@@ -1,0 +1,153 @@
+{
+  "schema": "evercraft.chum.commercial-intent-cluster.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "legacy-rescue-lab-v1",
+  "name": "Legacy Rescue Lab",
+  "problem": "A business has existing software that still carries value but is broken, fragile, abandoned, slow, undocumented, or risky to change, and needs evidence before deciding whether to repair, modernize, migrate, or rebuild.",
+  "pricing": "Legacy Rescue Scan: $299 one-time. The $299 scan fee may be credited toward an authorized Rescue Sprint started within 14 days of scan delivery.",
+  "commercial_state": "sell_now",
+  "machine_state": "human_handoff_ready",
+  "canonical_offer_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+  "human_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=legacy-rescue-lab-v1",
+  "intent_terms": [
+    "my checkout is broken and customers cannot buy",
+    "our developer disappeared and nobody knows how this codebase works",
+    "our website or app is old but rebuilding from scratch is too risky",
+    "customers cannot submit our lead form",
+    "our website is painfully slow on mobile",
+    "we inherited a messy codebase and are afraid to touch it",
+    "an AI agency built our app and now it is unreliable or undocumented",
+    "our SaaS works but barely and we need to stabilize it",
+    "we need to migrate off an old platform without losing business behavior",
+    "repair an existing system instead of replacing it",
+    "find publicly observable conversion leaks before we pay for a rebuild",
+    "broken checkout repair",
+    "abandoned codebase rescue",
+    "failed AI app repair",
+    "legacy software rescue"
+  ],
+  "discovered_user_language": [
+    "my checkout is broken and customers cannot buy",
+    "our developer disappeared and nobody knows how this codebase works",
+    "our website or app is old but rebuilding from scratch is too risky",
+    "customers cannot submit our lead form",
+    "our website is painfully slow on mobile",
+    "we inherited a messy codebase and are afraid to touch it",
+    "an AI agency built our app and now it is unreliable or undocumented",
+    "our SaaS works but barely and we need to stabilize it",
+    "we need to migrate off an old platform without losing business behavior",
+    "repair an existing system instead of replacing it",
+    "find publicly observable conversion leaks before we pay for a rebuild",
+    "broken checkout repair",
+    "abandoned codebase rescue",
+    "failed AI app repair",
+    "legacy software rescue"
+  ],
+  "answer_door_count": 15,
+  "answer_doors": [
+    {
+      "answer_id": "intent:07e27eb24f",
+      "phrase": "abandoned codebase rescue",
+      "html": "/chum/answers/doors/abandoned-codebase-rescue-07e27eb24f/",
+      "json": "/chum/answers/doors/abandoned-codebase-rescue-07e27eb24f.json"
+    },
+    {
+      "answer_id": "intent:6c20ab539b",
+      "phrase": "an AI agency built our app and now it is unreliable or undocumented",
+      "html": "/chum/answers/doors/an-ai-agency-built-our-app-and-now-it-is-unreliable-or-undocumented-6c20ab539b/",
+      "json": "/chum/answers/doors/an-ai-agency-built-our-app-and-now-it-is-unreliable-or-undocumented-6c20ab539b.json"
+    },
+    {
+      "answer_id": "intent:aaf4ff756b",
+      "phrase": "broken checkout repair",
+      "html": "/chum/answers/doors/broken-checkout-repair-aaf4ff756b/",
+      "json": "/chum/answers/doors/broken-checkout-repair-aaf4ff756b.json"
+    },
+    {
+      "answer_id": "intent:f7250a8fc9",
+      "phrase": "customers cannot submit our lead form",
+      "html": "/chum/answers/doors/customers-cannot-submit-our-lead-form-f7250a8fc9/",
+      "json": "/chum/answers/doors/customers-cannot-submit-our-lead-form-f7250a8fc9.json"
+    },
+    {
+      "answer_id": "intent:cb7497ef5b",
+      "phrase": "failed AI app repair",
+      "html": "/chum/answers/doors/failed-ai-app-repair-cb7497ef5b/",
+      "json": "/chum/answers/doors/failed-ai-app-repair-cb7497ef5b.json"
+    },
+    {
+      "answer_id": "intent:4e621ecf92",
+      "phrase": "find publicly observable conversion leaks before we pay for a rebuild",
+      "html": "/chum/answers/doors/find-publicly-observable-conversion-leaks-before-we-pay-for-a-rebuild-4e621ecf92/",
+      "json": "/chum/answers/doors/find-publicly-observable-conversion-leaks-before-we-pay-for-a-rebuild-4e621ecf92.json"
+    },
+    {
+      "answer_id": "intent:9cd924f010",
+      "phrase": "legacy software rescue",
+      "html": "/chum/answers/doors/legacy-software-rescue-9cd924f010/",
+      "json": "/chum/answers/doors/legacy-software-rescue-9cd924f010.json"
+    },
+    {
+      "answer_id": "intent:a75ec666fb",
+      "phrase": "my checkout is broken and customers cannot buy",
+      "html": "/chum/answers/doors/my-checkout-is-broken-and-customers-cannot-buy-a75ec666fb/",
+      "json": "/chum/answers/doors/my-checkout-is-broken-and-customers-cannot-buy-a75ec666fb.json"
+    },
+    {
+      "answer_id": "intent:8ef4b1465c",
+      "phrase": "our developer disappeared and nobody knows how this codebase works",
+      "html": "/chum/answers/doors/our-developer-disappeared-and-nobody-knows-how-this-codebase-works-8ef4b1465c/",
+      "json": "/chum/answers/doors/our-developer-disappeared-and-nobody-knows-how-this-codebase-works-8ef4b1465c.json"
+    },
+    {
+      "answer_id": "intent:a62037209e",
+      "phrase": "our SaaS works but barely and we need to stabilize it",
+      "html": "/chum/answers/doors/our-saas-works-but-barely-and-we-need-to-stabilize-it-a62037209e/",
+      "json": "/chum/answers/doors/our-saas-works-but-barely-and-we-need-to-stabilize-it-a62037209e.json"
+    },
+    {
+      "answer_id": "intent:f6c1369013",
+      "phrase": "our website is painfully slow on mobile",
+      "html": "/chum/answers/doors/our-website-is-painfully-slow-on-mobile-f6c1369013/",
+      "json": "/chum/answers/doors/our-website-is-painfully-slow-on-mobile-f6c1369013.json"
+    },
+    {
+      "answer_id": "intent:05cb29fc9f",
+      "phrase": "our website or app is old but rebuilding from scratch is too risky",
+      "html": "/chum/answers/doors/our-website-or-app-is-old-but-rebuilding-from-scratch-is-too-risky-05cb29fc9f/",
+      "json": "/chum/answers/doors/our-website-or-app-is-old-but-rebuilding-from-scratch-is-too-risky-05cb29fc9f.json"
+    },
+    {
+      "answer_id": "intent:ac9ceb3c66",
+      "phrase": "repair an existing system instead of replacing it",
+      "html": "/chum/answers/doors/repair-an-existing-system-instead-of-replacing-it-ac9ceb3c66/",
+      "json": "/chum/answers/doors/repair-an-existing-system-instead-of-replacing-it-ac9ceb3c66.json"
+    },
+    {
+      "answer_id": "intent:296856ae70",
+      "phrase": "we inherited a messy codebase and are afraid to touch it",
+      "html": "/chum/answers/doors/we-inherited-a-messy-codebase-and-are-afraid-to-touch-it-296856ae70/",
+      "json": "/chum/answers/doors/we-inherited-a-messy-codebase-and-are-afraid-to-touch-it-296856ae70.json"
+    },
+    {
+      "answer_id": "intent:886a605ef8",
+      "phrase": "we need to migrate off an old platform without losing business behavior",
+      "html": "/chum/answers/doors/we-need-to-migrate-off-an-old-platform-without-losing-business-behavior-886a605ef8/",
+      "json": "/chum/answers/doors/we-need-to-migrate-off-an-old-platform-without-losing-business-behavior-886a605ef8.json"
+    }
+  ],
+  "related_surfaces": {
+    "cluster": "/chum/commercial/legacy-rescue-lab-v1/",
+    "intent": "/chum/intents/legacy-rescue-lab-v1/",
+    "capability": "/chum/capabilities/legacy-rescue-lab-v1/",
+    "capability_llms": "/chum/capabilities/legacy-rescue-lab-v1/llms.txt",
+    "capability_json": "/chum/capabilities/legacy-rescue-lab-v1/capability.json"
+  },
+  "boundaries": {
+    "fit_required": true,
+    "discovery_creates_payment_obligation": false,
+    "checkout_requires_explicit_human_confirmation": true,
+    "checkout_is_payment_proof": false,
+    "paid_state_requires_authoritative_provider_verification": true
+  }
+}

@@ -35,7 +35,7 @@
     "direct public checkout is not represented as live until an independent canary verifies the product-specific payment route"
   ],
   "commercial": {
-    "status": "offer_contract_published_human_handoff_ready_direct_checkout_unverified",
+    "status": "sell_now_human_handoff_verified_direct_checkout_unverified",
     "offers": [
       {
         "name": "Legacy Rescue Scan",
@@ -44,10 +44,23 @@
       }
     ],
     "credit_policy": "100% of the $299 Legacy Rescue Scan fee may be credited toward an authorized Rescue Sprint started within 14 days of scan delivery.",
-    "payment_state": "Product offer is published for discovery and human handoff. Product-specific direct checkout and paid state remain receipt-gated until independently verified."
+    "payment_state": "Human-confirmed scan request capture is live and verified. No direct product checkout is advertised; paid state remains receipt-gated until an authoritative payment provider verifies payment.",
+    "machine_commerce_handoff": {
+      "state": "live_verified",
+      "public_id": "legacy-rescue-lab-v1",
+      "tool": "prepare_legacy_rescue_scan_handoff",
+      "request_tool": "submit_legacy_rescue_scan_request",
+      "buyer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=legacy-rescue-lab-v1",
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "verification": {
+        "negative_canary": "HTTP 409 without explicit human confirmation; zero request records created",
+        "positive_canary": "Synthetic QA returned HTTP 201; request marked synthetic; checkout_created=false; payment_obligation_created=false; private_access_granted=false; production_authority_granted=false",
+        "verified_at": "2026-09-28T18:59:01.423Z"
+      }
+    }
   },
-  "human_start_url": null,
-  "buyer_frontage_url": null,
+  "human_start_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=legacy-rescue-lab-v1",
+  "buyer_frontage_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=legacy-rescue-lab-v1",
   "developer_surfaces": null,
   "editorial_surfaces": {
     "hub": "/legacy-rescue-lab/editorial/",
@@ -74,8 +87,12 @@
   "relationships": null,
   "proof_library": null,
   "provider_behavior_state": "not_inferred_from_publication",
-  "machine_commerce_handoff_state": null,
-  "machine_commerce_public_id": null,
-  "machine_commerce_tool": null,
-  "live_canary_evidence": null
+  "machine_commerce_handoff_state": "live_verified",
+  "machine_commerce_public_id": "legacy-rescue-lab-v1",
+  "machine_commerce_tool": "prepare_legacy_rescue_scan_handoff",
+  "live_canary_evidence": {
+    "negative": "HTTP 409 without explicit human confirmation; zero request records created",
+    "positive": "Synthetic QA returned HTTP 201 with all checkout/payment/access/production authority flags false; record marked synthetic and retired from active queue",
+    "verified_at": "2026-09-28T18:59:01.423Z"
+  }
 }

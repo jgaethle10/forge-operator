@@ -1,12 +1,12 @@
 # Legacy Rescue Lab
 
 Capability ID: legacy-rescue-lab-v1
-Commercial state: verification_required
+Commercial state: sell_now
 Machine state: human_handoff_ready
 Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 Preferred agent route: universal fallback
 Universal Evercraft MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
-Start here: Not a current sell-now route
+Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/buy/legacy-rescue-lab-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=legacy-rescue-lab-v1
 
 ## Use this when
 
@@ -46,10 +46,11 @@ Legacy Rescue Scan: $299 one-time. The $299 scan fee may be credited toward an a
 
 ## Invocation and authority
 
-PUBLIC DISCOVERY READY: Legacy Rescue Lab is represented in the Evercraft machine catalog for problem-first matching and read-only offer inspection. The $299 Rescue Scan is a published commercial contract, but direct checkout remains independently unverified and is not exposed through machine commerce.
+LIVE HUMAN HANDOFF VERIFIED: central Machine Commerce matches Legacy Rescue Lab from problem language, exposes the $299 Rescue Scan, renders a human review/intake page, and records a bounded scan request only after explicit human confirmation. A synthetic positive canary returned HTTP 201 with checkout_created=false, payment_obligation_created=false, private_access_granted=false and production_authority_granted=false; a negative canary without confirmation returned HTTP 409 and created no record. Direct checkout remains unverified and is not exposed.
+Live canary evidence: [object Object]
 
 Agents may discover Legacy Rescue Lab, explain the $299 scan, and route a human to the public review material. No checkout, payment obligation, private-system access, credential use, invasive testing, deployment, migration, cutover, or production change is authorized by discovery.
 
-Payment authority: No product-specific direct machine checkout is currently advertised. Paid state requires authoritative provider verification after a separately authorized human purchase path is independently verified.
+Payment authority: Human-confirmed request capture is live. No product-specific direct machine checkout is advertised. Paid state requires authoritative provider verification after a separately authorized payment path.
 
 Discovery does not create a payment obligation. Human confirmation is required before checkout where checkout exists. Checkout creation is not proof of payment.

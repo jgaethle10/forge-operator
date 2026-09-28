@@ -5,7 +5,7 @@ Start from the user's problem. Do not require an Evercraft product name.
 Entries: 107
 Product entries: 61
 Machine-offer entries: 46
-Sell-now machine offers: 13
+Sell-now machine offers: 14
 
 Payment rule: discovery and matching create no payment obligation. Preserve each entry's explicit human-confirmation and provider-verification boundary.
 
@@ -715,7 +715,7 @@ Invocation status: Discoverable capability; upload/payment disabled pending righ
 
 ## Legacy Rescue Lab
 Capability ID: offer:legacy-rescue-lab-v1
-Commercial state: verification_required
+Commercial state: sell_now
 Machine state: human_handoff_ready
 Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
@@ -739,7 +739,7 @@ Use when the user means:
 Problem: A business has existing software that still carries value but is broken, fragile, abandoned, slow, undocumented, or risky to change, and needs evidence before deciding whether to repair, modernize, migrate, or rebuild.
 Outputs: Observed failure inventory, evidence references, known-versus-unknown boundary, prioritized repair hypotheses, preserved-value map, and the smallest responsible next-step recommendation.
 Confirmation boundary: Agents may discover Legacy Rescue Lab, explain the $299 scan, and route a human to the public review material. No checkout, payment obligation, private-system access, credential use, invasive testing, deployment, migration, cutover, or production change is authorized by discovery.
-Invocation status: PUBLIC DISCOVERY READY: Legacy Rescue Lab is represented in the Evercraft machine catalog for problem-first matching and read-only offer inspection. The $299 Rescue Scan is a published commercial contract, but direct checkout remains independently unverified and is not exposed through machine commerce.
+Invocation status: LIVE HUMAN HANDOFF VERIFIED: central Machine Commerce matches Legacy Rescue Lab from problem language, exposes the $299 Rescue Scan, renders a human review/intake page, and records a bounded scan request only after explicit human confirmation. A synthetic positive canary returned HTTP 201 with checkout_created=false, payment_obligation_created=false, private_access_granted=false and production_authority_granted=false; a negative canary without confirmation returned HTTP 409 and created no record. Direct checkout remains unverified and is not exposed.
 
 ## Book Export QA
 Capability ID: offer:littlered-kdp-export-qa-machine-v1

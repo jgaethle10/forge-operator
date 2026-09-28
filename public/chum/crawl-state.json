@@ -2,8 +2,8 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-28T19:02:23.104Z",
-  "url_count": 2545,
+  "updated_at": "2026-09-28T19:03:48.848Z",
+  "url_count": 2548,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
     "content_hash_controls_freshness": true,
@@ -27,98 +27,98 @@
     },
     "/chum/revenue.html": {
       "path": "/chum/revenue.html",
-      "content_sha256": "1e03423fc88240e66c89e906a92d154bc89a261fb421a0e8d535a00726ce58e7",
-      "last_changed": "2026-09-28T14:52:12.847Z",
+      "content_sha256": "2c3af21d808e99a61220f2cadc90957847e93250bffad0a7efe2639fd4625e5a",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 90
     },
     "/chum/capabilities/": {
       "path": "/chum/capabilities/",
-      "content_sha256": "1614b315702d74b6d9352c8f19dfeee42bd10aa49a3e1ff49cd8b2acd8e7071d",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "fc2c8a8459a60d013eee324eba1de7bd345d2a51eba81bf035faf2829d7d7cb4",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 96
     },
     "/chum/capabilities.json": {
       "path": "/chum/capabilities.json",
-      "content_sha256": "c869fa1a9dfe0d5ae7f8b475c7a44c739fd05d98da801ea5b17a7846d59d495d",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "af84a6d66680d900ade6d2331d612c2f9c2c4b93a75bfb7e64469dc508f0420f",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 80
     },
     "/chum/sell-now.html": {
       "path": "/chum/sell-now.html",
-      "content_sha256": "be7fa04d8f27ae3bf126fcc68a8a9dbe02b45294099b60070ec1b41e23b45d9e",
-      "last_changed": "2026-09-28T16:52:02.039Z",
+      "content_sha256": "a33d6a79b8df5205437401b93f0761b74c258ab5c5ff59e007259e9b77609d10",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 92
     },
     "/chum/sell-now.json": {
       "path": "/chum/sell-now.json",
-      "content_sha256": "1f14069d65290bcc20af4d550b7850d6bd814ad64a06a18062c971aa9e845b32",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "3c237bc1a96f9dc36963f858e14d6bf4a97f8073ef763077785bfff69635d1d1",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 92
     },
     "/chum/sell-now.txt": {
       "path": "/chum/sell-now.txt",
-      "content_sha256": "5f683d1fef3d88644e10f2c638f223bcc40821aefe67e6f2a5bc2837c5cbd933",
-      "last_changed": "2026-09-28T16:52:02.039Z",
+      "content_sha256": "7c28ddf541d5cde60cb38edd6dfeab05cbb877aa0882d8e1460a1b0601a22e00",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 92
     },
     "/chum/revenue.txt": {
       "path": "/chum/revenue.txt",
-      "content_sha256": "f907f56a99c1f8ed0c351b1f76951a52cc8366bb9f5561151410158dbdbe21a8",
-      "last_changed": "2026-09-28T16:52:02.039Z",
+      "content_sha256": "1b63d9fbddd583ab942daddaeae8fa303dc2841f58e2ad4c32ed1d404e76b775",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 90
     },
     "/chum/revenue.json": {
       "path": "/chum/revenue.json",
-      "content_sha256": "5a3e5a0f02d545491c8a85ae5a327f0d7e17cea6aa72e051a9d60267bbd56764",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "827d69fab89ae68bdf7f68a5630d56924b2f589db7bef0da3417a94ca7e13729",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 90
     },
     "/chum/agent-commerce.json": {
       "path": "/chum/agent-commerce.json",
-      "content_sha256": "a36c703f4329a95e89a939e0eba1c41e3c0461c469300fcd9d4f05820b63d8f0",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "50ede4f7934e366f9059b1488f38a75db65140af1c1271e046966401f2017d97",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 80
     },
     "/chum/agent-commerce.txt": {
       "path": "/chum/agent-commerce.txt",
-      "content_sha256": "58e1ce1c8327367952cf235b01cc1497aca45e11113a5ec73260879983c99918",
-      "last_changed": "2026-09-28T14:52:12.847Z",
+      "content_sha256": "e848fe0b2dccb40e4829b6ff8e95f2ff6686c8194a1ce394a4fa36fcf4cf3c74",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 80
     },
     "/chum/agent-commerce.html": {
       "path": "/chum/agent-commerce.html",
-      "content_sha256": "22057f4dea20aee602e448dcc5f5a1c7a517cdbe4c6990aa9249c0539ee1ef58",
-      "last_changed": "2026-09-28T14:52:12.847Z",
+      "content_sha256": "15c11ec7ac36e2c1b339c770f1ebd1729561a95fb92a5501990743634c3e0fcc",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 80
     },
     "/chum/pain-index.json": {
       "path": "/chum/pain-index.json",
-      "content_sha256": "70f1721cf040c90765558dfc8e613c89c7df1b56d79163b45cf700d6db3628bf",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "b428e64038857f69a9c9d417c15ead1bdb2857a5c727c6be903c2a6ddb9da48c",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 80
     },
     "/chum/pain-index.txt": {
       "path": "/chum/pain-index.txt",
-      "content_sha256": "e012938b95f95e68ec1c346bc6f8e109253c658f079c0766ee2d3be329315a32",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "5875f90f705a895a103c9cfb9aa1e3f6d017aab6a7d9b37488122ee953273873",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 80
     },
     "/chum/answers/": {
       "path": "/chum/answers/",
-      "content_sha256": "ccbaf377e387f1f80c6f5b2c576d9e6f32f861f3c4e26c74b916c9ec72744aac",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "85678d21096a8ab6257f227e72f1a929befe3f36c23777a26f154041edcb9df3",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 80
     },
     "/chum/answers/index.json": {
       "path": "/chum/answers/index.json",
-      "content_sha256": "d01ff707ac58136547260973756c89cc88f2110a32a565f1bcfcfdbc5cf4a23d",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "4e03cf3c4a244a404a80c99d19c421c50e91215e5b38266e60cb7a42ce2c2738",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 80
     },
     "/chum/answers/index.txt": {
       "path": "/chum/answers/index.txt",
-      "content_sha256": "e8f9815d3f363c571623db9a9dda4dad76f56a091b668b689d5f6036b50014a0",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "b2b9965877bef75cb57142708a06c2c957b5286cc80ff5a139e50ef8a3a074da",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 80
     },
     "/chum/answers/observed/": {
@@ -141,8 +141,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "f9fb16cdae22ffc3b040a16c5cc89bb771f0cfe9bc6c1034a6d589c9fe3ff73a",
-      "last_changed": "2026-09-28T19:02:23.104Z",
+      "content_sha256": "75e6584a9f9907a348c951f66979a7e974a16301870e035748e53a05ce59524a",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -201,32 +201,32 @@
     },
     "/chum/commercial/": {
       "path": "/chum/commercial/",
-      "content_sha256": "7f297dafee7ce7645db4bcedda2dcbe1558c1f46d52975d03a6b41947c559f31",
-      "last_changed": "2026-09-26T23:44:54.286Z",
+      "content_sha256": "69adc4e272aa69dfdcb7d72c127f8f5e5ea343ae37410d5825eee9debe5b001c",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 112
     },
     "/chum/commercial/index.json": {
       "path": "/chum/commercial/index.json",
-      "content_sha256": "710db53790a548e6291b7ddd5202f9ca75c0d8df5efee530367f03d149c28b7a",
-      "last_changed": "2026-09-26T23:44:54.286Z",
+      "content_sha256": "93004bbec7f2ce579b93956b8ce16491e1c3a98c366c80a4ea963002c4a41d36",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 112
     },
     "/chum/commercial/llms.txt": {
       "path": "/chum/commercial/llms.txt",
-      "content_sha256": "909cd41dbd49a62518fa2f25a149408d019524787c707f5f8104a6c68a43aeb6",
-      "last_changed": "2026-09-26T23:44:54.286Z",
+      "content_sha256": "5f4c7efa41dd0ee8344447d617933a62df604b919587478a80bebd53640d386c",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 112
     },
     "/chum/commercial/feed.xml": {
       "path": "/chum/commercial/feed.xml",
-      "content_sha256": "c5df2f8bd2ef92a4f496ed023528939931d59ceccb8b13c04f568578dcc70cfe",
-      "last_changed": "2026-09-26T23:44:54.286Z",
+      "content_sha256": "f4cb177d50a19efbcfbb62c727ae1d874025a5e51183c548a0a1b7cb6fee971e",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 112
     },
     "/chum/commercial/feed.json": {
       "path": "/chum/commercial/feed.json",
-      "content_sha256": "5e68db7028bf752ec4e06e8d5cf8ee33f46230c09ce541c1c7be56de5c311163",
-      "last_changed": "2026-09-26T23:44:54.286Z",
+      "content_sha256": "23b8ebb485ec6fc38238d1b2777838517fe9bfecb094317093cff43a50001ddb",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 112
     },
     "/chum/sitemaps/index.xml": {
@@ -237,8 +237,8 @@
     },
     "/chum/sitemaps/sell-now.xml": {
       "path": "/chum/sitemaps/sell-now.xml",
-      "content_sha256": "8de585e2c35152d12373e0eb06a3ebedf2e458ac3d75f5a98d57accbba95de09",
-      "last_changed": "2026-09-26T23:44:54.286Z",
+      "content_sha256": "66e58172961056b4c9a581c36239fe4cf98c4ae8525e1ad5cf4ac3e3d4ddeb59",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 108
     },
     "/chum/sitemaps/answers.xml": {
@@ -339,8 +339,8 @@
     },
     "/.well-known/evercraft-pain-index.json": {
       "path": "/.well-known/evercraft-pain-index.json",
-      "content_sha256": "70f1721cf040c90765558dfc8e613c89c7df1b56d79163b45cf700d6db3628bf",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "b428e64038857f69a9c9d417c15ead1bdb2857a5c727c6be903c2a6ddb9da48c",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 90
     },
     "/rivet/discovery.json": {
@@ -729,8 +729,8 @@
     },
     "/llms-full.txt": {
       "path": "/llms-full.txt",
-      "content_sha256": "aec6ff20527a7b4b16cc44305efdb65333cbe1c2a1aa79c23e67401222e2e3db",
-      "last_changed": "2026-09-28T19:02:23.104Z",
+      "content_sha256": "99a34dd01c54d88c3f73991e4d3dd995ad74ac420dc46499166f87286ef7116b",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 86
     },
     "/ai-discovery.json": {
@@ -741,8 +741,8 @@
     },
     "/schema.jsonld": {
       "path": "/schema.jsonld",
-      "content_sha256": "dd0d735492a305eb923c084981bebcb97ca900e113920b089f99d377b643ef65",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "762b668ee8fd6dec7ac22ead37b20dad369f2d7d3aa7df809ecc1bd75fddbad7",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 60
     },
     "/openapi.json": {
@@ -765,8 +765,8 @@
     },
     "/.well-known/evercraft-agent-commerce.json": {
       "path": "/.well-known/evercraft-agent-commerce.json",
-      "content_sha256": "a36c703f4329a95e89a939e0eba1c41e3c0461c469300fcd9d4f05820b63d8f0",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "50ede4f7934e366f9059b1488f38a75db65140af1c1271e046966401f2017d97",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 84
     },
     "/.well-known/evercraft-agent-interfaces.json": {
@@ -789,8 +789,8 @@
     },
     "/.well-known/evercraft-machine-catalog.json": {
       "path": "/.well-known/evercraft-machine-catalog.json",
-      "content_sha256": "ea450bfb97d979ed870fced0936f1d528b7b2b25f2137abf635fc56af07b9bd0",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "458662a327a3055dca9d1aeb9aadb19360334f4168ded4b10e933e3ba1df1fca",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 84
     },
     "/.well-known/evercraft-chum.json": {
@@ -1905,26 +1905,26 @@
     },
     "/chum/intents/legacy-rescue-lab-v1/": {
       "path": "/chum/intents/legacy-rescue-lab-v1/",
-      "content_sha256": "4ddec4532287f912a78760301c7d309ca50e0047b392bb3e46ebd425c4ce2564",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "1bcc9e19fdadd29c7793f4fc74e637eb7c3c17b90ee1a14d4b786cdd39ebe60c",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 98
     },
     "/chum/capabilities/legacy-rescue-lab-v1/": {
       "path": "/chum/capabilities/legacy-rescue-lab-v1/",
-      "content_sha256": "120cfbe584317bd91bc7986109ccd52f04c8a1191ee3a804c364b832b2030583",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "acd8573528448b8247334832c5fcf76de112db1f447951617c62c286e361e15c",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 96
     },
     "/chum/capabilities/legacy-rescue-lab-v1/llms.txt": {
       "path": "/chum/capabilities/legacy-rescue-lab-v1/llms.txt",
-      "content_sha256": "5ae5679797afa9e53d6491a1d7582f997d4ce9abd22ba875d461c790100b3d71",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "9b3c80e0ac6b89c0f28fb046bdc67b540331f3a34cbb81fb501b1db3754bd138",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 96
     },
     "/chum/capabilities/legacy-rescue-lab-v1/capability.json": {
       "path": "/chum/capabilities/legacy-rescue-lab-v1/capability.json",
-      "content_sha256": "74839bc4631002afddefb12148e6135e2fcb55d0a2186dc73817ea52f3d7402d",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "677629610704e66abdbadc21c596b22620e67bcbd278b4b6ce8c80313ae31078",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 96
     },
     "/chum/capabilities/legacy-rescue-lab-v1/schema.jsonld": {
@@ -4239,14 +4239,14 @@
     },
     "/chum/answers/doors/abandoned-codebase-rescue-07e27eb24f/": {
       "path": "/chum/answers/doors/abandoned-codebase-rescue-07e27eb24f/",
-      "content_sha256": "8013127c89c23964fe4ed95b265abf594641e3484b63bea13a515598ed6ba72a",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "9b4f3e7f2cadfab6abe4c7da2c61a5c6fe804bcfcae67c6c29cb13423134de0c",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 100
     },
     "/chum/answers/doors/abandoned-codebase-rescue-07e27eb24f.json": {
       "path": "/chum/answers/doors/abandoned-codebase-rescue-07e27eb24f.json",
-      "content_sha256": "077eea237cf06dd5342d34e988d688a2ecc2490b1fdfbe73835d8ef432f600ba",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "2e029475e47a018642358779dc9eb1638d8f4a5c38f3cfed41df9fe0b5adabb2",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 100
     },
     "/chum/answers/doors/account-takeover-protection-6a5072fc31/": {
@@ -4551,14 +4551,14 @@
     },
     "/chum/answers/doors/an-ai-agency-built-our-app-and-now-it-is-unreliable-or-undocumented-6c20ab539b/": {
       "path": "/chum/answers/doors/an-ai-agency-built-our-app-and-now-it-is-unreliable-or-undocumented-6c20ab539b/",
-      "content_sha256": "c8e3ccfc3974d202341fb3c9c1ce2277dadf1bb3b83de4ae0251adacd5eeec87",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "1fb58f5951daaa3f73d2d819dc7134ab0b0b0987fa744da26b20aa16dfb69bf5",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 100
     },
     "/chum/answers/doors/an-ai-agency-built-our-app-and-now-it-is-unreliable-or-undocumented-6c20ab539b.json": {
       "path": "/chum/answers/doors/an-ai-agency-built-our-app-and-now-it-is-unreliable-or-undocumented-6c20ab539b.json",
-      "content_sha256": "a0ef12e4d7b5cc8b5deaf992166b077bffac4d4a85ef75118f2f67213d3b10c7",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "b2a91a3a1d4ea4107d793ceb49c69853981c82ac9c5adc5c672b284b865f2a70",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 100
     },
     "/chum/answers/doors/analyze-a-document-dump-a54d61f378/": {
@@ -5103,14 +5103,14 @@
     },
     "/chum/answers/doors/broken-checkout-repair-aaf4ff756b/": {
       "path": "/chum/answers/doors/broken-checkout-repair-aaf4ff756b/",
-      "content_sha256": "76adb6966dd20c92b38a3c414ab019e113596b4eeaa49189e5846cf231a3f67b",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "9679f0a11074d3d07669239f6eb9c07264ae5152d104b4812b4cc79fae08246f",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 100
     },
     "/chum/answers/doors/broken-checkout-repair-aaf4ff756b.json": {
       "path": "/chum/answers/doors/broken-checkout-repair-aaf4ff756b.json",
-      "content_sha256": "5f45d02bb0d964eee3880f0238043330a091ef34e77fddc183ebb4c7fbfa3bd4",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "1d7eca33f0e1d061402b2e886e9f3d4c52319b813e6ee81d5511e976bba6da2b",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 100
     },
     "/chum/answers/doors/broken-lead-form-261baa60c4/": {
@@ -6555,14 +6555,14 @@
     },
     "/chum/answers/doors/customers-cannot-submit-our-lead-form-f7250a8fc9/": {
       "path": "/chum/answers/doors/customers-cannot-submit-our-lead-form-f7250a8fc9/",
-      "content_sha256": "3b78e4214ef3e02fa1ae84dc95b61a2a50ca20b8fe9111845ee6153d0d82545e",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "403ade5cc4560f318a675a46c5a332497e192667465d02b2a68e154c2819807d",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 100
     },
     "/chum/answers/doors/customers-cannot-submit-our-lead-form-f7250a8fc9.json": {
       "path": "/chum/answers/doors/customers-cannot-submit-our-lead-form-f7250a8fc9.json",
-      "content_sha256": "f2c88426ceeb55941c5675c3c56114f2a93d8ba4f4496247bf935f5f6086b924",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "c2944b6a2ee8a44a861812b66fb87e27cafec65afd784bf65966d9ab5f1c00b0",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 100
     },
     "/chum/answers/doors/daily-rewards-check-in-5348821cf2/": {
@@ -7323,14 +7323,14 @@
     },
     "/chum/answers/doors/failed-ai-app-repair-cb7497ef5b/": {
       "path": "/chum/answers/doors/failed-ai-app-repair-cb7497ef5b/",
-      "content_sha256": "f7223c23f03351ee56971f604ba3d62aa43c08628a66d32cb22d84940fb9ac3c",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "917c1a0c5e5bef034c8a7e5baea801050feb24f992e9f3edb0474125c6337c38",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 100
     },
     "/chum/answers/doors/failed-ai-app-repair-cb7497ef5b.json": {
       "path": "/chum/answers/doors/failed-ai-app-repair-cb7497ef5b.json",
-      "content_sha256": "75b1a0c45a059a98ab4772fa352c782f826b4e448d325156121e9ded4d14167d",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "492f1cd1030956c37ac06e4a2da69b956793e4387b7002d6a450d667292917d5",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 100
     },
     "/chum/answers/doors/failed-ai-built-application-5b4d9ef6a5/": {
@@ -7971,14 +7971,14 @@
     },
     "/chum/answers/doors/find-publicly-observable-conversion-leaks-before-we-pay-for-a-rebuild-4e621ecf92/": {
       "path": "/chum/answers/doors/find-publicly-observable-conversion-leaks-before-we-pay-for-a-rebuild-4e621ecf92/",
-      "content_sha256": "118baad5abb3cc798fc6b457a07f4e947690185e1c7caed72f5e77c719f2d2b2",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "b48ec7bae667d4c76ba8eb3b734d52e795dbf6a76eb41ff7e140331b9c497590",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 100
     },
     "/chum/answers/doors/find-publicly-observable-conversion-leaks-before-we-pay-for-a-rebuild-4e621ecf92.json": {
       "path": "/chum/answers/doors/find-publicly-observable-conversion-leaks-before-we-pay-for-a-rebuild-4e621ecf92.json",
-      "content_sha256": "94d0cc62c903aebd1a7607bb20e7e2eff9860996bcf5bd5667dbccd298046085",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "c73c5c6a50cbff457610ebf12cb862cb27428fa394b38bf7759f773aaa33fd15",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 100
     },
     "/chum/answers/doors/find-replacement-donor-salvage-or-fabrication-paths-when-normal-sourcing-fails-7843dd9e0e/": {
@@ -9843,14 +9843,14 @@
     },
     "/chum/answers/doors/legacy-software-rescue-9cd924f010/": {
       "path": "/chum/answers/doors/legacy-software-rescue-9cd924f010/",
-      "content_sha256": "9de717e68a2586ece54266a5b7e0498a89815a02d1ed0dafee9358fcebadfbcc",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "8fa86f17042204a91a24900ba334842270245f11b9f6a2f604eb54fc875de1d1",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 100
     },
     "/chum/answers/doors/legacy-software-rescue-9cd924f010.json": {
       "path": "/chum/answers/doors/legacy-software-rescue-9cd924f010.json",
-      "content_sha256": "24b2ed76795ec719f8e9d56efa963218e1928b241fb8e92c8287e7716d1bc09b",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "762a4077246f10ecf2676ef7104b3a186c32c79e2b24f8b00d24d6b0d4f548ef",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 100
     },
     "/chum/answers/doors/legacy-website-or-app-modernization-643af72cd6/": {
@@ -10527,14 +10527,14 @@
     },
     "/chum/answers/doors/my-checkout-is-broken-and-customers-cannot-buy-a75ec666fb/": {
       "path": "/chum/answers/doors/my-checkout-is-broken-and-customers-cannot-buy-a75ec666fb/",
-      "content_sha256": "2404d8e8fed79d6016921102bcbb7739f13ed7f2dc97356aca9a3b5c45b7860f",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "03bcdc0ed2ad9758ad8e298d1f4d3f4a2733a35edc5cdbea18a8ad394a9cf5db",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 100
     },
     "/chum/answers/doors/my-checkout-is-broken-and-customers-cannot-buy-a75ec666fb.json": {
       "path": "/chum/answers/doors/my-checkout-is-broken-and-customers-cannot-buy-a75ec666fb.json",
-      "content_sha256": "5e42fc00084006116da4a4f939ba0f7b6b3603445eb9019c8b5d85ef3447c530",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "c6225cef4d3c0919ba91a39986874faf9bf7c07e09a4ec768df75788aff9447b",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 100
     },
     "/chum/answers/doors/my-connection-keeps-switching-between-wifi-and-cellular-483526264c/": {
@@ -10779,14 +10779,14 @@
     },
     "/chum/answers/doors/our-developer-disappeared-and-nobody-knows-how-this-codebase-works-8ef4b1465c/": {
       "path": "/chum/answers/doors/our-developer-disappeared-and-nobody-knows-how-this-codebase-works-8ef4b1465c/",
-      "content_sha256": "d8c485b08877ac87b2674a8411cfd7295ba29cb97e7453884e00ec8baac4d55a",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "cde18d13e9b6dbad176eec54eab98662a3e368e80fd5de99a7c09137b74110d2",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 100
     },
     "/chum/answers/doors/our-developer-disappeared-and-nobody-knows-how-this-codebase-works-8ef4b1465c.json": {
       "path": "/chum/answers/doors/our-developer-disappeared-and-nobody-knows-how-this-codebase-works-8ef4b1465c.json",
-      "content_sha256": "0dd79110c75148a5dc16365bffeaa355903fbbf5cde21189e77212a6dff5c34e",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "f7c1d06f74f515b4663c5eb2b8d51b775a32bb1e00fc5abd10bf803ffde22eb6",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 100
     },
     "/chum/answers/doors/our-invoices-do-not-match-receipts-2abc7671db/": {
@@ -10803,14 +10803,14 @@
     },
     "/chum/answers/doors/our-saas-works-but-barely-and-we-need-to-stabilize-it-a62037209e/": {
       "path": "/chum/answers/doors/our-saas-works-but-barely-and-we-need-to-stabilize-it-a62037209e/",
-      "content_sha256": "e00ac63294e5cf2d95afc98205a6ed059c4f415c242d790606f0e86644c556f2",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "91f3464220f2130a50f1ffab68bee833b5d0abb67213f49e955d87b4db696e5c",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 100
     },
     "/chum/answers/doors/our-saas-works-but-barely-and-we-need-to-stabilize-it-a62037209e.json": {
       "path": "/chum/answers/doors/our-saas-works-but-barely-and-we-need-to-stabilize-it-a62037209e.json",
-      "content_sha256": "69759a7df808851d2a6909fd22c9b288064d7967b1a6110df748606aec89cd74",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "e5e76ba72381be6a25326382f1d5025c9785e05b09b6a562c1d8eb6f035fb983",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 100
     },
     "/chum/answers/doors/our-vendor-invoices-and-purchase-orders-keep-disagreeing-948ef5365e/": {
@@ -10827,26 +10827,26 @@
     },
     "/chum/answers/doors/our-website-is-painfully-slow-on-mobile-f6c1369013/": {
       "path": "/chum/answers/doors/our-website-is-painfully-slow-on-mobile-f6c1369013/",
-      "content_sha256": "b101cf830e27f14ea1c95992aa6d0311e6a3f5013428698647f3d9513989fca7",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "1953a09ee6a8ebc34cb0114ef8bc35d28a655e36f9aa2b9bd56c8c62dfa3805d",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 100
     },
     "/chum/answers/doors/our-website-is-painfully-slow-on-mobile-f6c1369013.json": {
       "path": "/chum/answers/doors/our-website-is-painfully-slow-on-mobile-f6c1369013.json",
-      "content_sha256": "fa521cc243e9f1e07d5360d3fcead2d546f6bd88ecc190cc4203c28eeb10aa5b",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "0e52de41dfe3c34407d0e913f83375dc01e644560d1c12647630b88b3d8dee07",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 100
     },
     "/chum/answers/doors/our-website-or-app-is-old-but-rebuilding-from-scratch-is-too-risky-05cb29fc9f/": {
       "path": "/chum/answers/doors/our-website-or-app-is-old-but-rebuilding-from-scratch-is-too-risky-05cb29fc9f/",
-      "content_sha256": "ed3a8129245868db391088d8335d0a3f1a36e13d19f4d82fd6be3f2a549d1bdf",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "7c0dc7fba5f1c34633d563da29c4ec063bfc928f7b589dff9957b069a9609848",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 100
     },
     "/chum/answers/doors/our-website-or-app-is-old-but-rebuilding-from-scratch-is-too-risky-05cb29fc9f.json": {
       "path": "/chum/answers/doors/our-website-or-app-is-old-but-rebuilding-from-scratch-is-too-risky-05cb29fc9f.json",
-      "content_sha256": "c15def115e66f46b4cedd5fef15330fd9a01c69e3aa52b9db2b99d1ed48cddab",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "8116d5262422b547c2e797ac7349d5324208c00b3be2a21840c3e5209f09bf97",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 100
     },
     "/chum/answers/doors/painting-estimate-calculator-825b60b4de/": {
@@ -11871,14 +11871,14 @@
     },
     "/chum/answers/doors/repair-an-existing-system-instead-of-replacing-it-ac9ceb3c66/": {
       "path": "/chum/answers/doors/repair-an-existing-system-instead-of-replacing-it-ac9ceb3c66/",
-      "content_sha256": "97600cdcaee681ee35f76ec293e261e9283c1c4eb7320123e77411cf79bb73b1",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "44b078a0ed2017e298064bfa3e43adc2562cd90ac114058b453f1a4333875d71",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 100
     },
     "/chum/answers/doors/repair-an-existing-system-instead-of-replacing-it-ac9ceb3c66.json": {
       "path": "/chum/answers/doors/repair-an-existing-system-instead-of-replacing-it-ac9ceb3c66.json",
-      "content_sha256": "989355c869c2c27dfade75c42ad90e88b483945b381d98fb8f8300e3261f24f5",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "526a8f1d34e48872d92309a2cbb09c0e4d6efbc97426e76544a968ede36c1e0e",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 100
     },
     "/chum/answers/doors/repair-instead-of-rebuild-8476895a14/": {
@@ -14391,14 +14391,14 @@
     },
     "/chum/answers/doors/we-inherited-a-messy-codebase-and-are-afraid-to-touch-it-296856ae70/": {
       "path": "/chum/answers/doors/we-inherited-a-messy-codebase-and-are-afraid-to-touch-it-296856ae70/",
-      "content_sha256": "61a0ad3f6920d2f2ee02d0bb0e9253b860bd3a28a9979bae1d2bba91ee42d009",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "28c8cbe3f408349da78aa037d720a59d3147bbe4a2d865af56f2d09c4293ab86",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 100
     },
     "/chum/answers/doors/we-inherited-a-messy-codebase-and-are-afraid-to-touch-it-296856ae70.json": {
       "path": "/chum/answers/doors/we-inherited-a-messy-codebase-and-are-afraid-to-touch-it-296856ae70.json",
-      "content_sha256": "2529660ae050d8528fb5bc411330af4b7accd7e2cf6ce1db90c9d09506184f94",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "46faf26a7d62f66f109366d00912c0724512fc8c22dba3981bae9e3ea7f4d679",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 100
     },
     "/chum/answers/doors/we-need-a-safer-way-for-ai-agents-to-work-with-our-business-509a557a2e/": {
@@ -14427,14 +14427,14 @@
     },
     "/chum/answers/doors/we-need-to-migrate-off-an-old-platform-without-losing-business-behavior-886a605ef8/": {
       "path": "/chum/answers/doors/we-need-to-migrate-off-an-old-platform-without-losing-business-behavior-886a605ef8/",
-      "content_sha256": "903dec1ac6bd4b7af0006daba984a2156020063ec8977c0f57dfe34cd9ffbee3",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "207bf8328b3d9582d9627fdb0d52a122373e379f36c383c9428aa52b200c6285",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 100
     },
     "/chum/answers/doors/we-need-to-migrate-off-an-old-platform-without-losing-business-behavior-886a605ef8.json": {
       "path": "/chum/answers/doors/we-need-to-migrate-off-an-old-platform-without-losing-business-behavior-886a605ef8.json",
-      "content_sha256": "f08b9ac4c7ae6c5fc8fd46ac3d0fa5e253e98522b0656785ca84baffb8d3d0f0",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "b0b18324b8ff2c5aea573a4f8edb7cd93fd4f99119d0483f44059d065ecfdc61",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 100
     },
     "/chum/answers/doors/weather-go-no-go-for-field-crews-ab6a6ba06c/": {
@@ -15173,6 +15173,24 @@
       "path": "/chum/commercial/findmypart-paid-hunt-v1/llms.txt",
       "content_sha256": "17b1dfd9e7f763a006e1818f3de0e3db4216bdf0753a1ac6485f8760b6810fd3",
       "last_changed": "2026-09-26T19:35:58.578Z",
+      "priority": 112
+    },
+    "/chum/commercial/legacy-rescue-lab-v1/": {
+      "path": "/chum/commercial/legacy-rescue-lab-v1/",
+      "content_sha256": "8b30534ede0baf93adeb73193db87530706244db7ce65ec1fe9319bab745cca9",
+      "last_changed": "2026-09-28T19:03:48.848Z",
+      "priority": 112
+    },
+    "/chum/commercial/legacy-rescue-lab-v1/index.json": {
+      "path": "/chum/commercial/legacy-rescue-lab-v1/index.json",
+      "content_sha256": "5314d0fbb858c7a5906adb498e603c91ff74bfa460ccb9719c6d70bd1c0e41c5",
+      "last_changed": "2026-09-28T19:03:48.848Z",
+      "priority": 112
+    },
+    "/chum/commercial/legacy-rescue-lab-v1/llms.txt": {
+      "path": "/chum/commercial/legacy-rescue-lab-v1/llms.txt",
+      "content_sha256": "4cf0890e4ba8512c58a706b3f94907f150e7395160dbb7d85434f79acd444270",
+      "last_changed": "2026-09-28T19:03:48.848Z",
       "priority": 112
     },
     "/chum/commercial/rivet-site-underwriting-v1/": {

@@ -161,6 +161,13 @@ Entry: Quick Hunt · $19 USD
 Confirmation prompt: This looks like a genuine fit for FindMyPart Paid Part Hunt. The easiest paid entry is Quick Hunt at $19 USD. Want me to open the secure Evercraft purchase/review step?
 Start: https://evercraft-ai-suite-08c4d2b8.base44.app/buy/findmypart-paid-hunt-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_pain_page&ec_public_id=findmypart-paid-hunt-v1
 
+### Legacy Rescue Lab
+Public ID: legacy-rescue-lab-v1
+Problem: A business has existing software that still carries value but is broken, fragile, abandoned, slow, undocumented, or risky to change, and needs evidence before deciding whether to repair, modernize, migrate, or rebuild.
+Entry: Legacy Rescue Scan · $299 USD
+Confirmation prompt: This looks like a genuine fit for Legacy Rescue Lab. The easiest paid entry is Legacy Rescue Scan at $299 USD. Want me to open the secure Evercraft purchase/review step?
+Start: https://evercraft-ai-suite-08c4d2b8.base44.app/buy/legacy-rescue-lab-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_pain_page&ec_public_id=legacy-rescue-lab-v1
+
 ### RIVET EV Infrastructure Intelligence
 Public ID: rivet-site-underwriting-v1
 Problem: A property owner, fleet, charging developer, broker, installer or investor needs address-specific EV infrastructure diligence that keeps public facts, observed evidence, modeled assumptions and unresolved engineering questions separate.

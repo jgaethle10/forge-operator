@@ -1170,9 +1170,9 @@
       ],
       "authority": "public discovery and bounded rescue diagnostics; private system access, credentials, source repositories, invasive testing, and production changes require separate explicit authorization",
       "human_confirmation_required": true,
-      "commercial_status": "offer_contract_published_human_handoff_ready_direct_checkout_unverified",
+      "commercial_status": "sell_now_human_handoff_verified_direct_checkout_unverified",
       "description": "Legacy Rescue Lab is an Evercraft legacy software rescue and modernization capability. Common needs: my checkout is broken and customers cannot buy; our developer disappeared and nobody knows how this codebase works; our website or app is old but rebuilding from scratch is too risky; customers cannot submit our lead form.",
-      "content_sha256": "4547b6f8228a33a4b8bd222421e18425d464a8e6c53bd68c83fe4f08cae7f588",
+      "content_sha256": "ab92bf143fb677c409c3eaf542e933a9a6b847b09596a3a7a4e365ae6484fe42",
       "updated_at": "2026-09-28T00:00:00.000Z"
     },
     {

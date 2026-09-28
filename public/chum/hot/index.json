@@ -2,9 +2,57 @@
   "schema": "evercraft.chum.hot-discovery.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-28T19:02:23.104Z",
+  "updated_at": "2026-09-28T19:03:48.848Z",
   "purpose": "High-priority public discovery surfaces for crawler fan-out. The queue reserves limited cold-start frontage for current commercial and sitemap surfaces, then fills remaining slots by observed priority. This is a crawl-order hint, not a ranking or recommendation claim.",
   "surfaces": [
+    {
+      "path": "/chum/commercial/",
+      "url": "/chum/commercial/",
+      "priority": 112,
+      "last_changed": "2026-09-28T19:03:48.848Z"
+    },
+    {
+      "path": "/chum/commercial/feed.json",
+      "url": "/chum/commercial/feed.json",
+      "priority": 112,
+      "last_changed": "2026-09-28T19:03:48.848Z"
+    },
+    {
+      "path": "/chum/commercial/feed.xml",
+      "url": "/chum/commercial/feed.xml",
+      "priority": 112,
+      "last_changed": "2026-09-28T19:03:48.848Z"
+    },
+    {
+      "path": "/chum/commercial/index.json",
+      "url": "/chum/commercial/index.json",
+      "priority": 112,
+      "last_changed": "2026-09-28T19:03:48.848Z"
+    },
+    {
+      "path": "/chum/commercial/legacy-rescue-lab-v1/",
+      "url": "/chum/commercial/legacy-rescue-lab-v1/",
+      "priority": 112,
+      "last_changed": "2026-09-28T19:03:48.848Z"
+    },
+    {
+      "path": "/chum/commercial/legacy-rescue-lab-v1/index.json",
+      "url": "/chum/commercial/legacy-rescue-lab-v1/index.json",
+      "priority": 112,
+      "last_changed": "2026-09-28T19:03:48.848Z"
+    },
+    {
+      "path": "/chum/commercial/legacy-rescue-lab-v1/llms.txt",
+      "url": "/chum/commercial/legacy-rescue-lab-v1/llms.txt",
+      "priority": 112,
+      "last_changed": "2026-09-28T19:03:48.848Z"
+    },
+    {
+      "path": "/chum/commercial/llms.txt",
+      "url": "/chum/commercial/llms.txt",
+      "priority": 112,
+      "last_changed": "2026-09-28T19:03:48.848Z"
+    },
     {
       "path": "/chum/commercial/ibmi-rescue-v1/index.json",
       "url": "/chum/commercial/ibmi-rescue-v1/index.json",
@@ -16,12 +64,6 @@
       "url": "/chum/commercial/ibmi-rescue-v1/llms.txt",
       "priority": 112,
       "last_changed": "2026-09-28T16:52:02.039Z"
-    },
-    {
-      "path": "/chum/commercial/",
-      "url": "/chum/commercial/",
-      "priority": 112,
-      "last_changed": "2026-09-26T23:44:54.286Z"
     },
     {
       "path": "/chum/commercial/aliev-site-opportunity-snapshot-v1/",
@@ -38,30 +80,6 @@
     {
       "path": "/chum/commercial/aliev-site-opportunity-snapshot-v1/llms.txt",
       "url": "/chum/commercial/aliev-site-opportunity-snapshot-v1/llms.txt",
-      "priority": 112,
-      "last_changed": "2026-09-26T23:44:54.286Z"
-    },
-    {
-      "path": "/chum/commercial/feed.json",
-      "url": "/chum/commercial/feed.json",
-      "priority": 112,
-      "last_changed": "2026-09-26T23:44:54.286Z"
-    },
-    {
-      "path": "/chum/commercial/feed.xml",
-      "url": "/chum/commercial/feed.xml",
-      "priority": 112,
-      "last_changed": "2026-09-26T23:44:54.286Z"
-    },
-    {
-      "path": "/chum/commercial/index.json",
-      "url": "/chum/commercial/index.json",
-      "priority": 112,
-      "last_changed": "2026-09-26T23:44:54.286Z"
-    },
-    {
-      "path": "/chum/commercial/llms.txt",
-      "url": "/chum/commercial/llms.txt",
       "priority": 112,
       "last_changed": "2026-09-26T23:44:54.286Z"
     },
@@ -270,6 +288,12 @@
       "last_changed": "2026-09-26T19:35:58.578Z"
     },
     {
+      "path": "/chum/sitemaps/sell-now.xml",
+      "url": "/chum/sitemaps/sell-now.xml",
+      "priority": 108,
+      "last_changed": "2026-09-28T19:03:48.848Z"
+    },
+    {
       "path": "/chum/sitemaps/answers.xml",
       "url": "/chum/sitemaps/answers.xml",
       "priority": 108,
@@ -288,64 +312,58 @@
       "last_changed": "2026-09-27T14:53:47.616Z"
     },
     {
-      "path": "/chum/sitemaps/sell-now.xml",
-      "url": "/chum/sitemaps/sell-now.xml",
-      "priority": 108,
-      "last_changed": "2026-09-26T23:44:54.286Z"
-    },
-    {
       "path": "/chum/sitemaps/index.xml",
       "url": "/chum/sitemaps/index.xml",
       "priority": 108,
       "last_changed": "2026-09-26T19:35:58.578Z"
     },
     {
-      "path": "/chum/sell-now.json",
-      "url": "/chum/sell-now.json",
-      "priority": 92,
-      "last_changed": "2026-09-28T18:59:42.997Z"
-    },
-    {
       "path": "/chum/sell-now.html",
       "url": "/chum/sell-now.html",
       "priority": 92,
-      "last_changed": "2026-09-28T16:52:02.039Z"
+      "last_changed": "2026-09-28T19:03:48.848Z"
+    },
+    {
+      "path": "/chum/sell-now.json",
+      "url": "/chum/sell-now.json",
+      "priority": 92,
+      "last_changed": "2026-09-28T19:03:48.848Z"
     },
     {
       "path": "/chum/sell-now.txt",
       "url": "/chum/sell-now.txt",
       "priority": 92,
-      "last_changed": "2026-09-28T16:52:02.039Z"
+      "last_changed": "2026-09-28T19:03:48.848Z"
     },
     {
       "path": "/.well-known/evercraft-pain-index.json",
       "url": "/.well-known/evercraft-pain-index.json",
       "priority": 90,
-      "last_changed": "2026-09-28T18:59:42.997Z"
-    },
-    {
-      "path": "/chum/revenue.json",
-      "url": "/chum/revenue.json",
-      "priority": 90,
-      "last_changed": "2026-09-28T18:59:42.997Z"
-    },
-    {
-      "path": "/chum/revenue.txt",
-      "url": "/chum/revenue.txt",
-      "priority": 90,
-      "last_changed": "2026-09-28T16:52:02.039Z"
+      "last_changed": "2026-09-28T19:03:48.848Z"
     },
     {
       "path": "/chum/revenue.html",
       "url": "/chum/revenue.html",
       "priority": 90,
-      "last_changed": "2026-09-28T14:52:12.847Z"
+      "last_changed": "2026-09-28T19:03:48.848Z"
+    },
+    {
+      "path": "/chum/revenue.json",
+      "url": "/chum/revenue.json",
+      "priority": 90,
+      "last_changed": "2026-09-28T19:03:48.848Z"
+    },
+    {
+      "path": "/chum/revenue.txt",
+      "url": "/chum/revenue.txt",
+      "priority": 90,
+      "last_changed": "2026-09-28T19:03:48.848Z"
     },
     {
       "path": "/.well-known/evercraft-machine-catalog.json",
       "url": "/.well-known/evercraft-machine-catalog.json",
       "priority": 84,
-      "last_changed": "2026-09-28T18:59:42.997Z"
+      "last_changed": "2026-09-28T19:03:48.848Z"
     },
     {
       "path": "/chum/answers/doors/15-gb-video-analysis-0f57ef2f90.json",
@@ -1184,24 +1202,6 @@
     {
       "path": "/chum/answers/doors/create-an-anonymous-inbox-1cf7f12421.json",
       "url": "/chum/answers/doors/create-an-anonymous-inbox-1cf7f12421.json",
-      "priority": 160,
-      "last_changed": "2026-09-28T18:59:42.997Z"
-    },
-    {
-      "path": "/chum/answers/doors/create-cross-business-loyalty-rewards-2c3ab05040.json",
-      "url": "/chum/answers/doors/create-cross-business-loyalty-rewards-2c3ab05040.json",
-      "priority": 160,
-      "last_changed": "2026-09-28T18:59:42.997Z"
-    },
-    {
-      "path": "/chum/answers/doors/credit-builder-d667e52872.json",
-      "url": "/chum/answers/doors/credit-builder-d667e52872.json",
-      "priority": 160,
-      "last_changed": "2026-09-28T18:59:42.997Z"
-    },
-    {
-      "path": "/chum/answers/doors/cron-job-audit-7941dee6af.json",
-      "url": "/chum/answers/doors/cron-job-audit-7941dee6af.json",
       "priority": 160,
       "last_changed": "2026-09-28T18:59:42.997Z"
     }

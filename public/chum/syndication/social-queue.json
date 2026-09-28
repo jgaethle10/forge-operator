@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.syndication-social-queue.v1",
-  "generated_at": "2026-09-28T17:30:38.189Z",
+  "generated_at": "2026-09-28T19:03:48.668Z",
   "bootstrap": false,
   "policy": "Material product changes enter once per content hash. Publishing still requires an authorized destination adapter.",
   "items": [
@@ -1022,6 +1022,16 @@
       "discovery_path": "/chum/products/legacy-rescue-lab/ai-discovery.json",
       "text": "Legacy Rescue Lab: Legacy Rescue Lab is an Evercraft legacy software rescue and modernization capability. Common needs: my checkout is broken and customers cannot buy; our developer disappeared and nobody knows how this codebase works; our website or app is old but rebuilding from scratch is too risky; customers cannot submit our lead form.",
       "content_sha256": "4547b6f8228a33a4b8bd222421e18425d464a8e6c53bd68c83fe4f08cae7f588",
+      "requires_authorized_destination": true
+    },
+    {
+      "dedupe_key": "legacy-rescue-lab:ab92bf143fb677c409c3eaf542e933a9a6b847b09596a3a7a4e365ae6484fe42",
+      "product_key": "legacy-rescue-lab",
+      "name": "Legacy Rescue Lab",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+      "discovery_path": "/chum/products/legacy-rescue-lab/ai-discovery.json",
+      "text": "Legacy Rescue Lab: Legacy Rescue Lab is an Evercraft legacy software rescue and modernization capability. Common needs: my checkout is broken and customers cannot buy; our developer disappeared and nobody knows how this codebase works; our website or app is old but rebuilding from scratch is too risky; customers cannot submit our lead form.",
+      "content_sha256": "ab92bf143fb677c409c3eaf542e933a9a6b847b09596a3a7a4e365ae6484fe42",
       "requires_authorized_destination": true
     },
     {

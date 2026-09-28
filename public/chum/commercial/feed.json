@@ -164,6 +164,28 @@
       ]
     },
     {
+      "id": "urn:evercraft:commercial-intent:legacy-rescue-lab-v1",
+      "external_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=legacy-rescue-lab-v1",
+      "title": "Legacy Rescue Lab",
+      "summary": "A business has existing software that still carries value but is broken, fragile, abandoned, slow, undocumented, or risky to change, and needs evidence before deciding whether to repair, modernize, migrate, or rebuild.",
+      "tags": [
+        "sell_now",
+        "legacy-rescue-lab-v1",
+        "abandoned codebase rescue",
+        "an AI agency built our app and now it is unreliable or undocumented",
+        "broken checkout repair",
+        "customers cannot submit our lead form",
+        "failed AI app repair",
+        "find publicly observable conversion leaks before we pay for a rebuild",
+        "legacy software rescue",
+        "my checkout is broken and customers cannot buy",
+        "our developer disappeared and nobody knows how this codebase works",
+        "our SaaS works but barely and we need to stabilize it",
+        "our website is painfully slow on mobile",
+        "our website or app is old but rebuilding from scratch is too risky"
+      ]
+    },
+    {
       "id": "urn:evercraft:commercial-intent:rivet-site-underwriting-v1",
       "external_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
       "title": "RIVET EV Infrastructure Intelligence",

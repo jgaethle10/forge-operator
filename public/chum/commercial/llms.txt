@@ -65,6 +65,13 @@ Intent page: /chum/intents/findmypart-paid-hunt-v1/
 Capability: /chum/capabilities/findmypart-paid-hunt-v1/
 Exact answer doors: 5
 
+## Legacy Rescue Lab
+Public ID: legacy-rescue-lab-v1
+Cluster: /chum/commercial/legacy-rescue-lab-v1/
+Intent page: /chum/intents/legacy-rescue-lab-v1/
+Capability: /chum/capabilities/legacy-rescue-lab-v1/
+Exact answer doors: 15
+
 ## RIVET EV Infrastructure Intelligence
 Public ID: rivet-site-underwriting-v1
 Cluster: /chum/commercial/rivet-site-underwriting-v1/

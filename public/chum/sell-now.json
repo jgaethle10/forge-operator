@@ -1,7 +1,7 @@
 {
   "schema": "evercraft.chum.sell-now.v1",
-  "updated_at": "2026-09-28T18:59:41.297Z",
-  "count": 13,
+  "updated_at": "2026-09-28T19:03:47.122Z",
+  "count": 14,
   "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
   "rule": "These offers are publicly cataloged as sell_now. Any supported checkout still requires explicit human payment confirmation and provider verification.",
   "offers": [
@@ -402,6 +402,59 @@
         "find undocumented dependencies in an IBM i workload",
         "AS/400 modernization assessment",
         "IBM i upgrade proof"
+      ]
+    },
+    {
+      "public_id": "legacy-rescue-lab-v1",
+      "name": "Legacy Rescue Lab",
+      "commercial_state": "sell_now",
+      "machine_state": "human_handoff_ready",
+      "pricing": "Legacy Rescue Scan: $299 one-time. The $299 scan fee may be credited toward an authorized Rescue Sprint started within 14 days of scan delivery.",
+      "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+      "page_url": "/chum/capabilities/legacy-rescue-lab-v1/",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/legacy-rescue-lab-v1/llms.txt",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/legacy-rescue-lab-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/legacy-rescue-lab-v1/schema.jsonld",
+      "start_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/buy/legacy-rescue-lab-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=legacy-rescue-lab-v1",
+      "start_url_state": "evercraft_buyer_frontage",
+      "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=legacy-rescue-lab-v1",
+      "entry_paid_offer": {
+        "offer_key": "legacy_rescue_scan_299",
+        "name": "Legacy Rescue Scan",
+        "price": "$299",
+        "price_usd": 299,
+        "billing": "one_time",
+        "checkout": "human_handoff_only_until_product_checkout_is_independently_verified",
+        "price_usd_normalized": 299
+      },
+      "live_proof": {
+        "product_key": "legacy-rescue-lab",
+        "conformance_state": "machine_commerce_handoff_live_verified",
+        "machine_commerce_handoff_state": "live_verified",
+        "registry_name": null,
+        "mcp": null,
+        "live_canary_evidence": "[object Object]",
+        "live_read_only_verified": false
+      },
+      "live_canary_evidence": "[object Object]",
+      "preferred_agent_route": "universal_fallback",
+      "direct_specialist": null,
+      "use_when": [
+        "my checkout is broken and customers cannot buy",
+        "our developer disappeared and nobody knows how this codebase works",
+        "our website or app is old but rebuilding from scratch is too risky",
+        "customers cannot submit our lead form",
+        "our website is painfully slow on mobile",
+        "we inherited a messy codebase and are afraid to touch it",
+        "an AI agency built our app and now it is unreliable or undocumented",
+        "our SaaS works but barely and we need to stabilize it",
+        "we need to migrate off an old platform without losing business behavior",
+        "repair an existing system instead of replacing it",
+        "find publicly observable conversion leaks before we pay for a rebuild",
+        "broken checkout repair",
+        "abandoned codebase rescue",
+        "failed AI app repair",
+        "legacy software rescue"
       ]
     },
     {

@@ -6,10 +6,10 @@
   "source_schema_version": "2026-09-28.1",
   "gateway_version": "evercraft-machine-commerce-gateway-v0.9.1",
   "source_generated_at": "2026-09-28T18:43:00.000Z",
-  "generated_at": "2026-09-28T18:59:41.297Z",
+  "generated_at": "2026-09-28T19:03:47.122Z",
   "offer_count": 46,
-  "sell_now_count": 13,
-  "discovery_count": 33,
+  "sell_now_count": 14,
+  "discovery_count": 32,
   "safety": {
     "discovery_creates_obligation": false,
     "human_confirmation_required_for_checkout": true,
@@ -1167,7 +1167,7 @@
       "problem": "A business has existing software that still carries value but is broken, fragile, abandoned, slow, undocumented, or risky to change, and needs evidence before deciding whether to repair, modernize, migrate, or rebuild.",
       "inputs": "A public URL or customer-authorized system target, a description of the observed failure or business pain, and optional screenshots, logs, exports, or repository evidence the customer is authorized to share.",
       "outputs": "Observed failure inventory, evidence references, known-versus-unknown boundary, prioritized repair hypotheses, preserved-value map, and the smallest responsible next-step recommendation.",
-      "commercial_state": "verification_required",
+      "commercial_state": "sell_now",
       "machine_state": "human_handoff_ready",
       "pricing": "Legacy Rescue Scan: $299 one-time. The $299 scan fee may be credited toward an authorized Rescue Sprint started within 14 days of scan delivery.",
       "offers": [
@@ -1184,8 +1184,8 @@
       "confirmation": "Agents may discover Legacy Rescue Lab, explain the $299 scan, and route a human to the public review material. No checkout, payment obligation, private-system access, credential use, invasive testing, deployment, migration, cutover, or production change is authorized by discovery.",
       "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
       "public_url_source": "source_catalog",
-      "payment_authority": "No product-specific direct machine checkout is currently advertised. Paid state requires authoritative provider verification after a separately authorized human purchase path is independently verified.",
-      "invocation_status": "PUBLIC DISCOVERY READY: Legacy Rescue Lab is represented in the Evercraft machine catalog for problem-first matching and read-only offer inspection. The $299 Rescue Scan is a published commercial contract, but direct checkout remains independently unverified and is not exposed through machine commerce.",
+      "payment_authority": "Human-confirmed request capture is live. No product-specific direct machine checkout is advertised. Paid state requires authoritative provider verification after a separately authorized payment path.",
+      "invocation_status": "LIVE HUMAN HANDOFF VERIFIED: central Machine Commerce matches Legacy Rescue Lab from problem language, exposes the $299 Rescue Scan, renders a human review/intake page, and records a bounded scan request only after explicit human confirmation. A synthetic positive canary returned HTTP 201 with checkout_created=false, payment_obligation_created=false, private_access_granted=false and production_authority_granted=false; a negative canary without confirmation returned HTTP 409 and created no record. Direct checkout remains unverified and is not exposed.",
       "catalog_version": "2026-09-28.1"
     },
     {

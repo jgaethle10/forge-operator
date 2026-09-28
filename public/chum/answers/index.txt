@@ -37,7 +37,7 @@ Answer ID: intent:07e27eb24f
 Human-readable match: /chum/answers/doors/abandoned-codebase-rescue-07e27eb24f/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/abandoned-codebase-rescue-07e27eb24f.json
 Candidates:
-- Legacy Rescue Lab | kind=machine_offer | commercial=verification_required | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+- Legacy Rescue Lab | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 
 ## account takeover protection
 Answer ID: intent:6a5072fc31
@@ -221,7 +221,7 @@ Answer ID: intent:6c20ab539b
 Human-readable match: /chum/answers/doors/an-ai-agency-built-our-app-and-now-it-is-unreliable-or-undocumented-6c20ab539b/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/an-ai-agency-built-our-app-and-now-it-is-unreliable-or-undocumented-6c20ab539b.json
 Candidates:
-- Legacy Rescue Lab | kind=machine_offer | commercial=verification_required | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+- Legacy Rescue Lab | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 - Legacy Rescue Lab | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 
 ## analyze a document dump
@@ -548,7 +548,7 @@ Answer ID: intent:aaf4ff756b
 Human-readable match: /chum/answers/doors/broken-checkout-repair-aaf4ff756b/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/broken-checkout-repair-aaf4ff756b.json
 Candidates:
-- Legacy Rescue Lab | kind=machine_offer | commercial=verification_required | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+- Legacy Rescue Lab | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 
 ## broken lead form
 Answer ID: intent:261baa60c4
@@ -1407,7 +1407,7 @@ Answer ID: intent:f7250a8fc9
 Human-readable match: /chum/answers/doors/customers-cannot-submit-our-lead-form-f7250a8fc9/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/customers-cannot-submit-our-lead-form-f7250a8fc9.json
 Candidates:
-- Legacy Rescue Lab | kind=machine_offer | commercial=verification_required | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+- Legacy Rescue Lab | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 - Legacy Rescue Lab | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 
 ## daily rewards check-in
@@ -1866,7 +1866,7 @@ Answer ID: intent:cb7497ef5b
 Human-readable match: /chum/answers/doors/failed-ai-app-repair-cb7497ef5b/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/failed-ai-app-repair-cb7497ef5b.json
 Candidates:
-- Legacy Rescue Lab | kind=machine_offer | commercial=verification_required | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+- Legacy Rescue Lab | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 
 ## failed AI-built application
 Answer ID: intent:5b4d9ef6a5
@@ -2247,7 +2247,7 @@ Answer ID: intent:4e621ecf92
 Human-readable match: /chum/answers/doors/find-publicly-observable-conversion-leaks-before-we-pay-for-a-rebuild-4e621ecf92/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-publicly-observable-conversion-leaks-before-we-pay-for-a-rebuild-4e621ecf92.json
 Candidates:
-- Legacy Rescue Lab | kind=machine_offer | commercial=verification_required | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+- Legacy Rescue Lab | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 - Legacy Rescue Lab | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 
 ## find replacement donor salvage or fabrication paths when normal sourcing fails
@@ -3354,7 +3354,7 @@ Answer ID: intent:9cd924f010
 Human-readable match: /chum/answers/doors/legacy-software-rescue-9cd924f010/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/legacy-software-rescue-9cd924f010.json
 Candidates:
-- Legacy Rescue Lab | kind=machine_offer | commercial=verification_required | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+- Legacy Rescue Lab | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 
 ## legacy website or app modernization
 Answer ID: intent:643af72cd6
@@ -3764,7 +3764,7 @@ Answer ID: intent:a75ec666fb
 Human-readable match: /chum/answers/doors/my-checkout-is-broken-and-customers-cannot-buy-a75ec666fb/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/my-checkout-is-broken-and-customers-cannot-buy-a75ec666fb.json
 Candidates:
-- Legacy Rescue Lab | kind=machine_offer | commercial=verification_required | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+- Legacy Rescue Lab | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 - Legacy Rescue Lab | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 
 ## my connection keeps switching between wifi and cellular
@@ -3916,7 +3916,7 @@ Answer ID: intent:8ef4b1465c
 Human-readable match: /chum/answers/doors/our-developer-disappeared-and-nobody-knows-how-this-codebase-works-8ef4b1465c/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/our-developer-disappeared-and-nobody-knows-how-this-codebase-works-8ef4b1465c.json
 Candidates:
-- Legacy Rescue Lab | kind=machine_offer | commercial=verification_required | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+- Legacy Rescue Lab | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 - Legacy Rescue Lab | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 
 ## our invoices do not match receipts
@@ -3931,7 +3931,7 @@ Answer ID: intent:a62037209e
 Human-readable match: /chum/answers/doors/our-saas-works-but-barely-and-we-need-to-stabilize-it-a62037209e/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/our-saas-works-but-barely-and-we-need-to-stabilize-it-a62037209e.json
 Candidates:
-- Legacy Rescue Lab | kind=machine_offer | commercial=verification_required | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+- Legacy Rescue Lab | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 - Legacy Rescue Lab | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 
 ## our vendor invoices and purchase orders keep disagreeing
@@ -3946,7 +3946,7 @@ Answer ID: intent:f6c1369013
 Human-readable match: /chum/answers/doors/our-website-is-painfully-slow-on-mobile-f6c1369013/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/our-website-is-painfully-slow-on-mobile-f6c1369013.json
 Candidates:
-- Legacy Rescue Lab | kind=machine_offer | commercial=verification_required | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+- Legacy Rescue Lab | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 - Legacy Rescue Lab | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 
 ## our website or app is old but rebuilding from scratch is too risky
@@ -3954,7 +3954,7 @@ Answer ID: intent:05cb29fc9f
 Human-readable match: /chum/answers/doors/our-website-or-app-is-old-but-rebuilding-from-scratch-is-too-risky-05cb29fc9f/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/our-website-or-app-is-old-but-rebuilding-from-scratch-is-too-risky-05cb29fc9f.json
 Candidates:
-- Legacy Rescue Lab | kind=machine_offer | commercial=verification_required | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+- Legacy Rescue Lab | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 - Legacy Rescue Lab | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 
 ## painting estimate calculator
@@ -4564,7 +4564,7 @@ Answer ID: intent:ac9ceb3c66
 Human-readable match: /chum/answers/doors/repair-an-existing-system-instead-of-replacing-it-ac9ceb3c66/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/repair-an-existing-system-instead-of-replacing-it-ac9ceb3c66.json
 Candidates:
-- Legacy Rescue Lab | kind=machine_offer | commercial=verification_required | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+- Legacy Rescue Lab | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 - Legacy Rescue Lab | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 
 ## repair instead of rebuild
@@ -6058,7 +6058,7 @@ Answer ID: intent:296856ae70
 Human-readable match: /chum/answers/doors/we-inherited-a-messy-codebase-and-are-afraid-to-touch-it-296856ae70/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/we-inherited-a-messy-codebase-and-are-afraid-to-touch-it-296856ae70.json
 Candidates:
-- Legacy Rescue Lab | kind=machine_offer | commercial=verification_required | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+- Legacy Rescue Lab | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 - Legacy Rescue Lab | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 
 ## we need a safer way for AI agents to work with our business
@@ -6080,7 +6080,7 @@ Answer ID: intent:886a605ef8
 Human-readable match: /chum/answers/doors/we-need-to-migrate-off-an-old-platform-without-losing-business-behavior-886a605ef8/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/we-need-to-migrate-off-an-old-platform-without-losing-business-behavior-886a605ef8.json
 Candidates:
-- Legacy Rescue Lab | kind=machine_offer | commercial=verification_required | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+- Legacy Rescue Lab | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 - Legacy Rescue Lab | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 
 ## weather go no-go for field crews

@@ -29,7 +29,7 @@
     "product_entries": 61,
     "machine_offer_entries": 46,
     "entries_with_pain_language": 107,
-    "sell_now_machine_offers": 13,
+    "sell_now_machine_offers": 14,
     "entries_with_declared_mcp": 61,
     "callable_or_routable_entries": 42,
     "suppressed_legacy_marketing_routes": 8
@@ -1669,7 +1669,7 @@
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
-      "commercial_state": "verification_required",
+      "commercial_state": "sell_now",
       "machine_state": "human_handoff_ready",
       "pricing": "Legacy Rescue Scan: $299 one-time. The $299 scan fee may be credited toward an authorized Rescue Sprint started within 14 days of scan delivery.",
       "offers": [
@@ -1684,8 +1684,8 @@
       ],
       "human_confirmation_required": true,
       "confirmation": "Agents may discover Legacy Rescue Lab, explain the $299 scan, and route a human to the public review material. No checkout, payment obligation, private-system access, credential use, invasive testing, deployment, migration, cutover, or production change is authorized by discovery.",
-      "payment_authority": "No product-specific direct machine checkout is currently advertised. Paid state requires authoritative provider verification after a separately authorized human purchase path is independently verified.",
-      "invocation_status": "PUBLIC DISCOVERY READY: Legacy Rescue Lab is represented in the Evercraft machine catalog for problem-first matching and read-only offer inspection. The $299 Rescue Scan is a published commercial contract, but direct checkout remains independently unverified and is not exposed through machine commerce.",
+      "payment_authority": "Human-confirmed request capture is live. No product-specific direct machine checkout is advertised. Paid state requires authoritative provider verification after a separately authorized payment path.",
+      "invocation_status": "LIVE HUMAN HANDOFF VERIFIED: central Machine Commerce matches Legacy Rescue Lab from problem language, exposes the $299 Rescue Scan, renders a human review/intake page, and records a bounded scan request only after explicit human confirmation. A synthetic positive canary returned HTTP 201 with checkout_created=false, payment_obligation_created=false, private_access_granted=false and production_authority_granted=false; a negative canary without confirmation returned HTTP 409 and created no record. Direct checkout remains unverified and is not exposed.",
       "source_refs": [
         "public/.well-known/evercraft-machine-catalog.json"
       ]
@@ -4428,7 +4428,7 @@
       "pricing": null,
       "offers": [],
       "commercial": {
-        "status": "offer_contract_published_human_handoff_ready_direct_checkout_unverified",
+        "status": "sell_now_human_handoff_verified_direct_checkout_unverified",
         "offers": [
           {
             "name": "Legacy Rescue Scan",
@@ -4437,7 +4437,20 @@
           }
         ],
         "credit_policy": "100% of the $299 Legacy Rescue Scan fee may be credited toward an authorized Rescue Sprint started within 14 days of scan delivery.",
-        "payment_state": "Product offer is published for discovery and human handoff. Product-specific direct checkout and paid state remain receipt-gated until independently verified."
+        "payment_state": "Human-confirmed scan request capture is live and verified. No direct product checkout is advertised; paid state remains receipt-gated until an authoritative payment provider verifies payment.",
+        "machine_commerce_handoff": {
+          "state": "live_verified",
+          "public_id": "legacy-rescue-lab-v1",
+          "tool": "prepare_legacy_rescue_scan_handoff",
+          "request_tool": "submit_legacy_rescue_scan_request",
+          "buyer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=legacy-rescue-lab-v1",
+          "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+          "verification": {
+            "negative_canary": "HTTP 409 without explicit human confirmation; zero request records created",
+            "positive_canary": "Synthetic QA returned HTTP 201; request marked synthetic; checkout_created=false; payment_obligation_created=false; private_access_granted=false; production_authority_granted=false",
+            "verified_at": "2026-09-28T18:59:01.423Z"
+          }
+        }
       },
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",

@@ -187,6 +187,31 @@ Use this when:
 - IBM i upgrade proof
 LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/ibmi-rescue-v1/llms.txt
 
+## Legacy Rescue Lab
+Capability ID: legacy-rescue-lab-v1
+Price: Legacy Rescue Scan: $299 one-time. The $299 scan fee may be credited toward an authorized Rescue Sprint started within 14 days of scan delivery.
+Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+Preferred agent route: universal fallback
+Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/buy/legacy-rescue-lab-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=legacy-rescue-lab-v1
+Machine state: human_handoff_ready
+Use this when:
+- my checkout is broken and customers cannot buy
+- our developer disappeared and nobody knows how this codebase works
+- our website or app is old but rebuilding from scratch is too risky
+- customers cannot submit our lead form
+- our website is painfully slow on mobile
+- we inherited a messy codebase and are afraid to touch it
+- an AI agency built our app and now it is unreliable or undocumented
+- our SaaS works but barely and we need to stabilize it
+- we need to migrate off an old platform without losing business behavior
+- repair an existing system instead of replacing it
+- find publicly observable conversion leaks before we pay for a rebuild
+- broken checkout repair
+- abandoned codebase rescue
+- failed AI app repair
+- legacy software rescue
+LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/legacy-rescue-lab-v1/llms.txt
+
 ## RIVET EV Infrastructure Intelligence
 Capability ID: rivet-site-underwriting-v1
 Price: $299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report.
