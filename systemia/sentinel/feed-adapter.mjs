@@ -133,9 +133,8 @@ export const PUBLIC_FEED_ADAPTER_BLUEPRINTS = Object.freeze([
   {
     adapter_id: 'public-emergency',
     domain: 'emergency_report',
-    source_family: 'authorized-public-safety-feed',
-    evidence_state: 'verified',
-    reliability: 0.95,
-    authority: 'authorized_official'
+    source_family: 'public-emergency-feed',
+    evidence_state: 'reported',
+    reliability: 0.75
   }
 ]);
