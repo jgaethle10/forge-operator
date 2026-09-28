@@ -432,11 +432,111 @@ export class EvercraftInteractionLedger {
         unanswered_outbound: unansweredOutbound,
         last_outbound_at: lastOutbound?.occurred_at || null,
         duplicate_content_checked: Boolean(contentFingerprint),
+        content_fingerprint: contentFingerprint,
         overdue_commitment_count: overdueCommitments.length,
       },
       evaluated_at: at,
       send_performed: false,
       mutation_performed: false,
     });
+  }
+
+  prepareContactPermit(input) {
+    const contentFingerprint = input?.content_fingerprint
+      ? requiredString(input.content_fingerprint, 'content_fingerprint')
+      : input?.content
+        ? sha256(String(input.content))
+        : null;
+    if (!contentFingerprint) throw new Error('contact_content_fingerprint_required');
+
+    const preflight = this.preflightContact({
+      ...input,
+      content: undefined,
+      content_fingerprint: contentFingerprint,
+    });
+
+    if (preflight.decision !== 'allow') {
+      return {
+        state: 'denied',
+        preflight,
+        permit: null,
+      };
+    }
+
+    if (!preflight.passport_grant_id) {
+      throw new Error('contact_preflight_grant_missing');
+    }
+
+    const permit = this.passport.mintActionPermit({
+      permit_id: input?.permit_id || undefined,
+      idempotency_key: requiredString(
+        input?.permit_idempotency_key,
+        'permit_idempotency_key'
+      ),
+      grant_id: preflight.passport_grant_id,
+      actor_ref: preflight.actor_ref,
+      scope: preflight.passport_scope,
+      resource_ref: preflight.subject_ref,
+      request_fingerprint: contentFingerprint,
+      ttl_seconds: input?.permit_ttl_seconds ?? 300,
+      minted_at: preflight.evaluated_at,
+    });
+
+    return {
+      state: permit.state === 'duplicate' ? 'permit_duplicate' : 'permit_minted',
+      preflight,
+      permit: permit.permit,
+      permit_receipt: permit.receipt,
+      send_performed: false,
+    };
+  }
+
+  finalizePermittedContact(input) {
+    const subjectRef = requiredString(input?.subject_ref, 'subject_ref');
+    const channel = normalizeChannel(input?.channel);
+    const actorRef = requiredString(input?.actor_ref, 'actor_ref');
+    const contentFingerprint = requiredString(
+      input?.content_fingerprint,
+      'content_fingerprint'
+    );
+    const providerEvidenceRef = requiredString(
+      input?.provider_evidence_ref,
+      'provider_evidence_ref'
+    );
+    const occurredAt = iso(input?.occurred_at || new Date().toISOString(), 'occurred_at');
+
+    const consumption = this.passport.consumeActionPermit({
+      idempotency_key: requiredString(
+        input?.permit_consumption_idempotency_key,
+        'permit_consumption_idempotency_key'
+      ),
+      permit_id: requiredString(input?.permit_id, 'permit_id'),
+      actor_ref: actorRef,
+      request_fingerprint: contentFingerprint,
+      evidence_ref: providerEvidenceRef,
+      consumed_at: occurredAt,
+    });
+
+    const recorded = this.recordEvent({
+      idempotency_key: requiredString(
+        input?.interaction_idempotency_key,
+        'interaction_idempotency_key'
+      ),
+      subject_ref: subjectRef,
+      channel,
+      direction: 'outbound',
+      event_type: 'message',
+      content_fingerprint: contentFingerprint,
+      evidence_ref: providerEvidenceRef,
+      occurred_at: occurredAt,
+    });
+
+    return {
+      state: 'finalized',
+      permit_consumption: consumption,
+      interaction: recorded,
+      provider_evidence_ref: providerEvidenceRef,
+      outbound_recorded: true,
+    };
   }
 }
