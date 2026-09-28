@@ -463,6 +463,19 @@
       "origin_canonical_url": "https://infinite-classroom-fe2d1357.base44.app/"
     },
     {
+      "product_key": "payflow",
+      "name": "PayFlow",
+      "class": "small_team_payroll_recordkeeping",
+      "canonical_url": "https://pay-flow-fix.base44.app/",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/payflow/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/payflow/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/payflow/ai-conformance.json",
+      "doorway_state": "source_build_lint_green_origin_machine_files_added_external_canary_pending",
+      "conformance_state": "not_yet_propagated",
+      "provider_behavior_state": "not_run",
+      "chum_mirror_state": "generated_public_fallback"
+    },
+    {
       "product_key": "raven-nexus",
       "name": "Raven Nexus",
       "class": "pain_first_modular_safety_and_stability",
@@ -517,6 +530,19 @@
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/seasonally/ai-discovery.json",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/seasonally/ai-conformance.json",
       "doorway_state": "source_build_green_origin_runtime_unresolved",
+      "conformance_state": "not_yet_propagated",
+      "provider_behavior_state": "not_run",
+      "chum_mirror_state": "generated_public_fallback"
+    },
+    {
+      "product_key": "second-stitch",
+      "name": "The Second Stitch",
+      "class": "textile_project_intelligence_and_procurement_prototype",
+      "canonical_url": "https://the-second-stitch.base44.app/",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/second-stitch/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/second-stitch/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/second-stitch/ai-conformance.json",
+      "doorway_state": "source_build_lint_green_origin_machine_files_added_external_canary_pending",
       "conformance_state": "not_yet_propagated",
       "provider_behavior_state": "not_run",
       "chum_mirror_state": "generated_public_fallback"
