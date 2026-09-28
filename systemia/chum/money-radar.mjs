@@ -169,6 +169,71 @@ function diagnosis(bucket) {
   return 'no_measured_acquisition';
 }
 
+function actionForDiagnosis(value) {
+  if (value === 'checkout_to_payment_dropoff') return { priority: 'P1', action: 'inspect_checkout_to_payment_dropoff_with_authoritative_receipts' };
+  if (value === 'continue_to_checkout_dropoff') return { priority: 'P1', action: 'inspect_buyer_handoff_and_checkout_friction' };
+  if (value === 'offer_to_continue_dropoff') return { priority: 'P1', action: 'repair_offer_trust_value_or_primary_cta' };
+  if (value === 'landing_to_offer_dropoff') return { priority: 'P1', action: 'inspect_discovery_to_offer_frontage_dropoff' };
+  if (value === 'raw_views_without_qualified_buyer_signal' || value === 'raw_landings_without_qualified_buyer_signal') {
+    return { priority: 'P1', action: 'increase_qualified_discovery_traffic_without_tuning_checkout_from_machine_noise' };
+  }
+  if (value === 'no_measured_acquisition') return { priority: 'P2', action: 'increase_qualified_discovery_traffic_and_measure_conversion' };
+  return { priority: 'P3', action: 'hold_and_measure_verified_conversion' };
+}
+
+function windowSnapshot(events, generatedAt, hours) {
+  const now = Date.parse(generatedAt);
+  const cutoff = Number.isFinite(now) ? now - hours * 3600_000 : Date.now() - hours * 3600_000;
+  const rows = events.filter((event) => {
+    if (event._source_kind !== 'public_acquisition_https' || !PUBLIC_STAGES.has(event.stage)) return false;
+    const t = Date.parse(event.occurred_at || '');
+    return Number.isFinite(t) && t >= cutoff;
+  });
+  const actor_class_counts = {};
+  const sessions = new Set();
+  let raw_landings = 0;
+  let raw_offer_views = 0;
+  let raw_continue_clicks = 0;
+  let raw_checkout_starts = 0;
+  let landings = 0;
+  let offer_views = 0;
+  let continue_clicks = 0;
+  let checkout_starts = 0;
+
+  for (const event of rows) {
+    const actor = actorClass(event);
+    actor_class_counts[actor] = (actor_class_counts[actor] || 0) + 1;
+    if (event.stage === 'landing') raw_landings += 1;
+    if (event.stage === 'offer_view') raw_offer_views += 1;
+    if (event.stage === 'continue_clicked') raw_continue_clicks += 1;
+    if (event.stage === 'checkout_started') raw_checkout_starts += 1;
+    if (!QUALIFIED_BUYER_CLASSES.has(actor)) continue;
+    if (event.stage === 'landing') landings += 1;
+    if (event.stage === 'offer_view') offer_views += 1;
+    if (event.stage === 'continue_clicked') continue_clicks += 1;
+    if (event.stage === 'checkout_started') checkout_starts += 1;
+    const session = safeSession(event);
+    if (session) sessions.add(session);
+  }
+
+  return {
+    hours,
+    raw_landings,
+    raw_offer_views,
+    raw_continue_clicks,
+    raw_checkout_starts,
+    landings,
+    offer_views,
+    continue_clicks,
+    checkout_starts,
+    unique_buyer_sessions: sessions.size,
+    view_to_continue_rate: rate(continue_clicks, offer_views),
+    continue_to_checkout_rate: rate(checkout_starts, continue_clicks),
+    raw_to_qualified_view_rate: rate(offer_views, raw_offer_views),
+    actor_class_counts,
+  };
+}
+
 async function fetchRemote(url, token = '') {
   const target = new URL(url);
   if (target.protocol !== 'https:') throw new Error('Money Radar source URL must use HTTPS.');
@@ -405,6 +470,40 @@ export async function buildMoneyRadar({
   if (buyerCheckoutStarts > 0 && revenueEvents.length === 0) buyerSignalState = 'checkout_without_verified_payment';
   if (revenueEvents.length > 0) buyerSignalState = 'verified_payment_observed';
 
+  const windows = Object.fromEntries(
+    [24, 168, 720].map((hours) => {
+      const snapshot = windowSnapshot(accepted, generatedAt, hours);
+      const cutoff = Date.parse(generatedAt) - hours * 3600_000;
+      const verified_payments = revenueEvents.filter((event) => {
+        const t = Date.parse(event.occurred_at || '');
+        return Number.isFinite(t) && t >= cutoff;
+      }).length;
+      return [hours === 24 ? '24h' : hours === 168 ? '7d' : '30d', { ...snapshot, verified_payments }];
+    })
+  );
+
+  const priorityWeight = { P0: 0, P1: 1, P2: 2, P3: 3 };
+  const action_queue = products
+    .map((row) => ({
+      public_id: row.public_id,
+      product_key: row.product_key,
+      priority: actionForDiagnosis(row.diagnosis).priority,
+      action: actionForDiagnosis(row.diagnosis).action,
+      diagnosis: row.diagnosis,
+      unique_buyer_sessions: row.unique_buyer_sessions,
+      qualified_offer_views: row.offer_views,
+      raw_offer_views: row.raw_offer_views,
+      continue_clicks: row.continue_clicks,
+      checkout_starts: row.checkout_starts,
+      verified_payments: row.verified_payments,
+    }))
+    .sort((a, b) =>
+      (priorityWeight[a.priority] ?? 9) - (priorityWeight[b.priority] ?? 9) ||
+      b.unique_buyer_sessions - a.unique_buyer_sessions ||
+      b.qualified_offer_views - a.qualified_offer_views ||
+      a.public_id.localeCompare(b.public_id)
+    );
+
   const receipt = {
     schema: 'evercraft.chum.money-radar.v2',
     generated_at: generatedAt,
@@ -472,6 +571,8 @@ export async function buildMoneyRadar({
     },
     source_breakdown: Object.values(sourceBreakdown)
       .sort((a, b) => b.raw_events - a.raw_events || a.source.localeCompare(b.source)),
+    windows,
+    action_queue,
     products,
     rejected: rejected.slice(0, 100),
   };
@@ -509,6 +610,18 @@ export async function buildMoneyRadar({
     `View → continue: ${receipt.totals.view_to_continue_rate ?? 'n/a'}`,
     `Continue → checkout: ${receipt.totals.continue_to_checkout_rate ?? 'n/a'}`,
     `Checkout → verified payment: ${receipt.totals.checkout_to_verified_payment_rate ?? 'n/a'}`,
+    '',
+    '## Velocity windows',
+    '',
+    `24h: ${JSON.stringify(windows['24h'])}`,
+    `7d: ${JSON.stringify(windows['7d'])}`,
+    `30d: ${JSON.stringify(windows['30d'])}`,
+    '',
+    '## Revenue action queue',
+    '',
+    ...(action_queue.length
+      ? action_queue.map((row) => `- ${row.priority} :: ${row.public_id} :: ${row.diagnosis} :: ${row.action} :: qualified_views=${row.qualified_offer_views} :: sessions=${row.unique_buyer_sessions}`)
+      : ['- No products with attribution yet.']),
     '',
     '## Product leak map',
     '',
