@@ -229,7 +229,10 @@ body{display:flex;align-items:center;justify-content:center}
       if(layer.kind==='media'){
         const video=el.querySelector('video');
         if(video){
-          const desired=(layer.trimStartSec||0)+t*(layer.playbackRate||1);
+          let desired=(layer.trimStartSec||0)+t*(layer.playbackRate||1);
+          if(layer.loop && Number.isFinite(video.duration) && video.duration>0){
+            desired=desired%video.duration;
+          }
           if(Math.abs(video.currentTime-desired)>.04){
             video.currentTime=Math.max(0,desired);
             await new Promise(resolve=>{const done=()=>{video.removeEventListener('seeked',done);resolve()};video.addEventListener('seeked',done,{once:true});setTimeout(done,250)});
