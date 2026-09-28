@@ -322,6 +322,12 @@ test('Fire Control recognizes Money Radar v2 and carries command intelligence fo
     acquisition_measurement_state: 'measured',
     payment_measurement_state: 'measured',
     buyer_signal_state: 'no_qualified_buyer_signal',
+    telemetry_quality: {
+      state: 'healthy',
+      conversion_decision_safe: true,
+      v2_coverage_rate: 1,
+      qualified_session_coverage_rate: null,
+    },
     buyer_milestones: {
       first_qualified_event_at: null,
       latest_qualified_event_at: null,
@@ -348,6 +354,8 @@ test('Fire Control recognizes Money Radar v2 and carries command intelligence fo
 
   assert.equal(receipt.inputs.money_radar_present, true);
   assert.equal(receipt.money_intelligence.buyer_milestones.first_buyer_tripwire_armed, true);
+  assert.equal(receipt.money_intelligence.telemetry_quality.state, 'healthy');
+  assert.equal(receipt.money_intelligence.conversion_decision_safe, true);
   assert.equal(receipt.money_intelligence.campaign_breakdown[0].campaign, 'buyer-frontage');
   assert.equal(receipt.command_events.length, 1);
   assert.equal(receipt.command_events[0].code, 'raw_attention_without_qualified_buyers');
