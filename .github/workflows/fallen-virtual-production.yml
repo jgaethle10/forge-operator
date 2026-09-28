@@ -73,12 +73,12 @@ jobs:
 
           ffmpeg -y -v error \
             -f lavfi -i "color=c=black@0.0:s=420x900:d=1,format=rgba" \
-            -vf "drawbox=x=135:y=160:w=150:h=470:color=0xF5F5F2@0.92:t=fill,drawbox=x=95:y=590:w=85:h=260:color=0xF5F5F2@0.92:t=fill,drawbox=x=240:y=590:w=85:h=260:color=0xF5F5F2@0.92:t=fill,drawbox=x=120:y=30:w=180:h=180:color=0xF5F5F2@0.92:t=fill" \
+            -vf "drawbox=x=135:y=160:w=150:h=470:color=0xF5F5F2@0.92:t=fill:replace=1,drawbox=x=95:y=590:w=85:h=260:color=0xF5F5F2@0.92:t=fill:replace=1,drawbox=x=240:y=590:w=85:h=260:color=0xF5F5F2@0.92:t=fill:replace=1,drawbox=x=120:y=30:w=180:h=180:color=0xF5F5F2@0.92:t=fill:replace=1" \
             -frames:v 1 "$ROOT/ci-host-mannequin.png"
 
           ffmpeg -y -v error \
             -f lavfi -i "color=c=black@0.0:s=1920x1080:d=1,format=rgba" \
-            -vf "drawbox=x=820:y=0:w=190:h=1080:color=0x111719@0.98:t=fill,drawbox=x=800:y=0:w=230:h=45:color=0xB79A56@0.75:t=fill" \
+            -vf "drawbox=x=820:y=0:w=190:h=1080:color=0x111719@0.98:t=fill:replace=1,drawbox=x=800:y=0:w=230:h=45:color=0xB79A56@0.75:t=fill:replace=1" \
             -frames:v 1 "$ROOT/global-ops-foreground.png"
 
       - name: Compile continuous hosted HQ
