@@ -58,6 +58,8 @@ function safePublicUrl(value, fallback = null) {
 }
 
 function buyerFrontageUrlFor(product) {
+  const explicit = safePublicUrl(product?.commercial?.machine_commerce_handoff?.buyer_url, null);
+  if (explicit) return explicit;
   const publicId = String(product?.commercial?.machine_commerce_handoff?.public_id || '').trim();
   if (!publicId) return null;
   try {
