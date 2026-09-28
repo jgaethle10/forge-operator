@@ -8,6 +8,7 @@ import type {
   VisualStage,
 } from './visual-stage.js';
 import { validateStage } from './visual-stage.js';
+import { resolveVisualTheme } from './visual-theme.js';
 
 function esc(value:string){
   return value
@@ -74,6 +75,7 @@ export function buildVisualStageHtml(stage:VisualStage){
   if(validation.status!=='accepted'){
     throw new Error(`Visual stage rejected: ${validation.errors.join(', ')}`);
   }
+  const theme=resolveVisualTheme(stage.theme);
   const json=safeJson(stage);
   const layers=stage.layers.map(layerMarkup).join('\n');
 
@@ -84,24 +86,42 @@ export function buildVisualStageHtml(stage:VisualStage){
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>${esc(stage.id)} - Evercraft Visual Stage</title>
 <style>
-html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#080b0b}
+:root{
+  --ev-bg:${theme.palette.background};
+  --ev-surface:${theme.palette.surface};
+  --ev-surface-raised:${theme.palette.surfaceRaised};
+  --ev-text:${theme.palette.textPrimary};
+  --ev-text-secondary:${theme.palette.textSecondary};
+  --ev-gold:${theme.palette.accentGold};
+  --ev-ice:${theme.palette.accentIce};
+  --ev-grid:${theme.palette.grid};
+  --ev-route-observed:${theme.palette.routeObserved};
+  --ev-route-modeled:${theme.palette.routeModeled};
+  --ev-point:${theme.palette.point};
+  --ev-timeline-rail:${theme.palette.timelineRail};
+  --ev-timeline-playhead:${theme.palette.timelinePlayhead};
+}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--ev-bg)}
 body{display:flex;align-items:center;justify-content:center}
-#viewport{position:relative;width:${stage.width}px;height:${stage.height}px;overflow:hidden;background:${esc(stage.background)};color:#fff}
+#viewport{position:relative;width:${stage.width}px;height:${stage.height}px;overflow:hidden;background:${esc(stage.background||theme.palette.background)};color:var(--ev-text)}
 #camera{position:absolute;inset:0;transform-origin:center center}
 .layer{box-sizing:border-box}
 .media-layer{overflow:hidden}
-.text-layer{display:flex;align-items:center;white-space:pre-wrap}
+.text-layer{display:flex;align-items:center;white-space:pre-wrap;color:var(--ev-text)}
 .metric-layer{display:flex;flex-direction:column;justify-content:center}
-.metric-label{font:600 22px Montserrat,Arial,sans-serif;letter-spacing:2px;opacity:.65}
-.metric-value{font:700 64px Montserrat,Arial,sans-serif;line-height:1}
-.evidence-badge{position:absolute;left:12px;bottom:12px;font:700 11px Montserrat,Arial,sans-serif;letter-spacing:1.5px;padding:5px 8px;border:1px solid rgba(255,255,255,.35);background:rgba(8,11,11,.72)}
-.ev-modeled,.ev-inferred,.ev-synthetic_visualization{border-style:dashed}
-.timeline-rail{position:absolute;left:0;right:0;top:50%;height:2px;background:rgba(255,255,255,.28)}
-.timeline-playhead{position:absolute;top:25%;bottom:25%;width:2px;background:#fff}
-.timeline-event{position:absolute;top:42%;width:8px;height:8px;border-radius:50%;background:#fff}
+.metric-label{font:600 22px var(--ev-font,Montserrat,Arial,sans-serif);letter-spacing:2px;color:var(--ev-text-secondary);opacity:.78}
+.metric-value{font:700 64px var(--ev-font,Montserrat,Arial,sans-serif);line-height:1;color:var(--ev-text)}
+.evidence-badge{position:absolute;left:12px;bottom:12px;font:700 11px var(--ev-font,Montserrat,Arial,sans-serif);letter-spacing:1.5px;padding:5px 8px;border:1px solid var(--ev-text-secondary);background:color-mix(in srgb,var(--ev-bg) 78%,transparent);color:var(--ev-text)}
+.ev-observed{border-color:${theme.evidence.observed}}
+.ev-public_source{border-color:${theme.evidence.public_source};color:${theme.evidence.public_source}}
+.ev-licensed{border-color:${theme.evidence.licensed};color:${theme.evidence.licensed}}
+.ev-modeled,.ev-inferred,.ev-synthetic_visualization{border-style:dashed;border-color:var(--ev-gold);color:var(--ev-gold)}
+.timeline-rail{position:absolute;left:0;right:0;top:50%;height:2px;background:var(--ev-timeline-rail)}
+.timeline-playhead{position:absolute;top:25%;bottom:25%;width:2px;background:var(--ev-timeline-playhead)}
+.timeline-event{position:absolute;top:42%;width:8px;height:8px;border-radius:50%;background:var(--ev-text)}
 </style>
 </head>
-<body>
+<body style="--ev-font:${esc(theme.fontFamily)};">
 <div id="viewport"><div id="camera">${layers}</div></div>
 <script id="evercraft-stage-data" type="application/json">${json}</script>
 <script>
@@ -179,21 +199,21 @@ body{display:flex;align-items:center;justify-content:center}
     if(layer.grid){
       for(let lon=-180;lon<=180;lon+=30){
         const a=project(-80,lon,layer),b=project(80,lon,layer);
-        const line=document.createElementNS(ns,'line');line.setAttribute('x1',a.x);line.setAttribute('y1',a.y);line.setAttribute('x2',b.x);line.setAttribute('y2',b.y);line.setAttribute('stroke','rgba(255,255,255,.08)');line.setAttribute('stroke-width','1');el.appendChild(line);
+        const line=document.createElementNS(ns,'line');line.setAttribute('x1',a.x);line.setAttribute('y1',a.y);line.setAttribute('x2',b.x);line.setAttribute('y2',b.y);line.setAttribute('stroke',stage.theme?.palette?.grid||'rgba(255,255,255,.08)');line.setAttribute('stroke-width','1');el.appendChild(line);
       }
       for(let lat=-60;lat<=60;lat+=30){
         const pts=[];for(let lon=-180;lon<=180;lon+=10)pts.push(project(lat,lon,layer));
-        const path=document.createElementNS(ns,'polyline');path.setAttribute('points',pts.map(p=>p.x+','+p.y).join(' '));path.setAttribute('fill','none');path.setAttribute('stroke','rgba(255,255,255,.08)');path.setAttribute('stroke-width','1');el.appendChild(path);
+        const path=document.createElementNS(ns,'polyline');path.setAttribute('points',pts.map(p=>p.x+','+p.y).join(' '));path.setAttribute('fill','none');path.setAttribute('stroke',stage.theme?.palette?.grid||'rgba(255,255,255,.08)');path.setAttribute('stroke-width','1');el.appendChild(path);
       }
     }
     for(const route of layer.routes||[]){
       const pts=route.points.map(p=>project(p.lat,p.lon,layer));
       const shown=trim(pts,clamp(at(route.progress,t,t/stage.durationSec),0,1));
-      const path=document.createElementNS(ns,'polyline');path.setAttribute('points',shown.map(p=>p.x+','+p.y).join(' '));path.setAttribute('fill','none');path.setAttribute('stroke','rgba(255,255,255,.88)');path.setAttribute('stroke-width',route.width||3);path.setAttribute('stroke-linecap','round');path.setAttribute('stroke-linejoin','round');if(['modeled','inferred','synthetic_visualization'].includes(route.evidenceState))path.setAttribute('stroke-dasharray','10 8');el.appendChild(path);
+      const path=document.createElementNS(ns,'polyline');path.setAttribute('points',shown.map(p=>p.x+','+p.y).join(' '));path.setAttribute('fill','none');path.setAttribute('stroke',['modeled','inferred','synthetic_visualization'].includes(route.evidenceState)?(stage.theme?.palette?.routeModeled||'#d0a85c'):(stage.theme?.palette?.routeObserved||'rgba(255,255,255,.88)'));path.setAttribute('stroke-width',route.width||3);path.setAttribute('stroke-linecap','round');path.setAttribute('stroke-linejoin','round');if(['modeled','inferred','synthetic_visualization'].includes(route.evidenceState))path.setAttribute('stroke-dasharray','10 8');el.appendChild(path);
     }
     for(const point of layer.points||[]){
       const p=project(point.lat,point.lon,layer);
-      const circle=document.createElementNS(ns,'circle');circle.setAttribute('cx',p.x);circle.setAttribute('cy',p.y);circle.setAttribute('r','5');circle.setAttribute('fill','#fff');el.appendChild(circle);if(point.label){const label=document.createElementNS(ns,'text');label.setAttribute('x',p.x+10);label.setAttribute('y',p.y-8);label.setAttribute('fill','rgba(255,255,255,.88)');label.setAttribute('font-size','16');label.setAttribute('font-family','Montserrat,Arial,sans-serif');label.textContent=point.label;el.appendChild(label)}
+      const circle=document.createElementNS(ns,'circle');circle.setAttribute('cx',p.x);circle.setAttribute('cy',p.y);circle.setAttribute('r','5');circle.setAttribute('fill',stage.theme?.palette?.point||'#fff');el.appendChild(circle);if(point.label){const label=document.createElementNS(ns,'text');label.setAttribute('x',p.x+10);label.setAttribute('y',p.y-8);label.setAttribute('fill',stage.theme?.palette?.textPrimary||'rgba(255,255,255,.88)');label.setAttribute('font-size','16');label.setAttribute('font-family',stage.theme?.fontFamily||'Montserrat,Arial,sans-serif');label.textContent=point.label;el.appendChild(label)}
     }
   };
   window.__evercraftRenderAt=async(timeSec)=>{

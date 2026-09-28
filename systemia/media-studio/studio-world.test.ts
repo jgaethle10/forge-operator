@@ -60,6 +60,9 @@ test('global operations compiles real subject media plus a map into fixed room s
   });
 
   assert.equal(validateStage(stage).status,'accepted');
+  assert.equal(stage.theme?.id,'evercraft-core-v1');
+  assert.equal(stage.theme?.palette.accentGold,'#B79A56');
+  assert.equal(stage.theme?.palette.accentIce,'#4FB8FF');
   const plate=stage.layers.find(layer=>layer.id==='studio-set-plate');
   assert.equal(plate?.kind,'media');
   if(plate?.kind==='media') assert.equal(plate.sourcePath,'asset://evercraft-hq-global-ops-v1');

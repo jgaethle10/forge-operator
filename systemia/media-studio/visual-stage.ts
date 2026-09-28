@@ -1,4 +1,5 @@
 import crypto from 'node:crypto';
+import type { VisualTheme } from './visual-theme.js';
 
 export type EaseName = 'linear' | 'ease_in' | 'ease_out' | 'ease_in_out';
 export type EvidenceState = 'observed' | 'public_source' | 'licensed' | 'modeled' | 'inferred' | 'synthetic_visualization';
@@ -141,6 +142,7 @@ export interface VisualStage {
   fps: number;
   durationSec: number;
   background: string;
+  theme?: VisualTheme;
   camera: VisualStageCamera;
   layers: VisualLayer[];
   createdAt: string;
