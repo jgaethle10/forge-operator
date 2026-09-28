@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.machine-commerce.distribution.v1",
-  "generated_at": "2026-09-25T18:33:30Z",
+  "generated_at": "2026-09-28T07:20:00Z",
   "public_id": "evercraft-machine-commerce",
   "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
   "live_runtime": {
@@ -58,6 +58,54 @@
       "destination": "ChatGPT plugin directory",
       "state": "not_evidenced_as_submitted",
       "note": "No exact Evercraft listing, approval email, or repository submission artifact observed."
+    },
+    {
+      "destination": "Launch MCP",
+      "state": "eligible_blocked_duplicate_history_check",
+      "submission_url": "https://launchmcp.co/about",
+      "note": "Launch MCP accepts hosted/open-source MCP listings and may import Official Registry entries. Before any email submission, check prior sent history to avoid duplicate outreach."
+    },
+    {
+      "destination": "Unyly",
+      "state": "upstream_auto_ingestion_to_verify",
+      "submission_url": "https://unyly.org/submit",
+      "note": "Unyly advertises Official MCP Registry ingestion plus direct submission. Verify exact Evercraft pickup before direct submission."
+    },
+    {
+      "destination": "LobeHub MCP Marketplace",
+      "state": "eligible_auth_or_ui_required",
+      "submission_url": "https://lobehub.com/mcp",
+      "note": "Marketplace submission requires an authorized publisher flow. No listing claim until independently observed."
+    },
+    {
+      "destination": "MCP Marketplace",
+      "state": "eligible_auth_or_ui_required",
+      "submission_url": "https://mcp-marketplace.io/submit",
+      "note": "Remote MCP endpoints are eligible for listing. Publication requires an authorized creator flow."
+    },
+    {
+      "destination": "ProMCP",
+      "state": "eligible_submission_packet_required",
+      "submission_url": "https://www.promcpservers.com/submit",
+      "note": "Curated listing requires a working server, public source/readme and clear setup/auth documentation."
+    },
+    {
+      "destination": "Awesome MCP Servers (punkpeye)",
+      "state": "eligible_external_pr_required",
+      "submission_url": "https://github.com/punkpeye/awesome-mcp-servers",
+      "note": "No exact Evercraft/ForensiScope/namespace entry was found in the repository search performed for this expansion. Contribution requires an external fork/PR and current project contribution requirements."
+    },
+    {
+      "destination": "TensorBlock Awesome MCP Servers",
+      "state": "eligible_external_issue_or_pr_required",
+      "submission_url": "https://github.com/TensorBlock/awesome-mcp-servers",
+      "note": "External repository intake requires authorized GitHub write and exact duplicate checks."
+    },
+    {
+      "destination": "Cline MCP Marketplace",
+      "state": "eligible_external_issue_required",
+      "submission_url": "https://github.com/cline/mcp-marketplace",
+      "note": "Marketplace intake is issue-driven and requires repository metadata plus a logo/reason-for-addition packet."
     }
   ],
   "instrumentation": {
@@ -82,7 +130,14 @@
       "windsurf-mcp",
       "cline-mcp",
       "codex-mcp",
-      "vscode-mcp"
+      "vscode-mcp",
+      "launchmcp",
+      "unyly",
+      "mcp-marketplace-io",
+      "promcp",
+      "awesome-mcp-servers",
+      "tensorblock-awesome-mcp",
+      "cline-marketplace"
     ],
     "revenue_boundary": "Discovery and tool invocation are not checkout, payment, revenue, recommendation, or provider endorsement proof."
   },
