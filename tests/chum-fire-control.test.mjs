@@ -311,3 +311,44 @@ test('Fire Control treats raw machine attention as acquisition work, not buyer C
   assert.equal(row.evidence.money_diagnosis, 'raw_views_without_qualified_buyer_signal');
   assert.deepEqual(row.evidence.traffic_class_counts, { machine_client: 45, crawler: 5 });
 });
+
+
+test('Fire Control recognizes Money Radar v2 and carries command intelligence forward', () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'chum-fire-control-'));
+  const data = fixture();
+  data.moneyRadar = {
+    schema: 'evercraft.chum.money-radar.v2',
+    measurement_state: 'measured',
+    acquisition_measurement_state: 'measured',
+    payment_measurement_state: 'measured',
+    buyer_signal_state: 'no_qualified_buyer_signal',
+    buyer_milestones: {
+      first_qualified_event_at: null,
+      latest_qualified_event_at: null,
+      qualified_event_count: 0,
+      first_buyer_tripwire_armed: true,
+    },
+    operator_alerts: [
+      {
+        severity: 'P1',
+        code: 'raw_attention_without_qualified_buyers',
+        message: '100 raw views produced zero qualified buyers.',
+        action: 'increase_qualified_discovery_pressure_without_tuning_checkout_from_machine_noise',
+      }
+    ],
+    campaign_breakdown: [{ campaign: 'buyer-frontage', raw_events: 100, unique_buyer_sessions: 0 }],
+    surface_breakdown: [{ surface: 'chum_capability_page', raw_events: 100, unique_buyer_sessions: 0 }],
+    experiment_breakdown: [],
+    journey_attribution: { sessions_with_lineage: 0, source_paths: [], campaign_paths: [] },
+    windows: { '24h': { raw_offer_views: 100, offer_views: 0, unique_buyer_sessions: 0 } },
+    products: [],
+  };
+
+  const receipt = buildFireControl({ root, ...data });
+
+  assert.equal(receipt.inputs.money_radar_present, true);
+  assert.equal(receipt.money_intelligence.buyer_milestones.first_buyer_tripwire_armed, true);
+  assert.equal(receipt.money_intelligence.campaign_breakdown[0].campaign, 'buyer-frontage');
+  assert.equal(receipt.command_events.length, 1);
+  assert.equal(receipt.command_events[0].code, 'raw_attention_without_qualified_buyers');
+});
