@@ -2,9 +2,14 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-09-28T17:03:20.114Z</updated>
+<updated>2026-09-28T17:05:39.009Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
+<entry><id>urn:evercraft:chum:770866315bf12f2c92446bfe</id><title>/chum/hot/</title><updated>2026-09-28T17:05:39.009Z</updated><link href="/chum/hot/"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-28T17:05:39.009Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:e75551f8817a367b4412bca9</id><title>/chum/proof/forensiscope.json</title><updated>2026-09-28T17:05:39.009Z</updated><link href="/chum/proof/forensiscope.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:07ef7bcf722a12057ed32ee4</id><title>/chum/proof/index.json</title><updated>2026-09-28T17:05:39.009Z</updated><link href="/chum/proof/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:780bd435a8894bd856d47115</id><title>/chum/proof/rivet.json</title><updated>2026-09-28T17:05:39.009Z</updated><link href="/chum/proof/rivet.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:5833c7c64eb1cda0b0c18a3f</id><title>/chum/answers/doors/find-replacement-donor-salvage-or-fabrication-paths-when-normal-sourcing-fails-7843dd9e0e.json</title><updated>2026-09-28T17:03:20.114Z</updated><link href="/chum/answers/doors/find-replacement-donor-salvage-or-fabrication-paths-when-normal-sourcing-fails-7843dd9e0e.json"/><category term="priority-160"/></entry>
 <entry><id>urn:evercraft:chum:9071c0002eb57420272b4532</id><title>/chum/answers/doors/find-replacement-donor-salvage-or-fabrication-paths-when-normal-sourcing-fails-7843dd9e0e/</title><updated>2026-09-28T17:03:20.114Z</updated><link href="/chum/answers/doors/find-replacement-donor-salvage-or-fabrication-paths-when-normal-sourcing-fails-7843dd9e0e/"/><category term="priority-160"/></entry>
 <entry><id>urn:evercraft:chum:6a2156e97d5a76ac182a54d7</id><title>/chum/sitemaps/answers.xml</title><updated>2026-09-28T17:03:20.114Z</updated><link href="/chum/sitemaps/answers.xml"/><category term="priority-108"/></entry>
@@ -97,12 +102,7 @@
 <entry><id>urn:evercraft:chum:37d28cd6c3d1e6b46c8259a0</id><title>/chum/answers/index.txt</title><updated>2026-09-28T17:03:20.114Z</updated><link href="/chum/answers/index.txt"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:6da70b5804f9e95febfbbe92</id><title>/chum/answers/observed/i-need-a-discontinued-machine-part-that-normal-suppliers-cannot-find-i-have-photos-m-6d7a66229b/</title><updated>2026-09-28T17:03:20.114Z</updated><link href="/chum/answers/observed/i-need-a-discontinued-machine-part-that-normal-suppliers-cannot-find-i-have-photos-m-6d7a66229b/"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:534464c2c528d8f5dead1a78</id><title>/chum/answers/observed/i-need-a-discontinued-machine-part-that-normal-suppliers-cannot-find-i-have-photos-m-6d7a66229b/answer.json</title><updated>2026-09-28T17:03:20.114Z</updated><link href="/chum/answers/observed/i-need-a-discontinued-machine-part-that-normal-suppliers-cannot-find-i-have-photos-m-6d7a66229b/answer.json"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-28T17:03:20.114Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:54c615f3a47d6649bffba47c</id><title>/chum/pain-index.json</title><updated>2026-09-28T17:03:20.114Z</updated><link href="/chum/pain-index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:dd55382bdac459cac744435b</id><title>/chum/pain-index.txt</title><updated>2026-09-28T17:03:20.114Z</updated><link href="/chum/pain-index.txt"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:e757940f8f544f52b930da4e</id><title>/chum/products/career-command/</title><updated>2026-09-28T17:02:37.885Z</updated><link href="/chum/products/career-command/"/><category term="priority-94"/></entry>
-<entry><id>urn:evercraft:chum:d7f6d21bfeb3d7d5824b159f</id><title>/chum/products/career-command/ai-conformance.json</title><updated>2026-09-28T17:02:37.885Z</updated><link href="/chum/products/career-command/ai-conformance.json"/><category term="priority-94"/></entry>
-<entry><id>urn:evercraft:chum:711546341472854095600050</id><title>/chum/products/career-command/ai-discovery.json</title><updated>2026-09-28T17:02:37.885Z</updated><link href="/chum/products/career-command/ai-discovery.json"/><category term="priority-94"/></entry>
-<entry><id>urn:evercraft:chum:7b703524bdc48511e6028d7e</id><title>/chum/products/career-command/llms.txt</title><updated>2026-09-28T17:02:37.885Z</updated><link href="/chum/products/career-command/llms.txt"/><category term="priority-94"/></entry>
-<entry><id>urn:evercraft:chum:d7364a8a1d1b52973aec4fcf</id><title>/chum/products/christmas-lights-usa/</title><updated>2026-09-28T17:02:37.885Z</updated><link href="/chum/products/christmas-lights-usa/"/><category term="priority-94"/></entry>
 </feed>
