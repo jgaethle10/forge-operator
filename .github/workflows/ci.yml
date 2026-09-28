@@ -203,6 +203,10 @@ jobs:
           if (fallenEpisode.data?.seriesPlan?.continuity?.status !== 'pass') throw new Error('Fallen family episode continuity did not pass');
           if (capabilities.invoke?.path !== '/api/forge') throw new Error('missing Forge invocation contract');
           if (capabilities.discovery?.crawlerRadar !== '/chum/crawler-radar.json') throw new Error('crawler radar public surface missing from capabilities');
+          if (capabilities.discovery?.a2aAgentCard !== '/.well-known/agent-card.json') throw new Error('A2A Agent Card missing from capabilities');
+          if (capabilities.discovery?.a2a?.protocol !== 'A2A' || capabilities.discovery?.a2a?.protocolVersion !== '1.0') throw new Error('A2A capability contract missing');
+          if (capabilities.discovery?.a2a?.protocolBinding !== 'HTTP+JSON' || capabilities.discovery?.a2a?.sendMessage !== '/a2a/message:send') throw new Error('A2A capability routing contract missing');
+          if (capabilities.discovery?.a2a?.authority !== 'read_only_public_capability_discovery') throw new Error('A2A authority boundary missing');
           if (capabilities.discovery?.buyerFrontage !== 'https://evercraft-ai-suite-08c4d2b8.base44.app/buy/{publicId}') throw new Error('dedicated buyer frontage contract missing from capabilities');
           if (crawlerRadar.schema !== 'evercraft.chum.crawler-radar.runtime.v1') throw new Error('crawler radar runtime schema missing');
           if (crawlerRadar.event_count < 1) throw new Error('crawler radar did not observe the synthetic crawler request');
