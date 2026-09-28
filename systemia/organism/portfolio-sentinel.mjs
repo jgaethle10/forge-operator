@@ -262,6 +262,125 @@ export function inspectLocalPortfolio({ rootDir = process.cwd() } = {}) {
   }
 
   report.inventory.registry_entries = listDirNames(root, 'registry');
+
+  const publicMcpResult = safeJson(root, 'registry/public-products.json');
+  const mcpManifestFiles = listFiles(root, 'mcp-registry', '.json');
+  report.inventory.mcp_registry_manifests = mcpManifestFiles;
+
+  if (!publicMcpResult.ok) {
+    addFinding(report, makeFinding({
+      code: 'public_mcp_source_invalid',
+      severity: 'high',
+      subject: 'registry/public-products.json',
+      detail: publicMcpResult.reason,
+      evidence_refs: ['repo:registry/public-products.json'],
+      repair_mode: 'systemia_repair'
+    }));
+  } else {
+    const sourceProducts = Array.isArray(publicMcpResult.value?.products)
+      ? publicMcpResult.value.products
+      : [];
+    const expectedByRegistryName = new Map();
+    let discoveryOnly = 0;
+    let boundedHttp = 0;
+
+    for (const product of sourceProducts) {
+      const mode = clean(product?.invocation?.mode);
+      if (mode === 'discovery_only') {
+        discoveryOnly += 1;
+        continue;
+      }
+      if (mode === 'bounded_http') {
+        boundedHttp += 1;
+        continue;
+      }
+      if (mode !== 'mcp') continue;
+
+      const registryName = clean(product?.registry_name);
+      const remote = clean(product?.invocation?.url);
+      const productKey = clean(product?.product_key);
+      if (!registryName.startsWith('io.github.jgaethle10/') || !/^https:\/\//i.test(remote)) {
+        addFinding(report, makeFinding({
+          code: 'public_mcp_identity_invalid',
+          severity: 'high',
+          subject: productKey || registryName || '<unnamed MCP product>',
+          detail: 'Public MCP product must declare an Evercraft registry name and HTTPS invocation URL.',
+          evidence_refs: ['repo:registry/public-products.json'],
+          repair_mode: 'systemia_repair'
+        }));
+        continue;
+      }
+
+      const prior = expectedByRegistryName.get(registryName);
+      if (prior && prior.remote !== remote) {
+        addFinding(report, makeFinding({
+          code: 'public_mcp_shared_name_conflict',
+          severity: 'critical',
+          subject: registryName,
+          detail: 'Multiple public products share one MCP Registry name but disagree on the remote URL.',
+          evidence_refs: ['repo:registry/public-products.json'],
+          repair_mode: 'systemia_repair'
+        }));
+        continue;
+      }
+
+      if (prior) prior.product_keys.push(productKey);
+      else expectedByRegistryName.set(registryName, { remote, product_keys: [productKey] });
+    }
+
+    let covered = 0;
+    for (const [registryName, expected] of expectedByRegistryName) {
+      const slug = registryName.slice('io.github.jgaethle10/'.length);
+      const manifestPath = `mcp-registry/${slug}.json`;
+      const manifestResult = safeJson(root, manifestPath);
+
+      if (!manifestResult.ok) {
+        addFinding(report, makeFinding({
+          code: 'public_mcp_manifest_missing',
+          severity: 'high',
+          subject: registryName,
+          detail: 'Public product declares a live MCP invocation but its checked-in MCP Registry manifest is missing.',
+          evidence_refs: ['repo:registry/public-products.json', `repo:${manifestPath}`],
+          repair_mode: 'bounded_generator',
+          repair_command: 'node scripts/reconcile-public-mcp-registry.mjs'
+        }));
+        continue;
+      }
+
+      const observedName = clean(manifestResult.value?.name);
+      const observedRemote = clean(manifestResult.value?.remotes?.[0]?.url);
+      if (observedName !== registryName || observedRemote !== expected.remote) {
+        addFinding(report, makeFinding({
+          code: 'public_mcp_manifest_drift',
+          severity: 'high',
+          subject: registryName,
+          detail: `Checked-in MCP Registry manifest disagrees with public source truth. expected_remote=${expected.remote} observed_remote=${observedRemote || 'missing'}`,
+          evidence_refs: ['repo:registry/public-products.json', `repo:${manifestPath}`],
+          repair_mode: 'systemia_repair'
+        }));
+        continue;
+      }
+      covered += 1;
+    }
+
+    report.inventory.machine_access = {
+      public_source_products: sourceProducts.length,
+      expected_unique_mcp_connectors: expectedByRegistryName.size,
+      checked_in_mcp_manifests: mcpManifestFiles.length,
+      covered_unique_mcp_connectors: covered,
+      discovery_only_products: discoveryOnly,
+      bounded_http_products: boundedHttp
+    };
+
+    addCheck(
+      report,
+      'public-mcp-registry-coverage',
+      covered === expectedByRegistryName.size,
+      `${covered}/${expectedByRegistryName.size} declared MCP connectors have matching checked-in manifests`,
+      ['repo:registry/public-products.json', 'repo:mcp-registry']
+    );
+  }
+
   report.inventory.workflows = listFiles(root, '.github/workflows', '.yml');
 
   const packageResult = safeJson(root, 'package.json');
