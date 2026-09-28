@@ -320,7 +320,7 @@ Answer ID: intent:5e73e54575
 Human-readable match: /chum/answers/doors/as-400-estate-assessment-before-upgrading-or-modernizing-5e73e54575/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/as-400-estate-assessment-before-upgrading-or-modernizing-5e73e54575.json
 Candidates:
-- Evercraft IBM i Rescue | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+- Evercraft IBM i Rescue | kind=machine_offer | commercial=sell_now | machine=direct_checkout_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 
 ## AS/400 modernization
 Answer ID: intent:11f60c6d3a
@@ -334,7 +334,7 @@ Answer ID: intent:49430f448e
 Human-readable match: /chum/answers/doors/as-400-modernization-assessment-49430f448e/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/as-400-modernization-assessment-49430f448e.json
 Candidates:
-- Evercraft IBM i Rescue | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+- Evercraft IBM i Rescue | kind=machine_offer | commercial=sell_now | machine=direct_checkout_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 
 ## ASL and Deaf culture learning
 Answer ID: intent:960d5b1784
@@ -355,7 +355,7 @@ Answer ID: intent:70ac865541
 Human-readable match: /chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541.json
 Candidates:
-- Evercraft IBM i Rescue | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+- Evercraft IBM i Rescue | kind=machine_offer | commercial=sell_now | machine=direct_checkout_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 
 ## audio too large for AI
 Answer ID: intent:a786a94fa2
@@ -611,7 +611,7 @@ Answer ID: intent:030d199287
 Human-readable match: /chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287.json
 Candidates:
-- Evercraft IBM i Rescue | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+- Evercraft IBM i Rescue | kind=machine_offer | commercial=sell_now | machine=direct_checkout_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 - Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 
 ## build a sourced brief about farm water land or production risk
@@ -2162,7 +2162,7 @@ Answer ID: intent:5d2d519d2f
 Human-readable match: /chum/answers/doors/find-undocumented-dependencies-in-an-ibm-i-workload-5d2d519d2f/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-undocumented-dependencies-in-an-ibm-i-workload-5d2d519d2f.json
 Candidates:
-- Evercraft IBM i Rescue | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+- Evercraft IBM i Rescue | kind=machine_offer | commercial=sell_now | machine=direct_checkout_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 - Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 
 ## find undocumented IBM i dependencies before a maintenance window
@@ -2170,7 +2170,7 @@ Answer ID: intent:e0c0c7b3bf
 Human-readable match: /chum/answers/doors/find-undocumented-ibm-i-dependencies-before-a-maintenance-window-e0c0c7b3bf/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-undocumented-ibm-i-dependencies-before-a-maintenance-window-e0c0c7b3bf.json
 Candidates:
-- Evercraft IBM i Rescue | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+- Evercraft IBM i Rescue | kind=machine_offer | commercial=sell_now | machine=direct_checkout_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 
 ## find verified help for housing shelter food benefits transportation childcare income or legal aid
 Answer ID: intent:229db803d4
@@ -2490,7 +2490,7 @@ Answer ID: intent:f9c27a8bcc
 Human-readable match: /chum/answers/doors/help-modernize-jde-world-or-a-custom-ibm-i-workload-without-losing-business-behavi-f9c27a8bcc/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/help-modernize-jde-world-or-a-custom-ibm-i-workload-without-losing-business-behavi-f9c27a8bcc.json
 Candidates:
-- Evercraft IBM i Rescue | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+- Evercraft IBM i Rescue | kind=machine_offer | commercial=sell_now | machine=direct_checkout_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 
 ## help my business with AI
 Answer ID: intent:1b27ec8927
@@ -2618,7 +2618,7 @@ Answer ID: intent:a25b87dd23
 Human-readable match: /chum/answers/doors/i-am-worried-an-ibm-i-upgrade-will-break-batch-jobs-interfaces-or-vendor-software-a25b87dd23/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/i-am-worried-an-ibm-i-upgrade-will-break-batch-jobs-interfaces-or-vendor-software-a25b87dd23.json
 Candidates:
-- Evercraft IBM i Rescue | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+- Evercraft IBM i Rescue | kind=machine_offer | commercial=sell_now | machine=direct_checkout_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 - Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 
 ## I cannot tell which jobs are actually profitable
@@ -2703,7 +2703,7 @@ Answer ID: intent:ca1da8e065
 Human-readable match: /chum/answers/doors/ibm-i-7-4-support-is-ending-and-i-need-an-upgrade-plan-ca1da8e065/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ibm-i-7-4-support-is-ending-and-i-need-an-upgrade-plan-ca1da8e065.json
 Candidates:
-- Evercraft IBM i Rescue | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+- Evercraft IBM i Rescue | kind=machine_offer | commercial=sell_now | machine=direct_checkout_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 - Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 
 ## IBM i 7.4 upgrade planning
@@ -2732,7 +2732,7 @@ Answer ID: intent:dab81f4a0a
 Human-readable match: /chum/answers/doors/ibm-i-estate-assessment-before-changing-production-dab81f4a0a/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ibm-i-estate-assessment-before-changing-production-dab81f4a0a.json
 Candidates:
-- Evercraft IBM i Rescue | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+- Evercraft IBM i Rescue | kind=machine_offer | commercial=sell_now | machine=direct_checkout_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 
 ## IBM i integration and maintenance-window risk assessment
 Answer ID: intent:fd1039dba4
@@ -2753,7 +2753,7 @@ Answer ID: intent:240178e2de
 Human-readable match: /chum/answers/doors/ibm-i-upgrade-proof-240178e2de/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ibm-i-upgrade-proof-240178e2de.json
 Candidates:
-- Evercraft IBM i Rescue | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+- Evercraft IBM i Rescue | kind=machine_offer | commercial=sell_now | machine=direct_checkout_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 
 ## IBM i upgrade rollback plan
 Answer ID: intent:6b1f2184fe
@@ -3305,7 +3305,7 @@ Answer ID: intent:aa38657636
 Human-readable match: /chum/answers/doors/map-rpg-cl-cobol-db2-jobs-and-integrations-before-ibm-i-modernization-aa38657636/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/map-rpg-cl-cobol-db2-jobs-and-integrations-before-ibm-i-modernization-aa38657636.json
 Candidates:
-- Evercraft IBM i Rescue | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+- Evercraft IBM i Rescue | kind=machine_offer | commercial=sell_now | machine=direct_checkout_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 - Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 
 ## map the evidence for this issue

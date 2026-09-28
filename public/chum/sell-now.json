@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.sell-now.v1",
-  "updated_at": "2026-09-28T14:52:11.301Z",
+  "updated_at": "2026-09-28T16:52:00.418Z",
   "count": 13,
   "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
   "rule": "These offers are publicly cataloged as sell_now. Any supported checkout still requires explicit human payment confirmation and provider verification.",
@@ -359,7 +359,7 @@
       "public_id": "ibmi-rescue-v1",
       "name": "Evercraft IBM i Rescue",
       "commercial_state": "sell_now",
-      "machine_state": "human_handoff_ready",
+      "machine_state": "direct_checkout_ready",
       "pricing": "$250 IBM i Estate X-Ray; $250 IBM i 7.4 Deadline X-Ray; $1,500 IBM i Upgrade Proof Sprint.",
       "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
       "page_url": "/chum/capabilities/ibmi-rescue-v1/",
@@ -374,7 +374,7 @@
         "name": "IBM i Estate X-Ray",
         "price": "$250",
         "billing": "one_time",
-        "checkout": "human_handoff",
+        "checkout": "human_confirmed_direct_checkout",
         "price_usd_normalized": 250
       },
       "live_proof": {

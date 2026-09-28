@@ -4,7 +4,7 @@ Public ID: ibmi-rescue-v1
 Problem: An organization running IBM i / AS/400 workloads needs to understand application, database, job, integration, hardware and vendor dependencies before a support-transition upgrade or modernization creates an outage or hidden compatibility failure.
 Pricing: $250 IBM i Estate X-Ray; $250 IBM i 7.4 Deadline X-Ray; $1,500 IBM i Upgrade Proof Sprint.
 Commercial state: sell_now
-Machine state: human_handoff_ready
+Machine state: direct_checkout_ready
 Human review: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=ibmi-rescue-v1
 Capability contract: /chum/capabilities/ibmi-rescue-v1/
 

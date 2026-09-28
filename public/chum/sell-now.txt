@@ -171,7 +171,7 @@ Price: $250 IBM i Estate X-Ray; $250 IBM i 7.4 Deadline X-Ray; $1,500 IBM i Upgr
 Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 Preferred agent route: universal fallback
 Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/buy/ibmi-rescue-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=ibmi-rescue-v1
-Machine state: human_handoff_ready
+Machine state: direct_checkout_ready
 Use this when:
 - IBM i estate assessment before changing production
 - AS/400 estate assessment before upgrading or modernizing

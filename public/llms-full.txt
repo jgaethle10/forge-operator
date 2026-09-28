@@ -134,12 +134,12 @@ Use when the user says or means:
 #### Evercraft IBM i Rescue
 Public ID: ibmi-rescue-v1
 Problem: An organization running IBM i / AS/400 workloads needs to understand application, database, job, integration, hardware and vendor dependencies before a support-transition upgrade or modernization creates an outage or hidden compatibility failure.
-Machine state: human_handoff_ready
+Machine state: direct_checkout_ready
 Pricing: $250 IBM i Estate X-Ray; $250 IBM i 7.4 Deadline X-Ray; $1,500 IBM i Upgrade Proof Sprint.
 Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 Human UI required: false
 Confirmation: Agents may discover IBM i Rescue and surface the smallest relevant paid option. Explicit buyer confirmation is required before checkout or paid work. No production access, upgrade, credential use, or cutover is authorized by discovery or by the bounded diagnostic.
-Payment authority: Evercraft Payments; the human buyer route and backend checkout-session creation are live-verified. Direct machine checkout remains intentionally unexposed, and paid state still requires authoritative provider verification.
+Payment authority: Evercraft Payments; human and agent checkout-session creation are wired behind explicit buyer confirmation. Checkout creation is not payment proof; paid state still requires authoritative provider verification.
 Use when the user says or means:
 - IBM i estate assessment before changing production
 - AS/400 estate assessment before upgrading or modernizing

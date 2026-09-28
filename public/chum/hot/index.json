@@ -2,9 +2,21 @@
   "schema": "evercraft.chum.hot-discovery.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-28T16:51:54.038Z",
+  "updated_at": "2026-09-28T16:52:02.039Z",
   "purpose": "High-priority public discovery surfaces for crawler fan-out. The queue reserves limited cold-start frontage for current commercial and sitemap surfaces, then fills remaining slots by observed priority. This is a crawl-order hint, not a ranking or recommendation claim.",
   "surfaces": [
+    {
+      "path": "/chum/commercial/ibmi-rescue-v1/index.json",
+      "url": "/chum/commercial/ibmi-rescue-v1/index.json",
+      "priority": 112,
+      "last_changed": "2026-09-28T16:52:02.039Z"
+    },
+    {
+      "path": "/chum/commercial/ibmi-rescue-v1/llms.txt",
+      "url": "/chum/commercial/ibmi-rescue-v1/llms.txt",
+      "priority": 112,
+      "last_changed": "2026-09-28T16:52:02.039Z"
+    },
     {
       "path": "/chum/commercial/",
       "url": "/chum/commercial/",
@@ -186,18 +198,6 @@
       "last_changed": "2026-09-26T19:35:58.578Z"
     },
     {
-      "path": "/chum/commercial/ibmi-rescue-v1/index.json",
-      "url": "/chum/commercial/ibmi-rescue-v1/index.json",
-      "priority": 112,
-      "last_changed": "2026-09-26T19:35:58.578Z"
-    },
-    {
-      "path": "/chum/commercial/ibmi-rescue-v1/llms.txt",
-      "url": "/chum/commercial/ibmi-rescue-v1/llms.txt",
-      "priority": 112,
-      "last_changed": "2026-09-26T19:35:58.578Z"
-    },
-    {
       "path": "/chum/commercial/rivet-site-underwriting-v1/",
       "url": "/chum/commercial/rivet-site-underwriting-v1/",
       "priority": 112,
@@ -303,19 +303,37 @@
       "path": "/chum/sell-now.html",
       "url": "/chum/sell-now.html",
       "priority": 92,
-      "last_changed": "2026-09-28T14:52:12.847Z"
+      "last_changed": "2026-09-28T16:52:02.039Z"
     },
     {
       "path": "/chum/sell-now.json",
       "url": "/chum/sell-now.json",
       "priority": 92,
-      "last_changed": "2026-09-28T14:52:12.847Z"
+      "last_changed": "2026-09-28T16:52:02.039Z"
     },
     {
       "path": "/chum/sell-now.txt",
       "url": "/chum/sell-now.txt",
       "priority": 92,
-      "last_changed": "2026-09-28T14:52:12.847Z"
+      "last_changed": "2026-09-28T16:52:02.039Z"
+    },
+    {
+      "path": "/.well-known/evercraft-pain-index.json",
+      "url": "/.well-known/evercraft-pain-index.json",
+      "priority": 90,
+      "last_changed": "2026-09-28T16:52:02.039Z"
+    },
+    {
+      "path": "/chum/revenue.json",
+      "url": "/chum/revenue.json",
+      "priority": 90,
+      "last_changed": "2026-09-28T16:52:02.039Z"
+    },
+    {
+      "path": "/chum/revenue.txt",
+      "url": "/chum/revenue.txt",
+      "priority": 90,
+      "last_changed": "2026-09-28T16:52:02.039Z"
     },
     {
       "path": "/chum/revenue.html",
@@ -324,28 +342,46 @@
       "last_changed": "2026-09-28T14:52:12.847Z"
     },
     {
-      "path": "/chum/revenue.json",
-      "url": "/chum/revenue.json",
-      "priority": 90,
-      "last_changed": "2026-09-28T14:52:12.847Z"
-    },
-    {
-      "path": "/chum/revenue.txt",
-      "url": "/chum/revenue.txt",
-      "priority": 90,
-      "last_changed": "2026-09-28T14:52:12.847Z"
-    },
-    {
-      "path": "/.well-known/evercraft-pain-index.json",
-      "url": "/.well-known/evercraft-pain-index.json",
-      "priority": 90,
-      "last_changed": "2026-09-28T07:39:13.230Z"
-    },
-    {
       "path": "/.well-known/evercraft-machine-catalog.json",
       "url": "/.well-known/evercraft-machine-catalog.json",
       "priority": 84,
-      "last_changed": "2026-09-28T14:52:12.847Z"
+      "last_changed": "2026-09-28T16:52:02.039Z"
+    },
+    {
+      "path": "/chum/answers/doors/as-400-modernization-assessment-49430f448e.json",
+      "url": "/chum/answers/doors/as-400-modernization-assessment-49430f448e.json",
+      "priority": 160,
+      "last_changed": "2026-09-28T16:52:02.039Z"
+    },
+    {
+      "path": "/chum/answers/doors/as-400-modernization-assessment-49430f448e/",
+      "url": "/chum/answers/doors/as-400-modernization-assessment-49430f448e/",
+      "priority": 160,
+      "last_changed": "2026-09-28T16:52:02.039Z"
+    },
+    {
+      "path": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541.json",
+      "url": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541.json",
+      "priority": 160,
+      "last_changed": "2026-09-28T16:52:02.039Z"
+    },
+    {
+      "path": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541/",
+      "url": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541/",
+      "priority": 160,
+      "last_changed": "2026-09-28T16:52:02.039Z"
+    },
+    {
+      "path": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287.json",
+      "url": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287.json",
+      "priority": 160,
+      "last_changed": "2026-09-28T16:52:02.039Z"
+    },
+    {
+      "path": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287/",
+      "url": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287/",
+      "priority": 160,
+      "last_changed": "2026-09-28T16:52:02.039Z"
     },
     {
       "path": "/chum/answers/doors/create-cross-business-loyalty-rewards-2c3ab05040.json",
@@ -696,20 +732,8 @@
       "last_changed": "2026-09-26T04:58:13.847Z"
     },
     {
-      "path": "/chum/answers/doors/as-400-modernization-assessment-49430f448e.json",
-      "url": "/chum/answers/doors/as-400-modernization-assessment-49430f448e.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
       "path": "/chum/answers/doors/asl-and-deaf-culture-learning-960d5b1784.json",
       "url": "/chum/answers/doors/asl-and-deaf-culture-learning-960d5b1784.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541.json",
-      "url": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541.json",
       "priority": 160,
       "last_changed": "2026-09-26T04:58:13.847Z"
     },
@@ -890,12 +914,6 @@
     {
       "path": "/chum/answers/doors/build-a-professional-website-for-my-small-business-476ef02530.json",
       "url": "/chum/answers/doors/build-a-professional-website-for-my-small-business-476ef02530.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287.json",
-      "url": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287.json",
       "priority": 160,
       "last_changed": "2026-09-26T04:58:13.847Z"
     },
@@ -1184,24 +1202,6 @@
     {
       "path": "/chum/answers/doors/connect-our-business-systems-without-replacing-everything-4e80c745da.json",
       "url": "/chum/answers/doors/connect-our-business-systems-without-replacing-everything-4e80c745da.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/connect-physical-models-to-evidence-640629f226.json",
-      "url": "/chum/answers/doors/connect-physical-models-to-evidence-640629f226.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/construction-crews-need-better-leadership-accountability-or-scheduling-2a9440a399.json",
-      "url": "/chum/answers/doors/construction-crews-need-better-leadership-accountability-or-scheduling-2a9440a399.json",
-      "priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z"
-    },
-    {
-      "path": "/chum/answers/doors/construction-weather-operations-d9ae36830b.json",
-      "url": "/chum/answers/doors/construction-weather-operations-d9ae36830b.json",
       "priority": 160,
       "last_changed": "2026-09-26T04:58:13.847Z"
     }

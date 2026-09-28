@@ -1069,7 +1069,7 @@
           "public_id": "ibmi-rescue-v1",
           "name": "Evercraft IBM i Rescue",
           "commercial_state": "sell_now",
-          "machine_state": "human_handoff_ready",
+          "machine_state": "direct_checkout_ready",
           "pain_page": "/chum/intents/ibmi-rescue-v1/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
           "registry_name": null
@@ -1115,7 +1115,7 @@
           "public_id": "ibmi-rescue-v1",
           "name": "Evercraft IBM i Rescue",
           "commercial_state": "sell_now",
-          "machine_state": "human_handoff_ready",
+          "machine_state": "direct_checkout_ready",
           "pain_page": "/chum/intents/ibmi-rescue-v1/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
           "registry_name": null
@@ -1184,7 +1184,7 @@
           "public_id": "ibmi-rescue-v1",
           "name": "Evercraft IBM i Rescue",
           "commercial_state": "sell_now",
-          "machine_state": "human_handoff_ready",
+          "machine_state": "direct_checkout_ready",
           "pain_page": "/chum/intents/ibmi-rescue-v1/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
           "registry_name": null
@@ -2060,7 +2060,7 @@
           "public_id": "ibmi-rescue-v1",
           "name": "Evercraft IBM i Rescue",
           "commercial_state": "sell_now",
-          "machine_state": "human_handoff_ready",
+          "machine_state": "direct_checkout_ready",
           "pain_page": "/chum/intents/ibmi-rescue-v1/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
           "registry_name": null
@@ -7374,7 +7374,7 @@
           "public_id": "ibmi-rescue-v1",
           "name": "Evercraft IBM i Rescue",
           "commercial_state": "sell_now",
-          "machine_state": "human_handoff_ready",
+          "machine_state": "direct_checkout_ready",
           "pain_page": "/chum/intents/ibmi-rescue-v1/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
           "registry_name": null
@@ -7409,7 +7409,7 @@
           "public_id": "ibmi-rescue-v1",
           "name": "Evercraft IBM i Rescue",
           "commercial_state": "sell_now",
-          "machine_state": "human_handoff_ready",
+          "machine_state": "direct_checkout_ready",
           "pain_page": "/chum/intents/ibmi-rescue-v1/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
           "registry_name": null
@@ -8504,7 +8504,7 @@
           "public_id": "ibmi-rescue-v1",
           "name": "Evercraft IBM i Rescue",
           "commercial_state": "sell_now",
-          "machine_state": "human_handoff_ready",
+          "machine_state": "direct_checkout_ready",
           "pain_page": "/chum/intents/ibmi-rescue-v1/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
           "registry_name": null
@@ -8942,7 +8942,7 @@
           "public_id": "ibmi-rescue-v1",
           "name": "Evercraft IBM i Rescue",
           "commercial_state": "sell_now",
-          "machine_state": "human_handoff_ready",
+          "machine_state": "direct_checkout_ready",
           "pain_page": "/chum/intents/ibmi-rescue-v1/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
           "registry_name": null
@@ -9230,7 +9230,7 @@
           "public_id": "ibmi-rescue-v1",
           "name": "Evercraft IBM i Rescue",
           "commercial_state": "sell_now",
-          "machine_state": "human_handoff_ready",
+          "machine_state": "direct_checkout_ready",
           "pain_page": "/chum/intents/ibmi-rescue-v1/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
           "registry_name": null
@@ -9334,7 +9334,7 @@
           "public_id": "ibmi-rescue-v1",
           "name": "Evercraft IBM i Rescue",
           "commercial_state": "sell_now",
-          "machine_state": "human_handoff_ready",
+          "machine_state": "direct_checkout_ready",
           "pain_page": "/chum/intents/ibmi-rescue-v1/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
           "registry_name": null
@@ -9403,7 +9403,7 @@
           "public_id": "ibmi-rescue-v1",
           "name": "Evercraft IBM i Rescue",
           "commercial_state": "sell_now",
-          "machine_state": "human_handoff_ready",
+          "machine_state": "direct_checkout_ready",
           "pain_page": "/chum/intents/ibmi-rescue-v1/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
           "registry_name": null
@@ -11269,7 +11269,7 @@
           "public_id": "ibmi-rescue-v1",
           "name": "Evercraft IBM i Rescue",
           "commercial_state": "sell_now",
-          "machine_state": "human_handoff_ready",
+          "machine_state": "direct_checkout_ready",
           "pain_page": "/chum/intents/ibmi-rescue-v1/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
           "registry_name": null

@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-28T16:51:54.038Z",
+  "updated_at": "2026-09-28T16:52:02.039Z",
   "url_count": 2404,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -33,50 +33,50 @@
     },
     "/chum/capabilities/": {
       "path": "/chum/capabilities/",
-      "content_sha256": "1e7908acb8cb84d5a54d509484ee08ba15247d7dcb8077ea0c327b985d70cb38",
-      "last_changed": "2026-09-27T23:49:53.447Z",
+      "content_sha256": "42145fb4f4dfdb7a06d5244d9e2e25ad2557c6658ff0d8a72e9f6a6fe4f79ca9",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 96
     },
     "/chum/capabilities.json": {
       "path": "/chum/capabilities.json",
-      "content_sha256": "28a159720973e37a73cc901f2c13f8e752078a4a5f4c55b63bc5b9b243d874d0",
-      "last_changed": "2026-09-28T14:52:12.847Z",
+      "content_sha256": "202f3609adf7db3d768741692d0c15fc5f110b6e1a271358345ae60b5c608925",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 80
     },
     "/chum/sell-now.html": {
       "path": "/chum/sell-now.html",
-      "content_sha256": "eb9f795c1ce55226b328a427e7a87b5c9e5969e32bffd06423c500cbb0730ef6",
-      "last_changed": "2026-09-28T14:52:12.847Z",
+      "content_sha256": "be7fa04d8f27ae3bf126fcc68a8a9dbe02b45294099b60070ec1b41e23b45d9e",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 92
     },
     "/chum/sell-now.json": {
       "path": "/chum/sell-now.json",
-      "content_sha256": "d4d0ea61f89996e0a810a6da8a38ebc6be257cd941502bbc1e0979558e17f772",
-      "last_changed": "2026-09-28T14:52:12.847Z",
+      "content_sha256": "eaffd5cd69632ee993dd470919c444406fb9ae62e90baab65664230d165362c2",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 92
     },
     "/chum/sell-now.txt": {
       "path": "/chum/sell-now.txt",
-      "content_sha256": "4396e4e091fe552d1134325b02c9c656faf7e8700cfb1c7b4f1ef36a9af08b9c",
-      "last_changed": "2026-09-28T14:52:12.847Z",
+      "content_sha256": "5f683d1fef3d88644e10f2c638f223bcc40821aefe67e6f2a5bc2837c5cbd933",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 92
     },
     "/chum/revenue.txt": {
       "path": "/chum/revenue.txt",
-      "content_sha256": "374e118df6743612efc8b2232c95ada4d902d88893552a86770323eafe5261da",
-      "last_changed": "2026-09-28T14:52:12.847Z",
+      "content_sha256": "f907f56a99c1f8ed0c351b1f76951a52cc8366bb9f5561151410158dbdbe21a8",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 90
     },
     "/chum/revenue.json": {
       "path": "/chum/revenue.json",
-      "content_sha256": "cb0aa5ad2623aa362ed12b79819784366fa4d5013f769d3c895152912f49d765",
-      "last_changed": "2026-09-28T14:52:12.847Z",
+      "content_sha256": "d3e85683caf67b37fae500c86bf9bb106e9b185d0878d99f34717f9fa8c0a400",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 90
     },
     "/chum/agent-commerce.json": {
       "path": "/chum/agent-commerce.json",
-      "content_sha256": "8df94eca9c53c06fe20071aae59103ba02efc8bab01dca6f9c5b55e28fb2cc55",
-      "last_changed": "2026-09-28T14:52:12.847Z",
+      "content_sha256": "2ce85d5bb90f7a5c8d4e1a73e2877fca37c196267892bc9839b034b7de290742",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 80
     },
     "/chum/agent-commerce.txt": {
@@ -93,32 +93,32 @@
     },
     "/chum/pain-index.json": {
       "path": "/chum/pain-index.json",
-      "content_sha256": "e973e4ae4575b63e18a241cb8b4529f89ef698ae16ea397e7d07057c7a627556",
-      "last_changed": "2026-09-28T07:39:13.230Z",
+      "content_sha256": "d474c99d9b1ed060b1e7cbe2b6d4688f222ba94c20de9bd864f0c681a0676214",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 80
     },
     "/chum/pain-index.txt": {
       "path": "/chum/pain-index.txt",
-      "content_sha256": "ddb6d7cca0de14a41037b1a0f226ceae277c2d25203c15c0eeb52739e782b3d3",
-      "last_changed": "2026-09-28T07:39:13.230Z",
+      "content_sha256": "aff5ed04ed7eccf5ced82f5ac655bf9996d37eed359c20543998a137382104e4",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 80
     },
     "/chum/answers/": {
       "path": "/chum/answers/",
-      "content_sha256": "d12c3c0aa04e823c56ebc4752b49df4517ce864d11350da19d7e5a70ecc575d1",
-      "last_changed": "2026-09-27T23:52:44.847Z",
+      "content_sha256": "3c13b961e40e677ac54b55b754e1eaf66951898e9bb61b2aa564cfec0862b52b",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 80
     },
     "/chum/answers/index.json": {
       "path": "/chum/answers/index.json",
-      "content_sha256": "54cbb5689d9c62ff4287d667780761f09233ff2ea492045782a3b03d145f8b52",
-      "last_changed": "2026-09-27T23:52:44.847Z",
+      "content_sha256": "459b749e65e0d4bcbea9a6a1dacf4154f551d05348b9c2118ed4368e9bf26f33",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 80
     },
     "/chum/answers/index.txt": {
       "path": "/chum/answers/index.txt",
-      "content_sha256": "5a0fdb952e24db117246801cb65aa39121b943f19ffc3cf3e33cba656d4e2287",
-      "last_changed": "2026-09-27T23:52:44.847Z",
+      "content_sha256": "49d1778f9b03b57ec63ef9e08691623dbf70622ab795625f9be9dda67bcde7dd",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 80
     },
     "/chum/answers/observed/": {
@@ -141,8 +141,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "ff24c83c605348e8969cd6b86eaaac8069f294e1f546ea3dd178136a962b28c0",
-      "last_changed": "2026-09-28T16:51:54.038Z",
+      "content_sha256": "2f763061a5e440de6004777ab2031160c314ec4e00518d213d5fa8feb71861a5",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -339,8 +339,8 @@
     },
     "/.well-known/evercraft-pain-index.json": {
       "path": "/.well-known/evercraft-pain-index.json",
-      "content_sha256": "e973e4ae4575b63e18a241cb8b4529f89ef698ae16ea397e7d07057c7a627556",
-      "last_changed": "2026-09-28T07:39:13.230Z",
+      "content_sha256": "d474c99d9b1ed060b1e7cbe2b6d4688f222ba94c20de9bd864f0c681a0676214",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 90
     },
     "/rivet/discovery.json": {
@@ -729,8 +729,8 @@
     },
     "/llms-full.txt": {
       "path": "/llms-full.txt",
-      "content_sha256": "79ec294e44745a26a74bcfc1719e64511cd003458debb39698498a98b103b97e",
-      "last_changed": "2026-09-28T14:52:12.847Z",
+      "content_sha256": "a8b4ff364df551296ca1c73fda9ec19522fa92dd020ff60707100799ec301dfe",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 86
     },
     "/ai-discovery.json": {
@@ -765,8 +765,8 @@
     },
     "/.well-known/evercraft-agent-commerce.json": {
       "path": "/.well-known/evercraft-agent-commerce.json",
-      "content_sha256": "8df94eca9c53c06fe20071aae59103ba02efc8bab01dca6f9c5b55e28fb2cc55",
-      "last_changed": "2026-09-28T14:52:12.847Z",
+      "content_sha256": "2ce85d5bb90f7a5c8d4e1a73e2877fca37c196267892bc9839b034b7de290742",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 84
     },
     "/.well-known/evercraft-agent-interfaces.json": {
@@ -789,8 +789,8 @@
     },
     "/.well-known/evercraft-machine-catalog.json": {
       "path": "/.well-known/evercraft-machine-catalog.json",
-      "content_sha256": "1b3e15788e8fad7bfd504c0652413d6d693163969333d3b47e01b0ef87ff02f4",
-      "last_changed": "2026-09-28T14:52:12.847Z",
+      "content_sha256": "50e0219f10a59c073a9f86ef628064a70049e183fb4b1f378cf3c7716af13e78",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 84
     },
     "/.well-known/evercraft-chum.json": {
@@ -1815,26 +1815,26 @@
     },
     "/chum/intents/ibmi-rescue-v1/": {
       "path": "/chum/intents/ibmi-rescue-v1/",
-      "content_sha256": "b5149dce6174e1edff690c1ad47793bcb143ea000e2a4a04abb4f3d72ee4b525",
-      "last_changed": "2026-09-28T14:52:12.847Z",
+      "content_sha256": "0e406d72c49397fcda50f91ddcabf962ff8adf111c6d415d0f07ad2abff94503",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 98
     },
     "/chum/capabilities/ibmi-rescue-v1/": {
       "path": "/chum/capabilities/ibmi-rescue-v1/",
-      "content_sha256": "d595e76fcf3dd1c003fffcaea254e23945e256f1385ddeae8276034acf6c8b5a",
-      "last_changed": "2026-09-28T14:52:12.847Z",
+      "content_sha256": "7a0d30218bfd222322d5df7192640387d22ba9d9ba6cc834ad05ece15f41c36d",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 96
     },
     "/chum/capabilities/ibmi-rescue-v1/llms.txt": {
       "path": "/chum/capabilities/ibmi-rescue-v1/llms.txt",
-      "content_sha256": "ee7d310360c56171d1c170cce126c9ab091a21449fae79d70998abcae2d2ec89",
-      "last_changed": "2026-09-28T14:52:12.847Z",
+      "content_sha256": "9e167f489822c87b162ecaa10a12cb33c8a728dac608adda256ae051bcf76af2",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 96
     },
     "/chum/capabilities/ibmi-rescue-v1/capability.json": {
       "path": "/chum/capabilities/ibmi-rescue-v1/capability.json",
-      "content_sha256": "122bf929ae19d675fd3f1eba8b8341617c6bb0d5c3cc6a8a397bac4d1ea2863a",
-      "last_changed": "2026-09-28T14:52:12.847Z",
+      "content_sha256": "a51110bb3422303b1a819ae26917c114ebb0a97293f6e3513b9b107eff07b490",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 96
     },
     "/chum/capabilities/ibmi-rescue-v1/schema.jsonld": {
@@ -4593,14 +4593,14 @@
     },
     "/chum/answers/doors/as-400-estate-assessment-before-upgrading-or-modernizing-5e73e54575/": {
       "path": "/chum/answers/doors/as-400-estate-assessment-before-upgrading-or-modernizing-5e73e54575/",
-      "content_sha256": "8737c6fcfcaa18359ca659262be14ca3fb2fb0c2dc8ec9acaed71de2a224647a",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "7a5096c50c415f9e3fe3e29f8fc433e7760ef4394d4d5fa80946705f6bbf291e",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 100
     },
     "/chum/answers/doors/as-400-estate-assessment-before-upgrading-or-modernizing-5e73e54575.json": {
       "path": "/chum/answers/doors/as-400-estate-assessment-before-upgrading-or-modernizing-5e73e54575.json",
-      "content_sha256": "c99948053df084084c45640d044cc6537af981f1fa5a8ea71a31febb41b25a03",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "f62b2c59c489b59feadc03075f19b4b0f1001ec9f258593f275ecb9226a925a0",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 100
     },
     "/chum/answers/doors/as-400-modernization-11f60c6d3a/": {
@@ -4617,14 +4617,14 @@
     },
     "/chum/answers/doors/as-400-modernization-assessment-49430f448e/": {
       "path": "/chum/answers/doors/as-400-modernization-assessment-49430f448e/",
-      "content_sha256": "4dc6d6c0f94f3d965aa2a41872b0627c355d289940f07f6065214179358ff3ba",
-      "last_changed": "2026-09-26T02:29:21.053Z",
+      "content_sha256": "cfea93bafc49b39efc793c5dee5e57bb3555cd56a81c1af7360f6f9049768b58",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 160
     },
     "/chum/answers/doors/as-400-modernization-assessment-49430f448e.json": {
       "path": "/chum/answers/doors/as-400-modernization-assessment-49430f448e.json",
-      "content_sha256": "7f4743d697d7aa968be1c21511d1aefd274c12a8000e218be72538b77efdd1d8",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "5e80d12cc5b17b166f0f4516277b34ea737deae722eacb90ce1440a0166bda48",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 160
     },
     "/chum/answers/doors/asl-and-deaf-culture-learning-960d5b1784/": {
@@ -4653,14 +4653,14 @@
     },
     "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541/": {
       "path": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541/",
-      "content_sha256": "9fccb65354ac618700345bb98155c91d0a6ae16271cc2a56b650bfad36b7f609",
-      "last_changed": "2026-09-26T04:33:16.534Z",
+      "content_sha256": "877a53f7897026a8e88514c6343f20ce72f9eac7d2a47d1f80dbb2031e89f3cc",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 160
     },
     "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541.json": {
       "path": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541.json",
-      "content_sha256": "b71f7802005ec0bb8a11a10c63494f81095296ef36fdef04654e48e5fcf3b24e",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "2645e971ad847b7a393bf30ebde71f1475a5070e36c66ab40aa5bbd78c0a0d67",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 160
     },
     "/chum/answers/doors/audio-too-large-for-ai-a786a94fa2/": {
@@ -5085,14 +5085,14 @@
     },
     "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287/": {
       "path": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287/",
-      "content_sha256": "a850b7fd2d345473f4cdab46e0d344ca3105e79b78757616afb2a21b5e2be66b",
-      "last_changed": "2026-09-26T02:29:21.053Z",
+      "content_sha256": "903f406751e82b029fa777ba276e193cb1dd9b367f95cbb6e9391f801453fdcb",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 160
     },
     "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287.json": {
       "path": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287.json",
-      "content_sha256": "a1107ba9160905c84f07b92d7c5b0627ac4ee8d18a50756e291adb2db2105323",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "58be01eb71c969afd5d00d9c75da0d306de85d468bd6bc6a73391a09288c0950",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 160
     },
     "/chum/answers/doors/build-a-sourced-brief-about-farm-water-land-or-production-risk-baefc8483b/": {
@@ -7701,26 +7701,26 @@
     },
     "/chum/answers/doors/find-undocumented-dependencies-in-an-ibm-i-workload-5d2d519d2f/": {
       "path": "/chum/answers/doors/find-undocumented-dependencies-in-an-ibm-i-workload-5d2d519d2f/",
-      "content_sha256": "be4bdd73ebf1627189b2ac9ba199e9e1b62d281efaaacb2b2e5eae18acfe8cb5",
-      "last_changed": "2026-09-26T02:29:21.053Z",
+      "content_sha256": "8ad7323c56a5335b2cfa7d14c104d5d42f0cebad8007abc0ce308100f211d752",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 100
     },
     "/chum/answers/doors/find-undocumented-dependencies-in-an-ibm-i-workload-5d2d519d2f.json": {
       "path": "/chum/answers/doors/find-undocumented-dependencies-in-an-ibm-i-workload-5d2d519d2f.json",
-      "content_sha256": "3ce5ce45896835869ae67c3524625e6da411b56778cb816d255a604abe974102",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "7da7b6e8c78699ccb0ac5e5ef6b8c384430a4121e9f2c348f9bc92cceb04644c",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 100
     },
     "/chum/answers/doors/find-undocumented-ibm-i-dependencies-before-a-maintenance-window-e0c0c7b3bf/": {
       "path": "/chum/answers/doors/find-undocumented-ibm-i-dependencies-before-a-maintenance-window-e0c0c7b3bf/",
-      "content_sha256": "c97854d0d82fbb72c3fab5e5375aece5804d29f443a1987f0a11c15a03dde10e",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "24c7523b8bf9254c240af376705185831e33c25f4ba9cf852805abcf6b3c9eb6",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 100
     },
     "/chum/answers/doors/find-undocumented-ibm-i-dependencies-before-a-maintenance-window-e0c0c7b3bf.json": {
       "path": "/chum/answers/doors/find-undocumented-ibm-i-dependencies-before-a-maintenance-window-e0c0c7b3bf.json",
-      "content_sha256": "013e5e0972ba29e913481f6593d5421faaa8a7ae92117c2d849aa0f7a772889c",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "1b1c3c39df02dd4d613c40b9faafe89b0b83f43c9cb75f28f8ed413266fd366e",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 100
     },
     "/chum/answers/doors/find-verified-help-for-housing-shelter-food-benefits-transportation-childcare-inco-229db803d4/": {
@@ -8253,14 +8253,14 @@
     },
     "/chum/answers/doors/help-modernize-jde-world-or-a-custom-ibm-i-workload-without-losing-business-behavi-f9c27a8bcc/": {
       "path": "/chum/answers/doors/help-modernize-jde-world-or-a-custom-ibm-i-workload-without-losing-business-behavi-f9c27a8bcc/",
-      "content_sha256": "e8f8de786a029c7af0459b695341b42f864e40c72b69e3427e3cb4f5dde1452d",
-      "last_changed": "2026-09-26T02:29:21.053Z",
+      "content_sha256": "4dfb16f028586b1bdaa029e2638a4f93fe570d30e12c9a221b205c5810839ef6",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 100
     },
     "/chum/answers/doors/help-modernize-jde-world-or-a-custom-ibm-i-workload-without-losing-business-behavi-f9c27a8bcc.json": {
       "path": "/chum/answers/doors/help-modernize-jde-world-or-a-custom-ibm-i-workload-without-losing-business-behavi-f9c27a8bcc.json",
-      "content_sha256": "fcfe141d289ae53cecf1d0050cade7e73c42898ce1cc82a71f1f160dbd9e03c3",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "fc4734c1775a2d435c19ae213d5d0b90f6497ea516971f5e803916201a1aeaf5",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 100
     },
     "/chum/answers/doors/help-my-business-with-ai-1b27ec8927/": {
@@ -8469,14 +8469,14 @@
     },
     "/chum/answers/doors/i-am-worried-an-ibm-i-upgrade-will-break-batch-jobs-interfaces-or-vendor-software-a25b87dd23/": {
       "path": "/chum/answers/doors/i-am-worried-an-ibm-i-upgrade-will-break-batch-jobs-interfaces-or-vendor-software-a25b87dd23/",
-      "content_sha256": "605c1ce1e2b677148761b96e610cf9268054ffa0b491f29a1f64a22cca779243",
-      "last_changed": "2026-09-26T02:29:21.053Z",
+      "content_sha256": "5296c2509241d77031351b11be1a6130c886e99a345983ede703cd7c933855b3",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 100
     },
     "/chum/answers/doors/i-am-worried-an-ibm-i-upgrade-will-break-batch-jobs-interfaces-or-vendor-software-a25b87dd23.json": {
       "path": "/chum/answers/doors/i-am-worried-an-ibm-i-upgrade-will-break-batch-jobs-interfaces-or-vendor-software-a25b87dd23.json",
-      "content_sha256": "9f06c33c83f72595d89421112a629343bab448432a56fcb25d66769fb4252fd7",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "606c1ef504183b6dec978aff4c20a60c13f9f20640f3dac39daa9ed27280cb03",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 100
     },
     "/chum/answers/doors/i-cannot-tell-which-jobs-are-actually-profitable-7e204ff7f2/": {
@@ -8613,14 +8613,14 @@
     },
     "/chum/answers/doors/ibm-i-7-4-support-is-ending-and-i-need-an-upgrade-plan-ca1da8e065/": {
       "path": "/chum/answers/doors/ibm-i-7-4-support-is-ending-and-i-need-an-upgrade-plan-ca1da8e065/",
-      "content_sha256": "e3c77930fe4ce358c0d2e342576b4a1f46139a56f34821b924c455f667aa28b1",
-      "last_changed": "2026-09-26T02:29:21.053Z",
+      "content_sha256": "5b8197b68a91353b75ad81ad4b397bc9ee0e1b6c660a76e7ea56e0f3da3d9d85",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 100
     },
     "/chum/answers/doors/ibm-i-7-4-support-is-ending-and-i-need-an-upgrade-plan-ca1da8e065.json": {
       "path": "/chum/answers/doors/ibm-i-7-4-support-is-ending-and-i-need-an-upgrade-plan-ca1da8e065.json",
-      "content_sha256": "4867fc7f19209d6febba365ca76a751d39421809a31a4589505fd44838a57342",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "cce8aeac5ebda49d55e485e5de5f764599cabc5043cb29557f159aed7c0164ba",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 100
     },
     "/chum/answers/doors/ibm-i-7-4-upgrade-planning-05c52de953/": {
@@ -8661,14 +8661,14 @@
     },
     "/chum/answers/doors/ibm-i-estate-assessment-before-changing-production-dab81f4a0a/": {
       "path": "/chum/answers/doors/ibm-i-estate-assessment-before-changing-production-dab81f4a0a/",
-      "content_sha256": "7e7491bc0fad5fd7d538283c15683b7cff749650ed10da40a66007a13c4116e3",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "3fb8a3890a142eeec26af7251ac46adcab1a874c3a86306362d4016f9bfe8c8e",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 100
     },
     "/chum/answers/doors/ibm-i-estate-assessment-before-changing-production-dab81f4a0a.json": {
       "path": "/chum/answers/doors/ibm-i-estate-assessment-before-changing-production-dab81f4a0a.json",
-      "content_sha256": "ae0c1d0f7de036570a3e76ccd22960a751f8af2d9ddecdd0f5f3f60c3bb7d4c5",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "589647ff7acaf1e915020823f86cb5599527fdc412c2abb69bccc95831b2de42",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 100
     },
     "/chum/answers/doors/ibm-i-integration-and-maintenance-window-risk-assessment-fd1039dba4/": {
@@ -8697,14 +8697,14 @@
     },
     "/chum/answers/doors/ibm-i-upgrade-proof-240178e2de/": {
       "path": "/chum/answers/doors/ibm-i-upgrade-proof-240178e2de/",
-      "content_sha256": "833d85541761f35d0e492ca819f6d6823135e0ad3d4ebb50d9b8d49f7412bc65",
-      "last_changed": "2026-09-26T02:29:21.053Z",
+      "content_sha256": "035ca688dadd7a77b2f6e041f79261829f84a83bbeaa094474f10dce2ffad4f1",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 100
     },
     "/chum/answers/doors/ibm-i-upgrade-proof-240178e2de.json": {
       "path": "/chum/answers/doors/ibm-i-upgrade-proof-240178e2de.json",
-      "content_sha256": "b2bb06b8f38873d64ab448e76e742c398331f4553b05fc946028c2a112efd078",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "71bfaab7e74e8de8f81a4253f8c1055d95df7fb251dae4ddc728b6245cb041ac",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 100
     },
     "/chum/answers/doors/ibm-i-upgrade-rollback-plan-6b1f2184fe/": {
@@ -9633,14 +9633,14 @@
     },
     "/chum/answers/doors/map-rpg-cl-cobol-db2-jobs-and-integrations-before-ibm-i-modernization-aa38657636/": {
       "path": "/chum/answers/doors/map-rpg-cl-cobol-db2-jobs-and-integrations-before-ibm-i-modernization-aa38657636/",
-      "content_sha256": "988d73f5750f7f3db9c1cad05600bbd2952ad04e669015705827dc56ad1ac87d",
-      "last_changed": "2026-09-26T02:29:21.053Z",
+      "content_sha256": "d7f5b94034f82c392d0851c49d018f28a1775428a33e3839ff58edeeb907f2e0",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 100
     },
     "/chum/answers/doors/map-rpg-cl-cobol-db2-jobs-and-integrations-before-ibm-i-modernization-aa38657636.json": {
       "path": "/chum/answers/doors/map-rpg-cl-cobol-db2-jobs-and-integrations-before-ibm-i-modernization-aa38657636.json",
-      "content_sha256": "0197e869eb48307224bb1cf5893483907ed04e902f6f0e40391273230ddf4cdc",
-      "last_changed": "2026-09-26T04:58:13.847Z",
+      "content_sha256": "ab4013b30f7da9c070b812a5f27f1552a19c77b177ae276ed4b509090eefa341",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 100
     },
     "/chum/answers/doors/map-the-evidence-for-this-issue-4cb357b7d1/": {
@@ -14265,14 +14265,14 @@
     },
     "/chum/commercial/ibmi-rescue-v1/index.json": {
       "path": "/chum/commercial/ibmi-rescue-v1/index.json",
-      "content_sha256": "abba27482951a7bf656784eb597f0bb0cf3d7218c08297dc483f316ce3255e74",
-      "last_changed": "2026-09-26T19:35:58.578Z",
+      "content_sha256": "4359f3e8e98192b7c2d91aa9903eba46150c002afb1cf85ed1937a4f4e75b6a3",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 112
     },
     "/chum/commercial/ibmi-rescue-v1/llms.txt": {
       "path": "/chum/commercial/ibmi-rescue-v1/llms.txt",
-      "content_sha256": "530b2f4919f67454d7929cf267692a902180868372948d0935ec905ec08b6151",
-      "last_changed": "2026-09-26T19:35:58.578Z",
+      "content_sha256": "71d0ff6460fb2b53cc5263d879ac1414c9890f6b1d37b865069fe06970b91cab",
+      "last_changed": "2026-09-28T16:52:02.039Z",
       "priority": 112
     },
     "/chum/commercial/website-launch-service-v1/": {

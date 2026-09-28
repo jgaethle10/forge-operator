@@ -19,7 +19,7 @@
     "IBM i upgrade proof"
   ],
   "commercial_state": "sell_now",
-  "machine_state": "human_handoff_ready",
+  "machine_state": "direct_checkout_ready",
   "exact_entry_offer": {
     "offer_key": "ibmi_estate_xray_250",
     "name": "IBM i Estate X-Ray",
