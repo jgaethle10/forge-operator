@@ -137,23 +137,25 @@ jobs:
           fs.writeFileSync('/tmp/wim/assets.json',JSON.stringify(assets,null,2));
           NODE
 
+          cat >/tmp/wim/make-render-input.mjs <<'NODE'
+          import fs from 'node:fs';
+          const stage=JSON.parse(fs.readFileSync(process.env.STAGE,'utf8'));
+          const assets=JSON.parse(fs.readFileSync('/tmp/wim/assets.json','utf8'));
+          fs.writeFileSync(`/tmp/wim/rendered/render-${process.env.INDEX}.input.json`,JSON.stringify({
+            id:`wim-render-${process.env.INDEX}`,
+            stage,
+            assetScopeId:'week-in-motion-hq',
+            maxFramesPerShard:20,
+            assets
+          },null,2));
+          NODE
+
           i=0
           for stage in /tmp/wim/stages/*.stage.json; do
             n="$(printf '%02d' "$i")"
             export STAGE="$stage"
             export INDEX="$n"
-            node --input-type=module - <<'NODE'
-            import fs from 'node:fs';
-            const stage=JSON.parse(fs.readFileSync(process.env.STAGE,'utf8'));
-            const assets=JSON.parse(fs.readFileSync('/tmp/wim/assets.json','utf8'));
-            fs.writeFileSync(`/tmp/wim/rendered/render-${process.env.INDEX}.input.json`,JSON.stringify({
-              id:`wim-render-${process.env.INDEX}`,
-              stage,
-              assetScopeId:'week-in-motion-hq',
-              maxFramesPerShard:20,
-              assets
-            },null,2));
-            NODE
+            node /tmp/wim/make-render-input.mjs
 
             npm run media:studio -- render-plan \
               "/tmp/wim/rendered/render-$n.input.json" \
