@@ -1,0 +1,61 @@
+{
+  "schema": "evercraft.cross-llm-product.v1",
+  "product": "Evercraft Revenue War Map",
+  "product_key": "revenue-war-map",
+  "aliases": [
+    "Evercraft Income War Map",
+    "Revenue War Map"
+  ],
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "canonical_url": "https://evercraft-war-map.base44.app/",
+  "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/revenue-war-map/llms.txt",
+  "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/revenue-war-map/ai-discovery.json",
+  "registry_name": null,
+  "mcp": null,
+  "authority": "public discovery plus private account-bound revenue planning from user-supplied income, expense, debt, savings, skill, time, work and general-location inputs",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "planning estimates for revenue, startup cost, feasibility, timing and risk are not guarantees",
+    "does not provide individualized investment, securities, tax, legal or credit advice",
+    "does not recommend specific securities, funds, cryptoassets, options, leverage, gambling, borrowing to invest, market timing, predatory lending, illegal activity or deceptive business practices",
+    "high debt should bias planning toward lawful practical cash-flow and cost-reduction paths rather than speculative risk",
+    "do not recommend quitting stable work for a weaker opportunity without strong explicitly stated evidence",
+    "self-reported earned revenue stays distinct from modeled opportunity revenue",
+    "private financial, employment, skill, location and progress data are not public discovery data"
+  ],
+  "commercial": null,
+  "human_start_url": null,
+  "buyer_frontage_url": null,
+  "developer_surfaces": null,
+  "editorial_surfaces": null,
+  "knowledge_surfaces": null,
+  "distribution_surfaces": null,
+  "relationships": {
+    "career-command": {
+      "name": "Career Command",
+      "description": "Career moves and interview preparation can support income plans when the user chooses a job-change path."
+    },
+    "systemia-field-library": {
+      "name": "Systemia Field Library",
+      "description": "Contractors and service operators can use proven operating playbooks when an income plan becomes a real service business."
+    },
+    "evercraft-rewards": {
+      "name": "Evercraft Rewards",
+      "description": "Local reward and savings opportunities can complement cash-flow improvement, but rewards are not counted as earned income unless actually realized."
+    }
+  },
+  "proof_library": null,
+  "provider_behavior_state": "not_inferred_from_publication",
+  "machine_commerce_handoff_state": null,
+  "machine_commerce_public_id": null,
+  "machine_commerce_tool": null,
+  "live_canary_evidence": null
+}

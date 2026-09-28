@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.hot-discovery.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-28T16:59:42.867Z",
+  "updated_at": "2026-09-28T16:59:50.301Z",
   "purpose": "High-priority public discovery surfaces for crawler fan-out. The queue reserves limited cold-start frontage for current commercial and sitemap surfaces, then fills remaining slots by observed priority. This is a crawl-order hint, not a ranking or recommendation claim.",
   "surfaces": [
     {
@@ -273,19 +273,19 @@
       "path": "/chum/sitemaps/answers.xml",
       "url": "/chum/sitemaps/answers.xml",
       "priority": 108,
-      "last_changed": "2026-09-27T23:49:53.447Z"
+      "last_changed": "2026-09-28T16:59:50.301Z"
+    },
+    {
+      "path": "/chum/sitemaps/products.xml",
+      "url": "/chum/sitemaps/products.xml",
+      "priority": 108,
+      "last_changed": "2026-09-28T16:59:50.301Z"
     },
     {
       "path": "/chum/sitemaps/machine.xml",
       "url": "/chum/sitemaps/machine.xml",
       "priority": 108,
       "last_changed": "2026-09-27T14:53:47.616Z"
-    },
-    {
-      "path": "/chum/sitemaps/products.xml",
-      "url": "/chum/sitemaps/products.xml",
-      "priority": 108,
-      "last_changed": "2026-09-27T06:03:00.949Z"
     },
     {
       "path": "/chum/sitemaps/sell-now.xml",
@@ -300,14 +300,14 @@
       "last_changed": "2026-09-26T19:35:58.578Z"
     },
     {
-      "path": "/chum/sell-now.html",
-      "url": "/chum/sell-now.html",
-      "priority": 92,
-      "last_changed": "2026-09-28T16:52:02.039Z"
-    },
-    {
       "path": "/chum/sell-now.json",
       "url": "/chum/sell-now.json",
+      "priority": 92,
+      "last_changed": "2026-09-28T16:59:50.301Z"
+    },
+    {
+      "path": "/chum/sell-now.html",
+      "url": "/chum/sell-now.html",
       "priority": 92,
       "last_changed": "2026-09-28T16:52:02.039Z"
     },
@@ -321,13 +321,13 @@
       "path": "/.well-known/evercraft-pain-index.json",
       "url": "/.well-known/evercraft-pain-index.json",
       "priority": 90,
-      "last_changed": "2026-09-28T16:52:02.039Z"
+      "last_changed": "2026-09-28T16:59:50.301Z"
     },
     {
       "path": "/chum/revenue.json",
       "url": "/chum/revenue.json",
       "priority": 90,
-      "last_changed": "2026-09-28T16:52:02.039Z"
+      "last_changed": "2026-09-28T16:59:50.301Z"
     },
     {
       "path": "/chum/revenue.txt",
@@ -345,13 +345,25 @@
       "path": "/.well-known/evercraft-machine-catalog.json",
       "url": "/.well-known/evercraft-machine-catalog.json",
       "priority": 84,
-      "last_changed": "2026-09-28T16:52:02.039Z"
+      "last_changed": "2026-09-28T16:59:50.301Z"
     },
     {
       "path": "/chum/answers/doors/as-400-modernization-assessment-49430f448e.json",
       "url": "/chum/answers/doors/as-400-modernization-assessment-49430f448e.json",
       "priority": 160,
-      "last_changed": "2026-09-28T16:52:02.039Z"
+      "last_changed": "2026-09-28T16:59:50.301Z"
+    },
+    {
+      "path": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541.json",
+      "url": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541.json",
+      "priority": 160,
+      "last_changed": "2026-09-28T16:59:50.301Z"
+    },
+    {
+      "path": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287.json",
+      "url": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287.json",
+      "priority": 160,
+      "last_changed": "2026-09-28T16:59:50.301Z"
     },
     {
       "path": "/chum/answers/doors/as-400-modernization-assessment-49430f448e/",
@@ -360,20 +372,8 @@
       "last_changed": "2026-09-28T16:52:02.039Z"
     },
     {
-      "path": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541.json",
-      "url": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541.json",
-      "priority": 160,
-      "last_changed": "2026-09-28T16:52:02.039Z"
-    },
-    {
       "path": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541/",
       "url": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541/",
-      "priority": 160,
-      "last_changed": "2026-09-28T16:52:02.039Z"
-    },
-    {
-      "path": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287.json",
-      "url": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287.json",
       "priority": 160,
       "last_changed": "2026-09-28T16:52:02.039Z"
     },

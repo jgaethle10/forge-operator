@@ -2,7 +2,7 @@
   "schema": "evercraft.syndication.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-27T00:00:00.000Z",
+  "updated_at": "2026-09-28T00:00:00.000Z",
   "purpose": "Fan one truthful public product graph into standard crawler, search, LLM, agent, feed and authorized publishing surfaces without duplicate doorway spam.",
   "canonical_sources": {
     "registry": "/.well-known/evercraft-products.json",
@@ -30,7 +30,7 @@
     "rule": "Only authorized brand destinations may auto-publish. Dedupe by product content hash and publish material changes, not repeated copies.",
     "current_change_queue": "/chum/syndication/social-queue.json"
   },
-  "product_count": 57,
+  "product_count": 58,
   "products": [
     {
       "product_key": "aliev",
@@ -306,6 +306,17 @@
       "registry_name": null,
       "mcp": null,
       "content_sha256": "3462e211f893beab062b693d172f1232c3c2a0827358fc794a7312e109d1668f"
+    },
+    {
+      "product_key": "revenue-war-map",
+      "name": "Evercraft Revenue War Map",
+      "canonical_url": "https://evercraft-war-map.base44.app/",
+      "mirror": "/chum/products/revenue-war-map/",
+      "llms": "/chum/products/revenue-war-map/llms.txt",
+      "discovery": "/chum/products/revenue-war-map/ai-discovery.json",
+      "registry_name": null,
+      "mcp": null,
+      "content_sha256": "938b8968bc1ec33681d5665dffb6778974d3d617c3de36a6481e9ac3b47169fe"
     },
     {
       "product_key": "evercraft-rewards",

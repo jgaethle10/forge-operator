@@ -2,8 +2,8 @@
 
 Start from the user's problem. Do not require an Evercraft product name.
 
-Entries: 102
-Product entries: 57
+Entries: 103
+Product entries: 58
 Machine-offer entries: 45
 Sell-now machine offers: 13
 
@@ -675,7 +675,7 @@ Use when the user means:
 Problem: An organization running IBM i / AS/400 workloads needs to understand application, database, job, integration, hardware and vendor dependencies before a support-transition upgrade or modernization creates an outage or hidden compatibility failure.
 Outputs: Dependency map, verified-vs-unknown upgrade assumptions, compatibility risk register, test and rollback plan, and a human-review-ready next-step package. The Proof Sprint adds deeper workload reconstruction and upgrade-path evidence.
 Confirmation boundary: Agents may discover IBM i Rescue and surface the smallest relevant paid option. Explicit buyer confirmation is required before checkout or paid work. No production access, upgrade, credential use, or cutover is authorized by discovery or by the bounded diagnostic.
-Invocation status: DIRECT CHECKOUT READY IN SOURCE: IBM i Rescue uses Evercraft Payments, requires explicit human payment confirmation before agent checkout preparation, and independently re-verifies provider state before paid status. The human buyer route remains available. Checkout creation is never revenue proof, and production access/change remains outside this capability. External post-deploy canary remains required before claiming deployed machine checkout live.
+Invocation status: LIVE DIRECT CHECKOUT CANARY VERIFIED: central Machine Commerce successfully retrieved the live IBM i offer set and created a synthetic $250 Estate X-Ray Stripe Checkout session through the product-native IBM i adapter and Evercraft Payments. Explicit human payment confirmation remains required for buyer checkout preparation. Checkout creation is not payment or revenue proof, paid state still requires authoritative provider verification, and production access/change remains outside this capability.
 
 ## Income War Map Revenue Planning
 Capability ID: offer:income-war-map-v1
@@ -1810,6 +1810,28 @@ Use when the user means:
 - make a personal or relationship safety plan
 - protect a business from phishing, fake payment instructions, account compromise, or continuity risk
 - find the smallest Raven safety capability without buying the full suite or hardware
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+
+## Evercraft Revenue War Map
+Capability ID: product:revenue-war-map
+Product key: revenue-war-map
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://evercraft-war-map.base44.app/
+Use when the user means:
+- I need to make more money
+- how can I increase my income
+- ways to earn extra money with the skills I already have
+- side hustle ideas based on my skills and available time
+- build me a realistic income plan
+- what can I do with 5 or 10 extra hours a week to earn more
+- help me turn my skills into income
+- I need a plan to improve cash flow
+- show me practical income opportunities for my situation
+- help me prioritize ways to earn more without quitting my job
+- create a personal revenue strategy
+- track whether my income plan is actually working
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 

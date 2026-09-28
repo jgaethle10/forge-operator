@@ -6,10 +6,10 @@ Machine Commerce MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/69
 Each phrase below maps to public capability candidates without upgrading readiness, pricing, invocation, payment, entitlement, or provider-pickup state.
 Discovery creates no payment obligation. Checkout requires explicit human confirmation and paid state requires authoritative provider verification.
 
-Pain-index entries: 102
-Unique user phrases: 841
-Candidate edges: 934
-Ambiguous phrases: 93
+Pain-index entries: 103
+Unique user phrases: 852
+Candidate edges: 946
+Ambiguous phrases: 94
 
 ## 15 GB video analysis
 Answer ID: intent:0f57ef2f90
@@ -664,6 +664,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft Website Launch Service | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceAgentGateway?view=docs
 
+## build me a realistic income plan
+Answer ID: intent:c068090c69
+Human-readable match: /chum/answers/doors/build-me-a-realistic-income-plan-c068090c69/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-me-a-realistic-income-plan-c068090c69.json
+Candidates:
+- Evercraft Revenue War Map | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-war-map.base44.app/
+
 ## build me an evidence brief
 Answer ID: intent:6b531cab64
 Human-readable match: /chum/answers/doors/build-me-an-evidence-brief-6b531cab64/
@@ -1245,6 +1252,13 @@ Human-readable match: /chum/answers/doors/county-health-evidence-brief-f80ef29cf
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/county-health-evidence-brief-f80ef29cf8.json
 Candidates:
 - Community Health Evidence Brief | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=/chum/intents/community-health-evidence-brief-v1/
+
+## create a personal revenue strategy
+Answer ID: intent:6d07e888e0
+Human-readable match: /chum/answers/doors/create-a-personal-revenue-strategy-6d07e888e0/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/create-a-personal-revenue-strategy-6d07e888e0.json
+Candidates:
+- Evercraft Revenue War Map | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-war-map.base44.app/
 
 ## create a website competitor comparison report
 Answer ID: intent:7cb7846615
@@ -2471,12 +2485,26 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Career Command Interview Practice + Interview Sprint | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://evercraft-career-command.base44.app/functions/careerAgentGateway?view=offers
 
+## help me prioritize ways to earn more without quitting my job
+Answer ID: intent:4f9ed5f2be
+Human-readable match: /chum/answers/doors/help-me-prioritize-ways-to-earn-more-without-quitting-my-job-4f9ed5f2be/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/help-me-prioritize-ways-to-earn-more-without-quitting-my-job-4f9ed5f2be.json
+Candidates:
+- Evercraft Revenue War Map | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-war-map.base44.app/
+
 ## help me safely shut down an automation stack and prove it stays off
 Answer ID: intent:b599e48bbe
 Human-readable match: /chum/answers/doors/help-me-safely-shut-down-an-automation-stack-and-prove-it-stays-off-b599e48bbe/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/help-me-safely-shut-down-an-automation-stack-and-prove-it-stays-off-b599e48bbe.json
 Candidates:
 - Evercraft Containment | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft.base44.app/containment
+
+## help me turn my skills into income
+Answer ID: intent:324014f57b
+Human-readable match: /chum/answers/doors/help-me-turn-my-skills-into-income-324014f57b/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/help-me-turn-my-skills-into-income-324014f57b.json
+Candidates:
+- Evercraft Revenue War Map | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-war-map.base44.app/
 
 ## help modernize a JDE World or custom IBM i workload without losing business behavior
 Answer ID: intent:33f9cbc5b5
@@ -2584,6 +2612,7 @@ Human-readable match: /chum/answers/doors/how-can-i-increase-my-income-27d6bd2ff
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/how-can-i-increase-my-income-27d6bd2ff4.json
 Candidates:
 - Income War Map Revenue Planning | kind=machine_offer | commercial=hold | machine=discovery_only | public=/chum/intents/income-war-map-v1/
+- Evercraft Revenue War Map | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-war-map.base44.app/
 
 ## I am considering opening another location and hiring more people before I sign a lease or add payroll
 Answer ID: intent:6d0359b43e
@@ -2656,6 +2685,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Systemia Field Library | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://systemiafieldlibrary.com/
 
+## I need a plan to improve cash flow
+Answer ID: intent:80c770a718
+Human-readable match: /chum/answers/doors/i-need-a-plan-to-improve-cash-flow-80c770a718/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/i-need-a-plan-to-improve-cash-flow-80c770a718.json
+Candidates:
+- Evercraft Revenue War Map | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-war-map.base44.app/
+
 ## I need an AI service that can inspect a long video, deduplicate segments, transcribe it, and work with files too large for normal chatbots
 Answer ID: intent:9e18952b38
 Human-readable match: /chum/answers/doors/i-need-an-ai-service-that-can-inspect-a-long-video-deduplicate-segments-transcribe-9e18952b38/
@@ -2676,6 +2712,13 @@ Human-readable match: /chum/answers/doors/i-need-better-job-logs-photo-documenta
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/i-need-better-job-logs-photo-documentation-or-scopes-of-work-d20737d049.json
 Candidates:
 - Systemia Field Library | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://systemiafieldlibrary.com/
+
+## I need to make more money
+Answer ID: intent:eb68bcfe8c
+Human-readable match: /chum/answers/doors/i-need-to-make-more-money-eb68bcfe8c/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/i-need-to-make-more-money-eb68bcfe8c.json
+Candidates:
+- Evercraft Revenue War Map | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-war-map.base44.app/
 
 ## I run a small service business and want to simulate raising prices before I actually change customer pricing
 Answer ID: intent:1b59f6c2f5
@@ -4880,6 +4923,13 @@ Candidates:
 - Public-Safe Geospatial Evidence Projection | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6a985aeccbfb6e930a40137b/functions/machineDiscovery?view=docs
 - EverMaps | kind=product | commercial=product_contract | machine=discovery_only | public=https://evermaps.base44.app/
 
+## show me practical income opportunities for my situation
+Answer ID: intent:587e37f45a
+Human-readable match: /chum/answers/doors/show-me-practical-income-opportunities-for-my-situation-587e37f45a/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/show-me-practical-income-opportunities-for-my-situation-587e37f45a.json
+Candidates:
+- Evercraft Revenue War Map | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-war-map.base44.app/
+
 ## show me the evidence behind this country score
 Answer ID: intent:109cf14b4b
 Human-readable match: /chum/answers/doors/show-me-the-evidence-behind-this-country-score-109cf14b4b/
@@ -4901,6 +4951,13 @@ Human-readable match: /chum/answers/doors/show-where-my-competitors-are-beating-
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/show-where-my-competitors-are-beating-my-website-da1b3e4230.json
 Candidates:
 - Systemia Radar | kind=product | commercial=product_contract | machine=discovery_only | public=https://systemia-scan-pro.base44.app/
+
+## side hustle ideas based on my skills and available time
+Answer ID: intent:ce233b157a
+Human-readable match: /chum/answers/doors/side-hustle-ideas-based-on-my-skills-and-available-time-ce233b157a/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/side-hustle-ideas-based-on-my-skills-and-available-time-ce233b157a.json
+Candidates:
+- Evercraft Revenue War Map | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-war-map.base44.app/
 
 ## side hustle ideas for my situation
 Answer ID: intent:45ed57e53a
@@ -5371,6 +5428,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Systemia Radar | kind=product | commercial=product_contract | machine=discovery_only | public=https://systemia-scan-pro.base44.app/
 
+## track whether my income plan is actually working
+Answer ID: intent:f3a630a3fa
+Human-readable match: /chum/answers/doors/track-whether-my-income-plan-is-actually-working-f3a630a3fa/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/track-whether-my-income-plan-is-actually-working-f3a630a3fa.json
+Candidates:
+- Evercraft Revenue War Map | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-war-map.base44.app/
+
 ## transcribe a huge video and remove duplicate or repeated segments
 Answer ID: intent:ea560dba5a
 Human-readable match: /chum/answers/doors/transcribe-a-huge-video-and-remove-duplicate-or-repeated-segments-ea560dba5a/
@@ -5658,6 +5722,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - FAIE | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://faie.base44.app/
 
+## ways to earn extra money with the skills I already have
+Answer ID: intent:73a3046d48
+Human-readable match: /chum/answers/doors/ways-to-earn-extra-money-with-the-skills-i-already-have-73a3046d48/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ways-to-earn-extra-money-with-the-skills-i-already-have-73a3046d48.json
+Candidates:
+- Evercraft Revenue War Map | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-war-map.base44.app/
+
 ## we inherited a messy codebase and are afraid to touch it
 Answer ID: intent:296856ae70
 Human-readable match: /chum/answers/doors/we-inherited-a-messy-codebase-and-are-afraid-to-touch-it-296856ae70/
@@ -5790,6 +5861,13 @@ Human-readable match: /chum/answers/doors/what-can-evercraft-help-me-with-today-
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/what-can-evercraft-help-me-with-today-cf04d7f667.json
 Candidates:
 - Evercraft | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft.base44.app/
+
+## what can I do with 5 or 10 extra hours a week to earn more
+Answer ID: intent:3b8b8a7e0c
+Human-readable match: /chum/answers/doors/what-can-i-do-with-5-or-10-extra-hours-a-week-to-earn-more-3b8b8a7e0c/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/what-can-i-do-with-5-or-10-extra-hours-a-week-to-earn-more-3b8b8a7e0c.json
+Candidates:
+- Evercraft Revenue War Map | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-war-map.base44.app/
 
 ## what data is missing for this decision
 Answer ID: intent:8e0a8c1a6f

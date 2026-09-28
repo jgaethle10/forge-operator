@@ -6,7 +6,7 @@
   "source_schema_version": "2026-09-26.2",
   "gateway_version": "evercraft-machine-commerce-gateway-v0.9.0",
   "source_generated_at": "2026-09-26T04:35:00.000Z",
-  "generated_at": "2026-09-28T16:52:00.418Z",
+  "generated_at": "2026-09-28T16:59:48.504Z",
   "offer_count": 45,
   "sell_now_count": 13,
   "discovery_count": 32,
@@ -1089,7 +1089,7 @@
       "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
       "public_url_source": "source_catalog",
       "payment_authority": "Evercraft Payments; human and agent checkout-session creation are wired behind explicit buyer confirmation. Checkout creation is not payment proof; paid state still requires authoritative provider verification.",
-      "invocation_status": "DIRECT CHECKOUT READY IN SOURCE: IBM i Rescue uses Evercraft Payments, requires explicit human payment confirmation before agent checkout preparation, and independently re-verifies provider state before paid status. The human buyer route remains available. Checkout creation is never revenue proof, and production access/change remains outside this capability. External post-deploy canary remains required before claiming deployed machine checkout live.",
+      "invocation_status": "LIVE DIRECT CHECKOUT CANARY VERIFIED: central Machine Commerce successfully retrieved the live IBM i offer set and created a synthetic $250 Estate X-Ray Stripe Checkout session through the product-native IBM i adapter and Evercraft Payments. Explicit human payment confirmation remains required for buyer checkout preparation. Checkout creation is not payment or revenue proof, paid state still requires authoritative provider verification, and production access/change remains outside this capability.",
       "catalog_version": "2026-09-28.1"
     },
     {

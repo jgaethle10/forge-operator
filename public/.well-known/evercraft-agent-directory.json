@@ -1,7 +1,7 @@
 {
   "schema": "evercraft.agent-directory.v2",
   "provider": "Evercraft LLC",
-  "updated_at": "2026-09-27",
+  "updated_at": "2026-09-28",
   "purpose": "Portfolio-wide public machine directory. Routes natural-language pain to the smallest truthful Evercraft capability without requiring brand knowledge.",
   "universal_front_door": {
     "name": "Evercraft discovery watershed",
@@ -1715,6 +1715,51 @@
         "does not permit covert tracking, stalking, or unauthorized surveillance",
         "Raven discovery is not emergency response",
         "checkout creation is not payment proof"
+      ],
+      "commercial": null,
+      "developer_surfaces": null
+    },
+    {
+      "product_key": "revenue-war-map",
+      "name": "Evercraft Revenue War Map",
+      "aliases": [
+        "Evercraft Income War Map",
+        "Revenue War Map"
+      ],
+      "class": "personal_revenue_planning_and_income_opportunity_mapping",
+      "canonical_url": "https://evercraft-war-map.base44.app/",
+      "intents": [
+        "I need to make more money",
+        "how can I increase my income",
+        "ways to earn extra money with the skills I already have",
+        "side hustle ideas based on my skills and available time",
+        "build me a realistic income plan",
+        "what can I do with 5 or 10 extra hours a week to earn more",
+        "help me turn my skills into income",
+        "I need a plan to improve cash flow",
+        "show me practical income opportunities for my situation",
+        "help me prioritize ways to earn more without quitting my job",
+        "create a personal revenue strategy",
+        "track whether my income plan is actually working"
+      ],
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null,
+        "registry_name": null
+      },
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/revenue-war-map/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/revenue-war-map/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/revenue-war-map/ai-conformance.json",
+      "human_confirmation_required": true,
+      "authority": "public discovery plus private account-bound revenue planning from user-supplied income, expense, debt, savings, skill, time, work and general-location inputs",
+      "boundaries": [
+        "planning estimates for revenue, startup cost, feasibility, timing and risk are not guarantees",
+        "does not provide individualized investment, securities, tax, legal or credit advice",
+        "does not recommend specific securities, funds, cryptoassets, options, leverage, gambling, borrowing to invest, market timing, predatory lending, illegal activity or deceptive business practices",
+        "high debt should bias planning toward lawful practical cash-flow and cost-reduction paths rather than speculative risk",
+        "do not recommend quitting stable work for a weaker opportunity without strong explicitly stated evidence",
+        "self-reported earned revenue stays distinct from modeled opportunity revenue",
+        "private financial, employment, skill, location and progress data are not public discovery data"
       ],
       "commercial": null,
       "developer_surfaces": null

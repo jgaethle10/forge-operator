@@ -20,11 +20,11 @@
     "provider_publication_is_not_endorsement_or_pickup_proof": true
   },
   "summary": {
-    "pain_index_entries": 102,
-    "unique_user_phrases": 841,
-    "mapped_candidate_edges": 934,
-    "ambiguous_phrases": 93,
-    "product_candidates": 57,
+    "pain_index_entries": 103,
+    "unique_user_phrases": 852,
+    "mapped_candidate_edges": 946,
+    "ambiguous_phrases": 94,
+    "product_candidates": 58,
     "machine_offer_candidates": 45
   },
   "doors": [
@@ -2253,6 +2253,29 @@
       ]
     },
     {
+      "answer_id": "intent:c068090c69",
+      "user_language": "build me a realistic income plan",
+      "normalized": "build me a realistic income plan",
+      "relative_json": "/chum/answers/doors/build-me-a-realistic-income-plan-c068090c69.json",
+      "relative_page": "/chum/answers/doors/build-me-a-realistic-income-plan-c068090c69/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-me-a-realistic-income-plan-c068090c69.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:revenue-war-map",
+          "kind": "product",
+          "product_key": "revenue-war-map",
+          "public_id": null,
+          "name": "Evercraft Revenue War Map",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/revenue-war-map/",
+          "public_url": "https://evercraft-war-map.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:6b531cab64",
       "user_language": "build me an evidence brief",
       "normalized": "build me an evidence brief",
@@ -4230,6 +4253,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/community-health-evidence-brief-v1/",
           "public_url": null,
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:6d07e888e0",
+      "user_language": "create a personal revenue strategy",
+      "normalized": "create a personal revenue strategy",
+      "relative_json": "/chum/answers/doors/create-a-personal-revenue-strategy-6d07e888e0.json",
+      "relative_page": "/chum/answers/doors/create-a-personal-revenue-strategy-6d07e888e0/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/create-a-personal-revenue-strategy-6d07e888e0.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:revenue-war-map",
+          "kind": "product",
+          "product_key": "revenue-war-map",
+          "public_id": null,
+          "name": "Evercraft Revenue War Map",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/revenue-war-map/",
+          "public_url": "https://evercraft-war-map.base44.app/",
           "registry_name": null
         }
       ]
@@ -8443,6 +8489,29 @@
       ]
     },
     {
+      "answer_id": "intent:4f9ed5f2be",
+      "user_language": "help me prioritize ways to earn more without quitting my job",
+      "normalized": "help me prioritize ways to earn more without quitting my job",
+      "relative_json": "/chum/answers/doors/help-me-prioritize-ways-to-earn-more-without-quitting-my-job-4f9ed5f2be.json",
+      "relative_page": "/chum/answers/doors/help-me-prioritize-ways-to-earn-more-without-quitting-my-job-4f9ed5f2be/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/help-me-prioritize-ways-to-earn-more-without-quitting-my-job-4f9ed5f2be.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:revenue-war-map",
+          "kind": "product",
+          "product_key": "revenue-war-map",
+          "public_id": null,
+          "name": "Evercraft Revenue War Map",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/revenue-war-map/",
+          "public_url": "https://evercraft-war-map.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:b599e48bbe",
       "user_language": "help me safely shut down an automation stack and prove it stays off",
       "normalized": "help me safely shut down an automation stack and prove it stays off",
@@ -8461,6 +8530,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/evercraft-containment/",
           "public_url": "https://evercraft.base44.app/containment",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:324014f57b",
+      "user_language": "help me turn my skills into income",
+      "normalized": "help me turn my skills into income",
+      "relative_json": "/chum/answers/doors/help-me-turn-my-skills-into-income-324014f57b.json",
+      "relative_page": "/chum/answers/doors/help-me-turn-my-skills-into-income-324014f57b/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/help-me-turn-my-skills-into-income-324014f57b.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:revenue-war-map",
+          "kind": "product",
+          "product_key": "revenue-war-map",
+          "public_id": null,
+          "name": "Evercraft Revenue War Map",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/revenue-war-map/",
+          "public_url": "https://evercraft-war-map.base44.app/",
           "registry_name": null
         }
       ]
@@ -8818,7 +8910,7 @@
       "relative_json": "/chum/answers/doors/how-can-i-increase-my-income-27d6bd2ff4.json",
       "relative_page": "/chum/answers/doors/how-can-i-increase-my-income-27d6bd2ff4/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/how-can-i-increase-my-income-27d6bd2ff4.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
         {
           "capability_id": "offer:income-war-map-v1",
@@ -8830,6 +8922,18 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/income-war-map-v1/",
           "public_url": null,
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:revenue-war-map",
+          "kind": "product",
+          "product_key": "revenue-war-map",
+          "public_id": null,
+          "name": "Evercraft Revenue War Map",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/revenue-war-map/",
+          "public_url": "https://evercraft-war-map.base44.app/",
           "registry_name": null
         }
       ]
@@ -9077,6 +9181,29 @@
       ]
     },
     {
+      "answer_id": "intent:80c770a718",
+      "user_language": "I need a plan to improve cash flow",
+      "normalized": "i need a plan to improve cash flow",
+      "relative_json": "/chum/answers/doors/i-need-a-plan-to-improve-cash-flow-80c770a718.json",
+      "relative_page": "/chum/answers/doors/i-need-a-plan-to-improve-cash-flow-80c770a718/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/i-need-a-plan-to-improve-cash-flow-80c770a718.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:revenue-war-map",
+          "kind": "product",
+          "product_key": "revenue-war-map",
+          "public_id": null,
+          "name": "Evercraft Revenue War Map",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/revenue-war-map/",
+          "public_url": "https://evercraft-war-map.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:9e18952b38",
       "user_language": "I need an AI service that can inspect a long video, deduplicate segments, transcribe it, and work with files too large for normal chatbots",
       "normalized": "i need an ai service that can inspect a long video deduplicate segments transcribe it and work with files too large for normal chatbots",
@@ -9142,6 +9269,29 @@
           "pain_page": "/chum/products/systemia-field-library/",
           "public_url": "https://systemiafieldlibrary.com/",
           "registry_name": "io.github.jgaethle10/systemia-field-library"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:eb68bcfe8c",
+      "user_language": "I need to make more money",
+      "normalized": "i need to make more money",
+      "relative_json": "/chum/answers/doors/i-need-to-make-more-money-eb68bcfe8c.json",
+      "relative_page": "/chum/answers/doors/i-need-to-make-more-money-eb68bcfe8c/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/i-need-to-make-more-money-eb68bcfe8c.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:revenue-war-map",
+          "kind": "product",
+          "product_key": "revenue-war-map",
+          "public_id": null,
+          "name": "Evercraft Revenue War Map",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/revenue-war-map/",
+          "public_url": "https://evercraft-war-map.base44.app/",
+          "registry_name": null
         }
       ]
     },
@@ -16672,6 +16822,29 @@
       ]
     },
     {
+      "answer_id": "intent:587e37f45a",
+      "user_language": "show me practical income opportunities for my situation",
+      "normalized": "show me practical income opportunities for my situation",
+      "relative_json": "/chum/answers/doors/show-me-practical-income-opportunities-for-my-situation-587e37f45a.json",
+      "relative_page": "/chum/answers/doors/show-me-practical-income-opportunities-for-my-situation-587e37f45a/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/show-me-practical-income-opportunities-for-my-situation-587e37f45a.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:revenue-war-map",
+          "kind": "product",
+          "product_key": "revenue-war-map",
+          "public_id": null,
+          "name": "Evercraft Revenue War Map",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/revenue-war-map/",
+          "public_url": "https://evercraft-war-map.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:109cf14b4b",
       "user_language": "show me the evidence behind this country score",
       "normalized": "show me the evidence behind this country score",
@@ -16748,6 +16921,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/systemia-radar/",
           "public_url": "https://systemia-scan-pro.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:ce233b157a",
+      "user_language": "side hustle ideas based on my skills and available time",
+      "normalized": "side hustle ideas based on my skills and available time",
+      "relative_json": "/chum/answers/doors/side-hustle-ideas-based-on-my-skills-and-available-time-ce233b157a.json",
+      "relative_page": "/chum/answers/doors/side-hustle-ideas-based-on-my-skills-and-available-time-ce233b157a/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/side-hustle-ideas-based-on-my-skills-and-available-time-ce233b157a.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:revenue-war-map",
+          "kind": "product",
+          "product_key": "revenue-war-map",
+          "public_id": null,
+          "name": "Evercraft Revenue War Map",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/revenue-war-map/",
+          "public_url": "https://evercraft-war-map.base44.app/",
           "registry_name": null
         }
       ]
@@ -18355,6 +18551,29 @@
       ]
     },
     {
+      "answer_id": "intent:f3a630a3fa",
+      "user_language": "track whether my income plan is actually working",
+      "normalized": "track whether my income plan is actually working",
+      "relative_json": "/chum/answers/doors/track-whether-my-income-plan-is-actually-working-f3a630a3fa.json",
+      "relative_page": "/chum/answers/doors/track-whether-my-income-plan-is-actually-working-f3a630a3fa/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/track-whether-my-income-plan-is-actually-working-f3a630a3fa.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:revenue-war-map",
+          "kind": "product",
+          "product_key": "revenue-war-map",
+          "public_id": null,
+          "name": "Evercraft Revenue War Map",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/revenue-war-map/",
+          "public_url": "https://evercraft-war-map.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:ea560dba5a",
       "user_language": "transcribe a huge video and remove duplicate or repeated segments",
       "normalized": "transcribe a huge video and remove duplicate or repeated segments",
@@ -19359,6 +19578,29 @@
       ]
     },
     {
+      "answer_id": "intent:73a3046d48",
+      "user_language": "ways to earn extra money with the skills I already have",
+      "normalized": "ways to earn extra money with the skills i already have",
+      "relative_json": "/chum/answers/doors/ways-to-earn-extra-money-with-the-skills-i-already-have-73a3046d48.json",
+      "relative_page": "/chum/answers/doors/ways-to-earn-extra-money-with-the-skills-i-already-have-73a3046d48/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ways-to-earn-extra-money-with-the-skills-i-already-have-73a3046d48.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:revenue-war-map",
+          "kind": "product",
+          "product_key": "revenue-war-map",
+          "public_id": null,
+          "name": "Evercraft Revenue War Map",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/revenue-war-map/",
+          "public_url": "https://evercraft-war-map.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:296856ae70",
       "user_language": "we inherited a messy codebase and are afraid to touch it",
       "normalized": "we inherited a messy codebase and are afraid to touch it",
@@ -19791,6 +20033,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/evercraft-front-door/",
           "public_url": "https://evercraft.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:3b8b8a7e0c",
+      "user_language": "what can I do with 5 or 10 extra hours a week to earn more",
+      "normalized": "what can i do with 5 or 10 extra hours a week to earn more",
+      "relative_json": "/chum/answers/doors/what-can-i-do-with-5-or-10-extra-hours-a-week-to-earn-more-3b8b8a7e0c.json",
+      "relative_page": "/chum/answers/doors/what-can-i-do-with-5-or-10-extra-hours-a-week-to-earn-more-3b8b8a7e0c/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/what-can-i-do-with-5-or-10-extra-hours-a-week-to-earn-more-3b8b8a7e0c.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:revenue-war-map",
+          "kind": "product",
+          "product_key": "revenue-war-map",
+          "public_id": null,
+          "name": "Evercraft Revenue War Map",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/revenue-war-map/",
+          "public_url": "https://evercraft-war-map.base44.app/",
           "registry_name": null
         }
       ]

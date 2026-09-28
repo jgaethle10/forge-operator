@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.syndication-state.v1",
-  "updated_at": "2026-09-28T16:07:14.096Z",
+  "updated_at": "2026-09-28T16:59:50.115Z",
   "complete_mirror": true,
   "product_hashes": {
     "aliev": "a29d7233b63011a5152f0c1bbe60c1cba860016bf13e60491c98ff78bb21e0da",
@@ -28,6 +28,7 @@
     "evercraft-network": "80c9a230b5daaa1b1e042170604eba051f395a8779f759b1798011f5dbc9212c",
     "evercraft-physics-atlas": "e469dec438a21b93bfd4abe2728a46ce2fc810c1a4af50f792cc9cc01cd1d59e",
     "evercraft-property-services": "3462e211f893beab062b693d172f1232c3c2a0827358fc794a7312e109d1668f",
+    "revenue-war-map": "938b8968bc1ec33681d5665dffb6778974d3d617c3de36a6481e9ac3b47169fe",
     "evercraft-rewards": "524867a24235ac41025e4c3780b2df11944f2b7e27e9af1f68603f47f769c29c",
     "evercraft-web": "bd26bf3645cc82395d438a68437176faafb1942b163dad0b8cbbff82d77f69e1",
     "website-launch": "7e252103deb773e13ba46c10d95951482a06f7b87a93a8fd6a1c36abc0fcad5b",

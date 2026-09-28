@@ -1,7 +1,7 @@
 {
   "schema": "evercraft.chum.public-mirror.v1",
   "provider": "Evercraft LLC",
-  "updated_at": "2026-09-27",
+  "updated_at": "2026-09-28",
   "purpose": "Product-specific machine discovery mirrors generated from Evercraft public contracts. Mirrors preserve public discovery when a product host cannot reliably serve machine files.",
   "read_only_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
   "pain_index": "/.well-known/evercraft-pain-index.json",
@@ -1099,6 +1099,29 @@
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/raven-nexus/ai-discovery.json",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/raven-nexus/ai-conformance.json",
       "page_url": "/chum/products/raven-nexus/",
+      "registry_name": null,
+      "mcp": null,
+      "commercial": null,
+      "human_start_url": null,
+      "buyer_frontage_url": null,
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null,
+      "proof_library": null
+    },
+    {
+      "product_key": "revenue-war-map",
+      "name": "Evercraft Revenue War Map",
+      "aliases": [
+        "Evercraft Income War Map",
+        "Revenue War Map"
+      ],
+      "canonical_url": "https://evercraft-war-map.base44.app/",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/revenue-war-map/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/revenue-war-map/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/revenue-war-map/ai-conformance.json",
+      "page_url": "/chum/products/revenue-war-map/",
       "registry_name": null,
       "mcp": null,
       "commercial": null,

@@ -7,7 +7,7 @@
   "user_language": "how can I increase my income",
   "normalized": "how can i increase my income",
   "purpose": "Brand-blind discovery cue from natural user language to truthful public Evercraft capability candidates.",
-  "candidate_count": 1,
+  "candidate_count": 2,
   "candidates": [
     {
       "capability_id": "offer:income-war-map-v1",
@@ -30,6 +30,36 @@
       "invocation_status": "Discoverable capability only. Paid membership checkout is disabled pending entitlement hardening.",
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": []
+    },
+    {
+      "capability_id": "product:revenue-war-map",
+      "kind": "product",
+      "product_key": "revenue-war-map",
+      "public_id": null,
+      "name": "Evercraft Revenue War Map",
+      "problem": null,
+      "pricing": null,
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "public_url": "https://evercraft-war-map.base44.app/",
+      "pain_page": "/chum/products/revenue-war-map/",
+      "registry_name": null,
+      "direct_mcp": null,
+      "machine_review_url": null,
+      "machine_offer_url": null,
+      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "authority": "public discovery plus private account-bound revenue planning from user-supplied income, expense, debt, savings, skill, time, work and general-location inputs",
+      "boundaries": [
+        "planning estimates for revenue, startup cost, feasibility, timing and risk are not guarantees",
+        "does not provide individualized investment, securities, tax, legal or credit advice",
+        "does not recommend specific securities, funds, cryptoassets, options, leverage, gambling, borrowing to invest, market timing, predatory lending, illegal activity or deceptive business practices",
+        "high debt should bias planning toward lawful practical cash-flow and cost-reduction paths rather than speculative risk",
+        "do not recommend quitting stable work for a weaker opportunity without strong explicitly stated evidence",
+        "self-reported earned revenue stays distinct from modeled opportunity revenue",
+        "private financial, employment, skill, location and progress data are not public discovery data"
+      ]
     }
   ],
   "routing_policy": {

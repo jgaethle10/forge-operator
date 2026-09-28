@@ -555,6 +555,19 @@
       }
     },
     {
+      "product_key": "revenue-war-map",
+      "name": "Evercraft Revenue War Map",
+      "class": "personal_revenue_planning_and_income_opportunity_mapping",
+      "canonical_url": "https://evercraft-war-map.base44.app/",
+      "github_record": "./revenue-war-map/README.md",
+      "llms": "./revenue-war-map/llms.txt",
+      "registry_name": null,
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null
+      }
+    },
+    {
       "product_key": "roasted",
       "name": "ROASTED",
       "class": "micro_purchase_text_pressure_test",
