@@ -58,6 +58,10 @@ for (const product of directory.products || []) {
   assert.ok(html.includes('name="robots"'), `${key} product page missing crawler metadata`);
   assert.ok(html.includes('./llms.txt'), `${key} product page missing llms.txt link`);
   assert.ok(html.includes('./ai-discovery.json'), `${key} product page missing discovery JSON link`);
+  assert.ok(html.includes(`rel="canonical" href="/chum/products/${key}/"`), `${key} product page missing canonical link`);
+  assert.ok(html.includes('/feed.xml'), `${key} product page missing RSS discovery link`);
+  assert.ok(html.includes('/feed.json'), `${key} product page missing JSON Feed discovery link`);
+  assert.ok(html.includes('/.well-known/agent-card.json'), `${key} product page missing A2A Agent Card link`);
 
   const proof = proofByKey.get(key);
   if (proof) {
@@ -100,6 +104,16 @@ const alievDiscovery = JSON.parse(fs.readFileSync('public/chum/products/aliev/ai
 if (proofByKey.has('aliev')) {
   assert.equal(alievDiscovery.proof_library?.product_card, '/chum/proof/rivet.json', 'AliEV must inherit the RIVET proof card');
 }
+
+const schemaGraph = JSON.parse(fs.readFileSync('public/schema.jsonld','utf8'));
+assert.ok(
+  schemaGraph['@graph']?.some((node) => node?.['@id'] === 'https://github.com/jgaethle10/forge-operator#evercraft-discovery-site' && node?.['@type'] === 'WebSite'),
+  'schema graph missing Evercraft discovery WebSite node'
+);
+assert.ok(
+  schemaGraph['@graph']?.some((node) => node?.['@type'] === 'WebSite' && node?.potentialAction?.['@type'] === 'SearchAction'),
+  'schema graph missing SearchAction'
+);
 
 console.log('CHUM PUBLIC DISCOVERY SURFACES PASS', JSON.stringify({
   products: (directory.products || []).length,
