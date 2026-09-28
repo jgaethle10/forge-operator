@@ -2,11 +2,21 @@ name: IBM i Rescue Machine Commerce canary
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "systemia/chum/ibmi-rescue-canary.mjs"
+      - ".github/workflows/ibmi-rescue-canary.yml"
   schedule:
     - cron: "23 13 * * *"
 
 permissions:
   contents: read
+
+concurrency:
+  group: ibmi-rescue-machine-commerce-canary-main
+  cancel-in-progress: true
 
 jobs:
   canary:
@@ -17,5 +27,5 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Verify IBM i Rescue live Machine Commerce handoff
+      - name: Verify IBM i Rescue live Machine Commerce direct checkout contract
         run: node systemia/chum/ibmi-rescue-canary.mjs
