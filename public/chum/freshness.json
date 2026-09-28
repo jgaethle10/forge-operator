@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-28T16:59:50.301Z",
+  "updated_at": "2026-09-28T17:01:22.136Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,352 +11,63 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/answers/doors/as-400-modernization-assessment-49430f448e.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/sitemaps/answers.xml",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 108
-    },
-    {
-      "path": "/chum/sitemaps/products.xml",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 108
-    },
-    {
-      "path": "/chum/answers/doors/as-400-estate-assessment-before-upgrading-or-modernizing-5e73e54575.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/build-me-a-realistic-income-plan-c068090c69.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/build-me-a-realistic-income-plan-c068090c69/",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/create-a-personal-revenue-strategy-6d07e888e0.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/create-a-personal-revenue-strategy-6d07e888e0/",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/find-undocumented-dependencies-in-an-ibm-i-workload-5d2d519d2f.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/find-undocumented-ibm-i-dependencies-before-a-maintenance-window-e0c0c7b3bf.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/help-me-prioritize-ways-to-earn-more-without-quitting-my-job-4f9ed5f2be.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/help-me-prioritize-ways-to-earn-more-without-quitting-my-job-4f9ed5f2be/",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/help-me-turn-my-skills-into-income-324014f57b.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/help-me-turn-my-skills-into-income-324014f57b/",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/help-modernize-jde-world-or-a-custom-ibm-i-workload-without-losing-business-behavi-f9c27a8bcc.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/how-can-i-increase-my-income-27d6bd2ff4.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/how-can-i-increase-my-income-27d6bd2ff4/",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/i-am-worried-an-ibm-i-upgrade-will-break-batch-jobs-interfaces-or-vendor-software-a25b87dd23.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/i-need-a-plan-to-improve-cash-flow-80c770a718.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/i-need-a-plan-to-improve-cash-flow-80c770a718/",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/i-need-to-make-more-money-eb68bcfe8c.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/i-need-to-make-more-money-eb68bcfe8c/",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/ibm-i-7-4-support-is-ending-and-i-need-an-upgrade-plan-ca1da8e065.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/ibm-i-estate-assessment-before-changing-production-dab81f4a0a.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/ibm-i-upgrade-proof-240178e2de.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/map-rpg-cl-cobol-db2-jobs-and-integrations-before-ibm-i-modernization-aa38657636.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/show-me-practical-income-opportunities-for-my-situation-587e37f45a.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/show-me-practical-income-opportunities-for-my-situation-587e37f45a/",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/side-hustle-ideas-based-on-my-skills-and-available-time-ce233b157a.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/side-hustle-ideas-based-on-my-skills-and-available-time-ce233b157a/",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/track-whether-my-income-plan-is-actually-working-f3a630a3fa.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/track-whether-my-income-plan-is-actually-working-f3a630a3fa/",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/ways-to-earn-extra-money-with-the-skills-i-already-have-73a3046d48.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/ways-to-earn-extra-money-with-the-skills-i-already-have-73a3046d48/",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/what-can-i-do-with-5-or-10-extra-hours-a-week-to-earn-more-3b8b8a7e0c.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/what-can-i-do-with-5-or-10-extra-hours-a-week-to-earn-more-3b8b8a7e0c/",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/capabilities/ibmi-rescue-v1/capability.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/ibmi-rescue-v1/llms.txt",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/products/revenue-war-map/",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/revenue-war-map/ai-conformance.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/revenue-war-map/ai-discovery.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/revenue-war-map/llms.txt",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/sell-now.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 92
-    },
-    {
-      "path": "/.well-known/evercraft-pain-index.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 90
-    },
-    {
-      "path": "/chum/revenue.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 90
-    },
-    {
-      "path": "/llms-full.txt",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 86
-    },
-    {
-      "path": "/.well-known/evercraft-agent-commerce.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-agent-directory.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-discovery.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-machine-catalog.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-syndication.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 84
-    },
-    {
-      "path": "/chum/",
-      "last_changed": "2026-09-28T16:59:50.301Z",
+      "path": "/chum/crawler-radar.json",
+      "last_changed": "2026-09-28T17:01:22.136Z",
       "priority": 80
     },
     {
-      "path": "/chum/agent-commerce.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/index.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/index.txt",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/capabilities.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
+      "path": "/chum/crawler-radar.txt",
+      "last_changed": "2026-09-28T17:01:22.136Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
+      "last_changed": "2026-09-28T17:01:22.136Z",
       "priority": 80
     },
     {
-      "path": "/chum/index.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
+      "path": "/chum/strike/index.json",
+      "last_changed": "2026-09-28T17:01:22.136Z",
       "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.txt",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/syndication/",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/syndication/index.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 80
-    },
-    {
-      "path": "/ai-discovery.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.xml",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 60
-    },
-    {
-      "path": "/schema.jsonld",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 60
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/crawler-radar.json",
+      "url": "/chum/crawler-radar.json",
+      "last_changed": "2026-09-28T17:01:22.136Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/crawler-radar.txt",
+      "url": "/chum/crawler-radar.txt",
+      "last_changed": "2026-09-28T17:01:22.136Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-28T17:01:22.136Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "url": "/chum/strike/index.json",
+      "last_changed": "2026-09-28T17:01:22.136Z",
+      "priority": 80
+    },
+    {
+      "path": "/.well-known/evercraft-products.json",
+      "url": "/.well-known/evercraft-products.json",
+      "last_changed": "2026-09-28T17:01:21.661Z",
+      "priority": 88
+    },
+    {
+      "path": "/chum/hot/",
+      "url": "/chum/hot/",
+      "last_changed": "2026-09-28T17:01:21.661Z",
+      "priority": 80
+    },
     {
       "path": "/chum/answers/doors/as-400-modernization-assessment-49430f448e.json",
       "url": "/chum/answers/doors/as-400-modernization-assessment-49430f448e.json",
@@ -712,12 +423,6 @@
       "priority": 80
     },
     {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/index.json",
       "url": "/chum/index.json",
       "last_changed": "2026-09-28T16:59:50.301Z",
@@ -772,39 +477,9 @@
       "priority": 60
     },
     {
-      "path": "/chum/crawler-radar.json",
-      "url": "/chum/crawler-radar.json",
-      "last_changed": "2026-09-28T16:59:42.867Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/crawler-radar.txt",
-      "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-09-28T16:59:42.867Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/strike/",
       "url": "/chum/strike/",
       "last_changed": "2026-09-28T16:59:42.867Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/strike/index.json",
-      "url": "/chum/strike/index.json",
-      "last_changed": "2026-09-28T16:59:42.867Z",
-      "priority": 80
-    },
-    {
-      "path": "/.well-known/evercraft-products.json",
-      "url": "/.well-known/evercraft-products.json",
-      "last_changed": "2026-09-28T16:59:42.395Z",
-      "priority": 88
-    },
-    {
-      "path": "/chum/hot/",
-      "url": "/chum/hot/",
-      "last_changed": "2026-09-28T16:55:33.517Z",
       "priority": 80
     },
     {
