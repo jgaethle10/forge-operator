@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.provider-probe-history.v1",
-  "updated_at": "2026-09-28T15:16:02.024Z",
+  "updated_at": "2026-09-28T16:10:11.947Z",
   "max_records": 500,
   "records": [
     {
@@ -3092,6 +3092,24 @@
       "pickup_observed": true,
       "provider_receipt_sha256": "b4565d1ce50634b28dfd7ebcd3116a0c6e97773d1f21809b000795b3ecc94441",
       "response_sha256": "815b902986137203b5557d8460f79f35f6ea64a402734841879f88ec812ea020",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "ad35da9c892a9209fb1b5b5940001ea8a91d30ef3c360788a14b164ebfe6e0c8",
+      "observed_at": "2026-09-28T16:10:11.946Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "evercraft-rewards",
+      "case_id": "local-rewards-001",
+      "prompt_sha256": "0ee34f5acd3d94f2634e6b51c1795fdf16d81a0d3cfe673a8c26758d2056ef36",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "cadfc3fdaf909d6695f83d15d2d79c54a45d93cd7864975ca8c7976bed372ac1",
+      "response_sha256": "0dee00684e5fb272c6b83ee25f94a81d86d2a8948ddb54073972ded1472c0238",
       "source": "authorized_provider_probe",
       "privacy": {
         "full_provider_response_persisted": false,
