@@ -113,6 +113,24 @@ function rate(numerator, denominator) {
   return Number((Number(numerator || 0) / Number(denominator)).toFixed(4));
 }
 
+function latencySummary(values) {
+  const bounded = values
+    .map((value) => Number(value))
+    .filter((value) => Number.isFinite(value) && value >= 0 && value <= 24 * 3600_000)
+    .sort((a, b) => a - b);
+  if (!bounded.length) {
+    return { samples: 0, average_seconds: null, p50_seconds: null, p90_seconds: null };
+  }
+  const percentile = (p) => bounded[Math.floor((bounded.length - 1) * p)];
+  const average = bounded.reduce((sum, value) => sum + value, 0) / bounded.length;
+  return {
+    samples: bounded.length,
+    average_seconds: Math.round(average / 1000),
+    p50_seconds: Math.round(percentile(0.5) / 1000),
+    p90_seconds: Math.round(percentile(0.9) / 1000),
+  };
+}
+
 function addAttributionObservation(map, key, event, actor) {
   const id = clean(key).toLowerCase() || 'unknown';
   map[id] ||= {
@@ -581,6 +599,10 @@ export async function buildMoneyRadar({
   const lastTouchSource = {};
   const sourcePaths = {};
   const campaignPaths = {};
+  const landingToOfferMs = [];
+  const offerToContinueMs = [];
+  const continueToCheckoutMs = [];
+  const offerToCheckoutMs = [];
   let sessionsWithJourneyLineage = 0;
 
   for (const events of journeyEventsBySession.values()) {
@@ -589,6 +611,20 @@ export async function buildMoneyRadar({
     events.sort((a, b) => Date.parse(a.occurred_at || '') - Date.parse(b.occurred_at || ''));
     const first = events[0];
     const last = events[events.length - 1];
+    const firstStageMs = (stage) => {
+      const found = events.find((event) => event.stage === stage);
+      const t = Date.parse(found?.occurred_at || '');
+      return Number.isFinite(t) ? t : null;
+    };
+    const landingMs = firstStageMs('landing');
+    const offerMs = firstStageMs('offer_view');
+    const continueMs = firstStageMs('continue_clicked');
+    const checkoutMs = firstStageMs('checkout_started');
+    if (landingMs != null && offerMs != null && offerMs >= landingMs) landingToOfferMs.push(offerMs - landingMs);
+    if (offerMs != null && continueMs != null && continueMs >= offerMs) offerToContinueMs.push(continueMs - offerMs);
+    if (continueMs != null && checkoutMs != null && checkoutMs >= continueMs) continueToCheckoutMs.push(checkoutMs - continueMs);
+    if (offerMs != null && checkoutMs != null && checkoutMs >= offerMs) offerToCheckoutMs.push(checkoutMs - offerMs);
+
     firstTouchSource[first.source] = (firstTouchSource[first.source] || 0) + 1;
     lastTouchSource[last.source] = (lastTouchSource[last.source] || 0) + 1;
 
@@ -619,6 +655,16 @@ export async function buildMoneyRadar({
     campaign_paths: Object.values(campaignPaths)
       .sort((a, b) => b.sessions - a.sessions || a.path.localeCompare(b.path))
       .slice(0, 50),
+  };
+  const stage_latency = {
+    landing_to_offer: latencySummary(landingToOfferMs),
+    offer_to_continue: latencySummary(offerToContinueMs),
+    continue_to_checkout: latencySummary(continueToCheckoutMs),
+    offer_to_checkout: latencySummary(offerToCheckoutMs),
+    doctrine: {
+      maximum_included_session_gap_hours: 24,
+      latency_is_descriptive_not_causal: true,
+    },
   };
 
   const acquisitionMeasurementState =
@@ -899,6 +945,7 @@ export async function buildMoneyRadar({
     surface_breakdown,
     experiment_breakdown,
     journey_attribution,
+    stage_latency,
     buyer_milestones,
     operator_alerts,
     windows,
@@ -960,6 +1007,7 @@ export async function buildMoneyRadar({
     `Surface quality: ${JSON.stringify(surface_breakdown.slice(0, 20))}`,
     `Experiment quality: ${JSON.stringify(experiment_breakdown.slice(0, 20))}`,
     `Journey attribution: ${JSON.stringify(journey_attribution)}`,
+    `Stage latency: ${JSON.stringify(stage_latency)}`,
     '',
     '## Velocity windows',
     '',
