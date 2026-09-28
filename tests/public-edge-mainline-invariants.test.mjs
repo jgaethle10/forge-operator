@@ -98,8 +98,8 @@ test('one verified Evercraft edge receipt promotes all four specialists but not 
   }
 });
 
-test('field mission does not hand control to Systemia until physical field certification is complete',()=>{
-  const waiting=evaluatePublicEdgeFieldMission({
+test('Systemia may search early but production edge still requires verified field capacity',()=>{
+  const searching=evaluatePublicEdgeFieldMission({
     node001Mission:{
       status:'waiting_on_field_evidence',
       completed_steps:['field_kit_ready','preflight_passed'],
@@ -107,11 +107,15 @@ test('field mission does not hand control to Systemia until physical field certi
     },
     directPluginSpecs:specs,
   });
-  assert.equal(waiting.mission.status,'waiting_on_field_evidence');
-  assert.equal(waiting.mission.systemia_autonomy_ready,false);
-  assert.equal(waiting.mission.founder_login_required,false);
+  assert.equal(searching.mission.status,'searching_for_eligible_field_capacity');
+  assert.equal(searching.mission.systemia_autonomy_ready,true);
+  assert.equal(searching.mission.field_verified,false);
+  assert.equal(searching.mission.edge_activated,false);
+  assert.equal(searching.mission.public_route_verified,false);
+  assert.equal(searching.mission.authorized_field_action_required,false);
+  assert.equal(searching.mission.founder_login_required,false);
 
-  const ready=evaluatePublicEdgeFieldMission({
+  const legacyReady=evaluatePublicEdgeFieldMission({
     node001Mission:{
       status:'complete',
       completed_steps:[
@@ -125,8 +129,23 @@ test('field mission does not hand control to Systemia until physical field certi
     },
     directPluginSpecs:specs,
   });
-  assert.equal(ready.mission.status,'ready_for_systemia');
-  assert.equal(ready.mission.field_verified,true);
-  assert.equal(ready.mission.systemia_autonomy_ready,true);
-  assert.equal(ready.mission.founder_login_required,false);
+  assert.equal(legacyReady.mission.status,'ready_for_systemia');
+  assert.equal(legacyReady.mission.field_verified,true);
+  assert.equal(legacyReady.mission.systemia_autonomy_ready,true);
+  assert.equal(legacyReady.mission.founder_login_required,false);
+
+  const alternateReady=evaluatePublicEdgeFieldMission({
+    node001Mission:null,
+    edgeWatch:{
+      action:'activated',
+      field_verified:true,
+      identity_verified:true,
+      route_verified:false,
+    },
+    directPluginSpecs:specs,
+  });
+  assert.equal(alternateReady.mission.field_verified,true);
+  assert.equal(alternateReady.mission.selected_capacity_field_verified,true);
+  assert.equal(alternateReady.mission.legacy_node001_field_verified,false);
+  assert.equal(alternateReady.mission.status,'edge_active_external_route_pending');
 });
