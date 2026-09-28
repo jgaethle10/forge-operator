@@ -50,7 +50,15 @@ requireMainOnlyPush('.github/workflows/evercraft-mcp-canary.yml');
   else pass(`${path} follows main checks only`);
 }
 
-for (const path of ['.github/workflows/ci.yml','.github/workflows/chum-watershed.yml','.github/workflows/evercraft-mcp-canary.yml']) {
+{
+  const path = '.github/workflows/ci.yml';
+  const text = read(path);
+  const conditional = /concurrency:[\s\S]*?cancel-in-progress:\s*\$\{\{\s*github\.event_name\s*==\s*['"]pull_request['"]\s*\}\}/.test(text);
+  if (!conditional) fail(`${path} must cancel stale pull-request runs while allowing active main verification to finish`);
+  else pass(`${path} cancels stale PR runs without starving main verification`);
+}
+
+for (const path of ['.github/workflows/chum-watershed.yml','.github/workflows/evercraft-mcp-canary.yml']) {
   const text = read(path);
   if (!/concurrency:[\s\S]*?cancel-in-progress:\s*true/.test(text)) fail(`${path} must cancel superseded runs`);
   else pass(`${path} cancels superseded runs`);
