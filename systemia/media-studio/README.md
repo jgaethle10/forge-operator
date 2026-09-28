@@ -178,6 +178,22 @@ npm run media:studio -- world-intel ./tmp/story.json ./tmp/world-stage.json ./tm
 
 This is intended for Week in Motion, TOWI, FAIE and other geography/time/scale-heavy stories where the visuals need to carry the explanation rather than sit behind typography.
 
+## Visual themes
+
+The Visual Stage carries a renderer-level theme contract instead of relying on scattered hard-coded CSS. Theme identity participates in the stage digest, so changing the visual system changes the reproducible render identity.
+
+The canonical `evercraft-core-v1` theme is based on the current Evercraft brand system:
+
+- Core Black: `#080B0B`
+- Engineering White: `#F5F5F2`
+- Titanium: `#B7BDC5`
+- Champagne Gold: `#B79A56`
+- Electric Ice Blue: `#4FB8FF`
+
+Theme tokens drive stage background, primary and secondary text, metrics, evidence badges, map grids, observed routes, modeled routes, tracked points and timeline elements. Public-source evidence defaults toward Electric Ice; modeled/inferred/synthetic visualization defaults toward Champagne Gold. The private Chromium renderer and browser preview surface consume the same stage theme contract.
+
+World-intelligence scenes opt into `evercraft-core-v1` by default.
+
 ## Distributed rendering
 
 Visual Stage frames can be sharded across multiple private Fallen Render Workers. The planner creates exact, non-overlapping frame ranges; workers render only their assigned lattice slice; the coordinator retrieves each PNG through the worker's authenticated artifact endpoint, re-hashes the bytes locally, proves full no-gap/no-duplicate coverage, and only then assembles the master with FFmpeg.
