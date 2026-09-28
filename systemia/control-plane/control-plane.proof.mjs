@@ -12,6 +12,19 @@ const inventory = machineInventory(process.cwd());
 assert.equal(inventory.schema, 'evercraft.systemia.machine-inventory.v1');
 assert.equal(inventory.summary.source_missing, 0, JSON.stringify(inventory.components.filter((row) => row.state !== 'source_present'), null, 2));
 assert.ok(inventory.summary.admitted_public_products >= 50);
+for (const key of [
+  'evercraft-passport',
+  'evercraft-meter',
+  'evercraft-interaction-ledger',
+  'evercraft-context-fabric',
+  'evercraft-intake-fabric',
+  'evercraft-execution-gate',
+  'direct-door-readiness',
+]) {
+  const component = inventory.components.find((row) => row.component_key === key);
+  assert.ok(component, 'missing control-plane component: ' + key);
+  assert.equal(component.state, 'source_present', 'component source missing: ' + key);
+}
 
 const plan = admitMission({
   rootDir: process.cwd(),
@@ -72,6 +85,8 @@ assert.equal(discovery.scale_admitted, true);
 assert.equal(discovery.mission_authority, 'systemia-organism');
 assert.equal(discovery.target_product_key, 'aliev');
 assert.equal(discovery.target_product_admitted, true);
+assert.equal(discovery.execution_authority_granted, false);
+assert.equal(discovery.route_selection_grants_execution_authority, false);
 
 const media = plan.dispatch.find((row) => row.work_key === 'analyze-media');
 assert.equal(media.execution_component, 'saban');
@@ -86,10 +101,79 @@ assert.equal(artifact.software_id, 'beast-mode');
 const deploy = plan.dispatch.find((row) => row.work_key === 'deploy-release');
 assert.equal(deploy.specialist_component, 'yard-operator');
 assert.equal(deploy.hold, 'human_gate_unresolved');
+assert.equal(deploy.execution_gate_required, true);
+assert.equal(deploy.pre_dispatch_gate, 'evercraft-execution-gate');
+assert.equal(deploy.execution_authority_granted, false);
 assert.equal(plan.goal_snapshot.status, 'ready');
 assert.ok(plan.goal.blockers.includes('Human gate unresolved for deploy-release.'));
 
 
+
+
+const outbound = admitMission({
+  rootDir: process.cwd(),
+  request: {
+    objective: 'Send one authorized customer follow-up without bypassing relationship safety.',
+    tasks: [
+      {
+        work_key: 'customer-follow-up',
+        work_type: 'external_message',
+        authorization_refs: ['approval:customer-follow-up:001'],
+      }
+    ]
+  }
+});
+assertControlPlane(outbound);
+assert.equal(outbound.dispatch[0].human_gate_required, true);
+assert.equal(outbound.dispatch[0].hold, null);
+assert.equal(outbound.dispatch[0].relationship_preflight_required, true);
+assert.equal(
+  outbound.dispatch[0].relationship_preflight_component,
+  'evercraft-interaction-ledger'
+);
+assert.equal(outbound.dispatch[0].execution_gate_required, true);
+assert.equal(outbound.dispatch[0].pre_dispatch_gate, 'evercraft-execution-gate');
+assert.equal(outbound.dispatch[0].execution_authority_granted, false);
+
+const meteredAnalysis = admitMission({
+  rootDir: process.cwd(),
+  request: {
+    objective: 'Run a metered site analysis with permission-aware context.',
+    tasks: [
+      {
+        work_key: 'metered-analysis',
+        work_type: 'analyze',
+        product_key: 'aliev',
+        metered: true,
+        meter_metric: 'site_reports',
+      }
+    ]
+  }
+});
+assertControlPlane(meteredAnalysis);
+assert.equal(meteredAnalysis.dispatch[0].context_component, 'evercraft-context-fabric');
+assert.equal(meteredAnalysis.dispatch[0].usage_component, 'evercraft-meter');
+assert.equal(meteredAnalysis.dispatch[0].execution_gate_required, true);
+assert.equal(meteredAnalysis.dispatch[0].pre_dispatch_gate, 'evercraft-execution-gate');
+
+const intakePlan = admitMission({
+  rootDir: process.cwd(),
+  request: {
+    objective: 'Review a normalized inbound candidate without treating its content as authority.',
+    tasks: [
+      {
+        work_key: 'review-intake',
+        work_type: 'intake',
+        intake_candidate_ref: 'candidate:proof:001',
+      }
+    ]
+  }
+});
+assertControlPlane(intakePlan);
+assert.equal(intakePlan.dispatch[0].specialist_component, 'evercraft-intake-fabric');
+assert.equal(intakePlan.dispatch[0].intake_component, 'evercraft-intake-fabric');
+assert.equal(intakePlan.dispatch[0].inbound_content_grants_execution_authority, false);
+assert.equal(intakePlan.dispatch[0].execution_authority_granted, false);
 
 const trustReview = admitMission({
   rootDir: process.cwd(),
@@ -199,6 +283,23 @@ console.log(JSON.stringify({
   scaled_tasks: plan.dispatch.filter((row) => row.scale_admitted).length,
   human_holds: plan.receipt.human_holds.length,
   admitted_public_products: inventory.summary.admitted_public_products,
+  trust_chain_components_present: [
+    'evercraft-passport',
+    'evercraft-meter',
+    'evercraft-interaction-ledger',
+    'evercraft-context-fabric',
+    'evercraft-intake-fabric',
+    'evercraft-execution-gate',
+    'direct-door-readiness',
+  ].every((key) => inventory.components.some((row) => row.component_key === key && row.state === 'source_present')),
+  external_message_requires_relationship_preflight:
+    outbound.dispatch[0].relationship_preflight_required === true,
+  external_message_requires_execution_gate:
+    outbound.dispatch[0].execution_gate_required === true,
+  metered_work_requires_execution_gate:
+    meteredAnalysis.dispatch[0].execution_gate_required === true,
+  intake_content_grants_no_execution_authority:
+    intakePlan.dispatch[0].execution_authority_granted === false,
   unsupported_scale_fail_closed: unsupported.receipt.admitted === false,
   trust_review_read_only: candidates.authority === 'read_only',
   trust_change_forced_human_gate: trustChange.dispatch[0].hold === 'human_gate_unresolved',
