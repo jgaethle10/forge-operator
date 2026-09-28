@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.forensiscope.developer-status.v1",
-  "updated_at": "2026-09-25",
+  "updated_at": "2026-09-28",
   "provider": "Evercraft LLC",
   "product": "ForensiScope by Evercraft",
   "product_key": "forensiscope",
@@ -21,7 +21,7 @@
   },
   "mcp": {
     "registry_name": "io.github.jgaethle10/forensiscope",
-    "manifest_version": "1.1.4",
+    "manifest_version": "1.1.5",
     "transport": "streamable-http",
     "url": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp",
     "verification": "included_in_live_portfolio_canary_zero_failed_mcp_on_latest_checked_run",
