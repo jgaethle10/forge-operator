@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.crawler-radar.v1",
-  "generated_at": "2026-09-28T15:56:21.937Z",
+  "generated_at": "2026-09-28T16:07:52.173Z",
   "coordinator": "CHUM",
   "runtime_feedback": {
     "requested": false,
@@ -10,7 +10,7 @@
   "observation_count": 0,
   "negative_provider_pickup_receipts": 174,
   "surface_count": 2404,
-  "strike_now_count": 1581,
+  "strike_now_count": 1716,
   "doctrine": {
     "crawler_fetch_is_not_indexing": true,
     "indexing_is_not_ranking": true,
@@ -163,10 +163,10 @@
     {
       "path": "/chum/products/deck-capital-fit/ai-conformance.json",
       "product_key": "deck-capital-fit",
-      "score": 239,
+      "score": 246,
       "urgency": "strike_now",
       "crawl_priority": 154,
-      "last_changed": "2026-09-27T14:53:47.616Z",
+      "last_changed": "2026-09-28T16:07:14.264Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -228,7 +228,7 @@
       ],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
+        "fresh_content_under_24h",
         "negative_provider_pickup_receipt",
         "indexnow_hash_pending"
       ],
@@ -242,10 +242,10 @@
     {
       "path": "/chum/products/deck-capital-fit/ai-discovery.json",
       "product_key": "deck-capital-fit",
-      "score": 239,
+      "score": 246,
       "urgency": "strike_now",
       "crawl_priority": 154,
-      "last_changed": "2026-09-27T14:53:47.616Z",
+      "last_changed": "2026-09-28T16:07:14.264Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -307,7 +307,7 @@
       ],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
+        "fresh_content_under_24h",
         "negative_provider_pickup_receipt",
         "indexnow_hash_pending"
       ],
@@ -321,10 +321,10 @@
     {
       "path": "/chum/products/evercraft-containment/ai-conformance.json",
       "product_key": "evercraft-containment",
-      "score": 239,
+      "score": 246,
       "urgency": "strike_now",
       "crawl_priority": 154,
-      "last_changed": "2026-09-27T14:53:47.616Z",
+      "last_changed": "2026-09-28T16:07:14.264Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -380,7 +380,7 @@
       ],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
+        "fresh_content_under_24h",
         "negative_provider_pickup_receipt",
         "indexnow_hash_pending"
       ],
@@ -394,10 +394,10 @@
     {
       "path": "/chum/products/evercraft-containment/ai-discovery.json",
       "product_key": "evercraft-containment",
-      "score": 239,
+      "score": 246,
       "urgency": "strike_now",
       "crawl_priority": 154,
-      "last_changed": "2026-09-27T14:53:47.616Z",
+      "last_changed": "2026-09-28T16:07:14.264Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -453,7 +453,7 @@
       ],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
+        "fresh_content_under_24h",
         "negative_provider_pickup_receipt",
         "indexnow_hash_pending"
       ],
@@ -467,10 +467,10 @@
     {
       "path": "/chum/products/forensiscope/",
       "product_key": "forensiscope",
-      "score": 239,
+      "score": 246,
       "urgency": "strike_now",
       "crawl_priority": 154,
-      "last_changed": "2026-09-27T14:53:47.616Z",
+      "last_changed": "2026-09-28T16:07:14.264Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -916,7 +916,7 @@
       ],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
+        "fresh_content_under_24h",
         "negative_provider_pickup_receipt",
         "indexnow_hash_pending"
       ],
@@ -930,10 +930,10 @@
     {
       "path": "/chum/products/forensiscope/ai-conformance.json",
       "product_key": "forensiscope",
-      "score": 239,
+      "score": 246,
       "urgency": "strike_now",
       "crawl_priority": 154,
-      "last_changed": "2026-09-27T14:53:47.616Z",
+      "last_changed": "2026-09-28T16:07:14.264Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -1379,7 +1379,7 @@
       ],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
+        "fresh_content_under_24h",
         "negative_provider_pickup_receipt",
         "indexnow_hash_pending"
       ],
@@ -1393,10 +1393,10 @@
     {
       "path": "/chum/products/forensiscope/ai-discovery.json",
       "product_key": "forensiscope",
-      "score": 239,
+      "score": 246,
       "urgency": "strike_now",
       "crawl_priority": 154,
-      "last_changed": "2026-09-27T14:53:47.616Z",
+      "last_changed": "2026-09-28T16:07:14.264Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -1842,7 +1842,7 @@
       ],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
+        "fresh_content_under_24h",
         "negative_provider_pickup_receipt",
         "indexnow_hash_pending"
       ],

@@ -2,9 +2,14 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-09-28T16:07:14.264Z</updated>
+<updated>2026-09-28T16:07:52.394Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
+<entry><id>urn:evercraft:chum:d8bcbc9c28ec3e0aa29125ea</id><title>/chum/crawler-radar.json</title><updated>2026-09-28T16:07:52.394Z</updated><link href="/chum/crawler-radar.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:aa9b916fd98945db10fa3cab</id><title>/chum/crawler-radar.txt</title><updated>2026-09-28T16:07:52.394Z</updated><link href="/chum/crawler-radar.txt"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-28T16:07:52.394Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:bc7689c4c0867339d0001ccc</id><title>/chum/strike/</title><updated>2026-09-28T16:07:52.394Z</updated><link href="/chum/strike/"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:494de3a9b5c21a35fdfdb6c2</id><title>/chum/strike/index.json</title><updated>2026-09-28T16:07:52.394Z</updated><link href="/chum/strike/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:8224ce0094403beef29dc19c</id><title>/chum/products/deck-capital-fit/ai-conformance.json</title><updated>2026-09-28T16:07:14.264Z</updated><link href="/chum/products/deck-capital-fit/ai-conformance.json"/><category term="priority-154"/></entry>
 <entry><id>urn:evercraft:chum:632a0322a4aba5313c5103f4</id><title>/chum/products/deck-capital-fit/ai-discovery.json</title><updated>2026-09-28T16:07:14.264Z</updated><link href="/chum/products/deck-capital-fit/ai-discovery.json"/><category term="priority-154"/></entry>
 <entry><id>urn:evercraft:chum:27a9196c1f010060327ea898</id><title>/chum/products/evercraft-containment/ai-conformance.json</title><updated>2026-09-28T16:07:14.264Z</updated><link href="/chum/products/evercraft-containment/ai-conformance.json"/><category term="priority-154"/></entry>
@@ -100,9 +105,4 @@
 <entry><id>urn:evercraft:chum:8f18fdcf8e3bcb1d93e55071</id><title>/chum/products/everystage/ai-conformance.json</title><updated>2026-09-28T16:07:14.264Z</updated><link href="/chum/products/everystage/ai-conformance.json"/><category term="priority-94"/></entry>
 <entry><id>urn:evercraft:chum:d236caeb089834eb4a3690f1</id><title>/chum/products/everystage/ai-discovery.json</title><updated>2026-09-28T16:07:14.264Z</updated><link href="/chum/products/everystage/ai-discovery.json"/><category term="priority-94"/></entry>
 <entry><id>urn:evercraft:chum:4ac50e9661c1b918e42fbec7</id><title>/chum/products/faie/</title><updated>2026-09-28T16:07:14.264Z</updated><link href="/chum/products/faie/"/><category term="priority-94"/></entry>
-<entry><id>urn:evercraft:chum:83104c62b6c7033055b1fb31</id><title>/chum/products/faie/ai-conformance.json</title><updated>2026-09-28T16:07:14.264Z</updated><link href="/chum/products/faie/ai-conformance.json"/><category term="priority-94"/></entry>
-<entry><id>urn:evercraft:chum:3eac46877e1769008be3ff6a</id><title>/chum/products/faie/ai-discovery.json</title><updated>2026-09-28T16:07:14.264Z</updated><link href="/chum/products/faie/ai-discovery.json"/><category term="priority-94"/></entry>
-<entry><id>urn:evercraft:chum:254a17a171b0dfff3ed19d1b</id><title>/chum/products/findmypart/</title><updated>2026-09-28T16:07:14.264Z</updated><link href="/chum/products/findmypart/"/><category term="priority-94"/></entry>
-<entry><id>urn:evercraft:chum:4b9c709f849c832210931bbf</id><title>/chum/products/findmypart/ai-conformance.json</title><updated>2026-09-28T16:07:14.264Z</updated><link href="/chum/products/findmypart/ai-conformance.json"/><category term="priority-94"/></entry>
-<entry><id>urn:evercraft:chum:70b41aeedbee86789d41d7e5</id><title>/chum/products/findmypart/ai-discovery.json</title><updated>2026-09-28T16:07:14.264Z</updated><link href="/chum/products/findmypart/ai-discovery.json"/><category term="priority-94"/></entry>
 </feed>
