@@ -244,17 +244,21 @@ export class EvercraftExecutionGate {
     return this.#mutate(() => {
       const idempotencyKey = requiredString(input?.idempotency_key, 'idempotency_key');
       const duplicate = this.operationIdempotency.get(idempotencyKey);
-      if (duplicate) {
+      const duplicateLatest = duplicate
+        ? this.latest.get(duplicate.lease_id) || duplicate
+        : null;
+      if (duplicate && duplicateLatest.state !== 'preparing') {
         return {
-          state: duplicate.state,
-          lease: duplicate,
+          state: duplicateLatest.state,
+          lease: duplicateLatest,
           duplicate: true,
+          dispatch_allowed: duplicateLatest.state === 'started',
         };
       }
 
-      const leaseId = input?.lease_id
+      const leaseId = duplicate?.lease_id || (input?.lease_id
         ? requiredString(input.lease_id, 'lease_id')
-        : 'lease_' + randomUUID();
+        : 'lease_' + randomUUID());
       const existingLease = this.latest.get(leaseId);
       if (existingLease && existingLease.state !== 'preparing') {
         throw new Error('lease_id_conflict');
