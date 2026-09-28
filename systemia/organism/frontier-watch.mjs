@@ -145,7 +145,11 @@ export function buildFrontierReport({ rootDir = process.cwd(), now = new Date() 
       sources: asset.sources,
       obligation,
       execution_rule: 'advance_or_explicit_hold',
-      required_receipts: ['evidence_state', 'next_edge', 'execution_or_hold', 'verification']
+      documentation_rule: 'every-material-advance-must-preserve-lineage-and-institutional-memory',
+      publication_rule: 'material-verified-advances-must-route-to-evercraft-clip-or-emit-explicit-publication-hold',
+      publication_owner: 'Evercraft Clip',
+      publication_states: ['documented_only', 'queued_to_clip', 'published_verified', 'held_with_reason'],
+      required_receipts: ['evidence_state', 'next_edge', 'execution_or_hold', 'verification', 'documentation', 'publication_disposition']
     };
     return {
       ...body,
