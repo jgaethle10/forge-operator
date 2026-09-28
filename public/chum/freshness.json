@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-28T19:03:48.848Z",
+  "updated_at": "2026-09-28T19:04:54.335Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,332 +11,29 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/commercial/",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 112
-    },
-    {
-      "path": "/chum/commercial/feed.json",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 112
-    },
-    {
-      "path": "/chum/commercial/feed.xml",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 112
-    },
-    {
-      "path": "/chum/commercial/index.json",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 112
-    },
-    {
-      "path": "/chum/commercial/legacy-rescue-lab-v1/",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 112
-    },
-    {
-      "path": "/chum/commercial/legacy-rescue-lab-v1/index.json",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 112
-    },
-    {
-      "path": "/chum/commercial/legacy-rescue-lab-v1/llms.txt",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 112
-    },
-    {
-      "path": "/chum/commercial/llms.txt",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 112
-    },
-    {
-      "path": "/chum/sitemaps/sell-now.xml",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 108
-    },
-    {
-      "path": "/chum/answers/doors/abandoned-codebase-rescue-07e27eb24f.json",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/abandoned-codebase-rescue-07e27eb24f/",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/an-ai-agency-built-our-app-and-now-it-is-unreliable-or-undocumented-6c20ab539b.json",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/an-ai-agency-built-our-app-and-now-it-is-unreliable-or-undocumented-6c20ab539b/",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/broken-checkout-repair-aaf4ff756b.json",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/broken-checkout-repair-aaf4ff756b/",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/customers-cannot-submit-our-lead-form-f7250a8fc9.json",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/customers-cannot-submit-our-lead-form-f7250a8fc9/",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/failed-ai-app-repair-cb7497ef5b.json",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/failed-ai-app-repair-cb7497ef5b/",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/find-publicly-observable-conversion-leaks-before-we-pay-for-a-rebuild-4e621ecf92.json",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/find-publicly-observable-conversion-leaks-before-we-pay-for-a-rebuild-4e621ecf92/",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/legacy-software-rescue-9cd924f010.json",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/legacy-software-rescue-9cd924f010/",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/my-checkout-is-broken-and-customers-cannot-buy-a75ec666fb.json",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/my-checkout-is-broken-and-customers-cannot-buy-a75ec666fb/",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/our-developer-disappeared-and-nobody-knows-how-this-codebase-works-8ef4b1465c.json",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/our-developer-disappeared-and-nobody-knows-how-this-codebase-works-8ef4b1465c/",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/our-saas-works-but-barely-and-we-need-to-stabilize-it-a62037209e.json",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/our-saas-works-but-barely-and-we-need-to-stabilize-it-a62037209e/",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/our-website-is-painfully-slow-on-mobile-f6c1369013.json",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/our-website-is-painfully-slow-on-mobile-f6c1369013/",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/our-website-or-app-is-old-but-rebuilding-from-scratch-is-too-risky-05cb29fc9f.json",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/our-website-or-app-is-old-but-rebuilding-from-scratch-is-too-risky-05cb29fc9f/",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/repair-an-existing-system-instead-of-replacing-it-ac9ceb3c66.json",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/repair-an-existing-system-instead-of-replacing-it-ac9ceb3c66/",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/we-inherited-a-messy-codebase-and-are-afraid-to-touch-it-296856ae70.json",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/we-inherited-a-messy-codebase-and-are-afraid-to-touch-it-296856ae70/",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/we-need-to-migrate-off-an-old-platform-without-losing-business-behavior-886a605ef8.json",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/we-need-to-migrate-off-an-old-platform-without-losing-business-behavior-886a605ef8/",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/intents/legacy-rescue-lab-v1/",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/capabilities/",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/legacy-rescue-lab-v1/",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/legacy-rescue-lab-v1/capability.json",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/legacy-rescue-lab-v1/llms.txt",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/sell-now.html",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 92
-    },
-    {
-      "path": "/chum/sell-now.json",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 92
-    },
-    {
-      "path": "/chum/sell-now.txt",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 92
-    },
-    {
-      "path": "/.well-known/evercraft-pain-index.json",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 90
-    },
-    {
-      "path": "/chum/revenue.html",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 90
-    },
-    {
-      "path": "/chum/revenue.json",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 90
-    },
-    {
-      "path": "/chum/revenue.txt",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 90
-    },
-    {
-      "path": "/llms-full.txt",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 86
-    },
-    {
-      "path": "/.well-known/evercraft-agent-commerce.json",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-machine-catalog.json",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 84
-    },
-    {
-      "path": "/chum/agent-commerce.html",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/agent-commerce.json",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/agent-commerce.txt",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/index.json",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/index.txt",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/capabilities.json",
-      "last_changed": "2026-09-28T19:03:48.848Z",
+      "path": "/chum/hot/",
+      "last_changed": "2026-09-28T19:04:54.335Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-28T19:03:48.848Z",
+      "last_changed": "2026-09-28T19:04:54.335Z",
       "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.json",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.txt",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 80
-    },
-    {
-      "path": "/schema.jsonld",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 60
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/hot/",
+      "url": "/chum/hot/",
+      "last_changed": "2026-09-28T19:04:54.335Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-28T19:04:54.335Z",
+      "priority": 80
+    },
     {
       "path": "/chum/commercial/",
       "url": "/chum/commercial/",
@@ -704,12 +401,6 @@
       "priority": 80
     },
     {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-09-28T19:03:48.848Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/pain-index.json",
       "url": "/chum/pain-index.json",
       "last_changed": "2026-09-28T19:03:48.848Z",
@@ -772,12 +463,6 @@
     {
       "path": "/chum/",
       "url": "/chum/",
-      "last_changed": "2026-09-28T19:02:23.104Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/",
-      "url": "/chum/hot/",
       "last_changed": "2026-09-28T19:02:23.104Z",
       "priority": 80
     },
