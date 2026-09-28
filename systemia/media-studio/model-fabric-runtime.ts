@@ -148,7 +148,7 @@ export async function executeVisualModelPlan(
     error:item.error,
   })).sort((a,b)=>a.jobId.localeCompare(b.jobId));
 
-  const status=completed.length===plan.jobs.length
+  const status:VisualExecutionResult['status']=completed.length===plan.jobs.length
     ? 'completed'
     : completed.length
       ? 'partial'
