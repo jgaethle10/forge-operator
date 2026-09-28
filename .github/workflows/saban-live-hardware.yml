@@ -5,6 +5,8 @@ on:
     paths:
       - 'systemia/saban/broker-capacity-pool.mjs'
       - 'systemia/saban/broker-capacity-pool.proof.mjs'
+      - 'systemia/saban/ambient-capability-resolver.mjs'
+      - 'systemia/saban/ambient-capability-resolver.proof.mjs'
       - 'systemia/compute/local-organism.mjs'
       - 'systemia/organism/public-edge-activation-watch-runner.mjs'
       - 'systemia/organism/public-edge-activation-watch.proof.mjs'
@@ -36,6 +38,8 @@ jobs:
           node-version: '22'
       - name: Prove broker-backed Saban hardware selection
         run: node systemia/saban/broker-capacity-pool.proof.mjs
+      - name: Prove ambient physical-world capability resolution
+        run: node systemia/saban/ambient-capability-resolver.proof.mjs
       - name: Prove generic public-edge capacity mission
         run: node systemia/organism/public-edge-field-mission.proof.mjs
       - name: Prove activation watcher searches before legacy Node 001 completion
