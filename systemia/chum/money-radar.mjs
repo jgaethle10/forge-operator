@@ -609,6 +609,78 @@ export async function buildMoneyRadar({
     })
   );
 
+  const generatedMs = Date.parse(generatedAt);
+  const prior24End = Number.isFinite(generatedMs) ? new Date(generatedMs - 24 * 3600_000).toISOString() : new Date(Date.now() - 24 * 3600_000).toISOString();
+  const prior24 = windowSnapshot(accepted, prior24End, 24);
+  const current24 = windows['24h'];
+  const operator_alerts = [];
+  const current24TotalActors = Object.values(current24.actor_class_counts || {}).reduce((n, value) => n + Number(value || 0), 0);
+  const current24MachineActors = Object.entries(current24.actor_class_counts || {})
+    .filter(([actor]) => MACHINE_CLASSES.has(actor))
+    .reduce((n, [, value]) => n + Number(value || 0), 0);
+  const current24MachineShare = rate(current24MachineActors, current24TotalActors);
+
+  if (current24.unique_buyer_sessions > 0 && prior24.unique_buyer_sessions === 0) {
+    operator_alerts.push({
+      severity: 'P0',
+      code: 'first_qualified_buyer_activity',
+      message: current24.unique_buyer_sessions + ' qualified buyer session(s) appeared in the last 24 hours after zero in the preceding 24 hours.',
+      action: 'inspect_source_campaign_surface_and_offer_path_immediately',
+    });
+  }
+  if (current24.raw_offer_views >= 20 && current24.offer_views === 0) {
+    operator_alerts.push({
+      severity: 'P1',
+      code: 'raw_attention_without_qualified_buyers',
+      message: current24.raw_offer_views + ' raw offer views produced zero qualified buyer offer views in the last 24 hours.',
+      action: 'increase_qualified_discovery_pressure_without_tuning_checkout_from_machine_noise',
+    });
+  }
+  if (current24MachineShare != null && current24MachineShare >= 0.8 && current24TotalActors >= 20) {
+    operator_alerts.push({
+      severity: 'P1',
+      code: 'machine_dominated_acquisition',
+      message: Math.round(current24MachineShare * 100) + '% of last-24h acquisition events are machine, crawler or synthetic.',
+      action: 'separate_distribution_success_from_human_acquisition_and_expand_human_reach',
+    });
+  }
+  if (current24.offer_views > 0 && current24.continue_clicks === 0) {
+    operator_alerts.push({
+      severity: 'P1',
+      code: 'qualified_offer_view_zero_continue',
+      message: current24.offer_views + ' qualified offer view(s) produced zero continue clicks in the last 24 hours.',
+      action: 'repair_offer_trust_value_or_primary_cta',
+    });
+  }
+  if (current24.continue_clicks > 0 && current24.checkout_starts === 0) {
+    operator_alerts.push({
+      severity: 'P1',
+      code: 'continue_zero_checkout',
+      message: current24.continue_clicks + ' qualified continue click(s) produced zero checkout starts in the last 24 hours.',
+      action: 'inspect_buyer_handoff_and_checkout_friction',
+    });
+  }
+  if (current24.checkout_starts > 0 && current24.verified_payments === 0) {
+    operator_alerts.push({
+      severity: 'P1',
+      code: 'checkout_zero_verified_payment',
+      message: current24.checkout_starts + ' checkout start(s) have no provider-verified payment in the last 24 hours.',
+      action: 'inspect_checkout_to_payment_dropoff_with_authoritative_receipts',
+    });
+  }
+
+  const qualifiedEventTimes = accepted
+    .filter((event) => event._source_kind === 'public_acquisition_https' && QUALIFIED_BUYER_CLASSES.has(actorClass(event)))
+    .map((event) => clean(event.occurred_at))
+    .filter(Boolean)
+    .sort();
+  const buyer_milestones = {
+    first_qualified_event_at: qualifiedEventTimes[0] || null,
+    latest_qualified_event_at: qualifiedEventTimes.at(-1) || null,
+    qualified_event_count: qualifiedEventTimes.length,
+    first_buyer_tripwire_armed: qualifiedEventTimes.length === 0,
+  };
+
   const priorityWeight = { P0: 0, P1: 1, P2: 2, P3: 3 };
   const action_queue = products
     .map((row) => ({
@@ -704,6 +776,8 @@ export async function buildMoneyRadar({
     surface_breakdown,
     experiment_breakdown,
     journey_attribution,
+    buyer_milestones,
+    operator_alerts,
     windows,
     action_queue,
     products,
@@ -743,6 +817,15 @@ export async function buildMoneyRadar({
     `View → continue: ${receipt.totals.view_to_continue_rate ?? 'n/a'}`,
     `Continue → checkout: ${receipt.totals.continue_to_checkout_rate ?? 'n/a'}`,
     `Checkout → verified payment: ${receipt.totals.checkout_to_verified_payment_rate ?? 'n/a'}`,
+    '',
+    '## Operator alerts',
+    '',
+    ...(operator_alerts.length
+      ? operator_alerts.map((alert) => `- ${alert.severity} :: ${alert.code} :: ${alert.message} :: ${alert.action}`)
+      : ['- No operator alerts.']),
+    `First-buyer tripwire armed: ${buyer_milestones.first_buyer_tripwire_armed}`,
+    `First qualified event: ${buyer_milestones.first_qualified_event_at || 'none'}`,
+    `Latest qualified event: ${buyer_milestones.latest_qualified_event_at || 'none'}`,
     '',
     '## Attribution lineage',
     '',
