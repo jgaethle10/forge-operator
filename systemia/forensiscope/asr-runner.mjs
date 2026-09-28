@@ -2,8 +2,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
-const DEFAULT_BASE_URL = 'https://api.openai.com/v1';
-const DEFAULT_MODEL = 'gpt-4o-transcribe-diarize';
+const DEFAULT_OPENAI_BASE_URL = 'https://api.openai.com/v1';
+const DEFAULT_OPENAI_MODEL = 'gpt-4o-transcribe-diarize';
+const DEFAULT_GEMINI_MODEL = 'gemini-3.5-transcribe';
+const DEFAULT_GEMINI_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta';
 const DEFAULT_TIMEOUT_MS = 5 * 60 * 1000;
 
 function required(value, name) {
@@ -31,7 +33,84 @@ function mimeFor(filePath) {
 }
 
 function endpoint(baseUrl) {
-  return `${String(baseUrl || DEFAULT_BASE_URL).replace(/\/+$/, '')}/audio/transcriptions`;
+  return `${String(baseUrl || DEFAULT_OPENAI_BASE_URL).replace(/\/+$/, '')}/audio/transcriptions`;
+}
+
+function detectProvider(env = process.env) {
+  const explicit = String(env.FORENSISCOPE_ASR_PROVIDER || '').trim().toLowerCase();
+  if (explicit) return explicit;
+  if (String(env.GEMINI_API_KEY || '').trim()) return 'gemini';
+  if (String(env.FORENSISCOPE_ASR_API_KEY || env.OPENAI_API_KEY || '').trim()) return 'openai';
+  return 'openai';
+}
+
+function secondsFromOffset(value) {
+  const raw = String(value ?? '').trim();
+  if (!raw) return null;
+  const numeric = raw.endsWith('s') ? raw.slice(0, -1) : raw;
+  return finite(numeric, null);
+}
+
+function extractGeminiWordAnnotations(interaction) {
+  const words = [];
+  for (const step of interaction?.steps ?? []) {
+    for (const content of step?.content ?? []) {
+      for (const annotation of content?.annotations ?? []) {
+        if (annotation?.type === 'word_info') words.push(annotation);
+      }
+    }
+  }
+  return words;
+}
+
+export function normalizeGeminiInteraction(interaction, fallbackDuration = null) {
+  const words = extractGeminiWordAnnotations(interaction);
+  const segments = [];
+  let current = null;
+
+  const flush = () => {
+    if (!current) return;
+    current.text = current.text.replace(/\s+([,.;:!?])/g, '$1').trim();
+    if (current.text) segments.push(current);
+    current = null;
+  };
+
+  for (const word of words) {
+    const text = String(word?.text || '').trim();
+    const start = secondsFromOffset(word?.start_offset ?? word?.startOffset);
+    const end = secondsFromOffset(word?.end_offset ?? word?.endOffset);
+    if (!text || start === null || end === null || end < start) continue;
+
+    const speaker = String(word?.speaker || '').trim() || null;
+    const gap = current ? start - current.end : null;
+    const speakerChanged = current && current.speaker !== speaker;
+    const largeGap = current && Number.isFinite(gap) && gap > 1.5;
+
+    if (!current || speakerChanged || largeGap) {
+      flush();
+      current = { start, end, text, speaker };
+    } else {
+      current.end = end;
+      current.text += ` ${text}`;
+    }
+  }
+  flush();
+
+  if (segments.length) return segments;
+
+  const text = String(
+    interaction?.output_text ??
+    interaction?.outputText ??
+    ''
+  ).replace(/\s+/g, ' ').trim();
+
+  if (!text) return [];
+  return [{
+    start: 0,
+    end: Math.max(0, finite(fallbackDuration, 0) ?? 0),
+    text,
+    speaker: null
+  }];
 }
 
 function normalizeSegments(payload, fallbackDuration = null) {
@@ -72,17 +151,28 @@ function normalizeSegments(payload, fallbackDuration = null) {
 }
 
 export function resolveAsrProvider(env = process.env) {
-  const provider = String(env.FORENSISCOPE_ASR_PROVIDER || 'openai').trim().toLowerCase();
-  if (!['openai', 'openai-compatible'].includes(provider)) {
+  const provider = detectProvider(env);
+  if (!['openai', 'openai-compatible', 'gemini'].includes(provider)) {
     throw new Error(`Unsupported FORENSISCOPE_ASR_PROVIDER: ${provider}`);
   }
 
+  const gemini = provider === 'gemini';
   const apiKey = required(
-    env.FORENSISCOPE_ASR_API_KEY || env.OPENAI_API_KEY,
-    'FORENSISCOPE_ASR_API_KEY or OPENAI_API_KEY'
+    gemini
+      ? (env.FORENSISCOPE_ASR_API_KEY || env.GEMINI_API_KEY)
+      : (env.FORENSISCOPE_ASR_API_KEY || env.OPENAI_API_KEY),
+    gemini
+      ? 'FORENSISCOPE_ASR_API_KEY or GEMINI_API_KEY'
+      : 'FORENSISCOPE_ASR_API_KEY or OPENAI_API_KEY'
   );
-  const baseUrl = String(env.FORENSISCOPE_ASR_BASE_URL || DEFAULT_BASE_URL).trim();
-  const model = String(env.FORENSISCOPE_ASR_MODEL || DEFAULT_MODEL).trim();
+  const baseUrl = String(
+    env.FORENSISCOPE_ASR_BASE_URL ||
+    (gemini ? DEFAULT_GEMINI_BASE_URL : DEFAULT_OPENAI_BASE_URL)
+  ).trim();
+  const model = String(
+    env.FORENSISCOPE_ASR_MODEL ||
+    (gemini ? DEFAULT_GEMINI_MODEL : DEFAULT_OPENAI_MODEL)
+  ).trim();
   const timeoutMs = Math.max(1000, finite(env.FORENSISCOPE_ASR_TIMEOUT_MS, DEFAULT_TIMEOUT_MS));
 
   return {
@@ -96,13 +186,81 @@ export function resolveAsrProvider(env = process.env) {
   };
 }
 
+async function createGeminiClient(apiKey) {
+  const mod = await import('@google/genai');
+  return new mod.GoogleGenAI({ apiKey });
+}
+
+async function transcribeWithGemini({
+  inputPath,
+  durationSeconds,
+  config,
+  geminiClient = null
+}) {
+  const client = geminiClient || await createGeminiClient(config.apiKey);
+  const uploaded = await client.files.upload({
+    file: inputPath,
+    config: { mimeType: mimeFor(inputPath) }
+  });
+
+  try {
+    const transcriptionConfig = {
+      mode: {
+        type: 'verbatim',
+        diarization_mode: 'speaker',
+        timestamp_granularities: ['word']
+      }
+    };
+    if (config.language) {
+      transcriptionConfig.language_codes = [config.language];
+    }
+
+    const interaction = await client.interactions.create({
+      model: config.model,
+      input: [{
+        type: 'audio',
+        uri: uploaded.uri,
+        mime_type: uploaded.mimeType || uploaded.mime_type || mimeFor(inputPath)
+      }],
+      generation_config: {
+        transcription_config: transcriptionConfig
+      }
+    });
+
+    return {
+      engine_id: `gemini:${config.model}`,
+      provider: 'gemini',
+      model: config.model,
+      segments: normalizeGeminiInteraction(interaction, durationSeconds)
+    };
+  } finally {
+    if (uploaded?.name && typeof client.files?.delete === 'function') {
+      try {
+        await client.files.delete({ name: uploaded.name });
+      } catch {
+        // Gemini Files API objects expire automatically; cleanup is best-effort.
+      }
+    }
+  }
+}
+
 export async function transcribeWithProvider({
   inputPath,
   durationSeconds = null,
   env = process.env,
-  fetchImpl = fetch
+  fetchImpl = fetch,
+  geminiClient = null
 }) {
   const config = resolveAsrProvider(env);
+  if (config.provider === 'gemini') {
+    return transcribeWithGemini({
+      inputPath,
+      durationSeconds,
+      config,
+      geminiClient
+    });
+  }
+
   const bytes = fs.readFileSync(inputPath);
   const form = new FormData();
   form.append('file', new Blob([bytes], { type: mimeFor(inputPath) }), path.basename(inputPath));
@@ -167,9 +325,14 @@ export async function healthcheckProvider({ env = process.env, fetchImpl = fetch
     };
   }
 
-  const url = `${config.baseUrl.replace(/\/+$/, '')}/models`;
+  const gemini = config.provider === 'gemini';
+  const url = gemini
+    ? `${config.baseUrl.replace(/\/+$/, '')}/models/${encodeURIComponent(config.model)}`
+    : `${config.baseUrl.replace(/\/+$/, '')}/models`;
   const response = await fetchImpl(url, {
-    headers: { Authorization: `Bearer ${config.apiKey}` }
+    headers: gemini
+      ? { 'x-goog-api-key': config.apiKey }
+      : { Authorization: `Bearer ${config.apiKey}` }
   });
   if (!response.ok) {
     throw new Error(`ASR remote healthcheck returned HTTP ${response.status}.`);
