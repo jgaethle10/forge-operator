@@ -1,0 +1,56 @@
+name: Reconcile public MCP registry
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "registry/public-products.json"
+      - "registry/**/server.json"
+      - "scripts/reconcile-public-mcp-registry.mjs"
+      - ".github/workflows/reconcile-public-mcp-registry.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: reconcile-public-mcp-registry-main
+  cancel-in-progress: true
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Reconcile public MCP manifests
+        run: node scripts/reconcile-public-mcp-registry.mjs
+
+      - name: Verify complete public MCP coverage
+        run: node scripts/reconcile-public-mcp-registry.mjs --check
+
+      - name: Commit newly materialized manifests
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add mcp-registry
+          if git diff --cached --quiet; then
+            echo "Public MCP registry is already reconciled."
+            exit 0
+          fi
+          git config user.name "Systemia Registry Reconciler"
+          git config user.email "registry-reconciler@users.noreply.github.com"
+          git commit -m "Reconcile public MCP registry manifests"
+          git push origin HEAD:main
+
+      - name: Write reconciliation summary
+        if: always()
+        run: node scripts/reconcile-public-mcp-registry.mjs --check >> "$GITHUB_STEP_SUMMARY" || true
