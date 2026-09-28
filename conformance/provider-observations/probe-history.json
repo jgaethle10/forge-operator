@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.provider-probe-history.v1",
-  "updated_at": "2026-09-28T15:01:09.842Z",
+  "updated_at": "2026-09-28T15:05:20.950Z",
   "max_records": 500,
   "records": [
     {
@@ -3037,6 +3037,24 @@
       "prompt_sha256": "f8e326c031f4f76fb2b81dd2c4f2f5e31d2e8b6029f6edbe758cfcf00b91b4e2",
       "pickup_observed": true,
       "provider_receipt_sha256": "6ed681ef1f06a264001e0176856b13a1ce37f404f4f4c7b45ac86bd2d6d51f3e",
+      "response_sha256": "815b902986137203b5557d8460f79f35f6ea64a402734841879f88ec812ea020",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "1f975ef66ef29db4994b079f751ef9a722dad5ca4586fd7b192ea9421d8b784b",
+      "observed_at": "2026-09-28T15:05:20.950Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "eventwave",
+      "case_id": "event-promotion-001",
+      "prompt_sha256": "f8e326c031f4f76fb2b81dd2c4f2f5e31d2e8b6029f6edbe758cfcf00b91b4e2",
+      "pickup_observed": true,
+      "provider_receipt_sha256": "65532ae7ce4d0ae1ada0795b6bc0999f3a9ca6f945990f275ee326af3948dc58",
       "response_sha256": "815b902986137203b5557d8460f79f35f6ea64a402734841879f88ec812ea020",
       "source": "authorized_provider_probe",
       "privacy": {
