@@ -91,12 +91,18 @@ export class EvercraftPassport {
     this.stateDir = path.resolve(stateDir);
     this.grantsFile = path.join(this.stateDir, 'grants.jsonl');
     this.revocationsFile = path.join(this.stateDir, 'revocations.jsonl');
+    this.permitsFile = path.join(this.stateDir, 'action-permits.jsonl');
+    this.permitConsumptionsFile = path.join(this.stateDir, 'action-permit-consumptions.jsonl');
     this.lockDir = path.join(this.stateDir, '.mutation-lock');
 
     this.grants = new Map();
     this.grantIdempotency = new Map();
     this.revocations = new Map();
     this.revocationIdempotency = new Map();
+    this.permits = new Map();
+    this.permitMintIdempotency = new Map();
+    this.permitConsumptions = new Map();
+    this.permitConsumeIdempotency = new Map();
     this.#reload();
   }
 
@@ -105,6 +111,10 @@ export class EvercraftPassport {
     this.grantIdempotency.clear();
     this.revocations.clear();
     this.revocationIdempotency.clear();
+    this.permits.clear();
+    this.permitMintIdempotency.clear();
+    this.permitConsumptions.clear();
+    this.permitConsumeIdempotency.clear();
 
     for (const grant of readJsonl(this.grantsFile)) {
       this.grants.set(grant.grant_id, grant);
@@ -113,6 +123,14 @@ export class EvercraftPassport {
     for (const revocation of readJsonl(this.revocationsFile)) {
       this.revocations.set(revocation.grant_id, revocation);
       this.revocationIdempotency.set(revocation.idempotency_key, revocation);
+    }
+    for (const permit of readJsonl(this.permitsFile)) {
+      this.permits.set(permit.permit_id, permit);
+      this.permitMintIdempotency.set(permit.idempotency_key, permit);
+    }
+    for (const consumption of readJsonl(this.permitConsumptionsFile)) {
+      this.permitConsumptions.set(consumption.permit_id, consumption);
+      this.permitConsumeIdempotency.set(consumption.idempotency_key, consumption);
     }
   }
 
@@ -518,6 +536,220 @@ export class EvercraftPassport {
       grant_lineage: selected?.state.lineage || [],
       evaluated_at: at,
       mutation_performed: false,
+    });
+  }
+
+  mintActionPermit(input) {
+    return this.#mutate(() => {
+      const idempotencyKey = requiredString(input?.idempotency_key, 'idempotency_key');
+      const duplicate = this.permitMintIdempotency.get(idempotencyKey);
+      if (duplicate) {
+        return {
+          state: 'duplicate',
+          permit: duplicate,
+          receipt: stableReceipt({
+            schema: 'evercraft.passport.action-permit-receipt.v1',
+            state: 'duplicate',
+            permit_id: duplicate.permit_id,
+            idempotency_key: idempotencyKey,
+          }),
+        };
+      }
+
+      const grantId = requiredString(input?.grant_id, 'grant_id');
+      const grant = this.grants.get(grantId);
+      if (!grant) throw new Error('grant_not_found');
+
+      const actorRef = requiredString(input?.actor_ref, 'actor_ref');
+      if (actorRef !== grant.subject_ref) throw new Error('permit_actor_not_grant_subject');
+
+      const mintedAt = iso(input?.minted_at || new Date().toISOString(), 'minted_at');
+      const grantState = this.#grantStateUnlocked(grantId, mintedAt);
+      if (!grantState.active) throw new Error('grant_not_active');
+
+      const scope = requiredString(input?.scope, 'scope');
+      if (!grant.scopes.some((granted) => scopeAllows(granted, scope))) {
+        throw new Error('permit_scope_not_authorized');
+      }
+
+      const resourceRef = input?.resource_ref
+        ? requiredString(input.resource_ref, 'resource_ref')
+        : null;
+      if (!resourceAllows(grant.resource_refs, resourceRef)) {
+        throw new Error('permit_resource_not_authorized');
+      }
+
+      const requestFingerprint = requiredString(
+        input?.request_fingerprint,
+        'request_fingerprint'
+      );
+      if (!/^sha256:[a-f0-9]{64}$/i.test(requestFingerprint)) {
+        throw new Error('request_fingerprint_invalid');
+      }
+
+      const ttlSeconds = Number(input?.ttl_seconds ?? 300);
+      if (!Number.isInteger(ttlSeconds) || ttlSeconds < 1 || ttlSeconds > 900) {
+        throw new Error('permit_ttl_invalid');
+      }
+
+      const desiredExpiry = new Date(new Date(mintedAt).getTime() + ttlSeconds * 1000);
+      const grantExpiry = new Date(grant.ends_at);
+      const expiresAt = new Date(
+        Math.min(desiredExpiry.getTime(), grantExpiry.getTime())
+      ).toISOString();
+      if (new Date(expiresAt) <= new Date(mintedAt)) {
+        throw new Error('permit_window_invalid');
+      }
+
+      const permit = stableReceipt({
+        schema: 'evercraft.passport.action-permit.v1',
+        permit_id: input?.permit_id
+          ? requiredString(input.permit_id, 'permit_id')
+          : 'permit_' + randomUUID(),
+        nonce: randomUUID(),
+        idempotency_key: idempotencyKey,
+        grant_id: grantId,
+        grant_lineage: grantState.lineage,
+        actor_ref: actorRef,
+        product: grant.product,
+        scope,
+        resource_ref: resourceRef,
+        request_fingerprint: requestFingerprint,
+        minted_at: mintedAt,
+        expires_at: expiresAt,
+        single_use: true,
+        bearer_credential: false,
+      });
+
+      this.permits.set(permit.permit_id, permit);
+      this.permitMintIdempotency.set(idempotencyKey, permit);
+      appendJsonl(this.permitsFile, permit);
+
+      return {
+        state: 'minted',
+        permit,
+        receipt: stableReceipt({
+          schema: 'evercraft.passport.action-permit-receipt.v1',
+          state: 'minted',
+          permit_id: permit.permit_id,
+          grant_id: grantId,
+          actor_ref: actorRef,
+          product: grant.product,
+          scope,
+          resource_ref: resourceRef,
+          request_fingerprint: requestFingerprint,
+          expires_at: expiresAt,
+        }),
+      };
+    });
+  }
+
+  getActionPermitState(permitId, { at = new Date().toISOString() } = {}) {
+    this.#reload();
+    const id = requiredString(permitId, 'permit_id');
+    const instant = iso(at, 'at');
+    const permit = this.permits.get(id);
+    if (!permit) throw new Error('permit_not_found');
+
+    const grantState = this.#grantStateUnlocked(permit.grant_id, instant);
+    const consumption = this.permitConsumptions.get(id) || null;
+    const expired = new Date(instant) >= new Date(permit.expires_at);
+
+    return {
+      schema: 'evercraft.passport.action-permit-state.v1',
+      permit_id: id,
+      grant_id: permit.grant_id,
+      actor_ref: permit.actor_ref,
+      product: permit.product,
+      scope: permit.scope,
+      resource_ref: permit.resource_ref,
+      request_fingerprint: permit.request_fingerprint,
+      active: grantState.active && !expired && !consumption,
+      consumed: Boolean(consumption),
+      consumption_receipt: consumption?.receipt_hash || null,
+      expired,
+      grant_active: grantState.active,
+      observed_at: instant,
+    };
+  }
+
+  consumeActionPermit(input) {
+    return this.#mutate(() => {
+      const idempotencyKey = requiredString(input?.idempotency_key, 'idempotency_key');
+      const duplicate = this.permitConsumeIdempotency.get(idempotencyKey);
+      if (duplicate) {
+        return {
+          state: 'duplicate',
+          consumption: duplicate,
+          receipt: stableReceipt({
+            schema: 'evercraft.passport.action-permit-consumption-receipt.v1',
+            state: 'duplicate',
+            permit_id: duplicate.permit_id,
+            idempotency_key: idempotencyKey,
+          }),
+        };
+      }
+
+      const permitId = requiredString(input?.permit_id, 'permit_id');
+      const permit = this.permits.get(permitId);
+      if (!permit) throw new Error('permit_not_found');
+      if (this.permitConsumptions.has(permitId)) throw new Error('permit_already_consumed');
+
+      const actorRef = requiredString(input?.actor_ref, 'actor_ref');
+      if (actorRef !== permit.actor_ref) throw new Error('permit_actor_mismatch');
+
+      const requestFingerprint = requiredString(
+        input?.request_fingerprint,
+        'request_fingerprint'
+      );
+      if (requestFingerprint !== permit.request_fingerprint) {
+        throw new Error('permit_request_fingerprint_mismatch');
+      }
+
+      const consumedAt = iso(input?.consumed_at || new Date().toISOString(), 'consumed_at');
+      if (new Date(consumedAt) >= new Date(permit.expires_at)) {
+        throw new Error('permit_expired');
+      }
+
+      const grantState = this.#grantStateUnlocked(permit.grant_id, consumedAt);
+      if (!grantState.active) throw new Error('permit_grant_not_active');
+
+      const evidenceRef = requiredString(input?.evidence_ref, 'evidence_ref');
+      const consumption = stableReceipt({
+        schema: 'evercraft.passport.action-permit-consumption.v1',
+        consumption_id: 'consume_' + randomUUID(),
+        idempotency_key: idempotencyKey,
+        permit_id: permitId,
+        grant_id: permit.grant_id,
+        actor_ref: actorRef,
+        product: permit.product,
+        scope: permit.scope,
+        resource_ref: permit.resource_ref,
+        request_fingerprint: requestFingerprint,
+        evidence_ref: evidenceRef,
+        consumed_at: consumedAt,
+      });
+
+      this.permitConsumptions.set(permitId, consumption);
+      this.permitConsumeIdempotency.set(idempotencyKey, consumption);
+      appendJsonl(this.permitConsumptionsFile, consumption);
+
+      return {
+        state: 'consumed',
+        consumption,
+        receipt: stableReceipt({
+          schema: 'evercraft.passport.action-permit-consumption-receipt.v1',
+          state: 'consumed',
+          permit_id: permitId,
+          grant_id: permit.grant_id,
+          actor_ref: actorRef,
+          product: permit.product,
+          scope: permit.scope,
+          resource_ref: permit.resource_ref,
+          request_fingerprint: requestFingerprint,
+          evidence_ref: evidenceRef,
+        }),
+      };
     });
   }
 
