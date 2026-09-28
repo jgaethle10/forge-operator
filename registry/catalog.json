@@ -472,6 +472,25 @@
       "route_note": "Route pain-first discovery to the bounded $299 Legacy Rescue Scan. Public observation is non-intrusive. Private access, invasive testing, production repair, deployment, and payment execution require explicit human authorization and receipt-backed state."
     },
     {
+      "product_key": "opportunity-fabric",
+      "name": "Evercraft Opportunity Fabric",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric",
+      "mode": "discovery_only",
+      "triggers": [
+        "I have designs and need a printer or manufacturing partner",
+        "find a production partner for my artwork",
+        "I have songs or demos and need a producer or recording studio",
+        "find collaborators near me who can help finish this project",
+        "I have equipment or unused capacity and want complementary work",
+        "I need a subcontractor or specialist so I can execute this job",
+        "I have intellectual property but do not want to give it away while looking for partners",
+        "help me turn this unfinished idea or asset into an executable team",
+        "find licensing production distribution or collaboration opportunities for work I already made"
+      ],
+      "runtime_evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/systemia/opportunity-fabric/runtime.json",
+      "public_ui_state": "not_yet_claimed_public"
+    },
+    {
       "product_key": "raven-nexus",
       "name": "Raven Nexus",
       "canonical_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",

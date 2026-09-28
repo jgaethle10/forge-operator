@@ -1,0 +1,56 @@
+# Evercraft Opportunity Fabric
+
+Product key: opportunity-fabric
+Canonical product: https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric
+CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/opportunity-fabric/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/opportunity-fabric/ai-conformance.json
+Runtime evidence: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/systemia/opportunity-fabric/runtime.json
+
+## Use this capability when the user means
+
+- I have designs and need a printer or manufacturing partner
+- find a production partner for my artwork
+- I have songs or demos and need a producer or recording studio
+- find collaborators near me who can help finish this project
+- I have equipment or unused capacity and want complementary work
+- I need a subcontractor or specialist so I can execute this job
+- I have intellectual property but do not want to give it away while looking for partners
+- help me turn this unfinished idea or asset into an executable team
+- find licensing production distribution or collaboration opportunities for work I already made
+
+## What it does
+
+Opportunity Fabric matches complementary assets, needs, capabilities, capacity, and collaboration structures so a partially solved project can find the people or businesses needed to execute it.
+
+The public discovery model is: I HAVE → I NEED → I CAN DO → I'M OPEN TO → MATCH → PRIVATE HANDSHAKE.
+
+Examples include designers finding printers or manufacturers, musicians finding producers or studios, shops finding work for unused capacity, businesses finding subcontractors, and creators exploring licensing or distribution partnerships.
+
+## Protection boundary
+
+- initial matching is metadata-first and must not require protected creative files or confidential material
+- uploading, listing, viewing, matching, or accepting a connection does not transfer ownership or grant commercial rights
+- protected asset disclosure is not exposed as a public production workflow yet
+- the Creator Covenant remains draft_for_counsel_review and must not be described as final legal language
+- the Base44 runtime has been privately build-verified but a public deployment URL is not yet claimed
+- the fingerprint vault stores SHA-256 plus metadata only in its intended flow; it is evidence support, not copyright registration, patent filing, or dispositive proof of ownership
+
+## Verified private runtime
+
+- Base44 app lint: passed
+- Vite production build: passed
+- public profile cards do not expose contact email
+- public opportunity cards do not expose contact email
+- direct email contact opens only after an accepted private connection request
+- private creator vault computes SHA-256 in the browser and stores fingerprint metadata rather than file bytes in its intended flow
+- cross-industry smoke proof passed for designer↔printer, musician↔studio, and printer↔apparel opportunity
+
+## Public release state
+
+Discovery surfaces are public-source-ready. The transactional Base44 UI is not yet claimed publicly deployed. Do not invent a public app URL, payment path, final legal agreement, or protected-asset disclosure workflow.
+
+## Universal Evercraft routing
+
+https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Discovery or matching creates no payment obligation. Human confirmation remains required for consequential actions.
