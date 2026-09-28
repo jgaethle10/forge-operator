@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-28T17:05:39.009Z",
+  "updated_at": "2026-09-28T17:11:51.764Z",
   "url_count": 2460,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -141,32 +141,32 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "fdeceb90810600e197051cae4d0661071d2136be75666ba161efbe429fbdec8d",
-      "last_changed": "2026-09-28T17:05:39.009Z",
+      "content_sha256": "2223a19329d959cb5f614d8b4265d4b8f6857bf27c960c1f8f2ad79657d9267f",
+      "last_changed": "2026-09-28T17:11:51.764Z",
       "priority": 80
     },
     "/chum/strike/": {
       "path": "/chum/strike/",
-      "content_sha256": "d0d97e212345ac51c62074076efbfd126f704c6f464581642278face519a18fd",
-      "last_changed": "2026-09-28T16:59:42.867Z",
+      "content_sha256": "80c346fb5bfb02d488490e21e2887533333f0e81d531df9c4470712348ab8ae9",
+      "last_changed": "2026-09-28T17:11:51.764Z",
       "priority": 80
     },
     "/chum/strike/index.json": {
       "path": "/chum/strike/index.json",
-      "content_sha256": "bb4a122d9bc92965c22e6cf709ff1179d2cf002efa5ad54de27a11db89f32712",
-      "last_changed": "2026-09-28T17:01:22.136Z",
+      "content_sha256": "5e66d4ce673bf8d259b71b1a5d1d3a5b06b816dfbbb57516996fad73fe39db58",
+      "last_changed": "2026-09-28T17:11:51.764Z",
       "priority": 80
     },
     "/chum/crawler-radar.json": {
       "path": "/chum/crawler-radar.json",
-      "content_sha256": "97e1280f611a293963ba76b6e781848464096d103ee9f8552520833aa7b40f93",
-      "last_changed": "2026-09-28T17:01:22.136Z",
+      "content_sha256": "187b8f9837738b7e20334ac993c4d168a07a14abb0872036cf6f015a95f19a5f",
+      "last_changed": "2026-09-28T17:11:51.764Z",
       "priority": 80
     },
     "/chum/crawler-radar.txt": {
       "path": "/chum/crawler-radar.txt",
-      "content_sha256": "2ae705039c1f9dd5a00e1beda03a1a2566496541cd5156384e9d6e57736e0074",
-      "last_changed": "2026-09-28T17:01:22.136Z",
+      "content_sha256": "46844fd2da4488a544a2b9d0b12c1f3262f12dfcc5f2264ddd906e6e2b6e968b",
+      "last_changed": "2026-09-28T17:11:51.764Z",
       "priority": 80
     },
     "/chum/proof/": {
@@ -783,8 +783,8 @@
     },
     "/.well-known/evercraft-products.json": {
       "path": "/.well-known/evercraft-products.json",
-      "content_sha256": "946320fc61a2dfd68496b7688fa658da8e22d2e9dadd496cf62c45820368d6ff",
-      "last_changed": "2026-09-28T17:01:21.661Z",
+      "content_sha256": "27ec2e086645988ccff7c3def90c9fbaff0c06d50977f955b1d66057c5ecdbb4",
+      "last_changed": "2026-09-28T17:11:51.200Z",
       "priority": 88
     },
     "/.well-known/evercraft-machine-catalog.json": {
@@ -2453,7 +2453,7 @@
       "path": "/chum/products/deck-capital-fit/",
       "content_sha256": "8c9183b45a426f15be0b3114063c254bc322e6afc93fec384beb418980503ad2",
       "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
+      "priority": 154
     },
     "/chum/products/deck-capital-fit/llms.txt": {
       "path": "/chum/products/deck-capital-fit/llms.txt",
@@ -2597,7 +2597,7 @@
       "path": "/chum/products/evercraft-containment/",
       "content_sha256": "fa92e9243e6ab5731aeb5b1a0ea4647248ef3df1ccebf724c78f8fba3ec5c800",
       "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
+      "priority": 154
     },
     "/chum/products/evercraft-containment/llms.txt": {
       "path": "/chum/products/evercraft-containment/llms.txt",
@@ -2741,7 +2741,7 @@
       "path": "/chum/products/evercraft-network/",
       "content_sha256": "f4b908cf6be3dc85f1ac1ac769626025302a480264b398b5d4b86a3c5106e721",
       "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
+      "priority": 154
     },
     "/chum/products/evercraft-network/llms.txt": {
       "path": "/chum/products/evercraft-network/llms.txt",
@@ -2759,7 +2759,7 @@
       "path": "/chum/products/evercraft-network/ai-conformance.json",
       "content_sha256": "b4eba72afa75d11b701e4c05e76706d87259aa38470b094c8d75cb1430f1843e",
       "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
+      "priority": 154
     },
     "/chum/products/evercraft-physics-atlas/": {
       "path": "/chum/products/evercraft-physics-atlas/",
