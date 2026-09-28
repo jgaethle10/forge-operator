@@ -78,8 +78,9 @@ const fridge=resolveAmbientCapabilities({
   requestedKinds:['actuation'],
 });
 assert.equal(fridge.eligible.length,0);
-assert.equal(fridge.rejected[0].id,'private-fridge-001');
-assert.equal(fridge.rejected[0].reason,'public_observation_is_read_only');
+const fridgeDecision=fridge.rejected.find((row)=>row.id==='private-fridge-001');
+assert.ok(fridgeDecision);
+assert.equal(fridgeDecision.reason,'public_observation_is_read_only');
 
 console.log(JSON.stringify({
   ok:true,
