@@ -215,23 +215,23 @@ function funnelState(bucket) {
 function diagnosis(bucket) {
   if (bucket.verified_payments > 0) return 'paid_conversion_observed';
   if (bucket.checkout_starts > 0) {
-    return bucket.checkout_starts >= DECISION_THRESHOLDS.qualified_checkout_starts
+    return Number(bucket.unique_checkout_sessions || 0) >= DECISION_THRESHOLDS.qualified_checkout_starts
       ? 'checkout_to_payment_dropoff'
       : 'checkout_signal_insufficient_sample';
   }
   if (bucket.continue_clicks > 0) {
-    return bucket.continue_clicks >= DECISION_THRESHOLDS.qualified_continue_clicks
+    return Number(bucket.unique_continue_sessions || 0) >= DECISION_THRESHOLDS.qualified_continue_clicks
       ? 'continue_to_checkout_dropoff'
       : 'continue_signal_insufficient_sample';
   }
   if (bucket.offer_views > 0) {
-    return bucket.offer_views >= DECISION_THRESHOLDS.qualified_offer_views
+    return Number(bucket.unique_offer_view_sessions || 0) >= DECISION_THRESHOLDS.qualified_offer_views
       ? 'offer_to_continue_dropoff'
       : 'offer_signal_insufficient_sample';
   }
   if (bucket.raw_offer_views > 0) return 'raw_views_without_qualified_buyer_signal';
   if (bucket.landings > 0) {
-    return bucket.landings >= DECISION_THRESHOLDS.qualified_landings
+    return Number(bucket.unique_landing_sessions || 0) >= DECISION_THRESHOLDS.qualified_landings
       ? 'landing_to_offer_dropoff'
       : 'landing_signal_insufficient_sample';
   }
@@ -264,6 +264,10 @@ function windowSnapshot(events, generatedAt, hours) {
   });
   const actor_class_counts = {};
   const sessions = new Set();
+  const landingSessions = new Set();
+  const offerViewSessions = new Set();
+  const continueSessions = new Set();
+  const checkoutSessions = new Set();
   let raw_landings = 0;
   let raw_offer_views = 0;
   let raw_continue_clicks = 0;
@@ -286,7 +290,13 @@ function windowSnapshot(events, generatedAt, hours) {
     if (event.stage === 'continue_clicked') continue_clicks += 1;
     if (event.stage === 'checkout_started') checkout_starts += 1;
     const session = safeSession(event);
-    if (session) sessions.add(session);
+    if (session) {
+      sessions.add(session);
+      if (event.stage === 'landing') landingSessions.add(session);
+      if (event.stage === 'offer_view') offerViewSessions.add(session);
+      if (event.stage === 'continue_clicked') continueSessions.add(session);
+      if (event.stage === 'checkout_started') checkoutSessions.add(session);
+    }
   }
 
   return {
@@ -300,8 +310,14 @@ function windowSnapshot(events, generatedAt, hours) {
     continue_clicks,
     checkout_starts,
     unique_buyer_sessions: sessions.size,
+    unique_landing_sessions: landingSessions.size,
+    unique_offer_view_sessions: offerViewSessions.size,
+    unique_continue_sessions: continueSessions.size,
+    unique_checkout_sessions: checkoutSessions.size,
     view_to_continue_rate: rate(continue_clicks, offer_views),
     continue_to_checkout_rate: rate(checkout_starts, continue_clicks),
+    session_view_to_continue_rate: rate(continueSessions.size, offerViewSessions.size),
+    session_continue_to_checkout_rate: rate(checkoutSessions.size, continueSessions.size),
     raw_to_qualified_view_rate: rate(offer_views, raw_offer_views),
     actor_class_counts,
   };
@@ -405,6 +421,7 @@ export async function buildMoneyRadar({
 
   const byPublicId = {};
   const buyerSessionsByProduct = new Map();
+  const buyerStageSessionsByProduct = new Map();
   const allBuyerSessions = new Set();
   const revenueEvents = [];
   const seenPayments = new Set();
@@ -468,6 +485,16 @@ export async function buildMoneyRadar({
         if (session) {
           if (!buyerSessionsByProduct.has(bucket.public_id)) buyerSessionsByProduct.set(bucket.public_id, new Set());
           buyerSessionsByProduct.get(bucket.public_id).add(session);
+          if (!buyerStageSessionsByProduct.has(bucket.public_id)) {
+            buyerStageSessionsByProduct.set(bucket.public_id, {
+              landing: new Set(),
+              offer_view: new Set(),
+              continue_clicked: new Set(),
+              checkout_started: new Set(),
+            });
+          }
+          const stageSets = buyerStageSessionsByProduct.get(bucket.public_id);
+          if (stageSets[event.stage]) stageSets[event.stage].add(session);
           allBuyerSessions.add(session);
           sourceRow._sessions ||= new Set();
           sourceRow._sessions.add(session);
@@ -523,8 +550,15 @@ export async function buildMoneyRadar({
 
   for (const bucket of Object.values(byPublicId)) {
     bucket.unique_buyer_sessions = buyerSessionsByProduct.get(bucket.public_id)?.size || 0;
+    const stageSets = buyerStageSessionsByProduct.get(bucket.public_id);
+    bucket.unique_landing_sessions = stageSets?.landing?.size || 0;
+    bucket.unique_offer_view_sessions = stageSets?.offer_view?.size || 0;
+    bucket.unique_continue_sessions = stageSets?.continue_clicked?.size || 0;
+    bucket.unique_checkout_sessions = stageSets?.checkout_started?.size || 0;
     bucket.view_to_continue_rate = rate(bucket.continue_clicks, bucket.offer_views);
     bucket.continue_to_checkout_rate = rate(bucket.checkout_starts, bucket.continue_clicks);
+    bucket.session_view_to_continue_rate = rate(bucket.unique_continue_sessions, bucket.unique_offer_view_sessions);
+    bucket.session_continue_to_checkout_rate = rate(bucket.unique_checkout_sessions, bucket.unique_continue_sessions);
     bucket.checkout_to_verified_payment_rate = rate(bucket.verified_payments, bucket.checkout_starts);
     bucket.raw_to_qualified_view_rate = rate(bucket.offer_views, bucket.raw_offer_views);
     bucket.funnel_state = funnelState(bucket);
@@ -670,7 +704,7 @@ export async function buildMoneyRadar({
       action: 'separate_distribution_success_from_human_acquisition_and_expand_human_reach',
     });
   }
-  if (current24.offer_views >= DECISION_THRESHOLDS.qualified_offer_views && current24.continue_clicks === 0) {
+  if (current24.unique_offer_view_sessions >= DECISION_THRESHOLDS.qualified_offer_views && current24.continue_clicks === 0) {
     operator_alerts.push({
       severity: 'P1',
       code: 'qualified_offer_view_zero_continue',
@@ -678,7 +712,7 @@ export async function buildMoneyRadar({
       action: 'repair_offer_trust_value_or_primary_cta',
     });
   }
-  if (current24.continue_clicks >= DECISION_THRESHOLDS.qualified_continue_clicks && current24.checkout_starts === 0) {
+  if (current24.unique_continue_sessions >= DECISION_THRESHOLDS.qualified_continue_clicks && current24.checkout_starts === 0) {
     operator_alerts.push({
       severity: 'P1',
       code: 'continue_zero_checkout',
@@ -686,7 +720,7 @@ export async function buildMoneyRadar({
       action: 'inspect_buyer_handoff_and_checkout_friction',
     });
   }
-  if (current24.checkout_starts >= DECISION_THRESHOLDS.qualified_checkout_starts && current24.verified_payments === 0) {
+  if (current24.unique_checkout_sessions >= DECISION_THRESHOLDS.qualified_checkout_starts && current24.verified_payments === 0) {
     operator_alerts.push({
       severity: 'P1',
       code: 'checkout_zero_verified_payment',
@@ -716,6 +750,9 @@ export async function buildMoneyRadar({
       action: actionForDiagnosis(row.diagnosis).action,
       diagnosis: row.diagnosis,
       unique_buyer_sessions: row.unique_buyer_sessions,
+      unique_offer_view_sessions: row.unique_offer_view_sessions,
+      unique_continue_sessions: row.unique_continue_sessions,
+      unique_checkout_sessions: row.unique_checkout_sessions,
       qualified_offer_views: row.offer_views,
       raw_offer_views: row.raw_offer_views,
       continue_clicks: row.continue_clicks,
