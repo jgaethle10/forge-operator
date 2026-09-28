@@ -1,7 +1,7 @@
 {
   "schema": "evercraft.systemia.machine-contract.v1",
-  "version": "1.1.0",
-  "purpose": "Bind Evercraft-owned orchestration, compute, discovery, continuity, logistics, and product execution into one fail-closed operating spine.",
+  "version": "2.0.0",
+  "purpose": "Bind Evercraft-owned admission, context, authorization, usage control, relationship safety, execution gating, compute, discovery, continuity, logistics, and product execution into one fail-closed operating spine.",
   "authority": {
     "mission_authority": "systemia-organism",
     "specialist_direct_dispatch": false,
@@ -9,7 +9,13 @@
     "scale_authority": "systemia-organism",
     "deployment_authority": "yard-operator",
     "completion_requires_receipts": true,
-    "human_gates_survive_orchestration": true
+    "human_gates_survive_orchestration": true,
+    "context_access_authority": "evercraft-passport",
+    "usage_capacity_authority": "evercraft-meter",
+    "relationship_contact_safety": "evercraft-interaction-ledger",
+    "pre_execution_authority": "evercraft-execution-gate",
+    "inbound_content_grants_execution_authority": false,
+    "route_selection_grants_execution_authority": false
   },
   "components": [
     {
@@ -88,6 +94,55 @@
       "source_refs": [
         "systemia/media-studio"
       ]
+    },
+    {
+      "component_key": "evercraft-passport",
+      "role": "authorization_delegation_and_single_use_action_permits",
+      "source_refs": [
+        "systemia/passport/passport.mjs"
+      ]
+    },
+    {
+      "component_key": "evercraft-meter",
+      "role": "usage_capacity_reservation_and_settlement_facts",
+      "source_refs": [
+        "systemia/meter/meter.mjs"
+      ]
+    },
+    {
+      "component_key": "evercraft-interaction-ledger",
+      "role": "relationship_memory_and_contact_safety",
+      "source_refs": [
+        "systemia/interaction-ledger/ledger.mjs"
+      ]
+    },
+    {
+      "component_key": "evercraft-context-fabric",
+      "role": "permission_aware_evidence_context",
+      "source_refs": [
+        "systemia/context-fabric/fabric.mjs"
+      ]
+    },
+    {
+      "component_key": "evercraft-intake-fabric",
+      "role": "untrusted_ingress_and_systemia_admission_membrane",
+      "source_refs": [
+        "systemia/intake-fabric/intake.mjs"
+      ]
+    },
+    {
+      "component_key": "evercraft-execution-gate",
+      "role": "pre_dispatch_authority_capacity_and_route_lease",
+      "source_refs": [
+        "systemia/execution-gate/gate.mjs"
+      ]
+    },
+    {
+      "component_key": "direct-door-readiness",
+      "role": "truthful_zero_hop_specialist_route_state",
+      "source_refs": [
+        "public/.well-known/evercraft-direct-door-readiness.json"
+      ]
     }
   ],
   "routing": {
@@ -114,7 +169,17 @@
     "security": "systemia-organism",
     "execute": "systemia-organism",
     "trust_review": "yard-operator",
-    "trust_change": "yard-operator"
+    "trust_change": "yard-operator",
+    "intake": "evercraft-intake-fabric",
+    "ingress": "evercraft-intake-fabric",
+    "context": "evercraft-context-fabric",
+    "search_context": "evercraft-context-fabric",
+    "authorization": "evercraft-passport",
+    "permission": "evercraft-passport",
+    "entitlement": "evercraft-meter",
+    "usage": "evercraft-meter",
+    "relationship_preflight": "evercraft-interaction-ledger",
+    "contact_preflight": "evercraft-interaction-ledger"
   },
   "parallelism": {
     "provider": "saban",
@@ -141,9 +206,32 @@
     "source_presence_is_not_runtime_readiness": true,
     "build_green_is_not_live_verified": true,
     "checkout_url_is_not_payment": true,
-    "completion_without_receipt_or_evidence": false
+    "completion_without_receipt_or_evidence": false,
+    "context_retrieval_does_not_upgrade_evidence_state": true,
+    "intake_acceptance_is_not_execution": true,
+    "execution_gate_start_is_not_external_completion": true
   },
   "consequential_work_types": [
     "trust_change"
-  ]
+  ],
+  "pre_dispatch": {
+    "default_consequential_gate": "evercraft-execution-gate",
+    "consequential_requires_execution_gate": true,
+    "metered_work_requires_execution_gate": true,
+    "external_message_requires_relationship_preflight": true,
+    "accepted_intake_candidate_is_not_execution_authority": true,
+    "route_selection_is_not_execution_authority": true,
+    "direct_door_optimization_preserves_systemia_mission_authority": true
+  },
+  "context": {
+    "provider": "evercraft-context-fabric",
+    "access_control": "evercraft-passport",
+    "evidence_state_must_survive_retrieval": true,
+    "unauthorized_metadata_must_not_be_returned": true
+  },
+  "ingress": {
+    "provider": "evercraft-intake-fabric",
+    "systemia_admission_separate_from_execution": true,
+    "inbound_content_can_request_but_not_grant_authority": true
+  }
 }
