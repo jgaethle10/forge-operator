@@ -51,6 +51,7 @@ export function scoreAgainstBaseline(state, sample, options = {}) {
   const watchZ = options.watchZ ?? 2.5;
   const urgentZ = options.urgentZ ?? 6;
   const floorStddev = Math.max(1e-9, Number(options.floorStddev ?? 1e-6));
+  const freezeAboveScore = Math.max(0, Math.min(1, Number(options.freezeAboveScore ?? 0.6)));
   const prior = next.series[key] || null;
 
   let zScore = 0;
@@ -66,10 +67,20 @@ export function scoreAgainstBaseline(state, sample, options = {}) {
       : clamp01((zScore - watchZ) / Math.max(0.001, urgentZ - watchZ));
   }
 
-  next.series[key] = {
-    ...statsAfter(prior, value),
-    updated_at: sample.created_at || new Date().toISOString()
-  };
+  const baselineUpdated = !baselineReady || anomalyScore < freezeAboveScore;
+  if (baselineUpdated) {
+    next.series[key] = {
+      ...statsAfter(prior, value),
+      updated_at: sample.created_at || new Date().toISOString()
+    };
+  } else {
+    next.series[key] = {
+      ...prior,
+      updated_at: prior.updated_at || sample.created_at || new Date().toISOString(),
+      last_deviation_at: sample.created_at || new Date().toISOString(),
+      last_deviation_value: value
+    };
+  }
 
   return {
     state: next,
@@ -83,6 +94,8 @@ export function scoreAgainstBaseline(state, sample, options = {}) {
       baseline_stddev: prior?.stddev ?? null,
       z_score: Number(zScore.toFixed(3)),
       anomaly_score: Number(anomalyScore.toFixed(3)),
+      baseline_updated: baselineUpdated,
+      baseline_update_reason: baselineUpdated ? 'normal_learning' : 'strong_deviation_frozen',
       state: baselineReady ? (anomalyScore > 0 ? 'deviation' : 'normal') : 'learning'
     }
   };
