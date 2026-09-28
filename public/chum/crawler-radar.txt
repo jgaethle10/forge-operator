@@ -1,19 +1,19 @@
 Evercraft CHUM Crawler Radar
-Generated: 2026-09-28T14:52:04.823Z
+Generated: 2026-09-28T14:54:43.727Z
 Observed crawler-like requests: 0
 Negative provider pickup receipts: 174
-Strike-now surfaces: 1669
+Strike-now surfaces: 1581
 
 1. [strike_now] score=250 /chum/intents/foundry-app-escape-audit-v1/ :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, negative_provider_pickup_receipt, indexnow_hash_pending
 2. [strike_now] score=250 /chum/intents/website-launch-service-v1/ :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, negative_provider_pickup_receipt, indexnow_hash_pending
-3. [strike_now] score=246 /chum/products/deck-capital-fit/ai-conformance.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, negative_provider_pickup_receipt, indexnow_hash_pending
-4. [strike_now] score=246 /chum/products/deck-capital-fit/ai-discovery.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, negative_provider_pickup_receipt, indexnow_hash_pending
-5. [strike_now] score=246 /chum/products/evercraft-containment/ai-conformance.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, negative_provider_pickup_receipt, indexnow_hash_pending
-6. [strike_now] score=246 /chum/products/evercraft-containment/ai-discovery.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, negative_provider_pickup_receipt, indexnow_hash_pending
-7. [strike_now] score=246 /chum/products/forensiscope/ :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, negative_provider_pickup_receipt, indexnow_hash_pending
-8. [strike_now] score=246 /chum/products/forensiscope/ai-conformance.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, negative_provider_pickup_receipt, indexnow_hash_pending
-9. [strike_now] score=246 /chum/products/forensiscope/ai-discovery.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, negative_provider_pickup_receipt, indexnow_hash_pending
-10. [strike_now] score=246 /chum/products/forensiscope/llms.txt :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, negative_provider_pickup_receipt, indexnow_hash_pending
+3. [strike_now] score=239 /chum/products/deck-capital-fit/ai-conformance.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_72h, negative_provider_pickup_receipt, indexnow_hash_pending
+4. [strike_now] score=239 /chum/products/deck-capital-fit/ai-discovery.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_72h, negative_provider_pickup_receipt, indexnow_hash_pending
+5. [strike_now] score=239 /chum/products/evercraft-containment/ai-conformance.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_72h, negative_provider_pickup_receipt, indexnow_hash_pending
+6. [strike_now] score=239 /chum/products/evercraft-containment/ai-discovery.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_72h, negative_provider_pickup_receipt, indexnow_hash_pending
+7. [strike_now] score=239 /chum/products/forensiscope/ :: no_self_identified_crawler_fetch_observed, fresh_content_under_72h, negative_provider_pickup_receipt, indexnow_hash_pending
+8. [strike_now] score=239 /chum/products/forensiscope/ai-conformance.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_72h, negative_provider_pickup_receipt, indexnow_hash_pending
+9. [strike_now] score=239 /chum/products/forensiscope/ai-discovery.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_72h, negative_provider_pickup_receipt, indexnow_hash_pending
+10. [strike_now] score=239 /chum/products/forensiscope/llms.txt :: no_self_identified_crawler_fetch_observed, fresh_content_under_72h, negative_provider_pickup_receipt, indexnow_hash_pending
 11. [strike_now] score=235 /chum/intents/forensiscope-evidence-review-v1/ :: no_self_identified_crawler_fetch_observed, negative_provider_pickup_receipt, indexnow_hash_pending
 12. [strike_now] score=231 /forensiscope/developers/llms.txt :: no_self_identified_crawler_fetch_observed, fresh_content_under_72h, negative_provider_pickup_receipt, indexnow_hash_pending
 13. [strike_now] score=231 /forensiscope/distribution/llms.txt :: no_self_identified_crawler_fetch_observed, fresh_content_under_72h, negative_provider_pickup_receipt, indexnow_hash_pending

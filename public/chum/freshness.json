@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-28T14:52:12.847Z",
+  "updated_at": "2026-09-28T14:54:43.873Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,337 +11,68 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/intents/foundry-app-escape-audit-v1/",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 158
-    },
-    {
-      "path": "/chum/intents/website-launch-service-v1/",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 158
-    },
-    {
-      "path": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/audit-center-website-audit-machine-v1/",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/career-command-interview-practice-machine-v1/",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/deck-capital-fit-sprint-machine-v1/",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/eventwave-paid-promotion-v1/",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/faie-signal-brief-v1/",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/findmypart-paid-hunt-v1/",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/ibmi-rescue-v1/",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/rivet-site-underwriting-v1/",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/roasted-text-pressure-test-machine-v1/",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/intents/site-survive-rapid-audit-v1/",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 98
-    },
-    {
-      "path": "/chum/capabilities/aliev-site-opportunity-snapshot-v1/",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/aliev-site-opportunity-snapshot-v1/capability.json",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/aliev-site-opportunity-snapshot-v1/llms.txt",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/audit-center-website-audit-machine-v1/",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/audit-center-website-audit-machine-v1/capability.json",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/audit-center-website-audit-machine-v1/llms.txt",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/career-command-interview-practice-machine-v1/",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/career-command-interview-practice-machine-v1/capability.json",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/career-command-interview-practice-machine-v1/llms.txt",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/deck-capital-fit-sprint-machine-v1/",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/deck-capital-fit-sprint-machine-v1/capability.json",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/deck-capital-fit-sprint-machine-v1/llms.txt",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/eventwave-paid-promotion-v1/",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/eventwave-paid-promotion-v1/capability.json",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/eventwave-paid-promotion-v1/llms.txt",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/faie-signal-brief-v1/",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/faie-signal-brief-v1/capability.json",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/faie-signal-brief-v1/llms.txt",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/findmypart-paid-hunt-v1/",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/findmypart-paid-hunt-v1/capability.json",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/findmypart-paid-hunt-v1/llms.txt",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/foundry-app-escape-audit-v1/",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/foundry-app-escape-audit-v1/capability.json",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/foundry-app-escape-audit-v1/llms.txt",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/ibmi-rescue-v1/",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/ibmi-rescue-v1/capability.json",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/ibmi-rescue-v1/llms.txt",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/rivet-site-underwriting-v1/",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/rivet-site-underwriting-v1/capability.json",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/rivet-site-underwriting-v1/llms.txt",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/roasted-text-pressure-test-machine-v1/",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/roasted-text-pressure-test-machine-v1/capability.json",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/roasted-text-pressure-test-machine-v1/llms.txt",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/site-survive-rapid-audit-v1/",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/site-survive-rapid-audit-v1/capability.json",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/site-survive-rapid-audit-v1/llms.txt",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/website-launch-service-v1/",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/website-launch-service-v1/capability.json",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/website-launch-service-v1/llms.txt",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/sell-now.html",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 92
-    },
-    {
-      "path": "/chum/sell-now.json",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 92
-    },
-    {
-      "path": "/chum/sell-now.txt",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 92
-    },
-    {
-      "path": "/chum/revenue.html",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 90
-    },
-    {
-      "path": "/chum/revenue.json",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 90
-    },
-    {
-      "path": "/chum/revenue.txt",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 90
-    },
-    {
-      "path": "/llms-full.txt",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 86
-    },
-    {
-      "path": "/.well-known/evercraft-agent-commerce.json",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-machine-catalog.json",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 84
-    },
-    {
-      "path": "/chum/agent-commerce.html",
-      "last_changed": "2026-09-28T14:52:12.847Z",
+      "path": "/chum/crawler-radar.json",
+      "last_changed": "2026-09-28T14:54:43.873Z",
       "priority": 80
     },
     {
-      "path": "/chum/agent-commerce.json",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/agent-commerce.txt",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/capabilities.json",
-      "last_changed": "2026-09-28T14:52:12.847Z",
+      "path": "/chum/crawler-radar.txt",
+      "last_changed": "2026-09-28T14:54:43.873Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-28T14:52:12.847Z",
+      "last_changed": "2026-09-28T14:54:43.873Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/",
+      "last_changed": "2026-09-28T14:54:43.873Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "last_changed": "2026-09-28T14:54:43.873Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/crawler-radar.json",
+      "url": "/chum/crawler-radar.json",
+      "last_changed": "2026-09-28T14:54:43.873Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/crawler-radar.txt",
+      "url": "/chum/crawler-radar.txt",
+      "last_changed": "2026-09-28T14:54:43.873Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-28T14:54:43.873Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/",
+      "url": "/chum/strike/",
+      "last_changed": "2026-09-28T14:54:43.873Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "url": "/chum/strike/index.json",
+      "last_changed": "2026-09-28T14:54:43.873Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/",
+      "url": "/chum/hot/",
+      "last_changed": "2026-09-28T14:54:43.238Z",
+      "priority": 80
+    },
     {
       "path": "/chum/intents/foundry-app-escape-audit-v1/",
       "url": "/chum/intents/foundry-app-escape-audit-v1/",
@@ -733,30 +464,6 @@
       "priority": 80
     },
     {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-09-28T14:52:12.847Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/crawler-radar.json",
-      "url": "/chum/crawler-radar.json",
-      "last_changed": "2026-09-28T14:52:04.960Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/crawler-radar.txt",
-      "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-09-28T14:52:04.960Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/strike/index.json",
-      "url": "/chum/strike/index.json",
-      "last_changed": "2026-09-28T14:52:04.960Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/proof/forensiscope.json",
       "url": "/chum/proof/forensiscope.json",
       "last_changed": "2026-09-28T14:11:06.542Z",
@@ -791,12 +498,6 @@
       "url": "/llms.txt",
       "last_changed": "2026-09-28T07:50:27.019Z",
       "priority": 86
-    },
-    {
-      "path": "/chum/hot/",
-      "url": "/chum/hot/",
-      "last_changed": "2026-09-28T07:42:44.652Z",
-      "priority": 80
     },
     {
       "path": "/chum/answers/doors/ai-contractor-estimate-tool-dd0a4af1a0.json",
@@ -964,12 +665,6 @@
       "path": "/chum/pain-index.txt",
       "url": "/chum/pain-index.txt",
       "last_changed": "2026-09-28T07:39:13.230Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/strike/",
-      "url": "/chum/strike/",
-      "last_changed": "2026-09-28T07:35:44.911Z",
       "priority": 80
     },
     {
