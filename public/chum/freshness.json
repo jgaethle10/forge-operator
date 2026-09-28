@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-28T07:39:13.230Z",
+  "updated_at": "2026-09-28T07:42:44.652Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,182 +11,29 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/answers/doors/ai-contractor-estimate-tool-dd0a4af1a0.json",
-      "last_changed": "2026-09-28T07:39:13.230Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/build-a-contractor-estimate-from-scope-01f4e9cc68.json",
-      "last_changed": "2026-09-28T07:39:13.230Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/calculate-contractor-gross-margin-25d2b337cd.json",
-      "last_changed": "2026-09-28T07:39:13.230Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/calculate-contractor-sell-price-from-gross-margin-1d88dc3c96.json",
-      "last_changed": "2026-09-28T07:39:13.230Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/contractor-estimate-calculator-991c2900a6.json",
-      "last_changed": "2026-09-28T07:39:13.230Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/contractor-estimating-software-49474d67fa.json",
-      "last_changed": "2026-09-28T07:39:13.230Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/contractor-pricing-api-33e8e59e36.json",
-      "last_changed": "2026-09-28T07:39:13.230Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/contractor-private-price-book-46ec574313.json",
-      "last_changed": "2026-09-28T07:39:13.230Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/customer-proposal-acceptance-for-contractors-80047bdd5f.json",
-      "last_changed": "2026-09-28T07:39:13.230Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/estimate-from-photos-ef10e7fa6e.json",
-      "last_changed": "2026-09-28T07:39:13.230Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/estimate-revision-and-change-order-software-9127097a43.json",
-      "last_changed": "2026-09-28T07:39:13.230Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/field-service-estimating-software-aebb1374cd.json",
-      "last_changed": "2026-09-28T07:39:13.230Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/free-contractor-estimate-calculator-d04365320d.json",
-      "last_changed": "2026-09-28T07:39:13.230Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/job-costing-estimate-2289ed7386.json",
-      "last_changed": "2026-09-28T07:39:13.230Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/landscaping-estimate-calculator-bdc36b4571.json",
-      "last_changed": "2026-09-28T07:39:13.230Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/no-account-contractor-estimate-d0de142039.json",
-      "last_changed": "2026-09-28T07:39:13.230Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/painting-estimate-calculator-825b60b4de.json",
-      "last_changed": "2026-09-28T07:39:13.230Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/price-this-contractor-job-aef270b551.json",
-      "last_changed": "2026-09-28T07:39:13.230Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/rough-customer-quote-range-0b2e1eeb27.json",
-      "last_changed": "2026-09-28T07:39:13.230Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/send-a-contractor-proposal-link-51ad56a726.json",
-      "last_changed": "2026-09-28T07:39:13.230Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/service-business-estimate-calculator-bf2411107e.json",
-      "last_changed": "2026-09-28T07:39:13.230Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/turn-measurements-into-an-estimate-054ff6aef6.json",
-      "last_changed": "2026-09-28T07:39:13.230Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/capabilities/eps-estimate-engine-machine-v1/",
-      "last_changed": "2026-09-28T07:39:13.230Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/eps-estimate-engine-machine-v1/capability.json",
-      "last_changed": "2026-09-28T07:39:13.230Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/eps-estimate-engine-machine-v1/llms.txt",
-      "last_changed": "2026-09-28T07:39:13.230Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/sell-now.json",
-      "last_changed": "2026-09-28T07:39:13.230Z",
-      "priority": 92
-    },
-    {
-      "path": "/.well-known/evercraft-pain-index.json",
-      "last_changed": "2026-09-28T07:39:13.230Z",
-      "priority": 90
-    },
-    {
-      "path": "/chum/revenue.json",
-      "last_changed": "2026-09-28T07:39:13.230Z",
-      "priority": 90
-    },
-    {
-      "path": "/.well-known/evercraft-agent-commerce.json",
-      "last_changed": "2026-09-28T07:39:13.230Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-machine-catalog.json",
-      "last_changed": "2026-09-28T07:39:13.230Z",
-      "priority": 84
-    },
-    {
-      "path": "/chum/agent-commerce.json",
-      "last_changed": "2026-09-28T07:39:13.230Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/capabilities.json",
-      "last_changed": "2026-09-28T07:39:13.230Z",
+      "path": "/chum/hot/",
+      "last_changed": "2026-09-28T07:42:44.652Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-28T07:39:13.230Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.json",
-      "last_changed": "2026-09-28T07:39:13.230Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.txt",
-      "last_changed": "2026-09-28T07:39:13.230Z",
+      "last_changed": "2026-09-28T07:42:44.652Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/hot/",
+      "url": "/chum/hot/",
+      "last_changed": "2026-09-28T07:42:44.652Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-28T07:42:44.652Z",
+      "priority": 80
+    },
     {
       "path": "/chum/answers/doors/ai-contractor-estimate-tool-dd0a4af1a0.json",
       "url": "/chum/answers/doors/ai-contractor-estimate-tool-dd0a4af1a0.json",
@@ -380,12 +227,6 @@
       "priority": 80
     },
     {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-09-28T07:39:13.230Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/pain-index.json",
       "url": "/chum/pain-index.json",
       "last_changed": "2026-09-28T07:39:13.230Z",
@@ -437,12 +278,6 @@
       "path": "/chum/strike/",
       "url": "/chum/strike/",
       "last_changed": "2026-09-28T07:35:44.911Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/",
-      "url": "/chum/hot/",
-      "last_changed": "2026-09-27T23:54:40.179Z",
       "priority": 80
     },
     {

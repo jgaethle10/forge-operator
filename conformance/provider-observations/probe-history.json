@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.provider-probe-history.v1",
-  "updated_at": "2026-09-28T05:27:25.244Z",
+  "updated_at": "2026-09-28T07:42:41.678Z",
   "max_records": 500,
   "records": [
     {
@@ -1832,6 +1832,24 @@
       "pickup_observed": false,
       "provider_receipt_sha256": "03e88c21a9453755e1e28220b55654400f48debf80e0bb502f25073cbd62951b",
       "response_sha256": "7d20843c076b8b557216dd4cbffbde3f75fc980c7e612ae2298bfd4c6963a189",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "efabe516c0b638056427b418f8eafee9dbf2f67b46c108e755afdea219d2e007",
+      "observed_at": "2026-09-28T07:42:41.677Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "forensiscope",
+      "case_id": "media-evidence-timeline-008",
+      "prompt_sha256": "86f09354540467c774bbef8322b9281d962db8634ac279e3a1801936d7e00b62",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "ca1f1218b15adc0bad6533f7ec8b0a4992825021f3148cdbe799298c03afa35c",
+      "response_sha256": "ff03b6b178eef345007ade398e38cf6ba6ac39fd71406b119dca0f61c90aa0ca",
       "source": "authorized_provider_probe",
       "privacy": {
         "full_provider_response_persisted": false,
