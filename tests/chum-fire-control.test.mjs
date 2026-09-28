@@ -352,3 +352,42 @@ test('Fire Control recognizes Money Radar v2 and carries command intelligence fo
   assert.equal(receipt.command_events.length, 1);
   assert.equal(receipt.command_events[0].code, 'raw_attention_without_qualified_buyers');
 });
+
+
+test('Fire Control holds conversion tuning when Money Radar says the buyer sample is too small', () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'chum-fire-control-'));
+  const data = fixture();
+  data.providerProbes.results = [
+    { product_key: 'forensiscope', status: 'completed', evaluation: { pickup_observed: true } },
+    { product_key: 'rivet', status: 'completed', evaluation: { pickup_observed: true } }
+  ];
+  data.moneyRadar = {
+    schema: 'evercraft.chum.money-radar.v2',
+    measurement_state: 'measured',
+    acquisition_measurement_state: 'measured',
+    payment_measurement_state: 'measured',
+    products: [
+      { public_id: 'forensiscope-v1', product_key: 'forensiscope', verified_payments: 1, funnel_state: 'paid', diagnosis: 'paid_conversion_observed' },
+      {
+        public_id: 'rivet-v1',
+        product_key: 'rivet',
+        raw_offer_views: 5,
+        offer_views: 5,
+        unique_offer_view_sessions: 1,
+        continue_clicks: 0,
+        checkout_starts: 0,
+        verified_payments: 0,
+        funnel_state: 'offer_view_no_continue',
+        diagnosis: 'offer_signal_insufficient_sample'
+      }
+    ]
+  };
+  data.revenueEvents = data.revenueEvents.filter((event) => event.public_id !== 'rivet-v1');
+
+  const receipt = buildFireControl({ root, ...data });
+  const row = receipt.offers.find((offer) => offer.public_id === 'rivet-v1');
+
+  assert.equal(row.first_broken_stage, 'provider_verified_payment');
+  assert.equal(row.next_action.priority, 'P2');
+  assert.equal(row.next_action.action, 'hold_conversion_tuning_collect_more_qualified_sessions');
+});
