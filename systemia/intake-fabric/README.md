@@ -58,11 +58,14 @@ Quarantine release is not execution authority. It only clears the candidate for 
 
 ## Admission
 
-Systemia admission uses a separate Passport scope:
+Systemia admission and candidate inspection use separate Passport scopes:
 
 ```
 intake.admit
+intake.read
 ```
+
+The existence, metadata, content references, risk flags, and admission history of an intake candidate are therefore not exposed merely because an adapter was allowed to submit it.
 
 A candidate may be:
 
