@@ -7,6 +7,7 @@ on:
       - main
     paths:
       - ".github/workflows/evercraft-mcp-canary.yml"
+      - "mcp-registry/*.json"
       - "registry/**/server.json"
 
 permissions:
@@ -19,8 +20,11 @@ concurrency:
 jobs:
   canary:
     runs-on: ubuntu-latest
+    timeout-minutes: 8
     steps:
-      - name: Verify remote MCP handshakes
+      - uses: actions/checkout@v4
+
+      - name: Verify every checked-in MCP manifest
         shell: bash
         run: |
           set -euo pipefail
@@ -30,7 +34,10 @@ jobs:
             NAME="$1"
             URL="$2"
             echo "::group::$NAME"
-            BODY="$(curl -fsS --max-time 20 -X POST "$URL"               -H 'Content-Type: application/json'               -H 'Accept: application/json, text/event-stream'               --data "$PAYLOAD")"
+            BODY="$(curl -fsS --max-time 20 -X POST "$URL" \
+              -H 'Content-Type: application/json' \
+              -H 'Accept: application/json, text/event-stream' \
+              --data "$PAYLOAD")"
             printf '%s\n' "$BODY" | head -c 2500
             echo
             printf '%s' "$BODY" | grep -q '"serverInfo"' || {
@@ -40,12 +47,39 @@ jobs:
             echo "::endgroup::"
           }
 
+          shopt -s nullglob
+          MANIFESTS=(mcp-registry/*.json)
+          if [ "${#MANIFESTS[@]}" -eq 0 ]; then
+            echo "No MCP manifests found." >&2
+            exit 1
+          fi
+
+          for manifest in "${MANIFESTS[@]}"; do
+            NAME="$(jq -r '.name // empty' "$manifest")"
+            URL="$(jq -r '.remotes[0].url // empty' "$manifest")"
+            if [ -z "$NAME" ] || [ -z "$URL" ]; then
+              echo "Invalid MCP manifest identity or remote: $manifest" >&2
+              exit 1
+            fi
+            check "$NAME" "$URL"
+          done
+
+          echo "Verified ${#MANIFESTS[@]} checked-in MCP manifests."
+
+      - name: Verify critical tool and commerce contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+
           check_tool() {
             NAME="$1"
             URL="$2"
             TOOL="$3"
             echo "::group::$NAME tool contract"
-            BODY="$(curl -fsS --max-time 20 -X POST "$URL"               -H 'Content-Type: application/json'               -H 'Accept: application/json, text/event-stream'               --data '{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}')"
+            BODY="$(curl -fsS --max-time 20 -X POST "$URL" \
+              -H 'Content-Type: application/json' \
+              -H 'Accept: application/json, text/event-stream' \
+              --data '{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}')"
             printf '%s\n' "$BODY" | head -c 4000
             echo
             printf '%s' "$BODY" | grep -q "$TOOL" || {
@@ -70,20 +104,11 @@ jobs:
             echo "::endgroup::"
           }
 
-          check "Evercraft Machine Commerce" "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
-          check_tool "Evercraft Rewards" "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp" "prepare_rewards_partner_enrollment"
-          check "AliEV" "https://aliev.base44.app/functions/alievMcp"
-          check "Career Command" "https://evercraft-career-command.base44.app/functions/careerMcp"
-          check "FindMyPart" "https://findmypart.base44.app/functions/findMyPartMcp"
-          check "Systemia Website Audit" "https://systemia-audit-pro.base44.app/functions/auditAgentMcp"
-          check "Deck Capital Fit" "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp"
-          check "Website Launch" "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp"
-          check "FAIE" "https://faie.base44.app/functions/faieMcp"
-          check "EventWave" "https://event-wave.base44.app/functions/eventWaveMcp"
-          check "ForensiScope" "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp"
-          check_offer "IBM i Rescue" "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway" "ibmi-rescue-v1"
-          check_tool "IBM i Rescue via Machine Commerce" "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp" "prepare_quote_ready_service_handoff"
-          check_offer "Foundry App Escape" "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway" "foundry-app-escape-audit-v1"
-          check_tool "Foundry App Escape via Machine Commerce" "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp" "prepare_quote_ready_service_handoff"
-          check_offer "Site-Survive" "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway" "site-survive-rapid-audit-v1"
-          check_tool "Site-Survive via Machine Commerce" "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp" "prepare_quote_ready_service_handoff"
+          COMMERCE_MCP="https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+          COMMERCE_GATEWAY="https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway"
+
+          check_tool "Evercraft Rewards" "$COMMERCE_MCP" "prepare_rewards_partner_enrollment"
+          check_tool "IBM i Rescue via Machine Commerce" "$COMMERCE_MCP" "prepare_quote_ready_service_handoff"
+          check_offer "IBM i Rescue" "$COMMERCE_GATEWAY" "ibmi-rescue-v1"
+          check_offer "Foundry App Escape" "$COMMERCE_GATEWAY" "foundry-app-escape-audit-v1"
+          check_offer "Site-Survive" "$COMMERCE_GATEWAY" "site-survive-rapid-audit-v1"
