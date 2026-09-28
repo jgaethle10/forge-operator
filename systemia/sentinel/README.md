@@ -95,3 +95,25 @@ Sentinel cannot:
 - bypass legal or human approval gates
 
 The purpose is simple: notice dangerous change sooner, communicate it more clearly, and buy people time.
+
+## Observation runtime
+
+Sentinel now has a bounded observation runtime around the correlation kernel:
+
+- `baseline.mjs` learns per-region, per-domain, per-kind baselines with streaming statistics and emits normalized deviation scores.
+- `feed-adapter.mjs` converts approved public or authorized feed records into the Sentinel observation contract while retaining coarse regions rather than exact coordinates.
+- `hypotheses.mjs` creates competing falsification jobs for Saban instead of prematurely completing a narrative.
+- `replay.mjs` measures warning lead time and elevated false alerts against labeled historical or synthetic observation streams.
+- `operator-picture.mjs` builds a compact life-safety picture with uncertainty, provenance-oriented source families, passive actions, and an explicit authorized-handoff boundary.
+
+The runtime remains source-agnostic. Network acquisition belongs in separate, auditable adapters. A connector may collect lawful public or authorized data, but it must normalize into this contract before correlation.
+
+## Evaluation metrics
+
+A Sentinel release should improve both sides of the same equation:
+
+- earlier corroborated warning time
+- lower elevated false-alert rate
+
+Synthetic replay is a proof of mechanics, not evidence of real-world detection performance. Real performance claims require labeled historical datasets or supervised exercises with known ground truth.
+
