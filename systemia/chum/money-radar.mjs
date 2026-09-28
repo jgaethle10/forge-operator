@@ -712,8 +712,7 @@ export async function buildMoneyRadar({
         : telemetry_quality.actor_classification_coverage_rate != null && telemetry_quality.actor_classification_coverage_rate < 0.95
           ? 'degraded_actor_classification'
           : 'healthy';
-  telemetry_quality.conversion_decision_safe =
-    telemetry_quality.state === 'healthy' || telemetry_quality.state === 'no_recent_events';
+  telemetry_quality.conversion_decision_safe = telemetry_quality.state === 'healthy';
 
   const operator_alerts = [];
   const current24TotalActors = Object.values(current24.actor_class_counts || {}).reduce((n, value) => n + Number(value || 0), 0);
