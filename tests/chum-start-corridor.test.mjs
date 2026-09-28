@@ -29,7 +29,7 @@ assert.match(direct, /ec_surface=test_surface/);
 assert.match(direct, /ec_public_id=career-command-interview-practice-machine-v1/);
 
 const frontage = buyerFrontageUrl(offer, { surface: 'test_surface' });
-assert.match(frontage, /^https:\/\/evercraft-ai-suite-08c4d2b8\.base44\.app\/api\/apps\/692b4178919afe7d08c4d2b8\/functions\/machineCommerceGateway\?view=service&public_id=career-command-interview-practice-machine-v1/);
+assert.match(frontage, /^https:\/\/evercraft-ai-suite-08c4d2b8\.base44\.app\/buy\/career-command-interview-practice-machine-v1\?/);
 assert.match(frontage, /src=chum/);
 assert.match(frontage, /campaign=buyer-frontage/);
 assert.match(frontage, /ec_surface=test_surface/);
@@ -52,7 +52,7 @@ const rivet = {
 };
 assert.match(
   humanStartUrl(rivet, { publicOrigin: '' }),
-  /^https:\/\/evercraft-ai-suite-08c4d2b8\.base44\.app\/api\/apps\/692b4178919afe7d08c4d2b8\/functions\/machineCommerceGateway\?view=service&public_id=rivet-site-underwriting-v1/
+  /^https:\/\/evercraft-ai-suite-08c4d2b8\.base44\.app\/buy\/rivet-site-underwriting-v1\?/
 );
 
 const handoffOnly = {
@@ -61,7 +61,7 @@ const handoffOnly = {
 };
 assert.match(
   humanStartUrl(handoffOnly, { publicOrigin: '' }),
-  /^https:\/\/evercraft-ai-suite-08c4d2b8\.base44\.app\/api\/apps\/692b4178919afe7d08c4d2b8\/functions\/machineCommerceGateway\?view=service&public_id=foundry-app-escape-audit-v1/
+  /^https:\/\/evercraft-ai-suite-08c4d2b8\.base44\.app\/buy\/foundry-app-escape-audit-v1\?/
 );
 assert.equal(
   humanStartState(handoffOnly, { publicOrigin: '' }),
