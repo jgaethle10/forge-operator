@@ -110,21 +110,50 @@ function slotCenter(roomId:StudioRoomId,slotId:string,width:number,height:number
   };
 }
 
+function shiftNumeric(
+  input:number|NumericKeyframe[]|undefined,
+  timeOffset:number,
+):number|NumericKeyframe[]|undefined{
+  if(input===undefined||typeof input==='number') return input;
+  return input.map(frame=>({...frame,t:frame.t+timeOffset}));
+}
+
 function withPrefixAndOffset(
   layer:VisualLayer,
   prefix:string,
   offsetX:number,
   roomIndex:number,
+  timeOffset:number,
 ):VisualLayer{
   const next={
     ...layer,
     id:`${prefix}-${layer.id}`,
     x:layer.x+offsetX,
     z:layer.z+(roomIndex*30),
+    opacity:shiftNumeric(layer.opacity,timeOffset),
+    scale:shiftNumeric(layer.scale,timeOffset),
+    rotationDeg:shiftNumeric(layer.rotationDeg,timeOffset),
+    rotateXDeg:shiftNumeric(layer.rotateXDeg,timeOffset),
+    rotateYDeg:shiftNumeric(layer.rotateYDeg,timeOffset),
+    translateX:shiftNumeric(layer.translateX,timeOffset),
+    translateY:shiftNumeric(layer.translateY,timeOffset),
   } as VisualLayer;
 
-  // The room is now part of one continuous stage, so the room-local camera
-  // parallax remains meaningful but the stage camera owns the travel.
+  if(next.kind==='metric'){
+    next.progress=shiftNumeric(next.progress,timeOffset);
+  }
+  if(next.kind==='geo'){
+    next.routes=(next.routes??[]).map(route=>({
+      ...route,
+      progress:shiftNumeric(route.progress,timeOffset),
+    }));
+  }
+  if(next.kind==='timeline'){
+    next.playhead=shiftNumeric(next.playhead,timeOffset);
+  }
+
+  // The room is now part of one continuous stage. Room-local animation is
+  // shifted onto the episode clock, while the stage camera owns travel.
   return next;
 }
 
@@ -212,7 +241,7 @@ export function compileVirtualProductionEpisode(
     });
 
     for(const layer of roomStage.layers){
-      layers.push(withPrefixAndOffset(layer,`${index}-${beat.id}`,offsetX,index));
+      layers.push(withPrefixAndOffset(layer,`${index}-${beat.id}`,offsetX,index,startSec));
     }
 
     const hostEntryX=offsetX+(entryPct*width)-(hostWidth/2);
