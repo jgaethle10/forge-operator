@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-28T17:30:38.361Z",
+  "updated_at": "2026-09-28T17:34:00.000Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,222 +11,29 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/sitemaps/answers.xml",
-      "last_changed": "2026-09-28T17:30:38.361Z",
-      "priority": 108
-    },
-    {
-      "path": "/chum/sitemaps/products.xml",
-      "last_changed": "2026-09-28T17:30:38.361Z",
-      "priority": 108
-    },
-    {
-      "path": "/chum/answers/doors/coach-team-culture-platform-6ae8064c7b.json",
-      "last_changed": "2026-09-28T17:30:38.361Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/coach-team-culture-platform-6ae8064c7b/",
-      "last_changed": "2026-09-28T17:30:38.361Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/parent-support-for-a-young-athlete-b0fc02f053.json",
-      "last_changed": "2026-09-28T17:30:38.361Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/parent-support-for-a-young-athlete-b0fc02f053/",
-      "last_changed": "2026-09-28T17:30:38.361Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/safer-communication-and-mentorship-boundaries-for-youth-programs-c34525e6f8.json",
-      "last_changed": "2026-09-28T17:30:38.361Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/safer-communication-and-mentorship-boundaries-for-youth-programs-c34525e6f8/",
-      "last_changed": "2026-09-28T17:30:38.361Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/safer-youth-sports-mentorship-14cb76ca51.json",
-      "last_changed": "2026-09-28T17:30:38.361Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/safer-youth-sports-mentorship-14cb76ca51/",
-      "last_changed": "2026-09-28T17:30:38.361Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/school-athlete-wellness-platform-917712df70.json",
-      "last_changed": "2026-09-28T17:30:38.361Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/school-athlete-wellness-platform-917712df70/",
-      "last_changed": "2026-09-28T17:30:38.361Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/structure-parent-coach-and-school-support-around-a-young-athlete-4cfce2f9e8.json",
-      "last_changed": "2026-09-28T17:30:38.361Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/structure-parent-coach-and-school-support-around-a-young-athlete-4cfce2f9e8/",
-      "last_changed": "2026-09-28T17:30:38.361Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/support-a-child-across-sports-dance-cheer-camps-clubs-or-arts-programs-1d6e3e9169.json",
-      "last_changed": "2026-09-28T17:30:38.361Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/support-a-child-across-sports-dance-cheer-camps-clubs-or-arts-programs-1d6e3e9169/",
-      "last_changed": "2026-09-28T17:30:38.361Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/wellness-reflection-tools-for-youth-activities-6a70665ca2.json",
-      "last_changed": "2026-09-28T17:30:38.361Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/wellness-reflection-tools-for-youth-activities-6a70665ca2/",
-      "last_changed": "2026-09-28T17:30:38.361Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/youth-activity-safeguarding-checklist-6f54282fd1.json",
-      "last_changed": "2026-09-28T17:30:38.361Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/youth-activity-safeguarding-checklist-6f54282fd1/",
-      "last_changed": "2026-09-28T17:30:38.361Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/youth-athlete-development-platform-a932878fb1.json",
-      "last_changed": "2026-09-28T17:30:38.361Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/youth-athlete-development-platform-a932878fb1/",
-      "last_changed": "2026-09-28T17:30:38.361Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/products/ascend/",
-      "last_changed": "2026-09-28T17:30:38.361Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/ascend/ai-conformance.json",
-      "last_changed": "2026-09-28T17:30:38.361Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/ascend/ai-discovery.json",
-      "last_changed": "2026-09-28T17:30:38.361Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/ascend/llms.txt",
-      "last_changed": "2026-09-28T17:30:38.361Z",
-      "priority": 94
-    },
-    {
-      "path": "/.well-known/evercraft-pain-index.json",
-      "last_changed": "2026-09-28T17:30:38.361Z",
-      "priority": 90
-    },
-    {
-      "path": "/llms-full.txt",
-      "last_changed": "2026-09-28T17:30:38.361Z",
-      "priority": 86
-    },
-    {
-      "path": "/.well-known/evercraft-agent-directory.json",
-      "last_changed": "2026-09-28T17:30:38.361Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-syndication.json",
-      "last_changed": "2026-09-28T17:30:38.361Z",
-      "priority": 84
-    },
-    {
-      "path": "/chum/",
-      "last_changed": "2026-09-28T17:30:38.361Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/",
-      "last_changed": "2026-09-28T17:30:38.361Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/index.json",
-      "last_changed": "2026-09-28T17:30:38.361Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/index.txt",
-      "last_changed": "2026-09-28T17:30:38.361Z",
+      "path": "/chum/hot/",
+      "last_changed": "2026-09-28T17:34:00.000Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-28T17:30:38.361Z",
+      "last_changed": "2026-09-28T17:34:00.000Z",
       "priority": 80
-    },
-    {
-      "path": "/chum/index.json",
-      "last_changed": "2026-09-28T17:30:38.361Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.json",
-      "last_changed": "2026-09-28T17:30:38.361Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.txt",
-      "last_changed": "2026-09-28T17:30:38.361Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/syndication/",
-      "last_changed": "2026-09-28T17:30:38.361Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/syndication/index.json",
-      "last_changed": "2026-09-28T17:30:38.361Z",
-      "priority": 80
-    },
-    {
-      "path": "/feed.json",
-      "last_changed": "2026-09-28T17:30:38.361Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.xml",
-      "last_changed": "2026-09-28T17:30:38.361Z",
-      "priority": 60
-    },
-    {
-      "path": "/schema.jsonld",
-      "last_changed": "2026-09-28T17:30:38.361Z",
-      "priority": 60
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/hot/",
+      "url": "/chum/hot/",
+      "last_changed": "2026-09-28T17:34:00.000Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-28T17:34:00.000Z",
+      "priority": 80
+    },
     {
       "path": "/chum/sitemaps/answers.xml",
       "url": "/chum/sitemaps/answers.xml",
@@ -432,12 +239,6 @@
       "priority": 80
     },
     {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-09-28T17:30:38.361Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/index.json",
       "url": "/chum/index.json",
       "last_changed": "2026-09-28T17:30:38.361Z",
@@ -514,12 +315,6 @@
       "url": "/.well-known/evercraft-products.json",
       "last_changed": "2026-09-28T17:30:30.897Z",
       "priority": 88
-    },
-    {
-      "path": "/chum/hot/",
-      "url": "/chum/hot/",
-      "last_changed": "2026-09-28T17:26:36.632Z",
-      "priority": 80
     },
     {
       "path": "/chum/answers/doors/commission-or-bonus-payment-record-tracker-ae24a6e0d9.json",

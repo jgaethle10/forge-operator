@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.provider-probe-history.v1",
-  "updated_at": "2026-09-28T17:26:33.662Z",
+  "updated_at": "2026-09-28T17:33:57.163Z",
   "max_records": 500,
   "records": [
     {
@@ -3253,6 +3253,24 @@
       "prompt_sha256": "d2039056b555a219fb927a8986237196bd4e7d578921d9eb668bcf38bbcb8aa5",
       "pickup_observed": false,
       "provider_receipt_sha256": "b46c68c62d9473c610524afbfb17f1da330208df2fd5006d5bc6a8e1d93f1c06",
+      "response_sha256": "ac78862da0eb56bf61d5fb6efb7097f4bd027a528ff41847d5a15e8ff2fad857",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "d4f6aaf83ffb41440c494e91125911605267f90910aef552c14c65feeed27897",
+      "observed_at": "2026-09-28T17:33:57.162Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "evercraft-web",
+      "case_id": "evercraft-web-001",
+      "prompt_sha256": "d2039056b555a219fb927a8986237196bd4e7d578921d9eb668bcf38bbcb8aa5",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "04b166c82c0245cdad4fc5aaefbbba98141b679ee1c090db1f971f3c3f586c70",
       "response_sha256": "ac78862da0eb56bf61d5fb6efb7097f4bd027a528ff41847d5a15e8ff2fad857",
       "source": "authorized_provider_probe",
       "privacy": {
