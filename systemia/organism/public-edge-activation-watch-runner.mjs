@@ -259,17 +259,10 @@ const watcher=new PublicEdgeActivationWatcher({
 const node001Mission=readJsonIfExists(node001MissionFile);
 let result;
 try{
-  if(node001ActivationAdmitted(node001Mission)){
-    result=await watcher.tick();
-  }else{
-    result=watcher.hold('node001_field_certification_incomplete',{
-      dependency_issue_ref:'github:issue:175',
-      node001_status:node001Mission?.status||'missing',
-      authorized_field_action_required:
-        node001Mission?.human_field_action_required!==false,
-      production_activation_attempted:false,
-    });
-  }
+  // Search the authorized capacity fabric every cycle. The legacy Node 001
+  // candidate is evidence, not a prerequisite for discovering another
+  // field-verified node that satisfies the public-edge contract.
+  result=await watcher.tick();
 }finally{
   watcher.stop();
 }
@@ -281,7 +274,8 @@ const fieldMission=evaluatePublicEdgeFieldMission({
   externalCanary:readJsonIfExists(externalCanaryFile),
   directPluginSpecs:readJsonIfExists(directSpecsFile),
   issueRef:'github:issue:403',
-  dependencyIssueRef:'github:issue:175',
+  dependencyIssueRef:null,
+  legacyCandidateIssueRef:'github:issue:175',
 });
 
 atomicJson(latestFile,result);

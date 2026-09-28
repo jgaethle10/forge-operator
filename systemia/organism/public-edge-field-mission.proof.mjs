@@ -36,9 +36,10 @@ const waiting=evaluatePublicEdgeFieldMission({
   },
   directPluginSpecs:pendingSpecs,
 });
-assert.equal(waiting.mission.status,'waiting_on_field_evidence');
-assert.equal(waiting.mission.authorized_field_action_required,true);
-assert.equal(waiting.mission.systemia_autonomy_ready,false);
+assert.equal(waiting.mission.status,'searching_for_eligible_field_capacity');
+assert.equal(waiting.mission.authorized_field_action_required,false);
+assert.equal(waiting.mission.legacy_node001_action_required,true);
+assert.equal(waiting.mission.systemia_autonomy_ready,true);
 assert.equal(waiting.mission.founder_login_required,false);
 
 const fieldReady=evaluatePublicEdgeFieldMission({
@@ -50,7 +51,7 @@ assert.equal(fieldReady.mission.field_verified,true);
 assert.equal(fieldReady.mission.systemia_autonomy_ready,true);
 
 const edgeActive=evaluatePublicEdgeFieldMission({
-  node001Mission:fieldReady.mission.field_verified?completeNode001Mission:null,
+  node001Mission:null,
   edgeWatch:{
     action:'healthy',
     field_verified:true,
@@ -61,6 +62,9 @@ const edgeActive=evaluatePublicEdgeFieldMission({
   directPluginSpecs:pendingSpecs,
 });
 assert.equal(edgeActive.mission.status,'public_edge_active_external_canary_pending');
+assert.equal(edgeActive.mission.field_verified,true);
+assert.equal(edgeActive.mission.selected_capacity_field_verified,true);
+assert.equal(edgeActive.mission.legacy_node001_field_verified,false);
 assert.equal(edgeActive.mission.public_route_verified,true);
 assert.equal(edgeActive.mission.external_canary_verified,false);
 
@@ -121,7 +125,7 @@ assert.equal(complete.mission_snapshot.counts.changed,0);
 console.log(JSON.stringify({
   ok:true,
   schema:'evercraft.public-edge.field-mission-proof.v1',
-  waiting_on_field_evidence:true,
+  generic_capacity_search:true,
   automatic_systemia_handoff:true,
   external_canary_gate:true,
   promotion_gate:true,

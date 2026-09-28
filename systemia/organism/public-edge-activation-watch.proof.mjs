@@ -51,7 +51,7 @@ try{
   ));
   assert.equal(first.ok,true);
   assert.equal(first.action,'hold');
-  assert.equal(first.reason,'node001_field_certification_incomplete');
+  assert.equal(first.reason,'no_compute_capacity_discovered');
   assert.equal(first.founder_action_required,false);
   assert.equal(first.public_https_verified,false);
   assert.equal(first.material_change,true);
@@ -61,12 +61,10 @@ try{
   const fieldMission1=JSON.parse(
     fs.readFileSync(path.join(out,'field-mission.json'),'utf8')
   );
-  assert.equal(fieldMission1.status,'waiting_on_field_evidence');
-  assert.equal(fieldMission1.systemia_autonomy_ready,false);
+  assert.equal(fieldMission1.status,'searching_for_eligible_field_capacity');
+  assert.equal(fieldMission1.systemia_autonomy_ready,true);
   assert.equal(latest1.action,'hold');
   assert.equal(latest1.founder_action_required,false);
-  assert.equal(latest1.production_activation_attempted,false);
-  assert.equal(latest1.node001_status,'waiting_on_field_evidence');
   assert.equal(snapshot1.schema,'evercraft.kaidance.mission-snapshot.v1');
   assert.equal(snapshot1.workflow_key,'public-edge-activation-watch');
   assert.equal(snapshot1.material_change,true);
@@ -81,7 +79,7 @@ try{
   ));
   assert.equal(second.ok,true);
   assert.equal(second.action,'hold');
-  assert.equal(second.reason,'node001_field_certification_incomplete');
+  assert.equal(second.reason,'no_compute_capacity_discovered');
   assert.equal(second.founder_action_required,false);
   assert.equal(second.material_change,false);
 
@@ -106,8 +104,8 @@ try{
     schema:'evercraft.public-edge.activation-watch-organism-proof.v1',
     cadence_seconds:300,
     first_cycle_hold:true,
-    node001_dependency_gate:true,
-    production_activation_attempted_before_node001_complete:false,
+    node001_dependency_gate:false,
+    authorized_capacity_search_before_legacy_node001_complete:true,
     founder_action_required:false,
     second_identical_cycle_material_change:false,
     kaidance_snapshot:true,

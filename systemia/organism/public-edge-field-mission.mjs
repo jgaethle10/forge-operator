@@ -25,20 +25,31 @@ export function evaluatePublicEdgeFieldMission({
   externalCanary=null,
   directPluginSpecs=null,
   issueRef='github:issue:403',
-  dependencyIssueRef='github:issue:175',
+  dependencyIssueRef=null,
+  legacyCandidateIssueRef='github:issue:175',
   now=new Date(),
 }={}){
   const completed=new Set(node001Mission?.completed_steps||[]);
-  const fieldVerified=Boolean(
+  const legacyNode001FieldVerified=Boolean(
     node001Mission?.status==='complete' &&
     completed.has('yard_enrollment_verified') &&
     completed.has('live_identity_attested') &&
     completed.has('kaidance_field_pulse_verified') &&
     completed.has('continuity_receipt_verified')
   );
-  const fieldEvidenceReady=completed.has('field_evidence_candidate_ready');
-  const physicalActionRequired=Boolean(
-    !fieldVerified && node001Mission?.human_field_action_required===true
+  const selectedCapacityFieldVerified=Boolean(
+    ['activated','healthy'].includes(String(edgeWatch?.action||'')) &&
+    edgeWatch?.field_verified===true &&
+    edgeWatch?.identity_verified!==false
+  );
+  const fieldVerified=selectedCapacityFieldVerified||legacyNode001FieldVerified;
+  const fieldEvidenceReady=Boolean(
+    selectedCapacityFieldVerified ||
+    completed.has('field_evidence_candidate_ready')
+  );
+  const legacyCandidateActionRequired=Boolean(
+    !legacyNode001FieldVerified &&
+    node001Mission?.human_field_action_required===true
   );
 
   const edgeActivated=Boolean(
@@ -63,14 +74,13 @@ export function evaluatePublicEdgeFieldMission({
     (x)=>x.state==='registry_published_direct_mcp_existing'
   );
 
-  let status='waiting_on_field_evidence';
-  let nextAction='Complete Node 001 field evidence and live Yard attestation.';
-  let systemiaAutonomyReady=false;
+  let status='searching_for_eligible_field_capacity';
+  let nextAction='Search authorized capacity for a field-verified public-edge node and negotiate a bounded lease.';
+  let systemiaAutonomyReady=true;
 
-  if(fieldVerified){
-    systemiaAutonomyReady=true;
+  if(fieldVerified&&!edgeActivated){
     status='ready_for_systemia';
-    nextAction='Discover an edge-ready field NodeSeed and activate the managed public edge.';
+    nextAction='Activate the managed public edge on the verified capacity candidate.';
   }
   if(edgeActivated&&!publicRouteVerified){
     status='edge_active_external_route_pending';
@@ -96,6 +106,7 @@ export function evaluatePublicEdgeFieldMission({
   const evidenceRefs=[
     issueRef,
     dependencyIssueRef,
+    legacyCandidateIssueRef,
     edgeWatch?.receipt_hash,
     edgeWatch?.provision_receipt,
     edgeWatch?.field_enrollment_receipt,
@@ -108,10 +119,15 @@ export function evaluatePublicEdgeFieldMission({
     schema:'evercraft.public-edge.field-mission-state.v1',
     issue_ref:issueRef,
     dependency_issue_ref:dependencyIssueRef,
+    legacy_candidate_issue_ref:legacyCandidateIssueRef,
     status,
     field_evidence_ready:fieldEvidenceReady,
     field_verified:fieldVerified,
-    authorized_field_action_required:physicalActionRequired,
+    selected_capacity_field_verified:selectedCapacityFieldVerified,
+    legacy_node001_field_verified:legacyNode001FieldVerified,
+    legacy_node001_action_required:legacyCandidateActionRequired,
+    authorized_field_action_required:false,
+    capacity_search_active:!edgeActivated,
     systemia_autonomy_ready:systemiaAutonomyReady,
     edge_activated:edgeActivated,
     public_route_verified:publicRouteVerified,
@@ -137,7 +153,7 @@ export function evaluatePublicEdgeFieldMission({
         scanned:1,
         changed,
         admitted:systemiaAutonomyReady?1:0,
-        held:physicalActionRequired?1:0,
+        held:edgeActivated?0:1,
       },
       evidence_refs:[...evidenceRefs,mission.receipt_hash],
       mission_key:'evercraft-public-specialist-edge',
