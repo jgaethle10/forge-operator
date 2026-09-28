@@ -1,0 +1,47 @@
+name: Fallen Model Fabric
+
+on:
+  pull_request:
+    paths:
+      - "systemia/media-studio/model-fabric.ts"
+      - "systemia/media-studio/model-fabric.test.ts"
+      - "systemia/media-studio/model-fabric-runtime.ts"
+      - "systemia/media-studio/model-fabric-runtime.test.ts"
+      - "systemia/media-studio/production-grade-gate.ts"
+      - "systemia/media-studio/production-grade-gate.test.ts"
+      - "systemia/media-studio/cli.ts"
+      - ".github/workflows/fallen-model-fabric.yml"
+  push:
+    branches: [main]
+    paths:
+      - "systemia/media-studio/model-fabric.ts"
+      - "systemia/media-studio/model-fabric.test.ts"
+      - "systemia/media-studio/model-fabric-runtime.ts"
+      - "systemia/media-studio/model-fabric-runtime.test.ts"
+      - "systemia/media-studio/production-grade-gate.ts"
+      - "systemia/media-studio/production-grade-gate.test.ts"
+      - "systemia/media-studio/cli.ts"
+      - ".github/workflows/fallen-model-fabric.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  model-fabric:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install
+        run: npm install --no-audit --no-fund
+      - name: Visual model fabric contracts
+        run: |
+          node --import tsx --test \
+            systemia/media-studio/model-fabric.test.ts \
+            systemia/media-studio/model-fabric-runtime.test.ts \
+            systemia/media-studio/production-grade-gate.test.ts
+      - name: Typecheck
+        run: npm run lint
