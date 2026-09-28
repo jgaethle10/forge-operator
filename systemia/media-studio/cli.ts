@@ -18,6 +18,12 @@ import { compileWorldIntelStage, type WorldIntelStageInput } from './world-intel
 import type { VisualStage } from './visual-stage.js';
 import { buildDistributedRenderPlan, type RenderAssetManifestRow } from './distributed-render.js';
 import type { FilmPlan, MediaProject, SeriesBible, SeriesEpisodePlan } from './types.js';
+import {
+  compileStudioJourney,
+  compileStudioRoomStage,
+  type StudioJourneyStop,
+  type StudioRoomStageInput,
+} from './studio-world.js';
 
 function readJson<T>(filePath: string): T {
   return JSON.parse(fs.readFileSync(path.resolve(filePath), 'utf8')) as T;
@@ -46,6 +52,8 @@ function usage() {
     '  npm run media:studio -- stage <visual-stage.json> <stage.html>',
     '  npm run media:studio -- world-intel <story.json> <visual-stage.json> [stage.html]',
     '  npm run media:studio -- render-plan <render-plan-input.json> <distributed-plan.json>',
+    '  npm run media:studio -- studio-room <room.json> <visual-stage.json>',
+    '  npm run media:studio -- studio-journey <journey.json> <journey-plan.json>',
   ].join('\n'));
 }
 
@@ -54,6 +62,32 @@ function main() {
 
   if (!command || command === '--help' || command === '-h') {
     usage();
+    return;
+  }
+
+  if (command === 'studio-room') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const room = readJson<StudioRoomStageInput>(input);
+    const stage = compileStudioRoomStage(room);
+    writeJson(output, stage);
+    console.log(`Studio room stage created: ${path.resolve(output)}`);
+    return;
+  }
+
+  if (command === 'studio-journey') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const journeyInput = readJson<{ id: string; stops: StudioJourneyStop[] }>(input);
+    const journey = compileStudioJourney(journeyInput);
+    writeJson(output, journey);
+    console.log(`Studio journey created: ${path.resolve(output)}`);
     return;
   }
 
