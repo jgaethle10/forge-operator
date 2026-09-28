@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-28T17:23:09.322Z",
+  "updated_at": "2026-09-28T17:26:36.632Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,342 +11,29 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/sitemaps/answers.xml",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 108
-    },
-    {
-      "path": "/chum/sitemaps/products.xml",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 108
-    },
-    {
-      "path": "/chum/answers/doors/commission-or-bonus-payment-record-tracker-ae24a6e0d9.json",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/commission-or-bonus-payment-record-tracker-ae24a6e0d9/",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/contractor-payroll-records-38d24b5ae9.json",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/contractor-payroll-records-38d24b5ae9/",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/document-a-payroll-dispute-or-correction-1d40b88f4c.json",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/document-a-payroll-dispute-or-correction-1d40b88f4c/",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/employee-payment-ledger-b2267a81f9.json",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/employee-payment-ledger-b2267a81f9/",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/estimate-fabric-and-notions-for-a-project-f45fe0f80a.json",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/estimate-fabric-and-notions-for-a-project-f45fe0f80a/",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/keep-crew-payment-history-organized-23d7dd4ddb.json",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/keep-crew-payment-history-organized-23d7dd4ddb/",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/model-a-textile-retail-project-planning-pilot-c3d8e2a579.json",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/model-a-textile-retail-project-planning-pilot-c3d8e2a579/",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/payroll-audit-trail-ec00cd145f.json",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/payroll-audit-trail-ec00cd145f/",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/payroll-spreadsheet-alternative-ecdc6feb16.json",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/payroll-spreadsheet-alternative-ecdc6feb16/",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/payroll-tracker-for-a-small-business-5465cc649c.json",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/payroll-tracker-for-a-small-business-5465cc649c/",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/plan-materials-for-costumes-or-small-batch-textile-production-9f374d4d13.json",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/plan-materials-for-costumes-or-small-batch-textile-production-9f374d4d13/",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/professional-fabric-procurement-workflow-52b7de91fe.json",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/professional-fabric-procurement-workflow-52b7de91fe/",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/repeat-textile-ordering-and-material-continuity-2344d2dc16.json",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/repeat-textile-ordering-and-material-continuity-2344d2dc16/",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/seasonal-employee-payment-records-280a8fefe4.json",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/seasonal-employee-payment-records-280a8fefe4/",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/small-team-payroll-recordkeeping-b7712e0eb4.json",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/small-team-payroll-recordkeeping-b7712e0eb4/",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/textile-intelligence-for-schools-theaters-makers-quilters-or-upholstery-shops-df5253c492.json",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/textile-intelligence-for-schools-theaters-makers-quilters-or-upholstery-shops-df5253c492/",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/textile-project-to-material-planning-78f6c45fd1.json",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/textile-project-to-material-planning-78f6c45fd1/",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/track-employee-pay-history-c65b486409.json",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/track-employee-pay-history-c65b486409/",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/track-payroll-corrections-and-reversals-4f3d30a967.json",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/track-payroll-corrections-and-reversals-4f3d30a967/",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/turn-a-sewing-project-into-a-material-list-6abeb211c6.json",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/turn-a-sewing-project-into-a-material-list-6abeb211c6/",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/products/payflow/",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/payflow/ai-conformance.json",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/payflow/ai-discovery.json",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/payflow/llms.txt",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/second-stitch/",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/second-stitch/ai-conformance.json",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/second-stitch/ai-discovery.json",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/second-stitch/llms.txt",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 94
-    },
-    {
-      "path": "/.well-known/evercraft-pain-index.json",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 90
-    },
-    {
-      "path": "/llms-full.txt",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 86
-    },
-    {
-      "path": "/.well-known/evercraft-agent-directory.json",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-syndication.json",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 84
-    },
-    {
-      "path": "/chum/",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/index.json",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/index.txt",
-      "last_changed": "2026-09-28T17:23:09.322Z",
+      "path": "/chum/hot/",
+      "last_changed": "2026-09-28T17:26:36.632Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-28T17:23:09.322Z",
+      "last_changed": "2026-09-28T17:26:36.632Z",
       "priority": 80
-    },
-    {
-      "path": "/chum/index.json",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.json",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.txt",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/syndication/",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/syndication/index.json",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 80
-    },
-    {
-      "path": "/feed.json",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.xml",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 60
-    },
-    {
-      "path": "/schema.jsonld",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 60
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/hot/",
+      "url": "/chum/hot/",
+      "last_changed": "2026-09-28T17:26:36.632Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-28T17:26:36.632Z",
+      "priority": 80
+    },
     {
       "path": "/chum/sitemaps/answers.xml",
       "url": "/chum/sitemaps/answers.xml",
@@ -696,12 +383,6 @@
       "priority": 80
     },
     {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/index.json",
       "url": "/chum/index.json",
       "last_changed": "2026-09-28T17:23:09.322Z",
@@ -778,12 +459,6 @@
       "url": "/.well-known/evercraft-products.json",
       "last_changed": "2026-09-28T17:23:01.975Z",
       "priority": 88
-    },
-    {
-      "path": "/chum/hot/",
-      "url": "/chum/hot/",
-      "last_changed": "2026-09-28T17:14:36.394Z",
-      "priority": 80
     },
     {
       "path": "/chum/products/deck-capital-fit/",
