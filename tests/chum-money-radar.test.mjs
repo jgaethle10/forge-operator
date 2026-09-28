@@ -262,7 +262,10 @@ test('Money Radar counts buyer sessions once across repeated funnel events', asy
   assert.equal(receipt.buyer_signal_state, 'continue_without_checkout');
   assert.equal(receipt.windows['30d'].unique_buyer_sessions, 1);
   assert.equal(receipt.windows['30d'].view_to_continue_rate, 1);
-  assert.equal(receipt.action_queue[0].action, 'inspect_buyer_handoff_and_checkout_friction');
+  assert.equal(receipt.products[0].unique_offer_view_sessions, 1);
+  assert.equal(receipt.products[0].unique_continue_sessions, 1);
+  assert.equal(receipt.products[0].diagnosis, 'continue_signal_insufficient_sample');
+  assert.equal(receipt.action_queue[0].action, 'hold_conversion_tuning_collect_more_qualified_sessions');
 });
 
 
@@ -337,5 +340,52 @@ test('Money Radar arms and fires the first-qualified-buyer tripwire without clai
   assert.equal(receipt.buyer_milestones.first_qualified_event_at, '2026-09-28T11:30:00.000Z');
   assert.equal(receipt.totals.unique_verified_payments, 0);
   assert.ok(receipt.operator_alerts.some((alert) => alert.code === 'first_qualified_buyer_activity'));
-  assert.ok(receipt.operator_alerts.some((alert) => alert.code === 'qualified_offer_view_zero_continue'));
+  assert.equal(receipt.operator_alerts.some((alert) => alert.code === 'qualified_offer_view_zero_continue'), false);
+  assert.equal(receipt.products[0].diagnosis, 'offer_signal_insufficient_sample');
+});
+
+
+test('Money Radar requires distinct qualified sessions before diagnosing an offer conversion leak', async () => {
+  const sameSessionRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'money-radar-'));
+  const sameSessionEvents = Array.from({ length: 5 }, (_, index) => ({
+    ...publicEvent('offer_view', 'reload-' + index),
+    session_key: 'buyer_same_session_1',
+    occurred_at: '2026-09-28T11:0' + index + ':00.000Z',
+  }));
+  const sameSession = await buildMoneyRadar({
+    root: sameSessionRoot,
+    generatedAt: '2026-09-28T12:00:00.000Z',
+    sourceUrl: '',
+    publicSourceUrl: '',
+    publicSourceEvents: sameSessionEvents,
+  });
+
+  assert.equal(sameSession.receipt.products[0].offer_views, 5);
+  assert.equal(sameSession.receipt.products[0].unique_offer_view_sessions, 1);
+  assert.equal(sameSession.receipt.products[0].diagnosis, 'offer_signal_insufficient_sample');
+  assert.equal(sameSession.receipt.action_queue[0].action, 'hold_conversion_tuning_collect_more_qualified_sessions');
+  assert.equal(
+    sameSession.receipt.operator_alerts.some((alert) => alert.code === 'qualified_offer_view_zero_continue'),
+    false
+  );
+
+  const distinctSessionsRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'money-radar-'));
+  const distinctSessionEvents = Array.from({ length: 5 }, (_, index) => ({
+    ...publicEvent('offer_view', 'distinct-' + index),
+    session_key: 'buyer_distinct_session_' + index,
+    occurred_at: '2026-09-28T11:1' + index + ':00.000Z',
+  }));
+  const distinctSessions = await buildMoneyRadar({
+    root: distinctSessionsRoot,
+    generatedAt: '2026-09-28T12:00:00.000Z',
+    sourceUrl: '',
+    publicSourceUrl: '',
+    publicSourceEvents: distinctSessionEvents,
+  });
+
+  assert.equal(distinctSessions.receipt.products[0].offer_views, 5);
+  assert.equal(distinctSessions.receipt.products[0].unique_offer_view_sessions, 5);
+  assert.equal(distinctSessions.receipt.products[0].diagnosis, 'offer_to_continue_dropoff');
+  assert.equal(distinctSessions.receipt.action_queue[0].action, 'repair_offer_trust_value_or_primary_cta');
+  assert.ok(distinctSessions.receipt.operator_alerts.some((alert) => alert.code === 'qualified_offer_view_zero_continue'));
 });
