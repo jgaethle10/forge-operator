@@ -98,7 +98,7 @@ function classificationState(event, actor) {
 }
 
 function safeSession(event) {
-  const value = clean(event?.session_key);
+  const value = clean(event?.session_bucket || event?.session_key);
   return /^[A-Za-z0-9_-]{8,120}$/.test(value) ? value : '';
 }
 
@@ -540,6 +540,7 @@ export async function buildMoneyRadar({
       machine_crawler_and_synthetic_traffic_never_counts_as_buyer_demand: true,
       legacy_unclassified_traffic_never_counts_as_buyer_demand: true,
       unique_buyer_is_session_based_not_person_identity: true,
+      exported_session_dedupe_is_one_way_and_product_scoped: true,
     },
     totals: {
       source_events: taggedEvents.length,
