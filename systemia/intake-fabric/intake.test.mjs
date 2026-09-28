@@ -33,7 +33,7 @@ function setup() {
     subject_ref: 'systemia:admission',
     issuer_ref: 'evercraft:identity-authority',
     product: 'evercraft-intake',
-    scopes: ['intake.admit', 'intake.quarantine.release'],
+    scopes: ['intake.admit', 'intake.quarantine.release', 'intake.read'],
     starts_at: '2026-09-01T00:00:00Z',
     ends_at: '2026-10-31T00:00:00Z',
     authority_state: 'verified_identity_authority',
@@ -111,7 +111,13 @@ test('replayed source event deduplicates even with a different ingest idempotenc
   assert.equal(first.candidate.candidate_id, 'candidate_email_001');
   assert.equal(second.state, 'deduplicated');
   assert.equal(second.candidate.candidate_id, 'candidate_email_001');
-  assert.equal(intake.getCandidate('candidate_should_not_exist'), null);
+  assert.equal(
+    intake.getCandidate('candidate_should_not_exist', {
+      actor_ref: 'systemia:admission',
+      at: '2026-09-27T18:01:00Z',
+    }),
+    null
+  );
 
   fs.rmSync(root, { recursive: true, force: true });
 });
@@ -212,7 +218,10 @@ test('admission itself still grants no consequential execution authority', () =>
     decided_at: '2026-09-27T18:10:00Z',
   });
 
-  const packet = intake.buildSystemiaAdmissionPacket('candidate_email_001');
+  const packet = intake.buildSystemiaAdmissionPacket('candidate_email_001', {
+    actor_ref: 'systemia:admission',
+    at: '2026-09-27T18:11:00Z',
+  });
   assert.equal(packet.mission_ref, 'mission:email:001');
   assert.equal(packet.execution_authority_granted, false);
   assert.equal(packet.external_side_effects_authorized, false);
@@ -291,9 +300,52 @@ test('raw payload and attachment bytes are not stored, and state survives restar
     stateDir: path.join(root, 'intake'),
     passportStateDir: path.join(root, 'passport'),
   });
-  const candidate = restarted.getCandidate('candidate_email_001');
+  const candidate = restarted.getCandidate('candidate_email_001', {
+    actor_ref: 'systemia:admission',
+    at: '2026-09-27T18:01:00Z',
+  });
   assert.equal(candidate.raw_payload_stored_in_intake, false);
   assert.equal(candidate.attachments[0].bytes_stored_in_intake, false);
+
+  fs.rmSync(root, { recursive: true, force: true });
+});
+
+
+test('candidate reads and admission packets fail closed without intake.read authority', () => {
+  const { root, intake } = setup();
+  ingestEmail(intake);
+
+  const hidden = intake.getCandidate('candidate_email_001', {
+    actor_ref: 'adapter:gmail',
+    at: '2026-09-27T18:01:00Z',
+  });
+  assert.equal(hidden, null);
+
+  intake.decideAdmission({
+    idempotency_key: 'decision:accept:read-proof',
+    candidate_id: 'candidate_email_001',
+    decision: 'accept',
+    actor_ref: 'systemia:admission',
+    mission_ref: 'mission:read-proof',
+    reason: 'valid request',
+    evidence_ref: 'systemia:admission:read-proof',
+    decided_at: '2026-09-27T18:05:00Z',
+  });
+
+  assert.throws(
+    () =>
+      intake.buildSystemiaAdmissionPacket('candidate_email_001', {
+        actor_ref: 'adapter:gmail',
+        at: '2026-09-27T18:06:00Z',
+      }),
+    /intake_read_not_authorized/
+  );
+
+  const packet = intake.buildSystemiaAdmissionPacket('candidate_email_001', {
+    actor_ref: 'systemia:admission',
+    at: '2026-09-27T18:06:00Z',
+  });
+  assert.equal(packet.mission_ref, 'mission:read-proof');
 
   fs.rmSync(root, { recursive: true, force: true });
 });
