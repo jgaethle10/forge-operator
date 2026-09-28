@@ -1,0 +1,27 @@
+name: Evercraft Interaction Ledger
+
+on:
+  push:
+    paths:
+      - 'systemia/interaction-ledger/**'
+      - 'systemia/passport/**'
+      - '.github/workflows/evercraft-interaction-ledger.yml'
+  pull_request:
+    paths:
+      - 'systemia/interaction-ledger/**'
+      - 'systemia/passport/**'
+      - '.github/workflows/evercraft-interaction-ledger.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  interaction-ledger:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Prove relationship memory and contact safety
+        run: node --test systemia/interaction-ledger/ledger.test.mjs

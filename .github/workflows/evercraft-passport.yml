@@ -1,0 +1,26 @@
+name: Evercraft Passport
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/passport/**'
+      - '.github/workflows/evercraft-passport.yml'
+  pull_request:
+    paths:
+      - 'systemia/passport/**'
+      - '.github/workflows/evercraft-passport.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  passport:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run Passport authorization proofs
+        run: node --test systemia/passport/passport.test.mjs
