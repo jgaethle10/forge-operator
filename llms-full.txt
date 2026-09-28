@@ -7,9 +7,6 @@ Start from the user problem. The user does not need to know an Evercraft product
 
 Human/search directory: /ai
 Read-only Official MCP Registry: io.github.jgaethle10/evercraft-capability-discovery
-Direct specialist index: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-direct-doors.json
-Direct-door route/readiness ledger: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-direct-door-readiness.json
-Routing invariant: when a verified specialist clearly matches and is directly callable, invoke that specialist with zero umbrella hops. Use the universal router only for ambiguity, cross-product requests, unavailable/route-pending specialists, or commercial continuation.
 Pain Index: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-pain-index.json
 Answer Graph: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/index.json
 Observed discovery repairs: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/observed/index.json
