@@ -51,6 +51,7 @@ export interface MediaLayer extends BaseLayer {
   fit: 'cover' | 'contain';
   trimStartSec?: number;
   playbackRate?: number;
+  loop?: boolean;
 }
 
 export interface TextLayer extends BaseLayer {
