@@ -54,3 +54,25 @@ test('explicit transcription disable wins over provider configuration', () => {
   assert.equal(capability.ready, false);
   assert.equal(capability.state, 'disabled');
 });
+
+
+test('Gemini app credential auto-enables truthful ForensiScope transcription capacity', () => {
+  const env = { GEMINI_API_KEY: 'gemini-test-key' };
+  const engine = resolveTranscriptionEngine(env);
+  assert.equal(engine.state, 'configured');
+  assert.equal(engine.engine_id, 'gemini:gemini-3.5-transcribe');
+
+  const capability = transcriptionCapabilityStatus({ env });
+  assert.equal(capability.ready, true);
+  assert.equal(capability.engine_id, 'gemini:gemini-3.5-transcribe');
+  assert.equal(capability.probe_state, 'ready');
+});
+
+test('explicit Gemini provider without a Gemini key fails closed', () => {
+  const capability = transcriptionCapabilityStatus({
+    env: { FORENSISCOPE_ASR_PROVIDER: 'gemini' }
+  });
+  assert.equal(capability.ready, false);
+  assert.equal(capability.state, 'misconfigured');
+  assert.match(capability.reason, /GEMINI_API_KEY/i);
+});
