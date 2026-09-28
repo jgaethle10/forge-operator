@@ -208,6 +208,22 @@ npm run media:studio -- studio-journey ./tmp/week-journey.json ./tmp/week-journe
 
 The journey compiler fails closed on room movements that are not in the studio transition graph instead of inventing new hallways or changing geography between episodes.
 
+## Visual themes
+
+The Visual Stage carries a renderer-level theme contract instead of relying on scattered hard-coded CSS. Theme identity participates in the stage digest, so changing the visual system changes the reproducible render identity.
+
+The canonical `evercraft-core-v1` theme uses the current Evercraft palette:
+
+- Core Black: `#080B0B`
+- Engineering White: `#F5F5F2`
+- Titanium: `#B7BDC5`
+- Champagne Gold: `#B79A56`
+- Electric Ice Blue: `#4FB8FF`
+
+Theme tokens drive stage background, primary and secondary text, metrics, evidence badges, map grids, observed routes, modeled routes, tracked points and timeline elements. Public-source evidence defaults toward Electric Ice; modeled, inferred and synthetic visualization defaults toward Champagne Gold.
+
+Both the browser preview and private Chromium renderer consume the same theme contract. World-intelligence scenes and the canonical Evercraft Studio World opt into `evercraft-core-v1` by default.
+
 ## Distributed rendering
 
 Visual Stage frames can be sharded across multiple private Fallen Render Workers. The planner creates exact, non-overlapping frame ranges; workers render only their assigned lattice slice; the coordinator retrieves each PNG through the worker's authenticated artifact endpoint, re-hashes the bytes locally, proves full no-gap/no-duplicate coverage, and only then assembles the master with FFmpeg.
