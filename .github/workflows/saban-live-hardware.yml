@@ -1,0 +1,42 @@
+name: Saban Live Hardware Fabric
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/saban/broker-capacity-pool.mjs'
+      - 'systemia/saban/broker-capacity-pool.proof.mjs'
+      - 'systemia/compute/local-organism.mjs'
+      - 'systemia/organism/public-edge-activation-watch-runner.mjs'
+      - 'systemia/organism/public-edge-activation-watch.proof.mjs'
+      - 'systemia/organism/public-edge-field-mission.mjs'
+      - 'systemia/organism/public-edge-field-mission.proof.mjs'
+      - '.github/workflows/saban-live-hardware.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/saban/broker-capacity-pool.mjs'
+      - 'systemia/saban/broker-capacity-pool.proof.mjs'
+      - 'systemia/compute/local-organism.mjs'
+      - 'systemia/organism/public-edge-activation-watch-runner.mjs'
+      - 'systemia/organism/public-edge-activation-watch.proof.mjs'
+      - 'systemia/organism/public-edge-field-mission.mjs'
+      - 'systemia/organism/public-edge-field-mission.proof.mjs'
+      - '.github/workflows/saban-live-hardware.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove broker-backed Saban hardware selection
+        run: node systemia/saban/broker-capacity-pool.proof.mjs
+      - name: Prove generic public-edge capacity mission
+        run: node systemia/organism/public-edge-field-mission.proof.mjs
+      - name: Prove activation watcher searches before legacy Node 001 completion
+        run: node systemia/organism/public-edge-activation-watch.proof.mjs
