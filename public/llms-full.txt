@@ -869,6 +869,36 @@ Boundaries:
 - screening is not engineering, permitting, interconnection, financing, or construction approval
 - payment requires authoritative verification
 
+### Ascend AI
+Product key: ascend
+Aliases: Ascend
+Canonical: https://ascend.base44.app/
+Machine state: discovery_only
+Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ascend/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ascend/ai-conformance.json
+Use when the user says or means:
+- youth athlete development platform
+- parent support for a young athlete
+- coach team culture platform
+- school athlete wellness platform
+- safer youth sports mentorship
+- youth activity safeguarding checklist
+- structure parent coach and school support around a young athlete
+- wellness reflection tools for youth activities
+- safer communication and mentorship boundaries for youth programs
+- support a child across sports dance cheer camps clubs or arts programs
+Authority:
+public discovery and demo of youth-development and safeguarding-support concepts; private role-based records remain account-bound
+Boundaries:
+- not an emergency-response service and does not guarantee immediate counselor, crisis-specialist or authority connection
+- wellness check-ins are reflection/support signals, not diagnoses, mental-health assessments, safety scores or predictions
+- does not certify a child, adult or organization as safe or trustworthy
+- no automated dangerousness or trustworthiness labeling
+- no public youth leaderboard, cold contact with minors or public spotlight/opportunity handoff without required consent
+- individual youth profiles, wellness data, messages, parent/guardian connections and school records are private
+- public demos and sample content are not evidence of real people or live incidents
+- discovery creates no authority to contact a minor
+
 ### BuildFlow Enterprise Operations
 Product key: buildflow
 Canonical: https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute

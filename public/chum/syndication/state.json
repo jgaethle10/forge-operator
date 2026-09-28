@@ -1,9 +1,10 @@
 {
   "schema": "evercraft.syndication-state.v1",
-  "updated_at": "2026-09-28T17:23:09.155Z",
+  "updated_at": "2026-09-28T17:30:38.189Z",
   "complete_mirror": true,
   "product_hashes": {
     "aliev": "a29d7233b63011a5152f0c1bbe60c1cba860016bf13e60491c98ff78bb21e0da",
+    "ascend": "5d60d533d37112e4f62e78cfb12a3c71cc51fe1ffb55a2e5a689b9af7c7a53c3",
     "buildflow": "dbd28209b28e210aca120a7ae926988e6b9e9cb6a0b6635a892e089028202845",
     "callproof-vault": "11374234943c893646747fea0ca3cfe4eea28daa9f4a284c385c6e191ed42a73",
     "christmas-lights-usa": "171a6c9ceda32526fefa650f616ddec3f07a9a3a0ebb8f74492516772e01be01",

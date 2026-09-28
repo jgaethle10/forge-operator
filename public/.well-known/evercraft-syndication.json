@@ -30,7 +30,7 @@
     "rule": "Only authorized brand destinations may auto-publish. Dedupe by product content hash and publish material changes, not repeated copies.",
     "current_change_queue": "/chum/syndication/social-queue.json"
   },
-  "product_count": 60,
+  "product_count": 61,
   "products": [
     {
       "product_key": "aliev",
@@ -42,6 +42,17 @@
       "registry_name": "io.github.jgaethle10/aliev",
       "mcp": "https://aliev.base44.app/functions/alievMcp",
       "content_sha256": "a29d7233b63011a5152f0c1bbe60c1cba860016bf13e60491c98ff78bb21e0da"
+    },
+    {
+      "product_key": "ascend",
+      "name": "Ascend AI",
+      "canonical_url": "https://ascend.base44.app/",
+      "mirror": "/chum/products/ascend/",
+      "llms": "/chum/products/ascend/llms.txt",
+      "discovery": "/chum/products/ascend/ai-discovery.json",
+      "registry_name": null,
+      "mcp": null,
+      "content_sha256": "5d60d533d37112e4f62e78cfb12a3c71cc51fe1ffb55a2e5a689b9af7c7a53c3"
     },
     {
       "product_key": "buildflow",

@@ -22,6 +22,19 @@
       }
     },
     {
+      "product_key": "ascend",
+      "name": "Ascend AI",
+      "class": "youth_development_and_safeguarding_support",
+      "canonical_url": "https://ascend.base44.app/",
+      "github_record": "./ascend/README.md",
+      "llms": "./ascend/llms.txt",
+      "registry_name": null,
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null
+      }
+    },
+    {
       "product_key": "buildflow",
       "name": "BuildFlow Enterprise Operations",
       "class": "enterprise_operations_discovery_and_handoff",

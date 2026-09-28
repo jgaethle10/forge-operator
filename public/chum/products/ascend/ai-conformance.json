@@ -1,0 +1,66 @@
+{
+  "schema": "evercraft.cross-llm-product.v1",
+  "product": "Ascend AI",
+  "product_key": "ascend",
+  "aliases": [
+    "Ascend"
+  ],
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "canonical_url": "https://ascend.base44.app/",
+  "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ascend/llms.txt",
+  "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ascend/ai-discovery.json",
+  "registry_name": null,
+  "mcp": null,
+  "authority": "public discovery and demo of youth-development and safeguarding-support concepts; private role-based records remain account-bound",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "not an emergency-response service and does not guarantee immediate counselor, crisis-specialist or authority connection",
+    "wellness check-ins are reflection/support signals, not diagnoses, mental-health assessments, safety scores or predictions",
+    "does not certify a child, adult or organization as safe or trustworthy",
+    "no automated dangerousness or trustworthiness labeling",
+    "no public youth leaderboard, cold contact with minors or public spotlight/opportunity handoff without required consent",
+    "individual youth profiles, wellness data, messages, parent/guardian connections and school records are private",
+    "public demos and sample content are not evidence of real people or live incidents",
+    "discovery creates no authority to contact a minor"
+  ],
+  "commercial": null,
+  "human_start_url": null,
+  "buyer_frontage_url": null,
+  "developer_surfaces": null,
+  "editorial_surfaces": null,
+  "knowledge_surfaces": null,
+  "distribution_surfaces": null,
+  "relationships": {
+    "guardian": {
+      "name": "Guardian Safeguard",
+      "description": "Verified outside-support navigation when a concern needs to leave the activity environment.",
+      "public_surface": "https://guardian-pilot.base44.app/GetHelp"
+    },
+    "infinite-classroom": {
+      "name": "Infinite Classroom",
+      "description": "Learning support when the next need is academic or cross-subject education."
+    },
+    "talent-atlas": {
+      "name": "Talent Atlas",
+      "description": "Only a controlled, consented opportunity handoff when a candidate is genuinely ready."
+    },
+    "evernest": {
+      "name": "EverNest",
+      "description": "Family support and practical household coordination can continue outside the youth-activity development context."
+    }
+  },
+  "proof_library": null,
+  "provider_behavior_state": "not_inferred_from_publication",
+  "machine_commerce_handoff_state": null,
+  "machine_commerce_public_id": null,
+  "machine_commerce_tool": null,
+  "live_canary_evidence": null
+}

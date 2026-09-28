@@ -6,9 +6,9 @@ Machine Commerce MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/69
 Each phrase below maps to public capability candidates without upgrading readiness, pricing, invocation, payment, entitlement, or provider-pickup state.
 Discovery creates no payment obligation. Checkout requires explicit human confirmation and paid state requires authoritative provider verification.
 
-Pain-index entries: 105
-Unique user phrases: 887
-Candidate edges: 981
+Pain-index entries: 106
+Unique user phrases: 897
+Candidate edges: 991
 Ambiguous phrases: 94
 
 ## 15 GB video analysis
@@ -961,6 +961,13 @@ Human-readable match: /chum/answers/doors/cloud-or-headless-browser-for-an-ai-wo
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/cloud-or-headless-browser-for-an-ai-workflow-5a0a04f9ec.json
 Candidates:
 - Evercraft Web | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs
+
+## coach team culture platform
+Answer ID: intent:6ae8064c7b
+Human-readable match: /chum/answers/doors/coach-team-culture-platform-6ae8064c7b/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/coach-team-culture-platform-6ae8064c7b.json
+Candidates:
+- Ascend AI | kind=product | commercial=product_contract | machine=discovery_only | public=https://ascend.base44.app/
 
 ## commercial Christmas light installation near me
 Answer ID: intent:8df9012963
@@ -3928,6 +3935,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - DayTrade Lens | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/daytrade-lens
 
+## parent support for a young athlete
+Answer ID: intent:b0fc02f053
+Human-readable match: /chum/answers/doors/parent-support-for-a-young-athlete-b0fc02f053/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/parent-support-for-a-young-athlete-b0fc02f053.json
+Candidates:
+- Ascend AI | kind=product | commercial=product_contract | machine=discovery_only | public=https://ascend.base44.app/
+
 ## parking garage reservation management
 Answer ID: intent:ae6e3aeb45
 Human-readable match: /chum/answers/doors/parking-garage-reservation-management-ae6e3aeb45/
@@ -4885,12 +4899,33 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Systemia Remote Ops | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops
 
+## safer communication and mentorship boundaries for youth programs
+Answer ID: intent:c34525e6f8
+Human-readable match: /chum/answers/doors/safer-communication-and-mentorship-boundaries-for-youth-programs-c34525e6f8/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/safer-communication-and-mentorship-boundaries-for-youth-programs-c34525e6f8.json
+Candidates:
+- Ascend AI | kind=product | commercial=product_contract | machine=discovery_only | public=https://ascend.base44.app/
+
+## safer youth sports mentorship
+Answer ID: intent:14cb76ca51
+Human-readable match: /chum/answers/doors/safer-youth-sports-mentorship-14cb76ca51/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/safer-youth-sports-mentorship-14cb76ca51.json
+Candidates:
+- Ascend AI | kind=product | commercial=product_contract | machine=discovery_only | public=https://ascend.base44.app/
+
 ## scan my website for problems
 Answer ID: intent:076b33b229
 Human-readable match: /chum/answers/doors/scan-my-website-for-problems-076b33b229/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/scan-my-website-for-problems-076b33b229.json
 Candidates:
 - Systemia Radar | kind=product | commercial=product_contract | machine=discovery_only | public=https://systemia-scan-pro.base44.app/
+
+## school athlete wellness platform
+Answer ID: intent:917712df70
+Human-readable match: /chum/answers/doors/school-athlete-wellness-platform-917712df70/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/school-athlete-wellness-platform-917712df70.json
+Candidates:
+- Ascend AI | kind=product | commercial=product_contract | machine=discovery_only | public=https://ascend.base44.app/
 
 ## score my interview answer
 Answer ID: intent:5e08f2c4f0
@@ -5355,6 +5390,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Systemia Remote Ops | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops
 
+## structure parent coach and school support around a young athlete
+Answer ID: intent:4cfce2f9e8
+Human-readable match: /chum/answers/doors/structure-parent-coach-and-school-support-around-a-young-athlete-4cfce2f9e8/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/structure-parent-coach-and-school-support-around-a-young-athlete-4cfce2f9e8.json
+Candidates:
+- Ascend AI | kind=product | commercial=product_contract | machine=discovery_only | public=https://ascend.base44.app/
+
 ## structured web content extraction for AI agents
 Answer ID: intent:bc8095fc5e
 Human-readable match: /chum/answers/doors/structured-web-content-extraction-for-ai-agents-bc8095fc5e/
@@ -5439,6 +5481,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Freight Load Exception Intelligence | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs
 - Systemia Atlas Freight Load Exception Intelligence | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs
+
+## support a child across sports dance cheer camps clubs or arts programs
+Answer ID: intent:1d6e3e9169
+Human-readable match: /chum/answers/doors/support-a-child-across-sports-dance-cheer-camps-clubs-or-arts-programs-1d6e3e9169/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/support-a-child-across-sports-dance-cheer-camps-clubs-or-arts-programs-1d6e3e9169.json
+Candidates:
+- Ascend AI | kind=product | commercial=product_contract | machine=discovery_only | public=https://ascend.base44.app/
 
 ## tailor my resume to this opening
 Answer ID: intent:8830572846
@@ -6079,6 +6128,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Systemia Website Audit | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs
 
+## wellness reflection tools for youth activities
+Answer ID: intent:6a70665ca2
+Human-readable match: /chum/answers/doors/wellness-reflection-tools-for-youth-activities-6a70665ca2/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/wellness-reflection-tools-for-youth-activities-6a70665ca2.json
+Candidates:
+- Ascend AI | kind=product | commercial=product_contract | machine=discovery_only | public=https://ascend.base44.app/
+
 ## what am I missing before I seek funding
 Answer ID: intent:ee5dbd15c2
 Human-readable match: /chum/answers/doors/what-am-i-missing-before-i-seek-funding-ee5dbd15c2/
@@ -6306,6 +6362,20 @@ Human-readable match: /chum/answers/doors/yard-cleanup-near-me-in-yakima-e8071f4
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/yard-cleanup-near-me-in-yakima-e8071f4a5d.json
 Candidates:
 - Evercraft Property Services | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraftpropertyservices.com/
+
+## youth activity safeguarding checklist
+Answer ID: intent:6f54282fd1
+Human-readable match: /chum/answers/doors/youth-activity-safeguarding-checklist-6f54282fd1/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/youth-activity-safeguarding-checklist-6f54282fd1.json
+Candidates:
+- Ascend AI | kind=product | commercial=product_contract | machine=discovery_only | public=https://ascend.base44.app/
+
+## youth athlete development platform
+Answer ID: intent:a932878fb1
+Human-readable match: /chum/answers/doors/youth-athlete-development-platform-a932878fb1/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/youth-athlete-development-platform-a932878fb1.json
+Candidates:
+- Ascend AI | kind=product | commercial=product_contract | machine=discovery_only | public=https://ascend.base44.app/
 
 ## Zapier cleanup
 Answer ID: intent:126ea7dc78

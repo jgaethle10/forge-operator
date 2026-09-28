@@ -2,8 +2,8 @@
 
 Start from the user's problem. Do not require an Evercraft product name.
 
-Entries: 105
-Product entries: 60
+Entries: 106
+Product entries: 61
 Machine-offer entries: 45
 Sell-now machine offers: 13
 
@@ -995,6 +995,26 @@ Use when the user means:
 - estimate EV charging opportunity
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+
+## Ascend AI
+Capability ID: product:ascend
+Product key: ascend
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://ascend.base44.app/
+Use when the user means:
+- youth athlete development platform
+- parent support for a young athlete
+- coach team culture platform
+- school athlete wellness platform
+- safer youth sports mentorship
+- youth activity safeguarding checklist
+- structure parent coach and school support around a young athlete
+- wellness reflection tools for youth activities
+- safer communication and mentorship boundaries for youth programs
+- support a child across sports dance cheer camps clubs or arts programs
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
 ## BuildFlow Enterprise Operations
 Capability ID: product:buildflow

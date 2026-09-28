@@ -20,11 +20,11 @@
     "provider_publication_is_not_endorsement_or_pickup_proof": true
   },
   "summary": {
-    "pain_index_entries": 105,
-    "unique_user_phrases": 887,
-    "mapped_candidate_edges": 981,
+    "pain_index_entries": 106,
+    "unique_user_phrases": 897,
+    "mapped_candidate_edges": 991,
     "ambiguous_phrases": 94,
-    "product_candidates": 60,
+    "product_candidates": 61,
     "machine_offer_candidates": 45
   },
   "doors": [
@@ -3263,6 +3263,29 @@
           "pain_page": "/chum/products/evercraft-web/",
           "public_url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs",
           "registry_name": "io.github.jgaethle10/evercraft-web"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:6ae8064c7b",
+      "user_language": "coach team culture platform",
+      "normalized": "coach team culture platform",
+      "relative_json": "/chum/answers/doors/coach-team-culture-platform-6ae8064c7b.json",
+      "relative_page": "/chum/answers/doors/coach-team-culture-platform-6ae8064c7b/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/coach-team-culture-platform-6ae8064c7b.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:ascend",
+          "kind": "product",
+          "product_key": "ascend",
+          "public_id": null,
+          "name": "Ascend AI",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/ascend/",
+          "public_url": "https://ascend.base44.app/",
+          "registry_name": null
         }
       ]
     },
@@ -13422,6 +13445,29 @@
       ]
     },
     {
+      "answer_id": "intent:b0fc02f053",
+      "user_language": "parent support for a young athlete",
+      "normalized": "parent support for a young athlete",
+      "relative_json": "/chum/answers/doors/parent-support-for-a-young-athlete-b0fc02f053.json",
+      "relative_page": "/chum/answers/doors/parent-support-for-a-young-athlete-b0fc02f053/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/parent-support-for-a-young-athlete-b0fc02f053.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:ascend",
+          "kind": "product",
+          "product_key": "ascend",
+          "public_id": null,
+          "name": "Ascend AI",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/ascend/",
+          "public_url": "https://ascend.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:ae6e3aeb45",
       "user_language": "parking garage reservation management",
       "normalized": "parking garage reservation management",
@@ -16671,6 +16717,52 @@
       ]
     },
     {
+      "answer_id": "intent:c34525e6f8",
+      "user_language": "safer communication and mentorship boundaries for youth programs",
+      "normalized": "safer communication and mentorship boundaries for youth programs",
+      "relative_json": "/chum/answers/doors/safer-communication-and-mentorship-boundaries-for-youth-programs-c34525e6f8.json",
+      "relative_page": "/chum/answers/doors/safer-communication-and-mentorship-boundaries-for-youth-programs-c34525e6f8/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/safer-communication-and-mentorship-boundaries-for-youth-programs-c34525e6f8.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:ascend",
+          "kind": "product",
+          "product_key": "ascend",
+          "public_id": null,
+          "name": "Ascend AI",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/ascend/",
+          "public_url": "https://ascend.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:14cb76ca51",
+      "user_language": "safer youth sports mentorship",
+      "normalized": "safer youth sports mentorship",
+      "relative_json": "/chum/answers/doors/safer-youth-sports-mentorship-14cb76ca51.json",
+      "relative_page": "/chum/answers/doors/safer-youth-sports-mentorship-14cb76ca51/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/safer-youth-sports-mentorship-14cb76ca51.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:ascend",
+          "kind": "product",
+          "product_key": "ascend",
+          "public_id": null,
+          "name": "Ascend AI",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/ascend/",
+          "public_url": "https://ascend.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:076b33b229",
       "user_language": "scan my website for problems",
       "normalized": "scan my website for problems",
@@ -16689,6 +16781,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/systemia-radar/",
           "public_url": "https://systemia-scan-pro.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:917712df70",
+      "user_language": "school athlete wellness platform",
+      "normalized": "school athlete wellness platform",
+      "relative_json": "/chum/answers/doors/school-athlete-wellness-platform-917712df70.json",
+      "relative_page": "/chum/answers/doors/school-athlete-wellness-platform-917712df70/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/school-athlete-wellness-platform-917712df70.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:ascend",
+          "kind": "product",
+          "product_key": "ascend",
+          "public_id": null,
+          "name": "Ascend AI",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/ascend/",
+          "public_url": "https://ascend.base44.app/",
           "registry_name": null
         }
       ]
@@ -18285,6 +18400,29 @@
       ]
     },
     {
+      "answer_id": "intent:4cfce2f9e8",
+      "user_language": "structure parent coach and school support around a young athlete",
+      "normalized": "structure parent coach and school support around a young athlete",
+      "relative_json": "/chum/answers/doors/structure-parent-coach-and-school-support-around-a-young-athlete-4cfce2f9e8.json",
+      "relative_page": "/chum/answers/doors/structure-parent-coach-and-school-support-around-a-young-athlete-4cfce2f9e8/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/structure-parent-coach-and-school-support-around-a-young-athlete-4cfce2f9e8.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:ascend",
+          "kind": "product",
+          "product_key": "ascend",
+          "public_id": null,
+          "name": "Ascend AI",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/ascend/",
+          "public_url": "https://ascend.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:bc8095fc5e",
       "user_language": "structured web content extraction for AI agents",
       "normalized": "structured web content extraction for ai agents",
@@ -18568,6 +18706,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/systemia-atlas-freight/",
           "public_url": "https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:1d6e3e9169",
+      "user_language": "support a child across sports dance cheer camps clubs or arts programs",
+      "normalized": "support a child across sports dance cheer camps clubs or arts programs",
+      "relative_json": "/chum/answers/doors/support-a-child-across-sports-dance-cheer-camps-clubs-or-arts-programs-1d6e3e9169.json",
+      "relative_page": "/chum/answers/doors/support-a-child-across-sports-dance-cheer-camps-clubs-or-arts-programs-1d6e3e9169/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/support-a-child-across-sports-dance-cheer-camps-clubs-or-arts-programs-1d6e3e9169.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:ascend",
+          "kind": "product",
+          "product_key": "ascend",
+          "public_id": null,
+          "name": "Ascend AI",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/ascend/",
+          "public_url": "https://ascend.base44.app/",
           "registry_name": null
         }
       ]
@@ -20751,6 +20912,29 @@
       ]
     },
     {
+      "answer_id": "intent:6a70665ca2",
+      "user_language": "wellness reflection tools for youth activities",
+      "normalized": "wellness reflection tools for youth activities",
+      "relative_json": "/chum/answers/doors/wellness-reflection-tools-for-youth-activities-6a70665ca2.json",
+      "relative_page": "/chum/answers/doors/wellness-reflection-tools-for-youth-activities-6a70665ca2/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/wellness-reflection-tools-for-youth-activities-6a70665ca2.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:ascend",
+          "kind": "product",
+          "product_key": "ascend",
+          "public_id": null,
+          "name": "Ascend AI",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/ascend/",
+          "public_url": "https://ascend.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:ee5dbd15c2",
       "user_language": "what am I missing before I seek funding",
       "normalized": "what am i missing before i seek funding",
@@ -21530,6 +21714,52 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/evercraft-property-services/",
           "public_url": "https://evercraftpropertyservices.com/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:6f54282fd1",
+      "user_language": "youth activity safeguarding checklist",
+      "normalized": "youth activity safeguarding checklist",
+      "relative_json": "/chum/answers/doors/youth-activity-safeguarding-checklist-6f54282fd1.json",
+      "relative_page": "/chum/answers/doors/youth-activity-safeguarding-checklist-6f54282fd1/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/youth-activity-safeguarding-checklist-6f54282fd1.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:ascend",
+          "kind": "product",
+          "product_key": "ascend",
+          "public_id": null,
+          "name": "Ascend AI",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/ascend/",
+          "public_url": "https://ascend.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:a932878fb1",
+      "user_language": "youth athlete development platform",
+      "normalized": "youth athlete development platform",
+      "relative_json": "/chum/answers/doors/youth-athlete-development-platform-a932878fb1.json",
+      "relative_page": "/chum/answers/doors/youth-athlete-development-platform-a932878fb1/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/youth-athlete-development-platform-a932878fb1.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:ascend",
+          "kind": "product",
+          "product_key": "ascend",
+          "public_id": null,
+          "name": "Ascend AI",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/ascend/",
+          "public_url": "https://ascend.base44.app/",
           "registry_name": null
         }
       ]

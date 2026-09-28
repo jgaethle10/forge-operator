@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.syndication-social-queue.v1",
-  "generated_at": "2026-09-28T17:23:09.155Z",
+  "generated_at": "2026-09-28T17:30:38.189Z",
   "bootstrap": false,
   "policy": "Material product changes enter once per content hash. Publishing still requires an authorized destination adapter.",
   "items": [
@@ -22,6 +22,16 @@
       "discovery_path": "/chum/products/aliev/ai-discovery.json",
       "text": "AliEV: AliEV is an Evercraft ev infrastructure opportunity intelligence capability. Common needs: would EV charging make sense at this property; what public EV charging is near this address; screen a property for EV infrastructure opportunity; compare EV opportunity depth, traffic, utility, tariff, incentive, or observed-usage evidence.",
       "content_sha256": "a29d7233b63011a5152f0c1bbe60c1cba860016bf13e60491c98ff78bb21e0da",
+      "requires_authorized_destination": true
+    },
+    {
+      "dedupe_key": "ascend:5d60d533d37112e4f62e78cfb12a3c71cc51fe1ffb55a2e5a689b9af7c7a53c3",
+      "product_key": "ascend",
+      "name": "Ascend AI",
+      "canonical_url": "https://ascend.base44.app/",
+      "discovery_path": "/chum/products/ascend/ai-discovery.json",
+      "text": "Ascend AI: Ascend AI is an Evercraft youth development and safeguarding support capability. Common needs: youth athlete development platform; parent support for a young athlete; coach team culture platform; school athlete wellness platform.",
+      "content_sha256": "5d60d533d37112e4f62e78cfb12a3c71cc51fe1ffb55a2e5a689b9af7c7a53c3",
       "requires_authorized_destination": true
     },
     {

@@ -4,6 +4,10 @@
   <url><loc>/chum/products/aliev/ai-conformance.json</loc></url>
   <url><loc>/chum/products/aliev/ai-discovery.json</loc></url>
   <url><loc>/chum/products/aliev/llms.txt</loc></url>
+  <url><loc>/chum/products/ascend/</loc></url>
+  <url><loc>/chum/products/ascend/ai-conformance.json</loc></url>
+  <url><loc>/chum/products/ascend/ai-discovery.json</loc></url>
+  <url><loc>/chum/products/ascend/llms.txt</loc></url>
   <url><loc>/chum/products/buildflow/</loc></url>
   <url><loc>/chum/products/buildflow/ai-conformance.json</loc></url>
   <url><loc>/chum/products/buildflow/ai-discovery.json</loc></url>

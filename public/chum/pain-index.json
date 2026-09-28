@@ -25,10 +25,10 @@
     "provider_verification_required_for_paid_state": true
   },
   "summary": {
-    "entries": 105,
-    "product_entries": 60,
+    "entries": 106,
+    "product_entries": 61,
     "machine_offer_entries": 45,
-    "entries_with_pain_language": 105,
+    "entries_with_pain_language": 106,
     "sell_now_machine_offers": 13,
     "entries_with_declared_mcp": 60,
     "callable_or_routable_entries": 41,
@@ -2224,6 +2224,59 @@
       "source_refs": [
         "public/.well-known/evercraft-products.json",
         "registry/catalog.json"
+      ]
+    },
+    {
+      "capability_id": "product:ascend",
+      "product_key": "ascend",
+      "kind": "product",
+      "name": "Ascend AI",
+      "class": "youth_development_and_safeguarding_support",
+      "pain_phrases": [
+        "youth athlete development platform",
+        "parent support for a young athlete",
+        "coach team culture platform",
+        "school athlete wellness platform",
+        "safer youth sports mentorship",
+        "youth activity safeguarding checklist",
+        "structure parent coach and school support around a young athlete",
+        "wellness reflection tools for youth activities",
+        "safer communication and mentorship boundaries for youth programs",
+        "support a child across sports dance cheer camps clubs or arts programs"
+      ],
+      "problem": null,
+      "inputs": null,
+      "outputs": null,
+      "canonical_url": "https://ascend.base44.app/",
+      "registry_name": null,
+      "mcp": null,
+      "routing": {
+        "preferred": "universal_machine_commerce",
+        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
+      "legacy_marketing_route_suppressed": false,
+      "authority": "public discovery and demo of youth-development and safeguarding-support concepts; private role-based records remain account-bound",
+      "boundaries": [
+        "not an emergency-response service and does not guarantee immediate counselor, crisis-specialist or authority connection",
+        "wellness check-ins are reflection/support signals, not diagnoses, mental-health assessments, safety scores or predictions",
+        "does not certify a child, adult or organization as safe or trustworthy",
+        "no automated dangerousness or trustworthiness labeling",
+        "no public youth leaderboard, cold contact with minors or public spotlight/opportunity handoff without required consent",
+        "individual youth profiles, wellness data, messages, parent/guardian connections and school records are private",
+        "public demos and sample content are not evidence of real people or live incidents",
+        "discovery creates no authority to contact a minor"
+      ],
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "pricing": null,
+      "offers": [],
+      "commercial": null,
+      "human_confirmation_required": true,
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "payment_authority": null,
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "source_refs": [
+        "public/.well-known/evercraft-products.json"
       ]
     },
     {

@@ -1,0 +1,35 @@
+# Ascend AI
+
+Provider: Evercraft
+Product key: ascend
+Class: youth_development_and_safeguarding_support
+Canonical URL: https://ascend.base44.app/
+Authority: public discovery and demo of youth-development and safeguarding-support concepts; private role-based records remain account-bound
+Human confirmation required: yes
+Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ascend/llms.txt
+
+## Natural-language intents
+- youth athlete development platform
+- parent support for a young athlete
+- coach team culture platform
+- school athlete wellness platform
+- safer youth sports mentorship
+- youth activity safeguarding checklist
+- structure parent coach and school support around a young athlete
+- wellness reflection tools for youth activities
+- safer communication and mentorship boundaries for youth programs
+- support a child across sports dance cheer camps clubs or arts programs
+
+## Boundaries
+- not an emergency-response service and does not guarantee immediate counselor, crisis-specialist or authority connection
+- wellness check-ins are reflection/support signals, not diagnoses, mental-health assessments, safety scores or predictions
+- does not certify a child, adult or organization as safe or trustworthy
+- no automated dangerousness or trustworthiness labeling
+- no public youth leaderboard, cold contact with minors or public spotlight/opportunity handoff without required consent
+- individual youth profiles, wellness data, messages, parent/guardian connections and school records are private
+- public demos and sample content are not evidence of real people or live incidents
+- discovery creates no authority to contact a minor
+
+Routing rule: Match only when the user's need fits the declared intents and authority. Preserve uncertainty and human-confirmation requirements. Do not infer private capabilities or internal topology.
+
+Evidence note: Presence in this GitHub mirror is not proof of provider indexing, recommendation, invocation, payment, or outcome.

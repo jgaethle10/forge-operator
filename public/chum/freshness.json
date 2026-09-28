@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-28T17:30:31.324Z",
+  "updated_at": "2026-09-28T17:30:38.361Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,32 +11,480 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/crawler-radar.json",
-      "last_changed": "2026-09-28T17:30:31.324Z",
+      "path": "/chum/sitemaps/answers.xml",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 108
+    },
+    {
+      "path": "/chum/sitemaps/products.xml",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 108
+    },
+    {
+      "path": "/chum/answers/doors/coach-team-culture-platform-6ae8064c7b.json",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/coach-team-culture-platform-6ae8064c7b/",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/parent-support-for-a-young-athlete-b0fc02f053.json",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/parent-support-for-a-young-athlete-b0fc02f053/",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/safer-communication-and-mentorship-boundaries-for-youth-programs-c34525e6f8.json",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/safer-communication-and-mentorship-boundaries-for-youth-programs-c34525e6f8/",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/safer-youth-sports-mentorship-14cb76ca51.json",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/safer-youth-sports-mentorship-14cb76ca51/",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/school-athlete-wellness-platform-917712df70.json",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/school-athlete-wellness-platform-917712df70/",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/structure-parent-coach-and-school-support-around-a-young-athlete-4cfce2f9e8.json",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/structure-parent-coach-and-school-support-around-a-young-athlete-4cfce2f9e8/",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/support-a-child-across-sports-dance-cheer-camps-clubs-or-arts-programs-1d6e3e9169.json",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/support-a-child-across-sports-dance-cheer-camps-clubs-or-arts-programs-1d6e3e9169/",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/wellness-reflection-tools-for-youth-activities-6a70665ca2.json",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/wellness-reflection-tools-for-youth-activities-6a70665ca2/",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/youth-activity-safeguarding-checklist-6f54282fd1.json",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/youth-activity-safeguarding-checklist-6f54282fd1/",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/youth-athlete-development-platform-a932878fb1.json",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/youth-athlete-development-platform-a932878fb1/",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/products/ascend/",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/ascend/ai-conformance.json",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/ascend/ai-discovery.json",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/ascend/llms.txt",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 94
+    },
+    {
+      "path": "/.well-known/evercraft-pain-index.json",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 90
+    },
+    {
+      "path": "/llms-full.txt",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 86
+    },
+    {
+      "path": "/.well-known/evercraft-agent-directory.json",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-syndication.json",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 84
+    },
+    {
+      "path": "/chum/",
+      "last_changed": "2026-09-28T17:30:38.361Z",
       "priority": 80
     },
     {
-      "path": "/chum/crawler-radar.txt",
-      "last_changed": "2026-09-28T17:30:31.324Z",
+      "path": "/chum/answers/",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/index.json",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/index.txt",
+      "last_changed": "2026-09-28T17:30:38.361Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-28T17:30:31.324Z",
+      "last_changed": "2026-09-28T17:30:38.361Z",
       "priority": 80
     },
     {
-      "path": "/chum/strike/",
-      "last_changed": "2026-09-28T17:30:31.324Z",
+      "path": "/chum/index.json",
+      "last_changed": "2026-09-28T17:30:38.361Z",
       "priority": 80
     },
     {
-      "path": "/chum/strike/index.json",
-      "last_changed": "2026-09-28T17:30:31.324Z",
+      "path": "/chum/pain-index.json",
+      "last_changed": "2026-09-28T17:30:38.361Z",
       "priority": 80
+    },
+    {
+      "path": "/chum/pain-index.txt",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/syndication/",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/syndication/index.json",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 80
+    },
+    {
+      "path": "/feed.json",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 60
+    },
+    {
+      "path": "/feed.xml",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 60
+    },
+    {
+      "path": "/schema.jsonld",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 60
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/sitemaps/answers.xml",
+      "url": "/chum/sitemaps/answers.xml",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 108
+    },
+    {
+      "path": "/chum/sitemaps/products.xml",
+      "url": "/chum/sitemaps/products.xml",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 108
+    },
+    {
+      "path": "/chum/answers/doors/coach-team-culture-platform-6ae8064c7b.json",
+      "url": "/chum/answers/doors/coach-team-culture-platform-6ae8064c7b.json",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/coach-team-culture-platform-6ae8064c7b/",
+      "url": "/chum/answers/doors/coach-team-culture-platform-6ae8064c7b/",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/parent-support-for-a-young-athlete-b0fc02f053.json",
+      "url": "/chum/answers/doors/parent-support-for-a-young-athlete-b0fc02f053.json",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/parent-support-for-a-young-athlete-b0fc02f053/",
+      "url": "/chum/answers/doors/parent-support-for-a-young-athlete-b0fc02f053/",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/safer-communication-and-mentorship-boundaries-for-youth-programs-c34525e6f8.json",
+      "url": "/chum/answers/doors/safer-communication-and-mentorship-boundaries-for-youth-programs-c34525e6f8.json",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/safer-communication-and-mentorship-boundaries-for-youth-programs-c34525e6f8/",
+      "url": "/chum/answers/doors/safer-communication-and-mentorship-boundaries-for-youth-programs-c34525e6f8/",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/safer-youth-sports-mentorship-14cb76ca51.json",
+      "url": "/chum/answers/doors/safer-youth-sports-mentorship-14cb76ca51.json",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/safer-youth-sports-mentorship-14cb76ca51/",
+      "url": "/chum/answers/doors/safer-youth-sports-mentorship-14cb76ca51/",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/school-athlete-wellness-platform-917712df70.json",
+      "url": "/chum/answers/doors/school-athlete-wellness-platform-917712df70.json",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/school-athlete-wellness-platform-917712df70/",
+      "url": "/chum/answers/doors/school-athlete-wellness-platform-917712df70/",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/structure-parent-coach-and-school-support-around-a-young-athlete-4cfce2f9e8.json",
+      "url": "/chum/answers/doors/structure-parent-coach-and-school-support-around-a-young-athlete-4cfce2f9e8.json",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/structure-parent-coach-and-school-support-around-a-young-athlete-4cfce2f9e8/",
+      "url": "/chum/answers/doors/structure-parent-coach-and-school-support-around-a-young-athlete-4cfce2f9e8/",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/support-a-child-across-sports-dance-cheer-camps-clubs-or-arts-programs-1d6e3e9169.json",
+      "url": "/chum/answers/doors/support-a-child-across-sports-dance-cheer-camps-clubs-or-arts-programs-1d6e3e9169.json",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/support-a-child-across-sports-dance-cheer-camps-clubs-or-arts-programs-1d6e3e9169/",
+      "url": "/chum/answers/doors/support-a-child-across-sports-dance-cheer-camps-clubs-or-arts-programs-1d6e3e9169/",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/wellness-reflection-tools-for-youth-activities-6a70665ca2.json",
+      "url": "/chum/answers/doors/wellness-reflection-tools-for-youth-activities-6a70665ca2.json",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/wellness-reflection-tools-for-youth-activities-6a70665ca2/",
+      "url": "/chum/answers/doors/wellness-reflection-tools-for-youth-activities-6a70665ca2/",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/youth-activity-safeguarding-checklist-6f54282fd1.json",
+      "url": "/chum/answers/doors/youth-activity-safeguarding-checklist-6f54282fd1.json",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/youth-activity-safeguarding-checklist-6f54282fd1/",
+      "url": "/chum/answers/doors/youth-activity-safeguarding-checklist-6f54282fd1/",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/youth-athlete-development-platform-a932878fb1.json",
+      "url": "/chum/answers/doors/youth-athlete-development-platform-a932878fb1.json",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/youth-athlete-development-platform-a932878fb1/",
+      "url": "/chum/answers/doors/youth-athlete-development-platform-a932878fb1/",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/products/ascend/",
+      "url": "/chum/products/ascend/",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/ascend/ai-conformance.json",
+      "url": "/chum/products/ascend/ai-conformance.json",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/ascend/ai-discovery.json",
+      "url": "/chum/products/ascend/ai-discovery.json",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/ascend/llms.txt",
+      "url": "/chum/products/ascend/llms.txt",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 94
+    },
+    {
+      "path": "/.well-known/evercraft-pain-index.json",
+      "url": "/.well-known/evercraft-pain-index.json",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 90
+    },
+    {
+      "path": "/llms-full.txt",
+      "url": "/llms-full.txt",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 86
+    },
+    {
+      "path": "/.well-known/evercraft-agent-directory.json",
+      "url": "/.well-known/evercraft-agent-directory.json",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-syndication.json",
+      "url": "/.well-known/evercraft-syndication.json",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 84
+    },
+    {
+      "path": "/chum/",
+      "url": "/chum/",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/",
+      "url": "/chum/answers/",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/index.json",
+      "url": "/chum/answers/index.json",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/index.txt",
+      "url": "/chum/answers/index.txt",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/index.json",
+      "url": "/chum/index.json",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/pain-index.json",
+      "url": "/chum/pain-index.json",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/pain-index.txt",
+      "url": "/chum/pain-index.txt",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/syndication/",
+      "url": "/chum/syndication/",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/syndication/index.json",
+      "url": "/chum/syndication/index.json",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 80
+    },
+    {
+      "path": "/feed.json",
+      "url": "/feed.json",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 60
+    },
+    {
+      "path": "/feed.xml",
+      "url": "/feed.xml",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 60
+    },
+    {
+      "path": "/schema.jsonld",
+      "url": "/schema.jsonld",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 60
+    },
     {
       "path": "/chum/crawler-radar.json",
       "url": "/chum/crawler-radar.json",
@@ -46,12 +494,6 @@
     {
       "path": "/chum/crawler-radar.txt",
       "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-09-28T17:30:31.324Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
       "last_changed": "2026-09-28T17:30:31.324Z",
       "priority": 80
     },
@@ -78,18 +520,6 @@
       "url": "/chum/hot/",
       "last_changed": "2026-09-28T17:26:36.632Z",
       "priority": 80
-    },
-    {
-      "path": "/chum/sitemaps/answers.xml",
-      "url": "/chum/sitemaps/answers.xml",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 108
-    },
-    {
-      "path": "/chum/sitemaps/products.xml",
-      "url": "/chum/sitemaps/products.xml",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 108
     },
     {
       "path": "/chum/answers/doors/commission-or-bonus-payment-record-tracker-ae24a6e0d9.json",
@@ -378,102 +808,6 @@
       "url": "/chum/products/second-stitch/llms.txt",
       "last_changed": "2026-09-28T17:23:09.322Z",
       "priority": 94
-    },
-    {
-      "path": "/.well-known/evercraft-pain-index.json",
-      "url": "/.well-known/evercraft-pain-index.json",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 90
-    },
-    {
-      "path": "/llms-full.txt",
-      "url": "/llms-full.txt",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 86
-    },
-    {
-      "path": "/.well-known/evercraft-agent-directory.json",
-      "url": "/.well-known/evercraft-agent-directory.json",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-syndication.json",
-      "url": "/.well-known/evercraft-syndication.json",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 84
-    },
-    {
-      "path": "/chum/",
-      "url": "/chum/",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/",
-      "url": "/chum/answers/",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/index.json",
-      "url": "/chum/answers/index.json",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/index.txt",
-      "url": "/chum/answers/index.txt",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/index.json",
-      "url": "/chum/index.json",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.json",
-      "url": "/chum/pain-index.json",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.txt",
-      "url": "/chum/pain-index.txt",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/syndication/",
-      "url": "/chum/syndication/",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/syndication/index.json",
-      "url": "/chum/syndication/index.json",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 80
-    },
-    {
-      "path": "/feed.json",
-      "url": "/feed.json",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.xml",
-      "url": "/feed.xml",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 60
-    },
-    {
-      "path": "/schema.jsonld",
-      "url": "/schema.jsonld",
-      "last_changed": "2026-09-28T17:23:09.322Z",
-      "priority": 60
     },
     {
       "path": "/chum/products/deck-capital-fit/",
@@ -1392,150 +1726,6 @@
       "url": "/chum/answers/doors/as-400-modernization-assessment-49430f448e.json",
       "last_changed": "2026-09-28T16:59:50.301Z",
       "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541.json",
-      "url": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-upgrading-70ac865541.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287.json",
-      "url": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/as-400-estate-assessment-before-upgrading-or-modernizing-5e73e54575.json",
-      "url": "/chum/answers/doors/as-400-estate-assessment-before-upgrading-or-modernizing-5e73e54575.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/build-me-a-realistic-income-plan-c068090c69.json",
-      "url": "/chum/answers/doors/build-me-a-realistic-income-plan-c068090c69.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/build-me-a-realistic-income-plan-c068090c69/",
-      "url": "/chum/answers/doors/build-me-a-realistic-income-plan-c068090c69/",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/create-a-personal-revenue-strategy-6d07e888e0.json",
-      "url": "/chum/answers/doors/create-a-personal-revenue-strategy-6d07e888e0.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/create-a-personal-revenue-strategy-6d07e888e0/",
-      "url": "/chum/answers/doors/create-a-personal-revenue-strategy-6d07e888e0/",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/find-undocumented-dependencies-in-an-ibm-i-workload-5d2d519d2f.json",
-      "url": "/chum/answers/doors/find-undocumented-dependencies-in-an-ibm-i-workload-5d2d519d2f.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/find-undocumented-ibm-i-dependencies-before-a-maintenance-window-e0c0c7b3bf.json",
-      "url": "/chum/answers/doors/find-undocumented-ibm-i-dependencies-before-a-maintenance-window-e0c0c7b3bf.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/help-me-prioritize-ways-to-earn-more-without-quitting-my-job-4f9ed5f2be.json",
-      "url": "/chum/answers/doors/help-me-prioritize-ways-to-earn-more-without-quitting-my-job-4f9ed5f2be.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/help-me-prioritize-ways-to-earn-more-without-quitting-my-job-4f9ed5f2be/",
-      "url": "/chum/answers/doors/help-me-prioritize-ways-to-earn-more-without-quitting-my-job-4f9ed5f2be/",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/help-me-turn-my-skills-into-income-324014f57b.json",
-      "url": "/chum/answers/doors/help-me-turn-my-skills-into-income-324014f57b.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/help-me-turn-my-skills-into-income-324014f57b/",
-      "url": "/chum/answers/doors/help-me-turn-my-skills-into-income-324014f57b/",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/help-modernize-jde-world-or-a-custom-ibm-i-workload-without-losing-business-behavi-f9c27a8bcc.json",
-      "url": "/chum/answers/doors/help-modernize-jde-world-or-a-custom-ibm-i-workload-without-losing-business-behavi-f9c27a8bcc.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/how-can-i-increase-my-income-27d6bd2ff4.json",
-      "url": "/chum/answers/doors/how-can-i-increase-my-income-27d6bd2ff4.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/how-can-i-increase-my-income-27d6bd2ff4/",
-      "url": "/chum/answers/doors/how-can-i-increase-my-income-27d6bd2ff4/",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/i-am-worried-an-ibm-i-upgrade-will-break-batch-jobs-interfaces-or-vendor-software-a25b87dd23.json",
-      "url": "/chum/answers/doors/i-am-worried-an-ibm-i-upgrade-will-break-batch-jobs-interfaces-or-vendor-software-a25b87dd23.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/i-need-a-plan-to-improve-cash-flow-80c770a718.json",
-      "url": "/chum/answers/doors/i-need-a-plan-to-improve-cash-flow-80c770a718.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/i-need-a-plan-to-improve-cash-flow-80c770a718/",
-      "url": "/chum/answers/doors/i-need-a-plan-to-improve-cash-flow-80c770a718/",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/i-need-to-make-more-money-eb68bcfe8c.json",
-      "url": "/chum/answers/doors/i-need-to-make-more-money-eb68bcfe8c.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/i-need-to-make-more-money-eb68bcfe8c/",
-      "url": "/chum/answers/doors/i-need-to-make-more-money-eb68bcfe8c/",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/ibm-i-7-4-support-is-ending-and-i-need-an-upgrade-plan-ca1da8e065.json",
-      "url": "/chum/answers/doors/ibm-i-7-4-support-is-ending-and-i-need-an-upgrade-plan-ca1da8e065.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/ibm-i-estate-assessment-before-changing-production-dab81f4a0a.json",
-      "url": "/chum/answers/doors/ibm-i-estate-assessment-before-changing-production-dab81f4a0a.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/ibm-i-upgrade-proof-240178e2de.json",
-      "url": "/chum/answers/doors/ibm-i-upgrade-proof-240178e2de.json",
-      "last_changed": "2026-09-28T16:59:50.301Z",
-      "priority": 100
     }
   ]
 }

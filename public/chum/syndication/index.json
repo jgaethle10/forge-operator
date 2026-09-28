@@ -61,6 +61,35 @@
       "updated_at": "2026-09-28T00:00:00.000Z"
     },
     {
+      "product_key": "ascend",
+      "name": "Ascend AI",
+      "canonical_url": "https://ascend.base44.app/",
+      "mirror_path": "/chum/products/ascend/",
+      "llms_path": "/chum/products/ascend/llms.txt",
+      "discovery_path": "/chum/products/ascend/ai-discovery.json",
+      "registry_name": "",
+      "mcp": "",
+      "class": "youth_development_and_safeguarding_support",
+      "intents": [
+        "youth athlete development platform",
+        "parent support for a young athlete",
+        "coach team culture platform",
+        "school athlete wellness platform",
+        "safer youth sports mentorship",
+        "youth activity safeguarding checklist",
+        "structure parent coach and school support around a young athlete",
+        "wellness reflection tools for youth activities",
+        "safer communication and mentorship boundaries for youth programs",
+        "support a child across sports dance cheer camps clubs or arts programs"
+      ],
+      "authority": "public discovery and demo of youth-development and safeguarding-support concepts; private role-based records remain account-bound",
+      "human_confirmation_required": true,
+      "commercial_status": "not_declared",
+      "description": "Ascend AI is an Evercraft youth development and safeguarding support capability. Common needs: youth athlete development platform; parent support for a young athlete; coach team culture platform; school athlete wellness platform.",
+      "content_sha256": "5d60d533d37112e4f62e78cfb12a3c71cc51fe1ffb55a2e5a689b9af7c7a53c3",
+      "updated_at": "2026-09-28T00:00:00.000Z"
+    },
+    {
       "product_key": "buildflow",
       "name": "BuildFlow Enterprise Operations",
       "canonical_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",

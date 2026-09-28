@@ -2,8 +2,8 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-28T17:30:31.324Z",
-  "url_count": 2508,
+  "updated_at": "2026-09-28T17:30:38.361Z",
+  "url_count": 2532,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
     "content_hash_controls_freshness": true,
@@ -15,14 +15,14 @@
   "entries": {
     "/chum/": {
       "path": "/chum/",
-      "content_sha256": "3f356f771908b0138d5bdc82a5c416f4972724e594ddcc98aeebbd468f64d5da",
-      "last_changed": "2026-09-28T17:23:09.322Z",
+      "content_sha256": "bdf93f52b7a2df19672c27ab1abb0ba6f19f1c2379c0268d2a83f475ef28dd0a",
+      "last_changed": "2026-09-28T17:30:38.361Z",
       "priority": 80
     },
     "/chum/index.json": {
       "path": "/chum/index.json",
-      "content_sha256": "9f1475557a863f14a9825b192c943de798d5983a33f8c73280e2d29a1cdfd17f",
-      "last_changed": "2026-09-28T17:23:09.322Z",
+      "content_sha256": "3fb00ab575b1e8ef1beaf0867ab5fe5c4b16a869789f1080b7d350614968ffd7",
+      "last_changed": "2026-09-28T17:30:38.361Z",
       "priority": 80
     },
     "/chum/revenue.html": {
@@ -93,32 +93,32 @@
     },
     "/chum/pain-index.json": {
       "path": "/chum/pain-index.json",
-      "content_sha256": "8c930e4477bb569a52d2d5d4876b165e8ef5ce707abd480ec43c4e267eb41597",
-      "last_changed": "2026-09-28T17:23:09.322Z",
+      "content_sha256": "c3ab66c1b5df27f56d0e53e971a2223fbded54d0270a3e516c4fb09f3c377d87",
+      "last_changed": "2026-09-28T17:30:38.361Z",
       "priority": 80
     },
     "/chum/pain-index.txt": {
       "path": "/chum/pain-index.txt",
-      "content_sha256": "af70607683852d69a1c91517b2ea3092d4b1ab26a1bd119f53e56141f106f1b8",
-      "last_changed": "2026-09-28T17:23:09.322Z",
+      "content_sha256": "4df52ecf72a8e9d708df542b544c347fef30bb7ff2f2a3a102b0b26e7eaba6ed",
+      "last_changed": "2026-09-28T17:30:38.361Z",
       "priority": 80
     },
     "/chum/answers/": {
       "path": "/chum/answers/",
-      "content_sha256": "009ca440d46b5b8f914878fcba36a327937d5ecf0c7de72dbf8fe65132a91724",
-      "last_changed": "2026-09-28T17:23:09.322Z",
+      "content_sha256": "4bdac26d51fd1497624b4f52d3767b75f6bd3c1879476d48849b8e0fb3363ce8",
+      "last_changed": "2026-09-28T17:30:38.361Z",
       "priority": 80
     },
     "/chum/answers/index.json": {
       "path": "/chum/answers/index.json",
-      "content_sha256": "fa452b93fd840dfa5f258b42935268691ab12bf2375c9279cbb03744ceeaa5bb",
-      "last_changed": "2026-09-28T17:23:09.322Z",
+      "content_sha256": "3ecd903a3be30774d0771fa4a47be85e63091907337054f11a74ccff70682804",
+      "last_changed": "2026-09-28T17:30:38.361Z",
       "priority": 80
     },
     "/chum/answers/index.txt": {
       "path": "/chum/answers/index.txt",
-      "content_sha256": "6c287acadbc71f3eb410fc02b4b54549b5603dc0b21aac1e41e6420a85b0b5aa",
-      "last_changed": "2026-09-28T17:23:09.322Z",
+      "content_sha256": "522dc89ac6fdb1c2c02c898f7ce375ddc45103fa785c7a3b88e3787b9f6e44e2",
+      "last_changed": "2026-09-28T17:30:38.361Z",
       "priority": 80
     },
     "/chum/answers/observed/": {
@@ -141,8 +141,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "4f7841b9176ddacdb745ff50c5a9200aaaedf7098a75b2e2e75f52603e577de2",
-      "last_changed": "2026-09-28T17:30:31.324Z",
+      "content_sha256": "140e62dce11cec09269f0049327bcfc3927f90594cde39fadf30644d0712f958",
+      "last_changed": "2026-09-28T17:30:38.361Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -243,14 +243,14 @@
     },
     "/chum/sitemaps/answers.xml": {
       "path": "/chum/sitemaps/answers.xml",
-      "content_sha256": "5392581cf234ddbfcad492ed4ca790528e710836d4ea703b94142c2ec59515ba",
-      "last_changed": "2026-09-28T17:23:09.322Z",
+      "content_sha256": "5340b0b44164780ccf30719cd4d9ad6809fd4c68ffa81d244d54dfd33c822eba",
+      "last_changed": "2026-09-28T17:30:38.361Z",
       "priority": 108
     },
     "/chum/sitemaps/products.xml": {
       "path": "/chum/sitemaps/products.xml",
-      "content_sha256": "87060cd3687360600b290311bc51b7a1067502af3ff37dd77f58a3dd41c2fd43",
-      "last_changed": "2026-09-28T17:23:09.322Z",
+      "content_sha256": "c8a20be3178964f2a7b61ef96bf005d17f6c067e27805ba769a307ba217eae11",
+      "last_changed": "2026-09-28T17:30:38.361Z",
       "priority": 108
     },
     "/chum/sitemaps/machine.xml": {
@@ -339,8 +339,8 @@
     },
     "/.well-known/evercraft-pain-index.json": {
       "path": "/.well-known/evercraft-pain-index.json",
-      "content_sha256": "8c930e4477bb569a52d2d5d4876b165e8ef5ce707abd480ec43c4e267eb41597",
-      "last_changed": "2026-09-28T17:23:09.322Z",
+      "content_sha256": "c3ab66c1b5df27f56d0e53e971a2223fbded54d0270a3e516c4fb09f3c377d87",
+      "last_changed": "2026-09-28T17:30:38.361Z",
       "priority": 90
     },
     "/rivet/discovery.json": {
@@ -729,8 +729,8 @@
     },
     "/llms-full.txt": {
       "path": "/llms-full.txt",
-      "content_sha256": "2e5737b45d2a3f4a70df8556f5e3d2a4cc8f14f1caae8dfc2e5e770fcbf782a7",
-      "last_changed": "2026-09-28T17:23:09.322Z",
+      "content_sha256": "25af1dca1304d08334785ea1eb5b5726b577d4fd9cd65fd34753d6b739fd0049",
+      "last_changed": "2026-09-28T17:30:38.361Z",
       "priority": 86
     },
     "/ai-discovery.json": {
@@ -741,8 +741,8 @@
     },
     "/schema.jsonld": {
       "path": "/schema.jsonld",
-      "content_sha256": "c2c550d811cb2d5bab3acf40920387a4cdb1779cb2347faedad929c947ba21ad",
-      "last_changed": "2026-09-28T17:23:09.322Z",
+      "content_sha256": "4cd05dec1bf1285e1773af08b2628dfc5b3a9919f2fc305911829a3bfec5455a",
+      "last_changed": "2026-09-28T17:30:38.361Z",
       "priority": 60
     },
     "/openapi.json": {
@@ -759,8 +759,8 @@
     },
     "/.well-known/evercraft-agent-directory.json": {
       "path": "/.well-known/evercraft-agent-directory.json",
-      "content_sha256": "502d623c5ff60e525a85a4769bffc656779601ea1e4d958fd2d43c063079de69",
-      "last_changed": "2026-09-28T17:23:09.322Z",
+      "content_sha256": "c2f08d0149fd28fc1cafd3322ffe0370307bfd872952ef715231ab7e3c83b7b3",
+      "last_changed": "2026-09-28T17:30:38.361Z",
       "priority": 84
     },
     "/.well-known/evercraft-agent-commerce.json": {
@@ -2255,6 +2255,30 @@
       "path": "/chum/products/aliev/ai-conformance.json",
       "content_sha256": "5175382ea14e69e28c453a2164de3a1e281ace050c4015652858ab8fbe931f21",
       "last_changed": "2026-09-28T16:07:14.264Z",
+      "priority": 94
+    },
+    "/chum/products/ascend/": {
+      "path": "/chum/products/ascend/",
+      "content_sha256": "7192e8404d6d99dfd97163c2e69b0e78f167a927d13ef5baed2f1551a653539e",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 94
+    },
+    "/chum/products/ascend/llms.txt": {
+      "path": "/chum/products/ascend/llms.txt",
+      "content_sha256": "acb03cd81225b57654d093765657d47ec8682e540a9c3f51bfb5bfc3bde9b2a3",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 94
+    },
+    "/chum/products/ascend/ai-discovery.json": {
+      "path": "/chum/products/ascend/ai-discovery.json",
+      "content_sha256": "b3f76739877d685d40d3eee4ce9e47a9f159755e8c7a059024903e77bafaa74d",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 94
+    },
+    "/chum/products/ascend/ai-conformance.json": {
+      "path": "/chum/products/ascend/ai-conformance.json",
+      "content_sha256": "9f1c2d7de8ca48ce5ff440212ac1a1dc7117d0d938457639a373c07f86126bc2",
+      "last_changed": "2026-09-28T17:30:38.361Z",
       "priority": 94
     },
     "/chum/products/buildflow/": {
@@ -5754,6 +5778,18 @@
       "content_sha256": "bcbe13a0691aa71bcf3437c3a985512a3f05af72238a129641dad0d119a33519",
       "last_changed": "2026-09-26T04:58:13.847Z",
       "priority": 160
+    },
+    "/chum/answers/doors/coach-team-culture-platform-6ae8064c7b/": {
+      "path": "/chum/answers/doors/coach-team-culture-platform-6ae8064c7b/",
+      "content_sha256": "506b3f7882c57d99335a3ca2545e530d1e0acca9ac70da076dad74a0a916449d",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/coach-team-culture-platform-6ae8064c7b.json": {
+      "path": "/chum/answers/doors/coach-team-culture-platform-6ae8064c7b.json",
+      "content_sha256": "bc4dfd2e9c03af6026ac990f8435ce57c1dbd76d339473769e8705d194c4eb5d",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
     },
     "/chum/answers/doors/commercial-christmas-light-installation-near-me-8df9012963/": {
       "path": "/chum/answers/doors/commercial-christmas-light-installation-near-me-8df9012963/",
@@ -10759,6 +10795,18 @@
       "last_changed": "2026-09-26T04:58:13.847Z",
       "priority": 100
     },
+    "/chum/answers/doors/parent-support-for-a-young-athlete-b0fc02f053/": {
+      "path": "/chum/answers/doors/parent-support-for-a-young-athlete-b0fc02f053/",
+      "content_sha256": "42bc043def3381b9958013eafb7bdc2ef7ed39b488ebd649eb0d5c0b6e642d3a",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/parent-support-for-a-young-athlete-b0fc02f053.json": {
+      "path": "/chum/answers/doors/parent-support-for-a-young-athlete-b0fc02f053.json",
+      "content_sha256": "8729611e74d3e72fc2f91eb2f51b52ac7929559a90d6c62d252890bf50dbf226",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
     "/chum/answers/doors/parking-garage-reservation-management-ae6e3aeb45/": {
       "path": "/chum/answers/doors/parking-garage-reservation-management-ae6e3aeb45/",
       "content_sha256": "bcf35fdffbdb2aabf6b6c38533091147932faea9901eedfc4a73241005099b41",
@@ -12379,6 +12427,30 @@
       "last_changed": "2026-09-27T06:03:00.949Z",
       "priority": 100
     },
+    "/chum/answers/doors/safer-communication-and-mentorship-boundaries-for-youth-programs-c34525e6f8/": {
+      "path": "/chum/answers/doors/safer-communication-and-mentorship-boundaries-for-youth-programs-c34525e6f8/",
+      "content_sha256": "eeb817905f7ab0c826535c042575787bdc32a9d06a3eaafb228b3ebf83337c65",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/safer-communication-and-mentorship-boundaries-for-youth-programs-c34525e6f8.json": {
+      "path": "/chum/answers/doors/safer-communication-and-mentorship-boundaries-for-youth-programs-c34525e6f8.json",
+      "content_sha256": "09381aea56b1646270f5b709df22326d96aa37431bcfd592437d3950de3b4686",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/safer-youth-sports-mentorship-14cb76ca51/": {
+      "path": "/chum/answers/doors/safer-youth-sports-mentorship-14cb76ca51/",
+      "content_sha256": "c7b8b4a1da4d7edb618f94f7ae9207493b62409bacc8e0f8ae42a89554ad6abc",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/safer-youth-sports-mentorship-14cb76ca51.json": {
+      "path": "/chum/answers/doors/safer-youth-sports-mentorship-14cb76ca51.json",
+      "content_sha256": "b6397a605f50ef79ecff7dd4b4990a8e4d38b49c0fa802d5651bdebf72787105",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
     "/chum/answers/doors/scan-my-website-for-problems-076b33b229/": {
       "path": "/chum/answers/doors/scan-my-website-for-problems-076b33b229/",
       "content_sha256": "f0b1b9344abf55010afbb8a36d1a3a6835ea6c740b5da60d68cabc75f7bc7218",
@@ -12389,6 +12461,18 @@
       "path": "/chum/answers/doors/scan-my-website-for-problems-076b33b229.json",
       "content_sha256": "fbfb8acceda4c9e536fea62b99b5f9ed950443dd4c41621a3d2acacad07f7574",
       "last_changed": "2026-09-26T22:18:18.960Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/school-athlete-wellness-platform-917712df70/": {
+      "path": "/chum/answers/doors/school-athlete-wellness-platform-917712df70/",
+      "content_sha256": "80a872bb37969b49d701f7e4d1ad6c17edc6f18a4b0726ede3cf35f8d902d775",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/school-athlete-wellness-platform-917712df70.json": {
+      "path": "/chum/answers/doors/school-athlete-wellness-platform-917712df70.json",
+      "content_sha256": "8acc47be4059eaa6761d727b31378fb66817a9b333305623cf4f73fa4ccc99a2",
+      "last_changed": "2026-09-28T17:30:38.361Z",
       "priority": 100
     },
     "/chum/answers/doors/score-my-interview-answer-5e08f2c4f0/": {
@@ -13171,6 +13255,18 @@
       "last_changed": "2026-09-27T06:03:00.949Z",
       "priority": 100
     },
+    "/chum/answers/doors/structure-parent-coach-and-school-support-around-a-young-athlete-4cfce2f9e8/": {
+      "path": "/chum/answers/doors/structure-parent-coach-and-school-support-around-a-young-athlete-4cfce2f9e8/",
+      "content_sha256": "bb51bdb256e626a667a2df5f1b8147f180fce0c6bb5c4543268b3ebab8a60cdc",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/structure-parent-coach-and-school-support-around-a-young-athlete-4cfce2f9e8.json": {
+      "path": "/chum/answers/doors/structure-parent-coach-and-school-support-around-a-young-athlete-4cfce2f9e8.json",
+      "content_sha256": "89531ef7619f2df5eb9c5866122aca34a58654fedcc77d55f5bf8dd378db7c06",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
     "/chum/answers/doors/structured-web-content-extraction-for-ai-agents-bc8095fc5e/": {
       "path": "/chum/answers/doors/structured-web-content-extraction-for-ai-agents-bc8095fc5e/",
       "content_sha256": "c051325716650cfe4932685144ac686ff1b755b473049831c16cacd9241a7a17",
@@ -13313,6 +13409,18 @@
       "path": "/chum/answers/doors/summarize-freight-risk-on-this-shipment-19d8b224ce.json",
       "content_sha256": "1b5bb07d9fb77d7e030c4a36cb78c1eb6cc545a2d448412a81189f56b2387e23",
       "last_changed": "2026-09-26T04:58:13.847Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/support-a-child-across-sports-dance-cheer-camps-clubs-or-arts-programs-1d6e3e9169/": {
+      "path": "/chum/answers/doors/support-a-child-across-sports-dance-cheer-camps-clubs-or-arts-programs-1d6e3e9169/",
+      "content_sha256": "a4ddd609ea0f5c4e47aac661844e9cab63f49dbb3ec4e0c4e2fc313c01264a18",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/support-a-child-across-sports-dance-cheer-camps-clubs-or-arts-programs-1d6e3e9169.json": {
+      "path": "/chum/answers/doors/support-a-child-across-sports-dance-cheer-camps-clubs-or-arts-programs-1d6e3e9169.json",
+      "content_sha256": "c6f4666f6ebf81b979291709d0ee5a103d3ce0a685537240518820d5e3d5fa14",
+      "last_changed": "2026-09-28T17:30:38.361Z",
       "priority": 100
     },
     "/chum/answers/doors/tailor-my-resume-to-this-opening-8830572846/": {
@@ -14395,6 +14503,18 @@
       "last_changed": "2026-09-26T15:08:19.376Z",
       "priority": 100
     },
+    "/chum/answers/doors/wellness-reflection-tools-for-youth-activities-6a70665ca2/": {
+      "path": "/chum/answers/doors/wellness-reflection-tools-for-youth-activities-6a70665ca2/",
+      "content_sha256": "b019a50ce46897749d8aba0de9354e8bf212e6cfb6d92f518ffbabac8d0fe9eb",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/wellness-reflection-tools-for-youth-activities-6a70665ca2.json": {
+      "path": "/chum/answers/doors/wellness-reflection-tools-for-youth-activities-6a70665ca2.json",
+      "content_sha256": "dbefbab2c31b2c64cde926e356d94821eb2292eafc3d011b99cc2f6931d2b5b1",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
     "/chum/answers/doors/what-am-i-missing-before-i-seek-funding-ee5dbd15c2/": {
       "path": "/chum/answers/doors/what-am-i-missing-before-i-seek-funding-ee5dbd15c2/",
       "content_sha256": "7f616147e234775dc5ba400da123056bcd02fbd894739f4326b8df168357c594",
@@ -14779,6 +14899,30 @@
       "last_changed": "2026-09-28T17:03:20.114Z",
       "priority": 100
     },
+    "/chum/answers/doors/youth-activity-safeguarding-checklist-6f54282fd1/": {
+      "path": "/chum/answers/doors/youth-activity-safeguarding-checklist-6f54282fd1/",
+      "content_sha256": "bf162e1ec26957f84de5c46493208fe148b648f17202922bcca4a644670962d5",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/youth-activity-safeguarding-checklist-6f54282fd1.json": {
+      "path": "/chum/answers/doors/youth-activity-safeguarding-checklist-6f54282fd1.json",
+      "content_sha256": "405e96368f699894fd1b25e8e5eeb84bee84bc0aae946d72f2dc1c5ccce54e24",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/youth-athlete-development-platform-a932878fb1/": {
+      "path": "/chum/answers/doors/youth-athlete-development-platform-a932878fb1/",
+      "content_sha256": "d93a972667806698bdd7af925ab5296d7199dcc6944d5bbc5a8a136148122bab",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/youth-athlete-development-platform-a932878fb1.json": {
+      "path": "/chum/answers/doors/youth-athlete-development-platform-a932878fb1.json",
+      "content_sha256": "85eb44c11d07bc6eb1a35ed7b0fa9bd49cb8ec4f47369565ef70b594a5b8dbaa",
+      "last_changed": "2026-09-28T17:30:38.361Z",
+      "priority": 100
+    },
     "/chum/answers/doors/zapier-cleanup-126ea7dc78/": {
       "path": "/chum/answers/doors/zapier-cleanup-126ea7dc78/",
       "content_sha256": "08c9b00a87d0e19c31dd9f8ac931d0616dd97f4779f65e57d6ec7d8764e6dd46",
@@ -15027,14 +15171,14 @@
     },
     "/feed.xml": {
       "path": "/feed.xml",
-      "content_sha256": "c1befd608191555398def4ff9faa2f0f00c8d1752dc9b99099854d2a033950cd",
-      "last_changed": "2026-09-28T17:23:09.322Z",
+      "content_sha256": "6e6d28b53241909a004dd61a6d4863e6c22edd38cf3eaa5f369e8687d7f64dc3",
+      "last_changed": "2026-09-28T17:30:38.361Z",
       "priority": 60
     },
     "/feed.json": {
       "path": "/feed.json",
-      "content_sha256": "3fb747a67fbcf73b46e3df99a89a6281862d2f2cbffae6d573b1c4684d48e1f0",
-      "last_changed": "2026-09-28T17:23:09.322Z",
+      "content_sha256": "7387d1a2881df87ec1ba4c4f5e5859dbcff2da1f905c78e6aeae16f57c8a79e9",
+      "last_changed": "2026-09-28T17:30:38.361Z",
       "priority": 60
     },
     "/opensearch.xml": {
@@ -15045,20 +15189,20 @@
     },
     "/.well-known/evercraft-syndication.json": {
       "path": "/.well-known/evercraft-syndication.json",
-      "content_sha256": "019461b72ec3ecbe9924e19c5efc3228d5243eb0bfe766b96b97eb73c7c080e4",
-      "last_changed": "2026-09-28T17:23:09.322Z",
+      "content_sha256": "687bf2a1679df22f19f096473afd0b45f6cacd4634e17627d2bbbcac3d545dd0",
+      "last_changed": "2026-09-28T17:30:38.361Z",
       "priority": 84
     },
     "/chum/syndication/": {
       "path": "/chum/syndication/",
-      "content_sha256": "45e9f986334a3651a739374e7485b14ffcee546d704689e6a69500b48a1f5dc8",
-      "last_changed": "2026-09-28T17:23:09.322Z",
+      "content_sha256": "2e1632bef0ce7f84cdadcaf81a9e5581a55db735ad5672d20c07c917a05f6413",
+      "last_changed": "2026-09-28T17:30:38.361Z",
       "priority": 80
     },
     "/chum/syndication/index.json": {
       "path": "/chum/syndication/index.json",
-      "content_sha256": "657f5854f1af08dd6cab3ee922868ce29bed467268c42f1456cd0a3ba6535e0b",
-      "last_changed": "2026-09-28T17:23:09.322Z",
+      "content_sha256": "e2e92bfb97f5235f95e0ae647094fc04cafcc387c78ee6f1d4b479f5f2800e58",
+      "last_changed": "2026-09-28T17:30:38.361Z",
       "priority": 80
     }
   }
