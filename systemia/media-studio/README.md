@@ -253,6 +253,8 @@ The Visual Model Fabric routes a shot request across multiple verified visual en
 
 A routed candidate is never publishable by itself. Every generated artifact must return a digest-bound execution receipt, survive visual observation and the Shot Tournament, pass production admission, and only then enter the virtual-production timeline.
 
+A model declaration is not an execution claim. An external visual engine only becomes usable when its adapter is independently verified; missing, unverified or failed adapters fail closed and cannot contribute a candidate.
+
 The fabric also models governed finishing passes. Lip-sync and upscaling happen after tournament selection so expensive finishing work is not wasted on losing candidates and the winning source digest remains traceable.
 
 ```bash
