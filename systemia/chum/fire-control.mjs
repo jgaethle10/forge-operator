@@ -429,6 +429,8 @@ export function buildFireControl({
     money_intelligence: {
       buyer_signal_state: money?.buyer_signal_state || 'unknown',
       buyer_milestones: money?.buyer_milestones || null,
+      telemetry_quality: money?.telemetry_quality || null,
+      conversion_decision_safe: money?.telemetry_quality?.conversion_decision_safe === true,
       operator_alert_count: moneyOperatorAlerts.length,
       campaign_breakdown: Array.isArray(money?.campaign_breakdown) ? money.campaign_breakdown.slice(0, 20) : [],
       surface_breakdown: Array.isArray(money?.surface_breakdown) ? money.surface_breakdown.slice(0, 20) : [],
