@@ -34,6 +34,10 @@ function publicEvent(stage, id = stage) {
     public_id: 'findmypart-paid-hunt-v1',
     stage,
     occurred_at: '2026-09-26T05:00:00.000Z',
+    actor_class: 'human_probable',
+    actor_confidence: 'high',
+    session_key: 'buyer_test_session_1',
+    telemetry_version: 'money-radar-v2',
     revenue: { verified: false, amount_cents: 0, currency: null },
   };
 }
@@ -207,4 +211,50 @@ test('payment export uses GitHub OIDC in authorized CHUM workflows', () => {
       file + ' should use short-lived OIDC instead of a long-lived payment-export secret'
     );
   }
+});
+
+
+test('Money Radar keeps machine crawler synthetic and legacy views out of buyer demand', async () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'money-radar-'));
+  const human = publicEvent('offer_view', 'human-view');
+  const crawler = { ...publicEvent('offer_view', 'crawler-view'), actor_class: 'crawler', provider_claim: 'gptbot', session_key: '' };
+  const machine = { ...publicEvent('offer_view', 'machine-view'), actor_class: 'machine_client', provider_claim: 'chum', session_key: '' };
+  const synthetic = { ...publicEvent('offer_view', 'synthetic-view'), actor_class: 'synthetic', is_synthetic: true, session_key: '' };
+  const legacy = { ...publicEvent('offer_view', 'legacy-view'), actor_class: undefined, actor_confidence: undefined, session_key: '', telemetry_version: 'legacy', provider_claim: 'direct' };
+
+  const { receipt } = await buildMoneyRadar({
+    root,
+    sourceUrl: '',
+    publicSourceUrl: '',
+    publicSourceEvents: [human, crawler, machine, synthetic, legacy],
+  });
+
+  assert.equal(receipt.totals.raw_offer_views, 5);
+  assert.equal(receipt.totals.offer_views, 1);
+  assert.equal(receipt.totals.unique_buyer_sessions, 1);
+  assert.equal(receipt.totals.actor_class_counts.crawler, 1);
+  assert.equal(receipt.totals.actor_class_counts.machine_client, 1);
+  assert.equal(receipt.totals.actor_class_counts.synthetic, 1);
+  assert.equal(receipt.totals.actor_class_counts.unknown, 1);
+  assert.equal(receipt.products[0].raw_offer_views, 5);
+  assert.equal(receipt.products[0].offer_views, 1);
+});
+
+test('Money Radar counts buyer sessions once across repeated funnel events', async () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'money-radar-'));
+  const { receipt } = await buildMoneyRadar({
+    root,
+    sourceUrl: '',
+    publicSourceUrl: '',
+    publicSourceEvents: [
+      publicEvent('landing', 'session-landing'),
+      publicEvent('offer_view', 'session-view'),
+      publicEvent('continue_clicked', 'session-click'),
+    ],
+  });
+
+  assert.equal(receipt.totals.unique_buyer_sessions, 1);
+  assert.equal(receipt.products[0].unique_buyer_sessions, 1);
+  assert.equal(receipt.totals.view_to_continue_rate, 1);
+  assert.equal(receipt.buyer_signal_state, 'continue_without_checkout');
 });
