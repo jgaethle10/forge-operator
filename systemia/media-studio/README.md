@@ -178,6 +178,28 @@ npm run media:studio -- world-intel ./tmp/story.json ./tmp/world-stage.json ./tm
 
 This is intended for Week in Motion, TOWI, FAIE and other geography/time/scale-heavy stories where the visuals need to carry the explanation rather than sit behind typography.
 
+## Distributed rendering
+
+Visual Stage frames can be sharded across multiple private Fallen Render Workers. The planner creates exact, non-overlapping frame ranges; workers render only their assigned lattice slice; the coordinator retrieves each PNG through the worker's authenticated artifact endpoint, re-hashes the bytes locally, proves full no-gap/no-duplicate coverage, and only then assembles the master with FFmpeg.
+
+A render job ID is separate from the shared asset scope ID. Multiple frame shards can therefore reuse one staged source-media scope instead of copying the same large footage once per shard.
+
+Create a plan:
+
+```bash
+npm run media:studio -- render-plan ./tmp/render-plan-input.json ./tmp/distributed-plan.json
+```
+
+Run the coordinator:
+
+```bash
+FALLEN_RENDER_WORKERS='[{"id":"node-a","url":"https://renderer-a","token":"..."},{"id":"node-b","url":"https://renderer-b","token":"..."}]' \
+  node systemia/media-studio/distributed-render-coordinator.mjs \
+  ./tmp/distributed-plan.json ./tmp/master.mp4 ./tmp/master.receipt.json
+```
+
+The final receipt binds the stage digest, complete ordered frame-hash lattice, worker shard receipts, assembled MP4 hash, and an explicit statement that publication authority remains downstream.
+
 ## Architecture direction
 
 1. **Understand**: sample source media, identify exact moments, people, products, locations and scene semantics.
