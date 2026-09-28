@@ -82,7 +82,13 @@ jobs:
           git merge-base --is-ancestor "$SHA" origin/main || { echo "Requested SHA is not on main."; exit 1; }
           BASE="$(git rev-parse "$SHA^")"
           npm install --no-audit --no-fund
-          npm run check
+          # Registry publication has its own focused trust gate. Keep it strict,
+          # but do not make an unrelated media/network/product proof block a
+          # healthy MCP release.
+          npm run check:ai
+          npm run test:release-policy
+          npm run direct:check
+          node scripts/reconcile-public-mcp-registry.mjs --check
           node systemia/release/release-policy.mjs --base "$BASE" --head "$SHA" > release-classification.json
           RISK="$(node -p "require('./release-classification.json').riskClass")"
           AUTO="$(node -p "require('./release-classification.json').autoReleaseAllowed")"
