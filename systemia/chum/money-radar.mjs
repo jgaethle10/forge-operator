@@ -107,6 +107,54 @@ function rate(numerator, denominator) {
   return Number((Number(numerator || 0) / Number(denominator)).toFixed(4));
 }
 
+function addAttributionObservation(map, key, event, actor) {
+  const id = clean(key).toLowerCase() || 'unknown';
+  map[id] ||= {
+    key: id,
+    raw_events: 0,
+    raw_offer_views: 0,
+    qualified_buyer_events: 0,
+    qualified_offer_views: 0,
+    continue_clicks: 0,
+    checkout_starts: 0,
+    _sessions: new Set(),
+  };
+  const row = map[id];
+  row.raw_events += 1;
+  if (event.stage === 'offer_view') row.raw_offer_views += 1;
+  if (!QUALIFIED_BUYER_CLASSES.has(actor)) return;
+  row.qualified_buyer_events += 1;
+  if (event.stage === 'offer_view') row.qualified_offer_views += 1;
+  if (event.stage === 'continue_clicked') row.continue_clicks += 1;
+  if (event.stage === 'checkout_started') row.checkout_starts += 1;
+  const session = safeSession(event);
+  if (session) row._sessions.add(session);
+}
+
+function finalizeAttributionBreakdown(map, labelField) {
+  return Object.values(map).map((row) => {
+    const result = {
+      [labelField]: row.key,
+      raw_events: row.raw_events,
+      raw_offer_views: row.raw_offer_views,
+      qualified_buyer_events: row.qualified_buyer_events,
+      qualified_offer_views: row.qualified_offer_views,
+      continue_clicks: row.continue_clicks,
+      checkout_starts: row.checkout_starts,
+      unique_buyer_sessions: row._sessions.size,
+      raw_to_qualified_view_rate: rate(row.qualified_offer_views, row.raw_offer_views),
+      view_to_continue_rate: rate(row.continue_clicks, row.qualified_offer_views),
+      continue_to_checkout_rate: rate(row.checkout_starts, row.continue_clicks),
+    };
+    return result;
+  }).sort((a, b) =>
+    b.unique_buyer_sessions - a.unique_buyer_sessions ||
+    b.qualified_offer_views - a.qualified_offer_views ||
+    b.raw_events - a.raw_events ||
+    String(a[labelField]).localeCompare(String(b[labelField]))
+  );
+}
+
 function bucketFor(map, event) {
   const key = clean(event.public_id);
   map[key] ||= {
@@ -338,6 +386,10 @@ export async function buildMoneyRadar({
   const trafficClassCounts = {};
   const classificationCounts = {};
   const sourceBreakdown = {};
+  const campaignBreakdown = {};
+  const surfaceBreakdown = {};
+  const experimentBreakdown = {};
+  const journeyEventsBySession = new Map();
 
   for (const event of accepted) {
     const bucket = bucketFor(byPublicId, event);
@@ -354,6 +406,20 @@ export async function buildMoneyRadar({
       incrementStage(bucket, 'raw_', event.stage);
 
       const source = clean(event.provider_claim).toLowerCase() || 'unknown';
+      const campaign = clean(event.campaign).toLowerCase() || 'unknown';
+      const surface = clean(event.surface).toLowerCase() || 'unknown';
+      const experimentKey = clean(event.experiment_key).toLowerCase();
+      const variantKey = clean(event.variant_key).toLowerCase();
+      addAttributionObservation(campaignBreakdown, campaign, event, actor);
+      addAttributionObservation(surfaceBreakdown, surface, event, actor);
+      if (experimentKey || variantKey) {
+        addAttributionObservation(
+          experimentBreakdown,
+          (experimentKey || 'unlabeled-experiment') + '::' + (variantKey || 'unlabeled-variant'),
+          event,
+          actor
+        );
+      }
       sourceBreakdown[source] ||= {
         source,
         raw_events: 0,
@@ -380,6 +446,19 @@ export async function buildMoneyRadar({
           allBuyerSessions.add(session);
           sourceRow._sessions ||= new Set();
           sourceRow._sessions.add(session);
+
+          const journeyKey = bucket.public_id + '|' + session;
+          if (!journeyEventsBySession.has(journeyKey)) journeyEventsBySession.set(journeyKey, []);
+          journeyEventsBySession.get(journeyKey).push({
+            occurred_at: clean(event.occurred_at),
+            source,
+            campaign,
+            surface,
+            creative_key: clean(event.creative_key).toLowerCase() || null,
+            experiment_key: experimentKey || null,
+            variant_key: variantKey || null,
+            stage: event.stage,
+          });
         }
       }
     }
@@ -432,6 +511,54 @@ export async function buildMoneyRadar({
     delete row._sessions;
     row.raw_to_qualified_view_rate = rate(row.qualified_offer_views, row.raw_offer_views);
   }
+
+  const campaign_breakdown = finalizeAttributionBreakdown(campaignBreakdown, 'campaign');
+  const surface_breakdown = finalizeAttributionBreakdown(surfaceBreakdown, 'surface');
+  const experiment_breakdown = finalizeAttributionBreakdown(experimentBreakdown, 'experiment_variant');
+
+  const firstTouchSource = {};
+  const lastTouchSource = {};
+  const sourcePaths = {};
+  const campaignPaths = {};
+  let sessionsWithJourneyLineage = 0;
+
+  for (const events of journeyEventsBySession.values()) {
+    if (!events.length) continue;
+    sessionsWithJourneyLineage += 1;
+    events.sort((a, b) => Date.parse(a.occurred_at || '') - Date.parse(b.occurred_at || ''));
+    const first = events[0];
+    const last = events[events.length - 1];
+    firstTouchSource[first.source] = (firstTouchSource[first.source] || 0) + 1;
+    lastTouchSource[last.source] = (lastTouchSource[last.source] || 0) + 1;
+
+    const sourcePath = first.source + ' → ' + last.source;
+    sourcePaths[sourcePath] ||= { path: sourcePath, sessions: 0, reached_continue: 0, reached_checkout: 0 };
+    sourcePaths[sourcePath].sessions += 1;
+    if (events.some((event) => event.stage === 'continue_clicked')) sourcePaths[sourcePath].reached_continue += 1;
+    if (events.some((event) => event.stage === 'checkout_started')) sourcePaths[sourcePath].reached_checkout += 1;
+
+    const campaignPath = first.campaign + ' → ' + last.campaign;
+    campaignPaths[campaignPath] ||= { path: campaignPath, sessions: 0, reached_continue: 0, reached_checkout: 0 };
+    campaignPaths[campaignPath].sessions += 1;
+    if (events.some((event) => event.stage === 'continue_clicked')) campaignPaths[campaignPath].reached_continue += 1;
+    if (events.some((event) => event.stage === 'checkout_started')) campaignPaths[campaignPath].reached_checkout += 1;
+  }
+
+  const journey_attribution = {
+    sessions_with_lineage: sessionsWithJourneyLineage,
+    first_touch_source: Object.entries(firstTouchSource)
+      .map(([source, sessions]) => ({ source, sessions }))
+      .sort((a, b) => b.sessions - a.sessions || a.source.localeCompare(b.source)),
+    last_touch_source: Object.entries(lastTouchSource)
+      .map(([source, sessions]) => ({ source, sessions }))
+      .sort((a, b) => b.sessions - a.sessions || a.source.localeCompare(b.source)),
+    source_paths: Object.values(sourcePaths)
+      .sort((a, b) => b.sessions - a.sessions || a.path.localeCompare(b.path))
+      .slice(0, 50),
+    campaign_paths: Object.values(campaignPaths)
+      .sort((a, b) => b.sessions - a.sessions || a.path.localeCompare(b.path))
+      .slice(0, 50),
+  };
 
   const acquisitionMeasurementState =
     !acquisitionConfigured ? 'blocked_source_not_configured'
@@ -541,6 +668,7 @@ export async function buildMoneyRadar({
       legacy_unclassified_traffic_never_counts_as_buyer_demand: true,
       unique_buyer_is_session_based_not_person_identity: true,
       exported_session_dedupe_is_one_way_and_product_scoped: true,
+      journey_attribution_is_aggregate_and_does_not_expose_session_buckets: true,
     },
     totals: {
       source_events: taggedEvents.length,
@@ -572,6 +700,10 @@ export async function buildMoneyRadar({
     },
     source_breakdown: Object.values(sourceBreakdown)
       .sort((a, b) => b.raw_events - a.raw_events || a.source.localeCompare(b.source)),
+    campaign_breakdown,
+    surface_breakdown,
+    experiment_breakdown,
+    journey_attribution,
     windows,
     action_queue,
     products,
@@ -611,6 +743,13 @@ export async function buildMoneyRadar({
     `View → continue: ${receipt.totals.view_to_continue_rate ?? 'n/a'}`,
     `Continue → checkout: ${receipt.totals.continue_to_checkout_rate ?? 'n/a'}`,
     `Checkout → verified payment: ${receipt.totals.checkout_to_verified_payment_rate ?? 'n/a'}`,
+    '',
+    '## Attribution lineage',
+    '',
+    `Campaign quality: ${JSON.stringify(campaign_breakdown.slice(0, 20))}`,
+    `Surface quality: ${JSON.stringify(surface_breakdown.slice(0, 20))}`,
+    `Experiment quality: ${JSON.stringify(experiment_breakdown.slice(0, 20))}`,
+    `Journey attribution: ${JSON.stringify(journey_attribution)}`,
     '',
     '## Velocity windows',
     '',
