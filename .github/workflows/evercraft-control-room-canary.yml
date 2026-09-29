@@ -1,0 +1,116 @@
+name: Evercraft Control Room External Canary
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/evercraft-web/browser-worker/**'
+      - 'systemia/yard/public-edge-controller.mjs'
+      - 'systemia/yard/public-edge-activation-watch.mjs'
+      - 'systemia/organism/public-edge-activation-watch-runner.mjs'
+      - '.github/workflows/evercraft-control-room-canary.yml'
+  workflow_dispatch:
+  schedule:
+    - cron: '29 * * * *'
+
+permissions:
+  contents: read
+
+jobs:
+  canary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      CONTROL_ROOM_ORIGIN: ${{ vars.EVERCRAFT_CONTROL_ROOM_ORIGIN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify Control Room external edge
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+
+          if [ -z "${CONTROL_ROOM_ORIGIN:-}" ]; then
+            cat > artifacts/evercraft-control-room-canary.json <<'JSON'
+          {
+            "schema": "evercraft.control-room.external-canary.v1",
+            "verified": false,
+            "state": "held_no_control_room_origin_configured",
+            "public_https_verified": false,
+            "authenticated_handoff_advertised": false
+          }
+          JSON
+            cat artifacts/evercraft-control-room-canary.json
+            exit 0
+          fi
+
+          node - <<'NODE'
+          const raw=process.env.CONTROL_ROOM_ORIGIN||'';
+          const url=new URL(raw);
+          if(url.protocol!=='https:') throw new Error('CONTROL_ROOM_ORIGIN must use HTTPS');
+          if(url.username||url.password||url.search||url.hash) throw new Error('CONTROL_ROOM_ORIGIN must be a clean HTTPS origin');
+          if(/(^|\.)base44\.app$/i.test(url.hostname)) throw new Error('Control Room public edge must not resolve to Base44');
+          if(url.pathname!=='/'&&url.pathname!=='') throw new Error('CONTROL_ROOM_ORIGIN must not include a path');
+          NODE
+
+          health="$(curl --fail --silent --show-error --max-time 20 "${CONTROL_ROOM_ORIGIN%/}/health")"
+          printf '%s' "$health" | jq -e '
+            .ok == true and
+            .service == "evercraft-web-browser-edge" and
+            .runtime == "Evercraft Compute" and
+            .deployment_receipt_bound == true and
+            (.deployment_receipt_ref | type == "string" and length > 0) and
+            (.instance_id | type == "string" and length > 0) and
+            .raw_worker_publicly_exposed == false
+          ' >/dev/null
+
+          capabilities="$(curl --fail --silent --show-error --max-time 20 "${CONTROL_ROOM_ORIGIN%/}/v1/browser/capabilities")"
+          printf '%s' "$capabilities" | jq -e '
+            .ok == true and
+            .service == "evercraft-web-browser-edge" and
+            .authenticated_human_handoff == true and
+            .authenticated_handoff_persists_profile == false and
+            .authenticated_handoff_secret_text_returned == false and
+            .credentials == false and
+            .cookies == false and
+            .private_targets == false
+          ' >/dev/null
+
+          observed_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          instance_id="$(printf '%s' "$health" | jq -r '.instance_id')"
+          deployment_receipt="$(printf '%s' "$health" | jq -r '.deployment_receipt_ref')"
+
+          jq -n \
+            --arg origin "$CONTROL_ROOM_ORIGIN" \
+            --arg instance "$instance_id" \
+            --arg deployment "$deployment_receipt" \
+            --arg observed "$observed_at" \
+            '{
+              schema:"evercraft.control-room.external-canary.v1",
+              verified:true,
+              state:"public_https_verified",
+              origin:$origin,
+              runtime:"Evercraft Compute",
+              service:"evercraft-web-browser-edge",
+              instance_id:$instance,
+              deployment_receipt_ref:$deployment,
+              public_https_verified:true,
+              certificate_validation:"system_default_trust_store",
+              raw_worker_publicly_exposed:false,
+              authenticated_handoff_advertised:true,
+              authenticated_profile_persisted:false,
+              secret_text_returned:false,
+              private_targets_blocked:true,
+              external_saas_browser_required:false,
+              observed_at:$observed
+            }' > artifacts/evercraft-control-room-canary.json
+
+          cat artifacts/evercraft-control-room-canary.json
+
+      - name: Upload Control Room canary receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-control-room-canary
+          path: artifacts/evercraft-control-room-canary.json
+          retention-days: 90
