@@ -47,6 +47,13 @@ jobs:
               "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=evercraft-clip-eps")"
             OIDC_TOKEN="$(printf '%s' "$TOKEN_RESPONSE" | jq -er '.value')"
             printf '%s' "$OIDC_TOKEN" > "$SECRET_FILE"
+            mkdir -p artifacts/base44-exit
+            OIDC_PAYLOAD="$(printf '%s' "$OIDC_TOKEN" | cut -d. -f2 | tr '_-' '/+' | awk '{l=length($0)%4;if(l==2)print $0"==";else if(l==3)print $0"=";else print $0}' | base64 -d)"
+            printf '%s' "$OIDC_PAYLOAD" | jq '{
+              iss,aud,repository,repository_id,repository_owner,ref,sha,
+              workflow,workflow_ref,job_workflow_ref,event_name,sub,actor,actor_id
+            }' > artifacts/base44-exit/github-oidc-claims.json
+            cat artifacts/base44-exit/github-oidc-claims.json
             echo "clip_identity=github_oidc" >> "$GITHUB_STEP_SUMMARY"
           fi
           echo "SYSTEMIA_CLIP_SHARED_SECRET_FILE=$SECRET_FILE" >> "$GITHUB_ENV"
@@ -80,5 +87,6 @@ jobs:
             artifacts/base44-exit/eps-social-yard-canary.json
             artifacts/base44-exit/clip-ingress-probe.json
             artifacts/base44-exit/clip-ingress-probe-status.txt
+            artifacts/base44-exit/github-oidc-claims.json
           if-no-files-found: error
           retention-days: 90
