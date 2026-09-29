@@ -111,11 +111,16 @@ export function createEvercraftBrokerMarketAdapter({
         control_grant_receipt_hash:grant.control_grant_receipt_hash||null,
         public_route_receipt_hash:grant.public_route_receipt_hash||null,
       };
-      return {
+      const result={
         ...body,
-        allocator_token:grant.allocator_token,
         receipt:sha(body),
       };
+      Object.defineProperty(result,'runtime_authority',{
+        value:Object.freeze({allocator_token:grant.allocator_token}),
+        enumerable:false,
+        writable:false,
+      });
+      return result;
     },
   };
 }
