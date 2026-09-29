@@ -6,6 +6,7 @@ import { pathToFileURL } from 'node:url';
 import { createMissionState } from '../organism/kernel.mjs';
 import { admitGoalPlan, createGoalState, goalSnapshot } from '../organism/goal-runtime.mjs';
 import { YardOperator } from '../yard/operator.mjs';
+import { compileProductRuntimePolicy } from '../capability-mesh/runtime.mjs';
 import {
   listPendingRemoteDeviceReviews,
 } from '../yard/remote-device-review.mjs';
@@ -51,6 +52,27 @@ function productByKey(productKey) {
   const key = clean(productKey);
   if (!key) return null;
   return (publicProductIndex.products || []).find((row) => clean(row.product_key) === key) || null;
+}
+
+function capabilityContractFor(productKey) {
+  const key = clean(productKey);
+  if (!key) return { state: 'not_applicable', policy: null, error: null };
+  try {
+    return {
+      state: 'complete_declaration',
+      policy: compileProductRuntimePolicy(key, process.cwd()),
+      error: null,
+    };
+  } catch (error) {
+    const message = clean(error?.message || error);
+    if (message === 'product_contract_missing') {
+      return { state: 'missing', policy: null, error: message };
+    }
+    if (message.startsWith('product_contract_incomplete:')) {
+      return { state: 'incomplete_declaration', policy: null, error: message };
+    }
+    return { state: 'invalid', policy: null, error: message };
+  }
 }
 
 function normalizeTask(raw, index) {
@@ -124,19 +146,48 @@ export function routeTask(task) {
   const productKey = clean(task.product_key);
   const product = productByKey(productKey);
   const workType = lower(task.work_type);
+  const actionScope = clean(task.action_scope);
+  const contractInfo = capabilityContractFor(productKey);
+  const productPolicy = contractInfo.policy;
+  const contractAction = actionScope && productPolicy
+    ? (productPolicy.execution.actions || []).find((row) => clean(row.scope) === actionScope) || null
+    : null;
+
+  let contractHold = null;
+  if (actionScope && productKey) {
+    if (contractInfo.state === 'missing') contractHold = 'product_contract_missing_for_action';
+    else if (contractInfo.state !== 'complete_declaration') contractHold = 'product_contract_invalid_for_action';
+    else if (!productPolicy.authority.scopes.includes(actionScope) || !contractAction) {
+      contractHold = 'capability_contract_scope_missing';
+    } else if (
+      clean(task.meter_metric) &&
+      contractAction.meter_metric &&
+      clean(task.meter_metric) !== clean(contractAction.meter_metric)
+    ) {
+      contractHold = 'capability_contract_meter_mismatch';
+    }
+  }
+
   const parallelRequested = task.parallel === true || Number(task.logical_agents || 0) > 1 || Boolean(softwareId);
   const allowed = sabanSoftwareIds();
   const sabanRequested = parallelRequested && softwareId && allowed.has(softwareId);
   const unsupportedSaban = parallelRequested && softwareId && !allowed.has(softwareId);
   const consequence = consequenceFor(task);
-  const metered = task.metered === true || Boolean(clean(task.meter_metric));
+
+  const contractMeterMetric = clean(contractAction?.meter_metric);
+  const meterMetric = contractMeterMetric || clean(task.meter_metric);
+  const metered = task.metered === true || Boolean(meterMetric);
   const relationshipPreflightRequired =
     consequence.impact === 'external_message' ||
-    ['external_message', 'outreach'].includes(workType);
+    ['external_message', 'outreach'].includes(workType) ||
+    productPolicy?.relationship?.state === 'declared';
+  const contractGateRequired =
+    Boolean(actionScope && contractAction && productPolicy?.execution?.gate_required === true);
   const executionGateRequired =
     consequence.required ||
     metered ||
     relationshipPreflightRequired ||
+    contractGateRequired ||
     task.execution_gate_required === true;
   const contextAccessRecommended =
     task.context_required === true ||
@@ -156,6 +207,16 @@ export function routeTask(task) {
     authorization_component: 'evercraft-passport',
     usage_component: metered ? 'evercraft-meter' : null,
     context_component: contextAccessRecommended ? 'evercraft-context-fabric' : null,
+    capability_contract_component: productKey ? 'evercraft-capability-mesh' : null,
+    capability_contract_state: productKey ? contractInfo.state : 'not_applicable',
+    capability_contract_ref: productPolicy
+      ? 'systemia/capability-mesh/runtime-policies.json#' + productKey
+      : null,
+    contract_action_scope: actionScope || null,
+    contract_specialist_slug: productPolicy?.route?.specialist_slug || null,
+    contract_context_namespace: productPolicy?.context?.namespace || null,
+    contract_meter_metric: contractMeterMetric || null,
+    contract_runtime_verified: productPolicy?.runtime_verified === true,
     intake_component: clean(task.intake_candidate_ref) ? 'evercraft-intake-fabric' : null,
     relationship_preflight_component: relationshipPreflightRequired
       ? 'evercraft-interaction-ledger'
@@ -170,6 +231,7 @@ export function routeTask(task) {
     scale_requested: parallelRequested,
     scale_admitted: sabanRequested,
     metered,
+    meter_metric: meterMetric || null,
     execution_gate_required: executionGateRequired,
     relationship_preflight_required: relationshipPreflightRequired,
     context_access_recommended: contextAccessRecommended,
@@ -180,13 +242,15 @@ export function routeTask(task) {
       ? 'saban_contract_missing'
       : productKey && !product
         ? 'unknown_product'
-        : consequence.required && !consequence.authorized
-          ? 'human_gate_unresolved'
-          : null,
+        : contractHold
+          ? contractHold
+          : consequence.required && !consequence.authorized
+            ? 'human_gate_unresolved'
+            : null,
     human_gate_required: consequence.required,
     authorization_refs: unique(task.authorization_refs || []),
     authority_boundary:
-      'Systemia retains mission authority. Routing, scale, intake admission, context retrieval, and human approval do not by themselves grant execution authority; consequential or metered dispatch must satisfy the declared pre-dispatch gates.',
+      'Systemia retains mission authority. Capability contracts describe product semantics but grant no authority. Routing, scale, intake admission, context retrieval, human approval, and compiled product policy do not by themselves grant execution authority; consequential or metered dispatch must satisfy the declared pre-dispatch gates.',
   };
 }
 

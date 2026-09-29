@@ -1,18 +1,15 @@
 {
-  "schema": "evercraft.capability-mesh.contracts.v1",
-  "version": "1.0.0",
-  "truth_boundary": {
-    "contract_declaration_is_not_runtime_verification": true,
-    "source_presence_is_not_live_readiness": true,
-    "missing_lane_is_never_inferred": true,
-    "not_required_requires_reason": true
-  },
-  "contracts": [
+  "schema": "evercraft.capability-mesh.runtime-policies.v1",
+  "generated_from": "systemia/capability-mesh/contracts.json",
+  "policy_count": 1,
+  "policies": [
     {
+      "schema": "evercraft.capability-mesh.runtime-policy.v1",
       "product_key": "aliev",
+      "product_name": "AliEV",
+      "product_class": "ev_infrastructure_opportunity_intelligence",
       "contract_version": "1.0.0",
       "owner": "systemia",
-      "specialist_slug": "aliev",
       "authority": {
         "state": "declared",
         "passport_product": "rivet",
@@ -87,7 +84,33 @@
         "intended_product_classes": [
           "ev_infrastructure_opportunity_intelligence"
         ]
-      }
+      },
+      "route": {
+        "specialist_slug": "aliev",
+        "state": "registry_published_direct_mcp_existing",
+        "direct_callable": true,
+        "registry_published": true,
+        "preferred_route": {
+          "mode": "direct_specialist",
+          "hops_before_specialist": 0,
+          "use_universal_router_first": false,
+          "registry_name": "io.github.jgaethle10/aliev",
+          "remote_mcp": "https://aliev.base44.app/functions/alievMcp",
+          "fallback_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+          "fallback_remote_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        },
+        "blocking_gates": [],
+        "next_release_action": "measure_provider_pickup_separately"
+      },
+      "runtime_verified": false,
+      "grants_authority": false,
+      "truth_boundary": "This runtime policy compiles declared product semantics. It does not grant Passport authority, entitlement, payment, live runtime readiness, or provider pickup."
     }
-  ]
+  ],
+  "truth_boundary": {
+    "compiled_policy_is_not_grant": true,
+    "compiled_policy_is_not_runtime_verification": true,
+    "undeclared_scope_fails_closed": true,
+    "undeclared_meter_metric_fails_closed": true
+  }
 }

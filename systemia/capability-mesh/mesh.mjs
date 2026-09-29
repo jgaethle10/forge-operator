@@ -79,10 +79,12 @@ function validateLane(productKey, laneName, lane, root) {
     if (!String(lane.write_scope || '').trim()) gaps.push('context_write_scope_missing');
   }
   if (laneName === 'meter') {
+    if (!String(lane.product || '').trim()) gaps.push('meter_product_missing');
     if (!Array.isArray(lane.metrics) || lane.metrics.length === 0) gaps.push('meter_metrics_missing');
   }
   if (laneName === 'execution') {
     if (lane.gate_required !== true) gaps.push('execution_gate_required_not_declared');
+    if (!Array.isArray(lane.actions) || lane.actions.length === 0) gaps.push('execution_actions_missing');
   }
   if (laneName === 'receipt_reconciliation') {
     if (!String(lane.namespace || '').trim()) gaps.push('receipt_reconciliation_namespace_missing');

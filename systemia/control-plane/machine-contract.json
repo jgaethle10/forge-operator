@@ -15,7 +15,9 @@
     "relationship_contact_safety": "evercraft-interaction-ledger",
     "pre_execution_authority": "evercraft-execution-gate",
     "inbound_content_grants_execution_authority": false,
-    "route_selection_grants_execution_authority": false
+    "route_selection_grants_execution_authority": false,
+    "product_contract_authority": "evercraft-capability-mesh",
+    "product_contract_grants_execution_authority": false
   },
   "components": [
     {
@@ -150,7 +152,9 @@
       "source_refs": [
         "systemia/capability-mesh/mesh.mjs",
         "systemia/capability-mesh/contracts.json",
-        "systemia/capability-mesh/adoption-coverage.json"
+        "systemia/capability-mesh/adoption-coverage.json",
+        "systemia/capability-mesh/runtime.mjs",
+        "systemia/capability-mesh/runtime-policies.json"
       ]
     }
   ],
@@ -234,7 +238,12 @@
     "external_message_requires_relationship_preflight": true,
     "accepted_intake_candidate_is_not_execution_authority": true,
     "route_selection_is_not_execution_authority": true,
-    "direct_door_optimization_preserves_systemia_mission_authority": true
+    "direct_door_optimization_preserves_systemia_mission_authority": true,
+    "contracted_action_derives_required_lanes": true,
+    "contracted_action_does_not_satisfy_required_lanes": true,
+    "undeclared_action_scope_fails_closed": true,
+    "undeclared_product_contract_for_action_fails_closed": true,
+    "caller_cannot_override_contract_meter_metric": true
   },
   "context": {
     "provider": "evercraft-context-fabric",
