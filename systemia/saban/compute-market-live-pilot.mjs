@@ -78,5 +78,3 @@ if(providerCount<1) throw Object.assign(new Error('akash_no_providers_seen'),{re
 if(onlineOffers<1) throw Object.assign(new Error('akash_no_online_offers_seen'),{receipt});
 if(result.eligible_offer_count<1) throw Object.assign(new Error('akash_no_offer_satisfies_live_demand'),{receipt});
 if(!result.selected_offer) throw Object.assign(new Error('akash_no_selected_supply_candidate'),{receipt});
-
-console.log(JSON.stringify(receipt,null,2));
