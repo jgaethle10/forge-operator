@@ -30,7 +30,7 @@ Each observation carries:
 - provenance reference
 - optional human-confirmed hazard state
 
-Examples of domains include aviation, weather, communications, infrastructure, environmental sensing, acoustic sensing, optical sensing, and emergency reports.
+Examples of domains include aviation, weather, communications, infrastructure, hydrology, environmental sensing, acoustic sensing, optical sensing, and emergency reports.
 
 Exact sensor coordinates, raw personally identifiable information, and sensitive operational details are not required by the correlation kernel. Adapters should minimize data before admission.
 
@@ -200,3 +200,12 @@ Sentinel can add NOAA/NWS National Water Prediction Service river gauges as a de
 The source uses the official NWPS gauge metadata and stage/flow endpoints. Observed river status can enter with verified evidence; official forecast values remain `modeled` because forecast is not observation. Flood-category severity can raise anomaly strength, but hydrology data alone cannot mark a hostile event or invoke intervention.
 
 NWPS and NWS alerts intentionally share the `noaa-nws` independence group. River data therefore broadens the physical-world domain coverage without falsely counting NOAA twice as independent corroboration.
+
+
+## Independent USGS water witness
+
+Sentinel can also use the modern USGS Water Data OGC API `latest-continuous` collection for configured monitoring locations. Set `SYSTEMIA_SENTINEL_USGS_WATER_LOCATIONS` to comma-separated identifiers such as `USGS-12484500`. The source requests recent discharge (`00060`) and gage-height (`00065`) sensor observations.
+
+Unlike NWPS, this lane belongs to the `usgs` independence group. A NOAA/NWPS river signal and a USGS sensor deviation can therefore contribute independent corroboration while multiple USGS products still collapse under one upstream group.
+
+Raw continuous sensor values do not enter the incident graph automatically. The resident baseline engine learns normal behavior per coarse region, domain, and metric. Routine/learning samples update the baseline without creating incidents. Only deviations beyond the configured statistical gate become Sentinel anomaly observations. USGS provisional readings are labeled `observed`; approved readings may be labeled `verified`.
