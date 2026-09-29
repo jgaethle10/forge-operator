@@ -37,12 +37,14 @@ export function coarseCellFromGeometry(geometry, cellDegrees = DEFAULT_CELL_DEGR
 
   let lonSum = 0;
   let latSum = 0;
+  let validCount = 0;
   for (const [lon, lat] of points) {
     if (lon < -180 || lon > 180 || lat < -90 || lat > 90) continue;
     lonSum += lon;
     latSum += lat;
+    validCount += 1;
   }
 
-  if (!points.length) return null;
-  return coarseCellFromPoint(lonSum / points.length, latSum / points.length, cellDegrees);
+  if (!validCount) return null;
+  return coarseCellFromPoint(lonSum / validCount, latSum / validCount, cellDegrees);
 }
