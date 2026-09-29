@@ -75,6 +75,8 @@ export async function startLocalOrganism({
   graceSeconds = 90,
   remoteBrokerUrl = '',
   remoteAdmissionRetryMs = 5_000,
+  clipEpsIngressUrl = '',
+  clipSharedSecretFile = '',
   placementLabels = ['opportunistic', 'private', 'outbound-only', 'personal-compute'],
 } = {}) {
   if (!root) throw new Error('root is required');
@@ -152,6 +154,8 @@ export async function startLocalOrganism({
         state_root: coreRoot,
         yard_state_dir: yardState,
         kaidance_deployment_id: 'kaidance-local-resident',
+        clip_eps_ingress_url: String(clipEpsIngressUrl || '').trim(),
+        clip_shared_secret_file: String(clipSharedSecretFile || '').trim(),
       },
       rollbackTarget: 'local-organism:core-previous',
       leaseTtlMs: 3_600_000,
@@ -334,6 +338,14 @@ if (isCli) {
     remoteBrokerUrl: arg(
       '--remote-broker',
       process.env.EVERCRAFT_REMOTE_BROKER_URL || ''
+    ),
+    clipEpsIngressUrl: arg(
+      '--clip-eps-ingress-url',
+      process.env.EVERCRAFT_CLIP_EPS_INGRESS_URL || ''
+    ),
+    clipSharedSecretFile: arg(
+      '--clip-shared-secret-file',
+      process.env.SYSTEMIA_CLIP_SHARED_SECRET_FILE || ''
     ),
     placementLabels: String(
       process.env.EVERCRAFT_LOCAL_NODE_LABELS ||
