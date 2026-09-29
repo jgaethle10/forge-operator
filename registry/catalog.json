@@ -296,7 +296,10 @@
       ],
       "tool": "prepare_rewards_partner_enrollment",
       "product": "Evercraft Rewards",
-      "route_note": "Rewards uses the universal Evercraft Machine Commerce MCP for machine handoff. The Rewards website is the canonical product. Read-only consumer discovery should not be mislabeled as a dedicated specialist MCP."
+      "route_note": "Evercraft Rewards is callable through the published Evercraft Machine Commerce MCP. Use the bounded Rewards enrollment/status/cancel tools; consumer discovery remains read-only and no enrollment implies activation, payment, publication, or fulfillment.",
+      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mode": "shared_mcp"
     },
     {
       "product_key": "evercraft-web",
@@ -496,7 +499,7 @@
       "product_key": "ibmi-rescue",
       "name": "Evercraft IBM i Rescue",
       "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
-      "mode": "discovery_only",
+      "mode": "shared_mcp",
       "triggers": [
         "IBM i estate assessment",
         "AS/400 estate assessment",
@@ -509,7 +512,10 @@
         "IBM i upgrade rollback plan",
         "undocumented IBM i integrations"
       ],
-      "route_note": "Public discovery mirror and universal Machine Commerce human handoff are live-verified. The human buyer route is externally reachable, and synthetic QA has verified backend checkout-session creation. Explicit human confirmation is required before checkout, and provider verification is required before paid state."
+      "route_note": "IBM i Rescue is callable through the published Evercraft Machine Commerce MCP. Agents may inspect the current offer, and only after explicit human payment confirmation may prepare a Stripe checkout. Checkout creation is not payment proof; provider verification controls paid state and fulfillment.",
+      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "machine_state": "direct_checkout_ready"
     },
     {
       "product_key": "infinite-classroom",
@@ -528,7 +534,7 @@
       "product_key": "legacy-rescue-lab",
       "name": "Legacy Rescue Lab",
       "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
-      "mode": "discovery_only",
+      "mode": "shared_mcp",
       "triggers": [
         "broken checkout or purchase flow",
         "broken lead form",
@@ -542,7 +548,10 @@
         "repair instead of rebuild",
         "public conversion leak diagnosis"
       ],
-      "route_note": "Route pain-first discovery to the bounded $299 Legacy Rescue Scan. Public observation is non-intrusive. Private access, invasive testing, production repair, deployment, and payment execution require explicit human authorization and receipt-backed state."
+      "route_note": "Legacy Rescue Lab is callable through the published Evercraft Machine Commerce MCP for bounded offer review and explicitly confirmed pilot-request handoff. Public observation is non-intrusive; private access, invasive testing, repair, deployment, and payment execution require separate authorization.",
+      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "machine_state": "human_handoff_ready"
     },
     {
       "product_key": "opportunity-fabric",
@@ -733,7 +742,11 @@
         "detect product URL workflow and deployment regressions"
       ],
       "runtime_state": "evercraft_internal_runtime_live_commercial_customer_onboarding_scoped",
-      "route_note": "Public problem matching is live through Evercraft Machine Commerce. Customer monitoring is human-onboarded and restricted to explicitly authorized surfaces; no discovery call exposes private topology or grants production mutation."
+      "route_note": "Systemia Portfolio Sentinel is callable through the published Evercraft Machine Commerce MCP for offer review and explicitly confirmed pilot-request handoff. Customer monitoring remains separately authorized and never exposes private topology or grants production mutation.",
+      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mode": "shared_mcp",
+      "machine_state": "human_handoff_ready"
     },
     {
       "product_key": "systemia-remote-ops",
