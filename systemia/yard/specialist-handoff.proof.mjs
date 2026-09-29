@@ -34,6 +34,7 @@ try{
   assert.equal(deployment.receipt.route_verification,'local_specialist_health_verified_public_route_unbound');
   assert.ok(deployment.result.local_url);
   assert.deepEqual(deployment.result.specialist_paths,[
+    '/mcp',
     '/mcp/ibmi-rescue',
     '/mcp/foundry-app-escape',
     '/mcp/site-survive',
