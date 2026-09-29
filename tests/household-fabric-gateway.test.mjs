@@ -107,3 +107,15 @@ fs.writeFileSync(artifact, JSON.stringify({
 }
 
 console.log('HOUSEHOLD_FABRIC_GATEWAY_PASS');
+
+
+{
+  const manifest = JSON.parse(fs.readFileSync(
+    path.resolve('public/.well-known/evercraft-household-fabric.json'),
+    'utf8'
+  ));
+  assert.equal(manifest.current_capability_state.ranking_engine, 'merged');
+  assert.equal(manifest.current_capability_state.google_places_fuel_source, 'credential_required_not_live');
+  assert.equal(manifest.current_capability_state.kroger_grocery_source, 'credential_required_not_live');
+  assert.equal(manifest.evidence_rules.includes('Source existence does not imply collector execution or fresh user-facing data.'), true);
+}
