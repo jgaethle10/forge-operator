@@ -154,6 +154,17 @@
     "missing_capabilities_preserved": true,
     "recommendation_is_not_membership": true,
     "recommendation_grants_rights": false,
-    "candidate_connection_still_requires_protected_handshake": true
+    "candidate_connection_still_requires_protected_handshake": true,
+    "ledger": {
+      "entity": "ExecutionBlueprint",
+      "owner_private_read": true,
+      "direct_client_mutation": false,
+      "trusted_runtime_write_required": true,
+      "deterministic_plan_id": true,
+      "identical_evidence_idempotent_replay": true,
+      "fabric_event_receipt_link_required": true,
+      "protected_content_stored": false,
+      "private_contact_information_stored": false
+    }
   }
 }

@@ -26,6 +26,8 @@ For each stated gap, the planner proposes a bounded work package and ranks up to
 
 A blueprint is a recommendation, not membership, qualification proof, authority, license or agreement. Contacting a suggested candidate still begins with the protected `ConnectionRequest` handshake. Accepted relationships are still required before team assembly.
 
+Blueprints are persisted in an owner-private `ExecutionBlueprint` ledger. The plan id is derived from the safe project and candidate evidence. Re-running identical evidence reopens the same ledger record instead of creating duplicate workflow truth, while materially changed capability evidence produces a new plan id. Each new ledger record links to its `FabricEvent` receipt.
+
 The execution flow is therefore:
 
 `SAFE OPPORTUNITY -> BLUEPRINT -> PROTECTED CONNECTIONS -> TEAM INVITATIONS -> WORK PACKAGES -> FORMATION / RIGHTS GATES -> EXECUTION`
@@ -77,7 +79,7 @@ This policy is a product-control contract specification. It is NOT represented a
 
 ## Trust model
 
-The verified v1.2 implementation sits behind an authenticated service-role runtime. Direct client mutation is locked for protected workflow entities, and the runtime re-verifies identity, relationship state, invitation state, and package authority before consequential writes. Client-supplied booleans or user ids must never be treated as proof of identity, signature, ownership, relationship, or authority.
+The verified v1.2.1 implementation sits behind an authenticated service-role runtime. Direct client mutation is locked for protected workflow entities, and the runtime re-verifies identity, relationship state, invitation state, and package authority before consequential writes. Client-supplied booleans or user ids must never be treated as proof of identity, signature, ownership, relationship, or authority.
 
 Authentication, e-signature identity proof, payment authority, durable storage, protected-file delivery, and legal record retention remain separate gates.
 
@@ -89,4 +91,4 @@ Discovery exposes opportunity, not crown-jewel content.
 
 ## Status
 
-v1.2 establishes metadata-first matching, safe execution blueprints, protected one-to-one formation, immutable terms snapshots, purpose-bound disclosure grants, multi-party execution teams, project-specific invitations, bounded work packages, evidence receipts, and conformance tests. The private runtime is verified, but it does not yet claim a production-ready legal agreement, payment/escrow rail, production identity proofing, protected-file delivery, or a publicly deployed transactional marketplace.
+v1.2.1 establishes metadata-first matching, safe execution blueprints, protected one-to-one formation, immutable terms snapshots, purpose-bound disclosure grants, multi-party execution teams, project-specific invitations, bounded work packages, evidence receipts, and conformance tests. The private runtime is verified, but it does not yet claim a production-ready legal agreement, payment/escrow rail, production identity proofing, protected-file delivery, or a publicly deployed transactional marketplace.
