@@ -74,7 +74,8 @@ assert.match(llms, /IBM i 7\.4 Deadline X-Ray/);
 assert.match(llms, /\$250 one-time/);
 assert.match(llms, /\$1,500 one-time/);
 assert.match(llms, /human buyer route is externally reachable/i);
-assert.match(llms, /backend checkout creation is independently verified/i);
+assert.match(llms, /synthetic QA verified creation of the \$250 Stripe Checkout session/i);
+assert.match(llms, /Machine Commerce direct checkout is live-verified/i);
 assert.match(topLevel, /Evercraft IBM i Rescue/);
 
 assert.equal(discovery.commercial?.machine_commerce_handoff?.mode, 'direct_checkout_capable');
