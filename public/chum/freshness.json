@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-29T02:26:29.672Z",
+  "updated_at": "2026-09-29T02:27:16.326Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,28 +11,73 @@
   },
   "latest_change_batch": [
     {
+      "path": "/chum/crawler-radar.json",
+      "last_changed": "2026-09-29T02:27:16.326Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/crawler-radar.txt",
+      "last_changed": "2026-09-29T02:27:16.326Z",
+      "priority": 80
+    },
+    {
       "path": "/chum/hot/",
-      "last_changed": "2026-09-29T02:26:29.672Z",
+      "last_changed": "2026-09-29T02:27:16.326Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-29T02:26:29.672Z",
+      "last_changed": "2026-09-29T02:27:16.326Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "last_changed": "2026-09-29T02:27:16.326Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
     {
+      "path": "/chum/crawler-radar.json",
+      "url": "/chum/crawler-radar.json",
+      "last_changed": "2026-09-29T02:27:16.326Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/crawler-radar.txt",
+      "url": "/chum/crawler-radar.txt",
+      "last_changed": "2026-09-29T02:27:16.326Z",
+      "priority": 80
+    },
+    {
       "path": "/chum/hot/",
       "url": "/chum/hot/",
-      "last_changed": "2026-09-29T02:26:29.672Z",
+      "last_changed": "2026-09-29T02:27:16.326Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
       "url": "/chum/hot/index.json",
-      "last_changed": "2026-09-29T02:26:29.672Z",
+      "last_changed": "2026-09-29T02:27:16.326Z",
       "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "url": "/chum/strike/index.json",
+      "last_changed": "2026-09-29T02:27:16.326Z",
+      "priority": 80
+    },
+    {
+      "path": "/.well-known/evercraft-products.json",
+      "url": "/.well-known/evercraft-products.json",
+      "last_changed": "2026-09-29T02:27:15.657Z",
+      "priority": 88
+    },
+    {
+      "path": "/.well-known/evercraft-machine-catalog.json",
+      "url": "/.well-known/evercraft-machine-catalog.json",
+      "last_changed": "2026-09-29T02:27:15.657Z",
+      "priority": 84
     },
     {
       "path": "/chum/answers/doors/15-gb-video-analysis-0f57ef2f90.json",
@@ -1489,36 +1534,6 @@
     {
       "path": "/chum/answers/doors/ai-research-retrieval-api-b5a1bbc264.json",
       "url": "/chum/answers/doors/ai-research-retrieval-api-b5a1bbc264.json",
-      "last_changed": "2026-09-29T02:24:28.186Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/ai-tool-to-select-moments-from-a-video-and-render-social-clips-70010b2c7f.json",
-      "url": "/chum/answers/doors/ai-tool-to-select-moments-from-a-video-and-render-social-clips-70010b2c7f.json",
-      "last_changed": "2026-09-29T02:24:28.186Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/an-ai-agency-built-our-app-and-now-it-is-unreliable-or-undocumented-6c20ab539b.json",
-      "url": "/chum/answers/doors/an-ai-agency-built-our-app-and-now-it-is-unreliable-or-undocumented-6c20ab539b.json",
-      "last_changed": "2026-09-29T02:24:28.186Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/application-continuity-across-changing-internet-connections-27b764741f.json",
-      "url": "/chum/answers/doors/application-continuity-across-changing-internet-connections-27b764741f.json",
-      "last_changed": "2026-09-29T02:24:28.186Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/as-400-estate-assessment-before-upgrading-or-modernizing-5e73e54575.json",
-      "url": "/chum/answers/doors/as-400-estate-assessment-before-upgrading-or-modernizing-5e73e54575.json",
-      "last_changed": "2026-09-29T02:24:28.186Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/as-400-estate-assessment-d3adc3c2a5.json",
-      "url": "/chum/answers/doors/as-400-estate-assessment-d3adc3c2a5.json",
       "last_changed": "2026-09-29T02:24:28.186Z",
       "priority": 100
     }
