@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#121210">
+<title>Evercraft | Executive Home</title>
+<style>
+:root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#191914;background:#f3f1eb}
+*{box-sizing:border-box}body{margin:0;background:#f3f1eb}.top{height:68px;background:#121211;color:#eeeae2;border-bottom:1px solid #2b2925;display:flex;align-items:center;justify-content:space-between;padding:0 34px;position:sticky;top:0;z-index:5}.brand{display:flex;gap:13px;align-items:center}.mark{height:33px;width:33px;border:1px solid #6e6349;display:grid;place-items:center;font-family:Georgia,serif}.name{font-size:12px;font-weight:700;letter-spacing:.18em}.sub{font-size:10px;color:#8e8a80;margin-top:2px}.private{font-size:11px;color:#a8a297}.hero{padding:60px 6vw 42px;border-bottom:1px solid #d5d1c8;display:grid;grid-template-columns:1fr 330px;gap:60px;align-items:end}.eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:10px;font-weight:700;color:#8b7843}.hero h1{font-family:Georgia,serif;font-weight:400;font-size:clamp(46px,6vw,78px);line-height:.98;letter-spacing:-.035em;margin:14px 0 20px}.hero p{font-size:17px;line-height:1.65;color:#69655d;max-width:760px}.mode{background:#e9e5dc;border:1px solid #d0cbc0;padding:24px}.mode strong{font-family:Georgia,serif;font-size:24px;font-weight:400}.mode p{font-size:13px;margin:8px 0 0}.strip{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid #d5d1c8;background:#e9e6df;padding:0 6vw}.metric{padding:22px 22px;border-right:1px solid #d1cdc4}.metric:first-child{padding-left:0}.metric:last-child{border:0}.metric span{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#777268}.metric b{font-family:Georgia,serif;font-size:26px;font-weight:400;display:block;margin-top:7px}.command{padding:28px 6vw;border-bottom:1px solid #d5d1c8;background:#f8f6f1}.command-grid{display:grid;grid-template-columns:240px 1fr;gap:28px;align-items:center}.command-title{font-family:Georgia,serif;font-size:24px}.command form{display:grid;grid-template-columns:1fr auto;gap:10px}.command input{width:100%;border:1px solid #c8c3b8;background:white;padding:15px 16px;font:inherit;color:#1c1b17;outline:none}.command input:focus{border-color:#766946;box-shadow:0 0 0 2px rgba(118,105,70,.12)}.command button{border:1px solid #25241f;background:#25241f;color:white;padding:0 18px;font:inherit;font-size:13px;font-weight:650;cursor:pointer}.command button:disabled{opacity:.55;cursor:default}.command-result{grid-column:2;color:#69655d;font-size:12px;min-height:18px}.layout{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(320px,.65fr);gap:64px;padding:52px 6vw 80px}.section h2,.aside h2{font-family:Georgia,serif;font-size:32px;font-weight:400;margin:10px 0}.surface{border-top:1px solid #d3cfc6;display:grid;grid-template-columns:52px 1fr 135px;gap:16px;padding:24px 0;align-items:start}.surface:last-child{border-bottom:1px solid #d3cfc6}.idx{font-size:11px;color:#8a857b}.surface h3{margin:0;font-size:18px;font-weight:650}.surface .cat{font-size:10px;text-transform:uppercase;letter-spacing:.11em;color:#8b7843;margin-left:10px}.surface p{margin:8px 0 0;color:#6d6961;font-size:14px;line-height:1.6}.state{font-size:12px;color:#6f6b63;display:flex;gap:8px;align-items:center}.dot{height:7px;width:7px;border-radius:50%;background:#9d9280}.reachable .dot{background:#54745c}.degraded .dot{background:#a78345}.unreachable .dot{background:#9b5858}.aside{border-left:1px solid #d3cfc6;padding-left:38px}.aside p{color:#6b675f;line-height:1.65;font-size:14px}.rule{border-top:1px solid #d8d4cb;padding:16px 0;display:grid;grid-template-columns:34px 1fr;font-size:13px;color:#5f5b54}.rule:first-of-type{margin-top:26px}.providers{margin-top:28px;border:1px solid #d1cdc4;background:#ece9e2;padding:18px}.providers strong{font-size:11px;text-transform:uppercase;letter-spacing:.11em}.provider{display:flex;justify-content:space-between;border-top:1px solid #d5d1c8;padding:12px 0;font-size:12px}.provider:first-of-type{margin-top:10px}.foot{background:#121211;color:#8e8a80;padding:26px 6vw;display:flex;justify-content:space-between;font-size:10px}
+@media(max-width:900px){.hero,.layout,.command-grid{grid-template-columns:1fr}.command form{grid-template-columns:1fr}.command-result{grid-column:1}.hero,.layout{grid-template-columns:1fr}.strip{grid-template-columns:1fr 1fr}.metric:nth-child(2){border-right:0}.aside{border-left:0;border-top:1px solid #d3cfc6;padding:34px 0 0}.surface{grid-template-columns:40px 1fr}.state{grid-column:2}.top{padding:0 18px}.hero,.layout,.strip{padding-left:22px;padding-right:22px}}
+</style>
+</head>
+<body>
+<header class="top"><div class="brand"><div class="mark">E</div><div><div class="name">EVERCRAFT</div><div class="sub">Executive Home</div></div></div><div class="private">Private · Evercraft controlled</div></header>
+<main>
+<section class="hero"><div><div class="eyebrow" id="date"></div><h1 id="greeting">Good evening.</h1><p>One owned front door into the company, Systemia, Raven Nexus, The Yard, the Evercraft Network, sovereign intelligence and the systems underneath them.</p></div><div class="mode"><div class="eyebrow">Operating mode</div><strong>Direct Mode</strong><p>Default. Operate Evercraft without an AI intermediary. Intelligence is available when you choose it.</p></div></section>
+<section class="strip"><div class="metric"><span>Owned services</span><b id="owned">5</b></div><div class="metric"><span>Reachable now</span><b id="reachable">0</b></div><div class="metric"><span>External dependencies to boot</span><b>0</b></div><div class="metric"><span>Root authority</span><b>Evercraft</b></div></section>
+<section class="command">
+  <div class="command-grid">
+    <div><div class="eyebrow">Direct Mode</div><div class="command-title">What do you want to do?</div></div>
+    <form id="plan-form">
+      <input id="objective" name="objective" maxlength="500" autocomplete="off" placeholder="Describe the work. Systemia will prepare the mission." aria-label="Work objective">
+      <button id="plan-button" type="submit">Prepare in Systemia</button>
+    </form>
+    <div class="command-result" id="plan-result">Planning only. Execution authority is never granted from this field.</div>
+  </div>
+</section>
+<section class="layout"><div class="section"><div class="eyebrow">Operating surfaces</div><h2>Enter the company directly.</h2><div id="services"></div></div><aside class="aside"><div class="eyebrow">Founder office</div><h2>Your front door, not a vendor's.</h2><p>Identity, permissions, discovery, operating state and navigation belong to Evercraft. Providers remain replaceable capabilities behind this layer.</p><div class="rule"><span>01</span><span>Systemia remains mission authority.</span></div><div class="rule"><span>02</span><span>Passport supplies scoped authorization. The interface never invents permissions.</span></div><div class="rule"><span>03</span><span>Missing configuration is never presented as healthy.</span></div><div class="rule"><span>04</span><span>The shell boots with every outside provider absent.</span></div><div class="providers"><strong>Operational evidence</strong>
+    <div class="provider"><span>The Yard</span><span id="yard-evidence">Checking…</span></div>
+    <div class="provider"><span>Evercraft Network</span><span id="network-evidence">Checking…</span></div>
+  </div>
+  <div class="providers"><strong>Optional providers</strong><div id="providers"></div></div></aside></section>
+</main>
+<footer class="foot"><span>EVERCRAFT · Built to endure.</span><span>Sovereign Home · Direct Mode</span></footer>
+<script>
+const labels={reachable:"Available",degraded:"Degraded",unreachable:"Unavailable",not_connected:"Not connected",invalid_configuration:"Configuration error"};
+const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+document.getElementById("plan-form").addEventListener("submit",async(event)=>{
+  event.preventDefault();
+  const input=document.getElementById("objective");
+  const button=document.getElementById("plan-button");
+  const result=document.getElementById("plan-result");
+  const objective=input.value.trim();
+  if(!objective){result.textContent="Enter an objective first.";return;}
+  button.disabled=true;
+  result.textContent="Preparing Systemia plan…";
+  try{
+    const response=await fetch("/api/systemia/plan",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({objective,tasks:[{title:objective,work_type:"plan"}]})});
+    const data=await response.json();
+    if(!response.ok||!data.ok) throw new Error(data.state||"plan_failed");
+    const mission=data.plan?.mission?.mission_key||"mission prepared";
+    const holds=(data.plan?.dispatch||[]).map(row=>row.hold).filter(Boolean);
+    result.textContent="Prepared: "+mission+(holds.length?" · Held: "+holds.join(", "):" · No execution performed.");
+  }catch(error){
+    result.textContent="Systemia could not prepare this request: "+String(error.message||error);
+  }finally{button.disabled=false;}
+});
+
+async function load(){
+  document.getElementById("date").textContent=new Intl.DateTimeFormat("en-US",{weekday:"long",month:"long",day:"numeric"}).format(new Date());
+  try{
+    const [session,overview,yard,network]=await Promise.all([
+      fetch("/api/session").then(r=>r.json()),
+      fetch("/api/overview").then(r=>r.json()),
+      fetch("/api/yard/overview").then(r=>r.json()).catch(()=>({ok:false})),
+      fetch("/api/network/overview").then(r=>r.json()).catch(()=>({ok:false}))
+    ]);
+    if(session.ok) document.getElementById("greeting").textContent="Good evening, "+esc(session.display_name)+".";
+    const owned=overview.services.filter(s=>s.ownership==="evercraft-owned");
+    const optional=overview.services.filter(s=>s.ownership!=="evercraft-owned");
+    document.getElementById("owned").textContent=owned.length;
+    document.getElementById("reachable").textContent=owned.filter(s=>s.state==="reachable").length;
+    document.getElementById("services").innerHTML=owned.map((s,i)=>'<article class="surface"><div class="idx">'+String(i+1).padStart(2,"0")+'</div><div><h3>'+esc(s.name)+' <span class="cat">'+esc(s.category)+'</span></h3><p>'+esc(s.description)+'</p></div><div class="state '+esc(s.state)+'"><span class="dot"></span>'+esc(labels[s.state]||"Unknown")+'</div></article>').join("");
+    document.getElementById("providers").innerHTML=optional.map(s=>'<div class="provider"><span>'+esc(s.name)+'</span><span>'+esc(labels[s.state]||"Unknown")+'</span></div>').join("");
+    const yardLabel=yard.ok&&yard.state==="observed_local_state"
+      ? String(yard.summary?.ready||0)+" ready / "+String(yard.summary?.deployments||0)+" persisted"
+      : "Runtime state not attached";
+    document.getElementById("yard-evidence").textContent=yardLabel;
+    const verified=network.ok?Number(network.verification?.executed_verified?.length||0):0;
+    document.getElementById("network-evidence").textContent=network.ok
+      ? String(verified)+" verified public action"+(verified===1?"":"s")
+      : "Evidence unavailable";
+  }catch{
+    document.getElementById("services").innerHTML='<p>Evercraft service discovery is unavailable. The shell itself is still running.</p>';
+  }
+}
+load();
+</script>
+</body>
+</html>
