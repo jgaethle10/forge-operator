@@ -3,6 +3,7 @@ import http from 'node:http';
 import { chromium } from 'playwright';
 import { createSecureOutboundProxy } from './secure-proxy.mjs';
 import { HEADING_SELECTOR, MAX_HEADINGS } from './snapshot-contract.mjs';
+import { AuthenticatedBrowserSessionManager, renderHumanBrowserHandoffPage } from './authenticated-handoff.mjs';
 import {
   assertBrowserRequestUrl,
   assertPublicHttpUrl,
@@ -16,6 +17,8 @@ const MAX_CONCURRENCY = Math.max(1, Math.min(8, Number(process.env.EVERCRAFT_BRO
 const MAX_BODY_BYTES = 64 * 1024;
 const MAX_SCREENSHOT_BYTES = 3 * 1024 * 1024;
 const ENGINE = 'evercraft-owned-browser-worker-v1';
+const AUTH_OPERATOR_TOKEN = String(process.env.EVERCRAFT_AUTH_BROWSER_OPERATOR_TOKEN || '');
+const AUTH_SESSION_TTL_MS = Math.max(60_000, Math.min(60 * 60_000, Number(process.env.EVERCRAFT_AUTH_BROWSER_SESSION_TTL_MS || 15 * 60_000)));
 
 if (!WORKER_TOKEN) {
   throw new Error('EVERCRAFT_BROWSER_WORKER_TOKEN is required');
@@ -40,12 +43,39 @@ function json(res, status, body) {
   res.end(payload);
 }
 
-function authorized(req) {
+function html(res, status, body) {
+  const payload = String(body || '');
+  res.writeHead(status, {
+    'content-type':'text/html; charset=utf-8',
+    'content-length':Buffer.byteLength(payload),
+    'cache-control':'no-store',
+    'content-security-policy':"default-src 'none'; img-src data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'self'; form-action 'none'; frame-ancestors 'none'; base-uri 'none'",
+    'referrer-policy':'no-referrer',
+    'x-content-type-options':'nosniff',
+    'x-frame-options':'DENY'
+  });
+  res.end(payload);
+}
+
+function bearerAuthorized(req, token) {
+  if (!token) return false;
   const raw = String(req.headers.authorization || '');
-  const expected = `Bearer ${WORKER_TOKEN}`;
+  const expected = `Bearer ${token}`;
   const a = Buffer.from(raw);
   const b = Buffer.from(expected);
   return a.length === b.length && crypto.timingSafeEqual(a,b);
+}
+
+function authorized(req) {
+  return bearerAuthorized(req, WORKER_TOKEN);
+}
+
+function authOperatorAuthorized(req) {
+  return bearerAuthorized(req, AUTH_OPERATOR_TOKEN);
+}
+
+function browserClaim(req) {
+  return String(req.headers['x-evercraft-browser-claim'] || '').trim();
 }
 
 async function readJson(req) {
@@ -74,6 +104,15 @@ async function getBrowser() {
   }
   return browserPromise;
 }
+
+const authSessions = AUTH_OPERATOR_TOKEN ? new AuthenticatedBrowserSessionManager({
+  getBrowser,
+  outboundProxyPromise,
+  assertPublicHttpUrl,
+  assertBrowserRequestUrl,
+  redactUrl,
+  ttlMs:AUTH_SESSION_TTL_MS,
+}) : null;
 
 async function runAction(page, action, timeoutMs) {
   if (action.type === 'wait') {
@@ -288,19 +327,97 @@ async function browse(job) {
 
 const server = http.createServer(async (req,res) => {
   try {
-    if (req.method === 'GET' && req.url === '/healthz') {
+    const pathname = new URL(req.url || '/', 'http://127.0.0.1').pathname;
+    if (req.method === 'GET' && pathname === '/healthz') {
       json(res,200,{
         ok:true,
         service:'evercraft-owned-browser-worker',
         engine:ENGINE,
         mode:'public_read_only',
         active_jobs:activeJobs,
-        max_concurrency:MAX_CONCURRENCY
+        max_concurrency:MAX_CONCURRENCY,
+        authenticated_handoff_available:Boolean(authSessions),
+        authenticated_handoff_mode:authSessions ? 'human_authorized_ephemeral' : 'disabled'
       });
       return;
     }
 
-    if (req.method !== 'POST' || req.url !== '/v1/browse') {
+    if (req.method === 'GET' && pathname === '/auth-browser/health') {
+      json(res,200,{
+        ok:true,
+        service:'evercraft-authenticated-browser-handoff',
+        enabled:Boolean(authSessions),
+        mode:authSessions ? 'human_authorized_ephemeral' : 'disabled',
+        persistent_profile:false,
+        secret_text_returned:false
+      });
+      return;
+    }
+
+    if (req.method === 'POST' && pathname === '/v1/auth-browser/sessions') {
+      if (!authSessions) {
+        json(res,503,{ok:false,error:'authenticated_browser_disabled'});
+        return;
+      }
+      if (!authOperatorAuthorized(req)) {
+        json(res,401,{ok:false,error:'authenticated_browser_operator_credential_required'});
+        return;
+      }
+      const body = await readJson(req);
+      const created = await authSessions.createSession(body);
+      const claimToken = created.claim_token;
+      const safe = {...created};
+      delete safe.claim_token;
+      json(res,201,{
+        ok:true,
+        ...safe,
+        handoff_path:'/handoff/' + encodeURIComponent(created.session_id) + '#claim=' + encodeURIComponent(claimToken)
+      });
+      return;
+    }
+
+    const handoffMatch = pathname.match(/^\/handoff\/([A-Za-z0-9_-]+)$/);
+    if (req.method === 'GET' && handoffMatch) {
+      if (!authSessions) {
+        html(res,503,'<!doctype html><title>Evercraft Browser</title><p>Authenticated browser handoff is disabled.</p>');
+        return;
+      }
+      html(res,200,renderHumanBrowserHandoffPage({sessionId:handoffMatch[1]}));
+      return;
+    }
+
+    const snapshotMatch = pathname.match(/^\/v1\/auth-browser\/sessions\/([A-Za-z0-9_-]+)\/snapshot$/);
+    if (req.method === 'GET' && snapshotMatch) {
+      if (!authSessions) {
+        json(res,503,{ok:false,error:'authenticated_browser_disabled'});
+        return;
+      }
+      json(res,200,await authSessions.snapshot(snapshotMatch[1],browserClaim(req)));
+      return;
+    }
+
+    const actionMatch = pathname.match(/^\/v1\/auth-browser\/sessions\/([A-Za-z0-9_-]+)\/action$/);
+    if (req.method === 'POST' && actionMatch) {
+      if (!authSessions) {
+        json(res,503,{ok:false,error:'authenticated_browser_disabled'});
+        return;
+      }
+      const body = await readJson(req);
+      json(res,200,await authSessions.act(actionMatch[1],browserClaim(req),body));
+      return;
+    }
+
+    const closeMatch = pathname.match(/^\/v1\/auth-browser\/sessions\/([A-Za-z0-9_-]+)$/);
+    if (req.method === 'DELETE' && closeMatch) {
+      if (!authSessions) {
+        json(res,503,{ok:false,error:'authenticated_browser_disabled'});
+        return;
+      }
+      json(res,200,await authSessions.closeSession(closeMatch[1],browserClaim(req)));
+      return;
+    }
+
+    if (req.method !== 'POST' || pathname !== '/v1/browse') {
       json(res,404,{ok:false,error:'not_found'});
       return;
     }
@@ -326,6 +443,13 @@ const server = http.createServer(async (req,res) => {
     }
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
+    const authErrors = new Set([
+      'authenticated_browser_claim_invalid',
+      'authenticated_browser_operator_credential_required'
+    ]);
+    const missingErrors = new Set([
+      'authenticated_browser_session_not_found'
+    ]);
     const safeClientErrors = new Set([
       'invalid_json',
       'request_body_too_large',
@@ -338,9 +462,15 @@ const server = http.createServer(async (req,res) => {
       'private_or_reserved_target',
       'dns_resolution_failed',
       'dns_resolution_empty',
-      'too_many_actions'
+      'too_many_actions',
+      'authenticated_browser_session_expired',
+      'authenticated_browser_action_limit',
+      'authenticated_browser_capacity_exhausted',
+      'typed_text_too_long',
+      'unsupported_key',
+      'unsupported_human_browser_action'
     ]);
-    const status = safeClientErrors.has(message) || message.startsWith('unsupported_action') || message.startsWith('invalid_selector') || message.startsWith('invalid_anchor_selector') ? 400 : 500;
+    const status = authErrors.has(message) ? 401 : missingErrors.has(message) ? 404 : safeClientErrors.has(message) || message.startsWith('unsupported_action') || message.startsWith('invalid_selector') || message.startsWith('invalid_anchor_selector') ? 400 : 500;
     json(res,status,{ok:false,error:message,engine:ENGINE});
   }
 });
@@ -351,6 +481,7 @@ server.listen(PORT,'0.0.0.0',() => {
 
 async function shutdown(signal) {
   server.close();
+  if (authSessions) await authSessions.closeAll().catch(() => {});
   if (browserPromise) {
     try {
       const browser = await browserPromise;
