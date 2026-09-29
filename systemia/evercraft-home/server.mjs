@@ -8,7 +8,6 @@ import { EvercraftIdentity, IdentityRateLimiter } from "../identity/identity.mjs
 import { authorizeEvercraftHome, verifyEvercraftSession } from "./identity.mjs";
 import { planSystemiaMission, readSystemiaInventory } from "./systemia-adapter.mjs";
 import { readNetworkOverview, readYardOverview } from "./operations-adapter.mjs";
-import { ProviderCredentialVault } from "./credential-vault.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const publicDir = path.join(here, "public");
@@ -94,7 +93,6 @@ export async function startEvercraftHomeServer({
   passportStateDir = String(process.env.EVERCRAFT_PASSPORT_STATE_DIR || "").trim(),
   yardStateDir = String(process.env.EVERCRAFT_YARD_STATE_DIR || "").trim(),
   identityStateDir = String(process.env.EVERCRAFT_IDENTITY_STATE_DIR || "").trim(),
-  credentialStateDir = String(process.env.EVERCRAFT_CREDENTIAL_STATE_DIR || (identityStateDir ? path.join(identityStateDir, "provider-credentials") : "")).trim(),
   sessionTtlSeconds = Number(process.env.EVERCRAFT_HOME_SESSION_TTL_SECONDS || 1800),
   cookieSecure = String(process.env.EVERCRAFT_HOME_COOKIE_SECURE || "true").toLowerCase() !== "false",
   serviceOrigins = process.env,
@@ -116,7 +114,6 @@ export async function startEvercraftHomeServer({
     ? new EvercraftIdentity({ stateDir: identityStateDir })
     : null;
   const loginLimiter = new IdentityRateLimiter();
-  const credentialVault = credentialStateDir ? new ProviderCredentialVault({ stateDir: credentialStateDir }) : null;
   const instanceId = "home_" + randomUUID();
   let closed = false;
   let deploymentReceiptRef = "";
@@ -333,45 +330,6 @@ export async function startEvercraftHomeServer({
       return json(res, session.ok ? 200 : session.status, session);
     }
 
-    if (req.method === "GET" && url.pathname === "/api/credentials/providers/alpaca/status") {
-      const session = sessionFor(req, "home.identity.sessions.manage");
-      if (!session.ok) return json(res, session.status, session);
-      if (!credentialVault) return json(res, 503, { ok: false, state: "credential_vault_not_configured" });
-      return json(res, 200, {
-        ok: true,
-        provider: "alpaca",
-        credentials: credentialVault.list({ provider: "alpaca" }),
-        secret_material_returned: false,
-      });
-    }
-
-    if (req.method === "POST" && url.pathname === "/api/credentials/providers/alpaca") {
-      const session = sessionFor(req, "home.identity.sessions.manage");
-      if (!session.ok) return json(res, session.status, session);
-      if (!credentialVault) return json(res, 503, { ok: false, state: "credential_vault_not_configured" });
-      try {
-        const body = await readJsonBody(req, 16384);
-        const credential = credentialVault.put({
-          provider: "alpaca",
-          environment: String(body.environment || "live"),
-          label: String(body.label || "daytrade-lens"),
-          apiKeyId: String(body.api_key_id || ""),
-          apiSecret: String(body.api_secret || ""),
-          actorRef: session.subject,
-        });
-        return json(res, 201, {
-          ok: true,
-          state: "credential_sealed",
-          credential,
-          secret_material_returned: false,
-          plaintext_persisted: false,
-          authority: "evercraft-home+provider-credential-vault",
-        });
-      } catch (error) {
-        return json(res, 400, { ok: false, state: error?.message || "credential_store_failed" });
-      }
-    }
-
     if (req.method === "GET" && url.pathname === "/api/systemia/inventory") {
       const session = sessionFor(req, "home.systemia.read");
       if (!session.ok) return json(res, session.status, session);
@@ -489,7 +447,6 @@ export async function startEvercraftHomeServer({
       signing_key_id: authMode === "passport" ? identityKeyId : null,
       accepted_signing_key_count: authMode === "passport" ? Object.keys(signingKeys).length : 0,
       session_revocation_supported: Boolean(identity),
-      provider_credential_vault_configured: Boolean(credentialVault),
     }),
     setDeploymentReceipt: (receiptRef) => {
       const ref = String(receiptRef || "").trim();
