@@ -6,6 +6,8 @@ on:
       - 'systemia/saban/compute-exchange.mjs'
       - 'systemia/saban/compute-exchange.proof.mjs'
       - 'systemia/saban/compute-market-live-pilot.mjs'
+      - 'systemia/saban/distributed-executor.mjs'
+      - 'systemia/saban/distributed-acquisition.proof.mjs'
       - 'systemia/saban/markets/**'
       - 'systemia/saban/README.md'
       - '.github/workflows/saban-compute-exchange.yml'
@@ -36,6 +38,8 @@ jobs:
           node-version: '22'
       - name: Prove provider-neutral compute negotiation
         run: node systemia/saban/compute-exchange.proof.mjs
+      - name: Prove distributed execution after dynamic acquisition
+        run: node systemia/saban/distributed-acquisition.proof.mjs
       - name: Scan real external compute supply
         shell: bash
         run: |
