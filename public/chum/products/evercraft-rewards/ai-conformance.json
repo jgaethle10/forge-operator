@@ -28,7 +28,11 @@
     "gaming redemption remains unavailable until a specific funded and authorized fulfillment rail, provider credential, sponsor budget and deployed runtime are independently verified",
     "Evercraft Points are not represented as publisher currency, cash or a direct publisher partnership",
     "prepared merchant enrollment does not activate a merchant, offer, discount, public listing or payment obligation",
-    "merchant directory publication and commercial activation require their own verified state"
+    "merchant directory publication and commercial activation require their own verified state",
+    "following a Game Wallet destination records user intent only until a real configured reward offer supplies a points target",
+    "referral attribution creates no automatic points or game credit",
+    "a referral becomes qualified only after the invitee completes a verified local Rewards check-in; that qualification still does not prove a purchase",
+    "merchant-funded Game Wallet earning boosts require a verified points-funding reference and capped points pool before activation"
   ],
   "commercial": null,
   "human_start_url": null,
@@ -63,5 +67,14 @@
   "machine_commerce_handoff_state": null,
   "machine_commerce_public_id": null,
   "machine_commerce_tool": null,
-  "live_canary_evidence": null
+  "live_canary_evidence": null,
+  "game_wallet_growth": {
+    "founding_player_target": 2000,
+    "player_goal_state": "implemented_source_qa_green",
+    "referral_state": "attribution_then_verified_local_checkin_qualification",
+    "referral_economic_reward": false,
+    "merchant_funded_earning_state": "verified_points_budget_and_race_safe_caps",
+    "production_issuance_state": "not_verified",
+    "source_qa_observed_on": "2026-09-29"
+  }
 }
