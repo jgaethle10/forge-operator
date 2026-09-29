@@ -15,11 +15,11 @@ function atomicJson(file, value) {
   fs.renameSync(tmp, file);
 }
 
-const dir = path.resolve(arg('--dir', 'artifacts/node001-field/megatron'));
-const out = path.resolve(arg('--out', 'artifacts/node001-field/megatron-status'));
+const dir = path.resolve(arg('--dir', 'artifacts/node001-field/evernode-one'));
+const out = path.resolve(arg('--out', 'artifacts/node001-field/evernode-one-status'));
 const result = evaluateNode001FieldMissionFromDirectory({
   dir,
-  candidateKey: arg('--candidate', 'megatron-node001-candidate'),
+  candidateKey: arg('--candidate', 'evernode-one-node001-candidate'),
   issueRef: arg('--issue', 'github:issue:175'),
 });
 

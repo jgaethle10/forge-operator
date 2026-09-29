@@ -1,0 +1,52 @@
+name: Saban Ambient Live Pilot
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/saban/ambient-live-pilot.mjs'
+      - 'systemia/saban/ambient-capability-resolver.mjs'
+      - '.github/workflows/saban-ambient-live-pilot.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/saban/ambient-live-pilot.mjs'
+      - 'systemia/saban/ambient-capability-resolver.mjs'
+      - '.github/workflows/saban-ambient-live-pilot.yml'
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  live:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Query real public physical-world capabilities
+        run: node systemia/saban/ambient-live-pilot.mjs --out=artifacts/saban-ambient-live/latest.json
+      - name: Publish pilot receipt summary
+        run: |
+          node - <<'NODE'
+          const fs=require('fs');
+          const r=JSON.parse(fs.readFileSync('artifacts/saban-ambient-live/latest.json','utf8'));
+          console.log('live_network_requests='+r.live_network_requests);
+          console.log('synthetic_data='+r.synthetic_data);
+          console.log('aircraft_seen='+r.source_state.adsb_lol.aircraft_count);
+          console.log('metars_seen='+r.source_state.aviation_weather.metar_count);
+          console.log('ndbc_buoy_live='+r.source_state.ndbc_buoy.ok);
+          console.log('capabilities_discovered='+r.discovered_capability_count);
+          console.log('observations_admitted='+r.admitted_observation_count);
+          console.log('compute_eligible_from_public_visibility='+r.compute_eligible_count);
+          console.log('receipt='+r.receipt_hash);
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: saban-ambient-live-pilot
+          path: artifacts/saban-ambient-live/latest.json
+          if-no-files-found: error

@@ -66,7 +66,7 @@ function evidenceCandidateReady(candidate) {
 }
 
 export function evaluateNode001FieldMission({
-  candidateKey = 'megatron-node001-candidate',
+  candidateKey = 'evernode-one-node001-candidate',
   issueRef = 'github:issue:175',
   fieldKitMerged = true,
   preflight = null,

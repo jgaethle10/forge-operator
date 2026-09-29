@@ -209,7 +209,7 @@ const stateDir=path.resolve(arg(
 ));
 const node001MissionFile=path.resolve(
   process.env.EVERCRAFT_NODE001_FIELD_MISSION_STATE||
-  'artifacts/node001-field/megatron-status/latest.json'
+  'artifacts/node001-field/evernode-one-status/latest.json'
 );
 const externalCanaryFile=path.resolve(
   process.env.EVERCRAFT_PUBLIC_EDGE_CANARY_STATE||

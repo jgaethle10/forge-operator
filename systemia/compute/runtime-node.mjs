@@ -1464,8 +1464,8 @@ export async function startEvercraftComputeNode({
           const workspaceRoot = path.join(stateRoot, 'workspace');
           const legacyOut = path.join(workspaceRoot, 'legacy-rescue-watch');
           const portfolioSentinelOut = path.join(workspaceRoot, 'portfolio-sentinel');
-          const node001Field = path.join(workspaceRoot, 'node001-field', 'megatron');
-          const node001Status = path.join(workspaceRoot, 'node001-field', 'megatron-status');
+          const node001Field = path.join(workspaceRoot, 'node001-field', 'evernode-one');
+          const node001Status = path.join(workspaceRoot, 'node001-field', 'evernode-one-status');
           const remoteDeviceTrustWatchOut = path.join(
             workspaceRoot,
             'remote-device-trust-watch'
@@ -1494,8 +1494,8 @@ export async function startEvercraftComputeNode({
                 stale_after_seconds: 900,
               },
               {
-                source_key: 'node001-megatron-field-certification',
-                path: 'node001-field/megatron-status/mission-snapshot.json',
+                source_key: 'node001-evernode-one-field-certification',
+                path: 'node001-field/evernode-one-status/mission-snapshot.json',
                 required: true,
                 stale_after_seconds: 900,
               },

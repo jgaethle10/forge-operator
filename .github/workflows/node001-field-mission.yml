@@ -1,4 +1,4 @@
-name: Node 001 field mission tracker
+name: Evernode One / Node 001 field mission tracker
 
 on:
   pull_request:
@@ -23,3 +23,10 @@ jobs:
           node-version: '22'
       - name: Prove Node 001 field mission progression
         run: node systemia/organism/node001-field-certification.proof.mjs
+      - name: Reject Lux-specific field-node naming
+        run: |
+          pattern='mega''tron'
+          if git grep -ni "$pattern" -- systemia .github tests; then
+            echo 'Retired Lux-specific field-node naming remains in active Evercraft infrastructure'
+            exit 1
+          fi

@@ -85,7 +85,7 @@ try {
       state_root: kaidanceRoot,
       mission_source_policies: [
         {
-          source_key: 'node001-megatron-field-certification',
+          source_key: 'node001-evernode-one-field-certification',
           required: true,
           stale_after_seconds: 900,
         },
@@ -111,7 +111,7 @@ try {
   assert.equal(route.health.state, 'healthy');
 
   const pushed = await yard.pushMissionSnapshot('remote-kaidance-proof', {
-    sourceKey: 'node001-megatron-field-certification',
+    sourceKey: 'node001-evernode-one-field-certification',
     snapshot: {
       schema: 'evercraft.kaidance.mission-snapshot.v1',
       snapshot_ref: 'remote-transport-proof-snapshot',
