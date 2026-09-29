@@ -10,7 +10,7 @@ It supports two service modes:
 The initial supervised organism is:
 
 - Legacy Rescue opportunity watch, every 300 seconds.
-- Node 001 / Megatron field-certification tracker, every 300 seconds.
+- Evernode One / Node 001 field-certification tracker, every 300 seconds.
 - Remote device trust watch, every 300 seconds, surfacing attested pending devices as explicit KAIDANCE holds without granting authority.
 - KAIDANCE mission publisher, resident, publishing changed mission snapshots on its own 300-second cadence.
 - Public Edge controller, resident and optional. It stays `disabled` rather than `held` until the admitted Evercraft Compute endpoint, immutable release, edge domain, TLS file paths, controller state path and allocator-token file path are configured. Once configured, it owns the Evercraft public edge, specialist handoff runtime, HTTPS route binding, lease renewal and route verification.
