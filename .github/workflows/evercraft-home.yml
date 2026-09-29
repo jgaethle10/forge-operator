@@ -7,8 +7,19 @@ on:
       - "systemia/identity/**"
       - "systemia/compute/runtime-node.mjs"
       - "systemia/compute/evercraft-home-runtime.proof.mjs"
+      - "systemia/compute/evercraft-home-capacity.proof.mjs"
       - "systemia/yard/operator.mjs"
       - "systemia/yard/evercraft-home-deployment.proof.mjs"
+      - "systemia/yard/public-edge-controller.mjs"
+      - "systemia/yard/public-edge-controller.proof.mjs"
+      - "systemia/yard/public-edge-activation-watch.mjs"
+      - "systemia/yard/public-edge-activation-watch.proof.mjs"
+      - "systemia/network/outbound-capacity-broker.mjs"
+      - "systemia/organism/public-edge-activation-watch-runner.mjs"
+      - "systemia/organism/public-edge-controller-runner.mjs"
+      - "systemia/organism/public-edge-activation-watch.workflow.json"
+      - ".github/workflows/evercraft-home-canary.yml"
+      - "tests/home-canary-contract.test.mjs"
       - ".github/workflows/evercraft-home.yml"
   push:
     branches:
@@ -18,8 +29,19 @@ on:
       - "systemia/identity/**"
       - "systemia/compute/runtime-node.mjs"
       - "systemia/compute/evercraft-home-runtime.proof.mjs"
+      - "systemia/compute/evercraft-home-capacity.proof.mjs"
       - "systemia/yard/operator.mjs"
       - "systemia/yard/evercraft-home-deployment.proof.mjs"
+      - "systemia/yard/public-edge-controller.mjs"
+      - "systemia/yard/public-edge-controller.proof.mjs"
+      - "systemia/yard/public-edge-activation-watch.mjs"
+      - "systemia/yard/public-edge-activation-watch.proof.mjs"
+      - "systemia/network/outbound-capacity-broker.mjs"
+      - "systemia/organism/public-edge-activation-watch-runner.mjs"
+      - "systemia/organism/public-edge-controller-runner.mjs"
+      - "systemia/organism/public-edge-activation-watch.workflow.json"
+      - ".github/workflows/evercraft-home-canary.yml"
+      - "tests/home-canary-contract.test.mjs"
       - ".github/workflows/evercraft-home.yml"
   workflow_dispatch:
 
@@ -29,7 +51,7 @@ permissions:
 jobs:
   prove-home:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -48,6 +70,18 @@ jobs:
 
       - name: Prove Evercraft Compute resident lifecycle
         run: node systemia/compute/evercraft-home-runtime.proof.mjs
+
+      - name: Prove Home-ready capacity admission
+        run: node systemia/compute/evercraft-home-capacity.proof.mjs
+
+      - name: Prove Home on the managed public-edge controller
+        run: node systemia/yard/public-edge-controller.proof.mjs
+
+      - name: Prove Home activation watch readiness and promotion
+        run: node systemia/yard/public-edge-activation-watch.proof.mjs
+
+      - name: Prove external Home canary contract
+        run: node --test tests/home-canary-contract.test.mjs
 
       - name: Prove Yard owns Home deployment lifecycle
         run: node systemia/yard/evercraft-home-deployment.proof.mjs
