@@ -466,6 +466,9 @@ const server = http.createServer(async (req,res) => {
     const missingErrors = new Set([
       'authenticated_browser_session_not_found'
     ]);
+    const conflictErrors = new Set([
+      'authenticated_browser_claim_already_redeemed'
+    ]);
     const safeClientErrors = new Set([
       'invalid_json',
       'request_body_too_large',
@@ -479,7 +482,6 @@ const server = http.createServer(async (req,res) => {
       'dns_resolution_failed',
       'dns_resolution_empty',
       'too_many_actions',
-      'authenticated_browser_claim_already_redeemed',
       'authenticated_browser_session_expired',
       'authenticated_browser_action_limit',
       'authenticated_browser_capacity_exhausted',
@@ -487,7 +489,7 @@ const server = http.createServer(async (req,res) => {
       'unsupported_key',
       'unsupported_human_browser_action'
     ]);
-    const status = authErrors.has(message) ? 401 : missingErrors.has(message) ? 404 : safeClientErrors.has(message) || message.startsWith('unsupported_action') || message.startsWith('invalid_selector') || message.startsWith('invalid_anchor_selector') ? 400 : 500;
+    const status = authErrors.has(message) ? 401 : conflictErrors.has(message) ? 409 : missingErrors.has(message) ? 404 : safeClientErrors.has(message) || message.startsWith('unsupported_action') || message.startsWith('invalid_selector') || message.startsWith('invalid_anchor_selector') ? 400 : 500;
     json(res,status,{ok:false,error:message,engine:ENGINE});
   }
 });
