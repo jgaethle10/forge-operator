@@ -37,6 +37,7 @@ jobs:
           console.log('synthetic_data='+r.synthetic_data);
           console.log('aircraft_seen='+r.source_state.adsb_lol.aircraft_count);
           console.log('metars_seen='+r.source_state.aviation_weather.metar_count);
+          console.log('ndbc_buoy_live='+r.source_state.ndbc_buoy.ok);
           console.log('capabilities_discovered='+r.discovered_capability_count);
           console.log('observations_admitted='+r.admitted_observation_count);
           console.log('compute_eligible_from_public_visibility='+r.compute_eligible_count);
