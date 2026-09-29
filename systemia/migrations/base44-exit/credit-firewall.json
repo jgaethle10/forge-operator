@@ -34,7 +34,8 @@
     "systemia_kaidance_internal_wake_v5_every_5_minutes",
     "systemia_capability_verification_every_15_minutes",
     "systemia_collider_hourly",
-    "systemia_eps_social_continuity_every_30_minutes"
+    "systemia_eps_social_continuity_every_30_minutes",
+    "systemia_release_continuity_every_15_minutes"
   ],
   "temporary_legacy_exceptions": [],
   "cutover_gates": [
@@ -77,6 +78,25 @@
       "bridge_containment_git_commit": "a3b6a17be27fc5073d0d2d065f1b942875cf1ebb",
       "bridge_containment_behavior": "return before Base44 entity operations and before Clip invocation",
       "runtime_scheduler_removal_pending": true
+    },
+    {
+      "workflow": "systemia_release_continuity_every_15_minutes",
+      "state": "source_disabled_fail_closed_runtime_verification_pending",
+      "rollback_checkpoint": "6abc33c9490e45a4f72c27bd",
+      "rollback_git_commit": "b9cef111ca4baa67bda9514718eb105008e82358",
+      "source_automation_active": false,
+      "source_fail_closed_guard": "LEGACY_BASE44_RELEASE_SWEEP_DISABLED",
+      "legacy_provider_scope": "Base44 production drift and release queue maintenance",
+      "replacement_strategy": "retire legacy-provider-specific sweep while canonical release authority moves to GitHub/Systemia",
+      "replacement_surfaces": [
+        ".github/workflows/systemia-portfolio-sentinel.yml",
+        "systemia/organism/portfolio-sentinel.mjs",
+        "systemia/release/release-policy.mjs",
+        ".github/workflows/publish-runtime.yml"
+      ],
+      "replacement_cadence_seconds": 300,
+      "runtime_scheduler_verification_pending": true,
+      "named_cloud_required": false
     }
   ]
 }
