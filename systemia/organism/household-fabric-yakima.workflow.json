@@ -1,0 +1,47 @@
+{
+  "schema": "evercraft.systemia.workflow-manifest.v1",
+  "workflow_key": "household-fabric-yakima",
+  "mission_key": "household-flourishing-yakima-2026",
+  "runtime": "systemia-organism+collider+evercraft-web-browser",
+  "collider_compatible": true,
+  "cadence_seconds": 300,
+  "material_change_only": true,
+  "entrypoint": "systemia/household-fabric/yvl-pipeline.mjs",
+  "runner": "systemia/organism/household-fabric-yakima-runner.mjs",
+  "proof": "systemia/organism/household-fabric-yakima.proof.mjs",
+  "outputs": {
+    "cycle_report": "artifacts/household-fabric/yakima/latest.json",
+    "ledger": "artifacts/household-fabric/yakima/ledger.json",
+    "today": "artifacts/household-fabric/yakima/today.json",
+    "mission_snapshot": "artifacts/household-fabric/yakima/mission-snapshot.json",
+    "collector_receipts": "artifacts/household-fabric/yakima/collector-receipts.json",
+    "state": "artifacts/household-fabric/yakima/state.json"
+  },
+  "sources": [
+    {
+      "source_key": "yakima-valley-libraries-events",
+      "source_url": "https://www.yvl.org/events/",
+      "collector": "systemia/household-fabric/collectors/yvl-events.mjs",
+      "transport": "evercraft-owned-browser",
+      "evidence_receipt_required": true
+    }
+  ],
+  "authority": {
+    "public_read": "autonomous",
+    "source_collection": "autonomous",
+    "ledger_ingestion": "autonomous",
+    "ranking": "autonomous",
+    "merchant_offer_write": "verified_identity_required",
+    "benefit_application": "human_gate",
+    "purchase": "human_gate",
+    "payment": "human_gate",
+    "external_message": "human_gate"
+  },
+  "promotion_policy": {
+    "source_exists_is_not_collector_live": true,
+    "collector_live_is_not_fresh_observation": true,
+    "fresh_observation_is_not_user_claim_until_ingested": true,
+    "stale_money_claims": "blocked",
+    "sponsorship_affects_organic_rank": false
+  }
+}
