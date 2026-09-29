@@ -19,9 +19,17 @@ A participant can bring designs, demos, songs, equipment, manufacturing capacity
 - find productive uses for underused equipment, capacity, inventory, or creative assets
 - create a protected evaluation handoff without giving away ownership or commercial rights
 
+## Execution blueprint
+
+The verified private v1.2 runtime can take an opportunity owned by the current user and produce a safe execution blueprint before a team exists. It decomposes stated needs into suggested work packages and ranks current members from public capability metadata only.
+
+The planner does not inspect protected assets, Creator Vault contents, private contact information, formation terms or disclosure grants. Candidate results contain no contact email. If no current member fits a required capability, the gap remains open instead of being filled with an invented partner.
+
+A suggested candidate is not automatically qualified, available, willing, contracted or part of the team. The next step is still a protected connection request.
+
 ## Multi-party execution
 
-The verified private v1.1 runtime can assemble an `ExecutionTeam` from multiple accepted relationships. Each counterparty must separately accept that specific team invitation before receiving work. The team leader can then create bounded work packages for accepted participants.
+The verified private v1.2 runtime can assemble an `ExecutionTeam` from multiple accepted relationships. Each counterparty must separately accept that specific team invitation before receiving work. The team leader can then create bounded work packages for accepted participants.
 
 Team assembly, invitation acceptance and work-package acceptance do not transfer IP rights, authorize protected-material disclosure, create payment, or constitute a final signed agreement.
 
