@@ -761,7 +761,8 @@
       "public_url_source": "source_catalog",
       "payment_authority": "No live Network membership payment authority is advertised. Reservation creates no charge. Any future paid activation requires an independently verified billing path and explicit human action.",
       "invocation_status": "LIVE READ-ONLY MCP VERIFIED: production initialize, tools/list, get_network_capabilities, get_network_presence, and prepare_network_handoff all passed the dedicated Evercraft Network canary. The handoff call returned only a tagged human URL and created no enrollment, checkout, payment obligation, device action, carrier action, or emergency authority. Founding Membership billing remains not live.",
-      "catalog_version": "2026-09-29.network-full-readonly-verified"
+      "catalog_version": "2026-09-29.network-full-readonly-verified",
+      "live_canary_evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/conformance/runtime-observations/2026-09-26-evercraft-network-mcp.json"
     },
     {
       "public_id": "evercraft-web-browser-agent-v1",
