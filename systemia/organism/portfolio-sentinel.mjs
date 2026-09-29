@@ -381,6 +381,99 @@ export function inspectLocalPortfolio({ rootDir = process.cwd() } = {}) {
     );
   }
 
+  const capabilityMeshResult = safeJson(root, 'systemia/capability-mesh/adoption-coverage.json');
+  if (!capabilityMeshResult.ok) {
+    addFinding(report, makeFinding({
+      code: 'capability_mesh_coverage_invalid',
+      severity: 'medium',
+      subject: 'systemia/capability-mesh/adoption-coverage.json',
+      detail: capabilityMeshResult.reason,
+      evidence_refs: ['repo:systemia/capability-mesh/adoption-coverage.json'],
+      repair_mode: 'capability_contract_migration',
+      repair_command: 'node systemia/capability-mesh/mesh.mjs'
+    }));
+  } else {
+    const mesh = capabilityMeshResult.value;
+    report.inventory.capability_mesh = mesh.summary || null;
+
+    addCheck(
+      report,
+      'capability-mesh-loaded',
+      mesh.schema === 'evercraft.capability-mesh.coverage.v1',
+      mesh.summary
+        ? `${Number(mesh.summary.explicit_contract_count || 0)}/${Number(mesh.summary.public_product_count || 0)} public products have explicit trust-chain contracts`
+        : 'capability mesh summary unavailable',
+      ['repo:systemia/capability-mesh/adoption-coverage.json']
+    );
+
+    const directMissing = new Set(mesh.priority_queues?.direct_door_without_contract || []);
+    const missing = new Set(mesh.priority_queues?.all_missing_contracts || []);
+    const incomplete = new Set(mesh.priority_queues?.incomplete_contracts || []);
+
+    for (const productKey of [...missing].sort()) {
+      const direct = directMissing.has(productKey);
+      addFinding(report, makeFinding({
+        code: direct ? 'direct_door_contract_missing' : 'product_trust_chain_contract_missing',
+        severity: 'medium',
+        subject: productKey,
+        detail: direct
+          ? 'Product has a public specialist door but no explicit Capability Mesh trust-chain contract.'
+          : 'Public product has no explicit Capability Mesh trust-chain contract.',
+        evidence_refs: [
+          'repo:systemia/capability-mesh/adoption-coverage.json',
+          'repo:systemia/capability-mesh/contracts.json'
+        ],
+        repair_mode: 'capability_contract_migration',
+        human_gate_required: false,
+        metadata: {
+          product_key: productKey,
+          direct_door: direct,
+          contract_state: 'missing'
+        }
+      }));
+    }
+
+    for (const productKey of [...incomplete].sort()) {
+      const row = (mesh.products || []).find((product) => product.product_key === productKey);
+      addFinding(report, makeFinding({
+        code: 'product_trust_chain_contract_incomplete',
+        severity: 'medium',
+        subject: productKey,
+        detail: `Product trust-chain contract is incomplete: ${(row?.gaps || []).join(', ') || 'unspecified gaps'}.`,
+        evidence_refs: [
+          'repo:systemia/capability-mesh/adoption-coverage.json',
+          'repo:systemia/capability-mesh/contracts.json'
+        ],
+        repair_mode: 'capability_contract_migration',
+        human_gate_required: false,
+        metadata: {
+          product_key: productKey,
+          gaps: row?.gaps || []
+        }
+      }));
+    }
+
+    for (const specialist of mesh.specialist_only || []) {
+      addFinding(report, makeFinding({
+        code: 'specialist_door_not_in_public_product_index',
+        severity: 'medium',
+        subject: specialist.specialist_slug,
+        detail: 'Specialist door exists outside the public product index. Review whether it should remain held/internal or be separately admitted; never auto-publish it.',
+        evidence_refs: [
+          'repo:systemia/capability-mesh/adoption-coverage.json',
+          'repo:public/.well-known/evercraft-direct-door-readiness.json'
+        ],
+        repair_mode: 'human_review',
+        human_gate_required: true,
+        metadata: {
+          specialist_slug: specialist.specialist_slug,
+          direct_door_state: specialist.direct_door_state,
+          publication_action: 'review_only'
+        }
+      }));
+    }
+  }
+
   report.inventory.workflows = listFiles(root, '.github/workflows', '.yml');
 
   const packageResult = safeJson(root, 'package.json');
