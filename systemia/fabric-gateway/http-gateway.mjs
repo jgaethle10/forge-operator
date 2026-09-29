@@ -1,5 +1,6 @@
 import path from 'node:path';
 import { buildFabricPublicManifest, EvercraftFabricGateway } from './gateway.mjs';
+import { composeEvercraftMission } from './mission-planner.mjs';
 
 function jsonRpc(id, result) {
   return { jsonrpc: '2.0', id: id ?? null, result };
@@ -38,6 +39,27 @@ function fabricTools() {
           limit: { type: 'integer', minimum: 1, maximum: 20, default: 5 },
         },
         required: ['intent'],
+        additionalProperties: false,
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    {
+      name: 'plan_evercraft_mission',
+      title: 'Plan a cross-capability Evercraft mission',
+      description: 'Turn a broad plain-language goal into a truthful multi-capability Evercraft mission candidate graph. The plan preserves evidence, commerce, permission, and Systemia execution boundaries and creates no side effect.',
+      inputSchema: {
+        type: 'object',
+        properties: {
+          goal: { type: 'string', minLength: 3 },
+          limit: { type: 'integer', minimum: 1, maximum: 10, default: 5 },
+          constraints: { type: 'array', items: { type: 'string' }, maxItems: 20 },
+        },
+        required: ['goal'],
         additionalProperties: false,
       },
       annotations: {
@@ -214,6 +236,28 @@ export async function executeFabricMcpRpc({
         public_only: true,
         private_authority_granted: false,
       }));
+    }
+
+    if (toolName === 'plan_evercraft_mission') {
+      const goal = String(args.goal || '').trim();
+      if (!goal) throw new Error('goal_required');
+      const limit = Math.min(Math.max(Number(args.limit || 5), 1), 10);
+      let discovery;
+      if (gateway) {
+        const discovered = await gateway.discover({ intent: goal, limit }, authorization || null);
+        discovery = discovered.result;
+      } else {
+        if (typeof discoverPublic !== 'function') {
+          throw new Error('fabric_public_discovery_not_configured');
+        }
+        discovery = await discoverPublic(goal, limit);
+      }
+      return jsonRpc(id, toolResult(composeEvercraftMission({
+        goal,
+        discovery,
+        limit,
+        constraints: args.constraints || [],
+      })));
     }
 
     const privateTools = new Set([
