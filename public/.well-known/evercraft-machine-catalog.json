@@ -3,10 +3,10 @@
   "provider": "Evercraft LLC",
   "purpose": "Public-safe snapshot of the canonical Evercraft machine-commerce catalog for AI/search/agent discovery. This file grants no private access and creates no payment authority.",
   "source_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=catalog",
-  "source_schema_version": "2026-09-28.1",
+  "source_schema_version": "2026-09-28.2",
   "gateway_version": "evercraft-machine-commerce-gateway-v0.9.1",
-  "source_generated_at": "2026-09-28T18:43:00.000Z",
-  "generated_at": "2026-09-28T19:03:47.122Z",
+  "source_generated_at": "2026-09-29T01:40:00.000Z",
+  "generated_at": "2026-09-29T02:24:26.467Z",
   "offer_count": 46,
   "sell_now_count": 14,
   "discovery_count": 32,
@@ -631,13 +631,16 @@
         "contractor pricing API",
         "AI contractor estimate tool",
         "calculate contractor sell price from gross margin",
-        "no account contractor estimate"
+        "no account contractor estimate",
+        "verify contractor estimate receipt",
+        "tamper evident contractor estimate",
+        "verify estimate calculation hash"
       ],
       "problem": "A contractor or field-service operator needs a consistent estimate or planning range from scope, measurements and job costs, with transparent cost build-up, true gross-margin math, uncertainty and commercial lineage.",
       "inputs": "For public read-only preview: caller-supplied labor hours/rate, materials, equipment, disposal, subcontractor, travel, other direct cost, overhead, contingency, target gross margin, tax and optional uncertainty/site-verification flags. Authenticated workspace also supports service scope, measurements, private company defaults, reusable costs, photos and commercial lineage.",
       "outputs": "Estimated cost, sell price or range, confidence, assumptions, inclusions, exclusions, warnings and site-review state, with revision and proposal lineage downstream.",
       "commercial_state": "contractor_beta",
-      "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
+      "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
       "pricing": "No approved public self-service subscription or machine-call price is advertised yet. The read-only planning preview has no checkout or payment side effect.",
       "offers": [],
       "human_ui_required": false,
@@ -645,8 +648,8 @@
       "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
       "public_url_source": "source_catalog",
       "payment_authority": "Stripe subscription control plane is build verified, but the EPS runtime currently has no STRIPE_SECRET_KEY, EPS_STRIPE_PRICE_ID or EPS_STRIPE_WEBHOOK_SECRET configured. Checkout therefore remains unavailable and no public price is approved.",
-      "invocation_status": "LIVE VERIFIED PLATFORM HTTPS + MCP: the no-account read-only estimate preview returned HTTP 200 and completed a real deployed HTTPS POST calculation on 2026-09-27. Machine Commerce MCP advertises calculate_contractor_estimate_preview and a real deployed tools/call returned the same deterministic pricing with side_effects none and persistence none. The estimator now emits a SHA-256 calculation receipt and can carry that receipt into a saved workspace estimate as explicit lineage. A Stripe subscription control plane with trusted entitlement records, Checkout, Customer Portal and signature-verified webhook sync is build verified; the billingGateway is deployed and returns authentication_required to anonymous callers. Runtime Stripe secret, approved Price ID, webhook secret and hard entitlemen",
-      "catalog_version": "2026-09-28.1"
+      "invocation_status": "LIVE VERIFIED PLATFORM HTTPS + MCP: the no-account read-only estimate preview is live; Machine Commerce MCP exposes calculate_contractor_estimate_preview and verify_contractor_estimate_receipt. EPS emits a SHA-256 calculation receipt and a deployed receipt verifier independently recomputes the canonical payload; live HTTP and MCP canaries returned verified=true with authority limited to integrity_only and identity_verified=false. Browser continuation carries receipt lineage into saved estimates. Private workspace company settings, overrides, cost library, estimates, revisions, proposals, acceptance receipts, change orders, job handoff and calibration now route through an authenticated entitlement-aware data gateway while preserving user-scoped Base44 RLS. That gateway is deployed and rejec",
+      "catalog_version": "2026-09-28.3"
     },
     {
       "public_id": "eventwave-paid-promotion-v1",
@@ -1253,8 +1256,8 @@
       "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
       "public_url_source": "source_catalog",
       "payment_authority": "No direct machine checkout is exposed. Commercial terms and any later payment require explicit human agreement and authoritative payment verification.",
-      "invocation_status": "LIVE for public machine discovery, deterministic problem matching, read-only pilot handoff, and human-confirmed commercial pilot request capture through Evercraft Machine Commerce. Evercraft's own Sentinel runtime is production-proven on a five-minute resident cycle; customer monitoring begins only after separate scoped onboarding and authorization. A pilot request grants no private access, monitoring authority, payment obligation, production mutation, or external-system authority.",
-      "catalog_version": "2026-09-26.2"
+      "invocation_status": "LIVE for public machine discovery, deterministic problem matching, read-only pilot handoff, and human-confirmed commercial pilot request capture through Evercraft Machine Commerce. The internal Portfolio Sentinel runtime now has receipt-backed commerce-integrity cycle code for product-native buyer-route reachability, gateway-leak detection and conversion-stage telemetry. Recurring cadence is not claimed until an authorized scheduler is configured and successive runtime receipts prove it. Customer monitoring begins only after separate scoped onboarding and authorization. A pilot request grants no private access, monitoring authority, payment obligation, production mutation, or external-system authority.",
+      "catalog_version": "2026-09-28.3"
     },
     {
       "public_id": "raven-nexus-pain-router-v1",

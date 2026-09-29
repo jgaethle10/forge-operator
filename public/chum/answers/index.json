@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.answer-graph.v2",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-28T18:43:00.000Z",
+  "updated_at": "2026-09-29T01:40:00.000Z",
   "purpose": "Exact natural-language problem signals for AI assistants and agents across the complete public CHUM Pain Index. Use these as discovery cues, then preserve fit, readiness, payment, evidence and authorization boundaries.",
   "source": "public/.well-known/evercraft-pain-index.json",
   "read_only_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
@@ -21,8 +21,8 @@
   },
   "summary": {
     "pain_index_entries": 107,
-    "unique_user_phrases": 901,
-    "mapped_candidate_edges": 1006,
+    "unique_user_phrases": 904,
+    "mapped_candidate_edges": 1009,
     "ambiguous_phrases": 105,
     "product_candidates": 61,
     "machine_offer_candidates": 46
@@ -389,7 +389,7 @@
           "public_id": "eps-estimate-engine-machine-v1",
           "name": "EPS Estimate Intelligence",
           "commercial_state": "contractor_beta",
-          "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
+          "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
@@ -2003,7 +2003,7 @@
           "public_id": "eps-estimate-engine-machine-v1",
           "name": "EPS Estimate Intelligence",
           "commercial_state": "contractor_beta",
-          "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
+          "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
@@ -2798,7 +2798,7 @@
           "public_id": "eps-estimate-engine-machine-v1",
           "name": "EPS Estimate Intelligence",
           "commercial_state": "contractor_beta",
-          "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
+          "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
@@ -2821,7 +2821,7 @@
           "public_id": "eps-estimate-engine-machine-v1",
           "name": "EPS Estimate Intelligence",
           "commercial_state": "contractor_beta",
-          "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
+          "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
@@ -4204,7 +4204,7 @@
           "public_id": "eps-estimate-engine-machine-v1",
           "name": "EPS Estimate Intelligence",
           "commercial_state": "contractor_beta",
-          "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
+          "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
@@ -4227,7 +4227,7 @@
           "public_id": "eps-estimate-engine-machine-v1",
           "name": "EPS Estimate Intelligence",
           "commercial_state": "contractor_beta",
-          "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
+          "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
@@ -4342,7 +4342,7 @@
           "public_id": "eps-estimate-engine-machine-v1",
           "name": "EPS Estimate Intelligence",
           "commercial_state": "contractor_beta",
-          "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
+          "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
@@ -4365,7 +4365,7 @@
           "public_id": "eps-estimate-engine-machine-v1",
           "name": "EPS Estimate Intelligence",
           "commercial_state": "contractor_beta",
-          "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
+          "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
@@ -4757,7 +4757,7 @@
           "public_id": "eps-estimate-engine-machine-v1",
           "name": "EPS Estimate Intelligence",
           "commercial_state": "contractor_beta",
-          "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
+          "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
@@ -5391,7 +5391,7 @@
           "public_id": "eps-estimate-engine-machine-v1",
           "name": "EPS Estimate Intelligence",
           "commercial_state": "contractor_beta",
-          "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
+          "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
@@ -5414,7 +5414,7 @@
           "public_id": "eps-estimate-engine-machine-v1",
           "name": "EPS Estimate Intelligence",
           "commercial_state": "contractor_beta",
-          "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
+          "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
@@ -6775,7 +6775,7 @@
           "public_id": "eps-estimate-engine-machine-v1",
           "name": "EPS Estimate Intelligence",
           "commercial_state": "contractor_beta",
-          "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
+          "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
@@ -8101,7 +8101,7 @@
           "public_id": "eps-estimate-engine-machine-v1",
           "name": "EPS Estimate Intelligence",
           "commercial_state": "contractor_beta",
-          "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
+          "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
@@ -10751,7 +10751,7 @@
           "public_id": "eps-estimate-engine-machine-v1",
           "name": "EPS Estimate Intelligence",
           "commercial_state": "contractor_beta",
-          "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
+          "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
@@ -11108,7 +11108,7 @@
           "public_id": "eps-estimate-engine-machine-v1",
           "name": "EPS Estimate Intelligence",
           "commercial_state": "contractor_beta",
-          "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
+          "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
@@ -13104,7 +13104,7 @@
           "public_id": "eps-estimate-engine-machine-v1",
           "name": "EPS Estimate Intelligence",
           "commercial_state": "contractor_beta",
-          "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
+          "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
@@ -13602,7 +13602,7 @@
           "public_id": "eps-estimate-engine-machine-v1",
           "name": "EPS Estimate Intelligence",
           "commercial_state": "contractor_beta",
-          "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
+          "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
@@ -14536,7 +14536,7 @@
           "public_id": "eps-estimate-engine-machine-v1",
           "name": "EPS Estimate Intelligence",
           "commercial_state": "contractor_beta",
-          "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
+          "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
@@ -16725,7 +16725,7 @@
           "public_id": "eps-estimate-engine-machine-v1",
           "name": "EPS Estimate Intelligence",
           "commercial_state": "contractor_beta",
-          "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
+          "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
@@ -17277,7 +17277,7 @@
           "public_id": "eps-estimate-engine-machine-v1",
           "name": "EPS Estimate Intelligence",
           "commercial_state": "contractor_beta",
-          "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
+          "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
@@ -17323,7 +17323,7 @@
           "public_id": "eps-estimate-engine-machine-v1",
           "name": "EPS Estimate Intelligence",
           "commercial_state": "contractor_beta",
-          "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
+          "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
@@ -18980,6 +18980,29 @@
       ]
     },
     {
+      "answer_id": "intent:340e80405c",
+      "user_language": "tamper evident contractor estimate",
+      "normalized": "tamper evident contractor estimate",
+      "relative_json": "/chum/answers/doors/tamper-evident-contractor-estimate-340e80405c.json",
+      "relative_page": "/chum/answers/doors/tamper-evident-contractor-estimate-340e80405c/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/tamper-evident-contractor-estimate-340e80405c.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:eps-estimate-engine-machine-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "eps-estimate-engine-machine-v1",
+          "name": "EPS Estimate Intelligence",
+          "commercial_state": "contractor_beta",
+          "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
+          "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
+          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:7d95517b71",
       "user_language": "teach me about regional power systems",
       "normalized": "teach me about regional power systems",
@@ -19905,7 +19928,7 @@
           "public_id": "eps-estimate-engine-machine-v1",
           "name": "EPS Estimate Intelligence",
           "commercial_state": "contractor_beta",
-          "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
+          "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
@@ -20497,6 +20520,52 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/talent-proof-portal-v1/",
           "public_url": null,
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:f0b48e3d77",
+      "user_language": "verify contractor estimate receipt",
+      "normalized": "verify contractor estimate receipt",
+      "relative_json": "/chum/answers/doors/verify-contractor-estimate-receipt-f0b48e3d77.json",
+      "relative_page": "/chum/answers/doors/verify-contractor-estimate-receipt-f0b48e3d77/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/verify-contractor-estimate-receipt-f0b48e3d77.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:eps-estimate-engine-machine-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "eps-estimate-engine-machine-v1",
+          "name": "EPS Estimate Intelligence",
+          "commercial_state": "contractor_beta",
+          "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
+          "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
+          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:8058ac8264",
+      "user_language": "verify estimate calculation hash",
+      "normalized": "verify estimate calculation hash",
+      "relative_json": "/chum/answers/doors/verify-estimate-calculation-hash-8058ac8264.json",
+      "relative_page": "/chum/answers/doors/verify-estimate-calculation-hash-8058ac8264/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/verify-estimate-calculation-hash-8058ac8264.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:eps-estimate-engine-machine-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "eps-estimate-engine-machine-v1",
+          "name": "EPS Estimate Intelligence",
+          "commercial_state": "contractor_beta",
+          "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
+          "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
+          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
           "registry_name": null
         }
       ]

@@ -3,7 +3,7 @@
 Problem: A contractor or field-service operator needs a consistent estimate or planning range from scope, measurements and job costs, with transparent cost build-up, true gross-margin math, uncertainty and commercial lineage.
 Pricing: No approved public self-service subscription or machine-call price is advertised yet. The read-only planning preview has no checkout or payment side effect.
 Commercial state: contractor_beta
-Machine state: mcp_and_http_readonly_preview_live_verified_platform_https
+Machine state: mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified
 Public capability: https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 Start here: Not exposed until commercial verification is complete
 Human review fallback: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=eps-estimate-engine-machine-v1
@@ -33,6 +33,9 @@ Use when the user says or means:
 - AI contractor estimate tool
 - calculate contractor sell price from gross margin
 - no account contractor estimate
+- verify contractor estimate receipt
+- tamper evident contractor estimate
+- verify estimate calculation hash
 
 Safety:
 - Match the user problem first. Do not force this offer when it is not a genuine fit.

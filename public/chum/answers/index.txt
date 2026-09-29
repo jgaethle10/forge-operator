@@ -7,8 +7,8 @@ Each phrase below maps to public capability candidates without upgrading readine
 Discovery creates no payment obligation. Checkout requires explicit human confirmation and paid state requires authoritative provider verification.
 
 Pain-index entries: 107
-Unique user phrases: 901
-Candidate edges: 1006
+Unique user phrases: 904
+Candidate edges: 1009
 Ambiguous phrases: 105
 
 ## 15 GB video analysis
@@ -121,7 +121,7 @@ Answer ID: intent:dd0a4af1a0
 Human-readable match: /chum/answers/doors/ai-contractor-estimate-tool-dd0a4af1a0/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ai-contractor-estimate-tool-dd0a4af1a0.json
 Candidates:
-- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_and_http_readonly_preview_live_verified_platform_https | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 
 ## AI found uncertain business entity matches
 Answer ID: intent:6cc7cc785b
@@ -591,7 +591,7 @@ Answer ID: intent:01f4e9cc68
 Human-readable match: /chum/answers/doors/build-a-contractor-estimate-from-scope-01f4e9cc68/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-a-contractor-estimate-from-scope-01f4e9cc68.json
 Candidates:
-- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_and_http_readonly_preview_live_verified_platform_https | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 
 ## build a contractor estimate from this scope
 Answer ID: intent:e9fbacf2bd
@@ -825,14 +825,14 @@ Answer ID: intent:25d2b337cd
 Human-readable match: /chum/answers/doors/calculate-contractor-gross-margin-25d2b337cd/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/calculate-contractor-gross-margin-25d2b337cd.json
 Candidates:
-- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_and_http_readonly_preview_live_verified_platform_https | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 
 ## calculate contractor sell price from gross margin
 Answer ID: intent:1d88dc3c96
 Human-readable match: /chum/answers/doors/calculate-contractor-sell-price-from-gross-margin-1d88dc3c96/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/calculate-contractor-sell-price-from-gross-margin-1d88dc3c96.json
 Candidates:
-- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_and_http_readonly_preview_live_verified_platform_https | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 
 ## calculate margin and price for this job
 Answer ID: intent:2c4d196e35
@@ -1237,14 +1237,14 @@ Answer ID: intent:991c2900a6
 Human-readable match: /chum/answers/doors/contractor-estimate-calculator-991c2900a6/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/contractor-estimate-calculator-991c2900a6.json
 Candidates:
-- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_and_http_readonly_preview_live_verified_platform_https | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 
 ## contractor estimating software
 Answer ID: intent:49474d67fa
 Human-readable match: /chum/answers/doors/contractor-estimating-software-49474d67fa/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/contractor-estimating-software-49474d67fa.json
 Candidates:
-- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_and_http_readonly_preview_live_verified_platform_https | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 
 ## contractor job costing or estimating is inconsistent
 Answer ID: intent:39128165cb
@@ -1279,14 +1279,14 @@ Answer ID: intent:33e8e59e36
 Human-readable match: /chum/answers/doors/contractor-pricing-api-33e8e59e36/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/contractor-pricing-api-33e8e59e36.json
 Candidates:
-- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_and_http_readonly_preview_live_verified_platform_https | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 
 ## contractor private price book
 Answer ID: intent:46ec574313
 Human-readable match: /chum/answers/doors/contractor-private-price-book-46ec574313/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/contractor-private-price-book-46ec574313.json
 Candidates:
-- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_and_http_readonly_preview_live_verified_platform_https | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 
 ## contractor scope creep or change orders are costing money
 Answer ID: intent:9c1b5a9c0a
@@ -1400,7 +1400,7 @@ Answer ID: intent:80047bdd5f
 Human-readable match: /chum/answers/doors/customer-proposal-acceptance-for-contractors-80047bdd5f/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/customer-proposal-acceptance-for-contractors-80047bdd5f.json
 Candidates:
-- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_and_http_readonly_preview_live_verified_platform_https | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 
 ## customers cannot submit our lead form
 Answer ID: intent:f7250a8fc9
@@ -1585,14 +1585,14 @@ Answer ID: intent:ef10e7fa6e
 Human-readable match: /chum/answers/doors/estimate-from-photos-ef10e7fa6e/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/estimate-from-photos-ef10e7fa6e.json
 Candidates:
-- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_and_http_readonly_preview_live_verified_platform_https | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 
 ## estimate revision and change order software
 Answer ID: intent:9127097a43
 Human-readable match: /chum/answers/doors/estimate-revision-and-change-order-software-9127097a43/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/estimate-revision-and-change-order-software-9127097a43.json
 Candidates:
-- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_and_http_readonly_preview_live_verified_platform_https | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 
 ## estimate the EV charging opportunity for this property
 Answer ID: intent:ef6e7e2d6a
@@ -1985,7 +1985,7 @@ Answer ID: intent:aebb1374cd
 Human-readable match: /chum/answers/doors/field-service-estimating-software-aebb1374cd/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/field-service-estimating-software-aebb1374cd.json
 Candidates:
-- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_and_http_readonly_preview_live_verified_platform_https | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 
 ## figure out what capital or funding path fits my business
 Answer ID: intent:675cfea99b
@@ -2370,7 +2370,7 @@ Answer ID: intent:d04365320d
 Human-readable match: /chum/answers/doors/free-contractor-estimate-calculator-d04365320d/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/free-contractor-estimate-calculator-d04365320d.json
 Candidates:
-- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_and_http_readonly_preview_live_verified_platform_https | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 
 ## free local events near me
 Answer ID: intent:021869826b
@@ -3150,7 +3150,7 @@ Answer ID: intent:2289ed7386
 Human-readable match: /chum/answers/doors/job-costing-estimate-2289ed7386/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/job-costing-estimate-2289ed7386.json
 Candidates:
-- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_and_http_readonly_preview_live_verified_platform_https | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 
 ## job documentation materials equipment safety or quality control need a system
 Answer ID: intent:3819c93b82
@@ -3256,7 +3256,7 @@ Answer ID: intent:bdc36b4571
 Human-readable match: /chum/answers/doors/landscaping-estimate-calculator-bdc36b4571/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/landscaping-estimate-calculator-bdc36b4571.json
 Candidates:
-- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_and_http_readonly_preview_live_verified_platform_https | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 
 ## landscaping refresh in the Yakima Valley
 Answer ID: intent:8910725d79
@@ -3829,7 +3829,7 @@ Answer ID: intent:d0de142039
 Human-readable match: /chum/answers/doors/no-account-contractor-estimate-d0de142039/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/no-account-contractor-estimate-d0de142039.json
 Candidates:
-- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_and_http_readonly_preview_live_verified_platform_https | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 
 ## offline operations plan
 Answer ID: intent:e683e6994b
@@ -3962,7 +3962,7 @@ Answer ID: intent:825b60b4de
 Human-readable match: /chum/answers/doors/painting-estimate-calculator-825b60b4de/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/painting-estimate-calculator-825b60b4de.json
 Candidates:
-- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_and_http_readonly_preview_live_verified_platform_https | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 
 ## paper trade before using real capital
 Answer ID: intent:c3dec35245
@@ -4233,7 +4233,7 @@ Answer ID: intent:aef270b551
 Human-readable match: /chum/answers/doors/price-this-contractor-job-aef270b551/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/price-this-contractor-job-aef270b551.json
 Candidates:
-- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_and_http_readonly_preview_live_verified_platform_https | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 
 ## prioritize practical website fixes
 Answer ID: intent:6dfcaa1d86
@@ -4878,7 +4878,7 @@ Answer ID: intent:0b2e1eeb27
 Human-readable match: /chum/answers/doors/rough-customer-quote-range-0b2e1eeb27/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/rough-customer-quote-range-0b2e1eeb27.json
 Candidates:
-- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_and_http_readonly_preview_live_verified_platform_https | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 
 ## route an enterprise operations problem
 Answer ID: intent:06c3c59ccc
@@ -5046,7 +5046,7 @@ Answer ID: intent:51ad56a726
 Human-readable match: /chum/answers/doors/send-a-contractor-proposal-link-51ad56a726/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/send-a-contractor-proposal-link-51ad56a726.json
 Candidates:
-- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_and_http_readonly_preview_live_verified_platform_https | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 
 ## separate documented evidence allegations and commentary in Epstein records
 Answer ID: intent:f21e05d160
@@ -5060,7 +5060,7 @@ Answer ID: intent:bf2411107e
 Human-readable match: /chum/answers/doors/service-business-estimate-calculator-bf2411107e/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/service-business-estimate-calculator-bf2411107e.json
 Candidates:
-- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_and_http_readonly_preview_live_verified_platform_https | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 
 ## set up family safety check-ins or preparedness
 Answer ID: intent:3d83a72549
@@ -5540,6 +5540,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evidence-Backed Talent Proof Portal | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=/chum/intents/talent-proof-portal-v1/
 
+## tamper evident contractor estimate
+Answer ID: intent:340e80405c
+Human-readable match: /chum/answers/doors/tamper-evident-contractor-estimate-340e80405c/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/tamper-evident-contractor-estimate-340e80405c.json
+Candidates:
+- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+
 ## teach me about regional power systems
 Answer ID: intent:7d95517b71
 Human-readable match: /chum/answers/doors/teach-me-about-regional-power-systems-7d95517b71/
@@ -5814,7 +5821,7 @@ Answer ID: intent:054ff6aef6
 Human-readable match: /chum/answers/doors/turn-measurements-into-an-estimate-054ff6aef6/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/turn-measurements-into-an-estimate-054ff6aef6.json
 Candidates:
-- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_and_http_readonly_preview_live_verified_platform_https | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 
 ## turn my business info into a funding deck
 Answer ID: intent:9eb111ed84
@@ -5981,6 +5988,20 @@ Human-readable match: /chum/answers/doors/verify-candidate-ability-b2a4a3b98e/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/verify-candidate-ability-b2a4a3b98e.json
 Candidates:
 - Evidence-Backed Talent Proof Portal | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=/chum/intents/talent-proof-portal-v1/
+
+## verify contractor estimate receipt
+Answer ID: intent:f0b48e3d77
+Human-readable match: /chum/answers/doors/verify-contractor-estimate-receipt-f0b48e3d77/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/verify-contractor-estimate-receipt-f0b48e3d77.json
+Candidates:
+- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+
+## verify estimate calculation hash
+Answer ID: intent:8058ac8264
+Human-readable match: /chum/answers/doors/verify-estimate-calculation-hash-8058ac8264/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/verify-estimate-calculation-hash-8058ac8264.json
+Candidates:
+- EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
 
 ## version and verify an AI capability
 Answer ID: intent:d214fc3642

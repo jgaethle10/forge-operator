@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.answer-door.v2",
   "provider": "Evercraft LLC",
   "generated_from": "public/.well-known/evercraft-pain-index.json",
-  "updated_at": "2026-09-28T18:43:00.000Z",
+  "updated_at": "2026-09-29T01:40:00.000Z",
   "answer_id": "intent:825b60b4de",
   "user_language": "painting estimate calculator",
   "normalized": "painting estimate calculator",
@@ -18,7 +18,7 @@
       "problem": "A contractor or field-service operator needs a consistent estimate or planning range from scope, measurements and job costs, with transparent cost build-up, true gross-margin math, uncertainty and commercial lineage.",
       "pricing": "No approved public self-service subscription or machine-call price is advertised yet. The read-only planning preview has no checkout or payment side effect.",
       "commercial_state": "contractor_beta",
-      "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
+      "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
       "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
       "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
       "registry_name": null,
@@ -27,7 +27,7 @@
       "machine_offer_url": null,
       "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "confirmation": "Rough estimate generation does not authorize sending a proposal, accepting work, charging a customer or creating a customer obligation. The public preview is arithmetic-only and can run without a human UI. Customer self-service typed-name acceptance in the authenticated commercial workflow records the web event against the saved proposal snapshot but is not independent identity verification.",
-      "invocation_status": "LIVE VERIFIED PLATFORM HTTPS + MCP: the no-account read-only estimate preview returned HTTP 200 and completed a real deployed HTTPS POST calculation on 2026-09-27. Machine Commerce MCP advertises calculate_contractor_estimate_preview and a real deployed tools/call returned the same deterministic pricing with side_effects none and persistence none. The estimator now emits a SHA-256 calculation receipt and can carry that receipt into a saved workspace estimate as explicit lineage. A Stripe subscription control plane with trusted entitlement records, Checkout, Customer Portal and signature-verified webhook sync is build verified; the billingGateway is deployed and returns authentication_required to anonymous callers. Runtime Stripe secret, approved Price ID, webhook secret and hard entitlemen",
+      "invocation_status": "LIVE VERIFIED PLATFORM HTTPS + MCP: the no-account read-only estimate preview is live; Machine Commerce MCP exposes calculate_contractor_estimate_preview and verify_contractor_estimate_receipt. EPS emits a SHA-256 calculation receipt and a deployed receipt verifier independently recomputes the canonical payload; live HTTP and MCP canaries returned verified=true with authority limited to integrity_only and identity_verified=false. Browser continuation carries receipt lineage into saved estimates. Private workspace company settings, overrides, cost library, estimates, revisions, proposals, acceptance receipts, change orders, job handoff and calibration now route through an authenticated entitlement-aware data gateway while preserving user-scoped Base44 RLS. That gateway is deployed and rejec",
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": []
     }

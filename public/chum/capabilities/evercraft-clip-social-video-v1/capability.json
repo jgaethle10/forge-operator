@@ -30,7 +30,7 @@
   "live_proof": {
     "product_key": "evercraft-clip",
     "conformance_state": "mcp_registry_live_receipt_backed",
-    "machine_commerce_handoff_state": "verification_required_checkout_not_verified",
+    "machine_commerce_handoff_state": "checkout_control_plane_live_payment_authority_unconfigured",
     "registry_name": "io.github.jgaethle10/evercraft-clip",
     "mcp": null,
     "live_canary_evidence": null,

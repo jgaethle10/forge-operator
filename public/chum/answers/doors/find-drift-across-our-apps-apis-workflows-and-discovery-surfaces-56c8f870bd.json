@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.answer-door.v2",
   "provider": "Evercraft LLC",
   "generated_from": "public/.well-known/evercraft-pain-index.json",
-  "updated_at": "2026-09-28T18:43:00.000Z",
+  "updated_at": "2026-09-29T01:40:00.000Z",
   "answer_id": "intent:56c8f870bd",
   "user_language": "find drift across our apps APIs workflows and discovery surfaces",
   "normalized": "find drift across our apps apis workflows and discovery surfaces",
@@ -27,7 +27,7 @@
       "machine_offer_url": null,
       "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "confirmation": "Public discovery is read-only. Monitoring private repositories, internal systems or customer infrastructure requires explicit scoped authorization. Production changes, payment actions and external communications remain separately gated.",
-      "invocation_status": "LIVE for public machine discovery, deterministic problem matching, read-only pilot handoff, and human-confirmed commercial pilot request capture through Evercraft Machine Commerce. Evercraft's own Sentinel runtime is production-proven on a five-minute resident cycle; customer monitoring begins only after separate scoped onboarding and authorization. A pilot request grants no private access, monitoring authority, payment obligation, production mutation, or external-system authority.",
+      "invocation_status": "LIVE for public machine discovery, deterministic problem matching, read-only pilot handoff, and human-confirmed commercial pilot request capture through Evercraft Machine Commerce. The internal Portfolio Sentinel runtime now has receipt-backed commerce-integrity cycle code for product-native buyer-route reachability, gateway-leak detection and conversion-stage telemetry. Recurring cadence is not claimed until an authorized scheduler is configured and successive runtime receipts prove it. Customer monitoring begins only after separate scoped onboarding and authorization. A pilot request grants no private access, monitoring authority, payment obligation, production mutation, or external-system authority.",
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": []
     },

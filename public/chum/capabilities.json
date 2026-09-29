@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.capability-index.v1",
-  "updated_at": "2026-09-28T19:03:47.122Z",
+  "updated_at": "2026-09-29T02:24:26.467Z",
   "count": 46,
   "sell_now_count": 14,
   "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
@@ -649,7 +649,7 @@
       "public_id": "eps-estimate-engine-machine-v1",
       "name": "EPS Estimate Intelligence",
       "commercial_state": "contractor_beta",
-      "machine_state": "mcp_and_http_readonly_preview_live_verified_platform_https",
+      "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
       "pricing": "No approved public self-service subscription or machine-call price is advertised yet. The read-only planning preview has no checkout or payment side effect.",
       "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
       "page_url": "/chum/capabilities/eps-estimate-engine-machine-v1/",
@@ -686,7 +686,10 @@
         "contractor pricing API",
         "AI contractor estimate tool",
         "calculate contractor sell price from gross margin",
-        "no account contractor estimate"
+        "no account contractor estimate",
+        "verify contractor estimate receipt",
+        "tamper evident contractor estimate",
+        "verify estimate calculation hash"
       ]
     },
     {
@@ -753,7 +756,7 @@
       "live_proof": {
         "product_key": "evercraft-clip",
         "conformance_state": "mcp_registry_live_receipt_backed",
-        "machine_commerce_handoff_state": "verification_required_checkout_not_verified",
+        "machine_commerce_handoff_state": "checkout_control_plane_live_payment_authority_unconfigured",
         "registry_name": "io.github.jgaethle10/evercraft-clip",
         "mcp": null,
         "live_canary_evidence": null,
