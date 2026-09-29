@@ -7,13 +7,13 @@
   },
   "summary": {
     "public_product_count": 61,
-    "explicit_contract_count": 1,
-    "complete_contract_declaration_count": 1,
+    "explicit_contract_count": 2,
+    "complete_contract_declaration_count": 2,
     "incomplete_contract_declaration_count": 0,
-    "missing_contract_count": 60,
+    "missing_contract_count": 59,
     "public_products_with_direct_door": 15,
     "direct_callable_public_products": 13,
-    "direct_door_public_products_without_contract": 14,
+    "direct_door_public_products_without_contract": 13,
     "specialist_doors_not_in_public_product_index": 2
   },
   "priority_queues": {
@@ -26,7 +26,6 @@
       "evercraft-web",
       "faie",
       "findmypart",
-      "forensiscope",
       "ibmi-rescue",
       "roasted",
       "systemia-remote-ops",
@@ -68,7 +67,6 @@
       "faie",
       "findmypart",
       "forensic-record",
-      "forensiscope",
       "global-energy-atlas",
       "globalstat",
       "guardian",
@@ -1316,30 +1314,71 @@
         "direct_callable": true,
         "registry_published": true
       },
-      "contract_state": "missing",
-      "contract_version": null,
+      "contract_state": "complete_declaration",
+      "contract_version": "1.0.0",
+      "owner": "systemia",
       "lane_states": {
-        "authority": "missing",
-        "context": "missing",
-        "meter": "missing",
-        "intake": "missing",
-        "execution": "missing",
-        "relationship": "missing",
-        "receipt_reconciliation": "missing"
+        "authority": "declared",
+        "context": "declared",
+        "meter": "not_required",
+        "intake": "not_required",
+        "execution": "declared",
+        "relationship": "not_required",
+        "receipt_reconciliation": "declared"
       },
-      "gaps": [
-        "product_contract_missing"
-      ],
-      "next_contract_actions": [
-        "declare_authority_contract",
-        "declare_context_contract",
-        "declare_meter_contract_or_not_required",
-        "declare_intake_contract_or_not_required",
-        "declare_execution_contract",
-        "declare_relationship_contract_or_not_required",
-        "declare_receipt_reconciliation_contract"
-      ],
-      "runtime_verified": false
+      "lane_evidence": {
+        "authority": [
+          {
+            "ref": "registry/forensiscope/server.json",
+            "present": true
+          },
+          {
+            "ref": "registry/forensiscope/overflow-contract.json",
+            "present": true
+          }
+        ],
+        "context": [
+          {
+            "ref": "systemia/forensiscope/evidence-graph.mjs",
+            "present": true
+          },
+          {
+            "ref": "systemia/context-fabric/fabric.mjs",
+            "present": true
+          }
+        ],
+        "meter": [],
+        "intake": [],
+        "execution": [
+          {
+            "ref": "registry/forensiscope/server.json",
+            "present": true
+          },
+          {
+            "ref": "public/forensiscope/developers/status.json",
+            "present": true
+          },
+          {
+            "ref": "registry/forensiscope/overflow-contract.json",
+            "present": true
+          }
+        ],
+        "relationship": [],
+        "receipt_reconciliation": [
+          {
+            "ref": "systemia/context-fabric/fabric.mjs",
+            "present": true
+          },
+          {
+            "ref": "systemia/forensiscope/evidence-graph.mjs",
+            "present": true
+          }
+        ]
+      },
+      "gaps": [],
+      "next_contract_actions": [],
+      "runtime_verified": false,
+      "truth_boundary": "Complete declaration and source evidence do not prove live runtime integration. Runtime verification must be produced by product-specific end-to-end receipts."
     },
     {
       "product_key": "global-energy-atlas",
