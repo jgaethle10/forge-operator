@@ -2,14 +2,15 @@
   "schema": "evercraft.opportunity-fabric.runtime.v1",
   "product_key": "opportunity-fabric",
   "name": "Evercraft Opportunity Fabric",
-  "updated_at": "2026-09-27",
+  "updated_at": "2026-09-29",
   "runtime": {
     "provider": "base44",
     "app_id": "6ab85d74fe2093703c6247e0",
-    "checkpoint_id": "6abb212cf0be1b660810cfac",
-    "checkpoint_commit": "8738fe38d4fd50298b4e280da8d1803ac965de37",
+    "checkpoint_id": "6abc09cb3da4f2121023120e",
+    "checkpoint_commit": "6ddb94a9fd87fd0697b33e05af0f46bb12a1600c",
     "public_url": null,
-    "publication_state": "not_claimed_public"
+    "publication_state": "not_claimed_public",
+    "runtime_version": "evercraft-opportunity-fabric-runtime-v1.1.0"
   },
   "verified_capabilities": [
     "metadata-first member profiles",
@@ -35,7 +36,16 @@
     "immutable FormationSnapshot records with participant-edit lock on terms",
     "purpose-bound ProtectedDisclosureGrant records tied to asset fingerprint and immutable formation snapshot",
     "recipient disclosure-grant acceptance is hash-bound",
-    "grant content delivery is locked false in the current app flow"
+    "grant content delivery is locked false in the current app flow",
+    "trusted service-role authority runtime for consequential workflow mutations",
+    "multi-party ExecutionTeam creation from one or more accepted ConnectionRequest records",
+    "counterparty deduplication before team invitations are created",
+    "private TeamInvitation acceptance and decline with evidence receipts",
+    "bounded WorkPackage creation only for a partner who accepted that specific team invitation",
+    "work-package scope and economics are leader-authored while assignee acceptance and progress are identity-checked by the runtime",
+    "work packages can flag protected material as required without disclosing protected content",
+    "multi-party team and work-package flows emit FabricEvent evidence receipts",
+    "all eight protected workflow entities are direct-client mutation locked and written through the trusted runtime"
   ],
   "verification": {
     "app_lint": "pass",
@@ -61,16 +71,22 @@
     },
     "security_smoke": {
       "result": "pass",
+      "trusted_runtime_version": "v1.1.0",
+      "protected_workflow_entities_runtime_write_only": 8,
       "private_contact_fields": 2,
-      "requester_self_acceptance_blocked": true,
-      "vault_owner_scoped": true,
-      "vault_file_upload_path_present": false,
-      "immutable_snapshot_terms_locked": true,
-      "snapshot_delete_admin_only": true,
-      "snapshot_creator_must_be_named_party": true,
-      "independent_snapshot_approval_hashes": true,
-      "purpose_bound_disclosure_grants": true,
-      "grant_content_delivery_locked_false": true
+      "vault_fingerprint_only": true,
+      "immutable_formations_runtime_authoritative": true,
+      "purpose_bound_disclosure_runtime_authoritative": true,
+      "execution_team_source_connections_verified": true,
+      "team_invitation_acceptance_server_authoritative": true,
+      "work_package_assignment_requires_accepted_invite": true,
+      "work_package_progress_requires_assignee": true,
+      "protected_material_disclosed_by_team_flow": false,
+      "protected_file_delivery_enabled": false
+    },
+    "authority_contract_test": {
+      "result": "pass",
+      "runtime_version": "v1.1.0"
     }
   },
   "known_limits": [
@@ -80,8 +96,10 @@
     "protected asset upload/reveal is intentionally not exposed in the public listing flow",
     "fingerprint registration is evidence support and is not represented as copyright registration, patent filing, or dispositive proof of ownership",
     "public deployment URL is not yet claimed",
-    "Current branch source fixes the previously stale Evercraft Network discovery invariant; a fresh connector-triggered GitHub Actions run is not available for the newest connector-authored head, so the invariant was re-evaluated directly against branch files",
-    "Mutual immutable-snapshot approval and disclosure-grant acceptance are technical evidence/consent controls, not signed legal agreements and not authorization for actual protected-file delivery"
+    "Mutual immutable-snapshot approval and disclosure-grant acceptance are technical evidence/consent controls, not signed legal agreements and not authorization for actual protected-file delivery",
+    "Multi-party assembly is verified in the private Base44 runtime but the public transactional UI is still not claimed deployed",
+    "Current multi-party work packages coordinate scope, economics, dependencies and progress but do not execute payment, escrow, legal signature or protected-file delivery",
+    "An accepted team invitation or work package is operational assent only and does not itself grant intellectual-property rights or create a final legal agreement"
   ],
   "release_rule": "Do not claim protected-asset disclosure, final legal enforceability, public deployment, or production payment until separately verified."
 }
