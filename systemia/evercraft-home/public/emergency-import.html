@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#11110f">
+<title>Import Raven Emergency Handoff</title>
+<style>
+:root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#1c1b18;background:#f3f0e8}*{box-sizing:border-box}body{margin:0}.top{background:#11110f;color:#f4efe5;padding:18px 20px;font-size:12px;font-weight:800;letter-spacing:.15em}.shell{max-width:720px;margin:auto;padding:36px 18px 70px}h1{font-family:Georgia,serif;font-weight:400;font-size:40px}.card{background:white;border:1px solid #d7d1c5;padding:22px}.field{margin-bottom:17px}.field label{display:block;font-size:11px;text-transform:uppercase;font-weight:850;letter-spacing:.08em;margin-bottom:7px}.field input,.field textarea{width:100%;padding:14px;border:1px solid #c9c2b5;font:inherit}.field textarea{min-height:140px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}.button{width:100%;padding:15px;border:0;background:#1f1f1b;color:#fff;font:inherit;font-weight:800}.status{margin-top:16px;font-size:13px;line-height:1.55}.fine{font-size:11px;line-height:1.55;color:#777168;margin-top:18px}
+</style>
+</head>
+<body>
+<div class="top">EVERCRAFT · RAVEN NEXUS · EMERGENCY IMPORT</div>
+<main class="shell">
+<h1>Open the sealed handoff.</h1>
+<p>The recovery key is used only in this browser. The browser decrypts the emergency package, immediately submits the recovered Alpaca pair to Raven's normal credential-vault endpoint, then clears the import fields.</p>
+<section class="card">
+<form id="form" autocomplete="off">
+<div class="field"><label for="package">Encrypted handoff</label><textarea id="package" required></textarea></div>
+<div class="field"><label for="recovery">Recovery key</label><input id="recovery" type="password" autocomplete="new-password" required></div>
+<button class="button" id="submit" type="submit">Import into Raven vault</button>
+</form>
+<div class="status" id="status"></div>
+<div class="fine">Neither the recovery key nor plaintext credentials are written to browser storage. The server receives only the same Alpaca credential pair it would receive from the normal authenticated credential form.</div>
+</section>
+</main>
+<script>
+(() => {
+  "use strict";
+  const decoder = new TextDecoder();
+  const encoder = new TextEncoder();
+  const form = document.getElementById("form");
+  const packageInput = document.getElementById("package");
+  const recoveryInput = document.getElementById("recovery");
+  const submit = document.getElementById("submit");
+  const status = document.getElementById("status");
+
+  const fromB64u = (value) => {
+    const padded = String(value).replace(/-/g, "+").replace(/_/g, "/") + "===".slice((String(value).length + 3) % 4);
+    const binary = atob(padded);
+    const bytes = new Uint8Array(binary.length);
+    for (let i=0;i<binary.length;i++) bytes[i] = binary.charCodeAt(i);
+    return bytes;
+  };
+  const decodeJson = (value) => JSON.parse(decoder.decode(fromB64u(value)));
+
+  async function requireSession() {
+    const response = await fetch("/api/session", { cache: "no-store" });
+    if (!response.ok) {
+      location.replace("/");
+      return false;
+    }
+    return true;
+  }
+
+  if (location.hash.startsWith("#RAVEN1.")) packageInput.value = location.hash.slice(1);
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    submit.disabled = true;
+    status.textContent = "Opening sealed handoff…";
+    let apiKeyId = "";
+    let apiSecret = "";
+    try {
+      const packageText = packageInput.value.trim();
+      const recoveryText = recoveryInput.value.trim();
+      if (!packageText.startsWith("RAVEN1.")) throw new Error("handoff_package_invalid");
+      if (!recoveryText.startsWith("RAVEN-KEY1.")) throw new Error("handoff_recovery_key_invalid");
+      const envelope = decodeJson(packageText.slice("RAVEN1.".length));
+      if (envelope.schema !== "evercraft.raven.emergency-handoff.v1") throw new Error("handoff_schema_invalid");
+      if (envelope.provider !== "alpaca" || envelope.environment !== "live") throw new Error("handoff_provider_invalid");
+
+      const rawKey = fromB64u(recoveryText.slice("RAVEN-KEY1.".length));
+      const iv = fromB64u(envelope.encryption.iv);
+      const aad = fromB64u(envelope.encryption.aad);
+      const ciphertext = fromB64u(envelope.encryption.ciphertext);
+      const cryptoKey = await crypto.subtle.importKey("raw", rawKey, { name: "AES-GCM" }, false, ["decrypt"]);
+      const plaintext = await crypto.subtle.decrypt({
+        name: "AES-GCM",
+        iv,
+        additionalData: aad,
+        tagLength: 128
+      }, cryptoKey, ciphertext);
+      const payload = JSON.parse(decoder.decode(plaintext));
+      apiKeyId = String(payload.api_key_id || "");
+      apiSecret = String(payload.api_secret || "");
+
+      packageInput.value = "";
+      recoveryInput.value = "";
+      history.replaceState(null, "", location.pathname + location.search);
+
+      const response = await fetch("/api/credentials/providers/alpaca", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        cache: "no-store",
+        body: JSON.stringify({
+          api_key_id: apiKeyId,
+          api_secret: apiSecret,
+          environment: "live",
+          label: "daytrade-lens"
+        })
+      });
+      const data = await response.json();
+      apiKeyId = "";
+      apiSecret = "";
+      if (!response.ok || !data.ok) throw new Error(data.state || "credential_store_failed");
+      status.textContent = "Imported and sealed in Raven. Reference: " + data.credential.credential_ref + " · fingerprint " + data.credential.credential_fingerprint;
+    } catch (error) {
+      apiKeyId = "";
+      apiSecret = "";
+      status.textContent = "Import failed: " + String(error && error.message ? error.message : error);
+    } finally {
+      submit.disabled = false;
+    }
+  });
+
+  requireSession().catch(() => location.replace("/"));
+})();
+</script>
+</body>
+</html>
