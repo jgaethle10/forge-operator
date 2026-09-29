@@ -15,6 +15,7 @@ import { buyerFrontageUrl } from './systemia/chum/start-corridor.mjs';
 import { createCrawlerRadarStore } from './systemia/chum/crawler-radar.mjs';
 import { registerFallenFamilyRoutes } from './systemia/media-studio/family-http.js';
 import { registerRivetReportGateway } from './systemia/rivet/http-gateway.mjs';
+import { registerHouseholdFabricGateway } from './systemia/household-fabric/http-gateway.mjs';
 import { registerSpecialistHandoffMcps } from './systemia/mcp/specialist-handoff.js';
 
 dotenv.config();
@@ -168,6 +169,7 @@ function rateLimit(maxRequests: number, windowMs: number) {
 
 app.use(express.json({ limit: '10mb', type: ['application/json', 'application/*+json'] }));
 registerRivetReportGateway(app);
+registerHouseholdFabricGateway(app);
 registerSpecialistHandoffMcps(app, { gatewayUrl: machineCommerceGatewayUrl });
 
 const CENTRAL_MACHINE_COMMERCE_MCP =
@@ -188,6 +190,8 @@ const CHUM_DISCOVERY_LINKS = [
   '</feed.json>; rel="alternate"; type="application/feed+json"; title="Evercraft Product Discovery JSON Feed"',
   '</opensearch.xml>; rel="search"; type="application/opensearchdescription+xml"; title="Evercraft Search"',
   '</.well-known/evercraft-syndication.json>; rel="service-desc"; type="application/json"; title="Evercraft Syndication Manifest"',
+  '</.well-known/evercraft-household-fabric.json>; rel="service-desc"; type="application/json"; title="Evercraft Household Fabric Manifest"',
+  '</api/household-fabric/yakima/today>; rel="alternate"; type="application/json"; title="Evercraft Household Fabric Yakima Today"',
   '</.well-known/agent-card.json>; rel="service-desc"; type="application/json"; title="Evercraft A2A Agent Card"',
   '</chum/freshness.xml>; rel="alternate"; type="application/atom+xml"; title="Evercraft CHUM Freshness Feed"',
   '</chum/freshness.json>; rel="alternate"; type="application/json"; title="Evercraft CHUM Freshness State"',
@@ -215,7 +219,8 @@ function isChumDiscoverySurface(pathname: string): boolean {
     pathname === '/api/capabilities' ||
     pathname === '/api/discover' ||
     pathname === '/api/revenue-watershed' ||
-    pathname === '/api/chum/crawler-radar';
+    pathname === '/api/chum/crawler-radar' ||
+    pathname.startsWith('/api/household-fabric/');
 }
 
 app.use((req: Request, res: Response, next: NextFunction) => {
