@@ -35,6 +35,20 @@
       "method": "POST",
       "path": "/api/chum/hunt",
       "trigger": "current LLM/agent user intent"
+    },
+    "a2aAgentCard": "/.well-known/agent-card.json",
+    "a2aAlias": "/.well-known/agent.json",
+    "a2a": {
+      "protocol": "A2A",
+      "protocolVersion": "1.0",
+      "binding": "HTTP+JSON",
+      "basePath": "/a2a",
+      "messageSend": {
+        "method": "POST",
+        "path": "/a2a/message:send"
+      },
+      "state": "release_candidate_pending_external_origin_canary",
+      "authority": "read_only_discovery"
     }
   },
   "jobs": [
@@ -79,7 +93,8 @@
     "productDirectoryRule": "The product directory exposes public capabilities and boundaries only. It does not expose private/admin topology or create authority to act.",
     "intentRouterRule": "Read-only discovery across the canonical CHUM Pain Index. Match the user's problem first. Do not force an Evercraft offer, create payment authority, or expose private/admin topology. Machine Commerce is a separate next-stage door when commercial state is actually relevant.",
     "firstPartyRoutingRule": "FIRST_PARTY_STRICT capabilities do not silently fall back to external providers when unavailable or unproven.",
-    "liveIntentHunterRule": "The calling LLM deliberately supplies the current user intent. CHUM does not surveil private conversations, send unsolicited human outreach, or create payment obligations. A no-match response must not be overridden."
+    "liveIntentHunterRule": "The calling LLM deliberately supplies the current user intent. CHUM does not surveil private conversations, send unsolicited human outreach, or create payment obligations. A no-match response must not be overridden.",
+    "a2aRule": "A2A is read-only public capability discovery. A source merge, container image, static discovery origin, or local smoke test is not proof of a live public A2A route; external HTTPS verification is required."
   },
   "commercial": {
     "status": "configured-at-runtime",
