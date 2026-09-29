@@ -21,6 +21,7 @@ export interface RunwayGen45AdapterConfig {
   outputDir:string;
   verified:boolean;
   commercialRights:'allowed'|'unknown';
+  allowPaidGeneration?:boolean;
   baseUrl?:string;
   pollIntervalMs?:number;
   maxPolls?:number;
@@ -104,6 +105,7 @@ export function createRunwayGen45Adapter(
     async execute(job:VisualModelJob):Promise<VisualExecutionReceipt>{
       validateJob(job);
       if(!config.apiKey?.trim()) throw new Error('runway_api_key_missing');
+      if(config.allowPaidGeneration!==true) throw new Error('runway_paid_generation_not_authorized');
       const fetchImpl=fetcher(config);
       const start=job.references.find(ref=>ref.role==='start_frame');
       const body:any={
