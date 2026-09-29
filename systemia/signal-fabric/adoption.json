@@ -1,15 +1,84 @@
 {
-  "schema":"systemia.signal-fabric.adoption.v1",
-  "default":"required_for_new_automation",
-  "lanes":[
-    {"lane":"engineering_ci","required":true,"adapter":"github-actions","direct_human_notifications":false},
-    {"lane":"deployments_runtime","required":true,"adapter":"runtime-health","direct_human_notifications":false},
-    {"lane":"public_ai_discovery","required":true,"adapter":"chum","direct_human_notifications":false},
-    {"lane":"security","required":true,"adapter":"security-events","direct_human_notifications":false},
-    {"lane":"payments_finance","required":true,"adapter":"finance-events","direct_human_notifications":false,"human_gate_preserved":true},
-    {"lane":"legal_compliance","required":true,"adapter":"compliance-events","direct_human_notifications":false,"human_gate_preserved":true},
-    {"lane":"customer_operations","required":true,"adapter":"customer-ops","direct_human_notifications":false},
-    {"lane":"field_operations","required":true,"adapter":"field-ops","direct_human_notifications":false}
+  "schema": "systemia.signal-fabric.adoption.v1",
+  "default": "required_for_new_automation",
+  "lanes": [
+    {
+      "lane": "engineering_ci",
+      "required": true,
+      "adapter": "github-actions",
+      "direct_human_notifications": false
+    },
+    {
+      "lane": "deployments_runtime",
+      "required": true,
+      "adapter": "runtime-health",
+      "direct_human_notifications": false
+    },
+    {
+      "lane": "public_ai_discovery",
+      "required": true,
+      "adapter": "chum",
+      "direct_human_notifications": false
+    },
+    {
+      "lane": "security",
+      "required": true,
+      "adapter": "security-events",
+      "direct_human_notifications": false
+    },
+    {
+      "lane": "payments_finance",
+      "required": true,
+      "adapter": "finance-events",
+      "direct_human_notifications": false,
+      "human_gate_preserved": true
+    },
+    {
+      "lane": "legal_compliance",
+      "required": true,
+      "adapter": "compliance-events",
+      "direct_human_notifications": false,
+      "human_gate_preserved": true
+    },
+    {
+      "lane": "customer_operations",
+      "required": true,
+      "adapter": "customer-ops",
+      "direct_human_notifications": false
+    },
+    {
+      "lane": "field_operations",
+      "required": true,
+      "adapter": "field-ops",
+      "direct_human_notifications": false
+    },
+    {
+      "lane": "commercial_intelligence",
+      "required": true,
+      "adapter": "one-body-revenue-circulation",
+      "direct_human_notifications": false,
+      "human_gate_preserved": true
+    },
+    {
+      "lane": "publishing_distribution",
+      "required": true,
+      "adapter": "one-body-publication",
+      "direct_human_notifications": false,
+      "human_gate_preserved": true
+    },
+    {
+      "lane": "portfolio_research",
+      "required": true,
+      "adapter": "one-body-portfolio-sentinel",
+      "direct_human_notifications": false
+    },
+    {
+      "lane": "science_safety",
+      "required": true,
+      "adapter": "sentinel-one-body",
+      "direct_human_notifications": false,
+      "human_gate_preserved": true
+    }
   ],
-  "rule":"Systems emit structured signals. Signal Fabric decides whether humans are paged, queued, digested, or only receipted."
+  "rule": "All Evercraft systems emit structured evidence/signals into the shared body. Signal Fabric governs human notification; One-Body routing guarantees shared context, commercial testing, mission routing, fulfillment/distribution routing when authorized, and no silent dead ends."
 }

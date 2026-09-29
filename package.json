@@ -40,7 +40,7 @@
     "test:chum-router": "node systemia/chum/discovery-router.test.mjs",
     "proof:organism": "node systemia/organism/proof.mjs",
     "proof:goal-runtime": "node systemia/organism/goal-runtime.proof.mjs",
-    "proof:systemia": "npm run proof:organism && npm run proof:goal-runtime && npm run proof:goal-store && npm run proof:legacy-rescue-watch && npm run proof:portfolio-sentinel && npm run proof:ibmi-rescue-fulfillment && npm run proof:universal-fulfillment && npm run proof:portfolio-fulfillment-router && npm run proof:portfolio-fulfillment-e2e && npm run proof:portfolio-fulfillment-all",
+    "proof:systemia": "npm run proof:organism && npm run proof:goal-runtime && npm run proof:goal-store && npm run proof:one-body && npm run proof:legacy-rescue-watch && npm run proof:portfolio-sentinel && npm run proof:ibmi-rescue-fulfillment && npm run proof:universal-fulfillment && npm run proof:portfolio-fulfillment-router && npm run proof:portfolio-fulfillment-e2e && npm run proof:portfolio-fulfillment-all",
     "goal": "node systemia/organism/goal-cli.mjs",
     "proof:goal-store": "node systemia/organism/goal-store.proof.mjs",
     "chum:index": "node systemia/chum/build-pain-index.mjs",
@@ -215,7 +215,8 @@
     "sentinel:cycle": "node systemia/sentinel/resident-runner.mjs --once",
     "sentinel:resident": "node systemia/sentinel/resident-runner.mjs",
     "test:sentinel-region-profiles": "node systemia/sentinel/region-profile.test.mjs",
-    "test:fabric-directory": "node --test tests/evercraft-fabric-runtime.test.mjs"
+    "test:fabric-directory": "node --test tests/evercraft-fabric-runtime.test.mjs",
+    "proof:one-body": "node systemia/organism/one-body.proof.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
