@@ -1149,7 +1149,6 @@ export async function startEvercraftComputeNode({
             teamToken: process.env.RIVET_YARD_TEAM_TOKEN || ''
           });
           const serviceId = `svc_${randomBytes(8).toString('hex')}`;
-          const authHandoffSupported = typeof runtime.createAuthSession === 'function';
           services.set(serviceId, {
             lease_id: body.lease_id,
             workload_class: body.workload_class,
@@ -1239,7 +1238,6 @@ export async function startEvercraftComputeNode({
           });
 
           const serviceId = `svc_${randomBytes(8).toString('hex')}`;
-          const authHandoffSupported = typeof runtime.createAuthSession === 'function';
           services.set(serviceId, {
             lease_id: body.lease_id,
             workload_class: body.workload_class,
@@ -1431,6 +1429,7 @@ export async function startEvercraftComputeNode({
             imageTag: String(body.input?.image_tag || ''),
           });
           const serviceId = `svc_${randomBytes(8).toString('hex')}`;
+          const authHandoffSupported = typeof runtime.createAuthSession === 'function';
           services.set(serviceId, {
             lease_id: body.lease_id,
             workload_class: body.workload_class,
