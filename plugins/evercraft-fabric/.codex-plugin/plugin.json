@@ -1,0 +1,39 @@
+{
+  "name": "evercraft",
+  "version": "1.0.0",
+  "description": "Connect ChatGPT and Codex to the Evercraft/Systemia capability fabric through one truthful, permission-aware front door.",
+  "author": {
+    "name": "Evercraft LLC",
+    "url": "https://github.com/jgaethle10/forge-operator"
+  },
+  "homepage": "https://github.com/jgaethle10/forge-operator",
+  "repository": "https://github.com/jgaethle10/forge-operator",
+  "license": "UNLICENSED",
+  "keywords": [
+    "evercraft",
+    "systemia",
+    "mcp",
+    "ai-tools",
+    "business",
+    "research",
+    "media",
+    "infrastructure",
+    "agents"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Evercraft",
+    "shortDescription": "One front door into the Evercraft capability fabric",
+    "longDescription": "Start from a real problem, discover the smallest truthful Evercraft capability, route into a verified specialist when one exists, and preserve authorization, provenance, evidence, and human confirmation for consequential actions.",
+    "developerName": "Evercraft LLC",
+    "category": "Business",
+    "capabilities": [
+      "Interactive"
+    ],
+    "websiteURL": "https://github.com/jgaethle10/forge-operator",
+    "defaultPrompt": [
+      "Help me solve this through Evercraft. Start from my problem, find the smallest relevant capability, use a verified specialist route when available, and do not create a payment or consequential action without my explicit approval."
+    ]
+  }
+}
