@@ -6,7 +6,7 @@ const nwsFixture = {
   type: 'FeatureCollection',
   features: [{
     id: 'urn:nws:alert:test',
-    geometry: { type: 'Polygon', coordinates: [[[1,2],[3,4],[5,6]]] },
+    geometry: { type: 'Polygon', coordinates: [[[-120.8,46.4],[-120.2,46.4],[-120.2,46.8],[-120.8,46.8],[-120.8,46.4]]] },
     properties: {
       event: 'Tornado Warning',
       headline: 'Synthetic warning fixture',
@@ -29,6 +29,7 @@ assert.equal(nws[0].hazard_state, 'confirmed_hazard');
 assert.equal(nws[0].region_key, 'Example County; Example State');
 assert.equal('geometry' in nws[0], false);
 assert.equal('coordinates' in nws[0], false);
+assert.ok(nws[0].region_group?.startsWith('coarse-grid:1deg:'));
 
 let nwsRequested;
 const fetchedNws = await fetchNwsActiveAlerts({
@@ -73,6 +74,8 @@ assert.equal(usgs[0].region_key, 'Example City, Washington');
 assert.ok(usgs[0].anomaly_score >= 0.88);
 assert.equal('geometry' in usgs[0], false);
 assert.equal('coordinates' in usgs[0], false);
+assert.ok(usgs[0].region_group?.startsWith('coarse-grid:1deg:'));
+assert.equal(usgs[0].region_group, nws[0].region_group);
 
 let usgsRequested;
 const fetchedUsgs = await fetchUsgsEarthquakes({

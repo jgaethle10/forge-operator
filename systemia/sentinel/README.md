@@ -128,3 +128,22 @@ Both parsers intentionally discard source geometry before producing Sentinel obs
 
 The NWS client is a single-request primitive. Any scheduler wrapping it must respect the documented NWS refresh guidance and should not poll more frequently than every 30 seconds.
 
+## Source lineage and regional event graph
+
+Sentinel treats source naming and source independence as different concepts. Multiple adapters can have different `source_family` values while sharing one `independence_group` when they ultimately depend on the same upstream provider. Corroboration thresholds count independence groups, preventing one provider from masquerading as multiple independent witnesses.
+
+Official geospatial adapters may transiently derive a 1-degree coarse cell from public source geometry, then discard the source coordinates. The coarse cell is correlation metadata, not a precision location or intervention coordinate.\n\nThe regional event graph sits above individual incidents. It links incidents only when they are close in time and share either the same coarse region key or an explicitly supplied coarse `region_group`. The graph can therefore recognize that differently named local areas are part of one broader event without retaining exact coordinates.
+
+Graph edges mean co-occurrence, not causation. Regional clusters preserve:
+
+- incident membership
+- coarse regions
+- data-domain breadth
+- upstream independence groups
+- verified-observation counts
+- confirmed-hazard state
+- provenance references
+- unresolved attribution
+
+A cluster can be labeled as an isolated, correlated, cross-domain, or strong cross-domain pattern. Those labels describe evidence structure only. They do not identify an attacker, infer hostile intent, or authorize intervention.
+

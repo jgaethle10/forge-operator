@@ -1,4 +1,5 @@
 import { createFeedAdapter } from '../feed-adapter.mjs';
+import { coarseCellFromGeometry } from '../coarse-geo.mjs';
 
 export const USGS_ALL_HOUR_GEOJSON = 'https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson';
 
@@ -6,6 +7,7 @@ const usgsAdapter = createFeedAdapter({
   adapter_id: 'usgs-earthquake-feed',
   domain: 'environmental',
   source_family: 'usgs-earthquake-feed',
+  independence_group: 'usgs',
   evidence_state: 'verified',
   reliability: 0.98
 });
@@ -52,6 +54,7 @@ export function parseUsgsEarthquakeFeature(feature = {}) {
   if (!Number.isFinite(Number(p.time))) throw new TypeError('USGS earthquake feature is missing time');
 
   const anomaly = scoreFeature(feature);
+  const coarseRegionGroup = coarseCellFromGeometry(feature.geometry);
   return usgsAdapter({
     id: String(id),
     timestamp: new Date(Number(p.time)).toISOString(),
@@ -62,6 +65,7 @@ export function parseUsgsEarthquakeFeature(feature = {}) {
     summary: ('M' + String(p.mag ?? '?') + ' ' + String(p.place || 'earthquake')).slice(0, 280)
   }, {
     region_key: coarsePlace(p.place),
+    region_group: coarseRegionGroup,
     anomaly_score: anomaly,
     evidence_state: 'verified',
     hazard_state: 'unknown'

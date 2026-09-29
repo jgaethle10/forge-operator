@@ -5,6 +5,7 @@ export function buildOperatorPicture(incident) {
 
   const domains = [...new Set((incident.observations || []).map((o) => o.domain))].sort();
   const sourceFamilies = [...new Set((incident.observations || []).map((o) => o.source_family))].sort();
+  const independenceGroups = [...new Set((incident.observations || []).map((o) => o.independence_group || o.source_family))].sort();
 
   const passiveActions = {
     watch: ['continue observation'],
@@ -22,7 +23,9 @@ export function buildOperatorPicture(incident) {
     level: incident.assessment.level,
     confidence: incident.assessment.confidence,
     attribution: 'unresolved',
-    independent_source_families: sourceFamilies.length,
+    independent_source_families: independenceGroups.length,
+    independent_source_groups: independenceGroups,
+    raw_source_families: sourceFamilies.length,
     domains,
     source_families: sourceFamilies,
     verified_observations: incident.assessment.verified_observations,
