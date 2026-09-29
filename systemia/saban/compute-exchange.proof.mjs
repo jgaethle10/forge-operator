@@ -6,7 +6,7 @@ import {
   negotiateCompute,
 } from './compute-exchange.mjs';
 import { createEvercraftBrokerMarketAdapter } from './markets/evercraft-broker.mjs';
-import { buildAkashSDL, uactPerBlockToUsdHour } from './markets/akash.mjs';
+import { buildAkashSDL, normalizeAkashBid, uactPerBlockToUsdHour } from './markets/akash.mjs';
 
 const fingerprint='sha256:'+'a'.repeat(64);
 const fakeYard={
@@ -353,6 +353,45 @@ const unknownVersionDecision=evaluateComputeOffer(
 assert.equal(unknownVersionDecision.eligible,false);
 assert.ok(unknownVersionDecision.reasons.includes('valid_version_required'));
 
+const enrichedAkashBid=normalizeAkashBid(
+  {
+    bid:{
+      id:{dseq:'100',gseq:1,oseq:1,provider:'akash-provider-proof'},
+      price:{denom:'uact',amount:'100'},
+      state:'open',
+    },
+  },
+  normalizeComputeDemand({
+    demand_id:'akash-bid-enrichment',
+    cpu_units:2,
+    memory_mb:2048,
+    storage_gb:5,
+  }),
+  'proof-manifest',
+  {
+    owner:'akash-provider-proof',
+    name:'Provider Proof',
+    hostUri:'https://provider.example',
+    ipRegionCode:'us-west',
+    ipCountryCode:'US',
+    featEndpointIp:true,
+    featPersistentStorage:true,
+    uptime7d:0.998,
+    isAudited:true,
+    isValidVersion:true,
+    lastCheckDate:'2026-09-29T14:00:00Z',
+  }
+);
+assert.equal(enrichedAkashBid.endpoint,'https://provider.example');
+assert.equal(enrichedAkashBid.placement.region,'us-west');
+assert.equal(enrichedAkashBid.placement.country,'US');
+assert.equal(enrichedAkashBid.placement.public_ingress,true);
+assert.equal(enrichedAkashBid.placement.persistent_storage,true);
+assert.equal(enrichedAkashBid.trust.uptime_7d,0.998);
+assert.equal(enrichedAkashBid.trust.audited,true);
+assert.equal(enrichedAkashBid.trust.valid_version,true);
+assert.equal(enrichedAkashBid.metadata.provider_metadata_found,true);
+
 assert.equal(uactPerBlockToUsdHour(100),0.06);
 const sdl=buildAkashSDL(normalizeComputeDemand({
   demand_id:'akash-sdl',
@@ -377,6 +416,7 @@ console.log(JSON.stringify({
   quote_required_before_commercial_lease:true,
   uncertain_lease_requires_manual_reconciliation:true,
   unknown_version_fails_closed:true,
+  akash_quoted_bid_provider_metadata_preserved:true,
   akash_sdl_generated:true,
   uact_cost_conversion_proven:true,
 },null,2));
