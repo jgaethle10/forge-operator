@@ -1134,6 +1134,19 @@ export async function startEvercraftComputeNode({
             return send(res, 422, { error: 'evercraft_identity_secret_required' });
           }
 
+          const identityStateValue = String(
+            body.input?.identity_state_dir ||
+            process.env.EVERCRAFT_IDENTITY_STATE_DIR ||
+            ''
+          ).trim();
+          if (!identityStateValue) {
+            return send(res, 422, { error: 'evercraft_identity_state_dir_required' });
+          }
+          const identityStateRoot = path.resolve(identityStateValue);
+          if (!isWithin(allowedRoot, identityStateRoot)) {
+            return send(res, 403, { error: 'evercraft_identity_state_outside_admitted_root' });
+          }
+
           const passportStateRoot = path.resolve(String(
             body.input?.passport_state_dir ||
             process.env.EVERCRAFT_PASSPORT_STATE_DIR ||
@@ -1162,6 +1175,7 @@ export async function startEvercraftComputeNode({
             authMode: 'passport',
             identitySecret,
             passportStateDir: passportStateRoot,
+            identityStateDir: identityStateRoot,
             yardStateDir: yardStateRoot,
           });
 

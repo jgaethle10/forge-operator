@@ -2,16 +2,44 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
+import { EvercraftIdentity } from "../identity/identity.mjs";
+import { EvercraftPassport } from "../passport/passport.mjs";
 import { startEvercraftComputeNode } from "../compute/runtime-node.mjs";
 import { YardOperator } from "./operator.mjs";
 
 const root = fs.mkdtempSync(path.join(os.tmpdir(), "evercraft-home-yard-"));
+const identityStateDir = path.join(root, "identity");
 const passportStateDir = path.join(root, "passport");
 const yardStateDir = path.join(root, "yard");
+fs.mkdirSync(identityStateDir, { recursive: true, mode: 0o700 });
 fs.mkdirSync(passportStateDir, { recursive: true, mode: 0o700 });
 
+const signingSecret = "proof-only-evercraft-home-secret-0123456789";
 const previousSecret = process.env.EVERCRAFT_IDENTITY_SECRET;
-process.env.EVERCRAFT_IDENTITY_SECRET = "proof-only-evercraft-home-secret";
+process.env.EVERCRAFT_IDENTITY_SECRET = signingSecret;
+
+const identity = new EvercraftIdentity({ stateDir: identityStateDir });
+const bootstrapped = identity.bootstrapOwner({
+  subjectRef: "user:owner-proof",
+  login: "owner",
+  displayName: "Owner",
+  password: "proof password long enough for owner 2026",
+  authorityReceiptRef: "manual:proof-owner-bootstrap",
+});
+
+const passport = new EvercraftPassport({ stateDir: passportStateDir });
+passport.issueGrant({
+  idempotency_key: "home-proof-owner",
+  subject_ref: "user:owner-proof",
+  issuer_ref: "evercraft:identity-authority",
+  product: "evercraft-home",
+  scopes: ["home.read", "home.systemia.read", "home.systemia.plan", "home.yard.read", "home.network.read"],
+  starts_at: new Date(Date.now() - 1000).toISOString(),
+  ends_at: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
+  max_delegation_depth: 1,
+  authority_state: "verified_identity_authority",
+  authority_receipt_ref: bootstrapped.receipt.receipt_hash,
+});
 
 let node;
 try {
@@ -30,6 +58,7 @@ try {
     workloadClass: "systemia.evercraft-home.v1",
     capacityEndpoint: node.endpoint,
     input: {
+      identity_state_dir: identityStateDir,
       passport_state_dir: passportStateDir,
       yard_state_dir: yardStateDir,
     },
@@ -90,6 +119,28 @@ try {
   const routedSession = await fetch(route.origin + "/api/session");
   assert.equal(routedSession.status, 401);
 
+  const login = await fetch(route.origin + "/api/login", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      login: "owner",
+      password: "proof password long enough for owner 2026",
+    }),
+  });
+  assert.equal(login.status, 200);
+  const cookie = login.headers.get("set-cookie");
+  assert.ok(cookie);
+  assert.match(cookie, /HttpOnly/i);
+  assert.match(cookie, /SameSite=Strict/i);
+
+  const authenticated = await fetch(route.origin + "/api/session", {
+    headers: { cookie: cookie.split(";")[0] },
+  });
+  assert.equal(authenticated.status, 200);
+  const authenticatedBody = await authenticated.json();
+  assert.equal(authenticatedBody.subject, "user:owner-proof");
+  assert.equal(authenticatedBody.authority, "evercraft-identity+passport");
+
   const releasedRoute = await edgeClient.releaseLease(route.lease_id, "proof_complete");
   assert.equal(releasedRoute.released, true);
 
@@ -99,6 +150,7 @@ try {
     deployment_id: record.deployment_id,
     health_verification: record.receipt.health_verification,
     route_verification: record.receipt.route_verification,
+    owner_login_verified_through_edge: true,
     public_route_bound: true,
     public_route_mode: "proof_loopback",
     trusted_public_dns_claimed: false,
