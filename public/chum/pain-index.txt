@@ -1224,8 +1224,9 @@ Invocation status: Route through the universal Evercraft discovery surface unles
 Capability ID: product:eps-estimate-engine
 Product key: eps-estimate-engine
 Commercial state: product_contract
-Machine state: discovery_only
+Machine state: specialist_mcp_declared
 Public URL: https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Use when the user means:
 - estimate this service job
 - build a contractor estimate from this scope
@@ -1234,7 +1235,7 @@ Use when the user means:
 - give me a rough customer range
 - calculate margin and price for this job
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
-Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
 
 ## EventWave
 Capability ID: product:eventwave

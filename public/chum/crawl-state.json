@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-29T05:33:53.073Z",
+  "updated_at": "2026-09-29T05:34:42.337Z",
   "url_count": 2628,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -39,8 +39,8 @@
     },
     "/chum/capabilities.json": {
       "path": "/chum/capabilities.json",
-      "content_sha256": "67a8b2b4fad2f0497693886dfd621505fd2dbcfa9927d2867c4df26cc0f9b3e3",
-      "last_changed": "2026-09-29T05:30:59.043Z",
+      "content_sha256": "6aadf6f0a30dc111e836b5df66dafe5e4f318d3315c86401468ab9c4965dfa54",
+      "last_changed": "2026-09-29T05:34:42.337Z",
       "priority": 80
     },
     "/chum/sell-now.html": {
@@ -93,32 +93,32 @@
     },
     "/chum/pain-index.json": {
       "path": "/chum/pain-index.json",
-      "content_sha256": "66b593373d587279d728b7e1d3c01b670c450dfd049164af6dca6d4f5864eecf",
-      "last_changed": "2026-09-29T05:30:59.043Z",
+      "content_sha256": "450f5a0c686939301a922b425d1d878e7351f7ba5fb0d55f7acab36f4f70d43f",
+      "last_changed": "2026-09-29T05:34:42.337Z",
       "priority": 80
     },
     "/chum/pain-index.txt": {
       "path": "/chum/pain-index.txt",
-      "content_sha256": "2f5f1f3fb271e829df061d7be5afcc21663c99b2cdd07e7b267aa9b400bb7318",
-      "last_changed": "2026-09-29T05:30:59.043Z",
+      "content_sha256": "7bf430c4afb994dc9acebf7702ad45b20fdde5ca49d0216bca60912651ef5478",
+      "last_changed": "2026-09-29T05:34:42.337Z",
       "priority": 80
     },
     "/chum/answers/": {
       "path": "/chum/answers/",
-      "content_sha256": "d1a7412980706d8d8871c84c08336ec3a34d6bcf3910df0fe54b9ccb6ff5b5c1",
-      "last_changed": "2026-09-29T05:30:59.043Z",
+      "content_sha256": "cedefe85eb23f81ca2823d4233e78cf9532a1a65b45548c43a76e4c01297434a",
+      "last_changed": "2026-09-29T05:34:42.337Z",
       "priority": 80
     },
     "/chum/answers/index.json": {
       "path": "/chum/answers/index.json",
-      "content_sha256": "2413dacfaf51a30f6896a90774e83abec4896c78cf254022044f258e6511c22f",
-      "last_changed": "2026-09-29T05:30:59.043Z",
+      "content_sha256": "5b3e83a9d626ae560ad61891581656ac1d872f654d13ad82c5cea47c272f990b",
+      "last_changed": "2026-09-29T05:34:42.337Z",
       "priority": 80
     },
     "/chum/answers/index.txt": {
       "path": "/chum/answers/index.txt",
-      "content_sha256": "e91da3b4f4cf9097397f556175f75e0f4ff55d3429a01b57d80fbe8cb0de6b44",
-      "last_changed": "2026-09-29T05:30:59.043Z",
+      "content_sha256": "612ac3216e1f50b596c56c92199e2e72083564eaba1fc33f2b0c1fc78d3cd72a",
+      "last_changed": "2026-09-29T05:34:42.337Z",
       "priority": 80
     },
     "/chum/answers/observed/": {
@@ -141,8 +141,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "977f9a5eab0257128fe390b70debf156bf203cbeed9ec8ea6ea4d7d3004d47ff",
-      "last_changed": "2026-09-29T05:33:53.073Z",
+      "content_sha256": "acf80e170d6f469114cae96ab9e4b1cbb8e0c72a31e6a2e8825dc77dac90c455",
+      "last_changed": "2026-09-29T05:34:42.337Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -339,8 +339,8 @@
     },
     "/.well-known/evercraft-pain-index.json": {
       "path": "/.well-known/evercraft-pain-index.json",
-      "content_sha256": "66b593373d587279d728b7e1d3c01b670c450dfd049164af6dca6d4f5864eecf",
-      "last_changed": "2026-09-29T05:30:59.043Z",
+      "content_sha256": "450f5a0c686939301a922b425d1d878e7351f7ba5fb0d55f7acab36f4f70d43f",
+      "last_changed": "2026-09-29T05:34:42.337Z",
       "priority": 90
     },
     "/rivet/discovery.json": {
@@ -1449,14 +1449,14 @@
     },
     "/chum/capabilities/eps-estimate-engine-machine-v1/llms.txt": {
       "path": "/chum/capabilities/eps-estimate-engine-machine-v1/llms.txt",
-      "content_sha256": "b4f4841e91956bfac0cb1f69bcde681161fd19f22483769f147ed2059e7769fc",
-      "last_changed": "2026-09-29T02:24:28.186Z",
+      "content_sha256": "421ff8bb94d463f90d28317c6b2090f47b5b691db65f22fb10209de6fd6b4a78",
+      "last_changed": "2026-09-29T05:34:42.337Z",
       "priority": 96
     },
     "/chum/capabilities/eps-estimate-engine-machine-v1/capability.json": {
       "path": "/chum/capabilities/eps-estimate-engine-machine-v1/capability.json",
-      "content_sha256": "3140db4bf5f6b6949846c4ec7b6999e3c788edd331fc814f92a826a5fd3b1882",
-      "last_changed": "2026-09-29T02:24:28.186Z",
+      "content_sha256": "bb9c551b8a83017c13b13c5add3bfc3d0c606d3fbc95c0e02a4f5114bb2950a0",
+      "last_changed": "2026-09-29T05:34:42.337Z",
       "priority": 96
     },
     "/chum/capabilities/eps-estimate-engine-machine-v1/schema.jsonld": {
@@ -5271,14 +5271,14 @@
     },
     "/chum/answers/doors/build-a-contractor-estimate-from-this-scope-e9fbacf2bd/": {
       "path": "/chum/answers/doors/build-a-contractor-estimate-from-this-scope-e9fbacf2bd/",
-      "content_sha256": "3c36bb09b68ff5b7288c84b9eeaeca7af2c356d3c0dcdd35628d45270e84bd44",
-      "last_changed": "2026-09-26T03:45:42.293Z",
+      "content_sha256": "7d29ad881a5c7ae86d888d2587c93c1f34ca45533f894afac7b00df273f3de48",
+      "last_changed": "2026-09-29T05:34:42.337Z",
       "priority": 160
     },
     "/chum/answers/doors/build-a-contractor-estimate-from-this-scope-e9fbacf2bd.json": {
       "path": "/chum/answers/doors/build-a-contractor-estimate-from-this-scope-e9fbacf2bd.json",
-      "content_sha256": "c421059e1508c9915d9a1ff56c727861e4c0eac74aec5e99a1fddbe9084b044f",
-      "last_changed": "2026-09-29T02:24:28.186Z",
+      "content_sha256": "df0629404155b9313d2cc13190d2abc74f5dc7b4f6f1245580131438e7d42024",
+      "last_changed": "2026-09-29T05:34:42.337Z",
       "priority": 160
     },
     "/chum/answers/doors/build-a-factual-unwanted-call-incident-timeline-242d097258/": {
@@ -5715,14 +5715,14 @@
     },
     "/chum/answers/doors/calculate-margin-and-price-for-this-job-2c4d196e35/": {
       "path": "/chum/answers/doors/calculate-margin-and-price-for-this-job-2c4d196e35/",
-      "content_sha256": "7e2bcb02723134b1e52789f9346054bcd6708d8ef4ada8704bd577942bc7ecd0",
-      "last_changed": "2026-09-26T03:45:42.293Z",
+      "content_sha256": "1d333f9b0b8d9642d8863ed67b2aa0d5a44f8ccd0f5f856a69bf319bad577ba4",
+      "last_changed": "2026-09-29T05:34:42.337Z",
       "priority": 160
     },
     "/chum/answers/doors/calculate-margin-and-price-for-this-job-2c4d196e35.json": {
       "path": "/chum/answers/doors/calculate-margin-and-price-for-this-job-2c4d196e35.json",
-      "content_sha256": "1058a1fa18a6869b6403d7eeb3a64962672579eec3036a852fa20b548152646f",
-      "last_changed": "2026-09-29T02:24:28.186Z",
+      "content_sha256": "8f1d36a8487ef3de929b7c6e8132b02c5d8d01ac029615b6d34d96b1a955999e",
+      "last_changed": "2026-09-29T05:34:42.337Z",
       "priority": 160
     },
     "/chum/answers/doors/can-my-crews-work-tomorrow-cbf6dd66e5/": {
@@ -7047,14 +7047,14 @@
     },
     "/chum/answers/doors/estimate-this-service-job-4e138afdda/": {
       "path": "/chum/answers/doors/estimate-this-service-job-4e138afdda/",
-      "content_sha256": "b58dbee221a240f4c19e68fb12640eb9ffb5c54d8f6a517b5ef93970da4cd567",
-      "last_changed": "2026-09-26T03:45:42.293Z",
+      "content_sha256": "67703842861e32e2f274cf7eda729e50651dd839ae4123cebb7243258dc5df8b",
+      "last_changed": "2026-09-29T05:34:42.337Z",
       "priority": 160
     },
     "/chum/answers/doors/estimate-this-service-job-4e138afdda.json": {
       "path": "/chum/answers/doors/estimate-this-service-job-4e138afdda.json",
-      "content_sha256": "ea06918be6781ae68c835f2e3dca05ff07815fef8a744b01bd24cdbdb7da69e9",
-      "last_changed": "2026-09-29T02:24:28.186Z",
+      "content_sha256": "eb51c9c5636cc629237b4e6d80d19aa3952028c1caa1ee32d98e98f5d3025958",
+      "last_changed": "2026-09-29T05:34:42.337Z",
       "priority": 160
     },
     "/chum/answers/doors/ev-charger-competition-around-this-address-33f3c50a03/": {
@@ -8559,14 +8559,14 @@
     },
     "/chum/answers/doors/give-me-a-rough-customer-range-fc777ed404/": {
       "path": "/chum/answers/doors/give-me-a-rough-customer-range-fc777ed404/",
-      "content_sha256": "f72cf23bd591f18e5ef764948e8bd24c085ac5b5d34ed83a5e4444c51373ce2f",
-      "last_changed": "2026-09-26T03:45:42.293Z",
+      "content_sha256": "6646a27e329208a5ff07da396f5c085a17e7e325f0bb869d74956c7df9dbc9f7",
+      "last_changed": "2026-09-29T05:34:42.337Z",
       "priority": 100
     },
     "/chum/answers/doors/give-me-a-rough-customer-range-fc777ed404.json": {
       "path": "/chum/answers/doors/give-me-a-rough-customer-range-fc777ed404.json",
-      "content_sha256": "3c68cc1017b304577b70577f2377054e87676c3b8234a471d99bcc0ed4b3fe58",
-      "last_changed": "2026-09-29T02:24:28.186Z",
+      "content_sha256": "720bd9d822e78ac923f634763d3593c3d3fb46348ea73a3f3d594d3d9e3d6860",
+      "last_changed": "2026-09-29T05:34:42.337Z",
       "priority": 100
     },
     "/chum/answers/doors/give-me-a-sourced-validation-memo-8cc2af920b/": {
@@ -14487,14 +14487,14 @@
     },
     "/chum/answers/doors/turn-these-measurements-into-an-estimate-eebe0357b6/": {
       "path": "/chum/answers/doors/turn-these-measurements-into-an-estimate-eebe0357b6/",
-      "content_sha256": "a4eb0f0ca95175070837450ac015535cc0dbcc737f93e53e6fa1415d83e38316",
-      "last_changed": "2026-09-26T03:45:42.293Z",
+      "content_sha256": "f508f4a6885a623cdcdcdd62e3f520621cbeaaa4fa7af764c3f46f854cc86734",
+      "last_changed": "2026-09-29T05:34:42.337Z",
       "priority": 100
     },
     "/chum/answers/doors/turn-these-measurements-into-an-estimate-eebe0357b6.json": {
       "path": "/chum/answers/doors/turn-these-measurements-into-an-estimate-eebe0357b6.json",
-      "content_sha256": "0361dac8d23a30510edf3a8323470a031688387e51560558295b6e95e5479a2b",
-      "last_changed": "2026-09-29T02:24:28.186Z",
+      "content_sha256": "ee2343634b5621c3ad678c4ff7c3f9bbfae6f8d6100b9074bbf839ff161cac8c",
+      "last_changed": "2026-09-29T05:34:42.337Z",
       "priority": 100
     },
     "/chum/answers/doors/turn-this-athlete-or-creator-evidence-into-an-opportunity-dossier-e7b99446da/": {
@@ -15255,14 +15255,14 @@
     },
     "/chum/answers/doors/what-should-this-job-cost-923f227308/": {
       "path": "/chum/answers/doors/what-should-this-job-cost-923f227308/",
-      "content_sha256": "48ac353d9eb0f0cbcb35b79bf3984775727c9b6874beec564ec613f0ec3f5104",
-      "last_changed": "2026-09-26T03:45:42.293Z",
+      "content_sha256": "4e3f22cfd6fda66d5837be2d344eb86b1229db338742fdaf1b77bf5986fec626",
+      "last_changed": "2026-09-29T05:34:42.337Z",
       "priority": 100
     },
     "/chum/answers/doors/what-should-this-job-cost-923f227308.json": {
       "path": "/chum/answers/doors/what-should-this-job-cost-923f227308.json",
-      "content_sha256": "3899b4c110da536692b7dc3a45681fd6488634f4f556273607ad84d67402824b",
-      "last_changed": "2026-09-29T02:24:28.186Z",
+      "content_sha256": "e4d9db0a839955bb4a488e98d7fc33c533ba9471008fabffd359cc5a51584513",
+      "last_changed": "2026-09-29T05:34:42.337Z",
       "priority": 100
     },
     "/chum/answers/doors/where-are-exceptions-slowing-us-down-75c04325df/": {

@@ -17,8 +17,8 @@
   "canonical_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
   "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eps-estimate-engine/llms.txt",
   "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eps-estimate-engine/ai-discovery.json",
-  "registry_name": null,
-  "mcp": null,
+  "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+  "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
   "authority": "public discovery of a bounded field-service estimate engine; rough estimate generation does not authorize proposal delivery, job acceptance or customer obligation",
   "human_confirmation_required": true,
   "boundaries": [
@@ -37,7 +37,13 @@
   "proof_library": null,
   "provider_behavior_state": "not_inferred_from_publication",
   "machine_commerce_handoff_state": null,
-  "machine_commerce_public_id": null,
-  "machine_commerce_tool": null,
-  "live_canary_evidence": null
+  "machine_commerce_public_id": "eps-estimate-engine-machine-v1",
+  "machine_commerce_tool": "calculate_contractor_estimate_preview",
+  "live_canary_evidence": {
+    "estimate_preview_tool_observed": true,
+    "estimate_preview_observed_at": "2026-09-27T23:35:00Z",
+    "receipt_verifier_tool_observed": true,
+    "receipt_verifier_observed_at": "2026-09-28T17:28:00-07:00",
+    "verifier_result_boundary": "verified=true means receipt integrity only; identity_verified=false"
+  }
 }

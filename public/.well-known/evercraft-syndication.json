@@ -144,9 +144,9 @@
       "mirror": "/chum/products/eps-estimate-engine/",
       "llms": "/chum/products/eps-estimate-engine/llms.txt",
       "discovery": "/chum/products/eps-estimate-engine/ai-discovery.json",
-      "registry_name": null,
-      "mcp": null,
-      "content_sha256": "c182687120c2240b10a71bec92f94c2f7185581f89e27eb6657f16a3dfa98a1b"
+      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "content_sha256": "85a73f36a80d68de7bd98d6e532511ef14526fd7f038291354c99da42bb0239c"
     },
     {
       "product_key": "eventwave",

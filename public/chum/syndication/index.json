@@ -276,8 +276,8 @@
       "mirror_path": "/chum/products/eps-estimate-engine/",
       "llms_path": "/chum/products/eps-estimate-engine/llms.txt",
       "discovery_path": "/chum/products/eps-estimate-engine/ai-discovery.json",
-      "registry_name": "",
-      "mcp": "",
+      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "class": "contractor_estimate_and_margin_modeling",
       "intents": [
         "estimate this service job",
@@ -291,7 +291,7 @@
       "human_confirmation_required": true,
       "commercial_status": "",
       "description": "EPS Field-Service Estimate Engine is an Evercraft contractor estimate and margin modeling capability. Common needs: estimate this service job; build a contractor estimate from this scope; what should this job cost; turn these measurements into an estimate.",
-      "content_sha256": "c182687120c2240b10a71bec92f94c2f7185581f89e27eb6657f16a3dfa98a1b",
+      "content_sha256": "85a73f36a80d68de7bd98d6e532511ef14526fd7f038291354c99da42bb0239c",
       "updated_at": "2026-09-28T00:00:00.000Z"
     },
     {

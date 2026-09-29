@@ -660,8 +660,16 @@
       "start_url_state": "not_sell_now",
       "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=eps-estimate-engine-machine-v1",
       "entry_paid_offer": null,
-      "live_proof": null,
-      "live_canary_evidence": null,
+      "live_proof": {
+        "product_key": "eps-estimate-engine",
+        "conformance_state": "live_read_only_mcp_verified",
+        "machine_commerce_handoff_state": null,
+        "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+        "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+        "live_canary_evidence": "[object Object]",
+        "live_read_only_verified": false
+      },
+      "live_canary_evidence": "[object Object]",
       "preferred_agent_route": "universal_fallback",
       "direct_specialist": null,
       "use_when": [

@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.syndication-social-queue.v1",
-  "generated_at": "2026-09-29T05:30:58.879Z",
+  "generated_at": "2026-09-29T05:34:42.173Z",
   "bootstrap": false,
   "policy": "Material product changes enter once per content hash. Publishing still requires an authorized destination adapter.",
   "items": [
@@ -292,6 +292,16 @@
       "discovery_path": "/chum/products/eps-estimate-engine/ai-discovery.json",
       "text": "EPS Field-Service Estimate Engine: EPS Field-Service Estimate Engine is an Evercraft contractor estimate and margin modeling capability. Common needs: estimate this service job; build a contractor estimate from this scope; what should this job cost; turn these measurements into an estimate.",
       "content_sha256": "c182687120c2240b10a71bec92f94c2f7185581f89e27eb6657f16a3dfa98a1b",
+      "requires_authorized_destination": true
+    },
+    {
+      "dedupe_key": "eps-estimate-engine:85a73f36a80d68de7bd98d6e532511ef14526fd7f038291354c99da42bb0239c",
+      "product_key": "eps-estimate-engine",
+      "name": "EPS Field-Service Estimate Engine",
+      "canonical_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+      "discovery_path": "/chum/products/eps-estimate-engine/ai-discovery.json",
+      "text": "EPS Field-Service Estimate Engine: EPS Field-Service Estimate Engine is an Evercraft contractor estimate and margin modeling capability. Common needs: estimate this service job; build a contractor estimate from this scope; what should this job cost; turn these measurements into an estimate.",
+      "content_sha256": "85a73f36a80d68de7bd98d6e532511ef14526fd7f038291354c99da42bb0239c",
       "requires_authorized_destination": true
     },
     {

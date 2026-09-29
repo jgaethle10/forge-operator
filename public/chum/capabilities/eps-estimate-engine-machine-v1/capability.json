@@ -42,8 +42,16 @@
   "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
   "payment_authority": "Stripe subscription control plane is build verified, but the EPS runtime currently has no STRIPE_SECRET_KEY, EPS_STRIPE_PRICE_ID or EPS_STRIPE_WEBHOOK_SECRET configured. Checkout therefore remains unavailable and no public price is approved.",
   "invocation_status": "LIVE VERIFIED PLATFORM HTTPS + MCP: the no-account read-only estimate preview is live; Machine Commerce MCP exposes calculate_contractor_estimate_preview and verify_contractor_estimate_receipt. EPS emits a SHA-256 calculation receipt and a deployed receipt verifier independently recomputes the canonical payload; live HTTP and MCP canaries returned verified=true with authority limited to integrity_only and identity_verified=false. Browser continuation carries receipt lineage into saved estimates. Private workspace company settings, overrides, cost library, estimates, revisions, proposals, acceptance receipts, change orders, job handoff and calibration now route through an authenticated entitlement-aware data gateway while preserving user-scoped Base44 RLS. That gateway is deployed and rejec",
-  "live_proof": null,
-  "live_canary_evidence": null,
+  "live_proof": {
+    "product_key": "eps-estimate-engine",
+    "conformance_state": "live_read_only_mcp_verified",
+    "machine_commerce_handoff_state": null,
+    "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+    "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+    "live_canary_evidence": "[object Object]",
+    "live_read_only_verified": false
+  },
+  "live_canary_evidence": "[object Object]",
   "preferred_agent_route": "universal_fallback",
   "direct_specialist": null,
   "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",

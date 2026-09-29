@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.hot-discovery.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-29T05:33:53.073Z",
+  "updated_at": "2026-09-29T05:34:42.337Z",
   "purpose": "High-priority public discovery surfaces for crawler fan-out. The queue reserves limited cold-start frontage for current commercial and sitemap surfaces, then fills remaining slots by observed priority. This is a crawl-order hint, not a ranking or recommendation claim.",
   "surfaces": [
     {
@@ -339,7 +339,7 @@
       "path": "/.well-known/evercraft-pain-index.json",
       "url": "/.well-known/evercraft-pain-index.json",
       "priority": 90,
-      "last_changed": "2026-09-29T05:30:59.043Z"
+      "last_changed": "2026-09-29T05:34:42.337Z"
     },
     {
       "path": "/chum/revenue.json",
@@ -364,6 +364,42 @@
       "url": "/.well-known/evercraft-machine-catalog.json",
       "priority": 84,
       "last_changed": "2026-09-29T02:27:24.445Z"
+    },
+    {
+      "path": "/chum/answers/doors/build-a-contractor-estimate-from-this-scope-e9fbacf2bd.json",
+      "url": "/chum/answers/doors/build-a-contractor-estimate-from-this-scope-e9fbacf2bd.json",
+      "priority": 160,
+      "last_changed": "2026-09-29T05:34:42.337Z"
+    },
+    {
+      "path": "/chum/answers/doors/build-a-contractor-estimate-from-this-scope-e9fbacf2bd/",
+      "url": "/chum/answers/doors/build-a-contractor-estimate-from-this-scope-e9fbacf2bd/",
+      "priority": 160,
+      "last_changed": "2026-09-29T05:34:42.337Z"
+    },
+    {
+      "path": "/chum/answers/doors/calculate-margin-and-price-for-this-job-2c4d196e35.json",
+      "url": "/chum/answers/doors/calculate-margin-and-price-for-this-job-2c4d196e35.json",
+      "priority": 160,
+      "last_changed": "2026-09-29T05:34:42.337Z"
+    },
+    {
+      "path": "/chum/answers/doors/calculate-margin-and-price-for-this-job-2c4d196e35/",
+      "url": "/chum/answers/doors/calculate-margin-and-price-for-this-job-2c4d196e35/",
+      "priority": 160,
+      "last_changed": "2026-09-29T05:34:42.337Z"
+    },
+    {
+      "path": "/chum/answers/doors/estimate-this-service-job-4e138afdda.json",
+      "url": "/chum/answers/doors/estimate-this-service-job-4e138afdda.json",
+      "priority": 160,
+      "last_changed": "2026-09-29T05:34:42.337Z"
+    },
+    {
+      "path": "/chum/answers/doors/estimate-this-service-job-4e138afdda/",
+      "url": "/chum/answers/doors/estimate-this-service-job-4e138afdda/",
+      "priority": 160,
+      "last_changed": "2026-09-29T05:34:42.337Z"
     },
     {
       "path": "/chum/answers/doors/as-400-modernization-11f60c6d3a.json",
@@ -786,12 +822,6 @@
       "last_changed": "2026-09-29T02:24:28.186Z"
     },
     {
-      "path": "/chum/answers/doors/build-a-contractor-estimate-from-this-scope-e9fbacf2bd.json",
-      "url": "/chum/answers/doors/build-a-contractor-estimate-from-this-scope-e9fbacf2bd.json",
-      "priority": 160,
-      "last_changed": "2026-09-29T02:24:28.186Z"
-    },
-    {
       "path": "/chum/answers/doors/build-a-factual-unwanted-call-incident-timeline-242d097258.json",
       "url": "/chum/answers/doors/build-a-factual-unwanted-call-incident-timeline-242d097258.json",
       "priority": 160,
@@ -926,12 +956,6 @@
     {
       "path": "/chum/answers/doors/buy-workforce-training-seats-for-my-company-acb9a334c3.json",
       "url": "/chum/answers/doors/buy-workforce-training-seats-for-my-company-acb9a334c3.json",
-      "priority": 160,
-      "last_changed": "2026-09-29T02:24:28.186Z"
-    },
-    {
-      "path": "/chum/answers/doors/calculate-margin-and-price-for-this-job-2c4d196e35.json",
-      "url": "/chum/answers/doors/calculate-margin-and-price-for-this-job-2c4d196e35.json",
       "priority": 160,
       "last_changed": "2026-09-29T02:24:28.186Z"
     },
@@ -1178,30 +1202,6 @@
     {
       "path": "/chum/answers/doors/contractor-measurement-tools-22952bd1fe.json",
       "url": "/chum/answers/doors/contractor-measurement-tools-22952bd1fe.json",
-      "priority": 160,
-      "last_changed": "2026-09-29T02:24:28.186Z"
-    },
-    {
-      "path": "/chum/answers/doors/contractor-opportunity-network-e143bcc009.json",
-      "url": "/chum/answers/doors/contractor-opportunity-network-e143bcc009.json",
-      "priority": 160,
-      "last_changed": "2026-09-29T02:24:28.186Z"
-    },
-    {
-      "path": "/chum/answers/doors/contractor-scope-creep-or-change-orders-are-costing-money-9c1b5a9c0a.json",
-      "url": "/chum/answers/doors/contractor-scope-creep-or-change-orders-are-costing-money-9c1b5a9c0a.json",
-      "priority": 160,
-      "last_changed": "2026-09-29T02:24:28.186Z"
-    },
-    {
-      "path": "/chum/answers/doors/conversation-video-timeline-14d07826b9.json",
-      "url": "/chum/answers/doors/conversation-video-timeline-14d07826b9.json",
-      "priority": 160,
-      "last_changed": "2026-09-29T02:24:28.186Z"
-    },
-    {
-      "path": "/chum/answers/doors/conversion-problems-272215f37a.json",
-      "url": "/chum/answers/doors/conversion-problems-272215f37a.json",
       "priority": 160,
       "last_changed": "2026-09-29T02:24:28.186Z"
     }

@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.syndication-state.v1",
-  "updated_at": "2026-09-29T05:30:58.879Z",
+  "updated_at": "2026-09-29T05:34:42.173Z",
   "complete_mirror": true,
   "product_hashes": {
     "aliev": "a29d7233b63011a5152f0c1bbe60c1cba860016bf13e60491c98ff78bb21e0da",
@@ -12,7 +12,7 @@
     "coda-y-codigo": "67e25955b627c3f67d39fc6afc6336fd53a3b55afa07790d65e9c663c4a76c51",
     "daytrade-lens": "99b2a013388ba57ca3284e672db25e8eb91de814b34b455dfcd7457c2d9dc616",
     "ecoledger": "9a8bb27ef01a9bcf144837c161814357f9671f4c1c43ca045ccfabcbefe31394",
-    "eps-estimate-engine": "c182687120c2240b10a71bec92f94c2f7185581f89e27eb6657f16a3dfa98a1b",
+    "eps-estimate-engine": "85a73f36a80d68de7bd98d6e532511ef14526fd7f038291354c99da42bb0239c",
     "eventwave": "ed34317dd97ed87d1072634d3321998ba0e3f82d6a8ce664fd58403c2ccb8679",
     "evercraft-front-door": "f93c7484bab41a3304b29ee38cd53d933b3438ec6675e429c52adbadd3b199db",
     "career-command": "246db80fc88166d96cdcd36b28c559adc2fd62c871cfd78a333efd9d789c5088",
