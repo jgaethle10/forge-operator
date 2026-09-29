@@ -16,10 +16,36 @@ AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 - I have intellectual property but do not want to give it away while looking for partners
 - help me turn this unfinished idea or asset into an executable team
 - find licensing production distribution or collaboration opportunities for work I already made
+- assemble several accepted partners into one execution team
+- break this project into work packages for different partners
+- coordinate a designer printer fulfillment partner and retailer on one project
+- build a music team with a producer studio engineer and videographer
+
+## Verified private multi-party runtime
+
+The private v1.1 runtime can turn multiple already-accepted relationships into one temporary execution team.
+
+Rules:
+
+- every source relationship must already be an accepted connection
+- the trusted runtime derives and deduplicates counterparties rather than trusting client-supplied participant ids
+- every counterparty separately accepts the specific team invitation
+- a work package can be assigned only after that team invitation is accepted
+- the team leader defines the bounded scope and economics
+- the assignee independently accepts the package and reports progress
+- work-package acceptance does not grant IP rights
+- team and work-package flows keep protected material undisclosed
+- actual protected-file delivery remains disabled
+
+Evidence:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/systemia/opportunity-fabric/runtime.json
+
+Reusable contract:
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/systemia/opportunity-fabric/multi-party.md
 
 ## Authority
 
-public capability discovery and metadata-first partner matching architecture; no public protected-asset disclosure or payment authority is claimed
+public capability discovery for metadata-first matching and verified private multi-party execution assembly; no public protected-file delivery, payment, or final legal-agreement authority is claimed
 
 ## Boundaries
 
