@@ -1,0 +1,23 @@
+{
+  "schema_version": "evercraft.registry-publication.receipt.v1",
+  "product_key": "evercraft-machine-commerce",
+  "registry": "Official MCP Registry",
+  "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+  "version": "1.5.1",
+  "manifest": "mcp-registry/evercraft-machine-commerce.json",
+  "remote": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "workflow": {
+    "name": "Publish MCP Registry manifests",
+    "run_id": 36495136179,
+    "publish_job_id": 109173470977,
+    "release_sha": "b0c7b95f8a618b1d230477b92a277ad7480616e9",
+    "conclusion": "success"
+  },
+  "published_at_utc": "2026-09-28T22:57:20Z",
+  "proof": {
+    "official_registry_publish": "success",
+    "publisher_output": "Server io.github.jgaethle10/evercraft-machine-commerce version 1.5.1"
+  },
+  "evidence_state": "receipt_backed",
+  "truth_boundary": "Proves Official MCP Registry publication of Evercraft Machine Commerce 1.5.1. It does not grant payment authority or prove any downstream specialist checkout, payment, fulfillment, or revenue."
+}
