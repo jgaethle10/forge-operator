@@ -64,6 +64,7 @@ Current Home scopes:
 - `home.systemia.plan` — prepare a Systemia mission plan.
 - `home.yard.read` — read sanitized persisted Yard deployment state.
 - `home.network.read` — read evidence-safe Evercraft Network declarations and verification metadata.
+- `home.identity.sessions.manage` — end all Evercraft Home sessions for the authenticated subject.
 
 Home does not issue grants to itself.
 
@@ -102,13 +103,12 @@ The dedicated `Evercraft Home sovereignty` workflow also:
 
 ## Next production slices
 
-1. Evercraft Identity issuer/login ceremony and key rotation.
-2. Owner/operator grant bootstrap through an explicit authority receipt.
-3. Bind the read-only Yard view to the canonical production Yard state directory.
-4. Add private Network telemetry only through an authenticated Network operator API, never through public discovery metadata.
-5. Raven Nexus owned runtime adapter once runtime readiness is evidenced.
-6. Consequential actions through Passport permits + Execution Gate, never directly from the UI.
-7. Evercraft-owned deployment route and domain binding.
+1. Production owner bootstrap on admitted Evercraft capacity with the signing secret/keyring supplied outside source control.
+2. Bind the read-only Yard view to the canonical production Yard state directory.
+3. Add private Network telemetry only through an authenticated Network operator API, never through public discovery metadata.
+4. Raven Nexus owned runtime adapter once runtime readiness is evidenced.
+5. Consequential actions through Passport permits + Execution Gate, never directly from the UI.
+6. Evercraft-owned deployment route and domain binding.
 
 Base44 remains a migration source for legacy applications only and is not part of Home's boot or authority chain.
 
@@ -118,3 +118,10 @@ Base44 remains a migration source for legacy applications only and is not part o
 The initial owner identity is created locally through `systemia/identity/bootstrap-owner.mjs`. It requires an explicit manual authority receipt and reads the password from a permission-restricted local file. The password file should be deleted after successful bootstrap.
 
 Bootstrap also creates the initial `evercraft-home` Passport grant for the owner. Identity still does not own authorization after that point.
+
+
+## Session security
+
+Every production session carries a signing key ID. Home may admit the current signing key plus explicitly configured retiring verification keys during a bounded rotation window. Removing a retiring key immediately causes sessions signed by that key to fail closed.
+
+Normal sign-out revokes the specific server-side session before clearing the browser cookie. The Account Security control uses `home.identity.sessions.manage` to end all prior Home sessions for the authenticated subject. Fresh authentication after the cutoff creates a new valid session.
