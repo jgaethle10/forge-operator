@@ -6,7 +6,7 @@
   "source_schema_version": "2026-09-28.2",
   "gateway_version": "evercraft-machine-commerce-gateway-v0.9.1",
   "source_generated_at": "2026-09-29T01:40:00.000Z",
-  "generated_at": "2026-09-29T18:40:10.917Z",
+  "generated_at": "2026-09-29T19:10:53.329Z",
   "offer_count": 46,
   "sell_now_count": 14,
   "discovery_count": 32,
@@ -761,8 +761,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "No live Network membership payment authority is advertised. Reservation creates no charge. Any future paid activation requires an independently verified billing path and explicit human action.",
       "invocation_status": "LIVE READ-ONLY MCP VERIFIED: production initialize, tools/list, get_network_capabilities, get_network_presence, and prepare_network_handoff all passed the dedicated Evercraft Network canary. The handoff call returned only a tagged human URL and created no enrollment, checkout, payment obligation, device action, carrier action, or emergency authority. Founding Membership billing remains not live.",
-      "catalog_version": "2026-09-29.network-full-readonly-verified",
-      "live_canary_evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/conformance/runtime-observations/2026-09-26-evercraft-network-mcp.json"
+      "catalog_version": "2026-09-29.network-full-readonly-verified"
     },
     {
       "public_id": "evercraft-web-browser-agent-v1",

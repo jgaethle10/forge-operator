@@ -2009,8 +2009,11 @@ Use when the user says or means:
 - break this project into work packages for different partners
 - coordinate a designer printer fulfillment partner and retailer on one project
 - build a music team with a producer studio engineer and videographer
+- figure out which partners I need for this opportunity
+- turn this project into work packages and find matching partners
+- suggest the team for this project
 Authority:
-public capability discovery plus verified private metadata-first multi-party execution assembly; no public protected-file delivery, payment, or final legal-agreement authority is claimed
+public capability discovery plus verified private metadata-first execution planning and multi-party assembly; no public protected-file delivery, payment, or final legal-agreement authority is claimed
 Boundaries:
 - public matching must not require protected creative files or confidential material
 - uploading listing viewing matching or forming a team does not transfer ownership or grant commercial rights
@@ -2022,6 +2025,11 @@ Boundaries:
 - each counterparty must accept the specific team invitation before receiving a work package
 - work-package acceptance does not grant intellectual-property rights or disclose protected material
 - actual protected-file delivery remains disabled
+- execution blueprints use safe opportunity metadata and public member capability metadata only
+- execution blueprints return no private contact information or protected content
+- execution blueprint recommendations are not membership qualification proof agreement authority or license
+- unmatched capabilities remain explicit gaps rather than invented partners
+- suggested candidates still require the protected connection handshake
 
 ### PayFlow
 Product key: payflow

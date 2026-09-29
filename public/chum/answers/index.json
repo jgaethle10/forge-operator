@@ -21,8 +21,8 @@
   },
   "summary": {
     "pain_index_entries": 110,
-    "unique_user_phrases": 942,
-    "mapped_candidate_edges": 1047,
+    "unique_user_phrases": 945,
+    "mapped_candidate_edges": 1050,
     "ambiguous_phrases": 105,
     "product_candidates": 64,
     "machine_offer_candidates": 46
@@ -7147,6 +7147,29 @@
           "pain_page": "/chum/products/deck-capital-fit/",
           "public_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
           "registry_name": "io.github.jgaethle10/deck-capital-fit"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:9c0aa314ff",
+      "user_language": "figure out which partners I need for this opportunity",
+      "normalized": "figure out which partners i need for this opportunity",
+      "relative_json": "/chum/answers/doors/figure-out-which-partners-i-need-for-this-opportunity-9c0aa314ff.json",
+      "relative_page": "/chum/answers/doors/figure-out-which-partners-i-need-for-this-opportunity-9c0aa314ff/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/figure-out-which-partners-i-need-for-this-opportunity-9c0aa314ff.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:opportunity-fabric",
+          "kind": "product",
+          "product_key": "opportunity-fabric",
+          "public_id": null,
+          "name": "Evercraft Opportunity Fabric",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/opportunity-fabric/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric",
+          "registry_name": null
         }
       ]
     },
@@ -19681,6 +19704,29 @@
       ]
     },
     {
+      "answer_id": "intent:6b6332459e",
+      "user_language": "suggest the team for this project",
+      "normalized": "suggest the team for this project",
+      "relative_json": "/chum/answers/doors/suggest-the-team-for-this-project-6b6332459e.json",
+      "relative_page": "/chum/answers/doors/suggest-the-team-for-this-project-6b6332459e/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/suggest-the-team-for-this-project-6b6332459e.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:opportunity-fabric",
+          "kind": "product",
+          "product_key": "opportunity-fabric",
+          "public_id": null,
+          "name": "Evercraft Opportunity Fabric",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/opportunity-fabric/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:19d8b224ce",
       "user_language": "summarize freight risk on this shipment",
       "normalized": "summarize freight risk on this shipment",
@@ -20956,6 +21002,29 @@
           "pain_page": "/chum/products/evercraft-clip/",
           "public_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
           "registry_name": "io.github.jgaethle10/evercraft-clip"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:dec734ac03",
+      "user_language": "turn this project into work packages and find matching partners",
+      "normalized": "turn this project into work packages and find matching partners",
+      "relative_json": "/chum/answers/doors/turn-this-project-into-work-packages-and-find-matching-partners-dec734ac03.json",
+      "relative_page": "/chum/answers/doors/turn-this-project-into-work-packages-and-find-matching-partners-dec734ac03/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/turn-this-project-into-work-packages-and-find-matching-partners-dec734ac03.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:opportunity-fabric",
+          "kind": "product",
+          "product_key": "opportunity-fabric",
+          "public_id": null,
+          "name": "Evercraft Opportunity Fabric",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/opportunity-fabric/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric",
+          "registry_name": null
         }
       ]
     },

@@ -7,8 +7,8 @@ Each phrase below maps to public capability candidates without upgrading readine
 Discovery creates no payment obligation. Checkout requires explicit human confirmation and paid state requires authoritative provider verification.
 
 Pain-index entries: 110
-Unique user phrases: 942
-Candidate edges: 1047
+Unique user phrases: 945
+Candidate edges: 1050
 Ambiguous phrases: 105
 
 ## 15 GB video analysis
@@ -2098,6 +2098,13 @@ Human-readable match: /chum/answers/doors/figure-out-what-capital-or-funding-pat
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/figure-out-what-capital-or-funding-path-fits-my-business-675cfea99b.json
 Candidates:
 - Evercraft Deck Capital Fit | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs
+
+## figure out which partners I need for this opportunity
+Answer ID: intent:9c0aa314ff
+Human-readable match: /chum/answers/doors/figure-out-which-partners-i-need-for-this-opportunity-9c0aa314ff/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/figure-out-which-partners-i-need-for-this-opportunity-9c0aa314ff.json
+Candidates:
+- Evercraft Opportunity Fabric | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric
 
 ## find a discontinued part
 Answer ID: intent:5646da09bb
@@ -5756,6 +5763,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Systemia University | kind=product | commercial=product_contract | machine=discovery_only | public=https://systemia-university.base44.app/
 
+## suggest the team for this project
+Answer ID: intent:6b6332459e
+Human-readable match: /chum/answers/doors/suggest-the-team-for-this-project-6b6332459e/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/suggest-the-team-for-this-project-6b6332459e.json
+Candidates:
+- Evercraft Opportunity Fabric | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric
+
 ## summarize freight risk on this shipment
 Answer ID: intent:19d8b224ce
 Human-readable match: /chum/answers/doors/summarize-freight-risk-on-this-shipment-19d8b224ce/
@@ -6131,6 +6145,13 @@ Human-readable match: /chum/answers/doors/turn-this-interview-into-social-clips-
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/turn-this-interview-into-social-clips-for-facebook-linkedin-and-instagram-47056367b8.json
 Candidates:
 - Evercraft Clip | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
+
+## turn this project into work packages and find matching partners
+Answer ID: intent:dec734ac03
+Human-readable match: /chum/answers/doors/turn-this-project-into-work-packages-and-find-matching-partners-dec734ac03/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/turn-this-project-into-work-packages-and-find-matching-partners-dec734ac03.json
+Candidates:
+- Evercraft Opportunity Fabric | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric
 
 ## turn this recipe into a grocery list
 Answer ID: intent:9dbaeec6e5

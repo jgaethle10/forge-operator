@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.syndication-social-queue.v1",
-  "generated_at": "2026-09-29T19:02:09.855Z",
+  "generated_at": "2026-09-29T19:10:54.831Z",
   "bootstrap": false,
   "policy": "Material product changes enter once per content hash. Publishing still requires an authorized destination adapter.",
   "items": [
@@ -1142,6 +1142,16 @@
       "discovery_path": "/chum/products/opportunity-fabric/ai-discovery.json",
       "text": "Evercraft Opportunity Fabric: Evercraft Opportunity Fabric is an Evercraft protected collaboration partner matching and execution orchestration capability. Common needs: I have designs and need a printer or manufacturing partner; find a production partner for my artwork; I have songs or demos and need a producer or recording studio; find collaborators near me who can help finish this project.",
       "content_sha256": "7ec7061402e57a729144bd3ba0a4da442a6de5465a202d3ac774493ab7ea639e",
+      "requires_authorized_destination": true
+    },
+    {
+      "dedupe_key": "opportunity-fabric:84c22922568c2a272d0b81175c0140675e45a20ac9f9cdd2d8ebe2293857502e",
+      "product_key": "opportunity-fabric",
+      "name": "Evercraft Opportunity Fabric",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric",
+      "discovery_path": "/chum/products/opportunity-fabric/ai-discovery.json",
+      "text": "Evercraft Opportunity Fabric: Evercraft Opportunity Fabric is an Evercraft protected collaboration partner matching and execution orchestration capability. Common needs: I have designs and need a printer or manufacturing partner; find a production partner for my artwork; I have songs or demos and need a producer or recording studio; find collaborators near me who can help finish this project.",
+      "content_sha256": "84c22922568c2a272d0b81175c0140675e45a20ac9f9cdd2d8ebe2293857502e",
       "requires_authorized_destination": true
     },
     {

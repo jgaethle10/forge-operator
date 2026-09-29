@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.syndication-state.v1",
-  "updated_at": "2026-09-29T19:02:09.855Z",
+  "updated_at": "2026-09-29T19:10:54.831Z",
   "complete_mirror": true,
   "product_hashes": {
     "aliev": "a29d7233b63011a5152f0c1bbe60c1cba860016bf13e60491c98ff78bb21e0da",
@@ -27,7 +27,7 @@
     "evercraft-home": "fc710e7e132644a8f2f38bcf1a1b0eb2d89611881172e1a945bfaf224c7c9699",
     "ibmi-rescue": "025a87cea0d19f2e43ad7be12338aff1208f7fa45327ab89715fbe1246038603",
     "evercraft-network": "80c9a230b5daaa1b1e042170604eba051f395a8779f759b1798011f5dbc9212c",
-    "opportunity-fabric": "7ec7061402e57a729144bd3ba0a4da442a6de5465a202d3ac774493ab7ea639e",
+    "opportunity-fabric": "84c22922568c2a272d0b81175c0140675e45a20ac9f9cdd2d8ebe2293857502e",
     "evercraft-physics-atlas": "e469dec438a21b93bfd4abe2728a46ce2fc810c1a4af50f792cc9cc01cd1d59e",
     "evercraft-property-services": "8e9891ffa175cd7969335b6eafba43aacc6dab54ec943e448fc5842e032307d3",
     "revenue-war-map": "938b8968bc1ec33681d5665dffb6778974d3d617c3de36a6481e9ac3b47169fe",

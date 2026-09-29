@@ -61,15 +61,5 @@
     "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/opportunity-fabric/ai-discovery.json",
     "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/opportunity-fabric/ai-conformance.json",
     "page": "/chum/products/opportunity-fabric/"
-  },
-  "execution_blueprint": {
-    "verified_private_runtime": true,
-    "project_owner_required": true,
-    "safe_metadata_only": true,
-    "contact_information_returned": false,
-    "protected_content_used": false,
-    "unmatched_capabilities_preserved": true,
-    "recommendation_is_not_membership": true,
-    "candidate_connection_required": true
   }
 }

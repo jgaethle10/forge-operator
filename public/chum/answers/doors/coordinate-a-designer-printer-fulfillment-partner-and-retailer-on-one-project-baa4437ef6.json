@@ -28,7 +28,7 @@
       "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
-      "authority": "public capability discovery plus verified private metadata-first multi-party execution assembly; no public protected-file delivery, payment, or final legal-agreement authority is claimed",
+      "authority": "public capability discovery plus verified private metadata-first execution planning and multi-party assembly; no public protected-file delivery, payment, or final legal-agreement authority is claimed",
       "boundaries": [
         "public matching must not require protected creative files or confidential material",
         "uploading listing viewing matching or forming a team does not transfer ownership or grant commercial rights",
@@ -39,7 +39,12 @@
         "multi-party team creation requires already-accepted source relationships",
         "each counterparty must accept the specific team invitation before receiving a work package",
         "work-package acceptance does not grant intellectual-property rights or disclose protected material",
-        "actual protected-file delivery remains disabled"
+        "actual protected-file delivery remains disabled",
+        "execution blueprints use safe opportunity metadata and public member capability metadata only",
+        "execution blueprints return no private contact information or protected content",
+        "execution blueprint recommendations are not membership qualification proof agreement authority or license",
+        "unmatched capabilities remain explicit gaps rather than invented partners",
+        "suggested candidates still require the protected connection handshake"
       ]
     }
   ],
