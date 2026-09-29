@@ -31,6 +31,7 @@ export interface ElevenLabsVeoAdapterConfig {
   outputDir:string;
   verified:boolean;
   commercialRights:'allowed'|'unknown';
+  allowPaidGeneration?:boolean;
   baseUrl?:string;
   pollIntervalMs?:number;
   maxPolls?:number;
@@ -136,6 +137,7 @@ export function createElevenLabsVeoAdapter(
     async execute(job:VisualModelJob):Promise<VisualExecutionReceipt>{
       validateJob(job,config);
       if(!config.apiKey?.trim()) throw new Error('elevenlabs_api_key_missing');
+      if(config.allowPaidGeneration!==true) throw new Error('elevenlabs_paid_generation_not_authorized');
       const fetchImpl=fetcher(config);
 
       const body:any={
