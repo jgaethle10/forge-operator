@@ -47,6 +47,7 @@ function publicOffer(offer) {
     public_url_source: sourcePublicUrl ? 'source_catalog' : 'machine_commerce_review_fallback',
     payment_authority: String(offer.payment_authority || ''),
     invocation_status: String(offer.invocation_status || ''),
+    live_canary_evidence: offer.live_canary_evidence ?? null,
     catalog_version: String(offer.catalog_version || '')
   };
 }
