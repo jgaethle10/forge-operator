@@ -44,6 +44,8 @@ Every record must declare one evidence state:
 
 The retrieval layer never upgrades those states. A modeled claim remains modeled after search.
 
+Each record also carries a separate `content_trust_state` such as `trusted_internal_receipt`, `verified_external_evidence`, `untrusted_external`, `derived_summary`, or `unknown`. Retrieval always returns `content_is_instruction: false` and `source_authority_inherited: false`. Remembering content never turns the source into an authority.
+
 ### Append-only history
 
 Updates do not overwrite history. A record may explicitly supersede an earlier record only inside the same namespace, visibility boundary, entity, and predicate.
@@ -88,6 +90,9 @@ A context record contains:
 - visibility
 - Passport read scope
 - source reference and optional source hash
+- source receipt schema and receipt hash when projected from a machine receipt
+- content trust state
+- hard non-instruction / non-authority-inheritance markers
 - content hash
 - observation time
 - optional validity window
@@ -104,6 +109,34 @@ It does not expose the existence or metadata of unauthorized records in query re
 
 It does not persist query text or search history.
 
+## Receipt reconciliation
+
+`receipt-bridge.mjs` closes the operating loop by projecting verified machine receipts back into institutional memory.
+
+The bridge currently accepts:
+
+- completed Evercraft Execution Gate lease receipts
+- accepted Intake Fabric admission packets
+- Systemia mission-admission receipts
+
+Before projection it verifies the receipt hash using the producing component's receipt contract. A tampered receipt fails closed.
+
+The bridge stores **structured summaries**, not arbitrary source instructions. In particular, accepted intake packets do not copy the inbound `intent_excerpt` into institutional memory. The resulting record says what Systemia accepted, where it came from, which capability hints were present, and that no execution authority came from intake.
+
+This creates the loop:
+
+```
+Intake / Systemia / Execution Gate
+        ↓ verified receipts
+Context Receipt Bridge
+        ↓
+Context Fabric institutional memory
+        ↓ authorized retrieval
+future planning and execution
+```
+
+Receipts can become memory. Memory does not become authority.
+
 ## The larger Evercraft stack
 
 ```
@@ -118,6 +151,10 @@ Systemia / specialist agent
 Execution Gate
         ↓
 authorized action
+        ↓ verified outcome receipt
+Context Receipt Bridge
+        ↓
+Context Fabric reconciliation
 ```
 
 The point is not to make every Evercraft system know everything. The point is to let every system receive exactly the context it is permitted to know, with enough evidence lineage to reason responsibly.
