@@ -478,7 +478,7 @@ export async function startOutboundCapacityBroker({
     return id;
   }
 
-  function createServiceRelay({
+  async function createServiceRelay({
     nodeId,
     serviceId,
     ttlMs = 30 * 60_000,
@@ -489,6 +489,19 @@ export async function startOutboundCapacityBroker({
       throw new Error('remote_node_unavailable');
     }
     const service = safeServiceId(serviceId);
+    const healthResult = await queueCommand(node, {
+      method:'GET',
+      route:'/v1/services/' + encodeURIComponent(service) + '/health',
+      body:null,
+      injectAllocatorAuth:false,
+    });
+    if (healthResult.status !== 200 || !healthResult.body?.ok) {
+      throw new Error('remote_service_relay_target_unhealthy');
+    }
+    const targetService = String(healthResult.body.service || '');
+    if (!['evercraft-owned-browser-worker','specialist-handoff-mcp'].includes(targetService)) {
+      throw new Error('remote_service_relay_target_not_bridgeable');
+    }
     const relayId = 'relay_' + randomBytes(12).toString('hex');
     const relayToken = randomBytes(32).toString('hex');
     const createdAt = new Date().toISOString();
@@ -500,6 +513,7 @@ export async function startOutboundCapacityBroker({
       relay_token_hash: sha(relayToken),
       node_id: id,
       service_id: service,
+      target_service: targetService,
       created_at: createdAt,
       expires_at: expiresAt,
     };
@@ -510,6 +524,7 @@ export async function startOutboundCapacityBroker({
       node_id: id,
       device_fingerprint: node.device_fingerprint,
       service_id: service,
+      target_service: targetService,
       created_at: createdAt,
       expires_at: expiresAt,
       relay_token_persisted: false,
