@@ -5,6 +5,9 @@ on:
     paths:
       - 'systemia/core/resident-supervisor.mjs'
       - 'systemia/core/resident-services.json'
+      - 'systemia/sentinel/resident.workflow.json'
+      - 'systemia/sentinel/resident-runner.mjs'
+      - 'systemia/sentinel/resident-cycle.mjs'
       - 'systemia/core/resident-supervisor-runner.mjs'
       - 'systemia/core/resident-supervisor.proof.mjs'
       - 'systemia/core/public-edge-resident-wiring.proof.mjs'
@@ -59,3 +62,5 @@ jobs:
         run: node systemia/core/resident-supervisor.proof.mjs
       - name: Prove public edge supervisor topology
         run: node systemia/core/public-edge-resident-wiring.proof.mjs
+      - name: Prove Sentinel resident registration
+        run: npm run test:sentinel-resident

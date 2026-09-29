@@ -163,3 +163,24 @@ Coverage is summarized by source, data domain, and upstream independence group. 
 
 Official NWS and USGS poll wrappers emit health receipts even when they return zero observations. This lets operators distinguish a healthy zero-event poll from a dead or stale sensor lane.
 
+
+## Resident orchestration
+
+Sentinel is registered as `sentinel-life-safety-watch` in the Systemia Core resident supervisor. The supervisor owns process restart limits and lifecycle. Sentinel itself owns source scheduling, evidence state, incident state, and operator snapshots.
+
+The resident loop:
+
+- polls only sources that are due
+- records every source receipt
+- applies source-specific exponential backoff after repeated errors
+- adds small deterministic jitter to avoid synchronized polling spikes
+- ingests bounded observations
+- retains a bounded incident window
+- re-evaluates source coverage every cycle, even when a source is not due
+- rebuilds the regional event graph
+- emits compact operator pictures and Signal Fabric-compatible records
+- persists state atomically for restart recovery
+
+A failed or stale source can generate a coverage warning. It cannot create an anomaly observation, increase incident confidence, or manufacture an urgent event.
+
+The default resident tick is 30 seconds. Built-in NWS and USGS sources are scheduled no faster than 60 seconds, and errors back off up to a bounded ceiling. `SYSTEMIA_SENTINEL_NWS_AREA` can scope NWS polling to a two-letter area code when a deployment wants regional coverage.
