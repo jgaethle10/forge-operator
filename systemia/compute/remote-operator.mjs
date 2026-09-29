@@ -14,10 +14,19 @@ const sha = (value) => {
 };
 
 const DEFAULT_PROGRAMS = new Set([
-  'git', 'npm', 'npx', 'node',
-  'systemctl', 'journalctl',
-  'ls', 'find', 'grep', 'sed', 'head', 'tail', 'pwd',
-  'cp', 'mv', 'mkdir', 'rm', 'chmod'
+  'git', 'npm', 'systemctl', 'journalctl'
+]);
+
+const GIT_SUBCOMMANDS = new Set([
+  'status', 'fetch', 'pull', 'log', 'diff', 'rev-parse', 'branch'
+]);
+
+const NPM_SUBCOMMANDS = new Set([
+  'install', 'test', 'run', 'start'
+]);
+
+const SYSTEMCTL_SUBCOMMANDS = new Set([
+  'status', 'restart', 'start', 'stop', 'is-active', 'daemon-reload'
 ]);
 
 const SENSITIVE_SEGMENTS = new Set([
@@ -97,14 +106,52 @@ function safeArgs(program, args = []) {
   const values = args.map((value) => String(value));
   if (values.length > 128) throw new Error('operator_args_too_many');
   if (values.some((value) => value.length > 4096)) throw new Error('operator_arg_too_large');
-  if (program === 'node' && values.some((value) =>
-    ['-e', '--eval', '-p', '--print', '-r', '--require', '--import'].includes(value)
-  )) {
-    throw new Error('operator_node_inline_execution_denied');
+  if (values.some((value) => /[\r\n\0]/.test(value))) throw new Error('operator_arg_control_character_denied');
+
+  if (program === 'git') {
+    const subcommand = values[0] || '';
+    if (!GIT_SUBCOMMANDS.has(subcommand)) throw new Error('operator_git_subcommand_denied');
+    if (values.some((value) =>
+      /^-c$|^--config-env(?:=|$)|^--git-dir(?:=|$)|^--work-tree(?:=|$)|^--exec-path(?:=|$)/.test(value)
+    )) {
+      throw new Error('operator_git_configuration_override_denied');
+    }
   }
-  if (program === 'systemctl' && !values.includes('--user')) {
-    throw new Error('operator_systemctl_user_scope_required');
+
+  if (program === 'npm') {
+    const subcommand = values[0] || '';
+    if (!NPM_SUBCOMMANDS.has(subcommand)) throw new Error('operator_npm_subcommand_denied');
+    if (values.some((value) => /^(?:--prefix|--global|-g)(?:=|$)/.test(value))) {
+      throw new Error('operator_npm_scope_override_denied');
+    }
   }
+
+  if (program === 'systemctl') {
+    if (values[0] !== '--user') throw new Error('operator_systemctl_user_scope_required');
+    const subcommand = values[1] || '';
+    if (!SYSTEMCTL_SUBCOMMANDS.has(subcommand)) {
+      throw new Error('operator_systemctl_subcommand_denied');
+    }
+    if (subcommand !== 'daemon-reload') {
+      const units = values.slice(2).filter((value) => !value.startsWith('-'));
+      if (!units.length || units.some((unit) => !/^evercraft-[a-zA-Z0-9_.@-]+(?:\.service)?$/.test(unit))) {
+        throw new Error('operator_systemctl_unit_denied');
+      }
+    }
+  }
+
+  if (program === 'journalctl') {
+    if (!values.includes('--user')) throw new Error('operator_journalctl_user_scope_required');
+    const unitIndex = values.findIndex((value) => value === '-u' || value === '--unit');
+    const unit = unitIndex >= 0 ? values[unitIndex + 1] : '';
+    if (!/^evercraft-[a-zA-Z0-9_.@-]+(?:\.service)?$/.test(String(unit || ''))) {
+      throw new Error('operator_journalctl_unit_denied');
+    }
+    if (values.some((value) => /^--file(?:=|$)|^--directory(?:=|$)|^--root(?:=|$)/.test(value))) {
+      throw new Error('operator_journalctl_source_override_denied');
+    }
+  }
+
   return values;
 }
 
