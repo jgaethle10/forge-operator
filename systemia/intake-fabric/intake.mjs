@@ -527,6 +527,8 @@ export class EvercraftIntakeFabric {
       schema: 'evercraft.intake.systemia-admission-packet.v1',
       candidate_id: id,
       mission_ref: decision.mission_ref,
+      admitted_at: decision.decided_at,
+      source_received_at: candidate.received_at,
       source_type: candidate.source_type,
       source_ref: candidate.source_ref,
       content_ref: candidate.content_ref,
