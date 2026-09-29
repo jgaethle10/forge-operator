@@ -93,3 +93,31 @@ Receipt reconciliation
 ```
 
 The compiler turns missing connective tissue into a machine-readable queue that KAIDANCE, Sentinel, Control Plane, and future product scaffolding can consume.
+
+
+## Executable runtime policies
+
+Capability Mesh now compiles each complete product contract into a runtime policy.
+
+The policy is not a grant. It is the exact machine-readable declaration that downstream Systemia code may use to construct bounded inputs.
+
+For example, the AliEV contract maps:
+
+```
+product_key: aliev
+action: report.generate
+Passport product: rivet
+Meter product: rivet
+Meter metric: site_reports
+Meter quantity: 1 report
+specialist door: aliev
+context namespace: aliev
+```
+
+`buildExecutionGateInput()` turns that declaration into the shape expected by Evercraft Execution Gate. The caller supplies the actor, resource, exact request and Meter subject, while the product contract supplies the scope-to-meter and product-to-specialist semantics.
+
+A caller cannot substitute an undeclared scope or select a different Meter metric.
+
+`buildContextBinding()` similarly exposes the product's Context Fabric namespace and required scopes without granting those scopes.
+
+This shifts product integration from hand-written glue toward **contract-compiled infrastructure**.
