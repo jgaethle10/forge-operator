@@ -34,6 +34,7 @@ export function buildDomainPlan({
   nameservers=[],
   mailHost='mail',
   edgeHost='edge',
+  serviceHosts=[],
   dkimSelector='evercraft1',
   dkimPublicKey='',
   serial=null,
@@ -59,6 +60,11 @@ export function buildDomainPlan({
 
   const mail=cleanHost(mailHost,zone);
   const edge=cleanHost(edgeHost,zone);
+  const services=[...new Set(
+    (Array.isArray(serviceHosts)?serviceHosts:[])
+      .map(host=>cleanHost(host,zone))
+      .filter(host=>host!==zone && host!==mail && host!==edge)
+  )];
   const selector=String(dkimSelector||'').trim().toLowerCase();
   if(!/^[a-z0-9][a-z0-9_-]{0,62}$/.test(selector)) throw new Error('invalid_dkim_selector');
   const dkimKey=String(dkimPublicKey||'').replace(/\s+/g,'').trim();
@@ -74,8 +80,18 @@ export function buildDomainPlan({
   const primary=ns[0].host;
   add('@','SOA',`${fqdn(primary)} hostmaster.${fqdn(zone)} ${zoneSerial} ${soaRefresh} ${soaRetry} ${soaExpire} ${soaMinimum}`);
   for(const server of ns) add('@','NS',fqdn(server.host));
-  if(ipv4){ add('@','A',ipv4); add(mail,'A',ipv4); add(edge,'A',ipv4); }
-  if(ipv6){ add('@','AAAA',ipv6); add(mail,'AAAA',ipv6); add(edge,'AAAA',ipv6); }
+  if(ipv4){
+    add('@','A',ipv4);
+    add(mail,'A',ipv4);
+    add(edge,'A',ipv4);
+    for(const host of services) add(host,'A',ipv4);
+  }
+  if(ipv6){
+    add('@','AAAA',ipv6);
+    add(mail,'AAAA',ipv6);
+    add(edge,'AAAA',ipv6);
+    for(const host of services) add(host,'AAAA',ipv6);
+  }
 
   for(const server of ns){
     if(server.host.endsWith('.'+zone)){
@@ -114,7 +130,7 @@ export function buildDomainPlan({
     domain:zone,
     serial:zoneSerial,
     ttl,
-    public:{ipv4,ipv6,edge_host:edge,mail_host:mail},
+    public:{ipv4,ipv6,edge_host:edge,mail_host:mail,service_hosts:services},
     nameservers:ns,
     mail:{
       mx_host:mail,
@@ -175,6 +191,7 @@ if(import.meta.url===`file://${process.argv[1]}`){
     nameservers,
     mailHost:args['mail-host']||'mail',
     edgeHost:args['edge-host']||'edge',
+    serviceHosts:String(args['service-hosts']||'').split(',').map(x=>x.trim()).filter(Boolean),
     dkimSelector:args['dkim-selector']||'evercraft1',
     dkimPublicKey:args['dkim-public-key']||'',
   });
