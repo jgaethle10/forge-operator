@@ -105,6 +105,7 @@ try {
       state_root: coreRoot,
       yard_state_dir: yardState,
       kaidance_deployment_id: 'kaidance-for-core-proof',
+      sentinel_region_profile: 'yakima-basin-wa',
     },
     rollbackTarget: 'proof:core-supervisor-rollback',
     leaseTtlMs: 120_000,
@@ -116,6 +117,7 @@ try {
   assert.equal(core.receipt.health_verification, 'healthy');
   assert.equal(core.receipt.route_verification, 'private_core_health_verified');
   assert.equal(core.result.supervised_service_count, expectedCoreServiceCount);
+  assert.equal(core.result.sentinel_region_profile, 'yakima-basin-wa');
   assert.ok(core.management.receipt_binding_hash);
   assert.equal(core.discovery.selected_node_id, 'core-compute-proof-node');
   assert.ok(core.discovery.receipt_hash);
@@ -130,6 +132,11 @@ try {
   assert.equal(route.health.failed_count, 0);
   assert.equal(route.health.held_count, 0);
   assert.equal(route.health.deployment_receipt, core.receipt.receipt_hash);
+  const sentinelHealth = route.health.services.find(
+    (service) => service.service_key === 'sentinel-life-safety-watch'
+  );
+  assert.ok(sentinelHealth);
+  assert.equal(['running', 'healthy', 'idle'].includes(sentinelHealth.status), true);
 
   const workspace = path.join(coreRoot, 'workspace');
   const publicEdgeMission = path.join(
@@ -206,6 +213,8 @@ try {
     runtime: 'Evercraft Compute',
     deployment_surface: 'Yard Operator',
     core_supervised_services: expectedCoreServiceCount,
+    sentinel_region_profile_bound: true,
+    sentinel_region_profile: core.result.sentinel_region_profile,
     private_workspace_verified: true,
     public_edge_workspace_verified:true,
     immutable_release_ref_injected:true,
