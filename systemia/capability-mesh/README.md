@@ -121,3 +121,28 @@ A caller cannot substitute an undeclared scope or select a different Meter metri
 `buildContextBinding()` similarly exposes the product's Context Fabric namespace and required scopes without granting those scopes.
 
 This shifts product integration from hand-written glue toward **contract-compiled infrastructure**.
+
+
+## ForensiScope canary contract
+
+ForensiScope is the second explicit product contract, but the contract intentionally stops at the machine surface that is currently proven.
+
+The registry manifest explicitly tells clients to start with `classify_media_route`. Public developer status verifies the remote MCP participates in live initialize/tools-list canaries, while also stating that secure machine media intake remains verification-gated.
+
+Accordingly the current Capability Mesh contract declares:
+
+```
+product_key: forensiscope
+action: classify_media_route
+Passport product: forensiscope
+Meter: not required for route classification
+specialist door: forensiscope
+context namespace: forensiscope
+secure machine media intake: verification-gated
+automatic media transfer: false
+machine media-analysis action: not contracted
+```
+
+Published duration pricing is not converted into a Meter metric, because pricing tiers are not evidence of a machine usage-meter contract. Likewise the existence of internal distributed media proofs does not upgrade the public machine-intake boundary.
+
+This is the intended behavior of Capability Mesh: make the strongest source-supported contract possible, then stop exactly where the evidence stops.
