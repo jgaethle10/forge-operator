@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node server.mjs",
     "test": "node --test *.test.mjs",
-    "check": "node --check server.mjs && node --check credential-vault.mjs && node --check identity.mjs && node --check systemia-adapter.mjs && node --check operations-adapter.mjs && node --test *.test.mjs"
+    "check": "node --check server.mjs && node --check credential-vault.mjs && node --check identity.mjs && node --check systemia-adapter.mjs && node --check operations-adapter.mjs && node --test *.test.mjs && node emergency-handoff.test.mjs",
+    "test:emergency-handoff": "node emergency-handoff.test.mjs"
   }
 }
