@@ -1,0 +1,61 @@
+name: Saban Compute Exchange
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/saban/compute-exchange.mjs'
+      - 'systemia/saban/compute-exchange.proof.mjs'
+      - 'systemia/saban/compute-market-live-pilot.mjs'
+      - 'systemia/saban/markets/**'
+      - 'systemia/saban/README.md'
+      - '.github/workflows/saban-compute-exchange.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/saban/compute-exchange.mjs'
+      - 'systemia/saban/compute-exchange.proof.mjs'
+      - 'systemia/saban/compute-market-live-pilot.mjs'
+      - 'systemia/saban/markets/**'
+      - 'systemia/saban/README.md'
+      - '.github/workflows/saban-compute-exchange.yml'
+  schedule:
+    - cron: '17 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove provider-neutral compute negotiation
+        run: node systemia/saban/compute-exchange.proof.mjs
+      - name: Scan real external compute supply
+        run: node systemia/saban/compute-market-live-pilot.mjs | tee /tmp/saban-compute-market-live.json
+      - name: Publish live market summary
+        run: |
+          node - <<'NODE'
+          const fs=require('fs');
+          const raw=fs.readFileSync('/tmp/saban-compute-market-live.json','utf8');
+          const r=JSON.parse(raw);
+          console.log('providers_seen='+r.providers_seen);
+          console.log('online_offers_seen='+r.online_offers_seen);
+          console.log('eligible_offer_count='+r.eligible_offer_count);
+          console.log('selected_provider='+r.selected_provider.provider_id);
+          console.log('selected_cpu_units='+r.selected_provider.cpu_units);
+          console.log('selected_memory_mb='+r.selected_provider.memory_mb);
+          console.log('selected_uptime_7d='+r.selected_provider.uptime_7d);
+          console.log('paid_lease_created='+r.paid_lease_created);
+          console.log('receipt='+r.receipt_hash);
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: saban-compute-exchange-live
+          path: /tmp/saban-compute-market-live.json
+          if-no-files-found: error
