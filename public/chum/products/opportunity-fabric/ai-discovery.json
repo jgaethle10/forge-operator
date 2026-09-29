@@ -18,9 +18,12 @@
     "assemble several accepted partners into one execution team",
     "break this project into work packages for different partners",
     "coordinate a designer printer fulfillment partner and retailer on one project",
-    "build a music team with a producer studio engineer and videographer"
+    "build a music team with a producer studio engineer and videographer",
+    "figure out which partners I need for this opportunity",
+    "turn this project into work packages and find matching partners",
+    "suggest the team for this project"
   ],
-  "authority": "public capability discovery plus verified private metadata-first multi-party execution assembly; no public protected-file delivery, payment, or final legal-agreement authority is claimed",
+  "authority": "public capability discovery plus verified private metadata-first execution planning and multi-party assembly; no public protected-file delivery, payment, or final legal-agreement authority is claimed",
   "human_confirmation_required": true,
   "boundaries": [
     "public matching must not require protected creative files or confidential material",
@@ -32,7 +35,12 @@
     "multi-party team creation requires already-accepted source relationships",
     "each counterparty must accept the specific team invitation before receiving a work package",
     "work-package acceptance does not grant intellectual-property rights or disclose protected material",
-    "actual protected-file delivery remains disabled"
+    "actual protected-file delivery remains disabled",
+    "execution blueprints use safe opportunity metadata and public member capability metadata only",
+    "execution blueprints return no private contact information or protected content",
+    "execution blueprint recommendations are not membership qualification proof agreement authority or license",
+    "unmatched capabilities remain explicit gaps rather than invented partners",
+    "suggested candidates still require the protected connection handshake"
   ],
   "commercial": null,
   "machine_commerce_handoff": null,
@@ -53,5 +61,15 @@
     "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/opportunity-fabric/ai-discovery.json",
     "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/opportunity-fabric/ai-conformance.json",
     "page": "/chum/products/opportunity-fabric/"
+  },
+  "execution_blueprint": {
+    "verified_private_runtime": true,
+    "project_owner_required": true,
+    "safe_metadata_only": true,
+    "contact_information_returned": false,
+    "protected_content_used": false,
+    "unmatched_capabilities_preserved": true,
+    "recommendation_is_not_membership": true,
+    "candidate_connection_required": true
   }
 }
