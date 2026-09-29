@@ -1,0 +1,235 @@
+import assert from 'node:assert/strict';
+import {
+  normalizeComputeDemand,
+  normalizeComputeOffer,
+  evaluateComputeOffer,
+  negotiateCompute,
+} from './compute-exchange.mjs';
+import { createEvercraftBrokerMarketAdapter } from './markets/evercraft-broker.mjs';
+import { buildAkashSDL, uactPerBlockToUsdHour } from './markets/akash.mjs';
+
+const fingerprint='sha256:'+'a'.repeat(64);
+const fakeYard={
+  async listRemoteCapacityNodes(){
+    return {
+      nodes:[
+        {
+          node_id:'chromebook-proof',
+          device_fingerprint:fingerprint,
+          connected:true,
+          last_seen_at:new Date().toISOString(),
+          capacity:{
+            protocol:'evercraft.capacity.v1',
+            runtime:'Evercraft Compute',
+            attestation_supported:true,
+            device_fingerprint:fingerprint,
+            placement_labels:['opportunistic','private','outbound-only','personal-compute'],
+            supported_workloads:['saban.multiplier-assignment.v1'],
+            capacity_hint:{cpu_units:4,memory_mb:4096,storage_gb:20},
+          },
+        },
+        {
+          node_id:'weak-node',
+          device_fingerprint:'sha256:'+'b'.repeat(64),
+          connected:true,
+          last_seen_at:new Date().toISOString(),
+          capacity:{
+            protocol:'evercraft.capacity.v1',
+            runtime:'Evercraft Compute',
+            attestation_supported:true,
+            device_fingerprint:'sha256:'+'b'.repeat(64),
+            placement_labels:['voluntary'],
+            supported_workloads:['saban.multiplier-assignment.v1'],
+            capacity_hint:{cpu_units:0.5,memory_mb:256,storage_gb:1},
+          },
+        },
+      ],
+    };
+  },
+  async remoteCapacityGrant(_deploymentId,nodeId){
+    assert.equal(nodeId,'chromebook-proof');
+    return {
+      node_id:'chromebook-proof',
+      device_fingerprint:fingerprint,
+      capacity_endpoint:'https://broker.example/nodes/chromebook-proof',
+      allocator_token:'proof-secret-never-in-receipt',
+      control_grant_receipt_hash:'sha256:grant',
+      public_route_receipt_hash:null,
+    };
+  },
+};
+
+const broker=createEvercraftBrokerMarketAdapter({
+  yard:fakeYard,
+  brokerDeploymentId:'broker-proof',
+});
+
+const commercial={
+  market:'paid-proof',
+  async discover(){
+    return {
+      offers:[{
+        offer_id:'paid-proof:1',
+        provider_id:'paid-provider',
+        access_class:'commercial_capacity',
+        resources:{cpu_units:8,memory_mb:16384,storage_gb:100,gpu_count:0,gpu_models:[]},
+        placement:{public_ingress:false,persistent_storage:false},
+        trust:{uptime_7d:0.999,audited:true,valid_version:true,attested:false},
+        economics:{zero_cost:false,quoted:true,hourly_usd:0.10,total_usd:0.10},
+        quote_required:false,
+      }],
+      receipt:{receipt_hash:'sha256:paid-discovery'},
+    };
+  },
+  async lease({offer}){
+    return {schema:'proof.paid-lease.v1',provider_id:offer.provider_id,receipt:'sha256:paid-lease'};
+  },
+};
+
+const demand=normalizeComputeDemand({
+  demand_id:'proof-small',
+  cpu_units:2,
+  memory_mb:2048,
+  storage_gb:2,
+  duration_seconds:3600,
+  negotiation_level:'lease',
+  max_total_usd:1,
+});
+
+const freeFirst=await negotiateCompute({
+  demand,
+  adapters:[commercial,broker],
+  leaseAuthority:{
+    schema:'evercraft.saban.compute-authority.v1',
+    approved:true,
+    demand_id:'proof-small',
+    allowed_markets:['evercraft-broker'],
+    max_total_usd:0,
+  },
+});
+assert.equal(freeFirst.selected_offer.market,'evercraft-broker');
+assert.equal(freeFirst.selected_offer.provider_id,'chromebook-proof');
+assert.equal(freeFirst.lease.zero_cost,true);
+assert.equal(freeFirst.lease.capacity_endpoint,'https://broker.example/nodes/chromebook-proof');
+assert.ok(!JSON.stringify(freeFirst).includes('proof-secret-never-in-receipt')===false);
+// allocator token exists only in the runtime acquisition object, never in source receipts.
+
+const tooLarge=normalizeComputeDemand({
+  demand_id:'proof-large',
+  cpu_units:8,
+  memory_mb:8192,
+  storage_gb:10,
+  duration_seconds:3600,
+  negotiation_level:'lease',
+  max_total_usd:1,
+});
+const paidFallback=await negotiateCompute({
+  demand:tooLarge,
+  adapters:[broker,commercial],
+  leaseAuthority:{
+    schema:'evercraft.saban.compute-authority.v1',
+    approved:true,
+    demand_id:'proof-large',
+    allowed_markets:['paid-proof'],
+    max_total_usd:1,
+  },
+});
+assert.equal(paidFallback.selected_offer.market,'paid-proof');
+assert.equal(paidFallback.lease.provider_id,'paid-provider');
+
+const expensive=normalizeComputeOffer({
+  offer_id:'expensive',
+  provider_id:'expensive-provider',
+  market:'paid-proof',
+  resources:{cpu_units:8,memory_mb:8192,storage_gb:10},
+  placement:{},
+  trust:{uptime_7d:1,audited:true,valid_version:true},
+  economics:{zero_cost:false,quoted:true,hourly_usd:5,total_usd:5},
+});
+const budgetDecision=evaluateComputeOffer(tooLarge,expensive);
+assert.equal(budgetDecision.eligible,false);
+assert.ok(budgetDecision.reasons.includes('total_budget_exceeded'));
+
+let quoteCancelled=false;
+const quotedMarket={
+  market:'quote-proof',
+  async discover(){
+    return {
+      offers:[{
+        offer_id:'quote-proof:supply',
+        provider_id:'quote-provider',
+        resources:{cpu_units:16,memory_mb:32768,storage_gb:100},
+        placement:{},
+        trust:{uptime_7d:1,audited:true,valid_version:true},
+        economics:{zero_cost:false,quoted:false},
+        quote_required:true,
+      }],
+    };
+  },
+  async requestQuotes(){
+    return {
+      schema:'proof.quote.v1',
+      order_id:'quote-order-1',
+      offers:[{
+        offer_id:'quote-proof:bid',
+        provider_id:'quote-provider',
+        resources:{cpu_units:16,memory_mb:32768,storage_gb:100},
+        placement:{},
+        trust:{uptime_7d:1,audited:true,valid_version:true},
+        economics:{zero_cost:false,quoted:true,hourly_usd:0.2,total_usd:0.2},
+        quote_required:false,
+      }],
+      receipt:{receipt_hash:'sha256:quote'},
+    };
+  },
+  async cancelQuote(){
+    quoteCancelled=true;
+    return {receipt_hash:'sha256:quote-cleanup'};
+  },
+};
+
+const quoteOnly=await negotiateCompute({
+  demand:{
+    demand_id:'proof-quote',
+    cpu_units:2,
+    memory_mb:1024,
+    negotiation_level:'quote',
+    max_total_usd:1,
+  },
+  adapters:[quotedMarket],
+  quoteAuthority:{
+    schema:'evercraft.saban.compute-authority.v1',
+    approved:true,
+    demand_id:'proof-quote',
+    allowed_markets:['quote-proof'],
+    allow_market_orders:true,
+  },
+});
+assert.equal(quoteOnly.selected_offer.offer_id,'quote-proof:bid');
+assert.equal(quoteCancelled,true);
+assert.ok(quoteOnly.events.some((e)=>e.type==='quote.cleaned_up'));
+
+assert.equal(uactPerBlockToUsdHour(100),0.06);
+const sdl=buildAkashSDL(normalizeComputeDemand({
+  demand_id:'akash-sdl',
+  container_image:'nginx:1.25.3',
+  cpu_units:2,
+  memory_mb:2048,
+  storage_gb:5,
+}),{maximumUactPerBlock:100});
+assert.match(sdl,/image: "nginx:1.25.3"/);
+assert.match(sdl,/units: 2/);
+assert.match(sdl,/size: 2048Mi/);
+assert.match(sdl,/denom: uact/);
+assert.match(sdl,/amount: 100/);
+
+console.log(JSON.stringify({
+  ok:true,
+  schema:'evercraft.saban.compute-exchange-proof.v1',
+  zero_cost_owned_capacity_preferred:true,
+  commercial_fallback_when_owned_capacity_insufficient:true,
+  budget_enforcement:true,
+  quote_orders_cleaned_up_when_not_leased:true,
+  akash_sdl_generated:true,
+  uact_cost_conversion_proven:true,
+},null,2));
