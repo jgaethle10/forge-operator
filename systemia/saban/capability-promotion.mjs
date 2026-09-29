@@ -67,6 +67,8 @@ export function buildCapabilityPromotionQueue({
       }
     }
 
+    const confRegistryPublished=published(conf?.mcp_registry?.publication_state);
+
     let state='discovery_only_no_machine_offer';
     let priority='P3';
     let next_action='Keep discovery-only until a bounded public execution contract is proven.';
@@ -81,7 +83,6 @@ export function buildCapabilityPromotionQueue({
       next_action='Maintain bounded HTTP canary and consider MCP only when it improves routing without expanding authority.';
     }else{
       const registryMcp=clean(registry?.mcp);
-      const confRegistryPublished=published(conf?.mcp_registry?.publication_state);
       if(registryMcp || confRegistryPublished){
         state='repairable_binding_drift';
         priority='P0';
