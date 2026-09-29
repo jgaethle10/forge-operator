@@ -21,8 +21,8 @@
   },
   "summary": {
     "pain_index_entries": 110,
-    "unique_user_phrases": 934,
-    "mapped_candidate_edges": 1039,
+    "unique_user_phrases": 938,
+    "mapped_candidate_edges": 1043,
     "ambiguous_phrases": 105,
     "product_candidates": 64,
     "machine_offer_candidates": 46
@@ -5376,12 +5376,104 @@
       ]
     },
     {
+      "answer_id": "intent:90f12daa00",
+      "user_language": "earn Nintendo eShop credit through local rewards",
+      "normalized": "earn nintendo eshop credit through local rewards",
+      "relative_json": "/chum/answers/doors/earn-nintendo-eshop-credit-through-local-rewards-90f12daa00.json",
+      "relative_page": "/chum/answers/doors/earn-nintendo-eshop-credit-through-local-rewards-90f12daa00/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/earn-nintendo-eshop-credit-through-local-rewards-90f12daa00.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-rewards",
+          "kind": "product",
+          "product_key": "evercraft-rewards",
+          "public_id": null,
+          "name": "Evercraft Rewards",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-rewards/",
+          "public_url": "https://evercraft-rewards.base44.app/",
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:10cf5def35",
+      "user_language": "earn PlayStation credit through local rewards",
+      "normalized": "earn playstation credit through local rewards",
+      "relative_json": "/chum/answers/doors/earn-playstation-credit-through-local-rewards-10cf5def35.json",
+      "relative_page": "/chum/answers/doors/earn-playstation-credit-through-local-rewards-10cf5def35/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/earn-playstation-credit-through-local-rewards-10cf5def35.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-rewards",
+          "kind": "product",
+          "product_key": "evercraft-rewards",
+          "public_id": null,
+          "name": "Evercraft Rewards",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-rewards/",
+          "public_url": "https://evercraft-rewards.base44.app/",
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
+        }
+      ]
+    },
+    {
       "answer_id": "intent:d04e178d65",
       "user_language": "earn rewards for visiting local businesses",
       "normalized": "earn rewards for visiting local businesses",
       "relative_json": "/chum/answers/doors/earn-rewards-for-visiting-local-businesses-d04e178d65.json",
       "relative_page": "/chum/answers/doors/earn-rewards-for-visiting-local-businesses-d04e178d65/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/earn-rewards-for-visiting-local-businesses-d04e178d65.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-rewards",
+          "kind": "product",
+          "product_key": "evercraft-rewards",
+          "public_id": null,
+          "name": "Evercraft Rewards",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-rewards/",
+          "public_url": "https://evercraft-rewards.base44.app/",
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:df46110239",
+      "user_language": "earn Roblox credit through local rewards",
+      "normalized": "earn roblox credit through local rewards",
+      "relative_json": "/chum/answers/doors/earn-roblox-credit-through-local-rewards-df46110239.json",
+      "relative_page": "/chum/answers/doors/earn-roblox-credit-through-local-rewards-df46110239/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/earn-roblox-credit-through-local-rewards-df46110239.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-rewards",
+          "kind": "product",
+          "product_key": "evercraft-rewards",
+          "public_id": null,
+          "name": "Evercraft Rewards",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-rewards/",
+          "public_url": "https://evercraft-rewards.base44.app/",
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:efb9d28079",
+      "user_language": "earn Xbox credit through local rewards",
+      "normalized": "earn xbox credit through local rewards",
+      "relative_json": "/chum/answers/doors/earn-xbox-credit-through-local-rewards-efb9d28079.json",
+      "relative_page": "/chum/answers/doors/earn-xbox-credit-through-local-rewards-efb9d28079/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/earn-xbox-credit-through-local-rewards-efb9d28079.json",
       "candidate_count": 1,
       "candidates": [
         {

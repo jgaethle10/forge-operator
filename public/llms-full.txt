@@ -1513,13 +1513,19 @@ Use when the user says or means:
 - create cross-business loyalty rewards
 - make my local business more discoverable
 - join a community business partnership program
+- earn PlayStation credit through local rewards
+- earn Xbox credit through local rewards
+- earn Nintendo eShop credit through local rewards
+- earn Roblox credit through local rewards
 Authority:
-public read-only local reward discovery plus account-bound check-ins, Daily Prize Tickets and Game Wallet activity; merchant enrollment is reversible and owner-confirmed through Evercraft Machine Commerce
+public read-only local reward discovery plus account-bound check-ins, Daily Prize Tickets and Game Wallet earning; Game Wallet fulfillment is implemented but production gaming issuance remains gated by provider authorization, credentials, sponsor funding and deployed-runtime verification; merchant enrollment is reversible and owner-confirmed through Evercraft Machine Commerce
 Boundaries:
 - read-only discovery creates no payment obligation
 - a verified geofence check-in proves eligible proximity only and does not prove a purchase, transaction value, ticket purchase or event attendance
 - Daily Prize Ticket selection, issuance, claim and credit state remain separate; ambiguous credit state requires reconciliation instead of automatic double payment
-- gaming redemption remains unavailable until a specific funded and authorized fulfillment rail exists
+- Game Wallet fulfillment keeps reserve, debit intent, points debit, provider request, delivery, refund and reconciliation as separate evidence states
+- a Giftbit adapter is implemented as provider adapter one; implementation does not imply provider partnership, production approval, funded inventory or live issuance
+- gaming redemption remains unavailable until a specific funded and authorized fulfillment rail, provider credential, sponsor budget and deployed runtime are independently verified
 - Evercraft Points are not represented as publisher currency, cash or a direct publisher partnership
 - prepared merchant enrollment does not activate a merchant, offer, discount, public listing or payment obligation
 - merchant directory publication and commercial activation require their own verified state

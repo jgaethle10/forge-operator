@@ -50,6 +50,8 @@ function sourceReleaseRef() {
   const files = [
     'systemia/compute/runtime-node.mjs',
     'systemia/compute/node-seed.mjs',
+    'systemia/compute/remote-operator.mjs',
+    'systemia/network/outbound-node-agent.mjs',
     'systemia/yard/operator.mjs',
     'systemia/core/resident-supervisor.mjs',
     'systemia/collider/runtime.mjs',
@@ -75,6 +77,7 @@ export async function startLocalOrganism({
   graceSeconds = 90,
   remoteBrokerUrl = '',
   remoteAdmissionRetryMs = 5_000,
+  remoteOperatorEnabled = false,
   clipEpsIngressUrl = '',
   clipSharedSecretFile = '',
   placementLabels = ['opportunistic', 'private', 'outbound-only', 'personal-compute'],
@@ -92,6 +95,7 @@ export async function startLocalOrganism({
   const coreRoot = path.join(computeRoot, 'services', 'systemia-core');
   const secretFile = path.join(organismRoot, '.secrets', 'allocator-token');
   const allocatorToken = loadOrCreateSecret(secretFile);
+  const remoteOperatorState = path.join(controlRoot, 'remote-operator');
 
   fs.mkdirSync(organismRoot, { recursive: true, mode: 0o700 });
 
@@ -115,6 +119,12 @@ export async function startLocalOrganism({
     advertiseHost: '127.0.0.1',
     allocatorToken,
     placementLabels,
+    remoteOperatorRoots: remoteOperatorEnabled ? {
+      home: os.homedir(),
+      evercraft: CODE_ROOT,
+      state: organismRoot,
+    } : null,
+    remoteOperatorStateDir: remoteOperatorEnabled ? remoteOperatorState : '',
     announce: false,
   });
 
@@ -239,6 +249,12 @@ export async function startLocalOrganism({
         enrollment_request_receipt: enrollmentRequest.receipt_hash,
         public_ingress: false,
       },
+      remote_operator: {
+        enabled: Boolean(remoteOperatorEnabled),
+        root_keys: remoteOperatorEnabled ? ['home', 'evercraft', 'state'] : [],
+        public_ingress: false,
+        authority: remoteOperatorEnabled ? 'allocator_control_grant_required' : 'disabled',
+      },
       physical_field_certification_claimed: false,
       named_cloud_required: false,
       started_at: new Date().toISOString(),
@@ -351,6 +367,9 @@ if (isCli) {
       '--remote-broker',
       process.env.EVERCRAFT_REMOTE_BROKER_URL || ''
     ),
+    remoteOperatorEnabled: String(
+      process.env.EVERCRAFT_REMOTE_OPERATOR_ENABLED || ''
+    ).toLowerCase() === 'true',
     clipEpsIngressUrl: arg(
       '--clip-eps-ingress-url',
       process.env.EVERCRAFT_CLIP_EPS_INGRESS_URL || ''
@@ -382,6 +401,7 @@ if (isCli) {
         },
     remote_admission_request_receipt:
       organism.enrollment_request.receipt_hash,
+    remote_operator: organism.receipt.remote_operator,
     public_ingress: false,
     named_cloud_required: false,
     receipt_hash: organism.receipt.receipt_hash,

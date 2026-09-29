@@ -17,13 +17,15 @@
   "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/ai-discovery.json",
   "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
   "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-  "authority": "public read-only local reward discovery plus account-bound check-ins, Daily Prize Tickets and Game Wallet activity; merchant enrollment is reversible and owner-confirmed through Evercraft Machine Commerce",
+  "authority": "public read-only local reward discovery plus account-bound check-ins, Daily Prize Tickets and Game Wallet earning; Game Wallet fulfillment is implemented but production gaming issuance remains gated by provider authorization, credentials, sponsor funding and deployed-runtime verification; merchant enrollment is reversible and owner-confirmed through Evercraft Machine Commerce",
   "human_confirmation_required": true,
   "boundaries": [
     "read-only discovery creates no payment obligation",
     "a verified geofence check-in proves eligible proximity only and does not prove a purchase, transaction value, ticket purchase or event attendance",
     "Daily Prize Ticket selection, issuance, claim and credit state remain separate; ambiguous credit state requires reconciliation instead of automatic double payment",
-    "gaming redemption remains unavailable until a specific funded and authorized fulfillment rail exists",
+    "Game Wallet fulfillment keeps reserve, debit intent, points debit, provider request, delivery, refund and reconciliation as separate evidence states",
+    "a Giftbit adapter is implemented as provider adapter one; implementation does not imply provider partnership, production approval, funded inventory or live issuance",
+    "gaming redemption remains unavailable until a specific funded and authorized fulfillment rail, provider credential, sponsor budget and deployed runtime are independently verified",
     "Evercraft Points are not represented as publisher currency, cash or a direct publisher partnership",
     "prepared merchant enrollment does not activate a merchant, offer, discount, public listing or payment obligation",
     "merchant directory publication and commercial activation require their own verified state"

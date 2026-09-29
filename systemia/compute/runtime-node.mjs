@@ -23,6 +23,7 @@ import { startPublicEdgeRuntime } from '../network/public-edge-runtime.mjs';
 import { startEvercraftHomeServer } from '../evercraft-home/server.mjs';
 import { validatePublicEdgeAdmission } from '../network/public-edge-tls.mjs';
 import { transcriptionCapabilityStatus } from '../forensiscope/transcription-engine.mjs';
+import { EvercraftRemoteOperator } from './remote-operator.mjs';
 
 const CODE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 
@@ -66,6 +67,11 @@ function send(res, status, body) {
     'content-length': data.length,
   });
   res.end(data);
+}
+
+function bearer(req) {
+  const value = String(req.headers.authorization || '');
+  return value.startsWith('Bearer ') ? value.slice(7) : '';
 }
 
 function isWithin(root, target) {
@@ -230,6 +236,8 @@ export async function startEvercraftComputeNode({
   deviceIdentity = null,
   placementLabels = [],
   browserRuntimeFactory = null,
+  remoteOperatorRoots = null,
+  remoteOperatorStateDir = '',
   maxStagedBlobBytes = Number(process.env.EVERCRAFT_MAX_STAGED_BLOB_BYTES || 2147483648),
 } = {}) {
   if (!root) throw new Error('root is required');
@@ -242,6 +250,15 @@ export async function startEvercraftComputeNode({
     throw new Error('deviceIdentity node_id must match Compute nodeId');
   }
   const allowedRoot = path.resolve(root);
+  const remoteOperator = remoteOperatorRoots
+    ? new EvercraftRemoteOperator({
+        roots: remoteOperatorRoots,
+        stateDir: String(remoteOperatorStateDir || path.join(allowedRoot, '.evercraft', 'remote-operator')),
+      })
+    : null;
+  if (remoteOperator && !allocatorTokenHash) {
+    throw new Error('remote operator requires allocatorToken');
+  }
   const nodePlacementLabels = normalizePlacementLabels(placementLabels);
   const processStartedAt = new Date(Date.now() - process.uptime() * 1000).toISOString();
   const hostBootIdHash = bootIdHash();
@@ -306,7 +323,17 @@ export async function startEvercraftComputeNode({
   const serviceCapabilities = {
     forensiscope_transcription: forensiscopeTranscriptionCapability.ready === true,
     evercraft_web_browser: browserRuntimeReady,
-    public_edge: publicEdgeCapability
+    public_edge: publicEdgeCapability,
+    remote_operator: remoteOperator ? {
+      ready: true,
+      transport: 'evercraft.outbound-capacity.v1',
+      public_ingress: false,
+      roots: remoteOperator.status().roots,
+      execution_mode: remoteOperator.status().execution.mode,
+    } : {
+      ready: false,
+      reason: 'not_enabled',
+    }
   };
   const leases = new Map();
   const services = new Map();
@@ -558,6 +585,37 @@ export async function startEvercraftComputeNode({
 
   const server = http.createServer(async (req, res) => {
     try {
+      if (
+        (req.method === 'GET' && req.url === '/v1/operator/status') ||
+        (req.method === 'POST' && /^\/v1\/operator\/(?:fs\/(?:list|read|write)|exec)$/.test(String(req.url || '')))
+      ) {
+        if (!remoteOperator) return send(res, 404, { error: 'remote_operator_not_enabled' });
+        if (!allocatorTokenHash || sha(bearer(req)) !== allocatorTokenHash) {
+          return send(res, 401, { error: 'remote_operator_auth_required' });
+        }
+        try {
+          if (req.method === 'GET') {
+            return send(res, 200, remoteOperator.status());
+          }
+          const body = await readJson(req);
+          if (req.url === '/v1/operator/fs/list') {
+            return send(res, 200, remoteOperator.list(body));
+          }
+          if (req.url === '/v1/operator/fs/read') {
+            return send(res, 200, remoteOperator.read(body));
+          }
+          if (req.url === '/v1/operator/fs/write') {
+            return send(res, 200, remoteOperator.write(body));
+          }
+          if (req.url === '/v1/operator/exec') {
+            const result = await remoteOperator.exec(body);
+            return send(res, result.ok ? 200 : 422, result);
+          }
+        } catch (error) {
+          return send(res, 422, { error: error instanceof Error ? error.message : String(error) });
+        }
+      }
+
       if (req.method === 'GET' && req.url === '/v1/health') {
         return send(res, 200, {
           ok: true,

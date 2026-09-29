@@ -38,6 +38,8 @@ export async function startNodeSeed({
   advertiseHost,
   allocatorToken = '',
   placementLabels = [],
+  remoteOperatorRoots = null,
+  remoteOperatorStateDir = '',
   announce = true,
   announceAddress = '239.42.24.42',
   announcePort = 42424,
@@ -59,6 +61,8 @@ export async function startNodeSeed({
     allocatorToken,
     deviceIdentity,
     placementLabels,
+    remoteOperatorRoots,
+    remoteOperatorStateDir,
   });
 
   const actualPort = Number(new URL(compute.endpoint).port);

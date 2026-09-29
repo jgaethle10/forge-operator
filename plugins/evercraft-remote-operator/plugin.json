@@ -1,0 +1,23 @@
+{
+  "name": "evercraft-remote-operator",
+  "version": "0.1.0",
+  "description": "Connect ChatGPT or another MCP client to an explicitly authorized Evercraft-owned or user-owned node through Evercraft's outbound-only Remote Operator fabric.",
+  "author": {
+    "name": "Evercraft LLC"
+  },
+  "homepage": "https://github.com/jgaethle10/forge-operator",
+  "repository": "https://github.com/jgaethle10/forge-operator",
+  "license": "UNLICENSED",
+  "keywords": [
+    "evercraft",
+    "raven",
+    "systemia",
+    "remote-operator",
+    "mcp",
+    "filesystem",
+    "terminal",
+    "chromebook",
+    "nodeseed"
+  ],
+  "mcpServers": "./mcp.json"
+}
