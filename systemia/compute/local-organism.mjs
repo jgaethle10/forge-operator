@@ -50,6 +50,8 @@ function sourceReleaseRef() {
   const files = [
     'systemia/compute/runtime-node.mjs',
     'systemia/compute/node-seed.mjs',
+    'systemia/compute/remote-operator.mjs',
+    'systemia/network/outbound-node-agent.mjs',
     'systemia/yard/operator.mjs',
     'systemia/core/resident-supervisor.mjs',
     'systemia/collider/runtime.mjs',
