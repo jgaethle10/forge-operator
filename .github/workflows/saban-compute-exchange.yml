@@ -37,7 +37,10 @@ jobs:
       - name: Prove provider-neutral compute negotiation
         run: node systemia/saban/compute-exchange.proof.mjs
       - name: Scan real external compute supply
-        run: node systemia/saban/compute-market-live-pilot.mjs | tee /tmp/saban-compute-market-live.json
+        shell: bash
+        run: |
+          set -o pipefail
+          node systemia/saban/compute-market-live-pilot.mjs | tee /tmp/saban-compute-market-live.json
       - name: Publish live market summary
         run: |
           node - <<'NODE'
