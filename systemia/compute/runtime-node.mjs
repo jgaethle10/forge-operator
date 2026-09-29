@@ -2300,7 +2300,7 @@ export async function startEvercraftComputeNode({
         }
         let relay;
         try {
-          relay = entry.runtime.createServiceRelay({
+          relay = await entry.runtime.createServiceRelay({
             nodeId:String(body.node_id || ''),
             serviceId:String(body.service_id || ''),
             ttlMs:Number(body.ttl_ms || 30 * 60_000),
@@ -2314,6 +2314,7 @@ export async function startEvercraftComputeNode({
           node_id:relay.node_id,
           device_fingerprint:relay.device_fingerprint,
           service_id:relay.service_id,
+          target_service:relay.target_service||null,
           relay_token:relay.relay_token,
           proxy_path:relay.proxy_path,
           expires_at:relay.expires_at,
