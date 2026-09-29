@@ -105,6 +105,7 @@ export function buildCapabilityMesh({
   publicProducts,
   directDoors,
   contracts,
+  ratchetBaseline,
 } = {}) {
   if (publicProducts?.schema !== 'evercraft.saban.public-product-index.v1') {
     throw new Error('public_product_index_schema_invalid');
@@ -114,6 +115,9 @@ export function buildCapabilityMesh({
   }
   if (contracts?.schema !== 'evercraft.capability-mesh.contracts.v1') {
     throw new Error('capability_mesh_contract_schema_invalid');
+  }
+  if (ratchetBaseline?.schema !== 'evercraft.capability-mesh.ratchet-baseline.v1') {
+    throw new Error('capability_mesh_ratchet_baseline_schema_invalid');
   }
 
   const publicByKey = new Map((publicProducts.products || []).map((row) => [row.product_key, row]));
@@ -222,6 +226,54 @@ export function buildCapabilityMesh({
   const missing = rows.filter((row) => row.contract_state === 'missing');
   const directPublic = rows.filter((row) => row.direct_door);
 
+  const baselinePublic = new Set(ratchetBaseline.public_product_keys || []);
+  const baselineDirectPublic = new Set(ratchetBaseline.direct_door_public_product_keys || []);
+  const baselineSpecialistOnly = new Set(ratchetBaseline.specialist_only_slugs || []);
+
+  const newPublicProducts = rows
+    .filter((row) => !baselinePublic.has(row.product_key))
+    .map((row) => row.product_key)
+    .sort();
+  const newPublicProductsWithoutContract = rows
+    .filter((row) =>
+      !baselinePublic.has(row.product_key) &&
+      row.contract_state !== 'complete_declaration'
+    )
+    .map((row) => row.product_key)
+    .sort();
+
+  const newDirectDoorPublicProducts = directPublic
+    .filter((row) => !baselineDirectPublic.has(row.product_key))
+    .map((row) => row.product_key)
+    .sort();
+  const newDirectDoorWithoutContract = directPublic
+    .filter((row) =>
+      !baselineDirectPublic.has(row.product_key) &&
+      row.contract_state !== 'complete_declaration'
+    )
+    .map((row) => row.product_key)
+    .sort();
+
+  const newSpecialistOnlyDoors = specialistOnly
+    .filter((row) => !baselineSpecialistOnly.has(row.specialist_slug))
+    .map((row) => row.specialist_slug)
+    .sort();
+
+  const blockingRegressions = [
+    ...newPublicProductsWithoutContract.map((product_key) => ({
+      code: 'new_public_product_without_contract',
+      product_key,
+    })),
+    ...newDirectDoorWithoutContract.map((product_key) => ({
+      code: 'new_direct_door_without_contract',
+      product_key,
+    })),
+    ...newSpecialistOnlyDoors.map((specialist_slug) => ({
+      code: 'new_specialist_only_door_requires_review',
+      specialist_slug,
+    })),
+  ];
+
   return {
     schema: 'evercraft.capability-mesh.coverage.v1',
     generated_from: {
@@ -247,6 +299,23 @@ export function buildCapabilityMesh({
       incomplete_contracts: incomplete.map((row) => row.product_key),
       all_missing_contracts: missing.map((row) => row.product_key),
     },
+    ratchet: {
+      schema: 'evercraft.capability-mesh.ratchet-state.v1',
+      baseline_captured_at: ratchetBaseline.captured_at,
+      state: blockingRegressions.length === 0 ? 'pass' : 'blocked',
+      baseline_public_product_count: baselinePublic.size,
+      current_public_product_count: rows.length,
+      new_public_products: newPublicProducts,
+      new_public_products_without_contract: newPublicProductsWithoutContract,
+      baseline_direct_door_public_product_count: baselineDirectPublic.size,
+      current_direct_door_public_product_count: directPublic.length,
+      new_direct_door_public_products: newDirectDoorPublicProducts,
+      new_direct_door_without_contract: newDirectDoorWithoutContract,
+      new_specialist_only_doors: newSpecialistOnlyDoors,
+      blocking_regressions: blockingRegressions,
+      doctrine:
+        'Grandfathered contract debt remains migration work. New public products and newly direct-door public products may not add uncontracted trust-chain debt.',
+    },
     specialist_only: specialistOnly,
     products: rows,
     truth_boundary: contracts.truth_boundary,
@@ -259,6 +328,9 @@ export function renderCapabilityMesh(root = process.cwd()) {
     publicProducts: readJson(path.join(root, 'registry', 'public-products.json')),
     directDoors: readJson(path.join(root, 'public', '.well-known', 'evercraft-direct-door-readiness.json')),
     contracts: readJson(path.join(root, 'systemia', 'capability-mesh', 'contracts.json')),
+    ratchetBaseline: readJson(
+      path.join(root, 'systemia', 'capability-mesh', 'ratchet-baseline.json')
+    ),
   });
 }
 

@@ -41,6 +41,15 @@ write('systemia/capability-mesh/adoption-coverage.json', JSON.stringify({
     incomplete_contracts: [],
     all_missing_contracts: ['alpha', 'beta']
   },
+  ratchet: {
+    schema: 'evercraft.capability-mesh.ratchet-state.v1',
+    state: 'blocked',
+    blocking_regressions: [
+      { code: 'new_public_product_without_contract', product_key: 'beta' },
+      { code: 'new_direct_door_without_contract', product_key: 'alpha' },
+      { code: 'new_specialist_only_door_requires_review', specialist_slug: 'new-held' }
+    ]
+  },
   specialist_only: [{
     specialist_slug: 'held-specialist',
     direct_door_state: 'yard_runtime_proven_public_route_pending'
@@ -84,7 +93,28 @@ assert.ok(codes.has('resident_service_executable_not_found'));
 assert.ok(codes.has('direct_door_contract_missing'));
 assert.ok(codes.has('product_trust_chain_contract_missing'));
 assert.ok(codes.has('specialist_door_not_in_public_product_index'));
+assert.ok(codes.has('new_public_product_without_contract'));
+assert.ok(codes.has('new_direct_door_without_contract'));
+assert.ok(codes.has('new_specialist_only_door_requires_review'));
 assert.equal(scan.inventory.capability_mesh.missing_contract_count, 2);
+assert.equal(scan.inventory.capability_mesh_ratchet.state, 'blocked');
+
+const newProductRegression = scan.findings.find(
+  (row) => row.code === 'new_public_product_without_contract'
+);
+assert.equal(newProductRegression.severity, 'high');
+assert.equal(newProductRegression.human_gate_required, false);
+
+const newDoorRegression = scan.findings.find(
+  (row) => row.code === 'new_direct_door_without_contract'
+);
+assert.equal(newDoorRegression.severity, 'high');
+
+const newSpecialistRegression = scan.findings.find(
+  (row) => row.code === 'new_specialist_only_door_requires_review'
+);
+assert.equal(newSpecialistRegression.severity, 'high');
+assert.equal(newSpecialistRegression.human_gate_required, true);
 
 const directContractFinding = scan.findings.find((row) => row.code === 'direct_door_contract_missing');
 assert.equal(directContractFinding.severity, 'medium');

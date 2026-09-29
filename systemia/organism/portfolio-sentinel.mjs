@@ -406,6 +406,33 @@ export function inspectLocalPortfolio({ rootDir = process.cwd() } = {}) {
       ['repo:systemia/capability-mesh/adoption-coverage.json']
     );
 
+    report.inventory.capability_mesh_ratchet = mesh.ratchet || null;
+
+    for (const regression of mesh.ratchet?.blocking_regressions || []) {
+      const subject = clean(regression.product_key || regression.specialist_slug || '<unknown>');
+      const specialistOnly = regression.code === 'new_specialist_only_door_requires_review';
+      addFinding(report, makeFinding({
+        code: regression.code,
+        severity: 'high',
+        subject,
+        detail: specialistOnly
+          ? 'A new specialist-only door appeared after the Capability Mesh baseline and requires explicit review before publication or contract binding.'
+          : 'New Capability Mesh adoption debt appeared after the ratchet baseline. Add a complete product contract before this architectural regression is accepted.',
+        evidence_refs: [
+          'repo:systemia/capability-mesh/ratchet-baseline.json',
+          'repo:systemia/capability-mesh/adoption-coverage.json'
+        ],
+        repair_mode: specialistOnly ? 'human_review' : 'capability_contract_migration',
+        human_gate_required: specialistOnly,
+        metadata: {
+          regression_code: regression.code,
+          product_key: regression.product_key || null,
+          specialist_slug: regression.specialist_slug || null,
+          ratchet_state: mesh.ratchet?.state || null
+        }
+      }));
+    }
+
     const directMissing = new Set(mesh.priority_queues?.direct_door_without_contract || []);
     const missing = new Set(mesh.priority_queues?.all_missing_contracts || []);
     const incomplete = new Set(mesh.priority_queues?.incomplete_contracts || []);
