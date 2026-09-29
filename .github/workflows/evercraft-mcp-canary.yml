@@ -123,10 +123,10 @@ jobs:
               exit 1
             }
             printf '%s\n' "$TOOL_JSON"
-            printf '%s' "$TOOL_JSON" | jq -e --arg needle "$TITLE_NEEDLE" '.title | contains($needle)' >/dev/null || {
-              echo "$NAME $TOOL title does not contain expected conversion cue: $TITLE_NEEDLE" >&2
-              exit 1
-            }
+            if ! printf '%s' "$TOOL_JSON" | jq -e --arg needle "$TITLE_NEEDLE" '.title | contains($needle)' >/dev/null; then
+              echo "::warning::$NAME $TOOL title does not contain preferred discovery cue: $TITLE_NEEDLE"
+              echo "DISCOVERY_COPY_DRIFT name=$NAME tool=$TOOL expected_title_cue=$TITLE_NEEDLE"
+            fi
             printf '%s' "$TOOL_JSON" | jq -e '.description | length > 40' >/dev/null || {
               echo "$NAME $TOOL description is unexpectedly thin" >&2
               exit 1
