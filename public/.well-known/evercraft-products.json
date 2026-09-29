@@ -1446,7 +1446,7 @@
         "unknown IBM i release is acceptable and must not be guessed from generic technology-use evidence"
       ],
       "commercial": {
-        "status": "sell_now_machine_commerce_handoff_live_buyer_route_live_backend_checkout_verified",
+        "status": "sell_now_machine_commerce_direct_checkout_live_buyer_route_live_backend_checkout_verified",
         "offers": [
           {
             "name": "IBM i Estate X-Ray",
@@ -1464,15 +1464,20 @@
             "offer_key": "ibmi_upgrade_proof_sprint_1500"
           }
         ],
-        "payment_state": "Evercraft Payments offers active. Human buyer route is externally reachable and backend checkout creation is independently verified with synthetic QA. Paid state still requires authoritative provider verification.",
+        "payment_state": "Evercraft Payments offers active. Human buyer route is externally reachable and synthetic QA verified creation of the $250 Stripe Checkout session. Checkout creation is not payment proof; authoritative provider verification is still required before paid state, revenue, or fulfillment claims.",
         "machine_commerce_handoff": {
           "state": "live_verified",
           "public_id": "ibmi-rescue-v1",
-          "mode": "fixed_price_human_handoff",
-          "tool": "prepare_quote_ready_service_handoff",
-          "checkout_created": false,
+          "mode": "direct_checkout_capable",
+          "offer_tool": "get_live_checkout_offer",
+          "tool": "prepare_verified_checkout",
+          "status_tool": "get_verified_order_status",
+          "explicit_human_payment_confirmation_required": true,
+          "checkout_capability_verified": true,
+          "synthetic_checkout_created_in_canary": true,
           "payment_created": false,
-          "evidence": "GitHub Actions canary 36211823272 verified three-tier offer discovery, live human handoff, buyer-route reachability, and synthetic backend checkout creation with zero payment."
+          "payment_proof": false,
+          "evidence": "GitHub Actions run 36495507434 verified current direct-checkout offer state and creation of a synthetic $250 Estate X-Ray Stripe Checkout session with no payment proof."
         }
       },
       "origin_product_url": "https://findmypart.base44.app/ibmi-rescue",
