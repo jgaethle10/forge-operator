@@ -442,6 +442,25 @@ async function persistChumAttributionEvent(event: unknown) {
 }
 
 
+function publicRuntimeBinding() {
+  const releaseRef = String(process.env.EVERCRAFT_RELEASE_REF || '').trim();
+  const deploymentReceiptRef = String(process.env.EVERCRAFT_DEPLOYMENT_RECEIPT_REF || '').trim();
+  const immutableRelease =
+    /^[a-f0-9]{40}$/i.test(releaseRef) ||
+    /^[a-f0-9]{64}$/i.test(releaseRef) ||
+    /^sha256:[a-f0-9]{64}$/i.test(releaseRef);
+  const validDeploymentReceipt = /^sha256:[a-f0-9]{64}$/i.test(deploymentReceiptRef);
+
+  return {
+    runtime: 'forge-operator',
+    release_ref: immutableRelease ? releaseRef : null,
+    deployment_receipt_ref: validDeploymentReceipt ? deploymentReceiptRef : null,
+    release_bound: immutableRelease,
+    deployment_receipt_bound: validDeploymentReceipt,
+    public_origin_configured: Boolean(String(process.env.CHUM_PUBLIC_ORIGIN || '').trim()),
+  };
+}
+
 app.get('/api/health', (_req: Request, res: Response) => {
   const speech = transcriptionCapabilityStatus();
   res.json({
@@ -450,6 +469,7 @@ app.get('/api/health', (_req: Request, res: Response) => {
     provider: 'Evercraft',
     version: '2026-09-28',
     timestamp: new Date().toISOString(),
+    runtime_binding: publicRuntimeBinding(),
     forensiscope: {
       transcription_ready: speech.ready,
       transcription_state: speech.state,
@@ -484,6 +504,15 @@ app.get('/api/capabilities', (_req: Request, res: Response) => {
       manifest: '/.well-known/evercraft-capabilities.json',
       firstPartyRouter: { method: 'POST', path: '/api/route-capability' },
       agentManifest: '/.well-known/evercraft-agent.json',
+      a2aAgentCard: '/.well-known/agent-card.json',
+      a2a: {
+        protocol: 'A2A',
+        protocolVersion: '1.0',
+        binding: 'HTTP+JSON',
+        basePath: '/a2a',
+        messageSend: { method: 'POST', path: '/a2a/message:send' },
+        authority: 'read_only_discovery'
+      },
       aiDirectory: '/ai',
       sitemap: '/sitemap.xml',
       segmentedSitemapIndex: '/chum/sitemaps/index.xml',

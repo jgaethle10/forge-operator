@@ -52,21 +52,40 @@ function normalizeOrigin(value) {
 
 function resolveVerifiedOrigin(root, explicitOrigin) {
   const explicit = normalizeOrigin(explicitOrigin);
-  if (explicit) return { origin: explicit, source: 'environment' };
-
   const receiptPath = path.join(root, 'public', '.well-known', 'evercraft-runtime-origin.json');
   const receipt = readJsonIfExists(receiptPath, null);
   const receiptOrigin = normalizeOrigin(receipt?.origin);
-  if (
+  const releaseRef = String(receipt?.release_ref || '').trim();
+  const deploymentReceipt = String(receipt?.deployment_receipt_hash || '').trim();
+  const receiptValid =
     receipt?.schema === 'evercraft.runtime-origin.v1' &&
     receipt?.runtime === 'forge-operator' &&
     receipt?.verified === true &&
-    receiptOrigin
-  ) {
+    receipt?.public_https_verified === true &&
+    /^[a-f0-9]{40}$/i.test(releaseRef) &&
+    /^sha256:[a-f0-9]{64}$/i.test(deploymentReceipt) &&
+    Boolean(receiptOrigin) &&
+    receiptOrigin.startsWith('https://');
+
+  if (explicit) {
+    if (!receiptValid || receiptOrigin !== explicit) {
+      return { origin: null, source: 'environment_unverified' };
+    }
+    return {
+      origin: explicit,
+      source: 'environment_verified_by_runtime_origin_receipt',
+      receipt_hash: deploymentReceipt,
+      release_ref: releaseRef,
+      verified_at: receipt.verified_at || null
+    };
+  }
+
+  if (receiptValid) {
     return {
       origin: receiptOrigin,
       source: 'verified_runtime_origin_receipt',
-      receipt_hash: receipt.deployment_receipt_hash || null,
+      receipt_hash: deploymentReceipt,
+      release_ref: releaseRef,
       verified_at: receipt.verified_at || null
     };
   }
@@ -583,6 +602,7 @@ export async function buildCrawlPressure({
     origin: normalizedOrigin,
     origin_source: originResolution.source,
     origin_receipt_hash: originResolution.receipt_hash || null,
+    origin_release_ref: originResolution.release_ref || null,
     indexed_surfaces: state.url_count,
     changed_surfaces: changedEntries.length,
     broadcast: broadcastResult,

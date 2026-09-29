@@ -1,0 +1,185 @@
+name: Forge Public Origin External Canary
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'server.ts'
+      - 'evercraft.compute.json'
+      - '.github/workflows/forge-public-origin-canary.yml'
+  workflow_dispatch:
+  schedule:
+    - cron: '37 * * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: forge-public-origin-canary
+  cancel-in-progress: true
+
+jobs:
+  canary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      FORGE_ORIGIN: ${{ vars.EVERCRAFT_FORGE_PUBLIC_ORIGIN }}
+    steps:
+      - name: Checkout canary revision
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Prepare held receipt when no public origin exists
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          if [ -n "${FORGE_ORIGIN:-}" ]; then
+            exit 0
+          fi
+          cat > artifacts/evercraft-forge-public-origin-canary.json <<'JSON'
+          {
+            "schema": "evercraft.forge-public-origin.external-canary.v1",
+            "verified": false,
+            "state": "held_no_public_origin_configured",
+            "public_https_verified": false,
+            "a2a_verified": false,
+            "founder_login_required": false
+          }
+          JSON
+          cat artifacts/evercraft-forge-public-origin-canary.json
+
+      - name: Validate configured origin
+        if: env.FORGE_ORIGIN != ''
+        shell: bash
+        run: |
+          set -euo pipefail
+          node - <<'NODE'
+          const raw=process.env.FORGE_ORIGIN||'';
+          const url=new URL(raw);
+          if(url.protocol!=='https:') throw new Error('EVERCRAFT_FORGE_PUBLIC_ORIGIN must use HTTPS');
+          if(url.username||url.password||url.search||url.hash) throw new Error('Forge public origin must be a clean HTTPS origin');
+          if(url.pathname!=='/'&&url.pathname!=='') throw new Error('Forge public origin must not include a path');
+          if(/(^|\.)base44\.app$/i.test(url.hostname)) throw new Error('Forge public origin must not resolve to Base44');
+          NODE
+
+      - name: Verify external Forge health, discovery, and A2A
+        if: env.FORGE_ORIGIN != ''
+        shell: bash
+        run: |
+          set -euo pipefail
+          origin="${FORGE_ORIGIN%/}"
+
+          curl --fail-with-body --silent --show-error --max-time 20             "$origin/api/health" > /tmp/forge-health.json
+          curl --fail-with-body --silent --show-error --max-time 20             "$origin/.well-known/agent-card.json" > /tmp/forge-agent-card.json
+          curl --fail-with-body --silent --show-error --max-time 20             "$origin/llms.txt" > /tmp/forge-llms.txt
+          curl --fail-with-body --silent --show-error --max-time 20             "$origin/sitemap.xml" > /tmp/forge-sitemap.xml
+          curl --fail-with-body --silent --show-error --max-time 20             -X POST "$origin/a2a/message:send"             -H 'Content-Type: application/a2a+json'             -H 'A2A-Version: 1.0'             --data '{"message":{"messageId":"forge-origin-canary","role":"ROLE_USER","parts":[{"text":"My AI cannot process this three hour video and I need the whole recording reviewed"}]}}'             > /tmp/forge-a2a.json
+
+          jq -e '
+            .ok == true and
+            .service == "forge-operator" and
+            .runtime_binding.runtime == "forge-operator" and
+            .runtime_binding.release_bound == true and
+            .runtime_binding.deployment_receipt_bound == true and
+            (.runtime_binding.release_ref | type == "string" and test("^[a-fA-F0-9]{40}$")) and
+            (.runtime_binding.deployment_receipt_ref | type == "string" and test("^sha256:[a-fA-F0-9]{64}$"))
+          ' /tmp/forge-health.json >/dev/null
+
+          release_ref="$(jq -r '.runtime_binding.release_ref' /tmp/forge-health.json)"
+          deployment_receipt="$(jq -r '.runtime_binding.deployment_receipt_ref' /tmp/forge-health.json)"
+
+          git fetch origin main --quiet
+          git cat-file -e "$release_ref^{commit}"
+          git merge-base --is-ancestor "$release_ref" origin/main
+
+          jq -e --arg origin "$origin" '
+            .name == "Evercraft CHUM Discovery" and
+            .capabilities.streaming == false and
+            .capabilities.pushNotifications == false and
+            (.supportedInterfaces | type == "array" and length > 0) and
+            .supportedInterfaces[0].url == ($origin + "/a2a") and
+            .supportedInterfaces[0].protocolBinding == "HTTP+JSON" and
+            .supportedInterfaces[0].protocolVersion == "1.0"
+          ' /tmp/forge-agent-card.json >/dev/null
+
+          jq -e '
+            .message.role == "ROLE_AGENT" and
+            ([.message.parts[] | select(.data.schema == "evercraft.chum.intent-routing.v3")] | length) == 1 and
+            ([.message.parts[] | select(.data.schema == "evercraft.chum.intent-routing.v3")][0].data.matches[0].public_id == "forensiscope-evidence-review-v1")
+          ' /tmp/forge-a2a.json >/dev/null
+
+          grep -q 'CHUM' /tmp/forge-llms.txt
+          grep -q '/.well-known/agent-card.json' /tmp/forge-sitemap.xml
+
+          observed_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          jq -n             --arg origin "$origin"             --arg release "$release_ref"             --arg deployment "$deployment_receipt"             --arg observed "$observed_at"             '{
+              schema:"evercraft.runtime-origin.v1",
+              runtime:"forge-operator",
+              verified:true,
+              origin:$origin,
+              release_ref:$release,
+              deployment_receipt_hash:$deployment,
+              verified_at:$observed,
+              public_https_verified:true,
+              health_verified:true,
+              agent_card_verified:true,
+              a2a_http_json_verified:true,
+              a2a_protocol_version:"1.0",
+              a2a_forensiscope_route_verified:true,
+              llms_verified:true,
+              sitemap_verified:true,
+              payment_authority_added:false,
+              irreversible_action_authority_added:false
+            }' > artifacts/evercraft-runtime-origin.json
+
+          cp artifacts/evercraft-runtime-origin.json artifacts/evercraft-forge-public-origin-canary.json
+          cat artifacts/evercraft-forge-public-origin-canary.json
+
+      - name: Promote verified runtime-origin receipt
+        if: env.FORGE_ORIGIN != ''
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main --quiet
+          if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
+            echo "Main advanced during verification. Keeping this run as evidence and deferring receipt promotion."
+            exit 0
+          fi
+
+          candidate="artifacts/evercraft-runtime-origin.json"
+          target="public/.well-known/evercraft-runtime-origin.json"
+          if [ -f "$target" ]; then
+            same="$(node - "$target" "$candidate" <<'NODE'
+          const fs=require('fs');
+          const [oldPath,newPath]=process.argv.slice(2);
+          const old=JSON.parse(fs.readFileSync(oldPath,'utf8'));
+          const next=JSON.parse(fs.readFileSync(newPath,'utf8'));
+          const keys=['schema','runtime','verified','origin','release_ref','deployment_receipt_hash','public_https_verified','health_verified','agent_card_verified','a2a_http_json_verified','a2a_protocol_version','a2a_forensiscope_route_verified','llms_verified','sitemap_verified','payment_authority_added','irreversible_action_authority_added'];
+          process.stdout.write(keys.every(k=>JSON.stringify(old[k])===JSON.stringify(next[k]))?'yes':'no');
+          NODE
+          )"
+            if [ "$same" = "yes" ]; then
+              echo "Verified origin binding is unchanged. No repository churn required."
+              exit 0
+            fi
+          fi
+
+          mkdir -p "$(dirname "$target")"
+          cp "$candidate" "$target"
+          git add "$target"
+          git config user.name "Evercraft Forge Origin Canary"
+          git config user.email "forge-origin-canary@users.noreply.github.com"
+          git commit -m "Promote canary-verified Forge public origin"
+          git push origin HEAD:main
+
+      - name: Upload public-origin canary receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-forge-public-origin-canary
+          path: |
+            artifacts/evercraft-forge-public-origin-canary.json
+            artifacts/evercraft-runtime-origin.json
+          if-no-files-found: warn
+          retention-days: 90
