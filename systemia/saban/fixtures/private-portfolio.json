@@ -47,6 +47,16 @@
     {
       "name": "Evercraft WGS",
       "id": "private-source-id-11"
+    },
+    {
+      "name": "Private Status Console",
+      "id": "private-source-id-12",
+      "visibility": "account_bound_private"
+    },
+    {
+      "name": "Multi Capability Shell",
+      "id": "private-source-id-13",
+      "visibility": "platform_container"
     }
   ]
 }

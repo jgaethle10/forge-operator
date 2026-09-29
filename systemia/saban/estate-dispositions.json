@@ -1,0 +1,37 @@
+{
+  "schema": "evercraft.private-estate-dispositions.v1",
+  "reviewed_on": "2026-09-28",
+  "doctrine": {
+    "inventory_is_not_publication": true,
+    "disposition_requires_source_evidence": true,
+    "public_platform_container_is_not_standalone_product": true,
+    "private_surface_is_not_public_admission_candidate": true
+  },
+  "items": [
+    {
+      "name": "Plasma Hearth",
+      "visibility": "internal_only",
+      "reason": "Source declares a private evidence vault, noindex/nofollow/noarchive/nosnippet, authentication required, and admin-only access."
+    },
+    {
+      "name": "Evercraft InternalOps",
+      "visibility": "internal_only",
+      "reason": "Source is the authenticated EPS/Evercraft internal operating application with team-member access controls and internal operations surfaces."
+    },
+    {
+      "name": "NetStatus",
+      "visibility": "account_bound_private",
+      "reason": "Root application explicitly redirects unauthenticated users to login; status/admin operations are account-bound."
+    },
+    {
+      "name": "Evercraft AI Suite",
+      "visibility": "platform_container",
+      "reason": "Source hosts multiple public ecosystem/buyer surfaces plus protected private operational pages; it is a platform container rather than one standalone product."
+    },
+    {
+      "name": "Systemia Command Center",
+      "visibility": "platform_container",
+      "reason": "Source hosts public Evercraft Web and Machine Commerce surfaces while keeping the Systemia Core home authenticated; it is a multi-capability container."
+    }
+  ]
+}

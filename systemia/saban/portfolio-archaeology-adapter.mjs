@@ -145,6 +145,24 @@ function classify(raw, publicAliases) {
     };
   }
 
+  if (raw?.visibility === 'account_bound_private') {
+    return {
+      classification: 'known_private_surface',
+      confidence: 1,
+      public_match: null,
+      admission_required: false
+    };
+  }
+
+  if (raw?.visibility === 'platform_container') {
+    return {
+      classification: 'platform_container',
+      confidence: 1,
+      public_match: null,
+      admission_required: false
+    };
+  }
+
   const match = bestPublicMatch(name, publicAliases);
   if (match?.score === 1) {
     return {
