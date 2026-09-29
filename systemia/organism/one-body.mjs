@@ -85,12 +85,17 @@ function productTerms(product) {
 
 function scoreProduct(product, haystack) {
   let score = 0;
+  const matchedWords = new Set();
   for (const term of productTerms(product)) {
     const needle = normalize(term);
     if (!needle || needle.length < 3) continue;
     if (haystack.includes(needle)) score += needle.length >= 12 ? 8 : 4;
     const words = needle.split(/[^a-z0-9]+/).filter((word) => word.length >= 4);
-    for (const word of words) if (haystack.includes(word)) score += 1;
+    for (const word of words) {
+      if (matchedWords.has(word) || !haystack.includes(word)) continue;
+      matchedWords.add(word);
+      score += 1;
+    }
   }
   return score;
 }
