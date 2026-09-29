@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-29T21:53:36.906Z",
+  "updated_at": "2026-09-29T22:15:04.894Z",
   "url_count": 2660,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -141,8 +141,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "6f6fa25b3b9854813f0aedf4a987d122b799dfcd42f498aa3d936ea85fee35a5",
-      "last_changed": "2026-09-29T21:53:36.906Z",
+      "content_sha256": "78f5591633a08ea19610639b03af4bce75f18dcb2030f44f89d9a8113df0fbd6",
+      "last_changed": "2026-09-29T22:15:04.894Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -177,8 +177,8 @@
     },
     "/chum/proof/index.json": {
       "path": "/chum/proof/index.json",
-      "content_sha256": "c2f80165bafd73f561ada76260f577531a476c746599c159657e4bf5ab26b895",
-      "last_changed": "2026-09-29T21:53:36.471Z",
+      "content_sha256": "d53c8153ec64e9fcbce2a6c52340b91917336251b4e758e197396b2c07686573",
+      "last_changed": "2026-09-29T22:15:04.894Z",
       "priority": 80
     },
     "/chum/proof/llms.txt": {
@@ -189,14 +189,14 @@
     },
     "/chum/proof/forensiscope.json": {
       "path": "/chum/proof/forensiscope.json",
-      "content_sha256": "4e706cac4e063f19d444f89d83680b3e96d9ddf6295a7d9c9bcb42541ae622ca",
-      "last_changed": "2026-09-29T21:53:36.471Z",
+      "content_sha256": "2b4b79c906aebd5619d272324bb13d0d9d2da1d9e33343303502398b6b35820d",
+      "last_changed": "2026-09-29T22:15:04.894Z",
       "priority": 80
     },
     "/chum/proof/rivet.json": {
       "path": "/chum/proof/rivet.json",
-      "content_sha256": "a28f67b5cbf6f1055dcf786bc29f08b82911ded8106ed28182334aa56187e67c",
-      "last_changed": "2026-09-29T21:53:36.471Z",
+      "content_sha256": "987f29683ff7ff94ef8bd3ca99bfb8b9eeea25e5e0ea97c152ccab2ed149799e",
+      "last_changed": "2026-09-29T22:15:04.894Z",
       "priority": 80
     },
     "/chum/commercial/": {
