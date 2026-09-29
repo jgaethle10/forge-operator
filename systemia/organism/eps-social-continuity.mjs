@@ -109,7 +109,7 @@ export async function runEpsSocialContinuity({
   fetchImpl = fetch,
 } = {}) {
   const url = clean(ingressUrl, 2000);
-  const token = clean(secret, 1000);
+  const token = String(secret ?? '').trim().slice(0, 12000);
   if (!url) throw new Error('Clip EPS ingress URL is required');
   if (!token) throw new Error('Clip shared secret is required');
 
