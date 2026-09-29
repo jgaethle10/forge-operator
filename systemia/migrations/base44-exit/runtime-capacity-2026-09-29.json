@@ -3,9 +3,10 @@
   "observed_at": "2026-09-29T16:05:00Z",
   "purpose": "Record the live runtime-capacity gate for the Base44 exit without treating source wiring as production cutover proof.",
   "observed_capacity": {
-    "digitalocean_droplets": 0,
     "evercraft_runtime_fabric_enrolled_node_keys": [],
-    "persistent_non_base44_runtime_observed": false
+    "persistent_non_base44_runtime_observed": false,
+    "named_cloud_dependency_required": false,
+    "capacity_model": "Evercraft-owned software over authorized existing compute; provider-neutral and hardware-replaceable"
   },
   "chromebook_node": {
     "node_key": "personal:chromebook:opportunistic:v1",
@@ -37,13 +38,16 @@
     "authorized_live_runtime_required_for_final_yard_cutover": true,
     "chromebook_can_satisfy_temporary_canary_role_when_online_and_enrolled": true,
     "chromebook_satisfies_final_persistent_production_role": false,
-    "new_paid_capacity_authorized": false
+    "new_paid_capacity_authorized": false,
+    "own_software_is_canonical_runtime_fabric": true,
+    "named_cloud_provider_required": false,
+    "third_party_cloud_is_optional_substrate_only": true
   },
   "next_actions": [
-    "Continue source, policy, scheduler and integration extraction without waiting for the Chromebook.",
-    "Keep the EPS social Base44 continuity exception until a live non-Base44 scheduler earns a verified Clip result.",
-    "If the Chromebook becomes available, complete its NodeSeed enrollment and use it only for a bounded live canary.",
-    "Do not provision paid cloud capacity without separate authorization.",
+    "Continue source, policy, scheduler and integration extraction without waiting for the Chromebook or any named cloud provider.",
+    "Use Systemia Core + Yard + Evercraft Compute + NodeSeed / outbound capacity transport as the canonical runtime path.",
+    "Keep the EPS social Base44 continuity exception until the Evercraft-owned scheduler earns a verified Clip result on authorized compute.",
+    "If the Chromebook becomes available, use it only as optional authorized capacity/canary, never as a required production dependency.",
     "After the live replacement receipt and observation window, retire the remaining EPS Base44 recurring wake."
   ]
 }
