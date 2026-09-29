@@ -70,8 +70,11 @@ Do not mark `evercraft.web.browser.public.v1` active until all are true:
 7. evidence receipt hashes verify;
 8. MCP/agent discovery only advertises the browser tool after the production canary passes;
 9. authenticated handoff creation crosses the private Yard lease rather than a public unauthenticated create endpoint;
-10. claim tokens and typed credential text do not appear in receipts or persistent state;
-11. a real human-login canary confirms the handoff page works through the verified public edge before authenticated browsing is advertised as production-live.
+10. the fragment bootstrap claim is single-use and rotates into a separate access credential;
+11. the public edge keeps ongoing access in an HttpOnly, Secure, SameSite=Strict cookie rather than page-readable storage;
+12. Control Room state-changing requests require the same-origin control header in addition to the host-only cookie;
+13. claim tokens, ongoing access credentials and typed credential text do not appear in receipts or persistent state;
+14. a real human-login canary confirms the handoff page works through the verified public edge before authenticated browsing is advertised as production-live.
 
 ## Authenticated human handoff
 
@@ -80,11 +83,14 @@ Source now includes an **ephemeral, human-authorized authenticated browser hando
 The flow is:
 
 1. Systemia/Yard creates an authenticated browser session through the private Compute lease.
-2. The worker returns a short-lived handoff path carrying a one-time claim in the URL fragment.
-3. The human opens the Evercraft handoff page and clicks/types directly into the isolated browser session.
-4. Typed text is never returned in action receipts. The worker records only bounded metadata such as action type and character count.
-5. Cookies and authenticated browser state live only inside that isolated in-memory browser context for the session lifetime.
-6. Closing or expiring the session destroys the context. v1 does not persist an authenticated profile.
+2. The worker returns a short-lived handoff path carrying a bootstrap claim in the URL fragment. The fragment is never sent on the initial HTTP request and Control Room immediately scrubs it from the visible URL.
+3. Control Room redeems that bootstrap claim once. The worker invalidates it and mints a distinct session access credential.
+4. The public edge removes the ongoing access credential from the JSON response and stores it only in an HttpOnly, Secure, SameSite=Strict cookie scoped to that exact session API path.
+5. Refreshing the Control Room page can resume an unexpired session from the HttpOnly cookie without re-exposing the original claim.
+6. The human clicks/types directly into the isolated browser session. The secure relay input disables password-manager/autofill hints so credentials are not accidentally saved against the Control Room origin.
+7. Typed text is never returned in action receipts. The worker records only bounded metadata such as action type and character count.
+8. Cookies and authenticated state for the destination site live only inside the isolated in-memory Chromium context for the session lifetime.
+9. Closing or expiring the session destroys the context. v1 does not persist an authenticated browser profile.
 
 The human handoff supports screenshot refresh, coordinate clicks, typing into the focused browser field, bounded key presses, scrolling, waiting and validated public-URL navigation. Private/reserved network targets remain blocked. Downloads and service workers remain blocked.
 
