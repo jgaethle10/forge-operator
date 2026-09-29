@@ -17,7 +17,7 @@ function safeImage(value){
   return image;
 }
 
-function requestHeaders(apiKey={}){
+function requestHeaders(apiKey=''){
   return {
     'content-type':'application/json',
     'accept':'application/json',
