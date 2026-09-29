@@ -27,7 +27,8 @@
     "remote-device-trust-watch",
     "kaidance-mission-publisher",
     "public-edge-controller",
-    "public-edge-activation-watch"
+    "public-edge-activation-watch",
+    "sentinel-life-safety-watch"
   ],
   "security": {
     "lease_required": true,
@@ -62,6 +63,8 @@
     "public_edge_allocator_authority_not_persisted_by_watch",
     "unconfigured_or_unavailable_public_edge_holds_cycle_without_holding_core",
     "eps_social_continuity_optional_until_private_clip_binding_present",
-    "eps_social_continuity_requires_provider_visible_verification_before_success"
+    "eps_social_continuity_requires_provider_visible_verification_before_success",
+    "sentinel_life_safety_resident_supervised",
+    "sentinel_region_profile_binding_is_explicit_and_receipted"
   ]
 }

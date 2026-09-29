@@ -53,3 +53,16 @@ A build, Git commit, image push, or reachable endpoint is not by itself deployme
 Moving source into GitHub does not widen authority. Payment, publication, outreach, privileged access, sensitive data, external side effects, and consequential fulfillment retain their existing confirmation and authorization gates.
 
 See `public-handoff.json` for the machine-readable boundary.
+
+
+## Sentinel regional binding
+
+The `systemia.core-supervisor.v1` Evercraft Compute workload accepts an optional
+`sentinel_region_profile` input. Compute copies that non-secret identifier into
+the private supervisor environment as `SYSTEMIA_SENTINEL_REGION_PROFILE`.
+The resident supervisor then passes it only to the Sentinel service through its
+declared argument binding.
+
+The selected profile identifier is returned in the private deployment result for
+receipt verification. It does not widen Sentinel authority, disclose exact sensor
+coordinates, or place allocator credentials in child environments.
