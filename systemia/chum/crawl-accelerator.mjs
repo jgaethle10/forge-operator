@@ -64,7 +64,8 @@ function resolveVerifiedOrigin(root, explicitOrigin) {
     receipt?.public_https_verified === true &&
     /^[a-f0-9]{40}$/i.test(releaseRef) &&
     /^sha256:[a-f0-9]{64}$/i.test(deploymentReceipt) &&
-    Boolean(receiptOrigin);
+    Boolean(receiptOrigin) &&
+    receiptOrigin.startsWith('https://');
 
   if (explicit) {
     if (!receiptValid || receiptOrigin !== explicit) {
