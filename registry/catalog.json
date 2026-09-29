@@ -588,10 +588,16 @@
         "I need a subcontractor or specialist so I can execute this job",
         "I have intellectual property but do not want to give it away while looking for partners",
         "help me turn this unfinished idea or asset into an executable team",
-        "find licensing production distribution or collaboration opportunities for work I already made"
+        "find licensing production distribution or collaboration opportunities for work I already made",
+        "assemble several accepted partners into one execution team",
+        "break this project into work packages for different partners",
+        "coordinate a designer printer fulfillment partner and retailer on one project",
+        "build a music team with a producer studio engineer and videographer"
       ],
       "runtime_evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/systemia/opportunity-fabric/runtime.json",
-      "public_ui_state": "not_yet_claimed_public"
+      "public_ui_state": "not_yet_claimed_public",
+      "runtime_version": "evercraft-opportunity-fabric-runtime-v1.1.0",
+      "multi_party_state": "verified_private_runtime"
     },
     {
       "product_key": "payflow",

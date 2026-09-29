@@ -16,6 +16,18 @@ Examples:
 - a contractor can assemble a subcontractor chain instead of rejecting work outside its direct trade
 - a business can bring an outcome and let Systemia assemble the temporary team required to execute it
 
+## Multi-party assembly
+
+v1.1 extends the one-to-one protected collaboration model into temporary execution teams.
+
+A team is assembled only from accepted connection records. The trusted runtime derives and deduplicates counterparties, creates a separate team invitation for each person or business, and refuses to assign a work package until that partner accepts that specific team invitation.
+
+The work then decomposes into bounded `WorkPackage` records. The team leader owns scope, output definition, dependencies and economics. The assignee independently accepts the package and reports progress. Neither team admission nor work-package acceptance grants intellectual-property rights or reveals protected material.
+
+A package can declare that protected material will eventually be required while keeping `protected_material_disclosed=false`. Protected files still require their own purpose-bound authorization path.
+
+See `multi-party.md` for the reusable execution contract.
+
 ## Non-negotiable protection boundary
 
 The matching layer MUST NOT require protected creative material.
@@ -51,9 +63,9 @@ This policy is a product-control contract specification. It is NOT represented a
 
 ## Trust model
 
-This module is designed to sit behind authenticated Systemia services. Client-supplied booleans must never be treated as proof of identity, signature, ownership, or authority.
+The verified v1.1 implementation sits behind an authenticated service-role runtime. Direct client mutation is locked for protected workflow entities, and the runtime re-verifies identity, relationship state, invitation state, and package authority before consequential writes. Client-supplied booleans or user ids must never be treated as proof of identity, signature, ownership, relationship, or authority.
 
-The engine can determine whether supplied verified facts satisfy policy. Authentication, e-signature identity proof, payment authority, durable storage, and legal record retention belong to the surrounding runtime.
+Authentication, e-signature identity proof, payment authority, durable storage, protected-file delivery, and legal record retention remain separate gates.
 
 ## Public promise
 
@@ -63,4 +75,4 @@ Discovery exposes opportunity, not crown-jewel content.
 
 ## Status
 
-v1 establishes the protection boundary, safe matching primitive, agreement gate, receipt model, and conformance tests. It does not yet claim a production-ready legal agreement, payment rail, identity proofing system, or public marketplace UI.
+v1.1 establishes metadata-first matching, protected one-to-one formation, immutable terms snapshots, purpose-bound disclosure grants, multi-party execution teams, project-specific invitations, bounded work packages, evidence receipts, and conformance tests. The private runtime is verified, but it does not yet claim a production-ready legal agreement, payment/escrow rail, production identity proofing, protected-file delivery, or a publicly deployed transactional marketplace.
