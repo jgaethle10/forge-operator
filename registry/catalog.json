@@ -561,7 +561,10 @@
         "find licensing production distribution or collaboration opportunities for work I already made"
       ],
       "runtime_evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/systemia/opportunity-fabric/runtime.json",
-      "public_ui_state": "not_yet_claimed_public"
+      "public_ui_state": "not_yet_claimed_public",
+      "aliases": [
+        "PrintConnect"
+      ]
     },
     {
       "product_key": "payflow",
