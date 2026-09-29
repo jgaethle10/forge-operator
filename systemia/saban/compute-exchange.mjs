@@ -90,7 +90,7 @@ export function normalizeComputeOffer(input={}){
     trust:{
       uptime_7d:Math.max(0,Math.min(1,n(input.trust?.uptime_7d))),
       audited:input.trust?.audited===true,
-      valid_version:input.trust?.valid_version!==false,
+      valid_version:input.trust?.valid_version===true,
       attested:input.trust?.attested===true,
     },
     economics:{
