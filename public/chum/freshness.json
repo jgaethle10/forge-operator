@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-29T05:48:02.778Z",
+  "updated_at": "2026-09-29T05:53:29.457Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,17 +11,204 @@
   },
   "latest_change_batch": [
     {
+      "path": "/chum/products/ibmi-rescue/",
+      "last_changed": "2026-09-29T05:53:29.457Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/ibmi-rescue/ai-conformance.json",
+      "last_changed": "2026-09-29T05:53:29.457Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/ibmi-rescue/ai-discovery.json",
+      "last_changed": "2026-09-29T05:53:29.457Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/ibmi-rescue/llms.txt",
+      "last_changed": "2026-09-29T05:53:29.457Z",
+      "priority": 94
+    },
+    {
+      "path": "/.well-known/evercraft-pain-index.json",
+      "last_changed": "2026-09-29T05:53:29.457Z",
+      "priority": 90
+    },
+    {
+      "path": "/.well-known/evercraft-products.json",
+      "last_changed": "2026-09-29T05:53:29.457Z",
+      "priority": 88
+    },
+    {
+      "path": "/llms-full.txt",
+      "last_changed": "2026-09-29T05:53:29.457Z",
+      "priority": 86
+    },
+    {
+      "path": "/.well-known/evercraft-agent-directory.json",
+      "last_changed": "2026-09-29T05:53:29.457Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-syndication.json",
+      "last_changed": "2026-09-29T05:53:29.457Z",
+      "priority": 84
+    },
+    {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-29T05:48:02.778Z",
+      "last_changed": "2026-09-29T05:53:29.457Z",
       "priority": 80
+    },
+    {
+      "path": "/chum/index.json",
+      "last_changed": "2026-09-29T05:53:29.457Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/pain-index.json",
+      "last_changed": "2026-09-29T05:53:29.457Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/forensiscope.json",
+      "last_changed": "2026-09-29T05:53:29.457Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/index.json",
+      "last_changed": "2026-09-29T05:53:29.457Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/rivet.json",
+      "last_changed": "2026-09-29T05:53:29.457Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/syndication/index.json",
+      "last_changed": "2026-09-29T05:53:29.457Z",
+      "priority": 80
+    },
+    {
+      "path": "/feed.json",
+      "last_changed": "2026-09-29T05:53:29.457Z",
+      "priority": 60
+    },
+    {
+      "path": "/feed.xml",
+      "last_changed": "2026-09-29T05:53:29.457Z",
+      "priority": 60
     }
   ],
   "recent_surfaces": [
     {
+      "path": "/chum/products/ibmi-rescue/",
+      "url": "/chum/products/ibmi-rescue/",
+      "last_changed": "2026-09-29T05:53:29.457Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/ibmi-rescue/ai-conformance.json",
+      "url": "/chum/products/ibmi-rescue/ai-conformance.json",
+      "last_changed": "2026-09-29T05:53:29.457Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/ibmi-rescue/ai-discovery.json",
+      "url": "/chum/products/ibmi-rescue/ai-discovery.json",
+      "last_changed": "2026-09-29T05:53:29.457Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/ibmi-rescue/llms.txt",
+      "url": "/chum/products/ibmi-rescue/llms.txt",
+      "last_changed": "2026-09-29T05:53:29.457Z",
+      "priority": 94
+    },
+    {
+      "path": "/.well-known/evercraft-pain-index.json",
+      "url": "/.well-known/evercraft-pain-index.json",
+      "last_changed": "2026-09-29T05:53:29.457Z",
+      "priority": 90
+    },
+    {
+      "path": "/.well-known/evercraft-products.json",
+      "url": "/.well-known/evercraft-products.json",
+      "last_changed": "2026-09-29T05:53:29.457Z",
+      "priority": 88
+    },
+    {
+      "path": "/llms-full.txt",
+      "url": "/llms-full.txt",
+      "last_changed": "2026-09-29T05:53:29.457Z",
+      "priority": 86
+    },
+    {
+      "path": "/.well-known/evercraft-agent-directory.json",
+      "url": "/.well-known/evercraft-agent-directory.json",
+      "last_changed": "2026-09-29T05:53:29.457Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-syndication.json",
+      "url": "/.well-known/evercraft-syndication.json",
+      "last_changed": "2026-09-29T05:53:29.457Z",
+      "priority": 84
+    },
+    {
       "path": "/chum/hot/index.json",
       "url": "/chum/hot/index.json",
-      "last_changed": "2026-09-29T05:48:02.778Z",
+      "last_changed": "2026-09-29T05:53:29.457Z",
       "priority": 80
+    },
+    {
+      "path": "/chum/index.json",
+      "url": "/chum/index.json",
+      "last_changed": "2026-09-29T05:53:29.457Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/pain-index.json",
+      "url": "/chum/pain-index.json",
+      "last_changed": "2026-09-29T05:53:29.457Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/forensiscope.json",
+      "url": "/chum/proof/forensiscope.json",
+      "last_changed": "2026-09-29T05:53:29.457Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/index.json",
+      "url": "/chum/proof/index.json",
+      "last_changed": "2026-09-29T05:53:29.457Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/rivet.json",
+      "url": "/chum/proof/rivet.json",
+      "last_changed": "2026-09-29T05:53:29.457Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/syndication/index.json",
+      "url": "/chum/syndication/index.json",
+      "last_changed": "2026-09-29T05:53:29.457Z",
+      "priority": 80
+    },
+    {
+      "path": "/feed.json",
+      "url": "/feed.json",
+      "last_changed": "2026-09-29T05:53:29.457Z",
+      "priority": 60
+    },
+    {
+      "path": "/feed.xml",
+      "url": "/feed.xml",
+      "last_changed": "2026-09-29T05:53:29.457Z",
+      "priority": 60
     },
     {
       "path": "/chum/hot/",
@@ -114,12 +301,6 @@
       "priority": 96
     },
     {
-      "path": "/.well-known/evercraft-pain-index.json",
-      "url": "/.well-known/evercraft-pain-index.json",
-      "last_changed": "2026-09-29T05:34:42.337Z",
-      "priority": 90
-    },
-    {
       "path": "/chum/answers/",
       "url": "/chum/answers/",
       "last_changed": "2026-09-29T05:34:42.337Z",
@@ -140,12 +321,6 @@
     {
       "path": "/chum/capabilities.json",
       "url": "/chum/capabilities.json",
-      "last_changed": "2026-09-29T05:34:42.337Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.json",
-      "url": "/chum/pain-index.json",
       "last_changed": "2026-09-29T05:34:42.337Z",
       "priority": 80
     },
@@ -178,48 +353,6 @@
       "url": "/chum/products/eps-estimate-engine/llms.txt",
       "last_changed": "2026-09-29T05:33:53.073Z",
       "priority": 94
-    },
-    {
-      "path": "/llms-full.txt",
-      "url": "/llms-full.txt",
-      "last_changed": "2026-09-29T05:33:53.073Z",
-      "priority": 86
-    },
-    {
-      "path": "/.well-known/evercraft-agent-directory.json",
-      "url": "/.well-known/evercraft-agent-directory.json",
-      "last_changed": "2026-09-29T05:33:53.073Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-syndication.json",
-      "url": "/.well-known/evercraft-syndication.json",
-      "last_changed": "2026-09-29T05:33:53.073Z",
-      "priority": 84
-    },
-    {
-      "path": "/chum/index.json",
-      "url": "/chum/index.json",
-      "last_changed": "2026-09-29T05:33:53.073Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/syndication/index.json",
-      "url": "/chum/syndication/index.json",
-      "last_changed": "2026-09-29T05:33:53.073Z",
-      "priority": 80
-    },
-    {
-      "path": "/feed.json",
-      "url": "/feed.json",
-      "last_changed": "2026-09-29T05:33:53.073Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.xml",
-      "url": "/feed.xml",
-      "last_changed": "2026-09-29T05:33:53.073Z",
-      "priority": 60
     },
     {
       "path": "/chum/crawler-radar.json",
@@ -1158,30 +1291,6 @@
       "priority": 94
     },
     {
-      "path": "/chum/products/ibmi-rescue/",
-      "url": "/chum/products/ibmi-rescue/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/ibmi-rescue/ai-conformance.json",
-      "url": "/chum/products/ibmi-rescue/ai-conformance.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/ibmi-rescue/ai-discovery.json",
-      "url": "/chum/products/ibmi-rescue/ai-discovery.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/ibmi-rescue/llms.txt",
-      "url": "/chum/products/ibmi-rescue/llms.txt",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 94
-    },
-    {
       "path": "/chum/products/legacy-rescue-lab/",
       "url": "/chum/products/legacy-rescue-lab/",
       "last_changed": "2026-09-29T05:30:59.043Z",
@@ -1490,30 +1599,6 @@
     {
       "path": "/chum/answers/doors/submit-an-ai-system-for-an-external-lab-22b4c83255/",
       "url": "/chum/answers/doors/submit-an-ai-system-for-an-external-lab-22b4c83255/",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/test-an-ai-agent-with-a-bounded-mission-3b66172d9e.json",
-      "url": "/chum/answers/doors/test-an-ai-agent-with-a-bounded-mission-3b66172d9e.json",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/test-an-ai-agent-with-a-bounded-mission-3b66172d9e/",
-      "url": "/chum/answers/doors/test-an-ai-agent-with-a-bounded-mission-3b66172d9e/",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/turn-a-real-task-into-a-structured-proving-exercise-c21c4fb857.json",
-      "url": "/chum/answers/doors/turn-a-real-task-into-a-structured-proving-exercise-c21c4fb857.json",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/turn-a-real-task-into-a-structured-proving-exercise-c21c4fb857/",
-      "url": "/chum/answers/doors/turn-a-real-task-into-a-structured-proving-exercise-c21c4fb857/",
       "last_changed": "2026-09-29T04:34:54.060Z",
       "priority": 100
     }

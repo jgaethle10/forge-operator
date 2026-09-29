@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.syndication-state.v1",
-  "updated_at": "2026-09-29T05:34:42.173Z",
+  "updated_at": "2026-09-29T05:53:29.289Z",
   "complete_mirror": true,
   "product_hashes": {
     "aliev": "a29d7233b63011a5152f0c1bbe60c1cba860016bf13e60491c98ff78bb21e0da",
@@ -25,7 +25,7 @@
     "evercraft-fantasy-intelligence": "007aea8041ef74d2c39d91dfc7361864522492c7bbf6da5e03737d0e2eba987a",
     "evercraft-global-health-atlas": "ab0c33e6fbfbe8a633a55e2d7ac93ff89ac41a5b9a40447289954dc629ccd38d",
     "evercraft-home": "fc710e7e132644a8f2f38bcf1a1b0eb2d89611881172e1a945bfaf224c7c9699",
-    "ibmi-rescue": "700abebb39c147f1039f64483a5e8b1c885a102f18ad875fa367015b3eaeead8",
+    "ibmi-rescue": "025a87cea0d19f2e43ad7be12338aff1208f7fa45327ab89715fbe1246038603",
     "evercraft-network": "80c9a230b5daaa1b1e042170604eba051f395a8779f759b1798011f5dbc9212c",
     "opportunity-fabric": "62fbc3909140364ca6a96467b690b727a85cbf6ae8fac3875669d44e29a6f8ed",
     "evercraft-physics-atlas": "e469dec438a21b93bfd4abe2728a46ce2fc810c1a4af50f792cc9cc01cd1d59e",

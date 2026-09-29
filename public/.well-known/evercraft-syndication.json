@@ -289,7 +289,7 @@
       "discovery": "/chum/products/ibmi-rescue/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-      "content_sha256": "700abebb39c147f1039f64483a5e8b1c885a102f18ad875fa367015b3eaeead8"
+      "content_sha256": "025a87cea0d19f2e43ad7be12338aff1208f7fa45327ab89715fbe1246038603"
     },
     {
       "product_key": "evercraft-network",

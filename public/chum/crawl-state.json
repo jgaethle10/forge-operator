@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-29T05:48:02.778Z",
+  "updated_at": "2026-09-29T05:53:29.457Z",
   "url_count": 2628,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -21,8 +21,8 @@
     },
     "/chum/index.json": {
       "path": "/chum/index.json",
-      "content_sha256": "2505aee46f2f284318be0f0263d7f795eb55b718ee7a461652af351bd156ad1c",
-      "last_changed": "2026-09-29T05:33:53.073Z",
+      "content_sha256": "03f7648cacbd083070e1e4c156dc069aa98b079d0f4927ce5b85af10c220bac4",
+      "last_changed": "2026-09-29T05:53:29.457Z",
       "priority": 80
     },
     "/chum/revenue.html": {
@@ -93,8 +93,8 @@
     },
     "/chum/pain-index.json": {
       "path": "/chum/pain-index.json",
-      "content_sha256": "450f5a0c686939301a922b425d1d878e7351f7ba5fb0d55f7acab36f4f70d43f",
-      "last_changed": "2026-09-29T05:34:42.337Z",
+      "content_sha256": "57ca94f5a75961202f2be2a00fd890d9088909faf6ee625fdfe9bebfff0d6372",
+      "last_changed": "2026-09-29T05:53:29.457Z",
       "priority": 80
     },
     "/chum/pain-index.txt": {
@@ -141,8 +141,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "2be95565e406e802b4906287d915b760add807c98c0aa9e0cd471cb262cef614",
-      "last_changed": "2026-09-29T05:48:02.778Z",
+      "content_sha256": "446feba4230098bf424963acae362eefa4f512be9211da41dc33737fdd524ef5",
+      "last_changed": "2026-09-29T05:53:29.457Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -177,8 +177,8 @@
     },
     "/chum/proof/index.json": {
       "path": "/chum/proof/index.json",
-      "content_sha256": "4d4b19143d8bd61c475e9b32af84a9b59562e28ad9ccadaf98740dd1172b4c67",
-      "last_changed": "2026-09-29T02:29:30.910Z",
+      "content_sha256": "af8c4a80d38871054d4532fd8db3924d1ba532dcf92992f450f61eca3d4c276e",
+      "last_changed": "2026-09-29T05:53:29.457Z",
       "priority": 80
     },
     "/chum/proof/llms.txt": {
@@ -189,14 +189,14 @@
     },
     "/chum/proof/forensiscope.json": {
       "path": "/chum/proof/forensiscope.json",
-      "content_sha256": "0ab8bcf2a10f6308cab2bed5478fffcb691320149614b567307075b503c4f454",
-      "last_changed": "2026-09-29T02:29:30.910Z",
+      "content_sha256": "b11da62a7c67534af92c728d537ec404d652c69d38fc73d02d29054270696683",
+      "last_changed": "2026-09-29T05:53:29.457Z",
       "priority": 80
     },
     "/chum/proof/rivet.json": {
       "path": "/chum/proof/rivet.json",
-      "content_sha256": "34639187ea7516c1fa2a40157f1341012eacdf7b160ace3c85e4d597f579b003",
-      "last_changed": "2026-09-29T02:29:30.910Z",
+      "content_sha256": "c2c4050ce50dd11cab40cad1ae7e05e74e0214281a144de47b7eba662cf89464",
+      "last_changed": "2026-09-29T05:53:29.457Z",
       "priority": 80
     },
     "/chum/commercial/": {
@@ -339,8 +339,8 @@
     },
     "/.well-known/evercraft-pain-index.json": {
       "path": "/.well-known/evercraft-pain-index.json",
-      "content_sha256": "450f5a0c686939301a922b425d1d878e7351f7ba5fb0d55f7acab36f4f70d43f",
-      "last_changed": "2026-09-29T05:34:42.337Z",
+      "content_sha256": "57ca94f5a75961202f2be2a00fd890d9088909faf6ee625fdfe9bebfff0d6372",
+      "last_changed": "2026-09-29T05:53:29.457Z",
       "priority": 90
     },
     "/rivet/discovery.json": {
@@ -729,8 +729,8 @@
     },
     "/llms-full.txt": {
       "path": "/llms-full.txt",
-      "content_sha256": "dce934b2e6148f3c49ea097eaab5bc4f810416bca6c71e3fbfd0562fd725b87a",
-      "last_changed": "2026-09-29T05:33:53.073Z",
+      "content_sha256": "0d4500ca568bd607845a471611cbddd2a2dba19b338c13218fbf7bd08e35aee0",
+      "last_changed": "2026-09-29T05:53:29.457Z",
       "priority": 86
     },
     "/ai-discovery.json": {
@@ -771,8 +771,8 @@
     },
     "/.well-known/evercraft-agent-directory.json": {
       "path": "/.well-known/evercraft-agent-directory.json",
-      "content_sha256": "29c5acb3845b898c69f6836706afbe2c672d8b1f0ef7390b04899fc442b803fe",
-      "last_changed": "2026-09-29T05:33:53.073Z",
+      "content_sha256": "b25d9ce68f77e2b11394748964fa253abf2c8f76c05f34d535901d0fc2eb2a14",
+      "last_changed": "2026-09-29T05:53:29.457Z",
       "priority": 84
     },
     "/.well-known/evercraft-agent-commerce.json": {
@@ -795,8 +795,8 @@
     },
     "/.well-known/evercraft-products.json": {
       "path": "/.well-known/evercraft-products.json",
-      "content_sha256": "229ee011aa80a72b8ef541e4c84e639fbbe973e217c2828e98b2fdc6a180dff2",
-      "last_changed": "2026-09-29T04:34:48.423Z",
+      "content_sha256": "cf45a576e2d2d8ae30147f8215ba02231778308ce7f675271103bc64e35c130f",
+      "last_changed": "2026-09-29T05:53:29.457Z",
       "priority": 88
     },
     "/.well-known/evercraft-machine-catalog.json": {
@@ -3225,26 +3225,26 @@
     },
     "/chum/products/ibmi-rescue/": {
       "path": "/chum/products/ibmi-rescue/",
-      "content_sha256": "fa5ff44143d8f4af1c947112310f9964408c7ed73a5ddc6201f86edfc9470250",
-      "last_changed": "2026-09-29T05:30:59.043Z",
+      "content_sha256": "fbb1ef10a3d2b07220190bc267b7651d3aea98cc4cda26b78930755d944b58f0",
+      "last_changed": "2026-09-29T05:53:29.457Z",
       "priority": 94
     },
     "/chum/products/ibmi-rescue/llms.txt": {
       "path": "/chum/products/ibmi-rescue/llms.txt",
-      "content_sha256": "015eec2f8f8c8db054cf0a49d81e7d918c079d0b40f42f73a604f3526a3daf3a",
-      "last_changed": "2026-09-29T05:30:59.043Z",
+      "content_sha256": "f0594a3ec1ce142b0033229d175b022eef374f92efcdf16778360233c52976ef",
+      "last_changed": "2026-09-29T05:53:29.457Z",
       "priority": 94
     },
     "/chum/products/ibmi-rescue/ai-discovery.json": {
       "path": "/chum/products/ibmi-rescue/ai-discovery.json",
-      "content_sha256": "dd38c744670cee211b793ba7a83a8ea06140a702af7a28b21dd38ff9b2a11e20",
-      "last_changed": "2026-09-29T05:30:59.043Z",
+      "content_sha256": "61b0bbd023e3606491dc0fbb318648131be407b17a960408f8d6096d4552842b",
+      "last_changed": "2026-09-29T05:53:29.457Z",
       "priority": 94
     },
     "/chum/products/ibmi-rescue/ai-conformance.json": {
       "path": "/chum/products/ibmi-rescue/ai-conformance.json",
-      "content_sha256": "b9681a0ff956339db5106328450bdfe9368b1cc4d262892b4bb118da56d27efa",
-      "last_changed": "2026-09-29T05:30:59.043Z",
+      "content_sha256": "0df5bfac16ae79bbe40e570606305fb92c8847a2d924b0d0ace80a149ad2760b",
+      "last_changed": "2026-09-29T05:53:29.457Z",
       "priority": 94
     },
     "/chum/products/infinite-classroom/": {
@@ -15747,14 +15747,14 @@
     },
     "/feed.xml": {
       "path": "/feed.xml",
-      "content_sha256": "d2dd3e93df9d69a100d0d89a605cb0bf4fb216e91969af008c2f53f69c832dd0",
-      "last_changed": "2026-09-29T05:33:53.073Z",
+      "content_sha256": "d0c799c7f7b28b9f1e18aa3c3d0fe3a9a6b8bc30167f8ca0504cfc81fb31c0d0",
+      "last_changed": "2026-09-29T05:53:29.457Z",
       "priority": 60
     },
     "/feed.json": {
       "path": "/feed.json",
-      "content_sha256": "d646779c798ca450c20cc33a572365b0522dd43565a1d849cdf85e12e21d69ed",
-      "last_changed": "2026-09-29T05:33:53.073Z",
+      "content_sha256": "0ea61580a31a499f59fe0027a072724abae0602472736c57538fdc375f319bf5",
+      "last_changed": "2026-09-29T05:53:29.457Z",
       "priority": 60
     },
     "/opensearch.xml": {
@@ -15765,8 +15765,8 @@
     },
     "/.well-known/evercraft-syndication.json": {
       "path": "/.well-known/evercraft-syndication.json",
-      "content_sha256": "128996530de3f43a61715af73c695dbf41d847006cdb3eb0e974cdd7ac36019d",
-      "last_changed": "2026-09-29T05:33:53.073Z",
+      "content_sha256": "871906a7ace364f42def70c51836e28f87bb4e16d0064bd0cda2cabb18aa1a05",
+      "last_changed": "2026-09-29T05:53:29.457Z",
       "priority": 84
     },
     "/chum/syndication/": {
@@ -15777,8 +15777,8 @@
     },
     "/chum/syndication/index.json": {
       "path": "/chum/syndication/index.json",
-      "content_sha256": "18ad8da5d45f9f89b06f29fd9ae33142a4ec5cbaf65612de90cfc10000b7b31a",
-      "last_changed": "2026-09-29T05:33:53.073Z",
+      "content_sha256": "84e7b972f987c04cd765c9b71020dfee187d350d9be78856c166c5b4a33c6304",
+      "last_changed": "2026-09-29T05:53:29.457Z",
       "priority": 80
     }
   }

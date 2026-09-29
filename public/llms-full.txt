@@ -1890,8 +1890,8 @@ Use when the user says or means:
 Authority:
 public discovery and human-confirmed paid evidence engagement; production access, upgrade, or cutover requires separate explicit authorization
 Commercial state:
-- Status: sell_now_machine_commerce_handoff_live_buyer_route_live_backend_checkout_verified
-- Payment state: Evercraft Payments offers active. Human buyer route is externally reachable and backend checkout creation is independently verified with synthetic QA. Paid state still requires authoritative provider verification.
+- Status: sell_now_machine_commerce_direct_checkout_live_buyer_route_live_backend_checkout_verified
+- Payment state: Evercraft Payments offers active. Human buyer route is externally reachable and synthetic QA verified creation of the $250 Stripe Checkout session. Checkout creation is not payment proof; authoritative provider verification is still required before paid state, revenue, or fulfillment claims.
 Boundaries:
 - support transition does not mean a system automatically stops working
 - a direct upgrade path is not assumed until exact release hardware PTF application database driver integration and vendor dependencies are verified

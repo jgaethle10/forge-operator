@@ -626,9 +626,9 @@
       ],
       "authority": "public discovery and human-confirmed paid evidence engagement; production access, upgrade, or cutover requires separate explicit authorization",
       "human_confirmation_required": true,
-      "commercial_status": "sell_now_machine_commerce_handoff_live_buyer_route_live_backend_checkout_verified",
+      "commercial_status": "sell_now_machine_commerce_direct_checkout_live_buyer_route_live_backend_checkout_verified",
       "description": "Evercraft IBM i Rescue is an Evercraft ibmi upgrade and legacy modernization evidence capability. Common needs: assess an IBM i or AS/400 estate before changing production; IBM i estate assessment; AS/400 estate assessment; find undocumented dependencies in an IBM i workload.",
-      "content_sha256": "700abebb39c147f1039f64483a5e8b1c885a102f18ad875fa367015b3eaeead8",
+      "content_sha256": "025a87cea0d19f2e43ad7be12338aff1208f7fa45327ab89715fbe1246038603",
       "updated_at": "2026-09-28T00:00:00.000Z"
     },
     {
