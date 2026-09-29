@@ -57,4 +57,4 @@ jobs:
       - name: Prove MCP gateway boundary
         run: node systemia/remote-operator/mcp-gateway.test.mjs
       - name: Typecheck Forge integration
-        run: npm ci && npm run lint
+        run: npm install --no-audit --no-fund && npm run lint
