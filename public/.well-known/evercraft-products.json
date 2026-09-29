@@ -1559,6 +1559,33 @@
       ]
     },
     {
+      "product_key": "opportunity-fabric",
+      "name": "Evercraft Opportunity Fabric",
+      "class": "protected_collaboration_partner_matching_and_execution_orchestration",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric",
+      "intents": [
+        "I have designs and need a printer or manufacturing partner",
+        "find a production partner for my artwork",
+        "I have songs or demos and need a producer or recording studio",
+        "find collaborators near me who can help finish this project",
+        "I have equipment or unused capacity and want complementary work",
+        "I need a subcontractor or specialist so I can execute this job",
+        "I have intellectual property but do not want to give it away while looking for partners",
+        "help me turn this unfinished idea or asset into an executable team",
+        "find licensing production distribution or collaboration opportunities for work I already made"
+      ],
+      "authority": "public capability discovery and metadata-first partner matching architecture; no public protected-asset disclosure or payment authority is claimed",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "public matching must not require protected creative files or confidential material",
+        "uploading listing viewing matching or forming a team does not transfer ownership or grant commercial rights",
+        "protected disclosure remains gated and actual protected-file delivery is not exposed as a public production workflow",
+        "Creator Covenant legal language remains draft_for_counsel_review",
+        "public Base44 deployment URL is not yet claimed",
+        "fingerprint vault evidence support is not copyright registration patent filing or dispositive proof of ownership"
+      ]
+    },
+    {
       "product_key": "payflow",
       "name": "PayFlow",
       "class": "small_team_payroll_recordkeeping",
