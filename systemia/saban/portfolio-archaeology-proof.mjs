@@ -18,7 +18,7 @@ const workItems = loadPrivateInventory(inventoryPath, {
   privacy: contract.inventory_privacy || {}
 });
 
-assert.equal(workItems.length, 11);
+assert.equal(workItems.length, 13);
 assert.ok(workItems.every((item) => item.raw?.source_identifiers_redacted === true));
 assert.ok(workItems.every((item) => !JSON.stringify(item).includes('private-source-id-')));
 
@@ -47,6 +47,8 @@ assert.ok(receipt.reconciliation.classification_counts.known_public >= 1);
 assert.ok(receipt.reconciliation.classification_counts.placeholder >= 1);
 assert.ok(receipt.reconciliation.classification_counts.commercial_candidate >= 1);
 assert.ok(receipt.reconciliation.classification_counts.internal_only_candidate >= 1);
+assert.ok(receipt.reconciliation.classification_counts.known_private_surface >= 1);
+assert.ok(receipt.reconciliation.classification_counts.platform_container >= 1);
 assert.ok(receipt.reconciliation.duplicate_name_groups.length >= 1);
 
 const falseAliasNames = new Set([
