@@ -98,6 +98,7 @@ try{
     eps_http_status:eps?.http_status??null,
     clip_endpoint_host:eps?.endpoint_host||new URL(clipUrl).hostname,
     oidc_subject_binding:'repository_owner_id+repository_id+ref',
+    oidc_debug_revision:'reason-v3',
     secret_persisted_in_public_receipt:false,
     base44_scheduler_retirement_authorized_by_this_canary:false
   };
