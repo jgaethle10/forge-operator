@@ -117,11 +117,9 @@ export async function run() {
   const canonical = JSON.stringify(receipt);
   receipt.receipt_sha256 = `sha256:${createHash('sha256').update(canonical).digest('hex')}`;
 
-  const path = process.env.CLIP_CONTINUITY_RECEIPT_PATH;
-  if (path) {
-    await mkdir(dirname(path), {recursive: true});
-    await writeFile(path, JSON.stringify(receipt, null, 2) + '\n', 'utf8');
-  }
+  const path = process.env.CLIP_CONTINUITY_RECEIPT_PATH || 'artifacts/clip-social-continuity/latest.json';
+  await mkdir(dirname(path), {recursive: true});
+  await writeFile(path, JSON.stringify(receipt, null, 2) + '\n', 'utf8');
   console.log(JSON.stringify(receipt, null, 2));
   if (status === 'incident') process.exitCode = 1;
   return receipt;
