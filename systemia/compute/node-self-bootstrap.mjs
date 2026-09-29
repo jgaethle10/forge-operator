@@ -1,0 +1,327 @@
+#!/usr/bin/env node
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
+import { createHash } from 'node:crypto';
+import { submitOutboundEnrollmentRequest } from '../network/outbound-node-agent.mjs';
+
+const here=path.dirname(fileURLToPath(import.meta.url));
+const sha=(value)=>'sha256:'+createHash('sha256').update(
+  typeof value==='string'?value:JSON.stringify(value)
+).digest('hex');
+
+function arg(name,fallback=null){
+  const i=process.argv.indexOf(name);
+  return i>=0&&process.argv[i+1]?process.argv[i+1]:fallback;
+}
+function has(name){return process.argv.includes(name);}
+function readJson(file){
+  try{return fs.existsSync(file)?JSON.parse(fs.readFileSync(file,'utf8')):null;}catch{return null;}
+}
+function readEnv(file){
+  const out={};
+  if(!fs.existsSync(file)) return out;
+  for(const raw of fs.readFileSync(file,'utf8').split('\n')){
+    const line=raw.trim();
+    if(!line||line.startsWith('#')) continue;
+    const i=line.indexOf('=');
+    if(i>0) out[line.slice(0,i)]=line.slice(i+1);
+  }
+  return out;
+}
+function bootHash(){
+  try{
+    const value=fs.readFileSync('/proc/sys/kernel/random/boot_id','utf8').trim();
+    return value?sha(value):null;
+  }catch{return null;}
+}
+function commandJson(command,args,{env=process.env}={}){
+  const run=spawnSync(command,args,{encoding:'utf8',env,maxBuffer:4*1024*1024});
+  let body=null;
+  try{body=JSON.parse(String(run.stdout||'').trim());}catch{}
+  return {
+    ok:run.status===0,
+    status:run.status,
+    stdout:String(run.stdout||''),
+    stderr:String(run.stderr||''),
+    body,
+  };
+}
+function fileState(root){
+  return {
+    preflight:readJson(path.join(root,'node001-preflight.json')),
+    install:readJson(path.join(root,'install-receipt.json')),
+    node:readJson(path.join(root,'nodeseed-receipt.json')),
+    offline:readJson(path.join(root,'offline-receipt.json')),
+    field:readJson(path.join(root,'field-evidence-candidate.json')),
+    public_edge:readJson(path.join(root,'public-edge-admission-receipt.json')),
+  };
+}
+function observedPublicEdge(edge){
+  return Boolean(
+    edge?.ready_for_public_edge_enrollment===true &&
+    edge?.runtime_advertisement_verified===true &&
+    edge?.public_edge_configuration_valid===true
+  );
+}
+
+export function evaluateBootstrap({
+  files={},
+  currentBootHash=null,
+  brokerUrl='',
+  physicalConfirmed=false,
+}={}){
+  const checks={
+    preflight_passed:files.preflight?.passed===true,
+    installed:Boolean(files.install),
+    node_receipt:Boolean(files.node?.device_fingerprint&&files.node?.node_id),
+    rebooted_after_install:Boolean(
+      files.install?.install_boot_id_hash &&
+      currentBootHash &&
+      files.install.install_boot_id_hash!==currentBootHash
+    ),
+    offline_verified:files.offline?.verified===true,
+    field_certified:files.field?.ready_for_yard_enrollment===true,
+    physical_confirmed:physicalConfirmed===true,
+    public_edge_admitted:observedPublicEdge(files.public_edge),
+    remote_broker_configured:Boolean(String(brokerUrl||'').trim()),
+  };
+
+  let state='ready_for_systemia_admission';
+  let next_action='none';
+  let human_action_required=false;
+  let reason='all_local_field_gates_complete';
+
+  if(!checks.preflight_passed){
+    state='ineligible_for_field_public_edge';
+    next_action='use_another_owned_machine';
+    human_action_required=true;
+    reason='field_preflight_failed';
+  }else if(!checks.installed||!checks.node_receipt){
+    state='install_ready';
+    next_action='run_bootstrap_with_--advance_as_root';
+    human_action_required=false;
+    reason='nodeseed_not_installed';
+  }else if(!checks.rebooted_after_install){
+    state='reboot_required';
+    next_action='reboot_machine_once_then_rerun_bootstrap';
+    human_action_required=true;
+    reason='reboot_persistence_not_yet_observed';
+  }else if(!checks.offline_verified){
+    state='offline_check_required';
+    next_action='disconnect_network_then_run_--capture-offline';
+    human_action_required=true;
+    reason='offline_survival_receipt_missing';
+  }else if(!checks.physical_confirmed||!checks.field_certified){
+    state='physical_confirmation_required';
+    next_action='rerun_with_--confirm-physical-host_--advance';
+    human_action_required=true;
+    reason='physical_host_claim_must_be_explicit';
+  }else if(!checks.public_edge_admitted){
+    state='public_https_admission_required';
+    next_action='bind_owned_domain_and_trusted_tls_then_run_--admit-public-edge';
+    human_action_required=false;
+    reason='public_https_not_yet_verified';
+  }else if(!checks.remote_broker_configured){
+    state='control_broker_binding_required';
+    next_action='supply_systemia_remote_broker_url';
+    human_action_required=false;
+    reason='outbound_control_lane_not_configured';
+  }
+
+  return {
+    schema:'evercraft.node-self-bootstrap.status.v1',
+    state,
+    reason,
+    next_action,
+    human_action_required,
+    checks,
+    node_id:files.node?.node_id||null,
+    device_fingerprint:files.node?.device_fingerprint||null,
+    public_edge:files.public_edge?{
+      base_domain:files.public_edge.base_domain||null,
+      public_port:files.public_edge.public_port||null,
+      certificate_fingerprint256:files.public_edge.certificate_fingerprint256||null,
+      ready_for_public_edge_enrollment:files.public_edge.ready_for_public_edge_enrollment===true,
+      external_dns_verified:files.public_edge.external_dns_verified===true,
+      public_reachability_verified:files.public_edge.public_reachability_verified===true,
+    }:null,
+  };
+}
+
+function writeStatus(root,status){
+  const body={...status,observed_at:new Date().toISOString()};
+  const receipt={...body,receipt_hash:sha(body)};
+  const file=path.join(root,'bootstrap-status.json');
+  fs.mkdirSync(root,{recursive:true,mode:0o750});
+  fs.writeFileSync(file,JSON.stringify(receipt,null,2)+'\n',{mode:0o600});
+  return receipt;
+}
+
+function ensureRoot(action){
+  if(typeof process.getuid==='function'&&process.getuid()!==0){
+    throw new Error(action+'_requires_root');
+  }
+}
+function requireValue(name,value){
+  const v=String(value||'').trim();
+  if(!v) throw new Error(name+'_required');
+  return v;
+}
+function localCapacityEndpoint(nodeReceipt){
+  if(!nodeReceipt?.endpoint) throw new Error('nodeseed_receipt_endpoint_missing');
+  const url=new URL(nodeReceipt.endpoint);
+  return 'http://127.0.0.1:'+url.port;
+}
+
+async function main(){
+  const root=path.resolve(arg('--root','/var/lib/evercraft/nodeseed'));
+  const envFile=path.resolve(arg('--env-file','/etc/evercraft/nodeseed.env'));
+  const brokerUrl=String(arg('--broker-url',process.env.EVERCRAFT_REMOTE_BROKER_URL||'')).trim();
+  const confirmPhysical=has('--confirm-physical-host');
+  const advance=has('--advance');
+  const sourceRoot=path.resolve(arg('--source-root',path.join(here,'../..')));
+
+  // Always refresh preflight before making a placement decision.
+  const preflightRun=commandJson(process.execPath,[
+    path.join(sourceRoot,'systemia/compute/field-preflight.mjs'),
+    '--root',root,
+  ]);
+  if(preflightRun.body){
+    fs.mkdirSync(root,{recursive:true,mode:0o750});
+    fs.writeFileSync(
+      path.join(root,'node001-preflight.json'),
+      JSON.stringify(preflightRun.body,null,2)+'\n',
+      {mode:0o600}
+    );
+  }
+
+  let files=fileState(root);
+  if(files.preflight?.passed!==true){
+    const status=evaluateBootstrap({
+      files,currentBootHash:bootHash(),brokerUrl,physicalConfirmed:confirmPhysical,
+    });
+    console.log(JSON.stringify(writeStatus(root,status),null,2));
+    process.exit(4);
+  }
+
+  if(advance&&!files.install){
+    ensureRoot('nodeseed_install');
+    const installed=spawnSync('bash',[
+      path.join(sourceRoot,'systemia/compute/install-node-seed.sh')
+    ],{
+      encoding:'utf8',
+      env:{...process.env,EVERCRAFT_NODESEED_ROOT:root},
+      stdio:['ignore','pipe','pipe'],
+      maxBuffer:4*1024*1024,
+    });
+    if(installed.status!==0){
+      throw new Error('nodeseed_install_failed:'+String(installed.stderr||installed.stdout||'').slice(0,1000));
+    }
+    files=fileState(root);
+  }
+
+  if(has('--capture-offline')){
+    const offline=commandJson(process.execPath,[
+      path.join(sourceRoot,'systemia/compute/field-offline-check.mjs'),
+      '--root',root,
+    ]);
+    if(!offline.ok) throw new Error('offline_check_failed:'+String(offline.stderr||offline.stdout||'').slice(0,1000));
+    files=fileState(root);
+  }
+
+  if(advance&&files.offline?.verified===true&&!files.field?.ready_for_yard_enrollment){
+    if(!confirmPhysical){
+      const status=evaluateBootstrap({
+        files,currentBootHash:bootHash(),brokerUrl,physicalConfirmed:false,
+      });
+      console.log(JSON.stringify(writeStatus(root,status),null,2));
+      return;
+    }
+    const operatorRef=requireValue('operator_ref',arg('--operator-ref','founder-authorized-local-observation'));
+    const receiptRef=requireValue('receipt_ref',arg('--receipt-ref',files.offline?.receipt_hash||''));
+    const certified=commandJson(process.execPath,[
+      path.join(sourceRoot,'systemia/compute/field-certify.mjs'),
+      '--root',root,
+      '--operator-ref',operatorRef,
+      '--receipt-ref',receiptRef,
+      '--physical-observed',
+    ]);
+    if(!certified.ok) throw new Error('field_certification_failed:'+String(certified.stderr||certified.stdout||'').slice(0,1000));
+    files=fileState(root);
+  }
+
+  if(has('--admit-public-edge')){
+    ensureRoot('public_edge_admission');
+    const domain=requireValue('base_domain',arg('--base-domain',process.env.EVERCRAFT_PUBLIC_EDGE_BASE_DOMAIN||''));
+    const key=requireValue('tls_key_path',arg('--tls-key-path',process.env.EVERCRAFT_PUBLIC_EDGE_TLS_KEY_PATH||''));
+    const cert=requireValue('tls_cert_path',arg('--tls-cert-path',process.env.EVERCRAFT_PUBLIC_EDGE_TLS_CERT_PATH||''));
+    const admitted=commandJson(process.execPath,[
+      path.join(sourceRoot,'systemia/compute/public-edge-field-admit.mjs'),
+      '--root',root,
+      '--base-domain',domain,
+      '--tls-key-path',key,
+      '--tls-cert-path',cert,
+      '--apply',
+    ]);
+    if(!admitted.ok) throw new Error('public_edge_admission_failed:'+String(admitted.stderr||admitted.stdout||'').slice(0,1200));
+    files=fileState(root);
+  }
+
+  let enrollment=null;
+  if(has('--request-enrollment')){
+    const broker=requireValue('broker_url',brokerUrl);
+    const env=readEnv(envFile);
+    const token=requireValue('allocator_token',env.EVERCRAFT_ALLOCATOR_TOKEN);
+    const node=files.node||readJson(path.join(root,'nodeseed-receipt.json'));
+    enrollment=await submitOutboundEnrollmentRequest({
+      brokerUrl:broker,
+      localCapacityEndpoint:localCapacityEndpoint(node),
+      localAllocatorToken:token,
+    });
+    const safeEnrollment={
+      schema:enrollment?.schema||null,
+      node_id:enrollment?.node_id||node?.node_id||null,
+      device_fingerprint:enrollment?.device_fingerprint||node?.device_fingerprint||null,
+      request_receipt_hash:enrollment?.request_receipt_hash||null,
+      expires_at:enrollment?.expires_at||null,
+      state:enrollment?.state||null,
+      authority_granted:false,
+      observed_at:new Date().toISOString(),
+    };
+    fs.writeFileSync(
+      path.join(root,'remote-enrollment-request.json'),
+      JSON.stringify(safeEnrollment,null,2)+'\n',
+      {mode:0o600}
+    );
+  }
+
+  const status=evaluateBootstrap({
+    files,currentBootHash:bootHash(),brokerUrl,physicalConfirmed:confirmPhysical,
+  });
+  const receipt=writeStatus(root,{
+    ...status,
+    remote_enrollment:enrollment?{
+      state:enrollment.state||null,
+      request_receipt_hash:enrollment.request_receipt_hash||null,
+      authority_granted:false,
+    }:null,
+  });
+  console.log(JSON.stringify(receipt,null,2));
+}
+
+const direct=process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url);
+if(direct){
+  try{await main();}
+  catch(error){
+    console.error(JSON.stringify({
+      ok:false,
+      schema:'evercraft.node-self-bootstrap.error.v1',
+      error:error instanceof Error?error.message:String(error),
+      founder_login_required:false,
+    },null,2));
+    process.exit(7);
+  }
+}
