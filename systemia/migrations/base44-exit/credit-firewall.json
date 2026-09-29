@@ -66,7 +66,12 @@
       "main_cutover_receipt": "sha256:fb2d5cb093e5906c247fa41745c90cba8b023c0cbade55bba510622778ce8e33",
       "main_cutover_result": "no_op",
       "last_legacy_wake_at": "2026-09-29T17:32:33.021Z",
-      "absence_window_verified": false
+      "absence_window_verified": false,
+      "post_freeze_replacement_run_id": "36609801991",
+      "post_freeze_replacement_receipt": "sha256:307c10228664e1360903b5c8a9b992b337b043a8bbac8dca0daeffb49a6c4b14",
+      "post_freeze_replacement_result": "no_op",
+      "post_freeze_replacement_verified_at": "2026-09-29T18:07:54.190Z",
+      "legacy_wakes_after_2026_09_29T18_01_34Z": 0
     }
   ]
 }
