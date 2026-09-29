@@ -12,6 +12,8 @@ on:
       - 'systemia/saban/ambient-live-pilot.mjs'
       - 'systemia/saban/ambient-capability-resolver.mjs'
       - '.github/workflows/saban-ambient-live-pilot.yml'
+  schedule:
+    - cron: '*/5 * * * *'
   workflow_dispatch:
 
 permissions:
