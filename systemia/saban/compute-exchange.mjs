@@ -158,7 +158,7 @@ export function evaluateComputeOffer(demandInput,offerInput){
 
   let score=0;
   if(!reasons.length){
-    if(offer.economics.zero_cost) score+=1000;
+    if(demand.economics.prefer_zero_cost&&offer.economics.zero_cost) score+=1000;
     score+=Math.round(offer.trust.uptime_7d*200);
     if(offer.trust.attested) score+=80;
     if(offer.trust.audited) score+=50;
