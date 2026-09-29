@@ -31,16 +31,21 @@ jobs:
         with:
           node-version: 22
 
-      - name: Restore resident source state
+      - name: Restore resident watch state
         uses: actions/cache/restore@v4
         with:
-          path: artifacts/legacy-rescue-watch/source-state.json
+          path: |
+            artifacts/legacy-rescue-watch/source-state.json
+            artifacts/legacy-rescue-watch/heartbeat-state.json
           key: legacy-rescue-watch-state-${{ runner.os }}-${{ github.run_id }}
           restore-keys: |
             legacy-rescue-watch-state-${{ runner.os }}-
 
       - name: Prove Systemia Legacy Rescue workflow
         run: npm run proof:legacy-rescue-watch
+
+      - name: Measure observed resident cadence
+        run: npm run run:legacy-rescue-cadence-health
 
       - name: Scan allowlisted public sources
         run: npm run scan:legacy-rescue-watch
@@ -51,11 +56,13 @@ jobs:
       - name: Run Systemia Legacy Rescue cycle
         run: npm run run:legacy-rescue-watch
 
-      - name: Save resident source state
+      - name: Save resident watch state
         if: always()
         uses: actions/cache/save@v4
         with:
-          path: artifacts/legacy-rescue-watch/source-state.json
+          path: |
+            artifacts/legacy-rescue-watch/source-state.json
+            artifacts/legacy-rescue-watch/heartbeat-state.json
           key: legacy-rescue-watch-state-${{ runner.os }}-${{ github.run_id }}
 
       - name: Upload Systemia receipts
@@ -72,6 +79,8 @@ jobs:
             artifacts/legacy-rescue-watch/buyer-research-queue.json
             artifacts/legacy-rescue-watch/public-scan.json
             artifacts/legacy-rescue-watch/signals.json
+            artifacts/legacy-rescue-watch/cadence-health.json
+            artifacts/legacy-rescue-watch/heartbeat-state.json
           if-no-files-found: warn
           retention-days: 14
 
@@ -83,14 +92,15 @@ jobs:
             echo "## Systemia Legacy Rescue resident watch"
             echo
             echo "Workflow logic: Systemia organism"
-            echo "Cadence transport: 5-minute resident heartbeat"
+            echo "Configured cadence target: 5 minutes"
+            echo "Observed cadence authority: cadence-health receipt"
             echo "Public-source monitors have per-source minimum poll intervals."
             echo "Named outreach: human-gated"
             echo "Payment requests: human-gated"
             echo "Private-system access: explicit authorization required"
             echo "Production mutation: explicit authorization required"
             echo
-            for FILE in               artifacts/legacy-rescue-watch/public-scan.json               artifacts/legacy-rescue-watch/latest.json               artifacts/legacy-rescue-watch/strike-admission.json               artifacts/legacy-rescue-watch/buyer-signals.json               artifacts/legacy-rescue-watch/buyer-research-queue.json               artifacts/legacy-rescue-watch/mission-snapshot.json; do
+            for FILE in               artifacts/legacy-rescue-watch/public-scan.json               artifacts/legacy-rescue-watch/latest.json               artifacts/legacy-rescue-watch/strike-admission.json               artifacts/legacy-rescue-watch/buyer-signals.json               artifacts/legacy-rescue-watch/buyer-research-queue.json               artifacts/legacy-rescue-watch/mission-snapshot.json               artifacts/legacy-rescue-watch/cadence-health.json; do
               if [ -f "$FILE" ]; then
                 echo
                 echo "### $FILE"
