@@ -65,7 +65,7 @@
     "physical_dependency": "waiting_on_field_evidence"
   },
   "dependencies": {
-    "node001_field_mission": "artifacts/node001-field/megatron-status/latest.json",
+    "node001_field_mission": "artifacts/node001-field/evernode-one-status/latest.json",
     "node001_issue": "github:issue:175",
     "public_edge_issue": "github:issue:403",
     "direct_plugin_specs": "distribution/direct-plugin-specs.json"
