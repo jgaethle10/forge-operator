@@ -10,24 +10,41 @@ const pluginDir=path.join(root,'plugins','evercraft-fabric');
 
 const readJson=(relative)=>JSON.parse(fs.readFileSync(path.join(pluginDir,relative),'utf8'));
 
-test('Evercraft is packaged as the umbrella OpenAI plugin',()=>{
-  const manifest=readJson('.codex-plugin/plugin.json');
+test('Evercraft is packaged in the current portable Agent Plugins format',()=>{
+  const manifest=readJson('plugin.json');
+  assert.equal(manifest.$schema,'https://agent-plugins.org/schemas/1.0.0/plugin.schema.json');
   assert.equal(manifest.name,'evercraft');
-  assert.equal(manifest.interface?.displayName,'Evercraft');
-  assert.equal(manifest.skills,'./skills/');
-  assert.equal(manifest.mcpServers,'./.mcp.json');
-  assert.match(String(manifest.interface?.longDescription||''),/smallest truthful Evercraft capability/i);
+  const openai=manifest.extensions?.['com.openai'];
+  assert.equal(openai?.interface?.displayName,'Evercraft');
+  assert.ok(String(openai?.interface?.shortDescription||'').length<=30);
+  assert.ok(String(openai?.interface?.longDescription||'').length<=4000);
+  assert.equal(openai?.onboardingSkill,'./skills/evercraft-router/SKILL.md');
+  assert.ok(openai?.interface?.supportURL);
+  assert.ok(openai?.interface?.privacyPolicyURL);
+  assert.ok(openai?.interface?.termsOfServiceURL);
+  assert.ok((openai?.interface?.defaultPrompt||[]).every((x)=>String(x).length<=128));
 });
 
-test('Evercraft MCP configuration is remote HTTPS and never embeds credentials',()=>{
-  const mcp=readJson('.mcp.json');
+test('Evercraft portable MCP configuration uses remote Streamable HTTP without credentials',()=>{
+  const mcp=readJson('mcp.json');
+  assert.equal(mcp.$schema,'https://agent-plugins.org/schemas/1.0.0/mcp.schema.json');
   const server=mcp.mcpServers?.evercraft;
   assert.ok(server);
-  assert.equal(server.type,'http');
+  assert.equal(server.type,'streamable-http');
   const url=new URL(server.url);
   assert.equal(url.protocol,'https:');
   assert.equal(url.username,'');
   assert.equal(url.password,'');
+});
+
+test('Codex compatibility package remains wired while portable manifest is canonical',()=>{
+  const compat=readJson('.codex-plugin/plugin.json');
+  const mcp=readJson('.mcp.json');
+  assert.equal(compat.name,'evercraft');
+  assert.equal(compat.interface?.displayName,'Evercraft');
+  assert.equal(compat.skills,'./skills/');
+  assert.equal(compat.mcpServers,'./.mcp.json');
+  assert.ok(mcp.mcpServers?.evercraft);
 });
 
 test('Evercraft plugin includes its safety and support surface',()=>{
@@ -37,7 +54,16 @@ test('Evercraft plugin includes its safety and support surface',()=>{
   assert.ok(fs.existsSync(path.join(pluginDir,'skills','evercraft-router','SKILL.md')));
 });
 
-test('OpenAI review matrix keeps the required positive and negative coverage',()=>{
+test('portable manifest embeds exactly the required MCP review cases',()=>{
+  const manifest=readJson('plugin.json');
+  const review=manifest.extensions?.['com.openai']?.review;
+  assert.equal(review?.test_cases?.positive?.length,5);
+  assert.equal(review?.test_cases?.negative?.length,3);
+  assert.ok(review.test_cases.positive.every((x)=>x.description&&x.prompt&&x.tools_triggered&&x.expected_behavior));
+  assert.ok(review.test_cases.negative.every((x)=>x.description&&x.prompt&&x.expected_behavior));
+});
+
+test('OpenAI account-side packet keeps public-directory and owned-route truth gates',()=>{
   const submission=readJson('openai-submission.json');
   assert.equal(submission.listing?.name,'Evercraft');
   assert.ok(submission.positive_tests.length>=5);
@@ -46,7 +72,7 @@ test('OpenAI review matrix keeps the required positive and negative coverage',()
   assert.equal(submission.compatibility_transport?.owned_fabric_cutover_required,true);
 });
 
-test('submission tests cover payment, privacy, and consequential-action denial cases',()=>{
+test('submission denial cases cover payment, privacy, and consequential actions',()=>{
   const submission=readJson('openai-submission.json');
   const negativeText=JSON.stringify(submission.negative_tests).toLowerCase();
   assert.match(negativeText,/payment|charge/);
