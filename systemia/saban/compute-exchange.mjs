@@ -212,7 +212,9 @@ export async function negotiateCompute({
   quoteAuthority=null,
   leaseAuthority=null,
 }={}){
-  const demand=normalizeComputeDemand(demandInput||{});
+  const demand=demandInput?.schema==='evercraft.saban.compute-demand.v1'
+    ? structuredClone(demandInput)
+    : normalizeComputeDemand(demandInput||{});
   const events=[];
   const discovered=[];
 
