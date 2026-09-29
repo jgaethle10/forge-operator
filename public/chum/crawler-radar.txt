@@ -1,8 +1,8 @@
 Evercraft CHUM Crawler Radar
-Generated: 2026-09-29T05:33:09.166Z
+Generated: 2026-09-29T07:01:05.221Z
 Observed crawler-like requests: 0
 Negative provider pickup receipts: 174
-Strike-now surfaces: 1939
+Strike-now surfaces: 1885
 
 1. [strike_now] score=250 /chum/intents/foundry-app-escape-audit-v1/ :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, negative_provider_pickup_receipt, indexnow_hash_pending
 2. [strike_now] score=250 /chum/intents/website-launch-service-v1/ :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, negative_provider_pickup_receipt, indexnow_hash_pending
@@ -102,7 +102,7 @@ Strike-now surfaces: 1939
 96. [strike_now] score=222 /chum/answers/doors/browser-automation-api-for-an-ai-agent-4865230391.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, indexnow_hash_pending
 97. [strike_now] score=222 /chum/answers/doors/brutally-critique-this-message-d550264762.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, indexnow_hash_pending
 98. [strike_now] score=222 /chum/answers/doors/build-a-contractor-estimate-from-this-scope-e9fbacf2bd.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, indexnow_hash_pending
-99. [strike_now] score=222 /chum/answers/doors/build-a-factual-unwanted-call-incident-timeline-242d097258.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, indexnow_hash_pending
-100. [strike_now] score=222 /chum/answers/doors/build-a-lender-ready-deck-592e365c97.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, indexnow_hash_pending
+99. [strike_now] score=222 /chum/answers/doors/build-a-contractor-estimate-from-this-scope-e9fbacf2bd/ :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, indexnow_hash_pending
+100. [strike_now] score=222 /chum/answers/doors/build-a-factual-unwanted-call-incident-timeline-242d097258.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, indexnow_hash_pending
 
 Truth boundary: self-identified crawler requests are attention evidence only. They do not prove indexing, ranking, citation, recommendation, training use, or conversion.

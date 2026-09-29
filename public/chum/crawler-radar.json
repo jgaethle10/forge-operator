@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.crawler-radar.v1",
-  "generated_at": "2026-09-29T05:33:09.166Z",
+  "generated_at": "2026-09-29T07:01:05.221Z",
   "coordinator": "CHUM",
   "runtime_feedback": {
     "requested": false,
@@ -10,7 +10,7 @@
   "observation_count": 0,
   "negative_provider_pickup_receipts": 174,
   "surface_count": 2628,
-  "strike_now_count": 1939,
+  "strike_now_count": 1885,
   "doctrine": {
     "crawler_fetch_is_not_indexing": true,
     "indexing_is_not_ranking": true,
@@ -11274,7 +11274,29 @@
       "score": 222,
       "urgency": "strike_now",
       "crawl_priority": 160,
-      "last_changed": "2026-09-29T02:24:28.186Z",
+      "last_changed": "2026-09-29T05:34:42.337Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/build-a-contractor-estimate-from-this-scope-e9fbacf2bd/",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-09-29T05:34:42.337Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -11846,7 +11868,29 @@
       "score": 222,
       "urgency": "strike_now",
       "crawl_priority": 160,
-      "last_changed": "2026-09-29T02:24:28.186Z",
+      "last_changed": "2026-09-29T05:34:42.337Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/calculate-margin-and-price-for-this-job-2c4d196e35/",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-09-29T05:34:42.337Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -13298,7 +13342,29 @@
       "score": 222,
       "urgency": "strike_now",
       "crawl_priority": 160,
-      "last_changed": "2026-09-29T02:24:28.186Z",
+      "last_changed": "2026-09-29T05:34:42.337Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/estimate-this-service-job-4e138afdda/",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-09-29T05:34:42.337Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -16489,27 +16555,6 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/build-a-contractor-estimate-from-this-scope-e9fbacf2bd/",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-09-26T03:45:42.293Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/build-a-factual-unwanted-call-incident-timeline-242d097258/",
       "product_key": null,
       "score": 207,
@@ -16978,27 +17023,6 @@
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-25T07:08:03.584Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/calculate-margin-and-price-for-this-job-2c4d196e35/",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-09-26T03:45:42.293Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -18280,27 +18304,6 @@
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-25T07:08:03.584Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/estimate-this-service-job-4e138afdda/",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-09-26T03:45:42.293Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
