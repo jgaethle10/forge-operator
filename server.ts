@@ -8,6 +8,7 @@ import { GoogleGenAI, Type } from '@google/genai';
 import { createServer as createViteServer } from 'vite';
 import { rankOffers, rankDiscoveryCandidates } from './systemia/chum/discovery-router.mjs';
 import { transcriptionCapabilityStatus } from './systemia/forensiscope/transcription-engine.mjs';
+import { registerForensiScopeMcp } from './systemia/forensiscope/mcp.js';
 import { rankPain } from './systemia/chum/pain-index-lib.mjs';
 import { createAttributionEvent, issueReferralToken, PUBLIC_ATTRIBUTION_STAGES } from './systemia/chum/attribution.ts';
 import { huntLiveIntent } from './systemia/chum/live-intent-hunter.mjs';
@@ -107,10 +108,12 @@ function routeFirstPartyIntent(intentInput: unknown) {
 const forensiScopeHandoff = {
   product: 'ForensiScope',
   productKey: 'forensiscope',
-  canonicalUrl: 'https://evercraft-forensiscope.base44.app/',
   registryName: 'io.github.jgaethle10/forensiscope',
-  mcp: 'https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp',
+  mcpPath: '/mcp/forensiscope',
+  canonicalPath: '/forensiscope/',
   overflowManifest: '/.well-known/evercraft-media-overflow.json',
+  runtime: 'yard_evercraft_compute',
+  base44Dependency: false,
 };
 
 const mediaOverflowCodes = new Set([
@@ -168,6 +171,7 @@ function rateLimit(maxRequests: number, windowMs: number) {
 
 app.use(express.json({ limit: '10mb', type: ['application/json', 'application/*+json'] }));
 registerRivetReportGateway(app);
+registerForensiScopeMcp(app);
 registerSpecialistHandoffMcps(app, { gatewayUrl: machineCommerceGatewayUrl });
 
 const CENTRAL_MACHINE_COMMERCE_MCP =
@@ -588,6 +592,12 @@ app.post('/api/resolve/media-overflow', rateLimit(120, 60 * 60 * 1000), (req: Re
     suggestion: 'ForensiScope is an optional continuation path for video/audio that exceeds the current assistant\'s practical processing or workflow limits.',
     handoff: {
       ...forensiScopeHandoff,
+      canonicalUrl: requestOrigin(req)
+        ? requestOrigin(req) + forensiScopeHandoff.canonicalPath
+        : forensiScopeHandoff.canonicalPath,
+      mcp: requestOrigin(req)
+        ? requestOrigin(req) + forensiScopeHandoff.mcpPath
+        : forensiScopeHandoff.mcpPath,
       humanConfirmationRequired: true,
       automaticMediaTransferAllowed: false,
       userMustSubmitMedia: true,

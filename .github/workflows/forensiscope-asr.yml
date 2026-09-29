@@ -12,6 +12,8 @@ on:
       - "systemia/forensiscope/batch-transcribe.test.mjs"
       - "systemia/forensiscope/doctor.mjs"
       - "systemia/forensiscope/runtime-packaging.test.mjs"
+      - "systemia/forensiscope/mcp.ts"
+      - "tests/forensiscope-sovereign-mcp.test.ts"
       - "server.ts"
       - "Dockerfile"
       - "systemia/forensiscope/ASR.md"
@@ -29,6 +31,8 @@ on:
       - "systemia/forensiscope/batch-transcribe.test.mjs"
       - "systemia/forensiscope/doctor.mjs"
       - "systemia/forensiscope/runtime-packaging.test.mjs"
+      - "systemia/forensiscope/mcp.ts"
+      - "tests/forensiscope-sovereign-mcp.test.ts"
       - "server.ts"
       - "Dockerfile"
       - "systemia/forensiscope/ASR.md"
@@ -47,6 +51,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
       - name: Syntax check
         run: |
           node --check systemia/forensiscope/asr-runner.mjs
