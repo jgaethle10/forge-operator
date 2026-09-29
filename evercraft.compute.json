@@ -32,13 +32,15 @@
       "/chum/hot/index.json",
       "/mcp/ibmi-rescue",
       "/mcp/foundry-app-escape",
-      "/mcp/site-survive",
-      "/api/remote-operator/health"
+      "/mcp/site-survive"
     ],
     "specialist_mcp_paths": [
       "/mcp/ibmi-rescue",
       "/mcp/foundry-app-escape",
-      "/mcp/site-survive",
+      "/mcp/site-survive"
+    ],
+    "private_authenticated_paths": [
+      "/api/remote-operator/health",
       "/mcp/evercraft-remote"
     ]
   },
