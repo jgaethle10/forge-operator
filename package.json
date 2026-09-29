@@ -217,6 +217,7 @@
     "test:sentinel-region-profiles": "node systemia/sentinel/region-profile.test.mjs",
     "test:fabric-directory": "node --test tests/evercraft-fabric-runtime.test.mjs",
     "proof:one-body": "node systemia/organism/one-body.proof.mjs",
+    "test:remote-operator": "node systemia/compute/remote-operator.test.mjs && node systemia/network/remote-operator.proof.mjs && node systemia/remote-operator/mcp-gateway.test.mjs",
     "proof:rockies": "node systemia/rockies/expansion.proof.mjs",
     "proof:worldstate-observation-fabric": "node systemia/worldstate/observation-fabric.proof.mjs",
     "proof:worldstate": "node systemia/worldstate/worldstate.proof.mjs",
