@@ -29,6 +29,43 @@ write('public/.well-known/evercraft-products.json', JSON.stringify({
     { product_key: 'alpha', name: 'Alpha Duplicate', canonical_url: 'not-a-url' }
   ]
 }, null, 2));
+write('conformance/products.json', JSON.stringify({
+  schema: 'evercraft.cross-llm-conformance.v1',
+  products: [{
+    product_key: 'alpha',
+    canonical_url: 'https://example.com/',
+    conformance_state: 'live_read_only_mcp_verified',
+    machine_commerce_handoff_state: 'bounded_read_only_mcp_verified',
+    machine_commerce_public_id: 'alpha-v1',
+    machine_commerce_tool: 'get_alpha',
+    live_canary_evidence: 'receipt:alpha-live',
+    mcp_registry: { name: 'io.github.jgaethle10/evercraft-machine-commerce' },
+    mcp: 'https://example.com/mcp'
+  }]
+}, null, 2));
+write('registry/catalog.json', JSON.stringify({
+  products: [{
+    product_key: 'alpha',
+    registry_name: 'io.github.jgaethle10/evercraft-machine-commerce',
+    mcp: 'https://example.com/mcp'
+  }]
+}, null, 2));
+write('public/.well-known/evercraft-machine-catalog.json', JSON.stringify({
+  offers: [{
+    public_id: 'alpha-v1',
+    invocation_status: 'SOURCE-WIRED: production verification is still required before claiming this is live.'
+  }]
+}, null, 2));
+write('public/chum/products/alpha/ai-conformance.json', JSON.stringify({
+  product_key: 'alpha',
+  canonical_url: 'https://human.example.com/',
+  registry_name: 'io.github.jgaethle10/evercraft-machine-commerce',
+  mcp: 'https://example.com/mcp',
+  machine_commerce_public_id: 'alpha-v1',
+  machine_commerce_tool: 'get_alpha',
+  machine_commerce_handoff_state: 'source_wired_pending',
+  live_canary_evidence: null
+}, null, 2));
 write('package.json', JSON.stringify({
   scripts: {
     ok: 'node scripts/ok.mjs',
@@ -59,6 +96,15 @@ assert.ok(codes.has('package_script_target_missing'));
 assert.ok(codes.has('workflow_script_missing'));
 assert.ok(codes.has('workflow_target_missing'));
 assert.ok(codes.has('resident_service_executable_not_found'));
+assert.ok(codes.has('public_conformance_truth_drift'));
+assert.ok(codes.has('verified_machine_offer_truth_downgrade'));
+const truthDowngrade = scan.findings.find((row) => row.code === 'verified_machine_offer_truth_downgrade');
+assert.equal(truthDowngrade?.severity, 'critical');
+assert.equal(truthDowngrade?.repair_mode, 'verify_external_dependency');
+assert.equal(truthDowngrade?.repair_command, '');
+assert.equal(scan.inventory.truth_convergence.verified_machine_offer_downgrades, 1);
+assert.ok(scan.inventory.truth_convergence.generated_conformance_drift >= 1);
+assert.equal(scan.findings.some((row) => row.subject === 'alpha:canonical_url'), false);
 
 const first = buildPortfolioDelta({ active_findings: [] }, scan.findings);
 assert.equal(first.added.length, scan.findings.length);
