@@ -1230,6 +1230,47 @@
       "developer_surfaces": null
     },
     {
+      "product_key": "evernest-atlas",
+      "name": "EverNest Atlas",
+      "aliases": [],
+      "class": "adult_household_life_planning",
+      "canonical_url": "https://evernest-life-map.base44.app/",
+      "intents": [
+        "build me a 30 60 90 day life plan",
+        "help me think through relocation and housing stability",
+        "compare practical life paths for my family",
+        "plan a career change around my household situation",
+        "build a household stability plan",
+        "turn my income savings debt skills and priorities into a life plan",
+        "help me organize housing career income and family systems together",
+        "create a relocation career and family stability roadmap",
+        "give me realistic tradeoffs and backup plans for a major life change",
+        "help me plan for stability without pretending outcomes are guaranteed"
+      ],
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null,
+        "registry_name": null
+      },
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest-atlas/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest-atlas/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest-atlas/ai-conformance.json",
+      "human_confirmation_required": true,
+      "authority": "public discovery plus private account-bound adult life planning from user-supplied inputs",
+      "boundaries": [
+        "designed for adults",
+        "generated plans are guidance rather than guaranteed outcomes",
+        "cost-of-living, income, timing, housing and career projections are estimates",
+        "not financial, legal, medical, tax, housing, safety or professional career advice",
+        "private household, financial, career, values, location, stress, plan and account data are not public discovery data",
+        "displayed subscription tiers or prices are not proof that billing or entitlement is active",
+        "paid access requires successful provider checkout and verified subscription state",
+        "discovery creates no payment obligation"
+      ],
+      "commercial": null,
+      "developer_surfaces": null
+    },
+    {
       "product_key": "everystage",
       "name": "EveryStage",
       "aliases": [],
@@ -2431,6 +2472,48 @@
         "pricing": "No public price is represented as verified.",
         "payment_state": "Discovery only. Do not create or imply checkout, payment, entitlement or paid execution until a public commercial path is independently verified."
       },
+      "developer_surfaces": null
+    },
+    {
+      "product_key": "systemia-university",
+      "name": "Systemia University",
+      "aliases": [],
+      "class": "evidence_centered_learning_agent_proving_and_workforce_readiness",
+      "canonical_url": "https://systemia-university.base44.app/",
+      "intents": [
+        "prove whether an AI agent can actually do its job",
+        "test an AI agent with a bounded mission",
+        "practice using AI on a real business workflow",
+        "create evidence of AI operator competency",
+        "run an agent proving mission",
+        "stress test a workflow before changing live operations",
+        "submit an AI system for an external lab",
+        "build an evidence-backed AI workforce profile",
+        "learn by completing real missions instead of passive courses",
+        "turn a real task into a structured proving exercise",
+        "evaluate evidence uncertainty role adherence and handoff behavior"
+      ],
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null,
+        "registry_name": null
+      },
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/ai-conformance.json",
+      "human_confirmation_required": true,
+      "authority": "public discovery plus evidence-centered missions, preliminary reviews, approved public proofs and workforce-readiness workflows",
+      "boundaries": [
+        "mission exercises are bounded simulations or evidence exercises unless live execution is separately verified",
+        "missions do not authorize contacting people, spending money, external publishing, live staffing changes or production mutations",
+        "one successful attempt is not proof of broad competency",
+        "provisional evidence is not verified evidence",
+        "competency claims that require verification remain human-reviewed",
+        "public proofs and workforce profiles must be explicitly approved for publication",
+        "external-lab submission does not imply acceptance, scheduling, certification, endorsement or benchmark success",
+        "discovery creates no payment obligation, employment offer, credential or authority"
+      ],
+      "commercial": null,
       "developer_surfaces": null
     },
     {

@@ -1068,6 +1068,54 @@
       }
     },
     {
+      "product_key": "evernest-atlas",
+      "name": "EverNest Atlas",
+      "class": "adult_household_life_planning",
+      "canonical_url": "https://evernest-life-map.base44.app/",
+      "intents": [
+        "build me a 30 60 90 day life plan",
+        "help me think through relocation and housing stability",
+        "compare practical life paths for my family",
+        "plan a career change around my household situation",
+        "build a household stability plan",
+        "turn my income savings debt skills and priorities into a life plan",
+        "help me organize housing career income and family systems together",
+        "create a relocation career and family stability roadmap",
+        "give me realistic tradeoffs and backup plans for a major life change",
+        "help me plan for stability without pretending outcomes are guaranteed"
+      ],
+      "authority": "public discovery plus private account-bound adult life planning from user-supplied inputs",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "designed for adults",
+        "generated plans are guidance rather than guaranteed outcomes",
+        "cost-of-living, income, timing, housing and career projections are estimates",
+        "not financial, legal, medical, tax, housing, safety or professional career advice",
+        "private household, financial, career, values, location, stress, plan and account data are not public discovery data",
+        "displayed subscription tiers or prices are not proof that billing or entitlement is active",
+        "paid access requires successful provider checkout and verified subscription state",
+        "discovery creates no payment obligation"
+      ],
+      "relationships": {
+        "evernest": {
+          "name": "EverNest",
+          "description": "EverNest handles practical family support and trusted-circle coordination; Atlas handles integrated adult life planning."
+        },
+        "revenue-war-map": {
+          "name": "Evercraft Revenue War Map",
+          "description": "Use Revenue War Map when the user's primary need is focused income-generation planning rather than a broader life roadmap."
+        },
+        "career-command": {
+          "name": "Evercraft Career Command",
+          "description": "A Rise-path career move can hand off to role-specific interview preparation."
+        },
+        "guardian": {
+          "name": "Guardian",
+          "description": "Immediate verified resource navigation belongs in Guardian rather than being replaced by a generated life plan."
+        }
+      }
+    },
+    {
       "product_key": "everystage",
       "name": "EveryStage",
       "class": "live_event_operations",
@@ -2119,6 +2167,51 @@
           "relationship": "focused_workforce_decision_companion",
           "public_surface": "/chum/products/systemia-decision-lab/",
           "description": "Use Decision Lab for focused hire-versus-outsource-versus-automate workforce analysis. Use Remote Ops when hiring is one variable inside a broader company-level scenario such as expansion, pricing, cash flow or acquisition."
+        }
+      }
+    },
+    {
+      "product_key": "systemia-university",
+      "name": "Systemia University",
+      "class": "evidence_centered_learning_agent_proving_and_workforce_readiness",
+      "canonical_url": "https://systemia-university.base44.app/",
+      "intents": [
+        "prove whether an AI agent can actually do its job",
+        "test an AI agent with a bounded mission",
+        "practice using AI on a real business workflow",
+        "create evidence of AI operator competency",
+        "run an agent proving mission",
+        "stress test a workflow before changing live operations",
+        "submit an AI system for an external lab",
+        "build an evidence-backed AI workforce profile",
+        "learn by completing real missions instead of passive courses",
+        "turn a real task into a structured proving exercise",
+        "evaluate evidence uncertainty role adherence and handoff behavior"
+      ],
+      "authority": "public discovery plus evidence-centered missions, preliminary reviews, approved public proofs and workforce-readiness workflows",
+      "human_confirmation_required": true,
+      "boundaries": [
+        "mission exercises are bounded simulations or evidence exercises unless live execution is separately verified",
+        "missions do not authorize contacting people, spending money, external publishing, live staffing changes or production mutations",
+        "one successful attempt is not proof of broad competency",
+        "provisional evidence is not verified evidence",
+        "competency claims that require verification remain human-reviewed",
+        "public proofs and workforce profiles must be explicitly approved for publication",
+        "external-lab submission does not imply acceptance, scheduling, certification, endorsement or benchmark success",
+        "discovery creates no payment obligation, employment offer, credential or authority"
+      ],
+      "relationships": {
+        "systemia-decision-lab": {
+          "name": "Systemia Decision Lab",
+          "description": "A bounded proving or simulation environment used inside selected University learning paths."
+        },
+        "opportunity-fabric": {
+          "name": "Evercraft Opportunity Fabric",
+          "description": "Evidence-backed skills and capabilities may later participate in protected opportunity matching, but University evidence does not itself create a job or match."
+        },
+        "infinite-classroom": {
+          "name": "Infinite Classroom",
+          "description": "Use Infinite Classroom when the need is broad guided learning rather than evidence-centered proving."
         }
       }
     },

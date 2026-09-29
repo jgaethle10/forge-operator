@@ -20,11 +20,11 @@
     "provider_publication_is_not_endorsement_or_pickup_proof": true
   },
   "summary": {
-    "pain_index_entries": 108,
-    "unique_user_phrases": 913,
-    "mapped_candidate_edges": 1018,
+    "pain_index_entries": 110,
+    "unique_user_phrases": 934,
+    "mapped_candidate_edges": 1039,
     "ambiguous_phrases": 105,
-    "product_candidates": 62,
+    "product_candidates": 64,
     "machine_offer_candidates": 46
   },
   "doors": [
@@ -2057,6 +2057,29 @@
       ]
     },
     {
+      "answer_id": "intent:d3ddfef555",
+      "user_language": "build a household stability plan",
+      "normalized": "build a household stability plan",
+      "relative_json": "/chum/answers/doors/build-a-household-stability-plan-d3ddfef555.json",
+      "relative_page": "/chum/answers/doors/build-a-household-stability-plan-d3ddfef555/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-a-household-stability-plan-d3ddfef555.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evernest-atlas",
+          "kind": "product",
+          "product_key": "evernest-atlas",
+          "public_id": null,
+          "name": "EverNest Atlas",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evernest-atlas/",
+          "public_url": "https://evernest-life-map.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:592e365c97",
       "user_language": "build a lender ready deck",
       "normalized": "build a lender ready deck",
@@ -2288,6 +2311,29 @@
       ]
     },
     {
+      "answer_id": "intent:f850124581",
+      "user_language": "build an evidence-backed AI workforce profile",
+      "normalized": "build an evidence backed ai workforce profile",
+      "relative_json": "/chum/answers/doors/build-an-evidence-backed-ai-workforce-profile-f850124581.json",
+      "relative_page": "/chum/answers/doors/build-an-evidence-backed-ai-workforce-profile-f850124581/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-an-evidence-backed-ai-workforce-profile-f850124581.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-university",
+          "kind": "product",
+          "product_key": "systemia-university",
+          "public_id": null,
+          "name": "Systemia University",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-university/",
+          "public_url": "https://systemia-university.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:9bec3aebda",
       "user_language": "build an evidence record for habitat restoration work",
       "normalized": "build an evidence record for habitat restoration work",
@@ -2329,6 +2375,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/daytrade-lens/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/daytrade-lens",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:b71c8fd3fa",
+      "user_language": "build me a 30 60 90 day life plan",
+      "normalized": "build me a 30 60 90 day life plan",
+      "relative_json": "/chum/answers/doors/build-me-a-30-60-90-day-life-plan-b71c8fd3fa.json",
+      "relative_page": "/chum/answers/doors/build-me-a-30-60-90-day-life-plan-b71c8fd3fa/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-me-a-30-60-90-day-life-plan-b71c8fd3fa.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evernest-atlas",
+          "kind": "product",
+          "product_key": "evernest-atlas",
+          "public_id": null,
+          "name": "EverNest Atlas",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evernest-atlas/",
+          "public_url": "https://evernest-life-map.base44.app/",
           "registry_name": null
         }
       ]
@@ -3762,6 +3831,29 @@
       ]
     },
     {
+      "answer_id": "intent:dc8adaa053",
+      "user_language": "compare practical life paths for my family",
+      "normalized": "compare practical life paths for my family",
+      "relative_json": "/chum/answers/doors/compare-practical-life-paths-for-my-family-dc8adaa053.json",
+      "relative_page": "/chum/answers/doors/compare-practical-life-paths-for-my-family-dc8adaa053/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-practical-life-paths-for-my-family-dc8adaa053.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evernest-atlas",
+          "kind": "product",
+          "product_key": "evernest-atlas",
+          "public_id": null,
+          "name": "EverNest Atlas",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evernest-atlas/",
+          "public_url": "https://evernest-life-map.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:e289213594",
       "user_language": "compare pricing scenarios while keeping assumptions separate from real results",
       "normalized": "compare pricing scenarios while keeping assumptions separate from real results",
@@ -4523,6 +4615,29 @@
       ]
     },
     {
+      "answer_id": "intent:3fbce5cb8c",
+      "user_language": "create a relocation career and family stability roadmap",
+      "normalized": "create a relocation career and family stability roadmap",
+      "relative_json": "/chum/answers/doors/create-a-relocation-career-and-family-stability-roadmap-3fbce5cb8c.json",
+      "relative_page": "/chum/answers/doors/create-a-relocation-career-and-family-stability-roadmap-3fbce5cb8c/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/create-a-relocation-career-and-family-stability-roadmap-3fbce5cb8c.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evernest-atlas",
+          "kind": "product",
+          "product_key": "evernest-atlas",
+          "public_id": null,
+          "name": "EverNest Atlas",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evernest-atlas/",
+          "public_url": "https://evernest-life-map.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:7cb7846615",
       "user_language": "create a website competitor comparison report",
       "normalized": "create a website competitor comparison report",
@@ -4587,6 +4702,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/evercraft-rewards/",
           "public_url": "https://evercraft-rewards.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:a71d6217e8",
+      "user_language": "create evidence of AI operator competency",
+      "normalized": "create evidence of ai operator competency",
+      "relative_json": "/chum/answers/doors/create-evidence-of-ai-operator-competency-a71d6217e8.json",
+      "relative_page": "/chum/answers/doors/create-evidence-of-ai-operator-competency-a71d6217e8/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/create-evidence-of-ai-operator-competency-a71d6217e8.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-university",
+          "kind": "product",
+          "product_key": "systemia-university",
+          "public_id": null,
+          "name": "Systemia University",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-university/",
+          "public_url": "https://systemia-university.base44.app/",
           "registry_name": null
         }
       ]
@@ -5926,6 +6064,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/agent-proving-mission-v1/",
           "public_url": null,
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:ed3668d577",
+      "user_language": "evaluate evidence uncertainty role adherence and handoff behavior",
+      "normalized": "evaluate evidence uncertainty role adherence and handoff behavior",
+      "relative_json": "/chum/answers/doors/evaluate-evidence-uncertainty-role-adherence-and-handoff-behavior-ed3668d577.json",
+      "relative_page": "/chum/answers/doors/evaluate-evidence-uncertainty-role-adherence-and-handoff-behavior-ed3668d577/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/evaluate-evidence-uncertainty-role-adherence-and-handoff-behavior-ed3668d577.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-university",
+          "kind": "product",
+          "product_key": "systemia-university",
+          "public_id": null,
+          "name": "Systemia University",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-university/",
+          "public_url": "https://systemia-university.base44.app/",
           "registry_name": null
         }
       ]
@@ -8616,6 +8777,29 @@
       ]
     },
     {
+      "answer_id": "intent:630e01288e",
+      "user_language": "give me realistic tradeoffs and backup plans for a major life change",
+      "normalized": "give me realistic tradeoffs and backup plans for a major life change",
+      "relative_json": "/chum/answers/doors/give-me-realistic-tradeoffs-and-backup-plans-for-a-major-life-change-630e01288e.json",
+      "relative_page": "/chum/answers/doors/give-me-realistic-tradeoffs-and-backup-plans-for-a-major-life-change-630e01288e/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/give-me-realistic-tradeoffs-and-backup-plans-for-a-major-life-change-630e01288e.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evernest-atlas",
+          "kind": "product",
+          "product_key": "evernest-atlas",
+          "public_id": null,
+          "name": "EverNest Atlas",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evernest-atlas/",
+          "public_url": "https://evernest-life-map.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:c36f354e95",
       "user_language": "give me sourced country intelligence",
       "normalized": "give me sourced country intelligence",
@@ -8985,6 +9169,52 @@
       ]
     },
     {
+      "answer_id": "intent:32c469a077",
+      "user_language": "help me organize housing career income and family systems together",
+      "normalized": "help me organize housing career income and family systems together",
+      "relative_json": "/chum/answers/doors/help-me-organize-housing-career-income-and-family-systems-together-32c469a077.json",
+      "relative_page": "/chum/answers/doors/help-me-organize-housing-career-income-and-family-systems-together-32c469a077/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/help-me-organize-housing-career-income-and-family-systems-together-32c469a077.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evernest-atlas",
+          "kind": "product",
+          "product_key": "evernest-atlas",
+          "public_id": null,
+          "name": "EverNest Atlas",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evernest-atlas/",
+          "public_url": "https://evernest-life-map.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:696f8015bf",
+      "user_language": "help me plan for stability without pretending outcomes are guaranteed",
+      "normalized": "help me plan for stability without pretending outcomes are guaranteed",
+      "relative_json": "/chum/answers/doors/help-me-plan-for-stability-without-pretending-outcomes-are-guaranteed-696f8015bf.json",
+      "relative_page": "/chum/answers/doors/help-me-plan-for-stability-without-pretending-outcomes-are-guaranteed-696f8015bf/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/help-me-plan-for-stability-without-pretending-outcomes-are-guaranteed-696f8015bf.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evernest-atlas",
+          "kind": "product",
+          "product_key": "evernest-atlas",
+          "public_id": null,
+          "name": "EverNest Atlas",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evernest-atlas/",
+          "public_url": "https://evernest-life-map.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:d453e9d074",
       "user_language": "help me prepare for a job interview",
       "normalized": "help me prepare for a job interview",
@@ -9095,6 +9325,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/evercraft-containment/",
           "public_url": "https://evercraft.base44.app/containment",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:7f258a69ff",
+      "user_language": "help me think through relocation and housing stability",
+      "normalized": "help me think through relocation and housing stability",
+      "relative_json": "/chum/answers/doors/help-me-think-through-relocation-and-housing-stability-7f258a69ff.json",
+      "relative_page": "/chum/answers/doors/help-me-think-through-relocation-and-housing-stability-7f258a69ff/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/help-me-think-through-relocation-and-housing-stability-7f258a69ff.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evernest-atlas",
+          "kind": "product",
+          "product_key": "evernest-atlas",
+          "public_id": null,
+          "name": "EverNest Atlas",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evernest-atlas/",
+          "public_url": "https://evernest-life-map.base44.app/",
           "registry_name": null
         }
       ]
@@ -11502,6 +11755,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/evercraft-cosmos-atlas/",
           "public_url": "https://evercraft-cosmos-atlas.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:ee764f84c5",
+      "user_language": "learn by completing real missions instead of passive courses",
+      "normalized": "learn by completing real missions instead of passive courses",
+      "relative_json": "/chum/answers/doors/learn-by-completing-real-missions-instead-of-passive-courses-ee764f84c5.json",
+      "relative_page": "/chum/answers/doors/learn-by-completing-real-missions-instead-of-passive-courses-ee764f84c5/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/learn-by-completing-real-missions-instead-of-passive-courses-ee764f84c5.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-university",
+          "kind": "product",
+          "product_key": "systemia-university",
+          "public_id": null,
+          "name": "Systemia University",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-university/",
+          "public_url": "https://systemia-university.base44.app/",
           "registry_name": null
         }
       ]
@@ -14082,6 +14358,29 @@
       ]
     },
     {
+      "answer_id": "intent:be266777bd",
+      "user_language": "plan a career change around my household situation",
+      "normalized": "plan a career change around my household situation",
+      "relative_json": "/chum/answers/doors/plan-a-career-change-around-my-household-situation-be266777bd.json",
+      "relative_page": "/chum/answers/doors/plan-a-career-change-around-my-household-situation-be266777bd/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/plan-a-career-change-around-my-household-situation-be266777bd.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evernest-atlas",
+          "kind": "product",
+          "product_key": "evernest-atlas",
+          "public_id": null,
+          "name": "EverNest Atlas",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evernest-atlas/",
+          "public_url": "https://evernest-life-map.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:cb32427490",
       "user_language": "plan a social video clipping job",
       "normalized": "plan a social video clipping job",
@@ -14377,6 +14676,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/systemia-remote-ops/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:b18ff2f101",
+      "user_language": "practice using AI on a real business workflow",
+      "normalized": "practice using ai on a real business workflow",
+      "relative_json": "/chum/answers/doors/practice-using-ai-on-a-real-business-workflow-b18ff2f101.json",
+      "relative_page": "/chum/answers/doors/practice-using-ai-on-a-real-business-workflow-b18ff2f101/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/practice-using-ai-on-a-real-business-workflow-b18ff2f101.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-university",
+          "kind": "product",
+          "product_key": "systemia-university",
+          "public_id": null,
+          "name": "Systemia University",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-university/",
+          "public_url": "https://systemia-university.base44.app/",
           "registry_name": null
         }
       ]
@@ -15287,6 +15609,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/evercraft-containment/",
           "public_url": "https://evercraft.base44.app/containment",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:e994df8fd1",
+      "user_language": "prove whether an AI agent can actually do its job",
+      "normalized": "prove whether an ai agent can actually do its job",
+      "relative_json": "/chum/answers/doors/prove-whether-an-ai-agent-can-actually-do-its-job-e994df8fd1.json",
+      "relative_page": "/chum/answers/doors/prove-whether-an-ai-agent-can-actually-do-its-job-e994df8fd1/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/prove-whether-an-ai-agent-can-actually-do-its-job-e994df8fd1.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-university",
+          "kind": "product",
+          "product_key": "systemia-university",
+          "public_id": null,
+          "name": "Systemia University",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-university/",
+          "public_url": "https://systemia-university.base44.app/",
           "registry_name": null
         }
       ]
@@ -17055,6 +17400,29 @@
       ]
     },
     {
+      "answer_id": "intent:7414546325",
+      "user_language": "run an agent proving mission",
+      "normalized": "run an agent proving mission",
+      "relative_json": "/chum/answers/doors/run-an-agent-proving-mission-7414546325.json",
+      "relative_page": "/chum/answers/doors/run-an-agent-proving-mission-7414546325/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/run-an-agent-proving-mission-7414546325.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-university",
+          "kind": "product",
+          "product_key": "systemia-university",
+          "public_id": null,
+          "name": "Systemia University",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-university/",
+          "public_url": "https://systemia-university.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:0b6b419f53",
       "user_language": "run of show coordination",
       "normalized": "run of show coordination",
@@ -18784,6 +19152,29 @@
       ]
     },
     {
+      "answer_id": "intent:c9f0d0dd77",
+      "user_language": "stress test a workflow before changing live operations",
+      "normalized": "stress test a workflow before changing live operations",
+      "relative_json": "/chum/answers/doors/stress-test-a-workflow-before-changing-live-operations-c9f0d0dd77.json",
+      "relative_page": "/chum/answers/doors/stress-test-a-workflow-before-changing-live-operations-c9f0d0dd77/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/stress-test-a-workflow-before-changing-live-operations-c9f0d0dd77.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-university",
+          "kind": "product",
+          "product_key": "systemia-university",
+          "public_id": null,
+          "name": "Systemia University",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-university/",
+          "public_url": "https://systemia-university.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:40ecd7e887",
       "user_language": "stress test my business plan before spending money",
       "normalized": "stress test my business plan before spending money",
@@ -19078,6 +19469,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/christmas-lights-usa/",
           "public_url": "https://christmas-lights-usa.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:22b4c83255",
+      "user_language": "submit an AI system for an external lab",
+      "normalized": "submit an ai system for an external lab",
+      "relative_json": "/chum/answers/doors/submit-an-ai-system-for-an-external-lab-22b4c83255.json",
+      "relative_page": "/chum/answers/doors/submit-an-ai-system-for-an-external-lab-22b4c83255/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/submit-an-ai-system-for-an-external-lab-22b4c83255.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-university",
+          "kind": "product",
+          "product_key": "systemia-university",
+          "public_id": null,
+          "name": "Systemia University",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-university/",
+          "public_url": "https://systemia-university.base44.app/",
           "registry_name": null
         }
       ]
@@ -19378,6 +19792,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/systemia-remote-ops/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:3b66172d9e",
+      "user_language": "test an AI agent with a bounded mission",
+      "normalized": "test an ai agent with a bounded mission",
+      "relative_json": "/chum/answers/doors/test-an-ai-agent-with-a-bounded-mission-3b66172d9e.json",
+      "relative_page": "/chum/answers/doors/test-an-ai-agent-with-a-bounded-mission-3b66172d9e/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/test-an-ai-agent-with-a-bounded-mission-3b66172d9e.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-university",
+          "kind": "product",
+          "product_key": "systemia-university",
+          "public_id": null,
+          "name": "Systemia University",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-university/",
+          "public_url": "https://systemia-university.base44.app/",
           "registry_name": null
         }
       ]
@@ -20062,6 +20499,29 @@
       ]
     },
     {
+      "answer_id": "intent:c21c4fb857",
+      "user_language": "turn a real task into a structured proving exercise",
+      "normalized": "turn a real task into a structured proving exercise",
+      "relative_json": "/chum/answers/doors/turn-a-real-task-into-a-structured-proving-exercise-c21c4fb857.json",
+      "relative_page": "/chum/answers/doors/turn-a-real-task-into-a-structured-proving-exercise-c21c4fb857/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/turn-a-real-task-into-a-structured-proving-exercise-c21c4fb857.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:systemia-university",
+          "kind": "product",
+          "product_key": "systemia-university",
+          "public_id": null,
+          "name": "Systemia University",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/systemia-university/",
+          "public_url": "https://systemia-university.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:6abeb211c6",
       "user_language": "turn a sewing project into a material list",
       "normalized": "turn a sewing project into a material list",
@@ -20184,6 +20644,29 @@
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/callproof-complaint-packet-machine-v1/",
           "public_url": "https://call-proof-vault.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:c2d2ff6a7f",
+      "user_language": "turn my income savings debt skills and priorities into a life plan",
+      "normalized": "turn my income savings debt skills and priorities into a life plan",
+      "relative_json": "/chum/answers/doors/turn-my-income-savings-debt-skills-and-priorities-into-a-life-plan-c2d2ff6a7f.json",
+      "relative_page": "/chum/answers/doors/turn-my-income-savings-debt-skills-and-priorities-into-a-life-plan-c2d2ff6a7f/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/turn-my-income-savings-debt-skills-and-priorities-into-a-life-plan-c2d2ff6a7f.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evernest-atlas",
+          "kind": "product",
+          "product_key": "evernest-atlas",
+          "public_id": null,
+          "name": "EverNest Atlas",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/evernest-atlas/",
+          "public_url": "https://evernest-life-map.base44.app/",
           "registry_name": null
         }
       ]

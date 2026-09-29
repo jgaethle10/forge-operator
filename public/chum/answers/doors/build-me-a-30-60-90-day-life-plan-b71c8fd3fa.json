@@ -1,0 +1,56 @@
+{
+  "schema": "evercraft.chum.answer-door.v2",
+  "provider": "Evercraft LLC",
+  "generated_from": "public/.well-known/evercraft-pain-index.json",
+  "updated_at": "2026-09-29T01:40:00.000Z",
+  "answer_id": "intent:b71c8fd3fa",
+  "user_language": "build me a 30 60 90 day life plan",
+  "normalized": "build me a 30 60 90 day life plan",
+  "purpose": "Brand-blind discovery cue from natural user language to truthful public Evercraft capability candidates.",
+  "candidate_count": 1,
+  "candidates": [
+    {
+      "capability_id": "product:evernest-atlas",
+      "kind": "product",
+      "product_key": "evernest-atlas",
+      "public_id": null,
+      "name": "EverNest Atlas",
+      "problem": null,
+      "pricing": null,
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "public_url": "https://evernest-life-map.base44.app/",
+      "pain_page": "/chum/products/evernest-atlas/",
+      "registry_name": null,
+      "direct_mcp": null,
+      "machine_review_url": null,
+      "machine_offer_url": null,
+      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "authority": "public discovery plus private account-bound adult life planning from user-supplied inputs",
+      "boundaries": [
+        "designed for adults",
+        "generated plans are guidance rather than guaranteed outcomes",
+        "cost-of-living, income, timing, housing and career projections are estimates",
+        "not financial, legal, medical, tax, housing, safety or professional career advice",
+        "private household, financial, career, values, location, stress, plan and account data are not public discovery data",
+        "displayed subscription tiers or prices are not proof that billing or entitlement is active",
+        "paid access requires successful provider checkout and verified subscription state",
+        "discovery creates no payment obligation"
+      ]
+    }
+  ],
+  "routing_policy": {
+    "fit_required": true,
+    "no_forced_product_match": true,
+    "smallest_sufficient_capability": true,
+    "preserve_commercial_and_machine_state": true,
+    "discovery_creates_payment_obligation": false,
+    "read_only_discovery_before_commerce": true,
+    "checkout_requires_explicit_human_confirmation": true,
+    "checkout_is_payment_proof": false,
+    "paid_state_requires_authoritative_provider_verification": true,
+    "provider_publication_is_not_endorsement_or_pickup_proof": true
+  }
+}

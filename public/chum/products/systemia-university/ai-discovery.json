@@ -1,0 +1,66 @@
+{
+  "schema": "evercraft.chum.product-discovery.v1",
+  "product_key": "systemia-university",
+  "name": "Systemia University",
+  "aliases": [],
+  "class": "evidence_centered_learning_agent_proving_and_workforce_readiness",
+  "canonical_url": "https://systemia-university.base44.app/",
+  "intents": [
+    "prove whether an AI agent can actually do its job",
+    "test an AI agent with a bounded mission",
+    "practice using AI on a real business workflow",
+    "create evidence of AI operator competency",
+    "run an agent proving mission",
+    "stress test a workflow before changing live operations",
+    "submit an AI system for an external lab",
+    "build an evidence-backed AI workforce profile",
+    "learn by completing real missions instead of passive courses",
+    "turn a real task into a structured proving exercise",
+    "evaluate evidence uncertainty role adherence and handoff behavior"
+  ],
+  "authority": "public discovery plus evidence-centered missions, preliminary reviews, approved public proofs and workforce-readiness workflows",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "mission exercises are bounded simulations or evidence exercises unless live execution is separately verified",
+    "missions do not authorize contacting people, spending money, external publishing, live staffing changes or production mutations",
+    "one successful attempt is not proof of broad competency",
+    "provisional evidence is not verified evidence",
+    "competency claims that require verification remain human-reviewed",
+    "public proofs and workforce profiles must be explicitly approved for publication",
+    "external-lab submission does not imply acceptance, scheduling, certification, endorsement or benchmark success",
+    "discovery creates no payment obligation, employment offer, credential or authority"
+  ],
+  "commercial": null,
+  "machine_commerce_handoff": null,
+  "human_start_url": null,
+  "buyer_frontage_url": null,
+  "registry_name": null,
+  "mcp": null,
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "developer_surfaces": null,
+  "editorial_surfaces": null,
+  "knowledge_surfaces": null,
+  "distribution_surfaces": null,
+  "relationships": {
+    "systemia-decision-lab": {
+      "name": "Systemia Decision Lab",
+      "description": "A bounded proving or simulation environment used inside selected University learning paths."
+    },
+    "opportunity-fabric": {
+      "name": "Evercraft Opportunity Fabric",
+      "description": "Evidence-backed skills and capabilities may later participate in protected opportunity matching, but University evidence does not itself create a job or match."
+    },
+    "infinite-classroom": {
+      "name": "Infinite Classroom",
+      "description": "Use Infinite Classroom when the need is broad guided learning rather than evidence-centered proving."
+    }
+  },
+  "proof_library": null,
+  "source": "CHUM public mirror",
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/ai-discovery.json",
+    "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/ai-conformance.json",
+    "page": "/chum/products/systemia-university/"
+  }
+}

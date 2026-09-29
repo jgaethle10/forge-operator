@@ -28,10 +28,10 @@
     "provider_verification_required_for_paid_state": true
   },
   "summary": {
-    "entries": 108,
-    "product_entries": 62,
+    "entries": 110,
+    "product_entries": 64,
     "machine_offer_entries": 46,
-    "entries_with_pain_language": 108,
+    "entries_with_pain_language": 110,
     "sell_now_machine_offers": 14,
     "entries_with_declared_mcp": 61,
     "callable_or_routable_entries": 42,
@@ -3802,6 +3802,59 @@
       ]
     },
     {
+      "capability_id": "product:evernest-atlas",
+      "product_key": "evernest-atlas",
+      "kind": "product",
+      "name": "EverNest Atlas",
+      "class": "adult_household_life_planning",
+      "pain_phrases": [
+        "build me a 30 60 90 day life plan",
+        "help me think through relocation and housing stability",
+        "compare practical life paths for my family",
+        "plan a career change around my household situation",
+        "build a household stability plan",
+        "turn my income savings debt skills and priorities into a life plan",
+        "help me organize housing career income and family systems together",
+        "create a relocation career and family stability roadmap",
+        "give me realistic tradeoffs and backup plans for a major life change",
+        "help me plan for stability without pretending outcomes are guaranteed"
+      ],
+      "problem": null,
+      "inputs": null,
+      "outputs": null,
+      "canonical_url": "https://evernest-life-map.base44.app/",
+      "registry_name": null,
+      "mcp": null,
+      "routing": {
+        "preferred": "universal_machine_commerce",
+        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
+      "legacy_marketing_route_suppressed": false,
+      "authority": "public discovery plus private account-bound adult life planning from user-supplied inputs",
+      "boundaries": [
+        "designed for adults",
+        "generated plans are guidance rather than guaranteed outcomes",
+        "cost-of-living, income, timing, housing and career projections are estimates",
+        "not financial, legal, medical, tax, housing, safety or professional career advice",
+        "private household, financial, career, values, location, stress, plan and account data are not public discovery data",
+        "displayed subscription tiers or prices are not proof that billing or entitlement is active",
+        "paid access requires successful provider checkout and verified subscription state",
+        "discovery creates no payment obligation"
+      ],
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "pricing": null,
+      "offers": [],
+      "commercial": null,
+      "human_confirmation_required": true,
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "payment_authority": null,
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "source_refs": [
+        "public/.well-known/evercraft-products.json"
+      ]
+    },
+    {
       "capability_id": "product:everystage",
       "product_key": "everystage",
       "kind": "product",
@@ -5352,6 +5405,60 @@
         "pricing": "No public price is represented as verified.",
         "payment_state": "Discovery only. Do not create or imply checkout, payment, entitlement or paid execution until a public commercial path is independently verified."
       },
+      "human_confirmation_required": true,
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "payment_authority": null,
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "source_refs": [
+        "public/.well-known/evercraft-products.json"
+      ]
+    },
+    {
+      "capability_id": "product:systemia-university",
+      "product_key": "systemia-university",
+      "kind": "product",
+      "name": "Systemia University",
+      "class": "evidence_centered_learning_agent_proving_and_workforce_readiness",
+      "pain_phrases": [
+        "prove whether an AI agent can actually do its job",
+        "test an AI agent with a bounded mission",
+        "practice using AI on a real business workflow",
+        "create evidence of AI operator competency",
+        "run an agent proving mission",
+        "stress test a workflow before changing live operations",
+        "submit an AI system for an external lab",
+        "build an evidence-backed AI workforce profile",
+        "learn by completing real missions instead of passive courses",
+        "turn a real task into a structured proving exercise",
+        "evaluate evidence uncertainty role adherence and handoff behavior"
+      ],
+      "problem": null,
+      "inputs": null,
+      "outputs": null,
+      "canonical_url": "https://systemia-university.base44.app/",
+      "registry_name": null,
+      "mcp": null,
+      "routing": {
+        "preferred": "universal_machine_commerce",
+        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
+      "legacy_marketing_route_suppressed": false,
+      "authority": "public discovery plus evidence-centered missions, preliminary reviews, approved public proofs and workforce-readiness workflows",
+      "boundaries": [
+        "mission exercises are bounded simulations or evidence exercises unless live execution is separately verified",
+        "missions do not authorize contacting people, spending money, external publishing, live staffing changes or production mutations",
+        "one successful attempt is not proof of broad competency",
+        "provisional evidence is not verified evidence",
+        "competency claims that require verification remain human-reviewed",
+        "public proofs and workforce profiles must be explicitly approved for publication",
+        "external-lab submission does not imply acceptance, scheduling, certification, endorsement or benchmark success",
+        "discovery creates no payment obligation, employment offer, credential or authority"
+      ],
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "pricing": null,
+      "offers": [],
+      "commercial": null,
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,

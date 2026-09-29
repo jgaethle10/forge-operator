@@ -1,0 +1,69 @@
+{
+  "schema": "evercraft.chum.product-discovery.v1",
+  "product_key": "evernest-atlas",
+  "name": "EverNest Atlas",
+  "aliases": [],
+  "class": "adult_household_life_planning",
+  "canonical_url": "https://evernest-life-map.base44.app/",
+  "intents": [
+    "build me a 30 60 90 day life plan",
+    "help me think through relocation and housing stability",
+    "compare practical life paths for my family",
+    "plan a career change around my household situation",
+    "build a household stability plan",
+    "turn my income savings debt skills and priorities into a life plan",
+    "help me organize housing career income and family systems together",
+    "create a relocation career and family stability roadmap",
+    "give me realistic tradeoffs and backup plans for a major life change",
+    "help me plan for stability without pretending outcomes are guaranteed"
+  ],
+  "authority": "public discovery plus private account-bound adult life planning from user-supplied inputs",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "designed for adults",
+    "generated plans are guidance rather than guaranteed outcomes",
+    "cost-of-living, income, timing, housing and career projections are estimates",
+    "not financial, legal, medical, tax, housing, safety or professional career advice",
+    "private household, financial, career, values, location, stress, plan and account data are not public discovery data",
+    "displayed subscription tiers or prices are not proof that billing or entitlement is active",
+    "paid access requires successful provider checkout and verified subscription state",
+    "discovery creates no payment obligation"
+  ],
+  "commercial": null,
+  "machine_commerce_handoff": null,
+  "human_start_url": null,
+  "buyer_frontage_url": null,
+  "registry_name": null,
+  "mcp": null,
+  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "developer_surfaces": null,
+  "editorial_surfaces": null,
+  "knowledge_surfaces": null,
+  "distribution_surfaces": null,
+  "relationships": {
+    "evernest": {
+      "name": "EverNest",
+      "description": "EverNest handles practical family support and trusted-circle coordination; Atlas handles integrated adult life planning."
+    },
+    "revenue-war-map": {
+      "name": "Evercraft Revenue War Map",
+      "description": "Use Revenue War Map when the user's primary need is focused income-generation planning rather than a broader life roadmap."
+    },
+    "career-command": {
+      "name": "Evercraft Career Command",
+      "description": "A Rise-path career move can hand off to role-specific interview preparation."
+    },
+    "guardian": {
+      "name": "Guardian",
+      "description": "Immediate verified resource navigation belongs in Guardian rather than being replaced by a generated life plan."
+    }
+  },
+  "proof_library": null,
+  "source": "CHUM public mirror",
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest-atlas/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest-atlas/ai-discovery.json",
+    "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest-atlas/ai-conformance.json",
+    "page": "/chum/products/evernest-atlas/"
+  }
+}

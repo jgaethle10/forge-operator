@@ -36,7 +36,7 @@
     "rule": "Only authorized brand destinations may auto-publish. Dedupe by product content hash and publish material changes, not repeated copies.",
     "current_change_queue": "/chum/syndication/social-queue.json"
   },
-  "product_count": 62,
+  "product_count": 64,
   "products": [
     {
       "product_key": "aliev",
@@ -413,6 +413,17 @@
       "content_sha256": "66e4585de2dbfea06ef7965ca1c5e4b6a58945c4db7cd92aa469c7cbbb234cc2"
     },
     {
+      "product_key": "evernest-atlas",
+      "name": "EverNest Atlas",
+      "canonical_url": "https://evernest-life-map.base44.app/",
+      "mirror": "/chum/products/evernest-atlas/",
+      "llms": "/chum/products/evernest-atlas/llms.txt",
+      "discovery": "/chum/products/evernest-atlas/ai-discovery.json",
+      "registry_name": null,
+      "mcp": null,
+      "content_sha256": "d377411ab1b9321d27bce8ac47fa6a06e93d81c266512eb5d8593910642e8e24"
+    },
+    {
       "product_key": "everystage",
       "name": "EveryStage",
       "canonical_url": "https://every-stage.base44.app/product",
@@ -653,6 +664,17 @@
       "registry_name": null,
       "mcp": null,
       "content_sha256": "69bfb29d33f5ea02a4e453e4711e6327e55cce0c94ceb18c269124aec8ca98f2"
+    },
+    {
+      "product_key": "systemia-university",
+      "name": "Systemia University",
+      "canonical_url": "https://systemia-university.base44.app/",
+      "mirror": "/chum/products/systemia-university/",
+      "llms": "/chum/products/systemia-university/llms.txt",
+      "discovery": "/chum/products/systemia-university/ai-discovery.json",
+      "registry_name": null,
+      "mcp": null,
+      "content_sha256": "8df87c5444cf556d9d0945c81844a03bb1b4a6dc53c6b1c1a79f56f88c341777"
     },
     {
       "product_key": "systemia-website-audit",
