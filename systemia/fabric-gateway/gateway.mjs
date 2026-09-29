@@ -400,7 +400,24 @@ export class EvercraftFabricGateway {
 
   prepareAction(authorization, input = {}) {
     const principal = this.#authorizedPrincipal(authorization, 'fabric.action.prepare');
-    const intentId = optionalString(input.idempotency_key) || randomUUID();
+    const suppliedIdempotencyKey = optionalString(input.idempotency_key);
+    const intentId = suppliedIdempotencyKey || randomUUID();
+
+    if (suppliedIdempotencyKey) {
+      const duplicate = readJsonl(this.actionIntentsFile).find(
+        (row) =>
+          row.credential_id === principal.credential_id &&
+          row.idempotency_key === suppliedIdempotencyKey
+      );
+      if (duplicate) {
+        return {
+          ok: true,
+          state: 'duplicate_prepared_not_executed',
+          receipt: duplicate,
+          next_boundary: 'Submit through Systemia admission and Execution Gate before any consequential action.',
+        };
+      }
+    }
 
     const receipt = stableReceipt({
       schema: 'evercraft.fabric.action-intent.v1',
