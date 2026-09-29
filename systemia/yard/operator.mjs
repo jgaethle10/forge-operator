@@ -1663,7 +1663,8 @@ export class YardOperator {
       record.receipt?.workload_class === 'systemia.remote-capacity-broker.v1' ||
       record.receipt?.workload_class === 'systemia.rivet-report-runtime.v1' ||
       record.receipt?.workload_class === 'systemia.specialist-handoff-mcp.v1' ||
-      record.receipt?.workload_class === 'systemia.evercraft-web-browser.v1'
+      record.receipt?.workload_class === 'systemia.evercraft-web-browser.v1' ||
+      record.receipt?.workload_class === 'systemia.evercraft-home.v1'
     ) {
       const broker =
         record.receipt?.workload_class === 'systemia.remote-capacity-broker.v1';
@@ -1673,7 +1674,11 @@ export class YardOperator {
         record.receipt?.workload_class === 'systemia.specialist-handoff-mcp.v1';
       const browser =
         record.receipt?.workload_class === 'systemia.evercraft-web-browser.v1';
-      const service = browser
+      const home =
+        record.receipt?.workload_class === 'systemia.evercraft-home.v1';
+      const service = home
+        ? 'evercraft-home'
+        : browser
         ? 'evercraft-web-browser-edge'
         : broker
           ? 'remote-capacity-broker'
@@ -1682,9 +1687,11 @@ export class YardOperator {
             : specialist
               ? 'specialist-handoff-mcp'
               : 'chum-public-origin';
-      const healthPath = browser
-        ? '/health'
-        : broker
+      const healthPath = home
+        ? '/api/health'
+        : browser
+          ? '/health'
+          : broker
           ? '/v1/remote/health'
           : rivet || specialist
             ? '/health'
@@ -1702,6 +1709,17 @@ export class YardOperator {
             (!browser || (
               health.mode === 'public_read_only' &&
               health.raw_worker_publicly_exposed === false
+            )) &&
+            (!home || (
+              health.runtime === 'Evercraft Compute' &&
+              health.workload_class === 'systemia.evercraft-home.v1' &&
+              health.authority === 'evercraft' &&
+              health.auth_mode === 'passport' &&
+              health.identity_login_configured === true &&
+              health.session_revocation_supported === true &&
+              health.base44_required === false &&
+              health.external_ai_required === false &&
+              health.legacy_provider_required === false
             ));
           return {
             ok,
@@ -1732,11 +1750,19 @@ export class YardOperator {
             local_health_ok:
               health.ok === true &&
               (
-                browser
-                  ? health.service === 'evercraft-owned-browser-worker' &&
+                home
+                  ? health.service === 'evercraft-home' &&
                     health.runtime === 'Evercraft Compute' &&
-                    health.mode === 'public_read_only'
-                  : health.service === service
+                    health.workload_class === 'systemia.evercraft-home.v1' &&
+                    health.authority === 'evercraft' &&
+                    health.auth_mode === 'passport' &&
+                    health.identity_login_configured === true &&
+                    health.session_revocation_supported === true
+                  : browser
+                    ? health.service === 'evercraft-owned-browser-worker' &&
+                      health.runtime === 'Evercraft Compute' &&
+                      health.mode === 'public_read_only'
+                    : health.service === service
               ) &&
               health.instance_id === record.result?.instance_id &&
               (!broker || health.secure_envelope_schema === 'evercraft.secure-envelope.v1'),
@@ -1745,9 +1771,11 @@ export class YardOperator {
         } catch (error) {
           return {
             ok: false,
-            state: browser
-              ? 'local_browser_unreachable'
-              : broker
+            state: home
+              ? 'local_home_unreachable'
+              : browser
+                ? 'local_browser_unreachable'
+                : broker
                 ? 'local_broker_unreachable'
                 : 'local_origin_unreachable',
             error: String(error?.message || error),
