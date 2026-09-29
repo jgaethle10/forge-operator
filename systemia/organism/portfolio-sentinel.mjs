@@ -92,6 +92,24 @@ function safeJson(rootDir, relativePath) {
   }
 }
 
+function stableJson(value) {
+  if (value === undefined) return '';
+  if (value === null || typeof value !== 'object') return JSON.stringify(value);
+  if (Array.isArray(value)) return '[' + value.map(stableJson).join(',') + ']';
+  return '{' + Object.keys(value).sort().map((key) => JSON.stringify(key) + ':' + stableJson(value[key])).join(',') + '}';
+}
+
+function isVerifiedState(value) {
+  return /(?:^|[_-])(live|verified)(?:[_-]|$)/i.test(clean(value)) || /verified/i.test(clean(value));
+}
+
+function staleVerifiedInvocationStatus(value) {
+  const text = clean(value);
+  return /^source-wired:/i.test(text) ||
+    /production verification is still required/i.test(text) ||
+    /pending independent production verification/i.test(text);
+}
+
 function listDirNames(rootDir, relativePath) {
   const full = path.join(rootDir, relativePath);
   if (!fs.existsSync(full)) return [];
@@ -512,6 +530,155 @@ export function inspectLocalPortfolio({ rootDir = process.cwd() } = {}) {
         ...(row.metadata || {})
       }
     }));
+  }
+
+  const canonicalConformanceResult = safeJson(root, 'conformance/products.json');
+  const registryCatalogResult = safeJson(root, 'registry/catalog.json');
+  const machineCatalogResult = safeJson(root, 'public/.well-known/evercraft-machine-catalog.json');
+
+  report.inventory.truth_convergence = {
+    canonical_products: 0,
+    generated_conformance_checked: 0,
+    generated_conformance_drift: 0,
+    registry_routes_checked: 0,
+    registry_route_drift: 0,
+    verified_machine_offers_checked: 0,
+    verified_machine_offer_downgrades: 0
+  };
+
+  if (!canonicalConformanceResult.ok) {
+    addFinding(report, makeFinding({
+      code: 'canonical_conformance_invalid',
+      severity: 'critical',
+      subject: 'conformance/products.json',
+      detail: canonicalConformanceResult.reason,
+      evidence_refs: ['repo:conformance/products.json'],
+      repair_mode: 'systemia_repair'
+    }));
+  } else {
+    const canonicalProducts = Array.isArray(canonicalConformanceResult.value?.products)
+      ? canonicalConformanceResult.value.products
+      : [];
+    const registryProducts = registryCatalogResult.ok && Array.isArray(registryCatalogResult.value?.products)
+      ? registryCatalogResult.value.products
+      : [];
+    const machineOffers = machineCatalogResult.ok && Array.isArray(machineCatalogResult.value?.offers)
+      ? machineCatalogResult.value.offers
+      : [];
+
+    report.inventory.truth_convergence.canonical_products = canonicalProducts.length;
+
+    for (const canonical of canonicalProducts) {
+      const productKey = clean(canonical?.product_key);
+      if (!productKey) continue;
+
+      const generatedPath = `public/chum/products/${productKey}/ai-conformance.json`;
+      const generatedResult = safeJson(root, generatedPath);
+      if (generatedResult.ok) {
+        report.inventory.truth_convergence.generated_conformance_checked += 1;
+        const generated = generatedResult.value || {};
+        const comparisons = [
+          ['machine_commerce_public_id', canonical?.machine_commerce_public_id, generated?.machine_commerce_public_id],
+          ['machine_commerce_tool', canonical?.machine_commerce_tool, generated?.machine_commerce_tool],
+          ['machine_commerce_handoff_state', canonical?.machine_commerce_handoff_state, generated?.machine_commerce_handoff_state],
+          ['mcp', canonical?.mcp, generated?.mcp],
+          ['registry_name', canonical?.mcp_registry?.name, generated?.registry_name],
+          ['live_canary_evidence', canonical?.live_canary_evidence, generated?.live_canary_evidence]
+        ];
+
+        for (const [field, expected, observed] of comparisons) {
+          if (expected === undefined || expected === null || clean(expected) === '') continue;
+          if (stableJson(expected) === stableJson(observed)) continue;
+          report.inventory.truth_convergence.generated_conformance_drift += 1;
+          const verified = isVerifiedState(canonical?.conformance_state) ||
+            isVerifiedState(canonical?.machine_commerce_handoff_state);
+          addFinding(report, makeFinding({
+            code: 'public_conformance_truth_drift',
+            severity: verified ? 'critical' : 'high',
+            subject: `${productKey}:${field}`,
+            detail: `Generated public conformance disagrees with canonical conformance for ${field}.`,
+            evidence_refs: ['repo:conformance/products.json', `repo:${generatedPath}`],
+            repair_mode: 'bounded_generator',
+            repair_command: 'npm run chum:mirror',
+            metadata: { product_key: productKey, field, expected, observed }
+          }));
+        }
+      }
+
+      const registryName = clean(canonical?.mcp_registry?.name);
+      const mcp = clean(canonical?.mcp);
+      if (registryName || mcp) {
+        const registryRow = registryProducts.find((row) => clean(row?.product_key) === productKey);
+        report.inventory.truth_convergence.registry_routes_checked += 1;
+        const registryMismatch = !registryRow ||
+          (registryName && clean(registryRow?.registry_name) !== registryName) ||
+          (mcp && clean(registryRow?.mcp) !== mcp);
+        if (registryMismatch) {
+          report.inventory.truth_convergence.registry_route_drift += 1;
+          addFinding(report, makeFinding({
+            code: 'registry_route_truth_drift',
+            severity: 'high',
+            subject: productKey,
+            detail: 'Registry catalog route disagrees with canonical product conformance.',
+            evidence_refs: ['repo:conformance/products.json', 'repo:registry/catalog.json'],
+            repair_mode: 'systemia_repair',
+            metadata: {
+              product_key: productKey,
+              expected_registry_name: registryName || null,
+              observed_registry_name: registryRow?.registry_name || null,
+              expected_mcp: mcp || null,
+              observed_mcp: registryRow?.mcp || null
+            }
+          }));
+        }
+      }
+
+      const publicId = clean(canonical?.machine_commerce_public_id);
+      const hasLiveEvidence = canonical?.live_canary_evidence !== undefined &&
+        canonical?.live_canary_evidence !== null &&
+        stableJson(canonical.live_canary_evidence) !== '""';
+      const verifiedMachineState = isVerifiedState(canonical?.conformance_state) ||
+        isVerifiedState(canonical?.machine_commerce_handoff_state);
+      if (publicId && hasLiveEvidence && verifiedMachineState) {
+        report.inventory.truth_convergence.verified_machine_offers_checked += 1;
+        const offer = machineOffers.find((row) => clean(row?.public_id) === publicId);
+        const downgraded = !offer || staleVerifiedInvocationStatus(offer?.invocation_status);
+        if (downgraded) {
+          report.inventory.truth_convergence.verified_machine_offer_downgrades += 1;
+          addFinding(report, makeFinding({
+            code: 'verified_machine_offer_truth_downgrade',
+            severity: 'critical',
+            subject: productKey,
+            detail: offer
+              ? 'Canonical conformance is live/verified with evidence, but the live-synced public machine offer still advertises a pending or source-wired invocation state.'
+              : 'Canonical conformance is live/verified with evidence, but the live-synced public machine offer is missing.',
+            evidence_refs: ['repo:conformance/products.json', 'repo:public/.well-known/evercraft-machine-catalog.json'],
+            repair_mode: 'verify_external_dependency',
+            repair_command: '',
+            human_gate_required: false,
+            metadata: {
+              product_key: productKey,
+              public_id: publicId,
+              canonical_conformance_state: canonical?.conformance_state || null,
+              canonical_handoff_state: canonical?.machine_commerce_handoff_state || null,
+              observed_invocation_status: offer?.invocation_status || null,
+              public_catalog_source_url: machineCatalogResult.value?.source_url || null,
+              repair_boundary: 'verify and correct the live Machine Commerce catalog source; regenerating CHUM alone cannot repair this drift'
+            }
+          }));
+        }
+      }
+    }
+
+    addCheck(
+      report,
+      'portfolio-truth-convergence',
+      report.inventory.truth_convergence.generated_conformance_drift === 0 &&
+        report.inventory.truth_convergence.registry_route_drift === 0 &&
+        report.inventory.truth_convergence.verified_machine_offer_downgrades === 0,
+      `generated_drift=${report.inventory.truth_convergence.generated_conformance_drift} registry_drift=${report.inventory.truth_convergence.registry_route_drift} verified_offer_downgrades=${report.inventory.truth_convergence.verified_machine_offer_downgrades}`,
+      ['repo:conformance/products.json', 'repo:registry/catalog.json', 'repo:public/.well-known/evercraft-machine-catalog.json', 'repo:public/chum/products']
+    );
   }
 
   const mirrorKeys = new Set(listDirNames(root, 'public/chum/products'));

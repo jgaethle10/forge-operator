@@ -26,6 +26,11 @@ on:
       - "server.ts"
       - "systemia/chum/build-commercial-discovery-mesh.mjs"
       - "public/.well-known/evercraft-machine-catalog.json"
+      - "conformance/products.json"
+      - "registry/catalog.json"
+      - "public/chum/products/**"
+      - "systemia/chum/build-public-mirror.mjs"
+      - "systemia/chum/build-capability-mirror.mjs"
       - "registry/public-products.json"
       - "registry/**/server.json"
       - "mcp-registry/**"
@@ -52,6 +57,11 @@ on:
       - "server.ts"
       - "systemia/chum/build-commercial-discovery-mesh.mjs"
       - "public/.well-known/evercraft-machine-catalog.json"
+      - "conformance/products.json"
+      - "registry/catalog.json"
+      - "public/chum/products/**"
+      - "systemia/chum/build-public-mirror.mjs"
+      - "systemia/chum/build-capability-mirror.mjs"
       - "registry/public-products.json"
       - "registry/**/server.json"
       - "mcp-registry/**"
@@ -136,6 +146,9 @@ jobs:
         if: always()
         run: node systemia/saban/capability-promotion.mjs --out artifacts/capability-promotion/latest.json
 
+      - name: Refresh live Machine Commerce catalog
+        run: npm run chum:sync
+
       - name: Run live portfolio integrity cycle
         if: always()
         env:
@@ -180,7 +193,7 @@ jobs:
             echo "## Systemia Portfolio Sentinel"
             echo
             echo "Cadence: 5 minutes"
-            echo "Coverage: raw estate reconciliation + public products + conformance + MCP publication + all known canonical URLs (up to 200/cycle) + GitHub + workflows + Systemia resident services + machine discovery + capability-promotion queue"
+            echo "Coverage: live Machine Commerce catalog refresh + canonical/public truth convergence + raw estate reconciliation + public products + conformance + MCP publication + all known canonical URLs (up to 200/cycle) + GitHub + workflows + Systemia resident services + machine discovery + capability-promotion queue"
             echo "Bounded failed-workflow retry: autonomous for newly observed failures"
             echo "Architectural invariants: enforced before green"
             echo "Human experience gate: Saban fan-out + owned browser visual receipts; BLOCKED never equals PASS"
