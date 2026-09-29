@@ -32,6 +32,7 @@ export function createFeedAdapter(config = {}) {
   }
 
   const sourceFamily = required(config.source_family, 'source_family');
+  const independenceGroup = required(config.independence_group || sourceFamily, 'independence_group');
   const evidenceState = String(config.evidence_state || 'observed').toLowerCase();
   if (!EVIDENCE_STATES.has(evidenceState)) {
     throw new TypeError('evidence_state must be modeled, reported, observed, or verified');
@@ -81,6 +82,8 @@ export function createFeedAdapter(config = {}) {
       created_at: createdAt.toISOString(),
       region_key: regionKey,
       source_family: sourceFamily,
+      independence_group: independenceGroup,
+      region_group: String(context.region_group || record.region_group || '').trim() || null,
       domain,
       kind: required(record.kind || config.default_kind || 'feed_deviation', 'kind'),
       anomaly_score: finite01(
@@ -101,6 +104,7 @@ export function createFeedAdapter(config = {}) {
         adapter_id: adapterId,
         exact_coordinates_retained: false,
         source_family: sourceFamily,
+        independence_group: independenceGroup,
         evidence_ceiling: evidenceState,
         confirmed_hazard_authority: canConfirmHazard
       }
