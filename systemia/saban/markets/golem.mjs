@@ -19,13 +19,24 @@ export function buildGolemOrderFromDemand(demand,{
   if(!image) throw new Error('golem_image_tag_required');
 
   const hours=Math.max(1/60,Number(demand.duration_seconds||3600)/3600);
-  const total=demand.economics.max_total_usd;
-  const hourly=demand.economics.max_hourly_usd;
-  const cpuCeiling=maxCpuPerHourPrice??hourly??(
-    total==null?null:Number(total)/hours
-  );
+  const marketCeilings=demand.economics.market_price_ceiling||{};
+  const cpuCeiling=
+    maxCpuPerHourPrice??
+    marketCeilings.golem_cpu_glm_per_hour??
+    null;
+  const envCeiling=
+    maxEnvPerHourPrice??
+    marketCeilings.golem_env_glm_per_hour??
+    null;
+  const startCeiling=
+    maxStartPrice??
+    marketCeilings.golem_start_glm??
+    0;
   if(cpuCeiling==null||!Number.isFinite(Number(cpuCeiling))){
-    throw new Error('golem_price_ceiling_required');
+    throw new Error('golem_cpu_glm_per_hour_ceiling_required');
+  }
+  if(envCeiling==null||!Number.isFinite(Number(envCeiling))){
+    throw new Error('golem_env_glm_per_hour_ceiling_required');
   }
 
   const order={
@@ -42,12 +53,9 @@ export function buildGolemOrderFromDemand(demand,{
       rentHours:hours,
       pricing:{
         model:'linear',
-        maxStartPrice:Math.max(0,Number(maxStartPrice||0)),
+        maxStartPrice:Math.max(0,Number(startCeiling)),
         maxCpuPerHourPrice:Math.max(0,Number(cpuCeiling)),
-        maxEnvPerHourPrice:Math.max(
-          0,
-          Number(maxEnvPerHourPrice??cpuCeiling)
-        ),
+        maxEnvPerHourPrice:Math.max(0,Number(envCeiling)),
       },
     },
     payment:{network:String(paymentNetwork)},
