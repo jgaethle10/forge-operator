@@ -58,6 +58,7 @@ export class EvercraftIdentity {
     this.subjectsDir = path.join(this.stateDir, "subjects");
     this.loginIndexFile = path.join(this.stateDir, "login-index.json");
     this.eventsFile = path.join(this.stateDir, "events.jsonl");
+    this.sessionControlFile = path.join(this.stateDir, "session-control.json");
   }
 
   #loginIndex() {
@@ -73,6 +74,103 @@ export class EvercraftIdentity {
   #appendEvent(event) {
     fs.mkdirSync(this.stateDir, { recursive: true, mode: 0o700 });
     fs.appendFileSync(this.eventsFile, JSON.stringify(event) + "\n", { mode: 0o600 });
+  }
+
+
+  #sessionControl() {
+    if (!fs.existsSync(this.sessionControlFile)) {
+      return {
+        schema: "evercraft.identity.session-control.v1",
+        revoked_sessions: {},
+        subject_not_before: {},
+        updated_at: null,
+      };
+    }
+    const state = JSON.parse(fs.readFileSync(this.sessionControlFile, "utf8"));
+    return {
+      schema: "evercraft.identity.session-control.v1",
+      revoked_sessions: state?.revoked_sessions && typeof state.revoked_sessions === "object"
+        ? state.revoked_sessions
+        : {},
+      subject_not_before: state?.subject_not_before && typeof state.subject_not_before === "object"
+        ? state.subject_not_before
+        : {},
+      updated_at: state?.updated_at || null,
+    };
+  }
+
+  #writeSessionControl(state, updatedAt) {
+    atomicJson(this.sessionControlFile, {
+      schema: "evercraft.identity.session-control.v1",
+      revoked_sessions: state.revoked_sessions || {},
+      subject_not_before: state.subject_not_before || {},
+      updated_at: new Date(updatedAt).toISOString(),
+    });
+  }
+
+  revokeSession({ sessionId, subjectRef, reason = "signed_out", at = new Date().toISOString() } = {}) {
+    const id = required(sessionId, "session_id");
+    const subject = required(subjectRef, "subject_ref");
+    const occurredAt = new Date(at).toISOString();
+    const state = this.#sessionControl();
+    state.revoked_sessions[id] = {
+      subject_ref: subject,
+      reason: required(reason, "reason"),
+      revoked_at: occurredAt,
+    };
+    this.#writeSessionControl(state, occurredAt);
+    const event = receipt({
+      schema: "evercraft.identity.event.v1",
+      event_id: "identity_event_" + randomUUID(),
+      type: "session.revoked",
+      subject_ref: subject,
+      session_id: id,
+      reason: state.revoked_sessions[id].reason,
+      occurred_at: occurredAt,
+    });
+    this.#appendEvent(event);
+    return { state: "revoked", session_id: id, subject_ref: subject, receipt: event };
+  }
+
+  revokeSubjectSessions({ subjectRef, reason = "sign_out_everywhere", at = new Date().toISOString() } = {}) {
+    const subject = required(subjectRef, "subject_ref");
+    const occurredAt = new Date(at).toISOString();
+    const state = this.#sessionControl();
+    state.subject_not_before[subject] = {
+      not_before: occurredAt,
+      reason: required(reason, "reason"),
+    };
+    this.#writeSessionControl(state, occurredAt);
+    const event = receipt({
+      schema: "evercraft.identity.event.v1",
+      event_id: "identity_event_" + randomUUID(),
+      type: "subject.sessions.revoked",
+      subject_ref: subject,
+      not_before: occurredAt,
+      reason: state.subject_not_before[subject].reason,
+      occurred_at: occurredAt,
+    });
+    this.#appendEvent(event);
+    return { state: "revoked_all", subject_ref: subject, not_before: occurredAt, receipt: event };
+  }
+
+  assertSessionActive(session) {
+    if (!session?.session_id || !session?.subject_ref || !session?.issued_at) {
+      throw new Error("session_identity_incomplete");
+    }
+    const state = this.#sessionControl();
+    if (state.revoked_sessions[session.session_id]) {
+      throw new Error("session_revoked");
+    }
+    const subjectCutoff = state.subject_not_before[session.subject_ref]?.not_before;
+    if (subjectCutoff) {
+      const issuedAt = new Date(session.issued_at).getTime();
+      const cutoff = new Date(subjectCutoff).getTime();
+      if (Number.isFinite(issuedAt) && Number.isFinite(cutoff) && issuedAt <= cutoff) {
+        throw new Error("session_subject_revoked");
+      }
+    }
+    return { active: true, session_id: session.session_id, subject_ref: session.subject_ref };
   }
 
   getSubject(subjectRef) {
@@ -179,10 +277,13 @@ export class EvercraftIdentity {
 
   issueSession(authentication, {
     signingSecret,
+    signingKeyId = "primary",
     ttlSeconds = 1800,
     now = new Date(),
   } = {}) {
     const secret = required(signingSecret, "signing_secret");
+    const keyId = required(signingKeyId, "signing_key_id");
+    if (!/^[a-zA-Z0-9._:-]{1,80}$/.test(keyId)) throw new Error("signing_key_id_invalid");
     if (Buffer.byteLength(secret, "utf8") < 32) throw new Error("signing_secret_too_short");
     if (authentication?.schema !== "evercraft.identity.authentication.v1") {
       throw new Error("authentication_required");
@@ -197,6 +298,7 @@ export class EvercraftIdentity {
       subject_ref: authentication.subject_ref,
       display_name: authentication.display_name,
       auth_strength: authentication.auth_strength,
+      signing_key_id: keyId,
       issuer_ref: this.issuerRef,
       issued_at: issuedAt.toISOString(),
       expires_at: expiresAt.toISOString(),
@@ -211,6 +313,7 @@ export class EvercraftIdentity {
       subject_ref: payload.subject_ref,
       session_id: payload.session_id,
       auth_strength: payload.auth_strength,
+      signing_key_id: payload.signing_key_id,
       expires_at: payload.expires_at,
       occurred_at: issuedAt.toISOString(),
     });

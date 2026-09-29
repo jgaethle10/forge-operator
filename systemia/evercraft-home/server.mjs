@@ -52,12 +52,44 @@ async function readJsonBody(req, limit = 131072) {
   }
 }
 
+
+function identityKeyring(currentKeyId, currentSecret, previousKeysJson) {
+  const keyId = String(currentKeyId || "primary").trim();
+  if (!/^[a-zA-Z0-9._:-]{1,80}$/.test(keyId)) throw new Error("signing_key_id_invalid");
+  const secret = String(currentSecret || "").trim();
+  if (Buffer.byteLength(secret, "utf8") < 32) throw new Error("signing_secret_too_short");
+  let previous = {};
+  if (String(previousKeysJson || "").trim()) {
+    try {
+      previous = JSON.parse(previousKeysJson);
+    } catch {
+      throw new Error("identity_previous_keys_invalid_json");
+    }
+    if (!previous || typeof previous !== "object" || Array.isArray(previous)) {
+      throw new Error("identity_previous_keys_invalid");
+    }
+  }
+  const result = {};
+  for (const [id, value] of Object.entries(previous)) {
+    const priorId = String(id || "").trim();
+    const priorSecret = String(value || "").trim();
+    if (!/^[a-zA-Z0-9._:-]{1,80}$/.test(priorId)) throw new Error("signing_key_id_invalid");
+    if (Buffer.byteLength(priorSecret, "utf8") < 32) throw new Error("signing_secret_too_short");
+    if (priorId === keyId) throw new Error("identity_previous_key_conflicts_with_current");
+    result[priorId] = priorSecret;
+  }
+  result[keyId] = secret;
+  return result;
+}
+
 export async function startEvercraftHomeServer({
   host = process.env.EVERCRAFT_HOME_HOST || "127.0.0.1",
   port = Number(process.env.EVERCRAFT_HOME_PORT || 4310),
   authMode = process.env.EVERCRAFT_HOME_AUTH || "local",
   operator = process.env.EVERCRAFT_HOME_OPERATOR || "Operator",
   identitySecret = String(process.env.EVERCRAFT_IDENTITY_SECRET || "").trim(),
+  identityKeyId = String(process.env.EVERCRAFT_IDENTITY_KEY_ID || "primary").trim(),
+  identityPreviousKeysJson = String(process.env.EVERCRAFT_IDENTITY_PREVIOUS_KEYS_JSON || "").trim(),
   passportStateDir = String(process.env.EVERCRAFT_PASSPORT_STATE_DIR || "").trim(),
   yardStateDir = String(process.env.EVERCRAFT_YARD_STATE_DIR || "").trim(),
   identityStateDir = String(process.env.EVERCRAFT_IDENTITY_STATE_DIR || "").trim(),
@@ -70,11 +102,14 @@ export async function startEvercraftHomeServer({
     throw new Error("Local auth may only bind to loopback. Configure Evercraft Identity before remote exposure.");
   }
   if (!["local", "passport"].includes(authMode)) throw new Error("unsupported_auth_mode");
-  if (authMode === "passport" && (!identitySecret || !passportStateDir)) {
-    throw new Error("Passport auth requires EVERCRAFT_IDENTITY_SECRET and EVERCRAFT_PASSPORT_STATE_DIR.");
+  if (authMode === "passport" && (!identitySecret || !identityStateDir || !passportStateDir)) {
+    throw new Error("Passport auth requires signing material, EVERCRAFT_IDENTITY_STATE_DIR and EVERCRAFT_PASSPORT_STATE_DIR.");
   }
 
   const passport = authMode === "passport" ? new EvercraftPassport({ stateDir: passportStateDir }) : null;
+  const signingKeys = authMode === "passport"
+    ? identityKeyring(identityKeyId, identitySecret, identityPreviousKeysJson)
+    : {};
   const identity = authMode === "passport" && identityStateDir
     ? new EvercraftIdentity({ stateDir: identityStateDir })
     : null;
@@ -107,15 +142,19 @@ export async function startEvercraftHomeServer({
     if (!token) return { ok: false, status: 401, state: "session_required" };
 
     try {
-      const session = verifyEvercraftSession(token, identitySecret);
+      const session = verifyEvercraftSession(token, signingKeys);
+      identity.assertSessionActive(session);
       const authorization = authorizeEvercraftHome(passport, session, { scope });
       return {
         ok: true,
         subject: session.subject_ref,
         display_name: session.display_name,
+        session_id: session.session_id,
+        signing_key_id: session.signing_key_id,
         authority: "evercraft-identity+passport",
         mode: "passport",
         grant_id: authorization.grant_id,
+        issued_at: session.issued_at,
         expires_at: session.expires_at,
       };
     } catch (error) {
@@ -214,6 +253,7 @@ export async function startEvercraftHomeServer({
 
         const issued = identity.issueSession(authentication, {
           signingSecret: identitySecret,
+          signingKeyId: identityKeyId,
           ttlSeconds: sessionTtlSeconds,
         });
         loginLimiter.recordSuccess(rateKey);
@@ -244,6 +284,17 @@ export async function startEvercraftHomeServer({
     }
 
     if (req.method === "POST" && url.pathname === "/api/logout") {
+      const token = cookies(req).evercraft_session;
+      if (token && identity) {
+        try {
+          const session = verifyEvercraftSession(token, signingKeys);
+          identity.revokeSession({
+            sessionId: session.session_id,
+            subjectRef: session.subject_ref,
+            reason: "signed_out",
+          });
+        } catch {}
+      }
       res.writeHead(200, {
         ...securityHeaders,
         "cache-control": "no-store",
@@ -251,6 +302,27 @@ export async function startEvercraftHomeServer({
         "set-cookie": sessionCookie("", 0),
       });
       return res.end(JSON.stringify({ ok: true, state: "signed_out" }));
+    }
+
+    if (req.method === "POST" && url.pathname === "/api/sessions/revoke-all") {
+      const session = sessionFor(req, "home.identity.sessions.manage");
+      if (!session.ok) return json(res, session.status, session);
+      const revoked = identity.revokeSubjectSessions({
+        subjectRef: session.subject,
+        reason: "sign_out_everywhere",
+      });
+      res.writeHead(200, {
+        ...securityHeaders,
+        "cache-control": "no-store",
+        "content-type": "application/json; charset=utf-8",
+        "set-cookie": sessionCookie("", 0),
+      });
+      return res.end(JSON.stringify({
+        ok: true,
+        state: revoked.state,
+        subject: revoked.subject_ref,
+        not_before: revoked.not_before,
+      }));
     }
 
     if (req.method === "GET" && url.pathname === "/api/session") {
@@ -372,6 +444,9 @@ export async function startEvercraftHomeServer({
       deployment_receipt_bound: Boolean(deploymentReceiptRef),
       deployment_receipt_ref: deploymentReceiptRef || null,
       identity_login_configured: Boolean(identity),
+      signing_key_id: authMode === "passport" ? identityKeyId : null,
+      accepted_signing_key_count: authMode === "passport" ? Object.keys(signingKeys).length : 0,
+      session_revocation_supported: Boolean(identity),
     }),
     setDeploymentReceipt: (receiptRef) => {
       const ref = String(receiptRef || "").trim();

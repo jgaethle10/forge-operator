@@ -44,7 +44,8 @@ const grant = passport.issueGrant({
     "home.systemia.read",
     "home.systemia.plan",
     "home.yard.read",
-    "home.network.read"
+    "home.network.read",
+    "home.identity.sessions.manage"
   ],
   starts_at: now.toISOString(),
   ends_at: ends.toISOString(),

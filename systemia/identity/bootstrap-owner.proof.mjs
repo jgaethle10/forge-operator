@@ -44,7 +44,7 @@ try{
   assert.equal(auth.subject_ref,"user:owner-ci");
 
   const passport=new EvercraftPassport({stateDir:passportStateDir});
-  for(const scope of ["home.read","home.systemia.read","home.systemia.plan","home.yard.read","home.network.read"]){
+  for(const scope of ["home.read","home.systemia.read","home.systemia.plan","home.yard.read","home.network.read", "home.identity.sessions.manage"]){
     const decision=passport.authorize({
       subject_ref:"user:owner-ci",
       product:"evercraft-home",

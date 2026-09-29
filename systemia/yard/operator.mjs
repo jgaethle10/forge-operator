@@ -570,6 +570,7 @@ export class YardOperator {
           health.workload_class === 'systemia.evercraft-home.v1' &&
           health.auth_mode === 'passport' &&
           health.identity_login_configured === true &&
+          health.session_revocation_supported === true &&
           health.authority === 'evercraft' &&
           health.external_ai_required === false &&
           health.legacy_provider_required === false &&

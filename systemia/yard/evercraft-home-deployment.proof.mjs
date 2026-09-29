@@ -33,7 +33,7 @@ passport.issueGrant({
   subject_ref: "user:owner-proof",
   issuer_ref: "evercraft:identity-authority",
   product: "evercraft-home",
-  scopes: ["home.read", "home.systemia.read", "home.systemia.plan", "home.yard.read", "home.network.read"],
+  scopes: ["home.read", "home.systemia.read", "home.systemia.plan", "home.yard.read", "home.network.read", "home.identity.sessions.manage"],
   starts_at: new Date(Date.now() - 1000).toISOString(),
   ends_at: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
   max_delegation_depth: 1,
@@ -141,6 +141,30 @@ try {
   assert.equal(authenticatedBody.subject, "user:owner-proof");
   assert.equal(authenticatedBody.authority, "evercraft-identity+passport");
 
+  const revokeAll = await fetch(route.origin + "/api/sessions/revoke-all", {
+    method: "POST",
+    headers: { cookie: cookie.split(";")[0] },
+  });
+  assert.equal(revokeAll.status, 200);
+  const revokeAllBody = await revokeAll.json();
+  assert.equal(revokeAllBody.state, "revoked_all");
+
+  const globallyRevoked = await fetch(route.origin + "/api/session", {
+    headers: { cookie: cookie.split(";")[0] },
+  });
+  assert.equal(globallyRevoked.status, 401);
+  assert.equal((await globallyRevoked.json()).state, "session_subject_revoked");
+
+  const freshLogin = await fetch(route.origin + "/api/login", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      login: "owner",
+      password: "proof password long enough for owner 2026",
+    }),
+  });
+  assert.equal(freshLogin.status, 200);
+
   const releasedRoute = await edgeClient.releaseLease(route.lease_id, "proof_complete");
   assert.equal(releasedRoute.released, true);
 
@@ -151,6 +175,7 @@ try {
     health_verification: record.receipt.health_verification,
     route_verification: record.receipt.route_verification,
     owner_login_verified_through_edge: true,
+    subject_wide_revocation_verified: true,
     public_route_bound: true,
     public_route_mode: "proof_loopback",
     trusted_public_dns_claimed: false,

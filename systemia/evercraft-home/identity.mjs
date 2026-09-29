@@ -12,11 +12,46 @@ function signatureFor(encodedPayload, secret) {
   return createHmac("sha256", secret).update(encodedPayload).digest("base64url");
 }
 
-export function verifyEvercraftSession(token, secret, { now = new Date() } = {}) {
-  const signingSecret = requiredString(secret, "identity_secret");
+function parsePayload(encodedPayload) {
+  try {
+    return JSON.parse(Buffer.from(encodedPayload, "base64url").toString("utf8"));
+  } catch {
+    throw new Error("session_payload_invalid");
+  }
+}
+
+function normalizeKeyring(keys) {
+  if (typeof keys === "string") {
+    const secret = requiredString(keys, "identity_secret");
+    return { legacy: secret, primary: secret };
+  }
+  if (!keys || typeof keys !== "object" || Array.isArray(keys)) {
+    throw new Error("identity_keyring_required");
+  }
+  const result = {};
+  for (const [keyId, value] of Object.entries(keys)) {
+    const id = requiredString(keyId, "signing_key_id");
+    const secret = requiredString(value, "identity_secret");
+    if (!/^[a-zA-Z0-9._:-]{1,80}$/.test(id)) throw new Error("signing_key_id_invalid");
+    if (Buffer.byteLength(secret, "utf8") < 32) throw new Error("signing_secret_too_short");
+    result[id] = secret;
+  }
+  if (!Object.keys(result).length) throw new Error("identity_keyring_required");
+  return result;
+}
+
+export function verifyEvercraftSession(token, keyringOrSecret, { now = new Date() } = {}) {
   const raw = requiredString(token, "session_token");
   const [encodedPayload, suppliedSignature, extra] = raw.split(".");
   if (!encodedPayload || !suppliedSignature || extra) throw new Error("session_token_invalid");
+
+  const payload = parsePayload(encodedPayload);
+  if (payload?.schema !== SESSION_SCHEMA) throw new Error("session_schema_invalid");
+
+  const keyring = normalizeKeyring(keyringOrSecret);
+  const keyId = payload.signing_key_id ? String(payload.signing_key_id) : "legacy";
+  const signingSecret = keyring[keyId];
+  if (!signingSecret) throw new Error("session_signing_key_unknown");
 
   const expectedSignature = signatureFor(encodedPayload, signingSecret);
   const supplied = Buffer.from(suppliedSignature);
@@ -25,25 +60,23 @@ export function verifyEvercraftSession(token, secret, { now = new Date() } = {})
     throw new Error("session_signature_invalid");
   }
 
-  let payload;
-  try {
-    payload = JSON.parse(Buffer.from(encodedPayload, "base64url").toString("utf8"));
-  } catch {
-    throw new Error("session_payload_invalid");
-  }
-
-  if (payload?.schema !== SESSION_SCHEMA) throw new Error("session_schema_invalid");
   const subjectRef = requiredString(payload.subject_ref, "subject_ref");
   const displayName = requiredString(payload.display_name, "display_name");
+  const sessionId = requiredString(payload.session_id, "session_id");
+  const issuedAt = new Date(payload.issued_at);
   const expiresAt = new Date(payload.expires_at);
+  if (!Number.isFinite(issuedAt.getTime())) throw new Error("session_issued_at_invalid");
   if (!Number.isFinite(expiresAt.getTime())) throw new Error("session_expiry_invalid");
   if (now >= expiresAt) throw new Error("session_expired");
 
   return {
     schema: SESSION_SCHEMA,
+    session_id: sessionId,
     subject_ref: subjectRef,
     display_name: displayName,
+    issued_at: issuedAt.toISOString(),
     expires_at: expiresAt.toISOString(),
+    signing_key_id: keyId,
     issuer_ref: payload.issuer_ref ? String(payload.issuer_ref) : null,
   };
 }

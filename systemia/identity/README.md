@@ -42,3 +42,32 @@ The bootstrap command does not belong in an unattended public deployment path.
 Identity authenticates a subject and issues a short-lived signed session. Home verifies the signature, then asks Passport whether the subject has the requested scope. A valid session without a Passport grant is denied.
 
 No external identity provider is required for this baseline.
+
+
+## Session key rotation
+
+Evercraft Home signs each new session with the current key and records its key ID in the signed payload.
+
+Production configuration uses:
+
+```bash
+EVERCRAFT_IDENTITY_KEY_ID=home-2026-09
+EVERCRAFT_IDENTITY_SECRET=<current secret>
+EVERCRAFT_IDENTITY_PREVIOUS_KEYS_JSON='{"home-2026-08":"<previous secret>"}'
+```
+
+During rotation, keep the retiring key in `EVERCRAFT_IDENTITY_PREVIOUS_KEYS_JSON` while new sessions are issued with the new current key. After the overlap window, remove the retiring key. Any still-present session signed by that removed key fails closed with `session_signing_key_unknown`.
+
+Signing keys are never written to Identity state or source control.
+
+## Session revocation
+
+Identity maintains a private session-control ledger.
+
+- Normal Home logout revokes the current session ID server-side before clearing the cookie.
+- `POST /api/sessions/revoke-all` advances a subject-wide not-before cutoff and clears the current cookie.
+- The revoke-all operation requires the Passport scope `home.identity.sessions.manage`.
+- A fresh login after the cutoff produces a new valid session.
+- Revocation remains independent of Passport grants. Passport still owns authorization.
+
+This means an old browser cookie, copied cookie, or retired device can be invalidated without changing the user's password or rebuilding Home.

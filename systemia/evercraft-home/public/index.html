@@ -65,7 +65,11 @@
     <div class="provider"><span>The Yard</span><span id="yard-evidence">Checking…</span></div>
     <div class="provider"><span>Evercraft Network</span><span id="network-evidence">Checking…</span></div>
   </div>
-  <div class="providers"><strong>Optional providers</strong><div id="providers"></div></div></aside></section>
+  <div class="providers"><strong>Optional providers</strong><div id="providers"></div></div>
+  <div class="providers"><strong>Account security</strong>
+    <div class="provider"><span>Current session</span><button id="end-all-sessions" type="button" style="border:0;background:transparent;padding:0;font:inherit;font-size:12px;color:#6d5b34;cursor:pointer">End all sessions</button></div>
+    <div id="security-status" style="font-size:11px;color:#777269;margin-top:8px;line-height:1.5">Use this if a device or session should no longer be trusted.</div>
+  </div></aside></section>
 </main>
 <footer class="foot" id="app-footer"><span>EVERCRAFT · Built to endure.</span><span>Sovereign Home · Direct Mode</span></footer>
 <script>
@@ -120,6 +124,23 @@ document.getElementById("login-form").addEventListener("submit",async(event)=>{
   }finally{
     button.disabled=false;
     button.textContent="Continue";
+  }
+});
+
+document.getElementById("end-all-sessions").addEventListener("click",async()=>{
+  const button=document.getElementById("end-all-sessions");
+  const status=document.getElementById("security-status");
+  button.disabled=true;
+  status.textContent="Ending all Evercraft Home sessions…";
+  try{
+    const response=await fetch("/api/sessions/revoke-all",{method:"POST"});
+    const data=await response.json();
+    if(!response.ok||!data.ok) throw new Error(data.state||"session_revoke_failed");
+    showLogin("All Evercraft Home sessions were ended. Sign in again.");
+  }catch(error){
+    status.textContent="Could not end all sessions: "+String(error.message||error);
+  }finally{
+    button.disabled=false;
   }
 });
 
