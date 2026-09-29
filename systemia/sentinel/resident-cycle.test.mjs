@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
 import {
   emptyResidentState,
-  runSentinelResidentCycle
+  runSentinelResidentCycle,
+  computeNextPollAt
 } from './resident-cycle.mjs';
 
 function source({
@@ -142,5 +143,21 @@ assert.equal(
 );
 assert.equal(result.snapshot.summary.urgent_incidents, 0);
 assert.equal(result.snapshot.doctrine.sensor_failure_is_not_threat_evidence, true);
+
+const thirdFailureAt = computeNextPollAt({
+  source: sources[0],
+  receipt: { status: 'error' },
+  sourceHealthState: {
+    sources: {
+      'weather-a': { consecutive_failures: 3 }
+    }
+  },
+  checkedAt: '2026-09-29T12:10:00Z',
+  maxJitterSeconds: 0
+});
+assert.equal(
+  new Date(thirdFailureAt).getTime() - new Date('2026-09-29T12:10:00Z').getTime(),
+  240000
+);
 
 console.log('SYSTEMIA SENTINEL RESIDENT CYCLE PASS');
