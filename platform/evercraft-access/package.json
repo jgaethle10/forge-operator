@@ -1,0 +1,13 @@
+{
+  "name": "@evercraft/access-gateway-core",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "description": "Provider-neutral Evercraft API credential and authorization core.",
+  "scripts": {
+    "test": "node ./test/access-core.test.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
