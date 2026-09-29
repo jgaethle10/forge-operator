@@ -151,7 +151,7 @@ export async function startFederatedServiceBridge({
     health,
     setDeploymentReceipt(value){
       const receipt=String(value||'').trim();
-      if(!/^sha256:[a-f0-9]{64}$/i.test(receipt)){
+      if(!/^(?:sha256:)?[a-f0-9]{64}$/i.test(receipt)){
         throw new Error('deployment_receipt_ref_invalid');
       }
       deploymentReceiptRef=receipt;
