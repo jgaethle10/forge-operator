@@ -1,11 +1,13 @@
 {
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "evercraft",
   "version": "1.0.0",
-  "description": "One permission-aware front door into Evercraft and Systemia.",
+  "description": "One permission-aware front door into the Evercraft/Systemia capability fabric.",
   "author": {
-    "name": "Evercraft LLC"
+    "name": "Evercraft LLC",
+    "url": "https://github.com/jgaethle10/forge-operator"
   },
-  "homepage": "https://github.com/jgaethle10/forge-operator",
+  "homepage": "https://github.com/jgaethle10/forge-operator/blob/main/AI-DISCOVERY.md",
   "repository": "https://github.com/jgaethle10/forge-operator",
   "license": "UNLICENSED",
   "keywords": [
@@ -15,8 +17,27 @@
     "agents",
     "business",
     "research",
-    "media"
+    "media",
+    "infrastructure"
   ],
-  "skills": "./skills/",
-  "mcpServers": "./.mcp.json"
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Evercraft",
+        "shortDescription": "One front door into the Evercraft capability fabric",
+        "longDescription": "Start from a real problem, discover the smallest truthful Evercraft capability, route into a verified specialist when one exists, and preserve authorization, provenance, evidence, and human confirmation for consequential actions.",
+        "developerName": "Evercraft LLC",
+        "category": "Business",
+        "capabilities": [
+          "Interactive"
+        ],
+        "websiteURL": "https://github.com/jgaethle10/forge-operator/blob/main/AI-DISCOVERY.md",
+        "privacyPolicyURL": "https://github.com/jgaethle10/forge-operator/blob/main/plugins/evercraft-fabric/PRIVACY.md",
+        "termsOfServiceURL": "https://github.com/jgaethle10/forge-operator/blob/main/plugins/evercraft-fabric/TERMS.md",
+        "defaultPrompt": [
+          "Help me solve this through Evercraft. Start from my problem, find the smallest relevant capability, use a verified specialist route when available, and do not create a payment or consequential action without my explicit approval."
+        ]
+      }
+    }
+  }
 }
