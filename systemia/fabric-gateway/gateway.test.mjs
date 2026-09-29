@@ -249,6 +249,16 @@ test('action preparation produces a receipt but no execution, payment, or side e
     assert.equal(prepared.receipt.execution_authorized, false);
     assert.equal(prepared.receipt.payment_authorized, false);
     assert.equal(prepared.receipt.external_side_effect_created, false);
+
+    const duplicate = gateway.prepareAction(issued.secret_once, {
+      idempotency_key: 'action-001',
+      capability_key: 'forensiscope.media.inspect.v1',
+      intent: 'Inspect the supplied recording and return evidence.',
+      resource_refs: ['host:file:123'],
+    });
+    assert.equal(duplicate.state, 'duplicate_prepared_not_executed');
+    assert.equal(duplicate.receipt.action_intent_id, prepared.receipt.action_intent_id);
+    assert.equal(duplicate.receipt.receipt_hash, prepared.receipt.receipt_hash);
   } finally {
     fs.rmSync(root, { recursive: true, force: true });
   }
