@@ -94,6 +94,9 @@ try{
     eps_published:eps?.published===true,
     eps_verified:eps?.verified===true,
     eps_no_op:eps?.no_op===true,
+    eps_reason:eps?.reason||null,
+    eps_http_status:eps?.http_status??null,
+    clip_endpoint_host:eps?.endpoint_host||new URL(clipUrl).hostname,
     secret_persisted_in_public_receipt:false,
     base44_scheduler_retirement_authorized_by_this_canary:false
   };
