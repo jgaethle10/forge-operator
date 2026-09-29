@@ -29,3 +29,24 @@ jobs:
         run: |
           node --test tests/evercraft-openai-plugin-package.test.mjs tests/evercraft-fabric-runtime.test.mjs
           node scripts/validate-openai-plugin-submission.mjs
+
+      - name: Build OpenAI upload ZIP
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          (
+            cd plugins/evercraft-fabric
+            zip -qr ../../artifacts/evercraft-openai-plugin.zip .               -x '*.DS_Store'
+          )
+          test -s artifacts/evercraft-openai-plugin.zip
+          unzip -l artifacts/evercraft-openai-plugin.zip | grep -q 'plugin.json'
+          unzip -l artifacts/evercraft-openai-plugin.zip | grep -q 'mcp.json'
+          unzip -l artifacts/evercraft-openai-plugin.zip | grep -q 'skills/evercraft-router/SKILL.md'
+
+      - name: Upload OpenAI submission artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-openai-plugin
+          path: artifacts/evercraft-openai-plugin.zip
+          if-no-files-found: error
+          retention-days: 30
