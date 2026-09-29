@@ -132,7 +132,7 @@ The NWS client is a single-request primitive. Any scheduler wrapping it must res
 
 Sentinel treats source naming and source independence as different concepts. Multiple adapters can have different `source_family` values while sharing one `independence_group` when they ultimately depend on the same upstream provider. Corroboration thresholds count independence groups, preventing one provider from masquerading as multiple independent witnesses.
 
-The regional event graph sits above individual incidents. It links incidents only when they are close in time and share either the same coarse region key or an explicitly supplied coarse `region_group`. The graph can therefore recognize that differently named local areas are part of one broader event without retaining exact coordinates.
+Official geospatial adapters may transiently derive a 1-degree coarse cell from public source geometry, then discard the source coordinates. The coarse cell is correlation metadata, not a precision location or intervention coordinate.\n\nThe regional event graph sits above individual incidents. It links incidents only when they are close in time and share either the same coarse region key or an explicitly supplied coarse `region_group`. The graph can therefore recognize that differently named local areas are part of one broader event without retaining exact coordinates.
 
 Graph edges mean co-occurrence, not causation. Regional clusters preserve:
 
