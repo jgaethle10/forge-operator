@@ -7,8 +7,8 @@ Each phrase below maps to public capability candidates without upgrading readine
 Discovery creates no payment obligation. Checkout requires explicit human confirmation and paid state requires authoritative provider verification.
 
 Pain-index entries: 110
-Unique user phrases: 945
-Candidate edges: 1050
+Unique user phrases: 950
+Candidate edges: 1055
 Ambiguous phrases: 105
 
 ## 15 GB video analysis
@@ -2477,6 +2477,13 @@ Candidates:
 - RIVET EV Infrastructure Intelligence | kind=machine_offer | commercial=sell_now | machine=payment_ready_human_confirmation | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1
 - AliEV | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://aliev.base44.app/
 
+## follow a PlayStation Xbox Nintendo or Roblox rewards goal
+Answer ID: intent:5aa65343ce
+Human-readable match: /chum/answers/doors/follow-a-playstation-xbox-nintendo-or-roblox-rewards-goal-5aa65343ce/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/follow-a-playstation-xbox-nintendo-or-roblox-rewards-goal-5aa65343ce.json
+Candidates:
+- Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
+
 ## founder readiness
 Answer ID: intent:41eaa40577
 Human-readable match: /chum/answers/doors/founder-readiness-41eaa40577/
@@ -3298,6 +3305,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - FAIE Evidence-First Signal Brief | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://faie.base44.app/functions/faieAgentGateway?view=docs
 
+## invite friends to join a local gaming rewards network
+Answer ID: intent:2957a35efd
+Human-readable match: /chum/answers/doors/invite-friends-to-join-a-local-gaming-rewards-network-2957a35efd/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/invite-friends-to-join-a-local-gaming-rewards-network-2957a35efd.json
+Candidates:
+- Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
+
 ## is my book file ready to publish
 Answer ID: intent:5208956c86
 Human-readable match: /chum/answers/doors/is-my-book-file-ready-to-publish-5208956c86/
@@ -3846,6 +3860,13 @@ Human-readable match: /chum/answers/doors/member-device-reconnect-visibility-b1e
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/member-device-reconnect-visibility-b1e695417e.json
 Candidates:
 - Evercraft Network | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://network-control.base44.app/
+
+## merchant funded Game Wallet points campaign
+Answer ID: intent:0aa166459d
+Human-readable match: /chum/answers/doors/merchant-funded-game-wallet-points-campaign-0aa166459d/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/merchant-funded-game-wallet-points-campaign-0aa166459d.json
+Candidates:
+- Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
 
 ## migrate from no-code
 Answer ID: intent:cd304f5aeb
@@ -5132,6 +5153,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 
+## run a local business gaming rewards campaign
+Answer ID: intent:cdd4032735
+Human-readable match: /chum/answers/doors/run-a-local-business-gaming-rewards-campaign-cdd4032735/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/run-a-local-business-gaming-rewards-campaign-cdd4032735.json
+Candidates:
+- Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
+
 ## run a role-specific mock interview
 Answer ID: intent:242e81edfb
 Human-readable match: /chum/answers/doors/run-a-role-specific-mock-interview-242e81edfb/
@@ -5989,6 +6017,13 @@ Human-readable match: /chum/answers/doors/track-payroll-corrections-and-reversal
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/track-payroll-corrections-and-reversals-4f3d30a967.json
 Candidates:
 - PayFlow | kind=product | commercial=product_contract | machine=discovery_only | public=https://pay-flow-fix.base44.app/
+
+## track progress toward gaming credit through local rewards
+Answer ID: intent:ab3e0b6713
+Human-readable match: /chum/answers/doors/track-progress-toward-gaming-credit-through-local-rewards-ab3e0b6713/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/track-progress-toward-gaming-credit-through-local-rewards-ab3e0b6713.json
+Candidates:
+- Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
 
 ## track referrals and professional introductions
 Answer ID: intent:531cd56642

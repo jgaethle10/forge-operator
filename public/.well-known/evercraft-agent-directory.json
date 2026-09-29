@@ -1054,7 +1054,12 @@
         "earn PlayStation credit through local rewards",
         "earn Xbox credit through local rewards",
         "earn Nintendo eShop credit through local rewards",
-        "earn Roblox credit through local rewards"
+        "earn Roblox credit through local rewards",
+        "track progress toward gaming credit through local rewards",
+        "follow a PlayStation Xbox Nintendo or Roblox rewards goal",
+        "invite friends to join a local gaming rewards network",
+        "merchant funded Game Wallet points campaign",
+        "run a local business gaming rewards campaign"
       ],
       "invocation": {
         "mode": "mcp",
@@ -1075,7 +1080,11 @@
         "gaming redemption remains unavailable until a specific funded and authorized fulfillment rail, provider credential, sponsor budget and deployed runtime are independently verified",
         "Evercraft Points are not represented as publisher currency, cash or a direct publisher partnership",
         "prepared merchant enrollment does not activate a merchant, offer, discount, public listing or payment obligation",
-        "merchant directory publication and commercial activation require their own verified state"
+        "merchant directory publication and commercial activation require their own verified state",
+        "following a Game Wallet destination records user intent only until a real configured reward offer supplies a points target",
+        "referral attribution creates no automatic points or game credit",
+        "a referral becomes qualified only after the invitee completes a verified local Rewards check-in; that qualification still does not prove a purchase",
+        "merchant-funded Game Wallet earning boosts require a verified points-funding reference and capped points pool before activation"
       ],
       "commercial": null,
       "developer_surfaces": null

@@ -88,14 +88,5 @@
     "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/ai-discovery.json",
     "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/ai-conformance.json",
     "page": "/chum/products/evercraft-rewards/"
-  },
-  "game_wallet_growth": {
-    "founding_player_target": 2000,
-    "player_goal_state": "implemented_source_qa_green",
-    "referral_state": "attribution_then_verified_local_checkin_qualification",
-    "referral_economic_reward": false,
-    "merchant_funded_earning_state": "verified_points_budget_and_race_safe_caps",
-    "production_issuance_state": "not_verified",
-    "source_qa_observed_on": "2026-09-29"
   }
 }

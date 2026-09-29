@@ -21,8 +21,8 @@
   },
   "summary": {
     "pain_index_entries": 110,
-    "unique_user_phrases": 945,
-    "mapped_candidate_edges": 1050,
+    "unique_user_phrases": 950,
+    "mapped_candidate_edges": 1055,
     "ambiguous_phrases": 105,
     "product_candidates": 64,
     "machine_offer_candidates": 46
@@ -8454,6 +8454,29 @@
       ]
     },
     {
+      "answer_id": "intent:5aa65343ce",
+      "user_language": "follow a PlayStation Xbox Nintendo or Roblox rewards goal",
+      "normalized": "follow a playstation xbox nintendo or roblox rewards goal",
+      "relative_json": "/chum/answers/doors/follow-a-playstation-xbox-nintendo-or-roblox-rewards-goal-5aa65343ce.json",
+      "relative_page": "/chum/answers/doors/follow-a-playstation-xbox-nintendo-or-roblox-rewards-goal-5aa65343ce/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/follow-a-playstation-xbox-nintendo-or-roblox-rewards-goal-5aa65343ce.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-rewards",
+          "kind": "product",
+          "product_key": "evercraft-rewards",
+          "public_id": null,
+          "name": "Evercraft Rewards",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-rewards/",
+          "public_url": "https://evercraft-rewards.base44.app/",
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
+        }
+      ]
+    },
+    {
       "answer_id": "intent:41eaa40577",
       "user_language": "founder readiness",
       "normalized": "founder readiness",
@@ -11230,6 +11253,29 @@
       ]
     },
     {
+      "answer_id": "intent:2957a35efd",
+      "user_language": "invite friends to join a local gaming rewards network",
+      "normalized": "invite friends to join a local gaming rewards network",
+      "relative_json": "/chum/answers/doors/invite-friends-to-join-a-local-gaming-rewards-network-2957a35efd.json",
+      "relative_page": "/chum/answers/doors/invite-friends-to-join-a-local-gaming-rewards-network-2957a35efd/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/invite-friends-to-join-a-local-gaming-rewards-network-2957a35efd.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-rewards",
+          "kind": "product",
+          "product_key": "evercraft-rewards",
+          "public_id": null,
+          "name": "Evercraft Rewards",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-rewards/",
+          "public_url": "https://evercraft-rewards.base44.app/",
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
+        }
+      ]
+    },
+    {
       "answer_id": "intent:5208956c86",
       "user_language": "is my book file ready to publish",
       "normalized": "is my book file ready to publish",
@@ -13116,6 +13162,29 @@
           "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/evercraft-network/",
           "public_url": "https://network-control.base44.app/",
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:0aa166459d",
+      "user_language": "merchant funded Game Wallet points campaign",
+      "normalized": "merchant funded game wallet points campaign",
+      "relative_json": "/chum/answers/doors/merchant-funded-game-wallet-points-campaign-0aa166459d.json",
+      "relative_page": "/chum/answers/doors/merchant-funded-game-wallet-points-campaign-0aa166459d/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/merchant-funded-game-wallet-points-campaign-0aa166459d.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-rewards",
+          "kind": "product",
+          "product_key": "evercraft-rewards",
+          "public_id": null,
+          "name": "Evercraft Rewards",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-rewards/",
+          "public_url": "https://evercraft-rewards.base44.app/",
           "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
@@ -17561,6 +17630,29 @@
       ]
     },
     {
+      "answer_id": "intent:cdd4032735",
+      "user_language": "run a local business gaming rewards campaign",
+      "normalized": "run a local business gaming rewards campaign",
+      "relative_json": "/chum/answers/doors/run-a-local-business-gaming-rewards-campaign-cdd4032735.json",
+      "relative_page": "/chum/answers/doors/run-a-local-business-gaming-rewards-campaign-cdd4032735/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/run-a-local-business-gaming-rewards-campaign-cdd4032735.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-rewards",
+          "kind": "product",
+          "product_key": "evercraft-rewards",
+          "public_id": null,
+          "name": "Evercraft Rewards",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-rewards/",
+          "public_url": "https://evercraft-rewards.base44.app/",
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
+        }
+      ]
+    },
+    {
       "answer_id": "intent:242e81edfb",
       "user_language": "run a role-specific mock interview",
       "normalized": "run a role specific mock interview",
@@ -20472,6 +20564,29 @@
           "pain_page": "/chum/products/payflow/",
           "public_url": "https://pay-flow-fix.base44.app/",
           "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:ab3e0b6713",
+      "user_language": "track progress toward gaming credit through local rewards",
+      "normalized": "track progress toward gaming credit through local rewards",
+      "relative_json": "/chum/answers/doors/track-progress-toward-gaming-credit-through-local-rewards-ab3e0b6713.json",
+      "relative_page": "/chum/answers/doors/track-progress-toward-gaming-credit-through-local-rewards-ab3e0b6713/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/track-progress-toward-gaming-credit-through-local-rewards-ab3e0b6713.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-rewards",
+          "kind": "product",
+          "product_key": "evercraft-rewards",
+          "public_id": null,
+          "name": "Evercraft Rewards",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-rewards/",
+          "public_url": "https://evercraft-rewards.base44.app/",
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },

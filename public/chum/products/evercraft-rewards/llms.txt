@@ -36,15 +36,10 @@ AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 - earn Xbox credit through local rewards
 - earn Nintendo eShop credit through local rewards
 - earn Roblox credit through local rewards
-
 - track progress toward gaming credit through local rewards
-
 - follow a PlayStation Xbox Nintendo or Roblox rewards goal
-
 - invite friends to join a local gaming rewards network
-
 - merchant funded Game Wallet points campaign
-
 - run a local business gaming rewards campaign
 
 ## Authority
@@ -62,13 +57,9 @@ public read-only local reward discovery plus account-bound check-ins, Daily Priz
 - Evercraft Points are not represented as publisher currency, cash or a direct publisher partnership
 - prepared merchant enrollment does not activate a merchant, offer, discount, public listing or payment obligation
 - merchant directory publication and commercial activation require their own verified state
-
 - following a Game Wallet destination records user intent only until a real configured reward offer supplies a points target
-
 - referral attribution creates no automatic points or game credit
-
 - a referral becomes qualified only after the invitee completes a verified local Rewards check-in; that qualification still does not prove a purchase
-
 - merchant-funded Game Wallet earning boosts require a verified points-funding reference and capped points pool before activation
 
 ## Universal Evercraft routing
@@ -76,12 +67,3 @@ public read-only local reward discovery plus account-bound check-ins, Daily Priz
 https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 
 Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.
-
-## Game Wallet growth state
-
-- Founding cohort target: 2,000 players who choose a Game Wallet destination.
-- Player goals may record interest before a reward exists; no conversion rate is invented.
-- Referral links record attribution. Qualification requires the invited player to complete a verified local Rewards check-in.
-- Referral qualification does not automatically award points or game credit.
-- Merchant-funded Game Wallet earning boosts require a verified points-funding reference and capped points pool.
-- Source QA for these growth controls passed on 2026-09-29; deployed-runtime verification remains separate.

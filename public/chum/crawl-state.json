@@ -2,8 +2,8 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-29T19:17:45.155Z",
-  "url_count": 2650,
+  "updated_at": "2026-09-29T19:18:34.761Z",
+  "url_count": 2660,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
     "content_hash_controls_freshness": true,
@@ -93,32 +93,32 @@
     },
     "/chum/pain-index.json": {
       "path": "/chum/pain-index.json",
-      "content_sha256": "b687bb51f63f032f296eb516c78009a60a9f20abb7c625152f72ff39970ab2f1",
-      "last_changed": "2026-09-29T19:10:55.004Z",
+      "content_sha256": "5a3f74d5ecb1e528736d90b1b6036519d386220076eab7089c2587a065f73ca7",
+      "last_changed": "2026-09-29T19:18:34.761Z",
       "priority": 80
     },
     "/chum/pain-index.txt": {
       "path": "/chum/pain-index.txt",
-      "content_sha256": "f65bddc87e73b7049c9f1306b50635b0a6754710f3cb611caea0b61b21d4fcbb",
-      "last_changed": "2026-09-29T19:10:55.004Z",
+      "content_sha256": "676ab7ba8b86d531dc30062b0c3e5d4b621e36dfa2bbd69a350f81bcc69b931d",
+      "last_changed": "2026-09-29T19:18:34.761Z",
       "priority": 80
     },
     "/chum/answers/": {
       "path": "/chum/answers/",
-      "content_sha256": "f4a8e33d29409043a3e086324bbaa7e0fe9aff0bf00c8e8ad0e0dcfa97e11a18",
-      "last_changed": "2026-09-29T19:10:55.004Z",
+      "content_sha256": "cf9453ebfbaef1869186de35588ce22d9d68ae2ef7345ab4245346ea8385797c",
+      "last_changed": "2026-09-29T19:18:34.761Z",
       "priority": 80
     },
     "/chum/answers/index.json": {
       "path": "/chum/answers/index.json",
-      "content_sha256": "d77abc7135c86a0729a2399966745d055b3736de34e6c7675ccea1e07cc807e1",
-      "last_changed": "2026-09-29T19:10:55.004Z",
+      "content_sha256": "5451e22a91f0150c4ac5fb403b050136f0e3a60ca447fe50af32bf2ed9830818",
+      "last_changed": "2026-09-29T19:18:34.761Z",
       "priority": 80
     },
     "/chum/answers/index.txt": {
       "path": "/chum/answers/index.txt",
-      "content_sha256": "a2d0152a5e86ebce05a2221514c34bf171578ce9e6e8b95db23beda5dc74759f",
-      "last_changed": "2026-09-29T19:10:55.004Z",
+      "content_sha256": "a3a9c9acdc9c31e244df61cee4d2b2f1adc992752f7541da7c61fea4a7143721",
+      "last_changed": "2026-09-29T19:18:34.761Z",
       "priority": 80
     },
     "/chum/answers/observed/": {
@@ -141,8 +141,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "60620244efaa3c03a52881afba593250286a768af6787e5a772b74b0230b535a",
-      "last_changed": "2026-09-29T19:17:45.155Z",
+      "content_sha256": "5c34215cbebd3db27c344201f0207f7fe87c6ef7b98abe096a3a755e4f117d08",
+      "last_changed": "2026-09-29T19:18:34.761Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -243,8 +243,8 @@
     },
     "/chum/sitemaps/answers.xml": {
       "path": "/chum/sitemaps/answers.xml",
-      "content_sha256": "cbab46a4ebfe9b54743fb70c564426b00982380f77a3a450b0d66e00eec2cb7a",
-      "last_changed": "2026-09-29T19:10:55.004Z",
+      "content_sha256": "8d4c97cd577200aa9bb7f90d2ca2c75683683f4a89343374a7b01191ec6f8da7",
+      "last_changed": "2026-09-29T19:18:34.761Z",
       "priority": 108
     },
     "/chum/sitemaps/products.xml": {
@@ -339,8 +339,8 @@
     },
     "/.well-known/evercraft-pain-index.json": {
       "path": "/.well-known/evercraft-pain-index.json",
-      "content_sha256": "b687bb51f63f032f296eb516c78009a60a9f20abb7c625152f72ff39970ab2f1",
-      "last_changed": "2026-09-29T19:10:55.004Z",
+      "content_sha256": "5a3f74d5ecb1e528736d90b1b6036519d386220076eab7089c2587a065f73ca7",
+      "last_changed": "2026-09-29T19:18:34.761Z",
       "priority": 90
     },
     "/rivet/discovery.json": {
@@ -729,8 +729,8 @@
     },
     "/llms-full.txt": {
       "path": "/llms-full.txt",
-      "content_sha256": "39b3f04ec83c4f1f69766c294a13fe15c72ce0f3d2dd9af8c0cd41dd1afcc3e1",
-      "last_changed": "2026-09-29T19:10:55.004Z",
+      "content_sha256": "6879dd78fd18a9bf0e017eac5bd62888678a2c0d80b32b72d40dd91420c373f5",
+      "last_changed": "2026-09-29T19:18:34.761Z",
       "priority": 86
     },
     "/ai-discovery.json": {
@@ -771,8 +771,8 @@
     },
     "/.well-known/evercraft-agent-directory.json": {
       "path": "/.well-known/evercraft-agent-directory.json",
-      "content_sha256": "aa36d47bec6402cd197a2f18789e4a254e2b4d020c9e45026d69e7c5fec694de",
-      "last_changed": "2026-09-29T19:10:55.004Z",
+      "content_sha256": "0f5bd46c99d0d81905a02a5781c36e56665846d58d76322b00e3d70047c7ccfa",
+      "last_changed": "2026-09-29T19:18:34.761Z",
       "priority": 84
     },
     "/.well-known/evercraft-agent-commerce.json": {
@@ -2877,26 +2877,26 @@
     },
     "/chum/products/evercraft-rewards/": {
       "path": "/chum/products/evercraft-rewards/",
-      "content_sha256": "31cf1c50865f3e44596baca5a0ecf81ecead03cb8daf4f18f214c824c7924ab9",
-      "last_changed": "2026-09-29T18:55:38.752Z",
+      "content_sha256": "c8bc480da51aa30a6fb3f3a5fb0b1d4fa3bfee70719f8c0b93a1b88a1eaff2ef",
+      "last_changed": "2026-09-29T19:18:34.761Z",
       "priority": 94
     },
     "/chum/products/evercraft-rewards/llms.txt": {
       "path": "/chum/products/evercraft-rewards/llms.txt",
-      "content_sha256": "89bfcf987fec68108794a4fe484114c6acab96eababe3ab42952c77bab2e159a",
-      "last_changed": "2026-09-29T19:16:09.538Z",
+      "content_sha256": "ebaf24bf641afcf77ef8ab51f9a764a431635607c2a5f442dae46770975d40ba",
+      "last_changed": "2026-09-29T19:18:34.761Z",
       "priority": 94
     },
     "/chum/products/evercraft-rewards/ai-discovery.json": {
       "path": "/chum/products/evercraft-rewards/ai-discovery.json",
-      "content_sha256": "a2144364a27bb97a62108227058ca9ddd35eff6c2a3a403f5c5e9f5de3b25561",
-      "last_changed": "2026-09-29T19:16:09.538Z",
+      "content_sha256": "95b9d364adef1c2bddc7d887690a20935e1ea659626b62f0d0ec914cc7ab9e52",
+      "last_changed": "2026-09-29T19:18:34.761Z",
       "priority": 94
     },
     "/chum/products/evercraft-rewards/ai-conformance.json": {
       "path": "/chum/products/evercraft-rewards/ai-conformance.json",
-      "content_sha256": "190e0e61a2c9027e9b1eb5bf54135d9fff65203634dd1aedbd2e8c24e3044c82",
-      "last_changed": "2026-09-29T19:16:09.538Z",
+      "content_sha256": "a6f24d43d695fcec307f6091a5d3ffe3efe3bd9ada1fd4f07373a967ff4254e1",
+      "last_changed": "2026-09-29T19:18:34.761Z",
       "priority": 94
     },
     "/chum/products/evercraft-web/": {
@@ -3405,8 +3405,8 @@
     },
     "/chum/products/opportunity-fabric/ai-conformance.json": {
       "path": "/chum/products/opportunity-fabric/ai-conformance.json",
-      "content_sha256": "384e36c6f5d2ebfb5379137b776a7c4c7efcbf8c8e143d0c7361ba65067ef2ed",
-      "last_changed": "2026-09-29T19:17:30.033Z",
+      "content_sha256": "7fe84c3b89492cd4a6ce0cb70a22b39d4021d0928d23b91a37045a7d28df9274",
+      "last_changed": "2026-09-29T19:18:34.761Z",
       "priority": 94
     },
     "/chum/products/payflow/": {
@@ -4143,14 +4143,14 @@
     },
     "/chum/answers/observed/i-own-a-local-business-and-want-a-cross-business-loyalty-network-that-can-make-us-mo-e0a0561536/": {
       "path": "/chum/answers/observed/i-own-a-local-business-and-want-a-cross-business-loyalty-network-that-can-make-us-mo-e0a0561536/",
-      "content_sha256": "9c3bb2eb6abd7bd56c1d669ca4ece3e4ffea177768564f7dc8d3a746ac35e9c3",
-      "last_changed": "2026-09-29T18:55:38.752Z",
+      "content_sha256": "0ec94873eba9d0eede6470d5ad200a152dff35eb8305e4b3d77a6b696f2a9047",
+      "last_changed": "2026-09-29T19:18:34.761Z",
       "priority": 80
     },
     "/chum/answers/observed/i-own-a-local-business-and-want-a-cross-business-loyalty-network-that-can-make-us-mo-e0a0561536/answer.json": {
       "path": "/chum/answers/observed/i-own-a-local-business-and-want-a-cross-business-loyalty-network-that-can-make-us-mo-e0a0561536/answer.json",
-      "content_sha256": "e4e5bdace1f64b8de47337450c31f38017d752ed202181493f808239e39d6710",
-      "last_changed": "2026-09-29T18:55:38.752Z",
+      "content_sha256": "6afda2c34c59757369ac5acc43c805fa7a8c441a6787f29e1c4d297353db04f0",
+      "last_changed": "2026-09-29T19:18:34.761Z",
       "priority": 80
     },
     "/chum/answers/observed/i-own-a-local-business-and-want-a-cross-business-loyalty-network-that-can-make-us-mo-e0a0561536/llms.txt": {
@@ -5661,8 +5661,8 @@
     },
     "/chum/answers/doors/businesses-near-me-with-rewards-7a4331cf86.json": {
       "path": "/chum/answers/doors/businesses-near-me-with-rewards-7a4331cf86.json",
-      "content_sha256": "486d35e9ca79bb49d5944e2d7f5cf589053d424e5285b6e6ec2b180f6f599e5b",
-      "last_changed": "2026-09-29T18:55:38.752Z",
+      "content_sha256": "c6126fa95dc5db5d1fe4aae3ec37f1ea17ebe35fccad23689e0291472455fc32",
+      "last_changed": "2026-09-29T19:18:34.761Z",
       "priority": 100
     },
     "/chum/answers/doors/buy-a-christmas-light-installation-lead-5ec6340858/": {
@@ -6657,8 +6657,8 @@
     },
     "/chum/answers/doors/create-cross-business-loyalty-rewards-2c3ab05040.json": {
       "path": "/chum/answers/doors/create-cross-business-loyalty-rewards-2c3ab05040.json",
-      "content_sha256": "fe1d93e5a4cd13709e30191c5220e42886136df9d07b105b6d8ae7370035a2e3",
-      "last_changed": "2026-09-29T18:55:38.752Z",
+      "content_sha256": "76269c03d4556c8722d0ca50f9b5df3d58a0e4da1870a1c628d2c5e8c464a7d3",
+      "last_changed": "2026-09-29T19:18:34.761Z",
       "priority": 160
     },
     "/chum/answers/doors/create-evidence-of-ai-operator-competency-a71d6217e8/": {
@@ -6777,8 +6777,8 @@
     },
     "/chum/answers/doors/daily-rewards-check-in-5348821cf2.json": {
       "path": "/chum/answers/doors/daily-rewards-check-in-5348821cf2.json",
-      "content_sha256": "f7fcba4a3b5b05d6c6ea5e221e04a99b933fecf0e6d24efd79b82a5b04eef773",
-      "last_changed": "2026-09-29T18:55:38.752Z",
+      "content_sha256": "86920cbba0340137351f46601bb9c364c565d5af76657cf96b5ccfa192f812a7",
+      "last_changed": "2026-09-29T19:18:34.761Z",
       "priority": 100
     },
     "/chum/answers/doors/daily-scratch-ticket-rewards-ea8243a20b/": {
@@ -6789,8 +6789,8 @@
     },
     "/chum/answers/doors/daily-scratch-ticket-rewards-ea8243a20b.json": {
       "path": "/chum/answers/doors/daily-scratch-ticket-rewards-ea8243a20b.json",
-      "content_sha256": "b602b55d302c0a08c1b72373bf18358ccf0cc4be96543a1c2ef1de0cc7543940",
-      "last_changed": "2026-09-29T18:55:38.752Z",
+      "content_sha256": "16303a3df9c27bd677a8cb3630273a35f5de7b4b06089c16caacc541f5f73ab6",
+      "last_changed": "2026-09-29T19:18:34.761Z",
       "priority": 100
     },
     "/chum/answers/doors/debris-removal-or-property-cleanout-in-yakima-e4af2dac45/": {
@@ -6957,8 +6957,8 @@
     },
     "/chum/answers/doors/earn-evercraft-points-near-me-425423859c.json": {
       "path": "/chum/answers/doors/earn-evercraft-points-near-me-425423859c.json",
-      "content_sha256": "d5fc37c0ad4ba334037ea4b8dd36d6a131a91b72fc471a547f54644e2a6739ab",
-      "last_changed": "2026-09-29T18:55:38.752Z",
+      "content_sha256": "da161b6e4978b4382ba9d81843315a59816e1c82abda30642ab64bf807649a72",
+      "last_changed": "2026-09-29T19:18:34.761Z",
       "priority": 100
     },
     "/chum/answers/doors/earn-game-credit-by-supporting-local-businesses-1e1bf9da6f/": {
@@ -6969,8 +6969,8 @@
     },
     "/chum/answers/doors/earn-game-credit-by-supporting-local-businesses-1e1bf9da6f.json": {
       "path": "/chum/answers/doors/earn-game-credit-by-supporting-local-businesses-1e1bf9da6f.json",
-      "content_sha256": "e6d5454458cd2f676f23f9dc318d5253b743afb2eeb02fef037e8654f816fd91",
-      "last_changed": "2026-09-29T18:55:38.752Z",
+      "content_sha256": "78d364211670f0163755bc18069e34b62e2bdc90bc4f248321432e400e9cef52",
+      "last_changed": "2026-09-29T19:18:34.761Z",
       "priority": 100
     },
     "/chum/answers/doors/earn-gaming-rewards-from-local-activity-797bb6432d/": {
@@ -6981,8 +6981,8 @@
     },
     "/chum/answers/doors/earn-gaming-rewards-from-local-activity-797bb6432d.json": {
       "path": "/chum/answers/doors/earn-gaming-rewards-from-local-activity-797bb6432d.json",
-      "content_sha256": "304a932b152e6dc5b06290f9d62728706e4029e2d63e17e17c6ab4b6befa72b0",
-      "last_changed": "2026-09-29T18:55:38.752Z",
+      "content_sha256": "b2289c8a0ad2e2d3bb6b3a156aef38f0b901fc97a67cf0a75cf9c74b8365f156",
+      "last_changed": "2026-09-29T19:18:34.761Z",
       "priority": 100
     },
     "/chum/answers/doors/earn-nintendo-eshop-credit-through-local-rewards-90f12daa00/": {
@@ -6993,8 +6993,8 @@
     },
     "/chum/answers/doors/earn-nintendo-eshop-credit-through-local-rewards-90f12daa00.json": {
       "path": "/chum/answers/doors/earn-nintendo-eshop-credit-through-local-rewards-90f12daa00.json",
-      "content_sha256": "fdaab04705824a92322b13f11d3924d876fd9fdbc7472515c38878b2ad07cf65",
-      "last_changed": "2026-09-29T18:55:38.752Z",
+      "content_sha256": "d824ecc407452f06ea0ff44281dfa6db6fd6eb9addc0120d18df65c618ed0043",
+      "last_changed": "2026-09-29T19:18:34.761Z",
       "priority": 100
     },
     "/chum/answers/doors/earn-playstation-credit-through-local-rewards-10cf5def35/": {
@@ -7005,8 +7005,8 @@
     },
     "/chum/answers/doors/earn-playstation-credit-through-local-rewards-10cf5def35.json": {
       "path": "/chum/answers/doors/earn-playstation-credit-through-local-rewards-10cf5def35.json",
-      "content_sha256": "2b068cd5d56ddfcbbbfda898997e4282d9ab255c344a33020a22bdd33a7a7350",
-      "last_changed": "2026-09-29T18:55:38.752Z",
+      "content_sha256": "8ebba12212c9555e2c19cfd54c04aef5673fcd032eb989e31fd46c8fb0eba3bc",
+      "last_changed": "2026-09-29T19:18:34.761Z",
       "priority": 100
     },
     "/chum/answers/doors/earn-rewards-for-visiting-local-businesses-d04e178d65/": {
@@ -7017,8 +7017,8 @@
     },
     "/chum/answers/doors/earn-rewards-for-visiting-local-businesses-d04e178d65.json": {
       "path": "/chum/answers/doors/earn-rewards-for-visiting-local-businesses-d04e178d65.json",
-      "content_sha256": "8f4ffe2c360028218cd00167c99a5b3f7f9c865e2f5ab5089208751622b24964",
-      "last_changed": "2026-09-29T18:55:38.752Z",
+      "content_sha256": "c5cdb89027ef8fe1eb06b3bef357f48dd067f916d1c0fe11d1fb546ffd8f312c",
+      "last_changed": "2026-09-29T19:18:34.761Z",
       "priority": 100
     },
     "/chum/answers/doors/earn-roblox-credit-through-local-rewards-df46110239/": {
@@ -7029,8 +7029,8 @@
     },
     "/chum/answers/doors/earn-roblox-credit-through-local-rewards-df46110239.json": {
       "path": "/chum/answers/doors/earn-roblox-credit-through-local-rewards-df46110239.json",
-      "content_sha256": "5d37dea069ea3dc08509bcce8407f0b75d8bbd51fee4d1aebedf08fa30402f5d",
-      "last_changed": "2026-09-29T18:55:38.752Z",
+      "content_sha256": "2cab7e6781d7db2c97348d22da9d6ca7c337dd3bf6df5ed59e2884c8c586fe50",
+      "last_changed": "2026-09-29T19:18:34.761Z",
       "priority": 100
     },
     "/chum/answers/doors/earn-xbox-credit-through-local-rewards-efb9d28079/": {
@@ -7041,8 +7041,8 @@
     },
     "/chum/answers/doors/earn-xbox-credit-through-local-rewards-efb9d28079.json": {
       "path": "/chum/answers/doors/earn-xbox-credit-through-local-rewards-efb9d28079.json",
-      "content_sha256": "20736b876ca3fb4465b1cc761102344487e98027a0b2ed229a2d1df52c1cf301",
-      "last_changed": "2026-09-29T18:55:38.752Z",
+      "content_sha256": "cba35bc5c3226d4b210113f7090a9ba530034dc936548e823fc91b539f18d749",
+      "last_changed": "2026-09-29T19:18:34.761Z",
       "priority": 100
     },
     "/chum/answers/doors/employee-payment-ledger-b2267a81f9/": {
@@ -8449,6 +8449,18 @@
       "last_changed": "2026-09-29T02:24:28.186Z",
       "priority": 100
     },
+    "/chum/answers/doors/follow-a-playstation-xbox-nintendo-or-roblox-rewards-goal-5aa65343ce/": {
+      "path": "/chum/answers/doors/follow-a-playstation-xbox-nintendo-or-roblox-rewards-goal-5aa65343ce/",
+      "content_sha256": "6c62a9c043b8c7feedb378bc2016481545e0232191b4ab655955b65377bb65ff",
+      "last_changed": "2026-09-29T19:18:34.761Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/follow-a-playstation-xbox-nintendo-or-roblox-rewards-goal-5aa65343ce.json": {
+      "path": "/chum/answers/doors/follow-a-playstation-xbox-nintendo-or-roblox-rewards-goal-5aa65343ce.json",
+      "content_sha256": "3b973dee2e9e66a3a5c504706927594cd13fd1fef7a4dccf91f378eb2879c66e",
+      "last_changed": "2026-09-29T19:18:34.761Z",
+      "priority": 100
+    },
     "/chum/answers/doors/founder-readiness-41eaa40577/": {
       "path": "/chum/answers/doors/founder-readiness-41eaa40577/",
       "content_sha256": "e080359b17f29c65caa4a44c6a818d83a6b9ba67ca2dde974287da77eb5c5b99",
@@ -9841,6 +9853,18 @@
       "last_changed": "2026-09-29T02:24:28.186Z",
       "priority": 100
     },
+    "/chum/answers/doors/invite-friends-to-join-a-local-gaming-rewards-network-2957a35efd/": {
+      "path": "/chum/answers/doors/invite-friends-to-join-a-local-gaming-rewards-network-2957a35efd/",
+      "content_sha256": "b7a851a819975a3c71936decca857f67bda7729cced974ec95f82802b072e487",
+      "last_changed": "2026-09-29T19:18:34.761Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/invite-friends-to-join-a-local-gaming-rewards-network-2957a35efd.json": {
+      "path": "/chum/answers/doors/invite-friends-to-join-a-local-gaming-rewards-network-2957a35efd.json",
+      "content_sha256": "b3169977a8e1d1cdcffd43042fc88e54171f8cbbb2bb5c51c1862c6516c154d6",
+      "last_changed": "2026-09-29T19:18:34.761Z",
+      "priority": 100
+    },
     "/chum/answers/doors/is-my-book-file-ready-to-publish-5208956c86/": {
       "path": "/chum/answers/doors/is-my-book-file-ready-to-publish-5208956c86/",
       "content_sha256": "1146f32704013b83823123af689c08210a91a40f9ce0ce3fa2660df8b9a32004",
@@ -9969,8 +9993,8 @@
     },
     "/chum/answers/doors/join-a-community-business-partnership-program-4a5d34ada5.json": {
       "path": "/chum/answers/doors/join-a-community-business-partnership-program-4a5d34ada5.json",
-      "content_sha256": "461d46c41b3d512c502ffa221c5f591b52ac73694a37108c063815098a41bea9",
-      "last_changed": "2026-09-29T18:55:38.752Z",
+      "content_sha256": "29982ca48c8713bb40208640e80d14bcf64ab2a9f7e5906d2264b1057b6270e5",
+      "last_changed": "2026-09-29T19:18:34.761Z",
       "priority": 100
     },
     "/chum/answers/doors/join-a-founding-professional-networking-beta-d27794cd5a/": {
@@ -10005,8 +10029,8 @@
     },
     "/chum/answers/doors/join-a-local-business-rewards-network-7d1ef68f27.json": {
       "path": "/chum/answers/doors/join-a-local-business-rewards-network-7d1ef68f27.json",
-      "content_sha256": "3537b9be44997fa9c44e124b026f27ee60efa551c1e20e941e2a100ce2775eab",
-      "last_changed": "2026-09-29T18:55:38.752Z",
+      "content_sha256": "589ff622d8d04e18355a5469ff3bbda4cb4636bb792ac8fdd356d5e675b4ed34",
+      "last_changed": "2026-09-29T19:18:34.761Z",
       "priority": 100
     },
     "/chum/answers/doors/journal-and-review-my-trades-42a3d685c4/": {
@@ -10353,8 +10377,8 @@
     },
     "/chum/answers/doors/local-deals-near-me-5c9f9f79b7.json": {
       "path": "/chum/answers/doors/local-deals-near-me-5c9f9f79b7.json",
-      "content_sha256": "460f4c1aece7881159ba4ebb9830d449cf18fc13577be6e0d6bda1df05bc1389",
-      "last_changed": "2026-09-29T18:55:38.752Z",
+      "content_sha256": "eb4a75f4bd29eaab5c13a399fd5b15c9f466b31ffb599147a0a136ccc08725c9",
+      "last_changed": "2026-09-29T19:18:34.761Z",
       "priority": 100
     },
     "/chum/answers/doors/local-events-near-me-e826ea2875/": {
@@ -10377,8 +10401,8 @@
     },
     "/chum/answers/doors/local-rewards-for-supporting-nearby-businesses-e507d240b3.json": {
       "path": "/chum/answers/doors/local-rewards-for-supporting-nearby-businesses-e507d240b3.json",
-      "content_sha256": "94858746f0d1f69cd78449f6aad84c360f29b9ac08ef571e074cc6b3fb21f0c8",
-      "last_changed": "2026-09-29T18:55:38.752Z",
+      "content_sha256": "e4800d3d4d886ea8374f6ea068d965fc4075059d6e9870eeb6deff24666a33b8",
+      "last_changed": "2026-09-29T19:18:34.761Z",
       "priority": 100
     },
     "/chum/answers/doors/local-seasonal-events-and-adventures-92b5c0e6d1/": {
@@ -10533,8 +10557,8 @@
     },
     "/chum/answers/doors/make-my-local-business-more-discoverable-5368f3dc15.json": {
       "path": "/chum/answers/doors/make-my-local-business-more-discoverable-5368f3dc15.json",
-      "content_sha256": "462d78b39a23c744491d1f67d5a9dce9e85880dbbc7953a310d60f76745062b7",
-      "last_changed": "2026-09-29T18:55:38.752Z",
+      "content_sha256": "14b2dd254946d2addac7d2a99aa23a7107cd394a268cf3cc075ab46be3f8fac8",
+      "last_changed": "2026-09-29T19:18:34.761Z",
       "priority": 100
     },
     "/chum/answers/doors/make-reels-from-an-authorized-source-video-8742052def/": {
@@ -10763,6 +10787,18 @@
       "path": "/chum/answers/doors/member-device-reconnect-visibility-b1e695417e.json",
       "content_sha256": "3e5d1fc418a89a3aa7769b3e88f2c5b37995e45f9548348d77f91766eb5ac8f7",
       "last_changed": "2026-09-29T02:24:28.186Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/merchant-funded-game-wallet-points-campaign-0aa166459d/": {
+      "path": "/chum/answers/doors/merchant-funded-game-wallet-points-campaign-0aa166459d/",
+      "content_sha256": "8b1abfd8ea02fc299e47258dc803bddc7221f82966cc181f24267f15c4436e0d",
+      "last_changed": "2026-09-29T19:18:34.761Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/merchant-funded-game-wallet-points-campaign-0aa166459d.json": {
+      "path": "/chum/answers/doors/merchant-funded-game-wallet-points-campaign-0aa166459d.json",
+      "content_sha256": "fdf1f11ddc90109fcb756ffab58f0fdd629521c77df3a9ed125d5755efefb80a",
+      "last_changed": "2026-09-29T19:18:34.761Z",
       "priority": 100
     },
     "/chum/answers/doors/migrate-from-no-code-cd304f5aeb/": {
@@ -12321,8 +12357,8 @@
     },
     "/chum/answers/doors/redeem-evercraft-points-toward-approved-gaming-credit-8e558dce41.json": {
       "path": "/chum/answers/doors/redeem-evercraft-points-toward-approved-gaming-credit-8e558dce41.json",
-      "content_sha256": "0dc5c37a5e31fb206be546988c400ce1e551e707942387879b7a9ffef7fb5c49",
-      "last_changed": "2026-09-29T18:55:38.752Z",
+      "content_sha256": "ece7fbaed4d3d3ce4b85813d6ca1df12185e6641643df6bc0fb2e8448a10cff8",
+      "last_changed": "2026-09-29T19:18:34.761Z",
       "priority": 100
     },
     "/chum/answers/doors/relationship-safety-planning-ea06cabc20/": {
@@ -12753,8 +12789,8 @@
     },
     "/chum/answers/doors/rewards-near-me-89d5f09b97.json": {
       "path": "/chum/answers/doors/rewards-near-me-89d5f09b97.json",
-      "content_sha256": "e44ce67131014bd8390edd19c59f8a26050ac377729bae924854f4ea9d3cdc91",
-      "last_changed": "2026-09-29T18:55:38.752Z",
+      "content_sha256": "278333fce72477638ca45a165fa15f58fd008deccfee6e949f995559f2440bfc",
+      "last_changed": "2026-09-29T19:18:34.761Z",
       "priority": 100
     },
     "/chum/answers/doors/rivet-ev-charging-report-09f613a2a6/": {
@@ -12923,6 +12959,18 @@
       "path": "/chum/answers/doors/rpg-or-cl-dependency-mapping-f10d59f52b.json",
       "content_sha256": "dd2544526e19c057e6e57c1970d6e716c13c382c8af6a26ab42fa3004958e2be",
       "last_changed": "2026-09-29T05:30:59.043Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/run-a-local-business-gaming-rewards-campaign-cdd4032735/": {
+      "path": "/chum/answers/doors/run-a-local-business-gaming-rewards-campaign-cdd4032735/",
+      "content_sha256": "855db98bcf8a12b5a0e655cf613abbeb1aeb73c7e7e085812d85c7ae11a2745e",
+      "last_changed": "2026-09-29T19:18:34.761Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/run-a-local-business-gaming-rewards-campaign-cdd4032735.json": {
+      "path": "/chum/answers/doors/run-a-local-business-gaming-rewards-campaign-cdd4032735.json",
+      "content_sha256": "e8fb9ed3962dc51227712a62510a33c26d02e556bb6d5cce96c9ad4fd78345b1",
+      "last_changed": "2026-09-29T19:18:34.761Z",
       "priority": 100
     },
     "/chum/answers/doors/run-a-role-specific-mock-interview-242e81edfb/": {
@@ -14377,6 +14425,18 @@
       "last_changed": "2026-09-29T02:24:28.186Z",
       "priority": 100
     },
+    "/chum/answers/doors/track-progress-toward-gaming-credit-through-local-rewards-ab3e0b6713/": {
+      "path": "/chum/answers/doors/track-progress-toward-gaming-credit-through-local-rewards-ab3e0b6713/",
+      "content_sha256": "f7066dbb3da4b09b786a455fd1d7ae1e03dbf6eb7f867732b42f9b4ae1559a85",
+      "last_changed": "2026-09-29T19:18:34.761Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/track-progress-toward-gaming-credit-through-local-rewards-ab3e0b6713.json": {
+      "path": "/chum/answers/doors/track-progress-toward-gaming-credit-through-local-rewards-ab3e0b6713.json",
+      "content_sha256": "a5f9890974f20a79495258c81bb3b8c12eae28cc1265ded0b8b3e25503f4f002",
+      "last_changed": "2026-09-29T19:18:34.761Z",
+      "priority": 100
+    },
     "/chum/answers/doors/track-referrals-and-professional-introductions-531cd56642/": {
       "path": "/chum/answers/doors/track-referrals-and-professional-introductions-531cd56642/",
       "content_sha256": "655cb1cda0c608d285ba6ca458f68c8fc3f401842523e4b0ddb968b80d9d8387",
@@ -15429,8 +15489,8 @@
     },
     "/chum/answers/doors/where-can-i-earn-points-today-3b76c8caac.json": {
       "path": "/chum/answers/doors/where-can-i-earn-points-today-3b76c8caac.json",
-      "content_sha256": "bb6b631888c133cea23078af44bc4871d4e5d7826e17a48d5d411e55a1d09f2d",
-      "last_changed": "2026-09-29T18:55:38.752Z",
+      "content_sha256": "49a6ab2e248612ce6403ccceaaabeddabee2131218614a68ccbff5db10811e1c",
+      "last_changed": "2026-09-29T19:18:34.761Z",
       "priority": 100
     },
     "/chum/answers/doors/where-can-i-find-this-discontinued-part-fbe2473669/": {
@@ -15879,14 +15939,14 @@
     },
     "/feed.xml": {
       "path": "/feed.xml",
-      "content_sha256": "690efa8eaa97e727780c49f3bf76b55ee877d7d1a60bcb7b0a85492d3fd70355",
-      "last_changed": "2026-09-29T19:10:55.004Z",
+      "content_sha256": "5f5d09bc5a19945d1d50e102fef30f3570227103c7f505eed0be634c735c9ca1",
+      "last_changed": "2026-09-29T19:18:34.761Z",
       "priority": 60
     },
     "/feed.json": {
       "path": "/feed.json",
-      "content_sha256": "89ff3e6a6716630694a8d1aa48ca9ed9ba5e51a47d231fcb2d48dac42e029984",
-      "last_changed": "2026-09-29T19:10:55.004Z",
+      "content_sha256": "02a19368654d188d3379764a71f621780725468b718c9fc854f4d638492ecb8e",
+      "last_changed": "2026-09-29T19:18:34.761Z",
       "priority": 60
     },
     "/opensearch.xml": {
@@ -15897,8 +15957,8 @@
     },
     "/.well-known/evercraft-syndication.json": {
       "path": "/.well-known/evercraft-syndication.json",
-      "content_sha256": "6c6bc96ad065143de6429be6cbac2672abcbd05bf097f1d11d0cb78abb5c61e8",
-      "last_changed": "2026-09-29T19:10:55.004Z",
+      "content_sha256": "f081d9b2a6b167d0783cde699a84fb3c4967696320821de0d0634150ac0b7b9e",
+      "last_changed": "2026-09-29T19:18:34.761Z",
       "priority": 84
     },
     "/chum/syndication/": {
@@ -15909,8 +15969,8 @@
     },
     "/chum/syndication/index.json": {
       "path": "/chum/syndication/index.json",
-      "content_sha256": "2e8d8d29d0f24bfae7dae75cecfc01bcae8c1199cf9b856b779b64ea6ab8c5a8",
-      "last_changed": "2026-09-29T19:10:55.004Z",
+      "content_sha256": "de33f3b1cbff0f118a6e912fdb0f2b9ee79a7e2bb8da6e7e0eb4233b20cba3eb",
+      "last_changed": "2026-09-29T19:18:34.761Z",
       "priority": 80
     }
   }

@@ -355,7 +355,7 @@
       "discovery": "/chum/products/evercraft-rewards/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-      "content_sha256": "aae39424d6f62039f552dbcf662cd8792fb747fd5bc2babfc14c4bd7ea9cf76d"
+      "content_sha256": "76e31be07fd96f21e5bb588c8d7bb4e899ce84bc0ef30a48c865a4235ca9eac6"
     },
     {
       "product_key": "evercraft-web",

@@ -813,13 +813,18 @@
         "earn PlayStation credit through local rewards",
         "earn Xbox credit through local rewards",
         "earn Nintendo eShop credit through local rewards",
-        "earn Roblox credit through local rewards"
+        "earn Roblox credit through local rewards",
+        "track progress toward gaming credit through local rewards",
+        "follow a PlayStation Xbox Nintendo or Roblox rewards goal",
+        "invite friends to join a local gaming rewards network",
+        "merchant funded Game Wallet points campaign",
+        "run a local business gaming rewards campaign"
       ],
       "authority": "public read-only local reward discovery plus account-bound check-ins, Daily Prize Tickets and Game Wallet earning; Game Wallet fulfillment is implemented but production gaming issuance remains gated by provider authorization, credentials, sponsor funding and deployed-runtime verification; merchant enrollment is reversible and owner-confirmed through Evercraft Machine Commerce",
       "human_confirmation_required": true,
       "commercial_status": "",
       "description": "Evercraft Rewards is an Evercraft local business rewards and partnership capability. Common needs: local deals near me; rewards near me; businesses near me with rewards; earn Evercraft Points near me.",
-      "content_sha256": "aae39424d6f62039f552dbcf662cd8792fb747fd5bc2babfc14c4bd7ea9cf76d",
+      "content_sha256": "76e31be07fd96f21e5bb588c8d7bb4e899ce84bc0ef30a48c865a4235ca9eac6",
       "updated_at": "2026-09-28T00:00:00.000Z"
     },
     {

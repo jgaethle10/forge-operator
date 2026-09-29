@@ -67,14 +67,5 @@
   "machine_commerce_handoff_state": null,
   "machine_commerce_public_id": null,
   "machine_commerce_tool": null,
-  "live_canary_evidence": null,
-  "game_wallet_growth": {
-    "founding_player_target": 2000,
-    "player_goal_state": "implemented_source_qa_green",
-    "referral_state": "attribution_then_verified_local_checkin_qualification",
-    "referral_economic_reward": false,
-    "merchant_funded_earning_state": "verified_points_budget_and_race_safe_caps",
-    "production_issuance_state": "not_verified",
-    "source_qa_observed_on": "2026-09-29"
-  }
+  "live_canary_evidence": null
 }
