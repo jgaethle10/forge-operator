@@ -20,8 +20,24 @@ function publishedMcpCount(conformance) {
 }
 
 const snapshot = readJson(snapshotPath);
+const dispositionPath = path.join(rootDir, 'systemia/saban/estate-dispositions.json');
+const dispositions = fs.existsSync(dispositionPath) ? readJson(dispositionPath) : { items: [] };
+const dispositionByName = new Map(
+  (dispositions.items || []).map((item) => [String(item.name || '').trim(), item])
+);
 const rows = sanitizePrivateInventoryRows(
-  (snapshot.apps || []).map((app) => ({ kind: 'base44_app', raw: { name: app.name } })),
+  (snapshot.apps || []).map((app) => {
+    const name = String(app.name || '').trim();
+    const disposition = dispositionByName.get(name) || null;
+    return {
+      kind: 'base44_app',
+      raw: {
+        name,
+        visibility: disposition?.visibility || app.visibility || null,
+        summary: disposition?.reason || app.summary || null
+      }
+    };
+  }),
   { expose_source_path: false }
 );
 
@@ -50,6 +66,8 @@ const likelyAlias = Number(counts.likely_alias || 0);
 const needsReview = Number(counts.needs_review || 0);
 const commercialCandidates = Number(counts.commercial_candidate || 0);
 const internalCandidates = Number(counts.internal_only_candidate || 0);
+const knownPrivate = Number(counts.known_private_surface || 0);
+const platformContainers = Number(counts.platform_container || 0);
 
 const report = {
   schema: 'evercraft.portfolio-estate-convergence.v1',
@@ -72,6 +90,8 @@ const report = {
     needs_review: needsReview,
     commercial_candidates: commercialCandidates,
     internal_only_candidates: internalCandidates,
+    known_private_surfaces: knownPrivate,
+    platform_containers: platformContainers,
     placeholders,
     public_product_directory: (directory.products || []).length,
     conformance_products: (conformance.products || []).length,
@@ -85,6 +105,8 @@ const report = {
   layers: {
     observed_estate_snapshot: 'Apps/builds observed in the privacy-safe inventory snapshot. This is not a full-estate count unless the source explicitly proves complete coverage.',
     public_product_directory: 'Products explicitly admitted for public discovery.',
+    known_private_surfaces: 'Account-bound/private applications intentionally excluded from public admission.',
+    platform_containers: 'Multi-capability shells that contain public and/or private surfaces but are not counted as standalone public products.',
     conformance_products: 'Products represented in the stricter cross-LLM conformance registry.',
     central_registry_products: 'Products represented in the central machine routing catalog.',
     mcp_registry_published: 'Products with receipt-backed published MCP Registry state.'
