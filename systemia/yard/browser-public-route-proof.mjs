@@ -251,9 +251,47 @@ try{
   const handoffPage=await fetch(handoffUrl).then(r=>r.text());
   assert.match(handoffPage,/Evercraft Control Room/);
 
+  const redemptionResponse=await fetch(
+    binding.origin+'/v1/auth-browser/sessions/browser-edge-auth-proof/redeem',
+    {
+      method:'POST',
+      headers:{
+        'x-evercraft-browser-claim':claim,
+        'x-evercraft-control-room':'1',
+      },
+    }
+  );
+  assert.equal(redemptionResponse.status,200);
+  const redemption=await redemptionResponse.json();
+  assert.equal(redemption.claim_redeemed,true);
+  assert.equal('access_token' in redemption,false);
+  assert.equal(authRedeemed,true);
+  const setCookie=redemptionResponse.headers.get('set-cookie')||'';
+  assert.match(setCookie,/HttpOnly/i);
+  assert.match(setCookie,/Secure/i);
+  assert.match(setCookie,/SameSite=Strict/i);
+  const cookie=setCookie.split(';')[0];
+
+  const replayResponse=await fetch(
+    binding.origin+'/v1/auth-browser/sessions/browser-edge-auth-proof/redeem',
+    {
+      method:'POST',
+      headers:{
+        'x-evercraft-browser-claim':claim,
+        'x-evercraft-control-room':'1',
+      },
+    }
+  );
+  assert.equal(replayResponse.status,409);
+
   const authSnapshot=await fetch(
     binding.origin+'/v1/auth-browser/sessions/browser-edge-auth-proof/snapshot',
-    {headers:{'x-evercraft-browser-claim':claim}}
+    {
+      headers:{
+        cookie,
+        'x-evercraft-control-room':'1',
+      },
+    }
   ).then(r=>r.json());
   assert.equal(authSnapshot.ok,true);
   assert.equal(authSnapshot.secure_transport,true);
