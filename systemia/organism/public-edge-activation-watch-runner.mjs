@@ -80,6 +80,7 @@ function allocatorAuthority(){
 async function delegatedCapacityGrant({
   requiredWorkloads=[],
   requiredPlacementLabels=[],
+  requiredServiceCapabilities=[],
 }={}){
   const brokerDeploymentId=String(
     process.env.SYSTEMIA_REMOTE_BROKER_DEPLOYMENT_ID||''
@@ -91,6 +92,7 @@ async function delegatedCapacityGrant({
   const inventory=await yard.listRemoteCapacityNodes(brokerDeploymentId);
   const requiredWork=new Set(requiredWorkloads.map(String));
   const requiredLabels=new Set(requiredPlacementLabels.map(String));
+  const requiredServices=new Set(requiredServiceCapabilities.map(String));
 
   const eligible=(inventory.nodes||[]).filter((node)=>{
     if(node.connected!==true) return false;
@@ -98,6 +100,13 @@ async function delegatedCapacityGrant({
     const workloads=new Set(capacity.supported_workloads||[]);
     const labels=new Set(capacity.placement_labels||[]);
     const edge=capacity.public_edge||{};
+    const serviceReady=(key)=>{
+      if(key==='public_edge') return edge.ready===true&&edge.public_https===true;
+      if(key==='evercraft_home_identity'){
+        return capacity.evercraft_home_identity?.ready===true;
+      }
+      return false;
+    };
     return (
       capacity.protocol==='evercraft.capacity.v1' &&
       capacity.runtime==='Evercraft Compute' &&
@@ -105,6 +114,7 @@ async function delegatedCapacityGrant({
       capacity.device_fingerprint===node.device_fingerprint &&
       [...requiredWork].every((key)=>workloads.has(key)) &&
       [...requiredLabels].every((key)=>labels.has(key)) &&
+      [...requiredServices].every((key)=>serviceReady(key)) &&
       edge.ready===true &&
       edge.public_https===true
     );
@@ -257,6 +267,11 @@ const watcher=new PublicEdgeActivationWatcher({
     requested_hostname:String(
       process.env.EVERCRAFT_CONTROL_ROOM_HOSTNAME||'evercraft-control'
     ),
+    stable_hostname:true,
+  },
+  home:{
+    enabled:String(process.env.EVERCRAFT_HOME_PUBLIC_EDGE_ENABLED||'true')!=='false',
+    requested_hostname:String(process.env.EVERCRAFT_HOME_HOSTNAME||'home'),
     stable_hostname:true,
   },
   requiredPlacementLabels:String(
