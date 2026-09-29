@@ -1134,6 +1134,19 @@ export async function startEvercraftComputeNode({
             return send(res, 422, { error: 'evercraft_identity_secret_required' });
           }
 
+          const identityStateValue = String(
+            body.input?.identity_state_dir ||
+            process.env.EVERCRAFT_IDENTITY_STATE_DIR ||
+            ''
+          ).trim();
+          if (!identityStateValue) {
+            return send(res, 422, { error: 'evercraft_identity_state_dir_required' });
+          }
+          const identityStateRoot = path.resolve(identityStateValue);
+          if (!isWithin(allowedRoot, identityStateRoot)) {
+            return send(res, 403, { error: 'evercraft_identity_state_outside_admitted_root' });
+          }
+
           const passportStateRoot = path.resolve(String(
             body.input?.passport_state_dir ||
             process.env.EVERCRAFT_PASSPORT_STATE_DIR ||
@@ -1162,6 +1175,7 @@ export async function startEvercraftComputeNode({
             authMode: 'passport',
             identitySecret,
             passportStateDir: passportStateRoot,
+            identityStateDir: identityStateRoot,
             yardStateDir: yardStateRoot,
           });
 
@@ -1616,9 +1630,6 @@ export async function startEvercraftComputeNode({
               remoteDeviceTrustWatchOut,
             SYSTEMIA_MISSION_SOURCES_CONFIG: missionSourcesConfig,
             SYSTEMIA_MISSION_PUBLISHER_LEDGER: publisherLedger,
-            SYSTEMIA_SENTINEL_REGION_PROFILE: String(
-              body.input?.sentinel_region_profile || ''
-            ).trim(),
           };
 
           const supervisor = new SystemiaCoreResidentSupervisor({
@@ -1645,7 +1656,6 @@ export async function startEvercraftComputeNode({
             service_url: null,
             health_path: `/v1/services/${serviceId}/health`,
             supervised_service_count: health.service_count,
-            sentinel_region_profile: serviceEnv.SYSTEMIA_SENTINEL_REGION_PROFILE || null,
           };
           const receipt = chain.issue('service.started', {
             lease_id: body.lease_id,
