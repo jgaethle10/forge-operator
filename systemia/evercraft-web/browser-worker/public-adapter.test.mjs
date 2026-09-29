@@ -31,8 +31,21 @@ test('public adapter exposes receipt-bound health and bounded render', async()=>
     async authHandoffPage(sessionId){
       return '<!doctype html><title>Evercraft Browser Handoff</title><p>'+sessionId+'</p>';
     },
-    async authSnapshot(sessionId,claim){
+    redeemed:false,
+    async authRedeem(sessionId,claim){
+      if(this.redeemed) throw new Error('authenticated_browser_claim_already_redeemed');
       if(claim!=='claim-ok') throw new Error('authenticated_browser_claim_invalid');
+      this.redeemed=true;
+      return {
+        ok:true,
+        session_id:sessionId,
+        access_token:'access-ok',
+        claim_redeemed:true,
+        expires_at:new Date(Date.now()+60000).toISOString(),
+      };
+    },
+    async authSnapshot(sessionId,access){
+      if(access!=='access-ok') throw new Error('authenticated_browser_access_invalid');
       return {
         ok:true,
         session_id:sessionId,
@@ -41,12 +54,12 @@ test('public adapter exposes receipt-bound health and bounded render', async()=>
         expires_at:new Date(Date.now()+60000).toISOString(),
       };
     },
-    async authAction(sessionId,claim,action){
-      if(claim!=='claim-ok') throw new Error('authenticated_browser_claim_invalid');
+    async authAction(sessionId,access,action){
+      if(access!=='access-ok') throw new Error('authenticated_browser_access_invalid');
       return {ok:true,session_id:sessionId,type:action.type,secret_text_recorded:false};
     },
-    async authClose(sessionId,claim){
-      if(claim!=='claim-ok') throw new Error('authenticated_browser_claim_invalid');
+    async authClose(sessionId,access){
+      if(access!=='access-ok') throw new Error('authenticated_browser_access_invalid');
       return {ok:true,closed:true,session_id:sessionId};
     }
   };
@@ -65,6 +78,8 @@ test('public adapter exposes receipt-bound health and bounded render', async()=>
 
     const capabilities=await fetch(adapter.url+'/v1/browser/capabilities').then(r=>r.json());
     assert.equal(capabilities.authenticated_human_handoff,true);
+    assert.equal(capabilities.authenticated_handoff_one_time_claim,true);
+    assert.equal(capabilities.authenticated_handoff_http_only_cookie,true);
     assert.equal(capabilities.authenticated_handoff_persists_profile,false);
     assert.equal(capabilities.authenticated_handoff_secret_text_returned,false);
 
@@ -72,8 +87,51 @@ test('public adapter exposes receipt-bound health and bounded render', async()=>
     assert.equal(handoff.status,200);
     assert.match(await handoff.text(),/Evercraft Browser Handoff/);
 
+    const beforeRedeem=await fetch(adapter.url+'/v1/auth-browser/sessions/session-test/snapshot',{
+      headers:{'x-evercraft-control-room':'1'}
+    });
+    assert.equal(beforeRedeem.status,401);
+
+    const redeem=await fetch(adapter.url+'/v1/auth-browser/sessions/session-test/redeem',{
+      method:'POST',
+      headers:{
+        'x-evercraft-browser-claim':'claim-ok',
+        'x-evercraft-control-room':'1'
+      }
+    });
+    assert.equal(redeem.status,200);
+    const redeemed=await redeem.json();
+    assert.equal(redeemed.ok,true);
+    assert.equal(redeemed.claim_redeemed,true);
+    assert.equal('access_token' in redeemed,false);
+
+    const setCookie=redeem.headers.get('set-cookie')||'';
+    assert.match(setCookie,/__Secure-evercraft_control_room=access-ok/);
+    assert.match(setCookie,/HttpOnly/i);
+    assert.match(setCookie,/Secure/i);
+    assert.match(setCookie,/SameSite=Strict/i);
+    assert.match(setCookie,/Path=\/v1\/auth-browser\/sessions\/session-test/i);
+    const cookie=setCookie.split(';')[0];
+
+    const reused=await fetch(adapter.url+'/v1/auth-browser/sessions/session-test/redeem',{
+      method:'POST',
+      headers:{
+        'x-evercraft-browser-claim':'claim-ok',
+        'x-evercraft-control-room':'1'
+      }
+    });
+    assert.equal(reused.status,409);
+
+    const missingGuard=await fetch(adapter.url+'/v1/auth-browser/sessions/session-test/snapshot',{
+      headers:{cookie}
+    });
+    assert.equal(missingGuard.status,403);
+
     const snapshot=await fetch(adapter.url+'/v1/auth-browser/sessions/session-test/snapshot',{
-      headers:{'x-evercraft-browser-claim':'claim-ok'}
+      headers:{
+        cookie,
+        'x-evercraft-control-room':'1'
+      }
     }).then(r=>r.json());
     assert.equal(snapshot.ok,true);
     assert.equal(snapshot.session_id,'session-test');
@@ -82,7 +140,8 @@ test('public adapter exposes receipt-bound health and bounded render', async()=>
       method:'POST',
       headers:{
         'content-type':'application/json',
-        'x-evercraft-browser-claim':'claim-ok'
+        cookie,
+        'x-evercraft-control-room':'1'
       },
       body:JSON.stringify({type:'type',text:'never-log-me'})
     }).then(r=>r.json());
@@ -90,11 +149,16 @@ test('public adapter exposes receipt-bound health and bounded render', async()=>
     assert.equal(typed.secret_text_recorded,false);
     assert.equal(JSON.stringify(typed).includes('never-log-me'),false);
 
-    const closed=await fetch(adapter.url+'/v1/auth-browser/sessions/session-test',{
+    const closeResponse=await fetch(adapter.url+'/v1/auth-browser/sessions/session-test',{
       method:'DELETE',
-      headers:{'x-evercraft-browser-claim':'claim-ok'}
-    }).then(r=>r.json());
+      headers:{
+        cookie,
+        'x-evercraft-control-room':'1'
+      }
+    });
+    const closed=await closeResponse.json();
     assert.equal(closed.closed,true);
+    assert.match(closeResponse.headers.get('set-cookie')||'',/Max-Age=0/i);
 
     const rendered=await fetch(adapter.url+'/v1/browser/render',{
       method:'POST',
