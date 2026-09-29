@@ -150,7 +150,9 @@
       "source_refs": [
         "systemia/capability-mesh/mesh.mjs",
         "systemia/capability-mesh/contracts.json",
-        "systemia/capability-mesh/adoption-coverage.json"
+        "systemia/capability-mesh/adoption-coverage.json",
+        "systemia/capability-mesh/runtime.mjs",
+        "systemia/capability-mesh/runtime-policies.json"
       ]
     }
   ],
