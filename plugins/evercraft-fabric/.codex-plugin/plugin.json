@@ -1,0 +1,36 @@
+{
+  "name": "evercraft-fabric",
+  "version": "0.1.0",
+  "description": "Attach this environment to Evercraft Fabric with explicit scopes, provenance, Context Fabric retrieval, and Systemia action boundaries.",
+  "author": {
+    "name": "Evercraft LLC",
+    "url": "https://github.com/jgaethle10/forge-operator"
+  },
+  "homepage": "https://github.com/jgaethle10/forge-operator",
+  "repository": "https://github.com/jgaethle10/forge-operator",
+  "license": "UNLICENSED",
+  "keywords": [
+    "evercraft",
+    "systemia",
+    "fabric",
+    "mcp",
+    "context",
+    "provenance"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Evercraft Fabric",
+    "shortDescription": "Connect this host to the Evercraft fabric",
+    "longDescription": "Evercraft Fabric is a thin, permissioned gateway that lets an AI host or workspace discover Evercraft capabilities, retrieve explicitly authorized Context Fabric records, emit scoped host events as evidence, and prepare Systemia-routed action intents without treating installation as authority.",
+    "developerName": "Evercraft LLC",
+    "category": "Business",
+    "capabilities": [
+      "Interactive"
+    ],
+    "websiteURL": "https://github.com/jgaethle10/forge-operator",
+    "defaultPrompt": [
+      "Connect this environment to Evercraft Fabric. Start with public capability discovery, show the scopes required before accessing private context, and never treat installation as execution authority."
+    ]
+  }
+}
