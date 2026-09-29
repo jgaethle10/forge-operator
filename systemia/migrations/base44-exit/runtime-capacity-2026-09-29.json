@@ -1,0 +1,49 @@
+{
+  "schema": "evercraft.systemia.base44-exit.runtime-capacity-receipt.v1",
+  "observed_at": "2026-09-29T16:05:00Z",
+  "purpose": "Record the live runtime-capacity gate for the Base44 exit without treating source wiring as production cutover proof.",
+  "observed_capacity": {
+    "digitalocean_droplets": 0,
+    "evercraft_runtime_fabric_enrolled_node_keys": [],
+    "persistent_non_base44_runtime_observed": false
+  },
+  "chromebook_node": {
+    "node_key": "personal:chromebook:opportunistic:v1",
+    "display_name": "Founder Chromebook Opportunistic Node",
+    "status": "active",
+    "admission_state": "not_ready",
+    "enrollment_state": "challenged",
+    "last_heartbeat_at": null,
+    "sovereignty_eligible": false,
+    "persistent_host": false,
+    "ram_gb": 2.7,
+    "cpu_logical_count": 2,
+    "docker_observed": false,
+    "role": "optional temporary canary / opportunistic edge only",
+    "must_not_become_sole_production_dependency": true
+  },
+  "base44_recurring_execution_observation": {
+    "window_start": "2026-09-29T05:00:00Z",
+    "network_sensor_last_observed_wake": "2026-09-29T04:50:43.425Z",
+    "transparency_atlas_last_observed_wake": "2026-09-29T03:54:15.954Z",
+    "network_sensor_new_wakes_after_window_start": 0,
+    "transparency_atlas_new_wakes_after_window_start": 0,
+    "remaining_observed_recurring_wake": "systemia_eps_social_continuity_every_30_minutes",
+    "remaining_wake_behavior": "completed no-op: no_eligible_scheduled_eps_content"
+  },
+  "decision": {
+    "chromebook_required_for_source_migration": false,
+    "chromebook_required_for_repository_and_control_plane_work": false,
+    "authorized_live_runtime_required_for_final_yard_cutover": true,
+    "chromebook_can_satisfy_temporary_canary_role_when_online_and_enrolled": true,
+    "chromebook_satisfies_final_persistent_production_role": false,
+    "new_paid_capacity_authorized": false
+  },
+  "next_actions": [
+    "Continue source, policy, scheduler and integration extraction without waiting for the Chromebook.",
+    "Keep the EPS social Base44 continuity exception until a live non-Base44 scheduler earns a verified Clip result.",
+    "If the Chromebook becomes available, complete its NodeSeed enrollment and use it only for a bounded live canary.",
+    "Do not provision paid cloud capacity without separate authorization.",
+    "After the live replacement receipt and observation window, retire the remaining EPS Base44 recurring wake."
+  ]
+}
