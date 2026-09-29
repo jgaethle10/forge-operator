@@ -18,6 +18,8 @@ const leaseTtlMs=Number(arg('--lease-ttl-ms','3600000'));
 const renewEveryMs=Number(arg('--renew-every-ms','1800000'));
 const intervalMs=Math.max(5000,Number(arg('--interval-ms','60000')));
 const attachPollMs=Math.max(100,Number(arg('--attach-poll-ms','5000')));
+const homeEnabled=String(process.env.EVERCRAFT_HOME_PUBLIC_EDGE_ENABLED||'true')!=='false';
+const homeHostname=String(process.env.EVERCRAFT_HOME_HOSTNAME||'home');
 
 let active=null;
 let attachInFlight=false;
@@ -48,14 +50,21 @@ async function attachIfReady(){
       renewEveryMs,
       intervalMs,
       allowLoopbackProof:false,
+      homeEnabled,
+      homeRequestedHostname:homeHostname,
+      homeStableHostname:true,
     });
     const edge=yard.deploymentStatus(controller.edgeDeploymentId);
     const specialist=yard.deploymentStatus(controller.specialistDeploymentId);
+    const home=homeEnabled
+      ? yard.deploymentStatus(controller.homeDeploymentId)
+      : null;
 
     if(
       !controller.binding ||
       edge?.state!=='ready' ||
-      specialist?.state!=='ready'
+      specialist?.state!=='ready' ||
+      (homeEnabled && (!controller.homeBinding || home?.state!=='ready'))
     ){
       if(lastState!=='held_waiting_for_activation_watch'){
         lastState='held_waiting_for_activation_watch';
@@ -74,6 +83,7 @@ async function attachIfReady(){
         controller.stop();
         yard.stopLeaseKeeper(controller.edgeDeploymentId);
         yard.stopLeaseKeeper(controller.specialistDeploymentId);
+        if(homeEnabled) yard.stopLeaseKeeper(controller.homeDeploymentId);
         return false;
       }
       active={yard,controller};
@@ -85,6 +95,10 @@ async function attachIfReady(){
         origin:startup.origin||null,
         route_scope:startup.route_scope||null,
         route_verified:startup.route_verified===true,
+        home_enabled:startup.home_enabled===true,
+        home_origin:startup.home_origin||null,
+        home_route_scope:startup.home_route_scope||null,
+        home_route_verified:startup.home_route_verified===true,
         field_verified:startup.field_verified===true,
         receipt_hash:startup.receipt_hash,
         resident_process_alive:true,
@@ -137,6 +151,7 @@ const stopForSupervisor=()=>{
     active.controller.stop();
     active.yard.stopLeaseKeeper(active.controller.edgeDeploymentId);
     active.yard.stopLeaseKeeper(active.controller.specialistDeploymentId);
+    if(homeEnabled) active.yard.stopLeaseKeeper(active.controller.homeDeploymentId);
   }
   emit({
     ok:true,
