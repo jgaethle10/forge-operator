@@ -95,6 +95,22 @@
       "website-launch"
     ]
   },
+  "ratchet": {
+    "schema": "evercraft.capability-mesh.ratchet-state.v1",
+    "baseline_captured_at": "2026-09-28",
+    "state": "pass",
+    "baseline_public_product_count": 61,
+    "current_public_product_count": 61,
+    "new_public_products": [],
+    "new_public_products_without_contract": [],
+    "baseline_direct_door_public_product_count": 15,
+    "current_direct_door_public_product_count": 15,
+    "new_direct_door_public_products": [],
+    "new_direct_door_without_contract": [],
+    "new_specialist_only_doors": [],
+    "blocking_regressions": [],
+    "doctrine": "Grandfathered contract debt remains migration work. New public products and newly direct-door public products may not add uncontracted trust-chain debt."
+  },
   "specialist_only": [
     {
       "specialist_slug": "foundry-app-escape",
