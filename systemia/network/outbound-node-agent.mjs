@@ -54,6 +54,11 @@ async function jsonRequest(url, {
 function routeAllowed(method, route) {
   if (method === 'GET' && route === '/v1/health') return true;
   if (method === 'GET' && route === '/v1/capacity') return true;
+  if (method === 'GET' && route === '/v1/operator/status') return true;
+  if (
+    method === 'POST' &&
+    /^\/v1\/operator\/(?:fs\/(?:list|read|write)|exec)$/.test(route)
+  ) return true;
   if (method === 'POST' && route === '/v1/attest') return true;
   if (method === 'POST' && route === '/v1/leases') return true;
   if (method === 'POST' && route === '/v1/jobs') return true;
