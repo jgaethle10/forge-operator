@@ -62,3 +62,5 @@ jobs:
         run: node systemia/core/resident-supervisor.proof.mjs
       - name: Prove public edge supervisor topology
         run: node systemia/core/public-edge-resident-wiring.proof.mjs
+      - name: Prove Sentinel resident registration
+        run: npm run test:sentinel-resident
