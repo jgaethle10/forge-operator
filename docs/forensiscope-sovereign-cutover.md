@@ -63,4 +63,6 @@ Cutover requires:
 8. registry/plugin/discovery URLs switched from Base44 to the verified Evercraft route;
 9. Base44 execution path demoted to legacy compatibility, then removed after rollback window.
 
+Functional MCP health and discovery-copy quality are separate gates: missing/failed tools block cutover; wording drift is tracked for repair but does not masquerade as a runtime outage.
+
 No Base44 publish step is part of the target architecture.
