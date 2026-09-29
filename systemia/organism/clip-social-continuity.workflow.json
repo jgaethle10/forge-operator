@@ -1,0 +1,27 @@
+{
+  "schema": "evercraft.systemia.workflow.v1",
+  "workflow_id": "clip-social-continuity",
+  "title": "Evercraft Clip portfolio social continuity",
+  "owner": "Systemia",
+  "purpose": "Wake the canonical Evercraft Clip unified publisher and fail closed when publishing continuity, runtime policy, provider lanes, or cadence health are not proven.",
+  "cadence_seconds": 1800,
+  "execution": {
+    "executable": "systemia/compute/clip-social-continuity-canary.mjs",
+    "side_effects": [
+      "Invokes Evercraft Clip canonical unified publishing pulse",
+      "Invokes publishing continuity watchdog",
+      "May publish only content already admitted by Clip's own existing standards, cadence, exclusion, provider and verification gates"
+    ]
+  },
+  "invariants": [
+    "R&B Chicken & Soul remains excluded from autonomous publishing.",
+    "Havenly Cleaning is not excluded from autonomous publishing.",
+    "A successful HTTP invocation is not equivalent to healthy publishing continuity.",
+    "Queued, accepted, or attempted publication never counts as published without the downstream provider receipt/verification semantics owned by Clip.",
+    "Active continuity incidents make the Systemia canary fail."
+  ],
+  "evidence": {
+    "receipt_schema": "systemia.clip-social-continuity.v1",
+    "retention": "GitHub Actions artifact plus Systemia stdout receipt"
+  }
+}
