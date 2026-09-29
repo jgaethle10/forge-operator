@@ -484,17 +484,24 @@
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ibmi-rescue/ai-discovery.json",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ibmi-rescue/ai-conformance.json",
       "doorway_state": "chum_public_mirror_source_ready",
-      "conformance_state": "machine_commerce_handoff_live_buyer_route_live_backend_checkout_verified",
+      "conformance_state": "machine_commerce_direct_checkout_live_verified",
       "provider_behavior_state": "not_run",
       "origin_canonical_url": "https://findmypart.base44.app/ibmi-rescue",
       "chum_mirror_state": "generated_public_primary_until_origin_verified",
       "machine_commerce_handoff_state": "live_verified",
       "machine_commerce_public_id": "ibmi-rescue-v1",
-      "machine_commerce_tool": "prepare_quote_ready_service_handoff",
-      "live_canary_evidence": "GitHubActionsRun:36211823272",
+      "machine_commerce_tool": "prepare_verified_checkout",
+      "live_canary_evidence": "GitHubActionsRun:36495507434",
       "buyer_route_state": "live_verified",
       "backend_checkout_state": "synthetic_live_verified",
-      "payment_state": "unverified_until_provider_payment"
+      "payment_state": "unverified_until_provider_payment",
+      "mcp_registry": {
+        "name": "io.github.jgaethle10/evercraft-machine-commerce",
+        "version": "1.5.1",
+        "publication_state": "published_shared_server"
+      },
+      "machine_commerce_offer_tool": "get_live_checkout_offer",
+      "machine_commerce_status_tool": "get_verified_order_status"
     },
     {
       "product_key": "infinite-classroom",
@@ -543,6 +550,11 @@
         "negative": "HTTP 409 without explicit human confirmation; zero request records created",
         "positive": "Synthetic QA returned HTTP 201 with all checkout/payment/access/production authority flags false; record marked synthetic and retired from active queue",
         "verified_at": "2026-09-28T18:59:01.423Z"
+      },
+      "mcp_registry": {
+        "name": "io.github.jgaethle10/evercraft-machine-commerce",
+        "version": "1.5.1",
+        "publication_state": "published_shared_server"
       }
     },
     {
@@ -739,6 +751,11 @@
         "workflow_run_id": 36276826078,
         "public_search_index_version_at_last_check": "1.2.2",
         "evidence_boundary": "Publisher success proves Registry publication. Search-index visibility may lag and is tracked separately."
+      },
+      "mcp_registry": {
+        "name": "io.github.jgaethle10/evercraft-machine-commerce",
+        "version": "1.5.1",
+        "publication_state": "published_shared_server"
       }
     },
     {
