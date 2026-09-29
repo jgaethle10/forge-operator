@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { parseNwsAlerts, fetchNwsActiveAlerts, pollNwsActiveAlerts, NWS_SOURCE_CONTRACT } from './nws-alerts.mjs';
 import { parseUsgsEarthquakes, fetchUsgsEarthquakes, pollUsgsEarthquakes, USGS_SOURCE_CONTRACT } from './usgs-earthquakes.mjs';
+import { parseNwpsGauge, fetchNwpsGauge, pollNwpsRiverGauges, NWPS_SOURCE_CONTRACT } from './nwps-rivers.mjs';
 
 const nwsFixture = {
   type: 'FeatureCollection',
@@ -124,5 +125,66 @@ await assert.rejects(
   }),
   /earthquake\.usgs\.gov/
 );
+
+const nwpsFixture = {
+  identifier: 'TEST1',
+  gauge: {
+    identifier: 'TEST1',
+    name: 'Example River at Example City',
+    state: 'WA',
+    county: 'Example',
+    latitude: 46.6,
+    longitude: -120.5
+  },
+  stageflow: {
+    observed: [{
+      type: 'observed',
+      validTime: '2026-09-29T08:00:00Z',
+      value: 12.4,
+      unit: 'ft',
+      floodCategory: 'Minor Flooding'
+    }],
+    forecast: [{
+      type: 'forecast',
+      validTime: '2026-09-29T14:00:00Z',
+      value: 15.2,
+      unit: 'ft',
+      floodCategory: 'Moderate Flooding'
+    }]
+  }
+};
+
+const nwps = parseNwpsGauge(nwpsFixture);
+assert.equal(nwps.length, 2);
+assert.equal(nwps[0].domain, 'hydrology');
+assert.equal(nwps[0].independence_group, 'noaa-nws');
+assert.equal(nwps.find((row) => row.kind === 'river_observed').evidence_state, 'verified');
+assert.equal(nwps.find((row) => row.kind === 'river_forecast').evidence_state, 'modeled');
+assert.equal(nwps.find((row) => row.kind === 'river_forecast').hazard_state, 'unknown');
+assert.ok(nwps.every((row) => row.region_group?.startsWith('coarse-grid:1deg:')));
+assert.ok(nwps.every((row) => !('latitude' in row) && !('longitude' in row)));
+
+const nwpsRequests = [];
+const fetchedNwps = await fetchNwpsGauge('TEST1', {
+  fetchImpl: async (url) => {
+    nwpsRequests.push(String(url));
+    return {
+      ok: true,
+      status: 200,
+      json: async () => String(url).endsWith('/stageflow') ? nwpsFixture.stageflow : nwpsFixture.gauge
+    };
+  }
+});
+assert.equal(fetchedNwps.length, 2);
+assert.equal(nwpsRequests.length, 2);
+assert.ok(nwpsRequests.every((url) => new URL(url).hostname === 'api.water.noaa.gov'));
+
+const nwpsNoConfig = await pollNwpsRiverGauges({
+  checkedAt: '2026-09-29T08:05:00Z',
+  gaugeIds: []
+});
+assert.equal(nwpsNoConfig.contract.source_id, NWPS_SOURCE_CONTRACT.source_id);
+assert.equal(nwpsNoConfig.receipt.status, 'partial');
+assert.equal(nwpsNoConfig.receipt.error_code, 'no_gauges_configured');
 
 console.log('SYSTEMIA SENTINEL OFFICIAL SOURCES PASS');
