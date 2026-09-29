@@ -44,6 +44,10 @@ import {
   assessProductionGrade,
   type ProductionBeatQualityInput,
 } from './production-grade-gate.js';
+import { renderTimelineExport } from './timeline-export.js';
+import type { FallenTimelineProject } from './timeline.js';
+import { compileStudioDraft, type StudioDraftPlan, type StudioDraftBundle } from './studio-create.js';
+import { resolveStudioDraft, type StudioResolutionItem } from './studio-resolve.js';
 
 function readJson<T>(filePath: string): T {
   return JSON.parse(fs.readFileSync(path.resolve(filePath), 'utf8')) as T;
@@ -79,7 +83,10 @@ function usage() {
     '  npm run media:studio -- host-plate <prep.json> <receipt.json>',
     '  npm run media:studio -- model-plan <payload.json> <model-plan.json>',
     '  npm run media:studio -- finish-plan <payload.json> <finish-plan.json>',
-    '  npm run media:studio -- production-grade <beats.json> <report.json>',\n    '  npm run media:studio -- timeline-export <timeline.json> <output.mp4> [receipt.json]',\n    '  npm run media:studio -- studio-create <draft-plan.json> <draft-bundle.json>',\n    '  npm run media:studio -- studio-resolve <resolution-payload.json> <resolved-bundle.json> [captions.srt]',
+    '  npm run media:studio -- production-grade <beats.json> <report.json>',
+    '  npm run media:studio -- timeline-export <timeline.json> <output.mp4> [receipt.json]',
+    '  npm run media:studio -- studio-create <draft-plan.json> <draft-bundle.json>',
+    '  npm run media:studio -- studio-resolve <resolution-payload.json> <resolved-bundle.json> [captions.srt]',
   ].join('\n'));
 }
 
