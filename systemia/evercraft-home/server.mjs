@@ -9,6 +9,7 @@ import { authorizeEvercraftHome, verifyEvercraftSession } from "./identity.mjs";
 import { planSystemiaMission, readSystemiaInventory } from "./systemia-adapter.mjs";
 import { readNetworkOverview, readYardOverview } from "./operations-adapter.mjs";
 import { ProviderCredentialVault } from "./credential-vault.mjs";
+import { normalizeProviderCredentialRequest } from "./provider-credentials.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const publicDir = path.join(here, "public");
@@ -331,6 +332,47 @@ export async function startEvercraftHomeServer({
     if (req.method === "GET" && url.pathname === "/api/session") {
       const session = sessionFor(req);
       return json(res, session.ok ? 200 : session.status, session);
+    }
+
+    const householdProviderCredentialMatch = url.pathname.match(
+      /^\/api\/credentials\/providers\/(google-places|kroger)(\/status)?$/
+    );
+    if (householdProviderCredentialMatch && req.method === "GET" && householdProviderCredentialMatch[2]) {
+      const session = sessionFor(req, "home.identity.sessions.manage");
+      if (!session.ok) return json(res, session.status, session);
+      if (!credentialVault) return json(res, 503, { ok: false, state: "credential_vault_not_configured" });
+      const provider = householdProviderCredentialMatch[1];
+      return json(res, 200, {
+        ok: true,
+        provider,
+        credentials: credentialVault.list({ provider }),
+        secret_material_returned: false,
+      });
+    }
+
+    if (householdProviderCredentialMatch && req.method === "POST" && !householdProviderCredentialMatch[2]) {
+      const session = sessionFor(req, "home.identity.sessions.manage");
+      if (!session.ok) return json(res, session.status, session);
+      if (!credentialVault) return json(res, 503, { ok: false, state: "credential_vault_not_configured" });
+      try {
+        const body = await readJsonBody(req, 16384);
+        const normalized = normalizeProviderCredentialRequest(householdProviderCredentialMatch[1], body);
+        const credential = credentialVault.put({
+          ...normalized,
+          actorRef: session.subject,
+        });
+        return json(res, 201, {
+          ok: true,
+          state: "credential_sealed",
+          provider: normalized.provider,
+          credential,
+          secret_material_returned: false,
+          plaintext_persisted: false,
+          authority: "evercraft-home+provider-credential-vault",
+        });
+      } catch (error) {
+        return json(res, 400, { ok: false, state: error?.message || "credential_store_failed" });
+      }
     }
 
     if (req.method === "GET" && url.pathname === "/api/credentials/providers/alpaca/status") {
