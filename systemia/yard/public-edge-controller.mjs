@@ -25,6 +25,10 @@ export class PublicEdgeController {
     browserEnabled=false,
     browserRequestedHostname='evercraft-control',
     browserStableHostname=true,
+    homeDeploymentId='evercraft-home',
+    homeEnabled=false,
+    homeRequestedHostname='home',
+    homeStableHostname=true,
     leaseTtlMs=3600000,
     renewEveryMs=1800000,
     intervalMs=60000,
@@ -40,12 +44,17 @@ export class PublicEdgeController {
     this.browserEnabled=Boolean(browserEnabled);
     this.browserRequestedHostname=String(browserRequestedHostname||'evercraft-control');
     this.browserStableHostname=browserStableHostname===true;
+    this.homeDeploymentId=homeDeploymentId;
+    this.homeEnabled=Boolean(homeEnabled);
+    this.homeRequestedHostname=String(homeRequestedHostname||'home');
+    this.homeStableHostname=homeStableHostname===true;
     this.leaseTtlMs=Math.max(60000,Number(leaseTtlMs||3600000));
     this.renewEveryMs=Math.max(30000,Number(renewEveryMs||1800000));
     this.intervalMs=Math.max(5000,Number(intervalMs||60000));
     this.allowLoopbackProof=Boolean(allowLoopbackProof);
     this.binding=null;
     this.browserBinding=null;
+    this.homeBinding=null;
     this.requestedHostname='';
     this.stableHostname=false;
     this.identityAttestationRequired=false;
@@ -66,6 +75,10 @@ export class PublicEdgeController {
           this.browserEnabled=Boolean(persisted.browser_enabled??this.browserEnabled);
           this.browserRequestedHostname=String(persisted.browser_requested_hostname||this.browserRequestedHostname||'evercraft-control');
           this.browserStableHostname=Boolean(persisted.browser_stable_hostname??this.browserStableHostname);
+          this.homeBinding=persisted.home_binding||null;
+          this.homeEnabled=Boolean(persisted.home_enabled??this.homeEnabled);
+          this.homeRequestedHostname=String(persisted.home_requested_hostname||this.homeRequestedHostname||'home');
+          this.homeStableHostname=Boolean(persisted.home_stable_hostname??this.homeStableHostname);
           this.requestedHostname=String(persisted.requested_hostname||'');
           this.stableHostname=Boolean(persisted.stable_hostname);
           this.identityAttestationRequired=Boolean(persisted.identity_attestation_required);
@@ -88,11 +101,16 @@ export class PublicEdgeController {
       edge_deployment_id:this.edgeDeploymentId,
       specialist_deployment_id:this.specialistDeploymentId,
       browser_deployment_id:this.browserDeploymentId,
+      home_deployment_id:this.homeDeploymentId,
       binding:this.binding,
       browser_binding:this.browserBinding,
       browser_enabled:this.browserEnabled,
       browser_requested_hostname:this.browserRequestedHostname||null,
       browser_stable_hostname:this.browserStableHostname,
+      home_binding:this.homeBinding,
+      home_enabled:this.homeEnabled,
+      home_requested_hostname:this.homeRequestedHostname||null,
+      home_stable_hostname:this.homeStableHostname,
       requested_hostname:this.requestedHostname||null,
       stable_hostname:this.stableHostname,
       identity_attestation_required:this.identityAttestationRequired,
@@ -117,6 +135,7 @@ export class PublicEdgeController {
       edge_deployment_id:this.edgeDeploymentId,
       specialist_deployment_id:this.specialistDeploymentId,
       browser_deployment_id:this.browserDeploymentId,
+      home_deployment_id:this.homeDeploymentId,
       observed_at:new Date().toISOString(),
       ...data,
     };
@@ -146,11 +165,18 @@ export class PublicEdgeController {
       requested_hostname:'evercraft-control',
       stable_hostname:true,
     },
+    home={
+      enabled:false,
+      requested_hostname:'home',
+      stable_hostname:true,
+      input:{},
+    },
     requestedHostname='evercraft-specialists',
     stableHostname=false,
     edgeRollbackTarget='none:first_install',
     specialistRollbackTarget='none:first_install',
     browserRollbackTarget='none:first_install',
+    homeRollbackTarget='none:first_install',
     requireIdentityAttestation=false,
     requireFieldEnrollment=false,
   }={}){
@@ -162,6 +188,7 @@ export class PublicEdgeController {
     let edgeRecord=null;
     let specialistRecord=null;
     let browserRecord=null;
+    let homeRecord=null;
     let broker=null;
     let fieldEnrollmentImport=null;
     const productionMode=String(edge.mode||'wildcard_https')==='wildcard_https';
@@ -170,6 +197,9 @@ export class PublicEdgeController {
     this.browserEnabled=browser?.enabled===true;
     this.browserRequestedHostname=String(browser?.requested_hostname||'evercraft-control');
     this.browserStableHostname=browser?.stable_hostname!==false;
+    this.homeEnabled=home?.enabled===true;
+    this.homeRequestedHostname=String(home?.requested_hostname||'home');
+    this.homeStableHostname=home?.stable_hostname!==false;
     this.identityAttestationRequired=productionMode || Boolean(requireIdentityAttestation);
     this.fieldEnrollmentRequired=productionMode || Boolean(requireFieldEnrollment);
 
@@ -243,6 +273,21 @@ export class PublicEdgeController {
         });
       }
 
+      if(this.homeEnabled){
+        homeRecord=await this.yard.deployRelease({
+          deploymentId:this.homeDeploymentId,
+          releaseRef,
+          workloadClass:'systemia.evercraft-home.v1',
+          capacityEndpoint,
+          allocatorToken,
+          input:{
+            ...(home?.input&&typeof home.input==='object'?home.input:{}),
+          },
+          rollbackTarget:String(homeRollbackTarget||'none:first_install'),
+          leaseTtlMs:this.leaseTtlMs,
+        });
+      }
+
       if(edgeRecord.receipt?.capacity_node_id!==specialistRecord.receipt?.capacity_node_id){
         throw new Error('edge_and_specialist_must_share_compute_node_for_loopback_upstream');
       }
@@ -255,17 +300,27 @@ export class PublicEdgeController {
       if(browserRecord && browserRecord.result?.auth_handoff_supported!==true){
         throw new Error('browser_authenticated_handoff_required');
       }
+      if(
+        homeRecord &&
+        edgeRecord.receipt?.capacity_node_id!==homeRecord.receipt?.capacity_node_id
+      ){
+        throw new Error('edge_and_home_must_share_compute_node_for_loopback_upstream');
+      }
 
       let edgeAttestation=null;
       let specialistAttestation=null;
       let browserAttestation=null;
+      let homeAttestation=null;
       let identityBinding=null;
       if(this.identityAttestationRequired){
-        [edgeAttestation,specialistAttestation,browserAttestation]=await Promise.all([
+        [edgeAttestation,specialistAttestation,browserAttestation,homeAttestation]=await Promise.all([
           this.yard.attestDeployment(this.edgeDeploymentId),
           this.yard.attestDeployment(this.specialistDeploymentId),
           this.browserEnabled
             ? this.yard.attestDeployment(this.browserDeploymentId)
+            : Promise.resolve(null),
+          this.homeEnabled
+            ? this.yard.attestDeployment(this.homeDeploymentId)
             : Promise.resolve(null),
         ]);
         if(edgeAttestation.identity_verified!==true){
@@ -286,6 +341,12 @@ export class PublicEdgeController {
         if(this.fieldEnrollmentRequired && this.browserEnabled && browserAttestation?.field_verified!==true){
           throw new Error('browser_field_attestation_failed');
         }
+        if(this.homeEnabled && homeAttestation?.identity_verified!==true){
+          throw new Error('home_identity_attestation_failed');
+        }
+        if(this.fieldEnrollmentRequired && this.homeEnabled && homeAttestation?.field_verified!==true){
+          throw new Error('home_field_attestation_failed');
+        }
         if(
           !edgeAttestation.device_fingerprint ||
           edgeAttestation.device_fingerprint!==specialistAttestation.device_fingerprint
@@ -297,6 +358,12 @@ export class PublicEdgeController {
           edgeAttestation.device_fingerprint!==browserAttestation?.device_fingerprint
         ){
           throw new Error('edge_browser_device_attestation_mismatch');
+        }
+        if(
+          this.homeEnabled &&
+          edgeAttestation.device_fingerprint!==homeAttestation?.device_fingerprint
+        ){
+          throw new Error('edge_home_device_attestation_mismatch');
         }
         identityBinding=await this.yard.bindSpecialistIdentityAttestation(
           this.specialistDeploymentId,
@@ -330,12 +397,24 @@ export class PublicEdgeController {
       }else{
         this.browserBinding=null;
       }
+      if(this.homeEnabled){
+        this.homeBinding=await broker.bindDeployment(this.homeDeploymentId,{
+          requestedHostname:this.homeRequestedHostname,
+          ttlMs:this.leaseTtlMs,
+          stableHostname:this.homeStableHostname,
+        });
+      }else{
+        this.homeBinding=null;
+      }
 
       if(productionMode && this.binding.route_verified!==true){
         throw new Error('public_https_route_verification_required');
       }
       if(productionMode && this.browserEnabled && this.browserBinding?.route_verified!==true){
         throw new Error('browser_public_https_route_verification_required');
+      }
+      if(productionMode && this.homeEnabled && this.homeBinding?.route_verified!==true){
+        throw new Error('home_public_https_route_verification_required');
       }
       if(!productionMode && !this.allowLoopbackProof){
         throw new Error('proof_route_not_authorized');
@@ -355,17 +434,26 @@ export class PublicEdgeController {
           renewEveryMs:this.renewEveryMs,
         });
       }
+      if(this.homeEnabled){
+        this.yard.startLeaseKeeper(this.homeDeploymentId,{
+          ttlMs:this.leaseTtlMs,
+          renewEveryMs:this.renewEveryMs,
+        });
+      }
 
       return this.#result('provisioned',{
         runtime_fabric:'Evercraft Compute',
         edge_node_id:edgeRecord.receipt?.capacity_node_id||null,
         specialist_node_id:specialistRecord.receipt?.capacity_node_id||null,
         browser_node_id:browserRecord?.receipt?.capacity_node_id||null,
+        home_node_id:homeRecord?.receipt?.capacity_node_id||null,
         edge_deployment_receipt:edgeRecord.receipt?.receipt_hash||null,
         specialist_deployment_receipt:specialistRecord.receipt?.receipt_hash||null,
         browser_deployment_receipt:browserRecord?.receipt?.receipt_hash||null,
+        home_deployment_receipt:homeRecord?.receipt?.receipt_hash||null,
         route_binding_receipt:this.binding.receipt_hash,
         browser_route_binding_receipt:this.browserBinding?.receipt_hash||null,
+        home_route_binding_receipt:this.homeBinding?.receipt_hash||null,
         route_scope:this.binding.route_scope,
         route_verified:this.binding.route_verified,
         origin:this.binding.origin,
@@ -373,6 +461,10 @@ export class PublicEdgeController {
         browser_origin:this.browserBinding?.origin||null,
         browser_route_scope:this.browserBinding?.route_scope||null,
         browser_route_verified:this.browserBinding?.route_verified===true,
+        home_enabled:this.homeEnabled,
+        home_origin:this.homeBinding?.origin||null,
+        home_route_scope:this.homeBinding?.route_scope||null,
+        home_route_verified:this.homeBinding?.route_verified===true,
         provider_transport:this.binding.provider_transport,
         identity_attestation_required:this.identityAttestationRequired,
         field_enrollment_required:this.fieldEnrollmentRequired,
@@ -403,12 +495,22 @@ export class PublicEdgeController {
         browser_identity_verified:this.identityAttestationRequired && this.browserEnabled
           ? browserAttestation?.identity_verified===true
           : null,
+        home_attestation_receipt:this.identityAttestationRequired && this.homeEnabled
+          ? homeAttestation?.receipt_hash||null
+          : null,
+        home_identity_verified:this.identityAttestationRequired && this.homeEnabled
+          ? homeAttestation?.identity_verified===true
+          : null,
         specialist_identity_binding_receipt:this.identityAttestationRequired
           ? identityBinding?.compute_binding_receipt||null
           : null,
         founder_login_required:false,
       });
     }catch(error){
+      if(this.homeBinding&&broker){
+        try{ await broker.releaseBinding(this.homeBinding,{reason:'provision_failed'}); }catch{}
+      }
+      this.homeBinding=null;
       if(this.browserBinding&&broker){
         try{ await broker.releaseBinding(this.browserBinding,{reason:'provision_failed'}); }catch{}
       }
@@ -417,6 +519,9 @@ export class PublicEdgeController {
         try{ await broker.releaseBinding(this.binding,{reason:'provision_failed'}); }catch{}
       }
       this.binding=null;
+      if(homeRecord){
+        try{ await this.yard.stopDeployment(this.homeDeploymentId,{reason:'provision_failed'}); }catch{}
+      }
       if(browserRecord){
         try{ await this.yard.stopDeployment(this.browserDeploymentId,{reason:'provision_failed'}); }catch{}
       }
