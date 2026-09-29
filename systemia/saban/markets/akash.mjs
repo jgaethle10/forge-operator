@@ -173,7 +173,7 @@ export function uactPerBlockToUsdHour(amount){
   return Number((((micro/1_000_000)*600)).toFixed(9));
 }
 
-function normalizeBid(bid,demand,manifest,providerRecord=null){
+export function normalizeAkashBid(bid,demand,manifest,providerRecord=null){
   const id=bid?.bid?.id||bid?.id||{};
   const price=bid?.bid?.price||bid?.price||{};
   const provider=String(id.provider||bid?.provider||'').trim();
@@ -338,7 +338,7 @@ export function createAkashMarketAdapter({
         const offers=bids.map((bid)=>{
           const id=bid?.bid?.id||bid?.id||{};
           const owner=String(id.provider||bid?.provider||'').trim();
-          return normalizeBid(bid,demand,manifest,providerByOwner.get(owner)||null);
+          return normalizeAkashBid(bid,demand,manifest,providerByOwner.get(owner)||null);
         }).filter(Boolean);
 
         const body={
