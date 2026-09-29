@@ -34,9 +34,25 @@ if [[ ! -f "${ENV_FILE}" ]]; then
   chmod 0600 "${ENV_FILE}"
 fi
 
-if [[ -n "${EVERCRAFT_REMOTE_BROKER_URL:-}" ]]; then
-  printf 'EVERCRAFT_REMOTE_BROKER_URL=%s\n' "${EVERCRAFT_REMOTE_BROKER_URL}" > "${ENV_FILE}"
+set_env_value() {
+  local key="$1"
+  local value="$2"
+  local tmp="${ENV_FILE}.tmp"
+  grep -v "^${key}=" "${ENV_FILE}" > "${tmp}" || true
+  printf '%s=%s\n' "${key}" "${value}" >> "${tmp}"
+  mv "${tmp}" "${ENV_FILE}"
   chmod 0600 "${ENV_FILE}"
+}
+
+if [[ -n "${EVERCRAFT_REMOTE_BROKER_URL:-}" ]]; then
+  set_env_value "EVERCRAFT_REMOTE_BROKER_URL" "${EVERCRAFT_REMOTE_BROKER_URL}"
+fi
+
+if [[ -n "${EVERCRAFT_REMOTE_OPERATOR_ENABLED:-}" ]]; then
+  case "${EVERCRAFT_REMOTE_OPERATOR_ENABLED,,}" in
+    true|false) set_env_value "EVERCRAFT_REMOTE_OPERATOR_ENABLED" "${EVERCRAFT_REMOTE_OPERATOR_ENABLED,,}" ;;
+    *) echo "EVERCRAFT_REMOTE_OPERATOR_ENABLED must be true or false." >&2; exit 2 ;;
+  esac
 fi
 
 rm -rf "${INSTALL_ROOT:?}/"*
@@ -73,10 +89,17 @@ fi
 echo "Evercraft local organism installed and active."
 echo "Runtime: NodeSeed -> Evercraft Compute -> Yard -> KAIDANCE -> Systemia Core"
 echo "Network: loopback-only; no public ingress created."
-if [[ -s "${ENV_FILE}" ]]; then
+if grep -q '^EVERCRAFT_REMOTE_BROKER_URL=' "${ENV_FILE}"; then
   echo "Remote admission: configured through private user environment."
 else
   echo "Remote admission: not configured; enrollment request will still be generated."
+fi
+if grep -q '^EVERCRAFT_REMOTE_OPERATOR_ENABLED=true
+echo "This user-mode Chromebook/Crostini runtime is authorized compute, not Node 001 physical field certification."
+ "${ENV_FILE}"; then
+  echo "Remote Operator: enabled; outbound control grant required."
+else
+  echo "Remote Operator: disabled."
 fi
 echo "State: ${STATE_ROOT}"
 echo "This user-mode Chromebook/Crostini runtime is authorized compute, not Node 001 physical field certification."
