@@ -52,8 +52,9 @@ The plugin is intentionally thin. Host adapters translate host conventions into 
 - `GET /api/fabric/manifest`
 - `POST /mcp/evercraft-fabric`
 - MCP tool: `discover_evercraft`
+- MCP tool: `plan_evercraft_mission`
 
-Public discovery exposes truthful public capabilities only. It does not grant entitlement or private authority.
+Public discovery exposes truthful public capabilities only. `plan_evercraft_mission` can turn a broad goal into a ranked cross-capability candidate graph using the same live portfolio discovery layer, carrying machine state, commercial metadata, invocation state, confirmation requirements and handoff surfaces forward without pretending those candidates are admitted or executable. It does not grant entitlement or private authority.
 
 ### Authenticated
 
@@ -114,6 +115,32 @@ Every event remains:
 - `source_authority_inherited: false`
 
 This is the key prompt-injection boundary for the fabric. Connected systems contribute evidence. They do not acquire command authority by supplying text.
+
+## Mission planning contract
+
+`plan_evercraft_mission` is the first host-neutral orchestration surface above individual Evercraft products.
+
+It accepts a broad goal and asks the live capability discovery layer for relevant Evercraft capabilities. The planner deduplicates those candidates and returns a mission graph that preserves each capability's public identity, machine state, commercial state, invocation status, pricing metadata, confirmation boundary and routing metadata when present.
+
+The returned stages are candidates, not an execution sequence. Every stage is explicitly marked `candidate_not_admitted`.
+
+Before any consequential work, Systemia must still:
+
+- admit the mission
+- deduplicate overlapping work
+- resolve dependencies and ordering
+- verify capacity and current capability state
+- preserve evidence and provenance semantics
+- pass consequential actions through Execution Gate
+
+The planner also preserves four non-collapse rules:
+
+- discovery rank is evidence for routing, not proof of execution order
+- pricing metadata is not payment authorization
+- checkout is not payment proof
+- installing Fabric never grants private context or external-action authority
+
+This is the key distinction between a conventional tool bundle and the Evercraft Fabric: the host can ask for an outcome without knowing which Evercraft products exist, while Systemia retains the authority to decide what can actually run.
 
 ## Action contract
 
