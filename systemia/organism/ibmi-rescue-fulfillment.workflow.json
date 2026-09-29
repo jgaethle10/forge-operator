@@ -1,0 +1,39 @@
+{
+  "schema": "evercraft.systemia.workflow-manifest.v1",
+  "workflow_key": "ibmi-rescue-paid-fulfillment",
+  "mission_key": "legacy-software-modernization-radar-2026-09-13",
+  "runtime": "systemia-organism",
+  "entrypoint": "systemia/organism/ibmi-rescue-fulfillment.mjs",
+  "trigger": {
+    "type": "verified_payment_receipt",
+    "product_key": "ibmi-rescue",
+    "synthetic": false,
+    "required_order_state": "paid"
+  },
+  "authority": {
+    "paid_fulfillment": "provider_verified_non_synthetic_receipt_only",
+    "private_system_access": "separate_explicit_authorization_required",
+    "credentials": "not_requested_by_default",
+    "production_mutation": "not_authorized",
+    "production_cutover": "not_authorized",
+    "expansion_payment_request": "human_gate"
+  },
+  "stages": [
+    "customer-intake",
+    "admit-evidence",
+    "reconstruct-dependencies",
+    "characterize-risk",
+    "test-rollback-plan",
+    "evidence-qa",
+    "customer-delivery",
+    "expansion-review"
+  ],
+  "doctrine": [
+    "payment is authority to perform only the purchased bounded service",
+    "payment does not authorize access to private systems or credentials",
+    "prefer customer-supplied exports or separately authorized read-only evidence",
+    "production mutation and cutover are never implied by purchase",
+    "synthetic QA orders and receipts never start fulfillment",
+    "a larger engagement requires a separate human-approved commercial step"
+  ]
+}
