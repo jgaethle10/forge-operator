@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-29T19:22:29.353Z",
+  "updated_at": "2026-09-29T19:24:13.034Z",
   "url_count": 2660,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -39,8 +39,8 @@
     },
     "/chum/capabilities.json": {
       "path": "/chum/capabilities.json",
-      "content_sha256": "48851017edb031e21e141e14e942197c595273db5904a5978547901d45eb15c5",
-      "last_changed": "2026-09-29T19:10:55.004Z",
+      "content_sha256": "1e7db486b49b03a18fe0e83176db9328219aa6abb61a2a34271a430f32ca2d71",
+      "last_changed": "2026-09-29T19:24:13.034Z",
       "priority": 80
     },
     "/chum/sell-now.html": {
@@ -51,8 +51,8 @@
     },
     "/chum/sell-now.json": {
       "path": "/chum/sell-now.json",
-      "content_sha256": "fdfa41dd0a416170df397ff80045dc25db201130ef563ddfa5e7b775d2c9760c",
-      "last_changed": "2026-09-29T19:10:55.004Z",
+      "content_sha256": "7a115027b2b3fd7965d9a9ee91c3b1c78046262d0d984fe5cb2721eccf7c8706",
+      "last_changed": "2026-09-29T19:24:13.034Z",
       "priority": 92
     },
     "/chum/sell-now.txt": {
@@ -69,14 +69,14 @@
     },
     "/chum/revenue.json": {
       "path": "/chum/revenue.json",
-      "content_sha256": "9123264c9f2b06a2621d5e1cadbd0330d236445757ceaf9a276819a778b882df",
-      "last_changed": "2026-09-29T19:10:55.004Z",
+      "content_sha256": "e8a0462b614d66bc8445d3a86c4a3127f5e59c0e6faf4330ddcba016c6b1158d",
+      "last_changed": "2026-09-29T19:24:13.034Z",
       "priority": 90
     },
     "/chum/agent-commerce.json": {
       "path": "/chum/agent-commerce.json",
-      "content_sha256": "fc0ef825a7e3b2c26f8fcc389b165da464679d0cba79a8226d00586e019012b1",
-      "last_changed": "2026-09-29T19:10:55.004Z",
+      "content_sha256": "d470775c78b76a2ff4cc726e7ce92d5be7bd9364f56d35ef89510206300ff3b2",
+      "last_changed": "2026-09-29T19:24:13.034Z",
       "priority": 80
     },
     "/chum/agent-commerce.txt": {
@@ -141,8 +141,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "1c32bf0691fbe3c6932cb8353a31eeab4be9faef1a63c6bcce8fb94c013c1ec8",
-      "last_changed": "2026-09-29T19:22:29.353Z",
+      "content_sha256": "e3dd6cf907b9137dc55c76ff3d2866e61c41706dc7f31c5de976a6a2e0fdb4a3",
+      "last_changed": "2026-09-29T19:24:13.034Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -777,8 +777,8 @@
     },
     "/.well-known/evercraft-agent-commerce.json": {
       "path": "/.well-known/evercraft-agent-commerce.json",
-      "content_sha256": "fc0ef825a7e3b2c26f8fcc389b165da464679d0cba79a8226d00586e019012b1",
-      "last_changed": "2026-09-29T19:10:55.004Z",
+      "content_sha256": "d470775c78b76a2ff4cc726e7ce92d5be7bd9364f56d35ef89510206300ff3b2",
+      "last_changed": "2026-09-29T19:24:13.034Z",
       "priority": 84
     },
     "/.well-known/evercraft-agent-interfaces.json": {
@@ -801,8 +801,8 @@
     },
     "/.well-known/evercraft-machine-catalog.json": {
       "path": "/.well-known/evercraft-machine-catalog.json",
-      "content_sha256": "1ea5123b4a8a3bccff20ffca9835aae3bf606e312a4232adada5db3fdbe9b7bf",
-      "last_changed": "2026-09-29T19:22:28.867Z",
+      "content_sha256": "9db03551d1d1404d2f54902f40bd54e3acb5b4e4c1fc2d13dc0e61b925832954",
+      "last_changed": "2026-09-29T19:24:13.034Z",
       "priority": 84
     },
     "/.well-known/evercraft-chum.json": {
