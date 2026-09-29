@@ -8,6 +8,7 @@ on:
       - 'systemia/compute/runtime-node.mjs'
       - 'systemia/compute/local-organism.mjs'
       - 'systemia/compute/eps-social-yard-canary.mjs'
+      - 'systemia/organism/eps-social-continuity.mjs'
       - '.github/workflows/eps-social-yard-canary.yml'
   workflow_dispatch:
 
