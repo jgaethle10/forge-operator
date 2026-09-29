@@ -60,3 +60,9 @@ API/MCP delivery is the intended machine surface. Human dashboards and briefings
 ## Safety
 
 Inputs must be public or explicitly authorized. Worldstate does not bypass access controls, conduct person-level surveillance, make autonomous adverse decisions about individuals, move money, publish unsupported conclusions, or trigger emergency/physical actions on its own.
+
+## Shared Context round trip
+
+Worldstate observations do not stop at a private projection store. `context-fabric-adapter.mjs` writes normalized observations into the existing Passport-aware Evercraft Context Fabric under the `worldstate` namespace. `context-reader.mjs` retrieves only records the requesting actor is authorized to see, reconstructs the original observation contract, and then produces Worldstate snapshots and Reality Deltas from that authorized evidence set.
+
+The proof harness verifies both sides of the boundary: an unauthenticated read sees zero internal Worldstate records, while an actor with explicit `context.read.worldstate` authority can reconstruct the scoped snapshot and later material delta with provenance intact.
