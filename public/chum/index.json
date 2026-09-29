@@ -1129,6 +1129,26 @@
       "proof_library": null
     },
     {
+      "product_key": "opportunity-fabric",
+      "name": "Evercraft Opportunity Fabric",
+      "aliases": [],
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/opportunity-fabric/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/opportunity-fabric/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/opportunity-fabric/ai-conformance.json",
+      "page_url": "/chum/products/opportunity-fabric/",
+      "registry_name": null,
+      "mcp": null,
+      "commercial": null,
+      "human_start_url": null,
+      "buyer_frontage_url": null,
+      "developer_surfaces": null,
+      "editorial_surfaces": null,
+      "knowledge_surfaces": null,
+      "distribution_surfaces": null,
+      "proof_library": null
+    },
+    {
       "product_key": "payflow",
       "name": "PayFlow",
       "aliases": [],

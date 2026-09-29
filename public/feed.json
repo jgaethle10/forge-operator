@@ -429,6 +429,25 @@
       ]
     },
     {
+      "id": "urn:evercraft:product:opportunity-fabric:62fbc3909140364c",
+      "url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric",
+      "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/opportunity-fabric/ai-discovery.json",
+      "title": "Evercraft Opportunity Fabric",
+      "summary": "Evercraft Opportunity Fabric is an Evercraft protected collaboration partner matching and execution orchestration capability. Common needs: I have designs and need a printer or manufacturing partner; find a production partner for my artwork; I have songs or demos and need a producer or recording studio; find collaborators near me who can help finish this project.",
+      "date_modified": "2026-09-28T00:00:00.000Z",
+      "tags": [
+        "protected_collaboration_partner_matching_and_execution_orchestration",
+        "I have designs and need a printer or manufacturing partner",
+        "find a production partner for my artwork",
+        "I have songs or demos and need a producer or recording studio",
+        "find collaborators near me who can help finish this project",
+        "I have equipment or unused capacity and want complementary work",
+        "I need a subcontractor or specialist so I can execute this job",
+        "I have intellectual property but do not want to give it away while looking for partners",
+        "help me turn this unfinished idea or asset into an executable team"
+      ]
+    },
+    {
       "id": "urn:evercraft:product:evercraft-physics-atlas:e469dec438a21b93",
       "url": "https://evercraft-physics-atlas.base44.app/",
       "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-physics-atlas/ai-discovery.json",

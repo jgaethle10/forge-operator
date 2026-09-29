@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.syndication-social-queue.v1",
-  "generated_at": "2026-09-28T19:03:48.668Z",
+  "generated_at": "2026-09-29T02:27:24.277Z",
   "bootstrap": false,
   "policy": "Material product changes enter once per content hash. Publishing still requires an authorized destination adapter.",
   "items": [
@@ -1052,6 +1052,16 @@
       "discovery_path": "/chum/products/little-red-book-export-qa/ai-discovery.json",
       "text": "Little Red Studio Book Export QA: Little Red Studio Book Export QA is an Evercraft book export preflight and cover geometry qa capability. Common needs: check if my book is ready for KDP; validate my cover dimensions; audit this paperback export; is my book file ready to publish.",
       "content_sha256": "a3e2ac942438ca5591a5af0bdc3c16b5fb89620e656b9a964665dae67eeb7796",
+      "requires_authorized_destination": true
+    },
+    {
+      "dedupe_key": "opportunity-fabric:62fbc3909140364ca6a96467b690b727a85cbf6ae8fac3875669d44e29a6f8ed",
+      "product_key": "opportunity-fabric",
+      "name": "Evercraft Opportunity Fabric",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric",
+      "discovery_path": "/chum/products/opportunity-fabric/ai-discovery.json",
+      "text": "Evercraft Opportunity Fabric: Evercraft Opportunity Fabric is an Evercraft protected collaboration partner matching and execution orchestration capability. Common needs: I have designs and need a printer or manufacturing partner; find a production partner for my artwork; I have songs or demos and need a producer or recording studio; find collaborators near me who can help finish this project.",
+      "content_sha256": "62fbc3909140364ca6a96467b690b727a85cbf6ae8fac3875669d44e29a6f8ed",
       "requires_authorized_destination": true
     },
     {

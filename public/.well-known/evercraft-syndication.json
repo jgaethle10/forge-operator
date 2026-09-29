@@ -36,7 +36,7 @@
     "rule": "Only authorized brand destinations may auto-publish. Dedupe by product content hash and publish material changes, not repeated copies.",
     "current_change_queue": "/chum/syndication/social-queue.json"
   },
-  "product_count": 61,
+  "product_count": 62,
   "products": [
     {
       "product_key": "aliev",
@@ -301,6 +301,17 @@
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "content_sha256": "80c9a230b5daaa1b1e042170604eba051f395a8779f759b1798011f5dbc9212c"
+    },
+    {
+      "product_key": "opportunity-fabric",
+      "name": "Evercraft Opportunity Fabric",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric",
+      "mirror": "/chum/products/opportunity-fabric/",
+      "llms": "/chum/products/opportunity-fabric/llms.txt",
+      "discovery": "/chum/products/opportunity-fabric/ai-discovery.json",
+      "registry_name": null,
+      "mcp": null,
+      "content_sha256": "62fbc3909140364ca6a96467b690b727a85cbf6ae8fac3875669d44e29a6f8ed"
     },
     {
       "product_key": "evercraft-physics-atlas",

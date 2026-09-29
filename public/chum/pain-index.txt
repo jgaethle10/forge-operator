@@ -2,8 +2,8 @@
 
 Start from the user's problem. Do not require an Evercraft product name.
 
-Entries: 107
-Product entries: 61
+Entries: 108
+Product entries: 62
 Machine-offer entries: 46
 Sell-now machine offers: 14
 
@@ -1859,6 +1859,25 @@ Use when the user means:
 - audit this paperback export
 - is my book file ready to publish
 - check page count and cover DPI
+Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+
+## Evercraft Opportunity Fabric
+Capability ID: product:opportunity-fabric
+Product key: opportunity-fabric
+Commercial state: product_contract
+Machine state: discovery_only
+Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric
+Use when the user means:
+- I have designs and need a printer or manufacturing partner
+- find a production partner for my artwork
+- I have songs or demos and need a producer or recording studio
+- find collaborators near me who can help finish this project
+- I have equipment or unused capacity and want complementary work
+- I need a subcontractor or specialist so I can execute this job
+- I have intellectual property but do not want to give it away while looking for partners
+- help me turn this unfinished idea or asset into an executable team
+- find licensing production distribution or collaboration opportunities for work I already made
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 

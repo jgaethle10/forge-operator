@@ -20,11 +20,11 @@
     "provider_publication_is_not_endorsement_or_pickup_proof": true
   },
   "summary": {
-    "pain_index_entries": 107,
-    "unique_user_phrases": 904,
-    "mapped_candidate_edges": 1009,
+    "pain_index_entries": 108,
+    "unique_user_phrases": 913,
+    "mapped_candidate_edges": 1018,
     "ambiguous_phrases": 105,
-    "product_candidates": 61,
+    "product_candidates": 62,
     "machine_offer_candidates": 46
   },
   "doors": [
@@ -6944,6 +6944,29 @@
       ]
     },
     {
+      "answer_id": "intent:a53975f087",
+      "user_language": "find a production partner for my artwork",
+      "normalized": "find a production partner for my artwork",
+      "relative_json": "/chum/answers/doors/find-a-production-partner-for-my-artwork-a53975f087.json",
+      "relative_page": "/chum/answers/doors/find-a-production-partner-for-my-artwork-a53975f087/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-a-production-partner-for-my-artwork-a53975f087.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:opportunity-fabric",
+          "kind": "product",
+          "product_key": "opportunity-fabric",
+          "public_id": null,
+          "name": "Evercraft Opportunity Fabric",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/opportunity-fabric/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:4be38e27cb",
       "user_language": "find a replacement for an obsolete part",
       "normalized": "find a replacement for an obsolete part",
@@ -7100,6 +7123,29 @@
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/deck-capital-fit-sprint-machine-v1/",
           "public_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:e0a9623be6",
+      "user_language": "find collaborators near me who can help finish this project",
+      "normalized": "find collaborators near me who can help finish this project",
+      "relative_json": "/chum/answers/doors/find-collaborators-near-me-who-can-help-finish-this-project-e0a9623be6.json",
+      "relative_page": "/chum/answers/doors/find-collaborators-near-me-who-can-help-finish-this-project-e0a9623be6/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-collaborators-near-me-who-can-help-finish-this-project-e0a9623be6.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:opportunity-fabric",
+          "kind": "product",
+          "product_key": "opportunity-fabric",
+          "public_id": null,
+          "name": "Evercraft Opportunity Fabric",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/opportunity-fabric/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric",
           "registry_name": null
         }
       ]
@@ -7377,6 +7423,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/space-dudz/",
           "public_url": "https://spacedudz.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:5711d10a51",
+      "user_language": "find licensing production distribution or collaboration opportunities for work I already made",
+      "normalized": "find licensing production distribution or collaboration opportunities for work i already made",
+      "relative_json": "/chum/answers/doors/find-licensing-production-distribution-or-collaboration-opportunities-for-work-i-a-5711d10a51.json",
+      "relative_page": "/chum/answers/doors/find-licensing-production-distribution-or-collaboration-opportunities-for-work-i-a-5711d10a51/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-licensing-production-distribution-or-collaboration-opportunities-for-work-i-a-5711d10a51.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:opportunity-fabric",
+          "kind": "product",
+          "product_key": "opportunity-fabric",
+          "public_id": null,
+          "name": "Evercraft Opportunity Fabric",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/opportunity-fabric/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric",
           "registry_name": null
         }
       ]
@@ -9077,6 +9146,29 @@
       ]
     },
     {
+      "answer_id": "intent:ddff6c3be7",
+      "user_language": "help me turn this unfinished idea or asset into an executable team",
+      "normalized": "help me turn this unfinished idea or asset into an executable team",
+      "relative_json": "/chum/answers/doors/help-me-turn-this-unfinished-idea-or-asset-into-an-executable-team-ddff6c3be7.json",
+      "relative_page": "/chum/answers/doors/help-me-turn-this-unfinished-idea-or-asset-into-an-executable-team-ddff6c3be7/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/help-me-turn-this-unfinished-idea-or-asset-into-an-executable-team-ddff6c3be7.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:opportunity-fabric",
+          "kind": "product",
+          "product_key": "opportunity-fabric",
+          "public_id": null,
+          "name": "Evercraft Opportunity Fabric",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/opportunity-fabric/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:33f9cbc5b5",
       "user_language": "help modernize a JDE World or custom IBM i workload without losing business behavior",
       "normalized": "help modernize a jde world or custom ibm i workload without losing business behavior",
@@ -9746,6 +9838,98 @@
       ]
     },
     {
+      "answer_id": "intent:5578781874",
+      "user_language": "I have designs and need a printer or manufacturing partner",
+      "normalized": "i have designs and need a printer or manufacturing partner",
+      "relative_json": "/chum/answers/doors/i-have-designs-and-need-a-printer-or-manufacturing-partner-5578781874.json",
+      "relative_page": "/chum/answers/doors/i-have-designs-and-need-a-printer-or-manufacturing-partner-5578781874/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/i-have-designs-and-need-a-printer-or-manufacturing-partner-5578781874.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:opportunity-fabric",
+          "kind": "product",
+          "product_key": "opportunity-fabric",
+          "public_id": null,
+          "name": "Evercraft Opportunity Fabric",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/opportunity-fabric/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:0f41f1907a",
+      "user_language": "I have equipment or unused capacity and want complementary work",
+      "normalized": "i have equipment or unused capacity and want complementary work",
+      "relative_json": "/chum/answers/doors/i-have-equipment-or-unused-capacity-and-want-complementary-work-0f41f1907a.json",
+      "relative_page": "/chum/answers/doors/i-have-equipment-or-unused-capacity-and-want-complementary-work-0f41f1907a/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/i-have-equipment-or-unused-capacity-and-want-complementary-work-0f41f1907a.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:opportunity-fabric",
+          "kind": "product",
+          "product_key": "opportunity-fabric",
+          "public_id": null,
+          "name": "Evercraft Opportunity Fabric",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/opportunity-fabric/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:d66ff15804",
+      "user_language": "I have intellectual property but do not want to give it away while looking for partners",
+      "normalized": "i have intellectual property but do not want to give it away while looking for partners",
+      "relative_json": "/chum/answers/doors/i-have-intellectual-property-but-do-not-want-to-give-it-away-while-looking-for-par-d66ff15804.json",
+      "relative_page": "/chum/answers/doors/i-have-intellectual-property-but-do-not-want-to-give-it-away-while-looking-for-par-d66ff15804/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/i-have-intellectual-property-but-do-not-want-to-give-it-away-while-looking-for-par-d66ff15804.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:opportunity-fabric",
+          "kind": "product",
+          "product_key": "opportunity-fabric",
+          "public_id": null,
+          "name": "Evercraft Opportunity Fabric",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/opportunity-fabric/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:2c59fff706",
+      "user_language": "I have songs or demos and need a producer or recording studio",
+      "normalized": "i have songs or demos and need a producer or recording studio",
+      "relative_json": "/chum/answers/doors/i-have-songs-or-demos-and-need-a-producer-or-recording-studio-2c59fff706.json",
+      "relative_page": "/chum/answers/doors/i-have-songs-or-demos-and-need-a-producer-or-recording-studio-2c59fff706/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/i-have-songs-or-demos-and-need-a-producer-or-recording-studio-2c59fff706.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:opportunity-fabric",
+          "kind": "product",
+          "product_key": "opportunity-fabric",
+          "public_id": null,
+          "name": "Evercraft Opportunity Fabric",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/opportunity-fabric/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:523390b128",
       "user_language": "I just had a baby and need practical help",
       "normalized": "i just had a baby and need practical help",
@@ -9856,6 +10040,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/revenue-war-map/",
           "public_url": "https://evercraft-war-map.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:90f2030945",
+      "user_language": "I need a subcontractor or specialist so I can execute this job",
+      "normalized": "i need a subcontractor or specialist so i can execute this job",
+      "relative_json": "/chum/answers/doors/i-need-a-subcontractor-or-specialist-so-i-can-execute-this-job-90f2030945.json",
+      "relative_page": "/chum/answers/doors/i-need-a-subcontractor-or-specialist-so-i-can-execute-this-job-90f2030945/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/i-need-a-subcontractor-or-specialist-so-i-can-execute-this-job-90f2030945.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:opportunity-fabric",
+          "kind": "product",
+          "product_key": "opportunity-fabric",
+          "public_id": null,
+          "name": "Evercraft Opportunity Fabric",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/opportunity-fabric/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric",
           "registry_name": null
         }
       ]

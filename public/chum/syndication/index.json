@@ -664,6 +664,34 @@
       "updated_at": "2026-09-28T00:00:00.000Z"
     },
     {
+      "product_key": "opportunity-fabric",
+      "name": "Evercraft Opportunity Fabric",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric",
+      "mirror_path": "/chum/products/opportunity-fabric/",
+      "llms_path": "/chum/products/opportunity-fabric/llms.txt",
+      "discovery_path": "/chum/products/opportunity-fabric/ai-discovery.json",
+      "registry_name": "",
+      "mcp": "",
+      "class": "protected_collaboration_partner_matching_and_execution_orchestration",
+      "intents": [
+        "I have designs and need a printer or manufacturing partner",
+        "find a production partner for my artwork",
+        "I have songs or demos and need a producer or recording studio",
+        "find collaborators near me who can help finish this project",
+        "I have equipment or unused capacity and want complementary work",
+        "I need a subcontractor or specialist so I can execute this job",
+        "I have intellectual property but do not want to give it away while looking for partners",
+        "help me turn this unfinished idea or asset into an executable team",
+        "find licensing production distribution or collaboration opportunities for work I already made"
+      ],
+      "authority": "public capability discovery and metadata-first partner matching architecture; no public protected-asset disclosure or payment authority is claimed",
+      "human_confirmation_required": true,
+      "commercial_status": "",
+      "description": "Evercraft Opportunity Fabric is an Evercraft protected collaboration partner matching and execution orchestration capability. Common needs: I have designs and need a printer or manufacturing partner; find a production partner for my artwork; I have songs or demos and need a producer or recording studio; find collaborators near me who can help finish this project.",
+      "content_sha256": "62fbc3909140364ca6a96467b690b727a85cbf6ae8fac3875669d44e29a6f8ed",
+      "updated_at": "2026-09-28T00:00:00.000Z"
+    },
+    {
       "product_key": "evercraft-physics-atlas",
       "name": "Evercraft Physics Atlas",
       "canonical_url": "https://evercraft-physics-atlas.base44.app/",

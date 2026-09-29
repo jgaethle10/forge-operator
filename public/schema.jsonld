@@ -597,6 +597,18 @@
     },
     {
       "@type": "Service",
+      "@id": "https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric#evercraft-service",
+      "name": "Evercraft Opportunity Fabric",
+      "alternateName": [],
+      "url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "protected_collaboration_partner_matching_and_execution_orchestration",
+      "description": "I have designs and need a printer or manufacturing partner; find a production partner for my artwork; I have songs or demos and need a producer or recording studio; find collaborators near me who can help finish this project"
+    },
+    {
+      "@type": "Service",
       "@id": "https://pay-flow-fix.base44.app/#evercraft-service",
       "name": "PayFlow",
       "alternateName": [],

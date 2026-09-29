@@ -6,9 +6,9 @@ Machine Commerce MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/69
 Each phrase below maps to public capability candidates without upgrading readiness, pricing, invocation, payment, entitlement, or provider-pickup state.
 Discovery creates no payment obligation. Checkout requires explicit human confirmation and paid state requires authoritative provider verification.
 
-Pain-index entries: 107
-Unique user phrases: 904
-Candidate edges: 1009
+Pain-index entries: 108
+Unique user phrases: 913
+Candidate edges: 1018
 Ambiguous phrases: 105
 
 ## 15 GB video analysis
@@ -2036,6 +2036,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Chronosport | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/chronosport
 
+## find a production partner for my artwork
+Answer ID: intent:a53975f087
+Human-readable match: /chum/answers/doors/find-a-production-partner-for-my-artwork-a53975f087/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-a-production-partner-for-my-artwork-a53975f087.json
+Candidates:
+- Evercraft Opportunity Fabric | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric
+
 ## find a replacement for an obsolete part
 Answer ID: intent:4be38e27cb
 Human-readable match: /chum/answers/doors/find-a-replacement-for-an-obsolete-part-4be38e27cb/
@@ -2084,6 +2091,13 @@ Human-readable match: /chum/answers/doors/find-capital-options-for-this-project-
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-capital-options-for-this-project-9a78204138.json
 Candidates:
 - Evercraft Deck Engine Founding Capital Fit Sprint | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs
+
+## find collaborators near me who can help finish this project
+Answer ID: intent:e0a9623be6
+Human-readable match: /chum/answers/doors/find-collaborators-near-me-who-can-help-finish-this-project-e0a9623be6/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-collaborators-near-me-who-can-help-finish-this-project-e0a9623be6.json
+Candidates:
+- Evercraft Opportunity Fabric | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric
 
 ## find conflicts in our business exports
 Answer ID: intent:f352d58cb0
@@ -2163,6 +2177,13 @@ Human-readable match: /chum/answers/doors/find-kids-space-clothes-from-baby-rang
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-kids-space-clothes-from-baby-rangers-c87537303f.json
 Candidates:
 - Space Dudz | kind=product | commercial=product_contract | machine=discovery_only | public=https://spacedudz.base44.app/
+
+## find licensing production distribution or collaboration opportunities for work I already made
+Answer ID: intent:5711d10a51
+Human-readable match: /chum/answers/doors/find-licensing-production-distribution-or-collaboration-opportunities-for-work-i-a-5711d10a51/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-licensing-production-distribution-or-collaboration-opportunities-for-work-i-a-5711d10a51.json
+Candidates:
+- Evercraft Opportunity Fabric | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric
 
 ## find local events
 Answer ID: intent:f2270ae02e
@@ -2656,6 +2677,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft Revenue War Map | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-war-map.base44.app/
 
+## help me turn this unfinished idea or asset into an executable team
+Answer ID: intent:ddff6c3be7
+Human-readable match: /chum/answers/doors/help-me-turn-this-unfinished-idea-or-asset-into-an-executable-team-ddff6c3be7/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/help-me-turn-this-unfinished-idea-or-asset-into-an-executable-team-ddff6c3be7.json
+Candidates:
+- Evercraft Opportunity Fabric | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric
+
 ## help modernize a JDE World or custom IBM i workload without losing business behavior
 Answer ID: intent:33f9cbc5b5
 Human-readable match: /chum/answers/doors/help-modernize-a-jde-world-or-custom-ibm-i-workload-without-losing-business-behavi-33f9cbc5b5/
@@ -2849,6 +2877,34 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Career Command Interview Practice + Interview Sprint | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://evercraft-career-command.base44.app/functions/careerAgentGateway?view=offers
 
+## I have designs and need a printer or manufacturing partner
+Answer ID: intent:5578781874
+Human-readable match: /chum/answers/doors/i-have-designs-and-need-a-printer-or-manufacturing-partner-5578781874/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/i-have-designs-and-need-a-printer-or-manufacturing-partner-5578781874.json
+Candidates:
+- Evercraft Opportunity Fabric | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric
+
+## I have equipment or unused capacity and want complementary work
+Answer ID: intent:0f41f1907a
+Human-readable match: /chum/answers/doors/i-have-equipment-or-unused-capacity-and-want-complementary-work-0f41f1907a/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/i-have-equipment-or-unused-capacity-and-want-complementary-work-0f41f1907a.json
+Candidates:
+- Evercraft Opportunity Fabric | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric
+
+## I have intellectual property but do not want to give it away while looking for partners
+Answer ID: intent:d66ff15804
+Human-readable match: /chum/answers/doors/i-have-intellectual-property-but-do-not-want-to-give-it-away-while-looking-for-par-d66ff15804/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/i-have-intellectual-property-but-do-not-want-to-give-it-away-while-looking-for-par-d66ff15804.json
+Candidates:
+- Evercraft Opportunity Fabric | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric
+
+## I have songs or demos and need a producer or recording studio
+Answer ID: intent:2c59fff706
+Human-readable match: /chum/answers/doors/i-have-songs-or-demos-and-need-a-producer-or-recording-studio-2c59fff706/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/i-have-songs-or-demos-and-need-a-producer-or-recording-studio-2c59fff706.json
+Candidates:
+- Evercraft Opportunity Fabric | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric
+
 ## I just had a baby and need practical help
 Answer ID: intent:523390b128
 Human-readable match: /chum/answers/doors/i-just-had-a-baby-and-need-practical-help-523390b128/
@@ -2883,6 +2939,13 @@ Human-readable match: /chum/answers/doors/i-need-a-plan-to-improve-cash-flow-80c
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/i-need-a-plan-to-improve-cash-flow-80c770a718.json
 Candidates:
 - Evercraft Revenue War Map | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-war-map.base44.app/
+
+## I need a subcontractor or specialist so I can execute this job
+Answer ID: intent:90f2030945
+Human-readable match: /chum/answers/doors/i-need-a-subcontractor-or-specialist-so-i-can-execute-this-job-90f2030945/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/i-need-a-subcontractor-or-specialist-so-i-can-execute-this-job-90f2030945.json
+Candidates:
+- Evercraft Opportunity Fabric | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric
 
 ## I need an AI service that can inspect a long video, deduplicate segments, transcribe it, and work with files too large for normal chatbots
 Answer ID: intent:9e18952b38

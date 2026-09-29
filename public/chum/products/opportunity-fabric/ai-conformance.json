@@ -2,11 +2,7 @@
   "schema": "evercraft.cross-llm-product.v1",
   "product": "Evercraft Opportunity Fabric",
   "product_key": "opportunity-fabric",
-  "aliases": [
-    "Opportunity Fabric",
-    "Evercraft Collaboration Fabric",
-    "Evercraft Execution Network"
-  ],
+  "aliases": [],
   "providers": [
     "chatgpt",
     "claude",
@@ -24,37 +20,25 @@
   "authority": "public capability discovery and metadata-first partner matching architecture; no public protected-asset disclosure or payment authority is claimed",
   "human_confirmation_required": true,
   "boundaries": [
-    "initial matching is metadata-first and must not require protected creative files or confidential material",
-    "uploading, listing, viewing, matching, or accepting a connection does not transfer ownership or grant commercial rights",
-    "protected asset disclosure is not exposed as a public production workflow yet",
-    "the Creator Covenant remains draft_for_counsel_review and must not be described as final legal language",
-    "the Base44 runtime has been privately build-verified but a public deployment URL is not yet claimed",
-    "the fingerprint vault stores SHA-256 plus metadata only in its intended flow; it is evidence support, not copyright registration, patent filing, or dispositive proof of ownership"
+    "public matching must not require protected creative files or confidential material",
+    "uploading listing viewing matching or forming a team does not transfer ownership or grant commercial rights",
+    "protected disclosure remains gated and actual protected-file delivery is not exposed as a public production workflow",
+    "Creator Covenant legal language remains draft_for_counsel_review",
+    "public Base44 deployment URL is not yet claimed",
+    "fingerprint vault evidence support is not copyright registration patent filing or dispositive proof of ownership"
   ],
   "commercial": null,
+  "human_start_url": null,
+  "buyer_frontage_url": null,
   "developer_surfaces": null,
   "editorial_surfaces": null,
   "knowledge_surfaces": null,
   "distribution_surfaces": null,
-  "relationships": [
-    {
-      "type": "orchestrated_by",
-      "product": "Systemia"
-    },
-    {
-      "type": "discovered_by",
-      "product": "CHUM"
-    },
-    {
-      "type": "adjacent_to",
-      "product": "Talent Atlas"
-    }
-  ],
+  "relationships": null,
+  "proof_library": null,
   "provider_behavior_state": "not_inferred_from_publication",
   "machine_commerce_handoff_state": null,
   "machine_commerce_public_id": null,
   "machine_commerce_tool": null,
-  "live_canary_evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/systemia/opportunity-fabric/runtime.json",
-  "runtime_state": "base44_private_build_lint_and_vite_build_verified",
-  "public_release_state": "pending"
+  "live_canary_evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/systemia/opportunity-fabric/runtime.json"
 }
