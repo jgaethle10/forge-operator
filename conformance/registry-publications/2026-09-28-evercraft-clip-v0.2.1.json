@@ -1,0 +1,23 @@
+{
+  "schema_version": "evercraft.registry-publication.receipt.v1",
+  "product_key": "evercraft-clip",
+  "registry": "Official MCP Registry",
+  "registry_name": "io.github.jgaethle10/evercraft-clip",
+  "version": "0.2.1",
+  "manifest": "mcp-registry/evercraft-clip.json",
+  "remote": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp",
+  "workflow": {
+    "name": "Publish MCP Registry manifests",
+    "run_id": 36495136179,
+    "publish_job_id": 109173470977,
+    "release_sha": "b0c7b95f8a618b1d230477b92a277ad7480616e9",
+    "conclusion": "success"
+  },
+  "published_at_utc": "2026-09-28T22:57:20Z",
+  "proof": {
+    "official_registry_publish": "success",
+    "publisher_output": "Server io.github.jgaethle10/evercraft-clip version 0.2.1"
+  },
+  "evidence_state": "receipt_backed",
+  "truth_boundary": "Proves Official MCP Registry publication of Evercraft Clip 0.2.1. Does not prove provider recommendation, checkout activation, payment, customer render, social publication, or revenue."
+}

@@ -1,0 +1,38 @@
+{
+  "schema_version": "evercraft.runtime-observation.v1",
+  "product_key": "evercraft-clip",
+  "observed_on": "2026-09-28",
+  "runtime_generation": "clip_production_engine_v2",
+  "checkpoint": {
+    "base44_checkpoint_id": "6abb1ec4bf5ad1ecb5b05a78",
+    "base44_git_commit": "dcb06dc5585ab41fc56f91921efa0f1128f70e25"
+  },
+  "public_gateway": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway",
+  "checkout_gateway": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipCheckoutGateway",
+  "official_registry": {
+    "name": "io.github.jgaethle10/evercraft-clip",
+    "version": "0.2.1",
+    "publication_state": "published_receipt_backed"
+  },
+  "commerce": {
+    "amount_cents": 499,
+    "currency": "usd",
+    "checkout_control_plane": "implemented_authenticated_human_flow",
+    "checkout_configured": false,
+    "explicit_human_confirmation_required": true,
+    "checkout_creation_is_payment_proof": false,
+    "paid_state_requires_provider_verification": true,
+    "payment_verification": "stripe_session_reread_paid_complete_exact_amount_currency_and_order_metadata",
+    "agent_checkout_authority": false,
+    "sell_now": false
+  },
+  "creative_runtime": {
+    "registry_discovery_smoke": "CLIP_DISCOVERY_CONTRACT_PASS",
+    "render_smoke": "CLIP_V2_RENDER_SMOKE_PASS",
+    "checkout_smoke": "CLIP_CHECKOUT_CONTRACT_PASS",
+    "performance_learning_policy": "CLIP_PERFORMANCE_LEARNING_POLICY_PASS",
+    "performance_learning_role": "weak observational tiebreaker only",
+    "performance_learning_truth_boundary": "truth, context, safety and diversity outrank engagement"
+  },
+  "truth_boundary": "Customer Studio, checkout control plane and Clip V2 are deployed. Server-side payment authority observed checkout_configured=false, so this is not a buy-now, payment, customer, or revenue receipt."
+}
