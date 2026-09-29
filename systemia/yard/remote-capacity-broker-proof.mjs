@@ -166,6 +166,92 @@ try {
   );
   assert.ok(grant.control_grant_receipt_hash);
 
+  const remoteSpecialist = await yard.deployRelease({
+    deploymentId:'remote-specialist-relay-proof',
+    releaseRef,
+    workloadClass:'systemia.specialist-handoff-mcp.v1',
+    capacityEndpoint:grant.capacity_endpoint,
+    allocatorToken:grant.allocator_token,
+    input:{
+      gateway_url:'https://example.invalid/machine-commerce',
+      fabric_mcp_path:'/mcp',
+    },
+    rollbackTarget:'proof:remote-specialist-previous',
+    leaseTtlMs:120_000,
+  });
+  assert.equal(remoteSpecialist.state,'ready');
+  assert.equal(remoteSpecialist.receipt.capacity_node_id,remoteSeed.node_id);
+  assert.equal(remoteSpecialist.result.read_only_specialist_handoff,true);
+
+  const serviceRelay=await yard.createRemoteServiceRelay(
+    'remote-capacity-broker-proof',
+    {
+      nodeId:remoteSeed.node_id,
+      serviceId:remoteSpecialist.result.service_id,
+      ttlMs:120_000,
+      allowLoopbackProof:true,
+    }
+  );
+  assert.equal(serviceRelay.schema,'evercraft.yard.remote-service-relay.v1');
+  assert.equal(serviceRelay.remote_node_id,remoteSeed.node_id);
+  assert.equal(serviceRelay.remote_service_id,remoteSpecialist.result.service_id);
+  assert.equal(serviceRelay.allocator_token_exposed,false);
+  assert.equal(serviceRelay.relay_token_persisted,false);
+  assert.ok(serviceRelay.relay_token);
+  assert.notEqual(serviceRelay.relay_token,grant.allocator_token);
+  assert.match(serviceRelay.relay_url,/\/v1\/remote\/service-relays\/relay_[a-f0-9]+\/proxy$/);
+
+  const relayedHealthEnvelope=await fetch(serviceRelay.relay_url,{
+    method:'POST',
+    headers:{
+      authorization:'Bearer '+serviceRelay.relay_token,
+      'content-type':'application/json',
+    },
+    body:JSON.stringify({
+      method:'GET',
+      path:'/health',
+      headers:{accept:'application/json'},
+      body_base64:'',
+    }),
+  }).then(async(response)=>({
+    status:response.status,
+    body:await response.json(),
+  }));
+  assert.equal(relayedHealthEnvelope.status,200);
+  assert.equal(relayedHealthEnvelope.body.ok,true);
+  assert.equal(relayedHealthEnvelope.body.status,200);
+  const relayedHealth=JSON.parse(
+    Buffer.from(relayedHealthEnvelope.body.body_base64,'base64').toString('utf8')
+  );
+  assert.equal(relayedHealth.ok,true);
+  assert.equal(relayedHealth.service,'specialist-handoff-mcp');
+  assert.equal(relayedHealth.instance_id,remoteSpecialist.result.instance_id);
+  assert.equal(
+    relayedHealth.deployment_receipt_ref,
+    remoteSpecialist.receipt.receipt_hash
+  );
+
+  const relayRelease=await yard.releaseRemoteServiceRelay(
+    'remote-capacity-broker-proof',
+    serviceRelay.relay_id,
+    {reason:'proof_complete'}
+  );
+  assert.equal(relayRelease.released,true);
+
+  const afterRelease=await fetch(serviceRelay.relay_url,{
+    method:'POST',
+    headers:{
+      authorization:'Bearer '+serviceRelay.relay_token,
+      'content-type':'application/json',
+    },
+    body:JSON.stringify({method:'GET',path:'/health',headers:{},body_base64:''}),
+  });
+  assert.equal(afterRelease.status,401);
+
+  await yard.stopDeployment('remote-specialist-relay-proof',{
+    reason:'proof_remote_relay_complete',
+  });
+
   const brokerRecordRaw = fs.readFileSync(
     path.join(yardState, 'remote-capacity-broker-proof.json'),
     'utf8'
@@ -217,6 +303,9 @@ try {
     safe_inventory_exposes_no_control_token:true,
     private_node_opens_public_ingress: false,
     yard_remote_deployment_through_broker_workload: true,
+    scoped_remote_service_relay_through_yard:true,
+    relay_token_distinct_from_control_grant:true,
+    relay_revocation_proven:true,
     secure_envelope_schema: 'evercraft.secure-envelope.v1',
     verified_public_https_route: false,
     named_cloud_required: false,
