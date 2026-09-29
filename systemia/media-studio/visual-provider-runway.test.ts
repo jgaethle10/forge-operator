@@ -63,7 +63,7 @@ test('Runway adapter executes text-to-video and captures output locally',async()
   };
   const outputDir=fs.mkdtempSync(path.join(os.tmpdir(),'fallen-runway-'));
   const adapter=createRunwayGen45Adapter({
-    apiKey:'test-key',outputDir,verified:true,commercialRights:'allowed',
+    apiKey:'test-key',outputDir,verified:true,commercialRights:'allowed',allowPaidGeneration:true,
     pollIntervalMs:0,maxPolls:3,fetchImpl:fetchImpl as any,
   });
   const receipt=await adapter.execute(baseJob);
@@ -86,7 +86,7 @@ test('Runway start frame accepts a URL and becomes promptImage',async()=>{
   const adapter=createRunwayGen45Adapter({
     apiKey:'test-key',
     outputDir:fs.mkdtempSync(path.join(os.tmpdir(),'fallen-runway-ref-')),
-    verified:true,commercialRights:'allowed',pollIntervalMs:0,maxPolls:1,
+    verified:true,commercialRights:'allowed',allowPaidGeneration:true,pollIntervalMs:0,maxPolls:1,
     fetchImpl:fetchImpl as any,
   });
   await adapter.execute({
@@ -101,7 +101,7 @@ test('Runway start frame accepts a URL and becomes promptImage',async()=>{
 
 test('unsupported end-frame contract fails before any paid request',async()=>{
   const adapter=createRunwayGen45Adapter({
-    apiKey:'test-key',outputDir:os.tmpdir(),verified:true,commercialRights:'allowed',
+    apiKey:'test-key',outputDir:os.tmpdir(),verified:true,commercialRights:'allowed',allowPaidGeneration:true,
     fetchImpl:(async()=>{throw new Error('network should not run');}) as any,
   });
   await assert.rejects(()=>adapter.execute({
@@ -111,4 +111,13 @@ test('unsupported end-frame contract fails before any paid request',async()=>{
       locator:{kind:'url',value:'https://assets.example/end.png'}
     }]
   }),/runway_gen45_end_frame_not_supported/);
+});
+
+
+test('paid generation requires an explicit execution authorization',async()=>{
+  const adapter=createRunwayGen45Adapter({
+    apiKey:'test-key',outputDir:os.tmpdir(),verified:true,commercialRights:'allowed',
+    fetchImpl:(async()=>{throw new Error('network should not run');}) as any,
+  });
+  await assert.rejects(()=>adapter.execute(baseJob),/runway_paid_generation_not_authorized/);
 });
