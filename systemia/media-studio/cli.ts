@@ -15,6 +15,7 @@ import type { CreativeCouncilInventory, CreativeCouncilReconciliation } from './
 import { compileSeriesEpisode } from './series.js';
 import { buildVisualStageHtml } from './visual-stage-html.js';
 import { compileWorldIntelStage, type WorldIntelStageInput } from './world-intel-stage.js';
+import { compileJournalEducationStage, type JournalFallenProductionBrief } from './journal-education.js';
 import type { VisualStage } from './visual-stage.js';
 import { buildDistributedRenderPlan, type RenderAssetManifestRow } from './distributed-render.js';
 import type { FilmPlan, MediaProject, SeriesBible, SeriesEpisodePlan } from './types.js';
@@ -59,6 +60,7 @@ function usage() {
     '  npm run media:studio -- explore <creative-bundle.json> <exploration-batch.json>',
     '  npm run media:studio -- stage <visual-stage.json> <stage.html>',
     '  npm run media:studio -- world-intel <story.json> <visual-stage.json> [stage.html]',
+    '  npm run media:studio -- journal-story <journal-brief.json> <visual-stage.json> [receipt.json]',
     '  npm run media:studio -- render-plan <render-plan-input.json> <distributed-plan.json>',
     '  npm run media:studio -- studio-room <room.json> <visual-stage.json>',
     '  npm run media:studio -- studio-journey <journey.json> <journey-plan.json>',
@@ -72,6 +74,21 @@ function main() {
 
   if (!command || command === '--help' || command === '-h') {
     usage();
+    return;
+  }
+
+  if (command === 'journal-story') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const brief = readJson<JournalFallenProductionBrief>(input);
+    const bundle = compileJournalEducationStage(brief);
+    writeJson(output, bundle.stage);
+    if (optionalPlan) writeJson(optionalPlan, bundle.receipt);
+    console.log(`Journal education stage created: ${path.resolve(output)}`);
+    if (optionalPlan) console.log(`Journal/Fallen receipt created: ${path.resolve(optionalPlan)}`);
     return;
   }
 

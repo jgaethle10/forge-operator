@@ -154,6 +154,20 @@ Run the bounded Saban proof:
 npm run proof:saban-fallen-tournament
 ```
 
+## Journal education bridge
+
+Fallen can now accept the canonical Evercraft Journal production contract `evercraft.fallen.journal.production.v1` and compile a render-ready world-intelligence Visual Stage without granting publication authority.
+
+The bridge is deliberately fail-closed. It requires package, mission and work identity; source and evidence lineage; a releasable freshness state; fresh volatile claims; resolved visual-rights state; and visual-layer source references that are already present in the approved Journal package. Stale, contradicted, unknown or out-of-package current-state evidence is rejected before the visual stage is created.
+
+Compile a Journal package into a Fallen stage:
+
+```bash
+npm run media:studio -- journal-story ./tmp/journal-brief.json ./tmp/journal-stage.json ./tmp/journal-stage.receipt.json
+```
+
+The resulting receipt binds the Journal package identity to the Fallen stage and explicitly sets `publication_authority: false`. Rendering and Evercraft Clip distribution remain separate downstream gates.
+
 ## Visual Stage
 
 Fallen now has a deterministic layered graphics surface above the legacy clip concatenator. A visual stage contains a virtual camera plus independently animated media, text, shape, geo, metric and timeline layers. Layers support local translation, scale, rotation, perspective, parallax and evidence state.
