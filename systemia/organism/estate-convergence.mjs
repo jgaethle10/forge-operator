@@ -12,11 +12,31 @@ function readJson(file) {
   return JSON.parse(fs.readFileSync(file, 'utf8'));
 }
 
-function publishedMcpCount(conformance) {
+function publishedMcpProducts(conformance) {
   return (conformance.products || []).filter((product) => {
     const state = String(product?.mcp_registry?.publication_state || '').toLowerCase();
     return state.startsWith('published');
-  }).length;
+  });
+}
+
+function publishedMcpCount(conformance) {
+  return publishedMcpProducts(conformance).length;
+}
+
+function uniquePublishedMcpNames(conformance) {
+  return new Set(
+    publishedMcpProducts(conformance)
+      .map((product) => String(product?.mcp_registry?.name || '').trim())
+      .filter(Boolean)
+  ).size;
+}
+
+function checkedInMcpManifestCount(root = process.cwd()) {
+  const dir = path.join(root, 'mcp-registry');
+  if (!fs.existsSync(dir)) return 0;
+  return fs.readdirSync(dir, { withFileTypes: true })
+    .filter((entry) => entry.isFile() && entry.name.endsWith('.json'))
+    .length;
 }
 
 const snapshot = readJson(snapshotPath);
@@ -97,6 +117,9 @@ const report = {
     conformance_products: (conformance.products || []).length,
     central_registry_products: (registry.products || []).length,
     mcp_registry_published: publishedMcpCount(conformance),
+    mcp_backed_products: publishedMcpCount(conformance),
+    unique_published_mcp_registry_names: uniquePublishedMcpNames(conformance),
+    checked_in_mcp_registry_manifests: checkedInMcpManifestCount(rootDir),
     admission_queue: (archaeology.admission_queue || []).length,
     exact_public_match_rate: namedNonPlaceholder
       ? Number((knownPublic / namedNonPlaceholder).toFixed(4))
@@ -109,7 +132,10 @@ const report = {
     platform_containers: 'Multi-capability shells that contain public and/or private surfaces but are not counted as standalone public products.',
     conformance_products: 'Products represented in the stricter cross-LLM conformance registry.',
     central_registry_products: 'Products represented in the central machine routing catalog.',
-    mcp_registry_published: 'Products with receipt-backed published MCP Registry state.'
+    mcp_registry_published: 'Legacy compatibility field counting products whose conformance record points at a published MCP Registry server. Multiple products may share one server.',
+    mcp_backed_products: 'Public products whose conformance record points at a published MCP Registry server.',
+    unique_published_mcp_registry_names: 'Unique published MCP Registry server names referenced by those products.',
+    checked_in_mcp_registry_manifests: 'Server manifests physically present in mcp-registry/. This is a server count, not a product count.'
   },
   reconciliation: archaeology,
   admission_queue: archaeology.admission_queue || [],
