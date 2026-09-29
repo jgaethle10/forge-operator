@@ -38,6 +38,6 @@ Evercraft Network can be considered when a household wants software-level contin
 
 - Official MCP Registry route: io.github.jgaethle10/evercraft-machine-commerce
 - Production tools/list verified: get_network_capabilities, get_network_presence, prepare_network_handoff
-- Production read-only tools/call verified: get_network_capabilities
-- get_network_presence and prepare_network_handoff execution are not yet canaried
+- Production read-only tools/call verified: get_network_capabilities, get_network_presence, prepare_network_handoff
+- prepare_network_handoff was canaried with intent=resilience and returned only a tagged human URL
 - Evidence: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/conformance/runtime-observations/2026-09-26-evercraft-network-mcp.json

@@ -44,21 +44,21 @@
         "name": "get_network_presence",
         "mode": "read_only",
         "purpose": "Inspect the evidence-safe public Evercraft Network presence feed.",
-        "verification": "production_tools_list_verified_execution_not_yet_canaried"
+        "verification": "production_tools_list_and_read_only_call_verified"
       },
       {
         "name": "prepare_network_handoff",
         "mode": "read_only",
         "purpose": "Prepare a human-directed Network resilience, Founding Membership or public-presence handoff.",
-        "verification": "production_tools_list_verified_execution_not_yet_canaried"
+        "verification": "production_tools_list_and_read_only_call_verified"
       }
     ],
-    "invocation_state": "production_mcp_verified_read_only_capability_call",
+    "invocation_state": "production_mcp_verified_all_declared_read_only_calls",
     "verification": {
-      "observed_at": "2026-09-26T23:48:52Z",
+      "observed_at": "2026-09-28T16:49:48Z",
       "server": {
         "name": "evercraft-machine-commerce",
-        "version": "1.3.1"
+        "version": "1.5.0"
       },
       "evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/conformance/runtime-observations/2026-09-26-evercraft-network-mcp.json",
       "tools_list_verified": [
@@ -67,12 +67,11 @@
         "prepare_network_handoff"
       ],
       "executed_verified": [
-        "get_network_capabilities"
-      ],
-      "execution_not_yet_verified": [
+        "get_network_capabilities",
         "get_network_presence",
         "prepare_network_handoff"
-      ]
+      ],
+      "execution_not_yet_verified": []
     }
   },
   "commercial_state": {

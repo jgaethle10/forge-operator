@@ -1,11 +1,11 @@
 {
   "schema": "evercraft.network.live-mcp-evidence.v1",
-  "observed_at": "2026-09-26T23:48:52Z",
+  "observed_at": "2026-09-28T16:49:48Z",
   "product_key": "evercraft-network",
   "endpoint": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
   "server_info": {
     "name": "evercraft-machine-commerce",
-    "version": "1.3.1"
+    "version": "1.5.0"
   },
   "verification": {
     "initialize": "pass",
@@ -19,37 +19,49 @@
     },
     "live_read_only_call": {
       "tool": "get_network_capabilities",
-      "status": "pass",
-      "has_result": true,
-      "is_error": false,
-      "structured_content_present": true,
-      "content_types": [
-        "text"
-      ]
-    }
+      "status": "pass"
+    },
+    "live_read_only_calls": [
+      {
+        "tool": "get_network_capabilities",
+        "status": "pass"
+      },
+      {
+        "tool": "get_network_presence",
+        "status": "pass"
+      },
+      {
+        "tool": "prepare_network_handoff",
+        "status": "pass",
+        "arguments": {
+          "intent": "resilience",
+          "source": "evercraft-network-canary"
+        }
+      }
+    ]
   },
   "github_actions": {
     "workflow": "Evercraft Network MCP Canary",
-    "workflow_run_id": 36280593232,
-    "workflow_run_url": "https://github.com/jgaethle10/forge-operator/actions/runs/36280593232",
-    "head_sha": "49bff41914433fae822c7e721fa76ec1ef374ff4",
+    "workflow_run_id": 36453822266,
+    "workflow_run_url": "https://github.com/jgaethle10/forge-operator/actions/runs/36453822266",
+    "head_sha": "d172f91b1fabefd1d18df0703198727217b13e5c",
     "conclusion": "success",
     "artifact": {
-      "id": 10918167735,
+      "id": 10984138652,
       "name": "evercraft-network-public-mcp-canary",
-      "digest": "sha256:2f29bde87952d89399f7df09d05792b3b250bc1e12eba38e27b63747d9565ce8",
-      "expires_at": "2026-12-25T23:48:45Z"
+      "digest": "sha256:1f54a21386b264f8773bb15e9c118ab64505e96a2d8a08f61a3992d6a9ec0211",
+      "expires_at": "2026-12-27T16:49:38Z"
     }
   },
   "verified": [
     "dedicated Evercraft Network MCP Canary completed successfully",
-    "production MCP initialize returned serverInfo for evercraft-machine-commerce v1.3.1",
+    "production MCP initialize returned serverInfo for evercraft-machine-commerce v1.5.0",
     "production tools/list exposed all three declared Evercraft Network tools",
-    "production get_network_capabilities read-only call returned a non-error result"
+    "production get_network_capabilities read-only tool call returned a non-error result",
+    "production get_network_presence read-only tool call returned a non-error result",
+    "production prepare_network_handoff read-only tool call returned a non-error result"
   ],
   "not_verified": [
-    "get_network_presence tool execution",
-    "prepare_network_handoff tool execution",
     "device enrollment",
     "payment or paid membership activation",
     "private telemetry access",

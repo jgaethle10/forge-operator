@@ -34,7 +34,7 @@ Declared read-only tools:
 - prepare_network_handoff
 
 Invocation state:
-production MCP verified for initialize + tools/list; get_network_capabilities also passed a live read-only tools/call
+production MCP verified for initialize + tools/list; all three declared Network tools passed live read-only tools/call execution
 
 Machine-readable Network manifest:
 /network/discovery.json
@@ -53,7 +53,8 @@ Well-known Network manifest:
 
 Verification boundary:
 - get_network_capabilities: observed in tools/list and executed successfully as a read-only call.
-- get_network_presence and prepare_network_handoff were observed in production tools/list; execution not yet canaried.
+- get_network_presence: observed in tools/list and executed successfully as a read-only call.
+- prepare_network_handoff: observed in tools/list and executed successfully as a read-only call using intent=resilience; it returned only a tagged human URL.
 - No device enrollment, payment, connectivity control, carrier control, private telemetry access, emergency routing, or coverage guarantee was verified.
 
 ## Truth boundary
