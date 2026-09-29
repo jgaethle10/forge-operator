@@ -44,7 +44,13 @@
       "new_internal_work_fanout_allowed": false,
       "replacement_workflow": "systemia/organism/eps-social-continuity.workflow.json",
       "replacement_scheduler": "systemia/core/resident-supervisor.mjs",
-      "replacement_state": "source_and_supervisor_wiring_present_not_live"
+      "replacement_state": "live_canary_verified_recurring_main_cutover_pending",
+      "live_canary_receipt": "sha256:fc17f8f8a80ca4f2e3ce734d6ad1299f8a87ae94e059515e093efff168343e1e",
+      "live_canary_result": "no_op",
+      "workload_identity": "github_oidc",
+      "named_cloud_required": false,
+      "persistent_runtime_proven": false,
+      "transition_bootstrap": ".github/workflows/eps-social-yard-canary.yml"
     }
   ],
   "cutover_gates": [
