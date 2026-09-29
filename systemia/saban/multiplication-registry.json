@@ -757,6 +757,82 @@
         "memory_mb_per_worker": 128,
         "require_capacity_hint": false
       }
+    },
+    {
+      "software_id": "portfolio-fulfillment-readiness",
+      "name": "Evercraft Portfolio Fulfillment Readiness",
+      "aliases": [
+        "fulfillment readiness",
+        "paid fulfillment",
+        "deliverable readiness"
+      ],
+      "adapter": "systemia/saban/fulfillment-readiness-adapter.mjs",
+      "default_logical_agents": 98,
+      "max_logical_agents": 10000,
+      "default_physical_workers": 16,
+      "max_physical_workers": 64,
+      "lease_seconds": 300,
+      "roles": [
+        "payment_guard",
+        "intake_guard",
+        "deliverable_mapper",
+        "specialist_router",
+        "qa_guard",
+        "shipping_guard",
+        "expansion_guard"
+      ],
+      "work_sources": [
+        {
+          "file": "systemia/organism/product-fulfillment-registry.json",
+          "field": "products",
+          "kind": "sell_now_product",
+          "key_field": "public_id"
+        }
+      ],
+      "reconciler": {
+        "adapter_export": "reconcile",
+        "once_per_swarm": true
+      },
+      "side_effects": {
+        "default": "deny",
+        "local_generated_files": true,
+        "local_receipts": true,
+        "external_network": false,
+        "unsolicited_human_outreach": false,
+        "automatic_checkout": false,
+        "payment_obligation": false,
+        "private_system_access": false,
+        "production_mutation": false,
+        "authority_escalation": false
+      },
+      "max_attempts_per_job": 2,
+      "budget": {
+        "max_logical_agents": 10000,
+        "max_physical_workers": 64,
+        "max_work_items": 1000,
+        "max_attempts_per_job": 2
+      },
+      "assignment_strategy": "role_item_cartesian",
+      "scaling": {
+        "strategy": "coverage_amplification",
+        "max_agents_per_item": 7,
+        "target_logical_per_physical_worker": 8,
+        "minimum_role_item_passes": 1
+      },
+      "quality": {
+        "minimum_completion_ratio": 1,
+        "dead_letter_allowed": false,
+        "require_all_roles": true,
+        "require_reconciliation": true,
+        "enforcement": "fail_execution"
+      },
+      "resources": {
+        "minimum_node_cpu_units": 1,
+        "minimum_node_memory_mb": 128,
+        "cpu_units_per_worker": 1,
+        "memory_mb_per_worker": 128,
+        "require_capacity_hint": false
+      }
     }
   ]
 }
