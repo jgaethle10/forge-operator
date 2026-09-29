@@ -66,9 +66,13 @@ const body={
   paid_lease_created:false,
   reason_paid_negotiation_not_started:'no_quote_authority_or_market_credentials_in_live_scan',
   exchange_receipt:result.receipt_hash,
+  exchange_events:result.events,
   observed_at:new Date().toISOString(),
 };
 const receipt={...body,receipt_hash:sha(body)};
+
+
+console.log(JSON.stringify(receipt,null,2));
 
 if(providerCount<1) throw Object.assign(new Error('akash_no_providers_seen'),{receipt});
 if(onlineOffers<1) throw Object.assign(new Error('akash_no_online_offers_seen'),{receipt});
