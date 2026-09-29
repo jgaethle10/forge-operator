@@ -1,0 +1,57 @@
+{
+  "schema": "systemia.sentinel.region-profile-registry.v1",
+  "profiles": [
+    {
+      "profile_id": "yakima-basin-wa",
+      "label": "Yakima Basin, Washington",
+      "geography": {
+        "country": "US",
+        "state": "WA",
+        "region": "Yakima River Basin",
+        "precision": "regional"
+      },
+      "sources": {
+        "nws_area": "WA",
+        "nwps_gauges": [],
+        "usgs_water_locations": [
+          "USGS-12484500",
+          "USGS-12498700",
+          "USGS-12500450",
+          "USGS-12510500"
+        ]
+      },
+      "provenance": [
+        {
+          "provider": "USGS",
+          "monitoring_location_id": "USGS-12484500",
+          "label": "Yakima River at Umtanum, WA",
+          "url": "https://waterdata.usgs.gov/monitoring-location/USGS-12484500/"
+        },
+        {
+          "provider": "USGS",
+          "monitoring_location_id": "USGS-12498700",
+          "label": "Naches River near Yakima, WA",
+          "url": "https://waterdata.usgs.gov/monitoring-location/USGS-12498700/"
+        },
+        {
+          "provider": "USGS",
+          "monitoring_location_id": "USGS-12500450",
+          "label": "Yakima River above Ahtanum Creek at Union Gap, WA",
+          "url": "https://waterdata.usgs.gov/monitoring-location/USGS-12500450/"
+        },
+        {
+          "provider": "USGS",
+          "monitoring_location_id": "USGS-12510500",
+          "label": "Yakima River at Kiona, WA",
+          "url": "https://waterdata.usgs.gov/monitoring-location/USGS-12510500/"
+        }
+      ],
+      "verified_at": "2026-09-29",
+      "notes": [
+        "USGS water locations were selected from official Water Data for the Nation monitoring-location surfaces with continuous-data availability.",
+        "NWPS gauges remain empty until a gauge-to-place mapping is independently verified from the NOAA gauge endpoint.",
+        "The NWS area filter is state-level because the public active-alert API area parameter is state/territory scoped."
+      ]
+    }
+  ]
+}
