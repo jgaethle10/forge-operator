@@ -49,5 +49,8 @@
   "machine_commerce_handoff_state": null,
   "machine_commerce_public_id": null,
   "machine_commerce_tool": null,
-  "live_canary_evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/systemia/opportunity-fabric/runtime.json"
+  "live_canary_evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/systemia/opportunity-fabric/runtime.json",
+  "runtime_state": "base44_private_runtime_v1_2_1_durable_blueprint_ledger_verified",
+  "execution_blueprint_ledger_state": "owner_private_receipt_backed_idempotent",
+  "protected_workflow_entities_runtime_write_only": 9
 }

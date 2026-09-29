@@ -6,11 +6,11 @@
   "runtime": {
     "provider": "base44",
     "app_id": "6ab85d74fe2093703c6247e0",
-    "checkpoint_id": "6abc0c487e374de557839b36",
-    "checkpoint_commit": "7489affce663ebc151ecf92f06d2d9097521d88b",
+    "checkpoint_id": "6abc0e0f08819ba0d0914e98",
+    "checkpoint_commit": "f964339d2d7c5781a519cb6ce0333785c7721573",
     "public_url": null,
     "publication_state": "not_claimed_public",
-    "runtime_version": "evercraft-opportunity-fabric-runtime-v1.2.0"
+    "runtime_version": "evercraft-opportunity-fabric-runtime-v1.2.1"
   },
   "verified_capabilities": [
     "metadata-first member profiles",
@@ -52,7 +52,12 @@
     "execution blueprint does not inspect ProtectedAsset, FormationSnapshot or ProtectedDisclosureGrant records",
     "execution blueprint records unresolved capability gaps instead of inventing partners",
     "execution blueprint recommendations do not create membership, rights or authority",
-    "candidate outreach from a blueprint still uses the protected ConnectionRequest handshake"
+    "candidate outreach from a blueprint still uses the protected ConnectionRequest handshake",
+    "owner-private ExecutionBlueprint ledger persists safe execution plans across sessions",
+    "execution blueprint plan ids include project outcome, capability gaps, candidate ids, scores and matched terms",
+    "identical blueprint evidence replays the existing owner-private ledger record instead of duplicating it",
+    "ExecutionBlueprint records link to the FabricEvent receipt that created them",
+    "ExecutionBlueprint is the ninth protected workflow entity locked to trusted-runtime writes"
   ],
   "verification": {
     "app_lint": "pass",
@@ -78,14 +83,16 @@
     },
     "security_smoke": {
       "result": "pass",
-      "trusted_runtime_version": "v1.2.0",
-      "protected_workflow_entities_runtime_write_only": 8,
+      "trusted_runtime_version": "v1.2.1",
+      "protected_workflow_entities_runtime_write_only": 9,
       "private_contact_fields": 2,
       "vault_fingerprint_only": true,
       "immutable_formations_runtime_authoritative": true,
       "purpose_bound_disclosure_runtime_authoritative": true,
       "execution_blueprint_safe_metadata_only": true,
       "execution_blueprint_returns_no_contact_information": true,
+      "execution_blueprint_owner_private_ledger": true,
+      "execution_blueprint_idempotent_replay": true,
       "execution_team_source_connections_verified": true,
       "team_invitation_acceptance_server_authoritative": true,
       "work_package_assignment_requires_accepted_invite": true,
@@ -95,7 +102,7 @@
     },
     "authority_contract_test": {
       "result": "pass",
-      "runtime_version": "v1.2.0"
+      "runtime_version": "v1.2.1"
     }
   },
   "known_limits": [
