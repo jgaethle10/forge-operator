@@ -111,8 +111,11 @@ assert.equal(freeFirst.selected_offer.market,'evercraft-broker');
 assert.equal(freeFirst.selected_offer.provider_id,'chromebook-proof');
 assert.equal(freeFirst.lease.zero_cost,true);
 assert.equal(freeFirst.lease.capacity_endpoint,'https://broker.example/nodes/chromebook-proof');
-assert.ok(!JSON.stringify(freeFirst).includes('proof-secret-never-in-receipt')===false);
-// allocator token exists only in the runtime acquisition object, never in source receipts.
+assert.equal(JSON.stringify(freeFirst).includes('proof-secret-never-in-receipt'),false);
+assert.equal(
+  freeFirst.lease.runtime_authority.allocator_token,
+  'proof-secret-never-in-receipt'
+);
 
 const tooLarge=normalizeComputeDemand({
   demand_id:'proof-large',
