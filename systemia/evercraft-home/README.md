@@ -135,3 +135,17 @@ Current endpoints:
 
 Until a dedicated `home.credentials.manage` grant is rolled through existing owner Passports, this narrow intake reuses the already owner-sensitive `home.identity.sessions.manage` scope rather than widening access.
 
+
+
+### Household Fabric provider credentials
+
+The same owner-gated Evercraft credential vault now accepts Household Fabric provider credentials through explicit allowlisted routes:
+
+- `POST /api/credentials/providers/google-places` with `api_key`
+- `GET /api/credentials/providers/google-places/status`
+- `POST /api/credentials/providers/kroger` with `client_id` and `client_secret`
+- `GET /api/credentials/providers/kroger/status`
+
+Google Places is stored using a fixed non-secret vault key ID while the actual API key is encrypted as secret material. Kroger maps its client ID and client secret directly into the generic provider envelope. The existing Alpaca routes remain unchanged.
+
+`/credentials.html` exposes all three supported providers through the same private intake surface. Status responses contain only opaque credential references, fingerprints, timestamps, provider metadata, and non-secret suffixes. Raw secrets are never returned by the HTTP API.
