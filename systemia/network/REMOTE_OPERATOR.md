@@ -71,13 +71,20 @@ Receipts persist operation type, hashes, timing, exit state, root key and approv
 
 ## Chromebook enablement
 
-The local organism stays secure-by-default. Enable Remote Operator at installation time:
+The local organism stays secure-by-default. If the Chromebook already has its Evercraft remote broker configured, enabling Remote Operator is one command from an updated Forge checkout:
 
 ```bash
-EVERCRAFT_REMOTE_OPERATOR_ENABLED=true \
-EVERCRAFT_REMOTE_BROKER_URL="https://<verified-evercraft-broker>" \
-bash systemia/compute/install-local-organism-user.sh
+bash systemia/compute/enable-remote-operator-user.sh
 ```
+
+For a first-time node, supply the independently verified Evercraft broker origin once:
+
+```bash
+EVERCRAFT_REMOTE_BROKER_URL="https://<verified-evercraft-broker>" \
+bash systemia/compute/enable-remote-operator-user.sh
+```
+
+The enable script reuses the normal local-organism installer, preserves existing private configuration, restarts the user service, and verifies that the loopback NodeSeed advertises Remote Operator as ready. It does not print the allocator token, broker control grant, device private key or any provider credential.
 
 The node remains outbound-only.
 
