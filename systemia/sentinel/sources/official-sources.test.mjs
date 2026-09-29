@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
-import { parseNwsAlerts, fetchNwsActiveAlerts } from './nws-alerts.mjs';
-import { parseUsgsEarthquakes, fetchUsgsEarthquakes } from './usgs-earthquakes.mjs';
+import { parseNwsAlerts, fetchNwsActiveAlerts, pollNwsActiveAlerts, NWS_SOURCE_CONTRACT } from './nws-alerts.mjs';
+import { parseUsgsEarthquakes, fetchUsgsEarthquakes, pollUsgsEarthquakes, USGS_SOURCE_CONTRACT } from './usgs-earthquakes.mjs';
 
 const nwsFixture = {
   type: 'FeatureCollection',
@@ -42,6 +42,21 @@ const fetchedNws = await fetchNwsActiveAlerts({
 assert.equal(fetchedNws.length, 1);
 assert.ok(nwsRequested.url.includes('area=WA'));
 assert.ok(nwsRequested.options.headers['User-Agent'].includes('Evercraft-Sentinel'));
+
+const nwsHealthyPoll = await pollNwsActiveAlerts({
+  checkedAt: '2026-09-29T01:00:00Z',
+  fetchImpl: async () => ({ ok: true, status: 200, json: async () => ({ type: 'FeatureCollection', features: [] }) })
+});
+assert.equal(nwsHealthyPoll.contract.source_id, NWS_SOURCE_CONTRACT.source_id);
+assert.equal(nwsHealthyPoll.receipt.status, 'ok');
+assert.equal(nwsHealthyPoll.receipt.item_count, 0);
+
+const nwsFailedPoll = await pollNwsActiveAlerts({
+  checkedAt: '2026-09-29T01:01:00Z',
+  fetchImpl: async () => ({ ok: false, status: 503, json: async () => ({}) })
+});
+assert.equal(nwsFailedPoll.receipt.status, 'error');
+assert.equal(nwsFailedPoll.observations.length, 0);
 
 const usgsFixture = {
   type: 'FeatureCollection',
@@ -86,6 +101,21 @@ const fetchedUsgs = await fetchUsgsEarthquakes({
 });
 assert.equal(fetchedUsgs.length, 1);
 assert.equal(new URL(usgsRequested).hostname, 'earthquake.usgs.gov');
+
+const usgsHealthyPoll = await pollUsgsEarthquakes({
+  checkedAt: '2026-09-29T01:00:00Z',
+  fetchImpl: async () => ({ ok: true, status: 200, json: async () => ({ type: 'FeatureCollection', features: [] }) })
+});
+assert.equal(usgsHealthyPoll.contract.source_id, USGS_SOURCE_CONTRACT.source_id);
+assert.equal(usgsHealthyPoll.receipt.status, 'ok');
+assert.equal(usgsHealthyPoll.receipt.item_count, 0);
+
+const usgsFailedPoll = await pollUsgsEarthquakes({
+  checkedAt: '2026-09-29T01:01:00Z',
+  fetchImpl: async () => ({ ok: false, status: 502, json: async () => ({}) })
+});
+assert.equal(usgsFailedPoll.receipt.status, 'error');
+assert.equal(usgsFailedPoll.observations.length, 0);
 
 await assert.rejects(
   fetchUsgsEarthquakes({

@@ -3,6 +3,14 @@ import { coarseCellFromGeometry } from '../coarse-geo.mjs';
 
 export const NWS_ACTIVE_ALERTS_ENDPOINT = 'https://api.weather.gov/alerts/active';
 export const NWS_MIN_POLL_INTERVAL_MS = 30000;
+export const NWS_SOURCE_CONTRACT = Object.freeze({
+  source_id: 'nws-active-alerts',
+  domain: 'emergency_report',
+  independence_group: 'noaa-nws',
+  expected_max_age_seconds: 120,
+  required: true,
+  description: 'National Weather Service active public alerts.'
+});
 
 const severityScore = Object.freeze({
   Extreme: 1,
@@ -116,4 +124,36 @@ export async function fetchNwsActiveAlerts({
     throw new Error('NWS request failed with status ' + String(response?.status ?? 'unknown'));
   }
   return parseNwsAlerts(await response.json());
+}
+
+
+export async function pollNwsActiveAlerts(options = {}) {
+  const checkedAt = options.checkedAt || new Date().toISOString();
+  try {
+    const observations = await fetchNwsActiveAlerts(options);
+    return {
+      contract: NWS_SOURCE_CONTRACT,
+      receipt: {
+        source_id: NWS_SOURCE_CONTRACT.source_id,
+        status: 'ok',
+        checked_at: checkedAt,
+        item_count: observations.length
+      },
+      observations,
+      error: null
+    };
+  } catch (error) {
+    return {
+      contract: NWS_SOURCE_CONTRACT,
+      receipt: {
+        source_id: NWS_SOURCE_CONTRACT.source_id,
+        status: 'error',
+        checked_at: checkedAt,
+        item_count: 0,
+        error_code: String(error?.message || error).slice(0, 120)
+      },
+      observations: [],
+      error: String(error?.message || error)
+    };
+  }
 }
