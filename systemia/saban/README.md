@@ -179,3 +179,41 @@ Registered workers may declare bounded artifacts with an artifact ID, SHA-256 id
 The coordinator retrieves granted artifacts through the authenticated lease before release, streams them while recomputing SHA-256, verifies the byte count, stores them under its own artifact-return root, and rehydrates the result with a coordinator-local path. Durable idempotency replay can re-grant an existing content-addressed artifact after a NodeSeed restart without re-running the software adapter. Missing or corrupt durable artifacts fail closed.
 
 ForensiScope uses this lane for prepared audio artifacts so distributed media reconciliation does not depend on a shared filesystem or a remote worker path.
+
+
+## Compute Exchange
+
+Saban can now act as a buyer/router for physical compute rather than only consuming a preconfigured worker pool.
+
+A compute request is normalized into `evercraft.saban.compute-demand.v1` with:
+
+- workload class and optional container image;
+- CPU, memory, storage and GPU requirements;
+- placement and ingress constraints;
+- trust floors;
+- intended duration;
+- cost ceilings;
+- negotiation level: `discover`, `quote`, or `lease`.
+
+The exchange asks multiple market adapters for offers and evaluates them under one policy. Zero-cost Evercraft capacity is preferred when it genuinely satisfies the workload. If owned/authorized capacity cannot satisfy the demand, Saban can continue into voluntary, partner, commercial or decentralized capacity markets instead of stalling.
+
+### Current adapters
+
+- `evercraft-broker`: connected NodeSeeds and outbound devices already admitted through Yard. Capacity is represented as zero-cost offers and the selected node is acquired through a receipt-bound control grant. Allocator authority remains runtime-only and is deliberately non-serializable.
+- `akash`: public no-auth supply discovery through Akash's provider network-data API, plus a guarded managed-market path for creating an order, collecting provider bids and accepting a lease.
+
+### Negotiation authority
+
+Discovery is read-only.
+
+Creating a market order requires a demand-scoped `evercraft.saban.compute-authority.v1` with quote approval and `allow_market_orders=true`.
+
+Creating a paid lease requires a separate approved authority for the same demand, an allowed-market match, an expiry check, `allow_spend=true`, and a hard total-cost ceiling. The Akash adapter additionally requires an explicit `uact/block` ceiling before it will open a bid round.
+
+Unleased quote orders are closed after the negotiation round instead of being left dangling.
+
+### External-market truth boundary
+
+The repository does not contain market API keys, wallets or billing credentials. Public Akash supply discovery is live and requires no authentication. The order/bid/lease path is implemented but cannot truthfully claim a paid lease was created unless a runtime supplies valid market credentials and demand-scoped spend authority.
+
+This keeps Saban capable of negotiating real compute without silently turning visibility into authorization or code execution into an open-ended purchasing permission.
