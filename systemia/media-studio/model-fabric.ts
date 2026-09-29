@@ -27,12 +27,20 @@ export type VisualReferenceRole =
   | 'motion'
   | 'dialogue_audio';
 
+export type VisualReferenceLocator =
+  | { kind:'url'; value:string }
+  | { kind:'data_uri'; value:string }
+  | { kind:'inline_base64'; value:string; mimeType:string }
+  | { kind:'provider_asset'; providerId:string; value:string }
+  | { kind:'provider_generation'; providerId:string; value:string };
+
 export interface VisualReference {
   id:string;
   kind:'image'|'video'|'audio';
   role:VisualReferenceRole;
   digest?:string;
   sourceRefs:string[];
+  locator?:VisualReferenceLocator;
 }
 
 export interface VisualModelCapability {
@@ -42,6 +50,7 @@ export interface VisualModelCapability {
   aspectRatios?:AspectRatio[];
   maxDurationSec?:number;
   resolutions?:string[];
+  durationOptions?:number[];
   maxReferences?:number;
   nativeAudio?:boolean;
   batchVariants?:number;
@@ -193,6 +202,12 @@ function capabilityReasons(
 
   if(request.durationSec!==undefined&&capability.maxDurationSec!==undefined&&request.durationSec>capability.maxDurationSec){
     reasons.push('duration_exceeds_model_limit');
+  }
+  if(request.durationSec!==undefined&&capability.durationOptions&&!capability.durationOptions.includes(request.durationSec)){
+    reasons.push('duration_not_supported');
+  }
+  if(request.targetResolution&&capability.resolutions&&!capability.resolutions.includes(request.targetResolution)){
+    reasons.push('resolution_not_supported');
   }
   if(request.aspectRatio&&capability.aspectRatios&&!capability.aspectRatios.includes(request.aspectRatio)){
     reasons.push('aspect_ratio_not_supported');
