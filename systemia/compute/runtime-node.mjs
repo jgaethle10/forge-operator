@@ -53,9 +53,14 @@ class ReceiptChain {
   }
 }
 
-async function readJson(req) {
+async function readJson(req, maxBytes = 16 * 1024 * 1024) {
   const chunks = [];
-  for await (const chunk of req) chunks.push(chunk);
+  let bytes = 0;
+  for await (const chunk of req) {
+    bytes += chunk.length;
+    if (bytes > maxBytes) throw new Error('request_body_too_large');
+    chunks.push(chunk);
+  }
   const raw = Buffer.concat(chunks).toString('utf8');
   return raw ? JSON.parse(raw) : {};
 }
@@ -72,6 +77,128 @@ function send(res, status, body) {
 function bearer(req) {
   const value = String(req.headers.authorization || '');
   return value.startsWith('Bearer ') ? value.slice(7) : '';
+}
+
+const BRIDGED_WORKLOADS = new Set([
+  'systemia.evercraft-web-browser.v1',
+  'systemia.specialist-handoff-mcp.v1',
+]);
+
+const BRIDGE_REQUEST_HEADERS = new Set([
+  'accept',
+  'content-type',
+  'authorization',
+  'mcp-session-id',
+  'last-event-id',
+  'x-evercraft-browser-claim',
+  'origin',
+  'referer',
+  'user-agent',
+]);
+
+const BRIDGE_RESPONSE_HEADERS = new Set([
+  'content-type',
+  'cache-control',
+  'content-security-policy',
+  'referrer-policy',
+  'x-content-type-options',
+  'x-frame-options',
+  'location',
+  'mcp-session-id',
+]);
+
+function bridgeHeaders(input, allow) {
+  const out = {};
+  for (const [rawKey, rawValue] of Object.entries(input || {})) {
+    const key = String(rawKey || '').toLowerCase();
+    if (!allow.has(key)) continue;
+    const value = Array.isArray(rawValue)
+      ? rawValue.map(String).join(', ')
+      : String(rawValue ?? '');
+    if (!value || value.length > 8192) continue;
+    out[key] = value;
+  }
+  return out;
+}
+
+function bridgeServiceOrigin(entry) {
+  if (entry?.workload_class === 'systemia.evercraft-web-browser.v1') {
+    return String(entry?.runtime?.localPublicUrl || '');
+  }
+  if (entry?.workload_class === 'systemia.specialist-handoff-mcp.v1') {
+    return String(entry?.runtime?.url || '');
+  }
+  return '';
+}
+
+function assertLoopbackBridgeOrigin(value) {
+  const url = new URL(String(value || ''));
+  const host = url.hostname.toLowerCase();
+  if (url.protocol !== 'http:') throw new Error('service_bridge_origin_must_be_http_loopback');
+  if (!['127.0.0.1','localhost','::1'].includes(host)) {
+    throw new Error('service_bridge_origin_must_be_loopback');
+  }
+  return url.origin;
+}
+
+function normalizeBridgePath(value) {
+  const raw = String(value || '/');
+  if (!raw.startsWith('/') || raw.startsWith('//')) throw new Error('service_bridge_path_invalid');
+  const parsed = new URL(raw, 'http://bridge.invalid');
+  if (parsed.origin !== 'http://bridge.invalid') throw new Error('service_bridge_path_invalid');
+  return parsed.pathname + parsed.search;
+}
+
+async function bridgeResidentHttp(entry, input = {}) {
+  if (!BRIDGED_WORKLOADS.has(entry?.workload_class)) {
+    throw new Error('resident_service_not_bridgeable');
+  }
+  const method = String(input.method || 'GET').toUpperCase();
+  if (!['GET','HEAD','POST','DELETE','OPTIONS'].includes(method)) {
+    throw new Error('resident_service_bridge_method_not_allowed');
+  }
+  const origin = assertLoopbackBridgeOrigin(bridgeServiceOrigin(entry));
+  const requestPath = normalizeBridgePath(input.path);
+  const target = new URL(requestPath, origin);
+  const encoded = String(input.body_base64 || '');
+  if (encoded.length > 12 * 1024 * 1024) throw new Error('resident_service_bridge_body_too_large');
+  const body = encoded ? Buffer.from(encoded, 'base64') : null;
+  if (body && body.length > 8 * 1024 * 1024) throw new Error('resident_service_bridge_body_too_large');
+
+  const response = await fetch(target, {
+    method,
+    headers: bridgeHeaders(input.headers, BRIDGE_REQUEST_HEADERS),
+    body: ['GET','HEAD'].includes(method) ? undefined : body,
+    redirect: 'manual',
+  });
+  const raw = Buffer.from(await response.arrayBuffer());
+  if (raw.length > 8 * 1024 * 1024) throw new Error('resident_service_bridge_response_too_large');
+
+  const responseHeaders = {};
+  for (const [key, value] of response.headers.entries()) {
+    if (!BRIDGE_RESPONSE_HEADERS.has(key.toLowerCase())) continue;
+    if (key.toLowerCase() === 'location') {
+      try {
+        const location = new URL(value, origin);
+        responseHeaders[key] = location.origin === origin
+          ? location.pathname + location.search + location.hash
+          : '/';
+      } catch {
+        responseHeaders[key] = '/';
+      }
+      continue;
+    }
+    responseHeaders[key] = value;
+  }
+
+  return {
+    status: response.status,
+    headers: responseHeaders,
+    body_base64: raw.toString('base64'),
+    request_path_hash: sha(requestPath),
+    request_bytes: body?.length || 0,
+    response_bytes: raw.length,
+  };
 }
 
 function isWithin(root, target) {
@@ -1891,6 +2018,46 @@ export async function startEvercraftComputeNode({
         const entry = services.get(serviceHealth[1]);
         if (!entry) return send(res, 404, { error: 'service_not_found' });
         return send(res, 200, await entry.runtime.health());
+      }
+
+      const residentHttpBridge = req.url?.match(
+        /^\/v1\/services\/([^/]+)\/http-bridge$/
+      );
+      if (req.method === 'POST' && residentHttpBridge) {
+        const entry = services.get(residentHttpBridge[1]);
+        if (!entry) return send(res, 404, { error: 'service_not_found' });
+        if (!allocatorTokenHash || sha(bearer(req)) !== allocatorTokenHash) {
+          return send(res, 401, { error: 'allocator_auth_required' });
+        }
+        if (!BRIDGED_WORKLOADS.has(entry.workload_class)) {
+          return send(res, 422, { error: 'resident_service_not_bridgeable' });
+        }
+        const body = await readJson(req, 16 * 1024 * 1024);
+        try {
+          const proxied = await bridgeResidentHttp(entry, body);
+          return send(res, 200, {
+            ok: true,
+            status: proxied.status,
+            headers: proxied.headers,
+            body_base64: proxied.body_base64,
+            receipt: chain.issue('resident-service.http-bridge', {
+              service_id: residentHttpBridge[1],
+              lease_id: entry.lease_id,
+              workload_class: entry.workload_class,
+              method: String(body.method || 'GET').toUpperCase(),
+              request_path_hash: proxied.request_path_hash,
+              request_bytes: proxied.request_bytes,
+              response_status: proxied.status,
+              response_bytes: proxied.response_bytes,
+              request_content_recorded: false,
+              response_content_recorded: false,
+            }),
+          });
+        } catch (error) {
+          return send(res, 422, {
+            error: error instanceof Error ? error.message : String(error),
+          });
+        }
       }
 
       const specialistIdentityAttestation = req.url?.match(
