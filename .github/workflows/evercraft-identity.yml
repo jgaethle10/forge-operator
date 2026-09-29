@@ -1,0 +1,54 @@
+name: Evercraft Identity
+
+on:
+  pull_request:
+    paths:
+      - "systemia/identity/**"
+      - "systemia/evercraft-home/**"
+      - "systemia/compute/runtime-node.mjs"
+      - "systemia/compute/evercraft-home-runtime.proof.mjs"
+      - "systemia/yard/operator.mjs"
+      - "systemia/yard/evercraft-home-deployment.proof.mjs"
+      - "evercraft.compute.json"
+      - ".github/workflows/evercraft-identity.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "systemia/identity/**"
+      - "systemia/evercraft-home/**"
+      - "systemia/compute/runtime-node.mjs"
+      - "systemia/compute/evercraft-home-runtime.proof.mjs"
+      - "systemia/yard/operator.mjs"
+      - "systemia/yard/evercraft-home-deployment.proof.mjs"
+      - "evercraft.compute.json"
+      - ".github/workflows/evercraft-identity.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prove-identity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Test identity core
+        run: node --test systemia/identity/identity.test.mjs
+
+      - name: Prove owner bootstrap
+        run: node systemia/identity/bootstrap-owner.proof.mjs
+
+      - name: Prove Home login on Compute
+        run: node systemia/compute/evercraft-home-runtime.proof.mjs
+
+      - name: Prove Home login through Yard and Evercraft edge
+        run: node systemia/yard/evercraft-home-deployment.proof.mjs
