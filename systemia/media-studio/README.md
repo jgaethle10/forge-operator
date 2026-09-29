@@ -258,6 +258,45 @@ The output is one Visual Stage suitable for the existing private Fallen Render W
 
 The production boundary is deliberate: Fallen can move an approved host reference through the world, but it will not fabricate a founder identity merely because a script asks for one. A real Week in Motion host pass requires an approved Jesse reference/performance asset or another explicitly licensed host asset.
 
+## Visual Model Fabric
+
+Fallen's visual quality ceiling cannot be the browser/FFmpeg compositor. The compositor is the stage and finishing room; cinematic generation belongs behind a provider-neutral model fabric.
+
+The Visual Model Fabric routes a shot request across multiple verified visual engines while preserving the Creative Council brief, continuity digest, identity references, start/end frames, motion references, rights requirements, provenance requirements and target media shape. Candidate fanout prefers provider diversity so a shot tournament compares genuinely different cameras instead of four variants from one engine.
+
+A routed candidate is never publishable by itself. Every generated artifact must return a digest-bound execution receipt, survive visual observation and the Shot Tournament, pass production admission, and only then enter the virtual-production timeline.
+
+A model declaration is not an execution claim. An external visual engine only becomes usable when its adapter is independently verified; missing, unverified or failed adapters fail closed and cannot contribute a candidate.
+
+The fabric also models governed finishing passes. Lip-sync and upscaling happen after tournament selection so expensive finishing work is not wasted on losing candidates and the winning source digest remains traceable.
+
+```bash
+npm run media:studio -- model-plan ./tmp/visual-model-payload.json ./tmp/model-plan.json
+npm run media:studio -- finish-plan ./tmp/finish-payload.json ./tmp/finish-plan.json
+```
+
+
+### Non-destructive timeline
+
+Fallen now keeps the edit alive instead of flattening every generation into a final render. The timeline core stores reusable assets on named video/overlay/voice/music/SFX/caption tracks and uses optimistic versioning for safe edits.
+
+A regenerated shot can replace one clip **in place** while preserving its clip identity, start time, duration and downstream timing. Moving or trimming a clip produces a digest-bound mutation receipt rather than silently rewriting the project.
+
+This is the editing contract the Studio Agent layer can target: plan a change, mutate one bounded part of the timeline, preserve everything else, then hand the result back to a human or another governed agent.
+
+### Production-grade gate
+
+CI specimens prove mechanics, not aesthetics. Fallen now has an explicit production-grade gate so a mannequin, test fixture, geometry-only set or text-dominant composition cannot silently become a finished Week in Motion scene.
+
+A publishable beat must carry real/verified capture, licensed media, continuity-bound cinematic generation, or meaningful data visualization as hero media. Host-visible beats require identity binding. Generated cinematic media requires continuity binding. Test fixtures are forbidden.
+
+```bash
+npm run media:studio -- production-grade ./tmp/beats.json ./tmp/production-grade.json
+```
+
+This gate intentionally separates **renderer proof** from **editorial-quality output**.
+
+
 ## Visual themes
 
 The Visual Stage carries a renderer-level theme contract instead of relying on scattered hard-coded CSS. Theme identity participates in the stage digest, so changing the visual system changes the reproducible render identity.
