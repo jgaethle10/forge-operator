@@ -5,6 +5,9 @@ on:
     paths:
       - 'systemia/core/resident-supervisor.mjs'
       - 'systemia/core/resident-services.json'
+      - 'systemia/sentinel/resident.workflow.json'
+      - 'systemia/sentinel/resident-runner.mjs'
+      - 'systemia/sentinel/resident-cycle.mjs'
       - 'systemia/core/resident-supervisor-runner.mjs'
       - 'systemia/core/resident-supervisor.proof.mjs'
       - 'systemia/core/public-edge-resident-wiring.proof.mjs'
