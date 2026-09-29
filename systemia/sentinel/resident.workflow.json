@@ -1,0 +1,16 @@
+{
+  "schema": "evercraft.systemia.workflow-manifest.v1",
+  "workflow_key": "sentinel-life-safety-resident",
+  "runtime": "systemia-core-resident",
+  "cadence_seconds": 30,
+  "entrypoint": "systemia/sentinel/resident-runner.mjs",
+  "purpose": "Continuously poll approved life-safety sources, track sensor coverage, correlate bounded observations, rebuild the regional event graph, and emit operator-facing evidence without autonomous intervention.",
+  "safety": {
+    "autonomous_intervention": false,
+    "hostile_attribution": false,
+    "targeting": false,
+    "jamming": false,
+    "spoofing": false,
+    "aircraft_interference": false
+  }
+}
