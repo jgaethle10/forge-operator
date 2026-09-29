@@ -1,0 +1,74 @@
+{
+  "schema": "evercraft.service-registry.v1",
+  "policy": {
+    "root_authority": "evercraft",
+    "direct_mode_default": true,
+    "external_provider_required": false,
+    "legacy_provider_required": false
+  },
+  "services": [
+    {
+      "id": "systemia",
+      "name": "Systemia",
+      "category": "Operating System",
+      "ownership": "evercraft-owned",
+      "origin_env": "SYSTEMIA_ORIGIN",
+      "health_path": "/api/health",
+      "description": "Mission authority, orchestration, routing, receipts, dependencies and company execution."
+    },
+    {
+      "id": "raven",
+      "name": "Raven Nexus",
+      "category": "Intelligence & Team",
+      "ownership": "evercraft-owned",
+      "origin_env": "RAVEN_ORIGIN",
+      "health_path": "/api/health",
+      "description": "Evercraft intelligence, specialist teams, research and deep work."
+    },
+    {
+      "id": "yard",
+      "name": "The Yard",
+      "category": "Build & Delivery",
+      "ownership": "evercraft-owned",
+      "origin_env": "YARD_ORIGIN",
+      "health_path": "/api/health",
+      "description": "Deployment, packaging, runtime handoff, proof and delivery receipts."
+    },
+    {
+      "id": "network",
+      "name": "Evercraft Network",
+      "category": "Infrastructure",
+      "ownership": "evercraft-owned",
+      "origin_env": "NETWORK_ORIGIN",
+      "health_path": "/api/health",
+      "description": "Nodes, transport, continuity, gateways, routes and network services."
+    },
+    {
+      "id": "sovereign-ai",
+      "name": "Evercraft Sovereign AI",
+      "category": "Owned Intelligence",
+      "ownership": "evercraft-owned",
+      "origin_env": "SOVEREIGN_AI_ORIGIN",
+      "health_path": "/api/health",
+      "description": "Evercraft-controlled inference and internal intelligence."
+    },
+    {
+      "id": "external-ai",
+      "name": "External AI",
+      "category": "Optional Provider",
+      "ownership": "external-optional",
+      "origin_env": "EXTERNAL_AI_ORIGIN",
+      "health_path": "/health",
+      "description": "Optional outside model provider. Never owns Evercraft identity, memory or authority."
+    },
+    {
+      "id": "legacy-builder",
+      "name": "Legacy App Provider",
+      "category": "Legacy Provider",
+      "ownership": "legacy-optional",
+      "origin_env": "LEGACY_APP_ORIGIN",
+      "health_path": "/",
+      "description": "Temporary compatibility surface for applications not yet extracted."
+    }
+  ]
+}

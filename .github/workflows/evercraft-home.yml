@@ -1,0 +1,95 @@
+name: Evercraft Home sovereignty
+
+on:
+  pull_request:
+    paths:
+      - "systemia/evercraft-home/**"
+      - ".github/workflows/evercraft-home.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "systemia/evercraft-home/**"
+      - ".github/workflows/evercraft-home.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prove-home:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Prove sovereign shell
+        working-directory: systemia/evercraft-home
+        run: npm run check
+
+      - name: Smoke boot without external providers
+        working-directory: systemia/evercraft-home
+        run: |
+          set -euo pipefail
+          EVERCRAFT_HOME_PORT=4310 node server.mjs > /tmp/evercraft-home.log 2>&1 &
+          pid=$!
+          trap 'kill "$pid" 2>/dev/null || true' EXIT
+          for i in $(seq 1 20); do
+            if curl -fsS http://127.0.0.1:4310/api/health > /tmp/home-health.json; then
+              break
+            fi
+            sleep 0.25
+          done
+          node - <<'NODE'
+          const fs = require('fs');
+          const health = JSON.parse(fs.readFileSync('/tmp/home-health.json','utf8'));
+          if (!health.ok) throw new Error('Evercraft Home health is not green');
+          if (health.base44_required !== false) throw new Error('Legacy provider became a boot dependency');
+          if (health.external_ai_required !== false) throw new Error('External AI became a boot dependency');
+          if (health.authority !== 'evercraft') throw new Error('Root authority drifted away from Evercraft');
+          NODE
+          curl -fsS http://127.0.0.1:4310/api/overview > /tmp/home-overview.json
+          node - <<'NODE'
+          const fs = require('fs');
+          const overview = JSON.parse(fs.readFileSync('/tmp/home-overview.json','utf8'));
+          if (!overview.ok) throw new Error('Overview endpoint failed');
+          if (overview.control_plane.owned_services !== 5) throw new Error('Owned service registry drift');
+          if (overview.control_plane.reachable !== 0) throw new Error('Unconfigured services were falsely reported reachable');
+          NODE
+
+          curl -fsS http://127.0.0.1:4310/api/systemia/inventory > /tmp/systemia-inventory.json
+          node - <<'NODE'
+          const fs = require('fs');
+          const payload = JSON.parse(fs.readFileSync('/tmp/systemia-inventory.json','utf8'));
+          if (!payload.ok) throw new Error('Systemia inventory endpoint failed');
+          if (payload.authority !== 'systemia-read-only') throw new Error('Inventory authority drift');
+          if (!payload.inventory?.summary?.total) throw new Error('Systemia inventory empty');
+          NODE
+
+          curl -fsS -X POST             -H 'content-type: application/json'             --data '{"objective":"CI prove Direct Mode planning","tasks":[{"work_key":"prove-home-plan","work_type":"plan","title":"Prove Home plan"}]}'             http://127.0.0.1:4310/api/systemia/plan > /tmp/systemia-plan.json
+          node - <<'NODE'
+          const fs = require('fs');
+          const payload = JSON.parse(fs.readFileSync('/tmp/systemia-plan.json','utf8'));
+          if (!payload.ok) throw new Error('Systemia plan endpoint failed');
+          if (payload.state !== 'planned_not_executed') throw new Error('Direct Mode planning state drift');
+          if (payload.execution_authority_granted !== false) throw new Error('Home illegally granted execution authority');
+          if (payload.plan?.receipt?.authority !== 'systemia-organism') throw new Error('Systemia lost mission authority');
+          NODE
+
+
+          curl -fsS http://127.0.0.1:4310/api/yard/overview > /tmp/yard-overview.json
+          curl -fsS http://127.0.0.1:4310/api/network/overview > /tmp/network-overview.json
+          node - <<'NODE'
+          const fs = require('fs');
+          const yard = JSON.parse(fs.readFileSync('/tmp/yard-overview.json','utf8'));
+          const network = JSON.parse(fs.readFileSync('/tmp/network-overview.json','utf8'));
+          if (!yard.ok || yard.state !== 'not_configured') throw new Error('Unconfigured Yard state was not represented truthfully');
+          if (!network.ok || network.state !== 'declared_public_evidence') throw new Error('Network evidence view failed');
+          if (!/not private node telemetry/i.test(network.evidence_semantics || '')) throw new Error('Network evidence boundary missing');
+          NODE
