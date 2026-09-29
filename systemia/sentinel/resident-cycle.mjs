@@ -290,3 +290,45 @@ export async function runSentinelResidentCycle({
 
   return { state, snapshot };
 }
+
+
+export function buildSentinelMissionSnapshot(snapshot) {
+  if (!snapshot || snapshot.schema !== 'systemia.sentinel.resident-cycle.v1') {
+    throw new TypeError('resident cycle snapshot is required');
+  }
+
+  const evidenceRefs = [...new Set([
+    ...(snapshot.operator_pictures || []).flatMap((picture) =>
+      picture?.hypothesis_review?.hypotheses
+        ? []
+        : []
+    ),
+    ...(snapshot.event_graph?.nodes || []).flatMap((node) => node.provenance_refs || []),
+    ...(snapshot.coverage?.blind_spots || []).map((row) => 'source-health:' + row.source_id)
+  ].filter(Boolean))].slice(0, 500);
+
+  const changed = (snapshot.cycle_decisions || []).filter((row) => !row.duplicate).length;
+  const admitted =
+    Number(snapshot.summary?.elevated_incidents || 0) +
+    Number(snapshot.summary?.urgent_incidents || 0);
+  const held = Number(snapshot.summary?.blind_spots || 0);
+  const scanned =
+    Number(snapshot.summary?.sources_polled || 0) +
+    (snapshot.cycle_decisions || []).length;
+
+  return {
+    schema: 'evercraft.kaidance.mission-snapshot.v1',
+    snapshot_ref: 'sentinel-life-safety:' + snapshot.observed_at,
+    mission_key: 'evercraft-life-safety-sentinel',
+    workflow_key: 'sentinel-life-safety-resident',
+    cadence_seconds: 30,
+    counts: {
+      scanned,
+      changed,
+      admitted,
+      held
+    },
+    evidence_refs: evidenceRefs,
+    observed_at: snapshot.observed_at
+  };
+}

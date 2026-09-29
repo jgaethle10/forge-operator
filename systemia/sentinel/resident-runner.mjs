@@ -3,7 +3,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {
   emptyResidentState,
-  runSentinelResidentCycle
+  runSentinelResidentCycle,
+  buildSentinelMissionSnapshot
 } from './resident-cycle.mjs';
 
 function arg(name, fallback = null) {
@@ -73,6 +74,10 @@ async function cycle() {
       observed_at: result.snapshot.observed_at,
       items: result.snapshot.signals
     });
+    atomicJson(
+      path.join(stateDir, 'mission-snapshot.json'),
+      buildSentinelMissionSnapshot(result.snapshot)
+    );
     process.stdout.write(JSON.stringify({
       ok: true,
       cycle_count: result.snapshot.cycle_count,

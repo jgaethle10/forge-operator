@@ -184,3 +184,10 @@ The resident loop:
 A failed or stale source can generate a coverage warning. It cannot create an anomaly observation, increase incident confidence, or manufacture an urgent event.
 
 The default resident tick is 30 seconds. Built-in NWS and USGS sources are scheduled no faster than 60 seconds, and errors back off up to a bounded ceiling. `SYSTEMIA_SENTINEL_NWS_AREA` can scope NWS polling to a two-letter area code when a deployment wants regional coverage.
+
+
+## KAIDANCE mission handoff
+
+Every successful resident cycle emits `artifacts/sentinel-resident/mission-snapshot.json` using the standard KAIDANCE mission-snapshot contract. The mission fabric registers Sentinel as the optional `sentinel-life-safety` source with a 180-second freshness window.
+
+The mission snapshot is intentionally compact. It contains counts, freshness, material change totals, and provenance references. It does not include raw geometry, raw sensor payloads, targeting data, or autonomous intervention commands. Blind spots are represented as held work so KAIDANCE can distinguish degraded sensing from confirmed danger.
