@@ -105,8 +105,10 @@ assert.match(feed, /\/chum\/answers\/doors\/ev-site\//);
 const hotHtml = fs.readFileSync(path.join(publicRoot, 'chum', 'hot', 'index.html'), 'utf8');
 const hotJson = JSON.parse(fs.readFileSync(path.join(publicRoot, 'chum', 'hot', 'index.json'), 'utf8'));
 assert.match(hotHtml, /Hot Discovery Queue/);
-assert.equal(hotJson.surfaces[0].path, '/chum/answers/doors/ev-site/');
-assert.equal(hotJson.surfaces[0].priority, 100);
+const hotByPath = new Map(hotJson.surfaces.map((row) => [row.path, row]));
+assert.equal(hotByPath.get('/.well-known/agent-card.json')?.priority, 104);
+assert.equal(hotByPath.get('/.well-known/agent.json')?.priority, 102);
+assert.equal(hotByPath.get('/chum/answers/doors/ev-site/')?.priority, 100);
 
 fs.writeFileSync(path.join(publicRoot, '.well-known', 'evercraft-runtime-origin.json'), JSON.stringify({
   schema: 'evercraft.runtime-origin.v1',
