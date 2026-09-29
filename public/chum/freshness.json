@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-29T19:14:55.485Z",
+  "updated_at": "2026-09-29T19:16:09.879Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,26 +11,89 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/hot/",
-      "last_changed": "2026-09-29T19:14:55.485Z",
+      "path": "/chum/crawler-radar.json",
+      "last_changed": "2026-09-29T19:16:09.879Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/crawler-radar.txt",
+      "last_changed": "2026-09-29T19:16:09.879Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-29T19:14:55.485Z",
+      "last_changed": "2026-09-29T19:16:09.879Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/",
+      "last_changed": "2026-09-29T19:16:09.879Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "last_changed": "2026-09-29T19:16:09.879Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
     {
-      "path": "/chum/hot/",
-      "url": "/chum/hot/",
-      "last_changed": "2026-09-29T19:14:55.485Z",
+      "path": "/chum/crawler-radar.json",
+      "url": "/chum/crawler-radar.json",
+      "last_changed": "2026-09-29T19:16:09.879Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/crawler-radar.txt",
+      "url": "/chum/crawler-radar.txt",
+      "last_changed": "2026-09-29T19:16:09.879Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
       "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-29T19:16:09.879Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/",
+      "url": "/chum/strike/",
+      "last_changed": "2026-09-29T19:16:09.879Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "url": "/chum/strike/index.json",
+      "last_changed": "2026-09-29T19:16:09.879Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/products/evercraft-rewards/ai-conformance.json",
+      "url": "/chum/products/evercraft-rewards/ai-conformance.json",
+      "last_changed": "2026-09-29T19:16:09.538Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/evercraft-rewards/ai-discovery.json",
+      "url": "/chum/products/evercraft-rewards/ai-discovery.json",
+      "last_changed": "2026-09-29T19:16:09.538Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/evercraft-rewards/llms.txt",
+      "url": "/chum/products/evercraft-rewards/llms.txt",
+      "last_changed": "2026-09-29T19:16:09.538Z",
+      "priority": 94
+    },
+    {
+      "path": "/.well-known/evercraft-products.json",
+      "url": "/.well-known/evercraft-products.json",
+      "last_changed": "2026-09-29T19:16:09.538Z",
+      "priority": 88
+    },
+    {
+      "path": "/chum/hot/",
+      "url": "/chum/hot/",
       "last_changed": "2026-09-29T19:14:55.485Z",
       "priority": 80
     },
@@ -197,12 +260,6 @@
       "priority": 90
     },
     {
-      "path": "/.well-known/evercraft-products.json",
-      "url": "/.well-known/evercraft-products.json",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 88
-    },
-    {
       "path": "/llms-full.txt",
       "url": "/llms-full.txt",
       "last_changed": "2026-09-29T19:10:55.004Z",
@@ -332,24 +389,6 @@
       "path": "/chum/proof/rivet.json",
       "url": "/chum/proof/rivet.json",
       "last_changed": "2026-09-29T19:02:10.017Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/crawler-radar.json",
-      "url": "/chum/crawler-radar.json",
-      "last_changed": "2026-09-29T18:57:39.482Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/crawler-radar.txt",
-      "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-09-29T18:57:39.482Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/strike/index.json",
-      "url": "/chum/strike/index.json",
-      "last_changed": "2026-09-29T18:57:39.482Z",
       "priority": 80
     },
     {
@@ -511,24 +550,6 @@
     {
       "path": "/chum/products/evercraft-rewards/",
       "url": "/chum/products/evercraft-rewards/",
-      "last_changed": "2026-09-29T18:55:38.752Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-rewards/ai-conformance.json",
-      "url": "/chum/products/evercraft-rewards/ai-conformance.json",
-      "last_changed": "2026-09-29T18:55:38.752Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-rewards/ai-discovery.json",
-      "url": "/chum/products/evercraft-rewards/ai-discovery.json",
-      "last_changed": "2026-09-29T18:55:38.752Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-rewards/llms.txt",
-      "url": "/chum/products/evercraft-rewards/llms.txt",
       "last_changed": "2026-09-29T18:55:38.752Z",
       "priority": 94
     },
@@ -987,12 +1008,6 @@
       "url": "/network/mesh/wifi-cellular-transition/",
       "last_changed": "2026-09-29T18:40:05.280Z",
       "priority": 60
-    },
-    {
-      "path": "/chum/strike/",
-      "url": "/chum/strike/",
-      "last_changed": "2026-09-29T18:07:50.904Z",
-      "priority": 80
     },
     {
       "path": "/chum/products/ibmi-rescue/llms.txt",

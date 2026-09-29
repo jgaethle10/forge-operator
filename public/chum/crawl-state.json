@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-29T19:14:55.485Z",
+  "updated_at": "2026-09-29T19:16:09.879Z",
   "url_count": 2650,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -141,32 +141,32 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "d7710666a4c6190f32e8959542f413abe57e83a312c98326d8d78f0a4a1e3022",
-      "last_changed": "2026-09-29T19:14:55.485Z",
+      "content_sha256": "9f234d0433c4533e77bc57c5572762d712ccfd0d15e485f96879fd3bd489c487",
+      "last_changed": "2026-09-29T19:16:09.879Z",
       "priority": 80
     },
     "/chum/strike/": {
       "path": "/chum/strike/",
-      "content_sha256": "40abaa38bbf54f8668328e09abbfeebcba341c4f65976aebe12067877920f2fd",
-      "last_changed": "2026-09-29T18:07:50.904Z",
+      "content_sha256": "b4d291fe92d7022e7158fe77835d0cfa57586db9c15f85a5a9abfee885a847bc",
+      "last_changed": "2026-09-29T19:16:09.879Z",
       "priority": 80
     },
     "/chum/strike/index.json": {
       "path": "/chum/strike/index.json",
-      "content_sha256": "78fa1bf93ddd85214695f7805e503eb81cdfaa993a4bf3823305fbea00cfa466",
-      "last_changed": "2026-09-29T18:57:39.482Z",
+      "content_sha256": "943da4817b847a6dfc65d53bc3771da88028689fc2bcaaa2988059c509d701c0",
+      "last_changed": "2026-09-29T19:16:09.879Z",
       "priority": 80
     },
     "/chum/crawler-radar.json": {
       "path": "/chum/crawler-radar.json",
-      "content_sha256": "d05062b089a34b25db37a2d5dedf11d039ed58b6152760053979ca4cece2d592",
-      "last_changed": "2026-09-29T18:57:39.482Z",
+      "content_sha256": "810fd9be4ac64e82cea617cbdd9b6e500599a0438919ea2d83efa43b1f10f3b1",
+      "last_changed": "2026-09-29T19:16:09.879Z",
       "priority": 80
     },
     "/chum/crawler-radar.txt": {
       "path": "/chum/crawler-radar.txt",
-      "content_sha256": "0cb0ffa58f025b92aa2befc5647537265116fb52f9e0baf648311e2a2f14ed58",
-      "last_changed": "2026-09-29T18:57:39.482Z",
+      "content_sha256": "85dff6f1eac7a12e7b2e6579d37f16696b00c41fde721a6ff57d2e97ef3c2e40",
+      "last_changed": "2026-09-29T19:16:09.879Z",
       "priority": 80
     },
     "/chum/proof/": {
@@ -795,8 +795,8 @@
     },
     "/.well-known/evercraft-products.json": {
       "path": "/.well-known/evercraft-products.json",
-      "content_sha256": "4b688692e7917352ccc01eba880ee4dac80bf7def6c8d984e3427aae8a9fa9b1",
-      "last_changed": "2026-09-29T19:10:55.004Z",
+      "content_sha256": "98ccdacc6d77ab0a9324f903718569c1da4cb4f54962952abe9655acb7690d9c",
+      "last_changed": "2026-09-29T19:16:09.538Z",
       "priority": 88
     },
     "/.well-known/evercraft-machine-catalog.json": {
@@ -2883,20 +2883,20 @@
     },
     "/chum/products/evercraft-rewards/llms.txt": {
       "path": "/chum/products/evercraft-rewards/llms.txt",
-      "content_sha256": "2b26089087c8368495f31231777353a745833b018068598da9146ffc611e91e7",
-      "last_changed": "2026-09-29T18:55:38.752Z",
+      "content_sha256": "89bfcf987fec68108794a4fe484114c6acab96eababe3ab42952c77bab2e159a",
+      "last_changed": "2026-09-29T19:16:09.538Z",
       "priority": 94
     },
     "/chum/products/evercraft-rewards/ai-discovery.json": {
       "path": "/chum/products/evercraft-rewards/ai-discovery.json",
-      "content_sha256": "42cd198e5b32531a5bae801bbf20c5758a7eb29eaf6807a8db2a4d49ce44f127",
-      "last_changed": "2026-09-29T18:55:38.752Z",
+      "content_sha256": "a2144364a27bb97a62108227058ca9ddd35eff6c2a3a403f5c5e9f5de3b25561",
+      "last_changed": "2026-09-29T19:16:09.538Z",
       "priority": 94
     },
     "/chum/products/evercraft-rewards/ai-conformance.json": {
       "path": "/chum/products/evercraft-rewards/ai-conformance.json",
-      "content_sha256": "ec6d9fd69f86bb62b8dc298a4582ba111328d7f80fc0e9d5aa564dc63390a90a",
-      "last_changed": "2026-09-29T18:55:38.752Z",
+      "content_sha256": "190e0e61a2c9027e9b1eb5bf54135d9fff65203634dd1aedbd2e8c24e3044c82",
+      "last_changed": "2026-09-29T19:16:09.538Z",
       "priority": 94
     },
     "/chum/products/evercraft-web/": {
