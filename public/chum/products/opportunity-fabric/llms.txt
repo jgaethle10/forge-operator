@@ -21,31 +21,9 @@ AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 - coordinate a designer printer fulfillment partner and retailer on one project
 - build a music team with a producer studio engineer and videographer
 
-## Verified private multi-party runtime
-
-The private v1.1 runtime can turn multiple already-accepted relationships into one temporary execution team.
-
-Rules:
-
-- every source relationship must already be an accepted connection
-- the trusted runtime derives and deduplicates counterparties rather than trusting client-supplied participant ids
-- every counterparty separately accepts the specific team invitation
-- a work package can be assigned only after that team invitation is accepted
-- the team leader defines the bounded scope and economics
-- the assignee independently accepts the package and reports progress
-- work-package acceptance does not grant IP rights
-- team and work-package flows keep protected material undisclosed
-- actual protected-file delivery remains disabled
-
-Evidence:
-https://raw.githubusercontent.com/jgaethle10/forge-operator/main/systemia/opportunity-fabric/runtime.json
-
-Reusable contract:
-https://raw.githubusercontent.com/jgaethle10/forge-operator/main/systemia/opportunity-fabric/multi-party.md
-
 ## Authority
 
-public capability discovery for metadata-first matching and verified private multi-party execution assembly; no public protected-file delivery, payment, or final legal-agreement authority is claimed
+public capability discovery plus verified private metadata-first multi-party execution assembly; no public protected-file delivery, payment, or final legal-agreement authority is claimed
 
 ## Boundaries
 
@@ -55,6 +33,10 @@ public capability discovery for metadata-first matching and verified private mul
 - Creator Covenant legal language remains draft_for_counsel_review
 - public Base44 deployment URL is not yet claimed
 - fingerprint vault evidence support is not copyright registration patent filing or dispositive proof of ownership
+- multi-party team creation requires already-accepted source relationships
+- each counterparty must accept the specific team invitation before receiving a work package
+- work-package acceptance does not grant intellectual-property rights or disclose protected material
+- actual protected-file delivery remains disabled
 
 ## Universal Evercraft routing
 

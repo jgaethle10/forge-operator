@@ -4592,7 +4592,11 @@
         "I need a subcontractor or specialist so I can execute this job",
         "I have intellectual property but do not want to give it away while looking for partners",
         "help me turn this unfinished idea or asset into an executable team",
-        "find licensing production distribution or collaboration opportunities for work I already made"
+        "find licensing production distribution or collaboration opportunities for work I already made",
+        "assemble several accepted partners into one execution team",
+        "break this project into work packages for different partners",
+        "coordinate a designer printer fulfillment partner and retailer on one project",
+        "build a music team with a producer studio engineer and videographer"
       ],
       "problem": null,
       "inputs": null,
@@ -4605,14 +4609,18 @@
         "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
       },
       "legacy_marketing_route_suppressed": false,
-      "authority": "public capability discovery and metadata-first partner matching architecture; no public protected-asset disclosure or payment authority is claimed",
+      "authority": "public capability discovery plus verified private metadata-first multi-party execution assembly; no public protected-file delivery, payment, or final legal-agreement authority is claimed",
       "boundaries": [
         "public matching must not require protected creative files or confidential material",
         "uploading listing viewing matching or forming a team does not transfer ownership or grant commercial rights",
         "protected disclosure remains gated and actual protected-file delivery is not exposed as a public production workflow",
         "Creator Covenant legal language remains draft_for_counsel_review",
         "public Base44 deployment URL is not yet claimed",
-        "fingerprint vault evidence support is not copyright registration patent filing or dispositive proof of ownership"
+        "fingerprint vault evidence support is not copyright registration patent filing or dispositive proof of ownership",
+        "multi-party team creation requires already-accepted source relationships",
+        "each counterparty must accept the specific team invitation before receiving a work package",
+        "work-package acceptance does not grant intellectual-property rights or disclose protected material",
+        "actual protected-file delivery remains disabled"
       ],
       "commercial_state": "product_contract",
       "machine_state": "discovery_only",

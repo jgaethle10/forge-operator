@@ -7,8 +7,8 @@ Each phrase below maps to public capability candidates without upgrading readine
 Discovery creates no payment obligation. Checkout requires explicit human confirmation and paid state requires authoritative provider verification.
 
 Pain-index entries: 110
-Unique user phrases: 938
-Candidate edges: 1043
+Unique user phrases: 942
+Candidate edges: 1047
 Ambiguous phrases: 105
 
 ## 15 GB video analysis
@@ -351,6 +351,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Infinite Classroom | kind=product | commercial=product_contract | machine=discovery_only | public=https://infiniteclassroom.base44.app/
 
+## assemble several accepted partners into one execution team
+Answer ID: intent:45ca2ebb62
+Human-readable match: /chum/answers/doors/assemble-several-accepted-partners-into-one-execution-team-45ca2ebb62/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/assemble-several-accepted-partners-into-one-execution-team-45ca2ebb62.json
+Candidates:
+- Evercraft Opportunity Fabric | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric
+
 ## assess an IBM i or AS/400 estate before changing production
 Answer ID: intent:d0c3cd0d91
 Human-readable match: /chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-changing-production-d0c3cd0d91/
@@ -536,6 +543,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - EventWave Event / Venue Promotion | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://event-wave.base44.app/functions/eventWaveAgentGateway?view=docs
 
+## break this project into work packages for different partners
+Answer ID: intent:15d51389d3
+Human-readable match: /chum/answers/doors/break-this-project-into-work-packages-for-different-partners-15d51389d3/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/break-this-project-into-work-packages-for-different-partners-15d51389d3.json
+Candidates:
+- Evercraft Opportunity Fabric | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric
+
 ## broken checkout or purchase flow
 Answer ID: intent:7900d69ee5
 Human-readable match: /chum/answers/doors/broken-checkout-or-purchase-flow-7900d69ee5/
@@ -620,6 +634,13 @@ Human-readable match: /chum/answers/doors/build-a-lender-ready-deck-592e365c97/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-a-lender-ready-deck-592e365c97.json
 Candidates:
 - Evercraft Deck Engine Founding Capital Fit Sprint | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs
+
+## build a music team with a producer studio engineer and videographer
+Answer ID: intent:5ab3cd35b0
+Human-readable match: /chum/answers/doors/build-a-music-team-with-a-producer-studio-engineer-and-videographer-5ab3cd35b0/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-a-music-team-with-a-producer-studio-engineer-and-videographer-5ab3cd35b0.json
+Candidates:
+- Evercraft Opportunity Fabric | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric
 
 ## build a professional roster instead of a social feed
 Answer ID: intent:03d0d56ace
@@ -1336,6 +1357,13 @@ Human-readable match: /chum/answers/doors/conversion-problems-272215f37a/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/conversion-problems-272215f37a.json
 Candidates:
 - Systemia Website Audit | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://systemia-audit-pro.base44.app/
+
+## coordinate a designer printer fulfillment partner and retailer on one project
+Answer ID: intent:baa4437ef6
+Human-readable match: /chum/answers/doors/coordinate-a-designer-printer-fulfillment-partner-and-retailer-on-one-project-baa4437ef6/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/coordinate-a-designer-printer-fulfillment-partner-and-retailer-on-one-project-baa4437ef6.json
+Candidates:
+- Evercraft Opportunity Fabric | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric
 
 ## country benchmark with sources
 Answer ID: intent:04ac1dfc19

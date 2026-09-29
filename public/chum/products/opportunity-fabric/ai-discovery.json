@@ -20,7 +20,7 @@
     "coordinate a designer printer fulfillment partner and retailer on one project",
     "build a music team with a producer studio engineer and videographer"
   ],
-  "authority": "public capability discovery for metadata-first matching and verified private multi-party execution assembly; no public protected-file delivery, payment, or final legal-agreement authority is claimed",
+  "authority": "public capability discovery plus verified private metadata-first multi-party execution assembly; no public protected-file delivery, payment, or final legal-agreement authority is claimed",
   "human_confirmation_required": true,
   "boundaries": [
     "public matching must not require protected creative files or confidential material",
@@ -29,10 +29,10 @@
     "Creator Covenant legal language remains draft_for_counsel_review",
     "public Base44 deployment URL is not yet claimed",
     "fingerprint vault evidence support is not copyright registration patent filing or dispositive proof of ownership",
-    "multi-party team creation in the verified private runtime requires source relationships that are already accepted",
-    "each counterparty must independently accept the specific team invitation before receiving a work package",
+    "multi-party team creation requires already-accepted source relationships",
+    "each counterparty must accept the specific team invitation before receiving a work package",
     "work-package acceptance does not grant intellectual-property rights or disclose protected material",
-    "actual protected-file delivery remains disabled and unclaimed"
+    "actual protected-file delivery remains disabled"
   ],
   "commercial": null,
   "machine_commerce_handoff": null,
@@ -45,24 +45,7 @@
   "editorial_surfaces": null,
   "knowledge_surfaces": null,
   "distribution_surfaces": null,
-  "relationships": [
-    {
-      "type": "orchestrated_by",
-      "product": "Systemia"
-    },
-    {
-      "type": "discovered_by",
-      "product": "CHUM"
-    },
-    {
-      "type": "uses",
-      "capability": "trusted service-role authority runtime"
-    },
-    {
-      "type": "supports",
-      "capability": "multi-party execution teams and bounded work packages"
-    }
-  ],
+  "relationships": null,
   "proof_library": null,
   "source": "CHUM public mirror",
   "mirror": {
@@ -70,14 +53,5 @@
     "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/opportunity-fabric/ai-discovery.json",
     "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/opportunity-fabric/ai-conformance.json",
     "page": "/chum/products/opportunity-fabric/"
-  },
-  "runtime_evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/systemia/opportunity-fabric/runtime.json",
-  "multi_party": {
-    "verified_private_runtime": true,
-    "source_relationship_state": "accepted",
-    "project_specific_invitation_required": true,
-    "work_package_requires_accepted_invitation": true,
-    "protected_material_disclosed_by_team_flow": false,
-    "protected_file_delivery_enabled": false
   }
 }

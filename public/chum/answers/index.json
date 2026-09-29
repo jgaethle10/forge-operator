@@ -21,8 +21,8 @@
   },
   "summary": {
     "pain_index_entries": 110,
-    "unique_user_phrases": 938,
-    "mapped_candidate_edges": 1043,
+    "unique_user_phrases": 942,
+    "mapped_candidate_edges": 1047,
     "ambiguous_phrases": 105,
     "product_candidates": 64,
     "machine_offer_candidates": 46
@@ -1181,6 +1181,29 @@
       ]
     },
     {
+      "answer_id": "intent:45ca2ebb62",
+      "user_language": "assemble several accepted partners into one execution team",
+      "normalized": "assemble several accepted partners into one execution team",
+      "relative_json": "/chum/answers/doors/assemble-several-accepted-partners-into-one-execution-team-45ca2ebb62.json",
+      "relative_page": "/chum/answers/doors/assemble-several-accepted-partners-into-one-execution-team-45ca2ebb62/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/assemble-several-accepted-partners-into-one-execution-team-45ca2ebb62.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:opportunity-fabric",
+          "kind": "product",
+          "product_key": "opportunity-fabric",
+          "public_id": null,
+          "name": "Evercraft Opportunity Fabric",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/opportunity-fabric/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:d0c3cd0d91",
       "user_language": "assess an IBM i or AS/400 estate before changing production",
       "normalized": "assess an ibm i or as 400 estate before changing production",
@@ -1815,6 +1838,29 @@
       ]
     },
     {
+      "answer_id": "intent:15d51389d3",
+      "user_language": "break this project into work packages for different partners",
+      "normalized": "break this project into work packages for different partners",
+      "relative_json": "/chum/answers/doors/break-this-project-into-work-packages-for-different-partners-15d51389d3.json",
+      "relative_page": "/chum/answers/doors/break-this-project-into-work-packages-for-different-partners-15d51389d3/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/break-this-project-into-work-packages-for-different-partners-15d51389d3.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:opportunity-fabric",
+          "kind": "product",
+          "product_key": "opportunity-fabric",
+          "public_id": null,
+          "name": "Evercraft Opportunity Fabric",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/opportunity-fabric/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:7900d69ee5",
       "user_language": "broken checkout or purchase flow",
       "normalized": "broken checkout or purchase flow",
@@ -2098,6 +2144,29 @@
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/deck-capital-fit-sprint-machine-v1/",
           "public_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:5ab3cd35b0",
+      "user_language": "build a music team with a producer studio engineer and videographer",
+      "normalized": "build a music team with a producer studio engineer and videographer",
+      "relative_json": "/chum/answers/doors/build-a-music-team-with-a-producer-studio-engineer-and-videographer-5ab3cd35b0.json",
+      "relative_page": "/chum/answers/doors/build-a-music-team-with-a-producer-studio-engineer-and-videographer-5ab3cd35b0/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-a-music-team-with-a-producer-studio-engineer-and-videographer-5ab3cd35b0.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:opportunity-fabric",
+          "kind": "product",
+          "product_key": "opportunity-fabric",
+          "public_id": null,
+          "name": "Evercraft Opportunity Fabric",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/opportunity-fabric/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric",
           "registry_name": null
         }
       ]
@@ -4530,6 +4599,29 @@
           "pain_page": "/chum/products/systemia-website-audit/",
           "public_url": "https://systemia-audit-pro.base44.app/",
           "registry_name": "io.github.jgaethle10/systemia-website-audit"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:baa4437ef6",
+      "user_language": "coordinate a designer printer fulfillment partner and retailer on one project",
+      "normalized": "coordinate a designer printer fulfillment partner and retailer on one project",
+      "relative_json": "/chum/answers/doors/coordinate-a-designer-printer-fulfillment-partner-and-retailer-on-one-project-baa4437ef6.json",
+      "relative_page": "/chum/answers/doors/coordinate-a-designer-printer-fulfillment-partner-and-retailer-on-one-project-baa4437ef6/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/coordinate-a-designer-printer-fulfillment-partner-and-retailer-on-one-project-baa4437ef6.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:opportunity-fabric",
+          "kind": "product",
+          "product_key": "opportunity-fabric",
+          "public_id": null,
+          "name": "Evercraft Opportunity Fabric",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/opportunity-fabric/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric",
+          "registry_name": null
         }
       ]
     },

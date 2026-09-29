@@ -2,8 +2,8 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-29T18:57:39.482Z",
-  "url_count": 2636,
+  "updated_at": "2026-09-29T19:02:10.017Z",
+  "url_count": 2644,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
     "content_hash_controls_freshness": true,
@@ -93,32 +93,32 @@
     },
     "/chum/pain-index.json": {
       "path": "/chum/pain-index.json",
-      "content_sha256": "458cc41181ea69071a3c82eed00507b7c6f0b5839b901a4e5f6e5067822aed24",
-      "last_changed": "2026-09-29T18:55:38.752Z",
+      "content_sha256": "8882bd98fcab3ee8d143dbe97b444de26ef7c6c0d7dc72b1b94113a4c7e6098f",
+      "last_changed": "2026-09-29T19:02:10.017Z",
       "priority": 80
     },
     "/chum/pain-index.txt": {
       "path": "/chum/pain-index.txt",
-      "content_sha256": "99b2bc1c6f038f760ff6da9e5ee841b85e0df14cc180aaf7e8585a10e53104ba",
-      "last_changed": "2026-09-29T18:55:38.752Z",
+      "content_sha256": "69b846f304b430e0a2846addb065f712e4ba865baa513a653447a1c5a3f77286",
+      "last_changed": "2026-09-29T19:02:10.017Z",
       "priority": 80
     },
     "/chum/answers/": {
       "path": "/chum/answers/",
-      "content_sha256": "3457266b4fffe53935c9508d4b9bfc788213e199bfbca66ba0b2b5d1fde5c6b2",
-      "last_changed": "2026-09-29T18:55:38.752Z",
+      "content_sha256": "c54728633aad8cce8faef3a2a055c37c2ac6721efeb7c173c11f49b8d92bb700",
+      "last_changed": "2026-09-29T19:02:10.017Z",
       "priority": 80
     },
     "/chum/answers/index.json": {
       "path": "/chum/answers/index.json",
-      "content_sha256": "fa83753c8094914caaa9afbeaae872a1b569818f1357702a483c57568793393f",
-      "last_changed": "2026-09-29T18:55:38.752Z",
+      "content_sha256": "1439f109217fed09f223ab648c3dcd1fbdcf2f492fac4728658fab0dea6517f1",
+      "last_changed": "2026-09-29T19:02:10.017Z",
       "priority": 80
     },
     "/chum/answers/index.txt": {
       "path": "/chum/answers/index.txt",
-      "content_sha256": "572b1933709bc6259d5c7655ee3552c108c815a5cb17e229fdf53765c69687f2",
-      "last_changed": "2026-09-29T18:55:38.752Z",
+      "content_sha256": "c367b24111612991b47a74f9a5843562dcb29b29a6d88c08c7b81d6e14adad3c",
+      "last_changed": "2026-09-29T19:02:10.017Z",
       "priority": 80
     },
     "/chum/answers/observed/": {
@@ -141,8 +141,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "1dd99b11887278ba1d2afc12cce1f9c7251397a0d367d25b620567edf778d6c7",
-      "last_changed": "2026-09-29T18:57:39.482Z",
+      "content_sha256": "580ea88c1373d2a94cf3c74532bbe6335b995a582d698ffa78c3aa0969626bfb",
+      "last_changed": "2026-09-29T19:02:10.017Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -177,8 +177,8 @@
     },
     "/chum/proof/index.json": {
       "path": "/chum/proof/index.json",
-      "content_sha256": "c9345870705546d706c947f35b5980b8cbf1107ee0ad6871d2f882236202dda5",
-      "last_changed": "2026-09-29T18:40:05.280Z",
+      "content_sha256": "6811c2af6e31f36064245e20cac7a6c4542e3619b0ab4104d31161c11f8a7ab1",
+      "last_changed": "2026-09-29T19:02:10.017Z",
       "priority": 80
     },
     "/chum/proof/llms.txt": {
@@ -189,14 +189,14 @@
     },
     "/chum/proof/forensiscope.json": {
       "path": "/chum/proof/forensiscope.json",
-      "content_sha256": "5b5892136dafd14cbae4880cca813ec49ae3ded0921475652f0ba0fd2e928111",
-      "last_changed": "2026-09-29T18:40:05.280Z",
+      "content_sha256": "db24dbbedb959e8257e324558439a9701d3433a4cb00c5c2c1d5357335f3ab96",
+      "last_changed": "2026-09-29T19:02:10.017Z",
       "priority": 80
     },
     "/chum/proof/rivet.json": {
       "path": "/chum/proof/rivet.json",
-      "content_sha256": "dd06c237b53728c8fc174f7c098c277edbd246e0b4796d37df5c7e0e31354004",
-      "last_changed": "2026-09-29T18:40:05.280Z",
+      "content_sha256": "c22787b2e27a858c3a5652269034560e784c98bcd7ba3dd6d05a9393f80cd929",
+      "last_changed": "2026-09-29T19:02:10.017Z",
       "priority": 80
     },
     "/chum/commercial/": {
@@ -243,8 +243,8 @@
     },
     "/chum/sitemaps/answers.xml": {
       "path": "/chum/sitemaps/answers.xml",
-      "content_sha256": "926b04d17dd7084c94b507fca776caa007afc5867019d81d9f5d585d3e2afc91",
-      "last_changed": "2026-09-29T18:55:38.752Z",
+      "content_sha256": "8bde110f66b77ee680b61548c4f7f2fe4f1aaee98cc4dc266c6932e43f347ea6",
+      "last_changed": "2026-09-29T19:02:10.017Z",
       "priority": 108
     },
     "/chum/sitemaps/products.xml": {
@@ -339,8 +339,8 @@
     },
     "/.well-known/evercraft-pain-index.json": {
       "path": "/.well-known/evercraft-pain-index.json",
-      "content_sha256": "458cc41181ea69071a3c82eed00507b7c6f0b5839b901a4e5f6e5067822aed24",
-      "last_changed": "2026-09-29T18:55:38.752Z",
+      "content_sha256": "8882bd98fcab3ee8d143dbe97b444de26ef7c6c0d7dc72b1b94113a4c7e6098f",
+      "last_changed": "2026-09-29T19:02:10.017Z",
       "priority": 90
     },
     "/rivet/discovery.json": {
@@ -729,8 +729,8 @@
     },
     "/llms-full.txt": {
       "path": "/llms-full.txt",
-      "content_sha256": "29bcf40f4df233cd227fbe7b31c83a7ccda93fc5b2da73ca1f233a70d9fb8c72",
-      "last_changed": "2026-09-29T18:55:38.752Z",
+      "content_sha256": "6f52d54f1214b19aa174a5731ebc0bf090c66dc4690810bf05d4865fd77ec682",
+      "last_changed": "2026-09-29T19:02:10.017Z",
       "priority": 86
     },
     "/ai-discovery.json": {
@@ -771,8 +771,8 @@
     },
     "/.well-known/evercraft-agent-directory.json": {
       "path": "/.well-known/evercraft-agent-directory.json",
-      "content_sha256": "27293050edd4a11d08fc4f8f7356790125cc1e82b219e6ee8ae2d75740de2432",
-      "last_changed": "2026-09-29T18:55:38.752Z",
+      "content_sha256": "830b3a89ba3d217bbf7933e5655a7f8e66842ac1b16f6253564764eee50fb4ce",
+      "last_changed": "2026-09-29T19:02:10.017Z",
       "priority": 84
     },
     "/.well-known/evercraft-agent-commerce.json": {
@@ -795,8 +795,8 @@
     },
     "/.well-known/evercraft-products.json": {
       "path": "/.well-known/evercraft-products.json",
-      "content_sha256": "31c21c4ddd2744f6c5f5a20ab9a5efd4aadcd05b17a6aac7f053c900d273ca30",
-      "last_changed": "2026-09-29T18:55:38.752Z",
+      "content_sha256": "8c62cfd9b452cb7338e888f5c5ac25ec54a56fc32bbfb2d14f4dcaf8df39238d",
+      "last_changed": "2026-09-29T19:02:10.017Z",
       "priority": 88
     },
     "/.well-known/evercraft-machine-catalog.json": {
@@ -3387,26 +3387,26 @@
     },
     "/chum/products/opportunity-fabric/": {
       "path": "/chum/products/opportunity-fabric/",
-      "content_sha256": "3e14ebd9d6e3011f7e81c68901db3dec6b4047c02630aecd86295375efa5e91e",
-      "last_changed": "2026-09-29T02:27:24.445Z",
+      "content_sha256": "791f61240cf6a7b120d2ab9e26f55e847ff60b101a42b1aa6363a7fd3868a156",
+      "last_changed": "2026-09-29T19:02:10.017Z",
       "priority": 94
     },
     "/chum/products/opportunity-fabric/llms.txt": {
       "path": "/chum/products/opportunity-fabric/llms.txt",
-      "content_sha256": "1c0a2d89b178723c5cb28229b9847549a28ab513618739b542db9100161c7d5b",
-      "last_changed": "2026-09-29T02:27:24.445Z",
+      "content_sha256": "0e8963caf2702fe258e037bf13a88d0486a47849b727a03ca737082a0caba883",
+      "last_changed": "2026-09-29T19:02:10.017Z",
       "priority": 94
     },
     "/chum/products/opportunity-fabric/ai-discovery.json": {
       "path": "/chum/products/opportunity-fabric/ai-discovery.json",
-      "content_sha256": "ce662954310b44127bc042d03c389c21e34ad54d06162fb3f60f08a1497075d1",
-      "last_changed": "2026-09-29T02:27:24.445Z",
+      "content_sha256": "9571ac5a0e83a8b7fcbad12ef122d3333fb33332e17609110fa7a854f5c51186",
+      "last_changed": "2026-09-29T19:02:10.017Z",
       "priority": 94
     },
     "/chum/products/opportunity-fabric/ai-conformance.json": {
       "path": "/chum/products/opportunity-fabric/ai-conformance.json",
-      "content_sha256": "f7f2a2ee9a2eed64660fa86088fd1cbee17990d44f45d59c5bfbeed505e22102",
-      "last_changed": "2026-09-29T02:27:24.445Z",
+      "content_sha256": "a915b2aa47e18108ddf62e99c53722f109e7f27523356dc64637f14dc1557a95",
+      "last_changed": "2026-09-29T19:02:10.017Z",
       "priority": 94
     },
     "/chum/products/payflow/": {
@@ -4861,6 +4861,18 @@
       "last_changed": "2026-09-29T02:24:28.186Z",
       "priority": 160
     },
+    "/chum/answers/doors/assemble-several-accepted-partners-into-one-execution-team-45ca2ebb62/": {
+      "path": "/chum/answers/doors/assemble-several-accepted-partners-into-one-execution-team-45ca2ebb62/",
+      "content_sha256": "e6cbdd2d90687f79d2d2f0ab285c4238c7f5d02c54e3967fbff45f1681515859",
+      "last_changed": "2026-09-29T19:02:10.017Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/assemble-several-accepted-partners-into-one-execution-team-45ca2ebb62.json": {
+      "path": "/chum/answers/doors/assemble-several-accepted-partners-into-one-execution-team-45ca2ebb62.json",
+      "content_sha256": "18456e0d753e63f7f048c470a18afa0a47df9cdecd19bfd69e521bd0ce4ad12a",
+      "last_changed": "2026-09-29T19:02:10.017Z",
+      "priority": 100
+    },
     "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-changing-production-d0c3cd0d91/": {
       "path": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-changing-production-d0c3cd0d91/",
       "content_sha256": "b927753abf2c128411f1ccdbbbbf185ed5775755dc15fedb81f08322e97da730",
@@ -5173,6 +5185,18 @@
       "last_changed": "2026-09-29T02:24:28.186Z",
       "priority": 160
     },
+    "/chum/answers/doors/break-this-project-into-work-packages-for-different-partners-15d51389d3/": {
+      "path": "/chum/answers/doors/break-this-project-into-work-packages-for-different-partners-15d51389d3/",
+      "content_sha256": "905bb815a626ea15372f9506e6872e3fa8db7d256eb60679be2a45466b0f3c79",
+      "last_changed": "2026-09-29T19:02:10.017Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/break-this-project-into-work-packages-for-different-partners-15d51389d3.json": {
+      "path": "/chum/answers/doors/break-this-project-into-work-packages-for-different-partners-15d51389d3.json",
+      "content_sha256": "218f64dbfafdb293dac650059beb962dc8da17f89abf45e82b393f2c2d1daa40",
+      "last_changed": "2026-09-29T19:02:10.017Z",
+      "priority": 100
+    },
     "/chum/answers/doors/broken-checkout-or-purchase-flow-7900d69ee5/": {
       "path": "/chum/answers/doors/broken-checkout-or-purchase-flow-7900d69ee5/",
       "content_sha256": "7a73461aa86d7ab023a815208497f1c6c1ed712604f8c67cee2b22ec76d7a39a",
@@ -5316,6 +5340,18 @@
       "content_sha256": "be7dcf28407e4956731f16b4fe824f83c604450e99c6d1a5c5358d8bbf0c360a",
       "last_changed": "2026-09-29T02:24:28.186Z",
       "priority": 160
+    },
+    "/chum/answers/doors/build-a-music-team-with-a-producer-studio-engineer-and-videographer-5ab3cd35b0/": {
+      "path": "/chum/answers/doors/build-a-music-team-with-a-producer-studio-engineer-and-videographer-5ab3cd35b0/",
+      "content_sha256": "d152f765851ef8296b2348dc15cf3312d8db6d41849c61213658bbcc82aeba0d",
+      "last_changed": "2026-09-29T19:02:10.017Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/build-a-music-team-with-a-producer-studio-engineer-and-videographer-5ab3cd35b0.json": {
+      "path": "/chum/answers/doors/build-a-music-team-with-a-producer-studio-engineer-and-videographer-5ab3cd35b0.json",
+      "content_sha256": "484c47e7c0385bba69f6eb918d82cc1b27c5de19f789267369b89ea64bd58777",
+      "last_changed": "2026-09-29T19:02:10.017Z",
+      "priority": 100
     },
     "/chum/answers/doors/build-a-professional-roster-instead-of-a-social-feed-03d0d56ace/": {
       "path": "/chum/answers/doors/build-a-professional-roster-instead-of-a-social-feed-03d0d56ace/",
@@ -6528,6 +6564,18 @@
       "content_sha256": "8cd45acd385eb5f8def439d8ff7250ac7bd56ed304086e672cfa621e9a7ccf78",
       "last_changed": "2026-09-29T02:24:28.186Z",
       "priority": 160
+    },
+    "/chum/answers/doors/coordinate-a-designer-printer-fulfillment-partner-and-retailer-on-one-project-baa4437ef6/": {
+      "path": "/chum/answers/doors/coordinate-a-designer-printer-fulfillment-partner-and-retailer-on-one-project-baa4437ef6/",
+      "content_sha256": "e15247f50b913c9c91c67fc4583d73124fe4c3604c4e51a47d27dd64850aff6f",
+      "last_changed": "2026-09-29T19:02:10.017Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/coordinate-a-designer-printer-fulfillment-partner-and-retailer-on-one-project-baa4437ef6.json": {
+      "path": "/chum/answers/doors/coordinate-a-designer-printer-fulfillment-partner-and-retailer-on-one-project-baa4437ef6.json",
+      "content_sha256": "ffd02310a1ed6691f4659e27adc76b7aa3136834670773da72cee1223a924579",
+      "last_changed": "2026-09-29T19:02:10.017Z",
+      "priority": 100
     },
     "/chum/answers/doors/country-benchmark-with-sources-04ac1dfc19/": {
       "path": "/chum/answers/doors/country-benchmark-with-sources-04ac1dfc19/",
@@ -7845,8 +7893,8 @@
     },
     "/chum/answers/doors/find-a-production-partner-for-my-artwork-a53975f087.json": {
       "path": "/chum/answers/doors/find-a-production-partner-for-my-artwork-a53975f087.json",
-      "content_sha256": "6e4ab15b524103e2d02cafc415a694146df8c895828b89bb81f4d73501fe04f5",
-      "last_changed": "2026-09-29T02:27:24.445Z",
+      "content_sha256": "ab65e79feea4a15d3b26bdeaca1e3fca31a25cbfc7b5241a5f7e2831e108d4e6",
+      "last_changed": "2026-09-29T19:02:10.017Z",
       "priority": 100
     },
     "/chum/answers/doors/find-a-replacement-for-an-obsolete-part-4be38e27cb/": {
@@ -7941,8 +7989,8 @@
     },
     "/chum/answers/doors/find-collaborators-near-me-who-can-help-finish-this-project-e0a9623be6.json": {
       "path": "/chum/answers/doors/find-collaborators-near-me-who-can-help-finish-this-project-e0a9623be6.json",
-      "content_sha256": "8b0c8b79180388a83bf2cd027e7830d73a76b86fe98cfa87b63557bd4981245f",
-      "last_changed": "2026-09-29T02:27:24.445Z",
+      "content_sha256": "ed80940e9a79a44417eeae7ab7abec98ebddfcd4a77a3d901d2e09dde2d95cec",
+      "last_changed": "2026-09-29T19:02:10.017Z",
       "priority": 100
     },
     "/chum/answers/doors/find-conflicts-in-our-business-exports-f352d58cb0/": {
@@ -8085,8 +8133,8 @@
     },
     "/chum/answers/doors/find-licensing-production-distribution-or-collaboration-opportunities-for-work-i-a-5711d10a51.json": {
       "path": "/chum/answers/doors/find-licensing-production-distribution-or-collaboration-opportunities-for-work-i-a-5711d10a51.json",
-      "content_sha256": "ae9465ee5fcf434d503f0f90429a686bcf3ac9d9c9fbd258f3187e69b8b2fc54",
-      "last_changed": "2026-09-29T02:27:24.445Z",
+      "content_sha256": "dba157201bd38338be076067e586b986c7cd8c8e9bb841fa2322134923bc0829",
+      "last_changed": "2026-09-29T19:02:10.017Z",
       "priority": 100
     },
     "/chum/answers/doors/find-local-events-f2270ae02e/": {
@@ -8973,8 +9021,8 @@
     },
     "/chum/answers/doors/help-me-turn-this-unfinished-idea-or-asset-into-an-executable-team-ddff6c3be7.json": {
       "path": "/chum/answers/doors/help-me-turn-this-unfinished-idea-or-asset-into-an-executable-team-ddff6c3be7.json",
-      "content_sha256": "ba78549ed1f026bd63a6d45e44c717baecb98433969ae2d8719d9ffa61864a73",
-      "last_changed": "2026-09-29T02:27:24.445Z",
+      "content_sha256": "fc79c1806f883d353b801cd9a60e7432dc6a7a4a8be965b3adb7819cb6a6db84",
+      "last_changed": "2026-09-29T19:02:10.017Z",
       "priority": 100
     },
     "/chum/answers/doors/help-modernize-a-jde-world-or-custom-ibm-i-workload-without-losing-business-behavi-33f9cbc5b5/": {
@@ -9309,8 +9357,8 @@
     },
     "/chum/answers/doors/i-have-designs-and-need-a-printer-or-manufacturing-partner-5578781874.json": {
       "path": "/chum/answers/doors/i-have-designs-and-need-a-printer-or-manufacturing-partner-5578781874.json",
-      "content_sha256": "001e9f138a3a902d8076576f6c37f111fcde9b541c0f4e636668cfd19ff2ef25",
-      "last_changed": "2026-09-29T02:27:24.445Z",
+      "content_sha256": "40bab2b8d744037317503a69534d51671b1023d3d5508d22dd911245fec7986f",
+      "last_changed": "2026-09-29T19:02:10.017Z",
       "priority": 100
     },
     "/chum/answers/doors/i-have-equipment-or-unused-capacity-and-want-complementary-work-0f41f1907a/": {
@@ -9321,8 +9369,8 @@
     },
     "/chum/answers/doors/i-have-equipment-or-unused-capacity-and-want-complementary-work-0f41f1907a.json": {
       "path": "/chum/answers/doors/i-have-equipment-or-unused-capacity-and-want-complementary-work-0f41f1907a.json",
-      "content_sha256": "43ddc8d727a4fe11511a1c80c614cc5a4f96b4f183ed4b2d13e3dcf5dcba005b",
-      "last_changed": "2026-09-29T02:27:24.445Z",
+      "content_sha256": "a304ec6b68360634c27dcfc52f381b78a02cbada987c38bdfb8b837daecf45cf",
+      "last_changed": "2026-09-29T19:02:10.017Z",
       "priority": 100
     },
     "/chum/answers/doors/i-have-intellectual-property-but-do-not-want-to-give-it-away-while-looking-for-par-d66ff15804/": {
@@ -9333,8 +9381,8 @@
     },
     "/chum/answers/doors/i-have-intellectual-property-but-do-not-want-to-give-it-away-while-looking-for-par-d66ff15804.json": {
       "path": "/chum/answers/doors/i-have-intellectual-property-but-do-not-want-to-give-it-away-while-looking-for-par-d66ff15804.json",
-      "content_sha256": "533bc92cbba81126f5d206614232b46c6bcd3087bdf6c6c117a530978a3264a7",
-      "last_changed": "2026-09-29T02:27:24.445Z",
+      "content_sha256": "a12d750b8fb4a6dd35c90d4a25499793f9cd23295e6c04e3d484398946567858",
+      "last_changed": "2026-09-29T19:02:10.017Z",
       "priority": 100
     },
     "/chum/answers/doors/i-have-songs-or-demos-and-need-a-producer-or-recording-studio-2c59fff706/": {
@@ -9345,8 +9393,8 @@
     },
     "/chum/answers/doors/i-have-songs-or-demos-and-need-a-producer-or-recording-studio-2c59fff706.json": {
       "path": "/chum/answers/doors/i-have-songs-or-demos-and-need-a-producer-or-recording-studio-2c59fff706.json",
-      "content_sha256": "9d4f7e42f6646be2f214572a2fd0a799fd3f554f4b0396f85b1bb20ad1de54f4",
-      "last_changed": "2026-09-29T02:27:24.445Z",
+      "content_sha256": "fcbaecabd2f10e8520601e45f1115ad52bcfae89cb4f4dd385dc2c90ba4a22e0",
+      "last_changed": "2026-09-29T19:02:10.017Z",
       "priority": 100
     },
     "/chum/answers/doors/i-just-had-a-baby-and-need-practical-help-523390b128/": {
@@ -9417,8 +9465,8 @@
     },
     "/chum/answers/doors/i-need-a-subcontractor-or-specialist-so-i-can-execute-this-job-90f2030945.json": {
       "path": "/chum/answers/doors/i-need-a-subcontractor-or-specialist-so-i-can-execute-this-job-90f2030945.json",
-      "content_sha256": "dd2530c5c0dd1dd5196d9dc2a1b44141de58ec2efdecf3f5bd7e082f13fe0b2c",
-      "last_changed": "2026-09-29T02:27:24.445Z",
+      "content_sha256": "431e69ca7d87cf78b33e8b71bffa5cae5b93b6ce3df4014de0cdf16b90aa9a20",
+      "last_changed": "2026-09-29T19:02:10.017Z",
       "priority": 100
     },
     "/chum/answers/doors/i-need-an-ai-service-that-can-inspect-a-long-video-deduplicate-segments-transcribe-9e18952b38/": {
@@ -15795,14 +15843,14 @@
     },
     "/feed.xml": {
       "path": "/feed.xml",
-      "content_sha256": "a03fe4550aa2f485e9a476ab91f9a8508c80b0a9ce8da22e286021da374b967d",
-      "last_changed": "2026-09-29T18:55:38.752Z",
+      "content_sha256": "ce1dc21172ff93f957fc9805e8b0898db6abb731d9d2082a76de865ee895e25f",
+      "last_changed": "2026-09-29T19:02:10.017Z",
       "priority": 60
     },
     "/feed.json": {
       "path": "/feed.json",
-      "content_sha256": "38afa46572097e613530d02eb9235dfca33bf50b7aff980b31a3602a030f4eb5",
-      "last_changed": "2026-09-29T18:55:38.752Z",
+      "content_sha256": "454fb1f0062874f78d87a8ec104820728691a9634c07abee8f355f6c2fcb657f",
+      "last_changed": "2026-09-29T19:02:10.017Z",
       "priority": 60
     },
     "/opensearch.xml": {
@@ -15813,8 +15861,8 @@
     },
     "/.well-known/evercraft-syndication.json": {
       "path": "/.well-known/evercraft-syndication.json",
-      "content_sha256": "0352e86d387e392f52ce6b20cace1671164995378effa5fbdf6ce71ed8df545b",
-      "last_changed": "2026-09-29T18:55:38.752Z",
+      "content_sha256": "9aab9b4f305ea3fa7639952ca532c2775398744bd559df54a8cec50c6e40194a",
+      "last_changed": "2026-09-29T19:02:10.017Z",
       "priority": 84
     },
     "/chum/syndication/": {
@@ -15825,8 +15873,8 @@
     },
     "/chum/syndication/index.json": {
       "path": "/chum/syndication/index.json",
-      "content_sha256": "bb0a7ae22274b7475cdc71538d3c3c0f56606e6a6ef5d477dd94c492f7491253",
-      "last_changed": "2026-09-29T18:55:38.752Z",
+      "content_sha256": "4934229c22be71edbb4f0cab31551d7daf9e214480a862935c84b84faa468555",
+      "last_changed": "2026-09-29T19:02:10.017Z",
       "priority": 80
     }
   }

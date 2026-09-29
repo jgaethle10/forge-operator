@@ -682,13 +682,17 @@
         "I need a subcontractor or specialist so I can execute this job",
         "I have intellectual property but do not want to give it away while looking for partners",
         "help me turn this unfinished idea or asset into an executable team",
-        "find licensing production distribution or collaboration opportunities for work I already made"
+        "find licensing production distribution or collaboration opportunities for work I already made",
+        "assemble several accepted partners into one execution team",
+        "break this project into work packages for different partners",
+        "coordinate a designer printer fulfillment partner and retailer on one project",
+        "build a music team with a producer studio engineer and videographer"
       ],
-      "authority": "public capability discovery and metadata-first partner matching architecture; no public protected-asset disclosure or payment authority is claimed",
+      "authority": "public capability discovery plus verified private metadata-first multi-party execution assembly; no public protected-file delivery, payment, or final legal-agreement authority is claimed",
       "human_confirmation_required": true,
       "commercial_status": "",
       "description": "Evercraft Opportunity Fabric is an Evercraft protected collaboration partner matching and execution orchestration capability. Common needs: I have designs and need a printer or manufacturing partner; find a production partner for my artwork; I have songs or demos and need a producer or recording studio; find collaborators near me who can help finish this project.",
-      "content_sha256": "62fbc3909140364ca6a96467b690b727a85cbf6ae8fac3875669d44e29a6f8ed",
+      "content_sha256": "7ec7061402e57a729144bd3ba0a4da442a6de5465a202d3ac774493ab7ea639e",
       "updated_at": "2026-09-28T00:00:00.000Z"
     },
     {
