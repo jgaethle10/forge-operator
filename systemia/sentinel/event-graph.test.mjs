@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { emptyState, ingestObservation } from './engine.mjs';
 import { createFeedAdapter } from './feed-adapter.mjs';
 import { buildRegionalEventGraph } from './event-graph.mjs';
+import { buildOperatorPicture } from './operator-picture.mjs';
 
 let state = emptyState();
 
@@ -55,6 +56,10 @@ state = result.state;
 assert.equal(result.decision.assessment.raw_source_families, 2);
 assert.equal(result.decision.assessment.independent_source_groups, 1);
 assert.equal(result.decision.assessment.level, 'watch');
+const lineagePicture = buildOperatorPicture(state.incidents[result.decision.incident_id]);
+assert.equal(lineagePicture.raw_source_families, 2);
+assert.equal(lineagePicture.independent_source_families, 1);
+assert.deepEqual(lineagePicture.independent_source_groups, ['noaa-nws']);
 
 const usgs = createFeedAdapter({
   adapter_id: 'usgs-test',
