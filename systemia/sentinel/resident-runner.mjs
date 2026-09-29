@@ -46,6 +46,9 @@ const nwsArea = String(
 const nwpsGaugeIds = String(
   arg('--nwps-gauges', process.env.SYSTEMIA_SENTINEL_NWPS_GAUGES || '')
 ).split(',').map((value) => value.trim()).filter(Boolean);
+const usgsWaterLocationIds = String(
+  arg('--usgs-water-locations', process.env.SYSTEMIA_SENTINEL_USGS_WATER_LOCATIONS || '')
+).split(',').map((value) => value.trim()).filter(Boolean);
 const once = has('--once');
 
 const stateFile = path.join(stateDir, 'state.json');
@@ -60,7 +63,7 @@ async function cycle() {
     const result = await runSentinelResidentCycle({
       inputState: state,
       now: new Date().toISOString(),
-      sources: buildBuiltinSentinelSources({ nwpsGaugeIds }),
+      sources: buildBuiltinSentinelSources({ nwpsGaugeIds, usgsWaterLocationIds }),
       sourceOptions: {
         'nws-active-alerts': nwsArea ? { area: nwsArea } : {}
       }
