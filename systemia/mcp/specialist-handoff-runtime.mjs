@@ -3,6 +3,7 @@ import { randomBytes } from 'node:crypto';
 import {
   executeFabricDirectoryRpc,
   fabricDirectoryTools,
+  loadFabricCatalogFromRepository,
   normalizeFabricCatalog,
   validateOpenAiChallengeToken,
 } from './fabric-directory.mjs';
@@ -566,7 +567,7 @@ export async function startSpecialistHandoffRuntime({
   gatewayFetch = null,
   remoteOpsPricingUrl = SYSTEMIA_REMOTE_OPS.pricing_url,
   remoteOpsPricingFetch = null,
-  fabricCatalog = [],
+  fabricCatalog = null,
   fabricMcpPath = '/mcp',
   openAiChallengeToken = '',
 } = {}) {
@@ -577,7 +578,9 @@ export async function startSpecialistHandoffRuntime({
     defaultGatewayFetch(gatewayUrl, action, publicId));
   const callRemoteOpsPricing = remoteOpsPricingFetch || ((payload) =>
     Promise.resolve(simulateRemoteOpsPricing(payload)));
-  const normalizedFabricCatalog = normalizeFabricCatalog(fabricCatalog);
+  const normalizedFabricCatalog = Array.isArray(fabricCatalog)
+    ? normalizeFabricCatalog(fabricCatalog)
+    : loadFabricCatalogFromRepository();
   const normalizedFabricPath = String(fabricMcpPath || '/mcp').trim();
   if (!/^\/[A-Za-z0-9._~!  const callRemoteOpsPricing = remoteOpsPricingFetch || ((payload) =>
     Promise.resolve(simulateRemoteOpsPricing(payload)));
