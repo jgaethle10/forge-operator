@@ -38,6 +38,12 @@ jobs:
       - name: Prove payment-to-fulfillment routing
         run: npm run proof:portfolio-fulfillment-router
 
+      - name: Prove paid order to delivery receipt
+        run: npm run proof:portfolio-fulfillment-e2e
+
+      - name: Dry-run all sell-now products
+        run: npm run proof:portfolio-fulfillment-all
+
       - name: Validate Saban contracts
         run: npm run check:saban-contracts
 
