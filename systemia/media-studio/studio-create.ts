@@ -117,14 +117,16 @@ function assertPlan(plan:StudioDraftPlan){
   }
 }
 
-function sourceAssetToTimeline(asset:SourceAsset):TimelineAsset{
+function sourceAssetToTimeline(asset:StudioSourceAsset):TimelineAsset{
+  if(!/^[a-f0-9]{64}$/i.test(asset.digest)) throw new Error(`studio_draft_source_digest_invalid:${asset.id}`);
+  if(!asset.sourceRefs?.length) throw new Error(`studio_draft_source_refs_missing:${asset.id}`);
   return {
     id:asset.id,
     path:asset.path,
-    digest:digest({id:asset.id,path:asset.path,kind:asset.kind}),
+    digest:asset.digest,
     kind:asset.kind,
-    sourceRefs:[`source:${asset.id}`],
-    evidenceState:asset.rights==='owned'||asset.rights==='licensed'?'licensed':'public_source',
+    sourceRefs:[...asset.sourceRefs],
+    evidenceState:asset.evidenceState??(asset.rights==='owned'||asset.rights==='licensed'?'licensed':'public_source'),
   };
 }
 
