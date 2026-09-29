@@ -108,10 +108,12 @@ function routeFirstPartyIntent(intentInput: unknown) {
 const forensiScopeHandoff = {
   product: 'ForensiScope',
   productKey: 'forensiscope',
-  canonicalUrl: 'https://evercraft-forensiscope.base44.app/',
   registryName: 'io.github.jgaethle10/forensiscope',
-  mcp: 'https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp',
+  mcpPath: '/mcp/forensiscope',
+  canonicalPath: '/forensiscope/',
   overflowManifest: '/.well-known/evercraft-media-overflow.json',
+  runtime: 'yard_evercraft_compute',
+  base44Dependency: false,
 };
 
 const mediaOverflowCodes = new Set([
@@ -590,6 +592,12 @@ app.post('/api/resolve/media-overflow', rateLimit(120, 60 * 60 * 1000), (req: Re
     suggestion: 'ForensiScope is an optional continuation path for video/audio that exceeds the current assistant\'s practical processing or workflow limits.',
     handoff: {
       ...forensiScopeHandoff,
+      canonicalUrl: requestOrigin(req)
+        ? requestOrigin(req) + forensiScopeHandoff.canonicalPath
+        : forensiScopeHandoff.canonicalPath,
+      mcp: requestOrigin(req)
+        ? requestOrigin(req) + forensiScopeHandoff.mcpPath
+        : forensiScopeHandoff.mcpPath,
       humanConfirmationRequired: true,
       automaticMediaTransferAllowed: false,
       userMustSubmitMedia: true,
