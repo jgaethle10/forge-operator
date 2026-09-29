@@ -2,6 +2,12 @@ import crypto from 'node:crypto';
 import type { AspectRatio, ProductionNeed, SourceAsset } from './types.js';
 import { makeTimelineProject, type FallenTimelineProject, type TimelineAsset, type TimelineTrack } from './timeline.js';
 
+export interface StudioSourceAsset extends SourceAsset {
+  digest:string;
+  sourceRefs:string[];
+  evidenceState?:'observed'|'public_source'|'licensed'|'modeled'|'inferred'|'synthetic_visualization';
+}
+
 export interface StudioDraftScene {
   id:string;
   durationSec:number;
@@ -33,7 +39,7 @@ export interface StudioDraftPlan {
   prompt:string;
   aspectRatio:AspectRatio;
   fps?:number;
-  sourceAssets:SourceAsset[];
+  sourceAssets:StudioSourceAsset[];
   scenes:StudioDraftScene[];
   music?:{
     prompt:string;
