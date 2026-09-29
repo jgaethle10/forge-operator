@@ -642,7 +642,11 @@ export function inspectLocalPortfolio({ rootDir = process.cwd() } = {}) {
       if (publicId && hasLiveEvidence && verifiedMachineState) {
         report.inventory.truth_convergence.verified_machine_offers_checked += 1;
         const offer = machineOffers.find((row) => clean(row?.public_id) === publicId);
-        const downgraded = !offer || staleVerifiedInvocationStatus(offer?.invocation_status);
+        const evidenceMismatch = Boolean(offer) &&
+          stableJson(canonical?.live_canary_evidence) !== stableJson(offer?.live_canary_evidence);
+        const downgraded = !offer ||
+          staleVerifiedInvocationStatus(offer?.invocation_status) ||
+          evidenceMismatch;
         if (downgraded) {
           report.inventory.truth_convergence.verified_machine_offer_downgrades += 1;
           addFinding(report, makeFinding({
@@ -662,6 +666,8 @@ export function inspectLocalPortfolio({ rootDir = process.cwd() } = {}) {
               canonical_conformance_state: canonical?.conformance_state || null,
               canonical_handoff_state: canonical?.machine_commerce_handoff_state || null,
               observed_invocation_status: offer?.invocation_status || null,
+              expected_live_canary_evidence: canonical?.live_canary_evidence || null,
+              observed_live_canary_evidence: offer?.live_canary_evidence || null,
               public_catalog_source_url: machineCatalogResult.value?.source_url || null,
               repair_boundary: 'verify and correct the live Machine Commerce catalog source; regenerating CHUM alone cannot repair this drift'
             }
