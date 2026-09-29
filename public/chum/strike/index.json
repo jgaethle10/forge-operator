@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.adaptive-strike-hub.v1",
-  "generated_at": "2026-09-29T04:42:31.037Z",
+  "generated_at": "2026-09-29T05:33:09.166Z",
   "coordinator": "CHUM",
   "purpose": "Adaptive internal cross-link hub for public Evercraft surfaces that currently need more legitimate crawler attention.",
   "truth_boundary": "Placement here requests discovery attention only. It does not prove indexing, ranking, citation, recommendation, provider pickup, or conversion.",
@@ -670,6 +670,16 @@
       ]
     },
     {
+      "path": "/chum/answers/doors/as-400-modernization-11f60c6d3a/",
+      "score": 222,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
       "path": "/chum/answers/doors/as-400-modernization-assessment-49430f448e.json",
       "score": 222,
       "urgency": "strike_now",
@@ -1001,16 +1011,6 @@
     },
     {
       "path": "/chum/answers/doors/build-a-lender-ready-deck-592e365c97.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/build-a-professional-roster-instead-of-a-social-feed-03d0d56ace.json",
       "score": 222,
       "urgency": "strike_now",
       "reasons": [

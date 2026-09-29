@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-29T05:30:59.043Z",
+  "updated_at": "2026-09-29T05:33:09.340Z",
   "url_count": 2628,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -135,38 +135,38 @@
     },
     "/chum/hot/": {
       "path": "/chum/hot/",
-      "content_sha256": "36385e7f6af59df53f8fa19795c324f4106edc97a5372451ceeb030954e265a6",
-      "last_changed": "2026-09-29T04:37:43.864Z",
+      "content_sha256": "3054f76ea7d21064713749f418772034a42c84087a368467d117c8c390ff864f",
+      "last_changed": "2026-09-29T05:33:08.913Z",
       "priority": 80
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "efba91bac13f0af3c5958fe0540be4c64026d9aa78b58c671c4000d8604503e8",
-      "last_changed": "2026-09-29T05:30:59.043Z",
+      "content_sha256": "a1243602ff57328be0d040348ca400cc231b09b4636ee05ddf79950ff0ffc146",
+      "last_changed": "2026-09-29T05:33:09.340Z",
       "priority": 80
     },
     "/chum/strike/": {
       "path": "/chum/strike/",
-      "content_sha256": "ab4a55d841d577f0d1df2033f2789c528440a8d4de6007814b7847911e2b6ce3",
-      "last_changed": "2026-09-29T00:32:05.400Z",
+      "content_sha256": "35f819338b067fd0e184af28c3b0278209dd6d1377409da64ddfce94d69b4715",
+      "last_changed": "2026-09-29T05:33:09.340Z",
       "priority": 80
     },
     "/chum/strike/index.json": {
       "path": "/chum/strike/index.json",
-      "content_sha256": "ff588f03a28bcb2bd817850c1a34be481ded4fcd4b80f79a1b94d2158f7bfd3b",
-      "last_changed": "2026-09-29T04:42:31.172Z",
+      "content_sha256": "4023d5b79c5ef233ffc9423099360cce057cd1f40dddbb4f929268b95d1d3d4e",
+      "last_changed": "2026-09-29T05:33:09.340Z",
       "priority": 80
     },
     "/chum/crawler-radar.json": {
       "path": "/chum/crawler-radar.json",
-      "content_sha256": "0ca4345360c96027ec69e69b1ff3cf7fa82515472bdf81a54faae714456190e8",
-      "last_changed": "2026-09-29T04:42:31.172Z",
+      "content_sha256": "66478942f3538e89fd6ca405ca0424e1765577b7869921ebf843a0e8b681ba7c",
+      "last_changed": "2026-09-29T05:33:09.340Z",
       "priority": 80
     },
     "/chum/crawler-radar.txt": {
       "path": "/chum/crawler-radar.txt",
-      "content_sha256": "40c925472759786811e722764c92d64ce3f46a34b157eb69a2073a56e32bd463",
-      "last_changed": "2026-09-29T04:42:31.172Z",
+      "content_sha256": "0c1b5e87c567d3dea98075039b126c859624b6bd80b862830a21db5b6c1be4f8",
+      "last_changed": "2026-09-29T05:33:09.340Z",
       "priority": 80
     },
     "/chum/proof/": {

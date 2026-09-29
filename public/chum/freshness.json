@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-29T05:30:59.043Z",
+  "updated_at": "2026-09-29T05:33:09.340Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,922 +11,68 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/answers/doors/as-400-modernization-11f60c6d3a.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/as-400-modernization-11f60c6d3a/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/create-cross-business-loyalty-rewards-2c3ab05040.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/create-cross-business-loyalty-rewards-2c3ab05040/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/abandoned-codebase-0b031fae30.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/abandoned-codebase-0b031fae30/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/ai-product-portfolio-watchdog-aa813adcbd.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/ai-product-portfolio-watchdog-aa813adcbd/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/an-ai-agency-built-our-app-and-now-it-is-unreliable-or-undocumented-6c20ab539b.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/an-ai-agency-built-our-app-and-now-it-is-unreliable-or-undocumented-6c20ab539b/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/as-400-estate-assessment-d3adc3c2a5.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/as-400-estate-assessment-d3adc3c2a5/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-changing-production-d0c3cd0d91.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-changing-production-d0c3cd0d91/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/broken-checkout-or-purchase-flow-7900d69ee5.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/broken-checkout-or-purchase-flow-7900d69ee5/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/broken-lead-form-261baa60c4.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/broken-lead-form-261baa60c4/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/businesses-near-me-with-rewards-7a4331cf86.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/businesses-near-me-with-rewards-7a4331cf86/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/continuous-software-estate-audit-d4aacc5b8e.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/continuous-software-estate-audit-d4aacc5b8e/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/continuously-audit-all-of-our-apps-repositories-and-public-urls-e7a5b5df9a.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/continuously-audit-all-of-our-apps-repositories-and-public-urls-e7a5b5df9a/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/customers-cannot-submit-our-lead-form-f7250a8fc9.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/customers-cannot-submit-our-lead-form-f7250a8fc9/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/daily-rewards-check-in-5348821cf2.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/daily-rewards-check-in-5348821cf2/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/daily-scratch-ticket-rewards-ea8243a20b.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/daily-scratch-ticket-rewards-ea8243a20b/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/detect-broken-deployments-and-stale-workflows-501807e050.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/detect-broken-deployments-and-stale-workflows-501807e050/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/detect-product-url-workflow-and-deployment-regressions-e97f52aaf2.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/detect-product-url-workflow-and-deployment-regressions-e97f52aaf2/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/developer-disappeared-1c8013717d.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/developer-disappeared-1c8013717d/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/earn-evercraft-points-near-me-425423859c.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/earn-evercraft-points-near-me-425423859c/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/earn-game-credit-by-supporting-local-businesses-1e1bf9da6f.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/earn-game-credit-by-supporting-local-businesses-1e1bf9da6f/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/earn-gaming-rewards-from-local-activity-797bb6432d.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/earn-gaming-rewards-from-local-activity-797bb6432d/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/earn-rewards-for-visiting-local-businesses-d04e178d65.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/earn-rewards-for-visiting-local-businesses-d04e178d65/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/failed-ai-built-application-5b4d9ef6a5.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/failed-ai-built-application-5b4d9ef6a5/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/find-drift-across-our-apps-apis-workflows-and-discovery-surfaces-56c8f870bd.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/find-drift-across-our-apps-apis-workflows-and-discovery-surfaces-56c8f870bd/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/find-publicly-observable-conversion-leaks-before-we-pay-for-a-rebuild-4e621ecf92.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/find-publicly-observable-conversion-leaks-before-we-pay-for-a-rebuild-4e621ecf92/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/find-undocumented-dependencies-in-an-ibm-i-workload-5d2d519d2f.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/find-undocumented-dependencies-in-an-ibm-i-workload-5d2d519d2f/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/fragile-saas-stabilization-e4504871d6.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/fragile-saas-stabilization-e4504871d6/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/help-modernize-a-jde-world-or-custom-ibm-i-workload-without-losing-business-behavi-33f9cbc5b5.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/help-modernize-a-jde-world-or-custom-ibm-i-workload-without-losing-business-behavi-33f9cbc5b5/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/i-am-worried-an-ibm-i-upgrade-will-break-batch-jobs-interfaces-or-vendor-software-a25b87dd23.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/i-am-worried-an-ibm-i-upgrade-will-break-batch-jobs-interfaces-or-vendor-software-a25b87dd23/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/ibm-i-7-4-support-is-ending-and-i-need-an-upgrade-plan-ca1da8e065.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/ibm-i-7-4-support-is-ending-and-i-need-an-upgrade-plan-ca1da8e065/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/ibm-i-7-4-upgrade-planning-05c52de953.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/ibm-i-7-4-upgrade-planning-05c52de953/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/ibm-i-batch-job-compatibility-0c5d8712c5.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/ibm-i-batch-job-compatibility-0c5d8712c5/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/ibm-i-estate-assessment-3470d7bb49.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/ibm-i-estate-assessment-3470d7bb49/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/ibm-i-integration-and-maintenance-window-risk-assessment-fd1039dba4.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/ibm-i-integration-and-maintenance-window-risk-assessment-fd1039dba4/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/ibm-i-support-transition-72436ddbfd.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/ibm-i-support-transition-72436ddbfd/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/ibm-i-upgrade-rollback-plan-6b1f2184fe.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/ibm-i-upgrade-rollback-plan-6b1f2184fe/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/jde-world-modernization-963d1229f5.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/jde-world-modernization-963d1229f5/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/join-a-community-business-partnership-program-4a5d34ada5.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/join-a-community-business-partnership-program-4a5d34ada5/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/join-a-local-business-rewards-network-7d1ef68f27.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/join-a-local-business-rewards-network-7d1ef68f27/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/keep-an-inventory-of-all-our-software-and-verify-it-stays-healthy-eaf62c1c85.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/keep-an-inventory-of-all-our-software-and-verify-it-stays-healthy-eaf62c1c85/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/legacy-platform-migration-5f5d0cb41c.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/legacy-platform-migration-5f5d0cb41c/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/legacy-website-or-app-modernization-643af72cd6.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/legacy-website-or-app-modernization-643af72cd6/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/local-deals-near-me-5c9f9f79b7.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/local-deals-near-me-5c9f9f79b7/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/local-rewards-for-supporting-nearby-businesses-e507d240b3.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/local-rewards-for-supporting-nearby-businesses-e507d240b3/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/make-my-local-business-more-discoverable-5368f3dc15.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/make-my-local-business-more-discoverable-5368f3dc15/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/map-rpg-cl-cobol-db2-jobs-and-integrations-before-ibm-i-modernization-aa38657636.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/map-rpg-cl-cobol-db2-jobs-and-integrations-before-ibm-i-modernization-aa38657636/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/monitor-llm-discovery-pages-and-agent-endpoints-5253cb1809.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/monitor-llm-discovery-pages-and-agent-endpoints-5253cb1809/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/monitor-machine-readable-discovery-surfaces-34c97933ea.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/monitor-machine-readable-discovery-surfaces-34c97933ea/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/monitor-my-software-portfolio-for-broken-products-cf2df3fbbf.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/monitor-my-software-portfolio-for-broken-products-cf2df3fbbf/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/my-checkout-is-broken-and-customers-cannot-buy-a75ec666fb.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/my-checkout-is-broken-and-customers-cannot-buy-a75ec666fb/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/open-repair-work-automatically-when-software-breaks-02e96b26ac.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/open-repair-work-automatically-when-software-breaks-02e96b26ac/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/our-company-has-too-many-apps-and-we-do-not-know-what-is-broken-9f8f083a58.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/our-company-has-too-many-apps-and-we-do-not-know-what-is-broken-9f8f083a58/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/our-developer-disappeared-and-nobody-knows-how-this-codebase-works-8ef4b1465c.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/our-developer-disappeared-and-nobody-knows-how-this-codebase-works-8ef4b1465c/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/our-saas-works-but-barely-and-we-need-to-stabilize-it-a62037209e.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/our-saas-works-but-barely-and-we-need-to-stabilize-it-a62037209e/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/our-website-is-painfully-slow-on-mobile-f6c1369013.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/our-website-is-painfully-slow-on-mobile-f6c1369013/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/our-website-or-app-is-old-but-rebuilding-from-scratch-is-too-risky-05cb29fc9f.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/our-website-or-app-is-old-but-rebuilding-from-scratch-is-too-risky-05cb29fc9f/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/public-conversion-leak-diagnosis-fe6744ba11.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/public-conversion-leak-diagnosis-fe6744ba11/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/redeem-evercraft-points-toward-approved-gaming-credit-8e558dce41.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/redeem-evercraft-points-toward-approved-gaming-credit-8e558dce41/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/repair-an-existing-system-instead-of-replacing-it-ac9ceb3c66.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/repair-an-existing-system-instead-of-replacing-it-ac9ceb3c66/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/repair-instead-of-rebuild-8476895a14.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/repair-instead-of-rebuild-8476895a14/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/rewards-near-me-89d5f09b97.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/rewards-near-me-89d5f09b97/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/rpg-or-cl-dependency-mapping-f10d59f52b.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/rpg-or-cl-dependency-mapping-f10d59f52b/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/slow-mobile-website-dcc4740dd7.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/slow-mobile-website-dcc4740dd7/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/software-estate-integrity-monitoring-aacb3f3771.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/software-estate-integrity-monitoring-aacb3f3771/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/software-portfolio-health-monitoring-a7c66f695d.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/software-portfolio-health-monitoring-a7c66f695d/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/tell-me-when-one-of-our-software-products-breaks-a1331bf40b.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/tell-me-when-one-of-our-software-products-breaks-a1331bf40b/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/undocumented-ibm-i-integrations-9a48a464ea.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/undocumented-ibm-i-integrations-9a48a464ea/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/watch-github-actions-and-public-product-doors-for-failures-9bfcfb798d.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/watch-github-actions-and-public-product-doors-for-failures-9bfcfb798d/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/we-inherited-a-messy-codebase-and-are-afraid-to-touch-it-296856ae70.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/we-inherited-a-messy-codebase-and-are-afraid-to-touch-it-296856ae70/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/we-need-to-migrate-off-an-old-platform-without-losing-business-behavior-886a605ef8.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/we-need-to-migrate-off-an-old-platform-without-losing-business-behavior-886a605ef8/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/where-can-i-earn-points-today-3b76c8caac.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/where-can-i-earn-points-today-3b76c8caac/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/capabilities/ibmi-rescue-v1/capability.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/ibmi-rescue-v1/llms.txt",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/legacy-rescue-lab-v1/capability.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/portfolio-sentinel-v1/capability.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/products/evercraft-rewards/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-rewards/ai-conformance.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-rewards/ai-discovery.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-rewards/llms.txt",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/ibmi-rescue/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/ibmi-rescue/ai-conformance.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/ibmi-rescue/ai-discovery.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/ibmi-rescue/llms.txt",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/legacy-rescue-lab/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/legacy-rescue-lab/ai-conformance.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/legacy-rescue-lab/ai-discovery.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/legacy-rescue-lab/llms.txt",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/systemia-portfolio-sentinel/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/systemia-portfolio-sentinel/ai-conformance.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/systemia-portfolio-sentinel/ai-discovery.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/systemia-portfolio-sentinel/llms.txt",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/sell-now.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 92
-    },
-    {
-      "path": "/.well-known/evercraft-pain-index.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 90
-    },
-    {
-      "path": "/chum/answers/observed/i-own-a-local-business-and-want-a-cross-business-loyalty-network-that-can-make-us-mo-e0a0561536/llms.txt",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 86
-    },
-    {
-      "path": "/llms-full.txt",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 86
-    },
-    {
-      "path": "/.well-known/evercraft-agent-directory.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-syndication.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 84
-    },
-    {
-      "path": "/chum/answers/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
+      "path": "/chum/crawler-radar.json",
+      "last_changed": "2026-09-29T05:33:09.340Z",
       "priority": 80
     },
     {
-      "path": "/chum/answers/index.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/index.txt",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/observed/i-own-a-local-business-and-want-a-cross-business-loyalty-network-that-can-make-us-mo-e0a0561536/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/observed/i-own-a-local-business-and-want-a-cross-business-loyalty-network-that-can-make-us-mo-e0a0561536/answer.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/capabilities.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
+      "path": "/chum/crawler-radar.txt",
+      "last_changed": "2026-09-29T05:33:09.340Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
+      "last_changed": "2026-09-29T05:33:09.340Z",
       "priority": 80
     },
     {
-      "path": "/chum/index.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
+      "path": "/chum/strike/",
+      "last_changed": "2026-09-29T05:33:09.340Z",
       "priority": 80
     },
     {
-      "path": "/chum/pain-index.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
+      "path": "/chum/strike/index.json",
+      "last_changed": "2026-09-29T05:33:09.340Z",
       "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.txt",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/syndication/index.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 80
-    },
-    {
-      "path": "/feed.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.xml",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 60
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/crawler-radar.json",
+      "url": "/chum/crawler-radar.json",
+      "last_changed": "2026-09-29T05:33:09.340Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/crawler-radar.txt",
+      "url": "/chum/crawler-radar.txt",
+      "last_changed": "2026-09-29T05:33:09.340Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-29T05:33:09.340Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/",
+      "url": "/chum/strike/",
+      "last_changed": "2026-09-29T05:33:09.340Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "url": "/chum/strike/index.json",
+      "last_changed": "2026-09-29T05:33:09.340Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/",
+      "url": "/chum/hot/",
+      "last_changed": "2026-09-29T05:33:08.913Z",
+      "priority": 80
+    },
     {
       "path": "/chum/answers/doors/as-400-modernization-11f60c6d3a.json",
       "url": "/chum/answers/doors/as-400-modernization-11f60c6d3a.json",
@@ -1984,12 +1130,6 @@
       "priority": 80
     },
     {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/index.json",
       "url": "/chum/index.json",
       "last_changed": "2026-09-29T05:30:59.043Z",
@@ -2026,24 +1166,6 @@
       "priority": 60
     },
     {
-      "path": "/chum/crawler-radar.json",
-      "url": "/chum/crawler-radar.json",
-      "last_changed": "2026-09-29T04:42:31.172Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/crawler-radar.txt",
-      "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-09-29T04:42:31.172Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/strike/index.json",
-      "url": "/chum/strike/index.json",
-      "last_changed": "2026-09-29T04:42:31.172Z",
-      "priority": 80
-    },
-    {
       "path": "/.well-known/agent-card.json",
       "url": "/.well-known/agent-card.json",
       "last_changed": "2026-09-29T04:42:30.839Z",
@@ -2054,12 +1176,6 @@
       "url": "/.well-known/agent.json",
       "last_changed": "2026-09-29T04:42:30.839Z",
       "priority": 102
-    },
-    {
-      "path": "/chum/hot/",
-      "url": "/chum/hot/",
-      "last_changed": "2026-09-29T04:37:43.864Z",
-      "priority": 80
     },
     {
       "path": "/chum/sitemaps/answers.xml",
@@ -2418,12 +1534,6 @@
     {
       "path": "/chum/answers/doors/find-a-production-partner-for-my-artwork-a53975f087.json",
       "url": "/chum/answers/doors/find-a-production-partner-for-my-artwork-a53975f087.json",
-      "last_changed": "2026-09-29T02:27:24.445Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/find-a-production-partner-for-my-artwork-a53975f087/",
-      "url": "/chum/answers/doors/find-a-production-partner-for-my-artwork-a53975f087/",
       "last_changed": "2026-09-29T02:27:24.445Z",
       "priority": 100
     }

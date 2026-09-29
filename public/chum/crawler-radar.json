@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.crawler-radar.v1",
-  "generated_at": "2026-09-29T04:42:31.037Z",
+  "generated_at": "2026-09-29T05:33:09.166Z",
   "coordinator": "CHUM",
   "runtime_feedback": {
     "requested": false,
@@ -10,7 +10,7 @@
   "observation_count": 0,
   "negative_provider_pickup_receipts": 174,
   "surface_count": 2628,
-  "strike_now_count": 1910,
+  "strike_now_count": 1939,
   "doctrine": {
     "crawler_fetch_is_not_indexing": true,
     "indexing_is_not_ranking": true,
@@ -10548,7 +10548,29 @@
       "score": 222,
       "urgency": "strike_now",
       "crawl_priority": 160,
-      "last_changed": "2026-09-29T02:24:28.186Z",
+      "last_changed": "2026-09-29T05:30:59.043Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/as-400-modernization-11f60c6d3a/",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-09-29T05:30:59.043Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -11362,7 +11384,7 @@
       "score": 222,
       "urgency": "strike_now",
       "crawl_priority": 160,
-      "last_changed": "2026-09-29T02:24:28.186Z",
+      "last_changed": "2026-09-29T05:30:59.043Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -11384,7 +11406,7 @@
       "score": 222,
       "urgency": "strike_now",
       "crawl_priority": 160,
-      "last_changed": "2026-09-28T16:52:02.039Z",
+      "last_changed": "2026-09-29T05:30:59.043Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -12924,7 +12946,29 @@
       "score": 222,
       "urgency": "strike_now",
       "crawl_priority": 160,
-      "last_changed": "2026-09-29T02:24:28.186Z",
+      "last_changed": "2026-09-29T05:30:59.043Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/create-cross-business-loyalty-rewards-2c3ab05040/",
+      "product_key": null,
+      "score": 222,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-09-29T05:30:59.043Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -15053,28 +15097,6 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/apartment-ev-charging-site-analysis-a4fc7910cc/",
-      "product_key": null,
-      "score": 215,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/application-network-that-reconnects-across-changing-authorized-internet-paths-3f92268565/",
       "product_key": null,
       "score": 215,
@@ -15119,28 +15141,6 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/charging-site-economics-6092dd77f1/",
-      "product_key": null,
-      "score": 215,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/check-my-local-seo-e8e838ec7c/",
       "product_key": null,
       "score": 215,
@@ -15169,226 +15169,6 @@
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-26T23:54:16.768Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/create-cross-business-loyalty-rewards-2c3ab05040/",
-      "product_key": null,
-      "score": 215,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-09-27T23:52:44.847Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/ev-charger-competition-near-this-address-aa69cb1075/",
-      "product_key": null,
-      "score": 215,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/ev-charger-feasibility-by-address-8a81d21c84/",
-      "product_key": null,
-      "score": 215,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/ev-charger-investment-report-ed6fd3f23a/",
-      "product_key": null,
-      "score": 215,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-demand-near-this-property-76a21ea75b/",
-      "product_key": null,
-      "score": 215,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-diligence-91e2eec236/",
-      "product_key": null,
-      "score": 215,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-incentives-for-this-site-76fa0b5a6c/",
-      "product_key": null,
-      "score": 215,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-roi-for-this-property-23181c0dbc/",
-      "product_key": null,
-      "score": 215,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-site-analysis-by-address-1e6ee8e9ee/",
-      "product_key": null,
-      "score": 215,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/evaluate-this-address-for-ev-charging-c676bc6509/",
-      "product_key": null,
-      "score": 215,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-09-26T04:58:13.847Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -16121,12 +15901,12 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/application-network-continuity-3ac8582e22/",
+      "path": "/chum/answers/doors/apartment-ev-charging-site-analysis-a4fc7910cc/",
       "product_key": null,
       "score": 207,
       "urgency": "strike_now",
       "crawl_priority": 160,
-      "last_changed": "2026-09-25T07:08:03.584Z",
+      "last_changed": "2026-09-26T04:58:13.847Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -16142,7 +15922,7 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/as-400-modernization-11f60c6d3a/",
+      "path": "/chum/answers/doors/application-network-continuity-3ac8582e22/",
       "product_key": null,
       "score": 207,
       "urgency": "strike_now",
@@ -17324,6 +17104,27 @@
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-25T07:08:03.584Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/charging-site-economics-6092dd77f1/",
+      "product_key": null,
+      "score": 207,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-09-26T04:58:13.847Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -18536,6 +18337,69 @@
       ]
     },
     {
+      "path": "/chum/answers/doors/ev-charger-competition-near-this-address-aa69cb1075/",
+      "product_key": null,
+      "score": 207,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-09-26T04:58:13.847Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/ev-charger-feasibility-by-address-8a81d21c84/",
+      "product_key": null,
+      "score": 207,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-09-26T04:58:13.847Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/ev-charger-investment-report-ed6fd3f23a/",
+      "product_key": null,
+      "score": 207,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-09-26T04:58:13.847Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
       "path": "/chum/answers/doors/ev-charger-site-analysis-fc320bee89/",
       "product_key": null,
       "score": 207,
@@ -18557,12 +18421,75 @@
       ]
     },
     {
+      "path": "/chum/answers/doors/ev-charging-demand-near-this-property-76a21ea75b/",
+      "product_key": null,
+      "score": 207,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-09-26T04:58:13.847Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/ev-charging-diligence-91e2eec236/",
+      "product_key": null,
+      "score": 207,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-09-26T04:58:13.847Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
       "path": "/chum/answers/doors/ev-charging-feasibility-by-address-734eac6eee/",
       "product_key": null,
       "score": 207,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-25T07:08:03.584Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/ev-charging-incentives-for-this-site-76fa0b5a6c/",
+      "product_key": null,
+      "score": 207,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-09-26T04:58:13.847Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -18641,6 +18568,48 @@
       ]
     },
     {
+      "path": "/chum/answers/doors/ev-charging-roi-for-this-property-23181c0dbc/",
+      "product_key": null,
+      "score": 207,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-09-26T04:58:13.847Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/ev-charging-site-analysis-by-address-1e6ee8e9ee/",
+      "product_key": null,
+      "score": 207,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-09-26T04:58:13.847Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
       "path": "/chum/answers/doors/ev-charging-site-ce5de7047c/",
       "product_key": null,
       "score": 207,
@@ -18689,6 +18658,27 @@
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-25T07:08:03.584Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/evaluate-this-address-for-ev-charging-c676bc6509/",
+      "product_key": null,
+      "score": 207,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-09-26T04:58:13.847Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
