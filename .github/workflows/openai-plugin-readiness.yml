@@ -1,0 +1,27 @@
+name: OpenAI Plugin Readiness
+
+on:
+  pull_request:
+    paths:
+      - 'plugins/evercraft-fabric/**'
+      - 'systemia/mcp/fabric-directory.mjs'
+      - 'systemia/mcp/specialist-handoff-runtime.mjs'
+      - 'tests/evercraft-fabric-runtime.test.mjs'
+      - 'tests/evercraft-openai-plugin-package.test.mjs'
+      - '.github/workflows/openai-plugin-readiness.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prove-evercraft-plugin:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove OpenAI package and Fabric contract
+        run: node --test tests/evercraft-openai-plugin-package.test.mjs tests/evercraft-fabric-runtime.test.mjs
