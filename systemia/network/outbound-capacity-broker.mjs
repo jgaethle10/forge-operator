@@ -462,6 +462,23 @@ export async function startOutboundCapacityBroker({
                 node.capacity.capacity_hint.services.public_edge.certificate_valid_to || null,
             }
           : null,
+        evercraft_home_identity: node.capacity.capacity_hint?.services?.evercraft_home_identity
+          ? {
+              configured:
+                node.capacity.capacity_hint.services.evercraft_home_identity.configured === true,
+              ready:
+                node.capacity.capacity_hint.services.evercraft_home_identity.ready === true,
+              identity_state_present:
+                node.capacity.capacity_hint.services.evercraft_home_identity.identity_state_present === true,
+              passport_state_present:
+                node.capacity.capacity_hint.services.evercraft_home_identity.passport_state_present === true,
+              signing_material_present:
+                node.capacity.capacity_hint.services.evercraft_home_identity.signing_material_present === true,
+              private_state_within_admitted_root:
+                node.capacity.capacity_hint.services.evercraft_home_identity.private_state_within_admitted_root === true,
+              secret_material_exposed:false,
+            }
+          : null,
       } : null,
       queued_commands: node.queue.length,
       pending_commands: node.pending.size,
