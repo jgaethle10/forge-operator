@@ -68,7 +68,18 @@ jobs:
           NODE
           SESSION_ID="$(cat /tmp/evercraft-session-id)"
           CLAIM="$(cat /tmp/evercraft-session-claim)"
-          curl -fsS "http://127.0.0.1:18787/v1/auth-browser/sessions/$SESSION_ID/snapshot"             -H "x-evercraft-browser-claim: $CLAIM"             > /tmp/evercraft-auth-snapshot.json
+          curl -fsS -X POST "http://127.0.0.1:18787/v1/auth-browser/sessions/$SESSION_ID/redeem"             -H "x-evercraft-browser-claim: $CLAIM"             > /tmp/evercraft-auth-redemption.json
+          node <<'NODE'
+          const fs = require('node:fs');
+          const redeemed = JSON.parse(fs.readFileSync('/tmp/evercraft-auth-redemption.json','utf8'));
+          if (!redeemed.ok || redeemed.claim_redeemed !== true) process.exit(1);
+          if (!redeemed.access_token || redeemed.access_token.length < 32) process.exit(1);
+          fs.writeFileSync('/tmp/evercraft-session-access', redeemed.access_token);
+          NODE
+          ACCESS="$(cat /tmp/evercraft-session-access)"
+          REPLAY_STATUS="$(curl -sS -o /tmp/evercraft-auth-replay.json -w '%{http_code}'             -X POST "http://127.0.0.1:18787/v1/auth-browser/sessions/$SESSION_ID/redeem"             -H "x-evercraft-browser-claim: $CLAIM")"
+          test "$REPLAY_STATUS" = "409"
+          curl -fsS "http://127.0.0.1:18787/v1/auth-browser/sessions/$SESSION_ID/snapshot"             -H "x-evercraft-browser-access: $ACCESS"             > /tmp/evercraft-auth-snapshot.json
           node <<'NODE'
           const fs = require('node:fs');
           const shot = JSON.parse(fs.readFileSync('/tmp/evercraft-auth-snapshot.json','utf8'));
@@ -76,9 +87,9 @@ jobs:
           if (!shot.screenshot_base64 || !/^[a-f0-9]{64}$/.test(shot.screenshot_sha256 || '')) process.exit(1);
           if (!String(shot.url || '').startsWith('https://example.com')) process.exit(1);
           NODE
-          curl -fsS -X POST "http://127.0.0.1:18787/v1/auth-browser/sessions/$SESSION_ID/action"             -H "x-evercraft-browser-claim: $CLAIM"             -H 'content-type: application/json'             --data '{"type":"reload"}'             > /tmp/evercraft-auth-action.json
+          curl -fsS -X POST "http://127.0.0.1:18787/v1/auth-browser/sessions/$SESSION_ID/action"             -H "x-evercraft-browser-access: $ACCESS"             -H 'content-type: application/json'             --data '{"type":"reload"}'             > /tmp/evercraft-auth-action.json
           node -e "const a=require('/tmp/evercraft-auth-action.json'); if(!a.ok||a.type!=='reload'||a.action_count!==1) process.exit(1)"
-          curl -fsS -X DELETE "http://127.0.0.1:18787/v1/auth-browser/sessions/$SESSION_ID"             -H "x-evercraft-browser-claim: $CLAIM"             > /tmp/evercraft-auth-close.json
+          curl -fsS -X DELETE "http://127.0.0.1:18787/v1/auth-browser/sessions/$SESSION_ID"             -H "x-evercraft-browser-access: $ACCESS"             > /tmp/evercraft-auth-close.json
           node -e "const c=require('/tmp/evercraft-auth-close.json'); if(!c.ok||c.closed!==true) process.exit(1)"
       - name: Stop smoke worker
         if: always()
