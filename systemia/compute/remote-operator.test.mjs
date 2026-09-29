@@ -51,7 +51,27 @@ try {
       args: ['-e', 'console.log(process.env)'],
       approval_ref: 'proof:user-approved',
     }),
-    /operator_node_inline_execution_denied/
+    /operator_program_not_allowed/
+  );
+
+  await assert.rejects(
+    operator.exec({
+      root_key: 'home',
+      program: 'git',
+      args: ['-c', 'alias.pwn=!sh -c id', 'pwn'],
+      approval_ref: 'proof:user-approved',
+    }),
+    /operator_git_subcommand_denied|operator_git_configuration_override_denied/
+  );
+
+  await assert.rejects(
+    operator.exec({
+      root_key: 'home',
+      program: 'systemctl',
+      args: ['restart', 'ssh.service'],
+      approval_ref: 'proof:user-approved',
+    }),
+    /operator_systemctl_user_scope_required/
   );
 
   const executed = await operator.exec({
@@ -73,7 +93,9 @@ try {
     ok: true,
     schema: 'evercraft.remote-operator-proof.v1',
     sensitive_path_read_blocked: true,
-    arbitrary_inline_node_execution_blocked: true,
+    arbitrary_program_execution_blocked: true,
+    git_configuration_override_blocked: true,
+    system_service_control_blocked: true,
     mutation_approval_required: true,
     receipt_contents_redacted: true,
   }));
