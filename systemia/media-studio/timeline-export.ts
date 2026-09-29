@@ -35,6 +35,7 @@ export interface TimelineExportPlan {
     deterministicTrackOrdering:true;
     captionsBurnedIntoPicture:true;
     mixedAudioNormalized:true;
+    inputAssetDigestsVerified:true;
     publicationAuthorityGranted:false;
   };
 }
@@ -253,6 +254,7 @@ export function buildTimelineExportPlan(input:{
       deterministicTrackOrdering:true,
       captionsBurnedIntoPicture:true,
       mixedAudioNormalized:true,
+      inputAssetDigestsVerified:true,
       publicationAuthorityGranted:false,
     },
   };
@@ -268,6 +270,10 @@ export function renderTimelineExport(input:{
     const asset=assets.get(assetId);
     if(!asset) throw new Error(`timeline_export_asset_missing:${assetId}`);
     if(!fs.existsSync(asset.path)) throw new Error(`timeline_export_asset_not_found:${asset.id}`);
+    const observedDigest=hashFile(asset.path);
+    if(observedDigest.toLowerCase()!==asset.digest.toLowerCase()){
+      throw new Error(`timeline_export_asset_digest_mismatch:${asset.id}`);
+    }
   }
   fs.mkdirSync(path.dirname(plan.outputPath),{recursive:true});
   run('ffmpeg',plan.ffmpegArgs);
