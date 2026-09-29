@@ -11,6 +11,7 @@ export interface VisualExecutionArtifact {
   width?:number;
   height?:number;
   durationSec?:number;
+  aspectRatio?:'9:16'|'16:9'|'1:1';
 }
 
 export interface VisualExecutionReceipt {
