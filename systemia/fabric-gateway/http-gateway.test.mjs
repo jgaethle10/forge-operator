@@ -26,7 +26,7 @@ function gatewaySetup() {
   return { root, gateway };
 }
 
-test('Fabric MCP initializes with five bounded tools', async () => {
+test('Fabric MCP initializes with six bounded tools', async () => {
   const init = await executeFabricMcpRpc({
     rpc: { jsonrpc: '2.0', id: 1, method: 'initialize', params: {} },
   });
@@ -40,6 +40,7 @@ test('Fabric MCP initializes with five bounded tools', async () => {
     list.result.tools.map((tool) => tool.name),
     [
       'discover_evercraft',
+      'plan_evercraft_mission',
       'connect_evercraft_fabric',
       'query_evercraft_context',
       'emit_evercraft_event',
@@ -72,6 +73,54 @@ test('public discovery works without a private Fabric credential', async () => {
   assert.equal(response.result.structuredContent.public_only, true);
   assert.equal(response.result.structuredContent.private_authority_granted, false);
   assert.equal(response.result.structuredContent.result.matches[0].public_id, 'forensiscope-v1');
+});
+
+test('public mission planning composes multiple capability candidates without side effects', async () => {
+  const response = await executeFabricMcpRpc({
+    rpc: {
+      jsonrpc: '2.0',
+      id: 31,
+      method: 'tools/call',
+      params: {
+        name: 'plan_evercraft_mission',
+        arguments: {
+          goal: 'Evaluate an EV site and turn the result into a customer-ready visual package',
+          limit: 4,
+          constraints: ['keep observed and modeled data separate'],
+        },
+      },
+    },
+    discoverPublic: async () => ({
+      schema: 'evercraft.chum.intent-routing.v3',
+      ok: true,
+      matches: [
+        {
+          public_id: 'rivet-v1',
+          product_key: 'rivet',
+          name: 'RIVET',
+          machine_state: 'ready',
+          commercial_state: 'sell_now',
+          invocation_status: 'ready',
+        },
+        {
+          public_id: 'fallen-v1',
+          product_key: 'fallen',
+          name: 'Fallen',
+          machine_state: 'live',
+        },
+      ],
+      capability_matches: [],
+    }),
+  });
+
+  const plan = response.result.structuredContent;
+  assert.equal(plan.schema, 'evercraft.fabric.mission-plan.v1');
+  assert.equal(plan.candidate_count, 2);
+  assert.deepEqual(plan.mission_stages.map((row) => row.product_key), ['rivet', 'fallen']);
+  assert.equal(plan.orchestration.systemia_admission_required, true);
+  assert.equal(plan.orchestration.no_candidate_is_executed_by_this_plan, true);
+  assert.equal(plan.commerce_contract.payment_authorized, false);
+  assert.equal(plan.host_contract.external_side_effect_created, false);
 });
 
 test('private Fabric tools fail closed without configured gateway or credential', async () => {
