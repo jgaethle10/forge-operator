@@ -56,6 +56,7 @@ test('executes only the verified adapter bound to the routed department and admi
   assert.equal(result.items[0].status,'completed');
   assert.equal(result.items[0].admission?.status,'accepted');
   assert.equal(result.boundaries.productionAdmissionEnforced,true);
+  assert.equal(result.boundaries.visualJobsRemainInVisualFabric,true);
 });
 
 test('provider output that fails production admission cannot advance',async()=>{
@@ -79,4 +80,25 @@ test('unverified adapters are unavailable even if supplied by the caller',async(
   });
   assert.equal(result.status,'blocked');
   assert.equal(result.items[0].error,'verified_production_adapter_missing');
+});
+
+
+test('visual production is rejected from this runtime so Shot Tournament cannot be bypassed',async()=>{
+  const visual:ProductionNeed={
+    id:'video-1',
+    kind:'video',
+    prompt:'A generated visual.',
+    durationSec:4,
+    aspectRatio:'16:9',
+    continuityDigest:'continuity',
+    requires:['commercial_rights','provenance_receipt','timing_control'],
+    status:'planned',
+  };
+  const result=await executeProductionRoutes({
+    needs:[visual],
+    routes:[{needId:visual.id,status:'routed',departmentId:'voice-dept',reason:'not actually valid'}],
+    adapters:[adapter()],
+  });
+  assert.equal(result.status,'blocked');
+  assert.equal(result.items[0].error,'visual_production_requires_visual_model_fabric');
 });
