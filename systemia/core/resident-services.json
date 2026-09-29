@@ -122,7 +122,8 @@
         "--nws-area": "SYSTEMIA_SENTINEL_NWS_AREA",
         "--interval-ms": "SYSTEMIA_SENTINEL_INTERVAL_MS",
         "--nwps-gauges": "SYSTEMIA_SENTINEL_NWPS_GAUGES",
-        "--usgs-water-locations": "SYSTEMIA_SENTINEL_USGS_WATER_LOCATIONS"
+        "--usgs-water-locations": "SYSTEMIA_SENTINEL_USGS_WATER_LOCATIONS",
+        "--region-profile": "SYSTEMIA_SENTINEL_REGION_PROFILE"
       },
       "max_restarts_per_hour": 12,
       "restart_backoff_ms": 5000

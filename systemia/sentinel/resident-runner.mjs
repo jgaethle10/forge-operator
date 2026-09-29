@@ -7,6 +7,7 @@ import {
   buildSentinelMissionSnapshot,
   buildBuiltinSentinelSources
 } from './resident-cycle.mjs';
+import { resolveSentinelRegionConfig } from './region-profile.mjs';
 
 function arg(name, fallback = null) {
   const index = process.argv.indexOf(name);
@@ -49,6 +50,15 @@ const nwpsGaugeIds = String(
 const usgsWaterLocationIds = String(
   arg('--usgs-water-locations', process.env.SYSTEMIA_SENTINEL_USGS_WATER_LOCATIONS || '')
 ).split(',').map((value) => value.trim()).filter(Boolean);
+const regionProfileId = String(
+  arg('--region-profile', process.env.SYSTEMIA_SENTINEL_REGION_PROFILE || '')
+).trim() || null;
+const resolvedRegion = resolveSentinelRegionConfig({
+  profileId: regionProfileId,
+  nwsArea,
+  nwpsGaugeIds,
+  usgsWaterLocationIds
+});
 const once = has('--once');
 
 const stateFile = path.join(stateDir, 'state.json');
@@ -63,10 +73,14 @@ async function cycle() {
     const result = await runSentinelResidentCycle({
       inputState: state,
       now: new Date().toISOString(),
-      sources: buildBuiltinSentinelSources({ nwpsGaugeIds, usgsWaterLocationIds }),
+      sources: buildBuiltinSentinelSources({
+        nwpsGaugeIds: resolvedRegion.nwps_gauges,
+        usgsWaterLocationIds: resolvedRegion.usgs_water_locations
+      }),
       sourceOptions: {
-        'nws-active-alerts': nwsArea ? { area: nwsArea } : {}
-      }
+        'nws-active-alerts': resolvedRegion.nws_area ? { area: resolvedRegion.nws_area } : {}
+      },
+      deploymentProfile: resolvedRegion
     });
     state = result.state;
     atomicJson(stateFile, state);

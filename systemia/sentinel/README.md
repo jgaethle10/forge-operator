@@ -209,3 +209,22 @@ Sentinel can also use the modern USGS Water Data OGC API `latest-continuous` col
 Unlike NWPS, this lane belongs to the `usgs` independence group. A NOAA/NWPS river signal and a USGS sensor deviation can therefore contribute independent corroboration while multiple USGS products still collapse under one upstream group.
 
 Raw continuous sensor values do not enter the incident graph automatically. The resident baseline engine learns normal behavior per coarse region, domain, and metric. Routine/learning samples update the baseline without creating incidents. Only deviations beyond the configured statistical gate become Sentinel anomaly observations. USGS provisional readings are labeled `observed`; approved readings may be labeled `verified`.
+
+
+## Regional sensor profiles
+
+Sentinel supports named, auditable regional sensor profiles so deployments do not have to hand-assemble every public-source binding.
+
+Set `SYSTEMIA_SENTINEL_REGION_PROFILE` or pass `--region-profile` to the resident runner. A profile can supply:
+
+- NWS alert area
+- NOAA/NWPS gauge identifiers
+- USGS Water Data monitoring-location identifiers
+- source provenance and verification date
+- coarse geographic metadata
+
+Explicit environment or CLI source lists extend a profile. An explicit NWS area overrides the profile's alert area. Unknown profile IDs fail closed at resident startup instead of silently falling back to a different footprint.
+
+The first bundled profile is `yakima-basin-wa`. It scopes NWS alerts to Washington and configures verified USGS continuous-water locations at Umtanum, Naches near Yakima, Union Gap, and Kiona. Its NWPS gauge list is intentionally empty until those gauge-to-place mappings are verified directly from NOAA's gauge endpoint.
+
+Every resident cycle records the resolved deployment profile in `latest.json`, so operators and KAIDANCE can audit what sensing footprint was active when a signal was produced.

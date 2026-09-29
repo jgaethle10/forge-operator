@@ -179,6 +179,7 @@ export async function runSentinelResidentCycle({
   now = new Date().toISOString(),
   sources = BUILTIN_SENTINEL_SOURCES,
   sourceOptions = {},
+  deploymentProfile = null,
   eventGraphWindowSeconds = 1800,
   maxOperatorPictures = 50,
   incidentRetentionSeconds = 86400,
@@ -330,6 +331,7 @@ export async function runSentinelResidentCycle({
     schema: 'systemia.sentinel.resident-cycle.v1',
     cycle_count: state.cycle_count,
     observed_at: nowIso,
+    deployment_profile: deploymentProfile ? structuredClone(deploymentProfile) : null,
     coverage,
     source_polls: pollResults,
     summary: {
