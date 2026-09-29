@@ -1,0 +1,44 @@
+{
+  "schema": "evercraft.systemia.base44-migration-slice.v1",
+  "slice": "eps_social_scheduler",
+  "priority": 2,
+  "source": {
+    "platform": "base44",
+    "product": "Systemia Command Center",
+    "workflow": "systemia_eps_social_continuity_every_30_minutes",
+    "authority": "temporary_legacy_publication_continuity"
+  },
+  "target": {
+    "source_control": "github",
+    "orchestration": "systemia",
+    "scheduler": "systemia/core/resident-supervisor.mjs",
+    "runtime": "yard_evercraft_compute",
+    "workflow": "systemia/organism/eps-social-continuity.workflow.json",
+    "publisher": "evercraft_clip"
+  },
+  "observed": {
+    "replacement_source_present": true,
+    "replacement_supervisor_wiring_present": true,
+    "cadence_seconds": 1800,
+    "private_secret_file_binding_required": true,
+    "provider_visible_verification_required": true,
+    "one_execution_per_bucket_enforced": true,
+    "secret_not_persisted_in_receipts": true,
+    "live_yard_cycle_verified": false,
+    "legacy_base44_schedule_retired": false
+  },
+  "acceptance": {
+    "required_result": "no_op_or_published_verified",
+    "published_without_verification_fails_closed": true,
+    "rollback_required": true,
+    "observation_window_required": true,
+    "legacy_schedule_retirement_requires_live_replacement": true
+  },
+  "blockers": [
+    "Yard runtime must receive the Clip EPS ingress URL and private shared-secret file binding.",
+    "A live Systemia Core cycle must return either an explicit no-op or a provider-verified publication receipt.",
+    "The replacement must survive the observation window before the legacy Base44 social schedule is retired."
+  ],
+  "next_action": "deploy the optional EPS social cycle on admitted Yard capacity with private bindings, observe a valid live result, then freeze the Base44 30-minute schedule",
+  "destructive_cutover_allowed": false
+}
