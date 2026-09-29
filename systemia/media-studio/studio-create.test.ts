@@ -19,6 +19,8 @@ function plan():StudioDraftPlan{
         kind:'video',
         durationSec:4,
         rights:'owned',
+        digest:'1'.repeat(64),
+        sourceRefs:['test:real-opening'],
       },
     ],
     scenes:[
@@ -100,4 +102,15 @@ test('speech without a locked voice remains routable without inventing a voice-p
   const need=bundle.productionNeeds.find(item=>item.id.endsWith('opening-speech'))!;
   assert.equal(need.kind,'speech');
   assert.equal(need.requires.includes('voice_profile'),false);
+});
+
+
+test('source media must carry a real digest and lineage',()=>{
+  const p=plan();
+  p.sourceAssets[0].digest='not-a-digest';
+  assert.throws(()=>compileStudioDraft(p),/studio_draft_source_digest_invalid:real-opening/);
+
+  const q=plan();
+  q.sourceAssets[0].sourceRefs=[];
+  assert.throws(()=>compileStudioDraft(q),/studio_draft_source_refs_missing:real-opening/);
 });
