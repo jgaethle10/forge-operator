@@ -190,7 +190,7 @@ export class PublicEdgeController {
           gateway_url:String(specialist.gateway_url||''),
           fabric_catalog:Array.isArray(specialist.fabric_catalog)
             ? specialist.fabric_catalog
-            : [],
+            : null,
           fabric_mcp_path:String(specialist.fabric_mcp_path||'/mcp'),
           openai_challenge_token:String(specialist.openai_challenge_token||''),
         },
