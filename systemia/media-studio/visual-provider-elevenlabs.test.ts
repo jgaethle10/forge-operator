@@ -83,6 +83,7 @@ test('adapter maps a governed Fallen job into ElevenLabs async generation and re
     outputDir,
     verified:true,
     commercialRights:'allowed',
+    allowPaidGeneration:true,
     pollIntervalMs:0,
     maxPolls:3,
     fetchImpl:fetchImpl as any,
@@ -104,6 +105,7 @@ test('adapter rejects unsupported end frame without a start frame before spendin
     outputDir:os.tmpdir(),
     verified:true,
     commercialRights:'allowed',
+    allowPaidGeneration:true,
     fetchImpl:(async()=>{throw new Error('network should not run');}) as any,
   });
   await assert.rejects(
@@ -131,9 +133,18 @@ test('commercial rights remain unknown unless explicitly configured',async()=>{
   const adapter=createElevenLabsVeoAdapter({
     apiKey:'test-key',modelId:'veo-3.1-fast-generate-001',
     outputDir:fs.mkdtempSync(path.join(os.tmpdir(),'fallen-elevenlabs-rights-')),
-    verified:true,commercialRights:'unknown',pollIntervalMs:0,maxPolls:1,
+    verified:true,commercialRights:'unknown',allowPaidGeneration:true,pollIntervalMs:0,maxPolls:1,
     fetchImpl:fetchImpl as any,
   });
   const receipt=await adapter.execute(job);
   assert.equal(receipt.commercialRights,'unknown');
+});
+
+
+test('paid generation requires an explicit execution authorization',async()=>{
+  const adapter=createElevenLabsVeoAdapter({
+    apiKey:'test-key',modelId:'veo-3.1-fast-generate-001',outputDir:os.tmpdir(),verified:true,commercialRights:'allowed',
+    fetchImpl:(async()=>{throw new Error('network should not run');}) as any,
+  });
+  await assert.rejects(()=>adapter.execute(job),/elevenlabs_paid_generation_not_authorized/);
 });
