@@ -173,7 +173,7 @@ export function uactPerBlockToUsdHour(amount){
   return Number((((micro/1_000_000)*600)).toFixed(9));
 }
 
-function normalizeBid(bid,demand,manifest){
+function normalizeBid(bid,demand,manifest,providerRecord=null){
   const id=bid?.bid?.id||bid?.id||{};
   const price=bid?.bid?.price||bid?.price||{};
   const provider=String(id.provider||bid?.provider||'').trim();
@@ -188,18 +188,21 @@ function normalizeBid(bid,demand,manifest){
     provider_id:provider,
     market:'akash',
     access_class:'commercial_capacity',
-    endpoint:null,
+    endpoint:providerRecord?.hostUri||null,
     resources:structuredClone(demand.resources),
     placement:{
-      region:null,
-      country:null,
-      public_ingress:demand.placement.require_public_ingress===true,
-      persistent_storage:demand.placement.require_persistent_storage===true,
+      region:providerRecord?.ipRegionCode||providerRecord?.ipRegion||null,
+      country:providerRecord?.ipCountryCode||providerRecord?.ipCountry||providerRecord?.country||null,
+      public_ingress:Boolean(
+        providerRecord?.featEndpointIp||
+        providerRecord?.featEndpointCustomDomain
+      ),
+      persistent_storage:providerRecord?.featPersistentStorage===true,
     },
     trust:{
-      uptime_7d:0,
-      audited:false,
-      valid_version:true,
+      uptime_7d:Number(providerRecord?.uptime7d||0),
+      audited:providerRecord?.isAudited===true,
+      valid_version:providerRecord?.isValidVersion===true,
       attested:false,
     },
     economics:{
@@ -225,6 +228,10 @@ function normalizeBid(bid,demand,manifest){
       manifest,
       bid_state:bid?.bid?.state||bid?.state||null,
       resources_offer:bid?.bid?.resources_offer||bid?.resources_offer||null,
+      provider_name:providerRecord?.name||null,
+      provider_host_uri:providerRecord?.hostUri||null,
+      provider_last_check_date:providerRecord?.lastCheckDate||null,
+      provider_metadata_found:Boolean(providerRecord),
     },
   };
 }
@@ -236,6 +243,24 @@ export function createAkashMarketAdapter({
   quoteTimeoutMs=45000,
 }={}){
   const base=String(baseUrl).replace(/\/$/,'');
+  const closeDeployment=async(dseq)=>{
+    if(!apiKey||!dseq) return null;
+    const payload=await requestJson(
+      `${base}/v1/deployments/${encodeURIComponent(String(dseq))}`,
+      {
+        method:'DELETE',
+        headers:requestHeaders(apiKey),
+      },
+      15000
+    );
+    const body={
+      schema:'evercraft.saban.akash-order-close.v1',
+      dseq:String(dseq),
+      closed_at:new Date().toISOString(),
+    };
+    return {...body,provider_response:payload?.data||payload,receipt_hash:sha(body)};
+  };
+
   return {
     market:'akash',
 
@@ -288,36 +313,66 @@ export function createAkashMarketAdapter({
       const manifest=String(createdData?.manifest||'');
       if(!dseq||!manifest) throw new Error('akash_deployment_order_response_invalid');
 
-      const deadline=Date.now()+Math.max(5000,quoteTimeoutMs);
-      let bids=[];
-      while(Date.now()<deadline){
-        const payload=await requestJson(
-          `${base}/v1/bids?dseq=${encodeURIComponent(dseq)}`,
-          {headers:requestHeaders(apiKey)},
-          15000
-        );
-        bids=bidArray(payload);
-        if(bids.length) break;
-        await new Promise((resolve)=>setTimeout(resolve,Math.max(1000,pollIntervalMs)));
-      }
+      try{
+        const deadline=Date.now()+Math.max(5000,quoteTimeoutMs);
+        let bids=[];
+        while(Date.now()<deadline){
+          const payload=await requestJson(
+            `${base}/v1/bids?dseq=${encodeURIComponent(dseq)}`,
+            {headers:requestHeaders(apiKey)},
+            15000
+          );
+          bids=bidArray(payload);
+          if(bids.length) break;
+          await new Promise((resolve)=>setTimeout(resolve,Math.max(1000,pollIntervalMs)));
+        }
 
-      const offers=bids.map((bid)=>normalizeBid(bid,demand,manifest)).filter(Boolean);
-      const body={
-        schema:'evercraft.saban.akash-quote-round.v1',
-        demand_id:demand.demand_id,
-        dseq,
-        bid_count:offers.length,
-        market_order_created:true,
-        lease_created:false,
-        observed_at:new Date().toISOString(),
-      };
-      return {
-        schema:body.schema,
-        order_id:dseq,
-        manifest,
-        offers,
-        receipt:{...body,receipt_hash:sha(body)},
-      };
+        if(!bids.length) throw new Error('akash_bid_round_empty');
+
+        const providerPayload=await requestJson(`${base}/v1/providers`,{},15000);
+        const providerByOwner=new Map(
+          providerArray(providerPayload)
+            .map((provider)=>[String(provider?.owner||'').trim(),provider])
+            .filter(([owner])=>Boolean(owner))
+        );
+        const offers=bids.map((bid)=>{
+          const id=bid?.bid?.id||bid?.id||{};
+          const owner=String(id.provider||bid?.provider||'').trim();
+          return normalizeBid(bid,demand,manifest,providerByOwner.get(owner)||null);
+        }).filter(Boolean);
+
+        const body={
+          schema:'evercraft.saban.akash-quote-round.v1',
+          demand_id:demand.demand_id,
+          dseq,
+          bid_count:offers.length,
+          provider_metadata_match_count:offers.filter(
+            (offer)=>offer.metadata?.provider_metadata_found===true
+          ).length,
+          market_order_created:true,
+          lease_created:false,
+          observed_at:new Date().toISOString(),
+        };
+        return {
+          schema:body.schema,
+          order_id:dseq,
+          manifest,
+          offers,
+          receipt:{...body,receipt_hash:sha(body)},
+        };
+      }catch(error){
+        try{
+          const cleanup=await closeDeployment(dseq);
+          if(cleanup && error && typeof error==='object'){
+            error.quote_cleanup_receipt=cleanup.receipt_hash;
+          }
+        }catch(cleanupError){
+          if(error && typeof error==='object'){
+            error.quote_cleanup_failed=String(cleanupError?.message||cleanupError);
+          }
+        }
+        throw error;
+      }
     },
 
     async lease({demand,offer,authority,quote}={}){
@@ -368,21 +423,7 @@ export function createAkashMarketAdapter({
     },
 
     async cancelQuote({quote}={}){
-      if(!apiKey||!quote?.order_id) return null;
-      const payload=await requestJson(
-        `${base}/v1/deployments/${encodeURIComponent(String(quote.order_id))}`,
-        {
-          method:'DELETE',
-          headers:requestHeaders(apiKey),
-        },
-        15000
-      );
-      const body={
-        schema:'evercraft.saban.akash-order-close.v1',
-        dseq:String(quote.order_id),
-        closed_at:new Date().toISOString(),
-      };
-      return {...body,provider_response:payload?.data||payload,receipt_hash:sha(body)};
+      return closeDeployment(quote?.order_id||null);
     },
   };
 }
