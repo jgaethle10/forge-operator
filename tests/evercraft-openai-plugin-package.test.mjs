@@ -69,7 +69,14 @@ test('OpenAI account-side packet keeps public-directory and owned-route truth ga
   assert.ok(submission.positive_tests.length>=5);
   assert.ok(submission.negative_tests.length>=3);
   assert.equal(submission.public_directory_claim_allowed,false);
-  assert.equal(submission.compatibility_transport?.owned_fabric_cutover_required,true);
+  if(submission.owned_fabric_transport?.verified_external_canary===true){
+    assert.equal(submission.compatibility_transport?.active,false);
+    assert.equal(submission.compatibility_transport?.owned_fabric_cutover_required,false);
+    assert.equal(submission.owned_fabric_transport?.authority,'owned_public_fabric');
+    assert.equal(submission.owned_fabric_transport?.origin_change_requires_new_openai_plugin_submission,true);
+  }else{
+    assert.equal(submission.compatibility_transport?.owned_fabric_cutover_required,true);
+  }
 });
 
 test('submission denial cases cover payment, privacy, and consequential actions',()=>{
