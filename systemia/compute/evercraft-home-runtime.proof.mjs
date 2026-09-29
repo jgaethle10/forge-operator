@@ -31,7 +31,7 @@ passport.issueGrant({
   subject_ref: "user:owner-proof",
   issuer_ref: "evercraft:identity-authority",
   product: "evercraft-home",
-  scopes: ["home.read", "home.systemia.read", "home.systemia.plan", "home.yard.read", "home.network.read"],
+  scopes: ["home.read", "home.systemia.read", "home.systemia.plan", "home.yard.read", "home.network.read", "home.identity.sessions.manage"],
   starts_at: new Date(Date.now() - 1000).toISOString(),
   ends_at: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
   max_delegation_depth: 1,
@@ -93,6 +93,9 @@ try {
   assert.equal(managedHealth.workload_class, "systemia.evercraft-home.v1");
   assert.equal(managedHealth.auth_mode, "passport");
   assert.equal(managedHealth.identity_login_configured, true);
+  assert.equal(managedHealth.session_revocation_supported, true);
+  assert.equal(managedHealth.signing_key_id, "primary");
+  assert.equal(managedHealth.accepted_signing_key_count, 1);
   assert.equal(managedHealth.external_ai_required, false);
   assert.equal(managedHealth.legacy_provider_required, false);
 
@@ -129,6 +132,17 @@ try {
   assert.equal(session.subject, "user:owner-proof");
   assert.equal(session.authority, "evercraft-identity+passport");
 
+  const logout = await fetch(job.result.local_url + "/api/logout", {
+    method: "POST",
+    headers: { cookie: cookie.split(";")[0] },
+  });
+  assert.equal(logout.status, 200);
+  const revokedSession = await fetch(job.result.local_url + "/api/session", {
+    headers: { cookie: cookie.split(";")[0] },
+  });
+  assert.equal(revokedSession.status, 401);
+  assert.equal((await revokedSession.json()).state, "session_revoked");
+
   const release = await fetch(node.endpoint + "/v1/leases/" + lease.lease_id + "/release", {
     method: "POST",
     headers: { "content-type": "application/json" },
@@ -143,6 +157,7 @@ try {
     private_origin_only: job.result.private_origin_only,
     auth_mode: job.result.auth_mode,
     owner_login_verified: true,
+    server_side_logout_verified: true,
     provider_independent_boot: job.result.provider_independent_boot,
   }, null, 2));
 } finally {
