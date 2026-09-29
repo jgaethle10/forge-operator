@@ -45,6 +45,33 @@ Saban distinguishes logical agents from physical workers. A formation can contai
 
 For contracts using `role_item_cartesian`, Saban covers every role × work-item pair before beginning duplicate passes. This prevents random hash allocation from leaving important roles or shards untouched.
 
+## Hardware federation
+
+Saban can compose a workload from multiple **explicitly authorized** Evercraft Compute machines instead of waiting for one perfect host.
+
+The federation planner treats each machine as bounded role-local capacity. CPU, memory and storage are never fictionally merged into one process. A role must fit on one node. Different roles may be placed on different nodes, which allows a small gateway to own public ingress while a stronger machine carries browser or media work.
+
+For Control Room, the deployable pattern is:
+
+```
+small field-certified gateway
+  -> public HTTPS / Fabric
+  -> loopback federated service bridge
+  -> encrypted outbound-capacity broker
+  -> authorized stronger browser NodeSeed
+```
+
+The remote machine opens no public listener. The broker mints a short-lived relay credential scoped to one verified resident service. The gateway never receives the remote node allocator secret. The relay cannot deploy workloads, browse the remote filesystem or pivot to another service.
+
+Visibility is not authorization. Machines discovered on a LAN, Wi-Fi network, Bluetooth neighborhood or other ambient surface remain unusable until they are explicitly enrolled and attested into the Evercraft capacity fabric.
+
+Run:
+
+```bash
+npm run proof:saban-hardware-federation
+npm run proof:saban-hardware-federation-bridge
+```
+
 ## Distributed execution
 
 Evercraft Compute NodeSeed exposes `saban.multiplier-assignment.v1`. A NodeSeed may execute a Saban assignment only through an authenticated capacity lease and only through `registered-worker.mjs`. The request names a registered software ID rather than an arbitrary code path. The registry resolves the adapter, contract validation runs again at the worker boundary, and the NodeSeed returns both a Saban worker receipt and an Evercraft Compute receipt.

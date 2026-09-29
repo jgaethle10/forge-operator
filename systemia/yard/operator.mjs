@@ -586,6 +586,27 @@ export class YardOperator {
         }
         healthState = 'healthy';
         routeVerification = 'private_home_health_verified_public_route_unbound';
+      } else if (workloadClass === 'systemia.federated-service-bridge.v1') {
+        const bridgeHealthy =
+          health.ok === true &&
+          health.service === 'evercraft-federated-service-bridge' &&
+          health.runtime === 'Evercraft Compute' &&
+          health.loopback_only === true &&
+          health.remote_transport === 'evercraft.outbound-capacity.v1' &&
+          health.relay_token_exposed === false &&
+          health.relay_token_persisted === false &&
+          health.instance_id === job.result?.instance_id;
+        if (!bridgeHealthy) {
+          try {
+            await request(`${capacityEndpoint}/v1/services/${job.result.service_id}/stop`, {
+              method:'POST',
+              body:JSON.stringify({ token:lease.token }),
+            });
+          } catch {}
+          throw new Error('federated service bridge failed initial health verification');
+        }
+        healthState='healthy';
+        routeVerification='private_federated_bridge_health_verified';
       } else if (workloadClass === 'systemia.evercraft-web-browser.v1') {
         const browserHealthy =
           health.ok === true &&
@@ -1502,6 +1523,96 @@ export class YardOperator {
       nodes,
       compute_management_receipt_hash: response.receipt?.receipt_hash || null,
       observed_at: new Date().toISOString(),
+    };
+  }
+
+  async createRemoteServiceRelay(deploymentId, {
+    nodeId,
+    serviceId,
+    ttlMs = 30 * 60_000,
+    allowLoopbackProof = false,
+  } = {}) {
+    const record = this.deploymentStatus(deploymentId);
+    const secret = this.#loadLeaseSecret(deploymentId);
+    if (!record || !secret) throw new Error('deployment lease authority unavailable');
+    if (record.receipt?.workload_class !== 'systemia.remote-capacity-broker.v1') {
+      throw new Error('deployment is not a remote capacity broker');
+    }
+    if (!record.result?.service_id) {
+      throw new Error('remote capacity broker service is unavailable');
+    }
+
+    const route = record.public_route;
+    const routeAllowed = route?.verified === true && route?.scope === 'public_https';
+    const loopbackAllowed =
+      allowLoopbackProof === true &&
+      route?.scope === 'loopback_proof';
+    if (!routeAllowed && !loopbackAllowed) {
+      throw new Error('verified public HTTPS broker route is required');
+    }
+
+    const relay = await request(
+      `${secret.capacity_endpoint}/v1/services/${record.result.service_id}/remote-service-relay`,
+      {
+        method:'POST',
+        body:JSON.stringify({
+          token:secret.token,
+          node_id:String(nodeId || ''),
+          service_id:String(serviceId || ''),
+          ttl_ms:Math.max(60_000,Math.min(60 * 60_000,Number(ttlMs || 30 * 60_000))),
+        }),
+      }
+    );
+
+    return {
+      schema:'evercraft.yard.remote-service-relay.v1',
+      broker_deployment_id:deploymentId,
+      broker_origin:route.origin,
+      relay_id:String(relay.relay_id || ''),
+      remote_node_id:String(relay.node_id || ''),
+      remote_service_id:String(relay.service_id || ''),
+      relay_url:
+        route.origin +
+        String(relay.proxy_path || ''),
+      relay_token:String(relay.relay_token || ''),
+      expires_at:relay.expires_at || null,
+      allocator_token_exposed:false,
+      relay_token_persisted:false,
+      compute_management_receipt_hash:relay.receipt?.receipt_hash || null,
+    };
+  }
+
+  async releaseRemoteServiceRelay(deploymentId, relayId, {
+    reason = 'released',
+  } = {}) {
+    const record = this.deploymentStatus(deploymentId);
+    const secret = this.#loadLeaseSecret(deploymentId);
+    if (!record || !secret) throw new Error('deployment lease authority unavailable');
+    if (record.receipt?.workload_class !== 'systemia.remote-capacity-broker.v1') {
+      throw new Error('deployment is not a remote capacity broker');
+    }
+    if (!record.result?.service_id) {
+      throw new Error('remote capacity broker service is unavailable');
+    }
+
+    const released = await request(
+      `${secret.capacity_endpoint}/v1/services/${record.result.service_id}/remote-service-relay/${encodeURIComponent(String(relayId || ''))}/release`,
+      {
+        method:'POST',
+        body:JSON.stringify({
+          token:secret.token,
+          reason:String(reason || 'released'),
+        }),
+      }
+    );
+    return {
+      schema:'evercraft.yard.remote-service-relay-release.v1',
+      broker_deployment_id:deploymentId,
+      relay_id:String(relayId || ''),
+      released:released.released===true,
+      reason:released.reason || String(reason || 'released'),
+      compute_management_receipt_hash:released.receipt?.receipt_hash || null,
+      released_at:released.released_at || new Date().toISOString(),
     };
   }
 
