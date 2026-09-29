@@ -1,0 +1,51 @@
+{
+  "schema": "evercraft.distribution.execution-policy.v1",
+  "updated_at": "2026-09-28T21:40:00-07:00",
+  "owner": "Systemia",
+  "rule": "Evercraft-owned execution first",
+  "primary_tools": [
+    {
+      "capability": "public_web_fetch",
+      "system": "Evercraft Web",
+      "registry_name": "io.github.jgaethle10/evercraft-web",
+      "state": "live_verified_read_only_public_fetch"
+    },
+    {
+      "capability": "browser_automation",
+      "system": "Evercraft Browser Worker",
+      "state": "owned_runtime_activation_gated",
+      "note": "Use Systemia Yard / Evercraft Compute deployment and canary path. Do not substitute a third-party browser agent as the operating dependency."
+    },
+    {
+      "capability": "capability_discovery_and_distribution",
+      "system": "CHUM",
+      "state": "active_control_plane"
+    },
+    {
+      "capability": "provider_pickup_measurement",
+      "system": "Nexus cross-LLM probes",
+      "state": "receipt_required"
+    },
+    {
+      "capability": "health_and_drift",
+      "system": "Systemia Portfolio Sentinel",
+      "state": "active"
+    }
+  ],
+  "prohibited_default_dependencies": [
+    "TinyFish",
+    "external browser-agent providers used merely because Evercraft browser execution is temporarily gated"
+  ],
+  "fallback_policy": "If an Evercraft-owned execution capability is gated, record the blocker and advance activation of that capability. Do not silently replace it with a third-party operating dependency.",
+  "exception_policy": "An external service may still be a distribution destination, evidence source, or user-authorized integration. That does not make it an Evercraft execution dependency.",
+  "browser_activation_gate": [
+    "container build green",
+    "Yard/Evercraft Compute deployment",
+    "gateway-to-worker token and lease configured",
+    "real JavaScript-rendered public canary",
+    "private/local target rejection verified",
+    "non-GET side effects blocked",
+    "receipt hashes verified",
+    "MCP discovery promoted only after production canary"
+  ]
+}
