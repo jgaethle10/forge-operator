@@ -118,3 +118,20 @@ Base44 remains a migration source for legacy applications only and is not part o
 The initial owner identity is created locally through `systemia/identity/bootstrap-owner.mjs`. It requires an explicit manual authority receipt and reads the password from a permission-restricted local file. The password file should be deleted after successful bootstrap.
 
 Bootstrap also creates the initial `evercraft-home` Passport grant for the owner. Identity still does not own authorization after that point.
+
+## Provider credential custody
+
+Authenticated owners can open `/credentials.html` to seal upstream provider credentials into the Evercraft-owned provider credential vault.
+
+The first intake is Alpaca live credentials for DayTrade Lens. The browser sends the key pair only to the authenticated Evercraft Home origin. The server encrypts the pair with AES-256-GCM under a locally generated 256-bit vault key stored with mode `0600` inside the private Identity state tree. Credential envelopes are also `0600`; the vault directory is `0700`.
+
+The HTTP API never returns plaintext credentials. Successful intake returns only an opaque credential reference, the final four characters of the key ID, and a keyed fingerprint. Raw provider secrets are not written to Systemia receipts, GitHub, application entities, browser storage, or logs.
+
+Current endpoints:
+
+- `POST /api/credentials/providers/alpaca` — owner-gated sealed intake.
+- `GET /api/credentials/providers/alpaca/status` — metadata only; never returns secret material.
+- `/credentials.html` — first-party human intake surface.
+
+Until a dedicated `home.credentials.manage` grant is rolled through existing owner Passports, this narrow intake reuses the already owner-sensitive `home.identity.sessions.manage` scope rather than widening access.
+
