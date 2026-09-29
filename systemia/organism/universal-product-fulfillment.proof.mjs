@@ -1,27 +1,18 @@
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import { auditFulfillmentRegistry, buildUniversalFulfillmentPlan, getFulfillmentProfile } from './universal-product-fulfillment.mjs';
 
-const SELL_NOW = [
-  'aliev-site-opportunity-snapshot-v1',
-  'career-command-interview-practice-machine-v1',
-  'eventwave-paid-promotion-v1',
-  'deck-capital-fit-sprint-machine-v1',
-  'foundry-app-escape-audit-v1',
-  'website-launch-service-v1',
-  'faie-signal-brief-v1',
-  'findmypart-paid-hunt-v1',
-  'rivet-site-underwriting-v1',
-  'roasted-text-pressure-test-machine-v1',
-  'legacy-rescue-lab-v1',
-  'ibmi-rescue-v1',
-  'site-survive-rapid-audit-v1',
-  'audit-center-website-audit-machine-v1'
-];
+const catalog = JSON.parse(fs.readFileSync('public/.well-known/evercraft-machine-catalog.json','utf8'));
+const SELL_NOW = catalog.offers
+  .filter((offer) => offer.commercial_state === 'sell_now')
+  .map((offer) => offer.public_id)
+  .sort();
 
 const audit = auditFulfillmentRegistry({ sellNowIds: SELL_NOW });
 assert.equal(audit.pass, true);
-assert.equal(audit.expected_sell_now_count, 14);
-assert.equal(audit.covered_sell_now_count, 14);
+assert.equal(audit.expected_sell_now_count, SELL_NOW.length);
+assert.equal(SELL_NOW.length, 14, 'current canonical sell-now count changed; add/remove fulfillment profiles deliberately');
+assert.equal(audit.covered_sell_now_count, SELL_NOW.length);
 assert.deepEqual(audit.missing, []);
 assert.deepEqual(audit.invalid, []);
 
