@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-29T18:30:17.667Z",
+  "updated_at": "2026-09-29T18:40:06.084Z",
   "url_count": 2628,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -135,14 +135,14 @@
     },
     "/chum/hot/": {
       "path": "/chum/hot/",
-      "content_sha256": "a8ebf02f20fc6527f6b8b55496759895cf3fb1f3e287bfe3cf7a64be0e008762",
-      "last_changed": "2026-09-29T05:56:22.327Z",
+      "content_sha256": "6a029d049b28299d5277c1efea4ac3d0b660bb6de2536cf0351a4ebb5f781197",
+      "last_changed": "2026-09-29T18:40:06.084Z",
       "priority": 80
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "cbbc24a8fc3850253d8fcd194b38298c664cbc524ee3d676d8323469e6adb596",
-      "last_changed": "2026-09-29T18:30:17.667Z",
+      "content_sha256": "69321ce9cdde61a0ea7f2c300f46cb4ce29f81f87a4ebfc72dee731bffecef7d",
+      "last_changed": "2026-09-29T18:40:06.084Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -153,20 +153,20 @@
     },
     "/chum/strike/index.json": {
       "path": "/chum/strike/index.json",
-      "content_sha256": "64909d45fad156bd6f92dc9dfc99eabfb9e42000531531f49fd7cb38f0f12328",
-      "last_changed": "2026-09-29T18:30:17.667Z",
+      "content_sha256": "8f2a2f067c0a6938f25ca503a68db7955a22763001d533dbb745e21448601a3a",
+      "last_changed": "2026-09-29T18:40:06.084Z",
       "priority": 80
     },
     "/chum/crawler-radar.json": {
       "path": "/chum/crawler-radar.json",
-      "content_sha256": "cc76b1f17e76065a35596ac27073e1fd209bb1a40675f3908e5aeab8382a73ba",
-      "last_changed": "2026-09-29T18:30:17.667Z",
+      "content_sha256": "d156b17b8dded8af728bba35976ddc3e378a161dbe88276d513006670e16b199",
+      "last_changed": "2026-09-29T18:40:06.084Z",
       "priority": 80
     },
     "/chum/crawler-radar.txt": {
       "path": "/chum/crawler-radar.txt",
-      "content_sha256": "6889a69eb5dfafe3a685927d35ed95b7305f69828d856928d9f3667e5a08b289",
-      "last_changed": "2026-09-29T18:30:17.667Z",
+      "content_sha256": "ac67b11b7e2e1b5cbf3480b8eaa95e6a66b2d1be9f4004dd3f373b72692ab650",
+      "last_changed": "2026-09-29T18:40:06.084Z",
       "priority": 80
     },
     "/chum/proof/": {
@@ -177,8 +177,8 @@
     },
     "/chum/proof/index.json": {
       "path": "/chum/proof/index.json",
-      "content_sha256": "232e26aec45296124da2864761ad9794075c37fa11900c06d2167ee7985c28bb",
-      "last_changed": "2026-09-29T18:30:17.217Z",
+      "content_sha256": "c9345870705546d706c947f35b5980b8cbf1107ee0ad6871d2f882236202dda5",
+      "last_changed": "2026-09-29T18:40:05.280Z",
       "priority": 80
     },
     "/chum/proof/llms.txt": {
@@ -189,14 +189,14 @@
     },
     "/chum/proof/forensiscope.json": {
       "path": "/chum/proof/forensiscope.json",
-      "content_sha256": "f51466726b1b9180d27a76c80018a8d65899b5b113cf47c6f658ed0b0edd65a3",
-      "last_changed": "2026-09-29T18:30:17.217Z",
+      "content_sha256": "5b5892136dafd14cbae4880cca813ec49ae3ded0921475652f0ba0fd2e928111",
+      "last_changed": "2026-09-29T18:40:05.280Z",
       "priority": 80
     },
     "/chum/proof/rivet.json": {
       "path": "/chum/proof/rivet.json",
-      "content_sha256": "485e466f70d74fdfa1ee22b96c4254a089391fcddd3c66269a4918043cc5d048",
-      "last_changed": "2026-09-29T18:30:17.217Z",
+      "content_sha256": "dd06c237b53728c8fc174f7c098c277edbd246e0b4796d37df5c7e0e31354004",
+      "last_changed": "2026-09-29T18:40:05.280Z",
       "priority": 80
     },
     "/chum/commercial/": {
@@ -267,8 +267,8 @@
     },
     "/network/": {
       "path": "/network/",
-      "content_sha256": "ea0fe34889c1dd60e99038dae4fc13bfd77db0dd56b94dc53d3ff226c8a72878",
-      "last_changed": "2026-09-26T23:54:10.681Z",
+      "content_sha256": "867e520385d177cf8e15f397ecf782d95989dab92c432bc05c660b35f8cc8a60",
+      "last_changed": "2026-09-29T18:40:05.280Z",
       "priority": 60
     },
     "/network/mesh/": {
@@ -279,62 +279,62 @@
     },
     "/network/mesh/index.json": {
       "path": "/network/mesh/index.json",
-      "content_sha256": "54b6948d953163db2ae3b5c187e24bdabc4af2637ee643a62dd69b911c1ae992",
-      "last_changed": "2026-09-26T23:54:10.681Z",
+      "content_sha256": "703676f75317f64e4ed290d5702498269c8c03ada482e826c935b50aeda6aa3d",
+      "last_changed": "2026-09-29T18:40:05.280Z",
       "priority": 60
     },
     "/network/mesh/llms.txt": {
       "path": "/network/mesh/llms.txt",
-      "content_sha256": "f2f0d6b97f152d4db12698024ffc38b9133b282a4786e09133393d78ae638b37",
-      "last_changed": "2026-09-26T23:54:10.681Z",
+      "content_sha256": "e21841da328f90180dd0279f6048fc6c6a87098f43431ac6d71181971eb93b45",
+      "last_changed": "2026-09-29T18:40:05.280Z",
       "priority": 86
     },
     "/network/mesh/application-continuity/": {
       "path": "/network/mesh/application-continuity/",
-      "content_sha256": "575f4fa90281b7119993f645027152f197b3f3c87eb7353a770708a31645ca67",
-      "last_changed": "2026-09-26T23:54:10.681Z",
+      "content_sha256": "091ec8d44cbf5ddae8fe1f7f4cc219ae27ea06da500a9d35931feac0c58c3a1b",
+      "last_changed": "2026-09-29T18:40:05.280Z",
       "priority": 60
     },
     "/network/mesh/wifi-cellular-transition/": {
       "path": "/network/mesh/wifi-cellular-transition/",
-      "content_sha256": "427f1c67c11b15143345671f0fd4a4fa78eb81ef116237a0e023434650f9343a",
-      "last_changed": "2026-09-26T23:54:10.681Z",
+      "content_sha256": "82a7110a5b152e878a737988b30fcca35559d6114db44e6a7944ff8c6bb8e1d3",
+      "last_changed": "2026-09-29T18:40:05.280Z",
       "priority": 60
     },
     "/network/mesh/device-reconnect-visibility/": {
       "path": "/network/mesh/device-reconnect-visibility/",
-      "content_sha256": "5b37305c898fea01023ddae475641bde387c85f43e9b3b1c12c465ad78aa3533",
-      "last_changed": "2026-09-26T23:54:10.681Z",
+      "content_sha256": "182064634342d6ee4497b12e4d972e81aba5800293cfafce17bbec7f0aa81083",
+      "last_changed": "2026-09-29T18:40:05.280Z",
       "priority": 60
     },
     "/network/mesh/business-connectivity-resilience/": {
       "path": "/network/mesh/business-connectivity-resilience/",
-      "content_sha256": "193bf3462639606c7ac6fc98c789bbac24954aec67b49de784a22e7d8745910c",
-      "last_changed": "2026-09-26T23:54:10.681Z",
+      "content_sha256": "46722df3bf8871a0e215dc557d853edcf428bf00c5c984eee254e9c4a996e844",
+      "last_changed": "2026-09-29T18:40:05.280Z",
       "priority": 60
     },
     "/network/mesh/household-connectivity-resilience/": {
       "path": "/network/mesh/household-connectivity-resilience/",
-      "content_sha256": "09eac7593acad0e579c75418aeb717fe6ed1e9791c4421f1574a8f477282c217",
-      "last_changed": "2026-09-26T23:54:10.681Z",
+      "content_sha256": "4814c0c3c46538d3aeb9bff350a5abbbb44d816bae63055cdbfaed575b11b6c7",
+      "last_changed": "2026-09-29T18:40:05.280Z",
       "priority": 60
     },
     "/network/llms.txt": {
       "path": "/network/llms.txt",
-      "content_sha256": "dd46a07ef1a446bc2663c5b35ee81616429b8e51016ade985289c63a84b3e4c8",
-      "last_changed": "2026-09-26T23:54:10.681Z",
+      "content_sha256": "4c1757c325d3743f3ff7f2e765718974343391a93dcb1ac95f17cccc67652a28",
+      "last_changed": "2026-09-29T18:40:05.280Z",
       "priority": 86
     },
     "/network/discovery.json": {
       "path": "/network/discovery.json",
-      "content_sha256": "93b62c3378f7d6e6ba698eaa2505b465df98d6801baabff6139a55bd133e279d",
-      "last_changed": "2026-09-26T23:54:10.681Z",
+      "content_sha256": "d3ba925651c0578ed9c10e721fa4c2b974e6baa32d8a29b1ea50f7b6485bf842",
+      "last_changed": "2026-09-29T18:40:05.280Z",
       "priority": 60
     },
     "/.well-known/evercraft-network.json": {
       "path": "/.well-known/evercraft-network.json",
-      "content_sha256": "93b62c3378f7d6e6ba698eaa2505b465df98d6801baabff6139a55bd133e279d",
-      "last_changed": "2026-09-26T23:54:10.681Z",
+      "content_sha256": "d3ba925651c0578ed9c10e721fa4c2b974e6baa32d8a29b1ea50f7b6485bf842",
+      "last_changed": "2026-09-29T18:40:05.280Z",
       "priority": 84
     },
     "/.well-known/evercraft-pain-index.json": {
@@ -729,14 +729,14 @@
     },
     "/llms-full.txt": {
       "path": "/llms-full.txt",
-      "content_sha256": "0d4500ca568bd607845a471611cbddd2a2dba19b338c13218fbf7bd08e35aee0",
-      "last_changed": "2026-09-29T05:53:29.457Z",
+      "content_sha256": "097f85d5f34a7cbd38b88542f7d3ee9f661e8c67a0e94ca2f52f12f9b3fe651a",
+      "last_changed": "2026-09-29T18:40:05.280Z",
       "priority": 86
     },
     "/ai-discovery.json": {
       "path": "/ai-discovery.json",
-      "content_sha256": "06cd26f9d107c83ed9f901ce704b69a24187481b3a3a88d412b0ddea07ef3ffe",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "a1a4089a8ecdd6600c48f56824b553f96e57cba5b9937355ee3fa1507aa8f359",
+      "last_changed": "2026-09-29T18:40:05.280Z",
       "priority": 60
     },
     "/schema.jsonld": {
@@ -789,8 +789,8 @@
     },
     "/.well-known/evercraft-discovery.json": {
       "path": "/.well-known/evercraft-discovery.json",
-      "content_sha256": "06cd26f9d107c83ed9f901ce704b69a24187481b3a3a88d412b0ddea07ef3ffe",
-      "last_changed": "2026-09-28T18:59:42.997Z",
+      "content_sha256": "a1a4089a8ecdd6600c48f56824b553f96e57cba5b9937355ee3fa1507aa8f359",
+      "last_changed": "2026-09-29T18:40:05.280Z",
       "priority": 84
     },
     "/.well-known/evercraft-products.json": {
@@ -801,8 +801,8 @@
     },
     "/.well-known/evercraft-machine-catalog.json": {
       "path": "/.well-known/evercraft-machine-catalog.json",
-      "content_sha256": "c106e84396453f639a19185b91eed186a496611e4ead2ea9a9565b5784199a85",
-      "last_changed": "2026-09-29T02:27:24.445Z",
+      "content_sha256": "42535f525ec75ee1e9c280d783fcf3f7f2c0a50a37e59a222fbfa54c43ccfb1d",
+      "last_changed": "2026-09-29T18:40:05.280Z",
       "priority": 84
     },
     "/.well-known/evercraft-chum.json": {

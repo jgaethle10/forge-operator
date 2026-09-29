@@ -21,17 +21,17 @@
   <url><loc>/chum/answers/index.txt</loc><lastmod>2026-09-29T05:34:42.337Z</lastmod></url>
   <url><loc>/chum/answers/observed/</loc><lastmod>2026-09-27T06:03:00.949Z</lastmod></url>
   <url><loc>/chum/answers/observed/index.json</loc><lastmod>2026-09-27T06:03:00.949Z</lastmod></url>
-  <url><loc>/chum/hot/</loc><lastmod>2026-09-29T05:56:22.327Z</lastmod></url>
-  <url><loc>/chum/hot/index.json</loc><lastmod>2026-09-29T18:30:17.667Z</lastmod></url>
+  <url><loc>/chum/hot/</loc><lastmod>2026-09-29T18:40:06.084Z</lastmod></url>
+  <url><loc>/chum/hot/index.json</loc><lastmod>2026-09-29T18:40:06.084Z</lastmod></url>
   <url><loc>/chum/strike/</loc><lastmod>2026-09-29T18:07:50.904Z</lastmod></url>
-  <url><loc>/chum/strike/index.json</loc><lastmod>2026-09-29T18:30:17.667Z</lastmod></url>
-  <url><loc>/chum/crawler-radar.json</loc><lastmod>2026-09-29T18:30:17.667Z</lastmod></url>
-  <url><loc>/chum/crawler-radar.txt</loc><lastmod>2026-09-29T18:30:17.667Z</lastmod></url>
+  <url><loc>/chum/strike/index.json</loc><lastmod>2026-09-29T18:40:06.084Z</lastmod></url>
+  <url><loc>/chum/crawler-radar.json</loc><lastmod>2026-09-29T18:40:06.084Z</lastmod></url>
+  <url><loc>/chum/crawler-radar.txt</loc><lastmod>2026-09-29T18:40:06.084Z</lastmod></url>
   <url><loc>/chum/proof/</loc><lastmod>2026-09-27T14:53:47.616Z</lastmod></url>
-  <url><loc>/chum/proof/index.json</loc><lastmod>2026-09-29T18:30:17.217Z</lastmod></url>
+  <url><loc>/chum/proof/index.json</loc><lastmod>2026-09-29T18:40:05.280Z</lastmod></url>
   <url><loc>/chum/proof/llms.txt</loc><lastmod>2026-09-27T14:53:47.616Z</lastmod></url>
-  <url><loc>/chum/proof/forensiscope.json</loc><lastmod>2026-09-29T18:30:17.217Z</lastmod></url>
-  <url><loc>/chum/proof/rivet.json</loc><lastmod>2026-09-29T18:30:17.217Z</lastmod></url>
+  <url><loc>/chum/proof/forensiscope.json</loc><lastmod>2026-09-29T18:40:05.280Z</lastmod></url>
+  <url><loc>/chum/proof/rivet.json</loc><lastmod>2026-09-29T18:40:05.280Z</lastmod></url>
   <url><loc>/chum/commercial/</loc><lastmod>2026-09-28T19:03:48.848Z</lastmod></url>
   <url><loc>/chum/commercial/index.json</loc><lastmod>2026-09-28T19:03:48.848Z</lastmod></url>
   <url><loc>/chum/commercial/llms.txt</loc><lastmod>2026-09-28T19:03:48.848Z</lastmod></url>
@@ -46,18 +46,18 @@
   <url><loc>/chum/freshness.json</loc></url>
   <url><loc>/chum/crawl-state.json</loc></url>
   <url><loc>/chum/sitemap.xml</loc><lastmod>2026-09-28T18:59:42.997Z</lastmod></url>
-  <url><loc>/network/</loc><lastmod>2026-09-26T23:54:10.681Z</lastmod></url>
+  <url><loc>/network/</loc><lastmod>2026-09-29T18:40:05.280Z</lastmod></url>
   <url><loc>/network/mesh/</loc><lastmod>2026-09-26T00:54:25.375Z</lastmod></url>
-  <url><loc>/network/mesh/index.json</loc><lastmod>2026-09-26T23:54:10.681Z</lastmod></url>
-  <url><loc>/network/mesh/llms.txt</loc><lastmod>2026-09-26T23:54:10.681Z</lastmod></url>
-  <url><loc>/network/mesh/application-continuity/</loc><lastmod>2026-09-26T23:54:10.681Z</lastmod></url>
-  <url><loc>/network/mesh/wifi-cellular-transition/</loc><lastmod>2026-09-26T23:54:10.681Z</lastmod></url>
-  <url><loc>/network/mesh/device-reconnect-visibility/</loc><lastmod>2026-09-26T23:54:10.681Z</lastmod></url>
-  <url><loc>/network/mesh/business-connectivity-resilience/</loc><lastmod>2026-09-26T23:54:10.681Z</lastmod></url>
-  <url><loc>/network/mesh/household-connectivity-resilience/</loc><lastmod>2026-09-26T23:54:10.681Z</lastmod></url>
-  <url><loc>/network/llms.txt</loc><lastmod>2026-09-26T23:54:10.681Z</lastmod></url>
-  <url><loc>/network/discovery.json</loc><lastmod>2026-09-26T23:54:10.681Z</lastmod></url>
-  <url><loc>/.well-known/evercraft-network.json</loc><lastmod>2026-09-26T23:54:10.681Z</lastmod></url>
+  <url><loc>/network/mesh/index.json</loc><lastmod>2026-09-29T18:40:05.280Z</lastmod></url>
+  <url><loc>/network/mesh/llms.txt</loc><lastmod>2026-09-29T18:40:05.280Z</lastmod></url>
+  <url><loc>/network/mesh/application-continuity/</loc><lastmod>2026-09-29T18:40:05.280Z</lastmod></url>
+  <url><loc>/network/mesh/wifi-cellular-transition/</loc><lastmod>2026-09-29T18:40:05.280Z</lastmod></url>
+  <url><loc>/network/mesh/device-reconnect-visibility/</loc><lastmod>2026-09-29T18:40:05.280Z</lastmod></url>
+  <url><loc>/network/mesh/business-connectivity-resilience/</loc><lastmod>2026-09-29T18:40:05.280Z</lastmod></url>
+  <url><loc>/network/mesh/household-connectivity-resilience/</loc><lastmod>2026-09-29T18:40:05.280Z</lastmod></url>
+  <url><loc>/network/llms.txt</loc><lastmod>2026-09-29T18:40:05.280Z</lastmod></url>
+  <url><loc>/network/discovery.json</loc><lastmod>2026-09-29T18:40:05.280Z</lastmod></url>
+  <url><loc>/.well-known/evercraft-network.json</loc><lastmod>2026-09-29T18:40:05.280Z</lastmod></url>
   <url><loc>/.well-known/evercraft-pain-index.json</loc><lastmod>2026-09-29T05:53:29.457Z</lastmod></url>
   <url><loc>/rivet/discovery.json</loc><lastmod>2026-09-27T14:38:34.804Z</lastmod></url>
   <url><loc>/rivet/llms.txt</loc><lastmod>2026-09-27T14:38:34.804Z</lastmod></url>
@@ -123,8 +123,8 @@
   <url><loc>/forensiscope/distribution/reddit-pack.json</loc><lastmod>2026-09-25T20:03:52.612Z</lastmod></url>
   <url><loc>/forensiscope/distribution/llms.txt</loc><lastmod>2026-09-25T20:03:52.612Z</lastmod></url>
   <url><loc>/llms.txt</loc><lastmod>2026-09-28T07:50:27.019Z</lastmod></url>
-  <url><loc>/llms-full.txt</loc><lastmod>2026-09-29T05:53:29.457Z</lastmod></url>
-  <url><loc>/ai-discovery.json</loc><lastmod>2026-09-28T18:59:42.997Z</lastmod></url>
+  <url><loc>/llms-full.txt</loc><lastmod>2026-09-29T18:40:05.280Z</lastmod></url>
+  <url><loc>/ai-discovery.json</loc><lastmod>2026-09-29T18:40:05.280Z</lastmod></url>
   <url><loc>/schema.jsonld</loc><lastmod>2026-09-29T04:34:54.060Z</lastmod></url>
   <url><loc>/openapi.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/.well-known/evercraft-agent.json</loc><lastmod>2026-09-28T18:59:42.997Z</lastmod></url>
@@ -133,9 +133,9 @@
   <url><loc>/.well-known/evercraft-agent-directory.json</loc><lastmod>2026-09-29T05:53:29.457Z</lastmod></url>
   <url><loc>/.well-known/evercraft-agent-commerce.json</loc><lastmod>2026-09-29T02:27:24.445Z</lastmod></url>
   <url><loc>/.well-known/evercraft-agent-interfaces.json</loc><lastmod>2026-09-28T18:59:42.997Z</lastmod></url>
-  <url><loc>/.well-known/evercraft-discovery.json</loc><lastmod>2026-09-28T18:59:42.997Z</lastmod></url>
+  <url><loc>/.well-known/evercraft-discovery.json</loc><lastmod>2026-09-29T18:40:05.280Z</lastmod></url>
   <url><loc>/.well-known/evercraft-products.json</loc><lastmod>2026-09-29T05:53:29.457Z</lastmod></url>
-  <url><loc>/.well-known/evercraft-machine-catalog.json</loc><lastmod>2026-09-29T02:27:24.445Z</lastmod></url>
+  <url><loc>/.well-known/evercraft-machine-catalog.json</loc><lastmod>2026-09-29T18:40:05.280Z</lastmod></url>
   <url><loc>/.well-known/evercraft-chum.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/.well-known/evercraft-media-overflow.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/.well-known/evercraft-capabilities.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>

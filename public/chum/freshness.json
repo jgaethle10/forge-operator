@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-29T18:30:17.667Z",
+  "updated_at": "2026-09-29T18:40:06.084Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -12,22 +12,27 @@
   "latest_change_batch": [
     {
       "path": "/chum/crawler-radar.json",
-      "last_changed": "2026-09-29T18:30:17.667Z",
+      "last_changed": "2026-09-29T18:40:06.084Z",
       "priority": 80
     },
     {
       "path": "/chum/crawler-radar.txt",
-      "last_changed": "2026-09-29T18:30:17.667Z",
+      "last_changed": "2026-09-29T18:40:06.084Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/",
+      "last_changed": "2026-09-29T18:40:06.084Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-29T18:30:17.667Z",
+      "last_changed": "2026-09-29T18:40:06.084Z",
       "priority": 80
     },
     {
       "path": "/chum/strike/index.json",
-      "last_changed": "2026-09-29T18:30:17.667Z",
+      "last_changed": "2026-09-29T18:40:06.084Z",
       "priority": 80
     }
   ],
@@ -35,44 +40,140 @@
     {
       "path": "/chum/crawler-radar.json",
       "url": "/chum/crawler-radar.json",
-      "last_changed": "2026-09-29T18:30:17.667Z",
+      "last_changed": "2026-09-29T18:40:06.084Z",
       "priority": 80
     },
     {
       "path": "/chum/crawler-radar.txt",
       "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-09-29T18:30:17.667Z",
+      "last_changed": "2026-09-29T18:40:06.084Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/",
+      "url": "/chum/hot/",
+      "last_changed": "2026-09-29T18:40:06.084Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
       "url": "/chum/hot/index.json",
-      "last_changed": "2026-09-29T18:30:17.667Z",
+      "last_changed": "2026-09-29T18:40:06.084Z",
       "priority": 80
     },
     {
       "path": "/chum/strike/index.json",
       "url": "/chum/strike/index.json",
-      "last_changed": "2026-09-29T18:30:17.667Z",
+      "last_changed": "2026-09-29T18:40:06.084Z",
       "priority": 80
+    },
+    {
+      "path": "/llms-full.txt",
+      "url": "/llms-full.txt",
+      "last_changed": "2026-09-29T18:40:05.280Z",
+      "priority": 86
+    },
+    {
+      "path": "/network/llms.txt",
+      "url": "/network/llms.txt",
+      "last_changed": "2026-09-29T18:40:05.280Z",
+      "priority": 86
+    },
+    {
+      "path": "/network/mesh/llms.txt",
+      "url": "/network/mesh/llms.txt",
+      "last_changed": "2026-09-29T18:40:05.280Z",
+      "priority": 86
+    },
+    {
+      "path": "/.well-known/evercraft-discovery.json",
+      "url": "/.well-known/evercraft-discovery.json",
+      "last_changed": "2026-09-29T18:40:05.280Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-machine-catalog.json",
+      "url": "/.well-known/evercraft-machine-catalog.json",
+      "last_changed": "2026-09-29T18:40:05.280Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-network.json",
+      "url": "/.well-known/evercraft-network.json",
+      "last_changed": "2026-09-29T18:40:05.280Z",
+      "priority": 84
     },
     {
       "path": "/chum/proof/forensiscope.json",
       "url": "/chum/proof/forensiscope.json",
-      "last_changed": "2026-09-29T18:30:17.217Z",
+      "last_changed": "2026-09-29T18:40:05.280Z",
       "priority": 80
     },
     {
       "path": "/chum/proof/index.json",
       "url": "/chum/proof/index.json",
-      "last_changed": "2026-09-29T18:30:17.217Z",
+      "last_changed": "2026-09-29T18:40:05.280Z",
       "priority": 80
     },
     {
       "path": "/chum/proof/rivet.json",
       "url": "/chum/proof/rivet.json",
-      "last_changed": "2026-09-29T18:30:17.217Z",
+      "last_changed": "2026-09-29T18:40:05.280Z",
       "priority": 80
+    },
+    {
+      "path": "/ai-discovery.json",
+      "url": "/ai-discovery.json",
+      "last_changed": "2026-09-29T18:40:05.280Z",
+      "priority": 60
+    },
+    {
+      "path": "/network/",
+      "url": "/network/",
+      "last_changed": "2026-09-29T18:40:05.280Z",
+      "priority": 60
+    },
+    {
+      "path": "/network/discovery.json",
+      "url": "/network/discovery.json",
+      "last_changed": "2026-09-29T18:40:05.280Z",
+      "priority": 60
+    },
+    {
+      "path": "/network/mesh/application-continuity/",
+      "url": "/network/mesh/application-continuity/",
+      "last_changed": "2026-09-29T18:40:05.280Z",
+      "priority": 60
+    },
+    {
+      "path": "/network/mesh/business-connectivity-resilience/",
+      "url": "/network/mesh/business-connectivity-resilience/",
+      "last_changed": "2026-09-29T18:40:05.280Z",
+      "priority": 60
+    },
+    {
+      "path": "/network/mesh/device-reconnect-visibility/",
+      "url": "/network/mesh/device-reconnect-visibility/",
+      "last_changed": "2026-09-29T18:40:05.280Z",
+      "priority": 60
+    },
+    {
+      "path": "/network/mesh/household-connectivity-resilience/",
+      "url": "/network/mesh/household-connectivity-resilience/",
+      "last_changed": "2026-09-29T18:40:05.280Z",
+      "priority": 60
+    },
+    {
+      "path": "/network/mesh/index.json",
+      "url": "/network/mesh/index.json",
+      "last_changed": "2026-09-29T18:40:05.280Z",
+      "priority": 60
+    },
+    {
+      "path": "/network/mesh/wifi-cellular-transition/",
+      "url": "/network/mesh/wifi-cellular-transition/",
+      "last_changed": "2026-09-29T18:40:05.280Z",
+      "priority": 60
     },
     {
       "path": "/chum/strike/",
@@ -91,12 +192,6 @@
       "url": "/chum/products/systemia-portfolio-sentinel/llms.txt",
       "last_changed": "2026-09-29T05:59:04.665Z",
       "priority": 94
-    },
-    {
-      "path": "/chum/hot/",
-      "url": "/chum/hot/",
-      "last_changed": "2026-09-29T05:56:22.327Z",
-      "priority": 80
     },
     {
       "path": "/chum/products/ibmi-rescue/",
@@ -127,12 +222,6 @@
       "url": "/.well-known/evercraft-products.json",
       "last_changed": "2026-09-29T05:53:29.457Z",
       "priority": 88
-    },
-    {
-      "path": "/llms-full.txt",
-      "url": "/llms-full.txt",
-      "last_changed": "2026-09-29T05:53:29.457Z",
-      "priority": 86
     },
     {
       "path": "/.well-known/evercraft-agent-directory.json",
@@ -1445,90 +1534,6 @@
     {
       "path": "/chum/answers/doors/help-me-think-through-relocation-and-housing-stability-7f258a69ff/",
       "url": "/chum/answers/doors/help-me-think-through-relocation-and-housing-stability-7f258a69ff/",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/learn-by-completing-real-missions-instead-of-passive-courses-ee764f84c5.json",
-      "url": "/chum/answers/doors/learn-by-completing-real-missions-instead-of-passive-courses-ee764f84c5.json",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/learn-by-completing-real-missions-instead-of-passive-courses-ee764f84c5/",
-      "url": "/chum/answers/doors/learn-by-completing-real-missions-instead-of-passive-courses-ee764f84c5/",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/plan-a-career-change-around-my-household-situation-be266777bd.json",
-      "url": "/chum/answers/doors/plan-a-career-change-around-my-household-situation-be266777bd.json",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/plan-a-career-change-around-my-household-situation-be266777bd/",
-      "url": "/chum/answers/doors/plan-a-career-change-around-my-household-situation-be266777bd/",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/practice-using-ai-on-a-real-business-workflow-b18ff2f101.json",
-      "url": "/chum/answers/doors/practice-using-ai-on-a-real-business-workflow-b18ff2f101.json",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/practice-using-ai-on-a-real-business-workflow-b18ff2f101/",
-      "url": "/chum/answers/doors/practice-using-ai-on-a-real-business-workflow-b18ff2f101/",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/prove-whether-an-ai-agent-can-actually-do-its-job-e994df8fd1.json",
-      "url": "/chum/answers/doors/prove-whether-an-ai-agent-can-actually-do-its-job-e994df8fd1.json",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/prove-whether-an-ai-agent-can-actually-do-its-job-e994df8fd1/",
-      "url": "/chum/answers/doors/prove-whether-an-ai-agent-can-actually-do-its-job-e994df8fd1/",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/run-an-agent-proving-mission-7414546325.json",
-      "url": "/chum/answers/doors/run-an-agent-proving-mission-7414546325.json",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/run-an-agent-proving-mission-7414546325/",
-      "url": "/chum/answers/doors/run-an-agent-proving-mission-7414546325/",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/stress-test-a-workflow-before-changing-live-operations-c9f0d0dd77.json",
-      "url": "/chum/answers/doors/stress-test-a-workflow-before-changing-live-operations-c9f0d0dd77.json",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/stress-test-a-workflow-before-changing-live-operations-c9f0d0dd77/",
-      "url": "/chum/answers/doors/stress-test-a-workflow-before-changing-live-operations-c9f0d0dd77/",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/submit-an-ai-system-for-an-external-lab-22b4c83255.json",
-      "url": "/chum/answers/doors/submit-an-ai-system-for-an-external-lab-22b4c83255.json",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/submit-an-ai-system-for-an-external-lab-22b4c83255/",
-      "url": "/chum/answers/doors/submit-an-ai-system-for-an-external-lab-22b4c83255/",
       "last_changed": "2026-09-29T04:34:54.060Z",
       "priority": 100
     }
