@@ -6,9 +6,12 @@ import { createHash, randomBytes } from 'node:crypto';
 import { promisify } from 'node:util';
 
 const execFileAsync = promisify(execFile);
-const sha = (value) => 'sha256:' + createHash('sha256').update(
-  typeof value === 'string' ? value : JSON.stringify(value)
-).digest('hex');
+const sha = (value) => {
+  const hash = createHash('sha256');
+  if (Buffer.isBuffer(value)) hash.update(value);
+  else hash.update(typeof value === 'string' ? value : JSON.stringify(value));
+  return 'sha256:' + hash.digest('hex');
+};
 
 const DEFAULT_PROGRAMS = new Set([
   'git', 'npm', 'npx', 'node',
@@ -184,7 +187,13 @@ export class EvercraftRemoteOperator {
     if (sensitivePath(relative)) throw new Error('operator_sensitive_path_denied');
     const target = path.resolve(root, relative);
     ensureInside(root, target);
-    const parent = fs.realpathSync(path.dirname(target));
+    let parentCandidate = path.dirname(target);
+    while (!fs.existsSync(parentCandidate)) {
+      const next = path.dirname(parentCandidate);
+      if (next === parentCandidate) throw new Error('operator_write_parent_invalid');
+      parentCandidate = next;
+    }
+    const parent = fs.realpathSync(parentCandidate);
     ensureInside(root, parent);
     if (fs.existsSync(target) && fs.lstatSync(target).isSymbolicLink()) {
       throw new Error('operator_symlink_write_denied');
