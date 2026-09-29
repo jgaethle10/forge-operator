@@ -30,14 +30,14 @@ assert.notEqual(product.canonical_url, product.origin_product_url, 'unverified p
 
 const cat = catalog.products.find((row) => row.product_key === 'ibmi-rescue');
 assert(cat, 'ibmi-rescue missing from registry catalog');
-assert.equal(cat.mode, 'discovery_only');
-assert(!cat.mcp, 'ibmi-rescue must not claim a dedicated MCP before verification');
+assert.equal(cat.mode, 'shared_mcp');
+assert.match(cat.mcp || '', /machineCommerceMcp$/);
+assert.equal(cat.registry_name, 'io.github.jgaethle10/evercraft-machine-commerce');
+assert.equal(cat.machine_state, 'direct_checkout_ready');
 
 const conf = conformance.products.find((row) => row.product_key === 'ibmi-rescue');
 assert(conf, 'ibmi-rescue missing from conformance inventory');
-assert.match(conf.conformance_state || '', /handoff_live/);
-assert.match(conf.conformance_state || '', /buyer_route_live/);
-assert.match(conf.conformance_state || '', /backend_checkout_verified/);
+assert.equal(conf.conformance_state, 'machine_commerce_direct_checkout_live_verified');
 assert.equal(conf.machine_commerce_handoff_state, 'live_verified');
 assert.equal(conf.provider_behavior_state, 'not_run');
 assert.equal(conf.buyer_route_state, 'live_verified');
@@ -45,13 +45,15 @@ assert.equal(conf.backend_checkout_state, 'synthetic_live_verified');
 
 const idx = publicIndex.products.find((row) => row.product_key === 'ibmi-rescue');
 assert(idx, 'ibmi-rescue missing from public registry index');
-assert.equal(idx.invocation?.mode, 'discovery_only');
-assert.equal(idx.invocation?.url, null);
+assert.equal(idx.invocation?.mode, 'mcp');
+assert.match(idx.invocation?.url || '', /machineCommerceMcp$/);
+assert.equal(idx.registry_name, 'io.github.jgaethle10/evercraft-machine-commerce');
 
 assert.equal(discovery.product_key, 'ibmi-rescue');
 assert.equal(discovery.human_confirmation_required, true);
 assert.equal(discovery.commercial?.offers?.length, 3);
-assert.equal(discovery.mcp, null);
+assert.match(discovery.mcp || '', /machineCommerceMcp$/);
+assert.equal(discovery.registry_name, 'io.github.jgaethle10/evercraft-machine-commerce');
 assert.match(discovery.buyer_frontage_url || '', /\/buy\/ibmi-rescue-v1/);
 assert.equal(discovery.human_start_url, 'https://findmypart.base44.app/ibmi-rescue');
 assert.equal(aiConformance.provider_behavior_state, 'not_inferred_from_publication');
@@ -70,6 +72,11 @@ assert.match(llms, /\$1,500 one-time/);
 assert.match(llms, /human buyer route is externally reachable/i);
 assert.match(llms, /backend checkout creation is independently verified/i);
 assert.match(topLevel, /Evercraft IBM i Rescue/);
+
+assert.equal(discovery.commercial?.machine_commerce_handoff?.mode, 'direct_checkout_capable');
+assert.equal(discovery.commercial?.machine_commerce_handoff?.tool, 'prepare_verified_checkout');
+assert.equal(discovery.commercial?.machine_commerce_handoff?.payment_created, false);
+assert.equal(discovery.commercial?.machine_commerce_handoff?.payment_proof, false);
 
 console.log(JSON.stringify({
   ok: true,
