@@ -21,15 +21,22 @@
     "join a local business rewards network",
     "create cross-business loyalty rewards",
     "make my local business more discoverable",
-    "join a community business partnership program"
+    "join a community business partnership program",
+    "earn PlayStation credit through local rewards",
+    "earn Xbox credit through local rewards",
+    "earn Nintendo eShop credit through local rewards",
+    "earn Roblox credit through local rewards",
+    "local business rewards that can fund gaming value"
   ],
-  "authority": "public read-only local reward discovery plus account-bound check-ins, Daily Prize Tickets and Game Wallet activity; merchant enrollment is reversible and owner-confirmed through Evercraft Machine Commerce",
+  "authority": "public read-only local reward discovery plus account-bound check-ins, Daily Prize Tickets and Game Wallet earning; Game Wallet fulfillment is implemented but production gaming issuance remains gated by provider authorization, credentials, sponsor funding and deployed-runtime verification; merchant enrollment is reversible and owner-confirmed through Evercraft Machine Commerce",
   "human_confirmation_required": true,
   "boundaries": [
     "read-only discovery creates no payment obligation",
     "a verified geofence check-in proves eligible proximity only and does not prove a purchase, transaction value, ticket purchase or event attendance",
     "Daily Prize Ticket selection, issuance, claim and credit state remain separate; ambiguous credit state requires reconciliation instead of automatic double payment",
-    "gaming redemption remains unavailable until a specific funded and authorized fulfillment rail exists",
+    "Game Wallet fulfillment keeps reserve, debit intent, points debit, provider request, delivery, refund and reconciliation as separate evidence states",
+    "a Giftbit adapter is implemented as provider adapter one; implementation does not imply provider partnership, production approval, funded inventory or live issuance",
+    "gaming redemption remains unavailable until a specific funded and authorized fulfillment rail, provider credential, sponsor budget and deployed runtime are independently verified",
     "Evercraft Points are not represented as publisher currency, cash or a direct publisher partnership",
     "prepared merchant enrollment does not activate a merchant, offer, discount, public listing or payment obligation",
     "merchant directory publication and commercial activation require their own verified state"
@@ -73,5 +80,32 @@
     "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/ai-discovery.json",
     "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/ai-conformance.json",
     "page": "/chum/products/evercraft-rewards/"
+  },
+  "game_wallet": {
+    "public_surface": "https://evercraft-rewards.base44.app/game-wallet",
+    "architecture_state": "provider_neutral_fulfillment_engine_source_qa_green",
+    "first_adapter": "giftbit",
+    "provider_relationship_claimed": false,
+    "production_issuance_state": "not_verified",
+    "source_qa_observed_on": "2026-09-29",
+    "evidence_states": [
+      "reserved",
+      "debit_pending",
+      "points_debited",
+      "provider_pending",
+      "fulfilled",
+      "refund_pending",
+      "refunded",
+      "reconciliation_required",
+      "cancelled"
+    ],
+    "sponsor_controls": [
+      "per_user_daily_limit",
+      "daily_issuance_cap",
+      "total_quantity_cap",
+      "total_dollar_cap",
+      "funding_reference"
+    ],
+    "deployment_note": "Base44 production deployment remains separately verified; source state alone is not proof the public runtime contains the fulfillment engine."
   }
 }
