@@ -13,6 +13,9 @@ on:
       - "systemia/network/outbound-capacity-broker.mjs"
       - "systemia/network/remote-operator.proof.mjs"
       - "systemia/network/REMOTE_OPERATOR.md"
+      - "systemia/remote-operator/**"
+      - "plugins/evercraft-remote-operator/**"
+      - "server.ts"
       - ".github/workflows/evercraft-remote-operator.yml"
   push:
     branches: [main]
@@ -27,6 +30,9 @@ on:
       - "systemia/network/outbound-capacity-broker.mjs"
       - "systemia/network/remote-operator.proof.mjs"
       - "systemia/network/REMOTE_OPERATOR.md"
+      - "systemia/remote-operator/**"
+      - "plugins/evercraft-remote-operator/**"
+      - "server.ts"
       - ".github/workflows/evercraft-remote-operator.yml"
   workflow_dispatch:
 
@@ -46,3 +52,7 @@ jobs:
         run: node systemia/compute/remote-operator.test.mjs
       - name: Prove outbound remote operator
         run: node systemia/network/remote-operator.proof.mjs
+      - name: Prove MCP gateway boundary
+        run: node systemia/remote-operator/mcp-gateway.test.mjs
+      - name: Typecheck Forge integration
+        run: npm ci && npm run lint
