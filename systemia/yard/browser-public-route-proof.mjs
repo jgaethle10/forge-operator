@@ -303,7 +303,8 @@ try{
       method:'POST',
       headers:{
         'content-type':'application/json',
-        'x-evercraft-browser-claim':claim,
+        cookie,
+        'x-evercraft-control-room':'1',
       },
       body:JSON.stringify({type:'reload'}),
     }
@@ -312,14 +313,19 @@ try{
   assert.equal(authAction.type,'reload');
   assert.equal(authAction.secret_text_recorded,false);
 
-  const authClose=await fetch(
+  const authCloseResponse=await fetch(
     binding.origin+'/v1/auth-browser/sessions/browser-edge-auth-proof',
     {
       method:'DELETE',
-      headers:{'x-evercraft-browser-claim':claim},
+      headers:{
+        cookie,
+        'x-evercraft-control-room':'1',
+      },
     }
-  ).then(r=>r.json());
+  );
+  const authClose=await authCloseResponse.json();
   assert.equal(authClose.closed,true);
+  assert.match(authCloseResponse.headers.get('set-cookie')||'',/Max-Age=0/i);
   assert.equal(authClosed,true);
 
   const renderResponse=await fetch(binding.origin+'/v1/browser/render',{
@@ -366,6 +372,9 @@ try{
     loopback_proof_not_misrepresented_as_public_https:true,
     authenticated_handoff_crossed_public_edge:true,
     authenticated_handoff_claim_enforced:true,
+    authenticated_handoff_claim_single_use:true,
+    authenticated_handoff_http_only_cookie:true,
+    authenticated_handoff_control_header_enforced:true,
     authenticated_handoff_close_destroyed_session:true,
     private_target_rejection_crossed_edge:true,
     evidence_receipt:rendered.result.evidence_receipt_sha256,
