@@ -105,7 +105,10 @@
       "auth": "evercraft_identity_plus_passport",
       "public_route_requires_independent_verification": true,
       "health_path": "/api/health",
-      "provider_independent_boot": true
+      "provider_independent_boot": true,
+      "identity": "evercraft-owned",
+      "identity_state_required": true,
+      "passport_state_required": true
     }
   },
   "release_gates": [
