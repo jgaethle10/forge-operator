@@ -52,6 +52,7 @@ const officialAdapter = createFeedAdapter({
   adapter_id: 'nws-active-alerts',
   domain: 'emergency_report',
   source_family: 'nws-api',
+  independence_group: 'noaa-nws',
   evidence_state: 'verified',
   reliability: 0.97,
   authority: 'authorized_official'
