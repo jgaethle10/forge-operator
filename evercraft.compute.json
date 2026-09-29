@@ -66,7 +66,8 @@
     "workload_classes": [
       "systemia.chum-public-origin.v1",
       "systemia.specialist-handoff-mcp.v1",
-      "systemia.public-edge.v1"
+      "systemia.public-edge.v1",
+      "systemia.evercraft-home.v1"
     ],
     "public_origin": {
       "workload_class": "systemia.chum-public-origin.v1",
@@ -97,6 +98,14 @@
       "route_binding_requires_deployment_receipt": true,
       "route_binding_requires_instance_match": true,
       "founder_login_required": false
+    },
+    "evercraft_home": {
+      "workload_class": "systemia.evercraft-home.v1",
+      "mode": "authenticated_private_origin",
+      "auth": "evercraft_identity_plus_passport",
+      "public_route_requires_independent_verification": true,
+      "health_path": "/api/health",
+      "provider_independent_boot": true
     }
   },
   "release_gates": [
