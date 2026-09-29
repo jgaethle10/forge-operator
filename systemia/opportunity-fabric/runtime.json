@@ -6,11 +6,11 @@
   "runtime": {
     "provider": "base44",
     "app_id": "6ab85d74fe2093703c6247e0",
-    "checkpoint_id": "6abc09cb3da4f2121023120e",
-    "checkpoint_commit": "6ddb94a9fd87fd0697b33e05af0f46bb12a1600c",
+    "checkpoint_id": "6abc0c487e374de557839b36",
+    "checkpoint_commit": "7489affce663ebc151ecf92f06d2d9097521d88b",
     "public_url": null,
     "publication_state": "not_claimed_public",
-    "runtime_version": "evercraft-opportunity-fabric-runtime-v1.1.0"
+    "runtime_version": "evercraft-opportunity-fabric-runtime-v1.2.0"
   },
   "verified_capabilities": [
     "metadata-first member profiles",
@@ -45,7 +45,14 @@
     "work-package scope and economics are leader-authored while assignee acceptance and progress are identity-checked by the runtime",
     "work packages can flag protected material as required without disclosing protected content",
     "multi-party team and work-package flows emit FabricEvent evidence receipts",
-    "all eight protected workflow entities are direct-client mutation locked and written through the trusted runtime"
+    "all eight protected workflow entities are direct-client mutation locked and written through the trusted runtime",
+    "project-owner-only execution blueprint planning from safe opportunity metadata",
+    "execution blueprint decomposes opportunity needs into bounded suggested work packages",
+    "execution blueprint ranks candidate members from public capability metadata without contact information",
+    "execution blueprint does not inspect ProtectedAsset, FormationSnapshot or ProtectedDisclosureGrant records",
+    "execution blueprint records unresolved capability gaps instead of inventing partners",
+    "execution blueprint recommendations do not create membership, rights or authority",
+    "candidate outreach from a blueprint still uses the protected ConnectionRequest handshake"
   ],
   "verification": {
     "app_lint": "pass",
@@ -71,12 +78,14 @@
     },
     "security_smoke": {
       "result": "pass",
-      "trusted_runtime_version": "v1.1.0",
+      "trusted_runtime_version": "v1.2.0",
       "protected_workflow_entities_runtime_write_only": 8,
       "private_contact_fields": 2,
       "vault_fingerprint_only": true,
       "immutable_formations_runtime_authoritative": true,
       "purpose_bound_disclosure_runtime_authoritative": true,
+      "execution_blueprint_safe_metadata_only": true,
+      "execution_blueprint_returns_no_contact_information": true,
       "execution_team_source_connections_verified": true,
       "team_invitation_acceptance_server_authoritative": true,
       "work_package_assignment_requires_accepted_invite": true,
@@ -86,7 +95,7 @@
     },
     "authority_contract_test": {
       "result": "pass",
-      "runtime_version": "v1.1.0"
+      "runtime_version": "v1.2.0"
     }
   },
   "known_limits": [
@@ -99,7 +108,9 @@
     "Mutual immutable-snapshot approval and disclosure-grant acceptance are technical evidence/consent controls, not signed legal agreements and not authorization for actual protected-file delivery",
     "Multi-party assembly is verified in the private Base44 runtime but the public transactional UI is still not claimed deployed",
     "Current multi-party work packages coordinate scope, economics, dependencies and progress but do not execute payment, escrow, legal signature or protected-file delivery",
-    "An accepted team invitation or work package is operational assent only and does not itself grant intellectual-property rights or create a final legal agreement"
+    "An accepted team invitation or work package is operational assent only and does not itself grant intellectual-property rights or create a final legal agreement",
+    "Execution blueprints are heuristic recommendations from safe metadata and are not proof that a candidate is qualified, available, willing or suitable",
+    "Blueprint candidate suggestions do not establish membership, partnership, contract, IP rights or authorization; every candidate still requires the normal protected connection and team gates"
   ],
   "release_rule": "Do not claim protected-asset disclosure, final legal enforceability, public deployment, or production payment until separately verified."
 }
