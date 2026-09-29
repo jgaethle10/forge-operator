@@ -212,6 +212,147 @@ assert.equal(quoteOnly.selected_offer.offer_id,'quote-proof:bid');
 assert.equal(quoteCancelled,true);
 assert.ok(quoteOnly.events.some((e)=>e.type==='quote.cleaned_up'));
 
+// A lease-level commercial demand must never skip a required quote round.
+let unquotedLeaseAttempts=0;
+const quoteRequiredMarket={
+  market:'quote-required-proof',
+  async discover(){
+    return {
+      offers:[{
+        offer_id:'quote-required-proof:supply',
+        provider_id:'quote-required-provider',
+        resources:{cpu_units:8,memory_mb:8192,storage_gb:20},
+        placement:{},
+        trust:{uptime_7d:1,audited:true,valid_version:true},
+        economics:{zero_cost:false,quoted:false},
+        quote_required:true,
+      }],
+    };
+  },
+  async requestQuotes(){
+    throw new Error('must_not_be_called_without_quote_authority');
+  },
+  async lease(){
+    unquotedLeaseAttempts+=1;
+    return {receipt:'sha256:should-not-exist'};
+  },
+};
+const quoteHeld=await negotiateCompute({
+  demand:{
+    demand_id:'proof-quote-required-lease',
+    cpu_units:2,
+    memory_mb:1024,
+    negotiation_level:'lease',
+    max_total_usd:1,
+  },
+  adapters:[quoteRequiredMarket],
+  leaseAuthority:{
+    schema:'evercraft.saban.compute-authority.v1',
+    approved:true,
+    demand_id:'proof-quote-required-lease',
+    allowed_markets:['quote-required-proof'],
+    max_total_usd:1,
+  },
+});
+assert.equal(unquotedLeaseAttempts,0);
+assert.equal(quoteHeld.lease,null);
+assert.ok(quoteHeld.events.some((e)=>e.type==='quote.held'));
+assert.ok(quoteHeld.events.some((e)=>
+  e.type==='lease.held'&&e.reason==='quote_required_before_lease'
+));
+
+// An uncertain lease failure requires reconciliation and must not auto-clean the quote.
+let leaseFailureCleanupCalls=0;
+const uncertainLeaseMarket={
+  market:'uncertain-lease-proof',
+  async discover(){
+    return {
+      offers:[{
+        offer_id:'uncertain-lease-proof:supply',
+        provider_id:'uncertain-provider',
+        resources:{cpu_units:8,memory_mb:8192,storage_gb:20},
+        placement:{},
+        trust:{uptime_7d:1,audited:true,valid_version:true},
+        economics:{zero_cost:false,quoted:false},
+        quote_required:true,
+      }],
+    };
+  },
+  async requestQuotes(){
+    return {
+      schema:'proof.quote.v1',
+      order_id:'uncertain-order',
+      offers:[{
+        offer_id:'uncertain-lease-proof:bid',
+        provider_id:'uncertain-provider',
+        resources:{cpu_units:8,memory_mb:8192,storage_gb:20},
+        placement:{},
+        trust:{uptime_7d:1,audited:true,valid_version:true},
+        economics:{zero_cost:false,quoted:true,hourly_usd:0.1,total_usd:0.1},
+        quote_required:false,
+      }],
+      receipt:{receipt_hash:'sha256:uncertain-quote'},
+    };
+  },
+  async lease(){
+    throw new Error('transport_dropped_after_commit_request');
+  },
+  async cancelQuote(){
+    leaseFailureCleanupCalls+=1;
+    return {receipt_hash:'sha256:unsafe-cleanup'};
+  },
+};
+const uncertainLease=await negotiateCompute({
+  demand:{
+    demand_id:'proof-uncertain-lease',
+    cpu_units:2,
+    memory_mb:1024,
+    negotiation_level:'lease',
+    max_total_usd:1,
+  },
+  adapters:[uncertainLeaseMarket],
+  quoteAuthority:{
+    schema:'evercraft.saban.compute-authority.v1',
+    approved:true,
+    demand_id:'proof-uncertain-lease',
+    allowed_markets:['uncertain-lease-proof'],
+  },
+  leaseAuthority:{
+    schema:'evercraft.saban.compute-authority.v1',
+    approved:true,
+    demand_id:'proof-uncertain-lease',
+    allowed_markets:['uncertain-lease-proof'],
+    max_total_usd:1,
+  },
+});
+assert.equal(uncertainLease.lease,null);
+assert.equal(uncertainLease.manual_reconciliation_required,true);
+assert.equal(leaseFailureCleanupCalls,0);
+assert.ok(uncertainLease.events.some((e)=>
+  e.type==='lease.failed'&&e.outcome==='reconciliation_required'
+));
+
+// Missing version evidence is not silently treated as current.
+const unknownVersion=normalizeComputeOffer({
+  offer_id:'unknown-version',
+  provider_id:'unknown-version-provider',
+  market:'proof',
+  resources:{cpu_units:8,memory_mb:8192,storage_gb:20},
+  placement:{},
+  trust:{uptime_7d:1,audited:true},
+  economics:{zero_cost:true,quoted:true,hourly_usd:0,total_usd:0},
+});
+const unknownVersionDecision=evaluateComputeOffer(
+  normalizeComputeDemand({
+    demand_id:'proof-version',
+    cpu_units:1,
+    memory_mb:512,
+  }),
+  unknownVersion
+);
+assert.equal(unknownVersionDecision.eligible,false);
+assert.ok(unknownVersionDecision.reasons.includes('valid_version_required'));
+
 assert.equal(uactPerBlockToUsdHour(100),0.06);
 const sdl=buildAkashSDL(normalizeComputeDemand({
   demand_id:'akash-sdl',
@@ -233,6 +374,9 @@ console.log(JSON.stringify({
   commercial_fallback_when_owned_capacity_insufficient:true,
   budget_enforcement:true,
   quote_orders_cleaned_up_when_not_leased:true,
+  quote_required_before_commercial_lease:true,
+  uncertain_lease_requires_manual_reconciliation:true,
+  unknown_version_fails_closed:true,
   akash_sdl_generated:true,
   uact_cost_conversion_proven:true,
 },null,2));
