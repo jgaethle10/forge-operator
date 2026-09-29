@@ -191,3 +191,12 @@ The default resident tick is 30 seconds. Built-in NWS and USGS sources are sched
 Every successful resident cycle emits `artifacts/sentinel-resident/mission-snapshot.json` using the standard KAIDANCE mission-snapshot contract. The mission fabric registers Sentinel as the optional `sentinel-life-safety` source with a 180-second freshness window.
 
 The mission snapshot is intentionally compact. It contains counts, freshness, material change totals, and provenance references. It does not include raw geometry, raw sensor payloads, targeting data, or autonomous intervention commands. Blind spots are represented as held work so KAIDANCE can distinguish degraded sensing from confirmed danger.
+
+
+## Hydrology lane
+
+Sentinel can add NOAA/NWS National Water Prediction Service river gauges as a dedicated `hydrology` domain. The resident activates this lane only when `SYSTEMIA_SENTINEL_NWPS_GAUGES` contains one or more comma-separated NWPS gauge identifiers.
+
+The source uses the official NWPS gauge metadata and stage/flow endpoints. Observed river status can enter with verified evidence; official forecast values remain `modeled` because forecast is not observation. Flood-category severity can raise anomaly strength, but hydrology data alone cannot mark a hostile event or invoke intervention.
+
+NWPS and NWS alerts intentionally share the `noaa-nws` independence group. River data therefore broadens the physical-world domain coverage without falsely counting NOAA twice as independent corroboration.
