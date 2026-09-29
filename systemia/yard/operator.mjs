@@ -562,6 +562,28 @@ export class YardOperator {
         }
         healthState = 'healthy';
         routeVerification = 'private_core_health_verified';
+      } else if (workloadClass === 'systemia.evercraft-home.v1') {
+        const homeHealthy =
+          health.ok === true &&
+          health.service === 'evercraft-home' &&
+          health.runtime === 'Evercraft Compute' &&
+          health.workload_class === 'systemia.evercraft-home.v1' &&
+          health.auth_mode === 'passport' &&
+          health.authority === 'evercraft' &&
+          health.external_ai_required === false &&
+          health.legacy_provider_required === false &&
+          health.instance_id === job.result?.instance_id;
+        if (!homeHealthy) {
+          try {
+            await request(`${capacityEndpoint}/v1/services/${job.result.service_id}/stop`, {
+              method: 'POST',
+              body: JSON.stringify({ token: lease.token }),
+            });
+          } catch {}
+          throw new Error('Evercraft Home failed initial sovereign health verification');
+        }
+        healthState = 'healthy';
+        routeVerification = 'private_home_health_verified_public_route_unbound';
       } else if (workloadClass === 'systemia.evercraft-web-browser.v1') {
         const browserHealthy =
           health.ok === true &&
