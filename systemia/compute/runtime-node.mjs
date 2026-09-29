@@ -1494,8 +1494,8 @@ export async function startEvercraftComputeNode({
                 stale_after_seconds: 900,
               },
               {
-                source_key: 'node001-megatron-field-certification',
-                path: 'node001-field/megatron-status/mission-snapshot.json',
+                source_key: 'node001-evernode-one-field-certification',
+                path: 'node001-field/evernode-one-status/mission-snapshot.json',
                 required: true,
                 stale_after_seconds: 900,
               },
