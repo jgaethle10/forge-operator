@@ -50,8 +50,23 @@ if (social.replacement_workflow !== 'systemia/organism/eps-social-continuity.wor
 if (social.replacement_scheduler !== 'systemia/core/resident-supervisor.mjs') {
   fail('EPS social exception must point to the Systemia Core resident supervisor');
 }
-if (social.replacement_state !== 'source_and_supervisor_wiring_present_not_live') {
-  fail('EPS social replacement must remain explicitly unverified until Yard runtime proof exists');
+if (social.replacement_state !== 'live_canary_verified_recurring_main_cutover_pending') {
+  fail('EPS social replacement state must reflect the verified live canary while main cutover remains pending');
+}
+if (!String(social.live_canary_receipt || '').startsWith('sha256:')) {
+  fail('EPS social live canary receipt is missing');
+}
+if (!['no_op','published_verified'].includes(String(social.live_canary_result || ''))) {
+  fail('EPS social live canary result must be an accepted verified outcome');
+}
+if (social.workload_identity !== 'github_oidc') {
+  fail('EPS social transition workload must use federated GitHub OIDC identity');
+}
+if (social.named_cloud_required !== false) {
+  fail('EPS social transition must not require a named cloud provider');
+}
+if (social.persistent_runtime_proven !== false) {
+  fail('EPS social ephemeral canary must not be mislabeled persistent runtime');
 }
 if (social.retirement_gate !== 'yard_cycle_live_plus_verified_clip_response_plus_observation_window') {
   fail('EPS social Base44 schedule retirement gate is incomplete');

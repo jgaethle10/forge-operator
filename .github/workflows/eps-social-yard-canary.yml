@@ -1,0 +1,96 @@
+name: EPS social Yard continuity
+
+on:
+  push:
+    branches:
+      - main
+      - systemia/eps-social-yard-canary-20260929
+    paths:
+      - 'systemia/compute/runtime-node.mjs'
+      - 'systemia/compute/local-organism.mjs'
+      - 'systemia/compute/eps-social-yard-canary.mjs'
+      - 'systemia/organism/eps-social-continuity.mjs'
+      - '.github/workflows/eps-social-yard-canary.yml'
+  workflow_dispatch:
+  schedule:
+    - cron: '*/30 * * * *'
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  canary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    env:
+      EVERCRAFT_CLIP_EPS_INGRESS_URL: https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/systemiaEPSPublishIngress
+      CLIP_SHARED_SECRET: ${{ secrets.SYSTEMIA_CLIP_SHARED_SECRET }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Prove Evercraft local organism
+        run: node systemia/compute/local-organism.proof.mjs
+
+      - name: Prepare private Clip workload identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          SECRET_FILE="$RUNNER_TEMP/clip-shared-secret"
+          umask 077
+          if [ -n "${CLIP_SHARED_SECRET:-}" ]; then
+            printf '%s' "$CLIP_SHARED_SECRET" > "$SECRET_FILE"
+            echo "clip_identity=shared_secret" >> "$GITHUB_STEP_SUMMARY"
+          else
+            TOKEN_RESPONSE="$(curl --fail --silent --show-error --max-time 20 \
+              -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+              "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=evercraft-clip-eps")"
+            OIDC_TOKEN="$(printf '%s' "$TOKEN_RESPONSE" | jq -er '.value')"
+            printf '%s' "$OIDC_TOKEN" > "$SECRET_FILE"
+            mkdir -p artifacts/base44-exit
+            OIDC_PAYLOAD="$(printf '%s' "$OIDC_TOKEN" | cut -d. -f2 | tr '_-' '/+' | awk '{l=length($0)%4;if(l==2)print $0"==";else if(l==3)print $0"=";else print $0}' | base64 -d)"
+            printf '%s' "$OIDC_PAYLOAD" | jq '{
+              iss,aud,repository,repository_id,repository_owner,ref,sha,
+              workflow,workflow_ref,job_workflow_ref,event_name,sub,actor,actor_id
+            }' > artifacts/base44-exit/github-oidc-claims.json
+            cat artifacts/base44-exit/github-oidc-claims.json
+            echo "clip_identity=github_oidc" >> "$GITHUB_STEP_SUMMARY"
+          fi
+          echo "SYSTEMIA_CLIP_SHARED_SECRET_FILE=$SECRET_FILE" >> "$GITHUB_ENV"
+
+      - name: Probe Clip ingress deployment state
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/base44-exit
+          STATUS="$(curl --silent --show-error --max-time 20 -o artifacts/base44-exit/clip-ingress-probe.json -w '%{http_code}' \
+            -H 'content-type: application/json' \
+            --data '{}' \
+            "$EVERCRAFT_CLIP_EPS_INGRESS_URL" || true)"
+          printf '%s\n' "$STATUS" > artifacts/base44-exit/clip-ingress-probe-status.txt
+          echo "clip_ingress_probe_status=$STATUS" >> "$GITHUB_STEP_SUMMARY"
+          if jq -e '.migration_probe == "github-oidc-ready-20260929"' artifacts/base44-exit/clip-ingress-probe.json >/dev/null 2>&1; then
+            echo "clip_source_change_live=true" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "clip_source_change_live=false" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Run EPS continuity through Systemia Core, Yard and Evercraft Compute
+        run: node systemia/compute/eps-social-yard-canary.mjs
+
+      - name: Upload cutover receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eps-social-yard-canary
+          path: |
+            artifacts/base44-exit/eps-social-yard-canary.json
+            artifacts/base44-exit/clip-ingress-probe.json
+            artifacts/base44-exit/clip-ingress-probe-status.txt
+            artifacts/base44-exit/github-oidc-claims.json
+          if-no-files-found: error
+          retention-days: 90

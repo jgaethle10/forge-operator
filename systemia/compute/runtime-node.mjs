@@ -1633,7 +1633,40 @@ export async function startEvercraftComputeNode({
             SYSTEMIA_SENTINEL_REGION_PROFILE: String(
               body.input?.sentinel_region_profile || ''
             ).trim(),
+            EVERCRAFT_CLIP_EPS_INGRESS_URL: String(
+              body.input?.clip_eps_ingress_url || ''
+            ).trim(),
+            SYSTEMIA_CLIP_SHARED_SECRET_FILE: String(
+              body.input?.clip_shared_secret_file || ''
+            ).trim(),
+            SYSTEMIA_EPS_SOCIAL_STATE_DIR: path.join(
+              workspaceRoot,
+              'eps-social-continuity'
+            ),
           };
+
+          if (serviceEnv.EVERCRAFT_CLIP_EPS_INGRESS_URL) {
+            let parsedClipIngress;
+            try {
+              parsedClipIngress = new URL(serviceEnv.EVERCRAFT_CLIP_EPS_INGRESS_URL);
+            } catch {
+              return send(res, 422, { error: 'clip_eps_ingress_url_invalid' });
+            }
+            if (parsedClipIngress.protocol !== 'https:') {
+              return send(res, 422, { error: 'clip_eps_ingress_url_https_required' });
+            }
+          }
+
+          if (serviceEnv.SYSTEMIA_CLIP_SHARED_SECRET_FILE) {
+            const clipSecretFile = path.resolve(serviceEnv.SYSTEMIA_CLIP_SHARED_SECRET_FILE);
+            if (!isWithin(allowedRoot, clipSecretFile)) {
+              return send(res, 403, { error: 'clip_shared_secret_file_outside_admitted_root' });
+            }
+            if (!fs.existsSync(clipSecretFile) || !fs.statSync(clipSecretFile).isFile()) {
+              return send(res, 422, { error: 'clip_shared_secret_file_missing' });
+            }
+            serviceEnv.SYSTEMIA_CLIP_SHARED_SECRET_FILE = clipSecretFile;
+          }
 
           const supervisor = new SystemiaCoreResidentSupervisor({
             repoRoot: CODE_ROOT,
