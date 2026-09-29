@@ -107,8 +107,72 @@ jobs:
           COMMERCE_MCP="https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
           COMMERCE_GATEWAY="https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway"
 
+          check_tool_contract() {
+            NAME="$1"
+            URL="$2"
+            TOOL="$3"
+            TITLE_NEEDLE="$4"
+            echo "::group::$NAME conversion-first tool contract"
+            BODY="$(curl -fsS --max-time 20 -X POST "$URL" \
+              -H 'Content-Type: application/json' \
+              -H 'Accept: application/json, text/event-stream' \
+              --data '{"jsonrpc":"2.0","id":3,"method":"tools/list","params":{}}')"
+            TOOL_JSON="$(printf '%s\n' "$BODY" | sed -n 's/^data: //p' | jq -c --arg tool "$TOOL" '.result.tools[] | select(.name==$tool)' | head -1)"
+            [ -n "$TOOL_JSON" ] || {
+              echo "MCP tools/list did not expose $TOOL for $NAME" >&2
+              exit 1
+            }
+            printf '%s\n' "$TOOL_JSON"
+            printf '%s' "$TOOL_JSON" | jq -e --arg needle "$TITLE_NEEDLE" '.title | contains($needle)' >/dev/null || {
+              echo "$NAME $TOOL title does not contain expected conversion cue: $TITLE_NEEDLE" >&2
+              exit 1
+            }
+            printf '%s' "$TOOL_JSON" | jq -e '.description | length > 40' >/dev/null || {
+              echo "$NAME $TOOL description is unexpectedly thin" >&2
+              exit 1
+            }
+            echo "::endgroup::"
+          }
+
+          call_readonly_tool() {
+            NAME="$1"
+            URL="$2"
+            TOOL="$3"
+            ARGS="$4"
+            echo "::group::$NAME read-only invocation"
+            BODY="$(curl -fsS --max-time 30 -X POST "$URL" \
+              -H 'Content-Type: application/json' \
+              -H 'Accept: application/json, text/event-stream' \
+              --data "$(jq -cn --arg tool "$TOOL" --argjson args "$ARGS" '{jsonrpc:"2.0",id:4,method:"tools/call",params:{name:$tool,arguments:$args}}')")"
+            printf '%s\n' "$BODY" | head -c 5000
+            echo
+            printf '%s' "$BODY" | grep -Eq '"result"|"structuredContent"' || {
+              echo "Read-only MCP invocation did not return a result for $NAME / $TOOL" >&2
+              exit 1
+            }
+            printf '%s' "$BODY" | grep -q '"isError":true' && {
+              echo "Read-only MCP invocation returned isError=true for $NAME / $TOOL" >&2
+              exit 1
+            }
+            echo "::endgroup::"
+          }
+
+          ALIEV_MCP="https://aliev.base44.app/functions/alievMcp"
+          FORENSISCOPE_MCP="https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp"
+          CLIP_MCP="https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp"
+
           check_tool "Evercraft Rewards" "$COMMERCE_MCP" "prepare_rewards_partner_enrollment"
           check_tool "IBM i Rescue via Machine Commerce" "$COMMERCE_MCP" "prepare_quote_ready_service_handoff"
+
+          check_tool_contract "Evercraft Machine Commerce" "$COMMERCE_MCP" "match_offer" "Start here"
+          check_tool_contract "AliEV" "$ALIEV_MCP" "analyze_ev_site" "Start here"
+          check_tool_contract "ForensiScope" "$FORENSISCOPE_MCP" "classify_media_route" "Start here"
+          check_tool_contract "Evercraft Clip" "$CLIP_MCP" "plan_clip_job" "Start here"
+
+          call_readonly_tool "Evercraft Machine Commerce" "$COMMERCE_MCP" "match_offer" '{"intent":"I need to understand a long video that ordinary chat tools cannot fully process","limit":1}'
+          call_readonly_tool "ForensiScope" "$FORENSISCOPE_MCP" "classify_media_route" '{"size_bytes":52428800,"duration_seconds":5400}'
+          call_readonly_tool "Evercraft Clip" "$CLIP_MCP" "plan_clip_job" '{"source_file_size_bytes":10485760,"source_duration_seconds":90,"target_platforms":["YouTube"],"goal":"Create a concise educational social video"}'
+
           check_offer "IBM i Rescue" "$COMMERCE_GATEWAY" "ibmi-rescue-v1"
           check_offer "Foundry App Escape" "$COMMERCE_GATEWAY" "foundry-app-escape-audit-v1"
           check_offer "Site-Survive" "$COMMERCE_GATEWAY" "site-survive-rapid-audit-v1"
