@@ -21,6 +21,11 @@
     "source_uses_base44_sdk": true,
     "legacy_gateway_present": true,
     "entity_schema_api_access": "inconsistent_or_unavailable",
+    "off_base44_kaidance_runtime_source_present": true,
+    "off_base44_resident_supervisor_source_present": true,
+    "off_base44_local_organism_installer_present": true,
+    "base44_internal_recurring_schedule_freeze_started": true,
+    "base44_credit_firewall_policy_present": true,
     "live_yard_runtime_verified": false,
     "legacy_baseline_checkpoint_created": true,
     "legacy_baseline_build_pass": true,
@@ -62,8 +67,9 @@
   "blockers": [
     "private Systemia Core repository is not currently visible through the connected GitHub installation",
     "Base44 entity schema/data API access for the source is currently inconsistent",
+    "source-level Base44 schedule freezes still require independent live-scheduler verification",
     "Yard deployment and live KAIDANCE heartbeat have not yet been independently verified"
   ],
-  "next_action": "provision_or_expose_private_core_repository_then_extract_source_and_migrate_runtime_in_bounded_slices",
+  "next_action": "finish the Base44 recurring-scheduler freeze, bind an admitted Evercraft Compute host, deploy Systemia Core plus KAIDANCE through Yard, verify the 300-second pulse and route, then retire the legacy scheduler after the observation window",
   "destructive_cutover_allowed": false
 }
