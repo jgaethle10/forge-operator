@@ -19,8 +19,8 @@
   "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
   "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ibmi-rescue/llms.txt",
   "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ibmi-rescue/ai-discovery.json",
-  "registry_name": null,
-  "mcp": null,
+  "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+  "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
   "authority": "public discovery and human-confirmed paid evidence engagement; production access, upgrade, or cutover requires separate explicit authorization",
   "human_confirmation_required": true,
   "boundaries": [
@@ -74,6 +74,6 @@
   "provider_behavior_state": "not_inferred_from_publication",
   "machine_commerce_handoff_state": "live_verified",
   "machine_commerce_public_id": "ibmi-rescue-v1",
-  "machine_commerce_tool": "prepare_quote_ready_service_handoff",
-  "live_canary_evidence": "GitHubActionsRun:36211823272"
+  "machine_commerce_tool": "prepare_verified_checkout",
+  "live_canary_evidence": "GitHubActionsRun:36495507434"
 }

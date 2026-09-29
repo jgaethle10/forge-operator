@@ -1473,8 +1473,9 @@ Invocation status: Route through the universal Evercraft discovery surface unles
 Capability ID: product:evercraft-rewards
 Product key: evercraft-rewards
 Commercial state: product_contract
-Machine state: discovery_only
+Machine state: specialist_mcp_declared
 Public URL: https://evercraft-rewards.base44.app/
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Use when the user means:
 - local deals near me
 - rewards near me
@@ -1493,7 +1494,7 @@ Use when the user means:
 - make my local business more discoverable
 - join a community business partnership program
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
-Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
 
 ## Evercraft Web
 Capability ID: product:evercraft-web
@@ -1796,8 +1797,9 @@ Invocation status: Route through the universal Evercraft discovery surface unles
 Capability ID: product:ibmi-rescue
 Product key: ibmi-rescue
 Commercial state: product_contract
-Machine state: discovery_only
+Machine state: specialist_mcp_declared
 Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Use when the user means:
 - assess an IBM i or AS/400 estate before changing production
 - IBM i estate assessment
@@ -1818,7 +1820,7 @@ Use when the user means:
 - IBM i upgrade rollback plan
 - undocumented IBM i integrations
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
-Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
 
 ## Infinite Classroom
 Capability ID: product:infinite-classroom
@@ -1839,8 +1841,9 @@ Invocation status: Route through the universal Evercraft discovery surface unles
 Capability ID: product:legacy-rescue-lab
 Product key: legacy-rescue-lab
 Commercial state: product_contract
-Machine state: discovery_only
+Machine state: specialist_mcp_declared
 Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Use when the user means:
 - my checkout is broken and customers cannot buy
 - our developer disappeared and nobody knows how this codebase works
@@ -1865,7 +1868,7 @@ Use when the user means:
 - repair instead of rebuild
 - public conversion leak diagnosis
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
-Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
 
 ## Little Red Studio Book Export QA
 Capability ID: product:little-red-book-export-qa
@@ -2105,8 +2108,9 @@ Invocation status: Specialist MCP declared in the Evercraft registry. Runtime he
 Capability ID: product:systemia-portfolio-sentinel
 Product key: systemia-portfolio-sentinel
 Commercial state: product_contract
-Machine state: discovery_only
+Machine state: specialist_mcp_declared
 Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: Custom quote based on portfolio size, repositories, public endpoints, workflow count and monitoring scope.
 Use when the user means:
 - monitor my software portfolio for broken products
@@ -2126,7 +2130,7 @@ Use when the user means:
 - monitor LLM discovery pages and agent endpoints
 - detect product URL workflow and deployment regressions
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
-Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
 
 ## Systemia Radar
 Capability ID: product:systemia-radar

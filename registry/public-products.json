@@ -342,8 +342,8 @@
       "llms": "./evercraft-rewards/llms.txt",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
       "invocation": {
-        "mode": "discovery_only",
-        "url": null
+        "mode": "mcp",
+        "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
       }
     },
     {
@@ -522,10 +522,10 @@
       "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
       "github_record": "./ibmi-rescue/README.md",
       "llms": "./ibmi-rescue/llms.txt",
-      "registry_name": null,
+      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
       "invocation": {
-        "mode": "discovery_only",
-        "url": null
+        "mode": "mcp",
+        "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
       }
     },
     {
@@ -548,10 +548,10 @@
       "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
       "github_record": "./legacy-rescue-lab/README.md",
       "llms": "./legacy-rescue-lab/llms.txt",
-      "registry_name": null,
+      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
       "invocation": {
-        "mode": "discovery_only",
-        "url": null
+        "mode": "mcp",
+        "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
       }
     },
     {
@@ -730,10 +730,10 @@
       "canonical_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
       "github_record": "./systemia-portfolio-sentinel/README.md",
       "llms": "./systemia-portfolio-sentinel/llms.txt",
-      "registry_name": null,
+      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
       "invocation": {
-        "mode": "discovery_only",
-        "url": null
+        "mode": "mcp",
+        "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
       }
     },
     {

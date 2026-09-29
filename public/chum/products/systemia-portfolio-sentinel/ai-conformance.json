@@ -19,8 +19,8 @@
   "canonical_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
   "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-portfolio-sentinel/llms.txt",
   "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-portfolio-sentinel/ai-discovery.json",
-  "registry_name": null,
-  "mcp": null,
+  "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+  "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
   "authority": "public discovery and commercial-pilot handoff; customer monitoring is restricted to explicitly authorized surfaces and grants no production-mutation authority",
   "human_confirmation_required": true,
   "boundaries": [

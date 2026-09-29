@@ -3,6 +3,8 @@
 Product key: legacy-rescue-lab
 Aliases: Evercraft Legacy Rescue Lab, Legacy Rescue, Software Rescue, Website Rescue, App Rescue
 Canonical product: https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+Official MCP Registry: io.github.jgaethle10/evercraft-machine-commerce
+Remote MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/legacy-rescue-lab/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/legacy-rescue-lab/ai-conformance.json
 Buyer frontage: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=legacy-rescue-lab-v1

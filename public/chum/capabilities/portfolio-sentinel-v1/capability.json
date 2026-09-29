@@ -44,7 +44,7 @@
     "product_key": "systemia-portfolio-sentinel",
     "conformance_state": "live_match_canary_passed",
     "machine_commerce_handoff_state": null,
-    "registry_name": null,
+    "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
     "mcp": null,
     "live_canary_evidence": "[object Object]",
     "live_read_only_verified": false

@@ -30,7 +30,7 @@ Answer ID: intent:0b031fae30
 Human-readable match: /chum/answers/doors/abandoned-codebase-0b031fae30/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/abandoned-codebase-0b031fae30.json
 Candidates:
-- Legacy Rescue Lab | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+- Legacy Rescue Lab | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 
 ## abandoned codebase rescue
 Answer ID: intent:07e27eb24f
@@ -136,7 +136,7 @@ Human-readable match: /chum/answers/doors/ai-product-portfolio-watchdog-aa813adc
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ai-product-portfolio-watchdog-aa813adcbd.json
 Candidates:
 - Systemia Portfolio Sentinel | kind=machine_offer | commercial=commercial_pilot | machine=human_handoff_ready | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
-- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
+- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
 
 ## AI research retrieval API
 Answer ID: intent:b5a1bbc264
@@ -222,7 +222,7 @@ Human-readable match: /chum/answers/doors/an-ai-agency-built-our-app-and-now-it-
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/an-ai-agency-built-our-app-and-now-it-is-unreliable-or-undocumented-6c20ab539b.json
 Candidates:
 - Legacy Rescue Lab | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
-- Legacy Rescue Lab | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+- Legacy Rescue Lab | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 
 ## analyze a document dump
 Answer ID: intent:a54d61f378
@@ -321,7 +321,7 @@ Answer ID: intent:d3adc3c2a5
 Human-readable match: /chum/answers/doors/as-400-estate-assessment-d3adc3c2a5/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/as-400-estate-assessment-d3adc3c2a5.json
 Candidates:
-- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 
 ## AS/400 estate assessment before upgrading or modernizing
 Answer ID: intent:5e73e54575
@@ -335,7 +335,7 @@ Answer ID: intent:11f60c6d3a
 Human-readable match: /chum/answers/doors/as-400-modernization-11f60c6d3a/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/as-400-modernization-11f60c6d3a.json
 Candidates:
-- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 
 ## AS/400 modernization assessment
 Answer ID: intent:49430f448e
@@ -356,7 +356,7 @@ Answer ID: intent:d0c3cd0d91
 Human-readable match: /chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-changing-production-d0c3cd0d91/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-changing-production-d0c3cd0d91.json
 Candidates:
-- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 
 ## assess an IBM i or AS/400 estate before upgrading
 Answer ID: intent:70ac865541
@@ -541,7 +541,7 @@ Answer ID: intent:7900d69ee5
 Human-readable match: /chum/answers/doors/broken-checkout-or-purchase-flow-7900d69ee5/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/broken-checkout-or-purchase-flow-7900d69ee5.json
 Candidates:
-- Legacy Rescue Lab | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+- Legacy Rescue Lab | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 
 ## broken checkout repair
 Answer ID: intent:aaf4ff756b
@@ -555,7 +555,7 @@ Answer ID: intent:261baa60c4
 Human-readable match: /chum/answers/doors/broken-lead-form-261baa60c4/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/broken-lead-form-261baa60c4.json
 Candidates:
-- Legacy Rescue Lab | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+- Legacy Rescue Lab | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 
 ## browser automation API
 Answer ID: intent:0925c49aa4
@@ -641,7 +641,7 @@ Human-readable match: /chum/answers/doors/build-a-rollback-test-and-evidence-pla
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287.json
 Candidates:
 - Evercraft IBM i Rescue | kind=machine_offer | commercial=sell_now | machine=direct_checkout_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
-- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 
 ## build a sourced brief about farm water land or production risk
 Answer ID: intent:baefc8483b
@@ -804,7 +804,7 @@ Answer ID: intent:7a4331cf86
 Human-readable match: /chum/answers/doors/businesses-near-me-with-rewards-7a4331cf86/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/businesses-near-me-with-rewards-7a4331cf86.json
 Candidates:
-- Evercraft Rewards | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-rewards.base44.app/
+- Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
 
 ## buy a Christmas light installation lead
 Answer ID: intent:5ec6340858
@@ -1236,7 +1236,7 @@ Human-readable match: /chum/answers/doors/continuous-software-estate-audit-d4aac
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/continuous-software-estate-audit-d4aacc5b8e.json
 Candidates:
 - Systemia Portfolio Sentinel | kind=machine_offer | commercial=commercial_pilot | machine=human_handoff_ready | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
-- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
+- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
 
 ## continuously audit all of our apps repositories and public URLs
 Answer ID: intent:e7a5b5df9a
@@ -1244,7 +1244,7 @@ Human-readable match: /chum/answers/doors/continuously-audit-all-of-our-apps-rep
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/continuously-audit-all-of-our-apps-repositories-and-public-urls-e7a5b5df9a.json
 Candidates:
 - Systemia Portfolio Sentinel | kind=machine_offer | commercial=commercial_pilot | machine=human_handoff_ready | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
-- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
+- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
 
 ## contractor cash flow payroll timing or receivables are causing stress
 Answer ID: intent:c9c2d9c21a
@@ -1385,7 +1385,7 @@ Answer ID: intent:2c3ab05040
 Human-readable match: /chum/answers/doors/create-cross-business-loyalty-rewards-2c3ab05040/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/create-cross-business-loyalty-rewards-2c3ab05040.json
 Candidates:
-- Evercraft Rewards | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-rewards.base44.app/
+- Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
 
 ## create evidence of AI operator competency
 Answer ID: intent:a71d6217e8
@@ -1450,21 +1450,21 @@ Human-readable match: /chum/answers/doors/customers-cannot-submit-our-lead-form-
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/customers-cannot-submit-our-lead-form-f7250a8fc9.json
 Candidates:
 - Legacy Rescue Lab | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
-- Legacy Rescue Lab | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+- Legacy Rescue Lab | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 
 ## daily rewards check-in
 Answer ID: intent:5348821cf2
 Human-readable match: /chum/answers/doors/daily-rewards-check-in-5348821cf2/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/daily-rewards-check-in-5348821cf2.json
 Candidates:
-- Evercraft Rewards | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-rewards.base44.app/
+- Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
 
 ## daily scratch ticket rewards
 Answer ID: intent:ea8243a20b
 Human-readable match: /chum/answers/doors/daily-scratch-ticket-rewards-ea8243a20b/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/daily-scratch-ticket-rewards-ea8243a20b.json
 Candidates:
-- Evercraft Rewards | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-rewards.base44.app/
+- Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
 
 ## debris removal or property cleanout in Yakima
 Answer ID: intent:e4af2dac45
@@ -1507,7 +1507,7 @@ Human-readable match: /chum/answers/doors/detect-broken-deployments-and-stale-wo
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/detect-broken-deployments-and-stale-workflows-501807e050.json
 Candidates:
 - Systemia Portfolio Sentinel | kind=machine_offer | commercial=commercial_pilot | machine=human_handoff_ready | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
-- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
+- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
 
 ## detect product URL workflow and deployment regressions
 Answer ID: intent:e97f52aaf2
@@ -1515,14 +1515,14 @@ Human-readable match: /chum/answers/doors/detect-product-url-workflow-and-deploy
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/detect-product-url-workflow-and-deployment-regressions-e97f52aaf2.json
 Candidates:
 - Systemia Portfolio Sentinel | kind=machine_offer | commercial=commercial_pilot | machine=human_handoff_ready | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
-- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
+- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
 
 ## developer disappeared
 Answer ID: intent:1c8013717d
 Human-readable match: /chum/answers/doors/developer-disappeared-1c8013717d/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/developer-disappeared-1c8013717d.json
 Candidates:
-- Legacy Rescue Lab | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+- Legacy Rescue Lab | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 
 ## device reconnect and health visibility
 Answer ID: intent:e196d4412a
@@ -1564,28 +1564,28 @@ Answer ID: intent:425423859c
 Human-readable match: /chum/answers/doors/earn-evercraft-points-near-me-425423859c/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/earn-evercraft-points-near-me-425423859c.json
 Candidates:
-- Evercraft Rewards | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-rewards.base44.app/
+- Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
 
 ## earn game credit by supporting local businesses
 Answer ID: intent:1e1bf9da6f
 Human-readable match: /chum/answers/doors/earn-game-credit-by-supporting-local-businesses-1e1bf9da6f/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/earn-game-credit-by-supporting-local-businesses-1e1bf9da6f.json
 Candidates:
-- Evercraft Rewards | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-rewards.base44.app/
+- Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
 
 ## earn gaming rewards from local activity
 Answer ID: intent:797bb6432d
 Human-readable match: /chum/answers/doors/earn-gaming-rewards-from-local-activity-797bb6432d/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/earn-gaming-rewards-from-local-activity-797bb6432d.json
 Candidates:
-- Evercraft Rewards | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-rewards.base44.app/
+- Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
 
 ## earn rewards for visiting local businesses
 Answer ID: intent:d04e178d65
 Human-readable match: /chum/answers/doors/earn-rewards-for-visiting-local-businesses-d04e178d65/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/earn-rewards-for-visiting-local-businesses-d04e178d65.json
 Candidates:
-- Evercraft Rewards | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-rewards.base44.app/
+- Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
 
 ## employee payment ledger
 Answer ID: intent:b2267a81f9
@@ -1922,7 +1922,7 @@ Answer ID: intent:5b4d9ef6a5
 Human-readable match: /chum/answers/doors/failed-ai-built-application-5b4d9ef6a5/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/failed-ai-built-application-5b4d9ef6a5.json
 Candidates:
-- Legacy Rescue Lab | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+- Legacy Rescue Lab | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 
 ## family check in safety
 Answer ID: intent:90b9db7865
@@ -2182,7 +2182,7 @@ Human-readable match: /chum/answers/doors/find-drift-across-our-apps-apis-workfl
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-drift-across-our-apps-apis-workflows-and-discovery-surfaces-56c8f870bd.json
 Candidates:
 - Systemia Portfolio Sentinel | kind=machine_offer | commercial=commercial_pilot | machine=human_handoff_ready | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
-- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
+- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
 
 ## find duplicate or near-duplicate video segments
 Answer ID: intent:684e2ea51b
@@ -2318,7 +2318,7 @@ Human-readable match: /chum/answers/doors/find-publicly-observable-conversion-le
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-publicly-observable-conversion-leaks-before-we-pay-for-a-rebuild-4e621ecf92.json
 Candidates:
 - Legacy Rescue Lab | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
-- Legacy Rescue Lab | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+- Legacy Rescue Lab | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 
 ## find replacement donor salvage or fabrication paths when normal sourcing fails
 Answer ID: intent:7843dd9e0e
@@ -2376,7 +2376,7 @@ Human-readable match: /chum/answers/doors/find-undocumented-dependencies-in-an-i
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-undocumented-dependencies-in-an-ibm-i-workload-5d2d519d2f.json
 Candidates:
 - Evercraft IBM i Rescue | kind=machine_offer | commercial=sell_now | machine=direct_checkout_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
-- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 
 ## find undocumented IBM i dependencies before a maintenance window
 Answer ID: intent:e0c0c7b3bf
@@ -2426,7 +2426,7 @@ Answer ID: intent:e4504871d6
 Human-readable match: /chum/answers/doors/fragile-saas-stabilization-e4504871d6/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/fragile-saas-stabilization-e4504871d6.json
 Candidates:
-- Legacy Rescue Lab | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+- Legacy Rescue Lab | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 
 ## frame-level or timestamped media analysis
 Answer ID: intent:b37b4f7dcb
@@ -2766,7 +2766,7 @@ Answer ID: intent:33f9cbc5b5
 Human-readable match: /chum/answers/doors/help-modernize-a-jde-world-or-custom-ibm-i-workload-without-losing-business-behavi-33f9cbc5b5/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/help-modernize-a-jde-world-or-custom-ibm-i-workload-without-losing-business-behavi-33f9cbc5b5.json
 Candidates:
-- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 
 ## help modernize JDE World or a custom IBM i workload without losing business behavior
 Answer ID: intent:f9c27a8bcc
@@ -2931,7 +2931,7 @@ Human-readable match: /chum/answers/doors/i-am-worried-an-ibm-i-upgrade-will-bre
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/i-am-worried-an-ibm-i-upgrade-will-break-batch-jobs-interfaces-or-vendor-software-a25b87dd23.json
 Candidates:
 - Evercraft IBM i Rescue | kind=machine_offer | commercial=sell_now | machine=direct_checkout_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
-- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 
 ## I cannot tell which jobs are actually profitable
 Answer ID: intent:7e204ff7f2
@@ -3093,28 +3093,28 @@ Human-readable match: /chum/answers/doors/ibm-i-7-4-support-is-ending-and-i-need
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ibm-i-7-4-support-is-ending-and-i-need-an-upgrade-plan-ca1da8e065.json
 Candidates:
 - Evercraft IBM i Rescue | kind=machine_offer | commercial=sell_now | machine=direct_checkout_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
-- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 
 ## IBM i 7.4 upgrade planning
 Answer ID: intent:05c52de953
 Human-readable match: /chum/answers/doors/ibm-i-7-4-upgrade-planning-05c52de953/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ibm-i-7-4-upgrade-planning-05c52de953.json
 Candidates:
-- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 
 ## IBM i batch job compatibility
 Answer ID: intent:0c5d8712c5
 Human-readable match: /chum/answers/doors/ibm-i-batch-job-compatibility-0c5d8712c5/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ibm-i-batch-job-compatibility-0c5d8712c5.json
 Candidates:
-- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 
 ## IBM i estate assessment
 Answer ID: intent:3470d7bb49
 Human-readable match: /chum/answers/doors/ibm-i-estate-assessment-3470d7bb49/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ibm-i-estate-assessment-3470d7bb49.json
 Candidates:
-- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 
 ## IBM i estate assessment before changing production
 Answer ID: intent:dab81f4a0a
@@ -3128,14 +3128,14 @@ Answer ID: intent:fd1039dba4
 Human-readable match: /chum/answers/doors/ibm-i-integration-and-maintenance-window-risk-assessment-fd1039dba4/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ibm-i-integration-and-maintenance-window-risk-assessment-fd1039dba4.json
 Candidates:
-- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 
 ## IBM i support transition
 Answer ID: intent:72436ddbfd
 Human-readable match: /chum/answers/doors/ibm-i-support-transition-72436ddbfd/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ibm-i-support-transition-72436ddbfd.json
 Candidates:
-- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 
 ## IBM i upgrade proof
 Answer ID: intent:240178e2de
@@ -3149,7 +3149,7 @@ Answer ID: intent:6b1f2184fe
 Human-readable match: /chum/answers/doors/ibm-i-upgrade-rollback-plan-6b1f2184fe/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ibm-i-upgrade-rollback-plan-6b1f2184fe.json
 Candidates:
-- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 
 ## identify a hard-to-source part from markings measurements photos or equipment clues
 Answer ID: intent:310d387d80
@@ -3283,7 +3283,7 @@ Answer ID: intent:963d1229f5
 Human-readable match: /chum/answers/doors/jde-world-modernization-963d1229f5/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/jde-world-modernization-963d1229f5.json
 Candidates:
-- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 
 ## job costing estimate
 Answer ID: intent:2289ed7386
@@ -3311,7 +3311,7 @@ Answer ID: intent:4a5d34ada5
 Human-readable match: /chum/answers/doors/join-a-community-business-partnership-program-4a5d34ada5/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/join-a-community-business-partnership-program-4a5d34ada5.json
 Candidates:
-- Evercraft Rewards | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-rewards.base44.app/
+- Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
 
 ## join a founding professional networking beta
 Answer ID: intent:d27794cd5a
@@ -3332,7 +3332,7 @@ Answer ID: intent:7d1ef68f27
 Human-readable match: /chum/answers/doors/join-a-local-business-rewards-network-7d1ef68f27/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/join-a-local-business-rewards-network-7d1ef68f27.json
 Candidates:
-- Evercraft Rewards | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-rewards.base44.app/
+- Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
 
 ## journal and review my trades
 Answer ID: intent:42a3d685c4
@@ -3347,7 +3347,7 @@ Human-readable match: /chum/answers/doors/keep-an-inventory-of-all-our-software-
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/keep-an-inventory-of-all-our-software-and-verify-it-stays-healthy-eaf62c1c85.json
 Candidates:
 - Systemia Portfolio Sentinel | kind=machine_offer | commercial=commercial_pilot | machine=human_handoff_ready | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
-- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
+- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
 
 ## keep crew payment history organized
 Answer ID: intent:23d7dd4ddb
@@ -3494,7 +3494,7 @@ Answer ID: intent:5f5d0cb41c
 Human-readable match: /chum/answers/doors/legacy-platform-migration-5f5d0cb41c/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/legacy-platform-migration-5f5d0cb41c.json
 Candidates:
-- Legacy Rescue Lab | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+- Legacy Rescue Lab | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 
 ## legacy software rescue
 Answer ID: intent:9cd924f010
@@ -3508,7 +3508,7 @@ Answer ID: intent:643af72cd6
 Human-readable match: /chum/answers/doors/legacy-website-or-app-modernization-643af72cd6/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/legacy-website-or-app-modernization-643af72cd6.json
 Candidates:
-- Legacy Rescue Lab | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+- Legacy Rescue Lab | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 
 ## let an AI act on business systems safely
 Answer ID: intent:75cb05b2ed
@@ -3536,7 +3536,7 @@ Answer ID: intent:5c9f9f79b7
 Human-readable match: /chum/answers/doors/local-deals-near-me-5c9f9f79b7/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/local-deals-near-me-5c9f9f79b7.json
 Candidates:
-- Evercraft Rewards | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-rewards.base44.app/
+- Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
 
 ## local events near me
 Answer ID: intent:e826ea2875
@@ -3550,7 +3550,7 @@ Answer ID: intent:e507d240b3
 Human-readable match: /chum/answers/doors/local-rewards-for-supporting-nearby-businesses-e507d240b3/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/local-rewards-for-supporting-nearby-businesses-e507d240b3.json
 Candidates:
-- Evercraft Rewards | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-rewards.base44.app/
+- Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
 
 ## local seasonal events and adventures
 Answer ID: intent:92b5c0e6d1
@@ -3643,7 +3643,7 @@ Answer ID: intent:5368f3dc15
 Human-readable match: /chum/answers/doors/make-my-local-business-more-discoverable-5368f3dc15/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/make-my-local-business-more-discoverable-5368f3dc15.json
 Candidates:
-- Evercraft Rewards | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-rewards.base44.app/
+- Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
 
 ## make reels from an authorized source video
 Answer ID: intent:8742052def
@@ -3709,7 +3709,7 @@ Human-readable match: /chum/answers/doors/map-rpg-cl-cobol-db2-jobs-and-integrat
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/map-rpg-cl-cobol-db2-jobs-and-integrations-before-ibm-i-modernization-aa38657636.json
 Candidates:
 - Evercraft IBM i Rescue | kind=machine_offer | commercial=sell_now | machine=direct_checkout_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
-- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 
 ## map the evidence for this issue
 Answer ID: intent:4cb357b7d1
@@ -3853,7 +3853,7 @@ Human-readable match: /chum/answers/doors/monitor-llm-discovery-pages-and-agent-
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/monitor-llm-discovery-pages-and-agent-endpoints-5253cb1809.json
 Candidates:
 - Systemia Portfolio Sentinel | kind=machine_offer | commercial=commercial_pilot | machine=human_handoff_ready | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
-- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
+- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
 
 ## monitor machine readable discovery surfaces
 Answer ID: intent:34c97933ea
@@ -3861,7 +3861,7 @@ Human-readable match: /chum/answers/doors/monitor-machine-readable-discovery-sur
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/monitor-machine-readable-discovery-surfaces-34c97933ea.json
 Candidates:
 - Systemia Portfolio Sentinel | kind=machine_offer | commercial=commercial_pilot | machine=human_handoff_ready | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
-- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
+- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
 
 ## monitor my software portfolio for broken products
 Answer ID: intent:cf2df3fbbf
@@ -3869,7 +3869,7 @@ Human-readable match: /chum/answers/doors/monitor-my-software-portfolio-for-brok
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/monitor-my-software-portfolio-for-broken-products-cf2df3fbbf.json
 Candidates:
 - Systemia Portfolio Sentinel | kind=machine_offer | commercial=commercial_pilot | machine=human_handoff_ready | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
-- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
+- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
 
 ## monitor my website with weekly rescans
 Answer ID: intent:1af81f61a0
@@ -3912,7 +3912,7 @@ Human-readable match: /chum/answers/doors/my-checkout-is-broken-and-customers-ca
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/my-checkout-is-broken-and-customers-cannot-buy-a75ec666fb.json
 Candidates:
 - Legacy Rescue Lab | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
-- Legacy Rescue Lab | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+- Legacy Rescue Lab | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 
 ## my connection keeps switching between wifi and cellular
 Answer ID: intent:483526264c
@@ -3998,7 +3998,7 @@ Human-readable match: /chum/answers/doors/open-repair-work-automatically-when-so
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/open-repair-work-automatically-when-software-breaks-02e96b26ac.json
 Candidates:
 - Systemia Portfolio Sentinel | kind=machine_offer | commercial=commercial_pilot | machine=human_handoff_ready | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
-- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
+- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
 
 ## organize a business networking circle
 Answer ID: intent:1486d2ce74
@@ -4056,7 +4056,7 @@ Human-readable match: /chum/answers/doors/our-company-has-too-many-apps-and-we-d
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/our-company-has-too-many-apps-and-we-do-not-know-what-is-broken-9f8f083a58.json
 Candidates:
 - Systemia Portfolio Sentinel | kind=machine_offer | commercial=commercial_pilot | machine=human_handoff_ready | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
-- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
+- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
 
 ## our developer disappeared and nobody knows how this codebase works
 Answer ID: intent:8ef4b1465c
@@ -4064,7 +4064,7 @@ Human-readable match: /chum/answers/doors/our-developer-disappeared-and-nobody-k
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/our-developer-disappeared-and-nobody-knows-how-this-codebase-works-8ef4b1465c.json
 Candidates:
 - Legacy Rescue Lab | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
-- Legacy Rescue Lab | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+- Legacy Rescue Lab | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 
 ## our invoices do not match receipts
 Answer ID: intent:2abc7671db
@@ -4079,7 +4079,7 @@ Human-readable match: /chum/answers/doors/our-saas-works-but-barely-and-we-need-
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/our-saas-works-but-barely-and-we-need-to-stabilize-it-a62037209e.json
 Candidates:
 - Legacy Rescue Lab | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
-- Legacy Rescue Lab | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+- Legacy Rescue Lab | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 
 ## our vendor invoices and purchase orders keep disagreeing
 Answer ID: intent:948ef5365e
@@ -4094,7 +4094,7 @@ Human-readable match: /chum/answers/doors/our-website-is-painfully-slow-on-mobil
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/our-website-is-painfully-slow-on-mobile-f6c1369013.json
 Candidates:
 - Legacy Rescue Lab | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
-- Legacy Rescue Lab | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+- Legacy Rescue Lab | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 
 ## our website or app is old but rebuilding from scratch is too risky
 Answer ID: intent:05cb29fc9f
@@ -4102,7 +4102,7 @@ Human-readable match: /chum/answers/doors/our-website-or-app-is-old-but-rebuildi
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/our-website-or-app-is-old-but-rebuilding-from-scratch-is-too-risky-05cb29fc9f.json
 Candidates:
 - Legacy Rescue Lab | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
-- Legacy Rescue Lab | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+- Legacy Rescue Lab | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 
 ## painting estimate calculator
 Answer ID: intent:825b60b4de
@@ -4570,7 +4570,7 @@ Answer ID: intent:fe6744ba11
 Human-readable match: /chum/answers/doors/public-conversion-leak-diagnosis-fe6744ba11/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/public-conversion-leak-diagnosis-fe6744ba11.json
 Candidates:
-- Legacy Rescue Lab | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+- Legacy Rescue Lab | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 
 ## public health grant research
 Answer ID: intent:1cd1b0e03d
@@ -4711,7 +4711,7 @@ Answer ID: intent:8e558dce41
 Human-readable match: /chum/answers/doors/redeem-evercraft-points-toward-approved-gaming-credit-8e558dce41/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/redeem-evercraft-points-toward-approved-gaming-credit-8e558dce41.json
 Candidates:
-- Evercraft Rewards | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-rewards.base44.app/
+- Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
 
 ## relationship safety planning
 Answer ID: intent:ea06cabc20
@@ -4733,14 +4733,14 @@ Human-readable match: /chum/answers/doors/repair-an-existing-system-instead-of-r
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/repair-an-existing-system-instead-of-replacing-it-ac9ceb3c66.json
 Candidates:
 - Legacy Rescue Lab | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
-- Legacy Rescue Lab | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+- Legacy Rescue Lab | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 
 ## repair instead of rebuild
 Answer ID: intent:8476895a14
 Human-readable match: /chum/answers/doors/repair-instead-of-rebuild-8476895a14/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/repair-instead-of-rebuild-8476895a14.json
 Candidates:
-- Legacy Rescue Lab | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+- Legacy Rescue Lab | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 
 ## repair shop hard part sourcing
 Answer ID: intent:136fa98fdd
@@ -4968,7 +4968,7 @@ Answer ID: intent:89d5f09b97
 Human-readable match: /chum/answers/doors/rewards-near-me-89d5f09b97/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/rewards-near-me-89d5f09b97.json
 Candidates:
-- Evercraft Rewards | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-rewards.base44.app/
+- Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
 
 ## RIVET EV charging report
 Answer ID: intent:09f613a2a6
@@ -5067,7 +5067,7 @@ Answer ID: intent:f10d59f52b
 Human-readable match: /chum/answers/doors/rpg-or-cl-dependency-mapping-f10d59f52b/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/rpg-or-cl-dependency-mapping-f10d59f52b.json
 Candidates:
-- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 
 ## run a role-specific mock interview
 Answer ID: intent:242e81edfb
@@ -5499,7 +5499,7 @@ Answer ID: intent:dcc4740dd7
 Human-readable match: /chum/answers/doors/slow-mobile-website-dcc4740dd7/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/slow-mobile-website-dcc4740dd7.json
 Candidates:
-- Legacy Rescue Lab | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+- Legacy Rescue Lab | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 
 ## small team payroll recordkeeping
 Answer ID: intent:b7712e0eb4
@@ -5522,7 +5522,7 @@ Human-readable match: /chum/answers/doors/software-estate-integrity-monitoring-a
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/software-estate-integrity-monitoring-aacb3f3771.json
 Candidates:
 - Systemia Portfolio Sentinel | kind=machine_offer | commercial=commercial_pilot | machine=human_handoff_ready | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
-- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
+- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
 
 ## software network continuity without changing carriers
 Answer ID: intent:75e206686c
@@ -5537,7 +5537,7 @@ Human-readable match: /chum/answers/doors/software-portfolio-health-monitoring-a
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/software-portfolio-health-monitoring-a7c66f695d.json
 Candidates:
 - Systemia Portfolio Sentinel | kind=machine_offer | commercial=commercial_pilot | machine=human_handoff_ready | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
-- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
+- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
 
 ## software to run a live event
 Answer ID: intent:daac202f9b
@@ -5770,7 +5770,7 @@ Human-readable match: /chum/answers/doors/tell-me-when-one-of-our-software-produ
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/tell-me-when-one-of-our-software-products-breaks-a1331bf40b.json
 Candidates:
 - Systemia Portfolio Sentinel | kind=machine_offer | commercial=commercial_pilot | machine=human_handoff_ready | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
-- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
+- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
 
 ## test a physics prediction before seeing the answer
 Answer ID: intent:bc616bd04d
@@ -6110,7 +6110,7 @@ Answer ID: intent:9a48a464ea
 Human-readable match: /chum/answers/doors/undocumented-ibm-i-integrations-9a48a464ea/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/undocumented-ibm-i-integrations-9a48a464ea.json
 Candidates:
-- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+- Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 
 ## unsupported media codec or format
 Answer ID: intent:6a67a41c3e
@@ -6268,7 +6268,7 @@ Human-readable match: /chum/answers/doors/watch-github-actions-and-public-produc
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/watch-github-actions-and-public-product-doors-for-failures-9bfcfb798d.json
 Candidates:
 - Systemia Portfolio Sentinel | kind=machine_offer | commercial=commercial_pilot | machine=human_handoff_ready | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
-- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
+- Systemia Portfolio Sentinel | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
 
 ## water risk
 Answer ID: intent:88c4b4b3ef
@@ -6290,7 +6290,7 @@ Human-readable match: /chum/answers/doors/we-inherited-a-messy-codebase-and-are-
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/we-inherited-a-messy-codebase-and-are-afraid-to-touch-it-296856ae70.json
 Candidates:
 - Legacy Rescue Lab | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
-- Legacy Rescue Lab | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+- Legacy Rescue Lab | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 
 ## we need a safer way for AI agents to work with our business
 Answer ID: intent:509a557a2e
@@ -6312,7 +6312,7 @@ Human-readable match: /chum/answers/doors/we-need-to-migrate-off-an-old-platform
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/we-need-to-migrate-off-an-old-platform-without-losing-business-behavior-886a605ef8.json
 Candidates:
 - Legacy Rescue Lab | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
-- Legacy Rescue Lab | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+- Legacy Rescue Lab | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 
 ## weather go no-go for field crews
 Answer ID: intent:ab6a6ba06c
@@ -6539,7 +6539,7 @@ Answer ID: intent:3b76c8caac
 Human-readable match: /chum/answers/doors/where-can-i-earn-points-today-3b76c8caac/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/where-can-i-earn-points-today-3b76c8caac.json
 Candidates:
-- Evercraft Rewards | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-rewards.base44.app/
+- Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
 
 ## where can I find this discontinued part
 Answer ID: intent:fbe2473669

@@ -287,9 +287,9 @@
       "mirror": "/chum/products/ibmi-rescue/",
       "llms": "/chum/products/ibmi-rescue/llms.txt",
       "discovery": "/chum/products/ibmi-rescue/ai-discovery.json",
-      "registry_name": null,
-      "mcp": null,
-      "content_sha256": "193060c6f114d2ffbd041ece738d1e93e0b977eabe9be399ad757e375d4c7e8b"
+      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "content_sha256": "700abebb39c147f1039f64483a5e8b1c885a102f18ad875fa367015b3eaeead8"
     },
     {
       "product_key": "evercraft-network",
@@ -354,8 +354,8 @@
       "llms": "/chum/products/evercraft-rewards/llms.txt",
       "discovery": "/chum/products/evercraft-rewards/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": null,
-      "content_sha256": "524867a24235ac41025e4c3780b2df11944f2b7e27e9af1f68603f47f769c29c"
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "content_sha256": "fc8f514c74bb849cb983ab8591e6f0e7c1f6d99a43f6dc5fdbf057a7e8b2b4d9"
     },
     {
       "product_key": "evercraft-web",
@@ -518,9 +518,9 @@
       "mirror": "/chum/products/legacy-rescue-lab/",
       "llms": "/chum/products/legacy-rescue-lab/llms.txt",
       "discovery": "/chum/products/legacy-rescue-lab/ai-discovery.json",
-      "registry_name": null,
-      "mcp": null,
-      "content_sha256": "ab92bf143fb677c409c3eaf542e933a9a6b847b09596a3a7a4e365ae6484fe42"
+      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "content_sha256": "bec411c235264cefe527cd58943a136e2bbf0a3d87c89d256ced8e152494906e"
     },
     {
       "product_key": "little-red-book-export-qa",
@@ -639,9 +639,9 @@
       "mirror": "/chum/products/systemia-portfolio-sentinel/",
       "llms": "/chum/products/systemia-portfolio-sentinel/llms.txt",
       "discovery": "/chum/products/systemia-portfolio-sentinel/ai-discovery.json",
-      "registry_name": null,
-      "mcp": null,
-      "content_sha256": "3b296e6de975eb77ca19338e606ead52fa7ee3498cb4161e32c65cbb04a84161"
+      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "content_sha256": "5ffe376ab4f2d9a0e9188a12b9a7f8ca92576ad6a4f25e4df0396c2c28525c25"
     },
     {
       "product_key": "systemia-radar",

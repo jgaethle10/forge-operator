@@ -45,7 +45,7 @@
     "product_key": "legacy-rescue-lab",
     "conformance_state": "machine_commerce_handoff_live_verified",
     "machine_commerce_handoff_state": "live_verified",
-    "registry_name": null,
+    "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
     "mcp": null,
     "live_canary_evidence": "[object Object]",
     "live_read_only_verified": false

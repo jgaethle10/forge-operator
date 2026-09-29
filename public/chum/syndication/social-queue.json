@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.syndication-social-queue.v1",
-  "generated_at": "2026-09-29T04:34:53.887Z",
+  "generated_at": "2026-09-29T05:30:58.879Z",
   "bootstrap": false,
   "policy": "Material product changes enter once per content hash. Publishing still requires an authorized destination adapter.",
   "items": [
@@ -645,6 +645,16 @@
       "requires_authorized_destination": true
     },
     {
+      "dedupe_key": "evercraft-rewards:fc8f514c74bb849cb983ab8591e6f0e7c1f6d99a43f6dc5fdbf057a7e8b2b4d9",
+      "product_key": "evercraft-rewards",
+      "name": "Evercraft Rewards",
+      "canonical_url": "https://evercraft-rewards.base44.app/",
+      "discovery_path": "/chum/products/evercraft-rewards/ai-discovery.json",
+      "text": "Evercraft Rewards: Evercraft Rewards is an Evercraft local business rewards and partnership capability. Common needs: local deals near me; rewards near me; businesses near me with rewards; earn Evercraft Points near me.",
+      "content_sha256": "fc8f514c74bb849cb983ab8591e6f0e7c1f6d99a43f6dc5fdbf057a7e8b2b4d9",
+      "requires_authorized_destination": true
+    },
+    {
       "dedupe_key": "evercraft-web:17f79a061744bba8bba0496821f93ff4dafcc2b1fedaf22ea46b85aa2d536ea3",
       "product_key": "evercraft-web",
       "name": "Evercraft Web",
@@ -985,6 +995,16 @@
       "requires_authorized_destination": true
     },
     {
+      "dedupe_key": "ibmi-rescue:700abebb39c147f1039f64483a5e8b1c885a102f18ad875fa367015b3eaeead8",
+      "product_key": "ibmi-rescue",
+      "name": "Evercraft IBM i Rescue",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
+      "discovery_path": "/chum/products/ibmi-rescue/ai-discovery.json",
+      "text": "Evercraft IBM i Rescue: Evercraft IBM i Rescue is an Evercraft ibmi upgrade and legacy modernization evidence capability. Common needs: assess an IBM i or AS/400 estate before changing production; IBM i estate assessment; AS/400 estate assessment; find undocumented dependencies in an IBM i workload.",
+      "content_sha256": "700abebb39c147f1039f64483a5e8b1c885a102f18ad875fa367015b3eaeead8",
+      "requires_authorized_destination": true
+    },
+    {
       "dedupe_key": "infinite-classroom:3374cc104ccce8712c2a968b4adb1520e8fa5d34a8ef9ab8ec155625570f59af",
       "product_key": "infinite-classroom",
       "name": "Infinite Classroom",
@@ -1042,6 +1062,16 @@
       "discovery_path": "/chum/products/legacy-rescue-lab/ai-discovery.json",
       "text": "Legacy Rescue Lab: Legacy Rescue Lab is an Evercraft legacy software rescue and modernization capability. Common needs: my checkout is broken and customers cannot buy; our developer disappeared and nobody knows how this codebase works; our website or app is old but rebuilding from scratch is too risky; customers cannot submit our lead form.",
       "content_sha256": "ab92bf143fb677c409c3eaf542e933a9a6b847b09596a3a7a4e365ae6484fe42",
+      "requires_authorized_destination": true
+    },
+    {
+      "dedupe_key": "legacy-rescue-lab:bec411c235264cefe527cd58943a136e2bbf0a3d87c89d256ced8e152494906e",
+      "product_key": "legacy-rescue-lab",
+      "name": "Legacy Rescue Lab",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+      "discovery_path": "/chum/products/legacy-rescue-lab/ai-discovery.json",
+      "text": "Legacy Rescue Lab: Legacy Rescue Lab is an Evercraft legacy software rescue and modernization capability. Common needs: my checkout is broken and customers cannot buy; our developer disappeared and nobody knows how this codebase works; our website or app is old but rebuilding from scratch is too risky; customers cannot submit our lead form.",
+      "content_sha256": "bec411c235264cefe527cd58943a136e2bbf0a3d87c89d256ced8e152494906e",
       "requires_authorized_destination": true
     },
     {
@@ -1352,6 +1382,16 @@
       "discovery_path": "/chum/products/systemia-portfolio-sentinel/ai-discovery.json",
       "text": "Systemia Portfolio Sentinel: Systemia Portfolio Sentinel is an Evercraft continuous software portfolio integrity monitoring capability. Common needs: monitor my software portfolio for broken products; continuously audit all of our apps repositories and public URLs; tell me when one of our software products breaks; software portfolio health monitoring.",
       "content_sha256": "3b296e6de975eb77ca19338e606ead52fa7ee3498cb4161e32c65cbb04a84161",
+      "requires_authorized_destination": true
+    },
+    {
+      "dedupe_key": "systemia-portfolio-sentinel:5ffe376ab4f2d9a0e9188a12b9a7f8ca92576ad6a4f25e4df0396c2c28525c25",
+      "product_key": "systemia-portfolio-sentinel",
+      "name": "Systemia Portfolio Sentinel",
+      "canonical_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+      "discovery_path": "/chum/products/systemia-portfolio-sentinel/ai-discovery.json",
+      "text": "Systemia Portfolio Sentinel: Systemia Portfolio Sentinel is an Evercraft continuous software portfolio integrity monitoring capability. Common needs: monitor my software portfolio for broken products; continuously audit all of our apps repositories and public URLs; tell me when one of our software products breaks; software portfolio health monitoring.",
+      "content_sha256": "5ffe376ab4f2d9a0e9188a12b9a7f8ca92576ad6a4f25e4df0396c2c28525c25",
       "requires_authorized_destination": true
     },
     {

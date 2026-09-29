@@ -90,10 +90,10 @@
           "public_id": null,
           "name": "Legacy Rescue Lab",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/legacy-rescue-lab/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -447,10 +447,10 @@
           "public_id": null,
           "name": "Systemia Portfolio Sentinel",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/systemia-portfolio-sentinel/",
           "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -747,10 +747,10 @@
           "public_id": null,
           "name": "Legacy Rescue Lab",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/legacy-rescue-lab/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -1081,10 +1081,10 @@
           "public_id": null,
           "name": "Evercraft IBM i Rescue",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/ibmi-rescue/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -1127,10 +1127,10 @@
           "public_id": null,
           "name": "Evercraft IBM i Rescue",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/ibmi-rescue/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -1196,10 +1196,10 @@
           "public_id": null,
           "name": "Evercraft IBM i Rescue",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/ibmi-rescue/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -1830,10 +1830,10 @@
           "public_id": null,
           "name": "Legacy Rescue Lab",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/legacy-rescue-lab/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -1876,10 +1876,10 @@
           "public_id": null,
           "name": "Legacy Rescue Lab",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/legacy-rescue-lab/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -2176,10 +2176,10 @@
           "public_id": null,
           "name": "Evercraft IBM i Rescue",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/ibmi-rescue/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -2729,10 +2729,10 @@
           "public_id": null,
           "name": "Evercraft Rewards",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/evercraft-rewards/",
           "public_url": "https://evercraft-rewards.base44.app/",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -4192,10 +4192,10 @@
           "public_id": null,
           "name": "Systemia Portfolio Sentinel",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/systemia-portfolio-sentinel/",
           "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -4227,10 +4227,10 @@
           "public_id": null,
           "name": "Systemia Portfolio Sentinel",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/systemia-portfolio-sentinel/",
           "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -4699,10 +4699,10 @@
           "public_id": null,
           "name": "Evercraft Rewards",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/evercraft-rewards/",
           "public_url": "https://evercraft-rewards.base44.app/",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -4930,10 +4930,10 @@
           "public_id": null,
           "name": "Legacy Rescue Lab",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/legacy-rescue-lab/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -4953,10 +4953,10 @@
           "public_id": null,
           "name": "Evercraft Rewards",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/evercraft-rewards/",
           "public_url": "https://evercraft-rewards.base44.app/",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -4976,10 +4976,10 @@
           "public_id": null,
           "name": "Evercraft Rewards",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/evercraft-rewards/",
           "public_url": "https://evercraft-rewards.base44.app/",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -5126,10 +5126,10 @@
           "public_id": null,
           "name": "Systemia Portfolio Sentinel",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/systemia-portfolio-sentinel/",
           "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -5161,10 +5161,10 @@
           "public_id": null,
           "name": "Systemia Portfolio Sentinel",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/systemia-portfolio-sentinel/",
           "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -5184,10 +5184,10 @@
           "public_id": null,
           "name": "Legacy Rescue Lab",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/legacy-rescue-lab/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -5322,10 +5322,10 @@
           "public_id": null,
           "name": "Evercraft Rewards",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/evercraft-rewards/",
           "public_url": "https://evercraft-rewards.base44.app/",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -5345,10 +5345,10 @@
           "public_id": null,
           "name": "Evercraft Rewards",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/evercraft-rewards/",
           "public_url": "https://evercraft-rewards.base44.app/",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -5368,10 +5368,10 @@
           "public_id": null,
           "name": "Evercraft Rewards",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/evercraft-rewards/",
           "public_url": "https://evercraft-rewards.base44.app/",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -5391,10 +5391,10 @@
           "public_id": null,
           "name": "Evercraft Rewards",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/evercraft-rewards/",
           "public_url": "https://evercraft-rewards.base44.app/",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -6568,10 +6568,10 @@
           "public_id": null,
           "name": "Legacy Rescue Lab",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/legacy-rescue-lab/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -7431,10 +7431,10 @@
           "public_id": null,
           "name": "Systemia Portfolio Sentinel",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/systemia-portfolio-sentinel/",
           "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -7904,10 +7904,10 @@
           "public_id": null,
           "name": "Legacy Rescue Lab",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/legacy-rescue-lab/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -8112,10 +8112,10 @@
           "public_id": null,
           "name": "Evercraft IBM i Rescue",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/ibmi-rescue/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -8285,10 +8285,10 @@
           "public_id": null,
           "name": "Legacy Rescue Lab",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/legacy-rescue-lab/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -9437,10 +9437,10 @@
           "public_id": null,
           "name": "Evercraft IBM i Rescue",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/ibmi-rescue/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -10014,10 +10014,10 @@
           "public_id": null,
           "name": "Evercraft IBM i Rescue",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/ibmi-rescue/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -10555,10 +10555,10 @@
           "public_id": null,
           "name": "Evercraft IBM i Rescue",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/ibmi-rescue/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -10578,10 +10578,10 @@
           "public_id": null,
           "name": "Evercraft IBM i Rescue",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/ibmi-rescue/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -10601,10 +10601,10 @@
           "public_id": null,
           "name": "Evercraft IBM i Rescue",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/ibmi-rescue/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -10624,10 +10624,10 @@
           "public_id": null,
           "name": "Evercraft IBM i Rescue",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/ibmi-rescue/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -10670,10 +10670,10 @@
           "public_id": null,
           "name": "Evercraft IBM i Rescue",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/ibmi-rescue/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -10693,10 +10693,10 @@
           "public_id": null,
           "name": "Evercraft IBM i Rescue",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/ibmi-rescue/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -10739,10 +10739,10 @@
           "public_id": null,
           "name": "Evercraft IBM i Rescue",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/ibmi-rescue/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -11188,10 +11188,10 @@
           "public_id": null,
           "name": "Evercraft IBM i Rescue",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/ibmi-rescue/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -11280,10 +11280,10 @@
           "public_id": null,
           "name": "Evercraft Rewards",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/evercraft-rewards/",
           "public_url": "https://evercraft-rewards.base44.app/",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -11349,10 +11349,10 @@
           "public_id": null,
           "name": "Evercraft Rewards",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/evercraft-rewards/",
           "public_url": "https://evercraft-rewards.base44.app/",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -11407,10 +11407,10 @@
           "public_id": null,
           "name": "Systemia Portfolio Sentinel",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/systemia-portfolio-sentinel/",
           "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -11890,10 +11890,10 @@
           "public_id": null,
           "name": "Legacy Rescue Lab",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/legacy-rescue-lab/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -11936,10 +11936,10 @@
           "public_id": null,
           "name": "Legacy Rescue Lab",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/legacy-rescue-lab/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -12028,10 +12028,10 @@
           "public_id": null,
           "name": "Evercraft Rewards",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/evercraft-rewards/",
           "public_url": "https://evercraft-rewards.base44.app/",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -12074,10 +12074,10 @@
           "public_id": null,
           "name": "Evercraft Rewards",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/evercraft-rewards/",
           "public_url": "https://evercraft-rewards.base44.app/",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -12397,10 +12397,10 @@
           "public_id": null,
           "name": "Evercraft Rewards",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/evercraft-rewards/",
           "public_url": "https://evercraft-rewards.base44.app/",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -12640,10 +12640,10 @@
           "public_id": null,
           "name": "Evercraft IBM i Rescue",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/ibmi-rescue/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -13148,10 +13148,10 @@
           "public_id": null,
           "name": "Systemia Portfolio Sentinel",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/systemia-portfolio-sentinel/",
           "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -13183,10 +13183,10 @@
           "public_id": null,
           "name": "Systemia Portfolio Sentinel",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/systemia-portfolio-sentinel/",
           "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -13218,10 +13218,10 @@
           "public_id": null,
           "name": "Systemia Portfolio Sentinel",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/systemia-portfolio-sentinel/",
           "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -13368,10 +13368,10 @@
           "public_id": null,
           "name": "Legacy Rescue Lab",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/legacy-rescue-lab/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -13668,10 +13668,10 @@
           "public_id": null,
           "name": "Systemia Portfolio Sentinel",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/systemia-portfolio-sentinel/",
           "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -13876,10 +13876,10 @@
           "public_id": null,
           "name": "Systemia Portfolio Sentinel",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/systemia-portfolio-sentinel/",
           "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -13911,10 +13911,10 @@
           "public_id": null,
           "name": "Legacy Rescue Lab",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/legacy-rescue-lab/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -13969,10 +13969,10 @@
           "public_id": null,
           "name": "Legacy Rescue Lab",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/legacy-rescue-lab/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -14027,10 +14027,10 @@
           "public_id": null,
           "name": "Legacy Rescue Lab",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/legacy-rescue-lab/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -14062,10 +14062,10 @@
           "public_id": null,
           "name": "Legacy Rescue Lab",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/legacy-rescue-lab/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -15652,10 +15652,10 @@
           "public_id": null,
           "name": "Legacy Rescue Lab",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/legacy-rescue-lab/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -16124,10 +16124,10 @@
           "public_id": null,
           "name": "Evercraft Rewards",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/evercraft-rewards/",
           "public_url": "https://evercraft-rewards.base44.app/",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -16205,10 +16205,10 @@
           "public_id": null,
           "name": "Legacy Rescue Lab",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/legacy-rescue-lab/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -16228,10 +16228,10 @@
           "public_id": null,
           "name": "Legacy Rescue Lab",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/legacy-rescue-lab/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -17012,10 +17012,10 @@
           "public_id": null,
           "name": "Evercraft Rewards",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/evercraft-rewards/",
           "public_url": "https://evercraft-rewards.base44.app/",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -17346,10 +17346,10 @@
           "public_id": null,
           "name": "Evercraft IBM i Rescue",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/ibmi-rescue/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -18809,10 +18809,10 @@
           "public_id": null,
           "name": "Legacy Rescue Lab",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/legacy-rescue-lab/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -18902,10 +18902,10 @@
           "public_id": null,
           "name": "Systemia Portfolio Sentinel",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/systemia-portfolio-sentinel/",
           "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -18960,10 +18960,10 @@
           "public_id": null,
           "name": "Systemia Portfolio Sentinel",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/systemia-portfolio-sentinel/",
           "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -19743,10 +19743,10 @@
           "public_id": null,
           "name": "Systemia Portfolio Sentinel",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/systemia-portfolio-sentinel/",
           "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -20895,10 +20895,10 @@
           "public_id": null,
           "name": "Evercraft IBM i Rescue",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/ibmi-rescue/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -21449,10 +21449,10 @@
           "public_id": null,
           "name": "Systemia Portfolio Sentinel",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/systemia-portfolio-sentinel/",
           "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -21530,10 +21530,10 @@
           "public_id": null,
           "name": "Legacy Rescue Lab",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/legacy-rescue-lab/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -21611,10 +21611,10 @@
           "public_id": null,
           "name": "Legacy Rescue Lab",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/legacy-rescue-lab/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -22383,10 +22383,10 @@
           "public_id": null,
           "name": "Evercraft Rewards",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/evercraft-rewards/",
           "public_url": "https://evercraft-rewards.base44.app/",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },

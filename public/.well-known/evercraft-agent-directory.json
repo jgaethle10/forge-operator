@@ -1053,9 +1053,9 @@
         "join a community business partnership program"
       ],
       "invocation": {
-        "mode": "discovery_only",
-        "url": null,
-        "registry_name": null
+        "mode": "mcp",
+        "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+        "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
       },
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/ai-discovery.json",
@@ -1625,9 +1625,9 @@
         "IBM i 7.4 support is ending and I need an upgrade plan"
       ],
       "invocation": {
-        "mode": "discovery_only",
-        "url": null,
-        "registry_name": null
+        "mode": "mcp",
+        "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+        "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
       },
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ibmi-rescue/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ibmi-rescue/ai-discovery.json",
@@ -1733,9 +1733,9 @@
         "find publicly observable conversion leaks before we pay for a rebuild"
       ],
       "invocation": {
-        "mode": "discovery_only",
-        "url": null,
-        "registry_name": null
+        "mode": "mcp",
+        "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+        "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
       },
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/legacy-rescue-lab/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/legacy-rescue-lab/ai-discovery.json",
@@ -2292,9 +2292,9 @@
         "detect product URL workflow and deployment regressions"
       ],
       "invocation": {
-        "mode": "discovery_only",
-        "url": null,
-        "registry_name": null
+        "mode": "mcp",
+        "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+        "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
       },
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-portfolio-sentinel/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-portfolio-sentinel/ai-discovery.json",

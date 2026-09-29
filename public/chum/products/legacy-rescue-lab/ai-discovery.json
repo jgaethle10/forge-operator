@@ -75,8 +75,8 @@
   },
   "human_start_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=legacy-rescue-lab-v1",
   "buyer_frontage_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=legacy-rescue-lab-v1",
-  "registry_name": null,
-  "mcp": null,
+  "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+  "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
   "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
   "developer_surfaces": null,
   "editorial_surfaces": {

@@ -1486,7 +1486,9 @@ Boundaries:
 ### Evercraft Rewards
 Product key: evercraft-rewards
 Canonical: https://evercraft-rewards.base44.app/
-Machine state: discovery_only
+Machine state: mcp
+Official MCP Registry: io.github.jgaethle10/evercraft-machine-commerce
+Invocation: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/ai-conformance.json
 Use when the user says or means:
@@ -1867,7 +1869,9 @@ Boundaries:
 Product key: ibmi-rescue
 Aliases: IBM i Rescue, AS/400 Rescue, Legacy Rescue for IBM i
 Canonical: https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
-Machine state: discovery_only
+Machine state: mcp
+Official MCP Registry: io.github.jgaethle10/evercraft-machine-commerce
+Invocation: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ibmi-rescue/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ibmi-rescue/ai-conformance.json
 Use when the user says or means:
@@ -1919,7 +1923,9 @@ Boundaries:
 Product key: legacy-rescue-lab
 Aliases: Evercraft Legacy Rescue Lab, Legacy Rescue, Software Rescue, Website Rescue, App Rescue
 Canonical: https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
-Machine state: discovery_only
+Machine state: mcp
+Official MCP Registry: io.github.jgaethle10/evercraft-machine-commerce
+Invocation: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Editorial hub: /legacy-rescue-lab/editorial/
 Editorial RSS: /legacy-rescue-lab/editorial/feed.xml
 Knowledge mesh: /legacy-rescue-lab/
@@ -2274,7 +2280,9 @@ Boundaries:
 Product key: systemia-portfolio-sentinel
 Aliases: Portfolio Sentinel, Evercraft Portfolio Sentinel, Software Estate Sentinel
 Canonical: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
-Machine state: discovery_only
+Machine state: mcp
+Official MCP Registry: io.github.jgaethle10/evercraft-machine-commerce
+Invocation: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-portfolio-sentinel/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-portfolio-sentinel/ai-conformance.json
 Use when the user says or means:

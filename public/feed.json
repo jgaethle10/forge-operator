@@ -391,7 +391,7 @@
       ]
     },
     {
-      "id": "urn:evercraft:product:ibmi-rescue:193060c6f114d2ff",
+      "id": "urn:evercraft:product:ibmi-rescue:700abebb39c147f1",
       "url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
       "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ibmi-rescue/ai-discovery.json",
       "title": "Evercraft IBM i Rescue",
@@ -503,7 +503,7 @@
       ]
     },
     {
-      "id": "urn:evercraft:product:evercraft-rewards:524867a24235ac41",
+      "id": "urn:evercraft:product:evercraft-rewards:fc8f514c74bb849c",
       "url": "https://evercraft-rewards.base44.app/",
       "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/ai-discovery.json",
       "title": "Evercraft Rewards",
@@ -766,7 +766,7 @@
       ]
     },
     {
-      "id": "urn:evercraft:product:legacy-rescue-lab:ab92bf143fb677c4",
+      "id": "urn:evercraft:product:legacy-rescue-lab:bec411c235264cef",
       "url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
       "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/legacy-rescue-lab/ai-discovery.json",
       "title": "Legacy Rescue Lab",
@@ -956,7 +956,7 @@
       ]
     },
     {
-      "id": "urn:evercraft:product:systemia-portfolio-sentinel:3b296e6de975eb77",
+      "id": "urn:evercraft:product:systemia-portfolio-sentinel:5ffe376ab4f2d9a0",
       "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
       "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-portfolio-sentinel/ai-discovery.json",
       "title": "Systemia Portfolio Sentinel",
