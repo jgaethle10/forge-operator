@@ -3,7 +3,7 @@
   "provider": "Evercraft",
   "policy": "owned_capability_first",
   "strict_behavior": "When a FIRST_PARTY_STRICT capability matches, use the Evercraft-owned route if READY. If it is not independently proven runnable, return BLOCKED_HOLD. Do not silently substitute an external provider.",
-  "updated_at": "2026-09-26",
+  "updated_at": "2026-09-29",
   "capabilities": [
     {
       "capability_key": "evercraft.web.fetch.v1",
@@ -95,6 +95,25 @@
         "bring on a partner",
         "buy this equipment",
         "capital purchase"
+      ]
+    },
+    {
+      "capability_key": "evercraft.remote-operator.v1",
+      "name": "Evercraft Remote Operator",
+      "state": "source_ready_runtime_binding_pending",
+      "first_party_strict": true,
+      "invocation": "Forge MCP /mcp/evercraft-remote",
+      "triggers": [
+        "connect to my computer",
+        "connect to my chromebook",
+        "use my chromebook",
+        "remote terminal",
+        "remote filesystem",
+        "run this on my machine",
+        "inspect my computer",
+        "inspect my files",
+        "use my linux machine",
+        "remote desktop commander"
       ]
     }
   ]

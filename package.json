@@ -216,7 +216,8 @@
     "sentinel:resident": "node systemia/sentinel/resident-runner.mjs",
     "test:sentinel-region-profiles": "node systemia/sentinel/region-profile.test.mjs",
     "test:fabric-directory": "node --test tests/evercraft-fabric-runtime.test.mjs",
-    "proof:one-body": "node systemia/organism/one-body.proof.mjs"
+    "proof:one-body": "node systemia/organism/one-body.proof.mjs",
+    "test:remote-operator": "node systemia/compute/remote-operator.test.mjs && node systemia/network/remote-operator.proof.mjs && node systemia/remote-operator/mcp-gateway.test.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",

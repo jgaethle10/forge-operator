@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "evercraft_remote_operator": {
+      "type": "http",
+      "url": "http://localhost:3000/mcp/evercraft-remote"
+    }
+  }
+}

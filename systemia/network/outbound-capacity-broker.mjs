@@ -78,6 +78,8 @@ function commandIrreversible(method, route) {
   const verb = String(method || 'GET').toUpperCase();
   const path = String(route || '');
   if (verb === 'GET') return false;
+  if (path === '/v1/operator/fs/list') return false;
+  if (path === '/v1/operator/fs/read') return false;
   if (path === '/v1/attest') return false;
   if (path === '/v1/field-enrollment-packet') return false;
   if (/^\/v1\/services\/[^/]+\/public-route-capabilities$/.test(path)) return false;
@@ -522,6 +524,12 @@ export async function startOutboundCapacityBroker({
     injectAllocatorAuth = false,
   }) {
     const commandId = `cmd_${randomBytes(10).toString('hex')}`;
+    const requestedExecTimeout = route === '/v1/operator/exec'
+      ? Number(body?.timeout_ms || 0)
+      : 0;
+    const effectiveTimeoutMs = route === '/v1/operator/exec'
+      ? Math.min(310_000, Math.max(commandTimeoutMs, requestedExecTimeout + 5_000))
+      : commandTimeoutMs;
     const command = {
       schema: 'evercraft.remote-capacity.command.v1',
       command_id: commandId,
@@ -530,6 +538,7 @@ export async function startOutboundCapacityBroker({
       body: body ?? null,
       inject_allocator_auth: Boolean(injectAllocatorAuth),
       irreversible: commandIrreversible(method, route),
+      transport_timeout_ms: effectiveTimeoutMs,
       issued_at: new Date().toISOString(),
     };
 
@@ -538,7 +547,7 @@ export async function startOutboundCapacityBroker({
         node.pending.delete(commandId);
         node.queue = node.queue.filter((item) => item.command_id !== commandId);
         reject(new Error('remote_command_timeout'));
-      }, commandTimeoutMs);
+      }, effectiveTimeoutMs);
       node.pending.set(commandId, { resolve, reject, timer });
       deliverCommand(node, command);
     });
@@ -812,7 +821,7 @@ export async function startOutboundCapacityBroker({
           kind: 'remote.capacity.command',
           message_id: command.command_id,
           expires_at: new Date(
-            Date.now() + Math.max(30_000, commandTimeoutMs * 2)
+            Date.now() + Math.max(30_000, Number(command.transport_timeout_ms || commandTimeoutMs) * 2)
           ).toISOString(),
           irreversible: command.irreversible === true,
           payload: command,
@@ -890,6 +899,7 @@ export async function startOutboundCapacityBroker({
         }
 
         const allocatorRoute =
+          route.startsWith('/v1/operator/') ||
           (req.method === 'POST' && route === '/v1/leases') ||
           (req.method === 'POST' && route === '/v1/attest') ||
           (req.method === 'POST' && route === '/v1/field-enrollment-packet');
