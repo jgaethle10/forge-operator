@@ -6,6 +6,7 @@ const usgsAdapter = createFeedAdapter({
   adapter_id: 'usgs-earthquake-feed',
   domain: 'environmental',
   source_family: 'usgs-earthquake-feed',
+  independence_group: 'usgs',
   evidence_state: 'verified',
   reliability: 0.98
 });
