@@ -1,0 +1,114 @@
+name: Evercraft Home External Canary
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/evercraft-home/**'
+      - 'systemia/yard/operator.mjs'
+      - 'systemia/domain-authority/**'
+      - '.github/workflows/evercraft-home-canary.yml'
+  workflow_dispatch:
+  schedule:
+    - cron: '41 * * * *'
+
+permissions:
+  contents: read
+
+jobs:
+  canary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      HOME_ORIGIN: ${{ vars.EVERCRAFT_HOME_ORIGIN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify Evercraft Home external edge
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+
+          if [ -z "${HOME_ORIGIN:-}" ]; then
+            cat > artifacts/evercraft-home-canary.json <<'JSON'
+          {
+            "schema": "evercraft.home.external-canary.v1",
+            "verified": false,
+            "state": "held_no_home_origin_configured",
+            "public_https_verified": false,
+            "anonymous_access_denied": false
+          }
+          JSON
+            cat artifacts/evercraft-home-canary.json
+            exit 0
+          fi
+
+          node - <<'NODE'
+          const raw=process.env.HOME_ORIGIN||'';
+          const url=new URL(raw);
+          if(url.protocol!=='https:') throw new Error('HOME_ORIGIN must use HTTPS');
+          if(url.username||url.password||url.search||url.hash) throw new Error('HOME_ORIGIN must be a clean HTTPS origin');
+          if(/(^|\.)base44\.app$/i.test(url.hostname)) throw new Error('Evercraft Home public edge must not resolve to Base44');
+          if(url.pathname!=='/'&&url.pathname!=='') throw new Error('HOME_ORIGIN must not include a path');
+          NODE
+
+          health="$(curl --fail --silent --show-error --max-time 20 "${HOME_ORIGIN%/}/api/health")"
+          printf '%s' "$health" | jq -e '
+            .ok == true and
+            .service == "evercraft-home" and
+            .runtime == "Evercraft Compute" and
+            .workload_class == "systemia.evercraft-home.v1" and
+            .authority == "evercraft" and
+            .auth_mode == "passport" and
+            .deployment_receipt_bound == true and
+            (.deployment_receipt_ref | type == "string" and length > 0) and
+            .identity_login_configured == true and
+            .session_revocation_supported == true and
+            .base44_required == false and
+            .external_ai_required == false and
+            .legacy_provider_required == false and
+            (.instance_id | type == "string" and length > 0)
+          ' >/dev/null
+
+          session_code="$(curl --silent --show-error --max-time 20             --output /tmp/evercraft-home-session.json             --write-out '%{http_code}'             "${HOME_ORIGIN%/}/api/session")"
+          test "$session_code" = "401"
+          jq -e '.ok == false and .state == "session_required"' /tmp/evercraft-home-session.json >/dev/null
+
+          html="$(curl --fail --silent --show-error --max-time 20 "${HOME_ORIGIN%/}/")"
+          printf '%s' "$html" | grep -F 'Evercraft Private Access' >/dev/null
+          printf '%s' "$html" | grep -F 'Executive Home' >/dev/null
+
+          observed_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          instance_id="$(printf '%s' "$health" | jq -r '.instance_id')"
+          deployment_receipt="$(printf '%s' "$health" | jq -r '.deployment_receipt_ref')"
+
+          jq -n             --arg origin "$HOME_ORIGIN"             --arg instance "$instance_id"             --arg deployment "$deployment_receipt"             --arg observed "$observed_at"             '{
+              schema:"evercraft.home.external-canary.v1",
+              verified:true,
+              state:"public_https_verified",
+              origin:$origin,
+              runtime:"Evercraft Compute",
+              service:"evercraft-home",
+              authority:"evercraft",
+              instance_id:$instance,
+              deployment_receipt_ref:$deployment,
+              public_https_verified:true,
+              certificate_validation:"system_default_trust_store",
+              identity_login_configured:true,
+              passport_authorization_required:true,
+              server_side_session_revocation:true,
+              anonymous_access_denied:true,
+              external_ai_required:false,
+              base44_required:false,
+              observed_at:$observed
+            }' > artifacts/evercraft-home-canary.json
+
+          cat artifacts/evercraft-home-canary.json
+
+      - name: Upload Home canary receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-home-canary
+          path: artifacts/evercraft-home-canary.json
+          retention-days: 90
