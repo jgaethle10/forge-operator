@@ -6,10 +6,12 @@ on:
       - 'plugins/evercraft-fabric/**'
       - 'distribution/openai-plugin/**'
       - 'scripts/validate-openai-plugin-submission.mjs'
+      - 'scripts/promote-openai-owned-fabric.mjs'
       - 'systemia/mcp/fabric-directory.mjs'
       - 'systemia/mcp/specialist-handoff-runtime.mjs'
       - 'tests/evercraft-fabric-runtime.test.mjs'
       - 'tests/evercraft-openai-plugin-package.test.mjs'
+      - 'tests/openai-owned-fabric-promotion.test.mjs'
       - '.github/workflows/openai-plugin-readiness.yml'
   workflow_dispatch:
 
