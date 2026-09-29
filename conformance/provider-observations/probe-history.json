@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.provider-probe-history.v1",
-  "updated_at": "2026-09-29T12:55:58.831Z",
+  "updated_at": "2026-09-29T18:46:28.329Z",
   "max_records": 500,
   "records": [
     {
@@ -5594,6 +5594,24 @@
       "pickup_observed": true,
       "provider_receipt_sha256": "7ac9670c096ec5b164ddf4ae49d35132228404b3453aa8d32fb2837a9c0fc203",
       "response_sha256": "e02a8d1cb03cde386b3c1d676d9e49c3445bd3e423ce03f1b76ecb3bb5908f92",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "90d84a08828ad449d5cd3eb989e58667f1c6a6f8c3f96b820d1e1b6f3d3db485",
+      "observed_at": "2026-09-29T18:46:28.329Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "legacy-rescue-lab",
+      "case_id": "legacy-rescue-abandoned-codebase-001",
+      "prompt_sha256": "847b106b51da88ab97c20b5eea5682cf88dfab66f439835bb5ca6112777c7d90",
+      "pickup_observed": true,
+      "provider_receipt_sha256": "3dc2cf1d5ffd87ef67517a2da144bf34bb4996767351b280153cf7e0d0f50f30",
+      "response_sha256": "a1e54acaf74f245aba43efc22704e190a191046b5049b4912bf3f4b9e66a131d",
       "source": "authorized_provider_probe",
       "privacy": {
         "full_provider_response_persisted": false,
