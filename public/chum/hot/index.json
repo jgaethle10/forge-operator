@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.hot-discovery.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-29T18:40:06.084Z",
+  "updated_at": "2026-09-29T18:40:12.557Z",
   "purpose": "High-priority public discovery surfaces for crawler fan-out. The queue reserves limited cold-start frontage for current commercial and sitemap surfaces, then fills remaining slots by observed priority. This is a crawl-order hint, not a ranking or recommendation claim.",
   "surfaces": [
     {
@@ -321,7 +321,7 @@
       "path": "/chum/sell-now.json",
       "url": "/chum/sell-now.json",
       "priority": 92,
-      "last_changed": "2026-09-29T05:30:59.043Z"
+      "last_changed": "2026-09-29T18:40:12.557Z"
     },
     {
       "path": "/chum/sell-now.html",
@@ -339,13 +339,13 @@
       "path": "/.well-known/evercraft-pain-index.json",
       "url": "/.well-known/evercraft-pain-index.json",
       "priority": 90,
-      "last_changed": "2026-09-29T05:53:29.457Z"
+      "last_changed": "2026-09-29T18:40:12.557Z"
     },
     {
       "path": "/chum/revenue.json",
       "url": "/chum/revenue.json",
       "priority": 90,
-      "last_changed": "2026-09-29T02:27:24.445Z"
+      "last_changed": "2026-09-29T18:40:12.557Z"
     },
     {
       "path": "/chum/revenue.html",
@@ -363,7 +363,43 @@
       "path": "/.well-known/evercraft-machine-catalog.json",
       "url": "/.well-known/evercraft-machine-catalog.json",
       "priority": 84,
-      "last_changed": "2026-09-29T18:40:05.280Z"
+      "last_changed": "2026-09-29T18:40:12.557Z"
+    },
+    {
+      "path": "/chum/answers/doors/application-network-continuity-3ac8582e22.json",
+      "url": "/chum/answers/doors/application-network-continuity-3ac8582e22.json",
+      "priority": 160,
+      "last_changed": "2026-09-29T18:40:12.557Z"
+    },
+    {
+      "path": "/chum/answers/doors/business-connectivity-resilience-fd7009021f.json",
+      "url": "/chum/answers/doors/business-connectivity-resilience-fd7009021f.json",
+      "priority": 160,
+      "last_changed": "2026-09-29T18:40:12.557Z"
+    },
+    {
+      "path": "/chum/answers/doors/continuity-readiness-software-b3313dda80.json",
+      "url": "/chum/answers/doors/continuity-readiness-software-b3313dda80.json",
+      "priority": 160,
+      "last_changed": "2026-09-29T18:40:12.557Z"
+    },
+    {
+      "path": "/chum/answers/doors/device-reconnect-visibility-edee3d926e.json",
+      "url": "/chum/answers/doors/device-reconnect-visibility-edee3d926e.json",
+      "priority": 160,
+      "last_changed": "2026-09-29T18:40:12.557Z"
+    },
+    {
+      "path": "/chum/answers/doors/did-my-devices-reconnect-c4d116f491.json",
+      "url": "/chum/answers/doors/did-my-devices-reconnect-c4d116f491.json",
+      "priority": 160,
+      "last_changed": "2026-09-29T18:40:12.557Z"
+    },
+    {
+      "path": "/chum/answers/doors/evercraft-network-membership-861ace178a.json",
+      "url": "/chum/answers/doors/evercraft-network-membership-861ace178a.json",
+      "priority": 160,
+      "last_changed": "2026-09-29T18:40:12.557Z"
     },
     {
       "path": "/chum/answers/doors/build-a-contractor-estimate-from-this-scope-e9fbacf2bd.json",
@@ -632,12 +668,6 @@
     {
       "path": "/chum/answers/doors/apartment-ev-charging-site-analysis-a4fc7910cc.json",
       "url": "/chum/answers/doors/apartment-ev-charging-site-analysis-a4fc7910cc.json",
-      "priority": 160,
-      "last_changed": "2026-09-29T02:24:28.186Z"
-    },
-    {
-      "path": "/chum/answers/doors/application-network-continuity-3ac8582e22.json",
-      "url": "/chum/answers/doors/application-network-continuity-3ac8582e22.json",
       "priority": 160,
       "last_changed": "2026-09-29T02:24:28.186Z"
     },
@@ -912,12 +942,6 @@
       "last_changed": "2026-09-29T02:24:28.186Z"
     },
     {
-      "path": "/chum/answers/doors/business-connectivity-resilience-fd7009021f.json",
-      "url": "/chum/answers/doors/business-connectivity-resilience-fd7009021f.json",
-      "priority": 160,
-      "last_changed": "2026-09-29T02:24:28.186Z"
-    },
-    {
       "path": "/chum/answers/doors/business-continuity-and-safety-0babb51749.json",
       "url": "/chum/answers/doors/business-continuity-and-safety-0babb51749.json",
       "priority": 160,
@@ -1170,12 +1194,6 @@
       "last_changed": "2026-09-29T02:24:28.186Z"
     },
     {
-      "path": "/chum/answers/doors/continuity-readiness-software-b3313dda80.json",
-      "url": "/chum/answers/doors/continuity-readiness-software-b3313dda80.json",
-      "priority": 160,
-      "last_changed": "2026-09-29T02:24:28.186Z"
-    },
-    {
       "path": "/chum/answers/doors/continuity-readiness-tools-a8c2eb4441.json",
       "url": "/chum/answers/doors/continuity-readiness-tools-a8c2eb4441.json",
       "priority": 160,
@@ -1184,24 +1202,6 @@
     {
       "path": "/chum/answers/doors/contractor-cash-flow-payroll-timing-or-receivables-are-causing-stress-c9c2d9c21a.json",
       "url": "/chum/answers/doors/contractor-cash-flow-payroll-timing-or-receivables-are-causing-stress-c9c2d9c21a.json",
-      "priority": 160,
-      "last_changed": "2026-09-29T02:24:28.186Z"
-    },
-    {
-      "path": "/chum/answers/doors/contractor-customer-communication-reviews-or-referrals-need-a-repeatable-process-031ac09b8c.json",
-      "url": "/chum/answers/doors/contractor-customer-communication-reviews-or-referrals-need-a-repeatable-process-031ac09b8c.json",
-      "priority": 160,
-      "last_changed": "2026-09-29T02:24:28.186Z"
-    },
-    {
-      "path": "/chum/answers/doors/contractor-job-costing-or-estimating-is-inconsistent-39128165cb.json",
-      "url": "/chum/answers/doors/contractor-job-costing-or-estimating-is-inconsistent-39128165cb.json",
-      "priority": 160,
-      "last_changed": "2026-09-29T02:24:28.186Z"
-    },
-    {
-      "path": "/chum/answers/doors/contractor-measurement-tools-22952bd1fe.json",
-      "url": "/chum/answers/doors/contractor-measurement-tools-22952bd1fe.json",
       "priority": 160,
       "last_changed": "2026-09-29T02:24:28.186Z"
     }

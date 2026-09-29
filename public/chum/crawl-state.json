@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-29T18:40:06.084Z",
+  "updated_at": "2026-09-29T18:40:12.557Z",
   "url_count": 2628,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -39,8 +39,8 @@
     },
     "/chum/capabilities.json": {
       "path": "/chum/capabilities.json",
-      "content_sha256": "6aadf6f0a30dc111e836b5df66dafe5e4f318d3315c86401468ab9c4965dfa54",
-      "last_changed": "2026-09-29T05:34:42.337Z",
+      "content_sha256": "64e564a8aacfaea533b34e185706407417ba8d33a5a58bd26746367950daf63b",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 80
     },
     "/chum/sell-now.html": {
@@ -51,8 +51,8 @@
     },
     "/chum/sell-now.json": {
       "path": "/chum/sell-now.json",
-      "content_sha256": "1c167b9343a1e2ddc6356b67399b1c71137ab58dafbcf3ac70fb3fb634c2843a",
-      "last_changed": "2026-09-29T05:30:59.043Z",
+      "content_sha256": "6eb32b6e3adda0d13747c3d5684a0025e348e1f55c52271cbcb291543f1107eb",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 92
     },
     "/chum/sell-now.txt": {
@@ -69,14 +69,14 @@
     },
     "/chum/revenue.json": {
       "path": "/chum/revenue.json",
-      "content_sha256": "1d4b72496855c03c331ef365c911527b6f4d9c16feccf4368d12aeabd99a28d5",
-      "last_changed": "2026-09-29T02:27:24.445Z",
+      "content_sha256": "0a5b3d0e64fc2af93bb515f76772f24b7549f21220ad1cb067912931f3af2695",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 90
     },
     "/chum/agent-commerce.json": {
       "path": "/chum/agent-commerce.json",
-      "content_sha256": "56bd20323eb580fe110d0e52e63970d6c5f9a65dc682b42b9b4ba57df187cf56",
-      "last_changed": "2026-09-29T02:27:24.445Z",
+      "content_sha256": "90c4e14d9957cdb9bfad74d483bf5dda07fc266ecfe429a8bd162dc1fa6ec32a",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 80
     },
     "/chum/agent-commerce.txt": {
@@ -93,14 +93,14 @@
     },
     "/chum/pain-index.json": {
       "path": "/chum/pain-index.json",
-      "content_sha256": "57ca94f5a75961202f2be2a00fd890d9088909faf6ee625fdfe9bebfff0d6372",
-      "last_changed": "2026-09-29T05:53:29.457Z",
+      "content_sha256": "33088e8047acf47802b0bcb809e6a9f2c7e0895f13c5cb1fa628dcef139a4383",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 80
     },
     "/chum/pain-index.txt": {
       "path": "/chum/pain-index.txt",
-      "content_sha256": "7bf430c4afb994dc9acebf7702ad45b20fdde5ca49d0216bca60912651ef5478",
-      "last_changed": "2026-09-29T05:34:42.337Z",
+      "content_sha256": "1c823bdd7622999617d2da38ace55c7aea96e0ae4011776ed523c8a24f6044fd",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 80
     },
     "/chum/answers/": {
@@ -141,8 +141,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "69321ce9cdde61a0ea7f2c300f46cb4ce29f81f87a4ebfc72dee731bffecef7d",
-      "last_changed": "2026-09-29T18:40:06.084Z",
+      "content_sha256": "fc91b759a4f08ab04d5eb27eb368a7c061fd6134a9536a43a3e723777173fd0f",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -339,8 +339,8 @@
     },
     "/.well-known/evercraft-pain-index.json": {
       "path": "/.well-known/evercraft-pain-index.json",
-      "content_sha256": "57ca94f5a75961202f2be2a00fd890d9088909faf6ee625fdfe9bebfff0d6372",
-      "last_changed": "2026-09-29T05:53:29.457Z",
+      "content_sha256": "33088e8047acf47802b0bcb809e6a9f2c7e0895f13c5cb1fa628dcef139a4383",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 90
     },
     "/rivet/discovery.json": {
@@ -735,8 +735,8 @@
     },
     "/ai-discovery.json": {
       "path": "/ai-discovery.json",
-      "content_sha256": "a1a4089a8ecdd6600c48f56824b553f96e57cba5b9937355ee3fa1507aa8f359",
-      "last_changed": "2026-09-29T18:40:05.280Z",
+      "content_sha256": "a4d19744c4f63576dc959a22ce30f8cfa4e70bbf774c2e446501d0aea5b45c84",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 60
     },
     "/schema.jsonld": {
@@ -777,8 +777,8 @@
     },
     "/.well-known/evercraft-agent-commerce.json": {
       "path": "/.well-known/evercraft-agent-commerce.json",
-      "content_sha256": "56bd20323eb580fe110d0e52e63970d6c5f9a65dc682b42b9b4ba57df187cf56",
-      "last_changed": "2026-09-29T02:27:24.445Z",
+      "content_sha256": "90c4e14d9957cdb9bfad74d483bf5dda07fc266ecfe429a8bd162dc1fa6ec32a",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 84
     },
     "/.well-known/evercraft-agent-interfaces.json": {
@@ -789,8 +789,8 @@
     },
     "/.well-known/evercraft-discovery.json": {
       "path": "/.well-known/evercraft-discovery.json",
-      "content_sha256": "a1a4089a8ecdd6600c48f56824b553f96e57cba5b9937355ee3fa1507aa8f359",
-      "last_changed": "2026-09-29T18:40:05.280Z",
+      "content_sha256": "a4d19744c4f63576dc959a22ce30f8cfa4e70bbf774c2e446501d0aea5b45c84",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 84
     },
     "/.well-known/evercraft-products.json": {
@@ -801,8 +801,8 @@
     },
     "/.well-known/evercraft-machine-catalog.json": {
       "path": "/.well-known/evercraft-machine-catalog.json",
-      "content_sha256": "42535f525ec75ee1e9c280d783fcf3f7f2c0a50a37e59a222fbfa54c43ccfb1d",
-      "last_changed": "2026-09-29T18:40:05.280Z",
+      "content_sha256": "02fbd5650c7f050528ecd3f14ba59de0890c1d57cdc364d900bb27eafbfd9143",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 84
     },
     "/.well-known/evercraft-chum.json": {
@@ -915,8 +915,8 @@
     },
     "/chum/capabilities/agent-proving-mission-v1/capability.json": {
       "path": "/chum/capabilities/agent-proving-mission-v1/capability.json",
-      "content_sha256": "228c0b794114d2a2466c83f9932e6129de15d88e55a6a5d24e0a985c176ad6c5",
-      "last_changed": "2026-09-27T03:48:14.633Z",
+      "content_sha256": "c1c57db27447b514d67b5be3fe12b413e9368a74edbd1b4258f0273651d02abb",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/agent-proving-mission-v1/schema.jsonld": {
@@ -945,8 +945,8 @@
     },
     "/chum/capabilities/ai-capability-install-v1/capability.json": {
       "path": "/chum/capabilities/ai-capability-install-v1/capability.json",
-      "content_sha256": "38b4835708cc9a70be68ce265ae2be66c980a07ab55140b60199094632e9d9e0",
-      "last_changed": "2026-09-27T03:48:14.633Z",
+      "content_sha256": "6c9e5078822c1034c233012765f81f90946957ad96b8e067c1da5c80087f99d4",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/ai-capability-install-v1/schema.jsonld": {
@@ -975,8 +975,8 @@
     },
     "/chum/capabilities/aliev-site-opportunity-snapshot-v1/capability.json": {
       "path": "/chum/capabilities/aliev-site-opportunity-snapshot-v1/capability.json",
-      "content_sha256": "e05da36447e7ebfb85084ef574a01f1d392c4f3ee6cd038eea24af2c48bbba1e",
-      "last_changed": "2026-09-28T14:52:12.847Z",
+      "content_sha256": "4dc4fa42fb8885083bf0cbae130cc341ef16265f8b41583cb53c8b795f693349",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/aliev-site-opportunity-snapshot-v1/schema.jsonld": {
@@ -1005,8 +1005,8 @@
     },
     "/chum/capabilities/audit-center-website-audit-machine-v1/capability.json": {
       "path": "/chum/capabilities/audit-center-website-audit-machine-v1/capability.json",
-      "content_sha256": "a630b78f24ac139a602b431d92f7a84edd986c5e596954f36b2db953e12d9ea1",
-      "last_changed": "2026-09-28T14:52:12.847Z",
+      "content_sha256": "c24dfabca064e7826e7eb029d823141c88c53045ffdc603918d85125cd15c393",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/audit-center-website-audit-machine-v1/schema.jsonld": {
@@ -1035,8 +1035,8 @@
     },
     "/chum/capabilities/buildflow-bounded-agent-action-v1/capability.json": {
       "path": "/chum/capabilities/buildflow-bounded-agent-action-v1/capability.json",
-      "content_sha256": "6fba36b4addd9eb7228fbb679da5f849732dc03cb002cd4717b6203e5b193ccd",
-      "last_changed": "2026-09-27T03:48:14.633Z",
+      "content_sha256": "502d62992a512130f73a5387b09f48d3c1cb4c7033294bfc19db112c28c5fa6c",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/buildflow-bounded-agent-action-v1/schema.jsonld": {
@@ -1065,8 +1065,8 @@
     },
     "/chum/capabilities/buildflow-enterprise-ops-router-v1/capability.json": {
       "path": "/chum/capabilities/buildflow-enterprise-ops-router-v1/capability.json",
-      "content_sha256": "43d822f854706be937d70407ce983c3cb718ce3cf58d716f787700ee1bb3199b",
-      "last_changed": "2026-09-27T03:48:14.633Z",
+      "content_sha256": "dbd07350b456d65069583ceabae31960f33ada81f25b36b683f2e98af2d621b8",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/buildflow-enterprise-ops-router-v1/schema.jsonld": {
@@ -1095,8 +1095,8 @@
     },
     "/chum/capabilities/buildflow-entity-resolution-machine-v1/capability.json": {
       "path": "/chum/capabilities/buildflow-entity-resolution-machine-v1/capability.json",
-      "content_sha256": "3d7259a2560d7ed1b9b27457364d29f8665e6f79a2fb678a15a50e1479877e4c",
-      "last_changed": "2026-09-27T03:48:14.633Z",
+      "content_sha256": "c428a7a1acd596ff97dbfffe18ca272c50470eecb50580f55e23b113034bc6d9",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/buildflow-entity-resolution-machine-v1/schema.jsonld": {
@@ -1125,8 +1125,8 @@
     },
     "/chum/capabilities/buildflow-process-audit-machine-v1/capability.json": {
       "path": "/chum/capabilities/buildflow-process-audit-machine-v1/capability.json",
-      "content_sha256": "313436debc01dc18f30e4060a20cb531e83ed76a425a460e61115904d00ecbae",
-      "last_changed": "2026-09-27T03:48:14.633Z",
+      "content_sha256": "0449e104ef46d5b51d4fa1f6ad5de196cecd3f89d4089181c0682ba8ccf5f0ff",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/buildflow-process-audit-machine-v1/schema.jsonld": {
@@ -1155,8 +1155,8 @@
     },
     "/chum/capabilities/buildflow-procure-to-pay-shadow-v1/capability.json": {
       "path": "/chum/capabilities/buildflow-procure-to-pay-shadow-v1/capability.json",
-      "content_sha256": "41c1ee79c300763008fec9cf155b0627421cb3dfba1b4c05c29d8c763423fe37",
-      "last_changed": "2026-09-27T03:48:14.633Z",
+      "content_sha256": "4e6e4fe198e998eec4ead1b2c8e315937e75f4911fae073aa8161b9527d32231",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/buildflow-procure-to-pay-shadow-v1/schema.jsonld": {
@@ -1185,8 +1185,8 @@
     },
     "/chum/capabilities/buildflow-shadow-migration-machine-v1/capability.json": {
       "path": "/chum/capabilities/buildflow-shadow-migration-machine-v1/capability.json",
-      "content_sha256": "4d075e4b2f42d936d0161f5a0b86ad749791d65f6d9585695c4824a86ce159af",
-      "last_changed": "2026-09-27T03:48:14.633Z",
+      "content_sha256": "845cab60e2699e8903abf115d1c6785b20a1829ba10508177985a47d138eea77",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/buildflow-shadow-migration-machine-v1/schema.jsonld": {
@@ -1215,8 +1215,8 @@
     },
     "/chum/capabilities/callproof-complaint-packet-machine-v1/capability.json": {
       "path": "/chum/capabilities/callproof-complaint-packet-machine-v1/capability.json",
-      "content_sha256": "d493995736df5d36c9212f8642bd3020f2a489db001053133e10be1ac21f55cc",
-      "last_changed": "2026-09-27T03:48:14.633Z",
+      "content_sha256": "cc75e1feb3051aa17386e2dc81117d358c6da0dfb111109a9f98a2782e8df1d1",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/callproof-complaint-packet-machine-v1/schema.jsonld": {
@@ -1245,8 +1245,8 @@
     },
     "/chum/capabilities/capability-concierge-v1/capability.json": {
       "path": "/chum/capabilities/capability-concierge-v1/capability.json",
-      "content_sha256": "58f2adbf679e982f533b2adb70018917bb3e52b4e808f138e7c43dbecf6d3ef7",
-      "last_changed": "2026-09-27T03:48:14.633Z",
+      "content_sha256": "2b3771105a2f29dd4816ed80736f59ee27169729965f394e1a1711857ab652ba",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/capability-concierge-v1/schema.jsonld": {
@@ -1275,8 +1275,8 @@
     },
     "/chum/capabilities/career-command-interview-practice-machine-v1/capability.json": {
       "path": "/chum/capabilities/career-command-interview-practice-machine-v1/capability.json",
-      "content_sha256": "81481b47cecc3f88553fabd31fe42094397b4a7e6d6f4d89c00db8b973536c71",
-      "last_changed": "2026-09-28T14:52:12.847Z",
+      "content_sha256": "a8501287857d127d9b96a795eab2a66a08eb504232d91dfcfc2a7a3335f89746",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/career-command-interview-practice-machine-v1/schema.jsonld": {
@@ -1305,8 +1305,8 @@
     },
     "/chum/capabilities/career-command-resume-job-fit-machine-v1/capability.json": {
       "path": "/chum/capabilities/career-command-resume-job-fit-machine-v1/capability.json",
-      "content_sha256": "be4594d53e9ccc639bec926a5e0b32f29595db4a070438733100b52b2b04e7b3",
-      "last_changed": "2026-09-27T03:48:14.633Z",
+      "content_sha256": "a37899f8095b1025f2ff347a5e2692ab674cd2adfaed289da2e6d051796c4656",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/career-command-resume-job-fit-machine-v1/schema.jsonld": {
@@ -1335,8 +1335,8 @@
     },
     "/chum/capabilities/community-health-evidence-brief-v1/capability.json": {
       "path": "/chum/capabilities/community-health-evidence-brief-v1/capability.json",
-      "content_sha256": "1d49120fcb51cb528d3b90c2b68153afb16c3eba2b8190d5872cb2ad776751d7",
-      "last_changed": "2026-09-27T03:48:14.633Z",
+      "content_sha256": "26e1a12928c5f4574888555c0f1bf2224335f9c39f69af3b7386c1332f157c1a",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/community-health-evidence-brief-v1/schema.jsonld": {
@@ -1365,8 +1365,8 @@
     },
     "/chum/capabilities/condition-desk-field-ops-v1/capability.json": {
       "path": "/chum/capabilities/condition-desk-field-ops-v1/capability.json",
-      "content_sha256": "e8d34826e7a22ae97cdc1a5c0f90a9aa257b72ba82bc943b915297888b05e511",
-      "last_changed": "2026-09-27T03:48:14.633Z",
+      "content_sha256": "d5eeb0b3558e6a8499450a7fc61d087e97b03a19e590d6c35237c5226a880b91",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/condition-desk-field-ops-v1/schema.jsonld": {
@@ -1395,8 +1395,8 @@
     },
     "/chum/capabilities/datafoundry-data-gap-audit-machine-v1/capability.json": {
       "path": "/chum/capabilities/datafoundry-data-gap-audit-machine-v1/capability.json",
-      "content_sha256": "5620fdc4bc83dcfc0b9a556501e298fc16c642f6fce0135e46721e7d090b8ba3",
-      "last_changed": "2026-09-27T03:48:14.633Z",
+      "content_sha256": "344fb570944dd9b4b753e62613a5c21206991a1347c9fe8a81e5f1382ddd8583",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/datafoundry-data-gap-audit-machine-v1/schema.jsonld": {
@@ -1425,8 +1425,8 @@
     },
     "/chum/capabilities/deck-capital-fit-sprint-machine-v1/capability.json": {
       "path": "/chum/capabilities/deck-capital-fit-sprint-machine-v1/capability.json",
-      "content_sha256": "dff33134f7dd824e5655c6c847870c6130fe9b1c5870625d696b580d780b2cdd",
-      "last_changed": "2026-09-28T14:52:12.847Z",
+      "content_sha256": "42211125cbf36ff365e349af35c58c06a46b89e9b46c417dd0d910b5827a4ccc",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/deck-capital-fit-sprint-machine-v1/schema.jsonld": {
@@ -1455,8 +1455,8 @@
     },
     "/chum/capabilities/eps-estimate-engine-machine-v1/capability.json": {
       "path": "/chum/capabilities/eps-estimate-engine-machine-v1/capability.json",
-      "content_sha256": "bb9c551b8a83017c13b13c5add3bfc3d0c606d3fbc95c0e02a4f5114bb2950a0",
-      "last_changed": "2026-09-29T05:34:42.337Z",
+      "content_sha256": "840ca5843309f7ec57a66a519c2bcb3f7d85a5d5c6c7343aae1452377f51f92e",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/eps-estimate-engine-machine-v1/schema.jsonld": {
@@ -1485,8 +1485,8 @@
     },
     "/chum/capabilities/eventwave-paid-promotion-v1/capability.json": {
       "path": "/chum/capabilities/eventwave-paid-promotion-v1/capability.json",
-      "content_sha256": "a8f36fc72d6e3d632e2130e7325ecc7ada906828f5868eacc9241532958f3ced",
-      "last_changed": "2026-09-28T14:52:12.847Z",
+      "content_sha256": "76e5308c4480c724f429c0724976c5ed2c97866f45afc5f18eeb8f6bb4c780e5",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/eventwave-paid-promotion-v1/schema.jsonld": {
@@ -1515,8 +1515,8 @@
     },
     "/chum/capabilities/evercraft-clip-social-video-v1/capability.json": {
       "path": "/chum/capabilities/evercraft-clip-social-video-v1/capability.json",
-      "content_sha256": "73f4b4469aa767b5aef444278b7a7cfa150e843c7575cb6ec95cd5bc90d02960",
-      "last_changed": "2026-09-29T02:24:28.186Z",
+      "content_sha256": "a9c7c60b0c909ec52e25d160fd06998e2fae55884be4afe21aa06a524172cf3a",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/evercraft-clip-social-video-v1/schema.jsonld": {
@@ -1539,14 +1539,14 @@
     },
     "/chum/capabilities/evercraft-network-resilience-membership-v1/llms.txt": {
       "path": "/chum/capabilities/evercraft-network-resilience-membership-v1/llms.txt",
-      "content_sha256": "2e8487110d010ded46c55ad4d54500f60945077d6b6c5e04821e41361eaf8ac3",
-      "last_changed": "2026-09-27T03:48:14.633Z",
+      "content_sha256": "67ba8602b87afca50d314b65b6423d9a89161e697cfa2ba75e3af94dd182ae3b",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/evercraft-network-resilience-membership-v1/capability.json": {
       "path": "/chum/capabilities/evercraft-network-resilience-membership-v1/capability.json",
-      "content_sha256": "da0795e4f22dfe06ddd15439ef6ded3e772d1d04c8a5c8918de393d7ad327ec3",
-      "last_changed": "2026-09-27T03:48:14.633Z",
+      "content_sha256": "f0c361718b021e7909f95314a23c4aee929524583a6f6ecd511291f205fe7081",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/evercraft-network-resilience-membership-v1/schema.jsonld": {
@@ -1575,8 +1575,8 @@
     },
     "/chum/capabilities/evercraft-web-browser-agent-v1/capability.json": {
       "path": "/chum/capabilities/evercraft-web-browser-agent-v1/capability.json",
-      "content_sha256": "75d278287b2a8f918acbc1882d0a9a87a548f940b4026ea459869e72a57de291",
-      "last_changed": "2026-09-27T03:48:14.633Z",
+      "content_sha256": "25db95cdc96233c1e007dc68e8dc9cfcc1f847697e0025e47b25d6bd8d334dde",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/evercraft-web-browser-agent-v1/schema.jsonld": {
@@ -1605,8 +1605,8 @@
     },
     "/chum/capabilities/evermaps-evidence-projection-machine-v1/capability.json": {
       "path": "/chum/capabilities/evermaps-evidence-projection-machine-v1/capability.json",
-      "content_sha256": "d175e02f8db6f959783c9f099cab83e30e768291a368ef3d7791fc30dbb4fd07",
-      "last_changed": "2026-09-27T03:48:14.633Z",
+      "content_sha256": "1c671a28a25a1342be9a7b05fdaed2649d64c4cece0bac420aca4cf59791ba8b",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/evermaps-evidence-projection-machine-v1/schema.jsonld": {
@@ -1635,8 +1635,8 @@
     },
     "/chum/capabilities/faie-signal-brief-v1/capability.json": {
       "path": "/chum/capabilities/faie-signal-brief-v1/capability.json",
-      "content_sha256": "6005be39056dba332f5d232d3cea8bf84028b61ee636062b3709f5d759fe08f3",
-      "last_changed": "2026-09-28T14:52:12.847Z",
+      "content_sha256": "33ef05920acd55b2fd2703c000fed3b55d4bed364f95c4783fd7e28e47213e3c",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/faie-signal-brief-v1/schema.jsonld": {
@@ -1665,8 +1665,8 @@
     },
     "/chum/capabilities/findmypart-paid-hunt-v1/capability.json": {
       "path": "/chum/capabilities/findmypart-paid-hunt-v1/capability.json",
-      "content_sha256": "fb649f7b45833d36faf8ea33d40b10ed51f7a959a350b58c3497cbb36bc9563a",
-      "last_changed": "2026-09-28T14:52:12.847Z",
+      "content_sha256": "b94eac769201c03814f853e57208f1521ec97bbb118ad8e01676e9ea35e50b6b",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/findmypart-paid-hunt-v1/schema.jsonld": {
@@ -1695,8 +1695,8 @@
     },
     "/chum/capabilities/findmypart-repair-shop-desk-v1/capability.json": {
       "path": "/chum/capabilities/findmypart-repair-shop-desk-v1/capability.json",
-      "content_sha256": "c739fa9f5d594000a3cd820fd8e7eaf42fc4517e5ebe666582dfc510a7f176f7",
-      "last_changed": "2026-09-27T03:48:14.633Z",
+      "content_sha256": "cbd88ebb45465e718459662cce90cff52ba66375da4e1a19a793516bb4869c92",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/findmypart-repair-shop-desk-v1/schema.jsonld": {
@@ -1725,8 +1725,8 @@
     },
     "/chum/capabilities/forensiscope-evidence-review-v1/capability.json": {
       "path": "/chum/capabilities/forensiscope-evidence-review-v1/capability.json",
-      "content_sha256": "c7e8ac1b37c34706dbea4e6b43efb30f408be344e16d91d75d867dd9029f5e3b",
-      "last_changed": "2026-09-27T03:48:14.633Z",
+      "content_sha256": "fe2bf9f4ba325909fa1b5673f5ed934fbc79f61e02985aa2f107f1fe2277e85e",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/forensiscope-evidence-review-v1/schema.jsonld": {
@@ -1755,8 +1755,8 @@
     },
     "/chum/capabilities/foundry-app-escape-audit-v1/capability.json": {
       "path": "/chum/capabilities/foundry-app-escape-audit-v1/capability.json",
-      "content_sha256": "f81a425989135f005b5f58c4ab6bdc208ced1de0ccd01c3bb1d6f4fbd53b6515",
-      "last_changed": "2026-09-28T14:52:12.847Z",
+      "content_sha256": "fe051051848ea6eaaa0878578f79a4e7afb01624f7118ffc360545ab32be3a48",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/foundry-app-escape-audit-v1/schema.jsonld": {
@@ -1785,8 +1785,8 @@
     },
     "/chum/capabilities/freight-load-exception-intelligence-machine-v1/capability.json": {
       "path": "/chum/capabilities/freight-load-exception-intelligence-machine-v1/capability.json",
-      "content_sha256": "e12dd3eb5d5599ecd371814c5ab2543da26ab54488ba58638f14c244abfb8bdf",
-      "last_changed": "2026-09-27T03:48:14.633Z",
+      "content_sha256": "9fbb39d964aa0da24122cd394bdc0834a17eeb92bb0f40cfeee24759b8fc2c37",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/freight-load-exception-intelligence-machine-v1/schema.jsonld": {
@@ -1815,8 +1815,8 @@
     },
     "/chum/capabilities/globalstat-country-intelligence-machine-v1/capability.json": {
       "path": "/chum/capabilities/globalstat-country-intelligence-machine-v1/capability.json",
-      "content_sha256": "04ebd8a7d453d5bea776f2ba45d863cc51efb3196bfba53bfa5d2a0fb903755a",
-      "last_changed": "2026-09-27T03:48:14.633Z",
+      "content_sha256": "af08ace2d0e80242124c207cf9225978c5ddab7433a559fe8dcb178ded914173",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/globalstat-country-intelligence-machine-v1/schema.jsonld": {
@@ -1839,14 +1839,14 @@
     },
     "/chum/capabilities/ibmi-rescue-v1/llms.txt": {
       "path": "/chum/capabilities/ibmi-rescue-v1/llms.txt",
-      "content_sha256": "fe76fc78eb7b1cb95095508dc96d1453f09f79eada1dad7b5c026f3ae9324b29",
-      "last_changed": "2026-09-29T05:30:59.043Z",
+      "content_sha256": "a7ed6415652c4724886e5c7f2f78367583837bfb18a37f4a5c10bbf4f2e2ad72",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/ibmi-rescue-v1/capability.json": {
       "path": "/chum/capabilities/ibmi-rescue-v1/capability.json",
-      "content_sha256": "5fdea8edbcef7c345c9887a3fdf425adadb9a0cf2042c584277325878a9037ba",
-      "last_changed": "2026-09-29T05:30:59.043Z",
+      "content_sha256": "221f8cfdccfc459da6f43fc5b48d25548ba4a42f0954a4c23483a6692b3eb15e",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/ibmi-rescue-v1/schema.jsonld": {
@@ -1875,8 +1875,8 @@
     },
     "/chum/capabilities/income-war-map-v1/capability.json": {
       "path": "/chum/capabilities/income-war-map-v1/capability.json",
-      "content_sha256": "de613e9999a2961ed2ee7f834fbf39f81b3a7f892174efc06893c0b5abcbe0e7",
-      "last_changed": "2026-09-27T03:48:14.633Z",
+      "content_sha256": "4965b90f004cc2f165b96bcf9e413ecc7278fd803639d0687049bbbd45ff6750",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/income-war-map-v1/schema.jsonld": {
@@ -1905,8 +1905,8 @@
     },
     "/chum/capabilities/large-document-corpus-review-v1/capability.json": {
       "path": "/chum/capabilities/large-document-corpus-review-v1/capability.json",
-      "content_sha256": "1dd8ff58dc545fcc54df3c171996ea40e93d8c927254c744b129cf7c84e86ec4",
-      "last_changed": "2026-09-27T03:48:14.633Z",
+      "content_sha256": "10ffa0bf73cb41376901a1150719e4f035e4b3ff1c5cfe176e6b5e239e1aec28",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/large-document-corpus-review-v1/schema.jsonld": {
@@ -1929,14 +1929,14 @@
     },
     "/chum/capabilities/legacy-rescue-lab-v1/llms.txt": {
       "path": "/chum/capabilities/legacy-rescue-lab-v1/llms.txt",
-      "content_sha256": "9b3c80e0ac6b89c0f28fb046bdc67b540331f3a34cbb81fb501b1db3754bd138",
-      "last_changed": "2026-09-28T19:03:48.848Z",
+      "content_sha256": "62569a3fa6b863ad911b729378bfa5b720fde4d01c5175ec5cf3b7413a66a5cf",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/legacy-rescue-lab-v1/capability.json": {
       "path": "/chum/capabilities/legacy-rescue-lab-v1/capability.json",
-      "content_sha256": "a1dbfb19216bd20b4538bf165f8dc615778ab0e9b1ba8c81137c6a1711b5f816",
-      "last_changed": "2026-09-29T05:30:59.043Z",
+      "content_sha256": "1b14b3713e8f018b3201c0f77709a40a42bdc3fcedc6e608d42a18a749596ff8",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/legacy-rescue-lab-v1/schema.jsonld": {
@@ -1965,8 +1965,8 @@
     },
     "/chum/capabilities/littlered-kdp-export-qa-machine-v1/capability.json": {
       "path": "/chum/capabilities/littlered-kdp-export-qa-machine-v1/capability.json",
-      "content_sha256": "ad49719f16286f8bb73a06224884fa53c3d7d6ea98b13c83c640b34a78aaa7d5",
-      "last_changed": "2026-09-27T03:48:14.633Z",
+      "content_sha256": "a3f04bf920b6ca20a1493b5a72ceefcfe818ef6f0e6772230e91f064f7247728",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/littlered-kdp-export-qa-machine-v1/schema.jsonld": {
@@ -1995,8 +1995,8 @@
     },
     "/chum/capabilities/portfolio-sentinel-v1/capability.json": {
       "path": "/chum/capabilities/portfolio-sentinel-v1/capability.json",
-      "content_sha256": "f5c6681fd1a0352a5df8f18c95f9842fd75737baff67eb4615ab39a93a748965",
-      "last_changed": "2026-09-29T05:30:59.043Z",
+      "content_sha256": "3aa265d1fbcff6e831beea9fd7d7a1a8e7c16aa1edc00675355d1360db624d05",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/portfolio-sentinel-v1/schema.jsonld": {
@@ -2025,8 +2025,8 @@
     },
     "/chum/capabilities/raven-nexus-pain-router-v1/capability.json": {
       "path": "/chum/capabilities/raven-nexus-pain-router-v1/capability.json",
-      "content_sha256": "396c112e2ba1ae93b64d6586d9b18dbf2a351624e47dcaefbca78e6cd2e738de",
-      "last_changed": "2026-09-27T03:48:14.633Z",
+      "content_sha256": "bed86a3f959e55c95cfcd8a0e7273fe82911e96def55aad99e91d7cf6f15bd13",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/raven-nexus-pain-router-v1/schema.jsonld": {
@@ -2055,8 +2055,8 @@
     },
     "/chum/capabilities/rivet-site-underwriting-v1/capability.json": {
       "path": "/chum/capabilities/rivet-site-underwriting-v1/capability.json",
-      "content_sha256": "07e0223601425925f9ebf273682812d73288e13fc37f431ac60e23cf120b8031",
-      "last_changed": "2026-09-28T14:52:12.847Z",
+      "content_sha256": "752b29d53f34ba4eee0d011d144da6deae2c2c82a243f1980b0936e85ad45630",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/rivet-site-underwriting-v1/schema.jsonld": {
@@ -2085,8 +2085,8 @@
     },
     "/chum/capabilities/roasted-text-pressure-test-machine-v1/capability.json": {
       "path": "/chum/capabilities/roasted-text-pressure-test-machine-v1/capability.json",
-      "content_sha256": "fddc4ab9613019c4c6a64fc5a62fb0d8c344d2021b5a758ef0b773dd5a37eb7f",
-      "last_changed": "2026-09-28T14:52:12.847Z",
+      "content_sha256": "f1d592dbaeac8dfdf2c14a11e69c9d17a9dfce119727bcd9dd5bdba71865ee51",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/roasted-text-pressure-test-machine-v1/schema.jsonld": {
@@ -2115,8 +2115,8 @@
     },
     "/chum/capabilities/site-survive-rapid-audit-v1/capability.json": {
       "path": "/chum/capabilities/site-survive-rapid-audit-v1/capability.json",
-      "content_sha256": "8f20ee3940aa84c0eb34897cbb7ca41cf7b878aec4c3e79cc48d3c080e4f3112",
-      "last_changed": "2026-09-28T14:52:12.847Z",
+      "content_sha256": "ef423ffcdf76d3397f0aa5e6f35df43cbf88e2047fd2a9222fe9d7773014a3bc",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/site-survive-rapid-audit-v1/schema.jsonld": {
@@ -2145,8 +2145,8 @@
     },
     "/chum/capabilities/systemia-yard-runtime-extension-v1/capability.json": {
       "path": "/chum/capabilities/systemia-yard-runtime-extension-v1/capability.json",
-      "content_sha256": "e114fff4c6ba3fcc74c38a0d9958a6bb1b2b3c6922f4a10e3a77da47cd24d1ee",
-      "last_changed": "2026-09-27T03:48:14.633Z",
+      "content_sha256": "5719069440086dd1c35d9db891f0b12e172056eb231ae6f317168b66391c2bb5",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/systemia-yard-runtime-extension-v1/schema.jsonld": {
@@ -2175,8 +2175,8 @@
     },
     "/chum/capabilities/talent-evidence-profile-machine-v1/capability.json": {
       "path": "/chum/capabilities/talent-evidence-profile-machine-v1/capability.json",
-      "content_sha256": "b095a735520fc0594055dacfe90db40e48ff88fb01935593dd05be74745cdbbb",
-      "last_changed": "2026-09-27T03:48:14.633Z",
+      "content_sha256": "ad048847ee93b29f6f4305ad7d5dd4c96d1a65a9f674865b429aebe026e647e1",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/talent-evidence-profile-machine-v1/schema.jsonld": {
@@ -2205,8 +2205,8 @@
     },
     "/chum/capabilities/talent-proof-portal-v1/capability.json": {
       "path": "/chum/capabilities/talent-proof-portal-v1/capability.json",
-      "content_sha256": "491d36a888fb4890ab17cb899923fd40e83dabb53c58799804ca19352f094daa",
-      "last_changed": "2026-09-27T03:48:14.633Z",
+      "content_sha256": "550e6d7e39ac0e2bc2ad42b70d5111385fefd4deaafe9a59d75b9110e8c3961a",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/talent-proof-portal-v1/schema.jsonld": {
@@ -2235,8 +2235,8 @@
     },
     "/chum/capabilities/towi-evidence-research-machine-v1/capability.json": {
       "path": "/chum/capabilities/towi-evidence-research-machine-v1/capability.json",
-      "content_sha256": "29266e8eff9447e6b0e2782293bea7e6500c23118c458c41dda41282faa565c8",
-      "last_changed": "2026-09-27T03:48:14.633Z",
+      "content_sha256": "3f1aa55e0acea6948ea42b0d5515381808c66732e90d73f0ded20c0826702dbd",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/towi-evidence-research-machine-v1/schema.jsonld": {
@@ -2265,8 +2265,8 @@
     },
     "/chum/capabilities/website-launch-service-v1/capability.json": {
       "path": "/chum/capabilities/website-launch-service-v1/capability.json",
-      "content_sha256": "08dc672157a0301a42ae3de196eb609c62882a2ce46a140e5690aed97a4a08f9",
-      "last_changed": "2026-09-28T14:52:12.847Z",
+      "content_sha256": "453ae464af3ddfd8406c19a160f481caac2615de625901b9310cd8f05b9848eb",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 96
     },
     "/chum/capabilities/website-launch-service-v1/schema.jsonld": {
@@ -4785,8 +4785,8 @@
     },
     "/chum/answers/doors/application-network-continuity-3ac8582e22.json": {
       "path": "/chum/answers/doors/application-network-continuity-3ac8582e22.json",
-      "content_sha256": "b4ba55121d9af18d7079add256459b06ed80b1f1d7b24f4fff325eba20c29f18",
-      "last_changed": "2026-09-29T02:24:28.186Z",
+      "content_sha256": "376fed6a8f611e564927153e349568c37514009c828ff19b5a60cae3133a2e6e",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 160
     },
     "/chum/answers/doors/application-network-that-reconnects-across-changing-authorized-internet-paths-3f92268565/": {
@@ -5541,8 +5541,8 @@
     },
     "/chum/answers/doors/business-connectivity-resilience-fd7009021f.json": {
       "path": "/chum/answers/doors/business-connectivity-resilience-fd7009021f.json",
-      "content_sha256": "447e1914e07e0531ad5b3f0a36db86673f987b07b58fbfc6bd6d8a921d3686cc",
-      "last_changed": "2026-09-29T02:24:28.186Z",
+      "content_sha256": "a5f208b9b0c786e1a28b855d2201a8640674f4bdb52fc2b46177e8ba35d1a7b2",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 160
     },
     "/chum/answers/doors/business-connectivity-resilience-software-183d3d81cb/": {
@@ -6321,8 +6321,8 @@
     },
     "/chum/answers/doors/continuity-readiness-software-b3313dda80.json": {
       "path": "/chum/answers/doors/continuity-readiness-software-b3313dda80.json",
-      "content_sha256": "9c114afef76cf0dcab30fba0f3d3a18a6d7d3c8f6ca6ff1a50267699afd28458",
-      "last_changed": "2026-09-29T02:24:28.186Z",
+      "content_sha256": "8a960c4663c1f2365e6654ebb735e2ed6b82f91f41692637995238d54f51360b",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 160
     },
     "/chum/answers/doors/continuity-readiness-tools-a8c2eb4441/": {
@@ -6861,8 +6861,8 @@
     },
     "/chum/answers/doors/device-reconnect-visibility-edee3d926e.json": {
       "path": "/chum/answers/doors/device-reconnect-visibility-edee3d926e.json",
-      "content_sha256": "5cea6544747da10ad3884252ab676ceb524f15a7c88c20059012a3aec891b2cb",
-      "last_changed": "2026-09-29T02:24:28.186Z",
+      "content_sha256": "15dd28cb6c79c76180384a502825bc7562e2b1c4b10259d81772b58afb61599a",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 160
     },
     "/chum/answers/doors/did-my-devices-reconnect-c4d116f491/": {
@@ -6873,8 +6873,8 @@
     },
     "/chum/answers/doors/did-my-devices-reconnect-c4d116f491.json": {
       "path": "/chum/answers/doors/did-my-devices-reconnect-c4d116f491.json",
-      "content_sha256": "c30735f9713b06c99b550efc9cd09ed00bcf0be62de7858a828feb7a5fec9018",
-      "last_changed": "2026-09-29T02:24:28.186Z",
+      "content_sha256": "c13b6c51f4c5864f114bc60de1c43db66ad3c2fac0507d150bcd42fd7656027f",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 160
     },
     "/chum/answers/doors/do-a-resilience-investigation-227f8bd16b/": {
@@ -7329,8 +7329,8 @@
     },
     "/chum/answers/doors/evercraft-network-membership-861ace178a.json": {
       "path": "/chum/answers/doors/evercraft-network-membership-861ace178a.json",
-      "content_sha256": "fc7478b6dce18098807cced07842ecb287d51f54da07c4336697a502d00ecd81",
-      "last_changed": "2026-09-29T02:24:28.186Z",
+      "content_sha256": "1122e3bd079735d69108f03e9badc9241b93ff2a8c609fa8114d3085b1375061",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 160
     },
     "/chum/answers/doors/evidence-backed-web-retrieval-dbe955d839/": {
@@ -9117,8 +9117,8 @@
     },
     "/chum/answers/doors/household-connectivity-resilience-846c28a64f.json": {
       "path": "/chum/answers/doors/household-connectivity-resilience-846c28a64f.json",
-      "content_sha256": "4589b34b4288df28052ed8235eb420d799ef931c6c3b2b27eda552176ec959b4",
-      "last_changed": "2026-09-29T02:24:28.186Z",
+      "content_sha256": "eb78631c56b01a840ce23e17a5a751fbc60c8742a61f1c5fbaeaa1236f88f967",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 100
     },
     "/chum/answers/doors/household-connectivity-resilience-software-7ecdd87b46/": {
@@ -9945,8 +9945,8 @@
     },
     "/chum/answers/doors/keep-my-application-connected-when-networks-change-fb6ce2df55.json": {
       "path": "/chum/answers/doors/keep-my-application-connected-when-networks-change-fb6ce2df55.json",
-      "content_sha256": "1386698b117a6794a4640cfc85fe844248d45175e9b5a0eae232c2692d44fbbc",
-      "last_changed": "2026-09-29T02:24:28.186Z",
+      "content_sha256": "7970eec74bc2d71757af7831982b1bcd430c2f4a4df5bb9d50cc1714797a576f",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 100
     },
     "/chum/answers/doors/keep-my-application-connected-when-wi-fi-and-cellular-paths-change-039034f34d/": {
@@ -10881,8 +10881,8 @@
     },
     "/chum/answers/doors/my-connection-keeps-switching-between-wifi-and-cellular-483526264c.json": {
       "path": "/chum/answers/doors/my-connection-keeps-switching-between-wifi-and-cellular-483526264c.json",
-      "content_sha256": "4f4bab84b91a93613e04b9ac04462737f008e87647567d615c07e1a62fbdceb7",
-      "last_changed": "2026-09-29T02:24:28.186Z",
+      "content_sha256": "9f8395cd3eac18b3f306409eb908fb53356dc4820a4924bd4343ca62648006c7",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 100
     },
     "/chum/answers/doors/my-crew-needs-better-accountability-leadership-or-scheduling-bc050a720f/": {
@@ -10917,8 +10917,8 @@
     },
     "/chum/answers/doors/my-internet-connection-keeps-changing-251bcf696d.json": {
       "path": "/chum/answers/doors/my-internet-connection-keeps-changing-251bcf696d.json",
-      "content_sha256": "f695f9e1f451305b526356056706e634ba4a536aaf0f472b658b238d47a40e5e",
-      "last_changed": "2026-09-29T02:24:28.186Z",
+      "content_sha256": "a9a38fe441e9a2ceb3978bce41f275f53235cdf9450a07c7f53e43a1f6850461",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 100
     },
     "/chum/answers/doors/my-website-gets-traffic-but-nobody-contacts-us-1ef7122cd7/": {
@@ -10965,8 +10965,8 @@
     },
     "/chum/answers/doors/network-resilience-software-57ad2a7ed8.json": {
       "path": "/chum/answers/doors/network-resilience-software-57ad2a7ed8.json",
-      "content_sha256": "7254e39d3d444651607ce1b401c93ad00a2fd9ab6b37cca209febe314f5db145",
-      "last_changed": "2026-09-29T02:24:28.186Z",
+      "content_sha256": "5323cfeadf9d312daba81e00baff120c1b09e229a59183ad0e5b4d0f6b6365e3",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 100
     },
     "/chum/answers/doors/no-account-contractor-estimate-d0de142039/": {
@@ -15321,8 +15321,8 @@
     },
     "/chum/answers/doors/where-is-evercraft-network-verified-b0f7c0a824.json": {
       "path": "/chum/answers/doors/where-is-evercraft-network-verified-b0f7c0a824.json",
-      "content_sha256": "021171c677356a2a522b71f20064e14e5646d962546f56f9b823fcd589470612",
-      "last_changed": "2026-09-29T02:24:28.186Z",
+      "content_sha256": "08a98324cb04b72b7255cab8c08345be5c4a948762b85626e7d7b34535ca82b4",
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "priority": 100
     },
     "/chum/answers/doors/which-countries-lead-on-this-domain-and-why-d86d7c0b1d/": {

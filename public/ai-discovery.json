@@ -21,6 +21,8 @@
     "agents": "/.well-known/evercraft-agent-directory.json",
     "interfaces": "/.well-known/evercraft-agent-interfaces.json",
     "machine_catalog": "/.well-known/evercraft-machine-catalog.json",
+    "direct_doors": "/.well-known/evercraft-direct-doors.json",
+    "direct_door_readiness": "/.well-known/evercraft-direct-door-readiness.json",
     "chum": "/.well-known/evercraft-chum.json",
     "chum_public_mirror": "/chum/index.json",
     "network": "/.well-known/evercraft-network.json",
@@ -40,9 +42,7 @@
     "commercial_intent_rss": "/chum/commercial/feed.xml",
     "commercial_intent_json": "/chum/commercial/feed.json",
     "opensearch": "/opensearch.xml",
-    "syndication_hub": "/chum/syndication/",
-    "direct_doors": "/.well-known/evercraft-direct-doors.json",
-    "direct_door_readiness": "/.well-known/evercraft-direct-door-readiness.json"
+    "syndication_hub": "/chum/syndication/"
   },
   "universal_front_door": {
     "read_only_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
@@ -56,6 +56,7 @@
     "checkout_ready": "An exact current checkout rail exists for that offer.",
     "paid": "Authoritative provider payment verification exists."
   },
+  "routing_mode": "direct_specialist_zero_hop_then_universal_fallback",
   "routing_rule": "Start from the user problem, route to a matching verified direct specialist with zero umbrella hops when one exists, otherwise use the universal fallback. Choose the smallest truthful public capability, preserve evidence/permission/geography/safety/payment boundaries, and never infer provider pickup from publication.",
   "private_surfaces": "not advertised",
   "freshness_broadcast": {
@@ -73,6 +74,5 @@
     "segmented_sitemap_index": "/chum/sitemaps/index.xml",
     "hub": "/chum/syndication/",
     "manifest": "/.well-known/evercraft-syndication.json"
-  },
-  "routing_mode": "direct_specialist_zero_hop_then_universal_fallback"
+  }
 }

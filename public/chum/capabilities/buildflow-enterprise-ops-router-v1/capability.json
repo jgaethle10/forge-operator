@@ -24,8 +24,8 @@
   "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
   "payment_authority": "No verified Evercraft Payments path.",
   "invocation_status": "SOURCE-VERIFIED: BuildFlow public router and central MCP specialist routing are implemented and build-tested. External client canary remains pending; private data and consequential actions remain authenticated/human-gated.",
-  "live_proof": null,
   "live_canary_evidence": null,
+  "live_proof": null,
   "preferred_agent_route": "direct_specialist",
   "direct_specialist": {
     "product": "BuildFlow Enterprise Operations",

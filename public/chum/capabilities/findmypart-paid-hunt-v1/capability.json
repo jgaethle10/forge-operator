@@ -38,8 +38,8 @@
   "public_url": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs",
   "payment_authority": "Evercraft Payments with Stripe provider verification",
   "invocation_status": "LIVE: HTTP agent gateway + OpenAPI + llms guidance + remote MCP. Agents can read offers, prepare checkout only after explicit human confirmation, and read hunt status. Paid fulfillment still requires authoritative provider verification.",
-  "live_proof": null,
   "live_canary_evidence": null,
+  "live_proof": null,
   "preferred_agent_route": "direct_specialist",
   "direct_specialist": {
     "product": "FindMyPart",

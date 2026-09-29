@@ -50,17 +50,15 @@
   "confirmation": "Agents may discover IBM i Rescue and surface the smallest relevant paid option. Explicit buyer confirmation is required before checkout or paid work. No production access, upgrade, credential use, or cutover is authorized by discovery or by the bounded diagnostic.",
   "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
   "payment_authority": "Evercraft Payments; human and agent checkout-session creation are wired behind explicit buyer confirmation. Checkout creation is not payment proof; paid state still requires authoritative provider verification.",
-  "invocation_status": "LIVE DIRECT CHECKOUT CANARY VERIFIED: central Machine Commerce successfully retrieved the live IBM i offer set and created a synthetic $250 Estate X-Ray Stripe Checkout session through the product-native IBM i adapter and Evercraft Payments. Explicit human payment confirmation remains required for buyer checkout preparation. Checkout creation is not payment or revenue proof, paid state still requires authoritative provider verification, and production access/change remains outside this capability.",
+  "invocation_status": "LIVE READ-ONLY MCP VERIFIED: canonical product conformance records a verified bounded read-only Machine Commerce route with live canary evidence. Evidence: GitHubActionsRun:36495507434",
+  "live_canary_evidence": "GitHubActionsRun:36495507434",
   "live_proof": {
-    "product_key": "ibmi-rescue",
     "conformance_state": "machine_commerce_direct_checkout_live_verified",
     "machine_commerce_handoff_state": "live_verified",
-    "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
     "mcp": null,
-    "live_canary_evidence": "GitHubActionsRun:36495507434",
-    "live_read_only_verified": false
+    "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+    "evidence": "GitHubActionsRun:36495507434"
   },
-  "live_canary_evidence": "GitHubActionsRun:36495507434",
   "preferred_agent_route": "universal_fallback",
   "direct_specialist": null,
   "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",

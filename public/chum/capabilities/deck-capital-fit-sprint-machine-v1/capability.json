@@ -33,8 +33,8 @@
   "public_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
   "payment_authority": "Evercraft Deck Engine / Polar, provider-verified",
   "invocation_status": "LIVE: direct agent HTTP gateway + OpenAPI + llms guidance + remote MCP at https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp. The stale vanity hostname is no longer used in the transaction path. Agents may prepare checkout only after explicit human confirmation; status independently verifies Polar payment and only a verified-paid machine case with the matching token may run bounded capital research.",
-  "live_proof": null,
   "live_canary_evidence": null,
+  "live_proof": null,
   "preferred_agent_route": "direct_specialist",
   "direct_specialist": {
     "product": "Deck Capital Fit",

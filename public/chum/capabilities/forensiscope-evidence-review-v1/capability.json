@@ -31,8 +31,8 @@
   "public_url": "https://evercraft-forensiscope.base44.app/video-too-large-for-ai",
   "payment_authority": "Evercraft Payments; central machine checkout remains verification-gated.",
   "invocation_status": "LIVE human-confirmed web handoff for AI media overflow and evidence review; secure machine intake and central checkout remain verification-gated.",
-  "live_proof": null,
   "live_canary_evidence": null,
+  "live_proof": null,
   "preferred_agent_route": "direct_specialist",
   "direct_specialist": {
     "product": "ForensiScope",

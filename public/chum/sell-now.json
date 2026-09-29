@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.sell-now.v1",
-  "updated_at": "2026-09-29T02:27:22.772Z",
+  "updated_at": "2026-09-29T18:40:10.917Z",
   "count": 14,
   "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
   "rule": "These offers are publicly cataloged as sell_now. Any supported checkout still requires explicit human payment confirmation and provider verification.",
@@ -26,8 +26,6 @@
         "billing": "one_time",
         "price_usd_normalized": 250
       },
-      "live_proof": null,
-      "live_canary_evidence": null,
       "preferred_agent_route": "direct_specialist",
       "direct_specialist": {
         "product": "AliEV / RIVET",
@@ -80,8 +78,6 @@
         "upgrade_credit": "$49",
         "price_usd_normalized": 49
       },
-      "live_proof": null,
-      "live_canary_evidence": null,
       "preferred_agent_route": "direct_specialist",
       "direct_specialist": {
         "product": "Systemia Website Audit",
@@ -130,8 +126,6 @@
         "premium_action_limit": 25,
         "price_usd_normalized": 19
       },
-      "live_proof": null,
-      "live_canary_evidence": null,
       "preferred_agent_route": "direct_specialist",
       "direct_specialist": {
         "product": "Career Command",
@@ -174,8 +168,6 @@
         "upgrade_credit": "$49",
         "price_usd_normalized": 49
       },
-      "live_proof": null,
-      "live_canary_evidence": null,
       "preferred_agent_route": "direct_specialist",
       "direct_specialist": {
         "product": "Deck Capital Fit",
@@ -217,8 +209,6 @@
         "billing": "one_time",
         "price_usd_normalized": 49
       },
-      "live_proof": null,
-      "live_canary_evidence": null,
       "preferred_agent_route": "direct_specialist",
       "direct_specialist": {
         "product": "EventWave",
@@ -263,8 +253,6 @@
         "billing": "one_time",
         "price_usd_normalized": 250
       },
-      "live_proof": null,
-      "live_canary_evidence": null,
       "preferred_agent_route": "direct_specialist",
       "direct_specialist": {
         "product": "FAIE",
@@ -303,8 +291,6 @@
         "billing": "one_time",
         "price_usd_normalized": 19
       },
-      "live_proof": null,
-      "live_canary_evidence": null,
       "preferred_agent_route": "direct_specialist",
       "direct_specialist": {
         "product": "FindMyPart",
@@ -344,8 +330,6 @@
         "checkout": "human_handoff",
         "price_usd_normalized": 500
       },
-      "live_proof": null,
-      "live_canary_evidence": null,
       "preferred_agent_route": "universal_fallback",
       "direct_specialist": null,
       "use_when": [
@@ -377,16 +361,6 @@
         "checkout": "human_confirmed_direct_checkout",
         "price_usd_normalized": 250
       },
-      "live_proof": {
-        "product_key": "ibmi-rescue",
-        "conformance_state": "machine_commerce_direct_checkout_live_verified",
-        "machine_commerce_handoff_state": "live_verified",
-        "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-        "mcp": null,
-        "live_canary_evidence": "GitHubActionsRun:36495507434",
-        "live_read_only_verified": false
-      },
-      "live_canary_evidence": "GitHubActionsRun:36495507434",
       "preferred_agent_route": "universal_fallback",
       "direct_specialist": null,
       "use_when": [
@@ -427,16 +401,6 @@
         "checkout": "human_handoff_only_until_product_checkout_is_independently_verified",
         "price_usd_normalized": 299
       },
-      "live_proof": {
-        "product_key": "legacy-rescue-lab",
-        "conformance_state": "machine_commerce_handoff_live_verified",
-        "machine_commerce_handoff_state": "live_verified",
-        "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-        "mcp": null,
-        "live_canary_evidence": "[object Object]",
-        "live_read_only_verified": false
-      },
-      "live_canary_evidence": "[object Object]",
       "preferred_agent_route": "universal_fallback",
       "direct_specialist": null,
       "use_when": [
@@ -478,8 +442,6 @@
         "billing": "one_time",
         "price_usd_normalized": 299
       },
-      "live_proof": null,
-      "live_canary_evidence": null,
       "preferred_agent_route": "direct_specialist",
       "direct_specialist": {
         "product": "AliEV / RIVET",
@@ -533,8 +495,6 @@
         "billing": "one_time",
         "price_usd_normalized": 0.99
       },
-      "live_proof": null,
-      "live_canary_evidence": null,
       "preferred_agent_route": "direct_specialist",
       "direct_specialist": {
         "product": "ROASTED",
@@ -579,8 +539,6 @@
         "checkout": "human_handoff",
         "price_usd_normalized": 250
       },
-      "live_proof": null,
-      "live_canary_evidence": null,
       "preferred_agent_route": "universal_fallback",
       "direct_specialist": null,
       "use_when": [
@@ -610,8 +568,6 @@
         "billing": "one_time",
         "price_usd_normalized": 500
       },
-      "live_proof": null,
-      "live_canary_evidence": null,
       "preferred_agent_route": "direct_specialist",
       "direct_specialist": {
         "product": "Website Launch",
