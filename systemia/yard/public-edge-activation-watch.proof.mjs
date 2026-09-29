@@ -6,6 +6,8 @@ import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { startNodeSeed } from '../compute/node-seed.mjs';
 import { PublicEdgeActivationWatcher } from './public-edge-activation-watch.mjs';
+import { EvercraftIdentity } from '../identity/identity.mjs';
+import { EvercraftPassport } from '../passport/passport.mjs';
 
 async function freeUdpPort(){
   const socket=dgram.createSocket('udp4');
@@ -41,6 +43,10 @@ const previous={
   key:process.env.EVERCRAFT_PUBLIC_EDGE_TLS_KEY_PATH,
   cert:process.env.EVERCRAFT_PUBLIC_EDGE_TLS_CERT_PATH,
   port:process.env.EVERCRAFT_PUBLIC_EDGE_PORT,
+  identitySecret:process.env.EVERCRAFT_IDENTITY_SECRET,
+  identityKeyId:process.env.EVERCRAFT_IDENTITY_KEY_ID,
+  identityState:process.env.EVERCRAFT_IDENTITY_STATE_DIR,
+  passportState:process.env.EVERCRAFT_PASSPORT_STATE_DIR,
 };
 process.env.EVERCRAFT_PUBLIC_EDGE_BASE_DOMAIN='edge.evercraft.test';
 process.env.EVERCRAFT_PUBLIC_EDGE_TLS_KEY_PATH=tlsKey;
@@ -57,6 +63,7 @@ const discovery={
 
 let seed=null;
 let heldSeed=null;
+let identityHeldSeed=null;
 let watcher=null;
 let restarted=null;
 
@@ -75,6 +82,11 @@ try{
     },
     specialist:{
       gateway_url:'https://example.invalid/machine-commerce',
+    },
+    home:{
+      enabled:true,
+      requested_hostname:'home-proof',
+      stable_hostname:true,
     },
     requiredPlacementLabels:['public-edge'],
     requestedHostname:'watched-specialists',
@@ -118,8 +130,65 @@ try{
   await heldSeed.close();
   heldSeed=null;
 
+  identityHeldSeed=await startNodeSeed({
+    root:path.join(root,'identity-held-node'),
+    nodeId:'watch-identity-held-node',
+    host:'127.0.0.1',
+    port:0,
+    advertiseHost:'127.0.0.1',
+    allocatorToken:token,
+    placementLabels:['public-edge','gateway'],
+    announce:true,
+    announceAddress:'127.0.0.1',
+    announcePort,
+    announceIntervalMs:100,
+  });
+  await new Promise(resolve=>setTimeout(resolve,180));
+
+  const identityHold=await watcher.tick();
+  assert.equal(identityHold.action,'hold');
+  assert.equal(identityHold.reason,'field_or_tls_admission_pending');
+  assert.equal(identityHold.discovered_count,1);
+  assert.equal(identityHold.eligible_count,0);
+  assert.equal(identityHold.candidate_reason_counts.service_capability_not_ready,1);
+  assert.equal(identityHold.founder_action_required,false);
+
+  await identityHeldSeed.close();
+  identityHeldSeed=null;
+
+  const nodeRoot=path.join(root,'node');
+  const identityState=path.join(nodeRoot,'identity');
+  const passportState=path.join(nodeRoot,'passport');
+  fs.mkdirSync(identityState,{recursive:true,mode:0o700});
+  fs.mkdirSync(passportState,{recursive:true,mode:0o700});
+  process.env.EVERCRAFT_IDENTITY_SECRET='activation-watch-home-secret-01234567890123456789';
+  process.env.EVERCRAFT_IDENTITY_KEY_ID='activation-proof-key';
+  process.env.EVERCRAFT_IDENTITY_STATE_DIR=identityState;
+  process.env.EVERCRAFT_PASSPORT_STATE_DIR=passportState;
+  const identity=new EvercraftIdentity({stateDir:identityState});
+  const boot=identity.bootstrapOwner({
+    subjectRef:'user:activation-watch-proof',
+    login:'activation-owner',
+    displayName:'Activation Owner',
+    password:'activation watcher proof password 2026',
+    authorityReceiptRef:'manual:activation-watch-proof',
+  });
+  const passport=new EvercraftPassport({stateDir:passportState});
+  passport.issueGrant({
+    idempotency_key:'activation-watch-home-owner',
+    subject_ref:'user:activation-watch-proof',
+    issuer_ref:'evercraft:identity-authority',
+    product:'evercraft-home',
+    scopes:['home.read','home.identity.sessions.manage'],
+    starts_at:new Date(Date.now()-1000).toISOString(),
+    ends_at:new Date(Date.now()+60*60*1000).toISOString(),
+    max_delegation_depth:1,
+    authority_state:'verified_identity_authority',
+    authority_receipt_ref:boot.receipt.receipt_hash,
+  });
+
   seed=await startNodeSeed({
-    root:path.join(root,'node'),
+    root:nodeRoot,
     nodeId:'watch-edge-node',
     host:'127.0.0.1',
     port:0,
@@ -138,6 +207,10 @@ try{
   assert.equal(activated.action,'activated');
   assert.equal(activated.route_scope,'loopback_proof');
   assert.equal(activated.route_verified,false);
+  assert.equal(activated.home_enabled,true);
+  assert.equal(activated.home_route_scope,'loopback_proof');
+  assert.equal(activated.home_route_verified,false);
+  assert.match(activated.home_origin,/^http:\/\/127\.0\.0\.1:/);
   assert.equal(activated.selected_node_id,'watch-edge-node');
   assert.equal(activated.identity_attestation_required,true);
   assert.equal(activated.identity_verified,true);
@@ -169,6 +242,11 @@ try{
     specialist:{
       gateway_url:'https://example.invalid/machine-commerce',
     },
+    home:{
+      enabled:true,
+      requested_hostname:'home-proof',
+      stable_hostname:true,
+    },
     requiredPlacementLabels:['public-edge'],
     requestedHostname:'watched-specialists',
     endpointTimeoutMs:500,
@@ -182,20 +260,27 @@ try{
   assert.equal(resumed.action,'healthy');
   assert.equal(resumed.route_scope,'loopback_proof');
   assert.equal(resumed.route_verified,false);
+  assert.equal(resumed.home_enabled,true);
+  assert.equal(resumed.home_route_scope,'loopback_proof');
+  assert.equal(resumed.home_route_verified,false);
+  assert.ok(resumed.home_origin);
   assert.ok(resumed.resume_receipt);
 
   const stopped=await restarted.close({stopManagedRuntime:true});
   assert.equal(stopped.action,'stopped');
   assert.ok(stopped.route_release_receipt);
+  assert.ok(stopped.home_route_release_receipt);
 
   console.log(JSON.stringify({
     ok:true,
     schema:'evercraft.public-edge.activation-watch-proof.v1',
     zero_capacity_hold:true,
     field_or_tls_admission_hold:true,
+    home_identity_readiness_hold:true,
     founder_action_required_on_hold:false,
     edge_ready_node_detected:true,
     automatic_activation:true,
+    evercraft_home_automatic_activation:true,
     selected_node:'watch-edge-node',
     placement_label_filtering:true,
     device_identity_attested:true,
@@ -209,6 +294,7 @@ try{
     proof_scope:'loopback_only',
     initial_hold_receipt:initial.receipt_hash,
     admission_hold_receipt:admissionHold.receipt_hash,
+    identity_hold_receipt:identityHold.receipt_hash,
     activation_receipt:activated.receipt_hash,
     resume_receipt:resumed.receipt_hash,
     stop_receipt:stopped.receipt_hash,
@@ -218,6 +304,7 @@ try{
   try{restarted?.stop();}catch{}
   try{await seed?.close();}catch{}
   try{await heldSeed?.close();}catch{}
+  try{await identityHeldSeed?.close();}catch{}
   if(previous.domain===undefined) delete process.env.EVERCRAFT_PUBLIC_EDGE_BASE_DOMAIN;
   else process.env.EVERCRAFT_PUBLIC_EDGE_BASE_DOMAIN=previous.domain;
   if(previous.key===undefined) delete process.env.EVERCRAFT_PUBLIC_EDGE_TLS_KEY_PATH;
@@ -226,5 +313,13 @@ try{
   else process.env.EVERCRAFT_PUBLIC_EDGE_TLS_CERT_PATH=previous.cert;
   if(previous.port===undefined) delete process.env.EVERCRAFT_PUBLIC_EDGE_PORT;
   else process.env.EVERCRAFT_PUBLIC_EDGE_PORT=previous.port;
+  if(previous.identitySecret===undefined) delete process.env.EVERCRAFT_IDENTITY_SECRET;
+  else process.env.EVERCRAFT_IDENTITY_SECRET=previous.identitySecret;
+  if(previous.identityKeyId===undefined) delete process.env.EVERCRAFT_IDENTITY_KEY_ID;
+  else process.env.EVERCRAFT_IDENTITY_KEY_ID=previous.identityKeyId;
+  if(previous.identityState===undefined) delete process.env.EVERCRAFT_IDENTITY_STATE_DIR;
+  else process.env.EVERCRAFT_IDENTITY_STATE_DIR=previous.identityState;
+  if(previous.passportState===undefined) delete process.env.EVERCRAFT_PASSPORT_STATE_DIR;
+  else process.env.EVERCRAFT_PASSPORT_STATE_DIR=previous.passportState;
   fs.rmSync(root,{recursive:true,force:true});
 }
