@@ -1,0 +1,58 @@
+name: EPS social Yard canary
+
+on:
+  push:
+    branches:
+      - systemia/eps-social-yard-canary-20260929
+    paths:
+      - 'systemia/compute/runtime-node.mjs'
+      - 'systemia/compute/local-organism.mjs'
+      - 'systemia/compute/eps-social-yard-canary.mjs'
+      - '.github/workflows/eps-social-yard-canary.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  canary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    env:
+      EVERCRAFT_CLIP_EPS_INGRESS_URL: https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/systemiaEPSPublishIngress
+      CLIP_SHARED_SECRET: ${{ secrets.SYSTEMIA_CLIP_SHARED_SECRET }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Prove Evercraft local organism
+        run: node systemia/compute/local-organism.proof.mjs
+
+      - name: Prepare private Clip binding
+        shell: bash
+        run: |
+          set -euo pipefail
+          SECRET_FILE="$RUNNER_TEMP/clip-shared-secret"
+          if [ -n "${CLIP_SHARED_SECRET:-}" ]; then
+            umask 077
+            printf '%s' "$CLIP_SHARED_SECRET" > "$SECRET_FILE"
+            echo "SYSTEMIA_CLIP_SHARED_SECRET_FILE=$SECRET_FILE" >> "$GITHUB_ENV"
+            echo "clip_secret_binding=configured" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "SYSTEMIA_CLIP_SHARED_SECRET_FILE=$SECRET_FILE" >> "$GITHUB_ENV"
+            echo "clip_secret_binding=missing" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Run EPS continuity through Systemia Core, Yard and Evercraft Compute
+        run: node systemia/compute/eps-social-yard-canary.mjs
+
+      - name: Upload cutover receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: eps-social-yard-canary
+          path: artifacts/base44-exit/eps-social-yard-canary.json
+          if-no-files-found: error
+          retention-days: 90
