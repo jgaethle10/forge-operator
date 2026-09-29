@@ -79,7 +79,7 @@ function usage() {
     '  npm run media:studio -- host-plate <prep.json> <receipt.json>',
     '  npm run media:studio -- model-plan <payload.json> <model-plan.json>',
     '  npm run media:studio -- finish-plan <payload.json> <finish-plan.json>',
-    '  npm run media:studio -- production-grade <beats.json> <report.json>',
+    '  npm run media:studio -- production-grade <beats.json> <report.json>',\n    '  npm run media:studio -- timeline-export <timeline.json> <output.mp4> [receipt.json]',
   ].join('\n'));
 }
 
@@ -129,6 +129,21 @@ function main() {
     const plan = buildVisualFinishPlan(payload.request, payload.endpoints);
     writeJson(output, plan);
     console.log(`Visual finish plan created: ${path.resolve(output)}`);
+    return;
+  }
+
+  if (command === 'timeline-export') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const project = readJson<FallenTimelineProject>(input);
+    const receipt = renderTimelineExport({ project, outputPath: output });
+    if (optionalPlan) writeJson(optionalPlan, receipt);
+    console.log(`Timeline export rendered: ${receipt.outputPath}`);
+    console.log(`SHA-256: ${receipt.sha256}`);
+    if (optionalPlan) console.log(`Timeline export receipt created: ${path.resolve(optionalPlan)}`);
     return;
   }
 
