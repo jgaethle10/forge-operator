@@ -4,12 +4,16 @@ on:
   pull_request:
     paths:
       - "systemia/evercraft-home/**"
+      - "systemia/compute/runtime-node.mjs"
+      - "systemia/compute/evercraft-home-runtime.proof.mjs"
       - ".github/workflows/evercraft-home.yml"
   push:
     branches:
       - main
     paths:
       - "systemia/evercraft-home/**"
+      - "systemia/compute/runtime-node.mjs"
+      - "systemia/compute/evercraft-home-runtime.proof.mjs"
       - ".github/workflows/evercraft-home.yml"
   workflow_dispatch:
 
@@ -32,6 +36,9 @@ jobs:
       - name: Prove sovereign shell
         working-directory: systemia/evercraft-home
         run: npm run check
+
+      - name: Prove Evercraft Compute resident lifecycle
+        run: node systemia/compute/evercraft-home-runtime.proof.mjs
 
       - name: Smoke boot without external providers
         working-directory: systemia/evercraft-home
