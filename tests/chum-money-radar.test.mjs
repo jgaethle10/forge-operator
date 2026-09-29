@@ -450,3 +450,48 @@ test('Money Radar flags when qualified buyer velocity disappears across adjacent
   assert.equal(receipt.velocity_comparison.unique_buyer_sessions.state, 'down');
   assert.ok(receipt.operator_alerts.some((alert) => alert.code === 'qualified_buyer_activity_disappeared'));
 });
+
+
+test('Money Radar preserves one qualified buyer journey across offer continue and checkout using only a privacy-safe session bucket', async () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'money-radar-'));
+  const bucket = 'ps_0123456789abcdef0123456789abcdef';
+  const { receipt } = await buildMoneyRadar({
+    root,
+    generatedAt: '2026-09-28T12:00:00.000Z',
+    sourceUrl: '',
+    publicSourceUrl: '',
+    publicSourceEvents: [
+      {
+        ...publicEvent('offer_view', 'bucket-view'),
+        session_key: '',
+        session_bucket: bucket,
+        occurred_at: '2026-09-28T11:00:00.000Z',
+      },
+      {
+        ...publicEvent('continue_clicked', 'bucket-continue'),
+        session_key: '',
+        session_bucket: bucket,
+        occurred_at: '2026-09-28T11:01:00.000Z',
+      },
+      {
+        ...publicEvent('checkout_started', 'bucket-checkout'),
+        session_key: '',
+        session_bucket: bucket,
+        occurred_at: '2026-09-28T11:03:00.000Z',
+      },
+    ],
+  });
+
+  const row = receipt.products.find((product) => product.public_id === 'findmypart-paid-hunt-v1');
+  assert.equal(receipt.totals.unique_buyer_sessions, 1);
+  assert.equal(row.unique_buyer_sessions, 1);
+  assert.equal(row.unique_offer_view_sessions, 1);
+  assert.equal(row.unique_continue_sessions, 1);
+  assert.equal(row.unique_checkout_sessions, 1);
+  assert.equal(receipt.journey_attribution.sessions_with_lineage, 1);
+  assert.equal(receipt.journey_attribution.source_paths[0].reached_checkout, 1);
+  assert.equal(receipt.stage_latency.offer_to_continue.p50_seconds, 60);
+  assert.equal(receipt.stage_latency.continue_to_checkout.p50_seconds, 120);
+  assert.equal(receipt.stage_latency.offer_to_checkout.p50_seconds, 180);
+  assert.equal(receipt.totals.unique_verified_payments, 0);
+});
