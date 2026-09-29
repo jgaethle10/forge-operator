@@ -1,11 +1,17 @@
 name: Saban discovery conformance policy
 
 on:
+  workflow_dispatch:
   pull_request:
     paths:
       - 'systemia/saban/discovery-swarm.mjs'
       - 'systemia/saban/discovery-policy.json'
       - 'tests/saban-discovery-conformance-policy.test.mjs'
+      - 'public/.well-known/evercraft-products.json'
+      - 'conformance/products.json'
+      - 'registry/catalog.json'
+      - 'registry/public-products.json'
+      - 'registry/public-products.md'
       - '.github/workflows/saban-discovery-conformance-policy.yml'
   push:
     branches:
@@ -14,16 +20,52 @@ on:
       - 'systemia/saban/discovery-swarm.mjs'
       - 'systemia/saban/discovery-policy.json'
       - 'tests/saban-discovery-conformance-policy.test.mjs'
+      - 'public/.well-known/evercraft-products.json'
+      - 'conformance/products.json'
+      - 'registry/catalog.json'
       - '.github/workflows/saban-discovery-conformance-policy.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: saban-discovery-conformance-${{ github.event_name == 'pull_request' && github.event.pull_request.number || 'main' }}
+  cancel-in-progress: true
 
 jobs:
   prove:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+
       - name: Prove discovery-only versus callable conformance policy
         run: node tests/saban-discovery-conformance-policy.test.mjs
+
+      - name: Reconcile Saban public discovery graph
+        if: github.event_name != 'pull_request'
+        run: node systemia/saban/discovery-swarm.mjs --emit
+
+      - name: Verify reconciled discovery graph
+        run: node systemia/saban/discovery-swarm.mjs --strict
+
+      - name: Commit generated discovery truth
+        if: github.event_name != 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add registry/public-products.json registry/public-products.md registry/*/README.md registry/*/llms.txt
+          if git diff --cached --quiet; then
+            echo "Saban discovery graph already reconciled."
+            exit 0
+          fi
+          git config user.name "Saban Discovery Reconciler"
+          git config user.email "saban-discovery@users.noreply.github.com"
+          git commit -m "Reconcile Saban public discovery graph"
+          git push origin HEAD:main
