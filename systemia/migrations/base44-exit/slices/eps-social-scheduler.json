@@ -14,7 +14,10 @@
     "scheduler": "systemia/core/resident-supervisor.mjs",
     "runtime": "yard_evercraft_compute",
     "workflow": "systemia/organism/eps-social-continuity.workflow.json",
-    "publisher": "evercraft_clip"
+    "publisher": "evercraft_clip",
+    "bootstrap_scheduler": ".github/workflows/eps-social-yard-canary.yml",
+    "bootstrap_scheduler_role": "transition_only_authorized_compute_bootstrap",
+    "workload_identity": "github_oidc_bound_to_exact_repository_workflow_ref_and_ref"
   },
   "observed": {
     "replacement_source_present": true,
@@ -24,8 +27,21 @@
     "provider_visible_verification_required": true,
     "one_execution_per_bucket_enforced": true,
     "secret_not_persisted_in_receipts": true,
-    "live_yard_cycle_verified": false,
-    "legacy_base44_schedule_retired": false
+    "live_yard_cycle_verified": true,
+    "legacy_base44_schedule_retired": false,
+    "live_yard_cycle_verified_at": "2026-09-29T17:11:13.283Z",
+    "live_result": "no_op",
+    "live_reason": "eps_180_minute_cooldown",
+    "live_http_status": 200,
+    "live_runtime": "Evercraft Compute",
+    "live_deployment_surface": "Yard Operator",
+    "live_control_plane": "Systemia Core",
+    "live_capacity_protocol": "evercraft.capacity.v1",
+    "live_substrate_class": "authorized_ephemeral_compute",
+    "persistent_runtime_proven": false,
+    "named_cloud_required": false,
+    "workload_identity_verified": "github_oidc",
+    "source_release_ref": "c5fc58950cf12d57a28db74e1baad4e67b000916"
   },
   "acceptance": {
     "required_result": "no_op_or_published_verified",
@@ -35,10 +51,10 @@
     "legacy_schedule_retirement_requires_live_replacement": true
   },
   "blockers": [
-    "Yard runtime must receive the Clip EPS ingress URL and private shared-secret file binding.",
-    "A live Systemia Core cycle must return either an explicit no-op or a provider-verified publication receipt.",
-    "The replacement must survive the observation window before the legacy Base44 social schedule is retired."
+    "Merge the verified recurrent bootstrap onto main so the 30-minute transition schedule exists on the default branch.",
+    "Freeze the legacy Base44 social schedule with a rollback checkpoint.",
+    "Observe the replacement after cutover and confirm the legacy Base44 wake does not recur."
   ],
-  "next_action": "deploy the optional EPS social cycle on admitted Yard capacity with private bindings, observe a valid live result, then freeze the Base44 30-minute schedule",
+  "next_action": "merge the verified recurrent bootstrap, freeze the Base44 30-minute schedule, then verify one replacement recurrence and one absent legacy wake window",
   "destructive_cutover_allowed": false
 }
