@@ -1,7 +1,7 @@
 {
   "schema": "evercraft.capability-mesh.runtime-policies.v1",
   "generated_from": "systemia/capability-mesh/contracts.json",
-  "policy_count": 1,
+  "policy_count": 2,
   "policies": [
     {
       "schema": "evercraft.capability-mesh.runtime-policy.v1",
@@ -85,6 +85,7 @@
           "ev_infrastructure_opportunity_intelligence"
         ]
       },
+      "boundaries": null,
       "route": {
         "specialist_slug": "aliev",
         "state": "registry_published_direct_mcp_existing",
@@ -96,6 +97,112 @@
           "use_universal_router_first": false,
           "registry_name": "io.github.jgaethle10/aliev",
           "remote_mcp": "https://aliev.base44.app/functions/alievMcp",
+          "fallback_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+          "fallback_remote_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        },
+        "blocking_gates": [],
+        "next_release_action": "measure_provider_pickup_separately"
+      },
+      "runtime_verified": false,
+      "grants_authority": false,
+      "truth_boundary": "This runtime policy compiles declared product semantics. It does not grant Passport authority, entitlement, payment, live runtime readiness, or provider pickup."
+    },
+    {
+      "schema": "evercraft.capability-mesh.runtime-policy.v1",
+      "product_key": "forensiscope",
+      "product_name": "ForensiScope",
+      "product_class": "ai_media_overflow_and_analysis",
+      "contract_version": "1.0.0",
+      "owner": "systemia",
+      "authority": {
+        "state": "declared",
+        "passport_product": "forensiscope",
+        "scopes": [
+          "classify_media_route"
+        ],
+        "evidence_refs": [
+          "registry/forensiscope/server.json",
+          "registry/forensiscope/overflow-contract.json"
+        ]
+      },
+      "context": {
+        "state": "declared",
+        "namespace": "forensiscope",
+        "read_scope": "context.read.forensiscope",
+        "write_scope": "context.write.forensiscope",
+        "evidence_refs": [
+          "systemia/forensiscope/evidence-graph.mjs",
+          "systemia/context-fabric/fabric.mjs"
+        ]
+      },
+      "meter": {
+        "state": "not_required",
+        "reason": "The currently contracted machine action is media-route classification only. Published duration pricing and paid review do not establish a machine usage-meter contract, and paid state remains authoritative elsewhere."
+      },
+      "intake": {
+        "state": "not_required",
+        "reason": "The currently contracted machine action does not ingest media. Public secure machine media intake remains verification-gated; actual media handoff is human-confirmed and the user submits authorized media through the product boundary."
+      },
+      "execution": {
+        "state": "declared",
+        "gate_required": true,
+        "scopes": [
+          "classify_media_route"
+        ],
+        "actions": [
+          {
+            "scope": "classify_media_route"
+          }
+        ],
+        "evidence_refs": [
+          "registry/forensiscope/server.json",
+          "public/forensiscope/developers/status.json",
+          "registry/forensiscope/overflow-contract.json"
+        ]
+      },
+      "relationship": {
+        "state": "not_required",
+        "reason": "Media-route classification does not itself perform outbound relationship contact."
+      },
+      "receipt_reconciliation": {
+        "state": "declared",
+        "namespace": "forensiscope",
+        "evidence_refs": [
+          "systemia/context-fabric/fabric.mjs",
+          "systemia/forensiscope/evidence-graph.mjs"
+        ]
+      },
+      "rollback": {
+        "state": "declared",
+        "policy": "Disable the ForensiScope product contract or specialist route without enabling machine media intake, weakening human-confirmed handoff, or changing Passport, Context, or Execution Gate defaults."
+      },
+      "compatibility": {
+        "intended_product_classes": [
+          "ai_media_overflow_and_analysis"
+        ]
+      },
+      "boundaries": {
+        "contracted_machine_surface": [
+          "classify_media_route"
+        ],
+        "secure_machine_media_intake": "verification_gated",
+        "human_confirmed_media_handoff": true,
+        "automatic_media_transfer_allowed": false,
+        "user_must_have_right_or_lawful_authority_to_submit": true,
+        "published_duration_pricing_is_not_technical_ingestion_guarantee": true,
+        "runtime_analysis_action_contracted": false
+      },
+      "route": {
+        "specialist_slug": "forensiscope",
+        "state": "registry_published_direct_mcp_existing",
+        "direct_callable": true,
+        "registry_published": true,
+        "preferred_route": {
+          "mode": "direct_specialist",
+          "hops_before_specialist": 0,
+          "use_universal_router_first": false,
+          "registry_name": "io.github.jgaethle10/forensiscope",
+          "remote_mcp": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp",
           "fallback_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
           "fallback_remote_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
         },
