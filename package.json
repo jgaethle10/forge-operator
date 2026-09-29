@@ -40,7 +40,7 @@
     "test:chum-router": "node systemia/chum/discovery-router.test.mjs",
     "proof:organism": "node systemia/organism/proof.mjs",
     "proof:goal-runtime": "node systemia/organism/goal-runtime.proof.mjs",
-    "proof:systemia": "npm run proof:organism && npm run proof:goal-runtime && npm run proof:goal-store && npm run proof:legacy-rescue-watch && npm run proof:portfolio-sentinel && npm run proof:ibmi-rescue-fulfillment && npm run proof:universal-fulfillment && npm run proof:portfolio-fulfillment-router",
+    "proof:systemia": "npm run proof:organism && npm run proof:goal-runtime && npm run proof:goal-store && npm run proof:legacy-rescue-watch && npm run proof:portfolio-sentinel && npm run proof:ibmi-rescue-fulfillment && npm run proof:universal-fulfillment && npm run proof:portfolio-fulfillment-router && npm run proof:portfolio-fulfillment-e2e && npm run proof:portfolio-fulfillment-all",
     "goal": "node systemia/organism/goal-cli.mjs",
     "proof:goal-store": "node systemia/organism/goal-store.proof.mjs",
     "chum:index": "node systemia/chum/build-pain-index.mjs",
@@ -206,7 +206,9 @@
     "saban:fulfillment-readiness": "node systemia/saban/multiplier.mjs --software portfolio-fulfillment-readiness --auto --execute --reconcile",
     "proof:saban-fulfillment": "npm run saban:fulfillment-readiness",
     "fulfillment:route": "node systemia/organism/portfolio-fulfillment-router.mjs",
-    "proof:portfolio-fulfillment-router": "node systemia/organism/portfolio-fulfillment-router.proof.mjs"
+    "proof:portfolio-fulfillment-router": "node systemia/organism/portfolio-fulfillment-router.proof.mjs",
+    "proof:portfolio-fulfillment-e2e": "node systemia/organism/portfolio-fulfillment-e2e.proof.mjs",
+    "proof:portfolio-fulfillment-all": "node systemia/organism/portfolio-fulfillment-all-products.proof.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
