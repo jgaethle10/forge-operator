@@ -219,7 +219,7 @@ export function buildTimelineExportPlan(input:{
     audioOut='aout';
   }
 
-  const filterComplex=filters.join('');
+  const filterComplex=filters.join('').replace(/;$/,'');
   args.push('-filter_complex',filterComplex,'-map',`[${currentVideo}]`);
   if(audioOut) args.push('-map',`[${audioOut}]`);
   args.push(
