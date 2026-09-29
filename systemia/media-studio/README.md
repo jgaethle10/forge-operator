@@ -276,6 +276,16 @@ npm run media:studio -- finish-plan ./tmp/finish-payload.json ./tmp/finish-plan.
 ```
 
 
+### Camera adapters
+
+The first provider adapters are intentionally subordinate to Fallen:
+
+- **ElevenLabs / Veo 3.1**: asynchronous video generation through the current ElevenLabs Image & Video API, with start/end-frame provider assets, local artifact capture, SHA-256 receipts and explicit commercial-rights state.
+- **Runway / Gen-4.5**: text-to-video or start-frame image-to-video through the current Runway task API, with local artifact capture and provider task receipts.
+
+Neither adapter becomes executable because a credential happens to exist. Both require `verified=true` **and** an explicit paid-generation authorization flag. Provider failures stay candidate failures; they never become accepted assets.
+
+Provider-generated media enters Fallen as `generated_visualization`, never as observed evidence. It must become a Shot Tournament candidate, win selection, and then pass the timeline/production-grade contracts before it can replace a clip.
 ### Non-destructive timeline
 
 Fallen now keeps the edit alive instead of flattening every generation into a final render. The timeline core stores reusable assets on named video/overlay/voice/music/SFX/caption tracks and uses optimistic versioning for safe edits.
