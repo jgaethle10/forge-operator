@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-29T19:10:55.004Z",
+  "updated_at": "2026-09-29T19:14:55.485Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,232 +11,29 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/sitemaps/answers.xml",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 108
-    },
-    {
-      "path": "/chum/answers/doors/assemble-several-accepted-partners-into-one-execution-team-45ca2ebb62.json",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/break-this-project-into-work-packages-for-different-partners-15d51389d3.json",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/build-a-music-team-with-a-producer-studio-engineer-and-videographer-5ab3cd35b0.json",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/coordinate-a-designer-printer-fulfillment-partner-and-retailer-on-one-project-baa4437ef6.json",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/figure-out-which-partners-i-need-for-this-opportunity-9c0aa314ff.json",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/figure-out-which-partners-i-need-for-this-opportunity-9c0aa314ff/",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/find-a-production-partner-for-my-artwork-a53975f087.json",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/find-collaborators-near-me-who-can-help-finish-this-project-e0a9623be6.json",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/find-licensing-production-distribution-or-collaboration-opportunities-for-work-i-a-5711d10a51.json",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/help-me-turn-this-unfinished-idea-or-asset-into-an-executable-team-ddff6c3be7.json",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/i-have-designs-and-need-a-printer-or-manufacturing-partner-5578781874.json",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/i-have-equipment-or-unused-capacity-and-want-complementary-work-0f41f1907a.json",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/i-have-intellectual-property-but-do-not-want-to-give-it-away-while-looking-for-par-d66ff15804.json",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/i-have-songs-or-demos-and-need-a-producer-or-recording-studio-2c59fff706.json",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/i-need-a-subcontractor-or-specialist-so-i-can-execute-this-job-90f2030945.json",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/suggest-the-team-for-this-project-6b6332459e.json",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/suggest-the-team-for-this-project-6b6332459e/",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/turn-this-project-into-work-packages-and-find-matching-partners-dec734ac03.json",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/turn-this-project-into-work-packages-and-find-matching-partners-dec734ac03/",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/products/opportunity-fabric/",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/opportunity-fabric/ai-conformance.json",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/opportunity-fabric/ai-discovery.json",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/opportunity-fabric/llms.txt",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/sell-now.json",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 92
-    },
-    {
-      "path": "/.well-known/evercraft-pain-index.json",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 90
-    },
-    {
-      "path": "/chum/revenue.json",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 90
-    },
-    {
-      "path": "/.well-known/evercraft-products.json",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 88
-    },
-    {
-      "path": "/llms-full.txt",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 86
-    },
-    {
-      "path": "/.well-known/evercraft-agent-commerce.json",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-agent-directory.json",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-machine-catalog.json",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-syndication.json",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 84
-    },
-    {
-      "path": "/chum/agent-commerce.json",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/index.json",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/index.txt",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/capabilities.json",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/hot/",
-      "last_changed": "2026-09-29T19:10:55.004Z",
+      "last_changed": "2026-09-29T19:14:55.485Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-29T19:10:55.004Z",
+      "last_changed": "2026-09-29T19:14:55.485Z",
       "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.json",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.txt",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/syndication/index.json",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 80
-    },
-    {
-      "path": "/feed.json",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.xml",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 60
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/hot/",
+      "url": "/chum/hot/",
+      "last_changed": "2026-09-29T19:14:55.485Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-29T19:14:55.485Z",
+      "priority": 80
+    },
     {
       "path": "/chum/sitemaps/answers.xml",
       "url": "/chum/sitemaps/answers.xml",
@@ -462,18 +259,6 @@
     {
       "path": "/chum/capabilities.json",
       "url": "/chum/capabilities.json",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/",
-      "url": "/chum/hot/",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
       "last_changed": "2026-09-29T19:10:55.004Z",
       "priority": 80
     },
