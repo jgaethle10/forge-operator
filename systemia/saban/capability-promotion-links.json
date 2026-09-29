@@ -4,24 +4,46 @@
   "rule": "These links associate an already-public product record with an already-public Machine Commerce offer. A link is evidence for review only and never grants new authority, payment rights, private access, or MCP publication.",
   "links": [
     {
+      "product_key": "callproof-vault",
+      "machine_public_id": "callproof-complaint-packet-machine-v1",
+      "evidence": "Machine Commerce catalog exposes a human-auth handoff only. The CallProof app contains authenticated entitlement, checkout, and packet-consumption primitives, but no public agent execution contract is yet declared.",
+      "required_next_primitive": "Define and externally prove an OAuth/user-authenticated MCP or bounded agent handoff that cannot read another user's records, file complaints, or create checkout without explicit human action."
+    },
+    {
       "product_key": "evermaps",
       "machine_public_id": "evermaps-evidence-projection-machine-v1",
-      "evidence": "Base44 machineDiscovery publishes this public_id and points to the central Evercraft Machine Commerce MCP; current machine_state remains discovery_only."
+      "evidence": "EverMaps publishes machine discovery and has internal/admin snapshot machinery, but public execution remains discovery-only.",
+      "required_next_primitive": "Expose a public-safe read-only projection query returning map-ready geometry, evidence state, freshness, source refs, and coverage cautions without writing snapshots or exposing private records."
     },
     {
       "product_key": "globalstat",
       "machine_public_id": "globalstat-country-intelligence-machine-v1",
-      "evidence": "Base44 machineDiscovery publishes this public_id and points to the central Evercraft Machine Commerce MCP; current machine_state remains discovery_only."
+      "evidence": "GlobalStat publishes machine discovery for sourced country/domain intelligence, but no public execution endpoint is currently declared.",
+      "required_next_primitive": "Expose a read-only sourced comparison query with freshness, evidence state, reconciliation warnings, and no opaque winner/ranking inference."
+    },
+    {
+      "product_key": "little-red-book-export-qa",
+      "machine_public_id": "littlered-kdp-export-qa-machine-v1",
+      "evidence": "Little Red publishes a machine-discovery contract for bounded book-export preflight, but the current public function is metadata/docs only.",
+      "required_next_primitive": "Expose a deterministic read-only export-preflight function for caller-supplied page count and geometry, with missing inputs reported as unknown and no publication/upload authority."
+    },
+    {
+      "product_key": "systemia-atlas-freight",
+      "machine_public_id": "freight-load-exception-intelligence-machine-v1",
+      "evidence": "Systemia Atlas publishes a machine-discovery contract for freight exception intelligence, but no public execution endpoint is currently declared.",
+      "required_next_primitive": "Expose a tenant-authorized read-only exception summary endpoint with provenance and explicit unknowns; no dispatch, carrier contact, claim filing, invoice, or payment side effects."
     },
     {
       "product_key": "talent-atlas",
       "machine_public_id": "talent-evidence-profile-machine-v1",
-      "evidence": "Base44 machineDiscovery publishes this public_id and points to the central Evercraft Machine Commerce MCP; current machine_state remains discovery_only."
+      "evidence": "Talent Atlas publishes machine discovery for evidence-backed profiles, but public execution remains discovery-only.",
+      "required_next_primitive": "Expose a consent-scoped read-only evidence profile endpoint that uses supplied/authorized evidence only, does not infer protected traits, and cannot contact or apply on anyone's behalf."
     },
     {
       "product_key": "towi-research",
       "machine_public_id": "towi-evidence-research-machine-v1",
-      "evidence": "Base44 machineDiscovery publishes this public_id and points to the central Evercraft Machine Commerce MCP; current machine_state remains discovery_only."
+      "evidence": "TOWI publishes machine discovery. Existing report generation is administrator-gated and the synthetic dry-run is QA-only, so neither is a public research endpoint.",
+      "required_next_primitive": "Expose a bounded read-only research/evidence preview or mission-scope endpoint with provenance and uncertainty; keep consequential conclusions, outreach, publishing, and paid fulfillment separately gated."
     }
   ]
 }
