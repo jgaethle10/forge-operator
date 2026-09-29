@@ -166,10 +166,10 @@
       "provider_behavior_state": "not_run",
       "mcp_registry": {
         "name": "io.github.jgaethle10/evercraft-clip",
-        "version": "0.1.0",
+        "version": "0.2.1",
         "publication_state": "published_receipt_backed",
-        "receipt": "conformance/registry-publications/2026-09-26-evercraft-clip.json",
-        "published_at_utc": "2026-09-26T02:27:27Z"
+        "receipt": "conformance/registry-publications/2026-09-28-evercraft-clip-v0.2.1.json",
+        "published_at_utc": "2026-09-28T22:57:20Z"
       },
       "origin_llms_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=llms",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-clip/ai-conformance.json",
@@ -189,7 +189,7 @@
       },
       "public_web_discovery_state": "registry_published_general_web_pickup_not_yet_verified",
       "machine_commerce_public_id": "evercraft-clip-social-video-v1",
-      "machine_commerce_handoff_state": "verification_required_checkout_not_verified",
+      "machine_commerce_handoff_state": "checkout_control_plane_live_payment_authority_unconfigured",
       "machine_commerce_tool": "get_offer",
       "runtime_generation": "clip_production_engine_v2",
       "runtime_gateway_schema": "evercraft.clip.agent.capabilities.v2",
@@ -199,9 +199,33 @@
         "source_grounded_caption_cues",
         "platform_native_facebook_linkedin_instagram_copy",
         "style_aware_vertical_rendering",
-        "forensiscope_overflow_recommendation_without_automatic_media_transfer"
+        "forensiscope_overflow_recommendation_without_automatic_media_transfer",
+        "bounded_performance_learning_weak_prior_with_operator_disclosure"
       ],
-      "next_registry_manifest_version": "0.2.0_staged_pending_publication_receipt"
+      "checkout_runtime": {
+        "observed_on": "2026-09-28",
+        "control_plane": "implemented_authenticated_human_flow",
+        "checkout_configured": false,
+        "price_cents": 499,
+        "currency": "usd",
+        "provider_verification_required": true,
+        "agent_checkout_authority": false,
+        "sell_now": false,
+        "receipt": "conformance/runtime-observations/2026-09-28-evercraft-clip-customer-studio.json"
+      },
+      "performance_learning": {
+        "state": "build_and_policy_contract_verified",
+        "minimum_window_posts": 4,
+        "confidence": [
+          "medium",
+          "high"
+        ],
+        "max_age_days": 21,
+        "role": "weak observational tiebreaker only",
+        "causal_claims": false,
+        "rule": "truth, context, safety and diversity outrank engagement",
+        "receipt": "conformance/runtime-observations/2026-09-28-evercraft-clip-customer-studio.json"
+      }
     },
     {
       "product_key": "evercraft-containment",
