@@ -26,6 +26,8 @@ A commit-addressed image is also published for every main-branch release. Yard O
 
 - `FORGE_CHECKOUT_URL` - HTTPS checkout or payment URL approved by the human operator
 - `CHUM_PUBLIC_ORIGIN` - verified public Forge origin. Set this only after Yard Operator has produced a DeploymentReceipt with the same independently verified live route.
+- `EVERCRAFT_RELEASE_REF` - immutable Git release SHA supplied by the deployment fabric.
+- `EVERCRAFT_DEPLOYMENT_RECEIPT_REF` - `sha256:` DeploymentReceipt reference bound to the running Forge instance.
 - `CHUM_ATTRIBUTION_SECRET` - signing secret for privacy-minimized CHUM referral tokens.
 - `CHUM_ATTRIBUTION_SINK_URL` - HTTPS durable attribution receipt sink.
 - `CHUM_ATTRIBUTION_SINK_TOKEN` - optional bearer token used by Forge when writing attribution receipts.
@@ -38,6 +40,8 @@ A commit-addressed image is also published for every main-branch release. Yard O
 If `FORGE_CHECKOUT_URL` is absent, Forge does not display or advertise an active checkout. Pricing remains human-gated.
 
 If `CHUM_PUBLIC_ORIGIN` is absent or invalid, generated public CHUM sales surfaces MUST use the already-live Machine Commerce review door instead of a relative `/api/chum/go/...` URL. A source build or GHCR image is not evidence of a public Forge origin.
+
+The repository variable `EVERCRAFT_FORGE_PUBLIC_ORIGIN` is consumed only by the external Forge-origin canary. It is not itself proof of deployment. The canary requires HTTPS, a release SHA that is contained in main, a bound DeploymentReceipt reference, the Forge health contract, the A2A Agent Card, an A2A 1.0 HTTP+JSON message round trip, `llms.txt`, and the sitemap before it can promote `public/.well-known/evercraft-runtime-origin.json`. Crawl Pressure accepts neither a bare environment origin nor a receipt that lacks those deployment bindings.
 
 If the attribution secret/sink is absent, public discovery may continue, but signed referral persistence and verified-revenue attribution must remain explicitly unproven.
 
