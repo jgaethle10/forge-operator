@@ -1,0 +1,124 @@
+{
+  "schema": "evercraft.chum.directory-submission-packets.v1",
+  "generated_at": "2026-09-28T18:42:00Z",
+  "repository_url": "https://github.com/jgaethle10/forge-operator",
+  "universal": {
+    "slug": "evercraft-machine-commerce",
+    "name": "Evercraft Machine Commerce",
+    "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+    "short_description": "Discover Evercraft capabilities, route specialist needs, and prepare human-confirmed commerce.",
+    "endpoint": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+    "transport": "streamable-http",
+    "category": "Business",
+    "remote": true,
+    "authority_boundary": "Discovery and preparation do not prove recommendation, checkout, payment, entitlement or fulfillment."
+  },
+  "specialists": [
+    {
+      "slug": "forensiscope",
+      "name": "ForensiScope",
+      "registry_name": "io.github.jgaethle10/forensiscope",
+      "short_description": "Analyze long or oversized video and audio",
+      "endpoint": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp",
+      "website_url": "https://evercraft-forensiscope.base44.app/",
+      "state": "registry_published_direct_mcp_existing",
+      "remote": true,
+      "transport": "streamable-http",
+      "truth_boundary": "Use the live ForensiScope MCP as authority for current capabilities, pricing, ingest boundaries, rights requirements, and handoff state. Never claim media was uploaded, analyzed, paid for, or completed unless live tool state proves it."
+    },
+    {
+      "slug": "aliev",
+      "name": "AliEV / RIVET",
+      "registry_name": "io.github.jgaethle10/aliev",
+      "short_description": "Evaluate EV charging opportunity by property",
+      "endpoint": "https://aliev.base44.app/functions/alievMcp",
+      "website_url": "https://aliev.base44.app/",
+      "state": "registry_published_direct_mcp_existing",
+      "remote": true,
+      "transport": "streamable-http",
+      "truth_boundary": "Keep observed, public, licensed, inferred, and modeled evidence distinct. Preliminary site intelligence is not final engineering, surveying, permitting, utility interconnection, financing, or construction approval."
+    },
+    {
+      "slug": "findmypart",
+      "name": "FindMyPart",
+      "registry_name": "io.github.jgaethle10/findmypart",
+      "short_description": "Find obsolete and hard-to-source parts",
+      "endpoint": "https://findmypart.base44.app/functions/findMyPartMcp",
+      "website_url": "https://findmypart.base44.app/",
+      "state": "registry_published_direct_mcp_existing",
+      "remote": true,
+      "transport": "streamable-http",
+      "truth_boundary": "Use the live FindMyPart MCP for current hunt, pricing, checkout, status, and evidence state. Never invent inventory, compatibility, supplier availability, or a successful purchase."
+    },
+    {
+      "slug": "systemia-website-audit",
+      "name": "Systemia Website Audit",
+      "registry_name": "io.github.jgaethle10/systemia-website-audit",
+      "short_description": "Audit a business website for conversion and local visibility",
+      "endpoint": "https://systemia-audit-pro.base44.app/functions/auditAgentMcp",
+      "website_url": "https://systemia-audit-pro.base44.app/",
+      "state": "registry_published_direct_mcp_existing",
+      "remote": true,
+      "transport": "streamable-http",
+      "truth_boundary": "Do not fabricate audit findings before the audit runs. Checkout preparation is not payment proof, and payment does not imply completed fulfillment until the product verifier confirms it."
+    },
+    {
+      "slug": "career-command",
+      "name": "Career Command",
+      "registry_name": "io.github.jgaethle10/career-command",
+      "short_description": "Practice interviews and prepare for career moves",
+      "endpoint": "https://evercraft-career-command.base44.app/functions/careerMcp",
+      "website_url": "https://evercraft-career-command.base44.app/",
+      "state": "registry_published_direct_mcp_existing",
+      "remote": true,
+      "transport": "streamable-http",
+      "truth_boundary": "Keep guidance user-controlled. Do not claim guaranteed hiring outcomes, employer endorsement, or access to private employer systems."
+    },
+    {
+      "slug": "eventwave",
+      "name": "EventWave",
+      "registry_name": "io.github.jgaethle10/eventwave",
+      "short_description": "Discover or promote events with human-controlled actions",
+      "endpoint": "https://event-wave.base44.app/functions/eventWaveMcp",
+      "website_url": "https://event-wave.base44.app/",
+      "state": "registry_published_direct_mcp_existing",
+      "remote": true,
+      "transport": "streamable-http",
+      "truth_boundary": "Do not claim a ticket, booking, publication, promotion, payment, or venue relationship exists until the corresponding live tool state proves it. Keep publishing and commerce human-controlled."
+    },
+    {
+      "slug": "faie",
+      "name": "FAIE",
+      "registry_name": "io.github.jgaethle10/faie",
+      "short_description": "Build evidence briefs for agriculture and resilience decisions",
+      "endpoint": "https://faie.base44.app/functions/faieMcp",
+      "website_url": "https://faie.base44.app/",
+      "state": "registry_published_direct_mcp_existing",
+      "remote": true,
+      "transport": "streamable-http",
+      "truth_boundary": "Preserve source provenance, uncertainty, geography, and date boundaries. Do not turn modeled or incomplete evidence into certainty."
+    },
+    {
+      "slug": "buildflow",
+      "name": "BuildFlow Enterprise Operations",
+      "registry_name": "io.github.jgaethle10/buildflow",
+      "short_description": "Route enterprise operations and migration problems safely",
+      "endpoint": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp",
+      "website_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+      "state": "registry_published_direct_mcp_existing",
+      "remote": true,
+      "transport": "streamable-http",
+      "truth_boundary": "Do not send private customer records through public discovery. A handoff does not grant private-system access, execute business actions, create checkout, or prove deployment."
+    }
+  ],
+  "directory_field_map": {
+    "server_name": "name",
+    "description": "short_description",
+    "registry_name": "registry_name",
+    "repository_or_docs": "repository_url or website_url",
+    "remote_endpoint": "endpoint",
+    "remote_flag": "remote",
+    "transport": "transport"
+  },
+  "rule": "Never submit a stronger commercial, security, provider-pickup or runtime claim than the canonical live evidence supports."
+}

@@ -1,0 +1,33 @@
+name: Validate CHUM directory expansion
+
+on:
+  pull_request:
+    paths:
+      - "distribution/directory-expansion-targets.json"
+      - "distribution/directory-submission-packets.json"
+      - "distribution/machine-commerce-distribution.json"
+      - "distribution/evercraft-owned-execution-policy.json"
+      - "scripts/validate-directory-expansion.mjs"
+      - ".github/workflows/validate-directory-expansion.yml"
+  push:
+    branches: [main]
+    paths:
+      - "distribution/directory-expansion-targets.json"
+      - "distribution/directory-submission-packets.json"
+      - "distribution/machine-commerce-distribution.json"
+      - "distribution/evercraft-owned-execution-policy.json"
+      - "scripts/validate-directory-expansion.mjs"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: node scripts/validate-directory-expansion.mjs

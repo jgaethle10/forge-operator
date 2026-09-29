@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.machine-commerce.distribution.v1",
-  "generated_at": "2026-09-25T18:33:30Z",
+  "generated_at": "2026-09-28T18:42:00Z",
   "public_id": "evercraft-machine-commerce",
   "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
   "live_runtime": {
@@ -8,16 +8,19 @@
     "transport": "streamable-http",
     "endpoint": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
     "health": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp?action=health",
-    "state": "live_verified"
+    "state": "live_verified",
+    "version_last_verified_at": "2026-09-25T18:32:42Z",
+    "note": "Runtime version 1.2.1 is the last independently recorded live-runtime verification in this ledger. Official Registry publication is newer; do not infer runtime parity until separately canaried."
   },
   "destinations": [
     {
       "destination": "Official MCP Registry",
       "state": "verified_live",
-      "version": "1.2.1",
+      "version": "1.2.2",
       "is_latest": true,
-      "observed_at": "2026-09-25T18:32:42Z",
-      "evidence_url": "https://registry.modelcontextprotocol.io/v0/servers?search=io.github.jgaethle10%2Fevercraft-machine-commerce"
+      "observed_at": "2026-09-26",
+      "evidence_url": "https://registry.modelcontextprotocol.io/v0/servers?search=io.github.jgaethle10%2Fevercraft-machine-commerce",
+      "note": "Official Registry observation is newer than the last independently recorded live-runtime version check; registry publication does not substitute for a runtime canary."
     },
     {
       "destination": "Glama",
@@ -55,9 +58,99 @@
       "note": "CLI/dashboard publication requires Smithery authorization. No listing claim."
     },
     {
-      "destination": "ChatGPT plugin directory",
-      "state": "not_evidenced_as_submitted",
-      "note": "No exact Evercraft listing, approval email, or repository submission artifact observed."
+      "destination": "OpenAI / ChatGPT app review",
+      "state": "user_reported_submitted_pending_review",
+      "note": "User reports an application was submitted several days before 2026-09-28. No provider approval receipt is recorded here yet; do not claim acceptance."
+    },
+    {
+      "destination": "Stork.AI MCP Directory",
+      "state": "pickup_to_verify_auth_required_for_direct_submit",
+      "submission_url": "https://www.stork.ai/mcp/submit",
+      "note": "Mirrors the Official MCP Registry and supports authenticated direct submission with live handshake verification."
+    },
+    {
+      "destination": "Launch MCP",
+      "state": "pickup_to_verify_duplicate_history_gate_for_email",
+      "submission_url": "https://launchmcp.co/guides/submit-an-mcp-server",
+      "note": "Imports hosted connectors from the Official MCP Registry and also accepts email submission; check sent history before emailing."
+    },
+    {
+      "destination": "mcpservers.org",
+      "state": "eligible_contact_email_required",
+      "submission_url": "https://mcpservers.org/submit",
+      "note": "Free web form supports Official Registry name and remote-connection flag."
+    },
+    {
+      "destination": "MCPizy",
+      "state": "eligible_submission_form_fields_to_complete",
+      "submission_url": "https://mcpizy.com/submit",
+      "note": "Free reviewed listing; published audit grade must be treated as measured, not guaranteed."
+    },
+    {
+      "destination": "Developers Digest MCP Directory",
+      "state": "eligible_external_github_write_required",
+      "submission_url": "https://mcp.developersdigest.tech/submit",
+      "note": "Documented intake is a GitHub issue or pull request."
+    },
+    {
+      "destination": "LobeHub MCP Marketplace",
+      "state": "eligible_auth_or_ui_required",
+      "submission_url": "https://lobehub.com/mcp",
+      "note": "Marketplace submission requires an authorized publisher session."
+    },
+    {
+      "destination": "MCP Marketplace",
+      "state": "eligible_auth_or_ui_required",
+      "submission_url": "https://mcp-marketplace.io/submit",
+      "note": "Remote MCP endpoints are eligible through an authorized creator flow."
+    },
+    {
+      "destination": "Unyly",
+      "state": "pickup_to_verify",
+      "submission_url": "https://unyly.org/submit",
+      "note": "Advertises Official Registry ingestion plus direct submission; verify exact pickup first."
+    },
+    {
+      "destination": "ProMCP",
+      "state": "eligible_submission_packet_ready",
+      "submission_url": "https://www.promcpservers.com/submit",
+      "note": "Curated listing packet is prepared from verified endpoint and public docs."
+    },
+    {
+      "destination": "Awesome Remote MCP Servers (punkpeye)",
+      "state": "eligible_external_fork_or_pr_required",
+      "submission_url": "https://github.com/punkpeye/awesome-remote-mcp-servers",
+      "note": "Remote list requires a live initialize handshake before listing."
+    },
+    {
+      "destination": "Awesome Remote MCP Servers (jaw9c)",
+      "state": "eligible_external_fork_or_pr_required",
+      "submission_url": "https://github.com/jaw9c/awesome-remote-mcp-servers",
+      "note": "Remote curated list; submit through an authorized fork/PR."
+    },
+    {
+      "destination": "Awesome MCP Servers (punkpeye)",
+      "state": "eligible_external_fork_or_pr_required",
+      "submission_url": "https://github.com/punkpeye/awesome-mcp-servers",
+      "note": "Use only where the current contribution rules fit; remote-first servers may belong in the remote list instead."
+    },
+    {
+      "destination": "TensorBlock Awesome MCP Servers",
+      "state": "eligible_external_write_required",
+      "submission_url": "https://github.com/TensorBlock/awesome-mcp-servers",
+      "note": "External repository intake requires authorized GitHub write and duplicate checks."
+    },
+    {
+      "destination": "Cline MCP Marketplace",
+      "state": "eligible_external_issue_required",
+      "submission_url": "https://github.com/cline/mcp-marketplace",
+      "note": "Issue-driven intake requires repository metadata, logo and reason-for-addition packet."
+    },
+    {
+      "destination": "Official Registry Metadata Mirror (whatismyip.live)",
+      "state": "pickup_to_verify",
+      "submission_url": "https://whatismyip.live/mcp-server-directory",
+      "note": "Observe registry-mirror pickup and current version/provenance."
     }
   ],
   "instrumentation": {
@@ -82,7 +175,21 @@
       "windsurf-mcp",
       "cline-mcp",
       "codex-mcp",
-      "vscode-mcp"
+      "vscode-mcp",
+      "stork",
+      "launchmcp",
+      "mcpservers-org",
+      "mcpizy",
+      "developersdigest-mcp",
+      "mcp-marketplace-io",
+      "unyly",
+      "promcp",
+      "awesome-remote-mcp-punkpeye",
+      "awesome-remote-mcp-jaw9c",
+      "awesome-mcp-servers",
+      "tensorblock-awesome-mcp",
+      "cline-marketplace",
+      "whatismyip-registry-mirror"
     ],
     "revenue_boundary": "Discovery and tool invocation are not checkout, payment, revenue, recommendation, or provider endorsement proof."
   },

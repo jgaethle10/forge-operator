@@ -1,0 +1,230 @@
+{
+  "schema": "evercraft.chum.directory-expansion-targets.v2",
+  "generated_at": "2026-09-28T18:42:00Z",
+  "owner": "CHUM",
+  "orchestration_owner": "Systemia",
+  "objective": "Maximize truthful Evercraft MCP and agent-directory distribution without conflating submission, listing, indexing, provider pickup, recommendation, invocation, handoff, checkout, or payment.",
+  "universal_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+  "universal_endpoint": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "rules": {
+    "pain_first": true,
+    "specialist_first_when_available": true,
+    "no_false_listing_claims": true,
+    "no_duplicate_outreach_without_history_check": true,
+    "external_auth_or_paid_submission_requires_explicit_authorization": true,
+    "no_fabricated_package_artifacts": true,
+    "preserve_evidence_boundaries": true,
+    "auto_ingestion_is_not_pickup_until_observed": true
+  },
+  "targets": [
+    {
+      "destination": "Official MCP Registry",
+      "mode": "registry",
+      "state": "verified_live",
+      "priority": "P0",
+      "submission_url": "https://registry.modelcontextprotocol.io",
+      "evidence_url": "https://registry.modelcontextprotocol.io/?q=io.github.jgaethle10%2Fevercraft-machine-commerce",
+      "action": "Keep official manifests current; treat the official registry as canonical publication authority."
+    },
+    {
+      "destination": "Glama",
+      "mode": "auto_index_plus_claim",
+      "state": "verified_live",
+      "priority": "P0",
+      "submission_url": "https://glama.ai/mcp/connectors",
+      "evidence_url": "https://glama.ai/mcp/connectors/io.github.jgaethle10/evercraft-machine-commerce",
+      "action": "Track namespace pickup, tool health, version propagation and tool-description quality."
+    },
+    {
+      "destination": "MCP.Directory",
+      "mode": "reviewed_submission_plus_registry_import",
+      "state": "submitted_pending_review",
+      "priority": "P0",
+      "submission_url": "https://mcp.directory/submit",
+      "action": "Verify review outcome and any automatic Official Registry import before claiming listing."
+    },
+    {
+      "destination": "PulseMCP",
+      "mode": "official_registry_ingestion",
+      "state": "pickup_expected_not_verified",
+      "priority": "P0",
+      "submission_url": "https://www.pulsemcp.com",
+      "action": "Probe exact namespace pickup from the Official MCP Registry."
+    },
+    {
+      "destination": "Stork.AI MCP Directory",
+      "mode": "official_registry_ingestion_plus_authenticated_submission",
+      "state": "pickup_to_verify_auth_required_for_direct_submit",
+      "priority": "P0",
+      "submission_url": "https://www.stork.ai/mcp/submit",
+      "action": "Probe registry mirror first; direct submission requires Stork sign-in and performs a real MCP handshake."
+    },
+    {
+      "destination": "Launch MCP",
+      "mode": "official_registry_import_plus_email_submission",
+      "state": "pickup_to_verify_duplicate_history_gate_for_email",
+      "priority": "P1",
+      "submission_url": "https://launchmcp.co/guides/submit-an-mcp-server",
+      "action": "Probe automatic hosted-connector import first. Before email submission, verify sent history to prevent duplicate outreach."
+    },
+    {
+      "destination": "mcpservers.org",
+      "mode": "free_web_form",
+      "state": "eligible_contact_email_required",
+      "priority": "P1",
+      "submission_url": "https://mcpservers.org/submit",
+      "action": "Submit free listing after duplicate search and use the canonical Official Registry name plus remote-connection flag."
+    },
+    {
+      "destination": "MCPizy",
+      "mode": "free_reviewed_web_form",
+      "state": "eligible_submission_form_fields_to_complete",
+      "priority": "P1",
+      "submission_url": "https://mcpizy.com/submit",
+      "action": "Submit only the free standard path; accept published audit grade as measured and do not pay for ranking."
+    },
+    {
+      "destination": "Developers Digest MCP Directory",
+      "mode": "github_issue_or_pull_request",
+      "state": "eligible_external_github_write_required",
+      "priority": "P1",
+      "submission_url": "https://mcp.developersdigest.tech/submit",
+      "action": "Use its documented GitHub issue or PR path after exact duplicate check."
+    },
+    {
+      "destination": "mcp.so",
+      "mode": "form_or_github_issue",
+      "state": "eligible_external_write_blocked",
+      "priority": "P1",
+      "submission_url": "https://mcp.so/submit?type=server",
+      "action": "Retry only through an authorized submission path; prior third-party GitHub issue write was permission-blocked, not rejected."
+    },
+    {
+      "destination": "Smithery",
+      "mode": "authenticated_publisher",
+      "state": "eligible_auth_required",
+      "priority": "P1",
+      "submission_url": "https://smithery.ai",
+      "action": "Publish remote Streamable HTTP specialist servers after Smithery authorization."
+    },
+    {
+      "destination": "LobeHub MCP Marketplace",
+      "mode": "marketplace_submission",
+      "state": "eligible_auth_or_ui_required",
+      "priority": "P1",
+      "submission_url": "https://lobehub.com/mcp",
+      "action": "Submit universal and specialist MCPs through an authorized publisher session."
+    },
+    {
+      "destination": "MCP Marketplace",
+      "mode": "marketplace_submission",
+      "state": "eligible_auth_or_ui_required",
+      "priority": "P1",
+      "submission_url": "https://mcp-marketplace.io/submit",
+      "action": "Submit remote MCP endpoints through an authorized creator session."
+    },
+    {
+      "destination": "Unyly",
+      "mode": "official_registry_ingestion_plus_direct_submission",
+      "state": "pickup_to_verify",
+      "priority": "P1",
+      "submission_url": "https://unyly.org/submit",
+      "action": "Probe automatic registry ingestion first, then direct-submit only missing servers."
+    },
+    {
+      "destination": "ProMCP",
+      "mode": "curated_submission",
+      "state": "eligible_submission_packet_ready",
+      "priority": "P2",
+      "submission_url": "https://www.promcpservers.com/submit",
+      "action": "Use the verified endpoint, public source, README, install/use instructions and declared auth/authority boundaries."
+    },
+    {
+      "destination": "Awesome Remote MCP Servers (punkpeye)",
+      "mode": "github_pull_request",
+      "state": "eligible_external_fork_or_pr_required",
+      "priority": "P2",
+      "submission_url": "https://github.com/punkpeye/awesome-remote-mcp-servers",
+      "action": "Contribute only after the live endpoint passes initialize; this list explicitly gates remote entries on handshake."
+    },
+    {
+      "destination": "Awesome Remote MCP Servers (jaw9c)",
+      "mode": "github_pull_request",
+      "state": "eligible_external_fork_or_pr_required",
+      "priority": "P2",
+      "submission_url": "https://github.com/jaw9c/awesome-remote-mcp-servers",
+      "action": "Submit verified remote endpoint metadata through an authorized fork/PR."
+    },
+    {
+      "destination": "Awesome MCP Servers (punkpeye)",
+      "mode": "github_pull_request",
+      "state": "eligible_external_fork_or_pr_required",
+      "priority": "P2",
+      "submission_url": "https://github.com/punkpeye/awesome-mcp-servers",
+      "action": "Use only for specialists that satisfy the list's current contribution rules; remote-first servers belong in the remote list when required."
+    },
+    {
+      "destination": "TensorBlock Awesome MCP Servers",
+      "mode": "github_issue_or_pull_request",
+      "state": "eligible_external_write_required",
+      "priority": "P2",
+      "submission_url": "https://github.com/TensorBlock/awesome-mcp-servers",
+      "action": "Submit through the repository's current intake after exact duplicate check."
+    },
+    {
+      "destination": "Cline MCP Marketplace",
+      "mode": "github_issue_submission",
+      "state": "eligible_external_issue_required",
+      "priority": "P2",
+      "submission_url": "https://github.com/cline/mcp-marketplace",
+      "action": "Prepare repository URL, logo and reason-for-addition packet; submit only through authorized external write."
+    },
+    {
+      "destination": "Stork Registry Mirror",
+      "mode": "registry_mirror_observation",
+      "state": "candidate_observation_lane",
+      "priority": "P2",
+      "submission_url": "https://www.stork.ai/mcp",
+      "action": "Measure semantic discoverability by user pain after namespace pickup, not only exact-name search."
+    },
+    {
+      "destination": "Official Registry Metadata Mirror (whatismyip.live)",
+      "mode": "official_registry_mirror",
+      "state": "pickup_to_verify",
+      "priority": "P3",
+      "submission_url": "https://whatismyip.live/mcp-server-directory",
+      "action": "Observe whether the official-registry mirror carries the current Evercraft version and provenance."
+    },
+    {
+      "destination": "MCPFind",
+      "mode": "package_plus_repository_submission",
+      "state": "not_eligible_without_real_package",
+      "priority": "P3",
+      "submission_url": "https://www.mcpfind.org/",
+      "action": "Do not fabricate npm/PyPI/Docker packaging. Revisit only when a real supported package artifact exists."
+    },
+    {
+      "destination": "OpenAI / ChatGPT app review",
+      "mode": "provider_application",
+      "state": "user_reported_submitted_pending_review",
+      "priority": "P0",
+      "submission_url": null,
+      "action": "Do not claim acceptance until provider approval is received. Keep all public contracts and verification receipts ready for review."
+    }
+  ],
+  "measurement": {
+    "states": [
+      "candidate",
+      "eligible",
+      "submitted",
+      "listed",
+      "indexed",
+      "healthy",
+      "invoked",
+      "human_handoff",
+      "checkout_created",
+      "provider_verified_payment"
+    ],
+    "note": "A later state requires its own receipt. Earlier states never imply later states."
+  }
+}
