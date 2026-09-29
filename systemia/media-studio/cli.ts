@@ -79,7 +79,7 @@ function usage() {
     '  npm run media:studio -- host-plate <prep.json> <receipt.json>',
     '  npm run media:studio -- model-plan <payload.json> <model-plan.json>',
     '  npm run media:studio -- finish-plan <payload.json> <finish-plan.json>',
-    '  npm run media:studio -- production-grade <beats.json> <report.json>',\n    '  npm run media:studio -- timeline-export <timeline.json> <output.mp4> [receipt.json]',
+    '  npm run media:studio -- production-grade <beats.json> <report.json>',\n    '  npm run media:studio -- timeline-export <timeline.json> <output.mp4> [receipt.json]',\n    '  npm run media:studio -- studio-create <draft-plan.json> <draft-bundle.json>',
   ].join('\n'));
 }
 
@@ -129,6 +129,20 @@ function main() {
     const plan = buildVisualFinishPlan(payload.request, payload.endpoints);
     writeJson(output, plan);
     console.log(`Visual finish plan created: ${path.resolve(output)}`);
+    return;
+  }
+
+  if (command === 'studio-create') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const draft = readJson<StudioDraftPlan>(input);
+    const bundle = compileStudioDraft(draft);
+    writeJson(output, bundle);
+    console.log(`Studio draft created: ${path.resolve(output)}`);
+    console.log(`Production needs: ${bundle.productionNeeds.length}; script cues: ${bundle.script.length}; caption cues: ${bundle.captions.length}`);
     return;
   }
 
