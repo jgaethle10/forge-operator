@@ -30,6 +30,12 @@
       "path": "../../artifacts/public-edge-activation-watch/field-mission-snapshot.json",
       "required": false,
       "stale_after_seconds": 900
+    },
+    {
+      "source_key": "sentinel-life-safety",
+      "path": "../../artifacts/sentinel-resident/mission-snapshot.json",
+      "required": false,
+      "stale_after_seconds": 180
     }
   ]
 }
