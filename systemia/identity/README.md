@@ -15,6 +15,8 @@ Authorization stays in Evercraft Passport.
 - one-time owner bootstrap protection
 - receipt-backed identity events
 - explicit Passport grant bootstrap for the Home scopes
+- keyed session signatures with bounded key overlap during rotation
+- per-session and subject-wide server-side revocation
 
 This is a sovereign baseline, not the final authentication UX. Passkeys can be added later without changing subject references or Passport authority.
 
