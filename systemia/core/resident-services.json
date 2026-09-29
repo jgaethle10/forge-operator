@@ -111,6 +111,19 @@
       },
       "max_restarts_per_hour": 12,
       "restart_backoff_ms": 5000
+    },
+    {
+      "service_key": "sentinel-life-safety-watch",
+      "mode": "resident",
+      "manifest": "systemia/sentinel/resident.workflow.json",
+      "executable": "systemia/sentinel/resident-runner.mjs",
+      "optional_env_args": {
+        "--state-dir": "SYSTEMIA_SENTINEL_STATE_DIR",
+        "--nws-area": "SYSTEMIA_SENTINEL_NWS_AREA",
+        "--interval-ms": "SYSTEMIA_SENTINEL_INTERVAL_MS"
+      },
+      "max_restarts_per_hour": 12,
+      "restart_backoff_ms": 5000
     }
   ]
 }
