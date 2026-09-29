@@ -56,8 +56,8 @@
     "machine_commerce_handoff": {
       "state": "live_verified",
       "public_id": "ibmi-rescue-v1",
-      "mode": "fixed_price_human_handoff",
-      "tool": "prepare_quote_ready_service_handoff",
+      "mode": "direct_checkout_capable",
+      "tool": "prepare_verified_checkout",
       "checkout_created": false,
       "payment_created": false,
       "evidence": "GitHub Actions canary 36211823272 verified three-tier offer discovery, live human handoff, buyer-route reachability, and synthetic backend checkout creation with zero payment."
@@ -66,14 +66,14 @@
   "machine_commerce_handoff": {
     "state": "live_verified",
     "public_id": "ibmi-rescue-v1",
-    "mode": "fixed_price_human_handoff",
-    "tool": "prepare_quote_ready_service_handoff",
+    "mode": "direct_checkout_capable",
+    "tool": "prepare_verified_checkout",
     "checkout_created": false,
     "payment_created": false,
     "evidence": "GitHub Actions canary 36211823272 verified three-tier offer discovery, live human handoff, buyer-route reachability, and synthetic backend checkout creation with zero payment."
   },
   "human_start_url": "https://findmypart.base44.app/ibmi-rescue",
-  "buyer_frontage_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/buy/ibmi-rescue-v1?src=chum&campaign=product-mirror&ec_surface=chum_product_mirror&ec_public_id=ibmi-rescue-v1",
+  "buyer_frontage_url": "https://findmypart.base44.app/ibmi-rescue?src=chum&campaign=product-mirror&ec_surface=chum_product_mirror&ec_public_id=ibmi-rescue-v1",
   "registry_name": null,
   "mcp": null,
   "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
