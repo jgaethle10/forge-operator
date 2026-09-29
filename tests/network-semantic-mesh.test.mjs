@@ -12,9 +12,11 @@ const expected=[
 const mesh=JSON.parse(fs.readFileSync('public/network/mesh/index.json','utf8'));
 if(mesh.schema!=='evercraft.network.semantic-mesh.v1') fail('mesh schema drifted');
 if(mesh.product_key!=='evercraft-network') fail('mesh product key drifted');
-if(mesh.machine_route?.state!=='production_mcp_verified_read_only_capability_call') fail('mesh machine route state drifted');
+if(mesh.machine_route?.state!=='production_mcp_verified_all_declared_read_only_calls') fail('mesh machine route state drifted');
 if(mesh.machine_route?.registry_name!=='io.github.jgaethle10/evercraft-machine-commerce') fail('mesh registry route drifted');
-if(mesh.machine_route?.executed_verified?.length!==1 || mesh.machine_route.executed_verified[0]!=='get_network_capabilities') fail('mesh executed proof drifted');
+const executed=new Set(mesh.machine_route?.executed_verified||[]);
+for(const tool of ['get_network_capabilities','get_network_presence','prepare_network_handoff']) if(!executed.has(tool)) fail('mesh executed proof missing '+tool);
+if(executed.size!==3) fail('mesh executed proof contains unexpected tools');
 if(!String(mesh.machine_route?.evidence||'').includes('2026-09-26-evercraft-network-mcp.json')) fail('machine route evidence missing');
 if(!Array.isArray(mesh.pages) || mesh.pages.length!==expected.length) fail('unexpected mesh page count');
 
@@ -40,7 +42,7 @@ for(const slug of expected) if(!seen.has(slug)) fail('missing expected slug: '+s
 const llms=fs.readFileSync('public/network/mesh/llms.txt','utf8');
 if(!llms.includes('Shared truth boundary')) fail('mesh llms boundary missing');
 if(!llms.includes('## Verified machine route')) fail('mesh llms verified route missing');
-if(!llms.includes('get_network_capabilities')) fail('mesh llms capability proof missing');
+for(const tool of ['get_network_capabilities','get_network_presence','prepare_network_handoff']) if(!llms.includes(tool)) fail('mesh llms proof missing '+tool);
 
 const rootLlms=fs.readFileSync('public/network/llms.txt','utf8');
 if(!rootLlms.includes('/network/mesh/')) fail('Network llms guide missing semantic mesh');

@@ -64,8 +64,8 @@ function extractTools(messages) {
   return [];
 }
 
-function summarizeCall(messages) {
-  const resultMessage = findResult(messages, 3);
+function summarizeCall(messages, id) {
+  const resultMessage = findResult(messages, id);
   const result = resultMessage?.result || null;
   return {
     has_result: Boolean(result),
@@ -113,29 +113,74 @@ if (!list.ok || missing.length) {
   throw new Error(`Evercraft Network MCP tools/list missing required tool(s): ${missing.join(', ') || 'unknown'}`);
 }
 
-const capabilityTool = byName.get('get_network_capabilities');
-const requiredArgs = Array.isArray(capabilityTool?.inputSchema?.required)
-  ? capabilityTool.inputSchema.required
-  : [];
-
-if (requiredArgs.length) {
-  throw new Error(`get_network_capabilities unexpectedly requires arguments: ${requiredArgs.join(', ')}`);
-}
-
-const call = await post({
-  jsonrpc: '2.0',
-  id: 3,
-  method: 'tools/call',
-  params: {
-    name: 'get_network_capabilities',
-    arguments: {}
+const SAFE_CALLS = [
+  { id: 3, name: 'get_network_capabilities', arguments: {} },
+  { id: 4, name: 'get_network_presence', arguments: {} },
+  {
+    id: 5,
+    name: 'prepare_network_handoff',
+    arguments: {
+      intent: 'resilience',
+      source: 'evercraft-network-canary'
+    }
   }
-});
+];
 
-const callSummary = summarizeCall(call.messages);
-if (!call.ok || !callSummary.has_result || callSummary.is_error || callSummary.error_code != null) {
-  throw new Error(`get_network_capabilities live read-only call failed: HTTP ${call.status} ${callSummary.error_message || ''}`.trim());
+function validateSafeCall(call) {
+  const tool = byName.get(call.name);
+  if (!tool) throw new Error(`Missing Network tool ${call.name}`);
+
+  if (!/read-only/i.test(String(tool.description || ''))) {
+    throw new Error(`${call.name} is no longer explicitly described as read-only; refusing live canary execution`);
+  }
+
+  const required = Array.isArray(tool?.inputSchema?.required) ? tool.inputSchema.required : [];
+  const missingArgs = required.filter((key) => !Object.prototype.hasOwnProperty.call(call.arguments || {}, key));
+  if (missingArgs.length) {
+    throw new Error(`${call.name} canary arguments are missing required field(s): ${missingArgs.join(', ')}`);
+  }
+
+  const properties = tool?.inputSchema?.properties || {};
+  const unknownArgs = Object.keys(call.arguments || {}).filter((key) => !Object.prototype.hasOwnProperty.call(properties, key));
+  if (unknownArgs.length) {
+    throw new Error(`${call.name} canary attempted unknown argument(s): ${unknownArgs.join(', ')}`);
+  }
+
+  for (const [key, value] of Object.entries(call.arguments || {})) {
+    const allowed = properties?.[key]?.enum;
+    if (Array.isArray(allowed) && !allowed.includes(value)) {
+      throw new Error(`${call.name} canary argument ${key}=${value} is outside the live enum`);
+    }
+  }
 }
+
+const liveReadOnlyCalls = [];
+for (const safeCall of SAFE_CALLS) {
+  validateSafeCall(safeCall);
+  const response = await post({
+    jsonrpc: '2.0',
+    id: safeCall.id,
+    method: 'tools/call',
+    params: {
+      name: safeCall.name,
+      arguments: safeCall.arguments
+    }
+  });
+
+  const summary = summarizeCall(response.messages, safeCall.id);
+  if (!response.ok || !summary.has_result || summary.is_error || summary.error_code != null) {
+    throw new Error(`${safeCall.name} live read-only call failed: HTTP ${response.status} ${summary.error_message || ''}`.trim());
+  }
+
+  liveReadOnlyCalls.push({
+    tool: safeCall.name,
+    http_status: response.status,
+    arguments: safeCall.arguments,
+    ...summary
+  });
+}
+
+const capabilityCall = liveReadOnlyCalls.find((row) => row.tool === 'get_network_capabilities');
 
 const receipt = {
   schema: 'evercraft.network.public-mcp-canary.v1',
@@ -155,16 +200,15 @@ const receipt = {
       input_schema: tool.inputSchema || null
     })),
   all_tool_names: tools.map((tool) => tool?.name).filter(Boolean).sort(),
-  live_read_only_call: {
-    tool: 'get_network_capabilities',
-    http_status: call.status,
-    ...callSummary
-  },
+  live_read_only_call: capabilityCall,
+  live_read_only_calls: liveReadOnlyCalls,
   truth_boundary: {
     verified: [
       'production MCP initialize returned serverInfo',
       'production tools/list exposed all three declared Evercraft Network tools',
-      'production get_network_capabilities read-only tool call returned a non-error result'
+      'production get_network_capabilities read-only tool call returned a non-error result',
+      'production get_network_presence read-only tool call returned a non-error result',
+      'production prepare_network_handoff read-only tool call returned a non-error result'
     ],
     not_verified: [
       'device enrollment',
@@ -187,5 +231,5 @@ console.log(JSON.stringify({
   endpoint: ENDPOINT,
   server: serverInfo,
   required_tools: REQUIRED_TOOLS,
-  live_read_only_call: callSummary
+  live_read_only_calls: liveReadOnlyCalls
 }, null, 2));

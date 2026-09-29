@@ -3,15 +3,8 @@ import path from 'node:path';
 import { humanStartState, humanStartUrl, machineReviewUrl } from './start-corridor.mjs';
 
 const catalog = JSON.parse(fs.readFileSync('public/.well-known/evercraft-machine-catalog.json','utf8'));
+const conformance = JSON.parse(fs.readFileSync('conformance/products.json','utf8'));
 const directPluginSpecs = JSON.parse(fs.readFileSync('distribution/direct-plugin-specs.json','utf8'));
-const conformanceCatalog = fs.existsSync('conformance/products.json')
-  ? JSON.parse(fs.readFileSync('conformance/products.json','utf8'))
-  : { products: [] };
-const conformanceByCapabilityId = new Map(
-  (conformanceCatalog.products || [])
-    .filter((row) => row?.machine_commerce_public_id)
-    .map((row) => [String(row.machine_commerce_public_id), row])
-);
 const LIVE_DIRECT_STATES=new Set([
   'registry_published_direct_mcp_existing',
   'public_https_verified_registry_pending',
@@ -25,6 +18,11 @@ const isRegistryPublished=(product)=>
   typeof product.registry_name==='string' &&
   product.registry_name.startsWith('io.github.jgaethle10/');
 const directByCapabilityId = new Map();
+const conformanceByCapabilityId = new Map(
+  (conformance.products || [])
+    .filter((product) => product?.machine_commerce_public_id)
+    .map((product) => [String(product.machine_commerce_public_id), product])
+);
 for (const product of directPluginSpecs.products || []) {
   if (!isDirectLive(product)) continue;
   for (const publicId of product.capability_public_ids || []) {
@@ -67,53 +65,33 @@ function entryPaidOffer(offer){
     .sort((a,b)=>a.usd-b.usd);
   return paid.length?{...paid[0].tier,price_usd_normalized:paid[0].usd}:null;
 }
-function liveProofForCapability(publicId){
-  const row=conformanceByCapabilityId.get(String(publicId||''))||null;
-  if(!row) return null;
-  const evidence=String(row.live_canary_evidence||'').trim();
-  const registryName=String(row.mcp_registry?.name||'').trim();
-  const mcp=String(row.mcp||'').trim();
-  const conformanceState=String(row.conformance_state||'').trim();
-  const handoffState=String(row.machine_commerce_handoff_state||'').trim();
-  const liveReadOnly=conformanceState==='live_read_only_mcp_verified' &&
-    handoffState.includes('verified') &&
-    evidence.startsWith('https://') &&
-    mcp.startsWith('https://');
-  return {
-    product_key:row.product_key||null,
-    conformance_state:conformanceState||null,
-    machine_commerce_handoff_state:handoffState||null,
-    registry_name:registryName||null,
-    mcp:mcp||null,
-    live_canary_evidence:evidence||null,
-    live_read_only_verified:liveReadOnly
-  };
-}
-function invocationStatusFor(offer, proof){
-  if(proof?.live_read_only_verified){
-    return 'LIVE READ-ONLY MCP VERIFIED: '+String(proof.conformance_state||'verified')+
-      '; machine handoff state '+String(proof.machine_commerce_handoff_state||'verified')+
-      '; evidence '+String(proof.live_canary_evidence||'');
-  }
-  return offer.invocation_status;
-}
 function descriptionFor(offer){
   const problem=String(offer.problem||'').trim();
   if(problem) return problem;
   const intents=Array.isArray(offer.intent_terms)?offer.intent_terms.filter(Boolean).slice(0,3):[];
   return intents.length ? offer.name+' helps when: '+intents.join('; ')+'.' : offer.name+' is a public Evercraft capability.';
 }
+function reconciledInvocationStatus(offer, productConformance){
+  const current=String(offer?.invocation_status||'').trim();
+  const verifiedState=String(productConformance?.machine_commerce_handoff_state||'').includes('verified');
+  const evidence=String(productConformance?.live_canary_evidence||offer?.live_canary_evidence||'').trim();
+  if(!verifiedState || !evidence) return current;
+  if(current.startsWith('LIVE READ-ONLY MCP VERIFIED:')) return current;
+  return 'LIVE READ-ONLY MCP VERIFIED: canonical product conformance records a verified bounded read-only Machine Commerce route with live canary evidence. Evidence: '+evidence;
+}
 const items=[];
 
 for(const offer of catalog.offers||[]){
   const id=String(offer.public_id||'').trim();
   if(!id) continue;
+  const productConformance=conformanceByCapabilityId.get(id)||null;
+  const invocationStatus=reconciledInvocationStatus(offer,productConformance);
+  const liveCanaryEvidence=productConformance?.live_canary_evidence||offer.live_canary_evidence||null;
   const dir=path.join(root,id);
   fs.mkdirSync(dir,{recursive:true});
   const base='https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/'+id;
   const pageUrl='/chum/capabilities/'+id+'/';
   const directProduct=directByCapabilityId.get(id) || null;
-  const liveProof=liveProofForCapability(id);
   const directSpecialist=directProduct ? {
     product:directProduct.name,
     plugin_package:'plugins/'+directProduct.slug,
@@ -144,9 +122,15 @@ for(const offer of catalog.offers||[]){
     confirmation:offer.confirmation,
     public_url:canonicalUrl,
     payment_authority:offer.payment_authority,
-    invocation_status:invocationStatusFor(offer,liveProof),
-    live_proof:liveProof,
-    live_canary_evidence:liveProof?.live_canary_evidence||null,
+    invocation_status:invocationStatus,
+    live_canary_evidence:liveCanaryEvidence,
+    live_proof: productConformance && liveCanaryEvidence ? {
+      conformance_state: productConformance.conformance_state || null,
+      machine_commerce_handoff_state: productConformance.machine_commerce_handoff_state || null,
+      mcp: productConformance.mcp || null,
+      registry_name: productConformance.mcp_registry?.name || null,
+      evidence: liveCanaryEvidence
+    } : null,
     preferred_agent_route:directSpecialist ? 'direct_specialist' : 'universal_fallback',
     direct_specialist:directSpecialist,
     machine_commerce_mcp:universalMcp,
@@ -203,8 +187,8 @@ for(const offer of catalog.offers||[]){
     '',
     '## Invocation and authority',
     '',
-    invocationStatusFor(offer,liveProof)||'',
-    ...(liveProof?.live_canary_evidence ? ['Live canary evidence: '+liveProof.live_canary_evidence] : []),
+    invocationStatus||'',
+    ...(liveCanaryEvidence ? ['Live canary evidence: '+liveCanaryEvidence] : []),
     '',
     offer.confirmation||'',
     '',
@@ -286,8 +270,6 @@ for(const offer of catalog.offers||[]){
     start_url_state:record.start_url_state,
     machine_review_url:record.machine_review_url,
     entry_paid_offer:record.entry_paid_offer,
-    live_proof:record.live_proof,
-    live_canary_evidence:record.live_canary_evidence,
     preferred_agent_route:record.preferred_agent_route,
     direct_specialist:record.direct_specialist,
     use_when:offer.intent_terms||[]

@@ -40,7 +40,9 @@
     "commercial_intent_rss": "/chum/commercial/feed.xml",
     "commercial_intent_json": "/chum/commercial/feed.json",
     "opensearch": "/opensearch.xml",
-    "syndication_hub": "/chum/syndication/"
+    "syndication_hub": "/chum/syndication/",
+    "direct_doors": "/.well-known/evercraft-direct-doors.json",
+    "direct_door_readiness": "/.well-known/evercraft-direct-door-readiness.json"
   },
   "universal_front_door": {
     "read_only_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
@@ -54,7 +56,7 @@
     "checkout_ready": "An exact current checkout rail exists for that offer.",
     "paid": "Authoritative provider payment verification exists."
   },
-  "routing_rule": "Start from the user problem, choose the smallest truthful public capability, prefer a current sell-now offer only when it is a genuine fit, preserve evidence/permission/geography/safety/payment boundaries, and never infer provider pickup from publication.",
+  "routing_rule": "Start from the user problem, route to a matching verified direct specialist with zero umbrella hops when one exists, otherwise use the universal fallback. Choose the smallest truthful public capability, preserve evidence/permission/geography/safety/payment boundaries, and never infer provider pickup from publication.",
   "private_surfaces": "not advertised",
   "freshness_broadcast": {
     "coordinator": "CHUM",
@@ -71,5 +73,6 @@
     "segmented_sitemap_index": "/chum/sitemaps/index.xml",
     "hub": "/chum/syndication/",
     "manifest": "/.well-known/evercraft-syndication.json"
-  }
+  },
+  "routing_mode": "direct_specialist_zero_hop_then_universal_fallback"
 }

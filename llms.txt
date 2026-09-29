@@ -95,7 +95,7 @@ https://network-control.base44.app/
 Universal MCP:
 https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 
-Verified Network route: the production Evercraft Machine Commerce MCP exposed `get_network_capabilities`, `get_network_presence`, and `prepare_network_handoff` in `tools/list` on 2026-09-26, and `get_network_capabilities` also passed a live read-only `tools/call`. Presence and handoff execution are not yet canaried. Evidence: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/conformance/runtime-observations/2026-09-26-evercraft-network-mcp.json
+Verified Network route: the production Evercraft Machine Commerce MCP exposed `get_network_capabilities`, `get_network_presence`, and `prepare_network_handoff` in `tools/list` on 2026-09-26, and all three passed live read-only `tools/call` execution in the dedicated Network canary. The handoff call returned only a tagged human URL and created no enrollment, checkout, payment obligation, device action, carrier action, or emergency authority. Evidence: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/conformance/runtime-observations/2026-09-26-evercraft-network-mcp.json
 
 Do not describe Evercraft Network as a cellular carrier, ISP, SIM/eSIM service, 911/PSAP integration, guaranteed geographic coverage, or guaranteed emergency backhaul. Do not infer access to private device identity, precise location, telecom identifiers, secrets, operator state or private topology.
 

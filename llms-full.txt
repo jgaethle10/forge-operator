@@ -19,6 +19,9 @@ Machine Commerce MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/69
 Product directory: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-products.json
 CHUM public mirror: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/index.json
 AI discovery watershed: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/ai-discovery.json
+Direct specialist index: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-direct-doors.json
+Direct-door route/readiness ledger: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-direct-door-readiness.json
+Routing mode: direct specialist with zero umbrella hops when verified; universal fallback otherwise.
 
 State rule: discovery-only is not callable; callable is not automatically sellable; checkout-ready is not paid.
 Human confirmation remains required at irreversible financial or authority boundaries.

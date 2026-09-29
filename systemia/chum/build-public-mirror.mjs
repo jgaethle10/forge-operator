@@ -727,6 +727,9 @@ const llmsLines = [
   `Product directory: ${rawBase}/public/.well-known/evercraft-products.json`,
   `CHUM public mirror: ${rawBase}/public/chum/index.json`,
   `AI discovery watershed: ${rawBase}/public/ai-discovery.json`,
+  `Direct specialist index: ${rawBase}/public/.well-known/evercraft-direct-doors.json`,
+  `Direct-door route/readiness ledger: ${rawBase}/public/.well-known/evercraft-direct-door-readiness.json`,
+  'Routing mode: direct specialist with zero umbrella hops when verified; universal fallback otherwise.',
   '',
   'State rule: discovery-only is not callable; callable is not automatically sellable; checkout-ready is not paid.',
   'Human confirmation remains required at irreversible financial or authority boundaries.',
@@ -915,6 +918,8 @@ const discoveryWatershed = {
     agents: '/.well-known/evercraft-agent-directory.json',
     interfaces: '/.well-known/evercraft-agent-interfaces.json',
     machine_catalog: '/.well-known/evercraft-machine-catalog.json',
+    direct_doors: '/.well-known/evercraft-direct-doors.json',
+    direct_door_readiness: '/.well-known/evercraft-direct-door-readiness.json',
     chum: '/.well-known/evercraft-chum.json',
     chum_public_mirror: '/chum/index.json',
     network: '/.well-known/evercraft-network.json',
@@ -941,7 +946,8 @@ const discoveryWatershed = {
     checkout_ready: 'An exact current checkout rail exists for that offer.',
     paid: 'Authoritative provider payment verification exists.'
   },
-  routing_rule: 'Start from the user problem, choose the smallest truthful public capability, prefer a current sell-now offer only when it is a genuine fit, preserve evidence/permission/geography/safety/payment boundaries, and never infer provider pickup from publication.',
+  routing_mode: 'direct_specialist_zero_hop_then_universal_fallback',
+  routing_rule: 'Start from the user problem, route to a matching verified direct specialist with zero umbrella hops when one exists, otherwise use the universal fallback. Choose the smallest truthful public capability, preserve evidence/permission/geography/safety/payment boundaries, and never infer provider pickup from publication.',
   private_surfaces: 'not advertised',
   freshness_broadcast: {
     coordinator: 'CHUM',
