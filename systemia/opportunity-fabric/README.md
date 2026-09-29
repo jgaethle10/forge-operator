@@ -16,6 +16,20 @@ Examples:
 - a contractor can assemble a subcontractor chain instead of rejecting work outside its direct trade
 - a business can bring an outcome and let Systemia assemble the temporary team required to execute it
 
+## Execution blueprints
+
+v1.2 adds a safe pre-assembly planning stage. An opportunity owner can ask Systemia to turn the opportunity's safe metadata into an execution blueprint before the owner knows who the team should be.
+
+The trusted runtime reads only the opportunity's stated needs, desired partner description, safe HAVE metadata, title, description and location plus members' public capability metadata. It does not inspect Creator Vault records, protected assets, formation snapshots, disclosure grants, private contact fields or protected file content.
+
+For each stated gap, the planner proposes a bounded work package and ranks up to three current network members whose public capability metadata appears relevant. It returns no contact email. If no member fits a capability, the gap stays unresolved rather than inventing a partner.
+
+A blueprint is a recommendation, not membership, qualification proof, authority, license or agreement. Contacting a suggested candidate still begins with the protected `ConnectionRequest` handshake. Accepted relationships are still required before team assembly.
+
+The execution flow is therefore:
+
+`SAFE OPPORTUNITY -> BLUEPRINT -> PROTECTED CONNECTIONS -> TEAM INVITATIONS -> WORK PACKAGES -> FORMATION / RIGHTS GATES -> EXECUTION`
+
 ## Multi-party assembly
 
 v1.1 extends the one-to-one protected collaboration model into temporary execution teams.
@@ -63,7 +77,7 @@ This policy is a product-control contract specification. It is NOT represented a
 
 ## Trust model
 
-The verified v1.1 implementation sits behind an authenticated service-role runtime. Direct client mutation is locked for protected workflow entities, and the runtime re-verifies identity, relationship state, invitation state, and package authority before consequential writes. Client-supplied booleans or user ids must never be treated as proof of identity, signature, ownership, relationship, or authority.
+The verified v1.2 implementation sits behind an authenticated service-role runtime. Direct client mutation is locked for protected workflow entities, and the runtime re-verifies identity, relationship state, invitation state, and package authority before consequential writes. Client-supplied booleans or user ids must never be treated as proof of identity, signature, ownership, relationship, or authority.
 
 Authentication, e-signature identity proof, payment authority, durable storage, protected-file delivery, and legal record retention remain separate gates.
 
@@ -75,4 +89,4 @@ Discovery exposes opportunity, not crown-jewel content.
 
 ## Status
 
-v1.1 establishes metadata-first matching, protected one-to-one formation, immutable terms snapshots, purpose-bound disclosure grants, multi-party execution teams, project-specific invitations, bounded work packages, evidence receipts, and conformance tests. The private runtime is verified, but it does not yet claim a production-ready legal agreement, payment/escrow rail, production identity proofing, protected-file delivery, or a publicly deployed transactional marketplace.
+v1.2 establishes metadata-first matching, safe execution blueprints, protected one-to-one formation, immutable terms snapshots, purpose-bound disclosure grants, multi-party execution teams, project-specific invitations, bounded work packages, evidence receipts, and conformance tests. The private runtime is verified, but it does not yet claim a production-ready legal agreement, payment/escrow rail, production identity proofing, protected-file delivery, or a publicly deployed transactional marketplace.
