@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.provider-probe-history.v1",
-  "updated_at": "2026-09-29T05:56:19.185Z",
+  "updated_at": "2026-09-29T06:01:23.054Z",
   "max_records": 500,
   "records": [
     {
@@ -4964,6 +4964,24 @@
       "pickup_observed": false,
       "provider_receipt_sha256": "57fa7a9186d325aa265beee106ab7e3907d05f4bf3d470d1c8641886dea403be",
       "response_sha256": "a3f383bb0bed312738076682144134d36c89af23a6eda1a9892f4840bbdcf226",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "b3db9286d60dc56cb7758209a7fd3b00d6353eb1f1f201d0e583acfffd46dc7d",
+      "observed_at": "2026-09-29T06:01:23.054Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "roasted",
+      "case_id": "roasted-copy-001",
+      "prompt_sha256": "878eb762ce464468f73830e962487b3f010437bfcb72f06fdb509cd6156af9cd",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "588489808e2696622ecf776360b64810ca72f23651c631a52395bec772de8719",
+      "response_sha256": "cbcdd592c8825629a8a4bda0ed5e851b271e21c3cb04d9d4dc9330a624f0202f",
       "source": "authorized_provider_probe",
       "privacy": {
         "full_provider_response_persisted": false,

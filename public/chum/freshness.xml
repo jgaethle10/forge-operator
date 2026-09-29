@@ -2,12 +2,12 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-09-29T05:59:04.665Z</updated>
+<updated>2026-09-29T06:01:25.868Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-29T06:01:25.868Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:5c00cb6dcc6ad4fb68cf8500</id><title>/chum/products/ibmi-rescue/llms.txt</title><updated>2026-09-29T05:59:04.665Z</updated><link href="/chum/products/ibmi-rescue/llms.txt"/><category term="priority-94"/></entry>
 <entry><id>urn:evercraft:chum:a1730538e46b85056bc51dfa</id><title>/chum/products/systemia-portfolio-sentinel/llms.txt</title><updated>2026-09-29T05:59:04.665Z</updated><link href="/chum/products/systemia-portfolio-sentinel/llms.txt"/><category term="priority-94"/></entry>
-<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-29T05:59:04.665Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:770866315bf12f2c92446bfe</id><title>/chum/hot/</title><updated>2026-09-29T05:56:22.327Z</updated><link href="/chum/hot/"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:211f88e615c25537c80f6042</id><title>/chum/products/ibmi-rescue/</title><updated>2026-09-29T05:53:29.457Z</updated><link href="/chum/products/ibmi-rescue/"/><category term="priority-94"/></entry>
 <entry><id>urn:evercraft:chum:5ea767c3d9f3f5b7b318f8f7</id><title>/chum/products/ibmi-rescue/ai-conformance.json</title><updated>2026-09-29T05:53:29.457Z</updated><link href="/chum/products/ibmi-rescue/ai-conformance.json"/><category term="priority-94"/></entry>
