@@ -146,7 +146,7 @@ try {
     true
   );
   assert.equal(
-    fs.existsSync(path.join(workspace, 'node001-field', 'megatron-status', 'mission-snapshot.json')),
+    fs.existsSync(path.join(workspace, 'node001-field', 'evernode-one-status', 'mission-snapshot.json')),
     true
   );
   assert.equal(
