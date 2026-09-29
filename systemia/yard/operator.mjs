@@ -1240,6 +1240,9 @@ export class YardOperator {
     } else if (workloadClass === 'systemia.specialist-handoff-mcp.v1') {
       service = 'specialist-handoff-mcp';
       healthPath = '/health';
+    } else if (workloadClass === 'systemia.evercraft-home.v1') {
+      service = 'evercraft-home';
+      healthPath = '/api/health';
     } else {
       throw new Error('deployment does not support a public route');
     }
@@ -1262,8 +1265,18 @@ export class YardOperator {
         health.mode === 'public_read_only' &&
         health.raw_worker_publicly_exposed === false
       );
+    const homeMatch =
+      workloadClass !== 'systemia.evercraft-home.v1' ||
+      (
+        health.authority === 'evercraft' &&
+        health.auth_mode === 'passport' &&
+        health.identity_login_configured === true &&
+        health.session_revocation_supported === true &&
+        health.external_ai_required === false &&
+        health.base44_required === false
+      );
 
-    if (!commonMatch || !brokerMatch || !browserMatch) {
+    if (!commonMatch || !brokerMatch || !browserMatch || !homeMatch) {
       throw new Error('public route health does not match this deployment receipt and instance');
     }
 
