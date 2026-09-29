@@ -11,6 +11,10 @@ on:
       - "systemia/media-studio/production-grade-gate.test.ts"
       - "systemia/media-studio/timeline.ts"
       - "systemia/media-studio/timeline.test.ts"
+      - "systemia/media-studio/visual-provider-elevenlabs.ts"
+      - "systemia/media-studio/visual-provider-elevenlabs.test.ts"
+      - "systemia/media-studio/visual-provider-elevenlabs.ts"
+      - "systemia/media-studio/visual-provider-elevenlabs.test.ts"
       - "systemia/media-studio/cli.ts"
       - ".github/workflows/fallen-model-fabric.yml"
   push:
@@ -47,6 +51,7 @@ jobs:
             systemia/media-studio/model-fabric.test.ts \
             systemia/media-studio/model-fabric-runtime.test.ts \
             systemia/media-studio/production-grade-gate.test.ts \
-            systemia/media-studio/timeline.test.ts
+            systemia/media-studio/timeline.test.ts \
+            systemia/media-studio/visual-provider-elevenlabs.test.ts
       - name: Typecheck
         run: npm run lint
