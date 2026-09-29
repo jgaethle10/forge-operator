@@ -1,0 +1,146 @@
+import assert from 'node:assert/strict';
+import {
+  emptyResidentState,
+  runSentinelResidentCycle
+} from './resident-cycle.mjs';
+
+function source({
+  sourceId,
+  domain,
+  group,
+  pollInterval = 60,
+  observation = null,
+  fail = false
+}) {
+  return {
+    source_id: sourceId,
+    poll_interval_seconds: pollInterval,
+    contract: {
+      source_id: sourceId,
+      domain,
+      independence_group: group,
+      expected_max_age_seconds: 120,
+      required: true,
+      description: sourceId
+    },
+    poll: async ({ checkedAt }) => {
+      if (fail) {
+        return {
+          contract: null,
+          receipt: {
+            source_id: sourceId,
+            status: 'error',
+            checked_at: checkedAt,
+            item_count: 0,
+            error_code: 'fixture_failure'
+          },
+          observations: [],
+          error: 'fixture_failure'
+        };
+      }
+      return {
+        contract: null,
+        receipt: {
+          source_id: sourceId,
+          status: 'ok',
+          checked_at: checkedAt,
+          item_count: observation ? 1 : 0
+        },
+        observations: observation ? [{ ...observation, observation_id: sourceId + ':' + observation.observation_id }] : [],
+        error: null
+      };
+    }
+  };
+}
+
+const now = '2026-09-29T12:00:00Z';
+const sources = [
+  source({
+    sourceId: 'weather-a',
+    domain: 'weather',
+    group: 'provider-a',
+    observation: {
+      observation_id: '1',
+      created_at: now,
+      region_key: 'Region A',
+      region_group: 'coarse-grid:1deg:136:59',
+      source_family: 'weather-a',
+      independence_group: 'provider-a',
+      domain: 'weather',
+      kind: 'deviation',
+      anomaly_score: 0.9,
+      reliability: 0.9,
+      evidence_state: 'verified'
+    }
+  }),
+  source({
+    sourceId: 'environment-b',
+    domain: 'environmental',
+    group: 'provider-b',
+    observation: {
+      observation_id: '1',
+      created_at: '2026-09-29T12:00:10Z',
+      region_key: 'Region B',
+      region_group: 'coarse-grid:1deg:136:59',
+      source_family: 'environment-b',
+      independence_group: 'provider-b',
+      domain: 'environmental',
+      kind: 'deviation',
+      anomaly_score: 0.88,
+      reliability: 0.9,
+      evidence_state: 'verified'
+    }
+  })
+];
+
+let result = await runSentinelResidentCycle({
+  inputState: emptyResidentState(),
+  now,
+  sources,
+  eventGraphWindowSeconds: 900
+});
+
+assert.equal(result.snapshot.summary.sources_polled, 2);
+assert.equal(result.snapshot.summary.coverage_healthy, true);
+assert.equal(result.snapshot.event_graph.cluster_count, 1);
+assert.equal(result.snapshot.event_graph.clusters[0].independent_source_groups.length, 2);
+assert.equal(result.snapshot.doctrine.autonomous_intervention, false);
+assert.equal(result.snapshot.event_graph.clusters[0].attribution, 'unresolved');
+
+const nextAt = result.state.source_schedule['weather-a'].next_poll_at;
+assert.ok(new Date(nextAt).getTime() >= new Date(now).getTime() + 60000);
+
+const second = await runSentinelResidentCycle({
+  inputState: result.state,
+  now: '2026-09-29T12:00:20Z',
+  sources
+});
+assert.equal(second.snapshot.summary.sources_polled, 0);
+assert.equal(second.snapshot.summary.sources_deferred, 2);
+
+const failing = [
+  source({
+    sourceId: 'weather-a',
+    domain: 'weather',
+    group: 'provider-a',
+    fail: true
+  }),
+  sources[1]
+];
+
+result = await runSentinelResidentCycle({
+  inputState: second.state,
+  now: '2026-09-29T12:02:30Z',
+  sources: failing
+});
+
+assert.equal(result.snapshot.coverage.healthy, false);
+assert.ok(result.snapshot.coverage.blind_spots.some((row) => row.source_id === 'weather-a'));
+assert.equal(
+  result.snapshot.signals.find((signal) => signal.kind === 'sensor_coverage').severity_hint,
+  'warning'
+);
+assert.equal(result.snapshot.summary.urgent_incidents, 0);
+assert.equal(result.snapshot.doctrine.sensor_failure_is_not_threat_evidence, true);
+
+console.log('SYSTEMIA SENTINEL RESIDENT CYCLE PASS');
