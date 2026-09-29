@@ -47,10 +47,25 @@ assert.equal(normalReceipt.signal.severity, 'receipt');
 assert.equal(normalReceipt.commercial.state, 'not_commercial');
 assert.ok(normalReceipt.lanes.includes('signal_fabric'));
 
+const dataOnly = routeBodyEvent({
+  product: 'RIVET',
+  source: 'rivet-data-sweep',
+  signal_type: 'data_coverage_expansion',
+  title: 'California charger data coverage expansion',
+  target_buyers: ['EV charging developers', 'RIVET Pro users'],
+  commercial_value_estimate: 'High product value, but no specific buyer intent observed.',
+  evidence_state: 'authoritative',
+  created_at: now,
+}, { registry, now });
+
+assert.equal(dataOnly.commercial.state, 'not_commercial');
+assert.equal(dataOnly.commercial.opportunity_key, null);
+
 const paymentGate = routeBodyEvent({
   product: 'Evercraft Clip',
   source: 'payments',
-  kind: 'payment',
+  kind: 'payment_blocked',
+  action_kind: 'payment',
   status: 'blocked',
   summary: 'Customer payment requires human attention',
   human_action_required: true,
@@ -109,6 +124,7 @@ console.log(JSON.stringify({
     'RIVET procurement becomes commercial opportunity',
     'closed tender becomes secondary recovery motion rather than dead end',
     'routine receipt stays quiet',
+    'data-only value does not become a fake buyer opportunity',
     'consequential action preserves human gate',
     'unknown product routes to portfolio sentinel',
     'duplicate event does not duplicate opportunity'
