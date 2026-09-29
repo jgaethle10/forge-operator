@@ -147,3 +147,19 @@ Graph edges mean co-occurrence, not causation. Regional clusters preserve:
 
 A cluster can be labeled as an isolated, correlated, cross-domain, or strong cross-domain pattern. Those labels describe evidence structure only. They do not identify an attacker, infer hostile intent, or authorize intervention.
 
+## Source coverage watchdog
+
+Sentinel treats telemetry health as part of the evidence model. A quiet source is only reassuring when the source itself is fresh and healthy.
+
+`source-health.mjs` records source polling receipts and evaluates each required source against a maximum expected age. Required sources can become:
+
+- fresh
+- partial
+- stale
+- error
+- missing
+
+Coverage is summarized by source, data domain, and upstream independence group. A stale or failed required feed becomes an explicit blind spot and emits a bounded Signal Fabric warning. It never becomes evidence that conditions are normal.
+
+Official NWS and USGS poll wrappers emit health receipts even when they return zero observations. This lets operators distinguish a healthy zero-event poll from a dead or stale sensor lane.
+
