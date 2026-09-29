@@ -582,13 +582,18 @@ export async function startSpecialistHandoffRuntime({
     ? normalizeFabricCatalog(fabricCatalog)
     : loadFabricCatalogFromRepository();
   const normalizedFabricPath = String(fabricMcpPath || '/mcp').trim();
-  if (!/^\/[A-Za-z0-9._~!  const callRemoteOpsPricing = remoteOpsPricingFetch || ((payload) =>
-    Promise.resolve(simulateRemoteOpsPricing(payload)));
-
-  const health = () => ({'()*+,;=:@%\/-]*$/.test(normalizedFabricPath)) {
+  if (
+    !normalizedFabricPath.startsWith('/') ||
+    normalizedFabricPath.length > 256 ||
+    /[\s?#]/.test(normalizedFabricPath)
+  ) {
     throw new Error('fabric_mcp_path_invalid');
   }
-  if (normalizedFabricPath === '/health' || SPECIALIST_HANDOFFS.some((x) => x.path === normalizedFabricPath) || normalizedFabricPath === SYSTEMIA_REMOTE_OPS.path) {
+  if (
+    normalizedFabricPath === '/health' ||
+    SPECIALIST_HANDOFFS.some((x) => x.path === normalizedFabricPath) ||
+    normalizedFabricPath === SYSTEMIA_REMOTE_OPS.path
+  ) {
     throw new Error('fabric_mcp_path_collision');
   }
   const challengeToken = validateOpenAiChallengeToken(openAiChallengeToken);
