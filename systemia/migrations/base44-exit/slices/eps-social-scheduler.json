@@ -48,7 +48,13 @@
     "main_branch_cutover_run_id": "36603707538",
     "main_branch_cutover_receipt": "sha256:fb2d5cb093e5906c247fa41745c90cba8b023c0cbade55bba510622778ce8e33",
     "legacy_last_observed_wake_at": "2026-09-29T17:32:33.021Z",
-    "legacy_absence_window_verified": false
+    "legacy_absence_window_verified": false,
+    "post_freeze_replacement_verified": true,
+    "post_freeze_replacement_run_id": "36609801991",
+    "post_freeze_replacement_receipt": "sha256:307c10228664e1360903b5c8a9b992b337b043a8bbac8dca0daeffb49a6c4b14",
+    "post_freeze_replacement_result": "no_op",
+    "post_freeze_replacement_verified_at": "2026-09-29T18:07:54.190Z",
+    "legacy_wakes_observed_after_2026_09_29T18_01_34Z": 0
   },
   "acceptance": {
     "required_result": "no_op_or_published_verified",
@@ -58,9 +64,9 @@
     "legacy_schedule_retirement_requires_live_replacement": true
   },
   "blockers": [
-    "Observe a scheduled main-branch replacement recurrence after the Base44 freeze.",
-    "Confirm no new legacy Base44 social wake appears across the same 30-minute window."
+    "Complete one full 30-minute absence window after the last legacy Base44 wake at 2026-09-29T18:01:31.240Z.",
+    "Confirm no new legacy Base44 social wake appears after that window."
   ],
-  "next_action": "verify one scheduled main-branch replacement run and one absent legacy Base44 wake window, then close this migration slice",
+  "next_action": "after 2026-09-29T18:31:34Z, verify no new legacy Base44 social wake exists; if clear, mark the slice verified_retired and close it",
   "destructive_cutover_allowed": false
 }
