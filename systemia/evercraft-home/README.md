@@ -135,3 +135,20 @@ Current endpoints:
 
 Until a dedicated `home.credentials.manage` grant is rolled through existing owner Passports, this narrow intake reuses the already owner-sensitive `home.identity.sessions.manage` scope rather than widening access.
 
+## Emergency phone handoff
+
+When the authenticated mobile Evercraft Home route is temporarily unavailable, `/emergency-handoff.html` provides a local-only bridge that lets a user enter an upstream provider credential once without sending plaintext to chat, GitHub, Systemia, analytics, or a third-party credential service.
+
+The page:
+- generates a fresh random 256-bit AES key in the browser;
+- encrypts the provider credential with AES-256-GCM and authenticated context;
+- clears the plaintext input fields after sealing;
+- emits an encrypted `RAVEN1.` handoff and a separate `RAVEN-KEY1.` recovery key;
+- performs no network request and uses no browser persistence.
+
+Only the encrypted `RAVEN1.` package may be transported through ordinary channels. The recovery key stays with the user.
+
+Once authenticated Raven/Home is reachable, `/emergency-import.html` decrypts the handoff in the browser and submits the recovered credential directly to Raven's normal provider-vault endpoint. The recovery key is never sent to the server.
+
+This is a temporary continuity path, not a replacement for the canonical authenticated mobile credential intake.
+
