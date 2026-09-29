@@ -64,3 +64,59 @@ Saban resource profiles may use required_node_labels and forbidden_node_labels t
 Run:
 
     npm run proof:nodeseed-placement
+
+
+## Self-bootstrap conductor
+
+For a founder-authorized physical Linux machine, use the resumable conductor instead of manually sequencing the field scripts:
+
+```bash
+node systemia/compute/node-self-bootstrap.mjs --root /var/lib/evercraft/nodeseed
+```
+
+It always runs field preflight first and emits one state plus one next action. It never weakens the field-public-edge admission floor.
+
+On an eligible machine, safe installation work can be advanced with:
+
+```bash
+sudo node systemia/compute/node-self-bootstrap.mjs \
+  --root /var/lib/evercraft/nodeseed \
+  --advance
+```
+
+The conductor intentionally stops for evidence that software cannot truthfully invent:
+
+- one reboot to prove service persistence;
+- an offline-survival observation captured while no default route is present;
+- explicit physical-host confirmation;
+- trusted public-HTTPS domain/TLS admission.
+
+To capture the offline receipt after reboot, disconnect the machine from its default network route and run:
+
+```bash
+sudo node systemia/compute/node-self-bootstrap.mjs \
+  --root /var/lib/evercraft/nodeseed \
+  --capture-offline
+```
+
+After reconnecting, continue certification with explicit physical observation:
+
+```bash
+sudo node systemia/compute/node-self-bootstrap.mjs \
+  --root /var/lib/evercraft/nodeseed \
+  --advance \
+  --confirm-physical-host
+```
+
+If a Systemia remote-capacity broker is configured, the same conductor can submit a signed outbound enrollment request without exposing the local allocator secret:
+
+```bash
+sudo node systemia/compute/node-self-bootstrap.mjs \
+  --root /var/lib/evercraft/nodeseed \
+  --broker-url https://<evercraft-control-origin> \
+  --request-enrollment
+```
+
+Enrollment request is not authorization. Yard must explicitly authorize the exact node-id/device-fingerprint pair before the outbound node agent can receive commands.
+
+The bootstrap status receipt is written to `bootstrap-status.json`. It contains no allocator token, private key, browser credential, TLS private-key bytes, or remote session token.
