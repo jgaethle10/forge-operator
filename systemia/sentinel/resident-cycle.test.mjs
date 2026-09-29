@@ -182,10 +182,18 @@ let result = await runSentinelResidentCycle({
   inputState: emptyResidentState(),
   now,
   sources,
+  deploymentProfile: {
+    schema: 'systemia.sentinel.resolved-region-config.v1',
+    profile: { profile_id: 'fixture-region', label: 'Fixture Region' },
+    nws_area: 'WA',
+    nwps_gauges: [],
+    usgs_water_locations: []
+  },
   eventGraphWindowSeconds: 900
 });
 
 assert.equal(result.snapshot.summary.sources_polled, 2);
+assert.equal(result.snapshot.deployment_profile.profile.profile_id, 'fixture-region');
 assert.equal(result.snapshot.summary.coverage_healthy, true);
 assert.equal(result.snapshot.event_graph.cluster_count, 1);
 assert.equal(result.snapshot.event_graph.clusters[0].independent_source_groups.length, 2);
@@ -263,6 +271,7 @@ assert.equal(registered.mode, 'resident');
 assert.equal(registered.executable, 'systemia/sentinel/resident-runner.mjs');
 assert.equal(registered.manifest, 'systemia/sentinel/resident.workflow.json');
 assert.equal(registered.max_restarts_per_hour, 12);
+assert.equal(registered.optional_env_args['--region-profile'], 'SYSTEMIA_SENTINEL_REGION_PROFILE');
 
 const missionSources = JSON.parse(fs.readFileSync(
   new URL('../collider/mission-sources.json', import.meta.url),
