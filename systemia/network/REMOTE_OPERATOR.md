@@ -56,14 +56,14 @@ Absolute paths, parent traversal and symlink write targets are rejected. Common 
 
 `POST /v1/operator/exec` is a bounded non-interactive program runner, not a raw public shell.
 
-The initial program set is designed for maintaining Evercraft:
+The initial execution surface is deliberately a maintenance console rather than an arbitrary shell:
 
-- git / npm / npx / node
-- systemctl / journalctl
-- ls / find / grep / sed / head / tail / pwd
-- cp / mv / mkdir / rm / chmod
+- `git`: status, fetch, pull, log, diff, rev-parse and branch
+- `npm`: install, test, run and start
+- `systemctl --user`: status, restart, start, stop, is-active and daemon-reload, restricted to `evercraft-*` units
+- `journalctl --user`: restricted to `evercraft-*` units
 
-Inline Node evaluation/require/import is blocked. `systemctl` is restricted to `--user`. Execution has a hard timeout and output cap. Ambient environment variables are not forwarded wholesale, so API keys present in the service environment are not automatically exposed to commands.
+There is no `bash`, `sh`, `sudo`, arbitrary Node evaluation, package-exec lane, or generic file-reading command in the execution profile. File inspection uses the separately policy-checked filesystem API. Git configuration/work-tree overrides, global npm scope overrides, system-level systemd control and journal source overrides are rejected. Execution has a hard timeout and output cap. Ambient environment variables are not forwarded wholesale, so API keys present in the service environment are not automatically exposed to commands.
 
 ## Receipts
 
