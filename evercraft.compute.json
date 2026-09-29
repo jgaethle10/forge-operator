@@ -32,12 +32,14 @@
       "/chum/hot/index.json",
       "/mcp/ibmi-rescue",
       "/mcp/foundry-app-escape",
-      "/mcp/site-survive"
+      "/mcp/site-survive",
+      "/api/remote-operator/health"
     ],
     "specialist_mcp_paths": [
       "/mcp/ibmi-rescue",
       "/mcp/foundry-app-escape",
-      "/mcp/site-survive"
+      "/mcp/site-survive",
+      "/mcp/evercraft-remote"
     ]
   },
   "environment": {
@@ -52,11 +54,15 @@
       "CHUM_ATTRIBUTION_SECRET",
       "CHUM_ATTRIBUTION_SINK_URL",
       "CHUM_ATTRIBUTION_SINK_TOKEN",
-      "CHUM_ATTRIBUTION_INGEST_TOKEN"
+      "CHUM_ATTRIBUTION_INGEST_TOKEN",
+      "EVERCRAFT_REMOTE_OPERATOR_CAPACITY_ENDPOINT",
+      "EVERCRAFT_REMOTE_OPERATOR_CONTROL_TOKEN",
+      "EVERCRAFT_REMOTE_OPERATOR_CLIENT_TOKEN"
     ],
     "rules": {
       "CHUM_PUBLIC_ORIGIN": "May be set only to a public route independently verified in the current Yard DeploymentReceipt.",
-      "attribution": "Missing attribution configuration must degrade to untracked public discovery, never fabricated referral or revenue receipts."
+      "attribution": "Missing attribution configuration must degrade to untracked public discovery, never fabricated referral or revenue receipts.",
+      "remote_operator": "Remote Operator gateway configuration is optional and must fail closed when incomplete. The client bearer and NodeSeed remote control grant must be distinct; neither secret may be emitted in health, manifests, logs, receipts, or client responses."
     }
   },
   "capacity": {
