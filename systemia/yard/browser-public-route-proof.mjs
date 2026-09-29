@@ -17,6 +17,8 @@ fs.mkdirSync(computeRoot,{recursive:true});
 let closed=false;
 let receiptRef='';
 let browseCount=0;
+let authSessionCount=0;
+let authClosed=false;
 const instanceId='browser-public-route-proof';
 
 const browserRuntimeFactory=async()=>{
@@ -67,6 +69,62 @@ const browserRuntimeFactory=async()=>{
           .update(JSON.stringify(evidence))
           .digest('hex'),
       };
+    },
+    async createAuthSession(job={}){
+      const target=new URL(String(job?.url||''));
+      if(target.hostname==='localhost'||target.hostname==='127.0.0.1'||target.hostname.endsWith('.local')){
+        throw new Error('private_or_reserved_target');
+      }
+      authSessionCount+=1;
+      return {
+        session_id:'browser-edge-auth-proof',
+        handoff_path:'/handoff/browser-edge-auth-proof#claim=edge-proof-claim',
+        expires_at:new Date(Date.now()+60_000).toISOString(),
+        mode:'human_authorized_ephemeral',
+        persisted_profile:false,
+        secret_text_returned:false,
+      };
+    },
+    async authHandoffPage(sessionId){
+      return '<!doctype html><title>Evercraft Control Room</title><main>session '+sessionId+'</main>';
+    },
+    async authSnapshot(sessionId,claim){
+      if(sessionId!=='browser-edge-auth-proof'||claim!=='edge-proof-claim'){
+        throw new Error('authenticated_browser_claim_invalid');
+      }
+      return {
+        ok:true,
+        session_id:sessionId,
+        title:'Evercraft browser edge auth proof',
+        url:'https://example.com/',
+        origin:'https://example.com',
+        secure_transport:true,
+        viewport:{width:1280,height:800},
+        screenshot_base64:'cHJvb2Y=',
+        screenshot_sha256:crypto.createHash('sha256').update('proof').digest('hex'),
+        expires_at:new Date(Date.now()+60_000).toISOString(),
+        mode:'human_authorized_ephemeral',
+      };
+    },
+    async authAction(sessionId,claim,action){
+      if(sessionId!=='browser-edge-auth-proof'||claim!=='edge-proof-claim'){
+        throw new Error('authenticated_browser_claim_invalid');
+      }
+      return {
+        ok:true,
+        session_id:sessionId,
+        type:String(action?.type||''),
+        action_count:1,
+        secret_text_recorded:false,
+        expires_at:new Date(Date.now()+60_000).toISOString(),
+      };
+    },
+    async authClose(sessionId,claim){
+      if(sessionId!=='browser-edge-auth-proof'||claim!=='edge-proof-claim'){
+        throw new Error('authenticated_browser_claim_invalid');
+      }
+      authClosed=true;
+      return {ok:true,closed:true,session_id:sessionId};
     },
     setDeploymentReceipt(value){
       receiptRef=String(value||'');
@@ -159,6 +217,57 @@ try{
   assert.equal(health.deployment_receipt_ref,deployment.receipt.receipt_hash);
   assert.equal(health.raw_worker_publicly_exposed,false);
 
+  const authHandoff=await yard.createBrowserAuthHandoff(
+    'evercraft-browser-public-route-proof',
+    {url:'https://example.com/'}
+  );
+  assert.equal(authHandoff.ok,true);
+  assert.equal(authHandoff.result.session_id,'browser-edge-auth-proof');
+  assert.equal(authHandoff.result.public_route_verified,true);
+  assert.equal(authHandoff.result.handoff_url,binding.origin+'/handoff/browser-edge-auth-proof#claim=edge-proof-claim');
+  assert.equal(authSessionCount,1);
+
+  const handoffUrl=new URL(authHandoff.result.handoff_url);
+  const claim=new URLSearchParams(handoffUrl.hash.slice(1)).get('claim');
+  assert.equal(claim,'edge-proof-claim');
+  handoffUrl.hash='';
+
+  const handoffPage=await fetch(handoffUrl).then(r=>r.text());
+  assert.match(handoffPage,/Evercraft Control Room/);
+
+  const authSnapshot=await fetch(
+    binding.origin+'/v1/auth-browser/sessions/browser-edge-auth-proof/snapshot',
+    {headers:{'x-evercraft-browser-claim':claim}}
+  ).then(r=>r.json());
+  assert.equal(authSnapshot.ok,true);
+  assert.equal(authSnapshot.secure_transport,true);
+  assert.match(authSnapshot.screenshot_sha256,/^[a-f0-9]{64}$/);
+
+  const authAction=await fetch(
+    binding.origin+'/v1/auth-browser/sessions/browser-edge-auth-proof/action',
+    {
+      method:'POST',
+      headers:{
+        'content-type':'application/json',
+        'x-evercraft-browser-claim':claim,
+      },
+      body:JSON.stringify({type:'reload'}),
+    }
+  ).then(r=>r.json());
+  assert.equal(authAction.ok,true);
+  assert.equal(authAction.type,'reload');
+  assert.equal(authAction.secret_text_recorded,false);
+
+  const authClose=await fetch(
+    binding.origin+'/v1/auth-browser/sessions/browser-edge-auth-proof',
+    {
+      method:'DELETE',
+      headers:{'x-evercraft-browser-claim':claim},
+    }
+  ).then(r=>r.json());
+  assert.equal(authClose.closed,true);
+  assert.equal(authClosed,true);
+
   const renderResponse=await fetch(binding.origin+'/v1/browser/render',{
     method:'POST',
     headers:{'content-type':'application/json'},
@@ -199,6 +308,10 @@ try{
     raw_worker_publicly_exposed:false,
     public_adapter_health_verified:true,
     public_render_crossed_edge:true,
+    authenticated_handoff_created_through_private_yard:true,
+    authenticated_handoff_crossed_public_edge:true,
+    authenticated_handoff_claim_enforced:true,
+    authenticated_handoff_close_destroyed_session:true,
     private_target_rejection_crossed_edge:true,
     evidence_receipt:rendered.result.evidence_receipt_sha256,
     route_binding_receipt:binding.receipt_hash,
