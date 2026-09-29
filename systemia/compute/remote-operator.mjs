@@ -109,6 +109,7 @@ function safeArgs(program, args = []) {
   if (values.some((value) => /[\r\n\0]/.test(value))) throw new Error('operator_arg_control_character_denied');
 
   if (program === 'git') {
+    if (values.length === 1 && values[0] === '--version') return values;
     const subcommand = values[0] || '';
     if (!GIT_SUBCOMMANDS.has(subcommand)) throw new Error('operator_git_subcommand_denied');
     if (values.some((value) =>
