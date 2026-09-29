@@ -601,6 +601,7 @@ export async function buildCrawlPressure({
     origin: normalizedOrigin,
     origin_source: originResolution.source,
     origin_receipt_hash: originResolution.receipt_hash || null,
+    origin_release_ref: originResolution.release_ref || null,
     indexed_surfaces: state.url_count,
     changed_surfaces: changedEntries.length,
     broadcast: broadcastResult,
