@@ -1630,6 +1630,9 @@ export async function startEvercraftComputeNode({
               remoteDeviceTrustWatchOut,
             SYSTEMIA_MISSION_SOURCES_CONFIG: missionSourcesConfig,
             SYSTEMIA_MISSION_PUBLISHER_LEDGER: publisherLedger,
+            SYSTEMIA_SENTINEL_REGION_PROFILE: String(
+              body.input?.sentinel_region_profile || ''
+            ).trim(),
           };
 
           const supervisor = new SystemiaCoreResidentSupervisor({
@@ -1656,6 +1659,7 @@ export async function startEvercraftComputeNode({
             service_url: null,
             health_path: `/v1/services/${serviceId}/health`,
             supervised_service_count: health.service_count,
+            sentinel_region_profile: serviceEnv.SYSTEMIA_SENTINEL_REGION_PROFILE || null,
           };
           const receipt = chain.issue('service.started', {
             lease_id: body.lease_id,
