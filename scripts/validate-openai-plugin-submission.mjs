@@ -18,6 +18,12 @@ const requireHttps = (label, value) => {
 if (submission.submission_type !== 'With MCP') errors.push('submission_type must be With MCP');
 if (!submission.plugin_name) errors.push('plugin_name is required');
 requireHttps('mcp.url', submission?.mcp?.url);
+if(submission?.mcp?.authority==='owned_public_fabric'){
+  const mcpUrl=new URL(submission.mcp.url);
+  if(/(^|\\.)base44\\.app$/i.test(mcpUrl.hostname)) errors.push('owned public Fabric MCP must not use Base44');
+  if(submission.mcp.owned_fabric_cutover_required!==false) errors.push('owned public Fabric must close the cutover gate');
+  if(submission.mcp.origin_change_requires_new_plugin_submission!==true) errors.push('owned Fabric origin change must require a new OpenAI plugin submission');
+}
 requireHttps('website', submission.website);
 requireHttps('support_url', submission.support_url);
 requireHttps('privacy_policy_url', submission.privacy_policy_url);
