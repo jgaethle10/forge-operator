@@ -34,13 +34,16 @@ assert.doesNotMatch(product.commercial?.machine_commerce_handoff?.buyer_url || '
 
 const cat = catalog.products.find((row) => row.product_key === 'legacy-rescue-lab');
 assert(cat, 'legacy-rescue-lab missing from registry catalog');
-assert.equal(cat.mode, 'discovery_only');
-assert(!cat.mcp, 'Legacy Rescue Lab must not claim a dedicated MCP before verification');
+assert.equal(cat.mode, 'shared_mcp');
+assert.equal(cat.registry_name, 'io.github.jgaethle10/evercraft-machine-commerce');
+assert.match(cat.mcp || '', /machineCommerceMcp$/);
+assert.equal(cat.machine_state, 'human_handoff_ready');
 
 assert.equal(discovery.product_key, 'legacy-rescue-lab');
 assert.equal(discovery.human_confirmation_required, true);
 assert.equal(discovery.commercial?.offers?.[0]?.offer_key, 'legacy_rescue_scan_299');
-assert.equal(discovery.mcp, null);
+assert.equal(discovery.registry_name, 'io.github.jgaethle10/evercraft-machine-commerce');
+assert.match(discovery.mcp || '', /machineCommerceMcp$/);
 assert.equal(aiConformance.provider_behavior_state, 'not_inferred_from_publication');
 
 const registeredConformance = conformanceRegistry.products.find((row) => row.product_key === 'legacy-rescue-lab');
@@ -63,7 +66,7 @@ assert.match(rootLlms, /Legacy Rescue Lab/i);
 const painEntry = painIndex.entries.find((row) => row.capability_id === 'product:legacy-rescue-lab');
 assert(painEntry, 'Legacy Rescue Lab missing from CHUM pain index');
 assert.match(painEntry.pain_phrases.join(' '), /repair instead of rebuild/i);
-assert.equal(painEntry.machine_state, 'discovery_only');
+assert.equal(painEntry.machine_state, 'specialist_mcp_declared');
 
 console.log(JSON.stringify({
   ok:true,
