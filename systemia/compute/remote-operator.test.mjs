@@ -1,0 +1,82 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import { EvercraftRemoteOperator } from './remote-operator.mjs';
+
+const root = fs.mkdtempSync(path.join(os.tmpdir(), 'evercraft-remote-operator-'));
+const state = path.join(root, '.operator-state');
+const home = path.join(root, 'home');
+fs.mkdirSync(home, { recursive: true });
+fs.writeFileSync(path.join(home, 'hello.txt'), 'hello evercraft\n');
+fs.mkdirSync(path.join(home, '.ssh'), { recursive: true });
+fs.writeFileSync(path.join(home, '.ssh', 'id_ed25519'), 'secret');
+
+try {
+  const operator = new EvercraftRemoteOperator({
+    roots: { home },
+    stateDir: state,
+    maxExecMs: 10_000,
+  });
+
+  const status = operator.status();
+  assert.equal(status.ok, true);
+  assert.deepEqual(status.roots, ['home']);
+  assert.equal(status.execution.root_privilege, false);
+  assert.equal(status.execution.ambient_secret_environment_forwarded, false);
+
+  const listed = operator.list({ root_key: 'home', path: '.' });
+  assert.ok(listed.entries.some((entry) => entry.name === 'hello.txt'));
+
+  const read = operator.read({ root_key: 'home', path: 'hello.txt' });
+  assert.equal(read.content, 'hello evercraft\n');
+  assert.throws(
+    () => operator.read({ root_key: 'home', path: '.ssh/id_ed25519' }),
+    /operator_sensitive_path_denied/
+  );
+
+  const written = operator.write({
+    root_key: 'home',
+    path: 'workspace/result.txt',
+    content: 'sealed\n',
+    approval_ref: 'proof:user-approved',
+  });
+  assert.equal(written.ok, true);
+  assert.equal(fs.readFileSync(path.join(home, 'workspace/result.txt'), 'utf8'), 'sealed\n');
+
+  await assert.rejects(
+    operator.exec({
+      root_key: 'home',
+      program: 'node',
+      args: ['-e', 'console.log(process.env)'],
+      approval_ref: 'proof:user-approved',
+    }),
+    /operator_node_inline_execution_denied/
+  );
+
+  const executed = await operator.exec({
+    root_key: 'home',
+    cwd: '.',
+    program: 'git',
+    args: ['--version'],
+    approval_ref: 'proof:user-approved',
+  });
+  assert.equal(executed.ok, true);
+  assert.match(executed.stdout, /git version/i);
+
+  const receipts = fs.readFileSync(path.join(state, 'operator-receipts.jsonl'), 'utf8');
+  assert.equal(receipts.includes('hello evercraft'), false);
+  assert.equal(receipts.includes('secret'), false);
+  assert.match(receipts, /evercraft\.remote-operator\.receipt\.v1/);
+
+  console.log(JSON.stringify({
+    ok: true,
+    schema: 'evercraft.remote-operator-proof.v1',
+    sensitive_path_read_blocked: true,
+    arbitrary_inline_node_execution_blocked: true,
+    mutation_approval_required: true,
+    receipt_contents_redacted: true,
+  }));
+} finally {
+  fs.rmSync(root, { recursive: true, force: true });
+}
