@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-29T05:53:29.457Z",
+  "updated_at": "2026-09-29T05:56:22.327Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,97 +11,29 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/products/ibmi-rescue/",
-      "last_changed": "2026-09-29T05:53:29.457Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/ibmi-rescue/ai-conformance.json",
-      "last_changed": "2026-09-29T05:53:29.457Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/ibmi-rescue/ai-discovery.json",
-      "last_changed": "2026-09-29T05:53:29.457Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/ibmi-rescue/llms.txt",
-      "last_changed": "2026-09-29T05:53:29.457Z",
-      "priority": 94
-    },
-    {
-      "path": "/.well-known/evercraft-pain-index.json",
-      "last_changed": "2026-09-29T05:53:29.457Z",
-      "priority": 90
-    },
-    {
-      "path": "/.well-known/evercraft-products.json",
-      "last_changed": "2026-09-29T05:53:29.457Z",
-      "priority": 88
-    },
-    {
-      "path": "/llms-full.txt",
-      "last_changed": "2026-09-29T05:53:29.457Z",
-      "priority": 86
-    },
-    {
-      "path": "/.well-known/evercraft-agent-directory.json",
-      "last_changed": "2026-09-29T05:53:29.457Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-syndication.json",
-      "last_changed": "2026-09-29T05:53:29.457Z",
-      "priority": 84
+      "path": "/chum/hot/",
+      "last_changed": "2026-09-29T05:56:22.327Z",
+      "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-29T05:53:29.457Z",
+      "last_changed": "2026-09-29T05:56:22.327Z",
       "priority": 80
-    },
-    {
-      "path": "/chum/index.json",
-      "last_changed": "2026-09-29T05:53:29.457Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.json",
-      "last_changed": "2026-09-29T05:53:29.457Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/proof/forensiscope.json",
-      "last_changed": "2026-09-29T05:53:29.457Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/proof/index.json",
-      "last_changed": "2026-09-29T05:53:29.457Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/proof/rivet.json",
-      "last_changed": "2026-09-29T05:53:29.457Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/syndication/index.json",
-      "last_changed": "2026-09-29T05:53:29.457Z",
-      "priority": 80
-    },
-    {
-      "path": "/feed.json",
-      "last_changed": "2026-09-29T05:53:29.457Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.xml",
-      "last_changed": "2026-09-29T05:53:29.457Z",
-      "priority": 60
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/hot/",
+      "url": "/chum/hot/",
+      "last_changed": "2026-09-29T05:56:22.327Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-29T05:56:22.327Z",
+      "priority": 80
+    },
     {
       "path": "/chum/products/ibmi-rescue/",
       "url": "/chum/products/ibmi-rescue/",
@@ -157,12 +89,6 @@
       "priority": 84
     },
     {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-09-29T05:53:29.457Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/index.json",
       "url": "/chum/index.json",
       "last_changed": "2026-09-29T05:53:29.457Z",
@@ -209,12 +135,6 @@
       "url": "/feed.xml",
       "last_changed": "2026-09-29T05:53:29.457Z",
       "priority": 60
-    },
-    {
-      "path": "/chum/hot/",
-      "url": "/chum/hot/",
-      "last_changed": "2026-09-29T05:38:52.396Z",
-      "priority": 80
     },
     {
       "path": "/chum/answers/doors/build-a-contractor-estimate-from-this-scope-e9fbacf2bd.json",
