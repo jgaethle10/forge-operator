@@ -7,6 +7,7 @@ import {
 } from './source-health.mjs';
 import { buildRegionalEventGraph } from './event-graph.mjs';
 import { buildOperatorPicture } from './operator-picture.mjs';
+import { emptyBaselineState, scoreAgainstBaseline } from './baseline.mjs';
 import {
   pollNwsActiveAlerts,
   NWS_SOURCE_CONTRACT
@@ -19,6 +20,10 @@ import {
   pollNwpsRiverGauges,
   NWPS_SOURCE_CONTRACT
 } from './sources/nwps-rivers.mjs';
+import {
+  pollUsgsWaterLatest,
+  USGS_WATER_SOURCE_CONTRACT
+} from './sources/usgs-water.mjs';
 
 export const BUILTIN_SENTINEL_SOURCES = Object.freeze([
   {
@@ -35,7 +40,7 @@ export const BUILTIN_SENTINEL_SOURCES = Object.freeze([
   }
 ]);
 
-export function buildBuiltinSentinelSources({ nwpsGaugeIds = [] } = {}) {
+export function buildBuiltinSentinelSources({ nwpsGaugeIds = [], usgsWaterLocationIds = [] } = {}) {
   const sources = [...BUILTIN_SENTINEL_SOURCES];
   const gaugeIds = [...new Set((nwpsGaugeIds || []).map((value) => String(value || '').trim()).filter(Boolean))];
   if (gaugeIds.length) {
@@ -44,6 +49,15 @@ export function buildBuiltinSentinelSources({ nwpsGaugeIds = [] } = {}) {
       contract: NWPS_SOURCE_CONTRACT,
       poll_interval_seconds: 300,
       poll: (options = {}) => pollNwpsRiverGauges({ ...options, gaugeIds })
+    });
+  }
+  const locations = [...new Set((usgsWaterLocationIds || []).map((value) => String(value || '').trim()).filter(Boolean))];
+  if (locations.length) {
+    sources.push({
+      source_id: USGS_WATER_SOURCE_CONTRACT.source_id,
+      contract: USGS_WATER_SOURCE_CONTRACT,
+      poll_interval_seconds: 300,
+      poll: (options = {}) => pollUsgsWaterLatest({ ...options, monitoringLocationIds: locations })
     });
   }
   return sources;
@@ -81,6 +95,7 @@ export function emptyResidentState() {
     last_cycle_at: null,
     sentinel_state: emptyState(),
     source_health_state: emptySourceHealthState(),
+    baseline_state: emptyBaselineState(),
     source_schedule: {}
   };
 }
@@ -185,6 +200,7 @@ export async function runSentinelResidentCycle({
     { incidentRetentionSeconds, maxIncidents }
   );
   state.source_health_state = state.source_health_state || emptySourceHealthState();
+  state.baseline_state = state.baseline_state || emptyBaselineState();
   state.source_schedule = state.source_schedule || {};
 
   const pollResults = [];
@@ -240,11 +256,45 @@ export async function runSentinelResidentCycle({
       : [];
 
     for (const observation of observations) {
-      const ingested = ingestObservation(state.sentinel_state, observation);
+      let candidate = observation;
+      let baseline = null;
+
+      if (Number.isFinite(Number(observation.metric_value))) {
+        const scored = scoreAgainstBaseline(state.baseline_state, {
+          region_key: observation.region_key,
+          domain: observation.domain,
+          kind: observation.baseline_kind || observation.kind,
+          value: Number(observation.metric_value),
+          created_at: observation.created_at
+        }, observation.baseline_options || {});
+        state.baseline_state = scored.state;
+        baseline = scored.result;
+
+        if (!baseline.baseline_ready || baseline.anomaly_score <= 0) {
+          cycleDecisions.push({
+            source_id: source.source_id,
+            observation_id: observation.observation_id,
+            action: 'baseline_learning',
+            duplicate: false,
+            material: false,
+            baseline
+          });
+          continue;
+        }
+
+        candidate = {
+          ...observation,
+          anomaly_score: baseline.anomaly_score
+        };
+      }
+
+      const ingested = ingestObservation(state.sentinel_state, candidate);
       state.sentinel_state = ingested.state;
       cycleDecisions.push({
         source_id: source.source_id,
-        observation_id: observation.observation_id,
+        observation_id: candidate.observation_id,
+        material: true,
+        baseline,
         ...ingested.decision
       });
     }
@@ -325,7 +375,7 @@ export function buildSentinelMissionSnapshot(snapshot) {
     ...(snapshot.coverage?.blind_spots || []).map((row) => 'source-health:' + row.source_id)
   ].filter(Boolean))].slice(0, 500);
 
-  const changed = (snapshot.cycle_decisions || []).filter((row) => !row.duplicate).length;
+  const changed = (snapshot.cycle_decisions || []).filter((row) => !row.duplicate && row.material !== false).length;
   const admitted =
     Number(snapshot.summary?.elevated_incidents || 0) +
     Number(snapshot.summary?.urgent_incidents || 0);
