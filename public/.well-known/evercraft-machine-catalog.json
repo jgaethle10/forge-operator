@@ -649,7 +649,8 @@
       "public_url_source": "source_catalog",
       "payment_authority": "Stripe subscription control plane is build verified, but the EPS runtime currently has no STRIPE_SECRET_KEY, EPS_STRIPE_PRICE_ID or EPS_STRIPE_WEBHOOK_SECRET configured. Checkout therefore remains unavailable and no public price is approved.",
       "invocation_status": "LIVE VERIFIED PLATFORM HTTPS + MCP: the no-account read-only estimate preview is live; Machine Commerce MCP exposes calculate_contractor_estimate_preview and verify_contractor_estimate_receipt. EPS emits a SHA-256 calculation receipt and a deployed receipt verifier independently recomputes the canonical payload; live HTTP and MCP canaries returned verified=true with authority limited to integrity_only and identity_verified=false. Browser continuation carries receipt lineage into saved estimates. Private workspace company settings, overrides, cost library, estimates, revisions, proposals, acceptance receipts, change orders, job handoff and calibration now route through an authenticated entitlement-aware data gateway while preserving user-scoped Base44 RLS. That gateway is deployed and rejec",
-      "catalog_version": "2026-09-28.3"
+      "catalog_version": "2026-09-28.3",
+      "live_canary_evidence": "[object Object]"
     },
     {
       "public_id": "eventwave-paid-promotion-v1",
@@ -761,7 +762,8 @@
       "public_url_source": "source_catalog",
       "payment_authority": "No live Network membership payment authority is advertised. Reservation creates no charge. Any future paid activation requires an independently verified billing path and explicit human action.",
       "invocation_status": "LIVE READ-ONLY MCP VERIFIED: production initialize, tools/list, get_network_capabilities, get_network_presence, and prepare_network_handoff all passed the dedicated Evercraft Network canary. The handoff call returned only a tagged human URL and created no enrollment, checkout, payment obligation, device action, carrier action, or emergency authority. Founding Membership billing remains not live.",
-      "catalog_version": "2026-09-29.network-full-readonly-verified"
+      "catalog_version": "2026-09-29.network-full-readonly-verified",
+      "live_canary_evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/conformance/runtime-observations/2026-09-26-evercraft-network-mcp.json"
     },
     {
       "public_id": "evercraft-web-browser-agent-v1",
@@ -1093,7 +1095,8 @@
       "public_url_source": "source_catalog",
       "payment_authority": "Evercraft Payments; human and agent checkout-session creation are wired behind explicit buyer confirmation. Checkout creation is not payment proof; paid state still requires authoritative provider verification.",
       "invocation_status": "LIVE DIRECT CHECKOUT CANARY VERIFIED: central Machine Commerce successfully retrieved the live IBM i offer set and created a synthetic $250 Estate X-Ray Stripe Checkout session through the product-native IBM i adapter and Evercraft Payments. Explicit human payment confirmation remains required for buyer checkout preparation. Checkout creation is not payment or revenue proof, paid state still requires authoritative provider verification, and production access/change remains outside this capability.",
-      "catalog_version": "2026-09-28.1"
+      "catalog_version": "2026-09-28.1",
+      "live_canary_evidence": "GitHubActionsRun:36495507434"
     },
     {
       "public_id": "income-war-map-v1",
@@ -1189,7 +1192,8 @@
       "public_url_source": "source_catalog",
       "payment_authority": "Human-confirmed request capture is live. No product-specific direct machine checkout is advertised. Paid state requires authoritative provider verification after a separately authorized payment path.",
       "invocation_status": "LIVE HUMAN HANDOFF VERIFIED: central Machine Commerce matches Legacy Rescue Lab from problem language, exposes the $299 Rescue Scan, renders a human review/intake page, and records a bounded scan request only after explicit human confirmation. A synthetic positive canary returned HTTP 201 with checkout_created=false, payment_obligation_created=false, private_access_granted=false and production_authority_granted=false; a negative canary without confirmation returned HTTP 409 and created no record. Direct checkout remains unverified and is not exposed.",
-      "catalog_version": "2026-09-28.1"
+      "catalog_version": "2026-09-28.1",
+      "live_canary_evidence": "[object Object]"
     },
     {
       "public_id": "littlered-kdp-export-qa-machine-v1",
@@ -1257,7 +1261,8 @@
       "public_url_source": "source_catalog",
       "payment_authority": "No direct machine checkout is exposed. Commercial terms and any later payment require explicit human agreement and authoritative payment verification.",
       "invocation_status": "LIVE for public machine discovery, deterministic problem matching, read-only pilot handoff, and human-confirmed commercial pilot request capture through Evercraft Machine Commerce. The internal Portfolio Sentinel runtime now has receipt-backed commerce-integrity cycle code for product-native buyer-route reachability, gateway-leak detection and conversion-stage telemetry. Recurring cadence is not claimed until an authorized scheduler is configured and successive runtime receipts prove it. Customer monitoring begins only after separate scoped onboarding and authorization. A pilot request grants no private access, monitoring authority, payment obligation, production mutation, or external-system authority.",
-      "catalog_version": "2026-09-28.3"
+      "catalog_version": "2026-09-28.3",
+      "live_canary_evidence": "[object Object]"
     },
     {
       "public_id": "raven-nexus-pain-router-v1",
