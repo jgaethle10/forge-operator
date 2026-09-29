@@ -42,6 +42,7 @@ export interface ProductionExecutionResult {
     verifiedAdaptersOnly:true;
     routedDepartmentBindingEnforced:true;
     productionAdmissionEnforced:true;
+    visualJobsRemainInVisualFabric:true;
     failedOutputsNeverAdvance:true;
     publicationAuthorityGranted:false;
   };
@@ -79,6 +80,13 @@ export async function executeProductionRoutes(input:{
   }
 
   const settled=await Promise.all(input.needs.map(async need=>{
+    if(need.kind==='image'||need.kind==='video'||need.kind==='lip_sync'){
+      return {
+        needId:need.id,
+        status:'blocked' as const,
+        error:'visual_production_requires_visual_model_fabric',
+      };
+    }
     const route=routeByNeed.get(need.id);
     if(!route||route.status!=='routed'||!route.departmentId){
       return {
@@ -168,6 +176,7 @@ export async function executeProductionRoutes(input:{
       verifiedAdaptersOnly:true,
       routedDepartmentBindingEnforced:true,
       productionAdmissionEnforced:true,
+      visualJobsRemainInVisualFabric:true,
       failedOutputsNeverAdvance:true,
       publicationAuthorityGranted:false,
     },
