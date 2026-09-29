@@ -190,6 +190,7 @@ const CHUM_DISCOVERY_LINKS = [
   '</feed.json>; rel="alternate"; type="application/feed+json"; title="Evercraft Product Discovery JSON Feed"',
   '</opensearch.xml>; rel="search"; type="application/opensearchdescription+xml"; title="Evercraft Search"',
   '</.well-known/evercraft-syndication.json>; rel="service-desc"; type="application/json"; title="Evercraft Syndication Manifest"',
+  '</.well-known/evercraft-household-fabric.json>; rel="service-desc"; type="application/json"; title="Evercraft Household Fabric Manifest"',
   '</api/household-fabric/yakima/today>; rel="alternate"; type="application/json"; title="Evercraft Household Fabric Yakima Today"',
   '</.well-known/agent-card.json>; rel="service-desc"; type="application/json"; title="Evercraft A2A Agent Card"',
   '</chum/freshness.xml>; rel="alternate"; type="application/atom+xml"; title="Evercraft CHUM Freshness Feed"',
