@@ -1,0 +1,65 @@
+name: Systemia fulfillment readiness
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "systemia/organism/product-fulfillment-registry.json"
+      - "systemia/organism/universal-product-fulfillment.mjs"
+      - "systemia/organism/universal-product-fulfillment.proof.mjs"
+      - "systemia/saban/fulfillment-readiness-adapter.mjs"
+      - "systemia/saban/multiplication-registry.json"
+      - ".github/workflows/systemia-fulfillment-readiness.yml"
+  schedule:
+    - cron: "41 14 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: systemia-fulfillment-readiness
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Prove universal fulfillment contract
+        run: npm run proof:universal-fulfillment
+
+      - name: Validate Saban contracts
+        run: npm run check:saban-contracts
+
+      - name: Run Saban fulfillment readiness swarm
+        run: npm run proof:saban-fulfillment
+
+      - name: Upload Saban receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: portfolio-fulfillment-readiness
+          path: |
+            artifacts/saban-multiplier/portfolio-fulfillment-readiness/**
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Summary
+        if: always()
+        run: |
+          {
+            echo "## Evercraft portfolio fulfillment readiness"
+            echo
+            echo "Coordinator: Systemia"
+            echo "Execution fabric: Saban"
+            echo "Authority: provider-verified non-synthetic payment only"
+            echo "Private access: never granted by payment"
+            echo "Completion: delivery receipt required"
+            echo "Expansion: human-gated"
+          } >> "$GITHUB_STEP_SUMMARY"
