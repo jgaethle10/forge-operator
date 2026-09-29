@@ -4,6 +4,7 @@ import path from "node:path";
 import { randomUUID } from "node:crypto";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { EvercraftPassport } from "../passport/passport.mjs";
+import { EvercraftIdentity, IdentityRateLimiter } from "../identity/identity.mjs";
 import { authorizeEvercraftHome, verifyEvercraftSession } from "./identity.mjs";
 import { planSystemiaMission, readSystemiaInventory } from "./systemia-adapter.mjs";
 import { readNetworkOverview, readYardOverview } from "./operations-adapter.mjs";
@@ -59,6 +60,9 @@ export async function startEvercraftHomeServer({
   identitySecret = String(process.env.EVERCRAFT_IDENTITY_SECRET || "").trim(),
   passportStateDir = String(process.env.EVERCRAFT_PASSPORT_STATE_DIR || "").trim(),
   yardStateDir = String(process.env.EVERCRAFT_YARD_STATE_DIR || "").trim(),
+  identityStateDir = String(process.env.EVERCRAFT_IDENTITY_STATE_DIR || "").trim(),
+  sessionTtlSeconds = Number(process.env.EVERCRAFT_HOME_SESSION_TTL_SECONDS || 1800),
+  cookieSecure = String(process.env.EVERCRAFT_HOME_COOKIE_SECURE || "true").toLowerCase() !== "false",
   serviceOrigins = process.env,
 } = {}) {
   const loopback = ["127.0.0.1", "localhost", "::1"].includes(host);
@@ -71,9 +75,28 @@ export async function startEvercraftHomeServer({
   }
 
   const passport = authMode === "passport" ? new EvercraftPassport({ stateDir: passportStateDir }) : null;
+  const identity = authMode === "passport" && identityStateDir
+    ? new EvercraftIdentity({ stateDir: identityStateDir })
+    : null;
+  const loginLimiter = new IdentityRateLimiter();
   const instanceId = "home_" + randomUUID();
   let closed = false;
   let deploymentReceiptRef = "";
+
+  function sessionCookie(token, maxAgeSeconds) {
+    return [
+      "evercraft_session=" + encodeURIComponent(token),
+      "Path=/",
+      "HttpOnly",
+      "SameSite=Strict",
+      cookieSecure ? "Secure" : "",
+      "Max-Age=" + Math.max(0, Number(maxAgeSeconds || 0)),
+    ].filter(Boolean).join("; ");
+  }
+
+  function loginRateKey(req, login) {
+    return String(login || "").toLowerCase() + "@" + String(req.socket?.remoteAddress || "unknown");
+  }
 
   function sessionFor(req, scope = "home.read") {
     if (authMode === "local") {
@@ -157,6 +180,77 @@ export async function startEvercraftHomeServer({
         instance_id: instanceId,
         timestamp: new Date().toISOString(),
       });
+    }
+
+    if (req.method === "POST" && url.pathname === "/api/login") {
+      if (authMode !== "passport" || !identity) {
+        return json(res, 503, { ok: false, state: "identity_login_not_configured" });
+      }
+      try {
+        const body = await readJsonBody(req, 32768);
+        const login = String(body.login || "").trim();
+        const rateKey = loginRateKey(req, login);
+        loginLimiter.assertAllowed(rateKey);
+        let authentication;
+        try {
+          authentication = identity.authenticatePassword({
+            login,
+            password: String(body.password || ""),
+          });
+        } catch (error) {
+          loginLimiter.recordFailure(rateKey);
+          throw error;
+        }
+
+        const authorization = passport.authorize({
+          subject_ref: authentication.subject_ref,
+          product: "evercraft-home",
+          scope: "home.read",
+          at: new Date().toISOString(),
+        });
+        if (authorization.decision !== "allow") {
+          throw new Error("home_access_denied");
+        }
+
+        const issued = identity.issueSession(authentication, {
+          signingSecret: identitySecret,
+          ttlSeconds: sessionTtlSeconds,
+        });
+        loginLimiter.recordSuccess(rateKey);
+        const bodyOut = JSON.stringify({
+          ok: true,
+          state: "authenticated",
+          subject: issued.session.subject_ref,
+          display_name: issued.session.display_name,
+          expires_at: issued.session.expires_at,
+          authority: "evercraft-identity+passport",
+        });
+        res.writeHead(200, {
+          ...securityHeaders,
+          "cache-control": "no-store",
+          "content-type": "application/json; charset=utf-8",
+          "set-cookie": sessionCookie(issued.token, sessionTtlSeconds),
+        });
+        return res.end(bodyOut);
+      } catch (error) {
+        const message = String(error?.message || "identity_login_failed");
+        const status = message === "identity_login_rate_limited"
+          ? 429
+          : message === "home_access_denied"
+            ? 403
+            : 401;
+        return json(res, status, { ok: false, state: message });
+      }
+    }
+
+    if (req.method === "POST" && url.pathname === "/api/logout") {
+      res.writeHead(200, {
+        ...securityHeaders,
+        "cache-control": "no-store",
+        "content-type": "application/json; charset=utf-8",
+        "set-cookie": sessionCookie("", 0),
+      });
+      return res.end(JSON.stringify({ ok: true, state: "signed_out" }));
     }
 
     if (req.method === "GET" && url.pathname === "/api/session") {
@@ -277,6 +371,7 @@ export async function startEvercraftHomeServer({
       legacy_provider_required: false,
       deployment_receipt_bound: Boolean(deploymentReceiptRef),
       deployment_receipt_ref: deploymentReceiptRef || null,
+      identity_login_configured: Boolean(identity),
     }),
     setDeploymentReceipt: (receiptRef) => {
       const ref = String(receiptRef || "").trim();
