@@ -1308,7 +1308,7 @@ export async function startEvercraftComputeNode({
             ),
             fabricCatalog: Array.isArray(body.input?.fabric_catalog)
               ? body.input.fabric_catalog
-              : [],
+              : null,
             fabricMcpPath: String(body.input?.fabric_mcp_path || '/mcp'),
             openAiChallengeToken: String(body.input?.openai_challenge_token || ''),
           });
