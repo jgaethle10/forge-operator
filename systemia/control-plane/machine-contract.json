@@ -143,6 +143,15 @@
       "source_refs": [
         "public/.well-known/evercraft-direct-door-readiness.json"
       ]
+    },
+    {
+      "component_key": "evercraft-capability-mesh",
+      "role": "product_trust_chain_contract_and_adoption_coverage",
+      "source_refs": [
+        "systemia/capability-mesh/mesh.mjs",
+        "systemia/capability-mesh/contracts.json",
+        "systemia/capability-mesh/adoption-coverage.json"
+      ]
     }
   ],
   "routing": {
@@ -231,7 +240,8 @@
     "provider": "evercraft-context-fabric",
     "access_control": "evercraft-passport",
     "evidence_state_must_survive_retrieval": true,
-    "unauthorized_metadata_must_not_be_returned": true
+    "unauthorized_metadata_must_not_be_returned": true,
+    "product_adoption_contracts": "evercraft-capability-mesh"
   },
   "ingress": {
     "provider": "evercraft-intake-fabric",
