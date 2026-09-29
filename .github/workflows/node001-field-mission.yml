@@ -25,7 +25,8 @@ jobs:
         run: node systemia/organism/node001-field-certification.proof.mjs
       - name: Reject Lux-specific field-node naming
         run: |
-          if git grep -ni 'megatron' -- systemia .github tests; then
-            echo 'Lux-specific Megatron naming remains in active Evercraft infrastructure'
+          pattern='mega''tron'
+          if git grep -ni "$pattern" -- systemia .github tests; then
+            echo 'Retired Lux-specific field-node naming remains in active Evercraft infrastructure'
             exit 1
           fi
