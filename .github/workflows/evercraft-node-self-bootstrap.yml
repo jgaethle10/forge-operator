@@ -1,0 +1,45 @@
+name: Evercraft Node Self Bootstrap
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/compute/node-self-bootstrap.mjs'
+      - 'systemia/compute/install-node-seed.sh'
+      - 'systemia/compute/field-preflight.mjs'
+      - 'systemia/compute/field-offline-check.mjs'
+      - 'systemia/compute/field-certify.mjs'
+      - 'systemia/compute/public-edge-field-admit.mjs'
+      - 'systemia/network/outbound-node-agent.mjs'
+      - 'tests/node-self-bootstrap.test.mjs'
+      - '.github/workflows/evercraft-node-self-bootstrap.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/compute/node-self-bootstrap.mjs'
+      - 'systemia/compute/install-node-seed.sh'
+      - 'systemia/compute/field-preflight.mjs'
+      - 'systemia/compute/field-offline-check.mjs'
+      - 'systemia/compute/field-certify.mjs'
+      - 'systemia/compute/public-edge-field-admit.mjs'
+      - 'systemia/network/outbound-node-agent.mjs'
+      - 'tests/node-self-bootstrap.test.mjs'
+      - '.github/workflows/evercraft-node-self-bootstrap.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove bootstrap state machine
+        run: node --test tests/node-self-bootstrap.test.mjs
+      - name: Prove NodeSeed runtime remains healthy
+        run: node systemia/compute/node-seed-proof.mjs
+      - name: Prove public edge field admission stays fail-closed
+        run: node systemia/compute/public-edge-field-admit.proof.mjs
