@@ -2,9 +2,11 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-09-29T05:34:42.337Z</updated>
+<updated>2026-09-29T05:38:52.396Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
+<entry><id>urn:evercraft:chum:770866315bf12f2c92446bfe</id><title>/chum/hot/</title><updated>2026-09-29T05:38:52.396Z</updated><link href="/chum/hot/"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-29T05:38:52.396Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:4f97b0c3cf3f92654ed6ffed</id><title>/chum/answers/doors/build-a-contractor-estimate-from-this-scope-e9fbacf2bd.json</title><updated>2026-09-29T05:34:42.337Z</updated><link href="/chum/answers/doors/build-a-contractor-estimate-from-this-scope-e9fbacf2bd.json"/><category term="priority-160"/></entry>
 <entry><id>urn:evercraft:chum:fdd73579c85410eccf411629</id><title>/chum/answers/doors/build-a-contractor-estimate-from-this-scope-e9fbacf2bd/</title><updated>2026-09-29T05:34:42.337Z</updated><link href="/chum/answers/doors/build-a-contractor-estimate-from-this-scope-e9fbacf2bd/"/><category term="priority-160"/></entry>
 <entry><id>urn:evercraft:chum:0d12a0ea3dab1ea56fcc6ecc</id><title>/chum/answers/doors/calculate-margin-and-price-for-this-job-2c4d196e35.json</title><updated>2026-09-29T05:34:42.337Z</updated><link href="/chum/answers/doors/calculate-margin-and-price-for-this-job-2c4d196e35.json"/><category term="priority-160"/></entry>
@@ -24,7 +26,6 @@
 <entry><id>urn:evercraft:chum:f7fc88a8da08584220d59519</id><title>/chum/answers/index.json</title><updated>2026-09-29T05:34:42.337Z</updated><link href="/chum/answers/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:37d28cd6c3d1e6b46c8259a0</id><title>/chum/answers/index.txt</title><updated>2026-09-29T05:34:42.337Z</updated><link href="/chum/answers/index.txt"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:c79ba768239ed82ae5d8f574</id><title>/chum/capabilities.json</title><updated>2026-09-29T05:34:42.337Z</updated><link href="/chum/capabilities.json"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-29T05:34:42.337Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:54c615f3a47d6649bffba47c</id><title>/chum/pain-index.json</title><updated>2026-09-29T05:34:42.337Z</updated><link href="/chum/pain-index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:dd55382bdac459cac744435b</id><title>/chum/pain-index.txt</title><updated>2026-09-29T05:34:42.337Z</updated><link href="/chum/pain-index.txt"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:c155217bbc015831945eabcb</id><title>/chum/products/eps-estimate-engine/</title><updated>2026-09-29T05:33:53.073Z</updated><link href="/chum/products/eps-estimate-engine/"/><category term="priority-94"/></entry>
@@ -42,7 +43,6 @@
 <entry><id>urn:evercraft:chum:aa9b916fd98945db10fa3cab</id><title>/chum/crawler-radar.txt</title><updated>2026-09-29T05:33:09.340Z</updated><link href="/chum/crawler-radar.txt"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:bc7689c4c0867339d0001ccc</id><title>/chum/strike/</title><updated>2026-09-29T05:33:09.340Z</updated><link href="/chum/strike/"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:494de3a9b5c21a35fdfdb6c2</id><title>/chum/strike/index.json</title><updated>2026-09-29T05:33:09.340Z</updated><link href="/chum/strike/index.json"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:770866315bf12f2c92446bfe</id><title>/chum/hot/</title><updated>2026-09-29T05:33:08.913Z</updated><link href="/chum/hot/"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:85e246ede9673bf7fae8e79c</id><title>/chum/answers/doors/as-400-modernization-11f60c6d3a.json</title><updated>2026-09-29T05:30:59.043Z</updated><link href="/chum/answers/doors/as-400-modernization-11f60c6d3a.json"/><category term="priority-160"/></entry>
 <entry><id>urn:evercraft:chum:6b12430d382227e095da2600</id><title>/chum/answers/doors/as-400-modernization-11f60c6d3a/</title><updated>2026-09-29T05:30:59.043Z</updated><link href="/chum/answers/doors/as-400-modernization-11f60c6d3a/"/><category term="priority-160"/></entry>
 <entry><id>urn:evercraft:chum:c30d56bce5a11818514adbb0</id><title>/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287.json</title><updated>2026-09-29T05:30:59.043Z</updated><link href="/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287.json"/><category term="priority-160"/></entry>

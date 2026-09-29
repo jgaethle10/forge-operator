@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-29T05:34:42.337Z",
+  "updated_at": "2026-09-29T05:38:52.396Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,117 +11,29 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/answers/doors/build-a-contractor-estimate-from-this-scope-e9fbacf2bd.json",
-      "last_changed": "2026-09-29T05:34:42.337Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/build-a-contractor-estimate-from-this-scope-e9fbacf2bd/",
-      "last_changed": "2026-09-29T05:34:42.337Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/calculate-margin-and-price-for-this-job-2c4d196e35.json",
-      "last_changed": "2026-09-29T05:34:42.337Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/calculate-margin-and-price-for-this-job-2c4d196e35/",
-      "last_changed": "2026-09-29T05:34:42.337Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/estimate-this-service-job-4e138afdda.json",
-      "last_changed": "2026-09-29T05:34:42.337Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/estimate-this-service-job-4e138afdda/",
-      "last_changed": "2026-09-29T05:34:42.337Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/give-me-a-rough-customer-range-fc777ed404.json",
-      "last_changed": "2026-09-29T05:34:42.337Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/give-me-a-rough-customer-range-fc777ed404/",
-      "last_changed": "2026-09-29T05:34:42.337Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/turn-these-measurements-into-an-estimate-eebe0357b6.json",
-      "last_changed": "2026-09-29T05:34:42.337Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/turn-these-measurements-into-an-estimate-eebe0357b6/",
-      "last_changed": "2026-09-29T05:34:42.337Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/what-should-this-job-cost-923f227308.json",
-      "last_changed": "2026-09-29T05:34:42.337Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/what-should-this-job-cost-923f227308/",
-      "last_changed": "2026-09-29T05:34:42.337Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/capabilities/eps-estimate-engine-machine-v1/capability.json",
-      "last_changed": "2026-09-29T05:34:42.337Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/eps-estimate-engine-machine-v1/llms.txt",
-      "last_changed": "2026-09-29T05:34:42.337Z",
-      "priority": 96
-    },
-    {
-      "path": "/.well-known/evercraft-pain-index.json",
-      "last_changed": "2026-09-29T05:34:42.337Z",
-      "priority": 90
-    },
-    {
-      "path": "/chum/answers/",
-      "last_changed": "2026-09-29T05:34:42.337Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/index.json",
-      "last_changed": "2026-09-29T05:34:42.337Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/index.txt",
-      "last_changed": "2026-09-29T05:34:42.337Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/capabilities.json",
-      "last_changed": "2026-09-29T05:34:42.337Z",
+      "path": "/chum/hot/",
+      "last_changed": "2026-09-29T05:38:52.396Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-29T05:34:42.337Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.json",
-      "last_changed": "2026-09-29T05:34:42.337Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.txt",
-      "last_changed": "2026-09-29T05:34:42.337Z",
+      "last_changed": "2026-09-29T05:38:52.396Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/hot/",
+      "url": "/chum/hot/",
+      "last_changed": "2026-09-29T05:38:52.396Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-29T05:38:52.396Z",
+      "priority": 80
+    },
     {
       "path": "/chum/answers/doors/build-a-contractor-estimate-from-this-scope-e9fbacf2bd.json",
       "url": "/chum/answers/doors/build-a-contractor-estimate-from-this-scope-e9fbacf2bd.json",
@@ -237,12 +149,6 @@
       "priority": 80
     },
     {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-09-29T05:34:42.337Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/pain-index.json",
       "url": "/chum/pain-index.json",
       "last_changed": "2026-09-29T05:34:42.337Z",
@@ -342,12 +248,6 @@
       "path": "/chum/strike/index.json",
       "url": "/chum/strike/index.json",
       "last_changed": "2026-09-29T05:33:09.340Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/",
-      "url": "/chum/hot/",
-      "last_changed": "2026-09-29T05:33:08.913Z",
       "priority": 80
     },
     {
