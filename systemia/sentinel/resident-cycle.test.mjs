@@ -57,14 +57,86 @@ function source({
   };
 }
 
-const configuredSources = buildBuiltinSentinelSources({ nwpsGaugeIds: ['TEST1'] });
-assert.equal(configuredSources.length, 3);
+const configuredSources = buildBuiltinSentinelSources({ nwpsGaugeIds: ['TEST1'], usgsWaterLocationIds: ['USGS-12484500'] });
+assert.equal(configuredSources.length, 4);
 assert.equal(configuredSources[2].source_id, 'nwps-river-gauges');
 assert.equal(configuredSources[2].contract.required, false);
 assert.equal(configuredSources[2].contract.independence_group, 'noaa-nws');
+assert.equal(configuredSources[3].source_id, 'usgs-water-latest-continuous');
+assert.equal(configuredSources[3].contract.independence_group, 'usgs');
 
 const unconfiguredSources = buildBuiltinSentinelSources();
 assert.equal(unconfiguredSources.length, 2);
+
+let metricValue = 100;
+let metricCounter = 0;
+const baselineMetricSource = {
+  source_id: 'metric-source',
+  poll_interval_seconds: 30,
+  contract: {
+    source_id: 'metric-source',
+    domain: 'hydrology',
+    independence_group: 'independent-water',
+    expected_max_age_seconds: 120,
+    required: false,
+    description: 'baseline fixture'
+  },
+  poll: async ({ checkedAt }) => ({
+    contract: null,
+    receipt: {
+      source_id: 'metric-source',
+      status: 'ok',
+      checked_at: checkedAt,
+      item_count: 1
+    },
+    observations: [{
+      observation_id: 'metric:' + String(++metricCounter),
+      created_at: checkedAt,
+      region_key: 'Baseline Region',
+      region_group: 'coarse-grid:1deg:136:59',
+      source_family: 'metric-source',
+      independence_group: 'independent-water',
+      domain: 'hydrology',
+      kind: 'stream_discharge',
+      anomaly_score: 0,
+      reliability: 0.95,
+      evidence_state: 'observed',
+      hazard_state: 'unknown',
+      metric_value: metricValue,
+      baseline_kind: 'stream_discharge',
+      baseline_options: {
+        minSamples: 4,
+        watchZ: 2,
+        urgentZ: 5,
+        floorStddev: 1,
+        freezeAboveScore: 0.6
+      }
+    }],
+    error: null
+  })
+};
+
+let baselineState = emptyResidentState();
+for (let i = 0; i < 5; i += 1) {
+  metricValue = 100 + (i % 2);
+  const cycle = await runSentinelResidentCycle({
+    inputState: baselineState,
+    now: new Date(Date.parse('2026-09-29T10:00:00Z') + i * 31000).toISOString(),
+    sources: [baselineMetricSource]
+  });
+  baselineState = cycle.state;
+  assert.equal(cycle.snapshot.summary.active_incidents, 0);
+}
+metricValue = 140;
+const deviationCycle = await runSentinelResidentCycle({
+  inputState: baselineState,
+  now: '2026-09-29T10:03:00Z',
+  sources: [baselineMetricSource]
+});
+assert.equal(deviationCycle.snapshot.summary.active_incidents, 1);
+assert.ok(deviationCycle.snapshot.cycle_decisions.some(
+  (row) => row.baseline?.baseline_ready && row.baseline.anomaly_score > 0
+));
 
 const now = '2026-09-29T12:00:00Z';
 const sources = [

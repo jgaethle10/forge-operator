@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { parseNwsAlerts, fetchNwsActiveAlerts, pollNwsActiveAlerts, NWS_SOURCE_CONTRACT } from './nws-alerts.mjs';
 import { parseUsgsEarthquakes, fetchUsgsEarthquakes, pollUsgsEarthquakes, USGS_SOURCE_CONTRACT } from './usgs-earthquakes.mjs';
 import { parseNwpsGauge, fetchNwpsGauge, pollNwpsRiverGauges, NWPS_SOURCE_CONTRACT } from './nwps-rivers.mjs';
+import { parseUsgsWaterFeature, fetchUsgsWaterLatest, pollUsgsWaterLatest, USGS_WATER_SOURCE_CONTRACT } from './usgs-water.mjs';
 
 const nwsFixture = {
   type: 'FeatureCollection',
@@ -186,5 +187,62 @@ const nwpsNoConfig = await pollNwpsRiverGauges({
 assert.equal(nwpsNoConfig.contract.source_id, NWPS_SOURCE_CONTRACT.source_id);
 assert.equal(nwpsNoConfig.receipt.status, 'partial');
 assert.equal(nwpsNoConfig.receipt.error_code, 'no_gauges_configured');
+
+const waterFeature = {
+  type: 'Feature',
+  id: 'water-fixture-1',
+  geometry: { type: 'Point', coordinates: [-120.5, 46.6] },
+  properties: {
+    monitoring_location_id: 'USGS-12484500',
+    monitoring_location_name: 'Yakima River at Umtanum, WA',
+    parameter_code: '00060',
+    time: '2026-09-29T08:15:00Z',
+    value: '2200',
+    unit_of_measure: 'ft3/s',
+    approval_status: 'Provisional',
+    county_name: 'Kittitas County',
+    state_name: 'Washington',
+    time_series_id: 'fixture-series'
+  }
+};
+
+const waterObs = parseUsgsWaterFeature(waterFeature);
+assert.equal(waterObs.domain, 'hydrology');
+assert.equal(waterObs.independence_group, 'usgs');
+assert.equal(waterObs.evidence_state, 'observed');
+assert.equal(waterObs.metric_value, 2200);
+assert.equal(waterObs.kind, 'stream_discharge');
+assert.ok(waterObs.region_group?.startsWith('coarse-grid:1deg:'));
+assert.equal('geometry' in waterObs, false);
+
+let waterUrl;
+const fetchedWater = await fetchUsgsWaterLatest({
+  monitoringLocationIds: ['USGS-12484500'],
+  fetchImpl: async (url) => {
+    waterUrl = String(url);
+    return {
+      ok: true,
+      status: 200,
+      json: async () => ({ type: 'FeatureCollection', features: [waterFeature] })
+    };
+  }
+});
+assert.equal(fetchedWater.length, 1);
+assert.equal(new URL(waterUrl).hostname, 'api.waterdata.usgs.gov');
+assert.ok(waterUrl.includes('monitoring_location_id=USGS-12484500'));
+assert.ok(waterUrl.includes('parameter_code=00060%2C00065'));
+
+const waterPoll = await pollUsgsWaterLatest({
+  monitoringLocationIds: ['USGS-12484500'],
+  checkedAt: '2026-09-29T08:20:00Z',
+  fetchImpl: async () => ({
+    ok: true,
+    status: 200,
+    json: async () => ({ type: 'FeatureCollection', features: [waterFeature] })
+  })
+});
+assert.equal(waterPoll.contract.source_id, USGS_WATER_SOURCE_CONTRACT.source_id);
+assert.equal(waterPoll.receipt.status, 'ok');
+assert.equal(waterPoll.receipt.item_count, 1);
 
 console.log('SYSTEMIA SENTINEL OFFICIAL SOURCES PASS');
