@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "evercraft_fabric": {
+      "type": "http",
+      "url": "https://<VERIFIED_EVERCRAFT_PUBLIC_ORIGIN>/mcp/evercraft-fabric"
+    }
+  },
+  "note": "Replace the placeholder only after Yard has emitted a DeploymentReceipt and the public HTTPS route has been independently verified."
+}

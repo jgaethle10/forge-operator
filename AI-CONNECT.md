@@ -11,6 +11,23 @@ https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8
 
 Use it when the user's need could map to multiple Evercraft products or services. It exposes public discovery, pain matching, specialist routing, current offer inspection, and human-confirmed commercial continuations where those are actually wired.
 
+## Evercraft Fabric Gateway
+
+Evercraft Fabric is the authenticated connective layer for hosts that need more than public capability discovery.
+
+It is intentionally different from Machine Commerce:
+
+- **Machine Commerce / CHUM** answers "what Evercraft capability fits this problem?"
+- **Evercraft Fabric** answers "how does this authorized host become part of the Evercraft/Systemia fabric without flattening permissions?"
+
+Fabric source now exposes public capability discovery, scoped host registration, Passport-filtered Context Fabric retrieval, scoped host-event ingestion, and receipt-bearing action-intent preparation for later Systemia admission.
+
+Installing Fabric is not an authority grant. Private context and writes require explicit scopes. Action-intent preparation is not execution.
+
+Development MCP: `http://localhost:3000/mcp/evercraft-fabric`
+
+Production endpoint state: **release-gated, not yet claimed here**. The public HTTPS MCP must be populated from a Yard DeploymentReceipt after independent route verification on Evercraft Compute. See `docs/EVERCRAFT_FABRIC_GATEWAY_2026-09-28.md`.
+
 ## Systemia Field Library MCP
 
 MCP URL:

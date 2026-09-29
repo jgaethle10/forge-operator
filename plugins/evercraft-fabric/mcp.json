@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "evercraft_fabric": {
+      "type": "http",
+      "url": "http://localhost:3000/mcp/evercraft-fabric"
+    }
+  }
+}

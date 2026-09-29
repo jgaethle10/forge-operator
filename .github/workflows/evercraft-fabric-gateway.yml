@@ -1,0 +1,41 @@
+name: Evercraft Fabric Gateway
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/fabric-gateway/**'
+      - 'systemia/context-fabric/**'
+      - 'systemia/passport/**'
+      - 'plugins/evercraft-fabric/**'
+      - 'server.ts'
+      - 'package.json'
+      - '.github/workflows/evercraft-fabric-gateway.yml'
+  pull_request:
+    paths:
+      - 'systemia/fabric-gateway/**'
+      - 'systemia/context-fabric/**'
+      - 'systemia/passport/**'
+      - 'plugins/evercraft-fabric/**'
+      - 'server.ts'
+      - 'package.json'
+      - '.github/workflows/evercraft-fabric-gateway.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  fabric-gateway:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Prove Fabric permission and MCP boundaries
+        run: node --test systemia/fabric-gateway/mission-planner.test.mjs systemia/fabric-gateway/gateway.test.mjs systemia/fabric-gateway/http-gateway.test.mjs
+      - name: Prove inherited Passport and Context Fabric boundaries
+        run: |
+          node --test systemia/passport/passport.test.mjs
+          node --test systemia/context-fabric/fabric.test.mjs

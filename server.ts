@@ -16,6 +16,7 @@ import { createCrawlerRadarStore } from './systemia/chum/crawler-radar.mjs';
 import { registerFallenFamilyRoutes } from './systemia/media-studio/family-http.js';
 import { registerRivetReportGateway } from './systemia/rivet/http-gateway.mjs';
 import { registerSpecialistHandoffMcps } from './systemia/mcp/specialist-handoff.js';
+import { registerEvercraftFabricGateway } from './systemia/fabric-gateway/http-gateway.mjs';
 
 dotenv.config();
 
@@ -169,6 +170,9 @@ function rateLimit(maxRequests: number, windowMs: number) {
 app.use(express.json({ limit: '10mb', type: ['application/json', 'application/*+json'] }));
 registerRivetReportGateway(app);
 registerSpecialistHandoffMcps(app, { gatewayUrl: machineCommerceGatewayUrl });
+registerEvercraftFabricGateway(app, {
+  capabilityProvider: async (intent: string, limit: number) => buildChumDiscoveryResult(intent, limit),
+});
 
 const CENTRAL_MACHINE_COMMERCE_MCP =
   'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp';
@@ -178,6 +182,7 @@ const CHUM_DISCOVERY_LINKS = [
   '</llms-full.txt>; rel="describedby"; type="text/plain"',
   '</.well-known/evercraft-pain-index.json>; rel="service-desc"; type="application/json"',
   '</.well-known/evercraft-products.json>; rel="service-desc"; type="application/json"',
+  '</api/fabric/manifest>; rel="service-desc"; type="application/json"; title="Evercraft Fabric Gateway"',
   '</openapi.json>; rel="service-desc"; type="application/json"',
   '</sitemap.xml>; rel="sitemap"; type="application/xml"',
   '</chum/sitemaps/index.xml>; rel="sitemap"; type="application/xml"; title="Evercraft Segmented Sitemap Index"',
@@ -513,6 +518,14 @@ app.get('/api/capabilities', (_req: Request, res: Response) => {
       buyerFrontage: 'https://evercraft-ai-suite-08c4d2b8.base44.app/buy/{publicId}',
       acquisitionExport: 'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceAcquisition?view=export&hours=720',
       liveIntentHunter: { method: 'POST', path: '/api/chum/hunt' },
+      fabricGateway: {
+        manifest: '/api/fabric/manifest',
+        health: '/api/fabric/health',
+        mcp: '/mcp/evercraft-fabric',
+        publicDiscovery: true,
+        privateScopesRequired: true,
+        installGrantsAuthority: false,
+      },
       specialistMcps: [
         { product: 'Evercraft IBM i Rescue', path: '/mcp/ibmi-rescue', state: 'read_only_handoff_runtime' },
         { product: 'Evercraft Foundry App Escape Audit', path: '/mcp/foundry-app-escape', state: 'read_only_handoff_runtime' },

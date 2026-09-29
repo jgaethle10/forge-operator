@@ -1,0 +1,23 @@
+{
+  "name": "evercraft-fabric",
+  "version": "0.1.0",
+  "description": "Connect an AI host or workspace to Evercraft's permissioned Systemia fabric through one thin, provenance-aware gateway.",
+  "author": {
+    "name": "Evercraft LLC"
+  },
+  "homepage": "https://github.com/jgaethle10/forge-operator",
+  "repository": "https://github.com/jgaethle10/forge-operator",
+  "license": "UNLICENSED",
+  "keywords": [
+    "evercraft",
+    "systemia",
+    "fabric",
+    "mcp",
+    "connectors",
+    "context",
+    "provenance",
+    "agents"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./mcp.json"
+}

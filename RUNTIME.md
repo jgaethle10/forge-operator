@@ -34,6 +34,11 @@ A commit-addressed image is also published for every main-branch release. Yard O
 - `RIVET_REPORT_GATEWAY_TOKEN` - private server-to-server bearer token required to invoke the RIVET Yard report gateway.
 - `ALIEV_YARD_SOURCE_URL` - optional override for the AliEV snapshot source endpoint.
 - `RIVET_REPORT_STATE_DIR` - optional runtime state directory for RIVET report receipts.
+- `EVERCRAFT_FABRIC_VERIFICATION_PEPPER` - protected server-side pepper used to verify Fabric host credentials. Minimum 32 characters. Never expose this to clients.
+- `EVERCRAFT_FABRIC_AUTHORITY_RECEIPT_REF` - verified identity-authority receipt reference used when minting and revoking linked Passport grants.
+- `EVERCRAFT_FABRIC_STATE_DIR` - optional root for Fabric credential, connection and action-intent state. Defaults to `/tmp/evercraft-fabric` until a durable Yard volume is bound.
+- `EVERCRAFT_FABRIC_PASSPORT_STATE_DIR` - optional override for the Passport state directory used by Fabric.
+- `EVERCRAFT_FABRIC_CONTEXT_STATE_DIR` - optional override for the Context Fabric state directory used by Fabric.
 
 If `FORGE_CHECKOUT_URL` is absent, Forge does not display or advertise an active checkout. Pricing remains human-gated.
 
@@ -67,3 +72,18 @@ A local healthy service does not become `CHUM_PUBLIC_ORIGIN` by inference. Yard 
 ## RIVET Yard report gateway
 
 When both `SYSTEMIA_MACHINE_KEY` and `RIVET_REPORT_GATEWAY_TOKEN` are configured, Forge exposes `POST /api/rivet/reports` as an authenticated server-to-server compatibility edge for the migrating RIVET UI. `GET /api/rivet/report-health` reports only safe configuration state. The gateway fails closed when either secret is absent and does not grant customer or payment authority. Base44 remains a temporary UI/data/auth compatibility client until the live Yard route and fresh-report canary are independently verified.
+
+
+## Evercraft Fabric Gateway
+
+Forge/Yard now carries the source runtime for the universal Evercraft Fabric gateway:
+
+- `GET /api/fabric/health`
+- `GET /api/fabric/manifest`
+- `POST /mcp/evercraft-fabric`
+
+Public capability discovery may remain available when the private gateway is not configured. Private host connection, Context Fabric access, event writes and action-intent preparation fail closed unless the Fabric verification pepper and verified authority receipt reference are present.
+
+A connected host does not receive private context or execution authority by installation. Private context requires both the relevant Fabric API scope and a matching Passport grant. Host event content remains non-instruction evidence. Prepared actions still require Systemia admission and Execution Gate authorization.
+
+The production plugin URL is release-gated. Do not replace the plugin's local development MCP with a public URL until Yard has emitted a DeploymentReceipt and independently verified that HTTPS route.
