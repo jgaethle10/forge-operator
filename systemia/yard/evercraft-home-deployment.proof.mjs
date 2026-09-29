@@ -51,13 +51,57 @@ try {
   assert.equal(verified.ok, true);
   assert.equal(verified.state, "verified");
 
+  const edge = await yard.deployRelease({
+    deploymentId: "evercraft-home-edge-proof",
+    releaseRef: "b".repeat(40),
+    workloadClass: "systemia.public-edge.v1",
+    capacityEndpoint: node.endpoint,
+    input: {
+      mode: "proof_loopback",
+      control_host: "127.0.0.1",
+      control_port: 0,
+    },
+    rollbackTarget: "none:first_install",
+    leaseTtlMs: 60_000,
+  });
+  assert.equal(edge.state, "ready");
+  assert.equal(edge.receipt.health_verification, "healthy");
+
+  const edgeClient = yard.publicRouteProviderClient("evercraft-home-edge-proof");
+  const capabilities = await edgeClient.capabilities();
+  assert.equal(capabilities.protocol, "evercraft.public-route.v1");
+  assert.equal(capabilities.proof_only, true);
+
+  const route = await edgeClient.createLease({
+    upstream_origin: record.result.local_url,
+    deployment_id: record.deployment_id,
+    deployment_receipt_hash: record.receipt.receipt_hash,
+    instance_id: record.result.instance_id,
+    requested_hostname: "home-proof",
+  });
+
+  assert.match(route.origin, /^http:\/\/127\.0\.0\.1:/);
+  const routedHealth = await fetch(route.origin + "/api/health").then((response) => response.json());
+  assert.equal(routedHealth.ok, true);
+  assert.equal(routedHealth.service, "evercraft-home");
+  assert.equal(routedHealth.authority, "evercraft");
+  assert.equal(routedHealth.auth_mode, "passport");
+
+  const routedSession = await fetch(route.origin + "/api/session");
+  assert.equal(routedSession.status, 401);
+
+  const releasedRoute = await edgeClient.releaseLease(route.lease_id, "proof_complete");
+  assert.equal(releasedRoute.released, true);
+
   console.log(JSON.stringify({
     ok: true,
     schema: "evercraft.home.yard-deployment-proof.v1",
     deployment_id: record.deployment_id,
     health_verification: record.receipt.health_verification,
     route_verification: record.receipt.route_verification,
-    public_route_bound: false,
+    public_route_bound: true,
+    public_route_mode: "proof_loopback",
+    trusted_public_dns_claimed: false,
   }, null, 2));
 } finally {
   if (node) await node.close();
