@@ -281,6 +281,31 @@ export async function negotiateCompute({
     }
   }
 
+  if(quote&&!lease){
+    const quotedMarket=String(
+      selected?.market ||
+      quote?.offers?.[0]?.market ||
+      ''
+    ).toLowerCase();
+    const adapter=adapters.find((x)=>String(x?.market||'').toLowerCase()===quotedMarket);
+    if(adapter&&typeof adapter.cancelQuote==='function'){
+      try{
+        const cleanup=await adapter.cancelQuote({demand,quote});
+        events.push({
+          type:'quote.cleaned_up',
+          market:quotedMarket,
+          receipt:cleanup?.receipt_hash||cleanup?.receipt||null,
+        });
+      }catch(error){
+        events.push({
+          type:'quote.cleanup_failed',
+          market:quotedMarket,
+          reason:String(error?.message||error),
+        });
+      }
+    }
+  }
+
   const body={
     schema:'evercraft.saban.compute-negotiation.v1',
     demand,
