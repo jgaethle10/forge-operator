@@ -19,6 +19,11 @@ const demand=normalizeComputeDemand({
   duration_seconds:1800,
   max_hourly_usd:0.20,
   max_total_usd:0.10,
+  market_price_ceiling:{
+    golem_start_glm:0,
+    golem_cpu_glm_per_hour:0.20,
+    golem_env_glm_per_hour:0.10,
+  },
   negotiation_level:'lease',
 });
 
@@ -104,7 +109,9 @@ assert.equal(order.order.demand.workload.minCpuCores,2);
 assert.equal(order.order.demand.workload.minMemGib,4);
 assert.equal(order.order.demand.workload.minStorageGib,10);
 assert.equal(order.order.market.rentHours,0.5);
+assert.equal(order.order.market.pricing.maxStartPrice,0);
 assert.equal(order.order.market.pricing.maxCpuPerHourPrice,0.20);
+assert.equal(order.order.market.pricing.maxEnvPerHourPrice,0.10);
 assert.equal(order.order.payment.network,'polygon');
 
 console.log(JSON.stringify({
