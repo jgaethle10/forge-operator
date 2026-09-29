@@ -2,15 +2,18 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-09-28T23:20:12.178Z</updated>
+<updated>2026-09-29T00:32:05.400Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
-<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-28T23:20:12.178Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:d8bcbc9c28ec3e0aa29125ea</id><title>/chum/crawler-radar.json</title><updated>2026-09-29T00:32:05.400Z</updated><link href="/chum/crawler-radar.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:aa9b916fd98945db10fa3cab</id><title>/chum/crawler-radar.txt</title><updated>2026-09-29T00:32:05.400Z</updated><link href="/chum/crawler-radar.txt"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-29T00:32:05.400Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:bc7689c4c0867339d0001ccc</id><title>/chum/strike/</title><updated>2026-09-29T00:32:05.400Z</updated><link href="/chum/strike/"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:494de3a9b5c21a35fdfdb6c2</id><title>/chum/strike/index.json</title><updated>2026-09-29T00:32:05.400Z</updated><link href="/chum/strike/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:e75551f8817a367b4412bca9</id><title>/chum/proof/forensiscope.json</title><updated>2026-09-29T00:32:04.969Z</updated><link href="/chum/proof/forensiscope.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:07ef7bcf722a12057ed32ee4</id><title>/chum/proof/index.json</title><updated>2026-09-29T00:32:04.969Z</updated><link href="/chum/proof/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:780bd435a8894bd856d47115</id><title>/chum/proof/rivet.json</title><updated>2026-09-29T00:32:04.969Z</updated><link href="/chum/proof/rivet.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:7e6f6077ae195faaa58cd246</id><title>/forensiscope/developers/status.json</title><updated>2026-09-28T22:55:46.514Z</updated><link href="/forensiscope/developers/status.json"/><category term="priority-60"/></entry>
-<entry><id>urn:evercraft:chum:d8bcbc9c28ec3e0aa29125ea</id><title>/chum/crawler-radar.json</title><updated>2026-09-28T22:49:59.469Z</updated><link href="/chum/crawler-radar.json"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:aa9b916fd98945db10fa3cab</id><title>/chum/crawler-radar.txt</title><updated>2026-09-28T22:49:59.469Z</updated><link href="/chum/crawler-radar.txt"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:494de3a9b5c21a35fdfdb6c2</id><title>/chum/strike/index.json</title><updated>2026-09-28T22:49:59.469Z</updated><link href="/chum/strike/index.json"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:bc7689c4c0867339d0001ccc</id><title>/chum/strike/</title><updated>2026-09-28T21:40:55.186Z</updated><link href="/chum/strike/"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:770866315bf12f2c92446bfe</id><title>/chum/hot/</title><updated>2026-09-28T19:04:54.335Z</updated><link href="/chum/hot/"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:a578a6e1caee77790999ed79</id><title>/chum/commercial/</title><updated>2026-09-28T19:03:48.848Z</updated><link href="/chum/commercial/"/><category term="priority-112"/></entry>
 <entry><id>urn:evercraft:chum:1f9c776a26c06d16a178e5c6</id><title>/chum/commercial/feed.json</title><updated>2026-09-28T19:03:48.848Z</updated><link href="/chum/commercial/feed.json"/><category term="priority-112"/></entry>
@@ -102,7 +105,4 @@
 <entry><id>urn:evercraft:chum:b328d36f6b10dd85b11c0451</id><title>/chum/answers/doors/ai-agents-still-running-6bf3174230.json</title><updated>2026-09-28T18:59:42.997Z</updated><link href="/chum/answers/doors/ai-agents-still-running-6bf3174230.json"/><category term="priority-160"/></entry>
 <entry><id>urn:evercraft:chum:2fa7b82b812249818b1b70a3</id><title>/chum/answers/doors/ai-context-limit-prevents-full-media-analysis-11b1153cc1.json</title><updated>2026-09-28T18:59:42.997Z</updated><link href="/chum/answers/doors/ai-context-limit-prevents-full-media-analysis-11b1153cc1.json"/><category term="priority-160"/></entry>
 <entry><id>urn:evercraft:chum:01732574b06c7d1616428297</id><title>/chum/answers/doors/ai-found-uncertain-business-entity-matches-6cc7cc785b.json</title><updated>2026-09-28T18:59:42.997Z</updated><link href="/chum/answers/doors/ai-found-uncertain-business-entity-matches-6cc7cc785b.json"/><category term="priority-160"/></entry>
-<entry><id>urn:evercraft:chum:6c24aeb4ff8724a6d2d55bd8</id><title>/chum/answers/doors/ai-scam-draining-my-bank-account-5ee1d51386.json</title><updated>2026-09-28T18:59:42.997Z</updated><link href="/chum/answers/doors/ai-scam-draining-my-bank-account-5ee1d51386.json"/><category term="priority-160"/></entry>
-<entry><id>urn:evercraft:chum:0240c6872e509381dd87b2b7</id><title>/chum/answers/doors/ai-should-prepare-actions-but-not-become-the-authority-c2795c224e.json</title><updated>2026-09-28T18:59:42.997Z</updated><link href="/chum/answers/doors/ai-should-prepare-actions-but-not-become-the-authority-c2795c224e.json"/><category term="priority-160"/></entry>
-<entry><id>urn:evercraft:chum:a329cd807eefb14487095433</id><title>/chum/answers/doors/ai-supported-subject-learning-8c51bb1e20.json</title><updated>2026-09-28T18:59:42.997Z</updated><link href="/chum/answers/doors/ai-supported-subject-learning-8c51bb1e20.json"/><category term="priority-160"/></entry>
 </feed>

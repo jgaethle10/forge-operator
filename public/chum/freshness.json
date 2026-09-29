@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-28T23:20:12.178Z",
+  "updated_at": "2026-09-29T00:32:05.400Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,16 +11,78 @@
   },
   "latest_change_batch": [
     {
+      "path": "/chum/crawler-radar.json",
+      "last_changed": "2026-09-29T00:32:05.400Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/crawler-radar.txt",
+      "last_changed": "2026-09-29T00:32:05.400Z",
+      "priority": 80
+    },
+    {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-28T23:20:12.178Z",
+      "last_changed": "2026-09-29T00:32:05.400Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/",
+      "last_changed": "2026-09-29T00:32:05.400Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "last_changed": "2026-09-29T00:32:05.400Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
     {
+      "path": "/chum/crawler-radar.json",
+      "url": "/chum/crawler-radar.json",
+      "last_changed": "2026-09-29T00:32:05.400Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/crawler-radar.txt",
+      "url": "/chum/crawler-radar.txt",
+      "last_changed": "2026-09-29T00:32:05.400Z",
+      "priority": 80
+    },
+    {
       "path": "/chum/hot/index.json",
       "url": "/chum/hot/index.json",
-      "last_changed": "2026-09-28T23:20:12.178Z",
+      "last_changed": "2026-09-29T00:32:05.400Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/",
+      "url": "/chum/strike/",
+      "last_changed": "2026-09-29T00:32:05.400Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "url": "/chum/strike/index.json",
+      "last_changed": "2026-09-29T00:32:05.400Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/forensiscope.json",
+      "url": "/chum/proof/forensiscope.json",
+      "last_changed": "2026-09-29T00:32:04.969Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/index.json",
+      "url": "/chum/proof/index.json",
+      "last_changed": "2026-09-29T00:32:04.969Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/rivet.json",
+      "url": "/chum/proof/rivet.json",
+      "last_changed": "2026-09-29T00:32:04.969Z",
       "priority": 80
     },
     {
@@ -28,30 +90,6 @@
       "url": "/forensiscope/developers/status.json",
       "last_changed": "2026-09-28T22:55:46.514Z",
       "priority": 60
-    },
-    {
-      "path": "/chum/crawler-radar.json",
-      "url": "/chum/crawler-radar.json",
-      "last_changed": "2026-09-28T22:49:59.469Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/crawler-radar.txt",
-      "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-09-28T22:49:59.469Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/strike/index.json",
-      "url": "/chum/strike/index.json",
-      "last_changed": "2026-09-28T22:49:59.469Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/strike/",
-      "url": "/chum/strike/",
-      "last_changed": "2026-09-28T21:40:55.186Z",
-      "priority": 80
     },
     {
       "path": "/chum/hot/",
@@ -1496,24 +1534,6 @@
     {
       "path": "/chum/answers/doors/ev-charging-feasibility-by-address-734eac6eee.json",
       "url": "/chum/answers/doors/ev-charging-feasibility-by-address-734eac6eee.json",
-      "last_changed": "2026-09-28T18:59:42.997Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-incentives-for-this-site-76fa0b5a6c.json",
-      "url": "/chum/answers/doors/ev-charging-incentives-for-this-site-76fa0b5a6c.json",
-      "last_changed": "2026-09-28T18:59:42.997Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-opportunity-report-43ed1d1e31.json",
-      "url": "/chum/answers/doors/ev-charging-opportunity-report-43ed1d1e31.json",
-      "last_changed": "2026-09-28T18:59:42.997Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/ev-charging-property-opportunity-49e40ac2a7.json",
-      "url": "/chum/answers/doors/ev-charging-property-opportunity-49e40ac2a7.json",
       "last_changed": "2026-09-28T18:59:42.997Z",
       "priority": 160
     }
