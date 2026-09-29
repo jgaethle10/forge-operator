@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-29T19:18:34.761Z",
+  "updated_at": "2026-09-29T19:22:29.353Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,262 +11,68 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/answers/doors/create-cross-business-loyalty-rewards-2c3ab05040.json",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/sitemaps/answers.xml",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 108
-    },
-    {
-      "path": "/chum/answers/doors/businesses-near-me-with-rewards-7a4331cf86.json",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/daily-rewards-check-in-5348821cf2.json",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/daily-scratch-ticket-rewards-ea8243a20b.json",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/earn-evercraft-points-near-me-425423859c.json",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/earn-game-credit-by-supporting-local-businesses-1e1bf9da6f.json",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/earn-gaming-rewards-from-local-activity-797bb6432d.json",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/earn-nintendo-eshop-credit-through-local-rewards-90f12daa00.json",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/earn-playstation-credit-through-local-rewards-10cf5def35.json",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/earn-rewards-for-visiting-local-businesses-d04e178d65.json",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/earn-roblox-credit-through-local-rewards-df46110239.json",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/earn-xbox-credit-through-local-rewards-efb9d28079.json",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/follow-a-playstation-xbox-nintendo-or-roblox-rewards-goal-5aa65343ce.json",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/follow-a-playstation-xbox-nintendo-or-roblox-rewards-goal-5aa65343ce/",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/invite-friends-to-join-a-local-gaming-rewards-network-2957a35efd.json",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/invite-friends-to-join-a-local-gaming-rewards-network-2957a35efd/",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/join-a-community-business-partnership-program-4a5d34ada5.json",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/join-a-local-business-rewards-network-7d1ef68f27.json",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/local-deals-near-me-5c9f9f79b7.json",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/local-rewards-for-supporting-nearby-businesses-e507d240b3.json",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/make-my-local-business-more-discoverable-5368f3dc15.json",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/merchant-funded-game-wallet-points-campaign-0aa166459d.json",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/merchant-funded-game-wallet-points-campaign-0aa166459d/",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/redeem-evercraft-points-toward-approved-gaming-credit-8e558dce41.json",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/rewards-near-me-89d5f09b97.json",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/run-a-local-business-gaming-rewards-campaign-cdd4032735.json",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/run-a-local-business-gaming-rewards-campaign-cdd4032735/",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/track-progress-toward-gaming-credit-through-local-rewards-ab3e0b6713.json",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/track-progress-toward-gaming-credit-through-local-rewards-ab3e0b6713/",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/where-can-i-earn-points-today-3b76c8caac.json",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/products/evercraft-rewards/",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-rewards/ai-conformance.json",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-rewards/ai-discovery.json",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evercraft-rewards/llms.txt",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/opportunity-fabric/ai-conformance.json",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 94
-    },
-    {
-      "path": "/.well-known/evercraft-pain-index.json",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 90
-    },
-    {
-      "path": "/llms-full.txt",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 86
-    },
-    {
-      "path": "/.well-known/evercraft-agent-directory.json",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-syndication.json",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 84
-    },
-    {
-      "path": "/chum/answers/",
-      "last_changed": "2026-09-29T19:18:34.761Z",
+      "path": "/chum/crawler-radar.json",
+      "last_changed": "2026-09-29T19:22:29.353Z",
       "priority": 80
     },
     {
-      "path": "/chum/answers/index.json",
-      "last_changed": "2026-09-29T19:18:34.761Z",
+      "path": "/chum/crawler-radar.txt",
+      "last_changed": "2026-09-29T19:22:29.353Z",
       "priority": 80
     },
     {
-      "path": "/chum/answers/index.txt",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/observed/i-own-a-local-business-and-want-a-cross-business-loyalty-network-that-can-make-us-mo-e0a0561536/",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/observed/i-own-a-local-business-and-want-a-cross-business-loyalty-network-that-can-make-us-mo-e0a0561536/answer.json",
-      "last_changed": "2026-09-29T19:18:34.761Z",
+      "path": "/chum/hot/",
+      "last_changed": "2026-09-29T19:22:29.353Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-29T19:18:34.761Z",
+      "last_changed": "2026-09-29T19:22:29.353Z",
       "priority": 80
     },
     {
-      "path": "/chum/pain-index.json",
-      "last_changed": "2026-09-29T19:18:34.761Z",
+      "path": "/chum/strike/index.json",
+      "last_changed": "2026-09-29T19:22:29.353Z",
       "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.txt",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/syndication/index.json",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 80
-    },
-    {
-      "path": "/feed.json",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.xml",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 60
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/crawler-radar.json",
+      "url": "/chum/crawler-radar.json",
+      "last_changed": "2026-09-29T19:22:29.353Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/crawler-radar.txt",
+      "url": "/chum/crawler-radar.txt",
+      "last_changed": "2026-09-29T19:22:29.353Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/",
+      "url": "/chum/hot/",
+      "last_changed": "2026-09-29T19:22:29.353Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-29T19:22:29.353Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "url": "/chum/strike/index.json",
+      "last_changed": "2026-09-29T19:22:29.353Z",
+      "priority": 80
+    },
+    {
+      "path": "/.well-known/evercraft-machine-catalog.json",
+      "url": "/.well-known/evercraft-machine-catalog.json",
+      "last_changed": "2026-09-29T19:22:28.867Z",
+      "priority": 84
+    },
     {
       "path": "/chum/answers/doors/create-cross-business-loyalty-rewards-2c3ab05040.json",
       "url": "/chum/answers/doors/create-cross-business-loyalty-rewards-2c3ab05040.json",
@@ -538,12 +344,6 @@
       "priority": 80
     },
     {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/pain-index.json",
       "url": "/chum/pain-index.json",
       "last_changed": "2026-09-29T19:18:34.761Z",
@@ -574,24 +374,6 @@
       "priority": 60
     },
     {
-      "path": "/chum/crawler-radar.json",
-      "url": "/chum/crawler-radar.json",
-      "last_changed": "2026-09-29T19:17:45.155Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/crawler-radar.txt",
-      "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-09-29T19:17:45.155Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/strike/index.json",
-      "url": "/chum/strike/index.json",
-      "last_changed": "2026-09-29T19:17:45.155Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/strike/",
       "url": "/chum/strike/",
       "last_changed": "2026-09-29T19:16:09.879Z",
@@ -602,12 +384,6 @@
       "url": "/.well-known/evercraft-products.json",
       "last_changed": "2026-09-29T19:16:09.538Z",
       "priority": 88
-    },
-    {
-      "path": "/chum/hot/",
-      "url": "/chum/hot/",
-      "last_changed": "2026-09-29T19:14:55.485Z",
-      "priority": 80
     },
     {
       "path": "/chum/answers/doors/assemble-several-accepted-partners-into-one-execution-team-45ca2ebb62.json",
@@ -756,12 +532,6 @@
     {
       "path": "/.well-known/evercraft-agent-commerce.json",
       "url": "/.well-known/evercraft-agent-commerce.json",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-machine-catalog.json",
-      "url": "/.well-known/evercraft-machine-catalog.json",
       "last_changed": "2026-09-29T19:10:55.004Z",
       "priority": 84
     },

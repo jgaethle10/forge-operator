@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.crawler-radar.v1",
-  "generated_at": "2026-09-29T19:17:44.926Z",
+  "generated_at": "2026-09-29T19:22:29.150Z",
   "coordinator": "CHUM",
   "runtime_feedback": {
     "requested": false,
@@ -9,8 +9,8 @@
   },
   "observation_count": 0,
   "negative_provider_pickup_receipts": 174,
-  "surface_count": 2650,
-  "strike_now_count": 1743,
+  "surface_count": 2660,
+  "strike_now_count": 1753,
   "doctrine": {
     "crawler_fetch_is_not_indexing": true,
     "indexing_is_not_ranking": true,
@@ -12946,7 +12946,7 @@
       "score": 222,
       "urgency": "strike_now",
       "crawl_priority": 160,
-      "last_changed": "2026-09-29T18:55:38.752Z",
+      "last_changed": "2026-09-29T19:18:34.761Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
