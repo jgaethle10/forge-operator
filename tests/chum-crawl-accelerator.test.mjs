@@ -110,13 +110,24 @@ assert.equal(hotByPath.get('/.well-known/agent-card.json')?.priority, 104);
 assert.equal(hotByPath.get('/.well-known/agent.json')?.priority, 102);
 assert.equal(hotByPath.get('/chum/answers/doors/ev-site/')?.priority, 100);
 
+const unverifiedExplicit = await buildCrawlPressure({
+  root,
+  now: '2026-09-25T07:05:00.000Z',
+  origin: 'https://unverified.evercraft.example',
+  broadcast: false
+});
+assert.equal(unverifiedExplicit.origin, null);
+assert.equal(unverifiedExplicit.origin_source, 'environment_unverified');
+
 fs.writeFileSync(path.join(publicRoot, '.well-known', 'evercraft-runtime-origin.json'), JSON.stringify({
   schema: 'evercraft.runtime-origin.v1',
   runtime: 'forge-operator',
   verified: true,
   origin: 'https://forge.evercraft.example/path-that-must-be-stripped',
-  deployment_receipt_hash: 'receipt-demo',
-  verified_at: '2026-09-25T07:05:00.000Z'
+  release_ref: '58d17315961483c0ab86be94b181d070eb6ea45e',
+  deployment_receipt_hash: 'sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+  verified_at: '2026-09-25T07:05:00.000Z',
+  public_https_verified: true
 }, null, 2) + '\n');
 
 const fourth = await buildCrawlPressure({
@@ -127,7 +138,7 @@ const fourth = await buildCrawlPressure({
 });
 assert.equal(fourth.origin, 'https://forge.evercraft.example');
 assert.equal(fourth.origin_source, 'verified_runtime_origin_receipt');
-assert.equal(fourth.origin_receipt_hash, 'receipt-demo');
+assert.equal(fourth.origin_receipt_hash, 'sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
 
 const freshnessWithOrigin = JSON.parse(fs.readFileSync(path.join(publicRoot, 'chum', 'freshness.json'), 'utf8'));
 assert.match(freshnessWithOrigin.recent_surfaces[0].url, /^https:\/\/forge\.evercraft\.example\//);
