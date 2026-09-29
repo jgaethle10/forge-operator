@@ -112,6 +112,13 @@ test('compiler detects invalid not-required lanes and missing evidence', () => {
         },
       ],
     },
+    ratchetBaseline: {
+      schema: 'evercraft.capability-mesh.ratchet-baseline.v1',
+      captured_at: '2026-09-28',
+      public_product_keys: ['demo'],
+      direct_door_public_product_keys: [],
+      specialist_only_slugs: [],
+    },
   });
 
   const demo = fixture.products[0];
@@ -143,6 +150,13 @@ test('specialist doors outside the public product index are preserved as a separ
       truth_boundary: {},
       contracts: [],
     },
+    ratchetBaseline: {
+      schema: 'evercraft.capability-mesh.ratchet-baseline.v1',
+      captured_at: '2026-09-28',
+      public_product_keys: [],
+      direct_door_public_product_keys: [],
+      specialist_only_slugs: ['held-specialist'],
+    },
   });
 
   assert.equal(fixture.specialist_only.length, 1);
@@ -150,5 +164,163 @@ test('specialist doors outside the public product index are preserved as a separ
   assert.equal(
     fixture.specialist_only[0].action,
     'review_before_publication_or_contract_binding'
+  );
+});
+
+
+test('production ratchet passes while grandfathered debt remains visible', () => {
+  const mesh = renderCapabilityMesh(process.cwd());
+  assert.equal(mesh.ratchet.state, 'pass');
+  assert.deepEqual(mesh.ratchet.new_public_products_without_contract, []);
+  assert.deepEqual(mesh.ratchet.new_direct_door_without_contract, []);
+  assert.deepEqual(mesh.ratchet.new_specialist_only_doors, []);
+  assert.ok(mesh.summary.missing_contract_count > 0);
+});
+
+test('new public product without a contract becomes a blocking ratchet regression', () => {
+  const fixture = buildCapabilityMesh({
+    root: process.cwd(),
+    publicProducts: {
+      schema: 'evercraft.saban.public-product-index.v1',
+      products: [
+        {
+          product_key: 'legacy',
+          name: 'Legacy',
+          class: 'demo',
+          invocation: { mode: 'discovery_only' },
+          registry_name: null,
+        },
+        {
+          product_key: 'new-product',
+          name: 'New Product',
+          class: 'demo',
+          invocation: { mode: 'discovery_only' },
+          registry_name: null,
+        },
+      ],
+    },
+    directDoors: {
+      schema: 'evercraft.direct-door-readiness.v2',
+      products: [],
+    },
+    contracts: {
+      schema: 'evercraft.capability-mesh.contracts.v1',
+      truth_boundary: {},
+      contracts: [],
+    },
+    ratchetBaseline: {
+      schema: 'evercraft.capability-mesh.ratchet-baseline.v1',
+      captured_at: '2026-09-28',
+      public_product_keys: ['legacy'],
+      direct_door_public_product_keys: [],
+      specialist_only_slugs: [],
+    },
+  });
+
+  assert.equal(fixture.ratchet.state, 'blocked');
+  assert.deepEqual(fixture.ratchet.new_public_products, ['new-product']);
+  assert.deepEqual(fixture.ratchet.new_public_products_without_contract, ['new-product']);
+  assert.ok(
+    fixture.ratchet.blocking_regressions.some(
+      (row) =>
+        row.code === 'new_public_product_without_contract' &&
+        row.product_key === 'new-product'
+    )
+  );
+});
+
+test('new direct door without a complete contract is blocked even for a grandfathered public product', () => {
+  const fixture = buildCapabilityMesh({
+    root: process.cwd(),
+    publicProducts: {
+      schema: 'evercraft.saban.public-product-index.v1',
+      products: [
+        {
+          product_key: 'legacy',
+          name: 'Legacy',
+          class: 'demo',
+          invocation: { mode: 'mcp' },
+          registry_name: 'io.github.jgaethle10/legacy',
+        },
+      ],
+    },
+    directDoors: {
+      schema: 'evercraft.direct-door-readiness.v2',
+      products: [
+        {
+          slug: 'legacy',
+          name: 'Legacy',
+          state: 'registry_published_direct_mcp_existing',
+          direct_callable: true,
+          registry_published: true,
+        },
+      ],
+    },
+    contracts: {
+      schema: 'evercraft.capability-mesh.contracts.v1',
+      truth_boundary: {},
+      contracts: [],
+    },
+    ratchetBaseline: {
+      schema: 'evercraft.capability-mesh.ratchet-baseline.v1',
+      captured_at: '2026-09-28',
+      public_product_keys: ['legacy'],
+      direct_door_public_product_keys: [],
+      specialist_only_slugs: [],
+    },
+  });
+
+  assert.equal(fixture.ratchet.state, 'blocked');
+  assert.deepEqual(fixture.ratchet.new_direct_door_public_products, ['legacy']);
+  assert.deepEqual(fixture.ratchet.new_direct_door_without_contract, ['legacy']);
+  assert.ok(
+    fixture.ratchet.blocking_regressions.some(
+      (row) =>
+        row.code === 'new_direct_door_without_contract' &&
+        row.product_key === 'legacy'
+    )
+  );
+});
+
+test('new specialist-only door is blocked for explicit review rather than auto-publication', () => {
+  const fixture = buildCapabilityMesh({
+    root: process.cwd(),
+    publicProducts: {
+      schema: 'evercraft.saban.public-product-index.v1',
+      products: [],
+    },
+    directDoors: {
+      schema: 'evercraft.direct-door-readiness.v2',
+      products: [
+        {
+          slug: 'new-held',
+          name: 'New Held Specialist',
+          state: 'yard_runtime_proven_public_route_pending',
+          direct_callable: false,
+        },
+      ],
+    },
+    contracts: {
+      schema: 'evercraft.capability-mesh.contracts.v1',
+      truth_boundary: {},
+      contracts: [],
+    },
+    ratchetBaseline: {
+      schema: 'evercraft.capability-mesh.ratchet-baseline.v1',
+      captured_at: '2026-09-28',
+      public_product_keys: [],
+      direct_door_public_product_keys: [],
+      specialist_only_slugs: [],
+    },
+  });
+
+  assert.equal(fixture.ratchet.state, 'blocked');
+  assert.deepEqual(fixture.ratchet.new_specialist_only_doors, ['new-held']);
+  assert.ok(
+    fixture.ratchet.blocking_regressions.some(
+      (row) =>
+        row.code === 'new_specialist_only_door_requires_review' &&
+        row.specialist_slug === 'new-held'
+    )
   );
 });
