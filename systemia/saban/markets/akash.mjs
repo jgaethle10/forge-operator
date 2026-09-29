@@ -413,6 +413,8 @@ export function createAkashMarketAdapter({
         estimated_total_usd:Number(offer.economics.total_usd),
         approved_ceiling_usd:ceiling,
         lease_created:true,
+        execution_ready:false,
+        execution_admission_required:'evercraft_compute_bootstrap_and_health_verification',
         created_at:new Date().toISOString(),
       };
       return {
