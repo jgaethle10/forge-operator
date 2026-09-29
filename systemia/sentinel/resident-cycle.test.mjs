@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import {
   emptyResidentState,
   runSentinelResidentCycle,
@@ -159,5 +160,18 @@ assert.equal(
   new Date(thirdFailureAt).getTime() - new Date('2026-09-29T12:10:00Z').getTime(),
   240000
 );
+
+const supervisorConfig = JSON.parse(fs.readFileSync(
+  new URL('../core/resident-services.json', import.meta.url),
+  'utf8'
+));
+const registered = supervisorConfig.services.find(
+  (row) => row.service_key === 'sentinel-life-safety-watch'
+);
+assert.ok(registered);
+assert.equal(registered.mode, 'resident');
+assert.equal(registered.executable, 'systemia/sentinel/resident-runner.mjs');
+assert.equal(registered.manifest, 'systemia/sentinel/resident.workflow.json');
+assert.equal(registered.max_restarts_per_hour, 12);
 
 console.log('SYSTEMIA SENTINEL RESIDENT CYCLE PASS');
