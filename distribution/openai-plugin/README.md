@@ -1,19 +1,25 @@
 # OpenAI public plugin submission packet
 
-This directory packages the existing Evercraft Machine Commerce remote MCP for OpenAI's public Plugins Directory review.
+This directory is the canonical account-side submission packet for the **Evercraft** public plugin.
 
-The source of truth for actual tool behavior is the deployed MCP plus the public Evercraft machine-commerce and CHUM contracts. This packet must never be used to advertise a tool or payment authority that is not live-verified.
+The product-facing source package lives at `plugins/evercraft-fabric/`. The public listing should present Evercraft as one problem-first front door into the broader Evercraft/Systemia capability fabric, not as a separate Machine Commerce product.
+
+## Current transport
+
+The submission packet currently references the existing live universal Evercraft Machine Commerce remote MCP as a compatibility transport. That is the currently reachable universal machine door, not the long-term authority boundary.
+
+The owned Evercraft Fabric MCP is implemented in `systemia/mcp/fabric-directory.mjs` and served by the specialist-handoff runtime. Its production cutover is receipt-gated on a verified stable Yard public HTTPS route and an external canary. The current workflow truth remains authoritative; never invent the future origin.
 
 ## Prepared
 
-- public listing copy
-- universal remote MCP URL
+- canonical listing copy for **Evercraft**
+- current universal remote MCP URL
 - website/support/privacy/terms URLs
 - starter prompts
-- five positive review cases
-- three negative review cases
-- release notes
-- current commercial and safety boundary
+- at least five positive review cases
+- at least three negative review cases
+- current commercial and safety boundaries
+- matching product package under `plugins/evercraft-fabric/`
 
 ## External platform steps that remain
 
@@ -21,11 +27,13 @@ OpenAI requires submission through the Platform plugin submission portal, with t
 
 Do not invent that token ahead of the portal challenge.
 
-After OpenAI approval, publication is a separate protected action in the portal.
+After OpenAI approval, publication is a separate protected action in the portal. After publication, directory pickup must be independently observed before Forge records the plugin as publicly available.
 
 ## Review doctrine
 
 - Tool annotations must match real behavior.
+- Public discovery is not Systemia execution authority.
+- Installation alone does not grant private context.
 - Public discovery is not payment authority.
 - Do not submit a stale MCP snapshot.
 - Scan Tools against the production endpoint immediately before submission.
