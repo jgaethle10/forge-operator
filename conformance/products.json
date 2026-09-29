@@ -137,6 +137,41 @@
       "chum_mirror_state": "generated_public_fallback"
     },
     {
+      "product_key": "eps-estimate-engine",
+      "name": "EPS Field-Service Estimate Engine",
+      "class": "contractor_estimate_and_margin_modeling",
+      "canonical_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eps-estimate-engine/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eps-estimate-engine/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eps-estimate-engine/ai-conformance.json",
+      "doorway_state": "machine_commerce_live",
+      "conformance_state": "live_read_only_mcp_verified",
+      "provider_behavior_state": "not_run",
+      "chum_mirror_state": "generated_public_fallback",
+      "machine_commerce_public_id": "eps-estimate-engine-machine-v1",
+      "machine_commerce_tool": "calculate_contractor_estimate_preview",
+      "machine_commerce_receipt_verifier_tool": "verify_contractor_estimate_receipt",
+      "machine_invocation_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/estimatePreviewGateway",
+      "machine_invocation_side_effects": "none",
+      "receipt_verifier_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/estimateReceiptVerifier",
+      "receipt_verifier_authority": "integrity_only",
+      "authority_state": "Public no-account estimate preview is arithmetic-only and creates no proposal, job acceptance, charge, customer obligation, private workspace write, or identity proof.",
+      "payment_state": "unavailable_not_configured",
+      "live_canary_evidence": {
+        "estimate_preview_tool_observed": true,
+        "estimate_preview_observed_at": "2026-09-27T23:35:00Z",
+        "receipt_verifier_tool_observed": true,
+        "receipt_verifier_observed_at": "2026-09-28T17:28:00-07:00",
+        "verifier_result_boundary": "verified=true means receipt integrity only; identity_verified=false"
+      },
+      "mcp_registry": {
+        "name": "io.github.jgaethle10/evercraft-machine-commerce",
+        "version": "1.5.1",
+        "publication_state": "published_shared_server"
+      },
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+    },
+    {
       "product_key": "eventwave",
       "name": "EventWave",
       "class": "agent_commerce",
