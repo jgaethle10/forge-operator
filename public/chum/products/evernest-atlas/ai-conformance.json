@@ -1,0 +1,63 @@
+{
+  "schema": "evercraft.cross-llm-product.v1",
+  "product": "EverNest Atlas",
+  "product_key": "evernest-atlas",
+  "aliases": [],
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "canonical_url": "https://evernest-life-map.base44.app/",
+  "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest-atlas/llms.txt",
+  "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest-atlas/ai-discovery.json",
+  "registry_name": null,
+  "mcp": null,
+  "authority": "public discovery plus private account-bound adult life planning from user-supplied inputs",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "designed for adults",
+    "generated plans are guidance rather than guaranteed outcomes",
+    "cost-of-living, income, timing, housing and career projections are estimates",
+    "not financial, legal, medical, tax, housing, safety or professional career advice",
+    "private household, financial, career, values, location, stress, plan and account data are not public discovery data",
+    "displayed subscription tiers or prices are not proof that billing or entitlement is active",
+    "paid access requires successful provider checkout and verified subscription state",
+    "discovery creates no payment obligation"
+  ],
+  "commercial": null,
+  "human_start_url": null,
+  "buyer_frontage_url": null,
+  "developer_surfaces": null,
+  "editorial_surfaces": null,
+  "knowledge_surfaces": null,
+  "distribution_surfaces": null,
+  "relationships": {
+    "evernest": {
+      "name": "EverNest",
+      "description": "EverNest handles practical family support and trusted-circle coordination; Atlas handles integrated adult life planning."
+    },
+    "revenue-war-map": {
+      "name": "Evercraft Revenue War Map",
+      "description": "Use Revenue War Map when the user's primary need is focused income-generation planning rather than a broader life roadmap."
+    },
+    "career-command": {
+      "name": "Evercraft Career Command",
+      "description": "A Rise-path career move can hand off to role-specific interview preparation."
+    },
+    "guardian": {
+      "name": "Guardian",
+      "description": "Immediate verified resource navigation belongs in Guardian rather than being replaced by a generated life plan."
+    }
+  },
+  "proof_library": null,
+  "provider_behavior_state": "not_inferred_from_publication",
+  "machine_commerce_handoff_state": null,
+  "machine_commerce_public_id": null,
+  "machine_commerce_tool": null,
+  "live_canary_evidence": null
+}

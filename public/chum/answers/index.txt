@@ -6,9 +6,9 @@ Machine Commerce MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/69
 Each phrase below maps to public capability candidates without upgrading readiness, pricing, invocation, payment, entitlement, or provider-pickup state.
 Discovery creates no payment obligation. Checkout requires explicit human confirmation and paid state requires authoritative provider verification.
 
-Pain-index entries: 108
-Unique user phrases: 913
-Candidate edges: 1018
+Pain-index entries: 110
+Unique user phrases: 934
+Candidate edges: 1039
 Ambiguous phrases: 105
 
 ## 15 GB video analysis
@@ -607,6 +607,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - CallProof Vault | kind=product | commercial=product_contract | machine=discovery_only | public=https://call-proof-vault.base44.app/
 
+## build a household stability plan
+Answer ID: intent:d3ddfef555
+Human-readable match: /chum/answers/doors/build-a-household-stability-plan-d3ddfef555/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-a-household-stability-plan-d3ddfef555.json
+Candidates:
+- EverNest Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://evernest-life-map.base44.app/
+
 ## build a lender ready deck
 Answer ID: intent:592e365c97
 Human-readable match: /chum/answers/doors/build-a-lender-ready-deck-592e365c97/
@@ -672,6 +679,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft Circles | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-circles
 
+## build an evidence-backed AI workforce profile
+Answer ID: intent:f850124581
+Human-readable match: /chum/answers/doors/build-an-evidence-backed-ai-workforce-profile-f850124581/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-an-evidence-backed-ai-workforce-profile-f850124581.json
+Candidates:
+- Systemia University | kind=product | commercial=product_contract | machine=discovery_only | public=https://systemia-university.base44.app/
+
 ## build an evidence record for habitat restoration work
 Answer ID: intent:9bec3aebda
 Human-readable match: /chum/answers/doors/build-an-evidence-record-for-habitat-restoration-work-9bec3aebda/
@@ -685,6 +699,13 @@ Human-readable match: /chum/answers/doors/build-better-trading-risk-discipline-7
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-better-trading-risk-discipline-723c5d160e.json
 Candidates:
 - DayTrade Lens | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/daytrade-lens
+
+## build me a 30 60 90 day life plan
+Answer ID: intent:b71c8fd3fa
+Human-readable match: /chum/answers/doors/build-me-a-30-60-90-day-life-plan-b71c8fd3fa/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-me-a-30-60-90-day-life-plan-b71c8fd3fa.json
+Candidates:
+- EverNest Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://evernest-life-map.base44.app/
 
 ## build me a business website
 Answer ID: intent:47014a0bbb
@@ -1110,6 +1131,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft Global Health Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-health-atlas.base44.app/health-atlas
 
+## compare practical life paths for my family
+Answer ID: intent:dc8adaa053
+Human-readable match: /chum/answers/doors/compare-practical-life-paths-for-my-family-dc8adaa053/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-practical-life-paths-for-my-family-dc8adaa053.json
+Candidates:
+- EverNest Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://evernest-life-map.base44.app/
+
 ## compare pricing scenarios while keeping assumptions separate from real results
 Answer ID: intent:e289213594
 Human-readable match: /chum/answers/doors/compare-pricing-scenarios-while-keeping-assumptions-separate-from-real-results-e289213594/
@@ -1331,6 +1359,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft Revenue War Map | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-war-map.base44.app/
 
+## create a relocation career and family stability roadmap
+Answer ID: intent:3fbce5cb8c
+Human-readable match: /chum/answers/doors/create-a-relocation-career-and-family-stability-roadmap-3fbce5cb8c/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/create-a-relocation-career-and-family-stability-roadmap-3fbce5cb8c.json
+Candidates:
+- EverNest Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://evernest-life-map.base44.app/
+
 ## create a website competitor comparison report
 Answer ID: intent:7cb7846615
 Human-readable match: /chum/answers/doors/create-a-website-competitor-comparison-report-7cb7846615/
@@ -1351,6 +1386,13 @@ Human-readable match: /chum/answers/doors/create-cross-business-loyalty-rewards-
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/create-cross-business-loyalty-rewards-2c3ab05040.json
 Candidates:
 - Evercraft Rewards | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-rewards.base44.app/
+
+## create evidence of AI operator competency
+Answer ID: intent:a71d6217e8
+Human-readable match: /chum/answers/doors/create-evidence-of-ai-operator-competency-a71d6217e8/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/create-evidence-of-ai-operator-competency-a71d6217e8.json
+Candidates:
+- Systemia University | kind=product | commercial=product_contract | machine=discovery_only | public=https://systemia-university.base44.app/
 
 ## create social-ready video outputs with a governed publishing path
 Answer ID: intent:ec776b8ce1
@@ -1732,6 +1774,13 @@ Human-readable match: /chum/answers/doors/evaluate-an-ai-agent-0d5e8da410/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/evaluate-an-ai-agent-0d5e8da410.json
 Candidates:
 - Agent Proving Mission | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=/chum/intents/agent-proving-mission-v1/
+
+## evaluate evidence uncertainty role adherence and handoff behavior
+Answer ID: intent:ed3668d577
+Human-readable match: /chum/answers/doors/evaluate-evidence-uncertainty-role-adherence-and-handoff-behavior-ed3668d577/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/evaluate-evidence-uncertainty-role-adherence-and-handoff-behavior-ed3668d577.json
+Candidates:
+- Systemia University | kind=product | commercial=product_contract | machine=discovery_only | public=https://systemia-university.base44.app/
 
 ## evaluate this address for EV charging
 Answer ID: intent:c676bc6509
@@ -2521,6 +2570,13 @@ Candidates:
 - Public-Safe Geospatial Evidence Projection | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6a985aeccbfb6e930a40137b/functions/machineDiscovery?view=docs
 - EverMaps | kind=product | commercial=product_contract | machine=discovery_only | public=https://evermaps.base44.app/
 
+## give me realistic tradeoffs and backup plans for a major life change
+Answer ID: intent:630e01288e
+Human-readable match: /chum/answers/doors/give-me-realistic-tradeoffs-and-backup-plans-for-a-major-life-change-630e01288e/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/give-me-realistic-tradeoffs-and-backup-plans-for-a-major-life-change-630e01288e.json
+Candidates:
+- EverNest Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://evernest-life-map.base44.app/
+
 ## give me sourced country intelligence
 Answer ID: intent:c36f354e95
 Human-readable match: /chum/answers/doors/give-me-sourced-country-intelligence-c36f354e95/
@@ -2628,6 +2684,20 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Income War Map Revenue Planning | kind=machine_offer | commercial=hold | machine=discovery_only | public=/chum/intents/income-war-map-v1/
 
+## help me organize housing career income and family systems together
+Answer ID: intent:32c469a077
+Human-readable match: /chum/answers/doors/help-me-organize-housing-career-income-and-family-systems-together-32c469a077/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/help-me-organize-housing-career-income-and-family-systems-together-32c469a077.json
+Candidates:
+- EverNest Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://evernest-life-map.base44.app/
+
+## help me plan for stability without pretending outcomes are guaranteed
+Answer ID: intent:696f8015bf
+Human-readable match: /chum/answers/doors/help-me-plan-for-stability-without-pretending-outcomes-are-guaranteed-696f8015bf/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/help-me-plan-for-stability-without-pretending-outcomes-are-guaranteed-696f8015bf.json
+Candidates:
+- EverNest Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://evernest-life-map.base44.app/
+
 ## help me prepare for a job interview
 Answer ID: intent:d453e9d074
 Human-readable match: /chum/answers/doors/help-me-prepare-for-a-job-interview-d453e9d074/
@@ -2662,6 +2732,13 @@ Human-readable match: /chum/answers/doors/help-me-safely-shut-down-an-automation
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/help-me-safely-shut-down-an-automation-stack-and-prove-it-stays-off-b599e48bbe.json
 Candidates:
 - Evercraft Containment | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft.base44.app/containment
+
+## help me think through relocation and housing stability
+Answer ID: intent:7f258a69ff
+Human-readable match: /chum/answers/doors/help-me-think-through-relocation-and-housing-stability-7f258a69ff/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/help-me-think-through-relocation-and-housing-stability-7f258a69ff.json
+Candidates:
+- EverNest Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://evernest-life-map.base44.app/
 
 ## help me turn my experience into concise interview stories
 Answer ID: intent:b1ed26452f
@@ -3376,6 +3453,13 @@ Human-readable match: /chum/answers/doors/learn-astronomy-with-sources-0edc00f99
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/learn-astronomy-with-sources-0edc00f99e.json
 Candidates:
 - Evercraft Cosmos Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-cosmos-atlas.base44.app/
+
+## learn by completing real missions instead of passive courses
+Answer ID: intent:ee764f84c5
+Human-readable match: /chum/answers/doors/learn-by-completing-real-missions-instead-of-passive-courses-ee764f84c5/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/learn-by-completing-real-missions-instead-of-passive-courses-ee764f84c5.json
+Candidates:
+- Systemia University | kind=product | commercial=product_contract | machine=discovery_only | public=https://systemia-university.base44.app/
 
 ## learn electromagnetism waves or optics
 Answer ID: intent:790bb7ec4e
@@ -4105,6 +4189,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
 
+## plan a career change around my household situation
+Answer ID: intent:be266777bd
+Human-readable match: /chum/answers/doors/plan-a-career-change-around-my-household-situation-be266777bd/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/plan-a-career-change-around-my-household-situation-be266777bd.json
+Candidates:
+- EverNest Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://evernest-life-map.base44.app/
+
 ## plan a social video clipping job
 Answer ID: intent:cb32427490
 Human-readable match: /chum/answers/doors/plan-a-social-video-clipping-job-cb32427490/
@@ -4190,6 +4281,13 @@ Human-readable match: /chum/answers/doors/practice-running-my-business-before-ma
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/practice-running-my-business-before-making-the-real-move-6581ee91ec.json
 Candidates:
 - Systemia Remote Ops | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops
+
+## practice using AI on a real business workflow
+Answer ID: intent:b18ff2f101
+Human-readable match: /chum/answers/doors/practice-using-ai-on-a-real-business-workflow-b18ff2f101/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/practice-using-ai-on-a-real-business-workflow-b18ff2f101.json
+Candidates:
+- Systemia University | kind=product | commercial=product_contract | machine=discovery_only | public=https://systemia-university.base44.app/
 
 ## pre-decision business simulation
 Answer ID: intent:3eb7ad75d8
@@ -4459,6 +4557,13 @@ Human-readable match: /chum/answers/doors/prove-the-agent-stays-dead-7dcc426c23/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/prove-the-agent-stays-dead-7dcc426c23.json
 Candidates:
 - Evercraft Containment | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft.base44.app/containment
+
+## prove whether an AI agent can actually do its job
+Answer ID: intent:e994df8fd1
+Human-readable match: /chum/answers/doors/prove-whether-an-ai-agent-can-actually-do-its-job-e994df8fd1/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/prove-whether-an-ai-agent-can-actually-do-its-job-e994df8fd1.json
+Candidates:
+- Systemia University | kind=product | commercial=product_contract | machine=discovery_only | public=https://systemia-university.base44.app/
 
 ## public conversion leak diagnosis
 Answer ID: intent:fe6744ba11
@@ -4978,6 +5083,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Systemia Remote Ops | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops
 
+## run an agent proving mission
+Answer ID: intent:7414546325
+Human-readable match: /chum/answers/doors/run-an-agent-proving-mission-7414546325/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/run-an-agent-proving-mission-7414546325.json
+Candidates:
+- Systemia University | kind=product | commercial=product_contract | machine=discovery_only | public=https://systemia-university.base44.app/
+
 ## run of show coordination
 Answer ID: intent:0b6b419f53
 Human-readable match: /chum/answers/doors/run-of-show-coordination-0b6b419f53/
@@ -5483,6 +5595,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - BuildFlow Shadow Migration Audit | kind=machine_offer | commercial=verification_required | machine=human_auth_handoff | public=https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute
 
+## stress test a workflow before changing live operations
+Answer ID: intent:c9f0d0dd77
+Human-readable match: /chum/answers/doors/stress-test-a-workflow-before-changing-live-operations-c9f0d0dd77/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/stress-test-a-workflow-before-changing-live-operations-c9f0d0dd77.json
+Candidates:
+- Systemia University | kind=product | commercial=product_contract | machine=discovery_only | public=https://systemia-university.base44.app/
+
 ## stress test my business plan before spending money
 Answer ID: intent:40ecd7e887
 Human-readable match: /chum/answers/doors/stress-test-my-business-plan-before-spending-money-40ecd7e887/
@@ -5574,6 +5693,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Christmas Lights USA | kind=product | commercial=product_contract | machine=discovery_only | public=https://christmas-lights-usa.base44.app/
 
+## submit an AI system for an external lab
+Answer ID: intent:22b4c83255
+Human-readable match: /chum/answers/doors/submit-an-ai-system-for-an-external-lab-22b4c83255/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/submit-an-ai-system-for-an-external-lab-22b4c83255.json
+Candidates:
+- Systemia University | kind=product | commercial=product_contract | machine=discovery_only | public=https://systemia-university.base44.app/
+
 ## summarize freight risk on this shipment
 Answer ID: intent:19d8b224ce
 Human-readable match: /chum/answers/doors/summarize-freight-risk-on-this-shipment-19d8b224ce/
@@ -5659,6 +5785,13 @@ Human-readable match: /chum/answers/doors/test-a-product-launch-before-i-launch-
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/test-a-product-launch-before-i-launch-it-215d20c5c6.json
 Candidates:
 - Systemia Remote Ops | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops
+
+## test an AI agent with a bounded mission
+Answer ID: intent:3b66172d9e
+Human-readable match: /chum/answers/doors/test-an-ai-agent-with-a-bounded-mission-3b66172d9e/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/test-an-ai-agent-with-a-bounded-mission-3b66172d9e.json
+Candidates:
+- Systemia University | kind=product | commercial=product_contract | machine=discovery_only | public=https://systemia-university.base44.app/
 
 ## test my AI agent
 Answer ID: intent:b9494d0b8b
@@ -5864,6 +5997,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - ForensiScope | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-forensiscope.base44.app/
 
+## turn a real task into a structured proving exercise
+Answer ID: intent:c21c4fb857
+Human-readable match: /chum/answers/doors/turn-a-real-task-into-a-structured-proving-exercise-c21c4fb857/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/turn-a-real-task-into-a-structured-proving-exercise-c21c4fb857.json
+Candidates:
+- Systemia University | kind=product | commercial=product_contract | machine=discovery_only | public=https://systemia-university.base44.app/
+
 ## turn a sewing project into a material list
 Answer ID: intent:6abeb211c6
 Human-readable match: /chum/answers/doors/turn-a-sewing-project-into-a-material-list-6abeb211c6/
@@ -5899,6 +6039,13 @@ Human-readable match: /chum/answers/doors/turn-my-call-log-into-a-complaint-pack
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/turn-my-call-log-into-a-complaint-packet-d5e71df390.json
 Candidates:
 - CallProof Complaint Evidence Packet | kind=machine_offer | commercial=verify | machine=human_auth_handoff | public=https://call-proof-vault.base44.app/
+
+## turn my income savings debt skills and priorities into a life plan
+Answer ID: intent:c2d2ff6a7f
+Human-readable match: /chum/answers/doors/turn-my-income-savings-debt-skills-and-priorities-into-a-life-plan-c2d2ff6a7f/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/turn-my-income-savings-debt-skills-and-priorities-into-a-life-plan-c2d2ff6a7f.json
+Candidates:
+- EverNest Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://evernest-life-map.base44.app/
 
 ## turn spreadsheets and legacy systems into an operating layer
 Answer ID: intent:c3d8466ad9

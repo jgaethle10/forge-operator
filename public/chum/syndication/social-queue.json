@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.syndication-social-queue.v1",
-  "generated_at": "2026-09-29T02:27:24.277Z",
+  "generated_at": "2026-09-29T04:34:53.887Z",
   "bootstrap": false,
   "policy": "Material product changes enter once per content hash. Publishing still requires an authorized destination adapter.",
   "items": [
@@ -745,6 +745,16 @@
       "requires_authorized_destination": true
     },
     {
+      "dedupe_key": "evernest-atlas:d377411ab1b9321d27bce8ac47fa6a06e93d81c266512eb5d8593910642e8e24",
+      "product_key": "evernest-atlas",
+      "name": "EverNest Atlas",
+      "canonical_url": "https://evernest-life-map.base44.app/",
+      "discovery_path": "/chum/products/evernest-atlas/ai-discovery.json",
+      "text": "EverNest Atlas: EverNest Atlas is an Evercraft adult household life planning capability. Common needs: build me a 30 60 90 day life plan; help me think through relocation and housing stability; compare practical life paths for my family; plan a career change around my household situation.",
+      "content_sha256": "d377411ab1b9321d27bce8ac47fa6a06e93d81c266512eb5d8593910642e8e24",
+      "requires_authorized_destination": true
+    },
+    {
       "dedupe_key": "everystage:8f43e2a15781cd8d6b25996830539e11b971eb0e992005ee17cfbf15a7ddbe21",
       "product_key": "everystage",
       "name": "EveryStage",
@@ -1412,6 +1422,16 @@
       "discovery_path": "/chum/products/systemia-remote-ops/ai-discovery.json",
       "text": "Systemia Remote Ops: Systemia Remote Ops is an Evercraft business decision simulator capability. Common needs: I am thinking about starting a business and want to test the operating and cash-flow assumptions before I commit real money or quit my job; I want a business simulator where I can change assumptions and compare scenarios before starting a company; simulate a business before I start it; stress test my business plan before spending money.",
       "content_sha256": "69bfb29d33f5ea02a4e453e4711e6327e55cce0c94ceb18c269124aec8ca98f2",
+      "requires_authorized_destination": true
+    },
+    {
+      "dedupe_key": "systemia-university:8df87c5444cf556d9d0945c81844a03bb1b4a6dc53c6b1c1a79f56f88c341777",
+      "product_key": "systemia-university",
+      "name": "Systemia University",
+      "canonical_url": "https://systemia-university.base44.app/",
+      "discovery_path": "/chum/products/systemia-university/ai-discovery.json",
+      "text": "Systemia University: Systemia University is an Evercraft evidence centered learning agent proving and workforce readiness capability. Common needs: prove whether an AI agent can actually do its job; test an AI agent with a bounded mission; practice using AI on a real business workflow; create evidence of AI operator competency.",
+      "content_sha256": "8df87c5444cf556d9d0945c81844a03bb1b4a6dc53c6b1c1a79f56f88c341777",
       "requires_authorized_destination": true
     },
     {

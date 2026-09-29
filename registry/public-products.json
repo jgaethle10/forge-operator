@@ -399,6 +399,19 @@
       }
     },
     {
+      "product_key": "evernest-atlas",
+      "name": "EverNest Atlas",
+      "class": "adult_household_life_planning",
+      "canonical_url": "https://evernest-life-map.base44.app/",
+      "github_record": "./evernest-atlas/README.md",
+      "llms": "./evernest-atlas/llms.txt",
+      "registry_name": null,
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null
+      }
+    },
+    {
       "product_key": "everystage",
       "name": "EveryStage",
       "class": "live_event_operations",
@@ -743,6 +756,19 @@
       "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops",
       "github_record": "./systemia-remote-ops/README.md",
       "llms": "./systemia-remote-ops/llms.txt",
+      "registry_name": null,
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null
+      }
+    },
+    {
+      "product_key": "systemia-university",
+      "name": "Systemia University",
+      "class": "evidence_centered_learning_agent_proving_and_workforce_readiness",
+      "canonical_url": "https://systemia-university.base44.app/",
+      "github_record": "./systemia-university/README.md",
+      "llms": "./systemia-university/llms.txt",
       "registry_name": null,
       "invocation": {
         "mode": "discovery_only",

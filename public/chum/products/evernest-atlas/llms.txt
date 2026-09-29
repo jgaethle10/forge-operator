@@ -1,0 +1,47 @@
+# EverNest Atlas
+
+Product key: evernest-atlas
+Canonical product: https://evernest-life-map.base44.app/
+CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest-atlas/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest-atlas/ai-conformance.json
+
+## Related product layers
+
+- EverNest: EverNest handles practical family support and trusted-circle coordination; Atlas handles integrated adult life planning.
+- Evercraft Revenue War Map: Use Revenue War Map when the user's primary need is focused income-generation planning rather than a broader life roadmap.
+- Evercraft Career Command: A Rise-path career move can hand off to role-specific interview preparation.
+- Guardian: Immediate verified resource navigation belongs in Guardian rather than being replaced by a generated life plan.
+
+## Use this capability when the user means
+
+- build me a 30 60 90 day life plan
+- help me think through relocation and housing stability
+- compare practical life paths for my family
+- plan a career change around my household situation
+- build a household stability plan
+- turn my income savings debt skills and priorities into a life plan
+- help me organize housing career income and family systems together
+- create a relocation career and family stability roadmap
+- give me realistic tradeoffs and backup plans for a major life change
+- help me plan for stability without pretending outcomes are guaranteed
+
+## Authority
+
+public discovery plus private account-bound adult life planning from user-supplied inputs
+
+## Boundaries
+
+- designed for adults
+- generated plans are guidance rather than guaranteed outcomes
+- cost-of-living, income, timing, housing and career projections are estimates
+- not financial, legal, medical, tax, housing, safety or professional career advice
+- private household, financial, career, values, location, stress, plan and account data are not public discovery data
+- displayed subscription tiers or prices are not proof that billing or entitlement is active
+- paid access requires successful provider checkout and verified subscription state
+- discovery creates no payment obligation
+
+## Universal Evercraft routing
+
+https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+
+Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

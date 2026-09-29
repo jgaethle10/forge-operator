@@ -433,6 +433,18 @@
     },
     {
       "@type": "Service",
+      "@id": "https://evernest-life-map.base44.app/#evercraft-service",
+      "name": "EverNest Atlas",
+      "alternateName": [],
+      "url": "https://evernest-life-map.base44.app/",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "adult_household_life_planning",
+      "description": "build me a 30 60 90 day life plan; help me think through relocation and housing stability; compare practical life paths for my family; plan a career change around my household situation"
+    },
+    {
+      "@type": "Service",
       "@id": "https://every-stage.base44.app/product#evercraft-service",
       "name": "EveryStage",
       "alternateName": [],
@@ -793,6 +805,18 @@
       },
       "serviceType": "business_decision_simulator",
       "description": "I am thinking about starting a business and want to test the operating and cash-flow assumptions before I commit real money or quit my job; I want a business simulator where I can change assumptions and compare scenarios before starting a company; simulate a business before I start it; stress test my business plan before spending money"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://systemia-university.base44.app/#evercraft-service",
+      "name": "Systemia University",
+      "alternateName": [],
+      "url": "https://systemia-university.base44.app/",
+      "provider": {
+        "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
+      },
+      "serviceType": "evidence_centered_learning_agent_proving_and_workforce_readiness",
+      "description": "prove whether an AI agent can actually do its job; test an AI agent with a bounded mission; practice using AI on a real business workflow; create evidence of AI operator competency"
     },
     {
       "@type": "Service",
