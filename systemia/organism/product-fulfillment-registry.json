@@ -1,0 +1,467 @@
+{
+  "schema": "evercraft.product-fulfillment-registry.v1",
+  "mission_key": "evercraft-portfolio-fulfillment-readiness-20260928",
+  "doctrine": {
+    "payment_authority": "provider_verified_non_synthetic_payment_only",
+    "checkout_is_not_payment": true,
+    "payment_does_not_grant_private_access": true,
+    "production_mutation_requires_separate_authorization": true,
+    "deliverable_completion_requires_receipt": true,
+    "expansion_requires_human_confirmation": true,
+    "systemia_is_coordinator": true,
+    "saban_is_execution_fabric_not_authority": true
+  },
+  "products": [
+    {
+      "public_id": "aliev-site-opportunity-snapshot-v1",
+      "name": "AliEV EV Site Opportunity Intelligence",
+      "execution_mode": "systemia_managed_report",
+      "native_state": "payment_handoff_live_report_delivery_not_uniformly_receipted",
+      "intake": [
+        "site_address",
+        "buyer_email",
+        "purchased_report_tier",
+        "authorized_context"
+      ],
+      "deliverables": [
+        "source-backed site opportunity report",
+        "evidence-state labels",
+        "nearby charging context",
+        "tariff/incentive context where available",
+        "assumptions and unknowns",
+        "next-step recommendations"
+      ],
+      "qa": [
+        "missing_is_not_zero",
+        "modeled_is_not_observed",
+        "source_provenance",
+        "address_scope_match"
+      ],
+      "human_review_before_delivery": true,
+      "specialist_roles": [
+        "RIVET/AliEV",
+        "Systemia",
+        "Saban",
+        "Evidence QA",
+        "Shipping"
+      ]
+    },
+    {
+      "public_id": "career-command-interview-practice-machine-v1",
+      "name": "Career Command Interview Practice + Interview Sprint",
+      "execution_mode": "native_entitlement_with_systemia_receipt",
+      "native_state": "bounded_paid_access_described_live",
+      "intake": [
+        "buyer_email",
+        "target_role",
+        "interview_context"
+      ],
+      "deliverables": [
+        "7-day bounded premium access",
+        "role-specific questions",
+        "answer evaluation",
+        "story recovery",
+        "interview plan"
+      ],
+      "qa": [
+        "entitlement_window",
+        "premium_action_limit",
+        "privacy_boundary"
+      ],
+      "human_review_before_delivery": false,
+      "specialist_roles": [
+        "Career Command",
+        "Systemia",
+        "Entitlement Guard"
+      ]
+    },
+    {
+      "public_id": "eventwave-paid-promotion-v1",
+      "name": "EventWave Event / Venue Promotion",
+      "execution_mode": "native_review_gated_placement",
+      "native_state": "payment_and_placement_state_live_source_review_required",
+      "intake": [
+        "buyer_email",
+        "event_or_venue_id",
+        "promotion_tier",
+        "source_material"
+      ],
+      "deliverables": [
+        "reviewed promotion placement",
+        "placement status",
+        "source review record"
+      ],
+      "qa": [
+        "source_authenticity",
+        "event_identity",
+        "placement_scope"
+      ],
+      "human_review_before_delivery": true,
+      "specialist_roles": [
+        "EventWave",
+        "Systemia",
+        "Source Review",
+        "Shipping"
+      ]
+    },
+    {
+      "public_id": "deck-capital-fit-sprint-machine-v1",
+      "name": "Evercraft Deck Engine Founding Capital Fit Sprint",
+      "execution_mode": "native_paid_case_with_systemia_receipt",
+      "native_state": "verified_paid_case_required_before_bounded_research",
+      "intake": [
+        "buyer_email",
+        "business_context",
+        "capital_goal",
+        "authorized_material"
+      ],
+      "deliverables": [
+        "bounded capital-fit research",
+        "readiness gaps",
+        "realistic capital paths",
+        "evidence-backed brief"
+      ],
+      "qa": [
+        "no_financing_guarantee",
+        "source_provenance",
+        "scope_match"
+      ],
+      "human_review_before_delivery": true,
+      "specialist_roles": [
+        "Deck Engine",
+        "Systemia",
+        "Research QA",
+        "Shipping"
+      ]
+    },
+    {
+      "public_id": "foundry-app-escape-audit-v1",
+      "name": "Evercraft Foundry App Escape Audit",
+      "execution_mode": "systemia_managed_service",
+      "native_state": "human_handoff_live_paid_fulfillment_requires_standard_contract",
+      "intake": [
+        "buyer_email",
+        "app_identity",
+        "authorized_source_or_exports",
+        "escape_goal"
+      ],
+      "deliverables": [
+        "platform-lock-in map",
+        "portable asset inventory",
+        "migration blockers",
+        "bounded escape plan",
+        "evidence package"
+      ],
+      "qa": [
+        "authorized_source_only",
+        "no_private_access_by_payment",
+        "provenance",
+        "rollback_boundary"
+      ],
+      "human_review_before_delivery": true,
+      "specialist_roles": [
+        "Foundry",
+        "Systemia",
+        "Saban",
+        "Migration QA",
+        "Shipping"
+      ]
+    },
+    {
+      "public_id": "website-launch-service-v1",
+      "name": "Evercraft Website Launch Service",
+      "execution_mode": "systemia_managed_service",
+      "native_state": "checkout_and_paid_order_verification_live_project_delivery_not_normalized",
+      "intake": [
+        "buyer_email",
+        "business_name",
+        "selected_tier",
+        "brand_inputs",
+        "site_goal",
+        "approved_content"
+      ],
+      "deliverables": [
+        "tier-scoped website build",
+        "responsive QA",
+        "content/brand review",
+        "launch checklist",
+        "delivery receipt"
+      ],
+      "qa": [
+        "scope_match",
+        "mobile",
+        "accessibility",
+        "links_forms",
+        "brand_approval"
+      ],
+      "human_review_before_delivery": true,
+      "specialist_roles": [
+        "Website Service",
+        "Systemia",
+        "Saban Human Experience",
+        "QA",
+        "Shipping"
+      ]
+    },
+    {
+      "public_id": "faie-signal-brief-v1",
+      "name": "FAIE Evidence-First Signal Brief",
+      "execution_mode": "systemia_managed_mission",
+      "native_state": "payment_and_mission_queue_live_human_review_controlled",
+      "intake": [
+        "buyer_email",
+        "question_or_signal",
+        "scope",
+        "authorized_sources"
+      ],
+      "deliverables": [
+        "evidence-first brief",
+        "source ledger",
+        "confidence/uncertainty",
+        "contradictions",
+        "next-step proof plan"
+      ],
+      "qa": [
+        "source_provenance",
+        "uncertainty",
+        "causal_claims",
+        "adversarial_read"
+      ],
+      "human_review_before_delivery": true,
+      "specialist_roles": [
+        "FAIE",
+        "Systemia",
+        "Saban",
+        "Evidence QA",
+        "Shipping"
+      ]
+    },
+    {
+      "public_id": "findmypart-paid-hunt-v1",
+      "name": "FindMyPart Paid Part Hunt",
+      "execution_mode": "native_hunt_with_systemia_receipt",
+      "native_state": "paid_hunt_status_live_provider_verification_required",
+      "intake": [
+        "buyer_email",
+        "part_description",
+        "equipment_context",
+        "photos_or_markings_if_available",
+        "selected_hunt_tier"
+      ],
+      "deliverables": [
+        "candidate part findings",
+        "source evidence",
+        "compatibility reasoning",
+        "sourcing options",
+        "escalation path"
+      ],
+      "qa": [
+        "part_identity_uncertainty",
+        "source_links",
+        "compatibility_not_overstated"
+      ],
+      "human_review_before_delivery": true,
+      "specialist_roles": [
+        "FindMyPart",
+        "Systemia",
+        "Saban",
+        "Compatibility QA",
+        "Shipping"
+      ]
+    },
+    {
+      "public_id": "rivet-site-underwriting-v1",
+      "name": "RIVET EV Infrastructure Intelligence",
+      "execution_mode": "systemia_managed_report",
+      "native_state": "checkout_handoff_live_report_delivery_not_uniformly_receipted",
+      "intake": [
+        "buyer_email",
+        "site_address",
+        "selected_report_tier",
+        "authorized_site_context"
+      ],
+      "deliverables": [
+        "site opportunity report",
+        "competition context",
+        "traffic/demand context",
+        "power/tariff context",
+        "incentive context",
+        "economics with evidence-state labels",
+        "next steps"
+      ],
+      "qa": [
+        "observed_vs_modeled",
+        "missing_is_not_zero",
+        "source_provenance",
+        "address_scope_match",
+        "economics_assumptions"
+      ],
+      "human_review_before_delivery": true,
+      "specialist_roles": [
+        "RIVET",
+        "AliEV",
+        "Systemia",
+        "Saban",
+        "Report QA",
+        "Shipping"
+      ]
+    },
+    {
+      "public_id": "roasted-text-pressure-test-machine-v1",
+      "name": "ROASTED 99¢ Text Pressure Test",
+      "execution_mode": "native_automatic_with_systemia_receipt",
+      "native_state": "paid_result_generation_requires_verified_bound_payment",
+      "intake": [
+        "buyer_email_or_session",
+        "authorized_text",
+        "roast_id"
+      ],
+      "deliverables": [
+        "single bounded roast result"
+      ],
+      "qa": [
+        "payment_binding",
+        "roast_id_binding",
+        "content_boundary"
+      ],
+      "human_review_before_delivery": false,
+      "specialist_roles": [
+        "ROASTED",
+        "Systemia",
+        "Payment Guard"
+      ]
+    },
+    {
+      "public_id": "legacy-rescue-lab-v1",
+      "name": "Legacy Rescue Lab",
+      "execution_mode": "systemia_managed_service",
+      "native_state": "human_handoff_live_direct_checkout_unverified",
+      "intake": [
+        "buyer_email",
+        "legacy_system_problem",
+        "public_or_authorized_evidence",
+        "scope"
+      ],
+      "deliverables": [
+        "bounded Legacy Rescue Scan",
+        "dependency/evidence map",
+        "risk register",
+        "proof-before-pitch next step"
+      ],
+      "qa": [
+        "public_or_authorized_only",
+        "no_production_mutation",
+        "provenance",
+        "uncertainty"
+      ],
+      "human_review_before_delivery": true,
+      "specialist_roles": [
+        "Legacy Rescue",
+        "Systemia",
+        "Saban",
+        "Evidence QA",
+        "Shipping"
+      ]
+    },
+    {
+      "public_id": "ibmi-rescue-v1",
+      "name": "Evercraft IBM i Rescue",
+      "execution_mode": "systemia_managed_service",
+      "native_state": "explicit_paid_fulfillment_authority_workflow_proven",
+      "intake": [
+        "buyer_email",
+        "business_name",
+        "offer_key",
+        "bounded_workload_scope",
+        "authorized_evidence"
+      ],
+      "deliverables": [
+        "dependency map",
+        "verified-vs-assumption register",
+        "compatibility risk register",
+        "test/rollback plan",
+        "human-review package"
+      ],
+      "qa": [
+        "provider_verified_payment",
+        "authorized_evidence",
+        "provenance",
+        "no_private_access_by_payment",
+        "no_production_cutover"
+      ],
+      "human_review_before_delivery": true,
+      "specialist_roles": [
+        "IBM i Rescue",
+        "Systemia",
+        "Saban",
+        "Evidence QA",
+        "Shipping"
+      ]
+    },
+    {
+      "public_id": "site-survive-rapid-audit-v1",
+      "name": "Site-Survive Rapid Audit",
+      "execution_mode": "systemia_managed_service",
+      "native_state": "human_handoff_live_paid_delivery_requires_standard_contract",
+      "intake": [
+        "buyer_email",
+        "site_url",
+        "audit_goal",
+        "authorized_context"
+      ],
+      "deliverables": [
+        "rapid site-survival audit",
+        "critical failure list",
+        "priority fixes",
+        "evidence references",
+        "upgrade path if appropriate"
+      ],
+      "qa": [
+        "public_surface_only_unless_authorized",
+        "evidence_links",
+        "priority_rationale"
+      ],
+      "human_review_before_delivery": true,
+      "specialist_roles": [
+        "Site-Survive",
+        "Systemia",
+        "Saban Human Experience",
+        "QA",
+        "Shipping"
+      ]
+    },
+    {
+      "public_id": "audit-center-website-audit-machine-v1",
+      "name": "Systemia Website Audit",
+      "execution_mode": "hybrid_native_and_systemia_managed",
+      "native_state": "quick_audit_source_ready_external_canary_pending_complete_patch_tiers_human_service",
+      "intake": [
+        "buyer_email",
+        "site_url",
+        "selected_tier",
+        "authorized_patch_scope_if_any"
+      ],
+      "deliverables": [
+        "tier-scoped website audit",
+        "health score where applicable",
+        "prioritized fixes",
+        "complete evidence package",
+        "patch receipt only when separately authorized"
+      ],
+      "qa": [
+        "public_site_evidence",
+        "score_reproducibility",
+        "no_patch_without_authority",
+        "delivery_receipt"
+      ],
+      "human_review_before_delivery": true,
+      "specialist_roles": [
+        "Audit Center",
+        "Systemia",
+        "Saban Human Experience",
+        "QA",
+        "Shipping"
+      ]
+    }
+  ]
+}
