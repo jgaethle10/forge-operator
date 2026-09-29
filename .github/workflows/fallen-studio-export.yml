@@ -14,6 +14,8 @@ on:
     paths:
       - "systemia/media-studio/timeline-export.ts"
       - "systemia/media-studio/timeline-export.test.ts"
+      - "systemia/media-studio/studio-create.ts"
+      - "systemia/media-studio/studio-create.test.ts"
       - "systemia/media-studio/cli.ts"
       - ".github/workflows/fallen-studio-export.yml"
 
@@ -125,6 +127,8 @@ jobs:
           if(receipt.audioCodec!=='aac') throw new Error('audio_codec_not_aac');
           if(!/^[a-f0-9]{64}$/.test(receipt.sha256)) throw new Error('bad_sha256');
           if(receipt.publicationAuthorityGranted!==false) throw new Error('publication_boundary_broken');
+          const timeline=JSON.parse(fs.readFileSync('/tmp/fallen-export-timeline.json','utf8'));
+          if(receipt.inputAssetIds.length!==timeline.assets.length) throw new Error('not_all_assets_bound_to_receipt');
           NODE
 
       - name: Typecheck
