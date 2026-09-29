@@ -42,6 +42,10 @@ assert.equal(conf.machine_commerce_handoff_state, 'live_verified');
 assert.equal(conf.provider_behavior_state, 'not_run');
 assert.equal(conf.buyer_route_state, 'live_verified');
 assert.equal(conf.backend_checkout_state, 'synthetic_live_verified');
+assert.equal(conf.machine_commerce_tool, 'prepare_verified_checkout');
+assert.equal(conf.machine_commerce_offer_tool, 'get_live_checkout_offer');
+assert.equal(conf.machine_commerce_status_tool, 'get_verified_order_status');
+assert.equal(conf.mcp_registry?.publication_state, 'published_shared_server');
 
 const idx = publicIndex.products.find((row) => row.product_key === 'ibmi-rescue');
 assert(idx, 'ibmi-rescue missing from public registry index');
