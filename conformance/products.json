@@ -614,8 +614,13 @@
       "provider_behavior_state": "not_run",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/opportunity-fabric/ai-conformance.json",
       "chum_mirror_state": "generated_public_fallback",
-      "runtime_state": "base44_private_build_lint_and_vite_build_verified",
-      "live_canary_evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/systemia/opportunity-fabric/runtime.json"
+      "runtime_state": "base44_private_runtime_v1_1_authority_security_matching_and_build_verified",
+      "live_canary_evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/systemia/opportunity-fabric/runtime.json",
+      "multi_party_state": "verified_private_runtime",
+      "authority_contract_state": "pass",
+      "security_smoke_state": "pass",
+      "protected_file_delivery": false,
+      "public_transactional_release": false
     },
     {
       "product_key": "payflow",
