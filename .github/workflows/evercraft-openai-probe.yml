@@ -1,0 +1,42 @@
+name: OpenAI Plugin Probe
+on:
+  push:
+    branches: [openai-plugin-probe-20260929]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: DNS and HTTPS probe
+        shell: bash
+        run: |
+          set -euxo pipefail
+          getent ahostsv4 systemiacommandcenters.com || true
+          echo '--- challenge headers/body ---'
+          curl -sS -D /tmp/challenge.headers --max-time 20 https://systemiacommandcenters.com/.well-known/openai-apps-challenge -o /tmp/challenge.body || true
+          cat /tmp/challenge.headers || true
+          printf 'BODY='; cat /tmp/challenge.body || true; echo
+          echo '--- MCP health ---'
+          curl -sS -D /tmp/health.headers --max-time 20 'https://systemiacommandcenters.com/api/functions/evercraftFabricMcp?view=health' -o /tmp/health.body || true
+          cat /tmp/health.headers || true
+          cat /tmp/health.body || true
+          echo
+          echo '--- MCP initialize ---'
+          curl -sS -D /tmp/init.headers --max-time 20 -X POST 'https://systemiacommandcenters.com/api/functions/evercraftFabricMcp' \
+            -H 'Content-Type: application/json' \
+            -H 'Accept: application/json, text/event-stream' \
+            --data '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"github-probe","version":"1.0"}}}' \
+            -o /tmp/init.body || true
+          cat /tmp/init.headers || true
+          cat /tmp/init.body || true
+          echo
+          echo '--- MCP tools/list ---'
+          curl -sS -D /tmp/tools.headers --max-time 20 -X POST 'https://systemiacommandcenters.com/api/functions/evercraftFabricMcp' \
+            -H 'Content-Type: application/json' \
+            -H 'Accept: application/json, text/event-stream' \
+            --data '{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}' \
+            -o /tmp/tools.body || true
+          cat /tmp/tools.headers || true
+          cat /tmp/tools.body || true
