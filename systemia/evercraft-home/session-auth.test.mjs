@@ -35,8 +35,10 @@ test("signed Evercraft session plus Passport grant allows Home entry", () => {
     const secret = "test-only-secret";
     const signed = token({
       schema: "evercraft.identity.session.v1",
+      session_id: "session-owner-test",
       subject_ref: "user:owner-test",
       display_name: "Owner",
+      issued_at: now.toISOString(),
       expires_at: ends,
       issuer_ref: "evercraft-identity:test",
     }, secret);
@@ -60,8 +62,10 @@ test("valid identity without Passport authority is denied", () => {
     const secret = "test-only-secret";
     const signed = token({
       schema: "evercraft.identity.session.v1",
+      session_id: "session-no-grant",
       subject_ref: "user:no-grant",
       display_name: "No Grant",
+      issued_at: now.toISOString(),
       expires_at: new Date(now.getTime() + 60 * 60 * 1000).toISOString(),
     }, secret);
 
@@ -77,8 +81,10 @@ test("tampered and expired sessions fail closed", () => {
   const now = new Date();
   const signed = token({
     schema: "evercraft.identity.session.v1",
+    session_id: "session-test",
     subject_ref: "user:test",
     display_name: "Test",
+    issued_at: now.toISOString(),
     expires_at: new Date(now.getTime() + 1000).toISOString(),
   }, secret);
 
