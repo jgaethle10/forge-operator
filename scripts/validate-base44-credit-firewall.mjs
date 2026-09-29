@@ -46,7 +46,7 @@ const social = retired.find(
   (row) => row.workflow === 'systemia_eps_social_continuity_every_30_minutes'
 );
 if (!social) fail('EPS social Base44 scheduler retirement record is missing');
-if (!['source_frozen_observation_pending','verified_retired'].includes(String(social.state || ''))) {
+if (!['source_frozen_observation_pending','deployed_schedule_still_firing_bridge_contained','verified_retired'].includes(String(social.state || ''))) {
   fail('EPS social retirement state is invalid');
 }
 if (!String(social.rollback_checkpoint || '').trim()) {
@@ -69,6 +69,12 @@ if (social.state === 'verified_retired' && social.absence_window_verified !== tr
 }
 if (social.state === 'source_frozen_observation_pending' && social.absence_window_verified !== false) {
   fail('pending EPS retirement must not claim the absence window passed');
+}
+if (social.state === 'deployed_schedule_still_firing_bridge_contained') {
+  if (social.absence_window_verified !== false) fail('contained legacy schedule must not claim an absence window');
+  if (social.source_freeze_stopped_deployed_schedule !== false) fail('contained legacy schedule must record that source freeze did not stop runtime execution');
+  if (!String(social.bridge_containment_checkpoint || '').trim()) fail('contained legacy schedule must preserve a containment rollback checkpoint');
+  if (social.runtime_scheduler_removal_pending !== true) fail('contained legacy schedule must remain marked for runtime scheduler removal');
 }
 
 for (const gate of [

@@ -28,7 +28,7 @@
     "one_execution_per_bucket_enforced": true,
     "secret_not_persisted_in_receipts": true,
     "live_yard_cycle_verified": true,
-    "legacy_base44_schedule_retired": true,
+    "legacy_base44_schedule_retired": false,
     "live_yard_cycle_verified_at": "2026-09-29T17:11:13.283Z",
     "live_result": "no_op",
     "live_reason": "eps_180_minute_cooldown",
@@ -47,8 +47,19 @@
     "main_branch_cutover_verified": true,
     "main_branch_cutover_run_id": "36603707538",
     "main_branch_cutover_receipt": "sha256:fb2d5cb093e5906c247fa41745c90cba8b023c0cbade55bba510622778ce8e33",
-    "legacy_last_observed_wake_at": "2026-09-29T17:32:33.021Z",
-    "legacy_absence_window_verified": false
+    "legacy_last_observed_wake_at": "2026-09-29T21:30:54.656Z",
+    "legacy_absence_window_verified": false,
+    "post_freeze_replacement_verified": true,
+    "post_freeze_replacement_run_id": "36609801991",
+    "post_freeze_replacement_receipt": "sha256:307c10228664e1360903b5c8a9b992b337b043a8bbac8dca0daeffb49a6c4b14",
+    "post_freeze_replacement_result": "no_op",
+    "post_freeze_replacement_verified_at": "2026-09-29T18:07:54.190Z",
+    "legacy_base44_schedule_source_frozen": true,
+    "legacy_base44_deployed_schedule_still_firing": true,
+    "legacy_wakes_observed_after_source_freeze": 7,
+    "bridge_containment_source_present": true,
+    "bridge_containment_checkpoint": "6abc31d686af18a72b08a88a",
+    "bridge_containment_expected_effect": "scheduled invocation may still occur, but returns before Base44 entity operations and Clip invocation once deployed"
   },
   "acceptance": {
     "required_result": "no_op_or_published_verified",
@@ -58,9 +69,10 @@
     "legacy_schedule_retirement_requires_live_replacement": true
   },
   "blockers": [
-    "Observe a scheduled main-branch replacement recurrence after the Base44 freeze.",
-    "Confirm no new legacy Base44 social wake appears across the same 30-minute window."
+    "Base44's deployed workflow scheduler is still firing even though the workflow source was frozen.",
+    "Verify the socialWakeBridge containment revision is deployed and stops MachineWakeLease creation / Clip fanout.",
+    "Remove or disable the deployed Base44 workflow runtime, then observe one full former 30-minute interval with no legacy execution."
   ],
-  "next_action": "verify one scheduled main-branch replacement run and one absent legacy Base44 wake window, then close this migration slice",
+  "next_action": "contain the deployed Base44 scheduler at socialWakeBridge immediately, then remove the runtime schedule when an authenticated workflow-control path is available; do not call the legacy scheduler retired until execution actually stops",
   "destructive_cutover_allowed": false
 }
