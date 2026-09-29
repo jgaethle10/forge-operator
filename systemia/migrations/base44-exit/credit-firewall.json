@@ -1,0 +1,50 @@
+{
+  "schema": "evercraft.systemia.base44-credit-firewall.v1",
+  "status": "active",
+  "effective_date": "2026-09-28",
+  "purpose": "Keep Base44 out of the recurring Systemia execution hot path while the portfolio migrates to GitHub + Systemia + Yard / Evercraft Compute.",
+  "rules": {
+    "new_base44_apps_allowed": false,
+    "new_base44_recurring_workflows_allowed": false,
+    "internal_recurring_base44_schedulers_allowed": false,
+    "base44_llm_as_default_inference_path_allowed": false,
+    "base44_as_runtime_authority_allowed": false,
+    "base44_role": "legacy_extraction_compatibility_and_bounded_transition_only"
+  },
+  "replacement": {
+    "canonical_source": "github",
+    "orchestration": "systemia",
+    "scheduler": "systemia/core/resident-supervisor.mjs",
+    "scheduler_config": "systemia/core/resident-services.json",
+    "runtime": "yard_evercraft_compute",
+    "kaidance_heartbeat_target_seconds": 300
+  },
+  "frozen_internal_workflows": [
+    "systemia_internal_wake_every_5_minutes",
+    "systemia_kaidance_internal_wake_v5_every_5_minutes",
+    "systemia_capability_verification_every_15_minutes",
+    "systemia_collider_hourly"
+  ],
+  "temporary_legacy_exceptions": [
+    {
+      "workflow": "systemia_eps_social_continuity_every_30_minutes",
+      "class": "customer_facing_publication_continuity",
+      "reason": "Do not silently stop an already-authorized publication lane before Evercraft Clip has an independently verified off-Base44 scheduler.",
+      "retirement_gate": "evercraft_clip_off_base44_scheduler_live_and_provider_verified",
+      "new_internal_work_fanout_allowed": false
+    }
+  ],
+  "cutover_gates": [
+    "replacement_runtime_live",
+    "kaidance_pulse_healthy",
+    "route_verification_pass",
+    "integration_parity_verified",
+    "rollback_target_present",
+    "observation_window_pass"
+  ],
+  "fail_closed": {
+    "scheduled_base44_systemia_wake_when_manual_fire_only_active": true,
+    "unverified_runtime_must_not_be_called_migrated": true,
+    "source_configuration_must_not_be_called_live_cutover_proof": true
+  }
+}
