@@ -20,6 +20,7 @@ import {
 import { startRivetReportRuntime } from '../rivet/report-runtime.mjs';
 import { startSpecialistHandoffRuntime } from '../mcp/specialist-handoff-runtime.mjs';
 import { startPublicEdgeRuntime } from '../network/public-edge-runtime.mjs';
+import { startEvercraftHomeServer } from '../evercraft-home/server.mjs';
 import { validatePublicEdgeAdmission } from '../network/public-edge-tls.mjs';
 import { transcriptionCapabilityStatus } from '../forensiscope/transcription-engine.mjs';
 
@@ -517,6 +518,7 @@ export async function startEvercraftComputeNode({
     'systemia.rivet-report-runtime.v1',
     'systemia.specialist-handoff-mcp.v1',
     'systemia.public-edge.v1',
+    'systemia.evercraft-home.v1',
     'saban.logical-agent',
     'saban.multiplier-assignment.v1',
   ]);
@@ -1116,6 +1118,81 @@ export async function startEvercraftComputeNode({
             workload_class: body.workload_class,
             result_schema: result.schema,
             instance_id: runtime.instance_id,
+          });
+          return send(res, 200, {
+            ok: true,
+            node_id: nodeId,
+            workload_class: body.workload_class,
+            result,
+            receipt,
+          });
+        }
+
+        if (workloadClass === 'systemia.evercraft-home.v1') {
+          const identitySecret = String(process.env.EVERCRAFT_IDENTITY_SECRET || '').trim();
+          if (!identitySecret) {
+            return send(res, 422, { error: 'evercraft_identity_secret_required' });
+          }
+
+          const passportStateRoot = path.resolve(String(
+            body.input?.passport_state_dir ||
+            process.env.EVERCRAFT_PASSPORT_STATE_DIR ||
+            ''
+          ));
+          if (!String(body.input?.passport_state_dir || process.env.EVERCRAFT_PASSPORT_STATE_DIR || '').trim()) {
+            return send(res, 422, { error: 'evercraft_passport_state_dir_required' });
+          }
+          if (!isWithin(allowedRoot, passportStateRoot)) {
+            return send(res, 403, { error: 'evercraft_passport_state_outside_admitted_root' });
+          }
+
+          const yardStateValue = String(
+            body.input?.yard_state_dir ||
+            process.env.EVERCRAFT_YARD_STATE_DIR ||
+            ''
+          ).trim();
+          const yardStateRoot = yardStateValue ? path.resolve(yardStateValue) : '';
+          if (yardStateRoot && !isWithin(allowedRoot, yardStateRoot)) {
+            return send(res, 403, { error: 'evercraft_yard_state_outside_admitted_root' });
+          }
+
+          const runtime = await startEvercraftHomeServer({
+            host: '127.0.0.1',
+            port: Number(body.input?.port || 0),
+            authMode: 'passport',
+            identitySecret,
+            passportStateDir: passportStateRoot,
+            yardStateDir: yardStateRoot,
+          });
+
+          const serviceId = `svc_${randomBytes(8).toString('hex')}`;
+          services.set(serviceId, {
+            lease_id: body.lease_id,
+            workload_class: body.workload_class,
+            runtime,
+            service: runtime,
+          });
+
+          const result = {
+            schema: 'evercraft.compute.resident-service.v1',
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            service_url: null,
+            local_url: runtime.url,
+            health_path: `/v1/services/${serviceId}/health`,
+            public_route_required: true,
+            public_health_path: '/api/health',
+            instance_id: runtime.instanceId,
+            auth_mode: runtime.authMode,
+            private_origin_only: true,
+            provider_independent_boot: true,
+          };
+          const receipt = chain.issue('service.started', {
+            lease_id: body.lease_id,
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            result_schema: result.schema,
+            instance_id: runtime.instanceId,
           });
           return send(res, 200, {
             ok: true,
