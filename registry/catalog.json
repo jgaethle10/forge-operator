@@ -136,6 +136,27 @@
       ]
     },
     {
+      "product_key": "eps-estimate-engine",
+      "name": "EPS Field-Service Estimate Engine",
+      "canonical_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mode": "shared_mcp",
+      "machine_state": "read_only_mcp_live",
+      "triggers": [
+        "estimate this service job",
+        "build a contractor estimate from this scope",
+        "what should this job cost",
+        "turn these measurements into an estimate",
+        "give me a rough customer range",
+        "calculate margin and price for this job"
+      ],
+      "aliases": [
+        "EPS Precise Estimator"
+      ],
+      "route_note": "EPS Estimate Intelligence is callable through the published Evercraft Machine Commerce MCP. The public no-account preview uses caller-supplied costs only, creates no customer obligation, and exposes a receipt verifier with integrity-only authority. Workspace writes and billing remain separately authenticated/gated."
+    },
+    {
       "product_key": "eventwave",
       "name": "EventWave",
       "canonical_url": "https://event-wave.base44.app/",
