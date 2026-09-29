@@ -49,10 +49,13 @@ Production uses:
 ```bash
 EVERCRAFT_HOME_AUTH=passport
 EVERCRAFT_IDENTITY_SECRET=<managed secret>
+EVERCRAFT_IDENTITY_STATE_DIR=/var/lib/evercraft/identity
 EVERCRAFT_PASSPORT_STATE_DIR=/var/lib/evercraft/passport
+EVERCRAFT_HOME_SESSION_TTL_SECONDS=1800
+EVERCRAFT_HOME_COOKIE_SECURE=true
 ```
 
-A production request must carry a valid Evercraft-signed `evercraft_session` cookie. The signed identity is then checked against Passport. A valid identity without an active Passport grant is denied.
+A production user signs in through Evercraft Identity. Home receives a short-lived Evercraft-signed `evercraft_session` cookie marked HttpOnly and SameSite=Strict. The verified identity is then checked against Passport. A valid identity without an active Passport grant is denied. Password credentials are stored only as salted scrypt material in the private Identity state directory.
 
 Current Home scopes:
 
@@ -108,3 +111,10 @@ The dedicated `Evercraft Home sovereignty` workflow also:
 7. Evercraft-owned deployment route and domain binding.
 
 Base44 remains a migration source for legacy applications only and is not part of Home's boot or authority chain.
+
+
+## Owner bootstrap
+
+The initial owner identity is created locally through `systemia/identity/bootstrap-owner.mjs`. It requires an explicit manual authority receipt and reads the password from a permission-restricted local file. The password file should be deleted after successful bootstrap.
+
+Bootstrap also creates the initial `evercraft-home` Passport grant for the owner. Identity still does not own authorization after that point.
