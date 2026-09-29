@@ -69,7 +69,7 @@ function routeAllowed(method, route) {
   ) return true;
   if (
     method === 'POST' &&
-    /^\/v1\/services\/[^/]+\/(?:cycle|checkpoint|deployment-receipt|stop|specialist-identity-attestation|public-route-capabilities|public-route-leases)$/.test(route)
+    /^\/v1\/services\/[^/]+\/(?:cycle|checkpoint|deployment-receipt|stop|specialist-identity-attestation|public-route-capabilities|public-route-leases|http-bridge)$/.test(route)
   ) return true;
   if (
     method === 'POST' &&
