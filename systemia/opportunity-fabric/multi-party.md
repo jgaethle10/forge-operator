@@ -1,6 +1,6 @@
 # Opportunity Fabric Multi-Party Execution Contract
 
-Version: v1.1  
+Version: v1.2  
 Evidence state: private runtime verified  
 Authority: Systemia Opportunity Fabric / trusted service-role runtime
 
@@ -9,6 +9,31 @@ Authority: Systemia Opportunity Fabric / trusted service-role runtime
 This contract turns a set of mutually accepted one-to-one relationships into a bounded temporary execution team without weakening the creator-protection boundary.
 
 The team is not a social group and is not an automatic partnership in the legal sense. It is an operational container for an outcome, participant invitations, bounded work packages, dependencies, progress, evidence receipts, and later agreement/payment rails.
+
+## Pre-assembly planning rule
+
+Before a team exists, the owner of an opportunity may request an execution blueprint.
+
+The blueprint must be derived from safe opportunity metadata and public member capability metadata only. It must not read protected asset records, private contact information, formation terms, disclosure grants or protected file content.
+
+The planner may:
+
+1. identify explicit capability gaps from the opportunity's stated needs
+2. propose bounded work-package shapes
+3. rank current members whose public capability metadata appears relevant
+4. preserve unmatched capabilities as open network gaps
+5. prepare a protected connection request to a suggested candidate
+
+The planner may not:
+
+- declare a suggested candidate qualified, available, willing or contracted
+- enroll a candidate into a team
+- expose contact information
+- transfer rights
+- bypass the protected connection handshake
+- fabricate a partner when no real match exists
+
+A blueprint recommendation is not team membership.
 
 ## Admission rule
 
@@ -74,11 +99,11 @@ A future work-package-specific disclosure must bind:
 - recipient acceptance
 - a durable receipt
 
-Actual protected-file delivery is not enabled or claimed in v1.1.
+Actual protected-file delivery is not enabled or claimed in v1.2.
 
 ## Authority model
 
-The following workflow entities are direct-client mutation locked in the verified v1.1 runtime:
+The following workflow entities are direct-client mutation locked in the verified v1.2 runtime:
 
 - ConnectionRequest
 - ProtectedAsset
@@ -109,7 +134,7 @@ Verified cross-industry examples include:
 
 ## Non-claims
 
-v1.1 does not claim:
+v1.2 does not claim:
 
 - a final legally reviewed Creator Covenant
 - signed contract execution
