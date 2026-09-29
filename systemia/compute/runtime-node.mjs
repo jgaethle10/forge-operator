@@ -437,6 +437,57 @@ export async function startEvercraftComputeNode({
     }
   })();
 
+  const evercraftHomeIdentityCapability = (() => {
+    const signingSecret = String(process.env.EVERCRAFT_IDENTITY_SECRET || '').trim();
+    const signingKeyId = String(process.env.EVERCRAFT_IDENTITY_KEY_ID || 'primary').trim();
+    const identityStateValue = String(process.env.EVERCRAFT_IDENTITY_STATE_DIR || '').trim();
+    const passportStateValue = String(process.env.EVERCRAFT_PASSPORT_STATE_DIR || '').trim();
+
+    const identityStateRoot = identityStateValue ? path.resolve(identityStateValue) : '';
+    const passportStateRoot = passportStateValue ? path.resolve(passportStateValue) : '';
+    const identityWithinRoot = Boolean(identityStateRoot && isWithin(allowedRoot, identityStateRoot));
+    const passportWithinRoot = Boolean(passportStateRoot && isWithin(allowedRoot, passportStateRoot));
+    const identityStatePresent = Boolean(
+      identityWithinRoot &&
+      fs.existsSync(path.join(identityStateRoot, 'login-index.json'))
+    );
+    const passportStatePresent = Boolean(
+      passportWithinRoot &&
+      fs.existsSync(path.join(passportStateRoot, 'grants.jsonl'))
+    );
+    const signingMaterialPresent = Buffer.byteLength(signingSecret, 'utf8') >= 32;
+    const signingKeyValid = /^[a-zA-Z0-9._:-]{1,80}$/.test(signingKeyId);
+    const ready = Boolean(
+      identityStatePresent &&
+      passportStatePresent &&
+      signingMaterialPresent &&
+      signingKeyValid
+    );
+
+    return {
+      configured: Boolean(identityStateValue || passportStateValue || signingSecret),
+      ready,
+      identity_state_present: identityStatePresent,
+      passport_state_present: passportStatePresent,
+      signing_material_present: signingMaterialPresent,
+      signing_key_configured: signingKeyValid && signingMaterialPresent,
+      secret_material_exposed: false,
+      private_state_within_admitted_root:
+        Boolean(identityWithinRoot && passportWithinRoot),
+      reason: ready
+        ? null
+        : !identityWithinRoot || !passportWithinRoot
+          ? 'identity_or_passport_state_outside_admitted_root'
+          : !identityStatePresent
+            ? 'identity_state_not_bootstrapped'
+            : !passportStatePresent
+              ? 'passport_state_not_bootstrapped'
+              : !signingMaterialPresent
+                ? 'identity_signing_material_missing'
+                : 'identity_signing_key_invalid',
+    };
+  })();
+
   const browserWorkerSourceDir = path.join(
     CODE_ROOT,
     'systemia',
@@ -451,6 +502,7 @@ export async function startEvercraftComputeNode({
   const serviceCapabilities = {
     forensiscope_transcription: forensiscopeTranscriptionCapability.ready === true,
     evercraft_web_browser: browserRuntimeReady,
+    evercraft_home_identity: evercraftHomeIdentityCapability,
     public_edge: publicEdgeCapability,
     remote_operator: remoteOperator ? {
       ready: true,

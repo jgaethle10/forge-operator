@@ -23,7 +23,8 @@
     "registry_publication": "systemia_release_policy",
     "founder_login_required": false,
     "payment_authority": false,
-    "initial_deploy_control_room_browser": "autonomous_after_node_tls_admission"
+    "initial_deploy_control_room_browser": "autonomous_after_node_tls_admission",
+    "initial_deploy_evercraft_home": "autonomous_after_node_tls_and_home_identity_admission"
   },
   "outputs": {
     "cycle_report": "artifacts/public-edge-activation-watch/latest.json",
@@ -40,7 +41,9 @@
     "openai_challenge_token": "OPENAI_APPS_CHALLENGE_TOKEN; consumed in memory only and never persisted",
     "fabric_hostname": "EVERCRAFT_PUBLIC_EDGE_REQUESTED_HOSTNAME optional; defaults to evercraft-fabric and uses a stable hostname lease",
     "control_room_hostname": "EVERCRAFT_CONTROL_ROOM_HOSTNAME optional; defaults to evercraft-control and uses a stable hostname lease",
-    "control_room_concurrency": "EVERCRAFT_CONTROL_ROOM_MAX_CONCURRENCY optional; defaults to 2"
+    "control_room_concurrency": "EVERCRAFT_CONTROL_ROOM_MAX_CONCURRENCY optional; defaults to 2",
+    "home_public_edge_enabled": "EVERCRAFT_HOME_PUBLIC_EDGE_ENABLED optional; defaults to true",
+    "home_hostname": "EVERCRAFT_HOME_HOSTNAME optional; defaults to home and uses a stable hostname lease"
   },
   "collider": {
     "heartbeat_seconds": 300,
@@ -53,13 +56,14 @@
     "no_base44_public_edge": true,
     "no_founder_auth_loop": true,
     "fabric_mcp_external_canary_required": true,
-    "control_room_public_https_external_canary_required": true
+    "control_room_public_https_external_canary_required": true,
+    "evercraft_home_public_https_external_canary_required": true
   },
   "role": "discovery_and_initial_activation_owner",
   "activation_owner": "public-edge-activation-watch",
   "maintenance_owner": "public-edge-controller",
   "handoff_policy": {
-    "after_successful_activation": "public-edge-controller owns 60-second continuity for Fabric and Control Room stable-hostname leases",
+    "after_successful_activation": "public-edge-controller owns 60-second continuity for Fabric, Control Room, and Evercraft Home stable-hostname leases",
     "on_hold": "activation watch retries on Collider heartbeat only when state may have changed",
     "duplicate_provisioning": false
   },
@@ -69,9 +73,11 @@
   "current_truth": {
     "software_path": "ci_proven",
     "public_production_edge": "not_verified",
-    "physical_dependency": "any_authorized_field_capacity_with_public_https_admission_and_owned_browser_workload",
+    "physical_dependency": "any authorized field capacity with public HTTPS admission, owned browser workload, and Evercraft Home identity readiness",
     "control_room_software_path": "ci_proven_and_activation_integrated",
-    "control_room_public_production_edge": "not_verified"
+    "control_room_public_production_edge": "not_verified",
+    "evercraft_home_software_path": "ci_proven_and_activation_integrated",
+    "evercraft_home_public_production_edge": "not_verified"
   },
   "dependencies": {
     "node001_field_mission": "optional legacy candidate evidence at artifacts/node001-field/evernode-one-status/latest.json",

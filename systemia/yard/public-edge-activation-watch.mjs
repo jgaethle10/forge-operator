@@ -25,6 +25,7 @@ export class PublicEdgeActivationWatcher {
     edge={mode:'wildcard_https'},
     specialist={},
     browser={enabled:false},
+    home={enabled:false},
     requiredPlacementLabels=['public-edge'],
     requestedHostname='evercraft-specialists',
     stableHostname=false,
@@ -53,6 +54,7 @@ export class PublicEdgeActivationWatcher {
     this.edge=edge;
     this.specialist=specialist;
     this.browser=browser||{enabled:false};
+    this.home=home||{enabled:false};
     this.requiredPlacementLabels=requiredPlacementLabels;
     this.requestedHostname=requestedHostname;
     this.stableHostname=stableHostname===true;
@@ -72,6 +74,9 @@ export class PublicEdgeActivationWatcher {
       browserEnabled:this.browser?.enabled===true,
       browserRequestedHostname:String(this.browser?.requested_hostname||'evercraft-control'),
       browserStableHostname:this.browser?.stable_hostname!==false,
+      homeEnabled:this.home?.enabled===true,
+      homeRequestedHostname:String(this.home?.requested_hostname||'home'),
+      homeStableHostname:this.home?.stable_hostname!==false,
     });
     this.timer=null;
     this.inFlight=false;
@@ -122,11 +127,15 @@ export class PublicEdgeActivationWatcher {
       const browser=this.browser?.enabled===true
         ? this.yard.deploymentStatus(this.controller.browserDeploymentId)
         : null;
+      const home=this.home?.enabled===true
+        ? this.yard.deploymentStatus(this.controller.homeDeploymentId)
+        : null;
 
       if(
         edge&&specialist&&
         edge.state==='ready'&&specialist.state==='ready'&&
-        (this.browser?.enabled!==true||(browser&&browser.state==='ready'))
+        (this.browser?.enabled!==true||(browser&&browser.state==='ready'))&&
+        (this.home?.enabled!==true||(home&&home.state==='ready'))
       ){
         try{
           const resumed=await this.controller.resume({rebindIfNeeded:true});
@@ -136,6 +145,10 @@ export class PublicEdgeActivationWatcher {
             browser_origin:resumed.browser_origin||null,
             browser_route_scope:resumed.browser_route_scope||null,
             browser_route_verified:resumed.browser_route_verified===true,
+            home_enabled:resumed.home_enabled===true,
+            home_origin:resumed.home_origin||null,
+            home_route_scope:resumed.home_route_scope||null,
+            home_route_verified:resumed.home_route_verified===true,
             route_scope:resumed.route_scope,
             route_verified:resumed.route_verified,
             field_enrollment_required:
@@ -165,8 +178,15 @@ export class PublicEdgeActivationWatcher {
               ...(this.browser?.enabled===true
                 ? ['systemia.evercraft-web-browser.v1']
                 : []),
+              ...(this.home?.enabled===true
+                ? ['systemia.evercraft-home.v1']
+                : []),
             ],
             requiredPlacementLabels:this.requiredPlacementLabels,
+            requiredServiceCapabilities:[
+              'public_edge',
+              ...(this.home?.enabled===true ? ['evercraft_home_identity'] : []),
+            ],
           });
           if(grant?.capacityEndpoint&&grant?.allocatorToken){
             const provisioned=await this.controller.provision({
@@ -176,10 +196,12 @@ export class PublicEdgeActivationWatcher {
               edge:this.edge,
               specialist:this.specialist,
               browser:this.browser,
+              home:this.home,
               requestedHostname:this.requestedHostname,
               stableHostname:this.stableHostname,
               edgeRollbackTarget:'systemia:public-edge-watch-previous',
               specialistRollbackTarget:'systemia:specialist-watch-previous',
+              homeRollbackTarget:'systemia:home-watch-previous',
               requireIdentityAttestation:true,
             });
             return this.#result('activated',{
@@ -188,6 +210,10 @@ export class PublicEdgeActivationWatcher {
               browser_origin:provisioned.browser_origin||null,
               browser_route_scope:provisioned.browser_route_scope||null,
               browser_route_verified:provisioned.browser_route_verified===true,
+              home_enabled:provisioned.home_enabled===true,
+              home_origin:provisioned.home_origin||null,
+              home_route_scope:provisioned.home_route_scope||null,
+              home_route_verified:provisioned.home_route_verified===true,
               route_scope:provisioned.route_scope,
               route_verified:provisioned.route_verified,
               selected_node_id:grant.nodeId||provisioned.edge_node_id||null,
@@ -242,10 +268,12 @@ export class PublicEdgeActivationWatcher {
           edge:this.edge,
           specialist:this.specialist,
           browser:this.browser,
+          home:this.home,
           requestedHostname:this.requestedHostname,
           stableHostname:this.stableHostname,
           edgeRollbackTarget:'systemia:public-edge-watch-previous',
           specialistRollbackTarget:'systemia:specialist-watch-previous',
+          homeRollbackTarget:'systemia:home-watch-previous',
         });
 
         return this.#result('activated',{
@@ -254,6 +282,10 @@ export class PublicEdgeActivationWatcher {
           browser_origin:provisioned.browser_origin||null,
           browser_route_scope:provisioned.browser_route_scope||null,
           browser_route_verified:provisioned.browser_route_verified===true,
+          home_enabled:provisioned.home_enabled===true,
+          home_origin:provisioned.home_origin||null,
+          home_route_scope:provisioned.home_route_scope||null,
+          home_route_verified:provisioned.home_route_verified===true,
           route_scope:provisioned.route_scope,
           route_verified:provisioned.route_verified,
           selected_node_id:provisioned.discovery?.selected_node_id||null,
