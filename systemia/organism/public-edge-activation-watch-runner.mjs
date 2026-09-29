@@ -249,6 +249,16 @@ const watcher=new PublicEdgeActivationWatcher({
       process.env.OPENAI_APPS_CHALLENGE_TOKEN||''
     ),
   },
+  browser:{
+    enabled:true,
+    max_concurrency:Number(
+      process.env.EVERCRAFT_CONTROL_ROOM_MAX_CONCURRENCY||2
+    ),
+    requested_hostname:String(
+      process.env.EVERCRAFT_CONTROL_ROOM_HOSTNAME||'evercraft-control'
+    ),
+    stable_hostname:true,
+  },
   requiredPlacementLabels:String(
     process.env.EVERCRAFT_PUBLIC_EDGE_REQUIRED_LABELS||'public-edge'
   ).split(',').map(x=>x.trim()).filter(Boolean),

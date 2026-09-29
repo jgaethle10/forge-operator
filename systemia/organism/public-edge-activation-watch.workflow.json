@@ -22,7 +22,8 @@
     "external_https_promotion": "external_canary_required",
     "registry_publication": "systemia_release_policy",
     "founder_login_required": false,
-    "payment_authority": false
+    "payment_authority": false,
+    "initial_deploy_control_room_browser": "autonomous_after_node_tls_admission"
   },
   "outputs": {
     "cycle_report": "artifacts/public-edge-activation-watch/latest.json",
@@ -37,7 +38,9 @@
     "discovery": "Evercraft capacity beacons",
     "persistence_root": "EVERCRAFT_PUBLIC_EDGE_STATE_DIR optional",
     "openai_challenge_token": "OPENAI_APPS_CHALLENGE_TOKEN; consumed in memory only and never persisted",
-    "fabric_hostname": "EVERCRAFT_PUBLIC_EDGE_REQUESTED_HOSTNAME optional; defaults to evercraft-fabric and uses a stable hostname lease"
+    "fabric_hostname": "EVERCRAFT_PUBLIC_EDGE_REQUESTED_HOSTNAME optional; defaults to evercraft-fabric and uses a stable hostname lease",
+    "control_room_hostname": "EVERCRAFT_CONTROL_ROOM_HOSTNAME optional; defaults to evercraft-control and uses a stable hostname lease",
+    "control_room_concurrency": "EVERCRAFT_CONTROL_ROOM_MAX_CONCURRENCY optional; defaults to 2"
   },
   "collider": {
     "heartbeat_seconds": 300,
@@ -49,13 +52,14 @@
     "official_registry_publication_requires_release_policy": true,
     "no_base44_public_edge": true,
     "no_founder_auth_loop": true,
-    "fabric_mcp_external_canary_required": true
+    "fabric_mcp_external_canary_required": true,
+    "control_room_public_https_external_canary_required": true
   },
   "role": "discovery_and_initial_activation_owner",
   "activation_owner": "public-edge-activation-watch",
   "maintenance_owner": "public-edge-controller",
   "handoff_policy": {
-    "after_successful_activation": "public-edge-controller owns 60-second continuity and stable-hostname lease maintenance",
+    "after_successful_activation": "public-edge-controller owns 60-second continuity for Fabric and Control Room stable-hostname leases",
     "on_hold": "activation watch retries on Collider heartbeat only when state may have changed",
     "duplicate_provisioning": false
   },
@@ -65,7 +69,9 @@
   "current_truth": {
     "software_path": "ci_proven",
     "public_production_edge": "not_verified",
-    "physical_dependency": "any_authorized_field_capacity_with_public_https_admission"
+    "physical_dependency": "any_authorized_field_capacity_with_public_https_admission_and_owned_browser_workload",
+    "control_room_software_path": "ci_proven_and_activation_integrated",
+    "control_room_public_production_edge": "not_verified"
   },
   "dependencies": {
     "node001_field_mission": "optional legacy candidate evidence at artifacts/node001-field/evernode-one-status/latest.json",
