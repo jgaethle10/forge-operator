@@ -7,6 +7,8 @@ import { buildCrawlPressure, crawlPriority, selectHotDiscoveryEntries } from '..
 assert.equal(crawlPriority('/chum/commercial/rivet-site-underwriting-v1/'), 112);
 assert.equal(crawlPriority('/chum/sitemaps/sell-now.xml'), 108);
 assert.equal(crawlPriority('/chum/answers/doors/example/'), 100);
+assert.equal(crawlPriority('/.well-known/agent-card.json'), 104);
+assert.equal(crawlPriority('/.well-known/agent.json'), 102);
 
 const saturated = Object.fromEntries([
   ...Array.from({ length: 250 }, (_, i) => [
@@ -36,11 +38,14 @@ fs.mkdirSync(path.join(publicRoot, '.well-known'), { recursive: true });
 
 fs.writeFileSync(path.join(publicRoot, 'chum', 'answers', 'doors', 'ev-site', 'index.html'), '<h1>EV site</h1>\n');
 fs.writeFileSync(path.join(publicRoot, '.well-known', 'evercraft-products.json'), '{"products":[]}\n');
+fs.writeFileSync(path.join(root, 'server.ts'), '// Evercraft CHUM Discovery dynamic source\n');
 fs.writeFileSync(path.join(publicRoot, 'sitemap.xml'), [
   '<?xml version="1.0" encoding="UTF-8"?>',
   '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
   '  <url><loc>/chum/answers/doors/ev-site/</loc></url>',
   '  <url><loc>/.well-known/evercraft-products.json</loc></url>',
+  '  <url><loc>/.well-known/agent-card.json</loc></url>',
+  '  <url><loc>/.well-known/agent.json</loc></url>',
   '</urlset>',
   ''
 ].join('\n'));
@@ -51,13 +56,16 @@ const first = await buildCrawlPressure({
   origin: '',
   broadcast: false
 });
-assert.equal(first.changed_surfaces, 2);
-assert.equal(first.indexed_surfaces, 2);
+assert.equal(first.changed_surfaces, 4);
+assert.equal(first.indexed_surfaces, 4);
 assert.equal(first.origin_source, 'not_configured');
 
 const state1 = JSON.parse(fs.readFileSync(path.join(publicRoot, 'chum', 'crawl-state.json'), 'utf8'));
 assert.equal(state1.entries['/chum/answers/doors/ev-site/'].priority, 100);
 assert.equal(state1.entries['/chum/answers/doors/ev-site/'].last_changed, '2026-09-25T06:30:00.000Z');
+assert.equal(state1.entries['/.well-known/agent-card.json'].priority, 104);
+assert.equal(state1.entries['/.well-known/agent.json'].priority, 102);
+assert.equal(state1.entries['/.well-known/agent-card.json'].content_sha256, state1.entries['/.well-known/agent.json'].content_sha256);
 
 const sitemap1 = fs.readFileSync(path.join(publicRoot, 'sitemap.xml'), 'utf8');
 assert.match(sitemap1, /<lastmod>2026-09-25T06:30:00.000Z<\/lastmod>/);
@@ -97,8 +105,10 @@ assert.match(feed, /\/chum\/answers\/doors\/ev-site\//);
 const hotHtml = fs.readFileSync(path.join(publicRoot, 'chum', 'hot', 'index.html'), 'utf8');
 const hotJson = JSON.parse(fs.readFileSync(path.join(publicRoot, 'chum', 'hot', 'index.json'), 'utf8'));
 assert.match(hotHtml, /Hot Discovery Queue/);
-assert.equal(hotJson.surfaces[0].path, '/chum/answers/doors/ev-site/');
-assert.equal(hotJson.surfaces[0].priority, 100);
+const hotByPath = new Map(hotJson.surfaces.map((row) => [row.path, row]));
+assert.equal(hotByPath.get('/.well-known/agent-card.json')?.priority, 104);
+assert.equal(hotByPath.get('/.well-known/agent.json')?.priority, 102);
+assert.equal(hotByPath.get('/chum/answers/doors/ev-site/')?.priority, 100);
 
 fs.writeFileSync(path.join(publicRoot, '.well-known', 'evercraft-runtime-origin.json'), JSON.stringify({
   schema: 'evercraft.runtime-origin.v1',
