@@ -6,6 +6,7 @@ on:
       - "distribution/directory-expansion-targets.json"
       - "distribution/directory-submission-packets.json"
       - "distribution/machine-commerce-distribution.json"
+      - "distribution/evercraft-owned-execution-policy.json"
       - "scripts/validate-directory-expansion.mjs"
       - ".github/workflows/validate-directory-expansion.yml"
   push:
@@ -14,6 +15,7 @@ on:
       - "distribution/directory-expansion-targets.json"
       - "distribution/directory-submission-packets.json"
       - "distribution/machine-commerce-distribution.json"
+      - "distribution/evercraft-owned-execution-policy.json"
       - "scripts/validate-directory-expansion.mjs"
   workflow_dispatch:
 
