@@ -35,6 +35,9 @@ jobs:
       - name: Prove universal fulfillment contract
         run: npm run proof:universal-fulfillment
 
+      - name: Prove payment-to-fulfillment routing
+        run: npm run proof:portfolio-fulfillment-router
+
       - name: Validate Saban contracts
         run: npm run check:saban-contracts
 
