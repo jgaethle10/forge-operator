@@ -27,19 +27,29 @@ for (const file of ['PRIVACY.md','TERMS.md','SUPPORT.md']) {
   if (!fs.existsSync(file)) errors.push(`${file} is required`);
 }
 
-if (!Array.isArray(tests.positive) || tests.positive.length < 5) {
-  errors.push('at least five positive review cases are required');
+if (submission.plugin_name !== 'Evercraft') errors.push('canonical plugin_name must be Evercraft');
+if (submission.source_package !== 'plugins/evercraft-fabric') errors.push('source_package must be plugins/evercraft-fabric');
+if (submission.public_directory_claim_allowed !== false) errors.push('public directory claim must remain false before publication receipt');
+if (!fs.existsSync('plugins/evercraft-fabric/.codex-plugin/plugin.json')) errors.push('Evercraft plugin package manifest is required');
+
+if (!Array.isArray(tests.positive) || tests.positive.length !== 5) {
+  errors.push('exactly five positive review cases are required');
 }
-if (!Array.isArray(tests.negative) || tests.negative.length < 3) {
-  errors.push('at least three negative review cases are required');
+if (!Array.isArray(tests.negative) || tests.negative.length !== 3) {
+  errors.push('exactly three negative review cases are required');
 }
 
 const allCases = [...(tests.positive || []), ...(tests.negative || [])];
 const ids = new Set();
 for (const test of allCases) {
-  if (!test.id || !test.prompt || !test.expected) errors.push('every review case needs id, prompt and expected');
+  if (!test.id || !test.description || !test.prompt || !test.expected_behavior) {
+    errors.push('every review case needs id, description, prompt and expected_behavior');
+  }
   if (ids.has(test.id)) errors.push(`duplicate test id: ${test.id}`);
   ids.add(test.id);
+}
+for (const test of tests.positive || []) {
+  if (!test.tools_triggered) errors.push(`positive review case ${test.id || 'unknown'} needs tools_triggered`);
 }
 
 const serialized = JSON.stringify({ submission, tests });
