@@ -374,6 +374,19 @@
       "chum_mirror_state": "generated_public_fallback"
     },
     {
+      "product_key": "evernest-atlas",
+      "name": "EverNest Atlas",
+      "class": "adult_household_life_planning",
+      "canonical_url": "https://evernest-life-map.base44.app/",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest-atlas/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest-atlas/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest-atlas/ai-conformance.json",
+      "doorway_state": "source_build_lint_green_origin_machine_files_added_external_canary_pending",
+      "conformance_state": "not_yet_propagated",
+      "provider_behavior_state": "not_run",
+      "chum_mirror_state": "generated_public_fallback"
+    },
+    {
       "product_key": "everystage",
       "name": "EveryStage",
       "class": "discovery_human_handoff",
@@ -758,6 +771,19 @@
         "observed_at": "2026-09-27",
         "state": "miss_receipts_persisted"
       }
+    },
+    {
+      "product_key": "systemia-university",
+      "name": "Systemia University",
+      "class": "evidence_centered_learning_agent_proving_and_workforce_readiness",
+      "canonical_url": "https://systemia-university.base44.app/",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/ai-conformance.json",
+      "doorway_state": "source_build_lint_green_origin_machine_files_added_external_canary_pending",
+      "conformance_state": "not_yet_propagated",
+      "provider_behavior_state": "not_run",
+      "chum_mirror_state": "generated_public_fallback"
     },
     {
       "product_key": "systemia-website-audit",
