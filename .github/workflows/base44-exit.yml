@@ -5,6 +5,11 @@ on:
     paths:
       - 'systemia/migrations/base44-exit/**'
       - 'systemia/collider/**'
+      - 'systemia/organism/eps-social-continuity.mjs'
+      - 'systemia/organism/eps-social-continuity.proof.mjs'
+      - 'systemia/organism/eps-social-continuity.workflow.json'
+      - 'systemia/core/resident-services.json'
+      - 'systemia/core/supervisor.evercraft.compute.json'
       - 'scripts/validate-base44-exit.mjs'
       - 'scripts/validate-base44-credit-firewall.mjs'
       - '.github/workflows/base44-exit.yml'
@@ -14,6 +19,11 @@ on:
     paths:
       - 'systemia/migrations/base44-exit/**'
       - 'systemia/collider/**'
+      - 'systemia/organism/eps-social-continuity.mjs'
+      - 'systemia/organism/eps-social-continuity.proof.mjs'
+      - 'systemia/organism/eps-social-continuity.workflow.json'
+      - 'systemia/core/resident-services.json'
+      - 'systemia/core/supervisor.evercraft.compute.json'
       - 'scripts/validate-base44-exit.mjs'
       - 'scripts/validate-base44-credit-firewall.mjs'
       - '.github/workflows/base44-exit.yml'
@@ -33,3 +43,5 @@ jobs:
         run: node scripts/validate-base44-credit-firewall.mjs
       - name: Prove KAIDANCE collider
         run: node systemia/collider/proof.mjs
+      - name: Prove off-Base44 EPS social continuity
+        run: node systemia/organism/eps-social-continuity.proof.mjs

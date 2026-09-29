@@ -40,6 +40,18 @@ if (!social || social.workflow !== 'systemia_eps_social_continuity_every_30_minu
   fail('only the bounded EPS social continuity exception is currently permitted');
 }
 if (social.new_internal_work_fanout_allowed !== false) fail('legacy exception may not fan out new internal work');
+if (social.replacement_workflow !== 'systemia/organism/eps-social-continuity.workflow.json') {
+  fail('EPS social exception must point to the Systemia Core replacement workflow');
+}
+if (social.replacement_scheduler !== 'systemia/core/resident-supervisor.mjs') {
+  fail('EPS social exception must point to the Systemia Core resident supervisor');
+}
+if (social.replacement_state !== 'source_and_supervisor_wiring_present_not_live') {
+  fail('EPS social replacement must remain explicitly unverified until Yard runtime proof exists');
+}
+if (social.retirement_gate !== 'yard_cycle_live_plus_verified_clip_response_plus_observation_window') {
+  fail('EPS social Base44 schedule retirement gate is incomplete');
+}
 
 for (const gate of [
   'replacement_runtime_live',
