@@ -35,7 +35,7 @@ concurrency:
 jobs:
   prove:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
         with:
@@ -48,24 +48,41 @@ jobs:
       - name: Prove discovery-only versus callable conformance policy
         run: node tests/saban-discovery-conformance-policy.test.mjs
 
-      - name: Reconcile Saban public discovery graph
-        if: github.event_name != 'pull_request'
-        run: node systemia/saban/discovery-swarm.mjs --emit
-
-      - name: Verify reconciled discovery graph
+      - name: Verify pull-request discovery graph
+        if: github.event_name == 'pull_request'
         run: node systemia/saban/discovery-swarm.mjs --strict
 
-      - name: Commit generated discovery truth
+      - name: Reconcile latest main without racing other Systemia writers
         if: github.event_name != 'pull_request'
         shell: bash
         run: |
           set -euo pipefail
-          git add registry/public-products.json registry/public-products.md registry/*/README.md registry/*/llms.txt
-          if git diff --cached --quiet; then
-            echo "Saban discovery graph already reconciled."
-            exit 0
-          fi
-          git config user.name "Saban Discovery Reconciler"
-          git config user.email "saban-discovery@users.noreply.github.com"
-          git commit -m "Reconcile Saban public discovery graph"
-          git push origin HEAD:main
+          for ATTEMPT in 1 2 3; do
+            echo "Saban reconciliation attempt $ATTEMPT"
+            git fetch origin main
+            git reset --hard origin/main
+
+            node tests/saban-discovery-conformance-policy.test.mjs
+            node systemia/saban/discovery-swarm.mjs --emit
+            node systemia/saban/discovery-swarm.mjs --strict
+
+            git add registry/public-products.json registry/public-products.md registry/*/README.md registry/*/llms.txt
+            if git diff --cached --quiet; then
+              echo "Saban discovery graph already reconciled on latest main."
+              exit 0
+            fi
+
+            git config user.name "Saban Discovery Reconciler"
+            git config user.email "saban-discovery@users.noreply.github.com"
+            git commit -m "Reconcile Saban public discovery graph"
+
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+
+            echo "Main advanced during reconciliation; retrying from latest source truth."
+            sleep 2
+          done
+
+          echo "Saban reconciliation could not obtain a clean mainline push after 3 attempts." >&2
+          exit 1
