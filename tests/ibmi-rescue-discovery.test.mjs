@@ -20,7 +20,7 @@ const product = directory.products.find((row) => row.product_key === 'ibmi-rescu
 assert(product, 'ibmi-rescue missing from product directory');
 assert.equal(product.human_confirmation_required, true);
 assert.equal(product.commercial?.offers?.length, 3);
-assert.match(product.commercial?.status || '', /handoff_live/);
+assert.match(product.commercial?.status || '', /direct_checkout_live/);
 assert.match(product.commercial?.status || '', /buyer_route_live/);
 assert.match(product.commercial?.status || '', /backend_checkout_verified/);
 assert.equal(product.commercial?.machine_commerce_handoff?.state, 'live_verified');
