@@ -223,11 +223,12 @@ try{
   );
   assert.equal(authHandoff.ok,true);
   assert.equal(authHandoff.result.session_id,'browser-edge-auth-proof');
-  assert.equal(authHandoff.result.public_route_verified,true);
-  assert.equal(authHandoff.result.handoff_url,binding.origin+'/handoff/browser-edge-auth-proof#claim=edge-proof-claim');
+  assert.equal(authHandoff.result.public_route_verified,false);
+  assert.equal(authHandoff.result.handoff_url,null);
+  assert.match(authHandoff.result.handoff_path,/^\/handoff\/browser-edge-auth-proof#claim=/);
   assert.equal(authSessionCount,1);
 
-  const handoffUrl=new URL(authHandoff.result.handoff_url);
+  const handoffUrl=new URL(authHandoff.result.handoff_path,binding.origin);
   const claim=new URLSearchParams(handoffUrl.hash.slice(1)).get('claim');
   assert.equal(claim,'edge-proof-claim');
   handoffUrl.hash='';
@@ -309,6 +310,7 @@ try{
     public_adapter_health_verified:true,
     public_render_crossed_edge:true,
     authenticated_handoff_created_through_private_yard:true,
+    loopback_proof_not_misrepresented_as_public_https:true,
     authenticated_handoff_crossed_public_edge:true,
     authenticated_handoff_claim_enforced:true,
     authenticated_handoff_close_destroyed_session:true,
