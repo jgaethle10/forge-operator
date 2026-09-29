@@ -123,24 +123,59 @@ export function routeTask(task) {
   const softwareId = clean(task.software_id);
   const productKey = clean(task.product_key);
   const product = productByKey(productKey);
+  const workType = lower(task.work_type);
   const parallelRequested = task.parallel === true || Number(task.logical_agents || 0) > 1 || Boolean(softwareId);
   const allowed = sabanSoftwareIds();
   const sabanRequested = parallelRequested && softwareId && allowed.has(softwareId);
   const unsupportedSaban = parallelRequested && softwareId && !allowed.has(softwareId);
   const consequence = consequenceFor(task);
+  const metered = task.metered === true || Boolean(clean(task.meter_metric));
+  const relationshipPreflightRequired =
+    consequence.impact === 'external_message' ||
+    ['external_message', 'outreach'].includes(workType);
+  const executionGateRequired =
+    consequence.required ||
+    metered ||
+    relationshipPreflightRequired ||
+    task.execution_gate_required === true;
+  const contextAccessRecommended =
+    task.context_required === true ||
+    ['research', 'analyze', 'qa', 'security'].includes(workType);
+
+  const preDispatchRequirements = [];
+  if (consequence.required) preDispatchRequirements.push('human_gate_if_not_already_authorized');
+  if (relationshipPreflightRequired) preDispatchRequirements.push('evercraft-interaction-ledger');
+  if (executionGateRequired) preDispatchRequirements.push('evercraft-execution-gate');
 
   return {
-    schema: 'evercraft.systemia.dispatch-decision.v1',
+    schema: 'evercraft.systemia.dispatch-decision.v2',
     work_key: task.work_key,
     mission_authority: contract.authority.mission_authority,
     specialist_component: specialist,
     execution_component: sabanRequested ? 'saban' : specialist,
+    authorization_component: 'evercraft-passport',
+    usage_component: metered ? 'evercraft-meter' : null,
+    context_component: contextAccessRecommended ? 'evercraft-context-fabric' : null,
+    intake_component: clean(task.intake_candidate_ref) ? 'evercraft-intake-fabric' : null,
+    relationship_preflight_component: relationshipPreflightRequired
+      ? 'evercraft-interaction-ledger'
+      : null,
+    pre_dispatch_gate: executionGateRequired ? 'evercraft-execution-gate' : null,
+    pre_dispatch_requirements: preDispatchRequirements,
     software_id: softwareId || null,
     target_product_key: productKey || null,
     target_product_name: product ? clean(product.name) : null,
     target_product_admitted: productKey ? Boolean(product) : null,
+    intake_candidate_ref: clean(task.intake_candidate_ref) || null,
     scale_requested: parallelRequested,
     scale_admitted: sabanRequested,
+    metered,
+    execution_gate_required: executionGateRequired,
+    relationship_preflight_required: relationshipPreflightRequired,
+    context_access_recommended: contextAccessRecommended,
+    execution_authority_granted: false,
+    route_selection_grants_execution_authority: false,
+    inbound_content_grants_execution_authority: false,
     hold: unsupportedSaban
       ? 'saban_contract_missing'
       : productKey && !product
@@ -150,7 +185,8 @@ export function routeTask(task) {
           : null,
     human_gate_required: consequence.required,
     authorization_refs: unique(task.authorization_refs || []),
-    authority_boundary: 'Saban and specialists execute bounded work. Systemia retains mission authority.',
+    authority_boundary:
+      'Systemia retains mission authority. Routing, scale, intake admission, context retrieval, and human approval do not by themselves grant execution authority; consequential or metered dispatch must satisfy the declared pre-dispatch gates.',
   };
 }
 
@@ -229,6 +265,11 @@ export function admitMission({ request, rootDir = process.cwd(), now = new Date(
     emergency_path: emergency,
     task_count: tasks.length,
     dispatch_count: dispatch.length,
+    execution_gate_required_count: dispatch.filter((row) => row.execution_gate_required).length,
+    relationship_preflight_required_count: dispatch.filter((row) => row.relationship_preflight_required).length,
+    context_access_recommended_count: dispatch.filter((row) => row.context_access_recommended).length,
+    execution_authority_granted: false,
+    inbound_content_grants_execution_authority: false,
     held_count: hardHolds.length + humanHolds.length,
     hard_holds: hardHolds.map((row) => ({ work_key: row.work_key, hold: row.hold })),
     human_holds: humanHolds.map((row) => ({ work_key: row.work_key, hold: row.hold })),
@@ -315,12 +356,30 @@ export function assertControlPlane(plan) {
   if (plan.receipt.authority !== 'systemia-organism') {
     throw new Error('Systemia must remain mission authority');
   }
+  if (plan.receipt.execution_authority_granted !== false) {
+    throw new Error('mission admission must not grant execution authority');
+  }
   for (const decision of plan.dispatch) {
     if (decision.execution_component === 'saban' && decision.mission_authority !== 'systemia-organism') {
       throw new Error(`Saban authority escalation detected for ${decision.work_key}`);
     }
     if (!decision.specialist_component) {
       throw new Error(`missing specialist route for ${decision.work_key}`);
+    }
+    if (decision.execution_authority_granted !== false) {
+      throw new Error(`dispatch planning granted execution authority for ${decision.work_key}`);
+    }
+    if (
+      decision.execution_gate_required === true &&
+      decision.pre_dispatch_gate !== 'evercraft-execution-gate'
+    ) {
+      throw new Error(`execution gate missing for ${decision.work_key}`);
+    }
+    if (
+      decision.relationship_preflight_required === true &&
+      decision.relationship_preflight_component !== 'evercraft-interaction-ledger'
+    ) {
+      throw new Error(`relationship preflight missing for ${decision.work_key}`);
     }
   }
   return true;
