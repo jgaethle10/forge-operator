@@ -1,13 +1,13 @@
 {
   "schema": "evercraft.systemia.workflow-manifest.v1",
   "workflow_key": "node001-field-certification-watch",
-  "mission_key": "node001-megatron-field-certification",
+  "mission_key": "node001-evernode-one-field-certification",
   "runtime": "systemia-organism+collider",
   "collider_compatible": true,
   "cadence_seconds": 300,
   "material_change_only": true,
   "issue_ref": "github:issue:175",
-  "candidate_key": "megatron-node001-candidate",
+  "candidate_key": "evernode-one-node001-candidate",
   "entrypoint": "systemia/organism/node001-field-certification-runner.mjs",
   "proof": "systemia/organism/node001-field-certification.proof.mjs",
   "authority": {
