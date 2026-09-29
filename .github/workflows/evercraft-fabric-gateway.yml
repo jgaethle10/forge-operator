@@ -34,7 +34,7 @@ jobs:
         with:
           node-version: 22
       - name: Prove Fabric permission and MCP boundaries
-        run: node --test systemia/fabric-gateway/gateway.test.mjs systemia/fabric-gateway/http-gateway.test.mjs
+        run: node --test systemia/fabric-gateway/mission-planner.test.mjs systemia/fabric-gateway/gateway.test.mjs systemia/fabric-gateway/http-gateway.test.mjs
       - name: Prove inherited Passport and Context Fabric boundaries
         run: |
           node --test systemia/passport/passport.test.mjs
