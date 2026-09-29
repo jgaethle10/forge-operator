@@ -1,0 +1,84 @@
+{
+  "schema": "evercraft.capability-mesh.contracts.v1",
+  "version": "1.0.0",
+  "truth_boundary": {
+    "contract_declaration_is_not_runtime_verification": true,
+    "source_presence_is_not_live_readiness": true,
+    "missing_lane_is_never_inferred": true,
+    "not_required_requires_reason": true
+  },
+  "contracts": [
+    {
+      "product_key": "aliev",
+      "contract_version": "1.0.0",
+      "owner": "systemia",
+      "specialist_slug": "aliev",
+      "authority": {
+        "state": "declared",
+        "passport_product": "rivet",
+        "scopes": [
+          "report.generate"
+        ],
+        "evidence_refs": [
+          "systemia/execution-gate/gate.test.mjs"
+        ]
+      },
+      "context": {
+        "state": "declared",
+        "namespace": "aliev",
+        "read_scope": "context.read.aliev",
+        "write_scope": "context.write.aliev",
+        "evidence_refs": [
+          "systemia/context-fabric/fabric.mjs"
+        ]
+      },
+      "meter": {
+        "state": "declared",
+        "metrics": [
+          {
+            "metric": "site_reports",
+            "unit": "report"
+          }
+        ],
+        "evidence_refs": [
+          "systemia/execution-gate/gate.test.mjs"
+        ]
+      },
+      "intake": {
+        "state": "not_required",
+        "reason": "Core AliEV/RIVET report invocation is a direct specialist/API path. Portfolio-wide inbound work may still enter through Intake Fabric before Systemia routing."
+      },
+      "execution": {
+        "state": "declared",
+        "gate_required": true,
+        "scopes": [
+          "report.generate"
+        ],
+        "evidence_refs": [
+          "systemia/execution-gate/gate.mjs",
+          "systemia/execution-gate/gate.test.mjs"
+        ]
+      },
+      "relationship": {
+        "state": "not_required",
+        "reason": "Core site-report generation does not itself perform outbound relationship contact."
+      },
+      "receipt_reconciliation": {
+        "state": "declared",
+        "namespace": "aliev",
+        "evidence_refs": [
+          "systemia/context-fabric/fabric.mjs"
+        ]
+      },
+      "rollback": {
+        "state": "declared",
+        "policy": "Disable the product contract or specialist route without weakening Passport, Meter, Context, Intake, or Execution Gate defaults."
+      },
+      "compatibility": {
+        "intended_product_classes": [
+          "ev_infrastructure_opportunity_intelligence"
+        ]
+      }
+    }
+  ]
+}
