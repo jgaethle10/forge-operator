@@ -1,0 +1,27 @@
+{
+  "schema": "evercraft.systemia.base44-migration-slice.v1",
+  "slice": "release_continuity",
+  "priority": 2,
+  "source": {
+    "platform": "base44",
+    "function": "releaseContinuityOps",
+    "automation": "systemia_release_continuity_every_15_minutes"
+  },
+  "target": {
+    "release_policy": "systemia/release/release-policy.mjs",
+    "runtime_release_workflow": ".github/workflows/publish-runtime.yml",
+    "portfolio_integrity_workflow": ".github/workflows/systemia-portfolio-sentinel.yml",
+    "portfolio_integrity_cadence_seconds": 300
+  },
+  "observed": {
+    "source_automation_active": false,
+    "source_fail_closed_guard_present": true,
+    "source_fail_closed_guard": "LEGACY_BASE44_RELEASE_SWEEP_DISABLED",
+    "pre_change_checkpoint": "6abc33c9490e45a4f72c27bd",
+    "pre_change_git_commit": "b9cef111ca4baa67bda9514718eb105008e82358",
+    "runtime_schedule_absence_verified": false,
+    "named_cloud_required": false
+  },
+  "state": "source_disabled_runtime_verification_pending",
+  "next_action": "Verify the deployed Base44 release continuity path no longer emits legacy release work across a former 15-minute cadence window."
+}
