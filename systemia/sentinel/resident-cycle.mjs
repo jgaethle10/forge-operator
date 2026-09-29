@@ -15,6 +15,10 @@ import {
   pollUsgsEarthquakes,
   USGS_SOURCE_CONTRACT
 } from './sources/usgs-earthquakes.mjs';
+import {
+  pollNwpsRiverGauges,
+  NWPS_SOURCE_CONTRACT
+} from './sources/nwps-rivers.mjs';
 
 export const BUILTIN_SENTINEL_SOURCES = Object.freeze([
   {
@@ -30,6 +34,20 @@ export const BUILTIN_SENTINEL_SOURCES = Object.freeze([
     poll: pollUsgsEarthquakes
   }
 ]);
+
+export function buildBuiltinSentinelSources({ nwpsGaugeIds = [] } = {}) {
+  const sources = [...BUILTIN_SENTINEL_SOURCES];
+  const gaugeIds = [...new Set((nwpsGaugeIds || []).map((value) => String(value || '').trim()).filter(Boolean))];
+  if (gaugeIds.length) {
+    sources.push({
+      source_id: NWPS_SOURCE_CONTRACT.source_id,
+      contract: NWPS_SOURCE_CONTRACT,
+      poll_interval_seconds: 300,
+      poll: (options = {}) => pollNwpsRiverGauges({ ...options, gaugeIds })
+    });
+  }
+  return sources;
+}
 
 const LEVEL_SCORE = Object.freeze({
   watch: 0,
