@@ -46,7 +46,7 @@ jobs:
         with:
           name: portfolio-fulfillment-readiness
           path: |
-            artifacts/saban-multiplier/portfolio-fulfillment-readiness/**
+            artifacts/saban-multiplier/portfolio-fulfillment-readiness-latest.json
           if-no-files-found: warn
           retention-days: 14
 
@@ -62,4 +62,11 @@ jobs:
             echo "Private access: never granted by payment"
             echo "Completion: delivery receipt required"
             echo "Expansion: human-gated"
+            if [ -f artifacts/saban-multiplier/portfolio-fulfillment-readiness-latest.json ]; then
+              echo
+              echo "### Saban reconciliation"
+              echo '~~~json'
+              node -e "const r=require('./artifacts/saban-multiplier/portfolio-fulfillment-readiness-latest.json'); console.log(JSON.stringify({quality:r.quality||null,reconciliation:r.reconciliation||null,scheduler_summary:r.scheduler_summary||null},null,2))"
+              echo '~~~'
+            fi
           } >> "$GITHUB_STEP_SUMMARY"
