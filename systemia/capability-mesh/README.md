@@ -146,3 +146,23 @@ machine media-analysis action: not contracted
 Published duration pricing is not converted into a Meter metric, because pricing tiers are not evidence of a machine usage-meter contract. Likewise the existence of internal distributed media proofs does not upgrade the public machine-intake boundary.
 
 This is the intended behavior of Capability Mesh: make the strongest source-supported contract possible, then stop exactly where the evidence stops.
+
+
+## No-new-debt ratchet
+
+Capability Mesh has a dated migration baseline for the portfolio that existed when the shared trust-chain program began.
+
+The baseline does **not** excuse missing contracts. Existing gaps remain visible migration debt. Its purpose is to distinguish migration work from regression.
+
+After the baseline:
+
+- a new public product without a complete contract is a blocking regression
+- a grandfathered public product that gains a new specialist door without a complete contract is a blocking regression
+- a new specialist-only door outside the public product index requires explicit human review
+- existing uncontracted products remain medium-priority migration findings instead of falsely making the whole portfolio unavailable
+
+Portfolio Sentinel consumes the ratchet state. New adoption debt is high severity; grandfathered debt remains medium. This means the migration can proceed incrementally while the architecture can no longer get worse quietly.
+
+The rule is intentionally asymmetric:
+
+> We may inherit old debt. We do not create new debt.
