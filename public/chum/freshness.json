@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-29T05:56:22.327Z",
+  "updated_at": "2026-09-29T05:59:04.665Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,26 +11,43 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/hot/",
-      "last_changed": "2026-09-29T05:56:22.327Z",
-      "priority": 80
+      "path": "/chum/products/ibmi-rescue/llms.txt",
+      "last_changed": "2026-09-29T05:59:04.665Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/systemia-portfolio-sentinel/llms.txt",
+      "last_changed": "2026-09-29T05:59:04.665Z",
+      "priority": 94
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-29T05:56:22.327Z",
+      "last_changed": "2026-09-29T05:59:04.665Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
     {
-      "path": "/chum/hot/",
-      "url": "/chum/hot/",
-      "last_changed": "2026-09-29T05:56:22.327Z",
-      "priority": 80
+      "path": "/chum/products/ibmi-rescue/llms.txt",
+      "url": "/chum/products/ibmi-rescue/llms.txt",
+      "last_changed": "2026-09-29T05:59:04.665Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/systemia-portfolio-sentinel/llms.txt",
+      "url": "/chum/products/systemia-portfolio-sentinel/llms.txt",
+      "last_changed": "2026-09-29T05:59:04.665Z",
+      "priority": 94
     },
     {
       "path": "/chum/hot/index.json",
       "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-29T05:59:04.665Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/",
+      "url": "/chum/hot/",
       "last_changed": "2026-09-29T05:56:22.327Z",
       "priority": 80
     },
@@ -49,12 +66,6 @@
     {
       "path": "/chum/products/ibmi-rescue/ai-discovery.json",
       "url": "/chum/products/ibmi-rescue/ai-discovery.json",
-      "last_changed": "2026-09-29T05:53:29.457Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/ibmi-rescue/llms.txt",
-      "url": "/chum/products/ibmi-rescue/llms.txt",
       "last_changed": "2026-09-29T05:53:29.457Z",
       "priority": 94
     },
@@ -1249,12 +1260,6 @@
     {
       "path": "/chum/products/systemia-portfolio-sentinel/ai-discovery.json",
       "url": "/chum/products/systemia-portfolio-sentinel/ai-discovery.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/systemia-portfolio-sentinel/llms.txt",
-      "url": "/chum/products/systemia-portfolio-sentinel/llms.txt",
       "last_changed": "2026-09-29T05:30:59.043Z",
       "priority": 94
     },

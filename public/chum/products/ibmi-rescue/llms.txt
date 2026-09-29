@@ -33,7 +33,7 @@ public discovery and human-confirmed paid evidence engagement; production access
 - Offer: IBM i Estate X-Ray · $250 one-time · offer_key: ibmi_estate_xray_250
 - Offer: IBM i 7.4 Deadline X-Ray · $250 one-time · offer_key: ibmi_74_deadline_xray_250
 - Offer: IBM i Upgrade Proof Sprint · $1,500 one-time · offer_key: ibmi_upgrade_proof_sprint_1500
-- Machine Commerce human handoff is live-verified.
+- Machine Commerce direct checkout is live-verified. Explicit human payment confirmation remains required, and checkout creation is not payment proof.
 - Payment state: Evercraft Payments offers active. Human buyer route is externally reachable and synthetic QA verified creation of the $250 Stripe Checkout session. Checkout creation is not payment proof; authoritative provider verification is still required before paid state, revenue, or fulfillment claims.
 
 ## Boundaries
