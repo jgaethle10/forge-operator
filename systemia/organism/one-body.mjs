@@ -33,6 +33,22 @@ const HIGH_INTENT_PATTERNS = [
   /seeking (?:a )?(?:supplier|vendor|contractor|partner)/i,
   /bids? (?:open|due|close|closing)/i,
   /procurement (?:open|live|notice|opportunity)/i,
+  /site.?host(?:ing)? (?:acquisition|expansion|program)/i,
+  /site.?acquisition/i,
+  /charging (?:network )?expansion/i,
+  /fleet charging (?:partnership|expansion|deployment)/i,
+  /commercial (?:property )?(?:expansion|deployment)/i,
+];
+
+const NON_DEAL_SIGNAL_PATTERNS = [
+  /data[_ -]?(?:coverage|quality|spine|expansion|refresh)/i,
+  /canonical[_ -]?(?:data|inventory|refresh)/i,
+  /inventory[_ -]?(?:change|refresh|history)/i,
+  /benchmark[_ -]?(?:enrichment|context)?/i,
+  /source[_ -]?lane/i,
+  /market[_ -]?inventory/i,
+  /supply[_ -]?pressure/i,
+  /observed[_ -]?usage/i,
 ];
 
 const HUMAN_GATE_KINDS = new Set([
@@ -149,15 +165,18 @@ export function classifyCommercial(raw, { now = new Date().toISOString(), produc
   ].map((value) => String(value || '').trim()));
 
   const explicitCommercial =
-    Boolean(raw.commercial_value_estimate) ||
-    buyers.length > 0 ||
     Boolean(raw.procurement) ||
     Boolean(raw.procurement_deadline) ||
+    Boolean(raw.buyer) ||
+    asArray(raw.buyers).length > 0 ||
     raw.commercial_signal === true;
 
   const commercialPattern = COMMERCIAL_PATTERNS.some((pattern) => pattern.test(text));
   const highIntent = HIGH_INTENT_PATTERNS.some((pattern) => pattern.test(text));
-  const isCommercial = explicitCommercial || commercialPattern;
+  const nonDealSignal = NON_DEAL_SIGNAL_PATTERNS.some((pattern) =>
+    pattern.test(String(raw.signal_type || '')) || pattern.test(String(raw.title || ''))
+  );
+  const isCommercial = explicitCommercial || (!nonDealSignal && commercialPattern && buyers.length > 0);
 
   if (!isCommercial) {
     return {
