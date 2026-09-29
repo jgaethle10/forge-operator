@@ -1,0 +1,52 @@
+name: OpenAI Plugin Readiness
+
+on:
+  pull_request:
+    paths:
+      - 'plugins/evercraft-fabric/**'
+      - 'distribution/openai-plugin/**'
+      - 'scripts/validate-openai-plugin-submission.mjs'
+      - 'systemia/mcp/fabric-directory.mjs'
+      - 'systemia/mcp/specialist-handoff-runtime.mjs'
+      - 'tests/evercraft-fabric-runtime.test.mjs'
+      - 'tests/evercraft-openai-plugin-package.test.mjs'
+      - '.github/workflows/openai-plugin-readiness.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prove-evercraft-plugin:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove OpenAI package and Fabric contract
+        run: |
+          node --test tests/evercraft-openai-plugin-package.test.mjs tests/evercraft-fabric-runtime.test.mjs
+          node scripts/validate-openai-plugin-submission.mjs
+
+      - name: Build OpenAI upload ZIP
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          (
+            cd plugins/evercraft-fabric
+            zip -qr ../../artifacts/evercraft-openai-plugin.zip .               -x '*.DS_Store'
+          )
+          test -s artifacts/evercraft-openai-plugin.zip
+          unzip -l artifacts/evercraft-openai-plugin.zip | grep -q 'plugin.json'
+          unzip -l artifacts/evercraft-openai-plugin.zip | grep -q 'mcp.json'
+          unzip -l artifacts/evercraft-openai-plugin.zip | grep -q 'skills/evercraft-router/SKILL.md'
+
+      - name: Upload OpenAI submission artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-openai-plugin
+          path: artifacts/evercraft-openai-plugin.zip
+          if-no-files-found: error
+          retention-days: 30

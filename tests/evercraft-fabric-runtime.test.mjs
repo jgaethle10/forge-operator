@@ -35,7 +35,12 @@ test('Fabric boots from the canonical CHUM capability index without a manual rou
   const canonical=loadFabricCatalogFromRepository();
   assert.ok(canonical.length>=40);
   assert.ok(canonical.some((x)=>x.public_id==='findmypart-paid-hunt-v1'));
-  assert.ok(canonical.some((x)=>x.public_id==='aliev-site-opportunity-snapshot-v1'));
+  const aliev=canonical.find((x)=>x.public_id==='aliev-site-opportunity-snapshot-v1');
+  assert.ok(aliev);
+  assert.ok(aliev.connections.some((x)=>x.type==='mcp'&&/alievMcp/.test(x.url)));
+  assert.ok(aliev.connections.some((x)=>x.type==='mcp'&&/machineCommerceMcp/.test(x.url)));
+  assert.ok(aliev.connections.some((x)=>x.type==='docs'));
+  assert.ok(canonical.every((x)=>x.connections.some((connection)=>connection.type==='mcp')));
 });
 
 test('Fabric catalog normalizes and intent matching finds the problem-native capability',()=>{

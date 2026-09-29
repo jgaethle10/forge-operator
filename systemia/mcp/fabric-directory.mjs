@@ -51,25 +51,66 @@ export function loadFabricCatalogFromRepository({catalogPath=''}={}){
   if(!fs.existsSync(resolved)) throw new Error('fabric_catalog_source_missing');
   const source=JSON.parse(fs.readFileSync(resolved,'utf8'));
   const rows=Array.isArray(source?.capabilities)?source.capabilities:[];
-  const mapped=rows.map((item)=>({
-    public_id:item.public_id,
-    name:item.name,
-    description:clean(
-      item.problem ||
-      (Array.isArray(item.use_when)?item.use_when.join('; '):'') ||
-      item.invocation_status ||
-      item.pricing ||
-      'Evercraft public capability.',
-      1200
-    ),
-    keywords:[
-      ...(Array.isArray(item.intent_terms)?item.intent_terms:[]),
-      ...(Array.isArray(item.use_when)?item.use_when:[]),
-    ].slice(0,32),
-    state:clean(item.machine_state||item.commercial_state||'available',80),
-    category:clean(item.category||'',120)||null,
-    connections:[],
-  }));
+  const universalMcp=safeUrl(source?.universal_mcp||'');
+  const mapped=rows.map((item)=>{
+    const connections=[];
+    const direct=item?.direct_specialist;
+    if(
+      direct &&
+      String(direct.registry_state||'').toLowerCase()==='published' &&
+      direct.mcp
+    ){
+      connections.push({
+        type:'mcp',
+        label:clean(direct.product||item.name||'Evercraft specialist',120),
+        url:direct.mcp,
+        state:clean(direct.route_state||'available',80),
+      });
+    }
+    if(universalMcp && !connections.some((x)=>x.url===universalMcp)){
+      connections.push({
+        type:'mcp',
+        label:'Evercraft universal MCP',
+        url:universalMcp,
+        state:'fallback_available',
+      });
+    }
+    if(item.public_url){
+      connections.push({
+        type:'website',
+        label:clean((item.name||'Evercraft')+' public surface',120),
+        url:item.public_url,
+        state:'public',
+      });
+    }
+    if(item.llms_url){
+      connections.push({
+        type:'docs',
+        label:clean((item.name||'Evercraft')+' LLM guide',120),
+        url:item.llms_url,
+        state:'public',
+      });
+    }
+    return {
+      public_id:item.public_id,
+      name:item.name,
+      description:clean(
+        item.problem ||
+        (Array.isArray(item.use_when)?item.use_when.join('; '):'') ||
+        item.invocation_status ||
+        item.pricing ||
+        'Evercraft public capability.',
+        1200
+      ),
+      keywords:[
+        ...(Array.isArray(item.intent_terms)?item.intent_terms:[]),
+        ...(Array.isArray(item.use_when)?item.use_when:[]),
+      ].slice(0,32),
+      state:clean(item.machine_state||item.commercial_state||'available',80),
+      category:clean(item.category||'',120)||null,
+      connections,
+    };
+  });
   return normalizeFabricCatalog(mapped);
 }
 
