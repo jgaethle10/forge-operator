@@ -8,7 +8,7 @@ export function buildGolemOrderFromDemand(demand,{
   imageTag,
   paymentNetwork='polygon',
   subnetTag=null,
-  maxStartPrice=0,
+  maxStartPrice=null,
   maxCpuPerHourPrice=null,
   maxEnvPerHourPrice=null,
 }={}){
