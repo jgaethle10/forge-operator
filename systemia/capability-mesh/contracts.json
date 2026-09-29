@@ -42,7 +42,8 @@
         ],
         "evidence_refs": [
           "systemia/execution-gate/gate.test.mjs"
-        ]
+        ],
+        "product": "rivet"
       },
       "intake": {
         "state": "not_required",
@@ -57,6 +58,14 @@
         "evidence_refs": [
           "systemia/execution-gate/gate.mjs",
           "systemia/execution-gate/gate.test.mjs"
+        ],
+        "actions": [
+          {
+            "scope": "report.generate",
+            "meter_metric": "site_reports",
+            "meter_quantity": 1,
+            "meter_unit": "report"
+          }
         ]
       },
       "relationship": {
