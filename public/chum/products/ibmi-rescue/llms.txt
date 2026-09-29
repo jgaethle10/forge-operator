@@ -5,7 +5,7 @@ Aliases: IBM i Rescue, AS/400 Rescue, Legacy Rescue for IBM i
 Canonical product: https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ibmi-rescue/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ibmi-rescue/ai-conformance.json
-Buyer frontage: https://evercraft-ai-suite-08c4d2b8.base44.app/buy/ibmi-rescue-v1?src=chum&campaign=product-mirror&ec_surface=chum_product_mirror&ec_public_id=ibmi-rescue-v1
+Buyer frontage: https://findmypart.base44.app/ibmi-rescue?src=chum&campaign=product-mirror&ec_surface=chum_product_mirror&ec_public_id=ibmi-rescue-v1
 Product-native start: https://findmypart.base44.app/ibmi-rescue
 
 ## Use this capability when the user means
@@ -31,7 +31,7 @@ public discovery and human-confirmed paid evidence engagement; production access
 - Offer: IBM i Estate X-Ray · $250 one-time · offer_key: ibmi_estate_xray_250
 - Offer: IBM i 7.4 Deadline X-Ray · $250 one-time · offer_key: ibmi_74_deadline_xray_250
 - Offer: IBM i Upgrade Proof Sprint · $1,500 one-time · offer_key: ibmi_upgrade_proof_sprint_1500
-- Machine Commerce human handoff is live-verified.
+- Machine Commerce offer discovery and human-confirmed direct checkout preparation are live-verified.
 - Payment state: Evercraft Payments offers active. Human buyer route is externally reachable and backend checkout creation is independently verified with synthetic QA. Paid state still requires authoritative provider verification.
 
 ## Boundaries
