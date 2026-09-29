@@ -11,6 +11,12 @@ Base44 is legacy infrastructure for Evercraft/Systemia. It is not a destination 
 - Yard / Evercraft Compute owns runtime, deployment, health checks, route verification and rollback.
 - Base44 is limited to temporary extraction, compatibility and continuity while a bounded slice is still unmigrated.
 
+## Runtime invariant
+
+Evercraft-owned software is the runtime/control fabric. Systemia Core schedules work, Yard admits and deploys it, Evercraft Compute supplies the workload contract, and NodeSeed / outbound capacity transport bind authorized compute when capacity is needed. No named cloud provider is a prerequisite or canonical dependency. Physical compute is replaceable substrate, not the operating system of Evercraft.
+
+The available-hardware-first rule applies during migration: discover and use already-authorized compatible capacity before considering any external infrastructure. A founder device may participate as optional capacity, but no personal device becomes a mandatory production dependency.
+
 ## Operating rule
 
 No new Evercraft/Systemia product begins life in Base44. Existing Base44 apps may receive only continuity, extraction, security, migration or parity work required to complete cutover.

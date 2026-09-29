@@ -18,6 +18,10 @@ if (cfg.rules?.base44_as_runtime_authority_allowed !== false) fail('Base44 canno
 if (cfg.replacement?.canonical_source !== 'github') fail('replacement source must be GitHub');
 if (cfg.replacement?.orchestration !== 'systemia') fail('replacement orchestration must be Systemia');
 if (cfg.replacement?.runtime !== 'yard_evercraft_compute') fail('replacement runtime must be Yard / Evercraft Compute');
+if (cfg.replacement?.runtime_owner !== 'evercraft') fail('Evercraft must own the runtime/control fabric');
+if (cfg.replacement?.named_cloud_dependency !== false) fail('no named cloud provider may be a required Base44-exit dependency');
+if (cfg.replacement?.capacity_strategy !== 'authorized_existing_compute_first') fail('capacity strategy must remain authorized-existing-compute-first');
+if (cfg.replacement?.capacity_protocol !== 'evercraft.capacity.v1') fail('capacity protocol must remain Evercraft-owned');
 if (cfg.replacement?.scheduler !== 'systemia/core/resident-supervisor.mjs') fail('replacement scheduler must be the Systemia Core resident supervisor');
 if (cfg.replacement?.scheduler_config !== 'systemia/core/resident-services.json') fail('replacement scheduler config is wrong');
 if (Number(cfg.replacement?.kaidance_heartbeat_target_seconds) !== 300) fail('KAIDANCE heartbeat must stay at 300 seconds');

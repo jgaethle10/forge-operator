@@ -17,7 +17,17 @@
     "scheduler": "systemia/core/resident-supervisor.mjs",
     "scheduler_config": "systemia/core/resident-services.json",
     "runtime": "yard_evercraft_compute",
-    "kaidance_heartbeat_target_seconds": 300
+    "kaidance_heartbeat_target_seconds": 300,
+    "runtime_owner": "evercraft",
+    "named_cloud_dependency": false,
+    "capacity_strategy": "authorized_existing_compute_first",
+    "capacity_protocol": "evercraft.capacity.v1",
+    "capacity_components": [
+      "systemia/core/resident-supervisor.mjs",
+      "systemia/yard/operator.mjs",
+      "systemia/compute/node-seed.mjs",
+      "systemia/network/outbound-capacity-broker.mjs"
+    ]
   },
   "frozen_internal_workflows": [
     "systemia_internal_wake_every_5_minutes",
