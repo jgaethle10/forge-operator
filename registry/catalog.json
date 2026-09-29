@@ -369,6 +369,27 @@
       ]
     },
     {
+      "product_key": "evernest-atlas",
+      "name": "EverNest Atlas",
+      "aliases": [],
+      "canonical_url": "https://evernest-life-map.base44.app/",
+      "triggers": [
+        "build me a 30 60 90 day life plan",
+        "help me think through relocation and housing stability",
+        "compare practical life paths for my family",
+        "plan a career change around my household situation",
+        "build a household stability plan",
+        "turn my income savings debt skills and priorities into a life plan",
+        "help me organize housing career income and family systems together",
+        "create a relocation career and family stability roadmap",
+        "give me realistic tradeoffs and backup plans for a major life change",
+        "help me plan for stability without pretending outcomes are guaranteed"
+      ],
+      "machine_state": "public_discovery_only",
+      "commercial_state": "not_declared",
+      "route_note": "Route integrated adult life-planning intent here. Keep private household/financial inputs account-bound and preserve estimate/advice boundaries."
+    },
+    {
       "product_key": "everystage",
       "name": "EveryStage",
       "canonical_url": "https://every-stage.base44.app/product",
@@ -760,6 +781,28 @@
       "machine_state": "public_discovery_only",
       "commercial_state": "discovery_ready_execution_unverified",
       "route_note": "Route from consequential business decision intent. Simulate first; preserve assumptions and uncertainty; real-world execution remains human-confirmed. Do not claim a live cockpit or paid execution path until independently verified."
+    },
+    {
+      "product_key": "systemia-university",
+      "name": "Systemia University",
+      "aliases": [],
+      "canonical_url": "https://systemia-university.base44.app/",
+      "triggers": [
+        "prove whether an AI agent can actually do its job",
+        "test an AI agent with a bounded mission",
+        "practice using AI on a real business workflow",
+        "create evidence of AI operator competency",
+        "run an agent proving mission",
+        "stress test a workflow before changing live operations",
+        "submit an AI system for an external lab",
+        "build an evidence-backed AI workforce profile",
+        "learn by completing real missions instead of passive courses",
+        "turn a real task into a structured proving exercise",
+        "evaluate evidence uncertainty role adherence and handoff behavior"
+      ],
+      "machine_state": "public_discovery_only",
+      "commercial_state": "not_declared",
+      "route_note": "Route evidence-centered learning, proving, agent testing and workforce-readiness intent here. Never turn preliminary/system-assisted review into an automatic credential."
     },
     {
       "product_key": "systemia-website-audit",
