@@ -26,6 +26,7 @@ export class PublicEdgeActivationWatcher {
     specialist={},
     requiredPlacementLabels=['public-edge'],
     requestedHostname='evercraft-specialists',
+    stableHostname=false,
     endpointTimeoutMs=1000,
     leaseTtlMs=3600000,
     renewEveryMs=1800000,
@@ -52,6 +53,7 @@ export class PublicEdgeActivationWatcher {
     this.specialist=specialist;
     this.requiredPlacementLabels=requiredPlacementLabels;
     this.requestedHostname=requestedHostname;
+    this.stableHostname=stableHostname===true;
     this.endpointTimeoutMs=Math.max(100,Number(endpointTimeoutMs||1000));
     this.leaseTtlMs=Math.max(60000,Number(leaseTtlMs||3600000));
     this.renewEveryMs=Math.max(30000,Number(renewEveryMs||1800000));
@@ -155,6 +157,7 @@ export class PublicEdgeActivationWatcher {
               edge:this.edge,
               specialist:this.specialist,
               requestedHostname:this.requestedHostname,
+              stableHostname:this.stableHostname,
               edgeRollbackTarget:'systemia:public-edge-watch-previous',
               specialistRollbackTarget:'systemia:specialist-watch-previous',
               requireIdentityAttestation:true,
@@ -215,6 +218,7 @@ export class PublicEdgeActivationWatcher {
           edge:this.edge,
           specialist:this.specialist,
           requestedHostname:this.requestedHostname,
+          stableHostname:this.stableHostname,
           edgeRollbackTarget:'systemia:public-edge-watch-previous',
           specialistRollbackTarget:'systemia:specialist-watch-previous',
         });

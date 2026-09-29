@@ -1,7 +1,7 @@
 {
   "schema": "evercraft.systemia.workflow-manifest.v1",
   "workflow_key": "public-edge-activation-watch",
-  "mission_key": "evercraft-public-specialist-edge",
+  "mission_key": "evercraft-public-fabric-edge",
   "runtime": "systemia-organism+collider",
   "collider_compatible": true,
   "cadence_seconds": 300,
@@ -35,7 +35,9 @@
     "allocator_authority": "EVERCRAFT_ALLOCATOR_TOKEN or EVERCRAFT_ALLOCATOR_TOKENS_JSON",
     "release_ref": "EVERCRAFT_RELEASE_REF or current git HEAD",
     "discovery": "Evercraft capacity beacons",
-    "persistence_root": "EVERCRAFT_PUBLIC_EDGE_STATE_DIR optional"
+    "persistence_root": "EVERCRAFT_PUBLIC_EDGE_STATE_DIR optional",
+    "openai_challenge_token": "OPENAI_APPS_CHALLENGE_TOKEN; consumed in memory only and never persisted",
+    "fabric_hostname": "EVERCRAFT_PUBLIC_EDGE_REQUESTED_HOSTNAME optional; defaults to evercraft-fabric and uses a stable hostname lease"
   },
   "collider": {
     "heartbeat_seconds": 300,
@@ -46,26 +48,27 @@
     "direct_mcp_promotion_requires_external_canary": true,
     "official_registry_publication_requires_release_policy": true,
     "no_base44_public_edge": true,
-    "no_founder_auth_loop": true
+    "no_founder_auth_loop": true,
+    "fabric_mcp_external_canary_required": true
   },
   "role": "discovery_and_initial_activation_owner",
   "activation_owner": "public-edge-activation-watch",
   "maintenance_owner": "public-edge-controller",
   "handoff_policy": {
-    "after_successful_activation": "public-edge-controller owns 60-second continuity and lease maintenance",
+    "after_successful_activation": "public-edge-controller owns 60-second continuity and stable-hostname lease maintenance",
     "on_hold": "activation watch retries on Collider heartbeat only when state may have changed",
     "duplicate_provisioning": false
   },
   "issue_ref": "github:issue:403",
   "dependency_issue_ref": "github:issue:175",
-  "dependency_state_required": "field_attestation_verified",
+  "dependency_state_required": "any_authorized_field_capacity_verified",
   "current_truth": {
     "software_path": "ci_proven",
     "public_production_edge": "not_verified",
-    "physical_dependency": "waiting_on_field_evidence"
+    "physical_dependency": "any_authorized_field_capacity_with_public_https_admission"
   },
   "dependencies": {
-    "node001_field_mission": "artifacts/node001-field/evernode-one-status/latest.json",
+    "node001_field_mission": "optional legacy candidate evidence at artifacts/node001-field/evernode-one-status/latest.json",
     "node001_issue": "github:issue:175",
     "public_edge_issue": "github:issue:403",
     "direct_plugin_specs": "distribution/direct-plugin-specs.json"

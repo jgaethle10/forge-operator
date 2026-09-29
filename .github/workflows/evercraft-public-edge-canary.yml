@@ -77,6 +77,9 @@ jobs:
             (.specialist_attestation_receipt_ref | type == "string" and test("^(sha256:)?[a-fA-F0-9]{64}$")) and
             .checkout_enabled == false and
             .payment_enabled == false and
+            .fabric_directory_enabled == true and
+            .fabric_mcp_path == "/mcp" and
+            .openai_challenge_ready == true and
             .identity_attestation_bound == true and
             .same_device_binding == true and
             .field_enrollment_bound == true and
@@ -111,6 +114,8 @@ jobs:
             ' >/dev/null
           }
 
+          check_mcp "/mcp" "evercraft-fabric" \
+            "match_evercraft_capability" "list_evercraft_capabilities" "get_evercraft_connection_options"
           check_mcp "/mcp/ibmi-rescue" "evercraft-ibmi-rescue"             "get_ibmi_rescue_offer" "prepare_ibmi_rescue_handoff"
           check_mcp "/mcp/foundry-app-escape" "evercraft-foundry-app-escape"             "get_foundry_app_escape_offer" "prepare_foundry_app_escape_handoff"
           check_mcp "/mcp/site-survive" "evercraft-site-survive"             "get_site_survive_offer" "prepare_site_survive_handoff"

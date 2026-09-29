@@ -38,6 +38,7 @@ export class PublicEdgeController {
     this.allowLoopbackProof=Boolean(allowLoopbackProof);
     this.binding=null;
     this.requestedHostname='';
+    this.stableHostname=false;
     this.identityAttestationRequired=false;
     this.fieldEnrollmentRequired=false;
     this.fieldEnrollmentReceipt='';
@@ -53,6 +54,7 @@ export class PublicEdgeController {
         if(persisted?.schema==='evercraft.yard.public-edge-controller-state.v1'){
           this.binding=persisted.binding||null;
           this.requestedHostname=String(persisted.requested_hostname||'');
+          this.stableHostname=Boolean(persisted.stable_hostname);
           this.identityAttestationRequired=Boolean(persisted.identity_attestation_required);
           this.fieldEnrollmentRequired=Boolean(persisted.field_enrollment_required);
           this.fieldEnrollmentReceipt=String(persisted.field_enrollment_receipt||'');
@@ -74,6 +76,7 @@ export class PublicEdgeController {
       specialist_deployment_id:this.specialistDeploymentId,
       binding:this.binding,
       requested_hostname:this.requestedHostname||null,
+      stable_hostname:this.stableHostname,
       identity_attestation_required:this.identityAttestationRequired,
       field_enrollment_required:this.fieldEnrollmentRequired,
       field_enrollment_receipt:this.fieldEnrollmentReceipt||null,
@@ -119,6 +122,7 @@ export class PublicEdgeController {
       gateway_url:'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway',
     },
     requestedHostname='evercraft-specialists',
+    stableHostname=false,
     edgeRollbackTarget='none:first_install',
     specialistRollbackTarget='none:first_install',
     requireIdentityAttestation=false,
@@ -135,6 +139,7 @@ export class PublicEdgeController {
     let fieldEnrollmentImport=null;
     const productionMode=String(edge.mode||'wildcard_https')==='wildcard_https';
     this.requestedHostname=String(requestedHostname||'evercraft-specialists');
+    this.stableHostname=stableHostname===true;
     this.identityAttestationRequired=productionMode || Boolean(requireIdentityAttestation);
     this.fieldEnrollmentRequired=productionMode || Boolean(requireFieldEnrollment);
 
@@ -183,6 +188,11 @@ export class PublicEdgeController {
         allocatorToken,
         input:{
           gateway_url:String(specialist.gateway_url||''),
+          fabric_catalog:Array.isArray(specialist.fabric_catalog)
+            ? specialist.fabric_catalog
+            : null,
+          fabric_mcp_path:String(specialist.fabric_mcp_path||'/mcp'),
+          openai_challenge_token:String(specialist.openai_challenge_token||''),
         },
         rollbackTarget:String(specialistRollbackTarget||'none:first_install'),
         leaseTtlMs:this.leaseTtlMs,
@@ -239,6 +249,7 @@ export class PublicEdgeController {
       this.binding=await broker.bindDeployment(this.specialistDeploymentId,{
         requestedHostname:this.requestedHostname,
         ttlMs:this.leaseTtlMs,
+        stableHostname:this.stableHostname,
       });
 
       if(productionMode && this.binding.route_verified!==true){
@@ -321,6 +332,7 @@ export class PublicEdgeController {
     edge = { mode: 'wildcard_https' },
     specialist = {},
     requestedHostname = 'evercraft-specialists',
+    stableHostname = false,
     edgeRollbackTarget = 'none:first_install',
     specialistRollbackTarget = 'none:first_install',
     requireIdentityAttestation = true,
@@ -364,6 +376,7 @@ export class PublicEdgeController {
       edge,
       specialist,
       requestedHostname,
+      stableHostname,
       edgeRollbackTarget,
       specialistRollbackTarget,
       requireIdentityAttestation,
@@ -481,6 +494,7 @@ export class PublicEdgeController {
       this.binding=await broker.bindDeployment(this.specialistDeploymentId,{
         requestedHostname:this.requestedHostname||'evercraft-specialists',
         ttlMs:this.leaseTtlMs,
+        stableHostname:this.stableHostname,
       });
       specialistHealth=await routeHealth();
     }

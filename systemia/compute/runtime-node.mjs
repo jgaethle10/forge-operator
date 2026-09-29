@@ -1306,6 +1306,11 @@ export async function startEvercraftComputeNode({
               process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL ||
               'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway'
             ),
+            fabricCatalog: Array.isArray(body.input?.fabric_catalog)
+              ? body.input.fabric_catalog
+              : null,
+            fabricMcpPath: String(body.input?.fabric_mcp_path || '/mcp'),
+            openAiChallengeToken: String(body.input?.openai_challenge_token || ''),
           });
           const serviceId = `svc_${randomBytes(8).toString('hex')}`;
           services.set(serviceId, {
@@ -1326,11 +1331,14 @@ export async function startEvercraftComputeNode({
             public_health_path: '/health',
             instance_id: runtime.instanceId,
             specialist_paths: [
+              String(body.input?.fabric_mcp_path || '/mcp'),
               '/mcp/ibmi-rescue',
               '/mcp/foundry-app-escape',
               '/mcp/site-survive',
               '/mcp/systemia-remote-ops',
             ],
+            openai_challenge_path: '/.well-known/openai-apps-challenge',
+            openai_challenge_configured: Boolean(String(body.input?.openai_challenge_token || '').trim()),
             read_only_specialist_handoff: true,
           };
           const receipt = chain.issue('service.started', {

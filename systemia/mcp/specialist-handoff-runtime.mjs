@@ -1,5 +1,12 @@
 import http from 'node:http';
 import { randomBytes } from 'node:crypto';
+import {
+  executeFabricDirectoryRpc,
+  fabricDirectoryTools,
+  loadFabricCatalogFromRepository,
+  normalizeFabricCatalog,
+  validateOpenAiChallengeToken,
+} from './fabric-directory.mjs';
 
 export const SPECIALIST_HANDOFFS = [
   {
@@ -560,6 +567,9 @@ export async function startSpecialistHandoffRuntime({
   gatewayFetch = null,
   remoteOpsPricingUrl = SYSTEMIA_REMOTE_OPS.pricing_url,
   remoteOpsPricingFetch = null,
+  fabricCatalog = null,
+  fabricMcpPath = '/mcp',
+  openAiChallengeToken = '',
 } = {}) {
   const instanceId = `specialist_handoff_${randomBytes(12).toString('hex')}`;
   let deploymentReceiptRef = '';
@@ -568,6 +578,26 @@ export async function startSpecialistHandoffRuntime({
     defaultGatewayFetch(gatewayUrl, action, publicId));
   const callRemoteOpsPricing = remoteOpsPricingFetch || ((payload) =>
     Promise.resolve(simulateRemoteOpsPricing(payload)));
+  const normalizedFabricCatalog = Array.isArray(fabricCatalog)
+    ? normalizeFabricCatalog(fabricCatalog)
+    : loadFabricCatalogFromRepository();
+  const normalizedFabricPath = String(fabricMcpPath || '/mcp').trim();
+  if (
+    !normalizedFabricPath.startsWith('/') ||
+    normalizedFabricPath.length > 256 ||
+    /[\s?#]/.test(normalizedFabricPath)
+  ) {
+    throw new Error('fabric_mcp_path_invalid');
+  }
+  if (
+    normalizedFabricPath === '/health' ||
+    SPECIALIST_HANDOFFS.some((x) => x.path === normalizedFabricPath) ||
+    normalizedFabricPath === SYSTEMIA_REMOTE_OPS.path
+  ) {
+    throw new Error('fabric_mcp_path_collision');
+  }
+  const challengeToken = validateOpenAiChallengeToken(openAiChallengeToken);
+  const openAiChallengePath = '/.well-known/openai-apps-challenge';
 
   const health = () => ({
     ok: true,
@@ -588,8 +618,19 @@ export async function startSpecialistHandoffRuntime({
     public_edge_admission_receipt_ref: identityAttestation?.public_edge_admission_receipt_ref || null,
     checkout_enabled: false,
     payment_enabled: false,
+    fabric_directory_enabled: true,
+    fabric_mcp_path: normalizedFabricPath,
+    fabric_capability_count: normalizedFabricCatalog.length,
+    openai_challenge_path: openAiChallengePath,
+    openai_challenge_ready: Boolean(challengeToken),
     legacy_adapter: 'evercraft_machine_commerce_gateway',
     specialist_paths: [
+      {
+        product: 'Evercraft Fabric',
+        path: normalizedFabricPath,
+        public_id: 'evercraft-fabric',
+        tools: fabricDirectoryTools().map((tool) => tool.name),
+      },
       ...SPECIALIST_HANDOFFS.map((x) => ({
         product: x.title,
         path: x.path,
@@ -619,6 +660,56 @@ export async function startSpecialistHandoffRuntime({
 
       if (req.method === 'GET' && req.url === '/health') {
         return sendJson(res, 200, health());
+      }
+
+      if (req.url === openAiChallengePath) {
+        if (req.method !== 'GET' && req.method !== 'HEAD') {
+          return sendJson(res, 405, { error: 'method_not_allowed' });
+        }
+        if (!challengeToken) return sendJson(res, 404, { error: 'openai_challenge_not_configured' });
+        const data = Buffer.from(challengeToken, 'utf8');
+        res.writeHead(200, {
+          'content-type': 'text/plain; charset=utf-8',
+          'content-length': data.length,
+          'cache-control': 'no-store',
+          'x-content-type-options': 'nosniff',
+        });
+        if (req.method === 'HEAD') return res.end();
+        return res.end(data);
+      }
+
+      if (req.url === normalizedFabricPath) {
+        if (req.method === 'GET') {
+          return sendJson(res, 200, {
+            ok: true,
+            service: 'Evercraft Fabric',
+            server: 'evercraft-fabric',
+            version: '1.0.0',
+            transport: 'Streamable HTTP',
+            tools: fabricDirectoryTools().map((tool) => tool.name),
+            capability_count: normalizedFabricCatalog.length,
+            transactional: false,
+            checkout_enabled: false,
+            payment_enabled: false,
+            runtime: 'Evercraft Compute',
+            instance_id: instanceId,
+            deployment_receipt_bound: Boolean(deploymentReceiptRef),
+            identity_attestation_bound: Boolean(identityAttestation),
+            same_device_binding: Boolean(identityAttestation?.same_device_binding),
+            field_verified: Boolean(identityAttestation?.field_verified),
+          });
+        }
+        if (req.method !== 'POST') {
+          return sendJson(res, 405, { error: 'method_not_allowed' });
+        }
+        const rpc = await readJson(req);
+        const response = await executeFabricDirectoryRpc(rpc, normalizedFabricCatalog);
+        if (response === null) {
+          res.writeHead(202, { 'cache-control': 'no-store' });
+          res.end();
+          return;
+        }
+        return sendJson(res, 200, response);
       }
 
       if (req.url === SYSTEMIA_REMOTE_OPS.path) {
