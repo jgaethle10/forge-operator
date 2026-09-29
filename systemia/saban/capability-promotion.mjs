@@ -109,6 +109,8 @@ export function buildCapabilityPromotionQueue({
       machine_state:offer?.machine_state||null,
       machine_public_url:offer?.public_url||null,
       match_basis,
+      promotion_evidence: linked?.evidence || null,
+      required_next_primitive: linked?.required_next_primitive || null,
       conformance_present:Boolean(conf),
       registry_binding_present:Boolean(clean(registry?.mcp)),
       published_shared_or_direct_registry:Boolean(confRegistryPublished || mode==='mcp'),
