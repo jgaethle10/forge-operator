@@ -34,6 +34,8 @@ A commit-addressed image is also published for every main-branch release. Yard O
 - `RIVET_REPORT_GATEWAY_TOKEN` - private server-to-server bearer token required to invoke the RIVET Yard report gateway.
 - `ALIEV_YARD_SOURCE_URL` - optional override for the AliEV snapshot source endpoint.
 - `RIVET_REPORT_STATE_DIR` - optional runtime state directory for RIVET report receipts.
+- `FORENSISCOPE_MCP_BEARER_TOKEN` - Evercraft-owned bearer secret required by the sovereign `/mcp/forensiscope` execution surface during the pre-OAuth migration phase.
+- `FORENSISCOPE_DIRECT_FILE_MAX_BYTES` - optional direct AI-client attachment ingress limit. Defaults to 64 MiB and does not redefine the larger internal ForensiScope source ceiling.
 
 If `FORGE_CHECKOUT_URL` is absent, Forge does not display or advertise an active checkout. Pricing remains human-gated.
 
@@ -67,3 +69,12 @@ A local healthy service does not become `CHUM_PUBLIC_ORIGIN` by inference. Yard 
 ## RIVET Yard report gateway
 
 When both `SYSTEMIA_MACHINE_KEY` and `RIVET_REPORT_GATEWAY_TOKEN` are configured, Forge exposes `POST /api/rivet/reports` as an authenticated server-to-server compatibility edge for the migrating RIVET UI. `GET /api/rivet/report-health` reports only safe configuration state. The gateway fails closed when either secret is absent and does not grant customer or payment authority. Base44 remains a temporary UI/data/auth compatibility client until the live Yard route and fresh-report canary are independently verified.
+
+
+## ForensiScope sovereign MCP
+
+The target ForensiScope execution surface is `POST /mcp/forensiscope` on the verified Evercraft Compute public route. It runs inside this Forge/Yard container and uses the local `systemia/forensiscope` runtime. Base44 is not a required dependency of this execution path.
+
+During cutover, public registry/plugin URLs may continue to reference the legacy Base44 compatibility endpoint until Yard produces a verified HTTPS DeploymentReceipt for the new route. Do not infer a public URL from source code, a GHCR image, or a locally healthy container. After live-route verification and an attached-media provider acceptance test, switch discovery surfaces to the sovereign endpoint and retire the legacy execution path after its rollback window.
+
+See `docs/forensiscope-sovereign-cutover.md`.
