@@ -191,7 +191,7 @@
     "test:forensiscope-batch": "node --test systemia/forensiscope/batch-transcribe.test.mjs",
     "test:forensiscope-runtime": "npm run test:forensiscope-asr && npm run test:forensiscope-engine && npm run test:forensiscope-batch && npm run test:forensiscope-packaging",
     "test:forensiscope-engine": "node --test systemia/forensiscope/transcription-engine.test.mjs",
-    "test:household-fabric": "node systemia/household-fabric/engine.test.mjs && node systemia/household-fabric/ingest.test.mjs && node systemia/household-fabric/surface.test.mjs && node systemia/household-fabric/collectors/yvl-events.test.mjs && node systemia/household-fabric/yvl-pipeline.test.mjs && node systemia/household-fabric/merchant-feed.test.mjs && node systemia/household-fabric/merchant-pipeline.test.mjs && node systemia/household-fabric/price-index.test.mjs",
+    "test:household-fabric": "node systemia/household-fabric/engine.test.mjs && node systemia/household-fabric/ingest.test.mjs && node systemia/household-fabric/surface.test.mjs && node systemia/household-fabric/collectors/yvl-events.test.mjs && node systemia/household-fabric/yvl-pipeline.test.mjs && node systemia/household-fabric/merchant-feed.test.mjs && node systemia/household-fabric/merchant-pipeline.test.mjs && node systemia/household-fabric/price-index.test.mjs && node systemia/household-fabric/adapters/google-places-fuel.test.mjs && node systemia/household-fabric/adapters/kroger-products.test.mjs",
     "media:render:distributed": "node systemia/media-studio/distributed-render-coordinator.mjs",
     "test:sentinel-runtime": "node systemia/sentinel/runtime.test.mjs",
     "proof:sentinel-replay": "node systemia/sentinel/replay-proof.mjs",
