@@ -2,14 +2,15 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-09-29T19:16:09.879Z</updated>
+<updated>2026-09-29T19:17:30.607Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
-<entry><id>urn:evercraft:chum:d8bcbc9c28ec3e0aa29125ea</id><title>/chum/crawler-radar.json</title><updated>2026-09-29T19:16:09.879Z</updated><link href="/chum/crawler-radar.json"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:aa9b916fd98945db10fa3cab</id><title>/chum/crawler-radar.txt</title><updated>2026-09-29T19:16:09.879Z</updated><link href="/chum/crawler-radar.txt"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-29T19:16:09.879Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:d8bcbc9c28ec3e0aa29125ea</id><title>/chum/crawler-radar.json</title><updated>2026-09-29T19:17:30.607Z</updated><link href="/chum/crawler-radar.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:aa9b916fd98945db10fa3cab</id><title>/chum/crawler-radar.txt</title><updated>2026-09-29T19:17:30.607Z</updated><link href="/chum/crawler-radar.txt"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-29T19:17:30.607Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:494de3a9b5c21a35fdfdb6c2</id><title>/chum/strike/index.json</title><updated>2026-09-29T19:17:30.607Z</updated><link href="/chum/strike/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:e25ea16f55ddef7cc9716845</id><title>/chum/products/opportunity-fabric/ai-conformance.json</title><updated>2026-09-29T19:17:30.033Z</updated><link href="/chum/products/opportunity-fabric/ai-conformance.json"/><category term="priority-94"/></entry>
 <entry><id>urn:evercraft:chum:bc7689c4c0867339d0001ccc</id><title>/chum/strike/</title><updated>2026-09-29T19:16:09.879Z</updated><link href="/chum/strike/"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:494de3a9b5c21a35fdfdb6c2</id><title>/chum/strike/index.json</title><updated>2026-09-29T19:16:09.879Z</updated><link href="/chum/strike/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:2198a73c471eecfa9197de22</id><title>/chum/products/evercraft-rewards/ai-conformance.json</title><updated>2026-09-29T19:16:09.538Z</updated><link href="/chum/products/evercraft-rewards/ai-conformance.json"/><category term="priority-94"/></entry>
 <entry><id>urn:evercraft:chum:f5863db26088a99fec3cfbd6</id><title>/chum/products/evercraft-rewards/ai-discovery.json</title><updated>2026-09-29T19:16:09.538Z</updated><link href="/chum/products/evercraft-rewards/ai-discovery.json"/><category term="priority-94"/></entry>
 <entry><id>urn:evercraft:chum:c67566d0e55f8bed9a41f1f8</id><title>/chum/products/evercraft-rewards/llms.txt</title><updated>2026-09-29T19:16:09.538Z</updated><link href="/chum/products/evercraft-rewards/llms.txt"/><category term="priority-94"/></entry>
@@ -36,7 +37,6 @@
 <entry><id>urn:evercraft:chum:39e85ee94c6bed2e5faac868</id><title>/chum/answers/doors/turn-this-project-into-work-packages-and-find-matching-partners-dec734ac03.json</title><updated>2026-09-29T19:10:55.004Z</updated><link href="/chum/answers/doors/turn-this-project-into-work-packages-and-find-matching-partners-dec734ac03.json"/><category term="priority-100"/></entry>
 <entry><id>urn:evercraft:chum:0e96e851dc56b3820fa61cc3</id><title>/chum/answers/doors/turn-this-project-into-work-packages-and-find-matching-partners-dec734ac03/</title><updated>2026-09-29T19:10:55.004Z</updated><link href="/chum/answers/doors/turn-this-project-into-work-packages-and-find-matching-partners-dec734ac03/"/><category term="priority-100"/></entry>
 <entry><id>urn:evercraft:chum:ce9a4db33aa19e272f6c42fd</id><title>/chum/products/opportunity-fabric/</title><updated>2026-09-29T19:10:55.004Z</updated><link href="/chum/products/opportunity-fabric/"/><category term="priority-94"/></entry>
-<entry><id>urn:evercraft:chum:e25ea16f55ddef7cc9716845</id><title>/chum/products/opportunity-fabric/ai-conformance.json</title><updated>2026-09-29T19:10:55.004Z</updated><link href="/chum/products/opportunity-fabric/ai-conformance.json"/><category term="priority-94"/></entry>
 <entry><id>urn:evercraft:chum:72fa69d3421cbc871c6661f9</id><title>/chum/products/opportunity-fabric/ai-discovery.json</title><updated>2026-09-29T19:10:55.004Z</updated><link href="/chum/products/opportunity-fabric/ai-discovery.json"/><category term="priority-94"/></entry>
 <entry><id>urn:evercraft:chum:21c0efb9ece7516755147472</id><title>/chum/products/opportunity-fabric/llms.txt</title><updated>2026-09-29T19:10:55.004Z</updated><link href="/chum/products/opportunity-fabric/llms.txt"/><category term="priority-94"/></entry>
 <entry><id>urn:evercraft:chum:d7715e164565fa58cf4513ad</id><title>/chum/sell-now.json</title><updated>2026-09-29T19:10:55.004Z</updated><link href="/chum/sell-now.json"/><category term="priority-92"/></entry>

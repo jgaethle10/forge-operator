@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-29T19:16:09.879Z",
+  "updated_at": "2026-09-29T19:17:30.607Z",
   "url_count": 2650,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -141,8 +141,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "9f234d0433c4533e77bc57c5572762d712ccfd0d15e485f96879fd3bd489c487",
-      "last_changed": "2026-09-29T19:16:09.879Z",
+      "content_sha256": "f55b770ce21234db5780e742a3fa52471b4af333ff619cf31839cfbaddead2cf",
+      "last_changed": "2026-09-29T19:17:30.607Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -153,20 +153,20 @@
     },
     "/chum/strike/index.json": {
       "path": "/chum/strike/index.json",
-      "content_sha256": "943da4817b847a6dfc65d53bc3771da88028689fc2bcaaa2988059c509d701c0",
-      "last_changed": "2026-09-29T19:16:09.879Z",
+      "content_sha256": "39ea753333d73309225afe78da8e438a91bd307da974697b678fe867f124d19e",
+      "last_changed": "2026-09-29T19:17:30.607Z",
       "priority": 80
     },
     "/chum/crawler-radar.json": {
       "path": "/chum/crawler-radar.json",
-      "content_sha256": "810fd9be4ac64e82cea617cbdd9b6e500599a0438919ea2d83efa43b1f10f3b1",
-      "last_changed": "2026-09-29T19:16:09.879Z",
+      "content_sha256": "cd2fb0dff405111ff3942e3a3c59dd78eb8cdea03ac1fd9e6fd366edef467a49",
+      "last_changed": "2026-09-29T19:17:30.607Z",
       "priority": 80
     },
     "/chum/crawler-radar.txt": {
       "path": "/chum/crawler-radar.txt",
-      "content_sha256": "85dff6f1eac7a12e7b2e6579d37f16696b00c41fde721a6ff57d2e97ef3c2e40",
-      "last_changed": "2026-09-29T19:16:09.879Z",
+      "content_sha256": "d8f0b359132dbf39e66e13841d2bd3b367bcf11ab75861f236103bf65efb75e8",
+      "last_changed": "2026-09-29T19:17:30.607Z",
       "priority": 80
     },
     "/chum/proof/": {
@@ -3405,8 +3405,8 @@
     },
     "/chum/products/opportunity-fabric/ai-conformance.json": {
       "path": "/chum/products/opportunity-fabric/ai-conformance.json",
-      "content_sha256": "7fe84c3b89492cd4a6ce0cb70a22b39d4021d0928d23b91a37045a7d28df9274",
-      "last_changed": "2026-09-29T19:10:55.004Z",
+      "content_sha256": "384e36c6f5d2ebfb5379137b776a7c4c7efcbf8c8e143d0c7361ba65067ef2ed",
+      "last_changed": "2026-09-29T19:17:30.033Z",
       "priority": 94
     },
     "/chum/products/payflow/": {

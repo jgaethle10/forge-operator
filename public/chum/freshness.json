@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-29T19:16:09.879Z",
+  "updated_at": "2026-09-29T19:17:30.607Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -12,27 +12,22 @@
   "latest_change_batch": [
     {
       "path": "/chum/crawler-radar.json",
-      "last_changed": "2026-09-29T19:16:09.879Z",
+      "last_changed": "2026-09-29T19:17:30.607Z",
       "priority": 80
     },
     {
       "path": "/chum/crawler-radar.txt",
-      "last_changed": "2026-09-29T19:16:09.879Z",
+      "last_changed": "2026-09-29T19:17:30.607Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-29T19:16:09.879Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/strike/",
-      "last_changed": "2026-09-29T19:16:09.879Z",
+      "last_changed": "2026-09-29T19:17:30.607Z",
       "priority": 80
     },
     {
       "path": "/chum/strike/index.json",
-      "last_changed": "2026-09-29T19:16:09.879Z",
+      "last_changed": "2026-09-29T19:17:30.607Z",
       "priority": 80
     }
   ],
@@ -40,30 +35,36 @@
     {
       "path": "/chum/crawler-radar.json",
       "url": "/chum/crawler-radar.json",
-      "last_changed": "2026-09-29T19:16:09.879Z",
+      "last_changed": "2026-09-29T19:17:30.607Z",
       "priority": 80
     },
     {
       "path": "/chum/crawler-radar.txt",
       "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-09-29T19:16:09.879Z",
+      "last_changed": "2026-09-29T19:17:30.607Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
       "url": "/chum/hot/index.json",
-      "last_changed": "2026-09-29T19:16:09.879Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/strike/",
-      "url": "/chum/strike/",
-      "last_changed": "2026-09-29T19:16:09.879Z",
+      "last_changed": "2026-09-29T19:17:30.607Z",
       "priority": 80
     },
     {
       "path": "/chum/strike/index.json",
       "url": "/chum/strike/index.json",
+      "last_changed": "2026-09-29T19:17:30.607Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/products/opportunity-fabric/ai-conformance.json",
+      "url": "/chum/products/opportunity-fabric/ai-conformance.json",
+      "last_changed": "2026-09-29T19:17:30.033Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/strike/",
+      "url": "/chum/strike/",
       "last_changed": "2026-09-29T19:16:09.879Z",
       "priority": 80
     },
@@ -220,12 +221,6 @@
     {
       "path": "/chum/products/opportunity-fabric/",
       "url": "/chum/products/opportunity-fabric/",
-      "last_changed": "2026-09-29T19:10:55.004Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/opportunity-fabric/ai-conformance.json",
-      "url": "/chum/products/opportunity-fabric/ai-conformance.json",
       "last_changed": "2026-09-29T19:10:55.004Z",
       "priority": 94
     },
