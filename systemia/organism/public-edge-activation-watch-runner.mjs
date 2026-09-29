@@ -242,13 +242,20 @@ const watcher=new PublicEdgeActivationWatcher({
       process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL||
       'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway'
     ),
+    fabric_mcp_path:String(
+      process.env.EVERCRAFT_FABRIC_MCP_PATH||'/mcp'
+    ),
+    openai_challenge_token:String(
+      process.env.OPENAI_APPS_CHALLENGE_TOKEN||''
+    ),
   },
   requiredPlacementLabels:String(
     process.env.EVERCRAFT_PUBLIC_EDGE_REQUIRED_LABELS||'public-edge'
   ).split(',').map(x=>x.trim()).filter(Boolean),
   requestedHostname:String(
-    process.env.EVERCRAFT_PUBLIC_EDGE_REQUESTED_HOSTNAME||'evercraft-specialists'
+    process.env.EVERCRAFT_PUBLIC_EDGE_REQUESTED_HOSTNAME||'evercraft-fabric'
   ),
+  stableHostname:true,
   endpointTimeoutMs:Number(process.env.EVERCRAFT_EDGE_ENDPOINT_TIMEOUT_MS||1000),
   leaseTtlMs:Number(process.env.EVERCRAFT_EDGE_LEASE_TTL_MS||3600000),
   renewEveryMs:Number(process.env.EVERCRAFT_EDGE_RENEW_EVERY_MS||1800000),
