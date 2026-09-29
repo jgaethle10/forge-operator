@@ -29,6 +29,28 @@ write('public/.well-known/evercraft-products.json', JSON.stringify({
     { product_key: 'alpha', name: 'Alpha Duplicate', canonical_url: 'not-a-url' }
   ]
 }, null, 2));
+write('systemia/capability-mesh/adoption-coverage.json', JSON.stringify({
+  schema: 'evercraft.capability-mesh.coverage.v1',
+  summary: {
+    public_product_count: 2,
+    explicit_contract_count: 0,
+    missing_contract_count: 2
+  },
+  priority_queues: {
+    direct_door_without_contract: ['alpha'],
+    incomplete_contracts: [],
+    all_missing_contracts: ['alpha', 'beta']
+  },
+  specialist_only: [{
+    specialist_slug: 'held-specialist',
+    direct_door_state: 'yard_runtime_proven_public_route_pending'
+  }],
+  products: [
+    { product_key: 'alpha', contract_state: 'missing', gaps: ['product_contract_missing'] },
+    { product_key: 'beta', contract_state: 'missing', gaps: ['product_contract_missing'] }
+  ]
+}, null, 2));
+
 write('package.json', JSON.stringify({
   scripts: {
     ok: 'node scripts/ok.mjs',
@@ -59,6 +81,17 @@ assert.ok(codes.has('package_script_target_missing'));
 assert.ok(codes.has('workflow_script_missing'));
 assert.ok(codes.has('workflow_target_missing'));
 assert.ok(codes.has('resident_service_executable_not_found'));
+assert.ok(codes.has('direct_door_contract_missing'));
+assert.ok(codes.has('product_trust_chain_contract_missing'));
+assert.ok(codes.has('specialist_door_not_in_public_product_index'));
+assert.equal(scan.inventory.capability_mesh.missing_contract_count, 2);
+
+const directContractFinding = scan.findings.find((row) => row.code === 'direct_door_contract_missing');
+assert.equal(directContractFinding.severity, 'medium');
+assert.equal(directContractFinding.human_gate_required, false);
+
+const specialistReview = scan.findings.find((row) => row.code === 'specialist_door_not_in_public_product_index');
+assert.equal(specialistReview.human_gate_required, true);
 
 const first = buildPortfolioDelta({ active_findings: [] }, scan.findings);
 assert.equal(first.added.length, scan.findings.length);
