@@ -81,9 +81,60 @@ test('caller cannot choose a different Meter metric because metric comes from th
   assert.equal(Object.prototype.hasOwnProperty.call(prepared.execution_gate_input, 'meter_metric'), false);
 });
 
-test('missing product contracts fail closed instead of inheriting AliEV defaults', () => {
+test('ForensiScope contract exposes only the currently proven route-classification action', () => {
+  const policy = compileProductRuntimePolicy('forensiscope', process.cwd());
+  assert.equal(policy.authority.passport_product, 'forensiscope');
+  assert.deepEqual(policy.authority.scopes, ['classify_media_route']);
+  assert.equal(policy.meter.state, 'not_required');
+  assert.equal(policy.intake.state, 'not_required');
+  assert.equal(policy.execution.gate_required, true);
+  assert.deepEqual(policy.execution.actions, [{ scope: 'classify_media_route' }]);
+  assert.equal(policy.route.specialist_slug, 'forensiscope');
+  assert.equal(policy.route.direct_callable, true);
+  assert.equal(policy.runtime_verified, false);
+  assert.equal(policy.boundaries?.runtime_analysis_action_contracted, false);
+});
+
+test('ForensiScope route classification compiles without inventing a Meter charge or media upload', () => {
+  const prepared = buildExecutionGateInput({
+    product_key: 'forensiscope',
+    actor_ref: 'agent:media-router',
+    scope: 'classify_media_route',
+    request: {
+      mediaType: 'video',
+      assistantCanFullyProcess: false,
+      failureCode: 'duration_exceeded',
+    },
+    idempotency_key: 'capability-mesh:forensiscope:route:001',
+    require_direct_specialist: true,
+  });
+
+  const input = prepared.execution_gate_input;
+  assert.equal(input.passport_product, 'forensiscope');
+  assert.equal(input.scope, 'classify_media_route');
+  assert.equal(input.specialist_slug, 'forensiscope');
+  assert.equal(Object.prototype.hasOwnProperty.call(input, 'meter'), false);
+  assert.equal(prepared.route_snapshot.direct_callable, true);
+  assert.equal(prepared.grants_execution_authority, false);
+});
+
+test('ForensiScope does not expose an unverified machine media-analysis action', () => {
   assert.throws(
-    () => compileProductRuntimePolicy('forensiscope', process.cwd()),
+    () =>
+      buildExecutionGateInput({
+        product_key: 'forensiscope',
+        actor_ref: 'agent:media-router',
+        scope: 'media.analyze',
+        request: { content_ref: 'some-media' },
+        idempotency_key: 'capability-mesh:forensiscope:unverified-analysis',
+      }),
+    /scope_not_declared_in_authority_contract/
+  );
+});
+
+test('missing product contracts fail closed instead of inheriting another product defaults', () => {
+  assert.throws(
+    () => compileProductRuntimePolicy('findmypart', process.cwd()),
     /product_contract_missing/
   );
 });
@@ -99,8 +150,8 @@ test('context binding describes scopes but grants no access', () => {
 
 test('generated runtime policy artifact covers only explicitly contracted products', () => {
   const rendered = renderRuntimePolicies(process.cwd());
-  assert.equal(rendered.policy_count, 1);
-  assert.deepEqual(rendered.policies.map((row) => row.product_key), ['aliev']);
+  assert.equal(rendered.policy_count, 2);
+  assert.deepEqual(rendered.policies.map((row) => row.product_key), ['aliev', 'forensiscope']);
   assert.equal(rendered.truth_boundary.undeclared_scope_fails_closed, true);
   assert.equal(rendered.truth_boundary.undeclared_meter_metric_fails_closed, true);
 });

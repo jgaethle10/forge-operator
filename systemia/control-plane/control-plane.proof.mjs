@@ -229,9 +229,9 @@ const missingProductContract = admitMission({
     tasks: [
       {
         work_key: 'missing-product-contract',
-        work_type: 'video',
-        product_key: 'forensiscope',
-        action_scope: 'media.process',
+        work_type: 'execute',
+        product_key: 'findmypart',
+        action_scope: 'parts.search',
       }
     ]
   }

@@ -45,7 +45,7 @@ test('AliEV canary contract binds the shared trust-chain primitives without clai
 
 test('missing product contracts fail visible instead of being inferred', () => {
   const mesh = renderCapabilityMesh(process.cwd());
-  const missing = mesh.products.find((row) => row.product_key === 'forensiscope');
+  const missing = mesh.products.find((row) => row.product_key === 'findmypart');
 
   assert.ok(missing);
   assert.equal(missing.contract_state, 'missing');

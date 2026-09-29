@@ -72,6 +72,7 @@ export function compileProductRuntimePolicy(productKey, root = process.cwd()) {
     receipt_reconciliation: laneCopy(contract.receipt_reconciliation),
     rollback: laneCopy(contract.rollback),
     compatibility: laneCopy(contract.compatibility),
+    boundaries: contract.boundaries ? laneCopy(contract.boundaries) : null,
     route: door
       ? {
           specialist_slug: contract.specialist_slug,
