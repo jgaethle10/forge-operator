@@ -1,0 +1,52 @@
+name: Systemia Merge Control
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  merge_group:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: systemia-merge-control-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  admission:
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout full history
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Prove coordination policy
+        run: node --test tests/merge-admission.test.mjs
+
+      - name: Admit against current main
+        id: admission
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          SYSTEMIA_BASE_REF: ${{ github.base_ref || 'main' }}
+          SYSTEMIA_PR_NUMBER: ${{ github.event.pull_request.number || 0 }}
+          SYSTEMIA_MAX_BEHIND: "20"
+        run: node systemia/coordination/merge-admission.mjs
+
+      - name: Upload coordination receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: systemia-merge-admission-${{ github.event.pull_request.number || github.run_id }}
+          path: artifacts/coordination/merge-admission.json
+          if-no-files-found: error
+          retention-days: 14
