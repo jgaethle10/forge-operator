@@ -9,6 +9,15 @@ const MACHINE_COMMERCE_GATEWAY_URL =
   process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL ||
   LIVE_CATALOG_URL.split('?', 1)[0];
 const TIMEOUT_MS = 20000;
+const CONFORMANCE_PATH = 'conformance/products.json';
+const conformance = fs.existsSync(CONFORMANCE_PATH)
+  ? JSON.parse(fs.readFileSync(CONFORMANCE_PATH, 'utf8'))
+  : { products: [] };
+const conformanceByCapabilityId = new Map(
+  (conformance.products || [])
+    .filter((product) => product?.machine_commerce_public_id)
+    .map((product) => [String(product.machine_commerce_public_id), product])
+);
 
 function stable(value) {
   if (Array.isArray(value)) return value.map(stable);
@@ -26,6 +35,10 @@ function semanticSnapshot(snapshot) {
 
 function publicOffer(offer) {
   const publicId = String(offer.public_id || '');
+  const productConformance = conformanceByCapabilityId.get(publicId) || null;
+  const liveCanaryEvidence = String(
+    offer?.live_canary_evidence || productConformance?.live_canary_evidence || ''
+  ).trim() || null;
   const sourcePublicUrl = String(offer.public_url || '').trim();
   const fallbackPublicUrl = publicId
     ? `${MACHINE_COMMERCE_GATEWAY_URL}?view=service&public_id=${encodeURIComponent(publicId)}`
@@ -47,6 +60,7 @@ function publicOffer(offer) {
     public_url_source: sourcePublicUrl ? 'source_catalog' : 'machine_commerce_review_fallback',
     payment_authority: String(offer.payment_authority || ''),
     invocation_status: String(offer.invocation_status || ''),
+    live_canary_evidence: liveCanaryEvidence,
     catalog_version: String(offer.catalog_version || '')
   };
 }
