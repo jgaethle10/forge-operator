@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {
   executeFabricDirectoryRpc,
   fabricDirectoryTools,
+  loadFabricCatalogFromRepository,
   matchFabricCapabilities,
   normalizeFabricCatalog,
   validateOpenAiChallengeToken,
@@ -29,6 +30,13 @@ const catalog=[
     connections:[],
   },
 ];
+
+test('Fabric boots from the canonical CHUM capability index without a manual routing table',()=>{
+  const canonical=loadFabricCatalogFromRepository();
+  assert.ok(canonical.length>=40);
+  assert.ok(canonical.some((x)=>x.public_id==='findmypart-paid-hunt-v1'));
+  assert.ok(canonical.some((x)=>x.public_id==='aliev-site-opportunity-snapshot-v1'));
+});
 
 test('Fabric catalog normalizes and intent matching finds the problem-native capability',()=>{
   const normalized=normalizeFabricCatalog(catalog);
