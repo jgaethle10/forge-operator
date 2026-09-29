@@ -65,4 +65,6 @@ Cutover requires:
 
 Functional MCP health and discovery-copy quality are separate gates: missing/failed tools block cutover; wording drift is tracked for repair but does not masquerade as a runtime outage.
 
+Until the sovereign HTTPS DeploymentReceipt is independently verified, the existing Base44 MCP remains the live compatibility route. Registry, plugin, and discovery URLs must not switch early.
+
 No Base44 publish step is part of the target architecture.
