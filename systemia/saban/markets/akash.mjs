@@ -170,7 +170,7 @@ deployment:
 export function uactPerBlockToUsdHour(amount){
   const micro=Number(amount);
   if(!Number.isFinite(micro)||micro<0) return null;
-  return (micro/1_000_000)*600;
+  return Number((((micro/1_000_000)*600)).toFixed(9));
 }
 
 function normalizeBid(bid,demand,manifest){
