@@ -1,8 +1,9 @@
-name: EPS social Yard canary
+name: EPS social Yard continuity
 
 on:
   push:
     branches:
+      - main
       - systemia/eps-social-yard-canary-20260929
     paths:
       - 'systemia/compute/runtime-node.mjs'
@@ -11,6 +12,8 @@ on:
       - 'systemia/organism/eps-social-continuity.mjs'
       - '.github/workflows/eps-social-yard-canary.yml'
   workflow_dispatch:
+  schedule:
+    - cron: '*/30 * * * *'
 
 permissions:
   contents: read
