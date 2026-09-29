@@ -8,6 +8,7 @@ import { GoogleGenAI, Type } from '@google/genai';
 import { createServer as createViteServer } from 'vite';
 import { rankOffers, rankDiscoveryCandidates } from './systemia/chum/discovery-router.mjs';
 import { transcriptionCapabilityStatus } from './systemia/forensiscope/transcription-engine.mjs';
+import { registerForensiScopeMcp } from './systemia/forensiscope/mcp.js';
 import { rankPain } from './systemia/chum/pain-index-lib.mjs';
 import { createAttributionEvent, issueReferralToken, PUBLIC_ATTRIBUTION_STAGES } from './systemia/chum/attribution.ts';
 import { huntLiveIntent } from './systemia/chum/live-intent-hunter.mjs';
@@ -168,6 +169,7 @@ function rateLimit(maxRequests: number, windowMs: number) {
 
 app.use(express.json({ limit: '10mb', type: ['application/json', 'application/*+json'] }));
 registerRivetReportGateway(app);
+registerForensiScopeMcp(app);
 registerSpecialistHandoffMcps(app, { gatewayUrl: machineCommerceGatewayUrl });
 
 const CENTRAL_MACHINE_COMMERCE_MCP =
