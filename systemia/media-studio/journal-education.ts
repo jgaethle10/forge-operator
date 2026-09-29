@@ -178,6 +178,7 @@ export function compileJournalEducationStage(
   if (!hasMedia(brief.visual_story) && rights !== 'verified' && rights !== 'not_required') {
     throw new Error('Journal/Fallen visual rights state is unresolved.');
   }
+  const admittedRights: 'verified' | 'not_required' = rights === 'verified' ? 'verified' : 'not_required';
 
   const visualEvidenceRefCount = assertGroundedVisuals(brief);
   const stageInput: WorldIntelStageInput = {
@@ -199,7 +200,7 @@ export function compileJournalEducationStage(
       stage_id: stage.id,
       status: 'accepted',
       freshness_state: freshness,
-      visual_rights_state: rights,
+      visual_rights_state: admittedRights,
       source_refs: sourceRefs,
       evidence_refs: evidenceRefs,
       visual_evidence_ref_count: visualEvidenceRefCount,
