@@ -2,6 +2,14 @@ import { createFeedAdapter } from '../feed-adapter.mjs';
 import { coarseCellFromGeometry } from '../coarse-geo.mjs';
 
 export const USGS_ALL_HOUR_GEOJSON = 'https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson';
+export const USGS_SOURCE_CONTRACT = Object.freeze({
+  source_id: 'usgs-earthquakes',
+  domain: 'environmental',
+  independence_group: 'usgs',
+  expected_max_age_seconds: 180,
+  required: true,
+  description: 'USGS real-time earthquake GeoJSON feed.'
+});
 
 const usgsAdapter = createFeedAdapter({
   adapter_id: 'usgs-earthquake-feed',
@@ -95,4 +103,36 @@ export async function fetchUsgsEarthquakes({
     throw new Error('USGS request failed with status ' + String(response?.status ?? 'unknown'));
   }
   return parseUsgsEarthquakes(await response.json());
+}
+
+
+export async function pollUsgsEarthquakes(options = {}) {
+  const checkedAt = options.checkedAt || new Date().toISOString();
+  try {
+    const observations = await fetchUsgsEarthquakes(options);
+    return {
+      contract: USGS_SOURCE_CONTRACT,
+      receipt: {
+        source_id: USGS_SOURCE_CONTRACT.source_id,
+        status: 'ok',
+        checked_at: checkedAt,
+        item_count: observations.length
+      },
+      observations,
+      error: null
+    };
+  } catch (error) {
+    return {
+      contract: USGS_SOURCE_CONTRACT,
+      receipt: {
+        source_id: USGS_SOURCE_CONTRACT.source_id,
+        status: 'error',
+        checked_at: checkedAt,
+        item_count: 0,
+        error_code: String(error?.message || error).slice(0, 120)
+      },
+      observations: [],
+      error: String(error?.message || error)
+    };
+  }
 }
