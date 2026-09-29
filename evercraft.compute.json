@@ -32,7 +32,10 @@
       "/chum/hot/index.json",
       "/mcp/ibmi-rescue",
       "/mcp/foundry-app-escape",
-      "/mcp/site-survive"
+      "/mcp/site-survive",
+      "/.well-known/agent-card.json",
+      "/.well-known/agent.json",
+      "/a2a/message:send"
     ],
     "specialist_mcp_paths": [
       "/mcp/ibmi-rescue",
@@ -52,11 +55,16 @@
       "CHUM_ATTRIBUTION_SECRET",
       "CHUM_ATTRIBUTION_SINK_URL",
       "CHUM_ATTRIBUTION_SINK_TOKEN",
-      "CHUM_ATTRIBUTION_INGEST_TOKEN"
+      "CHUM_ATTRIBUTION_INGEST_TOKEN",
+      "EVERCRAFT_RELEASE_REF",
+      "EVERCRAFT_DEPLOYMENT_RECEIPT_REF"
     ],
     "rules": {
       "CHUM_PUBLIC_ORIGIN": "May be set only to a public route independently verified in the current Yard DeploymentReceipt.",
-      "attribution": "Missing attribution configuration must degrade to untracked public discovery, never fabricated referral or revenue receipts."
+      "attribution": "Missing attribution configuration must degrade to untracked public discovery, never fabricated referral or revenue receipts.",
+      "EVERCRAFT_RELEASE_REF": "Must be an immutable release identifier supplied by the deployment fabric. Public verification must never synthesize it.",
+      "EVERCRAFT_DEPLOYMENT_RECEIPT_REF": "Must be a sha256 receipt reference bound by Yard/Compute to the deployed Forge runtime. Public verification must never synthesize it.",
+      "A2A_PUBLICATION": "A2A may be described as release-candidate in source, but live public support requires an external HTTPS canary against the deployed Forge runtime."
     }
   },
   "capacity": {
@@ -97,6 +105,20 @@
       "route_binding_requires_deployment_receipt": true,
       "route_binding_requires_instance_match": true,
       "founder_login_required": false
+    },
+    "full_forge_public_origin": {
+      "runtime": "forge-operator",
+      "mode": "dynamic_http_application",
+      "public_route_requires_independent_verification": true,
+      "health_path": "/api/health",
+      "a2a_agent_card": "/.well-known/agent-card.json",
+      "a2a_message_send": "/a2a/message:send",
+      "verified_origin_receipt": "/.well-known/evercraft-runtime-origin.json",
+      "required_runtime_binding": [
+        "EVERCRAFT_RELEASE_REF",
+        "EVERCRAFT_DEPLOYMENT_RECEIPT_REF"
+      ],
+      "truth_boundary": "A published container image, local health check, static CHUM origin, or source merge is not proof that the full Forge A2A runtime is publicly reachable."
     }
   },
   "release_gates": [
