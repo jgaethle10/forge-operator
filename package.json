@@ -40,7 +40,7 @@
     "test:chum-router": "node systemia/chum/discovery-router.test.mjs",
     "proof:organism": "node systemia/organism/proof.mjs",
     "proof:goal-runtime": "node systemia/organism/goal-runtime.proof.mjs",
-    "proof:systemia": "npm run proof:organism && npm run proof:goal-runtime && npm run proof:goal-store && npm run proof:legacy-rescue-watch && npm run proof:portfolio-sentinel",
+    "proof:systemia": "npm run proof:organism && npm run proof:goal-runtime && npm run proof:goal-store && npm run proof:legacy-rescue-watch && npm run proof:portfolio-sentinel && npm run proof:ibmi-rescue-fulfillment",
     "goal": "node systemia/organism/goal-cli.mjs",
     "proof:goal-store": "node systemia/organism/goal-store.proof.mjs",
     "chum:index": "node systemia/chum/build-pain-index.mjs",
@@ -200,7 +200,8 @@
     "test:sentinel-event-graph": "node systemia/sentinel/event-graph.test.mjs",
     "proof:sentinel-event-graph": "node systemia/sentinel/event-graph-proof.mjs",
     "test:sentinel-source-health": "node systemia/sentinel/source-health.test.mjs",
-    "proof:sentinel-source-health": "node systemia/sentinel/source-health-proof.mjs"
+    "proof:sentinel-source-health": "node systemia/sentinel/source-health-proof.mjs",
+    "proof:ibmi-rescue-fulfillment": "node systemia/organism/ibmi-rescue-fulfillment.proof.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
