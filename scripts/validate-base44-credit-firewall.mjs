@@ -32,44 +32,43 @@ for (const workflow of [
   'systemia_kaidance_internal_wake_v5_every_5_minutes',
   'systemia_capability_verification_every_15_minutes',
   'systemia_collider_hourly',
+  'systemia_eps_social_continuity_every_30_minutes',
 ]) {
   if (!frozen.has(workflow)) fail(`missing frozen internal workflow: ${workflow}`);
 }
 if (frozen.size !== (cfg.frozen_internal_workflows || []).length) fail('frozen workflow list contains duplicates');
 
 const exceptions = cfg.temporary_legacy_exceptions || [];
-if (exceptions.length > 1) fail('legacy schedule exception count expanded without review');
-const social = exceptions[0];
-if (!social || social.workflow !== 'systemia_eps_social_continuity_every_30_minutes') {
-  fail('only the bounded EPS social continuity exception is currently permitted');
+if (exceptions.length !== 0) fail('no recurring Base44 scheduler exception may remain after EPS cutover');
+
+const retired = cfg.retired_legacy_workflows || [];
+const social = retired.find(
+  (row) => row.workflow === 'systemia_eps_social_continuity_every_30_minutes'
+);
+if (!social) fail('EPS social Base44 scheduler retirement record is missing');
+if (!['source_frozen_observation_pending','verified_retired'].includes(String(social.state || ''))) {
+  fail('EPS social retirement state is invalid');
 }
-if (social.new_internal_work_fanout_allowed !== false) fail('legacy exception may not fan out new internal work');
-if (social.replacement_workflow !== 'systemia/organism/eps-social-continuity.workflow.json') {
-  fail('EPS social exception must point to the Systemia Core replacement workflow');
+if (!String(social.rollback_checkpoint || '').trim()) {
+  fail('EPS social rollback checkpoint is missing');
 }
-if (social.replacement_scheduler !== 'systemia/core/resident-supervisor.mjs') {
-  fail('EPS social exception must point to the Systemia Core resident supervisor');
+if (!String(social.main_cutover_receipt || '').startsWith('sha256:')) {
+  fail('EPS social main cutover receipt is missing');
 }
-if (social.replacement_state !== 'live_canary_verified_recurring_main_cutover_pending') {
-  fail('EPS social replacement state must reflect the verified live canary while main cutover remains pending');
-}
-if (!String(social.live_canary_receipt || '').startsWith('sha256:')) {
-  fail('EPS social live canary receipt is missing');
-}
-if (!['no_op','published_verified'].includes(String(social.live_canary_result || ''))) {
-  fail('EPS social live canary result must be an accepted verified outcome');
+if (!['no_op','published_verified'].includes(String(social.main_cutover_result || ''))) {
+  fail('EPS social main cutover result is invalid');
 }
 if (social.workload_identity !== 'github_oidc') {
   fail('EPS social transition workload must use federated GitHub OIDC identity');
 }
-if (social.named_cloud_required !== false) {
-  fail('EPS social transition must not require a named cloud provider');
+if (Number(social.transition_cadence_seconds) !== 1800) {
+  fail('EPS social transition cadence must remain 1800 seconds');
 }
-if (social.persistent_runtime_proven !== false) {
-  fail('EPS social ephemeral canary must not be mislabeled persistent runtime');
+if (social.state === 'verified_retired' && social.absence_window_verified !== true) {
+  fail('verified EPS retirement requires an observed absence window');
 }
-if (social.retirement_gate !== 'yard_cycle_live_plus_verified_clip_response_plus_observation_window') {
-  fail('EPS social Base44 schedule retirement gate is incomplete');
+if (social.state === 'source_frozen_observation_pending' && social.absence_window_verified !== false) {
+  fail('pending EPS retirement must not claim the absence window passed');
 }
 
 for (const gate of [
@@ -94,6 +93,7 @@ console.log(JSON.stringify({
   status: 'BASE44_CREDIT_FIREWALL_PASS',
   frozen_internal_workflows: frozen.size,
   temporary_legacy_exceptions: exceptions.length,
+  retired_legacy_workflows: retired.length,
   replacement_scheduler: cfg.replacement.scheduler,
   replacement_runtime: cfg.replacement.runtime,
 }));
