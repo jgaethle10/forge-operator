@@ -112,6 +112,11 @@ export function buildFabricPublicManifest() {
         description: 'Match a plain-language need to truthful public Evercraft capabilities.',
       },
       {
+        key: 'fabric.mission.plan',
+        public: true,
+        description: 'Compose a broad goal into a cross-capability Evercraft mission candidate graph without granting execution or payment authority.',
+      },
+      {
         key: 'fabric.connect',
         public: false,
         description: 'Attach an authenticated host instance to the fabric and return a connection receipt.',
