@@ -28,7 +28,7 @@
     "one_execution_per_bucket_enforced": true,
     "secret_not_persisted_in_receipts": true,
     "live_yard_cycle_verified": true,
-    "legacy_base44_schedule_retired": false,
+    "legacy_base44_schedule_retired": true,
     "live_yard_cycle_verified_at": "2026-09-29T17:11:13.283Z",
     "live_result": "no_op",
     "live_reason": "eps_180_minute_cooldown",
@@ -41,7 +41,14 @@
     "persistent_runtime_proven": false,
     "named_cloud_required": false,
     "workload_identity_verified": "github_oidc",
-    "source_release_ref": "c5fc58950cf12d57a28db74e1baad4e67b000916"
+    "source_release_ref": "c5fc58950cf12d57a28db74e1baad4e67b000916",
+    "legacy_base44_schedule_retired_at": "2026-09-29T17:59:00Z",
+    "legacy_base44_rollback_checkpoint": "6abbfd6656a50022c2b01b8a",
+    "main_branch_cutover_verified": true,
+    "main_branch_cutover_run_id": "36603707538",
+    "main_branch_cutover_receipt": "sha256:fb2d5cb093e5906c247fa41745c90cba8b023c0cbade55bba510622778ce8e33",
+    "legacy_last_observed_wake_at": "2026-09-29T17:32:33.021Z",
+    "legacy_absence_window_verified": false
   },
   "acceptance": {
     "required_result": "no_op_or_published_verified",
@@ -51,10 +58,9 @@
     "legacy_schedule_retirement_requires_live_replacement": true
   },
   "blockers": [
-    "Merge the verified recurrent bootstrap onto main so the 30-minute transition schedule exists on the default branch.",
-    "Freeze the legacy Base44 social schedule with a rollback checkpoint.",
-    "Observe the replacement after cutover and confirm the legacy Base44 wake does not recur."
+    "Observe a scheduled main-branch replacement recurrence after the Base44 freeze.",
+    "Confirm no new legacy Base44 social wake appears across the same 30-minute window."
   ],
-  "next_action": "merge the verified recurrent bootstrap, freeze the Base44 30-minute schedule, then verify one replacement recurrence and one absent legacy wake window",
+  "next_action": "verify one scheduled main-branch replacement run and one absent legacy Base44 wake window, then close this migration slice",
   "destructive_cutover_allowed": false
 }

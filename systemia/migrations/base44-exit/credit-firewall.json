@@ -33,26 +33,10 @@
     "systemia_internal_wake_every_5_minutes",
     "systemia_kaidance_internal_wake_v5_every_5_minutes",
     "systemia_capability_verification_every_15_minutes",
-    "systemia_collider_hourly"
+    "systemia_collider_hourly",
+    "systemia_eps_social_continuity_every_30_minutes"
   ],
-  "temporary_legacy_exceptions": [
-    {
-      "workflow": "systemia_eps_social_continuity_every_30_minutes",
-      "class": "customer_facing_publication_continuity",
-      "reason": "Do not silently stop an already-authorized publication lane before Evercraft Clip has an independently verified off-Base44 scheduler.",
-      "retirement_gate": "yard_cycle_live_plus_verified_clip_response_plus_observation_window",
-      "new_internal_work_fanout_allowed": false,
-      "replacement_workflow": "systemia/organism/eps-social-continuity.workflow.json",
-      "replacement_scheduler": "systemia/core/resident-supervisor.mjs",
-      "replacement_state": "live_canary_verified_recurring_main_cutover_pending",
-      "live_canary_receipt": "sha256:fc17f8f8a80ca4f2e3ce734d6ad1299f8a87ae94e059515e093efff168343e1e",
-      "live_canary_result": "no_op",
-      "workload_identity": "github_oidc",
-      "named_cloud_required": false,
-      "persistent_runtime_proven": false,
-      "transition_bootstrap": ".github/workflows/eps-social-yard-canary.yml"
-    }
-  ],
+  "temporary_legacy_exceptions": [],
   "cutover_gates": [
     "replacement_runtime_live",
     "kaidance_pulse_healthy",
@@ -65,5 +49,24 @@
     "scheduled_base44_systemia_wake_when_manual_fire_only_active": true,
     "unverified_runtime_must_not_be_called_migrated": true,
     "source_configuration_must_not_be_called_live_cutover_proof": true
-  }
+  },
+  "retired_legacy_workflows": [
+    {
+      "workflow": "systemia_eps_social_continuity_every_30_minutes",
+      "retired_at": "2026-09-29T17:59:00Z",
+      "state": "source_frozen_observation_pending",
+      "rollback_checkpoint": "6abbfd6656a50022c2b01b8a",
+      "rollback_git_commit": "3ef97f12cc3bebfb628d406e97edacdf605468b3",
+      "replacement_workflow": "systemia/organism/eps-social-continuity.workflow.json",
+      "replacement_scheduler": "systemia/core/resident-supervisor.mjs",
+      "transition_bootstrap": ".github/workflows/eps-social-yard-canary.yml",
+      "transition_cadence_seconds": 1800,
+      "workload_identity": "github_oidc",
+      "main_cutover_run_id": "36603707538",
+      "main_cutover_receipt": "sha256:fb2d5cb093e5906c247fa41745c90cba8b023c0cbade55bba510622778ce8e33",
+      "main_cutover_result": "no_op",
+      "last_legacy_wake_at": "2026-09-29T17:32:33.021Z",
+      "absence_window_verified": false
+    }
+  ]
 }
