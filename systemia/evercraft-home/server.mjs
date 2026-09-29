@@ -73,6 +73,7 @@ export async function startEvercraftHomeServer({
   const passport = authMode === "passport" ? new EvercraftPassport({ stateDir: passportStateDir }) : null;
   const instanceId = "home_" + randomUUID();
   let closed = false;
+  let deploymentReceiptRef = "";
 
   function sessionFor(req, scope = "home.read") {
     if (authMode === "local") {
@@ -274,7 +275,25 @@ export async function startEvercraftHomeServer({
       listen_scope: loopback ? "loopback" : "non_loopback",
       external_ai_required: false,
       legacy_provider_required: false,
+      deployment_receipt_bound: Boolean(deploymentReceiptRef),
+      deployment_receipt_ref: deploymentReceiptRef || null,
     }),
+    setDeploymentReceipt: (receiptRef) => {
+      const ref = String(receiptRef || "").trim();
+      if (!ref) throw new Error("deployment_receipt_ref_required");
+      deploymentReceiptRef = ref;
+      return {
+        ok: !closed,
+        service: "evercraft-home",
+        runtime: "Evercraft Compute",
+        workload_class: "systemia.evercraft-home.v1",
+        authority: "evercraft",
+        auth_mode: authMode,
+        instance_id: instanceId,
+        deployment_receipt_bound: true,
+        deployment_receipt_ref: deploymentReceiptRef,
+      };
+    },
     close: async () => {
       if (closed) return;
       closed = true;
