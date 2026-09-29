@@ -6,11 +6,11 @@ The intended public listing name is **Evercraft**. Users should not need to know
 
 ## Current transport
 
-The package currently points at the receipt-backed universal Evercraft Machine Commerce MCP:
+Until an owned external canary passes, the checked-in package keeps the receipt-backed universal Evercraft Machine Commerce MCP as a compatibility transport. It is not the long-term authority boundary.
 
-`https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp`
+Evercraft Fabric has an Evercraft-owned read-only MCP directory implemented in `systemia/mcp/fabric-directory.mjs` and served by the specialist handoff runtime. When the external Public Edge canary proves trusted HTTPS, field enrollment, same-device binding, MCP initialization, tool discovery, safe tool calls, and read-only authority, `scripts/promote-openai-owned-fabric.mjs` rewrites the package to the verified owned `/mcp` origin and produces an OpenAI promotion receipt plus upload ZIP.
 
-That is a compatibility transport, not the long-term authority boundary. Evercraft Fabric also has an Evercraft-owned read-only MCP directory implemented in `systemia/mcp/fabric-directory.mjs` and served by the specialist handoff runtime. The package must move to that owned public HTTPS route only after the Yard produces a verified stable route receipt. Do not invent the future URL or claim that migration has happened before receipt.
+OpenAI treats a change of MCP origin as a new plugin submission rather than a normal version update. The cutover automation therefore prepares the owned-origin submission packet but does not claim provider approval or publication.
 
 ## Public-directory status
 
