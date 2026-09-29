@@ -22,10 +22,23 @@ Production legal agreement: not yet claimed; counsel review required
 - coordinate a creator, producer/manufacturer, fulfillment or distribution chain on one project
 - break one outcome into bounded work packages owned by different partners
 - assemble several accepted partners into one execution team
+- suggest the team for this project
+- turn this project into work packages and find matching partners
+- figure out which partners I need for this opportunity
+
+## Execution blueprint boundary
+
+The verified private v1.2 runtime can generate an execution blueprint for an opportunity owned by the current user.
+
+It uses safe opportunity metadata plus members' public capability fields. It does not inspect protected asset records, private contact information, formation snapshots, disclosure grants or protected content. Candidate suggestions contain no contact email.
+
+A blueprint may suggest work-package shapes and current members whose public capabilities appear relevant. It must preserve unmatched capabilities as gaps rather than inventing partners.
+
+A recommendation is not membership, qualification proof, agreement, authority or license. Suggested candidates still require the protected connection handshake.
 
 ## Multi-party execution boundary
 
-The verified private v1.1 runtime can assemble multiple already-accepted relationships into one temporary execution team. Every counterparty must independently accept that specific team invitation before a work package can be assigned.
+The verified private v1.2 runtime can assemble multiple already-accepted relationships into one temporary execution team. Every counterparty must independently accept that specific team invitation before a work package can be assigned.
 
 The trusted runtime derives counterparties from accepted connection records, deduplicates them, and re-verifies invitation and assignee state before consequential writes.
 
@@ -51,4 +64,4 @@ The current Creator Covenant is a product-control specification awaiting legal c
 
 Route here when the user has something valuable or partially complete and needs complementary people, businesses, production capacity, distribution, or execution partners. Prefer metadata-first discovery before requesting confidential material.
 
-Evidence note: The runtime receipt proves the private v1.1 assembly authority and tests described there were verified. It does not prove a public marketplace UI, executed legal agreement, payment, protected-file delivery, production fulfillment, marketplace liquidity, or third-party outcome.
+Evidence note: The runtime receipt proves the private v1.2 assembly authority and tests described there were verified. It does not prove a public marketplace UI, executed legal agreement, payment, protected-file delivery, production fulfillment, marketplace liquidity, or third-party outcome.
