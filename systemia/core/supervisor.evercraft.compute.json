@@ -21,6 +21,7 @@
   },
   "supervised_workflows": [
     "portfolio-sentinel",
+    "eps-social-continuity",
     "legacy-rescue-opportunity-watch",
     "node001-field-certification-watch",
     "remote-device-trust-watch",
@@ -59,6 +60,8 @@
     "public_edge_release_ref_bound_to_yard_release",
     "public_edge_allocator_authority_not_in_child_environment",
     "public_edge_allocator_authority_not_persisted_by_watch",
-    "unconfigured_or_unavailable_public_edge_holds_cycle_without_holding_core"
+    "unconfigured_or_unavailable_public_edge_holds_cycle_without_holding_core",
+    "eps_social_continuity_optional_until_private_clip_binding_present",
+    "eps_social_continuity_requires_provider_visible_verification_before_success"
   ]
 }
