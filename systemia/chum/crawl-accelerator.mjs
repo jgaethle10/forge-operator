@@ -7,6 +7,11 @@ const INDEXNOW_ENDPOINT = 'https://api.indexnow.org/indexnow';
 const INDEXNOW_KEY = '8aef5f814d0b9c2896c1bc753c65c9bc';
 const INDEXNOW_KEY_FILE = `${INDEXNOW_KEY}.txt`;
 
+const DYNAMIC_DISCOVERY_SOURCES = new Map([
+  ['/.well-known/agent-card.json', 'server.ts'],
+  ['/.well-known/agent.json', 'server.ts']
+]);
+
 function sha256Bytes(value) {
   return crypto.createHash('sha256').update(value).digest('hex');
 }
@@ -182,11 +187,24 @@ function publicFileForUrl(publicRoot, urlPath) {
   return null;
 }
 
+function localContentForUrl(root, publicRoot, urlPath) {
+  const publicFile = publicFileForUrl(publicRoot, urlPath);
+  if (publicFile) return { source: publicFile, bytes: fs.readFileSync(publicFile), dynamic: false };
+
+  const dynamicSource = DYNAMIC_DISCOVERY_SOURCES.get(String(urlPath || ''));
+  if (!dynamicSource) return null;
+  const source = path.join(root, dynamicSource);
+  if (!fs.existsSync(source) || !fs.statSync(source).isFile()) return null;
+  return { source, bytes: fs.readFileSync(source), dynamic: true };
+}
+
 export function crawlPriority(urlPath) {
   const value = String(urlPath || '');
   if (value.includes('/chum/commercial/')) return 112;
   if (value.includes('/chum/sitemaps/')) return 108;
   if (value.includes('/chum/answers/doors/')) return 100;
+  if (value.includes('/.well-known/agent-card.json')) return 104;
+  if (value.includes('/.well-known/agent.json')) return 102;
   if (value.includes('/chum/intents/')) return 98;
   if (value.includes('/chum/capabilities/')) return 96;
   if (value.includes('/chum/products/')) return 94;
@@ -298,7 +316,8 @@ function rewriteSitemap({ sitemapPath, paths, entries }) {
 
 async function remoteMatches({ origin, entry, publicRoot, timeoutMs = 10000 }) {
   const file = publicFileForUrl(publicRoot, entry.path);
-  if (!file) return { ok: false, reason: 'no_local_file' };
+  const dynamicAgentCard = entry.path === '/.well-known/agent-card.json' || entry.path === '/.well-known/agent.json';
+  if (!file && !dynamicAgentCard) return { ok: false, reason: 'no_local_file' };
 
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
@@ -313,6 +332,29 @@ async function remoteMatches({ origin, entry, publicRoot, timeoutMs = 10000 }) {
       signal: controller.signal
     });
     if (!response.ok) return { ok: false, reason: 'http_' + response.status, status: response.status };
+
+    if (dynamicAgentCard) {
+      let card;
+      try {
+        card = await response.json();
+      } catch {
+        return { ok: false, reason: 'agent_card_invalid_json', status: response.status };
+      }
+      const iface = Array.isArray(card?.supportedInterfaces) ? card.supportedInterfaces[0] : null;
+      const expectedBase = origin.replace(/\/$/, '') + '/a2a';
+      const valid =
+        card?.name === 'Evercraft CHUM Discovery' &&
+        iface?.protocolBinding === 'HTTP+JSON' &&
+        iface?.protocolVersion === '1.0' &&
+        iface?.url === expectedBase &&
+        card?.capabilities?.streaming === false &&
+        card?.capabilities?.pushNotifications === false;
+      return {
+        ok: valid,
+        reason: valid ? 'dynamic_agent_card_healthy' : 'dynamic_agent_card_contract_mismatch',
+        status: response.status
+      };
+    }
 
     // These two routes are intentionally rendered at request time, so a healthy 2xx
     // is the release gate instead of byte identity.
@@ -466,9 +508,9 @@ export async function buildCrawlPressure({
 
   for (const urlPath of paths) {
     if (urlPath === '/chum/crawl-state.json' || urlPath === '/chum/freshness.json' || urlPath === '/chum/freshness.xml') continue;
-    const file = publicFileForUrl(publicRoot, urlPath);
-    if (!file) continue;
-    const hash = sha256Bytes(fs.readFileSync(file));
+    const local = localContentForUrl(root, publicRoot, urlPath);
+    if (!local) continue;
+    const hash = sha256Bytes(local.bytes);
     const old = previous.entries?.[urlPath] || null;
     const changed = !old || old.content_sha256 !== hash;
     const entry = {

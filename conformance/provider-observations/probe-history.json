@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.provider-probe-history.v1",
-  "updated_at": "2026-09-29T02:29:27.879Z",
+  "updated_at": "2026-09-29T04:44:57.503Z",
   "max_records": 500,
   "records": [
     {
@@ -4262,6 +4262,42 @@
       "pickup_observed": false,
       "provider_receipt_sha256": "2559b45c6b0b044fd9d586ad40ac23edc0f92c664c61882b4a244588938a5f96",
       "response_sha256": "0dee00684e5fb272c6b83ee25f94a81d86d2a8948ddb54073972ded1472c0238",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "344183b9ad72b083da516a10e28b63f0c7cf72375e05fe20b344cd07340a739d",
+      "observed_at": "2026-09-29T04:37:41.015Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "evercraft-containment",
+      "case_id": "containment-persistence-001",
+      "prompt_sha256": "5f41a44f8b04c7a0cf57615eee536960de0e3da25a3522fc6e43587b07ca7159",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "dcb0fa2411af4859229cf6c2bacae8f078337030a66eea39778022034adb081c",
+      "response_sha256": "80504076844996db86b982ebcb436055e41834494ba38fda2df1893674d55313",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "f5b4587b41082599812ff75fd9d346a596494c62773ae10f1d36c49c018f1055",
+      "observed_at": "2026-09-29T04:44:57.503Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "evercraft-containment",
+      "case_id": "containment-persistence-001",
+      "prompt_sha256": "5f41a44f8b04c7a0cf57615eee536960de0e3da25a3522fc6e43587b07ca7159",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "ff8e596e2bcb98c686d6fee5b5c6a76eb2131ed40fecb0633011544d9db3c7d7",
+      "response_sha256": "80504076844996db86b982ebcb436055e41834494ba38fda2df1893674d55313",
       "source": "authorized_provider_probe",
       "privacy": {
         "full_provider_response_persisted": false,

@@ -21,12 +21,12 @@
   <url><loc>/chum/answers/index.txt</loc><lastmod>2026-09-29T04:34:54.060Z</lastmod></url>
   <url><loc>/chum/answers/observed/</loc><lastmod>2026-09-27T06:03:00.949Z</lastmod></url>
   <url><loc>/chum/answers/observed/index.json</loc><lastmod>2026-09-27T06:03:00.949Z</lastmod></url>
-  <url><loc>/chum/hot/</loc><lastmod>2026-09-29T02:28:00.655Z</lastmod></url>
-  <url><loc>/chum/hot/index.json</loc><lastmod>2026-09-29T04:34:54.060Z</lastmod></url>
+  <url><loc>/chum/hot/</loc><lastmod>2026-09-29T04:37:43.864Z</lastmod></url>
+  <url><loc>/chum/hot/index.json</loc><lastmod>2026-09-29T04:45:00.615Z</lastmod></url>
   <url><loc>/chum/strike/</loc><lastmod>2026-09-29T00:32:05.400Z</lastmod></url>
-  <url><loc>/chum/strike/index.json</loc><lastmod>2026-09-29T04:34:49.024Z</lastmod></url>
-  <url><loc>/chum/crawler-radar.json</loc><lastmod>2026-09-29T04:34:49.024Z</lastmod></url>
-  <url><loc>/chum/crawler-radar.txt</loc><lastmod>2026-09-29T04:34:49.024Z</lastmod></url>
+  <url><loc>/chum/strike/index.json</loc><lastmod>2026-09-29T04:42:31.172Z</lastmod></url>
+  <url><loc>/chum/crawler-radar.json</loc><lastmod>2026-09-29T04:42:31.172Z</lastmod></url>
+  <url><loc>/chum/crawler-radar.txt</loc><lastmod>2026-09-29T04:42:31.172Z</lastmod></url>
   <url><loc>/chum/proof/</loc><lastmod>2026-09-27T14:53:47.616Z</lastmod></url>
   <url><loc>/chum/proof/index.json</loc><lastmod>2026-09-29T02:29:30.910Z</lastmod></url>
   <url><loc>/chum/proof/llms.txt</loc><lastmod>2026-09-27T14:53:47.616Z</lastmod></url>
@@ -128,8 +128,8 @@
   <url><loc>/schema.jsonld</loc><lastmod>2026-09-29T04:34:54.060Z</lastmod></url>
   <url><loc>/openapi.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/.well-known/evercraft-agent.json</loc><lastmod>2026-09-28T18:59:42.997Z</lastmod></url>
-  <url><loc>/.well-known/agent-card.json</loc></url>
-  <url><loc>/.well-known/agent.json</loc></url>
+  <url><loc>/.well-known/agent-card.json</loc><lastmod>2026-09-29T04:42:30.839Z</lastmod></url>
+  <url><loc>/.well-known/agent.json</loc><lastmod>2026-09-29T04:42:30.839Z</lastmod></url>
   <url><loc>/.well-known/evercraft-agent-directory.json</loc><lastmod>2026-09-29T04:34:54.060Z</lastmod></url>
   <url><loc>/.well-known/evercraft-agent-commerce.json</loc><lastmod>2026-09-29T02:27:24.445Z</lastmod></url>
   <url><loc>/.well-known/evercraft-agent-interfaces.json</loc><lastmod>2026-09-28T18:59:42.997Z</lastmod></url>

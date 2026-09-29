@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-29T04:34:54.060Z",
+  "updated_at": "2026-09-29T04:45:00.615Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,352 +11,54 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/sitemaps/answers.xml",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 108
-    },
-    {
-      "path": "/chum/sitemaps/products.xml",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 108
-    },
-    {
-      "path": "/chum/answers/doors/build-a-household-stability-plan-d3ddfef555.json",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/build-a-household-stability-plan-d3ddfef555/",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/build-an-evidence-backed-ai-workforce-profile-f850124581.json",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/build-an-evidence-backed-ai-workforce-profile-f850124581/",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/build-me-a-30-60-90-day-life-plan-b71c8fd3fa.json",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/build-me-a-30-60-90-day-life-plan-b71c8fd3fa/",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/compare-practical-life-paths-for-my-family-dc8adaa053.json",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/compare-practical-life-paths-for-my-family-dc8adaa053/",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/create-a-relocation-career-and-family-stability-roadmap-3fbce5cb8c.json",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/create-a-relocation-career-and-family-stability-roadmap-3fbce5cb8c/",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/create-evidence-of-ai-operator-competency-a71d6217e8.json",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/create-evidence-of-ai-operator-competency-a71d6217e8/",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/evaluate-evidence-uncertainty-role-adherence-and-handoff-behavior-ed3668d577.json",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/evaluate-evidence-uncertainty-role-adherence-and-handoff-behavior-ed3668d577/",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/give-me-realistic-tradeoffs-and-backup-plans-for-a-major-life-change-630e01288e.json",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/give-me-realistic-tradeoffs-and-backup-plans-for-a-major-life-change-630e01288e/",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/help-me-organize-housing-career-income-and-family-systems-together-32c469a077.json",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/help-me-organize-housing-career-income-and-family-systems-together-32c469a077/",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/help-me-plan-for-stability-without-pretending-outcomes-are-guaranteed-696f8015bf.json",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/help-me-plan-for-stability-without-pretending-outcomes-are-guaranteed-696f8015bf/",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/help-me-think-through-relocation-and-housing-stability-7f258a69ff.json",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/help-me-think-through-relocation-and-housing-stability-7f258a69ff/",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/learn-by-completing-real-missions-instead-of-passive-courses-ee764f84c5.json",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/learn-by-completing-real-missions-instead-of-passive-courses-ee764f84c5/",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/plan-a-career-change-around-my-household-situation-be266777bd.json",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/plan-a-career-change-around-my-household-situation-be266777bd/",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/practice-using-ai-on-a-real-business-workflow-b18ff2f101.json",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/practice-using-ai-on-a-real-business-workflow-b18ff2f101/",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/prove-whether-an-ai-agent-can-actually-do-its-job-e994df8fd1.json",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/prove-whether-an-ai-agent-can-actually-do-its-job-e994df8fd1/",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/run-an-agent-proving-mission-7414546325.json",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/run-an-agent-proving-mission-7414546325/",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/stress-test-a-workflow-before-changing-live-operations-c9f0d0dd77.json",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/stress-test-a-workflow-before-changing-live-operations-c9f0d0dd77/",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/submit-an-ai-system-for-an-external-lab-22b4c83255.json",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/submit-an-ai-system-for-an-external-lab-22b4c83255/",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/test-an-ai-agent-with-a-bounded-mission-3b66172d9e.json",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/test-an-ai-agent-with-a-bounded-mission-3b66172d9e/",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/turn-a-real-task-into-a-structured-proving-exercise-c21c4fb857.json",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/turn-a-real-task-into-a-structured-proving-exercise-c21c4fb857/",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/turn-my-income-savings-debt-skills-and-priorities-into-a-life-plan-c2d2ff6a7f.json",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/turn-my-income-savings-debt-skills-and-priorities-into-a-life-plan-c2d2ff6a7f/",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/products/evernest-atlas/",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evernest-atlas/ai-conformance.json",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evernest-atlas/ai-discovery.json",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evernest-atlas/llms.txt",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/systemia-university/",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/systemia-university/ai-conformance.json",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/systemia-university/ai-discovery.json",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/systemia-university/llms.txt",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 94
-    },
-    {
-      "path": "/.well-known/evercraft-pain-index.json",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 90
-    },
-    {
-      "path": "/llms-full.txt",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 86
-    },
-    {
-      "path": "/.well-known/evercraft-agent-directory.json",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-syndication.json",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 84
-    },
-    {
-      "path": "/chum/",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/index.json",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/index.txt",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-29T04:34:54.060Z",
+      "last_changed": "2026-09-29T04:45:00.615Z",
       "priority": 80
-    },
-    {
-      "path": "/chum/index.json",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.json",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.txt",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/syndication/",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/syndication/index.json",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 80
-    },
-    {
-      "path": "/feed.json",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.xml",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 60
-    },
-    {
-      "path": "/schema.jsonld",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 60
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-29T04:45:00.615Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/crawler-radar.json",
+      "url": "/chum/crawler-radar.json",
+      "last_changed": "2026-09-29T04:42:31.172Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/crawler-radar.txt",
+      "url": "/chum/crawler-radar.txt",
+      "last_changed": "2026-09-29T04:42:31.172Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "url": "/chum/strike/index.json",
+      "last_changed": "2026-09-29T04:42:31.172Z",
+      "priority": 80
+    },
+    {
+      "path": "/.well-known/agent-card.json",
+      "url": "/.well-known/agent-card.json",
+      "last_changed": "2026-09-29T04:42:30.839Z",
+      "priority": 104
+    },
+    {
+      "path": "/.well-known/agent.json",
+      "url": "/.well-known/agent.json",
+      "last_changed": "2026-09-29T04:42:30.839Z",
+      "priority": 102
+    },
+    {
+      "path": "/chum/hot/",
+      "url": "/chum/hot/",
+      "last_changed": "2026-09-29T04:37:43.864Z",
+      "priority": 80
+    },
     {
       "path": "/chum/sitemaps/answers.xml",
       "url": "/chum/sitemaps/answers.xml",
@@ -718,12 +420,6 @@
       "priority": 80
     },
     {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-09-29T04:34:54.060Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/index.json",
       "url": "/chum/index.json",
       "last_changed": "2026-09-29T04:34:54.060Z",
@@ -772,24 +468,6 @@
       "priority": 60
     },
     {
-      "path": "/chum/crawler-radar.json",
-      "url": "/chum/crawler-radar.json",
-      "last_changed": "2026-09-29T04:34:49.024Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/crawler-radar.txt",
-      "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-09-29T04:34:49.024Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/strike/index.json",
-      "url": "/chum/strike/index.json",
-      "last_changed": "2026-09-29T04:34:49.024Z",
-      "priority": 80
-    },
-    {
       "path": "/.well-known/evercraft-products.json",
       "url": "/.well-known/evercraft-products.json",
       "last_changed": "2026-09-29T04:34:48.423Z",
@@ -811,12 +489,6 @@
       "path": "/chum/proof/rivet.json",
       "url": "/chum/proof/rivet.json",
       "last_changed": "2026-09-29T02:29:30.910Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/",
-      "url": "/chum/hot/",
-      "last_changed": "2026-09-29T02:28:00.655Z",
       "priority": 80
     },
     {
@@ -1842,18 +1514,6 @@
     {
       "path": "/chum/answers/doors/cron-job-audit-7941dee6af.json",
       "url": "/chum/answers/doors/cron-job-audit-7941dee6af.json",
-      "last_changed": "2026-09-29T02:24:28.186Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/cross-subject-learning-32bd20f557.json",
-      "url": "/chum/answers/doors/cross-subject-learning-32bd20f557.json",
-      "last_changed": "2026-09-29T02:24:28.186Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/dedupe-our-vendor-list-safely-9edf25e4db.json",
-      "url": "/chum/answers/doors/dedupe-our-vendor-list-safely-9edf25e4db.json",
       "last_changed": "2026-09-29T02:24:28.186Z",
       "priority": 160
     }
