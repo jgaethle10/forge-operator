@@ -124,5 +124,36 @@
     "protected_material_may_be_flagged_required_without_disclosure": true,
     "protected_material_disclosed_by_team_flow": false,
     "protected_file_delivery_enabled": false
+  },
+  "execution_planning": {
+    "enabled_in_verified_private_runtime": true,
+    "project_owner_required": true,
+    "source_safe_metadata_only": true,
+    "project_fields_used": [
+      "need",
+      "looking_for",
+      "have",
+      "title",
+      "description",
+      "location",
+      "protected_material_present"
+    ],
+    "member_fields_used": [
+      "can_do",
+      "have",
+      "tags",
+      "specialty",
+      "role",
+      "location",
+      "name",
+      "protected_material_present"
+    ],
+    "protected_workflow_records_used": false,
+    "contact_information_returned": false,
+    "protected_content_used": false,
+    "missing_capabilities_preserved": true,
+    "recommendation_is_not_membership": true,
+    "recommendation_grants_rights": false,
+    "candidate_connection_still_requires_protected_handshake": true
   }
 }
