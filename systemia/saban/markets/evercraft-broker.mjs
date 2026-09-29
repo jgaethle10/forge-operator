@@ -21,7 +21,7 @@ export function createEvercraftBrokerMarketAdapter({
   return {
     market:'evercraft-broker',
 
-    async discover(){
+    async discover({demand}={}){
       const inventory=await yard.listRemoteCapacityNodes(brokerDeploymentId);
       const offers=[];
       for(const node of inventory.nodes||[]){
@@ -29,6 +29,11 @@ export function createEvercraftBrokerMarketAdapter({
         const capacity=node.capacity||{};
         const hint=capacity.capacity_hint||{};
         const nodeLabels=labels(node);
+        const supportedWorkloads=new Set(capacity.supported_workloads||[]);
+        if(
+          demand?.workload_class &&
+          !supportedWorkloads.has(String(demand.workload_class))
+        ) continue;
         offers.push({
           offer_id:`evercraft-broker:${node.node_id}`,
           provider_id:String(node.node_id),
@@ -107,6 +112,8 @@ export function createEvercraftBrokerMarketAdapter({
         device_fingerprint:grant.device_fingerprint,
         capacity_endpoint:grant.capacity_endpoint,
         zero_cost:true,
+        execution_ready:true,
+        workload_class:demand.workload_class,
         acquired_at:new Date().toISOString(),
         control_grant_receipt_hash:grant.control_grant_receipt_hash||null,
         public_route_receipt_hash:grant.public_route_receipt_hash||null,
