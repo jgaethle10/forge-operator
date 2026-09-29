@@ -1,27 +1,29 @@
 {
-  "schema": "evercraft.systemia.workflow.v1",
-  "workflow_id": "clip-social-continuity",
-  "title": "Evercraft Clip portfolio social continuity",
-  "owner": "Systemia",
-  "purpose": "Wake the canonical Evercraft Clip unified publisher and fail closed when publishing continuity, runtime policy, provider lanes, or cadence health are not proven.",
+  "schema": "evercraft.systemia.workflow-manifest.v1",
+  "workflow_key": "clip-social-continuity",
+  "mission_key": "evercraft-social-distribution-engine-2026-09",
+  "runtime": "systemia-core+yard-evercraft-compute",
+  "collider_compatible": true,
   "cadence_seconds": 1800,
-  "execution": {
-    "executable": "systemia/compute/clip-social-continuity-canary.mjs",
-    "side_effects": [
-      "Invokes Evercraft Clip canonical unified publishing pulse",
-      "Invokes publishing continuity watchdog",
-      "May publish only content already admitted by Clip's own existing standards, cadence, exclusion, provider and verification gates"
-    ]
+  "material_change_only": true,
+  "entrypoint": "systemia/organism/clip-social-continuity.mjs",
+  "runner": "systemia/compute/clip-social-continuity-canary.mjs",
+  "proof": "systemia/organism/clip-social-continuity.proof.mjs",
+  "outputs": {
+    "latest_receipt": "artifacts/clip-social-continuity/latest.json"
   },
-  "invariants": [
-    "R&B Chicken & Soul remains excluded from autonomous publishing.",
-    "Havenly Cleaning is not excluded from autonomous publishing.",
-    "A successful HTTP invocation is not equivalent to healthy publishing continuity.",
-    "Queued, accepted, or attempted publication never counts as published without the downstream provider receipt/verification semantics owned by Clip.",
-    "Active continuity incidents make the Systemia canary fail."
-  ],
-  "evidence": {
-    "receipt_schema": "systemia.clip-social-continuity.v1",
-    "retention": "GitHub Actions artifact plus Systemia stdout receipt"
+  "authority": {
+    "schedule": "systemia-core-resident-supervisor",
+    "runtime": "yard_evercraft_compute",
+    "publication_scope": "already-authorized Evercraft Clip social publishing only",
+    "caller_controlled_copy": false,
+    "caller_controlled_destination": false,
+    "provider_visible_verification_required": true,
+    "hard_excluded_pages": [
+      "R&B Chicken & Soul"
+    ],
+    "havenly_autonomous_publishing_authorized": true,
+    "new_outreach_authority": false,
+    "payment_authority": false
   }
 }
