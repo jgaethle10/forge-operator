@@ -18,6 +18,8 @@ on:
       - "systemia/media-studio/timeline-export.test.ts"
       - "systemia/media-studio/studio-create.ts"
       - "systemia/media-studio/studio-create.test.ts"
+      - "systemia/media-studio/studio-resolve.ts"
+      - "systemia/media-studio/studio-resolve.test.ts"
       - "systemia/media-studio/cli.ts"
       - ".github/workflows/fallen-studio-export.yml"
 
