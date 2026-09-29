@@ -20,6 +20,7 @@ import {
 import { startRivetReportRuntime } from '../rivet/report-runtime.mjs';
 import { startSpecialistHandoffRuntime } from '../mcp/specialist-handoff-runtime.mjs';
 import { startPublicEdgeRuntime } from '../network/public-edge-runtime.mjs';
+import { startFederatedServiceBridge } from '../network/federated-service-bridge.mjs';
 import { startEvercraftHomeServer } from '../evercraft-home/server.mjs';
 import { validatePublicEdgeAdmission } from '../network/public-edge-tls.mjs';
 import { transcriptionCapabilityStatus } from '../forensiscope/transcription-engine.mjs';
@@ -672,6 +673,7 @@ export async function startEvercraftComputeNode({
     'systemia.rivet-report-runtime.v1',
     'systemia.specialist-handoff-mcp.v1',
     'systemia.public-edge.v1',
+    'systemia.federated-service-bridge.v1',
     'systemia.evercraft-home.v1',
     'saban.logical-agent',
     'saban.multiplier-assignment.v1',
@@ -1397,6 +1399,56 @@ export async function startEvercraftComputeNode({
             ok: true,
             node_id: nodeId,
             workload_class: body.workload_class,
+            result,
+            receipt,
+          });
+        }
+
+        if (workloadClass === 'systemia.federated-service-bridge.v1') {
+          const relayUrl = String(body.input?.relay_url || '').trim();
+          const relayToken = String(body.input?.relay_token || '');
+          if (!relayUrl || !relayToken) {
+            return send(res, 422, { error: 'federated_service_relay_authority_required' });
+          }
+          const runtime = await startFederatedServiceBridge({
+            relayUrl,
+            relayToken,
+            host:'127.0.0.1',
+            port:Number(body.input?.port || 0),
+            maxBodyBytes:Number(body.input?.max_body_bytes || 8 * 1024 * 1024),
+          });
+          const serviceId = `svc_${randomBytes(8).toString('hex')}`;
+          services.set(serviceId, {
+            lease_id: body.lease_id,
+            workload_class: body.workload_class,
+            runtime,
+            service: runtime,
+          });
+          const result = {
+            schema:'evercraft.compute.resident-service.v1',
+            service_id:serviceId,
+            workload_class:body.workload_class,
+            service_url:null,
+            local_url:runtime.url,
+            health_path:`/v1/services/${serviceId}/health`,
+            public_route_required:false,
+            instance_id:runtime.instanceId,
+            loopback_only:true,
+            remote_transport:'evercraft.outbound-capacity.v1',
+            relay_authority_exposed:false,
+            relay_authority_persisted:false,
+          };
+          const receipt = chain.issue('service.started', {
+            lease_id:body.lease_id,
+            service_id:serviceId,
+            workload_class:body.workload_class,
+            result_schema:result.schema,
+            instance_id:runtime.instanceId,
+          });
+          return send(res,200,{
+            ok:true,
+            node_id:nodeId,
+            workload_class:body.workload_class,
             result,
             receipt,
           });
@@ -2228,6 +2280,85 @@ export async function startEvercraftComputeNode({
             lease_id: entry.lease_id,
             workload_class: entry.workload_class,
             node_count: nodes.length,
+          }),
+        });
+      }
+
+      const remoteServiceRelay = req.url?.match(
+        /^\/v1\/services\/([^/]+)\/remote-service-relay$/
+      );
+      if (req.method === 'POST' && remoteServiceRelay) {
+        const entry = services.get(remoteServiceRelay[1]);
+        if (!entry) return send(res, 404, { error: 'service_not_found' });
+        const body = await readJson(req);
+        const lease = leases.get(entry.lease_id);
+        if (!lease || lease.token_hash !== sha(body.token || '')) {
+          return send(res, 401, { error: 'invalid_lease' });
+        }
+        if (entry.workload_class !== 'systemia.remote-capacity-broker.v1') {
+          return send(res, 422, { error: 'remote_service_relay_not_supported' });
+        }
+        let relay;
+        try {
+          relay = entry.runtime.createServiceRelay({
+            nodeId:String(body.node_id || ''),
+            serviceId:String(body.service_id || ''),
+            ttlMs:Number(body.ttl_ms || 30 * 60_000),
+          });
+        } catch (error) {
+          return send(res, 422, { error:String(error?.message || error) });
+        }
+        return send(res, 201, {
+          ok:true,
+          relay_id:relay.relay_id,
+          node_id:relay.node_id,
+          device_fingerprint:relay.device_fingerprint,
+          service_id:relay.service_id,
+          relay_token:relay.relay_token,
+          proxy_path:relay.proxy_path,
+          expires_at:relay.expires_at,
+          relay_token_persisted:false,
+          allocator_token_exposed:false,
+          receipt:chain.issue('remote-capacity.service-relay.created',{
+            service_id:remoteServiceRelay[1],
+            lease_id:entry.lease_id,
+            workload_class:entry.workload_class,
+            remote_node_id:relay.node_id,
+            remote_service_id:relay.service_id,
+            relay_receipt_hash:relay.receipt_hash,
+            expires_at:relay.expires_at,
+            relay_token_persisted:false,
+            allocator_token_exposed:false,
+          }),
+        });
+      }
+
+      const remoteServiceRelayRelease = req.url?.match(
+        /^\/v1\/services\/([^/]+)\/remote-service-relay\/([^/]+)\/release$/
+      );
+      if (req.method === 'POST' && remoteServiceRelayRelease) {
+        const entry = services.get(remoteServiceRelayRelease[1]);
+        if (!entry) return send(res, 404, { error: 'service_not_found' });
+        const body = await readJson(req);
+        const lease = leases.get(entry.lease_id);
+        if (!lease || lease.token_hash !== sha(body.token || '')) {
+          return send(res, 401, { error: 'invalid_lease' });
+        }
+        if (entry.workload_class !== 'systemia.remote-capacity-broker.v1') {
+          return send(res, 422, { error: 'remote_service_relay_not_supported' });
+        }
+        const released=entry.runtime.releaseServiceRelay(
+          remoteServiceRelayRelease[2],
+          String(body.reason || 'released')
+        );
+        return send(res, released.released ? 200 : 404, {
+          ...released,
+          receipt:chain.issue('remote-capacity.service-relay.released',{
+            service_id:remoteServiceRelayRelease[1],
+            lease_id:entry.lease_id,
+            workload_class:entry.workload_class,
+            relay_id:remoteServiceRelayRelease[2],
+            released:released.released===true,
           }),
         });
       }
