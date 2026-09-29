@@ -95,6 +95,18 @@ export async function startLocalOrganism({
 
   fs.mkdirSync(organismRoot, { recursive: true, mode: 0o700 });
 
+  let admittedClipSecretFile = '';
+  const sourceClipSecretFile = String(clipSharedSecretFile || '').trim();
+  if (sourceClipSecretFile) {
+    const source = path.resolve(sourceClipSecretFile);
+    const secret = fs.readFileSync(source, 'utf8').trim();
+    if (!secret) throw new Error('clip shared secret file is empty');
+    const bindingDir = path.join(computeRoot, '.private-bindings');
+    fs.mkdirSync(bindingDir, { recursive: true, mode: 0o700 });
+    admittedClipSecretFile = path.join(bindingDir, 'clip-shared-secret');
+    fs.writeFileSync(admittedClipSecretFile, secret + '\n', { mode: 0o600 });
+  }
+
   const seed = await startNodeSeed({
     root: computeRoot,
     nodeId,
@@ -155,7 +167,7 @@ export async function startLocalOrganism({
         yard_state_dir: yardState,
         kaidance_deployment_id: 'kaidance-local-resident',
         clip_eps_ingress_url: String(clipEpsIngressUrl || '').trim(),
-        clip_shared_secret_file: String(clipSharedSecretFile || '').trim(),
+        clip_shared_secret_file: admittedClipSecretFile,
       },
       rollbackTarget: 'local-organism:core-previous',
       leaseTtlMs: 3_600_000,
