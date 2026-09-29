@@ -1,3 +1,7 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 const STOP_WORDS=new Set([
   'a','an','and','are','as','at','be','by','for','from','how','i','in','is','it',
   'me','my','of','on','or','the','this','to','we','what','with','you','your'
@@ -37,6 +41,36 @@ function normalizeConnection(item={}){
     url:safeUrl(item.url),
     state:clean(item.state||'available',80),
   };
+}
+
+export function loadFabricCatalogFromRepository({catalogPath=''}={}){
+  const moduleDir=path.dirname(fileURLToPath(import.meta.url));
+  const resolved=catalogPath
+    ? path.resolve(catalogPath)
+    : path.resolve(moduleDir,'../../public/chum/capabilities.json');
+  if(!fs.existsSync(resolved)) throw new Error('fabric_catalog_source_missing');
+  const source=JSON.parse(fs.readFileSync(resolved,'utf8'));
+  const rows=Array.isArray(source?.capabilities)?source.capabilities:[];
+  const mapped=rows.map((item)=>({
+    public_id:item.public_id,
+    name:item.name,
+    description:clean(
+      item.problem ||
+      (Array.isArray(item.use_when)?item.use_when.join('; '):'') ||
+      item.invocation_status ||
+      item.pricing ||
+      'Evercraft public capability.',
+      1200
+    ),
+    keywords:[
+      ...(Array.isArray(item.intent_terms)?item.intent_terms:[]),
+      ...(Array.isArray(item.use_when)?item.use_when:[]),
+    ].slice(0,32),
+    state:clean(item.machine_state||item.commercial_state||'available',80),
+    category:clean(item.category||'',120)||null,
+    connections:[],
+  }));
+  return normalizeFabricCatalog(mapped);
 }
 
 export function normalizeFabricCatalog(input=[]){
