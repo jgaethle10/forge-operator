@@ -4,6 +4,7 @@ const ALLOWED_DOMAINS = new Set([
   'communications',
   'infrastructure',
   'environmental',
+  'hydrology',
   'acoustic',
   'optical',
   'emergency_report'

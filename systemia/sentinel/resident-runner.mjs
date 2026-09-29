@@ -4,7 +4,8 @@ import path from 'node:path';
 import {
   emptyResidentState,
   runSentinelResidentCycle,
-  buildSentinelMissionSnapshot
+  buildSentinelMissionSnapshot,
+  buildBuiltinSentinelSources
 } from './resident-cycle.mjs';
 
 function arg(name, fallback = null) {
@@ -42,6 +43,9 @@ const intervalMs = Math.max(
 const nwsArea = String(
   arg('--nws-area', process.env.SYSTEMIA_SENTINEL_NWS_AREA || '')
 ).trim().toUpperCase() || null;
+const nwpsGaugeIds = String(
+  arg('--nwps-gauges', process.env.SYSTEMIA_SENTINEL_NWPS_GAUGES || '')
+).split(',').map((value) => value.trim()).filter(Boolean);
 const once = has('--once');
 
 const stateFile = path.join(stateDir, 'state.json');
@@ -56,6 +60,7 @@ async function cycle() {
     const result = await runSentinelResidentCycle({
       inputState: state,
       now: new Date().toISOString(),
+      sources: buildBuiltinSentinelSources({ nwpsGaugeIds }),
       sourceOptions: {
         'nws-active-alerts': nwsArea ? { area: nwsArea } : {}
       }

@@ -4,7 +4,8 @@ import {
   emptyResidentState,
   runSentinelResidentCycle,
   computeNextPollAt,
-  buildSentinelMissionSnapshot
+  buildSentinelMissionSnapshot,
+  buildBuiltinSentinelSources
 } from './resident-cycle.mjs';
 
 function source({
@@ -55,6 +56,15 @@ function source({
     }
   };
 }
+
+const configuredSources = buildBuiltinSentinelSources({ nwpsGaugeIds: ['TEST1'] });
+assert.equal(configuredSources.length, 3);
+assert.equal(configuredSources[2].source_id, 'nwps-river-gauges');
+assert.equal(configuredSources[2].contract.required, false);
+assert.equal(configuredSources[2].contract.independence_group, 'noaa-nws');
+
+const unconfiguredSources = buildBuiltinSentinelSources();
+assert.equal(unconfiguredSources.length, 2);
 
 const now = '2026-09-29T12:00:00Z';
 const sources = [
