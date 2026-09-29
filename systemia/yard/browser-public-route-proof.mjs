@@ -18,6 +18,7 @@ let closed=false;
 let receiptRef='';
 let browseCount=0;
 let authSessionCount=0;
+let authRedeemed=false;
 let authClosed=false;
 const instanceId='browser-public-route-proof';
 
@@ -88,9 +89,23 @@ const browserRuntimeFactory=async()=>{
     async authHandoffPage(sessionId){
       return '<!doctype html><title>Evercraft Control Room</title><main>session '+sessionId+'</main>';
     },
-    async authSnapshot(sessionId,claim){
+    async authRedeem(sessionId,claim){
       if(sessionId!=='browser-edge-auth-proof'||claim!=='edge-proof-claim'){
         throw new Error('authenticated_browser_claim_invalid');
+      }
+      if(authRedeemed) throw new Error('authenticated_browser_claim_already_redeemed');
+      authRedeemed=true;
+      return {
+        ok:true,
+        session_id:sessionId,
+        access_token:'edge-proof-access',
+        claim_redeemed:true,
+        expires_at:new Date(Date.now()+60_000).toISOString(),
+      };
+    },
+    async authSnapshot(sessionId,access){
+      if(sessionId!=='browser-edge-auth-proof'||access!=='edge-proof-access'){
+        throw new Error('authenticated_browser_access_invalid');
       }
       return {
         ok:true,
@@ -106,9 +121,9 @@ const browserRuntimeFactory=async()=>{
         mode:'human_authorized_ephemeral',
       };
     },
-    async authAction(sessionId,claim,action){
-      if(sessionId!=='browser-edge-auth-proof'||claim!=='edge-proof-claim'){
-        throw new Error('authenticated_browser_claim_invalid');
+    async authAction(sessionId,access,action){
+      if(sessionId!=='browser-edge-auth-proof'||access!=='edge-proof-access'){
+        throw new Error('authenticated_browser_access_invalid');
       }
       return {
         ok:true,
@@ -119,9 +134,9 @@ const browserRuntimeFactory=async()=>{
         expires_at:new Date(Date.now()+60_000).toISOString(),
       };
     },
-    async authClose(sessionId,claim){
-      if(sessionId!=='browser-edge-auth-proof'||claim!=='edge-proof-claim'){
-        throw new Error('authenticated_browser_claim_invalid');
+    async authClose(sessionId,access){
+      if(sessionId!=='browser-edge-auth-proof'||access!=='edge-proof-access'){
+        throw new Error('authenticated_browser_access_invalid');
       }
       authClosed=true;
       return {ok:true,closed:true,session_id:sessionId};
