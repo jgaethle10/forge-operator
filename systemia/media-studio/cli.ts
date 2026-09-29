@@ -79,7 +79,7 @@ function usage() {
     '  npm run media:studio -- host-plate <prep.json> <receipt.json>',
     '  npm run media:studio -- model-plan <payload.json> <model-plan.json>',
     '  npm run media:studio -- finish-plan <payload.json> <finish-plan.json>',
-    '  npm run media:studio -- production-grade <beats.json> <report.json>',\n    '  npm run media:studio -- timeline-export <timeline.json> <output.mp4> [receipt.json]',\n    '  npm run media:studio -- studio-create <draft-plan.json> <draft-bundle.json>',
+    '  npm run media:studio -- production-grade <beats.json> <report.json>',\n    '  npm run media:studio -- timeline-export <timeline.json> <output.mp4> [receipt.json]',\n    '  npm run media:studio -- studio-create <draft-plan.json> <draft-bundle.json>',\n    '  npm run media:studio -- studio-resolve <resolution-payload.json> <resolved-bundle.json> [captions.srt]',
   ].join('\n'));
 }
 
@@ -129,6 +129,26 @@ function main() {
     const plan = buildVisualFinishPlan(payload.request, payload.endpoints);
     writeJson(output, plan);
     console.log(`Visual finish plan created: ${path.resolve(output)}`);
+    return;
+  }
+
+  if (command === 'studio-resolve') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const payload = readJson<{ bundle: StudioDraftBundle; resolutions: StudioResolutionItem[] }>(input);
+    const result = resolveStudioDraft({
+      bundle: payload.bundle,
+      resolutions: payload.resolutions,
+      captionOutputPath: optionalPlan,
+    });
+    writeJson(output, result);
+    console.log(`Studio production resolution: ${result.status}`);
+    console.log(`Remaining production needs: ${result.remainingNeedIds.length}`);
+    if (optionalPlan && result.captionAssetId) console.log(`Captions created: ${path.resolve(optionalPlan)}`);
+    if (result.status === 'blocked') process.exitCode = 2;
     return;
   }
 
