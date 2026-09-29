@@ -79,6 +79,8 @@ jobs:
           docker run -d \
             --name forge-smoke \
             -e GEMINI_API_KEY=smoke-not-a-real-key \
+            -e EVERCRAFT_RELEASE_REF=${{ github.sha }} \
+            -e EVERCRAFT_DEPLOYMENT_RECEIPT_REF=sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa \
             -p 3000:3000 \
             forge-operator:${{ github.sha }}
 
@@ -195,7 +197,14 @@ jobs:
 
           if (health.ok !== true) throw new Error('health.ok must be true');
           if (health.service !== 'forge-operator') throw new Error('unexpected health service');
+          if (health.runtime_binding?.runtime !== 'forge-operator') throw new Error('Forge runtime binding missing');
+          if (health.runtime_binding?.release_bound !== true) throw new Error('Forge release binding missing');
+          if (!/^[a-f0-9]{40}$/i.test(String(health.runtime_binding?.release_ref || ''))) throw new Error('Forge release ref is not immutable');
+          if (health.runtime_binding?.deployment_receipt_bound !== true) throw new Error('Forge deployment receipt binding missing');
+          if (health.runtime_binding?.deployment_receipt_ref !== 'sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa') throw new Error('Forge deployment receipt ref mismatch');
           if (capabilities.schema !== 'evercraft.capability.v1') throw new Error('unexpected capability schema');
+          if (capabilities.discovery?.a2aAgentCard !== '/.well-known/agent-card.json') throw new Error('A2A Agent Card missing from capabilities');
+          if (capabilities.discovery?.a2a?.protocolVersion !== '1.0' || capabilities.discovery?.a2a?.binding !== 'HTTP+JSON') throw new Error('A2A capability contract missing');
           if (!fallenHtml.includes('<div id="root"></div>')) throw new Error('Fallen SPA route did not return the production app shell');
           if (fallenEpisode.success !== true) throw new Error('Fallen family episode smoke failed');
           if (fallenEpisode.data?.story?.scenes?.length !== 6) throw new Error('Fallen family episode must contain six scenes');
