@@ -1689,6 +1689,9 @@ export async function startEvercraftComputeNode({
             EVERCRAFT_NODE001_FIELD_MISSION_STATE: path.join(node001Status, 'latest.json'),
             EVERCRAFT_PUBLIC_EDGE_ARTIFACT_DIR: publicEdgeOut,
             EVERCRAFT_PUBLIC_EDGE_STATE_DIR: publicEdgeState,
+            OPENAI_APPS_CHALLENGE_TOKEN: String(
+              body.input?.openai_challenge_token || ''
+            ).trim(),
             SYSTEMIA_REMOTE_BROKER_DEPLOYMENT_ID: String(
               body.input?.remote_broker_deployment_id || ''
             ).trim(),

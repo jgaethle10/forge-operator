@@ -50,6 +50,36 @@ try{
   assert.equal(health.deployment_receipt_ref,deployment.receipt.receipt_hash);
   assert.equal(health.checkout_enabled,false);
   assert.equal(health.payment_enabled,false);
+  assert.equal(health.fabric_directory_enabled,true);
+  assert.equal(health.fabric_mcp_path,'/mcp');
+  assert.equal(health.openai_challenge_path,'/.well-known/openai-apps-challenge');
+  assert.equal(health.openai_challenge_ready,false);
+
+  const fabricInit=await fetch(deployment.result.local_url+'/mcp',{
+    method:'POST',
+    headers:{'content-type':'application/json'},
+    body:JSON.stringify({
+      jsonrpc:'2.0',id:10,method:'initialize',
+      params:{protocolVersion:'2025-03-26',capabilities:{},clientInfo:{name:'proof',version:'1'}}
+    })
+  }).then(r=>r.json());
+  assert.equal(fabricInit.result.serverInfo.name,'evercraft-fabric');
+
+  const fabricTools=await fetch(deployment.result.local_url+'/mcp',{
+    method:'POST',
+    headers:{'content-type':'application/json'},
+    body:JSON.stringify({jsonrpc:'2.0',id:11,method:'tools/list',params:{}})
+  }).then(r=>r.json());
+  assert.deepEqual(
+    fabricTools.result.tools.map(x=>x.name),
+    [
+      'match_evercraft_capability',
+      'list_evercraft_capabilities',
+      'get_evercraft_connection_options',
+    ]
+  );
+  assert.ok(fabricTools.result.tools.every(x=>x.annotations.readOnlyHint===true));
+  assert.ok(fabricTools.result.tools.every(x=>x.annotations.destructiveHint===false));
 
   const route=await yard.verifyPublicRoute('specialist-handoff-proof',{
     origin:deployment.result.local_url,
