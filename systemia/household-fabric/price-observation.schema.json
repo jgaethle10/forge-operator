@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Systemia Household Fabric Price Observation",
+  "type": "object",
+  "required": [
+    "id",
+    "item_key",
+    "category",
+    "unit",
+    "price_cents_per_unit",
+    "observed_at",
+    "evidence_state"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "item_key": {
+      "type": "string",
+      "minLength": 1
+    },
+    "item_label": {
+      "type": "string"
+    },
+    "category": {
+      "enum": [
+        "fuel",
+        "grocery"
+      ]
+    },
+    "unit": {
+      "type": "string",
+      "minLength": 1
+    },
+    "price_cents_per_unit": {
+      "type": "number",
+      "minimum": 0
+    },
+    "observed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source_url": {
+      "type": "string"
+    },
+    "source_id": {
+      "type": "string"
+    },
+    "source_name": {
+      "type": "string"
+    },
+    "evidence_state": {
+      "enum": [
+        "observed",
+        "public",
+        "licensed",
+        "modeled",
+        "inferred",
+        "unknown"
+      ]
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "location": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "distance_miles": {
+      "type": "number",
+      "minimum": 0
+    },
+    "travel_minutes": {
+      "type": "number",
+      "minimum": 0
+    },
+    "sponsored": {
+      "type": "boolean"
+    },
+    "sponsor_label": {
+      "type": "string"
+    }
+  },
+  "anyOf": [
+    {
+      "required": [
+        "source_url"
+      ]
+    },
+    {
+      "required": [
+        "source_id"
+      ]
+    }
+  ],
+  "additionalProperties": false
+}
