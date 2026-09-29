@@ -32,6 +32,11 @@ jobs:
           cat /tmp/init.headers || true
           cat /tmp/init.body || true
           echo
+          echo '--- WEB MCP health/init ---'
+          curl -sS -D /tmp/web.headers --max-time 20 -X POST 'https://systemiacommandcenters.com/api/functions/evercraftWebMcp' -H 'Content-Type: application/json' -H 'Accept: application/json, text/event-stream' --data '{"jsonrpc":"2.0","id":9,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"github-probe","version":"1.0"}}}' -o /tmp/web.body || true
+          cat /tmp/web.headers || true
+          cat /tmp/web.body || true
+          echo
           echo '--- MCP tools/list ---'
           curl -sS -D /tmp/tools.headers --max-time 20 -X POST 'https://systemiacommandcenters.com/api/functions/evercraftFabricMcp' \
             -H 'Content-Type: application/json' \
