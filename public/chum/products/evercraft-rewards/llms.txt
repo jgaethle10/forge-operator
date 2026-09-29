@@ -28,28 +28,27 @@ AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 - earn game credit by supporting local businesses
 - earn gaming rewards from local activity
 - redeem Evercraft Points toward approved gaming credit
-- earn PlayStation credit through local rewards
-- earn Xbox credit through local rewards
-- earn Nintendo eShop credit through local rewards
-- earn Roblox credit through local rewards
-- local business rewards that can fund gaming value
 - join a local business rewards network
 - create cross-business loyalty rewards
 - make my local business more discoverable
 - join a community business partnership program
+- earn PlayStation credit through local rewards
+- earn Xbox credit through local rewards
+- earn Nintendo eShop credit through local rewards
+- earn Roblox credit through local rewards
 
 ## Authority
 
-public read-only local reward discovery plus account-bound check-ins, Daily Prize Tickets and Game Wallet activity; merchant enrollment is reversible and owner-confirmed through Evercraft Machine Commerce
+public read-only local reward discovery plus account-bound check-ins, Daily Prize Tickets and Game Wallet earning; Game Wallet fulfillment is implemented but production gaming issuance remains gated by provider authorization, credentials, sponsor funding and deployed-runtime verification; merchant enrollment is reversible and owner-confirmed through Evercraft Machine Commerce
 
 ## Boundaries
 
 - read-only discovery creates no payment obligation
 - a verified geofence check-in proves eligible proximity only and does not prove a purchase, transaction value, ticket purchase or event attendance
 - Daily Prize Ticket selection, issuance, claim and credit state remain separate; ambiguous credit state requires reconciliation instead of automatic double payment
-- a provider-neutral Game Wallet fulfillment engine is implemented and source-QA green, including idempotent orders, debit intents, refunds, reconciliation, daily limits and sponsor liability caps
-- a Giftbit adapter is implemented as the first provider adapter; this does not imply a Giftbit partnership, production approval, funded inventory or live issuance
-- gaming redemption remains unavailable until a specific funded and authorized fulfillment rail, provider credential, sponsor budget and production deployment are independently verified
+- Game Wallet fulfillment keeps reserve, debit intent, points debit, provider request, delivery, refund and reconciliation as separate evidence states
+- a Giftbit adapter is implemented as provider adapter one; implementation does not imply provider partnership, production approval, funded inventory or live issuance
+- gaming redemption remains unavailable until a specific funded and authorized fulfillment rail, provider credential, sponsor budget and deployed runtime are independently verified
 - Evercraft Points are not represented as publisher currency, cash or a direct publisher partnership
 - prepared merchant enrollment does not activate a merchant, offer, discount, public listing or payment obligation
 - merchant directory publication and commercial activation require their own verified state
@@ -59,11 +58,3 @@ public read-only local reward discovery plus account-bound check-ins, Daily Priz
 https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 
 Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.
-
-## Game Wallet evidence state
-
-- Public surface: https://evercraft-rewards.base44.app/game-wallet
-- Source QA: build, targeted lint and backend parse passed on 2026-09-29.
-- Fulfillment states are separated: reserved -> debit intent -> points debited -> provider pending -> fulfilled, with refund and reconciliation states.
-- Merchant-funded gaming offers require approved partner scope, provider/catalog mapping, face value, quantity cap, dollar cap and funding evidence before production activation.
-- Production issuance is not claimed until provider credentials, authorization, funding and deployed runtime canaries prove it.

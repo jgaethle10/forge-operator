@@ -7,8 +7,8 @@ Each phrase below maps to public capability candidates without upgrading readine
 Discovery creates no payment obligation. Checkout requires explicit human confirmation and paid state requires authoritative provider verification.
 
 Pain-index entries: 110
-Unique user phrases: 934
-Candidate edges: 1039
+Unique user phrases: 938
+Candidate edges: 1043
 Ambiguous phrases: 105
 
 ## 15 GB video analysis
@@ -1580,10 +1580,38 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
 
+## earn Nintendo eShop credit through local rewards
+Answer ID: intent:90f12daa00
+Human-readable match: /chum/answers/doors/earn-nintendo-eshop-credit-through-local-rewards-90f12daa00/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/earn-nintendo-eshop-credit-through-local-rewards-90f12daa00.json
+Candidates:
+- Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
+
+## earn PlayStation credit through local rewards
+Answer ID: intent:10cf5def35
+Human-readable match: /chum/answers/doors/earn-playstation-credit-through-local-rewards-10cf5def35/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/earn-playstation-credit-through-local-rewards-10cf5def35.json
+Candidates:
+- Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
+
 ## earn rewards for visiting local businesses
 Answer ID: intent:d04e178d65
 Human-readable match: /chum/answers/doors/earn-rewards-for-visiting-local-businesses-d04e178d65/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/earn-rewards-for-visiting-local-businesses-d04e178d65.json
+Candidates:
+- Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
+
+## earn Roblox credit through local rewards
+Answer ID: intent:df46110239
+Human-readable match: /chum/answers/doors/earn-roblox-credit-through-local-rewards-df46110239/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/earn-roblox-credit-through-local-rewards-df46110239.json
+Candidates:
+- Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
+
+## earn Xbox credit through local rewards
+Answer ID: intent:efb9d28079
+Human-readable match: /chum/answers/doors/earn-xbox-credit-through-local-rewards-efb9d28079/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/earn-xbox-credit-through-local-rewards-efb9d28079.json
 Candidates:
 - Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
 

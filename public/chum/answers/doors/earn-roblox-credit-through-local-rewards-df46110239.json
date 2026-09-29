@@ -3,9 +3,9 @@
   "provider": "Evercraft LLC",
   "generated_from": "public/.well-known/evercraft-pain-index.json",
   "updated_at": "2026-09-29T01:40:00.000Z",
-  "answer_id": "intent:3b76c8caac",
-  "user_language": "where can I earn points today",
-  "normalized": "where can i earn points today",
+  "answer_id": "intent:df46110239",
+  "user_language": "earn Roblox credit through local rewards",
+  "normalized": "earn roblox credit through local rewards",
   "purpose": "Brand-blind discovery cue from natural user language to truthful public Evercraft capability candidates.",
   "candidate_count": 1,
   "candidates": [

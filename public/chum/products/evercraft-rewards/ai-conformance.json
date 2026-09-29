@@ -63,32 +63,5 @@
   "machine_commerce_handoff_state": null,
   "machine_commerce_public_id": null,
   "machine_commerce_tool": null,
-  "live_canary_evidence": null,
-  "game_wallet": {
-    "public_surface": "https://evercraft-rewards.base44.app/game-wallet",
-    "architecture_state": "provider_neutral_fulfillment_engine_source_qa_green",
-    "first_adapter": "giftbit",
-    "provider_relationship_claimed": false,
-    "production_issuance_state": "not_verified",
-    "source_qa_observed_on": "2026-09-29",
-    "evidence_states": [
-      "reserved",
-      "debit_pending",
-      "points_debited",
-      "provider_pending",
-      "fulfilled",
-      "refund_pending",
-      "refunded",
-      "reconciliation_required",
-      "cancelled"
-    ],
-    "sponsor_controls": [
-      "per_user_daily_limit",
-      "daily_issuance_cap",
-      "total_quantity_cap",
-      "total_dollar_cap",
-      "funding_reference"
-    ],
-    "deployment_note": "Base44 production deployment remains separately verified; source state alone is not proof the public runtime contains the fulfillment engine."
-  }
+  "live_canary_evidence": null
 }

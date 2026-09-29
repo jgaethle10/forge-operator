@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.hot-discovery.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-29T18:40:12.557Z",
+  "updated_at": "2026-09-29T18:55:38.752Z",
   "purpose": "High-priority public discovery surfaces for crawler fan-out. The queue reserves limited cold-start frontage for current commercial and sitemap surfaces, then fills remaining slots by observed priority. This is a crawl-order hint, not a ranking or recommendation claim.",
   "surfaces": [
     {
@@ -291,7 +291,7 @@
       "path": "/chum/sitemaps/answers.xml",
       "url": "/chum/sitemaps/answers.xml",
       "priority": 108,
-      "last_changed": "2026-09-29T04:34:54.060Z"
+      "last_changed": "2026-09-29T18:55:38.752Z"
     },
     {
       "path": "/chum/sitemaps/products.xml",
@@ -339,7 +339,7 @@
       "path": "/.well-known/evercraft-pain-index.json",
       "url": "/.well-known/evercraft-pain-index.json",
       "priority": 90,
-      "last_changed": "2026-09-29T18:40:12.557Z"
+      "last_changed": "2026-09-29T18:55:38.752Z"
     },
     {
       "path": "/chum/revenue.json",
@@ -364,6 +364,12 @@
       "url": "/.well-known/evercraft-machine-catalog.json",
       "priority": 84,
       "last_changed": "2026-09-29T18:40:12.557Z"
+    },
+    {
+      "path": "/chum/answers/doors/create-cross-business-loyalty-rewards-2c3ab05040.json",
+      "url": "/chum/answers/doors/create-cross-business-loyalty-rewards-2c3ab05040.json",
+      "priority": 160,
+      "last_changed": "2026-09-29T18:55:38.752Z"
     },
     {
       "path": "/chum/answers/doors/application-network-continuity-3ac8582e22.json",
@@ -458,12 +464,6 @@
     {
       "path": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287/",
       "url": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287/",
-      "priority": 160,
-      "last_changed": "2026-09-29T05:30:59.043Z"
-    },
-    {
-      "path": "/chum/answers/doors/create-cross-business-loyalty-rewards-2c3ab05040.json",
-      "url": "/chum/answers/doors/create-cross-business-loyalty-rewards-2c3ab05040.json",
       "priority": 160,
       "last_changed": "2026-09-29T05:30:59.043Z"
     },
