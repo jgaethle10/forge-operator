@@ -1,4 +1,5 @@
 import { createFeedAdapter } from '../feed-adapter.mjs';
+import { coarseCellFromGeometry } from '../coarse-geo.mjs';
 
 export const NWS_ACTIVE_ALERTS_ENDPOINT = 'https://api.weather.gov/alerts/active';
 export const NWS_MIN_POLL_INTERVAL_MS = 30000;
@@ -67,6 +68,7 @@ export function parseNwsAlertFeature(feature = {}) {
   if (!createdAt) throw new TypeError('NWS alert feature is missing a usable timestamp');
 
   const hazardState = confirmedLifeSafetyHazard(p) ? 'confirmed_hazard' : 'unknown';
+  const coarseRegionGroup = coarseCellFromGeometry(feature.geometry);
 
   return officialAdapter({
     id: String(id),
@@ -78,6 +80,7 @@ export function parseNwsAlertFeature(feature = {}) {
     summary: [p.event, p.headline || p.description].filter(Boolean).join(': ').slice(0, 280)
   }, {
     region_key: cleanRegion(p.areaDesc || p.geocode?.UGC?.join(',') || 'nws-national'),
+    region_group: coarseRegionGroup,
     anomaly_score: alertScore(p),
     evidence_state: 'verified',
     hazard_state: hazardState
