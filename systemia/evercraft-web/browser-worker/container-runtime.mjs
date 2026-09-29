@@ -191,25 +191,31 @@ export async function startBrowserContainer({
       async authHandoffPage(sessionId) {
         return fetchText(`${url}/handoff/${encodeURIComponent(String(sessionId || ''))}`, {}, 5000);
       },
-      async authSnapshot(sessionId, claimToken) {
-        return fetchJson(`${url}/v1/auth-browser/sessions/${encodeURIComponent(String(sessionId || ''))}/snapshot`, {
+      async authRedeem(sessionId, claimToken) {
+        return fetchJson(`${url}/v1/auth-browser/sessions/${encodeURIComponent(String(sessionId || ''))}/redeem`, {
+          method: 'POST',
           headers: { 'x-evercraft-browser-claim': String(claimToken || '') },
         }, 10_000);
       },
-      async authAction(sessionId, claimToken, action) {
+      async authSnapshot(sessionId, accessToken) {
+        return fetchJson(`${url}/v1/auth-browser/sessions/${encodeURIComponent(String(sessionId || ''))}/snapshot`, {
+          headers: { 'x-evercraft-browser-access': String(accessToken || '') },
+        }, 10_000);
+      },
+      async authAction(sessionId, accessToken, action) {
         return fetchJson(`${url}/v1/auth-browser/sessions/${encodeURIComponent(String(sessionId || ''))}/action`, {
           method: 'POST',
           headers: {
             'content-type': 'application/json',
-            'x-evercraft-browser-claim': String(claimToken || ''),
+            'x-evercraft-browser-access': String(accessToken || ''),
           },
           body: JSON.stringify(action || {}),
         }, 35_000);
       },
-      async authClose(sessionId, claimToken) {
+      async authClose(sessionId, accessToken) {
         return fetchJson(`${url}/v1/auth-browser/sessions/${encodeURIComponent(String(sessionId || ''))}`, {
           method: 'DELETE',
-          headers: { 'x-evercraft-browser-claim': String(claimToken || '') },
+          headers: { 'x-evercraft-browser-access': String(accessToken || '') },
         }, 10_000);
       },
       setDeploymentReceipt(receiptRef) {
