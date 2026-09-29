@@ -5,6 +5,8 @@ on:
     paths:
       - "systemia/media-studio/timeline-export.ts"
       - "systemia/media-studio/timeline-export.test.ts"
+      - "systemia/media-studio/studio-create.ts"
+      - "systemia/media-studio/studio-create.test.ts"
       - "systemia/media-studio/cli.ts"
       - ".github/workflows/fallen-studio-export.yml"
   push:
@@ -40,8 +42,11 @@ jobs:
           fi
           ffmpeg -version | head -n 1
 
-      - name: Timeline export contracts
-        run: node --import tsx --test systemia/media-studio/timeline-export.test.ts
+      - name: Studio draft and timeline export contracts
+        run: |
+          node --import tsx --test \
+            systemia/media-studio/studio-create.test.ts \
+            systemia/media-studio/timeline-export.test.ts
 
       - name: Build canary assets
         run: |
