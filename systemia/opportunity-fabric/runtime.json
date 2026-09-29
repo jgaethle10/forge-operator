@@ -1,0 +1,87 @@
+{
+  "schema": "evercraft.opportunity-fabric.runtime.v1",
+  "product_key": "opportunity-fabric",
+  "name": "Evercraft Opportunity Fabric",
+  "updated_at": "2026-09-27",
+  "runtime": {
+    "provider": "base44",
+    "app_id": "6ab85d74fe2093703c6247e0",
+    "checkpoint_id": "6abb212cf0be1b660810cfac",
+    "checkpoint_commit": "8738fe38d4fd50298b4e280da8d1803ac965de37",
+    "public_url": null,
+    "publication_state": "not_claimed_public"
+  },
+  "verified_capabilities": [
+    "metadata-first member profiles",
+    "I HAVE / I NEED / I CAN DO / I AM OPEN TO discovery model",
+    "metadata-first opportunity posts",
+    "local complementarity ranking",
+    "private connection-request entity",
+    "requester/target/admin row-level access on connection requests",
+    "member and opportunity public cards do not expose contact email",
+    "accepted connection opens direct contact path",
+    "protected-material-present flag without protected content storage in public listing UI",
+    "Creator Covenant acknowledgement in connection flow",
+    "private owner-only ProtectedAsset registry",
+    "browser-local SHA-256 file fingerprinting",
+    "fingerprint-only vault registration with content_uploaded=false",
+    "vault records do not require uploading protected file bytes",
+    "cross-industry complementarity smoke proof for designer/printer and musician/studio",
+    "accepted connections can open private Formation Rooms",
+    "formation terms are SHA-256 fingerprinted before party approval",
+    "owner and partner approval hashes are independently identity-scoped",
+    "mutual readiness is derived only when both approval hashes match the current terms fingerprint",
+    "requester self-acceptance is blocked at ConnectionRequest update RLS",
+    "immutable FormationSnapshot records with participant-edit lock on terms",
+    "purpose-bound ProtectedDisclosureGrant records tied to asset fingerprint and immutable formation snapshot",
+    "recipient disclosure-grant acceptance is hash-bound",
+    "grant content delivery is locked false in the current app flow"
+  ],
+  "verification": {
+    "app_lint": "pass",
+    "app_vite_build": "pass",
+    "privacy_grep": {
+      "public_profile_mailto": "none",
+      "public_opportunity_mailto": "none",
+      "protected_content_fields_in_app_source": "none",
+      "mailto_only_after_accepted_connection": true
+    },
+    "vault": {
+      "owner_only_rls": true,
+      "hash_algorithm": "SHA-256 via browser Web Crypto",
+      "file_bytes_uploaded_by_vault_flow": false
+    },
+    "forge_core_protection_proof": "pass",
+    "systemia_portfolio_sentinel": "pass",
+    "cross_industry_smoke": {
+      "designer_printer_score": 170,
+      "musician_studio_score": 322,
+      "printer_opportunity_score": 204,
+      "result": "pass"
+    },
+    "security_smoke": {
+      "result": "pass",
+      "private_contact_fields": 2,
+      "requester_self_acceptance_blocked": true,
+      "vault_owner_scoped": true,
+      "vault_file_upload_path_present": false,
+      "immutable_snapshot_terms_locked": true,
+      "snapshot_delete_admin_only": true,
+      "snapshot_creator_must_be_named_party": true,
+      "independent_snapshot_approval_hashes": true,
+      "purpose_bound_disclosure_grants": true,
+      "grant_content_delivery_locked_false": true
+    }
+  },
+  "known_limits": [
+    "Creator Covenant legal language remains draft_for_counsel_review",
+    "production-grade identity proof beyond authenticated account is not yet claimed",
+    "cryptographically signed disclosure receipts are not yet wired into the Base44 UI",
+    "protected asset upload/reveal is intentionally not exposed in the public listing flow",
+    "fingerprint registration is evidence support and is not represented as copyright registration, patent filing, or dispositive proof of ownership",
+    "public deployment URL is not yet claimed",
+    "Current branch source fixes the previously stale Evercraft Network discovery invariant; a fresh connector-triggered GitHub Actions run is not available for the newest connector-authored head, so the invariant was re-evaluated directly against branch files",
+    "Mutual immutable-snapshot approval and disclosure-grant acceptance are technical evidence/consent controls, not signed legal agreements and not authorization for actual protected-file delivery"
+  ],
+  "release_rule": "Do not claim protected-asset disclosure, final legal enforceability, public deployment, or production payment until separately verified."
+}
