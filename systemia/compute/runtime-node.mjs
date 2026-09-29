@@ -1149,6 +1149,7 @@ export async function startEvercraftComputeNode({
             teamToken: process.env.RIVET_YARD_TEAM_TOKEN || ''
           });
           const serviceId = `svc_${randomBytes(8).toString('hex')}`;
+          const authHandoffSupported = typeof runtime.createAuthSession === 'function';
           services.set(serviceId, {
             lease_id: body.lease_id,
             workload_class: body.workload_class,
@@ -1238,6 +1239,7 @@ export async function startEvercraftComputeNode({
           });
 
           const serviceId = `svc_${randomBytes(8).toString('hex')}`;
+          const authHandoffSupported = typeof runtime.createAuthSession === 'function';
           services.set(serviceId, {
             lease_id: body.lease_id,
             workload_class: body.workload_class,
@@ -1444,10 +1446,13 @@ export async function startEvercraftComputeNode({
             local_url: runtime.localPublicUrl || null,
             health_path: `/v1/services/${serviceId}/health`,
             invoke_path: `/v1/services/${serviceId}/browser`,
+            auth_handoff_create_path: authHandoffSupported ? `/v1/services/${serviceId}/browser/auth-session` : null,
             public_render_path: '/v1/browser/render',
+            public_handoff_path_template: authHandoffSupported ? '/handoff/{session_id}' : null,
             public_health_path: '/health',
             instance_id: runtime.instanceId || null,
-            mode: 'public_read_only',
+            mode: authHandoffSupported ? 'public_read_only_plus_human_handoff' : 'public_read_only',
+            auth_handoff_supported: authHandoffSupported,
             browser_engine: 'playwright-chromium',
             private_worker_endpoint_exposed: false,
           };
@@ -1689,9 +1694,6 @@ export async function startEvercraftComputeNode({
             EVERCRAFT_NODE001_FIELD_MISSION_STATE: path.join(node001Status, 'latest.json'),
             EVERCRAFT_PUBLIC_EDGE_ARTIFACT_DIR: publicEdgeOut,
             EVERCRAFT_PUBLIC_EDGE_STATE_DIR: publicEdgeState,
-            OPENAI_APPS_CHALLENGE_TOKEN: String(
-              body.input?.openai_challenge_token || ''
-            ).trim(),
             SYSTEMIA_REMOTE_BROKER_DEPLOYMENT_ID: String(
               body.input?.remote_broker_deployment_id || ''
             ).trim(),
@@ -2281,6 +2283,38 @@ export async function startEvercraftComputeNode({
             workload_class: entry.workload_class,
             requested_url_sha256: sha(String(body.job?.url || '')),
             evidence_receipt_sha256: result?.evidence_receipt_sha256 || null,
+          }),
+        });
+      }
+
+      const browserAuthSession = req.url?.match(/^\/v1\/services\/([^/]+)\/browser\/auth-session$/);
+      if (req.method === 'POST' && browserAuthSession) {
+        const entry = services.get(browserAuthSession[1]);
+        if (!entry) return send(res, 404, { error: 'service_not_found' });
+        const body = await readJson(req);
+        const lease = leases.get(entry.lease_id);
+        if (!lease || lease.token_hash !== sha(body.token || '')) {
+          return send(res, 401, { error: 'invalid_lease' });
+        }
+        if (entry.workload_class !== 'systemia.evercraft-web-browser.v1') {
+          return send(res, 422, { error: 'browser_auth_handoff_not_supported' });
+        }
+        if (typeof entry.runtime.createAuthSession !== 'function') {
+          return send(res, 503, { error: 'browser_auth_handoff_unavailable' });
+        }
+        const result = await entry.runtime.createAuthSession(body.job || {});
+        return send(res, 200, {
+          ok: true,
+          service_id: browserAuthSession[1],
+          result,
+          receipt: chain.issue('browser.auth_handoff.created', {
+            service_id: browserAuthSession[1],
+            lease_id: entry.lease_id,
+            workload_class: entry.workload_class,
+            requested_url_sha256: sha(String(body.job?.url || '')),
+            session_id_sha256: sha(String(result?.session_id || '')),
+            expires_at: result?.expires_at || null,
+            secret_material_recorded: false,
           }),
         });
       }

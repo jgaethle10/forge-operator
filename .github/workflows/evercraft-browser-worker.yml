@@ -43,6 +43,46 @@ jobs:
         run: npm test
       - name: Build worker image
         run: docker build -t evercraft/browser-worker:ci .
+      - name: Smoke worker image
+        run: |
+          docker run -d --rm --name evercraft-browser-smoke             -e EVERCRAFT_BROWSER_WORKER_TOKEN=ci-public-read-only-token             -e EVERCRAFT_AUTH_BROWSER_OPERATOR_TOKEN=ci-auth-handoff-operator-token             -p 127.0.0.1:18787:8787             evercraft/browser-worker:ci
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:18787/healthz > /tmp/evercraft-browser-health.json; then break; fi
+            sleep 1
+          done
+          node -e "const h=require('/tmp/evercraft-browser-health.json'); if(!h.ok||h.service!=='evercraft-owned-browser-worker'||h.authenticated_handoff_available!==true) process.exit(1)"
+          curl -fsS http://127.0.0.1:18787/auth-browser/health | tee /tmp/evercraft-auth-browser-health.json
+          node -e "const h=require('/tmp/evercraft-auth-browser-health.json'); if(!h.ok||h.mode!=='human_authorized_ephemeral'||h.secret_text_returned!==false) process.exit(1)"
+          curl -fsS -X POST http://127.0.0.1:18787/v1/auth-browser/sessions             -H 'authorization: Bearer ci-auth-handoff-operator-token'             -H 'content-type: application/json'             --data '{"url":"https://example.com/","viewport":{"width":1024,"height":768}}'             > /tmp/evercraft-auth-session.json
+          node <<'NODE'
+          const fs = require('node:fs');
+          const session = JSON.parse(fs.readFileSync('/tmp/evercraft-auth-session.json','utf8'));
+          if (!session.ok || session.mode !== 'human_authorized_ephemeral') process.exit(1);
+          if (session.persisted_profile !== false || session.secret_text_returned !== false) process.exit(1);
+          if (!session.session_id || !String(session.handoff_path || '').startsWith('/handoff/')) process.exit(1);
+          const handoff = new URL(session.handoff_path, 'https://evercraft.invalid');
+          const claim = new URLSearchParams(handoff.hash.slice(1)).get('claim');
+          if (!claim || claim.length < 32) process.exit(1);
+          fs.writeFileSync('/tmp/evercraft-session-id', session.session_id);
+          fs.writeFileSync('/tmp/evercraft-session-claim', claim);
+          NODE
+          SESSION_ID="$(cat /tmp/evercraft-session-id)"
+          CLAIM="$(cat /tmp/evercraft-session-claim)"
+          curl -fsS "http://127.0.0.1:18787/v1/auth-browser/sessions/$SESSION_ID/snapshot"             -H "x-evercraft-browser-claim: $CLAIM"             > /tmp/evercraft-auth-snapshot.json
+          node <<'NODE'
+          const fs = require('node:fs');
+          const shot = JSON.parse(fs.readFileSync('/tmp/evercraft-auth-snapshot.json','utf8'));
+          if (!shot.ok || shot.secure_transport !== true) process.exit(1);
+          if (!shot.screenshot_base64 || !/^[a-f0-9]{64}$/.test(shot.screenshot_sha256 || '')) process.exit(1);
+          if (!String(shot.url || '').startsWith('https://example.com')) process.exit(1);
+          NODE
+          curl -fsS -X POST "http://127.0.0.1:18787/v1/auth-browser/sessions/$SESSION_ID/action"             -H "x-evercraft-browser-claim: $CLAIM"             -H 'content-type: application/json'             --data '{"type":"reload"}'             > /tmp/evercraft-auth-action.json
+          node -e "const a=require('/tmp/evercraft-auth-action.json'); if(!a.ok||a.type!=='reload'||a.action_count!==1) process.exit(1)"
+          curl -fsS -X DELETE "http://127.0.0.1:18787/v1/auth-browser/sessions/$SESSION_ID"             -H "x-evercraft-browser-claim: $CLAIM"             > /tmp/evercraft-auth-close.json
+          node -e "const c=require('/tmp/evercraft-auth-close.json'); if(!c.ok||c.closed!==true) process.exit(1)"
+      - name: Stop smoke worker
+        if: always()
+        run: docker rm -f evercraft-browser-smoke || true
 
   yard-browser-route:
     runs-on: ubuntu-latest

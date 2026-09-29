@@ -801,6 +801,47 @@ export class YardOperator {
     };
   }
 
+  async createBrowserAuthHandoff(deploymentId, job = {}) {
+    const record = this.deploymentStatus(deploymentId);
+    const secret = this.#loadLeaseSecret(deploymentId);
+    if (!record || !secret) throw new Error('deployment lease authority unavailable');
+    if (record.receipt?.workload_class !== 'systemia.evercraft-web-browser.v1') {
+      throw new Error('deployment is not an Evercraft browser worker');
+    }
+    if (record.result?.auth_handoff_supported !== true || !record.result?.auth_handoff_create_path) {
+      throw new Error('Evercraft authenticated browser handoff is unavailable');
+    }
+
+    const invoked = await request(
+      new URL(record.result.auth_handoff_create_path, secret.capacity_endpoint).toString(),
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          token: secret.token,
+          job,
+        }),
+      }
+    );
+
+    const result = invoked.result || {};
+    const liveOrigin = this.getLiveUrl(deploymentId);
+    let handoffUrl = null;
+    if (liveOrigin && result.handoff_path) {
+      handoffUrl = new URL(result.handoff_path, liveOrigin).toString();
+    }
+
+    return {
+      ok: true,
+      deployment_id: deploymentId,
+      result: {
+        ...result,
+        handoff_url: handoffUrl,
+        public_route_verified: Boolean(liveOrigin),
+      },
+      compute_receipt_hash: invoked.receipt?.receipt_hash || null,
+    };
+  }
+
   async pushMissionSnapshot(deploymentId, {
     sourceKey,
     snapshot,

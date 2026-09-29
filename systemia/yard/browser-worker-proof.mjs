@@ -14,6 +14,7 @@ fs.mkdirSync(computeRoot, { recursive: true });
 let closed = false;
 let receiptRef = '';
 let browseCount = 0;
+let authSessionCount = 0;
 const instanceId = 'browser-proof-instance';
 
 const browserRuntimeFactory = async () => ({
@@ -66,6 +67,20 @@ const browserRuntimeFactory = async () => ({
         .digest('hex'),
     };
   },
+  async createAuthSession(job = {}) {
+    const url = new URL(String(job?.url || ''));
+    if (url.hostname === 'localhost' || url.hostname === '127.0.0.1' || url.hostname.endsWith('.local')) {
+      throw new Error('private_or_reserved_target');
+    }
+    authSessionCount += 1;
+    return {
+      session_id: 'auth-proof-session',
+      handoff_path: '/handoff/auth-proof-session#claim=stub',
+      expires_at: new Date(Date.now() + 60000).toISOString(),
+      mode: 'human_authorized_ephemeral',
+      persisted_profile: false
+    };
+  },
   setDeploymentReceipt(value) {
     receiptRef = String(value || '');
     return {
@@ -107,10 +122,22 @@ try {
   assert.equal(deployment.state, 'ready');
   assert.equal(deployment.receipt.health_verification, 'healthy');
   assert.equal(deployment.receipt.route_verification, 'private_browser_health_verified');
-  assert.equal(deployment.result.mode, 'public_read_only');
+  assert.equal(deployment.result.mode, 'public_read_only_plus_human_handoff');
+  assert.equal(deployment.result.auth_handoff_supported, true);
   assert.match(deployment.result.invoke_path, /\/browser$/);
   assert.ok(deployment.receipt.receipt_hash);
   assert.equal(receiptRef, deployment.receipt.receipt_hash);
+
+  const handoff = await yard.createBrowserAuthHandoff(
+    'evercraft-browser-proof',
+    { url: 'https://example.com/' }
+  );
+  assert.equal(handoff.ok, true);
+  assert.equal(handoff.result.session_id, 'auth-proof-session');
+  assert.equal(handoff.result.public_route_verified, false);
+  assert.equal(handoff.result.handoff_url, null);
+  assert.match(handoff.compute_receipt_hash, /^[a-f0-9]{64}$/);
+  assert.equal(authSessionCount, 1);
 
   const route = await yard.verifyRoute('evercraft-browser-proof');
   assert.equal(route.ok, false);
