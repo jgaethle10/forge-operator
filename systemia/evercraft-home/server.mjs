@@ -118,6 +118,28 @@ export async function startEvercraftHomeServer({
   let closed = false;
   let deploymentReceiptRef = "";
 
+  function homeHealth() {
+    return {
+      ok: !closed,
+      service: "evercraft-home",
+      runtime: "Evercraft Compute",
+      workload_class: "systemia.evercraft-home.v1",
+      authority: "evercraft",
+      auth_mode: authMode,
+      instance_id: instanceId,
+      listen_scope: loopback ? "loopback" : "non_loopback",
+      base44_required: false,
+      external_ai_required: false,
+      legacy_provider_required: false,
+      deployment_receipt_bound: Boolean(deploymentReceiptRef),
+      deployment_receipt_ref: deploymentReceiptRef || null,
+      identity_login_configured: Boolean(identity),
+      signing_key_id: authMode === "passport" ? identityKeyId : null,
+      accepted_signing_key_count: authMode === "passport" ? Object.keys(signingKeys).length : 0,
+      session_revocation_supported: Boolean(identity),
+    };
+  }
+
   function sessionCookie(token, maxAgeSeconds) {
     return [
       "evercraft_session=" + encodeURIComponent(token),
@@ -210,13 +232,7 @@ export async function startEvercraftHomeServer({
 
     if (req.method === "GET" && url.pathname === "/api/health") {
       return json(res, 200, {
-        ok: true,
-        service: "evercraft-home",
-        authority: "evercraft",
-        base44_required: false,
-        external_ai_required: false,
-        auth_mode: authMode,
-        instance_id: instanceId,
+        ...homeHealth(),
         timestamp: new Date().toISOString(),
       });
     }
@@ -430,39 +446,12 @@ export async function startEvercraftHomeServer({
     host,
     port: actualPort,
     authMode,
-    health: async () => ({
-      ok: !closed,
-      service: "evercraft-home",
-      runtime: "Evercraft Compute",
-      workload_class: "systemia.evercraft-home.v1",
-      authority: "evercraft",
-      auth_mode: authMode,
-      instance_id: instanceId,
-      listen_scope: loopback ? "loopback" : "non_loopback",
-      external_ai_required: false,
-      legacy_provider_required: false,
-      deployment_receipt_bound: Boolean(deploymentReceiptRef),
-      deployment_receipt_ref: deploymentReceiptRef || null,
-      identity_login_configured: Boolean(identity),
-      signing_key_id: authMode === "passport" ? identityKeyId : null,
-      accepted_signing_key_count: authMode === "passport" ? Object.keys(signingKeys).length : 0,
-      session_revocation_supported: Boolean(identity),
-    }),
+    health: async () => homeHealth(),
     setDeploymentReceipt: (receiptRef) => {
       const ref = String(receiptRef || "").trim();
       if (!ref) throw new Error("deployment_receipt_ref_required");
       deploymentReceiptRef = ref;
-      return {
-        ok: !closed,
-        service: "evercraft-home",
-        runtime: "Evercraft Compute",
-        workload_class: "systemia.evercraft-home.v1",
-        authority: "evercraft",
-        auth_mode: authMode,
-        instance_id: instanceId,
-        deployment_receipt_bound: true,
-        deployment_receipt_ref: deploymentReceiptRef,
-      };
+      return homeHealth();
     },
     close: async () => {
       if (closed) return;
