@@ -3,7 +3,8 @@ import fs from 'node:fs';
 import {
   emptyResidentState,
   runSentinelResidentCycle,
-  computeNextPollAt
+  computeNextPollAt,
+  buildSentinelMissionSnapshot
 } from './resident-cycle.mjs';
 
 function source({
@@ -145,6 +146,13 @@ assert.equal(
 assert.equal(result.snapshot.summary.urgent_incidents, 0);
 assert.equal(result.snapshot.doctrine.sensor_failure_is_not_threat_evidence, true);
 
+const missionSnapshot = buildSentinelMissionSnapshot(result.snapshot);
+assert.equal(missionSnapshot.schema, 'evercraft.kaidance.mission-snapshot.v1');
+assert.equal(missionSnapshot.mission_key, 'evercraft-life-safety-sentinel');
+assert.equal(missionSnapshot.workflow_key, 'sentinel-life-safety-resident');
+assert.equal(missionSnapshot.counts.held, 1);
+assert.ok(missionSnapshot.evidence_refs.includes('source-health:weather-a'));
+
 const thirdFailureAt = computeNextPollAt({
   source: sources[0],
   receipt: { status: 'error' },
@@ -173,5 +181,16 @@ assert.equal(registered.mode, 'resident');
 assert.equal(registered.executable, 'systemia/sentinel/resident-runner.mjs');
 assert.equal(registered.manifest, 'systemia/sentinel/resident.workflow.json');
 assert.equal(registered.max_restarts_per_hour, 12);
+
+const missionSources = JSON.parse(fs.readFileSync(
+  new URL('../collider/mission-sources.json', import.meta.url),
+  'utf8'
+));
+const sentinelMissionSource = missionSources.sources.find(
+  (row) => row.source_key === 'sentinel-life-safety'
+);
+assert.ok(sentinelMissionSource);
+assert.equal(sentinelMissionSource.required, false);
+assert.equal(sentinelMissionSource.stale_after_seconds, 180);
 
 console.log('SYSTEMIA SENTINEL RESIDENT CYCLE PASS');
