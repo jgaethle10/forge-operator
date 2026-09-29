@@ -6,11 +6,17 @@ on:
     paths:
       - 'systemia/context-fabric/**'
       - 'systemia/passport/**'
+      - 'systemia/intake-fabric/intake.mjs'
+      - 'systemia/execution-gate/gate.mjs'
+      - 'systemia/control-plane/control-plane.mjs'
       - '.github/workflows/evercraft-context-fabric.yml'
   pull_request:
     paths:
       - 'systemia/context-fabric/**'
       - 'systemia/passport/**'
+      - 'systemia/intake-fabric/intake.mjs'
+      - 'systemia/execution-gate/gate.mjs'
+      - 'systemia/control-plane/control-plane.mjs'
       - '.github/workflows/evercraft-context-fabric.yml'
 
 permissions:
@@ -28,3 +34,4 @@ jobs:
         run: |
           node --test systemia/passport/passport.test.mjs
           node --test systemia/context-fabric/fabric.test.mjs
+          node --test systemia/context-fabric/receipt-bridge.test.mjs

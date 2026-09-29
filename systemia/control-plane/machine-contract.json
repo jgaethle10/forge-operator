@@ -143,6 +143,13 @@
       "source_refs": [
         "public/.well-known/evercraft-direct-door-readiness.json"
       ]
+    },
+    {
+      "component_key": "evercraft-context-receipt-bridge",
+      "role": "verified_receipt_to_institutional_memory_reconciliation",
+      "source_refs": [
+        "systemia/context-fabric/receipt-bridge.mjs"
+      ]
     }
   ],
   "routing": {
@@ -209,7 +216,8 @@
     "completion_without_receipt_or_evidence": false,
     "context_retrieval_does_not_upgrade_evidence_state": true,
     "intake_acceptance_is_not_execution": true,
-    "execution_gate_start_is_not_external_completion": true
+    "execution_gate_start_is_not_external_completion": true,
+    "institutional_memory_from_receipts_requires_hash_verification": true
   },
   "consequential_work_types": [
     "trust_change",
@@ -231,7 +239,11 @@
     "provider": "evercraft-context-fabric",
     "access_control": "evercraft-passport",
     "evidence_state_must_survive_retrieval": true,
-    "unauthorized_metadata_must_not_be_returned": true
+    "unauthorized_metadata_must_not_be_returned": true,
+    "receipt_reconciliation": "evercraft-context-receipt-bridge",
+    "trusted_receipts_may_be_projected_to_memory": true,
+    "source_content_never_becomes_instruction": true,
+    "source_authority_never_inherited": true
   },
   "ingress": {
     "provider": "evercraft-intake-fabric",

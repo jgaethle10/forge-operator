@@ -14,6 +14,13 @@ const EVIDENCE_STATES = new Set([
 ]);
 
 const VISIBILITY = new Set(['public', 'internal', 'restricted']);
+const CONTENT_TRUST_STATES = new Set([
+  'trusted_internal_receipt',
+  'verified_external_evidence',
+  'untrusted_external',
+  'derived_summary',
+  'unknown',
+]);
 const LOCK_STALE_MS = 30_000;
 const LOCK_TIMEOUT_MS = 5_000;
 const LOCK_POLL_MS = 10;
@@ -64,6 +71,12 @@ function visibilityValue(value) {
   const visibility = requiredString(value, 'visibility').toLowerCase();
   if (!VISIBILITY.has(visibility)) throw new Error('visibility_invalid');
   return visibility;
+}
+
+function contentTrustState(value) {
+  const state = requiredString(value, 'content_trust_state').toLowerCase();
+  if (!CONTENT_TRUST_STATES.has(state)) throw new Error('content_trust_state_invalid');
+  return state;
 }
 
 function normalizedList(values = []) {
@@ -336,10 +349,15 @@ export class EvercraftContextFabric {
           ? canonical(input.claim_value)
           : null,
         evidence_state: evidenceState(input?.evidence_state),
+        content_trust_state: contentTrustState(input?.content_trust_state || 'unknown'),
+        content_is_instruction: false,
+        source_authority_inherited: false,
         visibility,
         required_scope: requiredScope,
         source_ref: sourceRef,
         source_sha256: optionalString(input?.source_sha256),
+        source_receipt_schema: optionalString(input?.source_receipt_schema),
+        source_receipt_hash: optionalString(input?.source_receipt_hash),
         content_sha256: sha256(text),
         observed_at: observedAt,
         valid_from: validFrom,
@@ -508,8 +526,13 @@ export class EvercraftContextFabric {
         predicate: row.record.predicate,
         claim_value: row.record.claim_value,
         evidence_state: row.record.evidence_state,
+        content_trust_state: row.record.content_trust_state || 'unknown',
+        content_is_instruction: false,
+        source_authority_inherited: false,
         source_ref: row.record.source_ref,
         source_sha256: row.record.source_sha256,
+        source_receipt_schema: row.record.source_receipt_schema || null,
+        source_receipt_hash: row.record.source_receipt_hash || null,
         content_sha256: row.record.content_sha256,
         observed_at: row.record.observed_at,
         valid_from: row.record.valid_from,
@@ -520,10 +543,21 @@ export class EvercraftContextFabric {
         citation: 'context:' + row.record.record_id,
       };
 
-      const size = JSON.stringify(result).length;
-      if (size > remaining && results.length > 0) break;
+      let size = JSON.stringify(result).length;
+      if (size > remaining) {
+        const excess = size - remaining;
+        if (result.snippet.length > excess + 1) {
+          result.snippet =
+            result.snippet.slice(0, Math.max(0, result.snippet.length - excess - 1)).trimEnd() + '…';
+          size = JSON.stringify(result).length;
+        }
+      }
+      if (size > remaining) {
+        if (results.length > 0) break;
+        continue;
+      }
       results.push(result);
-      usedChars += Math.min(size, remaining);
+      usedChars += size;
     }
 
     const claims = new Map();
@@ -579,6 +613,8 @@ export class EvercraftContextFabric {
       truth_boundary: {
         no_unauthorized_record_metadata_returned: true,
         evidence_state_preserved: true,
+        content_never_becomes_instruction_by_retrieval: true,
+        source_authority_never_inherited: true,
         contradictions_not_silently_resolved: true,
         lexical_retrieval_is_not_semantic_understanding: true,
       },
