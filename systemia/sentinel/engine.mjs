@@ -52,6 +52,8 @@ function normalizeObservation(raw) {
     created_at: createdAt.toISOString(),
     region_key: requireText(raw.region_key, 'region_key'),
     source_family: requireText(raw.source_family, 'source_family'),
+    independence_group: requireText(raw.independence_group || raw.source_family, 'independence_group'),
+    region_group: typeof raw.region_group === 'string' && raw.region_group.trim() ? raw.region_group.trim() : null,
     domain: requireText(raw.domain, 'domain'),
     kind: requireText(raw.kind || 'anomaly', 'kind'),
     anomaly_score: clamp01(raw.anomaly_score ?? 0.5),
@@ -89,6 +91,7 @@ function findIncident(state, observation, windowMs) {
 
 function classify(observations) {
   const families = new Set(observations.map((o) => o.source_family));
+  const independenceGroups = new Set(observations.map((o) => o.independence_group || o.source_family));
   const domains = new Set(observations.map((o) => o.domain));
   const verifiedCount = observations.filter((o) => o.evidence_state === 'verified').length;
   const directCount = observations.filter((o) => ['observed', 'verified'].includes(o.evidence_state)).length;
@@ -105,7 +108,7 @@ function classify(observations) {
   }
 
   const anomaly = weightedDenominator ? weightedNumerator / weightedDenominator : 0;
-  const independence = Math.min(1, families.size / 4);
+  const independence = Math.min(1, independenceGroups.size / 4);
   const domainBreadth = Math.min(1, domains.size / 3);
   const evidenceQuality = observations.reduce(
     (sum, o) => sum + EVIDENCE_WEIGHT[o.evidence_state],
@@ -120,12 +123,12 @@ function classify(observations) {
   );
 
   let level = 'watch';
-  if (families.size >= 2 && confidence >= 0.48) level = 'corroborating';
-  if (families.size >= 3 && domains.size >= 2 && directCount >= 2 && confidence >= 0.64) {
+  if (independenceGroups.size >= 2 && confidence >= 0.48) level = 'corroborating';
+  if (independenceGroups.size >= 3 && domains.size >= 2 && directCount >= 2 && confidence >= 0.64) {
     level = 'elevated';
   }
   if (
-    families.size >= 4 &&
+    independenceGroups.size >= 4 &&
     domains.size >= 3 &&
     verifiedCount >= 1 &&
     directCount >= 3 &&
@@ -148,7 +151,9 @@ function classify(observations) {
   return {
     level,
     confidence,
-    independent_source_families: families.size,
+    independent_source_families: independenceGroups.size,
+    raw_source_families: families.size,
+    independent_source_groups: independenceGroups.size,
     domains: domains.size,
     verified_observations: verifiedCount,
     direct_observations: directCount,
