@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - "systemia/evercraft-home/**"
+      - "systemia/identity/**"
       - "systemia/compute/runtime-node.mjs"
       - "systemia/compute/evercraft-home-runtime.proof.mjs"
       - "systemia/yard/operator.mjs"
@@ -14,6 +15,7 @@ on:
       - main
     paths:
       - "systemia/evercraft-home/**"
+      - "systemia/identity/**"
       - "systemia/compute/runtime-node.mjs"
       - "systemia/compute/evercraft-home-runtime.proof.mjs"
       - "systemia/yard/operator.mjs"
@@ -36,6 +38,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+
+      - name: Prove Evercraft Identity
+        run: node --test systemia/identity/identity.test.mjs
 
       - name: Prove sovereign shell
         working-directory: systemia/evercraft-home
