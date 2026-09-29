@@ -1,0 +1,27 @@
+{
+  "schema": "evercraft.capability-promotion-links.v1",
+  "updated_on": "2026-09-28",
+  "rule": "These links associate an already-public product record with an already-public Machine Commerce offer. A link is evidence for review only and never grants new authority, payment rights, private access, or MCP publication.",
+  "links": [
+    {
+      "product_key": "evermaps",
+      "machine_public_id": "evermaps-evidence-projection-machine-v1",
+      "evidence": "Base44 machineDiscovery publishes this public_id and points to the central Evercraft Machine Commerce MCP; current machine_state remains discovery_only."
+    },
+    {
+      "product_key": "globalstat",
+      "machine_public_id": "globalstat-country-intelligence-machine-v1",
+      "evidence": "Base44 machineDiscovery publishes this public_id and points to the central Evercraft Machine Commerce MCP; current machine_state remains discovery_only."
+    },
+    {
+      "product_key": "talent-atlas",
+      "machine_public_id": "talent-evidence-profile-machine-v1",
+      "evidence": "Base44 machineDiscovery publishes this public_id and points to the central Evercraft Machine Commerce MCP; current machine_state remains discovery_only."
+    },
+    {
+      "product_key": "towi-research",
+      "machine_public_id": "towi-evidence-research-machine-v1",
+      "evidence": "Base44 machineDiscovery publishes this public_id and points to the central Evercraft Machine Commerce MCP; current machine_state remains discovery_only."
+    }
+  ]
+}
