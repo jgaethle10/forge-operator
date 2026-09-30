@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.crawler-radar.v1",
-  "generated_at": "2026-09-29T23:11:35.790Z",
+  "generated_at": "2026-09-30T00:11:07.950Z",
   "coordinator": "CHUM",
   "runtime_feedback": {
     "requested": false,
@@ -10,7 +10,7 @@
   "observation_count": 0,
   "negative_provider_pickup_receipts": 174,
   "surface_count": 2660,
-  "strike_now_count": 1752,
+  "strike_now_count": 1716,
   "doctrine": {
     "crawler_fetch_is_not_indexing": true,
     "indexing_is_not_ranking": true,
@@ -15097,28 +15097,6 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/application-network-that-reconnects-across-changing-authorized-internet-paths-3f92268565/",
-      "product_key": null,
-      "score": 215,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-09-26T23:54:16.768Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/as-400-modernization-assessment-49430f448e/",
       "product_key": null,
       "score": 215,
@@ -15147,50 +15125,6 @@
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-28T16:52:02.039Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/continuity-readiness-tools-a8c2eb4441/",
-      "product_key": null,
-      "score": 215,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-09-26T23:54:16.768Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/evercraft-network-membership-861ace178a/",
-      "product_key": null,
-      "score": 215,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-09-26T23:54:16.768Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -15928,6 +15862,27 @@
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-25T07:08:03.584Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/application-network-that-reconnects-across-changing-authorized-internet-paths-3f92268565/",
+      "product_key": null,
+      "score": 207,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-09-26T23:54:16.768Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -17749,6 +17704,27 @@
       ]
     },
     {
+      "path": "/chum/answers/doors/continuity-readiness-tools-a8c2eb4441/",
+      "product_key": null,
+      "score": 207,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-09-26T23:54:16.768Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
       "path": "/chum/answers/doors/contractor-cash-flow-payroll-timing-or-receivables-are-causing-stress-c9c2d9c21a/",
       "product_key": null,
       "score": 207,
@@ -18721,6 +18697,27 @@
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-25T07:08:03.584Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/evercraft-network-membership-861ace178a/",
+      "product_key": null,
+      "score": 207,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-09-26T23:54:16.768Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
