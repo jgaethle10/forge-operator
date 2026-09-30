@@ -70,7 +70,7 @@ try {
 
     await assert.rejects(
       () => anonymous.auth.register({ email: 'new@example.invalid', password }),
-      /auth_registration_delivery_not_configured/
+      (error) => error?.code === 'auth_registration_delivery_not_configured'
     );
 
     const logout = await client.auth.logout();
