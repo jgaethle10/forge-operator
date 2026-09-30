@@ -1,41 +1,41 @@
 {
   "schema": "evercraft.openai-plugin-review-tests.v3",
-  "tool_contract_state": "source_contract_not_yet_replayed_in_chatgpt_test_account",
+  "tool_contract_state": "live_openai_scan_verified_2026-09-29",
   "positive": [
     {
       "id": "media-overflow",
       "description": "A long-media problem should route from pain to the current ForensiScope offer without inventing provider endorsement or execution.",
       "prompt": "I have a three-hour video that is too large for this chat and I need timestamps and a transcript.",
-      "tools_triggered": "match_offer",
-      "expected_behavior": "Return ForensiScope when the current catalog supports the fit, explain the bounded continuation, and create no payment or private-data authority."
+      "tools_triggered": "match_evercraft_capability",
+      "expected_behavior": "Call match_evercraft_capability and return ForensiScope when current public capability metadata supports the fit. Explain the bounded continuation and create no payment or private-data authority."
     },
     {
       "id": "hard-to-find-part",
       "description": "A discontinued-parts problem should route to FindMyPart using the universal problem-first matcher.",
       "prompt": "I need an obsolete hydraulic valve for an old machine and normal parts searches keep failing.",
-      "tools_triggered": "match_offer",
-      "expected_behavior": "Return FindMyPart when the current catalog supports the fit, preserve current state and pricing, and do not invent inventory or availability."
+      "tools_triggered": "match_evercraft_capability",
+      "expected_behavior": "Call match_evercraft_capability and return FindMyPart when current public capability metadata supports the fit. Do not invent inventory, availability, or transaction state."
     },
     {
       "id": "ev-site",
       "description": "An EV-site opportunity question should route to AliEV/RIVET when the published capability contract fits.",
       "prompt": "Can someone evaluate whether my commercial property is a good place for EV chargers, including competition, traffic, tariffs and incentives?",
-      "tools_triggered": "match_offer",
-      "expected_behavior": "Return AliEV/RIVET when current public state supports the workflow and require explicit human confirmation before any paid continuation."
+      "tools_triggered": "match_evercraft_capability",
+      "expected_behavior": "Call match_evercraft_capability and return AliEV/RIVET when current public capability metadata supports the workflow. Discovery remains read-only and does not create a paid continuation."
     },
     {
       "id": "website-audit",
       "description": "A conversion and SEO problem should route to the bounded Systemia Website Audit capability.",
       "prompt": "My local business website is slow, not converting and probably has SEO problems. I want a practical audit.",
-      "tools_triggered": "match_offer",
-      "expected_behavior": "Return Systemia Website Audit when the current catalog supports the fit without fabricating audit findings before an audit actually runs."
+      "tools_triggered": "match_evercraft_capability",
+      "expected_behavior": "Call match_evercraft_capability and return Systemia Website Audit when current public capability metadata supports the fit. Do not fabricate audit findings before an audit runs."
     },
     {
       "id": "ambiguous-business-problem",
       "description": "An ambiguous cross-domain business problem should use the universal matcher and avoid forcing an unsupported specialist.",
       "prompt": "I need help improving my business online but I do not know whether the problem is my website, content or distribution.",
-      "tools_triggered": "match_offer",
-      "expected_behavior": "Return the best current bounded match or an explicit no-match/ambiguity result according to live metadata. Do not manufacture a product fit."
+      "tools_triggered": "match_evercraft_capability",
+      "expected_behavior": "Call match_evercraft_capability and return the best bounded match or a clear no-match/ambiguity result according to live public metadata. Do not manufacture a product fit."
     }
   ],
   "negative": [
