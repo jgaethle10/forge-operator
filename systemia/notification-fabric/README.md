@@ -85,3 +85,8 @@ The default store is a durable single-node filesystem adapter intended for the c
 ## Next adapters
 
 The fabric is ready for APNs, native Android/FCM, SMS fallback, email fallback, in-app inbox, and digest workers. Those are transports, not separate notification systems. Product code should continue to emit the same intent contract.
+
+
+## Server-side adoption
+
+Node services can use `systemia/notification-fabric/client.mjs`. Configure `EVERCRAFT_NOTIFICATION_BASE_URL` and the server-only ingest token, then call `client.notify(intent)` for product/user notifications or `client.signal(signal)` for operational events. Product code never needs to know the Web Push protocol or transport details.
