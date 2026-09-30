@@ -1,0 +1,33 @@
+name: Control Room Public Probe
+on:
+  push:
+    branches: [fabric-public-probe-20260930]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Probe owned Control Room
+        shell: bash
+        run: |
+          set -euo pipefail
+          ORIGIN='https://evercraft-control.systemiacommandcenters.com'
+          echo '=== DNS ==='
+          getent ahostsv4 evercraft-control.systemiacommandcenters.com || true
+          echo '=== HEALTH ==='
+          code="$(curl -sS -o /tmp/health -w '%{http_code}' --max-time 20 "$ORIGIN/health" || true)"
+          echo "health_http=$code"
+          cat /tmp/health 2>/dev/null || true
+          echo
+          echo '=== CAPABILITIES ==='
+          ccode="$(curl -sS -o /tmp/caps -w '%{http_code}' --max-time 20 "$ORIGIN/v1/browser/capabilities" || true)"
+          echo "capabilities_http=$ccode"
+          cat /tmp/caps 2>/dev/null || true
+          echo
+          test "$code" = "200"
+          test "$ccode" = "200"
+          jq -e '.ok==true and .service=="evercraft-web-browser-edge" and .deployment_receipt_bound==true' /tmp/health >/dev/null
+          jq -e '.ok==true and .authenticated_human_handoff==true and .authenticated_handoff_persists_profile==false and .authenticated_handoff_secret_text_returned==false' /tmp/caps >/dev/null
