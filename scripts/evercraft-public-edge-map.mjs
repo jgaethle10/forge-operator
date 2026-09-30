@@ -139,20 +139,27 @@ async function discoverUpnp() {
   return [...locations];
 }
 
-function extractService(xml) {
-  const blocks = xml.match(/<service>[\s\S]*?<\/service>/gi) || [];
+function tagValue(block, localName) {
+  const re = new RegExp('<(?:[A-Za-z0-9_.-]+:)?' + localName + '\\b[^>]*>([\\s\\S]*?)<\\/(?:[A-Za-z0-9_.-]+:)?' + localName + '>', 'i');
+  return block.match(re)?.[1]?.trim() || null;
+}
+
+function extractServices(xml) {
+  const blocks =
+    xml.match(/<(?:[A-Za-z0-9_.-]+:)?service\\b[^>]*>[\\s\\S]*?<\\/(?:[A-Za-z0-9_.-]+:)?service>/gi) || [];
   const preferred = [
     'urn:schemas-upnp-org:service:WANIPConnection:2',
     'urn:schemas-upnp-org:service:WANIPConnection:1',
     'urn:schemas-upnp-org:service:WANPPPConnection:1',
   ];
-  for (const type of preferred) {
-    const block = blocks.find(b => b.includes(type));
-    if (!block) continue;
-    const control = block.match(/<controlURL>([^<]+)<\/controlURL>/i)?.[1]?.trim();
-    if (control) return { serviceType: type, controlURL: control };
+  const found = [];
+  for (const block of blocks) {
+    const serviceType = tagValue(block, 'serviceType');
+    const controlURL = tagValue(block, 'controlURL');
+    if (!serviceType || !controlURL) continue;
+    if (preferred.includes(serviceType)) found.push({ serviceType, controlURL });
   }
-  return null;
+  return found.sort((a, b) => preferred.indexOf(a.serviceType) - preferred.indexOf(b.serviceType));
 }
 
 async function soap(control, serviceType, action, body) {
@@ -177,21 +184,59 @@ async function soap(control, serviceType, action, body) {
 }
 
 async function upnpMap() {
-  const result = { method: 'UPnP-IGD', success: false, locations: [], external_ip: null, mappings: [] };
+  const result = {
+    method: 'UPnP-IGD',
+    success: false,
+    locations: [],
+    external_ip: null,
+    mappings: [],
+    diagnostics: [],
+  };
   const locations = await discoverUpnp();
   result.locations = locations;
 
   for (const location of locations) {
+    let xml;
     try {
-      const xml = await (await fetch(location, { signal: AbortSignal.timeout(3000) })).text();
-      const service = extractService(xml);
-      if (!service) continue;
-      const control = new URL(service.controlURL, location).href;
+      const res = await fetch(location, { signal: AbortSignal.timeout(4000) });
+      const text = await res.text();
+      result.diagnostics.push({
+        location,
+        descriptor_status: res.status,
+        descriptor_bytes: Buffer.byteLength(text),
+      });
+      if (!res.ok) continue;
+      xml = text;
+    } catch (e) {
+      result.diagnostics.push({ location, descriptor_error: e.message });
+      continue;
+    }
 
+    const services = extractServices(xml);
+    result.diagnostics.push({
+      location,
+      matching_services: services,
+      advertised_service_types:
+        [...xml.matchAll(/<(?:[A-Za-z0-9_.-]+:)?serviceType\\b[^>]*>([^<]+)<\\/(?:[A-Za-z0-9_.-]+:)?serviceType>/gi)]
+          .map(m => m[1].trim())
+          .filter((v, i, a) => a.indexOf(v) === i),
+    });
+
+    for (const service of services) {
+      const control = new URL(service.controlURL, location).href;
       try {
         const ipXml = await soap(control, service.serviceType, 'GetExternalIPAddress', '');
-        result.external_ip = ipXml.match(/<NewExternalIPAddress>([^<]+)<\/NewExternalIPAddress>/i)?.[1] || null;
-      } catch {}
+        result.external_ip =
+          ipXml.match(/<(?:[A-Za-z0-9_.-]+:)?NewExternalIPAddress>([^<]+)<\\/(?:[A-Za-z0-9_.-]+:)?NewExternalIPAddress>/i)?.[1] ||
+          result.external_ip;
+      } catch (e) {
+        result.diagnostics.push({
+          location,
+          service_type: service.serviceType,
+          control,
+          external_ip_error: e.message,
+        });
+      }
 
       const mapped = [];
       for (const m of mappings) {
@@ -212,6 +257,12 @@ async function upnpMap() {
         }
       }
       result.mappings = mapped;
+      result.diagnostics.push({
+        location,
+        service_type: service.serviceType,
+        control,
+        mapping_results: mapped,
+      });
       result.success = mapped.length === mappings.length && mapped.every(x => x.success);
       if (result.success) {
         result.location = location;
@@ -219,7 +270,7 @@ async function upnpMap() {
         result.service_type = service.serviceType;
         return result;
       }
-    } catch {}
+    }
   }
   return result;
 }

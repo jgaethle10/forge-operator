@@ -19,3 +19,11 @@ test('public edge mapper supports owned NAT traversal protocols',()=>{
   assert.match(src,/AddPortMapping/);
   assert.match(src,/5351/);
 });
+
+
+test('UPnP parser handles namespaced service descriptors and emits diagnostics',()=>{
+  assert.match(src,/tagValue\(block, 'serviceType'\)/);
+  assert.match(src,/matching_services/);
+  assert.match(src,/advertised_service_types/);
+  assert.match(src,/descriptor_status/);
+});
