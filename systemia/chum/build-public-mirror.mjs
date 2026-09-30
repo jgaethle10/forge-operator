@@ -37,9 +37,9 @@ const root = 'public/chum/products';
 const READ_ONLY_DISCOVERY_REGISTRY =
   catalog.universal_front_door?.read_only_registry_name ||
   'io.github.jgaethle10/evercraft-capability-discovery';
-const MACHINE_COMMERCE_GATEWAY =
-  'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
-const BUYER_FRONTAGE_ORIGIN = 'https://evercraft-ai-suite-08c4d2b8.base44.app';
+const MACHINE_COMMERCE_GATEWAY = String(process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL || '').trim();
+const CHUM_PUBLIC_ORIGIN = String(process.env.CHUM_PUBLIC_ORIGIN || '').trim();
+const LEGACY_PUBLIC_HOST = /(^|\\.)base44\\.app$/i;
 const BLOCKED_PUBLIC_HOSTS = new Set([
   'systemiacommandcenters.com',
   'www.systemiacommandcenters.com'
