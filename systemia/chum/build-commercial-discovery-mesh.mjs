@@ -8,7 +8,7 @@ const PRODUCT_DIRECTORY = 'public/.well-known/evercraft-products.json';
 const OUT = 'public/chum/commercial';
 const SITEMAPS = 'public/chum/sitemaps';
 const RAW_BASE = 'https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public';
-const MACHINE_GATEWAY = 'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
+const CAPABILITY_PUBLIC_BASE = 'https://github.com/jgaethle10/forge-operator/tree/main/public/chum/capabilities';
 
 const readJson = (p) => JSON.parse(fs.readFileSync(p, 'utf8'));
 const slugify = (value) => String(value || '')
@@ -41,7 +41,7 @@ function sitemap(paths) {
   ].join('\n');
 }
 function gatewayReview(publicId) {
-  return MACHINE_GATEWAY + '?view=service&public_id=' + encodeURIComponent(publicId);
+  return CAPABILITY_PUBLIC_BASE + '/' + encodeURIComponent(String(publicId || ''));
 }
 
 export function buildCommercialDiscoveryMesh({ root = process.cwd() } = {}) {
