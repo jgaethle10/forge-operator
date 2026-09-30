@@ -296,7 +296,7 @@ function completedWindow(now = new Date()) {
   end.setUTCDate(end.getUTCDate() - 1);
   end.setUTCHours(23, 59, 59, 999);
   const start = new Date(end);
-  start.setUTCDate(start.getUTCDate() - 14);
+  start.setUTCDate(start.getUTCDate() - 45);
   start.setUTCHours(0, 0, 0, 0);
   return { start: start.toISOString(), end: end.toISOString() };
 }
