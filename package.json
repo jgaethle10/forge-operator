@@ -234,7 +234,8 @@
     "proof:worldstate-context-reader": "node systemia/worldstate/context-reader.proof.mjs",
     "worldstate:phenomenon": "node systemia/worldstate/phenomenon-bridge.mjs",
     "proof:worldstate-phenomenon": "node systemia/worldstate/phenomenon-bridge.proof.mjs",
-    "proof:evercraft-hosting": "node systemia/compute/hosting-control-plane.proof.mjs"
+    "proof:evercraft-hosting": "node systemia/compute/hosting-control-plane.proof.mjs",
+    "proof:aliev-rivet-owned": "node systemia/compute/aliev-rivet-owned-lane.proof.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
