@@ -384,3 +384,20 @@ Unknown rights produce a warning. Restricted assets fail closed. Synthetic shots
 ## Release state
 
 The current code is a source-stage engine with executable planning/rendering slices, deterministic continuity tests, production-admission tests, and a bounded Saban production proof. It must not be advertised as a publicly live end-to-end creative platform until deployment, provider execution and real media canaries are independently verified.
+
+
+## Phenomenon Canvas
+
+Fallen now has a dedicated evidence-bound renderer for stories where the physical process itself should carry the explanation: currents, winds, rivers, smoke transport, migration, traffic flow, aircraft movement and other time-varying fields.
+
+The contract deliberately forces restraint. One visual answers one phenomenon. Motion, color and brightness must each have an explicit semantic meaning, and all field provenance must resolve to the approved source set before rendering. A modeled field stays labeled MODELED rather than being cosmetically promoted into an observation.
+
+The renderer uses deterministic exact-frame controls so the same source package can produce vertical social cuts, widescreen explainers and distributed render jobs without screen-recording a wall-clock animation. Dense streamline particles are rendered on an owned canvas surface with no external runtime dependency.
+
+Compile a phenomenon package:
+
+```bash
+npm run media:studio -- phenomenon ./tmp/phenomenon.json ./tmp/phenomenon.html ./tmp/phenomenon.receipt.json
+```
+
+The receipt records the evidence state, source references, streamline/sample counts and a stable digest. Render completion does not grant publication authority. Evercraft Clip remains downstream.
