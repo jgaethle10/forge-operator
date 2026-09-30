@@ -439,12 +439,20 @@ export async function startRivetReportRuntime({
   stateDir,
   host='127.0.0.1',
   port=0,
-  sourceUrl=process.env.ALIEV_YARD_SOURCE_URL || 'https://base44.app/api/apps/69b9b64d86a732029ce0db81/functions/energySiteLookup',
+  sourceUrl=process.env.ALIEV_YARD_SOURCE_URL || '',
   systemiaMachineKey=process.env.SYSTEMIA_MACHINE_KEY || '',
   teamToken=process.env.RIVET_YARD_TEAM_TOKEN || '',
   sourceFetch=fetch
 }={}){
   if(!stateDir) throw new Error('stateDir is required');
+  if(!clean(sourceUrl)) throw new Error('ALIEV_YARD_SOURCE_URL is required; legacy Base44 fallback is disabled');
+  try{
+    const source=new URL(sourceUrl);
+    if(/(^|\\.)base44\\.app$/i.test(source.hostname)) throw new Error('Base44 AliEV source URLs are prohibited');
+  }catch(error){
+    if(error instanceof Error && error.message==='Base44 AliEV source URLs are prohibited') throw error;
+    throw new Error('ALIEV_YARD_SOURCE_URL must be an absolute owned service URL');
+  }
   fs.mkdirSync(stateDir,{recursive:true,mode:0o750});
   if(!clean(systemiaMachineKey)) throw new Error('SYSTEMIA_MACHINE_KEY is required');
   if(!clean(teamToken)) throw new Error('RIVET_YARD_TEAM_TOKEN is required');
