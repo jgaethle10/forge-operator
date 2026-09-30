@@ -169,8 +169,8 @@ function rateLimit(maxRequests: number, windowMs: number) {
 }
 
 app.use(express.json({ limit: '10mb', type: ['application/json', 'application/*+json'] }));
-registerNotificationFabricRoutes(app);
-registerRivetReportGateway(app);
+const relay = registerNotificationFabricRoutes(app);
+registerRivetReportGateway(app, { relay });
 registerSpecialistHandoffMcps(app, { gatewayUrl: machineCommerceGatewayUrl });
 registerRemoteOperatorMcp(app);
 
