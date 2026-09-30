@@ -1,19 +1,8 @@
+import { normalizeUsState, inferUsAddressParts } from '../../aliev/geo-normalization.mjs';
+
 const clean=(v)=>String(v??'').trim();
 const lower=(v)=>clean(v).toLowerCase();
 const clone=(v)=>structuredClone(v||{});
-
-const US_STATE_CODES={
-  alabama:'AL',alaska:'AK',arizona:'AZ',arkansas:'AR',california:'CA',colorado:'CO',connecticut:'CT',
-  delaware:'DE',florida:'FL',georgia:'GA',hawaii:'HI',idaho:'ID',illinois:'IL',indiana:'IN',iowa:'IA',
-  kansas:'KS',kentucky:'KY',louisiana:'LA',maine:'ME',maryland:'MD',massachusetts:'MA',michigan:'MI',
-  minnesota:'MN',mississippi:'MS',missouri:'MO',montana:'MT',nebraska:'NE',nevada:'NV',
-  'new hampshire':'NH','new jersey':'NJ','new mexico':'NM','new york':'NY','north carolina':'NC',
-  'north dakota':'ND',ohio:'OH',oklahoma:'OK',oregon:'OR',pennsylvania:'PA','rhode island':'RI',
-  'south carolina':'SC','south dakota':'SD',tennessee:'TN',texas:'TX',utah:'UT',vermont:'VT',
-  virginia:'VA',washington:'WA','west virginia':'WV',wisconsin:'WI',wyoming:'WY',
-  'district of columbia':'DC'
-};
-const KNOWN_CODES=new Set(Object.values(US_STATE_CODES));
 
 export const ALIEV_LEGACY_DOMAIN_MAP={
   EVNationalChargePoint:'charging_inventory',
@@ -36,11 +25,6 @@ export function normalizeUsState(value){
   if(KNOWN_CODES.has(upper))return upper;
   return US_STATE_CODES[lower(raw)]||'';
 }
-function inferUsAddressParts(address){
-  const text=clean(address);
-  const match=text.match(/(?:,|\s)\s*([A-Z]{2})\s+(\d{5})(?:-\d{4})?\b/i);
-  return match?{state:match[1].toUpperCase(),postal_code:match[2]}:{state:'',postal_code:''};
-}
 function migrationKey(entity,row,index){
   const candidates=[
     row?.external_id,row?.aggregate_key,row?.profile_key,row?.snapshot_key,
@@ -51,7 +35,7 @@ function migrationKey(entity,row,index){
 function common(entity,row,index){
   const out=clone(row);
   const inferred=inferUsAddressParts(out.address);
-  const normalized=normalizeUsState(out.state||out.state_code||out.state_name);
+  const normalized=normalizeUsState(out.state||out.state_code||out.state_name||out.region_code);
   if(normalized)out.state=normalized;
   else if(inferred.state&&!out.state)out.state=inferred.state;
   if(!clean(out.postal_code)&&inferred.postal_code)out.postal_code=inferred.postal_code;
