@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 import { execFileSync } from 'node:child_process';
+import fs from 'node:fs';
+import path from 'node:path';
 
 const explicitBase = String(process.env.BASE44_MIGRATION_BASE_REF || '').trim();
 const candidates = [explicitBase, 'origin/main', 'main'].filter(Boolean);
@@ -61,4 +63,36 @@ if (violations.length) {
   process.exit(1);
 }
 
-console.log('Base44 coupling guard: PASS. No new Base44 runtime dependency was added.');
+const criticalRuntimePaths = [
+  'server.ts',
+  'systemia/chum/start-corridor.mjs',
+];
+
+const siteplanRoot = path.resolve('systemia/rivet/siteplan');
+if (fs.existsSync(siteplanRoot)) {
+  for (const name of fs.readdirSync(siteplanRoot)) {
+    if (/\.(py|mjs|js|ts)$/.test(name)) criticalRuntimePaths.push('systemia/rivet/siteplan/' + name);
+  }
+}
+
+const criticalViolations = [];
+for (const file of criticalRuntimePaths) {
+  if (!fs.existsSync(file)) continue;
+  const body = fs.readFileSync(file, 'utf8');
+  const lines = body.split('\n');
+  for (let i = 0; i < lines.length; i++) {
+    if (coupling.some((rx) => rx.test(lines[i]))) {
+      criticalViolations.push({ path: file, lineNumber: i + 1, line: lines[i].trim() });
+    }
+  }
+}
+
+if (criticalViolations.length) {
+  console.error('Base44 coupling remains in a critical owned runtime path.');
+  for (const item of criticalViolations) {
+    console.error(' - ' + item.path + ':' + item.lineNumber + ': ' + item.line);
+  }
+  process.exit(1);
+}
+
+console.log('Base44 coupling guard: PASS. No new Base44 dependency was added and critical owned runtime paths are clean.');
