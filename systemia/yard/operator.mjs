@@ -650,6 +650,9 @@ export class YardOperator {
           health.private_source_runtime === true &&
           health.public_route_required === false &&
           health.base44_runtime_required === false &&
+          health.dynamic_snapshot_engine === true &&
+          health.precomputed_snapshot_required === false &&
+          health.domain_store === 'content-addressed-domain-store-v1' &&
           health.instance_id === job.result?.instance_id;
         if (!alievHealthy) {
           try {
