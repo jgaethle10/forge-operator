@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import dgram from 'node:dgram';
 import process from 'node:process';
+import { randomBytes } from 'node:crypto';
 
 const args = new Map();
 for (let i = 2; i < process.argv.length; i += 2) {
@@ -223,6 +224,94 @@ async function upnpMap() {
   return result;
 }
 
+
+function ipv4Mapped(ip) {
+  const parts = ip.split('.').map(Number);
+  if (parts.length !== 4 || parts.some(n => !Number.isInteger(n) || n < 0 || n > 255)) {
+    throw new Error('invalid IPv4 address');
+  }
+  const b = Buffer.alloc(16);
+  b[10] = 0xff;
+  b[11] = 0xff;
+  parts.forEach((n, i) => { b[12 + i] = n; });
+  return b;
+}
+
+async function pcpMap() {
+  const socket = dgram.createSocket('udp4');
+  const result = { method: 'PCP', success: false, mappings: [] };
+
+  const request = (buf, timeout = 1800) => new Promise((resolve, reject) => {
+    let timer;
+    const onMessage = msg => {
+      clearTimeout(timer);
+      socket.off('message', onMessage);
+      resolve(msg);
+    };
+    socket.on('message', onMessage);
+    socket.send(buf, 5351, gateway, err => {
+      if (err) {
+        clearTimeout(timer);
+        socket.off('message', onMessage);
+        reject(err);
+      }
+    });
+    timer = setTimeout(() => {
+      socket.off('message', onMessage);
+      reject(new Error('timeout'));
+    }, timeout);
+  });
+
+  try {
+    for (const m of mappings) {
+      const nonce = randomBytes(12);
+      const buf = Buffer.alloc(60);
+      buf[0] = 2;
+      buf[1] = 1;
+      buf.writeUInt32BE(86400, 4);
+      ipv4Mapped(host).copy(buf, 8);
+      nonce.copy(buf, 24);
+      buf[36] = m.proto === 'TCP' ? 6 : 17;
+      buf.writeUInt16BE(m.internal, 40);
+      buf.writeUInt16BE(m.external, 42);
+
+      try {
+        const resp = await request(buf);
+        if (resp.length < 60) throw new Error('short response');
+        if (resp[0] !== 2 || (resp[1] & 0x80) === 0 || (resp[1] & 0x7f) !== 1) {
+          throw new Error('unexpected PCP response');
+        }
+        const code = resp[3];
+        const lifetime = resp.readUInt32BE(4);
+        const internal = resp.readUInt16BE(40);
+        const external = resp.readUInt16BE(42);
+        const addr = resp.subarray(44, 60);
+        let externalIp = null;
+        if (addr.subarray(0, 12).equals(Buffer.from([0,0,0,0,0,0,0,0,0,0,0xff,0xff]))) {
+          externalIp = [...addr.subarray(12,16)].join('.');
+        }
+        result.mappings.push({
+          requested: m,
+          result_code: code,
+          internal,
+          external,
+          lifetime,
+          external_ip: externalIp,
+          success: code === 0,
+        });
+      } catch (e) {
+        result.mappings.push({ requested: m, success: false, error: e.message });
+      }
+    }
+    result.success = result.mappings.length === mappings.length && result.mappings.every(x => x.success);
+    const firstIp = result.mappings.find(x => x.external_ip)?.external_ip;
+    if (firstIp) result.external_ip = firstIp;
+  } finally {
+    socket.close();
+  }
+  return result;
+}
+
 async function main() {
   const upnp = await upnpMap().catch(e => ({ method: 'UPnP-IGD', success: false, error: e.message }));
   out.attempts.push(upnp);
@@ -240,6 +329,16 @@ async function main() {
     out.ok = true;
     out.method = natpmp.method;
     out.external_ip = natpmp.external_ip;
+    console.log(JSON.stringify(out, null, 2));
+    return;
+  }
+
+  const pcp = await pcpMap().catch(e => ({ method: 'PCP', success: false, error: e.message }));
+  out.attempts.push(pcp);
+  if (pcp.success) {
+    out.ok = true;
+    out.method = pcp.method;
+    out.external_ip = pcp.external_ip;
   }
 
   console.log(JSON.stringify(out, null, 2));

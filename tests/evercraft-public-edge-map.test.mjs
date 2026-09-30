@@ -15,6 +15,7 @@ test('public edge mapper is credential-free and scoped to Fabric ports',()=>{
 test('public edge mapper supports owned NAT traversal protocols',()=>{
   assert.match(src,/UPnP-IGD/);
   assert.match(src,/NAT-PMP/);
+  assert.match(src,/PCP/);
   assert.match(src,/AddPortMapping/);
   assert.match(src,/5351/);
 });
