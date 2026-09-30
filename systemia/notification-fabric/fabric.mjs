@@ -106,18 +106,33 @@ export function createNotificationFabric(options = {}) {
       return { intent, matched: 0, delivered: 0, deduped: false, receipts: [event] };
     }
 
+    const maxAttempts = Math.max(1, Math.min(Number(options.pushAttempts ?? process.env.EVERCRAFT_NOTIFICATION_PUSH_ATTEMPTS ?? 3), 5));
+    const sleep = options.sleep || ((ms) => new Promise((resolve) => setTimeout(resolve, ms)));
+
     for (const subscription of matched) {
-      let result;
-      try {
-        result = await sendPush(subscription, safeNotificationPayload(intent), {
-          vapidPublicKey,
-          vapidPrivateKey,
-          vapidSubject,
-          ttlSeconds: intent.ttl_seconds,
-          urgency: urgency(intent.priority),
-        });
-      } catch (error) {
-        result = { ok: false, status: 0, responseBody: String(error?.message || error) };
+      let result = { ok: false, status: 0, responseBody: 'No delivery attempt completed.' };
+      let attempts = 0;
+      for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+        attempts = attempt;
+        try {
+          result = await sendPush(subscription, safeNotificationPayload(intent), {
+            vapidPublicKey,
+            vapidPrivateKey,
+            vapidSubject,
+            ttlSeconds: intent.ttl_seconds,
+            urgency: urgency(intent.priority),
+          });
+        } catch (error) {
+          result = { ok: false, status: 0, responseBody: String(error?.message || error) };
+        }
+        if (result.ok || result.status === 404 || result.status === 410) break;
+        const retryable = result.status === 0 || result.status === 429 || result.status >= 500;
+        if (!retryable || attempt === maxAttempts) break;
+        const retryAfterSeconds = /^\d+$/.test(String(result.retryAfter || '')) ? Number(result.retryAfter) : null;
+        const delayMs = retryAfterSeconds !== null
+          ? Math.min(retryAfterSeconds * 1000, 5000)
+          : Math.min(250 * (2 ** (attempt - 1)), 2000);
+        await sleep(delayMs);
       }
       if (result.status === 404 || result.status === 410) {
         store.disableSubscription(subscription.id, `push_endpoint_${result.status}`);
@@ -129,15 +144,17 @@ export function createNotificationFabric(options = {}) {
         principal_id: subscription.principal_id,
         product: intent.product,
         purpose: intent.purpose,
-        status: result.ok ? 'delivered_to_push_gateway' : 'delivery_failed',
+        status: result.ok ? 'accepted_by_push_gateway' : 'delivery_failed',
         http_status: result.status,
         retry_after: result.retryAfter || null,
+        attempts,
         at: new Date().toISOString(),
       };
       receipts.push(receipt);
       store.recordDelivery(receipt);
     }
-    return { intent, matched: matched.length, delivered: receipts.filter((r) => r.status === 'delivered_to_push_gateway').length, deduped: false, receipts };
+    const accepted = receipts.filter((r) => r.status === 'accepted_by_push_gateway').length;
+    return { intent, matched: matched.length, accepted, delivered: accepted, deduped: false, receipts };
   }
 
   async function dispatchSignal(rawSignal) {
