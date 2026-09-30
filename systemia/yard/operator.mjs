@@ -792,6 +792,44 @@ export class YardOperator {
     return record;
   }
 
+  async deploySiblingRelease({
+    sourceDeploymentId,
+    deploymentId,
+    releaseRef,
+    workloadClass,
+    input = {},
+    rollbackTarget,
+    leaseTtlMs = 3600000,
+  } = {}) {
+    const source = this.deploymentStatus(sourceDeploymentId);
+    const secret = this.#loadLeaseSecret(sourceDeploymentId);
+    if (!source || source.state !== 'ready') {
+      throw new Error('source_deployment_not_ready');
+    }
+    if (!secret?.capacity_endpoint || !secret?.allocator_token) {
+      throw new Error('source_deployment_capacity_authority_unavailable');
+    }
+    const record = await this.deployRelease({
+      deploymentId,
+      releaseRef,
+      workloadClass,
+      capacityEndpoint: secret.capacity_endpoint,
+      allocatorToken: secret.allocator_token,
+      input,
+      rollbackTarget,
+      leaseTtlMs,
+    });
+    if (
+      record.receipt?.capacity_node_id !== source.receipt?.capacity_node_id
+    ) {
+      try {
+        await this.stopDeployment(deploymentId, { reason: 'sibling_node_drift' });
+      } catch {}
+      throw new Error('sibling_deployment_node_drift');
+    }
+    return record;
+  }
+
   async invokeBrowser(deploymentId, job = {}) {
     const record = this.deploymentStatus(deploymentId);
     const secret = this.#loadLeaseSecret(deploymentId);

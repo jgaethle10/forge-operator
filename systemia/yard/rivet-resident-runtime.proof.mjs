@@ -9,6 +9,11 @@ import { YardOperator } from './operator.mjs';
 const root=fs.mkdtempSync(path.join(os.tmpdir(),'rivet-resident-yard-'));
 const computeRoot=path.join(root,'compute');
 const stateDir=path.join(root,'yard');
+const coverageDomains=[
+  'geocoding','charging_inventory','traffic','traffic_temporal','utility_service_area','utility_tariff',
+  'incentives','parcel_planning','local_ev_stock','observed_sessions','freight','dwell_context',
+  'deep_market_evidence','provenance'
+];
 const sourceSnapshot={
   response_profile:'rivet_report_snapshot_v1',
   evidence_state:'SOURCE_BACKED',
@@ -19,6 +24,12 @@ const sourceSnapshot={
   state:'WA',
   postal_code:'98908',
   retrieved_at:'2026-09-25T20:00:00.000Z',
+  source_coverage_manifest:{
+    schema:'evercraft.rivet.source-coverage.v1',
+    generated_at:'2026-09-25T20:00:00.000Z',
+    domains:Object.fromEntries(coverageDomains.map(key=>[key,{state:'CONNECTED',record_count:1,source_status:'resident-proof'}])),
+    semantics:'Missing is never zero.'
+  },
   coverage_contract:{utility_tariff:{state:'SCREENING_EVIDENCE_PRESENT'}},
   traffic:[{aadt:22100,source:'resident-yard-proof'}],
   chargers:[{name:'Proof charger'}],
