@@ -55,7 +55,7 @@
     "test:chum-capabilities": "npm run chum:capabilities && node tests/chum-capability-mirrors.test.mjs",
     "test:signal-fabric": "node systemia/signal-fabric/router.test.mjs",
     "test:signal-fabric-engine": "node systemia/signal-fabric/engine.test.mjs && node systemia/signal-fabric/adapters/github-actions.test.mjs",
-    "test:notification-fabric": "node --test systemia/notification-fabric/notification-fabric.test.mjs",
+    "test:notification-fabric": "node --test systemia/notification-fabric/*.test.mjs",
     "chum:router-recall": "node systemia/chum/router-recall.mjs",
     "proof:offline-continuity": "node systemia/network/offline-continuity-proof.mjs --require-local-inference --out ./offline-continuity-output",
     "test:chum-crawler-policy": "node systemia/chum/discovery-lane-policy.test.mjs",
