@@ -65,32 +65,65 @@ async function main() {
     restart_reopen_verified: false,
     cohort_count: 0,
     journal_records: 0,
+    measurement_count: 0,
     head_hash: null,
     root: null,
+    ingest_receipt: null,
   };
+  let durableScoreFile = null;
 
   const durableRoot = String(process.env.EVERCRAFT_EDGE_LAB_DURABLE_ROOT || "").trim();
   if (durableRoot) {
     const durable = new ForwardPaperDurableState({ root: durableRoot });
-    for (const cohort of frozenCohorts) durable.enroll(cohort);
+    const enrollment = frozenCohorts.map((cohort) => durable.enroll(cohort));
+    const ingestReceipt = durable.ingestResearchReport(report);
     const beforeRestart = durable.summary();
 
     const reopened = new ForwardPaperDurableState({ root: durableRoot });
     const afterRestart = reopened.summary();
     if (
       beforeRestart.cohort_count !== afterRestart.cohort_count ||
+      beforeRestart.measurement_count !== afterRestart.measurement_count ||
       beforeRestart.head_hash !== afterRestart.head_hash
     ) {
       throw new Error("edge_forward_paper_durable_reopen_mismatch");
     }
+
+    const scores = [...reopened.cohorts.values()].map((protocol) =>
+      reopened.score(protocol.cohort_id)
+    );
+    durableScoreFile = path.join(artifactDir, "durable-forward-paper-scores.json");
+    fs.writeFileSync(
+      durableScoreFile,
+      JSON.stringify({
+        schema: "evercraft.daytrade.forward-paper-durable-scores.v1",
+        generated_at: report.generated_at,
+        enrollments: enrollment.map((row) => ({
+          state: row.state,
+          cohort_id: row.cohort?.cohort_id || null,
+          signal_key: row.cohort?.signal_key || null,
+          rejected_new_cohort_id: row.rejected_new_cohort_id || null,
+        })),
+        ingest_receipt: ingestReceipt,
+        scores,
+        live_trade_authority: false,
+      }, null, 2) + "\n"
+    );
 
     durableState = {
       configured: true,
       restart_reopen_verified: true,
       cohort_count: afterRestart.cohort_count,
       journal_records: afterRestart.journal_records,
+      measurement_count: afterRestart.measurement_count,
       head_hash: afterRestart.head_hash,
       root: path.resolve(durableRoot),
+      ingest_receipt: {
+        cohort_count: ingestReceipt.cohort_count,
+        measurement_rows_seen: ingestReceipt.measurement_rows_seen,
+        appended: ingestReceipt.cohorts.reduce((n, row) => n + row.appended, 0),
+        duplicates: ingestReceipt.cohorts.reduce((n, row) => n + row.duplicates, 0),
+      },
     };
   }
 
@@ -146,6 +179,7 @@ async function main() {
       research: reportFile,
       adversarial_review: adversarialFile,
       forward_paper_cohorts: forwardPaperFile,
+      durable_forward_paper_scores: durableScoreFile,
       state_batch: persistence.batch_file,
     },
   };
