@@ -155,6 +155,9 @@ export interface PhenomenonLabel {
 
 export interface PhenomenonLayer extends BaseLayer {
   kind: 'phenomenon';
+  title: string;
+  subtitle?: string;
+  callout?: string;
   bounds: {
     north: number;
     south: number;
