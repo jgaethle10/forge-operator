@@ -62,6 +62,7 @@ export function compileProductRuntimePolicy(productKey, root = process.cwd()) {
     product_name: product.name,
     product_class: product.class,
     contract_version: contract.contract_version,
+    adoption_stage: contract.adoption_stage,
     owner: contract.owner,
     authority: laneCopy(contract.authority),
     context: laneCopy(contract.context),
@@ -116,6 +117,10 @@ export function buildExecutionGateInput({
   root = process.cwd(),
 } = {}) {
   const policy = compileProductRuntimePolicy(product_key, root);
+  if (policy.adoption_stage !== 'shared_runtime') {
+    throw new Error('product_not_shared_runtime');
+  }
+
   const actorRef = requiredString(actor_ref, 'actor_ref');
   const actionScope = requiredString(scope, 'scope');
   const idempotencyKey = requiredString(idempotency_key, 'idempotency_key');
@@ -186,6 +191,7 @@ export function buildExecutionGateInput({
 
 export function buildContextBinding(productKey, root = process.cwd()) {
   const policy = compileProductRuntimePolicy(productKey, root);
+  if (policy.adoption_stage !== 'shared_runtime') throw new Error('product_not_shared_runtime');
   if (policy.context.state !== 'declared') throw new Error('context_contract_not_declared');
   return {
     schema: 'evercraft.capability-mesh.context-binding.v1',
@@ -213,6 +219,7 @@ export function renderRuntimePolicies(root = process.cwd()) {
     truth_boundary: {
       compiled_policy_is_not_grant:true,
       compiled_policy_is_not_runtime_verification:true,
+      non_shared_runtime_execution_fails_closed:true,
       undeclared_scope_fails_closed:true,
       undeclared_meter_metric_fails_closed:true,
     },
