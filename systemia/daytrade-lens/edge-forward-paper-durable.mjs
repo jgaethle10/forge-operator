@@ -93,13 +93,19 @@ export class ForwardPaperDurableState {
     this.file = path.join(this.root, "forward-paper-journal.jsonl");
     this.state = readJournal(this.file);
     this.cohorts = new Map();
+    this.cohortBySignal = new Map();
     this.measurements = new Map();
 
     for (const record of this.state.records) {
       if (record.type === "cohort.enrolled") {
         validateFrozenProtocol(record.protocol);
         if (!this.cohorts.has(record.protocol.cohort_id)) {
+          const existingSignalCohort = this.cohortBySignal.get(record.protocol.signal_key);
+          if (existingSignalCohort && existingSignalCohort.cohort_id !== record.protocol.cohort_id) {
+            throw new Error("edge_forward_paper_duplicate_signal_cohort");
+          }
           this.cohorts.set(record.protocol.cohort_id, record.protocol);
+          this.cohortBySignal.set(record.protocol.signal_key, record.protocol);
         }
       }
       if (record.type === "measurement.appended") {
@@ -112,16 +118,76 @@ export class ForwardPaperDurableState {
 
   enroll(protocol) {
     validateFrozenProtocol(protocol);
+
+    const bySignal = this.cohortBySignal.get(protocol.signal_key);
+    if (bySignal) {
+      if (bySignal.cohort_id === protocol.cohort_id) {
+        if (bySignal.protocol_hash !== protocol.protocol_hash) {
+          throw new Error("edge_forward_paper_cohort_conflict");
+        }
+        return { state: "duplicate", cohort: bySignal, receipt: null };
+      }
+      return {
+        state: "existing_signal_cohort",
+        cohort: bySignal,
+        rejected_new_cohort_id: protocol.cohort_id,
+        receipt: null,
+      };
+    }
+
     const existing = this.cohorts.get(protocol.cohort_id);
     if (existing) {
       if (existing.protocol_hash !== protocol.protocol_hash) {
         throw new Error("edge_forward_paper_cohort_conflict");
       }
+      this.cohortBySignal.set(existing.signal_key, existing);
       return { state: "duplicate", cohort: existing, receipt: null };
     }
+
     const receipt = appendRecord(this.state, this.file, "cohort.enrolled", { protocol });
     this.cohorts.set(protocol.cohort_id, protocol);
+    this.cohortBySignal.set(protocol.signal_key, protocol);
     return { state: "enrolled", cohort: protocol, receipt };
+  }
+
+  getBySignal(signalKey) {
+    return this.cohortBySignal.get(String(signalKey || "")) || null;
+  }
+
+  ingestResearchReport(report) {
+    const rows = Array.isArray(report?.measurements) ? report.measurements : [];
+    const results = [];
+
+    for (const protocol of this.cohorts.values()) {
+      let appended = 0;
+      let duplicates = 0;
+      for (const row of rows) {
+        if (row?.signal_key !== protocol.signal_key) continue;
+        const observed = new Date(row?.observed_at).getTime();
+        const cutoff = new Date(protocol.observation_cutoff).getTime();
+        if (!Number.isFinite(observed) || observed <= cutoff) continue;
+
+        const result = this.appendMeasurement(protocol.cohort_id, row);
+        if (result.state === "appended") appended += 1;
+        if (result.state === "duplicate") duplicates += 1;
+      }
+
+      results.push({
+        cohort_id: protocol.cohort_id,
+        signal_key: protocol.signal_key,
+        appended,
+        duplicates,
+        score: this.score(protocol.cohort_id),
+      });
+    }
+
+    return {
+      schema: "evercraft.daytrade.forward-paper-ingest-receipt.v1",
+      cohort_count: results.length,
+      measurement_rows_seen: rows.length,
+      cohorts: results,
+      live_trade_authority: false,
+    };
   }
 
   appendMeasurement(cohortId, measurement) {
