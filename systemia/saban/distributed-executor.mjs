@@ -72,7 +72,7 @@ export function computeDemandFromDistributedPlan({
   });
 }
 
-export async function runPoolWithAcquisition({
+export export async function runPoolWithAcquisition({
   poolOptions,
   contract,
   plan,
