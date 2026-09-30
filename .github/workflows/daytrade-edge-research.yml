@@ -22,7 +22,7 @@ permissions:
 jobs:
   research:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -42,7 +42,7 @@ jobs:
           ALPACA_TRADING_SECRET: ${{ secrets.ALPACA_TRADING_SECRET }}
           EDGE_LAB_ARTIFACT_DIR: artifacts/daytrade-edge
           EVERCRAFT_EDGE_LAB_STATE_DIR: artifacts/daytrade-edge/state
-          EDGE_LAB_SEC_LOOKBACK_DAYS: "120"
+          EDGE_LAB_SEC_LOOKBACK_DAYS: "365"
           EDGE_LAB_SEC_PUBLICATION_DELAY_MINUTES: "10"
           EDGE_LAB_TRANSACTION_COST_BPS: "5"
         run: node systemia/daytrade-lens/sec-edge-backfill.mjs
