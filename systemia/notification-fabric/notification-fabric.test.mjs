@@ -87,3 +87,27 @@ test('critical Signal Fabric events become immediate operator push intents', asy
   assert.equal(sent[0].purpose, 'operational');
   assert.equal(sent[0].priority, 'critical');
 });
+
+
+test('transient push failures retry and gateway acceptance is not mislabeled as human delivery', async () => {
+  const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'evercraft-notify-'));
+  let attempts = 0;
+  const fabric = createNotificationFabric({
+    dataDir,
+    sleep: async () => {},
+    sendPush: async () => {
+      attempts += 1;
+      return attempts === 1
+        ? { ok: false, status: 503, retryAfter: null }
+        : { ok: true, status: 201, retryAfter: null };
+    },
+  });
+  fabric.subscribe(makeSubscription());
+  const result = await fabric.dispatchIntent({
+    product: 'systemia', purpose: 'operational', title: 'Retry', body: 'Retry proof', audiences: ['company-ops'],
+  });
+  assert.equal(attempts, 2);
+  assert.equal(result.accepted, 1);
+  assert.equal(result.receipts[0].status, 'accepted_by_push_gateway');
+  assert.equal(result.receipts[0].attempts, 2);
+});
