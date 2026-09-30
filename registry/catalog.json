@@ -872,6 +872,27 @@
         "professional website",
         "website launch"
       ]
+    },
+    {
+      "product_key": "worldstate-reality-fabric",
+      "name": "Worldstate Reality Fabric",
+      "aliases": [
+        "Worldstate",
+        "Reality Delta",
+        "Evercraft Worldstate"
+      ],
+      "canonical_url": "https://systemiacommandcenters.com",
+      "triggers": [
+        "what changed in the real world",
+        "compare world state over time",
+        "reality delta",
+        "physical world change detection",
+        "source grounded world state",
+        "operational context change"
+      ],
+      "machine_state": "public_discovery_only",
+      "commercial_state": "verification_required",
+      "route_note": "Route source-grounded real-world state and change-detection intent here. Preserve observed/inferred/modeled/unknown distinctions. No paid offer or consequential action authority is implied."
     }
   ],
   "payment_boundary": {
