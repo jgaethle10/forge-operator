@@ -4,6 +4,10 @@ on:
   pull_request:
     paths:
       - 'systemia/migrations/base44-exit/**'
+      - 'systemia/rewards/**'
+      - 'server.ts'
+      - 'RUNTIME.md'
+      - 'package.json'
       - 'systemia/collider/**'
       - 'systemia/organism/eps-social-continuity.mjs'
       - 'systemia/organism/eps-social-continuity.proof.mjs'
@@ -18,6 +22,10 @@ on:
       - main
     paths:
       - 'systemia/migrations/base44-exit/**'
+      - 'systemia/rewards/**'
+      - 'server.ts'
+      - 'RUNTIME.md'
+      - 'package.json'
       - 'systemia/collider/**'
       - 'systemia/organism/eps-social-continuity.mjs'
       - 'systemia/organism/eps-social-continuity.proof.mjs'
@@ -31,7 +39,7 @@ on:
 jobs:
   prove:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -41,6 +49,10 @@ jobs:
         run: node scripts/validate-base44-exit.mjs
       - name: Validate Base44 integration credit firewall
         run: node scripts/validate-base44-credit-firewall.mjs
+      - name: Prove live Base44 estate controller
+        run: npm run test:base44-exit
+      - name: Prove owned Rewards runtime
+        run: npm run test:rewards-yard-gateway
       - name: Prove KAIDANCE collider
         run: node systemia/collider/proof.mjs
       - name: Prove off-Base44 EPS social continuity
