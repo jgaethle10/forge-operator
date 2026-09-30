@@ -1,7 +1,7 @@
 {
   "schema": "evercraft.capability-mesh.runtime-policies.v1",
   "generated_from": "systemia/capability-mesh/contracts.json",
-  "policy_count": 6,
+  "policy_count": 7,
   "policies": [
     {
       "schema": "evercraft.capability-mesh.runtime-policy.v1",
@@ -529,6 +529,113 @@
         "preferred_route": null,
         "blocking_gates": [],
         "next_release_action": null
+      },
+      "runtime_verified": false,
+      "grants_authority": false,
+      "truth_boundary": "This runtime policy compiles declared product semantics. It does not grant Passport authority, entitlement, payment, live runtime readiness, or provider pickup."
+    },
+    {
+      "schema": "evercraft.capability-mesh.runtime-policy.v1",
+      "product_key": "findmypart",
+      "product_name": "FindMyPart",
+      "product_class": "hard_to_source_parts",
+      "contract_version": "1.0.0",
+      "adoption_stage": "shared_runtime",
+      "owner": "systemia",
+      "authority": {
+        "state": "declared",
+        "passport_product": "findmypart",
+        "scopes": [
+          "free_part_triage"
+        ],
+        "evidence_refs": [
+          "plugins/findmypart/skills/findmypart-direct/SKILL.md",
+          "mcp-registry/findmypart.json"
+        ]
+      },
+      "context": {
+        "state": "declared",
+        "namespace": "findmypart",
+        "read_scope": "context.read.findmypart",
+        "write_scope": "context.write.findmypart",
+        "evidence_refs": [
+          "registry/findmypart/README.md",
+          "systemia/context-fabric/fabric.mjs"
+        ]
+      },
+      "meter": {
+        "state": "not_required",
+        "reason": "The contracted action is the live free_part_triage tool, which explicitly creates no charge. Paid sourcing hunts remain separately human-confirmed and live MCP commercial state remains authoritative."
+      },
+      "intake": {
+        "state": "not_required",
+        "reason": "The contracted public action accepts bounded part clues through the specialist tool; no shared Intake Fabric adapter is declared."
+      },
+      "execution": {
+        "state": "declared",
+        "gate_required": true,
+        "scopes": [
+          "free_part_triage"
+        ],
+        "actions": [
+          {
+            "scope": "free_part_triage"
+          }
+        ],
+        "evidence_refs": [
+          "plugins/findmypart/skills/findmypart-direct/SKILL.md",
+          "mcp-registry/findmypart.json"
+        ]
+      },
+      "relationship": {
+        "state": "not_required",
+        "reason": "Free Part Passport triage does not itself contact vendors, buy parts, or perform outbound relationship actions."
+      },
+      "receipt_reconciliation": {
+        "state": "declared",
+        "namespace": "findmypart",
+        "evidence_refs": [
+          "systemia/context-fabric/fabric.mjs",
+          "registry/findmypart/README.md"
+        ]
+      },
+      "rollback": {
+        "state": "declared",
+        "policy": "Disable the FindMyPart contract or specialist route without enabling paid hunts, checkout, vendor contact, purchasing, or weakening evidence/fitment boundaries."
+      },
+      "compatibility": {
+        "intended_product_classes": [
+          "hard_to_source_parts"
+        ]
+      },
+      "boundaries": {
+        "contracted_machine_surface": [
+          "free_part_triage"
+        ],
+        "free_action_creates_charge": false,
+        "paid_hunts_contracted": false,
+        "checkout_creation_is_payment_proof": false,
+        "normalized_identity_is_fitment_proof": false,
+        "listing_is_live_inventory_proof": false,
+        "compatibility_guaranteed": false,
+        "private_vendor_analytics_session_command_center_sales_data_public": false
+      },
+      "route": {
+        "specialist_slug": "findmypart",
+        "state": "registry_published_direct_mcp_existing",
+        "direct_callable": true,
+        "registry_published": true,
+        "preferred_route": {
+          "mode": "direct_specialist",
+          "hops_before_specialist": 0,
+          "use_universal_router_first": false,
+          "registry_name": "io.github.jgaethle10/findmypart",
+          "remote_mcp": "https://findmypart.base44.app/functions/findMyPartMcp",
+          "fallback_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+          "fallback_remote_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        },
+        "blocking_gates": [],
+        "next_release_action": "measure_provider_pickup_separately"
       },
       "runtime_verified": false,
       "grants_authority": false,
