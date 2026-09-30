@@ -64,18 +64,29 @@ function writeSnapshot(stateDir,snapshot){
   const addressKey=norm(snapshot.matched_address);
   const aliases=[addressKey,...(Array.isArray(snapshot.address_aliases)?snapshot.address_aliases.map(norm):[])].filter(Boolean);
   const index=loadIndex(stateDir);
+  const candidateRetrievedAt=clean(snapshot.retrieved_at)||new Date().toISOString();
+  const indexedKeys=[];
+  const staleKeys=[];
   for(const key of new Set(aliases)){
+    const existing=index.entries[key]||null;
+    const existingTime=existing?.retrieved_at?Date.parse(existing.retrieved_at):NaN;
+    const candidateTime=Date.parse(candidateRetrievedAt);
+    if(existing && Number.isFinite(existingTime) && Number.isFinite(candidateTime) && existingTime>candidateTime){
+      staleKeys.push(key);
+      continue;
+    }
     index.entries[key]={
       sha256:digest,
       matched_address:snapshot.matched_address,
-      retrieved_at:clean(snapshot.retrieved_at)||new Date().toISOString(),
+      retrieved_at:candidateRetrievedAt,
       evidence_state:clean(snapshot.evidence_state)||'unknown',
       byte_count:bytes.byteLength,
     };
+    indexedKeys.push(key);
   }
   index.updated_at=new Date().toISOString();
   atomicJson(indexFile(stateDir),index);
-  return {sha256:digest,byte_count:bytes.byteLength,address_keys:[...new Set(aliases)]};
+  return {sha256:digest,byte_count:bytes.byteLength,address_keys:[...new Set(aliases)],indexed_keys:indexedKeys,stale_keys:staleKeys};
 }
 function readSnapshot(stateDir,address){
   const key=norm(address);
@@ -142,6 +153,25 @@ export async function startAliEvSourceRuntime({
         return send(res,201,{ok:true,schema:'evercraft.aliev.snapshot-ingest-receipt.v1',...result,stored_at:new Date().toISOString()});
       }
 
+      if(req.method==='POST'&&req.url==='/v1/snapshot-batch'){
+        if(clean(req.headers.authorization)!=='Bearer '+ingestToken) return send(res,401,{ok:false,error:'ingest_authorization_required'});
+        const body=await readJson(req,64*1024*1024);
+        const snapshots=Array.isArray(body?.snapshots)?body.snapshots:[];
+        if(!snapshots.length) return send(res,400,{ok:false,error:'snapshots_required'});
+        if(snapshots.length>100) return send(res,413,{ok:false,error:'snapshot_batch_too_large'});
+        const receipts=[];
+        for(const snapshot of snapshots) receipts.push(writeSnapshot(stateDir,snapshot));
+        return send(res,201,{
+          ok:true,
+          schema:'evercraft.aliev.snapshot-batch-ingest-receipt.v1',
+          snapshot_count:receipts.length,
+          indexed_key_count:receipts.reduce((n,x)=>n+(x.indexed_keys?.length||0),0),
+          stale_key_count:receipts.reduce((n,x)=>n+(x.stale_keys?.length||0),0),
+          receipts,
+          stored_at:new Date().toISOString()
+        });
+      }
+
       if(req.method==='POST'&&(req.url==='/energySiteLookup'||req.url==='/v1/site-snapshot')){
         if(clean(req.headers['x-systemia-machine-key'])!==systemiaMachineKey) return send(res,401,{ok:false,error:'systemia_machine_authorization_required'});
         const body=await readJson(req);
@@ -174,6 +204,7 @@ export async function startAliEvSourceRuntime({
     service_url:url,
     source_url:url+'/energySiteLookup',
     ingest_url:url+'/v1/snapshots',
+    batch_ingest_url:url+'/v1/snapshot-batch',
     health_path:'/health',
     health,
     setDeploymentReceipt:(receiptRef)=>{
