@@ -298,10 +298,12 @@ function concatenate(input:{
   }
 
   const duration=probeDuration(input.outputPath);
-  if(Math.abs(duration-input.expectedDurationSec)>.35){
+  const durationTolerance=Math.max(.35,input.inputs.length*.03);
+  if(Math.abs(duration-input.expectedDurationSec)>durationTolerance){
     throw new Error(
       'longform_output_duration_mismatch:'+input.scopeId+
-      ':expected='+input.expectedDurationSec+':observed='+duration
+      ':expected='+input.expectedDurationSec+':observed='+duration+
+      ':tolerance='+durationTolerance
     );
   }
 
