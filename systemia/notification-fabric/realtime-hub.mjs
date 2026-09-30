@@ -71,6 +71,31 @@ export function createRealtimeHub(options = {}) {
     return principals.get(String(principalId || '').trim())?.size || 0;
   }
 
+  function matchPrincipals(target = {}) {
+    const recipients = new Set((target.recipient_ids || []).map(String));
+    const audiences = new Set((target.audiences || []).map(String));
+    const product = String(target.product || '').trim();
+    const matches = new Set();
+    for (const [principal, bucket] of principals.entries()) {
+      if (recipients.size && recipients.has(principal)) {
+        matches.add(principal);
+        continue;
+      }
+      if (recipients.size) continue;
+      for (const connection of bucket.values()) {
+        const metadataAudiences = Array.isArray(connection.metadata?.audiences) ? connection.metadata.audiences.map(String) : [];
+        const metadataProducts = Array.isArray(connection.metadata?.products) ? connection.metadata.products.map(String) : [];
+        const audienceMatch = !audiences.size || metadataAudiences.some((value) => audiences.has(value));
+        const productMatch = !metadataProducts.length || !product || product === 'systemia' || metadataProducts.includes(product);
+        if (audienceMatch && productMatch) {
+          matches.add(principal);
+          break;
+        }
+      }
+    }
+    return [...matches];
+  }
+
   function snapshot() {
     let connections = 0;
     for (const bucket of principals.values()) connections += bucket.size;
@@ -86,5 +111,5 @@ export function createRealtimeHub(options = {}) {
     }
   }
 
-  return { connect, deliver, presence, snapshot, closeAll };
+  return { connect, deliver, presence, matchPrincipals, snapshot, closeAll };
 }
