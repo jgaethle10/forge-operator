@@ -384,7 +384,10 @@ async function main() {
   );
 
   const delta = buildPortfolioDelta(previous, activeFindings);
-  const retryCandidates = [...delta.added, ...delta.changed].filter((row) => row.code === 'github_workflow_failed');
+  // Failed workflows are active incidents, not one-shot notifications. Retry bounded
+  // automatable failures every cycle until they recover; GitHub concurrency and the
+  // one-attempt recipe keep each cycle bounded while Systemia keeps pressure on.
+  const retryCandidates = activeFindings.filter((row) => row.code === 'github_workflow_failed');
   const autoHeal = {
     enabled: Boolean(args.autoHeal),
     workflow_reruns: args.autoHeal
@@ -459,7 +462,7 @@ async function main() {
     doctrine: {
       material_change_only: true,
       safe_internal_repairs_only: true,
-      bounded_failed_workflow_retry: args.autoHeal ? 'autonomous' : 'disabled',
+      bounded_failed_workflow_retry: args.autoHeal ? 'continuous_until_green' : 'disabled',
       architectural_invariants: 'enforced_before_green',
       repair_recipe_memory: recipeRegistryResult.ok ? 'loaded' : 'invalid',
       human_experience_gate: 'saban_static_evidence_plus_owned_browser_receipts',
