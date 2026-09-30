@@ -319,12 +319,8 @@ export class EvercraftIdentityChallengeBroker {
       consumed_at: null
     };
     const delivered = await this.#deliverAndPersist(state, resetToken, { appKey, login, kind: 'password_reset' });
-    return {
-      status: 'accepted',
-      delivery_state: 'delivered',
-      expires_at: expiresAt,
-      delivery_receipt_ref: delivered.state.delivery_receipt_ref
-    };
+    void delivered;
+    return { status: 'accepted', delivery_state: 'not_disclosed' };
   }
 
   async completeReset({ appKey, body = {} } = {}) {
