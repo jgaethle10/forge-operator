@@ -67,6 +67,8 @@ jobs:
         run: npm run proof:base44-source-scan
       - name: Prove lossless Base44 entity transfer
         run: npm run proof:base44-entity-transfer
+      - name: Prove receipt-gated migration route registry
+        run: npm run proof:base44-route-registry
       - name: Prove Evercraft App Fabric
         run: npm run proof:app-fabric
       - name: Prove Base44 SDK compatibility
