@@ -46,3 +46,41 @@ The migrated Collider must expose a safe health surface that can report at least
 - degraded/healthy state,
 
 without exposing private mission content, credentials, customer data or internal topology.
+
+
+## Evacuation factory
+
+The portfolio-wide execution engine lives in `systemia/migrations/base44-exit/factory`.
+
+The factory converts each legacy Base44 app into a redacted migration plan, determines which shared Evercraft landing primitives it needs, and blocks cutover until the applicable gates are satisfied. The source remains read-only during extraction. Source deletion, credential copying, plaintext secret export, DNS mutation and production traffic cutover are outside the factory's authority.
+
+Shared landing primitives are intentionally reused across the estate:
+
+1. public edge,
+2. Yard runtime,
+3. canonical data,
+4. identity boundary,
+5. secret store,
+6. object storage,
+7. resident scheduler,
+8. connector gateway,
+9. webhook gateway,
+10. commerce boundary,
+11. Fabric / CHUM discovery,
+12. Portfolio Sentinel.
+
+The Saban contract `base44-evac` assigns ten bounded specialist roles to each private inventory record and reconciles their findings into one portfolio receipt. Private Base44 identifiers stay out of the public repository.
+
+Run a private plan with:
+
+```bash
+npm run base44:evac -- --inventory /secure/path/base44-estate.json
+```
+
+Run the bounded Saban fan-out with:
+
+```bash
+npm run saban:base44-evac -- --inventory /secure/path/base44-estate.json
+```
+
+A green plan means the migration requirements are explicit. It does not mean production traffic has moved.
