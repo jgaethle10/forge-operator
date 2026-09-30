@@ -2,9 +2,9 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.jgaethle10/evercraft-clip",
   "title": "Evercraft Clip",
-  "description": "Start with plan_clip_job to plan authorized social-video work and route complex media when needed.",
+  "description": "Discover and plan authorized Evercraft Clip social-video work through the Evercraft-owned Fabric MCP.",
   "version": "0.2.1",
-  "websiteUrl": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+  "websiteUrl": "https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-clip",
   "repository": {
     "url": "https://github.com/jgaethle10/forge-operator",
     "source": "github"
@@ -12,7 +12,7 @@
   "remotes": [
     {
       "type": "streamable-http",
-      "url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp"
+      "url": "https://fabric.systemiacommandcenters.com/mcp"
     }
   ]
 }
