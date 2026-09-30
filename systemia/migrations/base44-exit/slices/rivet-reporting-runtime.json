@@ -27,7 +27,10 @@
     "live_yard_route_verified": false,
     "live_fresh_report_ready_verified": false,
     "base44_report_execution_retired": false,
-    "focused_hotfix_release_ref": "513d3e9b4f2f0a0771544cbe20c6e456d65975c2"
+    "focused_hotfix_release_ref": "513d3e9b4f2f0a0771544cbe20c6e456d65975c2",
+    "resident_report_edge_registered": true,
+    "silent_base44_source_fallback_removed": true,
+    "automatic_owned_runtime_canary_on_main": true
   },
   "migrate": [
     "report_execution_runtime",
@@ -53,10 +56,11 @@
     "observation_window_required": true
   },
   "blockers": [
+    "owned AliEV source endpoint has not yet been bound to the resident RIVET report edge",
     "live authenticated Yard report route has not yet been independently verified",
     "RIVET New Report UI is still temporarily bound to the Base44 generateQuickReport compatibility function",
     "fresh 6405 W Chestnut live report has not yet reached generation_state=ready through Yard"
   ],
-  "next_action": "bind_the_new_report_creation_path_to_a_verified_yard_report_route_then_create_a_fresh_6405_w_chestnut_report_and_require_generation_state_ready",
+  "next_action": "bind_an_owned_non_base44_aliev_source_to_the_resident_rivet_report_edge_verify_public_https_route_then_move_new_report_creation_to_yard_and_require_a_fresh_6405_w_chestnut_generation_state_ready",
   "destructive_cutover_allowed": false
 }
