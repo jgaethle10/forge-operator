@@ -48,6 +48,7 @@ import { renderTimelineExport } from './timeline-export.js';
 import type { FallenTimelineProject } from './timeline.js';
 import { compileStudioDraft, type StudioDraftPlan, type StudioDraftBundle } from './studio-create.js';
 import { resolveStudioDraft, type StudioResolutionItem } from './studio-resolve.js';
+import { finalizeStudioDelivery, type StudioDeliveryRequest } from './studio-delivery.js';
 
 function readJson<T>(filePath: string): T {
   return JSON.parse(fs.readFileSync(path.resolve(filePath), 'utf8')) as T;
@@ -87,6 +88,7 @@ function usage() {
     '  npm run media:studio -- timeline-export <timeline.json> <output.mp4> [receipt.json]',
     '  npm run media:studio -- studio-create <draft-plan.json> <draft-bundle.json>',
     '  npm run media:studio -- studio-resolve <resolution-payload.json> <resolved-bundle.json> [captions.srt]',
+    '  npm run media:studio -- studio-deliver <delivery-request.json> <output-dir>',
   ].join('\n'));
 }
 
@@ -136,6 +138,20 @@ function main() {
     const plan = buildVisualFinishPlan(payload.request, payload.endpoints);
     writeJson(output, plan);
     console.log(`Visual finish plan created: ${path.resolve(output)}`);
+    return;
+  }
+
+  if (command === 'studio-deliver') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const request = readJson<StudioDeliveryRequest>(input);
+    const receipt = finalizeStudioDelivery({ request, outputDir: output });
+    console.log(`Studio delivery ready: ${receipt.videoPath}`);
+    console.log(`Clip intake manifest: ${receipt.clipManifestPath}`);
+    console.log(`SHA-256: ${receipt.mediaSha256}`);
     return;
   }
 
