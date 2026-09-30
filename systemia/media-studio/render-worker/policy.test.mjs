@@ -45,3 +45,59 @@ test('rejects modeled or synthetic layers with no source references',()=>{
     stage:{...base.stage,layers:[{id:'model',kind:'text',z:1,x:0,y:0,width:100,height:100,text:'model',fontSize:20,evidenceState:'modeled'}]}
   }),/evidence_source_refs_missing/);
 });
+
+
+test('accepts a bounded phenomenon layer for owned distributed rendering',()=>{
+  const job=sanitizeRenderJob({
+    ...base,
+    stage:{
+      ...base.stage,
+      id:'phenomenon-proof',
+      width:1080,
+      height:1920,
+      layers:[{
+        id:'phenomenon-field',
+        kind:'phenomenon',
+        z:1,x:0,y:0,width:1080,height:1920,
+        title:'Flow proof',
+        motionLabel:'flow direction',
+        sourceLabel:'Synthetic test source',
+        bounds:{north:48.5,south:46.9,west:-123.5,east:-121.8},
+        streamlines:[{
+          id:'stream-a',
+          points:[
+            {lat:48.1,lon:-122.9,colorValue:2,magnitude:1},
+            {lat:47.6,lon:-122.6,colorValue:5,magnitude:3}
+          ]
+        }],
+        colorEncoding:{label:'test scalar',min:0,max:10},
+        brightnessEncoding:{label:'test magnitude',min:0,max:5},
+        evidenceState:'synthetic_visualization',
+        sourceRefs:['ci:phenomenon']
+      }]
+    }
+  });
+  assert.equal(job.stage.layers[0].kind,'phenomenon');
+  assert.equal(job.stage.layers[0].streamlines.length,1);
+});
+
+test('rejects phenomenon layers that attempt to render without valid field geometry',()=>{
+  assert.throws(()=>sanitizeRenderJob({
+    ...base,
+    stage:{
+      ...base.stage,
+      layers:[{
+        id:'phenomenon-field',
+        kind:'phenomenon',
+        z:1,x:0,y:0,width:640,height:360,
+        title:'Broken',
+        motionLabel:'flow',
+        sourceLabel:'test',
+        bounds:{north:1,south:2,west:0,east:1},
+        streamlines:[{id:'s',points:[{lat:0,lon:0},{lat:1,lon:1}]}],
+        evidenceState:'modeled',
+        sourceRefs:['model:test']
+      }]
+    }
+  }),/phenomenon_bounds_invalid/);
+});
