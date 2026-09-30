@@ -13,7 +13,13 @@
     "registry_publication_state": "migration_hold",
     "registry_receipt": "conformance/registry-publications/2026-09-28-evercraft-machine-commerce-v1.5.1.json",
     "migration_state": "base44_evacuation",
-    "migration_note": "The prior Base44 MCP publication receipt is retained as historical provenance only and is not current invocation authority."
+    "migration_note": "The prior Base44 MCP publication receipt is retained as historical provenance only and is not current invocation authority.",
+    "http_gateway": "/api/machine-commerce",
+    "health": "/api/machine-commerce/health",
+    "route": "/api/machine-commerce/route",
+    "runtime": "forge-operator-owned",
+    "transactional_state": "migration_hold",
+    "base44_fallback_allowed": false
   },
   "products": [
     {
