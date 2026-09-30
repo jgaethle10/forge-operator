@@ -512,6 +512,94 @@
         "compatibility_guaranteed": false,
         "private_vendor_analytics_session_command_center_sales_data_public": false
       }
+    },
+    {
+      "product_key": "eventwave",
+      "contract_version": "1.0.0",
+      "owner": "systemia",
+      "adoption_stage": "shared_runtime",
+      "specialist_slug": "eventwave",
+      "authority": {
+        "state": "declared",
+        "passport_product": "eventwave",
+        "scopes": [
+          "event.search"
+        ],
+        "evidence_refs": [
+          "registry/eventwave/README.md",
+          "registry/eventwave/llms.txt",
+          "mcp-registry/eventwave.json"
+        ]
+      },
+      "context": {
+        "state": "declared",
+        "namespace": "eventwave",
+        "read_scope": "context.read.eventwave",
+        "write_scope": "context.write.eventwave",
+        "evidence_refs": [
+          "registry/eventwave/README.md",
+          "systemia/context-fabric/fabric.mjs"
+        ]
+      },
+      "meter": {
+        "state": "not_required",
+        "reason": "The contracted action is public event search. Paid labeled promotion and checkout are separate human-confirmed commercial workflows and are not part of this shared runtime action."
+      },
+      "intake": {
+        "state": "not_required",
+        "reason": "Public event search does not require a shared Intake Fabric adapter. Event submissions or promotion inputs remain separate product workflows."
+      },
+      "execution": {
+        "state": "declared",
+        "gate_required": true,
+        "scopes": [
+          "event.search"
+        ],
+        "actions": [
+          {
+            "scope": "event.search"
+          }
+        ],
+        "evidence_refs": [
+          "registry/eventwave/README.md",
+          "registry/eventwave/llms.txt",
+          "mcp-registry/eventwave.json"
+        ]
+      },
+      "relationship": {
+        "state": "not_required",
+        "reason": "Public event search does not publish, promote, contact venues, or perform outbound relationship actions."
+      },
+      "receipt_reconciliation": {
+        "state": "declared",
+        "namespace": "eventwave",
+        "evidence_refs": [
+          "systemia/context-fabric/fabric.mjs",
+          "registry/eventwave/README.md"
+        ]
+      },
+      "rollback": {
+        "state": "declared",
+        "policy": "Disable the EventWave search contract or specialist route without enabling promotion, publishing, checkout, payment, ticketing, booking, or venue-relationship claims."
+      },
+      "compatibility": {
+        "intended_product_classes": [
+          "event_discovery_and_labeled_promotion"
+        ]
+      },
+      "boundaries": {
+        "contracted_machine_surface": [
+          "event.search"
+        ],
+        "paid_promotion_contracted": false,
+        "publication_contracted": false,
+        "checkout_contracted": false,
+        "checkout_creation_is_payment_proof": false,
+        "ticket_or_booking_claimed": false,
+        "venue_relationship_claimed": false,
+        "paid_promotion_must_remain_labeled": true,
+        "source_review_governs_public_placement": true
+      }
     }
   ]
 }
