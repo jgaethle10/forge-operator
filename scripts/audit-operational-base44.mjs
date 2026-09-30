@@ -15,10 +15,10 @@ const ignoredPrefixes = [
 ];
 const textExtensions = new Set(['.js','.mjs','.cjs','.ts','.tsx','.json','.yml','.yaml','.md','.txt','.sh','.html','.jsonld']);
 const forbidden = [
-  { key: 'base44_host', re: /(?:https?:\\/\\/)?[^\\s"'<>]*base44\\.app/ig },
-  { key: 'base44_env', re: /\\bBASE44_[A-Z0-9_]+\\b/g },
-  { key: 'base44_package', re: /@base44\\//ig },
-  { key: 'base44_cli', re: /\\bbase44\\s+(?:functions|login|deploy|whoami|app)\\b/ig }
+  { key: 'base44_host', re: new RegExp('base44\\.app', 'i') },
+  { key: 'base44_env', re: new RegExp('\\bBASE44_[A-Z0-9_]+\\b') },
+  { key: 'base44_package', re: new RegExp('@base44\\/', 'i') },
+  { key: 'base44_cli', re: new RegExp('\\bbase44\\s+(?:functions|login|deploy|whoami|app)\\b', 'i') }
 ];
 
 function walk(dir, out = []) {
@@ -38,10 +38,9 @@ for (const root of roots) {
     if (ignoredPrefixes.some((prefix) => rel.startsWith(prefix))) continue;
     if (!textExtensions.has(path.extname(full).toLowerCase())) continue;
     const content = fs.readFileSync(full, 'utf8');
-    const lines = content.split(/\\r?\\n/);
+    const lines = content.split(/\r?\n/);
     lines.forEach((line, index) => {
       for (const rule of forbidden) {
-        rule.re.lastIndex = 0;
         if (rule.re.test(line)) {
           violations.push({
             path: rel,
