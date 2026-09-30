@@ -446,6 +446,109 @@ async function persistChumAttributionEvent(event: unknown) {
 }
 
 
+app.get('/api/machine-commerce/health', (_req: Request, res: Response) => {
+  res.setHeader('Cache-Control', 'no-store');
+  res.json({
+    ok: true,
+    schema: 'evercraft.machine-commerce.health.v1',
+    provider: 'Evercraft',
+    runtime: 'forge-operator-owned',
+    transactional_state: 'migration_hold',
+    catalog: '/api/machine-commerce?action=catalog',
+    route: { method: 'POST', path: '/api/machine-commerce/route' },
+    doctrine: {
+      discovery_creates_obligation: false,
+      checkout_is_payment: false,
+      held_specialists_are_not_invoked: true,
+      base44_fallback_allowed: false,
+    },
+  });
+});
+
+app.get('/api/machine-commerce', (req: Request, res: Response) => {
+  res.setHeader('Cache-Control', 'no-store');
+  const action = String(req.query.action || '').trim().toLowerCase();
+  const view = String(req.query.view || '').trim().toLowerCase();
+  const publicId = String(req.query.public_id || '').trim();
+  const catalog = loadPublicMachineCatalog();
+
+  if (action === 'health') {
+    res.json({
+      ok: true,
+      schema: 'evercraft.machine-commerce.health.v1',
+      runtime: 'forge-operator-owned',
+      transactional_state: 'migration_hold',
+      base44_fallback_allowed: false,
+    });
+    return;
+  }
+
+  if (action === 'catalog' || (!action && !view && !publicId)) {
+    res.json({
+      ...catalog,
+      served_by: 'forge-operator-owned',
+      transactional_state: 'migration_hold',
+      base44_fallback_allowed: false,
+    });
+    return;
+  }
+
+  if (view === 'service' && publicId) {
+    const offer = findChumOffer(publicId);
+    if (!offer) {
+      res.status(404).json({ ok: false, error: 'Unknown public Evercraft offer.' });
+      return;
+    }
+    res.json({
+      ok: true,
+      schema: 'evercraft.machine-commerce.service.v1',
+      offer: publicOfferProjection(offer),
+      start_url: offer.commercial_state === 'sell_now' ? '/buy/' + encodeURIComponent(publicId) : null,
+      transactional_state: offer.machine_state === 'migration_hold' ? 'migration_hold' : 'discovery_only',
+      base44_fallback_allowed: false,
+      confirmation: offer.confirmation || null,
+    });
+    return;
+  }
+
+  res.status(400).json({
+    ok: false,
+    error: 'Unsupported Machine Commerce request.',
+    supported: [
+      'GET /api/machine-commerce/health',
+      'GET /api/machine-commerce?action=catalog',
+      'GET /api/machine-commerce?view=service&public_id=...',
+      'POST /api/machine-commerce/route',
+    ],
+  });
+});
+
+app.post('/api/machine-commerce/route', rateLimit(240, 60 * 60 * 1000), (req: Request, res: Response) => {
+  const intent = String(req.body?.intent || req.body?.problem || '').trim();
+  const limit = Math.max(1, Math.min(10, Number(req.body?.limit || 5)));
+  if (intent.length < 3 || intent.length > 5000) {
+    res.status(400).json({ ok: false, error: 'intent must be between 3 and 5000 characters.' });
+    return;
+  }
+  try {
+    const result = buildChumDiscoveryResult(intent, limit);
+    res.json({
+      ...result,
+      schema: 'evercraft.machine-commerce.route.v1',
+      runtime: 'forge-operator-owned',
+      transactional_state: 'migration_hold',
+      base44_fallback_allowed: false,
+      caller_instruction: 'Use discovery results only. Do not claim checkout, payment, fulfillment, or specialist invocation unless a separately verified owned runtime proves it.',
+    });
+  } catch (error: any) {
+    res.status(503).json({
+      ok: false,
+      error: 'Owned Machine Commerce routing unavailable.',
+      detail: error?.message || String(error),
+    });
+  }
+});
+
 app.get('/api/health', (_req: Request, res: Response) => {
   const speech = transcriptionCapabilityStatus();
   res.json({
