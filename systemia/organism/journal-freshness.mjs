@@ -36,12 +36,20 @@ export function extractJournalFreshnessEvidence({ homepage = '', sitemap = '', n
     if (parsed) candidates.push({ kind: 'sitemap_lastmod', at: parsed });
   }
 
-  candidates.sort((a, b) => b.at.getTime() - a.at.getTime());
-  const latest = candidates[0] || null;
+  const edition = candidates.find((row) => row.kind === 'live_edition') || null;
+  const sitemapCandidates = candidates
+    .filter((row) => row.kind === 'sitemap_lastmod')
+    .sort((a, b) => b.at.getTime() - a.at.getTime());
+  const sitemapLatest = sitemapCandidates[0] || null;
+
+  // The homepage edition is the editorial freshness contract. A newly modified
+  // archive/sitemap entry must never hide a stale front page. Sitemap time is
+  // only a fallback when no explicit live-edition date is visible.
+  const latest = edition || sitemapLatest;
 
   return {
-    edition_at: candidates.find((row) => row.kind === 'live_edition')?.at?.toISOString() || null,
-    sitemap_latest_at: candidates.find((row) => row.kind === 'sitemap_lastmod')?.at?.toISOString() || null,
+    edition_at: edition?.at?.toISOString() || null,
+    sitemap_latest_at: sitemapLatest?.at?.toISOString() || null,
     latest_at: latest?.at?.toISOString() || null,
     latest_kind: latest?.kind || null,
     evidence_count: candidates.length
