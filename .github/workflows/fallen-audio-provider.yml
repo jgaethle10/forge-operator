@@ -1,0 +1,47 @@
+name: Fallen Audio Provider Fabric
+
+on:
+  pull_request:
+    paths:
+      - "systemia/media-studio/production-provider-runtime.ts"
+      - "systemia/media-studio/production-provider-runtime.test.ts"
+      - "systemia/media-studio/audio-provider-elevenlabs.ts"
+      - "systemia/media-studio/audio-provider-elevenlabs.test.ts"
+      - "systemia/media-studio/audio-provider-elevenlabs.integration.test.ts"
+      - ".github/workflows/fallen-audio-provider.yml"
+  push:
+    branches: [main]
+    paths:
+      - "systemia/media-studio/production-provider-runtime.ts"
+      - "systemia/media-studio/production-provider-runtime.test.ts"
+      - "systemia/media-studio/audio-provider-elevenlabs.ts"
+      - "systemia/media-studio/audio-provider-elevenlabs.test.ts"
+      - "systemia/media-studio/audio-provider-elevenlabs.integration.test.ts"
+      - ".github/workflows/fallen-audio-provider.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  audio-provider:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install
+        run: npm install --no-audit --no-fund
+      - name: Ensure FFmpeg
+        run: |
+          if ! command -v ffmpeg >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y ffmpeg
+          fi
+          ffmpeg -version | head -n 1
+      - name: Provider contracts
+        run: |
+          node --import tsx --test             systemia/media-studio/production-provider-runtime.test.ts             systemia/media-studio/audio-provider-elevenlabs.test.ts             systemia/media-studio/audio-provider-elevenlabs.integration.test.ts
+      - name: Typecheck
+        run: npm run lint
