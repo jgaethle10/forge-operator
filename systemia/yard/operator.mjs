@@ -642,6 +642,26 @@ export class YardOperator {
         }
         healthState = 'healthy';
         routeVerification = 'local_origin_health_verified_public_route_unbound';
+      } else if (workloadClass === 'systemia.aliev-source-runtime.v1') {
+        const alievHealthy =
+          health.ok === true &&
+          health.service === 'aliev-owned-source-runtime' &&
+          health.runtime === 'Evercraft Compute' &&
+          health.private_source_runtime === true &&
+          health.public_route_required === false &&
+          health.base44_runtime_required === false &&
+          health.instance_id === job.result?.instance_id;
+        if (!alievHealthy) {
+          try {
+            await request(`${capacityEndpoint}/v1/services/${job.result.service_id}/stop`, {
+              method: 'POST',
+              body: JSON.stringify({ token: lease.token }),
+            });
+          } catch {}
+          throw new Error('AliEV owned source runtime failed initial local health verification');
+        }
+        healthState = 'healthy';
+        routeVerification = 'private_aliev_source_health_verified';
       } else if (workloadClass === 'systemia.rivet-report-runtime.v1') {
         const rivetHealthy =
           health.ok === true &&
