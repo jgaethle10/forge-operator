@@ -2,6 +2,8 @@ import fs from 'node:fs';
 import http from 'node:http';
 import path from 'node:path';
 import { createHash, randomBytes } from 'node:crypto';
+import { ingestAliEvDomainRecords, aliEvDomainHealth } from './domain-store.mjs';
+import { buildOwnedAliEvSiteSnapshot, censusOnelineGeocode } from './source-engine.mjs';
 
 const COVERAGE_SCHEMA='evercraft.rivet.source-coverage.v1';
 const REQUIRED_DOMAINS=[
@@ -109,11 +111,15 @@ export async function startAliEvSourceRuntime({
   port=0,
   systemiaMachineKey=process.env.SYSTEMIA_MACHINE_KEY||'',
   ingestToken=process.env.ALIEV_OWNED_INGEST_TOKEN||'',
+  domainStateDir='',
+  geocode=censusOnelineGeocode,
 }={}){
   if(!stateDir) throw new Error('stateDir is required');
   if(!clean(systemiaMachineKey)) throw new Error('SYSTEMIA_MACHINE_KEY is required');
   if(!clean(ingestToken)) throw new Error('ALIEV_OWNED_INGEST_TOKEN is required');
   fs.mkdirSync(stateDir,{recursive:true,mode:0o750});
+  const domainRoot=path.resolve(domainStateDir||path.join(stateDir,'domain-store'));
+  fs.mkdirSync(domainRoot,{recursive:true,mode:0o750});
   fs.mkdirSync(snapshotDir(stateDir),{recursive:true,mode:0o750});
   if(!fs.existsSync(indexFile(stateDir))) atomicJson(indexFile(stateDir),{schema:'evercraft.aliev.snapshot-index.v1',entries:{},updated_at:new Date().toISOString()});
 
@@ -132,6 +138,9 @@ export async function startAliEvSourceRuntime({
       private_source_runtime:true,
       public_route_required:false,
       canonical_store:'content-addressed-snapshot-store-v1',
+      domain_store:'content-addressed-domain-store-v1',
+      dynamic_snapshot_engine:true,
+      precomputed_snapshot_required:false,
       snapshot_count:Object.keys(index.entries||{}).length,
       source_coverage_schema:COVERAGE_SCHEMA,
       required_source_domains:REQUIRED_DOMAINS.length,
@@ -172,13 +181,48 @@ export async function startAliEvSourceRuntime({
         });
       }
 
+      if(req.method==='POST'&&req.url==='/v1/domain-records'){
+        if(clean(req.headers.authorization)!=='Bearer '+ingestToken) return send(res,401,{ok:false,error:'ingest_authorization_required'});
+        const body=await readJson(req,64*1024*1024);
+        const records=Array.isArray(body?.records)?body.records:[];
+        if(!clean(body?.domain)||!records.length) return send(res,400,{ok:false,error:'domain_and_records_required'});
+        if(records.length>5000) return send(res,413,{ok:false,error:'domain_batch_too_large'});
+        const receipt=ingestAliEvDomainRecords({
+          stateDir:domainRoot,
+          domain:body.domain,
+          records,
+          source:body.source||{}
+        });
+        return send(res,201,{ok:true,...receipt,stored_at:new Date().toISOString()});
+      }
+
+      if(req.method==='GET'&&req.url==='/v1/domain-health'){
+        if(clean(req.headers.authorization)!=='Bearer '+ingestToken) return send(res,401,{ok:false,error:'ingest_authorization_required'});
+        const domains=['charging_inventory','traffic','traffic_temporal','utility_service_area','utility_tariff','incentives','parcel_planning','local_ev_stock','observed_sessions','freight','dwell_context','deep_market_evidence'];
+        return send(res,200,{ok:true,...aliEvDomainHealth({stateDir:domainRoot,domains})});
+      }
+
       if(req.method==='POST'&&(req.url==='/energySiteLookup'||req.url==='/v1/site-snapshot')){
         if(clean(req.headers['x-systemia-machine-key'])!==systemiaMachineKey) return send(res,401,{ok:false,error:'systemia_machine_authorization_required'});
         const body=await readJson(req);
         if(body.mode!=='rivet_report_snapshot') return send(res,400,{ok:false,error:'unsupported_mode'});
         const address=clean(body.address);
-        const found=readSnapshot(stateDir,address);
-        if(!found) return send(res,404,{ok:false,error:'site_snapshot_not_found',address});
+        let found=readSnapshot(stateDir,address);
+        if(!found){
+          try{
+            const snapshot=await buildOwnedAliEvSiteSnapshot({
+              address,
+              domainStateDir:domainRoot,
+              geocode,
+            });
+            const persisted=writeSnapshot(stateDir,snapshot);
+            found={snapshot,entry:{sha256:persisted.sha256,byte_count:persisted.byte_count,retrieved_at:snapshot.retrieved_at}};
+          }catch(error){
+            const message=error instanceof Error?error.message:String(error);
+            if(message==='geocoder_no_match') return send(res,404,{ok:false,error:'site_geocode_not_found',address});
+            throw error;
+          }
+        }
         return send(res,200,found.snapshot);
       }
 
@@ -205,6 +249,8 @@ export async function startAliEvSourceRuntime({
     source_url:url+'/energySiteLookup',
     ingest_url:url+'/v1/snapshots',
     batch_ingest_url:url+'/v1/snapshot-batch',
+    domain_ingest_url:url+'/v1/domain-records',
+    domain_health_url:url+'/v1/domain-health',
     health_path:'/health',
     health,
     setDeploymentReceipt:(receiptRef)=>{
