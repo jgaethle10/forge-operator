@@ -1,0 +1,18 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "FindMyPart Part Passport",
+  "serviceType": "Free evidence-aware part identification triage",
+  "provider": {
+    "@type": "Organization",
+    "name": "Evercraft LLC"
+  },
+  "url": "https://findmypart.base44.app/free-part-check",
+  "description": "Free evidence-aware triage for ambiguous, obsolete, discontinued and hard-to-source parts before paid sourcing.",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD",
+    "availability": "https://schema.org/InStock"
+  }
+}
