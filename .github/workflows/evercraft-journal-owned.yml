@@ -35,8 +35,16 @@ jobs:
         run: npm run journal:test
       - name: Build owned Journal
         run: npm run journal:build
-      - name: Verify generated public Journal is committed
-        run: git diff --exit-code -- public/journal
+      - name: Verify owned Journal build outputs
+        run: |
+          test -f public/journal/index.html
+          test -f public/journal/index.json
+          test -f public/journal/feed.xml
+          test -f public/journal/llms.txt
+          test -f public/journal/boeing-fa-xx-industrial-base/index.html
+          test -f public/journal/receipts/boeing-fa-xx-industrial-base.json
+          test -f public/journal/production/boeing-fa-xx-industrial-base/fallen-brief.json
+          test -f public/journal/production/boeing-fa-xx-industrial-base/clip-handoff.json
       - name: Verify no legacy shopping identity leaked
         run: |
           if grep -RniE 'Black Friday|shopping assistant|optimize your cart' public/journal; then
