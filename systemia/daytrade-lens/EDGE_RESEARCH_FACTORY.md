@@ -48,3 +48,18 @@ live_trade_authority=false
 ```
 
 The factory has no Alpaca trading endpoint and cannot place, modify or cancel an order.
+
+
+## Evidence diversity
+
+Edge Lab distinguishes source-family diversity from origin-entity diversity.
+
+For ordinary public-source signals, a research candidate requires at least two distinct source families.
+
+For an official authoritative source family such as SEC EDGAR, a single authority can support a cross-issuer research question when observations come from multiple independent origin entities. The current screen requires at least five distinct origin entities overall and at least three distinct origin entities in the chronological holdout slice. The holdout effect must also keep the same direction when each origin entity receives equal weight, preventing one prolific issuer from dominating the apparent result.
+
+This is an evidence-quality rule, not a relaxation of the sample, holdout, cost or false-discovery gates.
+
+## Sample depth
+
+The SEC field pack now uses a rolling 365-day research window and a broader multi-issuer universe. Alpaca historical bars are followed across `next_page_token` pages rather than silently truncating long windows at the first response page.

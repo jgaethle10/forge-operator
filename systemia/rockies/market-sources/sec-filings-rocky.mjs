@@ -2,13 +2,26 @@ import crypto from "node:crypto";
 
 export const DEFAULT_SEC_RESEARCH_UNIVERSE = Object.freeze([
   { ticker: "AAPL", rockies_range: "independent_scouts" },
+
   { ticker: "NVDA", rockies_range: "semiconductors_compute" },
   { ticker: "AMD", rockies_range: "semiconductors_compute" },
+  { ticker: "AVGO", rockies_range: "semiconductors_compute" },
+  { ticker: "INTC", rockies_range: "semiconductors_compute" },
+  { ticker: "QCOM", rockies_range: "semiconductors_compute" },
+  { ticker: "MU", rockies_range: "semiconductors_compute" },
+  { ticker: "AMAT", rockies_range: "semiconductors_compute" },
+
   { ticker: "MSFT", rockies_range: "ai_models" },
   { ticker: "GOOGL", rockies_range: "ai_models" },
   { ticker: "META", rockies_range: "ai_models" },
   { ticker: "AMZN", rockies_range: "ai_models" },
+  { ticker: "ORCL", rockies_range: "ai_models" },
+  { ticker: "CRM", rockies_range: "ai_models" },
+
   { ticker: "TSLA", rockies_range: "industrial_manufacturing" },
+  { ticker: "CAT", rockies_range: "industrial_manufacturing" },
+  { ticker: "DE", rockies_range: "industrial_manufacturing" },
+  { ticker: "GE", rockies_range: "industrial_manufacturing" },
 ]);
 
 const RANGE_DOMAINS = Object.freeze({
@@ -172,7 +185,7 @@ export function observationsFromSecSubmissions({
   rockies_range,
   submissions,
   forms = ["8-K","10-Q","10-K"],
-  lookback_days = 120,
+  lookback_days = 365,
   now = new Date(),
   publication_delay_buffer_minutes = 10,
 } = {}) {
@@ -261,7 +274,7 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 export async function buildSecRockyObservationBatch({
   universe = DEFAULT_SEC_RESEARCH_UNIVERSE,
   forms = ["8-K","10-Q","10-K"],
-  lookback_days = 120,
+  lookback_days = 365,
   publication_delay_buffer_minutes = 10,
   request_interval_ms = 300,
   now = new Date(),

@@ -38,3 +38,12 @@ Automated SEC requests identify the Evercraft research client and are deliberate
 ## Execution boundary
 
 This pack creates observations and research artifacts only. It cannot place, modify or cancel trades.
+
+
+## Current research depth
+
+The SEC market field pack uses a rolling **365-day** lookback and a deliberately multi-issuer research universe across semiconductors/compute, AI/software, industrial manufacturing and independent-scout controls.
+
+For official regulatory observations, Edge Lab records the SEC source family separately from the issuer origin entity. This lets the research layer demand issuer diversity without pretending that multiple companies are multiple regulatory authorities.
+
+Long Alpaca historical windows are paginated until the dataset is complete within the configured safety ceiling.

@@ -4,6 +4,7 @@ import {
   measureRockiesHypotheses,
   evaluateEdgeFamilies,
   benjaminiHochberg,
+  fetchAlpacaBars,
 } from "./edge-research-factory.mjs";
 
 function bars(start, count, drift) {
@@ -77,6 +78,61 @@ const rejected = evaluateEdgeFamilies(oneSource, {
 assert.equal(rejected[0].candidate_checks.minimum_source_family_diversity, false);
 assert.equal(rejected[0].status, "NOT_VALIDATED");
 
+const authoritative = many.map((row, i) => ({
+  ...row,
+  source_family: "sec_filings",
+  source_authority_class: "official_regulatory_filing",
+  origin_entity_ref: "sec:cik:" + String(i % 6).padStart(10, "0"),
+}));
+const authoritativeEval = evaluateEdgeFamilies(authoritative, {
+  transaction_cost_bps: 2,
+  false_discovery_rate: 0.10,
+});
+assert.equal(authoritativeEval[0].candidate_checks.minimum_source_family_diversity, false);
+assert.equal(authoritativeEval[0].candidate_checks.authoritative_multi_origin_diversity, true);
+assert.equal(authoritativeEval[0].candidate_checks.evidence_diversity_pass, true);
+assert.equal(authoritativeEval[0].distinct_origin_entities, 6);
+assert.ok(authoritativeEval[0].holdout_origin_entities >= 3);
+assert.equal(authoritativeEval[0].status, "RESEARCH_CANDIDATE");
+
+const tooFewOrigins = many.map((row, i) => ({
+  ...row,
+  source_family: "sec_filings",
+  source_authority_class: "official_regulatory_filing",
+  origin_entity_ref: "sec:cik:" + String(i % 2).padStart(10, "0"),
+}));
+const tooFewEval = evaluateEdgeFamilies(tooFewOrigins, {
+  transaction_cost_bps: 2,
+  false_discovery_rate: 0.10,
+});
+assert.equal(tooFewEval[0].candidate_checks.authoritative_multi_origin_diversity, false);
+assert.equal(tooFewEval[0].candidate_checks.evidence_diversity_pass, false);
+assert.equal(tooFewEval[0].status, "NOT_VALIDATED");
+
+let fetchCalls = 0;
+const paginationUrls = [];
+const fakeFetch = async (url) => {
+  fetchCalls += 1;
+  paginationUrls.push(String(url));
+  const payload = fetchCalls === 1
+    ? { bars: [{ t: "2026-01-01T14:30:00Z", c: 100 }], next_page_token: "p2" }
+    : { bars: [{ t: "2026-01-01T14:35:00Z", c: 101 }], next_page_token: null };
+  return new Response(JSON.stringify(payload), {
+    status: 200,
+    headers: { "content-type": "application/json" },
+  });
+};
+const paged = await fetchAlpacaBars("TEST", {
+  start: "2026-01-01T00:00:00Z",
+  end: "2026-12-31T23:59:59Z",
+  key: "proof-key",
+  secret: "proof-secret",
+  fetchImpl: fakeFetch,
+});
+assert.equal(fetchCalls, 2);
+assert.equal(paged.length, 2);
+assert.ok(paginationUrls[1].includes("page_token=p2"));
+
 const bh = benjaminiHochberg([
   { id: "a", development_p_approx: 0.001 },
   { id: "b", development_p_approx: 0.02 },
@@ -91,6 +147,8 @@ console.log(JSON.stringify({
   no_lookahead: true,
   benchmark_adjusted: true,
   source_diversity_required: true,
+  authoritative_multi_origin_screen: true,
+  alpaca_pagination: true,
   false_discovery_control: "benjamini_hochberg",
   live_trade_authority: false,
 }));

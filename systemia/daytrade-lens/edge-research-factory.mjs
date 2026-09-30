@@ -104,6 +104,8 @@ export function measureRockiesHypotheses(hypotheses, barsBySymbol, {
           source_observation_id: hypothesis.source_observation_id,
           observed_at: hypothesis.observed_at,
           source_family: hypothesis.source_family,
+          origin_entity_ref: hypothesis.origin_entity_ref || null,
+          source_authority_class: hypothesis.source_authority_class || null,
           independent_source_family_count: hypothesis.independent_source_family_count,
           rockies_range: hypothesis.rockies_range,
           observation_kind: hypothesis.observation_kind || "observation",
@@ -176,6 +178,9 @@ export function evaluateEdgeFamilies(measurements, {
   transaction_cost_bps = 5,
   false_discovery_rate = 0.10,
   minimum_source_families = 2,
+  minimum_authoritative_origins = 5,
+  minimum_holdout_origins = 3,
+  development_fraction = 0.7,
 } = {}) {
   const groups = new Map();
   for (const row of measurements || []) {
@@ -185,10 +190,44 @@ export function evaluateEdgeFamilies(measurements, {
 
   const evaluations = [...groups.entries()].map(([signalKey, rows]) => {
     rows.sort((a,b) => new Date(a.observed_at) - new Date(b.observed_at));
-    const evaluation = evaluateRockiesEdgeCandidate(rows, { transaction_cost_bps });
+    const evaluation = evaluateRockiesEdgeCandidate(rows, {
+      transaction_cost_bps,
+      development_fraction,
+    });
     const sourceFamilies = uniq(rows.map((row) => row.source_family));
     const observationIds = uniq(rows.map((row) => row.source_observation_id));
+    const originEntities = uniq(rows.map((row) => row.origin_entity_ref));
+    const authorityClasses = uniq(rows.map((row) => row.source_authority_class));
     const developmentP = approxTwoSidedNormalP(evaluation.development.t_like);
+
+    const splitAt = Math.max(1, Math.floor(rows.length * development_fraction));
+    const holdoutRows = rows.slice(splitAt);
+    const holdoutOrigins = uniq(holdoutRows.map((row) => row.origin_entity_ref));
+    const byOrigin = new Map();
+    for (const row of holdoutRows) {
+      if (!row.origin_entity_ref) continue;
+      if (!byOrigin.has(row.origin_entity_ref)) byOrigin.set(row.origin_entity_ref, []);
+      const excess = Number(row.forward_return || 0) - Number(row.benchmark_return || 0);
+      const net = excess - Math.sign(excess || 1) * (transaction_cost_bps / 10000);
+      byOrigin.get(row.origin_entity_ref).push(net);
+    }
+    const originMeans = [...byOrigin.values()].map((values) =>
+      values.reduce((a,b) => a + b, 0) / values.length
+    );
+    const originBalancedHoldoutMean = originMeans.length
+      ? originMeans.reduce((a,b) => a + b, 0) / originMeans.length
+      : 0;
+    const originBalancedSign = originBalancedHoldoutMean > 0
+      ? 1
+      : originBalancedHoldoutMean < 0 ? -1 : 0;
+    const officialAuthority = authorityClasses.length > 0 &&
+      authorityClasses.every((value) => String(value).startsWith("official_"));
+    const authoritativeMultiOrigin =
+      officialAuthority &&
+      originEntities.length >= minimum_authoritative_origins &&
+      holdoutOrigins.length >= minimum_holdout_origins &&
+      originBalancedSign !== 0 &&
+      originBalancedSign === evaluation.holdout.sign;
 
     return {
       schema: "evercraft.daytrade.edge-family-evaluation.v1",
@@ -201,12 +240,20 @@ export function evaluateEdgeFamilies(measurements, {
       observation_count: observationIds.length,
       distinct_source_families: sourceFamilies.length,
       source_families: sourceFamilies,
+      distinct_origin_entities: originEntities.length,
+      holdout_origin_entities: holdoutOrigins.length,
+      origin_entities: originEntities,
+      source_authority_classes: authorityClasses,
+      origin_balanced_holdout_mean_excess_return_net: originBalancedHoldoutMean,
       development_p_approx: developmentP,
       development_q_bh: 1,
       base_evaluation: evaluation,
       candidate_checks: {
         ...evaluation.checks,
         minimum_source_family_diversity: sourceFamilies.length >= minimum_source_families,
+        authoritative_multi_origin_diversity: authoritativeMultiOrigin,
+        evidence_diversity_pass:
+          sourceFamilies.length >= minimum_source_families || authoritativeMultiOrigin,
         false_discovery_rate_pass: false,
       },
       status: "NOT_VALIDATED",
@@ -223,7 +270,8 @@ export function evaluateEdgeFamilies(measurements, {
 
     const passed =
       row.base_evaluation.status === "RESEARCH_CANDIDATE" &&
-      Object.values(row.candidate_checks).every(Boolean);
+      row.candidate_checks.evidence_diversity_pass === true &&
+      row.candidate_checks.false_discovery_rate_pass === true;
 
     row.status = passed ? "RESEARCH_CANDIDATE" : "NOT_VALIDATED";
     row.learned_direction = passed
@@ -246,27 +294,42 @@ export async function fetchAlpacaBars(symbol, {
   key,
   secret,
   fetchImpl = fetch,
+  max_pages = 10,
 } = {}) {
   if (!key || !secret) throw new Error("edge_lab_alpaca_credentials_missing");
-  const url = new URL(`https://data.alpaca.markets/v2/stocks/${encodeURIComponent(symbol)}/bars`);
-  url.searchParams.set("timeframe", "5Min");
-  url.searchParams.set("start", start);
-  url.searchParams.set("end", end);
-  url.searchParams.set("adjustment", "raw");
-  url.searchParams.set("feed", "iex");
-  url.searchParams.set("sort", "asc");
-  url.searchParams.set("limit", "10000");
 
-  const response = await fetchImpl(url, {
-    headers: {
-      "APCA-API-KEY-ID": key,
-      "APCA-API-SECRET-KEY": secret,
-      accept: "application/json",
-    },
-  });
-  if (!response.ok) throw new Error(`edge_lab_alpaca_${symbol}_http_${response.status}`);
-  const payload = await response.json();
-  return Array.isArray(payload?.bars) ? payload.bars : [];
+  const allBars = [];
+  let pageToken = null;
+
+  for (let page = 0; page < max_pages; page++) {
+    const url = new URL(`https://data.alpaca.markets/v2/stocks/${encodeURIComponent(symbol)}/bars`);
+    url.searchParams.set("timeframe", "5Min");
+    url.searchParams.set("start", start);
+    url.searchParams.set("end", end);
+    url.searchParams.set("adjustment", "raw");
+    url.searchParams.set("feed", "iex");
+    url.searchParams.set("sort", "asc");
+    url.searchParams.set("limit", "10000");
+    if (pageToken) url.searchParams.set("page_token", pageToken);
+
+    const response = await fetchImpl(url, {
+      headers: {
+        "APCA-API-KEY-ID": key,
+        "APCA-API-SECRET-KEY": secret,
+        accept: "application/json",
+      },
+    });
+    if (!response.ok) throw new Error(`edge_lab_alpaca_${symbol}_http_${response.status}`);
+
+    const payload = await response.json();
+    if (Array.isArray(payload?.bars)) allBars.push(...payload.bars);
+
+    const next = String(payload?.next_page_token || "").trim();
+    if (!next) return allBars;
+    pageToken = next;
+  }
+
+  throw new Error(`edge_lab_alpaca_${symbol}_pagination_limit`);
 }
 
 function parseObservationFile(file) {
