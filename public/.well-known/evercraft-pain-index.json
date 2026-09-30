@@ -28,13 +28,13 @@
     "provider_verification_required_for_paid_state": true
   },
   "summary": {
-    "entries": 110,
+    "entries": 111,
     "product_entries": 64,
     "machine_offer_entries": 46,
-    "entries_with_pain_language": 110,
+    "entries_with_pain_language": 111,
     "sell_now_machine_offers": 14,
-    "entries_with_declared_mcp": 66,
-    "callable_or_routable_entries": 47,
+    "entries_with_declared_mcp": 67,
+    "callable_or_routable_entries": 48,
     "suppressed_legacy_marketing_routes": 8
   },
   "entries": [
@@ -1221,6 +1221,52 @@
       "invocation_status": "LIVE: FAIE HTTP agent gateway + OpenAPI + llms guidance + remote MCP at https://faie.base44.app/functions/faieMcp. Agents can inspect the fixed $250/$2,500 offers, prepare checkout only after explicit human confirmation, and verify payment/mission queue state. Paid work remains human-review controlled.",
       "source_refs": [
         "public/.well-known/evercraft-machine-catalog.json"
+      ]
+    },
+    {
+      "capability_id": "capability:findmypart-part-passport-v1",
+      "product_key": "findmypart",
+      "public_id": "findmypart-part-passport-v1",
+      "kind": "free_machine_capability",
+      "name": "FindMyPart Part Passport",
+      "class": "hard_to_source_parts",
+      "pain_phrases": [
+        "identify this part",
+        "identify a part from a photo or markings",
+        "I know what this part does but not what it is called",
+        "what evidence do I need before buying a replacement",
+        "is this part number enough to identify the right replacement",
+        "find a discontinued part but I am not sure exactly what it is"
+      ],
+      "problem": "The user has a broken, obscure, obsolete, discontinued or unknown part but does not yet have enough trustworthy identity evidence to buy the right replacement.",
+      "inputs": "Description plus any known asset identity, model, serial, part number, photos, markings, measurements, invoices, diagrams or fragments.",
+      "outputs": "Free evidence-aware Part Passport with cautious identity, function, observed identifiers, missing evidence, search readiness, likely sourcing lanes, safety gate and recommended next step.",
+      "canonical_url": "https://findmypart.base44.app/free-part-check",
+      "registry_name": "io.github.jgaethle10/findmypart",
+      "mcp": "https://findmypart.base44.app/functions/findMyPartMcp",
+      "routing": {
+        "preferred": "specialist_mcp",
+        "target": "https://findmypart.base44.app/functions/findMyPartMcp",
+        "tool": "free_part_triage"
+      },
+      "authority": "Free evidence-aware triage only.",
+      "boundaries": [
+        "normalized identity is not fitment proof",
+        "reachable listing is not inventory proof",
+        "unknown compatibility supplier availability price delivery certification or installation suitability remains unknown",
+        "free triage creates no charge"
+      ],
+      "commercial_state": "free",
+      "machine_state": "read_only_live",
+      "pricing": "Free",
+      "offers": [],
+      "human_confirmation_required": false,
+      "confirmation": "No payment confirmation is required for free triage. Any later paid hunt requires explicit human confirmation.",
+      "payment_authority": "No charge is created by Part Passport triage.",
+      "invocation_status": "LIVE: direct specialist MCP tool free_part_triage and HTTP agent-gateway triage action. Production canary verified a Part Passport response without charge.",
+      "source_refs": [
+        "public/chum/capabilities/findmypart-part-passport-v1/capability.json",
+        "conformance/runtime-observations/2026-09-29-findmypart-part-passport.json"
       ]
     },
     {
