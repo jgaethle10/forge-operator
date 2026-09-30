@@ -45,6 +45,9 @@ export function createEvercraftCoreClient({ baseUrl = '/api/core' } = {}) {
       }
       return post(baseUrl, '/upload-file', payload);
     },
+    CreateFileSignedUrl(payload) {
+      return post(baseUrl, '/create-file-signed-url', payload);
+    },
     SendEmail(payload) {
       return post(baseUrl, '/send-email', payload);
     },
@@ -63,6 +66,7 @@ export function createEvercraftCoreClient({ baseUrl = '/api/core' } = {}) {
 export const Core = createEvercraftCoreClient();
 export const InvokeLLM = Core.InvokeLLM;
 export const UploadFile = Core.UploadFile;
+export const CreateFileSignedUrl = Core.CreateFileSignedUrl;
 export const SendEmail = Core.SendEmail;
 export const SendSMS = Core.SendSMS;
 export const GenerateImage = Core.GenerateImage;
