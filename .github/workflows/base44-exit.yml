@@ -63,6 +63,8 @@ jobs:
         run: node scripts/validate-base44-credit-firewall.mjs
       - name: Prove Base44 evacuation factory
         run: npm run proof:base44-evac
+      - name: Prove Base44 source dependency scanner
+        run: npm run proof:base44-source-scan
       - name: Prove Evercraft App Fabric
         run: npm run proof:app-fabric
       - name: Prove Base44 SDK compatibility
