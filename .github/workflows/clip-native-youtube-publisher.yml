@@ -1,0 +1,38 @@
+name: Clip Native YouTube Publisher
+
+on:
+  pull_request:
+    paths:
+      - "systemia/clip/publisher-runtime.mjs"
+      - "systemia/clip/publisher-runtime.test.mjs"
+      - "systemia/clip/youtube-publisher.mjs"
+      - "systemia/clip/youtube-publisher.test.mjs"
+      - ".github/workflows/clip-native-youtube-publisher.yml"
+  push:
+    branches: [main]
+    paths:
+      - "systemia/clip/publisher-runtime.mjs"
+      - "systemia/clip/publisher-runtime.test.mjs"
+      - "systemia/clip/youtube-publisher.mjs"
+      - "systemia/clip/youtube-publisher.test.mjs"
+      - ".github/workflows/clip-native-youtube-publisher.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  native-youtube-publisher:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Native publishing contracts
+        run: |
+          node --test             systemia/clip/publisher-runtime.test.mjs             systemia/clip/youtube-publisher.test.mjs
+      - name: Estate typecheck
+        run: |
+          npm install --no-audit --no-fund
+          npm run lint
