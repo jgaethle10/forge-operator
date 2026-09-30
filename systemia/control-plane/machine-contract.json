@@ -46,6 +46,17 @@
       ]
     },
     {
+      "component_key": "evercraft-app-fabric",
+      "role": "base44_compatibility_data_function_integration_and_auth_membrane",
+      "source_refs": [
+        "systemia/app-fabric/client.mjs",
+        "systemia/app-fabric/query.mjs",
+        "systemia/app-fabric/entity-store.mjs",
+        "systemia/app-fabric/gateway.mjs",
+        "systemia/app-fabric/proof.mjs"
+      ]
+    },
+    {
       "component_key": "yard-operator",
       "role": "deployment_and_runtime_handoff",
       "source_refs": [
@@ -186,7 +197,9 @@
     "entitlement": "evercraft-meter",
     "usage": "evercraft-meter",
     "relationship_preflight": "evercraft-interaction-ledger",
-    "contact_preflight": "evercraft-interaction-ledger"
+    "contact_preflight": "evercraft-interaction-ledger",
+    "migrate_app": "evercraft-app-fabric",
+    "app_compatibility": "evercraft-app-fabric"
   },
   "parallelism": {
     "provider": "saban",
