@@ -1,0 +1,48 @@
+name: Base44 exit materializer
+
+on:
+  push:
+    branches:
+      - systemia/base44-exit-wave-20260930
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    if: ${{ !contains(github.event.head_commit.message, '[base44-materialized]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: systemia/base44-exit-wave-20260930
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Regenerate owned discovery surfaces
+        run: |
+          set -euo pipefail
+          npm run direct:generate
+          npm run chum:revenue
+          npm run chum:index
+          npm run chum:answers
+          npm run chum:capabilities
+          npm run chum:mirror
+
+      - name: Commit generated migration surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "evercraft-systemia"
+          git config user.email "actions@users.noreply.github.com"
+          git add distribution/direct-product-doors.json plugins public
+          if git diff --cached --quiet; then
+            echo "No generated changes to commit."
+            exit 0
+          fi
+          git commit -m "Materialize Base44 exit discovery surfaces [base44-materialized] [skip ci]"
+          git push origin HEAD:systemia/base44-exit-wave-20260930
