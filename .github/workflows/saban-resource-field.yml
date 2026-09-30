@@ -1,0 +1,60 @@
+name: Saban Resource Field
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/saban/resource-field.mjs'
+      - 'systemia/saban/resource-field.proof.mjs'
+      - 'systemia/saban/resource-acquirer.mjs'
+      - 'systemia/saban/resource-acquirer.proof.mjs'
+      - 'systemia/saban/resource-field-execution.proof.mjs'
+      - 'systemia/saban/market-factory.mjs'
+      - 'systemia/saban/market-factory.proof.mjs'
+      - 'systemia/saban/formation.mjs'
+      - 'systemia/saban/formation-resilience.proof.mjs'
+      - 'systemia/saban/distributed-executor.mjs'
+      - 'systemia/saban/compute-exchange.mjs'
+      - 'systemia/saban/compute-exchange.proof.mjs'
+      - 'systemia/saban/markets/**'
+      - 'systemia/compute/node-seed.mjs'
+      - 'systemia/compute/runtime-node.mjs'
+      - 'systemia/network/outbound-capacity-broker.mjs'
+      - 'systemia/yard/operator.mjs'
+      - '.github/workflows/saban-resource-field.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/saban/resource-field.mjs'
+      - 'systemia/saban/resource-acquirer.mjs'
+      - 'systemia/saban/market-factory.mjs'
+      - 'systemia/saban/formation.mjs'
+      - 'systemia/saban/distributed-executor.mjs'
+      - 'systemia/saban/compute-exchange.mjs'
+      - 'systemia/saban/markets/**'
+      - '.github/workflows/saban-resource-field.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove Resource Field planning
+        run: node systemia/saban/resource-field.proof.mjs
+      - name: Prove live resource acquisition
+        run: node systemia/saban/resource-acquirer.proof.mjs
+      - name: Prove automatic market construction
+        run: node systemia/saban/market-factory.proof.mjs
+      - name: Prove resilient Formation defaults
+        run: node systemia/saban/formation-resilience.proof.mjs
+      - name: Prove compute exchange boundaries
+        run: node systemia/saban/compute-exchange.proof.mjs
+      - name: Prove zero-capacity execution recovery
+        run: node systemia/saban/resource-field-execution.proof.mjs
