@@ -7,9 +7,9 @@
   "gateway_version": "evercraft-machine-commerce-gateway-v0.9.1",
   "source_generated_at": "2026-09-29T01:40:00.000Z",
   "generated_at": "2026-09-30T19:12:06.848Z",
-  "offer_count": 46,
+  "offer_count": 47,
   "sell_now_count": 14,
-  "discovery_count": 32,
+  "discovery_count": 33,
   "safety": {
     "discovery_creates_obligation": false,
     "human_confirmation_required_for_checkout": true,
@@ -1601,6 +1601,34 @@
       "invocation_status": "LIVE: agent HTTP gateway + OpenAPI + llms guidance + remote MCP at https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp. Agents can inspect $500/$999/$1,999 website-service tiers, prepare checkout only after explicit human confirmation, and independently verify paid order state.",
       "live_canary_evidence": null,
       "catalog_version": "2026-09-23.13"
+    },
+    {
+      "public_id": "worldstate-reality-delta-v1",
+      "name": "Worldstate Reality Delta",
+      "intent_terms": [
+        "what materially changed around my assets",
+        "monitor external conditions affecting my facilities",
+        "ground my AI in current physical world changes",
+        "show me evidence backed changes in this region",
+        "track infrastructure and environmental conditions around my portfolio",
+        "give my agent a current world state feed",
+        "tell me what changed that matters to my routes"
+      ],
+      "problem": "An organization or AI needs a continuously updated, evidence-backed picture of the external conditions that intersect its assets, facilities, routes, regions, dependencies, industries, or topics without drowning in generic news and alert noise.",
+      "inputs": "A bounded scope containing regions, domains, assets, facilities, routes, infrastructure dependencies, industries, or topics. Inputs must concern non-personal operational subjects and use public or explicitly authorized data.",
+      "outputs": "Worldstate snapshots and Reality Delta packets with observations, relevance/materiality, evidence state, source-family diversity, timestamps, provenance references, and compact agent-ready change packets.",
+      "commercial_state": "verification_required",
+      "machine_state": "discovery_only",
+      "pricing": "Pilot and enterprise pricing not yet approved for machine quoting. Scope, cadence, source requirements, geography and delivery surface determine commercial packaging.",
+      "offers": [],
+      "human_ui_required": false,
+      "confirmation": "Discovery and scoping create no obligation. Paid pilots, consequential integrations and external actions require explicit confirmation and existing Systemia review gates.",
+      "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/systemia/worldstate",
+      "public_url_source": "source_catalog",
+      "payment_authority": "No verified direct payment path approved for Worldstate yet.",
+      "invocation_status": "BUILD: machine contract and proof exist. Public runtime and commercial checkout are not claimed live.",
+      "live_canary_evidence": null,
+      "catalog_version": "2026-09-30"
     }
   ]
 }
