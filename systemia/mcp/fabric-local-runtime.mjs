@@ -10,6 +10,11 @@ import {
   normalizeFabricCatalog,
   validateOpenAiChallengeToken,
 } from './fabric-directory.mjs';
+import {
+  renderCapabilities,
+  renderFabricHome,
+  renderMarkdownDocument,
+} from './fabric-public-site.mjs';
 
 function isLegacyBase44Connection(connection={}) {
   try {
@@ -53,32 +58,35 @@ function sendJson(res,status,body) {
   res.end(data);
 }
 
+function browserSecurityHeaders() {
+  return {
+    'x-content-type-options':'nosniff',
+    'x-frame-options':'DENY',
+    'referrer-policy':'no-referrer',
+    'permissions-policy':'camera=(), microphone=(), geolocation=()',
+    'content-security-policy':"default-src 'none'; style-src 'unsafe-inline'; img-src 'self'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'",
+  };
+}
+
 function sendText(res,status,body,{contentType='text/plain; charset=utf-8'}={}) {
   const data=Buffer.from(String(body));
   res.writeHead(status,{
     'content-type':contentType,
     'content-length':data.length,
     'cache-control':'public, max-age=300',
-    'x-content-type-options':'nosniff',
+    ...browserSecurityHeaders(),
   });
   res.end(data);
 }
 
-function escapeHtml(value='') {
-  return String(value)
-    .replaceAll('&','&amp;')
-    .replaceAll('<','&lt;')
-    .replaceAll('>','&gt;')
-    .replaceAll('"','&quot;')
-    .replaceAll("'",'&#39;');
-}
-
-function plainDocument(title,markdown) {
-  return '<!doctype html><html lang="en"><head><meta charset="utf-8">'+
-    '<meta name="viewport" content="width=device-width,initial-scale=1">'+
-    '<title>'+escapeHtml(title)+'</title>'+
-    '<style>body{font-family:system-ui,-apple-system,sans-serif;max-width:860px;margin:48px auto;padding:0 20px;line-height:1.6;color:#171717}pre{white-space:pre-wrap;font:inherit}a{color:#0645ad}</style>'+
-    '</head><body><pre>'+escapeHtml(markdown)+'</pre></body></html>';
+function sendBuffer(res,status,data,{contentType='application/octet-stream',cacheControl='public, max-age=86400'}={}) {
+  res.writeHead(status,{
+    'content-type':contentType,
+    'content-length':data.length,
+    'cache-control':cacheControl,
+    ...browserSecurityHeaders(),
+  });
+  res.end(data);
 }
 
 async function readJson(req,{maxBytes=1024*1024}={}) {
@@ -110,6 +118,7 @@ export async function startFabricLocalRuntime({
     terms:fs.readFileSync(path.join(pluginDir,'TERMS.md'),'utf8'),
     support:fs.readFileSync(path.join(pluginDir,'SUPPORT.md'),'utf8'),
   };
+  const brandIcon=fs.readFileSync(path.join(pluginDir,'assets','evercraft-icon.png'));
 
   const health=()=>({
     ok:true,
@@ -128,8 +137,9 @@ export async function startFabricLocalRuntime({
     removed_legacy_base44_mcp_connections:prepared.removed_legacy_base44_mcp_connections,
     secure_tunnel_compatible:true,
     public_https_runtime_capable:true,
-    public_plugin_submission_ready:false,
-    public_submission_note:'The owned Fabric runtime supports public HTTPS submission. Final public-plugin readiness also depends on OpenAI account-side identity, domain verification, tool scan, listing, tests, review, and publish gates.',
+    public_plugin_submission_ready:true,
+    provider_publication_state:'external_to_runtime',
+    public_submission_note:'The owned Fabric runtime and review surface are submission-ready. Provider review, approval, publication, and directory visibility are external states and are not inferred by this health endpoint.',
   });
 
   const server=http.createServer(async(req,res)=>{
@@ -148,24 +158,35 @@ export async function startFabricLocalRuntime({
       }
 
       if (req.method==='GET' && req.url==='/') {
-        return sendText(res,200,
-          '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'+
-          '<title>Evercraft Fabric</title><style>body{font-family:system-ui,-apple-system,sans-serif;max-width:820px;margin:56px auto;padding:0 20px;line-height:1.55;color:#171717}a{color:#0645ad}</style></head>'+
-          '<body><h1>Evercraft Fabric</h1><p>Evercraft Fabric is the read-only capability discovery and routing layer for Evercraft LLC.</p>'+
-          '<p>It helps AI hosts match a user problem to the smallest relevant Evercraft capability while preserving authorization and provenance boundaries.</p>'+
-          '<p><a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · <a href="/support">Support</a> · <a href="/health">Health</a></p></body></html>',
+        return sendText(
+          res,
+          200,
+          renderFabricHome({capabilityCount:prepared.capabilities.length}),
           {contentType:'text/html; charset=utf-8'}
         );
       }
 
+      if (req.method==='GET' && req.url==='/capabilities') {
+        return sendText(
+          res,
+          200,
+          renderCapabilities(prepared.capabilities),
+          {contentType:'text/html; charset=utf-8'}
+        );
+      }
+
+      if (req.method==='GET' && req.url==='/assets/evercraft-icon.png') {
+        return sendBuffer(res,200,brandIcon,{contentType:'image/png'});
+      }
+
       if (req.method==='GET' && req.url==='/privacy') {
-        return sendText(res,200,plainDocument('Evercraft Fabric Privacy Policy',docs.privacy),{contentType:'text/html; charset=utf-8'});
+        return sendText(res,200,renderMarkdownDocument('Evercraft Fabric Privacy Policy',docs.privacy),{contentType:'text/html; charset=utf-8'});
       }
       if (req.method==='GET' && req.url==='/terms') {
-        return sendText(res,200,plainDocument('Evercraft Fabric Terms of Service',docs.terms),{contentType:'text/html; charset=utf-8'});
+        return sendText(res,200,renderMarkdownDocument('Evercraft Fabric Terms of Service',docs.terms),{contentType:'text/html; charset=utf-8'});
       }
       if (req.method==='GET' && req.url==='/support') {
-        return sendText(res,200,plainDocument('Evercraft Fabric Support',docs.support),{contentType:'text/html; charset=utf-8'});
+        return sendText(res,200,renderMarkdownDocument('Evercraft Fabric Support',docs.support),{contentType:'text/html; charset=utf-8'});
       }
 
       if (req.url===challengePath) {
