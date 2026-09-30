@@ -41,6 +41,8 @@ const dockerRegistry = {
   }]
 };
 
+write('systemia/mcp/example.js', "export const x = 1;\n");
+
 let result = evaluateArchitecturalInvariants({ rootDir: root, registry: dockerRegistry });
 assert.equal(result.ok, false);
 assert.equal(result.violations[0]?.invariant_id, 'docker-test');
