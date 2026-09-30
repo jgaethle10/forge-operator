@@ -51,6 +51,51 @@ export function registerNotificationFabricRoutes(app, options = {}) {
   });
   fabric.outbox = outbox;
   fabric.worker = worker;
+  fabric.enqueueIntent = (rawIntent, enqueueOptions = {}) => {
+    const intent = fabric.prepareIntent(rawIntent);
+    const idempotencyKey = String(enqueueOptions.idempotencyKey || `intent:${intent.id}`).trim();
+    const job = outbox.enqueue({
+      kind: 'intent',
+      idempotency_key: idempotencyKey,
+      fingerprint_source: {
+        intent: rawIntent,
+        max_attempts: enqueueOptions.maxAttempts ?? null,
+      },
+      payload: { intent },
+      max_attempts: enqueueOptions.maxAttempts,
+    });
+    fabric.store.recordDelivery({
+      schema: 'systemia.relay.job-receipt.v1',
+      job_id: job.id,
+      notification_id: intent.id,
+      status: job.duplicate ? 'job_deduplicated' : 'job_queued',
+      kind: 'intent',
+      at: new Date().toISOString(),
+    });
+    return { job, intent };
+  };
+  fabric.enqueueSignal = (signal, enqueueOptions = {}) => {
+    if (!signal || typeof signal !== 'object') throw new Error('Signal payload is required.');
+    const idempotencyKey = String(enqueueOptions.idempotencyKey || '').trim() || null;
+    const job = outbox.enqueue({
+      kind: 'signal',
+      idempotency_key: idempotencyKey,
+      fingerprint_source: {
+        signal,
+        max_attempts: enqueueOptions.maxAttempts ?? null,
+      },
+      payload: { signal },
+      max_attempts: enqueueOptions.maxAttempts,
+    });
+    fabric.store.recordDelivery({
+      schema: 'systemia.relay.job-receipt.v1',
+      job_id: job.id,
+      status: job.duplicate ? 'job_deduplicated' : 'job_queued',
+      kind: 'signal',
+      at: new Date().toISOString(),
+    });
+    return { job };
+  };
   const workerEnabled = String(options.workerEnabled ?? process.env.EVERCRAFT_NOTIFICATION_WORKER_ENABLED ?? 'true').toLowerCase() !== 'false';
   const maxQueueAgeMs = Math.max(1000, Number(options.maxQueueAgeMs ?? process.env.EVERCRAFT_NOTIFICATION_MAX_QUEUE_AGE_MS ?? 60000));
   if (workerEnabled) worker.start();
@@ -271,22 +316,11 @@ export function registerNotificationFabricRoutes(app, options = {}) {
   app.post('/api/notifications/jobs', requireIngest, (req, res) => {
     try {
       const rawIntent = req.body?.intent || req.body;
-      const intent = fabric.prepareIntent(rawIntent);
-      const idempotencyKey = String(req.get('idempotency-key') || req.body?.idempotency_key || `intent:${intent.id}`).trim();
-      const job = outbox.enqueue({
-        kind: 'intent',
-        idempotency_key: idempotencyKey,
-        fingerprint_source: rawIntent,
-        payload: { intent },
-        max_attempts: req.body?.max_attempts,
-      });
-      fabric.store.recordDelivery({
-        schema: 'systemia.relay.job-receipt.v1',
-        job_id: job.id,
-        notification_id: intent.id,
-        status: job.duplicate ? 'job_deduplicated' : 'job_queued',
-        kind: 'intent',
-        at: new Date().toISOString(),
+      const requestedKey = String(req.get('idempotency-key') || req.body?.idempotency_key || '').trim() || null;
+      const prepared = fabric.prepareIntent(rawIntent);
+      const { job, intent } = fabric.enqueueIntent(rawIntent, {
+        idempotencyKey: requestedKey || `intent:${prepared.id}`,
+        maxAttempts: req.body?.max_attempts,
       });
       res.status(job.duplicate ? 200 : 202).json({
         success: true,
@@ -307,21 +341,10 @@ export function registerNotificationFabricRoutes(app, options = {}) {
   app.post('/api/notifications/signal-jobs', requireIngest, (req, res) => {
     try {
       const signal = req.body?.signal || req.body;
-      if (!signal || typeof signal !== 'object') throw new Error('Signal payload is required.');
       const idempotencyKey = String(req.get('idempotency-key') || req.body?.idempotency_key || '').trim() || null;
-      const job = outbox.enqueue({
-        kind: 'signal',
-        idempotency_key: idempotencyKey,
-        fingerprint_source: signal,
-        payload: { signal },
-        max_attempts: req.body?.max_attempts,
-      });
-      fabric.store.recordDelivery({
-        schema: 'systemia.relay.job-receipt.v1',
-        job_id: job.id,
-        status: job.duplicate ? 'job_deduplicated' : 'job_queued',
-        kind: 'signal',
-        at: new Date().toISOString(),
+      const { job } = fabric.enqueueSignal(signal, {
+        idempotencyKey,
+        maxAttempts: req.body?.max_attempts,
       });
       res.status(job.duplicate ? 200 : 202).json({
         success: true,
