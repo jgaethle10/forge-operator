@@ -11,9 +11,9 @@ test('owned edge installer keeps Fabric private behind the TLS proxy',()=>{
 });
 
 test('owned edge installer maps ChromeOS-safe high ports for public 80 and 443',()=>{
-  assert.match(script,/HTTP_PORT="8080"/);
+  assert.match(script,/HTTP_PORT="18080"/);
   assert.match(script,/HTTPS_PORT="8443"/);
-  assert.match(script,/http_port 8080/);
+  assert.match(script,/http_port 18080/);
   assert.match(script,/https_port 8443/);
 });
 
