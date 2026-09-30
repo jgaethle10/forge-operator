@@ -1,13 +1,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const LIVE_CATALOG_URL =
-  process.env.EVERCRAFT_MACHINE_CATALOG_URL ||
-  'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=catalog';
+const LIVE_CATALOG_URL = String(process.env.EVERCRAFT_MACHINE_CATALOG_URL || '').trim();
 const OUTPUT = 'public/.well-known/evercraft-machine-catalog.json';
-const MACHINE_COMMERCE_GATEWAY_URL =
-  process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL ||
-  LIVE_CATALOG_URL.split('?', 1)[0];
+const MACHINE_COMMERCE_GATEWAY_URL = String(process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL || '').trim();
 const TIMEOUT_MS = 20000;
 const CONFORMANCE_PATH = 'conformance/products.json';
 const conformance = fs.existsSync(CONFORMANCE_PATH)
@@ -41,7 +37,7 @@ function publicOffer(offer) {
   ).trim() || null;
   const sourcePublicUrl = String(offer.public_url || '').trim();
   const fallbackPublicUrl = publicId
-    ? `${MACHINE_COMMERCE_GATEWAY_URL}?view=service&public_id=${encodeURIComponent(publicId)}`
+    ? `https://github.com/jgaethle10/forge-operator/tree/main/public/chum/capabilities/${encodeURIComponent(publicId)}`
     : '';
   return {
     public_id: publicId,
@@ -63,6 +59,21 @@ function publicOffer(offer) {
     live_canary_evidence: liveCanaryEvidence,
     catalog_version: String(offer.catalog_version || '')
   };
+}
+
+if (!LIVE_CATALOG_URL) {
+  console.log(JSON.stringify({
+    changed: false,
+    state: 'owned_catalog_source_unconfigured',
+    output: OUTPUT,
+    reason: 'CHUM will not fetch a legacy Base44 catalog. Configure an owned HTTPS catalog source when available.'
+  }));
+  process.exit(0);
+}
+const sourceUrl = new URL(LIVE_CATALOG_URL);
+const sourceHost = sourceUrl.hostname.toLowerCase();
+if (sourceUrl.protocol !== 'https:' || sourceHost === 'base44.app' || sourceHost.endsWith('.base44.app')) {
+  throw new Error('EVERCRAFT_MACHINE_CATALOG_URL must be an owned non-Base44 HTTPS source');
 }
 
 const controller = new AbortController();
