@@ -123,3 +123,5 @@ The EPS Facebook continuity loop now has a first-party data and execution bounda
 - `GET /api/social/providers/health` - reports provider readiness and owned social-store counts without returning secrets or post bodies.
 
 The continuity route fails closed if publishing is not explicitly enabled or provider credentials are absent. Content containing a Base44 URL is blocked from publication. The old Base44 Clip ingress is not a runtime fallback.
+
+Base44 social ingress URLs are rejected by the resident continuity worker even if supplied accidentally. The scheduler no longer reads the legacy `EVERCRAFT_CLIP_EPS_INGRESS_URL` variable.
