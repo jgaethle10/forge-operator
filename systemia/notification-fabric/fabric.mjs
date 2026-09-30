@@ -217,6 +217,30 @@ export function createNotificationFabric(options = {}) {
         continue;
       }
 
+      const budgetExempt = intent.priority === 'critical' || intent.purpose === 'safety';
+      if (!budgetExempt) {
+        const budget = store.consumeAttentionBudget(subscription.principal_id, intent.purpose, {
+          now: options.now ? new Date(options.now).getTime() : Date.now(),
+          limits: options.attentionLimits,
+        });
+        if (!budget.allowed) {
+          pushSuppressed += 1;
+          receipts.push(store.recordDelivery({
+            schema: 'systemia.notification.delivery.v2',
+            notification_id: intent.id,
+            subscription_id: subscription.id,
+            principal_id: subscription.principal_id,
+            product: intent.product,
+            purpose: intent.purpose,
+            status: 'push_suppressed',
+            reason: 'attention_budget',
+            attention_budget: budget,
+            at: new Date().toISOString(),
+          }));
+          continue;
+        }
+      }
+
       let result = { ok: false, status: 0, responseBody: 'No delivery attempt completed.' };
       let attempts = 0;
       for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
