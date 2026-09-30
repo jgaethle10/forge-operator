@@ -1,0 +1,46 @@
+{
+  "schema": "evercraft.systemia.base44-exit-slice.v1",
+  "slice": "evercraft-clip-owned-runtime",
+  "product": "Evercraft Clip",
+  "wave": 3,
+  "priority": "incident_p0",
+  "status": "source_dependency_extraction_active",
+  "observed_direct_core_matches": 3,
+  "observed_core_operations": [
+    "upload_file"
+  ],
+  "observed_dependency_examples": [
+    "src/pages/Home.jsx legacy integration endpoint",
+    "src/pages/ClipLab.jsx UploadFile",
+    "src/pages/CustomerClipStudio.jsx UploadFile"
+  ],
+  "owned_assets_already_present": [
+    "plugins/evercraft-clip",
+    "mcp-registry/evercraft-clip.json",
+    "public/chum/products/evercraft-clip"
+  ],
+  "target": {
+    "source": "github",
+    "orchestration": "systemia",
+    "runtime": "yard_evercraft_compute",
+    "integrations": "systemia/core/core-gateway.mjs"
+  },
+  "next": [
+    "extract current Clip application and publishing runtime",
+    "replace direct upload endpoints with the owned Core Gateway",
+    "enumerate social platform credentials and publishing adapters without copying secrets into source",
+    "bind finished media handoff from Fallen and other Evercraft tools",
+    "prove publish, schedule, retry, receipt and deduplication parity"
+  ],
+  "done_when": [
+    "source_extracted",
+    "no_direct_legacy_core_calls",
+    "publishing_adapter_parity_verified",
+    "dedupe_verified",
+    "tests_pass",
+    "yard_deployment_receipt",
+    "route_verification_pass",
+    "rollback_target_present",
+    "observation_window_pass"
+  ]
+}
