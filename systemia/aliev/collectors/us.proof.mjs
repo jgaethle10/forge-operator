@@ -9,7 +9,8 @@ import {
   AFDC_NEAREST_URL,
   AFDC_INCENTIVES_URL
 } from './us.mjs';
-import { WSDOT_TRAFFIC_URL, WA_UTILITY_AREA_URL } from './washington.mjs';
+import { WSDOT_TRAFFIC_URL, WA_UTILITY_AREA_URL, WSDOT_FREIGHT_TRUCK_URL, WSDOT_FREIGHT_ECON_URL } from './washington.mjs';
+import { OVERPASS_ENDPOINTS } from './dwell.mjs';
 import { queryAliEvDomain } from '../domain-store.mjs';
 
 const root=fs.mkdtempSync(path.join(os.tmpdir(),'us-owned-collectors-proof-'));
@@ -58,6 +59,24 @@ const fetchImpl=async(input)=>{
       features:[{attributes:{OBJECTID:8,Name:'Seattle City Light'}}]
     }),{status:200,headers:{'content-type':'application/json'}});
   }
+  if(samePath(url,WSDOT_FREIGHT_TRUCK_URL)){
+    return new Response(JSON.stringify({
+      features:[{attributes:{OBJECTID:91,RouteIdentifier:'I-5',RoadName:'Interstate 5',RoadNumber:'5',FGTSClass:'T-1',TruckTonnage:200000,TruckAADT:10000,TruckPercentage:20,TruckVolumeDataYear:'2025',CityName:'SeaTac',CountyName:'King'}}]
+    }),{status:200,headers:{'content-type':'application/json'}});
+  }
+  if(samePath(url,WSDOT_FREIGHT_ECON_URL)){
+    return new Response(JSON.stringify({
+      features:[{attributes:{OBJECTID:92,RouteIdentifier:'SR 518',RoadName:'SR 518',RoadNumber:'518',FGTSClass:'T-2',EconomicCorridorType:'Connector',Description:'Proof'}}]
+    }),{status:200,headers:{'content-type':'application/json'}});
+  }
+  if(OVERPASS_ENDPOINTS.some(endpoint=>samePath(url,endpoint))){
+    return new Response(JSON.stringify({
+      elements:[
+        {type:'node',id:1,lat:47.426,lon:-122.296,tags:{tourism:'hotel',name:'Proof Hotel'}},
+        {type:'node',id:2,lat:47.427,lon:-122.297,tags:{aeroway:'aerodrome',name:'Proof Airport'}}
+      ]
+    }),{status:200,headers:{'content-type':'application/json'}});
+  }
   return new Response('{}',{status:404});
 };
 
@@ -93,6 +112,15 @@ try{
   assert.equal(all.collectors.incentives.source_status,'connected');
   assert.equal(all.collectors.traffic.source_status,'connected');
   assert.equal(all.collectors.utility_service_area.source_status,'screen_match');
+  assert.equal(all.collectors.freight.source_status,'connected');
+  assert.equal(all.collectors.dwell_context.source_status,'connected');
+
+  const dwellRows=queryAliEvDomain({stateDir:root,domain:'dwell_context',latitude:47.4239,longitude:-122.2955,radiusMiles:15});
+  assert.equal(dwellRows.length,2);
+  assert.ok(dwellRows.some(x=>x.category==='hotel'));
+  assert.ok(dwellRows.every(x=>/not foot traffic/i.test(x.semantics)));
+  const freightRows=queryAliEvDomain({stateDir:root,domain:'freight',latitude:47.4239,longitude:-122.2955,radiusMiles:1});
+  assert.equal(freightRows.length,2);
 
   const serialized=JSON.stringify(all);
   assert.equal(serialized.includes('proof-key'),false);
@@ -104,6 +132,8 @@ try{
     afdc_incentives_direct_to_evercraft:true,
     configured_api_key_not_persisted:true,
     washington_collectors_composed:true,
+    wsdot_freight_direct_to_evercraft:true,
+    osm_dwell_context_direct_to_evercraft:true,
     charger_power_and_port_semantics_preserved:true,
     retail_price_not_operator_cost:true,
     base44_runtime_required:false
