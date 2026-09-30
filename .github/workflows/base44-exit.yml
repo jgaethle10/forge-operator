@@ -9,6 +9,8 @@ on:
       - 'systemia/organism/eps-social-continuity.proof.mjs'
       - 'systemia/organism/eps-social-continuity.workflow.json'
       - 'systemia/core/resident-services.json'
+      - 'systemia/app-runtime/**'
+      - 'tests/app-runtime.test.mjs'
       - 'systemia/core/core-gateway.mjs'
       - 'systemia/core/core-client.js'
       - 'tests/core-gateway.test.mjs'
@@ -26,6 +28,8 @@ on:
       - 'systemia/organism/eps-social-continuity.proof.mjs'
       - 'systemia/organism/eps-social-continuity.workflow.json'
       - 'systemia/core/resident-services.json'
+      - 'systemia/app-runtime/**'
+      - 'tests/app-runtime.test.mjs'
       - 'systemia/core/core-gateway.mjs'
       - 'systemia/core/core-client.js'
       - 'tests/core-gateway.test.mjs'
@@ -49,6 +53,8 @@ jobs:
         run: node scripts/validate-base44-credit-firewall.mjs
       - name: Prove Evercraft Core Gateway
         run: node --test tests/core-gateway.test.mjs
+      - name: Prove Evercraft App Runtime
+        run: node --test tests/app-runtime.test.mjs
       - name: Prove KAIDANCE collider
         run: node systemia/collider/proof.mjs
       - name: Prove off-Base44 EPS social continuity
