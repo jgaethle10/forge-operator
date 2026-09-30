@@ -101,6 +101,46 @@
     },
     "created_at": {
       "type": "string"
+    },
+    "acknowledgement": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "required": {
+          "type": "boolean"
+        },
+        "mode": {
+          "enum": [
+            "any",
+            "all"
+          ]
+        },
+        "within_seconds": {
+          "type": "integer",
+          "minimum": 15,
+          "maximum": 604800
+        },
+        "max_escalations": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 5
+        },
+        "escalation_interval_seconds": {
+          "type": "integer",
+          "minimum": 15,
+          "maximum": 86400
+        },
+        "title_prefix": {
+          "type": "string",
+          "maxLength": 40
+        }
+      },
+      "required": [
+        "required"
+      ],
+      "additionalProperties": false
     }
   },
   "additionalProperties": true
