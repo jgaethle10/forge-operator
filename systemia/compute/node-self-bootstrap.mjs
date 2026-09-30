@@ -75,11 +75,13 @@ export function evaluateBootstrap({
   nodeRole='public_edge',
 }={}){
   const role=String(nodeRole||'public_edge').trim();
-  if(!['public_edge','private_worker'].includes(role)){
+  if(!['public_edge','private_worker','virtual_worker'].includes(role)){
     throw new Error('node_role_invalid');
   }
   const checks={
     preflight_passed:files.preflight?.passed===true,
+    field_eligible:files.preflight?.field_eligible===true || (files.preflight?.field_eligible===undefined && files.preflight?.passed===true),
+    compute_worker_eligible:files.preflight?.compute_worker_eligible===true || (files.preflight?.compute_worker_eligible===undefined && files.preflight?.passed===true),
     installed:Boolean(files.install),
     node_receipt:Boolean(files.node?.device_fingerprint&&files.node?.node_id),
     rebooted_after_install:Boolean(
@@ -97,29 +99,29 @@ export function evaluateBootstrap({
   let state='ready_for_systemia_admission';
   let next_action='none';
   let human_action_required=false;
-  let reason='all_local_field_gates_complete';
+  let reason=role==='virtual_worker'?'virtual_compute_gates_complete':'all_local_field_gates_complete';
 
   if(!checks.preflight_passed){
-    state='ineligible_for_field_public_edge';
-    next_action='use_another_owned_machine';
+    state=role==='virtual_worker'?'ineligible_for_compute_worker':'ineligible_for_field_public_edge';
+    next_action='use_another_eligible_machine';
     human_action_required=true;
-    reason='field_preflight_failed';
+    reason=role==='virtual_worker'?'compute_worker_preflight_failed':'field_preflight_failed';
   }else if(!checks.installed||!checks.node_receipt){
     state='install_ready';
     next_action='run_bootstrap_with_--advance_as_root';
     human_action_required=false;
     reason='nodeseed_not_installed';
-  }else if(!checks.rebooted_after_install){
+  }else if(role!=='virtual_worker'&&!checks.rebooted_after_install){
     state='reboot_required';
     next_action='reboot_machine_once_then_rerun_bootstrap';
     human_action_required=true;
     reason='reboot_persistence_not_yet_observed';
-  }else if(!checks.offline_verified){
+  }else if(role!=='virtual_worker'&&!checks.offline_verified){
     state='offline_check_required';
     next_action='disconnect_network_then_run_--capture-offline';
     human_action_required=true;
     reason='offline_survival_receipt_missing';
-  }else if(!checks.physical_confirmed||!checks.field_certified){
+  }else if(role!=='virtual_worker'&&(!checks.physical_confirmed||!checks.field_certified)){
     state='physical_confirmation_required';
     next_action='rerun_with_--confirm-physical-host_--advance';
     human_action_required=true;
@@ -146,7 +148,9 @@ export function evaluateBootstrap({
     node_role:role,
     public_edge_required:role==='public_edge',
     inbound_public_port_required:role==='public_edge',
-    outbound_only_eligible:role==='private_worker',
+    outbound_only_eligible:role==='private_worker'||role==='virtual_worker',
+    physical_certification_required:role!=='virtual_worker',
+    trust_class:role==='virtual_worker'?'operator_authorized_virtual':role==='public_edge'?'field_certified_public_edge':'field_certified_private_worker',
     node_id:files.node?.node_id||null,
     device_fingerprint:files.node?.device_fingerprint||null,
     public_edge:files.public_edge?{
@@ -191,7 +195,7 @@ async function main(){
   const brokerUrl=String(arg('--broker-url',process.env.EVERCRAFT_REMOTE_BROKER_URL||'')).trim();
   const confirmPhysical=has('--confirm-physical-host');
   const nodeRole=String(arg('--role',process.env.EVERCRAFT_NODE_ROLE||'public_edge')).trim();
-  if(!['public_edge','private_worker'].includes(nodeRole)) throw new Error('node_role_invalid');
+  if(!['public_edge','private_worker','virtual_worker'].includes(nodeRole)) throw new Error('node_role_invalid');
   const advance=has('--advance');
   const sourceRoot=path.resolve(arg('--source-root',path.join(here,'../..')));
 
@@ -199,6 +203,7 @@ async function main(){
   const preflightRun=commandJson(process.execPath,[
     path.join(sourceRoot,'systemia/compute/field-preflight.mjs'),
     '--root',root,
+    '--role',nodeRole,
   ]);
   if(preflightRun.body){
     fs.mkdirSync(root,{recursive:true,mode:0o750});
@@ -224,7 +229,7 @@ async function main(){
       path.join(sourceRoot,'systemia/compute/install-node-seed.sh')
     ],{
       encoding:'utf8',
-      env:{...process.env,EVERCRAFT_NODESEED_ROOT:root},
+      env:{...process.env,EVERCRAFT_NODESEED_ROOT:root,EVERCRAFT_NODE_ROLE:nodeRole},
       stdio:['ignore','pipe','pipe'],
       maxBuffer:4*1024*1024,
     });
@@ -243,7 +248,7 @@ async function main(){
     files=fileState(root);
   }
 
-  if(advance&&files.offline?.verified===true&&!files.field?.ready_for_yard_enrollment){
+  if(nodeRole!=='virtual_worker'&&advance&&files.offline?.verified===true&&!files.field?.ready_for_yard_enrollment){
     if(!confirmPhysical){
       const status=evaluateBootstrap({
         files,currentBootHash:bootHash(),brokerUrl,physicalConfirmed:false,nodeRole,
@@ -265,6 +270,7 @@ async function main(){
   }
 
   if(has('--admit-public-edge')){
+    if(nodeRole!=='public_edge') throw new Error('public_edge_admission_requires_public_edge_role');
     ensureRoot('public_edge_admission');
     const domain=requireValue('base_domain',arg('--base-domain',process.env.EVERCRAFT_PUBLIC_EDGE_BASE_DOMAIN||''));
     const key=requireValue('tls_key_path',arg('--tls-key-path',process.env.EVERCRAFT_PUBLIC_EDGE_TLS_KEY_PATH||''));
