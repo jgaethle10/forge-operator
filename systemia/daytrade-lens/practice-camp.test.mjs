@@ -17,7 +17,7 @@ assert.equal(riskGate({
 const bars = [];
 const start = Date.parse("2026-09-14T13:30:00Z");
 for (let i = 0; i < 30; i++) {
-  const base = i < 6 ? 100 + (i % 2) * 0.10 : 100.4 + (i - 6) * 0.03;
+  const base = i < 6 ? 100 + (i % 2) * 0.10 : 100.30 + (i - 6) * 0.01;
   bars.push({
     t: new Date(start + i * 5 * 60_000).toISOString(),
     o: base - 0.03,
