@@ -1,0 +1,22 @@
+name: Fallen Performance Director
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/performance-director.ts'
+      - 'systemia/media-studio/performance-director.test.ts'
+      - 'systemia/media-studio/cinematic-sequence.ts'
+      - '.github/workflows/fallen-performance-director.yml'
+  workflow_dispatch:
+
+jobs:
+  performance-director:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-audit --no-fund
+      - run: node --import tsx --test systemia/media-studio/performance-director.test.ts systemia/media-studio/cinematic-sequence.test.ts
+      - run: npm run lint

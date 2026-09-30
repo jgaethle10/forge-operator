@@ -57,6 +57,11 @@ import {
   type CinematicShotBinding,
   type CinematicShotContract,
 } from './cinematic-sequence.js';
+import {
+  applyPerformanceDirection,
+  compilePerformancePlan,
+  type PerformancePlanInput,
+} from './performance-director.js';
 
 function readJson<T>(filePath: string): T {
   return JSON.parse(fs.readFileSync(path.resolve(filePath), 'utf8')) as T;
@@ -101,6 +106,7 @@ function usage() {
     '  npm run media:studio -- studio-deliver <delivery-request.json> <output-dir>',
     '  npm run media:studio -- cinematic-sequence <sequence.json> <sequence-plan.json>',
     '  npm run media:studio -- cinematic-shot <shot-binding.json> <visual-request.json>',
+    '  npm run media:studio -- performance-direct <payload.json> <directed-sequence.json> [performance-plan.json]',
   ].join('\n'));
 }
 
@@ -150,6 +156,28 @@ function main() {
     const plan = buildVisualFinishPlan(payload.request, payload.endpoints);
     writeJson(output, plan);
     console.log(`Visual finish plan created: ${path.resolve(output)}`);
+    return;
+  }
+
+  if (command === 'performance-direct') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const payload = readJson<{ sequence:CinematicSequenceInput; performance:PerformancePlanInput }>(input);
+    const plan = compilePerformancePlan(payload);
+    if (optionalPlan) writeJson(optionalPlan, plan);
+    if (plan.status !== 'accepted') {
+      writeJson(output, payload.sequence);
+      console.error(`Performance plan rejected: ${plan.errors.join(' | ')}`);
+      process.exitCode = 2;
+      return;
+    }
+    const directed = applyPerformanceDirection({ sequence:payload.sequence, plan });
+    writeJson(output, directed);
+    console.log(`Performance-directed cinematic sequence created: ${path.resolve(output)}`);
+    if (optionalPlan) console.log(`Performance plan created: ${path.resolve(optionalPlan)}`);
     return;
   }
 
