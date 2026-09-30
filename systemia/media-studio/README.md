@@ -402,3 +402,35 @@ npm run media:studio -- phenomenon-stage ./tmp/phenomenon.json ./tmp/phenomenon.
 ```
 
 The owned render workers explicitly admit this bounded layer while continuing to reject arbitrary HTML, unmanifested local files and external web media. The receipt records the evidence state, source references, streamline/sample counts and the stage digest. Render completion does not grant publication authority. Evercraft Clip remains downstream.
+
+
+## Cinematic Sequence continuity
+
+Fallen now has a scene-level continuity compiler above individual model calls. It treats a sequence as one physical performance instead of a bag of unrelated prompts.
+
+The contract locks:
+
+- character blocking from shot start to shot end;
+- screen direction and the 180-degree axis;
+- dialogue eyelines and conversational geography;
+- location/environment references;
+- character identity references;
+- lens, shot scale and camera movement intent;
+- action-continuity IDs across cuts;
+- selected-shot end-frame carryover into the next generated shot.
+
+Continuous shots fail closed when the prior verified end frame is missing. An in-progress action cannot silently teleport a character to a new side of the frame, reverse facing direction, or cross the established axis unless the shot explicitly declares an axis reset. That reset also breaks automatic end-frame carryover so the geography must be re-established deliberately.
+
+Compile a scene:
+
+```bash
+npm run media:studio -- cinematic-sequence ./tmp/sequence.json ./tmp/sequence-plan.json
+```
+
+Bind a verified prior end frame into one shot's provider-neutral visual request:
+
+```bash
+npm run media:studio -- cinematic-shot ./tmp/shot-binding.json ./tmp/visual-request.json
+```
+
+This layer does not generate media or grant publication authority. It makes downstream Veo, Runway and future visual engines obey the same physical scene grammar and gives Shot Tournament/continuity QA an explicit contract to judge against.
