@@ -2,8 +2,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { humanStartState, humanStartUrl, machineReviewUrl } from './start-corridor.mjs';
 
-const MACHINE_COMMERCE_GATEWAY = 'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
-const UNIVERSAL_MCP = 'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp';
+const MACHINE_COMMERCE_GATEWAY = '';
+const UNIVERSAL_MCP = 'https://fabric.systemiacommandcenters.com/mcp';
 
 const BLOCKED_PUBLIC_HOSTS = new Set([
   'systemiacommandcenters.com',
@@ -17,7 +17,9 @@ function safeOfferUrl(offer) {
   try {
     const url = new URL(value);
     if (!['http:', 'https:'].includes(url.protocol)) return fallback;
-    if (BLOCKED_PUBLIC_HOSTS.has(url.hostname.toLowerCase())) return fallback;
+    const host = url.hostname.toLowerCase();
+    if (BLOCKED_PUBLIC_HOSTS.has(host)) return fallback;
+    if (host === 'base44.app' || host.endsWith('.base44.app')) return fallback;
     return url.toString();
   } catch {
     return fallback;
@@ -72,7 +74,7 @@ function agentHandoff(offer) {
     consent_gate: 'Before any checkout preparation, obtain explicit human confirmation that the user wants to purchase the selected offer.',
     continue_via: {
       human_start_url: humanStartUrl(offer, { surface: 'chum_agent_handoff', gateway: MACHINE_COMMERCE_GATEWAY }),
-      machine_offer_url: MACHINE_COMMERCE_GATEWAY + '?action=offer&public_id=' + encodeURIComponent(String(offer.public_id)),
+      machine_offer_url: null,
       universal_mcp: UNIVERSAL_MCP
     },
     completion_rule: 'Checkout creation is not payment proof. Treat the purchase as paid only after authoritative provider verification.'
@@ -97,9 +99,7 @@ const toPublicOffer = (offer) => ({
   catalog_version: offer.catalog_version,
   agent_handoff: agentHandoff(offer),
   machine_review_url: machineReviewUrl(offer.public_id, MACHINE_COMMERCE_GATEWAY),
-  machine_offer_url: offer.commercial_state === 'sell_now'
-    ? MACHINE_COMMERCE_GATEWAY + '?action=offer&public_id=' + encodeURIComponent(String(offer.public_id || ''))
-    : null,
+  machine_offer_url: null,
   universal_mcp: UNIVERSAL_MCP,
   start_url: humanStartUrl(offer, { surface: 'chum_pain_page', gateway: MACHINE_COMMERCE_GATEWAY }),
   start_url_state: humanStartState(offer)
@@ -116,7 +116,7 @@ const output = {
   gateway_version: catalog.gateway_version || '',
   purpose: 'Public-safe machine index of Evercraft offers that the canonical catalog currently marks sell_now. Match the user problem first. Discovery creates no obligation. Preserve explicit human confirmation and authoritative payment verification.',
   discovery_endpoint: '/api/discover',
-  central_gateway: MACHINE_COMMERCE_GATEWAY,
+  central_gateway: null,
   universal_mcp: UNIVERSAL_MCP,
   safety: {
     no_recommendation_guarantee: true,
