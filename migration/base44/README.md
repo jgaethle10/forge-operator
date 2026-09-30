@@ -97,3 +97,7 @@ Base44 can be considered evacuated only when:
 - restore and rollback drills pass on Evercraft-owned infrastructure
 
 The estate inventory for the current migration wave is in `migration/base44/estate-inventory.json`.
+
+## Current execution note
+
+GitHub create-file mutations became unavailable during the active migration session. Continue using existing-file updates and verified commits until connector write health is restored. This is an execution-channel incident, not a reason to route production back through Base44.
