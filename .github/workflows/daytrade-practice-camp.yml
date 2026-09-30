@@ -32,7 +32,10 @@ jobs:
           node-version: 22
 
       - name: Prove simulator and fail-closed gates
-        run: node systemia/daytrade-lens/practice-camp.test.mjs
+        run: |
+          node systemia/daytrade-lens/practice-camp.test.mjs
+          node systemia/daytrade-lens/rockies-edge-fabric.test.mjs
+          node systemia/daytrade-lens/rockies-edge-consumer.test.mjs
 
       - name: Run historical market-data replay only
         if: github.event_name != 'pull_request'
