@@ -117,13 +117,13 @@ function quickRead(data){
   };
 }
 
-export function buildYardReport({address,sourceSnapshot,retrievedAt=new Date().toISOString(),sourceSnapshotSha256='',sourceSnapshotRef=''}){
+export function buildYardReport({address,reportType='preliminary_site_opportunity',sourceSnapshot,retrievedAt=new Date().toISOString(),sourceSnapshotSha256='',sourceSnapshotRef=''}){
   const read=quickRead(sourceSnapshot);
   const coverage=normalizeCoverageManifest(sourceSnapshot,retrievedAt);
   return {
     schema:'evercraft.rivet.yard-report.v1',
     generation_state:'ready',
-    report_type:'preliminary_site_opportunity',
+    report_type:clean(reportType)||'preliminary_site_opportunity',
     address:clean(sourceSnapshot?.matched_address || address),
     requested_address:clean(address),
     latitude:number(sourceSnapshot?.latitude),
@@ -244,6 +244,7 @@ export function buildYardReport({address,sourceSnapshot,retrievedAt=new Date().t
 
 export async function generateYardReport({
   address,
+  reportType='preliminary_site_opportunity',
   sourceUrl,
   systemiaMachineKey,
   sourceFetch=fetch,
@@ -253,6 +254,8 @@ export async function generateYardReport({
 }){
   const requested=clean(address);
   if(requested.length<5) throw new Error('address_required');
+  const normalizedReportType=clean(reportType)||'preliminary_site_opportunity';
+  if(!['preliminary_site_opportunity','full_site_opportunity'].includes(normalizedReportType)) throw new Error('unsupported_report_type');
   if(!clean(sourceUrl)) throw new Error('aliev_source_url_required');
   if(!clean(systemiaMachineKey)) throw new Error('systemia_machine_key_required');
   if(!stateDir) throw new Error('state_dir_required');
@@ -365,6 +368,7 @@ export async function generateYardReport({
   progress('report_render',7,8,{message:'Building the RIVET report.'});
   const report=buildYardReport({
     address:requested,
+    reportType:normalizedReportType,
     sourceSnapshot:data,
     retrievedAt:now(),
     sourceSnapshotSha256:snapshotSha,
@@ -374,6 +378,7 @@ export async function generateYardReport({
   const reportSha=sha256(reportBytes);
   const reportId='rivet-yard:'+sha256(JSON.stringify(stable({
     address:requested,
+    report_type:normalizedReportType,
     source_sha256:snapshotSha,
     report_sha256:reportSha
   }))).slice(0,32);
@@ -491,6 +496,7 @@ export async function startRivetReportRuntime({
         const progress=[];
         const record=await generateYardReport({
           address:body?.address,
+          reportType:body?.report_type,
           sourceUrl,
           systemiaMachineKey,
           sourceFetch,
