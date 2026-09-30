@@ -21,6 +21,7 @@ COPY --from=build /app/systemia/chum ./systemia/chum
 COPY --from=build /app/systemia/mcp ./systemia/mcp
 COPY --from=build /app/systemia/remote-operator ./systemia/remote-operator
 COPY --from=build /app/systemia/notification-fabric ./systemia/notification-fabric
+COPY --from=build /app/systemia/signal-fabric ./systemia/signal-fabric
 COPY --from=build /app/systemia/media-studio ./systemia/media-studio
 COPY --from=build /app/systemia/forensiscope ./systemia/forensiscope
 COPY --from=build /app/systemia/rivet ./systemia/rivet
