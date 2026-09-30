@@ -64,6 +64,7 @@ if (violations.length) {
 const criticalRuntimePaths = [
   'server.ts',
   'systemia/chum/start-corridor.mjs',
+  'systemia/chum/build-public-mirror.mjs',
 ];
 
 const siteplanRoot = path.resolve('systemia/rivet/siteplan');
