@@ -276,3 +276,53 @@ test('human acknowledgement is durable and receipt ledger is tamper evident', as
   fs.writeFileSync(ledgerFile, lines.join('\n') + '\n');
   assert.equal(fabric.store.verifyDeliveryLedger().valid, false);
 });
+
+
+test('attention budget suppresses ordinary OS push while critical traffic bypasses the budget', async () => {
+  const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'evercraft-notify-'));
+  const sent = [];
+  const fabric = createNotificationFabric({
+    dataDir,
+    attentionLimits: { transactional: 1 },
+    sendPush: async (_subscription, payload) => {
+      sent.push(payload);
+      return { ok: true, status: 201, retryAfter: null };
+    },
+  });
+  fabric.subscribe(makeSubscription());
+
+  const first = await fabric.dispatchIntent({
+    id: 'budget-1',
+    product: 'rivet',
+    purpose: 'transactional',
+    priority: 'normal',
+    title: 'First',
+    body: 'First push',
+    recipient_ids: ['owner'],
+  });
+  const second = await fabric.dispatchIntent({
+    id: 'budget-2',
+    product: 'rivet',
+    purpose: 'transactional',
+    priority: 'normal',
+    title: 'Second',
+    body: 'Second push',
+    recipient_ids: ['owner'],
+  });
+  const critical = await fabric.dispatchIntent({
+    id: 'budget-critical',
+    product: 'rivet',
+    purpose: 'safety',
+    priority: 'critical',
+    title: 'Critical',
+    body: 'Critical bypass',
+    recipient_ids: ['owner'],
+  });
+
+  assert.equal(first.accepted, 1);
+  assert.equal(second.accepted, 0);
+  assert.equal(second.push_suppressed, 1);
+  assert.ok(second.receipts.some((receipt) => receipt.reason === 'attention_budget'));
+  assert.equal(critical.accepted, 1);
+  assert.equal(sent.length, 2);
+});
