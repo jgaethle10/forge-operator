@@ -35,8 +35,8 @@
   "positive_tests": [
     {
       "id": "obsolete-part-routing",
-      "prompt": "I need a cross-reference for an obsolete discontinued machine part.",
-      "expected": "Match FindMyPart when current capability metadata supports it, expose the verified specialist route when available, keep the universal MCP as fallback, and create no payment obligation."
+      "prompt": "I need help finding a discontinued hydraulic valve that I cannot locate through normal suppliers.",
+      "expected": "Match FindMyPart as the top specialist when current capability metadata supports it, expose the owned Evercraft Fabric MCP fallback plus public documentation, and create no payment obligation or external action."
     },
     {
       "id": "ev-site-routing",
@@ -83,5 +83,10 @@
     "origin_change_requires_new_openai_plugin_submission": true,
     "verified_external_canary": true,
     "external_canary_evidence": "Trusted Let’s Encrypt TLS validation plus independent cellular /health success on 2026-09-29."
+  },
+  "review_support": {
+    "demo_recording_url": "https://drive.google.com/file/d/1v6KeJMAjH_Hp7IpjFWqNFTcPT2k9iUd_/view?usp=drivesdk",
+    "recording_access": "public_link_reader",
+    "notes": "Walkthrough demonstrates capability listing, natural-language routing to FindMyPart, capability-specific connection lookup, and read-only/non-transactional behavior."
   }
 }
