@@ -1,7 +1,7 @@
 {
   "schema": "evercraft.chum.revenue-watershed.v2",
   "provider": "Evercraft LLC",
-  "updated_at": "2026-09-30T20:55:19.667Z",
+  "updated_at": "2026-09-30T20:58:30.000Z",
   "source_schema_version": "2026-09-30.1",
   "gateway_version": "evercraft-machine-commerce-gateway-v0.9.1",
   "purpose": "Public-safe machine index of Evercraft offers that the canonical catalog currently marks sell_now. Match the user problem first. Discovery creates no obligation. Preserve explicit human confirmation and authoritative payment verification.",
@@ -17,7 +17,7 @@
     "private_topology_exposed": false
   },
   "sell_now_count": 14,
-  "discovery_count": 47,
+  "discovery_count": 48,
   "offers": [
     {
       "public_id": "aliev-site-opportunity-snapshot-v1",
@@ -2952,6 +2952,37 @@
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/systemia-yard-runtime-extension-v1/"
+    },
+    {
+      "public_id": "worldstate-reality-delta-v1",
+      "name": "Worldstate Reality Delta",
+      "problem": "A user or Evercraft system needs to understand what materially changed in the real world across time without collapsing observed, reported, inferred, modeled, or uncertain evidence into one undifferentiated claim.",
+      "intent_terms": [
+        "what changed in the real world",
+        "show me the reality delta for this place or system",
+        "compare verified worldstate before and after an event",
+        "what materially changed across weather infrastructure economy health or hazards",
+        "build a provenance-preserving worldstate snapshot",
+        "turn observations into an evidence-backed change packet"
+      ],
+      "pricing": "No approved public machine price or payment path. Do not auto-quote.",
+      "offers": [],
+      "entry_paid_offer": null,
+      "commercial_state": "verification_required",
+      "machine_state": "discovery_only",
+      "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=worldstate-reality-delta-v1",
+      "human_ui_required": false,
+      "confirmation": "Discovery and evidence comparison create no action authority. Publishing, consequential decisions, private-data access, and paid work remain separately authorized.",
+      "payment_authority": "No verified public payment path.",
+      "invocation_status": "SOURCE-VERIFIED: Worldstate snapshot/delta, Context Fabric adapter/reader, observation fabric, Passport-authorized read path, and Fallen phenomenon bridge are covered by repository proofs. Public machine execution is not claimed until an external callable route is independently verified.",
+      "catalog_version": "2026-09-30.1",
+      "agent_handoff": null,
+      "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=worldstate-reality-delta-v1",
+      "machine_offer_url": null,
+      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "start_url": null,
+      "start_url_state": "not_sell_now",
+      "pain_page": "/chum/intents/worldstate-reality-delta-v1/"
     }
   ]
 }

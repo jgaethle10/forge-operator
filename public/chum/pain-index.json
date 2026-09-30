@@ -28,14 +28,14 @@
     "provider_verification_required_for_paid_state": true
   },
   "summary": {
-    "entries": 111,
+    "entries": 112,
     "product_entries": 64,
-    "machine_offer_entries": 47,
-    "entries_with_pain_language": 111,
+    "machine_offer_entries": 48,
+    "entries_with_pain_language": 112,
     "sell_now_machine_offers": 14,
-    "entries_with_declared_mcp": 67,
+    "entries_with_declared_mcp": 68,
     "callable_or_routable_entries": 48,
-    "suppressed_legacy_marketing_routes": 8
+    "suppressed_legacy_marketing_routes": 9
   },
   "entries": [
     {
@@ -2257,6 +2257,46 @@
       "confirmation": "The buyer must explicitly choose a tier and confirm payment before checkout. Fulfillment begins only after independent payment verification.",
       "payment_authority": "Evercraft Website Service / Stripe, provider-verified",
       "invocation_status": "LIVE: agent HTTP gateway + OpenAPI + llms guidance + remote MCP at https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp. Agents can inspect $500/$999/$1,999 website-service tiers, prepare checkout only after explicit human confirmation, and independently verify paid order state.",
+      "source_refs": [
+        "public/.well-known/evercraft-machine-catalog.json"
+      ]
+    },
+    {
+      "capability_id": "offer:worldstate-reality-delta-v1",
+      "product_key": null,
+      "public_id": "worldstate-reality-delta-v1",
+      "kind": "machine_offer",
+      "name": "Worldstate Reality Delta",
+      "class": "machine_commerce_offer",
+      "pain_phrases": [
+        "what changed in the real world",
+        "show me the reality delta for this place or system",
+        "compare verified worldstate before and after an event",
+        "what materially changed across weather infrastructure economy health or hazards",
+        "build a provenance-preserving worldstate snapshot",
+        "turn observations into an evidence-backed change packet"
+      ],
+      "problem": "A user or Evercraft system needs to understand what materially changed in the real world across time without collapsing observed, reported, inferred, modeled, or uncertain evidence into one undifferentiated claim.",
+      "inputs": "A bounded place, system, phenomenon, time window, or decision context plus available observation/context sources and authority scope.",
+      "outputs": "Evidence-preserving worldstate snapshots, material deltas, provenance links, evidence-state labels, contradictions, uncertainty, and bounded context packets for downstream Evercraft systems.",
+      "canonical_url": null,
+      "legacy_marketing_route_suppressed": true,
+      "registry_name": null,
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "routing": {
+        "preferred": "universal_machine_commerce",
+        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
+      "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
+      "boundaries": [],
+      "commercial_state": "verification_required",
+      "machine_state": "discovery_only",
+      "pricing": "No approved public machine price or payment path. Do not auto-quote.",
+      "offers": [],
+      "human_confirmation_required": true,
+      "confirmation": "Discovery and evidence comparison create no action authority. Publishing, consequential decisions, private-data access, and paid work remain separately authorized.",
+      "payment_authority": "No verified public payment path.",
+      "invocation_status": "SOURCE-VERIFIED: Worldstate snapshot/delta, Context Fabric adapter/reader, observation fabric, Passport-authorized read path, and Fallen phenomenon bridge are covered by repository proofs. Public machine execution is not claimed until an external callable route is independently verified.",
       "source_refs": [
         "public/.well-known/evercraft-machine-catalog.json"
       ]

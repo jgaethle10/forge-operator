@@ -1,0 +1,27 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Service",
+      "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/worldstate-reality-delta-v1/index.html#evercraft-capability",
+      "name": "Worldstate Reality Delta",
+      "description": "A user or Evercraft system needs to understand what materially changed in the real world across time without collapsing observed, reported, inferred, modeled, or uncertain evidence into one undifferentiated claim.",
+      "url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/worldstate-reality-delta-v1/index.html",
+      "provider": {
+        "@type": "Organization",
+        "name": "Evercraft LLC",
+        "url": "https://github.com/jgaethle10/forge-operator"
+      },
+      "serviceType": "Evercraft public machine capability",
+      "identifier": "worldstate-reality-delta-v1"
+    },
+    {
+      "@type": "WebPage",
+      "name": "Worldstate Reality Delta | Evercraft capability",
+      "description": "A user or Evercraft system needs to understand what materially changed in the real world across time without collapsing observed, reported, inferred, modeled, or uncertain evidence into one undifferentiated claim.",
+      "about": {
+        "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/worldstate-reality-delta-v1/index.html#evercraft-capability"
+      }
+    }
+  ]
+}

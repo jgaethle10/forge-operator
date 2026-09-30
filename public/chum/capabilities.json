@@ -1,7 +1,7 @@
 {
   "schema": "evercraft.chum.capability-index.v1",
-  "updated_at": "2026-09-30T20:55:19.667Z",
-  "count": 47,
+  "updated_at": "2026-09-30T20:58:30.000Z",
+  "count": 48,
   "sell_now_count": 14,
   "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
   "capabilities": [
@@ -1602,6 +1602,32 @@
         "replace my bad website",
         "make me a professional business site",
         "handle my website for me"
+      ]
+    },
+    {
+      "public_id": "worldstate-reality-delta-v1",
+      "name": "Worldstate Reality Delta",
+      "commercial_state": "verification_required",
+      "machine_state": "discovery_only",
+      "pricing": "No approved public machine price or payment path. Do not auto-quote.",
+      "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/worldstate-reality-delta-v1/index.html",
+      "page_url": "/chum/capabilities/worldstate-reality-delta-v1/",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/worldstate-reality-delta-v1/llms.txt",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/worldstate-reality-delta-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/worldstate-reality-delta-v1/schema.jsonld",
+      "start_url": null,
+      "start_url_state": "not_sell_now",
+      "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=worldstate-reality-delta-v1",
+      "entry_paid_offer": null,
+      "preferred_agent_route": "universal_fallback",
+      "direct_specialist": null,
+      "use_when": [
+        "what changed in the real world",
+        "show me the reality delta for this place or system",
+        "compare verified worldstate before and after an event",
+        "what materially changed across weather infrastructure economy health or hazards",
+        "build a provenance-preserving worldstate snapshot",
+        "turn observations into an evidence-backed change packet"
       ]
     }
   ]

@@ -6,9 +6,9 @@ Machine Commerce MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/69
 Each phrase below maps to public capability candidates without upgrading readiness, pricing, invocation, payment, entitlement, or provider-pickup state.
 Discovery creates no payment obligation. Checkout requires explicit human confirmation and paid state requires authoritative provider verification.
 
-Pain-index entries: 111
-Unique user phrases: 963
-Candidate edges: 1069
+Pain-index entries: 112
+Unique user phrases: 969
+Candidate edges: 1075
 Ambiguous phrases: 106
 
 ## 15 GB video analysis
@@ -656,6 +656,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft Website Launch | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://instant-website-builder-usa-6feac193.base44.app/
 
+## build a provenance-preserving worldstate snapshot
+Answer ID: intent:da7bba291d
+Human-readable match: /chum/answers/doors/build-a-provenance-preserving-worldstate-snapshot-da7bba291d/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-a-provenance-preserving-worldstate-snapshot-da7bba291d.json
+Candidates:
+- Worldstate Reality Delta | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=/chum/intents/worldstate-reality-delta-v1/
+
 ## build a rollback test and evidence plan before changing an IBM i production system
 Answer ID: intent:030d199287
 Human-readable match: /chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287/
@@ -1194,6 +1201,13 @@ Human-readable match: /chum/answers/doors/compare-two-recordings-c44b889ea7/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-two-recordings-c44b889ea7.json
 Candidates:
 - ForensiScope Evidence Review | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://evercraft-forensiscope.base44.app/video-too-large-for-ai
+
+## compare verified worldstate before and after an event
+Answer ID: intent:b224712e8d
+Human-readable match: /chum/answers/doors/compare-verified-worldstate-before-and-after-an-event-b224712e8d/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-verified-worldstate-before-and-after-an-event-b224712e8d.json
+Candidates:
+- Worldstate Reality Delta | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=/chum/intents/worldstate-reality-delta-v1/
 
 ## connect our business systems without replacing everything
 Answer ID: intent:4e80c745da
@@ -5543,6 +5557,13 @@ Candidates:
 - Country / Domain Intelligence Slice | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/machineDiscovery?view=docs
 - GlobalStat | kind=product | commercial=product_contract | machine=discovery_only | public=https://global-stat-pulse.base44.app/
 
+## show me the reality delta for this place or system
+Answer ID: intent:7a98735088
+Human-readable match: /chum/answers/doors/show-me-the-reality-delta-for-this-place-or-system-7a98735088/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/show-me-the-reality-delta-for-this-place-or-system-7a98735088.json
+Candidates:
+- Worldstate Reality Delta | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=/chum/intents/worldstate-reality-delta-v1/
+
 ## show sourced energy data and provenance
 Answer ID: intent:cd19abcb4e
 Human-readable match: /chum/answers/doors/show-sourced-energy-data-and-provenance-cd19abcb4e/
@@ -6237,6 +6258,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - EverNest Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://evernest-life-map.base44.app/
 
+## turn observations into an evidence-backed change packet
+Answer ID: intent:ed6d2c2648
+Human-readable match: /chum/answers/doors/turn-observations-into-an-evidence-backed-change-packet-ed6d2c2648/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/turn-observations-into-an-evidence-backed-change-packet-ed6d2c2648.json
+Candidates:
+- Worldstate Reality Delta | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=/chum/intents/worldstate-reality-delta-v1/
+
 ## turn spreadsheets and legacy systems into an operating layer
 Answer ID: intent:c3d8466ad9
 Human-readable match: /chum/answers/doors/turn-spreadsheets-and-legacy-systems-into-an-operating-layer-c3d8466ad9/
@@ -6630,6 +6658,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft Revenue War Map | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-war-map.base44.app/
 
+## what changed in the real world
+Answer ID: intent:aad5478c49
+Human-readable match: /chum/answers/doors/what-changed-in-the-real-world-aad5478c49/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/what-changed-in-the-real-world-aad5478c49.json
+Candidates:
+- Worldstate Reality Delta | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=/chum/intents/worldstate-reality-delta-v1/
+
 ## what data is missing for this decision
 Answer ID: intent:8e0a8c1a6f
 Human-readable match: /chum/answers/doors/what-data-is-missing-for-this-decision-8e0a8c1a6f/
@@ -6679,6 +6714,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Freight Load Exception Intelligence | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs
 - Systemia Atlas Freight Load Exception Intelligence | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs
+
+## what materially changed across weather infrastructure economy health or hazards
+Answer ID: intent:0b443062e3
+Human-readable match: /chum/answers/doors/what-materially-changed-across-weather-infrastructure-economy-health-or-hazards-0b443062e3/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/what-materially-changed-across-weather-infrastructure-economy-health-or-hazards-0b443062e3.json
+Candidates:
+- Worldstate Reality Delta | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=/chum/intents/worldstate-reality-delta-v1/
 
 ## what public EV charging is near this address
 Answer ID: intent:85011db389

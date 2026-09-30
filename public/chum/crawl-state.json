@@ -2,8 +2,8 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-30T20:58:03.033Z",
-  "url_count": 2691,
+  "updated_at": "2026-09-30T20:58:29.212Z",
+  "url_count": 2708,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
     "content_hash_controls_freshness": true,
@@ -33,14 +33,14 @@
     },
     "/chum/capabilities/": {
       "path": "/chum/capabilities/",
-      "content_sha256": "190c5d0baacb140bbd6792c727d09e6cda42cbc8e81ae202eca24ba09015d6c8",
-      "last_changed": "2026-09-30T20:55:21.460Z",
+      "content_sha256": "fe4d1e7ec0397721ad89728ba22156e01991599214b652803eb7b8a972bef660",
+      "last_changed": "2026-09-30T20:58:29.212Z",
       "priority": 96
     },
     "/chum/capabilities.json": {
       "path": "/chum/capabilities.json",
-      "content_sha256": "e4e721b229a6ca80c72814f2dab0ff016ec8e1f273ca57aa7247fb1c45e59d72",
-      "last_changed": "2026-09-30T20:55:21.460Z",
+      "content_sha256": "6cadaa1785a0b4158f0e7cd1f796f69a88b80964a5623c8d92ff9a0a737d906f",
+      "last_changed": "2026-09-30T20:58:29.212Z",
       "priority": 80
     },
     "/chum/sell-now.html": {
@@ -51,8 +51,8 @@
     },
     "/chum/sell-now.json": {
       "path": "/chum/sell-now.json",
-      "content_sha256": "f4112ea34b26c6fad0376c601f113554e00bc97840e89f6d1360fb658e1cd31c",
-      "last_changed": "2026-09-30T20:55:21.460Z",
+      "content_sha256": "e3c8462b10622171bc76340078b4e638f1a214c0d99e387a0017190ff6dd9f27",
+      "last_changed": "2026-09-30T20:58:29.212Z",
       "priority": 92
     },
     "/chum/sell-now.txt": {
@@ -69,14 +69,14 @@
     },
     "/chum/revenue.json": {
       "path": "/chum/revenue.json",
-      "content_sha256": "80f698d96420d48f5306c398715d3060df92ff2cee93587509172bdf4191da26",
-      "last_changed": "2026-09-30T20:55:21.460Z",
+      "content_sha256": "231fc8519ce59fa59374bdda34834a9aee30a2f350fb8ce9ed6ff801bc8b57ae",
+      "last_changed": "2026-09-30T20:58:29.212Z",
       "priority": 90
     },
     "/chum/agent-commerce.json": {
       "path": "/chum/agent-commerce.json",
-      "content_sha256": "5ed048a73b814322ff456807af1a8a70b50a82fabc2f6124ab7a4c3a3b8d487b",
-      "last_changed": "2026-09-30T20:55:21.460Z",
+      "content_sha256": "5347dbb201952d98fd766ff10ba69843a6d8259dba35d50c53dc2fb943a78992",
+      "last_changed": "2026-09-30T20:58:29.212Z",
       "priority": 80
     },
     "/chum/agent-commerce.txt": {
@@ -93,32 +93,32 @@
     },
     "/chum/pain-index.json": {
       "path": "/chum/pain-index.json",
-      "content_sha256": "6bafdd2b132e80b20587d8113884fae3e13afef58c570509b09d17c225f1a529",
-      "last_changed": "2026-09-30T20:55:21.460Z",
+      "content_sha256": "3a8ec52c93cbcf3ec70be12e19ed55216da31a667a313176be06e34dfd218523",
+      "last_changed": "2026-09-30T20:58:29.212Z",
       "priority": 80
     },
     "/chum/pain-index.txt": {
       "path": "/chum/pain-index.txt",
-      "content_sha256": "67b75d498d7dc6b2593f60e1dc401a65060c1472f8aece610deab01cb430513e",
-      "last_changed": "2026-09-30T20:55:21.460Z",
+      "content_sha256": "4b4e6d5bdd50d2bbfd1f80874091b00e60711f5aa32899d891a9dc9282166b36",
+      "last_changed": "2026-09-30T20:58:29.212Z",
       "priority": 80
     },
     "/chum/answers/": {
       "path": "/chum/answers/",
-      "content_sha256": "0b47952b937a67e2bd871aaa3a5892b0672117cba4cdd085cd74480537cb88bd",
-      "last_changed": "2026-09-30T20:55:21.460Z",
+      "content_sha256": "1852138b676e98bde9451517a78b782f49c576b917c3c9bb75d90f52064436a9",
+      "last_changed": "2026-09-30T20:58:29.212Z",
       "priority": 80
     },
     "/chum/answers/index.json": {
       "path": "/chum/answers/index.json",
-      "content_sha256": "a916971a6ad5bd12808d849a546145ec84cdde72eae212a3e5d12150661a109d",
-      "last_changed": "2026-09-30T20:55:21.460Z",
+      "content_sha256": "e5ca9431a1f401c99b03ef9f86ffd6725e5f732d271725e2bdb3f162b3f54d2f",
+      "last_changed": "2026-09-30T20:58:29.212Z",
       "priority": 80
     },
     "/chum/answers/index.txt": {
       "path": "/chum/answers/index.txt",
-      "content_sha256": "80ead919991b2f590e03f5a7c8c33add0a8fdc66f5f173c6902337b340f05874",
-      "last_changed": "2026-09-30T20:55:21.460Z",
+      "content_sha256": "e5e5bb7ea942bd895423fc271b2e2f5b2b0e4333e355ce1618d7b3a9b12b328a",
+      "last_changed": "2026-09-30T20:58:29.212Z",
       "priority": 80
     },
     "/chum/answers/observed/": {
@@ -141,8 +141,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "d167913ff3c0d7a790f98dfd51fcc606d6846e13411b45953505f032756774ba",
-      "last_changed": "2026-09-30T20:58:03.033Z",
+      "content_sha256": "97f629dbb1e30e9ddb8bfd9fa79b80b6d139b4de6a9cb0f960164a3eefcde05d",
+      "last_changed": "2026-09-30T20:58:29.212Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -243,8 +243,8 @@
     },
     "/chum/sitemaps/answers.xml": {
       "path": "/chum/sitemaps/answers.xml",
-      "content_sha256": "8dcdd94c81a791b711847e36cfe381c2e7a9e5d0e708eafb8a916d6fcd552143",
-      "last_changed": "2026-09-30T20:55:21.460Z",
+      "content_sha256": "beb27c93dbda8ade6792239a59ee76fb3fd58c88419a0445c61e40f6852f8423",
+      "last_changed": "2026-09-30T20:58:29.212Z",
       "priority": 108
     },
     "/chum/sitemaps/products.xml": {
@@ -261,8 +261,8 @@
     },
     "/chum/sitemap.xml": {
       "path": "/chum/sitemap.xml",
-      "content_sha256": "0e2f399fdbcba74593cdb376373c4fe27a3ddfe968312a7bd894d281e14b9f23",
-      "last_changed": "2026-09-30T20:55:21.460Z",
+      "content_sha256": "63fbdd87a889464a762ac8263edc428abb55a3ca783613fba5bd330e1f736fe2",
+      "last_changed": "2026-09-30T20:58:29.212Z",
       "priority": 80
     },
     "/network/": {
@@ -339,8 +339,8 @@
     },
     "/.well-known/evercraft-pain-index.json": {
       "path": "/.well-known/evercraft-pain-index.json",
-      "content_sha256": "6bafdd2b132e80b20587d8113884fae3e13afef58c570509b09d17c225f1a529",
-      "last_changed": "2026-09-30T20:55:21.460Z",
+      "content_sha256": "3a8ec52c93cbcf3ec70be12e19ed55216da31a667a313176be06e34dfd218523",
+      "last_changed": "2026-09-30T20:58:29.212Z",
       "priority": 90
     },
     "/rivet/discovery.json": {
@@ -729,8 +729,8 @@
     },
     "/llms-full.txt": {
       "path": "/llms-full.txt",
-      "content_sha256": "c28549293e8c73909931e81854c1106aaf7b1e9c7e0dd089ab67fedac618dc88",
-      "last_changed": "2026-09-30T20:55:21.460Z",
+      "content_sha256": "3dc650997f15da9e9c8346076ec42c299ec02f33f761c1617590f310ec2b2e0d",
+      "last_changed": "2026-09-30T20:58:29.212Z",
       "priority": 86
     },
     "/ai-discovery.json": {
@@ -777,8 +777,8 @@
     },
     "/.well-known/evercraft-agent-commerce.json": {
       "path": "/.well-known/evercraft-agent-commerce.json",
-      "content_sha256": "5ed048a73b814322ff456807af1a8a70b50a82fabc2f6124ab7a4c3a3b8d487b",
-      "last_changed": "2026-09-30T20:55:21.460Z",
+      "content_sha256": "5347dbb201952d98fd766ff10ba69843a6d8259dba35d50c53dc2fb943a78992",
+      "last_changed": "2026-09-30T20:58:29.212Z",
       "priority": 84
     },
     "/.well-known/evercraft-agent-interfaces.json": {
@@ -2303,6 +2303,36 @@
       "path": "/chum/capabilities/website-launch-service-v1/schema.jsonld",
       "content_sha256": "4b26e4f4bd7c8790e51eb37897f5f765081fbcd56916e575fe2fd143dc5ea73c",
       "last_changed": "2026-09-25T06:50:26.447Z",
+      "priority": 96
+    },
+    "/chum/intents/worldstate-reality-delta-v1/": {
+      "path": "/chum/intents/worldstate-reality-delta-v1/",
+      "content_sha256": "9c28ac8261525fbbde0d301af878873c7ad742cfa4773137f19a6ac41cdbaf0d",
+      "last_changed": "2026-09-30T20:58:29.212Z",
+      "priority": 98
+    },
+    "/chum/capabilities/worldstate-reality-delta-v1/": {
+      "path": "/chum/capabilities/worldstate-reality-delta-v1/",
+      "content_sha256": "6193bb160a4d880854ef79811a6c28d493657b7e5b4fe94fdb1e85896572fe0d",
+      "last_changed": "2026-09-30T20:58:29.212Z",
+      "priority": 96
+    },
+    "/chum/capabilities/worldstate-reality-delta-v1/llms.txt": {
+      "path": "/chum/capabilities/worldstate-reality-delta-v1/llms.txt",
+      "content_sha256": "1a386f295c117f77e460470b2eca36c24c599e5ed69859eec73ee0fde28b8ae9",
+      "last_changed": "2026-09-30T20:58:29.212Z",
+      "priority": 96
+    },
+    "/chum/capabilities/worldstate-reality-delta-v1/capability.json": {
+      "path": "/chum/capabilities/worldstate-reality-delta-v1/capability.json",
+      "content_sha256": "b6f8446be3f466ace3c8761e9378611cfa51ba5bbb44da3a1ca7d69eb30ebe2c",
+      "last_changed": "2026-09-30T20:58:29.212Z",
+      "priority": 96
+    },
+    "/chum/capabilities/worldstate-reality-delta-v1/schema.jsonld": {
+      "path": "/chum/capabilities/worldstate-reality-delta-v1/schema.jsonld",
+      "content_sha256": "7f8a924cb55f17fb424c351aa44b6eec3c4821ba6f9d3ad2236827f5ee85510f",
+      "last_changed": "2026-09-30T20:58:29.212Z",
       "priority": 96
     },
     "/chum/products/aliev/": {
@@ -5407,6 +5437,18 @@
       "last_changed": "2026-09-30T20:55:21.460Z",
       "priority": 160
     },
+    "/chum/answers/doors/build-a-provenance-preserving-worldstate-snapshot-da7bba291d/": {
+      "path": "/chum/answers/doors/build-a-provenance-preserving-worldstate-snapshot-da7bba291d/",
+      "content_sha256": "1f3a31e75f6cfa5778da5994b2a780e4d1bb3aaf55b5405101bd8912005beda7",
+      "last_changed": "2026-09-30T20:58:29.212Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/build-a-provenance-preserving-worldstate-snapshot-da7bba291d.json": {
+      "path": "/chum/answers/doors/build-a-provenance-preserving-worldstate-snapshot-da7bba291d.json",
+      "content_sha256": "badaafb55e354002cdb5bcfb3f8ba842adaad904272c5deb067aba3177a1fa8e",
+      "last_changed": "2026-09-30T20:58:29.212Z",
+      "priority": 100
+    },
     "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287/": {
       "path": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287/",
       "content_sha256": "b6d6489af813e219ef577ad01b49e6633d64b9629dd9403114a7e4031e422c1b",
@@ -6318,6 +6360,18 @@
       "content_sha256": "18b507de2eebd2612445a8c3f5286add7bf6f6f5cdef3238fb588158416912e6",
       "last_changed": "2026-09-30T20:55:21.460Z",
       "priority": 160
+    },
+    "/chum/answers/doors/compare-verified-worldstate-before-and-after-an-event-b224712e8d/": {
+      "path": "/chum/answers/doors/compare-verified-worldstate-before-and-after-an-event-b224712e8d/",
+      "content_sha256": "090605278c79bb42ab68329cb0368d4abff696287a946cc3b5822498d487bfff",
+      "last_changed": "2026-09-30T20:58:29.212Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/compare-verified-worldstate-before-and-after-an-event-b224712e8d.json": {
+      "path": "/chum/answers/doors/compare-verified-worldstate-before-and-after-an-event-b224712e8d.json",
+      "content_sha256": "d75168673db48802861b7d2dc3ccd250b4f15230d71d1ffeadebeb1faec1bedc",
+      "last_changed": "2026-09-30T20:58:29.212Z",
+      "priority": 100
     },
     "/chum/answers/doors/connect-our-business-systems-without-replacing-everything-4e80c745da/": {
       "path": "/chum/answers/doors/connect-our-business-systems-without-replacing-everything-4e80c745da/",
@@ -13651,6 +13705,18 @@
       "last_changed": "2026-09-30T20:55:21.460Z",
       "priority": 100
     },
+    "/chum/answers/doors/show-me-the-reality-delta-for-this-place-or-system-7a98735088/": {
+      "path": "/chum/answers/doors/show-me-the-reality-delta-for-this-place-or-system-7a98735088/",
+      "content_sha256": "45b1210d4fb9e099995be61d9bdb9d1f29e69392620ae95633810cd7068a9a84",
+      "last_changed": "2026-09-30T20:58:29.212Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/show-me-the-reality-delta-for-this-place-or-system-7a98735088.json": {
+      "path": "/chum/answers/doors/show-me-the-reality-delta-for-this-place-or-system-7a98735088.json",
+      "content_sha256": "6ab01924c3f6df24c3e7f9459fff5884bb57ebd8d6928c4a23ef11084e9bd583",
+      "last_changed": "2026-09-30T20:58:29.212Z",
+      "priority": 100
+    },
     "/chum/answers/doors/show-sourced-energy-data-and-provenance-cd19abcb4e/": {
       "path": "/chum/answers/doors/show-sourced-energy-data-and-provenance-cd19abcb4e/",
       "content_sha256": "f48bde90ecb6a5a594ebe440091ed6790d99363a68858530d24678528f67594a",
@@ -14827,6 +14893,18 @@
       "last_changed": "2026-09-30T20:55:21.460Z",
       "priority": 100
     },
+    "/chum/answers/doors/turn-observations-into-an-evidence-backed-change-packet-ed6d2c2648/": {
+      "path": "/chum/answers/doors/turn-observations-into-an-evidence-backed-change-packet-ed6d2c2648/",
+      "content_sha256": "1b99a2554fcf1703920b2c0f5c5185893a992479d460b09a41cb9e90e38dd38f",
+      "last_changed": "2026-09-30T20:58:29.212Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/turn-observations-into-an-evidence-backed-change-packet-ed6d2c2648.json": {
+      "path": "/chum/answers/doors/turn-observations-into-an-evidence-backed-change-packet-ed6d2c2648.json",
+      "content_sha256": "aaad1520b0fa2a350a550281bed8a00da75a56b2e05a84412261146ef355db08",
+      "last_changed": "2026-09-30T20:58:29.212Z",
+      "priority": 100
+    },
     "/chum/answers/doors/turn-spreadsheets-and-legacy-systems-into-an-operating-layer-c3d8466ad9/": {
       "path": "/chum/answers/doors/turn-spreadsheets-and-legacy-systems-into-an-operating-layer-c3d8466ad9/",
       "content_sha256": "34c5d640b40654867110139d0587653e3fecedc83f1b4e5eea64a846d6b7a0ca",
@@ -15487,6 +15565,18 @@
       "last_changed": "2026-09-30T20:55:21.460Z",
       "priority": 100
     },
+    "/chum/answers/doors/what-changed-in-the-real-world-aad5478c49/": {
+      "path": "/chum/answers/doors/what-changed-in-the-real-world-aad5478c49/",
+      "content_sha256": "b37402b0a3170151226592597d22b8018f8a0e329ef617bd6ee149f965ec4fb3",
+      "last_changed": "2026-09-30T20:58:29.212Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/what-changed-in-the-real-world-aad5478c49.json": {
+      "path": "/chum/answers/doors/what-changed-in-the-real-world-aad5478c49.json",
+      "content_sha256": "2063ddf5fd841c947488c6abf739a419012069ad19e6d39f6c106b9798c8e329",
+      "last_changed": "2026-09-30T20:58:29.212Z",
+      "priority": 100
+    },
     "/chum/answers/doors/what-data-is-missing-for-this-decision-8e0a8c1a6f/": {
       "path": "/chum/answers/doors/what-data-is-missing-for-this-decision-8e0a8c1a6f/",
       "content_sha256": "d71d62187e0c771e6ef8d397cbe79bc6752b30cd7742fead87aa1b1e39b59749",
@@ -15569,6 +15659,18 @@
       "path": "/chum/answers/doors/what-is-wrong-with-this-load-c902d7993e.json",
       "content_sha256": "21725191280fa6e82915d0a5180172294356272bdb1a2f825c60d24ad33258d4",
       "last_changed": "2026-09-30T20:55:21.460Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/what-materially-changed-across-weather-infrastructure-economy-health-or-hazards-0b443062e3/": {
+      "path": "/chum/answers/doors/what-materially-changed-across-weather-infrastructure-economy-health-or-hazards-0b443062e3/",
+      "content_sha256": "5555e8f6f2cb0808a959d8c9a931912a464adcee92e554bf0e16cddf22b03f28",
+      "last_changed": "2026-09-30T20:58:29.212Z",
+      "priority": 100
+    },
+    "/chum/answers/doors/what-materially-changed-across-weather-infrastructure-economy-health-or-hazards-0b443062e3.json": {
+      "path": "/chum/answers/doors/what-materially-changed-across-weather-infrastructure-economy-health-or-hazards-0b443062e3.json",
+      "content_sha256": "ee62f8cd5c992d4c0f1357191b84c897773d57b598a8d1607a336e1eb539c93a",
+      "last_changed": "2026-09-30T20:58:29.212Z",
       "priority": 100
     },
     "/chum/answers/doors/what-public-ev-charging-is-near-this-address-85011db389/": {

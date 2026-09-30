@@ -20,12 +20,12 @@
     "provider_publication_is_not_endorsement_or_pickup_proof": true
   },
   "summary": {
-    "pain_index_entries": 111,
-    "unique_user_phrases": 963,
-    "mapped_candidate_edges": 1069,
+    "pain_index_entries": 112,
+    "unique_user_phrases": 969,
+    "mapped_candidate_edges": 1075,
     "ambiguous_phrases": 106,
     "product_candidates": 64,
-    "machine_offer_candidates": 47
+    "machine_offer_candidates": 48
   },
   "doors": [
     {
@@ -2218,6 +2218,29 @@
       ]
     },
     {
+      "answer_id": "intent:da7bba291d",
+      "user_language": "build a provenance-preserving worldstate snapshot",
+      "normalized": "build a provenance preserving worldstate snapshot",
+      "relative_json": "/chum/answers/doors/build-a-provenance-preserving-worldstate-snapshot-da7bba291d.json",
+      "relative_page": "/chum/answers/doors/build-a-provenance-preserving-worldstate-snapshot-da7bba291d/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-a-provenance-preserving-worldstate-snapshot-da7bba291d.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:worldstate-reality-delta-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "worldstate-reality-delta-v1",
+          "name": "Worldstate Reality Delta",
+          "commercial_state": "verification_required",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/intents/worldstate-reality-delta-v1/",
+          "public_url": null,
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:030d199287",
       "user_language": "build a rollback test and evidence plan before changing an IBM i production system",
       "normalized": "build a rollback test and evidence plan before changing an ibm i production system",
@@ -4045,6 +4068,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/forensiscope-evidence-review-v1/",
           "public_url": "https://evercraft-forensiscope.base44.app/video-too-large-for-ai",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:b224712e8d",
+      "user_language": "compare verified worldstate before and after an event",
+      "normalized": "compare verified worldstate before and after an event",
+      "relative_json": "/chum/answers/doors/compare-verified-worldstate-before-and-after-an-event-b224712e8d.json",
+      "relative_page": "/chum/answers/doors/compare-verified-worldstate-before-and-after-an-event-b224712e8d/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-verified-worldstate-before-and-after-an-event-b224712e8d.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:worldstate-reality-delta-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "worldstate-reality-delta-v1",
+          "name": "Worldstate Reality Delta",
+          "commercial_state": "verification_required",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/intents/worldstate-reality-delta-v1/",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -18955,6 +19001,29 @@
       ]
     },
     {
+      "answer_id": "intent:7a98735088",
+      "user_language": "show me the reality delta for this place or system",
+      "normalized": "show me the reality delta for this place or system",
+      "relative_json": "/chum/answers/doors/show-me-the-reality-delta-for-this-place-or-system-7a98735088.json",
+      "relative_page": "/chum/answers/doors/show-me-the-reality-delta-for-this-place-or-system-7a98735088/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/show-me-the-reality-delta-for-this-place-or-system-7a98735088.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:worldstate-reality-delta-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "worldstate-reality-delta-v1",
+          "name": "Worldstate Reality Delta",
+          "commercial_state": "verification_required",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/intents/worldstate-reality-delta-v1/",
+          "public_url": null,
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:cd19abcb4e",
       "user_language": "show sourced energy data and provenance",
       "normalized": "show sourced energy data and provenance",
@@ -21305,6 +21374,29 @@
       ]
     },
     {
+      "answer_id": "intent:ed6d2c2648",
+      "user_language": "turn observations into an evidence-backed change packet",
+      "normalized": "turn observations into an evidence backed change packet",
+      "relative_json": "/chum/answers/doors/turn-observations-into-an-evidence-backed-change-packet-ed6d2c2648.json",
+      "relative_page": "/chum/answers/doors/turn-observations-into-an-evidence-backed-change-packet-ed6d2c2648/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/turn-observations-into-an-evidence-backed-change-packet-ed6d2c2648.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:worldstate-reality-delta-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "worldstate-reality-delta-v1",
+          "name": "Worldstate Reality Delta",
+          "commercial_state": "verification_required",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/intents/worldstate-reality-delta-v1/",
+          "public_url": null,
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:c3d8466ad9",
       "user_language": "turn spreadsheets and legacy systems into an operating layer",
       "normalized": "turn spreadsheets and legacy systems into an operating layer",
@@ -22666,6 +22758,29 @@
       ]
     },
     {
+      "answer_id": "intent:aad5478c49",
+      "user_language": "what changed in the real world",
+      "normalized": "what changed in the real world",
+      "relative_json": "/chum/answers/doors/what-changed-in-the-real-world-aad5478c49.json",
+      "relative_page": "/chum/answers/doors/what-changed-in-the-real-world-aad5478c49/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/what-changed-in-the-real-world-aad5478c49.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:worldstate-reality-delta-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "worldstate-reality-delta-v1",
+          "name": "Worldstate Reality Delta",
+          "commercial_state": "verification_required",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/intents/worldstate-reality-delta-v1/",
+          "public_url": null,
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:8e0a8c1a6f",
       "user_language": "what data is missing for this decision",
       "normalized": "what data is missing for this decision",
@@ -22834,6 +22949,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/systemia-atlas-freight/",
           "public_url": "https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:0b443062e3",
+      "user_language": "what materially changed across weather infrastructure economy health or hazards",
+      "normalized": "what materially changed across weather infrastructure economy health or hazards",
+      "relative_json": "/chum/answers/doors/what-materially-changed-across-weather-infrastructure-economy-health-or-hazards-0b443062e3.json",
+      "relative_page": "/chum/answers/doors/what-materially-changed-across-weather-infrastructure-economy-health-or-hazards-0b443062e3/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/what-materially-changed-across-weather-infrastructure-economy-health-or-hazards-0b443062e3.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:worldstate-reality-delta-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "worldstate-reality-delta-v1",
+          "name": "Worldstate Reality Delta",
+          "commercial_state": "verification_required",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/intents/worldstate-reality-delta-v1/",
+          "public_url": null,
           "registry_name": null
         }
       ]

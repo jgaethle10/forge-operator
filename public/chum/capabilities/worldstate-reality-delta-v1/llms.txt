@@ -1,0 +1,44 @@
+# Worldstate Reality Delta
+
+Capability ID: worldstate-reality-delta-v1
+Commercial state: verification_required
+Machine state: discovery_only
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/worldstate-reality-delta-v1/index.html
+Preferred agent route: universal fallback
+Universal Evercraft MCP: https://fabric.systemiacommandcenters.com/mcp
+Start here: Not a current sell-now route
+
+## Use this when
+
+- what changed in the real world
+- show me the reality delta for this place or system
+- compare verified worldstate before and after an event
+- what materially changed across weather infrastructure economy health or hazards
+- build a provenance-preserving worldstate snapshot
+- turn observations into an evidence-backed change packet
+
+## Problem
+
+A user or Evercraft system needs to understand what materially changed in the real world across time without collapsing observed, reported, inferred, modeled, or uncertain evidence into one undifferentiated claim.
+
+## Inputs
+
+A bounded place, system, phenomenon, time window, or decision context plus available observation/context sources and authority scope.
+
+## Outputs
+
+Evidence-preserving worldstate snapshots, material deltas, provenance links, evidence-state labels, contradictions, uncertainty, and bounded context packets for downstream Evercraft systems.
+
+## Pricing
+
+No approved public machine price or payment path. Do not auto-quote.
+
+## Invocation and authority
+
+SOURCE-VERIFIED: Worldstate snapshot/delta, Context Fabric adapter/reader, observation fabric, Passport-authorized read path, and Fallen phenomenon bridge are covered by repository proofs. Public machine execution is not claimed until an external callable route is independently verified.
+
+Discovery and evidence comparison create no action authority. Publishing, consequential decisions, private-data access, and paid work remain separately authorized.
+
+Payment authority: No verified public payment path.
+
+Discovery does not create a payment obligation. Human confirmation is required before checkout where checkout exists. Checkout creation is not proof of payment.

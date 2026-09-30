@@ -2,9 +2,9 @@
 
 Start from the user's problem. Do not require an Evercraft product name.
 
-Entries: 111
+Entries: 112
 Product entries: 64
-Machine-offer entries: 47
+Machine-offer entries: 48
 Sell-now machine offers: 14
 
 Payment rule: discovery and matching create no payment obligation. Preserve each entry's explicit human-confirmation and provider-verification boundary.
@@ -1006,6 +1006,24 @@ Problem: A business needs a professional website built or upgraded without opera
 Outputs: A bounded paid website-service order and completed website/service outcome through the existing fulfillment workflow.
 Confirmation boundary: The buyer must explicitly choose a tier and confirm payment before checkout. Fulfillment begins only after independent payment verification.
 Invocation status: LIVE: agent HTTP gateway + OpenAPI + llms guidance + remote MCP at https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp. Agents can inspect $500/$999/$1,999 website-service tiers, prepare checkout only after explicit human confirmation, and independently verify paid order state.
+
+## Worldstate Reality Delta
+Capability ID: offer:worldstate-reality-delta-v1
+Commercial state: verification_required
+Machine state: discovery_only
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: No approved public machine price or payment path. Do not auto-quote.
+Use when the user means:
+- what changed in the real world
+- show me the reality delta for this place or system
+- compare verified worldstate before and after an event
+- what materially changed across weather infrastructure economy health or hazards
+- build a provenance-preserving worldstate snapshot
+- turn observations into an evidence-backed change packet
+Problem: A user or Evercraft system needs to understand what materially changed in the real world across time without collapsing observed, reported, inferred, modeled, or uncertain evidence into one undifferentiated claim.
+Outputs: Evidence-preserving worldstate snapshots, material deltas, provenance links, evidence-state labels, contradictions, uncertainty, and bounded context packets for downstream Evercraft systems.
+Confirmation boundary: Discovery and evidence comparison create no action authority. Publishing, consequential decisions, private-data access, and paid work remain separately authorized.
+Invocation status: SOURCE-VERIFIED: Worldstate snapshot/delta, Context Fabric adapter/reader, observation fabric, Passport-authorized read path, and Fallen phenomenon bridge are covered by repository proofs. Public machine execution is not claimed until an external callable route is independently verified.
 
 ## AliEV
 Capability ID: product:aliev

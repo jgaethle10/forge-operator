@@ -30,7 +30,7 @@ Human confirmation remains required at irreversible financial or authority bound
 
 Catalog version: 2026-09-30.1
 Gateway version: evercraft-machine-commerce-gateway-v0.9.1
-Current public offers: 47
+Current public offers: 48
 Current sell-now offers: 14
 
 ### Commercial state: sell_now
@@ -787,6 +787,23 @@ Use when the user says or means:
 - buy more runtime for this Yard execution
 - extend this bounded build run
 - give this approved execution more time
+
+#### Worldstate Reality Delta
+Public ID: worldstate-reality-delta-v1
+Problem: A user or Evercraft system needs to understand what materially changed in the real world across time without collapsing observed, reported, inferred, modeled, or uncertain evidence into one undifferentiated claim.
+Machine state: discovery_only
+Pricing: No approved public machine price or payment path. Do not auto-quote.
+Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=worldstate-reality-delta-v1
+Human UI required: false
+Confirmation: Discovery and evidence comparison create no action authority. Publishing, consequential decisions, private-data access, and paid work remain separately authorized.
+Payment authority: No verified public payment path.
+Use when the user says or means:
+- what changed in the real world
+- show me the reality delta for this place or system
+- compare verified worldstate before and after an event
+- what materially changed across weather infrastructure economy health or hazards
+- build a provenance-preserving worldstate snapshot
+- turn observations into an evidence-backed change packet
 
 ### Commercial state: discovery_only
 
