@@ -14,7 +14,7 @@ export type SyncLabsLipModel='sync-3'|'lipsync-2-pro'|'lipsync-2';
 type FetchLike=(input:string,init?:{
   method?:string;
   headers?:Record<string,string>;
-  body?:string;
+  body?:string|Buffer;
 })=>Promise<{
   ok:boolean;
   status:number;
@@ -85,10 +85,89 @@ function fetcher(config:SyncLabsLipAdapterConfig):FetchLike{
   return impl;
 }
 
-function urlReference(locator:VisualReferenceLocator|undefined,label:string){
+function providerInput(
+  locator:VisualReferenceLocator|undefined,
+  type:'video'|'audio',
+  label:string,
+){
   if(!locator) throw new Error(`sync_${label}_locator_missing`);
-  if(locator.kind==='url') return locator.value;
+  if(locator.kind==='url') return {type,url:locator.value};
+  if(locator.kind==='provider_asset'&&locator.providerId==='sync'){
+    return {type,assetId:locator.id};
+  }
   throw new Error(`sync_${label}_locator_unsupported:${locator.kind}`);
+}
+
+export interface SyncLabsStagedAsset {
+  providerId:'sync';
+  assetId:string;
+  locator:VisualReferenceLocator;
+  sourcePath:string;
+  sourceSha256:string;
+  providerUrl:string;
+  sizeBytes:number;
+}
+
+export async function stageSyncLabsAsset(input:{
+  apiKey:string;
+  filePath:string;
+  contentType:'video/mp4'|'audio/wav'|'audio/mpeg';
+  assetType:'VIDEO'|'AUDIO';
+  baseUrl?:string;
+  fetchImpl?:FetchLike;
+}):Promise<SyncLabsStagedAsset>{
+  if(!input.apiKey?.trim()) throw new Error('sync_api_key_missing');
+  if(!fs.existsSync(input.filePath)) throw new Error('sync_stage_file_missing');
+  const bytes=fs.readFileSync(input.filePath);
+  if(!bytes.length) throw new Error('sync_stage_file_empty');
+  const base=(input.baseUrl??'https://api.sync.so').replace(/\/$/,'');
+  const fetchImpl=input.fetchImpl??(globalThis.fetch as unknown as FetchLike);
+  if(!fetchImpl) throw new Error('sync_fetch_unavailable');
+  const fileName=path.basename(input.filePath).replace(/[^a-zA-Z0-9._-]+/g,'_');
+
+  const presign=await fetchImpl(`${base}/v2/assets/upload`,{
+    method:'POST',
+    headers:{'Content-Type':'application/json','x-api-key':input.apiKey},
+    body:JSON.stringify({fileName,contentType:input.contentType,size:bytes.length}),
+  });
+  if(!presign.ok){
+    throw new Error(`sync_asset_presign_failed:${presign.status}:${(await presign.text()).slice(0,500)}`);
+  }
+  const presigned=await presign.json();
+  const uploadUrl=String(presigned?.uploadUrl??'');
+  const providerUrl=String(presigned?.url??'');
+  if(!uploadUrl||!providerUrl) throw new Error('sync_asset_presign_response_invalid');
+
+  const uploaded=await fetchImpl(uploadUrl,{
+    method:'PUT',
+    headers:{'Content-Type':input.contentType},
+    body:bytes,
+  });
+  if(!uploaded.ok){
+    throw new Error(`sync_asset_upload_failed:${uploaded.status}:${(await uploaded.text()).slice(0,500)}`);
+  }
+
+  const registered=await fetchImpl(`${base}/v2/assets`,{
+    method:'POST',
+    headers:{'Content-Type':'application/json','x-api-key':input.apiKey},
+    body:JSON.stringify({url:providerUrl,type:input.assetType,name:fileName}),
+  });
+  if(!registered.ok){
+    throw new Error(`sync_asset_register_failed:${registered.status}:${(await registered.text()).slice(0,500)}`);
+  }
+  const asset=await registered.json();
+  const assetId=String(asset?.id??'');
+  if(!assetId) throw new Error('sync_asset_id_missing');
+
+  return {
+    providerId:'sync',
+    assetId,
+    locator:{kind:'provider_asset',providerId:'sync',id:assetId},
+    sourcePath:path.resolve(input.filePath),
+    sourceSha256:crypto.createHash('sha256').update(bytes).digest('hex'),
+    providerUrl,
+    sizeBytes:bytes.length,
+  };
 }
 
 function refs(job:VisualModelJob){
@@ -112,8 +191,8 @@ function validateJob(job:VisualModelJob,config:SyncLabsLipAdapterConfig){
   if(!audio.sourceRefs?.length) throw new Error('sync_dialogue_audio_provenance_missing');
   if(!video.digest?.match(/^[a-f0-9]{64}$/i)) throw new Error('sync_source_video_digest_missing');
   if(!audio.digest?.match(/^[a-f0-9]{64}$/i)) throw new Error('sync_dialogue_audio_digest_missing');
-  urlReference(video.locator,'source_video');
-  urlReference(audio.locator,'dialogue_audio');
+  providerInput(video.locator,'video','source_video');
+  providerInput(audio.locator,'audio','dialogue_audio');
 }
 
 function outputName(job:VisualModelJob){
@@ -167,8 +246,8 @@ export function createSyncLabsLipAdapter(
       const requestBody:any={
         model:config.modelId,
         input:[
-          {type:'video',url:urlReference(video.locator,'source_video')},
-          {type:'audio',url:urlReference(audio.locator,'dialogue_audio')},
+          providerInput(video.locator,'video','source_video'),
+          providerInput(audio.locator,'audio','dialogue_audio'),
         ],
         outputFileName:job.id.replace(/[^a-zA-Z0-9_-]+/g,'_').slice(0,100),
         options:{
