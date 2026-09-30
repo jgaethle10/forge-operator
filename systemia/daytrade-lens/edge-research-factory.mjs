@@ -438,6 +438,7 @@ export async function runEdgeResearchBatch({
     measurement_count: measurements.length,
     family_count: evaluations.length,
     research_candidate_count: candidates.length,
+    measurements,
     date_window: window,
     transaction_cost_bps,
     no_lookahead_policy: true,
