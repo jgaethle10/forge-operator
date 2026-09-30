@@ -13,8 +13,11 @@ export function registerRivetReportGateway(app,{
   systemiaMachineKey=process.env.SYSTEMIA_MACHINE_KEY || '',
   sourceUrl=process.env.ALIEV_YARD_SOURCE_URL || '',
   stateDir=process.env.RIVET_REPORT_STATE_DIR || path.join('/tmp','evercraft-rivet-report'),
-  generate=generateYardReport
+  generate=generateYardReport,
+  sourceRequired=generate===generateYardReport
 }={}){
+  const sourceReady=()=>!sourceRequired || Boolean(clean(sourceUrl));
+  const configured=()=>Boolean(clean(gatewayToken) && clean(systemiaMachineKey) && sourceReady());
   app.get('/api/rivet/report-health',(_req,res)=>{
     res.setHeader('cache-control','no-store');
     res.json({
@@ -32,7 +35,7 @@ export function registerRivetReportGateway(app,{
   });
 
   app.post('/api/rivet/reports',async(req,res)=>{
-    if(!clean(gatewayToken) || !clean(systemiaMachineKey) || !clean(sourceUrl)){
+    if(!configured()){
       res.status(503).json({ok:false,error:'rivet_report_gateway_not_configured'});
       return;
     }
