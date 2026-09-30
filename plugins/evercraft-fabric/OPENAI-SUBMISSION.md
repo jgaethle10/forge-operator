@@ -4,7 +4,7 @@
 
 - Name: **Evercraft**
 - Developer: **Evercraft LLC**
-- Category: **Business**
+- Category: **Business & Operations**
 - Short description: **Find and use the right Evercraft capability from one connected front door.**
 - Source package: `plugins/evercraft-fabric/`
 - Submission type: **With MCP**
