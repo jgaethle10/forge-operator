@@ -15,7 +15,7 @@ import type { CreativeCouncilInventory, CreativeCouncilReconciliation } from './
 import { compileSeriesEpisode } from './series.js';
 import { buildVisualStageHtml } from './visual-stage-html.js';
 import { compileWorldIntelStage, type WorldIntelStageInput } from './world-intel-stage.js';
-import { compilePhenomenonCanvas, type PhenomenonInput } from './phenomenon-renderer.js';
+import { compilePhenomenonCanvas, compilePhenomenonStage, type PhenomenonInput } from './phenomenon-renderer.js';
 import { compileJournalEducationStage, type JournalFallenProductionBrief } from './journal-education.js';
 import type { VisualStage } from './visual-stage.js';
 import { buildDistributedRenderPlan, type RenderAssetManifestRow } from './distributed-render.js';
@@ -73,6 +73,7 @@ function usage() {
     '  npm run media:studio -- stage <visual-stage.json> <stage.html>',
     '  npm run media:studio -- world-intel <story.json> <visual-stage.json> [stage.html]',
     '  npm run media:studio -- phenomenon <phenomenon.json> <stage.html> [receipt.json]',
+    '  npm run media:studio -- phenomenon-stage <phenomenon.json> <stage.json> [receipt.json]',
     '  npm run media:studio -- journal-story <journal-brief.json> <visual-stage.json> [receipt.json]',
     '  npm run media:studio -- render-plan <render-plan-input.json> <distributed-plan.json>',
     '  npm run media:studio -- studio-room <room.json> <visual-stage.json>',
@@ -223,6 +224,22 @@ function main() {
     writeJson(output, plan);
     console.log(`Distributed render plan created: ${path.resolve(output)}`);
     console.log(`Frames: ${plan.totalFrames}; shards: ${plan.shards.length}; fps: ${plan.fps}`);
+    return;
+  }
+
+  if (command === 'phenomenon-stage') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const phenomenon = readJson<PhenomenonInput>(input);
+    const stage = compilePhenomenonStage(phenomenon);
+    const bundle = compilePhenomenonCanvas(phenomenon);
+    writeJson(output, stage);
+    if (optionalPlan) writeJson(optionalPlan, bundle.receipt);
+    console.log(`Phenomenon render stage created: ${path.resolve(output)}`);
+    if (optionalPlan) console.log(`Phenomenon receipt created: ${path.resolve(optionalPlan)}`);
     return;
   }
 
