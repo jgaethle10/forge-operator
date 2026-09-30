@@ -6,10 +6,10 @@
   "source_schema_version": "2026-09-28.2",
   "gateway_version": "evercraft-machine-commerce-gateway-v0.9.1",
   "source_generated_at": "2026-09-29T01:40:00.000Z",
-  "generated_at": "2026-09-30T16:20:00.000Z",
-  "offer_count": 46,
+  "generated_at": "2026-09-30T16:39:00.000Z",
+  "offer_count": 47,
   "sell_now_count": 14,
-  "discovery_count": 32,
+  "discovery_count": 33,
   "safety": {
     "discovery_creates_obligation": false,
     "human_confirmation_required_for_checkout": true,
