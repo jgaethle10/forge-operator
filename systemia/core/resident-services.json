@@ -18,21 +18,6 @@
       }
     },
     {
-      "service_key": "eps-social-continuity",
-      "mode": "cycle",
-      "manifest": "systemia/organism/eps-social-continuity.workflow.json",
-      "executable": "systemia/organism/eps-social-continuity.mjs",
-      "cadence_seconds": 1800,
-      "optional_when_unconfigured": true,
-      "env_args": {
-        "--url": "EVERCRAFT_CLIP_EPS_INGRESS_URL",
-        "--secret-file": "SYSTEMIA_CLIP_SHARED_SECRET_FILE"
-      },
-      "optional_env_args": {
-        "--state-dir": "SYSTEMIA_EPS_SOCIAL_STATE_DIR"
-      }
-    },
-    {
       "service_key": "legacy-rescue-opportunity-watch",
       "mode": "cycle",
       "manifest": "systemia/organism/legacy-rescue-watch.workflow.json",
