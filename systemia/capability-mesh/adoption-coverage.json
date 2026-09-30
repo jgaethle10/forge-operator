@@ -7,15 +7,15 @@
   },
   "summary": {
     "public_product_count": 64,
-    "explicit_contract_count": 7,
-    "complete_contract_declaration_count": 7,
+    "explicit_contract_count": 8,
+    "complete_contract_declaration_count": 8,
     "incomplete_contract_declaration_count": 0,
-    "missing_contract_count": 57,
+    "missing_contract_count": 56,
     "public_products_with_direct_door": 15,
     "direct_callable_public_products": 13,
-    "direct_door_public_products_without_contract": 11,
+    "direct_door_public_products_without_contract": 10,
     "specialist_doors_not_in_public_product_index": 2,
-    "shared_runtime_contract_count": 4,
+    "shared_runtime_contract_count": 5,
     "private_runtime_contract_count": 1,
     "discovery_only_contract_count": 2
   },
@@ -24,7 +24,6 @@
       "buildflow",
       "career-command",
       "deck-capital-fit",
-      "eventwave",
       "evercraft-web",
       "faie",
       "ibmi-rescue",
@@ -47,7 +46,6 @@
       "deck-capital-fit",
       "ecoledger",
       "eps-estimate-engine",
-      "eventwave",
       "evercraft-circles",
       "evercraft-containment",
       "evercraft-cosmos-atlas",
@@ -638,31 +636,76 @@
         "direct_callable": true,
         "registry_published": true
       },
-      "contract_state": "missing",
-      "contract_version": null,
-      "adoption_stage": "missing",
+      "contract_state": "complete_declaration",
+      "contract_version": "1.0.0",
+      "adoption_stage": "shared_runtime",
       "lane_states": {
-        "authority": "missing",
-        "context": "missing",
-        "meter": "missing",
-        "intake": "missing",
-        "execution": "missing",
-        "relationship": "missing",
-        "receipt_reconciliation": "missing"
+        "authority": "declared",
+        "context": "declared",
+        "meter": "not_required",
+        "intake": "not_required",
+        "execution": "declared",
+        "relationship": "not_required",
+        "receipt_reconciliation": "declared"
       },
-      "gaps": [
-        "product_contract_missing"
-      ],
-      "next_contract_actions": [
-        "declare_authority_contract",
-        "declare_context_contract",
-        "declare_meter_contract_or_not_required",
-        "declare_intake_contract_or_not_required",
-        "declare_execution_contract",
-        "declare_relationship_contract_or_not_required",
-        "declare_receipt_reconciliation_contract"
-      ],
-      "runtime_verified": false
+      "gaps": [],
+      "next_contract_actions": [],
+      "runtime_verified": false,
+      "owner": "systemia",
+      "lane_evidence": {
+        "authority": [
+          {
+            "ref": "registry/eventwave/README.md",
+            "present": true
+          },
+          {
+            "ref": "registry/eventwave/llms.txt",
+            "present": true
+          },
+          {
+            "ref": "mcp-registry/eventwave.json",
+            "present": true
+          }
+        ],
+        "context": [
+          {
+            "ref": "registry/eventwave/README.md",
+            "present": true
+          },
+          {
+            "ref": "systemia/context-fabric/fabric.mjs",
+            "present": true
+          }
+        ],
+        "meter": [],
+        "intake": [],
+        "execution": [
+          {
+            "ref": "registry/eventwave/README.md",
+            "present": true
+          },
+          {
+            "ref": "registry/eventwave/llms.txt",
+            "present": true
+          },
+          {
+            "ref": "mcp-registry/eventwave.json",
+            "present": true
+          }
+        ],
+        "relationship": [],
+        "receipt_reconciliation": [
+          {
+            "ref": "systemia/context-fabric/fabric.mjs",
+            "present": true
+          },
+          {
+            "ref": "registry/eventwave/README.md",
+            "present": true
+          }
+        ]
+      },
+      "truth_boundary": "Complete declaration and source evidence do not prove live runtime integration. Runtime verification must be produced by product-specific end-to-end receipts."
     },
     {
       "product_key": "evercraft-circles",
