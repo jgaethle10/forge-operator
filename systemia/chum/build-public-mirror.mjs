@@ -75,6 +75,15 @@ function buyerFrontageUrlFor(product) {
   return new URL(relative, origin).toString();
 }
 
+function offerFallbackUrl(offer) {
+  if (offer?.commercial_state !== 'sell_now') return null;
+  const publicId = String(offer?.public_id || '').trim();
+  if (!publicId) return null;
+  return '/buy/' + encodeURIComponent(publicId)
+    + '?src=chum&campaign=machine-catalog&ec_surface=machine_catalog&ec_public_id='
+    + encodeURIComponent(publicId);
+}
+
 function registryNameFor(registry, conf) {
   const publicationState = String(conf?.mcp_registry?.publication_state || '').toLowerCase();
   if (conf?.mcp_registry?.name) {
@@ -759,7 +768,7 @@ for (const state of commercialStateOrder) {
       `Problem: ${offer.problem || ''}`,
       `Machine state: ${offer.machine_state || ''}`,
       `Pricing: ${offer.pricing || ''}`,
-      `Public URL: ${safePublicUrl(offer.public_url, MACHINE_COMMERCE_GATEWAY + '?view=service&public_id=' + encodeURIComponent(String(offer.public_id || ''))) || ''}`,
+      `Public URL: ${safePublicUrl(offer.public_url, offerFallbackUrl(offer)) || ''}`,
       `Human UI required: ${Boolean(offer.human_ui_required)}`,
       `Confirmation: ${offer.confirmation || ''}`,
       `Payment authority: ${offer.payment_authority || ''}`,
