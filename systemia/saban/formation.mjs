@@ -181,6 +181,32 @@ export function planFormation({ request, rootDir = process.cwd() }) {
   };
 }
 
+export function nodePoolOptionsForExecution(node, env = process.env) {
+  const execution=node?.execution||{};
+  const rawAcquisition=execution.acquisition;
+  const acquisition=rawAcquisition===false
+    ? {enabled:false}
+    : {
+        enabled:rawAcquisition?.enabled!==false,
+        auto_discover_markets:rawAcquisition?.auto_discover_markets!==false,
+        public_market_discovery:rawAcquisition?.public_market_discovery===true,
+        ...(rawAcquisition&&typeof rawAcquisition==='object'?rawAcquisition:{}),
+      };
+
+  return {
+    endpoints:execution.endpoints||[],
+    discover:execution.discover!==false,
+    discoveryOptions:execution.discovery_options||{},
+    allocatorToken:env.EVERCRAFT_ALLOCATOR_TOKEN||'',
+    maxAttempts:execution.max_attempts,
+    maxConcurrencyPerNode:execution.max_concurrency_per_node,
+    timeoutMs:execution.timeout_ms,
+    assignmentTimeoutMs:execution.assignment_timeout_ms,
+    requestedTtlMs:execution.requested_ttl_ms,
+    acquisition,
+  };
+}
+
 export async function executeFormation({ formation, rootDir = process.cwd() }) {
   const receipts = [];
   const receiptByNode = new Map();
@@ -224,17 +250,7 @@ export async function executeFormation({ formation, rootDir = process.cwd() }) {
             workItems: node.work_items,
             rootDir,
             reconcile: node.reconcile,
-            nodePool: {
-              endpoints: node.execution?.endpoints || [],
-              discover: node.execution?.discover === true,
-              discoveryOptions: node.execution?.discovery_options || {},
-              allocatorToken: process.env.EVERCRAFT_ALLOCATOR_TOKEN || '',
-              maxAttempts: node.execution?.max_attempts,
-              maxConcurrencyPerNode: node.execution?.max_concurrency_per_node,
-              timeoutMs: node.execution?.timeout_ms,
-              assignmentTimeoutMs: node.execution?.assignment_timeout_ms,
-              requestedTtlMs: node.execution?.requested_ttl_ms
-            }
+            nodePool: nodePoolOptionsForExecution(node)
           })
         : await executeMultiplicationPlan({
             contract: node.contract,
