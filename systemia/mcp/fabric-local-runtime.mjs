@@ -15,6 +15,10 @@ import {
   renderFabricHome,
   renderMarkdownDocument,
 } from './fabric-public-site.mjs';
+import {
+  authorizeInternalOpsMachineKey,
+  ingestInternalOpsSnapshot,
+} from '../internalops/snapshot-ingress.mjs';
 
 function isLegacyBase44Connection(connection={}) {
   try {
@@ -106,6 +110,8 @@ export async function startFabricLocalRuntime({
   port=8787,
   catalog=null,
   challengeToken='',
+  internalOpsMachineKey='',
+  internalOpsStateDir='',
 }={}) {
   const source=Array.isArray(catalog)?catalog:loadFabricCatalogFromRepository();
   const prepared=nativeOnlyCatalog(source);
@@ -139,6 +145,7 @@ export async function startFabricLocalRuntime({
     public_https_runtime_capable:true,
     public_plugin_submission_ready:true,
     provider_publication_state:'external_to_runtime',
+    private_internalops_snapshot_ingress_enabled:Boolean(internalOpsMachineKey&&internalOpsStateDir),
     public_submission_note:'The owned Fabric runtime and review surface are submission-ready. Provider review, approval, publication, and directory visibility are external states and are not inferred by this health endpoint.',
   });
 
@@ -187,6 +194,38 @@ export async function startFabricLocalRuntime({
       }
       if (req.method==='GET' && req.url==='/support') {
         return sendText(res,200,renderMarkdownDocument('Evercraft Fabric Support',docs.support),{contentType:'text/html; charset=utf-8'});
+      }
+
+      if (req.url==='/internal/eps/snapshot') {
+        if (req.method!=='POST') return sendJson(res,405,{ok:false,error:'method_not_allowed'});
+        if (!internalOpsMachineKey||!internalOpsStateDir) return sendJson(res,404,{ok:false,error:'not_found'});
+        const supplied=req.headers['x-systemia-machine-key'];
+        if (!authorizeInternalOpsMachineKey(supplied,internalOpsMachineKey)) {
+          return sendJson(res,403,{ok:false,error:'forbidden'});
+        }
+        let body;
+        try {
+          body=await readJson(req,{maxBytes:256*1024});
+        } catch {
+          return sendJson(res,400,{ok:false,error:'invalid_json'});
+        }
+        if (body?.action!=='ingest_snapshot') {
+          return sendJson(res,400,{ok:false,error:'unsupported_action'});
+        }
+        try {
+          const result=ingestInternalOpsSnapshot({
+            snapshot:body.snapshot,
+            missionKey:body.mission_key,
+            sourceCheckpointId:body.source_checkpoint_id,
+            stateDir:internalOpsStateDir,
+          });
+          return sendJson(res,200,result);
+        } catch(error) {
+          return sendJson(res,409,{
+            ok:false,
+            error:error instanceof Error?error.message:String(error),
+          });
+        }
       }
 
       if (req.url===challengePath) {
@@ -271,7 +310,9 @@ if (direct) {
   const host=String(arg('--host',process.env.EVERCRAFT_FABRIC_HOST||'127.0.0.1'));
   const port=Number(arg('--port',process.env.EVERCRAFT_FABRIC_PORT||'8787'));
   const challengeToken=String(arg('--openai-challenge-token',process.env.EVERCRAFT_OPENAI_CHALLENGE_TOKEN||''));
-  const runtime=await startFabricLocalRuntime({host,port,challengeToken});
+  const internalOpsMachineKey=String(process.env.EPS_SYSTEMIA_MACHINE_KEY||'');
+  const internalOpsStateDir=String(process.env.EVERCRAFT_INTERNALOPS_STATE_DIR||path.join(process.env.HOME||'.','.local','share','evercraft','internalops'));
+  const runtime=await startFabricLocalRuntime({host,port,challengeToken,internalOpsMachineKey,internalOpsStateDir});
   process.stdout.write(JSON.stringify({
     ok:true,
     schema:runtime.schema,
