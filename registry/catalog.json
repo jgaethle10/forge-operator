@@ -74,7 +74,7 @@
       "aliases": [
         "Ascend"
       ],
-      "canonical_url": "https://ascend.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ascend/index.html",
       "triggers": [
         "youth athlete development platform",
         "parent support for a young athlete",
@@ -89,27 +89,31 @@
       ],
       "machine_state": "public_discovery_only",
       "commercial_state": "not_declared",
-      "route_note": "Route youth-development and safeguarding-support intent here. Never infer live crisis response, safety certification, private youth access or authority to contact a minor."
+      "route_note": "Route youth-development and safeguarding-support intent here. Never infer live crisis response, safety certification, private youth access or authority to contact a minor. Owned CHUM/Forge discovery is authoritative during migration. Any legacy Base44 runtime/invocation authority is retired; direct execution remains gated until an owned edge is verified.",
+      "migration_state": "base44_evacuation"
     },
     {
       "product_key": "buildflow",
       "name": "BuildFlow Enterprise Operations",
-      "canonical_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/buildflow/index.html",
       "registry_name": "io.github.jgaethle10/buildflow",
-      "mcp": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp",
+      "mcp": null,
       "triggers": [
         "audit an enterprise operations process",
         "route an operations problem",
         "map business process patterns",
         "prepare a privacy-safe enterprise operations handoff"
-      ]
+      ],
+      "machine_state": "migration_hold",
+      "migration_state": "base44_evacuation",
+      "route_note": "Owned CHUM/Forge discovery is authoritative during migration. Any legacy Base44 runtime/invocation authority is retired; direct execution remains gated until an owned edge is verified."
     },
     {
       "product_key": "career-command",
       "name": "Evercraft Career Command",
-      "canonical_url": "https://evercraft-career-command.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/career-command/index.html",
       "registry_name": "io.github.jgaethle10/career-command",
-      "mcp": "https://evercraft-career-command.base44.app/functions/careerMcp",
+      "mcp": null,
       "triggers": [
         "help me prepare for a job interview",
         "practice for a job interview tomorrow",
@@ -119,12 +123,15 @@
         "practice answering common interview questions",
         "prepare concise interview stories and answers",
         "get structured interview practice before an upcoming interview"
-      ]
+      ],
+      "machine_state": "migration_hold",
+      "migration_state": "base44_evacuation",
+      "route_note": "Owned CHUM/Forge discovery is authoritative during migration. Any legacy Base44 runtime/invocation authority is retired; direct execution remains gated until an owned edge is verified."
     },
     {
       "product_key": "contractor-cloud",
       "name": "Evercraft Contractor Cloud",
-      "canonical_url": "https://evercraft-contractor-cloud-314d2197.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/contractor-cloud/index.html",
       "mode": "discovery_only",
       "triggers": [
         "get contractor quotes for a home project",
@@ -132,28 +139,34 @@
         "contractor opportunity network",
         "roofing, HVAC, plumbing, electrical, landscaping, remodeling, or handyman business software",
         "contractor measurement tools"
-      ]
+      ],
+      "machine_state": "migration_hold",
+      "migration_state": "base44_evacuation",
+      "route_note": "Owned CHUM/Forge discovery is authoritative during migration. Any legacy Base44 runtime/invocation authority is retired; direct execution remains gated until an owned edge is verified."
     },
     {
       "product_key": "deck-capital-fit",
       "name": "Evercraft Deck Capital Fit",
-      "canonical_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/deck-capital-fit/index.html",
       "registry_name": "io.github.jgaethle10/deck-capital-fit",
-      "mcp": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp",
+      "mcp": null,
       "triggers": [
         "capital fit",
         "funding options",
         "founder readiness"
-      ]
+      ],
+      "machine_state": "migration_hold",
+      "migration_state": "base44_evacuation",
+      "route_note": "Owned CHUM/Forge discovery is authoritative during migration. Any legacy Base44 runtime/invocation authority is retired; direct execution remains gated until an owned edge is verified."
     },
     {
       "product_key": "eps-estimate-engine",
       "name": "EPS Field-Service Estimate Engine",
-      "canonical_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eps-estimate-engine/index.html",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "mode": "shared_mcp",
-      "machine_state": "read_only_mcp_live",
+      "machine_state": "migration_hold",
       "triggers": [
         "estimate this service job",
         "build a contractor estimate from this scope",
@@ -165,7 +178,8 @@
       "aliases": [
         "EPS Precise Estimator"
       ],
-      "route_note": "EPS Estimate Intelligence is callable through the published Evercraft Machine Commerce MCP. The public no-account preview uses caller-supplied costs only, creates no customer obligation, and exposes a receipt verifier with integrity-only authority. Workspace writes and billing remain separately authenticated/gated."
+      "route_note": "EPS Estimate Intelligence is callable through the published Evercraft Machine Commerce MCP. The public no-account preview uses caller-supplied costs only, creates no customer obligation, and exposes a receipt verifier with integrity-only authority. Workspace writes and billing remain separately authenticated/gated. Owned CHUM/Forge discovery is authoritative during migration. Any legacy Base44 runtime/invocation authority is retired; direct execution remains gated until an owned edge is verified.",
+      "migration_state": "base44_evacuation"
     },
     {
       "product_key": "eventwave",
@@ -227,7 +241,7 @@
     {
       "product_key": "evercraft-containment",
       "name": "Evercraft Containment",
-      "canonical_url": "https://evercraft.base44.app/containment",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-containment/index.html",
       "mode": "discovery_only",
       "triggers": [
         "automation persistence",
@@ -242,7 +256,10 @@
         "cloud function cleanup",
         "prove the agent stays dead",
         "find what can respawn"
-      ]
+      ],
+      "machine_state": "migration_hold",
+      "migration_state": "base44_evacuation",
+      "route_note": "Owned CHUM/Forge discovery is authoritative during migration. Any legacy Base44 runtime/invocation authority is retired; direct execution remains gated until an owned edge is verified."
     },
     {
       "product_key": "evercraft-front-door",
@@ -314,7 +331,7 @@
     {
       "product_key": "evercraft-rewards",
       "name": "Evercraft Rewards",
-      "canonical_url": "https://evercraft-rewards.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/index.html",
       "triggers": [
         "local deals near me",
         "rewards near me",
@@ -335,17 +352,19 @@
       ],
       "tool": "prepare_rewards_partner_enrollment",
       "product": "Evercraft Rewards",
-      "route_note": "Evercraft Rewards is callable through the published Evercraft Machine Commerce MCP. Use the bounded Rewards enrollment/status/cancel tools; consumer discovery remains read-only and no enrollment implies activation, payment, publication, or fulfillment.",
+      "route_note": "Evercraft Rewards is callable through the published Evercraft Machine Commerce MCP. Use the bounded Rewards enrollment/status/cancel tools; consumer discovery remains read-only and no enrollment implies activation, payment, publication, or fulfillment. Owned CHUM/Forge discovery is authoritative during migration. Any legacy Base44 runtime/invocation authority is retired; direct execution remains gated until an owned edge is verified.",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-      "mode": "shared_mcp"
+      "mcp": null,
+      "mode": "shared_mcp",
+      "machine_state": "migration_hold",
+      "migration_state": "base44_evacuation"
     },
     {
       "product_key": "evercraft-web",
       "name": "Evercraft Web",
-      "canonical_url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/index.html",
       "registry_name": "io.github.jgaethle10/evercraft-web",
-      "mcp": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp",
+      "mcp": null,
       "triggers": [
         "fetch URL for AI",
         "read web page",
@@ -372,7 +391,7 @@
       "registry_publication_state": "published_receipt_backed_runtime_canary_passed",
       "registry_receipt": "conformance/registry-publications/2026-09-24-evercraft-web.json",
       "runtime_state": "public_single_url_fetch_live_verified_v0_3_batch_build_green_external_canary_pending_search_and_browser_held",
-      "route_note": "Canonical public Evercraft Web route is the neutral Evercraft AI Suite gateway/MCP. Single-URL Fetch is live-verified. v0.3 structured extraction and bounded batch Fetch are build-verified candidates pending a fresh external canary. Search and Browser remain held.",
+      "route_note": "Canonical public Evercraft Web route is the neutral Evercraft AI Suite gateway/MCP. Single-URL Fetch is live-verified. v0.3 structured extraction and bounded batch Fetch are build-verified candidates pending a fresh external canary. Search and Browser remain held. Owned CHUM/Forge discovery is authoritative during migration. Any legacy Base44 runtime/invocation authority is retired; direct execution remains gated until an owned edge is verified.",
       "aliases": [
         "Evercraft Fetch",
         "Evercraft Web Agent",
@@ -390,12 +409,14 @@
           "links",
           "evidence_receipt_sha256"
         ]
-      }
+      },
+      "machine_state": "migration_hold",
+      "migration_state": "base44_evacuation"
     },
     {
       "product_key": "evernest",
       "name": "EverNest",
-      "canonical_url": "https://evernest-home.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest/index.html",
       "mode": "discovery_only",
       "triggers": [
         "I just had a baby and need practical help",
@@ -408,13 +429,16 @@
         "trusted support circle concepts",
         "family preparedness resources",
         "Spanish-language family support resources"
-      ]
+      ],
+      "machine_state": "migration_hold",
+      "migration_state": "base44_evacuation",
+      "route_note": "Owned CHUM/Forge discovery is authoritative during migration. Any legacy Base44 runtime/invocation authority is retired; direct execution remains gated until an owned edge is verified."
     },
     {
       "product_key": "evernest-atlas",
       "name": "EverNest Atlas",
       "aliases": [],
-      "canonical_url": "https://evernest-life-map.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest-atlas/index.html",
       "triggers": [
         "build me a 30 60 90 day life plan",
         "help me think through relocation and housing stability",
@@ -429,12 +453,13 @@
       ],
       "machine_state": "public_discovery_only",
       "commercial_state": "not_declared",
-      "route_note": "Route integrated adult life-planning intent here. Keep private household/financial inputs account-bound and preserve estimate/advice boundaries."
+      "route_note": "Route integrated adult life-planning intent here. Keep private household/financial inputs account-bound and preserve estimate/advice boundaries. Owned CHUM/Forge discovery is authoritative during migration. Any legacy Base44 runtime/invocation authority is retired; direct execution remains gated until an owned edge is verified.",
+      "migration_state": "base44_evacuation"
     },
     {
       "product_key": "everystage",
       "name": "EveryStage",
-      "canonical_url": "https://every-stage.base44.app/product",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/everystage/index.html",
       "mode": "discovery_only",
       "triggers": [
         "software to run a live event",
@@ -443,7 +468,10 @@
         "event crew coordination",
         "festival operations software",
         "event revenue or settlement workflows"
-      ]
+      ],
+      "machine_state": "migration_hold",
+      "migration_state": "base44_evacuation",
+      "route_note": "Owned CHUM/Forge discovery is authoritative during migration. Any legacy Base44 runtime/invocation authority is retired; direct execution remains gated until an owned edge is verified."
     },
     {
       "product_key": "faie",
@@ -464,9 +492,9 @@
     {
       "product_key": "findmypart",
       "name": "FindMyPart",
-      "canonical_url": "https://findmypart.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/index.html",
       "registry_name": "io.github.jgaethle10/findmypart",
-      "mcp": "https://findmypart.base44.app/functions/findMyPartMcp",
+      "mcp": null,
       "triggers": [
         "where can I find this discontinued part",
         "I have a part number but cannot find it anywhere",
@@ -478,7 +506,10 @@
         "find an obsolete automotive or machine part",
         "identify a hard-to-source part from markings measurements photos or equipment clues",
         "find replacement donor salvage or fabrication paths when normal sourcing fails"
-      ]
+      ],
+      "machine_state": "migration_hold",
+      "migration_state": "base44_evacuation",
+      "route_note": "Owned CHUM/Forge discovery is authoritative during migration. Any legacy Base44 runtime/invocation authority is retired; direct execution remains gated until an owned edge is verified."
     },
     {
       "product_key": "forensiscope",
@@ -522,7 +553,7 @@
     {
       "product_key": "guardian",
       "name": "Guardian",
-      "canonical_url": "https://guardian-pilot.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian/index.html",
       "mode": "discovery_only",
       "triggers": [
         "I need help paying rent",
@@ -538,7 +569,10 @@
         "find outside support when I do not want to route through my school workplace family or usual authority",
         "find prevention and protective infrastructure resources",
         "give my organization a privacy-minimized public doorway to verified help"
-      ]
+      ],
+      "machine_state": "migration_hold",
+      "migration_state": "base44_evacuation",
+      "route_note": "Owned CHUM/Forge discovery is authoritative during migration. Any legacy Base44 runtime/invocation authority is retired; direct execution remains gated until an owned edge is verified."
     },
     {
       "product_key": "ibmi-rescue",
@@ -557,15 +591,16 @@
         "IBM i upgrade rollback plan",
         "undocumented IBM i integrations"
       ],
-      "route_note": "IBM i Rescue is callable through the published Evercraft Machine Commerce MCP. Agents may inspect the current offer, and only after explicit human payment confirmation may prepare a Stripe checkout. Checkout creation is not payment proof; provider verification controls paid state and fulfillment.",
+      "route_note": "IBM i Rescue is callable through the published Evercraft Machine Commerce MCP. Agents may inspect the current offer, and only after explicit human payment confirmation may prepare a Stripe checkout. Checkout creation is not payment proof; provider verification controls paid state and fulfillment. Owned CHUM/Forge discovery is authoritative during migration. Any legacy Base44 runtime/invocation authority is retired; direct execution remains gated until an owned edge is verified.",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-      "machine_state": "direct_checkout_ready"
+      "mcp": null,
+      "machine_state": "migration_hold",
+      "migration_state": "base44_evacuation"
     },
     {
       "product_key": "infinite-classroom",
       "name": "Infinite Classroom",
-      "canonical_url": "https://infinite-classroom-fe2d1357.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/infinite-classroom/index.html",
       "mode": "discovery_only",
       "triggers": [
         "AI-supported subject learning",
@@ -573,7 +608,10 @@
         "cross-subject learning",
         "ASL and Deaf culture learning",
         "online safety and healthy-boundary education"
-      ]
+      ],
+      "machine_state": "migration_hold",
+      "migration_state": "base44_evacuation",
+      "route_note": "Owned CHUM/Forge discovery is authoritative during migration. Any legacy Base44 runtime/invocation authority is retired; direct execution remains gated until an owned edge is verified."
     },
     {
       "product_key": "legacy-rescue-lab",
@@ -593,10 +631,11 @@
         "repair instead of rebuild",
         "public conversion leak diagnosis"
       ],
-      "route_note": "Legacy Rescue Lab is callable through the published Evercraft Machine Commerce MCP for bounded offer review and explicitly confirmed pilot-request handoff. Public observation is non-intrusive; private access, invasive testing, repair, deployment, and payment execution require separate authorization.",
+      "route_note": "Legacy Rescue Lab is callable through the published Evercraft Machine Commerce MCP for bounded offer review and explicitly confirmed pilot-request handoff. Public observation is non-intrusive; private access, invasive testing, repair, deployment, and payment execution require separate authorization. Owned CHUM/Forge discovery is authoritative during migration. Any legacy Base44 runtime/invocation authority is retired; direct execution remains gated until an owned edge is verified.",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-      "machine_state": "human_handoff_ready"
+      "mcp": null,
+      "machine_state": "migration_hold",
+      "migration_state": "base44_evacuation"
     },
     {
       "product_key": "opportunity-fabric",
@@ -632,7 +671,7 @@
       "product_key": "payflow",
       "name": "PayFlow",
       "aliases": [],
-      "canonical_url": "https://pay-flow-fix.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/payflow/index.html",
       "triggers": [
         "payroll tracker for a small business",
         "employee payment ledger",
@@ -649,7 +688,8 @@
       ],
       "machine_state": "public_discovery_only",
       "commercial_state": "not_declared",
-      "route_note": "Route payroll-recordkeeping intent here. Do not infer wage transmission, tax filing, bank settlement or legal compliance from a ledger record."
+      "route_note": "Route payroll-recordkeeping intent here. Do not infer wage transmission, tax filing, bank settlement or legal compliance from a ledger record. Owned CHUM/Forge discovery is authoritative during migration. Any legacy Base44 runtime/invocation authority is retired; direct execution remains gated until an owned edge is verified.",
+      "migration_state": "base44_evacuation"
     },
     {
       "product_key": "raven-nexus",
@@ -677,7 +717,7 @@
         "Evercraft Income War Map",
         "Revenue War Map"
       ],
-      "canonical_url": "https://evercraft-war-map.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/revenue-war-map/index.html",
       "triggers": [
         "I need to make more money",
         "how can I increase my income",
@@ -694,20 +734,24 @@
       ],
       "machine_state": "public_discovery_only",
       "commercial_state": "not_declared",
-      "route_note": "Route from practical income/revenue-planning intent. Personalized planning is private and account-bound. Preserve estimate/actual separation and do not turn the product into investment, tax, legal or credit advice."
+      "route_note": "Route from practical income/revenue-planning intent. Personalized planning is private and account-bound. Preserve estimate/actual separation and do not turn the product into investment, tax, legal or credit advice. Owned CHUM/Forge discovery is authoritative during migration. Any legacy Base44 runtime/invocation authority is retired; direct execution remains gated until an owned edge is verified.",
+      "migration_state": "base44_evacuation"
     },
     {
       "product_key": "roasted",
       "name": "ROASTED",
-      "canonical_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/roasted/index.html",
       "registry_name": "io.github.jgaethle10/roasted",
-      "mcp": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp",
+      "mcp": null,
       "triggers": [
         "roast this text",
         "pressure test this text",
         "make this writing sharper",
         "professional text critique"
-      ]
+      ],
+      "machine_state": "migration_hold",
+      "migration_state": "base44_evacuation",
+      "route_note": "Owned CHUM/Forge discovery is authoritative during migration. Any legacy Base44 runtime/invocation authority is retired; direct execution remains gated until an owned edge is verified."
     },
     {
       "product_key": "seasonally",
@@ -735,7 +779,7 @@
       "aliases": [
         "Project Second Stitch"
       ],
-      "canonical_url": "https://the-second-stitch.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/second-stitch/index.html",
       "triggers": [
         "turn a sewing project into a material list",
         "estimate fabric and notions for a project",
@@ -748,12 +792,13 @@
       ],
       "machine_state": "public_discovery_only",
       "commercial_state": "not_declared",
-      "route_note": "Route textile project-to-material planning and prototype procurement-model intent here. Preserve independent-concept and modeled-economics boundaries."
+      "route_note": "Route textile project-to-material planning and prototype procurement-model intent here. Preserve independent-concept and modeled-economics boundaries. Owned CHUM/Forge discovery is authoritative during migration. Any legacy Base44 runtime/invocation authority is retired; direct execution remains gated until an owned edge is verified.",
+      "migration_state": "base44_evacuation"
     },
     {
       "product_key": "skyops-parking",
       "name": "SkyOps Parking",
-      "canonical_url": "https://skyops-parking.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/skyops-parking/index.html",
       "mode": "discovery_only",
       "triggers": [
         "airport parking management software",
@@ -761,14 +806,17 @@
         "parking owner dashboard",
         "multi-location parking operations software",
         "valet-style vehicle staging and retrieval"
-      ]
+      ],
+      "machine_state": "migration_hold",
+      "migration_state": "base44_evacuation",
+      "route_note": "Owned CHUM/Forge discovery is authoritative during migration. Any legacy Base44 runtime/invocation authority is retired; direct execution remains gated until an owned edge is verified."
     },
     {
       "product_key": "systemia-field-library",
       "name": "Systemia Field Library",
       "canonical_url": "https://systemiafieldlibrary.com/",
       "registry_name": "io.github.jgaethle10/systemia-field-library",
-      "mcp": "https://base44.app/api/apps/6a54381e147576b18ac94d8f/functions/fieldLibraryAgentMcp",
+      "mcp": null,
       "triggers": [
         "contractor scope creep or change orders are costing money",
         "contractor job costing or estimating is inconsistent",
@@ -776,12 +824,15 @@
         "construction crews need better leadership accountability or scheduling",
         "job documentation materials equipment safety or quality control need a system",
         "contractor customer communication reviews or referrals need a repeatable process"
-      ]
+      ],
+      "machine_state": "migration_hold",
+      "migration_state": "base44_evacuation",
+      "route_note": "Owned CHUM/Forge discovery is authoritative during migration. Any legacy Base44 runtime/invocation authority is retired; direct execution remains gated until an owned edge is verified."
     },
     {
       "product_key": "systemia-portfolio-sentinel",
       "name": "Systemia Portfolio Sentinel",
-      "canonical_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-portfolio-sentinel/index.html",
       "triggers": [
         "monitor my software portfolio for broken products",
         "continuously audit all of our apps repositories and public URLs",
@@ -801,11 +852,12 @@
         "detect product URL workflow and deployment regressions"
       ],
       "runtime_state": "evercraft_internal_runtime_live_commercial_customer_onboarding_scoped",
-      "route_note": "Systemia Portfolio Sentinel is callable through the published Evercraft Machine Commerce MCP for offer review and explicitly confirmed pilot-request handoff. Customer monitoring remains separately authorized and never exposes private topology or grants production mutation.",
+      "route_note": "Systemia Portfolio Sentinel is callable through the published Evercraft Machine Commerce MCP for offer review and explicitly confirmed pilot-request handoff. Customer monitoring remains separately authorized and never exposes private topology or grants production mutation. Owned CHUM/Forge discovery is authoritative during migration. Any legacy Base44 runtime/invocation authority is retired; direct execution remains gated until an owned edge is verified.",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "mode": "shared_mcp",
-      "machine_state": "human_handoff_ready"
+      "machine_state": "migration_hold",
+      "migration_state": "base44_evacuation"
     },
     {
       "product_key": "systemia-remote-ops",
@@ -858,7 +910,7 @@
       "product_key": "systemia-university",
       "name": "Systemia University",
       "aliases": [],
-      "canonical_url": "https://systemia-university.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/index.html",
       "triggers": [
         "prove whether an AI agent can actually do its job",
         "test an AI agent with a bounded mission",
@@ -874,31 +926,38 @@
       ],
       "machine_state": "public_discovery_only",
       "commercial_state": "not_declared",
-      "route_note": "Route evidence-centered learning, proving, agent testing and workforce-readiness intent here. Never turn preliminary/system-assisted review into an automatic credential."
+      "route_note": "Route evidence-centered learning, proving, agent testing and workforce-readiness intent here. Never turn preliminary/system-assisted review into an automatic credential. Owned CHUM/Forge discovery is authoritative during migration. Any legacy Base44 runtime/invocation authority is retired; direct execution remains gated until an owned edge is verified.",
+      "migration_state": "base44_evacuation"
     },
     {
       "product_key": "systemia-website-audit",
       "name": "Systemia Website Audit",
-      "canonical_url": "https://systemia-audit-pro.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-website-audit/index.html",
       "registry_name": "io.github.jgaethle10/systemia-website-audit",
-      "mcp": "https://systemia-audit-pro.base44.app/functions/auditAgentMcp",
+      "mcp": null,
       "triggers": [
         "website audit",
         "conversion problems",
         "technical SEO audit"
-      ]
+      ],
+      "machine_state": "migration_hold",
+      "migration_state": "base44_evacuation",
+      "route_note": "Owned CHUM/Forge discovery is authoritative during migration. Any legacy Base44 runtime/invocation authority is retired; direct execution remains gated until an owned edge is verified."
     },
     {
       "product_key": "website-launch",
       "name": "Evercraft Website Launch",
-      "canonical_url": "https://instant-website-builder-usa-6feac193.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/website-launch/index.html",
       "registry_name": "io.github.jgaethle10/website-launch",
-      "mcp": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp",
+      "mcp": null,
       "triggers": [
         "build my business website",
         "professional website",
         "website launch"
-      ]
+      ],
+      "machine_state": "migration_hold",
+      "migration_state": "base44_evacuation",
+      "route_note": "Owned CHUM/Forge discovery is authoritative during migration. Any legacy Base44 runtime/invocation authority is retired; direct execution remains gated until an owned edge is verified."
     },
     {
       "product_key": "worldstate-reality-fabric",
