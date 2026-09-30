@@ -124,7 +124,6 @@ export class RivetReportEdgeController {
     rollbackTarget='systemia:rivet-report-runtime-previous',
   }={}){
     if(!/^[a-f0-9]{40}$/i.test(String(releaseRef||''))) throw new Error('release_ref_must_be_immutable_sha');
-    if(!capacityEndpoint) throw new Error('capacity_endpoint_required');
     const edge=this.yard.deploymentStatus(this.edgeDeploymentId);
     if(!edge||edge.state!=='ready') throw new Error('public_edge_not_ready');
     this.requestedHostname=String(requestedHostname||'rivet-reports');
@@ -133,19 +132,27 @@ export class RivetReportEdgeController {
     let record=null;
     let broker=null;
     try{
-      record=await this.yard.deployRelease({
+      const deployArgs={
         deploymentId:this.rivetDeploymentId,
         releaseRef,
         workloadClass:'systemia.rivet-report-runtime.v1',
-        capacityEndpoint,
-        allocatorToken,
         input:{
           ...(stateRoot?{state_root:String(stateRoot)}:{}),
           ...(sourceUrl?{source_url:String(sourceUrl)}:{}),
         },
         rollbackTarget:String(rollbackTarget||'systemia:rivet-report-runtime-previous'),
         leaseTtlMs:this.leaseTtlMs,
-      });
+      };
+      record=capacityEndpoint
+        ? await this.yard.deployRelease({
+            ...deployArgs,
+            capacityEndpoint,
+            allocatorToken,
+          })
+        : await this.yard.deploySiblingRelease({
+            sourceDeploymentId:this.edgeDeploymentId,
+            ...deployArgs,
+          });
       if(record.receipt?.capacity_node_id!==edge.receipt?.capacity_node_id){
         throw new Error('edge_and_rivet_must_share_compute_node_for_loopback_upstream');
       }
@@ -173,6 +180,8 @@ export class RivetReportEdgeController {
         route_verified:this.binding.route_verified===true,
         origin:this.binding.origin,
         authenticated_report_api:true,
+        capacity_authority_inherited:!capacityEndpoint,
+        capacity_authority_exposed:false,
         founder_login_required:false,
       });
     }catch(error){
