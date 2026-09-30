@@ -1,0 +1,24 @@
+name: Control Room SNI Probe
+on:
+  push:
+    branches: [fabric-public-probe-20260930]
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Probe same owned edge with Control Room SNI
+        shell: bash
+        run: |
+          set -euo pipefail
+          HOST='evercraft-control.systemiacommandcenters.com'
+          IP='50.46.190.39'
+          for route in /health /v1/browser/capabilities; do
+            echo "=== $route ==="
+            code="$(curl -sS --resolve "$HOST:443:$IP" -o /tmp/body -w '%{http_code}' --max-time 20 "https://$HOST$route" || true)"
+            echo "http=$code"
+            head -c 4000 /tmp/body 2>/dev/null || true
+            echo
+          done
