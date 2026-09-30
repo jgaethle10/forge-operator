@@ -21,6 +21,7 @@ async function start(options){
   };
 }
 
+const OWNED_SOURCE_URL='http://127.0.0.1:8793/v1/site-snapshot';
 const COVERAGE_KEYS=['geocoding','charging_inventory','traffic','traffic_temporal','utility_service_area','utility_tariff','incentives','parcel_planning','local_ev_stock','observed_sessions','freight','dwell_context','deep_market_evidence','provenance'];
 const fakeGenerate=async({address,systemiaMachineKey,onProgress})=>{
   assert.equal(systemiaMachineKey,'machine-proof');
@@ -35,7 +36,7 @@ const fakeGenerate=async({address,systemiaMachineKey,onProgress})=>{
 };
 
 {
-  const runtime=await start({gatewayToken:'',systemiaMachineKey:'machine-proof',generate:fakeGenerate});
+  const runtime=await start({gatewayToken:'',systemiaMachineKey:'machine-proof',sourceUrl:OWNED_SOURCE_URL,generate:fakeGenerate});
   try{
     const r=await fetch(runtime.url+'/api/rivet/reports',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({address:'6405 W Chestnut Ave'})});
     assert.equal(r.status,503);
@@ -43,7 +44,7 @@ const fakeGenerate=async({address,systemiaMachineKey,onProgress})=>{
 }
 
 {
-  const runtime=await start({gatewayToken:'gateway-proof',systemiaMachineKey:'machine-proof',generate:fakeGenerate});
+  const runtime=await start({gatewayToken:'gateway-proof',systemiaMachineKey:'machine-proof',sourceUrl:OWNED_SOURCE_URL,generate:fakeGenerate});
   try{
     const health=await fetch(runtime.url+'/api/rivet/report-health').then(r=>r.json());
     assert.equal(health.ok,true);
@@ -83,7 +84,7 @@ const fakeGenerate=async({address,systemiaMachineKey,onProgress})=>{
     nearby_observed_usage:[{charging_sessions_count:42,period_start:'2026-08-01',period_granularity:'month'}]
   };
   const runtime=await start({
-    gatewayToken:'gateway-proof',systemiaMachineKey:'machine-proof',stateDir,
+    gatewayToken:'gateway-proof',systemiaMachineKey:'machine-proof',sourceUrl:OWNED_SOURCE_URL,stateDir,
     generate:(args)=>generateYardReport({...args,sourceFetch:async()=>new Response(JSON.stringify(sourceSnapshot),{status:200})})
   });
   try{

@@ -1,0 +1,609 @@
+{
+  "schema": "evercraft.systemia.base44-observed-estate.v1",
+  "observed_at": "2026-09-30T19:30:00Z",
+  "observed_minimum": 100,
+  "privacy": "Names only. Legacy app IDs, private URLs, credentials, customer data and internal topology are intentionally omitted.",
+  "rule": "Every observed app must remain represented until it has a migrate, merge, archive or retire receipt.",
+  "apps": [
+    {
+      "name": "RIVET",
+      "ordinal": 1,
+      "risk_tier": "p0",
+      "disposition": "migrate"
+    },
+    {
+      "name": "Evercraft Property Services",
+      "ordinal": 2,
+      "risk_tier": "p0",
+      "disposition": "migrate"
+    },
+    {
+      "name": "Evercraft InternalOps",
+      "ordinal": 3,
+      "risk_tier": "p0",
+      "disposition": "migrate"
+    },
+    {
+      "name": "Evercraft Clip",
+      "ordinal": 4,
+      "risk_tier": "p0",
+      "disposition": "migrate"
+    },
+    {
+      "name": "SYSTEMIA Marketing Agency",
+      "ordinal": 5,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "AliEV",
+      "ordinal": 6,
+      "risk_tier": "p0",
+      "disposition": "migrate"
+    },
+    {
+      "name": "Evercraft Journal",
+      "ordinal": 7,
+      "risk_tier": "p0",
+      "disposition": "migrate"
+    },
+    {
+      "name": "DayTradeLens",
+      "ordinal": 8,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Evercraft Transparency Atlas",
+      "ordinal": 9,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Systemia Remote Ops",
+      "ordinal": 10,
+      "risk_tier": "p0",
+      "disposition": "migrate"
+    },
+    {
+      "name": "Evercraft Emergency Command",
+      "ordinal": 11,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Evercraft AI Workforce",
+      "ordinal": 12,
+      "risk_tier": "p0",
+      "disposition": "migrate"
+    },
+    {
+      "name": "Evercraft WGS",
+      "ordinal": 13,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Energy Department",
+      "ordinal": 14,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Untitled",
+      "ordinal": 15,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Untitled",
+      "ordinal": 16,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "EPS Command Blueprint",
+      "ordinal": 17,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Yakima Event Command Center (YECC)",
+      "ordinal": 18,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "TOWI Dashboard",
+      "ordinal": 19,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Untitled",
+      "ordinal": 20,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Untitled",
+      "ordinal": 21,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Untitled",
+      "ordinal": 22,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Untitled",
+      "ordinal": 23,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Untitled",
+      "ordinal": 24,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Untitled",
+      "ordinal": 25,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Evercraft Canonical Data Foundry⁠",
+      "ordinal": 26,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Untitled",
+      "ordinal": 27,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "EverNest Atlas",
+      "ordinal": 28,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Untitled",
+      "ordinal": 29,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Coda y Codigo",
+      "ordinal": 30,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Evercraft Wildlife Atlas",
+      "ordinal": 31,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Evercraft Circles",
+      "ordinal": 32,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "The Forensic Record",
+      "ordinal": 33,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Chronosport",
+      "ordinal": 34,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Evercraft Physics Atlas",
+      "ordinal": 35,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Raven Nexus",
+      "ordinal": 36,
+      "risk_tier": "p1",
+      "disposition": "migrate"
+    },
+    {
+      "name": "Franchise Engine",
+      "ordinal": 37,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Evercraft Health Atlas",
+      "ordinal": 38,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Evercraft Cosmos Atlas",
+      "ordinal": 39,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Systemia Field Library",
+      "ordinal": 40,
+      "risk_tier": "p1",
+      "disposition": "migrate"
+    },
+    {
+      "name": "Space Dudz",
+      "ordinal": 41,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Christmas Lights USA",
+      "ordinal": 42,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Seasonally",
+      "ordinal": 43,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "LifeLog — The Everything Tracker AI",
+      "ordinal": 44,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Evercraft Docs Center",
+      "ordinal": 45,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Habitat AI",
+      "ordinal": 46,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Legacy DocuHub⁠",
+      "ordinal": 47,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Evercraft Income War Map",
+      "ordinal": 48,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "BuildFlow",
+      "ordinal": 49,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "FamilySketch",
+      "ordinal": 50,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Plasma Hearth",
+      "ordinal": 51,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "OpticVault",
+      "ordinal": 52,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Roasted",
+      "ordinal": 53,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "EPS Precise Estimator",
+      "ordinal": 54,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Instant Website Builder USA",
+      "ordinal": 55,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Evercraft",
+      "ordinal": 56,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Family Haven",
+      "ordinal": 57,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "PrintConnect",
+      "ordinal": 58,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Thoughtdrop",
+      "ordinal": 59,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Evercraft Deck Engine",
+      "ordinal": 60,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "The Second Stitch",
+      "ordinal": 61,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "CallProof Vault",
+      "ordinal": 62,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Systemia Decision Lab",
+      "ordinal": 63,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "EventWave AI",
+      "ordinal": 64,
+      "risk_tier": "p1",
+      "disposition": "migrate"
+    },
+    {
+      "name": "PayFlow",
+      "ordinal": 65,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Ascend",
+      "ordinal": 66,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "EcoLedger AI",
+      "ordinal": 67,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "GuardianLink",
+      "ordinal": 68,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "EverNest",
+      "ordinal": 69,
+      "risk_tier": "p1",
+      "disposition": "migrate"
+    },
+    {
+      "name": "EveryStage",
+      "ordinal": 70,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Global Energy Atlas",
+      "ordinal": 71,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Systemia Atlas",
+      "ordinal": 72,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "ForensiScope",
+      "ordinal": 73,
+      "risk_tier": "p1",
+      "disposition": "migrate"
+    },
+    {
+      "name": "Talent Atlas",
+      "ordinal": 74,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "GlobalStat",
+      "ordinal": 75,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "EverMaps",
+      "ordinal": 76,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "FindMyPart AI",
+      "ordinal": 77,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Evercraft Data Foundry",
+      "ordinal": 78,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Little Red Studio",
+      "ordinal": 79,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Evercraft AI Suite",
+      "ordinal": 80,
+      "risk_tier": "p1",
+      "disposition": "migrate"
+    },
+    {
+      "name": "EverNest Companion",
+      "ordinal": 81,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "TOWI AI",
+      "ordinal": 82,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "FAIE",
+      "ordinal": 83,
+      "risk_tier": "p1",
+      "disposition": "migrate"
+    },
+    {
+      "name": "Evercraft Network",
+      "ordinal": 84,
+      "risk_tier": "p1",
+      "disposition": "migrate"
+    },
+    {
+      "name": "Evercraft HQ",
+      "ordinal": 85,
+      "risk_tier": "p1",
+      "disposition": "migrate"
+    },
+    {
+      "name": "Systemia Command Center",
+      "ordinal": 86,
+      "risk_tier": "p0",
+      "disposition": "migrate"
+    },
+    {
+      "name": "Evercraft Rewards",
+      "ordinal": 87,
+      "risk_tier": "p1",
+      "disposition": "migrate"
+    },
+    {
+      "name": "Systemia Radar",
+      "ordinal": 88,
+      "risk_tier": "p1",
+      "disposition": "migrate"
+    },
+    {
+      "name": "Systemia Audit Center",
+      "ordinal": 89,
+      "risk_tier": "p0",
+      "disposition": "migrate"
+    },
+    {
+      "name": "Evercraft Career Command",
+      "ordinal": 90,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Evercraft Earth Atlas",
+      "ordinal": 91,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Insurance Market Radar",
+      "ordinal": 92,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Evercraft Routing Engine",
+      "ordinal": 93,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "ATH-Pro Omnicore",
+      "ordinal": 94,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "NetStatus",
+      "ordinal": 95,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Systemia University",
+      "ordinal": 96,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Sentinel Intelligence",
+      "ordinal": 97,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Evercraft Home",
+      "ordinal": 98,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Yakima County Sheriff",
+      "ordinal": 99,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    },
+    {
+      "name": "Vote For Roman",
+      "ordinal": 100,
+      "risk_tier": "untriaged",
+      "disposition": "triage_required"
+    }
+  ]
+}

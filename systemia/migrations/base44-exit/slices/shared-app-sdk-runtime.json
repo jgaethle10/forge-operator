@@ -1,0 +1,38 @@
+{
+  "schema": "evercraft.systemia.base44-exit-slice.v1",
+  "slice": "shared-app-sdk-runtime",
+  "wave": 1,
+  "priority": "incident_p0",
+  "status": "replacement_landed_proof_pending",
+  "problem": "P0 applications contain hundreds of generated SDK entity, auth and function calls. Rewriting call sites individually would multiply migration risk.",
+  "replacement": {
+    "runtime_owner": "evercraft",
+    "client": "systemia/app-runtime/app-client.js",
+    "gateway": "systemia/app-runtime/app-gateway.mjs",
+    "entity_store": "systemia/app-runtime/entity-store.mjs",
+    "data_backend": "sqlite_on_authorized_evercraft_runtime",
+    "auth": "adapter_boundary_fail_closed_by_default",
+    "functions": "systemia_function_router_boundary",
+    "core_integrations": "systemia/core/core-gateway.mjs",
+    "legacy_sdk_transport": false
+  },
+  "migration_mechanism": "Replace the generated SDK client seam per extracted app. Existing entity, auth, function and Core call sites remain structurally compatible while transport authority moves to Evercraft.",
+  "security": [
+    "anonymous read and write are disabled by default",
+    "production auth must pass through an admitted auth adapter",
+    "function invocation must pass through the Systemia function router",
+    "data remains on authorized Evercraft runtime capacity",
+    "migration does not copy credentials into source control"
+  ],
+  "acceptance": [
+    "app_runtime_test_pass",
+    "legacy_sdk_transport_false",
+    "auth_fail_closed_without_adapter",
+    "entity_crud_parity_verified",
+    "function_router_parity_verified",
+    "data_import_reconciled",
+    "yard_deployment_receipt",
+    "route_verification_pass",
+    "rollback_target_present"
+  ]
+}

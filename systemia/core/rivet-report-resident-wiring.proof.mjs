@@ -21,18 +21,19 @@ assert.equal(manifest.authority?.founder_login_required,false);
 assert.equal(manifest.authority?.provision_new_external_capacity,false);
 
 const runner=fs.readFileSync(rivet.executable,'utf8');
-assert.ok(runner.includes('held_waiting_for_owned_aliev_source'));
+assert.ok(runner.includes("mode:'embedded_owned'"));
 assert.ok(runner.includes('owned_aliev_source_must_not_use_base44'));
 assert.ok(runner.includes('founder_login_required:false'));
 assert.ok(runner.includes('allocator_reentry_required:false'));
 
 const compute=fs.readFileSync('systemia/compute/runtime-node.mjs','utf8');
-assert.ok(compute.includes('aliev_owned_source_url_required'));
+assert.ok(compute.includes("'systemia.aliev-source-runtime.v1'"));
+assert.ok(compute.includes('owned_source_embedded'));
 assert.ok(compute.includes('aliev_owned_source_must_not_use_base44'));
 assert.equal(
-  compute.includes("'https://base44.app/api/apps/69b9b64d86a732029ce0db81/functions/energySiteLookup'"),
+  /https?:\/\/[^"'\\s]*base44\\.app/i.test(compute),
   false,
-  'Evercraft Compute must not silently fall back to Base44 for RIVET source intelligence'
+  'Evercraft Compute must not contain a live Base44 URL for RIVET source intelligence'
 );
 
 const migration=JSON.parse(fs.readFileSync('systemia/migrations/base44-exit/slices/rivet-reporting-runtime.json','utf8'));
@@ -45,6 +46,7 @@ console.log(JSON.stringify({
   schema:'evercraft.systemia.rivet-report-resident-wiring-proof.v1',
   resident_supervision:true,
   owned_runtime_required:true,
+  embedded_owned_source_supported:true,
   silent_base44_source_fallback:false,
   public_edge_capacity_reused:true,
   founder_login_required:false,

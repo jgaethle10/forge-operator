@@ -47,7 +47,7 @@ function emit(payload){
 }
 
 function ownedAliEvSourceReady(value){
-  if(!value) return {ok:false,reason:'held_waiting_for_owned_aliev_source'};
+  if(!value) return {ok:true,reason:null,mode:'embedded_owned'};
   try{
     const parsed=new URL(value);
     if(/(^|\.)base44\.app$/i.test(parsed.hostname)){
@@ -57,7 +57,7 @@ function ownedAliEvSourceReady(value){
     if(parsed.protocol!=='https:'&&!loopback){
       return {ok:false,reason:'owned_aliev_source_must_use_https'};
     }
-    return {ok:true,reason:null};
+    return {ok:true,reason:null,mode:'explicit_owned_url'};
   }catch{
     return {ok:false,reason:'owned_aliev_source_url_invalid'};
   }
@@ -115,6 +115,7 @@ async function reconcile(){
       route_scope:result.route_scope||null,
       route_verified:result.route_verified===true,
       authenticated_report_api:result.authenticated_report_api===true,
+      source_mode:sourceGate.mode||'embedded_owned',
       receipt_hash:result.receipt_hash,
       retrying:false,
     });
