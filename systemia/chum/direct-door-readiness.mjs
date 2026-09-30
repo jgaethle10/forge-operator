@@ -9,9 +9,8 @@ const DIRECT_CALLABLE_STATES = new Set([
 ]);
 
 export const UNIVERSAL_FALLBACK = {
-  registry_name: 'io.github.jgaethle10/evercraft-machine-commerce',
-  remote_mcp:
-    'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp',
+  registry_name: 'io.github.jgaethle10/evercraft-capability-discovery',
+  remote_mcp: 'https://fabric.systemiacommandcenters.com/mcp',
 };
 
 function arg(name, fallback = null) {
