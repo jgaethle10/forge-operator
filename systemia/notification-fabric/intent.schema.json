@@ -135,6 +135,12 @@
         "title_prefix": {
           "type": "string",
           "maxLength": 40
+        },
+        "due_at": {
+          "type": [
+            "string",
+            "null"
+          ]
         }
       },
       "required": [
