@@ -6,10 +6,10 @@
   "source_schema_version": "2026-09-30.1",
   "gateway_version": "evercraft-machine-commerce-gateway-v0.9.1",
   "source_generated_at": "2026-09-30T20:21:00.000Z",
-  "generated_at": "2026-09-30T20:55:19.667Z",
-  "offer_count": 47,
+  "generated_at": "2026-09-30T20:58:30.000Z",
+  "offer_count": 48,
   "sell_now_count": 14,
-  "discovery_count": 33,
+  "discovery_count": 34,
   "safety": {
     "discovery_creates_obligation": false,
     "human_confirmation_required_for_checkout": true,
@@ -1634,6 +1634,33 @@
       "invocation_status": "LIVE: agent HTTP gateway + OpenAPI + llms guidance + remote MCP at https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp. Agents can inspect $500/$999/$1,999 website-service tiers, prepare checkout only after explicit human confirmation, and independently verify paid order state.",
       "live_canary_evidence": null,
       "catalog_version": "2026-09-23.13"
+    },
+    {
+      "public_id": "worldstate-reality-delta-v1",
+      "name": "Worldstate Reality Delta",
+      "intent_terms": [
+        "what changed in the real world",
+        "show me the reality delta for this place or system",
+        "compare verified worldstate before and after an event",
+        "what materially changed across weather infrastructure economy health or hazards",
+        "build a provenance-preserving worldstate snapshot",
+        "turn observations into an evidence-backed change packet"
+      ],
+      "problem": "A user or Evercraft system needs to understand what materially changed in the real world across time without collapsing observed, reported, inferred, modeled, or uncertain evidence into one undifferentiated claim.",
+      "inputs": "A bounded place, system, phenomenon, time window, or decision context plus available observation/context sources and authority scope.",
+      "outputs": "Evidence-preserving worldstate snapshots, material deltas, provenance links, evidence-state labels, contradictions, uncertainty, and bounded context packets for downstream Evercraft systems.",
+      "commercial_state": "verification_required",
+      "machine_state": "discovery_only",
+      "pricing": "No approved public machine price or payment path. Do not auto-quote.",
+      "offers": [],
+      "human_ui_required": false,
+      "confirmation": "Discovery and evidence comparison create no action authority. Publishing, consequential decisions, private-data access, and paid work remain separately authorized.",
+      "public_url": "https://systemiacommandcenters.com",
+      "public_url_source": "source_catalog",
+      "payment_authority": "No verified public payment path.",
+      "invocation_status": "SOURCE-VERIFIED: Worldstate snapshot/delta, Context Fabric adapter/reader, observation fabric, Passport-authorized read path, and Fallen phenomenon bridge are covered by repository proofs. Public machine execution is not claimed until an external callable route is independently verified.",
+      "live_canary_evidence": null,
+      "catalog_version": "2026-09-30.1"
     }
   ]
 }
