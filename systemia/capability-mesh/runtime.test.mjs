@@ -188,7 +188,7 @@ test('Clip cannot compile an uncontracted publish or render action', () => {
 });
 
 test('FindMyPart exposes only free triage through the shared runtime contract', () => {
-  const policy = compileProductRuntimePolicy('findmypart', process.cwd());
+  const policy = compileProductRuntimePolicy('buildflow', process.cwd());
   assert.equal(policy.adoption_stage, 'shared_runtime');
   assert.equal(policy.authority.passport_product, 'findmypart');
   assert.deepEqual(policy.authority.scopes, ['free_part_triage']);
