@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import http from 'node:http';
+import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
@@ -52,6 +53,34 @@ function sendJson(res,status,body) {
   res.end(data);
 }
 
+function sendText(res,status,body,{contentType='text/plain; charset=utf-8'}={}) {
+  const data=Buffer.from(String(body));
+  res.writeHead(status,{
+    'content-type':contentType,
+    'content-length':data.length,
+    'cache-control':'public, max-age=300',
+    'x-content-type-options':'nosniff',
+  });
+  res.end(data);
+}
+
+function escapeHtml(value='') {
+  return String(value)
+    .replaceAll('&','&amp;')
+    .replaceAll('<','&lt;')
+    .replaceAll('>','&gt;')
+    .replaceAll('"','&quot;')
+    .replaceAll("'",'&#39;');
+}
+
+function plainDocument(title,markdown) {
+  return '<!doctype html><html lang="en"><head><meta charset="utf-8">'+
+    '<meta name="viewport" content="width=device-width,initial-scale=1">'+
+    '<title>'+escapeHtml(title)+'</title>'+
+    '<style>body{font-family:system-ui,-apple-system,sans-serif;max-width:860px;margin:48px auto;padding:0 20px;line-height:1.6;color:#171717}pre{white-space:pre-wrap;font:inherit}a{color:#0645ad}</style>'+
+    '</head><body><pre>'+escapeHtml(markdown)+'</pre></body></html>';
+}
+
 async function readJson(req,{maxBytes=1024*1024}={}) {
   const chunks=[];
   let bytes=0;
@@ -74,6 +103,13 @@ export async function startFabricLocalRuntime({
   const prepared=nativeOnlyCatalog(source);
   const token=validateOpenAiChallengeToken(challengeToken);
   const challengePath='/.well-known/openai-apps-challenge';
+  const moduleDir=path.dirname(fileURLToPath(import.meta.url));
+  const pluginDir=path.resolve(moduleDir,'../../plugins/evercraft-fabric');
+  const docs={
+    privacy:fs.readFileSync(path.join(pluginDir,'PRIVACY.md'),'utf8'),
+    terms:fs.readFileSync(path.join(pluginDir,'TERMS.md'),'utf8'),
+    support:fs.readFileSync(path.join(pluginDir,'SUPPORT.md'),'utf8'),
+  };
 
   const health=()=>({
     ok:true,
@@ -91,8 +127,9 @@ export async function startFabricLocalRuntime({
     removed_legacy_base44_connections:prepared.removed_legacy_base44_connections,
     removed_legacy_base44_mcp_connections:prepared.removed_legacy_base44_mcp_connections,
     secure_tunnel_compatible:true,
+    public_https_runtime_capable:true,
     public_plugin_submission_ready:false,
-    public_submission_note:'Secure MCP Tunnel is for private/developer-mode connectivity. Public plugin submission still requires stable public HTTPS.',
+    public_submission_note:'The owned Fabric runtime supports public HTTPS submission. Final public-plugin readiness also depends on OpenAI account-side identity, domain verification, tool scan, listing, tests, review, and publish gates.',
   });
 
   const server=http.createServer(async(req,res)=>{
@@ -108,6 +145,27 @@ export async function startFabricLocalRuntime({
 
       if (req.method==='GET' && req.url==='/health') {
         return sendJson(res,200,health());
+      }
+
+      if (req.method==='GET' && req.url==='/') {
+        return sendText(res,200,
+          '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'+
+          '<title>Evercraft Fabric</title><style>body{font-family:system-ui,-apple-system,sans-serif;max-width:820px;margin:56px auto;padding:0 20px;line-height:1.55;color:#171717}a{color:#0645ad}</style></head>'+
+          '<body><h1>Evercraft Fabric</h1><p>Evercraft Fabric is the read-only capability discovery and routing layer for Evercraft LLC.</p>'+
+          '<p>It helps AI hosts match a user problem to the smallest relevant Evercraft capability while preserving authorization and provenance boundaries.</p>'+
+          '<p><a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · <a href="/support">Support</a> · <a href="/health">Health</a></p></body></html>',
+          {contentType:'text/html; charset=utf-8'}
+        );
+      }
+
+      if (req.method==='GET' && req.url==='/privacy') {
+        return sendText(res,200,plainDocument('Evercraft Fabric Privacy Policy',docs.privacy),{contentType:'text/html; charset=utf-8'});
+      }
+      if (req.method==='GET' && req.url==='/terms') {
+        return sendText(res,200,plainDocument('Evercraft Fabric Terms of Service',docs.terms),{contentType:'text/html; charset=utf-8'});
+      }
+      if (req.method==='GET' && req.url==='/support') {
+        return sendText(res,200,plainDocument('Evercraft Fabric Support',docs.support),{contentType:'text/html; charset=utf-8'});
       }
 
       if (req.url===challengePath) {
