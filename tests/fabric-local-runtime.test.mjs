@@ -38,7 +38,8 @@ test('Fabric local runtime is read-only, tunnel-compatible, and makes no Base44 
     assert.equal(health.ok,true);
     assert.equal(health.base44_transport_enabled,false);
     assert.equal(health.secure_tunnel_compatible,true);
-    assert.equal(health.public_plugin_submission_ready,false);
+    assert.equal(health.public_plugin_submission_ready,true);
+    assert.equal(health.provider_publication_state,'external_to_runtime');
     assert.equal(health.removed_legacy_base44_connections,2);
     assert.equal(health.removed_legacy_base44_mcp_connections,1);
 
