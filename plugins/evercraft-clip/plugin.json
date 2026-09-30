@@ -5,7 +5,7 @@
   "author": {
     "name": "Evercraft LLC"
   },
-  "homepage": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+  "homepage": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-clip/index.html",
   "repository": "https://github.com/jgaethle10/forge-operator",
   "license": "UNLICENSED",
   "keywords": [
@@ -17,5 +17,7 @@
     "mcp"
   ],
   "skills": "./skills/",
-  "mcpServers": "./mcp.json"
+  "mcpServers": "./mcp.json",
+  "releaseState": "MIGRATION_HOLD_OWNED_EDGE_PENDING",
+  "publicOriginState": "owned_edge_not_yet_verified"
 }
