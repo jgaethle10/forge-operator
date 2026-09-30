@@ -101,9 +101,11 @@ def acquire_site(n,offline=False,force=False):
  print('ACQUIRED',n,plan_mode,area_mode,'sha',sha(out))
  return rec
 
-def compile_site(n):
- src=SRC/f'site_{n:02d}.json'; acq=EVID/f'site_{n:02d}_acquisition.json'
- if not acq.exists(): raise RuntimeError(f'acquisition receipt missing for site {n}')
+def compile_site(n,offline=False,force_acquire=False):
+ src=SRC/f'site_{n:02d}.json'; ident=IDENT/f'site_{n:02d}_identity.json'; acq=EVID/f'site_{n:02d}_acquisition.json'
+ if not ident.exists(): raise RuntimeError(f'identity receipt missing for site {n}')
+ identity=json.loads(ident.read_text())
+ if force_acquire or not acquisition_current(n,src,identity): acquire_site(n,offline=offline,force=force_acquire)
  d=json.load(open(src)); a=json.load(open(acq)); out=copy.deepcopy(d)
  redev_path=REDEV/f'site_{n:02d}.json'
  redevelopment=json.load(open(redev_path)) if redev_path.exists() else None
@@ -125,17 +127,27 @@ def compile_site(n):
  if redevelopment and redevelopment.get('classification') in ('planned_redevelopment','active_redevelopment') and redevelopment.get('surface_state')!='verified':
   failures.append('DEVELOPMENT_SURFACE_UNRESOLVED')
  out['compiler_meta']={
-   'compiler_version':'KSS-SITEPLAN-COMPILER-v2',
+   'compiler_version':'EVERCRAFT-RIVET-SITEPLAN-v1',
    'source_record_sha256':sha(src),'acquisition_receipt_sha256':sha(acq),
    'identity_sha256':a.get('identity_sha256'),'identity_receipt':a.get('identity_receipt'),
    'stall_count':int(d.get('charging_stalls') or 6),
    'stall_count_basis':d.get('charging_stalls_basis') or 'modeled fit-study default',
    'redevelopment_context':redevelopment,
-   'typed_evidence':evidence,'compile_failures':failures,'frozen':True
+   'typed_evidence':evidence,'compile_failures':failures,'frozen':True,'external_delivery_authorized':False
  }
  dst=MODELS/f'site_{n:02d}.json'; dst.write_text(json.dumps(out,indent=2)); print('COMPILED',n,'failures',failures,'sha',sha(dst))
  if failures: raise RuntimeError(f'site {n} compile failures: {failures}')
  return dst
 
-ap=argparse.ArgumentParser(); ap.add_argument('--sites',nargs='+',type=int,required=True); args=ap.parse_args()
-for n in args.sites: compile_site(n)
+def main():
+ ap=argparse.ArgumentParser()
+ ap.add_argument('--sites',nargs='+',type=int,required=True)
+ ap.add_argument('--offline',action='store_true')
+ ap.add_argument('--refresh-aerial',action='store_true')
+ ap.add_argument('--acquire-only',action='store_true')
+ args=ap.parse_args()
+ for n in args.sites:
+  if args.acquire_only: acquire_site(n,offline=args.offline,force=args.refresh_aerial)
+  else: compile_site(n,offline=args.offline,force_acquire=args.refresh_aerial)
+
+if __name__=='__main__': main()
