@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
 import { YardPublicRouteBroker } from '../yard/public-route-broker.mjs';
+import { resolveEvercraftRemoteCapacity } from './capacity-fabric.mjs';
 
 const sha=(value)=>'sha256:'+createHash('sha256').update(
   typeof value==='string'?value:JSON.stringify(value)
@@ -38,11 +39,14 @@ function assertSpec(spec){
   if(!clean(spec.rollback_target)) throw new Error('rollback_target_required');
   if(deepHasSecretValue(spec.input||{})) throw new Error('secret_material_must_not_be_embedded_in_service_spec');
   const route=spec.route||{mode:'none'};
-  if(!['none','public_edge'].includes(route.mode)) throw new Error('route_mode_invalid');
-  if(route.mode==='public_edge'){
+  if(!['none','public_edge','federated_public_edge'].includes(route.mode)) throw new Error('route_mode_invalid');
+  if(route.mode==='public_edge'||route.mode==='federated_public_edge'){
     safeId(route.edge_deployment_id||'evercraft-public-edge');
     if(!clean(route.hostname)) throw new Error('public_route_hostname_required');
   }
+  const placement=spec.placement||{mode:'local'};
+  if(!['local','remote_broker'].includes(placement.mode||'local')) throw new Error('placement_mode_invalid');
+  if(placement.mode==='remote_broker'&&!clean(placement.broker_deployment_id)) throw new Error('broker_deployment_id_required');
   const health=spec.health||{};
   if(health.path&&!String(health.path).startsWith('/')) throw new Error('health_path_invalid');
   return spec;
@@ -112,11 +116,9 @@ export class EvercraftHostingControlPlane {
 
   status(serviceId){return this.#load(serviceId);}
 
-  async #probe(record,spec){
-    const health=spec.health||{};
+  async #probeOrigin(origin,health={}){
     if(!health.path) return {ok:true,state:'health_probe_not_required',body:null};
-    const origin=clean(record?.result?.local_url);
-    if(!origin) return {ok:false,state:'local_service_origin_missing',body:null};
+    if(!clean(origin)) return {ok:false,state:'service_origin_missing',body:null};
     try{
       const response=await fetch(new URL(health.path,origin));
       const body=await response.json().catch(()=>null);
@@ -127,12 +129,73 @@ export class EvercraftHostingControlPlane {
     }
   }
 
+  async #probe(record,spec){
+    const health=spec.health||{};
+    if(!health.path) return {ok:true,state:'health_probe_not_required',body:null};
+    const direct=await this.#probeOrigin(record?.result?.local_url,health);
+    if(direct.ok) return direct;
+    try{
+      const verified=await this.yard.verifyRoute(record.deployment_id);
+      const body=verified?.health||null;
+      const managementReachable=verified?.ok===true||verified?.local_health_ok===true;
+      const ok=Boolean(managementReachable&&body&&matchesExpected(body,health.expect||{ok:true}));
+      return {
+        ok,
+        state:ok?'healthy_via_yard_management':direct.state,
+        body,
+        management_state:verified?.state||null,
+      };
+    }catch(error){
+      return {...direct,management_detail:String(error?.message||error)};
+    }
+  }
+
+  async #probeRelay(relay,health={}){
+    if(!health.path) return {ok:true,state:'health_probe_not_required',body:null};
+    try{
+      const response=await fetch(relay.relay_url,{
+        method:'POST',
+        headers:{authorization:'Bearer '+relay.relay_token,'content-type':'application/json'},
+        body:JSON.stringify({method:'GET',path:health.path,headers:{accept:'application/json'},body_base64:''})
+      });
+      const envelope=await response.json().catch(()=>null);
+      if(!response.ok||!envelope?.ok) return {ok:false,state:'relay_probe_failed',status:response.status,body:envelope};
+      const body=JSON.parse(Buffer.from(String(envelope.body_base64||''),'base64').toString('utf8')||'null');
+      const ok=Number(envelope.status||0)>=200&&Number(envelope.status||0)<300&&body&&matchesExpected(body,health.expect||{ok:true});
+      return {ok,state:ok?'healthy_via_remote_relay':'health_contract_mismatch',status:Number(envelope.status||0),body};
+    }catch(error){
+      return {ok:false,state:'relay_probe_failed',detail:String(error?.message||error),body:null};
+    }
+  }
+
   #broker(edgeDeploymentId){
     return new YardPublicRouteBroker({
       yard:this.yard,
       providerClient:this.yard.publicRouteProviderClient(edgeDeploymentId),
       allowLoopbackProof:this.allowLoopbackProof,
     });
+  }
+
+  async #releaseRouteArtifacts(route,{reason='hosting_replacement'}={}){
+    if(!route||route.mode==='none') return;
+    if(route.route_lease_id&&route.edge_deployment_id){
+      try{
+        await this.#broker(route.edge_deployment_id).releaseBinding({
+          route_lease_id:route.route_lease_id,
+          deployment_id:route.bridge_deployment_id||route.deployment_id||null,
+          origin:route.origin||null,
+        },{reason});
+      }catch{}
+    }
+    if(route.bridge_deployment_id){
+      try{this.yard.stopLeaseKeeper(route.bridge_deployment_id);}catch{}
+      try{await this.yard.stopDeployment(route.bridge_deployment_id,{reason});}catch{}
+    }
+    if(route.relay_id&&route.broker_deployment_id){
+      try{
+        await this.yard.releaseRemoteServiceRelay(route.broker_deployment_id,route.relay_id,{reason});
+      }catch{}
+    }
   }
 
   async apply(spec,{capacityEndpoint='',allocatorToken=''}={}){
@@ -161,6 +224,10 @@ export class EvercraftHostingControlPlane {
     const candidateId=safeId(serviceId+'--'+desiredHash.replace(/^sha256:/,'').slice(0,12));
     let candidate=null;
     let binding=null;
+    let placementResolution=null;
+    let remoteRelay=null;
+    let bridge=null;
+    let bridgeId='';
     try{
       const args={
         deploymentId:candidateId,
@@ -170,15 +237,32 @@ export class EvercraftHostingControlPlane {
         rollbackTarget:clean(spec.rollback_target),
         leaseTtlMs,
       };
-      candidate=capacityEndpoint
-        ? await this.yard.deployRelease({...args,capacityEndpoint,allocatorToken})
-        : spec.capacity_source_deployment_id
-          ? await this.yard.deploySiblingRelease({
-              sourceDeploymentId:clean(spec.capacity_source_deployment_id),
-              ...args,
-            })
-          : null;
-      if(!candidate) throw new Error('capacity_endpoint_or_source_deployment_required');
+      const placement=spec.placement||{mode:'local'};
+      if(capacityEndpoint){
+        candidate=await this.yard.deployRelease({...args,capacityEndpoint,allocatorToken});
+        placementResolution={mode:'explicit_capacity',node_id:candidate.receipt?.capacity_node_id||null};
+      }else if(placement.mode==='remote_broker'){
+        placementResolution=await resolveEvercraftRemoteCapacity({
+          yard:this.yard,
+          brokerDeploymentId:clean(placement.broker_deployment_id),
+          workloadClass:clean(spec.workload_class),
+          resourceProfile:placement.resource_profile||{},
+          preferredNodeId:clean(placement.preferred_node_id),
+          allowLoopbackProof:this.allowLoopbackProof,
+        });
+        candidate=await this.yard.deployRelease({
+          ...args,
+          capacityEndpoint:placementResolution.capacity_endpoint,
+          allocatorToken:placementResolution.allocator_token,
+        });
+      }else if(spec.capacity_source_deployment_id){
+        candidate=await this.yard.deploySiblingRelease({
+          sourceDeploymentId:clean(spec.capacity_source_deployment_id),
+          ...args,
+        });
+        placementResolution={mode:'sibling',node_id:candidate.receipt?.capacity_node_id||null};
+      }
+      if(!candidate) throw new Error('capacity_endpoint_source_deployment_or_remote_placement_required');
 
       const health=await this.#probe(candidate,spec);
       if(!health.ok) throw new Error('candidate_health_gate_failed:'+health.state);
@@ -199,6 +283,46 @@ export class EvercraftHostingControlPlane {
         if(!this.allowLoopbackProof&&binding.route_verified!==true){
           throw new Error('public_https_route_verification_required');
         }
+      }else if(routeSpec.mode==='federated_public_edge'){
+        if((spec.placement||{}).mode!=='remote_broker') throw new Error('federated_public_edge_requires_remote_broker_placement');
+        const brokerDeploymentId=clean(spec.placement.broker_deployment_id);
+        const edgeDeploymentId=clean(routeSpec.edge_deployment_id||'evercraft-public-edge');
+        const edge=this.yard.deploymentStatus(edgeDeploymentId);
+        if(!edge||edge.state!=='ready') throw new Error('public_edge_not_ready');
+        if(edge.receipt?.capacity_node_id===candidate.receipt?.capacity_node_id){
+          throw new Error('federated_route_requires_distinct_remote_compute_node');
+        }
+        remoteRelay=await this.yard.createRemoteServiceRelay(brokerDeploymentId,{
+          nodeId:candidate.receipt?.capacity_node_id,
+          serviceId:candidate.result?.service_id,
+          ttlMs:leaseTtlMs,
+          allowLoopbackProof:this.allowLoopbackProof,
+        });
+        const relayedHealth=await this.#probeRelay(remoteRelay,spec.health||{});
+        if(!relayedHealth.ok) throw new Error('remote_relay_health_gate_failed:'+relayedHealth.state);
+
+        bridgeId=safeId('bridge--'+desiredHash.replace(/^sha256:/,'').slice(0,12)+'--'+serviceId.slice(0,50));
+        bridge=await this.yard.deploySiblingRelease({
+          sourceDeploymentId:edgeDeploymentId,
+          deploymentId:bridgeId,
+          releaseRef:clean(spec.release_ref),
+          workloadClass:'systemia.federated-service-bridge.v1',
+          input:{relay_url:remoteRelay.relay_url,relay_token:remoteRelay.relay_token},
+          rollbackTarget:'hosting:federated-bridge-previous',
+          leaseTtlMs,
+        });
+        const throughBridge=await this.#probeOrigin(bridge.result?.local_url,spec.health||{});
+        if(!throughBridge.ok) throw new Error('federated_bridge_upstream_health_gate_failed:'+throughBridge.state);
+
+        binding=await this.#broker(edgeDeploymentId).bindDeployment(bridgeId,{
+          requestedHostname:clean(routeSpec.hostname),
+          ttlMs:leaseTtlMs,
+          stableHostname:routeSpec.stable_hostname!==false,
+        });
+        if(!this.allowLoopbackProof&&binding.route_verified!==true){
+          throw new Error('public_https_route_verification_required');
+        }
+        this.yard.startLeaseKeeper(bridgeId,{ttlMs:leaseTtlMs,renewEveryMs});
       }
 
       this.yard.startLeaseKeeper(candidateId,{ttlMs:leaseTtlMs,renewEveryMs});
@@ -216,13 +340,25 @@ export class EvercraftHostingControlPlane {
         capacity_node_id:candidate.receipt?.capacity_node_id||null,
         instance_id:candidate.result?.instance_id||null,
         health,
+        placement:placementResolution?{
+          mode:(spec.placement||{}).mode==='remote_broker'?'remote_broker':placementResolution.mode,
+          node_id:candidate.receipt?.capacity_node_id||placementResolution.node_id||null,
+          device_fingerprint:candidate.receipt?.capacity_device_fingerprint||placementResolution.device_fingerprint||null,
+          broker_deployment_id:clean((spec.placement||{}).broker_deployment_id)||null,
+          control_grant_receipt_hash:placementResolution.control_grant_receipt_hash||null,
+        }:{mode:'unknown',node_id:candidate.receipt?.capacity_node_id||null},
         route:binding?{
-          mode:'public_edge',
+          mode:(spec.route||{}).mode,
           origin:binding.origin,
           scope:binding.route_scope,
           verified:binding.route_verified===true,
           binding_receipt:binding.receipt_hash,
+          route_lease_id:binding.route_lease_id||null,
           edge_deployment_id:clean((spec.route||{}).edge_deployment_id||'evercraft-public-edge'),
+          bridge_deployment_id:bridge?.deployment_id||null,
+          relay_id:remoteRelay?.relay_id||null,
+          broker_deployment_id:clean((spec.placement||{}).broker_deployment_id)||null,
+          remote_node_id:candidate.receipt?.capacity_node_id||null,
         }:{mode:'none',origin:null,verified:false},
         previous:previous?{
           desired_spec:previous.desired_spec,
@@ -237,9 +373,7 @@ export class EvercraftHostingControlPlane {
 
       if(previous?.active_deployment_id&&previous.active_deployment_id!==candidateId){
         try{
-          if(previous.route?.binding_receipt&&previous.route?.edge_deployment_id){
-            // Old route leases expire independently. Stop the old resident only after the new candidate is healthy and bound.
-          }
+          await this.#releaseRouteArtifacts(previous.route,{reason:'hosting_blue_green_promoted'});
           this.yard.stopLeaseKeeper(previous.active_deployment_id);
           await this.yard.stopDeployment(previous.active_deployment_id,{reason:'hosting_blue_green_promoted'});
         }catch{}
@@ -250,6 +384,15 @@ export class EvercraftHostingControlPlane {
         try{
           const edgeId=clean((spec.route||{}).edge_deployment_id||'evercraft-public-edge');
           await this.#broker(edgeId).releaseBinding(binding,{reason:'hosting_candidate_failed'});
+        }catch{}
+      }
+      if(bridge){
+        try{this.yard.stopLeaseKeeper(bridgeId);}catch{}
+        try{await this.yard.stopDeployment(bridgeId,{reason:'hosting_candidate_failed'});}catch{}
+      }
+      if(remoteRelay){
+        try{
+          await this.yard.releaseRemoteServiceRelay(clean((spec.placement||{}).broker_deployment_id),remoteRelay.relay_id,{reason:'hosting_candidate_failed'});
         }catch{}
       }
       if(candidate){
@@ -293,6 +436,7 @@ export class EvercraftHostingControlPlane {
   async remove(serviceId,{reason='operator_requested'}={}){
     const current=this.#load(serviceId);
     if(!current) return {ok:true,service_id:serviceId,state:'absent'};
+    await this.#releaseRouteArtifacts(current.route,{reason});
     if(current.active_deployment_id){
       this.yard.stopLeaseKeeper(current.active_deployment_id);
       try{await this.yard.stopDeployment(current.active_deployment_id,{reason});}catch{}
