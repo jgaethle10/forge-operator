@@ -62,6 +62,39 @@ const firstPartyRouting = JSON.parse(fs.readFileSync(firstPartyRoutingPath, 'utf
   }>;
 };
 
+function requestPublicOrigin(req: Request): string {
+  if (ownedPublicOrigin) {
+    try {
+      const configured = new URL(ownedPublicOrigin);
+      if (configured.protocol === 'https:' && !/(^|\\.)base44\\.app$/i.test(configured.hostname)) return configured.origin;
+    } catch {}
+  }
+  const host = String(req.get('host') || '').trim();
+  const forwarded = String(req.get('x-forwarded-proto') || req.protocol || '').split(',')[0].trim();
+  if (!host || !['http','https'].includes(forwarded)) return '';
+  try {
+    const candidate = new URL(`${forwarded}://${host}`);
+    if (/(^|\\.)base44\\.app$/i.test(candidate.hostname)) return '';
+    return candidate.origin;
+  } catch {
+    return '';
+  }
+}
+
+function absoluteOwnedTarget(req: Request, target: string): string {
+  const raw = String(target || '').trim();
+  if (!raw) throw new Error('Owned Evercraft handoff target is missing.');
+  try {
+    const direct = new URL(raw);
+    if (/(^|\\.)base44\\.app$/i.test(direct.hostname)) throw new Error('Base44 handoff targets are disabled.');
+    return direct.toString();
+  } catch {
+    const origin = requestPublicOrigin(req);
+    if (!origin) throw new Error('Owned Evercraft public origin is not configured.');
+    return new URL(raw, origin).toString();
+  }
+}
+
 function normalizeOwnedIntent(value: unknown): string {
   return String(value ?? '').trim().toLowerCase().slice(0, 5000);
 }
@@ -443,7 +476,7 @@ function chumHumanReviewUrl(publicId: string): string {
     target.searchParams.set('public_id', publicId);
     return target.toString();
   }
-  throw new Error('Owned Evercraft public origin is not configured; legacy Machine Commerce fallback is disabled.');
+  return '/buy/' + id;
 }
 
 async function persistChumAttributionEvent(event: unknown) {
@@ -976,10 +1009,11 @@ app.post('/api/chum/referral', rateLimit(240, 60 * 60 * 1000), (req: Request, re
       return;
     }
 
-    const targetUrl = buyerFrontageUrl(offer, {
+    const targetUrl = absoluteOwnedTarget(req, buyerFrontageUrl(offer, {
       surface,
-      source: providerClaim === 'unknown' ? 'chum' : providerClaim
-    }) || chumHumanReviewUrl(offer.public_id);
+      source: providerClaim === 'unknown' ? 'chum' : providerClaim,
+      gateway: ownedPublicOrigin
+    }) || chumHumanReviewUrl(offer.public_id));
     const issued = issueReferralToken({
       productKey: offer.product_key || offer.public_id,
       publicId: offer.public_id,
@@ -1040,10 +1074,11 @@ app.get('/api/chum/go/:publicId', rateLimit(240, 60 * 60 * 1000), async (req: Re
       return;
     }
 
-    const targetUrl = buyerFrontageUrl(offer, {
+    const targetUrl = absoluteOwnedTarget(req, buyerFrontageUrl(offer, {
       surface,
-      source: providerClaim === 'unknown' ? 'chum' : providerClaim
-    }) || chumHumanReviewUrl(offer.public_id);
+      source: providerClaim === 'unknown' ? 'chum' : providerClaim,
+      gateway: ownedPublicOrigin
+    }) || chumHumanReviewUrl(offer.public_id));
     const landing = new URL(targetUrl);
     landing.searchParams.set('ec_source', 'chum');
     landing.searchParams.set('ec_surface', surface);
