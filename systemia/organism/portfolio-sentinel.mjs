@@ -417,6 +417,119 @@ export function inspectLocalPortfolio({ rootDir = process.cwd() } = {}) {
     );
   }
 
+  const capabilityMeshResult = safeJson(root, 'systemia/capability-mesh/adoption-coverage.json');
+  if (!capabilityMeshResult.ok) {
+    addFinding(report, makeFinding({
+      code: 'capability_mesh_coverage_invalid',
+      severity: 'medium',
+      subject: 'systemia/capability-mesh/adoption-coverage.json',
+      detail: capabilityMeshResult.reason,
+      evidence_refs: ['repo:systemia/capability-mesh/adoption-coverage.json'],
+      repair_mode: 'capability_contract_migration',
+      repair_command: 'node systemia/capability-mesh/mesh.mjs'
+    }));
+  } else {
+    const mesh = capabilityMeshResult.value;
+    report.inventory.capability_mesh = mesh.summary || null;
+    report.inventory.capability_mesh_ratchet = mesh.ratchet || null;
+
+    addCheck(
+      report,
+      'capability-mesh-loaded',
+      mesh.schema === 'evercraft.capability-mesh.coverage.v1',
+      mesh.summary
+        ? `${Number(mesh.summary.explicit_contract_count || 0)}/${Number(mesh.summary.public_product_count || 0)} public products have explicit trust-chain contracts`
+        : 'capability mesh summary unavailable',
+      ['repo:systemia/capability-mesh/adoption-coverage.json']
+    );
+
+    for (const regression of mesh.ratchet?.blocking_regressions || []) {
+      const subject = clean(regression.product_key || regression.specialist_slug || '<unknown>');
+      const specialistOnly = regression.code === 'new_specialist_only_door_requires_review';
+      addFinding(report, makeFinding({
+        code: regression.code,
+        severity: 'high',
+        subject,
+        detail: specialistOnly
+          ? 'A new specialist-only door appeared after the Capability Mesh baseline and requires explicit review before publication or contract binding.'
+          : 'New Capability Mesh adoption debt appeared after the ratchet baseline. Add a complete product contract before accepting the architectural regression.',
+        evidence_refs: [
+          'repo:systemia/capability-mesh/ratchet-baseline.json',
+          'repo:systemia/capability-mesh/adoption-coverage.json'
+        ],
+        repair_mode: specialistOnly ? 'human_review' : 'capability_contract_migration',
+        human_gate_required: specialistOnly,
+        metadata: regression
+      }));
+    }
+
+    const directMissing = new Set(mesh.priority_queues?.direct_door_without_contract || []);
+    for (const productKey of mesh.priority_queues?.all_missing_contracts || []) {
+      const direct = directMissing.has(productKey);
+      addFinding(report, makeFinding({
+        code: direct ? 'direct_door_contract_missing' : 'product_trust_chain_contract_missing',
+        severity: 'medium',
+        subject: productKey,
+        detail: direct
+          ? 'Product has a public specialist door but no explicit Capability Mesh trust-chain contract.'
+          : 'Public product has no explicit Capability Mesh trust-chain contract.',
+        evidence_refs: [
+          'repo:systemia/capability-mesh/adoption-coverage.json',
+          'repo:systemia/capability-mesh/contracts.json'
+        ],
+        repair_mode: 'capability_contract_migration',
+        human_gate_required: false,
+        metadata: { product_key: productKey, direct_door: direct, contract_state: 'missing' }
+      }));
+    }
+
+    for (const productKey of mesh.priority_queues?.incomplete_contracts || []) {
+      const row = (mesh.products || []).find((product) => product.product_key === productKey);
+      addFinding(report, makeFinding({
+        code: 'product_trust_chain_contract_incomplete',
+        severity: 'medium',
+        subject: productKey,
+        detail: `Product trust-chain contract is incomplete: ${(row?.gaps || []).join(', ') || 'unspecified gaps'}.`,
+        evidence_refs: ['repo:systemia/capability-mesh/adoption-coverage.json'],
+        repair_mode: 'capability_contract_migration',
+        metadata: { product_key: productKey, gaps: row?.gaps || [] }
+      }));
+    }
+
+    for (const productKey of mesh.priority_queues?.contracted_not_shared_runtime || []) {
+      const row = (mesh.products || []).find((product) => product.product_key === productKey);
+      addFinding(report, makeFinding({
+        code: 'product_contracted_not_shared_runtime',
+        severity: 'medium',
+        subject: productKey,
+        detail: `Product has an explicit ${row?.adoption_stage || 'non-shared'} contract, but shared Passport/Context/Meter/Execution integration is not claimed.`,
+        evidence_refs: ['repo:systemia/capability-mesh/adoption-coverage.json'],
+        repair_mode: 'capability_contract_migration',
+        metadata: { product_key: productKey, adoption_stage: row?.adoption_stage || null }
+      }));
+    }
+
+    for (const specialist of mesh.specialist_only || []) {
+      addFinding(report, makeFinding({
+        code: 'specialist_door_not_in_public_product_index',
+        severity: 'medium',
+        subject: specialist.specialist_slug,
+        detail: 'Specialist door exists outside the public product index. Review whether it should remain held/internal or be separately admitted; never auto-publish it.',
+        evidence_refs: [
+          'repo:systemia/capability-mesh/adoption-coverage.json',
+          'repo:public/.well-known/evercraft-direct-door-readiness.json'
+        ],
+        repair_mode: 'human_review',
+        human_gate_required: true,
+        metadata: {
+          specialist_slug: specialist.specialist_slug,
+          direct_door_state: specialist.direct_door_state,
+          publication_action: 'review_only'
+        }
+      }));
+    }
+  }
+
   report.inventory.workflows = listFiles(root, '.github/workflows', '.yml');
 
   const packageResult = safeJson(root, 'package.json');
