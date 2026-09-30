@@ -109,3 +109,8 @@ Forge now carries the first direct provider adapter used to remove Clip's Base44
 - `POST /api/social/providers/facebook/identity-canary` - verifies page identity and create-content authority without publishing.
 
 The provider primitive can publish a feed post and requires exact provider-visible message readback before returning `verified: true`, but no autonomous queue is routed to it until credentials, live canary, rollback and observation gates pass.
+
+
+## RIVET AliEV source boundary
+
+`ALIEV_YARD_SOURCE_URL` is mandatory for RIVET report generation and must resolve to an Evercraft-owned AliEV evidence service. There is no Base44 default or compatibility fallback. If the owned AliEV source is not configured, the RIVET report gateway reports itself unconfigured and holds report generation rather than tunneling through the legacy platform.
