@@ -5,7 +5,7 @@
   "author": {
     "name": "Evercraft LLC"
   },
-  "homepage": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/",
+  "homepage": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/deck-capital-fit",
   "repository": "https://github.com/jgaethle10/forge-operator",
   "license": "UNLICENSED",
   "keywords": [
@@ -17,5 +17,7 @@
     "mcp"
   ],
   "skills": "./skills/",
-  "mcpServers": "./mcp.json"
+  "mcpServers": "./mcp.json",
+  "releaseState": "OWNED_RUNTIME_MIGRATION_PENDING",
+  "publicOriginState": "owned_runtime_route_pending"
 }

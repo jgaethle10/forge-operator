@@ -1,8 +1,3 @@
 {
-  "mcpServers": {
-    "faie": {
-      "type": "http",
-      "url": "https://faie.base44.app/functions/faieMcp"
-    }
-  }
+  "mcpServers": {}
 }

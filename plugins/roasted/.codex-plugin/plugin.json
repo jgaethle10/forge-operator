@@ -6,7 +6,7 @@
     "name": "Evercraft LLC",
     "url": "https://github.com/jgaethle10/forge-operator"
   },
-  "homepage": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+  "homepage": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/roasted",
   "repository": "https://github.com/jgaethle10/forge-operator",
   "license": "UNLICENSED",
   "keywords": [
@@ -28,9 +28,11 @@
     "capabilities": [
       "Interactive"
     ],
-    "websiteURL": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+    "websiteURL": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/roasted",
     "defaultPrompt": [
       "Pressure-test this text and make the weak spots obvious without pretending a paid result exists before payment is verified."
     ]
-  }
+  },
+  "releaseState": "OWNED_RUNTIME_MIGRATION_PENDING",
+  "publicOriginState": "owned_runtime_route_pending"
 }

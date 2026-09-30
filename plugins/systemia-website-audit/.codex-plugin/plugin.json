@@ -6,7 +6,7 @@
     "name": "Evercraft LLC",
     "url": "https://github.com/jgaethle10/forge-operator"
   },
-  "homepage": "https://systemia-audit-pro.base44.app/",
+  "homepage": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/systemia-website-audit",
   "repository": "https://github.com/jgaethle10/forge-operator",
   "license": "UNLICENSED",
   "keywords": [
@@ -28,9 +28,11 @@
     "capabilities": [
       "Interactive"
     ],
-    "websiteURL": "https://systemia-audit-pro.base44.app/",
+    "websiteURL": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/systemia-website-audit",
     "defaultPrompt": [
       "Audit my business website for conversion, local SEO, performance, and practical fixes."
     ]
-  }
+  },
+  "releaseState": "OWNED_RUNTIME_MIGRATION_PENDING",
+  "publicOriginState": "owned_runtime_route_pending"
 }

@@ -1,8 +1,3 @@
 {
-  "mcpServers": {
-    "evercraft_clip": {
-      "type": "http",
-      "url": "https://fabric.systemiacommandcenters.com/mcp"
-    }
-  }
+  "mcpServers": {}
 }

@@ -6,7 +6,7 @@
     "name": "Evercraft LLC",
     "url": "https://github.com/jgaethle10/forge-operator"
   },
-  "homepage": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=foundry-app-escape-audit-v1",
+  "homepage": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/foundry-app-escape",
   "repository": "https://github.com/jgaethle10/forge-operator",
   "license": "UNLICENSED",
   "keywords": [
@@ -28,12 +28,12 @@
     "capabilities": [
       "Interactive"
     ],
-    "websiteURL": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=foundry-app-escape-audit-v1",
+    "websiteURL": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/foundry-app-escape",
     "defaultPrompt": [
       "Audit this app for portability, lock-in, dependency, migration, and rollback risk without changing production."
     ]
   },
-  "releaseState": "YARD_RUNTIME_PROVEN_PUBLIC_ROUTE_PENDING",
+  "releaseState": "OWNED_RUNTIME_MIGRATION_PENDING",
   "pendingRuntimePath": "/mcp/foundry-app-escape",
-  "publicOriginState": "https_route_unbound"
+  "publicOriginState": "owned_runtime_route_pending"
 }

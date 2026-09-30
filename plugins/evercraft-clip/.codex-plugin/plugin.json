@@ -6,7 +6,7 @@
     "name": "Evercraft LLC",
     "url": "https://github.com/jgaethle10/forge-operator"
   },
-  "homepage": "https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-clip",
+  "homepage": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-clip",
   "repository": "https://github.com/jgaethle10/forge-operator",
   "license": "UNLICENSED",
   "keywords": [
@@ -28,9 +28,11 @@
     "capabilities": [
       "Interactive"
     ],
-    "websiteURL": "https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-clip",
+    "websiteURL": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-clip",
     "defaultPrompt": [
       "Help me plan a social-video job from this source material and tell me the current Evercraft Clip execution boundary."
     ]
-  }
+  },
+  "releaseState": "OWNED_RUNTIME_MIGRATION_PENDING",
+  "publicOriginState": "owned_runtime_route_pending"
 }

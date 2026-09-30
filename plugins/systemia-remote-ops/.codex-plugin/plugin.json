@@ -6,7 +6,7 @@
     "name": "Evercraft LLC",
     "url": "https://github.com/jgaethle10/forge-operator"
   },
-  "homepage": "https://systemia-remote-ops.base44.app/",
+  "homepage": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/systemia-remote-ops",
   "repository": "https://github.com/jgaethle10/forge-operator",
   "license": "UNLICENSED",
   "keywords": [
@@ -41,12 +41,12 @@
     "capabilities": [
       "Interactive"
     ],
-    "websiteURL": "https://systemia-remote-ops.base44.app/",
+    "websiteURL": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/systemia-remote-ops",
     "defaultPrompt": [
       "I am considering a consequential business decision. Help me model the baseline, change the assumptions, compare scenarios, and keep modeled results clearly separated from observed reality before I act."
     ]
   },
-  "releaseState": "YARD_RUNTIME_PROVEN_PUBLIC_ROUTE_PENDING",
+  "releaseState": "OWNED_RUNTIME_MIGRATION_PENDING",
   "pendingRuntimePath": "/mcp/systemia-remote-ops",
-  "publicOriginState": "https_route_unbound"
+  "publicOriginState": "owned_runtime_route_pending"
 }
