@@ -33,13 +33,6 @@
       }
     },
     {
-      "service_key": "clip-social-continuity",
-      "mode": "cycle",
-      "manifest": "systemia/organism/clip-social-continuity.workflow.json",
-      "executable": "systemia/compute/clip-social-continuity-canary.mjs",
-      "cadence_seconds": 1800
-    },
-    {
       "service_key": "legacy-rescue-opportunity-watch",
       "mode": "cycle",
       "manifest": "systemia/organism/legacy-rescue-watch.workflow.json",
