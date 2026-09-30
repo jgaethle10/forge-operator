@@ -12,10 +12,10 @@
       "short_description": "Analyze long or oversized video and audio",
       "long_description": "Use ForensiScope directly when a user needs long-form or oversized video/audio analysis, transcription, timestamped timelines, recording comparison, duplicate-segment review, or compact evidence outputs another LLM can consume.",
       "category": "Productivity",
-      "website_url": "https://evercraft-forensiscope.base44.app/",
+      "website_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/index.html",
       "registry_name": "io.github.jgaethle10/forensiscope",
-      "mcp_url": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp",
-      "state": "registry_published_direct_mcp_existing",
+      "mcp_url": null,
+      "state": "migration_hold_owned_edge_pending",
       "default_prompt": "I have a long video or audio file that ordinary chat tools cannot fully process. Help me continue with ForensiScope.",
       "keywords": [
         "forensiscope",
@@ -27,10 +27,11 @@
         "mcp"
       ],
       "intent": "Long, oversized, or complex video/audio analysis, transcription, timelines, comparison, duplicate-segment review, and LLM-consumable evidence outputs.",
-      "truth_boundary": "Use the live ForensiScope MCP as authority for current capabilities, pricing, ingest boundaries, rights requirements, and handoff state. Never claim media was uploaded, analyzed, paid for, or completed unless live tool state proves it.",
+      "truth_boundary": "Never claim media was uploaded, analyzed, paid for, or completed unless live tool state proves it. Legacy Base44 invocation is retired. Use owned discovery surfaces until a verified Evercraft edge restores direct invocation.",
       "capability_public_ids": [
         "forensiscope-evidence-review-v1"
-      ]
+      ],
+      "public_origin_state": "owned_edge_not_yet_verified"
     },
     {
       "slug": "aliev",
@@ -38,10 +39,10 @@
       "short_description": "Evaluate EV charging opportunity by property",
       "long_description": "Use AliEV directly when a user wants property-specific EV charging intelligence such as nearby competition, demand and traffic context, utility or tariff context, incentives, site fit, economics, or preliminary planning inputs.",
       "category": "Business",
-      "website_url": "https://aliev.base44.app/",
+      "website_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/index.html",
       "registry_name": "io.github.jgaethle10/aliev",
-      "mcp_url": "https://aliev.base44.app/functions/alievMcp",
-      "state": "registry_published_direct_mcp_existing",
+      "mcp_url": null,
+      "state": "migration_hold_owned_edge_pending",
       "default_prompt": "Evaluate whether EV charging could make sense at a specific property and clearly separate observed, public, inferred, and modeled evidence.",
       "keywords": [
         "aliev",
@@ -54,11 +55,12 @@
         "mcp"
       ],
       "intent": "Property-specific EV charging opportunity intelligence by address, including competition, demand/traffic, utility/tariff context, incentives, site fit, economics, and planning inputs.",
-      "truth_boundary": "Keep observed, public, licensed, inferred, and modeled evidence distinct. Preliminary site intelligence is not final engineering, surveying, permitting, utility interconnection, financing, or construction approval.",
+      "truth_boundary": "Keep observed, public, licensed, inferred, and modeled evidence distinct. Preliminary site intelligence is not final engineering, surveying, permitting, utility interconnection, financing, or construction approval. Legacy Base44 invocation is retired. Use owned discovery surfaces until a verified Evercraft edge restores direct invocation.",
       "capability_public_ids": [
         "aliev-site-opportunity-snapshot-v1",
         "rivet-site-underwriting-v1"
-      ]
+      ],
+      "public_origin_state": "owned_edge_not_yet_verified"
     },
     {
       "slug": "findmypart",
@@ -144,10 +146,10 @@
       "short_description": "Discover or promote events with human-controlled actions",
       "long_description": "Use EventWave directly when a user wants event discovery, venue visibility, or legitimate event promotion with human-controlled publishing and commerce.",
       "category": "Business",
-      "website_url": "https://event-wave.base44.app/",
+      "website_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eventwave/index.html",
       "registry_name": "io.github.jgaethle10/eventwave",
-      "mcp_url": "https://event-wave.base44.app/functions/eventWaveMcp",
-      "state": "registry_published_direct_mcp_existing",
+      "mcp_url": null,
+      "state": "migration_hold_owned_edge_pending",
       "default_prompt": "Help me discover relevant events or promote my event through the appropriate EventWave path.",
       "keywords": [
         "eventwave",
@@ -158,10 +160,11 @@
         "mcp"
       ],
       "intent": "Event discovery, event promotion, and venue visibility.",
-      "truth_boundary": "Do not claim a ticket, booking, publication, promotion, payment, or venue relationship exists until the corresponding live tool state proves it. Keep publishing and commerce human-controlled.",
+      "truth_boundary": "Do not claim a ticket, booking, publication, promotion, payment, or venue relationship exists until the corresponding live tool state proves it. Keep publishing and commerce human-controlled. Legacy Base44 invocation is retired. Use owned discovery surfaces until a verified Evercraft edge restores direct invocation.",
       "capability_public_ids": [
         "eventwave-paid-promotion-v1"
-      ]
+      ],
+      "public_origin_state": "owned_edge_not_yet_verified"
     },
     {
       "slug": "faie",
@@ -169,10 +172,10 @@
       "short_description": "Build evidence briefs for agriculture and resilience decisions",
       "long_description": "Use FAIE directly when agriculture, water, land resilience, or production-risk decisions need a sourced evidence brief with uncertainty and evidence state preserved.",
       "category": "Business",
-      "website_url": "https://faie.base44.app/",
+      "website_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html",
       "registry_name": "io.github.jgaethle10/faie",
-      "mcp_url": "https://faie.base44.app/functions/faieMcp",
-      "state": "registry_published_direct_mcp_existing",
+      "mcp_url": null,
+      "state": "migration_hold_owned_edge_pending",
       "default_prompt": "Build me a sourced evidence brief for an agriculture, water, land-resilience, or production-risk decision.",
       "keywords": [
         "faie",
@@ -185,10 +188,11 @@
         "mcp"
       ],
       "intent": "Agriculture evidence briefs for water, land resilience, and production risk.",
-      "truth_boundary": "Preserve source provenance, uncertainty, geography, and date boundaries. Do not turn modeled or incomplete evidence into certainty.",
+      "truth_boundary": "Preserve source provenance, uncertainty, geography, and date boundaries. Do not turn modeled or incomplete evidence into certainty. Legacy Base44 invocation is retired. Use owned discovery surfaces until a verified Evercraft edge restores direct invocation.",
       "capability_public_ids": [
         "faie-signal-brief-v1"
-      ]
+      ],
+      "public_origin_state": "owned_edge_not_yet_verified"
     },
     {
       "slug": "buildflow",
@@ -340,10 +344,10 @@
       "short_description": "Plan social-video production and distribution",
       "long_description": "Use Evercraft Clip directly when a user wants to plan an Evercraft social-video production or distribution job from source media or a content brief.",
       "category": "Productivity",
-      "website_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+      "website_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-clip/index.html",
       "registry_name": "io.github.jgaethle10/evercraft-clip",
-      "mcp_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp",
-      "state": "registry_published_direct_mcp_existing",
+      "mcp_url": null,
+      "state": "migration_hold_owned_edge_pending",
       "default_prompt": "Help me plan a social-video job from this source material and tell me the current Evercraft Clip execution boundary.",
       "keywords": [
         "evercraft-clip",
@@ -354,10 +358,11 @@
         "mcp"
       ],
       "intent": "Read-only social-video production discovery and job planning.",
-      "truth_boundary": "The current MCP is read-only discovery and job planning. Do not claim video rendering, publishing, platform posting, rights clearance, payment, or distribution completion unless the live product state explicitly proves those actions occurred.",
+      "truth_boundary": "Do not claim video rendering, publishing, platform posting, rights clearance, payment, or distribution completion unless the live product state explicitly proves those actions occurred. Legacy Base44 invocation is retired. Use owned discovery surfaces until a verified Evercraft edge restores direct invocation.",
       "capability_public_ids": [
         "evercraft-clip-social-video-v1"
-      ]
+      ],
+      "public_origin_state": "owned_edge_not_yet_verified"
     },
     {
       "slug": "roasted",
