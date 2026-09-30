@@ -1,0 +1,62 @@
+name: Clip content supply
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - systemia/clip-content-supply-20260930
+    paths:
+      - 'systemia/organism/clip-content-supply.mjs'
+      - 'systemia/organism/clip-content-supply.proof.mjs'
+      - 'systemia/organism/clip-content-supply.workflow.json'
+      - '.github/workflows/clip-content-supply.yml'
+  schedule:
+    - cron: '17 */6 * * *'
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: clip-content-supply
+  cancel-in-progress: false
+
+jobs:
+  supply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    env:
+      EVERCRAFT_CLIP_SUPPLY_INGRESS_URL: https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/systemiaClipSupplyIngress
+      CLIP_SUPPLY_MAX_REQUESTS: '2'
+      CLIP_SUPPLY_RECEIPT_PATH: artifacts/clip-content-supply/latest.json
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Prove bounded supply contract
+        run: node systemia/organism/clip-content-supply.proof.mjs
+
+      - name: Mint private workload identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          TOKEN_FILE="$RUNNER_TEMP/clip-supply-oidc"
+          TOKEN_RESPONSE="$(curl --fail --silent --show-error --max-time 20             -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN"             "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=evercraft-clip-supply")"
+          umask 077
+          printf '%s' "$(printf '%s' "$TOKEN_RESPONSE" | jq -er '.value')" > "$TOKEN_FILE"
+          echo "SYSTEMIA_CLIP_SUPPLY_ID_TOKEN_FILE=$TOKEN_FILE" >> "$GITHUB_ENV"
+
+      - name: Replenish bounded rights-cleared supply
+        run: node systemia/organism/clip-content-supply.mjs
+
+      - name: Upload supply receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: clip-content-supply-receipt
+          path: artifacts/clip-content-supply/latest.json
+          if-no-files-found: warn
+          retention-days: 30
