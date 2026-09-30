@@ -1,0 +1,35 @@
+{
+  "schema": "evercraft.systemia.workflow-manifest.v1",
+  "workflow_key": "rivet-report-edge",
+  "mission_key": "rivet-reporting-runtime",
+  "runtime": "systemia-core-resident",
+  "collider_compatible": false,
+  "cadence_seconds": 60,
+  "entrypoint": "systemia/organism/rivet-report-edge-runner.mjs",
+  "authority": {
+    "reuse_existing_public_edge_capacity": "autonomous",
+    "deploy_rivet_sibling_runtime": "autonomous_after_public_edge_ready",
+    "renew_compute_leases": "autonomous",
+    "verify_route_and_receipts": "autonomous",
+    "rebind_existing_route": "autonomous_after_receipt_and_instance_match",
+    "provision_new_external_capacity": false,
+    "use_base44_as_source_runtime": false,
+    "create_payment_obligation": false,
+    "grant_customer_production_access": false,
+    "founder_login_required": false
+  },
+  "truth_gates": [
+    "evercraft_public_edge_ready",
+    "immutable_release_ref",
+    "owned_aliev_source_url",
+    "non_base44_source_runtime",
+    "yard_deployment_receipt",
+    "public_https_route_verification",
+    "authenticated_team_report_api",
+    "fresh_report_canary_before_cutover"
+  ],
+  "role": "revenue_critical_owned_report_edge",
+  "maintenance_owner": "systemia",
+  "hold_state": "held_waiting_for_owned_dependencies",
+  "proof": "systemia/core/rivet-report-resident-wiring.proof.mjs"
+}
