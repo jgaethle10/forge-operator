@@ -50,6 +50,17 @@ function assertSpec(spec){
 function redactSpec(spec){
   return structuredClone(spec);
 }
+function resolvedInput(spec){
+  const input=structuredClone(spec.input||{});
+  for(const [field,envNameRaw] of Object.entries(spec.input_env||{})){
+    const envName=clean(envNameRaw);
+    if(!/^[A-Z][A-Z0-9_]{1,127}$/.test(envName)) throw new Error('input_env_name_invalid');
+    const value=process.env[envName];
+    if(value===undefined||value==='') throw new Error('required_input_env_missing:'+envName);
+    input[field]=value;
+  }
+  return input;
+}
 function matchesExpected(actual,expected){
   for(const [key,value] of Object.entries(expected||{})){
     if(actual?.[key]!==value) return false;
@@ -147,7 +158,7 @@ export class EvercraftHostingControlPlane {
       }
     }
 
-    const candidateId=safeId(serviceId+'--'+clean(spec.release_ref).slice(0,12));
+    const candidateId=safeId(serviceId+'--'+desiredHash.replace(/^sha256:/,'').slice(0,12));
     let candidate=null;
     let binding=null;
     try{
@@ -155,7 +166,7 @@ export class EvercraftHostingControlPlane {
         deploymentId:candidateId,
         releaseRef:clean(spec.release_ref),
         workloadClass:clean(spec.workload_class),
-        input:structuredClone(spec.input||{}),
+        input:resolvedInput(spec),
         rollbackTarget:clean(spec.rollback_target),
         leaseTtlMs,
       };
