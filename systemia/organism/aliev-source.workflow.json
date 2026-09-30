@@ -1,0 +1,32 @@
+{
+  "schema": "evercraft.systemia.workflow-manifest.v1",
+  "workflow_key": "aliev-owned-source",
+  "mission_key": "aliev-owned-data-runtime",
+  "runtime": "systemia-core-resident",
+  "collider_compatible": false,
+  "cadence_seconds": 60,
+  "entrypoint": "systemia/organism/aliev-source-runner.mjs",
+  "authority": {
+    "reuse_existing_public_edge_capacity": "autonomous",
+    "deploy_private_aliev_source_sibling": "autonomous_after_public_edge_ready",
+    "renew_compute_leases": "autonomous",
+    "expose_aliev_source_publicly": false,
+    "provision_new_external_capacity": false,
+    "use_base44_as_runtime": false,
+    "create_payment_obligation": false,
+    "founder_login_required": false
+  },
+  "truth_gates": [
+    "evercraft_public_edge_ready",
+    "immutable_release_ref",
+    "systemia_machine_key_present_on_compute_node",
+    "aliev_owned_ingest_token_present_on_compute_node",
+    "private_loopback_source_only",
+    "yard_deployment_receipt",
+    "content_addressed_snapshot_store"
+  ],
+  "role": "revenue_critical_owned_aliev_source",
+  "maintenance_owner": "systemia",
+  "hold_state": "held_waiting_for_owned_dependencies",
+  "proof": "systemia/compute/aliev-rivet-owned-lane.proof.mjs"
+}

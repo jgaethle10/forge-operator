@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.sell-now.v1",
-  "updated_at": "2026-09-30T19:12:06.848Z",
+  "updated_at": "2026-09-30T20:58:30.000Z",
   "count": 14,
   "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
   "rule": "These offers are publicly cataloged as sell_now. Any supported checkout still requires explicit human payment confirmation and provider verification.",
@@ -303,10 +303,13 @@
       },
       "use_when": [
         "find a hard-to-source part",
-        "identify this part",
         "find a discontinued part",
         "source an obsolete component",
-        "find a donor or salvage part"
+        "find a supersession or cross reference",
+        "find a donor or salvage part",
+        "find a blueprint or fabrication path",
+        "source new old stock or aftermarket replacement",
+        "normal part searches failed and I need deeper sourcing"
       ]
     },
     {

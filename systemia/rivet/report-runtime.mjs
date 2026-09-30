@@ -37,7 +37,7 @@ function atomicBytes(file,bytes){
   fs.renameSync(tmp,file);
 }
 function safeId(value){ return clean(value).replace(/[^a-zA-Z0-9._-]/g,'_').slice(0,180); }
-function number(value){ const n=Number(value); return Number.isFinite(n)?n:null; }
+function number(value){ if(value===null||value===undefined||String(value).trim()==='') return null; const n=Number(value); return Number.isFinite(n)?n:null; }
 function arr(value){ return Array.isArray(value)?value:[]; }
 function publicText(value){ return clean(value).slice(0,4000); }
 function normalizeCoverageManifest(data,retrievedAt){
@@ -69,9 +69,9 @@ function evidenceIndex(data){
     charging_inventory:count(data?.chargers),
     incentives:count(data?.incentives)+count(data?.new_york_programs),
     observed_sessions:count(data?.nearby_observed_usage),
-    utility_service_area:count(data?.washington_utility_service_area_candidates)+count(data?.california_utility_service_area_candidates),
+    utility_service_area:count(data?.utility_service_area_candidates)+count(data?.washington_utility_service_area_candidates)+count(data?.california_utility_service_area_candidates),
     utility_tariff:count(data?.utility_rate_candidates)+count(data?.california_candidate_tariff_catalog)+count(data?.washington_pacific_power_current_rate_catalog),
-    parcel_planning:count(data?.california_parcel_planning),
+    parcel_planning:count(data?.parcel_planning)+count(data?.california_parcel_planning),
     local_ev_stock:count(data?.local_ev_stock),
     freight:count(data?.freight_context),
     dwell_context:count(data?.dwell_anchors),
@@ -117,13 +117,13 @@ function quickRead(data){
   };
 }
 
-export function buildYardReport({address,sourceSnapshot,retrievedAt=new Date().toISOString(),sourceSnapshotSha256='',sourceSnapshotRef=''}){
+export function buildYardReport({address,reportType='preliminary_site_opportunity',sourceSnapshot,retrievedAt=new Date().toISOString(),sourceSnapshotSha256='',sourceSnapshotRef=''}){
   const read=quickRead(sourceSnapshot);
   const coverage=normalizeCoverageManifest(sourceSnapshot,retrievedAt);
   return {
     schema:'evercraft.rivet.yard-report.v1',
     generation_state:'ready',
-    report_type:'preliminary_site_opportunity',
+    report_type:clean(reportType)||'preliminary_site_opportunity',
     address:clean(sourceSnapshot?.matched_address || address),
     requested_address:clean(address),
     latitude:number(sourceSnapshot?.latitude),
@@ -187,6 +187,7 @@ export function buildYardReport({address,sourceSnapshot,retrievedAt=new Date().t
           rate_source_status:sourceSnapshot?.utility_rate_source_status || null,
           rate_source_error:sourceSnapshot?.utility_rate_source_error || null,
           rate_semantics:sourceSnapshot?.utility_rate_semantics || null,
+          service_area_candidates:arr(sourceSnapshot?.utility_service_area_candidates).slice(0,30),
           washington_service_area_candidates:arr(sourceSnapshot?.washington_utility_service_area_candidates).slice(0,20),
           washington_service_area_status:sourceSnapshot?.washington_utility_service_area_status || null,
           washington_pacific_power_ev_tariff_context:sourceSnapshot?.washington_pacific_power_ev_tariff_context || null,
@@ -208,6 +209,7 @@ export function buildYardReport({address,sourceSnapshot,retrievedAt=new Date().t
           new_york_source_status:sourceSnapshot?.new_york_program_source_status || null
         },
         property_planning:{
+          parcel_planning:arr(sourceSnapshot?.parcel_planning).slice(0,30),
           california_near_home_charging_gap:sourceSnapshot?.california_near_home_charging_gap || null,
           california_near_home_gap_source_status:sourceSnapshot?.california_near_home_gap_source_status || null,
           california_parcel_planning:sourceSnapshot?.california_parcel_planning || null,
@@ -244,6 +246,7 @@ export function buildYardReport({address,sourceSnapshot,retrievedAt=new Date().t
 
 export async function generateYardReport({
   address,
+  reportType='preliminary_site_opportunity',
   sourceUrl,
   systemiaMachineKey,
   sourceFetch=fetch,
@@ -253,6 +256,8 @@ export async function generateYardReport({
 }){
   const requested=clean(address);
   if(requested.length<5) throw new Error('address_required');
+  const normalizedReportType=clean(reportType)||'preliminary_site_opportunity';
+  if(!['preliminary_site_opportunity','full_site_opportunity'].includes(normalizedReportType)) throw new Error('unsupported_report_type');
   if(!clean(sourceUrl)) throw new Error('aliev_source_url_required');
   if(!clean(systemiaMachineKey)) throw new Error('systemia_machine_key_required');
   if(!stateDir) throw new Error('state_dir_required');
@@ -365,6 +370,7 @@ export async function generateYardReport({
   progress('report_render',7,8,{message:'Building the RIVET report.'});
   const report=buildYardReport({
     address:requested,
+    reportType:normalizedReportType,
     sourceSnapshot:data,
     retrievedAt:now(),
     sourceSnapshotSha256:snapshotSha,
@@ -374,6 +380,7 @@ export async function generateYardReport({
   const reportSha=sha256(reportBytes);
   const reportId='rivet-yard:'+sha256(JSON.stringify(stable({
     address:requested,
+    report_type:normalizedReportType,
     source_sha256:snapshotSha,
     report_sha256:reportSha
   }))).slice(0,32);
@@ -439,12 +446,20 @@ export async function startRivetReportRuntime({
   stateDir,
   host='127.0.0.1',
   port=0,
-  sourceUrl=process.env.ALIEV_YARD_SOURCE_URL || 'https://base44.app/api/apps/69b9b64d86a732029ce0db81/functions/energySiteLookup',
+  sourceUrl=process.env.ALIEV_YARD_SOURCE_URL || '',
   systemiaMachineKey=process.env.SYSTEMIA_MACHINE_KEY || '',
   teamToken=process.env.RIVET_YARD_TEAM_TOKEN || '',
   sourceFetch=fetch
 }={}){
   if(!stateDir) throw new Error('stateDir is required');
+  if(!clean(sourceUrl)) throw new Error('ALIEV_YARD_SOURCE_URL or sourceUrl is required');
+  try{
+    const parsedSource=new URL(sourceUrl);
+    if(/(^|\\.)base44\\.app$/i.test(parsedSource.hostname)) throw new Error('owned_rivet_runtime_refuses_base44_source');
+  }catch(error){
+    if(error instanceof Error && error.message==='owned_rivet_runtime_refuses_base44_source') throw error;
+    throw new Error('owned_aliev_source_url_invalid');
+  }
   fs.mkdirSync(stateDir,{recursive:true,mode:0o750});
   if(!clean(systemiaMachineKey)) throw new Error('SYSTEMIA_MACHINE_KEY is required');
   if(!clean(teamToken)) throw new Error('RIVET_YARD_TEAM_TOKEN is required');
@@ -483,6 +498,7 @@ export async function startRivetReportRuntime({
         const progress=[];
         const record=await generateYardReport({
           address:body?.address,
+          reportType:body?.report_type,
           sourceUrl,
           systemiaMachineKey,
           sourceFetch,

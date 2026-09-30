@@ -1,0 +1,53 @@
+name: Evercraft Journal owned newsroom
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/newsroom/**'
+      - 'systemia/worldstate/subscriptions.json'
+      - 'public/journal/**'
+      - 'package.json'
+      - '.github/workflows/evercraft-journal-owned.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'systemia/newsroom/**'
+      - 'systemia/worldstate/subscriptions.json'
+      - 'public/journal/**'
+      - 'package.json'
+      - '.github/workflows/evercraft-journal-owned.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Prove owned newsroom contracts
+        run: npm run journal:test
+      - name: Build owned Journal
+        run: npm run journal:build
+      - name: Verify owned Journal build outputs
+        run: |
+          test -f public/journal/index.html
+          test -f public/journal/index.json
+          test -f public/journal/feed.xml
+          test -f public/journal/llms.txt
+          test -f public/journal/boeing-fa-xx-industrial-base/index.html
+          test -f public/journal/receipts/boeing-fa-xx-industrial-base.json
+          test -f public/journal/production/boeing-fa-xx-industrial-base/fallen-brief.json
+          test -f public/journal/production/boeing-fa-xx-industrial-base/clip-handoff.json
+      - name: Verify no legacy shopping identity leaked
+        run: |
+          if grep -RniE 'Black Friday|shopping assistant|optimize your cart' public/journal; then
+            echo "Legacy shopping identity detected in owned Journal output."
+            exit 1
+          fi

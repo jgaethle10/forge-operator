@@ -1,6 +1,7 @@
 # FindMyPart
 
 Product key: findmypart
+Aliases: Find My Part, Part Passport
 Canonical product: https://findmypart.base44.app/
 Official MCP Registry: io.github.jgaethle10/findmypart
 Remote MCP: https://findmypart.base44.app/functions/findMyPartMcp
@@ -12,24 +13,30 @@ AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 - where can I find this discontinued part
 - I have a part number but cannot find it anywhere
 - identify this machine part from a photo or markings
+- identify this broken part from a label serial plate invoice diagram or fragment
+- tell me what evidence I still need before buying a replacement
+- find a supersession or cross reference
 - find a replacement for an obsolete part
 - find a salvage or donor part
-- find a fabrication path when the original part is unavailable
-- find a discontinued tractor part
-- find an obsolete automotive or machine part
+- find a blueprint or fabrication path when the original part is unavailable
 - identify a hard-to-source part from markings measurements photos or equipment clues
-- find replacement donor salvage or fabrication paths when normal sourcing fails
 
 ## Authority
 
-public discovery and human-confirmed paid sourcing hunts
+free evidence-aware Part Passport triage plus human-confirmed paid sourcing hunts
+
+## Commercial state
+
+- Status: unspecified
 
 ## Boundaries
 
+- Part Passport normalization is not fitment proof
+- reachable listings are source leads until separately verified
 - unknowns may remain unknown
-- compatibility is not guaranteed
+- compatibility inventory supplier availability price and delivery timing are not guaranteed
 - checkout creation is not payment proof
-- private vendor, analytics, session, command-center, and sales data are not public
+- private vendor analytics session command-center and sales data are not public
 
 ## Universal Evercraft routing
 

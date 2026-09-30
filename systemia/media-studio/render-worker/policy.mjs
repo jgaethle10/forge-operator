@@ -10,6 +10,9 @@ const MAX_DIMENSION=3840;
 const ID_RX=/^[a-zA-Z0-9._-]{1,128}$/;
 const SHA_RX=/^[a-f0-9]{64}$/i;
 const MEDIA_TYPES=new Set(['image/png','image/jpeg','image/webp','video/mp4','video/webm']);
+const PHENOMENON_COLOR_RX=/^#[0-9a-fA-F]{3,8}$/;
+const MAX_PHENOMENON_STREAMS=1000;
+const MAX_PHENOMENON_SAMPLES=5000;
 
 function boundedNumber(value,fallback,min,max){
   const n=Number(value);
@@ -48,9 +51,53 @@ function sanitizeStage(input){
     const layerId=cleanId(layer?.id,'layer_id');
     if(ids.has(layerId)) throw new Error('duplicate_layer_id');
     ids.add(layerId);
-    if(!['media','text','shape','geo','metric','timeline'].includes(layer?.kind)) throw new Error(`layer_kind_invalid:${layerId}`);
+    if(!['media','text','shape','geo','metric','timeline','phenomenon'].includes(layer?.kind)) throw new Error(`layer_kind_invalid:${layerId}`);
     if(!Number.isFinite(Number(layer?.z))) throw new Error(`layer_z_invalid:${layerId}`);
     validateEvidence(layer);
+    if(layer?.kind==='phenomenon'){
+      const b=layer.bounds||{};
+      if(![b.north,b.south,b.east,b.west].every(v=>Number.isFinite(Number(v)))||Number(b.north)<=Number(b.south)||Number(b.east)===Number(b.west)){
+        throw new Error(`phenomenon_bounds_invalid:${layerId}`);
+      }
+      if(Number(b.north)>90||Number(b.north)<-90||Number(b.south)>90||Number(b.south)<-90||Number(b.east)>180||Number(b.east)<-180||Number(b.west)>180||Number(b.west)<-180){
+        throw new Error(`phenomenon_bounds_coordinate_range_invalid:${layerId}`);
+      }
+      if(!String(layer.title||'').trim()) throw new Error(`phenomenon_title_missing:${layerId}`);
+      if(!String(layer.motionLabel||'').trim()) throw new Error(`phenomenon_motion_label_missing:${layerId}`);
+      if(!String(layer.sourceLabel||'').trim()) throw new Error(`phenomenon_source_label_missing:${layerId}`);
+      if(!Array.isArray(layer.sourceRefs)||!layer.sourceRefs.length) throw new Error(`phenomenon_source_refs_missing:${layerId}`);
+      const sourceRefs=new Set(layer.sourceRefs.map(value=>String(value||'').trim()).filter(Boolean));
+      if(!sourceRefs.size) throw new Error(`phenomenon_source_refs_missing:${layerId}`);
+      if(layer.colorEncoding){
+        if(!Number.isFinite(Number(layer.colorEncoding.min))||!Number.isFinite(Number(layer.colorEncoding.max))||Number(layer.colorEncoding.max)<=Number(layer.colorEncoding.min)) throw new Error(`phenomenon_color_range_invalid:${layerId}`);
+        if(layer.colorEncoding.palette){
+          if(!Array.isArray(layer.colorEncoding.palette)||layer.colorEncoding.palette.length<2||layer.colorEncoding.palette.length>16||layer.colorEncoding.palette.some(value=>!PHENOMENON_COLOR_RX.test(String(value||'')))) throw new Error(`phenomenon_color_palette_invalid:${layerId}`);
+        }
+      }
+      if(layer.brightnessEncoding&&(!Number.isFinite(Number(layer.brightnessEncoding.min))||!Number.isFinite(Number(layer.brightnessEncoding.max))||Number(layer.brightnessEncoding.max)<=Number(layer.brightnessEncoding.min))) throw new Error(`phenomenon_brightness_range_invalid:${layerId}`);
+      if(layer.time){
+        const start=Date.parse(String(layer.time.startIso||'')),end=Date.parse(String(layer.time.endIso||''));
+        if(!Number.isFinite(start)||!Number.isFinite(end)||end<=start) throw new Error(`phenomenon_time_range_invalid:${layerId}`);
+      }
+      if(!Array.isArray(layer.streamlines)||!layer.streamlines.length) throw new Error(`phenomenon_streamlines_missing:${layerId}`);
+      if(layer.streamlines.length>MAX_PHENOMENON_STREAMS) throw new Error(`phenomenon_streamline_count_exceeded:${layerId}`);
+      let sampleCount=0;
+      for(const stream of layer.streamlines){
+        if(Array.isArray(stream?.sourceRefs)){
+          for(const ref of stream.sourceRefs){
+            if(!sourceRefs.has(String(ref||'').trim())) throw new Error(`phenomenon_stream_source_ref_outside_layer:${layerId}`);
+          }
+        }
+        if(!Array.isArray(stream?.points)||stream.points.length<2) throw new Error(`phenomenon_stream_points_invalid:${layerId}`);
+        sampleCount+=stream.points.length;
+        if(sampleCount>MAX_PHENOMENON_SAMPLES) throw new Error(`phenomenon_sample_count_exceeded:${layerId}`);
+        for(const point of stream.points){
+          if(!Number.isFinite(Number(point?.lat))||Number(point.lat)<-90||Number(point.lat)>90||!Number.isFinite(Number(point?.lon))||Number(point.lon)<-180||Number(point.lon)>180) throw new Error(`phenomenon_coordinate_invalid:${layerId}`);
+          if(layer.colorEncoding&&!Number.isFinite(Number(point?.colorValue))) throw new Error(`phenomenon_color_value_missing:${layerId}`);
+          if(layer.brightnessEncoding&&!Number.isFinite(Number(point?.magnitude))) throw new Error(`phenomenon_magnitude_missing:${layerId}`);
+        }
+      }
+    }
   }
 
   return JSON.parse(JSON.stringify({...input,id,width,height,fps,durationSec}));

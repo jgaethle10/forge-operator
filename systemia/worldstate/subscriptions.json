@@ -2,7 +2,8 @@
   "schema": "evercraft.context-fabric.subscriptions.v1",
   "always": [
     "systemia_world_model",
-    "sentinel"
+    "sentinel",
+    "journal"
   ],
   "by_domain": {
     "weather": [
@@ -10,27 +11,31 @@
       "faie",
       "towi",
       "evermaps",
-      "daytrade_edge_lab"
+      "daytrade_edge_lab",
+      "fallen_phenomenon"
     ],
     "climate": [
       "weather_desk",
       "faie",
       "towi",
       "evermaps",
-      "daytrade_edge_lab"
+      "daytrade_edge_lab",
+      "fallen_phenomenon"
     ],
     "water": [
       "weather_desk",
       "faie",
       "towi",
       "evermaps",
-      "daytrade_edge_lab"
+      "daytrade_edge_lab",
+      "fallen_phenomenon"
     ],
     "environment": [
       "faie",
       "towi",
       "evermaps",
-      "daytrade_edge_lab"
+      "daytrade_edge_lab",
+      "fallen_phenomenon"
     ],
     "earth_hazards": [
       "faie",
@@ -65,7 +70,8 @@
       "evermaps",
       "rivet",
       "omnicore",
-      "daytrade_edge_lab"
+      "daytrade_edge_lab",
+      "fallen_phenomenon"
     ],
     "energy": [
       "faie",
@@ -100,7 +106,8 @@
       "evermaps",
       "weather_desk",
       "omnicore",
-      "daytrade_edge_lab"
+      "daytrade_edge_lab",
+      "fallen_phenomenon"
     ],
     "space_weather": [
       "faie",
@@ -116,14 +123,16 @@
       "evermaps",
       "omnicore",
       "skyops",
-      "daytrade_edge_lab"
+      "daytrade_edge_lab",
+      "fallen_phenomenon"
     ],
     "maritime": [
       "faie",
       "towi",
       "evermaps",
       "omnicore",
-      "daytrade_edge_lab"
+      "daytrade_edge_lab",
+      "fallen_phenomenon"
     ],
     "telecom": [
       "faie",

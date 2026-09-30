@@ -3,7 +3,7 @@
   "provider": "Evercraft LLC",
   "public_id": "findmypart-paid-hunt-v1",
   "name": "FindMyPart Paid Part Hunt",
-  "problem": "A difficult, ambiguous, obsolete, discontinued or hard-to-source part is blocking a repair, restoration, machine or project.",
+  "problem": "A difficult, identified-enough physical part is still blocking a repair, restoration, machine or project after ordinary sourcing has failed or deeper cross-reference, salvage, documentation, blueprint or fabrication work is needed.",
   "pricing": "Quick Hunt $19 one-time; Deep Hunt $49 one-time; Rescue Hunt $99 one-time.",
   "commercial_state": "sell_now",
   "machine_state": "payment_ready",
@@ -11,20 +11,32 @@
   "human_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=findmypart-paid-hunt-v1",
   "intent_terms": [
     "find a hard-to-source part",
-    "identify this part",
     "find a discontinued part",
     "source an obsolete component",
-    "find a donor or salvage part"
+    "find a supersession or cross reference",
+    "find a donor or salvage part",
+    "find a blueprint or fabrication path",
+    "source new old stock or aftermarket replacement",
+    "normal part searches failed and I need deeper sourcing"
   ],
   "discovered_user_language": [
     "find a hard-to-source part",
-    "identify this part",
     "find a discontinued part",
     "source an obsolete component",
-    "find a donor or salvage part"
+    "find a supersession or cross reference",
+    "find a donor or salvage part",
+    "find a blueprint or fabrication path",
+    "source new old stock or aftermarket replacement",
+    "normal part searches failed and I need deeper sourcing"
   ],
-  "answer_door_count": 5,
+  "answer_door_count": 8,
   "answer_doors": [
+    {
+      "answer_id": "intent:1a2c5aeb49",
+      "phrase": "find a blueprint or fabrication path",
+      "html": "/chum/answers/doors/find-a-blueprint-or-fabrication-path-1a2c5aeb49/",
+      "json": "/chum/answers/doors/find-a-blueprint-or-fabrication-path-1a2c5aeb49.json"
+    },
     {
       "answer_id": "intent:5646da09bb",
       "phrase": "find a discontinued part",
@@ -44,16 +56,28 @@
       "json": "/chum/answers/doors/find-a-hard-to-source-part-78dcd37ecc.json"
     },
     {
-      "answer_id": "intent:870c0fa937",
-      "phrase": "identify this part",
-      "html": "/chum/answers/doors/identify-this-part-870c0fa937/",
-      "json": "/chum/answers/doors/identify-this-part-870c0fa937.json"
+      "answer_id": "intent:072d61a0a0",
+      "phrase": "find a supersession or cross reference",
+      "html": "/chum/answers/doors/find-a-supersession-or-cross-reference-072d61a0a0/",
+      "json": "/chum/answers/doors/find-a-supersession-or-cross-reference-072d61a0a0.json"
+    },
+    {
+      "answer_id": "intent:9223ab99d9",
+      "phrase": "normal part searches failed and I need deeper sourcing",
+      "html": "/chum/answers/doors/normal-part-searches-failed-and-i-need-deeper-sourcing-9223ab99d9/",
+      "json": "/chum/answers/doors/normal-part-searches-failed-and-i-need-deeper-sourcing-9223ab99d9.json"
     },
     {
       "answer_id": "intent:61fb541501",
       "phrase": "source an obsolete component",
       "html": "/chum/answers/doors/source-an-obsolete-component-61fb541501/",
       "json": "/chum/answers/doors/source-an-obsolete-component-61fb541501.json"
+    },
+    {
+      "answer_id": "intent:6756b15f14",
+      "phrase": "source new old stock or aftermarket replacement",
+      "html": "/chum/answers/doors/source-new-old-stock-or-aftermarket-replacement-6756b15f14/",
+      "json": "/chum/answers/doors/source-new-old-stock-or-aftermarket-replacement-6756b15f14.json"
     }
   ],
   "related_surfaces": {

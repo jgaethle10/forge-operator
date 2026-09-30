@@ -30,7 +30,30 @@
     "focused_hotfix_release_ref": "513d3e9b4f2f0a0771544cbe20c6e456d65975c2",
     "resident_report_edge_registered": true,
     "silent_base44_source_fallback_removed": true,
-    "automatic_owned_runtime_canary_on_main": true
+    "automatic_owned_runtime_canary_on_main": true,
+    "owned_aliev_source_runtime_in_github": true,
+    "owned_aliev_content_addressed_snapshot_store_proof": "pass",
+    "owned_aliev_to_rivet_same_node_proof": "pass",
+    "resident_aliev_source_registered": true,
+    "rivet_auto_discovers_owned_aliev": true,
+    "evercraft_hosting_control_plane_proof": "pass",
+    "failed_candidate_preserves_active_service": true,
+    "blue_green_and_rollback_proof": "pass",
+    "explicit_cutover_modes": [
+      "legacy_only",
+      "shadow_owned",
+      "owned_primary",
+      "owned_only"
+    ],
+    "runtime_receipt_entity": "RIVETRuntimeReceipt",
+    "silent_failback_for_owned_only": false,
+    "explicit_legacy_failback_flag_required_for_owned_primary": true,
+    "full_report_tier_forwarded_to_yard": true,
+    "stale_migration_snapshot_overwrite_blocked": true,
+    "authenticated_batch_snapshot_ingest": true,
+    "one_shot_aliev_extractor_proof": "pass",
+    "migration_secret_persistence": false,
+    "owned_runtime_base44_default_removed": true
   },
   "migrate": [
     "report_execution_runtime",
@@ -40,7 +63,10 @@
     "live_rivet_ui_route",
     "auth_and_team_authority_adapter",
     "report_record_persistence_adapter",
-    "customer_and_team_delivery_handoff"
+    "customer_and_team_delivery_handoff",
+    "runtime_cutover_receipts",
+    "aliev_snapshot_bundle_extractor",
+    "stale_safe_snapshot_reconciliation"
   ],
   "acceptance": {
     "canary_address": "6405 W Chestnut Ave, Yakima, WA 98908",
@@ -56,11 +82,12 @@
     "observation_window_required": true
   },
   "blockers": [
-    "owned AliEV source endpoint has not yet been bound to the resident RIVET report edge",
-    "live authenticated Yard report route has not yet been independently verified",
-    "RIVET New Report UI is still temporarily bound to the Base44 generateQuickReport compatibility function",
-    "fresh 6405 W Chestnut live report has not yet reached generation_state=ready through Yard"
+    "owned AliEV source and RIVET resident stack have not yet been admitted on a field/public-edge production node",
+    "production AliEV snapshot store has not yet been seeded with the live migration bundle",
+    "live authenticated Yard report route has not yet been independently verified from outside the production node",
+    "RIVET New Report UI remains on legacy_only until shadow-owned canaries pass the promotion policy",
+    "fresh preliminary and full-site live reports have not yet reached generation_state=ready through the owned production lane"
   ],
-  "next_action": "bind_an_owned_non_base44_aliev_source_to_the_resident_rivet_report_edge_verify_public_https_route_then_move_new_report_creation_to_yard_and_require_a_fresh_6405_w_chestnut_generation_state_ready",
+  "next_action": "admit_owned_compute_capacity_extract_and_seed_live_aliev_bundle_run_shadow_owned_preliminary_and_full_canaries_then_promote_to_owned_primary_after_policy_receipts",
   "destructive_cutover_allowed": false
 }

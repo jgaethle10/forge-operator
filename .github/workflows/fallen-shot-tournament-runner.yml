@@ -1,0 +1,33 @@
+name: Fallen Shot Tournament Runner
+
+on:
+  pull_request:
+    paths:
+      - "systemia/media-studio/shot-tournament-runner.mjs"
+      - "systemia/media-studio/shot-tournament-runner.test.mjs"
+      - ".github/workflows/fallen-shot-tournament-runner.yml"
+  push:
+    branches: [main]
+    paths:
+      - "systemia/media-studio/shot-tournament-runner.mjs"
+      - "systemia/media-studio/shot-tournament-runner.test.mjs"
+      - ".github/workflows/fallen-shot-tournament-runner.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  tournament-runner:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Tournament runner contracts
+        run: node --test systemia/media-studio/shot-tournament-runner.test.mjs
+      - name: Estate typecheck
+        run: |
+          npm install --no-audit --no-fund
+          npm run lint

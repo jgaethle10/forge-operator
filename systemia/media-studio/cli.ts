@@ -15,6 +15,7 @@ import type { CreativeCouncilInventory, CreativeCouncilReconciliation } from './
 import { compileSeriesEpisode } from './series.js';
 import { buildVisualStageHtml } from './visual-stage-html.js';
 import { compileWorldIntelStage, type WorldIntelStageInput } from './world-intel-stage.js';
+import { compilePhenomenonCanvas, compilePhenomenonStage, type PhenomenonInput } from './phenomenon-renderer.js';
 import { compileJournalEducationStage, type JournalFallenProductionBrief } from './journal-education.js';
 import type { VisualStage } from './visual-stage.js';
 import { buildDistributedRenderPlan, type RenderAssetManifestRow } from './distributed-render.js';
@@ -48,6 +49,19 @@ import { renderTimelineExport } from './timeline-export.js';
 import type { FallenTimelineProject } from './timeline.js';
 import { compileStudioDraft, type StudioDraftPlan, type StudioDraftBundle } from './studio-create.js';
 import { resolveStudioDraft, type StudioResolutionItem } from './studio-resolve.js';
+import { finalizeStudioDelivery, type StudioDeliveryRequest } from './studio-delivery.js';
+import {
+  buildCinematicVisualRequest,
+  compileCinematicSequence,
+  type CinematicSequenceInput,
+  type CinematicShotBinding,
+  type CinematicShotContract,
+} from './cinematic-sequence.js';
+import {
+  applyPerformanceDirection,
+  compilePerformancePlan,
+  type PerformancePlanInput,
+} from './performance-director.js';
 
 function readJson<T>(filePath: string): T {
   return JSON.parse(fs.readFileSync(path.resolve(filePath), 'utf8')) as T;
@@ -75,6 +89,8 @@ function usage() {
     '  npm run media:studio -- explore <creative-bundle.json> <exploration-batch.json>',
     '  npm run media:studio -- stage <visual-stage.json> <stage.html>',
     '  npm run media:studio -- world-intel <story.json> <visual-stage.json> [stage.html]',
+    '  npm run media:studio -- phenomenon <phenomenon.json> <stage.html> [receipt.json]',
+    '  npm run media:studio -- phenomenon-stage <phenomenon.json> <stage.json> [receipt.json]',
     '  npm run media:studio -- journal-story <journal-brief.json> <visual-stage.json> [receipt.json]',
     '  npm run media:studio -- render-plan <render-plan-input.json> <distributed-plan.json>',
     '  npm run media:studio -- studio-room <room.json> <visual-stage.json>',
@@ -87,6 +103,10 @@ function usage() {
     '  npm run media:studio -- timeline-export <timeline.json> <output.mp4> [receipt.json]',
     '  npm run media:studio -- studio-create <draft-plan.json> <draft-bundle.json>',
     '  npm run media:studio -- studio-resolve <resolution-payload.json> <resolved-bundle.json> [captions.srt]',
+    '  npm run media:studio -- studio-deliver <delivery-request.json> <output-dir>',
+    '  npm run media:studio -- cinematic-sequence <sequence.json> <sequence-plan.json>',
+    '  npm run media:studio -- cinematic-shot <shot-binding.json> <visual-request.json>',
+    '  npm run media:studio -- performance-direct <payload.json> <directed-sequence.json> [performance-plan.json]',
   ].join('\n'));
 }
 
@@ -136,6 +156,70 @@ function main() {
     const plan = buildVisualFinishPlan(payload.request, payload.endpoints);
     writeJson(output, plan);
     console.log(`Visual finish plan created: ${path.resolve(output)}`);
+    return;
+  }
+
+  if (command === 'performance-direct') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const payload = readJson<{ sequence:CinematicSequenceInput; performance:PerformancePlanInput }>(input);
+    const plan = compilePerformancePlan(payload);
+    if (optionalPlan) writeJson(optionalPlan, plan);
+    if (plan.status !== 'accepted') {
+      writeJson(output, payload.sequence);
+      console.error(`Performance plan rejected: ${plan.errors.join(' | ')}`);
+      process.exitCode = 2;
+      return;
+    }
+    const directed = applyPerformanceDirection({ sequence:payload.sequence, plan });
+    writeJson(output, directed);
+    console.log(`Performance-directed cinematic sequence created: ${path.resolve(output)}`);
+    if (optionalPlan) console.log(`Performance plan created: ${path.resolve(optionalPlan)}`);
+    return;
+  }
+
+  if (command === 'cinematic-sequence') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const sequence = readJson<CinematicSequenceInput>(input);
+    const plan = compileCinematicSequence(sequence);
+    writeJson(output, plan);
+    console.log(`Cinematic sequence plan created: ${path.resolve(output)}`);
+    console.log(`Status: ${plan.status}; shots: ${plan.shots.length}; warnings: ${plan.warnings.length}`);
+    if (plan.status === 'rejected') process.exitCode = 2;
+    return;
+  }
+
+  if (command === 'cinematic-shot') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const payload = readJson<{ shot:CinematicShotContract; binding?:CinematicShotBinding }>(input);
+    const request = buildCinematicVisualRequest(payload.shot, payload.binding ?? {});
+    writeJson(output, request);
+    console.log(`Cinematic visual request created: ${path.resolve(output)}`);
+    return;
+  }
+
+  if (command === 'studio-deliver') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const request = readJson<StudioDeliveryRequest>(input);
+    const receipt = finalizeStudioDelivery({ request, outputDir: output });
+    console.log(`Studio delivery ready: ${receipt.videoPath}`);
+    console.log(`Clip intake manifest: ${receipt.clipManifestPath}`);
+    console.log(`SHA-256: ${receipt.mediaSha256}`);
     return;
   }
 
@@ -277,6 +361,38 @@ function main() {
     writeJson(output, plan);
     console.log(`Distributed render plan created: ${path.resolve(output)}`);
     console.log(`Frames: ${plan.totalFrames}; shards: ${plan.shards.length}; fps: ${plan.fps}`);
+    return;
+  }
+
+  if (command === 'phenomenon-stage') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const phenomenon = readJson<PhenomenonInput>(input);
+    const stage = compilePhenomenonStage(phenomenon);
+    const bundle = compilePhenomenonCanvas(phenomenon);
+    writeJson(output, stage);
+    if (optionalPlan) writeJson(optionalPlan, bundle.receipt);
+    console.log(`Phenomenon render stage created: ${path.resolve(output)}`);
+    if (optionalPlan) console.log(`Phenomenon receipt created: ${path.resolve(optionalPlan)}`);
+    return;
+  }
+
+  if (command === 'phenomenon') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const phenomenon = readJson<PhenomenonInput>(input);
+    const bundle = compilePhenomenonCanvas(phenomenon);
+    fs.mkdirSync(path.dirname(path.resolve(output)), { recursive: true });
+    fs.writeFileSync(path.resolve(output), bundle.html, 'utf8');
+    if (optionalPlan) writeJson(optionalPlan, bundle.receipt);
+    console.log(`Phenomenon canvas created: ${path.resolve(output)}`);
+    if (optionalPlan) console.log(`Phenomenon receipt created: ${path.resolve(optionalPlan)}`);
     return;
   }
 

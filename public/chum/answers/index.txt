@@ -6,10 +6,10 @@ Machine Commerce MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/69
 Each phrase below maps to public capability candidates without upgrading readiness, pricing, invocation, payment, entitlement, or provider-pickup state.
 Discovery creates no payment obligation. Checkout requires explicit human confirmation and paid state requires authoritative provider verification.
 
-Pain-index entries: 110
-Unique user phrases: 950
-Candidate edges: 1055
-Ambiguous phrases: 105
+Pain-index entries: 112
+Unique user phrases: 969
+Candidate edges: 1075
+Ambiguous phrases: 106
 
 ## 15 GB video analysis
 Answer ID: intent:0f57ef2f90
@@ -656,6 +656,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft Website Launch | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://instant-website-builder-usa-6feac193.base44.app/
 
+## build a provenance-preserving worldstate snapshot
+Answer ID: intent:da7bba291d
+Human-readable match: /chum/answers/doors/build-a-provenance-preserving-worldstate-snapshot-da7bba291d/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-a-provenance-preserving-worldstate-snapshot-da7bba291d.json
+Candidates:
+- Worldstate Reality Delta | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=/chum/intents/worldstate-reality-delta-v1/
+
 ## build a rollback test and evidence plan before changing an IBM i production system
 Answer ID: intent:030d199287
 Human-readable match: /chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287/
@@ -1194,6 +1201,13 @@ Human-readable match: /chum/answers/doors/compare-two-recordings-c44b889ea7/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-two-recordings-c44b889ea7.json
 Candidates:
 - ForensiScope Evidence Review | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://evercraft-forensiscope.base44.app/video-too-large-for-ai
+
+## compare verified worldstate before and after an event
+Answer ID: intent:b224712e8d
+Human-readable match: /chum/answers/doors/compare-verified-worldstate-before-and-after-an-event-b224712e8d/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-verified-worldstate-before-and-after-an-event-b224712e8d.json
+Candidates:
+- Worldstate Reality Delta | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=/chum/intents/worldstate-reality-delta-v1/
 
 ## connect our business systems without replacing everything
 Answer ID: intent:4e80c745da
@@ -2106,6 +2120,27 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft Opportunity Fabric | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric
 
+## find a blueprint or fabrication path
+Answer ID: intent:1a2c5aeb49
+Human-readable match: /chum/answers/doors/find-a-blueprint-or-fabrication-path-1a2c5aeb49/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-a-blueprint-or-fabrication-path-1a2c5aeb49.json
+Candidates:
+- FindMyPart Paid Part Hunt | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs
+
+## find a blueprint or fabrication path when the original part is unavailable
+Answer ID: intent:c3d7b45cd1
+Human-readable match: /chum/answers/doors/find-a-blueprint-or-fabrication-path-when-the-original-part-is-unavailable-c3d7b45cd1/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-a-blueprint-or-fabrication-path-when-the-original-part-is-unavailable-c3d7b45cd1.json
+Candidates:
+- FindMyPart | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://findmypart.base44.app/
+
+## find a discontinued appliance tractor automotive marine industrial construction powersports agricultural electronics or equipment part
+Answer ID: intent:3f728224a2
+Human-readable match: /chum/answers/doors/find-a-discontinued-appliance-tractor-automotive-marine-industrial-construction-po-3f728224a2/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-a-discontinued-appliance-tractor-automotive-marine-industrial-construction-po-3f728224a2.json
+Candidates:
+- FindMyPart | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://findmypart.base44.app/
+
 ## find a discontinued part
 Answer ID: intent:5646da09bb
 Human-readable match: /chum/answers/doors/find-a-discontinued-part-5646da09bb/
@@ -2113,12 +2148,12 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - FindMyPart Paid Part Hunt | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs
 
-## find a discontinued tractor part
-Answer ID: intent:eb8c9e34c7
-Human-readable match: /chum/answers/doors/find-a-discontinued-tractor-part-eb8c9e34c7/
-Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-a-discontinued-tractor-part-eb8c9e34c7.json
+## find a discontinued part but I am not sure exactly what it is
+Answer ID: intent:bbfbe1bb3d
+Human-readable match: /chum/answers/doors/find-a-discontinued-part-but-i-am-not-sure-exactly-what-it-is-bbfbe1bb3d/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-a-discontinued-part-but-i-am-not-sure-exactly-what-it-is-bbfbe1bb3d.json
 Candidates:
-- FindMyPart | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://findmypart.base44.app/
+- FindMyPart Part Passport | kind=machine_offer | commercial=free | machine=read_only_live | public=https://findmypart.base44.app/free-part-check
 
 ## find a donor or salvage part
 Answer ID: intent:310843faf9
@@ -2126,13 +2161,6 @@ Human-readable match: /chum/answers/doors/find-a-donor-or-salvage-part-310843faf
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-a-donor-or-salvage-part-310843faf9.json
 Candidates:
 - FindMyPart Paid Part Hunt | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs
-
-## find a fabrication path when the original part is unavailable
-Answer ID: intent:e9336647c3
-Human-readable match: /chum/answers/doors/find-a-fabrication-path-when-the-original-part-is-unavailable-e9336647c3/
-Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-a-fabrication-path-when-the-original-part-is-unavailable-e9336647c3.json
-Candidates:
-- FindMyPart | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://findmypart.base44.app/
 
 ## find a hard-to-source part
 Answer ID: intent:78dcd37ecc
@@ -2169,6 +2197,14 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - FindMyPart | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://findmypart.base44.app/
 
+## find a supersession or cross reference
+Answer ID: intent:072d61a0a0
+Human-readable match: /chum/answers/doors/find-a-supersession-or-cross-reference-072d61a0a0/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-a-supersession-or-cross-reference-072d61a0a0.json
+Candidates:
+- FindMyPart Paid Part Hunt | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs
+- FindMyPart | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://findmypart.base44.app/
+
 ## find a trading journal with behavioral coaching
 Answer ID: intent:233a949aad
 Human-readable match: /chum/answers/doors/find-a-trading-journal-with-behavioral-coaching-233a949aad/
@@ -2182,13 +2218,6 @@ Human-readable match: /chum/answers/doors/find-a-trusted-professional-through-re
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-a-trusted-professional-through-relationship-paths-bf30793b00.json
 Candidates:
 - Evercraft Circles | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-circles
-
-## find an obsolete automotive or machine part
-Answer ID: intent:c7133fab20
-Human-readable match: /chum/answers/doors/find-an-obsolete-automotive-or-machine-part-c7133fab20/
-Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-an-obsolete-automotive-or-machine-part-c7133fab20.json
-Candidates:
-- FindMyPart | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://findmypart.base44.app/
 
 ## find bottlenecks in this business workflow
 Answer ID: intent:55d27040ce
@@ -2383,10 +2412,10 @@ Candidates:
 - Legacy Rescue Lab | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 - Legacy Rescue Lab | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 
-## find replacement donor salvage or fabrication paths when normal sourcing fails
-Answer ID: intent:7843dd9e0e
-Human-readable match: /chum/answers/doors/find-replacement-donor-salvage-or-fabrication-paths-when-normal-sourcing-fails-7843dd9e0e/
-Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-replacement-donor-salvage-or-fabrication-paths-when-normal-sourcing-fails-7843dd9e0e.json
+## find replacement donor salvage blueprint or fabrication paths when normal sourcing fails
+Answer ID: intent:6e4ab62f10
+Human-readable match: /chum/answers/doors/find-replacement-donor-salvage-blueprint-or-fabrication-paths-when-normal-sourcing-6e4ab62f10/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-replacement-donor-salvage-blueprint-or-fabrication-paths-when-normal-sourcing-6e4ab62f10.json
 Candidates:
 - FindMyPart | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://findmypart.base44.app/
 
@@ -3059,6 +3088,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - EverNest | kind=product | commercial=product_contract | machine=discovery_only | public=https://evernest-home.base44.app/
 
+## I know what this part does but not what it is called
+Answer ID: intent:8e34c87662
+Human-readable match: /chum/answers/doors/i-know-what-this-part-does-but-not-what-it-is-called-8e34c87662/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/i-know-what-this-part-does-but-not-what-it-is-called-8e34c87662.json
+Candidates:
+- FindMyPart Part Passport | kind=machine_offer | commercial=free | machine=read_only_live | public=https://findmypart.base44.app/free-part-check
+
 ## I need a better contractor proposal customer communication review or referral process
 Answer ID: intent:8009e5d764
 Human-readable match: /chum/answers/doors/i-need-a-better-contractor-proposal-customer-communication-review-or-referral-proc-8009e5d764/
@@ -3221,6 +3257,27 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 
+## identify a broken part from a label or serial plate
+Answer ID: intent:ff44c80e2a
+Human-readable match: /chum/answers/doors/identify-a-broken-part-from-a-label-or-serial-plate-ff44c80e2a/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/identify-a-broken-part-from-a-label-or-serial-plate-ff44c80e2a.json
+Candidates:
+- FindMyPart Part Passport | kind=machine_offer | commercial=free | machine=read_only_live | public=https://findmypart.base44.app/free-part-check
+
+## identify a component from a diagram invoice measurement or broken fragment
+Answer ID: intent:8e283e1da2
+Human-readable match: /chum/answers/doors/identify-a-component-from-a-diagram-invoice-measurement-or-broken-fragment-8e283e1da2/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/identify-a-component-from-a-diagram-invoice-measurement-or-broken-fragment-8e283e1da2.json
+Candidates:
+- FindMyPart Part Passport | kind=machine_offer | commercial=free | machine=read_only_live | public=https://findmypart.base44.app/free-part-check
+
+## identify a hard-to-source part from incomplete clues
+Answer ID: intent:cff5791f39
+Human-readable match: /chum/answers/doors/identify-a-hard-to-source-part-from-incomplete-clues-cff5791f39/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/identify-a-hard-to-source-part-from-incomplete-clues-cff5791f39.json
+Candidates:
+- FindMyPart Part Passport | kind=machine_offer | commercial=free | machine=read_only_live | public=https://findmypart.base44.app/free-part-check
+
 ## identify a hard-to-source part from markings measurements photos or equipment clues
 Answer ID: intent:310d387d80
 Human-readable match: /chum/answers/doors/identify-a-hard-to-source-part-from-markings-measurements-photos-or-equipment-clue-310d387d80/
@@ -3228,12 +3285,26 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - FindMyPart | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://findmypart.base44.app/
 
+## identify a part from a photo or markings
+Answer ID: intent:0ff974a58c
+Human-readable match: /chum/answers/doors/identify-a-part-from-a-photo-or-markings-0ff974a58c/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/identify-a-part-from-a-photo-or-markings-0ff974a58c.json
+Candidates:
+- FindMyPart Part Passport | kind=machine_offer | commercial=free | machine=read_only_live | public=https://findmypart.base44.app/free-part-check
+
 ## identify founder readiness gaps before raising money
 Answer ID: intent:ffb54bb05e
 Human-readable match: /chum/answers/doors/identify-founder-readiness-gaps-before-raising-money-ffb54bb05e/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/identify-founder-readiness-gaps-before-raising-money-ffb54bb05e.json
 Candidates:
 - Evercraft Deck Capital Fit | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs
+
+## identify this broken part from a label serial plate invoice diagram or fragment
+Answer ID: intent:69a166fa68
+Human-readable match: /chum/answers/doors/identify-this-broken-part-from-a-label-serial-plate-invoice-diagram-or-fragment-69a166fa68/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/identify-this-broken-part-from-a-label-serial-plate-invoice-diagram-or-fragment-69a166fa68.json
+Candidates:
+- FindMyPart | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://findmypart.base44.app/
 
 ## identify this machine part from a photo or markings
 Answer ID: intent:42b537ac03
@@ -3247,7 +3318,7 @@ Answer ID: intent:870c0fa937
 Human-readable match: /chum/answers/doors/identify-this-part-870c0fa937/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/identify-this-part-870c0fa937.json
 Candidates:
-- FindMyPart Paid Part Hunt | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs
+- FindMyPart Part Passport | kind=machine_offer | commercial=free | machine=read_only_live | public=https://findmypart.base44.app/free-part-check
 
 ## identity theft protection
 Answer ID: intent:1d8e691739
@@ -3333,6 +3404,13 @@ Human-readable match: /chum/answers/doors/is-my-resume-ats-friendly-3b113a7b48/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/is-my-resume-ats-friendly-3b113a7b48.json
 Candidates:
 - Career Command Resume + Job Fit Audit | kind=machine_offer | commercial=verify | machine=discovery_only | public=https://evercraft-career-command.base44.app/
+
+## is this part number enough to identify the right replacement
+Answer ID: intent:a23411bd30
+Human-readable match: /chum/answers/doors/is-this-part-number-enough-to-identify-the-right-replacement-a23411bd30/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/is-this-part-number-enough-to-identify-the-right-replacement-a23411bd30.json
+Candidates:
+- FindMyPart Part Passport | kind=machine_offer | commercial=free | machine=read_only_live | public=https://findmypart.base44.app/free-part-check
 
 ## is this property a good EV charging site
 Answer ID: intent:28f9203083
@@ -4061,6 +4139,13 @@ Human-readable match: /chum/answers/doors/no-account-contractor-estimate-d0de142
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/no-account-contractor-estimate-d0de142039.json
 Candidates:
 - EPS Estimate Intelligence | kind=machine_offer | commercial=contractor_beta | machine=mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified | public=https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+
+## normal part searches failed and I need deeper sourcing
+Answer ID: intent:9223ab99d9
+Human-readable match: /chum/answers/doors/normal-part-searches-failed-and-i-need-deeper-sourcing-9223ab99d9/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/normal-part-searches-failed-and-i-need-deeper-sourcing-9223ab99d9.json
+Candidates:
+- FindMyPart Paid Part Hunt | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs
 
 ## offline operations plan
 Answer ID: intent:e683e6994b
@@ -5472,6 +5557,13 @@ Candidates:
 - Country / Domain Intelligence Slice | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/machineDiscovery?view=docs
 - GlobalStat | kind=product | commercial=product_contract | machine=discovery_only | public=https://global-stat-pulse.base44.app/
 
+## show me the reality delta for this place or system
+Answer ID: intent:7a98735088
+Human-readable match: /chum/answers/doors/show-me-the-reality-delta-for-this-place-or-system-7a98735088/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/show-me-the-reality-delta-for-this-place-or-system-7a98735088.json
+Candidates:
+- Worldstate Reality Delta | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=/chum/intents/worldstate-reality-delta-v1/
+
 ## show sourced energy data and provenance
 Answer ID: intent:cd19abcb4e
 Human-readable match: /chum/answers/doors/show-sourced-energy-data-and-provenance-cd19abcb4e/
@@ -5650,6 +5742,13 @@ Human-readable match: /chum/answers/doors/source-difficult-parts-for-my-repair-s
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/source-difficult-parts-for-my-repair-shop-e87c01827e.json
 Candidates:
 - Repair Shop Sourcing Desk | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://findmypart.base44.app/
+
+## source new old stock or aftermarket replacement
+Answer ID: intent:6756b15f14
+Human-readable match: /chum/answers/doors/source-new-old-stock-or-aftermarket-replacement-6756b15f14/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/source-new-old-stock-or-aftermarket-replacement-6756b15f14.json
+Candidates:
+- FindMyPart Paid Part Hunt | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs
 
 ## Spanish and English job training for a crew
 Answer ID: intent:46a8234171
@@ -5854,6 +5953,13 @@ Human-readable match: /chum/answers/doors/technical-seo-audit-6b934569ee/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/technical-seo-audit-6b934569ee.json
 Candidates:
 - Systemia Website Audit | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://systemia-audit-pro.base44.app/
+
+## tell me what evidence I still need before buying a replacement
+Answer ID: intent:19d8521bdb
+Human-readable match: /chum/answers/doors/tell-me-what-evidence-i-still-need-before-buying-a-replacement-19d8521bdb/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/tell-me-what-evidence-i-still-need-before-buying-a-replacement-19d8521bdb.json
+Candidates:
+- FindMyPart | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://findmypart.base44.app/
 
 ## tell me what is wrong with my business website
 Answer ID: intent:de24de764f
@@ -6151,6 +6257,13 @@ Human-readable match: /chum/answers/doors/turn-my-income-savings-debt-skills-and
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/turn-my-income-savings-debt-skills-and-priorities-into-a-life-plan-c2d2ff6a7f.json
 Candidates:
 - EverNest Atlas | kind=product | commercial=product_contract | machine=discovery_only | public=https://evernest-life-map.base44.app/
+
+## turn observations into an evidence-backed change packet
+Answer ID: intent:ed6d2c2648
+Human-readable match: /chum/answers/doors/turn-observations-into-an-evidence-backed-change-packet-ed6d2c2648/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/turn-observations-into-an-evidence-backed-change-packet-ed6d2c2648.json
+Candidates:
+- Worldstate Reality Delta | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=/chum/intents/worldstate-reality-delta-v1/
 
 ## turn spreadsheets and legacy systems into an operating layer
 Answer ID: intent:c3d8466ad9
@@ -6545,6 +6658,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft Revenue War Map | kind=product | commercial=product_contract | machine=discovery_only | public=https://evercraft-war-map.base44.app/
 
+## what changed in the real world
+Answer ID: intent:aad5478c49
+Human-readable match: /chum/answers/doors/what-changed-in-the-real-world-aad5478c49/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/what-changed-in-the-real-world-aad5478c49.json
+Candidates:
+- Worldstate Reality Delta | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=/chum/intents/worldstate-reality-delta-v1/
+
 ## what data is missing for this decision
 Answer ID: intent:8e0a8c1a6f
 Human-readable match: /chum/answers/doors/what-data-is-missing-for-this-decision-8e0a8c1a6f/
@@ -6558,6 +6678,13 @@ Human-readable match: /chum/answers/doors/what-ev-chargers-are-near-this-propert
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/what-ev-chargers-are-near-this-property-e8a3eda0e4.json
 Candidates:
 - AliEV EV Site Opportunity Intelligence | kind=machine_offer | commercial=sell_now | machine=payment_ready_human_confirmation | public=https://aliev.base44.app/functions/alievAgentGateway?view=docs
+
+## what evidence do I need before buying a replacement
+Answer ID: intent:db7ee95e16
+Human-readable match: /chum/answers/doors/what-evidence-do-i-need-before-buying-a-replacement-db7ee95e16/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/what-evidence-do-i-need-before-buying-a-replacement-db7ee95e16.json
+Candidates:
+- FindMyPart Part Passport | kind=machine_offer | commercial=free | machine=read_only_live | public=https://findmypart.base44.app/free-part-check
 
 ## what is happening near me tonight
 Answer ID: intent:960699d185
@@ -6587,6 +6714,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Freight Load Exception Intelligence | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs
 - Systemia Atlas Freight Load Exception Intelligence | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs
+
+## what materially changed across weather infrastructure economy health or hazards
+Answer ID: intent:0b443062e3
+Human-readable match: /chum/answers/doors/what-materially-changed-across-weather-infrastructure-economy-health-or-hazards-0b443062e3/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/what-materially-changed-across-weather-infrastructure-economy-health-or-hazards-0b443062e3.json
+Candidates:
+- Worldstate Reality Delta | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=/chum/intents/worldstate-reality-delta-v1/
 
 ## what public EV charging is near this address
 Answer ID: intent:85011db389

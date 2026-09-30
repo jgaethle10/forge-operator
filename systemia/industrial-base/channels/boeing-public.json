@@ -1,0 +1,57 @@
+{
+  "schema": "evercraft.industrial-base.buyer-entry-channel.v1",
+  "buyer": "Boeing",
+  "observed_at": "2026-09-30T22:00:00.000Z",
+  "source_refs": [
+    "https://www.boeingsuppliers.com/become",
+    "https://www.boeingsuppliers.com/supplier-principles/supplier-sourcing"
+  ],
+  "registration_path": "Register capabilities through Boeing's Enterprise Supplier LifeCycle (ESLC) process. Boeing states that registration makes a company visible to sourcing specialists but does not guarantee business or contracts.",
+  "categories": [
+    {
+      "key": "aerospace-support",
+      "label": "Aerospace support",
+      "terms": [
+        "engineering services",
+        "maintenance",
+        "repair",
+        "overhaul",
+        "training services",
+        "ground support equipment",
+        "specialized part handling",
+        "distribution"
+      ]
+    },
+    {
+      "key": "common-aerospace-commodities",
+      "label": "Common aerospace commodities",
+      "terms": [
+        "forgings",
+        "castings",
+        "wire bundles",
+        "fasteners",
+        "microcircuits",
+        "retainers",
+        "sealants"
+      ]
+    },
+    {
+      "key": "technology",
+      "label": "Technology",
+      "terms": [
+        "technology",
+        "nonproduction prototypes",
+        "testing and evaluation",
+        "white papers",
+        "studies",
+        "analysis",
+        "research"
+      ]
+    }
+  ],
+  "boundaries": {
+    "source_type": "public_buyer_material",
+    "f_a_xx_specific_requirements_claimed": false,
+    "classified_requirements_inferred": false
+  }
+}

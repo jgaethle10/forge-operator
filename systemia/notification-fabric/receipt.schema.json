@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evercraft.example/schemas/systemia.notification.delivery.v2.json",
+  "title": "Evercraft Relay Delivery Receipt",
+  "type": "object",
+  "required": [
+    "schema",
+    "notification_id",
+    "status",
+    "at",
+    "receipt_hash"
+  ],
+  "properties": {
+    "schema": {
+      "const": "systemia.notification.delivery.v2"
+    },
+    "notification_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "subscription_id": {
+      "type": "string"
+    },
+    "principal_id": {
+      "type": "string"
+    },
+    "product": {
+      "type": "string"
+    },
+    "purpose": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "deduped",
+        "no_target",
+        "delivered_realtime",
+        "push_suppressed",
+        "accepted_by_push_gateway",
+        "delivery_failed",
+        "human_seen",
+        "human_acknowledged"
+      ]
+    },
+    "reason": {
+      "type": "string"
+    },
+    "http_status": {
+      "type": "integer"
+    },
+    "attempts": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "connections": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "at": {
+      "type": "string"
+    },
+    "prev_hash": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "receipt_hash": {
+      "type": "string",
+      "minLength": 32
+    }
+  },
+  "additionalProperties": true
+}

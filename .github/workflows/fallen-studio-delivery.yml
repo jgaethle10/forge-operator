@@ -1,0 +1,156 @@
+name: Fallen Studio Delivery
+
+on:
+  pull_request:
+    paths:
+      - "systemia/media-studio/studio-delivery.ts"
+      - "systemia/media-studio/studio-delivery.test.ts"
+      - "systemia/media-studio/master-qc.ts"
+      - "systemia/media-studio/master-qc.integration.test.ts"
+      - "systemia/media-studio/cli.ts"
+      - ".github/workflows/fallen-studio-delivery.yml"
+  push:
+    branches: [main]
+    paths:
+      - "systemia/media-studio/studio-delivery.ts"
+      - "systemia/media-studio/studio-delivery.test.ts"
+      - "systemia/media-studio/master-qc.ts"
+      - "systemia/media-studio/master-qc.integration.test.ts"
+      - "systemia/media-studio/cli.ts"
+      - ".github/workflows/fallen-studio-delivery.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  delivery-canary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install
+        run: npm install --no-audit --no-fund
+      - name: Ensure FFmpeg
+        run: |
+          if ! command -v ffmpeg >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y ffmpeg
+          fi
+          ffmpeg -version | head -n 1
+      - name: Delivery and master QC contracts
+        run: |
+          node --import tsx --test \
+            systemia/media-studio/studio-delivery.test.ts \
+            systemia/media-studio/master-qc.integration.test.ts
+      - name: Build media fixtures
+        run: |
+          set -euo pipefail
+          ROOT="$GITHUB_WORKSPACE/.ci-assets/fallen-delivery"
+          mkdir -p "$ROOT"
+          ffmpeg -y -v error -f lavfi -i "testsrc2=size=640x360:rate=30" -t 2 -c:v libx264 -pix_fmt yuv420p "$ROOT/shot.mp4"
+          ffmpeg -y -v error -f lavfi -i "sine=frequency=330:sample_rate=48000" -t 2 "$ROOT/voice.wav"
+          cat >"$ROOT/captions.srt" <<'SRT'
+          1
+          00:00:00,100 --> 00:00:01,900
+          FALLEN TO CLIP DELIVERY CANARY
+          SRT
+      - name: Build delivery request
+        run: |
+          node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          import path from 'node:path';
+          const root=path.join(process.env.GITHUB_WORKSPACE,'.ci-assets/fallen-delivery');
+          const digest=(file)=>crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
+          const asset=(id,file,kind)=>({
+            id,
+            path:path.join(root,file),
+            digest:digest(path.join(root,file)),
+            kind,
+            sourceRefs:['ci:fallen-studio-delivery']
+          });
+          const request={
+            schema:'evercraft.fallen.studio-delivery-request.v1',
+            id:'fallen-delivery-ci',
+            slug:'fallen-delivery-ci',
+            destinations:['youtube','linkedin','instagram'],
+            metadata:{
+              title:'Fallen Delivery CI',
+              description:'Proof that Fallen can finish a timeline and hand a governed package to Clip.',
+              tags:['fallen','clip','ci'],
+              language:'en'
+            },
+            project:{
+              schema:'evercraft.fallen.timeline.v1',
+              id:'fallen-delivery-project-ci',
+              title:'Fallen Delivery CI',
+              aspectRatio:'16:9',
+              fps:30,
+              version:1,
+              assets:[
+                asset('shot','shot.mp4','video'),
+                asset('voice','voice.wav','audio'),
+                asset('captions','captions.srt','captions')
+              ],
+              tracks:[
+                {id:'picture',kind:'video',name:'Picture',clips:[
+                  {id:'shot-clip',trackId:'picture',assetId:'shot',startSec:0,durationSec:2}
+                ]},
+                {id:'voice',kind:'voice',name:'Voice',clips:[
+                  {id:'voice-clip',trackId:'voice',assetId:'voice',startSec:0,durationSec:2,volume:.8}
+                ]},
+                {id:'captions',kind:'captions',name:'Captions',clips:[
+                  {id:'caption-clip',trackId:'captions',assetId:'captions',startSec:0,durationSec:2}
+                ]}
+              ],
+              createdAt:new Date().toISOString(),
+              updatedAt:new Date().toISOString()
+            }
+          };
+          fs.writeFileSync('/tmp/fallen-delivery-request.json',JSON.stringify(request,null,2));
+          NODE
+      - name: Run one-command final delivery
+        run: |
+          npm run media:studio -- studio-deliver /tmp/fallen-delivery-request.json /tmp/fallen-delivery
+          ffprobe -v error             -show_entries stream=codec_type,codec_name,width,height             -show_entries format=duration,size             -of json /tmp/fallen-delivery/fallen-delivery-ci.mp4
+      - name: Verify Clip intake package
+        run: |
+          node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          const root='/tmp/fallen-delivery';
+          const manifest=JSON.parse(fs.readFileSync(root+'/fallen-delivery-ci.clip-intake.json','utf8'));
+          const receipt=JSON.parse(fs.readFileSync(root+'/fallen-delivery-ci.render-receipt.json','utf8'));
+          const qc=JSON.parse(fs.readFileSync(root+'/fallen-delivery-ci.master-qc.json','utf8'));
+          const digest=crypto.createHash('sha256').update(fs.readFileSync(root+'/fallen-delivery-ci.mp4')).digest('hex');
+          if(manifest.schema!=='evercraft.clip.media-intake.v1') throw new Error('manifest_schema_invalid');
+          if(manifest.state!=='ready_for_clip_intake') throw new Error('manifest_state_invalid');
+          if(manifest.sourceApp!=='fallen') throw new Error('source_app_invalid');
+          if(manifest.media.sha256!==digest) throw new Error('manifest_media_digest_mismatch');
+          if(receipt.sha256!==digest) throw new Error('receipt_media_digest_mismatch');
+          if(qc.status!=='accepted') throw new Error('master_qc_not_accepted');
+          if(qc.sha256!==digest) throw new Error('master_qc_digest_mismatch');
+          if(!manifest.provenance.masterQcReceiptPath.endsWith('.master-qc.json')) throw new Error('master_qc_receipt_not_bound');
+          if(manifest.destinations.join(',')!=='youtube,linkedin,instagram') throw new Error('destinations_invalid');
+          if(manifest.captions.length!==1) throw new Error('caption_asset_missing');
+          if(manifest.boundaries.publicationAuthorityGranted!==false) throw new Error('publication_boundary_broken');
+          if(manifest.boundaries.platformCredentialsConsumed!==false) throw new Error('credential_boundary_broken');
+          NODE
+      - name: Typecheck
+        run: npm run lint
+      - name: Package proof
+        run: |
+          mkdir -p artifacts/fallen-studio-delivery
+          cp /tmp/fallen-delivery/fallen-delivery-ci.mp4 artifacts/fallen-studio-delivery/
+          cp /tmp/fallen-delivery/fallen-delivery-ci.render-receipt.json artifacts/fallen-studio-delivery/
+          cp /tmp/fallen-delivery/fallen-delivery-ci.master-qc.json artifacts/fallen-studio-delivery/
+          cp /tmp/fallen-delivery/fallen-delivery-ci.clip-intake.json artifacts/fallen-studio-delivery/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fallen-studio-delivery-canary
+          path: artifacts/fallen-studio-delivery/
+          if-no-files-found: error
+          retention-days: 14

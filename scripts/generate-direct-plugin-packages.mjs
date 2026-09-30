@@ -121,7 +121,9 @@ function buildDoorIndex(){
       public_origin_state:p.public_origin_state||null,
       plugin_package:`plugins/${p.slug}`,
       state:p.state,
-      truth_boundary:p.truth_boundary
+      truth_boundary:p.truth_boundary,
+      ...(p.free_entry ? {free_entry:p.free_entry} : {}),
+      ...(p.commercial ? {commercial:p.commercial} : {})
     }))
   };
 }

@@ -107,8 +107,8 @@ export async function startFabricLocalRuntime({
   catalog=null,
   challengeToken='',
 }={}) {
-  const source=Array.isArray(catalog)?catalog:loadFabricCatalogFromRepository();
-  const prepared=nativeOnlyCatalog(source);
+  const staticPrepared=Array.isArray(catalog)?nativeOnlyCatalog(catalog):null;
+  const preparedCatalog=()=>staticPrepared||nativeOnlyCatalog(loadFabricCatalogFromRepository());
   const token=validateOpenAiChallengeToken(challengeToken);
   const challengePath='/.well-known/openai-apps-challenge';
   const moduleDir=path.dirname(fileURLToPath(import.meta.url));
@@ -120,7 +120,9 @@ export async function startFabricLocalRuntime({
   };
   const brandIcon=fs.readFileSync(path.join(pluginDir,'assets','evercraft-icon.png'));
 
-  const health=()=>({
+  const health=()=>{
+    const prepared=preparedCatalog();
+    return ({
     ok:true,
     service:'evercraft-fabric-local',
     server:'evercraft-fabric',
@@ -128,7 +130,7 @@ export async function startFabricLocalRuntime({
     transport:'Streamable HTTP',
     mcp_path:'/mcp',
     tools:fabricDirectoryTools().map((tool)=>tool.name),
-    capability_count:prepared.capabilities.length,
+    capability_count:preparedCatalog().capabilities.length,
     read_only:true,
     transactional:false,
     external_action_authority:false,
@@ -140,7 +142,9 @@ export async function startFabricLocalRuntime({
     public_plugin_submission_ready:true,
     provider_publication_state:'external_to_runtime',
     public_submission_note:'The owned Fabric runtime and review surface are submission-ready. Provider review, approval, publication, and directory visibility are external states and are not inferred by this health endpoint.',
+    catalog_reload_mode:staticPrepared?'static_injected':'hot_reload_repository',
   });
+  };
 
   const server=http.createServer(async(req,res)=>{
     try {
@@ -161,7 +165,7 @@ export async function startFabricLocalRuntime({
         return sendText(
           res,
           200,
-          renderFabricHome({capabilityCount:prepared.capabilities.length}),
+          renderFabricHome({capabilityCount:preparedCatalog().capabilities.length}),
           {contentType:'text/html; charset=utf-8'}
         );
       }
@@ -170,7 +174,7 @@ export async function startFabricLocalRuntime({
         return sendText(
           res,
           200,
-          renderCapabilities(prepared.capabilities),
+          renderCapabilities(preparedCatalog().capabilities),
           {contentType:'text/html; charset=utf-8'}
         );
       }
@@ -215,7 +219,7 @@ export async function startFabricLocalRuntime({
           version:'1.0.0',
           transport:'Streamable HTTP',
           tools:fabricDirectoryTools().map((tool)=>tool.name),
-          capability_count:prepared.capabilities.length,
+          capability_count:preparedCatalog().capabilities.length,
           read_only:true,
           base44_transport_enabled:false,
         });
@@ -223,7 +227,7 @@ export async function startFabricLocalRuntime({
 
       if (req.method!=='POST') return sendJson(res,405,{error:'method_not_allowed'});
       const rpc=await readJson(req);
-      const response=await executeFabricDirectoryRpc(rpc,prepared.capabilities);
+      const response=await executeFabricDirectoryRpc(rpc,preparedCatalog().capabilities);
       if (response===null) {
         res.writeHead(202,{'cache-control':'no-store'});
         return res.end();

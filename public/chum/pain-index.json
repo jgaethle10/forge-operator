@@ -5,7 +5,7 @@
     "product_directory_schema": "evercraft.product-directory.v1",
     "product_directory_updated_at": "2026-09-28",
     "machine_catalog_schema": "evercraft.machine-catalog.snapshot.v1",
-    "machine_catalog_source_generated_at": "2026-09-29T01:40:00.000Z",
+    "machine_catalog_source_generated_at": "2026-09-30T20:21:00.000Z",
     "registry_schema": "evercraft.agent.registry.v1",
     "registry_updated_at": "2026-09-28"
   },
@@ -28,14 +28,14 @@
     "provider_verification_required_for_paid_state": true
   },
   "summary": {
-    "entries": 110,
+    "entries": 112,
     "product_entries": 64,
-    "machine_offer_entries": 46,
-    "entries_with_pain_language": 110,
+    "machine_offer_entries": 48,
+    "entries_with_pain_language": 112,
     "sell_now_machine_offers": 14,
-    "entries_with_declared_mcp": 66,
-    "callable_or_routable_entries": 47,
-    "suppressed_legacy_marketing_routes": 8
+    "entries_with_declared_mcp": 68,
+    "callable_or_routable_entries": 48,
+    "suppressed_legacy_marketing_routes": 9
   },
   "entries": [
     {
@@ -1232,14 +1232,17 @@
       "class": "machine_commerce_offer",
       "pain_phrases": [
         "find a hard-to-source part",
-        "identify this part",
         "find a discontinued part",
         "source an obsolete component",
-        "find a donor or salvage part"
+        "find a supersession or cross reference",
+        "find a donor or salvage part",
+        "find a blueprint or fabrication path",
+        "source new old stock or aftermarket replacement",
+        "normal part searches failed and I need deeper sourcing"
       ],
-      "problem": "A difficult, ambiguous, obsolete, discontinued or hard-to-source part is blocking a repair, restoration, machine or project.",
+      "problem": "A difficult, identified-enough physical part is still blocking a repair, restoration, machine or project after ordinary sourcing has failed or deeper cross-reference, salvage, documentation, blueprint or fabrication work is needed.",
       "inputs": "Part description plus any known equipment identity, model/serial/part numbers, photos, measurements or functional clues.",
-      "outputs": "Evidence-backed sourcing hunt with candidate parts, source evidence, compatibility reasoning, sourcing options and escalation paths when ordinary sourcing fails.",
+      "outputs": "Evidence-backed paid sourcing hunt with tier-dependent source lanes, customer-safe Part Passport state, candidate source evidence, verification state, and escalation paths when ordinary sourcing fails.",
       "canonical_url": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs",
       "legacy_marketing_route_suppressed": false,
       "registry_name": null,
@@ -1273,7 +1276,50 @@
       "human_confirmation_required": true,
       "confirmation": "User must explicitly choose an offer and confirm payment. Paid fulfillment starts only after independently verified payment.",
       "payment_authority": "Evercraft Payments with Stripe provider verification",
-      "invocation_status": "LIVE: HTTP agent gateway + OpenAPI + llms guidance + remote MCP. Agents can read offers, prepare checkout only after explicit human confirmation, and read hunt status. Paid fulfillment still requires authoritative provider verification.",
+      "invocation_status": "LIVE: direct FindMyPart MCP exposes free Part Passport triage, current paid offers, human-confirmed checkout preparation, and private-token hunt status. Use free_part_triage first when identity or sourcing path is unclear. Paid fulfillment still requires authoritative provider verification.",
+      "source_refs": [
+        "public/.well-known/evercraft-machine-catalog.json"
+      ]
+    },
+    {
+      "capability_id": "offer:findmypart-part-passport-v1",
+      "product_key": null,
+      "public_id": "findmypart-part-passport-v1",
+      "kind": "machine_offer",
+      "name": "FindMyPart Part Passport",
+      "class": "machine_commerce_offer",
+      "pain_phrases": [
+        "identify this part",
+        "identify a part from a photo or markings",
+        "identify a broken part from a label or serial plate",
+        "I know what this part does but not what it is called",
+        "what evidence do I need before buying a replacement",
+        "is this part number enough to identify the right replacement",
+        "find a discontinued part but I am not sure exactly what it is",
+        "identify a hard-to-source part from incomplete clues",
+        "identify a component from a diagram invoice measurement or broken fragment"
+      ],
+      "problem": "A person has a broken, obscure, obsolete, discontinued or unknown physical part and does not yet have enough trustworthy identity evidence to buy the right replacement.",
+      "inputs": "Part description plus any known asset or equipment identity, model, serial, part number, photos, markings, measurements, invoices, diagrams or fragments. Unknown information may remain unknown.",
+      "outputs": "Free evidence-aware Part Passport with cautious normalized identity, required function, observed identifiers and attributes, highest-value missing evidence, search readiness, likely sourcing lanes, safety or regulatory gate, and a recommended next step.",
+      "canonical_url": "https://findmypart.base44.app/free-part-check",
+      "legacy_marketing_route_suppressed": false,
+      "registry_name": null,
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "routing": {
+        "preferred": "universal_machine_commerce",
+        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
+      "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
+      "boundaries": [],
+      "commercial_state": "free",
+      "machine_state": "read_only_live",
+      "pricing": "Free. Creates no charge.",
+      "offers": [],
+      "human_confirmation_required": true,
+      "confirmation": "No payment confirmation is required for free triage. Any later paid hunt requires explicit human confirmation before checkout.",
+      "payment_authority": "No charge is created by Part Passport triage.",
+      "invocation_status": "LIVE: direct FindMyPart MCP tool free_part_triage and HTTP agent-gateway triage action. Part Passport is triage, not fitment proof; unknown compatibility, inventory, supplier availability, price and delivery timing may remain unknown.",
       "source_refs": [
         "public/.well-known/evercraft-machine-catalog.json"
       ]
@@ -2211,6 +2257,46 @@
       "confirmation": "The buyer must explicitly choose a tier and confirm payment before checkout. Fulfillment begins only after independent payment verification.",
       "payment_authority": "Evercraft Website Service / Stripe, provider-verified",
       "invocation_status": "LIVE: agent HTTP gateway + OpenAPI + llms guidance + remote MCP at https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp. Agents can inspect $500/$999/$1,999 website-service tiers, prepare checkout only after explicit human confirmation, and independently verify paid order state.",
+      "source_refs": [
+        "public/.well-known/evercraft-machine-catalog.json"
+      ]
+    },
+    {
+      "capability_id": "offer:worldstate-reality-delta-v1",
+      "product_key": null,
+      "public_id": "worldstate-reality-delta-v1",
+      "kind": "machine_offer",
+      "name": "Worldstate Reality Delta",
+      "class": "machine_commerce_offer",
+      "pain_phrases": [
+        "what changed in the real world",
+        "show me the reality delta for this place or system",
+        "compare verified worldstate before and after an event",
+        "what materially changed across weather infrastructure economy health or hazards",
+        "build a provenance-preserving worldstate snapshot",
+        "turn observations into an evidence-backed change packet"
+      ],
+      "problem": "A user or Evercraft system needs to understand what materially changed in the real world across time without collapsing observed, reported, inferred, modeled, or uncertain evidence into one undifferentiated claim.",
+      "inputs": "A bounded place, system, phenomenon, time window, or decision context plus available observation/context sources and authority scope.",
+      "outputs": "Evidence-preserving worldstate snapshots, material deltas, provenance links, evidence-state labels, contradictions, uncertainty, and bounded context packets for downstream Evercraft systems.",
+      "canonical_url": null,
+      "legacy_marketing_route_suppressed": true,
+      "registry_name": null,
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "routing": {
+        "preferred": "universal_machine_commerce",
+        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      },
+      "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
+      "boundaries": [],
+      "commercial_state": "verification_required",
+      "machine_state": "discovery_only",
+      "pricing": "No approved public machine price or payment path. Do not auto-quote.",
+      "offers": [],
+      "human_confirmation_required": true,
+      "confirmation": "Discovery and evidence comparison create no action authority. Publishing, consequential decisions, private-data access, and paid work remain separately authorized.",
+      "payment_authority": "No verified public payment path.",
+      "invocation_status": "SOURCE-VERIFIED: Worldstate snapshot/delta, Context Fabric adapter/reader, observation fabric, Passport-authorized read path, and Fallen phenomenon bridge are covered by repository proofs. Public machine execution is not claimed until an external callable route is independently verified.",
       "source_refs": [
         "public/.well-known/evercraft-machine-catalog.json"
       ]
@@ -3972,13 +4058,15 @@
         "where can I find this discontinued part",
         "I have a part number but cannot find it anywhere",
         "identify this machine part from a photo or markings",
+        "identify this broken part from a label serial plate invoice diagram or fragment",
+        "tell me what evidence I still need before buying a replacement",
+        "find a supersession or cross reference",
         "find a replacement for an obsolete part",
         "find a salvage or donor part",
-        "find a fabrication path when the original part is unavailable",
-        "find a discontinued tractor part",
-        "find an obsolete automotive or machine part",
+        "find a blueprint or fabrication path when the original part is unavailable",
         "identify a hard-to-source part from markings measurements photos or equipment clues",
-        "find replacement donor salvage or fabrication paths when normal sourcing fails"
+        "find a discontinued appliance tractor automotive marine industrial construction powersports agricultural electronics or equipment part",
+        "find replacement donor salvage blueprint or fabrication paths when normal sourcing fails"
       ],
       "problem": null,
       "inputs": null,
@@ -3991,18 +4079,24 @@
         "target": "https://findmypart.base44.app/functions/findMyPartMcp"
       },
       "legacy_marketing_route_suppressed": false,
-      "authority": "public discovery and human-confirmed paid sourcing hunts",
+      "authority": "free evidence-aware Part Passport triage plus human-confirmed paid sourcing hunts",
       "boundaries": [
+        "Part Passport normalization is not fitment proof",
+        "reachable listings are source leads until separately verified",
         "unknowns may remain unknown",
-        "compatibility is not guaranteed",
+        "compatibility inventory supplier availability price and delivery timing are not guaranteed",
         "checkout creation is not payment proof",
-        "private vendor, analytics, session, command-center, and sales data are not public"
+        "private vendor analytics session command-center and sales data are not public"
       ],
       "commercial_state": "product_contract",
       "machine_state": "specialist_mcp_declared",
       "pricing": null,
       "offers": [],
-      "commercial": null,
+      "commercial": {
+        "quick_hunt_usd": 19,
+        "deep_hunt_usd": 49,
+        "rescue_hunt_usd": 99
+      },
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,

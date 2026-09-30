@@ -88,7 +88,7 @@ sudo tee /etc/evercraft/Caddyfile >/dev/null <<'EOF'
 }
 EOF
 
-echo "[3/7] Installing resident Evercraft Fabric service..."
+echo "[3/8] Installing resident Evercraft Fabric service..."
 sudo tee /etc/systemd/system/evercraft-fabric.service >/dev/null <<EOF
 [Unit]
 Description=Evercraft Fabric MCP
@@ -112,7 +112,7 @@ ProtectHome=read-only
 WantedBy=multi-user.target
 EOF
 
-echo "[4/7] Installing resident TLS edge service..."
+echo "[4/8] Installing resident TLS edge service..."
 sudo systemctl disable --now caddy.service >/dev/null 2>&1 || true
 sudo tee /etc/systemd/system/evercraft-public-edge.service >/dev/null <<'EOF'
 [Unit]
@@ -138,7 +138,7 @@ ProtectHome=true
 WantedBy=multi-user.target
 EOF
 
-echo "[5/7] Installing safe OpenAI challenge-token helper..."
+echo "[5/8] Installing safe OpenAI challenge-token helper..."
 sudo tee /usr/local/sbin/evercraft-set-openai-challenge >/dev/null <<'EOF'
 #!/usr/bin/env bash
 set -euo pipefail
@@ -158,12 +158,15 @@ echo "OpenAI challenge token installed and Evercraft Fabric restarted."
 EOF
 sudo chmod 0755 /usr/local/sbin/evercraft-set-openai-challenge
 
-echo "[6/7] Enabling services..."
+echo "[6/8] Enabling services..."
 sudo systemctl daemon-reload
 sudo systemctl enable --now evercraft-fabric.service
 sudo systemctl enable --now evercraft-public-edge.service
 
-echo "[7/7] Local checks..."
+echo "[7/8] Installing fail-closed Fabric self-update heartbeat..."
+bash "$REPO_ROOT/scripts/install-fabric-self-update.sh" --repo-root "$REPO_ROOT" --cadence 5min
+
+echo "[8/8] Local checks..."
 curl -fsS "http://127.0.0.1:$FABRIC_PORT/health" >/tmp/evercraft-fabric-health.json
 sudo /usr/bin/caddy validate --config /etc/evercraft/Caddyfile --adapter caddyfile >/dev/null
 

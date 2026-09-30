@@ -1,0 +1,125 @@
+{
+  "schema": "evercraft.aliev.legacy-inventory.v1",
+  "observed_at": "2026-09-30",
+  "source_app": "AliEV legacy Base44",
+  "source_app_id": "69b9b64d86a732029ce0db81",
+  "total_rows_confirmed": 31600,
+  "entities": [
+    {
+      "entity": "EVNationalChargePoint",
+      "rows": 41,
+      "retired_rows": 2,
+      "owned_domain": "charging_inventory",
+      "pagination": {
+        "mode": "offset",
+        "page_size": 500
+      }
+    },
+    {
+      "entity": "EVObservedUsageAggregate",
+      "rows": 29610,
+      "owned_domain": "observed_sessions",
+      "pagination": {
+        "mode": "keyset",
+        "key": "aggregate_key",
+        "sort": "aggregate_key",
+        "page_size": 500,
+        "terminal_cursor": "uk-dft-public-sector-fasts:wiltshire-council:2017",
+        "terminal_exhaustion_verified": true
+      }
+    },
+    {
+      "entity": "EVTrafficProfile",
+      "rows": 33,
+      "owned_domain": "traffic_temporal",
+      "pagination": {
+        "mode": "offset",
+        "page_size": 500
+      }
+    },
+    {
+      "entity": "EVOpsTariff",
+      "rows": 241,
+      "owned_domain": "utility_tariff",
+      "pagination": {
+        "mode": "offset",
+        "page_size": 500
+      }
+    },
+    {
+      "entity": "EVStateStockApproxAggregate",
+      "rows": 51,
+      "owned_domain": "local_ev_stock",
+      "pagination": {
+        "mode": "offset",
+        "page_size": 500
+      }
+    },
+    {
+      "entity": "RivetMarketEvidence",
+      "rows": 167,
+      "owned_domain": "deep_market_evidence",
+      "pagination": {
+        "mode": "offset",
+        "page_size": 500
+      }
+    },
+    {
+      "entity": "RivetExternalEvidence",
+      "rows": 52,
+      "owned_domain": "deep_market_evidence",
+      "pagination": {
+        "mode": "offset",
+        "page_size": 500
+      }
+    },
+    {
+      "entity": "RivetSiteBenchmark",
+      "rows": 9,
+      "owned_domain": "deep_market_evidence",
+      "pagination": {
+        "mode": "offset",
+        "page_size": 500
+      }
+    },
+    {
+      "entity": "RivetUtilityProgramEvidence",
+      "rows": 286,
+      "owned_domain": "deep_market_evidence",
+      "pagination": {
+        "mode": "offset",
+        "page_size": 500
+      }
+    },
+    {
+      "entity": "WashingtonNEVIAwardSite",
+      "rows": 14,
+      "owned_domain": "deep_market_evidence",
+      "pagination": {
+        "mode": "offset",
+        "page_size": 500
+      }
+    },
+    {
+      "entity": "EVOpsSourceRecord",
+      "rows": 1096,
+      "owned_domain": "provenance",
+      "pagination": {
+        "mode": "offset",
+        "page_size": 500,
+        "guard": "fail if source grows beyond offset ceiling before migration completes"
+      }
+    }
+  ],
+  "reconciliation": {
+    "completion_rule": "For every entity, source_rows = accepted_rows + excluded_rows, every accepted record has a destination-domain ingest receipt, and every pagination stream proves terminal exhaustion.",
+    "missing_is_never_zero": true,
+    "silent_truncation_forbidden": true,
+    "observed_usage_skip_pagination_forbidden": true
+  },
+  "live_adapters_not_in_row_total": [
+    "WSDOT Traffic Counts AADT",
+    "Washington Ecology Electric Utility Service Areas",
+    "other jurisdictional live adapters traced separately"
+  ]
+}

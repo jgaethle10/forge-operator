@@ -2,7 +2,10 @@
   "schema": "evercraft.cross-llm-product.v1",
   "product": "FindMyPart",
   "product_key": "findmypart",
-  "aliases": [],
+  "aliases": [
+    "Find My Part",
+    "Part Passport"
+  ],
   "providers": [
     "chatgpt",
     "claude",
@@ -17,15 +20,21 @@
   "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/ai-discovery.json",
   "registry_name": "io.github.jgaethle10/findmypart",
   "mcp": "https://findmypart.base44.app/functions/findMyPartMcp",
-  "authority": "public discovery and human-confirmed paid sourcing hunts",
+  "authority": "free evidence-aware Part Passport triage plus human-confirmed paid sourcing hunts",
   "human_confirmation_required": true,
   "boundaries": [
+    "Part Passport normalization is not fitment proof",
+    "reachable listings are source leads until separately verified",
     "unknowns may remain unknown",
-    "compatibility is not guaranteed",
+    "compatibility inventory supplier availability price and delivery timing are not guaranteed",
     "checkout creation is not payment proof",
-    "private vendor, analytics, session, command-center, and sales data are not public"
+    "private vendor analytics session command-center and sales data are not public"
   ],
-  "commercial": null,
+  "commercial": {
+    "quick_hunt_usd": 19,
+    "deep_hunt_usd": 49,
+    "rescue_hunt_usd": 99
+  },
   "human_start_url": null,
   "buyer_frontage_url": null,
   "developer_surfaces": null,
