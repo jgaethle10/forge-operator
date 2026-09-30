@@ -231,8 +231,8 @@
     "proof:worldstate": "node systemia/worldstate/worldstate.proof.mjs",
     "proof:worldstate-context-adapter": "node systemia/worldstate/context-fabric-adapter.proof.mjs",
     "proof:worldstate-context-reader": "node systemia/worldstate/context-reader.proof.mjs",
-    "proof:base44-evac": "node systemia/base44-evac/proof.mjs",
-    "base44:evac": "node systemia/base44-evac/runner.mjs",
+    "proof:base44-evac": "node systemia/migrations/base44-exit/factory/proof.mjs",
+    "base44:evac": "node systemia/migrations/base44-exit/factory/runner.mjs",
     "saban:base44-evac": "node systemia/saban/multiplier.mjs --software base44-evac --auto --execute --reconcile"
   },
   "dependencies": {
