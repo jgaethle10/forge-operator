@@ -14,6 +14,7 @@ if (cfg.rules?.new_base44_recurring_workflows_allowed !== false) fail('new Base4
 if (cfg.rules?.internal_recurring_base44_schedulers_allowed !== false) fail('internal recurring Base44 schedulers must remain prohibited');
 if (cfg.rules?.base44_llm_as_default_inference_path_allowed !== false) fail('Base44 LLM cannot be the default inference path');
 if (cfg.rules?.base44_as_runtime_authority_allowed !== false) fail('Base44 cannot be runtime authority');
+if (cfg.rules?.base44_core_integrations_allowed !== false) fail('Base44 Core integrations must be disabled for new active execution paths');
 
 if (cfg.replacement?.canonical_source !== 'github') fail('replacement source must be GitHub');
 if (cfg.replacement?.orchestration !== 'systemia') fail('replacement orchestration must be Systemia');
@@ -24,6 +25,10 @@ if (cfg.replacement?.capacity_strategy !== 'authorized_existing_compute_first') 
 if (cfg.replacement?.capacity_protocol !== 'evercraft.capacity.v1') fail('capacity protocol must remain Evercraft-owned');
 if (cfg.replacement?.scheduler !== 'systemia/core/resident-supervisor.mjs') fail('replacement scheduler must be the Systemia Core resident supervisor');
 if (cfg.replacement?.scheduler_config !== 'systemia/core/resident-services.json') fail('replacement scheduler config is wrong');
+if (cfg.replacement?.integration_gateway !== 'systemia/core/core-gateway.mjs') fail('owned integration gateway is missing');
+if (cfg.replacement?.integration_client_shim !== 'systemia/core/core-client.js') fail('owned integration client shim is missing');
+if (cfg.replacement?.integration_gateway_owner !== 'evercraft') fail('integration gateway must be Evercraft-owned');
+if (cfg.replacement?.integration_gateway_legacy_transport !== false) fail('integration gateway must not route through Base44');
 if (Number(cfg.replacement?.kaidance_heartbeat_target_seconds) !== 300) fail('KAIDANCE heartbeat must stay at 300 seconds');
 
 const frozen = new Set(cfg.frozen_internal_workflows || []);
@@ -96,6 +101,7 @@ if (releaseContinuity.named_cloud_required !== false) {
 }
 
 for (const gate of [
+  'core_gateway_proof_pass',
   'replacement_runtime_live',
   'kaidance_pulse_healthy',
   'route_verification_pass',
