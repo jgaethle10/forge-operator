@@ -398,6 +398,9 @@ Compile a phenomenon package:
 
 ```bash
 npm run media:studio -- phenomenon ./tmp/phenomenon.json ./tmp/phenomenon.html ./tmp/phenomenon.receipt.json
+npm run media:studio -- phenomenon-stage ./tmp/phenomenon.json ./tmp/phenomenon.stage.json ./tmp/phenomenon.receipt.json
 ```
 
-The receipt records the evidence state, source references, streamline/sample counts and a stable digest. Render completion does not grant publication authority. Evercraft Clip remains downstream.
+The stage form is a first-class `evercraft.fallen.visual-stage.v1` with a governed `phenomenon` layer, so it can enter the same distributed render plan and owned Playwright/FFmpeg worker fabric as the rest of Fallen. Workers still reject arbitrary HTML and external media; the phenomenon grammar is explicitly admitted and bounded in render policy.
+
+The receipt records the evidence state, source references, streamline/sample counts and the stage digest. Render completion does not grant publication authority. Evercraft Clip remains downstream.
