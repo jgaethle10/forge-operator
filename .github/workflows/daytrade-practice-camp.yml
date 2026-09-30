@@ -1,0 +1,43 @@
+name: DayTrade Lens Practice Camp
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "systemia/daytrade-lens/**"
+      - ".github/workflows/daytrade-practice-camp.yml"
+  schedule:
+    - cron: "30 22 * * 1-5"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  practice:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      ALPACA_TRADING: ${{ secrets.ALPACA_TRADING }}
+      ALPACA_TRADING_SECRET: ${{ secrets.ALPACA_TRADING_SECRET }}
+      PRACTICE_REPORT_PATH: artifacts/daytrade-practice/latest.json
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Prove simulator and fail-closed gates
+        run: node systemia/daytrade-lens/practice-camp.test.mjs
+
+      - name: Run historical market-data replay only
+        run: node systemia/daytrade-lens/practice-camp.mjs
+
+      - name: Upload simulation receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: daytrade-practice-camp
+          path: artifacts/daytrade-practice/latest.json
+          if-no-files-found: error
+          retention-days: 14
