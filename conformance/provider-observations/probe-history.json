@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.provider-probe-history.v1",
-  "updated_at": "2026-09-30T05:38:02.885Z",
+  "updated_at": "2026-09-30T07:19:26.607Z",
   "max_records": 500,
   "records": [
     {
@@ -6944,6 +6944,24 @@
       "pickup_observed": true,
       "provider_receipt_sha256": "68d2c27c2f8094fd37f5455b263ee6361281b8389112ea09c8eb4d1dd7e5016b",
       "response_sha256": "0cf6c0964e1e568f76acf50b2501f1ef55f41a20c396332a989e3bf2a194089e",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "7ee0a4d6919bb8b21a709946a00212fd641afd55bb6c150de0d06f8dac575b56",
+      "observed_at": "2026-09-30T07:19:26.607Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "systemia-website-audit",
+      "case_id": "website-audit-001",
+      "prompt_sha256": "e6a88dba6f0d63962eb1b93ff3dd00071846815cadd934c02774a440a75fe3a9",
+      "pickup_observed": true,
+      "provider_receipt_sha256": "9746082390cee9ca16c6d2d4e7d1dced64fd511ffd02e4624e8b290ecee6ea69",
+      "response_sha256": "cdde3868f8cef52368eaa751ada20e4a4339eb974928d098eb52886750e88aeb",
       "source": "authorized_provider_probe",
       "privacy": {
         "full_provider_response_persisted": false,
