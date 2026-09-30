@@ -15,6 +15,7 @@ import { buyerFrontageUrl } from './systemia/chum/start-corridor.mjs';
 import { createCrawlerRadarStore } from './systemia/chum/crawler-radar.mjs';
 import { registerFallenFamilyRoutes } from './systemia/media-studio/family-http.js';
 import { registerRivetReportGateway } from './systemia/rivet/http-gateway.mjs';
+import { registerRewardsGateway } from './systemia/rewards/http-gateway.mjs';
 import { registerSpecialistHandoffMcps } from './systemia/mcp/specialist-handoff.js';
 import { registerRemoteOperatorMcp } from './systemia/remote-operator/mcp-gateway.mjs';
 
@@ -169,6 +170,7 @@ function rateLimit(maxRequests: number, windowMs: number) {
 
 app.use(express.json({ limit: '10mb', type: ['application/json', 'application/*+json'] }));
 registerRivetReportGateway(app);
+registerRewardsGateway(app);
 registerSpecialistHandoffMcps(app, { gatewayUrl: machineCommerceGatewayUrl });
 registerRemoteOperatorMcp(app);
 
