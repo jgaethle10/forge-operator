@@ -14,6 +14,11 @@ ENV_DIR="/etc/evercraft"
 ENV_FILE="${ENV_DIR}/nodeseed.env"
 UNIT_FILE="/etc/systemd/system/evercraft-nodeseed.service"
 NODE_BIN="$(command -v node || true)"
+NODE_ROLE="${EVERCRAFT_NODE_ROLE:-public_edge}"
+if [[ "${NODE_ROLE}" != "public_edge" && "${NODE_ROLE}" != "private_worker" && "${NODE_ROLE}" != "virtual_worker" ]]; then
+  echo "EVERCRAFT_NODE_ROLE must be public_edge, private_worker, or virtual_worker." >&2
+  exit 3
+fi
 
 if [[ -z "${NODE_BIN}" ]]; then
   echo "Node.js is required." >&2
@@ -27,7 +32,7 @@ if [[ "${NODE_MAJOR}" -lt 22 ]]; then
 fi
 
 PREFLIGHT_TMP="$(mktemp)"
-if ! "${NODE_BIN}" "${SOURCE_ROOT}/systemia/compute/field-preflight.mjs" --root "${STATE_ROOT}" > "${PREFLIGHT_TMP}"; then
+if ! "${NODE_BIN}" "${SOURCE_ROOT}/systemia/compute/field-preflight.mjs" --root "${STATE_ROOT}" --role "${NODE_ROLE}" > "${PREFLIGHT_TMP}"; then
   cat "${PREFLIGHT_TMP}" >&2
   rm -f "${PREFLIGHT_TMP}"
   exit 4
@@ -75,6 +80,7 @@ EVERCRAFT_ALLOCATOR_TOKEN=${ALLOCATOR_TOKEN}
 EVERCRAFT_ADVERTISE_HOST=${ADVERTISE_HOST}
 EVERCRAFT_NODE_ID=${NODE_ID}
 EVERCRAFT_NODE_LABELS=${NODE_LABELS}
+EVERCRAFT_NODE_ROLE=${NODE_ROLE}
 EOF
 
 # Public-edge configuration is opt-in. If the host is already provisioned with
@@ -138,6 +144,7 @@ cat > "${STATE_ROOT}/install-receipt.json" <<EOF
 {
   "schema": "evercraft.node001.install-receipt.v1",
   "node_id": "${NODE_ID}",
+  "node_role": "${NODE_ROLE}",
   "install_boot_id_hash": "${INSTALL_BOOT_HASH}",
   "installed_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
   "service": "evercraft-nodeseed.service",
