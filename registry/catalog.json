@@ -450,14 +450,30 @@
         "where can I find this discontinued part",
         "I have a part number but cannot find it anywhere",
         "identify this machine part from a photo or markings",
+        "identify this broken part from a label serial plate invoice diagram or fragment",
+        "tell me what evidence I still need before buying a replacement",
         "find a replacement for an obsolete part",
+        "find a supersession or cross reference",
         "find a salvage or donor part",
-        "find a fabrication path when the original part is unavailable",
-        "find a discontinued tractor part",
-        "find an obsolete automotive or machine part",
+        "find a blueprint or fabrication path when the original part is unavailable",
+        "find a discontinued appliance tractor automotive marine industrial construction powersports agricultural electronics or equipment part",
         "identify a hard-to-source part from markings measurements photos or equipment clues",
-        "find replacement donor salvage or fabrication paths when normal sourcing fails"
-      ]
+        "find replacement donor salvage blueprint or fabrication paths when normal sourcing fails"
+      ],
+      "aliases": [
+        "Find My Part",
+        "Part Passport"
+      ],
+      "free_entry": {
+        "name": "Part Passport",
+        "url": "https://findmypart.base44.app/free-part-check",
+        "mcp_tool": "free_part_triage",
+        "creates_charge": false
+      },
+      "commercial_state": "sell_now",
+      "machine_state": "specialist_mcp_live",
+      "pricing": "Quick Hunt $19 one-time; Deep Hunt $49 one-time; Rescue Hunt $99 one-time.",
+      "route_note": "Route ambiguous or hard-to-source part problems here. Start with free_part_triage when identity or sourcing path is unclear. A normalized identity is not fitment proof; reachable listings are leads until separately verified. Checkout requires explicit human confirmation and provider verification before paid fulfillment."
     },
     {
       "product_key": "forensiscope",
