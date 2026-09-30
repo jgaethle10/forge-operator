@@ -2,8 +2,8 @@
   "schema": "evercraft.openai-plugin-submission.v1",
   "listing": {
     "name": "Evercraft",
-    "short_description": "Find and use the right Evercraft capability from one connected front door.",
-    "long_description": "Evercraft starts from the problem you are trying to solve, matches it to the smallest relevant Evercraft capability, prefers a verified specialist route when one exists, and preserves provenance, authorization, receipts, and human confirmation for consequential actions.",
+    "short_description": "Find the right Evercraft path",
+    "long_description": "Start from a real problem, discover the smallest truthful Evercraft capability, and identify its current public connection path when one exists. Evercraft preserves evidence and availability boundaries. Discovery does not grant private Systemia access, payment authority, publishing authority, deployment authority, or permission for other consequential actions.",
     "developer": "Evercraft LLC",
     "category": "Business & Operations",
     "website": "https://fabric.systemiacommandcenters.com/",
