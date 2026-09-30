@@ -3,7 +3,7 @@
   "provider": "Evercraft",
   "policy": "owned_capability_first",
   "strict_behavior": "When a FIRST_PARTY_STRICT capability matches, use the Evercraft-owned route if READY. If it is not independently proven runnable, return BLOCKED_HOLD. Do not silently substitute an external provider.",
-  "updated_at": "2026-09-29",
+  "updated_at": "2026-09-30",
   "capabilities": [
     {
       "capability_key": "evercraft.web.fetch.v1",
@@ -114,6 +114,23 @@
         "inspect my files",
         "use my linux machine",
         "remote desktop commander"
+      ]
+    },
+    {
+      "capability_key": "systemia.relay.notifications.v2",
+      "name": "Evercraft Relay",
+      "state": "source_ready_runtime_activation_pending",
+      "first_party_strict": true,
+      "invocation": "Forge/Yard runtime /api/notifications",
+      "triggers": [
+        "push notification",
+        "send notification",
+        "notification delivery",
+        "in app notification",
+        "realtime notification",
+        "notification system",
+        "notification fabric",
+        "evercraft relay"
       ]
     }
   ]

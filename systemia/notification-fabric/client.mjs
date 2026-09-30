@@ -40,5 +40,6 @@ export function createNotificationClient(options = {}) {
   return {
     notify(intent) { return post('/api/notifications/intents', intent); },
     signal(signal) { return post('/api/notifications/signals', signal); },
+    issueSession(input) { return post('/api/notifications/session-tokens', input); },
   };
 }
