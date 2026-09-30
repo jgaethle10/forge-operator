@@ -7,11 +7,13 @@
     "read_only_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
     "read_only_purpose": "Read-only matching from user problems to public Evercraft capabilities. Creates no payment or external-action authority.",
     "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-    "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-    "purpose": "Discover Evercraft capabilities, match natural-language needs, inspect offers, route to specialists, and prepare human-confirmed checkout where supported.",
+    "mcp": null,
+    "purpose": "Read-only capability discovery remains available through Evercraft Fabric and CHUM. Transactional Machine Commerce invocation is disabled until the owned Yard/Fabric edge passes live verification.",
     "registry_version": "1.5.1",
-    "registry_publication_state": "published_receipt_backed",
-    "registry_receipt": "conformance/registry-publications/2026-09-28-evercraft-machine-commerce-v1.5.1.json"
+    "registry_publication_state": "migration_hold",
+    "registry_receipt": "conformance/registry-publications/2026-09-28-evercraft-machine-commerce-v1.5.1.json",
+    "migration_state": "base44_evacuation",
+    "migration_note": "The prior Base44 MCP publication receipt is retained as historical provenance only and is not current invocation authority."
   },
   "products": [
     {
