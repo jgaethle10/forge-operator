@@ -6,7 +6,7 @@
   "source_schema_version": "2026-09-28.2",
   "gateway_version": "evercraft-machine-commerce-gateway-v0.9.1",
   "source_generated_at": "2026-09-29T01:40:00.000Z",
-  "generated_at": "2026-09-30T18:55:45.112Z",
+  "generated_at": "2026-09-30T19:03:11.972Z",
   "offer_count": 46,
   "sell_now_count": 14,
   "discovery_count": 32,
@@ -1601,33 +1601,6 @@
       "invocation_status": "LIVE: agent HTTP gateway + OpenAPI + llms guidance + remote MCP at https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp. Agents can inspect $500/$999/$1,999 website-service tiers, prepare checkout only after explicit human confirmation, and independently verify paid order state.",
       "live_canary_evidence": null,
       "catalog_version": "2026-09-23.13"
-    },
-    {
-      "public_id": "worldstate-reality-delta-v1",
-      "name": "Evercraft Worldstate Reality Delta",
-      "intent_terms": [
-        "what materially changed around my assets",
-        "monitor external conditions affecting my operations",
-        "current worldstate for my facilities",
-        "route and infrastructure change intelligence",
-        "evidence backed external change feed",
-        "ground my AI in current real world conditions"
-      ],
-      "problem": "Operators and agents need a bounded, evidence-backed view of material external changes affecting assets, routes, industries and infrastructure without drowning in unrelated alerts.",
-      "inputs": "Authorized Worldstate scope such as regions, assets, facilities, routes, dependencies, industries, domains and topics.",
-      "outputs": "Worldstate snapshot, Reality Delta and compact agent packet preserving evidence state, source family, provenance, materiality and unresolved uncertainty.",
-      "commercial_state": "verification_required",
-      "machine_state": "discovery_only",
-      "pricing": "No canonical paid offer is published yet; commercial verification is required.",
-      "offers": [],
-      "human_ui_required": false,
-      "confirmation": "Discovery does not create monitoring, payment, notification or external-action authority. Any future paid or operational execution requires independently verified terms and the existing Evercraft authority gates.",
-      "public_url": "https://systemiacommandcenters.com",
-      "public_url_source": "source_catalog",
-      "payment_authority": "Evercraft Payments; no payment authority is granted by Worldstate discovery.",
-      "invocation_status": "DISCOVERY ONLY: core Worldstate, Reality Delta, Context Fabric and Rockies contracts are source-ready; commercial/public invocation requires independent verification before any live claim.",
-      "live_canary_evidence": null,
-      "catalog_version": "2026-09-30"
     }
   ]
 }
