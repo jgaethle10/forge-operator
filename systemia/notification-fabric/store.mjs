@@ -57,6 +57,7 @@ export function createNotificationStore({ dataDir }) {
   const ledgerHeadFile = path.join(root, 'delivery-ledger-head.json');
   const digestFile = path.join(root, 'digest-queue.ndjson');
   const ownerQueueFile = path.join(root, 'owner-queue.ndjson');
+  const attentionFile = path.join(root, 'attention-budget.json');
   const inboxDir = path.join(root, 'inbox');
 
   function inboxFile(principalId) {
@@ -218,6 +219,31 @@ export function createNotificationStore({ dataDir }) {
       }
       const head = safeReadJson(ledgerHeadFile, { last_hash: null, count: 0 });
       return { valid: head.last_hash === previous && Number(head.count || 0) === count, count, last_hash: previous };
+    },
+    consumeAttentionBudget(principalId, purpose, options = {}) {
+      const principal = String(principalId || '').trim();
+      if (!principal) return { allowed: false, used: 0, limit: 0 };
+      const now = Number(options.now ?? Date.now());
+      const windowMs = Math.max(60000, Number(options.windowMs ?? 60 * 60 * 1000));
+      const limits = {
+        transactional: 8,
+        operational: 6,
+        reminder: 4,
+        marketing: 2,
+        ...(options.limits || {}),
+      };
+      const limit = Math.max(0, Number(limits[purpose] ?? 6));
+      const state = safeReadJson(attentionFile, { schema: 'systemia.notification-attention-budget.v1', principals: {} });
+      const key = stableId(principal);
+      const bucket = state.principals[key] || { principal_id: principal, events: [] };
+      const cutoff = now - windowMs;
+      bucket.events = (bucket.events || []).filter((event) => Number(event.at_ms) >= cutoff);
+      const used = bucket.events.filter((event) => event.purpose === purpose).length;
+      const allowed = used < limit;
+      if (allowed) bucket.events.push({ purpose, at_ms: now });
+      state.principals[key] = bucket;
+      atomicWriteJson(attentionFile, state);
+      return { allowed, used: allowed ? used + 1 : used, limit, window_ms: windowMs };
     },
     deliverySnapshot(options = {}) {
       const sinceMs = Number(options.sinceMs ?? 24 * 60 * 60 * 1000);
