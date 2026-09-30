@@ -38,7 +38,22 @@
     "rivet_auto_discovers_owned_aliev": true,
     "evercraft_hosting_control_plane_proof": "pass",
     "failed_candidate_preserves_active_service": true,
-    "blue_green_and_rollback_proof": "pass"
+    "blue_green_and_rollback_proof": "pass",
+    "explicit_cutover_modes": [
+      "legacy_only",
+      "shadow_owned",
+      "owned_primary",
+      "owned_only"
+    ],
+    "runtime_receipt_entity": "RIVETRuntimeReceipt",
+    "silent_failback_for_owned_only": false,
+    "explicit_legacy_failback_flag_required_for_owned_primary": true,
+    "full_report_tier_forwarded_to_yard": true,
+    "stale_migration_snapshot_overwrite_blocked": true,
+    "authenticated_batch_snapshot_ingest": true,
+    "one_shot_aliev_extractor_proof": "pass",
+    "migration_secret_persistence": false,
+    "owned_runtime_base44_default_removed": true
   },
   "migrate": [
     "report_execution_runtime",
@@ -48,7 +63,10 @@
     "live_rivet_ui_route",
     "auth_and_team_authority_adapter",
     "report_record_persistence_adapter",
-    "customer_and_team_delivery_handoff"
+    "customer_and_team_delivery_handoff",
+    "runtime_cutover_receipts",
+    "aliev_snapshot_bundle_extractor",
+    "stale_safe_snapshot_reconciliation"
   ],
   "acceptance": {
     "canary_address": "6405 W Chestnut Ave, Yakima, WA 98908",
@@ -65,11 +83,11 @@
   },
   "blockers": [
     "owned AliEV source and RIVET resident stack have not yet been admitted on a field/public-edge production node",
-    "production AliEV snapshot store has not yet been bulk-seeded and reconciled from legacy source data",
-    "live authenticated Yard report route has not yet been independently verified",
-    "RIVET New Report UI is still temporarily bound to the Base44 generateQuickReport compatibility function",
-    "fresh 6405 W Chestnut live report has not yet reached generation_state=ready through the owned production lane"
+    "production AliEV snapshot store has not yet been seeded with the live migration bundle",
+    "live authenticated Yard report route has not yet been independently verified from outside the production node",
+    "RIVET New Report UI remains on legacy_only until shadow-owned canaries pass the promotion policy",
+    "fresh preliminary and full-site live reports have not yet reached generation_state=ready through the owned production lane"
   ],
-  "next_action": "admit_owned_compute_capacity_seed_and_reconcile_the_aliev_snapshot_store_start_resident_aliev_then_rivet_verify_public_https_and_fresh_report_canary_then_switch_new_report_creation_off_base44",
+  "next_action": "admit_owned_compute_capacity_extract_and_seed_live_aliev_bundle_run_shadow_owned_preliminary_and_full_canaries_then_promote_to_owned_primary_after_policy_receipts",
   "destructive_cutover_allowed": false
 }
