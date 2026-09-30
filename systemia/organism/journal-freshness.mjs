@@ -118,6 +118,24 @@ export async function probeJournalFreshness({
     human_gate_required: false
   };
 
+  const homepageLower = clean(home.text).toLowerCase();
+  const identityDriftMarkers = [
+    'all-in-one ai shopping assistant for black friday',
+    'optimize your cart for maximum savings'
+  ];
+  const identityDrift = home.ok && identityDriftMarkers.some((marker) => homepageLower.includes(marker));
+  const identityFindings = identityDrift
+    ? [{
+        ...findingBase,
+        code: 'journal_public_identity_drift',
+        severity: 'high',
+        detail: 'The public Journal homepage is exposing stale shopping-assistant identity/SEO copy instead of the Evercraft Journal editorial identity.',
+        metadata: {
+          marker_family: 'legacy_black_friday_shopping_identity'
+        }
+      }]
+    : [];
+
   const observation = {
     schema: 'evercraft.journal.freshness-observation.v1',
     observed_at: now.toISOString(),
@@ -128,6 +146,7 @@ export async function probeJournalFreshness({
     sitemap_latest_at: evidence.sitemap_latest_at,
     latest_at: evidence.latest_at,
     latest_kind: evidence.latest_kind,
+    identity_state: identityDrift ? 'drifted' : (home.ok ? 'expected_or_unverified' : 'unknown'),
     stale_after_hours: staleAfterHours,
     block_after_hours: blockAfterHours,
     state: 'unknown',
@@ -138,12 +157,15 @@ export async function probeJournalFreshness({
     return {
       scanned: 2,
       observation,
-      findings: [{
-        ...findingBase,
-        code: 'journal_freshness_probe_unreachable',
-        severity: 'medium',
-        detail: 'Systemia could not reach either the Journal homepage or sitemap, so editorial freshness cannot be verified.'
-      }]
+      findings: [
+        ...identityFindings,
+        {
+          ...findingBase,
+          code: 'journal_freshness_probe_unreachable',
+          severity: 'medium',
+          detail: 'Systemia could not reach either the Journal homepage or sitemap, so editorial freshness cannot be verified.'
+        }
+      ]
     };
   }
 
@@ -151,12 +173,15 @@ export async function probeJournalFreshness({
     return {
       scanned: 2,
       observation,
-      findings: [{
-        ...findingBase,
-        code: 'journal_freshness_unverifiable',
-        severity: 'medium',
-        detail: 'The Journal is reachable, but Systemia could not find a dated live edition or sitemap modification timestamp. Freshness is therefore unknown, never assumed.'
-      }]
+      findings: [
+        ...identityFindings,
+        {
+          ...findingBase,
+          code: 'journal_freshness_unverifiable',
+          severity: 'medium',
+          detail: 'The Journal is reachable, but Systemia could not find a dated live edition or sitemap modification timestamp. Freshness is therefore unknown, never assumed.'
+        }
+      ]
     };
   }
 
@@ -165,25 +190,28 @@ export async function probeJournalFreshness({
 
   if (ageHours <= staleAfterHours) {
     observation.state = 'fresh';
-    return { scanned: 2, observation, findings: [] };
+    return { scanned: 2, observation, findings: identityFindings };
   }
 
   observation.state = ageHours >= blockAfterHours ? 'stale_blocking' : 'stale_warning';
   return {
     scanned: 2,
     observation,
-    findings: [{
-      ...findingBase,
-      code: 'journal_front_page_stale',
-      severity: ageHours >= blockAfterHours ? 'high' : 'medium',
-      detail: `Journal freshness is ${ageHours.toFixed(1)} hours old, beyond the ${staleAfterHours}-hour editorial floor. Latest dated evidence: ${evidence.latest_at} (${evidence.latest_kind}).`,
-      metadata: {
-        latest_at: evidence.latest_at,
-        latest_kind: evidence.latest_kind,
-        age_hours: Number(ageHours.toFixed(2)),
-        stale_after_hours: staleAfterHours,
-        block_after_hours: blockAfterHours
+    findings: [
+      ...identityFindings,
+      {
+        ...findingBase,
+        code: 'journal_front_page_stale',
+        severity: ageHours >= blockAfterHours ? 'high' : 'medium',
+        detail: `Journal freshness is ${ageHours.toFixed(1)} hours old, beyond the ${staleAfterHours}-hour editorial floor. Latest dated evidence: ${evidence.latest_at} (${evidence.latest_kind}).`,
+        metadata: {
+          latest_at: evidence.latest_at,
+          latest_kind: evidence.latest_kind,
+          age_hours: Number(ageHours.toFixed(2)),
+          stale_after_hours: staleAfterHours,
+          block_after_hours: blockAfterHours
+        }
       }
-    }]
+    ]
   };
 }
