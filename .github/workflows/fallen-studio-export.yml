@@ -1,0 +1,154 @@
+name: Fallen Studio Export
+
+on:
+  pull_request:
+    paths:
+      - "systemia/media-studio/timeline-export.ts"
+      - "systemia/media-studio/timeline-export.test.ts"
+      - "systemia/media-studio/studio-create.ts"
+      - "systemia/media-studio/studio-create.test.ts"
+      - "systemia/media-studio/studio-resolve.ts"
+      - "systemia/media-studio/studio-resolve.test.ts"
+      - "systemia/media-studio/cli.ts"
+      - ".github/workflows/fallen-studio-export.yml"
+  push:
+    branches: [main]
+    paths:
+      - "systemia/media-studio/timeline-export.ts"
+      - "systemia/media-studio/timeline-export.test.ts"
+      - "systemia/media-studio/studio-create.ts"
+      - "systemia/media-studio/studio-create.test.ts"
+      - "systemia/media-studio/studio-resolve.ts"
+      - "systemia/media-studio/studio-resolve.test.ts"
+      - "systemia/media-studio/cli.ts"
+      - ".github/workflows/fallen-studio-export.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  export-canary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install runtime
+        run: npm install --no-audit --no-fund
+
+      - name: Ensure FFmpeg
+        run: |
+          if ! command -v ffmpeg >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y ffmpeg
+          fi
+          ffmpeg -version | head -n 1
+
+      - name: Studio draft and timeline export contracts
+        run: |
+          node --import tsx --test \
+            systemia/media-studio/studio-create.test.ts \
+            systemia/media-studio/studio-resolve.test.ts \
+            systemia/media-studio/timeline-export.test.ts
+
+      - name: Build canary assets
+        run: |
+          set -euo pipefail
+          ROOT="$GITHUB_WORKSPACE/.ci-assets/fallen-export"
+          mkdir -p "$ROOT"
+          ffmpeg -y -v error -f lavfi -i "testsrc2=size=640x360:rate=30" -t 2 -c:v libx264 -pix_fmt yuv420p "$ROOT/shot.mp4"
+          ffmpeg -y -v error -f lavfi -i "color=c=white:s=160x90" -frames:v 1 "$ROOT/logo.png"
+          ffmpeg -y -v error -f lavfi -i "sine=frequency=440:sample_rate=48000" -t 2 "$ROOT/voice.wav"
+          ffmpeg -y -v error -f lavfi -i "sine=frequency=220:sample_rate=48000" -t 2 "$ROOT/music.wav"
+          cat >"$ROOT/captions.srt" <<'SRT'
+          1
+          00:00:00,200 --> 00:00:01,800
+          FALLEN EXPORT CANARY
+          SRT
+
+      - name: Build canary timeline
+        run: |
+          node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          import path from 'node:path';
+          const root=path.join(process.env.GITHUB_WORKSPACE,'.ci-assets/fallen-export');
+          const digest=(file)=>crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
+          const asset=(id,file,kind)=>({id,path:path.join(root,file),digest:digest(path.join(root,file)),kind,sourceRefs:['ci:fallen-studio-export']});
+          const timeline={
+            schema:'evercraft.fallen.timeline.v1',
+            id:'fallen-studio-export-ci',
+            title:'Fallen Studio Export CI',
+            aspectRatio:'16:9',
+            fps:30,
+            version:1,
+            assets:[
+              asset('shot','shot.mp4','video'),
+              asset('logo','logo.png','image'),
+              asset('voice','voice.wav','audio'),
+              asset('music','music.wav','audio'),
+              asset('captions','captions.srt','captions'),
+            ],
+            tracks:[
+              {id:'picture',kind:'video',name:'Picture',clips:[
+                {id:'shot-clip',trackId:'picture',assetId:'shot',startSec:0,durationSec:2}
+              ]},
+              {id:'overlay',kind:'overlay',name:'Overlay',clips:[
+                {id:'logo-clip',trackId:'overlay',assetId:'logo',startSec:.4,durationSec:1.2,x:24,y:24,scale:.5,opacity:.85}
+              ]},
+              {id:'voice',kind:'voice',name:'Voice',clips:[
+                {id:'voice-clip',trackId:'voice',assetId:'voice',startSec:0,durationSec:2,volume:.8}
+              ]},
+              {id:'music',kind:'music',name:'Music',clips:[
+                {id:'music-clip',trackId:'music',assetId:'music',startSec:0,durationSec:2,volume:.15}
+              ]},
+              {id:'captions',kind:'captions',name:'Captions',clips:[
+                {id:'captions-clip',trackId:'captions',assetId:'captions',startSec:0,durationSec:2}
+              ]},
+            ],
+            createdAt:new Date().toISOString(),
+            updatedAt:new Date().toISOString(),
+          };
+          fs.writeFileSync('/tmp/fallen-export-timeline.json',JSON.stringify(timeline,null,2));
+          NODE
+
+      - name: Render real MP4 canary
+        run: |
+          npm run media:studio -- timeline-export /tmp/fallen-export-timeline.json /tmp/fallen-export-canary.mp4 /tmp/fallen-export-receipt.json
+          ffprobe -v error             -show_entries stream=codec_type,codec_name,width,height             -show_entries format=duration,size             -of json /tmp/fallen-export-canary.mp4
+
+      - name: Verify receipt
+        run: |
+          node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+          const receipt=JSON.parse(fs.readFileSync('/tmp/fallen-export-receipt.json','utf8'));
+          if(receipt.schema!=='evercraft.fallen.timeline-export-receipt.v1') throw new Error('bad_receipt_schema');
+          if(receipt.width!==1920||receipt.height!==1080) throw new Error('bad_dimensions');
+          if(receipt.videoCodec!=='h264') throw new Error('video_codec_not_h264');
+          if(receipt.audioCodec!=='aac') throw new Error('audio_codec_not_aac');
+          if(!/^[a-f0-9]{64}$/.test(receipt.sha256)) throw new Error('bad_sha256');
+          if(receipt.publicationAuthorityGranted!==false) throw new Error('publication_boundary_broken');
+          const timeline=JSON.parse(fs.readFileSync('/tmp/fallen-export-timeline.json','utf8'));
+          if(receipt.inputAssetIds.length!==timeline.assets.length) throw new Error('not_all_assets_bound_to_receipt');
+          NODE
+
+      - name: Typecheck
+        run: npm run lint
+
+      - name: Package proof
+        run: |
+          mkdir -p artifacts/fallen-studio-export
+          cp /tmp/fallen-export-canary.mp4 artifacts/fallen-studio-export/
+          cp /tmp/fallen-export-receipt.json artifacts/fallen-studio-export/
+          cp /tmp/fallen-export-timeline.json artifacts/fallen-studio-export/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fallen-studio-export-canary
+          path: artifacts/fallen-studio-export/
+          if-no-files-found: error
+          retention-days: 14
