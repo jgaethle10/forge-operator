@@ -55,8 +55,17 @@ export function createRelayWorker(options = {}) {
   }
 
   async function handleIntent(job, now) {
-    const result = await fabric.dispatchIntent(job.payload.intent);
-    const watch = await scheduleAckWatch(job.payload.intent, result, now);
+    const originalIntent = job.payload.intent;
+    const policy = normalizeAckPolicy(originalIntent.acknowledgement);
+    const deliveryIntent = policy ? {
+      ...originalIntent,
+      acknowledgement: {
+        ...originalIntent.acknowledgement,
+        due_at: new Date(now + policy.within_seconds * 1000).toISOString(),
+      },
+    } : originalIntent;
+    const result = await fabric.dispatchIntent(deliveryIntent);
+    const watch = await scheduleAckWatch(deliveryIntent, result, now);
     return {
       kind: 'intent',
       notification_id: result.intent?.id || job.payload.intent?.id || null,
