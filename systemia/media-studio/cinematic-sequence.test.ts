@@ -120,6 +120,7 @@ test('axis reset permits a deliberate geography reset',()=>{
   input.shots[1].screenDirection='right_to_left';
   input.shots[1].axisReset=true;
   input.shots[1].actionContinuityId=undefined;
+  input.shots[2].screenDirection='right_to_left';
   const plan=compileCinematicSequence(input);
   assert.equal(plan.status,'accepted');
   assert.equal(plan.shots[1].mustProvideStartFrame,false);
