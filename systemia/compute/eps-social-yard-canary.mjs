@@ -28,11 +28,30 @@ async function waitJson(file,timeoutMs=60000){
 }
 
 const outFile=path.resolve(arg('--out','artifacts/base44-exit/eps-social-yard-canary.json'));
-const clipUrl=String(process.env.EVERCRAFT_CLIP_EPS_INGRESS_URL||'https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/systemiaEPSPublishIngress').trim();
+const clipUrl=String(process.env.EVERCRAFT_CLIP_EPS_INGRESS_URL||'').trim();
 const sourceSecretFile=String(process.env.SYSTEMIA_CLIP_SHARED_SECRET_FILE||'').trim();
 const releaseRef=String(process.env.EVERCRAFT_RELEASE_REF||process.env.GITHUB_SHA||'').trim();
 
 if(!/^[a-f0-9]{40}$/i.test(releaseRef)) throw new Error('immutable release SHA required');
+if(!clipUrl){
+  const held={
+    schema:'evercraft.systemia.eps-social-yard-canary.v1',
+    observed_at:new Date().toISOString(),
+    verified:false,
+    state:'held_no_owned_clip_ingress',
+    runtime:'Evercraft Compute',
+    deployment_surface:'Yard Operator',
+    control_plane:'Systemia Core',
+    named_cloud_required:false,
+    persistent_runtime_proven:false,
+    external_action_taken:false,
+    base44_fallback_allowed:false
+  };
+  held.receipt_hash='sha256:'+hash(held);
+  writeJson(outFile,held);
+  console.log(JSON.stringify(held,null,2));
+  process.exit(0);
+}
 if(!sourceSecretFile||!fs.existsSync(sourceSecretFile)){
   const held={
     schema:'evercraft.systemia.eps-social-yard-canary.v1',
