@@ -86,3 +86,11 @@ test('submission denial cases cover payment, privacy, and consequential actions'
   assert.match(negativeText,/private|credential|secret/);
   assert.match(negativeText,/consequential|publish|deploy/);
 });
+
+
+test('review test cases reference the live scanned Fabric matcher',()=>{
+  const manifest=readJson('plugin.json');
+  const review=manifest.extensions?.['com.openai']?.review;
+  assert.ok(review.test_cases.positive.every((x)=>x.tools_triggered==='match_evercraft_capability'));
+  assert.equal(manifest.version,'1.0.1');
+});
