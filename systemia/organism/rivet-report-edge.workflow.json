@@ -16,12 +16,13 @@
     "use_base44_as_source_runtime": false,
     "create_payment_obligation": false,
     "grant_customer_production_access": false,
-    "founder_login_required": false
+    "founder_login_required": false,
+    "embedded_owned_aliev_source": "autonomous_when_no_explicit_source_url"
   },
   "truth_gates": [
     "evercraft_public_edge_ready",
     "immutable_release_ref",
-    "owned_aliev_source_url",
+    "owned_aliev_source_runtime",
     "non_base44_source_runtime",
     "yard_deployment_receipt",
     "public_https_route_verification",

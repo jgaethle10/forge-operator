@@ -75,7 +75,9 @@
       "systemia.chum-public-origin.v1",
       "systemia.specialist-handoff-mcp.v1",
       "systemia.public-edge.v1",
-      "systemia.evercraft-home.v1"
+      "systemia.evercraft-home.v1",
+      "systemia.aliev-source-runtime.v1",
+      "systemia.rivet-report-runtime.v1"
     ],
     "public_origin": {
       "workload_class": "systemia.chum-public-origin.v1",
@@ -117,6 +119,20 @@
       "identity": "evercraft-owned",
       "identity_state_required": true,
       "passport_state_required": true
+    },
+    "aliev_source": {
+      "workload_class": "systemia.aliev-source-runtime.v1",
+      "mode": "machine_authenticated_source_snapshot",
+      "source_contract": "rivet_report_snapshot_v1",
+      "legacy_provider_fallback": false,
+      "missing_evidence_rule": "missing_is_never_zero"
+    },
+    "rivet_report": {
+      "workload_class": "systemia.rivet-report-runtime.v1",
+      "mode": "authenticated_report_runtime",
+      "embedded_owned_source_when_unbound": true,
+      "legacy_provider_fallback": false,
+      "source_contract": "rivet_report_snapshot_v1"
     }
   },
   "release_gates": [

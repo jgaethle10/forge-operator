@@ -7,11 +7,20 @@ function clean(value){ return String(value ?? '').trim(); }
 function safeId(value){ return clean(value).replace(/[^a-zA-Z0-9._-]/g,'_').slice(0,180); }
 function sha256(bytes){ return createHash('sha256').update(bytes).digest('hex'); }
 function authorized(req,token){ return clean(req.headers.authorization) === 'Bearer '+token; }
+function validatedOwnedSourceUrl(value){
+  const raw=clean(value);
+  if(!raw) throw new Error('aliev_owned_source_url_required');
+  const url=new URL(raw);
+  if(!['http:','https:'].includes(url.protocol)) throw new Error('aliev_source_url_protocol_invalid');
+  const host=url.hostname.toLowerCase();
+  if(host==='base44.app'||host.endsWith('.base44.app')) throw new Error('legacy_base44_source_url_prohibited');
+  return url.toString();
+}
 
 export function registerRivetReportGateway(app,{
   gatewayToken=process.env.RIVET_REPORT_GATEWAY_TOKEN || '',
   systemiaMachineKey=process.env.SYSTEMIA_MACHINE_KEY || '',
-  sourceUrl=process.env.ALIEV_YARD_SOURCE_URL || 'https://base44.app/api/apps/69b9b64d86a732029ce0db81/functions/energySiteLookup',
+  sourceUrl=process.env.ALIEV_YARD_SOURCE_URL || '',
   stateDir=process.env.RIVET_REPORT_STATE_DIR || path.join('/tmp','evercraft-rivet-report'),
   generate=generateYardReport
 }={}){
@@ -21,7 +30,9 @@ export function registerRivetReportGateway(app,{
       ok:true,
       service:'rivet-yard-report-gateway',
       runtime:'Forge/Yard',
-      configured:Boolean(clean(gatewayToken) && clean(systemiaMachineKey)),
+      configured:Boolean(clean(gatewayToken) && clean(systemiaMachineKey) && clean(sourceUrl)),
+      source_provider:'evercraft_owned_or_explicit_non_legacy',
+      legacy_source_fallback:false,
       source_contract:'rivet_report_snapshot_v1',
       canonical_store:'yard-atomic-files-v2',
       full_source_snapshot_persistence:true,
@@ -30,7 +41,7 @@ export function registerRivetReportGateway(app,{
   });
 
   app.post('/api/rivet/reports',async(req,res)=>{
-    if(!clean(gatewayToken) || !clean(systemiaMachineKey)){
+    if(!clean(gatewayToken) || !clean(systemiaMachineKey) || !clean(sourceUrl)){
       res.status(503).json({ok:false,error:'rivet_report_gateway_not_configured'});
       return;
     }
@@ -50,7 +61,7 @@ export function registerRivetReportGateway(app,{
       const progress=[];
       const record=await generate({
         address,
-        sourceUrl,
+        sourceUrl:validatedOwnedSourceUrl(sourceUrl),
         systemiaMachineKey,
         stateDir,
         onProgress:event=>progress.push(event)

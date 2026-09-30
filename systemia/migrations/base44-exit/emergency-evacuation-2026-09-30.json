@@ -1,0 +1,66 @@
+{
+  "schema": "evercraft.systemia.base44-emergency-evacuation.v1",
+  "declared_at": "2026-09-30T19:20:00Z",
+  "status": "active",
+  "reason": "Legacy integration credits exhausted and caused portfolio-wide execution degradation.",
+  "command": "Remove Base44 from active execution paths. Preserve it only as a bounded extraction source until each slice earns owned-runtime cutover receipts.",
+  "canonical_stack": {
+    "source": "github",
+    "orchestration": "systemia",
+    "runtime": "yard_evercraft_compute",
+    "scheduler": "systemia/core/resident-supervisor.mjs",
+    "integration_gateway": "systemia/core/core-gateway.mjs",
+    "public_edge": "evercraft_owned_public_edge"
+  },
+  "incident_rules": {
+    "new_legacy_integrations": false,
+    "legacy_integration_credit_spend_for_new_work": false,
+    "legacy_llm_default_path": false,
+    "legacy_runtime_authority": false,
+    "copy_only_migration_claims": false,
+    "cutover_requires_receipts": true
+  },
+  "p0_sequence": [
+    {
+      "product": "Systemia Command Center / KAIDANCE",
+      "goal": "protect orchestration, heartbeat, receipts and resident scheduling",
+      "state": "owned_slice_exists"
+    },
+    {
+      "product": "Shared Core Integrations",
+      "goal": "replace legacy inference, upload, messaging, image and extraction calls once for the portfolio",
+      "state": "replacement_landed_proof_pending"
+    },
+    {
+      "product": "RIVET",
+      "goal": "finish route cutover around the already-landed Yard reporting runtime",
+      "state": "owned_report_runtime_exists"
+    },
+    {
+      "product": "AliEV",
+      "goal": "extract application runtime and bind it to the owned Core Gateway and Yard",
+      "state": "source_dependency_extraction_active"
+    },
+    {
+      "product": "Evercraft Clip",
+      "goal": "move publishing execution and media handoff off legacy integrations",
+      "state": "source_dependency_extraction_active"
+    },
+    {
+      "product": "Evercraft InternalOps",
+      "goal": "move operational records, scheduling surfaces and integrations onto Systemia-owned services",
+      "state": "source_dependency_extraction_active"
+    },
+    {
+      "product": "Evercraft Journal",
+      "goal": "move editorial generation, asset upload and publication support onto owned services",
+      "state": "source_dependency_extraction_active"
+    },
+    {
+      "product": "Evercraft Property Services",
+      "goal": "move uploads, notifications, content generation and operational app dependencies onto owned services",
+      "state": "source_dependency_extraction_active"
+    }
+  ],
+  "portfolio_rule": "After P0 execution paths are stable, continue the same slice contract across the complete observed legacy estate until no production dependency remains."
+}

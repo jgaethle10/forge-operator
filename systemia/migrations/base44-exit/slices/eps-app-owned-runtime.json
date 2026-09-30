@@ -1,0 +1,39 @@
+{
+  "schema": "evercraft.systemia.base44-exit-slice.v1",
+  "slice": "eps-app-owned-runtime",
+  "product": "Evercraft Property Services",
+  "wave": 3,
+  "priority": "incident_p0",
+  "status": "source_dependency_extraction_active",
+  "observed_direct_core_matches": 22,
+  "observed_core_operations": [
+    "invoke_llm",
+    "upload_file",
+    "send_email"
+  ],
+  "target": {
+    "source": "github",
+    "orchestration": "systemia",
+    "runtime": "yard_evercraft_compute",
+    "integrations": "systemia/core/core-gateway.mjs"
+  },
+  "next": [
+    "extract current customer and admin application source",
+    "replace LLM, upload and email calls with the owned gateway",
+    "migrate lead, estimate, article, testimonial and booking data",
+    "preserve field photo and attachment integrity with checksums",
+    "prove customer lead, estimator, booking, upload and admin publishing flows"
+  ],
+  "done_when": [
+    "source_extracted",
+    "no_direct_legacy_core_calls",
+    "data_reconciled",
+    "auth_parity_verified",
+    "integration_parity_verified",
+    "tests_pass",
+    "yard_deployment_receipt",
+    "route_verification_pass",
+    "rollback_target_present",
+    "observation_window_pass"
+  ]
+}

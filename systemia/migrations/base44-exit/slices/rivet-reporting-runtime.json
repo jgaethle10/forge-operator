@@ -30,11 +30,15 @@
     "focused_hotfix_release_ref": "513d3e9b4f2f0a0771544cbe20c6e456d65975c2",
     "resident_report_edge_registered": true,
     "silent_base44_source_fallback_removed": true,
-    "automatic_owned_runtime_canary_on_main": true
+    "automatic_owned_runtime_canary_on_main": true,
+    "owned_aliev_source_runtime_landed": true,
+    "owned_aliev_source_contract_proof": "tests/aliev-owned-source-runtime.test.mjs",
+    "embedded_owned_source_compute_proof": "systemia/yard/rivet-owned-source-runtime.proof.mjs",
+    "legacy_base44_source_url_default_removed": true,
+    "legacy_source_url_fail_closed": true
   },
   "migrate": [
     "report_execution_runtime",
-    "aliev_source_adapter",
     "report_progress_telemetry",
     "beast_football_source_snapshot_transport",
     "live_rivet_ui_route",
@@ -56,11 +60,10 @@
     "observation_window_required": true
   },
   "blockers": [
-    "owned AliEV source endpoint has not yet been bound to the resident RIVET report edge",
     "live authenticated Yard report route has not yet been independently verified",
     "RIVET New Report UI is still temporarily bound to the Base44 generateQuickReport compatibility function",
-    "fresh 6405 W Chestnut live report has not yet reached generation_state=ready through Yard"
+    "fresh 6405 W Chestnut live report has not yet reached generation_state=ready through the independently verified public Yard route"
   ],
-  "next_action": "bind_an_owned_non_base44_aliev_source_to_the_resident_rivet_report_edge_verify_public_https_route_then_move_new_report_creation_to_yard_and_require_a_fresh_6405_w_chestnut_generation_state_ready",
+  "next_action": "verify_owned_source_ci_then_bind_and_verify_the_public_yard_report_route_and_run_a_fresh_6405_w_chestnut_canary_report",
   "destructive_cutover_allowed": false
 }

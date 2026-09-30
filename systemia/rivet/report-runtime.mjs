@@ -5,8 +5,6 @@ import { createHash, randomBytes } from 'node:crypto';
 import { createCargoManifest } from '../beast-mode/manifest.mjs';
 import { sealFootball, openFootball } from '../beast-mode/football.mjs';
 
-const ALIEV_APP_ID = '69b9b64d86a732029ce0db81';
-const RIVET_APP_ID = '6ab2062323d5c33c7dde7606';
 const SOURCE_COVERAGE_SCHEMA = 'evercraft.rivet.source-coverage.v1';
 const REQUIRED_SOURCE_COVERAGE_DOMAINS = [
   'geocoding','charging_inventory','traffic','traffic_temporal','utility_service_area','utility_tariff','incentives',
@@ -133,7 +131,7 @@ export function buildYardReport({address,sourceSnapshot,retrievedAt=new Date().t
     generated_at:new Date().toISOString(),
     source:{
       system:'AliEV',
-      app_id:ALIEV_APP_ID,
+      runtime:'systemia.aliev-source-runtime.v1',
       response_profile:clean(sourceSnapshot?.response_profile),
       evidence_state:clean(sourceSnapshot?.evidence_state),
       retrieved_at:clean(sourceSnapshot?.retrieved_at || retrievedAt),
@@ -254,6 +252,10 @@ export async function generateYardReport({
   const requested=clean(address);
   if(requested.length<5) throw new Error('address_required');
   if(!clean(sourceUrl)) throw new Error('aliev_source_url_required');
+  const parsedSourceUrl=new URL(clean(sourceUrl));
+  if(!['http:','https:'].includes(parsedSourceUrl.protocol)) throw new Error('aliev_source_url_protocol_invalid');
+  const sourceHost=parsedSourceUrl.hostname.toLowerCase();
+  if(sourceHost==='base44.app'||sourceHost.endsWith('.base44.app')) throw new Error('legacy_base44_source_url_prohibited');
   if(!clean(systemiaMachineKey)) throw new Error('systemia_machine_key_required');
   if(!stateDir) throw new Error('state_dir_required');
   const startedAt=Date.now();
@@ -311,8 +313,8 @@ export async function generateYardReport({
   }
   const artifactId='aliev-snapshot:'+sha256(requested).slice(0,24);
   const manifest=createCargoManifest({
-    source:{system:'AliEV',app_id:ALIEV_APP_ID},
-    destination:{system:'RIVET Yard',app_id:RIVET_APP_ID,workspace:'report-runtime'},
+    source:{system:'AliEV',runtime:'systemia.aliev-source-runtime.v1'},
+    destination:{system:'RIVET Yard',runtime:'systemia.rivet-report-runtime.v1',workspace:'report-runtime'},
     authority:{
       scope:'internal_source_snapshot',
       payment_state:'not_required',
@@ -439,7 +441,7 @@ export async function startRivetReportRuntime({
   stateDir,
   host='127.0.0.1',
   port=0,
-  sourceUrl=process.env.ALIEV_YARD_SOURCE_URL || 'https://base44.app/api/apps/69b9b64d86a732029ce0db81/functions/energySiteLookup',
+  sourceUrl=process.env.ALIEV_YARD_SOURCE_URL || '',
   systemiaMachineKey=process.env.SYSTEMIA_MACHINE_KEY || '',
   teamToken=process.env.RIVET_YARD_TEAM_TOKEN || '',
   sourceFetch=fetch
@@ -461,6 +463,8 @@ export async function startRivetReportRuntime({
     deployment_receipt_bound:Boolean(deploymentReceiptRef),
     deployment_receipt_ref:deploymentReceiptRef||null,
     source_adapter:'aliev-rivet-report-snapshot-v1',
+    source_runtime:'evercraft_owned_or_explicit_non_legacy',
+    legacy_source_fallback:false,
     canonical_report_store:'yard-atomic-files-v2',
     full_source_snapshot_persistence:true,
     source_coverage_manifest_required:true,
