@@ -185,7 +185,7 @@ export function observationsFromSecSubmissions({
   rockies_range,
   submissions,
   forms = ["8-K","10-Q","10-K"],
-  lookback_days = 120,
+  lookback_days = 365,
   now = new Date(),
   publication_delay_buffer_minutes = 10,
 } = {}) {
@@ -274,7 +274,7 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 export async function buildSecRockyObservationBatch({
   universe = DEFAULT_SEC_RESEARCH_UNIVERSE,
   forms = ["8-K","10-Q","10-K"],
-  lookback_days = 120,
+  lookback_days = 365,
   publication_delay_buffer_minutes = 10,
   request_interval_ms = 300,
   now = new Date(),
