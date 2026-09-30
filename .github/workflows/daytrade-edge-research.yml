@@ -1,0 +1,57 @@
+name: DayTrade Rockies Edge Research
+
+on:
+  pull_request:
+    paths:
+      - "systemia/daytrade-lens/**"
+      - "systemia/rockies/market-sources/**"
+      - ".github/workflows/daytrade-edge-research.yml"
+  push:
+    branches: [main]
+    paths:
+      - "systemia/daytrade-lens/**"
+      - "systemia/rockies/market-sources/**"
+      - ".github/workflows/daytrade-edge-research.yml"
+  schedule:
+    - cron: "15 23 * * 1-5"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Prove Rockies SEC and Edge Lab contracts
+        run: |
+          node systemia/rockies/market-sources/sec-filings-rocky.test.mjs
+          node systemia/daytrade-lens/rockies-edge-fabric.test.mjs
+          node systemia/daytrade-lens/edge-research-factory.test.mjs
+
+      - name: Run real SEC to Alpaca event study
+        if: github.event_name != 'pull_request'
+        env:
+          ALPACA_TRADING: ${{ secrets.ALPACA_TRADING }}
+          ALPACA_TRADING_SECRET: ${{ secrets.ALPACA_TRADING_SECRET }}
+          EDGE_LAB_ARTIFACT_DIR: artifacts/daytrade-edge
+          EVERCRAFT_EDGE_LAB_STATE_DIR: artifacts/daytrade-edge/state
+          EDGE_LAB_SEC_LOOKBACK_DAYS: "120"
+          EDGE_LAB_SEC_PUBLICATION_DELAY_MINUTES: "10"
+          EDGE_LAB_TRANSACTION_COST_BPS: "5"
+        run: node systemia/daytrade-lens/sec-edge-backfill.mjs
+
+      - name: Upload Edge Lab research receipts
+        if: always() && github.event_name != 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: daytrade-rockies-edge-research
+          path: artifacts/daytrade-edge
+          if-no-files-found: error
+          retention-days: 30

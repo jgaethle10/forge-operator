@@ -19,7 +19,7 @@ const observation = {
   provenance_refs: ["public:port-status:proof"],
   correlation_keys: ["us-west::supply-chain::port-flow"],
   facts: { direction: "worse_than_baseline" },
-  metadata: { rockies_range: "maritime" },
+  metadata: { rockies_range: "maritime", market_symbols: ["MATX"] },
 };
 
 const hypotheses = rockiesObservationToEdgeHypotheses(observation, {
@@ -28,6 +28,7 @@ const hypotheses = rockiesObservationToEdgeHypotheses(observation, {
 assert.ok(hypotheses.length >= 2);
 assert.ok(hypotheses.some((x) => x.rockies_range === "maritime"));
 assert.ok(hypotheses.some((x) => x.rockies_range === "supply_chain"));
+assert.ok(hypotheses.every((x) => x.research_instruments.includes("MATX")));
 assert.ok(hypotheses.every((x) => x.direction === "LEARN_FROM_DATA"));
 assert.ok(hypotheses.every((x) => x.constraints.no_live_trade_instruction === true));
 assert.ok(hypotheses.every((x) => x.provenance_refs.length === 1));

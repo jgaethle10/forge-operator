@@ -177,6 +177,9 @@ export function rockiesObservationToEdgeHypotheses(rawObservation, {
 
   return ranges.map((range) => {
     const spec = RANGE_MAP[range];
+    const directMarketSymbols = uniq(observation.metadata?.market_symbols || [])
+      .map((symbol) => symbol.toUpperCase())
+      .filter((symbol) => /^[A-Z][A-Z0-9.-]{0,9}$/.test(symbol));
     const priorityScore = Math.max(0, Math.min(1,
       observation.anomaly_score *
       observation.reliability *
@@ -201,7 +204,7 @@ export function rockiesObservationToEdgeHypotheses(rawObservation, {
       observation_domains: [...observation.domains],
       region_keys: [...observation.region_keys],
       themes: [...spec.themes],
-      research_instruments: [...spec.instruments],
+      research_instruments: uniq([...directMarketSymbols, ...spec.instruments]),
       lag_windows: lags.map((x) => ({ ...x })),
       direction: "LEARN_FROM_DATA",
       benchmark_policy: "instrument_vs_SPY_and_sector_peer",
@@ -212,6 +215,8 @@ export function rockiesObservationToEdgeHypotheses(rawObservation, {
       research_priority_score: priorityScore,
       provenance_refs: [...observation.provenance_refs],
       source_family: observation.source_family,
+      origin_entity_ref: observation.metadata?.origin_entity_ref || null,
+      source_authority_class: observation.metadata?.authority_class || null,
       summary: observation.summary,
       constraints: {
         no_live_trade_instruction: true,
