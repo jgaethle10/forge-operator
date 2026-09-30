@@ -16,7 +16,9 @@
     "private_core_source_in_public_repo": false,
     "migration_expands_authority": false,
     "payment_requires_explicit_confirmation": true,
-    "revenue_requires_provider_verified_payment": true
+    "revenue_requires_provider_verified_payment": true,
+    "critical_owned_runtime_hardcoded_base44_network_routes": false,
+    "route_registry_automatic_cutover": false
   },
   "cutover_required_evidence": [
     "source_extracted",
@@ -75,7 +77,9 @@
     "realtime_bus",
     "source_dependency_scanner",
     "lossless_entity_transfer",
-    "identity_challenge_broker"
+    "identity_challenge_broker",
+    "receipt_gated_route_registry",
+    "owned_runtime_base44_network_firewall"
   ],
   "landing_implementations": {
     "app_fabric_compatibility": {
@@ -174,6 +178,22 @@
         "systemia/secret-store/secret-store.mjs"
       ],
       "boundary": "Pending registration credentials are encrypted; OTPs and reset tokens are hash-only at rest. No successful delivery state exists without a delivery receipt."
+    },
+    "receipt_gated_route_registry": {
+      "state": "owned_baseline_proved_local",
+      "source_refs": [
+        "systemia/migrations/base44-exit/route-registry.mjs",
+        "systemia/migrations/base44-exit/route-registry.proof.mjs"
+      ],
+      "boundary": "A destination may be staged and verified without receiving traffic. Activation requires a separate cutover receipt pinned to the verified route binding and release. Raw legacy route values are fingerprinted rather than persisted."
+    },
+    "owned_runtime_base44_network_firewall": {
+      "state": "active_ci_guard",
+      "source_refs": [
+        "scripts/validate-base44-owned-runtime-firewall.mjs",
+        ".github/workflows/base44-exit.yml"
+      ],
+      "boundary": "Critical owned runtime surfaces may contain compatibility terminology but may not hard-code Base44 network destinations."
     }
   }
 }
