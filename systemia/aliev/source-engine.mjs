@@ -67,6 +67,7 @@ export async function buildOwnedAliEvSiteSnapshot({
   address,
   domainStateDir,
   geocode=censusOnelineGeocode,
+  refreshDomains=async()=>null,
   now=()=>new Date().toISOString(),
 }={}){
   if(!clean(address)) throw new Error('address_required');
@@ -76,6 +77,8 @@ export async function buildOwnedAliEvSiteSnapshot({
   if(latitude===null||longitude===null) throw new Error('geocoding_coordinates_required');
   const state=clean(geo?.state);
   const postal=clean(geo?.postal_code);
+  const collectedAt=now();
+  const liveRefresh=await refreshDomains({stateDir:domainStateDir,state,latitude,longitude,retrievedAt:collectedAt});
   const near=(domain,radiusMiles,limit=50)=>records(domainStateDir,domain,{latitude,longitude,radiusMiles,limit});
   const regional=(domain,limit=50)=>records(domainStateDir,domain,{state,limit});
   const postalRows=(domain,limit=50)=>{
@@ -102,7 +105,8 @@ export async function buildOwnedAliEvSiteSnapshot({
       row
     ])
   ).values()].slice(0,60);
-  const utilityAreas=postalRows('utility_service_area',30);
+  const nearbyUtilityAreas=near('utility_service_area',0.5,30);
+  const utilityAreas=nearbyUtilityAreas.length?nearbyUtilityAreas:postalRows('utility_service_area',30);
   const tariffs=postalRows('utility_tariff',40);
   const incentives=regional('incentives',60);
   const parcel=near('parcel_planning',1.5,20);
@@ -141,10 +145,10 @@ export async function buildOwnedAliEvSiteSnapshot({
     matched_address:clean(geo?.matched_address||address),
     requested_address:clean(address),
     latitude,longitude,state,postal_code:postal,city:clean(geo?.city),
-    retrieved_at:now(),
+    retrieved_at:collectedAt,
     source_coverage_manifest:{
       schema:'evercraft.rivet.source-coverage.v1',
-      generated_at:now(),
+      generated_at:collectedAt,
       domains,
       semantics:'Every report-relevant source domain is explicit. Missing is never zero; candidate utility, tariff and incentive records remain unverified until site-specific eligibility is confirmed.'
     },
@@ -183,8 +187,9 @@ export async function buildOwnedAliEvSiteSnapshot({
     owned_domain_engine:{
       schema:'evercraft.aliev.owned-domain-engine.v1',
       required_domains:REQUIRED_DOMAINS.length,
-      queried_at:now(),
+      queried_at:collectedAt,
       precomputed_snapshot_required:false,
+      live_refresh:liveRefresh,
     }
   };
 }
