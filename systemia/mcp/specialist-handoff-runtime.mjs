@@ -50,10 +50,16 @@ export const SYSTEMIA_REMOTE_OPS = {
   server_name: 'systemia-remote-ops',
   title: 'Systemia Remote Ops',
   version: '0.2.0',
-  human_origin: 'https://systemia-remote-ops.base44.app',
-  pricing_url: 'https://base44.app/api/apps/6a59b8c78561c8db1b43bd1d/functions/runPricingSimulation',
+  human_origin: null,
+  pricing_url: null,
   truth_boundary: 'Simulation is modeled decision support, not a guarantee or authoritative accounting, legal, tax, investment, valuation, financing, employment, or operational advice. Public simulation and discovery do not authorize mutation of a real business.',
 };
+
+function remoteOpsHumanUrl(pathname = '/') {
+  const origin = String(SYSTEMIA_REMOTE_OPS.human_origin || '').trim();
+  if (!origin) return null;
+  return new URL(String(pathname || '/'), origin.endsWith('/') ? origin : origin + '/').toString();
+}
 
 function remoteOpsTools() {
   return [
@@ -141,30 +147,30 @@ export function classifyBusinessDecision(intentRaw) {
   const intent = String(intentRaw || '').toLowerCase();
   const hit = (terms) => terms.some((term) => intent.includes(term));
   if (hit(['price','pricing','charge','raise my prices','lower my prices','rate','what should i charge'])) {
-    return { decision_type: 'pricing', state: 'native_deterministic_simulation', runnable: true, tool: 'simulate_pricing_change', human_url: SYSTEMIA_REMOTE_OPS.human_origin + '/what-should-i-charge' };
+    return { decision_type: 'pricing', state: 'native_deterministic_simulation', runnable: true, tool: 'simulate_pricing_change', human_url: remoteOpsHumanUrl('/what-should-i-charge') };
   }
   if (hit(['hire','employee','staff','headcount','layoff','restructur'])) {
-    return { decision_type: 'hiring_or_staffing', state: 'native_assumption_driven_simulation', runnable: true, tool: 'simulate_business_scenario', human_url: SYSTEMIA_REMOTE_OPS.human_origin + '/can-i-afford-an-employee' };
+    return { decision_type: 'hiring_or_staffing', state: 'native_assumption_driven_simulation', runnable: true, tool: 'simulate_business_scenario', human_url: remoteOpsHumanUrl('/can-i-afford-an-employee') };
   }
   if (hit(['new product','new service','add a service','remove a service','launch a product','launch a service'])) {
-    return { decision_type: 'product_or_service', state: 'native_assumption_driven_simulation', runnable: true, tool: 'simulate_business_scenario', human_url: SYSTEMIA_REMOTE_OPS.human_origin + '/' };
+    return { decision_type: 'product_or_service', state: 'native_assumption_driven_simulation', runnable: true, tool: 'simulate_business_scenario', human_url: remoteOpsHumanUrl('/') };
   }
   if (hit(['expand','new market','new location','branch','territory','second location','another location'])) {
-    return { decision_type: 'expansion', state: 'native_assumption_driven_simulation', runnable: true, tool: 'simulate_business_scenario', human_url: SYSTEMIA_REMOTE_OPS.human_origin + '/should-i-expand' };
+    return { decision_type: 'expansion', state: 'native_assumption_driven_simulation', runnable: true, tool: 'simulate_business_scenario', human_url: remoteOpsHumanUrl('/should-i-expand') };
   }
   if (hit(['buy a business','acquire','acquisition','sell my business','selling my business','business sale'])) {
-    return { decision_type: 'business_transaction', state: 'native_assumption_driven_simulation', runnable: true, tool: 'simulate_business_scenario', human_url: SYSTEMIA_REMOTE_OPS.human_origin + '/' };
+    return { decision_type: 'business_transaction', state: 'native_assumption_driven_simulation', runnable: true, tool: 'simulate_business_scenario', human_url: remoteOpsHumanUrl('/') };
   }
   if (hit(['partnership','partner','ownership change','equity partner'])) {
-    return { decision_type: 'partnership_or_ownership', state: 'native_assumption_driven_simulation', runnable: true, tool: 'simulate_business_scenario', human_url: SYSTEMIA_REMOTE_OPS.human_origin + '/' };
+    return { decision_type: 'partnership_or_ownership', state: 'native_assumption_driven_simulation', runnable: true, tool: 'simulate_business_scenario', human_url: remoteOpsHumanUrl('/') };
   }
   if (hit(['equipment','vehicle','machine','capital purchase','buy this asset','lease this'])) {
-    return { decision_type: 'capital_purchase', state: 'native_assumption_driven_simulation', runnable: true, tool: 'simulate_business_scenario', human_url: SYSTEMIA_REMOTE_OPS.human_origin + '/' };
+    return { decision_type: 'capital_purchase', state: 'native_assumption_driven_simulation', runnable: true, tool: 'simulate_business_scenario', human_url: remoteOpsHumanUrl('/') };
   }
   if (hit(['start a business','starting a business','new business','business idea','launch a business'])) {
-    return { decision_type: 'startup', state: 'native_assumption_driven_simulation', runnable: true, tool: 'simulate_business_scenario', human_url: SYSTEMIA_REMOTE_OPS.human_origin + '/' };
+    return { decision_type: 'startup', state: 'native_assumption_driven_simulation', runnable: true, tool: 'simulate_business_scenario', human_url: remoteOpsHumanUrl('/') };
   }
-  return { decision_type: 'other_business_decision', state: 'native_assumption_driven_simulation', runnable: true, tool: 'simulate_business_scenario', human_url: SYSTEMIA_REMOTE_OPS.human_origin + '/' };
+  return { decision_type: 'other_business_decision', state: 'native_assumption_driven_simulation', runnable: true, tool: 'simulate_business_scenario', human_url: remoteOpsHumanUrl('/') };
 }
 
 function finiteNumber(value, field, { min = null, max = null } = {}) {
@@ -371,7 +377,7 @@ export async function executeRemoteOpsRpc(rpc, pricingFetch) {
         simulation_type: 'pricing',
         modeled: true,
         simulation,
-        human_url: SYSTEMIA_REMOTE_OPS.human_origin + '/what-should-i-charge',
+        human_url: remoteOpsHumanUrl('/what-should-i-charge'),
         legacy_adapter: 'systemia_runPricingSimulation',
         external_action_taken: false,
         truth_boundary: 'This is a modeled scenario using simplified assumptions. It does not predict or guarantee actual customer retention or revenue.',
@@ -565,7 +571,7 @@ export async function startSpecialistHandoffRuntime({
   port = 0,
   gatewayUrl = '',
   gatewayFetch = null,
-  remoteOpsPricingUrl = SYSTEMIA_REMOTE_OPS.pricing_url,
+  remoteOpsPricingUrl = '',
   remoteOpsPricingFetch = null,
   fabricCatalog = null,
   fabricMcpPath = '/mcp',
