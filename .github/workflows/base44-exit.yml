@@ -11,6 +11,7 @@ on:
       - 'systemia/rewards/**'
       - 'systemia/clip/**'
       - 'systemia/social/**'
+      - 'systemia/aliev/**'
       - 'server.ts'
       - 'RUNTIME.md'
       - 'package.json'
@@ -36,6 +37,7 @@ on:
       - 'systemia/rewards/**'
       - 'systemia/clip/**'
       - 'systemia/social/**'
+      - 'systemia/aliev/**'
       - 'server.ts'
       - 'RUNTIME.md'
       - 'package.json'
@@ -73,6 +75,8 @@ jobs:
         run: npm run test:machine-commerce-owned
       - name: Prove owned social provider adapters
         run: npm run test:social-providers
+      - name: Prove owned AliEV public edge
+        run: npm run test:aliev-owned-edge
       - name: Prove KAIDANCE collider
         run: node systemia/collider/proof.mjs
       - name: Prove off-Base44 EPS social continuity

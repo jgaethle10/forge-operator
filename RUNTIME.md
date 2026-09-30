@@ -114,3 +114,17 @@ The provider primitive can publish a feed post and requires exact provider-visib
 ## RIVET AliEV source boundary
 
 `ALIEV_YARD_SOURCE_URL` is mandatory for RIVET report generation and must resolve to an Evercraft-owned AliEV evidence service. There is no Base44 default or compatibility fallback. If the owned AliEV source is not configured, the RIVET report gateway reports itself unconfigured and holds report generation rather than tunneling through the legacy platform.
+
+
+## AliEV owned public edge
+
+Forge/Yard now carries the non-transactional AliEV agent surface:
+
+- `GET /api/aliev` - capabilities; `?view=offers` returns the paid-depth catalog.
+- `POST /api/aliev` - `capabilities`, `offers`, `create_handoff`, and `analyze_site`.
+- `GET /mcp/aliev?action=health` and `POST /mcp/aliev` - owned MCP for capabilities, offers, paid-depth human review, and source-gated site screening.
+- `GET /aliev/review` - owned human review page. It creates no checkout, payment, entitlement, report access, or outreach.
+- `ALIEV_PUBLIC_SCREEN_SOURCE_URL` - optional owned public-screen evidence source. If absent, `analyze_site` returns a migration hold. Base44 hosts are rejected.
+- `ALIEV_YARD_SOURCE_URL` may serve as the same owned evidence source when one service supports both public and RIVET snapshot profiles.
+
+Checkout creation and purchase status are intentionally unavailable on this owned edge until the first-party commerce execution rail is independently verified. Public registry URLs remain on the legacy route until the owned site evidence source and Yard route pass parity/canary.

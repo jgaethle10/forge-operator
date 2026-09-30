@@ -20,6 +20,7 @@ import { registerRivetReportGateway } from './systemia/rivet/http-gateway.mjs';
 import { registerRewardsGateway } from './systemia/rewards/http-gateway.mjs';
 import { registerClipGateway } from './systemia/clip/http-gateway.js';
 import { registerSocialProviderGateway } from './systemia/social/http-gateway.js';
+import { registerAliEVGateway } from './systemia/aliev/http-gateway.js';
 import { registerSpecialistHandoffMcps } from './systemia/mcp/specialist-handoff.js';
 import { registerRemoteOperatorMcp } from './systemia/remote-operator/mcp-gateway.mjs';
 
@@ -214,6 +215,7 @@ registerRivetReportGateway(app);
 registerRewardsGateway(app);
 registerClipGateway(app);
 registerSocialProviderGateway(app);
+registerAliEVGateway(app);
 registerOwnedMachineCommerce(app, { loadCatalog: () => loadPublicMachineCatalog() });
 registerSpecialistHandoffMcps(app, {
   gatewayUrl: machineCommerceGatewayUrl,

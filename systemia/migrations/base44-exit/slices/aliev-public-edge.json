@@ -1,0 +1,54 @@
+{
+  "schema": "evercraft.systemia.base44-migration-slice.v1",
+  "slice": "aliev_public_agent_edge",
+  "priority": 1,
+  "source": {
+    "platform": "base44",
+    "product": "AliEV",
+    "functions": [
+      "alievAgentGateway",
+      "alievMcp",
+      "energySiteLookup"
+    ]
+  },
+  "target": {
+    "source_control": "github",
+    "runtime": "yard_evercraft_compute",
+    "gateway": "/api/aliev",
+    "mcp": "/mcp/aliev",
+    "review": "/aliev/review"
+  },
+  "migrated_now": [
+    "capability_discovery",
+    "offer_catalog",
+    "human_paid_depth_handoff",
+    "public_mcp_surface",
+    "public_screen_adapter_contract"
+  ],
+  "held": [
+    "owned_site_evidence_engine",
+    "direct_site_report_checkout",
+    "purchase_status",
+    "payment_verification",
+    "paid_entitlement",
+    "registry_cutover"
+  ],
+  "invariants": [
+    "AliEV public edge never falls back to Base44",
+    "missing owned site evidence source returns migration hold",
+    "mapped inventory is not utilization",
+    "missing is not zero",
+    "human review creates no checkout or payment",
+    "checkout and payment status remain absent from owned MCP until commerce execution is verified"
+  ],
+  "acceptance": {
+    "source_tests": false,
+    "owned_route_verified": false,
+    "mcp_verified": false,
+    "owned_site_source_verified": false,
+    "public_screen_canary": false,
+    "registry_cutover_allowed": false
+  },
+  "next_action": "migrate the AliEV evidence source engine behind ALIEV_YARD_SOURCE_URL, then run public-screen parity against known addresses before changing public registry/MCP URLs away from Base44",
+  "destructive_cutover_allowed": false
+}
