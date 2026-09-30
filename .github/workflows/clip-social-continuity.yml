@@ -2,6 +2,16 @@ name: Systemia Clip Social Continuity
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+      - systemia/clip-content-supply-20260930
+    paths:
+      - 'systemia/organism/clip-content-supply.mjs'
+      - 'systemia/organism/clip-content-supply.proof.mjs'
+      - 'systemia/organism/clip-content-supply.workflow.json'
+      - '.github/workflows/clip-content-supply.yml'
+      - '.github/workflows/clip-social-continuity.yml'
   schedule:
     - cron: '*/30 * * * *'
 
