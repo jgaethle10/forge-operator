@@ -10,6 +10,7 @@ import {
 } from "./edge-research-factory.mjs";
 import { adversarialValidateCandidates } from "./edge-adversarial-validation.mjs";
 import { persistFrozenCohorts } from "./edge-forward-paper.mjs";
+import { ForwardPaperDurableState } from "./edge-forward-paper-durable.mjs";
 
 async function main() {
   const artifactDir = path.resolve(
@@ -59,6 +60,40 @@ async function main() {
     enrolled_at: report.generated_at,
     transaction_cost_bps: Number(process.env.EDGE_LAB_TRANSACTION_COST_BPS || 5),
   });
+  let durableState = {
+    configured: false,
+    restart_reopen_verified: false,
+    cohort_count: 0,
+    journal_records: 0,
+    head_hash: null,
+    root: null,
+  };
+
+  const durableRoot = String(process.env.EVERCRAFT_EDGE_LAB_DURABLE_ROOT || "").trim();
+  if (durableRoot) {
+    const durable = new ForwardPaperDurableState({ root: durableRoot });
+    for (const cohort of frozenCohorts) durable.enroll(cohort);
+    const beforeRestart = durable.summary();
+
+    const reopened = new ForwardPaperDurableState({ root: durableRoot });
+    const afterRestart = reopened.summary();
+    if (
+      beforeRestart.cohort_count !== afterRestart.cohort_count ||
+      beforeRestart.head_hash !== afterRestart.head_hash
+    ) {
+      throw new Error("edge_forward_paper_durable_reopen_mismatch");
+    }
+
+    durableState = {
+      configured: true,
+      restart_reopen_verified: true,
+      cohort_count: afterRestart.cohort_count,
+      journal_records: afterRestart.journal_records,
+      head_hash: afterRestart.head_hash,
+      root: path.resolve(durableRoot),
+    };
+  }
+
   const forwardPaperFile = path.join(artifactDir, "forward-paper-cohorts.json");
   fs.writeFileSync(
     forwardPaperFile,
@@ -67,8 +102,11 @@ async function main() {
       generated_at: report.generated_at,
       cohort_count: frozenCohorts.length,
       cohorts: frozenCohorts,
-      persistent_state_verified: false,
-      persistence_note: "This run writes immutable cohort artifacts. Durable cross-run Yard state remains separately verified before longitudinal scoring is claimed.",
+      persistent_state_verified: durableState.configured && durableState.restart_reopen_verified,
+      persistence_note: durableState.configured
+        ? "Frozen cohorts were enrolled into the configured host filesystem journal and successfully reopened in this run. Power-loss behavior remains a separate hardware validation boundary."
+        : "This run writes immutable cohort artifacts. Durable cross-run Yard state remains separately verified before longitudinal scoring is claimed.",
+      durable_state: durableState,
       live_trade_authority: false,
     }, null, 2) + "\n"
   );
@@ -96,6 +134,8 @@ async function main() {
     candidate_clusters: adversarial.candidate_cluster_count || 0,
     forward_paper_eligible: adversarial.forward_paper_eligible_count || 0,
     frozen_forward_paper_cohorts: frozenCohorts.length,
+    durable_forward_paper_state_configured: durableState.configured,
+    durable_forward_paper_restart_reopen_verified: durableState.restart_reopen_verified,
     top_screened_families: top,
     exact_public_availability_time_known: false,
     sec_publication_delay_buffer_minutes:
