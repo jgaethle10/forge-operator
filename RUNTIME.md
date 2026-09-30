@@ -94,3 +94,18 @@ Forge/Yard now carries a read-only Clip discovery and planning edge:
 - `POST /mcp/evercraft-clip` - Streamable HTTP JSON-RPC for `get_clip_capabilities`, `plan_clip_job`, and `plan_distribution_campaign`.
 
 The owned public edge has no upload, checkout, payment, rendering, or publication authority. Existing provider execution lanes remain compatibility-only until each first-party social adapter passes provider authorization, live canary, readback, rollback, and observation gates. Do not update the public Clip registry away from its legacy endpoint until the Yard route and MCP contract are independently verified.
+
+
+## Owned social provider adapters
+
+Forge now carries the first direct provider adapter used to remove Clip's Base44 OAuth/runtime dependency:
+
+- `META_USER_ACCESS_TOKEN` - Meta user token held only in the private runtime secret store.
+- `META_EPS_PAGE_ID` - expected EPS Facebook page ID.
+- `META_GRAPH_VERSION` - optional Graph API version, default `v23.0`.
+- `EVERCRAFT_FACEBOOK_PUBLISH_ENABLED` - explicit fail-closed publish switch.
+- `SOCIAL_PROVIDER_OPERATOR_TOKEN` - private operator token for provider canaries.
+- `GET /api/social/providers/health` - safe readiness only; never returns provider secrets.
+- `POST /api/social/providers/facebook/identity-canary` - verifies page identity and create-content authority without publishing.
+
+The provider primitive can publish a feed post and requires exact provider-visible message readback before returning `verified: true`, but no autonomous queue is routed to it until credentials, live canary, rollback and observation gates pass.
