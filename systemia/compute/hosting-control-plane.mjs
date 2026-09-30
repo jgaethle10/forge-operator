@@ -256,13 +256,16 @@ export class EvercraftHostingControlPlane {
         try{this.yard.stopLeaseKeeper(candidateId);}catch{}
         try{await this.yard.stopDeployment(candidateId,{reason:'hosting_candidate_failed'});}catch{}
       }
+      const preserveActive=previous?.state==='ready'&&previous?.active_deployment_id;
       const failed={
         schema:'evercraft.compute.hosted-service-state.v1',
         service_id:serviceId,
-        state:previous?.state==='ready'?'ready':'failed',
+        state:preserveActive?'ready':'failed',
         action:'candidate_rejected',
-        desired_spec:redactSpec(spec),
-        desired_spec_hash:desiredHash,
+        desired_spec:preserveActive?previous.desired_spec:redactSpec(spec),
+        desired_spec_hash:preserveActive?previous.desired_spec_hash:desiredHash,
+        last_attempted_spec:redactSpec(spec),
+        last_attempted_spec_hash:desiredHash,
         active_deployment_id:previous?.active_deployment_id||null,
         active_release_ref:previous?.active_release_ref||null,
         deployment_receipt:previous?.deployment_receipt||null,
