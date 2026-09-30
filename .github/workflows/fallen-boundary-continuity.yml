@@ -1,0 +1,30 @@
+name: Fallen Boundary Continuity
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/continuity-boundary.ts'
+      - 'systemia/media-studio/continuity-boundary.test.ts'
+      - 'systemia/media-studio/timeline-ingest.ts'
+      - 'systemia/media-studio/timeline-ingest.test.ts'
+      - '.github/workflows/fallen-boundary-continuity.yml'
+  workflow_dispatch:
+
+jobs:
+  boundary-continuity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-audit --no-fund
+      - name: Ensure FFmpeg
+        run: |
+          if ! command -v ffmpeg >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y ffmpeg
+          fi
+      - run: node --import tsx --test systemia/media-studio/continuity-boundary.test.ts systemia/media-studio/timeline-ingest.test.ts
+      - run: npm run lint
