@@ -19,6 +19,7 @@ The transport boundary is intentionally replaceable. The first transport is stan
 - Subscription files are written with owner-only filesystem permissions where supported.
 - Marketing notifications require explicit opt-in and are disabled by default on every subscription.
 - Dead Web Push endpoints (`404`/`410`) are disabled automatically.
+- Transient network, `429`, and `5xx` failures receive bounded retries with short capped backoff.
 - Product events carry a dedupe key/window so retries do not become notification storms.
 - Operational critical alerts inherit Signal Fabric evidence, recovery, dedupe, and hourly budget rules.
 
@@ -40,6 +41,7 @@ EVERCRAFT_NOTIFICATION_INGEST_TOKEN=...
 EVERCRAFT_NOTIFICATION_ENROLL_TOKEN=...
 EVERCRAFT_NOTIFICATION_ALLOWED_ORIGINS=https://app1.example,https://app2.example
 EVERCRAFT_NOTIFICATION_DATA_DIR=/durable/private/path/notifications
+EVERCRAFT_NOTIFICATION_PUSH_ATTEMPTS=3
 ```
 
 Never put the private VAPID key or either bearer token in browser code.
@@ -74,7 +76,7 @@ Purposes are `transactional`, `operational`, `safety`, `reminder`, and `marketin
 
 ## Browser adoption
 
-Each Evercraft web product should serve `evercraft-push-sw.js` from its own origin and call the shared browser registration helper only after an authenticated user asks for notifications. Do not ship a global enrollment token to the browser. Apps should mint a short-lived scoped enrollment credential or proxy registration through their authenticated backend.
+Each Evercraft web product should serve `evercraft-push-sw.js` from its own origin and call the shared browser registration helper only after an authenticated user asks for notifications. Do not ship a global enrollment token to the browser. Public apps should proxy registration through their authenticated backend so the global enrollment secret never reaches browser code. The browser helper accepts an optional bearer only for deployments that already issue a safe scoped credential.
 
 The shared helper lives at `systemia/notification-fabric/browser-client.ts`.
 
