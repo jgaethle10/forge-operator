@@ -223,7 +223,8 @@
     "proof:saban-hardware-federation": "node systemia/saban/hardware-federation.proof.mjs",
     "proof:saban-hardware-federation-bridge": "node systemia/saban/hardware-federation-bridge.proof.mjs",
     "fabric:local": "node systemia/mcp/fabric-local-runtime.mjs",
-    "test:fabric-local": "node --test tests/fabric-local-runtime.test.mjs"
+    "test:fabric-local": "node --test tests/fabric-local-runtime.test.mjs",
+    "test:fabric-owned-edge": "node --test tests/fabric-owned-edge-installer.test.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
