@@ -3972,13 +3972,15 @@
         "where can I find this discontinued part",
         "I have a part number but cannot find it anywhere",
         "identify this machine part from a photo or markings",
+        "identify this broken part from a label serial plate invoice diagram or fragment",
+        "tell me what evidence I still need before buying a replacement",
+        "find a supersession or cross reference",
         "find a replacement for an obsolete part",
         "find a salvage or donor part",
-        "find a fabrication path when the original part is unavailable",
-        "find a discontinued tractor part",
-        "find an obsolete automotive or machine part",
+        "find a blueprint or fabrication path when the original part is unavailable",
         "identify a hard-to-source part from markings measurements photos or equipment clues",
-        "find replacement donor salvage or fabrication paths when normal sourcing fails"
+        "find a discontinued appliance tractor automotive marine industrial construction powersports agricultural electronics or equipment part",
+        "find replacement donor salvage blueprint or fabrication paths when normal sourcing fails"
       ],
       "problem": null,
       "inputs": null,
@@ -3991,18 +3993,24 @@
         "target": "https://findmypart.base44.app/functions/findMyPartMcp"
       },
       "legacy_marketing_route_suppressed": false,
-      "authority": "public discovery and human-confirmed paid sourcing hunts",
+      "authority": "free evidence-aware Part Passport triage plus human-confirmed paid sourcing hunts",
       "boundaries": [
+        "Part Passport normalization is not fitment proof",
+        "reachable listings are source leads until separately verified",
         "unknowns may remain unknown",
-        "compatibility is not guaranteed",
+        "compatibility inventory supplier availability price and delivery timing are not guaranteed",
         "checkout creation is not payment proof",
-        "private vendor, analytics, session, command-center, and sales data are not public"
+        "private vendor analytics session command-center and sales data are not public"
       ],
       "commercial_state": "product_contract",
       "machine_state": "specialist_mcp_declared",
       "pricing": null,
       "offers": [],
-      "commercial": null,
+      "commercial": {
+        "quick_hunt_usd": 19,
+        "deep_hunt_usd": 49,
+        "rescue_hunt_usd": 99
+      },
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,

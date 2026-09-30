@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.hot-discovery.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-30T20:11:39.857Z",
+  "updated_at": "2026-09-30T20:35:42.472Z",
   "purpose": "High-priority public discovery surfaces for crawler fan-out. The queue reserves limited cold-start frontage for current commercial and sitemap surfaces, then fills remaining slots by observed priority. This is a crawl-order hint, not a ranking or recommendation claim.",
   "surfaces": [
     {
@@ -291,7 +291,7 @@
       "path": "/chum/sitemaps/answers.xml",
       "url": "/chum/sitemaps/answers.xml",
       "priority": 108,
-      "last_changed": "2026-09-29T19:18:34.761Z"
+      "last_changed": "2026-09-30T20:35:42.472Z"
     },
     {
       "path": "/chum/sitemaps/products.xml",
@@ -321,7 +321,7 @@
       "path": "/chum/sell-now.json",
       "url": "/chum/sell-now.json",
       "priority": 92,
-      "last_changed": "2026-09-30T19:12:08.593Z"
+      "last_changed": "2026-09-30T20:35:42.472Z"
     },
     {
       "path": "/chum/sell-now.txt",
@@ -336,16 +336,16 @@
       "last_changed": "2026-09-28T19:03:48.848Z"
     },
     {
-      "path": "/chum/revenue.json",
-      "url": "/chum/revenue.json",
-      "priority": 90,
-      "last_changed": "2026-09-30T19:12:08.593Z"
-    },
-    {
       "path": "/.well-known/evercraft-pain-index.json",
       "url": "/.well-known/evercraft-pain-index.json",
       "priority": 90,
-      "last_changed": "2026-09-29T19:18:34.761Z"
+      "last_changed": "2026-09-30T20:35:42.472Z"
+    },
+    {
+      "path": "/chum/revenue.json",
+      "url": "/chum/revenue.json",
+      "priority": 90,
+      "last_changed": "2026-09-30T20:35:42.472Z"
     },
     {
       "path": "/chum/revenue.html",
@@ -363,7 +363,7 @@
       "path": "/.well-known/evercraft-machine-catalog.json",
       "url": "/.well-known/evercraft-machine-catalog.json",
       "priority": 84,
-      "last_changed": "2026-09-30T19:12:08.593Z"
+      "last_changed": "2026-09-30T20:35:42.472Z"
     },
     {
       "path": "/chum/answers/doors/create-cross-business-loyalty-rewards-2c3ab05040.json",

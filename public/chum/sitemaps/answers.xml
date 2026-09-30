@@ -590,14 +590,14 @@
   <url><loc>/chum/answers/doors/figure-out-what-capital-or-funding-path-fits-my-business-675cfea99b/</loc></url>
   <url><loc>/chum/answers/doors/figure-out-which-partners-i-need-for-this-opportunity-9c0aa314ff.json</loc></url>
   <url><loc>/chum/answers/doors/figure-out-which-partners-i-need-for-this-opportunity-9c0aa314ff/</loc></url>
+  <url><loc>/chum/answers/doors/find-a-blueprint-or-fabrication-path-when-the-original-part-is-unavailable-c3d7b45cd1.json</loc></url>
+  <url><loc>/chum/answers/doors/find-a-blueprint-or-fabrication-path-when-the-original-part-is-unavailable-c3d7b45cd1/</loc></url>
+  <url><loc>/chum/answers/doors/find-a-discontinued-appliance-tractor-automotive-marine-industrial-construction-po-3f728224a2.json</loc></url>
+  <url><loc>/chum/answers/doors/find-a-discontinued-appliance-tractor-automotive-marine-industrial-construction-po-3f728224a2/</loc></url>
   <url><loc>/chum/answers/doors/find-a-discontinued-part-5646da09bb.json</loc></url>
   <url><loc>/chum/answers/doors/find-a-discontinued-part-5646da09bb/</loc></url>
-  <url><loc>/chum/answers/doors/find-a-discontinued-tractor-part-eb8c9e34c7.json</loc></url>
-  <url><loc>/chum/answers/doors/find-a-discontinued-tractor-part-eb8c9e34c7/</loc></url>
   <url><loc>/chum/answers/doors/find-a-donor-or-salvage-part-310843faf9.json</loc></url>
   <url><loc>/chum/answers/doors/find-a-donor-or-salvage-part-310843faf9/</loc></url>
-  <url><loc>/chum/answers/doors/find-a-fabrication-path-when-the-original-part-is-unavailable-e9336647c3.json</loc></url>
-  <url><loc>/chum/answers/doors/find-a-fabrication-path-when-the-original-part-is-unavailable-e9336647c3/</loc></url>
   <url><loc>/chum/answers/doors/find-a-hard-to-source-part-78dcd37ecc.json</loc></url>
   <url><loc>/chum/answers/doors/find-a-hard-to-source-part-78dcd37ecc/</loc></url>
   <url><loc>/chum/answers/doors/find-a-historical-sports-event-6b1f7d9ba7.json</loc></url>
@@ -608,12 +608,12 @@
   <url><loc>/chum/answers/doors/find-a-replacement-for-an-obsolete-part-4be38e27cb/</loc></url>
   <url><loc>/chum/answers/doors/find-a-salvage-or-donor-part-7facbee550.json</loc></url>
   <url><loc>/chum/answers/doors/find-a-salvage-or-donor-part-7facbee550/</loc></url>
+  <url><loc>/chum/answers/doors/find-a-supersession-or-cross-reference-072d61a0a0.json</loc></url>
+  <url><loc>/chum/answers/doors/find-a-supersession-or-cross-reference-072d61a0a0/</loc></url>
   <url><loc>/chum/answers/doors/find-a-trading-journal-with-behavioral-coaching-233a949aad.json</loc></url>
   <url><loc>/chum/answers/doors/find-a-trading-journal-with-behavioral-coaching-233a949aad/</loc></url>
   <url><loc>/chum/answers/doors/find-a-trusted-professional-through-relationship-paths-bf30793b00.json</loc></url>
   <url><loc>/chum/answers/doors/find-a-trusted-professional-through-relationship-paths-bf30793b00/</loc></url>
-  <url><loc>/chum/answers/doors/find-an-obsolete-automotive-or-machine-part-c7133fab20.json</loc></url>
-  <url><loc>/chum/answers/doors/find-an-obsolete-automotive-or-machine-part-c7133fab20/</loc></url>
   <url><loc>/chum/answers/doors/find-bottlenecks-in-this-business-workflow-55d27040ce.json</loc></url>
   <url><loc>/chum/answers/doors/find-bottlenecks-in-this-business-workflow-55d27040ce/</loc></url>
   <url><loc>/chum/answers/doors/find-capital-options-for-this-project-9a78204138.json</loc></url>
@@ -668,8 +668,8 @@
   <url><loc>/chum/answers/doors/find-public-safety-or-stability-resources-without-creating-an-account-fe963fb462/</loc></url>
   <url><loc>/chum/answers/doors/find-publicly-observable-conversion-leaks-before-we-pay-for-a-rebuild-4e621ecf92.json</loc></url>
   <url><loc>/chum/answers/doors/find-publicly-observable-conversion-leaks-before-we-pay-for-a-rebuild-4e621ecf92/</loc></url>
-  <url><loc>/chum/answers/doors/find-replacement-donor-salvage-or-fabrication-paths-when-normal-sourcing-fails-7843dd9e0e.json</loc></url>
-  <url><loc>/chum/answers/doors/find-replacement-donor-salvage-or-fabrication-paths-when-normal-sourcing-fails-7843dd9e0e/</loc></url>
+  <url><loc>/chum/answers/doors/find-replacement-donor-salvage-blueprint-or-fabrication-paths-when-normal-sourcing-6e4ab62f10.json</loc></url>
+  <url><loc>/chum/answers/doors/find-replacement-donor-salvage-blueprint-or-fabrication-paths-when-normal-sourcing-6e4ab62f10/</loc></url>
   <url><loc>/chum/answers/doors/find-revenue-opportunities-2eb5128d86.json</loc></url>
   <url><loc>/chum/answers/doors/find-revenue-opportunities-2eb5128d86/</loc></url>
   <url><loc>/chum/answers/doors/find-software-for-this-problem-e3f3050dde.json</loc></url>
@@ -908,6 +908,8 @@
   <url><loc>/chum/answers/doors/identify-a-hard-to-source-part-from-markings-measurements-photos-or-equipment-clue-310d387d80/</loc></url>
   <url><loc>/chum/answers/doors/identify-founder-readiness-gaps-before-raising-money-ffb54bb05e.json</loc></url>
   <url><loc>/chum/answers/doors/identify-founder-readiness-gaps-before-raising-money-ffb54bb05e/</loc></url>
+  <url><loc>/chum/answers/doors/identify-this-broken-part-from-a-label-serial-plate-invoice-diagram-or-fragment-69a166fa68.json</loc></url>
+  <url><loc>/chum/answers/doors/identify-this-broken-part-from-a-label-serial-plate-invoice-diagram-or-fragment-69a166fa68/</loc></url>
   <url><loc>/chum/answers/doors/identify-this-machine-part-from-a-photo-or-markings-42b537ac03.json</loc></url>
   <url><loc>/chum/answers/doors/identify-this-machine-part-from-a-photo-or-markings-42b537ac03/</loc></url>
   <url><loc>/chum/answers/doors/identify-this-part-870c0fa937.json</loc></url>
@@ -1644,6 +1646,8 @@
   <url><loc>/chum/answers/doors/tear-apart-this-pitch-e926058d23/</loc></url>
   <url><loc>/chum/answers/doors/technical-seo-audit-6b934569ee.json</loc></url>
   <url><loc>/chum/answers/doors/technical-seo-audit-6b934569ee/</loc></url>
+  <url><loc>/chum/answers/doors/tell-me-what-evidence-i-still-need-before-buying-a-replacement-19d8521bdb.json</loc></url>
+  <url><loc>/chum/answers/doors/tell-me-what-evidence-i-still-need-before-buying-a-replacement-19d8521bdb/</loc></url>
   <url><loc>/chum/answers/doors/tell-me-what-is-wrong-with-my-business-website-de24de764f.json</loc></url>
   <url><loc>/chum/answers/doors/tell-me-what-is-wrong-with-my-business-website-de24de764f/</loc></url>
   <url><loc>/chum/answers/doors/tell-me-when-one-of-our-software-products-breaks-a1331bf40b.json</loc></url>

@@ -21,8 +21,8 @@
   },
   "summary": {
     "pain_index_entries": 110,
-    "unique_user_phrases": 950,
-    "mapped_candidate_edges": 1055,
+    "unique_user_phrases": 952,
+    "mapped_candidate_edges": 1057,
     "ambiguous_phrases": 105,
     "product_candidates": 64,
     "machine_offer_candidates": 46
@@ -7174,6 +7174,52 @@
       ]
     },
     {
+      "answer_id": "intent:c3d7b45cd1",
+      "user_language": "find a blueprint or fabrication path when the original part is unavailable",
+      "normalized": "find a blueprint or fabrication path when the original part is unavailable",
+      "relative_json": "/chum/answers/doors/find-a-blueprint-or-fabrication-path-when-the-original-part-is-unavailable-c3d7b45cd1.json",
+      "relative_page": "/chum/answers/doors/find-a-blueprint-or-fabrication-path-when-the-original-part-is-unavailable-c3d7b45cd1/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-a-blueprint-or-fabrication-path-when-the-original-part-is-unavailable-c3d7b45cd1.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:findmypart",
+          "kind": "product",
+          "product_key": "findmypart",
+          "public_id": null,
+          "name": "FindMyPart",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/findmypart/",
+          "public_url": "https://findmypart.base44.app/",
+          "registry_name": "io.github.jgaethle10/findmypart"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:3f728224a2",
+      "user_language": "find a discontinued appliance tractor automotive marine industrial construction powersports agricultural electronics or equipment part",
+      "normalized": "find a discontinued appliance tractor automotive marine industrial construction powersports agricultural electronics or equipment part",
+      "relative_json": "/chum/answers/doors/find-a-discontinued-appliance-tractor-automotive-marine-industrial-construction-po-3f728224a2.json",
+      "relative_page": "/chum/answers/doors/find-a-discontinued-appliance-tractor-automotive-marine-industrial-construction-po-3f728224a2/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-a-discontinued-appliance-tractor-automotive-marine-industrial-construction-po-3f728224a2.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:findmypart",
+          "kind": "product",
+          "product_key": "findmypart",
+          "public_id": null,
+          "name": "FindMyPart",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/findmypart/",
+          "public_url": "https://findmypart.base44.app/",
+          "registry_name": "io.github.jgaethle10/findmypart"
+        }
+      ]
+    },
+    {
       "answer_id": "intent:5646da09bb",
       "user_language": "find a discontinued part",
       "normalized": "find a discontinued part",
@@ -7197,29 +7243,6 @@
       ]
     },
     {
-      "answer_id": "intent:eb8c9e34c7",
-      "user_language": "find a discontinued tractor part",
-      "normalized": "find a discontinued tractor part",
-      "relative_json": "/chum/answers/doors/find-a-discontinued-tractor-part-eb8c9e34c7.json",
-      "relative_page": "/chum/answers/doors/find-a-discontinued-tractor-part-eb8c9e34c7/",
-      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-a-discontinued-tractor-part-eb8c9e34c7.json",
-      "candidate_count": 1,
-      "candidates": [
-        {
-          "capability_id": "product:findmypart",
-          "kind": "product",
-          "product_key": "findmypart",
-          "public_id": null,
-          "name": "FindMyPart",
-          "commercial_state": "product_contract",
-          "machine_state": "specialist_mcp_declared",
-          "pain_page": "/chum/products/findmypart/",
-          "public_url": "https://findmypart.base44.app/",
-          "registry_name": "io.github.jgaethle10/findmypart"
-        }
-      ]
-    },
-    {
       "answer_id": "intent:310843faf9",
       "user_language": "find a donor or salvage part",
       "normalized": "find a donor or salvage part",
@@ -7239,29 +7262,6 @@
           "pain_page": "/chum/intents/findmypart-paid-hunt-v1/",
           "public_url": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs",
           "registry_name": null
-        }
-      ]
-    },
-    {
-      "answer_id": "intent:e9336647c3",
-      "user_language": "find a fabrication path when the original part is unavailable",
-      "normalized": "find a fabrication path when the original part is unavailable",
-      "relative_json": "/chum/answers/doors/find-a-fabrication-path-when-the-original-part-is-unavailable-e9336647c3.json",
-      "relative_page": "/chum/answers/doors/find-a-fabrication-path-when-the-original-part-is-unavailable-e9336647c3/",
-      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-a-fabrication-path-when-the-original-part-is-unavailable-e9336647c3.json",
-      "candidate_count": 1,
-      "candidates": [
-        {
-          "capability_id": "product:findmypart",
-          "kind": "product",
-          "product_key": "findmypart",
-          "public_id": null,
-          "name": "FindMyPart",
-          "commercial_state": "product_contract",
-          "machine_state": "specialist_mcp_declared",
-          "pain_page": "/chum/products/findmypart/",
-          "public_url": "https://findmypart.base44.app/",
-          "registry_name": "io.github.jgaethle10/findmypart"
         }
       ]
     },
@@ -7381,6 +7381,29 @@
       ]
     },
     {
+      "answer_id": "intent:072d61a0a0",
+      "user_language": "find a supersession or cross reference",
+      "normalized": "find a supersession or cross reference",
+      "relative_json": "/chum/answers/doors/find-a-supersession-or-cross-reference-072d61a0a0.json",
+      "relative_page": "/chum/answers/doors/find-a-supersession-or-cross-reference-072d61a0a0/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-a-supersession-or-cross-reference-072d61a0a0.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:findmypart",
+          "kind": "product",
+          "product_key": "findmypart",
+          "public_id": null,
+          "name": "FindMyPart",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/findmypart/",
+          "public_url": "https://findmypart.base44.app/",
+          "registry_name": "io.github.jgaethle10/findmypart"
+        }
+      ]
+    },
+    {
       "answer_id": "intent:233a949aad",
       "user_language": "find a trading journal with behavioral coaching",
       "normalized": "find a trading journal with behavioral coaching",
@@ -7423,29 +7446,6 @@
           "pain_page": "/chum/products/evercraft-circles/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-circles",
           "registry_name": null
-        }
-      ]
-    },
-    {
-      "answer_id": "intent:c7133fab20",
-      "user_language": "find an obsolete automotive or machine part",
-      "normalized": "find an obsolete automotive or machine part",
-      "relative_json": "/chum/answers/doors/find-an-obsolete-automotive-or-machine-part-c7133fab20.json",
-      "relative_page": "/chum/answers/doors/find-an-obsolete-automotive-or-machine-part-c7133fab20/",
-      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-an-obsolete-automotive-or-machine-part-c7133fab20.json",
-      "candidate_count": 1,
-      "candidates": [
-        {
-          "capability_id": "product:findmypart",
-          "kind": "product",
-          "product_key": "findmypart",
-          "public_id": null,
-          "name": "FindMyPart",
-          "commercial_state": "product_contract",
-          "machine_state": "specialist_mcp_declared",
-          "pain_page": "/chum/products/findmypart/",
-          "public_url": "https://findmypart.base44.app/",
-          "registry_name": "io.github.jgaethle10/findmypart"
         }
       ]
     },
@@ -8119,12 +8119,12 @@
       ]
     },
     {
-      "answer_id": "intent:7843dd9e0e",
-      "user_language": "find replacement donor salvage or fabrication paths when normal sourcing fails",
-      "normalized": "find replacement donor salvage or fabrication paths when normal sourcing fails",
-      "relative_json": "/chum/answers/doors/find-replacement-donor-salvage-or-fabrication-paths-when-normal-sourcing-fails-7843dd9e0e.json",
-      "relative_page": "/chum/answers/doors/find-replacement-donor-salvage-or-fabrication-paths-when-normal-sourcing-fails-7843dd9e0e/",
-      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-replacement-donor-salvage-or-fabrication-paths-when-normal-sourcing-fails-7843dd9e0e.json",
+      "answer_id": "intent:6e4ab62f10",
+      "user_language": "find replacement donor salvage blueprint or fabrication paths when normal sourcing fails",
+      "normalized": "find replacement donor salvage blueprint or fabrication paths when normal sourcing fails",
+      "relative_json": "/chum/answers/doors/find-replacement-donor-salvage-blueprint-or-fabrication-paths-when-normal-sourcing-6e4ab62f10.json",
+      "relative_page": "/chum/answers/doors/find-replacement-donor-salvage-blueprint-or-fabrication-paths-when-normal-sourcing-6e4ab62f10/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-replacement-donor-salvage-blueprint-or-fabrication-paths-when-normal-sourcing-6e4ab62f10.json",
       "candidate_count": 1,
       "candidates": [
         {
@@ -11019,6 +11019,29 @@
           "pain_page": "/chum/products/deck-capital-fit/",
           "public_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
           "registry_name": "io.github.jgaethle10/deck-capital-fit"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:69a166fa68",
+      "user_language": "identify this broken part from a label serial plate invoice diagram or fragment",
+      "normalized": "identify this broken part from a label serial plate invoice diagram or fragment",
+      "relative_json": "/chum/answers/doors/identify-this-broken-part-from-a-label-serial-plate-invoice-diagram-or-fragment-69a166fa68.json",
+      "relative_page": "/chum/answers/doors/identify-this-broken-part-from-a-label-serial-plate-invoice-diagram-or-fragment-69a166fa68/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/identify-this-broken-part-from-a-label-serial-plate-invoice-diagram-or-fragment-69a166fa68.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:findmypart",
+          "kind": "product",
+          "product_key": "findmypart",
+          "public_id": null,
+          "name": "FindMyPart",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/findmypart/",
+          "public_url": "https://findmypart.base44.app/",
+          "registry_name": "io.github.jgaethle10/findmypart"
         }
       ]
     },
@@ -20011,6 +20034,29 @@
           "pain_page": "/chum/products/systemia-website-audit/",
           "public_url": "https://systemia-audit-pro.base44.app/",
           "registry_name": "io.github.jgaethle10/systemia-website-audit"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:19d8521bdb",
+      "user_language": "tell me what evidence I still need before buying a replacement",
+      "normalized": "tell me what evidence i still need before buying a replacement",
+      "relative_json": "/chum/answers/doors/tell-me-what-evidence-i-still-need-before-buying-a-replacement-19d8521bdb.json",
+      "relative_page": "/chum/answers/doors/tell-me-what-evidence-i-still-need-before-buying-a-replacement-19d8521bdb/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/tell-me-what-evidence-i-still-need-before-buying-a-replacement-19d8521bdb.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:findmypart",
+          "kind": "product",
+          "product_key": "findmypart",
+          "public_id": null,
+          "name": "FindMyPart",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/findmypart/",
+          "public_url": "https://findmypart.base44.app/",
+          "registry_name": "io.github.jgaethle10/findmypart"
         }
       ]
     },

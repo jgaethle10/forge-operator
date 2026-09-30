@@ -2,27 +2,27 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>/</loc></url>
   <url><loc>/chum/</loc><lastmod>2026-09-29T04:34:54.060Z</lastmod></url>
-  <url><loc>/chum/index.json</loc><lastmod>2026-09-29T05:53:29.457Z</lastmod></url>
+  <url><loc>/chum/index.json</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
   <url><loc>/chum/revenue.html</loc><lastmod>2026-09-28T19:03:48.848Z</lastmod></url>
   <url><loc>/chum/capabilities/</loc><lastmod>2026-09-29T02:24:28.186Z</lastmod></url>
-  <url><loc>/chum/capabilities.json</loc><lastmod>2026-09-30T19:12:08.593Z</lastmod></url>
+  <url><loc>/chum/capabilities.json</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
   <url><loc>/chum/sell-now.html</loc><lastmod>2026-09-28T19:03:48.848Z</lastmod></url>
-  <url><loc>/chum/sell-now.json</loc><lastmod>2026-09-30T19:12:08.593Z</lastmod></url>
+  <url><loc>/chum/sell-now.json</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
   <url><loc>/chum/sell-now.txt</loc><lastmod>2026-09-30T07:16:23.209Z</lastmod></url>
   <url><loc>/chum/revenue.txt</loc><lastmod>2026-09-28T19:03:48.848Z</lastmod></url>
-  <url><loc>/chum/revenue.json</loc><lastmod>2026-09-30T19:12:08.593Z</lastmod></url>
-  <url><loc>/chum/agent-commerce.json</loc><lastmod>2026-09-30T19:12:08.593Z</lastmod></url>
+  <url><loc>/chum/revenue.json</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
+  <url><loc>/chum/agent-commerce.json</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
   <url><loc>/chum/agent-commerce.txt</loc><lastmod>2026-09-28T19:03:48.848Z</lastmod></url>
   <url><loc>/chum/agent-commerce.html</loc><lastmod>2026-09-28T19:03:48.848Z</lastmod></url>
-  <url><loc>/chum/pain-index.json</loc><lastmod>2026-09-29T19:18:34.761Z</lastmod></url>
-  <url><loc>/chum/pain-index.txt</loc><lastmod>2026-09-29T19:18:34.761Z</lastmod></url>
-  <url><loc>/chum/answers/</loc><lastmod>2026-09-29T19:18:34.761Z</lastmod></url>
-  <url><loc>/chum/answers/index.json</loc><lastmod>2026-09-29T19:18:34.761Z</lastmod></url>
-  <url><loc>/chum/answers/index.txt</loc><lastmod>2026-09-29T19:18:34.761Z</lastmod></url>
+  <url><loc>/chum/pain-index.json</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
+  <url><loc>/chum/pain-index.txt</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
+  <url><loc>/chum/answers/</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
+  <url><loc>/chum/answers/index.json</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
+  <url><loc>/chum/answers/index.txt</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
   <url><loc>/chum/answers/observed/</loc><lastmod>2026-09-27T06:03:00.949Z</lastmod></url>
   <url><loc>/chum/answers/observed/index.json</loc><lastmod>2026-09-27T06:03:00.949Z</lastmod></url>
   <url><loc>/chum/hot/</loc><lastmod>2026-09-30T20:11:39.857Z</lastmod></url>
-  <url><loc>/chum/hot/index.json</loc><lastmod>2026-09-30T20:11:39.857Z</lastmod></url>
+  <url><loc>/chum/hot/index.json</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
   <url><loc>/chum/strike/</loc><lastmod>2026-09-30T20:11:39.857Z</lastmod></url>
   <url><loc>/chum/strike/index.json</loc><lastmod>2026-09-30T20:11:39.857Z</lastmod></url>
   <url><loc>/chum/crawler-radar.json</loc><lastmod>2026-09-30T20:11:39.857Z</lastmod></url>
@@ -39,7 +39,7 @@
   <url><loc>/chum/commercial/feed.json</loc><lastmod>2026-09-28T19:03:48.848Z</lastmod></url>
   <url><loc>/chum/sitemaps/index.xml</loc><lastmod>2026-09-26T19:35:58.578Z</lastmod></url>
   <url><loc>/chum/sitemaps/sell-now.xml</loc><lastmod>2026-09-28T19:03:48.848Z</lastmod></url>
-  <url><loc>/chum/sitemaps/answers.xml</loc><lastmod>2026-09-29T19:18:34.761Z</lastmod></url>
+  <url><loc>/chum/sitemaps/answers.xml</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
   <url><loc>/chum/sitemaps/products.xml</loc><lastmod>2026-09-29T04:34:54.060Z</lastmod></url>
   <url><loc>/chum/sitemaps/machine.xml</loc><lastmod>2026-09-27T14:53:47.616Z</lastmod></url>
   <url><loc>/chum/freshness.xml</loc></url>
@@ -58,7 +58,7 @@
   <url><loc>/network/llms.txt</loc><lastmod>2026-09-29T18:40:05.280Z</lastmod></url>
   <url><loc>/network/discovery.json</loc><lastmod>2026-09-29T18:40:05.280Z</lastmod></url>
   <url><loc>/.well-known/evercraft-network.json</loc><lastmod>2026-09-29T18:40:05.280Z</lastmod></url>
-  <url><loc>/.well-known/evercraft-pain-index.json</loc><lastmod>2026-09-29T19:18:34.761Z</lastmod></url>
+  <url><loc>/.well-known/evercraft-pain-index.json</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
   <url><loc>/rivet/discovery.json</loc><lastmod>2026-09-27T14:38:34.804Z</lastmod></url>
   <url><loc>/rivet/llms.txt</loc><lastmod>2026-09-27T14:38:34.804Z</lastmod></url>
   <url><loc>/rivet/brand.json</loc><lastmod>2026-09-25T21:21:08.209Z</lastmod></url>
@@ -123,19 +123,19 @@
   <url><loc>/forensiscope/distribution/reddit-pack.json</loc><lastmod>2026-09-25T20:03:52.612Z</lastmod></url>
   <url><loc>/forensiscope/distribution/llms.txt</loc><lastmod>2026-09-25T20:03:52.612Z</lastmod></url>
   <url><loc>/llms.txt</loc><lastmod>2026-09-28T07:50:27.019Z</lastmod></url>
-  <url><loc>/llms-full.txt</loc><lastmod>2026-09-29T19:18:34.761Z</lastmod></url>
+  <url><loc>/llms-full.txt</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
   <url><loc>/ai-discovery.json</loc><lastmod>2026-09-29T18:40:12.557Z</lastmod></url>
-  <url><loc>/schema.jsonld</loc><lastmod>2026-09-29T04:34:54.060Z</lastmod></url>
+  <url><loc>/schema.jsonld</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
   <url><loc>/openapi.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/.well-known/evercraft-agent.json</loc><lastmod>2026-09-28T18:59:42.997Z</lastmod></url>
   <url><loc>/.well-known/agent-card.json</loc><lastmod>2026-09-29T18:57:38.943Z</lastmod></url>
   <url><loc>/.well-known/agent.json</loc><lastmod>2026-09-29T18:57:38.943Z</lastmod></url>
-  <url><loc>/.well-known/evercraft-agent-directory.json</loc><lastmod>2026-09-29T19:18:34.761Z</lastmod></url>
-  <url><loc>/.well-known/evercraft-agent-commerce.json</loc><lastmod>2026-09-30T19:12:08.593Z</lastmod></url>
+  <url><loc>/.well-known/evercraft-agent-directory.json</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
+  <url><loc>/.well-known/evercraft-agent-commerce.json</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
   <url><loc>/.well-known/evercraft-agent-interfaces.json</loc><lastmod>2026-09-28T18:59:42.997Z</lastmod></url>
   <url><loc>/.well-known/evercraft-discovery.json</loc><lastmod>2026-09-29T18:40:12.557Z</lastmod></url>
-  <url><loc>/.well-known/evercraft-products.json</loc><lastmod>2026-09-29T19:16:09.538Z</lastmod></url>
-  <url><loc>/.well-known/evercraft-machine-catalog.json</loc><lastmod>2026-09-30T19:12:08.593Z</lastmod></url>
+  <url><loc>/.well-known/evercraft-products.json</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
+  <url><loc>/.well-known/evercraft-machine-catalog.json</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
   <url><loc>/.well-known/evercraft-chum.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/.well-known/evercraft-media-overflow.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/.well-known/evercraft-capabilities.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
@@ -513,10 +513,10 @@
   <url><loc>/chum/products/faie/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/chum/products/faie/ai-discovery.json</loc><lastmod>2026-09-28T16:07:14.264Z</lastmod></url>
   <url><loc>/chum/products/faie/ai-conformance.json</loc><lastmod>2026-09-28T16:07:14.264Z</lastmod></url>
-  <url><loc>/chum/products/findmypart/</loc><lastmod>2026-09-28T18:59:42.997Z</lastmod></url>
-  <url><loc>/chum/products/findmypart/llms.txt</loc><lastmod>2026-09-28T17:02:37.885Z</lastmod></url>
-  <url><loc>/chum/products/findmypart/ai-discovery.json</loc><lastmod>2026-09-28T17:02:37.885Z</lastmod></url>
-  <url><loc>/chum/products/findmypart/ai-conformance.json</loc><lastmod>2026-09-28T16:07:14.264Z</lastmod></url>
+  <url><loc>/chum/products/findmypart/</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
+  <url><loc>/chum/products/findmypart/llms.txt</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
+  <url><loc>/chum/products/findmypart/ai-discovery.json</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
+  <url><loc>/chum/products/findmypart/ai-conformance.json</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
   <url><loc>/chum/products/forensic-record/</loc><lastmod>2026-09-28T18:59:42.997Z</lastmod></url>
   <url><loc>/chum/products/forensic-record/llms.txt</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/chum/products/forensic-record/ai-discovery.json</loc><lastmod>2026-09-28T16:07:14.264Z</lastmod></url>
@@ -668,9 +668,9 @@
   <url><loc>/chum/answers/observed/i-have-authorized-site-footage-and-need-a-factual-timestamped-evidence-timeline-with-e163663954/</loc><lastmod>2026-09-26T05:00:53.896Z</lastmod></url>
   <url><loc>/chum/answers/observed/i-have-authorized-site-footage-and-need-a-factual-timestamped-evidence-timeline-with-e163663954/answer.json</loc><lastmod>2026-09-26T21:13:26.879Z</lastmod></url>
   <url><loc>/chum/answers/observed/i-have-authorized-site-footage-and-need-a-factual-timestamped-evidence-timeline-with-e163663954/llms.txt</loc><lastmod>2026-09-26T05:00:53.896Z</lastmod></url>
-  <url><loc>/chum/answers/observed/i-need-a-discontinued-machine-part-that-normal-suppliers-cannot-find-i-have-photos-m-6d7a66229b/</loc><lastmod>2026-09-28T17:03:20.114Z</lastmod></url>
-  <url><loc>/chum/answers/observed/i-need-a-discontinued-machine-part-that-normal-suppliers-cannot-find-i-have-photos-m-6d7a66229b/answer.json</loc><lastmod>2026-09-28T17:03:20.114Z</lastmod></url>
-  <url><loc>/chum/answers/observed/i-need-a-discontinued-machine-part-that-normal-suppliers-cannot-find-i-have-photos-m-6d7a66229b/llms.txt</loc><lastmod>2026-09-28T17:03:20.114Z</lastmod></url>
+  <url><loc>/chum/answers/observed/i-need-a-discontinued-machine-part-that-normal-suppliers-cannot-find-i-have-photos-m-6d7a66229b/</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
+  <url><loc>/chum/answers/observed/i-need-a-discontinued-machine-part-that-normal-suppliers-cannot-find-i-have-photos-m-6d7a66229b/answer.json</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
+  <url><loc>/chum/answers/observed/i-need-a-discontinued-machine-part-that-normal-suppliers-cannot-find-i-have-photos-m-6d7a66229b/llms.txt</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
   <url><loc>/chum/answers/observed/i-need-a-professional-small-business-website-built-for-me-quickly-i-do-not-want-a-di-8efe0081de/</loc><lastmod>2026-09-26T05:00:53.896Z</lastmod></url>
   <url><loc>/chum/answers/observed/i-need-a-professional-small-business-website-built-for-me-quickly-i-do-not-want-a-di-8efe0081de/answer.json</loc><lastmod>2026-09-26T21:24:15.939Z</lastmod></url>
   <url><loc>/chum/answers/observed/i-need-a-professional-small-business-website-built-for-me-quickly-i-do-not-want-a-di-8efe0081de/llms.txt</loc><lastmod>2026-09-26T05:00:53.896Z</lastmod></url>
@@ -1306,14 +1306,14 @@
   <url><loc>/chum/answers/doors/figure-out-what-capital-or-funding-path-fits-my-business-675cfea99b.json</loc><lastmod>2026-09-29T02:24:28.186Z</lastmod></url>
   <url><loc>/chum/answers/doors/figure-out-which-partners-i-need-for-this-opportunity-9c0aa314ff/</loc><lastmod>2026-09-29T19:10:55.004Z</lastmod></url>
   <url><loc>/chum/answers/doors/figure-out-which-partners-i-need-for-this-opportunity-9c0aa314ff.json</loc><lastmod>2026-09-29T19:10:55.004Z</lastmod></url>
+  <url><loc>/chum/answers/doors/find-a-blueprint-or-fabrication-path-when-the-original-part-is-unavailable-c3d7b45cd1/</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
+  <url><loc>/chum/answers/doors/find-a-blueprint-or-fabrication-path-when-the-original-part-is-unavailable-c3d7b45cd1.json</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
+  <url><loc>/chum/answers/doors/find-a-discontinued-appliance-tractor-automotive-marine-industrial-construction-po-3f728224a2/</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
+  <url><loc>/chum/answers/doors/find-a-discontinued-appliance-tractor-automotive-marine-industrial-construction-po-3f728224a2.json</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
   <url><loc>/chum/answers/doors/find-a-discontinued-part-5646da09bb/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/find-a-discontinued-part-5646da09bb.json</loc><lastmod>2026-09-29T02:24:28.186Z</lastmod></url>
-  <url><loc>/chum/answers/doors/find-a-discontinued-tractor-part-eb8c9e34c7/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
-  <url><loc>/chum/answers/doors/find-a-discontinued-tractor-part-eb8c9e34c7.json</loc><lastmod>2026-09-29T02:24:28.186Z</lastmod></url>
   <url><loc>/chum/answers/doors/find-a-donor-or-salvage-part-310843faf9/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/find-a-donor-or-salvage-part-310843faf9.json</loc><lastmod>2026-09-29T02:24:28.186Z</lastmod></url>
-  <url><loc>/chum/answers/doors/find-a-fabrication-path-when-the-original-part-is-unavailable-e9336647c3/</loc><lastmod>2026-09-28T17:03:20.114Z</lastmod></url>
-  <url><loc>/chum/answers/doors/find-a-fabrication-path-when-the-original-part-is-unavailable-e9336647c3.json</loc><lastmod>2026-09-29T02:24:28.186Z</lastmod></url>
   <url><loc>/chum/answers/doors/find-a-hard-to-source-part-78dcd37ecc/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/find-a-hard-to-source-part-78dcd37ecc.json</loc><lastmod>2026-09-29T02:24:28.186Z</lastmod></url>
   <url><loc>/chum/answers/doors/find-a-historical-sports-event-6b1f7d9ba7/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
@@ -1321,15 +1321,15 @@
   <url><loc>/chum/answers/doors/find-a-production-partner-for-my-artwork-a53975f087/</loc><lastmod>2026-09-29T02:27:24.445Z</lastmod></url>
   <url><loc>/chum/answers/doors/find-a-production-partner-for-my-artwork-a53975f087.json</loc><lastmod>2026-09-29T19:10:55.004Z</lastmod></url>
   <url><loc>/chum/answers/doors/find-a-replacement-for-an-obsolete-part-4be38e27cb/</loc><lastmod>2026-09-28T17:03:20.114Z</lastmod></url>
-  <url><loc>/chum/answers/doors/find-a-replacement-for-an-obsolete-part-4be38e27cb.json</loc><lastmod>2026-09-29T02:24:28.186Z</lastmod></url>
+  <url><loc>/chum/answers/doors/find-a-replacement-for-an-obsolete-part-4be38e27cb.json</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
   <url><loc>/chum/answers/doors/find-a-salvage-or-donor-part-7facbee550/</loc><lastmod>2026-09-28T17:03:20.114Z</lastmod></url>
-  <url><loc>/chum/answers/doors/find-a-salvage-or-donor-part-7facbee550.json</loc><lastmod>2026-09-29T02:24:28.186Z</lastmod></url>
+  <url><loc>/chum/answers/doors/find-a-salvage-or-donor-part-7facbee550.json</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
+  <url><loc>/chum/answers/doors/find-a-supersession-or-cross-reference-072d61a0a0/</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
+  <url><loc>/chum/answers/doors/find-a-supersession-or-cross-reference-072d61a0a0.json</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
   <url><loc>/chum/answers/doors/find-a-trading-journal-with-behavioral-coaching-233a949aad/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/find-a-trading-journal-with-behavioral-coaching-233a949aad.json</loc><lastmod>2026-09-29T02:24:28.186Z</lastmod></url>
   <url><loc>/chum/answers/doors/find-a-trusted-professional-through-relationship-paths-bf30793b00/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/find-a-trusted-professional-through-relationship-paths-bf30793b00.json</loc><lastmod>2026-09-29T02:24:28.186Z</lastmod></url>
-  <url><loc>/chum/answers/doors/find-an-obsolete-automotive-or-machine-part-c7133fab20/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
-  <url><loc>/chum/answers/doors/find-an-obsolete-automotive-or-machine-part-c7133fab20.json</loc><lastmod>2026-09-29T02:24:28.186Z</lastmod></url>
   <url><loc>/chum/answers/doors/find-bottlenecks-in-this-business-workflow-55d27040ce/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/find-bottlenecks-in-this-business-workflow-55d27040ce.json</loc><lastmod>2026-09-29T02:24:28.186Z</lastmod></url>
   <url><loc>/chum/answers/doors/find-capital-options-for-this-project-9a78204138/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
@@ -1384,8 +1384,8 @@
   <url><loc>/chum/answers/doors/find-public-safety-or-stability-resources-without-creating-an-account-fe963fb462.json</loc><lastmod>2026-09-29T02:24:28.186Z</lastmod></url>
   <url><loc>/chum/answers/doors/find-publicly-observable-conversion-leaks-before-we-pay-for-a-rebuild-4e621ecf92/</loc><lastmod>2026-09-29T05:30:59.043Z</lastmod></url>
   <url><loc>/chum/answers/doors/find-publicly-observable-conversion-leaks-before-we-pay-for-a-rebuild-4e621ecf92.json</loc><lastmod>2026-09-29T05:30:59.043Z</lastmod></url>
-  <url><loc>/chum/answers/doors/find-replacement-donor-salvage-or-fabrication-paths-when-normal-sourcing-fails-7843dd9e0e/</loc><lastmod>2026-09-28T17:03:20.114Z</lastmod></url>
-  <url><loc>/chum/answers/doors/find-replacement-donor-salvage-or-fabrication-paths-when-normal-sourcing-fails-7843dd9e0e.json</loc><lastmod>2026-09-29T02:24:28.186Z</lastmod></url>
+  <url><loc>/chum/answers/doors/find-replacement-donor-salvage-blueprint-or-fabrication-paths-when-normal-sourcing-6e4ab62f10/</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
+  <url><loc>/chum/answers/doors/find-replacement-donor-salvage-blueprint-or-fabrication-paths-when-normal-sourcing-6e4ab62f10.json</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
   <url><loc>/chum/answers/doors/find-revenue-opportunities-2eb5128d86/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/find-revenue-opportunities-2eb5128d86.json</loc><lastmod>2026-09-29T02:24:28.186Z</lastmod></url>
   <url><loc>/chum/answers/doors/find-software-for-this-problem-e3f3050dde/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
@@ -1561,7 +1561,7 @@
   <url><loc>/chum/answers/doors/i-cannot-tell-which-jobs-are-actually-profitable-7e204ff7f2/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/i-cannot-tell-which-jobs-are-actually-profitable-7e204ff7f2.json</loc><lastmod>2026-09-29T02:24:28.186Z</lastmod></url>
   <url><loc>/chum/answers/doors/i-have-a-part-number-but-cannot-find-it-anywhere-f84b529cb2/</loc><lastmod>2026-09-28T17:03:20.114Z</lastmod></url>
-  <url><loc>/chum/answers/doors/i-have-a-part-number-but-cannot-find-it-anywhere-f84b529cb2.json</loc><lastmod>2026-09-29T02:24:28.186Z</lastmod></url>
+  <url><loc>/chum/answers/doors/i-have-a-part-number-but-cannot-find-it-anywhere-f84b529cb2.json</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
   <url><loc>/chum/answers/doors/i-have-an-interview-tomorrow-0fe9809d38/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/i-have-an-interview-tomorrow-0fe9809d38.json</loc><lastmod>2026-09-29T02:24:28.186Z</lastmod></url>
   <url><loc>/chum/answers/doors/i-have-designs-and-need-a-printer-or-manufacturing-partner-5578781874/</loc><lastmod>2026-09-29T02:27:24.445Z</lastmod></url>
@@ -1621,11 +1621,13 @@
   <url><loc>/chum/answers/doors/ibm-i-upgrade-rollback-plan-6b1f2184fe/</loc><lastmod>2026-09-29T05:30:59.043Z</lastmod></url>
   <url><loc>/chum/answers/doors/ibm-i-upgrade-rollback-plan-6b1f2184fe.json</loc><lastmod>2026-09-29T05:30:59.043Z</lastmod></url>
   <url><loc>/chum/answers/doors/identify-a-hard-to-source-part-from-markings-measurements-photos-or-equipment-clue-310d387d80/</loc><lastmod>2026-09-28T17:03:20.114Z</lastmod></url>
-  <url><loc>/chum/answers/doors/identify-a-hard-to-source-part-from-markings-measurements-photos-or-equipment-clue-310d387d80.json</loc><lastmod>2026-09-29T02:24:28.186Z</lastmod></url>
+  <url><loc>/chum/answers/doors/identify-a-hard-to-source-part-from-markings-measurements-photos-or-equipment-clue-310d387d80.json</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
   <url><loc>/chum/answers/doors/identify-founder-readiness-gaps-before-raising-money-ffb54bb05e/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/identify-founder-readiness-gaps-before-raising-money-ffb54bb05e.json</loc><lastmod>2026-09-29T02:24:28.186Z</lastmod></url>
+  <url><loc>/chum/answers/doors/identify-this-broken-part-from-a-label-serial-plate-invoice-diagram-or-fragment-69a166fa68/</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
+  <url><loc>/chum/answers/doors/identify-this-broken-part-from-a-label-serial-plate-invoice-diagram-or-fragment-69a166fa68.json</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
   <url><loc>/chum/answers/doors/identify-this-machine-part-from-a-photo-or-markings-42b537ac03/</loc><lastmod>2026-09-28T17:03:20.114Z</lastmod></url>
-  <url><loc>/chum/answers/doors/identify-this-machine-part-from-a-photo-or-markings-42b537ac03.json</loc><lastmod>2026-09-29T02:24:28.186Z</lastmod></url>
+  <url><loc>/chum/answers/doors/identify-this-machine-part-from-a-photo-or-markings-42b537ac03.json</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
   <url><loc>/chum/answers/doors/identify-this-part-870c0fa937/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/identify-this-part-870c0fa937.json</loc><lastmod>2026-09-29T02:24:28.186Z</lastmod></url>
   <url><loc>/chum/answers/doors/identity-theft-protection-1d8e691739/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
@@ -2360,6 +2362,8 @@
   <url><loc>/chum/answers/doors/tear-apart-this-pitch-e926058d23.json</loc><lastmod>2026-09-29T02:24:28.186Z</lastmod></url>
   <url><loc>/chum/answers/doors/technical-seo-audit-6b934569ee/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/technical-seo-audit-6b934569ee.json</loc><lastmod>2026-09-29T02:24:28.186Z</lastmod></url>
+  <url><loc>/chum/answers/doors/tell-me-what-evidence-i-still-need-before-buying-a-replacement-19d8521bdb/</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
+  <url><loc>/chum/answers/doors/tell-me-what-evidence-i-still-need-before-buying-a-replacement-19d8521bdb.json</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
   <url><loc>/chum/answers/doors/tell-me-what-is-wrong-with-my-business-website-de24de764f/</loc><lastmod>2026-09-26T15:08:19.376Z</lastmod></url>
   <url><loc>/chum/answers/doors/tell-me-what-is-wrong-with-my-business-website-de24de764f.json</loc><lastmod>2026-09-29T02:24:28.186Z</lastmod></url>
   <url><loc>/chum/answers/doors/tell-me-when-one-of-our-software-products-breaks-a1331bf40b/</loc><lastmod>2026-09-29T05:30:59.043Z</lastmod></url>
@@ -2585,7 +2589,7 @@
   <url><loc>/chum/answers/doors/where-can-i-earn-points-today-3b76c8caac/</loc><lastmod>2026-09-29T05:30:59.043Z</lastmod></url>
   <url><loc>/chum/answers/doors/where-can-i-earn-points-today-3b76c8caac.json</loc><lastmod>2026-09-29T19:18:34.761Z</lastmod></url>
   <url><loc>/chum/answers/doors/where-can-i-find-this-discontinued-part-fbe2473669/</loc><lastmod>2026-09-28T17:03:20.114Z</lastmod></url>
-  <url><loc>/chum/answers/doors/where-can-i-find-this-discontinued-part-fbe2473669.json</loc><lastmod>2026-09-29T02:24:28.186Z</lastmod></url>
+  <url><loc>/chum/answers/doors/where-can-i-find-this-discontinued-part-fbe2473669.json</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
   <url><loc>/chum/answers/doors/where-is-evercraft-network-verified-b0f7c0a824/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
   <url><loc>/chum/answers/doors/where-is-evercraft-network-verified-b0f7c0a824.json</loc><lastmod>2026-09-29T18:40:12.557Z</lastmod></url>
   <url><loc>/chum/answers/doors/which-countries-lead-on-this-domain-and-why-d86d7c0b1d/</loc><lastmod>2026-09-25T07:08:03.584Z</lastmod></url>
@@ -2658,10 +2662,10 @@
   <url><loc>/chum/commercial/audit-center-website-audit-machine-v1/</loc><lastmod>2026-09-26T19:35:58.578Z</lastmod></url>
   <url><loc>/chum/commercial/audit-center-website-audit-machine-v1/index.json</loc><lastmod>2026-09-26T19:35:58.578Z</lastmod></url>
   <url><loc>/chum/commercial/audit-center-website-audit-machine-v1/llms.txt</loc><lastmod>2026-09-26T19:35:58.578Z</lastmod></url>
-  <url><loc>/feed.xml</loc><lastmod>2026-09-29T19:18:34.761Z</lastmod></url>
-  <url><loc>/feed.json</loc><lastmod>2026-09-29T19:18:34.761Z</lastmod></url>
+  <url><loc>/feed.xml</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
+  <url><loc>/feed.json</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
   <url><loc>/opensearch.xml</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
-  <url><loc>/.well-known/evercraft-syndication.json</loc><lastmod>2026-09-29T19:18:34.761Z</lastmod></url>
+  <url><loc>/.well-known/evercraft-syndication.json</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
   <url><loc>/chum/syndication/</loc><lastmod>2026-09-29T04:34:54.060Z</lastmod></url>
-  <url><loc>/chum/syndication/index.json</loc><lastmod>2026-09-29T19:18:34.761Z</lastmod></url>
+  <url><loc>/chum/syndication/index.json</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
 </urlset>

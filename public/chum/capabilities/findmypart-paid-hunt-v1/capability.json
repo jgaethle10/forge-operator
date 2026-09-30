@@ -6,11 +6,10 @@
   "problem": "A difficult, ambiguous, obsolete, discontinued or hard-to-source part is blocking a repair, restoration, machine or project.",
   "use_when": [
     "find a hard-to-source part",
+    "identify this part",
     "find a discontinued part",
     "source an obsolete component",
-    "find a supersession or cross reference",
-    "find a donor or salvage part",
-    "find a blueprint or fabrication path"
+    "find a donor or salvage part"
   ],
   "inputs": "Part description plus any known equipment identity, model/serial/part numbers, photos, measurements or functional clues.",
   "outputs": "Evidence-backed sourcing hunt with candidate parts, source evidence, compatibility reasoning, sourcing options and escalation paths when ordinary sourcing fails.",
@@ -38,8 +37,8 @@
   "confirmation": "User must explicitly choose an offer and confirm payment. Paid fulfillment starts only after independently verified payment.",
   "public_url": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs",
   "payment_authority": "Evercraft Payments with Stripe provider verification",
-  "invocation_status": "LIVE: direct FindMyPart MCP exposes free Part Passport triage, current offers, human-confirmed checkout preparation, and private-token hunt status. Paid fulfillment still requires authoritative provider verification.",
-  "live_canary_evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/conformance/runtime-observations/2026-09-29-findmypart-part-passport.json",
+  "invocation_status": "LIVE: HTTP agent gateway + OpenAPI + llms guidance + remote MCP. Agents can read offers, prepare checkout only after explicit human confirmation, and read hunt status. Paid fulfillment still requires authoritative provider verification.",
+  "live_canary_evidence": null,
   "live_proof": null,
   "preferred_agent_route": "direct_specialist",
   "direct_specialist": {
@@ -49,13 +48,7 @@
     "registry_state": "published",
     "mcp": "https://findmypart.base44.app/functions/findMyPartMcp",
     "route_state": "preferred_when_available",
-    "fallback_mcp": "https://fabric.systemiacommandcenters.com/mcp",
-    "toolset": [
-      "free_part_triage",
-      "get_part_hunt_offers",
-      "prepare_part_hunt_checkout",
-      "get_part_hunt_status"
-    ]
+    "fallback_mcp": "https://fabric.systemiacommandcenters.com/mcp"
   },
   "machine_commerce_mcp": "https://fabric.systemiacommandcenters.com/mcp",
   "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=findmypart-paid-hunt-v1",
@@ -73,13 +66,5 @@
     "json": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/findmypart-paid-hunt-v1/capability.json",
     "schema": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/findmypart-paid-hunt-v1/schema.jsonld"
   },
-  "authority_rule": "Discovery never creates a payment obligation. Checkout preparation requires explicit human confirmation when supported. Checkout creation is not proof of payment. Paid state and fulfillment require authoritative provider verification.",
-  "free_first": {
-    "public_id": "findmypart-part-passport-v1",
-    "name": "FindMyPart Part Passport",
-    "url": "https://findmypart.base44.app/free-part-check",
-    "mcp_tool": "free_part_triage",
-    "creates_charge": false,
-    "rule": "Use the free Part Passport first when identity or sourcing path is unclear. Do not force a paid hunt."
-  }
+  "authority_rule": "Discovery never creates a payment obligation. Checkout preparation requires explicit human confirmation when supported. Checkout creation is not proof of payment. Paid state and fulfillment require authoritative provider verification."
 }

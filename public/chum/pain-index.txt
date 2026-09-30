@@ -1663,13 +1663,15 @@ Use when the user means:
 - where can I find this discontinued part
 - I have a part number but cannot find it anywhere
 - identify this machine part from a photo or markings
+- identify this broken part from a label serial plate invoice diagram or fragment
+- tell me what evidence I still need before buying a replacement
+- find a supersession or cross reference
 - find a replacement for an obsolete part
 - find a salvage or donor part
-- find a fabrication path when the original part is unavailable
-- find a discontinued tractor part
-- find an obsolete automotive or machine part
+- find a blueprint or fabrication path when the original part is unavailable
 - identify a hard-to-source part from markings measurements photos or equipment clues
-- find replacement donor salvage or fabrication paths when normal sourcing fails
+- find a discontinued appliance tractor automotive marine industrial construction powersports agricultural electronics or equipment part
+- find replacement donor salvage blueprint or fabrication paths when normal sourcing fails
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
 

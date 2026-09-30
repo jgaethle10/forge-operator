@@ -10,12 +10,14 @@
     "canonical_url": "https://findmypart.base44.app/",
     "registry_name": "io.github.jgaethle10/findmypart",
     "mcp": "https://findmypart.base44.app/functions/findMyPartMcp",
-    "authority": "public discovery and human-confirmed paid sourcing hunts",
+    "authority": "free evidence-aware Part Passport triage plus human-confirmed paid sourcing hunts",
     "boundaries": [
+      "Part Passport normalization is not fitment proof",
+      "reachable listings are source leads until separately verified",
       "unknowns may remain unknown",
-      "compatibility is not guaranteed",
+      "compatibility inventory supplier availability price and delivery timing are not guaranteed",
       "checkout creation is not payment proof",
-      "private vendor, analytics, session, command-center, and sales data are not public"
+      "private vendor analytics session command-center and sales data are not public"
     ],
     "human_confirmation_required": true,
     "commercial_state": "product_contract",
@@ -25,7 +27,7 @@
   "observed_providers": [
     "generic_agent"
   ],
-  "answer": "Evercraft publishes FindMyPart for this problem class. Its public contract includes where can I find this discontinued part; I have a part number but cannot find it anywhere; identify this machine part from a photo or markings; find a replacement for an obsolete part. Check the current public contract and boundaries before handing off media, creating checkout, or claiming a completed result.",
+  "answer": "Evercraft publishes FindMyPart for this problem class. Its public contract includes where can I find this discontinued part; I have a part number but cannot find it anywhere; identify this machine part from a photo or markings; identify this broken part from a label serial plate invoice diagram or fragment. Check the current public contract and boundaries before handing off media, creating checkout, or claiming a completed result.",
   "truth_boundary": {
     "provider_pickup_claimed": false,
     "provider_endorsement_claimed": false,

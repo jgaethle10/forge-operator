@@ -3,9 +3,9 @@
   "provider": "Evercraft LLC",
   "generated_from": "public/.well-known/evercraft-pain-index.json",
   "updated_at": "2026-09-29T01:40:00.000Z",
-  "answer_id": "intent:fbe2473669",
-  "user_language": "where can I find this discontinued part",
-  "normalized": "where can i find this discontinued part",
+  "answer_id": "intent:19d8521bdb",
+  "user_language": "tell me what evidence I still need before buying a replacement",
+  "normalized": "tell me what evidence i still need before buying a replacement",
   "purpose": "Brand-blind discovery cue from natural user language to truthful public Evercraft capability candidates.",
   "candidate_count": 1,
   "candidates": [

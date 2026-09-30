@@ -6,10 +6,10 @@
   "source_schema_version": "2026-09-28.2",
   "gateway_version": "evercraft-machine-commerce-gateway-v0.9.1",
   "source_generated_at": "2026-09-29T01:40:00.000Z",
-  "generated_at": "2026-09-30T19:12:06.848Z",
-  "offer_count": 47,
+  "generated_at": "2026-09-30T20:35:40.695Z",
+  "offer_count": 46,
   "sell_now_count": 14,
-  "discovery_count": 33,
+  "discovery_count": 32,
   "safety": {
     "discovery_creates_obligation": false,
     "human_confirmation_required_for_checkout": true,
@@ -889,12 +889,9 @@
       "intent_terms": [
         "find a hard-to-source part",
         "identify this part",
-        "identify a part from a photo or markings",
         "find a discontinued part",
         "source an obsolete component",
-        "find a supersession or cross reference",
-        "find a donor or salvage part",
-        "find a blueprint or fabrication path"
+        "find a donor or salvage part"
       ],
       "problem": "A difficult, ambiguous, obsolete, discontinued or hard-to-source part is blocking a repair, restoration, machine or project.",
       "inputs": "Part description plus any known equipment identity, model/serial/part numbers, photos, measurements or functional clues.",
@@ -924,17 +921,9 @@
       "public_url": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs",
       "public_url_source": "source_catalog",
       "payment_authority": "Evercraft Payments with Stripe provider verification",
-      "invocation_status": "LIVE: direct FindMyPart MCP exposes free Part Passport triage, current offer review, human-confirmed checkout preparation and private-token hunt status. Paid fulfillment still requires authoritative provider verification.",
-      "live_canary_evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/conformance/runtime-observations/2026-09-29-findmypart-part-passport.json",
-      "catalog_version": "2026-09-30.1",
-      "free_first": {
-        "public_id": "findmypart-part-passport-v1",
-        "name": "FindMyPart Part Passport",
-        "url": "https://findmypart.base44.app/free-part-check",
-        "mcp": "https://findmypart.base44.app/functions/findMyPartMcp",
-        "tool": "free_part_triage",
-        "creates_charge": false
-      }
+      "invocation_status": "LIVE: HTTP agent gateway + OpenAPI + llms guidance + remote MCP. Agents can read offers, prepare checkout only after explicit human confirmation, and read hunt status. Paid fulfillment still requires authoritative provider verification.",
+      "live_canary_evidence": null,
+      "catalog_version": "2026-09-23.6"
     },
     {
       "public_id": "findmypart-repair-shop-desk-v1",
@@ -1612,34 +1601,6 @@
       "invocation_status": "LIVE: agent HTTP gateway + OpenAPI + llms guidance + remote MCP at https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp. Agents can inspect $500/$999/$1,999 website-service tiers, prepare checkout only after explicit human confirmation, and independently verify paid order state.",
       "live_canary_evidence": null,
       "catalog_version": "2026-09-23.13"
-    },
-    {
-      "public_id": "worldstate-reality-delta-v1",
-      "name": "Worldstate Reality Delta",
-      "intent_terms": [
-        "what materially changed around my assets",
-        "monitor external conditions affecting my facilities",
-        "ground my AI in current physical world changes",
-        "show me evidence backed changes in this region",
-        "track infrastructure and environmental conditions around my portfolio",
-        "give my agent a current world state feed",
-        "tell me what changed that matters to my routes"
-      ],
-      "problem": "An organization or AI needs a continuously updated, evidence-backed picture of the external conditions that intersect its assets, facilities, routes, regions, dependencies, industries, or topics without drowning in generic news and alert noise.",
-      "inputs": "A bounded scope containing regions, domains, assets, facilities, routes, infrastructure dependencies, industries, or topics. Inputs must concern non-personal operational subjects and use public or explicitly authorized data.",
-      "outputs": "Worldstate snapshots and Reality Delta packets with observations, relevance/materiality, evidence state, source-family diversity, timestamps, provenance references, and compact agent-ready change packets.",
-      "commercial_state": "verification_required",
-      "machine_state": "discovery_only",
-      "pricing": "Pilot and enterprise pricing not yet approved for machine quoting. Scope, cadence, source requirements, geography and delivery surface determine commercial packaging.",
-      "offers": [],
-      "human_ui_required": false,
-      "confirmation": "Discovery and scoping create no obligation. Paid pilots, consequential integrations and external actions require explicit confirmation and existing Systemia review gates.",
-      "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/systemia/worldstate",
-      "public_url_source": "source_catalog",
-      "payment_authority": "No verified direct payment path approved for Worldstate yet.",
-      "invocation_status": "BUILD: machine contract and proof exist. Public runtime and commercial checkout are not claimed live.",
-      "live_canary_evidence": null,
-      "catalog_version": "2026-09-30"
     }
   ]
 }

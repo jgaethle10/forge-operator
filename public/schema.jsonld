@@ -471,13 +471,16 @@
       "@type": "Service",
       "@id": "https://findmypart.base44.app/#evercraft-service",
       "name": "FindMyPart",
-      "alternateName": [],
+      "alternateName": [
+        "Find My Part",
+        "Part Passport"
+      ],
       "url": "https://findmypart.base44.app/",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
       },
       "serviceType": "hard_to_source_parts",
-      "description": "where can I find this discontinued part; I have a part number but cannot find it anywhere; identify this machine part from a photo or markings; find a replacement for an obsolete part"
+      "description": "where can I find this discontinued part; I have a part number but cannot find it anywhere; identify this machine part from a photo or markings; identify this broken part from a label serial plate invoice diagram or fragment"
     },
     {
       "@type": "Service",

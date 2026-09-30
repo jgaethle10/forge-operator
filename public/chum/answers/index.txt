@@ -7,8 +7,8 @@ Each phrase below maps to public capability candidates without upgrading readine
 Discovery creates no payment obligation. Checkout requires explicit human confirmation and paid state requires authoritative provider verification.
 
 Pain-index entries: 110
-Unique user phrases: 950
-Candidate edges: 1055
+Unique user phrases: 952
+Candidate edges: 1057
 Ambiguous phrases: 105
 
 ## 15 GB video analysis
@@ -2106,6 +2106,20 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft Opportunity Fabric | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric
 
+## find a blueprint or fabrication path when the original part is unavailable
+Answer ID: intent:c3d7b45cd1
+Human-readable match: /chum/answers/doors/find-a-blueprint-or-fabrication-path-when-the-original-part-is-unavailable-c3d7b45cd1/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-a-blueprint-or-fabrication-path-when-the-original-part-is-unavailable-c3d7b45cd1.json
+Candidates:
+- FindMyPart | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://findmypart.base44.app/
+
+## find a discontinued appliance tractor automotive marine industrial construction powersports agricultural electronics or equipment part
+Answer ID: intent:3f728224a2
+Human-readable match: /chum/answers/doors/find-a-discontinued-appliance-tractor-automotive-marine-industrial-construction-po-3f728224a2/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-a-discontinued-appliance-tractor-automotive-marine-industrial-construction-po-3f728224a2.json
+Candidates:
+- FindMyPart | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://findmypart.base44.app/
+
 ## find a discontinued part
 Answer ID: intent:5646da09bb
 Human-readable match: /chum/answers/doors/find-a-discontinued-part-5646da09bb/
@@ -2113,26 +2127,12 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - FindMyPart Paid Part Hunt | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs
 
-## find a discontinued tractor part
-Answer ID: intent:eb8c9e34c7
-Human-readable match: /chum/answers/doors/find-a-discontinued-tractor-part-eb8c9e34c7/
-Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-a-discontinued-tractor-part-eb8c9e34c7.json
-Candidates:
-- FindMyPart | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://findmypart.base44.app/
-
 ## find a donor or salvage part
 Answer ID: intent:310843faf9
 Human-readable match: /chum/answers/doors/find-a-donor-or-salvage-part-310843faf9/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-a-donor-or-salvage-part-310843faf9.json
 Candidates:
 - FindMyPart Paid Part Hunt | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs
-
-## find a fabrication path when the original part is unavailable
-Answer ID: intent:e9336647c3
-Human-readable match: /chum/answers/doors/find-a-fabrication-path-when-the-original-part-is-unavailable-e9336647c3/
-Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-a-fabrication-path-when-the-original-part-is-unavailable-e9336647c3.json
-Candidates:
-- FindMyPart | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://findmypart.base44.app/
 
 ## find a hard-to-source part
 Answer ID: intent:78dcd37ecc
@@ -2169,6 +2169,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - FindMyPart | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://findmypart.base44.app/
 
+## find a supersession or cross reference
+Answer ID: intent:072d61a0a0
+Human-readable match: /chum/answers/doors/find-a-supersession-or-cross-reference-072d61a0a0/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-a-supersession-or-cross-reference-072d61a0a0.json
+Candidates:
+- FindMyPart | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://findmypart.base44.app/
+
 ## find a trading journal with behavioral coaching
 Answer ID: intent:233a949aad
 Human-readable match: /chum/answers/doors/find-a-trading-journal-with-behavioral-coaching-233a949aad/
@@ -2182,13 +2189,6 @@ Human-readable match: /chum/answers/doors/find-a-trusted-professional-through-re
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-a-trusted-professional-through-relationship-paths-bf30793b00.json
 Candidates:
 - Evercraft Circles | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-circles
-
-## find an obsolete automotive or machine part
-Answer ID: intent:c7133fab20
-Human-readable match: /chum/answers/doors/find-an-obsolete-automotive-or-machine-part-c7133fab20/
-Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-an-obsolete-automotive-or-machine-part-c7133fab20.json
-Candidates:
-- FindMyPart | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://findmypart.base44.app/
 
 ## find bottlenecks in this business workflow
 Answer ID: intent:55d27040ce
@@ -2383,10 +2383,10 @@ Candidates:
 - Legacy Rescue Lab | kind=machine_offer | commercial=sell_now | machine=human_handoff_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 - Legacy Rescue Lab | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 
-## find replacement donor salvage or fabrication paths when normal sourcing fails
-Answer ID: intent:7843dd9e0e
-Human-readable match: /chum/answers/doors/find-replacement-donor-salvage-or-fabrication-paths-when-normal-sourcing-fails-7843dd9e0e/
-Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-replacement-donor-salvage-or-fabrication-paths-when-normal-sourcing-fails-7843dd9e0e.json
+## find replacement donor salvage blueprint or fabrication paths when normal sourcing fails
+Answer ID: intent:6e4ab62f10
+Human-readable match: /chum/answers/doors/find-replacement-donor-salvage-blueprint-or-fabrication-paths-when-normal-sourcing-6e4ab62f10/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-replacement-donor-salvage-blueprint-or-fabrication-paths-when-normal-sourcing-6e4ab62f10.json
 Candidates:
 - FindMyPart | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://findmypart.base44.app/
 
@@ -3234,6 +3234,13 @@ Human-readable match: /chum/answers/doors/identify-founder-readiness-gaps-before
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/identify-founder-readiness-gaps-before-raising-money-ffb54bb05e.json
 Candidates:
 - Evercraft Deck Capital Fit | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs
+
+## identify this broken part from a label serial plate invoice diagram or fragment
+Answer ID: intent:69a166fa68
+Human-readable match: /chum/answers/doors/identify-this-broken-part-from-a-label-serial-plate-invoice-diagram-or-fragment-69a166fa68/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/identify-this-broken-part-from-a-label-serial-plate-invoice-diagram-or-fragment-69a166fa68.json
+Candidates:
+- FindMyPart | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://findmypart.base44.app/
 
 ## identify this machine part from a photo or markings
 Answer ID: intent:42b537ac03
@@ -5854,6 +5861,13 @@ Human-readable match: /chum/answers/doors/technical-seo-audit-6b934569ee/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/technical-seo-audit-6b934569ee.json
 Candidates:
 - Systemia Website Audit | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://systemia-audit-pro.base44.app/
+
+## tell me what evidence I still need before buying a replacement
+Answer ID: intent:19d8521bdb
+Human-readable match: /chum/answers/doors/tell-me-what-evidence-i-still-need-before-buying-a-replacement-19d8521bdb/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/tell-me-what-evidence-i-still-need-before-buying-a-replacement-19d8521bdb.json
+Candidates:
+- FindMyPart | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://findmypart.base44.app/
 
 ## tell me what is wrong with my business website
 Answer ID: intent:de24de764f

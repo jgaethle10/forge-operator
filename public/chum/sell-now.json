@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.sell-now.v1",
-  "updated_at": "2026-09-30T19:12:06.848Z",
+  "updated_at": "2026-09-30T20:35:40.695Z",
   "count": 14,
   "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
   "rule": "These offers are publicly cataloged as sell_now. Any supported checkout still requires explicit human payment confirmation and provider verification.",
@@ -304,20 +304,10 @@
       "use_when": [
         "find a hard-to-source part",
         "identify this part",
-        "identify a part from a photo or markings",
         "find a discontinued part",
         "source an obsolete component",
-        "find a supersession or cross reference",
-        "find a donor or salvage part",
-        "find a blueprint or fabrication path"
-      ],
-      "free_first": {
-        "name": "Part Passport",
-        "url": "https://findmypart.base44.app/free-part-check",
-        "mcp_tool": "free_part_triage",
-        "creates_charge": false,
-        "rule": "Use free triage first when identity or sourcing path is unclear; do not force a paid hunt."
-      }
+        "find a donor or salvage part"
+      ]
     },
     {
       "public_id": "foundry-app-escape-audit-v1",

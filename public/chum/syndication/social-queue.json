@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.syndication-social-queue.v1",
-  "generated_at": "2026-09-29T19:18:34.587Z",
+  "generated_at": "2026-09-30T20:35:42.321Z",
   "bootstrap": false,
   "policy": "Material product changes enter once per content hash. Publishing still requires an authorized destination adapter.",
   "items": [
@@ -862,6 +862,16 @@
       "discovery_path": "/chum/products/findmypart/ai-discovery.json",
       "text": "FindMyPart: FindMyPart is an Evercraft hard to source parts capability. Common needs: where can I find this discontinued part; I have a part number but cannot find it anywhere; identify this machine part from a photo or markings; find a replacement for an obsolete part.",
       "content_sha256": "23f2836c96cdfe9f7347846345dd8fa51dab5ca5912dafb4dddb5d66a1704d76",
+      "requires_authorized_destination": true
+    },
+    {
+      "dedupe_key": "findmypart:9eb2711ee3771ee1b424539887090af4d27a6d687f067096f767c671dd5c3171",
+      "product_key": "findmypart",
+      "name": "FindMyPart",
+      "canonical_url": "https://findmypart.base44.app/",
+      "discovery_path": "/chum/products/findmypart/ai-discovery.json",
+      "text": "FindMyPart: FindMyPart is an Evercraft hard to source parts capability. Common needs: where can I find this discontinued part; I have a part number but cannot find it anywhere; identify this machine part from a photo or markings; identify this broken part from a label serial plate invoice diagram or fragment.",
+      "content_sha256": "9eb2711ee3771ee1b424539887090af4d27a6d687f067096f767c671dd5c3171",
       "requires_authorized_destination": true
     },
     {
