@@ -70,7 +70,32 @@ assert.equal(packet.changes[0].source_family, 'utility-public-status');
 
 const unrelated = normalizeWorldstateScope({ region_keys:['miami'], domains:['water'] });
 const unrelatedProjection = projectWorldstate(state, unrelated);
-assert.equal(unrelatedProjection.observation_count, 0);
+assert.equal(unrelatedProjection.observation_count, 0, 'region + domain scope must be conjunctive');
+
+const yakimaWater = projectWorldstate(
+  state,
+  normalizeWorldstateScope({ region_keys:['yakima'], domains:['water'] })
+);
+assert.equal(yakimaWater.observation_count, 1);
+assert.equal(yakimaWater.observations[0].observation_id, 'obs-river-baseline');
+assert.equal(yakimaWater.observations[0].scope_gates.region.passed, true);
+assert.equal(yakimaWater.observations[0].scope_gates.domain.passed, true);
+
+const globalWater = projectWorldstate(
+  state,
+  normalizeWorldstateScope({ domains:['water'] })
+);
+assert.equal(globalWater.observation_count, 1, 'domain-only scopes may intentionally operate globally');
+
+const missingSubject = projectWorldstate(
+  state,
+  normalizeWorldstateScope({
+    region_keys:['yakima'],
+    domains:['energy','infrastructure'],
+    facilities:['facility-that-is-not-in-the-observation']
+  })
+);
+assert.equal(missingSubject.observation_count, 0, 'populated subject filters must also match');
 
 console.log(JSON.stringify({
   ok:true,
