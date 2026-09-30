@@ -202,12 +202,27 @@ This distinction prevents "we documented it" from becoming "Systemia may execute
 
 The current integration branch evaluates 64 public products.
 
-- 6 have explicit complete contracts
-- 3 are `shared_runtime`: AliEV, ForensiScope route classification, Evercraft Clip read-only planning
+- 7 have explicit complete contracts
+- 4 are `shared_runtime`: AliEV, ForensiScope route classification, Evercraft Clip read-only planning, FindMyPart free Part Passport triage
 - 1 is `private_runtime`: Opportunity Fabric
 - 2 are `discovery_only`: EverNest Atlas and Systemia University
-- 58 grandfathered public products remain in the migration queue
-- 12 public direct-door products still need contracts
+- 57 grandfathered public products remain in the migration queue
+- 11 public direct-door products still need contracts
 - the ratchet remains PASS because all three products added after the original 61-product baseline now have explicit contracts
 
 The baseline is not moved forward to hide new products. New products are contracted against the original migration boundary.
+
+
+## FindMyPart canary contract
+
+FindMyPart is the fourth shared-runtime contract and the seventh explicit product contract overall.
+
+The contracted machine action is exactly the live free first step documented by the product:
+
+```
+free_part_triage
+```
+
+It creates no charge and can produce an evidence-aware Part Passport. Paid Quick/Deep/Rescue hunts, checkout, vendor contact, purchase, fitment claims, inventory claims and successful resolution are not inherited by this contract.
+
+That lets Systemia route free triage through the shared trust chain while keeping commercial and compatibility claims behind their own evidence and human-confirmation boundaries.
