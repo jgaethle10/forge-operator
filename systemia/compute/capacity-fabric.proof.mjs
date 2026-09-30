@@ -76,6 +76,17 @@ const preferred=classifyEvercraftCapacity(nodes,{
 });
 assert.equal(preferred.eligible[0].node_id,'private-rivet-b');
 
+const failedNodeExcluded=classifyEvercraftCapacity(nodes,{
+  workloadClass:'systemia.rivet-report-runtime.v1',
+  requiredNodeLabels:['outbound-only'],
+  excludeNodeIds:['private-rivet-a'],
+});
+assert.equal(failedNodeExcluded.eligible[0].node_id,'private-rivet-b');
+assert.equal(
+  failedNodeExcluded.rejected.find(x=>x.node_id==='private-rivet-a').reason,
+  'node_explicitly_excluded'
+);
+
 const yard={
   async listRemoteCapacityNodes(id){
     assert.equal(id,'remote-capacity-broker');
