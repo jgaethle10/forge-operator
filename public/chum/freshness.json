@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-30T05:38:05.995Z",
+  "updated_at": "2026-09-30T07:16:23.892Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,65 +11,108 @@
   },
   "latest_change_batch": [
     {
+      "path": "/chum/crawler-radar.json",
+      "last_changed": "2026-09-30T07:16:23.892Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/crawler-radar.txt",
+      "last_changed": "2026-09-30T07:16:23.892Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/",
+      "last_changed": "2026-09-30T07:16:23.892Z",
+      "priority": 80
+    },
+    {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-30T05:38:05.995Z",
+      "last_changed": "2026-09-30T07:16:23.892Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/",
+      "last_changed": "2026-09-30T07:16:23.892Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "last_changed": "2026-09-30T07:16:23.892Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
     {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-09-30T05:38:05.995Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/crawler-radar.json",
       "url": "/chum/crawler-radar.json",
-      "last_changed": "2026-09-30T02:02:00.010Z",
+      "last_changed": "2026-09-30T07:16:23.892Z",
       "priority": 80
     },
     {
       "path": "/chum/crawler-radar.txt",
       "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-09-30T02:02:00.010Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/proof/forensiscope.json",
-      "url": "/chum/proof/forensiscope.json",
-      "last_changed": "2026-09-30T02:02:00.010Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/proof/index.json",
-      "url": "/chum/proof/index.json",
-      "last_changed": "2026-09-30T02:02:00.010Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/proof/rivet.json",
-      "url": "/chum/proof/rivet.json",
-      "last_changed": "2026-09-30T02:02:00.010Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/strike/index.json",
-      "url": "/chum/strike/index.json",
-      "last_changed": "2026-09-30T02:02:00.010Z",
+      "last_changed": "2026-09-30T07:16:23.892Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/",
       "url": "/chum/hot/",
-      "last_changed": "2026-09-29T19:45:13.931Z",
+      "last_changed": "2026-09-30T07:16:23.892Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-30T07:16:23.892Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/",
+      "url": "/chum/strike/",
+      "last_changed": "2026-09-30T07:16:23.892Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "url": "/chum/strike/index.json",
+      "last_changed": "2026-09-30T07:16:23.892Z",
       "priority": 80
     },
     {
       "path": "/chum/sell-now.json",
       "url": "/chum/sell-now.json",
-      "last_changed": "2026-09-29T19:24:13.034Z",
+      "last_changed": "2026-09-30T07:16:23.209Z",
       "priority": 92
+    },
+    {
+      "path": "/chum/sell-now.txt",
+      "url": "/chum/sell-now.txt",
+      "last_changed": "2026-09-30T07:16:23.209Z",
+      "priority": 92
+    },
+    {
+      "path": "/chum/capabilities.json",
+      "url": "/chum/capabilities.json",
+      "last_changed": "2026-09-30T07:16:23.209Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/forensiscope.json",
+      "url": "/chum/proof/forensiscope.json",
+      "last_changed": "2026-09-30T07:16:23.209Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/index.json",
+      "url": "/chum/proof/index.json",
+      "last_changed": "2026-09-30T07:16:23.209Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/rivet.json",
+      "url": "/chum/proof/rivet.json",
+      "last_changed": "2026-09-30T07:16:23.209Z",
+      "priority": 80
     },
     {
       "path": "/chum/revenue.json",
@@ -92,12 +135,6 @@
     {
       "path": "/chum/agent-commerce.json",
       "url": "/chum/agent-commerce.json",
-      "last_changed": "2026-09-29T19:24:13.034Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/capabilities.json",
-      "url": "/chum/capabilities.json",
       "last_changed": "2026-09-29T19:24:13.034Z",
       "priority": 80
     },
@@ -400,12 +437,6 @@
       "url": "/feed.xml",
       "last_changed": "2026-09-29T19:18:34.761Z",
       "priority": 60
-    },
-    {
-      "path": "/chum/strike/",
-      "url": "/chum/strike/",
-      "last_changed": "2026-09-29T19:16:09.879Z",
-      "priority": 80
     },
     {
       "path": "/.well-known/evercraft-products.json",
@@ -1508,12 +1539,6 @@
     {
       "path": "/chum/answers/doors/ibm-i-7-4-support-is-ending-and-i-need-an-upgrade-plan-ca1da8e065/",
       "url": "/chum/answers/doors/ibm-i-7-4-support-is-ending-and-i-need-an-upgrade-plan-ca1da8e065/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/ibm-i-7-4-upgrade-planning-05c52de953.json",
-      "url": "/chum/answers/doors/ibm-i-7-4-upgrade-planning-05c52de953.json",
       "last_changed": "2026-09-29T05:30:59.043Z",
       "priority": 100
     }
