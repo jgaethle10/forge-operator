@@ -889,9 +889,12 @@
       "intent_terms": [
         "find a hard-to-source part",
         "identify this part",
+        "identify a part from a photo or markings",
         "find a discontinued part",
         "source an obsolete component",
-        "find a donor or salvage part"
+        "find a supersession or cross reference",
+        "find a donor or salvage part",
+        "find a blueprint or fabrication path"
       ],
       "problem": "A difficult, ambiguous, obsolete, discontinued or hard-to-source part is blocking a repair, restoration, machine or project.",
       "inputs": "Part description plus any known equipment identity, model/serial/part numbers, photos, measurements or functional clues.",
@@ -921,9 +924,17 @@
       "public_url": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs",
       "public_url_source": "source_catalog",
       "payment_authority": "Evercraft Payments with Stripe provider verification",
-      "invocation_status": "LIVE: HTTP agent gateway + OpenAPI + llms guidance + remote MCP. Agents can read offers, prepare checkout only after explicit human confirmation, and read hunt status. Paid fulfillment still requires authoritative provider verification.",
-      "live_canary_evidence": null,
-      "catalog_version": "2026-09-23.6"
+      "invocation_status": "LIVE: direct FindMyPart MCP exposes free Part Passport triage, current offer review, human-confirmed checkout preparation and private-token hunt status. Paid fulfillment still requires authoritative provider verification.",
+      "live_canary_evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/conformance/runtime-observations/2026-09-29-findmypart-part-passport.json",
+      "catalog_version": "2026-09-30.1",
+      "free_first": {
+        "public_id": "findmypart-part-passport-v1",
+        "name": "FindMyPart Part Passport",
+        "url": "https://findmypart.base44.app/free-part-check",
+        "mcp": "https://findmypart.base44.app/functions/findMyPartMcp",
+        "tool": "free_part_triage",
+        "creates_charge": false
+      }
     },
     {
       "public_id": "findmypart-repair-shop-desk-v1",
