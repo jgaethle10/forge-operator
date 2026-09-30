@@ -6,15 +6,18 @@
     "contracts": "systemia/capability-mesh/contracts.json"
   },
   "summary": {
-    "public_product_count": 61,
-    "explicit_contract_count": 3,
-    "complete_contract_declaration_count": 3,
+    "public_product_count": 64,
+    "explicit_contract_count": 6,
+    "complete_contract_declaration_count": 6,
     "incomplete_contract_declaration_count": 0,
     "missing_contract_count": 58,
     "public_products_with_direct_door": 15,
     "direct_callable_public_products": 13,
     "direct_door_public_products_without_contract": 12,
-    "specialist_doors_not_in_public_product_index": 2
+    "specialist_doors_not_in_public_product_index": 2,
+    "shared_runtime_contract_count": 3,
+    "private_runtime_contract_count": 1,
+    "discovery_only_contract_count": 2
   },
   "priority_queues": {
     "direct_door_without_contract": [
@@ -91,6 +94,11 @@
       "thoughtdrop",
       "towi-research",
       "website-launch"
+    ],
+    "contracted_not_shared_runtime": [
+      "evernest-atlas",
+      "opportunity-fabric",
+      "systemia-university"
     ]
   },
   "ratchet": {
@@ -98,8 +106,12 @@
     "baseline_captured_at": "2026-09-28",
     "state": "pass",
     "baseline_public_product_count": 61,
-    "current_public_product_count": 61,
-    "new_public_products": [],
+    "current_public_product_count": 64,
+    "new_public_products": [
+      "evernest-atlas",
+      "opportunity-fabric",
+      "systemia-university"
+    ],
     "new_public_products_without_contract": [],
     "baseline_direct_door_public_product_count": 15,
     "current_direct_door_public_product_count": 15,
@@ -142,6 +154,7 @@
       },
       "contract_state": "complete_declaration",
       "contract_version": "1.0.0",
+      "adoption_stage": "shared_runtime",
       "owner": "systemia",
       "lane_states": {
         "authority": "declared",
@@ -205,6 +218,7 @@
       "direct_door": null,
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -242,6 +256,7 @@
       },
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -275,6 +290,7 @@
       "direct_door": null,
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -312,6 +328,7 @@
       },
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -345,6 +362,7 @@
       "direct_door": null,
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -378,6 +396,7 @@
       "direct_door": null,
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -411,6 +430,7 @@
       "direct_door": null,
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -444,6 +464,7 @@
       "direct_door": null,
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -477,6 +498,7 @@
       "direct_door": null,
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -514,6 +536,7 @@
       },
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -547,6 +570,7 @@
       "direct_door": null,
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -574,12 +598,13 @@
       "product_key": "eps-estimate-engine",
       "name": "EPS Field-Service Estimate Engine",
       "product_class": "contractor_estimate_and_margin_modeling",
-      "public_invocation_mode": "discovery_only",
-      "registry_name": null,
+      "public_invocation_mode": "mcp",
+      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
       "specialist_slug": null,
       "direct_door": null,
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -617,6 +642,7 @@
       },
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -650,6 +676,7 @@
       "direct_door": null,
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -687,6 +714,7 @@
       },
       "contract_state": "complete_declaration",
       "contract_version": "1.0.0",
+      "adoption_stage": "shared_runtime",
       "owner": "systemia",
       "lane_states": {
         "authority": "declared",
@@ -765,6 +793,7 @@
       "direct_door": null,
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -798,6 +827,7 @@
       "direct_door": null,
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -831,6 +861,7 @@
       "direct_door": null,
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -864,6 +895,7 @@
       "direct_door": null,
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -897,6 +929,7 @@
       "direct_door": null,
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -930,6 +963,7 @@
       "direct_door": null,
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -963,6 +997,7 @@
       "direct_door": null,
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -996,6 +1031,7 @@
       "direct_door": null,
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -1029,6 +1065,7 @@
       "direct_door": null,
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -1056,12 +1093,13 @@
       "product_key": "evercraft-rewards",
       "name": "Evercraft Rewards",
       "product_class": "local_business_rewards_and_partnership",
-      "public_invocation_mode": "discovery_only",
+      "public_invocation_mode": "mcp",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
       "specialist_slug": null,
       "direct_door": null,
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -1099,6 +1137,7 @@
       },
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -1132,6 +1171,7 @@
       "direct_door": null,
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -1165,6 +1205,7 @@
       "direct_door": null,
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -1198,6 +1239,7 @@
       "direct_door": null,
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -1222,6 +1264,41 @@
       "runtime_verified": false
     },
     {
+      "product_key": "evernest-atlas",
+      "name": "EverNest Atlas",
+      "product_class": "adult_household_life_planning",
+      "public_invocation_mode": "discovery_only",
+      "registry_name": null,
+      "specialist_slug": null,
+      "direct_door": null,
+      "contract_state": "complete_declaration",
+      "contract_version": "1.0.0",
+      "adoption_stage": "discovery_only",
+      "owner": "systemia",
+      "lane_states": {
+        "authority": "not_required",
+        "context": "not_required",
+        "meter": "not_required",
+        "intake": "not_required",
+        "execution": "not_required",
+        "relationship": "not_required",
+        "receipt_reconciliation": "not_required"
+      },
+      "lane_evidence": {
+        "authority": [],
+        "context": [],
+        "meter": [],
+        "intake": [],
+        "execution": [],
+        "relationship": [],
+        "receipt_reconciliation": []
+      },
+      "gaps": [],
+      "next_contract_actions": [],
+      "runtime_verified": false,
+      "truth_boundary": "Complete declaration and source evidence do not prove live runtime integration. Runtime verification must be produced by product-specific end-to-end receipts."
+    },
+    {
       "product_key": "everystage",
       "name": "EveryStage",
       "product_class": "live_event_operations",
@@ -1231,6 +1308,7 @@
       "direct_door": null,
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -1268,6 +1346,7 @@
       },
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -1305,6 +1384,7 @@
       },
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -1338,6 +1418,7 @@
       "direct_door": null,
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -1375,6 +1456,7 @@
       },
       "contract_state": "complete_declaration",
       "contract_version": "1.0.0",
+      "adoption_stage": "shared_runtime",
       "owner": "systemia",
       "lane_states": {
         "authority": "declared",
@@ -1449,6 +1531,7 @@
       "direct_door": null,
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -1482,6 +1565,7 @@
       "direct_door": null,
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -1515,6 +1599,7 @@
       "direct_door": null,
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -1542,8 +1627,8 @@
       "product_key": "ibmi-rescue",
       "name": "Evercraft IBM i Rescue",
       "product_class": "ibmi_upgrade_and_legacy_modernization_evidence",
-      "public_invocation_mode": "discovery_only",
-      "registry_name": null,
+      "public_invocation_mode": "mcp",
+      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
       "specialist_slug": "ibmi-rescue",
       "direct_door": {
         "state": "yard_runtime_proven_public_route_pending",
@@ -1552,6 +1637,7 @@
       },
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -1585,6 +1671,7 @@
       "direct_door": null,
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -1612,12 +1699,13 @@
       "product_key": "legacy-rescue-lab",
       "name": "Legacy Rescue Lab",
       "product_class": "legacy_software_rescue_and_modernization",
-      "public_invocation_mode": "discovery_only",
-      "registry_name": null,
+      "public_invocation_mode": "mcp",
+      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
       "specialist_slug": null,
       "direct_door": null,
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -1651,6 +1739,7 @@
       "direct_door": null,
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -1675,6 +1764,41 @@
       "runtime_verified": false
     },
     {
+      "product_key": "opportunity-fabric",
+      "name": "Evercraft Opportunity Fabric",
+      "product_class": "protected_collaboration_partner_matching_and_execution_orchestration",
+      "public_invocation_mode": "discovery_only",
+      "registry_name": null,
+      "specialist_slug": null,
+      "direct_door": null,
+      "contract_state": "complete_declaration",
+      "contract_version": "1.0.0",
+      "adoption_stage": "private_runtime",
+      "owner": "systemia",
+      "lane_states": {
+        "authority": "not_required",
+        "context": "not_required",
+        "meter": "not_required",
+        "intake": "not_required",
+        "execution": "not_required",
+        "relationship": "not_required",
+        "receipt_reconciliation": "not_required"
+      },
+      "lane_evidence": {
+        "authority": [],
+        "context": [],
+        "meter": [],
+        "intake": [],
+        "execution": [],
+        "relationship": [],
+        "receipt_reconciliation": []
+      },
+      "gaps": [],
+      "next_contract_actions": [],
+      "runtime_verified": false,
+      "truth_boundary": "Complete declaration and source evidence do not prove live runtime integration. Runtime verification must be produced by product-specific end-to-end receipts."
+    },
+    {
       "product_key": "payflow",
       "name": "PayFlow",
       "product_class": "small_team_payroll_recordkeeping",
@@ -1684,6 +1808,7 @@
       "direct_door": null,
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -1717,6 +1842,7 @@
       "direct_door": null,
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -1750,6 +1876,7 @@
       "direct_door": null,
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -1787,6 +1914,7 @@
       },
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -1820,6 +1948,7 @@
       "direct_door": null,
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -1853,6 +1982,7 @@
       "direct_door": null,
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -1886,6 +2016,7 @@
       "direct_door": null,
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -1919,6 +2050,7 @@
       "direct_door": null,
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -1952,6 +2084,7 @@
       "direct_door": null,
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -1985,6 +2118,7 @@
       "direct_door": null,
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -2018,6 +2152,7 @@
       "direct_door": null,
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -2045,12 +2180,13 @@
       "product_key": "systemia-portfolio-sentinel",
       "name": "Systemia Portfolio Sentinel",
       "product_class": "continuous_software_portfolio_integrity_monitoring",
-      "public_invocation_mode": "discovery_only",
-      "registry_name": null,
+      "public_invocation_mode": "mcp",
+      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
       "specialist_slug": null,
       "direct_door": null,
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -2084,6 +2220,7 @@
       "direct_door": null,
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -2121,6 +2258,7 @@
       },
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -2145,6 +2283,41 @@
       "runtime_verified": false
     },
     {
+      "product_key": "systemia-university",
+      "name": "Systemia University",
+      "product_class": "evidence_centered_learning_agent_proving_and_workforce_readiness",
+      "public_invocation_mode": "discovery_only",
+      "registry_name": null,
+      "specialist_slug": null,
+      "direct_door": null,
+      "contract_state": "complete_declaration",
+      "contract_version": "1.0.0",
+      "adoption_stage": "discovery_only",
+      "owner": "systemia",
+      "lane_states": {
+        "authority": "not_required",
+        "context": "not_required",
+        "meter": "not_required",
+        "intake": "not_required",
+        "execution": "not_required",
+        "relationship": "not_required",
+        "receipt_reconciliation": "not_required"
+      },
+      "lane_evidence": {
+        "authority": [],
+        "context": [],
+        "meter": [],
+        "intake": [],
+        "execution": [],
+        "relationship": [],
+        "receipt_reconciliation": []
+      },
+      "gaps": [],
+      "next_contract_actions": [],
+      "runtime_verified": false,
+      "truth_boundary": "Complete declaration and source evidence do not prove live runtime integration. Runtime verification must be produced by product-specific end-to-end receipts."
+    },
+    {
       "product_key": "systemia-website-audit",
       "name": "Systemia Website Audit",
       "product_class": "website_conversion_and_technical_audit",
@@ -2158,6 +2331,7 @@
       },
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -2191,6 +2365,7 @@
       "direct_door": null,
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -2224,6 +2399,7 @@
       "direct_door": null,
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -2257,6 +2433,7 @@
       "direct_door": null,
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -2294,6 +2471,7 @@
       },
       "contract_state": "missing",
       "contract_version": null,
+      "adoption_stage": "missing",
       "lane_states": {
         "authority": "missing",
         "context": "missing",
@@ -2322,6 +2500,7 @@
     "contract_declaration_is_not_runtime_verification": true,
     "source_presence_is_not_live_readiness": true,
     "missing_lane_is_never_inferred": true,
-    "not_required_requires_reason": true
+    "not_required_requires_reason": true,
+    "adoption_stage_is_not_runtime_verification": true
   }
 }
