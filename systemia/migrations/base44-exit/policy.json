@@ -37,7 +37,8 @@
     "secrets_rekeyed",
     "critical_journey_parity_pass",
     "observability_ready",
-    "post_cutover_sentinel_ready"
+    "post_cutover_sentinel_ready",
+    "realtime_parity_if_required"
   ],
   "priority": [
     "systemia_core_and_kaidance_collider",
@@ -58,6 +59,7 @@
     "public_source_identifiers_allowed": false
   },
   "shared_landing_primitives": [
+    "app_fabric_compatibility",
     "public_edge",
     "yard_runtime",
     "canonical_data",
@@ -69,6 +71,56 @@
     "webhook_gateway",
     "commerce_boundary",
     "fabric_discovery",
-    "portfolio_sentinel"
-  ]
+    "portfolio_sentinel",
+    "realtime_bus"
+  ],
+  "landing_implementations": {
+    "app_fabric_compatibility": {
+      "state": "proved_local",
+      "source_refs": [
+        "systemia/app-fabric/client.mjs",
+        "systemia/app-fabric/gateway.mjs",
+        "systemia/app-fabric/query.mjs"
+      ]
+    },
+    "canonical_data": {
+      "state": "owned_baseline_proved_local",
+      "source_refs": [
+        "systemia/app-fabric/entity-store.mjs"
+      ],
+      "boundary": "Higher-volume or distributed workloads require a stronger backing implementation behind the same compatibility contract before cutover."
+    },
+    "identity_boundary": {
+      "state": "owned",
+      "source_refs": [
+        "systemia/identity/identity.mjs",
+        "systemia/passport/passport.mjs"
+      ]
+    },
+    "public_edge": {
+      "state": "owned",
+      "source_refs": [
+        "systemia/yard/public-route-broker.mjs",
+        "systemia/yard/public-edge-controller.mjs"
+      ]
+    },
+    "yard_runtime": {
+      "state": "owned",
+      "source_refs": [
+        "systemia/yard/operator.mjs"
+      ]
+    },
+    "portfolio_sentinel": {
+      "state": "owned",
+      "source_refs": [
+        "systemia/organism/portfolio-sentinel-runner.mjs",
+        "systemia/organism/portfolio-sentinel.workflow.json"
+      ]
+    },
+    "realtime_bus": {
+      "state": "not_implemented",
+      "source_refs": [],
+      "boundary": "Apps that depend on entity subscriptions remain blocked until an Evercraft-owned realtime bus passes parity."
+    }
+  }
 }
