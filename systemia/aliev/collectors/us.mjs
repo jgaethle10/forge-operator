@@ -1,5 +1,6 @@
 import { ingestAliEvDomainRecords } from '../domain-store.mjs';
 import { refreshWashingtonSiteDomains } from './washington.mjs';
+import { collectUsDwellContext } from './dwell.mjs';
 
 export const AFDC_NEAREST_URL='https://developer.nlr.gov/api/alt-fuel-stations/v1/nearest.json';
 export const AFDC_INCENTIVES_URL='https://developer.nlr.gov/api/transportation-incentives-laws/v1.json';
@@ -158,7 +159,8 @@ export async function refreshOwnedAliEvSiteDomains({
   if(/^[A-Z]{2}$/.test(region)){
     for(const [key,fn,args] of [
       ['charging_inventory',collectUsAfdcCharging,{latitude,longitude,state:region,apiKey:afdcApiKey}],
-      ['incentives',collectUsAfdcIncentives,{state:region,apiKey:afdcApiKey}]
+      ['incentives',collectUsAfdcIncentives,{state:region,apiKey:afdcApiKey}],
+      ['dwell_context',collectUsDwellContext,{latitude,longitude,state:region}]
     ]){
       try{collectors[key]=await fn({stateDir,fetchImpl,retrievedAt,...args});}
       catch(error){collectors[key]={schema:'evercraft.aliev.collector-receipt.v1',collector:key,source_status:'unavailable',records:0,error:error instanceof Error?error.message:String(error),retrieved_at:retrievedAt};}
