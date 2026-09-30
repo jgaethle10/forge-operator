@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "routing_policy": {
     "default": "specialist_direct_when_clear",
-    "fallback": "evercraft_machine_commerce_when_ambiguous_or_specialist_unavailable"
+    "fallback": "evercraft_fabric_when_ambiguous_or_specialist_unavailable"
   },
   "products": [
     {
