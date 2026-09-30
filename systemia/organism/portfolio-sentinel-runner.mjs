@@ -16,6 +16,7 @@ import {
   resolveRepairRecipe
 } from '../sentinel/architectural-invariants.mjs';
 import { probeJournalFreshness } from './journal-freshness.mjs';
+import { buildRepairUnitState } from '../sentinel/repair-unit.mjs';
 
 function clean(value) {
   return String(value ?? '').trim();
@@ -399,6 +400,8 @@ async function main() {
       : []
   };
   const repairQueue = buildPortfolioRepairQueue(activeFindings, delta);
+  const repairUnitFile = path.join(outDir, 'repair-unit-state.json');
+  const repairUnit = buildRepairUnitState(activeFindings, loadJson(repairUnitFile, { items: [] }));
   const evidenceRefs = activeFindings.flatMap((row) => row.evidence_refs || []).slice(0, 500);
   const snapshot = buildPortfolioMissionSnapshot({ scanned, delta, observedAt, evidenceRefs });
   const cycleKey = new Date(Math.floor(observedAt.getTime() / 300000) * 300000).toISOString();
@@ -459,6 +462,7 @@ async function main() {
     },
     repair_queue: repairQueue,
     auto_heal: autoHeal,
+    repair_unit: repairUnit,
     doctrine: {
       material_change_only: true,
       safe_internal_repairs_only: true,
@@ -479,6 +483,7 @@ async function main() {
   atomicJson(path.join(outDir, 'mission-snapshot.json'), snapshot);
   atomicJson(path.join(outDir, 'repair-queue.json'), { schema: 'evercraft.portfolio-sentinel.repair-queue.v1', observed_at: report.observed_at, items: repairQueue });
   atomicJson(path.join(outDir, 'inventory.json'), { schema: 'evercraft.portfolio-sentinel.inventory.v1', observed_at: report.observed_at, ...report.inventory });
+  atomicJson(repairUnitFile, repairUnit);
   atomicJson(path.join(outDir, 'repair-memory.json'), {
     schema: 'evercraft.portfolio-sentinel.repair-memory.v1',
     observed_at: report.observed_at,
@@ -509,6 +514,7 @@ async function main() {
     repair_queue: repairQueue.length,
     blocking_findings: blockingFindings.length,
     auto_heal_reruns: autoHeal.workflow_reruns.length,
+    repair_unit: repairUnit.summary,
     matched_repair_recipes: activeFindings.filter((row) => row.repair_recipe?.recipe_id).length,
     mission_snapshot: path.join(outDir, 'mission-snapshot.json')
   }));
