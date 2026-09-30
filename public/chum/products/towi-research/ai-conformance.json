@@ -15,7 +15,7 @@
     "grok",
     "generic_agent"
   ],
-  "canonical_url": "https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs",
+  "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/towi-research",
   "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/towi-research/llms.txt",
   "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/towi-research/ai-discovery.json",
   "registry_name": null,

@@ -2,8 +2,8 @@
 
 Capability ID: evermaps-evidence-projection-machine-v1
 Commercial state: verification_required
-Machine state: discovery_only
-Public URL: https://base44.app/api/apps/6a985aeccbfb6e930a40137b/functions/machineDiscovery?view=docs
+Machine state: owned_runtime_migration_pending
+Public URL: https://github.com/jgaethle10/forge-operator/tree/main/public/chum/capabilities/evermaps-evidence-projection-machine-v1
 Preferred agent route: universal fallback
 Universal Evercraft MCP: https://fabric.systemiacommandcenters.com/mcp
 Start here: Not a current sell-now route
@@ -35,7 +35,7 @@ No approved machine price was found. Do not auto-quote.
 
 ## Invocation and authority
 
-LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.
+MIGRATION HOLD: legacy Base44 route removed. Use Evercraft Fabric for discovery; direct execution, checkout and fulfillment require independent owned-runtime verification.
 
 Public-safe reads can be served within access rules. Any paid packaging requires explicit terms/confirmation first.
 

@@ -7,9 +7,9 @@
   "matched_capability": {
     "name": "Evercraft Web",
     "class": "ai_web_fetch_search_browser_infrastructure",
-    "canonical_url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs",
-    "registry_name": "io.github.jgaethle10/evercraft-web",
-    "mcp": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp",
+    "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-web",
+    "registry_name": null,
+    "mcp": null,
     "authority": "public discovery and live-verified read-only public URL fetch through the neutral Evercraft Web MCP; search and browser automation remain separately held/gated",
     "boundaries": [
       "public Fetch is live-verified by external MCP initialize, tools/list, successful public-page fetch, and private-target rejection canaries",
@@ -21,7 +21,7 @@
     ],
     "human_confirmation_required": false,
     "commercial_state": "product_contract",
-    "machine_state": "specialist_mcp_declared"
+    "machine_state": "discovery_only"
   },
   "observed_miss_count": 1,
   "observed_providers": [

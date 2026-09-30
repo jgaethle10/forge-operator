@@ -2,12 +2,12 @@
 
 Problem: A founder or operator needs a clear portability, dependency, security and migration map for an app tied to a builder-specific runtime.
 Pricing: $500 one-time.
-Commercial state: sell_now
-Machine state: human_handoff_ready
-Public capability: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=foundry-app-escape-audit-v1
-Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/buy/foundry-app-escape-audit-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_pain_page&ec_public_id=foundry-app-escape-audit-v1
-Human review fallback: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=foundry-app-escape-audit-v1
-Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=foundry-app-escape-audit-v1
+Commercial state: migration_hold
+Machine state: owned_runtime_migration_pending
+Public capability: https://github.com/jgaethle10/forge-operator/tree/main/public/chum/capabilities/foundry-app-escape-audit-v1
+Start here: Not exposed until commercial verification is complete
+Human review fallback: null
+Machine offer JSON: Not exposed until commercial verification is complete
 Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 
 Use when the user says or means:

@@ -14,7 +14,7 @@
     "grok",
     "generic_agent"
   ],
-  "canonical_url": "https://evercraft.base44.app/",
+  "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-front-door",
   "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-front-door/llms.txt",
   "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-front-door/ai-discovery.json",
   "registry_name": null,
@@ -39,12 +39,12 @@
     "rewards": {
       "name": "Evercraft Rewards",
       "description": "Local rewards, nearby offers, check-ins and the Daily Prize Ticket are part of the everyday Evercraft utility graph.",
-      "public_surface": "https://evercraft-rewards.base44.app/"
+      "public_surface": null
     },
     "eventwave": {
       "name": "EventWave",
       "description": "Use EventWave for current local-event discovery and venue context.",
-      "public_surface": "https://event-wave.base44.app/"
+      "public_surface": null
     },
     "seasonally": {
       "name": "Season & Story",
@@ -57,7 +57,7 @@
     "evermaps": {
       "name": "EverMaps",
       "description": "Selected local destinations can hand off into public-safe map and navigation context.",
-      "public_surface": "https://evermaps.base44.app/"
+      "public_surface": null
     }
   },
   "proof_library": null,

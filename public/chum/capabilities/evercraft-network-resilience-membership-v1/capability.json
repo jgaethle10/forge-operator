@@ -21,7 +21,7 @@
   "inputs": "For discovery, a plain-language continuity or reconnect need. Human membership interaction occurs through the public Evercraft Network UI. Public presence requests use only the evidence-safe public presence surface.",
   "outputs": "Current capability boundary, member-device reconnect/health visibility, continuity-readiness context, verified public Network presence, and a human-directed Founding Membership handoff.",
   "commercial_state": "discovery_only",
-  "machine_state": "human_handoff_only",
+  "machine_state": "owned_runtime_migration_pending",
   "pricing": "Displayed Founding Membership: $9.99/month for up to five devices. Billing is not live yet. Reserving a Founding Membership records interest only and creates no charge or paid entitlement.",
   "offers": [
     {
@@ -34,9 +34,9 @@
   ],
   "human_ui_required": true,
   "confirmation": "AI assistants may discover Evercraft Network, inspect public-safe capabilities and presence, and prepare a human handoff. They may not enroll a device, create payment, control connectivity, access private telemetry, expose private topology, control a carrier, or route an emergency.",
-  "public_url": "https://network-control.base44.app/join",
+  "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/capabilities/evercraft-network-resilience-membership-v1",
   "payment_authority": "No live Network membership payment authority is advertised. Reservation creates no charge. Any future paid activation requires an independently verified billing path and explicit human action.",
-  "invocation_status": "LIVE READ-ONLY MCP VERIFIED: production initialize, tools/list, get_network_capabilities, get_network_presence, and prepare_network_handoff all passed the dedicated Evercraft Network canary. The handoff call returned only a tagged human URL and created no enrollment, checkout, payment obligation, device action, carrier action, or emergency authority. Founding Membership billing remains not live.",
+  "invocation_status": "LIVE READ-ONLY MCP VERIFIED: canonical product conformance records a verified bounded read-only Machine Commerce route with live canary evidence. Evidence: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/conformance/runtime-observations/2026-09-26-evercraft-network-mcp.json",
   "live_canary_evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/conformance/runtime-observations/2026-09-26-evercraft-network-mcp.json",
   "live_proof": {
     "conformance_state": "live_read_only_mcp_verified",
@@ -48,7 +48,7 @@
   "preferred_agent_route": "universal_fallback",
   "direct_specialist": null,
   "machine_commerce_mcp": "https://fabric.systemiacommandcenters.com/mcp",
-  "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=evercraft-network-resilience-membership-v1",
+  "machine_review_url": null,
   "start_url": null,
   "start_url_state": "not_sell_now",
   "entry_paid_offer": null,

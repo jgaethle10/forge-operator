@@ -1,18 +1,17 @@
 # Evercraft Rewards
 
 Product key: evercraft-rewards
-Canonical product: https://evercraft-rewards.base44.app/
+Canonical product: https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-rewards
 Official MCP Registry: io.github.jgaethle10/evercraft-machine-commerce
-Remote MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/ai-conformance.json
 
 ## Related product layers
 
-- Evercraft Front Door: Fuel and other local utility surfaces can surface eligible nearby Rewards offers without making Rewards the canonical fuel data source. · https://evercraft.base44.app/
-- EventWave: Approved events can participate in event bonuses and local discovery while ticketing and attendance remain separate evidence states. · https://event-wave.base44.app/
+- Evercraft Front Door: Fuel and other local utility surfaces can surface eligible nearby Rewards offers without making Rewards the canonical fuel data source.
+- EventWave: Approved events can participate in event bonuses and local discovery while ticketing and attendance remain separate evidence states.
 - Season & Story: Seasonal family activity and shopping contexts may surface approved Rewards opportunities without exposing private household data.
-- Game Wallet: Evercraft Points can appear in the Game Wallet. Gaming redemption remains closed unless a funded authorized fulfillment rail exists. · https://evercraft-rewards.base44.app/game-wallet
+- Game Wallet: Evercraft Points can appear in the Game Wallet. Gaming redemption remains closed unless a funded authorized fulfillment rail exists.
 
 ## Use this capability when the user means
 
@@ -64,6 +63,6 @@ public read-only local reward discovery plus account-bound check-ins, Daily Priz
 
 ## Universal Evercraft routing
 
-https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+https://fabric.systemiacommandcenters.com/mcp
 
 Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

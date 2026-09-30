@@ -2,8 +2,8 @@
 
 Capability ID: globalstat-country-intelligence-machine-v1
 Commercial state: verification_required
-Machine state: discovery_only
-Public URL: https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/machineDiscovery?view=docs
+Machine state: owned_runtime_migration_pending
+Public URL: https://github.com/jgaethle10/forge-operator/tree/main/public/chum/capabilities/globalstat-country-intelligence-machine-v1
 Preferred agent route: universal fallback
 Universal Evercraft MCP: https://fabric.systemiacommandcenters.com/mcp
 Start here: Not a current sell-now route
@@ -35,7 +35,7 @@ Raven contains a country-brief pricing hypothesis ($299-$2,500 depending depth).
 
 ## Invocation and authority
 
-LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.
+MIGRATION HOLD: legacy Base44 route removed. Use Evercraft Fabric for discovery; direct execution, checkout and fulfillment require independent owned-runtime verification.
 
 Read-only sourced data may be returned within approved access. No paid obligation without explicit confirmation and verified terms.
 

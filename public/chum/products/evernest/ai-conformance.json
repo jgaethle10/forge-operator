@@ -12,7 +12,7 @@
     "grok",
     "generic_agent"
   ],
-  "canonical_url": "https://evernest-home.base44.app/",
+  "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evernest",
   "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest/llms.txt",
   "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest/ai-discovery.json",
   "registry_name": null,

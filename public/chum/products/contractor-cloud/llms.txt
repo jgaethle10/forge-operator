@@ -4,7 +4,6 @@ Product key: contractor-cloud
 Canonical product: https://github.com/jgaethle10/forge-operator/tree/main/registry/contractor-cloud
 CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/contractor-cloud/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/contractor-cloud/ai-conformance.json
-Product-native start: https://evercraft-contractor-cloud-314d2197.base44.app/
 
 ## Use this capability when the user means
 
@@ -28,6 +27,6 @@ public discovery only until a dedicated Contractor Cloud product runtime is inde
 
 ## Universal Evercraft routing
 
-https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+https://fabric.systemiacommandcenters.com/mcp
 
 Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

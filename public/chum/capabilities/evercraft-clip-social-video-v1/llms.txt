@@ -2,13 +2,10 @@
 
 Capability ID: evercraft-clip-social-video-v1
 Commercial state: verification_required
-Machine state: invocation_ready
-Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-clip
-Preferred agent route: direct specialist
-Direct specialist: Evercraft Clip
-Direct MCP: https://fabric.systemiacommandcenters.com/mcp
-Official MCP Registry name: io.github.jgaethle10/evercraft-clip
-Universal Evercraft fallback MCP: https://fabric.systemiacommandcenters.com/mcp
+Machine state: owned_runtime_migration_pending
+Public URL: https://github.com/jgaethle10/forge-operator/tree/main/public/chum/capabilities/evercraft-clip-social-video-v1
+Preferred agent route: universal fallback
+Universal Evercraft MCP: https://fabric.systemiacommandcenters.com/mcp
 Start here: Not a current sell-now route
 
 ## Use this when
@@ -42,7 +39,7 @@ Canonical customer price is $4.99 one-time (499 cents USD). An authenticated Cli
 
 ## Invocation and authority
 
-LIVE: Clip Production Engine V2, Customer Clip Studio, read-only Creative Director planning, and an authenticated checkout/provider-verification control plane are deployed. The live checkout offer reports 499 cents USD, explicit confirmation required, checkout creation not payment proof, and checkout_configured=false. Machine checkout is not enabled. ForensiScope remains the overflow path for oversized or full-timeline media.
+MIGRATION HOLD: legacy Base44 route removed. Use Evercraft Fabric for discovery; direct execution, checkout and fulfillment require independent owned-runtime verification.
 
 Public discovery and planning create no payment obligation. Customer checkout requires an authenticated human and explicit $4.99 confirmation; rendering remains locked until Stripe reports paid + complete and exact amount, currency, and order metadata all verify.
 

@@ -3,10 +3,10 @@
   "@graph": [
     {
       "@type": "Service",
-      "@id": "https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-clip#evercraft-capability",
+      "@id": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/capabilities/evercraft-clip-social-video-v1#evercraft-capability",
       "name": "Evercraft Clip Social Video Production",
       "description": "An authorized user needs a source video turned into a small set of social-ready vertical clips with bounded rendering, transparent limits and governed downstream distribution.",
-      "url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-clip",
+      "url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/capabilities/evercraft-clip-social-video-v1",
       "provider": {
         "@type": "Organization",
         "name": "Evercraft LLC",
@@ -20,7 +20,7 @@
       "name": "Evercraft Clip Social Video Production | Evercraft capability",
       "description": "An authorized user needs a source video turned into a small set of social-ready vertical clips with bounded rendering, transparent limits and governed downstream distribution.",
       "about": {
-        "@id": "https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-clip#evercraft-capability"
+        "@id": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/capabilities/evercraft-clip-social-video-v1#evercraft-capability"
       }
     }
   ]

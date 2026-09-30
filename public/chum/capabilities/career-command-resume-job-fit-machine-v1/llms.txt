@@ -2,13 +2,10 @@
 
 Capability ID: career-command-resume-job-fit-machine-v1
 Commercial state: verify
-Machine state: discovery_only
-Public URL: https://evercraft-career-command.base44.app/
-Preferred agent route: direct specialist
-Direct specialist: Career Command
-Direct MCP: https://evercraft-career-command.base44.app/functions/careerMcp
-Official MCP Registry name: io.github.jgaethle10/career-command
-Universal Evercraft fallback MCP: https://fabric.systemiacommandcenters.com/mcp
+Machine state: owned_runtime_migration_pending
+Public URL: https://github.com/jgaethle10/forge-operator/tree/main/public/chum/capabilities/career-command-resume-job-fit-machine-v1
+Preferred agent route: universal fallback
+Universal Evercraft MCP: https://fabric.systemiacommandcenters.com/mcp
 Start here: Not a current sell-now route
 
 ## Use this when
@@ -41,7 +38,7 @@ Free core is available. No premium machine-lane price is approved yet.
 
 ## Invocation and authority
 
-catalog_ready_runtime_adapter_pending
+MIGRATION HOLD: legacy Base44 route removed. Use Evercraft Fabric for discovery; direct execution, checkout and fulfillment require independent owned-runtime verification.
 
 No payment obligation is created. Any future paid premium action requires explicit user confirmation and verified payment.
 

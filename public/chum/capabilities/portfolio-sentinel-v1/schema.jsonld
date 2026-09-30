@@ -3,10 +3,10 @@
   "@graph": [
     {
       "@type": "Service",
-      "@id": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1#evercraft-capability",
+      "@id": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/capabilities/portfolio-sentinel-v1#evercraft-capability",
       "name": "Systemia Portfolio Sentinel",
       "description": "Organizations with growing software estates lose track of which apps, repositories, workflows, public endpoints and machine-discovery surfaces are actually healthy. Systemia Portfolio Sentinel continuously inventories known surfaces, detects material drift, deduplicates repeat failures and routes evidence-backed repair work without exposing private topology.",
-      "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+      "url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/capabilities/portfolio-sentinel-v1",
       "provider": {
         "@type": "Organization",
         "name": "Evercraft LLC",
@@ -20,7 +20,7 @@
       "name": "Systemia Portfolio Sentinel | Evercraft capability",
       "description": "Organizations with growing software estates lose track of which apps, repositories, workflows, public endpoints and machine-discovery surfaces are actually healthy. Systemia Portfolio Sentinel continuously inventories known surfaces, detects material drift, deduplicates repeat failures and routes evidence-backed repair work without exposing private topology.",
       "about": {
-        "@id": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1#evercraft-capability"
+        "@id": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/capabilities/portfolio-sentinel-v1#evercraft-capability"
       }
     }
   ]

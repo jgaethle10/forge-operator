@@ -2,12 +2,12 @@
 
 Problem: A property owner, fleet, charging developer, broker, installer or investor needs source-backed EV infrastructure opportunity intelligence for a specific address or market without confusing mapped charger inventory, modeled demand, tariff context, incentives or feasibility.
 Pricing: $299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report; $250 Qualified Opportunity Pack pilot; $2,500/month Territory Opportunity Feed.
-Commercial state: sell_now
-Machine state: payment_ready_human_confirmation
-Public capability: https://aliev.base44.app/functions/alievAgentGateway?view=docs
-Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/buy/aliev-site-opportunity-snapshot-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_pain_page&ec_public_id=aliev-site-opportunity-snapshot-v1
-Human review fallback: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=aliev-site-opportunity-snapshot-v1
-Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=aliev-site-opportunity-snapshot-v1
+Commercial state: migration_hold
+Machine state: owned_runtime_migration_pending
+Public capability: https://github.com/jgaethle10/forge-operator/tree/main/public/chum/capabilities/aliev-site-opportunity-snapshot-v1
+Start here: Not exposed until commercial verification is complete
+Human review fallback: null
+Machine offer JSON: Not exposed until commercial verification is complete
 Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 
 Use when the user says or means:

@@ -3,10 +3,10 @@
 Problem: A team has a dataset or decision problem and needs to know what is missing, conflicted, stale, inaccessible or governance-restricted before trusting analysis built on top of it.
 Pricing: No approved fixed machine price/payment path verified. Raven data-product concepts are hypotheses unless separately approved.
 Commercial state: verification_required
-Machine state: discovery_only
-Public capability: https://base44.app/api/apps/6a961b11776ad5ca30439db3/functions/machineDiscovery?view=docs
+Machine state: owned_runtime_migration_pending
+Public capability: https://github.com/jgaethle10/forge-operator/tree/main/public/chum/capabilities/datafoundry-data-gap-audit-machine-v1
 Start here: Not exposed until commercial verification is complete
-Human review fallback: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=datafoundry-data-gap-audit-machine-v1
+Human review fallback: null
 Machine offer JSON: Not exposed until commercial verification is complete
 Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 

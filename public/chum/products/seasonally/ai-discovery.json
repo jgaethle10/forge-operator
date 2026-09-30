@@ -32,7 +32,7 @@
   "buyer_frontage_url": null,
   "registry_name": null,
   "mcp": null,
-  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "machine_commerce_mcp": "https://fabric.systemiacommandcenters.com/mcp",
   "developer_surfaces": null,
   "editorial_surfaces": null,
   "knowledge_surfaces": null,
@@ -41,12 +41,12 @@
     "rewards": {
       "name": "Evercraft Rewards",
       "description": "Approved local rewards can complement household shopping and seasonal activity discovery without changing grocery evidence rules.",
-      "public_surface": "https://evercraft-rewards.base44.app/"
+      "public_surface": null
     },
     "eventwave": {
       "name": "EventWave",
       "description": "Current local events can feed seasonal adventure discovery while event availability and ticketing remain source-bound.",
-      "public_surface": "https://event-wave.base44.app/"
+      "public_surface": null
     },
     "home": {
       "name": "Evercraft Home",

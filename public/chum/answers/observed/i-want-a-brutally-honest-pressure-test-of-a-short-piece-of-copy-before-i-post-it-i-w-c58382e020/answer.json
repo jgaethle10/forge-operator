@@ -7,9 +7,9 @@
   "matched_capability": {
     "name": "ROASTED",
     "class": "micro_purchase_text_pressure_test",
-    "canonical_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
-    "registry_name": "io.github.jgaethle10/roasted",
-    "mcp": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp",
+    "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/roasted",
+    "registry_name": null,
+    "mcp": null,
     "authority": "public offer discovery, human-confirmed 99-cent checkout, and paid-result retrieval through a live specialist MCP",
     "boundaries": [
       "checkout requires explicit human agreement to pay",
@@ -18,7 +18,7 @@
     ],
     "human_confirmation_required": true,
     "commercial_state": "product_contract",
-    "machine_state": "specialist_mcp_declared"
+    "machine_state": "discovery_only"
   },
   "observed_miss_count": 1,
   "observed_providers": [

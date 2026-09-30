@@ -1,15 +1,12 @@
 # RIVET EV Infrastructure Intelligence
 
 Capability ID: rivet-site-underwriting-v1
-Commercial state: sell_now
-Machine state: payment_ready_human_confirmation
-Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1
-Preferred agent route: direct specialist
-Direct specialist: AliEV / RIVET
-Direct MCP: https://aliev.base44.app/functions/alievMcp
-Official MCP Registry name: io.github.jgaethle10/aliev
-Universal Evercraft fallback MCP: https://fabric.systemiacommandcenters.com/mcp
-Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/buy/rivet-site-underwriting-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=rivet-site-underwriting-v1
+Commercial state: migration_hold
+Machine state: owned_runtime_migration_pending
+Public URL: https://github.com/jgaethle10/forge-operator/tree/main/public/chum/capabilities/rivet-site-underwriting-v1
+Preferred agent route: universal fallback
+Universal Evercraft MCP: https://fabric.systemiacommandcenters.com/mcp
+Start here: Not a current sell-now route
 
 ## Use this when
 
@@ -56,7 +53,7 @@ $299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report.
 
 ## Invocation and authority
 
-LIVE: RIVET is a first-class Evercraft Machine Commerce identity for the $299 Preliminary and $750 Full Site Opportunity Reports. The underlying address-intelligence engine remains internal to the commercial handoff. Checkout preparation is human-confirmed and paid state requires provider verification.
+MIGRATION HOLD: legacy Base44 route removed. Use Evercraft Fabric for discovery; direct execution, checkout and fulfillment require independent owned-runtime verification.
 
 Agents may discover RIVET and inspect current report options. Secure checkout preparation requires explicit human payment confirmation, buyer email and address. Checkout creation is not payment proof; paid state and fulfillment require authoritative provider verification.
 

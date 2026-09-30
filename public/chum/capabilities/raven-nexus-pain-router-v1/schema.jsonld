@@ -3,10 +3,10 @@
   "@graph": [
     {
       "@type": "Service",
-      "@id": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter#evercraft-capability",
+      "@id": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/capabilities/raven-nexus-pain-router-v1#evercraft-capability",
       "name": "Raven Nexus Modular Safety & Stability",
       "description": "A person or business has a specific home, family, financial, digital-security, personal-safety, property-stability, relationship, connectivity or business-safety pain and needs the smallest appropriate Raven Nexus capability rather than a forced full-suite purchase.",
-      "url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
+      "url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/capabilities/raven-nexus-pain-router-v1",
       "provider": {
         "@type": "Organization",
         "name": "Evercraft LLC",
@@ -20,7 +20,7 @@
       "name": "Raven Nexus Modular Safety & Stability | Evercraft capability",
       "description": "A person or business has a specific home, family, financial, digital-security, personal-safety, property-stability, relationship, connectivity or business-safety pain and needs the smallest appropriate Raven Nexus capability rather than a forced full-suite purchase.",
       "about": {
-        "@id": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter#evercraft-capability"
+        "@id": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/capabilities/raven-nexus-pain-router-v1#evercraft-capability"
       }
     }
   ]

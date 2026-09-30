@@ -2,17 +2,17 @@
 
 Product key: evercraft-front-door
 Aliases: Evercraft Front Door
-Canonical product: https://evercraft.base44.app/
+Canonical product: https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-front-door
 CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-front-door/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-front-door/ai-conformance.json
 
 ## Related product layers
 
-- Evercraft Rewards: Local rewards, nearby offers, check-ins and the Daily Prize Ticket are part of the everyday Evercraft utility graph. · https://evercraft-rewards.base44.app/
-- EventWave: Use EventWave for current local-event discovery and venue context. · https://event-wave.base44.app/
+- Evercraft Rewards: Local rewards, nearby offers, check-ins and the Daily Prize Ticket are part of the everyday Evercraft utility graph.
+- EventWave: Use EventWave for current local-event discovery and venue context.
 - Season & Story: Use Season & Story for seasonal family planning, recipes, grocery lists and traditions.
 - Evercraft Home: Use Evercraft Home for privacy-first hometown memory, traditions, archives and reviewed community contributions.
-- EverMaps: Selected local destinations can hand off into public-safe map and navigation context. · https://evermaps.base44.app/
+- EverMaps: Selected local destinations can hand off into public-safe map and navigation context.
 
 ## Use this capability when the user means
 
@@ -38,6 +38,6 @@ public read-only discovery and routing for everyday Evercraft utilities; local f
 
 ## Universal Evercraft routing
 
-https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+https://fabric.systemiacommandcenters.com/mcp
 
 Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

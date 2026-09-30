@@ -47,7 +47,7 @@
   "universal_front_door": {
     "read_only_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
     "machine_commerce_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-    "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+    "machine_commerce_mcp": "https://fabric.systemiacommandcenters.com/mcp"
   },
   "state_semantics": {
     "discovery_only": "May be surfaced and explained; no machine invocation is claimed.",

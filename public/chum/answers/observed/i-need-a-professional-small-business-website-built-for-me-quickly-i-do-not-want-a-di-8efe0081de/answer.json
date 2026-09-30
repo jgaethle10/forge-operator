@@ -7,9 +7,9 @@
   "matched_capability": {
     "name": "Evercraft Website Launch",
     "class": "done_for_you_business_website_service",
-    "canonical_url": "https://instant-website-builder-usa-6feac193.base44.app/",
-    "registry_name": "io.github.jgaethle10/website-launch",
-    "mcp": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp",
+    "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/website-launch",
+    "registry_name": null,
+    "mcp": null,
     "authority": "public fixed-service offer discovery and human-confirmed paid checkout",
     "boundaries": [
       "scope depends on the selected service tier",
@@ -18,7 +18,7 @@
     ],
     "human_confirmation_required": true,
     "commercial_state": "product_contract",
-    "machine_state": "specialist_mcp_declared"
+    "machine_state": "discovery_only"
   },
   "observed_miss_count": 1,
   "observed_providers": [

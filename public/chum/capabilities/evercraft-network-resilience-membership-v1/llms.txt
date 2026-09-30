@@ -2,8 +2,8 @@
 
 Capability ID: evercraft-network-resilience-membership-v1
 Commercial state: discovery_only
-Machine state: human_handoff_only
-Public URL: https://network-control.base44.app/join
+Machine state: owned_runtime_migration_pending
+Public URL: https://github.com/jgaethle10/forge-operator/tree/main/public/chum/capabilities/evercraft-network-resilience-membership-v1
 Preferred agent route: universal fallback
 Universal Evercraft MCP: https://fabric.systemiacommandcenters.com/mcp
 Start here: Not a current sell-now route
@@ -43,7 +43,7 @@ Displayed Founding Membership: $9.99/month for up to five devices. Billing is no
 
 ## Invocation and authority
 
-LIVE READ-ONLY MCP VERIFIED: production initialize, tools/list, get_network_capabilities, get_network_presence, and prepare_network_handoff all passed the dedicated Evercraft Network canary. The handoff call returned only a tagged human URL and created no enrollment, checkout, payment obligation, device action, carrier action, or emergency authority. Founding Membership billing remains not live.
+LIVE READ-ONLY MCP VERIFIED: canonical product conformance records a verified bounded read-only Machine Commerce route with live canary evidence. Evidence: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/conformance/runtime-observations/2026-09-26-evercraft-network-mcp.json
 Live canary evidence: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/conformance/runtime-observations/2026-09-26-evercraft-network-mcp.json
 
 AI assistants may discover Evercraft Network, inspect public-safe capabilities and presence, and prepare a human handoff. They may not enroll a device, create payment, control connectivity, access private telemetry, expose private topology, control a carrier, or route an emergency.

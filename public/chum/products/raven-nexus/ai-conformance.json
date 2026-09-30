@@ -12,7 +12,7 @@
     "grok",
     "generic_agent"
   ],
-  "canonical_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
+  "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/raven-nexus",
   "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/raven-nexus/llms.txt",
   "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/raven-nexus/ai-discovery.json",
   "registry_name": null,

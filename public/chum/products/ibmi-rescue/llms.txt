@@ -4,11 +4,8 @@ Product key: ibmi-rescue
 Aliases: IBM i Rescue, AS/400 Rescue, Legacy Rescue for IBM i
 Canonical product: https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 Official MCP Registry: io.github.jgaethle10/evercraft-machine-commerce
-Remote MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ibmi-rescue/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ibmi-rescue/ai-conformance.json
-Buyer frontage: https://evercraft-ai-suite-08c4d2b8.base44.app/buy/ibmi-rescue-v1?src=chum&campaign=product-mirror&ec_surface=chum_product_mirror&ec_public_id=ibmi-rescue-v1
-Product-native start: https://findmypart.base44.app/ibmi-rescue
 
 ## Use this capability when the user means
 
@@ -33,7 +30,7 @@ public discovery and human-confirmed paid evidence engagement; production access
 - Offer: IBM i Estate X-Ray · $250 one-time · offer_key: ibmi_estate_xray_250
 - Offer: IBM i 7.4 Deadline X-Ray · $250 one-time · offer_key: ibmi_74_deadline_xray_250
 - Offer: IBM i Upgrade Proof Sprint · $1,500 one-time · offer_key: ibmi_upgrade_proof_sprint_1500
-- Machine Commerce direct checkout is live-verified. Explicit human payment confirmation remains required, and checkout creation is not payment proof.
+- Machine Commerce handoff state: owned_runtime_migration_pending.
 - Payment state: Evercraft Payments offers active. Human buyer route is externally reachable and synthetic QA verified creation of the $250 Stripe Checkout session. Checkout creation is not payment proof; authoritative provider verification is still required before paid state, revenue, or fulfillment claims.
 
 ## Boundaries
@@ -49,6 +46,6 @@ public discovery and human-confirmed paid evidence engagement; production access
 
 ## Universal Evercraft routing
 
-https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+https://fabric.systemiacommandcenters.com/mcp
 
 Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

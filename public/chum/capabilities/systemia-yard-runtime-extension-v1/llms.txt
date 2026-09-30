@@ -2,8 +2,8 @@
 
 Capability ID: systemia-yard-runtime-extension-v1
 Commercial state: verification_required
-Machine state: invocation_ready
-Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=systemia-yard-runtime-extension-v1
+Machine state: owned_runtime_migration_pending
+Public URL: https://github.com/jgaethle10/forge-operator/tree/main/public/chum/capabilities/systemia-yard-runtime-extension-v1
 Preferred agent route: universal fallback
 Universal Evercraft MCP: https://fabric.systemiacommandcenters.com/mcp
 Start here: Not a current sell-now route
@@ -33,7 +33,7 @@ Dynamic server quote only. Source defaults are not public price authority becaus
 
 ## Invocation and authority
 
-Machine discovery/OpenAPI contract exists; settlement remains verification-gated.
+MIGRATION HOLD: legacy Base44 route removed. Use Evercraft Fabric for discovery; direct execution, checkout and fulfillment require independent owned-runtime verification.
 
 Explicit purchase authorization is required. Purchased runtime changes time only and never widens execution scope, permissions, release authority or security access.
 

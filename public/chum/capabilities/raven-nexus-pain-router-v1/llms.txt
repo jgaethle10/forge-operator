@@ -2,8 +2,8 @@
 
 Capability ID: raven-nexus-pain-router-v1
 Commercial state: verification_required
-Machine state: invocation_ready
-Public URL: https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter
+Machine state: owned_runtime_migration_pending
+Public URL: https://github.com/jgaethle10/forge-operator/tree/main/public/chum/capabilities/raven-nexus-pain-router-v1
 Preferred agent route: universal fallback
 Universal Evercraft MCP: https://fabric.systemiacommandcenters.com/mcp
 Start here: Not a current sell-now route
@@ -43,7 +43,7 @@ Varies by matched modular capability. The live pain router is the authority for 
 
 ## Invocation and authority
 
-LIVE: public Raven Nexus pain router accepts plain-language pain and returns the smallest appropriate modular capability with evidence-state and checkout boundaries.
+MIGRATION HOLD: legacy Base44 route removed. Use Evercraft Fabric for discovery; direct execution, checkout and fulfillment require independent owned-runtime verification.
 
 Discovery and pain matching are read-only. A returned checkout link is not payment proof, and consequential safety or financial actions keep their own human gates.
 

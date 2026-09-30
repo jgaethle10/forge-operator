@@ -2,9 +2,8 @@
 
 Product key: forensiscope
 Aliases: ForensiScope by Evercraft, Evercraft ForensiScope
-Canonical product: https://evercraft-forensiscope.base44.app/
+Canonical product: https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/forensiscope
 Official MCP Registry: io.github.jgaethle10/forensiscope
-Remote MCP: https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp
 CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/ai-conformance.json
 Receipt-backed proof: /chum/proof/forensiscope.json
@@ -66,6 +65,6 @@ public discovery and human-submitted media analysis
 
 ## Universal Evercraft routing
 
-https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+https://fabric.systemiacommandcenters.com/mcp
 
 Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

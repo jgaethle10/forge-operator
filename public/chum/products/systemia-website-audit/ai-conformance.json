@@ -12,11 +12,11 @@
     "grok",
     "generic_agent"
   ],
-  "canonical_url": "https://systemia-audit-pro.base44.app/",
+  "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/systemia-website-audit",
   "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-website-audit/llms.txt",
   "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-website-audit/ai-discovery.json",
   "registry_name": "io.github.jgaethle10/systemia-website-audit",
-  "mcp": "https://systemia-audit-pro.base44.app/functions/auditAgentMcp",
+  "mcp": null,
   "authority": "public audit offer discovery and human-confirmed paid checkout",
   "human_confirmation_required": true,
   "boundaries": [

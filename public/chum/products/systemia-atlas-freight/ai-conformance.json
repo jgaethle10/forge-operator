@@ -14,7 +14,7 @@
     "grok",
     "generic_agent"
   ],
-  "canonical_url": "https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs",
+  "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/systemia-atlas-freight",
   "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-atlas-freight/llms.txt",
   "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-atlas-freight/ai-discovery.json",
   "registry_name": null,

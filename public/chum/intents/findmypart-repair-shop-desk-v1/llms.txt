@@ -3,10 +3,10 @@
 Problem: Technicians lose billable time hunting discontinued, cross-referenced or obscure parts.
 Pricing: Current hypothesis $99-$499/month by hunt volume/service level; not auto-quotable yet.
 Commercial state: verification_required
-Machine state: discovery_only
-Public capability: https://findmypart.base44.app/
+Machine state: owned_runtime_migration_pending
+Public capability: https://github.com/jgaethle10/forge-operator/tree/main/public/chum/capabilities/findmypart-repair-shop-desk-v1
 Start here: Not exposed until commercial verification is complete
-Human review fallback: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=findmypart-repair-shop-desk-v1
+Human review fallback: null
 Machine offer JSON: Not exposed until commercial verification is complete
 Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 

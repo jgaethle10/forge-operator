@@ -3,10 +3,10 @@
   "@graph": [
     {
       "@type": "Service",
-      "@id": "https://findmypart.base44.app/#evercraft-capability",
+      "@id": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/capabilities/findmypart-repair-shop-desk-v1#evercraft-capability",
       "name": "Repair Shop Sourcing Desk",
       "description": "Technicians lose billable time hunting discontinued, cross-referenced or obscure parts.",
-      "url": "https://findmypart.base44.app/",
+      "url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/capabilities/findmypart-repair-shop-desk-v1",
       "provider": {
         "@type": "Organization",
         "name": "Evercraft LLC",
@@ -20,7 +20,7 @@
       "name": "Repair Shop Sourcing Desk | Evercraft capability",
       "description": "Technicians lose billable time hunting discontinued, cross-referenced or obscure parts.",
       "about": {
-        "@id": "https://findmypart.base44.app/#evercraft-capability"
+        "@id": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/capabilities/findmypart-repair-shop-desk-v1#evercraft-capability"
       }
     }
   ]

@@ -2,13 +2,13 @@
 
 Product key: ascend
 Aliases: Ascend
-Canonical product: https://ascend.base44.app/
+Canonical product: https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/ascend
 CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ascend/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ascend/ai-conformance.json
 
 ## Related product layers
 
-- Guardian Safeguard: Verified outside-support navigation when a concern needs to leave the activity environment. · https://guardian-pilot.base44.app/GetHelp
+- Guardian Safeguard: Verified outside-support navigation when a concern needs to leave the activity environment.
 - Infinite Classroom: Learning support when the next need is academic or cross-subject education.
 - Talent Atlas: Only a controlled, consented opportunity handoff when a candidate is genuinely ready.
 - EverNest: Family support and practical household coordination can continue outside the youth-activity development context.
@@ -43,6 +43,6 @@ public discovery and demo of youth-development and safeguarding-support concepts
 
 ## Universal Evercraft routing
 
-https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+https://fabric.systemiacommandcenters.com/mcp
 
 Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.
