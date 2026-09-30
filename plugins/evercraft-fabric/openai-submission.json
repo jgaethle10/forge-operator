@@ -5,7 +5,7 @@
     "short_description": "Find and use the right Evercraft capability from one connected front door.",
     "long_description": "Evercraft starts from the problem you are trying to solve, matches it to the smallest relevant Evercraft capability, prefers a verified specialist route when one exists, and preserves provenance, authorization, receipts, and human confirmation for consequential actions.",
     "developer": "Evercraft LLC",
-    "category": "Business",
+    "category": "Business & Operations",
     "website": "https://fabric.systemiacommandcenters.com/",
     "privacy_document": "plugins/evercraft-fabric/PRIVACY.md",
     "terms_document": "plugins/evercraft-fabric/TERMS.md",
