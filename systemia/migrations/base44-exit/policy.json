@@ -30,7 +30,14 @@
     "health_pass",
     "route_verification_pass",
     "rollback_target_present",
-    "observation_window_pass"
+    "observation_window_pass",
+    "route_inventory_captured",
+    "data_snapshot_verified",
+    "delta_sync_or_write_freeze_verified",
+    "secrets_rekeyed",
+    "critical_journey_parity_pass",
+    "observability_ready",
+    "post_cutover_sentinel_ready"
   ],
   "priority": [
     "systemia_core_and_kaidance_collider",
@@ -41,5 +48,27 @@
     "safety_family_and_continuity_products",
     "research_media_atlas_and_long_tail"
   ],
-  "retirement_rule": "Retire a Base44 dependency only after its named replacement is live, independently verified, reconciled and rollback-safe."
+  "retirement_rule": "Retire a Base44 dependency only after its named replacement is live, independently verified, reconciled and rollback-safe.",
+  "factory": {
+    "contract": "systemia/migrations/base44-exit/factory/contract.mjs",
+    "runner": "systemia/migrations/base44-exit/factory/runner.mjs",
+    "saban_software_id": "base44-evac",
+    "source_mode": "read_only_until_separate_decommission_gate",
+    "private_inventory_required": true,
+    "public_source_identifiers_allowed": false
+  },
+  "shared_landing_primitives": [
+    "public_edge",
+    "yard_runtime",
+    "canonical_data",
+    "identity_boundary",
+    "secret_store",
+    "object_storage",
+    "resident_scheduler",
+    "connector_gateway",
+    "webhook_gateway",
+    "commerce_boundary",
+    "fabric_discovery",
+    "portfolio_sentinel"
+  ]
 }
