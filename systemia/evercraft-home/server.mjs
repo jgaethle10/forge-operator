@@ -8,6 +8,7 @@ import { EvercraftIdentity, IdentityRateLimiter } from "../identity/identity.mjs
 import { authorizeEvercraftHome, verifyEvercraftSession } from "./identity.mjs";
 import { planSystemiaMission, readSystemiaInventory } from "./systemia-adapter.mjs";
 import { readNetworkOverview, readYardOverview } from "./operations-adapter.mjs";
+import { readRavenOverview } from "./raven-adapter.mjs";
 import { ProviderCredentialVault } from "./credential-vault.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -411,6 +412,16 @@ export async function startEvercraftHomeServer({
       } catch (error) {
         return json(res, 400, { ok: false, state: error?.message || "mission_plan_invalid" });
       }
+    }
+
+    if (req.method === "GET" && url.pathname === "/api/raven/overview") {
+      const session = sessionFor(req);
+      if (!session.ok) return json(res, session.status, session);
+      return json(res, 200, {
+        ok: true,
+        subject: session.subject,
+        ...readRavenOverview(repoRoot),
+      });
     }
 
     if (req.method === "GET" && url.pathname === "/api/yard/overview") {
