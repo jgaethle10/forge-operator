@@ -1,0 +1,33 @@
+name: Fallen Audio Master
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/audio-master.ts'
+      - 'systemia/media-studio/audio-master.test.ts'
+      - 'systemia/media-studio/audio-master.integration.test.ts'
+      - 'systemia/media-studio/timeline.ts'
+      - 'systemia/media-studio/timeline-export.ts'
+      - 'systemia/media-studio/timeline-export.test.ts'
+      - '.github/workflows/fallen-audio-master.yml'
+  workflow_dispatch:
+
+jobs:
+  audio-master:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Ensure FFmpeg
+        run: |
+          if ! command -v ffmpeg >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y ffmpeg
+          fi
+          ffmpeg -version | head -n 1
+      - run: node --import tsx --test systemia/media-studio/audio-master.test.ts systemia/media-studio/timeline-export.test.ts systemia/media-studio/audio-master.integration.test.ts
