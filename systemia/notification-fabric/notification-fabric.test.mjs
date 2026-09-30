@@ -127,8 +127,10 @@ test('server-side product client sends the common intent contract with bearer au
     },
   });
   await client.notify({ product: 'rivet', purpose: 'transactional', title: 'Ready', body: 'Open it' });
+  await client.issueSession({ principal_id: 'owner', permissions: ['stream'] });
   assert.equal(calls[0].url, 'https://notify.evercraft.test/api/notifications/intents');
   assert.equal(calls[0].init.headers.authorization, 'Bearer secret');
+  assert.equal(calls[1].url, 'https://notify.evercraft.test/api/notifications/session-tokens');
 });
 
 
@@ -325,4 +327,28 @@ test('attention budget suppresses ordinary OS push while critical traffic bypass
   assert.ok(second.receipts.some((receipt) => receipt.reason === 'attention_budget'));
   assert.equal(critical.accepted, 1);
   assert.equal(sent.length, 2);
+});
+
+
+test('keyed receipt ledger reports HMAC mode and verifies intact receipts', async () => {
+  const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'evercraft-notify-'));
+  const fabric = createNotificationFabric({
+    dataDir,
+    receiptSecret: '0123456789abcdef0123456789abcdef',
+    sendPush: async () => ({ ok: true, status: 201, retryAfter: null }),
+  });
+  await fabric.dispatchIntent({
+    id: 'signed-ledger-1',
+    product: 'journal',
+    purpose: 'operational',
+    priority: 'normal',
+    title: 'Signed',
+    body: 'Receipt proof',
+    recipient_ids: ['owner'],
+  });
+  const head = fabric.store.deliveryLedgerHead();
+  const verified = fabric.store.verifyDeliveryLedger();
+  assert.equal(head.mode, 'hmac-sha256');
+  assert.equal(verified.mode, 'hmac-sha256');
+  assert.equal(verified.valid, true);
 });
