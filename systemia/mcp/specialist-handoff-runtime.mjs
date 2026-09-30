@@ -563,7 +563,7 @@ export async function executeSpecialistRpc(def, rpc, gatewayFetch) {
 export async function startSpecialistHandoffRuntime({
   host = '127.0.0.1',
   port = 0,
-  gatewayUrl = 'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway',
+  gatewayUrl = '',
   gatewayFetch = null,
   remoteOpsPricingUrl = SYSTEMIA_REMOTE_OPS.pricing_url,
   remoteOpsPricingFetch = null,
@@ -574,8 +574,12 @@ export async function startSpecialistHandoffRuntime({
   const instanceId = `specialist_handoff_${randomBytes(12).toString('hex')}`;
   let deploymentReceiptRef = '';
   let identityAttestation = null;
-  const callGateway = gatewayFetch || ((action, publicId) =>
-    defaultGatewayFetch(gatewayUrl, action, publicId));
+  const configuredGatewayUrl = String(gatewayUrl || '').trim();
+  const callGateway = gatewayFetch || (
+    configuredGatewayUrl
+      ? ((action, publicId) => defaultGatewayFetch(configuredGatewayUrl, action, publicId))
+      : (async () => { throw new Error('machine_commerce_gateway_not_configured'); })
+  );
   const callRemoteOpsPricing = remoteOpsPricingFetch || ((payload) =>
     Promise.resolve(simulateRemoteOpsPricing(payload)));
   const normalizedFabricCatalog = Array.isArray(fabricCatalog)
