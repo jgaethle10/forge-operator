@@ -101,3 +101,33 @@ test('rejects phenomenon layers that attempt to render without valid field geome
     }
   }),/phenomenon_bounds_invalid/);
 });
+
+
+test('rejects unsafe phenomenon palette at the worker boundary',()=>{
+  assert.throws(()=>sanitizeRenderJob({
+    ...base,
+    stage:{
+      ...base.stage,
+      layers:[{
+        id:'phenomenon-field',
+        kind:'phenomenon',
+        z:1,x:0,y:0,width:640,height:360,
+        title:'Unsafe palette',
+        motionLabel:'flow',
+        sourceLabel:'test',
+        bounds:{north:2,south:0,west:0,east:2},
+        streamlines:[{
+          id:'s',
+          points:[
+            {lat:0.5,lon:0.5,colorValue:1},
+            {lat:1.5,lon:1.5,colorValue:2}
+          ],
+          sourceRefs:['model:test']
+        }],
+        colorEncoding:{label:'value',min:0,max:3,palette:['#0055ff','red);background:url(https://example.invalid)']},
+        evidenceState:'modeled',
+        sourceRefs:['model:test']
+      }]
+    }
+  }),/phenomenon_color_palette_invalid/);
+});
