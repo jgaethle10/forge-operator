@@ -65,16 +65,14 @@ function buyerFrontageUrlFor(product) {
   if (explicit) return explicit;
   const publicId = String(product?.commercial?.machine_commerce_handoff?.public_id || '').trim();
   if (!publicId) return null;
-  try {
-    const target = new URL('/buy/' + encodeURIComponent(publicId), BUYER_FRONTAGE_ORIGIN);
-    target.searchParams.set('src', 'chum');
-    target.searchParams.set('campaign', 'product-mirror');
-    target.searchParams.set('ec_surface', 'chum_product_mirror');
-    target.searchParams.set('ec_public_id', publicId);
-    return target.toString();
-  } catch {
-    return null;
-  }
+
+  const relative = '/buy/' + encodeURIComponent(publicId)
+    + '?src=chum&campaign=product-mirror&ec_surface=chum_product_mirror&ec_public_id='
+    + encodeURIComponent(publicId);
+
+  const origin = safePublicUrl(CHUM_PUBLIC_ORIGIN, null);
+  if (!origin) return relative;
+  return new URL(relative, origin).toString();
 }
 
 function registryNameFor(registry, conf) {
