@@ -14,11 +14,26 @@
   "authority": {
     "source_discovery": "bounded_public_web",
     "source_provider": "wikimedia_commons",
-    "automatic_license_allowlist": ["public_domain", "cc0"],
+    "automatic_license_allowlist": [
+      "public_domain",
+      "cc0"
+    ],
     "max_supply_requests_per_cycle": 2,
     "publication_authority": false,
     "llm_calls": false,
-    "hard_excluded_page_ids": ["116675248108887", "1302468962947782"],
-    "base44_role": "temporary_compatibility_persistence_only"
+    "hard_excluded_page_ids": [
+      "116675248108887",
+      "1302468962947782"
+    ],
+    "base44_role": "temporary_compatibility_persistence_only",
+    "supported_media": [
+      "image",
+      "video"
+    ],
+    "sensitive_page_exclusions": [
+      "R&B Chicken & Soul",
+      "Evercraft Transparency Atlas",
+      "Files Companion"
+    ]
   }
 }
