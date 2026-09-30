@@ -294,12 +294,13 @@ export async function fetchAlpacaBars(symbol, {
   key,
   secret,
   fetchImpl = fetch,
-  max_pages = 10,
+  max_pages = 100,
 } = {}) {
   if (!key || !secret) throw new Error("edge_lab_alpaca_credentials_missing");
 
   const allBars = [];
   let pageToken = null;
+  const seenPageTokens = new Set();
 
   for (let page = 0; page < max_pages; page++) {
     const url = new URL(`https://data.alpaca.markets/v2/stocks/${encodeURIComponent(symbol)}/bars`);
@@ -326,6 +327,10 @@ export async function fetchAlpacaBars(symbol, {
 
     const next = String(payload?.next_page_token || "").trim();
     if (!next) return allBars;
+    if (seenPageTokens.has(next)) {
+      throw new Error(`edge_lab_alpaca_${symbol}_pagination_loop`);
+    }
+    seenPageTokens.add(next);
     pageToken = next;
   }
 
