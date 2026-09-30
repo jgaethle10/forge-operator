@@ -63,3 +63,12 @@ This is an evidence-quality rule, not a relaxation of the sample, holdout, cost 
 ## Sample depth
 
 The SEC field pack now uses a rolling 365-day research window and a broader multi-issuer universe. Alpaca historical bars are followed across `next_page_token` pages rather than silently truncating long windows at the first response page.
+
+
+## Market-session horizon
+
+Intraday and multi-day event windows are measured over **core U.S. equity session bars only**, using 9:30 AM through 4:00 PM America/New_York.
+
+Five-minute bars before 9:30 AM or at/after 4:00 PM are excluded before lag counting. This makes 78 five-minute bars one complete core trading session. If an observation becomes available after the close, measurement begins at the next eligible core-session bar.
+
+This avoids silently changing a "1 day" horizon when premarket or after-hours bars are present in a market-data feed.
