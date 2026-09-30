@@ -142,3 +142,26 @@ npm run proof:base44-entity-transfer
 ```
 
 The transfer receipt proves data movement only. It does not authorize DNS changes, traffic cutover or Base44 decommissioning.
+
+
+## Route cutover registry
+
+Hard-coded Base44 endpoint strings are not a migration strategy. The receipt-gated route registry in `systemia/migrations/base44-exit/route-registry.mjs` separates four different states that legacy code previously blurred together:
+
+1. **staged**: the owned destination exists as a candidate,
+2. **verified**: a route binding and independent probe receipt match the candidate,
+3. **active**: a separate cutover receipt explicitly authorizes traffic to resolve there,
+4. **verified but inactive**: the candidate remains available after a hold or rollback.
+
+Staging and verification never move production traffic. Activation is pinned to the expected immutable release and route-binding receipt. A legacy URL may be supplied during staging only to create a fingerprint; the raw legacy route is not persisted in the registry.
+
+The owned specialist runtime and Yard public-edge controller no longer contain a Base44 gateway as a hidden default. If no owned specialist gateway is configured, transactional/specialist calls fail closed while the read-only Fabric directory remains available.
+
+Run:
+
+```bash
+npm run proof:base44-route-registry
+npm run validate:base44-owned-runtime-firewall
+```
+
+The firewall blocks hard-coded Base44 network destinations from critical owned runtime surfaces while still allowing compatibility terminology and migration tooling.
