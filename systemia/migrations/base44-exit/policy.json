@@ -118,9 +118,27 @@
       ]
     },
     "realtime_bus": {
-      "state": "not_implemented",
-      "source_refs": [],
-      "boundary": "Apps that depend on entity subscriptions remain blocked until an Evercraft-owned realtime bus passes parity."
+      "state": "owned_baseline_proved_local",
+      "source_refs": [
+        "systemia/realtime-bus/realtime-bus.mjs",
+        "systemia/app-fabric/gateway.mjs",
+        "systemia/app-fabric/client.mjs"
+      ],
+      "boundary": "Durable hash-chained sequence log plus authorized resumable SSE baseline. Product-specific realtime semantics still require parity."
+    },
+    "secret_store": {
+      "state": "owned_baseline_proved_local",
+      "source_refs": [
+        "systemia/secret-store/secret-store.mjs"
+      ],
+      "boundary": "Master encryption key is supplied out of band and is never persisted by the store. Provider credentials are re-issued rather than copied from Base44."
+    },
+    "object_storage": {
+      "state": "owned_baseline_proved_local",
+      "source_refs": [
+        "systemia/object-store/object-store.mjs"
+      ],
+      "boundary": "Content-addressed local baseline with app-scoped references and integrity checks. Replication and geographic requirements remain app-specific cutover gates."
     }
   }
 }
