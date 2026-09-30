@@ -6,7 +6,7 @@
     "name": "Evercraft LLC",
     "url": "https://github.com/jgaethle10/forge-operator"
   },
-  "homepage": "https://aliev.base44.app/",
+  "homepage": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/index.html",
   "repository": "https://github.com/jgaethle10/forge-operator",
   "license": "UNLICENSED",
   "keywords": [
@@ -31,5 +31,7 @@
     "defaultPrompt": [
       "Evaluate whether EV charging could make sense at a specific property and clearly separate observed, public, inferred, and modeled evidence."
     ]
-  }
+  },
+  "releaseState": "MIGRATION_HOLD_OWNED_EDGE_PENDING",
+  "publicOriginState": "owned_edge_not_yet_verified"
 }
