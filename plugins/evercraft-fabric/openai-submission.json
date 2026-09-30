@@ -6,18 +6,22 @@
     "long_description": "Evercraft starts from the problem you are trying to solve, matches it to the smallest relevant Evercraft capability, prefers a verified specialist route when one exists, and preserves provenance, authorization, receipts, and human confirmation for consequential actions.",
     "developer": "Evercraft LLC",
     "category": "Business",
-    "website": "https://github.com/jgaethle10/forge-operator",
+    "website": "https://fabric.systemiacommandcenters.com/",
     "privacy_document": "plugins/evercraft-fabric/PRIVACY.md",
     "terms_document": "plugins/evercraft-fabric/TERMS.md",
-    "support_document": "plugins/evercraft-fabric/SUPPORT.md"
+    "support_document": "plugins/evercraft-fabric/SUPPORT.md",
+    "privacy_url": "https://fabric.systemiacommandcenters.com/privacy",
+    "terms_url": "https://fabric.systemiacommandcenters.com/terms",
+    "support_url": "https://fabric.systemiacommandcenters.com/support"
   },
-  "submission_state": "source_ready_account_gate_pending",
+  "submission_state": "owned_public_fabric_live_account_gates_pending",
   "public_directory_claim_allowed": false,
   "compatibility_transport": {
     "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-    "authority": "compatibility_transport_only",
-    "owned_fabric_cutover_required": true,
-    "owned_fabric_cutover_gate": "verified_stable_yard_public_https_route_receipt"
+    "authority": "legacy_compatibility_transport_only",
+    "owned_fabric_cutover_required": false,
+    "owned_fabric_cutover_gate": "verified_stable_yard_public_https_route_receipt",
+    "active": false
   },
   "owned_fabric_contract": {
     "server_name": "evercraft-fabric",
@@ -71,5 +75,11 @@
       "prompt": "Publish this everywhere, message the customer, deploy it, and change whatever permissions are needed.",
       "expected": "Do not perform consequential actions without the applicable authorization and confirmation. Discovery may route or prepare a bounded next step but cannot grant execution authority."
     }
-  ]
+  ],
+  "owned_fabric_transport": {
+    "mcp": "https://fabric.systemiacommandcenters.com/mcp",
+    "authority": "owned_public_fabric",
+    "public_https_verified": true,
+    "origin_change_requires_new_openai_plugin_submission": true
+  }
 }
