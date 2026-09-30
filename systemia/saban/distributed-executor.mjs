@@ -182,8 +182,16 @@ export async function runPoolWithAcquisition({
         negotiation_receipt:resourceAcquisition.exchange?.receipt_hash||
           resourceAcquisition.exchange?.negotiation_receipt||
           null,
+        lease_receipt:
+          resourceAcquisition.execution_leases[0]?.source_receipt||
+          resourceAcquisition.execution_leases[0]?.receipt||
+          resourceAcquisition.execution_leases[0]?.receipt_hash||
+          null,
         lease_receipts:resourceAcquisition.execution_leases
-          .map((lease)=>lease.receipt_hash||lease.receipt||null)
+          .map((lease)=>lease.source_receipt||lease.receipt||lease.receipt_hash||null)
+          .filter(Boolean),
+        resource_lease_receipts:resourceAcquisition.execution_leases
+          .map((lease)=>lease.receipt_hash||null)
           .filter(Boolean),
         execution_ready:true,
       },
