@@ -87,6 +87,7 @@ export function createRelayOutbox(options = {}) {
         request_fingerprint: fingerprint,
         status: 'pending',
         attempts: 0,
+        failures: 0,
         max_attempts: Math.max(1, Math.min(Number(input.max_attempts ?? 8), 50)),
         not_before_at: iso(notBeforeMs),
         lease_owner: null,
@@ -116,7 +117,7 @@ export function createRelayOutbox(options = {}) {
       for (const job of Object.values(state.jobs || {})) {
         if (job.status !== 'processing') continue;
         const leaseExpires = Date.parse(job.lease_expires_at || '');
-        if (Number.isFinite(leaseExpires) && leaseExpires <= now) {
+        if (!Number.isFinite(leaseExpires) || leaseExpires <= now) {
           job.status = 'retry';
           job.lease_owner = null;
           job.lease_expires_at = null;
@@ -169,14 +170,15 @@ export function createRelayOutbox(options = {}) {
       job.last_error = safeError(error);
       job.lease_owner = null;
       job.lease_expires_at = null;
-      const exhausted = Number(job.attempts || 0) >= Number(job.max_attempts || 1);
+      job.failures = Number(job.failures || 0) + 1;
+      const exhausted = Number(job.failures || 0) >= Number(job.max_attempts || 1);
       if (exhausted || options.dead_letter === true) {
         job.status = 'dead_letter';
         job.dead_lettered_at = iso(now);
       } else {
         const base = Math.max(250, Number(options.base_backoff_ms ?? 1000));
         const cap = Math.max(base, Number(options.max_backoff_ms ?? 5 * 60 * 1000));
-        const exponent = Math.max(0, Number(job.attempts || 1) - 1);
+        const exponent = Math.max(0, Number(job.failures || 1) - 1);
         const backoff = Math.min(cap, base * (2 ** exponent));
         job.status = 'retry';
         job.not_before_at = iso(now + backoff);
@@ -193,6 +195,7 @@ export function createRelayOutbox(options = {}) {
       const now = Number(options.now ?? Date.now());
       job.status = 'retry';
       job.attempts = 0;
+      job.failures = 0;
       job.not_before_at = iso(now);
       job.lease_owner = null;
       job.lease_expires_at = null;
