@@ -1,5 +1,9 @@
 import assert from 'node:assert/strict';
 import express from 'express';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import { generateYardReport } from '../systemia/rivet/report-runtime.mjs';
 import { registerRivetReportGateway } from '../systemia/rivet/http-gateway.mjs';
 
 async function start(options){
@@ -17,6 +21,7 @@ async function start(options){
   };
 }
 
+const COVERAGE_KEYS=['geocoding','charging_inventory','traffic','traffic_temporal','utility_service_area','utility_tariff','incentives','parcel_planning','local_ev_stock','observed_sessions','freight','dwell_context','deep_market_evidence','provenance'];
 const fakeGenerate=async({address,systemiaMachineKey,onProgress})=>{
   assert.equal(systemiaMachineKey,'machine-proof');
   onProgress({schema:'evercraft.rivet.report-progress.v1',stage:'ready',percent:100});
@@ -60,11 +65,59 @@ const fakeGenerate=async({address,systemiaMachineKey,onProgress})=>{
   }finally{await runtime.close();}
 }
 
+{
+  const stateDir=fs.mkdtempSync(path.join(os.tmpdir(),'rivet-gateway-source-'));
+  const sourceSnapshot={
+    response_profile:'rivet_report_snapshot_v1',
+    evidence_state:'SOURCE_BACKED',
+    access_policy:{commercial_access:true},
+    matched_address:'19820 International Boulevard, SeaTac, WA 98188',
+    latitude:47.4239385,
+    longitude:-122.2955482,
+    state:'WA',postal_code:'98188',retrieved_at:'2026-09-30T18:30:00.000Z',
+    source_coverage_manifest:{
+      schema:'evercraft.rivet.source-coverage.v1',generated_at:'2026-09-30T18:30:00.000Z',
+      domains:Object.fromEntries(COVERAGE_KEYS.map(key=>[key,{state:'CONNECTED',record_count:1,source_status:'gateway-proof'}]))
+    },
+    traffic:[{aadt:35000}],chargers:[{name:'Gateway charger'}],incentives:[{name:'Gateway incentive'}],
+    nearby_observed_usage:[{charging_sessions_count:42,period_start:'2026-08-01',period_granularity:'month'}]
+  };
+  const runtime=await start({
+    gatewayToken:'gateway-proof',systemiaMachineKey:'machine-proof',stateDir,
+    generate:(args)=>generateYardReport({...args,sourceFetch:async()=>new Response(JSON.stringify(sourceSnapshot),{status:200})})
+  });
+  try{
+    const created=await fetch(runtime.url+'/api/rivet/reports',{method:'POST',headers:{'content-type':'application/json','authorization':'Bearer gateway-proof'},body:JSON.stringify({address:'19820 International Boulevard, SeaTac, WA 98188'})});
+    assert.equal(created.status,201);
+    const made=await created.json();
+    assert.equal(made.generation_state,'ready');
+    assert.equal(made.verification.full_source_snapshot_persisted,true);
+
+    const report=await fetch(runtime.url+'/api/rivet/reports/'+encodeURIComponent(made.report_id),{headers:{authorization:'Bearer gateway-proof'}});
+    assert.equal(report.status,200);
+    const reportBody=await report.json();
+    assert.equal(reportBody.report_id,made.report_id);
+
+    const source=await fetch(runtime.url+'/api/rivet/reports/'+encodeURIComponent(made.report_id)+'/source',{headers:{authorization:'Bearer gateway-proof'}});
+    assert.equal(source.status,200);
+    const sourceBody=await source.json();
+    assert.equal(sourceBody.sha256,made.source_snapshot.sha256);
+    assert.equal(sourceBody.source_snapshot.matched_address,sourceSnapshot.matched_address);
+    assert.equal(Object.keys(sourceBody.source_snapshot.source_coverage_manifest.domains).length,14);
+  }finally{
+    await runtime.close();
+    fs.rmSync(stateDir,{recursive:true,force:true});
+  }
+}
+
 console.log(JSON.stringify({
   ok:true,
   schema:'evercraft.rivet.yard-gateway-proof.v1',
   fail_closed_when_unconfigured:true,
   auth_required:true,
   address_required:true,
-  ready_report_returned:true
+  ready_report_returned:true,
+  stored_report_retrieval:true,
+  full_source_snapshot_retrieval:true,
+  exact_source_integrity_verified:true
 },null,2));
