@@ -10,8 +10,7 @@ import {
   validateOpenAiChallengeToken,
 } from './fabric-directory.mjs';
 
-function isLegacyBase44Mcp(connection={}) {
-  if (String(connection.type||'').toLowerCase() !== 'mcp') return false;
+function isLegacyBase44Connection(connection={}) {
   try {
     const url = new URL(String(connection.url||''));
     return /(^|\.)base44\.app$/i.test(url.hostname);
@@ -23,15 +22,23 @@ function isLegacyBase44Mcp(connection={}) {
 export function nativeOnlyCatalog(input=[]) {
   const normalized=normalizeFabricCatalog(input);
   let removed=0;
+  let removedMcp=0;
   const capabilities=normalized.map((item)=>({
     ...item,
     connections:item.connections.filter((connection)=>{
-      const legacy=isLegacyBase44Mcp(connection);
-      if (legacy) removed+=1;
+      const legacy=isLegacyBase44Connection(connection);
+      if (legacy) {
+        removed+=1;
+        if (String(connection.type||'').toLowerCase()==='mcp') removedMcp+=1;
+      }
       return !legacy;
     }),
   }));
-  return {capabilities,removed_legacy_base44_mcp_connections:removed};
+  return {
+    capabilities,
+    removed_legacy_base44_connections:removed,
+    removed_legacy_base44_mcp_connections:removedMcp,
+  };
 }
 
 function sendJson(res,status,body) {
@@ -81,6 +88,7 @@ export async function startFabricLocalRuntime({
     transactional:false,
     external_action_authority:false,
     base44_transport_enabled:false,
+    removed_legacy_base44_connections:prepared.removed_legacy_base44_connections,
     removed_legacy_base44_mcp_connections:prepared.removed_legacy_base44_mcp_connections,
     secure_tunnel_compatible:true,
     public_plugin_submission_ready:false,
