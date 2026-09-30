@@ -66,3 +66,16 @@ Inputs must be public or explicitly authorized. Worldstate does not bypass acces
 Worldstate observations do not stop at a private projection store. `context-fabric-adapter.mjs` writes normalized observations into the existing Passport-aware Evercraft Context Fabric under the `worldstate` namespace. `context-reader.mjs` retrieves only records the requesting actor is authorized to see, reconstructs the original observation contract, and then produces Worldstate snapshots and Reality Deltas from that authorized evidence set.
 
 The proof harness verifies both sides of the boundary: an unauthenticated read sees zero internal Worldstate records, while an actor with explicit `context.read.worldstate` authority can reconstruct the scoped snapshot and later material delta with provenance intact.
+
+## Owned commercial pilot door
+
+Worldstate exposes a Forge-owned MCP source route at `/mcp/worldstate`. The initial commercial door is intentionally narrower than monitoring execution.
+
+It exposes two read-only tools:
+
+- `get_worldstate_offer` reads the canonical local machine-catalog offer.
+- `prepare_worldstate_pilot_handoff` converts a bounded non-person operating scope into a structured human-review packet.
+
+The handoff does **not** start Rockies, create a Passport grant, grant source access, create checkout or payment, mutate production, create emergency authority, or trigger an external action. Customer monitoring begins only after separate commercial review, source-permission review and explicit onboarding authorization.
+
+Worldstate is also registered in `registry/owned-machine-offers.json`. CHUM catalog sync merges legacy remote offers with this Forge-owned registry so an external catalog refresh cannot erase or downgrade the owned Worldstate record.
