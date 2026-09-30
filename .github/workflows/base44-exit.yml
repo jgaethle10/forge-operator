@@ -25,6 +25,7 @@ on:
       - 'scripts/base44-exit-controller.mjs'
       - 'tests/base44-exit-controller.test.mjs'
       - 'scripts/validate-base44-credit-firewall.mjs'
+      - 'scripts/validate-rivet-owned-source-boundary.mjs'
       - '.github/workflows/base44-exit.yml'
   push:
     branches:
@@ -52,6 +53,7 @@ on:
       - 'scripts/base44-exit-controller.mjs'
       - 'tests/base44-exit-controller.test.mjs'
       - 'scripts/validate-base44-credit-firewall.mjs'
+      - 'scripts/validate-rivet-owned-source-boundary.mjs'
       - '.github/workflows/base44-exit.yml'
 
 jobs:
@@ -73,6 +75,8 @@ jobs:
         run: node --test tests/core-gateway.test.mjs
       - name: Prove Evercraft App Runtime
         run: node --test tests/app-runtime.test.mjs
+      - name: Validate RIVET owned source boundary
+        run: node scripts/validate-rivet-owned-source-boundary.mjs
       - name: Prove owned AliEV source contract
         run: node --test tests/aliev-owned-source-runtime.test.mjs
       - name: Prove RIVET gateway has no legacy source fallback
