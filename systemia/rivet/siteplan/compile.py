@@ -1,7 +1,7 @@
-import argparse,json,hashlib,copy,os
+import argparse,json,hashlib,copy,os,math,urllib.parse,urllib.request
 from pathlib import Path
-from paths import DATA_ROOT, SOURCE_ROOT, COMPILER_ROOT
-ROOT=DATA_ROOT; SRC=Path(os.getenv('KSS_CANONICAL_SITE_SRC', str(SOURCE_ROOT))); EVID=COMPILER_ROOT/'evidence'; REDEV=EVID/'redevelopment'; MODELS=COMPILER_ROOT/'models'; MODELS.mkdir(parents=True,exist_ok=True)
+from paths import DATA_ROOT, SOURCE_ROOT, COMPILER_ROOT, IDENTITY_ROOT, AERIAL_CACHE_ROOT
+ROOT=DATA_ROOT; SRC=Path(os.getenv('RIVET_SITEPLAN_SOURCE_ROOT', str(SOURCE_ROOT))); IDENT=IDENTITY_ROOT; EVID=COMPILER_ROOT/'evidence'; REDEV=EVID/'redevelopment'; MODELS=COMPILER_ROOT/'models'; MODELS.mkdir(parents=True,exist_ok=True); AERIAL_CACHE_ROOT.mkdir(parents=True,exist_ok=True)
 
 def sha(p):
  h=hashlib.sha256();
@@ -11,6 +11,9 @@ def sha(p):
 
 def state(value,source=None,kind='source-derived',limit=None):
  return {'state':kind,'present':value is not None,'source':source,'limit':limit}
+
+NAIP_ENDPOINT='https://imagery.nationalmap.gov/arcgis/rest/services/USGSNAIPImagery/ImageServer/exportImage'
+USER_AGENT='Evercraft-RIVET-SitePlan/1.0'
 
 def compile_site(n):
  src=SRC/f'site_{n:02d}.json'; acq=EVID/f'site_{n:02d}_acquisition.json'
