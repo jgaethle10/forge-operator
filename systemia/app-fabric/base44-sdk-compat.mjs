@@ -91,9 +91,13 @@ export function createClient(config = {}) {
   };
 
   const rawLogout = client.auth.logout.bind(client.auth);
-  client.auth.logout = async (...args) => {
+  client.auth.logout = async (fromUrl = '') => {
     try {
-      return await rawLogout(...args);
+      const result = await rawLogout();
+      if (fromUrl && typeof window !== 'undefined') {
+        window.location.assign(String(fromUrl));
+      }
+      return result;
     } finally {
       if (config.persistToken !== false) writeCompatToken('');
     }
@@ -118,7 +122,10 @@ function joinUrl(baseURL, requestPath) {
   const path = String(requestPath || '').trim();
   const origin = browserOrigin() || 'http://app-fabric.local';
   if (/^https?:\/\//i.test(path)) return path;
-  if (/^https?:\/\//i.test(base)) return new URL(path, base.endsWith('/') ? base : base + '/').toString();
+  if (/^https?:\/\//i.test(base)) {
+    const relativePath = path.replace(/^\/+/, '');
+    return new URL(relativePath, base.endsWith('/') ? base : base + '/').toString();
+  }
   const merged = [base.replace(/\/$/, ''), path.replace(/^\//, '')].filter(Boolean).join('/');
   return new URL('/' + merged.replace(/^\//, ''), origin).toString();
 }
