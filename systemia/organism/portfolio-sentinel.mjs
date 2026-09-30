@@ -120,8 +120,44 @@ function scriptFileTargets(script) {
 function workflowReferences(text) {
   const npmScripts = [];
   const files = [];
-  for (const match of String(text || '').matchAll(/\bnpm\s+run\s+([A-Za-z0-9:_-]+)/g)) npmScripts.push(match[1]);
-  for (const match of String(text || '').matchAll(/\b(?:node|tsx)\s+([A-Za-z0-9_./-]+\.(?:mjs|cjs|js|ts|tsx))/g)) files.push(match[1]);
+  const lines = String(text || '').split(/\r?\n/);
+  let stepIndent = null;
+  let stepLines = [];
+
+  const flushStep = () => {
+    if (!stepLines.length) return;
+    const stepText = stepLines.join('\n');
+    const workingDirectoryMatch = stepText.match(/^\s*working-directory:\s*["']?([^"'#\n]+?)["']?\s*$/m);
+    const workingDirectory = clean(workingDirectoryMatch?.[1] || '').replaceAll('\\\\', '/');
+
+    for (const match of stepText.matchAll(/\bnpm\s+run\s+([A-Za-z0-9:_-]+)/g)) {
+      npmScripts.push(match[1]);
+    }
+    for (const match of stepText.matchAll(/\b(?:node|tsx)\s+([A-Za-z0-9_./-]+\.(?:mjs|cjs|js|ts|tsx))/g)) {
+      const target = match[1];
+      const resolved = workingDirectory && !workingDirectory.includes('${{') && !path.posix.isAbsolute(target)
+        ? path.posix.normalize(path.posix.join(workingDirectory, target))
+        : target;
+      files.push(resolved);
+    }
+    stepLines = [];
+  };
+
+  for (const line of lines) {
+    const marker = line.match(/^(\s*)-\s+(?:name|uses|run)\s*:/);
+    if (marker) {
+      const indent = marker[1].length;
+      if (stepIndent === null) stepIndent = indent;
+      if (indent === stepIndent) {
+        flushStep();
+        stepLines.push(line);
+        continue;
+      }
+    }
+    if (stepIndent !== null) stepLines.push(line);
+  }
+  flushStep();
+
   return { npmScripts: unique(npmScripts), files: unique(files) };
 }
 
