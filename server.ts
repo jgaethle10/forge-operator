@@ -17,6 +17,7 @@ import { registerFallenFamilyRoutes } from './systemia/media-studio/family-http.
 import { registerRivetReportGateway } from './systemia/rivet/http-gateway.mjs';
 import { registerSpecialistHandoffMcps } from './systemia/mcp/specialist-handoff.js';
 import { registerRemoteOperatorMcp } from './systemia/remote-operator/mcp-gateway.mjs';
+import { registerWorldstatePilotMcp } from './systemia/worldstate/pilot-mcp.mjs';
 
 dotenv.config();
 
@@ -171,6 +172,9 @@ app.use(express.json({ limit: '10mb', type: ['application/json', 'application/*+
 registerRivetReportGateway(app);
 registerSpecialistHandoffMcps(app, { gatewayUrl: machineCommerceGatewayUrl });
 registerRemoteOperatorMcp(app);
+registerWorldstatePilotMcp(app, {
+  catalogPath: path.resolve(__dirname, isProd ? 'dist/.well-known/evercraft-machine-catalog.json' : 'public/.well-known/evercraft-machine-catalog.json')
+});
 
 const CENTRAL_MACHINE_COMMERCE_MCP =
   'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp';
