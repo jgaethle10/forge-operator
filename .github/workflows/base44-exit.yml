@@ -5,6 +5,7 @@ on:
     paths:
       - 'systemia/migrations/base44-exit/**'
       - 'systemia/rewards/**'
+      - 'systemia/clip/**'
       - 'server.ts'
       - 'RUNTIME.md'
       - 'package.json'
@@ -23,6 +24,7 @@ on:
     paths:
       - 'systemia/migrations/base44-exit/**'
       - 'systemia/rewards/**'
+      - 'systemia/clip/**'
       - 'server.ts'
       - 'RUNTIME.md'
       - 'package.json'
@@ -53,6 +55,8 @@ jobs:
         run: npm run test:base44-exit
       - name: Prove owned Rewards runtime
         run: npm run test:rewards-yard-gateway
+      - name: Prove owned Clip public edge
+        run: npm run test:clip-yard-gateway
       - name: Prove KAIDANCE collider
         run: node systemia/collider/proof.mjs
       - name: Prove off-Base44 EPS social continuity
