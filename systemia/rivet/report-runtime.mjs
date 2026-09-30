@@ -37,7 +37,7 @@ function atomicBytes(file,bytes){
   fs.renameSync(tmp,file);
 }
 function safeId(value){ return clean(value).replace(/[^a-zA-Z0-9._-]/g,'_').slice(0,180); }
-function number(value){ const n=Number(value); return Number.isFinite(n)?n:null; }
+function number(value){ if(value===null||value===undefined||String(value).trim()==='') return null; const n=Number(value); return Number.isFinite(n)?n:null; }
 function arr(value){ return Array.isArray(value)?value:[]; }
 function publicText(value){ return clean(value).slice(0,4000); }
 function normalizeCoverageManifest(data,retrievedAt){
