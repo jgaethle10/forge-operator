@@ -182,3 +182,32 @@ plan_clip_job
 It does not contract private-media upload, checkout, paid rendering, or social publishing. Facebook, LinkedIn, and Instagram publishing code paths may exist inside authenticated Clip workflows, but that is not public agent publication proof. TikTok remains explicitly unverified.
 
 The contract therefore compiles planning into the specialist route without inventing Meter charges, payment state, rendering authority, or publishing authority.
+
+
+## Adoption stages
+
+Contract completeness and shared-runtime integration are deliberately separate.
+
+Every product contract declares one adoption stage:
+
+- `shared_runtime` — the contracted machine actions are allowed to compile into the shared Passport / Context / Meter / Execution Gate path.
+- `private_runtime` — a verified product-private runtime exists, but shared Evercraft trust-chain integration is not yet claimed.
+- `discovery_only` — the public product record is intentionally discovery/front-door only; private workflows may exist, but no shared machine execution contract is claimed.
+
+A complete `private_runtime` or `discovery_only` contract satisfies the no-unknown-debt ratchet because the architecture is explicit, but it stays in `contracted_not_shared_runtime` migration work. `buildExecutionGateInput()` and `buildContextBinding()` fail closed unless the product is `shared_runtime`.
+
+This distinction prevents "we documented it" from becoming "Systemia may execute it."
+
+## Current-trunk adoption snapshot
+
+The current integration branch evaluates 64 public products.
+
+- 6 have explicit complete contracts
+- 3 are `shared_runtime`: AliEV, ForensiScope route classification, Evercraft Clip read-only planning
+- 1 is `private_runtime`: Opportunity Fabric
+- 2 are `discovery_only`: EverNest Atlas and Systemia University
+- 58 grandfathered public products remain in the migration queue
+- 12 public direct-door products still need contracts
+- the ratchet remains PASS because all three products added after the original 61-product baseline now have explicit contracts
+
+The baseline is not moved forward to hide new products. New products are contracted against the original migration boundary.
