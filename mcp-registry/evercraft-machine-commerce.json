@@ -2,9 +2,9 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.jgaethle10/evercraft-machine-commerce",
   "title": "Evercraft Machine Commerce",
-  "description": "Start with match_offer to route a user problem to the smallest public-safe Evercraft capability.",
+  "description": "Owned Evercraft Fabric discovery and routing entry for Evercraft Machine Commerce. Product-specific execution is migration-gated until Yard/Evercraft Compute verification exists.",
   "version": "1.5.1",
-  "websiteUrl": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
+  "websiteUrl": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-machine-commerce",
   "repository": {
     "url": "https://github.com/jgaethle10/forge-operator",
     "source": "github"
@@ -12,7 +12,7 @@
   "remotes": [
     {
       "type": "streamable-http",
-      "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      "url": "https://fabric.systemiacommandcenters.com/mcp"
     }
   ]
 }
