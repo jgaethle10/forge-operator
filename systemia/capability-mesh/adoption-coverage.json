@@ -7,15 +7,15 @@
   },
   "summary": {
     "public_product_count": 64,
-    "explicit_contract_count": 6,
-    "complete_contract_declaration_count": 6,
+    "explicit_contract_count": 7,
+    "complete_contract_declaration_count": 7,
     "incomplete_contract_declaration_count": 0,
-    "missing_contract_count": 58,
+    "missing_contract_count": 57,
     "public_products_with_direct_door": 15,
     "direct_callable_public_products": 13,
-    "direct_door_public_products_without_contract": 12,
+    "direct_door_public_products_without_contract": 11,
     "specialist_doors_not_in_public_product_index": 2,
-    "shared_runtime_contract_count": 3,
+    "shared_runtime_contract_count": 4,
     "private_runtime_contract_count": 1,
     "discovery_only_contract_count": 2
   },
@@ -27,7 +27,6 @@
       "eventwave",
       "evercraft-web",
       "faie",
-      "findmypart",
       "ibmi-rescue",
       "roasted",
       "systemia-remote-ops",
@@ -66,7 +65,6 @@
       "evernest",
       "everystage",
       "faie",
-      "findmypart",
       "forensic-record",
       "global-energy-atlas",
       "globalstat",
@@ -1382,31 +1380,68 @@
         "direct_callable": true,
         "registry_published": true
       },
-      "contract_state": "missing",
-      "contract_version": null,
-      "adoption_stage": "missing",
+      "contract_state": "complete_declaration",
+      "contract_version": "1.0.0",
+      "adoption_stage": "shared_runtime",
       "lane_states": {
-        "authority": "missing",
-        "context": "missing",
-        "meter": "missing",
-        "intake": "missing",
-        "execution": "missing",
-        "relationship": "missing",
-        "receipt_reconciliation": "missing"
+        "authority": "declared",
+        "context": "declared",
+        "meter": "not_required",
+        "intake": "not_required",
+        "execution": "declared",
+        "relationship": "not_required",
+        "receipt_reconciliation": "declared"
       },
-      "gaps": [
-        "product_contract_missing"
-      ],
-      "next_contract_actions": [
-        "declare_authority_contract",
-        "declare_context_contract",
-        "declare_meter_contract_or_not_required",
-        "declare_intake_contract_or_not_required",
-        "declare_execution_contract",
-        "declare_relationship_contract_or_not_required",
-        "declare_receipt_reconciliation_contract"
-      ],
-      "runtime_verified": false
+      "gaps": [],
+      "next_contract_actions": [],
+      "runtime_verified": false,
+      "owner": "systemia",
+      "lane_evidence": {
+        "authority": [
+          {
+            "ref": "plugins/findmypart/skills/findmypart-direct/SKILL.md",
+            "present": true
+          },
+          {
+            "ref": "mcp-registry/findmypart.json",
+            "present": true
+          }
+        ],
+        "context": [
+          {
+            "ref": "registry/findmypart/README.md",
+            "present": true
+          },
+          {
+            "ref": "systemia/context-fabric/fabric.mjs",
+            "present": true
+          }
+        ],
+        "meter": [],
+        "intake": [],
+        "execution": [
+          {
+            "ref": "plugins/findmypart/skills/findmypart-direct/SKILL.md",
+            "present": true
+          },
+          {
+            "ref": "mcp-registry/findmypart.json",
+            "present": true
+          }
+        ],
+        "relationship": [],
+        "receipt_reconciliation": [
+          {
+            "ref": "systemia/context-fabric/fabric.mjs",
+            "present": true
+          },
+          {
+            "ref": "registry/findmypart/README.md",
+            "present": true
+          }
+        ]
+      },
+      "truth_boundary": "Complete declaration and source evidence do not prove live runtime integration. Runtime verification must be produced by product-specific end-to-end receipts."
     },
     {
       "product_key": "forensic-record",
