@@ -13,6 +13,12 @@ on:
       - 'tests/app-runtime.test.mjs'
       - 'systemia/core/core-gateway.mjs'
       - 'systemia/core/core-client.js'
+      - 'systemia/aliev/**'
+      - 'systemia/rivet/**'
+      - 'systemia/compute/runtime-node.mjs'
+      - 'systemia/yard/rivet-owned-source-runtime.proof.mjs'
+      - 'tests/aliev-owned-source-runtime.test.mjs'
+      - 'tests/rivet-yard-gateway.test.mjs'
       - 'tests/core-gateway.test.mjs'
       - 'systemia/core/supervisor.evercraft.compute.json'
       - 'scripts/validate-base44-exit.mjs'
@@ -34,6 +40,12 @@ on:
       - 'tests/app-runtime.test.mjs'
       - 'systemia/core/core-gateway.mjs'
       - 'systemia/core/core-client.js'
+      - 'systemia/aliev/**'
+      - 'systemia/rivet/**'
+      - 'systemia/compute/runtime-node.mjs'
+      - 'systemia/yard/rivet-owned-source-runtime.proof.mjs'
+      - 'tests/aliev-owned-source-runtime.test.mjs'
+      - 'tests/rivet-yard-gateway.test.mjs'
       - 'tests/core-gateway.test.mjs'
       - 'systemia/core/supervisor.evercraft.compute.json'
       - 'scripts/validate-base44-exit.mjs'
@@ -61,6 +73,12 @@ jobs:
         run: node --test tests/core-gateway.test.mjs
       - name: Prove Evercraft App Runtime
         run: node --test tests/app-runtime.test.mjs
+      - name: Prove owned AliEV source contract
+        run: node --test tests/aliev-owned-source-runtime.test.mjs
+      - name: Prove RIVET gateway has no legacy source fallback
+        run: node tests/rivet-yard-gateway.test.mjs
+      - name: Prove RIVET on embedded owned AliEV source
+        run: node systemia/yard/rivet-owned-source-runtime.proof.mjs
       - name: Prove KAIDANCE collider
         run: node systemia/collider/proof.mjs
       - name: Prove off-Base44 EPS social continuity
