@@ -161,6 +161,30 @@
       "source_refs": [
         "systemia/context-fabric/receipt-bridge.mjs"
       ]
+    },
+    {
+      "component_key": "evercraft-secret-store",
+      "role": "encrypted_application_secret_storage",
+      "source_refs": [
+        "systemia/secret-store/secret-store.mjs",
+        "systemia/secret-store/proof.mjs"
+      ]
+    },
+    {
+      "component_key": "evercraft-object-store",
+      "role": "content_addressed_application_object_storage",
+      "source_refs": [
+        "systemia/object-store/object-store.mjs",
+        "systemia/object-store/proof.mjs"
+      ]
+    },
+    {
+      "component_key": "evercraft-realtime-bus",
+      "role": "durable_resumable_application_event_stream",
+      "source_refs": [
+        "systemia/realtime-bus/realtime-bus.mjs",
+        "systemia/realtime-bus/proof.mjs"
+      ]
     }
   ],
   "routing": {
@@ -199,7 +223,10 @@
     "relationship_preflight": "evercraft-interaction-ledger",
     "contact_preflight": "evercraft-interaction-ledger",
     "migrate_app": "evercraft-app-fabric",
-    "app_compatibility": "evercraft-app-fabric"
+    "app_compatibility": "evercraft-app-fabric",
+    "secret_storage": "evercraft-secret-store",
+    "object_storage": "evercraft-object-store",
+    "realtime": "evercraft-realtime-bus"
   },
   "parallelism": {
     "provider": "saban",
