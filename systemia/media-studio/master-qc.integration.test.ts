@@ -69,7 +69,7 @@ test('digest mismatch fails before quality measurements can launder the wrong fi
   ffmpeg([
     '-y','-v','error',
     '-f','lavfi','-i','testsrc2=size=640x360:rate=30',
-    '-t','.5',
+    '-t','0.5',
     '-c:v','libx264','-pix_fmt','yuv420p',
     '-an',
     file,
