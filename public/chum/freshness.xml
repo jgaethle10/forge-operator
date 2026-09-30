@@ -2,15 +2,20 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-09-30T16:43:41.301Z</updated>
+<updated>2026-09-30T16:43:46.788Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
+<entry><id>urn:evercraft:chum:d7715e164565fa58cf4513ad</id><title>/chum/sell-now.json</title><updated>2026-09-30T16:43:46.788Z</updated><link href="/chum/sell-now.json"/><category term="priority-92"/></entry>
+<entry><id>urn:evercraft:chum:c5910dc82ba7729311c550e0</id><title>/chum/revenue.json</title><updated>2026-09-30T16:43:46.788Z</updated><link href="/chum/revenue.json"/><category term="priority-90"/></entry>
+<entry><id>urn:evercraft:chum:3512ff1e15f8ad791030cf1d</id><title>/.well-known/evercraft-agent-commerce.json</title><updated>2026-09-30T16:43:46.788Z</updated><link href="/.well-known/evercraft-agent-commerce.json"/><category term="priority-84"/></entry>
+<entry><id>urn:evercraft:chum:f6f50a192b2dfdad7e76c1d3</id><title>/.well-known/evercraft-machine-catalog.json</title><updated>2026-09-30T16:43:46.788Z</updated><link href="/.well-known/evercraft-machine-catalog.json"/><category term="priority-84"/></entry>
+<entry><id>urn:evercraft:chum:e69e17b4a8ea861ea1b9c8f7</id><title>/chum/agent-commerce.json</title><updated>2026-09-30T16:43:46.788Z</updated><link href="/chum/agent-commerce.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:c79ba768239ed82ae5d8f574</id><title>/chum/capabilities.json</title><updated>2026-09-30T16:43:46.788Z</updated><link href="/chum/capabilities.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-30T16:43:46.788Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:d8bcbc9c28ec3e0aa29125ea</id><title>/chum/crawler-radar.json</title><updated>2026-09-30T16:43:41.301Z</updated><link href="/chum/crawler-radar.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:aa9b916fd98945db10fa3cab</id><title>/chum/crawler-radar.txt</title><updated>2026-09-30T16:43:41.301Z</updated><link href="/chum/crawler-radar.txt"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:770866315bf12f2c92446bfe</id><title>/chum/hot/</title><updated>2026-09-30T16:43:41.301Z</updated><link href="/chum/hot/"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-09-30T16:43:41.301Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:494de3a9b5c21a35fdfdb6c2</id><title>/chum/strike/index.json</title><updated>2026-09-30T16:43:41.301Z</updated><link href="/chum/strike/index.json"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:f6f50a192b2dfdad7e76c1d3</id><title>/.well-known/evercraft-machine-catalog.json</title><updated>2026-09-30T16:43:40.718Z</updated><link href="/.well-known/evercraft-machine-catalog.json"/><category term="priority-84"/></entry>
 <entry><id>urn:evercraft:chum:e75551f8817a367b4412bca9</id><title>/chum/proof/forensiscope.json</title><updated>2026-09-30T16:43:40.718Z</updated><link href="/chum/proof/forensiscope.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:07ef7bcf722a12057ed32ee4</id><title>/chum/proof/index.json</title><updated>2026-09-30T16:43:40.718Z</updated><link href="/chum/proof/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:780bd435a8894bd856d47115</id><title>/chum/proof/rivet.json</title><updated>2026-09-30T16:43:40.718Z</updated><link href="/chum/proof/rivet.json"/><category term="priority-80"/></entry>
@@ -100,9 +105,4 @@
 <entry><id>urn:evercraft:chum:dfc3e00e6c45e89bce860ff6</id><title>/chum/capabilities/systemia-yard-runtime-extension-v1/capability.json</title><updated>2026-09-30T07:16:28.399Z</updated><link href="/chum/capabilities/systemia-yard-runtime-extension-v1/capability.json"/><category term="priority-96"/></entry>
 <entry><id>urn:evercraft:chum:7bbcea115c7d07baf8b39fae</id><title>/chum/capabilities/systemia-yard-runtime-extension-v1/llms.txt</title><updated>2026-09-30T07:16:28.399Z</updated><link href="/chum/capabilities/systemia-yard-runtime-extension-v1/llms.txt"/><category term="priority-96"/></entry>
 <entry><id>urn:evercraft:chum:612ca94699cc9b1926de86d8</id><title>/chum/capabilities/talent-evidence-profile-machine-v1/capability.json</title><updated>2026-09-30T07:16:28.399Z</updated><link href="/chum/capabilities/talent-evidence-profile-machine-v1/capability.json"/><category term="priority-96"/></entry>
-<entry><id>urn:evercraft:chum:ec2bc6d24becc1b594542437</id><title>/chum/capabilities/talent-evidence-profile-machine-v1/llms.txt</title><updated>2026-09-30T07:16:28.399Z</updated><link href="/chum/capabilities/talent-evidence-profile-machine-v1/llms.txt"/><category term="priority-96"/></entry>
-<entry><id>urn:evercraft:chum:5a1fcd862515cf21a84ce178</id><title>/chum/capabilities/talent-proof-portal-v1/capability.json</title><updated>2026-09-30T07:16:28.399Z</updated><link href="/chum/capabilities/talent-proof-portal-v1/capability.json"/><category term="priority-96"/></entry>
-<entry><id>urn:evercraft:chum:1bc2124cf1ceffacad106eab</id><title>/chum/capabilities/talent-proof-portal-v1/llms.txt</title><updated>2026-09-30T07:16:28.399Z</updated><link href="/chum/capabilities/talent-proof-portal-v1/llms.txt"/><category term="priority-96"/></entry>
-<entry><id>urn:evercraft:chum:b4b03d9584897e1c64056f76</id><title>/chum/capabilities/towi-evidence-research-machine-v1/capability.json</title><updated>2026-09-30T07:16:28.399Z</updated><link href="/chum/capabilities/towi-evidence-research-machine-v1/capability.json"/><category term="priority-96"/></entry>
-<entry><id>urn:evercraft:chum:df39b4b69d79e4c99905c3c2</id><title>/chum/capabilities/towi-evidence-research-machine-v1/llms.txt</title><updated>2026-09-30T07:16:28.399Z</updated><link href="/chum/capabilities/towi-evidence-research-machine-v1/llms.txt"/><category term="priority-96"/></entry>
 </feed>
