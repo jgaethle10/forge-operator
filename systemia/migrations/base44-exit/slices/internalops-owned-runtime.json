@@ -1,0 +1,44 @@
+{
+  "schema": "evercraft.systemia.base44-exit-slice.v1",
+  "slice": "internalops-owned-runtime",
+  "product": "Evercraft InternalOps",
+  "wave": 3,
+  "priority": "incident_p0",
+  "status": "source_dependency_extraction_active",
+  "observed_direct_core_matches": 25,
+  "observed_core_operations": [
+    "upload_file",
+    "invoke_llm",
+    "send_email",
+    "send_sms",
+    "generate_image",
+    "extract_data"
+  ],
+  "target": {
+    "source": "github",
+    "orchestration": "systemia",
+    "runtime": "yard_evercraft_compute",
+    "integrations": "systemia/core/core-gateway.mjs"
+  },
+  "risk": "Operational records, job photos, reimbursements, chat, materials and field workflows make data reconciliation mandatory before any legacy retirement.",
+  "next": [
+    "extract canonical source and entity schema inventory",
+    "replace Core integration imports with the owned client shim",
+    "migrate operational data and file references with checksums",
+    "replace auth and entity access with Systemia-owned data/auth services",
+    "prove job, scheduling, photo, reimbursement and chat workflows end to end"
+  ],
+  "done_when": [
+    "source_extracted",
+    "dependencies_enumerated",
+    "no_direct_legacy_core_calls",
+    "data_reconciled",
+    "auth_parity_verified",
+    "integration_parity_verified",
+    "tests_pass",
+    "yard_deployment_receipt",
+    "route_verification_pass",
+    "rollback_target_present",
+    "observation_window_pass"
+  ]
+}
