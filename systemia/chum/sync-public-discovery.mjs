@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { mergeMachineOfferSources } from './owned-machine-offers.mjs';
 
 const LIVE_CATALOG_URL =
   process.env.EVERCRAFT_MACHINE_CATALOG_URL ||
@@ -10,6 +11,7 @@ const MACHINE_COMMERCE_GATEWAY_URL =
   LIVE_CATALOG_URL.split('?', 1)[0];
 const TIMEOUT_MS = 20000;
 const CONFORMANCE_PATH = 'conformance/products.json';
+const OWNED_OFFERS_PATH = process.env.EVERCRAFT_OWNED_MACHINE_OFFERS_PATH || 'registry/owned-machine-offers.json';
 const conformance = fs.existsSync(CONFORMANCE_PATH)
   ? JSON.parse(fs.readFileSync(CONFORMANCE_PATH, 'utf8'))
   : { products: [] };
@@ -33,7 +35,7 @@ function semanticSnapshot(snapshot) {
   return stable(rest);
 }
 
-function publicOffer(offer) {
+function publicOffer(offer, sourceAuthority = 'remote_legacy_catalog') {
   const publicId = String(offer.public_id || '');
   const productConformance = conformanceByCapabilityId.get(publicId) || null;
   const liveCanaryEvidence = String(
@@ -57,7 +59,10 @@ function publicOffer(offer) {
     human_ui_required: Boolean(offer.human_ui_required),
     confirmation: String(offer.confirmation || ''),
     public_url: sourcePublicUrl || fallbackPublicUrl,
-    public_url_source: sourcePublicUrl ? 'source_catalog' : 'machine_commerce_review_fallback',
+    public_url_source: sourcePublicUrl
+      ? (sourceAuthority === 'forge_owned_source' ? 'forge_owned_registry' : 'source_catalog')
+      : 'machine_commerce_review_fallback',
+    source_authority: sourceAuthority,
     payment_authority: String(offer.payment_authority || ''),
     invocation_status: String(offer.invocation_status || ''),
     live_canary_evidence: liveCanaryEvidence,
@@ -80,7 +85,15 @@ if (!response.ok) throw new Error(`Live catalog returned HTTP ${response.status}
 const live = await response.json();
 if (live?.ok !== true || !Array.isArray(live?.offers)) throw new Error('Live catalog response is not a valid Evercraft public catalog.');
 
-const offers = live.offers.map(publicOffer).filter((x) => x.public_id && x.name).sort((a,b) => a.public_id.localeCompare(b.public_id));
+const ownedRegistry = fs.existsSync(OWNED_OFFERS_PATH)
+  ? JSON.parse(fs.readFileSync(OWNED_OFFERS_PATH, 'utf8'))
+  : { schema:'evercraft.owned-machine-offers.v1', authority:'forge_owned_source', offers:[] };
+const mergeReceipt = mergeMachineOfferSources(live.offers, ownedRegistry);
+const offers = mergeReceipt.offers
+  .map((row) => publicOffer(row.offer, row.source_authority))
+  .filter((x) => x.public_id && x.name)
+  .sort((a,b) => a.public_id.localeCompare(b.public_id));
+
 const next = {
   schema: 'evercraft.machine-catalog.snapshot.v1',
   provider: 'Evercraft LLC',
@@ -89,6 +102,14 @@ const next = {
   source_schema_version: String(live.schema_version || ''),
   gateway_version: String(live.gateway_version || ''),
   source_generated_at: String(live.generated_at || ''),
+  catalog_authority: 'remote_legacy_plus_forge_owned',
+  owned_offer_registry: OWNED_OFFERS_PATH,
+  source_merge: {
+    remote_offer_count: mergeReceipt.remote_offer_count,
+    owned_offer_count: mergeReceipt.owned_offer_count,
+    owned_added_count: mergeReceipt.owned_added_count,
+    owned_override_count: mergeReceipt.owned_override_count
+  },
   generated_at: new Date().toISOString(),
   offer_count: offers.length,
   sell_now_count: offers.filter((x) => x.commercial_state === 'sell_now').length,
@@ -109,9 +130,9 @@ if (fs.existsSync(OUTPUT)) {
   try { current = JSON.parse(fs.readFileSync(OUTPUT, 'utf8')); } catch {}
 }
 if (current && JSON.stringify(semanticSnapshot(current)) === JSON.stringify(semanticSnapshot(next))) {
-  console.log(JSON.stringify({ changed:false, offer_count:offers.length, sell_now_count:next.sell_now_count, output:OUTPUT }));
+  console.log(JSON.stringify({ changed:false, offer_count:offers.length, sell_now_count:next.sell_now_count, owned_offer_count:mergeReceipt.owned_offer_count, output:OUTPUT }));
 } else {
   fs.mkdirSync(path.dirname(OUTPUT), { recursive:true });
   fs.writeFileSync(OUTPUT, JSON.stringify(next,null,2) + '\n');
-  console.log(JSON.stringify({ changed:true, offer_count:offers.length, sell_now_count:next.sell_now_count, output:OUTPUT }));
+  console.log(JSON.stringify({ changed:true, offer_count:offers.length, sell_now_count:next.sell_now_count, owned_offer_count:mergeReceipt.owned_offer_count, output:OUTPUT }));
 }
