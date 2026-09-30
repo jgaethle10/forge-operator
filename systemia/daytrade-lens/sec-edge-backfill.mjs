@@ -9,6 +9,7 @@ import {
   persistEdgeResearchBatch,
 } from "./edge-research-factory.mjs";
 import { adversarialValidateCandidates } from "./edge-adversarial-validation.mjs";
+import { persistFrozenCohorts } from "./edge-forward-paper.mjs";
 
 async function main() {
   const artifactDir = path.resolve(
@@ -46,10 +47,31 @@ async function main() {
   const adversarialFile = path.join(artifactDir, "sec-edge-adversarial-review.json");
   fs.writeFileSync(adversarialFile, JSON.stringify(adversarial, null, 2) + "\n");
 
+  const stateDir = process.env.EVERCRAFT_EDGE_LAB_STATE_DIR ||
+    path.join(artifactDir, "state");
+
   const persistence = persistEdgeResearchBatch(report, {
-    stateDir: process.env.EVERCRAFT_EDGE_LAB_STATE_DIR ||
-      path.join(artifactDir, "state"),
+    stateDir,
   });
+
+  const frozenCohorts = persistFrozenCohorts(adversarial, report, {
+    state_dir: path.join(stateDir, "forward-paper"),
+    enrolled_at: report.generated_at,
+    transaction_cost_bps: Number(process.env.EDGE_LAB_TRANSACTION_COST_BPS || 5),
+  });
+  const forwardPaperFile = path.join(artifactDir, "forward-paper-cohorts.json");
+  fs.writeFileSync(
+    forwardPaperFile,
+    JSON.stringify({
+      schema: "evercraft.daytrade.forward-paper-enrollment.v1",
+      generated_at: report.generated_at,
+      cohort_count: frozenCohorts.length,
+      cohorts: frozenCohorts,
+      persistent_state_verified: false,
+      persistence_note: "This run writes immutable cohort artifacts. Durable cross-run Yard state remains separately verified before longitudinal scoring is claimed.",
+      live_trade_authority: false,
+    }, null, 2) + "\n"
+  );
 
   const top = (report.evaluations || []).slice(0, 10).map((row) => ({
     signal_key: row.signal_key,
@@ -73,6 +95,7 @@ async function main() {
     research_candidates: report.research_candidate_count || 0,
     candidate_clusters: adversarial.candidate_cluster_count || 0,
     forward_paper_eligible: adversarial.forward_paper_eligible_count || 0,
+    frozen_forward_paper_cohorts: frozenCohorts.length,
     top_screened_families: top,
     exact_public_availability_time_known: false,
     sec_publication_delay_buffer_minutes:
@@ -82,6 +105,7 @@ async function main() {
       observations: observationFile,
       research: reportFile,
       adversarial_review: adversarialFile,
+      forward_paper_cohorts: forwardPaperFile,
       state_batch: persistence.batch_file,
     },
   };

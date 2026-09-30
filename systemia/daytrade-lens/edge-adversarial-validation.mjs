@@ -111,6 +111,10 @@ export function adversarialValidateCandidates(report, {
 } = {}) {
   const evaluations = report?.evaluations || [];
   const measurements = report?.measurements || [];
+  const candidateRows = evaluations.filter((row) => row.status === "RESEARCH_CANDIDATE");
+  if (candidateRows.length > 0 && measurements.length === 0) {
+    throw new Error("edge_adversarial_measurement_evidence_missing");
+  }
   const clusters = clusterCandidateEvaluations(evaluations);
 
   const candidateReviews = evaluations
