@@ -233,7 +233,10 @@ body{display:flex;align-items:center;justify-content:center}
   const phenHex=h=>{const x=String(h||'').replace('#','');const v=parseInt(x.length===3?x.split('').map(c=>c+c).join(''):x,16);return {r:(v>>16)&255,g:(v>>8)&255,b:v&255}};
   const phenColor=(v,enc)=>{if(!enc)return {r:52,g:211,b:196};const pal=enc.palette&&enc.palette.length>1?enc.palette:['#2457ff','#00b7ff','#23e6c8','#f6d743','#ff633a'];const p=clamp((v-enc.min)/(enc.max-enc.min),0,1)*(pal.length-1),i=Math.min(pal.length-2,Math.floor(p)),q=p-i,a=phenHex(pal[i]),b=phenHex(pal[i+1]);return {r:Math.round(a.r+(b.r-a.r)*q),g:Math.round(a.g+(b.g-a.g)*q),b:Math.round(a.b+(b.b-a.b)*q)}};
   const phenLonSpan=b=>b.east>=b.west?b.east-b.west:(180-b.west)+(b.east+180);
-  const phenLonP=(lon,b)=>{let d=lon-b.west;if(d<0)d+=360;return clamp(d/phenLonSpan(b),0,1)};
+  const phenLonP=(lon,b)=>{
+    if(b.east>=b.west) return clamp((lon-b.west)/(b.east-b.west),0,1);
+    let d=lon-b.west;if(d<0)d+=360;return clamp(d/phenLonSpan(b),0,1);
+  };
   const phenProject=(p,l)=>({x:phenLonP(p.lon,l.bounds)*l.width,y:(l.bounds.north-p.lat)/(l.bounds.north-l.bounds.south)*l.height});
   const phenPrepare=l=>{
     if(phenCache.has(l.id))return phenCache.get(l.id);
