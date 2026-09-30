@@ -45,9 +45,11 @@ function atomicJson(file, value) {
 }
 
 export class DurableEntityStore {
-  constructor({ stateDir } = {}) {
+  constructor({ stateDir, eventSink = null } = {}) {
     if (!stateDir) throw new Error('entity_store_state_dir_required');
+    if (eventSink != null && typeof eventSink !== 'function') throw new Error('entity_store_event_sink_invalid');
     this.stateDir = path.resolve(stateDir);
+    this.eventSink = eventSink;
     this.entitiesDir = path.join(this.stateDir, 'entities');
     this.locksDir = path.join(this.stateDir, '.locks');
     this.receiptsFile = path.join(this.stateDir, 'mutation-receipts.jsonl');
@@ -129,6 +131,18 @@ export class DurableEntityStore {
   #appendReceipt(receipt) {
     fs.mkdirSync(this.stateDir, { recursive: true, mode: 0o700 });
     fs.appendFileSync(this.receiptsFile, JSON.stringify(receipt) + '\n', { mode: 0o600 });
+  }
+
+  #emit(appKey, entity, type, data, result) {
+    if (!this.eventSink) return;
+    this.eventSink({
+      appKey,
+      entity,
+      type,
+      data: clone(data),
+      revision: result.state.revision,
+      mutationReceiptHash: result.receipt.receipt_hash
+    });
   }
 
   #mutate(appKey, entity, operation, fn, now = new Date()) {
@@ -217,6 +231,7 @@ export class DurableEntityStore {
       records.push(created);
       return records;
     }, now);
+    this.#emit(appKey, entity, 'create', created, result);
     return { record: clone(created), receipt: result.receipt };
   }
 
@@ -243,6 +258,7 @@ export class DurableEntityStore {
       if (created.some((row) => existing.has(row.id))) throw new Error('entity_id_conflict');
       return records.concat(created);
     }, now);
+    for (const record of created) this.#emit(appKey, entity, 'create', record, result);
     return { records: clone(created), receipt: result.receipt };
   }
 
@@ -265,6 +281,7 @@ export class DurableEntityStore {
       records[index] = updated;
       return records;
     }, now);
+    this.#emit(appKey, entity, 'update', updated, result);
     return { record: clone(updated), receipt: result.receipt };
   }
 
@@ -278,6 +295,7 @@ export class DurableEntityStore {
       [deleted] = records.splice(index, 1);
       return records;
     }, now);
+    this.#emit(appKey, entity, 'delete', deleted, result);
     return { record: clone(deleted), receipt: result.receipt };
   }
 
@@ -291,6 +309,7 @@ export class DurableEntityStore {
       }
       return keep;
     }, now);
+    for (const record of deleted) this.#emit(appKey, entity, 'delete', record, result);
     return { deleted_count: deleted.length, records: clone(deleted), receipt: result.receipt };
   }
 
@@ -311,6 +330,7 @@ export class DurableEntityStore {
         updated.push(next);
         return next;
       }), now);
+    for (const record of updated) this.#emit(appKey, entity, 'update', record, result);
     return { updated_count: updated.length, records: clone(updated), receipt: result.receipt };
   }
 
@@ -342,6 +362,7 @@ export class DurableEntityStore {
         return next;
       }), now);
     if (byId.size) throw new Error('entity_bulk_update_missing_id');
+    for (const record of updated) this.#emit(appKey, entity, 'update', record, result);
     return { records: clone(updated), receipt: result.receipt };
   }
 
@@ -381,6 +402,7 @@ export class DurableEntityStore {
       }
       return records;
     }, now);
+    for (const record of written) this.#emit(appKey, entity, 'upsert', record, result);
     return { records: clone(written), receipt: result.receipt };
   }
 
