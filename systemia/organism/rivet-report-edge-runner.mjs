@@ -24,7 +24,7 @@ const sharedStateRoot=path.resolve(
 );
 const yardState=path.resolve(arg('--yard-state',path.join(sharedStateRoot,'yard')));
 const controllerState=path.resolve(arg('--controller-state',path.join(sharedStateRoot,'rivet-report-controller')));
-const sourceUrl=String(process.env.ALIEV_YARD_SOURCE_URL||'').trim();
+const sourceUrl=String(arg('--source-url',process.env.ALIEV_YARD_SOURCE_URL||'')).trim();
 const requestedHostname=String(process.env.RIVET_YARD_HOSTNAME||'rivet-reports');
 const intervalMs=Math.max(5000,Number(arg('--interval-ms','60000')));
 const leaseTtlMs=Math.max(60000,Number(arg('--lease-ttl-ms','3600000')));
@@ -46,10 +46,35 @@ function emit(payload){
   }));
 }
 
+function ownedAliEvSourceReady(value){
+  if(!value) return {ok:false,reason:'held_waiting_for_owned_aliev_source'};
+  try{
+    const parsed=new URL(value);
+    if(/(^|\.)base44\.app$/i.test(parsed.hostname)){
+      return {ok:false,reason:'owned_aliev_source_must_not_use_base44'};
+    }
+    const loopback=['127.0.0.1','localhost','::1'].includes(parsed.hostname);
+    if(parsed.protocol!=='https:'&&!loopback){
+      return {ok:false,reason:'owned_aliev_source_must_use_https'};
+    }
+    return {ok:true,reason:null};
+  }catch{
+    return {ok:false,reason:'owned_aliev_source_url_invalid'};
+  }
+}
+
 async function reconcile(){
   if(closing||inFlight) return;
   inFlight=true;
   try{
+    const sourceGate=ownedAliEvSourceReady(sourceUrl);
+    if(!sourceGate.ok){
+      if(lastState!==sourceGate.reason){
+        lastState=sourceGate.reason;
+        emit({ok:true,state:lastState,retrying:true});
+      }
+      return;
+    }
     const yard=new YardOperator({stateDir:yardState});
     const controller=new RivetReportEdgeController({
       yard,
