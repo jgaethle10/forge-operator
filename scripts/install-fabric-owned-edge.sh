@@ -127,7 +127,6 @@ User=caddy
 Group=caddy
 EnvironmentFile=/etc/evercraft/public-edge.env
 ExecStart=/usr/bin/caddy run --environ --config /etc/evercraft/Caddyfile --adapter caddyfile
-ExecReload=/usr/bin/caddy reload --config /etc/evercraft/Caddyfile --adapter caddyfile
 Restart=always
 RestartSec=3
 NoNewPrivileges=true
