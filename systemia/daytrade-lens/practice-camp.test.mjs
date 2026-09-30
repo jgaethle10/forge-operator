@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { DEFAULT_RISK, riskGate, runAdversarialDrills, buildReplayCandidates, selectDailyPracticeTrades } from "./practice-camp.mjs";
+import { DEFAULT_RISK, riskGate, runAdversarialDrills, buildReplayCandidates, selectDailyPracticeTrades, performanceMetrics } from "./practice-camp.mjs";
 
 const drills = runAdversarialDrills(DEFAULT_RISK);
 assert.equal(drills.every((d) => d.passed), true);
@@ -44,3 +44,26 @@ console.log(JSON.stringify({
   historical_replay_engine: true,
   live_order_capability_used: false,
 }));
+
+
+const losingSessions = Array.from({ length: 20 }, (_, i) => ({
+  date: "L" + i,
+  trades: [{ simulated_pnl: -0.01, planned_risk_dollars: 0.05 }],
+}));
+const losingPerformance = performanceMetrics(losingSessions);
+assert.equal(losingPerformance.gate.positive_total_expectancy, false);
+assert.equal(losingPerformance.gate.positive_holdout_expectancy, false);
+
+const winningSessions = Array.from({ length: 20 }, (_, i) => ({
+  date: "W" + i,
+  trades: [
+    { simulated_pnl: 0.03, planned_risk_dollars: 0.05 },
+    { simulated_pnl: -0.01, planned_risk_dollars: 0.05 },
+  ],
+}));
+const winningPerformance = performanceMetrics(winningSessions);
+assert.equal(winningPerformance.gate.minimum_trades, true);
+assert.equal(winningPerformance.gate.positive_total_expectancy, true);
+assert.equal(winningPerformance.gate.profit_factor_above_1_05, true);
+assert.equal(winningPerformance.gate.holdout_has_sample, true);
+assert.equal(winningPerformance.gate.positive_holdout_expectancy, true);
