@@ -108,3 +108,58 @@ test('all local field gates plus broker binding reach Systemia admission state',
   assert.equal(s.node_id,'evercraft-field-01');
   assert.equal(s.device_fingerprint,fingerprint);
 });
+
+
+test('private worker skips public edge and needs only outbound broker after field proof',()=>{
+  const files=baseFiles();
+  files.public_edge=null;
+  const status=evaluateBootstrap({
+    files,
+    currentBootHash:bootB,
+    physicalConfirmed:true,
+    brokerUrl:'https://fabric-control.example.test',
+    nodeRole:'private_worker',
+  });
+  assert.equal(status.state,'ready_for_systemia_admission');
+  assert.equal(status.node_role,'private_worker');
+  assert.equal(status.public_edge_required,false);
+  assert.equal(status.inbound_public_port_required,false);
+  assert.equal(status.outbound_only_eligible,true);
+});
+
+test('private worker without broker holds for outbound control but never asks for TLS',()=>{
+  const files=baseFiles();
+  files.public_edge=null;
+  const status=evaluateBootstrap({
+    files,
+    currentBootHash:bootB,
+    physicalConfirmed:true,
+    brokerUrl:'',
+    nodeRole:'private_worker',
+  });
+  assert.equal(status.state,'control_broker_binding_required');
+  assert.equal(status.public_edge_required,false);
+  assert.notEqual(status.next_action,'bind_owned_domain_and_trusted_tls_then_run_--admit-public-edge');
+});
+
+test('public edge role still requires trusted public HTTPS',()=>{
+  const files=baseFiles();
+  files.public_edge=null;
+  const status=evaluateBootstrap({
+    files,
+    currentBootHash:bootB,
+    physicalConfirmed:true,
+    brokerUrl:'https://fabric-control.example.test',
+    nodeRole:'public_edge',
+  });
+  assert.equal(status.state,'public_https_admission_required');
+  assert.equal(status.public_edge_required,true);
+  assert.equal(status.inbound_public_port_required,true);
+});
+
+test('invalid node role is rejected',()=>{
+  assert.throws(
+    ()=>evaluateBootstrap({files:baseFiles(),currentBootHash:bootB,nodeRole:'mystery'}),
+    /node_role_invalid/
+  );
+});
