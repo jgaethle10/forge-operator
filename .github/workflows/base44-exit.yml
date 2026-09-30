@@ -65,6 +65,8 @@ jobs:
         run: npm run proof:base44-evac
       - name: Prove Base44 source dependency scanner
         run: npm run proof:base44-source-scan
+      - name: Prove privacy-safe estate coverage
+        run: npm run proof:base44-estate-coverage
       - name: Prove lossless Base44 entity transfer
         run: npm run proof:base44-entity-transfer
       - name: Prove receipt-gated migration route registry
