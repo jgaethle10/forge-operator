@@ -97,8 +97,8 @@
       "problem": "A property owner, fleet, charging developer, broker, installer or investor needs source-backed EV infrastructure opportunity intelligence for a specific address or market without confusing mapped charger inventory, modeled demand, tariff context, incentives or feasibility.",
       "inputs": "Street address for public site screening. Paid-depth site reports use the same address context. Opportunity packs and territory feeds use an agreed market/territory.",
       "outputs": "Free source-backed address screen with nearby mapped charging context, evidence-state labels and source provenance; paid preliminary/full site reports; qualified opportunity packs; recurring territory opportunity intelligence.",
-      "commercial_state": "sell_now",
-      "machine_state": "payment_ready_human_confirmation",
+      "commercial_state": "verification_required",
+      "machine_state": "migration_hold",
       "pricing": "$299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report; $250 Qualified Opportunity Pack pilot; $2,500/month Territory Opportunity Feed.",
       "offers": [
         {
@@ -128,12 +128,13 @@
       ],
       "human_ui_required": true,
       "confirmation": "Agents may discover AliEV, run the free screen, inspect offers and prepare a paid handoff. The handoff creates only a human review URL. Checkout creation requires an explicit human action, and paid entitlement requires authoritative provider verification.",
-      "public_url": "https://aliev.base44.app/functions/alievAgentGateway?view=docs",
-      "public_url_source": "source_catalog",
+      "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/index.html",
+      "public_url_source": "owned_chum_mirror",
       "payment_authority": "Evercraft Payments / provider-verified payment authority. MCP and Agent Gateway have no silent payment authority.",
-      "invocation_status": "LIVE: AliEV HTTP agent gateway + official-registry MCP. Free address screening and offer discovery are live. $299 Preliminary and $750 Full Site Reports now support direct secure checkout preparation after explicit human confirmation, buyer email, and address; checkout creation is not payment proof and paid state/fulfillment require Evercraft Payments provider verification. $250 opportunity pack and $2,500/month territory feed remain human review/handoff flows.",
+      "invocation_status": "Base44 invocation retired during platform evacuation. Public discovery remains available through owned CHUM/Forge surfaces. Paid or consequential machine execution is disabled until the owned Evercraft edge passes live contract, payment-authority, and fulfillment verification.",
       "live_canary_evidence": null,
-      "catalog_version": "2026-09-26.18"
+      "catalog_version": "2026-09-26.18",
+      "migration_state": "base44_evacuation"
     },
     {
       "public_id": "audit-center-website-audit-machine-v1",
@@ -689,8 +690,8 @@
       "problem": "An organizer or venue wants a bounded paid EventWave placement with verified payment, source review and controlled activation.",
       "inputs": "Choose Event Boost or Venue Pack, provide contact email and the relevant public event or venue identifiers/URL.",
       "outputs": "Verified order state, source-review state, bounded activated placement, placement expiry and activation evidence.",
-      "commercial_state": "sell_now",
-      "machine_state": "payment_ready",
+      "commercial_state": "verification_required",
+      "machine_state": "migration_hold",
       "pricing": "Event Boost $49 one-time; Venue Pack $149 one-time.",
       "offers": [
         {
@@ -706,12 +707,13 @@
       ],
       "human_ui_required": false,
       "confirmation": "Explicit purchase confirmation and verified payment are required. Source review must pass before any public placement activates.",
-      "public_url": "https://event-wave.base44.app/functions/eventWaveAgentGateway?view=docs",
-      "public_url_source": "source_catalog",
+      "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eventwave/index.html",
+      "public_url_source": "owned_chum_mirror",
       "payment_authority": "Evercraft Payments with provider verification",
-      "invocation_status": "LIVE: EventWave HTTP agent gateway + OpenAPI + llms guidance + remote MCP at https://event-wave.base44.app/functions/eventWaveMcp. Agents can search events, inspect $49/$149 promotion offers, prepare checkout only after explicit human confirmation, and verify payment/placement state. Source review still governs public activation.",
+      "invocation_status": "Base44 invocation retired during platform evacuation. Public discovery remains available through owned CHUM/Forge surfaces. Paid or consequential machine execution is disabled until the owned Evercraft edge passes live contract, payment-authority, and fulfillment verification.",
       "live_canary_evidence": null,
-      "catalog_version": "2026-09-23.12"
+      "catalog_version": "2026-09-23.12",
+      "migration_state": "base44_evacuation"
     },
     {
       "public_id": "evercraft-clip-social-video-v1",
@@ -732,17 +734,18 @@
       "inputs": "Authorized source video. Current customer renderer is bounded to 35 MiB. Optional source duration, desired social goal and target platforms improve planning.",
       "outputs": "Up to 3 planned or rendered vertical clips, 8-45 seconds each, with 720x1280 MP4 H.264/AAC output in the authenticated paid workflow. Clip V2 adds clean/bold/documentary/property creative direction, source-grounded caption cues, and distinct Facebook/LinkedIn/Instagram copy. Public agent tools remain discovery and non-executing planning only.",
       "commercial_state": "verification_required",
-      "machine_state": "invocation_ready",
+      "machine_state": "migration_hold",
       "pricing": "Canonical customer price is $4.99 one-time (499 cents USD). An authenticated Clip checkout control plane and provider-verification path are deployed, but the live checkout gateway currently reports payment authority unconfigured, so this must not be represented as sell-now yet.",
       "offers": [],
       "human_ui_required": true,
       "confirmation": "Public discovery and planning create no payment obligation. Customer checkout requires an authenticated human and explicit $4.99 confirmation; rendering remains locked until Stripe reports paid + complete and exact amount, currency, and order metadata all verify.",
-      "public_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
-      "public_url_source": "source_catalog",
+      "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-clip/index.html",
+      "public_url_source": "owned_chum_mirror",
       "payment_authority": "Evercraft Clip clipCheckoutGateway + Stripe provider verification. Control plane is deployed and fail-closed; live gateway observed 2026-09-28 with checkout_configured=false, so payment creation remains unavailable until server-side authority is provisioned.",
-      "invocation_status": "LIVE: Clip Production Engine V2, Customer Clip Studio, read-only Creative Director planning, and an authenticated checkout/provider-verification control plane are deployed. The live checkout offer reports 499 cents USD, explicit confirmation required, checkout creation not payment proof, and checkout_configured=false. Machine checkout is not enabled. ForensiScope remains the overflow path for oversized or full-timeline media.",
+      "invocation_status": "Base44 invocation retired during platform evacuation. Public discovery remains available through owned CHUM/Forge surfaces. Paid or consequential machine execution is disabled until the owned Evercraft edge passes live contract, payment-authority, and fulfillment verification.",
       "live_canary_evidence": null,
-      "catalog_version": "2026-09-28.1"
+      "catalog_version": "2026-09-28.1",
+      "migration_state": "base44_evacuation"
     },
     {
       "public_id": "evercraft-network-resilience-membership-v1",
@@ -859,8 +862,8 @@
       "problem": "A buyer has one bounded agriculture, land, water, production or resilience question and needs a sourced evidence-first investigation.",
       "inputs": "Defined question, buyer email and selected fixed offer. Geography, organization and use case are optional scope context.",
       "outputs": "A bounded evidence-first mission packet with findings, source references, uncertainty/evidence-needed items, challenge notes and human-review items.",
-      "commercial_state": "sell_now",
-      "machine_state": "payment_ready",
+      "commercial_state": "verification_required",
+      "machine_state": "migration_hold",
       "pricing": "Signal Brief $250 one-time; Proof Sprint $2,500 one-time. Other intake categories are not auto-quotable.",
       "offers": [
         {
@@ -876,12 +879,13 @@
       ],
       "human_ui_required": false,
       "confirmation": "Explicit buyer confirmation is required before checkout. Verified payment queues a human-controlled mission; consequential claims or actions remain review-gated.",
-      "public_url": "https://faie.base44.app/functions/faieAgentGateway?view=docs",
-      "public_url_source": "source_catalog",
+      "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html",
+      "public_url_source": "owned_chum_mirror",
       "payment_authority": "FAIE / Stripe, provider-verified",
-      "invocation_status": "LIVE: FAIE HTTP agent gateway + OpenAPI + llms guidance + remote MCP at https://faie.base44.app/functions/faieMcp. Agents can inspect the fixed $250/$2,500 offers, prepare checkout only after explicit human confirmation, and verify payment/mission queue state. Paid work remains human-review controlled.",
+      "invocation_status": "Base44 invocation retired during platform evacuation. Public discovery remains available through owned CHUM/Forge surfaces. Paid or consequential machine execution is disabled until the owned Evercraft edge passes live contract, payment-authority, and fulfillment verification.",
       "live_canary_evidence": null,
-      "catalog_version": "2026-09-23.14"
+      "catalog_version": "2026-09-23.14",
+      "migration_state": "base44_evacuation"
     },
     {
       "public_id": "findmypart-paid-hunt-v1",
@@ -974,17 +978,18 @@
       "inputs": "Authorized evidence set, case context and requested review scope.",
       "outputs": "Source-lineage-preserving evidence analysis with custody events, timestamped findings and integrity review.",
       "commercial_state": "verification_required",
-      "machine_state": "discovery_only",
+      "machine_state": "migration_hold",
       "pricing": "Published duration tiers are $15 up to 5 minutes, $35 up to 30 minutes, $75 up to 2 hours, $149 up to 6 hours and $249 up to 12 hours. Central machine checkout remains verification-gated.",
       "offers": [],
       "human_ui_required": false,
       "confirmation": "Evidence authorization and payment confirmation are required. Secure machine intake remains disabled until current security tests pass.",
-      "public_url": "https://evercraft-forensiscope.base44.app/video-too-large-for-ai",
-      "public_url_source": "source_catalog",
+      "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/index.html",
+      "public_url_source": "owned_chum_mirror",
       "payment_authority": "Evercraft Payments; central machine checkout remains verification-gated.",
-      "invocation_status": "LIVE human-confirmed web handoff for AI media overflow and evidence review; secure machine intake and central checkout remain verification-gated.",
+      "invocation_status": "Base44 invocation retired during platform evacuation. Public discovery remains available through owned CHUM/Forge surfaces. Paid or consequential machine execution is disabled until the owned Evercraft edge passes live contract, payment-authority, and fulfillment verification.",
       "live_canary_evidence": null,
-      "catalog_version": "2026-09-24.1"
+      "catalog_version": "2026-09-24.1",
+      "migration_state": "base44_evacuation"
     },
     {
       "public_id": "foundry-app-escape-audit-v1",
@@ -1359,8 +1364,8 @@
       "problem": "A property owner, fleet, charging developer, broker, installer or investor needs address-specific EV infrastructure diligence that keeps public facts, observed evidence, modeled assumptions and unresolved engineering questions separate.",
       "inputs": "Street address plus the buyer decision question. Paid site reports require the address and buyer email; deeper diligence may use authorized site-specific inputs.",
       "outputs": "Address-specific RIVET site opportunity report with charging competition, demand/traffic evidence where available, utility/tariff and incentive context, site-fit signals, modeled economics boundaries and next diligence.",
-      "commercial_state": "sell_now",
-      "machine_state": "payment_ready_human_confirmation",
+      "commercial_state": "verification_required",
+      "machine_state": "migration_hold",
       "pricing": "$299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report.",
       "offers": [
         {
@@ -1378,12 +1383,13 @@
       ],
       "human_ui_required": true,
       "confirmation": "Agents may discover RIVET and inspect current report options. Secure checkout preparation requires explicit human payment confirmation, buyer email and address. Checkout creation is not payment proof; paid state and fulfillment require authoritative provider verification.",
-      "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
-      "public_url_source": "source_catalog",
+      "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/index.html",
+      "public_url_source": "owned_chum_mirror",
       "payment_authority": "Evercraft Payments / provider-verified payment authority. Discovery and agent routing have no silent payment authority.",
-      "invocation_status": "LIVE: RIVET is a first-class Evercraft Machine Commerce identity for the $299 Preliminary and $750 Full Site Opportunity Reports. The underlying address-intelligence engine remains internal to the commercial handoff. Checkout preparation is human-confirmed and paid state requires provider verification.",
+      "invocation_status": "Base44 invocation retired during platform evacuation. Public discovery remains available through owned CHUM/Forge surfaces. Paid or consequential machine execution is disabled until the owned Evercraft edge passes live contract, payment-authority, and fulfillment verification.",
       "live_canary_evidence": null,
-      "catalog_version": "2026-09-26.2"
+      "catalog_version": "2026-09-26.2",
+      "migration_state": "base44_evacuation"
     },
     {
       "public_id": "roasted-text-pressure-test-machine-v1",
