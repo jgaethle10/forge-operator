@@ -1,65 +1,125 @@
-# Systemia Notification Fabric
+# Evercraft Relay / Systemia Notification Fabric
 
-Systemia Notification Fabric is Evercraft's shared notification delivery plane. Products do not each invent their own push stack. They emit either a normalized notification intent or an operational Signal Fabric event and this service handles targeting, consent, deduplication, delivery, dead-endpoint cleanup, and receipts.
+Evercraft Relay is the shared delivery control plane for the Evercraft ecosystem. Products emit one normalized intent. Relay decides how to reach the right principal with the least unnecessary interruption while preserving durable continuity and evidence.
 
-## Architecture
+A product should never need to know whether the human is currently connected through Evercraft realtime, offline behind Web Push, inside quiet hours, over an attention budget, or awaiting acknowledgement. Those decisions belong here.
 
-`Product event -> Notification Intent -> policy/consent/targeting -> transport -> receipt ledger`
+## Routing model
 
-`Operational event -> Signal Fabric -> severity/dedupe/budget -> Notification Fabric -> operator devices`
+```text
+Product / Systemia event
+        |
+        v
+Normalized intent
+        |
+        +--> consent + targeting + dedupe
+        |
+        +--> durable inbox
+        |
+        +--> owned realtime presence
+        |
+        +--> quiet-hours + attention policy
+        |
+        +--> Web Push fallback / critical fanout
+        |
+        v
+hash-chained receipts -> seen -> acknowledged
+```
 
-The transport boundary is intentionally replaceable. The first transport is standards-based Web Push using VAPID and RFC 8291 payload encryption. Evercraft owns routing, subscriptions, preferences, policy, payloads, receipts, and event history. Browser vendors still operate the last-mile push gateway required by the Web Push platform. Native APNs and Android transports can be added behind the same adapter contract without changing product code.
+Operational events first pass through Systemia Signal Fabric, which determines severity, evidence state, dedupe, recovery coalescing, and critical notification budgets. Relay then handles human delivery.
 
-## Security defaults
+### Core policy
 
-- Server-to-server notification ingestion is closed unless `EVERCRAFT_NOTIFICATION_INGEST_TOKEN` is configured.
-- Device enrollment is closed unless `EVERCRAFT_NOTIFICATION_ENROLL_TOKEN` is configured.
-- Cross-origin browser access is denied unless the exact origin is listed in `EVERCRAFT_NOTIFICATION_ALLOWED_ORIGINS`.
-- Push endpoints must use HTTPS.
-- Subscription files are written with owner-only filesystem permissions where supported.
-- Marketing notifications require explicit opt-in and are disabled by default on every subscription.
-- Dead Web Push endpoints (`404`/`410`) are disabled automatically.
-- Transient network, `429`, and `5xx` failures receive bounded retries with short capped backoff.
-- Product events carry a dedupe key/window so retries do not become notification storms.
-- Operational critical alerts inherit Signal Fabric evidence, recovery, dedupe, and hourly budget rules.
+- Normal traffic prefers the least disruptive route.
+- If a principal is actively connected to Relay, ordinary OS push is suppressed and the notification arrives through realtime plus the durable inbox.
+- If the principal is offline, Web Push becomes the fallback.
+- Quiet hours keep noncritical traffic in the inbox.
+- Per-principal attention budgets prevent ordinary notification storms.
+- Safety and critical traffic bypass quiet hours and attention budgets and deliberately fan out across available channels.
+- A push gateway acceptance is recorded only as gateway acceptance. It is never mislabeled as human delivery.
+- Human `seen` and `acknowledged` are separate receipts.
+
+## Trust model
+
+Relay receipts form a chained ledger. Set `EVERCRAFT_NOTIFICATION_RECEIPT_SECRET` to use HMAC-SHA256 receipt hashes. This makes unauthorized receipt rewriting detectable as long as the secret remains outside the state store. Without the secret, Relay falls back to an unkeyed SHA-256 chain for corruption detection.
+
+Browser-facing access uses short-lived scoped Relay sessions rather than the global enrollment or ingest secret. Session claims bind a principal to explicit permissions, audiences, products, issuance time, expiry, and a unique token ID.
+
+The global ingest token remains server-only.
+
+## Transports
+
+### Owned realtime
+
+Relay exposes an authenticated Server-Sent Events stream at `/api/notifications/stream`. It is the preferred delivery route while an Evercraft surface is open. Realtime presence can be matched by principal, audience, and product.
+
+### Durable inbox
+
+Every targeted principal receives a durable inbox entry before transient delivery paths are attempted. This keeps continuity even when a browser, device, or external push gateway is unavailable.
+
+### Web Push
+
+The first offline transport is standards-based Web Push using VAPID and RFC 8291 payload encryption. Web Push endpoints must use HTTPS. Dead endpoints returning `404` or `410` are disabled automatically. Transient network, `429`, and `5xx` failures receive bounded retries.
+
+Browser vendors still operate the final Web Push gateway required by the platform. Evercraft owns the event model, routing, policy, targeting, consent, retries, inbox, realtime transport, receipts, and audit state.
+
+Native APNs and Android delivery remain adapter targets behind the same intent contract. They are not separate notification systems.
 
 ## Environment
 
-Generate a VAPID key pair with:
+Generate VAPID keys:
 
 ```bash
 node systemia/notification-fabric/generate-vapid-keys.mjs
 ```
 
-Configure the runtime:
+Runtime configuration:
 
 ```text
 EVERCRAFT_VAPID_PUBLIC_KEY=...
 EVERCRAFT_VAPID_PRIVATE_KEY=...
 EVERCRAFT_VAPID_SUBJECT=mailto:ops@your-domain.example
+
 EVERCRAFT_NOTIFICATION_INGEST_TOKEN=...
 EVERCRAFT_NOTIFICATION_ENROLL_TOKEN=...
+EVERCRAFT_NOTIFICATION_SESSION_SECRET=<32+ byte secret>
+EVERCRAFT_NOTIFICATION_RECEIPT_SECRET=<strong independent secret>
+
 EVERCRAFT_NOTIFICATION_ALLOWED_ORIGINS=https://app1.example,https://app2.example
 EVERCRAFT_NOTIFICATION_DATA_DIR=/durable/private/path/notifications
 EVERCRAFT_NOTIFICATION_PUSH_ATTEMPTS=3
 ```
 
-Never put the private VAPID key or either bearer token in browser code.
+Never expose the VAPID private key, ingest token, enrollment token, session secret, or receipt secret to browser code.
 
 ## API
 
-- `GET /api/notifications/health` returns transport readiness without secrets.
-- `GET /api/notifications/config` returns the public VAPID key for browser subscription.
-- `POST /api/notifications/subscriptions` registers or refreshes a browser subscription. Enrollment bearer token required.
-- `DELETE /api/notifications/subscriptions/:id` removes a subscription. Enrollment bearer token required.
-- `POST /api/notifications/intents` delivers product/user notifications. Ingest bearer token required.
-- `POST /api/notifications/signals` sends an operational event through Signal Fabric and only pages when policy permits. Ingest bearer token required.
+Public configuration and health:
+
+- `GET /api/notifications/health`
+- `GET /api/notifications/config`
+
+Server-to-server, ingest token required:
+
+- `POST /api/notifications/intents`
+- `POST /api/notifications/signals`
+- `POST /api/notifications/session-tokens`
+- `GET /api/notifications/metrics`
+
+Browser/device session:
+
+- `POST /api/notifications/subscriptions` using a scoped `subscribe` session or the legacy enrollment token
+- `DELETE /api/notifications/subscriptions/:id`
+- `GET /api/notifications/stream` with `stream` permission
+- `GET /api/notifications/inbox` with `inbox` permission
+- `POST /api/notifications/inbox/:id/seen`
+- `POST /api/notifications/inbox/:id/ack` with `ack` permission
 
 ## Intent contract
 
 ```json
 {
-  "schema": "systemia.notification.intent.v1",
+  "schema": "systemia.notification.intent.v2",
   "product": "rivet",
   "purpose": "transactional",
   "priority": "normal",
@@ -74,19 +134,39 @@ Never put the private VAPID key or either bearer token in browser code.
 
 Purposes are `transactional`, `operational`, `safety`, `reminder`, and `marketing`. Marketing requires `consent_basis: "explicit_opt_in"` and an opted-in subscription.
 
+Machine-readable contracts live in `intent.schema.json` and `receipt.schema.json`.
+
 ## Browser adoption
 
-Each Evercraft web product should serve `evercraft-push-sw.js` from its own origin and call the shared browser registration helper only after an authenticated user asks for notifications. Do not ship a global enrollment token to the browser. Public apps should proxy registration through their authenticated backend so the global enrollment secret never reaches browser code. The browser helper accepts an optional bearer only for deployments that already issue a safe scoped credential.
+Each Evercraft web product serves `public/evercraft-push-sw.js` from its own origin and uses `browser-client.ts`.
 
-The shared helper lives at `systemia/notification-fabric/browser-client.ts`.
+The product backend authenticates its user, then uses `client.mjs` to mint a short-lived Relay session:
 
-The default store is a durable single-node filesystem adapter intended for the current Forge runtime. The store contract is replaceable. Before running multiple notification service replicas, move subscription, dedupe, and receipt state to a shared transactional store so replicas cannot race.
+```js
+const session = await relay.issueSession({
+  principal_id: user.id,
+  permissions: ['subscribe', 'stream', 'inbox', 'ack'],
+  audiences: ['company-ops'],
+  products: ['rivet']
+});
+```
 
-## Next adapters
-
-The fabric is ready for APNs, native Android/FCM, SMS fallback, email fallback, in-app inbox, and digest workers. Those are transports, not separate notification systems. Product code should continue to emit the same intent contract.
-
+The browser can then register Web Push, connect to the owned realtime stream, read its inbox, and acknowledge notifications without ever receiving a global infrastructure secret.
 
 ## Server-side adoption
 
-Node services can use `systemia/notification-fabric/client.mjs`. Configure `EVERCRAFT_NOTIFICATION_BASE_URL` and the server-only ingest token, then call `client.notify(intent)` for product/user notifications or `client.signal(signal)` for operational events. Product code never needs to know the Web Push protocol or transport details.
+Node services use `systemia/notification-fabric/client.mjs`:
+
+- `client.notify(intent)`
+- `client.signal(signal)`
+- `client.issueSession(claims)`
+
+Products continue to emit the same intent contract as transports evolve.
+
+## Persistence boundary
+
+The default store is a durable single-node adapter suitable for the current Forge runtime. Before Relay runs as multiple active replicas, subscription state, inboxes, attention budgets, dedupe state, and receipt sequencing must move to a shared transactional store so replicas cannot race. The store interface is intentionally replaceable.
+
+## Verification
+
+Relay has a dedicated GitHub Actions gate in `.github/workflows/notification-fabric.yml`. The workflow runs the focused notification suite and syntax-checks all runtime modules whenever Relay or Signal Fabric changes.
