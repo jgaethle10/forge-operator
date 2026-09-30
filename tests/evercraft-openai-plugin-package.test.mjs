@@ -102,6 +102,7 @@ test('portable and compatibility manifests agree on release identity',()=>{
   assert.equal(compatibility.version,portable.version);
   assert.equal(compatibility.name,portable.name);
   assert.equal(compatibility.interface?.category,portable.extensions?.['com.openai']?.interface?.category);
+  assert.equal(portable.extensions?.['com.openai']?.interface?.category,'Business & Operations');
   assert.equal(compatibility.interface?.websiteURL,portable.homepage);
 });
 
