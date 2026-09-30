@@ -2,13 +2,13 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.jgaethle10/findmypart",
   "title": "FindMyPart",
-  "description": "Hard-to-source part discovery with replacement, salvage and fabrication paths.",
+  "description": "Owned Evercraft Fabric discovery and routing entry for FindMyPart. Product-specific execution is migration-gated until Yard/Evercraft Compute verification exists.",
   "version": "1.0.2",
-  "websiteUrl": "https://findmypart.base44.app/",
+  "websiteUrl": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/findmypart",
   "remotes": [
     {
       "type": "streamable-http",
-      "url": "https://findmypart.base44.app/functions/findMyPartMcp"
+      "url": "https://fabric.systemiacommandcenters.com/mcp"
     }
   ]
 }
