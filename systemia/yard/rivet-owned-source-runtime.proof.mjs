@@ -78,7 +78,7 @@ const yard = new YardOperator({ stateDir: yardState });
 try {
   const deployment = await yard.deployRelease({
     deploymentId: 'rivet-owned-source-proof',
-    releaseRef: 'owned-source-proof-release',
+    releaseRef: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
     workloadClass: 'systemia.rivet-report-runtime.v1',
     capacityEndpoint: node.endpoint,
     input: { state_root: path.join(computeRoot, 'rivet-state') },
