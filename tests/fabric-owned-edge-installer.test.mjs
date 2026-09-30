@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 
 const script=fs.readFileSync(new URL('../scripts/install-fabric-owned-edge.sh',import.meta.url),'utf8');
+const updater=fs.readFileSync(new URL('../scripts/update-fabric-owned-edge.sh',import.meta.url),'utf8');
+const updaterInstaller=fs.readFileSync(new URL('../scripts/install-fabric-self-update.sh',import.meta.url),'utf8');
 
 test('owned edge installer keeps Fabric private behind the TLS proxy',()=>{
   assert.match(script,/--host 127\.0\.0\.1 --port \$FABRIC_PORT/);
@@ -29,4 +31,29 @@ test('OpenAI verification token helper is secret-prompted and validated',()=>{
   assert.match(script,/read -r -s -p "Paste OpenAI domain verification token/);
   assert.match(script,/\[A-Za-z0-9_-\]\{16,512\}/);
   assert.match(script,/chmod 0600/);
+});
+
+
+test('Fabric self updater accepts only the authorized Forge repository and fast-forward history',()=>{
+  assert.match(updater,/jgaethle10\/forge-operator/);
+  assert.match(updater,/status --porcelain/);
+  assert.match(updater,/merge-base --is-ancestor/);
+  assert.match(updater,/merge --ff-only/);
+  assert.doesNotMatch(updater,/git reset --hard origin\/main/);
+});
+
+test('Fabric self updater proves the release before restart and rolls back failed health',()=>{
+  assert.match(updater,/npm run test:fabric-directory/);
+  assert.match(updater,/npm run test:fabric-local/);
+  assert.match(updater,/npm run proof:specialist-handoff-yard/);
+  assert.match(updater,/systemctl restart "\$SERVICE"/);
+  assert.match(updater,/rollback "health_contract_failed"/);
+  assert.match(updater,/capability_count/);
+});
+
+test('Fabric self update timer creates no inbound admin surface and runs on a bounded cadence',()=>{
+  assert.match(updaterInstaller,/OnUnitActiveSec=\$CADENCE/);
+  assert.match(updaterInstaller,/evercraft-fabric-update\.service/);
+  assert.match(updaterInstaller,/NoNewPrivileges=true/);
+  assert.doesNotMatch(updaterInstaller,/ListenStream|ssh|sshd|0\.0\.0\.0/);
 });
