@@ -7,6 +7,9 @@ on:
       - "systemia/media-studio/studio-world.test.ts"
       - "systemia/media-studio/cli.ts"
       - "systemia/media-studio/visual-stage*.ts"
+      - "systemia/media-studio/phenomenon-renderer*.ts"
+      - "systemia/worldstate/phenomenon-bridge*"
+      - "systemia/worldstate/subscriptions.json"
       - "systemia/media-studio/render-worker/**"
       - "systemia/media-studio/distributed-render*"
       - ".github/workflows/fallen-studio-world.yml"
@@ -17,6 +20,9 @@ on:
       - "systemia/media-studio/studio-world.test.ts"
       - "systemia/media-studio/cli.ts"
       - "systemia/media-studio/visual-stage*.ts"
+      - "systemia/media-studio/phenomenon-renderer*.ts"
+      - "systemia/worldstate/phenomenon-bridge*"
+      - "systemia/worldstate/subscriptions.json"
       - "systemia/media-studio/render-worker/**"
       - "systemia/media-studio/distributed-render*"
       - ".github/workflows/fallen-studio-world.yml"
@@ -40,6 +46,61 @@ jobs:
 
       - name: Studio world tests
         run: node --import tsx --test systemia/media-studio/studio-world.test.ts
+
+      - name: Phenomenon canvas contracts
+        run: |
+          node --import tsx --test systemia/media-studio/phenomenon-renderer.test.ts
+          npm run proof:worldstate-phenomenon
+
+      - name: Compile bounded phenomenon canary
+        run: |
+          cat >/tmp/phenomenon-ci.json <<'JSON'
+          {
+            "id":"phenomenon-ci-flow",
+            "title":"FLOW CANARY",
+            "subtitle":"Deterministic evidence-bound movement",
+            "durationSec":4,
+            "aspectRatio":"9:16",
+            "geography":{
+              "bounds":{"north":48.5,"south":46.9,"west":-123.5,"east":-121.8},
+              "labels":[{"label":"SEATTLE","lat":47.61,"lon":-122.33},{"label":"TACOMA","lat":47.25,"lon":-122.44}]
+            },
+            "encoding":{
+              "motionLabel":"flow direction",
+              "color":{"label":"test scalar","min":0,"max":10,"unit":""},
+              "brightness":{"label":"test magnitude","min":0,"max":5,"unit":""}
+            },
+            "field":{
+              "kind":"flow",
+              "evidenceState":"synthetic_visualization",
+              "sourceRefs":["ci:phenomenon-flow"],
+              "streamlines":[
+                {
+                  "id":"ci-stream",
+                  "points":[
+                    {"lat":48.1,"lon":-122.9,"colorValue":2,"magnitude":1},
+                    {"lat":47.6,"lon":-122.6,"colorValue":5,"magnitude":3},
+                    {"lat":47.2,"lon":-122.5,"colorValue":8,"magnitude":4}
+                  ],
+                  "sourceRefs":["ci:phenomenon-flow"]
+                }
+              ]
+            },
+            "source":{"label":"Synthetic CI fixture","refs":["ci:phenomenon-flow"]},
+            "callout":"One phenomenon, one visual grammar."
+          }
+          JSON
+          npm run media:studio -- phenomenon /tmp/phenomenon-ci.json /tmp/phenomenon-ci.html /tmp/phenomenon-ci.receipt.json
+          node - <<'NODE'
+          const fs=require('fs');
+          const html=fs.readFileSync('/tmp/phenomenon-ci.html','utf8');
+          const receipt=JSON.parse(fs.readFileSync('/tmp/phenomenon-ci.receipt.json','utf8'));
+          if(!html.includes('__evercraftRenderFrame')) throw new Error('frame_hook_missing');
+          if(!html.includes('BRIGHTNESS =')) throw new Error('semantic_legend_missing');
+          if(receipt.evidence_state!=='synthetic_visualization') throw new Error('evidence_state_laundered');
+          if(receipt.publication_authority!==false) throw new Error('publication_authority_leak');
+          console.log(JSON.stringify({digest:receipt.digest,streams:receipt.stream_count,samples:receipt.sample_count}));
+          NODE
 
       - name: Ensure FFmpeg
         run: |
