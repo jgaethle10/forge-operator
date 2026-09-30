@@ -86,6 +86,7 @@ function measuredReturn(bars, observedAt, lagBars) {
 export function measureRockiesHypotheses(hypotheses, barsBySymbol, {
   benchmark = "SPY",
   lagBars = FIVE_MINUTE_LAG_BARS,
+  controlOffsetsDays = [14, 21],
 } = {}) {
   const benchmarkBars = filterCoreSessionBars(barsBySymbol?.[benchmark] || []);
   const rows = [];
@@ -105,6 +106,34 @@ export function measureRockiesHypotheses(hypotheses, barsBySymbol, {
         if (!instrumentMove.no_pre_observation_price_used || !benchmarkMove.no_pre_observation_price_used) {
           throw new Error("edge_lab_lookahead_violation");
         }
+
+        const eventExcess =
+          instrumentMove.forward_return - benchmarkMove.forward_return;
+        const matchedControls = [];
+        for (const offsetDays of controlOffsetsDays) {
+          const controlAt = new Date(
+            new Date(hypothesis.observed_at).getTime() -
+              Number(offsetDays) * 86400000
+          ).toISOString();
+          const controlInstrument = measuredReturn(instrumentBars, controlAt, bars);
+          const controlBenchmark = measuredReturn(benchmarkBars, controlAt, bars);
+          if (!controlInstrument || !controlBenchmark) continue;
+          matchedControls.push({
+            offset_days: Number(offsetDays),
+            control_at: controlAt,
+            instrument_start_time: controlInstrument.start_time,
+            instrument_end_time: controlInstrument.end_time,
+            excess_return:
+              controlInstrument.forward_return - controlBenchmark.forward_return,
+          });
+        }
+        const matchedControlExcess = matchedControls.length
+          ? matchedControls.reduce((sum, row) => sum + row.excess_return, 0) /
+            matchedControls.length
+          : null;
+        const placeboAdjustedExcess = Number.isFinite(matchedControlExcess)
+          ? eventExcess - matchedControlExcess
+          : null;
 
         rows.push({
           schema: "evercraft.daytrade.edge-measurement.v1",
@@ -134,7 +163,11 @@ export function measureRockiesHypotheses(hypotheses, barsBySymbol, {
           lag_bars: bars,
           forward_return: instrumentMove.forward_return,
           benchmark_return: benchmarkMove.forward_return,
-          excess_return: instrumentMove.forward_return - benchmarkMove.forward_return,
+          excess_return: eventExcess,
+          matched_control_count: matchedControls.length,
+          matched_control_offsets_days: matchedControls.map((row) => row.offset_days),
+          matched_control_excess_return: matchedControlExcess,
+          placebo_adjusted_excess_return: placeboAdjustedExcess,
           instrument_start_time: instrumentMove.start_time,
           instrument_end_time: instrumentMove.end_time,
           benchmark_start_time: benchmarkMove.start_time,
@@ -151,6 +184,42 @@ export function measureRockiesHypotheses(hypotheses, barsBySymbol, {
   }
 
   return rows;
+}
+
+function effectStats(values, costBps = 0) {
+  const effects = (values || [])
+    .map(Number)
+    .filter(Number.isFinite);
+  const cost = Number(costBps || 0) / 10000;
+  const net = effects.map((value) =>
+    value - Math.sign(value || 1) * cost
+  );
+  const avg = net.length
+    ? net.reduce((a,b) => a + b, 0) / net.length
+    : 0;
+  const sign = avg > 0 ? 1 : avg < 0 ? -1 : 0;
+  const aligned = net.filter((value) =>
+    sign === 0 ? value === 0 : Math.sign(value) === sign
+  ).length;
+  const variance = net.length > 1
+    ? net.reduce((sum, value) => sum + (value - avg) ** 2, 0) /
+      (net.length - 1)
+    : 0;
+  const standardError = net.length
+    ? Math.sqrt(variance / net.length)
+    : Infinity;
+  const tLike =
+    Number.isFinite(standardError) && standardError > 0
+      ? avg / standardError
+      : 0;
+
+  return {
+    samples: net.length,
+    mean_effect_net: avg,
+    directional_hit_rate: net.length ? aligned / net.length : 0,
+    sign,
+    t_like: tLike,
+  };
 }
 
 function erf(x) {
@@ -217,17 +286,44 @@ export function evaluateEdgeFamilies(measurements, {
     const observationIds = uniq(rows.map((row) => row.source_observation_id));
     const originEntities = uniq(rows.map((row) => row.origin_entity_ref));
     const authorityClasses = uniq(rows.map((row) => row.source_authority_class));
-    const developmentP = approxTwoSidedNormalP(evaluation.development.t_like);
 
     const splitAt = Math.max(1, Math.floor(rows.length * development_fraction));
+    const developmentRows = rows.slice(0, splitAt);
     const holdoutRows = rows.slice(splitAt);
+    const placeboDevelopment = effectStats(
+      developmentRows.map((row) => row.placebo_adjusted_excess_return),
+      transaction_cost_bps
+    );
+    const placeboHoldout = effectStats(
+      holdoutRows.map((row) => row.placebo_adjusted_excess_return),
+      transaction_cost_bps
+    );
+    const placeboOverall = effectStats(
+      rows.map((row) => row.placebo_adjusted_excess_return),
+      transaction_cost_bps
+    );
+    const placeboCoverage =
+      rows.length > 0 ? placeboOverall.samples / rows.length : 0;
+    const placeboHoldoutCoverage =
+      holdoutRows.length > 0
+        ? placeboHoldout.samples / holdoutRows.length
+        : 0;
+    const placeboDevelopmentP =
+      approxTwoSidedNormalP(placeboDevelopment.t_like);
+    const rawDevelopmentP =
+      approxTwoSidedNormalP(evaluation.development.t_like);
     const holdoutOrigins = uniq(holdoutRows.map((row) => row.origin_entity_ref));
     const byOrigin = new Map();
     for (const row of holdoutRows) {
       if (!row.origin_entity_ref) continue;
       if (!byOrigin.has(row.origin_entity_ref)) byOrigin.set(row.origin_entity_ref, []);
-      const excess = Number(row.forward_return || 0) - Number(row.benchmark_return || 0);
-      const net = excess - Math.sign(excess || 1) * (transaction_cost_bps / 10000);
+      const rawExcess =
+        Number(row.forward_return || 0) - Number(row.benchmark_return || 0);
+      const effect = Number.isFinite(Number(row.placebo_adjusted_excess_return))
+        ? Number(row.placebo_adjusted_excess_return)
+        : rawExcess;
+      const net =
+        effect - Math.sign(effect || 1) * (transaction_cost_bps / 10000);
       byOrigin.get(row.origin_entity_ref).push(net);
     }
     const originMeans = [...byOrigin.values()].map((values) =>
@@ -246,7 +342,7 @@ export function evaluateEdgeFamilies(measurements, {
       originEntities.length >= minimum_authoritative_origins &&
       holdoutOrigins.length >= minimum_holdout_origins &&
       originBalancedSign !== 0 &&
-      originBalancedSign === evaluation.holdout.sign;
+      originBalancedSign === placeboHoldout.sign;
 
     return {
       schema: "evercraft.daytrade.edge-family-evaluation.v1",
@@ -264,15 +360,33 @@ export function evaluateEdgeFamilies(measurements, {
       origin_entities: originEntities,
       source_authority_classes: authorityClasses,
       origin_balanced_holdout_mean_excess_return_net: originBalancedHoldoutMean,
-      development_p_approx: developmentP,
+      raw_development_p_approx: rawDevelopmentP,
+      development_p_approx: placeboDevelopmentP,
       development_q_bh: 1,
       base_evaluation: evaluation,
+      matched_placebo: {
+        control_offsets_days: [14, 21],
+        coverage: placeboCoverage,
+        holdout_coverage: placeboHoldoutCoverage,
+        development: placeboDevelopment,
+        holdout: placeboHoldout,
+        overall: placeboOverall,
+      },
       candidate_checks: {
         ...evaluation.checks,
         minimum_source_family_diversity: sourceFamilies.length >= minimum_source_families,
         authoritative_multi_origin_diversity: authoritativeMultiOrigin,
         evidence_diversity_pass:
           sourceFamilies.length >= minimum_source_families || authoritativeMultiOrigin,
+        matched_placebo_coverage:
+          placeboCoverage >= 0.90 && placeboHoldoutCoverage >= 0.90,
+        placebo_train_holdout_sign_agreement:
+          placeboDevelopment.sign !== 0 &&
+          placeboDevelopment.sign === placeboHoldout.sign,
+        placebo_holdout_effect_survives_costs:
+          Math.abs(placeboHoldout.mean_effect_net) >= 0.0008,
+        placebo_holdout_directional_hit_rate_above_half:
+          placeboHoldout.directional_hit_rate > 0.5,
         false_discovery_rate_pass: false,
       },
       status: "NOT_VALIDATED",
@@ -290,6 +404,10 @@ export function evaluateEdgeFamilies(measurements, {
     const passed =
       row.base_evaluation.status === "RESEARCH_CANDIDATE" &&
       row.candidate_checks.evidence_diversity_pass === true &&
+      row.candidate_checks.matched_placebo_coverage === true &&
+      row.candidate_checks.placebo_train_holdout_sign_agreement === true &&
+      row.candidate_checks.placebo_holdout_effect_survives_costs === true &&
+      row.candidate_checks.placebo_holdout_directional_hit_rate_above_half === true &&
       row.candidate_checks.false_discovery_rate_pass === true;
 
     row.status = passed ? "RESEARCH_CANDIDATE" : "NOT_VALIDATED";
@@ -378,7 +496,7 @@ function dateWindow(observations) {
   if (!times.length) throw new Error("edge_lab_observation_timestamps_missing");
   const min = new Date(Math.min(...times));
   const max = new Date(Math.max(...times));
-  min.setUTCDate(min.getUTCDate() - 1);
+  min.setUTCDate(min.getUTCDate() - 28);
   max.setUTCDate(max.getUTCDate() + 14);
   return { start: min.toISOString(), end: max.toISOString() };
 }
