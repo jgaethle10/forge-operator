@@ -133,6 +133,29 @@ assert.equal(fetchCalls, 2);
 assert.equal(paged.length, 2);
 assert.ok(paginationUrls[1].includes("page_token=p2"));
 
+let loopCalls = 0;
+const loopingFetch = async () => {
+  loopCalls += 1;
+  return new Response(JSON.stringify({
+    bars: [],
+    next_page_token: "same-token",
+  }), {
+    status: 200,
+    headers: { "content-type": "application/json" },
+  });
+};
+await assert.rejects(
+  () => fetchAlpacaBars("LOOP", {
+    start: "2026-01-01T00:00:00Z",
+    end: "2026-12-31T23:59:59Z",
+    key: "proof-key",
+    secret: "proof-secret",
+    fetchImpl: loopingFetch,
+  }),
+  /pagination_loop/
+);
+assert.equal(loopCalls, 2);
+
 const bh = benjaminiHochberg([
   { id: "a", development_p_approx: 0.001 },
   { id: "b", development_p_approx: 0.02 },
@@ -149,6 +172,7 @@ console.log(JSON.stringify({
   source_diversity_required: true,
   authoritative_multi_origin_screen: true,
   alpaca_pagination: true,
+  pagination_loop_guard: true,
   false_discovery_control: "benjamini_hochberg",
   live_trade_authority: false,
 }));
