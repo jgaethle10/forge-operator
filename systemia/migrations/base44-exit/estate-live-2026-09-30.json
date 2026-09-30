@@ -27,7 +27,7 @@
       "wave": 3,
       "lane": "revenue_critical",
       "target": "github_plus_yard",
-      "state": "queued",
+      "state": "owned_scratch_runtime_candidate",
       "source_platform": "base44",
       "source_identifiers_public": false
     },
@@ -187,7 +187,7 @@
       "wave": 2,
       "lane": "shared_distribution_and_discovery",
       "target": "github_plus_systemia_plus_yard",
-      "state": "queued",
+      "state": "owned_public_agent_edge_candidate",
       "source_platform": "base44",
       "source_identifiers_public": false
     },
@@ -511,5 +511,18 @@
       "source_platform": "base44",
       "source_identifiers_public": false
     }
-  ]
+  ],
+  "migration_progress": {
+    "estate_observed": 50,
+    "owned_runtime_slices_active": [
+      "systemia_core",
+      "rivet_reporting_runtime",
+      "evercraft_rewards_scratch_runtime",
+      "evercraft_clip_public_agent_edge",
+      "machine_commerce_discovery_handoff"
+    ],
+    "hardcoded_base44_runtime_url_policy": "forbidden_in_owned_runtime_source",
+    "destructive_cutover_allowed": false,
+    "note": "A migration slice is not a production cutover. Base44 authority remains only where the owned replacement has not yet passed route, data/auth/integration parity, rollback and observation gates."
+  }
 }
