@@ -7,6 +7,11 @@ import { sealFootball, openFootball } from '../beast-mode/football.mjs';
 
 const ALIEV_APP_ID = '69b9b64d86a732029ce0db81';
 const RIVET_APP_ID = '6ab2062323d5c33c7dde7606';
+const SOURCE_COVERAGE_SCHEMA = 'evercraft.rivet.source-coverage.v1';
+const REQUIRED_SOURCE_COVERAGE_DOMAINS = [
+  'geocoding','charging_inventory','traffic','traffic_temporal','utility_service_area','utility_tariff','incentives',
+  'parcel_planning','local_ev_stock','observed_sessions','freight','dwell_context','deep_market_evidence','provenance'
+];
 
 function clean(value){ return String(value ?? '').trim(); }
 function stable(value){
@@ -25,10 +30,55 @@ function atomicJson(file,value){
   fs.writeFileSync(tmp,JSON.stringify(value,null,2)+'\n',{mode:0o600});
   fs.renameSync(tmp,file);
 }
+function atomicBytes(file,bytes){
+  fs.mkdirSync(path.dirname(file),{recursive:true,mode:0o750});
+  const tmp=file+'.'+process.pid+'.'+randomBytes(4).toString('hex')+'.tmp';
+  fs.writeFileSync(tmp,bytes,{mode:0o600});
+  fs.renameSync(tmp,file);
+}
 function safeId(value){ return clean(value).replace(/[^a-zA-Z0-9._-]/g,'_').slice(0,180); }
 function number(value){ const n=Number(value); return Number.isFinite(n)?n:null; }
 function arr(value){ return Array.isArray(value)?value:[]; }
 function publicText(value){ return clean(value).slice(0,4000); }
+function normalizeCoverageManifest(data,retrievedAt){
+  const manifest=data?.source_coverage_manifest;
+  if(manifest?.schema!==SOURCE_COVERAGE_SCHEMA || !manifest?.domains || typeof manifest.domains!=='object'){
+    throw new Error('source_coverage_manifest_required');
+  }
+  const missing=REQUIRED_SOURCE_COVERAGE_DOMAINS.filter(key=>!manifest.domains[key] || !clean(manifest.domains[key]?.state));
+  if(missing.length) throw new Error('source_coverage_manifest_incomplete:'+missing.join(','));
+  return {
+    schema:SOURCE_COVERAGE_SCHEMA,
+    generated_at:clean(manifest.generated_at || retrievedAt),
+    domains:Object.fromEntries(REQUIRED_SOURCE_COVERAGE_DOMAINS.map(key=>{
+      const row=manifest.domains[key] || {};
+      return [key,{
+        state:clean(row.state),
+        record_count:number(row.record_count),
+        source_status:clean(row.source_status) || null
+      }];
+    })),
+    semantics:clean(manifest.semantics) || 'Every report-relevant source domain is explicit. Missing is never zero.'
+  };
+}
+function evidenceIndex(data){
+  const count=(v)=>Array.isArray(v)?v.length:(v?1:0);
+  return {
+    traffic:count(data?.traffic),
+    traffic_temporal:count(data?.traffic_profiles),
+    charging_inventory:count(data?.chargers),
+    incentives:count(data?.incentives)+count(data?.new_york_programs),
+    observed_sessions:count(data?.nearby_observed_usage),
+    utility_service_area:count(data?.washington_utility_service_area_candidates)+count(data?.california_utility_service_area_candidates),
+    utility_tariff:count(data?.utility_rate_candidates)+count(data?.california_candidate_tariff_catalog)+count(data?.washington_pacific_power_current_rate_catalog),
+    parcel_planning:count(data?.california_parcel_planning),
+    local_ev_stock:count(data?.local_ev_stock),
+    freight:count(data?.freight_context),
+    dwell_context:count(data?.dwell_anchors),
+    deep_market_evidence:count(data?.deep_benchmark_records)+count(data?.deep_market_evidence)+count(data?.deep_utility_program_evidence)+count(data?.deep_external_evidence),
+    provenance:count(data?.source_record_ids)
+  };
+}
 
 function quickRead(data){
   const traffic=arr(data?.traffic);
@@ -67,8 +117,9 @@ function quickRead(data){
   };
 }
 
-export function buildYardReport({address,sourceSnapshot,retrievedAt=new Date().toISOString()}){
+export function buildYardReport({address,sourceSnapshot,retrievedAt=new Date().toISOString(),sourceSnapshotSha256='',sourceSnapshotRef=''}){
   const read=quickRead(sourceSnapshot);
+  const coverage=normalizeCoverageManifest(sourceSnapshot,retrievedAt);
   return {
     schema:'evercraft.rivet.yard-report.v1',
     generation_state:'ready',
@@ -85,7 +136,10 @@ export function buildYardReport({address,sourceSnapshot,retrievedAt=new Date().t
       app_id:ALIEV_APP_ID,
       response_profile:clean(sourceSnapshot?.response_profile),
       evidence_state:clean(sourceSnapshot?.evidence_state),
-      retrieved_at:clean(sourceSnapshot?.retrieved_at || retrievedAt)
+      retrieved_at:clean(sourceSnapshot?.retrieved_at || retrievedAt),
+      snapshot_sha256:clean(sourceSnapshotSha256),
+      snapshot_ref:clean(sourceSnapshotRef),
+      coverage_manifest:coverage
     },
     decision:{
       label:read.decision_label,
@@ -102,7 +156,9 @@ export function buildYardReport({address,sourceSnapshot,retrievedAt=new Date().t
       chargers:read.chargers,
       incentives:read.incentives,
       observed_usage:read.observed_usage,
-      coverage_contract:sourceSnapshot?.coverage_contract || null
+      coverage_contract:sourceSnapshot?.coverage_contract || null,
+      source_coverage_manifest:coverage,
+      index:evidenceIndex(sourceSnapshot)
     },
     caveats:[
       'This is a source-backed screening report, not final engineering, underwriting, permitting, investment approval, or a stamped plan.',
@@ -166,8 +222,17 @@ export async function generateYardReport({
     observed_usage_records:arr(data?.nearby_observed_usage).length
   });
 
+  const coverageManifest=normalizeCoverageManifest(data,data?.retrieved_at || now());
+  data.source_coverage_manifest=coverageManifest;
   const snapshotBytes=jsonBytes(data);
   const snapshotSha=sha256(snapshotBytes);
+  const sourceSnapshotRef=path.join('source-snapshots',snapshotSha+'.json');
+  const sourceSnapshotFile=path.join(stateDir,sourceSnapshotRef);
+  atomicBytes(sourceSnapshotFile,snapshotBytes);
+  const persistedSnapshot=fs.readFileSync(sourceSnapshotFile);
+  if(sha256(persistedSnapshot)!==snapshotSha || persistedSnapshot.byteLength!==snapshotBytes.byteLength){
+    throw new Error('source_snapshot_persistence_verification_failed');
+  }
   const artifactId='aliev-snapshot:'+sha256(requested).slice(0,24);
   const manifest=createCargoManifest({
     source:{system:'AliEV',app_id:ALIEV_APP_ID},
@@ -222,7 +287,13 @@ export async function generateYardReport({
   progress('evidence_integrity',6,8,{message:'Evidence integrity confirmed.',source_bytes:snapshotBytes.byteLength});
 
   progress('report_render',7,8,{message:'Building the RIVET report.'});
-  const report=buildYardReport({address:requested,sourceSnapshot:data,retrievedAt:now()});
+  const report=buildYardReport({
+    address:requested,
+    sourceSnapshot:data,
+    retrievedAt:now(),
+    sourceSnapshotSha256:snapshotSha,
+    sourceSnapshotRef
+  });
   const reportBytes=jsonBytes(report);
   const reportSha=sha256(reportBytes);
   const reportId='rivet-yard:'+sha256(JSON.stringify(stable({
@@ -241,9 +312,15 @@ export async function generateYardReport({
       byte_count:snapshotBytes.byteLength,
       football_id:sealed.football_id,
       football_sha256:sha256(sealed.buffer),
-      response_profile:'rivet_report_snapshot_v1'
+      response_profile:'rivet_report_snapshot_v1',
+      store_ref:sourceSnapshotRef,
+      persisted:true,
+      coverage_manifest:coverageManifest,
+      evidence_index:evidenceIndex(data)
     },
     report:{
+      source_snapshot_sha256:snapshotSha,
+      source_snapshot_ref:sourceSnapshotRef,
       sha256:reportSha,
       byte_count:reportBytes.byteLength,
       body:report
@@ -254,7 +331,10 @@ export async function generateYardReport({
       football_opened:true,
       source_sha256_match:true,
       source_byte_count_match:true,
-      report_generation_state:'ready'
+      report_generation_state:'ready',
+      full_source_snapshot_persisted:true,
+      full_source_snapshot_reopened_and_verified:true,
+      source_coverage_manifest_verified:true
     }
   };
   atomicJson(path.join(stateDir,'reports',safeId(reportId)+'.json'),record);
@@ -300,6 +380,9 @@ export async function startRivetReportRuntime({
     deployment_receipt_bound:Boolean(deploymentReceiptRef),
     deployment_receipt_ref:deploymentReceiptRef||null,
     source_adapter:'aliev-rivet-report-snapshot-v1',
+    canonical_report_store:'yard-atomic-files-v2',
+    full_source_snapshot_persistence:true,
+    source_coverage_manifest_required:true,
     started_at:startedAt
   });
 
@@ -335,6 +418,24 @@ export async function startRivetReportRuntime({
         const file=progressFile(stateDir,jobId);
         if(!fs.existsSync(file)) return send(res,404,{ok:false,error:'report_job_not_found'});
         return send(res,200,{ok:true,...JSON.parse(fs.readFileSync(file,'utf8'))});
+      }
+      const sourceMatch=req.url?.match(/^\/v1\/reports\/([^/?#]+)\/source$/);
+      if(req.method==='GET' && sourceMatch){
+        const auth=clean(req.headers.authorization);
+        if(auth!==('Bearer '+teamToken)) return send(res,401,{ok:false,error:'team_authorization_required'});
+        const id=decodeURIComponent(sourceMatch[1]);
+        const reportFile=path.join(stateDir,'reports',safeId(id)+'.json');
+        if(!fs.existsSync(reportFile)) return send(res,404,{ok:false,error:'report_not_found'});
+        const record=JSON.parse(fs.readFileSync(reportFile,'utf8'));
+        const ref=clean(record?.source_snapshot?.store_ref);
+        const root=path.resolve(stateDir);
+        const file=path.resolve(stateDir,ref);
+        if(!ref || !file.startsWith(root+path.sep) || !fs.existsSync(file)) return send(res,404,{ok:false,error:'source_snapshot_not_found'});
+        const bytes=fs.readFileSync(file);
+        const expectedSha=clean(record?.source_snapshot?.sha256);
+        const expectedBytes=Number(record?.source_snapshot?.byte_count||0);
+        if(sha256(bytes)!==expectedSha || bytes.byteLength!==expectedBytes) return send(res,409,{ok:false,error:'source_snapshot_integrity_failed'});
+        return send(res,200,{ok:true,report_id:id,sha256:expectedSha,byte_count:bytes.byteLength,source_snapshot:JSON.parse(bytes.toString('utf8'))});
       }
       const m=req.url?.match(/^\/v1\/reports\/([^/?#]+)$/);
       if(req.method==='GET' && m){
