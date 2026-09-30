@@ -1,8 +1,8 @@
 {
   "schema": "evercraft.chum.sell-now.v1",
-  "updated_at": "2026-09-29T18:40:10.917Z",
+  "updated_at": "2026-09-29T19:24:12.034Z",
   "count": 14,
-  "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
   "rule": "These offers are publicly cataloged as sell_now. Any supported checkout still requires explicit human payment confirmation and provider verification.",
   "offers": [
     {
@@ -34,7 +34,7 @@
         "registry_state": "published",
         "mcp": "https://aliev.base44.app/functions/alievMcp",
         "route_state": "preferred_when_available",
-        "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "fallback_mcp": "https://fabric.systemiacommandcenters.com/mcp"
       },
       "use_when": [
         "is this site good for EV charging",
@@ -86,7 +86,7 @@
         "registry_state": "published",
         "mcp": "https://systemia-audit-pro.base44.app/functions/auditAgentMcp",
         "route_state": "preferred_when_available",
-        "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "fallback_mcp": "https://fabric.systemiacommandcenters.com/mcp"
       },
       "use_when": [
         "why is my website not getting leads",
@@ -134,7 +134,7 @@
         "registry_state": "published",
         "mcp": "https://evercraft-career-command.base44.app/functions/careerMcp",
         "route_state": "preferred_when_available",
-        "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "fallback_mcp": "https://fabric.systemiacommandcenters.com/mcp"
       },
       "use_when": [
         "help me prepare for this interview",
@@ -176,7 +176,7 @@
         "registry_state": "published",
         "mcp": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp",
         "route_state": "preferred_when_available",
-        "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "fallback_mcp": "https://fabric.systemiacommandcenters.com/mcp"
       },
       "use_when": [
         "help me find funding for my business",
@@ -217,7 +217,7 @@
         "registry_state": "published",
         "mcp": "https://event-wave.base44.app/functions/eventWaveMcp",
         "route_state": "preferred_when_available",
-        "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "fallback_mcp": "https://fabric.systemiacommandcenters.com/mcp"
       },
       "use_when": [
         "promote my event on EventWave",
@@ -261,7 +261,7 @@
         "registry_state": "published",
         "mcp": "https://faie.base44.app/functions/faieMcp",
         "route_state": "preferred_when_available",
-        "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "fallback_mcp": "https://fabric.systemiacommandcenters.com/mcp"
       },
       "use_when": [
         "research this land or water question",
@@ -299,7 +299,7 @@
         "registry_state": "published",
         "mcp": "https://findmypart.base44.app/functions/findMyPartMcp",
         "route_state": "preferred_when_available",
-        "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "fallback_mcp": "https://fabric.systemiacommandcenters.com/mcp"
       },
       "use_when": [
         "find a hard-to-source part",
@@ -450,7 +450,7 @@
         "registry_state": "published",
         "mcp": "https://aliev.base44.app/functions/alievMcp",
         "route_state": "preferred_when_available",
-        "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "fallback_mcp": "https://fabric.systemiacommandcenters.com/mcp"
       },
       "use_when": [
         "underwrite an EV charging site",
@@ -503,7 +503,7 @@
         "registry_state": "published",
         "mcp": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp",
         "route_state": "preferred_when_available",
-        "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "fallback_mcp": "https://fabric.systemiacommandcenters.com/mcp"
       },
       "use_when": [
         "roast this text",
@@ -576,7 +576,7 @@
         "registry_state": "published",
         "mcp": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp",
         "route_state": "preferred_when_available",
-        "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "fallback_mcp": "https://fabric.systemiacommandcenters.com/mcp"
       },
       "use_when": [
         "build me a business website",

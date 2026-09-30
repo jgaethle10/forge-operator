@@ -219,6 +219,16 @@ jobs:
           node scripts/generate-mcp-registry-candidates.mjs
           node scripts/materialize-mcp-registry-candidates.mjs             --out artifacts/mcp-registry-materialization-receipt.json
           node systemia/chum/build-capability-mirror.mjs
+          node scripts/promote-openai-owned-fabric.mjs \\
+            --receipt artifacts/evercraft-public-edge-canary.json \\
+            --origin "$SPECIALIST_ORIGIN"
+          node scripts/validate-openai-plugin-submission.mjs
+          mkdir -p artifacts
+          (
+            cd plugins/evercraft-fabric
+            zip -qr ../../artifacts/evercraft-openai-owned-plugin.zip . -x '*.DS_Store'
+          )
+          test -s artifacts/evercraft-openai-owned-plugin.zip
           npm run direct:check
 
       - name: Commit verified discovery promotion
@@ -226,7 +236,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          git add             distribution/direct-plugin-specs.json             distribution/direct-product-doors.json             public/.well-known/evercraft-direct-doors.json             plugins/ibmi-rescue             plugins/foundry-app-escape             plugins/site-survive             plugins/systemia-remote-ops             distribution/mcp-registry-candidates             mcp-registry/ibmi-rescue.json             mcp-registry/foundry-app-escape.json             mcp-registry/site-survive.json             mcp-registry/systemia-remote-ops.json             public/chum
+          git add             distribution/direct-plugin-specs.json             distribution/direct-product-doors.json             public/.well-known/evercraft-direct-doors.json             plugins/ibmi-rescue             plugins/foundry-app-escape             plugins/site-survive             plugins/systemia-remote-ops             distribution/mcp-registry-candidates             mcp-registry/ibmi-rescue.json             mcp-registry/foundry-app-escape.json             mcp-registry/site-survive.json             mcp-registry/systemia-remote-ops.json             public/chum \\
+            plugins/evercraft-fabric/mcp.json \\
+            plugins/evercraft-fabric/.mcp.json \\
+            plugins/evercraft-fabric/openai-submission.json \\
+            distribution/openai-plugin/submission.json
           if git diff --cached --quiet; then
             echo "Discovery already reflects this verified public edge."
             exit 0
@@ -244,5 +258,7 @@ jobs:
             artifacts/evercraft-public-edge-canary.json
             artifacts/direct-door-promotion-receipt.json
             artifacts/mcp-registry-materialization-receipt.json
+            artifacts/openai-owned-fabric-promotion-receipt.json
+            artifacts/evercraft-openai-owned-plugin.zip
           if-no-files-found: warn
           retention-days: 90

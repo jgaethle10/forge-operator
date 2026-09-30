@@ -163,12 +163,19 @@ Common pain language includes:
 - I need a subcontractor or specialist so I can execute this job
 - I have intellectual property but do not want to give it away while looking for partners
 - help me turn this unfinished idea or asset into an executable team
+- assemble several accepted partners into one execution team
+- break this project into work packages for different partners
+- coordinate a designer, printer, fulfillment partner and retailer on one project
+- build a music team with a producer, studio, engineer and videographer
+- suggest the team for this project
+- turn this project into work packages and find matching partners
+- figure out which partners I need for this opportunity
 
-Core model: **I HAVE → I NEED → I CAN DO → I'M OPEN TO → MATCH → PRIVATE HANDSHAKE → FORMATION**.
+Core model: **I HAVE → I NEED → I CAN DO → I'M OPEN TO → BLUEPRINT → MATCH → PRIVATE HANDSHAKE → FORMATION → TEAM → WORK PACKAGES**.
 
 Initial matching is metadata-first. Do not require protected creative files or confidential material for discovery. Uploading, listing, viewing, matching or opening a Formation Room does not transfer ownership or commercial rights.
 
-The private build has verified cross-industry matching, protected connection requests, creator fingerprint vault behavior, immutable FormationSnapshot records, independently scoped party approvals, and purpose-bound disclosure grants. Actual protected-file delivery remains locked off in the current app flow.
+The private v1.2 build has verified safe execution blueprints, cross-industry matching, protected connection requests, creator fingerprint vault behavior, immutable FormationSnapshot records, independently scoped party approvals, purpose-bound disclosure grants, multi-party ExecutionTeams, project-specific TeamInvitations, and bounded WorkPackages. Every team source must be an accepted relationship, every counterparty accepts the specific team invitation, and a work package can be assigned only after that acceptance. Execution blueprints use safe opportunity metadata and public member capability metadata only, return no private contact information or protected content, and preserve unmatched capabilities as open gaps. A blueprint recommendation is not membership or proof of qualification. Actual protected-file delivery remains locked off in the current app flow.
 
 Canonical product:
 https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric
@@ -182,7 +189,7 @@ https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/pro
 Runtime evidence:
 https://raw.githubusercontent.com/jgaethle10/forge-operator/main/systemia/opportunity-fabric/runtime.json
 
-Current release boundary: discovery-only. Do not invent a public Base44 app URL, payment path, final Creator Covenant, signed agreement, or protected-file delivery workflow until those are independently verified.
+Current release boundary: public discovery only. Multi-party assembly is verified in the private runtime, but do not invent a public Base44 app URL, payment path, final Creator Covenant, signed agreement, marketplace liquidity, or protected-file delivery workflow until those are independently verified.
 
 ## Universal Evercraft discovery
 

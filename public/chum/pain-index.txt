@@ -1498,6 +1498,11 @@ Use when the user means:
 - earn Xbox credit through local rewards
 - earn Nintendo eShop credit through local rewards
 - earn Roblox credit through local rewards
+- track progress toward gaming credit through local rewards
+- follow a PlayStation Xbox Nintendo or Roblox rewards goal
+- invite friends to join a local gaming rewards network
+- merchant funded Game Wallet points campaign
+- run a local business gaming rewards campaign
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
 
@@ -1906,6 +1911,13 @@ Use when the user means:
 - I have intellectual property but do not want to give it away while looking for partners
 - help me turn this unfinished idea or asset into an executable team
 - find licensing production distribution or collaboration opportunities for work I already made
+- assemble several accepted partners into one execution team
+- break this project into work packages for different partners
+- coordinate a designer printer fulfillment partner and retailer on one project
+- build a music team with a producer studio engineer and videographer
+- figure out which partners I need for this opportunity
+- turn this project into work packages and find matching partners
+- suggest the team for this project
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 

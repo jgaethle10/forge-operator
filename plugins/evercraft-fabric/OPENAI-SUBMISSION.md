@@ -24,11 +24,11 @@ The package contains:
 
 ## Transport truth
 
-The checked-in plugin configuration currently uses the live universal Evercraft Machine Commerce MCP as a compatibility transport.
+Before owned-edge verification, the checked-in plugin configuration may still use the live universal Evercraft Machine Commerce MCP as a compatibility transport.
 
-Evercraft's owned Fabric MCP is implemented by `systemia/mcp/fabric-directory.mjs` and is served by the specialist-handoff runtime at a configurable `/mcp` path. The Yard already has the deployment and OpenAI challenge wiring needed to expose that runtime.
+Evercraft's owned Fabric MCP is implemented by `systemia/mcp/fabric-directory.mjs` and is served by the specialist-handoff runtime at `/mcp`. The Yard and Public Edge canary own the production gate. Once the external canary proves the actual HTTPS origin, `scripts/promote-openai-owned-fabric.mjs` rewrites the portable and compatibility manifests plus both OpenAI submission packets to that exact receipted origin. It also records the source canary digest and disables the legacy transport in submission metadata.
 
-Do not replace the plugin MCP URL with a guessed hostname. Cut over only after the Yard produces a verified stable public HTTPS route receipt and an external probe confirms `initialize`, `tools/list`, a safe tool call, and the OpenAI domain-verification challenge.
+Never replace the plugin MCP URL with a guessed hostname. OpenAI requires a new plugin submission when the MCP origin changes, so owned-origin promotion prepares a new submission artifact rather than representing the already-approved compatibility-origin plugin as interchangeable.
 
 ## OpenAI account-side gates
 

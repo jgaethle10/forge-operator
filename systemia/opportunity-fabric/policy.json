@@ -59,6 +59,19 @@
       "territory",
       "duration",
       "derivative_rights"
+    ],
+    "multi_party_contract": "multi-party.md",
+    "work_package_fields": [
+      "team_id",
+      "assignee",
+      "title",
+      "capability_required",
+      "safe_input_summary",
+      "output_definition",
+      "dependencies",
+      "economics",
+      "due_date",
+      "protected_material_required"
     ]
   },
   "receipt": {
@@ -90,5 +103,68 @@
     "jurisdiction",
     "record_retention",
     "privacy_and_data_processing"
-  ]
+  ],
+  "runtime_authority": {
+    "protected_workflow_direct_client_mutation": false,
+    "trusted_runtime_required": true,
+    "service_role_reverifies_identity_and_state": true,
+    "client_supplied_identity_or_consent_not_authoritative": true
+  },
+  "multi_party": {
+    "enabled_in_verified_private_runtime": true,
+    "team_sources_must_be_accepted_connections": true,
+    "counterparties_derived_server_side": true,
+    "counterparties_deduplicated": true,
+    "project_specific_team_invitation_required": true,
+    "work_package_requires_accepted_team_invitation": true,
+    "leader_controls_scope_and_economics": true,
+    "assignee_controls_acceptance_and_progress": true,
+    "team_membership_grants_ip_rights": false,
+    "work_package_acceptance_grants_ip_rights": false,
+    "protected_material_may_be_flagged_required_without_disclosure": true,
+    "protected_material_disclosed_by_team_flow": false,
+    "protected_file_delivery_enabled": false
+  },
+  "execution_planning": {
+    "enabled_in_verified_private_runtime": true,
+    "project_owner_required": true,
+    "source_safe_metadata_only": true,
+    "project_fields_used": [
+      "need",
+      "looking_for",
+      "have",
+      "title",
+      "description",
+      "location",
+      "protected_material_present"
+    ],
+    "member_fields_used": [
+      "can_do",
+      "have",
+      "tags",
+      "specialty",
+      "role",
+      "location",
+      "name",
+      "protected_material_present"
+    ],
+    "protected_workflow_records_used": false,
+    "contact_information_returned": false,
+    "protected_content_used": false,
+    "missing_capabilities_preserved": true,
+    "recommendation_is_not_membership": true,
+    "recommendation_grants_rights": false,
+    "candidate_connection_still_requires_protected_handshake": true,
+    "ledger": {
+      "entity": "ExecutionBlueprint",
+      "owner_private_read": true,
+      "direct_client_mutation": false,
+      "trusted_runtime_write_required": true,
+      "deterministic_plan_id": true,
+      "identical_evidence_idempotent_replay": true,
+      "fabric_event_receipt_link_required": true,
+      "protected_content_stored": false,
+      "private_contact_information_stored": false
+    }
+  }
 }

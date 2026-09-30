@@ -1,0 +1,46 @@
+name: Saban Hardware Federation
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/saban/hardware-federation.mjs'
+      - 'systemia/saban/hardware-federation.proof.mjs'
+      - 'systemia/saban/hardware-federation-bridge.proof.mjs'
+      - 'systemia/network/outbound-capacity-broker.mjs'
+      - 'systemia/network/outbound-node-agent.mjs'
+      - 'systemia/network/federated-service-bridge.mjs'
+      - 'systemia/compute/runtime-node.mjs'
+      - 'systemia/yard/operator.mjs'
+      - 'package.json'
+      - '.github/workflows/saban-hardware-federation.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/saban/hardware-federation.mjs'
+      - 'systemia/saban/hardware-federation.proof.mjs'
+      - 'systemia/saban/hardware-federation-bridge.proof.mjs'
+      - 'systemia/network/outbound-capacity-broker.mjs'
+      - 'systemia/network/outbound-node-agent.mjs'
+      - 'systemia/network/federated-service-bridge.mjs'
+      - 'systemia/compute/runtime-node.mjs'
+      - 'systemia/yard/operator.mjs'
+      - 'package.json'
+      - '.github/workflows/saban-hardware-federation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  federation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove Saban hardware role federation
+        run: node systemia/saban/hardware-federation.proof.mjs
+      - name: Prove encrypted two-node browser federation
+        run: node systemia/saban/hardware-federation-bridge.proof.mjs

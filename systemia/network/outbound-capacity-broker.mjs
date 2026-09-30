@@ -163,6 +163,7 @@ export async function startOutboundCapacityBroker({
   const challenges = new Map();
   const enrollmentChallengeRate = new Map();
   const nodes = new Map();
+  const serviceRelays = new Map();
   let shuttingDown = false;
   const instanceId = `remote_broker_${randomBytes(12).toString('hex')}`;
   let deploymentReceiptRef = '';
@@ -461,6 +462,23 @@ export async function startOutboundCapacityBroker({
                 node.capacity.capacity_hint.services.public_edge.certificate_valid_to || null,
             }
           : null,
+        evercraft_home_identity: node.capacity.capacity_hint?.services?.evercraft_home_identity
+          ? {
+              configured:
+                node.capacity.capacity_hint.services.evercraft_home_identity.configured === true,
+              ready:
+                node.capacity.capacity_hint.services.evercraft_home_identity.ready === true,
+              identity_state_present:
+                node.capacity.capacity_hint.services.evercraft_home_identity.identity_state_present === true,
+              passport_state_present:
+                node.capacity.capacity_hint.services.evercraft_home_identity.passport_state_present === true,
+              signing_material_present:
+                node.capacity.capacity_hint.services.evercraft_home_identity.signing_material_present === true,
+              private_state_within_admitted_root:
+                node.capacity.capacity_hint.services.evercraft_home_identity.private_state_within_admitted_root === true,
+              secret_material_exposed:false,
+            }
+          : null,
       } : null,
       queued_commands: node.queue.length,
       pending_commands: node.pending.size,
@@ -469,6 +487,99 @@ export async function startOutboundCapacityBroker({
       result_envelopes_accepted: node.result_envelopes_accepted,
       duplicate_results_acknowledged: node.duplicate_results_acknowledged,
     };
+  }
+
+  function safeServiceId(value) {
+    const id = String(value || '').trim();
+    if (!/^svc_[a-f0-9]{16}$/i.test(id)) throw new Error('remote_service_id_invalid');
+    return id;
+  }
+
+  async function createServiceRelay({
+    nodeId,
+    serviceId,
+    ttlMs = 30 * 60_000,
+  } = {}) {
+    const id = safeNodeId(nodeId);
+    const node = nodes.get(id);
+    if (!node || Date.now() - node.last_seen_at > capacityFreshMs) {
+      throw new Error('remote_node_unavailable');
+    }
+    const service = safeServiceId(serviceId);
+    const healthResult = await queueCommand(node, {
+      method:'GET',
+      route:'/v1/services/' + encodeURIComponent(service) + '/health',
+      body:null,
+      injectAllocatorAuth:false,
+    });
+    if (healthResult.status !== 200 || !healthResult.body?.ok) {
+      throw new Error('remote_service_relay_target_unhealthy');
+    }
+    const targetService = String(healthResult.body.service || '');
+    if (!['evercraft-owned-browser-worker','specialist-handoff-mcp'].includes(targetService)) {
+      throw new Error('remote_service_relay_target_not_bridgeable');
+    }
+    const relayId = 'relay_' + randomBytes(12).toString('hex');
+    const relayToken = randomBytes(32).toString('hex');
+    const createdAt = new Date().toISOString();
+    const expiresAt = new Date(
+      Date.now() + Math.max(60_000, Math.min(60 * 60_000, Number(ttlMs || 30 * 60_000)))
+    ).toISOString();
+    const relay = {
+      relay_id: relayId,
+      relay_token_hash: sha(relayToken),
+      node_id: id,
+      service_id: service,
+      target_service: targetService,
+      created_at: createdAt,
+      expires_at: expiresAt,
+    };
+    serviceRelays.set(relayId, relay);
+    const receiptBody = {
+      schema: 'evercraft.remote-capacity.service-relay-receipt.v1',
+      relay_id: relayId,
+      node_id: id,
+      device_fingerprint: node.device_fingerprint,
+      service_id: service,
+      target_service: targetService,
+      created_at: createdAt,
+      expires_at: expiresAt,
+      relay_token_persisted: false,
+      allocator_token_exposed: false,
+    };
+    return {
+      ...receiptBody,
+      relay_token: relayToken,
+      proxy_path: '/v1/remote/service-relays/' + relayId + '/proxy',
+      receipt_hash: 'sha256:' + sha(JSON.stringify(receiptBody)),
+    };
+  }
+
+  function releaseServiceRelay(relayId, reason = 'released') {
+    const id = String(relayId || '').trim();
+    const relay = serviceRelays.get(id);
+    if (!relay) return { ok: true, released: false, relay_id: id };
+    serviceRelays.delete(id);
+    return {
+      ok: true,
+      released: true,
+      relay_id: id,
+      reason: String(reason || 'released'),
+      released_at: new Date().toISOString(),
+    };
+  }
+
+  function validRelay(relayId, token) {
+    const relay = serviceRelays.get(String(relayId || ''));
+    if (!relay) return null;
+    if (Date.parse(relay.expires_at) <= Date.now()) {
+      serviceRelays.delete(relay.relay_id);
+      return null;
+    }
+    if (sha(String(token || '')) !== relay.relay_token_hash) return null;
+    const node = nodes.get(relay.node_id);
+    if (!node || Date.now() - node.last_seen_at > capacityFreshMs) return null;
+    return { relay, node };
   }
 
   function nextCommand(node) {
@@ -836,7 +947,7 @@ export async function startOutboundCapacityBroker({
       if (req.method === 'POST' && url.pathname === '/v1/remote/agent/result') {
         const node = findSession(bearer(req));
         if (!node) return send(res, 401, { error: 'remote_session_invalid' });
-        const body = await readJson(req);
+        const body = await readJson(req, 16 * 1024 * 1024);
         let opened;
         try {
           opened = openEnvelope({
@@ -881,6 +992,44 @@ export async function startOutboundCapacityBroker({
         return send(res, 200, { ok: true, duplicate: false });
       }
 
+      const relayProxy = url.pathname.match(
+        /^\/v1\/remote\/service-relays\/([^/]+)\/proxy$/
+      );
+      if (req.method === 'POST' && relayProxy) {
+        const active = validRelay(relayProxy[1], bearer(req));
+        if (!active) return send(res, 401, { error: 'service_relay_invalid_or_expired' });
+        const body = await readJson(req, 16 * 1024 * 1024);
+        const method = String(body.method || 'GET').toUpperCase();
+        if (!['GET','HEAD','POST','DELETE','OPTIONS'].includes(method)) {
+          return send(res, 405, { error: 'service_relay_method_not_allowed' });
+        }
+        const route =
+          '/v1/services/' +
+          encodeURIComponent(active.relay.service_id) +
+          '/http-bridge';
+        let result;
+        try {
+          result = await queueCommand(active.node, {
+            method: 'POST',
+            route,
+            body: {
+              method,
+              path: String(body.path || '/'),
+              headers: body.headers && typeof body.headers === 'object'
+                ? body.headers
+                : {},
+              body_base64: body.body_base64 || '',
+            },
+            injectAllocatorAuth: true,
+          });
+        } catch (error) {
+          return send(res, 504, {
+            error: error instanceof Error ? error.message : String(error),
+          });
+        }
+        return send(res, result.status, result.body);
+      }
+
       const remote = url.pathname.match(/^\/nodes\/([^/]+)(\/v1\/.*)$/);
       if (remote) {
         const nodeId = safeNodeId(decodeURIComponent(remote[1]));
@@ -902,7 +1051,8 @@ export async function startOutboundCapacityBroker({
           route.startsWith('/v1/operator/') ||
           (req.method === 'POST' && route === '/v1/leases') ||
           (req.method === 'POST' && route === '/v1/attest') ||
-          (req.method === 'POST' && route === '/v1/field-enrollment-packet');
+          (req.method === 'POST' && route === '/v1/field-enrollment-packet') ||
+          (req.method === 'POST' && /^\/v1\/services\/[^/]+\/http-bridge$/.test(route));
         if (allocatorRoute && sha(bearer(req)) !== node.control_token_hash) {
           return send(res, 401, { error: 'remote_allocator_auth_required' });
         }
@@ -961,6 +1111,8 @@ export async function startOutboundCapacityBroker({
         node_id,
       }));
     },
+    createServiceRelay,
+    releaseServiceRelay,
     controlGrant(nodeId) {
       const id = safeNodeId(nodeId);
       const node = nodes.get(id);
@@ -991,6 +1143,7 @@ export async function startOutboundCapacityBroker({
       shuttingDown = true;
       challenges.clear();
       enrollmentChallengeRate.clear();
+      serviceRelays.clear();
 
       for (const node of nodes.values()) {
         node.session_expires_at = 0;

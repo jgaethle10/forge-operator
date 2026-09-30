@@ -106,6 +106,7 @@ try {
       yard_state_dir: yardState,
       kaidance_deployment_id: 'kaidance-for-core-proof',
       sentinel_region_profile: 'yakima-basin-wa',
+      openai_challenge_token: 'OpenAIChallenge_CorePrivate_abcdefghijklmnopqrstuvwxyz123456',
     },
     rollbackTarget: 'proof:core-supervisor-rollback',
     leaseTtlMs: 120_000,
@@ -190,6 +191,27 @@ try {
   assert.equal(edgeWatch.release_ref,'e101fa959836ae9c26b52c0ebf6185a1f9957e92');
   assert.equal(edgeWatch.allocator_authority_persisted,false);
   assert.equal(edgeWatchRaw.includes(allocatorToken),false);
+  assert.equal(
+    edgeWatchRaw.includes('OpenAIChallenge_CorePrivate_abcdefghijklmnopqrstuvwxyz123456'),
+    false,
+    'OpenAI challenge token must not be persisted in public-edge watch state'
+  );
+
+  const coreStateFiles=[];
+  const collect=(dir)=>{
+    for(const entry of fs.readdirSync(dir,{withFileTypes:true})){
+      const full=path.join(dir,entry.name);
+      if(entry.isDirectory()) collect(full);
+      else if(entry.isFile() && /\.(json|jsonl|txt)$/.test(entry.name)) coreStateFiles.push(full);
+    }
+  };
+  collect(coreRoot);
+  const persistedCoreState=coreStateFiles.map((file)=>fs.readFileSync(file,'utf8')).join('\n');
+  assert.equal(
+    persistedCoreState.includes('OpenAIChallenge_CorePrivate_abcdefghijklmnopqrstuvwxyz123456'),
+    false,
+    'OpenAI challenge token must stay in process memory and out of persisted Core state'
+  );
 
   const rawHealth = JSON.stringify(route.health);
   assert.ok(!rawHealth.includes(allocatorToken));
@@ -226,6 +248,7 @@ try {
     deployment_receipt_bound: true,
     private_paths_redacted_from_health: true,
     allocator_secret_redacted_from_children_and_health: true,
+    openai_challenge_token_memory_only_verified: true,
     clean_stop_verified: true,
     named_cloud_required: false,
   }, null, 2));

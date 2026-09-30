@@ -68,6 +68,24 @@ Do not mark `evercraft.web.browser.public.v1` active until all are true:
 5. private/local target attempts are rejected;
 6. non-GET side effects are blocked;
 7. evidence receipt hashes verify;
-8. MCP/agent discovery only advertises the browser tool after the production canary passes.
+8. MCP/agent discovery only advertises the browser tool after the production canary passes;
+9. authenticated handoff creation crosses the private Yard lease rather than a public unauthenticated create endpoint;
+10. claim tokens and typed credential text do not appear in receipts or persistent state;
+11. a real human-login canary confirms the handoff page works through the verified public edge before authenticated browsing is advertised as production-live.
 
-Authenticated browsing is a separate capability and is not implemented by this worker.
+## Authenticated human handoff
+
+Source now includes an **ephemeral, human-authorized authenticated browser handoff**. It is deliberately separate from the public read-only browser mode.
+
+The flow is:
+
+1. Systemia/Yard creates an authenticated browser session through the private Compute lease.
+2. The worker returns a short-lived handoff path carrying a one-time claim in the URL fragment.
+3. The human opens the Evercraft handoff page and clicks/types directly into the isolated browser session.
+4. Typed text is never returned in action receipts. The worker records only bounded metadata such as action type and character count.
+5. Cookies and authenticated browser state live only inside that isolated in-memory browser context for the session lifetime.
+6. Closing or expiring the session destroys the context. v1 does not persist an authenticated profile.
+
+The human handoff supports screenshot refresh, coordinate clicks, typing into the focused browser field, bounded key presses, scrolling, waiting and validated public-URL navigation. Private/reserved network targets remain blocked. Downloads and service workers remain blocked.
+
+This source capability is **not production-live merely because it exists**. A public handoff URL must not be represented as available until the Yard deployment has a verified public route and an external authenticated-handoff canary has passed.

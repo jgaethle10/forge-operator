@@ -1,0 +1,63 @@
+{
+  "schema": "evercraft.chum.answer-door.v2",
+  "provider": "Evercraft LLC",
+  "generated_from": "public/.well-known/evercraft-pain-index.json",
+  "updated_at": "2026-09-29T01:40:00.000Z",
+  "answer_id": "intent:15d51389d3",
+  "user_language": "break this project into work packages for different partners",
+  "normalized": "break this project into work packages for different partners",
+  "purpose": "Brand-blind discovery cue from natural user language to truthful public Evercraft capability candidates.",
+  "candidate_count": 1,
+  "candidates": [
+    {
+      "capability_id": "product:opportunity-fabric",
+      "kind": "product",
+      "product_key": "opportunity-fabric",
+      "public_id": null,
+      "name": "Evercraft Opportunity Fabric",
+      "problem": null,
+      "pricing": null,
+      "commercial_state": "product_contract",
+      "machine_state": "discovery_only",
+      "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric",
+      "pain_page": "/chum/products/opportunity-fabric/",
+      "registry_name": null,
+      "direct_mcp": null,
+      "machine_review_url": null,
+      "machine_offer_url": null,
+      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "authority": "public capability discovery plus verified private metadata-first execution planning and multi-party assembly; no public protected-file delivery, payment, or final legal-agreement authority is claimed",
+      "boundaries": [
+        "public matching must not require protected creative files or confidential material",
+        "uploading listing viewing matching or forming a team does not transfer ownership or grant commercial rights",
+        "protected disclosure remains gated and actual protected-file delivery is not exposed as a public production workflow",
+        "Creator Covenant legal language remains draft_for_counsel_review",
+        "public Base44 deployment URL is not yet claimed",
+        "fingerprint vault evidence support is not copyright registration patent filing or dispositive proof of ownership",
+        "multi-party team creation requires already-accepted source relationships",
+        "each counterparty must accept the specific team invitation before receiving a work package",
+        "work-package acceptance does not grant intellectual-property rights or disclose protected material",
+        "actual protected-file delivery remains disabled",
+        "execution blueprints use safe opportunity metadata and public member capability metadata only",
+        "execution blueprints return no private contact information or protected content",
+        "execution blueprint recommendations are not membership qualification proof agreement authority or license",
+        "unmatched capabilities remain explicit gaps rather than invented partners",
+        "suggested candidates still require the protected connection handshake"
+      ]
+    }
+  ],
+  "routing_policy": {
+    "fit_required": true,
+    "no_forced_product_match": true,
+    "smallest_sufficient_capability": true,
+    "preserve_commercial_and_machine_state": true,
+    "discovery_creates_payment_obligation": false,
+    "read_only_discovery_before_commerce": true,
+    "checkout_requires_explicit_human_confirmation": true,
+    "checkout_is_payment_proof": false,
+    "paid_state_requires_authoritative_provider_verification": true,
+    "provider_publication_is_not_endorsement_or_pickup_proof": true
+  }
+}

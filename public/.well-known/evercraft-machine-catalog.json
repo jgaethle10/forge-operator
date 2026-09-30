@@ -6,7 +6,7 @@
   "source_schema_version": "2026-09-28.2",
   "gateway_version": "evercraft-machine-commerce-gateway-v0.9.1",
   "source_generated_at": "2026-09-29T01:40:00.000Z",
-  "generated_at": "2026-09-29T18:50:00.000Z",
+  "generated_at": "2026-09-29T19:24:12.034Z",
   "offer_count": 46,
   "sell_now_count": 14,
   "discovery_count": 32,
@@ -46,6 +46,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "Evercraft Payments",
       "invocation_status": "Discoverable capability; paid execution verification pending.",
+      "live_canary_evidence": null,
       "catalog_version": "2026-09-23"
     },
     {
@@ -71,6 +72,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "Evercraft Payments",
       "invocation_status": "Discoverable capability; environment-specific deployment/payment verification required.",
+      "live_canary_evidence": null,
       "catalog_version": "2026-09-23"
     },
     {
@@ -130,6 +132,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "Evercraft Payments / provider-verified payment authority. MCP and Agent Gateway have no silent payment authority.",
       "invocation_status": "LIVE: AliEV HTTP agent gateway + official-registry MCP. Free address screening and offer discovery are live. $299 Preliminary and $750 Full Site Reports now support direct secure checkout preparation after explicit human confirmation, buyer email, and address; checkout creation is not payment proof and paid state/fulfillment require Evercraft Payments provider verification. $250 opportunity pack and $2,500/month territory feed remain human review/handoff flows.",
+      "live_canary_evidence": null,
       "catalog_version": "2026-09-26.18"
     },
     {
@@ -189,6 +192,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "Systemia Audit Center / Stripe, provider-verified",
       "invocation_status": "SOURCE READY: specialist gateway/MCP now declares a $49 Quick Win Audit with explicit human checkout confirmation, exact Stripe amount verification, and automatic bounded public-site triage after verified payment. Existing $500/$1,200 tiers remain intact. Do not claim the $49 lane live until an independent public canary observes the updated specialist offers and tool schema.",
+      "live_canary_evidence": null,
       "catalog_version": "2026-09-26.17"
     },
     {
@@ -215,6 +219,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "No verified Evercraft Payments path.",
       "invocation_status": "SOURCE-VERIFIED: public routing and authenticated policy-check/internal-approval primitives are implemented and build-tested; external client canary remains pending. No external business-action executor.",
+      "live_canary_evidence": null,
       "catalog_version": "2026-09-24.1"
     },
     {
@@ -242,6 +247,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "No verified Evercraft Payments path.",
       "invocation_status": "SOURCE-VERIFIED: BuildFlow public router and central MCP specialist routing are implemented and build-tested. External client canary remains pending; private data and consequential actions remain authenticated/human-gated.",
+      "live_canary_evidence": null,
       "catalog_version": "2026-09-24.1"
     },
     {
@@ -268,6 +274,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "No verified Evercraft Payments path.",
       "invocation_status": "SOURCE-VERIFIED: discovery and authenticated Decision Desk adjudication are implemented and build-tested; external client canary remains pending. Canonical merge remains a separate gated action.",
+      "live_canary_evidence": null,
       "catalog_version": "2026-09-24.1"
     },
     {
@@ -296,6 +303,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "No verified Evercraft Payments path.",
       "invocation_status": "SOURCE-VERIFIED: machine discovery docs, central MCP matching and authenticated Process Discovery are implemented and build-tested; external client canary remains pending.",
+      "live_canary_evidence": null,
       "catalog_version": "2026-09-24.1"
     },
     {
@@ -323,6 +331,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "No verified Evercraft Payments path.",
       "invocation_status": "SOURCE-VERIFIED: discovery, tenant-scoped P2P model and bounded internal approval-request flow are implemented and build-tested; external client canary remains pending. External writes disabled.",
+      "live_canary_evidence": null,
       "catalog_version": "2026-09-24.1"
     },
     {
@@ -349,6 +358,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "No verified Evercraft Payments path.",
       "invocation_status": "SOURCE-VERIFIED: discovery/routing and authenticated shadow-import flow are implemented and build-tested; external client canary remains pending. External-system writes are disabled.",
+      "live_canary_evidence": null,
       "catalog_version": "2026-09-24.1"
     },
     {
@@ -394,6 +404,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "CallProof Vault / Stripe",
       "invocation_status": "discoverable_authenticated_checkout_required",
+      "live_canary_evidence": null,
       "catalog_version": "2026-09-23.3"
     },
     {
@@ -418,6 +429,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "Evercraft Payments",
       "invocation_status": "Internal routing exists; public universal invocation is not yet advertised.",
+      "live_canary_evidence": null,
       "catalog_version": "2026-09-23"
     },
     {
@@ -458,6 +470,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "Evercraft Payments with provider verification",
       "invocation_status": "LIVE: Career Command HTTP agent gateway + remote MCP at https://evercraft-career-command.base44.app/functions/careerMcp. Agents can inspect the approved $19 Interview Sprint, prepare checkout only after explicit human payment confirmation, verify payment through Evercraft Payments, receive bounded 7-day access, and consume up to 25 premium practice actions. Premium modes are role-specific question generation, practice-answer evaluation, story recovery, and interview planning. Raw resume/answer text is not stored in the usage ledger; only hashes and bounded lifecycle metadata are retained. No QA checkout or revenue claim was created during acceptance testing.",
+      "live_canary_evidence": null,
       "catalog_version": "2026-09-23.17"
     },
     {
@@ -491,6 +504,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "Evercraft Payments",
       "invocation_status": "catalog_ready_runtime_adapter_pending",
+      "live_canary_evidence": null,
       "catalog_version": "2026-09-23.1"
     },
     {
@@ -516,6 +530,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "Evercraft Payments",
       "invocation_status": "Discoverable capability; brief-specific source verification required before fulfillment.",
+      "live_canary_evidence": null,
       "catalog_version": "2026-09-23"
     },
     {
@@ -542,6 +557,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "Evercraft Payments",
       "invocation_status": "Discoverable capability; notification/commercial reliability verification pending.",
+      "live_canary_evidence": null,
       "catalog_version": "2026-09-23"
     },
     {
@@ -568,6 +584,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "No verified Evercraft Payments path for this specific audit.",
       "invocation_status": "LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.",
+      "live_canary_evidence": null,
       "catalog_version": "2026-09-23.12"
     },
     {
@@ -604,6 +621,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "Evercraft Deck Engine / Polar, provider-verified",
       "invocation_status": "LIVE: direct agent HTTP gateway + OpenAPI + llms guidance + remote MCP at https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp. The stale vanity hostname is no longer used in the transaction path. Agents may prepare checkout only after explicit human confirmation; status independently verifies Polar payment and only a verified-paid machine case with the matching token may run bounded capital research.",
+      "live_canary_evidence": null,
       "catalog_version": "2026-09-23.15"
     },
     {
@@ -649,6 +667,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "Stripe subscription control plane is build verified, but the EPS runtime currently has no STRIPE_SECRET_KEY, EPS_STRIPE_PRICE_ID or EPS_STRIPE_WEBHOOK_SECRET configured. Checkout therefore remains unavailable and no public price is approved.",
       "invocation_status": "LIVE VERIFIED PLATFORM HTTPS + MCP: the no-account read-only estimate preview is live; Machine Commerce MCP exposes calculate_contractor_estimate_preview and verify_contractor_estimate_receipt. EPS emits a SHA-256 calculation receipt and a deployed receipt verifier independently recomputes the canonical payload; live HTTP and MCP canaries returned verified=true with authority limited to integrity_only and identity_verified=false. Browser continuation carries receipt lineage into saved estimates. Private workspace company settings, overrides, cost library, estimates, revisions, proposals, acceptance receipts, change orders, job handoff and calibration now route through an authenticated entitlement-aware data gateway while preserving user-scoped Base44 RLS. That gateway is deployed and rejec",
+      "live_canary_evidence": "[object Object]",
       "catalog_version": "2026-09-28.3"
     },
     {
@@ -691,6 +710,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "Evercraft Payments with provider verification",
       "invocation_status": "LIVE: EventWave HTTP agent gateway + OpenAPI + llms guidance + remote MCP at https://event-wave.base44.app/functions/eventWaveMcp. Agents can search events, inspect $49/$149 promotion offers, prepare checkout only after explicit human confirmation, and verify payment/placement state. Source review still governs public activation.",
+      "live_canary_evidence": null,
       "catalog_version": "2026-09-23.12"
     },
     {
@@ -721,6 +741,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "Evercraft Clip clipCheckoutGateway + Stripe provider verification. Control plane is deployed and fail-closed; live gateway observed 2026-09-28 with checkout_configured=false, so payment creation remains unavailable until server-side authority is provisioned.",
       "invocation_status": "LIVE: Clip Production Engine V2, Customer Clip Studio, read-only Creative Director planning, and an authenticated checkout/provider-verification control plane are deployed. The live checkout offer reports 499 cents USD, explicit confirmation required, checkout creation not payment proof, and checkout_configured=false. Machine checkout is not enabled. ForensiScope remains the overflow path for oversized or full-timeline media.",
+      "live_canary_evidence": null,
       "catalog_version": "2026-09-28.1"
     },
     {
@@ -761,6 +782,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "No live Network membership payment authority is advertised. Reservation creates no charge. Any future paid activation requires an independently verified billing path and explicit human action.",
       "invocation_status": "LIVE READ-ONLY MCP VERIFIED: production initialize, tools/list, get_network_capabilities, get_network_presence, and prepare_network_handoff all passed the dedicated Evercraft Network canary. The handoff call returned only a tagged human URL and created no enrollment, checkout, payment obligation, device action, carrier action, or emergency authority. Founding Membership billing remains not live.",
+      "live_canary_evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/conformance/runtime-observations/2026-09-26-evercraft-network-mcp.json",
       "catalog_version": "2026-09-29.network-full-readonly-verified"
     },
     {
@@ -794,6 +816,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "No public machine checkout is advertised for Evercraft Web yet.",
       "invocation_status": "LIVE specialist discovery through the central MCP tool discover_web_capability. Evercraft Fetch is implemented and build-passed but remains external-canary gated; web search and owned browser execution remain held pending runtime activation, pairing/isolation and production receipts.",
+      "live_canary_evidence": null,
       "catalog_version": "2026-09-24.3"
     },
     {
@@ -820,6 +843,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "No verified Evercraft Payments path for this capability.",
       "invocation_status": "LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.",
+      "live_canary_evidence": null,
       "catalog_version": "2026-09-23.12"
     },
     {
@@ -856,6 +880,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "FAIE / Stripe, provider-verified",
       "invocation_status": "LIVE: FAIE HTTP agent gateway + OpenAPI + llms guidance + remote MCP at https://faie.base44.app/functions/faieMcp. Agents can inspect the fixed $250/$2,500 offers, prepare checkout only after explicit human confirmation, and verify payment/mission queue state. Paid work remains human-review controlled.",
+      "live_canary_evidence": null,
       "catalog_version": "2026-09-23.14"
     },
     {
@@ -897,6 +922,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "Evercraft Payments with Stripe provider verification",
       "invocation_status": "LIVE: HTTP agent gateway + OpenAPI + llms guidance + remote MCP. Agents can read offers, prepare checkout only after explicit human confirmation, and read hunt status. Paid fulfillment still requires authoritative provider verification.",
+      "live_canary_evidence": null,
       "catalog_version": "2026-09-23.6"
     },
     {
@@ -922,6 +948,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "Evercraft Payments",
       "invocation_status": "Discoverable capability; recurring entitlement/payment path still being verified.",
+      "live_canary_evidence": null,
       "catalog_version": "2026-09-23"
     },
     {
@@ -956,6 +983,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "Evercraft Payments; central machine checkout remains verification-gated.",
       "invocation_status": "LIVE human-confirmed web handoff for AI media overflow and evidence review; secure machine intake and central checkout remain verification-gated.",
+      "live_canary_evidence": null,
       "catalog_version": "2026-09-24.1"
     },
     {
@@ -987,6 +1015,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "Evercraft Payments; direct machine checkout is not exposed for this service.",
       "invocation_status": "LIVE fixed-price human review handoff through the central Machine Commerce MCP tool prepare_quote_ready_service_handoff. Discovery and qualification are machine-callable; source access, payment and paid work remain explicitly human-confirmed.",
+      "live_canary_evidence": null,
       "catalog_version": "2026-09-23"
     },
     {
@@ -1013,6 +1042,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "No verified payment path for this capability.",
       "invocation_status": "LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.",
+      "live_canary_evidence": null,
       "catalog_version": "2026-09-23.12"
     },
     {
@@ -1039,6 +1069,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "No verified Evercraft Payments path for this capability.",
       "invocation_status": "LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.",
+      "live_canary_evidence": null,
       "catalog_version": "2026-09-23.12"
     },
     {
@@ -1093,6 +1124,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "Evercraft Payments; human and agent checkout-session creation are wired behind explicit buyer confirmation. Checkout creation is not payment proof; paid state still requires authoritative provider verification.",
       "invocation_status": "LIVE DIRECT CHECKOUT CANARY VERIFIED: central Machine Commerce successfully retrieved the live IBM i offer set and created a synthetic $250 Estate X-Ray Stripe Checkout session through the product-native IBM i adapter and Evercraft Payments. Explicit human payment confirmation remains required for buyer checkout preparation. Checkout creation is not payment or revenue proof, paid state still requires authoritative provider verification, and production access/change remains outside this capability.",
+      "live_canary_evidence": "GitHubActionsRun:36495507434",
       "catalog_version": "2026-09-28.1"
     },
     {
@@ -1120,6 +1152,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "Stripe legacy adapter; checkout paused",
       "invocation_status": "Discoverable capability only. Paid membership checkout is disabled pending entitlement hardening.",
+      "live_canary_evidence": null,
       "catalog_version": "2026-09-23"
     },
     {
@@ -1145,6 +1178,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "Evercraft Payments",
       "invocation_status": "Discoverable capability; upload/payment disabled pending rights/security verification.",
+      "live_canary_evidence": null,
       "catalog_version": "2026-09-23"
     },
     {
@@ -1189,6 +1223,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "Human-confirmed request capture is live. No product-specific direct machine checkout is advertised. Paid state requires authoritative provider verification after a separately authorized payment path.",
       "invocation_status": "LIVE HUMAN HANDOFF VERIFIED: central Machine Commerce matches Legacy Rescue Lab from problem language, exposes the $299 Rescue Scan, renders a human review/intake page, and records a bounded scan request only after explicit human confirmation. A synthetic positive canary returned HTTP 201 with checkout_created=false, payment_obligation_created=false, private_access_granted=false and production_authority_granted=false; a negative canary without confirmation returned HTTP 409 and created no record. Direct checkout remains unverified and is not exposed.",
+      "live_canary_evidence": "[object Object]",
       "catalog_version": "2026-09-28.1"
     },
     {
@@ -1214,6 +1249,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "No verified Evercraft Payments path.",
       "invocation_status": "LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.",
+      "live_canary_evidence": null,
       "catalog_version": "2026-09-23.12"
     },
     {
@@ -1257,6 +1293,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "No direct machine checkout is exposed. Commercial terms and any later payment require explicit human agreement and authoritative payment verification.",
       "invocation_status": "LIVE for public machine discovery, deterministic problem matching, read-only pilot handoff, and human-confirmed commercial pilot request capture through Evercraft Machine Commerce. The internal Portfolio Sentinel runtime now has receipt-backed commerce-integrity cycle code for product-native buyer-route reachability, gateway-leak detection and conversion-stage telemetry. Recurring cadence is not claimed until an authorized scheduler is configured and successive runtime receipts prove it. Customer monitoring begins only after separate scoped onboarding and authorization. A pilot request grants no private access, monitoring authority, payment obligation, production mutation, or external-system authority.",
+      "live_canary_evidence": "[object Object]",
       "catalog_version": "2026-09-28.3"
     },
     {
@@ -1291,6 +1328,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "Raven Nexus / Evercraft Payments where a specific matched offer is verified; the pain router has no silent payment authority.",
       "invocation_status": "LIVE: public Raven Nexus pain router accepts plain-language pain and returns the smallest appropriate modular capability with evidence-state and checkout boundaries.",
+      "live_canary_evidence": null,
       "catalog_version": "2026-09-24.1"
     },
     {
@@ -1344,6 +1382,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "Evercraft Payments / provider-verified payment authority. Discovery and agent routing have no silent payment authority.",
       "invocation_status": "LIVE: RIVET is a first-class Evercraft Machine Commerce identity for the $299 Preliminary and $750 Full Site Opportunity Reports. The underlying address-intelligence engine remains internal to the commercial handoff. Checkout preparation is human-confirmed and paid state requires provider verification.",
+      "live_canary_evidence": null,
       "catalog_version": "2026-09-26.2"
     },
     {
@@ -1380,6 +1419,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "ROASTED / Stripe, provider-verified",
       "invocation_status": "LIVE: agent HTTP gateway + OpenAPI + llms guidance + remote MCP at https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp. Agents can read the 99¢ offer, prepare checkout only after explicit human confirmation, and retrieve the paid roast result. Generation requires Stripe verification of paid + complete + USD 0.99 + bound roast ID.",
+      "live_canary_evidence": null,
       "catalog_version": "2026-09-23.10"
     },
     {
@@ -1411,6 +1451,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "Evercraft Payments; direct machine checkout is not exposed for this service.",
       "invocation_status": "LIVE fixed-price human review handoff through the central Machine Commerce MCP tool prepare_quote_ready_service_handoff. Discovery and qualification are machine-callable; payment and paid work remain explicitly human-confirmed.",
+      "live_canary_evidence": null,
       "catalog_version": "2026-09-23"
     },
     {
@@ -1435,6 +1476,7 @@
       "public_url_source": "machine_commerce_review_fallback",
       "payment_authority": "Runtime broker supports machine settlement, but live verifier configuration and a paid canary still require independent verification.",
       "invocation_status": "Machine discovery/OpenAPI contract exists; settlement remains verification-gated.",
+      "live_canary_evidence": null,
       "catalog_version": "2026-09-23.3"
     },
     {
@@ -1461,6 +1503,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "No verified Evercraft Payments path for this capability.",
       "invocation_status": "LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.",
+      "live_canary_evidence": null,
       "catalog_version": "2026-09-23.12"
     },
     {
@@ -1487,6 +1530,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "Evercraft Payments",
       "invocation_status": "Discoverable capability; privacy/onboarding acceptance work pending.",
+      "live_canary_evidence": null,
       "catalog_version": "2026-09-23"
     },
     {
@@ -1513,6 +1557,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "No verified Evercraft Payments path for this capability.",
       "invocation_status": "LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.",
+      "live_canary_evidence": null,
       "catalog_version": "2026-09-23.12"
     },
     {
@@ -1554,34 +1599,8 @@
       "public_url_source": "source_catalog",
       "payment_authority": "Evercraft Website Service / Stripe, provider-verified",
       "invocation_status": "LIVE: agent HTTP gateway + OpenAPI + llms guidance + remote MCP at https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp. Agents can inspect $500/$999/$1,999 website-service tiers, prepare checkout only after explicit human confirmation, and independently verify paid order state.",
+      "live_canary_evidence": null,
       "catalog_version": "2026-09-23.13"
-    },
-    {
-      "public_id": "worldstate-reality-delta-v1",
-      "name": "Worldstate Reality Delta",
-      "intent_terms": [
-        "what materially changed around my assets",
-        "monitor external conditions affecting my facilities",
-        "ground my AI in current physical world changes",
-        "show me evidence backed changes in this region",
-        "track infrastructure and environmental conditions around my portfolio",
-        "give my agent a current world state feed",
-        "tell me what changed that matters to my routes"
-      ],
-      "problem": "An organization or AI needs a continuously updated, evidence-backed picture of the external conditions that intersect its assets, facilities, routes, regions, dependencies, industries, or topics without drowning in generic news and alert noise.",
-      "inputs": "A bounded scope containing regions, domains, assets, facilities, routes, infrastructure dependencies, industries, or topics. Inputs must concern non-personal operational subjects and use public or explicitly authorized data.",
-      "outputs": "Worldstate snapshots and Reality Delta packets with observations, relevance/materiality, evidence state, source-family diversity, timestamps, provenance references, and compact agent-ready change packets.",
-      "commercial_state": "verification_required",
-      "machine_state": "discovery_only",
-      "pricing": "Pilot and enterprise pricing not yet approved for machine quoting. Scope, cadence, source requirements, geography and delivery surface determine commercial packaging.",
-      "offers": [],
-      "human_ui_required": false,
-      "confirmation": "Discovery and scoping create no obligation. Paid pilots, consequential integrations and external actions require explicit confirmation and existing Systemia review gates.",
-      "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/systemia/worldstate",
-      "public_url_source": "source_catalog",
-      "payment_authority": "No verified direct payment path approved for Worldstate yet.",
-      "invocation_status": "BUILD: machine contract and proof exist on the Worldstate branch; public runtime and commercial checkout are not yet claimed live.",
-      "catalog_version": "2026-09-29"
     }
   ]
 }

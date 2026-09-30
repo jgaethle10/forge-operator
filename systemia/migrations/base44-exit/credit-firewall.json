@@ -34,7 +34,8 @@
     "systemia_kaidance_internal_wake_v5_every_5_minutes",
     "systemia_capability_verification_every_15_minutes",
     "systemia_collider_hourly",
-    "systemia_eps_social_continuity_every_30_minutes"
+    "systemia_eps_social_continuity_every_30_minutes",
+    "systemia_release_continuity_every_15_minutes"
   ],
   "temporary_legacy_exceptions": [],
   "cutover_gates": [
@@ -54,7 +55,7 @@
     {
       "workflow": "systemia_eps_social_continuity_every_30_minutes",
       "retired_at": "2026-09-29T17:59:00Z",
-      "state": "source_frozen_observation_pending",
+      "state": "deployed_schedule_still_firing_bridge_contained",
       "rollback_checkpoint": "6abbfd6656a50022c2b01b8a",
       "rollback_git_commit": "3ef97f12cc3bebfb628d406e97edacdf605468b3",
       "replacement_workflow": "systemia/organism/eps-social-continuity.workflow.json",
@@ -65,8 +66,37 @@
       "main_cutover_run_id": "36603707538",
       "main_cutover_receipt": "sha256:fb2d5cb093e5906c247fa41745c90cba8b023c0cbade55bba510622778ce8e33",
       "main_cutover_result": "no_op",
-      "last_legacy_wake_at": "2026-09-29T17:32:33.021Z",
-      "absence_window_verified": false
+      "last_legacy_wake_at": "2026-09-29T21:30:54.656Z",
+      "absence_window_verified": false,
+      "post_freeze_replacement_run_id": "36609801991",
+      "post_freeze_replacement_receipt": "sha256:307c10228664e1360903b5c8a9b992b337b043a8bbac8dca0daeffb49a6c4b14",
+      "post_freeze_replacement_result": "no_op",
+      "post_freeze_replacement_verified_at": "2026-09-29T18:07:54.190Z",
+      "legacy_wakes_after_source_freeze": 7,
+      "source_freeze_stopped_deployed_schedule": false,
+      "bridge_containment_checkpoint": "6abc31d686af18a72b08a88a",
+      "bridge_containment_git_commit": "a3b6a17be27fc5073d0d2d065f1b942875cf1ebb",
+      "bridge_containment_behavior": "return before Base44 entity operations and before Clip invocation",
+      "runtime_scheduler_removal_pending": true
+    },
+    {
+      "workflow": "systemia_release_continuity_every_15_minutes",
+      "state": "source_disabled_fail_closed_runtime_verification_pending",
+      "rollback_checkpoint": "6abc33c9490e45a4f72c27bd",
+      "rollback_git_commit": "b9cef111ca4baa67bda9514718eb105008e82358",
+      "source_automation_active": false,
+      "source_fail_closed_guard": "LEGACY_BASE44_RELEASE_SWEEP_DISABLED",
+      "legacy_provider_scope": "Base44 production drift and release queue maintenance",
+      "replacement_strategy": "retire legacy-provider-specific sweep while canonical release authority moves to GitHub/Systemia",
+      "replacement_surfaces": [
+        ".github/workflows/systemia-portfolio-sentinel.yml",
+        "systemia/organism/portfolio-sentinel.mjs",
+        "systemia/release/release-policy.mjs",
+        ".github/workflows/publish-runtime.yml"
+      ],
+      "replacement_cadence_seconds": 300,
+      "runtime_scheduler_verification_pending": true,
+      "named_cloud_required": false
     }
   ]
 }

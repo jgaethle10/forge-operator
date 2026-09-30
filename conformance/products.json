@@ -345,8 +345,8 @@
       "class": "bounded_membership_discovery",
       "canonical_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/llms.txt",
-      "doorway_state": "machine_commerce_live_game_wallet_source_qa_green_production_issuance_not_verified",
-      "conformance_state": "machine_commerce_live_game_wallet_truth_boundaries_hardened",
+      "doorway_state": "machine_commerce_live_game_wallet_growth_source_qa_green_production_issuance_not_verified",
+      "conformance_state": "machine_commerce_live_game_wallet_growth_truth_boundaries_hardened",
       "provider_behavior_state": "not_run",
       "mcp_registry": {
         "name": "io.github.jgaethle10/evercraft-machine-commerce",
@@ -359,13 +359,27 @@
       "chum_mirror_state": "generated_public_fallback",
       "game_wallet": {
         "public_surface": "https://evercraft-rewards.base44.app/game-wallet",
-        "source_state": "fulfillment_engine_source_qa_green",
+        "source_state": "fulfillment_growth_and_funded_earning_engine_source_qa_green",
         "source_qa_observed_on": "2026-09-29",
         "provider_adapter": "giftbit",
         "provider_relationship_claimed": false,
         "production_issuance_state": "not_verified",
         "deployment_state": "base44_cli_reauthentication_required_for_current_candidate",
-        "truth_boundary": "Do not claim a gaming reward can be issued until provider credentials, catalog authorization, sponsor funding, liability caps and deployed runtime canaries prove the exact rail is live."
+        "truth_boundary": "Do not claim a gaming reward can be issued until provider credentials, catalog authorization, sponsor funding, liability caps and deployed runtime canaries prove the exact rail is live. Do not claim referral rewards exist unless a separately funded referral campaign is activated.",
+        "founding_player_target": 2000,
+        "player_goal_state": "implemented_source_qa_green",
+        "referral_state": "attribution_and_verified_local_qualification_implemented_source_qa_green",
+        "referral_reward_state": "no_automatic_economic_reward",
+        "merchant_funded_earning_state": "implemented_with_verified_points_budget_and_race_safe_caps",
+        "sponsor_controls": [
+          "per_user_daily_limit",
+          "daily_issuance_cap",
+          "total_quantity_cap",
+          "total_dollar_cap",
+          "redemption_funding_reference",
+          "earning_points_budget_cap",
+          "earning_funding_reference"
+        ]
       }
     },
     {
@@ -614,8 +628,20 @@
       "provider_behavior_state": "not_run",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/opportunity-fabric/ai-conformance.json",
       "chum_mirror_state": "generated_public_fallback",
-      "runtime_state": "base44_private_build_lint_and_vite_build_verified",
-      "live_canary_evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/systemia/opportunity-fabric/runtime.json"
+      "runtime_state": "base44_private_runtime_v1_2_1_durable_blueprint_ledger_verified",
+      "live_canary_evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/systemia/opportunity-fabric/runtime.json",
+      "multi_party_state": "verified_private_runtime",
+      "authority_contract_state": "pass",
+      "security_smoke_state": "pass",
+      "protected_file_delivery": false,
+      "public_transactional_release": false,
+      "execution_blueprint_state": "verified_private_runtime",
+      "execution_blueprint_safe_metadata_only": true,
+      "execution_blueprint_contact_information_returned": false,
+      "execution_blueprint_protected_content_used": false,
+      "recommendation_is_not_membership": true,
+      "execution_blueprint_ledger_state": "owner_private_receipt_backed_idempotent",
+      "protected_workflow_entities_runtime_write_only": 9
     },
     {
       "product_key": "payflow",

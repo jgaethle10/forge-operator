@@ -4,15 +4,29 @@ import { fileURLToPath } from 'node:url';
 
 const STOP_WORDS=new Set([
   'a','an','and','are','as','at','be','by','for','from','how','i','in','is','it',
-  'me','my','of','on','or','the','this','to','we','what','with','you','your'
+  'me','my','of','on','or','the','this','to','we','what','with','you','your',
+  'can','cannot','cant','could','need','needs','please','trying','want','wants',
+  'help','helps','through','normal'
 ]);
 
 function clean(value,max=4000){
   return String(value??'').trim().slice(0,max);
 }
 
+function stemToken(token){
+  let value=String(token||'').toLowerCase();
+  if(value.length>5&&value.endsWith('ies')) value=value.slice(0,-3)+'y';
+  else if(value.length>5&&value.endsWith('ing')) value=value.slice(0,-3);
+  else if(value.length>4&&value.endsWith('ed')) value=value.slice(0,-2);
+  else if(value.length>4&&value.endsWith('es')) value=value.slice(0,-2);
+  else if(value.length>3&&value.endsWith('s')) value=value.slice(0,-1);
+  return value;
+}
+
 function tokens(value){
-  return clean(value).toLowerCase().match(/[a-z0-9]+/g)?.filter((x)=>x.length>1&&!STOP_WORDS.has(x))||[];
+  return clean(value).toLowerCase().match(/[a-z0-9]+/g)
+    ?.map(stemToken)
+    .filter((x)=>x.length>1&&!STOP_WORDS.has(x))||[];
 }
 
 function normalizedId(value){
@@ -144,28 +158,69 @@ export function normalizeFabricCatalog(input=[]){
   });
 }
 
-function scoreEntry(intent,entry){
-  const intentTokens=tokens(intent);
+function entryTokenSet(entry){
+  return new Set([
+    ...tokens(entry.name),
+    ...tokens(entry.description),
+    ...entry.keywords.flatMap(tokens),
+  ]);
+}
+
+function buildDocumentFrequency(catalog){
+  const frequency=new Map();
+  for(const entry of catalog){
+    for(const token of entryTokenSet(entry)){
+      frequency.set(token,(frequency.get(token)||0)+1);
+    }
+  }
+  return frequency;
+}
+
+function tokenWeight(token,frequency,total){
+  const df=frequency.get(token)||0;
+  return 1+Math.log((total+1)/(df+1));
+}
+
+function scoreEntry(intent,entry,{frequency,total}){
+  const intentTokens=[...new Set(tokens(intent))];
   if(!intentTokens.length) return 0;
-  const nameTokens=tokens(entry.name);
-  const descTokens=tokens(entry.description);
-  const keywordTokens=entry.keywords.flatMap(tokens);
+  const nameTokens=new Set(tokens(entry.name));
+  const descTokens=new Set(tokens(entry.description));
+  const keywordTokens=new Set(entry.keywords.flatMap(tokens));
   let score=0;
   for(const token of intentTokens){
-    if(nameTokens.includes(token)) score+=8;
-    if(keywordTokens.includes(token)) score+=6;
-    if(descTokens.includes(token)) score+=2;
+    const weight=tokenWeight(token,frequency,total);
+    if(nameTokens.has(token)) score+=8*weight;
+    if(keywordTokens.has(token)) score+=6*weight;
+    if(descTokens.has(token)) score+=2*weight;
   }
+
+  const intentSet=new Set(intentTokens);
+  for(const keyword of entry.keywords){
+    const phraseTokens=[...new Set(tokens(keyword))];
+    if(phraseTokens.length<2) continue;
+    const overlap=phraseTokens.filter((token)=>intentSet.has(token));
+    if(overlap.length>=2){
+      const coverage=overlap.length/phraseTokens.length;
+      score+=coverage*overlap.reduce(
+        (sum,token)=>sum+(4*tokenWeight(token,frequency,total)),
+        0
+      );
+    }
+  }
+
   const phrase=clean(intent).toLowerCase();
   if(phrase&&entry.name.toLowerCase().includes(phrase)) score+=20;
-  return score;
+  return Math.round(score*100)/100;
 }
 
 export function matchFabricCapabilities(intent,catalog,{limit=5}={}){
   const normalized=normalizeFabricCatalog(catalog);
   const max=Math.max(1,Math.min(20,Number(limit||5)));
+  const frequency=buildDocumentFrequency(normalized);
+  const total=normalized.length;
   return normalized
-    .map((entry)=>({...entry,match_score:scoreEntry(intent,entry)}))
+    .map((entry)=>({...entry,match_score:scoreEntry(intent,entry,{frequency,total})}))
     .filter((entry)=>entry.match_score>0)
     .sort((a,b)=>b.match_score-a.match_score||a.name.localeCompare(b.name))
     .slice(0,max);

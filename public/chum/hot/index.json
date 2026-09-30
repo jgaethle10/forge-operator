@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.hot-discovery.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-29T18:57:39.482Z",
+  "updated_at": "2026-09-30T15:18:41.885Z",
   "purpose": "High-priority public discovery surfaces for crawler fan-out. The queue reserves limited cold-start frontage for current commercial and sitemap surfaces, then fills remaining slots by observed priority. This is a crawl-order hint, not a ranking or recommendation claim.",
   "surfaces": [
     {
@@ -291,7 +291,7 @@
       "path": "/chum/sitemaps/answers.xml",
       "url": "/chum/sitemaps/answers.xml",
       "priority": 108,
-      "last_changed": "2026-09-29T18:55:38.752Z"
+      "last_changed": "2026-09-29T19:18:34.761Z"
     },
     {
       "path": "/chum/sitemaps/products.xml",
@@ -321,7 +321,13 @@
       "path": "/chum/sell-now.json",
       "url": "/chum/sell-now.json",
       "priority": 92,
-      "last_changed": "2026-09-29T18:40:12.557Z"
+      "last_changed": "2026-09-30T07:16:23.209Z"
+    },
+    {
+      "path": "/chum/sell-now.txt",
+      "url": "/chum/sell-now.txt",
+      "priority": 92,
+      "last_changed": "2026-09-30T07:16:23.209Z"
     },
     {
       "path": "/chum/sell-now.html",
@@ -330,22 +336,16 @@
       "last_changed": "2026-09-28T19:03:48.848Z"
     },
     {
-      "path": "/chum/sell-now.txt",
-      "url": "/chum/sell-now.txt",
-      "priority": 92,
-      "last_changed": "2026-09-28T19:03:48.848Z"
+      "path": "/chum/revenue.json",
+      "url": "/chum/revenue.json",
+      "priority": 90,
+      "last_changed": "2026-09-29T19:24:13.034Z"
     },
     {
       "path": "/.well-known/evercraft-pain-index.json",
       "url": "/.well-known/evercraft-pain-index.json",
       "priority": 90,
-      "last_changed": "2026-09-29T18:55:38.752Z"
-    },
-    {
-      "path": "/chum/revenue.json",
-      "url": "/chum/revenue.json",
-      "priority": 90,
-      "last_changed": "2026-09-29T18:40:12.557Z"
+      "last_changed": "2026-09-29T19:18:34.761Z"
     },
     {
       "path": "/chum/revenue.html",
@@ -363,13 +363,13 @@
       "path": "/.well-known/evercraft-machine-catalog.json",
       "url": "/.well-known/evercraft-machine-catalog.json",
       "priority": 84,
-      "last_changed": "2026-09-29T18:40:12.557Z"
+      "last_changed": "2026-09-29T19:24:13.034Z"
     },
     {
       "path": "/chum/answers/doors/create-cross-business-loyalty-rewards-2c3ab05040.json",
       "url": "/chum/answers/doors/create-cross-business-loyalty-rewards-2c3ab05040.json",
       "priority": 160,
-      "last_changed": "2026-09-29T18:55:38.752Z"
+      "last_changed": "2026-09-29T19:18:34.761Z"
     },
     {
       "path": "/chum/answers/doors/application-network-continuity-3ac8582e22.json",

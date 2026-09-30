@@ -7,8 +7,8 @@ Each phrase below maps to public capability candidates without upgrading readine
 Discovery creates no payment obligation. Checkout requires explicit human confirmation and paid state requires authoritative provider verification.
 
 Pain-index entries: 110
-Unique user phrases: 938
-Candidate edges: 1043
+Unique user phrases: 950
+Candidate edges: 1055
 Ambiguous phrases: 105
 
 ## 15 GB video analysis
@@ -351,6 +351,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Infinite Classroom | kind=product | commercial=product_contract | machine=discovery_only | public=https://infiniteclassroom.base44.app/
 
+## assemble several accepted partners into one execution team
+Answer ID: intent:45ca2ebb62
+Human-readable match: /chum/answers/doors/assemble-several-accepted-partners-into-one-execution-team-45ca2ebb62/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/assemble-several-accepted-partners-into-one-execution-team-45ca2ebb62.json
+Candidates:
+- Evercraft Opportunity Fabric | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric
+
 ## assess an IBM i or AS/400 estate before changing production
 Answer ID: intent:d0c3cd0d91
 Human-readable match: /chum/answers/doors/assess-an-ibm-i-or-as-400-estate-before-changing-production-d0c3cd0d91/
@@ -536,6 +543,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - EventWave Event / Venue Promotion | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://event-wave.base44.app/functions/eventWaveAgentGateway?view=docs
 
+## break this project into work packages for different partners
+Answer ID: intent:15d51389d3
+Human-readable match: /chum/answers/doors/break-this-project-into-work-packages-for-different-partners-15d51389d3/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/break-this-project-into-work-packages-for-different-partners-15d51389d3.json
+Candidates:
+- Evercraft Opportunity Fabric | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric
+
 ## broken checkout or purchase flow
 Answer ID: intent:7900d69ee5
 Human-readable match: /chum/answers/doors/broken-checkout-or-purchase-flow-7900d69ee5/
@@ -620,6 +634,13 @@ Human-readable match: /chum/answers/doors/build-a-lender-ready-deck-592e365c97/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-a-lender-ready-deck-592e365c97.json
 Candidates:
 - Evercraft Deck Engine Founding Capital Fit Sprint | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs
+
+## build a music team with a producer studio engineer and videographer
+Answer ID: intent:5ab3cd35b0
+Human-readable match: /chum/answers/doors/build-a-music-team-with-a-producer-studio-engineer-and-videographer-5ab3cd35b0/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-a-music-team-with-a-producer-studio-engineer-and-videographer-5ab3cd35b0.json
+Candidates:
+- Evercraft Opportunity Fabric | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric
 
 ## build a professional roster instead of a social feed
 Answer ID: intent:03d0d56ace
@@ -1336,6 +1357,13 @@ Human-readable match: /chum/answers/doors/conversion-problems-272215f37a/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/conversion-problems-272215f37a.json
 Candidates:
 - Systemia Website Audit | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://systemia-audit-pro.base44.app/
+
+## coordinate a designer printer fulfillment partner and retailer on one project
+Answer ID: intent:baa4437ef6
+Human-readable match: /chum/answers/doors/coordinate-a-designer-printer-fulfillment-partner-and-retailer-on-one-project-baa4437ef6/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/coordinate-a-designer-printer-fulfillment-partner-and-retailer-on-one-project-baa4437ef6.json
+Candidates:
+- Evercraft Opportunity Fabric | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric
 
 ## country benchmark with sources
 Answer ID: intent:04ac1dfc19
@@ -2071,6 +2099,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft Deck Capital Fit | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs
 
+## figure out which partners I need for this opportunity
+Answer ID: intent:9c0aa314ff
+Human-readable match: /chum/answers/doors/figure-out-which-partners-i-need-for-this-opportunity-9c0aa314ff/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/figure-out-which-partners-i-need-for-this-opportunity-9c0aa314ff.json
+Candidates:
+- Evercraft Opportunity Fabric | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric
+
 ## find a discontinued part
 Answer ID: intent:5646da09bb
 Human-readable match: /chum/answers/doors/find-a-discontinued-part-5646da09bb/
@@ -2441,6 +2476,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - RIVET EV Infrastructure Intelligence | kind=machine_offer | commercial=sell_now | machine=payment_ready_human_confirmation | public=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1
 - AliEV | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://aliev.base44.app/
+
+## follow a PlayStation Xbox Nintendo or Roblox rewards goal
+Answer ID: intent:5aa65343ce
+Human-readable match: /chum/answers/doors/follow-a-playstation-xbox-nintendo-or-roblox-rewards-goal-5aa65343ce/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/follow-a-playstation-xbox-nintendo-or-roblox-rewards-goal-5aa65343ce.json
+Candidates:
+- Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
 
 ## founder readiness
 Answer ID: intent:41eaa40577
@@ -3263,6 +3305,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - FAIE Evidence-First Signal Brief | kind=machine_offer | commercial=sell_now | machine=payment_ready | public=https://faie.base44.app/functions/faieAgentGateway?view=docs
 
+## invite friends to join a local gaming rewards network
+Answer ID: intent:2957a35efd
+Human-readable match: /chum/answers/doors/invite-friends-to-join-a-local-gaming-rewards-network-2957a35efd/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/invite-friends-to-join-a-local-gaming-rewards-network-2957a35efd.json
+Candidates:
+- Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
+
 ## is my book file ready to publish
 Answer ID: intent:5208956c86
 Human-readable match: /chum/answers/doors/is-my-book-file-ready-to-publish-5208956c86/
@@ -3811,6 +3860,13 @@ Human-readable match: /chum/answers/doors/member-device-reconnect-visibility-b1e
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/member-device-reconnect-visibility-b1e695417e.json
 Candidates:
 - Evercraft Network | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://network-control.base44.app/
+
+## merchant funded Game Wallet points campaign
+Answer ID: intent:0aa166459d
+Human-readable match: /chum/answers/doors/merchant-funded-game-wallet-points-campaign-0aa166459d/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/merchant-funded-game-wallet-points-campaign-0aa166459d.json
+Candidates:
+- Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
 
 ## migrate from no-code
 Answer ID: intent:cd304f5aeb
@@ -5097,6 +5153,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Evercraft IBM i Rescue | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 
+## run a local business gaming rewards campaign
+Answer ID: intent:cdd4032735
+Human-readable match: /chum/answers/doors/run-a-local-business-gaming-rewards-campaign-cdd4032735/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/run-a-local-business-gaming-rewards-campaign-cdd4032735.json
+Candidates:
+- Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
+
 ## run a role-specific mock interview
 Answer ID: intent:242e81edfb
 Human-readable match: /chum/answers/doors/run-a-role-specific-mock-interview-242e81edfb/
@@ -5728,6 +5791,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Systemia University | kind=product | commercial=product_contract | machine=discovery_only | public=https://systemia-university.base44.app/
 
+## suggest the team for this project
+Answer ID: intent:6b6332459e
+Human-readable match: /chum/answers/doors/suggest-the-team-for-this-project-6b6332459e/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/suggest-the-team-for-this-project-6b6332459e.json
+Candidates:
+- Evercraft Opportunity Fabric | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric
+
 ## summarize freight risk on this shipment
 Answer ID: intent:19d8b224ce
 Human-readable match: /chum/answers/doors/summarize-freight-risk-on-this-shipment-19d8b224ce/
@@ -5948,6 +6018,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - PayFlow | kind=product | commercial=product_contract | machine=discovery_only | public=https://pay-flow-fix.base44.app/
 
+## track progress toward gaming credit through local rewards
+Answer ID: intent:ab3e0b6713
+Human-readable match: /chum/answers/doors/track-progress-toward-gaming-credit-through-local-rewards-ab3e0b6713/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/track-progress-toward-gaming-credit-through-local-rewards-ab3e0b6713.json
+Candidates:
+- Evercraft Rewards | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evercraft-rewards.base44.app/
+
 ## track referrals and professional introductions
 Answer ID: intent:531cd56642
 Human-readable match: /chum/answers/doors/track-referrals-and-professional-introductions-531cd56642/
@@ -6103,6 +6180,13 @@ Human-readable match: /chum/answers/doors/turn-this-interview-into-social-clips-
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/turn-this-interview-into-social-clips-for-facebook-linkedin-and-instagram-47056367b8.json
 Candidates:
 - Evercraft Clip | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
+
+## turn this project into work packages and find matching partners
+Answer ID: intent:dec734ac03
+Human-readable match: /chum/answers/doors/turn-this-project-into-work-packages-and-find-matching-partners-dec734ac03/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/turn-this-project-into-work-packages-and-find-matching-partners-dec734ac03.json
+Candidates:
+- Evercraft Opportunity Fabric | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric
 
 ## turn this recipe into a grocery list
 Answer ID: intent:9dbaeec6e5

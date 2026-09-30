@@ -21,8 +21,8 @@
   },
   "summary": {
     "pain_index_entries": 110,
-    "unique_user_phrases": 938,
-    "mapped_candidate_edges": 1043,
+    "unique_user_phrases": 950,
+    "mapped_candidate_edges": 1055,
     "ambiguous_phrases": 105,
     "product_candidates": 64,
     "machine_offer_candidates": 46
@@ -1181,6 +1181,29 @@
       ]
     },
     {
+      "answer_id": "intent:45ca2ebb62",
+      "user_language": "assemble several accepted partners into one execution team",
+      "normalized": "assemble several accepted partners into one execution team",
+      "relative_json": "/chum/answers/doors/assemble-several-accepted-partners-into-one-execution-team-45ca2ebb62.json",
+      "relative_page": "/chum/answers/doors/assemble-several-accepted-partners-into-one-execution-team-45ca2ebb62/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/assemble-several-accepted-partners-into-one-execution-team-45ca2ebb62.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:opportunity-fabric",
+          "kind": "product",
+          "product_key": "opportunity-fabric",
+          "public_id": null,
+          "name": "Evercraft Opportunity Fabric",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/opportunity-fabric/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:d0c3cd0d91",
       "user_language": "assess an IBM i or AS/400 estate before changing production",
       "normalized": "assess an ibm i or as 400 estate before changing production",
@@ -1815,6 +1838,29 @@
       ]
     },
     {
+      "answer_id": "intent:15d51389d3",
+      "user_language": "break this project into work packages for different partners",
+      "normalized": "break this project into work packages for different partners",
+      "relative_json": "/chum/answers/doors/break-this-project-into-work-packages-for-different-partners-15d51389d3.json",
+      "relative_page": "/chum/answers/doors/break-this-project-into-work-packages-for-different-partners-15d51389d3/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/break-this-project-into-work-packages-for-different-partners-15d51389d3.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:opportunity-fabric",
+          "kind": "product",
+          "product_key": "opportunity-fabric",
+          "public_id": null,
+          "name": "Evercraft Opportunity Fabric",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/opportunity-fabric/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:7900d69ee5",
       "user_language": "broken checkout or purchase flow",
       "normalized": "broken checkout or purchase flow",
@@ -2098,6 +2144,29 @@
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/deck-capital-fit-sprint-machine-v1/",
           "public_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:5ab3cd35b0",
+      "user_language": "build a music team with a producer studio engineer and videographer",
+      "normalized": "build a music team with a producer studio engineer and videographer",
+      "relative_json": "/chum/answers/doors/build-a-music-team-with-a-producer-studio-engineer-and-videographer-5ab3cd35b0.json",
+      "relative_page": "/chum/answers/doors/build-a-music-team-with-a-producer-studio-engineer-and-videographer-5ab3cd35b0/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-a-music-team-with-a-producer-studio-engineer-and-videographer-5ab3cd35b0.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:opportunity-fabric",
+          "kind": "product",
+          "product_key": "opportunity-fabric",
+          "public_id": null,
+          "name": "Evercraft Opportunity Fabric",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/opportunity-fabric/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric",
           "registry_name": null
         }
       ]
@@ -4530,6 +4599,29 @@
           "pain_page": "/chum/products/systemia-website-audit/",
           "public_url": "https://systemia-audit-pro.base44.app/",
           "registry_name": "io.github.jgaethle10/systemia-website-audit"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:baa4437ef6",
+      "user_language": "coordinate a designer printer fulfillment partner and retailer on one project",
+      "normalized": "coordinate a designer printer fulfillment partner and retailer on one project",
+      "relative_json": "/chum/answers/doors/coordinate-a-designer-printer-fulfillment-partner-and-retailer-on-one-project-baa4437ef6.json",
+      "relative_page": "/chum/answers/doors/coordinate-a-designer-printer-fulfillment-partner-and-retailer-on-one-project-baa4437ef6/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/coordinate-a-designer-printer-fulfillment-partner-and-retailer-on-one-project-baa4437ef6.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:opportunity-fabric",
+          "kind": "product",
+          "product_key": "opportunity-fabric",
+          "public_id": null,
+          "name": "Evercraft Opportunity Fabric",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/opportunity-fabric/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric",
+          "registry_name": null
         }
       ]
     },
@@ -7059,6 +7151,29 @@
       ]
     },
     {
+      "answer_id": "intent:9c0aa314ff",
+      "user_language": "figure out which partners I need for this opportunity",
+      "normalized": "figure out which partners i need for this opportunity",
+      "relative_json": "/chum/answers/doors/figure-out-which-partners-i-need-for-this-opportunity-9c0aa314ff.json",
+      "relative_page": "/chum/answers/doors/figure-out-which-partners-i-need-for-this-opportunity-9c0aa314ff/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/figure-out-which-partners-i-need-for-this-opportunity-9c0aa314ff.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:opportunity-fabric",
+          "kind": "product",
+          "product_key": "opportunity-fabric",
+          "public_id": null,
+          "name": "Evercraft Opportunity Fabric",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/opportunity-fabric/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:5646da09bb",
       "user_language": "find a discontinued part",
       "normalized": "find a discontinued part",
@@ -8335,6 +8450,29 @@
           "pain_page": "/chum/products/aliev/",
           "public_url": "https://aliev.base44.app/",
           "registry_name": "io.github.jgaethle10/aliev"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:5aa65343ce",
+      "user_language": "follow a PlayStation Xbox Nintendo or Roblox rewards goal",
+      "normalized": "follow a playstation xbox nintendo or roblox rewards goal",
+      "relative_json": "/chum/answers/doors/follow-a-playstation-xbox-nintendo-or-roblox-rewards-goal-5aa65343ce.json",
+      "relative_page": "/chum/answers/doors/follow-a-playstation-xbox-nintendo-or-roblox-rewards-goal-5aa65343ce/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/follow-a-playstation-xbox-nintendo-or-roblox-rewards-goal-5aa65343ce.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-rewards",
+          "kind": "product",
+          "product_key": "evercraft-rewards",
+          "public_id": null,
+          "name": "Evercraft Rewards",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-rewards/",
+          "public_url": "https://evercraft-rewards.base44.app/",
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -11115,6 +11253,29 @@
       ]
     },
     {
+      "answer_id": "intent:2957a35efd",
+      "user_language": "invite friends to join a local gaming rewards network",
+      "normalized": "invite friends to join a local gaming rewards network",
+      "relative_json": "/chum/answers/doors/invite-friends-to-join-a-local-gaming-rewards-network-2957a35efd.json",
+      "relative_page": "/chum/answers/doors/invite-friends-to-join-a-local-gaming-rewards-network-2957a35efd/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/invite-friends-to-join-a-local-gaming-rewards-network-2957a35efd.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-rewards",
+          "kind": "product",
+          "product_key": "evercraft-rewards",
+          "public_id": null,
+          "name": "Evercraft Rewards",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-rewards/",
+          "public_url": "https://evercraft-rewards.base44.app/",
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
+        }
+      ]
+    },
+    {
       "answer_id": "intent:5208956c86",
       "user_language": "is my book file ready to publish",
       "normalized": "is my book file ready to publish",
@@ -13001,6 +13162,29 @@
           "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/evercraft-network/",
           "public_url": "https://network-control.base44.app/",
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:0aa166459d",
+      "user_language": "merchant funded Game Wallet points campaign",
+      "normalized": "merchant funded game wallet points campaign",
+      "relative_json": "/chum/answers/doors/merchant-funded-game-wallet-points-campaign-0aa166459d.json",
+      "relative_page": "/chum/answers/doors/merchant-funded-game-wallet-points-campaign-0aa166459d/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/merchant-funded-game-wallet-points-campaign-0aa166459d.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-rewards",
+          "kind": "product",
+          "product_key": "evercraft-rewards",
+          "public_id": null,
+          "name": "Evercraft Rewards",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-rewards/",
+          "public_url": "https://evercraft-rewards.base44.app/",
           "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
@@ -17446,6 +17630,29 @@
       ]
     },
     {
+      "answer_id": "intent:cdd4032735",
+      "user_language": "run a local business gaming rewards campaign",
+      "normalized": "run a local business gaming rewards campaign",
+      "relative_json": "/chum/answers/doors/run-a-local-business-gaming-rewards-campaign-cdd4032735.json",
+      "relative_page": "/chum/answers/doors/run-a-local-business-gaming-rewards-campaign-cdd4032735/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/run-a-local-business-gaming-rewards-campaign-cdd4032735.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-rewards",
+          "kind": "product",
+          "product_key": "evercraft-rewards",
+          "public_id": null,
+          "name": "Evercraft Rewards",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-rewards/",
+          "public_url": "https://evercraft-rewards.base44.app/",
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
+        }
+      ]
+    },
+    {
       "answer_id": "intent:242e81edfb",
       "user_language": "run a role-specific mock interview",
       "normalized": "run a role specific mock interview",
@@ -19589,6 +19796,29 @@
       ]
     },
     {
+      "answer_id": "intent:6b6332459e",
+      "user_language": "suggest the team for this project",
+      "normalized": "suggest the team for this project",
+      "relative_json": "/chum/answers/doors/suggest-the-team-for-this-project-6b6332459e.json",
+      "relative_page": "/chum/answers/doors/suggest-the-team-for-this-project-6b6332459e/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/suggest-the-team-for-this-project-6b6332459e.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:opportunity-fabric",
+          "kind": "product",
+          "product_key": "opportunity-fabric",
+          "public_id": null,
+          "name": "Evercraft Opportunity Fabric",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/opportunity-fabric/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:19d8b224ce",
       "user_language": "summarize freight risk on this shipment",
       "normalized": "summarize freight risk on this shipment",
@@ -20338,6 +20568,29 @@
       ]
     },
     {
+      "answer_id": "intent:ab3e0b6713",
+      "user_language": "track progress toward gaming credit through local rewards",
+      "normalized": "track progress toward gaming credit through local rewards",
+      "relative_json": "/chum/answers/doors/track-progress-toward-gaming-credit-through-local-rewards-ab3e0b6713.json",
+      "relative_page": "/chum/answers/doors/track-progress-toward-gaming-credit-through-local-rewards-ab3e0b6713/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/track-progress-toward-gaming-credit-through-local-rewards-ab3e0b6713.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:evercraft-rewards",
+          "kind": "product",
+          "product_key": "evercraft-rewards",
+          "public_id": null,
+          "name": "Evercraft Rewards",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/evercraft-rewards/",
+          "public_url": "https://evercraft-rewards.base44.app/",
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
+        }
+      ]
+    },
+    {
       "answer_id": "intent:531cd56642",
       "user_language": "track referrals and professional introductions",
       "normalized": "track referrals and professional introductions",
@@ -20864,6 +21117,29 @@
           "pain_page": "/chum/products/evercraft-clip/",
           "public_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
           "registry_name": "io.github.jgaethle10/evercraft-clip"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:dec734ac03",
+      "user_language": "turn this project into work packages and find matching partners",
+      "normalized": "turn this project into work packages and find matching partners",
+      "relative_json": "/chum/answers/doors/turn-this-project-into-work-packages-and-find-matching-partners-dec734ac03.json",
+      "relative_page": "/chum/answers/doors/turn-this-project-into-work-packages-and-find-matching-partners-dec734ac03/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/turn-this-project-into-work-packages-and-find-matching-partners-dec734ac03.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:opportunity-fabric",
+          "kind": "product",
+          "product_key": "opportunity-fabric",
+          "public_id": null,
+          "name": "Evercraft Opportunity Fabric",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/opportunity-fabric/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric",
+          "registry_name": null
         }
       ]
     },

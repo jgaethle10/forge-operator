@@ -13,6 +13,20 @@ function sendJson(res,status,body){
   res.end(data);
 }
 
+function sendHtml(res,status,body){
+  const data=Buffer.from(String(body||''));
+  res.writeHead(status,{
+    'content-type':'text/html; charset=utf-8',
+    'content-length':data.length,
+    'cache-control':'no-store',
+    'content-security-policy':"default-src 'none'; img-src data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'self'; form-action 'none'; frame-ancestors 'none'; base-uri 'none'",
+    'referrer-policy':'no-referrer',
+    'x-content-type-options':'nosniff',
+    'x-frame-options':'DENY'
+  });
+  res.end(data);
+}
+
 async function readJson(req){
   const chunks=[];
   let bytes=0;
@@ -78,15 +92,58 @@ export async function startBrowserPublicAdapter({
         return sendJson(res,200,{
           ok:true,
           service:'evercraft-web-browser-edge',
-          mode:'public_read_only',
+          mode:'public_read_only_plus_human_handoff',
           actions:['wait','wait_for_selector','scroll','follow_anchor'],
           arbitrary_click:false,
           form_submit:false,
           credentials:false,
           cookies:false,
           private_targets:false,
+          authenticated_human_handoff:
+            typeof runtime.authHandoffPage==='function' &&
+            typeof runtime.authSnapshot==='function' &&
+            typeof runtime.authAction==='function' &&
+            typeof runtime.authClose==='function',
+          authenticated_handoff_persists_profile:false,
+          authenticated_handoff_secret_text_returned:false,
           max_request_bytes:MAX_BODY_BYTES,
         });
+      }
+
+      const handoffMatch=String(req.url||'').match(/^\/handoff\/([A-Za-z0-9_-]+)$/);
+      if(req.method==='GET' && handoffMatch){
+        if(typeof runtime.authHandoffPage!=='function'){
+          return sendJson(res,503,{ok:false,error:'authenticated_browser_handoff_unavailable'});
+        }
+        return sendHtml(res,200,await runtime.authHandoffPage(handoffMatch[1]));
+      }
+
+      const snapshotMatch=String(req.url||'').match(/^\/v1\/auth-browser\/sessions\/([A-Za-z0-9_-]+)\/snapshot$/);
+      if(req.method==='GET' && snapshotMatch){
+        if(typeof runtime.authSnapshot!=='function'){
+          return sendJson(res,503,{ok:false,error:'authenticated_browser_handoff_unavailable'});
+        }
+        const claim=String(req.headers['x-evercraft-browser-claim']||'').trim();
+        return sendJson(res,200,await runtime.authSnapshot(snapshotMatch[1],claim));
+      }
+
+      const actionMatch=String(req.url||'').match(/^\/v1\/auth-browser\/sessions\/([A-Za-z0-9_-]+)\/action$/);
+      if(req.method==='POST' && actionMatch){
+        if(typeof runtime.authAction!=='function'){
+          return sendJson(res,503,{ok:false,error:'authenticated_browser_handoff_unavailable'});
+        }
+        const claim=String(req.headers['x-evercraft-browser-claim']||'').trim();
+        const action=await readJson(req);
+        return sendJson(res,200,await runtime.authAction(actionMatch[1],claim,action));
+      }
+
+      const closeMatch=String(req.url||'').match(/^\/v1\/auth-browser\/sessions\/([A-Za-z0-9_-]+)$/);
+      if(req.method==='DELETE' && closeMatch){
+        if(typeof runtime.authClose!=='function'){
+          return sendJson(res,503,{ok:false,error:'authenticated_browser_handoff_unavailable'});
+        }
+        const claim=String(req.headers['x-evercraft-browser-claim']||'').trim();
+        return sendJson(res,200,await runtime.authClose(closeMatch[1],claim));
       }
 
       if(req.method==='POST' && req.url==='/v1/browser/render'){
@@ -106,6 +163,8 @@ export async function startBrowserPublicAdapter({
       return sendJson(res,404,{ok:false,error:'not_found'});
     }catch(error){
       const message=error instanceof Error?error.message:String(error);
+      const authError=message==='authenticated_browser_claim_invalid';
+      const missingError=message==='authenticated_browser_session_not_found';
       const clientError=
         message==='request_body_too_large' ||
         message==='invalid_json' ||
@@ -122,7 +181,7 @@ export async function startBrowserPublicAdapter({
         message.startsWith('unsupported_action') ||
         message.startsWith('invalid_selector') ||
         message.startsWith('invalid_anchor_selector');
-      return sendJson(res,clientError?400:500,{
+      return sendJson(res,authError?401:missingError?404:clientError?400:500,{
         ok:false,
         error:message,
         service:'evercraft-web-browser-edge'

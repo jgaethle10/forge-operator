@@ -3562,7 +3562,12 @@
         "earn PlayStation credit through local rewards",
         "earn Xbox credit through local rewards",
         "earn Nintendo eShop credit through local rewards",
-        "earn Roblox credit through local rewards"
+        "earn Roblox credit through local rewards",
+        "track progress toward gaming credit through local rewards",
+        "follow a PlayStation Xbox Nintendo or Roblox rewards goal",
+        "invite friends to join a local gaming rewards network",
+        "merchant funded Game Wallet points campaign",
+        "run a local business gaming rewards campaign"
       ],
       "problem": null,
       "inputs": null,
@@ -3585,7 +3590,11 @@
         "gaming redemption remains unavailable until a specific funded and authorized fulfillment rail, provider credential, sponsor budget and deployed runtime are independently verified",
         "Evercraft Points are not represented as publisher currency, cash or a direct publisher partnership",
         "prepared merchant enrollment does not activate a merchant, offer, discount, public listing or payment obligation",
-        "merchant directory publication and commercial activation require their own verified state"
+        "merchant directory publication and commercial activation require their own verified state",
+        "following a Game Wallet destination records user intent only until a real configured reward offer supplies a points target",
+        "referral attribution creates no automatic points or game credit",
+        "a referral becomes qualified only after the invitee completes a verified local Rewards check-in; that qualification still does not prove a purchase",
+        "merchant-funded Game Wallet earning boosts require a verified points-funding reference and capped points pool before activation"
       ],
       "commercial_state": "product_contract",
       "machine_state": "specialist_mcp_declared",
@@ -4592,7 +4601,14 @@
         "I need a subcontractor or specialist so I can execute this job",
         "I have intellectual property but do not want to give it away while looking for partners",
         "help me turn this unfinished idea or asset into an executable team",
-        "find licensing production distribution or collaboration opportunities for work I already made"
+        "find licensing production distribution or collaboration opportunities for work I already made",
+        "assemble several accepted partners into one execution team",
+        "break this project into work packages for different partners",
+        "coordinate a designer printer fulfillment partner and retailer on one project",
+        "build a music team with a producer studio engineer and videographer",
+        "figure out which partners I need for this opportunity",
+        "turn this project into work packages and find matching partners",
+        "suggest the team for this project"
       ],
       "problem": null,
       "inputs": null,
@@ -4605,14 +4621,23 @@
         "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
       },
       "legacy_marketing_route_suppressed": false,
-      "authority": "public capability discovery and metadata-first partner matching architecture; no public protected-asset disclosure or payment authority is claimed",
+      "authority": "public capability discovery plus verified private metadata-first execution planning and multi-party assembly; no public protected-file delivery, payment, or final legal-agreement authority is claimed",
       "boundaries": [
         "public matching must not require protected creative files or confidential material",
         "uploading listing viewing matching or forming a team does not transfer ownership or grant commercial rights",
         "protected disclosure remains gated and actual protected-file delivery is not exposed as a public production workflow",
         "Creator Covenant legal language remains draft_for_counsel_review",
         "public Base44 deployment URL is not yet claimed",
-        "fingerprint vault evidence support is not copyright registration patent filing or dispositive proof of ownership"
+        "fingerprint vault evidence support is not copyright registration patent filing or dispositive proof of ownership",
+        "multi-party team creation requires already-accepted source relationships",
+        "each counterparty must accept the specific team invitation before receiving a work package",
+        "work-package acceptance does not grant intellectual-property rights or disclose protected material",
+        "actual protected-file delivery remains disabled",
+        "execution blueprints use safe opportunity metadata and public member capability metadata only",
+        "execution blueprints return no private contact information or protected content",
+        "execution blueprint recommendations are not membership qualification proof agreement authority or license",
+        "unmatched capabilities remain explicit gaps rather than invented partners",
+        "suggested candidates still require the protected connection handshake"
       ],
       "commercial_state": "product_contract",
       "machine_state": "discovery_only",

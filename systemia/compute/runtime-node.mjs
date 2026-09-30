@@ -20,6 +20,7 @@ import {
 import { startRivetReportRuntime } from '../rivet/report-runtime.mjs';
 import { startSpecialistHandoffRuntime } from '../mcp/specialist-handoff-runtime.mjs';
 import { startPublicEdgeRuntime } from '../network/public-edge-runtime.mjs';
+import { startFederatedServiceBridge } from '../network/federated-service-bridge.mjs';
 import { startEvercraftHomeServer } from '../evercraft-home/server.mjs';
 import { validatePublicEdgeAdmission } from '../network/public-edge-tls.mjs';
 import { transcriptionCapabilityStatus } from '../forensiscope/transcription-engine.mjs';
@@ -53,9 +54,14 @@ class ReceiptChain {
   }
 }
 
-async function readJson(req) {
+async function readJson(req, maxBytes = 16 * 1024 * 1024) {
   const chunks = [];
-  for await (const chunk of req) chunks.push(chunk);
+  let bytes = 0;
+  for await (const chunk of req) {
+    bytes += chunk.length;
+    if (bytes > maxBytes) throw new Error('request_body_too_large');
+    chunks.push(chunk);
+  }
   const raw = Buffer.concat(chunks).toString('utf8');
   return raw ? JSON.parse(raw) : {};
 }
@@ -72,6 +78,128 @@ function send(res, status, body) {
 function bearer(req) {
   const value = String(req.headers.authorization || '');
   return value.startsWith('Bearer ') ? value.slice(7) : '';
+}
+
+const BRIDGED_WORKLOADS = new Set([
+  'systemia.evercraft-web-browser.v1',
+  'systemia.specialist-handoff-mcp.v1',
+]);
+
+const BRIDGE_REQUEST_HEADERS = new Set([
+  'accept',
+  'content-type',
+  'authorization',
+  'mcp-session-id',
+  'last-event-id',
+  'x-evercraft-browser-claim',
+  'origin',
+  'referer',
+  'user-agent',
+]);
+
+const BRIDGE_RESPONSE_HEADERS = new Set([
+  'content-type',
+  'cache-control',
+  'content-security-policy',
+  'referrer-policy',
+  'x-content-type-options',
+  'x-frame-options',
+  'location',
+  'mcp-session-id',
+]);
+
+function bridgeHeaders(input, allow) {
+  const out = {};
+  for (const [rawKey, rawValue] of Object.entries(input || {})) {
+    const key = String(rawKey || '').toLowerCase();
+    if (!allow.has(key)) continue;
+    const value = Array.isArray(rawValue)
+      ? rawValue.map(String).join(', ')
+      : String(rawValue ?? '');
+    if (!value || value.length > 8192) continue;
+    out[key] = value;
+  }
+  return out;
+}
+
+function bridgeServiceOrigin(entry) {
+  if (entry?.workload_class === 'systemia.evercraft-web-browser.v1') {
+    return String(entry?.runtime?.localPublicUrl || '');
+  }
+  if (entry?.workload_class === 'systemia.specialist-handoff-mcp.v1') {
+    return String(entry?.runtime?.url || '');
+  }
+  return '';
+}
+
+function assertLoopbackBridgeOrigin(value) {
+  const url = new URL(String(value || ''));
+  const host = url.hostname.toLowerCase();
+  if (url.protocol !== 'http:') throw new Error('service_bridge_origin_must_be_http_loopback');
+  if (!['127.0.0.1','localhost','::1'].includes(host)) {
+    throw new Error('service_bridge_origin_must_be_loopback');
+  }
+  return url.origin;
+}
+
+function normalizeBridgePath(value) {
+  const raw = String(value || '/');
+  if (!raw.startsWith('/') || raw.startsWith('//')) throw new Error('service_bridge_path_invalid');
+  const parsed = new URL(raw, 'http://bridge.invalid');
+  if (parsed.origin !== 'http://bridge.invalid') throw new Error('service_bridge_path_invalid');
+  return parsed.pathname + parsed.search;
+}
+
+async function bridgeResidentHttp(entry, input = {}) {
+  if (!BRIDGED_WORKLOADS.has(entry?.workload_class)) {
+    throw new Error('resident_service_not_bridgeable');
+  }
+  const method = String(input.method || 'GET').toUpperCase();
+  if (!['GET','HEAD','POST','DELETE','OPTIONS'].includes(method)) {
+    throw new Error('resident_service_bridge_method_not_allowed');
+  }
+  const origin = assertLoopbackBridgeOrigin(bridgeServiceOrigin(entry));
+  const requestPath = normalizeBridgePath(input.path);
+  const target = new URL(requestPath, origin);
+  const encoded = String(input.body_base64 || '');
+  if (encoded.length > 12 * 1024 * 1024) throw new Error('resident_service_bridge_body_too_large');
+  const body = encoded ? Buffer.from(encoded, 'base64') : null;
+  if (body && body.length > 8 * 1024 * 1024) throw new Error('resident_service_bridge_body_too_large');
+
+  const response = await fetch(target, {
+    method,
+    headers: bridgeHeaders(input.headers, BRIDGE_REQUEST_HEADERS),
+    body: ['GET','HEAD'].includes(method) ? undefined : body,
+    redirect: 'manual',
+  });
+  const raw = Buffer.from(await response.arrayBuffer());
+  if (raw.length > 8 * 1024 * 1024) throw new Error('resident_service_bridge_response_too_large');
+
+  const responseHeaders = {};
+  for (const [key, value] of response.headers.entries()) {
+    if (!BRIDGE_RESPONSE_HEADERS.has(key.toLowerCase())) continue;
+    if (key.toLowerCase() === 'location') {
+      try {
+        const location = new URL(value, origin);
+        responseHeaders[key] = location.origin === origin
+          ? location.pathname + location.search + location.hash
+          : '/';
+      } catch {
+        responseHeaders[key] = '/';
+      }
+      continue;
+    }
+    responseHeaders[key] = value;
+  }
+
+  return {
+    status: response.status,
+    headers: responseHeaders,
+    body_base64: raw.toString('base64'),
+    request_path_hash: sha(requestPath),
+    request_bytes: body?.length || 0,
+    response_bytes: raw.length,
+  };
 }
 
 function isWithin(root, target) {
@@ -309,6 +437,57 @@ export async function startEvercraftComputeNode({
     }
   })();
 
+  const evercraftHomeIdentityCapability = (() => {
+    const signingSecret = String(process.env.EVERCRAFT_IDENTITY_SECRET || '').trim();
+    const signingKeyId = String(process.env.EVERCRAFT_IDENTITY_KEY_ID || 'primary').trim();
+    const identityStateValue = String(process.env.EVERCRAFT_IDENTITY_STATE_DIR || '').trim();
+    const passportStateValue = String(process.env.EVERCRAFT_PASSPORT_STATE_DIR || '').trim();
+
+    const identityStateRoot = identityStateValue ? path.resolve(identityStateValue) : '';
+    const passportStateRoot = passportStateValue ? path.resolve(passportStateValue) : '';
+    const identityWithinRoot = Boolean(identityStateRoot && isWithin(allowedRoot, identityStateRoot));
+    const passportWithinRoot = Boolean(passportStateRoot && isWithin(allowedRoot, passportStateRoot));
+    const identityStatePresent = Boolean(
+      identityWithinRoot &&
+      fs.existsSync(path.join(identityStateRoot, 'login-index.json'))
+    );
+    const passportStatePresent = Boolean(
+      passportWithinRoot &&
+      fs.existsSync(path.join(passportStateRoot, 'grants.jsonl'))
+    );
+    const signingMaterialPresent = Buffer.byteLength(signingSecret, 'utf8') >= 32;
+    const signingKeyValid = /^[a-zA-Z0-9._:-]{1,80}$/.test(signingKeyId);
+    const ready = Boolean(
+      identityStatePresent &&
+      passportStatePresent &&
+      signingMaterialPresent &&
+      signingKeyValid
+    );
+
+    return {
+      configured: Boolean(identityStateValue || passportStateValue || signingSecret),
+      ready,
+      identity_state_present: identityStatePresent,
+      passport_state_present: passportStatePresent,
+      signing_material_present: signingMaterialPresent,
+      signing_key_configured: signingKeyValid && signingMaterialPresent,
+      secret_material_exposed: false,
+      private_state_within_admitted_root:
+        Boolean(identityWithinRoot && passportWithinRoot),
+      reason: ready
+        ? null
+        : !identityWithinRoot || !passportWithinRoot
+          ? 'identity_or_passport_state_outside_admitted_root'
+          : !identityStatePresent
+            ? 'identity_state_not_bootstrapped'
+            : !passportStatePresent
+              ? 'passport_state_not_bootstrapped'
+              : !signingMaterialPresent
+                ? 'identity_signing_material_missing'
+                : 'identity_signing_key_invalid',
+    };
+  })();
+
   const browserWorkerSourceDir = path.join(
     CODE_ROOT,
     'systemia',
@@ -323,6 +502,7 @@ export async function startEvercraftComputeNode({
   const serviceCapabilities = {
     forensiscope_transcription: forensiscopeTranscriptionCapability.ready === true,
     evercraft_web_browser: browserRuntimeReady,
+    evercraft_home_identity: evercraftHomeIdentityCapability,
     public_edge: publicEdgeCapability,
     remote_operator: remoteOperator ? {
       ready: true,
@@ -545,6 +725,7 @@ export async function startEvercraftComputeNode({
     'systemia.rivet-report-runtime.v1',
     'systemia.specialist-handoff-mcp.v1',
     'systemia.public-edge.v1',
+    'systemia.federated-service-bridge.v1',
     'systemia.evercraft-home.v1',
     'saban.logical-agent',
     'saban.multiplier-assignment.v1',
@@ -1275,6 +1456,56 @@ export async function startEvercraftComputeNode({
           });
         }
 
+        if (workloadClass === 'systemia.federated-service-bridge.v1') {
+          const relayUrl = String(body.input?.relay_url || '').trim();
+          const relayToken = String(body.input?.relay_token || '');
+          if (!relayUrl || !relayToken) {
+            return send(res, 422, { error: 'federated_service_relay_authority_required' });
+          }
+          const runtime = await startFederatedServiceBridge({
+            relayUrl,
+            relayToken,
+            host:'127.0.0.1',
+            port:Number(body.input?.port || 0),
+            maxBodyBytes:Number(body.input?.max_body_bytes || 8 * 1024 * 1024),
+          });
+          const serviceId = `svc_${randomBytes(8).toString('hex')}`;
+          services.set(serviceId, {
+            lease_id: body.lease_id,
+            workload_class: body.workload_class,
+            runtime,
+            service: runtime,
+          });
+          const result = {
+            schema:'evercraft.compute.resident-service.v1',
+            service_id:serviceId,
+            workload_class:body.workload_class,
+            service_url:null,
+            local_url:runtime.url,
+            health_path:`/v1/services/${serviceId}/health`,
+            public_route_required:false,
+            instance_id:runtime.instanceId,
+            loopback_only:true,
+            remote_transport:'evercraft.outbound-capacity.v1',
+            relay_authority_exposed:false,
+            relay_authority_persisted:false,
+          };
+          const receipt = chain.issue('service.started', {
+            lease_id:body.lease_id,
+            service_id:serviceId,
+            workload_class:body.workload_class,
+            result_schema:result.schema,
+            instance_id:runtime.instanceId,
+          });
+          return send(res,200,{
+            ok:true,
+            node_id:nodeId,
+            workload_class:body.workload_class,
+            result,
+            receipt,
+          });
+        }
+
         if (workloadClass === 'systemia.public-edge.v1') {
           const controlHost = String(body.input?.control_host || '127.0.0.1');
           const mode = String(body.input?.mode || 'proof_loopback');
@@ -1429,6 +1660,7 @@ export async function startEvercraftComputeNode({
             imageTag: String(body.input?.image_tag || ''),
           });
           const serviceId = `svc_${randomBytes(8).toString('hex')}`;
+          const authHandoffSupported = typeof runtime.createAuthSession === 'function';
           services.set(serviceId, {
             lease_id: body.lease_id,
             workload_class: body.workload_class,
@@ -1444,10 +1676,13 @@ export async function startEvercraftComputeNode({
             local_url: runtime.localPublicUrl || null,
             health_path: `/v1/services/${serviceId}/health`,
             invoke_path: `/v1/services/${serviceId}/browser`,
+            auth_handoff_create_path: authHandoffSupported ? `/v1/services/${serviceId}/browser/auth-session` : null,
             public_render_path: '/v1/browser/render',
+            public_handoff_path_template: authHandoffSupported ? '/handoff/{session_id}' : null,
             public_health_path: '/health',
             instance_id: runtime.instanceId || null,
-            mode: 'public_read_only',
+            mode: authHandoffSupported ? 'public_read_only_plus_human_handoff' : 'public_read_only',
+            auth_handoff_supported: authHandoffSupported,
             browser_engine: 'playwright-chromium',
             private_worker_endpoint_exposed: false,
           };
@@ -1889,6 +2124,46 @@ export async function startEvercraftComputeNode({
         return send(res, 200, await entry.runtime.health());
       }
 
+      const residentHttpBridge = req.url?.match(
+        /^\/v1\/services\/([^/]+)\/http-bridge$/
+      );
+      if (req.method === 'POST' && residentHttpBridge) {
+        const entry = services.get(residentHttpBridge[1]);
+        if (!entry) return send(res, 404, { error: 'service_not_found' });
+        if (!allocatorTokenHash || sha(bearer(req)) !== allocatorTokenHash) {
+          return send(res, 401, { error: 'allocator_auth_required' });
+        }
+        if (!BRIDGED_WORKLOADS.has(entry.workload_class)) {
+          return send(res, 422, { error: 'resident_service_not_bridgeable' });
+        }
+        const body = await readJson(req, 16 * 1024 * 1024);
+        try {
+          const proxied = await bridgeResidentHttp(entry, body);
+          return send(res, 200, {
+            ok: true,
+            status: proxied.status,
+            headers: proxied.headers,
+            body_base64: proxied.body_base64,
+            receipt: chain.issue('resident-service.http-bridge', {
+              service_id: residentHttpBridge[1],
+              lease_id: entry.lease_id,
+              workload_class: entry.workload_class,
+              method: String(body.method || 'GET').toUpperCase(),
+              request_path_hash: proxied.request_path_hash,
+              request_bytes: proxied.request_bytes,
+              response_status: proxied.status,
+              response_bytes: proxied.response_bytes,
+              request_content_recorded: false,
+              response_content_recorded: false,
+            }),
+          });
+        } catch (error) {
+          return send(res, 422, {
+            error: error instanceof Error ? error.message : String(error),
+          });
+        }
+      }
+
       const specialistIdentityAttestation = req.url?.match(
         /^\/v1\/services\/([^/]+)\/specialist-identity-attestation$/
       );
@@ -2057,6 +2332,86 @@ export async function startEvercraftComputeNode({
             lease_id: entry.lease_id,
             workload_class: entry.workload_class,
             node_count: nodes.length,
+          }),
+        });
+      }
+
+      const remoteServiceRelay = req.url?.match(
+        /^\/v1\/services\/([^/]+)\/remote-service-relay$/
+      );
+      if (req.method === 'POST' && remoteServiceRelay) {
+        const entry = services.get(remoteServiceRelay[1]);
+        if (!entry) return send(res, 404, { error: 'service_not_found' });
+        const body = await readJson(req);
+        const lease = leases.get(entry.lease_id);
+        if (!lease || lease.token_hash !== sha(body.token || '')) {
+          return send(res, 401, { error: 'invalid_lease' });
+        }
+        if (entry.workload_class !== 'systemia.remote-capacity-broker.v1') {
+          return send(res, 422, { error: 'remote_service_relay_not_supported' });
+        }
+        let relay;
+        try {
+          relay = await entry.runtime.createServiceRelay({
+            nodeId:String(body.node_id || ''),
+            serviceId:String(body.service_id || ''),
+            ttlMs:Number(body.ttl_ms || 30 * 60_000),
+          });
+        } catch (error) {
+          return send(res, 422, { error:String(error?.message || error) });
+        }
+        return send(res, 201, {
+          ok:true,
+          relay_id:relay.relay_id,
+          node_id:relay.node_id,
+          device_fingerprint:relay.device_fingerprint,
+          service_id:relay.service_id,
+          target_service:relay.target_service||null,
+          relay_token:relay.relay_token,
+          proxy_path:relay.proxy_path,
+          expires_at:relay.expires_at,
+          relay_token_persisted:false,
+          allocator_token_exposed:false,
+          receipt:chain.issue('remote-capacity.service-relay.created',{
+            service_id:remoteServiceRelay[1],
+            lease_id:entry.lease_id,
+            workload_class:entry.workload_class,
+            remote_node_id:relay.node_id,
+            remote_service_id:relay.service_id,
+            relay_receipt_hash:relay.receipt_hash,
+            expires_at:relay.expires_at,
+            relay_token_persisted:false,
+            allocator_token_exposed:false,
+          }),
+        });
+      }
+
+      const remoteServiceRelayRelease = req.url?.match(
+        /^\/v1\/services\/([^/]+)\/remote-service-relay\/([^/]+)\/release$/
+      );
+      if (req.method === 'POST' && remoteServiceRelayRelease) {
+        const entry = services.get(remoteServiceRelayRelease[1]);
+        if (!entry) return send(res, 404, { error: 'service_not_found' });
+        const body = await readJson(req);
+        const lease = leases.get(entry.lease_id);
+        if (!lease || lease.token_hash !== sha(body.token || '')) {
+          return send(res, 401, { error: 'invalid_lease' });
+        }
+        if (entry.workload_class !== 'systemia.remote-capacity-broker.v1') {
+          return send(res, 422, { error: 'remote_service_relay_not_supported' });
+        }
+        const released=entry.runtime.releaseServiceRelay(
+          remoteServiceRelayRelease[2],
+          String(body.reason || 'released')
+        );
+        return send(res, released.released ? 200 : 404, {
+          ...released,
+          receipt:chain.issue('remote-capacity.service-relay.released',{
+            service_id:remoteServiceRelayRelease[1],
+            lease_id:entry.lease_id,
+            workload_class:entry.workload_class,
+            relay_id:remoteServiceRelayRelease[2],
+            released:released.released===true,
           }),
         });
       }
@@ -2278,6 +2633,38 @@ export async function startEvercraftComputeNode({
             workload_class: entry.workload_class,
             requested_url_sha256: sha(String(body.job?.url || '')),
             evidence_receipt_sha256: result?.evidence_receipt_sha256 || null,
+          }),
+        });
+      }
+
+      const browserAuthSession = req.url?.match(/^\/v1\/services\/([^/]+)\/browser\/auth-session$/);
+      if (req.method === 'POST' && browserAuthSession) {
+        const entry = services.get(browserAuthSession[1]);
+        if (!entry) return send(res, 404, { error: 'service_not_found' });
+        const body = await readJson(req);
+        const lease = leases.get(entry.lease_id);
+        if (!lease || lease.token_hash !== sha(body.token || '')) {
+          return send(res, 401, { error: 'invalid_lease' });
+        }
+        if (entry.workload_class !== 'systemia.evercraft-web-browser.v1') {
+          return send(res, 422, { error: 'browser_auth_handoff_not_supported' });
+        }
+        if (typeof entry.runtime.createAuthSession !== 'function') {
+          return send(res, 503, { error: 'browser_auth_handoff_unavailable' });
+        }
+        const result = await entry.runtime.createAuthSession(body.job || {});
+        return send(res, 200, {
+          ok: true,
+          service_id: browserAuthSession[1],
+          result,
+          receipt: chain.issue('browser.auth_handoff.created', {
+            service_id: browserAuthSession[1],
+            lease_id: entry.lease_id,
+            workload_class: entry.workload_class,
+            requested_url_sha256: sha(String(body.job?.url || '')),
+            session_id_sha256: sha(String(result?.session_id || '')),
+            expires_at: result?.expires_at || null,
+            secret_material_recorded: false,
           }),
         });
       }

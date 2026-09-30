@@ -65,6 +65,24 @@ async function fetchJson(url, options = {}, timeoutMs = 10_000) {
   }
 }
 
+async function fetchText(url, options = {}, timeoutMs = 10_000) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const response = await fetch(url, { ...options, signal: controller.signal });
+    const body = await response.text();
+    if (!response.ok) {
+      const error = new Error('browser_worker_http_' + response.status);
+      error.status = response.status;
+      error.body = body.slice(0, 2000);
+      throw error;
+    }
+    return body;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 async function waitForHealth(url, timeoutMs = DEFAULT_START_TIMEOUT_MS) {
   const deadline = Date.now() + timeoutMs;
   let lastError = null;
@@ -102,6 +120,7 @@ export async function startBrowserContainer({
   command('docker', ['build', '-q', '-t', image, root], { timeout: buildTimeoutMs });
 
   const workerToken = crypto.randomBytes(32).toString('hex');
+  const authOperatorToken = crypto.randomBytes(32).toString('hex');
   const name = `evercraft-browser-${crypto.randomBytes(6).toString('hex')}`;
   const runArgs = [
     'run',
@@ -113,6 +132,7 @@ export async function startBrowserContainer({
     '--memory', '1024m',
     '--cpus', '2',
     '-e', `EVERCRAFT_BROWSER_WORKER_TOKEN=${workerToken}`,
+    '-e', `EVERCRAFT_AUTH_BROWSER_OPERATOR_TOKEN=${authOperatorToken}`,
     '-e', `EVERCRAFT_BROWSER_MAX_CONCURRENCY=${Math.max(1, Math.min(8, Number(maxConcurrency) || 2))}`,
     '-p', '127.0.0.1::8787',
     image,
@@ -157,6 +177,40 @@ export async function startBrowserContainer({
           },
           body: JSON.stringify(job || {}),
         }, Math.max(35_000, Number(job?.timeout_ms || 15_000) + 5000));
+      },
+      async createAuthSession(job) {
+        return fetchJson(`${url}/v1/auth-browser/sessions`, {
+          method: 'POST',
+          headers: {
+            'content-type': 'application/json',
+            authorization: `Bearer ${authOperatorToken}`,
+          },
+          body: JSON.stringify(job || {}),
+        }, 35_000);
+      },
+      async authHandoffPage(sessionId) {
+        return fetchText(`${url}/handoff/${encodeURIComponent(String(sessionId || ''))}`, {}, 5000);
+      },
+      async authSnapshot(sessionId, claimToken) {
+        return fetchJson(`${url}/v1/auth-browser/sessions/${encodeURIComponent(String(sessionId || ''))}/snapshot`, {
+          headers: { 'x-evercraft-browser-claim': String(claimToken || '') },
+        }, 10_000);
+      },
+      async authAction(sessionId, claimToken, action) {
+        return fetchJson(`${url}/v1/auth-browser/sessions/${encodeURIComponent(String(sessionId || ''))}/action`, {
+          method: 'POST',
+          headers: {
+            'content-type': 'application/json',
+            'x-evercraft-browser-claim': String(claimToken || ''),
+          },
+          body: JSON.stringify(action || {}),
+        }, 35_000);
+      },
+      async authClose(sessionId, claimToken) {
+        return fetchJson(`${url}/v1/auth-browser/sessions/${encodeURIComponent(String(sessionId || ''))}`, {
+          method: 'DELETE',
+          headers: { 'x-evercraft-browser-claim': String(claimToken || '') },
+        }, 10_000);
       },
       setDeploymentReceipt(receiptRef) {
         deploymentReceiptRef = String(receiptRef || '');

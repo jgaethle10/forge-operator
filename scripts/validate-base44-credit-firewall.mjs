@@ -33,6 +33,7 @@ for (const workflow of [
   'systemia_capability_verification_every_15_minutes',
   'systemia_collider_hourly',
   'systemia_eps_social_continuity_every_30_minutes',
+  'systemia_release_continuity_every_15_minutes',
 ]) {
   if (!frozen.has(workflow)) fail(`missing frozen internal workflow: ${workflow}`);
 }
@@ -46,7 +47,7 @@ const social = retired.find(
   (row) => row.workflow === 'systemia_eps_social_continuity_every_30_minutes'
 );
 if (!social) fail('EPS social Base44 scheduler retirement record is missing');
-if (!['source_frozen_observation_pending','verified_retired'].includes(String(social.state || ''))) {
+if (!['source_frozen_observation_pending','deployed_schedule_still_firing_bridge_contained','verified_retired'].includes(String(social.state || ''))) {
   fail('EPS social retirement state is invalid');
 }
 if (!String(social.rollback_checkpoint || '').trim()) {
@@ -69,6 +70,29 @@ if (social.state === 'verified_retired' && social.absence_window_verified !== tr
 }
 if (social.state === 'source_frozen_observation_pending' && social.absence_window_verified !== false) {
   fail('pending EPS retirement must not claim the absence window passed');
+}
+if (social.state === 'deployed_schedule_still_firing_bridge_contained') {
+  if (social.absence_window_verified !== false) fail('contained legacy schedule must not claim an absence window');
+  if (social.source_freeze_stopped_deployed_schedule !== false) fail('contained legacy schedule must record that source freeze did not stop runtime execution');
+  if (!String(social.bridge_containment_checkpoint || '').trim()) fail('contained legacy schedule must preserve a containment rollback checkpoint');
+  if (social.runtime_scheduler_removal_pending !== true) fail('contained legacy schedule must remain marked for runtime scheduler removal');
+}
+
+const releaseContinuity = retired.find(
+  (row) => row.workflow === 'systemia_release_continuity_every_15_minutes'
+);
+if (!releaseContinuity) fail('Base44 release continuity retirement record is missing');
+if (releaseContinuity.source_automation_active !== false) {
+  fail('Base44 release continuity source automation must be disabled');
+}
+if (releaseContinuity.source_fail_closed_guard !== 'LEGACY_BASE44_RELEASE_SWEEP_DISABLED') {
+  fail('Base44 release continuity must preserve the fail-closed source guard');
+}
+if (!String(releaseContinuity.rollback_checkpoint || '').trim()) {
+  fail('Base44 release continuity rollback checkpoint is missing');
+}
+if (releaseContinuity.named_cloud_required !== false) {
+  fail('Base44 release continuity replacement must not require a named cloud provider');
 }
 
 for (const gate of [

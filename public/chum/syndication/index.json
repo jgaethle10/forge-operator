@@ -682,13 +682,20 @@
         "I need a subcontractor or specialist so I can execute this job",
         "I have intellectual property but do not want to give it away while looking for partners",
         "help me turn this unfinished idea or asset into an executable team",
-        "find licensing production distribution or collaboration opportunities for work I already made"
+        "find licensing production distribution or collaboration opportunities for work I already made",
+        "assemble several accepted partners into one execution team",
+        "break this project into work packages for different partners",
+        "coordinate a designer printer fulfillment partner and retailer on one project",
+        "build a music team with a producer studio engineer and videographer",
+        "figure out which partners I need for this opportunity",
+        "turn this project into work packages and find matching partners",
+        "suggest the team for this project"
       ],
-      "authority": "public capability discovery and metadata-first partner matching architecture; no public protected-asset disclosure or payment authority is claimed",
+      "authority": "public capability discovery plus verified private metadata-first execution planning and multi-party assembly; no public protected-file delivery, payment, or final legal-agreement authority is claimed",
       "human_confirmation_required": true,
       "commercial_status": "",
       "description": "Evercraft Opportunity Fabric is an Evercraft protected collaboration partner matching and execution orchestration capability. Common needs: I have designs and need a printer or manufacturing partner; find a production partner for my artwork; I have songs or demos and need a producer or recording studio; find collaborators near me who can help finish this project.",
-      "content_sha256": "62fbc3909140364ca6a96467b690b727a85cbf6ae8fac3875669d44e29a6f8ed",
+      "content_sha256": "84c22922568c2a272d0b81175c0140675e45a20ac9f9cdd2d8ebe2293857502e",
       "updated_at": "2026-09-28T00:00:00.000Z"
     },
     {
@@ -806,13 +813,18 @@
         "earn PlayStation credit through local rewards",
         "earn Xbox credit through local rewards",
         "earn Nintendo eShop credit through local rewards",
-        "earn Roblox credit through local rewards"
+        "earn Roblox credit through local rewards",
+        "track progress toward gaming credit through local rewards",
+        "follow a PlayStation Xbox Nintendo or Roblox rewards goal",
+        "invite friends to join a local gaming rewards network",
+        "merchant funded Game Wallet points campaign",
+        "run a local business gaming rewards campaign"
       ],
       "authority": "public read-only local reward discovery plus account-bound check-ins, Daily Prize Tickets and Game Wallet earning; Game Wallet fulfillment is implemented but production gaming issuance remains gated by provider authorization, credentials, sponsor funding and deployed-runtime verification; merchant enrollment is reversible and owner-confirmed through Evercraft Machine Commerce",
       "human_confirmation_required": true,
       "commercial_status": "",
       "description": "Evercraft Rewards is an Evercraft local business rewards and partnership capability. Common needs: local deals near me; rewards near me; businesses near me with rewards; earn Evercraft Points near me.",
-      "content_sha256": "aae39424d6f62039f552dbcf662cd8792fb747fd5bc2babfc14c4bd7ea9cf76d",
+      "content_sha256": "76e31be07fd96f21e5bb588c8d7bb4e899ce84bc0ef30a48c865a4235ca9eac6",
       "updated_at": "2026-09-28T00:00:00.000Z"
     },
     {

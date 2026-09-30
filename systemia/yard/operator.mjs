@@ -586,6 +586,27 @@ export class YardOperator {
         }
         healthState = 'healthy';
         routeVerification = 'private_home_health_verified_public_route_unbound';
+      } else if (workloadClass === 'systemia.federated-service-bridge.v1') {
+        const bridgeHealthy =
+          health.ok === true &&
+          health.service === 'evercraft-federated-service-bridge' &&
+          health.runtime === 'Evercraft Compute' &&
+          health.loopback_only === true &&
+          health.remote_transport === 'evercraft.outbound-capacity.v1' &&
+          health.relay_token_exposed === false &&
+          health.relay_token_persisted === false &&
+          health.instance_id === job.result?.instance_id;
+        if (!bridgeHealthy) {
+          try {
+            await request(`${capacityEndpoint}/v1/services/${job.result.service_id}/stop`, {
+              method:'POST',
+              body:JSON.stringify({ token:lease.token }),
+            });
+          } catch {}
+          throw new Error('federated service bridge failed initial health verification');
+        }
+        healthState='healthy';
+        routeVerification='private_federated_bridge_health_verified';
       } else if (workloadClass === 'systemia.evercraft-web-browser.v1') {
         const browserHealthy =
           health.ok === true &&
@@ -797,6 +818,47 @@ export class YardOperator {
       ok: true,
       deployment_id: deploymentId,
       result: invoked.result,
+      compute_receipt_hash: invoked.receipt?.receipt_hash || null,
+    };
+  }
+
+  async createBrowserAuthHandoff(deploymentId, job = {}) {
+    const record = this.deploymentStatus(deploymentId);
+    const secret = this.#loadLeaseSecret(deploymentId);
+    if (!record || !secret) throw new Error('deployment lease authority unavailable');
+    if (record.receipt?.workload_class !== 'systemia.evercraft-web-browser.v1') {
+      throw new Error('deployment is not an Evercraft browser worker');
+    }
+    if (record.result?.auth_handoff_supported !== true || !record.result?.auth_handoff_create_path) {
+      throw new Error('Evercraft authenticated browser handoff is unavailable');
+    }
+
+    const invoked = await request(
+      new URL(record.result.auth_handoff_create_path, secret.capacity_endpoint).toString(),
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          token: secret.token,
+          job,
+        }),
+      }
+    );
+
+    const result = invoked.result || {};
+    const liveOrigin = this.getLiveUrl(deploymentId);
+    let handoffUrl = null;
+    if (liveOrigin && result.handoff_path) {
+      handoffUrl = new URL(result.handoff_path, liveOrigin).toString();
+    }
+
+    return {
+      ok: true,
+      deployment_id: deploymentId,
+      result: {
+        ...result,
+        handoff_url: handoffUrl,
+        public_route_verified: Boolean(liveOrigin),
+      },
       compute_receipt_hash: invoked.receipt?.receipt_hash || null,
     };
   }
@@ -1240,6 +1302,9 @@ export class YardOperator {
     } else if (workloadClass === 'systemia.specialist-handoff-mcp.v1') {
       service = 'specialist-handoff-mcp';
       healthPath = '/health';
+    } else if (workloadClass === 'systemia.evercraft-home.v1') {
+      service = 'evercraft-home';
+      healthPath = '/api/health';
     } else {
       throw new Error('deployment does not support a public route');
     }
@@ -1262,8 +1327,20 @@ export class YardOperator {
         health.mode === 'public_read_only' &&
         health.raw_worker_publicly_exposed === false
       );
+    const homeMatch =
+      workloadClass !== 'systemia.evercraft-home.v1' ||
+      (
+        health.workload_class === 'systemia.evercraft-home.v1' &&
+        health.authority === 'evercraft' &&
+        health.auth_mode === 'passport' &&
+        health.identity_login_configured === true &&
+        health.session_revocation_supported === true &&
+        health.base44_required === false &&
+        health.external_ai_required === false &&
+        health.legacy_provider_required === false
+      );
 
-    if (!commonMatch || !brokerMatch || !browserMatch) {
+    if (!commonMatch || !brokerMatch || !browserMatch || !homeMatch) {
       throw new Error('public route health does not match this deployment receipt and instance');
     }
 
@@ -1464,6 +1541,96 @@ export class YardOperator {
     };
   }
 
+  async createRemoteServiceRelay(deploymentId, {
+    nodeId,
+    serviceId,
+    ttlMs = 30 * 60_000,
+    allowLoopbackProof = false,
+  } = {}) {
+    const record = this.deploymentStatus(deploymentId);
+    const secret = this.#loadLeaseSecret(deploymentId);
+    if (!record || !secret) throw new Error('deployment lease authority unavailable');
+    if (record.receipt?.workload_class !== 'systemia.remote-capacity-broker.v1') {
+      throw new Error('deployment is not a remote capacity broker');
+    }
+    if (!record.result?.service_id) {
+      throw new Error('remote capacity broker service is unavailable');
+    }
+
+    const route = record.public_route;
+    const routeAllowed = route?.verified === true && route?.scope === 'public_https';
+    const loopbackAllowed =
+      allowLoopbackProof === true &&
+      route?.scope === 'loopback_proof';
+    if (!routeAllowed && !loopbackAllowed) {
+      throw new Error('verified public HTTPS broker route is required');
+    }
+
+    const relay = await request(
+      `${secret.capacity_endpoint}/v1/services/${record.result.service_id}/remote-service-relay`,
+      {
+        method:'POST',
+        body:JSON.stringify({
+          token:secret.token,
+          node_id:String(nodeId || ''),
+          service_id:String(serviceId || ''),
+          ttl_ms:Math.max(60_000,Math.min(60 * 60_000,Number(ttlMs || 30 * 60_000))),
+        }),
+      }
+    );
+
+    return {
+      schema:'evercraft.yard.remote-service-relay.v1',
+      broker_deployment_id:deploymentId,
+      broker_origin:route.origin,
+      relay_id:String(relay.relay_id || ''),
+      remote_node_id:String(relay.node_id || ''),
+      remote_service_id:String(relay.service_id || ''),
+      relay_url:
+        route.origin +
+        String(relay.proxy_path || ''),
+      relay_token:String(relay.relay_token || ''),
+      expires_at:relay.expires_at || null,
+      allocator_token_exposed:false,
+      relay_token_persisted:false,
+      compute_management_receipt_hash:relay.receipt?.receipt_hash || null,
+    };
+  }
+
+  async releaseRemoteServiceRelay(deploymentId, relayId, {
+    reason = 'released',
+  } = {}) {
+    const record = this.deploymentStatus(deploymentId);
+    const secret = this.#loadLeaseSecret(deploymentId);
+    if (!record || !secret) throw new Error('deployment lease authority unavailable');
+    if (record.receipt?.workload_class !== 'systemia.remote-capacity-broker.v1') {
+      throw new Error('deployment is not a remote capacity broker');
+    }
+    if (!record.result?.service_id) {
+      throw new Error('remote capacity broker service is unavailable');
+    }
+
+    const released = await request(
+      `${secret.capacity_endpoint}/v1/services/${record.result.service_id}/remote-service-relay/${encodeURIComponent(String(relayId || ''))}/release`,
+      {
+        method:'POST',
+        body:JSON.stringify({
+          token:secret.token,
+          reason:String(reason || 'released'),
+        }),
+      }
+    );
+    return {
+      schema:'evercraft.yard.remote-service-relay-release.v1',
+      broker_deployment_id:deploymentId,
+      relay_id:String(relayId || ''),
+      released:released.released===true,
+      reason:released.reason || String(reason || 'released'),
+      compute_management_receipt_hash:released.receipt?.receipt_hash || null,
+      released_at:released.released_at || new Date().toISOString(),
+    };
+  }
+
   async remoteCapacityGrant(deploymentId, nodeId, {
     allowLoopbackProof = false,
   } = {}) {
@@ -1622,7 +1789,8 @@ export class YardOperator {
       record.receipt?.workload_class === 'systemia.remote-capacity-broker.v1' ||
       record.receipt?.workload_class === 'systemia.rivet-report-runtime.v1' ||
       record.receipt?.workload_class === 'systemia.specialist-handoff-mcp.v1' ||
-      record.receipt?.workload_class === 'systemia.evercraft-web-browser.v1'
+      record.receipt?.workload_class === 'systemia.evercraft-web-browser.v1' ||
+      record.receipt?.workload_class === 'systemia.evercraft-home.v1'
     ) {
       const broker =
         record.receipt?.workload_class === 'systemia.remote-capacity-broker.v1';
@@ -1632,7 +1800,11 @@ export class YardOperator {
         record.receipt?.workload_class === 'systemia.specialist-handoff-mcp.v1';
       const browser =
         record.receipt?.workload_class === 'systemia.evercraft-web-browser.v1';
-      const service = browser
+      const home =
+        record.receipt?.workload_class === 'systemia.evercraft-home.v1';
+      const service = home
+        ? 'evercraft-home'
+        : browser
         ? 'evercraft-web-browser-edge'
         : broker
           ? 'remote-capacity-broker'
@@ -1641,9 +1813,11 @@ export class YardOperator {
             : specialist
               ? 'specialist-handoff-mcp'
               : 'chum-public-origin';
-      const healthPath = browser
-        ? '/health'
-        : broker
+      const healthPath = home
+        ? '/api/health'
+        : browser
+          ? '/health'
+          : broker
           ? '/v1/remote/health'
           : rivet || specialist
             ? '/health'
@@ -1661,6 +1835,17 @@ export class YardOperator {
             (!browser || (
               health.mode === 'public_read_only' &&
               health.raw_worker_publicly_exposed === false
+            )) &&
+            (!home || (
+              health.runtime === 'Evercraft Compute' &&
+              health.workload_class === 'systemia.evercraft-home.v1' &&
+              health.authority === 'evercraft' &&
+              health.auth_mode === 'passport' &&
+              health.identity_login_configured === true &&
+              health.session_revocation_supported === true &&
+              health.base44_required === false &&
+              health.external_ai_required === false &&
+              health.legacy_provider_required === false
             ));
           return {
             ok,
@@ -1691,11 +1876,19 @@ export class YardOperator {
             local_health_ok:
               health.ok === true &&
               (
-                browser
-                  ? health.service === 'evercraft-owned-browser-worker' &&
+                home
+                  ? health.service === 'evercraft-home' &&
                     health.runtime === 'Evercraft Compute' &&
-                    health.mode === 'public_read_only'
-                  : health.service === service
+                    health.workload_class === 'systemia.evercraft-home.v1' &&
+                    health.authority === 'evercraft' &&
+                    health.auth_mode === 'passport' &&
+                    health.identity_login_configured === true &&
+                    health.session_revocation_supported === true
+                  : browser
+                    ? health.service === 'evercraft-owned-browser-worker' &&
+                      health.runtime === 'Evercraft Compute' &&
+                      health.mode === 'public_read_only'
+                    : health.service === service
               ) &&
               health.instance_id === record.result?.instance_id &&
               (!broker || health.secure_envelope_schema === 'evercraft.secure-envelope.v1'),
@@ -1704,9 +1897,11 @@ export class YardOperator {
         } catch (error) {
           return {
             ok: false,
-            state: browser
-              ? 'local_browser_unreachable'
-              : broker
+            state: home
+              ? 'local_home_unreachable'
+              : browser
+                ? 'local_browser_unreachable'
+                : broker
                 ? 'local_broker_unreachable'
                 : 'local_origin_unreachable',
             error: String(error?.message || error),
