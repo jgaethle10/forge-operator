@@ -63,6 +63,9 @@ function publicOffer(offer, sourceAuthority = 'remote_legacy_catalog') {
       ? (sourceAuthority === 'forge_owned_source' ? 'forge_owned_registry' : 'source_catalog')
       : 'machine_commerce_review_fallback',
     source_authority: sourceAuthority,
+    owned_mcp_path: sourceAuthority === 'forge_owned_source' ? String(offer.owned_mcp_path || '') : null,
+    owned_route_state: sourceAuthority === 'forge_owned_source' ? String(offer.owned_route_state || '') : null,
+    owned_runtime: sourceAuthority === 'forge_owned_source' ? String(offer.owned_runtime || '') : null,
     payment_authority: String(offer.payment_authority || ''),
     invocation_status: String(offer.invocation_status || ''),
     live_canary_evidence: liveCanaryEvidence,
