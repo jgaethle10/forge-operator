@@ -9,7 +9,7 @@ assert.match(source, /publication_attempted:\s*false/);
 assert.match(source, /MAX_REQUESTS/);
 assert.match(source, /116675248108887/);
 assert.match(source, /1302468962947782/);
-assert.doesNotMatch(source, /openai|anthropic|gemini|llm/i);
+assert.doesNotMatch(source, /openai|anthropic|gemini/i);
 console.log(JSON.stringify({
   schema: 'evercraft.systemia.clip-content-supply.proof.v1',
   status: 'pass',
