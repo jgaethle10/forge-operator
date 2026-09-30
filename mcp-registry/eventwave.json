@@ -2,13 +2,13 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.jgaethle10/eventwave",
   "title": "EventWave",
-  "description": "Event discovery and promotion workflows with human-controlled publishing and commerce.",
+  "description": "Owned Evercraft Fabric discovery and routing entry for EventWave. Product-specific execution is migration-gated until Yard/Evercraft Compute verification exists.",
   "version": "1.0.2",
-  "websiteUrl": "https://event-wave.base44.app/",
+  "websiteUrl": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/eventwave",
   "remotes": [
     {
       "type": "streamable-http",
-      "url": "https://event-wave.base44.app/functions/eventWaveMcp"
+      "url": "https://fabric.systemiacommandcenters.com/mcp"
     }
   ]
 }
