@@ -237,7 +237,8 @@
     "proof:evercraft-hosting": "node systemia/compute/hosting-control-plane.proof.mjs",
     "proof:aliev-rivet-owned": "node systemia/compute/aliev-rivet-owned-lane.proof.mjs",
     "proof:aliev-migration": "node systemia/aliev/snapshot-bundle.proof.mjs",
-    "proof:aliev-extractor": "node systemia/migrations/base44-exit/aliev-extractor.proof.mjs"
+    "proof:aliev-extractor": "node systemia/migrations/base44-exit/aliev-extractor.proof.mjs",
+    "proof:rivet-cutover": "node systemia/rivet/cutover-controller.proof.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
