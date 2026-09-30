@@ -55,6 +55,9 @@ jobs:
       - name: Prove Passport-authorized round trip
         run: node systemia/worldstate/context-reader.proof.mjs
 
+      - name: Prove Fallen phenomenon bridge
+        run: node systemia/worldstate/phenomenon-bridge.proof.mjs
+
       - name: Verify canonical discovery state
         run: |
           node --input-type=module <<'NODE'
