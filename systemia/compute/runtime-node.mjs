@@ -18,6 +18,7 @@ import {
   startBrowserContainer,
 } from '../evercraft-web/browser-worker/container-runtime.mjs';
 import { startRivetReportRuntime } from '../rivet/report-runtime.mjs';
+import { startAliEvSourceRuntime } from '../aliev/source-runtime.mjs';
 import { startSpecialistHandoffRuntime } from '../mcp/specialist-handoff-runtime.mjs';
 import { startPublicEdgeRuntime } from '../network/public-edge-runtime.mjs';
 import { startFederatedServiceBridge } from '../network/federated-service-bridge.mjs';
@@ -366,6 +367,7 @@ export async function startEvercraftComputeNode({
   browserRuntimeFactory = null,
   remoteOperatorRoots = null,
   remoteOperatorStateDir = '',
+  alievSourceRuntimeFactory = null,
   maxStagedBlobBytes = Number(process.env.EVERCRAFT_MAX_STAGED_BLOB_BYTES || 2147483648),
 } = {}) {
   if (!root) throw new Error('root is required');
@@ -722,6 +724,7 @@ export async function startEvercraftComputeNode({
     'systemia.kaidance-collider.v1',
     'systemia.chum-public-origin.v1',
     'systemia.remote-capacity-broker.v1',
+    'systemia.aliev-source-runtime.v1',
     'systemia.rivet-report-runtime.v1',
     'systemia.specialist-handoff-mcp.v1',
     'systemia.public-edge.v1',
@@ -1309,6 +1312,53 @@ export async function startEvercraftComputeNode({
           });
         }
 
+        if (workloadClass === 'systemia.aliev-source-runtime.v1') {
+          const sourceFactory = typeof alievSourceRuntimeFactory === 'function'
+            ? alievSourceRuntimeFactory
+            : startAliEvSourceRuntime;
+          const runtime = await sourceFactory({
+            host: '127.0.0.1',
+            port: Number(body.input?.port || 0),
+            systemiaMachineKey: process.env.SYSTEMIA_MACHINE_KEY || '',
+            afdcApiKey: process.env.NLR_API_KEY || process.env.AFDC_API_KEY || 'DEMO_KEY',
+            openEiApiKey: process.env.OPENEI_API_KEY || process.env.OPEN_EI_API_KEY || '',
+          });
+          const serviceId = `svc_${randomBytes(8).toString('hex')}`;
+          services.set(serviceId, {
+            lease_id: body.lease_id,
+            workload_class: body.workload_class,
+            runtime,
+            service: runtime,
+          });
+          const result = {
+            schema: 'evercraft.compute.resident-service.v1',
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            service_url: null,
+            local_url: runtime.service_url,
+            health_path: `/v1/services/${serviceId}/health`,
+            public_route_required: false,
+            snapshot_path: runtime.snapshot_path,
+            instance_id: runtime.instance_id,
+            authenticated_machine_api: true,
+            legacy_provider_transport: false,
+          };
+          const receipt = chain.issue('service.started', {
+            lease_id: body.lease_id,
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            result_schema: result.schema,
+            instance_id: runtime.instance_id,
+          });
+          return send(res, 200, {
+            ok: true,
+            node_id: nodeId,
+            workload_class: body.workload_class,
+            result,
+            receipt,
+          });
+        }
+
         if (workloadClass === 'systemia.rivet-report-runtime.v1') {
           const stateRoot = path.resolve(String(
             body.input?.state_root || path.join(allowedRoot, '.evercraft', 'rivet-report-runtime')
@@ -1317,24 +1367,60 @@ export async function startEvercraftComputeNode({
             return send(res, 403, { error: 'rivet_report_state_outside_admitted_root' });
           }
 
+          let ownedSource = null;
+          let sourceUrl = String(
+            body.input?.source_url || process.env.ALIEV_YARD_SOURCE_URL || ''
+          ).trim();
+
+          if (sourceUrl) {
+            let parsedSource;
+            try {
+              parsedSource = new URL(sourceUrl);
+            } catch {
+              return send(res, 422, { error: 'aliev_source_url_invalid' });
+            }
+            if (!['http:', 'https:'].includes(parsedSource.protocol)) {
+              return send(res, 422, { error: 'aliev_source_url_protocol_invalid' });
+            }
+            if (parsedSource.hostname === 'base44.app' || parsedSource.hostname.endsWith('.base44.app')) {
+              return send(res, 422, { error: 'legacy_base44_source_url_prohibited' });
+            }
+          } else {
+            const sourceFactory = typeof alievSourceRuntimeFactory === 'function'
+              ? alievSourceRuntimeFactory
+              : startAliEvSourceRuntime;
+            ownedSource = await sourceFactory({
+              host: '127.0.0.1',
+              port: 0,
+              systemiaMachineKey: process.env.SYSTEMIA_MACHINE_KEY || '',
+              afdcApiKey: process.env.NLR_API_KEY || process.env.AFDC_API_KEY || 'DEMO_KEY',
+              openEiApiKey: process.env.OPENEI_API_KEY || process.env.OPEN_EI_API_KEY || '',
+            });
+            sourceUrl = ownedSource.service_url + ownedSource.snapshot_path;
+          }
+
           const runtime = await startRivetReportRuntime({
             stateDir: stateRoot,
             host: '127.0.0.1',
             port: Number(body.input?.port || 0),
-            sourceUrl: String(
-              body.input?.source_url ||
-              process.env.ALIEV_YARD_SOURCE_URL ||
-              'https://base44.app/api/apps/69b9b64d86a732029ce0db81/functions/energySiteLookup'
-            ),
+            sourceUrl,
             systemiaMachineKey: process.env.SYSTEMIA_MACHINE_KEY || '',
             teamToken: process.env.RIVET_YARD_TEAM_TOKEN || ''
           });
+          const service = ownedSource
+            ? {
+                close: async () => {
+                  await runtime.close();
+                  await ownedSource.close();
+                }
+              }
+            : runtime;
           const serviceId = `svc_${randomBytes(8).toString('hex')}`;
           services.set(serviceId, {
             lease_id: body.lease_id,
             workload_class: body.workload_class,
             runtime,
-            service: runtime,
+            service,
           });
 
           const result = {
@@ -1350,6 +1436,11 @@ export async function startEvercraftComputeNode({
             progress_path_template: runtime.progress_path_template,
             instance_id: runtime.instance_id,
             authenticated_report_api: true,
+            owned_source_embedded: Boolean(ownedSource),
+            source_runtime: ownedSource
+              ? 'systemia.aliev-source-runtime.v1'
+              : 'explicit_non_legacy_source_url',
+            legacy_source_transport: false,
           };
           const receipt = chain.issue('service.started', {
             lease_id: body.lease_id,
@@ -1357,6 +1448,7 @@ export async function startEvercraftComputeNode({
             workload_class: body.workload_class,
             result_schema: result.schema,
             instance_id: runtime.instance_id,
+            owned_source_embedded: Boolean(ownedSource),
           });
           return send(res, 200, {
             ok: true,
