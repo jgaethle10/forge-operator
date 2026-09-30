@@ -6,6 +6,7 @@ import { evaluateSwarmQuality } from './quality-gate.mjs';
 import { runNodeSeedAssignmentPool } from './nodeseed-pool.mjs';
 import { normalizeComputeDemand } from './compute-exchange.mjs';
 import { acquireResourceCapacity } from './resource-acquirer.mjs';
+import { buildComputeMarketAdapters } from './market-factory.mjs';
 
 async function reconcileResults({ contract, plan, results, rootDir }) {
   if (contract.reconciler?.once_per_swarm !== true) {
@@ -117,14 +118,15 @@ export export async function runPoolWithAcquisition({
       external_spend_requires_human_approval:true,
     };
 
+    const marketFactory=buildComputeMarketAdapters({acquisition});
     const resourceAcquisition=await acquireResourceCapacity({
       need,
       candidates:acquisition.candidates||[],
       runtimeAuthorities:acquisition.runtimeAuthorities||{},
       spawnAdapters:acquisition.spawnAdapters||{},
-      marketAdapters:acquisition.adapters||[],
-      quoteAuthority:acquisition.quoteAuthority||null,
-      leaseAuthority:acquisition.leaseAuthority||null,
+      marketAdapters:marketFactory.adapters,
+      quoteAuthority:acquisition.quoteAuthority||acquisition.quote_authority||null,
+      leaseAuthority:acquisition.leaseAuthority||acquisition.lease_authority||null,
       computeDemand:demand,
     });
 
@@ -167,6 +169,10 @@ export export async function runPoolWithAcquisition({
         resource_mode:resourceAcquisition.mode,
         resource_field_receipt:resourceAcquisition.resource_field_receipt,
         acquired_endpoint_count:endpoints.length,
+        market_factory:{
+          markets:marketFactory.markets,
+          diagnostics:marketFactory.diagnostics,
+        },
         market:resourceAcquisition.exchange?.selected_offer?.market||
           resourceAcquisition.exchange?.selected_market||
           null,
