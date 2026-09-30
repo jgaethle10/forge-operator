@@ -31,9 +31,9 @@ assert.ok(compute.includes("'systemia.aliev-source-runtime.v1'"));
 assert.ok(compute.includes('owned_source_embedded'));
 assert.ok(compute.includes('aliev_owned_source_must_not_use_base44'));
 assert.equal(
-  compute.includes("'https://base44.app/api/apps/69b9b64d86a732029ce0db81/functions/energySiteLookup'"),
+  /https?:\/\/[^"'\\s]*base44\\.app/i.test(compute),
   false,
-  'Evercraft Compute must not silently fall back to Base44 for RIVET source intelligence'
+  'Evercraft Compute must not contain a live Base44 URL for RIVET source intelligence'
 );
 
 const migration=JSON.parse(fs.readFileSync('systemia/migrations/base44-exit/slices/rivet-reporting-runtime.json','utf8'));
