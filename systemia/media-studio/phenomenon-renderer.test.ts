@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { compilePhenomenonCanvas, validatePhenomenon, type PhenomenonInput } from './phenomenon-renderer.js';
+import { buildDistributedRenderPlan } from './distributed-render.js';
 
 const input: PhenomenonInput = {
   id: 'puget-flow-proof',
@@ -62,6 +63,16 @@ test('phenomenon canvas turns one sourced physical process into an exact-frame c
   assert.equal(bundle.receipt.stream_count, 1);
   assert.equal(bundle.receipt.sample_count, 3);
   assert.equal(bundle.receipt.publication_authority, false);
+  assert.equal(bundle.receipt.distributed_render_compatible, true);
+  assert.equal(bundle.stage.layers[0].kind, 'phenomenon');
+  const plan = buildDistributedRenderPlan({
+    id: 'phenomenon-proof-render',
+    stage: bundle.stage,
+    assets: [],
+    maxFramesPerShard: 60,
+  });
+  assert.ok(plan.shards.length > 0);
+  assert.equal(plan.stageDigest, bundle.receipt.stage_digest);
   assert.match(bundle.html, /__evercraftRenderAt/);
   assert.match(bundle.html, /__evercraftRenderFrame/);
   assert.match(bundle.html, /BRIGHTNESS =/);
