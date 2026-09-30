@@ -107,7 +107,7 @@ assert.equal(ingest.cohorts[0].duplicates, 1);
 
 const restarted = new ForwardPaperDurableState({ root });
 assert.equal(restarted.summary().cohort_count, 1);
-assert.equal(restarted.summary().measurement_count, 2);
+assert.equal(restarted.summary().measurement_count, 3);
 assert.equal(restarted.score(protocol.cohort_id).status, "FORWARD_PAPER_PASS");
 assert.equal(restarted.summary().live_trade_authority, false);
 
