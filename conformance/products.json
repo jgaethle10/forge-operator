@@ -42,68 +42,74 @@
       "product_key": "ascend",
       "name": "Ascend AI",
       "class": "youth_development_and_safeguarding_support",
-      "canonical_url": "https://ascend.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ascend/index.html",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ascend/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ascend/ai-discovery.json",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ascend/ai-conformance.json",
-      "doorway_state": "source_build_lint_green_origin_machine_files_added_safeguarding_boundaries_explicit_external_canary_pending",
-      "conformance_state": "not_yet_propagated",
+      "doorway_state": "migration_hold_owned_discovery_only",
+      "conformance_state": "migration_hold_legacy_endpoint_retired",
       "provider_behavior_state": "not_run",
-      "chum_mirror_state": "generated_public_fallback"
+      "chum_mirror_state": "generated_public_fallback",
+      "public_web_discovery_state": "owned_chum_mirror_live_direct_invocation_migration_hold"
     },
     {
       "product_key": "buildflow",
       "name": "BuildFlow Enterprise Operations",
       "class": "enterprise_operations_agent",
-      "canonical_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/buildflow/index.html",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/buildflow/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/buildflow/ai-discovery.json",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/buildflow/ai-conformance.json",
-      "doorway_state": "mcp_registry_live",
-      "conformance_state": "mcp_registry_live",
+      "doorway_state": "migration_hold_owned_discovery_only",
+      "conformance_state": "migration_hold_legacy_endpoint_retired",
       "provider_behavior_state": "not_run",
       "mcp_registry": {
         "name": "io.github.jgaethle10/buildflow",
         "version": "0.7.0",
-        "publication_state": "published"
+        "publication_state": "historical_receipt_legacy_endpoint_retired",
+        "migration_note": "Publication receipt retained as provenance only; legacy Base44 endpoint is not current invocation authority."
       },
-      "chum_mirror_state": "generated_public_fallback"
+      "chum_mirror_state": "generated_public_fallback",
+      "public_web_discovery_state": "owned_chum_mirror_live_direct_invocation_migration_hold"
     },
     {
       "product_key": "career-command",
       "name": "Evercraft Career Command",
       "class": "agent_commerce",
-      "canonical_url": "https://evercraft-career-command.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/career-command/index.html",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/career-command/llms.txt",
-      "doorway_state": "mcp_registry_live",
-      "conformance_state": "mcp_registry_live",
+      "doorway_state": "migration_hold_owned_discovery_only",
+      "conformance_state": "migration_hold_legacy_endpoint_retired",
       "provider_behavior_state": "not_run",
       "mcp_registry": {
         "name": "io.github.jgaethle10/career-command",
         "version": "1.0.0",
-        "publication_state": "published"
+        "publication_state": "historical_receipt_legacy_endpoint_retired",
+        "migration_note": "Publication receipt retained as provenance only; legacy Base44 endpoint is not current invocation authority."
       },
-      "origin_llms_url": "https://evercraft-career-command.base44.app/llms.txt",
+      "origin_llms_url": null,
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/career-command/ai-conformance.json",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/career-command/ai-discovery.json",
-      "chum_mirror_state": "generated_public_fallback"
+      "chum_mirror_state": "generated_public_fallback",
+      "public_web_discovery_state": "owned_chum_mirror_live_direct_invocation_migration_hold"
     },
     {
       "product_key": "contractor-cloud",
       "name": "Evercraft Contractor Cloud",
       "class": "two_sided_marketplace_human_handoff",
-      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/contractor-cloud",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/contractor-cloud/index.html",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/contractor-cloud/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/contractor-cloud/ai-discovery.json",
-      "doorway_state": "source_build_green",
-      "conformance_state": "not_yet_propagated",
+      "doorway_state": "migration_hold_owned_discovery_only",
+      "conformance_state": "migration_hold_legacy_endpoint_retired",
       "provider_behavior_state": "not_run",
-      "origin_llms_url": "https://evercraft-contractor-cloud-314d2197.base44.app/llms.txt",
-      "origin_discovery_url": "https://evercraft-contractor-cloud-314d2197.base44.app/ai-discovery.json",
+      "origin_llms_url": null,
+      "origin_discovery_url": null,
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/contractor-cloud/ai-conformance.json",
       "chum_mirror_state": "generated_public_fallback",
-      "origin_canonical_url": "https://evercraft-contractor-cloud-314d2197.base44.app/",
-      "runtime_state": "public_discovery_only_product_ui_not_live_verified"
+      "origin_canonical_url": null,
+      "runtime_state": "public_discovery_only_product_ui_not_live_verified",
+      "public_web_discovery_state": "owned_chum_mirror_live_direct_invocation_migration_hold"
     },
     {
       "product_key": "daytrade-lens",
@@ -122,39 +128,41 @@
       "product_key": "deck-capital-fit",
       "name": "Evercraft Deck Capital Fit",
       "class": "agent_commerce",
-      "canonical_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/deck-capital-fit/index.html",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/deck-capital-fit/llms.txt",
-      "doorway_state": "mcp_registry_live",
-      "conformance_state": "mcp_registry_live",
+      "doorway_state": "migration_hold_owned_discovery_only",
+      "conformance_state": "migration_hold_legacy_endpoint_retired",
       "provider_behavior_state": "not_run",
       "mcp_registry": {
         "name": "io.github.jgaethle10/deck-capital-fit",
         "version": "2.0.0",
-        "publication_state": "published"
+        "publication_state": "historical_receipt_legacy_endpoint_retired",
+        "migration_note": "Publication receipt retained as provenance only; legacy Base44 endpoint is not current invocation authority."
       },
-      "origin_llms_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=llms",
+      "origin_llms_url": null,
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/deck-capital-fit/ai-conformance.json",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/deck-capital-fit/ai-discovery.json",
-      "chum_mirror_state": "generated_public_fallback"
+      "chum_mirror_state": "generated_public_fallback",
+      "public_web_discovery_state": "owned_chum_mirror_live_direct_invocation_migration_hold"
     },
     {
       "product_key": "eps-estimate-engine",
       "name": "EPS Field-Service Estimate Engine",
       "class": "contractor_estimate_and_margin_modeling",
-      "canonical_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eps-estimate-engine/index.html",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eps-estimate-engine/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eps-estimate-engine/ai-discovery.json",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eps-estimate-engine/ai-conformance.json",
-      "doorway_state": "machine_commerce_live",
-      "conformance_state": "live_read_only_mcp_verified",
+      "doorway_state": "migration_hold_owned_discovery_only",
+      "conformance_state": "migration_hold_legacy_endpoint_retired",
       "provider_behavior_state": "not_run",
       "chum_mirror_state": "generated_public_fallback",
       "machine_commerce_public_id": "eps-estimate-engine-machine-v1",
       "machine_commerce_tool": "calculate_contractor_estimate_preview",
       "machine_commerce_receipt_verifier_tool": "verify_contractor_estimate_receipt",
-      "machine_invocation_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/estimatePreviewGateway",
+      "machine_invocation_url": null,
       "machine_invocation_side_effects": "none",
-      "receipt_verifier_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/estimateReceiptVerifier",
+      "receipt_verifier_url": null,
       "receipt_verifier_authority": "integrity_only",
       "authority_state": "Public no-account estimate preview is arithmetic-only and creates no proposal, job acceptance, charge, customer obligation, private workspace write, or identity proof.",
       "payment_state": "unavailable_not_configured",
@@ -168,9 +176,11 @@
       "mcp_registry": {
         "name": "io.github.jgaethle10/evercraft-machine-commerce",
         "version": "1.5.1",
-        "publication_state": "published_shared_server"
+        "publication_state": "historical_receipt_legacy_endpoint_retired",
+        "migration_note": "Publication receipt retained as provenance only; legacy Base44 endpoint is not current invocation authority."
       },
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      "mcp": null,
+      "public_web_discovery_state": "owned_chum_mirror_live_direct_invocation_migration_hold"
     },
     {
       "product_key": "eventwave",
@@ -198,7 +208,7 @@
       "name": "Evercraft Clip",
       "class": "ai_social_video_production_and_governed_distribution",
       "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-clip/index.html",
-      "llms_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=llms",
+      "llms_url": null,
       "doorway_state": "migration_hold_owned_discovery_only",
       "conformance_state": "migration_hold_legacy_endpoint_retired",
       "provider_behavior_state": "not_run",
@@ -208,7 +218,7 @@
         "publication_state": "historical_receipt_legacy_endpoint_retired",
         "receipt": "conformance/registry-publications/2026-09-28-evercraft-clip-v0.2.1.json",
         "published_at_utc": "2026-09-28T22:57:20Z",
-        "migration_note": "Publication receipt is retained as provenance only; any legacy Base44 endpoint is not current invocation authority."
+        "migration_note": "Publication receipt retained as provenance only; legacy Base44 endpoint is not current invocation authority."
       },
       "origin_llms_url": null,
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-clip/ai-conformance.json",
@@ -270,14 +280,15 @@
       "product_key": "evercraft-containment",
       "name": "Evercraft Containment",
       "class": "agent_persistence_diagnostic",
-      "canonical_url": "https://evercraft.base44.app/containment",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-containment/index.html",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-containment/llms.txt",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-containment/ai-conformance.json",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-containment/ai-discovery.json",
-      "doorway_state": "public_product_page_live_machine_surface_pending",
-      "conformance_state": "chum_discovery_mirror",
+      "doorway_state": "migration_hold_owned_discovery_only",
+      "conformance_state": "migration_hold_legacy_endpoint_retired",
       "provider_behavior_state": "not_run",
-      "chum_mirror_state": "generated_public_fallback"
+      "chum_mirror_state": "generated_public_fallback",
+      "public_web_discovery_state": "owned_chum_mirror_live_direct_invocation_migration_hold"
     },
     {
       "product_key": "evercraft-front-door",
@@ -317,7 +328,7 @@
       "conformance_state": "migration_hold_legacy_endpoint_retired",
       "provider_behavior_state": "not_run",
       "origin_llms_url": null,
-      "origin_discovery_url": "https://network-control.base44.app/ai-discovery.json",
+      "origin_discovery_url": null,
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-network/ai-conformance.json",
       "chum_mirror_state": "generated_public_fallback",
       "machine_commerce_handoff_state": "bounded_read_only_mcp_verified",
@@ -327,9 +338,9 @@
       "mcp_registry": {
         "name": "io.github.jgaethle10/evercraft-machine-commerce",
         "publication_state": "historical_receipt_legacy_endpoint_retired",
-        "migration_note": "Publication receipt is retained as provenance only; any legacy Base44 endpoint is not current invocation authority."
+        "migration_note": "Publication receipt retained as provenance only; legacy Base44 endpoint is not current invocation authority."
       },
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "public_web_discovery_state": "owned_chum_mirror_live_direct_invocation_migration_hold"
     },
     {
@@ -350,22 +361,23 @@
       "product_key": "evercraft-rewards",
       "name": "Evercraft Rewards",
       "class": "bounded_membership_discovery",
-      "canonical_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/index.html",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/llms.txt",
-      "doorway_state": "machine_commerce_live_game_wallet_growth_source_qa_green_production_issuance_not_verified",
-      "conformance_state": "machine_commerce_live_game_wallet_growth_truth_boundaries_hardened",
+      "doorway_state": "migration_hold_owned_discovery_only",
+      "conformance_state": "migration_hold_legacy_endpoint_retired",
       "provider_behavior_state": "not_run",
       "mcp_registry": {
         "name": "io.github.jgaethle10/evercraft-machine-commerce",
         "version": "1.1.0",
-        "publication_state": "published"
+        "publication_state": "historical_receipt_legacy_endpoint_retired",
+        "migration_note": "Publication receipt retained as provenance only; legacy Base44 endpoint is not current invocation authority."
       },
-      "origin_llms_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=llms",
+      "origin_llms_url": null,
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/ai-conformance.json",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/ai-discovery.json",
       "chum_mirror_state": "generated_public_fallback",
       "game_wallet": {
-        "public_surface": "https://evercraft-rewards.base44.app/game-wallet",
+        "public_surface": null,
         "source_state": "fulfillment_growth_and_funded_earning_engine_source_qa_green",
         "source_qa_observed_on": "2026-09-29",
         "provider_adapter": "giftbit",
@@ -387,27 +399,29 @@
           "earning_points_budget_cap",
           "earning_funding_reference"
         ]
-      }
+      },
+      "public_web_discovery_state": "owned_chum_mirror_live_direct_invocation_migration_hold"
     },
     {
       "product_key": "evercraft-web",
       "name": "Evercraft Web",
       "class": "web_agent_infrastructure",
-      "canonical_url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/index.html",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/llms.txt",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/ai-conformance.json",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/ai-discovery.json",
-      "doorway_state": "registry_published_runtime_canary_passed",
-      "conformance_state": "registry_publication_receipt_backed",
+      "doorway_state": "migration_hold_owned_discovery_only",
+      "conformance_state": "migration_hold_legacy_endpoint_retired",
       "provider_behavior_state": "not_run",
       "mcp_registry": {
         "name": "io.github.jgaethle10/evercraft-web",
         "version": "0.1.1",
-        "publication_state": "published_receipt_backed",
+        "publication_state": "historical_receipt_legacy_endpoint_retired",
         "receipt": "conformance/registry-publications/2026-09-24-evercraft-web.json",
-        "published_at_utc": "2026-09-24T16:49:21Z"
+        "published_at_utc": "2026-09-24T16:49:21Z",
+        "migration_note": "Publication receipt retained as provenance only; legacy Base44 endpoint is not current invocation authority."
       },
-      "public_web_discovery_state": "not_yet_observed",
+      "public_web_discovery_state": "owned_chum_mirror_live_direct_invocation_migration_hold",
       "runtime_evidence_state": {
         "fetch": "external_canary_passed_public_read_only",
         "search": "held_not_production_verified",
@@ -428,44 +442,47 @@
       "product_key": "evernest",
       "name": "EverNest",
       "class": "public_resource_discovery_only",
-      "canonical_url": "https://evernest-home.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest/index.html",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest/ai-discovery.json",
-      "doorway_state": "source_build_green",
-      "conformance_state": "not_yet_propagated",
+      "doorway_state": "migration_hold_owned_discovery_only",
+      "conformance_state": "migration_hold_legacy_endpoint_retired",
       "provider_behavior_state": "not_run",
-      "origin_llms_url": "https://evernest-home.base44.app/llms.txt",
-      "origin_discovery_url": "https://evernest-home.base44.app/ai-discovery.json",
+      "origin_llms_url": null,
+      "origin_discovery_url": null,
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest/ai-conformance.json",
-      "chum_mirror_state": "generated_public_fallback"
+      "chum_mirror_state": "generated_public_fallback",
+      "public_web_discovery_state": "owned_chum_mirror_live_direct_invocation_migration_hold"
     },
     {
       "product_key": "evernest-atlas",
       "name": "EverNest Atlas",
       "class": "adult_household_life_planning",
-      "canonical_url": "https://evernest-life-map.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest-atlas/index.html",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest-atlas/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest-atlas/ai-discovery.json",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest-atlas/ai-conformance.json",
-      "doorway_state": "source_build_lint_green_origin_machine_files_added_external_canary_pending",
-      "conformance_state": "not_yet_propagated",
+      "doorway_state": "migration_hold_owned_discovery_only",
+      "conformance_state": "migration_hold_legacy_endpoint_retired",
       "provider_behavior_state": "not_run",
-      "chum_mirror_state": "generated_public_fallback"
+      "chum_mirror_state": "generated_public_fallback",
+      "public_web_discovery_state": "owned_chum_mirror_live_direct_invocation_migration_hold"
     },
     {
       "product_key": "everystage",
       "name": "EveryStage",
       "class": "discovery_human_handoff",
-      "canonical_url": "https://every-stage.base44.app/product",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/everystage/index.html",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/everystage/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/everystage/ai-discovery.json",
-      "doorway_state": "source_build_green",
-      "conformance_state": "not_yet_propagated",
+      "doorway_state": "migration_hold_owned_discovery_only",
+      "conformance_state": "migration_hold_legacy_endpoint_retired",
       "provider_behavior_state": "not_run",
-      "origin_llms_url": "https://every-stage.base44.app/llms.txt",
-      "origin_discovery_url": "https://every-stage.base44.app/ai-discovery.json",
+      "origin_llms_url": null,
+      "origin_discovery_url": null,
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/everystage/ai-conformance.json",
-      "chum_mirror_state": "generated_public_fallback"
+      "chum_mirror_state": "generated_public_fallback",
+      "public_web_discovery_state": "owned_chum_mirror_live_direct_invocation_migration_hold"
     },
     {
       "product_key": "faie",
@@ -492,16 +509,17 @@
       "product_key": "findmypart",
       "name": "FindMyPart",
       "class": "agent_commerce",
-      "canonical_url": "https://findmypart.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/index.html",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/llms.txt",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/ai-conformance.json",
-      "doorway_state": "source_build_green",
-      "conformance_state": "reference_implementation",
+      "doorway_state": "migration_hold_owned_discovery_only",
+      "conformance_state": "migration_hold_legacy_endpoint_retired",
       "provider_behavior_state": "not_run",
-      "origin_llms_url": "https://findmypart.base44.app/llms.txt",
-      "origin_conformance_url": "https://findmypart.base44.app/ai-conformance.json",
+      "origin_llms_url": null,
+      "origin_conformance_url": null,
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/ai-discovery.json",
-      "chum_mirror_state": "generated_public_fallback"
+      "chum_mirror_state": "generated_public_fallback",
+      "public_web_discovery_state": "owned_chum_mirror_live_direct_invocation_migration_hold"
     },
     {
       "product_key": "forensiscope",
@@ -522,40 +540,40 @@
         "publication_state": "historical_receipt_legacy_endpoint_retired",
         "receipt": "conformance/registry-publications/2026-09-24-forensiscope.json",
         "published_at_utc": "2026-09-24T17:45:44Z",
-        "migration_note": "Publication receipt is retained as provenance only; any legacy Base44 endpoint is not current invocation authority."
+        "migration_note": "Publication receipt retained as provenance only; legacy Base44 endpoint is not current invocation authority."
       },
       "public_web_discovery_state": "owned_chum_mirror_live_direct_invocation_migration_hold",
       "provider_observation_state": "negative_observations_recorded",
       "origin_llms_url": null,
       "origin_conformance_url": null,
-      "origin_discovery_url": "https://evercraft-forensiscope.base44.app/forensiscope-capabilities.json",
+      "origin_discovery_url": null,
       "chum_mirror_state": "generated_public_fallback"
     },
     {
       "product_key": "guardian",
       "name": "Guardian",
       "class": "privacy_first_protection_navigation_and_prevention",
-      "canonical_url": "https://guardian-pilot.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian/index.html",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian/ai-discovery.json",
-      "doorway_state": "canonical_public_chum_mirror",
-      "conformance_state": "not_yet_propagated",
+      "doorway_state": "migration_hold_owned_discovery_only",
+      "conformance_state": "migration_hold_legacy_endpoint_retired",
       "provider_behavior_state": "not_run",
-      "public_web_discovery_state": "not_measured",
+      "public_web_discovery_state": "owned_chum_mirror_live_direct_invocation_migration_hold",
       "canonical_host_machine_surface_state": "guardian host reachable; Base44 autogenerated llms.txt observed stale and /ai-discovery.json observed as HTML SPA fallback on 2026-09-24; CHUM mirror is the declared machine surface until host files are live-verified"
     },
     {
       "product_key": "ibmi-rescue",
       "name": "Evercraft IBM i Rescue",
       "class": "legacy_modernization_evidence_human_handoff",
-      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ibmi-rescue/index.html",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ibmi-rescue/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ibmi-rescue/ai-discovery.json",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ibmi-rescue/ai-conformance.json",
-      "doorway_state": "chum_public_mirror_source_ready",
-      "conformance_state": "machine_commerce_direct_checkout_live_verified",
+      "doorway_state": "migration_hold_owned_discovery_only",
+      "conformance_state": "migration_hold_legacy_endpoint_retired",
       "provider_behavior_state": "not_run",
-      "origin_canonical_url": "https://findmypart.base44.app/ibmi-rescue",
+      "origin_canonical_url": null,
       "chum_mirror_state": "generated_public_primary_until_origin_verified",
       "machine_commerce_handoff_state": "live_verified",
       "machine_commerce_public_id": "ibmi-rescue-v1",
@@ -567,26 +585,29 @@
       "mcp_registry": {
         "name": "io.github.jgaethle10/evercraft-machine-commerce",
         "version": "1.5.1",
-        "publication_state": "published_shared_server"
+        "publication_state": "historical_receipt_legacy_endpoint_retired",
+        "migration_note": "Publication receipt retained as provenance only; legacy Base44 endpoint is not current invocation authority."
       },
       "machine_commerce_offer_tool": "get_live_checkout_offer",
-      "machine_commerce_status_tool": "get_verified_order_status"
+      "machine_commerce_status_tool": "get_verified_order_status",
+      "public_web_discovery_state": "owned_chum_mirror_live_direct_invocation_migration_hold"
     },
     {
       "product_key": "infinite-classroom",
       "name": "Infinite Classroom",
       "class": "public_learning_discovery",
-      "canonical_url": "https://infiniteclassroom.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/infinite-classroom/index.html",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/infinite-classroom/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/infinite-classroom/ai-discovery.json",
-      "doorway_state": "source_build_green",
-      "conformance_state": "not_yet_propagated",
+      "doorway_state": "migration_hold_owned_discovery_only",
+      "conformance_state": "migration_hold_legacy_endpoint_retired",
       "provider_behavior_state": "not_run",
-      "origin_llms_url": "https://infinite-classroom-fe2d1357.base44.app/llms.txt",
-      "origin_discovery_url": "https://infinite-classroom-fe2d1357.base44.app/ai-discovery.json",
+      "origin_llms_url": null,
+      "origin_discovery_url": null,
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/infinite-classroom/ai-conformance.json",
       "chum_mirror_state": "generated_public_fallback",
-      "origin_canonical_url": "https://infinite-classroom-fe2d1357.base44.app/"
+      "origin_canonical_url": null,
+      "public_web_discovery_state": "owned_chum_mirror_live_direct_invocation_migration_hold"
     },
     {
       "product_key": "legacy-rescue-lab",
@@ -657,14 +678,15 @@
       "product_key": "payflow",
       "name": "PayFlow",
       "class": "small_team_payroll_recordkeeping",
-      "canonical_url": "https://pay-flow-fix.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/payflow/index.html",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/payflow/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/payflow/ai-discovery.json",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/payflow/ai-conformance.json",
-      "doorway_state": "source_build_lint_green_origin_machine_files_added_external_canary_pending",
-      "conformance_state": "not_yet_propagated",
+      "doorway_state": "migration_hold_owned_discovery_only",
+      "conformance_state": "migration_hold_legacy_endpoint_retired",
       "provider_behavior_state": "not_run",
-      "chum_mirror_state": "generated_public_fallback"
+      "chum_mirror_state": "generated_public_fallback",
+      "public_web_discovery_state": "owned_chum_mirror_live_direct_invocation_migration_hold"
     },
     {
       "product_key": "raven-nexus",
@@ -674,7 +696,7 @@
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/raven-nexus/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/raven-nexus/ai-discovery.json",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/raven-nexus/ai-conformance.json",
-      "origin_discovery_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
+      "origin_discovery_url": null,
       "doorway_state": "migration_hold_owned_discovery_only",
       "conformance_state": "migration_hold_legacy_endpoint_retired",
       "provider_behavior_state": "not_run",
@@ -685,32 +707,35 @@
       "product_key": "revenue-war-map",
       "name": "Evercraft Revenue War Map",
       "class": "personal_revenue_planning_and_income_opportunity_mapping",
-      "canonical_url": "https://evercraft-war-map.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/revenue-war-map/index.html",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/revenue-war-map/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/revenue-war-map/ai-discovery.json",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/revenue-war-map/ai-conformance.json",
-      "doorway_state": "source_build_lint_typecheck_green_origin_machine_files_added_external_canary_pending",
-      "conformance_state": "not_yet_propagated",
+      "doorway_state": "migration_hold_owned_discovery_only",
+      "conformance_state": "migration_hold_legacy_endpoint_retired",
       "provider_behavior_state": "not_run",
-      "chum_mirror_state": "generated_public_fallback"
+      "chum_mirror_state": "generated_public_fallback",
+      "public_web_discovery_state": "owned_chum_mirror_live_direct_invocation_migration_hold"
     },
     {
       "product_key": "roasted",
       "name": "ROASTED",
       "class": "agent_commerce",
-      "canonical_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/roasted/index.html",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/roasted/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/roasted/ai-discovery.json",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/roasted/ai-conformance.json",
-      "doorway_state": "mcp_registry_live",
-      "conformance_state": "mcp_registry_live",
+      "doorway_state": "migration_hold_owned_discovery_only",
+      "conformance_state": "migration_hold_legacy_endpoint_retired",
       "provider_behavior_state": "not_run",
       "mcp_registry": {
         "name": "io.github.jgaethle10/roasted",
         "version": "1.0.0",
-        "publication_state": "published"
+        "publication_state": "historical_receipt_legacy_endpoint_retired",
+        "migration_note": "Publication receipt retained as provenance only; legacy Base44 endpoint is not current invocation authority."
       },
-      "chum_mirror_state": "generated_public_fallback"
+      "chum_mirror_state": "generated_public_fallback",
+      "public_web_discovery_state": "owned_chum_mirror_live_direct_invocation_migration_hold"
     },
     {
       "product_key": "seasonally",
@@ -729,66 +754,70 @@
       "product_key": "second-stitch",
       "name": "The Second Stitch",
       "class": "textile_project_intelligence_and_procurement_prototype",
-      "canonical_url": "https://the-second-stitch.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/second-stitch/index.html",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/second-stitch/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/second-stitch/ai-discovery.json",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/second-stitch/ai-conformance.json",
-      "doorway_state": "source_build_lint_green_origin_machine_files_added_external_canary_pending",
-      "conformance_state": "not_yet_propagated",
+      "doorway_state": "migration_hold_owned_discovery_only",
+      "conformance_state": "migration_hold_legacy_endpoint_retired",
       "provider_behavior_state": "not_run",
-      "chum_mirror_state": "generated_public_fallback"
+      "chum_mirror_state": "generated_public_fallback",
+      "public_web_discovery_state": "owned_chum_mirror_live_direct_invocation_migration_hold"
     },
     {
       "product_key": "skyops-parking",
       "name": "SkyOps Parking",
       "class": "discovery_human_handoff",
-      "canonical_url": "https://skyopsparking.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/skyops-parking/index.html",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/skyops-parking/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/skyops-parking/ai-discovery.json",
-      "doorway_state": "source_build_green",
-      "conformance_state": "not_yet_propagated",
+      "doorway_state": "migration_hold_owned_discovery_only",
+      "conformance_state": "migration_hold_legacy_endpoint_retired",
       "provider_behavior_state": "not_run",
-      "origin_llms_url": "https://skyops-parking.base44.app/llms.txt",
-      "origin_discovery_url": "https://skyops-parking.base44.app/ai-discovery.json",
+      "origin_llms_url": null,
+      "origin_discovery_url": null,
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/skyops-parking/ai-conformance.json",
       "chum_mirror_state": "generated_public_fallback",
-      "origin_canonical_url": "https://skyops-parking.base44.app/"
+      "origin_canonical_url": null,
+      "public_web_discovery_state": "owned_chum_mirror_live_direct_invocation_migration_hold"
     },
     {
       "product_key": "systemia-field-library",
       "name": "Systemia Field Library",
       "class": "read_only_playbook_discovery",
-      "canonical_url": "https://systemiafieldlibrary.com/",
-      "llms_url": "https://base44.app/api/apps/6a54381e147576b18ac94d8f/functions/fieldLibraryAgentGateway?view=llms",
-      "discovery_url": "https://base44.app/api/apps/6a54381e147576b18ac94d8f/functions/fieldLibraryAgentGateway?action=discover",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-field-library/index.html",
+      "llms_url": null,
+      "discovery_url": null,
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-field-library/ai-conformance.json",
-      "doorway_state": "mcp_registry_live_llms_gateway_live",
-      "conformance_state": "live_mcp_tools_verified_registry_active",
+      "doorway_state": "migration_hold_owned_discovery_only",
+      "conformance_state": "migration_hold_legacy_endpoint_retired",
       "provider_behavior_state": "not_run",
       "mcp_registry": {
         "name": "io.github.jgaethle10/systemia-field-library",
         "version": "1.0.0",
-        "publication_state": "published"
+        "publication_state": "historical_receipt_legacy_endpoint_retired",
+        "migration_note": "Publication receipt retained as provenance only; legacy Base44 endpoint is not current invocation authority."
       },
       "chum_mirror_state": "generated_public_fallback",
-      "origin_llms_url": "https://systemiafieldlibrary.com/llms.txt"
+      "origin_llms_url": "https://systemiafieldlibrary.com/llms.txt",
+      "public_web_discovery_state": "owned_chum_mirror_live_direct_invocation_migration_hold"
     },
     {
       "product_key": "systemia-portfolio-sentinel",
       "name": "Systemia Portfolio Sentinel",
       "class": "continuous_software_portfolio_integrity_monitoring",
-      "canonical_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-portfolio-sentinel/index.html",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-portfolio-sentinel/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-portfolio-sentinel/ai-discovery.json",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-portfolio-sentinel/ai-conformance.json",
-      "doorway_state": "machine_commerce_live",
-      "conformance_state": "live_match_canary_passed",
+      "doorway_state": "migration_hold_owned_discovery_only",
+      "conformance_state": "migration_hold_legacy_endpoint_retired",
       "provider_behavior_state": "not_run",
       "chum_mirror_state": "generated_public_fallback",
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "universal_mcp": null,
       "machine_commerce_public_id": "portfolio-sentinel-v1",
       "machine_commerce_tool": "get_offer",
-      "public_web_discovery_state": "source_published_general_web_pickup_not_yet_verified",
+      "public_web_discovery_state": "owned_chum_mirror_live_direct_invocation_migration_hold",
       "runtime_evidence_state": {
         "evercraft_internal_resident_cycle": "live_verified",
         "cadence_seconds": 300,
@@ -836,7 +865,8 @@
       "mcp_registry": {
         "name": "io.github.jgaethle10/evercraft-machine-commerce",
         "version": "1.5.1",
-        "publication_state": "published_shared_server"
+        "publication_state": "historical_receipt_legacy_endpoint_retired",
+        "migration_note": "Publication receipt retained as provenance only; legacy Base44 endpoint is not current invocation authority."
       }
     },
     {
@@ -874,52 +904,57 @@
       "product_key": "systemia-university",
       "name": "Systemia University",
       "class": "evidence_centered_learning_agent_proving_and_workforce_readiness",
-      "canonical_url": "https://systemia-university.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/index.html",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/ai-discovery.json",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/ai-conformance.json",
-      "doorway_state": "source_build_lint_green_origin_machine_files_added_external_canary_pending",
-      "conformance_state": "not_yet_propagated",
+      "doorway_state": "migration_hold_owned_discovery_only",
+      "conformance_state": "migration_hold_legacy_endpoint_retired",
       "provider_behavior_state": "not_run",
-      "chum_mirror_state": "generated_public_fallback"
+      "chum_mirror_state": "generated_public_fallback",
+      "public_web_discovery_state": "owned_chum_mirror_live_direct_invocation_migration_hold"
     },
     {
       "product_key": "systemia-website-audit",
       "name": "Systemia Website Audit",
       "class": "agent_commerce",
-      "canonical_url": "https://systemia-audit-pro.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-website-audit/index.html",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-website-audit/llms.txt",
-      "doorway_state": "mcp_registry_live",
-      "conformance_state": "mcp_registry_live",
+      "doorway_state": "migration_hold_owned_discovery_only",
+      "conformance_state": "migration_hold_legacy_endpoint_retired",
       "provider_behavior_state": "not_run",
       "mcp_registry": {
         "name": "io.github.jgaethle10/systemia-website-audit",
         "version": "1.0.0",
-        "publication_state": "published"
+        "publication_state": "historical_receipt_legacy_endpoint_retired",
+        "migration_note": "Publication receipt retained as provenance only; legacy Base44 endpoint is not current invocation authority."
       },
-      "origin_llms_url": "https://systemia-audit-pro.base44.app/llms.txt",
+      "origin_llms_url": null,
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-website-audit/ai-conformance.json",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-website-audit/ai-discovery.json",
-      "chum_mirror_state": "generated_public_fallback"
+      "chum_mirror_state": "generated_public_fallback",
+      "public_web_discovery_state": "owned_chum_mirror_live_direct_invocation_migration_hold"
     },
     {
       "product_key": "website-launch",
       "name": "Evercraft Website Launch",
       "class": "agent_commerce",
-      "canonical_url": "https://instant-website-builder-usa-6feac193.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/website-launch/index.html",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/website-launch/llms.txt",
-      "doorway_state": "mcp_registry_live",
-      "conformance_state": "mcp_registry_live",
+      "doorway_state": "migration_hold_owned_discovery_only",
+      "conformance_state": "migration_hold_legacy_endpoint_retired",
       "provider_behavior_state": "not_run",
       "mcp_registry": {
         "name": "io.github.jgaethle10/website-launch",
         "version": "1.0.0",
-        "publication_state": "published"
+        "publication_state": "historical_receipt_legacy_endpoint_retired",
+        "migration_note": "Publication receipt retained as provenance only; legacy Base44 endpoint is not current invocation authority."
       },
-      "origin_llms_url": "https://instant-website-builder-usa-6feac193.base44.app/llms.txt",
+      "origin_llms_url": null,
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/website-launch/ai-conformance.json",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/website-launch/ai-discovery.json",
-      "chum_mirror_state": "generated_public_fallback"
+      "chum_mirror_state": "generated_public_fallback",
+      "public_web_discovery_state": "owned_chum_mirror_live_direct_invocation_migration_hold"
     }
   ],
   "state_semantics": {
