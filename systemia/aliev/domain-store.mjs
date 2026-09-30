@@ -9,7 +9,7 @@ const safe=(v)=>{
   if(!/^[a-zA-Z0-9][a-zA-Z0-9._-]{0,95}$/.test(s)) throw new Error('domain_or_key_invalid');
   return s;
 };
-const n=(v)=>{const x=Number(v);return Number.isFinite(x)?x:null;};
+const n=(v)=>{if(v===null||v===undefined||String(v).trim()==='')return null;const x=Number(v);return Number.isFinite(x)?x:null;};
 const when=(v)=>{const x=Date.parse(String(v||''));return Number.isFinite(x)?x:null;};
 
 function atomicJson(file,value){
