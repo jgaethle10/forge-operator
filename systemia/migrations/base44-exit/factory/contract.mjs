@@ -87,6 +87,7 @@ export function inferFeatures(rawInput = {}) {
   const webhooks = arr(raw.webhooks);
   const storage = arr(raw.storage_buckets || raw.storage_surfaces);
   const machine = arr(raw.public_machine_surfaces || raw.machine_surfaces);
+  const subscriptions = arr(raw.realtime_subscriptions || raw.subscriptions || raw.entity_subscriptions);
 
   const entityCount = Math.max(countLike(raw.entity_count), entities.length);
   const functionCount = Math.max(countLike(raw.function_count), functions.length);
@@ -105,6 +106,7 @@ export function inferFeatures(rawInput = {}) {
     webhooks,
     storage_surfaces: storage,
     public_machine_surfaces: machine,
+    realtime_subscriptions: subscriptions,
     auth: bool(raw.auth) || bool(raw.uses_auth) || entities.includes('User'),
     storage: bool(raw.storage) || bool(raw.uses_storage) || storage.length > 0,
     scheduled_work: bool(raw.scheduled_work) || jobs.length > 0,
@@ -115,11 +117,16 @@ export function inferFeatures(rawInput = {}) {
     external_connectors: connectorCount > 0,
     server_functions: functionCount > 0,
     structured_data: entityCount > 0,
+    realtime: bool(raw.realtime) || bool(raw.uses_realtime) || subscriptions.length > 0,
     secrets_required: envKeys.length > 0 || bool(raw.secrets_required)
   };
 }
 
 const TARGETS = {
+  app_fabric_compatibility: {
+    key: 'app_fabric_compatibility',
+    purpose: 'Preserve high-value Base44 SDK call geometry while authority and runtime move onto Evercraft.'
+  },
   public_edge: {
     key: 'public_edge',
     purpose: 'Serve browser assets and preserve public routes without Base44.'
@@ -167,11 +174,15 @@ const TARGETS = {
   portfolio_sentinel: {
     key: 'portfolio_sentinel',
     purpose: 'Canary the new route after cutover and detect regressions or drift.'
+  },
+  realtime_bus: {
+    key: 'realtime_bus',
+    purpose: 'Provide Evercraft-owned realtime entity/event subscriptions for applications that depend on live updates.'
   }
 };
 
 export function requiredTargets(features = {}) {
-  const keys = ['public_edge', 'portfolio_sentinel'];
+  const keys = ['app_fabric_compatibility', 'public_edge', 'portfolio_sentinel'];
   if (features.server_functions) keys.push('yard_runtime');
   if (features.structured_data) keys.push('canonical_data');
   if (features.auth) keys.push('identity_boundary');
@@ -182,6 +193,7 @@ export function requiredTargets(features = {}) {
   if (features.webhook_ingress) keys.push('webhook_gateway');
   if (features.payments) keys.push('commerce_boundary');
   if (features.public_machine_access) keys.push('fabric_discovery');
+  if (features.realtime) keys.push('realtime_bus');
   return [...new Set(keys)].map((key) => TARGETS[key]);
 }
 
@@ -216,6 +228,7 @@ export function buildCutoverGates(rawInput = {}, featuresInput = null) {
     gate('secrets_rekeyed', features.secrets_required, evidence(raw, 'secrets_rekeyed'), 'Secret material is re-issued into Evercraft-controlled storage, not exported as plaintext.'),
     gate('payment_path_verified', features.payments, evidence(raw, 'payment_path_verified'), 'Checkout and payment verification remain provider-authoritative.'),
     gate('machine_surfaces_verified', features.public_machine_access, evidence(raw, 'machine_surfaces_verified'), 'MCP/OpenAPI/A2A/discovery doors point to the new authority.'),
+    gate('realtime_replatformed', features.realtime, evidence(raw, 'realtime_replatformed'), 'Realtime subscriptions use an Evercraft-owned bus and pass reconnect, ordering, authorization, and delivery parity tests.'),
     gate('custom_domains_ready', features.custom_domain, evidence(raw, 'custom_domains_ready'), 'DNS, TLS, redirects, and callback URLs are staged.'),
     gate('parity_suite_passed', true, evidence(raw, 'parity_suite_passed'), 'Critical user journeys and API contracts pass against the new stack.'),
     gate('observability_ready', true, evidence(raw, 'observability_ready'), 'Health, logs, error receipts, latency, and dependency health are visible.'),
@@ -254,7 +267,8 @@ export function buildEvacuationPlan(rawInput = {}) {
     (features.webhook_ingress ? 2 : 0) +
     (features.scheduled_work ? 2 : 0) +
     (features.storage ? 2 : 0) +
-    (features.public_machine_access ? 2 : 0);
+    (features.public_machine_access ? 2 : 0) +
+    (features.realtime ? 2 : 0);
 
   return {
     schema: 'evercraft.base44-evac.app-plan.v1',
