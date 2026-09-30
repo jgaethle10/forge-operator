@@ -92,5 +92,15 @@ test('review test cases reference the live scanned Fabric matcher',()=>{
   const manifest=readJson('plugin.json');
   const review=manifest.extensions?.['com.openai']?.review;
   assert.ok(review.test_cases.positive.every((x)=>x.tools_triggered==='match_evercraft_capability'));
-  assert.equal(manifest.version,'1.0.1');
+  assert.equal(manifest.version,'1.0.2');
+});
+
+
+test('review package includes an accessible demo recording and release notes',()=>{
+  const manifest=readJson('plugin.json');
+  const openai=manifest.extensions?.['com.openai'];
+  const demo=new URL(openai.review.demo_recording_url);
+  assert.equal(demo.protocol,'https:');
+  assert.equal(demo.hostname,'drive.google.com');
+  assert.ok(String(openai.publication?.release_notes||'').length>20);
 });
