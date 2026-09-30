@@ -5,6 +5,7 @@ import {
   evaluateEdgeFamilies,
   benjaminiHochberg,
   fetchAlpacaBars,
+  filterCoreSessionBars,
 } from "./edge-research-factory.mjs";
 
 function bars(start, count, drift) {
@@ -19,6 +20,17 @@ function bars(start, count, drift) {
   }
   return out;
 }
+
+const filtered = filterCoreSessionBars([
+  { t: "2026-09-01T13:25:00Z", c: 99 },
+  { t: "2026-09-01T13:30:00Z", c: 100 },
+  { t: "2026-09-01T19:55:00Z", c: 101 },
+  { t: "2026-09-01T20:00:00Z", c: 102 },
+]);
+assert.deepEqual(filtered.map((row) => row.t), [
+  "2026-09-01T13:30:00Z",
+  "2026-09-01T19:55:00Z",
+]);
 
 const hypothesis = {
   hypothesis_id: "edgehyp:proof",
@@ -169,6 +181,7 @@ console.log(JSON.stringify({
   schema: "evercraft.daytrade.edge-research-factory-proof.v1",
   no_lookahead: true,
   benchmark_adjusted: true,
+  core_session_horizons: true,
   source_diversity_required: true,
   authoritative_multi_origin_screen: true,
   alpaca_pagination: true,
