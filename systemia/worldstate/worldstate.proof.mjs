@@ -87,6 +87,13 @@ const globalWater = projectWorldstate(
 );
 assert.equal(globalWater.observation_count, 1, 'domain-only scopes may intentionally operate globally');
 
+const gridInterestOnly = projectWorldstate(
+  state,
+  normalizeWorldstateScope({ dependencies:['grid'] })
+);
+assert.equal(gridInterestOnly.observation_count, 1, 'interest-only scopes must still narrow');
+assert.equal(gridInterestOnly.observations[0].observation_id, 'obs-grid-material');
+
 const missingSubject = projectWorldstate(
   state,
   normalizeWorldstateScope({
