@@ -20,7 +20,7 @@ Caddy in Crostini
 Evercraft Fabric :8787
 ```
 
-HTTP port 80 is forwarded to Chromebook port 8080 so Caddy can complete public certificate issuance/renewal. The MCP process itself remains bound to `127.0.0.1`; only the TLS reverse proxy is exposed.
+HTTP port 80 is forwarded to Chromebook port 18080 so Caddy can complete public certificate issuance/renewal. The MCP process itself remains bound to `127.0.0.1`; only the TLS reverse proxy is exposed.
 
 ## Install
 
@@ -41,7 +41,7 @@ Open **Settings -> About ChromeOS -> Developers -> Linux development environment
 
 Add:
 
-- TCP 8080, label `Evercraft HTTP`
+- TCP 18080, label `Evercraft HTTP`
 - TCP 8443, label `Evercraft HTTPS`
 
 ChromeOS describes this feature as making Linux ports available to other devices on the network.
@@ -50,7 +50,7 @@ ChromeOS describes this feature as making Linux ports available to other devices
 
 Give the Chromebook a DHCP reservation if the router supports it. Then add:
 
-- WAN TCP 80 -> Chromebook LAN IP, port 8080
+- WAN TCP 80 -> Chromebook LAN IP, port 18080
 - WAN TCP 443 -> Chromebook LAN IP, port 8443
 
 If the router reports a private/CGNAT WAN address instead of a public address, direct inbound hosting will not work. In that case this lane must stop rather than pretending the endpoint is public; use another Evercraft-authorized public-edge candidate.
@@ -84,3 +84,23 @@ https://fabric.YOURDOMAIN.com/.well-known/openai-apps-challenge
 ```
 
 After verification, keep the endpoint live for review. Public-directory publication still depends on OpenAI review and explicit Publish after approval.
+
+
+## Resident router-map recovery
+
+When the household router supports UPnP IGD, Evercraft can keep the two public mappings resident without requiring the router admin password.
+
+Install the refresh timer:
+
+```bash
+bash scripts/install-fabric-router-map-resident.sh \
+  --gateway YOUR_ROUTER_IP \
+  --host YOUR_CHROMEBOOK_LAN_IP
+```
+
+This installs a systemd timer that reasserts only:
+
+- WAN TCP 80 -> Chromebook TCP 18080
+- WAN TCP 443 -> Chromebook TCP 8443
+
+It runs once after boot and every 10 minutes so a router reboot does not silently strand the public edge.
