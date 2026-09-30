@@ -1,0 +1,42 @@
+{
+  "schema": "evercraft.runtime-observation.v1",
+  "observed_at": "2026-09-29T14:17:19Z",
+  "product": "FindMyPart",
+  "product_key": "findmypart",
+  "environment": "public_production",
+  "endpoint": "https://base44.app/api/apps/692536fdd7bfe083fc4086fa/functions/findMyPartAgentGateway",
+  "observations": [
+    {
+      "probe": "GET capabilities",
+      "http_status": 200,
+      "verified": true,
+      "observed_capabilities": [
+        "free_part_triage",
+        "get_part_hunt_offers",
+        "prepare_part_hunt_checkout",
+        "get_part_hunt_status"
+      ]
+    },
+    {
+      "probe": "POST triage",
+      "verified": true,
+      "charge_created": false,
+      "sample_input_summary": "Discontinued Whirlpool dryer control timer identified by supplied marking 3392519 with exact dryer model unknown.",
+      "observed_output_summary": {
+        "normalized_name": "Whirlpool Dryer Control Timer",
+        "observed_identifier": "3392519",
+        "readiness_score": 70,
+        "recommended_offer_slug": "deep-hunt",
+        "safety_category": "standard"
+      }
+    }
+  ],
+  "truth_boundaries": [
+    "The Part Passport is evidence-aware triage, not fitment proof.",
+    "Unknown compatibility, inventory and supplier availability remain unknown until separately verified.",
+    "Free triage creates no charge.",
+    "Checkout creation is not payment proof.",
+    "Paid fulfillment requires authoritative provider payment verification."
+  ],
+  "evidence_state": "direct_live_runtime_observation"
+}
