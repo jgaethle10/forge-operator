@@ -1,7 +1,7 @@
 export type EvercraftPushRegistration = {
   apiBase?: string;
   principalId: string;
-  bearerToken: string;
+  bearerToken?: string;
   audiences?: string[];
   products?: string[];
   preferences?: Partial<Record<'transactional' | 'operational' | 'safety' | 'reminder' | 'marketing', boolean>>;
@@ -38,7 +38,10 @@ export async function registerEvercraftPush(options: EvercraftPushRegistration) 
   const response = await fetch(`${apiBase}/api/notifications/subscriptions`, {
     method: 'POST',
     credentials: 'include',
-    headers: { 'content-type': 'application/json', authorization: `Bearer ${options.bearerToken}` },
+    headers: {
+      'content-type': 'application/json',
+      ...(options.bearerToken ? { authorization: `Bearer ${options.bearerToken}` } : {}),
+    },
     body: JSON.stringify({
       principal_id: options.principalId,
       endpoint: json.endpoint,
