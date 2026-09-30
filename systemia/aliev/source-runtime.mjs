@@ -4,6 +4,7 @@ import path from 'node:path';
 import { createHash, randomBytes } from 'node:crypto';
 import { ingestAliEvDomainRecords, aliEvDomainHealth } from './domain-store.mjs';
 import { buildOwnedAliEvSiteSnapshot, censusOnelineGeocode } from './source-engine.mjs';
+import { refreshOwnedAliEvSiteDomains } from './collectors/washington.mjs';
 
 const COVERAGE_SCHEMA='evercraft.rivet.source-coverage.v1';
 const REQUIRED_DOMAINS=[
@@ -113,6 +114,7 @@ export async function startAliEvSourceRuntime({
   ingestToken=process.env.ALIEV_OWNED_INGEST_TOKEN||'',
   domainStateDir='',
   geocode=censusOnelineGeocode,
+  refreshDomains=refreshOwnedAliEvSiteDomains,
 }={}){
   if(!stateDir) throw new Error('stateDir is required');
   if(!clean(systemiaMachineKey)) throw new Error('SYSTEMIA_MACHINE_KEY is required');
@@ -214,6 +216,7 @@ export async function startAliEvSourceRuntime({
               address,
               domainStateDir:domainRoot,
               geocode,
+              refreshDomains,
             });
             const persisted=writeSnapshot(stateDir,snapshot);
             found={snapshot,entry:{sha256:persisted.sha256,byte_count:persisted.byte_count,retrieved_at:snapshot.retrieved_at}};
