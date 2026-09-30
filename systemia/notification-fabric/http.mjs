@@ -242,11 +242,13 @@ export function registerNotificationFabricRoutes(app, options = {}) {
 
   app.post('/api/notifications/jobs', requireIngest, (req, res) => {
     try {
-      const intent = fabric.prepareIntent(req.body?.intent || req.body);
+      const rawIntent = req.body?.intent || req.body;
+      const intent = fabric.prepareIntent(rawIntent);
       const idempotencyKey = String(req.get('idempotency-key') || req.body?.idempotency_key || `intent:${intent.id}`).trim();
       const job = outbox.enqueue({
         kind: 'intent',
         idempotency_key: idempotencyKey,
+        fingerprint_source: rawIntent,
         payload: { intent },
         max_attempts: req.body?.max_attempts,
       });
@@ -282,6 +284,7 @@ export function registerNotificationFabricRoutes(app, options = {}) {
       const job = outbox.enqueue({
         kind: 'signal',
         idempotency_key: idempotencyKey,
+        fingerprint_source: signal,
         payload: { signal },
         max_attempts: req.body?.max_attempts,
       });
