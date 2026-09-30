@@ -3,8 +3,8 @@
   "prepared_at": "2026-09-30",
   "submission_type": "With MCP",
   "plugin_name": "Evercraft",
-  "short_description": "Find and use the right Evercraft capability from one connected front door.",
-  "long_description": "Evercraft is a problem-first front door into the Evercraft/Systemia capability fabric. It matches a real-world goal to the smallest truthful Evercraft capability, prefers a verified specialist route when one exists, preserves evidence and availability boundaries, and keeps private context, payments, publishing, deployment and other consequential actions behind the applicable authorization and explicit human confirmation.",
+  "short_description": "Find the right Evercraft path",
+  "long_description": "Start from a real problem, discover the smallest truthful Evercraft capability, and identify its current public connection path when one exists. Evercraft preserves evidence and availability boundaries. Discovery does not grant private Systemia access, payment authority, publishing authority, deployment authority, or permission for other consequential actions.",
   "source_package": "plugins/evercraft-fabric",
   "mcp": {
     "url": "https://fabric.systemiacommandcenters.com/mcp",
