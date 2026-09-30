@@ -239,7 +239,7 @@ export function buildTimelineExportPlan(input:{
     '-pix_fmt','yuv420p',
   );
   if(audioOut){
-    args.push('-c:a','aac','-b:a','192k','-ar','48000');
+    args.push('-c:a','aac','-b:a','192k','-ar',String(audioMaster.policy.sampleRate));
   }else{
     args.push('-an');
   }
