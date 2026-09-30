@@ -2,42 +2,96 @@
   "schema": "evercraft.chum.product-discovery.v1",
   "product_key": "findmypart",
   "name": "FindMyPart",
-  "aliases": [],
+  "aliases": [
+    "Find My Part",
+    "Part Passport"
+  ],
   "class": "hard_to_source_parts",
   "canonical_url": "https://findmypart.base44.app/",
   "intents": [
     "where can I find this discontinued part",
     "I have a part number but cannot find it anywhere",
     "identify this machine part from a photo or markings",
+    "identify a broken part from a serial plate label invoice diagram or fragment",
+    "tell me what evidence I still need before buying a replacement",
     "find a replacement for an obsolete part",
+    "find a supersession or cross reference",
     "find a salvage or donor part",
     "find a fabrication path when the original part is unavailable",
-    "find a discontinued tractor part",
-    "find an obsolete automotive or machine part",
+    "find a discontinued appliance tractor automotive marine industrial or equipment part",
     "identify a hard-to-source part from markings measurements photos or equipment clues",
-    "find replacement donor salvage or fabrication paths when normal sourcing fails"
+    "find replacement donor salvage blueprint or fabrication paths when normal sourcing fails"
   ],
-  "authority": "public discovery and human-confirmed paid sourcing hunts",
+  "authority": "free evidence-aware Part Passport triage plus human-confirmed paid sourcing hunts",
   "human_confirmation_required": true,
   "boundaries": [
+    "Part Passport normalization is not fitment proof",
     "unknowns may remain unknown",
     "compatibility is not guaranteed",
+    "reachable listings are source leads until separately verified",
     "checkout creation is not payment proof",
     "private vendor, analytics, session, command-center, and sales data are not public"
   ],
-  "commercial": null,
-  "machine_commerce_handoff": null,
-  "human_start_url": null,
-  "buyer_frontage_url": null,
+  "commercial": {
+    "currency": "USD",
+    "offers": [
+      {
+        "slug": "quick-hunt",
+        "name": "Quick Hunt",
+        "price": 19,
+        "payment_mode": "one_time",
+        "scope": "OEM, aftermarket/cross-reference, marketplace/NOS and documentation sourcing lanes"
+      },
+      {
+        "slug": "deep-hunt",
+        "name": "Deep Hunt",
+        "price": 49,
+        "payment_mode": "one_time",
+        "scope": "Quick Hunt lanes plus salvage/donor and community/cross-reference lanes"
+      },
+      {
+        "slug": "rescue-hunt",
+        "name": "Rescue Hunt",
+        "price": 99,
+        "payment_mode": "one_time",
+        "scope": "Deep Hunt lanes plus blueprint, patent/documentation and fabrication/reverse-engineering lanes"
+      }
+    ],
+    "payment_boundary": "Explicit human confirmation is required before checkout. Provider verification is required before paid fulfillment."
+  },
+  "free_part_passport": {
+    "human_url": "https://findmypart.base44.app/free-part-check",
+    "agent_action": "triage",
+    "mcp_tool": "free_part_triage",
+    "creates_charge": false,
+    "returns": [
+      "cautious normalized identity",
+      "required function",
+      "observed identifiers and attributes",
+      "highest-value missing evidence",
+      "search lanes",
+      "safety or regulatory gate",
+      "recommended paid hunt tier"
+    ]
+  },
+  "human_start_url": "https://findmypart.base44.app/free-part-check",
+  "buyer_frontage_url": "https://findmypart.base44.app/",
   "registry_name": "io.github.jgaethle10/findmypart",
   "mcp": "https://findmypart.base44.app/functions/findMyPartMcp",
+  "agent_gateway": "https://base44.app/api/apps/692536fdd7bfe083fc4086fa/functions/findMyPartAgentGateway",
   "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-  "developer_surfaces": null,
-  "editorial_surfaces": null,
-  "knowledge_surfaces": null,
-  "distribution_surfaces": null,
-  "relationships": null,
-  "proof_library": null,
+  "developer_surfaces": [
+    "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=capabilities",
+    "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=openapi",
+    "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=llms"
+  ],
+  "distribution_surfaces": [
+    "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/mcp-registry/findmypart.json",
+    "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/llms.txt"
+  ],
+  "proof_library": [
+    "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/conformance/runtime-observations/2026-09-29-findmypart-part-passport.json"
+  ],
   "source": "CHUM public mirror",
   "mirror": {
     "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/llms.txt",
