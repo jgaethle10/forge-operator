@@ -16,26 +16,27 @@
       "product_key": "aliev",
       "name": "AliEV",
       "class": "evidence_aware_agent_commerce",
-      "canonical_url": "https://aliev.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/index.html",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/llms.txt",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/ai-conformance.json",
-      "doorway_state": "mcp_registry_live",
-      "conformance_state": "mcp_registry_live_receipt_backed",
+      "doorway_state": "migration_hold_owned_discovery_only",
+      "conformance_state": "migration_hold_legacy_mcp_retired",
       "provider_behavior_state": "not_run",
-      "origin_llms_url": "https://aliev.base44.app/llms.txt",
-      "origin_conformance_url": "https://aliev.base44.app/ai-conformance.json",
+      "origin_llms_url": null,
+      "origin_conformance_url": null,
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/ai-discovery.json",
       "chum_mirror_state": "generated_public_fallback",
-      "openapi_state": "not_declared_until_independently_live_verified",
-      "openapi_note": "The previously declared root /openapi.json returned HTML rather than a verified OpenAPI document on the 2026-09-24 CHUM canary. AliEV discovery and invocation remain available through CHUM mirrors and the verified MCP.",
+      "openapi_state": "migration_hold_until_owned_edge_verified",
+      "openapi_note": "AliEV public discovery is preserved through the owned CHUM mirror. Direct OpenAPI/MCP invocation is disabled until an owned Evercraft edge passes independent live verification.",
       "mcp_registry": {
         "name": "io.github.jgaethle10/aliev",
         "version": "1.0.5",
-        "publication_state": "published_receipt_backed",
+        "publication_state": "historical_receipt_legacy_endpoint_retired",
         "receipt": "conformance/registry-publications/2026-09-26-aliev-1.0.5.json",
-        "published_at_utc": "2026-09-26T00:47:31Z"
+        "published_at_utc": "2026-09-26T00:47:31Z",
+        "migration_note": "Registry publication receipt is retained as provenance only. The legacy Base44 MCP is not current invocation authority."
       },
-      "public_web_discovery_state": "registry_published_general_web_pickup_not_yet_verified"
+      "public_web_discovery_state": "owned_chum_mirror_live_direct_invocation_migration_hold"
     },
     {
       "product_key": "ascend",
