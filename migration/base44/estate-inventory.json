@@ -1,0 +1,814 @@
+{
+  "schema": "evercraft.base44-evacuation-inventory.v1",
+  "generated_at": "2026-09-30",
+  "source": "Base44 authenticated app inventory",
+  "app_count": 100,
+  "doctrine": {
+    "base44_role": "legacy evacuation source only",
+    "canonical_runtime": "Forge Operator + Systemia Yard + Evercraft Compute",
+    "new_base44_dependencies_allowed": false,
+    "cutover_rule": "No app is declared migrated until code, data, auth, storage, jobs, secrets, public routes, observability, rollback, and acceptance tests are verified outside Base44."
+  },
+  "apps": [
+    {
+      "name": "TOWI Dashboard",
+      "base44_app_id": "6a8f0f4045e2424f94a805f4",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "critical"
+    },
+    {
+      "name": "Yakima Event Command Center (YECC)",
+      "base44_app_id": "6990cd0bdd3d59a97447491b",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "EPS Command Blueprint",
+      "base44_app_id": "69bc7e809f0e9b0f1821ffb9",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Untitled",
+      "base44_app_id": "6aa9afc178e33928070ba144",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Evercraft AI Workforce",
+      "base44_app_id": "69e91f6f98d5c87b416a6899",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Untitled",
+      "base44_app_id": "6aa9b0017c0d8989f8816b05",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Energy Department ",
+      "base44_app_id": "69c574f275a283c173fb9974",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Evercraft WGS",
+      "base44_app_id": "692969aefdfed7441f55120e",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Evercraft Emergency Command",
+      "base44_app_id": "6a961ccc0e76efc0265be5be",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "critical"
+    },
+    {
+      "name": "SYSTEMIA Marketing Agency",
+      "base44_app_id": "694612db777e391542fd0333",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "critical"
+    },
+    {
+      "name": "Systemia Remote Ops",
+      "base44_app_id": "6a59b8c78561c8db1b43bd1d",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "critical"
+    },
+    {
+      "name": "Evercraft Transparency Atlas",
+      "base44_app_id": "694985a7cb60682ad91670c9",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "DayTradeLens",
+      "base44_app_id": "692a88525db15a5c379a7b7e",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Evercraft InternalOps",
+      "base44_app_id": "691e24bfd71f783621efc20c",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "RIVET",
+      "base44_app_id": "6ab2062323d5c33c7dde7606",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "critical"
+    },
+    {
+      "name": "Evercraft Property Services",
+      "base44_app_id": "69366f28616356c5a7cad217",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Evercraft Clip",
+      "base44_app_id": "6a83af980c9f995f588c7df3",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "critical"
+    },
+    {
+      "name": "AliEV",
+      "base44_app_id": "69b9b64d86a732029ce0db81",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "critical"
+    },
+    {
+      "name": "Evercraft Journal",
+      "base44_app_id": "692769f5535245f5b6bc4ccf",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "critical"
+    },
+    {
+      "name": "Untitled",
+      "base44_app_id": "6aa75249178a23ce089fd5b7",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Untitled",
+      "base44_app_id": "6aa9b00cbd61e71e65e5e02c",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Untitled",
+      "base44_app_id": "6aa9ad7bfce40f8e76d7395b",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Untitled",
+      "base44_app_id": "6aa9b01a47ddf275d75720b2",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Untitled",
+      "base44_app_id": "6aa9afb68bc896a6346fd112",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Untitled",
+      "base44_app_id": "6a9f1cec9563ecdfdce654cc",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Evercraft Canonical Data Foundry⁠",
+      "base44_app_id": "6a961b11776ad5ca30439db3",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Untitled",
+      "base44_app_id": "6aab93d6b10c3a2a22899b76",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "EverNest Atlas",
+      "base44_app_id": "69953bffabd3a33ad1ca1040",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Untitled",
+      "base44_app_id": "6aa9ce2980d46b6103f49428",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Coda y Codigo",
+      "base44_app_id": "692507456234ba2af1e3c6d5",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Evercraft Wildlife Atlas",
+      "base44_app_id": "6936686f7e6895fc4e62fb0f",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Evercraft Circles",
+      "base44_app_id": "6992203f4d4cfb5d10b2e61d",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "The Forensic Record",
+      "base44_app_id": "6991f0d23322216766bbe515",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Chronosport",
+      "base44_app_id": "6a9d5e02e42d33df4c6d8636",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Evercraft Physics Atlas",
+      "base44_app_id": "69ade0dff366b33eb9857095",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Raven Nexus",
+      "base44_app_id": "6a7adc9666bfd8c5c2fb4069",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "critical"
+    },
+    {
+      "name": "Franchise Engine",
+      "base44_app_id": "692a2a5d4f97d76b2dac5691",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Evercraft Health Atlas",
+      "base44_app_id": "6a986588d214f569712b1f89",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Evercraft Cosmos Atlas",
+      "base44_app_id": "69b96fda441c0e480e508ba1",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Systemia Field Library",
+      "base44_app_id": "6a54381e147576b18ac94d8f",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "critical"
+    },
+    {
+      "name": "Space Dudz ",
+      "base44_app_id": "692a2faa1b464e40bacd89aa",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Christmas Lights USA",
+      "base44_app_id": "6921c08f5cdb88e738c82eb8",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Seasonally",
+      "base44_app_id": "6aa973db2fd9e7db2dbd9a71",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "LifeLog — The Everything Tracker AI",
+      "base44_app_id": "692a7e1b5228a0792af2946b",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Evercraft Docs Center",
+      "base44_app_id": "69e90ba1e19ec63109e12f31",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Habitat AI",
+      "base44_app_id": "6a71deccb12ed4305bbabf1e",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Legacy DocuHub⁠",
+      "base44_app_id": "6a961b0822203d8f2656fc63",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Evercraft Income War Map",
+      "base44_app_id": "6a2f34f732bb19748527357c",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "BuildFlow",
+      "base44_app_id": "6ab26dc00debf9a25bca5f3e",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "FamilySketch",
+      "base44_app_id": "6aab93c8279bdd3f337e9895",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Plasma Hearth",
+      "base44_app_id": "69a710be11c848c703467bf2",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "OpticVault",
+      "base44_app_id": "6ab7dab2b22ca04061349088",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Roasted ",
+      "base44_app_id": "699732f3fcb10c954f3abac2",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "EPS Precise Estimator",
+      "base44_app_id": "6aa15584c12c93293f7510e1",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Instant Website Builder USA",
+      "base44_app_id": "6928dd33a07bdab26feac193",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Evercraft",
+      "base44_app_id": "6a9b99a2de0b9ce8e46ccf3c",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Family Haven",
+      "base44_app_id": "6926a56c8f611578eb6bd808",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "PrintConnect",
+      "base44_app_id": "6ab85d74fe2093703c6247e0",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Thoughtdrop",
+      "base44_app_id": "69236a8a2fe2149aa045716e",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Evercraft Deck Engine",
+      "base44_app_id": "69c5b9c1c4406941ad277ad5",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "The Second Stitch",
+      "base44_app_id": "6aa7096d7dea20dfc7b8c9dd",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "CallProof Vault",
+      "base44_app_id": "694784c138d2c013d62333bd",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Systemia Decision Lab",
+      "base44_app_id": "692509e5e0af73ded3828291",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "critical"
+    },
+    {
+      "name": "EventWave AI",
+      "base44_app_id": "6929590347bad79bd094ad68",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "PayFlow",
+      "base44_app_id": "6a3587db0c624a9a01c63441",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Ascend",
+      "base44_app_id": "6928abf5cb3130060b54a8d5",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "EcoLedger AI",
+      "base44_app_id": "692a84a35db15a5c379a7af4",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "GuardianLink",
+      "base44_app_id": "692693efc00b604973a20b97",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "EverNest",
+      "base44_app_id": "692a42f267ea601020d26aa6",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "EveryStage",
+      "base44_app_id": "6929471bf3f6b84b38b4a472",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Global Energy Atlas",
+      "base44_app_id": "6944b3d83d75f11624964819",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Systemia Atlas",
+      "base44_app_id": "69455b200bffe3a07c7bb042",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "critical"
+    },
+    {
+      "name": "ForensiScope",
+      "base44_app_id": "6aad970f4ba83a98c73ec9f9",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Talent Atlas",
+      "base44_app_id": "6a95d4f7e0df3e09c9b42996",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "GlobalStat",
+      "base44_app_id": "6a97a3d3e2940a7aadbf3078",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "EverMaps ",
+      "base44_app_id": "6a985aeccbfb6e930a40137b",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "critical"
+    },
+    {
+      "name": "FindMyPart AI",
+      "base44_app_id": "692536fdd7bfe083fc4086fa",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Evercraft Data Foundry ",
+      "base44_app_id": "6a986573af870b20e563ebe0",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Little Red Studio",
+      "base44_app_id": "698c1f429cfd9b61a605bfc7",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Evercraft AI Suite",
+      "base44_app_id": "692b4178919afe7d08c4d2b8",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "EverNest Companion",
+      "base44_app_id": "692686dfcfa4c3a5ddef75e9",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "TOWI AI",
+      "base44_app_id": "69295c46aba7e47aab0ece22",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "critical"
+    },
+    {
+      "name": "FAIE",
+      "base44_app_id": "6929623f0510ae3ce500df2f",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "critical"
+    },
+    {
+      "name": "Evercraft Network ",
+      "base44_app_id": "6a983e0ad004be753d51d569",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "critical"
+    },
+    {
+      "name": "Evercraft HQ",
+      "base44_app_id": "6a597067c5f88923e5dd97f6",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "critical"
+    },
+    {
+      "name": "Systemia Command Center",
+      "base44_app_id": "6aa059677743abfe5aa8710e",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "critical"
+    },
+    {
+      "name": "Evercraft Rewards",
+      "base44_app_id": "6a6d5a3448dcd8e8cb45caff",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Systemia Radar",
+      "base44_app_id": "698d76447fd0d2b8c1dd5e6b",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "critical"
+    },
+    {
+      "name": "Systemia Audit Center",
+      "base44_app_id": "698cb6dd30475e7649f4fdcd",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "critical"
+    },
+    {
+      "name": "Evercraft Career Command",
+      "base44_app_id": "692a2de4f0b474b87a8a8164",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Evercraft Earth Atlas",
+      "base44_app_id": "69eab2deb77c5f7857e8f488",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Insurance Market Radar",
+      "base44_app_id": "6aa7525345b382f609a0879c",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Evercraft Routing Engine",
+      "base44_app_id": "691de628f6b891e57d360c58",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "ATH-Pro Omnicore",
+      "base44_app_id": "692a4cf0bac54e30679713a7",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "NetStatus",
+      "base44_app_id": "6a985a482b4efbf76c956ce7",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Systemia University",
+      "base44_app_id": "6a846761fad4937428407761",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "critical"
+    },
+    {
+      "name": "Sentinel Intelligence",
+      "base44_app_id": "6a301552f24168e42232305a",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Evercraft Home",
+      "base44_app_id": "6aa97b379f8f8ae12bdd230f",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "critical"
+    },
+    {
+      "name": "Yakima County Sheriff",
+      "base44_app_id": "69eee302eb11c96be841ff5e",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    },
+    {
+      "name": "Vote For Roman",
+      "base44_app_id": "695b569648342cb044659f4b",
+      "git_remote_source": "s3",
+      "migration_state": "inventory_only",
+      "target_platform": "forge-operator/systemia-yard",
+      "criticality": "untriaged"
+    }
+  ]
+}
