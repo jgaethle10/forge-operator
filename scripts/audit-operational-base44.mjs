@@ -57,16 +57,28 @@ for (const root of roots) {
 const unique = [...new Map(violations.map((v) => [`${v.path}:${v.line}:${v.rule}`, v])).values()]
   .sort((a,b) => a.path.localeCompare(b.path) || a.line - b.line);
 
+const grouped = Object.values(unique.reduce((acc, row) => {
+  const key = row.path;
+  if (!acc[key]) acc[key] = { path: key, violation_count: 0, rules: new Set(), first_excerpt: row.excerpt };
+  acc[key].violation_count += 1;
+  acc[key].rules.add(row.rule);
+  return acc;
+}, {})).map((row) => ({
+  ...row,
+  rules: [...row.rules].sort()
+})).sort((a,b) => b.violation_count - a.violation_count || a.path.localeCompare(b.path));
+
 const report = {
   schema: 'evercraft.systemia.no-base44-runtime-audit.v1',
   operational_roots: roots,
   ignored_historical_prefixes: ignoredPrefixes,
   violation_count: unique.length,
-  violations: unique
+  violating_file_count: grouped.length,
+  files: grouped
 };
 console.log(JSON.stringify(report, null, 2));
 if (unique.length) {
-  console.error(`NO_BASE44_RUNTIME_FAIL: ${unique.length} operational Base44 reference(s) remain`);
+  console.error(`NO_BASE44_RUNTIME_FAIL: ${unique.length} operational Base44 reference(s) across ${grouped.length} file(s)`);
   process.exit(1);
 }
 console.log('NO_BASE44_RUNTIME_PASS');
