@@ -31,6 +31,14 @@ function validateIntent(raw) {
     throw new Error('Marketing notifications require consent_basis=explicit_opt_in.');
   }
   const now = new Date().toISOString();
+  const acknowledgement = raw?.acknowledgement?.required === true ? {
+    required: true,
+    mode: raw.acknowledgement.mode === 'all' ? 'all' : 'any',
+    within_seconds: Math.max(15, Math.min(Number(raw.acknowledgement.within_seconds ?? 300), 7 * 24 * 60 * 60)),
+    max_escalations: Math.max(0, Math.min(Number(raw.acknowledgement.max_escalations ?? 2), 5)),
+    escalation_interval_seconds: Math.max(15, Math.min(Number(raw.acknowledgement.escalation_interval_seconds ?? 300), 24 * 60 * 60)),
+    title_prefix: String(raw.acknowledgement.title_prefix || 'UNACKNOWLEDGED').slice(0, 40),
+  } : null;
   return {
     schema: 'systemia.notification.intent.v2',
     id: String(raw.id || crypto.randomUUID()),
@@ -46,6 +54,7 @@ function validateIntent(raw) {
     audiences: normArray(raw.audiences),
     topics: normArray(raw.topics),
     data: raw.data && typeof raw.data === 'object' ? raw.data : {},
+    acknowledgement,
     evidence_state: String(raw.evidence_state || 'not_applicable'),
     consent_basis: raw.consent_basis || (purpose === 'safety' ? 'safety_service' : 'service_relationship'),
     ttl_seconds: Math.max(0, Math.min(Number(raw.ttl_seconds ?? 3600), 2419200)),
@@ -116,6 +125,10 @@ function isQuietHours(subscription, now = new Date()) {
   return start < end ? current >= start && current < end : current >= start || current < end;
 }
 
+function pushTopic(notificationId) {
+  return crypto.createHash('sha256').update(String(notificationId || '')).digest('base64url').slice(0, 32);
+}
+
 function routeStrategy(intent, realtimeDelivered, subscription, now = new Date()) {
   const urgent = intent.priority === 'critical' || intent.purpose === 'safety';
   if (!urgent && isQuietHours(subscription, now)) {
@@ -142,7 +155,7 @@ export function createNotificationFabric(options = {}) {
     const dedupeKey = intent.dedupe_key ? `${intent.product}|${intent.dedupe_key}` : null;
     if (dedupeKey && store.seenDedupe(dedupeKey, intent.dedupe_window_seconds)) {
       const event = store.recordDelivery({ schema: 'systemia.notification.delivery.v2', notification_id: intent.id, status: 'deduped', at: new Date().toISOString(), intent });
-      return { intent, matched: 0, accepted: 0, realtime_delivered: 0, inboxed: 0, deduped: true, receipts: [event] };
+      return { intent, matched: 0, accepted: 0, realtime_delivered: 0, inboxed: 0, targeted_principal_ids: [], deduped: true, receipts: [event] };
     }
 
     const matched = store.listSubscriptions().filter((sub) => matchesSubscription(sub, intent));
@@ -202,7 +215,7 @@ export function createNotificationFabric(options = {}) {
         at: new Date().toISOString(),
         intent,
       }));
-      return { intent, matched: 0, accepted: 0, realtime_delivered: 0, inboxed: 0, deduped: false, receipts };
+      return { intent, matched: 0, accepted: 0, realtime_delivered: 0, inboxed: 0, targeted_principal_ids: [], deduped: false, receipts };
     }
 
     const maxAttempts = Math.max(1, Math.min(Number(options.pushAttempts ?? process.env.EVERCRAFT_NOTIFICATION_PUSH_ATTEMPTS ?? 3), 5));
@@ -268,6 +281,7 @@ export function createNotificationFabric(options = {}) {
             vapidSubject,
             ttlSeconds: intent.ttl_seconds,
             urgency: urgency(intent.priority),
+            topic: pushTopic(intent.id),
           });
         } catch (error) {
           result = { ok: false, status: 0, responseBody: String(error?.message || error) };
@@ -306,6 +320,7 @@ export function createNotificationFabric(options = {}) {
       intent,
       matched: matched.length,
       targeted_principals: principals.size,
+      targeted_principal_ids: [...principals],
       accepted,
       delivered: accepted,
       realtime_delivered: realtimeDelivered,
@@ -404,6 +419,7 @@ export function createNotificationFabric(options = {}) {
       return store.removeSubscription(String(id || ''));
     },
     listInbox(principalId, options = {}) { return store.listInbox(principalId, options); },
+    prepareIntent(rawIntent) { return validateIntent(rawIntent); },
     acknowledge,
     seen,
     dispatchIntent,
