@@ -61,6 +61,8 @@ jobs:
         run: npm run proof:app-fabric
       - name: Prove Base44 SDK compatibility
         run: npm run proof:base44-sdk-compat
+      - name: Prove owned App Fabric identity binding
+        run: npm run proof:app-fabric-identity
       - name: Prove realtime, storage, and secret boundaries
         run: npm run proof:realtime-bus && npm run proof:object-store && npm run proof:secret-store
       - name: Prove KAIDANCE collider
