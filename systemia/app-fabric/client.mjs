@@ -69,34 +69,74 @@ export function createEvercraftAppClient({
       async list(sort = '', limit = 100, skip = 0, fields = []) {
         if (sort && typeof sort === 'object' && !Array.isArray(sort)) {
           const options = sort;
-          const params = { sort: options.sort || '', limit: options.limit ?? 100, cursor: options.cursor || '', fields: options.fields || [] };
+          const params = {
+            sort: options.sort || '',
+            limit: options.limit ?? 100,
+            cursor: options.cursor || '',
+            fields: options.fields || []
+          };
           if (options.distinct) params.distinct = options.distinct;
-          return await request('GET', `${root}/v2/list${queryString(params)}`);
+          const result = await request('GET', `${root}/v2/list${queryString(params)}`);
+          return result;
         }
         return await request('GET', `${root}${queryString({ sort, limit, skip, fields })}`);
       },
       async filter(query = {}, sort = '', limit = 100, skip = 0, fields = []) {
         if (sort && typeof sort === 'object' && !Array.isArray(sort)) {
           const options = sort;
-          return await request('GET', `${root}/v2/list${queryString({ q: JSON.stringify(query || {}), sort: options.sort || '', limit: options.limit ?? 100, cursor: options.cursor || '', fields: options.fields || [] })}`);
+          return await request('GET', `${root}/v2/list${queryString({
+            q: JSON.stringify(query || {}),
+            sort: options.sort || '',
+            limit: options.limit ?? 100,
+            cursor: options.cursor || '',
+            fields: options.fields || []
+          })}`);
         }
-        return await request('GET', `${root}${queryString({ q: JSON.stringify(query || {}), sort, limit, skip, fields })}`);
+        return await request('GET', `${root}${queryString({
+          q: JSON.stringify(query || {}),
+          sort,
+          limit,
+          skip,
+          fields
+        })}`);
       },
-      async get(id) { return await request('GET', `${root}/${encodeURIComponent(id)}`); },
-      async create(record) { return await request('POST', root, record); },
-      async update(id, patch) { return await request('PUT', `${root}/${encodeURIComponent(id)}`, patch); },
-      async delete(id) { return await request('DELETE', `${root}/${encodeURIComponent(id)}`); },
-      async deleteMany(query = {}) { return await request('DELETE', root, query); },
-      async bulkCreate(records) { return await request('POST', `${root}/bulk`, records); },
-      async updateMany(query, data) { return await request('PATCH', `${root}/update-many`, { query, data }); },
+      async get(id) {
+        return await request('GET', `${root}/${encodeURIComponent(id)}`);
+      },
+      async create(record) {
+        return await request('POST', root, record);
+      },
+      async update(id, patch) {
+        return await request('PUT', `${root}/${encodeURIComponent(id)}`, patch);
+      },
+      async delete(id) {
+        return await request('DELETE', `${root}/${encodeURIComponent(id)}`);
+      },
+      async deleteMany(query = {}) {
+        return await request('DELETE', root, query);
+      },
+      async bulkCreate(records) {
+        return await request('POST', `${root}/bulk`, records);
+      },
+      async updateMany(query, data) {
+        return await request('PATCH', `${root}/update-many`, { query, data });
+      },
       async count(query = {}) {
         const result = await request('GET', `${root}/count${queryString({ q: JSON.stringify(query || {}) })}`);
         return Number(result?.count || 0);
       },
-      async aggregate(spec = {}) { return await request('POST', `${root}/aggregate`, spec); },
-      async upsert(records, options = {}) { return await request('POST', `${root}/upsert`, { records, key: options.key || 'id' }); },
-      async bulkUpdate(records) { return await request('PUT', `${root}/bulk`, records); },
-      subscribe() { throw new AppFabricError('realtime_not_configured', { code: 'realtime_not_configured' }); }
+      async aggregate(spec = {}) {
+        return await request('POST', `${root}/aggregate`, spec);
+      },
+      async upsert(records, options = {}) {
+        return await request('POST', `${root}/upsert`, { records, key: options.key || 'id' });
+      },
+      async bulkUpdate(records) {
+        return await request('PUT', `${root}/bulk`, records);
+      },
+      subscribe() {
+        throw new AppFabricError('realtime_not_configured', { code: 'realtime_not_configured' });
+      }
     };
   };
 
@@ -111,7 +151,14 @@ export function createEvercraftAppClient({
     get(_target, provider) {
       if (typeof provider !== 'string' || provider === 'then' || provider.startsWith('_')) return undefined;
       if (provider === 'custom') {
-        return { call: async (slug, operation, input = {}) => await request('POST', `/api/apps/${encodeURIComponent(appKey)}/integrations/custom/${encodeURIComponent(slug)}/${encodeURIComponent(operation)}`, input) };
+        return {
+          call: async (slug, operation, input = {}) =>
+            await request(
+              'POST',
+              `/api/apps/${encodeURIComponent(appKey)}/integrations/custom/${encodeURIComponent(slug)}/${encodeURIComponent(operation)}`,
+              input
+            )
+        };
       }
       return new Proxy({}, {
         get(_inner, operation) {
@@ -128,12 +175,25 @@ export function createEvercraftAppClient({
   });
 
   const auth = {
-    hasToken() { return Boolean(currentToken || tokenProvider); },
-    setToken(nextToken) { currentToken = String(nextToken || '').trim(); },
-    async me() { return await request('GET', `/api/apps/${encodeURIComponent(appKey)}/entities/User/me`); },
-    async updateMe(patch) { return await request('PUT', `/api/apps/${encodeURIComponent(appKey)}/entities/User/me`, patch); },
+    hasToken() {
+      return Boolean(currentToken || tokenProvider);
+    },
+    setToken(nextToken) {
+      currentToken = String(nextToken || '').trim();
+    },
+    async me() {
+      return await request('GET', `/api/apps/${encodeURIComponent(appKey)}/entities/User/me`);
+    },
+    async updateMe(patch) {
+      return await request('PUT', `/api/apps/${encodeURIComponent(appKey)}/entities/User/me`, patch);
+    },
     async loginViaEmailPassword(login, password, extras = {}) {
-      const result = await request('POST', `/api/apps/${encodeURIComponent(appKey)}/auth/login`, { email: login, login, password, ...extras });
+      const result = await request('POST', `/api/apps/${encodeURIComponent(appKey)}/auth/login`, {
+        email: login,
+        login,
+        password,
+        ...extras
+      });
       const next = result?.access_token || result?.token || '';
       if (next) currentToken = next;
       return result;
@@ -157,12 +217,26 @@ export function createEvercraftAppClient({
 
   return {
     entities,
-    functions: { async invoke(functionName, input = {}) { const data = await request('POST', `/api/apps/${encodeURIComponent(appKey)}/functions/${encodeURIComponent(functionName)}`, input); return { data }; } },
+    functions: {
+      async invoke(functionName, input = {}) {
+        const data = await request(
+          'POST',
+          `/api/apps/${encodeURIComponent(appKey)}/functions/${encodeURIComponent(functionName)}`,
+          input
+        );
+        return { data };
+      }
+    },
     integrations,
     auth,
     get asServiceRole() {
       if (!servicePermit) throw new AppFabricError('service_permit_required', { code: 'service_permit_required' });
-      return createEvercraftAppClient({ appId: appKey, baseUrl: origin, servicePermit, fetchImpl });
+      return createEvercraftAppClient({
+        appId: appKey,
+        baseUrl: origin,
+        servicePermit,
+        fetchImpl
+      });
     }
   };
 }
@@ -175,7 +249,13 @@ export function createClientFromRequest(request, {
 } = {}) {
   const authorization = String(request?.headers?.get?.('authorization') || request?.headers?.authorization || '');
   const token = authorization.startsWith('Bearer ') ? authorization.slice(7).trim() : '';
-  return createEvercraftAppClient({ appId, baseUrl, token, servicePermit, fetchImpl });
+  return createEvercraftAppClient({
+    appId,
+    baseUrl,
+    token,
+    servicePermit,
+    fetchImpl
+  });
 }
 
 export { AppFabricError };
