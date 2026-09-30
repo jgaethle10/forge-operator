@@ -120,6 +120,8 @@ if (!supportedCategories.has(interfaceMeta.category)) {
 if (submission.proposed_category !== interfaceMeta.category) {
   errors.push('submission category must match portable interface category');
 }
+if (submission.short_description !== interfaceMeta.shortDescription) errors.push('submission short description must match portable interface');
+if (submission.long_description !== interfaceMeta.longDescription) errors.push('submission long description must match portable interface');
 if (compatibility.interface?.category !== interfaceMeta.category) {
   errors.push('compatibility category must match portable interface category');
 }
