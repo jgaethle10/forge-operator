@@ -72,3 +72,16 @@ Intraday and multi-day event windows are measured over **core U.S. equity sessio
 Five-minute bars before 9:30 AM or at/after 4:00 PM are excluded before lag counting. This makes 78 five-minute bars one complete core trading session. If an observation becomes available after the close, measurement begins at the next eligible core-session bar.
 
 This avoids silently changing a "1 day" horizon when premarket or after-hours bars are present in a market-data feed.
+
+
+## Matched placebo control
+
+A signal family cannot pass merely because its instrument outperformed SPY during a favorable sector regime.
+
+For every event measurement, Edge Lab also measures the same instrument-versus-SPY horizon from matched non-event anchors 14 and 21 calendar days before the observation. The event effect is then compared with the mean of those local controls.
+
+Promotion requires at least 90% matched-control coverage overall and in holdout, development/holdout direction agreement for the placebo-adjusted effect, a holdout effect of at least 8 basis points after modeled transaction cost, and a placebo-adjusted holdout directional hit rate above 50%.
+
+Benjamini-Hochberg false-discovery control is applied to the **placebo-adjusted development effect**, not merely the raw instrument-minus-SPY return.
+
+This is designed to reject "the sector was already going up" as a counterfeit event edge.
