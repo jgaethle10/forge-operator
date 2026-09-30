@@ -1,0 +1,23 @@
+name: Fallen Sync Lip Provider
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/visual-provider-sync.ts'
+      - 'systemia/media-studio/visual-provider-sync.test.ts'
+      - 'systemia/media-studio/model-fabric.ts'
+      - 'systemia/media-studio/model-fabric-runtime.ts'
+      - '.github/workflows/fallen-sync-lip-provider.yml'
+  workflow_dispatch:
+
+jobs:
+  sync-provider:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-audit --no-fund
+      - run: node --import tsx --test systemia/media-studio/visual-provider-sync.test.ts systemia/media-studio/model-fabric.test.ts systemia/media-studio/model-fabric-runtime.test.ts
+      - run: npm run lint
