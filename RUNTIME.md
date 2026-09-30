@@ -34,6 +34,8 @@ A commit-addressed image is also published for every main-branch release. Yard O
 - `RIVET_REPORT_GATEWAY_TOKEN` - private server-to-server bearer token required to invoke the RIVET Yard report gateway.
 - `ALIEV_YARD_SOURCE_URL` - optional override for the AliEV snapshot source endpoint.
 - `RIVET_REPORT_STATE_DIR` - optional runtime state directory for RIVET report receipts.
+- `REWARDS_GATEWAY_TOKEN` - private server-to-server bearer token for the sovereign Rewards migration edge.
+- `REWARDS_STATE_DIR` - optional durable state directory for the owned Rewards service. Defaults to `/tmp/evercraft-rewards` for development only; production Yard leases must bind durable authorized storage.
 
 If `FORGE_CHECKOUT_URL` is absent, Forge does not display or advertise an active checkout. Pricing remains human-gated.
 
@@ -67,3 +69,16 @@ A local healthy service does not become `CHUM_PUBLIC_ORIGIN` by inference. Yard 
 ## RIVET Yard report gateway
 
 When both `SYSTEMIA_MACHINE_KEY` and `RIVET_REPORT_GATEWAY_TOKEN` are configured, Forge exposes `POST /api/rivet/reports` as an authenticated server-to-server compatibility edge for the migrating RIVET UI. `GET /api/rivet/report-health` reports only safe configuration state. The gateway fails closed when either secret is absent and does not grant customer or payment authority. Base44 remains a temporary UI/data/auth compatibility client until the live Yard route and fresh-report canary are independently verified.
+
+
+## Evercraft Rewards Yard migration edge
+
+Forge now exposes a first-party Rewards migration boundary:
+
+- `GET /api/rewards/health` - safe runtime/configuration health. It exposes no customer identifiers.
+- `POST /api/rewards/profile` - authenticated server-to-server Scratch Lab profile read.
+- `POST /api/rewards/scratch/play` - authenticated idempotent cosmetic Scratch Lab write.
+
+This first slice intentionally has **no economic write authority**. It cannot mutate wallet points, Arcade XP, prize entries, cash value, promotional odds, provider fulfillment, or the Daily Prize Ticket. Subject identifiers are hashed in the owned store, writes are atomic, and duplicate run keys are idempotent.
+
+Base44 remains temporary compatibility for the unmigrated Rewards wallet/auth/value surfaces only. The Scratch Lab owned-runtime canary must pass persistent-storage, route, rollback, and observation gates before any Base44 Scratch Lab write path is retired.
