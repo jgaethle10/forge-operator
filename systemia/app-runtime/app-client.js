@@ -191,8 +191,9 @@ export function createEvercraftAppClient({
   });
 
   const functions = {
-    invoke(name, payload = {}) {
-      return request(context.baseUrl, '/functions/invoke', { name, payload }, context.appId);
+    async invoke(name, payload = {}) {
+      const value = await request(context.baseUrl, '/functions/invoke', { name, payload }, context.appId);
+      return { data: value };
     },
   };
 
