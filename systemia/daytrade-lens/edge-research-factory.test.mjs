@@ -52,8 +52,8 @@ for (let i = 0; i < 50; i++) {
     source_observation_id: "o:" + i,
     observed_at: new Date(Date.parse("2026-01-01T15:00:00Z") + i * 86400000).toISOString(),
     source_family: i % 2 ? "grid_operator" : "utility_public_status",
-    forward_return: i < 35 ? 0.0030 : 0.0025,
-    benchmark_return: 0.0005,
+    forward_return: (i < 35 ? 0.0030 : 0.0025) + (i % 5) * 0.0001,
+    benchmark_return: 0.0005 + (i % 3) * 0.00002,
   });
 }
 const evaluated = evaluateEdgeFamilies(many, {
