@@ -2,13 +2,13 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.jgaethle10/systemia-field-library",
   "title": "Systemia Field Library",
-  "description": "Match contractor operating problems to practical Field Library playbooks. Read-only discovery.",
+  "description": "Owned Evercraft Fabric discovery and routing entry for Systemia Field Library. Product-specific execution is migration-gated until Yard/Evercraft Compute verification exists.",
   "version": "1.0.0",
-  "websiteUrl": "https://systemiafieldlibrary.com/",
+  "websiteUrl": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/systemia-field-library",
   "remotes": [
     {
       "type": "streamable-http",
-      "url": "https://base44.app/api/apps/6a54381e147576b18ac94d8f/functions/fieldLibraryAgentMcp"
+      "url": "https://fabric.systemiacommandcenters.com/mcp"
     }
   ]
 }
