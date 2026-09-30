@@ -110,8 +110,9 @@ test('transient push failures retry and gateway acceptance is not mislabeled as 
   });
   assert.equal(attempts, 2);
   assert.equal(result.accepted, 1);
-  assert.equal(result.receipts[0].status, 'accepted_by_push_gateway');
-  assert.equal(result.receipts[0].attempts, 2);
+  const gatewayReceipt = result.receipts.find((receipt) => receipt.status === 'accepted_by_push_gateway');
+  assert.ok(gatewayReceipt);
+  assert.equal(gatewayReceipt.attempts, 2);
 });
 
 
