@@ -1,5 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 import {
   nativeOnlyCatalog,
   startFabricLocalRuntime,
@@ -114,5 +117,84 @@ test('Fabric public customer front door is branded, browsable, and policy-safe',
     assert.match(privacy,/Information processed/);
   } finally {
     await runtime.close();
+  }
+});
+
+
+test('Fabric admits only machine-authenticated aggregate InternalOps snapshots into owned state',async()=>{
+  const stateDir=fs.mkdtempSync(path.join(os.tmpdir(),'evercraft-fabric-internalops-'));
+  const runtime=await startFabricLocalRuntime({
+    host:'127.0.0.1',
+    port:0,
+    catalog,
+    internalOpsMachineKey:'test-machine-key',
+    internalOpsStateDir:stateDir,
+  });
+  const snapshot={
+    ok:true,
+    contract:'eps_systemia_read_only_snapshot_v1',
+    source_app_id:'legacy-source-id',
+    generated_at:'2026-09-30T18:00:00.000Z',
+    authority:{
+      read_only:true,
+      contains_personal_contact_data:false,
+      contains_tax_or_payment_account_data:false,
+      may_authorize_mutation:false,
+    },
+    jobs:{active_or_scheduled:1},
+    crew:{active_team_members:1},
+    payroll_integrity:{action_gate:'clear'},
+    reimbursements:{open_items:0},
+    pipeline:{leads_needing_contact_or_followup:1},
+    record_counts:{jobs:1},
+  };
+  try {
+    const health=await fetch(runtime.url+'/health').then((r)=>r.json());
+    assert.equal(health.private_internalops_snapshot_ingress_enabled,true);
+    assert.equal(health.read_only,true);
+
+    const unauthorized=await fetch(runtime.url+'/internal/eps/snapshot',{
+      method:'POST',
+      headers:{'content-type':'application/json','x-systemia-machine-key':'wrong'},
+      body:JSON.stringify({
+        action:'ingest_snapshot',
+        mission_key:'evercraft-internalops-operations-nexus-v1',
+        snapshot,
+      }),
+    });
+    assert.equal(unauthorized.status,403);
+
+    const accepted=await fetch(runtime.url+'/internal/eps/snapshot',{
+      method:'POST',
+      headers:{'content-type':'application/json','x-systemia-machine-key':'test-machine-key'},
+      body:JSON.stringify({
+        action:'ingest_snapshot',
+        mission_key:'evercraft-internalops-operations-nexus-v1',
+        source_checkpoint_id:'checkpoint-test',
+        snapshot,
+      }),
+    }).then((r)=>r.json());
+    assert.equal(accepted.ok,true);
+    assert.equal(accepted.accepted,true);
+    assert.equal(accepted.duplicate,false);
+
+    const duplicate=await fetch(runtime.url+'/internal/eps/snapshot',{
+      method:'POST',
+      headers:{'content-type':'application/json','x-systemia-machine-key':'test-machine-key'},
+      body:JSON.stringify({
+        action:'ingest_snapshot',
+        mission_key:'evercraft-internalops-operations-nexus-v1',
+        source_checkpoint_id:'checkpoint-test',
+        snapshot,
+      }),
+    }).then((r)=>r.json());
+    assert.equal(duplicate.duplicate,true);
+
+    const latest=JSON.parse(fs.readFileSync(path.join(stateDir,'latest.json'),'utf8'));
+    assert.equal(latest.snapshot.source_app_id,undefined);
+    assert.equal(latest.snapshot.jobs.active_or_scheduled,1);
+  } finally {
+    await runtime.close();
+    fs.rmSync(stateDir,{recursive:true,force:true});
   }
 });

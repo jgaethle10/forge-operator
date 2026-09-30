@@ -1,0 +1,53 @@
+{
+  "schema": "evercraft.systemia.base44-migration-slice.v1",
+  "slice": "evercraft_internalops_owned_snapshot_ingress",
+  "priority": 1,
+  "source": {
+    "platform": "base44",
+    "product": "Evercraft InternalOps",
+    "authority": "legacy_source_adapter_only",
+    "identifiers_public": false
+  },
+  "target": {
+    "source_control": "github",
+    "orchestration": "systemia",
+    "runtime": "yard_evercraft_compute",
+    "ingress": "evercraft_fabric_owned_runtime"
+  },
+  "extracted_contract": {
+    "legacy_function": "epsSystemiaSnapshot",
+    "contract": "eps_systemia_read_only_snapshot_v1",
+    "aggregate_only": true,
+    "personal_contact_data_allowed": false,
+    "tax_or_payment_account_data_allowed": false,
+    "mutation_authority_allowed": false
+  },
+  "owned_replacement": {
+    "module": "systemia/internalops/snapshot-ingress.mjs",
+    "fabric_route": "/internal/eps/snapshot",
+    "authentication": "machine_key",
+    "deduplication": "sha256_payload_hash",
+    "receipt_store": "local_private_state",
+    "legacy_source_identifier_persisted": false,
+    "public_mcp_authority_changed": false
+  },
+  "acceptance": {
+    "machine_auth_required": true,
+    "contract_validation_required": true,
+    "aggregate_privacy_gate_required": true,
+    "idempotent_receipt_required": true,
+    "atomic_latest_snapshot_required": true,
+    "legacy_source_identifier_stripped": true,
+    "public_mcp_remains_read_only": true,
+    "live_route_verification_required_before_cutover": true
+  },
+  "state": "owned_ingress_landed_legacy_source_adapter_remaining",
+  "blockers": [
+    "Chromebook/Yard runtime must pull the merged source before the owned ingress exists live.",
+    "EPS_SYSTEMIA_MACHINE_KEY must be installed in the owned runtime secret environment without entering public source control.",
+    "The legacy InternalOps push function must not be repointed until the owned route passes live external verification.",
+    "InternalOps source data remains on the legacy platform until a private data-store migration is separately reconciled."
+  ],
+  "next_action": "merge and deploy the owned ingress, verify authenticated replay and local receipt persistence, then repoint only the aggregate snapshot push away from the legacy Systemia endpoint to the owned Fabric route",
+  "destructive_cutover_allowed": false
+}

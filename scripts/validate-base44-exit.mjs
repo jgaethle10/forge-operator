@@ -2,6 +2,7 @@ import fs from 'node:fs';
 
 const policy = JSON.parse(fs.readFileSync(new URL('../systemia/migrations/base44-exit/policy.json', import.meta.url)));
 const estate = JSON.parse(fs.readFileSync(new URL('../systemia/migrations/base44-exit/estate-snapshot.json', import.meta.url)));
+const internalOpsSlice = JSON.parse(fs.readFileSync(new URL('../systemia/migrations/base44-exit/slices/evercraft-internalops-snapshot-ingress.json', import.meta.url)));
 
 const fail = (message) => {
   console.error(`BASE44_EXIT_POLICY_FAIL: ${message}`);
@@ -42,6 +43,23 @@ if (!Number.isInteger(estate.observed_apps_minimum) || estate.observed_apps_mini
 for (const item of estate.queue || []) {
   if (!item.product || !item.target || !item.state) fail('every migration queue item needs product, target and state');
   if (/base44/i.test(item.target)) fail(`${item.product} points back to Base44`);
+}
+
+const internalOps = (estate.queue || []).find((item) => item.product === 'Evercraft InternalOps');
+if (!internalOps) fail('Evercraft InternalOps must remain in the migration queue');
+if (internalOps.state === 'owned_snapshot_ingress_landed_legacy_source_adapter_remaining') {
+  if (internalOpsSlice.state !== 'owned_ingress_landed_legacy_source_adapter_remaining') {
+    fail('InternalOps estate state requires the owned ingress migration slice');
+  }
+  if (internalOpsSlice.destructive_cutover_allowed !== false) {
+    fail('InternalOps destructive cutover must remain disabled until live route verification');
+  }
+  if (internalOpsSlice.owned_replacement?.public_mcp_authority_changed !== false) {
+    fail('InternalOps migration must not expand public MCP authority');
+  }
+  if (internalOpsSlice.extracted_contract?.aggregate_only !== true) {
+    fail('InternalOps snapshot cutover must remain aggregate-only');
+  }
 }
 
 const first = estate.queue?.[0];

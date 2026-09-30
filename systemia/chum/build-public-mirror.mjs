@@ -6,6 +6,24 @@ const directory = readJson('public/.well-known/evercraft-products.json');
 const conformance = readJson('conformance/products.json');
 const catalog = readJson('registry/catalog.json');
 const machineCatalog = readJson('public/.well-known/evercraft-machine-catalog.json');
+const machineOfferCount = Array.isArray(machineCatalog.offers) ? machineCatalog.offers.length : 0;
+const machineSellNowCount = Array.isArray(machineCatalog.offers)
+  ? machineCatalog.offers.filter((offer) => offer?.commercial_state === 'sell_now').length
+  : 0;
+const machineDiscoveryCount = machineOfferCount - machineSellNowCount;
+if (
+  machineCatalog.offer_count !== machineOfferCount ||
+  machineCatalog.sell_now_count !== machineSellNowCount ||
+  machineCatalog.discovery_count !== machineDiscoveryCount
+) {
+  machineCatalog.offer_count = machineOfferCount;
+  machineCatalog.sell_now_count = machineSellNowCount;
+  machineCatalog.discovery_count = machineDiscoveryCount;
+  fs.writeFileSync(
+    'public/.well-known/evercraft-machine-catalog.json',
+    JSON.stringify(machineCatalog, null, 2) + '\n'
+  );
+}
 let observedMissIndex = { pages: [] };
 try { observedMissIndex = readJson('public/chum/answers/observed/index.json'); } catch {}
 const answerGraph = fs.existsSync('public/chum/answers/index.json')
