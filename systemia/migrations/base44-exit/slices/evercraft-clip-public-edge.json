@@ -1,0 +1,57 @@
+{
+  "schema": "evercraft.systemia.base44-migration-slice.v1",
+  "slice": "evercraft_clip_public_agent_edge",
+  "priority": 2,
+  "source": {
+    "platform": "base44",
+    "product": "Evercraft Clip",
+    "authority": "legacy_public_agent_mcp_and_authenticated_execution_runtime",
+    "identifiers_public": false
+  },
+  "target": {
+    "source_control": "github",
+    "orchestration": "systemia",
+    "runtime": "yard_evercraft_compute",
+    "owned_gateway": "/api/clip",
+    "owned_mcp": "/mcp/evercraft-clip"
+  },
+  "observed": {
+    "base44_function_count": 49,
+    "base44_entity_count": 84,
+    "social_touching_function_files": 44,
+    "base44_integration_touching_function_files": 5,
+    "owned_public_planner_implemented": true,
+    "owned_public_mcp_implemented": true,
+    "owned_public_execution_authority": false,
+    "owned_social_provider_adapters_verified": false,
+    "public_route_verified": false
+  },
+  "migrated_now": [
+    "public_capability_discovery",
+    "bounded_clip_job_planning",
+    "campaign_distribution_planning",
+    "remote_mcp_tool_surface"
+  ],
+  "intentionally_held": [
+    "private_media_upload",
+    "paid_customer_order",
+    "payment_verification",
+    "clip_render_execution",
+    "facebook_provider_publish",
+    "linkedin_provider_publish",
+    "instagram_provider_publish",
+    "youtube_provider_publish",
+    "tiktok_provider_publish"
+  ],
+  "acceptance": {
+    "source_parity_tested": false,
+    "yard_route_verified": false,
+    "mcp_initialize_verified": false,
+    "mcp_tools_list_verified": false,
+    "planning_parity_verified": false,
+    "rollback_target_present": false,
+    "observation_window_pass": false
+  },
+  "next_action": "run source parity vectors against the legacy read-only gateway and the owned planner, deploy the owned gateway through Yard, verify MCP and public route, then update registry URLs away from Base44; provider publishing migrates separately with per-platform canary/readback",
+  "destructive_cutover_allowed": false
+}

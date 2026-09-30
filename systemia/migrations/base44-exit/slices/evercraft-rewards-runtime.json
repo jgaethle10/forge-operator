@@ -1,0 +1,67 @@
+{
+  "schema": "evercraft.systemia.base44-migration-slice.v1",
+  "slice": "evercraft_rewards_runtime",
+  "priority": 3,
+  "source": {
+    "platform": "base44",
+    "product": "Evercraft Rewards",
+    "authority": "legacy_compatibility_for_unmigrated_ui_data_auth_and_route_only",
+    "identifiers_public": false
+  },
+  "target": {
+    "source_control": "github",
+    "orchestration": "systemia",
+    "runtime": "yard_evercraft_compute",
+    "public_handoff": "verified_rewards_route_on_evercraft_owned_runtime"
+  },
+  "observed": {
+    "base44_source_checkpoint": "6abb25e6b493ca4baa7506f1",
+    "base44_source_commit": "8d2d816dbb20c4d71c9130d3dc9c937a5fc4a94c",
+    "scratch_lab_source_green": true,
+    "game_reward_rail_source_green": true,
+    "arcade_regression_green": true,
+    "source_build_green": true,
+    "source_lint_green": true,
+    "base44_production_is_canonical": false,
+    "sovereign_rewards_runtime_present": false,
+    "live_yard_route_verified": false,
+    "data_reconciliation_verified": false,
+    "auth_parity_verified": false,
+    "integration_parity_verified": false
+  },
+  "migrate": [
+    "public_rewards_ui",
+    "reward_wallet_and_activity_store",
+    "daily_prize_ticket_service",
+    "scratch_lab_profile_and_run_store",
+    "arcade_progression_service",
+    "reward_surface_discovery",
+    "game_reward_fulfillment_rail",
+    "partner_offer_store",
+    "auth_adapter",
+    "location_market_matching_adapter"
+  ],
+  "invariants": [
+    "scratch_lab_free_play_must_not_award_wallet_points_xp_cash_value_prize_entries_or_better_odds",
+    "game_reward_rail_must_persist_debit_intent_before_wallet_mutation",
+    "interrupted_debit_intent_must_fail_to_reconciliation_not_auto_retry",
+    "provider_fulfillment_defaults_fail_closed",
+    "production_value_rail_requires_explicit_provider_and_inventory_authorization"
+  ],
+  "acceptance": {
+    "source_extracted": true,
+    "dependencies_enumerated": false,
+    "data_reconciled": false,
+    "auth_parity_verified": false,
+    "integration_parity_verified": false,
+    "tests_pass": true,
+    "immutable_release_ref": false,
+    "yard_deployment_receipt": false,
+    "health_pass": false,
+    "route_verification_pass": false,
+    "rollback_target_present": false,
+    "observation_window_pass": false
+  },
+  "next_action": "extract Rewards dependency/data/auth contracts into Forge Operator, implement the first-party Rewards service boundary on Systemia/Yard, dual-read against Base44 only for reconciliation, then cut writes to the owned store after parity and rollback proof",
+  "destructive_cutover_allowed": false
+}

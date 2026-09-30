@@ -1,112 +1,119 @@
-const DEFAULT_MACHINE_COMMERCE_GATEWAY = 'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
-export const BUYER_FRONTAGE_ORIGIN = 'https://evercraft-ai-suite-08c4d2b8.base44.app';
-export const BUYER_FRONTAGE_GATEWAY = BUYER_FRONTAGE_ORIGIN;
+const DEFAULT_MACHINE_COMMERCE_GATEWAY = String(process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL || '').trim();
+export const BUYER_FRONTAGE_ORIGIN = '';
+export const BUYER_FRONTAGE_GATEWAY = '';
 
 const BLOCKED_PUBLIC_HOSTS = new Set([
   'systemiacommandcenters.com',
   'www.systemiacommandcenters.com'
 ]);
 
-const DIRECT_HUMAN_BUYER_DESTINATIONS = Object.freeze({
-  'career-command-interview-practice-machine-v1': 'https://evercraft-career-command.base44.app/',
-  'aliev-site-opportunity-snapshot-v1': 'https://aliev.base44.app/',
-  'rivet-site-underwriting-v1': 'https://rivet.base44.app/',
-  'findmypart-paid-hunt-v1': 'https://findmypart.base44.app/?offer=quick-hunt',
-  'audit-center-website-audit-machine-v1': 'https://systemia-audit-pro.base44.app/',
-  'website-launch-service-v1': 'https://instant-website-builder-usa-6feac193.base44.app/',
-  'faie-signal-brief-v1': 'https://faie.base44.app/',
-  'eventwave-paid-promotion-v1': 'https://event-wave.base44.app/',
-  'roasted-text-pressure-test-machine-v1': 'https://get-roasted-hub.base44.app/',
-  'ibmi-rescue-v1': 'https://findmypart.base44.app/ibmi-rescue'
-});
+const DIRECT_HUMAN_BUYER_DESTINATIONS = Object.freeze({});
 
-export function machineReviewUrl(publicId, gateway = DEFAULT_MACHINE_COMMERCE_GATEWAY) {
-  const id = String(publicId || '').trim();
-  if (!id) return null;
-  return gateway + '?view=service&public_id=' + encodeURIComponent(id);
+function relativeBuyerFrontage(offer,{surface='chum_public_surface',source='chum',campaign='buyer-frontage'}={}){
+  if(offer?.commercial_state!=='sell_now'||!offer?.public_id) return null;
+  const params=new URLSearchParams();
+  params.set('src',String(source||'chum').slice(0,80));
+  params.set('campaign',String(campaign||'buyer-frontage').slice(0,120));
+  params.set('ec_surface',String(surface||'chum_public_surface').slice(0,80));
+  params.set('ec_public_id',String(offer.public_id));
+  return '/buy/'+encodeURIComponent(String(offer.public_id))+'?'+params.toString();
 }
 
-export function configuredChumPublicOrigin(value = process.env.CHUM_PUBLIC_ORIGIN) {
-  const raw = String(value || '').trim();
-  if (!raw) return null;
-  try {
-    const url = new URL(raw);
-    if (url.protocol !== 'https:') return null;
-    if (BLOCKED_PUBLIC_HOSTS.has(url.hostname.toLowerCase())) return null;
+export function machineReviewUrl(publicId,gateway=DEFAULT_MACHINE_COMMERCE_GATEWAY){
+  const id=String(publicId||'').trim();
+  if(!id) return null;
+  const target=String(gateway||'').trim();
+  if(!target) return '/buy/'+encodeURIComponent(id);
+  try{
+    const url=new URL(target);
+    if(url.protocol!=='https:') return null;
+    if(/(^|\.)base44\.app$/i.test(url.hostname)) return null;
+    url.searchParams.set('view','service');
+    url.searchParams.set('public_id',id);
+    return url.toString();
+  }catch{
+    return null;
+  }
+}
+
+export function configuredChumPublicOrigin(value=process.env.CHUM_PUBLIC_ORIGIN||process.env.PUBLIC_BASE_URL){
+  const raw=String(value||'').trim();
+  if(!raw) return null;
+  try{
+    const url=new URL(raw);
+    if(url.protocol!=='https:') return null;
+    if(BLOCKED_PUBLIC_HOSTS.has(url.hostname.toLowerCase())) return null;
+    if(/(^|\.)base44\.app$/i.test(url.hostname)) return null;
     return url.origin;
-  } catch {
+  }catch{
     return null;
   }
 }
 
-export function buyerFrontageUrl(offer, {
-  surface = 'chum_public_surface',
-  source = 'chum',
-  campaign = 'buyer-frontage',
-  gateway = BUYER_FRONTAGE_GATEWAY
-} = {}) {
-  if (offer?.commercial_state !== 'sell_now' || !offer?.public_id) return null;
-  try {
-    const url = new URL(
-      '/buy/' + encodeURIComponent(String(offer.public_id)),
-      gateway === DEFAULT_MACHINE_COMMERCE_GATEWAY ? BUYER_FRONTAGE_ORIGIN : gateway
-    );
-    if (url.protocol !== 'https:') return null;
-    url.searchParams.set('src', String(source || 'chum').slice(0, 80));
-    url.searchParams.set('campaign', String(campaign || 'buyer-frontage').slice(0, 120));
-    url.searchParams.set('ec_surface', String(surface || 'chum_public_surface').slice(0, 80));
-    url.searchParams.set('ec_public_id', String(offer.public_id));
+export function buyerFrontageUrl(offer,{
+  surface='chum_public_surface',
+  source='chum',
+  campaign='buyer-frontage',
+  gateway=configuredChumPublicOrigin()
+}={}){
+  if(offer?.commercial_state!=='sell_now'||!offer?.public_id) return null;
+  const path=relativeBuyerFrontage(offer,{surface,source,campaign});
+  const target=String(gateway||'').trim();
+  if(!target) return path;
+  try{
+    const origin=configuredChumPublicOrigin(target);
+    if(!origin) return null;
+    return new URL(path,origin).toString();
+  }catch{
+    return null;
+  }
+}
+
+export function directHumanBuyerUrl(offer,{surface='chum_public_surface'}={}){
+  if(offer?.commercial_state!=='sell_now'||!offer?.public_id) return null;
+  const destination=DIRECT_HUMAN_BUYER_DESTINATIONS[String(offer.public_id)]||'';
+  if(!destination) return null;
+  try{
+    const url=new URL(destination);
+    if(url.protocol!=='https:'||/(^|\.)base44\.app$/i.test(url.hostname)) return null;
+    url.searchParams.set('src','chum');
+    url.searchParams.set('campaign','buyer-frontage');
+    url.searchParams.set('ec_surface',String(surface||'chum_public_surface'));
+    url.searchParams.set('ec_public_id',String(offer.public_id));
     return url.toString();
-  } catch {
+  }catch{
     return null;
   }
 }
 
-export function directHumanBuyerUrl(offer, { surface = 'chum_public_surface' } = {}) {
-  if (offer?.commercial_state !== 'sell_now' || !offer?.public_id) return null;
-  const destination = DIRECT_HUMAN_BUYER_DESTINATIONS[String(offer.public_id)] || '';
-  if (!destination) return null;
-  try {
-    const url = new URL(destination);
-    if (url.protocol !== 'https:') return null;
-    url.searchParams.set('src', 'chum');
-    url.searchParams.set('campaign', 'buyer-frontage');
-    url.searchParams.set('ec_surface', String(surface || 'chum_public_surface'));
-    url.searchParams.set('ec_public_id', String(offer.public_id));
-    return url.toString();
-  } catch {
-    return null;
-  }
-}
+export function humanStartUrl(offer,{
+  surface='chum_public_surface',
+  publicOrigin=process.env.CHUM_PUBLIC_ORIGIN||process.env.PUBLIC_BASE_URL,
+  gateway=DEFAULT_MACHINE_COMMERCE_GATEWAY
+}={}){
+  if(offer?.commercial_state!=='sell_now'||!offer?.public_id) return null;
 
-export function humanStartUrl(offer, {
-  surface = 'chum_public_surface',
-  publicOrigin = process.env.CHUM_PUBLIC_ORIGIN,
-  gateway = DEFAULT_MACHINE_COMMERCE_GATEWAY
-} = {}) {
-  if (offer?.commercial_state !== 'sell_now' || !offer?.public_id) return null;
-
-  const origin = configuredChumPublicOrigin(publicOrigin);
-  if (origin) {
-    return origin + '/api/chum/go/' + encodeURIComponent(String(offer.public_id))
-      + '?surface=' + encodeURIComponent(String(surface || 'chum_public_surface'));
+  const origin=configuredChumPublicOrigin(publicOrigin);
+  if(origin){
+    return origin+'/api/chum/go/'+encodeURIComponent(String(offer.public_id))
+      +'?surface='+encodeURIComponent(String(surface||'chum_public_surface'));
   }
 
-  const frontage = buyerFrontageUrl(offer, { surface });
-  if (frontage) return frontage;
+  const frontage=buyerFrontageUrl(offer,{surface,gateway:''});
+  if(frontage) return frontage;
 
-  const direct = directHumanBuyerUrl(offer, { surface });
-  if (direct) return direct;
+  const direct=directHumanBuyerUrl(offer,{surface});
+  if(direct) return direct;
 
-  return machineReviewUrl(offer.public_id, gateway);
+  return machineReviewUrl(offer.public_id,gateway);
 }
 
-export function humanStartState(offer, {
-  publicOrigin = process.env.CHUM_PUBLIC_ORIGIN
-} = {}) {
-  if (offer?.commercial_state !== 'sell_now' || !offer?.public_id) return 'not_sell_now';
-  if (configuredChumPublicOrigin(publicOrigin)) return 'tracked_chum_handoff_configured_origin';
-  if (buyerFrontageUrl(offer)) return 'evercraft_buyer_frontage';
-  if (DIRECT_HUMAN_BUYER_DESTINATIONS[String(offer.public_id)]) return 'direct_human_buyer_destination';
-  return 'machine_commerce_review_fallback';
+export function humanStartState(offer,{
+  publicOrigin=process.env.CHUM_PUBLIC_ORIGIN||process.env.PUBLIC_BASE_URL
+}={}){
+  if(offer?.commercial_state!=='sell_now'||!offer?.public_id) return 'not_sell_now';
+  if(configuredChumPublicOrigin(publicOrigin)) return 'tracked_chum_handoff_configured_origin';
+  if(buyerFrontageUrl(offer,{gateway:''})) return 'owned_relative_buyer_frontage';
+  if(DIRECT_HUMAN_BUYER_DESTINATIONS[String(offer.public_id)]) return 'direct_human_buyer_destination';
+  return 'commercial_execution_migration_hold';
 }

@@ -1,0 +1,41 @@
+{
+  "schema": "evercraft.systemia.base44-migration-slice.v1",
+  "slice": "clip_facebook_provider_adapter",
+  "priority": 2,
+  "source": {
+    "platform": "base44",
+    "product": "Evercraft Clip",
+    "dependency": "facebook_pages OAuth connector plus Graph API publisher"
+  },
+  "target": {
+    "source_control": "github",
+    "orchestration": "systemia",
+    "runtime": "yard_evercraft_compute",
+    "provider": "Meta Graph API",
+    "credentials": "runtime_secret_store"
+  },
+  "migrated_now": [
+    "facebook_page_identity_lookup_contract",
+    "create_content_permission_gate",
+    "feed_publish_provider_primitive",
+    "exact_message_provider_readback",
+    "provider_readiness_surface"
+  ],
+  "observed": {
+    "owned_provider_source_present": true,
+    "base44_connector_required": false,
+    "runtime_credentials_present": false,
+    "identity_canary_verified": false,
+    "live_publish_canary_verified": false
+  },
+  "acceptance": {
+    "credentials_migrated_to_owned_secret_store": false,
+    "page_identity_verified": false,
+    "publish_canary_verified": false,
+    "exact_readback_verified": false,
+    "rollback_target_present": false,
+    "observation_window_pass": false
+  },
+  "next_action": "provision Meta user/page credentials into the Yard runtime secret store, run the identity-only canary first, then a bounded approved test publish with provider readback before routing any Clip queue to this adapter",
+  "destructive_cutover_allowed": false
+}

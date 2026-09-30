@@ -1,0 +1,528 @@
+{
+  "schema": "evercraft.systemia.base44-live-estate.v1",
+  "observed_at": "2026-09-30T12:45:00-07:00",
+  "observed_count": 50,
+  "source": "Base44 authenticated estate listing",
+  "identifiers_public": false,
+  "canonical_destination": {
+    "source_control": "github",
+    "orchestration": "systemia",
+    "runtime": "yard_evercraft_compute"
+  },
+  "rule": "Base44 is extraction/compatibility only. No observed app may be declared migrated until replacement source, data/auth/integration parity, Yard deployment, route verification, rollback, and observation receipts exist.",
+  "apps": [
+    {
+      "legacy_ref": "base44-observed-01",
+      "product": "Evercraft Transparency Atlas",
+      "wave": 5,
+      "lane": "research_media_atlas_long_tail",
+      "target": "github_plus_yard",
+      "state": "queued",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-02",
+      "product": "Evercraft Rewards",
+      "wave": 3,
+      "lane": "revenue_critical",
+      "target": "github_plus_yard",
+      "state": "owned_scratch_runtime_candidate",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-03",
+      "product": "TOWI Dashboard",
+      "wave": 5,
+      "lane": "research_media_atlas_long_tail",
+      "target": "github_plus_yard",
+      "state": "queued",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-04",
+      "product": "Yakima Event Command Center (YECC)",
+      "wave": 5,
+      "lane": "research_media_atlas_long_tail",
+      "target": "github_plus_yard",
+      "state": "queued",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-05",
+      "product": "EPS Command Blueprint",
+      "wave": 5,
+      "lane": "research_media_atlas_long_tail",
+      "target": "github_plus_yard",
+      "state": "queued",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-06",
+      "product": "Untitled",
+      "wave": 8,
+      "lane": "legacy_triage",
+      "target": "retire_merge_or_recover",
+      "state": "triage_required",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-07",
+      "product": "Evercraft AI Workforce",
+      "wave": 1,
+      "lane": "core_control_plane",
+      "target": "systemia_plus_yard",
+      "state": "queued",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-08",
+      "product": "Untitled",
+      "wave": 8,
+      "lane": "legacy_triage",
+      "target": "retire_merge_or_recover",
+      "state": "triage_required",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-09",
+      "product": "Energy Department",
+      "wave": 3,
+      "lane": "revenue_critical",
+      "target": "github_plus_yard",
+      "state": "queued",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-10",
+      "product": "Evercraft WGS",
+      "wave": 4,
+      "lane": "safety_family_continuity",
+      "target": "github_plus_yard",
+      "state": "queued_strict_gate",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-11",
+      "product": "Evercraft Emergency Command",
+      "wave": 4,
+      "lane": "safety_family_continuity",
+      "target": "github_plus_yard",
+      "state": "queued_strict_gate",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-12",
+      "product": "SYSTEMIA Marketing Agency",
+      "wave": 1,
+      "lane": "core_control_plane",
+      "target": "systemia_plus_yard",
+      "state": "exit_program_active",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-13",
+      "product": "Systemia Remote Ops",
+      "wave": 1,
+      "lane": "core_control_plane",
+      "target": "systemia_plus_yard",
+      "state": "queued",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-14",
+      "product": "DayTradeLens",
+      "wave": 3,
+      "lane": "revenue_critical",
+      "target": "github_plus_yard",
+      "state": "queued",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-15",
+      "product": "Evercraft InternalOps",
+      "wave": 1,
+      "lane": "core_control_plane",
+      "target": "systemia_plus_yard",
+      "state": "queued",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-16",
+      "product": "RIVET",
+      "wave": 3,
+      "lane": "revenue_critical",
+      "target": "github_plus_yard",
+      "state": "yard_report_engine_landed_route_cutover_active",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-17",
+      "product": "Evercraft Property Services",
+      "wave": 3,
+      "lane": "revenue_critical",
+      "target": "github_plus_yard",
+      "state": "queued",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-18",
+      "product": "Evercraft Clip",
+      "wave": 2,
+      "lane": "shared_distribution_and_discovery",
+      "target": "github_plus_systemia_plus_yard",
+      "state": "owned_public_agent_edge_candidate",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-19",
+      "product": "AliEV",
+      "wave": 3,
+      "lane": "revenue_critical",
+      "target": "github_plus_yard",
+      "state": "queued",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-20",
+      "product": "Evercraft Journal",
+      "wave": 2,
+      "lane": "shared_distribution_and_discovery",
+      "target": "github_plus_systemia_plus_yard",
+      "state": "queued",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-21",
+      "product": "Untitled",
+      "wave": 8,
+      "lane": "legacy_triage",
+      "target": "retire_merge_or_recover",
+      "state": "triage_required",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-22",
+      "product": "Untitled",
+      "wave": 8,
+      "lane": "legacy_triage",
+      "target": "retire_merge_or_recover",
+      "state": "triage_required",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-23",
+      "product": "Untitled",
+      "wave": 8,
+      "lane": "legacy_triage",
+      "target": "retire_merge_or_recover",
+      "state": "triage_required",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-24",
+      "product": "Untitled",
+      "wave": 8,
+      "lane": "legacy_triage",
+      "target": "retire_merge_or_recover",
+      "state": "triage_required",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-25",
+      "product": "Untitled",
+      "wave": 8,
+      "lane": "legacy_triage",
+      "target": "retire_merge_or_recover",
+      "state": "triage_required",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-26",
+      "product": "Untitled",
+      "wave": 8,
+      "lane": "legacy_triage",
+      "target": "retire_merge_or_recover",
+      "state": "triage_required",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-27",
+      "product": "Evercraft Canonical Data Foundry⁠",
+      "wave": 1,
+      "lane": "core_control_plane",
+      "target": "systemia_plus_yard",
+      "state": "queued",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-28",
+      "product": "Untitled",
+      "wave": 8,
+      "lane": "legacy_triage",
+      "target": "retire_merge_or_recover",
+      "state": "triage_required",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-29",
+      "product": "EverNest Atlas",
+      "wave": 4,
+      "lane": "safety_family_continuity",
+      "target": "github_plus_yard",
+      "state": "queued_strict_gate",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-30",
+      "product": "Untitled",
+      "wave": 8,
+      "lane": "legacy_triage",
+      "target": "retire_merge_or_recover",
+      "state": "triage_required",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-31",
+      "product": "Coda y Codigo",
+      "wave": 5,
+      "lane": "research_media_atlas_long_tail",
+      "target": "github_plus_yard",
+      "state": "queued",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-32",
+      "product": "Evercraft Wildlife Atlas",
+      "wave": 5,
+      "lane": "research_media_atlas_long_tail",
+      "target": "github_plus_yard",
+      "state": "queued",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-33",
+      "product": "Evercraft Circles",
+      "wave": 4,
+      "lane": "safety_family_continuity",
+      "target": "github_plus_yard",
+      "state": "queued_strict_gate",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-34",
+      "product": "The Forensic Record",
+      "wave": 5,
+      "lane": "research_media_atlas_long_tail",
+      "target": "github_plus_yard",
+      "state": "queued",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-35",
+      "product": "Chronosport",
+      "wave": 5,
+      "lane": "research_media_atlas_long_tail",
+      "target": "github_plus_yard",
+      "state": "queued",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-36",
+      "product": "Evercraft Physics Atlas",
+      "wave": 5,
+      "lane": "research_media_atlas_long_tail",
+      "target": "github_plus_yard",
+      "state": "queued",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-37",
+      "product": "Raven Nexus",
+      "wave": 4,
+      "lane": "safety_family_continuity",
+      "target": "github_plus_yard",
+      "state": "queued_strict_gate",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-38",
+      "product": "Franchise Engine",
+      "wave": 3,
+      "lane": "revenue_critical",
+      "target": "github_plus_yard",
+      "state": "queued",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-39",
+      "product": "Evercraft Health Atlas",
+      "wave": 5,
+      "lane": "research_media_atlas_long_tail",
+      "target": "github_plus_yard",
+      "state": "queued",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-40",
+      "product": "Evercraft Cosmos Atlas",
+      "wave": 5,
+      "lane": "research_media_atlas_long_tail",
+      "target": "github_plus_yard",
+      "state": "queued",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-41",
+      "product": "Systemia Field Library",
+      "wave": 5,
+      "lane": "research_media_atlas_long_tail",
+      "target": "github_plus_yard",
+      "state": "queued",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-42",
+      "product": "Space Dudz",
+      "wave": 5,
+      "lane": "research_media_atlas_long_tail",
+      "target": "github_plus_yard",
+      "state": "queued",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-43",
+      "product": "Christmas Lights USA",
+      "wave": 3,
+      "lane": "revenue_critical",
+      "target": "github_plus_yard",
+      "state": "queued",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-44",
+      "product": "Seasonally",
+      "wave": 3,
+      "lane": "revenue_critical",
+      "target": "github_plus_yard",
+      "state": "queued",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-45",
+      "product": "LifeLog — The Everything Tracker AI",
+      "wave": 4,
+      "lane": "safety_family_continuity",
+      "target": "github_plus_yard",
+      "state": "queued_strict_gate",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-46",
+      "product": "Evercraft Docs Center",
+      "wave": 1,
+      "lane": "core_control_plane",
+      "target": "systemia_plus_yard",
+      "state": "queued",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-47",
+      "product": "Habitat AI",
+      "wave": 4,
+      "lane": "safety_family_continuity",
+      "target": "github_plus_yard",
+      "state": "queued_strict_gate",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-48",
+      "product": "Legacy DocuHub⁠",
+      "wave": 5,
+      "lane": "research_media_atlas_long_tail",
+      "target": "github_plus_yard",
+      "state": "queued",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-49",
+      "product": "Evercraft Income War Map",
+      "wave": 5,
+      "lane": "research_media_atlas_long_tail",
+      "target": "github_plus_yard",
+      "state": "queued",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    },
+    {
+      "legacy_ref": "base44-observed-50",
+      "product": "BuildFlow",
+      "wave": 3,
+      "lane": "revenue_critical",
+      "target": "github_plus_yard",
+      "state": "queued",
+      "source_platform": "base44",
+      "source_identifiers_public": false
+    }
+  ],
+  "migration_progress": {
+    "estate_observed": 50,
+    "owned_runtime_slices_active": [
+      "systemia_core",
+      "rivet_reporting_runtime",
+      "evercraft_rewards_scratch_runtime",
+      "evercraft_clip_public_agent_edge",
+      "machine_commerce_discovery_handoff"
+    ],
+    "hardcoded_base44_runtime_url_policy": "forbidden_in_owned_runtime_source",
+    "destructive_cutover_allowed": false,
+    "note": "A migration slice is not a production cutover. Base44 authority remains only where the owned replacement has not yet passed route, data/auth/integration parity, rollback and observation gates."
+  }
+}

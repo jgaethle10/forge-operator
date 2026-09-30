@@ -34,6 +34,8 @@ A commit-addressed image is also published for every main-branch release. Yard O
 - `RIVET_REPORT_GATEWAY_TOKEN` - private server-to-server bearer token required to invoke the RIVET Yard report gateway.
 - `ALIEV_YARD_SOURCE_URL` - optional override for the AliEV snapshot source endpoint.
 - `RIVET_REPORT_STATE_DIR` - optional runtime state directory for RIVET report receipts.
+- `REWARDS_GATEWAY_TOKEN` - private server-to-server bearer token for the sovereign Rewards migration edge.
+- `REWARDS_STATE_DIR` - optional durable state directory for the owned Rewards service. Defaults to `/tmp/evercraft-rewards` for development only; production Yard leases must bind durable authorized storage.
 
 If `FORGE_CHECKOUT_URL` is absent, Forge does not display or advertise an active checkout. Pricing remains human-gated.
 
@@ -67,3 +69,48 @@ A local healthy service does not become `CHUM_PUBLIC_ORIGIN` by inference. Yard 
 ## RIVET Yard report gateway
 
 When both `SYSTEMIA_MACHINE_KEY` and `RIVET_REPORT_GATEWAY_TOKEN` are configured, Forge exposes `POST /api/rivet/reports` as an authenticated server-to-server compatibility edge for the migrating RIVET UI. `GET /api/rivet/report-health` reports only safe configuration state. The gateway fails closed when either secret is absent and does not grant customer or payment authority. Base44 remains a temporary UI/data/auth compatibility client until the live Yard route and fresh-report canary are independently verified.
+
+
+## Evercraft Rewards Yard migration edge
+
+Forge now exposes a first-party Rewards migration boundary:
+
+- `GET /api/rewards/health` - safe runtime/configuration health. It exposes no customer identifiers.
+- `POST /api/rewards/profile` - authenticated server-to-server Scratch Lab profile read.
+- `POST /api/rewards/scratch/play` - authenticated idempotent cosmetic Scratch Lab write.
+
+This first slice intentionally has **no economic write authority**. It cannot mutate wallet points, Arcade XP, prize entries, cash value, promotional odds, provider fulfillment, or the Daily Prize Ticket. Subject identifiers are hashed in the owned store, writes are atomic, and duplicate run keys are idempotent.
+
+Base44 remains temporary compatibility for the unmigrated Rewards wallet/auth/value surfaces only. The Scratch Lab owned-runtime canary must pass persistent-storage, route, rollback, and observation gates before any Base44 Scratch Lab write path is retired.
+
+
+## Evercraft Clip owned public edge
+
+Forge/Yard now carries a read-only Clip discovery and planning edge:
+
+- `GET /api/clip` - capability discovery; `?view=openapi` and `?view=llms` expose machine-readable documentation.
+- `POST /api/clip` - deterministic non-executing `capabilities`, `plan_job`, and `plan_distribution_campaign` actions.
+- `GET /mcp/evercraft-clip?action=health` - owned MCP health.
+- `POST /mcp/evercraft-clip` - Streamable HTTP JSON-RPC for `get_clip_capabilities`, `plan_clip_job`, and `plan_distribution_campaign`.
+
+The owned public edge has no upload, checkout, payment, rendering, or publication authority. Existing provider execution lanes remain compatibility-only until each first-party social adapter passes provider authorization, live canary, readback, rollback, and observation gates. Do not update the public Clip registry away from its legacy endpoint until the Yard route and MCP contract are independently verified.
+
+
+## Owned social provider adapters
+
+Forge now carries the first direct provider adapter used to remove Clip's Base44 OAuth/runtime dependency:
+
+- `META_USER_ACCESS_TOKEN` - Meta user token held only in the private runtime secret store.
+- `META_EPS_PAGE_ID` - expected EPS Facebook page ID.
+- `META_GRAPH_VERSION` - optional Graph API version, default `v23.0`.
+- `EVERCRAFT_FACEBOOK_PUBLISH_ENABLED` - explicit fail-closed publish switch.
+- `SOCIAL_PROVIDER_OPERATOR_TOKEN` - private operator token for provider canaries.
+- `GET /api/social/providers/health` - safe readiness only; never returns provider secrets.
+- `POST /api/social/providers/facebook/identity-canary` - verifies page identity and create-content authority without publishing.
+
+The provider primitive can publish a feed post and requires exact provider-visible message readback before returning `verified: true`, but no autonomous queue is routed to it until credentials, live canary, rollback and observation gates pass.
+
+
+## RIVET AliEV source boundary
+
+`ALIEV_YARD_SOURCE_URL` is mandatory for RIVET report generation and must resolve to an Evercraft-owned AliEV evidence service. There is no Base44 default or compatibility fallback. If the owned AliEV source is not configured, the RIVET report gateway reports itself unconfigured and holds report generation rather than tunneling through the legacy platform.

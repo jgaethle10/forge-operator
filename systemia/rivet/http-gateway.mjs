@@ -11,7 +11,7 @@ function authorized(req,token){ return clean(req.headers.authorization) === 'Bea
 export function registerRivetReportGateway(app,{
   gatewayToken=process.env.RIVET_REPORT_GATEWAY_TOKEN || '',
   systemiaMachineKey=process.env.SYSTEMIA_MACHINE_KEY || '',
-  sourceUrl=process.env.ALIEV_YARD_SOURCE_URL || 'https://base44.app/api/apps/69b9b64d86a732029ce0db81/functions/energySiteLookup',
+  sourceUrl=process.env.ALIEV_YARD_SOURCE_URL || '',
   stateDir=process.env.RIVET_REPORT_STATE_DIR || path.join('/tmp','evercraft-rivet-report'),
   generate=generateYardReport
 }={}){
@@ -21,7 +21,9 @@ export function registerRivetReportGateway(app,{
       ok:true,
       service:'rivet-yard-report-gateway',
       runtime:'Forge/Yard',
-      configured:Boolean(clean(gatewayToken) && clean(systemiaMachineKey)),
+      configured:Boolean(clean(gatewayToken) && clean(systemiaMachineKey) && clean(sourceUrl)),
+      source_configured:Boolean(clean(sourceUrl)),
+      base44_source_fallback:false,
       source_contract:'rivet_report_snapshot_v1',
       canonical_store:'yard-atomic-files-v2',
       full_source_snapshot_persistence:true,
@@ -30,8 +32,8 @@ export function registerRivetReportGateway(app,{
   });
 
   app.post('/api/rivet/reports',async(req,res)=>{
-    if(!clean(gatewayToken) || !clean(systemiaMachineKey)){
-      res.status(503).json({ok:false,error:'rivet_report_gateway_not_configured'});
+    if(!clean(gatewayToken) || !clean(systemiaMachineKey) || !clean(sourceUrl)){
+      res.status(503).json({ok:false,error:'rivet_report_gateway_not_configured',source_configured:Boolean(clean(sourceUrl)),base44_source_fallback:false});
       return;
     }
 
@@ -70,7 +72,7 @@ export function registerRivetReportGateway(app,{
   });
 
   app.get('/api/rivet/reports/:reportId',async(req,res)=>{
-    if(!clean(gatewayToken) || !clean(systemiaMachineKey)){
+    if(!clean(gatewayToken) || !clean(systemiaMachineKey) || !clean(sourceUrl)){
       res.status(503).json({ok:false,error:'rivet_report_gateway_not_configured'});
       return;
     }
@@ -90,7 +92,7 @@ export function registerRivetReportGateway(app,{
   });
 
   app.get('/api/rivet/reports/:reportId/source',async(req,res)=>{
-    if(!clean(gatewayToken) || !clean(systemiaMachineKey)){
+    if(!clean(gatewayToken) || !clean(systemiaMachineKey) || !clean(sourceUrl)){
       res.status(503).json({ok:false,error:'rivet_report_gateway_not_configured'});
       return;
     }
