@@ -3,7 +3,6 @@ import path from 'node:path';
 
 const FETCH_CACHE = new Map();
 const MAX_HTML_BYTES = 450000;
-const UI_HOST_RE = /(?:^|\.)base44\.app$/i;
 
 function clean(value) {
   return String(value ?? '').replace(/\s+/g, ' ').trim();
