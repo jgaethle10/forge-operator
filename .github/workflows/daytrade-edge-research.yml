@@ -35,6 +35,7 @@ jobs:
           node systemia/daytrade-lens/rockies-edge-fabric.test.mjs
           node systemia/daytrade-lens/edge-research-factory.test.mjs
           node systemia/daytrade-lens/edge-adversarial-validation.test.mjs
+          node systemia/daytrade-lens/edge-forward-paper.test.mjs
 
       - name: Run real SEC to Alpaca event study
         if: github.event_name != 'pull_request'
