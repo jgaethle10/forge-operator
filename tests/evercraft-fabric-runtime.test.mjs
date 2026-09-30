@@ -38,9 +38,11 @@ test('Fabric boots from the canonical CHUM capability index without a manual rou
   const aliev=canonical.find((x)=>x.public_id==='aliev-site-opportunity-snapshot-v1');
   assert.ok(aliev);
   assert.ok(aliev.connections.some((x)=>x.type==='mcp'&&/alievMcp/.test(x.url)));
-  assert.ok(aliev.connections.some((x)=>x.type==='mcp'&&/machineCommerceMcp/.test(x.url)));
+  assert.ok(aliev.connections.some((x)=>x.type==='mcp'&&x.url==='https://fabric.systemiacommandcenters.com/mcp'));
   assert.ok(aliev.connections.some((x)=>x.type==='docs'));
   assert.ok(canonical.every((x)=>x.connections.some((connection)=>connection.type==='mcp')));
+  const findMyPart=canonical.find((x)=>x.public_id==='findmypart-paid-hunt-v1');
+  assert.ok(findMyPart.connections.some((x)=>x.type==='mcp'&&x.url==='https://fabric.systemiacommandcenters.com/mcp'));
 });
 
 test('Fabric catalog normalizes and intent matching finds the problem-native capability',()=>{
@@ -50,6 +52,17 @@ test('Fabric catalog normalizes and intent matching finds the problem-native cap
     'I need a cross reference for an obsolete discontinued machine part',
     normalized,
     {limit:2}
+  );
+  assert.equal(hits[0].public_id,'findmypart-paid-hunt-v1');
+  assert.ok(hits[0].match_score>0);
+});
+
+test('Fabric ranks the direct parts specialist for natural discontinued-part language',()=>{
+  const canonical=loadFabricCatalogFromRepository();
+  const hits=matchFabricCapabilities(
+    'I need help finding a discontinued hydraulic valve that I cannot locate through normal suppliers.',
+    canonical,
+    {limit:5}
   );
   assert.equal(hits[0].public_id,'findmypart-paid-hunt-v1');
   assert.ok(hits[0].match_score>0);
