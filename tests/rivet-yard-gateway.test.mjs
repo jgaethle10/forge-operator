@@ -43,11 +43,24 @@ const fakeGenerate=async({address,systemiaMachineKey,onProgress})=>{
 }
 
 {
+  const runtime=await start({gatewayToken:'gateway-proof',systemiaMachineKey:'machine-proof'});
+  try{
+    const health=await fetch(runtime.url+'/api/rivet/report-health').then(r=>r.json());
+    assert.equal(health.ok,true);
+    assert.equal(health.configured,false);
+    assert.equal(health.source_required,true);
+    const created=await fetch(runtime.url+'/api/rivet/reports',{method:'POST',headers:{'content-type':'application/json','authorization':'Bearer gateway-proof'},body:JSON.stringify({address:'6405 W Chestnut Ave, Yakima, WA 98908'})});
+    assert.equal(created.status,503);
+  }finally{await runtime.close();}
+}
+
+{
   const runtime=await start({gatewayToken:'gateway-proof',systemiaMachineKey:'machine-proof',generate:fakeGenerate});
   try{
     const health=await fetch(runtime.url+'/api/rivet/report-health').then(r=>r.json());
     assert.equal(health.ok,true);
     assert.equal(health.configured,true);
+    assert.equal(health.source_required,false);
 
     const denied=await fetch(runtime.url+'/api/rivet/reports',{method:'POST',headers:{'content-type':'application/json','authorization':'Bearer wrong'},body:JSON.stringify({address:'6405 W Chestnut Ave'})});
     assert.equal(denied.status,401);
