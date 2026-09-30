@@ -4,6 +4,13 @@ on:
   pull_request:
     paths:
       - 'systemia/migrations/base44-exit/**'
+      - 'systemia/app-fabric/**'
+      - 'systemia/realtime-bus/**'
+      - 'systemia/object-store/**'
+      - 'systemia/secret-store/**'
+      - 'systemia/connector-gateway/**'
+      - 'systemia/webhook-gateway/**'
+      - 'systemia/commerce-boundary/**'
       - 'systemia/collider/**'
       - 'systemia/organism/eps-social-continuity.mjs'
       - 'systemia/organism/eps-social-continuity.proof.mjs'
@@ -18,6 +25,13 @@ on:
       - main
     paths:
       - 'systemia/migrations/base44-exit/**'
+      - 'systemia/app-fabric/**'
+      - 'systemia/realtime-bus/**'
+      - 'systemia/object-store/**'
+      - 'systemia/secret-store/**'
+      - 'systemia/connector-gateway/**'
+      - 'systemia/webhook-gateway/**'
+      - 'systemia/commerce-boundary/**'
       - 'systemia/collider/**'
       - 'systemia/organism/eps-social-continuity.mjs'
       - 'systemia/organism/eps-social-continuity.proof.mjs'
@@ -41,6 +55,14 @@ jobs:
         run: node scripts/validate-base44-exit.mjs
       - name: Validate Base44 integration credit firewall
         run: node scripts/validate-base44-credit-firewall.mjs
+      - name: Prove Base44 evacuation factory
+        run: npm run proof:base44-evac
+      - name: Prove Evercraft App Fabric
+        run: npm run proof:app-fabric
+      - name: Prove Base44 SDK compatibility
+        run: npm run proof:base44-sdk-compat
+      - name: Prove realtime, storage, and secret boundaries
+        run: npm run proof:realtime-bus && npm run proof:object-store && npm run proof:secret-store
       - name: Prove KAIDANCE collider
         run: node systemia/collider/proof.mjs
       - name: Prove off-Base44 EPS social continuity
