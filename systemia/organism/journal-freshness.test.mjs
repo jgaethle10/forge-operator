@@ -82,3 +82,27 @@ test('fails to unknown rather than calling undated reachable content fresh', asy
   assert.equal(result.observation.state, 'unknown');
   assert.equal(result.findings[0].code, 'journal_freshness_unverifiable');
 });
+
+
+test('makes stale Black Friday shopping metadata a blocking identity finding', async () => {
+  const fetchImpl = async (url) => ({
+    ok: true,
+    status: 200,
+    url,
+    async text() {
+      return url.endsWith('sitemap.xml')
+        ? '<urlset><url><lastmod>2026-09-30T19:30:00Z</lastmod></url></urlset>'
+        : '<html><title>Evercraft Journal</title><meta name="description" content="Your all-in-one AI shopping assistant for Black Friday and holiday shopping."></html>';
+    }
+  });
+
+  const result = await probeJournalFreshness({
+    url: 'https://evercraftjournal.example',
+    now: new Date('2026-09-30T20:00:00Z'),
+    fetchImpl
+  });
+
+  assert.equal(result.observation.state, 'fresh');
+  assert.equal(result.observation.identity_state, 'drifted');
+  assert.equal(result.findings.some((row) => row.code === 'journal_public_identity_drift' && row.severity === 'high'), true);
+});
