@@ -16,6 +16,27 @@ if (policy.destinations?.base44 !== 'legacy_extraction_compatibility_only') fail
 if (policy.invariants?.new_base44_apps !== false) fail('new Base44 apps must be frozen');
 if (policy.invariants?.base44_as_new_runtime_target !== false) fail('Base44 cannot be a new runtime target');
 if (policy.invariants?.base44_as_canonical_source !== false) fail('Base44 cannot be canonical source');
+if (policy.invariants?.critical_owned_runtime_hardcoded_base44_network_routes !== false) {
+  fail('critical owned runtime must prohibit hard-coded Base44 network routes');
+}
+if (policy.invariants?.route_registry_automatic_cutover !== false) {
+  fail('route registry must not allow automatic cutover');
+}
+
+for (const primitive of [
+  'source_dependency_scanner',
+  'lossless_entity_transfer',
+  'identity_challenge_broker',
+  'receipt_gated_route_registry',
+  'owned_runtime_base44_network_firewall',
+]) {
+  if (!policy.shared_landing_primitives?.includes(primitive)) {
+    fail(`missing shared landing primitive ${primitive}`);
+  }
+  if (!policy.landing_implementations?.[primitive]?.state) {
+    fail(`missing landing implementation state for ${primitive}`);
+  }
+}
 
 const required = new Set([
   'source_extracted',
