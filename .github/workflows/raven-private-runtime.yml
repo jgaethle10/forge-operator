@@ -1,0 +1,49 @@
+name: Raven Private Runtime
+
+on:
+  pull_request:
+    paths:
+      - "systemia/raven/**"
+      - "systemia/compute/runtime-node.mjs"
+      - "systemia/compute/raven-private-runtime.proof.mjs"
+      - "systemia/yard/operator.mjs"
+      - "systemia/yard/raven-private-deployment.proof.mjs"
+      - "evercraft.compute.json"
+      - ".github/workflows/raven-private-runtime.yml"
+  push:
+    branches: [main]
+    paths:
+      - "systemia/raven/**"
+      - "systemia/compute/runtime-node.mjs"
+      - "systemia/compute/raven-private-runtime.proof.mjs"
+      - "systemia/yard/operator.mjs"
+      - "systemia/yard/raven-private-deployment.proof.mjs"
+      - "evercraft.compute.json"
+      - ".github/workflows/raven-private-runtime.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prove-raven-private:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Check Raven runtime source
+        run: node --check systemia/raven/private-runtime.mjs
+
+      - name: Prove private Raven runtime
+        run: node systemia/raven/private-runtime.proof.mjs
+
+      - name: Prove Raven on Evercraft Compute
+        run: node systemia/compute/raven-private-runtime.proof.mjs
+
+      - name: Prove Yard manages Raven lifecycle
+        run: node systemia/yard/raven-private-deployment.proof.mjs
