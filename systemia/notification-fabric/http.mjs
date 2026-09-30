@@ -370,8 +370,19 @@ export function registerNotificationFabricRoutes(app, options = {}) {
   });
 
   app.post('/api/notifications/intents', requireIngest, async (req, res) => {
-    try { res.json({ success: true, ...(await fabric.dispatchIntent(req.body)) }); }
-    catch (error) { res.status(400).json({ success: false, error: error?.message || String(error) }); }
+    try {
+      const intent = fabric.prepareIntent(req.body);
+      if (intent.acknowledgement?.required) {
+        res.status(409).json({
+          success: false,
+          error: 'Acknowledgement-enforced notifications must use the durable /api/notifications/jobs path.',
+        });
+        return;
+      }
+      res.json({ success: true, ...(await fabric.dispatchIntent(intent)) });
+    } catch (error) {
+      res.status(400).json({ success: false, error: error?.message || String(error) });
+    }
   });
 
   app.post('/api/notifications/signals', requireIngest, async (req, res) => {
