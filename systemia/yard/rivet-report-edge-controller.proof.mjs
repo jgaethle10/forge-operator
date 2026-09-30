@@ -108,8 +108,6 @@ try{
   });
   const provisioned=await controller.provision({
     releaseRef,
-    capacityEndpoint:node.endpoint,
-    allocatorToken,
     sourceUrl,
     stateRoot:path.join(computeRoot,'rivet-state'),
     rollbackTarget:'proof:rivet-previous',
@@ -120,6 +118,8 @@ try{
   assert.equal(provisioned.route_scope,'loopback_proof');
   assert.equal(provisioned.route_verified,false);
   assert.equal(provisioned.authenticated_report_api,true);
+  assert.equal(provisioned.capacity_authority_inherited,true);
+  assert.equal(provisioned.capacity_authority_exposed,false);
   assert.match(provisioned.origin,/^http:\/\/127\.0\.0\.1:/);
 
   const created=await fetch(provisioned.origin+'/v1/reports',{
@@ -168,6 +168,8 @@ try{
     team_auth_through_edge:true,
     source_coverage_verified:true,
     resident_lease_renewal:true,
+    sibling_capacity_authority_reused_privately:true,
+    allocator_reentry_required:false,
     restart_resume_without_manual_reprovision:true,
     route_release_proven:true,
     production_https_gate_remains_fail_closed:true,
