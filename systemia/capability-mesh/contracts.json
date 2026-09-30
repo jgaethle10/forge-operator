@@ -427,6 +427,91 @@
         "discovery_creates_credential_or_employment_authority": false,
         "shared_runtime_contracted": false
       }
+    },
+    {
+      "product_key": "findmypart",
+      "contract_version": "1.0.0",
+      "owner": "systemia",
+      "adoption_stage": "shared_runtime",
+      "specialist_slug": "findmypart",
+      "authority": {
+        "state": "declared",
+        "passport_product": "findmypart",
+        "scopes": [
+          "free_part_triage"
+        ],
+        "evidence_refs": [
+          "plugins/findmypart/skills/findmypart-direct/SKILL.md",
+          "mcp-registry/findmypart.json"
+        ]
+      },
+      "context": {
+        "state": "declared",
+        "namespace": "findmypart",
+        "read_scope": "context.read.findmypart",
+        "write_scope": "context.write.findmypart",
+        "evidence_refs": [
+          "registry/findmypart/README.md",
+          "systemia/context-fabric/fabric.mjs"
+        ]
+      },
+      "meter": {
+        "state": "not_required",
+        "reason": "The contracted action is the live free_part_triage tool, which explicitly creates no charge. Paid sourcing hunts remain separately human-confirmed and live MCP commercial state remains authoritative."
+      },
+      "intake": {
+        "state": "not_required",
+        "reason": "The contracted public action accepts bounded part clues through the specialist tool; no shared Intake Fabric adapter is declared."
+      },
+      "execution": {
+        "state": "declared",
+        "gate_required": true,
+        "scopes": [
+          "free_part_triage"
+        ],
+        "actions": [
+          {
+            "scope": "free_part_triage"
+          }
+        ],
+        "evidence_refs": [
+          "plugins/findmypart/skills/findmypart-direct/SKILL.md",
+          "mcp-registry/findmypart.json"
+        ]
+      },
+      "relationship": {
+        "state": "not_required",
+        "reason": "Free Part Passport triage does not itself contact vendors, buy parts, or perform outbound relationship actions."
+      },
+      "receipt_reconciliation": {
+        "state": "declared",
+        "namespace": "findmypart",
+        "evidence_refs": [
+          "systemia/context-fabric/fabric.mjs",
+          "registry/findmypart/README.md"
+        ]
+      },
+      "rollback": {
+        "state": "declared",
+        "policy": "Disable the FindMyPart contract or specialist route without enabling paid hunts, checkout, vendor contact, purchasing, or weakening evidence/fitment boundaries."
+      },
+      "compatibility": {
+        "intended_product_classes": [
+          "hard_to_source_parts"
+        ]
+      },
+      "boundaries": {
+        "contracted_machine_surface": [
+          "free_part_triage"
+        ],
+        "free_action_creates_charge": false,
+        "paid_hunts_contracted": false,
+        "checkout_creation_is_payment_proof": false,
+        "normalized_identity_is_fitment_proof": false,
+        "listing_is_live_inventory_proof": false,
+        "compatibility_guaranteed": false,
+        "private_vendor_analytics_session_command_center_sales_data_public": false
+      }
     }
   ]
 }
