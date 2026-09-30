@@ -13,6 +13,7 @@ const REQUIRED_LANES = [
 ];
 
 const VALID_LANE_STATES = new Set(['declared', 'not_required']);
+const VALID_ADOPTION_STAGES = new Set(['shared_runtime', 'private_runtime', 'discovery_only']);
 
 function readJson(file) {
   return JSON.parse(fs.readFileSync(file, 'utf8'));
@@ -128,6 +129,9 @@ export function buildCapabilityMesh({
     const productKey = requiredString(contract.product_key, 'product_key');
     if (contractByProduct.has(productKey)) throw new Error('duplicate_product_contract:' + productKey);
     if (!publicByKey.has(productKey)) throw new Error('contract_product_not_public:' + productKey);
+    if (!VALID_ADOPTION_STAGES.has(String(contract.adoption_stage || '').trim())) {
+      throw new Error('contract_adoption_stage_invalid:' + productKey);
+    }
     contractByProduct.set(productKey, contract);
   }
 
@@ -153,6 +157,7 @@ export function buildCapabilityMesh({
           : null,
         contract_state: 'missing',
         contract_version: null,
+        adoption_stage: 'missing',
         lane_states: Object.fromEntries(REQUIRED_LANES.map((lane) => [lane, 'missing'])),
         gaps: ['product_contract_missing'],
         next_contract_actions: [
@@ -194,6 +199,7 @@ export function buildCapabilityMesh({
         : null,
       contract_state: gaps.length === 0 ? 'complete_declaration' : 'incomplete_declaration',
       contract_version: contract.contract_version || null,
+      adoption_stage: contract.adoption_stage,
       owner: contract.owner || null,
       lane_states: Object.fromEntries(
         Object.entries(laneResults).map(([lane, result]) => [lane, result.state])
@@ -225,6 +231,15 @@ export function buildCapabilityMesh({
   const incomplete = rows.filter((row) => row.contract_state === 'incomplete_declaration');
   const missing = rows.filter((row) => row.contract_state === 'missing');
   const directPublic = rows.filter((row) => row.direct_door);
+  const sharedRuntime = rows.filter(
+    (row) => row.contract_state === 'complete_declaration' && row.adoption_stage === 'shared_runtime'
+  );
+  const privateRuntime = rows.filter(
+    (row) => row.contract_state === 'complete_declaration' && row.adoption_stage === 'private_runtime'
+  );
+  const discoveryOnly = rows.filter(
+    (row) => row.contract_state === 'complete_declaration' && row.adoption_stage === 'discovery_only'
+  );
 
   const baselinePublic = new Set(ratchetBaseline.public_product_keys || []);
   const baselineDirectPublic = new Set(ratchetBaseline.direct_door_public_product_keys || []);
@@ -291,6 +306,9 @@ export function buildCapabilityMesh({
       direct_callable_public_products: directPublic.filter((row) => row.direct_door.direct_callable).length,
       direct_door_public_products_without_contract: directPublic.filter((row) => row.contract_state === 'missing').length,
       specialist_doors_not_in_public_product_index: specialistOnly.length,
+      shared_runtime_contract_count: sharedRuntime.length,
+      private_runtime_contract_count: privateRuntime.length,
+      discovery_only_contract_count: discoveryOnly.length,
     },
     priority_queues: {
       direct_door_without_contract: directPublic
@@ -298,6 +316,9 @@ export function buildCapabilityMesh({
         .map((row) => row.product_key),
       incomplete_contracts: incomplete.map((row) => row.product_key),
       all_missing_contracts: missing.map((row) => row.product_key),
+      contracted_not_shared_runtime: [...privateRuntime, ...discoveryOnly]
+        .map((row) => row.product_key)
+        .sort(),
     },
     ratchet: {
       schema: 'evercraft.capability-mesh.ratchet-state.v1',
