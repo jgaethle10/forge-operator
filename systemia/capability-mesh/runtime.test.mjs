@@ -227,6 +227,46 @@ test('FindMyPart paid hunt is not silently exposed by the free-triage contract',
   );
 });
 
+test('EventWave exposes public search without inheriting promotion or commerce', () => {
+  const policy = compileProductRuntimePolicy('eventwave', process.cwd());
+  assert.equal(policy.adoption_stage, 'shared_runtime');
+  assert.equal(policy.authority.passport_product, 'eventwave');
+  assert.deepEqual(policy.authority.scopes, ['event.search']);
+  assert.equal(policy.meter.state, 'not_required');
+  assert.equal(policy.boundaries.paid_promotion_contracted, false);
+  assert.equal(policy.boundaries.publication_contracted, false);
+  assert.equal(policy.boundaries.checkout_contracted, false);
+});
+
+test('EventWave search compiles to the direct specialist without payment claims', () => {
+  const prepared = buildExecutionGateInput({
+    product_key: 'eventwave',
+    actor_ref: 'agent:event-search',
+    scope: 'event.search',
+    request: { location: 'Yakima, WA', date_window: 'this_weekend' },
+    idempotency_key: 'capability-mesh:eventwave:search:001',
+    require_direct_specialist: true,
+  });
+  assert.equal(prepared.execution_gate_input.passport_product, 'eventwave');
+  assert.equal(prepared.execution_gate_input.specialist_slug, 'eventwave');
+  assert.equal(Object.prototype.hasOwnProperty.call(prepared.execution_gate_input, 'meter'), false);
+  assert.equal(prepared.payment_state_inferred, false);
+});
+
+test('EventWave paid promotion is not silently exposed by search contract', () => {
+  assert.throws(
+    () =>
+      buildExecutionGateInput({
+        product_key: 'eventwave',
+        actor_ref: 'agent:event-search',
+        scope: 'event.promote',
+        request: { event_ref: 'event:001' },
+        idempotency_key: 'capability-mesh:eventwave:promote',
+      }),
+    /scope_not_declared_in_authority_contract/
+  );
+});
+
 test('missing product contracts fail closed instead of inheriting another product defaults', () => {
   assert.throws(
     () => compileProductRuntimePolicy('findmypart', process.cwd()),
@@ -245,7 +285,7 @@ test('context binding describes scopes but grants no access', () => {
 
 test('generated runtime policy artifact covers only explicitly contracted products', () => {
   const rendered = renderRuntimePolicies(process.cwd());
-  assert.equal(rendered.policy_count, 7);
+  assert.equal(rendered.policy_count, 8);
   assert.deepEqual(
     rendered.policies.map((row) => row.product_key),
     [
@@ -256,6 +296,7 @@ test('generated runtime policy artifact covers only explicitly contracted produc
       'opportunity-fabric',
       'systemia-university',
       'findmypart',
+      'eventwave',
     ]
   );
   assert.equal(rendered.truth_boundary.non_shared_runtime_execution_fails_closed, true);
