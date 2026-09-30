@@ -241,7 +241,8 @@
     "proof:rivet-cutover": "node systemia/rivet/cutover-controller.proof.mjs",
     "proof:aliev-domain-engine": "node systemia/aliev/domain-engine.proof.mjs",
     "journal:test": "node --test systemia/newsroom/*.test.mjs",
-    "journal:build": "node systemia/newsroom/journal-publisher.mjs systemia/newsroom/stories public/journal"
+    "journal:build": "node systemia/newsroom/journal-publisher.mjs systemia/newsroom/stories public/journal",
+    "test:industrial-base": "node --test systemia/industrial-base/*.test.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
