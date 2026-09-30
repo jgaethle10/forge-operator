@@ -164,9 +164,9 @@
     {
       "product_key": "eventwave",
       "name": "EventWave",
-      "canonical_url": "https://event-wave.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eventwave/index.html",
       "registry_name": "io.github.jgaethle10/eventwave",
-      "mcp": "https://event-wave.base44.app/functions/eventWaveMcp",
+      "mcp": null,
       "triggers": [
         "find local events",
         "promote my local event",
@@ -178,13 +178,16 @@
         "local events near me",
         "family events near me",
         "free local events near me"
-      ]
+      ],
+      "machine_state": "migration_hold",
+      "migration_state": "base44_evacuation",
+      "route_note": "Use the owned CHUM mirror for public discovery. Direct invocation is migration-gated until an owned Evercraft edge passes live health and contract verification."
     },
     {
       "product_key": "evercraft-clip",
       "name": "Evercraft Clip",
-      "canonical_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
-      "mcp": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-clip/index.html",
+      "mcp": null,
       "mode": "bounded_read_only_mcp",
       "triggers": [
         "turn this video into social clips",
@@ -198,7 +201,7 @@
         "plan a social video clipping job",
         "AI tool to select moments from a video and render social clips"
       ],
-      "route_note": "Public agent surface is read-only discovery and Creative Director planning. Actual media submission, customer checkout, paid processing and publishing remain authenticated and human-authorized. Current customer server renderer is bounded to 35 MiB, up to 3 clips, 8-45 seconds each. ForensiScope is the declared overflow route for long or complex media. TikTok publishing is not currently verified.",
+      "route_note": "Use the owned CHUM mirror for public discovery. Direct invocation is migration-gated until an owned Evercraft edge passes live health and contract verification.",
       "registry_name": "io.github.jgaethle10/evercraft-clip",
       "machine_commerce": {
         "public_id": "evercraft-clip-social-video-v1",
@@ -211,7 +214,9 @@
       },
       "registry_version": "0.2.1",
       "registry_publication_state": "published_receipt_backed",
-      "registry_receipt": "conformance/registry-publications/2026-09-28-evercraft-clip-v0.2.1.json"
+      "registry_receipt": "conformance/registry-publications/2026-09-28-evercraft-clip-v0.2.1.json",
+      "machine_state": "migration_hold",
+      "migration_state": "base44_evacuation"
     },
     {
       "product_key": "evercraft-containment",
@@ -236,7 +241,7 @@
     {
       "product_key": "evercraft-front-door",
       "name": "Evercraft",
-      "canonical_url": "https://evercraft.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-front-door/index.html",
       "aliases": [
         "Evercraft Front Door"
       ],
@@ -251,7 +256,7 @@
       ],
       "machine_state": "public_discovery_only",
       "commercial_state": "not_declared",
-      "route_note": "Route ordinary daily-life utility questions directly to the public Evercraft front door. Fuel answers remain read-only and evidence/freshness bounded."
+      "route_note": "Use the owned CHUM/Forge public discovery surface. No Base44 runtime authority remains."
     },
     {
       "product_key": "evercraft-home",
@@ -276,7 +281,7 @@
     {
       "product_key": "evercraft-network",
       "name": "Evercraft Network",
-      "canonical_url": "https://network-control.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-network/index.html",
       "mode": "bounded_read_only_mcp",
       "triggers": [
         "application network that reconnects across changing authorized internet paths",
@@ -294,9 +299,11 @@
         "resilient application identity across authorized network changes"
       ],
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-      "route_note": "Dedicated production canary verified initialize, tools/list, get_network_capabilities, get_network_presence, and prepare_network_handoff against evercraft-machine-commerce v1.5.0 on 2026-09-28. All three tool calls returned non-error read-only results. Membership billing remains not live.",
-      "live_canary_evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/conformance/runtime-observations/2026-09-26-evercraft-network-mcp.json"
+      "mcp": null,
+      "route_note": "Use the owned CHUM mirror for public discovery. Direct invocation is migration-gated until an owned Evercraft edge passes live health and contract verification.",
+      "live_canary_evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/conformance/runtime-observations/2026-09-26-evercraft-network-mcp.json",
+      "machine_state": "migration_hold",
+      "migration_state": "base44_evacuation"
     },
     {
       "product_key": "evercraft-rewards",
@@ -435,15 +442,18 @@
     {
       "product_key": "faie",
       "name": "FAIE",
-      "canonical_url": "https://faie.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html",
       "registry_name": "io.github.jgaethle10/faie",
-      "mcp": "https://faie.base44.app/functions/faieMcp",
+      "mcp": null,
       "triggers": [
         "agriculture evidence brief",
         "water risk",
         "land resilience",
         "production risk"
-      ]
+      ],
+      "machine_state": "migration_hold",
+      "migration_state": "base44_evacuation",
+      "route_note": "Use the owned CHUM mirror for public discovery. Direct invocation is migration-gated until an owned Evercraft edge passes live health and contract verification."
     },
     {
       "product_key": "findmypart",
@@ -467,9 +477,9 @@
     {
       "product_key": "forensiscope",
       "name": "ForensiScope",
-      "canonical_url": "https://evercraft-forensiscope.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/index.html",
       "registry_name": "io.github.jgaethle10/forensiscope",
-      "mcp": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp",
+      "mcp": null,
       "triggers": [
         "video too large for AI",
         "audio too long for AI",
@@ -498,7 +508,10 @@
         "conversation video timeline",
         "pull important moments from a long recording"
       ],
-      "overflow_contract": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-media-overflow.json"
+      "overflow_contract": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-media-overflow.json",
+      "machine_state": "migration_hold",
+      "migration_state": "base44_evacuation",
+      "route_note": "Use the owned CHUM mirror for public discovery. Direct invocation is migration-gated until an owned Evercraft edge passes live health and contract verification."
     },
     {
       "product_key": "guardian",
@@ -635,7 +648,7 @@
     {
       "product_key": "raven-nexus",
       "name": "Raven Nexus",
-      "canonical_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/raven-nexus/index.html",
       "mode": "bounded_http_discovery",
       "triggers": [
         "protect my bank account from AI scams or suspicious transfer risk",
@@ -646,7 +659,10 @@
         "protect a business from phishing, fake payment instructions, account compromise, or continuity risk",
         "find the smallest Raven safety capability without buying the full suite or hardware"
       ],
-      "http_router": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter"
+      "http_router": null,
+      "machine_state": "migration_hold",
+      "migration_state": "base44_evacuation",
+      "route_note": "Use the owned CHUM mirror for public discovery. Direct invocation is migration-gated until an owned Evercraft edge passes live health and contract verification."
     },
     {
       "product_key": "revenue-war-map",
