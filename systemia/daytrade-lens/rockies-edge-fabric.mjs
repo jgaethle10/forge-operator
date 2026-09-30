@@ -148,6 +148,11 @@ function inferredRanges(observation, explicitRange) {
   if (explicitRange && RANGE_MAP[explicitRange]) ranges.push(explicitRange);
   const metaRange = String(observation.metadata?.rockies_range || observation.metadata?.range || "").trim();
   if (metaRange && RANGE_MAP[metaRange]) ranges.push(metaRange);
+
+  const explicit = uniq(ranges);
+  const allowDomainExpansion = observation.metadata?.allow_domain_range_expansion === true;
+  if (explicit.length && !allowDomainExpansion) return explicit;
+
   for (const domain of observation.domains || []) {
     const match = DOMAIN_TO_RANGE[String(domain).toLowerCase()];
     if (match) ranges.push(match);

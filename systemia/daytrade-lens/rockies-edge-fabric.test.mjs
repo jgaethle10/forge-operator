@@ -25,10 +25,22 @@ const observation = {
 const hypotheses = rockiesObservationToEdgeHypotheses(observation, {
   independent_source_family_count: 3,
 });
-assert.ok(hypotheses.length >= 2);
+assert.equal(hypotheses.length, 1);
 assert.ok(hypotheses.some((x) => x.rockies_range === "maritime"));
-assert.ok(hypotheses.some((x) => x.rockies_range === "supply_chain"));
+assert.equal(hypotheses.some((x) => x.rockies_range === "supply_chain"), false);
 assert.ok(hypotheses.every((x) => x.research_instruments.includes("MATX")));
+
+const expanded = rockiesObservationToEdgeHypotheses({
+  ...observation,
+  metadata: {
+    ...observation.metadata,
+    allow_domain_range_expansion: true,
+  },
+}, {
+  independent_source_family_count: 3,
+});
+assert.ok(expanded.some((x) => x.rockies_range === "maritime"));
+assert.ok(expanded.some((x) => x.rockies_range === "supply_chain"));
 assert.ok(hypotheses.every((x) => x.direction === "LEARN_FROM_DATA"));
 assert.ok(hypotheses.every((x) => x.constraints.no_live_trade_instruction === true));
 assert.ok(hypotheses.every((x) => x.provenance_refs.length === 1));
