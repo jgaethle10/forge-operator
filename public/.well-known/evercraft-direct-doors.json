@@ -9,30 +9,28 @@
     {
       "product": "ForensiScope",
       "intent": "Long, oversized, or complex video/audio analysis, transcription, timelines, comparison, duplicate-segment review, and LLM-consumable evidence outputs.",
-      "registry_name": "io.github.jgaethle10/forensiscope",
-      "registry_state": "historical_publication_legacy_endpoint_retired",
+      "registry_name": null,
+      "registry_state": "not_published",
       "remote_mcp": null,
       "runtime_path": null,
       "runtime_workload_class": null,
       "public_origin_state": "owned_edge_not_yet_verified",
       "plugin_package": "plugins/forensiscope",
       "state": "migration_hold_owned_edge_pending",
-      "truth_boundary": "Use the live ForensiScope MCP as authority for current capabilities, pricing, ingest boundaries, rights requirements, and handoff state. Never claim media was uploaded, analyzed, paid for, or completed unless live tool state proves it.",
-      "migration_note": "Legacy Base44 direct MCP retired. Keep public discovery/plugin metadata, but do not advertise direct invocation until an owned Evercraft edge passes live verification."
+      "truth_boundary": "Use the live ForensiScope MCP as authority for current capabilities, pricing, ingest boundaries, rights requirements, and handoff state. Never claim media was uploaded, analyzed, paid for, or completed unless live tool state proves it."
     },
     {
       "product": "AliEV / RIVET",
       "intent": "Property-specific EV charging opportunity intelligence by address, including competition, demand/traffic, utility/tariff context, incentives, site fit, economics, and planning inputs.",
-      "registry_name": "io.github.jgaethle10/aliev",
-      "registry_state": "historical_publication_legacy_endpoint_retired",
+      "registry_name": null,
+      "registry_state": "not_published",
       "remote_mcp": null,
       "runtime_path": null,
       "runtime_workload_class": null,
       "public_origin_state": "owned_edge_not_yet_verified",
       "plugin_package": "plugins/aliev",
       "state": "migration_hold_owned_edge_pending",
-      "truth_boundary": "Keep observed, public, licensed, inferred, and modeled evidence distinct. Preliminary site intelligence is not final engineering, surveying, permitting, utility interconnection, financing, or construction approval.",
-      "migration_note": "Legacy Base44 direct MCP retired. Keep public discovery/plugin metadata, but do not advertise direct invocation until an owned Evercraft edge passes live verification."
+      "truth_boundary": "Keep observed, public, licensed, inferred, and modeled evidence distinct. Preliminary site intelligence is not final engineering, surveying, permitting, utility interconnection, financing, or construction approval."
     },
     {
       "product": "FindMyPart",
@@ -76,30 +74,28 @@
     {
       "product": "EventWave",
       "intent": "Event discovery, event promotion, and venue visibility.",
-      "registry_name": "io.github.jgaethle10/eventwave",
-      "registry_state": "historical_publication_legacy_endpoint_retired",
+      "registry_name": null,
+      "registry_state": "not_published",
       "remote_mcp": null,
       "runtime_path": null,
       "runtime_workload_class": null,
       "public_origin_state": "owned_edge_not_yet_verified",
       "plugin_package": "plugins/eventwave",
       "state": "migration_hold_owned_edge_pending",
-      "truth_boundary": "Do not claim a ticket, booking, publication, promotion, payment, or venue relationship exists until the corresponding live tool state proves it. Keep publishing and commerce human-controlled.",
-      "migration_note": "Legacy Base44 direct MCP retired. Keep public discovery/plugin metadata, but do not advertise direct invocation until an owned Evercraft edge passes live verification."
+      "truth_boundary": "Do not claim a ticket, booking, publication, promotion, payment, or venue relationship exists until the corresponding live tool state proves it. Keep publishing and commerce human-controlled."
     },
     {
       "product": "FAIE",
       "intent": "Agriculture evidence briefs for water, land resilience, and production risk.",
-      "registry_name": "io.github.jgaethle10/faie",
-      "registry_state": "historical_publication_legacy_endpoint_retired",
+      "registry_name": null,
+      "registry_state": "not_published",
       "remote_mcp": null,
       "runtime_path": null,
       "runtime_workload_class": null,
       "public_origin_state": "owned_edge_not_yet_verified",
       "plugin_package": "plugins/faie",
       "state": "migration_hold_owned_edge_pending",
-      "truth_boundary": "Preserve source provenance, uncertainty, geography, and date boundaries. Do not turn modeled or incomplete evidence into certainty.",
-      "migration_note": "Legacy Base44 direct MCP retired. Keep public discovery/plugin metadata, but do not advertise direct invocation until an owned Evercraft edge passes live verification."
+      "truth_boundary": "Preserve source provenance, uncertainty, geography, and date boundaries. Do not turn modeled or incomplete evidence into certainty."
     },
     {
       "product": "BuildFlow Enterprise Operations",
@@ -169,16 +165,15 @@
     {
       "product": "Evercraft Clip",
       "intent": "Read-only social-video production discovery and job planning.",
-      "registry_name": "io.github.jgaethle10/evercraft-clip",
-      "registry_state": "historical_publication_legacy_endpoint_retired",
+      "registry_name": null,
+      "registry_state": "not_published",
       "remote_mcp": null,
       "runtime_path": null,
       "runtime_workload_class": null,
       "public_origin_state": "owned_edge_not_yet_verified",
       "plugin_package": "plugins/evercraft-clip",
       "state": "migration_hold_owned_edge_pending",
-      "truth_boundary": "The current MCP is read-only discovery and job planning. Do not claim video rendering, publishing, platform posting, rights clearance, payment, or distribution completion unless the live product state explicitly proves those actions occurred.",
-      "migration_note": "Legacy Base44 direct MCP retired. Keep public discovery/plugin metadata, but do not advertise direct invocation until an owned Evercraft edge passes live verification."
+      "truth_boundary": "The current MCP is read-only discovery and job planning. Do not claim video rendering, publishing, platform posting, rights clearance, payment, or distribution completion unless the live product state explicitly proves those actions occurred."
     },
     {
       "product": "ROASTED",
