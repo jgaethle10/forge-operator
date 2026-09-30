@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 from __future__ import annotations
-import argparse, json, subprocess, sys, time
+import argparse, json, os, subprocess, sys, time
 from pathlib import Path
-from paths import SOURCE_ROOT, CORRECTION_ROOT
+from paths import SOURCE_ROOT, CORRECTION_ROOT, RENDER_ROOT
 
 HERE=Path(__file__).resolve().parent
 
-def run_stage(name, cmd, remaining):
+def run_stage(name, cmd, remaining, env=None):
     started=time.monotonic()
     try:
-        p=subprocess.run(cmd,cwd=HERE,text=True,capture_output=True,timeout=max(1,remaining))
+        p=subprocess.run(cmd,cwd=HERE,text=True,capture_output=True,timeout=max(1,remaining),env=env)
         elapsed=time.monotonic()-started
         return {
             'name':name,'ok':p.returncode==0,'returncode':p.returncode,
@@ -50,10 +50,15 @@ def main():
       ('identity',[sys.executable,str(HERE/'identity.py'),'--sites',str(site),'--source-root',str(SOURCE_ROOT)]),
       ('compile',[sys.executable,str(HERE/'compile.py'),'--sites',str(site)]),
       ('geometry',[sys.executable,str(HERE/'geometry.py'),'--sites',str(site)]),
-      ('lineage',[sys.executable,str(HERE/'lineage_guard.py'),'--site',str(site),'--require-complete'])
+      ('lineage',[sys.executable,str(HERE/'lineage_guard.py'),'--site',str(site),'--require-complete']),
+      ('render',[sys.executable,str(HERE/'render_pair.py'),'--site',str(site)]),
+      ('layout_qa',[sys.executable,str(HERE/'layout_qa.py'),'--site',str(site),'--render-dir',str(RENDER_ROOT)]),
+      ('stall_label_visual_qa',[sys.executable,str(HERE/'stall_label_visual_qa.py'),'--site',str(site),'--render-dir',str(RENDER_ROOT),'--source-dir',str(SOURCE_ROOT)])
     ]
     if args.offline: commands[1][1].append('--offline')
     if args.refresh_aerial: commands[1][1].append('--refresh-aerial')
+    stage_env=os.environ.copy()
+    if args.offline: stage_env['KSS_RENDER_OFFLINE']='1'
 
     blocker=''
     for name,cmd in commands:
@@ -63,7 +68,7 @@ def main():
             blocker='CORRECTION_BUDGET_BREACHED'
             stages.append({'name':name,'ok':False,'returncode':124,'seconds':0,'blocker':blocker})
             break
-        result=run_stage(name,cmd,remaining)
+        result=run_stage(name,cmd,remaining,stage_env)
         stages.append(result)
         if not result['ok']:
             blocker=result.get('blocker') or f'{name.upper()}_FAILED'
