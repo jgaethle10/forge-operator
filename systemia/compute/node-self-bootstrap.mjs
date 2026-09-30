@@ -103,7 +103,7 @@ export function evaluateBootstrap({
 
   if(!checks.preflight_passed){
     state=role==='virtual_worker'?'ineligible_for_compute_worker':'ineligible_for_field_public_edge';
-    next_action='use_another_eligible_machine';
+    next_action=role==='virtual_worker'?'use_another_eligible_machine':'use_another_owned_machine';
     human_action_required=true;
     reason=role==='virtual_worker'?'compute_worker_preflight_failed':'field_preflight_failed';
   }else if(!checks.installed||!checks.node_receipt){
