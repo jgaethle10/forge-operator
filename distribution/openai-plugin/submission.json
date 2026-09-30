@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.openai-plugin-submission-prep.v2",
-  "prepared_at": "2026-09-29",
+  "prepared_at": "2026-09-30",
   "submission_type": "With MCP",
   "plugin_name": "Evercraft",
   "short_description": "Find and use the right Evercraft capability from one connected front door.",
@@ -22,7 +22,7 @@
   "proposed_availability": [
     "US"
   ],
-  "release_notes": "Evercraft now uses its Evercraft-owned public Fabric MCP at fabric.systemiacommandcenters.com. The public discovery tools are read-only and preserve separate authorization for consequential actions.",
+  "release_notes": "Evercraft v1.0.3 aligns portable and compatibility metadata for public OpenAI submission on the verified Evercraft-owned Fabric MCP. Discovery remains read-only and consequential actions retain separate authorization.",
   "starter_prompts": [
     "I have a problem and do not know which Evercraft capability fits. Find the smallest useful option.",
     "I have a video that's too large for this chat. What can handle it?",
@@ -33,15 +33,16 @@
     "Our developer disappeared and our existing app is breaking. We need an evidence-first diagnosis before rebuilding."
   ],
   "remaining_platform_prerequisites": [
-    "OpenAI Platform Apps Management write permission",
-    "Verified Evercraft LLC business identity",
-    "Portal-generated domain verification challenge",
-    "Successful current Scan Tools result against the owned Fabric MCP",
-    "Demo recording URL showing the main use cases and tools",
-    "Exactly five positive and three negative test cases",
+    "Upload the canonical Evercraft v1.0.3 ZIP in OpenAI Platform Plugins",
+    "Select the verified Evercraft LLC developer identity in the owning organization/project",
+    "Confirm Apps Management Write access if the submitter is not an organization owner",
+    "Complete the portal-generated domain verification challenge for fabric.systemiacommandcenters.com",
+    "Complete the current portal MCP connection and Scan Tools checks",
+    "Confirm the imported five positive and three negative tests plus reviewer walkthrough",
     "Submit for OpenAI review",
     "Explicit Publish after approval",
     "Independent directory discovery receipt after publication"
   ],
-  "public_directory_claim_allowed": false
+  "public_directory_claim_allowed": false,
+  "package_version": "1.0.3"
 }
