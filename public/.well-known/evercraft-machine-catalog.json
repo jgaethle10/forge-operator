@@ -6,10 +6,10 @@
   "source_schema_version": "2026-09-28.2",
   "gateway_version": "evercraft-machine-commerce-gateway-v0.9.1",
   "source_generated_at": "2026-09-29T01:40:00.000Z",
-  "generated_at": "2026-09-30T16:43:45.169Z",
-  "offer_count": 46,
+  "generated_at": "2026-09-30T16:50:00.000Z",
+  "offer_count": 47,
   "sell_now_count": 14,
-  "discovery_count": 32,
+  "discovery_count": 33,
   "safety": {
     "discovery_creates_obligation": false,
     "human_confirmation_required_for_checkout": true,
@@ -1601,6 +1601,43 @@
       "invocation_status": "LIVE: agent HTTP gateway + OpenAPI + llms guidance + remote MCP at https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp. Agents can inspect $500/$999/$1,999 website-service tiers, prepare checkout only after explicit human confirmation, and independently verify paid order state.",
       "live_canary_evidence": null,
       "catalog_version": "2026-09-23.13"
+    },
+    {
+      "public_id": "worldstate-reality-delta-v1",
+      "name": "Worldstate Reality Delta",
+      "intent_terms": [
+        "what materially changed around my assets",
+        "monitor external conditions affecting my facilities",
+        "ground my AI in current physical world changes",
+        "show me evidence backed changes in this region",
+        "track infrastructure and environmental conditions around my portfolio",
+        "give my agent a current world state feed",
+        "tell me what changed that matters to my routes"
+      ],
+      "problem": "An organization or AI needs a continuously updated, evidence-backed picture of external conditions intersecting its assets, facilities, routes, regions, dependencies, industries, or topics without drowning in generic news and alert noise.",
+      "inputs": "A bounded non-personal scope containing regions, domains, assets, facilities, routes, infrastructure dependencies, industries, or topics. Data sources must be public or explicitly authorized.",
+      "outputs": "Worldstate snapshots and Reality Delta packets with relevant observations, materiality, evidence state, independent source-family count, timestamps, provenance references, and compact agent-ready changes.",
+      "commercial_state": "verification_required",
+      "machine_state": "discovery_only",
+      "pricing": "Commercial pilot packaging is under verification. No fixed machine-quotable price is approved.",
+      "offers": [],
+      "human_ui_required": false,
+      "confirmation": "Public discovery and pilot-scope preparation create no monitoring authority, source access, Passport grant, payment obligation, production authority, emergency authority, or external action. Customer monitoring requires separate scoped onboarding and explicit authorization.",
+      "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/systemia/worldstate",
+      "payment_authority": "No direct Worldstate payment path is approved.",
+      "invocation_status": "SOURCE READY: Forge-owned Worldstate read-only pilot MCP is implemented at /mcp/worldstate for canonical offer inspection and bounded non-person pilot-scope preparation. It creates no monitoring authority, Passport grant, source access, checkout, payment, production mutation, emergency authority, or external action. Do not claim public runtime availability until an independent HTTPS canary verifies the deployed route.",
+      "live_canary_evidence": null,
+      "catalog_version": "2026-09-30.3",
+      "public_url_source": "forge_owned_registry",
+      "source_authority": "forge_owned_source"
     }
-  ]
+  ],
+  "catalog_authority": "remote_legacy_plus_forge_owned",
+  "owned_offer_registry": "registry/owned-machine-offers.json",
+  "source_merge": {
+    "remote_offer_count": 46,
+    "owned_offer_count": 1,
+    "owned_added_count": 1,
+    "owned_override_count": 0
+  }
 }
