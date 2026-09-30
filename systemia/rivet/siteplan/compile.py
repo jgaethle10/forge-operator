@@ -59,6 +59,48 @@ def fetch_naip(site,source_sha,identity_sha,bounds,key,size=(1800,1400),offline=
  cache.write_bytes(data)
  return cache,'network'
 
+def acquisition_current(n,src,identity):
+ receipt=EVID/f'site_{n:02d}_acquisition.json'
+ if not receipt.exists(): return False
+ try: a=json.loads(receipt.read_text())
+ except Exception: return False
+ if a.get('source_record_sha256')!=sha(src): return False
+ if a.get('identity_sha256')!=identity.get('identity_sha256'): return False
+ aerials=a.get('aerials') or {}
+ for key in ('plan','area'):
+  row=aerials.get(key) or {}
+  p=Path(row.get('path','')) if isinstance(row,dict) else Path(str(row or ''))
+  if not p.exists() or p.stat().st_size<=10000: return False
+ return True
+
+def acquire_site(n,offline=False,force=False):
+ src=SRC/f'site_{n:02d}.json'; ident=IDENT/f'site_{n:02d}_identity.json'
+ if not src.exists(): raise RuntimeError(f'SOURCE_MISSING:{src}')
+ if not ident.exists(): raise RuntimeError(f'IDENTITY_RECEIPT_MISSING:{ident}')
+ d=json.loads(src.read_text()); identity=json.loads(ident.read_text())
+ source_sha=sha(src)
+ if identity.get('input_source_sha256')!=source_sha: raise RuntimeError(f'IDENTITY_SOURCE_HASH_MISMATCH site={n}')
+ if not force and acquisition_current(n,src,identity):
+  return json.loads((EVID/f'site_{n:02d}_acquisition.json').read_text())
+ identity_sha=identity.get('identity_sha256')
+ if not identity_sha: raise RuntimeError(f'IDENTITY_HASH_MISSING site={n}')
+ plan_bounds=aerial_bounds(d,False); area_bounds=aerial_bounds(d,True)
+ plan,plan_mode=fetch_naip(n,source_sha,identity_sha,plan_bounds,'plan',offline=offline)
+ area,area_mode=fetch_naip(n,source_sha,identity_sha,area_bounds,'area',offline=offline)
+ rec={
+  'compiler_version':'EVERCRAFT-RIVET-SITEPLAN-v1','site':n,'address':d.get('address'),
+  'source_record':str(src),'source_record_sha256':source_sha,
+  'identity_receipt':str(ident),'identity_sha256':identity_sha,
+  'aerials':{
+   'plan':{'path':str(plan),'sha256':sha(plan),'bytes':plan.stat().st_size,'bounds':plan_bounds,'source':'USGS/USDA NAIP via The National Map','mode':plan_mode},
+   'area':{'path':str(area),'sha256':sha(area),'bytes':area.stat().st_size,'bounds':area_bounds,'source':'USGS/USDA NAIP via The National Map','mode':area_mode}
+  },
+  'acquisition_complete':True,'external_delivery_authorized':False
+ }
+ out=EVID/f'site_{n:02d}_acquisition.json'; out.write_text(json.dumps(rec,indent=2)+'\n')
+ print('ACQUIRED',n,plan_mode,area_mode,'sha',sha(out))
+ return rec
+
 def compile_site(n):
  src=SRC/f'site_{n:02d}.json'; acq=EVID/f'site_{n:02d}_acquisition.json'
  if not acq.exists(): raise RuntimeError(f'acquisition receipt missing for site {n}')
