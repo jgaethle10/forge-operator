@@ -1,0 +1,44 @@
+function normalizeBaseUrl(value) {
+  const url = new URL(String(value || '').trim());
+  if (url.protocol !== 'https:' && url.hostname !== 'localhost' && url.hostname !== '127.0.0.1') {
+    throw new Error('Notification Fabric base URL must use HTTPS.');
+  }
+  return url.origin;
+}
+
+export function createNotificationClient(options = {}) {
+  const baseUrl = normalizeBaseUrl(options.baseUrl || process.env.EVERCRAFT_NOTIFICATION_BASE_URL || 'http://localhost:3000');
+  const token = String(options.token ?? process.env.EVERCRAFT_NOTIFICATION_INGEST_TOKEN ?? '').trim();
+  const fetchImpl = options.fetchImpl || fetch;
+  const timeoutMs = Math.max(250, Math.min(Number(options.timeoutMs ?? 5000), 30000));
+
+  if (!token) throw new Error('Notification Fabric ingest token is required.');
+
+  async function post(pathname, payload) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      const response = await fetchImpl(`${baseUrl}${pathname}`, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+        signal: controller.signal,
+      });
+      const body = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(body?.error || `Notification Fabric request failed (${response.status}).`);
+      }
+      return body;
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
+  return {
+    notify(intent) { return post('/api/notifications/intents', intent); },
+    signal(signal) { return post('/api/notifications/signals', signal); },
+  };
+}
