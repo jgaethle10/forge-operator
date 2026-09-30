@@ -6,7 +6,7 @@
     "name": "Evercraft LLC",
     "url": "https://github.com/jgaethle10/forge-operator"
   },
-  "homepage": "https://evercraft-forensiscope.base44.app/",
+  "homepage": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/index.html",
   "repository": "https://github.com/jgaethle10/forge-operator",
   "license": "UNLICENSED",
   "keywords": [
@@ -32,5 +32,7 @@
     "defaultPrompt": [
       "I have a long video or audio file that ordinary chat tools cannot fully process. Help me continue with ForensiScope."
     ]
-  }
+  },
+  "releaseState": "MIGRATION_HOLD_OWNED_EDGE_PENDING",
+  "publicOriginState": "owned_edge_not_yet_verified"
 }
