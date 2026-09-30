@@ -66,21 +66,30 @@ export function scoreObservationForScope(observation, scopeInput) {
     topic: scope.topics.filter((x) => hasToken(terms, x))
   };
 
-  const subjectCriteriaCount =
+  const hardSubjectCriteriaCount =
     scope.assets.length +
     scope.facilities.length +
-    scope.routes.length +
+    scope.routes.length;
+
+  const hardSubjectMatchCount =
+    matches.asset.length +
+    matches.facility.length +
+    matches.route.length;
+
+  const interestCriteriaCount =
     scope.dependencies.length +
     scope.industries.length +
     scope.topics.length;
 
-  const subjectMatchCount =
-    matches.asset.length +
-    matches.facility.length +
-    matches.route.length +
+  const interestMatchCount =
     matches.dependency.length +
     matches.industry.length +
     matches.topic.length;
+
+  const hasHardBoundary =
+    scope.region_keys.length > 0 ||
+    scope.domains.length > 0 ||
+    hardSubjectCriteriaCount > 0;
 
   const scope_gates = {
     region: {
@@ -92,15 +101,20 @@ export function scoreObservationForScope(observation, scopeInput) {
       passed: scope.domains.length === 0 || matches.domain.length > 0
     },
     subject: {
-      required: subjectCriteriaCount > 0,
-      passed: subjectCriteriaCount === 0 || subjectMatchCount > 0
+      required: hardSubjectCriteriaCount > 0,
+      passed: hardSubjectCriteriaCount === 0 || hardSubjectMatchCount > 0
+    },
+    interest: {
+      required: interestCriteriaCount > 0 && !hasHardBoundary,
+      passed: interestCriteriaCount === 0 || interestMatchCount > 0 || hasHardBoundary
     }
   };
 
   const hasAnyCriteria =
     scope_gates.region.required ||
     scope_gates.domain.required ||
-    scope_gates.subject.required;
+    scope_gates.subject.required ||
+    scope_gates.interest.required;
 
   if (!hasAnyCriteria) {
     return {
