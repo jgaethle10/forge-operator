@@ -5,6 +5,7 @@ on:
     paths:
       - 'systemia/media-studio/longform-checkpoints.ts'
       - 'systemia/media-studio/longform-checkpoints.test.ts'
+      - 'systemia/media-studio/longform-cli.ts'
       - 'systemia/media-studio/master-qc.ts'
       - '.github/workflows/fallen-longform-checkpoints.yml'
   workflow_dispatch:
