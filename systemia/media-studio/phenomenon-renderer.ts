@@ -116,6 +116,18 @@ function finite(value: unknown) {
   return typeof value === 'number' && Number.isFinite(value);
 }
 
+const COLOR_RX = /^#[0-9a-fA-F]{3,8}$/;
+const MAX_STREAMS = 1000;
+const MAX_SAMPLES = 5000;
+
+function validLat(value: unknown) {
+  return finite(value) && Number(value) >= -90 && Number(value) <= 90;
+}
+
+function validLon(value: unknown) {
+  return finite(value) && Number(value) >= -180 && Number(value) <= 180;
+}
+
 function safeId(value: string) {
   return clean(value).replace(/[^a-zA-Z0-9._-]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 128);
 }
@@ -132,6 +144,9 @@ export function validatePhenomenon(input: PhenomenonInput) {
   } else {
     if (bounds.north <= bounds.south) errors.push('bounds_latitude_order_invalid');
     if (bounds.east === bounds.west) errors.push('bounds_longitude_span_invalid');
+    if (!validLat(bounds.north) || !validLat(bounds.south) || !validLon(bounds.east) || !validLon(bounds.west)) {
+      errors.push('bounds_coordinate_range_invalid');
+    }
   }
 
   const sourceRefs = unique(input?.source?.refs);
@@ -147,7 +162,7 @@ export function validatePhenomenon(input: PhenomenonInput) {
 
   const streams = input?.field?.streamlines ?? [];
   if (!streams.length) errors.push('streamlines_missing');
-  if (streams.length > 5000) errors.push('streamline_count_exceeded');
+  if (streams.length > MAX_STREAMS) errors.push('streamline_count_exceeded');
 
   let sampleCount = 0;
   for (const stream of streams) {
@@ -157,12 +172,12 @@ export function validatePhenomenon(input: PhenomenonInput) {
       continue;
     }
     sampleCount += stream.points.length;
-    if (sampleCount > 250000) {
+    if (sampleCount > MAX_SAMPLES) {
       errors.push('stream_sample_count_exceeded');
       break;
     }
     for (const point of stream.points) {
-      if (!finite(point.lat) || !finite(point.lon)) {
+      if (!validLat(point.lat) || !validLon(point.lon)) {
         errors.push(`stream_coordinate_invalid:${stream.id || 'unknown'}`);
         break;
       }
@@ -188,6 +203,9 @@ export function validatePhenomenon(input: PhenomenonInput) {
       errors.push('color_range_invalid');
     }
     if (color.palette && color.palette.length < 2) errors.push('color_palette_too_short');
+    if (color.palette && (color.palette.length > 16 || color.palette.some((value) => !COLOR_RX.test(clean(value))))) {
+      errors.push('color_palette_invalid');
+    }
   }
 
   const brightness = input?.encoding?.brightness;
