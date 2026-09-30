@@ -91,3 +91,15 @@ test('phenomenon canvas fails closed when encoded values or provenance are missi
   assert.equal(result.status, 'rejected');
   assert.ok(result.errors.some((error) => error.startsWith('field_source_ref_outside_source:')));
 });
+
+
+test('phenomenon canvas rejects unsafe palette input at the compiler boundary', () => {
+  const unsafe: PhenomenonInput = structuredClone(input);
+  unsafe.encoding.color = {
+    ...unsafe.encoding.color!,
+    palette: ['#0055ff', 'red);background:url(https://example.invalid)'],
+  };
+  const result = validatePhenomenon(unsafe);
+  assert.equal(result.status, 'rejected');
+  assert.ok(result.errors.includes('color_palette_invalid'));
+});
