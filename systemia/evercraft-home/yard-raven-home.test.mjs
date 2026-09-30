@@ -41,3 +41,10 @@ test("Raven overview stays a read surface and does not add execution endpoints",
   assert.equal(server.includes('"/api/raven/execute"'),false);
   assert.equal(server.includes('"/api/raven/dispatch"'),false);
 });
+
+
+test("Home inline application JavaScript remains syntactically valid",()=>{
+  const match=html.match(/<script>([\s\S]*?)<\/script>/);
+  assert.ok(match,"inline script missing");
+  assert.doesNotThrow(()=>new Function(match[1]));
+});
