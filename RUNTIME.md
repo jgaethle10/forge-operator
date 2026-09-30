@@ -82,3 +82,15 @@ Forge now exposes a first-party Rewards migration boundary:
 This first slice intentionally has **no economic write authority**. It cannot mutate wallet points, Arcade XP, prize entries, cash value, promotional odds, provider fulfillment, or the Daily Prize Ticket. Subject identifiers are hashed in the owned store, writes are atomic, and duplicate run keys are idempotent.
 
 Base44 remains temporary compatibility for the unmigrated Rewards wallet/auth/value surfaces only. The Scratch Lab owned-runtime canary must pass persistent-storage, route, rollback, and observation gates before any Base44 Scratch Lab write path is retired.
+
+
+## Evercraft Clip owned public edge
+
+Forge/Yard now carries a read-only Clip discovery and planning edge:
+
+- `GET /api/clip` - capability discovery; `?view=openapi` and `?view=llms` expose machine-readable documentation.
+- `POST /api/clip` - deterministic non-executing `capabilities`, `plan_job`, and `plan_distribution_campaign` actions.
+- `GET /mcp/evercraft-clip?action=health` - owned MCP health.
+- `POST /mcp/evercraft-clip` - Streamable HTTP JSON-RPC for `get_clip_capabilities`, `plan_clip_job`, and `plan_distribution_campaign`.
+
+The owned public edge has no upload, checkout, payment, rendering, or publication authority. Existing provider execution lanes remain compatibility-only until each first-party social adapter passes provider authorization, live canary, readback, rollback, and observation gates. Do not update the public Clip registry away from its legacy endpoint until the Yard route and MCP contract are independently verified.
