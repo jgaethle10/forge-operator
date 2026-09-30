@@ -26,6 +26,8 @@ The first bounded Direct Mode slice is live in source:
 - `POST /api/systemia/plan` prepares a Systemia control-plane mission plan.
 - `GET /api/yard/overview` reads sanitized persisted Yard deployment evidence.
 - `GET /api/raven/overview` reads Raven registry, provider-matrix and Nexus probe-contract evidence without claiming a private runtime.
+- `POST /api/raven/command-plan` lets the authenticated founder route a bounded work request into Systemia from Raven's Command Desk.
+- Raven Command Desk planning explicitly returns `execution_authority_granted=false` and `ai_inference_used=false`.
 - Planning explicitly returns `execution_authority_granted=false`.
 - The browser home includes a restrained "What do you want to do?" field that submits into that planning route.
 - No mission execution, external communication, purchase, deployment, trust change, or other consequential action is authorized by the Home planning field.
@@ -83,7 +85,7 @@ SOVEREIGN_AI_ORIGIN=
 
 Missing configuration reports `not_connected`. It is never promoted to healthy.
 
-Home now exposes Raven's registry, provider matrix and Nexus probe contracts as a first-class executive read surface while explicitly holding the private-runtime state unless a standalone owned Raven human runtime is evidenced. The Yard surface exposes sanitized persisted deployment state including workload class, runtime fabric and verification metadata, while excluding lease secrets, credentials and private endpoints.
+Home now exposes Raven's registry, provider matrix and Nexus probe contracts as a first-class executive read surface while explicitly holding the private-runtime state unless a standalone owned Raven human runtime is evidenced. The Raven Command Desk is a separate direct founder-to-Systemia route: it prepares a receipted Systemia plan and shows routing/holds, but does not pretend an AI answered and does not grant execution authority. The Yard surface exposes sanitized persisted deployment state including workload class, runtime fabric and verification metadata, while excluding lease secrets, credentials and private endpoints.
 
 ## Verification
 
