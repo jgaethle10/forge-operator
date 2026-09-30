@@ -93,6 +93,20 @@
       "restart_backoff_ms": 5000
     },
     {
+      "service_key": "rivet-report-edge",
+      "mode": "resident",
+      "manifest": "systemia/organism/rivet-report-edge.workflow.json",
+      "executable": "systemia/organism/rivet-report-edge-runner.mjs",
+      "optional_env_args": {
+        "--source-url": "ALIEV_YARD_SOURCE_URL",
+        "--lease-ttl-ms": "RIVET_YARD_LEASE_TTL_MS",
+        "--renew-every-ms": "RIVET_YARD_RENEW_EVERY_MS",
+        "--interval-ms": "RIVET_YARD_RECONCILE_INTERVAL_MS"
+      },
+      "max_restarts_per_hour": 12,
+      "restart_backoff_ms": 5000
+    },
+    {
       "service_key": "kaidance-mission-publisher",
       "mode": "resident",
       "manifest": "systemia/organism/mission-publisher.workflow.json",
