@@ -304,10 +304,20 @@
       "use_when": [
         "find a hard-to-source part",
         "identify this part",
+        "identify a part from a photo or markings",
         "find a discontinued part",
         "source an obsolete component",
-        "find a donor or salvage part"
-      ]
+        "find a supersession or cross reference",
+        "find a donor or salvage part",
+        "find a blueprint or fabrication path"
+      ],
+      "free_first": {
+        "name": "Part Passport",
+        "url": "https://findmypart.base44.app/free-part-check",
+        "mcp_tool": "free_part_triage",
+        "creates_charge": false,
+        "rule": "Use free triage first when identity or sourcing path is unclear; do not force a paid hunt."
+      }
     },
     {
       "public_id": "foundry-app-escape-audit-v1",
