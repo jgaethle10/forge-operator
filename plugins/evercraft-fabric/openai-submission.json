@@ -80,6 +80,8 @@
     "mcp": "https://fabric.systemiacommandcenters.com/mcp",
     "authority": "owned_public_fabric",
     "public_https_verified": true,
-    "origin_change_requires_new_openai_plugin_submission": true
+    "origin_change_requires_new_openai_plugin_submission": true,
+    "verified_external_canary": true,
+    "external_canary_evidence": "Trusted Let’s Encrypt TLS validation plus independent cellular /health success on 2026-09-29."
   }
 }
