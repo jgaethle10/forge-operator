@@ -94,6 +94,7 @@ test('compiler detects invalid not-required lanes and missing evidence', () => {
           product_key: 'demo',
           contract_version: '1.0.0',
           owner: 'systemia',
+          adoption_stage: 'shared_runtime',
           authority: {
             state: 'declared',
             passport_product: 'demo',
@@ -188,6 +189,13 @@ test('production ratchet passes while grandfathered debt remains visible', () =>
   assert.deepEqual(mesh.ratchet.new_direct_door_without_contract, []);
   assert.deepEqual(mesh.ratchet.new_specialist_only_doors, []);
   assert.ok(mesh.summary.missing_contract_count > 0);
+  assert.equal(mesh.summary.shared_runtime_contract_count, 3);
+  assert.equal(mesh.summary.private_runtime_contract_count, 1);
+  assert.equal(mesh.summary.discovery_only_contract_count, 2);
+  assert.deepEqual(
+    mesh.priority_queues.contracted_not_shared_runtime,
+    ['evernest-atlas', 'opportunity-fabric', 'systemia-university']
+  );
 });
 
 test('new public product without a contract becomes a blocking ratchet regression', () => {
@@ -336,4 +344,26 @@ test('new specialist-only door is blocked for explicit review rather than auto-p
         row.specialist_slug === 'new-held'
     )
   );
+});
+
+
+test('new current-trunk products are explicitly contracted without overclaiming shared runtime', () => {
+  const mesh = renderCapabilityMesh(process.cwd());
+  const evernest = mesh.products.find((row) => row.product_key === 'evernest-atlas');
+  const opportunity = mesh.products.find((row) => row.product_key === 'opportunity-fabric');
+  const university = mesh.products.find((row) => row.product_key === 'systemia-university');
+
+  assert.equal(evernest.contract_state, 'complete_declaration');
+  assert.equal(evernest.adoption_stage, 'discovery_only');
+  assert.equal(opportunity.contract_state, 'complete_declaration');
+  assert.equal(opportunity.adoption_stage, 'private_runtime');
+  assert.equal(university.contract_state, 'complete_declaration');
+  assert.equal(university.adoption_stage, 'discovery_only');
+  assert.equal(mesh.ratchet.state, 'pass');
+  assert.deepEqual(mesh.ratchet.new_public_products.sort(), [
+    'evernest-atlas',
+    'opportunity-fabric',
+    'systemia-university',
+  ]);
+  assert.deepEqual(mesh.ratchet.new_public_products_without_contract, []);
 });
