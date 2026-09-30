@@ -1,0 +1,80 @@
+{
+  "schema": "evercraft.systemia.base44-migration-slice.v1",
+  "slice": "eps_social_owned_store_and_ingress",
+  "priority": 1,
+  "source": {
+    "platform": "base44",
+    "product": "Evercraft Clip",
+    "entities": [
+      "ContentPackage",
+      "PublishQueue",
+      "SocialPage",
+      "PagePublishHealth",
+      "PublisherHeartbeat",
+      "PostPublishVerification"
+    ],
+    "function": "systemiaEPSPublishIngress"
+  },
+  "target": {
+    "source_control": "github",
+    "orchestration": "systemia",
+    "runtime": "yard_evercraft_compute",
+    "state_store": "systemia/social/store.mjs",
+    "continuity_service": "systemia/social/eps-continuity.mjs",
+    "ingress": "/api/social/eps/continuity",
+    "ingest": "/api/social/packages",
+    "provider_adapter": "systemia/social/facebook-provider.mjs"
+  },
+  "model_reduction": {
+    "legacy_entities_required_for_eps_loop": 6,
+    "owned_state_domains": [
+      "content_packages",
+      "publish_queue",
+      "verification_receipts",
+      "page_health",
+      "publisher_heartbeats"
+    ],
+    "social_page_identity_moved_to_provider_secret_and_canary_contract": true
+  },
+  "migrated_now": [
+    "owned_content_package_state",
+    "owned_publish_queue_state",
+    "owned_cadence_and_daily_cap",
+    "owned_publish_preflight",
+    "owned_verification_receipts",
+    "owned_page_health",
+    "owned_publisher_heartbeat",
+    "owned_private_scheduler_ingress",
+    "direct_meta_provider_primitive"
+  ],
+  "held": [
+    "production_durable_storage_binding",
+    "historical_pending_queue_reconciliation",
+    "meta_runtime_credentials",
+    "facebook_identity_canary",
+    "live_approved_publish_canary",
+    "legacy_base44_queue_write_freeze",
+    "legacy_base44_ingress_retirement_observation"
+  ],
+  "invariants": [
+    "Base44 URLs are not publishable content on the owned path",
+    "Base44 hosts are rejected as continuity ingress",
+    "provider publication must be explicitly enabled",
+    "provider credentials must be private runtime secrets",
+    "published is not verified until exact provider readback passes",
+    "missing owned configuration holds rather than falling back"
+  ],
+  "acceptance": {
+    "source_tests": false,
+    "durable_store_verified": false,
+    "pending_queue_reconciled": false,
+    "scheduler_owned_route_verified": false,
+    "provider_identity_verified": false,
+    "publish_canary_verified": false,
+    "provider_readback_verified": false,
+    "rollback_target_present": false,
+    "legacy_absence_window_verified": false
+  },
+  "next_action": "after parent severance PR merges, bind durable SOCIAL_STATE_DIR and owned social tokens on Yard, reconcile approved pending EPS rows into /api/social/packages, run Facebook identity-only canary, then one bounded approved publish with exact provider readback before freezing legacy Clip queue writes",
+  "destructive_cutover_allowed": false
+}

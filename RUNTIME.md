@@ -109,3 +109,19 @@ Forge now carries the first direct provider adapter used to remove Clip's Base44
 - `POST /api/social/providers/facebook/identity-canary` - verifies page identity and create-content authority without publishing.
 
 The provider primitive can publish a feed post and requires exact provider-visible message readback before returning `verified: true`, but no autonomous queue is routed to it until credentials, live canary, rollback and observation gates pass.
+
+
+## Owned EPS social state
+
+The EPS Facebook continuity loop now has a first-party data and execution boundary on Forge/Yard.
+
+- `SOCIAL_STATE_DIR` - durable private storage for content packages, publish queue rows, verification receipts, page health, and publisher heartbeat. Production must bind authorized persistent storage.
+- `SOCIAL_INGEST_TOKEN` - private bearer token for approved content-package/queue ingestion.
+- `SOCIAL_CONTINUITY_TOKEN` - private bearer token used by the Systemia resident scheduler.
+- `POST /api/social/packages` - records an owned content package and optional queue row.
+- `POST /api/social/eps/continuity` - evaluates EPS cadence, local-day cap, owned preflight, direct Facebook provider write, exact provider readback, verification receipt, health, and heartbeat.
+- `GET /api/social/providers/health` - reports provider readiness and owned social-store counts without returning secrets or post bodies.
+
+The continuity route fails closed if publishing is not explicitly enabled or provider credentials are absent. Content containing a Base44 URL is blocked from publication. The old Base44 Clip ingress is not a runtime fallback.
+
+Base44 social ingress URLs are rejected by the resident continuity worker even if supplied accidentally. The scheduler no longer reads the legacy `EVERCRAFT_CLIP_EPS_INGRESS_URL` variable.

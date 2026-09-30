@@ -73,6 +73,8 @@ jobs:
         run: npm run test:machine-commerce-owned
       - name: Prove owned social provider adapters
         run: npm run test:social-providers
+      - name: Prove owned EPS social state
+        run: npm run test:eps-social-owned
       - name: Prove KAIDANCE collider
         run: node systemia/collider/proof.mjs
       - name: Prove off-Base44 EPS social continuity

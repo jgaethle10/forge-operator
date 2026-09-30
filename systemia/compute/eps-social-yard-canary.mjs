@@ -28,7 +28,7 @@ async function waitJson(file,timeoutMs=60000){
 }
 
 const outFile=path.resolve(arg('--out','artifacts/base44-exit/eps-social-yard-canary.json'));
-const clipUrl=String(process.env.EVERCRAFT_CLIP_EPS_INGRESS_URL||'').trim();
+const clipUrl=String(process.env.EVERCRAFT_SOCIAL_CONTINUITY_URL||'').trim();
 const sourceSecretFile=String(process.env.SYSTEMIA_CLIP_SHARED_SECRET_FILE||'').trim();
 const releaseRef=String(process.env.EVERCRAFT_RELEASE_REF||process.env.GITHUB_SHA||'').trim();
 
