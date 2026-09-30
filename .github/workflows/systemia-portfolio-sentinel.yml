@@ -95,6 +95,9 @@ jobs:
       - name: Prove Sentinel contract
         run: node systemia/organism/portfolio-sentinel.proof.mjs
 
+      - name: Prove Journal freshness forcing function
+        run: node --test systemia/organism/journal-freshness.test.mjs
+
       - name: Prove architectural invariants and trigger modes
         run: npm run test:sentinel-invariants
 
@@ -143,6 +146,7 @@ jobs:
           PORTFOLIO_SENTINEL_GITHUB_OWNER: jgaethle10
           PORTFOLIO_SENTINEL_AUTO_HEAL: ${{ github.event_name == 'pull_request' && 'false' || 'true' }}
           PORTFOLIO_SENTINEL_ENFORCE_HEALTH: ${{ github.event_name == 'pull_request' && 'false' || 'true' }}
+          EVERCRAFT_JOURNAL_URL: https://evercraftjournal.base44.app/
         run: node systemia/organism/portfolio-sentinel-runner.mjs --max-urls 200
 
       - name: Save Sentinel state
@@ -187,6 +191,7 @@ jobs:
             echo "Trigger modes: push + schedule + manual simulated from one shared policy"
             echo "Repair memory: learned failure fingerprints mapped to bounded recipes"
             echo "Health gate: critical/high findings fail closed until cleared"
+            echo "Journal freshness floor: checked every cycle; >24h warns and >36h becomes a blocking portfolio finding"
             echo "Production mutation: human-gated"
             echo
             for FILE in artifacts/portfolio-sentinel/latest.json artifacts/portfolio-sentinel/estate-convergence.json artifacts/portfolio-sentinel/repair-queue.json artifacts/portfolio-sentinel/repair-memory.json artifacts/human-experience/latest.json artifacts/capability-promotion/latest.json; do
