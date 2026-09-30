@@ -1,6 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 
 const src=fs.readFileSync(new URL('../scripts/evercraft-public-edge-map.mjs',import.meta.url),'utf8');
 
@@ -26,4 +28,11 @@ test('UPnP parser handles namespaced service descriptors and emits diagnostics',
   assert.match(src,/matching_services/);
   assert.match(src,/advertised_service_types/);
   assert.match(src,/descriptor_status/);
+});
+
+
+test('router mapper parses under the repository Node runtime',()=>{
+  const scriptPath = fileURLToPath(new URL('../scripts/evercraft-public-edge-map.mjs', import.meta.url));
+  const checked = spawnSync(process.execPath, ['--check', scriptPath], { encoding: 'utf8' });
+  assert.equal(checked.status, 0, checked.stderr || checked.stdout);
 });
