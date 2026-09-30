@@ -9,7 +9,8 @@
     "internal_recurring_base44_schedulers_allowed": false,
     "base44_llm_as_default_inference_path_allowed": false,
     "base44_as_runtime_authority_allowed": false,
-    "base44_role": "legacy_extraction_compatibility_and_bounded_transition_only"
+    "base44_role": "legacy_extraction_compatibility_and_bounded_transition_only",
+    "base44_core_integrations_allowed": false
   },
   "replacement": {
     "canonical_source": "github",
@@ -27,7 +28,11 @@
       "systemia/yard/operator.mjs",
       "systemia/compute/node-seed.mjs",
       "systemia/network/outbound-capacity-broker.mjs"
-    ]
+    ],
+    "integration_gateway": "systemia/core/core-gateway.mjs",
+    "integration_client_shim": "systemia/core/core-client.js",
+    "integration_gateway_owner": "evercraft",
+    "integration_gateway_legacy_transport": false
   },
   "frozen_internal_workflows": [
     "systemia_internal_wake_every_5_minutes",
@@ -39,6 +44,7 @@
   ],
   "temporary_legacy_exceptions": [],
   "cutover_gates": [
+    "core_gateway_proof_pass",
     "replacement_runtime_live",
     "kaidance_pulse_healthy",
     "route_verification_pass",
