@@ -15,6 +15,15 @@ const sourceSnapshot={
   postal_code:'98908',
   retrieved_at:'2026-09-25T20:00:00.000Z',
   coverage_contract:{utility_tariff:{state:'SCREENING_EVIDENCE_PRESENT'}},
+  source_coverage_manifest:{
+  schema:'evercraft.rivet.source-coverage.v1',
+  generated_at:'2026-09-25T20:00:00.000Z',
+  domains:Object.fromEntries([
+    'geocoding','charging_inventory','traffic','traffic_temporal','utility_service_area','utility_tariff','incentives',
+    'parcel_planning','local_ev_stock','observed_sessions','freight','dwell_context','deep_market_evidence','provenance'
+  ].map(key=>[key,{state:'CONNECTED',record_count:1,source_status:'proof'}])),
+  semantics:'Every report-relevant source domain is explicit. Missing is never zero.'
+},
   traffic:[{aadt:22100,source:'proof'}],
   chargers:[{name:'Proof charger'}],
   incentives:[{name:'Proof program'}],
@@ -43,6 +52,14 @@ assert.equal(record.verification.football_opened,true);
 assert.equal(record.verification.source_sha256_match,true);
 assert.equal(record.report.body.generation_state,'ready');
 assert.equal(record.report.body.metrics.max_aadt,22100);
+assert.equal(record.verification.full_source_snapshot_persisted,true);
+assert.equal(record.verification.full_source_snapshot_reopened_and_verified,true);
+assert.equal(record.verification.source_coverage_manifest_verified,true);
+assert.ok(record.source_snapshot.store_ref.startsWith('source-snapshots/'));
+assert.equal(record.source_snapshot.coverage_manifest.schema,'evercraft.rivet.source-coverage.v1');
+assert.equal(Object.keys(record.source_snapshot.coverage_manifest.domains).length,14);
+assert.equal(record.report.body.source.snapshot_sha256,record.source_snapshot.sha256);
+assert.equal(record.report.body.source.snapshot_ref,record.source_snapshot.store_ref);
 assert.deepEqual(progress.map(x=>x.stage),['address_admitted','site_intelligence','source_verified','football_packing','football_transfer','evidence_integrity','report_render','ready']);
 assert.deepEqual(progress.map(x=>x.percent),[13,25,38,50,63,75,88,100]);
 assert.equal(progress.find(x=>x.stage==='source_verified').detail.charger_records,1);
@@ -59,6 +76,8 @@ const runtime=await startRivetReportRuntime({
 try{
   const health=await fetch(runtime.service_url+'/health').then(r=>r.json());
   assert.equal(health.ok,true);
+  assert.equal(health.full_source_snapshot_persistence,true);
+  assert.equal(health.source_coverage_manifest_required,true);
 
   const denied=await fetch(runtime.service_url+'/v1/reports',{
     method:'POST',headers:{'content-type':'application/json'},
@@ -96,6 +115,16 @@ try{
   const stored=await fetched.json();
   assert.equal(stored.report.sha256,made.report.sha256);
 
+  const source=await fetch(runtime.service_url+'/v1/reports/'+encodeURIComponent(made.report_id)+'/source',{
+    headers:{'authorization':'Bearer proof-team-token'}
+  });
+  assert.equal(source.status,200);
+  const sourceBody=await source.json();
+  assert.equal(sourceBody.sha256,made.source_snapshot.sha256);
+  assert.equal(sourceBody.byte_count,made.source_snapshot.byte_count);
+  assert.equal(sourceBody.source_snapshot.response_profile,'rivet_report_snapshot_v1');
+  assert.equal(sourceBody.source_snapshot.source_coverage_manifest.schema,'evercraft.rivet.source-coverage.v1');
+
   console.log(JSON.stringify({
     ok:true,
     schema:'evercraft.rivet.yard-report-proof.v1',
@@ -103,6 +132,9 @@ try{
     beast_football_source_snapshot:true,
     team_auth_fail_closed:true,
     exact_source_hash_verified:true,
+    full_source_snapshot_persisted:true,
+    source_retrieval_verified:true,
+    explicit_source_coverage_verified:true,
     report_id:made.report_id
   },null,2));
 }finally{
