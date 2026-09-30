@@ -28,9 +28,9 @@
       "confirmation": "Public discovery and pilot-scope preparation create no monitoring authority, source access, Passport grant, payment obligation, production authority, emergency authority, or external action. Customer monitoring requires separate scoped onboarding and explicit authorization.",
       "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/systemia/worldstate",
       "payment_authority": "No direct Worldstate payment path is approved.",
-      "invocation_status": "SOURCE READY: Worldstate and Reality Delta are merged on Forge main with executable proof coverage. A Forge-owned read-only pilot MCP is being bound at /mcp/worldstate for offer inspection and bounded pilot-scope preparation. Do not claim public runtime availability until an independent HTTPS canary verifies the deployed route.",
+      "invocation_status": "SOURCE READY: Forge-owned Worldstate read-only pilot MCP is implemented at /mcp/worldstate for canonical offer inspection and bounded non-person pilot-scope preparation. It creates no monitoring authority, Passport grant, source access, checkout, payment, production mutation, emergency authority, or external action. Do not claim public runtime availability until an independent HTTPS canary verifies the deployed route.",
       "live_canary_evidence": null,
-      "catalog_version": "2026-09-30.2"
+      "catalog_version": "2026-09-30.3"
     }
   ]
 }
