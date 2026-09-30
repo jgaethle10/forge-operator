@@ -1,16 +1,16 @@
 # Evercraft AI Suite plugin
 
-This folder packages Evercraft's universal Machine Commerce MCP as a reusable AI plugin.
+This folder packages the Evercraft-owned Fabric MCP as a reusable AI plugin.
 
 ## Purpose
 
-The plugin gives an AI assistant one pain-first Evercraft front door instead of requiring users to know product names. It can discover public capabilities, inspect current public offers, invoke bounded public tools where supported, and prepare human-confirmed commercial continuations.
+The plugin gives an AI assistant one pain-first Evercraft front door instead of requiring users to know product names. It can discover public capabilities, discover public capabilities and route toward verified owned specialist surfaces without granting payment or external-action authority.
 
 ## MCP
 
 Remote MCP:
 
-`https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp`
+`https://fabric.systemiacommandcenters.com/mcp`
 
 ## Truth boundary
 
