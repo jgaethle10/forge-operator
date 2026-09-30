@@ -236,7 +236,8 @@
     "proof:worldstate-phenomenon": "node systemia/worldstate/phenomenon-bridge.proof.mjs",
     "proof:evercraft-hosting": "node systemia/compute/hosting-control-plane.proof.mjs",
     "proof:aliev-rivet-owned": "node systemia/compute/aliev-rivet-owned-lane.proof.mjs",
-    "proof:aliev-migration": "node systemia/aliev/snapshot-bundle.proof.mjs"
+    "proof:aliev-migration": "node systemia/aliev/snapshot-bundle.proof.mjs",
+    "proof:aliev-extractor": "node systemia/migrations/base44-exit/aliev-extractor.proof.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
