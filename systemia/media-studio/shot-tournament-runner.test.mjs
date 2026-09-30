@@ -38,7 +38,7 @@ function candidate(id,beauty,continuity=.9){
       observation(id,'continuity',continuity,.85),
       observation(id,'brand_fidelity',id==='a'?.91:.86),
       observation(id,'beauty',beauty,.8),
-      observation(id,'editability',.98,1),
+      observation(id,'editability',1,1),
     ],
   };
 }
