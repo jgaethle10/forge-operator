@@ -2,7 +2,8 @@
   "schema": "evercraft.context-fabric.subscriptions.v1",
   "always": [
     "systemia_world_model",
-    "sentinel"
+    "sentinel",
+    "journal"
   ],
   "by_domain": {
     "weather": [

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx server.ts",
-    "build": "vite build",
+    "build": "npm run journal:build && vite build",
     "preview": "vite preview",
     "start": "tsx server.ts",
     "clean": "rm -rf dist server.js",
@@ -239,7 +239,10 @@
     "proof:aliev-migration": "node systemia/aliev/snapshot-bundle.proof.mjs",
     "proof:aliev-extractor": "node systemia/migrations/base44-exit/aliev-extractor.proof.mjs",
     "proof:rivet-cutover": "node systemia/rivet/cutover-controller.proof.mjs",
-    "proof:aliev-domain-engine": "node systemia/aliev/domain-engine.proof.mjs"
+    "proof:aliev-domain-engine": "node systemia/aliev/domain-engine.proof.mjs",
+    "journal:test": "node --test systemia/newsroom/*.test.mjs",
+    "journal:build": "node systemia/newsroom/journal-publisher.mjs systemia/newsroom/stories public/journal",
+    "test:industrial-base": "node --test systemia/industrial-base/*.test.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
