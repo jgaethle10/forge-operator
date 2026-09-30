@@ -179,7 +179,6 @@ export function registerNotificationFabricRoutes(app, options = {}) {
         jti: req.relaySession.jti,
       },
     });
-    res.setHeader?.('X-Relay-Connection-Id', connection.connection_id);
   });
 
   app.get('/api/notifications/inbox', requireSession('inbox'), (req, res) => {
