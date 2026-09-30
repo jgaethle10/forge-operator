@@ -65,6 +65,7 @@ test('expired worker leases are recovered after process death', () => {
   assert.equal(recovered[0].id, job.id);
   assert.equal(recovered[0].recovery_count, 1);
   assert.equal(recovered[0].attempts, 2);
+  assert.equal(recovered[0].failures, 0);
 });
 
 test('worker retries failures with backoff then completes without losing the job', async () => {
@@ -265,6 +266,7 @@ test('dead letters can be explicitly requeued with a fresh attempt budget', asyn
   const requeued = outbox.requeueDeadLetter(job.id, { now: 6_000, max_attempts: 3 });
   assert.equal(requeued.status, 'retry');
   assert.equal(requeued.attempts, 0);
+  assert.equal(requeued.failures, 0);
   assert.equal(requeued.max_attempts, 3);
   assert.equal(requeued.dead_lettered_at, null);
 });
@@ -378,4 +380,41 @@ test('registered Relay runtime exposes canonical durable enqueue without leaking
   assert.equal(first.job.id, second.job.id);
   assert.equal(first.intent.id, 'runtime-enqueue-1');
   assert.equal(relay.outbox.get(first.job.id).kind, 'intent');
+});
+
+
+test('repeated lease recovery does not exhaust the real failure budget', async () => {
+  const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'relay-crash-budget-'));
+  const outbox = createRelayOutbox({ dataDir });
+  const job = outbox.enqueue({
+    kind: 'intent',
+    payload: { intent: { id: 'crash-budget-1' } },
+    max_attempts: 1,
+    now: 1_000,
+  });
+  for (let i = 0; i < 5; i += 1) {
+    const now = 1_000 + i * 2_000;
+    const claimed = outbox.claim({ worker_id: `crashed-${i}`, lease_ms: 1_000, now });
+    assert.equal(claimed.length, 1);
+  }
+  const recovered = outbox.get(job.id);
+  assert.equal(recovered.failures, 0);
+  assert.equal(recovered.status, 'processing');
+
+  const fabric = {
+    dispatchIntent: async (intent) => ({
+      intent,
+      accepted: 1,
+      realtime_delivered: 0,
+      inboxed: 1,
+      targeted_principal_ids: [],
+    }),
+    dispatchSignal: async () => ({}),
+    store: { getInboxItem: () => null, recordDelivery: () => ({}) },
+  };
+  const worker = createRelayWorker({ fabric, outbox, workerId: 'healthy-worker', leaseMs: 1_000 });
+  const result = await worker.runOnce({ now: 11_001 });
+  assert.equal(result.results[0].status, 'completed');
+  assert.equal(outbox.get(job.id).status, 'completed');
+  assert.equal(outbox.get(job.id).failures, 0);
 });
