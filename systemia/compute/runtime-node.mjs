@@ -1317,15 +1317,33 @@ export async function startEvercraftComputeNode({
             return send(res, 403, { error: 'rivet_report_state_outside_admitted_root' });
           }
 
+          const sourceUrl = String(
+            body.input?.source_url ||
+            process.env.ALIEV_YARD_SOURCE_URL ||
+            ''
+          ).trim();
+          if (!sourceUrl) {
+            return send(res, 503, { error: 'aliev_owned_source_url_required' });
+          }
+          let source;
+          try {
+            source = new URL(sourceUrl);
+          } catch {
+            return send(res, 400, { error: 'aliev_owned_source_url_invalid' });
+          }
+          if (/(^|\\.)base44\\.app$/i.test(source.hostname)) {
+            return send(res, 403, { error: 'aliev_owned_source_must_not_use_base44' });
+          }
+          const loopbackSource = ['127.0.0.1', 'localhost', '::1'].includes(source.hostname);
+          if (source.protocol !== 'https:' && !loopbackSource) {
+            return send(res, 403, { error: 'aliev_owned_source_must_use_https' });
+          }
+
           const runtime = await startRivetReportRuntime({
             stateDir: stateRoot,
             host: '127.0.0.1',
             port: Number(body.input?.port || 0),
-            sourceUrl: String(
-              body.input?.source_url ||
-              process.env.ALIEV_YARD_SOURCE_URL ||
-              'https://base44.app/api/apps/69b9b64d86a732029ce0db81/functions/energySiteLookup'
-            ),
+            sourceUrl,
             systemiaMachineKey: process.env.SYSTEMIA_MACHINE_KEY || '',
             teamToken: process.env.RIVET_YARD_TEAM_TOKEN || ''
           });
