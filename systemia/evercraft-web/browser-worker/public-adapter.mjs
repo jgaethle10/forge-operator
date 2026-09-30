@@ -1,16 +1,49 @@
 import http from 'node:http';
 
 const MAX_BODY_BYTES = 64 * 1024;
+const CONTROL_ROOM_COOKIE = '__Secure-evercraft_control_room';
 
-function sendJson(res,status,body){
+function sendJson(res,status,body,extraHeaders={}){
   const data=Buffer.from(JSON.stringify(body));
   res.writeHead(status,{
     'content-type':'application/json; charset=utf-8',
     'content-length':data.length,
     'cache-control':'no-store',
-    'x-content-type-options':'nosniff'
+    'x-content-type-options':'nosniff',
+    ...extraHeaders
   });
   res.end(data);
+}
+
+function cookieValue(req,name){
+  const raw=String(req.headers.cookie||'');
+  for(const pair of raw.split(';')){
+    const index=pair.indexOf('=');
+    if(index<0) continue;
+    if(pair.slice(0,index).trim()!==name) continue;
+    try{return decodeURIComponent(pair.slice(index+1).trim());}catch{return '';}
+  }
+  return '';
+}
+
+function assertControlRoomRequest(req){
+  if(String(req.headers['x-evercraft-control-room']||'')!=='1'){
+    throw new Error('control_room_request_header_required');
+  }
+}
+
+function accessCookie(sessionId,token,expiresAt){
+  const remaining=Math.max(1,Math.min(3600,Math.ceil((new Date(expiresAt).getTime()-Date.now())/1000)));
+  return CONTROL_ROOM_COOKIE+'='+encodeURIComponent(String(token||''))+
+    '; Max-Age='+remaining+
+    '; Path=/v1/auth-browser/sessions/'+encodeURIComponent(String(sessionId||''))+
+    '; HttpOnly; Secure; SameSite=Strict; Priority=High';
+}
+
+function clearAccessCookie(sessionId){
+  return CONTROL_ROOM_COOKIE+'=; Max-Age=0; Path=/v1/auth-browser/sessions/'+
+    encodeURIComponent(String(sessionId||''))+
+    '; HttpOnly; Secure; SameSite=Strict; Priority=High';
 }
 
 function sendHtml(res,status,body){
@@ -101,9 +134,12 @@ export async function startBrowserPublicAdapter({
           private_targets:false,
           authenticated_human_handoff:
             typeof runtime.authHandoffPage==='function' &&
+            typeof runtime.authRedeem==='function' &&
             typeof runtime.authSnapshot==='function' &&
             typeof runtime.authAction==='function' &&
             typeof runtime.authClose==='function',
+          authenticated_handoff_one_time_claim:true,
+          authenticated_handoff_http_only_cookie:true,
           authenticated_handoff_persists_profile:false,
           authenticated_handoff_secret_text_returned:false,
           max_request_bytes:MAX_BODY_BYTES,
@@ -118,13 +154,31 @@ export async function startBrowserPublicAdapter({
         return sendHtml(res,200,await runtime.authHandoffPage(handoffMatch[1]));
       }
 
+      const redeemMatch=String(req.url||'').match(/^\/v1\/auth-browser\/sessions\/([A-Za-z0-9_-]+)\/redeem$/);
+      if(req.method==='POST' && redeemMatch){
+        if(typeof runtime.authRedeem!=='function'){
+          return sendJson(res,503,{ok:false,error:'authenticated_browser_handoff_unavailable'});
+        }
+        assertControlRoomRequest(req);
+        const claim=String(req.headers['x-evercraft-browser-claim']||'').trim();
+        const redeemed=await runtime.authRedeem(redeemMatch[1],claim);
+        const accessToken=String(redeemed?.access_token||'');
+        if(!accessToken) throw new Error('authenticated_browser_access_token_missing');
+        const safe={...redeemed};
+        delete safe.access_token;
+        return sendJson(res,200,safe,{
+          'set-cookie':accessCookie(redeemMatch[1],accessToken,redeemed.expires_at),
+        });
+      }
+
       const snapshotMatch=String(req.url||'').match(/^\/v1\/auth-browser\/sessions\/([A-Za-z0-9_-]+)\/snapshot$/);
       if(req.method==='GET' && snapshotMatch){
         if(typeof runtime.authSnapshot!=='function'){
           return sendJson(res,503,{ok:false,error:'authenticated_browser_handoff_unavailable'});
         }
-        const claim=String(req.headers['x-evercraft-browser-claim']||'').trim();
-        return sendJson(res,200,await runtime.authSnapshot(snapshotMatch[1],claim));
+        assertControlRoomRequest(req);
+        const access=cookieValue(req,CONTROL_ROOM_COOKIE);
+        return sendJson(res,200,await runtime.authSnapshot(snapshotMatch[1],access));
       }
 
       const actionMatch=String(req.url||'').match(/^\/v1\/auth-browser\/sessions\/([A-Za-z0-9_-]+)\/action$/);
@@ -132,9 +186,10 @@ export async function startBrowserPublicAdapter({
         if(typeof runtime.authAction!=='function'){
           return sendJson(res,503,{ok:false,error:'authenticated_browser_handoff_unavailable'});
         }
-        const claim=String(req.headers['x-evercraft-browser-claim']||'').trim();
+        assertControlRoomRequest(req);
+        const access=cookieValue(req,CONTROL_ROOM_COOKIE);
         const action=await readJson(req);
-        return sendJson(res,200,await runtime.authAction(actionMatch[1],claim,action));
+        return sendJson(res,200,await runtime.authAction(actionMatch[1],access,action));
       }
 
       const closeMatch=String(req.url||'').match(/^\/v1\/auth-browser\/sessions\/([A-Za-z0-9_-]+)$/);
@@ -142,8 +197,10 @@ export async function startBrowserPublicAdapter({
         if(typeof runtime.authClose!=='function'){
           return sendJson(res,503,{ok:false,error:'authenticated_browser_handoff_unavailable'});
         }
-        const claim=String(req.headers['x-evercraft-browser-claim']||'').trim();
-        return sendJson(res,200,await runtime.authClose(closeMatch[1],claim));
+        assertControlRoomRequest(req);
+        const access=cookieValue(req,CONTROL_ROOM_COOKIE);
+        const result=await runtime.authClose(closeMatch[1],access);
+        return sendJson(res,200,result,{'set-cookie':clearAccessCookie(closeMatch[1])});
       }
 
       if(req.method==='POST' && req.url==='/v1/browser/render'){
@@ -163,7 +220,12 @@ export async function startBrowserPublicAdapter({
       return sendJson(res,404,{ok:false,error:'not_found'});
     }catch(error){
       const message=error instanceof Error?error.message:String(error);
-      const authError=message==='authenticated_browser_claim_invalid';
+      const authError=
+        message==='authenticated_browser_claim_invalid' ||
+        message==='authenticated_browser_access_invalid' ||
+        message==='authenticated_browser_claim_not_redeemed';
+      const forbiddenError=message==='control_room_request_header_required';
+      const conflictError=message==='authenticated_browser_claim_already_redeemed';
       const missingError=message==='authenticated_browser_session_not_found';
       const clientError=
         message==='request_body_too_large' ||
@@ -181,7 +243,7 @@ export async function startBrowserPublicAdapter({
         message.startsWith('unsupported_action') ||
         message.startsWith('invalid_selector') ||
         message.startsWith('invalid_anchor_selector');
-      return sendJson(res,authError?401:missingError?404:clientError?400:500,{
+      return sendJson(res,authError?401:forbiddenError?403:conflictError?409:missingError?404:clientError?400:500,{
         ok:false,
         error:message,
         service:'evercraft-web-browser-edge'

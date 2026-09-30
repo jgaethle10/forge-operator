@@ -97,7 +97,7 @@ export function renderHumanBrowserHandoffPage({ sessionId }) {
     '</aside>',
     '</main>',
     '<div class="dock"><div class="dockin">',
-    '<div class="typebar"><button id="privacy" class="privacy" aria-pressed="true" title="Private typing is on">Private</button><input id="text" class="secret" type="password" autocomplete="new-password" autocapitalize="none" placeholder="Type into the focused browser field" aria-label="Secure browser typing"><button id="type" class="send">Send</button></div>',
+    '<div class="typebar"><button id="privacy" class="privacy" aria-pressed="true" title="Private typing is on">Private</button><input id="text" class="secret" type="password" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" data-1p-ignore data-lpignore="true" placeholder="Type into the focused browser field" aria-label="Secure browser typing"><button id="type" class="send">Send</button></div>',
     '<div class="keys"><button class="key" data-key="Tab">Tab</button><button class="key" data-key="Enter">Enter</button><button class="key" data-key="Backspace">⌫</button><button class="key" data-key="Escape">Esc</button><button class="key" data-key="ArrowUp">↑</button><button class="key" data-key="ArrowDown">↓</button><button class="key" id="scrollup">Scroll up</button><button class="key" id="scrolldown">Scroll down</button><span class="spacer"></span><button class="key" id="fullscreen">Full screen</button><button class="key" id="refresh">Refresh</button><button class="key" id="close2">End session</button></div>',
     '<div class="sessionline"><span class="live" id="state">Evercraft secure handoff</span><span>•</span><span id="status">Connecting to browser…</span></div>',
     '</div></div>',
@@ -107,17 +107,18 @@ export function renderHumanBrowserHandoffPage({ sessionId }) {
     '(function(){',
     'const sessionId=' + JSON.stringify(safeId) + ';',
     'const hash=new URLSearchParams(location.hash.slice(1));',
-    'const claim=hash.get("claim")||"";',
+    'let bootstrapClaim=hash.get("claim")||"";',
     'history.replaceState(null,"",location.pathname);',
     'const $=function(id){return document.getElementById(id)};',
     'const shot=$("shot"),screen=$("screen"),status=$("status"),urlInput=$("url"),textInput=$("text"),connection=$("connection"),site=$("site"),transport=$("transport"),expires=$("expires"),actions=$("actions"),state=$("state"),toast=$("toast");',
     'let busy=false,closed=false,actionCount=0,privateTyping=true,lastHash="",refreshTimer=null;',
     'function announce(message){toast.textContent=message;toast.classList.add("show");setTimeout(function(){toast.classList.remove("show")},1500)}',
     'function setBusy(next,label){busy=next;screen.classList.toggle("loading",next);document.querySelectorAll("button").forEach(function(button){button.disabled=next&&button.id!=="close"&&button.id!=="close2"});if(label)status.textContent=label}',
-    'async function api(path,options){options=options||{};const headers=Object.assign({},options.headers||{},{"x-evercraft-browser-claim":claim});const response=await fetch(path,Object.assign({},options,{headers,cache:"no-store"}));const body=await response.json().catch(function(){return {}});if(!response.ok)throw new Error(body.error||("http_"+response.status));return body;}',
+    'async function api(path,options){options=options||{};const headers=Object.assign({},options.headers||{},{"x-evercraft-control-room":"1"});const response=await fetch(path,Object.assign({},options,{headers,cache:"no-store",credentials:"same-origin"}));const body=await response.json().catch(function(){return {}});if(!response.ok)throw new Error(body.error||("http_"+response.status));return body;}',
+    'async function redeem(){if(!bootstrapClaim)throw new Error("handoff_claim_missing");const claim=bootstrapClaim;const response=await fetch("/v1/auth-browser/sessions/"+encodeURIComponent(sessionId)+"/redeem",{method:"POST",headers:{"x-evercraft-browser-claim":claim,"x-evercraft-control-room":"1"},credentials:"same-origin",cache:"no-store"});const body=await response.json().catch(function(){return {}});if(!response.ok)throw new Error(body.error||("redeem_http_"+response.status));bootstrapClaim="";return body;}',
     'function domainFrom(value){try{return new URL(value).hostname}catch{return "—"}}',
     'function updateExpiry(value){if(!value){expires.textContent="—";return}const date=new Date(value);expires.textContent=date.toLocaleTimeString([], {hour:"numeric",minute:"2-digit"});}',
-    'async function refresh(silent){if(closed||busy&&!silent)return;try{if(!silent)setBusy(true,"Refreshing secure view…");const data=await api("/v1/auth-browser/sessions/"+encodeURIComponent(sessionId)+"/snapshot");if(data.screenshot_sha256!==lastHash){shot.src="data:image/png;base64,"+data.screenshot_base64;lastHash=data.screenshot_sha256||""}shot.dataset.width=String(data.viewport.width);shot.dataset.height=String(data.viewport.height);urlInput.value=data.url||"";connection.textContent="Connected";connection.style.color="var(--good)";site.textContent=domainFrom(data.url);transport.textContent=data.secure_transport?"Encrypted HTTPS":"HTTP";transport.style.color=data.secure_transport?"var(--good)":"var(--warn)";$("lock").style.color=data.secure_transport?"var(--good)":"var(--warn)";updateExpiry(data.expires_at);state.textContent="Evercraft secure handoff";status.textContent=data.title||"Ready";screen.classList.remove("loading");}catch(error){connection.textContent="Needs attention";connection.style.color="var(--danger)";state.textContent="Connection issue";state.className="error";status.textContent=error.message;screen.classList.remove("loading");if(!silent)announce("Session needs attention")}finally{if(!silent)setBusy(false)}}',
+    'async function refresh(silent){if(closed||busy&&!silent)return false;try{if(!silent)setBusy(true,"Refreshing secure view…");const data=await api("/v1/auth-browser/sessions/"+encodeURIComponent(sessionId)+"/snapshot");if(data.screenshot_sha256!==lastHash){shot.src="data:image/png;base64,"+data.screenshot_base64;lastHash=data.screenshot_sha256||""}shot.dataset.width=String(data.viewport.width);shot.dataset.height=String(data.viewport.height);urlInput.value=data.url||"";connection.textContent="Connected";connection.style.color="var(--good)";site.textContent=domainFrom(data.url);transport.textContent=data.secure_transport?"Encrypted HTTPS":"HTTP";transport.style.color=data.secure_transport?"var(--good)":"var(--warn)";$("lock").style.color=data.secure_transport?"var(--good)":"var(--warn)";updateExpiry(data.expires_at);state.textContent="Evercraft secure handoff";state.className="live";status.textContent=data.title||"Ready";screen.classList.remove("loading");return true;}catch(error){connection.textContent="Needs attention";connection.style.color="var(--danger)";state.textContent="Connection issue";state.className="error";status.textContent=error.message;screen.classList.remove("loading");if(!silent)announce("Session needs attention");return false;}finally{if(!silent)setBusy(false)}}',
     'async function act(action,label){if(closed||busy)return;try{setBusy(true,label||"Applying…");const result=await api("/v1/auth-browser/sessions/"+encodeURIComponent(sessionId)+"/action",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(action)});actionCount=result.action_count||actionCount+1;actions.textContent=String(actionCount);updateExpiry(result.expires_at);await refresh(true);}catch(error){status.textContent=error.message;announce("Action failed")}finally{setBusy(false)}}',
     'shot.addEventListener("click",function(event){if(busy||closed)return;const rect=shot.getBoundingClientRect(),width=Number(shot.dataset.width||1280),height=Number(shot.dataset.height||800),x=Math.round((event.clientX-rect.left)*width/rect.width),y=Math.round((event.clientY-rect.top)*height/rect.height);act({type:"click",x:x,y:y},"Clicking…")});',
     '$("type").onclick=async function(){const text=textInput.value;if(!text)return;textInput.value="";await act({type:"type",text:text},"Typing securely…");textInput.focus()};',
@@ -132,7 +133,8 @@ export function renderHumanBrowserHandoffPage({ sessionId }) {
     'async function endSession(){if(closed)return;try{setBusy(true,"Closing session…");await api("/v1/auth-browser/sessions/"+encodeURIComponent(sessionId),{method:"DELETE"});closed=true;connection.textContent="Closed";connection.style.color="var(--muted)";state.textContent="Session closed";status.textContent="The isolated browser context has been destroyed.";shot.removeAttribute("src");document.querySelectorAll("button,input").forEach(function(node){node.disabled=true})}catch(error){status.textContent="Close failed: "+error.message}finally{screen.classList.remove("loading")}}',
     '$("close").onclick=endSession;$("close2").onclick=endSession;',
     'document.addEventListener("visibilitychange",function(){if(!document.hidden&&!closed)refresh(true)});',
-    'refresh(false);refreshTimer=setInterval(function(){if(!document.hidden&&!busy&&!closed)refresh(true)},1800);',
+    'async function boot(){try{setBusy(true,bootstrapClaim?"Securing Control Room…":"Resuming Control Room…");if(bootstrapClaim){const redeemed=await redeem();updateExpiry(redeemed.expires_at);state.textContent="One-time handoff redeemed";}const ready=await refresh(true);if(!ready)throw new Error(bootstrapClaim?"handoff_resume_failed":"handoff_session_unavailable");refreshTimer=setInterval(function(){if(!document.hidden&&!busy&&!closed)refresh(true)},1800);}catch(error){connection.textContent="Access denied";connection.style.color="var(--danger)";state.textContent="Handoff unavailable";state.className="error";status.textContent=error.message;announce("Secure handoff could not be opened")}finally{setBusy(false)}}',
+    'boot();',
     'window.addEventListener("pagehide",function(){if(refreshTimer)clearInterval(refreshTimer)});',
     '})();',
     '</script></body></html>'
@@ -186,6 +188,8 @@ export class AuthenticatedBrowserSessionManager {
     const session = {
       id,
       claimHash: sha256(claimToken),
+      claimRedeemedAt: null,
+      accessHash: null,
       context,
       page: null,
       createdAt: Date.now(),
@@ -230,16 +234,50 @@ export class AuthenticatedBrowserSessionManager {
     };
   }
 
-  requireSession(id, claimToken) {
+  sessionForId(id) {
     const session = this.sessions.get(String(id || ''));
     if (!session) throw new Error('authenticated_browser_session_not_found');
     if (session.expiresAt <= Date.now()) throw new Error('authenticated_browser_session_expired');
-    if (!claimToken || !tokenEqualPlainToHash(claimToken, session.claimHash)) throw new Error('authenticated_browser_claim_invalid');
     return session;
   }
 
-  async snapshot(id, claimToken) {
-    const session = this.requireSession(id, claimToken);
+  redeemClaim(id, claimToken) {
+    const session = this.sessionForId(id);
+    if (session.claimRedeemedAt || !session.claimHash) {
+      throw new Error('authenticated_browser_claim_already_redeemed');
+    }
+    if (!claimToken || !tokenEqualPlainToHash(claimToken, session.claimHash)) {
+      throw new Error('authenticated_browser_claim_invalid');
+    }
+
+    const accessToken = crypto.randomBytes(32).toString('base64url');
+    session.accessHash = sha256(accessToken);
+    session.claimHash = null;
+    session.claimRedeemedAt = Date.now();
+
+    return {
+      ok: true,
+      session_id: session.id,
+      access_token: accessToken,
+      claim_redeemed: true,
+      claim_redeemed_at: new Date(session.claimRedeemedAt).toISOString(),
+      expires_at: new Date(session.expiresAt).toISOString(),
+    };
+  }
+
+  requireSession(id, accessToken) {
+    const session = this.sessionForId(id);
+    if (!session.claimRedeemedAt || !session.accessHash) {
+      throw new Error('authenticated_browser_claim_not_redeemed');
+    }
+    if (!accessToken || !tokenEqualPlainToHash(accessToken, session.accessHash)) {
+      throw new Error('authenticated_browser_access_invalid');
+    }
+    return session;
+  }
+
+  async snapshot(id, accessToken) {
+    const session = this.requireSession(id, accessToken);
     const page = session.page;
     const png = await page.screenshot({ type: 'png', fullPage: false, animations: 'disabled', caret: 'hide' });
     return {
@@ -257,8 +295,8 @@ export class AuthenticatedBrowserSessionManager {
     };
   }
 
-  async act(id, claimToken, rawAction) {
-    const session = this.requireSession(id, claimToken);
+  async act(id, accessToken, rawAction) {
+    const session = this.requireSession(id, accessToken);
     if (session.actionCount >= 500) throw new Error('authenticated_browser_action_limit');
     const action = normalizeHumanBrowserAction(rawAction);
     const page = session.page;
@@ -283,12 +321,10 @@ export class AuthenticatedBrowserSessionManager {
     };
   }
 
-  async closeSession(id, claimToken = null) {
+  async closeSession(id, accessToken = null) {
     const session = this.sessions.get(String(id || ''));
     if (!session) return { ok: true, closed: false };
-    if (claimToken !== null && (!claimToken || !tokenEqualPlainToHash(claimToken, session.claimHash))) {
-      throw new Error('authenticated_browser_claim_invalid');
-    }
+    if (accessToken !== null) this.requireSession(id, accessToken);
     this.sessions.delete(session.id);
     await session.context.close().catch(() => {});
     return { ok: true, closed: true, session_id: session.id };

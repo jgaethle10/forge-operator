@@ -78,6 +78,10 @@ function browserClaim(req) {
   return String(req.headers['x-evercraft-browser-claim'] || '').trim();
 }
 
+function browserAccess(req) {
+  return String(req.headers['x-evercraft-browser-access'] || '').trim();
+}
+
 async function readJson(req) {
   let size = 0;
   const chunks = [];
@@ -386,13 +390,23 @@ const server = http.createServer(async (req,res) => {
       return;
     }
 
+    const redeemMatch = pathname.match(/^\/v1\/auth-browser\/sessions\/([A-Za-z0-9_-]+)\/redeem$/);
+    if (req.method === 'POST' && redeemMatch) {
+      if (!authSessions) {
+        json(res,503,{ok:false,error:'authenticated_browser_disabled'});
+        return;
+      }
+      json(res,200,authSessions.redeemClaim(redeemMatch[1],browserClaim(req)));
+      return;
+    }
+
     const snapshotMatch = pathname.match(/^\/v1\/auth-browser\/sessions\/([A-Za-z0-9_-]+)\/snapshot$/);
     if (req.method === 'GET' && snapshotMatch) {
       if (!authSessions) {
         json(res,503,{ok:false,error:'authenticated_browser_disabled'});
         return;
       }
-      json(res,200,await authSessions.snapshot(snapshotMatch[1],browserClaim(req)));
+      json(res,200,await authSessions.snapshot(snapshotMatch[1],browserAccess(req)));
       return;
     }
 
@@ -403,7 +417,7 @@ const server = http.createServer(async (req,res) => {
         return;
       }
       const body = await readJson(req);
-      json(res,200,await authSessions.act(actionMatch[1],browserClaim(req),body));
+      json(res,200,await authSessions.act(actionMatch[1],browserAccess(req),body));
       return;
     }
 
@@ -413,7 +427,7 @@ const server = http.createServer(async (req,res) => {
         json(res,503,{ok:false,error:'authenticated_browser_disabled'});
         return;
       }
-      json(res,200,await authSessions.closeSession(closeMatch[1],browserClaim(req)));
+      json(res,200,await authSessions.closeSession(closeMatch[1],browserAccess(req)));
       return;
     }
 
@@ -445,10 +459,15 @@ const server = http.createServer(async (req,res) => {
     const message = error instanceof Error ? error.message : String(error);
     const authErrors = new Set([
       'authenticated_browser_claim_invalid',
+      'authenticated_browser_access_invalid',
+      'authenticated_browser_claim_not_redeemed',
       'authenticated_browser_operator_credential_required'
     ]);
     const missingErrors = new Set([
       'authenticated_browser_session_not_found'
+    ]);
+    const conflictErrors = new Set([
+      'authenticated_browser_claim_already_redeemed'
     ]);
     const safeClientErrors = new Set([
       'invalid_json',
@@ -470,7 +489,7 @@ const server = http.createServer(async (req,res) => {
       'unsupported_key',
       'unsupported_human_browser_action'
     ]);
-    const status = authErrors.has(message) ? 401 : missingErrors.has(message) ? 404 : safeClientErrors.has(message) || message.startsWith('unsupported_action') || message.startsWith('invalid_selector') || message.startsWith('invalid_anchor_selector') ? 400 : 500;
+    const status = authErrors.has(message) ? 401 : conflictErrors.has(message) ? 409 : missingErrors.has(message) ? 404 : safeClientErrors.has(message) || message.startsWith('unsupported_action') || message.startsWith('invalid_selector') || message.startsWith('invalid_anchor_selector') ? 400 : 500;
     json(res,status,{ok:false,error:message,engine:ENGINE});
   }
 });
