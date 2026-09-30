@@ -7,6 +7,12 @@ on:
       - 'systemia/network/public-edge-runtime.mjs'
       - 'systemia/network/public-edge-tls.mjs'
       - 'systemia/mcp/specialist-handoff-runtime.mjs'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'systemia/mcp/fabric-public-site.mjs'
+      - 'plugins/evercraft-fabric/PRIVACY.md'
+      - 'plugins/evercraft-fabric/SUPPORT.md'
+      - 'plugins/evercraft-fabric/TERMS.md'
+      - 'scripts/build-evercraft-openai-plugin.sh'
       - 'systemia/yard/public-edge-controller.mjs'
       - '.github/workflows/evercraft-public-edge-canary.yml'
   workflow_dispatch:
@@ -61,6 +67,19 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+
+          verify_listing_page() {
+            local path="$1"
+            local expected="$2"
+            local body
+            body="$(curl --fail --silent --show-error --max-time 20 "${SPECIALIST_ORIGIN%/}$path")"
+            printf '%s' "$body" | grep -Fq "$expected"
+          }
+
+          verify_listing_page "/" "Evercraft Fabric"
+          verify_listing_page "/support" "Evercraft Fabric Support"
+          verify_listing_page "/privacy" "Evercraft Fabric Privacy Policy"
+          verify_listing_page "/terms" "Evercraft Fabric Terms of Service"
 
           health="$(curl --fail --silent --show-error --max-time 20 "${SPECIALIST_ORIGIN%/}/health")"
           printf '%s' "$health" | jq -e '
@@ -188,6 +207,8 @@ jobs:
               mcp_tools_list_verified:true,
               mcp_tool_calls_verified:true,
               read_only_authority_verified:true,
+              listing_pages_verified:true,
+              listing_pages:["/","/support","/privacy","/terms"],
               founder_login_required:false,
               external_saas_route_provider_required:false,
               observed_at:$observed
@@ -223,11 +244,8 @@ jobs:
             --receipt artifacts/evercraft-public-edge-canary.json \\
             --origin "$SPECIALIST_ORIGIN"
           node scripts/validate-openai-plugin-submission.mjs
-          mkdir -p artifacts
-          (
-            cd plugins/evercraft-fabric
-            zip -qr ../../artifacts/evercraft-openai-owned-plugin.zip . -x '*.DS_Store'
-          )
+          bash scripts/build-evercraft-openai-plugin.sh
+          cp artifacts/evercraft-openai-plugin.zip artifacts/evercraft-openai-owned-plugin.zip
           test -s artifacts/evercraft-openai-owned-plugin.zip
           npm run direct:check
 
