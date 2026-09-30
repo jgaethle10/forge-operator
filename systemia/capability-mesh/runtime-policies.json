@@ -1,7 +1,7 @@
 {
   "schema": "evercraft.capability-mesh.runtime-policies.v1",
   "generated_from": "systemia/capability-mesh/contracts.json",
-  "policy_count": 3,
+  "policy_count": 6,
   "policies": [
     {
       "schema": "evercraft.capability-mesh.runtime-policy.v1",
@@ -9,6 +9,7 @@
       "product_name": "AliEV",
       "product_class": "ev_infrastructure_opportunity_intelligence",
       "contract_version": "1.0.0",
+      "adoption_stage": "shared_runtime",
       "owner": "systemia",
       "authority": {
         "state": "declared",
@@ -113,6 +114,7 @@
       "product_name": "ForensiScope",
       "product_class": "ai_media_overflow_and_analysis",
       "contract_version": "1.0.0",
+      "adoption_stage": "shared_runtime",
       "owner": "systemia",
       "authority": {
         "state": "declared",
@@ -219,6 +221,7 @@
       "product_name": "Evercraft Clip",
       "product_class": "ai_social_video_production_and_governed_distribution",
       "contract_version": "1.0.0",
+      "adoption_stage": "shared_runtime",
       "owner": "systemia",
       "authority": {
         "state": "declared",
@@ -328,11 +331,214 @@
       "runtime_verified": false,
       "grants_authority": false,
       "truth_boundary": "This runtime policy compiles declared product semantics. It does not grant Passport authority, entitlement, payment, live runtime readiness, or provider pickup."
+    },
+    {
+      "schema": "evercraft.capability-mesh.runtime-policy.v1",
+      "product_key": "evernest-atlas",
+      "product_name": "EverNest Atlas",
+      "product_class": "adult_household_life_planning",
+      "contract_version": "1.0.0",
+      "adoption_stage": "discovery_only",
+      "owner": "systemia",
+      "authority": {
+        "state": "not_required",
+        "reason": "Public admission is discovery-only. Private account-bound life planning remains inside the authenticated product and is not yet exposed through shared Passport scopes."
+      },
+      "context": {
+        "state": "not_required",
+        "reason": "Private household, financial, career, values, location, stress, plan and account data remain product-private; no shared Context Fabric namespace is declared yet."
+      },
+      "meter": {
+        "state": "not_required",
+        "reason": "Displayed subscription tiers or prices are not proof of active billing or entitlement, and no shared Meter contract is established."
+      },
+      "intake": {
+        "state": "not_required",
+        "reason": "No public machine intake contract is declared; user-supplied planning inputs remain inside the authenticated product boundary."
+      },
+      "execution": {
+        "state": "not_required",
+        "reason": "No shared machine execution action is declared. Generated plans are guidance and consequential actions require separate verification and human confirmation."
+      },
+      "relationship": {
+        "state": "not_required",
+        "reason": "The public discovery surface does not contact third parties or perform outbound relationship actions."
+      },
+      "receipt_reconciliation": {
+        "state": "not_required",
+        "reason": "No shared receipt-to-Context reconciliation contract has been established for private life-planning sessions."
+      },
+      "rollback": {
+        "state": "declared",
+        "policy": "Remove the public discovery admission or disable future shared-runtime bindings without exposing private household data or changing private account authority."
+      },
+      "compatibility": {
+        "intended_product_classes": [
+          "adult_household_life_planning"
+        ]
+      },
+      "boundaries": {
+        "adults_only": true,
+        "planning_guidance_not_guaranteed_outcome": true,
+        "private_household_and_financial_data_not_public": true,
+        "financial_legal_medical_tax_housing_safety_professional_advice_not_claimed": true,
+        "discovery_creates_payment_obligation": false,
+        "shared_runtime_contracted": false
+      },
+      "route": {
+        "specialist_slug": null,
+        "state": "not_declared",
+        "direct_callable": false,
+        "registry_published": false,
+        "preferred_route": null,
+        "blocking_gates": [],
+        "next_release_action": null
+      },
+      "runtime_verified": false,
+      "grants_authority": false,
+      "truth_boundary": "This runtime policy compiles declared product semantics. It does not grant Passport authority, entitlement, payment, live runtime readiness, or provider pickup."
+    },
+    {
+      "schema": "evercraft.capability-mesh.runtime-policy.v1",
+      "product_key": "opportunity-fabric",
+      "product_name": "Evercraft Opportunity Fabric",
+      "product_class": "protected_collaboration_partner_matching_and_execution_orchestration",
+      "contract_version": "1.0.0",
+      "adoption_stage": "private_runtime",
+      "owner": "systemia",
+      "authority": {
+        "state": "not_required",
+        "reason": "The verified v1.2.1 private runtime uses its own authenticated service-role and state re-verification. Shared Passport authority has not yet replaced or wrapped that private runtime."
+      },
+      "context": {
+        "state": "not_required",
+        "reason": "Safe metadata and protected workflow records remain inside the private Opportunity Fabric runtime; no shared Context Fabric namespace is declared yet."
+      },
+      "meter": {
+        "state": "not_required",
+        "reason": "No shared usage-meter or payment/escrow rail is claimed for the verified private runtime."
+      },
+      "intake": {
+        "state": "not_required",
+        "reason": "Public discovery is metadata-only and the private runtime has its own opportunity/member inputs. A shared Intake Fabric adapter has not yet been contracted."
+      },
+      "execution": {
+        "state": "not_required",
+        "reason": "Private execution blueprints, team invitations and work-package state are verified in the product runtime, but no shared Execution Gate action or public transactional route is declared yet."
+      },
+      "relationship": {
+        "state": "not_required",
+        "reason": "Protected connection requests and team invitations use Opportunity Fabric state, not the shared Interaction Ledger today."
+      },
+      "receipt_reconciliation": {
+        "state": "not_required",
+        "reason": "Opportunity Fabric has its own FabricEvent/disclosure receipts, but shared Context Receipt Bridge reconciliation has not yet been contracted."
+      },
+      "rollback": {
+        "state": "declared",
+        "policy": "Keep the public product discovery-only or disable future shared-runtime bindings without weakening metadata-first matching, purpose-bound disclosure, team-invitation, IP, or counsel-review gates."
+      },
+      "compatibility": {
+        "intended_product_classes": [
+          "protected_collaboration_partner_matching_and_execution_orchestration"
+        ]
+      },
+      "boundaries": {
+        "verified_private_runtime": true,
+        "public_transactional_marketplace_claimed": false,
+        "protected_matching_metadata_first": true,
+        "protected_file_delivery_enabled": false,
+        "client_supplied_identity_or_consent_authoritative": false,
+        "creator_covenant_final_legal_agreement": false,
+        "payment_or_escrow_claimed": false,
+        "shared_runtime_contracted": false
+      },
+      "route": {
+        "specialist_slug": null,
+        "state": "not_declared",
+        "direct_callable": false,
+        "registry_published": false,
+        "preferred_route": null,
+        "blocking_gates": [],
+        "next_release_action": null
+      },
+      "runtime_verified": false,
+      "grants_authority": false,
+      "truth_boundary": "This runtime policy compiles declared product semantics. It does not grant Passport authority, entitlement, payment, live runtime readiness, or provider pickup."
+    },
+    {
+      "schema": "evercraft.capability-mesh.runtime-policy.v1",
+      "product_key": "systemia-university",
+      "product_name": "Systemia University",
+      "product_class": "evidence_centered_learning_agent_proving_and_workforce_readiness",
+      "contract_version": "1.0.0",
+      "adoption_stage": "discovery_only",
+      "owner": "systemia",
+      "authority": {
+        "state": "not_required",
+        "reason": "Public admission is discovery-only. Evidence-centered missions and workforce workflows are not yet exposed as shared Passport-authorized machine actions."
+      },
+      "context": {
+        "state": "not_required",
+        "reason": "No shared Context Fabric namespace is declared for proving missions, preliminary reviews, proofs, or workforce profiles."
+      },
+      "meter": {
+        "state": "not_required",
+        "reason": "Discovery creates no payment obligation and no shared Meter contract is established."
+      },
+      "intake": {
+        "state": "not_required",
+        "reason": "External-lab submissions and mission inputs have no shared Intake Fabric contract yet."
+      },
+      "execution": {
+        "state": "not_required",
+        "reason": "Mission exercises are bounded simulations/evidence exercises unless live execution is separately verified; no shared execution action is declared."
+      },
+      "relationship": {
+        "state": "not_required",
+        "reason": "Public discovery does not contact people, publish externally, or perform staffing changes."
+      },
+      "receipt_reconciliation": {
+        "state": "not_required",
+        "reason": "No shared receipt-reconciliation contract has been established for mission evidence or competency reviews."
+      },
+      "rollback": {
+        "state": "declared",
+        "policy": "Disable public discovery or future shared-runtime bindings without converting simulations, provisional evidence, or human-reviewed competency claims into live authority."
+      },
+      "compatibility": {
+        "intended_product_classes": [
+          "evidence_centered_learning_agent_proving_and_workforce_readiness"
+        ]
+      },
+      "boundaries": {
+        "simulations_not_live_execution": true,
+        "missions_do_not_authorize_contact_spend_publish_staffing_or_production_mutation": true,
+        "one_success_not_broad_competency_proof": true,
+        "provisional_evidence_not_verified_evidence": true,
+        "competency_verification_human_reviewed": true,
+        "public_proof_requires_explicit_approval": true,
+        "discovery_creates_credential_or_employment_authority": false,
+        "shared_runtime_contracted": false
+      },
+      "route": {
+        "specialist_slug": null,
+        "state": "not_declared",
+        "direct_callable": false,
+        "registry_published": false,
+        "preferred_route": null,
+        "blocking_gates": [],
+        "next_release_action": null
+      },
+      "runtime_verified": false,
+      "grants_authority": false,
+      "truth_boundary": "This runtime policy compiles declared product semantics. It does not grant Passport authority, entitlement, payment, live runtime readiness, or provider pickup."
     }
   ],
   "truth_boundary": {
     "compiled_policy_is_not_grant": true,
     "compiled_policy_is_not_runtime_verification": true,
+    "non_shared_runtime_execution_fails_closed": true,
     "undeclared_scope_fails_closed": true,
     "undeclared_meter_metric_fails_closed": true
   }
