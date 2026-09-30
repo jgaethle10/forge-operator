@@ -11,6 +11,7 @@ test('AliEV contract compiles into a fail-closed runtime policy', () => {
   const policy = compileProductRuntimePolicy('aliev', process.cwd());
 
   assert.equal(policy.schema, 'evercraft.capability-mesh.runtime-policy.v1');
+  assert.equal(policy.adoption_stage, 'shared_runtime');
   assert.equal(policy.authority.passport_product, 'rivet');
   assert.deepEqual(policy.authority.scopes, ['report.generate']);
   assert.equal(policy.context.namespace, 'aliev');
@@ -204,11 +205,49 @@ test('context binding describes scopes but grants no access', () => {
 
 test('generated runtime policy artifact covers only explicitly contracted products', () => {
   const rendered = renderRuntimePolicies(process.cwd());
-  assert.equal(rendered.policy_count, 3);
+  assert.equal(rendered.policy_count, 6);
   assert.deepEqual(
     rendered.policies.map((row) => row.product_key),
-    ['aliev', 'forensiscope', 'evercraft-clip']
+    [
+      'aliev',
+      'forensiscope',
+      'evercraft-clip',
+      'evernest-atlas',
+      'opportunity-fabric',
+      'systemia-university',
+    ]
   );
+  assert.equal(rendered.truth_boundary.non_shared_runtime_execution_fails_closed, true);
   assert.equal(rendered.truth_boundary.undeclared_scope_fails_closed, true);
   assert.equal(rendered.truth_boundary.undeclared_meter_metric_fails_closed, true);
+});
+
+
+test('discovery-only and private-runtime contracts cannot be compiled into shared Execution Gate actions', () => {
+  assert.equal(
+    compileProductRuntimePolicy('evernest-atlas', process.cwd()).adoption_stage,
+    'discovery_only'
+  );
+  assert.equal(
+    compileProductRuntimePolicy('opportunity-fabric', process.cwd()).adoption_stage,
+    'private_runtime'
+  );
+  assert.equal(
+    compileProductRuntimePolicy('systemia-university', process.cwd()).adoption_stage,
+    'discovery_only'
+  );
+
+  for (const product_key of ['evernest-atlas', 'opportunity-fabric', 'systemia-university']) {
+    assert.throws(
+      () =>
+        buildExecutionGateInput({
+          product_key,
+          actor_ref: 'agent:test',
+          scope: 'anything',
+          request: { test: true },
+          idempotency_key: 'non-shared:' + product_key,
+        }),
+      /product_not_shared_runtime/
+    );
+  }
 });
