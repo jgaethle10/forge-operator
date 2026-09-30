@@ -145,8 +145,11 @@ function tagValue(block, localName) {
 }
 
 function extractServices(xml) {
-  const blocks =
-    xml.match(/<(?:[A-Za-z0-9_.-]+:)?service\\b[^>]*>[\\s\\S]*?<\\/(?:[A-Za-z0-9_.-]+:)?service>/gi) || [];
+  const serviceBlockRe = new RegExp(
+    '<(?:[A-Za-z0-9_.-]+:)?service\\b[^>]*>[\\s\\S]*?<\\/(?:[A-Za-z0-9_.-]+:)?service>',
+    'gi',
+  );
+  const blocks = xml.match(serviceBlockRe) || [];
   const preferred = [
     'urn:schemas-upnp-org:service:WANIPConnection:2',
     'urn:schemas-upnp-org:service:WANIPConnection:1',
@@ -217,7 +220,10 @@ async function upnpMap() {
       location,
       matching_services: services,
       advertised_service_types:
-        [...xml.matchAll(/<(?:[A-Za-z0-9_.-]+:)?serviceType\\b[^>]*>([^<]+)<\\/(?:[A-Za-z0-9_.-]+:)?serviceType>/gi)]
+        [...xml.matchAll(new RegExp(
+          '<(?:[A-Za-z0-9_.-]+:)?serviceType\\b[^>]*>([^<]+)<\\/(?:[A-Za-z0-9_.-]+:)?serviceType>',
+          'gi',
+        ))]
           .map(m => m[1].trim())
           .filter((v, i, a) => a.indexOf(v) === i),
     });
@@ -227,7 +233,10 @@ async function upnpMap() {
       try {
         const ipXml = await soap(control, service.serviceType, 'GetExternalIPAddress', '');
         result.external_ip =
-          ipXml.match(/<(?:[A-Za-z0-9_.-]+:)?NewExternalIPAddress>([^<]+)<\\/(?:[A-Za-z0-9_.-]+:)?NewExternalIPAddress>/i)?.[1] ||
+          ipXml.match(new RegExp(
+            '<(?:[A-Za-z0-9_.-]+:)?NewExternalIPAddress>([^<]+)<\\/(?:[A-Za-z0-9_.-]+:)?NewExternalIPAddress>',
+            'i',
+          ))?.[1] ||
           result.external_ip;
       } catch (e) {
         result.diagnostics.push({
