@@ -118,6 +118,9 @@ export function createEvercraftAppClient({
       async bulkCreate(records) {
         return await request('POST', `${root}/bulk`, records);
       },
+      async importEntities(records) {
+        return await request('POST', `${root}/import`, records);
+      },
       async updateMany(query, data) {
         return await request('PATCH', `${root}/update-many`, { query, data });
       },
@@ -247,11 +250,41 @@ export function createEvercraftAppClient({
     setToken(nextToken) {
       currentToken = String(nextToken || '').trim();
     },
+    async isAuthenticated() {
+      if (!currentToken && !tokenProvider) return false;
+      try {
+        await request('GET', `/api/apps/${encodeURIComponent(appKey)}/entities/User/me`);
+        return true;
+      } catch (error) {
+        if (error?.status === 401 || error?.status === 403) return false;
+        throw error;
+      }
+    },
     async me() {
       return await request('GET', `/api/apps/${encodeURIComponent(appKey)}/entities/User/me`);
     },
     async updateMe(patch) {
       return await request('PUT', `/api/apps/${encodeURIComponent(appKey)}/entities/User/me`, patch);
+    },
+    async register(input = {}, password = undefined) {
+      const body = typeof input === 'string'
+        ? { email: input, login: input, password }
+        : { ...(input || {}) };
+      return await request('POST', `/api/apps/${encodeURIComponent(appKey)}/auth/register`, body);
+    },
+    async verifyOtp(input = {}) {
+      return await request('POST', `/api/apps/${encodeURIComponent(appKey)}/auth/verify-otp`, input || {});
+    },
+    async resendOtp(input = {}) {
+      const body = typeof input === 'string' ? { email: input, login: input } : (input || {});
+      return await request('POST', `/api/apps/${encodeURIComponent(appKey)}/auth/resend-otp`, body);
+    },
+    async resetPasswordRequest(input = {}) {
+      const body = typeof input === 'string' ? { email: input, login: input } : (input || {});
+      return await request('POST', `/api/apps/${encodeURIComponent(appKey)}/auth/reset-password-request`, body);
+    },
+    async resetPassword(input = {}) {
+      return await request('POST', `/api/apps/${encodeURIComponent(appKey)}/auth/reset-password`, input || {});
     },
     async loginViaEmailPassword(login, password, extras = {}) {
       const result = await request('POST', `/api/apps/${encodeURIComponent(appKey)}/auth/login`, {
@@ -282,6 +315,14 @@ export function createEvercraftAppClient({
   };
 
   return {
+    getConfig() {
+      return {
+        appId: appKey,
+        baseUrl: origin,
+        serverUrl: origin,
+        transport: 'evercraft-app-fabric'
+      };
+    },
     entities,
     functions: {
       async invoke(functionName, input = {}) {
