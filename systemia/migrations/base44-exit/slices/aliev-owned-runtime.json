@@ -4,7 +4,7 @@
   "product": "AliEV",
   "wave": 3,
   "priority": "incident_p0",
-  "status": "source_dependency_extraction_active",
+  "status": "owned_source_runtime_landed_ui_data_auth_cutover_pending",
   "observed_direct_core_matches": 2,
   "observed_core_operations": [
     "invoke_llm",
@@ -23,14 +23,17 @@
     "source": "github",
     "orchestration": "systemia",
     "runtime": "yard_evercraft_compute",
-    "integrations": "systemia/core/core-gateway.mjs"
+    "integrations": "systemia/core/core-gateway.mjs",
+    "source_runtime": "systemia/aliev/source-runtime.mjs",
+    "app_runtime": "systemia/app-runtime/app-gateway.mjs",
+    "integration_gateway": "systemia/core/core-gateway.mjs"
   },
   "next": [
-    "extract current application source into a canonical owned product tree",
-    "replace direct Core integration calls with the owned client shim",
-    "enumerate and migrate entity, auth, file and function dependencies",
-    "bind the application to the owned runtime and public route",
-    "run report and artifact review parity tests before cutover"
+    "extract the AliEV UI source into a private canonical product tree without publishing commercial source",
+    "replace the generated Base44 SDK client seam with the Evercraft App Runtime client",
+    "migrate entity/auth/file/function state and verify reconciliation",
+    "bind the AliEV public specialist route to the verified Evercraft public edge",
+    "retire remaining legacy UI and specialist endpoints only after route and observation receipts pass"
   ],
   "done_when": [
     "source_extracted",
@@ -43,5 +46,9 @@
     "route_verification_pass",
     "rollback_target_present",
     "observation_window_pass"
-  ]
+  ],
+  "observed_owned_source_contract": "rivet_report_snapshot_v1",
+  "observed_owned_source_proof": "tests/aliev-owned-source-runtime.test.mjs",
+  "observed_rivet_embedded_source_proof": "systemia/yard/rivet-owned-source-runtime.proof.mjs",
+  "legacy_report_source_fallback": false
 }
