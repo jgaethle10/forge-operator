@@ -50,13 +50,13 @@ export function freezeForwardPaperCohort(candidateReview, evaluation, {
       no_retroactive_events: true,
     },
     live_trade_authority: false,
+    immutable: true,
   };
   const protocol_hash = digest(protocol);
   return {
     ...protocol,
     protocol_hash,
     cohort_id: "edgepaper_" + protocol_hash.slice(0,20),
-    immutable: true,
   };
 }
 
