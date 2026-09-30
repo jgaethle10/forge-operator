@@ -333,6 +333,31 @@ export function registerNotificationFabricRoutes(app, options = {}) {
     });
   });
 
+  app.post('/api/notifications/jobs/:id/requeue', requireIngest, (req, res) => {
+    const job = outbox.requeueDeadLetter(req.params.id, { max_attempts: req.body?.max_attempts });
+    if (!job) {
+      res.status(409).json({ success: false, error: 'Relay job is not a dead letter or does not exist.' });
+      return;
+    }
+    fabric.store.recordDelivery({
+      schema: 'systemia.relay.job-receipt.v1',
+      job_id: job.id,
+      status: 'job_requeued',
+      kind: job.kind,
+      at: new Date().toISOString(),
+    });
+    res.json({
+      success: true,
+      job: {
+        id: job.id,
+        status: job.status,
+        attempts: job.attempts,
+        max_attempts: job.max_attempts,
+        not_before_at: job.not_before_at,
+      },
+    });
+  });
+
   app.post('/api/notifications/worker/run', requireIngest, async (req, res) => {
     try {
       res.json({ success: true, ...(await worker.runOnce({ limit: req.body?.limit })) });
