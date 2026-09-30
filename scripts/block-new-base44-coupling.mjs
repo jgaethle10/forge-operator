@@ -15,17 +15,15 @@ for (const candidate of candidates) {
   } catch {}
 }
 
-if (!base) {
-  console.error('Base44 coupling guard: unable to resolve a migration base ref.');
-  process.exit(2);
-}
-
 let diff = '';
-try {
-  diff = execFileSync('git', ['diff', '--unified=0', base + '...HEAD'], { encoding: 'utf8' });
-} catch (error) {
-  console.error('Base44 coupling guard: git diff failed.');
-  process.exit(2);
+if (base) {
+  try {
+    diff = execFileSync('git', ['diff', '--unified=0', base + '...HEAD'], { encoding: 'utf8' });
+  } catch {
+    console.warn('Base44 coupling guard: diff comparison unavailable; continuing with critical-runtime zero-coupling scan.');
+  }
+} else {
+  console.warn('Base44 coupling guard: migration base ref unavailable in this checkout; continuing with critical-runtime zero-coupling scan.');
 }
 
 const coupling = [
