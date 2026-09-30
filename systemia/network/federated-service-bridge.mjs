@@ -72,6 +72,16 @@ export async function startFederatedServiceBridge({
   const server=http.createServer(async(req,res)=>{
     try{
       const method=String(req.method||'GET').toUpperCase();
+      if(method==='GET'&&String(req.url||'')==='/__evercraft/health'){
+        const body=Buffer.from(JSON.stringify(health()));
+        res.writeHead(200,{
+          'content-type':'application/json',
+          'content-length':String(body.length),
+          'cache-control':'no-store',
+        });
+        res.end(body);
+        return;
+      }
       if(!['GET','HEAD','POST','DELETE','OPTIONS'].includes(method)){
         res.writeHead(405,{'content-type':'application/json'});
         res.end(JSON.stringify({error:'method_not_allowed'}));
