@@ -1,0 +1,29 @@
+name: Fallen Longform Checkpoints
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/longform-checkpoints.ts'
+      - 'systemia/media-studio/longform-checkpoints.test.ts'
+      - 'systemia/media-studio/master-qc.ts'
+      - '.github/workflows/fallen-longform-checkpoints.yml'
+  workflow_dispatch:
+
+jobs:
+  longform-checkpoints:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-audit --no-fund
+      - name: Ensure FFmpeg
+        run: |
+          if ! command -v ffmpeg >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y ffmpeg
+          fi
+      - run: node --import tsx --test systemia/media-studio/longform-checkpoints.test.ts
+      - run: npm run lint
