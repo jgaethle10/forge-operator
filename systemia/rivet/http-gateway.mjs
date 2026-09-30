@@ -52,6 +52,7 @@ export function registerRivetReportGateway(app,{
       const progress=[];
       const record=await generate({
         address,
+        reportType:req.body?.report_type,
         sourceUrl,
         systemiaMachineKey,
         stateDir,
