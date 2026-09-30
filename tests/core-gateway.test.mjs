@@ -65,6 +65,13 @@ test('Evercraft Core Gateway replaces shared integration calls without legacy tr
     assert.match(upload.value.file_url, /^https:\/\/assets\.example\.test\/core\//);
     assert.equal(fs.readFileSync(path.join(uploadRoot, upload.value.filename), 'utf8'), 'evercraft');
 
+    const signed = await fetch(runtime.url + '/api/core/create-file-signed-url', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ file_uri: upload.value.file_url, expires_in: 900 }),
+    }).then((r) => r.json());
+    assert.equal(signed.value.signed_url, upload.value.file_url);
+
     const extracted = await fetch(runtime.url + '/api/core/extract-data', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
