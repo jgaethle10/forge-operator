@@ -10,7 +10,8 @@
     "base44_llm_as_default_inference_path_allowed": false,
     "base44_as_runtime_authority_allowed": false,
     "base44_role": "legacy_extraction_compatibility_and_bounded_transition_only",
-    "base44_core_integrations_allowed": false
+    "base44_core_integrations_allowed": false,
+    "base44_sdk_transport_allowed": false
   },
   "replacement": {
     "canonical_source": "github",
@@ -32,7 +33,12 @@
     "integration_gateway": "systemia/core/core-gateway.mjs",
     "integration_client_shim": "systemia/core/core-client.js",
     "integration_gateway_owner": "evercraft",
-    "integration_gateway_legacy_transport": false
+    "integration_gateway_legacy_transport": false,
+    "app_runtime_gateway": "systemia/app-runtime/app-gateway.mjs",
+    "app_runtime_client": "systemia/app-runtime/app-client.js",
+    "entity_store": "systemia/app-runtime/entity-store.mjs",
+    "entity_store_backend": "sqlite_on_authorized_evercraft_runtime",
+    "auth_default": "fail_closed"
   },
   "frozen_internal_workflows": [
     "systemia_internal_wake_every_5_minutes",
@@ -44,6 +50,7 @@
   ],
   "temporary_legacy_exceptions": [],
   "cutover_gates": [
+    "app_runtime_proof_pass",
     "core_gateway_proof_pass",
     "replacement_runtime_live",
     "kaidance_pulse_healthy",
