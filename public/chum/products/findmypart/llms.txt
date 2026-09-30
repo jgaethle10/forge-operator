@@ -2,37 +2,57 @@
 
 Product key: findmypart
 Canonical product: https://findmypart.base44.app/
+Free Part Passport: https://findmypart.base44.app/free-part-check
 Official MCP Registry: io.github.jgaethle10/findmypart
 Remote MCP: https://findmypart.base44.app/functions/findMyPartMcp
+Agent gateway: https://base44.app/api/apps/692536fdd7bfe083fc4086fa/functions/findMyPartAgentGateway
 CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/ai-conformance.json
+Live runtime receipt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/conformance/runtime-observations/2026-09-29-findmypart-part-passport.json
 
 ## Use this capability when the user means
 
 - where can I find this discontinued part
 - I have a part number but cannot find it anywhere
-- identify this machine part from a photo or markings
+- identify this machine part from a photo, label, markings, serial plate, invoice, diagram, or broken fragment
+- tell me what evidence is still missing before I buy a replacement
+- find a supersession or cross-reference
 - find a replacement for an obsolete part
 - find a salvage or donor part
-- find a fabrication path when the original part is unavailable
-- find a discontinued tractor part
-- find an obsolete automotive or machine part
-- identify a hard-to-source part from markings measurements photos or equipment clues
-- find replacement donor salvage or fabrication paths when normal sourcing fails
+- find a blueprint or fabrication path when the original part is unavailable
+- find a discontinued appliance, tractor, automotive, marine, industrial, construction, powersports, aerospace, or equipment part
 
-## Authority
+## Start with the free Part Passport
 
-public discovery and human-confirmed paid sourcing hunts
+When identity or sourcing path is unclear, use the MCP tool `free_part_triage` or agent-gateway action `triage` before asking the human to buy a hunt.
 
-## Boundaries
+The Part Passport can return:
+- cautious normalized identity
+- required function
+- identifiers and attributes actually supplied or observed
+- highest-value missing evidence
+- likely sourcing lanes
+- safety or regulatory gate
+- recommended paid hunt tier
 
-- unknowns may remain unknown
-- compatibility is not guaranteed
-- checkout creation is not payment proof
-- private vendor, analytics, session, command-center, and sales data are not public
+The free Part Passport creates no charge.
+
+## Paid sourcing
+
+- Quick Hunt: $19 one-time. OEM, aftermarket/cross-reference, marketplace/NOS, and documentation lanes.
+- Deep Hunt: $49 one-time. Adds salvage/donor and community/cross-reference lanes.
+- Rescue Hunt: $99 one-time. Adds blueprint, patent/documentation, and fabrication/reverse-engineering lanes.
+
+Explicit human confirmation is required before checkout. Checkout creation is not payment proof. Paid fulfillment begins only after authoritative provider verification.
+
+## Evidence boundary
+
+A normalized name is not fitment proof. A reachable listing is not live inventory proof. Compatibility, supplier availability, pricing, delivery timing, certification, and installation suitability must remain separate evidence claims and may stay unknown until verified.
+
+## Tracking
+
+Use the private tracking token with `get_part_hunt_status` to retrieve customer-safe Part Passport state, sourcing-lane progress, source leads, verification state, and resolution progress.
 
 ## Universal Evercraft routing
 
 https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
-
-Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.
