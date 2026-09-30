@@ -1360,6 +1360,9 @@ export class YardOperator {
     } else if (workloadClass === 'systemia.rivet-report-runtime.v1') {
       service = 'rivet-yard-report-runtime';
       healthPath = '/health';
+    } else if (workloadClass === 'systemia.federated-service-bridge.v1') {
+      service = 'evercraft-federated-service-bridge';
+      healthPath = '/__evercraft/health';
     } else if (workloadClass === 'systemia.specialist-handoff-mcp.v1') {
       service = 'specialist-handoff-mcp';
       healthPath = '/health';
