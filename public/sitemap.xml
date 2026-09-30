@@ -21,17 +21,17 @@
   <url><loc>/chum/answers/index.txt</loc><lastmod>2026-09-29T19:18:34.761Z</lastmod></url>
   <url><loc>/chum/answers/observed/</loc><lastmod>2026-09-27T06:03:00.949Z</lastmod></url>
   <url><loc>/chum/answers/observed/index.json</loc><lastmod>2026-09-27T06:03:00.949Z</lastmod></url>
-  <url><loc>/chum/hot/</loc><lastmod>2026-09-30T16:47:21.665Z</lastmod></url>
-  <url><loc>/chum/hot/index.json</loc><lastmod>2026-09-30T18:29:10.255Z</lastmod></url>
-  <url><loc>/chum/strike/</loc><lastmod>2026-09-30T15:05:34.255Z</lastmod></url>
-  <url><loc>/chum/strike/index.json</loc><lastmod>2026-09-30T18:29:10.255Z</lastmod></url>
-  <url><loc>/chum/crawler-radar.json</loc><lastmod>2026-09-30T18:29:10.255Z</lastmod></url>
-  <url><loc>/chum/crawler-radar.txt</loc><lastmod>2026-09-30T18:29:10.255Z</lastmod></url>
+  <url><loc>/chum/hot/</loc><lastmod>2026-09-30T18:55:38.814Z</lastmod></url>
+  <url><loc>/chum/hot/index.json</loc><lastmod>2026-09-30T18:55:38.814Z</lastmod></url>
+  <url><loc>/chum/strike/</loc><lastmod>2026-09-30T18:55:38.814Z</lastmod></url>
+  <url><loc>/chum/strike/index.json</loc><lastmod>2026-09-30T18:55:38.814Z</lastmod></url>
+  <url><loc>/chum/crawler-radar.json</loc><lastmod>2026-09-30T18:55:38.814Z</lastmod></url>
+  <url><loc>/chum/crawler-radar.txt</loc><lastmod>2026-09-30T18:55:38.814Z</lastmod></url>
   <url><loc>/chum/proof/</loc><lastmod>2026-09-27T14:53:47.616Z</lastmod></url>
-  <url><loc>/chum/proof/index.json</loc><lastmod>2026-09-30T16:47:21.665Z</lastmod></url>
+  <url><loc>/chum/proof/index.json</loc><lastmod>2026-09-30T18:55:38.260Z</lastmod></url>
   <url><loc>/chum/proof/llms.txt</loc><lastmod>2026-09-27T14:53:47.616Z</lastmod></url>
-  <url><loc>/chum/proof/forensiscope.json</loc><lastmod>2026-09-30T16:47:21.665Z</lastmod></url>
-  <url><loc>/chum/proof/rivet.json</loc><lastmod>2026-09-30T16:47:21.665Z</lastmod></url>
+  <url><loc>/chum/proof/forensiscope.json</loc><lastmod>2026-09-30T18:55:38.260Z</lastmod></url>
+  <url><loc>/chum/proof/rivet.json</loc><lastmod>2026-09-30T18:55:38.260Z</lastmod></url>
   <url><loc>/chum/commercial/</loc><lastmod>2026-09-28T19:03:48.848Z</lastmod></url>
   <url><loc>/chum/commercial/index.json</loc><lastmod>2026-09-28T19:03:48.848Z</lastmod></url>
   <url><loc>/chum/commercial/llms.txt</loc><lastmod>2026-09-28T19:03:48.848Z</lastmod></url>
@@ -135,7 +135,7 @@
   <url><loc>/.well-known/evercraft-agent-interfaces.json</loc><lastmod>2026-09-28T18:59:42.997Z</lastmod></url>
   <url><loc>/.well-known/evercraft-discovery.json</loc><lastmod>2026-09-29T18:40:12.557Z</lastmod></url>
   <url><loc>/.well-known/evercraft-products.json</loc><lastmod>2026-09-29T19:16:09.538Z</lastmod></url>
-  <url><loc>/.well-known/evercraft-machine-catalog.json</loc><lastmod>2026-09-30T16:43:46.788Z</lastmod></url>
+  <url><loc>/.well-known/evercraft-machine-catalog.json</loc><lastmod>2026-09-30T18:55:38.260Z</lastmod></url>
   <url><loc>/.well-known/evercraft-chum.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/.well-known/evercraft-media-overflow.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/.well-known/evercraft-capabilities.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>

@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.crawler-radar.v1",
-  "generated_at": "2026-09-30T18:29:10.109Z",
+  "generated_at": "2026-09-30T18:55:38.591Z",
   "coordinator": "CHUM",
   "runtime_feedback": {
     "requested": false,
@@ -9772,144 +9772,12 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/application-network-continuity-3ac8582e22.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-09-29T18:40:12.557Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/business-connectivity-resilience-fd7009021f.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-09-29T18:40:12.557Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/continuity-readiness-software-b3313dda80.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-09-29T18:40:12.557Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/create-cross-business-loyalty-rewards-2c3ab05040.json",
       "product_key": null,
       "score": 222,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-29T19:18:34.761Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/device-reconnect-visibility-edee3d926e.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-09-29T18:40:12.557Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/did-my-devices-reconnect-c4d116f491.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-09-29T18:40:12.557Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/evercraft-network-membership-861ace178a.json",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-09-29T18:40:12.557Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -10636,6 +10504,28 @@
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-29T02:24:28.186Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/application-network-continuity-3ac8582e22.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -11818,6 +11708,28 @@
       ]
     },
     {
+      "path": "/chum/answers/doors/business-connectivity-resilience-fd7009021f.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-09-29T18:40:12.557Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
       "path": "/chum/answers/doors/business-continuity-and-safety-0babb51749.json",
       "product_key": null,
       "score": 215,
@@ -12786,6 +12698,28 @@
       ]
     },
     {
+      "path": "/chum/answers/doors/continuity-readiness-software-b3313dda80.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-09-29T18:40:12.557Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
       "path": "/chum/answers/doors/continuity-readiness-tools-a8c2eb4441.json",
       "product_key": null,
       "score": 215,
@@ -13232,6 +13166,50 @@
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-29T02:24:28.186Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/device-reconnect-visibility-edee3d926e.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-09-29T18:40:12.557Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/did-my-devices-reconnect-c4d116f491.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -13848,6 +13826,28 @@
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-29T02:24:28.186Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/evercraft-network-membership-861ace178a.json",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-09-29T18:40:12.557Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
