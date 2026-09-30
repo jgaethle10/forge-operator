@@ -126,3 +126,29 @@ The second task remains held until a valid human authorization is attached.
 12. Control-plane admission and routing always report execution_authority_granted=false; a later exact execution lease is required.
 
 This control plane is intentionally provider-independent. It is meant to survive movement away from Base44 and other temporary hosting or orchestration layers without changing Evercraft's core operating doctrine.
+
+
+## Contract-driven product dispatch
+
+When a task names both a `product_key` and an `action_scope`, Systemia consults Evercraft Capability Mesh.
+
+For a `shared_runtime` product, the contract may derive the exact Passport product, action scope, Context namespace, Meter metric, specialist slug, and Execution Gate requirement. Those declarations still grant nothing by themselves.
+
+For AliEV:
+
+```
+product_key: aliev
+action_scope: report.generate
+    ↓ Capability Mesh
+Passport product: rivet
+Meter metric: site_reports
+Execution Gate: required
+Context namespace: aliev
+Specialist slug: aliev
+```
+
+Systemia hard-holds when an action scope is undeclared, when a caller attempts to replace a contracted Meter metric, or when the product has no contract.
+
+A complete contract with `adoption_stage: discovery_only` or `private_runtime` also hard-holds action-scoped shared execution. This lets EverNest Atlas, Opportunity Fabric, Systemia University, and future products declare their current architectural truth without accidentally gaining shared execution authority.
+
+Capability Mesh derives requirements. Passport, Meter, relationship preflight, and Execution Gate still satisfy them.
