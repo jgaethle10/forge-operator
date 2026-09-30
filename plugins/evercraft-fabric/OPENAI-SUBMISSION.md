@@ -5,7 +5,7 @@
 - Name: **Evercraft**
 - Developer: **Evercraft LLC**
 - Category: **Business & Operations**
-- Short description: **Find and use the right Evercraft capability from one connected front door.**
+- Short description: **Find the right Evercraft path**
 - Source package: `plugins/evercraft-fabric/`
 - Submission type: **With MCP**
 - MCP: `https://fabric.systemiacommandcenters.com/mcp`
