@@ -2,7 +2,10 @@
   "schema": "evercraft.cross-llm-product.v1",
   "product": "FindMyPart",
   "product_key": "findmypart",
-  "aliases": [],
+  "aliases": [
+    "Find My Part",
+    "Part Passport"
+  ],
   "providers": [
     "chatgpt",
     "claude",
@@ -17,26 +20,34 @@
   "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/ai-discovery.json",
   "registry_name": "io.github.jgaethle10/findmypart",
   "mcp": "https://findmypart.base44.app/functions/findMyPartMcp",
-  "authority": "public discovery and human-confirmed paid sourcing hunts",
+  "authority": "free evidence-aware Part Passport triage and human-confirmed paid sourcing hunts",
   "human_confirmation_required": true,
   "boundaries": [
+    "Part Passport normalization is not fitment proof",
     "unknowns may remain unknown",
     "compatibility is not guaranteed",
+    "reachable listings remain leads until verified",
     "checkout creation is not payment proof",
     "private vendor, analytics, session, command-center, and sales data are not public"
   ],
-  "commercial": null,
-  "human_start_url": null,
-  "buyer_frontage_url": null,
-  "developer_surfaces": null,
-  "editorial_surfaces": null,
-  "knowledge_surfaces": null,
-  "distribution_surfaces": null,
-  "relationships": null,
-  "proof_library": null,
+  "commercial": {
+    "quick_hunt_usd": 19,
+    "deep_hunt_usd": 49,
+    "rescue_hunt_usd": 99,
+    "provider_verification_required_for_paid_state": true
+  },
+  "human_start_url": "https://findmypart.base44.app/free-part-check",
+  "buyer_frontage_url": "https://findmypart.base44.app/",
+  "developer_surfaces": [
+    "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=capabilities",
+    "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=openapi"
+  ],
+  "distribution_surfaces": [
+    "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/mcp-registry/findmypart.json"
+  ],
   "provider_behavior_state": "not_inferred_from_publication",
-  "machine_commerce_handoff_state": null,
-  "machine_commerce_public_id": null,
-  "machine_commerce_tool": null,
-  "live_canary_evidence": null
+  "machine_commerce_handoff_state": "direct_specialist_mcp_live",
+  "machine_commerce_public_id": "findmypart",
+  "machine_commerce_tool": "findMyPartMcp",
+  "live_canary_evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/conformance/runtime-observations/2026-09-29-findmypart-part-passport.json"
 }
