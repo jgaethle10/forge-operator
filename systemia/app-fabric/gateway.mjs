@@ -93,6 +93,9 @@ export function createAppFabricHandler({
   functionInvoker = null,
   integrationInvoker = null,
   authHandlers = {},
+  realtimeBus = null,
+  realtimePollMs = 100,
+  realtimeHeartbeatMs = 15_000,
   allowedOrigins = [],
   maxBodyBytes = DEFAULT_MAX_BODY_BYTES
 } = {}) {
@@ -109,7 +112,8 @@ export function createAppFabricHandler({
         return json(response, 200, {
           schema: 'evercraft.app-fabric.health.v1',
           state: 'healthy',
-          entity_store: store.health()
+          entity_store: store.health(),
+          realtime: realtimeBus ? realtimeBus.health() : { state: 'not_configured' }
         }, cors);
       }
 
@@ -158,6 +162,49 @@ export function createAppFabricHandler({
             return json(response, 200, await maybe(authHandlers.updateMe({ appKey, subjectRef, identity, body })), cors);
           }
           return json(response, 405, { error: 'method_not_allowed' }, cors);
+        }
+
+        if (request.method === 'GET' && tail === 'subscribe') {
+          if (!realtimeBus) throw new Error('realtime_not_configured');
+          await require({ kind: 'entity', operation: 'subscribe', entity });
+          let afterSequence = Math.max(
+            0,
+            Number(request.headers['last-event-id'] || url.searchParams.get('after') || 0) || 0
+          );
+          const pollMs = Math.max(25, Math.min(5000, Number(realtimePollMs || 100)));
+          const heartbeatMs = Math.max(1000, Math.min(120000, Number(realtimeHeartbeatMs || 15000)));
+          response.writeHead(200, {
+            'content-type': 'text/event-stream; charset=utf-8',
+            'cache-control': 'no-store, no-transform',
+            connection: 'keep-alive',
+            'x-accel-buffering': 'no',
+            ...cors
+          });
+          response.write(': ready\n\n');
+          let closed = false;
+          let lastHeartbeat = Date.now();
+          const close = () => { closed = true; clearInterval(timer); };
+          const pump = () => {
+            if (closed || response.destroyed || response.writableEnded) return;
+            const events = realtimeBus.read(appKey, entity, { afterSequence, limit: 250 });
+            for (const event of events) {
+              response.write(`id: ${event.sequence}\n`);
+              response.write('event: entity\n');
+              response.write(`data: ${JSON.stringify(event)}\n\n`);
+              afterSequence = event.sequence;
+              lastHeartbeat = Date.now();
+            }
+            if (Date.now() - lastHeartbeat >= heartbeatMs) {
+              response.write(`: heartbeat ${Date.now()}\n\n`);
+              lastHeartbeat = Date.now();
+            }
+          };
+          const timer = setInterval(pump, pollMs);
+          timer.unref?.();
+          request.once('aborted', close);
+          response.once('close', close);
+          pump();
+          return;
         }
 
         if (request.method === 'GET' && tail === 'count') {
