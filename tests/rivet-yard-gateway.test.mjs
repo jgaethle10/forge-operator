@@ -180,6 +180,7 @@ const fakeGenerate=async({address,systemiaMachineKey,onProgress})=>{
   };
   const runtime=await start({
     gatewayToken:'gateway-proof',systemiaMachineKey:'machine-proof',stateDir,
+    sourceUrl:'https://aliev.evercraft.test/rivet-report-snapshot',
     generate:(args)=>generateYardReport({...args,sourceFetch:async()=>new Response(JSON.stringify(sourceSnapshot),{status:200})})
   });
   try{
