@@ -6,7 +6,7 @@ const REQUIRED_DOMAINS=[
 ];
 const clean=(v)=>String(v??'').trim();
 const arr=(v)=>Array.isArray(v)?v:[];
-const n=(v)=>{const x=Number(v);return Number.isFinite(x)?x:null;};
+const n=(v)=>{if(v===null||v===undefined||String(v).trim()==='')return null;const x=Number(v);return Number.isFinite(x)?x:null;};
 
 function publicRecord(row){
   const { _meta, _distance_miles, ...record }=row||{};
