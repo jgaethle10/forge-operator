@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 const OPERATION_PATHS = Object.freeze({
   '/api/core/invoke-llm': 'invoke_llm',
   '/api/core/upload-file': 'upload_file',
+  '/api/core/create-file-signed-url': 'create_file_signed_url',
   '/api/core/send-email': 'send_email',
   '/api/core/send-sms': 'send_sms',
   '/api/core/generate-image': 'generate_image',
@@ -213,6 +214,26 @@ async function uploadLocal(payload, config) {
   };
 }
 
+function createFileSignedUrl(payload, config) {
+  const fileUri = clean(payload.file_uri || payload.file_url || '', 4000);
+  if (!fileUri) throw new Error('file_uri_missing');
+  const expiresIn = Math.max(60, Math.min(86400, Number(payload.expires_in || 900)));
+
+  if (/^https?:\/\//i.test(fileUri)) {
+    return { signed_url: fileUri, expires_in: expiresIn };
+  }
+
+  const prefix = 'evercraft://core-uploads/';
+  if (!fileUri.startsWith(prefix)) throw new Error('file_uri_scheme_unsupported');
+  if (!config.uploadPublicBase) throw new Error('upload_public_base_unconfigured');
+
+  const filename = safeFilename(fileUri.slice(prefix.length));
+  return {
+    signed_url: `${config.uploadPublicBase}/${encodeURIComponent(filename)}`,
+    expires_in: expiresIn,
+  };
+}
+
 function normalizeAdapterResult(value) {
   if (value && typeof value === 'object' && Object.prototype.hasOwnProperty.call(value, 'value')) {
     return value.value;
@@ -230,6 +251,7 @@ export async function executeCoreOperation(
   }
 
   if (operation === 'upload_file') return uploadLocal(payload, config);
+  if (operation === 'create_file_signed_url') return createFileSignedUrl(payload, config);
   if (operation === 'extract_data') return extractLocal(payload);
 
   const adapter = adapters[operation];
@@ -252,7 +274,7 @@ export async function startCoreGateway({
     legacy_provider_transport: false,
     runtime_owner: 'evercraft',
     operations: Object.values(OPERATION_PATHS),
-    local_operations: ['upload_file', 'extract_data'],
+    local_operations: ['upload_file', 'create_file_signed_url', 'extract_data'],
     configured_adapters: Object.fromEntries(
       ['invoke_llm', 'send_email', 'send_sms', 'generate_image'].map((operation) => [
         operation,
