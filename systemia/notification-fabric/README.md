@@ -92,6 +92,49 @@ EVERCRAFT_NOTIFICATION_PUSH_ATTEMPTS=3
 
 Never expose the VAPID private key, ingest token, enrollment token, session secret, or receipt secret to browser code.
 
+## Durable delivery and recovery
+
+For work that must survive a process crash, use the durable job path instead of direct synchronous delivery.
+
+```text
+product event
+   |
+   v
+durable outbox commit  ->  202 Accepted + job id
+   |
+   v
+leased Relay worker
+   |
+   +--> delivery succeeds -> completed
+   |
+   +--> transient failure -> exponential retry
+   |
+   +--> worker dies -> lease expires -> another worker recovers job
+   |
+   +--> attempts exhausted -> dead letter
+```
+
+Producer retries are deduplicated with an `Idempotency-Key`. Each job preserves a stable logical notification ID across worker retries. Web Push attempts also carry a stable Topic derived from that ID so compatible push services can collapse still-pending duplicate attempts.
+
+Critical intents may opt into acknowledgement enforcement:
+
+```json
+{
+  "acknowledgement": {
+    "required": true,
+    "mode": "any",
+    "within_seconds": 300,
+    "max_escalations": 2,
+    "escalation_interval_seconds": 300,
+    "title_prefix": "STILL UNACKNOWLEDGED"
+  }
+}
+```
+
+Relay schedules a durable acknowledgement watch after successful delivery. If the original notification is not acknowledged by policy, Relay emits a critical escalation and can repeat that escalation within the bounded ladder. Acknowledging the original event terminates subsequent escalation.
+
+The filesystem outbox is restart-safe for the current single-node Forge/Yard runtime. It deliberately does not claim multi-process consensus. Before running multiple active Relay replicas, the outbox, leases, inbox, attention budgets, receipt sequencing and idempotency index must move behind one shared transactional store.
+
 ## API
 
 Public configuration and health:
@@ -101,7 +144,11 @@ Public configuration and health:
 
 Server-to-server, ingest token required:
 
-- `POST /api/notifications/intents`
+- `POST /api/notifications/jobs` durable intent enqueue, preferred for production workflows
+- `POST /api/notifications/signal-jobs` durable Signal Fabric enqueue
+- `GET /api/notifications/jobs/:id` job state without returning the queued payload
+- `POST /api/notifications/worker/run` bounded manual worker cycle for operations/testing
+- `POST /api/notifications/intents` direct synchronous delivery, retained for compatibility and low-risk paths
 - `POST /api/notifications/signals`
 - `POST /api/notifications/session-tokens`
 - `GET /api/notifications/metrics`
@@ -134,7 +181,7 @@ Browser/device session:
 
 Purposes are `transactional`, `operational`, `safety`, `reminder`, and `marketing`. Marketing requires `consent_basis: "explicit_opt_in"` and an opted-in subscription.
 
-Machine-readable contracts live in `intent.schema.json` and `receipt.schema.json`.
+Machine-readable contracts live in `intent.schema.json`, `receipt.schema.json`, and `job.schema.json`.
 
 ## Browser adoption
 
@@ -157,7 +204,9 @@ The browser can then register Web Push, connect to the owned realtime stream, re
 
 Node services use `systemia/notification-fabric/client.mjs`:
 
-- `client.notify(intent)`
+- `client.enqueue(intent, { idempotencyKey })` preferred durable production path
+- `client.enqueueSignal(signal, { idempotencyKey })`
+- `client.notify(intent)` synchronous compatibility path
 - `client.signal(signal)`
 - `client.issueSession(claims)`
 
@@ -170,3 +219,16 @@ The default store is a durable single-node adapter suitable for the current Forg
 ## Verification
 
 Relay has a dedicated GitHub Actions gate in `.github/workflows/notification-fabric.yml`. The workflow runs the focused notification suite and syntax-checks all runtime modules whenever Relay or Signal Fabric changes.
+
+
+## Worker configuration
+
+```text
+EVERCRAFT_NOTIFICATION_WORKER_ENABLED=true
+EVERCRAFT_NOTIFICATION_WORKER_ID=<optional stable node label>
+EVERCRAFT_NOTIFICATION_WORKER_INTERVAL_MS=1000
+EVERCRAFT_NOTIFICATION_WORKER_LEASE_MS=30000
+EVERCRAFT_NOTIFICATION_WORKER_BATCH_SIZE=10
+```
+
+The resident worker timer is unreferenced so it does not prevent clean process shutdown. Operators can disable the resident worker and run an isolated worker process later without changing product contracts.
