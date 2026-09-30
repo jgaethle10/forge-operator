@@ -78,11 +78,11 @@ The compatibility API is deliberately separated from the storage implementation 
 
 ## Realtime boundary
 
-Realtime entity subscriptions are deliberately not faked.
+Realtime entity subscriptions are backed by the Evercraft realtime bus.
 
-`entities.<name>.subscribe()` currently fails closed with `realtime_not_configured`. The Base44 Exit factory has a separate `realtime_bus` landing target and `realtime_replatformed` cutover gate for applications that depend on subscriptions.
+`entities.<name>.subscribe(callback)` opens an authorized server-sent event stream with durable sequence IDs. Entity mutations publish into a hash-chained app/entity event log and clients expose the last delivered sequence so reconnects can resume after a known cursor.
 
-An app that needs realtime does not cut over until that contract is implemented and parity-tested.
+The Base44 Exit factory still keeps a separate `realtime_replatformed` cutover gate. The owned baseline existing is not enough by itself for every product. Apps that depend on ordering semantics, high fan-out, delivery guarantees or other Base44-specific subscription behavior must pass app-level parity before traffic moves.
 
 ## Migration use
 
