@@ -7,22 +7,21 @@
   "long_description": "Evercraft is a problem-first front door into the Evercraft/Systemia capability fabric. It matches a real-world goal to the smallest truthful Evercraft capability, prefers a verified specialist route when one exists, preserves evidence and availability boundaries, and keeps private context, payments, publishing, deployment and other consequential actions behind the applicable authorization and explicit human confirmation.",
   "source_package": "plugins/evercraft-fabric",
   "mcp": {
-    "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-    "url_type": "CompatibilityUniversal",
-    "authentication": "None for public discovery tools; tool-specific boundaries apply.",
-    "authority": "compatibility_transport_only",
-    "owned_fabric_cutover_required": true,
-    "owned_fabric_cutover_gate": "verified_stable_yard_public_https_route_receipt_and_external_canary"
+    "url": "https://fabric.systemiacommandcenters.com/mcp",
+    "url_type": "Universal",
+    "authentication": "None",
+    "authority": "owned_public_fabric",
+    "owned_fabric_cutover_required": false
   },
-  "website": "https://github.com/jgaethle10/forge-operator/blob/main/AI-DISCOVERY.md",
-  "support_url": "https://github.com/jgaethle10/forge-operator/issues",
-  "privacy_policy_url": "https://github.com/jgaethle10/forge-operator/blob/main/plugins/evercraft-fabric/PRIVACY.md",
-  "terms_url": "https://github.com/jgaethle10/forge-operator/blob/main/plugins/evercraft-fabric/TERMS.md",
+  "website": "https://fabric.systemiacommandcenters.com/",
+  "support_url": "https://fabric.systemiacommandcenters.com/support",
+  "privacy_policy_url": "https://fabric.systemiacommandcenters.com/privacy",
+  "terms_url": "https://fabric.systemiacommandcenters.com/terms",
   "proposed_category": "Business",
   "proposed_availability": [
     "US"
   ],
-  "release_notes": "Evercraft is now packaged as the umbrella ChatGPT/Codex front door. Problem-first discovery can route across the published Evercraft capability catalog, prefer verified specialist MCP routes where present, and retain the universal MCP as a fallback. Discovery remains non-authoritative for private access, payment and consequential actions.",
+  "release_notes": "Evercraft now uses its Evercraft-owned public Fabric MCP at fabric.systemiacommandcenters.com. The public discovery tools are read-only and preserve separate authorization for consequential actions.",
   "starter_prompts": [
     "I have a problem and do not know which Evercraft capability fits. Find the smallest useful option.",
     "I have a video that's too large for this chat. What can handle it?",
@@ -34,11 +33,13 @@
   ],
   "remaining_platform_prerequisites": [
     "OpenAI Platform Apps Management write permission",
-    "Verified Evercraft business or developer identity",
-    "Portal-generated domain verification challenge if requested",
-    "Final Scan Tools review against the submitted MCP",
-    "Five positive and three negative test cases accepted by reviewer",
-    "Final human publication action after OpenAI approval",
+    "Verified Evercraft LLC business identity",
+    "Portal-generated domain verification challenge",
+    "Successful current Scan Tools result against the owned Fabric MCP",
+    "Demo recording URL showing the main use cases and tools",
+    "Exactly five positive and three negative test cases",
+    "Submit for OpenAI review",
+    "Explicit Publish after approval",
     "Independent directory discovery receipt after publication"
   ],
   "public_directory_claim_allowed": false
