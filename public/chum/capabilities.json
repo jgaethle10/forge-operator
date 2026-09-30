@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.capability-index.v1",
-  "updated_at": "2026-09-30T20:35:00.000Z",
+  "updated_at": "2026-09-30T20:55:19.667Z",
   "count": 47,
   "sell_now_count": 14,
   "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
@@ -874,52 +874,6 @@
       ]
     },
     {
-      "public_id": "findmypart-part-passport-v1",
-      "name": "FindMyPart Part Passport",
-      "commercial_state": "free",
-      "machine_state": "read_only_live",
-      "pricing": "Free. Creates no charge.",
-      "category": "hard_to_source_parts",
-      "public_url": "https://findmypart.base44.app/free-part-check",
-      "page_url": "/chum/capabilities/findmypart-part-passport-v1/",
-      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/findmypart-part-passport-v1/llms.txt",
-      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/findmypart-part-passport-v1/capability.json",
-      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/findmypart-part-passport-v1/schema.jsonld",
-      "start_url": "https://findmypart.base44.app/free-part-check?src=chum&campaign=part-passport",
-      "start_url_state": "free_direct",
-      "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=findmypart-part-passport-v1",
-      "entry_paid_offer": null,
-      "preferred_agent_route": "direct_specialist",
-      "direct_specialist": {
-        "product": "FindMyPart",
-        "plugin_package": "plugins/findmypart",
-        "registry_name": "io.github.jgaethle10/findmypart",
-        "registry_state": "published",
-        "mcp": "https://findmypart.base44.app/functions/findMyPartMcp",
-        "route_state": "preferred_when_available",
-        "fallback_mcp": "https://fabric.systemiacommandcenters.com/mcp"
-      },
-      "problem": "A person has a broken, obscure, obsolete, discontinued, or unknown physical part and does not yet have enough trustworthy identity evidence to buy the right replacement.",
-      "intent_terms": [
-        "identify this part",
-        "identify a part from a photo or markings",
-        "identify a broken part from a label or serial plate",
-        "I know what this part does but not what it is called",
-        "what evidence do I need before buying a replacement",
-        "is this part number enough to identify the right replacement",
-        "find a discontinued part but I am not sure exactly what it is",
-        "identify a hard-to-source part from incomplete clues",
-        "identify a component from a diagram invoice measurement or broken fragment"
-      ],
-      "use_when": [
-        "identify this part",
-        "identify a part from a photo or markings",
-        "identify a broken component from a label serial plate diagram invoice or fragment",
-        "figure out what evidence is missing before buying a replacement",
-        "identify a part without the model number"
-      ]
-    },
-    {
       "public_id": "findmypart-paid-hunt-v1",
       "name": "FindMyPart Paid Part Hunt",
       "commercial_state": "sell_now",
@@ -956,25 +910,46 @@
         "find a supersession or cross reference",
         "find a donor or salvage part",
         "find a blueprint or fabrication path",
-        "normal part searches failed and I need deeper sourcing"
-      ],
-      "problem": "A difficult, identified-enough physical part is still blocking a repair, restoration, machine, or project after ordinary sourcing has failed or deeper cross-reference, salvage, documentation, blueprint, or fabrication work is needed.",
-      "intent_terms": [
-        "find a hard-to-source part",
-        "find a discontinued part",
-        "source an obsolete component",
-        "find a supersession or cross reference",
-        "find a donor or salvage part",
-        "find a blueprint or fabrication path",
         "source new old stock or aftermarket replacement",
         "normal part searches failed and I need deeper sourcing"
-      ],
-      "free_first": {
-        "public_id": "findmypart-part-passport-v1",
-        "name": "FindMyPart Part Passport",
-        "tool": "free_part_triage",
-        "creates_charge": false
-      }
+      ]
+    },
+    {
+      "public_id": "findmypart-part-passport-v1",
+      "name": "FindMyPart Part Passport",
+      "commercial_state": "free",
+      "machine_state": "read_only_live",
+      "pricing": "Free. Creates no charge.",
+      "public_url": "https://findmypart.base44.app/free-part-check",
+      "page_url": "/chum/capabilities/findmypart-part-passport-v1/",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/findmypart-part-passport-v1/llms.txt",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/findmypart-part-passport-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/findmypart-part-passport-v1/schema.jsonld",
+      "start_url": null,
+      "start_url_state": "not_sell_now",
+      "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=findmypart-part-passport-v1",
+      "entry_paid_offer": null,
+      "preferred_agent_route": "direct_specialist",
+      "direct_specialist": {
+        "product": "FindMyPart",
+        "plugin_package": "plugins/findmypart",
+        "registry_name": "io.github.jgaethle10/findmypart",
+        "registry_state": "published",
+        "mcp": "https://findmypart.base44.app/functions/findMyPartMcp",
+        "route_state": "preferred_when_available",
+        "fallback_mcp": "https://fabric.systemiacommandcenters.com/mcp"
+      },
+      "use_when": [
+        "identify this part",
+        "identify a part from a photo or markings",
+        "identify a broken part from a label or serial plate",
+        "I know what this part does but not what it is called",
+        "what evidence do I need before buying a replacement",
+        "is this part number enough to identify the right replacement",
+        "find a discontinued part but I am not sure exactly what it is",
+        "identify a hard-to-source part from incomplete clues",
+        "identify a component from a diagram invoice measurement or broken fragment"
+      ]
     },
     {
       "public_id": "findmypart-repair-shop-desk-v1",

@@ -4,7 +4,7 @@
   "coordinator": "CHUM",
   "purpose": "High-intent crawl neighborhoods around current sell-now offers. This mesh organizes existing canonical pain and capability surfaces instead of manufacturing duplicate doorway copy.",
   "sell_now_count": 14,
-  "answer_door_edges": 133,
+  "answer_door_edges": 136,
   "clusters": [
     {
       "public_id": "aliev-site-opportunity-snapshot-v1",
@@ -517,15 +517,21 @@
     {
       "public_id": "findmypart-paid-hunt-v1",
       "name": "FindMyPart Paid Part Hunt",
-      "problem": "A difficult, ambiguous, obsolete, discontinued or hard-to-source part is blocking a repair, restoration, machine or project.",
+      "problem": "A difficult, identified-enough physical part is still blocking a repair, restoration, machine or project after ordinary sourcing has failed or deeper cross-reference, salvage, documentation, blueprint or fabrication work is needed.",
       "pricing": "Quick Hunt $19 one-time; Deep Hunt $49 one-time; Rescue Hunt $99 one-time.",
       "cluster": "/chum/commercial/findmypart-paid-hunt-v1/",
       "cluster_json": "/chum/commercial/findmypart-paid-hunt-v1/index.json",
       "cluster_llms": "/chum/commercial/findmypart-paid-hunt-v1/llms.txt",
       "intent": "/chum/intents/findmypart-paid-hunt-v1/",
       "capability": "/chum/capabilities/findmypart-paid-hunt-v1/",
-      "answer_door_count": 5,
+      "answer_door_count": 8,
       "answer_doors": [
+        {
+          "answer_id": "intent:1a2c5aeb49",
+          "phrase": "find a blueprint or fabrication path",
+          "html": "/chum/answers/doors/find-a-blueprint-or-fabrication-path-1a2c5aeb49/",
+          "json": "/chum/answers/doors/find-a-blueprint-or-fabrication-path-1a2c5aeb49.json"
+        },
         {
           "answer_id": "intent:5646da09bb",
           "phrase": "find a discontinued part",
@@ -545,16 +551,28 @@
           "json": "/chum/answers/doors/find-a-hard-to-source-part-78dcd37ecc.json"
         },
         {
-          "answer_id": "intent:870c0fa937",
-          "phrase": "identify this part",
-          "html": "/chum/answers/doors/identify-this-part-870c0fa937/",
-          "json": "/chum/answers/doors/identify-this-part-870c0fa937.json"
+          "answer_id": "intent:072d61a0a0",
+          "phrase": "find a supersession or cross reference",
+          "html": "/chum/answers/doors/find-a-supersession-or-cross-reference-072d61a0a0/",
+          "json": "/chum/answers/doors/find-a-supersession-or-cross-reference-072d61a0a0.json"
+        },
+        {
+          "answer_id": "intent:9223ab99d9",
+          "phrase": "normal part searches failed and I need deeper sourcing",
+          "html": "/chum/answers/doors/normal-part-searches-failed-and-i-need-deeper-sourcing-9223ab99d9/",
+          "json": "/chum/answers/doors/normal-part-searches-failed-and-i-need-deeper-sourcing-9223ab99d9.json"
         },
         {
           "answer_id": "intent:61fb541501",
           "phrase": "source an obsolete component",
           "html": "/chum/answers/doors/source-an-obsolete-component-61fb541501/",
           "json": "/chum/answers/doors/source-an-obsolete-component-61fb541501.json"
+        },
+        {
+          "answer_id": "intent:6756b15f14",
+          "phrase": "source new old stock or aftermarket replacement",
+          "html": "/chum/answers/doors/source-new-old-stock-or-aftermarket-replacement-6756b15f14/",
+          "json": "/chum/answers/doors/source-new-old-stock-or-aftermarket-replacement-6756b15f14.json"
         }
       ]
     },

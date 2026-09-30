@@ -960,7 +960,7 @@
       "@type": "Service",
       "@id": "https://github.com/jgaethle10/forge-operator#offer-findmypart-paid-hunt-v1",
       "name": "FindMyPart Paid Part Hunt",
-      "description": "A difficult, ambiguous, obsolete, discontinued or hard-to-source part is blocking a repair, restoration, machine or project.",
+      "description": "A difficult, identified-enough physical part is still blocking a repair, restoration, machine or project after ordinary sourcing has failed or deeper cross-reference, salvage, documentation, blueprint or fabrication work is needed.",
       "url": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"

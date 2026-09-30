@@ -1,0 +1,50 @@
+# FindMyPart Part Passport
+
+Capability ID: findmypart-part-passport-v1
+Commercial state: free
+Machine state: read_only_live
+Public URL: https://findmypart.base44.app/free-part-check
+Preferred agent route: direct specialist
+Direct specialist: FindMyPart
+Direct MCP: https://findmypart.base44.app/functions/findMyPartMcp
+Official MCP Registry name: io.github.jgaethle10/findmypart
+Universal Evercraft fallback MCP: https://fabric.systemiacommandcenters.com/mcp
+Start here: Not a current sell-now route
+
+## Use this when
+
+- identify this part
+- identify a part from a photo or markings
+- identify a broken part from a label or serial plate
+- I know what this part does but not what it is called
+- what evidence do I need before buying a replacement
+- is this part number enough to identify the right replacement
+- find a discontinued part but I am not sure exactly what it is
+- identify a hard-to-source part from incomplete clues
+- identify a component from a diagram invoice measurement or broken fragment
+
+## Problem
+
+A person has a broken, obscure, obsolete, discontinued or unknown physical part and does not yet have enough trustworthy identity evidence to buy the right replacement.
+
+## Inputs
+
+Part description plus any known asset or equipment identity, model, serial, part number, photos, markings, measurements, invoices, diagrams or fragments. Unknown information may remain unknown.
+
+## Outputs
+
+Free evidence-aware Part Passport with cautious normalized identity, required function, observed identifiers and attributes, highest-value missing evidence, search readiness, likely sourcing lanes, safety or regulatory gate, and a recommended next step.
+
+## Pricing
+
+Free. Creates no charge.
+
+## Invocation and authority
+
+LIVE: direct FindMyPart MCP tool free_part_triage and HTTP agent-gateway triage action. Part Passport is triage, not fitment proof; unknown compatibility, inventory, supplier availability, price and delivery timing may remain unknown.
+
+No payment confirmation is required for free triage. Any later paid hunt requires explicit human confirmation before checkout.
+
+Payment authority: No charge is created by Part Passport triage.
+
+Discovery does not create a payment obligation. Human confirmation is required before checkout where checkout exists. Checkout creation is not proof of payment.

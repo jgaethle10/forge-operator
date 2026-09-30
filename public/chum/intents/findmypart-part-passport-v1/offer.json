@@ -1,0 +1,39 @@
+{
+  "schema": "evercraft.chum.pain-door.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "findmypart-part-passport-v1",
+  "name": "FindMyPart Part Passport",
+  "problem": "A person has a broken, obscure, obsolete, discontinued or unknown physical part and does not yet have enough trustworthy identity evidence to buy the right replacement.",
+  "intent_terms": [
+    "identify this part",
+    "identify a part from a photo or markings",
+    "identify a broken part from a label or serial plate",
+    "I know what this part does but not what it is called",
+    "what evidence do I need before buying a replacement",
+    "is this part number enough to identify the right replacement",
+    "find a discontinued part but I am not sure exactly what it is",
+    "identify a hard-to-source part from incomplete clues",
+    "identify a component from a diagram invoice measurement or broken fragment"
+  ],
+  "pricing": "Free. Creates no charge.",
+  "offers": [],
+  "entry_paid_offer": null,
+  "commercial_state": "free",
+  "machine_state": "read_only_live",
+  "public_url": "https://findmypart.base44.app/free-part-check",
+  "human_ui_required": false,
+  "confirmation": "No payment confirmation is required for free triage. Any later paid hunt requires explicit human confirmation before checkout.",
+  "payment_authority": "No charge is created by Part Passport triage.",
+  "invocation_status": "LIVE: direct FindMyPart MCP tool free_part_triage and HTTP agent-gateway triage action. Part Passport is triage, not fitment proof; unknown compatibility, inventory, supplier availability, price and delivery timing may remain unknown.",
+  "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=findmypart-part-passport-v1",
+  "machine_offer_url": null,
+  "start_url": null,
+  "start_url_state": "not_sell_now",
+  "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "safety": {
+    "fit_required": true,
+    "discovery_creates_obligation": false,
+    "checkout_is_payment_proof": false,
+    "authoritative_payment_verification_required": true
+  }
+}

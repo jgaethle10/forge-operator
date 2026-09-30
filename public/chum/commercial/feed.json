@@ -152,15 +152,18 @@
       "id": "urn:evercraft:commercial-intent:findmypart-paid-hunt-v1",
       "external_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=findmypart-paid-hunt-v1",
       "title": "FindMyPart Paid Part Hunt",
-      "summary": "A difficult, ambiguous, obsolete, discontinued or hard-to-source part is blocking a repair, restoration, machine or project.",
+      "summary": "A difficult, identified-enough physical part is still blocking a repair, restoration, machine or project after ordinary sourcing has failed or deeper cross-reference, salvage, documentation, blueprint or fabrication work is needed.",
       "tags": [
         "sell_now",
         "findmypart-paid-hunt-v1",
+        "find a blueprint or fabrication path",
         "find a discontinued part",
         "find a donor or salvage part",
         "find a hard-to-source part",
-        "identify this part",
-        "source an obsolete component"
+        "find a supersession or cross reference",
+        "normal part searches failed and I need deeper sourcing",
+        "source an obsolete component",
+        "source new old stock or aftermarket replacement"
       ]
     },
     {

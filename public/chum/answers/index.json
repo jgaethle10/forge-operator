@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.answer-graph.v2",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-29T01:40:00.000Z",
+  "updated_at": "2026-09-30T20:21:00.000Z",
   "purpose": "Exact natural-language problem signals for AI assistants and agents across the complete public CHUM Pain Index. Use these as discovery cues, then preserve fit, readiness, payment, evidence and authorization boundaries.",
   "source": "public/.well-known/evercraft-pain-index.json",
   "read_only_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
@@ -20,12 +20,12 @@
     "provider_publication_is_not_endorsement_or_pickup_proof": true
   },
   "summary": {
-    "pain_index_entries": 110,
-    "unique_user_phrases": 952,
-    "mapped_candidate_edges": 1057,
-    "ambiguous_phrases": 105,
+    "pain_index_entries": 111,
+    "unique_user_phrases": 963,
+    "mapped_candidate_edges": 1069,
+    "ambiguous_phrases": 106,
     "product_candidates": 64,
-    "machine_offer_candidates": 46
+    "machine_offer_candidates": 47
   },
   "doors": [
     {
@@ -7174,6 +7174,29 @@
       ]
     },
     {
+      "answer_id": "intent:1a2c5aeb49",
+      "user_language": "find a blueprint or fabrication path",
+      "normalized": "find a blueprint or fabrication path",
+      "relative_json": "/chum/answers/doors/find-a-blueprint-or-fabrication-path-1a2c5aeb49.json",
+      "relative_page": "/chum/answers/doors/find-a-blueprint-or-fabrication-path-1a2c5aeb49/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-a-blueprint-or-fabrication-path-1a2c5aeb49.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:findmypart-paid-hunt-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "findmypart-paid-hunt-v1",
+          "name": "FindMyPart Paid Part Hunt",
+          "commercial_state": "sell_now",
+          "machine_state": "payment_ready",
+          "pain_page": "/chum/intents/findmypart-paid-hunt-v1/",
+          "public_url": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:c3d7b45cd1",
       "user_language": "find a blueprint or fabrication path when the original part is unavailable",
       "normalized": "find a blueprint or fabrication path when the original part is unavailable",
@@ -7238,6 +7261,29 @@
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/findmypart-paid-hunt-v1/",
           "public_url": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:bbfbe1bb3d",
+      "user_language": "find a discontinued part but I am not sure exactly what it is",
+      "normalized": "find a discontinued part but i am not sure exactly what it is",
+      "relative_json": "/chum/answers/doors/find-a-discontinued-part-but-i-am-not-sure-exactly-what-it-is-bbfbe1bb3d.json",
+      "relative_page": "/chum/answers/doors/find-a-discontinued-part-but-i-am-not-sure-exactly-what-it-is-bbfbe1bb3d/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-a-discontinued-part-but-i-am-not-sure-exactly-what-it-is-bbfbe1bb3d.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:findmypart-part-passport-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "findmypart-part-passport-v1",
+          "name": "FindMyPart Part Passport",
+          "commercial_state": "free",
+          "machine_state": "read_only_live",
+          "pain_page": "/chum/intents/findmypart-part-passport-v1/",
+          "public_url": "https://findmypart.base44.app/free-part-check",
           "registry_name": null
         }
       ]
@@ -7387,8 +7433,20 @@
       "relative_json": "/chum/answers/doors/find-a-supersession-or-cross-reference-072d61a0a0.json",
       "relative_page": "/chum/answers/doors/find-a-supersession-or-cross-reference-072d61a0a0/",
       "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-a-supersession-or-cross-reference-072d61a0a0.json",
-      "candidate_count": 1,
+      "candidate_count": 2,
       "candidates": [
+        {
+          "capability_id": "offer:findmypart-paid-hunt-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "findmypart-paid-hunt-v1",
+          "name": "FindMyPart Paid Part Hunt",
+          "commercial_state": "sell_now",
+          "machine_state": "payment_ready",
+          "pain_page": "/chum/intents/findmypart-paid-hunt-v1/",
+          "public_url": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs",
+          "registry_name": null
+        },
         {
           "capability_id": "product:findmypart",
           "kind": "product",
@@ -10436,6 +10494,29 @@
       ]
     },
     {
+      "answer_id": "intent:8e34c87662",
+      "user_language": "I know what this part does but not what it is called",
+      "normalized": "i know what this part does but not what it is called",
+      "relative_json": "/chum/answers/doors/i-know-what-this-part-does-but-not-what-it-is-called-8e34c87662.json",
+      "relative_page": "/chum/answers/doors/i-know-what-this-part-does-but-not-what-it-is-called-8e34c87662/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/i-know-what-this-part-does-but-not-what-it-is-called-8e34c87662.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:findmypart-part-passport-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "findmypart-part-passport-v1",
+          "name": "FindMyPart Part Passport",
+          "commercial_state": "free",
+          "machine_state": "read_only_live",
+          "pain_page": "/chum/intents/findmypart-part-passport-v1/",
+          "public_url": "https://findmypart.base44.app/free-part-check",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:8009e5d764",
       "user_language": "I need a better contractor proposal customer communication review or referral process",
       "normalized": "i need a better contractor proposal customer communication review or referral process",
@@ -10977,6 +11058,75 @@
       ]
     },
     {
+      "answer_id": "intent:ff44c80e2a",
+      "user_language": "identify a broken part from a label or serial plate",
+      "normalized": "identify a broken part from a label or serial plate",
+      "relative_json": "/chum/answers/doors/identify-a-broken-part-from-a-label-or-serial-plate-ff44c80e2a.json",
+      "relative_page": "/chum/answers/doors/identify-a-broken-part-from-a-label-or-serial-plate-ff44c80e2a/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/identify-a-broken-part-from-a-label-or-serial-plate-ff44c80e2a.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:findmypart-part-passport-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "findmypart-part-passport-v1",
+          "name": "FindMyPart Part Passport",
+          "commercial_state": "free",
+          "machine_state": "read_only_live",
+          "pain_page": "/chum/intents/findmypart-part-passport-v1/",
+          "public_url": "https://findmypart.base44.app/free-part-check",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:8e283e1da2",
+      "user_language": "identify a component from a diagram invoice measurement or broken fragment",
+      "normalized": "identify a component from a diagram invoice measurement or broken fragment",
+      "relative_json": "/chum/answers/doors/identify-a-component-from-a-diagram-invoice-measurement-or-broken-fragment-8e283e1da2.json",
+      "relative_page": "/chum/answers/doors/identify-a-component-from-a-diagram-invoice-measurement-or-broken-fragment-8e283e1da2/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/identify-a-component-from-a-diagram-invoice-measurement-or-broken-fragment-8e283e1da2.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:findmypart-part-passport-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "findmypart-part-passport-v1",
+          "name": "FindMyPart Part Passport",
+          "commercial_state": "free",
+          "machine_state": "read_only_live",
+          "pain_page": "/chum/intents/findmypart-part-passport-v1/",
+          "public_url": "https://findmypart.base44.app/free-part-check",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:cff5791f39",
+      "user_language": "identify a hard-to-source part from incomplete clues",
+      "normalized": "identify a hard to source part from incomplete clues",
+      "relative_json": "/chum/answers/doors/identify-a-hard-to-source-part-from-incomplete-clues-cff5791f39.json",
+      "relative_page": "/chum/answers/doors/identify-a-hard-to-source-part-from-incomplete-clues-cff5791f39/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/identify-a-hard-to-source-part-from-incomplete-clues-cff5791f39.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:findmypart-part-passport-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "findmypart-part-passport-v1",
+          "name": "FindMyPart Part Passport",
+          "commercial_state": "free",
+          "machine_state": "read_only_live",
+          "pain_page": "/chum/intents/findmypart-part-passport-v1/",
+          "public_url": "https://findmypart.base44.app/free-part-check",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:310d387d80",
       "user_language": "identify a hard-to-source part from markings measurements photos or equipment clues",
       "normalized": "identify a hard to source part from markings measurements photos or equipment clues",
@@ -10996,6 +11146,29 @@
           "pain_page": "/chum/products/findmypart/",
           "public_url": "https://findmypart.base44.app/",
           "registry_name": "io.github.jgaethle10/findmypart"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:0ff974a58c",
+      "user_language": "identify a part from a photo or markings",
+      "normalized": "identify a part from a photo or markings",
+      "relative_json": "/chum/answers/doors/identify-a-part-from-a-photo-or-markings-0ff974a58c.json",
+      "relative_page": "/chum/answers/doors/identify-a-part-from-a-photo-or-markings-0ff974a58c/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/identify-a-part-from-a-photo-or-markings-0ff974a58c.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:findmypart-part-passport-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "findmypart-part-passport-v1",
+          "name": "FindMyPart Part Passport",
+          "commercial_state": "free",
+          "machine_state": "read_only_live",
+          "pain_page": "/chum/intents/findmypart-part-passport-v1/",
+          "public_url": "https://findmypart.base44.app/free-part-check",
+          "registry_name": null
         }
       ]
     },
@@ -11078,15 +11251,15 @@
       "candidate_count": 1,
       "candidates": [
         {
-          "capability_id": "offer:findmypart-paid-hunt-v1",
+          "capability_id": "offer:findmypart-part-passport-v1",
           "kind": "machine_offer",
           "product_key": null,
-          "public_id": "findmypart-paid-hunt-v1",
-          "name": "FindMyPart Paid Part Hunt",
-          "commercial_state": "sell_now",
-          "machine_state": "payment_ready",
-          "pain_page": "/chum/intents/findmypart-paid-hunt-v1/",
-          "public_url": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs",
+          "public_id": "findmypart-part-passport-v1",
+          "name": "FindMyPart Part Passport",
+          "commercial_state": "free",
+          "machine_state": "read_only_live",
+          "pain_page": "/chum/intents/findmypart-part-passport-v1/",
+          "public_url": "https://findmypart.base44.app/free-part-check",
           "registry_name": null
         }
       ]
@@ -11375,6 +11548,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/career-command-resume-job-fit-machine-v1/",
           "public_url": "https://evercraft-career-command.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:a23411bd30",
+      "user_language": "is this part number enough to identify the right replacement",
+      "normalized": "is this part number enough to identify the right replacement",
+      "relative_json": "/chum/answers/doors/is-this-part-number-enough-to-identify-the-right-replacement-a23411bd30.json",
+      "relative_page": "/chum/answers/doors/is-this-part-number-enough-to-identify-the-right-replacement-a23411bd30/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/is-this-part-number-enough-to-identify-the-right-replacement-a23411bd30.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:findmypart-part-passport-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "findmypart-part-passport-v1",
+          "name": "FindMyPart Part Passport",
+          "commercial_state": "free",
+          "machine_state": "read_only_live",
+          "pain_page": "/chum/intents/findmypart-part-passport-v1/",
+          "public_url": "https://findmypart.base44.app/free-part-check",
           "registry_name": null
         }
       ]
@@ -13889,6 +14085,29 @@
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:9223ab99d9",
+      "user_language": "normal part searches failed and I need deeper sourcing",
+      "normalized": "normal part searches failed and i need deeper sourcing",
+      "relative_json": "/chum/answers/doors/normal-part-searches-failed-and-i-need-deeper-sourcing-9223ab99d9.json",
+      "relative_page": "/chum/answers/doors/normal-part-searches-failed-and-i-need-deeper-sourcing-9223ab99d9/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/normal-part-searches-failed-and-i-need-deeper-sourcing-9223ab99d9.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:findmypart-paid-hunt-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "findmypart-paid-hunt-v1",
+          "name": "FindMyPart Paid Part Hunt",
+          "commercial_state": "sell_now",
+          "machine_state": "payment_ready",
+          "pain_page": "/chum/intents/findmypart-paid-hunt-v1/",
+          "public_url": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs",
           "registry_name": null
         }
       ]
@@ -19359,6 +19578,29 @@
       ]
     },
     {
+      "answer_id": "intent:6756b15f14",
+      "user_language": "source new old stock or aftermarket replacement",
+      "normalized": "source new old stock or aftermarket replacement",
+      "relative_json": "/chum/answers/doors/source-new-old-stock-or-aftermarket-replacement-6756b15f14.json",
+      "relative_page": "/chum/answers/doors/source-new-old-stock-or-aftermarket-replacement-6756b15f14/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/source-new-old-stock-or-aftermarket-replacement-6756b15f14.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:findmypart-paid-hunt-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "findmypart-paid-hunt-v1",
+          "name": "FindMyPart Paid Part Hunt",
+          "commercial_state": "sell_now",
+          "machine_state": "payment_ready",
+          "pain_page": "/chum/intents/findmypart-paid-hunt-v1/",
+          "public_url": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:46a8234171",
       "user_language": "Spanish and English job training for a crew",
       "normalized": "spanish and english job training for a crew",
@@ -22465,6 +22707,29 @@
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
           "public_url": "https://aliev.base44.app/functions/alievAgentGateway?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:db7ee95e16",
+      "user_language": "what evidence do I need before buying a replacement",
+      "normalized": "what evidence do i need before buying a replacement",
+      "relative_json": "/chum/answers/doors/what-evidence-do-i-need-before-buying-a-replacement-db7ee95e16.json",
+      "relative_page": "/chum/answers/doors/what-evidence-do-i-need-before-buying-a-replacement-db7ee95e16/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/what-evidence-do-i-need-before-buying-a-replacement-db7ee95e16.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:findmypart-part-passport-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "findmypart-part-passport-v1",
+          "name": "FindMyPart Part Passport",
+          "commercial_state": "free",
+          "machine_state": "read_only_live",
+          "pain_page": "/chum/intents/findmypart-part-passport-v1/",
+          "public_url": "https://findmypart.base44.app/free-part-check",
           "registry_name": null
         }
       ]

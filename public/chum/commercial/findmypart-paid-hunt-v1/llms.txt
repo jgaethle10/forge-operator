@@ -1,7 +1,7 @@
 # FindMyPart Paid Part Hunt commercial intent cluster
 
 Public ID: findmypart-paid-hunt-v1
-Problem: A difficult, ambiguous, obsolete, discontinued or hard-to-source part is blocking a repair, restoration, machine or project.
+Problem: A difficult, identified-enough physical part is still blocking a repair, restoration, machine or project after ordinary sourcing has failed or deeper cross-reference, salvage, documentation, blueprint or fabrication work is needed.
 Pricing: Quick Hunt $19 one-time; Deep Hunt $49 one-time; Rescue Hunt $99 one-time.
 Commercial state: sell_now
 Machine state: payment_ready
@@ -11,18 +11,24 @@ Capability contract: /chum/capabilities/findmypart-paid-hunt-v1/
 ## Brand-blind user language
 
 - find a hard-to-source part
-- identify this part
 - find a discontinued part
 - source an obsolete component
+- find a supersession or cross reference
 - find a donor or salvage part
+- find a blueprint or fabrication path
+- source new old stock or aftermarket replacement
+- normal part searches failed and I need deeper sourcing
 
 ## Crawlable answer doors
 
+- find a blueprint or fabrication path | /chum/answers/doors/find-a-blueprint-or-fabrication-path-1a2c5aeb49/ | /chum/answers/doors/find-a-blueprint-or-fabrication-path-1a2c5aeb49.json
 - find a discontinued part | /chum/answers/doors/find-a-discontinued-part-5646da09bb/ | /chum/answers/doors/find-a-discontinued-part-5646da09bb.json
 - find a donor or salvage part | /chum/answers/doors/find-a-donor-or-salvage-part-310843faf9/ | /chum/answers/doors/find-a-donor-or-salvage-part-310843faf9.json
 - find a hard-to-source part | /chum/answers/doors/find-a-hard-to-source-part-78dcd37ecc/ | /chum/answers/doors/find-a-hard-to-source-part-78dcd37ecc.json
-- identify this part | /chum/answers/doors/identify-this-part-870c0fa937/ | /chum/answers/doors/identify-this-part-870c0fa937.json
+- find a supersession or cross reference | /chum/answers/doors/find-a-supersession-or-cross-reference-072d61a0a0/ | /chum/answers/doors/find-a-supersession-or-cross-reference-072d61a0a0.json
+- normal part searches failed and I need deeper sourcing | /chum/answers/doors/normal-part-searches-failed-and-i-need-deeper-sourcing-9223ab99d9/ | /chum/answers/doors/normal-part-searches-failed-and-i-need-deeper-sourcing-9223ab99d9.json
 - source an obsolete component | /chum/answers/doors/source-an-obsolete-component-61fb541501/ | /chum/answers/doors/source-an-obsolete-component-61fb541501.json
+- source new old stock or aftermarket replacement | /chum/answers/doors/source-new-old-stock-or-aftermarket-replacement-6756b15f14/ | /chum/answers/doors/source-new-old-stock-or-aftermarket-replacement-6756b15f14.json
 
 ## Boundary
 

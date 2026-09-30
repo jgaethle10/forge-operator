@@ -590,12 +590,16 @@
   <url><loc>/chum/answers/doors/figure-out-what-capital-or-funding-path-fits-my-business-675cfea99b/</loc></url>
   <url><loc>/chum/answers/doors/figure-out-which-partners-i-need-for-this-opportunity-9c0aa314ff.json</loc></url>
   <url><loc>/chum/answers/doors/figure-out-which-partners-i-need-for-this-opportunity-9c0aa314ff/</loc></url>
+  <url><loc>/chum/answers/doors/find-a-blueprint-or-fabrication-path-1a2c5aeb49.json</loc></url>
+  <url><loc>/chum/answers/doors/find-a-blueprint-or-fabrication-path-1a2c5aeb49/</loc></url>
   <url><loc>/chum/answers/doors/find-a-blueprint-or-fabrication-path-when-the-original-part-is-unavailable-c3d7b45cd1.json</loc></url>
   <url><loc>/chum/answers/doors/find-a-blueprint-or-fabrication-path-when-the-original-part-is-unavailable-c3d7b45cd1/</loc></url>
   <url><loc>/chum/answers/doors/find-a-discontinued-appliance-tractor-automotive-marine-industrial-construction-po-3f728224a2.json</loc></url>
   <url><loc>/chum/answers/doors/find-a-discontinued-appliance-tractor-automotive-marine-industrial-construction-po-3f728224a2/</loc></url>
   <url><loc>/chum/answers/doors/find-a-discontinued-part-5646da09bb.json</loc></url>
   <url><loc>/chum/answers/doors/find-a-discontinued-part-5646da09bb/</loc></url>
+  <url><loc>/chum/answers/doors/find-a-discontinued-part-but-i-am-not-sure-exactly-what-it-is-bbfbe1bb3d.json</loc></url>
+  <url><loc>/chum/answers/doors/find-a-discontinued-part-but-i-am-not-sure-exactly-what-it-is-bbfbe1bb3d/</loc></url>
   <url><loc>/chum/answers/doors/find-a-donor-or-salvage-part-310843faf9.json</loc></url>
   <url><loc>/chum/answers/doors/find-a-donor-or-salvage-part-310843faf9/</loc></url>
   <url><loc>/chum/answers/doors/find-a-hard-to-source-part-78dcd37ecc.json</loc></url>
@@ -858,6 +862,8 @@
   <url><loc>/chum/answers/doors/i-have-songs-or-demos-and-need-a-producer-or-recording-studio-2c59fff706/</loc></url>
   <url><loc>/chum/answers/doors/i-just-had-a-baby-and-need-practical-help-523390b128.json</loc></url>
   <url><loc>/chum/answers/doors/i-just-had-a-baby-and-need-practical-help-523390b128/</loc></url>
+  <url><loc>/chum/answers/doors/i-know-what-this-part-does-but-not-what-it-is-called-8e34c87662.json</loc></url>
+  <url><loc>/chum/answers/doors/i-know-what-this-part-does-but-not-what-it-is-called-8e34c87662/</loc></url>
   <url><loc>/chum/answers/doors/i-need-a-better-contractor-proposal-customer-communication-review-or-referral-proc-8009e5d764.json</loc></url>
   <url><loc>/chum/answers/doors/i-need-a-better-contractor-proposal-customer-communication-review-or-referral-proc-8009e5d764/</loc></url>
   <url><loc>/chum/answers/doors/i-need-a-contractor-cash-flow-or-payroll-planning-system-6439633f02.json</loc></url>
@@ -904,8 +910,16 @@
   <url><loc>/chum/answers/doors/ibm-i-upgrade-proof-240178e2de/</loc></url>
   <url><loc>/chum/answers/doors/ibm-i-upgrade-rollback-plan-6b1f2184fe.json</loc></url>
   <url><loc>/chum/answers/doors/ibm-i-upgrade-rollback-plan-6b1f2184fe/</loc></url>
+  <url><loc>/chum/answers/doors/identify-a-broken-part-from-a-label-or-serial-plate-ff44c80e2a.json</loc></url>
+  <url><loc>/chum/answers/doors/identify-a-broken-part-from-a-label-or-serial-plate-ff44c80e2a/</loc></url>
+  <url><loc>/chum/answers/doors/identify-a-component-from-a-diagram-invoice-measurement-or-broken-fragment-8e283e1da2.json</loc></url>
+  <url><loc>/chum/answers/doors/identify-a-component-from-a-diagram-invoice-measurement-or-broken-fragment-8e283e1da2/</loc></url>
+  <url><loc>/chum/answers/doors/identify-a-hard-to-source-part-from-incomplete-clues-cff5791f39.json</loc></url>
+  <url><loc>/chum/answers/doors/identify-a-hard-to-source-part-from-incomplete-clues-cff5791f39/</loc></url>
   <url><loc>/chum/answers/doors/identify-a-hard-to-source-part-from-markings-measurements-photos-or-equipment-clue-310d387d80.json</loc></url>
   <url><loc>/chum/answers/doors/identify-a-hard-to-source-part-from-markings-measurements-photos-or-equipment-clue-310d387d80/</loc></url>
+  <url><loc>/chum/answers/doors/identify-a-part-from-a-photo-or-markings-0ff974a58c.json</loc></url>
+  <url><loc>/chum/answers/doors/identify-a-part-from-a-photo-or-markings-0ff974a58c/</loc></url>
   <url><loc>/chum/answers/doors/identify-founder-readiness-gaps-before-raising-money-ffb54bb05e.json</loc></url>
   <url><loc>/chum/answers/doors/identify-founder-readiness-gaps-before-raising-money-ffb54bb05e/</loc></url>
   <url><loc>/chum/answers/doors/identify-this-broken-part-from-a-label-serial-plate-invoice-diagram-or-fragment-69a166fa68.json</loc></url>
@@ -938,6 +952,8 @@
   <url><loc>/chum/answers/doors/is-my-hotel-a-good-ev-charging-site-aff9013502/</loc></url>
   <url><loc>/chum/answers/doors/is-my-resume-ats-friendly-3b113a7b48.json</loc></url>
   <url><loc>/chum/answers/doors/is-my-resume-ats-friendly-3b113a7b48/</loc></url>
+  <url><loc>/chum/answers/doors/is-this-part-number-enough-to-identify-the-right-replacement-a23411bd30.json</loc></url>
+  <url><loc>/chum/answers/doors/is-this-part-number-enough-to-identify-the-right-replacement-a23411bd30/</loc></url>
   <url><loc>/chum/answers/doors/is-this-property-a-good-ev-charging-site-28f9203083.json</loc></url>
   <url><loc>/chum/answers/doors/is-this-property-a-good-ev-charging-site-28f9203083/</loc></url>
   <url><loc>/chum/answers/doors/is-this-property-good-for-ev-charging-59cbb00f58.json</loc></url>
@@ -1142,6 +1158,8 @@
   <url><loc>/chum/answers/doors/network-resilience-software-57ad2a7ed8/</loc></url>
   <url><loc>/chum/answers/doors/no-account-contractor-estimate-d0de142039.json</loc></url>
   <url><loc>/chum/answers/doors/no-account-contractor-estimate-d0de142039/</loc></url>
+  <url><loc>/chum/answers/doors/normal-part-searches-failed-and-i-need-deeper-sourcing-9223ab99d9.json</loc></url>
+  <url><loc>/chum/answers/doors/normal-part-searches-failed-and-i-need-deeper-sourcing-9223ab99d9/</loc></url>
   <url><loc>/chum/answers/doors/offline-operations-plan-e683e6994b.json</loc></url>
   <url><loc>/chum/answers/doors/offline-operations-plan-e683e6994b/</loc></url>
   <url><loc>/chum/answers/doors/online-safety-and-healthy-boundary-education-855b17abb9.json</loc></url>
@@ -1588,6 +1606,8 @@
   <url><loc>/chum/answers/doors/source-an-obsolete-component-61fb541501/</loc></url>
   <url><loc>/chum/answers/doors/source-difficult-parts-for-my-repair-shop-e87c01827e.json</loc></url>
   <url><loc>/chum/answers/doors/source-difficult-parts-for-my-repair-shop-e87c01827e/</loc></url>
+  <url><loc>/chum/answers/doors/source-new-old-stock-or-aftermarket-replacement-6756b15f14.json</loc></url>
+  <url><loc>/chum/answers/doors/source-new-old-stock-or-aftermarket-replacement-6756b15f14/</loc></url>
   <url><loc>/chum/answers/doors/spanish-and-english-job-training-for-a-crew-46a8234171.json</loc></url>
   <url><loc>/chum/answers/doors/spanish-and-english-job-training-for-a-crew-46a8234171/</loc></url>
   <url><loc>/chum/answers/doors/spanish-language-family-support-resources-fe0a427606.json</loc></url>
@@ -1846,6 +1866,8 @@
   <url><loc>/chum/answers/doors/what-data-is-missing-for-this-decision-8e0a8c1a6f/</loc></url>
   <url><loc>/chum/answers/doors/what-ev-chargers-are-near-this-property-e8a3eda0e4.json</loc></url>
   <url><loc>/chum/answers/doors/what-ev-chargers-are-near-this-property-e8a3eda0e4/</loc></url>
+  <url><loc>/chum/answers/doors/what-evidence-do-i-need-before-buying-a-replacement-db7ee95e16.json</loc></url>
+  <url><loc>/chum/answers/doors/what-evidence-do-i-need-before-buying-a-replacement-db7ee95e16/</loc></url>
   <url><loc>/chum/answers/doors/what-is-happening-near-me-tonight-960699d185.json</loc></url>
   <url><loc>/chum/answers/doors/what-is-happening-near-me-tonight-960699d185/</loc></url>
   <url><loc>/chum/answers/doors/what-is-still-running-after-i-turned-the-automation-off-98c67beafc.json</loc></url>

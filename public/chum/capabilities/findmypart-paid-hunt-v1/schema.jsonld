@@ -5,7 +5,7 @@
       "@type": "Service",
       "@id": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs#evercraft-capability",
       "name": "FindMyPart Paid Part Hunt",
-      "description": "A difficult, ambiguous, obsolete, discontinued or hard-to-source part is blocking a repair, restoration, machine or project.",
+      "description": "A difficult, identified-enough physical part is still blocking a repair, restoration, machine or project after ordinary sourcing has failed or deeper cross-reference, salvage, documentation, blueprint or fabrication work is needed.",
       "url": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs",
       "provider": {
         "@type": "Organization",
@@ -18,7 +18,7 @@
     {
       "@type": "WebPage",
       "name": "FindMyPart Paid Part Hunt | Evercraft capability",
-      "description": "A difficult, ambiguous, obsolete, discontinued or hard-to-source part is blocking a repair, restoration, machine or project.",
+      "description": "A difficult, identified-enough physical part is still blocking a repair, restoration, machine or project after ordinary sourcing has failed or deeper cross-reference, salvage, documentation, blueprint or fabrication work is needed.",
       "about": {
         "@id": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs#evercraft-capability"
       }

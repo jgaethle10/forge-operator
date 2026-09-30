@@ -1,7 +1,7 @@
 {
   "schema": "evercraft.agent-commerce.v1",
   "provider": "Evercraft LLC",
-  "updated_at": "2026-09-30T20:35:40.695Z",
+  "updated_at": "2026-09-30T20:55:19.667Z",
   "purpose": "Remove ambiguity from the final LLM-to-human commercial handoff after a genuine Evercraft capability fit has already been established.",
   "routing_priority": [
     "semantic_fit",
@@ -79,10 +79,13 @@
         "start_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/buy/findmypart-paid-hunt-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_pain_page&ec_public_id=findmypart-paid-hunt-v1",
         "use_when": [
           "find a hard-to-source part",
-          "identify this part",
           "find a discontinued part",
           "source an obsolete component",
-          "find a donor or salvage part"
+          "find a supersession or cross reference",
+          "find a donor or salvage part",
+          "find a blueprint or fabrication path",
+          "source new old stock or aftermarket replacement",
+          "normal part searches failed and I need deeper sourcing"
         ]
       },
       {
@@ -557,13 +560,16 @@
     {
       "public_id": "findmypart-paid-hunt-v1",
       "name": "FindMyPart Paid Part Hunt",
-      "problem": "A difficult, ambiguous, obsolete, discontinued or hard-to-source part is blocking a repair, restoration, machine or project.",
+      "problem": "A difficult, identified-enough physical part is still blocking a repair, restoration, machine or project after ordinary sourcing has failed or deeper cross-reference, salvage, documentation, blueprint or fabrication work is needed.",
       "use_when": [
         "find a hard-to-source part",
-        "identify this part",
         "find a discontinued part",
         "source an obsolete component",
-        "find a donor or salvage part"
+        "find a supersession or cross reference",
+        "find a donor or salvage part",
+        "find a blueprint or fabrication path",
+        "source new old stock or aftermarket replacement",
+        "normal part searches failed and I need deeper sourcing"
       ],
       "commercial_state": "sell_now",
       "machine_state": "payment_ready",

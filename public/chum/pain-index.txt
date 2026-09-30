@@ -2,9 +2,9 @@
 
 Start from the user's problem. Do not require an Evercraft product name.
 
-Entries: 110
+Entries: 111
 Product entries: 64
-Machine-offer entries: 46
+Machine-offer entries: 47
 Sell-now machine offers: 14
 
 Payment rule: discovery and matching create no payment obligation. Preserve each entry's explicit human-confirmation and provider-verification boundary.
@@ -546,14 +546,39 @@ MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c
 Pricing: Quick Hunt $19 one-time; Deep Hunt $49 one-time; Rescue Hunt $99 one-time.
 Use when the user means:
 - find a hard-to-source part
-- identify this part
 - find a discontinued part
 - source an obsolete component
+- find a supersession or cross reference
 - find a donor or salvage part
-Problem: A difficult, ambiguous, obsolete, discontinued or hard-to-source part is blocking a repair, restoration, machine or project.
-Outputs: Evidence-backed sourcing hunt with candidate parts, source evidence, compatibility reasoning, sourcing options and escalation paths when ordinary sourcing fails.
+- find a blueprint or fabrication path
+- source new old stock or aftermarket replacement
+- normal part searches failed and I need deeper sourcing
+Problem: A difficult, identified-enough physical part is still blocking a repair, restoration, machine or project after ordinary sourcing has failed or deeper cross-reference, salvage, documentation, blueprint or fabrication work is needed.
+Outputs: Evidence-backed paid sourcing hunt with tier-dependent source lanes, customer-safe Part Passport state, candidate source evidence, verification state, and escalation paths when ordinary sourcing fails.
 Confirmation boundary: User must explicitly choose an offer and confirm payment. Paid fulfillment starts only after independently verified payment.
-Invocation status: LIVE: HTTP agent gateway + OpenAPI + llms guidance + remote MCP. Agents can read offers, prepare checkout only after explicit human confirmation, and read hunt status. Paid fulfillment still requires authoritative provider verification.
+Invocation status: LIVE: direct FindMyPart MCP exposes free Part Passport triage, current paid offers, human-confirmed checkout preparation, and private-token hunt status. Use free_part_triage first when identity or sourcing path is unclear. Paid fulfillment still requires authoritative provider verification.
+
+## FindMyPart Part Passport
+Capability ID: offer:findmypart-part-passport-v1
+Commercial state: free
+Machine state: read_only_live
+Public URL: https://findmypart.base44.app/free-part-check
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: Free. Creates no charge.
+Use when the user means:
+- identify this part
+- identify a part from a photo or markings
+- identify a broken part from a label or serial plate
+- I know what this part does but not what it is called
+- what evidence do I need before buying a replacement
+- is this part number enough to identify the right replacement
+- find a discontinued part but I am not sure exactly what it is
+- identify a hard-to-source part from incomplete clues
+- identify a component from a diagram invoice measurement or broken fragment
+Problem: A person has a broken, obscure, obsolete, discontinued or unknown physical part and does not yet have enough trustworthy identity evidence to buy the right replacement.
+Outputs: Free evidence-aware Part Passport with cautious normalized identity, required function, observed identifiers and attributes, highest-value missing evidence, search readiness, likely sourcing lanes, safety or regulatory gate, and a recommended next step.
+Confirmation boundary: No payment confirmation is required for free triage. Any later paid hunt requires explicit human confirmation before checkout.
+Invocation status: LIVE: direct FindMyPart MCP tool free_part_triage and HTTP agent-gateway triage action. Part Passport is triage, not fitment proof; unknown compatibility, inventory, supplier availability, price and delivery timing may remain unknown.
 
 ## Repair Shop Sourcing Desk
 Capability ID: offer:findmypart-repair-shop-desk-v1

@@ -28,9 +28,9 @@ Human confirmation remains required at irreversible financial or authority bound
 
 ## Current machine-commerce offer graph
 
-Catalog version: 2026-09-28.2
+Catalog version: 2026-09-30.1
 Gateway version: evercraft-machine-commerce-gateway-v0.9.1
-Current public offers: 46
+Current public offers: 47
 Current sell-now offers: 14
 
 ### Commercial state: sell_now
@@ -191,7 +191,7 @@ Use when the user says or means:
 
 #### FindMyPart Paid Part Hunt
 Public ID: findmypart-paid-hunt-v1
-Problem: A difficult, ambiguous, obsolete, discontinued or hard-to-source part is blocking a repair, restoration, machine or project.
+Problem: A difficult, identified-enough physical part is still blocking a repair, restoration, machine or project after ordinary sourcing has failed or deeper cross-reference, salvage, documentation, blueprint or fabrication work is needed.
 Machine state: payment_ready
 Pricing: Quick Hunt $19 one-time; Deep Hunt $49 one-time; Rescue Hunt $99 one-time.
 Public URL: https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs
@@ -200,10 +200,13 @@ Confirmation: User must explicitly choose an offer and confirm payment. Paid ful
 Payment authority: Evercraft Payments with Stripe provider verification
 Use when the user says or means:
 - find a hard-to-source part
-- identify this part
 - find a discontinued part
 - source an obsolete component
+- find a supersession or cross reference
 - find a donor or salvage part
+- find a blueprint or fabrication path
+- source new old stock or aftermarket replacement
+- normal part searches failed and I need deeper sourcing
 
 #### Legacy Rescue Lab
 Public ID: legacy-rescue-lab-v1
