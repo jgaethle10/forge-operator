@@ -206,6 +206,8 @@ export class EvercraftHostingControlPlane {
     const leaseTtlMs=Math.max(60000,Number(spec.lease_ttl_ms||this.defaultLeaseTtlMs));
     const renewEveryMs=Math.max(30000,Number(spec.renew_every_ms||this.defaultRenewEveryMs));
 
+    let previousHealthFailed=false;
+    let failedActiveNodeId='';
     if(previous?.state==='ready'&&previous.desired_spec_hash===desiredHash){
       const current=this.yard.deploymentStatus(previous.active_deployment_id);
       if(current?.state==='ready'){
@@ -218,10 +220,16 @@ export class EvercraftHostingControlPlane {
             action:'unchanged',
           });
         }
+        previousHealthFailed=true;
+        failedActiveNodeId=clean(previous.capacity_node_id||current.receipt?.capacity_node_id);
+      }else{
+        previousHealthFailed=true;
+        failedActiveNodeId=clean(previous.capacity_node_id);
       }
     }
 
-    const candidateId=safeId(serviceId+'--'+desiredHash.replace(/^sha256:/,'').slice(0,12));
+    const deploymentGeneration=Math.max(1,Number(previous?.deployment_generation||0)+1);
+    const candidateId=safeId(serviceId+'--'+desiredHash.replace(/^sha256:/,'').slice(0,10)+'--g'+deploymentGeneration);
     let candidate=null;
     let binding=null;
     let placementResolution=null;
@@ -248,6 +256,7 @@ export class EvercraftHostingControlPlane {
           workloadClass:clean(spec.workload_class),
           resourceProfile:placement.resource_profile||{},
           preferredNodeId:clean(placement.preferred_node_id),
+          excludeNodeIds:failedActiveNodeId?[failedActiveNodeId]:[],
           allowLoopbackProof:this.allowLoopbackProof,
         });
         candidate=await this.yard.deployRelease({
@@ -336,6 +345,7 @@ export class EvercraftHostingControlPlane {
         desired_spec_hash:desiredHash,
         active_deployment_id:candidateId,
         active_release_ref:clean(spec.release_ref),
+        deployment_generation:deploymentGeneration,
         deployment_receipt:candidate.receipt?.receipt_hash||null,
         capacity_node_id:candidate.receipt?.capacity_node_id||null,
         instance_id:candidate.result?.instance_id||null,
@@ -399,11 +409,11 @@ export class EvercraftHostingControlPlane {
         try{this.yard.stopLeaseKeeper(candidateId);}catch{}
         try{await this.yard.stopDeployment(candidateId,{reason:'hosting_candidate_failed'});}catch{}
       }
-      const preserveActive=previous?.state==='ready'&&previous?.active_deployment_id;
+      const preserveActive=previous?.state==='ready'&&previous?.active_deployment_id&&!previousHealthFailed;
       const failed={
         schema:'evercraft.compute.hosted-service-state.v1',
         service_id:serviceId,
-        state:preserveActive?'ready':'failed',
+        state:preserveActive?'ready':previousHealthFailed?'degraded':'failed',
         action:'candidate_rejected',
         desired_spec:preserveActive?previous.desired_spec:redactSpec(spec),
         desired_spec_hash:preserveActive?previous.desired_spec_hash:desiredHash,
@@ -411,6 +421,7 @@ export class EvercraftHostingControlPlane {
         last_attempted_spec_hash:desiredHash,
         active_deployment_id:previous?.active_deployment_id||null,
         active_release_ref:previous?.active_release_ref||null,
+        deployment_generation:Number(previous?.deployment_generation||0),
         deployment_receipt:previous?.deployment_receipt||null,
         capacity_node_id:previous?.capacity_node_id||null,
         instance_id:previous?.instance_id||null,
@@ -424,6 +435,40 @@ export class EvercraftHostingControlPlane {
       this.#save(failed);
       throw error;
     }
+  }
+
+  async reconcile(serviceId,{capacityEndpoint='',allocatorToken=''}={}){
+    const current=this.#load(serviceId);
+    if(!current?.desired_spec) throw new Error('hosted_service_spec_unavailable');
+    return await this.apply(structuredClone(current.desired_spec),{capacityEndpoint,allocatorToken});
+  }
+
+  async reconcileAll(){
+    const results=[];
+    for(const name of fs.readdirSync(path.join(this.stateDir,'services'))){
+      if(!name.endsWith('.json')) continue;
+      const serviceId=name.slice(0,-5);
+      try{
+        const record=await this.reconcile(serviceId);
+        results.push({service_id:serviceId,ok:true,state:record.state,action:record.action});
+      }catch(error){
+        const current=this.#load(serviceId);
+        results.push({
+          service_id:serviceId,
+          ok:false,
+          state:current?.state||'unknown',
+          error:String(error?.message||error)
+        });
+      }
+    }
+    return {
+      schema:'evercraft.compute.hosting-reconcile.v1',
+      service_count:results.length,
+      healthy_count:results.filter(x=>x.ok&&x.state==='ready').length,
+      degraded_count:results.filter(x=>!x.ok||x.state==='degraded').length,
+      results,
+      reconciled_at:new Date().toISOString(),
+    };
   }
 
   async rollback(serviceId,{capacityEndpoint='',allocatorToken=''}={}){

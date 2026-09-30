@@ -10,16 +10,19 @@ export function classifyEvercraftCapacity(nodes=[],{
   minimumNodeMemoryMb=0,
   requireAttestation=true,
   preferredNodeId='',
+  excludeNodeIds=[],
 }={}){
   const eligible=[],rejected=[];
   const work=clean(workloadClass);
   const required=new Set(requiredNodeLabels.map(v=>clean(v).toLowerCase()).filter(Boolean));
   const forbidden=new Set(forbiddenNodeLabels.map(v=>clean(v).toLowerCase()).filter(Boolean));
+  const excludedNodes=new Set(excludeNodeIds.map(clean).filter(Boolean));
   for(const node of nodes||[]){
     const capacity=node?.capacity||{};
     const nodeLabels=labels(node),supported=workloads(node);
     let reason='';
-    if(node?.connected!==true) reason='node_not_connected';
+    if(excludedNodes.has(clean(node?.node_id))) reason='node_explicitly_excluded';
+    else if(node?.connected!==true) reason='node_not_connected';
     else if(capacity.protocol!=='evercraft.capacity.v1') reason='capacity_protocol_mismatch';
     else if(capacity.runtime!=='Evercraft Compute') reason='runtime_mismatch';
     else if(requireAttestation&&capacity.attestation_supported!==true) reason='attestation_not_supported';
@@ -57,6 +60,7 @@ export async function resolveEvercraftRemoteCapacity({
   workloadClass,
   resourceProfile={},
   preferredNodeId='',
+  excludeNodeIds=[],
   allowLoopbackProof=false,
 }={}){
   if(!yard||typeof yard.listRemoteCapacityNodes!=='function') throw new Error('yard_operator_required');
@@ -72,6 +76,7 @@ export async function resolveEvercraftRemoteCapacity({
     minimumNodeMemoryMb:resourceProfile.minimum_node_memory_mb||0,
     requireAttestation:resourceProfile.require_node_attestation!==false,
     preferredNodeId,
+    excludeNodeIds,
   });
   const selected=classified.eligible[0]||null;
   if(!selected){
