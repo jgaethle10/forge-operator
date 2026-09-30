@@ -5,6 +5,8 @@ on:
     paths:
       - "systemia/media-studio/studio-delivery.ts"
       - "systemia/media-studio/studio-delivery.test.ts"
+      - "systemia/media-studio/master-qc.ts"
+      - "systemia/media-studio/master-qc.integration.test.ts"
       - "systemia/media-studio/cli.ts"
       - ".github/workflows/fallen-studio-delivery.yml"
   push:
@@ -36,8 +38,11 @@ jobs:
             sudo apt-get install -y ffmpeg
           fi
           ffmpeg -version | head -n 1
-      - name: Delivery contracts
-        run: node --import tsx --test systemia/media-studio/studio-delivery.test.ts
+      - name: Delivery and master QC contracts
+        run: |
+          node --import tsx --test \
+            systemia/media-studio/studio-delivery.test.ts \
+            systemia/media-studio/master-qc.integration.test.ts
       - name: Build media fixtures
         run: |
           set -euo pipefail
@@ -117,12 +122,16 @@ jobs:
           const root='/tmp/fallen-delivery';
           const manifest=JSON.parse(fs.readFileSync(root+'/fallen-delivery-ci.clip-intake.json','utf8'));
           const receipt=JSON.parse(fs.readFileSync(root+'/fallen-delivery-ci.render-receipt.json','utf8'));
+          const qc=JSON.parse(fs.readFileSync(root+'/fallen-delivery-ci.master-qc.json','utf8'));
           const digest=crypto.createHash('sha256').update(fs.readFileSync(root+'/fallen-delivery-ci.mp4')).digest('hex');
           if(manifest.schema!=='evercraft.clip.media-intake.v1') throw new Error('manifest_schema_invalid');
           if(manifest.state!=='ready_for_clip_intake') throw new Error('manifest_state_invalid');
           if(manifest.sourceApp!=='fallen') throw new Error('source_app_invalid');
           if(manifest.media.sha256!==digest) throw new Error('manifest_media_digest_mismatch');
           if(receipt.sha256!==digest) throw new Error('receipt_media_digest_mismatch');
+          if(qc.status!=='accepted') throw new Error('master_qc_not_accepted');
+          if(qc.sha256!==digest) throw new Error('master_qc_digest_mismatch');
+          if(!manifest.provenance.masterQcReceiptPath.endsWith('.master-qc.json')) throw new Error('master_qc_receipt_not_bound');
           if(manifest.destinations.join(',')!=='youtube,linkedin,instagram') throw new Error('destinations_invalid');
           if(manifest.captions.length!==1) throw new Error('caption_asset_missing');
           if(manifest.boundaries.publicationAuthorityGranted!==false) throw new Error('publication_boundary_broken');
@@ -135,6 +144,7 @@ jobs:
           mkdir -p artifacts/fallen-studio-delivery
           cp /tmp/fallen-delivery/fallen-delivery-ci.mp4 artifacts/fallen-studio-delivery/
           cp /tmp/fallen-delivery/fallen-delivery-ci.render-receipt.json artifacts/fallen-studio-delivery/
+          cp /tmp/fallen-delivery/fallen-delivery-ci.master-qc.json artifacts/fallen-studio-delivery/
           cp /tmp/fallen-delivery/fallen-delivery-ci.clip-intake.json artifacts/fallen-studio-delivery/
       - uses: actions/upload-artifact@v4
         with:
