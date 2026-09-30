@@ -62,16 +62,17 @@ function bus(
   labels:string[],
   filters:string[],
   sampleRate:number,
+  durationSec:number,
 ){
   if(!labels.length) return undefined;
   const output=kind+'bus';
   if(labels.length===1){
-    filters.push(`[${labels[0]}]aresample=${sampleRate}[${output}];`);
+    filters.push(`[${labels[0]}]aresample=${sampleRate},apad,atrim=duration=${durationSec}[${output}];`);
     return output;
   }
   filters.push(
     labels.map(label=>`[${label}]`).join('')+
-    `amix=inputs=${labels.length}:duration=longest:dropout_transition=0:normalize=0,aresample=${sampleRate}[${output}];`
+    `amix=inputs=${labels.length}:duration=longest:dropout_transition=0:normalize=0,aresample=${sampleRate},apad,atrim=duration=${durationSec}[${output}];`
   );
   return output;
 }
@@ -95,9 +96,9 @@ export function buildAudioMasterGraph(input:{
   const musicLabels=input.clips.filter(item=>item.trackKind==='music').map(item=>item.label);
   const sfxLabels=input.clips.filter(item=>item.trackKind==='sfx').map(item=>item.label);
 
-  let voice=bus('voice',voiceLabels,filters,policy.sampleRate);
-  let music=bus('music',musicLabels,filters,policy.sampleRate);
-  const sfx=bus('sfx',sfxLabels,filters,policy.sampleRate);
+  let voice=bus('voice',voiceLabels,filters,policy.sampleRate,input.durationSec);
+  let music=bus('music',musicLabels,filters,policy.sampleRate,input.durationSec);
+  const sfx=bus('sfx',sfxLabels,filters,policy.sampleRate,input.durationSec);
   let duckedMusic:string|undefined;
 
   if(voice&&music&&policy.dialogueDucking){
