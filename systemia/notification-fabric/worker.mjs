@@ -33,7 +33,10 @@ export function createRelayWorker(options = {}) {
 
   async function scheduleAckWatch(intent, result, now = Date.now()) {
     const policy = normalizeAckPolicy(intent.acknowledgement);
-    const principals = Array.isArray(result.targeted_principal_ids) ? result.targeted_principal_ids : [];
+    let principals = Array.isArray(result.targeted_principal_ids) ? result.targeted_principal_ids : [];
+    if (!principals.length && typeof fabric.resolvePrincipals === 'function') {
+      principals = fabric.resolvePrincipals(intent);
+    }
     if (!policy || !principals.length || policy.max_escalations <= 0) return null;
     return outbox.enqueue({
       kind: 'ack_watch',
