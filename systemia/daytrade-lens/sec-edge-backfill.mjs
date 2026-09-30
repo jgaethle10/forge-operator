@@ -17,7 +17,7 @@ async function main() {
 
   const observationBatch = await buildSecRockyObservationBatch({
     universe: DEFAULT_SEC_RESEARCH_UNIVERSE,
-    lookback_days: Number(process.env.EDGE_LAB_SEC_LOOKBACK_DAYS || 120),
+    lookback_days: Number(process.env.EDGE_LAB_SEC_LOOKBACK_DAYS || 365),
     publication_delay_buffer_minutes: Number(
       process.env.EDGE_LAB_SEC_PUBLICATION_DELAY_MINUTES || 10
     ),
