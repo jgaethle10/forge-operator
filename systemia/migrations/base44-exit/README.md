@@ -84,3 +84,61 @@ npm run saban:base44-evac -- --inventory /secure/path/base44-estate.json
 ```
 
 A green plan means the migration requirements are explicit. It does not mean production traffic has moved.
+
+
+## Compatibility membrane
+
+The migration path does not require every generated Base44 client call to be rewritten at once. Evercraft App Fabric now exposes a bounded compatibility membrane for the call shapes observed in live portfolio applications:
+
+- entity CRUD, bulk operations, aggregate, upsert, import and realtime subscription,
+- function invocation,
+- integration invocation,
+- generated auth-context calls,
+- public app settings,
+- cross-app clients,
+- Base44 SDK-style `createClient()` and axios helper usage.
+
+The implementation lives in `systemia/app-fabric`. Compatibility is a bridge, not permanent Base44 authority. Destination routing resolves to Evercraft-owned App Fabric, and public cutover remains gated on parity.
+
+The source archaeologist is `systemia/migrations/base44-exit/source-scanner.mjs`. It fingerprints cross-app IDs, reports environment variable names without values, inventories entity/function/auth/integration usage and counts hard-coded Base44 route dependencies without emitting those route values.
+
+Run it against an extracted application tree with:
+
+```bash
+npm run base44:scan-source -- --source /secure/path/extracted-app
+```
+
+## Identity migration boundary
+
+Evercraft Identity is the destination authority for app sessions. App Fabric binds to the existing Evercraft session format and server-side revocation ledger. Migrated users may be provisioned only with a verified migration, operator or delivered-challenge authority receipt.
+
+Registration and password recovery use `systemia/identity/challenge-broker.mjs`. Pending registration credentials are encrypted in Evercraft Secret Store. Verification codes and reset tokens are stored only as hashes. The broker refuses to claim registration or recovery delivery unless a real delivery adapter returns a receipt.
+
+This means generated Base44 auth pages can be made compatible without copying Base44 credentials or inventing a fake OTP path.
+
+## Lossless entity transfer
+
+Generic structured-data transfer lives in `systemia/migrations/base44-exit/entity-transfer.mjs`.
+
+Each entity transfer must prove:
+
+1. bounded pagination,
+2. terminal source exhaustion,
+3. stable source row count when the source exposes one,
+4. unique migration keys,
+5. immutable page objects in Evercraft Object Store,
+6. per-page object hashes,
+7. one deterministic whole-stream hash,
+8. idempotent destination import,
+9. destination field-by-field reconciliation for every source field,
+10. mutation receipts for destination writes.
+
+Raw pagination cursors, source secret values and traffic changes are excluded from the transfer manifest. A source that loops cursors, changes its asserted total, omits a next cursor before exhaustion, duplicates a migration key or disagrees with the final row count fails closed.
+
+Run the proof with:
+
+```bash
+npm run proof:base44-entity-transfer
+```
+
+The transfer receipt proves data movement only. It does not authorize DNS changes, traffic cutover or Base44 decommissioning.
