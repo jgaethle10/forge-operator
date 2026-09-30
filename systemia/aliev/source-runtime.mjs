@@ -4,7 +4,7 @@ import path from 'node:path';
 import { createHash, randomBytes } from 'node:crypto';
 import { ingestAliEvDomainRecords, aliEvDomainHealth } from './domain-store.mjs';
 import { buildOwnedAliEvSiteSnapshot, censusOnelineGeocode } from './source-engine.mjs';
-import { refreshOwnedAliEvSiteDomains } from './collectors/washington.mjs';
+import { refreshOwnedAliEvSiteDomains } from './collectors/us.mjs';
 
 const COVERAGE_SCHEMA='evercraft.rivet.source-coverage.v1';
 const REQUIRED_DOMAINS=[
