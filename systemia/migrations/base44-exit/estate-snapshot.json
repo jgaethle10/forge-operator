@@ -3,6 +3,7 @@
   "observed_at": "2026-09-24",
   "observed_apps_minimum": 100,
   "observed_source_state": "s3_plus_connected_drive_recovery",
+  "last_updated_at": "2026-09-30",
   "note": "Snapshot intentionally omits Base44 app IDs, Drive file IDs, private URLs, credentials, customer data and internal topology.",
   "queue": [
     {
@@ -31,7 +32,7 @@
       "wave": 1,
       "role": "internal_operations",
       "target": "systemia_plus_yard",
-      "state": "queued"
+      "state": "owned_snapshot_ingress_landed_legacy_source_adapter_remaining"
     },
     {
       "product": "Systemia Audit Center",
