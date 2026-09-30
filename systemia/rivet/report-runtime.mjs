@@ -37,20 +37,49 @@ function arr(value){ return Array.isArray(value)?value:[]; }
 function publicText(value){ return clean(value).slice(0,4000); }
 function requireSourceCoverage(data){
   const manifest=data?.source_coverage_manifest;
-  if(clean(manifest?.schema)!==SOURCE_COVERAGE_SCHEMA || !manifest?.domains || typeof manifest.domains!=='object'){
-    throw new Error('source_coverage_manifest_required');
+  if(manifest?.domains && typeof manifest.domains==='object'){
+    if(clean(manifest?.schema)!==SOURCE_COVERAGE_SCHEMA) throw new Error('source_coverage_schema_unsupported');
+    const missing=REQUIRED_SOURCE_COVERAGE_DOMAINS.filter(key=>!manifest.domains[key] || !clean(manifest.domains[key]?.state));
+    if(missing.length) throw new Error('source_coverage_incomplete:'+missing.join(','));
+    return {
+      schema:SOURCE_COVERAGE_SCHEMA,
+      contract_state:'verified',
+      generated_at:clean(manifest.generated_at || data?.retrieved_at),
+      domains:Object.fromEntries(REQUIRED_SOURCE_COVERAGE_DOMAINS.map(key=>[key,{
+        state:clean(manifest.domains[key]?.state),
+        record_count:number(manifest.domains[key]?.record_count) ?? 0,
+        source_status:clean(manifest.domains[key]?.source_status) || null
+      }])),
+      semantics:clean(manifest.semantics) || 'Every report-relevant source domain is explicit. Missing is never zero.'
+    };
   }
-  const missing=REQUIRED_SOURCE_COVERAGE_DOMAINS.filter(key=>!manifest.domains[key] || !clean(manifest.domains[key]?.state));
-  if(missing.length) throw new Error('source_coverage_incomplete:'+missing.join(','));
+  const present=(...values)=>values.some(value=>Array.isArray(value)?value.length>0:(value!==null&&value!==undefined&&value!==''));
+  const row=(connected,count=0)=>({
+    state:connected?'CONNECTED':'NOT_OBSERVABLE',
+    record_count:connected?count:0,
+    source_status:'compatibility_derived_missing_manifest'
+  });
   return {
     schema:SOURCE_COVERAGE_SCHEMA,
-    generated_at:clean(manifest.generated_at || data?.retrieved_at),
-    domains:Object.fromEntries(REQUIRED_SOURCE_COVERAGE_DOMAINS.map(key=>[key,{
-      state:clean(manifest.domains[key]?.state),
-      record_count:number(manifest.domains[key]?.record_count) ?? 0,
-      source_status:clean(manifest.domains[key]?.source_status) || null
-    }])),
-    semantics:clean(manifest.semantics) || 'Every report-relevant source domain is explicit. Missing is never zero.'
+    contract_state:'compatibility_derived',
+    generated_at:clean(data?.retrieved_at),
+    domains:{
+      geocoding:row(present(data?.matched_address,data?.latitude,data?.longitude),data?.matched_address?1:0),
+      charging_inventory:row(present(data?.chargers),arr(data?.chargers).length),
+      traffic:row(present(data?.traffic),arr(data?.traffic).length),
+      traffic_temporal:row(present(data?.traffic_profiles),arr(data?.traffic_profiles).length),
+      utility_service_area:row(present(data?.washington_utility_service_area_candidates,data?.california_utility_service_area_candidates),arr(data?.washington_utility_service_area_candidates).length+arr(data?.california_utility_service_area_candidates).length),
+      utility_tariff:row(present(data?.utility_rate_candidates,data?.washington_pacific_power_current_rate_catalog,data?.california_candidate_tariff_catalog),arr(data?.utility_rate_candidates).length+arr(data?.california_candidate_tariff_catalog).length+(data?.washington_pacific_power_current_rate_catalog?1:0)),
+      incentives:row(present(data?.incentives,data?.new_york_ev_programs),arr(data?.incentives).length+arr(data?.new_york_ev_programs).length),
+      parcel_planning:row(present(data?.california_parcel_planning),data?.california_parcel_planning?1:0),
+      local_ev_stock:row(present(data?.local_ev_stock),data?.local_ev_stock?1:0),
+      observed_sessions:row(present(data?.nearby_observed_usage),arr(data?.nearby_observed_usage).length),
+      freight:row(present(data?.freight_context),data?.freight_context?1:0),
+      dwell_context:row(present(data?.dwell_anchors),arr(data?.dwell_anchors).length),
+      deep_market_evidence:row(present(data?.deep_benchmark_records,data?.deep_market_evidence,data?.deep_utility_program_evidence,data?.deep_external_evidence),arr(data?.deep_benchmark_records).length+arr(data?.deep_market_evidence).length+arr(data?.deep_utility_program_evidence).length+arr(data?.deep_external_evidence).length),
+      provenance:row(present(data?.source_record_ids),arr(data?.source_record_ids).length)
+    },
+    semantics:'Compatibility-derived source coverage. Missing is explicit and never converted to zero. Upgrade the source adapter to the verified manifest contract.'
   };
 }
 
@@ -353,8 +382,9 @@ export async function generateYardReport({
       football_opened:true,
       source_sha256_match:true,
       source_byte_count_match:true,
-      source_coverage_verified:true,
-      required_source_domains_verified:REQUIRED_SOURCE_COVERAGE_DOMAINS.length,
+      source_coverage_verified:sourceCoverage.contract_state==='verified',
+      source_coverage_compatibility_derived:sourceCoverage.contract_state==='compatibility_derived',
+      required_source_domains_explicit:REQUIRED_SOURCE_COVERAGE_DOMAINS.length,
       report_generation_state:'ready'
     }
   };
