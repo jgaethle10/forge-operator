@@ -46,13 +46,19 @@ test('builds one deterministic mp4 export from video, overlay, audio and caption
   assert.deepEqual(plan.audioClipIds,['voice-clip','music-clip']);
   assert.deepEqual(plan.captionClipIds,['caption-clip']);
   assert.equal(plan.boundaries.publicationAuthorityGranted,false);
+  assert.equal(plan.boundaries.roleAwareAudioBuses,true);
+  assert.equal(plan.boundaries.dialogueAwareMusicDucking,true);
+  assert.equal(plan.audioMaster.targetLufs,-14);
+  assert.equal(plan.audioMaster.truePeakDb,-1);
 
   const filterIndex=plan.ffmpegArgs.indexOf('-filter_complex');
   assert.ok(filterIndex>=0);
   const filter=plan.ffmpegArgs[filterIndex+1];
   assert.match(filter,/overlay=/);
   assert.match(filter,/amix=inputs=2/);
-  assert.match(filter,/alimiter=limit=0\.95/);
+  assert.match(filter,/sidechaincompress=threshold=0\.05:ratio=8:attack=20:release=350/);
+  assert.match(filter,/loudnorm=I=-14:TP=-1:LRA=11:linear=true/);
+  assert.match(filter,/alimiter=limit=0\.891251/);
   assert.match(filter,/subtitles=filename=/);
   assert.ok(plan.ffmpegArgs.includes('+faststart'));
   assert.ok(plan.ffmpegArgs.includes('libx264'));
@@ -96,4 +102,28 @@ test('visual-only projects export without inventing an audio stream',()=>{
   const plan=buildTimelineExportPlan({project,outputPath:'/tmp/silent.mp4'});
   assert.ok(plan.ffmpegArgs.includes('-an'));
   assert.equal(plan.audioClipIds.length,0);
+});
+
+
+test('respects a bounded custom audio master policy',()=>{
+  const project=readyProject();
+  project.audioMaster={
+    targetLufs:-16,
+    truePeakDb:-1.5,
+    lra:9,
+    dialogueDucking:true,
+    duckThreshold:.08,
+    duckRatio:6,
+    attackMs:30,
+    releaseMs:420,
+    sampleRate:44100,
+  };
+  const plan=buildTimelineExportPlan({project,outputPath:'/tmp/custom-master.mp4'});
+  const filter=plan.ffmpegArgs[plan.ffmpegArgs.indexOf('-filter_complex')+1];
+  assert.equal(plan.audioMaster.targetLufs,-16);
+  assert.equal(plan.audioMaster.truePeakDb,-1.5);
+  assert.equal(plan.audioMaster.sampleRate,44100);
+  assert.match(filter,/aresample=44100/);
+  assert.match(filter,/sidechaincompress=threshold=0\.08:ratio=6:attack=30:release=420/);
+  assert.match(filter,/loudnorm=I=-16:TP=-1\.5:LRA=9:linear=true/);
 });

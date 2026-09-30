@@ -3,9 +3,9 @@
   "provider": "Evercraft LLC",
   "generated_from": "public/.well-known/evercraft-pain-index.json",
   "updated_at": "2026-09-29T01:40:00.000Z",
-  "answer_id": "intent:e9336647c3",
-  "user_language": "find a fabrication path when the original part is unavailable",
-  "normalized": "find a fabrication path when the original part is unavailable",
+  "answer_id": "intent:3f728224a2",
+  "user_language": "find a discontinued appliance tractor automotive marine industrial construction powersports agricultural electronics or equipment part",
+  "normalized": "find a discontinued appliance tractor automotive marine industrial construction powersports agricultural electronics or equipment part",
   "purpose": "Brand-blind discovery cue from natural user language to truthful public Evercraft capability candidates.",
   "candidate_count": 1,
   "candidates": [
@@ -28,12 +28,14 @@
       "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "invocation_status": "Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.",
-      "authority": "public discovery and human-confirmed paid sourcing hunts",
+      "authority": "free evidence-aware Part Passport triage plus human-confirmed paid sourcing hunts",
       "boundaries": [
+        "Part Passport normalization is not fitment proof",
+        "reachable listings are source leads until separately verified",
         "unknowns may remain unknown",
-        "compatibility is not guaranteed",
+        "compatibility inventory supplier availability price and delivery timing are not guaranteed",
         "checkout creation is not payment proof",
-        "private vendor, analytics, session, command-center, and sales data are not public"
+        "private vendor analytics session command-center and sales data are not public"
       ]
     }
   ],

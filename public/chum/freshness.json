@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-30T20:11:39.857Z",
+  "updated_at": "2026-09-30T20:35:42.472Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,37 +11,535 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/crawler-radar.json",
-      "last_changed": "2026-09-30T20:11:39.857Z",
+      "path": "/chum/sitemaps/answers.xml",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 108
+    },
+    {
+      "path": "/chum/answers/doors/find-a-blueprint-or-fabrication-path-when-the-original-part-is-unavailable-c3d7b45cd1.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/find-a-blueprint-or-fabrication-path-when-the-original-part-is-unavailable-c3d7b45cd1/",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/find-a-discontinued-appliance-tractor-automotive-marine-industrial-construction-po-3f728224a2.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/find-a-discontinued-appliance-tractor-automotive-marine-industrial-construction-po-3f728224a2/",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/find-a-replacement-for-an-obsolete-part-4be38e27cb.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/find-a-salvage-or-donor-part-7facbee550.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/find-a-supersession-or-cross-reference-072d61a0a0.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/find-a-supersession-or-cross-reference-072d61a0a0/",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/find-replacement-donor-salvage-blueprint-or-fabrication-paths-when-normal-sourcing-6e4ab62f10.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/find-replacement-donor-salvage-blueprint-or-fabrication-paths-when-normal-sourcing-6e4ab62f10/",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/i-have-a-part-number-but-cannot-find-it-anywhere-f84b529cb2.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/identify-a-hard-to-source-part-from-markings-measurements-photos-or-equipment-clue-310d387d80.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/identify-this-broken-part-from-a-label-serial-plate-invoice-diagram-or-fragment-69a166fa68.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/identify-this-broken-part-from-a-label-serial-plate-invoice-diagram-or-fragment-69a166fa68/",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/identify-this-machine-part-from-a-photo-or-markings-42b537ac03.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/tell-me-what-evidence-i-still-need-before-buying-a-replacement-19d8521bdb.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/tell-me-what-evidence-i-still-need-before-buying-a-replacement-19d8521bdb/",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/where-can-i-find-this-discontinued-part-fbe2473669.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/products/findmypart/",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/findmypart/ai-conformance.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/findmypart/ai-discovery.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/findmypart/llms.txt",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/sell-now.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 92
+    },
+    {
+      "path": "/.well-known/evercraft-pain-index.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 90
+    },
+    {
+      "path": "/chum/revenue.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 90
+    },
+    {
+      "path": "/.well-known/evercraft-products.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 88
+    },
+    {
+      "path": "/chum/answers/observed/i-need-a-discontinued-machine-part-that-normal-suppliers-cannot-find-i-have-photos-m-6d7a66229b/llms.txt",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 86
+    },
+    {
+      "path": "/llms-full.txt",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 86
+    },
+    {
+      "path": "/.well-known/evercraft-agent-commerce.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-agent-directory.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-machine-catalog.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-syndication.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 84
+    },
+    {
+      "path": "/chum/agent-commerce.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
       "priority": 80
     },
     {
-      "path": "/chum/crawler-radar.txt",
-      "last_changed": "2026-09-30T20:11:39.857Z",
+      "path": "/chum/answers/",
+      "last_changed": "2026-09-30T20:35:42.472Z",
       "priority": 80
     },
     {
-      "path": "/chum/hot/",
-      "last_changed": "2026-09-30T20:11:39.857Z",
+      "path": "/chum/answers/index.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/index.txt",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/observed/i-need-a-discontinued-machine-part-that-normal-suppliers-cannot-find-i-have-photos-m-6d7a66229b/",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/observed/i-need-a-discontinued-machine-part-that-normal-suppliers-cannot-find-i-have-photos-m-6d7a66229b/answer.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/capabilities.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-30T20:11:39.857Z",
+      "last_changed": "2026-09-30T20:35:42.472Z",
       "priority": 80
     },
     {
-      "path": "/chum/strike/",
-      "last_changed": "2026-09-30T20:11:39.857Z",
+      "path": "/chum/index.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
       "priority": 80
     },
     {
-      "path": "/chum/strike/index.json",
-      "last_changed": "2026-09-30T20:11:39.857Z",
+      "path": "/chum/pain-index.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
       "priority": 80
+    },
+    {
+      "path": "/chum/pain-index.txt",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/syndication/index.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 80
+    },
+    {
+      "path": "/feed.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 60
+    },
+    {
+      "path": "/feed.xml",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 60
+    },
+    {
+      "path": "/schema.jsonld",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 60
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/sitemaps/answers.xml",
+      "url": "/chum/sitemaps/answers.xml",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 108
+    },
+    {
+      "path": "/chum/answers/doors/find-a-blueprint-or-fabrication-path-when-the-original-part-is-unavailable-c3d7b45cd1.json",
+      "url": "/chum/answers/doors/find-a-blueprint-or-fabrication-path-when-the-original-part-is-unavailable-c3d7b45cd1.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/find-a-blueprint-or-fabrication-path-when-the-original-part-is-unavailable-c3d7b45cd1/",
+      "url": "/chum/answers/doors/find-a-blueprint-or-fabrication-path-when-the-original-part-is-unavailable-c3d7b45cd1/",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/find-a-discontinued-appliance-tractor-automotive-marine-industrial-construction-po-3f728224a2.json",
+      "url": "/chum/answers/doors/find-a-discontinued-appliance-tractor-automotive-marine-industrial-construction-po-3f728224a2.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/find-a-discontinued-appliance-tractor-automotive-marine-industrial-construction-po-3f728224a2/",
+      "url": "/chum/answers/doors/find-a-discontinued-appliance-tractor-automotive-marine-industrial-construction-po-3f728224a2/",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/find-a-replacement-for-an-obsolete-part-4be38e27cb.json",
+      "url": "/chum/answers/doors/find-a-replacement-for-an-obsolete-part-4be38e27cb.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/find-a-salvage-or-donor-part-7facbee550.json",
+      "url": "/chum/answers/doors/find-a-salvage-or-donor-part-7facbee550.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/find-a-supersession-or-cross-reference-072d61a0a0.json",
+      "url": "/chum/answers/doors/find-a-supersession-or-cross-reference-072d61a0a0.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/find-a-supersession-or-cross-reference-072d61a0a0/",
+      "url": "/chum/answers/doors/find-a-supersession-or-cross-reference-072d61a0a0/",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/find-replacement-donor-salvage-blueprint-or-fabrication-paths-when-normal-sourcing-6e4ab62f10.json",
+      "url": "/chum/answers/doors/find-replacement-donor-salvage-blueprint-or-fabrication-paths-when-normal-sourcing-6e4ab62f10.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/find-replacement-donor-salvage-blueprint-or-fabrication-paths-when-normal-sourcing-6e4ab62f10/",
+      "url": "/chum/answers/doors/find-replacement-donor-salvage-blueprint-or-fabrication-paths-when-normal-sourcing-6e4ab62f10/",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/i-have-a-part-number-but-cannot-find-it-anywhere-f84b529cb2.json",
+      "url": "/chum/answers/doors/i-have-a-part-number-but-cannot-find-it-anywhere-f84b529cb2.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/identify-a-hard-to-source-part-from-markings-measurements-photos-or-equipment-clue-310d387d80.json",
+      "url": "/chum/answers/doors/identify-a-hard-to-source-part-from-markings-measurements-photos-or-equipment-clue-310d387d80.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/identify-this-broken-part-from-a-label-serial-plate-invoice-diagram-or-fragment-69a166fa68.json",
+      "url": "/chum/answers/doors/identify-this-broken-part-from-a-label-serial-plate-invoice-diagram-or-fragment-69a166fa68.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/identify-this-broken-part-from-a-label-serial-plate-invoice-diagram-or-fragment-69a166fa68/",
+      "url": "/chum/answers/doors/identify-this-broken-part-from-a-label-serial-plate-invoice-diagram-or-fragment-69a166fa68/",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/identify-this-machine-part-from-a-photo-or-markings-42b537ac03.json",
+      "url": "/chum/answers/doors/identify-this-machine-part-from-a-photo-or-markings-42b537ac03.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/tell-me-what-evidence-i-still-need-before-buying-a-replacement-19d8521bdb.json",
+      "url": "/chum/answers/doors/tell-me-what-evidence-i-still-need-before-buying-a-replacement-19d8521bdb.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/tell-me-what-evidence-i-still-need-before-buying-a-replacement-19d8521bdb/",
+      "url": "/chum/answers/doors/tell-me-what-evidence-i-still-need-before-buying-a-replacement-19d8521bdb/",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/answers/doors/where-can-i-find-this-discontinued-part-fbe2473669.json",
+      "url": "/chum/answers/doors/where-can-i-find-this-discontinued-part-fbe2473669.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 100
+    },
+    {
+      "path": "/chum/products/findmypart/",
+      "url": "/chum/products/findmypart/",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/findmypart/ai-conformance.json",
+      "url": "/chum/products/findmypart/ai-conformance.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/findmypart/ai-discovery.json",
+      "url": "/chum/products/findmypart/ai-discovery.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/findmypart/llms.txt",
+      "url": "/chum/products/findmypart/llms.txt",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/sell-now.json",
+      "url": "/chum/sell-now.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 92
+    },
+    {
+      "path": "/.well-known/evercraft-pain-index.json",
+      "url": "/.well-known/evercraft-pain-index.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 90
+    },
+    {
+      "path": "/chum/revenue.json",
+      "url": "/chum/revenue.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 90
+    },
+    {
+      "path": "/.well-known/evercraft-products.json",
+      "url": "/.well-known/evercraft-products.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 88
+    },
+    {
+      "path": "/chum/answers/observed/i-need-a-discontinued-machine-part-that-normal-suppliers-cannot-find-i-have-photos-m-6d7a66229b/llms.txt",
+      "url": "/chum/answers/observed/i-need-a-discontinued-machine-part-that-normal-suppliers-cannot-find-i-have-photos-m-6d7a66229b/llms.txt",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 86
+    },
+    {
+      "path": "/llms-full.txt",
+      "url": "/llms-full.txt",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 86
+    },
+    {
+      "path": "/.well-known/evercraft-agent-commerce.json",
+      "url": "/.well-known/evercraft-agent-commerce.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-agent-directory.json",
+      "url": "/.well-known/evercraft-agent-directory.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-machine-catalog.json",
+      "url": "/.well-known/evercraft-machine-catalog.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-syndication.json",
+      "url": "/.well-known/evercraft-syndication.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 84
+    },
+    {
+      "path": "/chum/agent-commerce.json",
+      "url": "/chum/agent-commerce.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/",
+      "url": "/chum/answers/",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/index.json",
+      "url": "/chum/answers/index.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/index.txt",
+      "url": "/chum/answers/index.txt",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/observed/i-need-a-discontinued-machine-part-that-normal-suppliers-cannot-find-i-have-photos-m-6d7a66229b/",
+      "url": "/chum/answers/observed/i-need-a-discontinued-machine-part-that-normal-suppliers-cannot-find-i-have-photos-m-6d7a66229b/",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/answers/observed/i-need-a-discontinued-machine-part-that-normal-suppliers-cannot-find-i-have-photos-m-6d7a66229b/answer.json",
+      "url": "/chum/answers/observed/i-need-a-discontinued-machine-part-that-normal-suppliers-cannot-find-i-have-photos-m-6d7a66229b/answer.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/capabilities.json",
+      "url": "/chum/capabilities.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/index.json",
+      "url": "/chum/index.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/pain-index.json",
+      "url": "/chum/pain-index.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/pain-index.txt",
+      "url": "/chum/pain-index.txt",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/syndication/index.json",
+      "url": "/chum/syndication/index.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 80
+    },
+    {
+      "path": "/feed.json",
+      "url": "/feed.json",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 60
+    },
+    {
+      "path": "/feed.xml",
+      "url": "/feed.xml",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 60
+    },
+    {
+      "path": "/schema.jsonld",
+      "url": "/schema.jsonld",
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "priority": 60
+    },
     {
       "path": "/chum/crawler-radar.json",
       "url": "/chum/crawler-radar.json",
@@ -61,12 +559,6 @@
       "priority": 80
     },
     {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-09-30T20:11:39.857Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/strike/",
       "url": "/chum/strike/",
       "last_changed": "2026-09-30T20:11:39.857Z",
@@ -76,42 +568,6 @@
       "path": "/chum/strike/index.json",
       "url": "/chum/strike/index.json",
       "last_changed": "2026-09-30T20:11:39.857Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/sell-now.json",
-      "url": "/chum/sell-now.json",
-      "last_changed": "2026-09-30T19:12:08.593Z",
-      "priority": 92
-    },
-    {
-      "path": "/chum/revenue.json",
-      "url": "/chum/revenue.json",
-      "last_changed": "2026-09-30T19:12:08.593Z",
-      "priority": 90
-    },
-    {
-      "path": "/.well-known/evercraft-agent-commerce.json",
-      "url": "/.well-known/evercraft-agent-commerce.json",
-      "last_changed": "2026-09-30T19:12:08.593Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-machine-catalog.json",
-      "url": "/.well-known/evercraft-machine-catalog.json",
-      "last_changed": "2026-09-30T19:12:08.593Z",
-      "priority": 84
-    },
-    {
-      "path": "/chum/agent-commerce.json",
-      "url": "/chum/agent-commerce.json",
-      "last_changed": "2026-09-30T19:12:08.593Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/capabilities.json",
-      "url": "/chum/capabilities.json",
-      "last_changed": "2026-09-30T19:12:08.593Z",
       "priority": 80
     },
     {
@@ -697,12 +1153,6 @@
       "priority": 160
     },
     {
-      "path": "/chum/sitemaps/answers.xml",
-      "url": "/chum/sitemaps/answers.xml",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 108
-    },
-    {
       "path": "/chum/answers/doors/businesses-near-me-with-rewards-7a4331cf86.json",
       "url": "/chum/answers/doors/businesses-near-me-with-rewards-7a4331cf86.json",
       "last_changed": "2026-09-29T19:18:34.761Z",
@@ -907,48 +1357,6 @@
       "priority": 94
     },
     {
-      "path": "/.well-known/evercraft-pain-index.json",
-      "url": "/.well-known/evercraft-pain-index.json",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 90
-    },
-    {
-      "path": "/llms-full.txt",
-      "url": "/llms-full.txt",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 86
-    },
-    {
-      "path": "/.well-known/evercraft-agent-directory.json",
-      "url": "/.well-known/evercraft-agent-directory.json",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-syndication.json",
-      "url": "/.well-known/evercraft-syndication.json",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 84
-    },
-    {
-      "path": "/chum/answers/",
-      "url": "/chum/answers/",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/index.json",
-      "url": "/chum/answers/index.json",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/index.txt",
-      "url": "/chum/answers/index.txt",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/answers/observed/i-own-a-local-business-and-want-a-cross-business-loyalty-network-that-can-make-us-mo-e0a0561536/",
       "url": "/chum/answers/observed/i-own-a-local-business-and-want-a-cross-business-loyalty-network-that-can-make-us-mo-e0a0561536/",
       "last_changed": "2026-09-29T19:18:34.761Z",
@@ -959,42 +1367,6 @@
       "url": "/chum/answers/observed/i-own-a-local-business-and-want-a-cross-business-loyalty-network-that-can-make-us-mo-e0a0561536/answer.json",
       "last_changed": "2026-09-29T19:18:34.761Z",
       "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.json",
-      "url": "/chum/pain-index.json",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.txt",
-      "url": "/chum/pain-index.txt",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/syndication/index.json",
-      "url": "/chum/syndication/index.json",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 80
-    },
-    {
-      "path": "/feed.json",
-      "url": "/feed.json",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.xml",
-      "url": "/feed.xml",
-      "last_changed": "2026-09-29T19:18:34.761Z",
-      "priority": 60
-    },
-    {
-      "path": "/.well-known/evercraft-products.json",
-      "url": "/.well-known/evercraft-products.json",
-      "last_changed": "2026-09-29T19:16:09.538Z",
-      "priority": 88
     },
     {
       "path": "/chum/answers/doors/assemble-several-accepted-partners-into-one-execution-team-45ca2ebb62.json",
@@ -1369,12 +1741,6 @@
       "priority": 94
     },
     {
-      "path": "/chum/index.json",
-      "url": "/chum/index.json",
-      "last_changed": "2026-09-29T05:53:29.457Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/answers/doors/build-a-contractor-estimate-from-this-scope-e9fbacf2bd.json",
       "url": "/chum/answers/doors/build-a-contractor-estimate-from-this-scope-e9fbacf2bd.json",
       "last_changed": "2026-09-29T05:34:42.337Z",
@@ -1385,162 +1751,6 @@
       "url": "/chum/answers/doors/build-a-contractor-estimate-from-this-scope-e9fbacf2bd/",
       "last_changed": "2026-09-29T05:34:42.337Z",
       "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/calculate-margin-and-price-for-this-job-2c4d196e35.json",
-      "url": "/chum/answers/doors/calculate-margin-and-price-for-this-job-2c4d196e35.json",
-      "last_changed": "2026-09-29T05:34:42.337Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/calculate-margin-and-price-for-this-job-2c4d196e35/",
-      "url": "/chum/answers/doors/calculate-margin-and-price-for-this-job-2c4d196e35/",
-      "last_changed": "2026-09-29T05:34:42.337Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/estimate-this-service-job-4e138afdda.json",
-      "url": "/chum/answers/doors/estimate-this-service-job-4e138afdda.json",
-      "last_changed": "2026-09-29T05:34:42.337Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/estimate-this-service-job-4e138afdda/",
-      "url": "/chum/answers/doors/estimate-this-service-job-4e138afdda/",
-      "last_changed": "2026-09-29T05:34:42.337Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/give-me-a-rough-customer-range-fc777ed404.json",
-      "url": "/chum/answers/doors/give-me-a-rough-customer-range-fc777ed404.json",
-      "last_changed": "2026-09-29T05:34:42.337Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/give-me-a-rough-customer-range-fc777ed404/",
-      "url": "/chum/answers/doors/give-me-a-rough-customer-range-fc777ed404/",
-      "last_changed": "2026-09-29T05:34:42.337Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/turn-these-measurements-into-an-estimate-eebe0357b6.json",
-      "url": "/chum/answers/doors/turn-these-measurements-into-an-estimate-eebe0357b6.json",
-      "last_changed": "2026-09-29T05:34:42.337Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/turn-these-measurements-into-an-estimate-eebe0357b6/",
-      "url": "/chum/answers/doors/turn-these-measurements-into-an-estimate-eebe0357b6/",
-      "last_changed": "2026-09-29T05:34:42.337Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/what-should-this-job-cost-923f227308.json",
-      "url": "/chum/answers/doors/what-should-this-job-cost-923f227308.json",
-      "last_changed": "2026-09-29T05:34:42.337Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/what-should-this-job-cost-923f227308/",
-      "url": "/chum/answers/doors/what-should-this-job-cost-923f227308/",
-      "last_changed": "2026-09-29T05:34:42.337Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/products/eps-estimate-engine/",
-      "url": "/chum/products/eps-estimate-engine/",
-      "last_changed": "2026-09-29T05:33:53.073Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/eps-estimate-engine/ai-conformance.json",
-      "url": "/chum/products/eps-estimate-engine/ai-conformance.json",
-      "last_changed": "2026-09-29T05:33:53.073Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/eps-estimate-engine/ai-discovery.json",
-      "url": "/chum/products/eps-estimate-engine/ai-discovery.json",
-      "last_changed": "2026-09-29T05:33:53.073Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/eps-estimate-engine/llms.txt",
-      "url": "/chum/products/eps-estimate-engine/llms.txt",
-      "last_changed": "2026-09-29T05:33:53.073Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/answers/doors/as-400-modernization-11f60c6d3a.json",
-      "url": "/chum/answers/doors/as-400-modernization-11f60c6d3a.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/as-400-modernization-11f60c6d3a/",
-      "url": "/chum/answers/doors/as-400-modernization-11f60c6d3a/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287.json",
-      "url": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287/",
-      "url": "/chum/answers/doors/build-a-rollback-test-and-evidence-plan-before-changing-an-ibm-i-production-system-030d199287/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/create-cross-business-loyalty-rewards-2c3ab05040/",
-      "url": "/chum/answers/doors/create-cross-business-loyalty-rewards-2c3ab05040/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/abandoned-codebase-0b031fae30.json",
-      "url": "/chum/answers/doors/abandoned-codebase-0b031fae30.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/abandoned-codebase-0b031fae30/",
-      "url": "/chum/answers/doors/abandoned-codebase-0b031fae30/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/ai-product-portfolio-watchdog-aa813adcbd.json",
-      "url": "/chum/answers/doors/ai-product-portfolio-watchdog-aa813adcbd.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/ai-product-portfolio-watchdog-aa813adcbd/",
-      "url": "/chum/answers/doors/ai-product-portfolio-watchdog-aa813adcbd/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/an-ai-agency-built-our-app-and-now-it-is-unreliable-or-undocumented-6c20ab539b.json",
-      "url": "/chum/answers/doors/an-ai-agency-built-our-app-and-now-it-is-unreliable-or-undocumented-6c20ab539b.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/an-ai-agency-built-our-app-and-now-it-is-unreliable-or-undocumented-6c20ab539b/",
-      "url": "/chum/answers/doors/an-ai-agency-built-our-app-and-now-it-is-unreliable-or-undocumented-6c20ab539b/",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/as-400-estate-assessment-d3adc3c2a5.json",
-      "url": "/chum/answers/doors/as-400-estate-assessment-d3adc3c2a5.json",
-      "last_changed": "2026-09-29T05:30:59.043Z",
-      "priority": 100
     }
   ]
 }

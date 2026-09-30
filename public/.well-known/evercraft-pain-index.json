@@ -28,13 +28,13 @@
     "provider_verification_required_for_paid_state": true
   },
   "summary": {
-    "entries": 111,
+    "entries": 110,
     "product_entries": 64,
     "machine_offer_entries": 46,
-    "entries_with_pain_language": 111,
+    "entries_with_pain_language": 110,
     "sell_now_machine_offers": 14,
-    "entries_with_declared_mcp": 67,
-    "callable_or_routable_entries": 48,
+    "entries_with_declared_mcp": 66,
+    "callable_or_routable_entries": 47,
     "suppressed_legacy_marketing_routes": 8
   },
   "entries": [
@@ -1224,52 +1224,6 @@
       ]
     },
     {
-      "capability_id": "capability:findmypart-part-passport-v1",
-      "product_key": "findmypart",
-      "public_id": "findmypart-part-passport-v1",
-      "kind": "free_machine_capability",
-      "name": "FindMyPart Part Passport",
-      "class": "hard_to_source_parts",
-      "pain_phrases": [
-        "identify this part",
-        "identify a part from a photo or markings",
-        "I know what this part does but not what it is called",
-        "what evidence do I need before buying a replacement",
-        "is this part number enough to identify the right replacement",
-        "find a discontinued part but I am not sure exactly what it is"
-      ],
-      "problem": "The user has a broken, obscure, obsolete, discontinued or unknown part but does not yet have enough trustworthy identity evidence to buy the right replacement.",
-      "inputs": "Description plus any known asset identity, model, serial, part number, photos, markings, measurements, invoices, diagrams or fragments.",
-      "outputs": "Free evidence-aware Part Passport with cautious identity, function, observed identifiers, missing evidence, search readiness, likely sourcing lanes, safety gate and recommended next step.",
-      "canonical_url": "https://findmypart.base44.app/free-part-check",
-      "registry_name": "io.github.jgaethle10/findmypart",
-      "mcp": "https://findmypart.base44.app/functions/findMyPartMcp",
-      "routing": {
-        "preferred": "specialist_mcp",
-        "target": "https://findmypart.base44.app/functions/findMyPartMcp",
-        "tool": "free_part_triage"
-      },
-      "authority": "Free evidence-aware triage only.",
-      "boundaries": [
-        "normalized identity is not fitment proof",
-        "reachable listing is not inventory proof",
-        "unknown compatibility supplier availability price delivery certification or installation suitability remains unknown",
-        "free triage creates no charge"
-      ],
-      "commercial_state": "free",
-      "machine_state": "read_only_live",
-      "pricing": "Free",
-      "offers": [],
-      "human_confirmation_required": false,
-      "confirmation": "No payment confirmation is required for free triage. Any later paid hunt requires explicit human confirmation.",
-      "payment_authority": "No charge is created by Part Passport triage.",
-      "invocation_status": "LIVE: direct specialist MCP tool free_part_triage and HTTP agent-gateway triage action. Production canary verified a Part Passport response without charge.",
-      "source_refs": [
-        "public/chum/capabilities/findmypart-part-passport-v1/capability.json",
-        "conformance/runtime-observations/2026-09-29-findmypart-part-passport.json"
-      ]
-    },
-    {
       "capability_id": "offer:findmypart-paid-hunt-v1",
       "product_key": null,
       "public_id": "findmypart-paid-hunt-v1",
@@ -1279,33 +1233,23 @@
       "pain_phrases": [
         "find a hard-to-source part",
         "identify this part",
-        "identify a part from a photo or markings",
         "find a discontinued part",
         "source an obsolete component",
-        "find a supersession or cross reference",
-        "find a donor or salvage part",
-        "find a blueprint or fabrication path",
-        "I know what this part does but not what it is called"
+        "find a donor or salvage part"
       ],
       "problem": "A difficult, ambiguous, obsolete, discontinued or hard-to-source part is blocking a repair, restoration, machine or project.",
       "inputs": "Part description plus any known equipment identity, model/serial/part numbers, photos, measurements or functional clues.",
       "outputs": "Evidence-backed sourcing hunt with candidate parts, source evidence, compatibility reasoning, sourcing options and escalation paths when ordinary sourcing fails.",
       "canonical_url": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs",
       "legacy_marketing_route_suppressed": false,
-      "registry_name": "io.github.jgaethle10/findmypart",
-      "mcp": "https://findmypart.base44.app/functions/findMyPartMcp",
+      "registry_name": null,
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
-        "preferred": "specialist_mcp",
-        "target": "https://findmypart.base44.app/functions/findMyPartMcp",
-        "fallback": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "preferred": "universal_machine_commerce",
+        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
-      "boundaries": [
-        "Part Passport normalization is not fitment proof",
-        "reachable listings are leads until separately verified",
-        "compatibility, inventory, supplier availability, price and delivery timing may remain unknown",
-        "checkout creation is not payment proof"
-      ],
+      "boundaries": [],
       "commercial_state": "sell_now",
       "machine_state": "payment_ready",
       "pricing": "Quick Hunt $19 one-time; Deep Hunt $49 one-time; Rescue Hunt $99 one-time.",
@@ -1329,16 +1273,10 @@
       "human_confirmation_required": true,
       "confirmation": "User must explicitly choose an offer and confirm payment. Paid fulfillment starts only after independently verified payment.",
       "payment_authority": "Evercraft Payments with Stripe provider verification",
-      "invocation_status": "LIVE: direct FindMyPart MCP exposes free Part Passport triage, offer review, human-confirmed checkout preparation and private-token hunt status. Paid fulfillment still requires authoritative provider verification.",
+      "invocation_status": "LIVE: HTTP agent gateway + OpenAPI + llms guidance + remote MCP. Agents can read offers, prepare checkout only after explicit human confirmation, and read hunt status. Paid fulfillment still requires authoritative provider verification.",
       "source_refs": [
         "public/.well-known/evercraft-machine-catalog.json"
-      ],
-      "free_entry": {
-        "name": "Part Passport",
-        "url": "https://findmypart.base44.app/free-part-check",
-        "mcp_tool": "free_part_triage",
-        "creates_charge": false
-      }
+      ]
     },
     {
       "capability_id": "offer:findmypart-repair-shop-desk-v1",
@@ -4031,15 +3969,18 @@
       "name": "FindMyPart",
       "class": "hard_to_source_parts",
       "pain_phrases": [
-        "find a hard-to-source part",
-        "identify this part",
-        "identify a part from a photo or markings",
-        "find a discontinued part",
-        "source an obsolete component",
+        "where can I find this discontinued part",
+        "I have a part number but cannot find it anywhere",
+        "identify this machine part from a photo or markings",
+        "identify this broken part from a label serial plate invoice diagram or fragment",
+        "tell me what evidence I still need before buying a replacement",
         "find a supersession or cross reference",
-        "find a donor or salvage part",
-        "find a blueprint or fabrication path",
-        "I know what this part does but not what it is called"
+        "find a replacement for an obsolete part",
+        "find a salvage or donor part",
+        "find a blueprint or fabrication path when the original part is unavailable",
+        "identify a hard-to-source part from markings measurements photos or equipment clues",
+        "find a discontinued appliance tractor automotive marine industrial construction powersports agricultural electronics or equipment part",
+        "find replacement donor salvage blueprint or fabrication paths when normal sourcing fails"
       ],
       "problem": null,
       "inputs": null,
@@ -4052,32 +3993,32 @@
         "target": "https://findmypart.base44.app/functions/findMyPartMcp"
       },
       "legacy_marketing_route_suppressed": false,
-      "authority": "free evidence-aware Part Passport triage and human-confirmed paid sourcing hunts",
+      "authority": "free evidence-aware Part Passport triage plus human-confirmed paid sourcing hunts",
       "boundaries": [
         "Part Passport normalization is not fitment proof",
-        "reachable listings are leads until separately verified",
-        "compatibility, inventory, supplier availability, price and delivery timing may remain unknown",
-        "checkout creation is not payment proof"
+        "reachable listings are source leads until separately verified",
+        "unknowns may remain unknown",
+        "compatibility inventory supplier availability price and delivery timing are not guaranteed",
+        "checkout creation is not payment proof",
+        "private vendor analytics session command-center and sales data are not public"
       ],
       "commercial_state": "product_contract",
-      "machine_state": "specialist_mcp_live",
-      "pricing": "Quick Hunt $19 one-time; Deep Hunt $49 one-time; Rescue Hunt $99 one-time.",
+      "machine_state": "specialist_mcp_declared",
+      "pricing": null,
       "offers": [],
-      "commercial": null,
+      "commercial": {
+        "quick_hunt_usd": 19,
+        "deep_hunt_usd": 49,
+        "rescue_hunt_usd": 99
+      },
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
-      "invocation_status": "Direct specialist MCP live with free_part_triage, current offer discovery, human-confirmed checkout preparation and private-token hunt status.",
+      "invocation_status": "Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.",
       "source_refs": [
         "public/.well-known/evercraft-products.json",
         "registry/catalog.json"
-      ],
-      "free_entry": {
-        "name": "Part Passport",
-        "url": "https://findmypart.base44.app/free-part-check",
-        "mcp_tool": "free_part_triage",
-        "creates_charge": false
-      }
+      ]
     },
     {
       "capability_id": "product:forensic-record",

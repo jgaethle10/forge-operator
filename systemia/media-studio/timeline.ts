@@ -3,6 +3,18 @@ import type { AspectRatio, MediaKind } from './types.js';
 
 export type TimelineTrackKind='video'|'overlay'|'voice'|'music'|'sfx'|'captions';
 
+export interface TimelineAudioMasterSettings {
+  targetLufs?:number;
+  truePeakDb?:number;
+  lra?:number;
+  dialogueDucking?:boolean;
+  duckThreshold?:number;
+  duckRatio?:number;
+  attackMs?:number;
+  releaseMs?:number;
+  sampleRate?:number;
+}
+
 export interface TimelineAsset {
   id:string;
   path:string;
@@ -47,6 +59,7 @@ export interface FallenTimelineProject {
   version:number;
   assets:TimelineAsset[];
   tracks:TimelineTrack[];
+  audioMaster?:TimelineAudioMasterSettings;
   createdAt:string;
   updatedAt:string;
 }
@@ -260,6 +273,7 @@ export function makeTimelineProject(input:{
   fps?:number;
   assets?:TimelineAsset[];
   tracks?:TimelineTrack[];
+  audioMaster?:TimelineAudioMasterSettings;
 }):FallenTimelineProject{
   const now=new Date().toISOString();
   const project:FallenTimelineProject={
@@ -271,6 +285,7 @@ export function makeTimelineProject(input:{
     version:1,
     assets:input.assets??[],
     tracks:input.tracks??[],
+    audioMaster:input.audioMaster,
     createdAt:now,
     updatedAt:now,
   };

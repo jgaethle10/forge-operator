@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import type { FallenTimelineProject } from './timeline.js';
 import { renderTimelineExport, type TimelineExportReceipt } from './timeline-export.js';
+import { assessStudioMaster } from './master-qc.js';
 
 export type ClipDestination =
   | 'youtube'
@@ -62,6 +63,7 @@ export interface ClipDeliveryManifest {
     sourceRefs:string[];
     continuityDigests:string[];
     renderReceiptPath:string;
+    masterQcReceiptPath:string;
   };
   boundaries:{
     publicationAuthorityGranted:false;
@@ -78,6 +80,7 @@ export interface StudioDeliveryReceipt {
   outputDir:string;
   videoPath:string;
   renderReceiptPath:string;
+  masterQcReceiptPath:string;
   clipManifestPath:string;
   mediaSha256:string;
   manifestSha256:string;
@@ -100,6 +103,12 @@ function safeSlug(value:string){
 
 function unique<T>(values:T[]){
   return [...new Set(values)];
+}
+
+function projectDuration(project:FallenTimelineProject){
+  const ends=project.tracks.flatMap(track=>track.clips.map(clip=>clip.startSec+clip.durationSec));
+  if(!ends.length) throw new Error('studio_delivery_empty_timeline');
+  return Math.max(...ends);
 }
 
 function captionAssets(project:FallenTimelineProject){
@@ -130,6 +139,7 @@ export function buildClipDeliveryManifest(input:{
   request:StudioDeliveryRequest;
   renderReceipt:TimelineExportReceipt;
   renderReceiptPath:string;
+  masterQcReceiptPath:string;
 }):ClipDeliveryManifest{
   validateRequest(input.request);
   const project=input.request.project;
@@ -183,6 +193,7 @@ export function buildClipDeliveryManifest(input:{
       sourceRefs,
       continuityDigests,
       renderReceiptPath:path.resolve(input.renderReceiptPath),
+      masterQcReceiptPath:path.resolve(input.masterQcReceiptPath),
     },
     boundaries:{
       publicationAuthorityGranted:false,
@@ -205,6 +216,7 @@ export function finalizeStudioDelivery(input:{
 
   const videoPath=path.join(outputDir,slug+'.mp4');
   const renderReceiptPath=path.join(outputDir,slug+'.render-receipt.json');
+  const masterQcReceiptPath=path.join(outputDir,slug+'.master-qc.json');
   const clipManifestPath=path.join(outputDir,slug+'.clip-intake.json');
 
   const renderReceipt=renderTimelineExport({
@@ -217,10 +229,25 @@ export function finalizeStudioDelivery(input:{
     'utf8',
   );
 
+  const masterQc=assessStudioMaster({
+    filePath:videoPath,
+    expectedSha256:renderReceipt.sha256,
+    policy:{expectedDurationSec:projectDuration(input.request.project)},
+  });
+  fs.writeFileSync(
+    masterQcReceiptPath,
+    JSON.stringify(masterQc,null,2)+'\n',
+    'utf8',
+  );
+  if(masterQc.status!=='accepted'){
+    throw new Error('studio_delivery_master_qc_rejected:'+masterQc.reasons.join('|'));
+  }
+
   const manifest=buildClipDeliveryManifest({
     request:input.request,
     renderReceipt,
     renderReceiptPath,
+    masterQcReceiptPath,
   });
   fs.writeFileSync(
     clipManifestPath,
@@ -239,6 +266,7 @@ export function finalizeStudioDelivery(input:{
     outputDir,
     videoPath,
     renderReceiptPath,
+    masterQcReceiptPath,
     clipManifestPath,
     mediaSha256:renderReceipt.sha256,
     manifestSha256:hashFile(clipManifestPath),

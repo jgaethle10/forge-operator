@@ -454,7 +454,7 @@
       "discovery": "/chum/products/findmypart/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/findmypart",
       "mcp": "https://findmypart.base44.app/functions/findMyPartMcp",
-      "content_sha256": "23f2836c96cdfe9f7347846345dd8fa51dab5ca5912dafb4dddb5d66a1704d76"
+      "content_sha256": "9eb2711ee3771ee1b424539887090af4d27a6d687f067096f767c671dd5c3171"
     },
     {
       "product_key": "forensiscope",

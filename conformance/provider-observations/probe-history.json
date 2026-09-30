@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.provider-probe-history.v1",
-  "updated_at": "2026-09-30T19:17:14.865Z",
+  "updated_at": "2026-09-30T20:39:00.934Z",
   "max_records": 500,
   "records": [
     {
@@ -7646,6 +7646,24 @@
       "pickup_observed": true,
       "provider_receipt_sha256": "1ba22596841234322338ceb4dec843c049b3e0f5342355febde9365b329aa323",
       "response_sha256": "be1f0e726b32dee72336f2542a87f6bff84bc810614af390a27a9845ae75bfec",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "cd9ac6f89ecde06811f3d7a493ffd6b6fdeceba2cd2e0fdcd493c2e1b3dff161",
+      "observed_at": "2026-09-30T20:39:00.934Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "aliev",
+      "case_id": "ev-site-plan-004",
+      "prompt_sha256": "f0de7bf7f87e439ed3abed8d70f6beecbbf91252b5788c3642428ffd621c4025",
+      "pickup_observed": true,
+      "provider_receipt_sha256": "075311b01815d3012e21f13694e756fb6e53e5c75edc9d7d5ea3a4e990c71ba9",
+      "response_sha256": "dd84129df962ade810a14923f00857bbf1543442d94bac608b9d428b54183ec2",
       "source": "authorized_provider_probe",
       "privacy": {
         "full_provider_response_persisted": false,
