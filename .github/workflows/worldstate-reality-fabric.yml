@@ -8,6 +8,14 @@ on:
       - 'systemia/context-fabric/**'
       - 'systemia/passport/**'
       - 'public/.well-known/evercraft-machine-catalog.json'
+      - 'systemia/chum/owned-machine-offers.mjs'
+      - 'systemia/chum/sync-public-discovery.mjs'
+      - 'registry/owned-machine-offers.json'
+      - 'registry/first-party-routing.json'
+      - 'tests/worldstate-pilot-mcp.test.mjs'
+      - 'tests/owned-machine-offers.test.mjs'
+      - 'server.ts'
+      - 'Dockerfile'
       - 'package.json'
       - '.github/workflows/worldstate-reality-fabric.yml'
   push:
@@ -55,6 +63,12 @@ jobs:
       - name: Prove Passport-authorized round trip
         run: node systemia/worldstate/context-reader.proof.mjs
 
+      - name: Prove owned Worldstate pilot MCP
+        run: node --test tests/worldstate-pilot-mcp.test.mjs
+
+      - name: Prove Forge-owned offer authority
+        run: node --test tests/owned-machine-offers.test.mjs
+
       - name: Verify canonical discovery state
         run: |
           node --input-type=module <<'NODE'
@@ -66,5 +80,7 @@ jobs:
           assert.equal(row.commercial_state, 'verification_required');
           assert.equal(row.machine_state, 'discovery_only');
           assert.equal((row.offers || []).length, 0, 'Worldstate must not invent a paid offer');
+          assert.equal(row.source_authority, 'forge_owned_source');
+          assert.equal(catalog.offer_count, catalog.offers.length);
           console.log('Worldstate canonical discovery state: PASS');
           NODE
