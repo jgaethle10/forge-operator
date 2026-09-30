@@ -29,6 +29,9 @@ jobs:
           challenge_bytes="$(wc -c </tmp/challenge 2>/dev/null || echo 0)"
           echo "challenge_http=$challenge_code"
           echo "challenge_bytes=$challenge_bytes"
+          challenge_sha="$(sha256sum /tmp/challenge | awk '{print $1}')"
+          echo "challenge_sha256=$challenge_sha"
+          test "$challenge_sha" = "c443b0d01f4ce3a65e49b525e2ba3e0d6fe419cc358c702b6e04dbba622f0f7a"
 
           echo '=== MCP INITIALIZE ==='
           init_code="$(curl -sS -o /tmp/init -w '%{http_code}' --max-time 20 -X POST "$ORIGIN/mcp" \
