@@ -1,4 +1,5 @@
 import { normalizeUsState, inferUsAddressParts } from '../../aliev/geo-normalization.mjs';
+export { normalizeUsState } from '../../aliev/geo-normalization.mjs';
 
 const clean=(v)=>String(v??'').trim();
 const lower=(v)=>clean(v).toLowerCase();
@@ -18,13 +19,6 @@ export const ALIEV_LEGACY_DOMAIN_MAP={
   EVOpsSourceRecord:'provenance',
 };
 
-export function normalizeUsState(value){
-  const raw=clean(value);
-  if(!raw)return '';
-  const upper=raw.toUpperCase();
-  if(KNOWN_CODES.has(upper))return upper;
-  return US_STATE_CODES[lower(raw)]||'';
-}
 function migrationKey(entity,row,index){
   const candidates=[
     row?.external_id,row?.aggregate_key,row?.profile_key,row?.snapshot_key,
