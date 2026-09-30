@@ -1317,15 +1317,29 @@ export async function startEvercraftComputeNode({
             return send(res, 403, { error: 'rivet_report_state_outside_admitted_root' });
           }
 
+          const rivetSourceUrl = String(
+            body.input?.source_url ||
+            process.env.ALIEV_YARD_SOURCE_URL ||
+            ''
+          ).trim();
+          if (!rivetSourceUrl) {
+            return send(res, 503, { error: 'aliev_owned_source_url_required' });
+          }
+          const rivetSource = new URL(rivetSourceUrl);
+          const rivetSourceHost = rivetSource.hostname.toLowerCase();
+          if (
+            rivetSource.protocol !== 'https:' ||
+            rivetSourceHost === 'base44.app' ||
+            rivetSourceHost.endsWith('.base44.app')
+          ) {
+            return send(res, 403, { error: 'aliev_owned_source_url_invalid_or_legacy' });
+          }
+
           const runtime = await startRivetReportRuntime({
             stateDir: stateRoot,
             host: '127.0.0.1',
             port: Number(body.input?.port || 0),
-            sourceUrl: String(
-              body.input?.source_url ||
-              process.env.ALIEV_YARD_SOURCE_URL ||
-              'https://base44.app/api/apps/69b9b64d86a732029ce0db81/functions/energySiteLookup'
-            ),
+            sourceUrl: rivetSourceUrl,
             systemiaMachineKey: process.env.SYSTEMIA_MACHINE_KEY || '',
             teamToken: process.env.RIVET_YARD_TEAM_TOKEN || ''
           });
@@ -1593,7 +1607,7 @@ export async function startEvercraftComputeNode({
             gatewayUrl: String(
               body.input?.gateway_url ||
               process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL ||
-              'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway'
+              ''
             ),
             fabricCatalog: Array.isArray(body.input?.fabric_catalog)
               ? body.input.fabric_catalog
