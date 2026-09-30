@@ -353,3 +353,45 @@ test('keyed receipt ledger reports HMAC mode and verifies intact receipts', asyn
   assert.equal(verified.mode, 'hmac-sha256');
   assert.equal(verified.valid, true);
 });
+
+
+test('multiple devices consume one human attention budget slot', async () => {
+  const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'evercraft-notify-'));
+  const sent = [];
+  const fabric = createNotificationFabric({
+    dataDir,
+    attentionLimits: { transactional: 1 },
+    sendPush: async (subscription) => {
+      sent.push(subscription.endpoint);
+      return { ok: true, status: 201, retryAfter: null };
+    },
+  });
+  const firstDevice = makeSubscription();
+  const secondDevice = { ...makeSubscription(), endpoint: 'https://push.example.test/message/456' };
+  fabric.subscribe(firstDevice);
+  fabric.subscribe(secondDevice);
+
+  const first = await fabric.dispatchIntent({
+    id: 'multi-device-1',
+    product: 'rivet',
+    purpose: 'transactional',
+    priority: 'normal',
+    title: 'One human event',
+    body: 'Fan out to devices',
+    recipient_ids: ['owner'],
+  });
+  const second = await fabric.dispatchIntent({
+    id: 'multi-device-2',
+    product: 'rivet',
+    purpose: 'transactional',
+    priority: 'normal',
+    title: 'Second human event',
+    body: 'Budget should suppress',
+    recipient_ids: ['owner'],
+  });
+
+  assert.equal(first.accepted, 2);
+  assert.equal(second.accepted, 0);
+  assert.equal(second.push_suppressed, 2);
+  assert.equal(sent.length, 2);
+});
