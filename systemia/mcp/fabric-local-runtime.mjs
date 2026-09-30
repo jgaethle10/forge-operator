@@ -106,13 +106,25 @@ export async function startFabricLocalRuntime({
   port=8787,
   catalog=null,
   challengeToken='',
+  challengeFile='',
 }={}) {
   const source=Array.isArray(catalog)?catalog:loadFabricCatalogFromRepository();
   const prepared=nativeOnlyCatalog(source);
-  const token=validateOpenAiChallengeToken(challengeToken);
+  const fallbackChallengeToken=validateOpenAiChallengeToken(challengeToken);
   const challengePath='/.well-known/openai-apps-challenge';
   const moduleDir=path.dirname(fileURLToPath(import.meta.url));
   const pluginDir=path.resolve(moduleDir,'../../plugins/evercraft-fabric');
+  const defaultChallengeFile=path.join(pluginDir,'openai-apps-challenge.txt');
+  const resolvedChallengeFile=path.resolve(String(challengeFile||defaultChallengeFile));
+  const challengeTokenValue=()=>{
+    let fileValue='';
+    try{
+      if(fs.existsSync(resolvedChallengeFile)){
+        fileValue=fs.readFileSync(resolvedChallengeFile,'utf8').trim();
+      }
+    }catch{}
+    return validateOpenAiChallengeToken(fileValue||fallbackChallengeToken);
+  };
   const docs={
     privacy:fs.readFileSync(path.join(pluginDir,'PRIVACY.md'),'utf8'),
     terms:fs.readFileSync(path.join(pluginDir,'TERMS.md'),'utf8'),
@@ -193,6 +205,7 @@ export async function startFabricLocalRuntime({
         if (!['GET','HEAD'].includes(req.method||'')) {
           return sendJson(res,405,{error:'method_not_allowed'});
         }
+        const token=challengeTokenValue();
         if (!token) return sendJson(res,404,{error:'openai_challenge_not_configured'});
         const data=Buffer.from(token,'utf8');
         res.writeHead(200,{
@@ -271,7 +284,8 @@ if (direct) {
   const host=String(arg('--host',process.env.EVERCRAFT_FABRIC_HOST||'127.0.0.1'));
   const port=Number(arg('--port',process.env.EVERCRAFT_FABRIC_PORT||'8787'));
   const challengeToken=String(arg('--openai-challenge-token',process.env.EVERCRAFT_OPENAI_CHALLENGE_TOKEN||''));
-  const runtime=await startFabricLocalRuntime({host,port,challengeToken});
+  const challengeFile=String(arg('--openai-challenge-file',process.env.EVERCRAFT_OPENAI_CHALLENGE_FILE||''));
+  const runtime=await startFabricLocalRuntime({host,port,challengeToken,challengeFile});
   process.stdout.write(JSON.stringify({
     ok:true,
     schema:runtime.schema,
