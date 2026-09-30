@@ -6,12 +6,19 @@ import path from 'node:path';
 import { DurableEntityStore } from './entity-store.mjs';
 import { createEvercraftAppClient } from './client.mjs';
 import { startAppFabricGateway } from './gateway.mjs';
+import { EvercraftRealtimeBus } from './realtime-bus.mjs';
 
 const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), 'evercraft-app-fabric-proof-'));
-const store = new DurableEntityStore({ stateDir });
+const realtimeBus = new EvercraftRealtimeBus({ stateDir: path.join(stateDir, 'realtime') });
+const store = new DurableEntityStore({
+  stateDir: path.join(stateDir, 'entities'),
+  eventSink: ({ appKey, entity, type, data, revision, mutationReceiptHash }) =>
+    realtimeBus.publish(appKey, entity, { type, data, revision, mutationReceiptHash })
+});
 
 const gateway = await startAppFabricGateway({
   store,
+  realtimeBus,
   authorize: async ({ subjectRef, serviceRole }) =>
     serviceRole || subjectRef === 'evercraft:subject:proof-user',
   identityResolver: async ({ token }) =>
@@ -103,6 +110,21 @@ try {
   const me = await client.auth.me();
   assert.equal(me.subject_ref, 'evercraft:subject:proof-user');
 
+  const realtimeEvents = [];
+  const unsubscribe = client.entities.LiveWidget.subscribe((event) => { realtimeEvents.push(event); });
+  await unsubscribe.ready;
+  const live = await client.entities.LiveWidget.create({ name: 'live-alpha' });
+  const deadline = Date.now() + 3000;
+  while (realtimeEvents.length === 0 && Date.now() < deadline) {
+    await new Promise((resolve) => setTimeout(resolve, 25));
+  }
+  assert.equal(realtimeEvents.length, 1);
+  assert.equal(realtimeEvents[0].type, 'create');
+  assert.equal(realtimeEvents[0].data.id, live.id);
+  assert.equal(realtimeEvents[0].sequence, 1);
+  unsubscribe();
+  await unsubscribe.done;
+
   const service = createEvercraftAppClient({
     appId: 'proof-app',
     baseUrl: gateway.origin,
@@ -121,11 +143,11 @@ try {
   );
 
   const beforeRestart = await client.entities.Widget.count();
-  const reopened = new DurableEntityStore({ stateDir });
+  const reopened = new DurableEntityStore({ stateDir: path.join(stateDir, 'entities') });
   assert.equal(reopened.count('proof-app', 'Widget', {}), beforeRestart);
   assert.equal(reopened.health().state, 'healthy');
 
-  const receipts = fs.readFileSync(path.join(stateDir, 'mutation-receipts.jsonl'), 'utf8')
+  const receipts = fs.readFileSync(path.join(stateDir, 'entities', 'mutation-receipts.jsonl'), 'utf8')
     .trim()
     .split('\n')
     .map((line) => JSON.parse(line));
@@ -145,7 +167,9 @@ try {
     service_role_boundary: true,
     unauthorized_default_denied: true,
     durable_restart: true,
-    mutation_receipts: true
+    mutation_receipts: true,
+    realtime_subscription: true,
+    realtime_resume_cursor: unsubscribe.lastSequence === 1
   }));
 } finally {
   await new Promise((resolve) => gateway.server.close(resolve));
