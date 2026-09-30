@@ -87,6 +87,17 @@ function receipt():TimelineExportReceipt{
     videoCodec:'h264',
     audioCodec:'aac',
     inputAssetIds:['shot','captions'],
+    audioMaster:{
+      targetLufs:-14,
+      truePeakDb:-1,
+      lra:11,
+      dialogueDucking:true,
+      duckThreshold:.05,
+      duckRatio:8,
+      attackMs:20,
+      releaseMs:350,
+      sampleRate:48000,
+    },
     renderedAt:'2026-09-30T00:00:00Z',
     publicationAuthorityGranted:false,
   };
