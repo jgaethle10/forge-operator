@@ -150,6 +150,11 @@ export function createNotificationFabric(options = {}) {
   const vapidSubject = options.vapidSubject ?? process.env.EVERCRAFT_VAPID_SUBJECT ?? '';
   const immediateBudgetPerHour = Number(options.immediateBudgetPerHour ?? process.env.EVERCRAFT_NOTIFICATION_IMMEDIATE_BUDGET ?? 4);
 
+  function resolveTargets(intent) {
+    const { matched, principals } = resolveTargets(intent);
+    return { matched, principals };
+  }
+
   async function dispatchIntent(rawIntent) {
     const intent = validateIntent(rawIntent);
     const dedupeKey = intent.dedupe_key ? `${intent.product}|${intent.dedupe_key}` : null;
@@ -420,6 +425,10 @@ export function createNotificationFabric(options = {}) {
     },
     listInbox(principalId, options = {}) { return store.listInbox(principalId, options); },
     prepareIntent(rawIntent) { return validateIntent(rawIntent); },
+    resolvePrincipals(rawIntent) {
+      const intent = validateIntent(rawIntent);
+      return [...resolveTargets(intent).principals];
+    },
     acknowledge,
     seen,
     dispatchIntent,
