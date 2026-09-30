@@ -13,6 +13,7 @@ on:
       - 'registry/owned-machine-offers.json'
       - 'registry/first-party-routing.json'
       - 'tests/worldstate-pilot-mcp.test.mjs'
+      - 'tests/worldstate-owned-route.test.mjs'
       - 'tests/owned-machine-offers.test.mjs'
       - 'server.ts'
       - 'Dockerfile'
@@ -68,6 +69,9 @@ jobs:
 
       - name: Prove Forge-owned offer authority
         run: node --test tests/owned-machine-offers.test.mjs
+
+      - name: Prove Worldstate owned route shipping
+        run: node --test tests/worldstate-owned-route.test.mjs
 
       - name: Verify canonical discovery state
         run: |
