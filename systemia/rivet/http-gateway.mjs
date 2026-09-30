@@ -1,7 +1,12 @@
 import path from 'node:path';
+import fs from 'node:fs';
+import { createHash } from 'node:crypto';
 import { generateYardReport } from './report-runtime.mjs';
 
 function clean(value){ return String(value ?? '').trim(); }
+function safeId(value){ return clean(value).replace(/[^a-zA-Z0-9._-]/g,'_').slice(0,180); }
+function sha256(bytes){ return createHash('sha256').update(bytes).digest('hex'); }
+function authorized(req,token){ return clean(req.headers.authorization) === 'Bearer '+token; }
 
 export function registerRivetReportGateway(app,{
   gatewayToken=process.env.RIVET_REPORT_GATEWAY_TOKEN || '',
@@ -17,7 +22,10 @@ export function registerRivetReportGateway(app,{
       service:'rivet-yard-report-gateway',
       runtime:'Forge/Yard',
       configured:Boolean(clean(gatewayToken) && clean(systemiaMachineKey)),
-      source_contract:'rivet_report_snapshot_v1'
+      source_contract:'rivet_report_snapshot_v1',
+      canonical_store:'yard-atomic-files-v2',
+      full_source_snapshot_persistence:true,
+      source_coverage_manifest_required:true
     });
   });
 
@@ -27,8 +35,7 @@ export function registerRivetReportGateway(app,{
       return;
     }
 
-    const authorization=clean(req.headers.authorization);
-    if(authorization !== 'Bearer '+gatewayToken){
+    if(!authorized(req,gatewayToken)){
       res.status(401).json({ok:false,error:'rivet_report_gateway_authorization_required'});
       return;
     }
@@ -60,5 +67,65 @@ export function registerRivetReportGateway(app,{
         detail:error instanceof Error ? error.message : String(error)
       });
     }
+  });
+
+  app.get('/api/rivet/reports/:reportId',async(req,res)=>{
+    if(!clean(gatewayToken) || !clean(systemiaMachineKey)){
+      res.status(503).json({ok:false,error:'rivet_report_gateway_not_configured'});
+      return;
+    }
+    if(!authorized(req,gatewayToken)){
+      res.status(401).json({ok:false,error:'rivet_report_gateway_authorization_required'});
+      return;
+    }
+    const reportId=clean(req.params.reportId);
+    const file=path.join(stateDir,'reports',safeId(reportId)+'.json');
+    if(!fs.existsSync(file)){
+      res.status(404).json({ok:false,error:'report_not_found'});
+      return;
+    }
+    const record=JSON.parse(fs.readFileSync(file,'utf8'));
+    res.setHeader('cache-control','no-store');
+    res.json({ok:true,...record});
+  });
+
+  app.get('/api/rivet/reports/:reportId/source',async(req,res)=>{
+    if(!clean(gatewayToken) || !clean(systemiaMachineKey)){
+      res.status(503).json({ok:false,error:'rivet_report_gateway_not_configured'});
+      return;
+    }
+    if(!authorized(req,gatewayToken)){
+      res.status(401).json({ok:false,error:'rivet_report_gateway_authorization_required'});
+      return;
+    }
+    const reportId=clean(req.params.reportId);
+    const reportFile=path.join(stateDir,'reports',safeId(reportId)+'.json');
+    if(!fs.existsSync(reportFile)){
+      res.status(404).json({ok:false,error:'report_not_found'});
+      return;
+    }
+    const record=JSON.parse(fs.readFileSync(reportFile,'utf8'));
+    const ref=clean(record?.source_snapshot?.store_ref);
+    const root=path.resolve(stateDir);
+    const file=path.resolve(stateDir,ref);
+    if(!ref || !file.startsWith(root+path.sep) || !fs.existsSync(file)){
+      res.status(404).json({ok:false,error:'source_snapshot_not_found'});
+      return;
+    }
+    const bytes=fs.readFileSync(file);
+    const expectedSha=clean(record?.source_snapshot?.sha256);
+    const expectedBytes=Number(record?.source_snapshot?.byte_count||0);
+    if(sha256(bytes)!==expectedSha || bytes.byteLength!==expectedBytes){
+      res.status(409).json({ok:false,error:'source_snapshot_integrity_failed'});
+      return;
+    }
+    res.setHeader('cache-control','no-store');
+    res.json({
+      ok:true,
+      report_id:reportId,
+      sha256:expectedSha,
+      byte_count:bytes.byteLength,
+      source_snapshot:JSON.parse(bytes.toString('utf8'))
+    });
   });
 }
