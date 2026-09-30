@@ -138,23 +138,11 @@ ProtectHome=true
 WantedBy=multi-user.target
 EOF
 
-echo "[5/7] Installing safe OpenAI challenge-token helper..."
-sudo tee /usr/local/sbin/evercraft-set-openai-challenge >/dev/null <<'EOF'
+echo "[5/7] Installing safe OpenAI challenge helper..."
+sudo tee /usr/local/sbin/evercraft-set-openai-challenge >/dev/null <<EOF
 #!/usr/bin/env bash
 set -euo pipefail
-read -r -s -p "Paste OpenAI domain verification token: " TOKEN
-echo
-if [[ -z "$TOKEN" || ! "$TOKEN" =~ ^[A-Za-z0-9_-]{16,512}$ ]]; then
-  echo "ERROR: token format rejected" >&2
-  exit 2
-fi
-TMP="$(mktemp)"
-printf 'EVERCRAFT_OPENAI_CHALLENGE_TOKEN=%s\n' "$TOKEN" > "$TMP"
-chmod 0600 "$TMP"
-sudo install -o root -g root -m 0600 "$TMP" /etc/evercraft/fabric.env
-rm -f "$TMP"
-sudo systemctl restart evercraft-fabric.service
-echo "OpenAI challenge token installed and Evercraft Fabric restarted."
+exec "$REPO_ROOT/scripts/set-openai-challenge-artifact.sh"
 EOF
 sudo chmod 0755 /usr/local/sbin/evercraft-set-openai-challenge
 
@@ -191,7 +179,8 @@ Then verify from a device NOT on your home Wi-Fi:
   https://$DOMAIN/health
 
 For OpenAI domain verification, run:
-  sudo evercraft-set-openai-challenge
+  evercraft-set-openai-challenge
 
-Do not paste the OpenAI verification token into chat.
+The verification token is a public challenge artifact. Fabric reloads it
+dynamically, so no service restart is required.
 EOF
