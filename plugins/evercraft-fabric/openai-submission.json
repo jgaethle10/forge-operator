@@ -14,7 +14,7 @@
     "terms_url": "https://fabric.systemiacommandcenters.com/terms",
     "support_url": "https://fabric.systemiacommandcenters.com/support"
   },
-  "submission_state": "owned_public_fabric_live_account_gates_pending",
+  "submission_state": "owned_public_fabric_live_platform_upload_pending",
   "public_directory_claim_allowed": false,
   "compatibility_transport": {
     "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
@@ -87,6 +87,7 @@
   "review_support": {
     "demo_recording_url": "https://drive.google.com/file/d/1v6KeJMAjH_Hp7IpjFWqNFTcPT2k9iUd_/view?usp=drivesdk",
     "recording_access": "public_link_reader",
-    "notes": "Walkthrough demonstrates capability listing, natural-language routing to FindMyPart, capability-specific connection lookup, and read-only/non-transactional behavior."
-  }
+    "notes": "Walkthrough demonstrates capability listing, natural-language routing to FindMyPart, capability-specific connection lookup, and read-only/non-transactional behavior. Canonical v1.0.3 package metadata is aligned for public submission."
+  },
+  "package_version": "1.0.3"
 }
