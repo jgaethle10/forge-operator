@@ -40,7 +40,7 @@
     "test:chum-router": "node systemia/chum/discovery-router.test.mjs",
     "proof:organism": "node systemia/organism/proof.mjs",
     "proof:goal-runtime": "node systemia/organism/goal-runtime.proof.mjs",
-    "proof:systemia": "npm run proof:organism && npm run proof:goal-runtime && npm run proof:goal-store && npm run proof:one-body && npm run proof:legacy-rescue-watch && npm run proof:portfolio-sentinel && npm run proof:ibmi-rescue-fulfillment && npm run proof:universal-fulfillment && npm run proof:portfolio-fulfillment-router && npm run proof:portfolio-fulfillment-e2e && npm run proof:portfolio-fulfillment-all",
+    "proof:systemia": "npm run proof:organism && npm run proof:goal-runtime && npm run proof:goal-store && npm run proof:one-body && npm run proof:legacy-rescue-watch && npm run proof:portfolio-sentinel && npm run proof:ibmi-rescue-fulfillment && npm run proof:universal-fulfillment && npm run proof:portfolio-fulfillment-router && npm run proof:portfolio-fulfillment-e2e && npm run proof:portfolio-fulfillment-all && npm run proof:rockies && npm run proof:worldstate-observation-fabric && npm run proof:worldstate-context-adapter && npm run proof:worldstate-context-reader",
     "goal": "node systemia/organism/goal-cli.mjs",
     "proof:goal-store": "node systemia/organism/goal-store.proof.mjs",
     "chum:index": "node systemia/chum/build-pain-index.mjs",
@@ -225,7 +225,12 @@
     "fabric:local": "node systemia/mcp/fabric-local-runtime.mjs",
     "test:fabric-local": "node --test tests/fabric-local-runtime.test.mjs",
     "test:fabric-owned-edge": "node --test tests/fabric-owned-edge-installer.test.mjs",
-    "fabric:launch-gate": "node scripts/fabric-launch-gate.mjs"
+    "fabric:launch-gate": "node scripts/fabric-launch-gate.mjs",
+    "proof:rockies": "node systemia/rockies/expansion.proof.mjs",
+    "proof:worldstate-observation-fabric": "node systemia/worldstate/observation-fabric.proof.mjs",
+    "proof:worldstate": "node systemia/worldstate/worldstate.proof.mjs",
+    "proof:worldstate-context-adapter": "node systemia/worldstate/context-fabric-adapter.proof.mjs",
+    "proof:worldstate-context-reader": "node systemia/worldstate/context-reader.proof.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",

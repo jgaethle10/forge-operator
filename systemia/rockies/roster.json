@@ -1,0 +1,452 @@
+{
+  "schema": "evercraft.rockies.topology.v1",
+  "version": "1.0.0",
+  "doctrine": {
+    "role": "Public-source observation specialists feeding Systemia shared context.",
+    "stored_is_integrated": false,
+    "default_output": "evercraft.context.observation.v1",
+    "direct_human_notification": false,
+    "direct_external_action": false,
+    "independent_source_family_target": 2,
+    "baseline_policy": "Learn normal cadence before promoting deviation.",
+    "surge_policy": "Increase logical Rockies when a context node crosses anomaly, freshness, or corroboration thresholds."
+  },
+  "scaling": {
+    "current_reference_agents": 65,
+    "target_baseline_agents": 99,
+    "max_surge_agents": 384
+  },
+  "cadence_classes": {
+    "streaming": {
+      "seconds": 300,
+      "mode": "quiet_baseline"
+    },
+    "fast": {
+      "seconds": 900,
+      "mode": "quiet_baseline"
+    },
+    "hourly": {
+      "seconds": 3600,
+      "mode": "quiet_baseline"
+    },
+    "six_hour": {
+      "seconds": 21600,
+      "mode": "digest_baseline"
+    },
+    "daily": {
+      "seconds": 86400,
+      "mode": "digest_baseline"
+    }
+  },
+  "ranges": [
+    {
+      "range": "seismic",
+      "baseline_agents": 5,
+      "cadence": "fast",
+      "domains": [
+        "geophysics",
+        "earth_hazards"
+      ],
+      "source_families": [
+        "usgs_earthquakes",
+        "pnsn",
+        "regional_seismic_networks",
+        "global_seismic_catalogs"
+      ]
+    },
+    {
+      "range": "volcano",
+      "baseline_agents": 4,
+      "cadence": "hourly",
+      "domains": [
+        "geophysics",
+        "earth_hazards"
+      ],
+      "source_families": [
+        "usgs_volcano_hazards",
+        "volcano_observatories",
+        "aviation_volcanic_ash_advisories"
+      ]
+    },
+    {
+      "range": "water",
+      "baseline_agents": 5,
+      "cadence": "fast",
+      "domains": [
+        "water",
+        "climate"
+      ],
+      "source_families": [
+        "usgs_water",
+        "nws_river_forecast",
+        "bureau_reclamation",
+        "usace_water",
+        "state_water_agencies"
+      ]
+    },
+    {
+      "range": "weather",
+      "baseline_agents": 5,
+      "cadence": "fast",
+      "domains": [
+        "weather",
+        "climate"
+      ],
+      "source_families": [
+        "nws",
+        "noaa_spc",
+        "noaa_wpc",
+        "noaa_cpc",
+        "noaa_nhc"
+      ]
+    },
+    {
+      "range": "wildfire_smoke",
+      "baseline_agents": 5,
+      "cadence": "fast",
+      "domains": [
+        "environment",
+        "earth_hazards",
+        "weather"
+      ],
+      "source_families": [
+        "nifc",
+        "inciweb",
+        "nasa_firms",
+        "airnow",
+        "state_fire_agencies"
+      ]
+    },
+    {
+      "range": "cryosphere",
+      "baseline_agents": 3,
+      "cadence": "six_hour",
+      "domains": [
+        "climate",
+        "water",
+        "earth_hazards"
+      ],
+      "source_families": [
+        "nsidc",
+        "nrcs_snotel",
+        "noaa_snow",
+        "glacier_observatories"
+      ]
+    },
+    {
+      "range": "ocean_coastal",
+      "baseline_agents": 3,
+      "cadence": "hourly",
+      "domains": [
+        "ocean",
+        "weather",
+        "earth_hazards"
+      ],
+      "source_families": [
+        "noaa_tides_currents",
+        "noaa_buoys",
+        "tsunami_warning_centers",
+        "marine_forecasts"
+      ]
+    },
+    {
+      "range": "space_weather",
+      "baseline_agents": 3,
+      "cadence": "fast",
+      "domains": [
+        "space_weather",
+        "infrastructure"
+      ],
+      "source_families": [
+        "noaa_swpc",
+        "nasa_space_weather",
+        "solar_observatories"
+      ]
+    },
+    {
+      "range": "aviation",
+      "baseline_agents": 4,
+      "cadence": "fast",
+      "domains": [
+        "aviation",
+        "transport",
+        "weather"
+      ],
+      "source_families": [
+        "faa_nas_status",
+        "aviation_weather",
+        "airport_public_status",
+        "ntsb"
+      ]
+    },
+    {
+      "range": "maritime",
+      "baseline_agents": 3,
+      "cadence": "hourly",
+      "domains": [
+        "maritime",
+        "transport",
+        "supply_chain"
+      ],
+      "source_families": [
+        "uscg_public_notices",
+        "noaa_marine",
+        "port_authorities",
+        "waterway_status"
+      ]
+    },
+    {
+      "range": "grid_energy",
+      "baseline_agents": 5,
+      "cadence": "fast",
+      "domains": [
+        "energy",
+        "infrastructure"
+      ],
+      "source_families": [
+        "eia",
+        "regional_grid_operators",
+        "utility_public_status",
+        "energy_emergency_notices",
+        "open_energy_data"
+      ]
+    },
+    {
+      "range": "transportation",
+      "baseline_agents": 4,
+      "cadence": "fast",
+      "domains": [
+        "transport",
+        "infrastructure"
+      ],
+      "source_families": [
+        "state_dot",
+        "fhwa",
+        "fra",
+        "fta",
+        "ntsb"
+      ]
+    },
+    {
+      "range": "telecom",
+      "baseline_agents": 3,
+      "cadence": "hourly",
+      "domains": [
+        "telecom",
+        "infrastructure"
+      ],
+      "source_families": [
+        "fcc_public_notices",
+        "provider_status",
+        "internet_measurement_networks"
+      ]
+    },
+    {
+      "range": "cyber",
+      "baseline_agents": 5,
+      "cadence": "fast",
+      "domains": [
+        "cyber",
+        "infrastructure"
+      ],
+      "source_families": [
+        "cisa_kev",
+        "nvd",
+        "cert_advisories",
+        "vendor_security_advisories",
+        "internet_radar"
+      ]
+    },
+    {
+      "range": "ai_models",
+      "baseline_agents": 5,
+      "cadence": "hourly",
+      "domains": [
+        "ai",
+        "science"
+      ],
+      "source_families": [
+        "model_hubs",
+        "provider_changelogs",
+        "arxiv_ai",
+        "github_ai_releases",
+        "research_labs"
+      ]
+    },
+    {
+      "range": "robotics",
+      "baseline_agents": 3,
+      "cadence": "six_hour",
+      "domains": [
+        "robotics",
+        "science"
+      ],
+      "source_families": [
+        "ros_ecosystem",
+        "robotics_research_labs",
+        "github_robotics",
+        "standards_bodies"
+      ]
+    },
+    {
+      "range": "semiconductors_compute",
+      "baseline_agents": 3,
+      "cadence": "six_hour",
+      "domains": [
+        "semiconductors",
+        "infrastructure",
+        "ai"
+      ],
+      "source_families": [
+        "manufacturer_public_updates",
+        "sec_filings",
+        "industry_standards",
+        "public_fab_updates"
+      ]
+    },
+    {
+      "range": "industrial_manufacturing",
+      "baseline_agents": 3,
+      "cadence": "six_hour",
+      "domains": [
+        "industrial",
+        "supply_chain",
+        "infrastructure"
+      ],
+      "source_families": [
+        "osha_public_data",
+        "manufacturer_public_status",
+        "industrial_incident_feeds",
+        "standards_bodies"
+      ]
+    },
+    {
+      "range": "supply_chain",
+      "baseline_agents": 4,
+      "cadence": "hourly",
+      "domains": [
+        "supply_chain",
+        "economy",
+        "transport"
+      ],
+      "source_families": [
+        "port_authorities",
+        "public_freight_data",
+        "customs_trade_data",
+        "rail_public_status",
+        "shipping_notices"
+      ]
+    },
+    {
+      "range": "agriculture_food",
+      "baseline_agents": 4,
+      "cadence": "six_hour",
+      "domains": [
+        "agriculture",
+        "food",
+        "economy",
+        "climate"
+      ],
+      "source_families": [
+        "usda_ams",
+        "usda_nass",
+        "usda_crop_progress",
+        "drought_monitor",
+        "state_agriculture"
+      ]
+    },
+    {
+      "range": "public_health",
+      "baseline_agents": 4,
+      "cadence": "six_hour",
+      "domains": [
+        "public_health",
+        "biology"
+      ],
+      "source_families": [
+        "cdc",
+        "hhs",
+        "who",
+        "state_health_departments",
+        "public_surveillance_feeds"
+      ]
+    },
+    {
+      "range": "biology_science",
+      "baseline_agents": 3,
+      "cadence": "daily",
+      "domains": [
+        "biology",
+        "science"
+      ],
+      "source_families": [
+        "pubmed",
+        "biorxiv",
+        "nih",
+        "research_institutions"
+      ]
+    },
+    {
+      "range": "economy_labor",
+      "baseline_agents": 4,
+      "cadence": "six_hour",
+      "domains": [
+        "economy",
+        "labor",
+        "household"
+      ],
+      "source_families": [
+        "bls",
+        "bea",
+        "fred",
+        "dol",
+        "state_labor"
+      ]
+    },
+    {
+      "range": "housing_construction",
+      "baseline_agents": 3,
+      "cadence": "daily",
+      "domains": [
+        "housing",
+        "construction",
+        "economy"
+      ],
+      "source_families": [
+        "census_building_permits",
+        "fhfa",
+        "hud",
+        "local_permit_feeds"
+      ]
+    },
+    {
+      "range": "public_policy_regulation",
+      "baseline_agents": 3,
+      "cadence": "six_hour",
+      "domains": [
+        "regulation",
+        "public_policy"
+      ],
+      "source_families": [
+        "federal_register",
+        "regulations_gov",
+        "agency_rulemaking",
+        "state_registers"
+      ]
+    },
+    {
+      "range": "independent_scouts",
+      "baseline_agents": 3,
+      "cadence": "six_hour",
+      "domains": [
+        "general"
+      ],
+      "source_families": [
+        "local_government_notices",
+        "university_labs",
+        "public_data_portals",
+        "specialized_public_feeds"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+name: Worldstate Reality Fabric
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/worldstate/**'
+      - 'systemia/rockies/**'
+      - 'systemia/context-fabric/**'
+      - 'systemia/passport/**'
+      - 'public/.well-known/evercraft-machine-catalog.json'
+      - 'package.json'
+      - '.github/workflows/worldstate-reality-fabric.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'systemia/worldstate/**'
+      - 'systemia/rockies/**'
+      - 'systemia/context-fabric/**'
+      - 'systemia/passport/**'
+      - 'public/.well-known/evercraft-machine-catalog.json'
+      - 'package.json'
+      - '.github/workflows/worldstate-reality-fabric.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prove:
+    name: Prove Worldstate contracts
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Prove Rockies expansion
+        run: node systemia/rockies/expansion.proof.mjs
+
+      - name: Prove observation fabric
+        run: node systemia/worldstate/observation-fabric.proof.mjs
+
+      - name: Prove Worldstate and Reality Delta
+        run: node systemia/worldstate/worldstate.proof.mjs
+
+      - name: Prove Context Fabric adapter
+        run: node systemia/worldstate/context-fabric-adapter.proof.mjs
+
+      - name: Prove Passport-authorized round trip
+        run: node systemia/worldstate/context-reader.proof.mjs
+
+      - name: Verify canonical discovery state
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import assert from 'node:assert/strict';
+          const catalog = JSON.parse(fs.readFileSync('public/.well-known/evercraft-machine-catalog.json','utf8'));
+          const row = (catalog.offers || []).find((offer) => offer.public_id === 'worldstate-reality-delta-v1');
+          assert.ok(row, 'Worldstate must exist in canonical machine catalog');
+          assert.equal(row.commercial_state, 'verification_required');
+          assert.equal(row.machine_state, 'discovery_only');
+          assert.equal((row.offers || []).length, 0, 'Worldstate must not invent a paid offer');
+          console.log('Worldstate canonical discovery state: PASS');
+          NODE

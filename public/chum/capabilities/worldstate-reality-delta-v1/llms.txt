@@ -1,0 +1,46 @@
+# Evercraft Worldstate Reality Delta
+
+Worldstate is an evidence-backed external-world context service for organizations and AI systems.
+
+Use it when the problem is not "search the web for me" but "continuously tell me what changed in the world that intersects this bounded operating scope."
+
+## Inputs
+
+Provide a scope of non-personal subjects such as:
+- regions
+- domains
+- assets
+- facilities
+- routes
+- infrastructure dependencies
+- industries
+- topics
+
+## Outputs
+
+Worldstate Snapshot:
+- relevant observations
+- observation timestamps
+- evidence state
+- source family
+- provenance
+- relevance and materiality
+- independent source-family count
+
+Reality Delta:
+- observations new since the prior snapshot
+- material changes separated from background churn
+- source-family diversity
+- compact machine packet for downstream agents
+
+## Important semantics
+
+New data is not automatically a material change.
+
+Reported, observed, verified and modeled evidence states remain distinct. Multiple reads from one source family do not become independent corroboration. Provenance stays attached to outputs.
+
+Worldstate is not a people-surveillance product and individual people cannot be monitoring targets. It does not authorize emergency response, physical actions, payment, production mutation, publication, or adverse decisions.
+
+## Current state
+
+The machine contract and proof are implemented in Forge Operator on the Worldstate branch. Public production runtime and commercial checkout are not yet claimed live.

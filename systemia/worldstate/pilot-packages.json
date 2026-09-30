@@ -1,0 +1,109 @@
+{
+  "schema": "evercraft.worldstate.pilot-packages.v1",
+  "pricing_state": "unpriced_verification_required",
+  "doctrine": "One shared world model, many bounded customer projections.",
+  "packages": [
+    {
+      "key": "asset_portfolio",
+      "buyer_problem": "I manage many facilities or physical assets and need to know which external changes materially intersect them.",
+      "scope_fields": [
+        "region_keys",
+        "assets",
+        "facilities",
+        "dependencies",
+        "domains"
+      ],
+      "default_outputs": [
+        "worldstate_snapshot",
+        "reality_delta",
+        "agent_packet"
+      ],
+      "example_domains": [
+        "weather",
+        "water",
+        "energy",
+        "infrastructure",
+        "wildfire_smoke",
+        "transport",
+        "telecom"
+      ],
+      "delivery": [
+        "api",
+        "mcp",
+        "dashboard_projection",
+        "scheduled_brief"
+      ],
+      "proof_goal": "A material external change around one scoped asset appears with provenance while unrelated changes are excluded."
+    },
+    {
+      "key": "route_logistics",
+      "buyer_problem": "I need current external conditions affecting routes, hubs and transportation dependencies without generic alert noise.",
+      "scope_fields": [
+        "region_keys",
+        "routes",
+        "facilities",
+        "dependencies",
+        "domains"
+      ],
+      "default_outputs": [
+        "worldstate_snapshot",
+        "reality_delta",
+        "agent_packet"
+      ],
+      "example_domains": [
+        "transport",
+        "aviation",
+        "maritime",
+        "weather",
+        "wildfire_smoke",
+        "supply_chain",
+        "energy"
+      ],
+      "delivery": [
+        "api",
+        "mcp",
+        "operations_projection"
+      ],
+      "proof_goal": "A route-relevant disruption enters the delta while out-of-scope events remain background."
+    },
+    {
+      "key": "agent_grounding",
+      "buyer_problem": "My AI needs a current, evidence-backed picture of changing external conditions instead of starting every task with a fresh generic web search.",
+      "scope_fields": [
+        "region_keys",
+        "domains",
+        "industries",
+        "topics",
+        "dependencies"
+      ],
+      "default_outputs": [
+        "agent_packet",
+        "worldstate_snapshot",
+        "reality_delta"
+      ],
+      "example_domains": [
+        "general",
+        "economy",
+        "regulation",
+        "energy",
+        "transport",
+        "weather",
+        "ai",
+        "cyber"
+      ],
+      "delivery": [
+        "api",
+        "mcp"
+      ],
+      "proof_goal": "The agent receives compact material changes with evidence state, source family and provenance preserved."
+    }
+  ],
+  "commercial_boundaries": {
+    "individual_people_monitoring": false,
+    "autonomous_adverse_decisions": false,
+    "emergency_dispatch": false,
+    "payment_authority": false,
+    "production_mutation": false,
+    "external_action_requires_existing_gate": true
+  }
+}
