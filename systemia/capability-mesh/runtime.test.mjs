@@ -187,6 +187,46 @@ test('Clip cannot compile an uncontracted publish or render action', () => {
   }
 });
 
+test('FindMyPart exposes only free triage through the shared runtime contract', () => {
+  const policy = compileProductRuntimePolicy('findmypart', process.cwd());
+  assert.equal(policy.adoption_stage, 'shared_runtime');
+  assert.equal(policy.authority.passport_product, 'findmypart');
+  assert.deepEqual(policy.authority.scopes, ['free_part_triage']);
+  assert.equal(policy.meter.state, 'not_required');
+  assert.equal(policy.boundaries.free_action_creates_charge, false);
+  assert.equal(policy.boundaries.paid_hunts_contracted, false);
+});
+
+test('FindMyPart free triage compiles without inventing checkout, payment or purchasing authority', () => {
+  const prepared = buildExecutionGateInput({
+    product_key: 'findmypart',
+    actor_ref: 'agent:part-triage',
+    scope: 'free_part_triage',
+    request: { markings: 'ABC-123', equipment: 'legacy tractor' },
+    idempotency_key: 'capability-mesh:findmypart:triage:001',
+    require_direct_specialist: true,
+  });
+  assert.equal(prepared.execution_gate_input.passport_product, 'findmypart');
+  assert.equal(prepared.execution_gate_input.scope, 'free_part_triage');
+  assert.equal(prepared.execution_gate_input.specialist_slug, 'findmypart');
+  assert.equal(Object.prototype.hasOwnProperty.call(prepared.execution_gate_input, 'meter'), false);
+  assert.equal(prepared.payment_state_inferred, false);
+});
+
+test('FindMyPart paid hunt is not silently exposed by the free-triage contract', () => {
+  assert.throws(
+    () =>
+      buildExecutionGateInput({
+        product_key: 'findmypart',
+        actor_ref: 'agent:part-triage',
+        scope: 'paid_hunt',
+        request: { tier: 'rescue' },
+        idempotency_key: 'capability-mesh:findmypart:paid',
+      }),
+    /scope_not_declared_in_authority_contract/
+  );
+});
+
 test('missing product contracts fail closed instead of inheriting another product defaults', () => {
   assert.throws(
     () => compileProductRuntimePolicy('findmypart', process.cwd()),
@@ -205,7 +245,7 @@ test('context binding describes scopes but grants no access', () => {
 
 test('generated runtime policy artifact covers only explicitly contracted products', () => {
   const rendered = renderRuntimePolicies(process.cwd());
-  assert.equal(rendered.policy_count, 6);
+  assert.equal(rendered.policy_count, 7);
   assert.deepEqual(
     rendered.policies.map((row) => row.product_key),
     [
@@ -215,6 +255,7 @@ test('generated runtime policy artifact covers only explicitly contracted produc
       'evernest-atlas',
       'opportunity-fabric',
       'systemia-university',
+      'findmypart',
     ]
   );
   assert.equal(rendered.truth_boundary.non_shared_runtime_execution_fails_closed, true);
