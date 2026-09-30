@@ -42,7 +42,10 @@ const measured = measureRockiesHypotheses([hypothesis], {
 assert.equal(measured.length, 1);
 assert.equal(measured[0].lag_bars, FIVE_MINUTE_LAG_BARS["15m"]);
 assert.equal(measured[0].live_trade_authority, false);
-assert.equal(measured[0].instrument_start_time >= hypothesis.observed_at, true);
+assert.equal(
+  new Date(measured[0].instrument_start_time).getTime() >= new Date(hypothesis.observed_at).getTime(),
+  true
+);
 
 const many = [];
 for (let i = 0; i < 50; i++) {
