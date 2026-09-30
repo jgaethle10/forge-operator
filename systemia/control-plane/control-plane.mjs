@@ -141,11 +141,11 @@ export function machineInventory(rootDir = process.cwd()) {
 }
 
 export function routeTask(task) {
-  const specialist = contract.routing[task.work_type] || 'systemia-organism';
+  const workType = lower(task.work_type);
+  const defaultSpecialist = contract.routing[workType] || 'systemia-organism';
   const softwareId = clean(task.software_id);
   const productKey = clean(task.product_key);
   const product = productByKey(productKey);
-  const workType = lower(task.work_type);
   const actionScope = clean(task.action_scope);
   const contractInfo = capabilityContractFor(productKey);
   const productPolicy = contractInfo.policy;
@@ -169,6 +169,14 @@ export function routeTask(task) {
       contractHold = 'capability_contract_meter_mismatch';
     }
   }
+
+  const specialist =
+    actionScope &&
+    contractAction &&
+    productPolicy?.adoption_stage === 'shared_runtime' &&
+    clean(productPolicy?.route?.specialist_slug)
+      ? clean(productPolicy.route.specialist_slug)
+      : defaultSpecialist;
 
   const parallelRequested = task.parallel === true || Number(task.logical_agents || 0) > 1 || Boolean(softwareId);
   const allowed = sabanSoftwareIds();
