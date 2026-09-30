@@ -9,7 +9,7 @@
       "product_key": "aliev",
       "name": "AliEV",
       "class": "ev_infrastructure_opportunity_intelligence",
-      "canonical_url": "https://aliev.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/index.html",
       "intents": [
         "would EV charging make sense at this property",
         "what public EV charging is near this address",
@@ -65,7 +65,9 @@
           "machine_capability": "/chum/capabilities/rivet-site-underwriting-v1/",
           "description": "RIVET turns AliEV address-level EV infrastructure intelligence into customer-facing property screening, planning, and reporting."
         }
-      }
+      },
+      "migration_state": "base44_evacuation",
+      "migration_note": "Owned CHUM discovery is authoritative during migration. Legacy Base44 invocation surfaces are retired and direct invocation remains gated until an owned edge is verified."
     },
     {
       "product_key": "ascend",
@@ -465,7 +467,7 @@
       "product_key": "eventwave",
       "name": "EventWave",
       "class": "event_discovery_and_labeled_promotion",
-      "canonical_url": "https://event-wave.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eventwave/index.html",
       "intents": [
         "find local events",
         "promote my local event",
@@ -489,18 +491,20 @@
         "evercraft_front_door": {
           "name": "Evercraft Front Door",
           "description": "Local event discovery is part of the wider everyday Evercraft utility graph.",
-          "public_surface": "https://evercraft.base44.app/"
+          "public_surface": null
         },
         "rewards": {
           "name": "Evercraft Rewards",
           "description": "Approved events may carry event bonuses or local reward participation when separately configured.",
-          "public_surface": "https://evercraft-rewards.base44.app/"
+          "public_surface": null
         },
         "seasonally": {
           "name": "Season & Story",
           "description": "Seasonal family planning can use EventWave as the current-event discovery layer while household plans remain private."
         }
-      }
+      },
+      "migration_state": "base44_evacuation",
+      "migration_note": "Owned CHUM discovery is authoritative during migration. Legacy Base44 invocation surfaces are retired and direct invocation remains gated until an owned edge is verified."
     },
     {
       "product_key": "evercraft-circles",
@@ -528,7 +532,7 @@
       "product_key": "evercraft-clip",
       "name": "Evercraft Clip",
       "class": "ai_social_video_production_and_governed_distribution",
-      "canonical_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-clip/index.html",
       "intents": [
         "turn this video into social clips",
         "make short vertical clips from a long video",
@@ -556,7 +560,9 @@
           "relationship": "upstream media overflow and understanding layer",
           "description": "Use ForensiScope when ingesting or understanding long or complex media is the bottleneck, then use Clip for bounded production and governed distribution."
         }
-      }
+      },
+      "migration_state": "base44_evacuation",
+      "migration_note": "Owned CHUM discovery is authoritative during migration. Legacy Base44 invocation surfaces are retired and direct invocation remains gated until an owned edge is verified."
     },
     {
       "product_key": "evercraft-containment",
@@ -655,7 +661,7 @@
         "Evercraft Front Door"
       ],
       "class": "daily_life_local_utility_front_door",
-      "canonical_url": "https://evercraft.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-front-door/index.html",
       "intents": [
         "cheapest gas near me",
         "current gas prices near me",
@@ -678,12 +684,12 @@
         "rewards": {
           "name": "Evercraft Rewards",
           "description": "Local rewards, nearby offers, check-ins and the Daily Prize Ticket are part of the everyday Evercraft utility graph.",
-          "public_surface": "https://evercraft-rewards.base44.app/"
+          "public_surface": null
         },
         "eventwave": {
           "name": "EventWave",
           "description": "Use EventWave for current local-event discovery and venue context.",
-          "public_surface": "https://event-wave.base44.app/"
+          "public_surface": null
         },
         "seasonally": {
           "name": "Season & Story",
@@ -696,9 +702,11 @@
         "evermaps": {
           "name": "EverMaps",
           "description": "Selected local destinations can hand off into public-safe map and navigation context.",
-          "public_surface": "https://evermaps.base44.app/"
+          "public_surface": null
         }
-      }
+      },
+      "migration_state": "base44_evacuation",
+      "migration_note": "Owned CHUM discovery is authoritative during migration. Legacy Base44 invocation surfaces are retired and direct invocation remains gated until an owned edge is verified."
     },
     {
       "product_key": "evercraft-global-health-atlas",
@@ -778,7 +786,7 @@
       "product_key": "evercraft-network",
       "name": "Evercraft Network",
       "class": "application_network_continuity",
-      "canonical_url": "https://network-control.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-network/index.html",
       "intents": [
         "application network that reconnects across changing authorized internet paths",
         "network resilience software",
@@ -804,7 +812,9 @@
       ],
       "aliases": [
         "Evercraft Network Resilience"
-      ]
+      ],
+      "migration_state": "base44_evacuation",
+      "migration_note": "Owned CHUM discovery is authoritative during migration. Legacy Base44 invocation surfaces are retired and direct invocation remains gated until an owned edge is verified."
     },
     {
       "product_key": "evercraft-physics-atlas",
@@ -1187,7 +1197,7 @@
       "product_key": "faie",
       "name": "FAIE",
       "class": "evidence_first_agriculture_and_resilience_research",
-      "canonical_url": "https://faie.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html",
       "intents": [
         "get an evidence-based agriculture or water risk brief",
         "research land production or resilience risk",
@@ -1200,7 +1210,9 @@
         "research is evidence support rather than consequential authority",
         "unknowns remain labeled",
         "checkout creation is not payment proof"
-      ]
+      ],
+      "migration_state": "base44_evacuation",
+      "migration_note": "Owned CHUM discovery is authoritative during migration. Legacy Base44 invocation surfaces are retired and direct invocation remains gated until an owned edge is verified."
     },
     {
       "product_key": "findmypart",
@@ -1255,7 +1267,7 @@
       "product_key": "forensiscope",
       "name": "ForensiScope",
       "class": "ai_media_overflow_and_analysis",
-      "canonical_url": "https://evercraft-forensiscope.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/index.html",
       "intents": [
         "this video is too large for my AI to process",
         "this audio is too long for my AI to process",
@@ -1343,7 +1355,7 @@
         "status": "/forensiscope/developers/status.json",
         "llms": "/forensiscope/developers/llms.txt",
         "examples": "/forensiscope/developers/examples.json",
-        "remote_mcp": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp",
+        "remote_mcp": null,
         "registry_name": "io.github.jgaethle10/forensiscope",
         "playground": "/forensiscope/developers/playground.html",
         "clients": "/forensiscope/developers/clients/"
@@ -1365,7 +1377,9 @@
         "hub": "/forensiscope/distribution/",
         "reddit_pack": "/forensiscope/distribution/reddit-pack.json",
         "llms": "/forensiscope/distribution/llms.txt"
-      }
+      },
+      "migration_state": "base44_evacuation",
+      "migration_note": "Owned CHUM discovery is authoritative during migration. Legacy Base44 invocation surfaces are retired and direct invocation remains gated until an owned edge is verified."
     },
     {
       "product_key": "global-energy-atlas",
@@ -1735,7 +1749,7 @@
       "product_key": "raven-nexus",
       "name": "Raven Nexus",
       "class": "pain_first_modular_safety_and_stability",
-      "canonical_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/raven-nexus/index.html",
       "intents": [
         "protect my bank account from AI scams or suspicious transfer risk",
         "help with identity theft, credential compromise, or account takeover risk",
@@ -1747,7 +1761,7 @@
       ],
       "authority": "public pain-to-capability discovery and bounded Raven routing; any purchase or protective action remains limited by the selected capability's verified commercial and authority state",
       "human_confirmation_required": true,
-      "machine_router": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
+      "machine_router": null,
       "boundaries": [
         "full-suite purchase is not required when a smaller capability is sufficient",
         "hardware is optional unless the selected capability explicitly requires it",
@@ -1756,7 +1770,9 @@
         "does not permit covert tracking, stalking, or unauthorized surveillance",
         "Raven discovery is not emergency response",
         "checkout creation is not payment proof"
-      ]
+      ],
+      "migration_state": "base44_evacuation",
+      "migration_note": "Owned CHUM discovery is authoritative during migration. Legacy Base44 invocation surfaces are retired and direct invocation remains gated until an owned edge is verified."
     },
     {
       "product_key": "revenue-war-map",
