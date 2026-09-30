@@ -34,7 +34,7 @@ const root = 'public/chum/capabilities';
 fs.rmSync(root,{recursive:true,force:true});
 fs.mkdirSync(root,{recursive:true});
 
-const universalMcp='https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp';
+const universalMcp='https://fabric.systemiacommandcenters.com/mcp';
 const BLOCKED_PUBLIC_HOSTS=new Set(['systemiacommandcenters.com','www.systemiacommandcenters.com']);
 
 function escapeHtml(value){
