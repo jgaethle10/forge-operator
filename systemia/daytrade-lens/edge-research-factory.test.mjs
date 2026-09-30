@@ -62,14 +62,20 @@ assert.equal(
 
 const many = [];
 for (let i = 0; i < 50; i++) {
+  const forward = (i < 35 ? 0.0030 : 0.0025) + (i % 5) * 0.0001;
+  const benchmark = 0.0005 + (i % 3) * 0.00002;
+  const matchedControl = 0.00015 + (i % 4) * 0.00001;
   many.push({
     ...measured[0],
     measurement_id: "m:" + i,
     source_observation_id: "o:" + i,
     observed_at: new Date(Date.parse("2026-01-01T15:00:00Z") + i * 86400000).toISOString(),
     source_family: i % 2 ? "grid_operator" : "utility_public_status",
-    forward_return: (i < 35 ? 0.0030 : 0.0025) + (i % 5) * 0.0001,
-    benchmark_return: 0.0005 + (i % 3) * 0.00002,
+    forward_return: forward,
+    benchmark_return: benchmark,
+    matched_control_count: 2,
+    matched_control_excess_return: matchedControl,
+    placebo_adjusted_excess_return: (forward - benchmark) - matchedControl,
   });
 }
 const evaluated = evaluateEdgeFamilies(many, {
@@ -79,6 +85,9 @@ const evaluated = evaluateEdgeFamilies(many, {
 assert.equal(evaluated.length, 1);
 assert.equal(evaluated[0].distinct_source_families, 2);
 assert.equal(evaluated[0].candidate_checks.minimum_source_family_diversity, true);
+assert.equal(evaluated[0].candidate_checks.matched_placebo_coverage, true);
+assert.equal(evaluated[0].candidate_checks.placebo_train_holdout_sign_agreement, true);
+assert.equal(evaluated[0].candidate_checks.placebo_holdout_effect_survives_costs, true);
 assert.equal(evaluated[0].status, "RESEARCH_CANDIDATE");
 assert.equal(evaluated[0].live_trade_authority, false);
 
@@ -168,6 +177,20 @@ await assert.rejects(
 );
 assert.equal(loopCalls, 2);
 
+const trendOnly = many.map((row, i) => ({
+  ...row,
+  placebo_adjusted_excess_return: 0.00002 + (i % 3) * 0.000005,
+}));
+const trendOnlyEval = evaluateEdgeFamilies(trendOnly, {
+  transaction_cost_bps: 2,
+  false_discovery_rate: 0.10,
+});
+assert.equal(
+  trendOnlyEval[0].candidate_checks.placebo_holdout_effect_survives_costs,
+  false
+);
+assert.equal(trendOnlyEval[0].status, "NOT_VALIDATED");
+
 const bh = benjaminiHochberg([
   { id: "a", development_p_approx: 0.001 },
   { id: "b", development_p_approx: 0.02 },
@@ -182,6 +205,8 @@ console.log(JSON.stringify({
   no_lookahead: true,
   benchmark_adjusted: true,
   core_session_horizons: true,
+  matched_placebo_controls: true,
+  sector_trend_placebo_rejected: true,
   source_diversity_required: true,
   authoritative_multi_origin_screen: true,
   alpaca_pagination: true,
