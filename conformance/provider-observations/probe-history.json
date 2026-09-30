@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.provider-probe-history.v1",
-  "updated_at": "2026-09-30T16:47:18.673Z",
+  "updated_at": "2026-09-30T19:01:41.189Z",
   "max_records": 500,
   "records": [
     {
@@ -7592,6 +7592,24 @@
       "pickup_observed": false,
       "provider_receipt_sha256": "45f61d2dac1017e959e6a9264882a4d3d02e956e715578f1f54cc66672c71b5b",
       "response_sha256": "23ff129196c894b38e94325c97b84a0ab2e1c4f5b6e9b47484f2218951179611",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "2687d16ab40868a99d8822c02838cd9548d8d76d7fd367f63e83b6acaea998e2",
+      "observed_at": "2026-09-30T19:01:41.188Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "aliev",
+      "case_id": "ev-roi-003",
+      "prompt_sha256": "d30bb6b50ab3c9fef8c79633b4944cfa50dd7cb7c203affe9a70338956ff9265",
+      "pickup_observed": true,
+      "provider_receipt_sha256": "3d41df4a9e9849d79aebbc2eae008153db1cae613c00733ae4e19a435f4a0a9a",
+      "response_sha256": "d2c6aef295454772c2544a34c70e4794afceab68242539b2799591be1a65e639",
       "source": "authorized_provider_probe",
       "privacy": {
         "full_provider_response_persisted": false,
