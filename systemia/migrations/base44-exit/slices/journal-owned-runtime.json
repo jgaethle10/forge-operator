@@ -1,0 +1,38 @@
+{
+  "schema": "evercraft.systemia.base44-exit-slice.v1",
+  "slice": "journal-owned-runtime",
+  "product": "Evercraft Journal",
+  "wave": 3,
+  "priority": "incident_p0",
+  "status": "source_dependency_extraction_active",
+  "observed_direct_core_matches": 34,
+  "observed_core_operations": [
+    "invoke_llm",
+    "upload_file"
+  ],
+  "target": {
+    "source": "github",
+    "orchestration": "systemia",
+    "runtime": "yard_evercraft_compute",
+    "integrations": "systemia/core/core-gateway.mjs",
+    "media": "systemia/media-studio"
+  },
+  "next": [
+    "extract Journal application source and editorial entities",
+    "move generation calls onto the owned integration gateway",
+    "move asset upload and article media references onto owned storage",
+    "preserve editorial provenance and publishing receipts",
+    "prove article create, edit, media, sports and newsroom surfaces before route cutover"
+  ],
+  "done_when": [
+    "source_extracted",
+    "no_direct_legacy_core_calls",
+    "editorial_data_reconciled",
+    "integration_parity_verified",
+    "tests_pass",
+    "yard_deployment_receipt",
+    "route_verification_pass",
+    "rollback_target_present",
+    "observation_window_pass"
+  ]
+}
