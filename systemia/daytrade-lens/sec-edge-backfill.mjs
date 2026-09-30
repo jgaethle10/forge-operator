@@ -55,6 +55,24 @@ async function main() {
     ),
   }));
 
+  const candidateDetails = (report.candidates || []).slice(0, 20).map((row) => ({
+    signal_key: row.signal_key,
+    observations: row.observation_count,
+    distinct_origin_entities: row.distinct_origin_entities,
+    holdout_origin_entities: row.holdout_origin_entities,
+    development_q_bh: Number(Number(row.development_q_bh || 1).toFixed(6)),
+    raw_holdout_mean_excess_return_net: Number(
+      Number(row.base_evaluation?.holdout?.mean_excess_return_net || 0).toFixed(6)
+    ),
+    placebo_holdout_mean_effect_net: Number(
+      Number(row.matched_placebo?.holdout?.mean_effect_net || 0).toFixed(6)
+    ),
+    placebo_holdout_hit_rate: Number(
+      Number(row.matched_placebo?.holdout?.directional_hit_rate || 0).toFixed(4)
+    ),
+    learned_direction: row.learned_direction,
+  }));
+
   const summary = {
     ok: true,
     schema: "evercraft.daytrade.sec-edge-backfill-receipt.v1",
@@ -64,6 +82,7 @@ async function main() {
     measurements: report.measurement_count || 0,
     signal_families: report.family_count || 0,
     research_candidates: report.research_candidate_count || 0,
+    research_candidate_details: candidateDetails,
     top_screened_families: top,
     exact_public_availability_time_known: false,
     sec_publication_delay_buffer_minutes:
