@@ -104,8 +104,7 @@ jobs:
             echo "::endgroup::"
           }
 
-          COMMERCE_MCP="https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
-          COMMERCE_GATEWAY="https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway"
+          FABRIC_MCP="https://fabric.systemiacommandcenters.com/mcp"
 
           check_tool_contract() {
             NAME="$1"
