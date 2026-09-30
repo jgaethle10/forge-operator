@@ -12,6 +12,8 @@ import { rankPain } from './systemia/chum/pain-index-lib.mjs';
 import { createAttributionEvent, issueReferralToken, PUBLIC_ATTRIBUTION_STAGES } from './systemia/chum/attribution.ts';
 import { huntLiveIntent } from './systemia/chum/live-intent-hunter.mjs';
 import { buyerFrontageUrl } from './systemia/chum/start-corridor.mjs';
+import { resolveOwnedMachineCommerceAction } from './systemia/chum/machine-commerce-owned.mjs';
+import { registerOwnedMachineCommerce } from './systemia/chum/machine-commerce-http.js';
 import { createCrawlerRadarStore } from './systemia/chum/crawler-radar.mjs';
 import { registerFallenFamilyRoutes } from './systemia/media-studio/family-http.js';
 import { registerRivetReportGateway } from './systemia/rivet/http-gateway.mjs';
@@ -33,9 +35,12 @@ const chumAttributionSecret = process.env.CHUM_ATTRIBUTION_SECRET?.trim() || '';
 const chumAttributionSinkUrl = process.env.CHUM_ATTRIBUTION_SINK_URL?.trim() || '';
 const chumAttributionSinkToken = process.env.CHUM_ATTRIBUTION_SINK_TOKEN?.trim() || '';
 const chumAttributionIngestToken = process.env.CHUM_ATTRIBUTION_INGEST_TOKEN?.trim() || '';
+const ownedPublicOrigin =
+  process.env.CHUM_PUBLIC_ORIGIN?.trim() ||
+  process.env.PUBLIC_BASE_URL?.trim() ||
+  '';
 const machineCommerceGatewayUrl =
-  process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL?.trim() ||
-  'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
+  process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL?.trim() || '';
 const crawlerRadarStore = createCrawlerRadarStore({
   maxEvents: Number(process.env.CHUM_CRAWLER_RADAR_MAX_EVENTS || 5000),
   persistPath: process.env.CHUM_CRAWLER_OBSERVATION_PATH?.trim() || '',
@@ -110,9 +115,10 @@ function routeFirstPartyIntent(intentInput: unknown) {
 const forensiScopeHandoff = {
   product: 'ForensiScope',
   productKey: 'forensiscope',
-  canonicalUrl: 'https://evercraft-forensiscope.base44.app/',
+  canonicalUrl: ownedPublicOrigin ? ownedPublicOrigin.replace(/\/$/, '') + '/forensiscope/' : '/forensiscope/',
   registryName: 'io.github.jgaethle10/forensiscope',
-  mcp: 'https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp',
+  mcp: null,
+  mcpState: 'owned_mcp_migration_hold',
   overflowManifest: '/.well-known/evercraft-media-overflow.json',
 };
 
@@ -173,11 +179,22 @@ app.use(express.json({ limit: '10mb', type: ['application/json', 'application/*+
 registerRivetReportGateway(app);
 registerRewardsGateway(app);
 registerClipGateway(app);
-registerSpecialistHandoffMcps(app, { gatewayUrl: machineCommerceGatewayUrl });
+registerOwnedMachineCommerce(app, { loadCatalog: () => loadPublicMachineCatalog() });
+registerSpecialistHandoffMcps(app, {
+  gatewayUrl: machineCommerceGatewayUrl,
+  gatewayFetch: async (action, publicId) => resolveOwnedMachineCommerceAction(
+    action,
+    publicId,
+    loadPublicMachineCatalog(),
+    { origin: ownedPublicOrigin }
+  ),
+});
 registerRemoteOperatorMcp(app);
 
 const CENTRAL_MACHINE_COMMERCE_MCP =
-  'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp';
+  ownedPublicOrigin
+    ? ownedPublicOrigin.replace(/\/$/, '') + '/mcp/machine-commerce'
+    : '/mcp/machine-commerce';
 
 const CHUM_DISCOVERY_LINKS = [
   '</llms.txt>; rel="describedby"; type="text/plain"',
@@ -412,13 +429,21 @@ function findChumOffer(publicId: string): any | null {
 }
 
 function chumHumanReviewUrl(publicId: string): string {
-  const target = new URL(machineCommerceGatewayUrl);
-  if (target.protocol !== 'https:') {
-    throw new Error('Evercraft Machine Commerce gateway must use HTTPS.');
+  const id = encodeURIComponent(String(publicId || '').trim());
+  if (!id) throw new Error('Evercraft offer id is required.');
+  if (ownedPublicOrigin) {
+    const target = new URL('/buy/' + id, ownedPublicOrigin);
+    if (target.protocol !== 'https:') throw new Error('Owned Evercraft public origin must use HTTPS.');
+    return target.toString();
   }
-  target.searchParams.set('view', 'service');
-  target.searchParams.set('public_id', publicId);
-  return target.toString();
+  if (machineCommerceGatewayUrl) {
+    const target = new URL(machineCommerceGatewayUrl);
+    if (target.protocol !== 'https:') throw new Error('Configured compatibility gateway must use HTTPS.');
+    target.searchParams.set('view', 'service');
+    target.searchParams.set('public_id', publicId);
+    return target.toString();
+  }
+  throw new Error('Owned Evercraft public origin is not configured; legacy Machine Commerce fallback is disabled.');
 }
 
 async function persistChumAttributionEvent(event: unknown) {
@@ -516,8 +541,9 @@ app.get('/api/capabilities', (_req: Request, res: Response) => {
       chumAttribution: '/.well-known/evercraft-chum-attribution.json',
       chumReferral: { method: 'POST', path: '/api/chum/referral' },
       chumHumanHandoff: { method: 'GET', path: '/api/chum/go/{publicId}' },
-      buyerFrontage: 'https://evercraft-ai-suite-08c4d2b8.base44.app/buy/{publicId}',
-      acquisitionExport: 'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceAcquisition?view=export&hours=720',
+      buyerFrontage: ownedPublicOrigin ? ownedPublicOrigin.replace(/\/$/, '') + '/buy/{publicId}' : '/buy/{publicId}',
+      acquisitionExport: null,
+      machineCommerceMcp: CENTRAL_MACHINE_COMMERCE_MCP,
       liveIntentHunter: { method: 'POST', path: '/api/chum/hunt' },
       specialistMcps: [
         { product: 'Evercraft IBM i Rescue', path: '/mcp/ibmi-rescue', state: 'read_only_handoff_runtime' },
