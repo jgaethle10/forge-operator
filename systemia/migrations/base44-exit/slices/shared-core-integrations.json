@@ -1,0 +1,39 @@
+{
+  "schema": "evercraft.systemia.base44-exit-slice.v1",
+  "slice": "shared-core-integrations",
+  "wave": 1,
+  "priority": "incident_p0",
+  "status": "replacement_landed_proof_pending",
+  "observed_failure_mode": "Portfolio applications directly consume legacy platform integration credits for inference, uploads, messaging, image generation and extraction.",
+  "replacement": {
+    "runtime_owner": "evercraft",
+    "gateway": "systemia/core/core-gateway.mjs",
+    "client_shim": "systemia/core/core-client.js",
+    "runtime": "yard_evercraft_compute",
+    "orchestration": "systemia",
+    "legacy_transport_allowed": false,
+    "operations": [
+      "invoke_llm",
+      "upload_file",
+      "send_email",
+      "send_sms",
+      "generate_image",
+      "extract_data"
+    ]
+  },
+  "cutover_strategy": [
+    "Replace application imports of legacy Core integrations with systemia/core/core-client.js or an app-local equivalent generated from that contract.",
+    "Route provider-backed operations through explicitly configured Systemia adapters. No application may call the legacy provider directly.",
+    "Keep file persistence and basic text/JSON/CSV extraction inside the Evercraft runtime where possible.",
+    "Require parity proof per application before disabling its legacy integration path."
+  ],
+  "acceptance": [
+    "core_gateway_test_pass",
+    "health_reports_legacy_provider_transport_false",
+    "application_has_no_direct_legacy_core_integration_calls",
+    "integration_parity_verified",
+    "yard_deployment_receipt",
+    "route_verification_pass",
+    "rollback_target_present"
+  ]
+}
