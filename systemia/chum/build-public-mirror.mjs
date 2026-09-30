@@ -47,9 +47,12 @@ const BLOCKED_PUBLIC_HOSTS = new Set([
 
 function safePublicUrl(value, fallback = null) {
   if (!value) return fallback;
+  const raw = String(value).trim();
+  if (raw.startsWith('/') && !raw.startsWith('//')) return raw;
   try {
-    const url = new URL(String(value));
+    const url = new URL(raw);
     if (!['http:', 'https:'].includes(url.protocol)) return fallback;
+    if (LEGACY_PUBLIC_HOST.test(url.hostname)) return fallback;
     if (BLOCKED_PUBLIC_HOSTS.has(url.hostname.toLowerCase())) return fallback;
     return url.toString();
   } catch {
