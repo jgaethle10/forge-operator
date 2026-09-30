@@ -18,7 +18,10 @@
     "payment_requires_explicit_confirmation": true,
     "revenue_requires_provider_verified_payment": true,
     "critical_owned_runtime_hardcoded_base44_network_routes": false,
-    "route_registry_automatic_cutover": false
+    "route_registry_automatic_cutover": false,
+    "public_migration_queue_is_complete_estate_inventory": false,
+    "untitled_apps_may_be_silently_discarded": false,
+    "capped_source_listing_proves_complete_inventory": false
   },
   "cutover_required_evidence": [
     "source_extracted",
@@ -79,7 +82,8 @@
     "lossless_entity_transfer",
     "identity_challenge_broker",
     "receipt_gated_route_registry",
-    "owned_runtime_base44_network_firewall"
+    "owned_runtime_base44_network_firewall",
+    "estate_coverage_ledger"
   ],
   "landing_implementations": {
     "app_fabric_compatibility": {
@@ -194,6 +198,16 @@
         ".github/workflows/base44-exit.yml"
       ],
       "boundary": "Critical owned runtime surfaces may contain compatibility terminology but may not hard-code Base44 network destinations."
+    },
+    "estate_coverage_ledger": {
+      "state": "owned_baseline_proved_local",
+      "source_refs": [
+        "systemia/migrations/base44-exit/estate-coverage.mjs",
+        "systemia/migrations/base44-exit/estate-coverage-runner.mjs",
+        "systemia/migrations/base44-exit/estate-coverage.proof.mjs",
+        "systemia/migrations/base44-exit/estate-snapshot.json"
+      ],
+      "boundary": "Coverage uses source-ID fingerprints, withholds unmatched source names and never treats the capped 100-app listing as proof of complete inventory. Untitled sources require classification before migration or archive; aliases require authority receipts."
     }
   }
 }
