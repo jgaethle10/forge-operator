@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-30T18:55:46.775Z",
+  "updated_at": "2026-09-30T19:02:18.052Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,42 +11,68 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/sell-now.json",
-      "last_changed": "2026-09-30T18:55:46.775Z",
-      "priority": 92
-    },
-    {
-      "path": "/chum/revenue.json",
-      "last_changed": "2026-09-30T18:55:46.775Z",
-      "priority": 90
-    },
-    {
-      "path": "/.well-known/evercraft-agent-commerce.json",
-      "last_changed": "2026-09-30T18:55:46.775Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-machine-catalog.json",
-      "last_changed": "2026-09-30T18:55:46.775Z",
-      "priority": 84
-    },
-    {
-      "path": "/chum/agent-commerce.json",
-      "last_changed": "2026-09-30T18:55:46.775Z",
+      "path": "/chum/crawler-radar.json",
+      "last_changed": "2026-09-30T19:02:18.052Z",
       "priority": 80
     },
     {
-      "path": "/chum/capabilities.json",
-      "last_changed": "2026-09-30T18:55:46.775Z",
+      "path": "/chum/crawler-radar.txt",
+      "last_changed": "2026-09-30T19:02:18.052Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/",
+      "last_changed": "2026-09-30T19:02:18.052Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-30T18:55:46.775Z",
+      "last_changed": "2026-09-30T19:02:18.052Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "last_changed": "2026-09-30T19:02:18.052Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/crawler-radar.json",
+      "url": "/chum/crawler-radar.json",
+      "last_changed": "2026-09-30T19:02:18.052Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/crawler-radar.txt",
+      "url": "/chum/crawler-radar.txt",
+      "last_changed": "2026-09-30T19:02:18.052Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/",
+      "url": "/chum/hot/",
+      "last_changed": "2026-09-30T19:02:18.052Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-30T19:02:18.052Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "url": "/chum/strike/index.json",
+      "last_changed": "2026-09-30T19:02:18.052Z",
+      "priority": 80
+    },
+    {
+      "path": "/.well-known/evercraft-machine-catalog.json",
+      "url": "/.well-known/evercraft-machine-catalog.json",
+      "last_changed": "2026-09-30T19:02:17.497Z",
+      "priority": 84
+    },
     {
       "path": "/chum/sell-now.json",
       "url": "/chum/sell-now.json",
@@ -66,12 +92,6 @@
       "priority": 84
     },
     {
-      "path": "/.well-known/evercraft-machine-catalog.json",
-      "url": "/.well-known/evercraft-machine-catalog.json",
-      "last_changed": "2026-09-30T18:55:46.775Z",
-      "priority": 84
-    },
-    {
       "path": "/chum/agent-commerce.json",
       "url": "/chum/agent-commerce.json",
       "last_changed": "2026-09-30T18:55:46.775Z",
@@ -84,38 +104,8 @@
       "priority": 80
     },
     {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-09-30T18:55:46.775Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/crawler-radar.json",
-      "url": "/chum/crawler-radar.json",
-      "last_changed": "2026-09-30T18:55:38.814Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/crawler-radar.txt",
-      "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-09-30T18:55:38.814Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/",
-      "url": "/chum/hot/",
-      "last_changed": "2026-09-30T18:55:38.814Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/strike/",
       "url": "/chum/strike/",
-      "last_changed": "2026-09-30T18:55:38.814Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/strike/index.json",
-      "url": "/chum/strike/index.json",
       "last_changed": "2026-09-30T18:55:38.814Z",
       "priority": 80
     },
