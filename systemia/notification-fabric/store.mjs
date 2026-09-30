@@ -40,15 +40,18 @@ function canonical(value) {
   return JSON.stringify(value);
 }
 
-function receiptHash(previous, event) {
-  return crypto.createHash('sha256').update(String(previous || '') + '\n' + canonical(event)).digest('hex');
+function receiptHash(previous, event, secret = '') {
+  const input = String(previous || '') + '\n' + canonical(event);
+  return secret
+    ? crypto.createHmac('sha256', secret).update(input).digest('hex')
+    : crypto.createHash('sha256').update(input).digest('hex');
 }
 
 function boundedLimit(value, fallback = 50, max = 500) {
   return Math.max(1, Math.min(Number(value ?? fallback), max));
 }
 
-export function createNotificationStore({ dataDir }) {
+export function createNotificationStore({ dataDir, receiptSecret = '' }) {
   const root = path.resolve(dataDir);
   const subscriptionsFile = path.join(root, 'subscriptions.json');
   const signalStateFile = path.join(root, 'signal-state.json');
@@ -191,13 +194,14 @@ export function createNotificationStore({ dataDir }) {
       const base = { ...event };
       delete base.prev_hash;
       delete base.receipt_hash;
-      const hash = receiptHash(head.last_hash, base);
+      const hash = receiptHash(head.last_hash, base, receiptSecret);
       const receipt = { ...base, prev_hash: head.last_hash, receipt_hash: hash };
       appendJsonLine(ledgerFile, receipt);
       atomicWriteJson(ledgerHeadFile, {
         schema: 'systemia.notification-ledger-head.v1',
         last_hash: hash,
         count: Number(head.count || 0) + 1,
+        mode: receiptSecret ? 'hmac-sha256' : 'sha256',
         updated_at: new Date().toISOString(),
       });
       return receipt;
@@ -210,15 +214,33 @@ export function createNotificationStore({ dataDir }) {
       for (const line of lines) {
         const receipt = JSON.parse(line);
         const { prev_hash, receipt_hash, ...base } = receipt;
-        const expected = receiptHash(previous, base);
+        const expected = receiptHash(previous, base, receiptSecret);
         if (prev_hash !== previous || receipt_hash !== expected) {
           return { valid: false, count, last_hash: previous, broken_at: count + 1 };
         }
         previous = receipt_hash;
         count += 1;
       }
-      const head = safeReadJson(ledgerHeadFile, { last_hash: null, count: 0 });
-      return { valid: head.last_hash === previous && Number(head.count || 0) === count, count, last_hash: previous };
+      const head = safeReadJson(ledgerHeadFile, { last_hash: null, count: 0, mode: receiptSecret ? 'hmac-sha256' : 'sha256' });
+      return {
+        valid: head.last_hash === previous && Number(head.count || 0) === count,
+        count,
+        last_hash: previous,
+        mode: receiptSecret ? 'hmac-sha256' : 'sha256',
+      };
+    },
+    deliveryLedgerHead() {
+      const head = safeReadJson(ledgerHeadFile, {
+        schema: 'systemia.notification-ledger-head.v1',
+        last_hash: null,
+        count: 0,
+        mode: receiptSecret ? 'hmac-sha256' : 'sha256',
+      });
+      return {
+        count: Number(head.count || 0),
+        last_hash: head.last_hash || null,
+        mode: head.mode || (receiptSecret ? 'hmac-sha256' : 'sha256'),
+      };
     },
     consumeAttentionBudget(principalId, purpose, options = {}) {
       const principal = String(principalId || '').trim();
