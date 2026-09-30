@@ -30,7 +30,15 @@
     "focused_hotfix_release_ref": "513d3e9b4f2f0a0771544cbe20c6e456d65975c2",
     "resident_report_edge_registered": true,
     "silent_base44_source_fallback_removed": true,
-    "automatic_owned_runtime_canary_on_main": true
+    "automatic_owned_runtime_canary_on_main": true,
+    "owned_aliev_source_runtime_in_github": true,
+    "owned_aliev_content_addressed_snapshot_store_proof": "pass",
+    "owned_aliev_to_rivet_same_node_proof": "pass",
+    "resident_aliev_source_registered": true,
+    "rivet_auto_discovers_owned_aliev": true,
+    "evercraft_hosting_control_plane_proof": "pass",
+    "failed_candidate_preserves_active_service": true,
+    "blue_green_and_rollback_proof": "pass"
   },
   "migrate": [
     "report_execution_runtime",
@@ -56,11 +64,12 @@
     "observation_window_required": true
   },
   "blockers": [
-    "owned AliEV source endpoint has not yet been bound to the resident RIVET report edge",
+    "owned AliEV source and RIVET resident stack have not yet been admitted on a field/public-edge production node",
+    "production AliEV snapshot store has not yet been bulk-seeded and reconciled from legacy source data",
     "live authenticated Yard report route has not yet been independently verified",
     "RIVET New Report UI is still temporarily bound to the Base44 generateQuickReport compatibility function",
-    "fresh 6405 W Chestnut live report has not yet reached generation_state=ready through Yard"
+    "fresh 6405 W Chestnut live report has not yet reached generation_state=ready through the owned production lane"
   ],
-  "next_action": "bind_an_owned_non_base44_aliev_source_to_the_resident_rivet_report_edge_verify_public_https_route_then_move_new_report_creation_to_yard_and_require_a_fresh_6405_w_chestnut_generation_state_ready",
+  "next_action": "admit_owned_compute_capacity_seed_and_reconcile_the_aliev_snapshot_store_start_resident_aliev_then_rivet_verify_public_https_and_fresh_report_canary_then_switch_new_report_creation_off_base44",
   "destructive_cutover_allowed": false
 }
