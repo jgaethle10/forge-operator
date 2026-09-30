@@ -1,0 +1,33 @@
+name: Clip Native Media Intake
+
+on:
+  pull_request:
+    paths:
+      - "systemia/clip/media-intake.mjs"
+      - "systemia/clip/media-intake.test.mjs"
+      - ".github/workflows/clip-native-media-intake.yml"
+  push:
+    branches: [main]
+    paths:
+      - "systemia/clip/media-intake.mjs"
+      - "systemia/clip/media-intake.test.mjs"
+      - ".github/workflows/clip-native-media-intake.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  native-intake:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Native Clip intake contracts
+        run: node --test systemia/clip/media-intake.test.mjs
+      - name: Typecheck estate
+        run: |
+          npm install --no-audit --no-fund
+          npm run lint
