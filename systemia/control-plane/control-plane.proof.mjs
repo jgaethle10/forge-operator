@@ -194,6 +194,8 @@ const contractDispatch = contractDerived.dispatch[0];
 assert.equal(contractDispatch.capability_contract_state, 'complete_declaration');
 assert.equal(contractDispatch.adoption_stage, 'shared_runtime');
 assert.equal(contractDispatch.contract_specialist_slug, 'aliev');
+assert.equal(contractDispatch.specialist_component, 'aliev');
+assert.equal(contractDispatch.execution_component, 'aliev');
 assert.equal(contractDispatch.contract_context_namespace, 'aliev');
 assert.equal(contractDispatch.metered, true);
 assert.equal(contractDispatch.meter_metric, 'site_reports');
