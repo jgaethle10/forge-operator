@@ -72,7 +72,12 @@ export function evaluateBootstrap({
   currentBootHash=null,
   brokerUrl='',
   physicalConfirmed=false,
+  nodeRole='public_edge',
 }={}){
+  const role=String(nodeRole||'public_edge').trim();
+  if(!['public_edge','private_worker'].includes(role)){
+    throw new Error('node_role_invalid');
+  }
   const checks={
     preflight_passed:files.preflight?.passed===true,
     installed:Boolean(files.install),
@@ -119,7 +124,7 @@ export function evaluateBootstrap({
     next_action='rerun_with_--confirm-physical-host_--advance';
     human_action_required=true;
     reason='physical_host_claim_must_be_explicit';
-  }else if(!checks.public_edge_admitted){
+  }else if(role==='public_edge'&&!checks.public_edge_admitted){
     state='public_https_admission_required';
     next_action='bind_owned_domain_and_trusted_tls_then_run_--admit-public-edge';
     human_action_required=false;
@@ -138,6 +143,10 @@ export function evaluateBootstrap({
     next_action,
     human_action_required,
     checks,
+    node_role:role,
+    public_edge_required:role==='public_edge',
+    inbound_public_port_required:role==='public_edge',
+    outbound_only_eligible:role==='private_worker',
     node_id:files.node?.node_id||null,
     device_fingerprint:files.node?.device_fingerprint||null,
     public_edge:files.public_edge?{
@@ -181,6 +190,8 @@ async function main(){
   const envFile=path.resolve(arg('--env-file','/etc/evercraft/nodeseed.env'));
   const brokerUrl=String(arg('--broker-url',process.env.EVERCRAFT_REMOTE_BROKER_URL||'')).trim();
   const confirmPhysical=has('--confirm-physical-host');
+  const nodeRole=String(arg('--role',process.env.EVERCRAFT_NODE_ROLE||'public_edge')).trim();
+  if(!['public_edge','private_worker'].includes(nodeRole)) throw new Error('node_role_invalid');
   const advance=has('--advance');
   const sourceRoot=path.resolve(arg('--source-root',path.join(here,'../..')));
 
@@ -201,7 +212,7 @@ async function main(){
   let files=fileState(root);
   if(files.preflight?.passed!==true){
     const status=evaluateBootstrap({
-      files,currentBootHash:bootHash(),brokerUrl,physicalConfirmed:confirmPhysical,
+      files,currentBootHash:bootHash(),brokerUrl,physicalConfirmed:confirmPhysical,nodeRole,
     });
     console.log(JSON.stringify(writeStatus(root,status),null,2));
     process.exit(4);
@@ -235,7 +246,7 @@ async function main(){
   if(advance&&files.offline?.verified===true&&!files.field?.ready_for_yard_enrollment){
     if(!confirmPhysical){
       const status=evaluateBootstrap({
-        files,currentBootHash:bootHash(),brokerUrl,physicalConfirmed:false,
+        files,currentBootHash:bootHash(),brokerUrl,physicalConfirmed:false,nodeRole,
       });
       console.log(JSON.stringify(writeStatus(root,status),null,2));
       return;
@@ -299,7 +310,7 @@ async function main(){
   }
 
   const status=evaluateBootstrap({
-    files,currentBootHash:bootHash(),brokerUrl,physicalConfirmed:confirmPhysical,
+    files,currentBootHash:bootHash(),brokerUrl,physicalConfirmed:confirmPhysical,nodeRole,
   });
   const receipt=writeStatus(root,{
     ...status,
