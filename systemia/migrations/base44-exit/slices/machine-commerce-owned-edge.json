@@ -1,0 +1,50 @@
+{
+  "schema": "evercraft.systemia.base44-migration-slice.v1",
+  "slice": "machine_commerce_discovery_handoff",
+  "priority": 1,
+  "source": {
+    "platform": "base44",
+    "product": "Evercraft Machine Commerce",
+    "authority": "legacy_remote_mcp_gateway_buyer_frontage_and_handoff"
+  },
+  "target": {
+    "source_control": "github",
+    "orchestration": "systemia",
+    "runtime": "yard_evercraft_compute",
+    "gateway": "/api/machine-commerce",
+    "mcp": "/mcp/machine-commerce",
+    "human_review": "/buy/{publicId}"
+  },
+  "migrated_now": [
+    "offer_lookup",
+    "problem_to_offer_matching",
+    "human_review_preparation",
+    "safe_remote_mcp_subset",
+    "owned_human_review_surface"
+  ],
+  "intentionally_held": [
+    "checkout_creation",
+    "payment_collection",
+    "provider_payment_verification",
+    "paid_entitlement",
+    "product_specific_execution",
+    "legacy_21_tool_registry_parity"
+  ],
+  "invariants": [
+    "owned projections must strip Base44 URLs",
+    "discovery creates no obligation",
+    "human review creates no checkout or payment",
+    "unknown or unmigrated execution state must hold rather than silently call Base44"
+  ],
+  "acceptance": {
+    "source_tests": false,
+    "yard_route_verified": false,
+    "mcp_initialize_verified": false,
+    "mcp_tools_list_verified": false,
+    "owned_review_verified": false,
+    "specialist_handoff_local_resolution_verified": false,
+    "registry_cutover_allowed": false
+  },
+  "next_action": "wire Forge internal specialist handoffs and CHUM review links to the owned resolver, run CI and Yard canary, then migrate remaining Machine Commerce tools and product-specific payment/execution routes before registry cutover",
+  "destructive_cutover_allowed": false
+}
