@@ -53,7 +53,8 @@ def main():
       ('lineage',[sys.executable,str(HERE/'lineage_guard.py'),'--site',str(site),'--require-complete']),
       ('render',[sys.executable,str(HERE/'render_pair.py'),'--site',str(site)]),
       ('layout_qa',[sys.executable,str(HERE/'layout_qa.py'),'--site',str(site),'--render-dir',str(RENDER_ROOT)]),
-      ('stall_label_visual_qa',[sys.executable,str(HERE/'stall_label_visual_qa.py'),'--site',str(site),'--render-dir',str(RENDER_ROOT),'--source-dir',str(SOURCE_ROOT)])
+      ('stall_label_visual_qa',[sys.executable,str(HERE/'stall_label_visual_qa.py'),'--site',str(site),'--render-dir',str(RENDER_ROOT),'--source-dir',str(SOURCE_ROOT)]),
+      ('artifact_promotion',[sys.executable,str(HERE/'artifact_store.py'),'--site',str(site),'--revision',revision])
     ]
     if args.offline: commands[1][1].append('--offline')
     if args.refresh_aerial: commands[1][1].append('--refresh-aerial')
