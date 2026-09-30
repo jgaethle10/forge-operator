@@ -32,6 +32,18 @@ function safeError(error) {
   return String(error?.message || error || 'Unknown Relay worker error.').slice(0, 2000);
 }
 
+function canonical(value) {
+  if (Array.isArray(value)) return '[' + value.map(canonical).join(',') + ']';
+  if (value && typeof value === 'object') {
+    return '{' + Object.keys(value).sort().map((key) => JSON.stringify(key) + ':' + canonical(value[key])).join(',') + '}';
+  }
+  return JSON.stringify(value);
+}
+
+function requestFingerprint(kind, value) {
+  return crypto.createHash('sha256').update(String(kind || '') + '\n' + canonical(value)).digest('hex');
+}
+
 export function createRelayOutbox(options = {}) {
   const root = path.resolve(options.dataDir || '.systemia-state/notifications');
   const file = options.file || path.join(root, 'relay-outbox.json');
@@ -52,10 +64,16 @@ export function createRelayOutbox(options = {}) {
     return mutate((state) => {
       const idempotencyKey = String(input.idempotency_key || '').trim() || null;
       if (idempotencyKey && idempotencyKey.length > 256) throw new Error('Relay idempotency key exceeds 256 characters.');
+      const fingerprint = requestFingerprint(input.kind || 'intent', input.fingerprint_source ?? input.payload ?? {});
       if (idempotencyKey) {
         const existingId = state.idempotency?.[idempotencyKey];
         const existing = existingId ? state.jobs?.[existingId] : null;
-        if (existing) return { ...existing, duplicate: true };
+        if (existing) {
+          if (existing.request_fingerprint && existing.request_fingerprint !== fingerprint) {
+            throw new Error('Relay idempotency key was reused with a different request.');
+          }
+          return { ...existing, duplicate: true };
+        }
       }
       const now = Number(input.now ?? Date.now());
       const id = String(input.id || crypto.randomUUID());
@@ -66,6 +84,7 @@ export function createRelayOutbox(options = {}) {
         kind: String(input.kind || 'intent'),
         payload: input.payload ?? {},
         idempotency_key: idempotencyKey,
+        request_fingerprint: fingerprint,
         status: 'pending',
         attempts: 0,
         max_attempts: Math.max(1, Math.min(Number(input.max_attempts ?? 8), 50)),
