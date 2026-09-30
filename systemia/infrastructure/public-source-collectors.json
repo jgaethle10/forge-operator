@@ -1,0 +1,44 @@
+{
+  "schema": "evercraft.systemia.infrastructure-collectors.v1",
+  "runtime": "systemia-core+yard-evercraft-compute",
+  "canonical_owner": "systemia",
+  "collector": "systemia/infrastructure/public-source-collectors.mjs",
+  "transition_scheduler": ".github/workflows/infrastructure-public-source-collectors.yml",
+  "compatibility_ingress": "systemiaInfrastructureIngress",
+  "compatibility_app_id": "694985a7cb60682ad91670c9",
+  "named_cloud_required": false,
+  "lanes": [
+    {
+      "key": "world-bank",
+      "source": "World Bank public API",
+      "cadence_seconds": 86400,
+      "legacy_base44_function": "refreshWorldBankInfrastructure",
+      "state": "live_canary_pending",
+      "semantics": {
+        "reported_values": "reported",
+        "derived_unserved_population": "modeled",
+        "missing_is_zero": false
+      }
+    },
+    {
+      "key": "yakima-hydromet",
+      "source": "U.S. Bureau of Reclamation Yakima Hydromet",
+      "cadence_seconds": 21600,
+      "legacy_base44_function": "refreshYakimaHydromet",
+      "state": "live_canary_pending",
+      "semantics": {
+        "source_values": "reported_provisional",
+        "blank_is_zero": false,
+        "forecast_generated": false,
+        "revision_history_preserved_by_value_hashed_identity": true
+      }
+    }
+  ],
+  "cutover_gate": [
+    "off_base44_fetch_succeeds",
+    "compatibility_mirror_succeeds",
+    "receipt_written",
+    "legacy_schedule_disabled",
+    "observation_window_passes"
+  ]
+}
