@@ -69,6 +69,8 @@ jobs:
         run: npm run proof:base44-entity-transfer
       - name: Prove receipt-gated migration route registry
         run: npm run proof:base44-route-registry
+      - name: Block hard-coded Base44 routes in owned runtime
+        run: npm run validate:base44-owned-runtime-firewall
       - name: Prove Evercraft App Fabric
         run: npm run proof:app-fabric
       - name: Prove Base44 SDK compatibility
