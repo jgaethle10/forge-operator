@@ -41,7 +41,9 @@
           "Find the smallest Evercraft capability for this problem.",
           "Route this problem to the right verified Evercraft specialist.",
           "Show me the safest next step Evercraft can actually perform."
-        ]
+        ],
+        "composerIcon": "./assets/evercraft-icon.png",
+        "logo": "./assets/evercraft-icon.png"
       },
       "onboardingSkill": "./skills/evercraft-router/SKILL.md",
       "review": {
