@@ -3,10 +3,10 @@
 Capability ID: evercraft-clip-social-video-v1
 Commercial state: verification_required
 Machine state: invocation_ready
-Public URL: https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
+Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-clip
 Preferred agent route: direct specialist
 Direct specialist: Evercraft Clip
-Direct MCP: https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp
+Direct MCP: https://fabric.systemiacommandcenters.com/mcp
 Official MCP Registry name: io.github.jgaethle10/evercraft-clip
 Universal Evercraft fallback MCP: https://fabric.systemiacommandcenters.com/mcp
 Start here: Not a current sell-now route
