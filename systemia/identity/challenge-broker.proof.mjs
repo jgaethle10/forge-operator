@@ -11,6 +11,7 @@ import { EvercraftSecretStore } from '../secret-store/secret-store.mjs';
 const root = fs.mkdtempSync(path.join(os.tmpdir(), 'evercraft-challenge-proof-'));
 const delivered = [];
 const credential = randomBytes(24).toString('base64url');
+const replacementCredential = randomBytes(24).toString('base64url');
 
 try {
   const identity = new EvercraftIdentity({ stateDir: path.join(root, 'identity') });
@@ -53,13 +54,53 @@ try {
     verified.subject_ref
   );
 
+  const recovery = await broker.beginReset({
+    appKey: 'proof-app',
+    body: { email: 'new-person@example.invalid' }
+  });
+  assert.equal(recovery.status, 'accepted');
+  assert.equal(recovery.delivery_state, 'not_disclosed');
+  const resetToken = delivered.at(-1).resetToken;
+  assert.ok(resetToken);
+
+  const challengeDiskAfterReset = fs.readdirSync(path.join(root, 'challenges'), { recursive: true })
+    .map((name) => path.join(root, 'challenges', name))
+    .filter((name) => fs.existsSync(name) && fs.statSync(name).isFile())
+    .map((name) => fs.readFileSync(name, 'utf8'))
+    .join('\n');
+  assert.equal(challengeDiskAfterReset.includes(resetToken), false);
+
+  const reset = await broker.completeReset({
+    appKey: 'proof-app',
+    body: { resetToken, newPassword: replacementCredential }
+  });
+  assert.equal(reset.reset, true);
+  assert.throws(
+    () => identity.authenticatePassword({ login: 'new-person@example.invalid', password: credential }),
+    /identity_credentials_invalid/
+  );
+  assert.equal(
+    identity.authenticatePassword({ login: 'new-person@example.invalid', password: replacementCredential }).subject_ref,
+    verified.subject_ref
+  );
+
+  const unknownRecovery = await broker.beginReset({
+    appKey: 'proof-app',
+    body: { email: 'missing-person@example.invalid' }
+  });
+  assert.deepEqual(unknownRecovery, recovery);
+  assert.equal(delivered.length, 2);
+
   console.log(JSON.stringify({
     schema: 'evercraft.identity.challenge-broker-proof.v1',
     status: 'pass',
     challenge_delivery_receipted: true,
     pending_credential_not_plaintext: true,
     code_not_plaintext: true,
-    subject_provisioned_only_after_verification: true
+    subject_provisioned_only_after_verification: true,
+    recovery_token_not_plaintext: true,
+    recovery_account_state_not_disclosed: true,
+    credential_replacement_revokes_old_credential: true
   }));
 } finally {
   fs.rmSync(root, { recursive: true, force: true });
