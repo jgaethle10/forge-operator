@@ -128,7 +128,8 @@ function routeStrategy(intent, realtimeDelivered, subscription, now = new Date()
 
 export function createNotificationFabric(options = {}) {
   const dataDir = options.dataDir || process.env.EVERCRAFT_NOTIFICATION_DATA_DIR || path.resolve('.systemia-state/notifications');
-  const store = options.store || createNotificationStore({ dataDir });
+  const receiptSecret = options.receiptSecret ?? process.env.EVERCRAFT_NOTIFICATION_RECEIPT_SECRET ?? '';
+  const store = options.store || createNotificationStore({ dataDir, receiptSecret });
   const realtimeHub = options.realtimeHub || createRealtimeHub(options.realtimeOptions);
   const sendPush = options.sendPush || sendWebPush;
   const vapidPublicKey = options.vapidPublicKey ?? process.env.EVERCRAFT_VAPID_PUBLIC_KEY ?? '';
@@ -370,7 +371,7 @@ export function createNotificationFabric(options = {}) {
           durable_inbox: true,
           web_push_vapid: Boolean(vapidPublicKey && vapidPrivateKey && vapidSubject),
         },
-        receipt_ledger: store.verifyDeliveryLedger(),
+        receipt_ledger: store.deliveryLedgerHead(),
         realtime_presence: realtimeHub.snapshot(),
       };
     },
