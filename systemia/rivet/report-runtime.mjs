@@ -7,6 +7,12 @@ import { sealFootball, openFootball } from '../beast-mode/football.mjs';
 
 const ALIEV_APP_ID = '69b9b64d86a732029ce0db81';
 const RIVET_APP_ID = '6ab2062323d5c33c7dde7606';
+const SOURCE_COVERAGE_SCHEMA = 'evercraft.rivet.source-coverage.v1';
+const REQUIRED_SOURCE_COVERAGE_DOMAINS = [
+  'geocoding','charging_inventory','traffic','traffic_temporal','utility_service_area','utility_tariff',
+  'incentives','parcel_planning','local_ev_stock','observed_sessions','freight','dwell_context',
+  'deep_market_evidence','provenance'
+];
 
 function clean(value){ return String(value ?? '').trim(); }
 function stable(value){
@@ -29,6 +35,24 @@ function safeId(value){ return clean(value).replace(/[^a-zA-Z0-9._-]/g,'_').slic
 function number(value){ const n=Number(value); return Number.isFinite(n)?n:null; }
 function arr(value){ return Array.isArray(value)?value:[]; }
 function publicText(value){ return clean(value).slice(0,4000); }
+function requireSourceCoverage(data){
+  const manifest=data?.source_coverage_manifest;
+  if(clean(manifest?.schema)!==SOURCE_COVERAGE_SCHEMA || !manifest?.domains || typeof manifest.domains!=='object'){
+    throw new Error('source_coverage_manifest_required');
+  }
+  const missing=REQUIRED_SOURCE_COVERAGE_DOMAINS.filter(key=>!manifest.domains[key] || !clean(manifest.domains[key]?.state));
+  if(missing.length) throw new Error('source_coverage_incomplete:'+missing.join(','));
+  return {
+    schema:SOURCE_COVERAGE_SCHEMA,
+    generated_at:clean(manifest.generated_at || data?.retrieved_at),
+    domains:Object.fromEntries(REQUIRED_SOURCE_COVERAGE_DOMAINS.map(key=>[key,{
+      state:clean(manifest.domains[key]?.state),
+      record_count:number(manifest.domains[key]?.record_count) ?? 0,
+      source_status:clean(manifest.domains[key]?.source_status) || null
+    }])),
+    semantics:clean(manifest.semantics) || 'Every report-relevant source domain is explicit. Missing is never zero.'
+  };
+}
 
 function quickRead(data){
   const traffic=arr(data?.traffic);
@@ -68,6 +92,7 @@ function quickRead(data){
 }
 
 export function buildYardReport({address,sourceSnapshot,retrievedAt=new Date().toISOString()}){
+  const sourceCoverage=requireSourceCoverage(sourceSnapshot);
   const read=quickRead(sourceSnapshot);
   return {
     schema:'evercraft.rivet.yard-report.v1',
@@ -85,7 +110,9 @@ export function buildYardReport({address,sourceSnapshot,retrievedAt=new Date().t
       app_id:ALIEV_APP_ID,
       response_profile:clean(sourceSnapshot?.response_profile),
       evidence_state:clean(sourceSnapshot?.evidence_state),
-      retrieved_at:clean(sourceSnapshot?.retrieved_at || retrievedAt)
+      retrieved_at:clean(sourceSnapshot?.retrieved_at || retrievedAt),
+      coverage_schema:sourceCoverage.schema,
+      source_snapshot_preserved:true
     },
     decision:{
       label:read.decision_label,
@@ -98,11 +125,77 @@ export function buildYardReport({address,sourceSnapshot,retrievedAt=new Date().t
       charger_count:read.charger_count
     },
     evidence:{
-      traffic:read.traffic_rows,
-      chargers:read.chargers,
-      incentives:read.incentives,
-      observed_usage:read.observed_usage,
-      coverage_contract:sourceSnapshot?.coverage_contract || null
+      source_coverage_manifest:sourceCoverage,
+      coverage_contract:sourceSnapshot?.coverage_contract || null,
+      traffic:{
+        rows:read.traffic_rows,
+        profiles:arr(sourceSnapshot?.traffic_profiles).slice(0,24),
+        source_status:clean(sourceSnapshot?.traffic_source_status) || null,
+        source_name:clean(sourceSnapshot?.traffic_source_name) || null,
+        source_url:clean(sourceSnapshot?.traffic_source_url) || null,
+        available_dimensions:sourceSnapshot?.traffic_available_dimensions || null,
+        semantics:sourceSnapshot?.traffic_semantics || null,
+        freight_context:sourceSnapshot?.freight_context || null
+      },
+      charging:{
+        chargers:read.chargers,
+        source_status:clean(sourceSnapshot?.charger_source_status) || null,
+        source_name:clean(sourceSnapshot?.charger_source_name) || null,
+        source_license:clean(sourceSnapshot?.charger_source_license) || null,
+        price_benchmark:sourceSnapshot?.zip_charging_price_benchmark || null,
+        observed_usage:read.observed_usage
+      },
+      utility:{
+        rate_candidates:arr(sourceSnapshot?.utility_rate_candidates).slice(0,30),
+        candidate_utilities:arr(sourceSnapshot?.utility_rate_candidate_utilities).slice(0,30),
+        rate_source_status:sourceSnapshot?.utility_rate_source_status || null,
+        rate_source_error:sourceSnapshot?.utility_rate_source_error || null,
+        rate_semantics:sourceSnapshot?.utility_rate_semantics || null,
+        washington_service_area_candidates:arr(sourceSnapshot?.washington_utility_service_area_candidates).slice(0,20),
+        washington_service_area_status:sourceSnapshot?.washington_utility_service_area_status || null,
+        washington_pacific_power_ev_tariff_context:sourceSnapshot?.washington_pacific_power_ev_tariff_context || null,
+        washington_pacific_power_ev_tariff_status:sourceSnapshot?.washington_pacific_power_ev_tariff_status || null,
+        washington_pacific_power_program_watch:sourceSnapshot?.washington_pacific_power_program_watch || null,
+        washington_pacific_power_current_rate_catalog:sourceSnapshot?.washington_pacific_power_current_rate_catalog || null,
+        california_service_area_candidates:arr(sourceSnapshot?.california_utility_service_area_candidates).slice(0,20),
+        california_service_area_status:sourceSnapshot?.california_utility_service_area_status || null,
+        california_other_lse_overlap_context:arr(sourceSnapshot?.california_other_lse_overlap_context).slice(0,20),
+        california_candidate_tariff_catalog:arr(sourceSnapshot?.california_candidate_tariff_catalog).slice(0,20),
+        california_candidate_tariff_status:sourceSnapshot?.california_candidate_tariff_status || null,
+        california_utility_confirmation_paths:arr(sourceSnapshot?.california_utility_confirmation_paths).slice(0,20)
+      },
+      incentives:{
+        programs:read.incentives,
+        evidence:sourceSnapshot?.incentive_evidence || null,
+        source_status:sourceSnapshot?.incentive_source_status || null,
+        new_york_programs:arr(sourceSnapshot?.new_york_ev_programs).slice(0,30),
+        new_york_source_status:sourceSnapshot?.new_york_program_source_status || null
+      },
+      property_planning:{
+        california_near_home_charging_gap:sourceSnapshot?.california_near_home_charging_gap || null,
+        california_near_home_gap_source_status:sourceSnapshot?.california_near_home_gap_source_status || null,
+        california_parcel_planning:sourceSnapshot?.california_parcel_planning || null,
+        california_parcel_planning_status:sourceSnapshot?.california_parcel_planning_status || null,
+        california_property_adapter_trace:sourceSnapshot?.california_property_adapter_trace || null,
+        california_county_charging_market:sourceSnapshot?.california_county_charging_market || null,
+        california_county_charging_market_status:sourceSnapshot?.california_county_charging_market_status || null,
+        site_diligence:sourceSnapshot?.site_diligence || null
+      },
+      market:{
+        local_ev_stock:sourceSnapshot?.local_ev_stock || null,
+        local_ev_stock_status:sourceSnapshot?.local_ev_stock_status || null,
+        dwell_anchors:arr(sourceSnapshot?.dwell_anchors).slice(0,30),
+        dwell_source_status:sourceSnapshot?.dwell_source_status || null,
+        sales_angles:arr(sourceSnapshot?.sales_angles).slice(0,20),
+        deep_benchmark_records:arr(sourceSnapshot?.deep_benchmark_records).slice(0,16),
+        deep_market_evidence:arr(sourceSnapshot?.deep_market_evidence).slice(0,16),
+        deep_utility_program_evidence:arr(sourceSnapshot?.deep_utility_program_evidence).slice(0,16),
+        deep_external_evidence:arr(sourceSnapshot?.deep_external_evidence).slice(0,16),
+        deep_evidence_semantics:sourceSnapshot?.deep_evidence_semantics || null
+      },
+      provenance:{
+        source_record_ids:arr(sourceSnapshot?.source_record_ids).slice(0,100)
+      }
     },
     caveats:[
       'This is a source-backed screening report, not final engineering, underwriting, permitting, investment approval, or a stamped plan.',
@@ -158,12 +251,15 @@ export async function generateYardReport({
   if(clean(data?.response_profile)!=='rivet_report_snapshot_v1'){
     throw new Error('aliev_snapshot_profile_required');
   }
+  const sourceCoverage=requireSourceCoverage(data);
   progress('source_verified',3,8,{
     message:'Source intelligence received and verified.',
     traffic_records:arr(data?.traffic).length,
     charger_records:arr(data?.chargers).length,
     incentive_records:arr(data?.incentives).length,
-    observed_usage_records:arr(data?.nearby_observed_usage).length
+    observed_usage_records:arr(data?.nearby_observed_usage).length,
+    coverage_schema:sourceCoverage.schema,
+    coverage_domains_verified:REQUIRED_SOURCE_COVERAGE_DOMAINS.length
   });
 
   const snapshotBytes=jsonBytes(data);
@@ -241,7 +337,10 @@ export async function generateYardReport({
       byte_count:snapshotBytes.byteLength,
       football_id:sealed.football_id,
       football_sha256:sha256(sealed.buffer),
-      response_profile:'rivet_report_snapshot_v1'
+      response_profile:'rivet_report_snapshot_v1',
+      coverage_schema:sourceCoverage.schema,
+      coverage_domains_verified:REQUIRED_SOURCE_COVERAGE_DOMAINS.length,
+      body:data
     },
     report:{
       sha256:reportSha,
@@ -254,6 +353,8 @@ export async function generateYardReport({
       football_opened:true,
       source_sha256_match:true,
       source_byte_count_match:true,
+      source_coverage_verified:true,
+      required_source_domains_verified:REQUIRED_SOURCE_COVERAGE_DOMAINS.length,
       report_generation_state:'ready'
     }
   };
@@ -300,6 +401,8 @@ export async function startRivetReportRuntime({
     deployment_receipt_bound:Boolean(deploymentReceiptRef),
     deployment_receipt_ref:deploymentReceiptRef||null,
     source_adapter:'aliev-rivet-report-snapshot-v1',
+    source_coverage_schema:SOURCE_COVERAGE_SCHEMA,
+    required_source_domains:REQUIRED_SOURCE_COVERAGE_DOMAINS.length,
     started_at:startedAt
   });
 
