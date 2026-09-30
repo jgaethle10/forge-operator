@@ -38,6 +38,7 @@ function validateIntent(raw) {
     max_escalations: Math.max(0, Math.min(Number(raw.acknowledgement.max_escalations ?? 2), 5)),
     escalation_interval_seconds: Math.max(15, Math.min(Number(raw.acknowledgement.escalation_interval_seconds ?? 300), 24 * 60 * 60)),
     title_prefix: String(raw.acknowledgement.title_prefix || 'UNACKNOWLEDGED').slice(0, 40),
+    due_at: raw.acknowledgement.due_at ? String(raw.acknowledgement.due_at) : null,
   } : null;
   return {
     schema: 'systemia.notification.intent.v2',
@@ -86,6 +87,7 @@ function safeNotificationPayload(intent) {
     icon: intent.icon,
     badge: intent.badge,
     data: intent.data,
+    acknowledgement: intent.acknowledgement,
     created_at: intent.created_at,
   };
 }
