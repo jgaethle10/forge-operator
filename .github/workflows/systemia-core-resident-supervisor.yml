@@ -11,6 +11,9 @@ on:
       - 'systemia/core/resident-supervisor-runner.mjs'
       - 'systemia/core/resident-supervisor.proof.mjs'
       - 'systemia/core/public-edge-resident-wiring.proof.mjs'
+      - 'systemia/core/rivet-report-resident-wiring.proof.mjs'
+      - 'systemia/organism/rivet-report-edge-runner.mjs'
+      - 'systemia/organism/rivet-report-edge.workflow.json'
       - 'systemia/core/RESIDENT_SUPERVISOR.md'
       - 'systemia/yard/public-route-broker.mjs'
       - 'systemia/yard/public-edge-controller.mjs'
@@ -34,6 +37,9 @@ on:
       - 'systemia/core/resident-supervisor-runner.mjs'
       - 'systemia/core/resident-supervisor.proof.mjs'
       - 'systemia/core/public-edge-resident-wiring.proof.mjs'
+      - 'systemia/core/rivet-report-resident-wiring.proof.mjs'
+      - 'systemia/organism/rivet-report-edge-runner.mjs'
+      - 'systemia/organism/rivet-report-edge.workflow.json'
       - 'systemia/core/RESIDENT_SUPERVISOR.md'
       - 'systemia/yard/public-route-broker.mjs'
       - 'systemia/yard/public-edge-controller.mjs'
@@ -62,5 +68,7 @@ jobs:
         run: node systemia/core/resident-supervisor.proof.mjs
       - name: Prove public edge supervisor topology
         run: node systemia/core/public-edge-resident-wiring.proof.mjs
+      - name: Prove RIVET resident report edge wiring
+        run: node systemia/core/rivet-report-resident-wiring.proof.mjs
       - name: Prove Sentinel resident registration
         run: npm run test:sentinel-resident
