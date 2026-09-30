@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-30T21:01:13.414Z",
+  "updated_at": "2026-09-30T21:03:44.546Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,26 +11,72 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/hot/",
-      "last_changed": "2026-09-30T21:01:13.414Z",
+      "path": "/chum/crawler-radar.json",
+      "last_changed": "2026-09-30T21:03:44.546Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/crawler-radar.txt",
+      "last_changed": "2026-09-30T21:03:44.546Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-30T21:01:13.414Z",
+      "last_changed": "2026-09-30T21:03:44.546Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "last_changed": "2026-09-30T21:03:44.546Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
     {
-      "path": "/chum/hot/",
-      "url": "/chum/hot/",
-      "last_changed": "2026-09-30T21:01:13.414Z",
+      "path": "/chum/crawler-radar.json",
+      "url": "/chum/crawler-radar.json",
+      "last_changed": "2026-09-30T21:03:44.546Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/crawler-radar.txt",
+      "url": "/chum/crawler-radar.txt",
+      "last_changed": "2026-09-30T21:03:44.546Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
       "url": "/chum/hot/index.json",
+      "last_changed": "2026-09-30T21:03:44.546Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "url": "/chum/strike/index.json",
+      "last_changed": "2026-09-30T21:03:44.546Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/forensiscope.json",
+      "url": "/chum/proof/forensiscope.json",
+      "last_changed": "2026-09-30T21:03:43.998Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/index.json",
+      "url": "/chum/proof/index.json",
+      "last_changed": "2026-09-30T21:03:43.998Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/rivet.json",
+      "url": "/chum/proof/rivet.json",
+      "last_changed": "2026-09-30T21:03:43.998Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/",
+      "url": "/chum/hot/",
       "last_changed": "2026-09-30T21:01:13.414Z",
       "priority": 80
     },
@@ -227,26 +273,8 @@
       "priority": 80
     },
     {
-      "path": "/chum/crawler-radar.json",
-      "url": "/chum/crawler-radar.json",
-      "last_changed": "2026-09-30T20:58:03.033Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/crawler-radar.txt",
-      "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-09-30T20:58:03.033Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/strike/",
       "url": "/chum/strike/",
-      "last_changed": "2026-09-30T20:58:03.033Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/strike/index.json",
-      "url": "/chum/strike/index.json",
       "last_changed": "2026-09-30T20:58:03.033Z",
       "priority": 80
     },
@@ -1501,24 +1529,6 @@
     {
       "path": "/chum/answers/doors/find-a-hard-to-source-part-78dcd37ecc/",
       "url": "/chum/answers/doors/find-a-hard-to-source-part-78dcd37ecc/",
-      "last_changed": "2026-09-30T20:55:21.460Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/find-a-historical-sports-event-6b1f7d9ba7.json",
-      "url": "/chum/answers/doors/find-a-historical-sports-event-6b1f7d9ba7.json",
-      "last_changed": "2026-09-30T20:55:21.460Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/find-a-trading-journal-with-behavioral-coaching-233a949aad.json",
-      "url": "/chum/answers/doors/find-a-trading-journal-with-behavioral-coaching-233a949aad.json",
-      "last_changed": "2026-09-30T20:55:21.460Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/find-a-trusted-professional-through-relationship-paths-bf30793b00.json",
-      "url": "/chum/answers/doors/find-a-trusted-professional-through-relationship-paths-bf30793b00.json",
       "last_changed": "2026-09-30T20:55:21.460Z",
       "priority": 160
     }
