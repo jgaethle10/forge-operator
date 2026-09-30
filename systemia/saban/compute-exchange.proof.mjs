@@ -117,6 +117,24 @@ assert.equal(
   'proof-secret-never-in-receipt'
 );
 
+const freeWithoutExtraAuthority=await negotiateCompute({
+  demand:normalizeComputeDemand({
+    demand_id:'proof-zero-cost-internal',
+    cpu_units:2,
+    memory_mb:2048,
+    storage_gb:2,
+    duration_seconds:3600,
+    negotiation_level:'lease',
+  }),
+  adapters:[broker],
+});
+assert.equal(freeWithoutExtraAuthority.selected_offer.market,'evercraft-broker');
+assert.equal(freeWithoutExtraAuthority.lease.zero_cost,true);
+assert.equal(freeWithoutExtraAuthority.lease.capacity_endpoint,'https://broker.example/nodes/chromebook-proof');
+assert.ok(freeWithoutExtraAuthority.events.some((e)=>
+  e.type==='lease.granted'
+));
+
 const tooLarge=normalizeComputeDemand({
   demand_id:'proof-large',
   cpu_units:8,
