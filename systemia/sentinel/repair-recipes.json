@@ -202,7 +202,7 @@
       "learned_from": "Commercial discovery expansion Sep 26 2026"
     },
     {
-      "recipe_id": "human-buyer-frontage-regression",
+      "recipe_id": "owned-buyer-frontage-regression",
       "match": {
         "invariant_ids": [
           "human-buyer-frontage-stays-clean"
@@ -215,15 +215,15 @@
           "systemia/chum/start-corridor.mjs",
           "tests/chum-start-corridor.test.mjs"
         ],
-        "instructions": "Restore verified clean product buyer destinations before exposing Machine Commerce plumbing. Preserve tracked Forge handoff when a verified CHUM public origin exists and retain Machine Commerce only as last fallback."
+        "instructions": "Restore an owned HTTPS CHUM public origin or owned Machine Commerce gateway. Base44 destinations are forbidden. If no owned route is verified, preserve fail-closed blocked_no_owned_handoff behavior."
       },
       "verification": [
         "npm run test:chum-start-corridor",
-        "npm run test:chum-revenue",
+        "npm run check:no-new-base44",
         "customer gauntlet remains open"
       ],
-      "rollback": "Restore the last known-green buyer destination map if a product-domain destination fails live verification.",
-      "learned_from": "Zero-sale conversion audit Sep 26 2026"
+      "rollback": "Restore the last known-green owned Evercraft route. Never roll back to a Base44 destination.",
+      "learned_from": "Base44 evacuation incident Sep 30 2026"
     },
     {
       "recipe_id": "money-radar-funnel-trust-regression",
