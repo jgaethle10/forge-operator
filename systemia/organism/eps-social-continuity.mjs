@@ -110,11 +110,12 @@ export async function runEpsSocialContinuity({
 } = {}) {
   const url = clean(ingressUrl, 2000);
   const token = String(secret ?? '').trim().slice(0, 12000);
-  if (!url) throw new Error('Clip EPS ingress URL is required');
+  if (!url) throw new Error('Evercraft social continuity URL is required');
   if (!token) throw new Error('Clip shared secret is required');
 
   const parsed = new URL(url);
-  if (parsed.protocol !== 'https:') throw new Error('Clip EPS ingress must use HTTPS');
+  if (parsed.protocol !== 'https:') throw new Error('Evercraft social continuity ingress must use HTTPS');
+  if (/(^|\\.)base44\\.app$/i.test(parsed.hostname)) throw new Error('Base44 social continuity ingress is prohibited');
 
   const root = path.resolve(stateDir || 'artifacts/eps-social-continuity');
   const stateFile = path.join(root, 'state.json');
@@ -223,7 +224,7 @@ async function cli() {
   const ingressUrl = arg(
     argv,
     '--url',
-    process.env.EVERCRAFT_CLIP_EPS_INGRESS_URL || ''
+    process.env.EVERCRAFT_SOCIAL_CONTINUITY_URL || ''
   );
   const secretFile = arg(
     argv,
