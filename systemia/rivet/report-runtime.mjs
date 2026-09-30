@@ -69,9 +69,9 @@ function evidenceIndex(data){
     charging_inventory:count(data?.chargers),
     incentives:count(data?.incentives)+count(data?.new_york_programs),
     observed_sessions:count(data?.nearby_observed_usage),
-    utility_service_area:count(data?.washington_utility_service_area_candidates)+count(data?.california_utility_service_area_candidates),
+    utility_service_area:count(data?.utility_service_area_candidates)+count(data?.washington_utility_service_area_candidates)+count(data?.california_utility_service_area_candidates),
     utility_tariff:count(data?.utility_rate_candidates)+count(data?.california_candidate_tariff_catalog)+count(data?.washington_pacific_power_current_rate_catalog),
-    parcel_planning:count(data?.california_parcel_planning),
+    parcel_planning:count(data?.parcel_planning)+count(data?.california_parcel_planning),
     local_ev_stock:count(data?.local_ev_stock),
     freight:count(data?.freight_context),
     dwell_context:count(data?.dwell_anchors),
@@ -187,6 +187,7 @@ export function buildYardReport({address,reportType='preliminary_site_opportunit
           rate_source_status:sourceSnapshot?.utility_rate_source_status || null,
           rate_source_error:sourceSnapshot?.utility_rate_source_error || null,
           rate_semantics:sourceSnapshot?.utility_rate_semantics || null,
+          service_area_candidates:arr(sourceSnapshot?.utility_service_area_candidates).slice(0,30),
           washington_service_area_candidates:arr(sourceSnapshot?.washington_utility_service_area_candidates).slice(0,20),
           washington_service_area_status:sourceSnapshot?.washington_utility_service_area_status || null,
           washington_pacific_power_ev_tariff_context:sourceSnapshot?.washington_pacific_power_ev_tariff_context || null,
@@ -208,6 +209,7 @@ export function buildYardReport({address,reportType='preliminary_site_opportunit
           new_york_source_status:sourceSnapshot?.new_york_program_source_status || null
         },
         property_planning:{
+          parcel_planning:arr(sourceSnapshot?.parcel_planning).slice(0,30),
           california_near_home_charging_gap:sourceSnapshot?.california_near_home_charging_gap || null,
           california_near_home_gap_source_status:sourceSnapshot?.california_near_home_gap_source_status || null,
           california_parcel_planning:sourceSnapshot?.california_parcel_planning || null,
