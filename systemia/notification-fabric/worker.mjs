@@ -198,7 +198,8 @@ export function createRelayWorker(options = {}) {
         }
       }
       lastError = null;
-      return { worker_id: workerId, claimed: claimed.length, results };
+      const retention = outbox.prune({ now });
+      return { worker_id: workerId, claimed: claimed.length, results, retention };
     } catch (error) {
       lastError = String(error?.message || error);
       throw error;
