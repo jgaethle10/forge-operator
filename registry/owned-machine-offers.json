@@ -30,7 +30,10 @@
       "payment_authority": "No direct Worldstate payment path is approved.",
       "invocation_status": "SOURCE READY: Forge-owned Worldstate read-only pilot MCP is implemented at /mcp/worldstate for canonical offer inspection and bounded non-person pilot-scope preparation. It creates no monitoring authority, Passport grant, source access, checkout, payment, production mutation, emergency authority, or external action. Do not claim public runtime availability until an independent HTTPS canary verifies the deployed route.",
       "live_canary_evidence": null,
-      "catalog_version": "2026-09-30.3"
+      "catalog_version": "2026-09-30.3",
+      "owned_mcp_path": "/mcp/worldstate",
+      "owned_route_state": "source_ready_runtime_binding_pending",
+      "owned_runtime": "yard_evercraft_compute"
     }
   ]
 }
