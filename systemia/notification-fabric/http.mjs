@@ -1,6 +1,8 @@
 import crypto from 'node:crypto';
 import { createNotificationFabric } from './fabric.mjs';
 import { issueRelaySession, verifyRelaySession } from './session-token.mjs';
+import { createRelayOutbox } from './outbox.mjs';
+import { createRelayWorker } from './worker.mjs';
 
 function bearer(req) {
   const header = String(req.get('authorization') || '');
@@ -38,6 +40,19 @@ export function registerNotificationFabricRoutes(app, options = {}) {
   const ingestToken = options.ingestToken ?? process.env.EVERCRAFT_NOTIFICATION_INGEST_TOKEN ?? '';
   const enrollToken = options.enrollToken ?? process.env.EVERCRAFT_NOTIFICATION_ENROLL_TOKEN ?? '';
   const sessionSecret = options.sessionSecret ?? process.env.EVERCRAFT_NOTIFICATION_SESSION_SECRET ?? '';
+  const outbox = options.outbox || createRelayOutbox({ dataDir: fabric.store.root });
+  const worker = options.worker || createRelayWorker({
+    fabric,
+    outbox,
+    workerId: options.workerId ?? process.env.EVERCRAFT_NOTIFICATION_WORKER_ID,
+    intervalMs: options.workerIntervalMs ?? process.env.EVERCRAFT_NOTIFICATION_WORKER_INTERVAL_MS,
+    leaseMs: options.workerLeaseMs ?? process.env.EVERCRAFT_NOTIFICATION_WORKER_LEASE_MS,
+    batchSize: options.workerBatchSize ?? process.env.EVERCRAFT_NOTIFICATION_WORKER_BATCH_SIZE,
+  });
+  fabric.outbox = outbox;
+  fabric.worker = worker;
+  const workerEnabled = String(options.workerEnabled ?? process.env.EVERCRAFT_NOTIFICATION_WORKER_ENABLED ?? 'true').toLowerCase() !== 'false';
+  if (workerEnabled) worker.start();
   const requireIngest = requireToken(ingestToken, 'Notification ingestion is not configured.');
   const allowedOrigins = new Set(
     String(options.allowedOrigins ?? process.env.EVERCRAFT_NOTIFICATION_ALLOWED_ORIGINS ?? '')
@@ -93,7 +108,12 @@ export function registerNotificationFabricRoutes(app, options = {}) {
 
   app.get('/api/notifications/health', (_req, res) => {
     res.setHeader('Cache-Control', 'no-store');
-    res.json({ success: true, ...fabric.config() });
+    res.json({
+      success: true,
+      ...fabric.config(),
+      outbox: outbox.stats(),
+      worker: worker.snapshot(),
+    });
   });
 
   app.get('/api/notifications/config', (_req, res) => {
@@ -215,7 +235,110 @@ export function registerNotificationFabricRoutes(app, options = {}) {
       delivery: fabric.store.deliverySnapshot(),
       ledger: fabric.store.verifyDeliveryLedger(),
       realtime: fabric.realtimeHub.snapshot(),
+      outbox: outbox.stats(),
+      worker: worker.snapshot(),
     });
+  });
+
+  app.post('/api/notifications/jobs', requireIngest, (req, res) => {
+    try {
+      const intent = fabric.prepareIntent(req.body?.intent || req.body);
+      const idempotencyKey = String(req.get('idempotency-key') || req.body?.idempotency_key || `intent:${intent.id}`).trim();
+      const job = outbox.enqueue({
+        kind: 'intent',
+        idempotency_key: idempotencyKey,
+        payload: { intent },
+        max_attempts: req.body?.max_attempts,
+      });
+      fabric.store.recordDelivery({
+        schema: 'systemia.relay.job-receipt.v1',
+        job_id: job.id,
+        notification_id: intent.id,
+        status: job.duplicate ? 'job_deduplicated' : 'job_queued',
+        kind: 'intent',
+        at: new Date().toISOString(),
+      });
+      res.status(job.duplicate ? 200 : 202).json({
+        success: true,
+        job: {
+          id: job.id,
+          status: job.status,
+          duplicate: Boolean(job.duplicate),
+          notification_id: intent.id,
+          created_at: job.created_at,
+          not_before_at: job.not_before_at,
+        },
+      });
+    } catch (error) {
+      res.status(400).json({ success: false, error: error?.message || String(error) });
+    }
+  });
+
+  app.post('/api/notifications/signal-jobs', requireIngest, (req, res) => {
+    try {
+      const signal = req.body?.signal || req.body;
+      if (!signal || typeof signal !== 'object') throw new Error('Signal payload is required.');
+      const idempotencyKey = String(req.get('idempotency-key') || req.body?.idempotency_key || '').trim() || null;
+      const job = outbox.enqueue({
+        kind: 'signal',
+        idempotency_key: idempotencyKey,
+        payload: { signal },
+        max_attempts: req.body?.max_attempts,
+      });
+      fabric.store.recordDelivery({
+        schema: 'systemia.relay.job-receipt.v1',
+        job_id: job.id,
+        status: job.duplicate ? 'job_deduplicated' : 'job_queued',
+        kind: 'signal',
+        at: new Date().toISOString(),
+      });
+      res.status(job.duplicate ? 200 : 202).json({
+        success: true,
+        job: {
+          id: job.id,
+          status: job.status,
+          duplicate: Boolean(job.duplicate),
+          created_at: job.created_at,
+          not_before_at: job.not_before_at,
+        },
+      });
+    } catch (error) {
+      res.status(400).json({ success: false, error: error?.message || String(error) });
+    }
+  });
+
+  app.get('/api/notifications/jobs/:id', requireIngest, (req, res) => {
+    const job = outbox.get(req.params.id);
+    if (!job) {
+      res.status(404).json({ success: false, error: 'Relay job not found.' });
+      return;
+    }
+    res.setHeader('Cache-Control', 'no-store');
+    res.json({
+      success: true,
+      job: {
+        id: job.id,
+        kind: job.kind,
+        status: job.status,
+        attempts: job.attempts,
+        max_attempts: job.max_attempts,
+        not_before_at: job.not_before_at,
+        created_at: job.created_at,
+        updated_at: job.updated_at,
+        completed_at: job.completed_at,
+        dead_lettered_at: job.dead_lettered_at,
+        last_error: job.last_error,
+        result: job.result,
+      },
+    });
+  });
+
+  app.post('/api/notifications/worker/run', requireIngest, async (req, res) => {
+    try {
+      res.json({ success: true, ...(await worker.runOnce({ limit: req.body?.limit })) });
+    } catch (error) {
+      res.status(500).json({ success: false, error: error?.message || String(error) });
+    }
   });
 
   app.post('/api/notifications/intents', requireIngest, async (req, res) => {
