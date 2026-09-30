@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict';
 import {
-  BUYER_FRONTAGE_GATEWAY,
   buyerFrontageUrl,
   configuredChumPublicOrigin,
+  configuredMachineCommerceGateway,
   directHumanBuyerUrl,
   humanStartState,
   humanStartUrl,
@@ -14,58 +14,40 @@ const offer = {
   commercial_state: 'sell_now'
 };
 
-const review = machineReviewUrl(offer.public_id);
-assert.match(review, /^https:\/\//);
-
 assert.equal(configuredChumPublicOrigin(''), null);
 assert.equal(configuredChumPublicOrigin('http://forge.example.com'), null);
-assert.equal(configuredChumPublicOrigin('https://systemiacommandcenters.com'), null);
+assert.equal(configuredChumPublicOrigin('https://legacy.base44.app'), null);
+assert.equal(configuredChumPublicOrigin('https://forge.evercraft.example/some/path'), 'https://forge.evercraft.example');
 
-const direct = directHumanBuyerUrl(offer, { surface: 'test_surface' });
-assert.match(direct, /^https:\/\/evercraft-career-command\.base44\.app\//);
-assert.match(direct, /src=chum/);
-assert.match(direct, /campaign=buyer-frontage/);
-assert.match(direct, /ec_surface=test_surface/);
-assert.match(direct, /ec_public_id=career-command-interview-practice-machine-v1/);
+assert.equal(configuredMachineCommerceGateway(''), null);
+assert.equal(configuredMachineCommerceGateway('https://legacy.base44.app/functions/gateway'), null);
+assert.equal(
+  configuredMachineCommerceGateway('https://commerce.evercraft.example/gateway'),
+  'https://commerce.evercraft.example/gateway'
+);
 
-const frontage = buyerFrontageUrl(offer, { surface: 'test_surface' });
-assert.match(frontage, /^https:\/\/evercraft-ai-suite-08c4d2b8\.base44\.app\/buy\/career-command-interview-practice-machine-v1\?/);
+assert.equal(directHumanBuyerUrl(offer, { surface: 'test_surface' }), null);
+assert.equal(buyerFrontageUrl(offer, { publicOrigin: '' }), null);
+assert.equal(machineReviewUrl(offer.public_id, ''), null);
+
+const frontage = buyerFrontageUrl(offer, {
+  publicOrigin: 'https://forge.evercraft.example',
+  surface: 'test_surface'
+});
+assert.equal(new URL(frontage).origin, 'https://forge.evercraft.example');
+assert.match(frontage, /\/buy\/career-command-interview-practice-machine-v1\?/);
 assert.match(frontage, /src=chum/);
 assert.match(frontage, /campaign=buyer-frontage/);
 assert.match(frontage, /ec_surface=test_surface/);
-assert.match(frontage, /ec_public_id=career-command-interview-practice-machine-v1/);
-assert.equal(new URL(frontage).origin, new URL(BUYER_FRONTAGE_GATEWAY).origin);
 
 assert.equal(
-  humanStartUrl(offer, { publicOrigin: '', surface: 'test_surface' }),
-  frontage,
-  'when Forge origin is unavailable, use branded Evercraft buyer frontage before the downstream product destination'
+  humanStartUrl(offer, { publicOrigin: '', gateway: '' }),
+  null,
+  'without an owned public origin or owned commerce gateway the corridor must fail closed'
 );
 assert.equal(
-  humanStartState(offer, { publicOrigin: '' }),
-  'evercraft_buyer_frontage'
-);
-
-const rivet = {
-  public_id: 'rivet-site-underwriting-v1',
-  commercial_state: 'sell_now'
-};
-assert.match(
-  humanStartUrl(rivet, { publicOrigin: '' }),
-  /^https:\/\/evercraft-ai-suite-08c4d2b8\.base44\.app\/buy\/rivet-site-underwriting-v1\?/
-);
-
-const handoffOnly = {
-  public_id: 'foundry-app-escape-audit-v1',
-  commercial_state: 'sell_now'
-};
-assert.match(
-  humanStartUrl(handoffOnly, { publicOrigin: '' }),
-  /^https:\/\/evercraft-ai-suite-08c4d2b8\.base44\.app\/buy\/foundry-app-escape-audit-v1\?/
-);
-assert.equal(
-  humanStartState(handoffOnly, { publicOrigin: '' }),
-  'evercraft_buyer_frontage'
+  humanStartState(offer, { publicOrigin: '', gateway: '' }),
+  'blocked_no_owned_handoff'
 );
 
 const live = humanStartUrl(offer, {
@@ -78,7 +60,18 @@ assert.equal(
 );
 assert.equal(
   humanStartState(offer, { publicOrigin: 'https://forge.evercraft.example' }),
-  'tracked_chum_handoff_configured_origin'
+  'owned_chum_handoff_configured'
+);
+
+const review = machineReviewUrl(
+  offer.public_id,
+  'https://commerce.evercraft.example/machine-review'
+);
+assert.match(review, /^https:\/\/commerce\.evercraft\.example\/machine-review\?/);
+assert.match(review, /public_id=career-command-interview-practice-machine-v1/);
+assert.equal(
+  humanStartState(offer, { publicOrigin: '', gateway: 'https://commerce.evercraft.example/machine-review' }),
+  'owned_machine_commerce_gateway'
 );
 
 assert.equal(
@@ -88,9 +81,8 @@ assert.equal(
 
 console.log(JSON.stringify({
   ok: true,
-  direct_human_buyer_destination: true,
-  branded_buyer_frontage_default: true,
-  rivet_clean_buyer_frontage: true,
-  machine_review_is_last_fallback: true,
-  tracked_corridor_requires_configured_https_origin: true
+  base44_rejected: true,
+  unconfigured_corridor_fails_closed: true,
+  owned_buyer_frontage: true,
+  owned_machine_review_optional: true
 }));
