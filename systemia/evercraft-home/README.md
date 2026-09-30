@@ -24,6 +24,8 @@ The first bounded Direct Mode slice is live in source:
 
 - `GET /api/systemia/inventory` reads Systemia's source inventory with source-only evidence semantics.
 - `POST /api/systemia/plan` prepares a Systemia control-plane mission plan.
+- `GET /api/yard/overview` reads sanitized persisted Yard deployment evidence.
+- `GET /api/raven/overview` reads Raven registry, provider-matrix and Nexus probe-contract evidence without claiming a private runtime.
 - Planning explicitly returns `execution_authority_granted=false`.
 - The browser home includes a restrained "What do you want to do?" field that submits into that planning route.
 - No mission execution, external communication, purchase, deployment, trust change, or other consequential action is authorized by the Home planning field.
@@ -81,7 +83,7 @@ SOVEREIGN_AI_ORIGIN=
 
 Missing configuration reports `not_connected`. It is never promoted to healthy.
 
-Raven currently has strong registry, discovery and probe surfaces in Forge, but this Home slice does not pretend that those are equivalent to a standalone Raven human runtime. Yard and Network have substantial executable owned components; Home will expose those only as their bounded operator APIs are attached and verified.
+Home now exposes Raven's registry, provider matrix and Nexus probe contracts as a first-class executive read surface while explicitly holding the private-runtime state unless a standalone owned Raven human runtime is evidenced. The Yard surface exposes sanitized persisted deployment state including workload class, runtime fabric and verification metadata, while excluding lease secrets, credentials and private endpoints.
 
 ## Verification
 
@@ -98,17 +100,17 @@ The dedicated `Evercraft Home sovereignty` workflow also:
 3. verifies missing providers are not reported healthy,
 4. reads the Systemia inventory through the HTTP boundary,
 5. prepares a Systemia mission through the HTTP boundary,
-6. verifies the Home path never grants execution authority.
+6. verifies the Home path never grants execution authority,
+7. verifies Raven registry evidence does not become a private-runtime claim,
+8. verifies an unattached Yard is represented as an evidence hold rather than an empty-production claim.
 
 ## Next production slices
 
-1. Evercraft Identity issuer/login ceremony and key rotation.
-2. Owner/operator grant bootstrap through an explicit authority receipt.
-3. Bind the read-only Yard view to the canonical production Yard state directory.
-4. Add private Network telemetry only through an authenticated Network operator API, never through public discovery metadata.
-5. Raven Nexus owned runtime adapter once runtime readiness is evidenced.
-6. Consequential actions through Passport permits + Execution Gate, never directly from the UI.
-7. Evercraft-owned deployment route and domain binding.
+1. Bind the Yard executive portfolio to the canonical production Yard state directory on the deployed Home instance.
+2. Add private Network telemetry only through an authenticated Network operator API, never through public discovery metadata.
+3. Build the standalone owned Raven human runtime and authorized Nexus bridge, then migrate Raven's remaining legacy public discovery route.
+4. Add consequential Yard/Network/Raven actions only through Passport permits, Systemia admission and Execution Gate.
+5. Keep the public Home canary held until real field ingress, owned DNS delegation and trusted TLS produce a verified `EVERCRAFT_HOME_ORIGIN`.
 
 Base44 remains a migration source for legacy applications only and is not part of Home's boot or authority chain.
 

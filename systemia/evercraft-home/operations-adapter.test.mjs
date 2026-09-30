@@ -22,7 +22,9 @@ test("Yard overview sanitizes persisted deployment state and ignores secrets", (
         workload_class:"systemia.private-core-origin.v1",
         runtime_fabric:"Evercraft Compute",
         capacity_node_id:"node-001",
-        receipt_hash:"receipt:deployment-1"
+        receipt_hash:"receipt:deployment-1",
+        health_verification:"healthy",
+        route_verification:"private_route_verified"
       }
     }));
 
@@ -31,6 +33,8 @@ test("Yard overview sanitizes persisted deployment state and ignores secrets", (
     assert.equal(result.summary.deployments,1);
     assert.equal(result.summary.ready,1);
     assert.equal(result.deployments[0].deployment_id,"dep-1");
+    assert.equal(result.deployments[0].health_verification,"healthy");
+    assert.equal(result.deployments[0].route_verification,"private_route_verified");
     assert.equal(JSON.stringify(result).includes("SUPER-SECRET"),false);
   }finally{fs.rmSync(dir,{recursive:true,force:true});}
 });

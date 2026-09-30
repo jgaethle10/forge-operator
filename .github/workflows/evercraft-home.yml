@@ -138,11 +138,16 @@ jobs:
 
           curl -fsS http://127.0.0.1:4310/api/yard/overview > /tmp/yard-overview.json
           curl -fsS http://127.0.0.1:4310/api/network/overview > /tmp/network-overview.json
+          curl -fsS http://127.0.0.1:4310/api/raven/overview > /tmp/raven-overview.json
           node - <<'NODE'
           const fs = require('fs');
           const yard = JSON.parse(fs.readFileSync('/tmp/yard-overview.json','utf8'));
           const network = JSON.parse(fs.readFileSync('/tmp/network-overview.json','utf8'));
+          const raven = JSON.parse(fs.readFileSync('/tmp/raven-overview.json','utf8'));
           if (!yard.ok || yard.state !== 'not_configured') throw new Error('Unconfigured Yard state was not represented truthfully');
           if (!network.ok || network.state !== 'declared_public_evidence') throw new Error('Network evidence view failed');
           if (!/not private node telemetry/i.test(network.evidence_semantics || '')) throw new Error('Network evidence boundary missing');
+          if (!raven.ok || raven.state !== 'registered_public_capability') throw new Error('Raven registry view failed');
+          if (raven.runtime?.standalone_private_runtime_evidenced !== false) throw new Error('Raven private runtime was invented');
+          if (!/not proof of a live private Raven human runtime/i.test(raven.evidence_semantics || '')) throw new Error('Raven evidence boundary missing');
           NODE

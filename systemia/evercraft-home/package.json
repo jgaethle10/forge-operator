@@ -1,12 +1,12 @@
 {
   "name": "@evercraft/home",
   "private": true,
-  "version": "0.4.0",
+  "version": "0.5.0",
   "type": "module",
   "scripts": {
     "start": "node server.mjs",
     "test": "node --test *.test.mjs",
-    "check": "node --check server.mjs && node --check credential-vault.mjs && node --check identity.mjs && node --check systemia-adapter.mjs && node --check operations-adapter.mjs && node --test *.test.mjs && node emergency-handoff.test.mjs",
+    "check": "node --check server.mjs && node --check credential-vault.mjs && node --check identity.mjs && node --check systemia-adapter.mjs && node --check operations-adapter.mjs && node --check raven-adapter.mjs && node --test *.test.mjs && node emergency-handoff.test.mjs",
     "test:emergency-handoff": "node emergency-handoff.test.mjs"
   }
 }

@@ -44,6 +44,9 @@ export function readYardOverview(stateDir) {
       runtime_fabric: record.receipt?.runtime_fabric || null,
       capacity_node_id: record.receipt?.capacity_node_id || null,
       deployment_receipt: record.receipt?.receipt_hash || null,
+      health_verification: record.receipt?.health_verification || null,
+      route_verification: record.receipt?.route_verification || null,
+      release_ref: record.release_ref || record.receipt?.release_ref || null,
       updated_at: record.updated_at || null,
     });
   }
