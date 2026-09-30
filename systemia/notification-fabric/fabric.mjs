@@ -165,8 +165,18 @@ export function createNotificationFabric(options = {}) {
     const realtimeByPrincipal = new Map();
 
     for (const principal of principals) {
-      store.appendInbox(principal, payload);
+      const inboxItem = store.appendInbox(principal, payload);
       inboxed += 1;
+      receipts.push(store.recordDelivery({
+        schema: 'systemia.notification.delivery.v2',
+        notification_id: intent.id,
+        principal_id: principal,
+        product: intent.product,
+        purpose: intent.purpose,
+        status: 'inboxed',
+        inboxed_at: inboxItem.inboxed_at,
+        at: new Date().toISOString(),
+      }));
       const realtime = realtimeHub.deliver(principal, payload);
       realtimeByPrincipal.set(principal, realtime.delivered);
       realtimeDelivered += realtime.delivered;
