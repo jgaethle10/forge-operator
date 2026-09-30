@@ -1,0 +1,36 @@
+{
+  "schema": "evercraft.owned-machine-offers.v1",
+  "provider": "Evercraft LLC",
+  "authority": "forge_owned_source",
+  "updated_at": "2026-09-30",
+  "doctrine": "Forge-owned offers are authoritative for their declared public_id. Remote legacy catalog sync may contribute other offers but may not erase or downgrade an owned offer.",
+  "offers": [
+    {
+      "public_id": "worldstate-reality-delta-v1",
+      "name": "Worldstate Reality Delta",
+      "intent_terms": [
+        "what materially changed around my assets",
+        "monitor external conditions affecting my facilities",
+        "ground my AI in current physical world changes",
+        "show me evidence backed changes in this region",
+        "track infrastructure and environmental conditions around my portfolio",
+        "give my agent a current world state feed",
+        "tell me what changed that matters to my routes"
+      ],
+      "problem": "An organization or AI needs a continuously updated, evidence-backed picture of external conditions intersecting its assets, facilities, routes, regions, dependencies, industries, or topics without drowning in generic news and alert noise.",
+      "inputs": "A bounded non-personal scope containing regions, domains, assets, facilities, routes, infrastructure dependencies, industries, or topics. Data sources must be public or explicitly authorized.",
+      "outputs": "Worldstate snapshots and Reality Delta packets with relevant observations, materiality, evidence state, independent source-family count, timestamps, provenance references, and compact agent-ready changes.",
+      "commercial_state": "verification_required",
+      "machine_state": "discovery_only",
+      "pricing": "Commercial pilot packaging is under verification. No fixed machine-quotable price is approved.",
+      "offers": [],
+      "human_ui_required": false,
+      "confirmation": "Public discovery and pilot-scope preparation create no monitoring authority, source access, Passport grant, payment obligation, production authority, emergency authority, or external action. Customer monitoring requires separate scoped onboarding and explicit authorization.",
+      "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/systemia/worldstate",
+      "payment_authority": "No direct Worldstate payment path is approved.",
+      "invocation_status": "SOURCE READY: Worldstate and Reality Delta are merged on Forge main with executable proof coverage. A Forge-owned read-only pilot MCP is being bound at /mcp/worldstate for offer inspection and bounded pilot-scope preparation. Do not claim public runtime availability until an independent HTTPS canary verifies the deployed route.",
+      "live_canary_evidence": null,
+      "catalog_version": "2026-09-30.2"
+    }
+  ]
+}
