@@ -1601,6 +1601,33 @@
       "invocation_status": "LIVE: agent HTTP gateway + OpenAPI + llms guidance + remote MCP at https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp. Agents can inspect $500/$999/$1,999 website-service tiers, prepare checkout only after explicit human confirmation, and independently verify paid order state.",
       "live_canary_evidence": null,
       "catalog_version": "2026-09-23.13"
+    },
+    {
+      "public_id": "worldstate-reality-delta-v1",
+      "name": "Worldstate Reality Delta",
+      "intent_terms": [
+        "what changed in the real world",
+        "compare world state over time",
+        "reality delta",
+        "physical world change detection",
+        "source grounded world state",
+        "operational context change"
+      ],
+      "problem": "Teams and agents need a source-grounded way to compare material changes in the physical world without collapsing observed, inferred, modeled, and unknown states into one claim.",
+      "inputs": "Authorized scope, geography or subject, comparison window, and available source-grounded observations.",
+      "outputs": "Evidence-labeled world-state snapshot and material reality delta with provenance, confidence, contradictions, uncertainty, and downstream context packets.",
+      "commercial_state": "verification_required",
+      "machine_state": "discovery_only",
+      "pricing": "No approved paid offer. Do not auto-quote.",
+      "offers": [],
+      "human_ui_required": false,
+      "confirmation": "Discovery and read-only context generation create no payment or external-action authority.",
+      "public_url": "https://systemiacommandcenters.com",
+      "public_url_source": "owned_public_surface",
+      "payment_authority": "No payment authority for this capability.",
+      "invocation_status": "Owned Worldstate runtime and context-fabric proofs are live in Forge Operator. Public discovery only; no paid or consequential execution authority is implied.",
+      "live_canary_evidence": null,
+      "catalog_version": "2026-09-30"
     }
   ]
 }
