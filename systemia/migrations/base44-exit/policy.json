@@ -72,16 +72,22 @@
     "commerce_boundary",
     "fabric_discovery",
     "portfolio_sentinel",
-    "realtime_bus"
+    "realtime_bus",
+    "source_dependency_scanner",
+    "lossless_entity_transfer",
+    "identity_challenge_broker"
   ],
   "landing_implementations": {
     "app_fabric_compatibility": {
-      "state": "proved_local",
+      "state": "owned_baseline_proved_local",
       "source_refs": [
         "systemia/app-fabric/client.mjs",
         "systemia/app-fabric/gateway.mjs",
-        "systemia/app-fabric/query.mjs"
-      ]
+        "systemia/app-fabric/query.mjs",
+        "systemia/app-fabric/base44-sdk-compat.mjs",
+        "systemia/app-fabric/base44-sdk-compat.proof.mjs"
+      ],
+      "boundary": "Compatibility covers observed Base44 SDK call geometry. Product-specific unsupported calls and hard-coded legacy routes remain explicit migration blockers."
     },
     "canonical_data": {
       "state": "owned_baseline_proved_local",
@@ -91,11 +97,14 @@
       "boundary": "Higher-volume or distributed workloads require a stronger backing implementation behind the same compatibility contract before cutover."
     },
     "identity_boundary": {
-      "state": "owned",
+      "state": "owned_baseline_proved_local",
       "source_refs": [
         "systemia/identity/identity.mjs",
+        "systemia/identity/challenge-broker.mjs",
+        "systemia/app-fabric/identity-adapter.mjs",
         "systemia/passport/passport.mjs"
-      ]
+      ],
+      "boundary": "Identity and session issuance are owned. Registration/recovery remain fail-closed until a real delivery adapter returns a receipt. Legacy credentials are not copied."
     },
     "public_edge": {
       "state": "owned",
@@ -139,6 +148,32 @@
         "systemia/object-store/object-store.mjs"
       ],
       "boundary": "Content-addressed local baseline with app-scoped references and integrity checks. Replication and geographic requirements remain app-specific cutover gates."
+    },
+    "source_dependency_scanner": {
+      "state": "owned_baseline_proved_local",
+      "source_refs": [
+        "systemia/migrations/base44-exit/source-scanner.mjs",
+        "systemia/migrations/base44-exit/source-scanner.proof.mjs"
+      ],
+      "boundary": "Scans extracted source for migration dependencies while redacting cross-app identifiers, environment values and hard-coded legacy route values."
+    },
+    "lossless_entity_transfer": {
+      "state": "owned_baseline_proved_local",
+      "source_refs": [
+        "systemia/migrations/base44-exit/entity-transfer.mjs",
+        "systemia/migrations/base44-exit/entity-transfer.proof.mjs",
+        "systemia/app-fabric/entity-store.mjs",
+        "systemia/object-store/object-store.mjs"
+      ],
+      "boundary": "Requires terminal pagination, immutable page hashes, whole-stream reconciliation, idempotent import and destination field verification. Transfer receipts do not authorize traffic cutover."
+    },
+    "identity_challenge_broker": {
+      "state": "owned_baseline_proved_local",
+      "source_refs": [
+        "systemia/identity/challenge-broker.mjs",
+        "systemia/secret-store/secret-store.mjs"
+      ],
+      "boundary": "Pending registration credentials are encrypted; OTPs and reset tokens are hash-only at rest. No successful delivery state exists without a delivery receipt."
     }
   }
 }
