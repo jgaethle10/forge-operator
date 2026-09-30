@@ -1,0 +1,30 @@
+name: Fabric Private Plugin Package
+on:
+  push:
+    branches: [fabric-public-probe-20260930]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build plugin archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          (
+            cd plugins/evercraft-fabric
+            zip -qr ../../artifacts/evercraft-fabric-private.zip . -x '*.DS_Store'
+          )
+          test -s artifacts/evercraft-fabric-private.zip
+          unzip -l artifacts/evercraft-fabric-private.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-fabric-private
+          path: artifacts/evercraft-fabric-private.zip
+          if-no-files-found: error
+          retention-days: 7
