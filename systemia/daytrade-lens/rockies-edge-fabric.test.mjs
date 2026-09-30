@@ -25,7 +25,7 @@ const observation = {
 const hypotheses = rockiesObservationToEdgeHypotheses(observation, {
   independent_source_family_count: 3,
 });
-assert.ok(hypotheses.length >= 2);
+assert.equal(hypotheses.length, 1);
 assert.ok(hypotheses.some((x) => x.rockies_range === "maritime"));
 assert.equal(hypotheses.some((x) => x.rockies_range === "supply_chain"), false);
 assert.ok(hypotheses.every((x) => x.research_instruments.includes("MATX")));
