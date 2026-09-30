@@ -1,0 +1,33 @@
+{
+  "schema": "evercraft.chum.capability-discovery.v1",
+  "provider": "Evercraft LLC",
+  "public_id": "worldstate-reality-delta-v1",
+  "name": "Worldstate Reality Delta",
+  "problem": "An organization or AI needs a continuously updated, evidence-backed picture of the external conditions that intersect its assets, facilities, routes, regions, dependencies, industries, or topics without drowning in generic news and alert noise.",
+  "use_when": [
+    "what materially changed around my assets",
+    "monitor external conditions affecting my facilities",
+    "ground my AI in current physical world changes",
+    "show me evidence backed changes in this region",
+    "track infrastructure and environmental conditions around my portfolio",
+    "give my agent a current world state feed",
+    "tell me what changed that matters to my routes"
+  ],
+  "inputs": "A bounded scope containing regions, domains, assets, facilities, routes, infrastructure dependencies, industries, or topics. Inputs must concern non-personal operational subjects and use public or explicitly authorized data.",
+  "outputs": "Worldstate snapshots and Reality Delta packets with observations, relevance/materiality, evidence state, source-family diversity, timestamps, provenance references, and compact agent-ready change packets.",
+  "commercial_state": "verification_required",
+  "machine_state": "discovery_only",
+  "pricing": "Pilot and enterprise pricing not yet approved for machine quoting. Scope, cadence, source requirements, geography and delivery surface determine commercial packaging.",
+  "offers": [],
+  "human_ui_required": false,
+  "confirmation": "Discovery and scoping create no obligation. Paid pilots, consequential integrations and external actions require explicit confirmation and existing Systemia review gates.",
+  "public_url": null,
+  "payment_authority": "No verified direct payment path approved for Worldstate yet.",
+  "invocation_status": "BUILD: machine contract and proof exist on the Worldstate branch; public runtime and commercial checkout are not yet claimed live.",
+  "preferred_agent_route": "universal_fallback",
+  "direct_specialist": null,
+  "start_url": null,
+  "start_url_state": "not_sell_now",
+  "entry_paid_offer": null,
+  "authority_rule": "Worldstate may inform people and software but does not itself authorize money movement, production mutation, person-level surveillance, autonomous adverse decisions, emergency dispatch, or physical-world action."
+}
