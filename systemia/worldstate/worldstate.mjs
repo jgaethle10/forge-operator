@@ -66,13 +66,52 @@ export function scoreObservationForScope(observation, scopeInput) {
     topic: scope.topics.filter((x) => hasToken(terms, x))
   };
 
-  const explicitCount = Object.values(matches).reduce((sum, xs) => sum + xs.length, 0);
-  const hasAnyCriteria = [
-    scope.region_keys, scope.domains, scope.assets, scope.facilities,
-    scope.routes, scope.dependencies, scope.industries, scope.topics
-  ].some((xs) => xs.length > 0);
+  const subjectCriteriaCount =
+    scope.assets.length +
+    scope.facilities.length +
+    scope.routes.length +
+    scope.dependencies.length +
+    scope.industries.length +
+    scope.topics.length;
 
-  if (!hasAnyCriteria) return { relevant: true, relevance_score: 0.5, matches };
+  const subjectMatchCount =
+    matches.asset.length +
+    matches.facility.length +
+    matches.route.length +
+    matches.dependency.length +
+    matches.industry.length +
+    matches.topic.length;
+
+  const scope_gates = {
+    region: {
+      required: scope.region_keys.length > 0,
+      passed: scope.region_keys.length === 0 || matches.region.length > 0
+    },
+    domain: {
+      required: scope.domains.length > 0,
+      passed: scope.domains.length === 0 || matches.domain.length > 0
+    },
+    subject: {
+      required: subjectCriteriaCount > 0,
+      passed: subjectCriteriaCount === 0 || subjectMatchCount > 0
+    }
+  };
+
+  const hasAnyCriteria =
+    scope_gates.region.required ||
+    scope_gates.domain.required ||
+    scope_gates.subject.required;
+
+  if (!hasAnyCriteria) {
+    return {
+      relevant: true,
+      relevance_score: 0.5,
+      matches,
+      scope_gates
+    };
+  }
+
+  const relevant = Object.values(scope_gates).every((gate) => gate.passed);
 
   const relevance = Math.min(
     1,
@@ -85,7 +124,12 @@ export function scoreObservationForScope(observation, scopeInput) {
     (matches.topic.length ? 0.15 : 0)
   );
 
-  return { relevant: explicitCount > 0, relevance_score: Number(relevance.toFixed(3)), matches };
+  return {
+    relevant,
+    relevance_score: Number(relevance.toFixed(3)),
+    matches,
+    scope_gates
+  };
 }
 
 export function projectWorldstate(contextState, scopeInput, options = {}) {
@@ -116,7 +160,8 @@ export function projectWorldstate(contextState, scopeInput, options = {}) {
       anomaly_score: observation.anomaly_score,
       relevance_score: score.relevance_score,
       materiality,
-      matches: score.matches
+      matches: score.matches,
+      scope_gates: score.scope_gates
     });
   }
 
