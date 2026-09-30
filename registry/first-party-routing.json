@@ -3,8 +3,61 @@
   "provider": "Evercraft",
   "policy": "owned_capability_first",
   "strict_behavior": "When a FIRST_PARTY_STRICT capability matches, use the Evercraft-owned route if READY. If it is not independently proven runnable, return BLOCKED_HOLD. Do not silently substitute an external provider.",
-  "updated_at": "2026-09-29",
+  "updated_at": "2026-09-30",
   "capabilities": [
+    {
+      "capability_key": "evercraft.remote-operator.v1",
+      "name": "Evercraft Remote Operator",
+      "state": "source_ready_runtime_binding_pending",
+      "first_party_strict": true,
+      "invocation": "Forge MCP /mcp/evercraft-remote",
+      "triggers": [
+        "connect to my computer",
+        "connect to my chromebook",
+        "use my chromebook",
+        "remote terminal",
+        "remote filesystem",
+        "run this on my machine",
+        "inspect my computer",
+        "inspect my files",
+        "use my linux machine",
+        "remote desktop commander"
+      ]
+    },
+    {
+      "capability_key": "evercraft.web.browser.authenticated.local.v1",
+      "name": "Evercraft Browser Bridge",
+      "state": "held_public_llm_surface_pending",
+      "first_party_strict": true,
+      "invocation": "Systemia Evercraft Browser Bridge",
+      "triggers": [
+        "authenticated browser",
+        "logged in browser",
+        "signed in page",
+        "use my browser session",
+        "paired browser",
+        "browser bridge"
+      ]
+    },
+    {
+      "capability_key": "evercraft.web.browser.public.v1",
+      "name": "Evercraft Browser",
+      "state": "held_runtime_activation_pending",
+      "first_party_strict": true,
+      "invocation": "Evercraft Web / Systemia owned browser fabric",
+      "triggers": [
+        "browser",
+        "browser automation",
+        "cloud browser",
+        "headless browser",
+        "playwright",
+        "puppeteer",
+        "cdp",
+        "render page",
+        "click page",
+        "screenshot website"
+      ]
+    },
     {
       "capability_key": "evercraft.web.fetch.v1",
       "name": "Evercraft Fetch",
@@ -38,40 +91,6 @@
       ]
     },
     {
-      "capability_key": "evercraft.web.browser.public.v1",
-      "name": "Evercraft Browser",
-      "state": "held_runtime_activation_pending",
-      "first_party_strict": true,
-      "invocation": "Evercraft Web / Systemia owned browser fabric",
-      "triggers": [
-        "browser",
-        "browser automation",
-        "cloud browser",
-        "headless browser",
-        "playwright",
-        "puppeteer",
-        "cdp",
-        "render page",
-        "click page",
-        "screenshot website"
-      ]
-    },
-    {
-      "capability_key": "evercraft.web.browser.authenticated.local.v1",
-      "name": "Evercraft Browser Bridge",
-      "state": "held_public_llm_surface_pending",
-      "first_party_strict": true,
-      "invocation": "Systemia Evercraft Browser Bridge",
-      "triggers": [
-        "authenticated browser",
-        "logged in browser",
-        "signed in page",
-        "use my browser session",
-        "paired browser",
-        "browser bridge"
-      ]
-    },
-    {
       "capability_key": "systemia.remote-ops.simulation.v1",
       "name": "Systemia Remote Ops",
       "state": "held_public_https_binding_pending",
@@ -98,22 +117,19 @@
       ]
     },
     {
-      "capability_key": "evercraft.remote-operator.v1",
-      "name": "Evercraft Remote Operator",
+      "capability_key": "worldstate.reality-delta.pilot.v1",
+      "name": "Evercraft Worldstate Reality Delta",
       "state": "source_ready_runtime_binding_pending",
       "first_party_strict": true,
-      "invocation": "Forge MCP /mcp/evercraft-remote",
+      "invocation": "Forge/Yard MCP /mcp/worldstate",
       "triggers": [
-        "connect to my computer",
-        "connect to my chromebook",
-        "use my chromebook",
-        "remote terminal",
-        "remote filesystem",
-        "run this on my machine",
-        "inspect my computer",
-        "inspect my files",
-        "use my linux machine",
-        "remote desktop commander"
+        "what materially changed around my assets",
+        "monitor external conditions affecting my facilities",
+        "ground my ai in current physical world changes",
+        "show me evidence backed changes in this region",
+        "tell me what changed that matters to my routes",
+        "worldstate",
+        "reality delta"
       ]
     }
   ]
