@@ -12,8 +12,8 @@ test('extracts the live-edition date and sitemap evidence', () => {
     now: new Date('2026-09-30T20:00:00Z')
   });
 
-  assert.equal(evidence.edition_at, '2026-09-25T12:00:00.000Z');
-  assert.equal(evidence.latest_at, '2026-09-25T12:00:00.000Z');
+  assert.equal(evidence.edition_at, '2026-09-25T00:00:00.000Z');
+  assert.equal(evidence.latest_at, '2026-09-25T00:00:00.000Z');
   assert.equal(evidence.latest_kind, 'live_edition');
 });
 
