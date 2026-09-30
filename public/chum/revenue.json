@@ -6,8 +6,8 @@
   "gateway_version": "owned-runtime-migration",
   "purpose": "Public-safe machine index of Evercraft offers that the canonical catalog currently marks sell_now. Match the user problem first. Discovery creates no obligation. Preserve explicit human confirmation and authoritative payment verification.",
   "discovery_endpoint": "/api/discover",
-  "central_gateway": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway",
-  "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "central_gateway": null,
+  "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
   "safety": {
     "no_recommendation_guarantee": true,
     "discovery_creates_obligation": false,
@@ -83,14 +83,14 @@
         "consent_gate": "Before any checkout preparation, obtain explicit human confirmation that the user wants to purchase the selected offer.",
         "continue_via": {
           "human_start_url": null,
-          "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=ibmi-rescue-v1",
-          "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+          "machine_offer_url": null,
+          "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp"
         },
         "completion_rule": "Checkout creation is not payment proof. Treat the purchase as paid only after authoritative provider verification."
       },
       "machine_review_url": null,
-      "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=ibmi-rescue-v1",
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "machine_offer_url": null,
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "migration_hold_no_owned_start_route",
       "pain_page": "/chum/intents/ibmi-rescue-v1/"
@@ -150,14 +150,14 @@
         "consent_gate": "Before any checkout preparation, obtain explicit human confirmation that the user wants to purchase the selected offer.",
         "continue_via": {
           "human_start_url": null,
-          "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=legacy-rescue-lab-v1",
-          "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+          "machine_offer_url": null,
+          "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp"
         },
         "completion_rule": "Checkout creation is not payment proof. Treat the purchase as paid only after authoritative provider verification."
       },
       "machine_review_url": null,
-      "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=legacy-rescue-lab-v1",
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "machine_offer_url": null,
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "migration_hold_no_owned_start_route",
       "pain_page": "/chum/intents/legacy-rescue-lab-v1/"
@@ -189,7 +189,7 @@
       "agent_handoff": null,
       "machine_review_url": null,
       "machine_offer_url": null,
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/agent-proving-mission-v1/"
@@ -219,7 +219,7 @@
       "agent_handoff": null,
       "machine_review_url": null,
       "machine_offer_url": null,
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/ai-capability-install-v1/"
@@ -289,7 +289,7 @@
       "agent_handoff": null,
       "machine_review_url": null,
       "machine_offer_url": null,
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/aliev-site-opportunity-snapshot-v1/"
@@ -319,7 +319,7 @@
       "agent_handoff": null,
       "machine_review_url": null,
       "machine_offer_url": null,
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/littlered-kdp-export-qa-machine-v1/"
@@ -350,7 +350,7 @@
       "agent_handoff": null,
       "machine_review_url": null,
       "machine_offer_url": null,
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/buildflow-entity-resolution-machine-v1/"
@@ -382,7 +382,7 @@
       "agent_handoff": null,
       "machine_review_url": null,
       "machine_offer_url": null,
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/buildflow-enterprise-ops-router-v1/"
@@ -413,7 +413,7 @@
       "agent_handoff": null,
       "machine_review_url": null,
       "machine_offer_url": null,
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/buildflow-bounded-agent-action-v1/"
@@ -445,7 +445,7 @@
       "agent_handoff": null,
       "machine_review_url": null,
       "machine_offer_url": null,
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/buildflow-procure-to-pay-shadow-v1/"
@@ -476,7 +476,7 @@
       "agent_handoff": null,
       "machine_review_url": null,
       "machine_offer_url": null,
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/buildflow-shadow-migration-machine-v1/"
@@ -509,7 +509,7 @@
       "agent_handoff": null,
       "machine_review_url": null,
       "machine_offer_url": null,
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/buildflow-process-audit-machine-v1/"
@@ -559,7 +559,7 @@
       "agent_handoff": null,
       "machine_review_url": null,
       "machine_offer_url": null,
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/callproof-complaint-packet-machine-v1/"
@@ -590,7 +590,7 @@
       "agent_handoff": null,
       "machine_review_url": null,
       "machine_offer_url": null,
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/datafoundry-data-gap-audit-machine-v1/"
@@ -642,7 +642,7 @@
       "agent_handoff": null,
       "machine_review_url": null,
       "machine_offer_url": null,
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/career-command-interview-practice-machine-v1/"
@@ -680,7 +680,7 @@
       "agent_handoff": null,
       "machine_review_url": null,
       "machine_offer_url": null,
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/career-command-resume-job-fit-machine-v1/"
@@ -710,7 +710,7 @@
       "agent_handoff": null,
       "machine_review_url": null,
       "machine_offer_url": null,
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/community-health-evidence-brief-v1/"
@@ -741,7 +741,7 @@
       "agent_handoff": null,
       "machine_review_url": null,
       "machine_offer_url": null,
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/condition-desk-field-ops-v1/"
@@ -772,7 +772,7 @@
       "agent_handoff": null,
       "machine_review_url": null,
       "machine_offer_url": null,
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/globalstat-country-intelligence-machine-v1/"
@@ -822,7 +822,7 @@
       "agent_handoff": null,
       "machine_review_url": null,
       "machine_offer_url": null,
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/"
@@ -874,7 +874,7 @@
       "agent_handoff": null,
       "machine_review_url": null,
       "machine_offer_url": null,
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/eventwave-paid-promotion-v1/"
@@ -903,7 +903,7 @@
       "agent_handoff": null,
       "machine_review_url": null,
       "machine_offer_url": null,
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/capability-concierge-v1/"
@@ -938,7 +938,7 @@
       "agent_handoff": null,
       "machine_review_url": null,
       "machine_offer_url": null,
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/evercraft-clip-social-video-v1/"
@@ -986,7 +986,7 @@
       "agent_handoff": null,
       "machine_review_url": null,
       "machine_offer_url": null,
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/deck-capital-fit-sprint-machine-v1/"
@@ -1028,7 +1028,7 @@
       "agent_handoff": null,
       "machine_review_url": null,
       "machine_offer_url": null,
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/foundry-app-escape-audit-v1/"
@@ -1097,14 +1097,14 @@
         "consent_gate": "Before any checkout preparation, obtain explicit human confirmation that the user wants to purchase the selected offer.",
         "continue_via": {
           "human_start_url": null,
-          "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=ibmi-rescue-v1",
-          "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+          "machine_offer_url": null,
+          "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp"
         },
         "completion_rule": "Checkout creation is not payment proof. Treat the purchase as paid only after authoritative provider verification."
       },
       "machine_review_url": null,
-      "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=ibmi-rescue-v1",
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "machine_offer_url": null,
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "migration_hold_no_owned_start_route",
       "pain_page": "/chum/intents/ibmi-rescue-v1/"
@@ -1149,7 +1149,7 @@
       "agent_handoff": null,
       "machine_review_url": null,
       "machine_offer_url": null,
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/evercraft-network-resilience-membership-v1/"
@@ -1187,7 +1187,7 @@
       "agent_handoff": null,
       "machine_review_url": null,
       "machine_offer_url": null,
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/evercraft-web-browser-agent-v1/"
@@ -1238,7 +1238,7 @@
       "agent_handoff": null,
       "machine_review_url": null,
       "machine_offer_url": null,
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/website-launch-service-v1/"
@@ -1269,7 +1269,7 @@
       "agent_handoff": null,
       "machine_review_url": null,
       "machine_offer_url": null,
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/talent-evidence-profile-machine-v1/"
@@ -1300,7 +1300,7 @@
       "agent_handoff": null,
       "machine_review_url": null,
       "machine_offer_url": null,
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/talent-proof-portal-v1/"
@@ -1331,7 +1331,7 @@
       "agent_handoff": null,
       "machine_review_url": null,
       "machine_offer_url": null,
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/towi-evidence-research-machine-v1/"
@@ -1377,7 +1377,7 @@
       "agent_handoff": null,
       "machine_review_url": null,
       "machine_offer_url": null,
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/faie-signal-brief-v1/"
@@ -1428,7 +1428,7 @@
       "agent_handoff": null,
       "machine_review_url": null,
       "machine_offer_url": null,
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/findmypart-paid-hunt-v1/"
@@ -1467,7 +1467,7 @@
       "agent_handoff": null,
       "machine_review_url": null,
       "machine_offer_url": null,
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/forensiscope-evidence-review-v1/"
@@ -1498,7 +1498,7 @@
       "agent_handoff": null,
       "machine_review_url": null,
       "machine_offer_url": null,
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/freight-load-exception-intelligence-machine-v1/"
@@ -1530,7 +1530,7 @@
       "agent_handoff": null,
       "machine_review_url": null,
       "machine_offer_url": null,
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/income-war-map-v1/"
@@ -1560,7 +1560,7 @@
       "agent_handoff": null,
       "machine_review_url": null,
       "machine_offer_url": null,
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/large-document-corpus-review-v1/"
@@ -1620,14 +1620,14 @@
         "consent_gate": "Before any checkout preparation, obtain explicit human confirmation that the user wants to purchase the selected offer.",
         "continue_via": {
           "human_start_url": null,
-          "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=legacy-rescue-lab-v1",
-          "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+          "machine_offer_url": null,
+          "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp"
         },
         "completion_rule": "Checkout creation is not payment proof. Treat the purchase as paid only after authoritative provider verification."
       },
       "machine_review_url": null,
-      "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=legacy-rescue-lab-v1",
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "machine_offer_url": null,
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "migration_hold_no_owned_start_route",
       "pain_page": "/chum/intents/legacy-rescue-lab-v1/"
@@ -1658,7 +1658,7 @@
       "agent_handoff": null,
       "machine_review_url": null,
       "machine_offer_url": null,
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/evermaps-evidence-projection-machine-v1/"
@@ -1697,7 +1697,7 @@
       "agent_handoff": null,
       "machine_review_url": null,
       "machine_offer_url": null,
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/raven-nexus-pain-router-v1/"
@@ -1727,7 +1727,7 @@
       "agent_handoff": null,
       "machine_review_url": null,
       "machine_offer_url": null,
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/findmypart-repair-shop-desk-v1/"
@@ -1791,7 +1791,7 @@
       "agent_handoff": null,
       "machine_review_url": null,
       "machine_offer_url": null,
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/rivet-site-underwriting-v1/"
@@ -1837,7 +1837,7 @@
       "agent_handoff": null,
       "machine_review_url": null,
       "machine_offer_url": null,
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/roasted-text-pressure-test-machine-v1/"
@@ -1879,7 +1879,7 @@
       "agent_handoff": null,
       "machine_review_url": null,
       "machine_offer_url": null,
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/site-survive-rapid-audit-v1/"
@@ -1927,7 +1927,7 @@
       "agent_handoff": null,
       "machine_review_url": null,
       "machine_offer_url": null,
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/portfolio-sentinel-v1/"
@@ -2001,7 +2001,7 @@
       "agent_handoff": null,
       "machine_review_url": null,
       "machine_offer_url": null,
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/audit-center-website-audit-machine-v1/"
@@ -2030,7 +2030,7 @@
       "agent_handoff": null,
       "machine_review_url": null,
       "machine_offer_url": null,
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/systemia-yard-runtime-extension-v1/"
