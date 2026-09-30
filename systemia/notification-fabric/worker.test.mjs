@@ -221,3 +221,126 @@ test('stable Web Push Topic is reused for the same logical notification', async 
   assert.equal(topics[0], topics[1]);
   assert.match(topics[0], /^[A-Za-z0-9_-]{1,32}$/);
 });
+
+
+test('idempotency key reuse with different content is rejected', () => {
+  const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'relay-idempotency-'));
+  const outbox = createRelayOutbox({ dataDir });
+  outbox.enqueue({
+    kind: 'intent',
+    idempotency_key: 'same-key',
+    fingerprint_source: { report_id: 'a' },
+    payload: { intent: { id: 'a' } },
+    now: 1_000,
+  });
+  assert.throws(() => outbox.enqueue({
+    kind: 'intent',
+    idempotency_key: 'same-key',
+    fingerprint_source: { report_id: 'b' },
+    payload: { intent: { id: 'b' } },
+    now: 2_000,
+  }), /different request/);
+});
+
+test('dead letters can be explicitly requeued with a fresh attempt budget', async () => {
+  const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'relay-requeue-'));
+  const outbox = createRelayOutbox({ dataDir });
+  const fabric = {
+    dispatchIntent: async () => { throw new Error('still bad'); },
+    dispatchSignal: async () => ({}),
+    store: { getInboxItem: () => null, recordDelivery: () => ({}) },
+  };
+  const worker = createRelayWorker({ fabric, outbox, workerId: 'worker-requeue' });
+  const job = outbox.enqueue({
+    kind: 'intent',
+    payload: { intent: { id: 'dead-requeue-1' } },
+    max_attempts: 1,
+    now: 5_000,
+  });
+  await worker.runOnce({ now: 5_000 });
+  assert.equal(outbox.get(job.id).status, 'dead_letter');
+  const requeued = outbox.requeueDeadLetter(job.id, { now: 6_000, max_attempts: 3 });
+  assert.equal(requeued.status, 'retry');
+  assert.equal(requeued.attempts, 0);
+  assert.equal(requeued.max_attempts, 3);
+  assert.equal(requeued.dead_lettered_at, null);
+});
+
+test('outbox pruning removes only old terminal jobs and releases idempotency keys', () => {
+  const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'relay-prune-'));
+  const outbox = createRelayOutbox({ dataDir });
+  const old = outbox.enqueue({
+    kind: 'intent',
+    idempotency_key: 'old-terminal-key',
+    payload: { intent: { id: 'old' } },
+    now: 1_000,
+  });
+  outbox.complete(old.id, { ok: true }, { now: 2_000 });
+  const live = outbox.enqueue({
+    kind: 'intent',
+    idempotency_key: 'live-key',
+    payload: { intent: { id: 'live' } },
+    now: 3_000,
+  });
+  const result = outbox.prune({
+    now: 100_000,
+    completed_retention_ms: 60_000,
+    dead_retention_ms: 60_000,
+    max_retained: 100,
+  });
+  assert.equal(result.removed, 1);
+  assert.equal(outbox.get(old.id), null);
+  assert.ok(outbox.get(live.id));
+  const reused = outbox.enqueue({
+    kind: 'intent',
+    idempotency_key: 'old-terminal-key',
+    payload: { intent: { id: 'new' } },
+    now: 101_000,
+  });
+  assert.equal(reused.duplicate, false);
+});
+
+test('acknowledgement target reconstruction survives a deduped recovery result', async () => {
+  const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'relay-ack-recovery-'));
+  const outbox = createRelayOutbox({ dataDir });
+  const receipts = [];
+  const fabric = {
+    dispatchIntent: async (intent) => ({
+      intent,
+      deduped: true,
+      accepted: 0,
+      realtime_delivered: 0,
+      inboxed: 0,
+      targeted_principal_ids: [],
+    }),
+    dispatchSignal: async () => ({}),
+    resolvePrincipals: () => ['owner'],
+    store: {
+      getInboxItem: () => ({ id: 'recover-ack', acknowledged_at: null }),
+      recordDelivery: (event) => { receipts.push(event); return event; },
+    },
+  };
+  const worker = createRelayWorker({ fabric, outbox, workerId: 'worker-ack-recovery' });
+  const job = outbox.enqueue({
+    kind: 'intent',
+    payload: {
+      intent: {
+        id: 'recover-ack',
+        title: 'Recover',
+        body: 'Recover',
+        acknowledgement: {
+          required: true,
+          within_seconds: 15,
+          max_escalations: 1,
+          escalation_interval_seconds: 15,
+        },
+      },
+    },
+    now: 10_000,
+  });
+  await worker.runOnce({ now: 10_000 });
+  const jobs = Object.values(JSON.parse(fs.readFileSync(outbox.file, 'utf8')).jobs);
+  const watch = jobs.find((entry) => entry.kind === 'ack_watch');
+  assert.ok(watch);
+  assert.deepEqual(watch.payload.principal_ids, ['owner']);
+});
