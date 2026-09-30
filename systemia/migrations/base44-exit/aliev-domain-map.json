@@ -1,0 +1,128 @@
+{
+  "schema": "evercraft.aliev.legacy-domain-map.v1",
+  "semantics": [
+    "Base44 entity names are migration inputs, never runtime dependencies.",
+    "Rows marked retired are excluded from active charging inventory.",
+    "Observed usage remains observed evidence and may bind spatially or by station_external_id.",
+    "Awarded or planned infrastructure is market/pipeline evidence, never operational charging inventory.",
+    "Missing values remain null/unknown and are never normalized to zero.",
+    "Live public-source layers migrate as owned adapters, not copied stale tables."
+  ],
+  "entities": {
+    "EVNationalChargePoint": {
+      "domain": "charging_inventory",
+      "mode": "copy_active_records",
+      "exclude_data_status": [
+        "retired"
+      ],
+      "key_fields": [
+        "external_id"
+      ]
+    },
+    "EVObservedUsageAggregate": {
+      "domain": "observed_sessions",
+      "mode": "copy_records",
+      "key_fields": [
+        "aggregate_key"
+      ],
+      "join_fields": [
+        "station_external_id"
+      ]
+    },
+    "EVTrafficProfile": {
+      "domain": "traffic_temporal",
+      "mode": "copy_records",
+      "key_fields": [
+        "profile_key"
+      ],
+      "chunk_entity": "EVTrafficProfileChunk"
+    },
+    "EVOpsTariff": {
+      "domain": "utility_tariff",
+      "mode": "copy_records",
+      "key_fields": [
+        "id"
+      ],
+      "guardrail": "Tariff record is candidate context until service-point assignment is verified."
+    },
+    "EVStateStockApproxAggregate": {
+      "domain": "local_ev_stock",
+      "mode": "copy_records",
+      "key_fields": [
+        "aggregate_key"
+      ],
+      "normalization": "us_state_name_to_postal_code"
+    },
+    "RivetMarketEvidence": {
+      "domain": "deep_market_evidence",
+      "mode": "copy_records",
+      "key_fields": [
+        "evidence_key"
+      ]
+    },
+    "RivetExternalEvidence": {
+      "domain": "deep_market_evidence",
+      "mode": "copy_records",
+      "key_fields": [
+        "evidence_key"
+      ]
+    },
+    "RivetSiteBenchmark": {
+      "domain": "deep_market_evidence",
+      "mode": "copy_records",
+      "key_fields": [
+        "benchmark_key"
+      ]
+    },
+    "RivetUtilityProgramEvidence": {
+      "domain": "deep_market_evidence",
+      "mode": "copy_records",
+      "key_fields": [
+        "evidence_key"
+      ],
+      "guardrail": "Program/rate evidence is not site eligibility, tariff assignment, funding award, or observed utilization."
+    },
+    "WashingtonNEVIAwardSite": {
+      "domain": "deep_market_evidence",
+      "mode": "copy_records",
+      "key_fields": [
+        "id"
+      ],
+      "guardrail": "Awarded pipeline is not operating infrastructure."
+    },
+    "EVOpsSourceRecord": {
+      "domain": "provenance",
+      "mode": "copy_records",
+      "key_fields": [
+        "id"
+      ]
+    }
+  },
+  "live_adapters": {
+    "US-WA:traffic_aadt": {
+      "domain": "traffic",
+      "source": "Washington State Department of Transportation Traffic Counts",
+      "runtime": "evercraft_owned_adapter",
+      "legacy_base44_table_required": false
+    },
+    "US-WA:utility_service_area": {
+      "domain": "utility_service_area",
+      "source": "Washington State Department of Ecology Electric Utility Service Areas",
+      "runtime": "evercraft_owned_adapter",
+      "legacy_base44_table_required": false,
+      "semantic_guardrail": "Screening boundary only. Confirm actual service with utility."
+    },
+    "US-CA:traffic_aadt": {
+      "domain": "traffic",
+      "source": "California Department of Transportation Traffic Volumes AADT",
+      "runtime": "evercraft_owned_adapter",
+      "legacy_base44_table_required": false
+    },
+    "US-CA:utility_service_area": {
+      "domain": "utility_service_area",
+      "source": "California Energy Commission Electric Load Serving Entities",
+      "runtime": "evercraft_owned_adapter",
+      "legacy_base44_table_required": false
+    }
+  }
+}
