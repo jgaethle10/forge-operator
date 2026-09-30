@@ -1,7 +1,7 @@
 {
   "name": "findmypart",
-  "version": "0.1.0",
-  "description": "Direct hard-to-source part discovery with replacement, salvage, and fabrication paths.",
+  "version": "0.2.0",
+  "description": "Direct evidence-aware Part Passport triage and hard-to-source part recovery with replacement, salvage, blueprint and fabrication paths.",
   "author": {
     "name": "Evercraft LLC"
   },
@@ -11,9 +11,11 @@
   "keywords": [
     "findmypart",
     "parts",
+    "part-passport",
     "obsolete-parts",
     "salvage",
     "replacement",
+    "cross-reference",
     "fabrication",
     "mcp"
   ],
