@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-30T20:35:42.472Z",
+  "updated_at": "2026-09-30T20:55:15.206Z",
   "url_count": 2664,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -39,8 +39,8 @@
     },
     "/chum/capabilities.json": {
       "path": "/chum/capabilities.json",
-      "content_sha256": "f3c6993f97bbf6f35ee5026983ac9def293a6ada3af247c99397a37effbd8fb2",
-      "last_changed": "2026-09-30T20:35:42.472Z",
+      "content_sha256": "7ac2709fa7aa703631f6b3c26c442ca8c6f378e852ca02b7e881b2e38c963896",
+      "last_changed": "2026-09-30T20:55:14.624Z",
       "priority": 80
     },
     "/chum/sell-now.html": {
@@ -135,14 +135,14 @@
     },
     "/chum/hot/": {
       "path": "/chum/hot/",
-      "content_sha256": "543e43fa34d2f33067291012c1fabc9a30283569622e9739086fcc01063d29f2",
-      "last_changed": "2026-09-30T20:11:39.857Z",
+      "content_sha256": "44920f52cf5c0e033c35c9552d5c9065cb16894a7a81ddf1471893fa91d4e31a",
+      "last_changed": "2026-09-30T20:55:14.624Z",
       "priority": 80
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "d28f079caba44d00b425b9ff7e1a96d0e43d277bf191a95943176ca4d9dd69bc",
-      "last_changed": "2026-09-30T20:35:42.472Z",
+      "content_sha256": "7f6b37d2c81ffe97b91d0b73b16ce3bc81e3154bcac9fe48ed1a33681748e071",
+      "last_changed": "2026-09-30T20:55:15.206Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -153,20 +153,20 @@
     },
     "/chum/strike/index.json": {
       "path": "/chum/strike/index.json",
-      "content_sha256": "ad14ad384e7ce577db2d4cda74864c270b0c0209b3c0cdeabc9ad876e423f38f",
-      "last_changed": "2026-09-30T20:11:39.857Z",
+      "content_sha256": "6f2ba11ae406bf7dcdd61b427318d73f09918e48e069df63727d7c85b9af6c6c",
+      "last_changed": "2026-09-30T20:55:15.206Z",
       "priority": 80
     },
     "/chum/crawler-radar.json": {
       "path": "/chum/crawler-radar.json",
-      "content_sha256": "f1db94df42ea9b49465f37a8aed5d4854d0501edde3eac1a07a85533cdb1ff10",
-      "last_changed": "2026-09-30T20:11:39.857Z",
+      "content_sha256": "241715c9422ffc2d7ec9f1496f0ba289f5aee29aa773d4a9c0d7925a07aa2f48",
+      "last_changed": "2026-09-30T20:55:15.206Z",
       "priority": 80
     },
     "/chum/crawler-radar.txt": {
       "path": "/chum/crawler-radar.txt",
-      "content_sha256": "eb65dc4b48ce030492cb6ced9e68a8ab3c59127513478bd2c8ad289fbc0a5180",
-      "last_changed": "2026-09-30T20:11:39.857Z",
+      "content_sha256": "b27dd32b680ce48c424de844937845de338ebafc607f220be599b627e8edc2ae",
+      "last_changed": "2026-09-30T20:55:15.206Z",
       "priority": 80
     },
     "/chum/proof/": {
@@ -177,8 +177,8 @@
     },
     "/chum/proof/index.json": {
       "path": "/chum/proof/index.json",
-      "content_sha256": "613e96919ab0d39306463d65b7dee626f4f5e72d877b302933e9e5ecc01d008d",
-      "last_changed": "2026-09-30T18:55:38.260Z",
+      "content_sha256": "82f80a74d57e69ce8a58b38ce3038813dc1e44274c60183074a8a69392db4cfc",
+      "last_changed": "2026-09-30T20:55:14.624Z",
       "priority": 80
     },
     "/chum/proof/llms.txt": {
@@ -189,14 +189,14 @@
     },
     "/chum/proof/forensiscope.json": {
       "path": "/chum/proof/forensiscope.json",
-      "content_sha256": "de8f1b8e55a3363b85a2cd50ee48fa39bf208ed0665ab9908937b66139600336",
-      "last_changed": "2026-09-30T18:55:38.260Z",
+      "content_sha256": "d405cc0c8d223c1c50a09163d31e38f33240339cfdadda02b766a867f2db6a96",
+      "last_changed": "2026-09-30T20:55:14.624Z",
       "priority": 80
     },
     "/chum/proof/rivet.json": {
       "path": "/chum/proof/rivet.json",
-      "content_sha256": "503399b6dbb6bcc8972a7faa0d39db4f6723edb89b56030619c20099ad1c3280",
-      "last_changed": "2026-09-30T18:55:38.260Z",
+      "content_sha256": "468f156a318d7bbcf0ac754cca2b6cad2f733df00403bc810116adbb50f0426b",
+      "last_changed": "2026-09-30T20:55:14.624Z",
       "priority": 80
     },
     "/chum/commercial/": {
@@ -759,14 +759,14 @@
     },
     "/.well-known/agent-card.json": {
       "path": "/.well-known/agent-card.json",
-      "content_sha256": "7647eb48c42359b00aa44d59a5e12e42be023e912fd622a7cfb23ccd592e20ad",
-      "last_changed": "2026-09-29T18:57:38.943Z",
+      "content_sha256": "14ca08412ef66754c489ef86d4304d6578be7c9d6daf4e80440be0389dd1a3eb",
+      "last_changed": "2026-09-30T20:55:14.624Z",
       "priority": 104
     },
     "/.well-known/agent.json": {
       "path": "/.well-known/agent.json",
-      "content_sha256": "7647eb48c42359b00aa44d59a5e12e42be023e912fd622a7cfb23ccd592e20ad",
-      "last_changed": "2026-09-29T18:57:38.943Z",
+      "content_sha256": "14ca08412ef66754c489ef86d4304d6578be7c9d6daf4e80440be0389dd1a3eb",
+      "last_changed": "2026-09-30T20:55:14.624Z",
       "priority": 102
     },
     "/.well-known/evercraft-agent-directory.json": {
@@ -2525,7 +2525,7 @@
       "path": "/chum/products/deck-capital-fit/llms.txt",
       "content_sha256": "6aa95982f4fd24039ddad3ac28c6263cdecb9a23830e22c9d603a3d666dde3b7",
       "last_changed": "2026-09-28T17:11:58.389Z",
-      "priority": 94
+      "priority": 154
     },
     "/chum/products/deck-capital-fit/ai-discovery.json": {
       "path": "/chum/products/deck-capital-fit/ai-discovery.json",
@@ -2819,7 +2819,7 @@
       "path": "/chum/products/evercraft-network/ai-discovery.json",
       "content_sha256": "a9cf1482dea5a5748138c2968429bbb11760eae62e8d4d51ff4b5e7c06cf88dc",
       "last_changed": "2026-09-28T16:07:14.264Z",
-      "priority": 94
+      "priority": 154
     },
     "/chum/products/evercraft-network/ai-conformance.json": {
       "path": "/chum/products/evercraft-network/ai-conformance.json",
@@ -3071,25 +3071,25 @@
       "path": "/chum/products/findmypart/",
       "content_sha256": "e63a30e67f8fd08e359da5388643b30dcf808e3de918a01512459d7317c100c4",
       "last_changed": "2026-09-30T20:35:42.472Z",
-      "priority": 94
+      "priority": 154
     },
     "/chum/products/findmypart/llms.txt": {
       "path": "/chum/products/findmypart/llms.txt",
       "content_sha256": "93803bda48f4c1a79140ba6fdebcb4d55dedc75e517848b19a7074a301264f34",
       "last_changed": "2026-09-30T20:35:42.472Z",
-      "priority": 94
+      "priority": 154
     },
     "/chum/products/findmypart/ai-discovery.json": {
       "path": "/chum/products/findmypart/ai-discovery.json",
       "content_sha256": "3bc1f5add5a84f870aac2ac956bdc5bd5cc1fffeab7824387d1714d3dc4d6000",
       "last_changed": "2026-09-30T20:35:42.472Z",
-      "priority": 94
+      "priority": 154
     },
     "/chum/products/findmypart/ai-conformance.json": {
       "path": "/chum/products/findmypart/ai-conformance.json",
       "content_sha256": "3dbd7f879504cef7498e3bf02fb7cd7ec7902d324cfba4ed5aab9902d9e39d2a",
       "last_changed": "2026-09-30T20:35:42.472Z",
-      "priority": 94
+      "priority": 154
     },
     "/chum/products/forensic-record/": {
       "path": "/chum/products/forensic-record/",

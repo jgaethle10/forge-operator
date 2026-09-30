@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.crawler-radar.v1",
-  "generated_at": "2026-09-30T20:11:39.667Z",
+  "generated_at": "2026-09-30T20:55:14.975Z",
   "coordinator": "CHUM",
   "runtime_feedback": {
     "requested": false,
@@ -9,8 +9,8 @@
   },
   "observation_count": 0,
   "negative_provider_pickup_receipts": 174,
-  "surface_count": 2660,
-  "strike_now_count": 1674,
+  "surface_count": 2664,
+  "strike_now_count": 1680,
   "doctrine": {
     "crawler_fetch_is_not_indexing": true,
     "indexing_is_not_ranking": true,
@@ -14414,28 +14414,6 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/find-a-discontinued-tractor-part-eb8c9e34c7.json",
-      "product_key": null,
-      "score": 215,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-09-29T02:24:28.186Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/find-a-donor-or-salvage-part-310843faf9.json",
       "product_key": null,
       "score": 215,
@@ -14525,28 +14503,6 @@
     },
     {
       "path": "/chum/answers/doors/find-a-trusted-professional-through-relationship-paths-bf30793b00.json",
-      "product_key": null,
-      "score": 215,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-09-29T02:24:28.186Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/find-an-obsolete-automotive-or-machine-part-c7133fab20.json",
       "product_key": null,
       "score": 215,
       "urgency": "strike_now",
@@ -15014,50 +14970,6 @@
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-09-29T02:24:28.186Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/find-replacement-donor-salvage-or-fabrication-paths-when-normal-sourcing-fails-7843dd9e0e.json",
-      "product_key": null,
-      "score": 215,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-09-29T02:24:28.186Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/find-replacement-donor-salvage-or-fabrication-paths-when-normal-sourcing-fails-7843dd9e0e/",
-      "product_key": null,
-      "score": 215,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-09-28T17:03:20.114Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -19257,27 +19169,6 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/find-a-discontinued-tractor-part-eb8c9e34c7/",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-09-25T07:08:03.584Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/find-a-donor-or-salvage-part-310843faf9/",
       "product_key": null,
       "score": 207,
@@ -19363,27 +19254,6 @@
     },
     {
       "path": "/chum/answers/doors/find-a-trusted-professional-through-relationship-paths-bf30793b00/",
-      "product_key": null,
-      "score": 207,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-09-25T07:08:03.584Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/find-an-obsolete-automotive-or-machine-part-c7133fab20/",
       "product_key": null,
       "score": 207,
       "urgency": "strike_now",
@@ -19904,6 +19774,516 @@
       "recommended_actions": [
         "verify_live_bytes_then_indexnow",
         "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/products/findmypart/",
+      "product_key": "findmypart",
+      "score": 186,
+      "urgency": "strike_now",
+      "crawl_priority": 94,
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:12:01.590Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-hard-part-001-080208c25280b48e.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:27:42.783Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-hard-part-001-251d48b6000ad488.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T21:12:44.975Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-hard-part-001-7549be0746b2049a.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T16:26:59.138Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-hard-part-001-8555e7187453a126.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T05:00:27.697Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-hard-part-001-e7847b0134854b12.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T17:06:42.825Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-hard-part-001-e7c82a11d272dd74.json"
+        }
+      ],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "negative_provider_pickup_receipt",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "run_brand_blind_provider_probe_after_publication",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/products/findmypart/ai-conformance.json",
+      "product_key": "findmypart",
+      "score": 186,
+      "urgency": "strike_now",
+      "crawl_priority": 94,
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:12:01.590Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-hard-part-001-080208c25280b48e.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:27:42.783Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-hard-part-001-251d48b6000ad488.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T21:12:44.975Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-hard-part-001-7549be0746b2049a.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T16:26:59.138Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-hard-part-001-8555e7187453a126.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T05:00:27.697Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-hard-part-001-e7847b0134854b12.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T17:06:42.825Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-hard-part-001-e7c82a11d272dd74.json"
+        }
+      ],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "negative_provider_pickup_receipt",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "run_brand_blind_provider_probe_after_publication",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/products/findmypart/ai-discovery.json",
+      "product_key": "findmypart",
+      "score": 186,
+      "urgency": "strike_now",
+      "crawl_priority": 94,
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:12:01.590Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-hard-part-001-080208c25280b48e.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:27:42.783Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-hard-part-001-251d48b6000ad488.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T21:12:44.975Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-hard-part-001-7549be0746b2049a.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T16:26:59.138Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-hard-part-001-8555e7187453a126.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T05:00:27.697Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-hard-part-001-e7847b0134854b12.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T17:06:42.825Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-hard-part-001-e7c82a11d272dd74.json"
+        }
+      ],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "negative_provider_pickup_receipt",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "run_brand_blind_provider_probe_after_publication",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/products/findmypart/llms.txt",
+      "product_key": "findmypart",
+      "score": 186,
+      "urgency": "strike_now",
+      "crawl_priority": 94,
+      "last_changed": "2026-09-30T20:35:42.472Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:12:01.590Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-hard-part-001-080208c25280b48e.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:27:42.783Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-hard-part-001-251d48b6000ad488.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T21:12:44.975Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-hard-part-001-7549be0746b2049a.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T16:26:59.138Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-hard-part-001-8555e7187453a126.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T05:00:27.697Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-hard-part-001-e7847b0134854b12.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T17:06:42.825Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-hard-part-001-e7c82a11d272dd74.json"
+        }
+      ],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "negative_provider_pickup_receipt",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "run_brand_blind_provider_probe_after_publication",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/products/deck-capital-fit/llms.txt",
+      "product_key": "deck-capital-fit",
+      "score": 179,
+      "urgency": "strike_now",
+      "crawl_priority": 94,
+      "last_changed": "2026-09-28T17:11:58.389Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T16:27:04.034Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-capital-fit-001-01b93be69463882a.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T20:54:00.448Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-capital-fit-001-01f5df2b824918b8.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T12:23:46.386Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-capital-fit-001-15f5b2276c7ab7ac.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T18:05:11.184Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-capital-fit-001-19f519a8e4c9105b.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T17:06:47.842Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-capital-fit-001-2b5def755f027cb5.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T05:00:31.478Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-capital-fit-001-547a00af10ba674d.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:12:07.754Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-capital-fit-001-9ea9f908d2f3e85b.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T21:12:50.895Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-capital-fit-001-df13c49c29adaf41.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:27:47.706Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-capital-fit-001-e2ef32443c25aa59.json"
+        }
+      ],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "negative_provider_pickup_receipt",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "run_brand_blind_provider_probe_after_publication",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/products/evercraft-network/ai-discovery.json",
+      "product_key": "evercraft-network",
+      "score": 179,
+      "urgency": "strike_now",
+      "crawl_priority": 94,
+      "last_changed": "2026-09-28T16:07:14.264Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T06:16:58.567Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-0615d66dc72adb4c.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T16:27:24.331Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-2f37944e5052e797.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T12:24:13.964Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-450a858b4c3ca5d3.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T06:34:23.070Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-4e23a6f52d6b6065.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:12:36.385Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-64f2c63c7d6cb940.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T21:13:22.361Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-7f0846a44b8a9347.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:28:11.058Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-a5a3be10dbc2b144.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T05:00:50.489Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-b50b7597134b27bb.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T17:07:06.599Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-bccb611d895af8fc.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T06:28:30.049Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-bf5f0a48dcd9732f.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T18:05:40.059Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-business-resilience-002-ca5b7b4e741c34b3.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T21:13:20.448Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-03df3b6d39643714.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:28:09.130Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-32ae9241a8754723.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:12:34.503Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-3e25485bf26921f9.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T17:07:05.502Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-5077546084b72b13.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T18:05:38.128Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-70b4a46386f1b706.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T12:24:12.656Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-a6d1cface17820b4.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T05:00:49.026Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-fb8fe632142a6c3e.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T16:27:23.237Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-continuity-001-fc4fe6d5449ad81e.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T15:12:38.181Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-042dab635908df52.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T21:13:24.207Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-54db661616785a83.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T12:24:15.525Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-577a947fa5553b1d.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T18:05:41.909Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-b62de3a5a4983cb5.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T11:28:12.158Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-ba91191c99a5c792.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T05:00:51.496Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-d72b4495d12255c1.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T16:27:26.125Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-e88e9945c51eb854.json"
+        },
+        {
+          "provider": "generic_agent",
+          "observed_at": "2026-09-26T17:07:07.667Z",
+          "source": "authorized_provider_probe",
+          "evidence_ref": "conformance/provider-observations/auto-generic_agent-network-device-reconnect-003-ee988958b13a3e52.json"
+        }
+      ],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "negative_provider_pickup_receipt",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "run_brand_blind_provider_probe_after_publication",
         "increase_internal_crosslinks_from_relevant_public_surfaces"
       ]
     }

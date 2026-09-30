@@ -5,7 +5,7 @@
   <url><loc>/chum/index.json</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
   <url><loc>/chum/revenue.html</loc><lastmod>2026-09-28T19:03:48.848Z</lastmod></url>
   <url><loc>/chum/capabilities/</loc><lastmod>2026-09-29T02:24:28.186Z</lastmod></url>
-  <url><loc>/chum/capabilities.json</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
+  <url><loc>/chum/capabilities.json</loc><lastmod>2026-09-30T20:55:14.624Z</lastmod></url>
   <url><loc>/chum/sell-now.html</loc><lastmod>2026-09-28T19:03:48.848Z</lastmod></url>
   <url><loc>/chum/sell-now.json</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
   <url><loc>/chum/sell-now.txt</loc><lastmod>2026-09-30T07:16:23.209Z</lastmod></url>
@@ -21,17 +21,17 @@
   <url><loc>/chum/answers/index.txt</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
   <url><loc>/chum/answers/observed/</loc><lastmod>2026-09-27T06:03:00.949Z</lastmod></url>
   <url><loc>/chum/answers/observed/index.json</loc><lastmod>2026-09-27T06:03:00.949Z</lastmod></url>
-  <url><loc>/chum/hot/</loc><lastmod>2026-09-30T20:11:39.857Z</lastmod></url>
-  <url><loc>/chum/hot/index.json</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
+  <url><loc>/chum/hot/</loc><lastmod>2026-09-30T20:55:14.624Z</lastmod></url>
+  <url><loc>/chum/hot/index.json</loc><lastmod>2026-09-30T20:55:15.206Z</lastmod></url>
   <url><loc>/chum/strike/</loc><lastmod>2026-09-30T20:11:39.857Z</lastmod></url>
-  <url><loc>/chum/strike/index.json</loc><lastmod>2026-09-30T20:11:39.857Z</lastmod></url>
-  <url><loc>/chum/crawler-radar.json</loc><lastmod>2026-09-30T20:11:39.857Z</lastmod></url>
-  <url><loc>/chum/crawler-radar.txt</loc><lastmod>2026-09-30T20:11:39.857Z</lastmod></url>
+  <url><loc>/chum/strike/index.json</loc><lastmod>2026-09-30T20:55:15.206Z</lastmod></url>
+  <url><loc>/chum/crawler-radar.json</loc><lastmod>2026-09-30T20:55:15.206Z</lastmod></url>
+  <url><loc>/chum/crawler-radar.txt</loc><lastmod>2026-09-30T20:55:15.206Z</lastmod></url>
   <url><loc>/chum/proof/</loc><lastmod>2026-09-27T14:53:47.616Z</lastmod></url>
-  <url><loc>/chum/proof/index.json</loc><lastmod>2026-09-30T18:55:38.260Z</lastmod></url>
+  <url><loc>/chum/proof/index.json</loc><lastmod>2026-09-30T20:55:14.624Z</lastmod></url>
   <url><loc>/chum/proof/llms.txt</loc><lastmod>2026-09-27T14:53:47.616Z</lastmod></url>
-  <url><loc>/chum/proof/forensiscope.json</loc><lastmod>2026-09-30T18:55:38.260Z</lastmod></url>
-  <url><loc>/chum/proof/rivet.json</loc><lastmod>2026-09-30T18:55:38.260Z</lastmod></url>
+  <url><loc>/chum/proof/forensiscope.json</loc><lastmod>2026-09-30T20:55:14.624Z</lastmod></url>
+  <url><loc>/chum/proof/rivet.json</loc><lastmod>2026-09-30T20:55:14.624Z</lastmod></url>
   <url><loc>/chum/commercial/</loc><lastmod>2026-09-28T19:03:48.848Z</lastmod></url>
   <url><loc>/chum/commercial/index.json</loc><lastmod>2026-09-28T19:03:48.848Z</lastmod></url>
   <url><loc>/chum/commercial/llms.txt</loc><lastmod>2026-09-28T19:03:48.848Z</lastmod></url>
@@ -128,8 +128,8 @@
   <url><loc>/schema.jsonld</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
   <url><loc>/openapi.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/.well-known/evercraft-agent.json</loc><lastmod>2026-09-28T18:59:42.997Z</lastmod></url>
-  <url><loc>/.well-known/agent-card.json</loc><lastmod>2026-09-29T18:57:38.943Z</lastmod></url>
-  <url><loc>/.well-known/agent.json</loc><lastmod>2026-09-29T18:57:38.943Z</lastmod></url>
+  <url><loc>/.well-known/agent-card.json</loc><lastmod>2026-09-30T20:55:14.624Z</lastmod></url>
+  <url><loc>/.well-known/agent.json</loc><lastmod>2026-09-30T20:55:14.624Z</lastmod></url>
   <url><loc>/.well-known/evercraft-agent-directory.json</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
   <url><loc>/.well-known/evercraft-agent-commerce.json</loc><lastmod>2026-09-30T20:35:42.472Z</lastmod></url>
   <url><loc>/.well-known/evercraft-agent-interfaces.json</loc><lastmod>2026-09-28T18:59:42.997Z</lastmod></url>
