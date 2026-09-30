@@ -134,8 +134,74 @@ export function createEvercraftAppClient({
       async bulkUpdate(records) {
         return await request('PUT', `${root}/bulk`, records);
       },
-      subscribe() {
-        throw new AppFabricError('realtime_not_configured', { code: 'realtime_not_configured' });
+      subscribe(callback, options = {}) {
+        if (typeof callback !== 'function') throw new AppFabricError('realtime_callback_required', { code: 'realtime_callback_required' });
+        const controller = new AbortController();
+        const externalSignal = options?.signal || null;
+        if (externalSignal) {
+          if (externalSignal.aborted) controller.abort();
+          else externalSignal.addEventListener('abort', () => controller.abort(), { once: true });
+        }
+        let lastSequence = Math.max(0, Number(options?.afterSequence || 0) || 0);
+        let readyResolve;
+        let readyReject;
+        let readySettled = false;
+        const ready = new Promise((resolve, reject) => { readyResolve = resolve; readyReject = reject; });
+        const task = (async () => {
+          try {
+            const resolvedToken = tokenProvider ? await tokenProvider() : currentToken;
+            const headers = { accept: 'text/event-stream' };
+            if (resolvedToken) headers.authorization = `Bearer ${resolvedToken}`;
+            if (servicePermit) headers['x-evercraft-service-permit'] = servicePermit;
+            if (lastSequence > 0) headers['last-event-id'] = String(lastSequence);
+            const response = await fetchImpl(`${origin}${root}/subscribe?after=${encodeURIComponent(lastSequence)}`, {
+              method: 'GET',
+              headers,
+              signal: controller.signal
+            });
+            if (!response.ok) {
+              const data = await response.json().catch(() => null);
+              const code = data?.error?.code || `app_fabric_http_${response.status}`;
+              throw new AppFabricError(data?.error?.message || code, { status: response.status, code, data });
+            }
+            if (!response.body?.getReader) throw new AppFabricError('realtime_stream_unavailable', { code: 'realtime_stream_unavailable' });
+            readySettled = true;
+            readyResolve(true);
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+            let buffer = '';
+            while (true) {
+              const { value, done } = await reader.read();
+              if (done) break;
+              buffer += decoder.decode(value, { stream: true });
+              const blocks = buffer.split(/\r?\n\r?\n/);
+              buffer = blocks.pop() || '';
+              for (const block of blocks) {
+                const dataLines = block.split(/\r?\n/)
+                  .filter((line) => line.startsWith('data:'))
+                  .map((line) => line.slice(5).trimStart());
+                if (!dataLines.length) continue;
+                const event = JSON.parse(dataLines.join('\n'));
+                if (Number.isFinite(Number(event?.sequence))) lastSequence = Number(event.sequence);
+                await callback(event);
+              }
+            }
+            return true;
+          } catch (error) {
+            if (error?.name === 'AbortError' || controller.signal.aborted) {
+              if (!readySettled) { readySettled = true; readyResolve(false); }
+              return false;
+            }
+            if (!readySettled) { readySettled = true; readyReject(error); }
+            if (typeof options?.onError === 'function') await options.onError(error);
+            return false;
+          }
+        })();
+        const unsubscribe = () => controller.abort();
+        unsubscribe.ready = ready;
+        unsubscribe.done = task;
+        Object.defineProperty(unsubscribe, 'lastSequence', { get: () => lastSequence });
+        return unsubscribe;
       }
     };
   };
