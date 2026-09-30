@@ -14,3 +14,6 @@ artifacts/forensiscope/
 artifacts/forensiscope-intake/
 artifacts/forensiscope-proof/
 artifacts/forensiscope-transport/
+
+# Private runtime state. Never commit customer/site-plan data.
+var/rivet-siteplans/
