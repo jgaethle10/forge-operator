@@ -79,6 +79,89 @@ const fakeGenerate=async({address,systemiaMachineKey,onProgress})=>{
 }
 
 {
+  const queued=[];
+  const relay={
+    enqueueIntent(intent,options){
+      queued.push({intent,options});
+      return {job:{id:'relay-job-ready',status:'pending',duplicate:false},intent};
+    }
+  };
+  const runtime=await start({gatewayToken:'gateway-proof',systemiaMachineKey:'machine-proof',generate:fakeGenerate,relay});
+  try{
+    const created=await fetch(runtime.url+'/api/rivet/reports',{
+      method:'POST',
+      headers:{'content-type':'application/json','authorization':'Bearer gateway-proof'},
+      body:JSON.stringify({
+        address:'6405 W Chestnut Ave, Yakima, WA 98908',
+        notification_principal_id:'owner'
+      })
+    });
+    assert.equal(created.status,201);
+    const body=await created.json();
+    assert.equal(body.notification.state,'queued');
+    assert.equal(body.notification.job_id,'relay-job-ready');
+    assert.equal(queued.length,1);
+    assert.equal(queued[0].intent.product,'rivet');
+    assert.equal(queued[0].intent.purpose,'transactional');
+    assert.deepEqual(queued[0].intent.recipient_ids,['owner']);
+    assert.equal(queued[0].intent.data.report_id,'rivet-yard:proof');
+    assert.equal(JSON.stringify(queued[0].intent).includes('6405 W Chestnut'),false);
+    assert.match(queued[0].options.idempotencyKey,/^rivet:report-ready:/);
+  }finally{await runtime.close();}
+}
+
+{
+  const relay={
+    enqueueIntent(){throw new Error('relay temporarily unavailable');}
+  };
+  const runtime=await start({gatewayToken:'gateway-proof',systemiaMachineKey:'machine-proof',generate:fakeGenerate,relay});
+  try{
+    const created=await fetch(runtime.url+'/api/rivet/reports',{
+      method:'POST',
+      headers:{'content-type':'application/json','authorization':'Bearer gateway-proof'},
+      body:JSON.stringify({
+        address:'6405 W Chestnut Ave, Yakima, WA 98908',
+        notification_principal_id:'owner'
+      })
+    });
+    assert.equal(created.status,201);
+    const body=await created.json();
+    assert.equal(body.ok,true);
+    assert.equal(body.generation_state,'ready');
+    assert.equal(body.notification.state,'enqueue_failed');
+  }finally{await runtime.close();}
+}
+
+{
+  const signals=[];
+  const relay={
+    enqueueSignal(signal,options){
+      signals.push({signal,options});
+      return {job:{id:'relay-job-failure',status:'pending',duplicate:false}};
+    }
+  };
+  const failingGenerate=async()=>{throw new Error('upstream_snapshot_failed:sensitive-detail');};
+  const runtime=await start({gatewayToken:'gateway-proof',systemiaMachineKey:'machine-proof',generate:failingGenerate,relay});
+  try{
+    const created=await fetch(runtime.url+'/api/rivet/reports',{
+      method:'POST',
+      headers:{'content-type':'application/json','authorization':'Bearer gateway-proof'},
+      body:JSON.stringify({address:'6405 W Chestnut Ave, Yakima, WA 98908'})
+    });
+    assert.equal(created.status,502);
+    const body=await created.json();
+    assert.equal(body.operator_signal.state,'queued');
+    assert.equal(signals.length,1);
+    assert.equal(signals[0].signal.product,'rivet');
+    assert.equal(signals[0].signal.source,'rivet-yard-report-gateway');
+    assert.equal(signals[0].signal.status,'failed');
+    assert.equal(signals[0].signal.evidence_state,'live_verified');
+    assert.equal(signals[0].signal.error_code,'upstream_snapshot_failed');
+    assert.equal(JSON.stringify(signals[0].signal).includes('6405 W Chestnut'),false);
+  }finally{await runtime.close();}
+}
+
+{
   const stateDir=fs.mkdtempSync(path.join(os.tmpdir(),'rivet-gateway-source-'));
   const sourceSnapshot={
     response_profile:'rivet_report_snapshot_v1',
