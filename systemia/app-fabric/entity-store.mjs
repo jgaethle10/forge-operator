@@ -366,6 +366,48 @@ export class DurableEntityStore {
     return { records: clone(updated), receipt: result.receipt };
   }
 
+  importRecords(appKey, entity, inputs, { key = 'id', now = new Date() } = {}) {
+    if (!Array.isArray(inputs)) throw new Error('entity_records_array_required');
+    const field = String(key || '').trim();
+    if (!field) throw new Error('entity_import_key_required');
+    const at = nowIso(now);
+    const written = [];
+    const result = this.#mutate(appKey, entity, 'import_records', (records) => {
+      for (const input of inputs) {
+        const source = ensureRecord(clone(input));
+        if (source[field] == null) throw new Error('entity_import_key_value_required');
+        const index = records.findIndex((row) => row[field] === source[field]);
+        let id = source.id == null ? null : String(source.id);
+        if (index >= 0) {
+          const existingId = String(records[index].id);
+          if (id && id !== existingId) throw new Error('entity_import_identity_conflict');
+          id = existingId;
+        } else if (!id) {
+          id = field === 'id' ? String(source[field]) : randomUUID();
+        }
+
+        const createdDate = source.created_date || source.created_at || at;
+        const createdAt = source.created_at || source.created_date || at;
+        const updatedDate = source.updated_date || source.updated_at || createdDate;
+        const updatedAt = source.updated_at || source.updated_date || createdAt;
+        const imported = {
+          ...source,
+          id,
+          created_date: createdDate,
+          created_at: createdAt,
+          updated_date: updatedDate,
+          updated_at: updatedAt
+        };
+        if (index >= 0) records[index] = imported;
+        else records.push(imported);
+        written.push(imported);
+      }
+      return records;
+    }, now);
+    for (const record of written) this.#emit(appKey, entity, 'import', record, result);
+    return { records: clone(written), receipt: result.receipt };
+  }
+
   upsert(appKey, entity, inputs, { key = 'id', now = new Date() } = {}) {
     if (!Array.isArray(inputs)) throw new Error('entity_records_array_required');
     const field = String(key || '').trim();
