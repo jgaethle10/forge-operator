@@ -15,6 +15,7 @@ import {
   loadRepairRecipeRegistry,
   resolveRepairRecipe
 } from '../sentinel/architectural-invariants.mjs';
+import { probeJournalFreshness } from './journal-freshness.mjs';
 
 function clean(value) {
   return String(value ?? '').trim();
@@ -327,7 +328,7 @@ async function main() {
     null
   );
   const findings = [...local.findings, ...humanExperience.findings];
-  const network = { url_probes: [], github: null };
+  const network = { url_probes: [], github: null, journal_freshness: null };
   let scanned = local.scanned + Number(humanExperience.receipt?.summary?.surfaces || 0);
 
   if (!args.offline) {
@@ -335,6 +336,14 @@ async function main() {
     findings.push(...publicScan.findings);
     scanned += publicScan.scanned;
     network.url_probes = publicScan.rows;
+
+    const journalFreshness = await probeJournalFreshness({
+      url: process.env.EVERCRAFT_JOURNAL_URL || 'https://evercraftjournal.base44.app/',
+      now: observedAt
+    });
+    findings.push(...journalFreshness.findings.map((finding) => makeFinding(finding)));
+    scanned += journalFreshness.scanned;
+    network.journal_freshness = journalFreshness.observation;
 
     const githubScan = await scanGithub({
       owner: args.githubOwner,
@@ -427,7 +436,9 @@ async function main() {
       conformance_products: estateConvergence?.summary?.conformance_products ?? null,
       central_registry_products: estateConvergence?.summary?.central_registry_products ?? null,
       mcp_registry_published: estateConvergence?.summary?.mcp_registry_published ?? null,
-      estate_admission_queue: estateConvergence?.summary?.admission_queue ?? null
+      estate_admission_queue: estateConvergence?.summary?.admission_queue ?? null,
+      journal_freshness_state: network.journal_freshness?.state ?? (args.offline ? 'not_checked_offline' : 'unknown'),
+      journal_age_hours: network.journal_freshness?.age_hours ?? null
     },
     inventory: {
       ...local.inventory,
