@@ -6,7 +6,7 @@ import path from 'node:path';
 import { DurableEntityStore } from './entity-store.mjs';
 import { createEvercraftAppClient } from './client.mjs';
 import { startAppFabricGateway } from './gateway.mjs';
-import { EvercraftRealtimeBus } from './realtime-bus.mjs';
+import { EvercraftRealtimeBus } from '../realtime-bus/realtime-bus.mjs';
 
 const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), 'evercraft-app-fabric-proof-'));
 const realtimeBus = new EvercraftRealtimeBus({ stateDir: path.join(stateDir, 'realtime') });
