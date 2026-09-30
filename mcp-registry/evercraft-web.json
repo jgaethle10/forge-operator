@@ -2,9 +2,9 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.jgaethle10/evercraft-web",
   "title": "Evercraft Web",
-  "description": "Public web retrieval for AI agents with structured extraction and evidence receipts; search and browser automation remain behind independent safety and runtime gates.",
+  "description": "Owned Evercraft Fabric discovery and routing entry for Evercraft Web. Product-specific execution is migration-gated until Yard/Evercraft Compute verification exists.",
   "version": "0.3.0",
-  "websiteUrl": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs",
+  "websiteUrl": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-web",
   "repository": {
     "url": "https://github.com/jgaethle10/forge-operator",
     "source": "github"
@@ -12,7 +12,7 @@
   "remotes": [
     {
       "type": "streamable-http",
-      "url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp"
+      "url": "https://fabric.systemiacommandcenters.com/mcp"
     }
   ]
 }
