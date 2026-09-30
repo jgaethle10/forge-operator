@@ -5,6 +5,9 @@ on:
     paths:
       - 'systemia/migrations/base44-exit/**'
       - 'systemia/app-fabric/**'
+      - 'systemia/identity/identity.mjs'
+      - 'systemia/identity/challenge-broker.mjs'
+      - 'systemia/identity/challenge-broker.proof.mjs'
       - 'systemia/realtime-bus/**'
       - 'systemia/object-store/**'
       - 'systemia/secret-store/**'
@@ -26,6 +29,9 @@ on:
     paths:
       - 'systemia/migrations/base44-exit/**'
       - 'systemia/app-fabric/**'
+      - 'systemia/identity/identity.mjs'
+      - 'systemia/identity/challenge-broker.mjs'
+      - 'systemia/identity/challenge-broker.proof.mjs'
       - 'systemia/realtime-bus/**'
       - 'systemia/object-store/**'
       - 'systemia/secret-store/**'
@@ -63,6 +69,8 @@ jobs:
         run: npm run proof:base44-sdk-compat
       - name: Prove owned App Fabric identity binding
         run: npm run proof:app-fabric-identity
+      - name: Prove owned registration and recovery challenges
+        run: npm run proof:identity-challenges
       - name: Prove realtime, storage, and secret boundaries
         run: npm run proof:realtime-bus && npm run proof:object-store && npm run proof:secret-store
       - name: Prove KAIDANCE collider
