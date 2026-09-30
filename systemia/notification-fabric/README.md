@@ -114,7 +114,7 @@ leased Relay worker
    +--> attempts exhausted -> dead letter
 ```
 
-Producer retries are deduplicated with an `Idempotency-Key`. Each job preserves a stable logical notification ID across worker retries. Web Push attempts also carry a stable Topic derived from that ID so compatible push services can collapse still-pending duplicate attempts.
+Producer retries are deduplicated with an `Idempotency-Key`. Relay binds that key to a request fingerprint: reusing the same key for the same request returns the existing job, while reusing it for different content is rejected instead of silently swallowing the second request. Each job preserves a stable logical notification ID across worker retries. Web Push attempts also carry a stable Topic derived from that ID so compatible push services can collapse still-pending duplicate attempts.
 
 Critical intents may opt into acknowledgement enforcement:
 
@@ -139,7 +139,8 @@ The filesystem outbox is restart-safe for the current single-node Forge/Yard run
 
 Public configuration and health:
 
-- `GET /api/notifications/health`
+- `GET /api/notifications/health` sanitized liveness and queue summary
+- `GET /api/notifications/readiness` delivery readiness based on worker state and oldest pending job age
 - `GET /api/notifications/config`
 
 Server-to-server, ingest token required:
@@ -147,6 +148,7 @@ Server-to-server, ingest token required:
 - `POST /api/notifications/jobs` durable intent enqueue, preferred for production workflows
 - `POST /api/notifications/signal-jobs` durable Signal Fabric enqueue
 - `GET /api/notifications/jobs/:id` job state without returning the queued payload
+- `POST /api/notifications/jobs/:id/requeue` explicit dead-letter replay
 - `POST /api/notifications/worker/run` bounded manual worker cycle for operations/testing
 - `POST /api/notifications/intents` direct synchronous delivery, retained for compatibility and low-risk paths
 - `POST /api/notifications/signals`
@@ -229,6 +231,7 @@ EVERCRAFT_NOTIFICATION_WORKER_ID=<optional stable node label>
 EVERCRAFT_NOTIFICATION_WORKER_INTERVAL_MS=1000
 EVERCRAFT_NOTIFICATION_WORKER_LEASE_MS=30000
 EVERCRAFT_NOTIFICATION_WORKER_BATCH_SIZE=10
+EVERCRAFT_NOTIFICATION_MAX_QUEUE_AGE_MS=60000
 ```
 
 The resident worker timer is unreferenced so it does not prevent clean process shutdown. Operators can disable the resident worker and run an isolated worker process later without changing product contracts.
