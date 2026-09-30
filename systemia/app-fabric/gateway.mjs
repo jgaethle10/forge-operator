@@ -20,6 +20,17 @@ function empty(response, status = 204, headers = {}) {
   response.end();
 }
 
+function redirect(response, location, status = 302, headers = {}) {
+  const target = String(location || '').trim();
+  if (!target) throw new Error('redirect_location_required');
+  response.writeHead(status, {
+    location: target,
+    'cache-control': 'no-store',
+    ...headers
+  });
+  response.end();
+}
+
 function bearer(request) {
   const raw = String(request.headers.authorization || '');
   return raw.startsWith('Bearer ') ? raw.slice(7).trim() : '';
@@ -115,6 +126,16 @@ export function createAppFabricHandler({
           entity_store: store.health(),
           realtime: realtimeBus ? realtimeBus.health() : { state: 'not_configured' }
         }, cors);
+      }
+
+      const publicSettingsMatch = url.pathname.match(/^\/api\/apps\/public\/prod\/public-settings\/by-id\/([^/]+)$/);
+      if (publicSettingsMatch && request.method === 'GET') {
+        if (typeof authHandlers.publicSettings !== 'function') throw new Error('public_settings_unsupported');
+        const requestedAppKey = safeKey(decodeURIComponent(publicSettingsMatch[1]), 'app_key');
+        return json(response, 200, await maybe(authHandlers.publicSettings({
+          appKey: requestedAppKey,
+          request
+        })), cors);
       }
 
       const appMatch = url.pathname.match(/^\/api\/apps\/([^/]+)\/(.+)$/);
@@ -244,6 +265,13 @@ export function createAppFabricHandler({
           const body = await readBody(request, maxBodyBytes);
           await require({ kind: 'entity', operation: 'bulk_create', entity, body });
           return json(response, 200, store.bulkCreate(appKey, entity, body || []).records, cors);
+        }
+
+        if (request.method === 'POST' && tail === 'import') {
+          const body = await readBody(request, maxBodyBytes);
+          await require({ kind: 'entity', operation: 'import_entities', entity, body });
+          const rows = Array.isArray(body) ? body : (Array.isArray(body?.records) ? body.records : []);
+          return json(response, 200, store.bulkCreate(appKey, entity, rows).records, cors);
         }
 
         if (request.method === 'POST' && tail === 'aggregate') {
@@ -398,6 +426,39 @@ export function createAppFabricHandler({
       if (remainder === 'auth/logout' && request.method === 'POST') {
         if (typeof authHandlers.logout !== 'function') return json(response, 200, { logged_out: true }, cors);
         return json(response, 200, await maybe(authHandlers.logout({ appKey, subjectRef, identity, request })), cors);
+      }
+
+      const authActionMatch = remainder.match(/^auth\/(register|verify-otp|resend-otp|reset-password-request|reset-password)$/);
+      if (authActionMatch) {
+        if (request.method !== 'POST') return json(response, 405, { error: 'method_not_allowed' }, cors);
+        const handlerName = {
+          'register': 'register',
+          'verify-otp': 'verifyOtp',
+          'resend-otp': 'resendOtp',
+          'reset-password-request': 'resetPasswordRequest',
+          'reset-password': 'resetPassword'
+        }[authActionMatch[1]];
+        if (typeof authHandlers[handlerName] !== 'function') throw new Error(`auth_${authActionMatch[1]}_unsupported`);
+        const body = await readBody(request, maxBodyBytes);
+        return json(response, 200, await maybe(authHandlers[handlerName]({
+          appKey,
+          body: body || {},
+          request
+        })), cors);
+      }
+
+      const providerLoginMatch = remainder.match(/^auth\/([^/]+)\/login$/);
+      if (providerLoginMatch && request.method === 'GET') {
+        if (typeof authHandlers.providerLogin !== 'function') throw new Error('auth_provider_login_unsupported');
+        const provider = safeKey(decodeURIComponent(providerLoginMatch[1]), 'auth_provider');
+        const result = await maybe(authHandlers.providerLogin({
+          appKey,
+          provider,
+          fromUrl: url.searchParams.get('from_url') || '/',
+          request
+        }));
+        const target = typeof result === 'string' ? result : result?.redirect_url;
+        return redirect(response, target, Number(result?.status || 302), cors);
       }
 
       return json(response, 404, { error: 'route_not_found' }, cors);
