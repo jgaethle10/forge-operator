@@ -90,17 +90,31 @@ jobs:
             "callout":"One phenomenon, one visual grammar."
           }
           JSON
-          npm run media:studio -- phenomenon /tmp/phenomenon-ci.json /tmp/phenomenon-ci.html /tmp/phenomenon-ci.receipt.json
+          npm run media:studio -- phenomenon-stage /tmp/phenomenon-ci.json /tmp/phenomenon-ci.stage.json /tmp/phenomenon-ci.receipt.json
+          npm run media:studio -- stage /tmp/phenomenon-ci.stage.json /tmp/phenomenon-ci.html
           node - <<'NODE'
           const fs=require('fs');
           const html=fs.readFileSync('/tmp/phenomenon-ci.html','utf8');
           const receipt=JSON.parse(fs.readFileSync('/tmp/phenomenon-ci.receipt.json','utf8'));
+          const stage=JSON.parse(fs.readFileSync('/tmp/phenomenon-ci.stage.json','utf8'));
           if(!html.includes('__evercraftRenderFrame')) throw new Error('frame_hook_missing');
           if(!html.includes('BRIGHTNESS =')) throw new Error('semantic_legend_missing');
           if(receipt.evidence_state!=='synthetic_visualization') throw new Error('evidence_state_laundered');
+          if(receipt.distributed_render_compatible!==true) throw new Error('distributed_render_boundary_missing');
           if(receipt.publication_authority!==false) throw new Error('publication_authority_leak');
-          console.log(JSON.stringify({digest:receipt.digest,streams:receipt.stream_count,samples:receipt.sample_count}));
+          if(stage.layers?.[0]?.kind!=='phenomenon') throw new Error('phenomenon_layer_missing');
+          stage.fps=12;
+          fs.writeFileSync('/tmp/phenomenon-ci.stage.json',JSON.stringify(stage,null,2));
+          fs.writeFileSync('/tmp/phenomenon-ci.render-input.json',JSON.stringify({
+            id:'phenomenon-ci-render',
+            stage,
+            assetScopeId:'phenomenon-ci-assets',
+            assets:[],
+            maxFramesPerShard:12
+          },null,2));
+          console.log(JSON.stringify({stage_digest:receipt.stage_digest,streams:receipt.stream_count,samples:receipt.sample_count}));
           NODE
+          npm run media:studio -- render-plan /tmp/phenomenon-ci.render-input.json /tmp/phenomenon-ci.render-plan.json
 
       - name: Ensure FFmpeg
         run: |
@@ -256,6 +270,27 @@ jobs:
             /tmp/global-ops-canary.mp4 \
             /tmp/global-ops-canary.receipt.json
 
+      - name: Render Phenomenon Canvas through the fabric
+        env:
+          FALLEN_RENDER_WORKERS: >-
+            [{"id":"studio-a","url":"http://127.0.0.1:8794","token":"studio-a"},{"id":"studio-b","url":"http://127.0.0.1:8795","token":"studio-b"}]
+        run: |
+          node systemia/media-studio/distributed-render-coordinator.mjs \
+            /tmp/phenomenon-ci.render-plan.json \
+            /tmp/phenomenon-ci.mp4 \
+            /tmp/phenomenon-ci.render.receipt.json
+          node - <<'NODE'
+          const fs=require('fs');
+          const receipt=JSON.parse(fs.readFileSync('/tmp/phenomenon-ci.render.receipt.json','utf8'));
+          if(receipt.schema!=='evercraft.fallen.distributed-render-receipt.v1') throw new Error('phenomenon_receipt_schema');
+          if(receipt.workers.length!==2) throw new Error('phenomenon_two_workers_not_used');
+          if(receipt.total_frames!==48) throw new Error('phenomenon_frame_count');
+          if(receipt.boundaries?.every_frame_sha256_verified!==true) throw new Error('phenomenon_frame_verification_missing');
+          if(receipt.boundaries?.publication_authority!==false) throw new Error('phenomenon_publication_authority_leak');
+          if(!fs.statSync('/tmp/phenomenon-ci.mp4').size) throw new Error('phenomenon_movie_empty');
+          console.log(JSON.stringify({output_sha256:receipt.output_sha256,frames:receipt.total_frames,workers:receipt.workers}));
+          NODE
+
       - name: Verify rendered studio canary
         run: |
           node - <<'NODE'
@@ -283,6 +318,10 @@ jobs:
           cp /tmp/global-ops-canary.receipt.json "$GITHUB_WORKSPACE/artifacts/studio-world-canary/"
           cp /tmp/global-ops.stage.json "$GITHUB_WORKSPACE/artifacts/studio-world-canary/"
           cp /tmp/global-ops.render-plan.json "$GITHUB_WORKSPACE/artifacts/studio-world-canary/"
+          cp /tmp/phenomenon-ci.mp4 "$GITHUB_WORKSPACE/artifacts/studio-world-canary/"
+          cp /tmp/phenomenon-ci.render.receipt.json "$GITHUB_WORKSPACE/artifacts/studio-world-canary/"
+          cp /tmp/phenomenon-ci.stage.json "$GITHUB_WORKSPACE/artifacts/studio-world-canary/"
+          cp /tmp/phenomenon-ci.render-plan.json "$GITHUB_WORKSPACE/artifacts/studio-world-canary/"
 
       - name: Upload watchable studio specimen
         uses: actions/upload-artifact@v4
