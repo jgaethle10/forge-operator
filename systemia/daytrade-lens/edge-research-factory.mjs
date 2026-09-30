@@ -25,6 +25,14 @@ function uniq(values) {
   return [...new Set((values || []).filter(Boolean))];
 }
 
+const NY_MARKET_CLOCK = new Intl.DateTimeFormat("en-US", {
+  timeZone: "America/New_York",
+  weekday: "short",
+  hour: "2-digit",
+  minute: "2-digit",
+  hourCycle: "h23",
+});
+
 function normalizeBars(rows = []) {
   return rows
     .map((row) => ({
@@ -33,6 +41,17 @@ function normalizeBars(rows = []) {
     }))
     .filter((row) => row.t && Number.isFinite(row.c) && row.c > 0)
     .sort((a,b) => new Date(a.t) - new Date(b.t));
+}
+
+export function filterCoreSessionBars(rows = []) {
+  return normalizeBars(rows).filter((row) => {
+    const parts = Object.fromEntries(
+      NY_MARKET_CLOCK.formatToParts(new Date(row.t)).map((part) => [part.type, part.value])
+    );
+    if (parts.weekday === "Sat" || parts.weekday === "Sun") return false;
+    const minuteOfDay = Number(parts.hour) * 60 + Number(parts.minute);
+    return minuteOfDay >= 570 && minuteOfDay < 960;
+  });
 }
 
 function firstBarAtOrAfter(bars, timestamp) {
@@ -68,12 +87,12 @@ export function measureRockiesHypotheses(hypotheses, barsBySymbol, {
   benchmark = "SPY",
   lagBars = FIVE_MINUTE_LAG_BARS,
 } = {}) {
-  const benchmarkBars = normalizeBars(barsBySymbol?.[benchmark] || []);
+  const benchmarkBars = filterCoreSessionBars(barsBySymbol?.[benchmark] || []);
   const rows = [];
 
   for (const hypothesis of hypotheses || []) {
     for (const instrument of hypothesis.research_instruments || []) {
-      const instrumentBars = normalizeBars(barsBySymbol?.[instrument] || []);
+      const instrumentBars = filterCoreSessionBars(barsBySymbol?.[instrument] || []);
       if (!instrumentBars.length || !benchmarkBars.length) continue;
 
       for (const lag of hypothesis.lag_windows || []) {
