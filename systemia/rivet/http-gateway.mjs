@@ -14,7 +14,8 @@ export function registerRivetReportGateway(app,{
   sourceUrl=process.env.ALIEV_YARD_SOURCE_URL || '',
   stateDir=process.env.RIVET_REPORT_STATE_DIR || path.join('/tmp','evercraft-rivet-report'),
   generate=generateYardReport,
-  sourceRequired=generate===generateYardReport
+  sourceRequired=generate===generateYardReport,
+  relay=null
 }={}){
   const sourceReady=()=>!sourceRequired || Boolean(clean(sourceUrl));
   const configured=()=>Boolean(clean(gatewayToken) && clean(systemiaMachineKey) && sourceReady());
@@ -24,7 +25,9 @@ export function registerRivetReportGateway(app,{
       ok:true,
       service:'rivet-yard-report-gateway',
       runtime:'Forge/Yard',
-      configured:Boolean(clean(gatewayToken) && clean(systemiaMachineKey) && clean(sourceUrl)),
+      configured:configured(),
+      source_required:Boolean(sourceRequired),
+      notification_fabric_connected:Boolean(relay && typeof relay.enqueueIntent==='function'),
       owned_source_configured:Boolean(clean(sourceUrl) && !/(^|\\.)base44\\.app$/i.test((()=>{try{return new URL(sourceUrl).hostname}catch{return ''}})())),
       base44_source_refused:true,
       source_contract:'rivet_report_snapshot_v1',
@@ -50,6 +53,11 @@ export function registerRivetReportGateway(app,{
       res.status(400).json({ok:false,error:'address_required'});
       return;
     }
+    const notificationPrincipalId=clean(req.body?.notification_principal_id);
+    if(notificationPrincipalId.length>256 || /[\u0000-\u001f\u007f]/.test(notificationPrincipalId)){
+      res.status(400).json({ok:false,error:'notification_principal_id_invalid'});
+      return;
+    }
 
     try{
       const progress=[];
@@ -61,16 +69,72 @@ export function registerRivetReportGateway(app,{
         stateDir,
         onProgress:event=>progress.push(event)
       });
+      let notification={state:notificationPrincipalId?'relay_unavailable':'not_requested'};
+      if(notificationPrincipalId && relay && typeof relay.enqueueIntent==='function'){
+        const notificationKey=sha256(Buffer.from(String(record.report_id)+'|'+notificationPrincipalId)).slice(0,24);
+        const notificationId='rivet-report-ready:'+notificationKey;
+        try{
+          const queued=relay.enqueueIntent({
+            id:notificationId,
+            product:'rivet',
+            purpose:'transactional',
+            priority:'normal',
+            title:'RIVET report ready',
+            body:'Your site opportunity report is ready.',
+            recipient_ids:[notificationPrincipalId],
+            dedupe_key:'report-ready:'+String(record.report_id),
+            dedupe_window_seconds:86400,
+            data:{
+              action:'open_rivet_report',
+              report_id:String(record.report_id),
+              generation_state:'ready'
+            }
+          },{
+            idempotencyKey:'rivet:report-ready:'+notificationKey
+          });
+          notification={
+            state:queued?.job?.duplicate?'already_queued':'queued',
+            job_id:queued?.job?.id || null,
+            notification_id:notificationId
+          };
+        }catch{
+          notification={state:'enqueue_failed'};
+        }
+      }
       res.status(201).json({
         ok:true,
         progress:progress.at(-1) || null,
+        notification,
         ...record
       });
     }catch(error){
+      let operator_signal={state:'relay_unavailable'};
+      if(relay && typeof relay.enqueueSignal==='function'){
+        const rawCode=clean(error instanceof Error ? error.message : error).split(':')[0];
+        const errorCode=(rawCode || 'report_generation_failed').replace(/[^a-zA-Z0-9._-]/g,'_').slice(0,96);
+        try{
+          const queued=relay.enqueueSignal({
+            product:'rivet',
+            source:'rivet-yard-report-gateway',
+            kind:'report_generation_failed',
+            component:'owned-yard-gateway',
+            error_code:errorCode,
+            status:'failed',
+            evidence_state:'live_verified',
+            impact:'report_generation_failed',
+            summary:'RIVET report generation failed in the owned Yard gateway.',
+            recipient:'company-ops'
+          });
+          operator_signal={state:queued?.job?.duplicate?'already_queued':'queued',job_id:queued?.job?.id || null};
+        }catch{
+          operator_signal={state:'enqueue_failed'};
+        }
+      }
       res.status(502).json({
         ok:false,
         error:'rivet_report_generation_failed',
-        detail:error instanceof Error ? error.message : String(error)
+        detail:error instanceof Error ? error.message : String(error),
+        operator_signal
       });
     }
   });
