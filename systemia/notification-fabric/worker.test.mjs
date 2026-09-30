@@ -35,7 +35,7 @@ test('outbox deduplicates producer retries by idempotency key', () => {
   const second = outbox.enqueue({
     kind: 'intent',
     idempotency_key: 'rivet-report-123',
-    payload: { intent: { id: 'notice-2' } },
+    payload: { intent: { id: 'notice-1' } },
     now: 2_000,
   });
   assert.equal(first.duplicate, false);
@@ -169,6 +169,8 @@ test('unacknowledged critical work escalates and later acknowledgement stops the
   await worker.runOnce({ now: 1_000_000 });
   assert.equal(outbox.get(job.id).status, 'completed');
   assert.equal(sent.length, 1);
+  assert.equal(sent[0].acknowledgement.required, true);
+  assert.equal(sent[0].acknowledgement.due_at, new Date(1_015_000).toISOString());
 
   const firstWatch = Object.values(JSON.parse(fs.readFileSync(outbox.file, 'utf8')).jobs)
     .find((entry) => entry.kind === 'ack_watch' && entry.payload?.escalation_level === 1);
