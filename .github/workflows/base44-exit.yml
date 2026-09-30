@@ -16,6 +16,8 @@ on:
       - 'tests/core-gateway.test.mjs'
       - 'systemia/core/supervisor.evercraft.compute.json'
       - 'scripts/validate-base44-exit.mjs'
+      - 'scripts/base44-exit-controller.mjs'
+      - 'tests/base44-exit-controller.test.mjs'
       - 'scripts/validate-base44-credit-firewall.mjs'
       - '.github/workflows/base44-exit.yml'
   push:
@@ -35,6 +37,8 @@ on:
       - 'tests/core-gateway.test.mjs'
       - 'systemia/core/supervisor.evercraft.compute.json'
       - 'scripts/validate-base44-exit.mjs'
+      - 'scripts/base44-exit-controller.mjs'
+      - 'tests/base44-exit-controller.test.mjs'
       - 'scripts/validate-base44-credit-firewall.mjs'
       - '.github/workflows/base44-exit.yml'
 
@@ -49,6 +53,8 @@ jobs:
           node-version: '22'
       - name: Validate Base44 exit policy
         run: node scripts/validate-base44-exit.mjs
+      - name: Prove full observed estate coverage
+        run: node --test tests/base44-exit-controller.test.mjs
       - name: Validate Base44 integration credit firewall
         run: node scripts/validate-base44-credit-firewall.mjs
       - name: Prove Evercraft Core Gateway
