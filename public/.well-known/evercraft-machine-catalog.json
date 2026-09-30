@@ -2,10 +2,10 @@
   "schema": "evercraft.machine-catalog.snapshot.v1",
   "provider": "Evercraft LLC",
   "purpose": "Public-safe snapshot of the canonical Evercraft machine-commerce catalog for AI/search/agent discovery. This file grants no private access and creates no payment authority.",
-  "source_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=catalog",
-  "source_schema_version": "2026-09-28.2",
-  "gateway_version": "evercraft-machine-commerce-gateway-v0.9.1",
-  "source_generated_at": "2026-09-29T01:40:00.000Z",
+  "source_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-machine-catalog.json",
+  "source_schema_version": "evercraft-owned-migration-2026-09-30",
+  "gateway_version": "migration-hold-owned-runtime",
+  "source_generated_at": "2026-09-30T22:20:00.000Z",
   "generated_at": "2026-09-30T19:12:06.848Z",
   "offer_count": 46,
   "sell_now_count": 14,
@@ -1629,5 +1629,7 @@
       "live_canary_evidence": null,
       "catalog_version": "2026-09-30"
     }
-  ]
+  ],
+  "migration_state": "base44_evacuation",
+  "migration_note": "This checked-in catalog is the owned source during Base44 evacuation. Transactional machine invocation remains disabled until the owned Yard/Fabric edge passes live verification."
 }
