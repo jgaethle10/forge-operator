@@ -7,6 +7,7 @@ import test from 'node:test';
 import { createNotificationFabric } from './fabric.mjs';
 import { createRelayOutbox } from './outbox.mjs';
 import { createRelayWorker } from './worker.mjs';
+import { registerNotificationFabricRoutes } from './http.mjs';
 
 function makeSubscription(principalId = 'owner', endpoint = 'https://push.example.test/message/worker') {
   const receiver = crypto.createECDH('prime256v1');
@@ -345,4 +346,36 @@ test('acknowledgement target reconstruction survives a deduped recovery result',
   const watch = jobs.find((entry) => entry.kind === 'ack_watch');
   assert.ok(watch);
   assert.deepEqual(watch.payload.principal_ids, ['owner']);
+});
+
+
+test('registered Relay runtime exposes canonical durable enqueue without leaking outbox internals to products', () => {
+  const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'relay-runtime-'));
+  const app = {
+    use() {},
+    get() {},
+    post() {},
+    delete() {},
+  };
+  const relay = registerNotificationFabricRoutes(app, {
+    dataDir,
+    workerEnabled: false,
+    ingestToken: 'test-ingest-token',
+    sendPush: async () => ({ ok: true, status: 201, retryAfter: null }),
+  });
+  const raw = {
+    id: 'runtime-enqueue-1',
+    product: 'rivet',
+    purpose: 'transactional',
+    title: 'Report ready',
+    body: 'Your RIVET report is ready.',
+    recipient_ids: ['owner'],
+  };
+  const first = relay.enqueueIntent(raw, { idempotencyKey: 'rivet:runtime-enqueue-1' });
+  const second = relay.enqueueIntent(raw, { idempotencyKey: 'rivet:runtime-enqueue-1' });
+  assert.equal(first.job.duplicate, false);
+  assert.equal(second.job.duplicate, true);
+  assert.equal(first.job.id, second.job.id);
+  assert.equal(first.intent.id, 'runtime-enqueue-1');
+  assert.equal(relay.outbox.get(first.job.id).kind, 'intent');
 });
