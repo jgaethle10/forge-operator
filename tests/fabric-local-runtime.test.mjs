@@ -1,5 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 import {
   nativeOnlyCatalog,
   startFabricLocalRuntime,
@@ -114,5 +117,35 @@ test('Fabric public customer front door is branded, browsable, and policy-safe',
     assert.match(privacy,/Information processed/);
   } finally {
     await runtime.close();
+  }
+});
+
+
+test('OpenAI challenge can rotate through a public release artifact without restarting Fabric',async()=>{
+  const root=fs.mkdtempSync(path.join(os.tmpdir(),'evercraft-openai-challenge-'));
+  const challengeFile=path.join(root,'openai-apps-challenge.txt');
+  const first='OpenAIChallenge_First_abcdefghijklmnopqrstuvwxyz123456';
+  const second='OpenAIChallenge_Second_abcdefghijklmnopqrstuvwxyz123456';
+  fs.writeFileSync(challengeFile,first+'\n');
+
+  const runtime=await startFabricLocalRuntime({
+    host:'127.0.0.1',
+    port:0,
+    catalog,
+    challengeFile,
+  });
+  try {
+    const firstResponse=await fetch(runtime.url+'/.well-known/openai-apps-challenge');
+    assert.equal(firstResponse.status,200);
+    assert.equal(await firstResponse.text(),first);
+
+    fs.writeFileSync(challengeFile,second+'\n');
+
+    const secondResponse=await fetch(runtime.url+'/.well-known/openai-apps-challenge');
+    assert.equal(secondResponse.status,200);
+    assert.equal(await secondResponse.text(),second);
+  } finally {
+    await runtime.close();
+    fs.rmSync(root,{recursive:true,force:true});
   }
 });
