@@ -5,13 +5,13 @@
   <url><loc>/chum/index.json</loc><lastmod>2026-09-29T05:53:29.457Z</lastmod></url>
   <url><loc>/chum/revenue.html</loc><lastmod>2026-09-28T19:03:48.848Z</lastmod></url>
   <url><loc>/chum/capabilities/</loc><lastmod>2026-09-29T02:24:28.186Z</lastmod></url>
-  <url><loc>/chum/capabilities.json</loc><lastmod>2026-09-30T19:03:13.199Z</lastmod></url>
+  <url><loc>/chum/capabilities.json</loc><lastmod>2026-09-30T19:12:08.593Z</lastmod></url>
   <url><loc>/chum/sell-now.html</loc><lastmod>2026-09-28T19:03:48.848Z</lastmod></url>
-  <url><loc>/chum/sell-now.json</loc><lastmod>2026-09-30T19:03:13.199Z</lastmod></url>
+  <url><loc>/chum/sell-now.json</loc><lastmod>2026-09-30T19:12:08.593Z</lastmod></url>
   <url><loc>/chum/sell-now.txt</loc><lastmod>2026-09-30T07:16:23.209Z</lastmod></url>
   <url><loc>/chum/revenue.txt</loc><lastmod>2026-09-28T19:03:48.848Z</lastmod></url>
-  <url><loc>/chum/revenue.json</loc><lastmod>2026-09-30T19:03:13.199Z</lastmod></url>
-  <url><loc>/chum/agent-commerce.json</loc><lastmod>2026-09-30T19:03:13.199Z</lastmod></url>
+  <url><loc>/chum/revenue.json</loc><lastmod>2026-09-30T19:12:08.593Z</lastmod></url>
+  <url><loc>/chum/agent-commerce.json</loc><lastmod>2026-09-30T19:12:08.593Z</lastmod></url>
   <url><loc>/chum/agent-commerce.txt</loc><lastmod>2026-09-28T19:03:48.848Z</lastmod></url>
   <url><loc>/chum/agent-commerce.html</loc><lastmod>2026-09-28T19:03:48.848Z</lastmod></url>
   <url><loc>/chum/pain-index.json</loc><lastmod>2026-09-29T19:18:34.761Z</lastmod></url>
@@ -22,7 +22,7 @@
   <url><loc>/chum/answers/observed/</loc><lastmod>2026-09-27T06:03:00.949Z</lastmod></url>
   <url><loc>/chum/answers/observed/index.json</loc><lastmod>2026-09-27T06:03:00.949Z</lastmod></url>
   <url><loc>/chum/hot/</loc><lastmod>2026-09-30T19:11:27.078Z</lastmod></url>
-  <url><loc>/chum/hot/index.json</loc><lastmod>2026-09-30T19:11:27.078Z</lastmod></url>
+  <url><loc>/chum/hot/index.json</loc><lastmod>2026-09-30T19:12:08.593Z</lastmod></url>
   <url><loc>/chum/strike/</loc><lastmod>2026-09-30T18:55:38.814Z</lastmod></url>
   <url><loc>/chum/strike/index.json</loc><lastmod>2026-09-30T19:11:27.078Z</lastmod></url>
   <url><loc>/chum/crawler-radar.json</loc><lastmod>2026-09-30T19:11:27.078Z</lastmod></url>
@@ -131,11 +131,11 @@
   <url><loc>/.well-known/agent-card.json</loc><lastmod>2026-09-29T18:57:38.943Z</lastmod></url>
   <url><loc>/.well-known/agent.json</loc><lastmod>2026-09-29T18:57:38.943Z</lastmod></url>
   <url><loc>/.well-known/evercraft-agent-directory.json</loc><lastmod>2026-09-29T19:18:34.761Z</lastmod></url>
-  <url><loc>/.well-known/evercraft-agent-commerce.json</loc><lastmod>2026-09-30T19:03:13.199Z</lastmod></url>
+  <url><loc>/.well-known/evercraft-agent-commerce.json</loc><lastmod>2026-09-30T19:12:08.593Z</lastmod></url>
   <url><loc>/.well-known/evercraft-agent-interfaces.json</loc><lastmod>2026-09-28T18:59:42.997Z</lastmod></url>
   <url><loc>/.well-known/evercraft-discovery.json</loc><lastmod>2026-09-29T18:40:12.557Z</lastmod></url>
   <url><loc>/.well-known/evercraft-products.json</loc><lastmod>2026-09-29T19:16:09.538Z</lastmod></url>
-  <url><loc>/.well-known/evercraft-machine-catalog.json</loc><lastmod>2026-09-30T19:11:26.502Z</lastmod></url>
+  <url><loc>/.well-known/evercraft-machine-catalog.json</loc><lastmod>2026-09-30T19:12:08.593Z</lastmod></url>
   <url><loc>/.well-known/evercraft-chum.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/.well-known/evercraft-media-overflow.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
   <url><loc>/.well-known/evercraft-capabilities.json</loc><lastmod>2026-09-25T06:50:26.447Z</lastmod></url>
