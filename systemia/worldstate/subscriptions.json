@@ -9,24 +9,28 @@
       "weather_desk",
       "faie",
       "towi",
-      "evermaps"
+      "evermaps",
+      "daytrade_edge_lab"
     ],
     "climate": [
       "weather_desk",
       "faie",
       "towi",
-      "evermaps"
+      "evermaps",
+      "daytrade_edge_lab"
     ],
     "water": [
       "weather_desk",
       "faie",
       "towi",
-      "evermaps"
+      "evermaps",
+      "daytrade_edge_lab"
     ],
     "environment": [
       "faie",
       "towi",
-      "evermaps"
+      "evermaps",
+      "daytrade_edge_lab"
     ],
     "earth_hazards": [
       "faie",
@@ -52,34 +56,40 @@
       "towi",
       "evermaps",
       "rivet",
-      "omnicore"
+      "omnicore",
+      "daytrade_edge_lab"
     ],
     "transport": [
       "faie",
       "towi",
       "evermaps",
       "rivet",
-      "omnicore"
+      "omnicore",
+      "daytrade_edge_lab"
     ],
     "energy": [
       "faie",
       "towi",
       "evermaps",
-      "rivet"
+      "rivet",
+      "daytrade_edge_lab"
     ],
     "ai": [
       "portfolio_sentinel",
       "chum",
-      "security"
+      "security",
+      "daytrade_edge_lab"
     ],
     "cyber": [
       "portfolio_sentinel",
       "chum",
-      "security"
+      "security",
+      "daytrade_edge_lab"
     ],
     "economy": [
       "faie",
-      "household_fabric"
+      "household_fabric",
+      "daytrade_edge_lab"
     ],
     "household": [
       "household_fabric"
@@ -89,75 +99,87 @@
       "towi",
       "evermaps",
       "weather_desk",
-      "omnicore"
+      "omnicore",
+      "daytrade_edge_lab"
     ],
     "space_weather": [
       "faie",
       "towi",
       "evermaps",
       "emergency_command",
-      "network"
+      "network",
+      "daytrade_edge_lab"
     ],
     "aviation": [
       "faie",
       "towi",
       "evermaps",
       "omnicore",
-      "skyops"
+      "skyops",
+      "daytrade_edge_lab"
     ],
     "maritime": [
       "faie",
       "towi",
       "evermaps",
-      "omnicore"
+      "omnicore",
+      "daytrade_edge_lab"
     ],
     "telecom": [
       "faie",
       "towi",
       "evermaps",
       "network",
-      "portfolio_sentinel"
+      "portfolio_sentinel",
+      "daytrade_edge_lab"
     ],
     "robotics": [
       "faie",
       "towi",
-      "portfolio_sentinel"
+      "portfolio_sentinel",
+      "daytrade_edge_lab"
     ],
     "semiconductors": [
       "faie",
       "towi",
       "portfolio_sentinel",
-      "rivet"
+      "rivet",
+      "daytrade_edge_lab"
     ],
     "industrial": [
       "faie",
       "towi",
       "evermaps",
-      "portfolio_sentinel"
+      "portfolio_sentinel",
+      "daytrade_edge_lab"
     ],
     "supply_chain": [
       "faie",
       "towi",
       "evermaps",
       "household_fabric",
-      "omnicore"
+      "omnicore",
+      "daytrade_edge_lab"
     ],
     "agriculture": [
       "faie",
       "towi",
       "evermaps",
-      "household_fabric"
+      "household_fabric",
+      "daytrade_edge_lab"
     ],
     "food": [
       "faie",
       "towi",
       "household_fabric",
-      "global_health_atlas"
+      "global_health_atlas",
+      "daytrade_edge_lab"
     ],
     "public_health": [
       "towi",
       "evermaps",
-      "global_health_atlas"
+      "global_health_atlas",
+      "daytrade_edge_lab"
     ],
     "biology": [
       "towi",
@@ -171,29 +193,34 @@
     "labor": [
       "faie",
       "towi",
-      "household_fabric"
+      "household_fabric",
+      "daytrade_edge_lab"
     ],
     "housing": [
       "faie",
       "towi",
       "evermaps",
       "household_fabric",
-      "eps"
+      "eps",
+      "daytrade_edge_lab"
     ],
     "construction": [
       "faie",
       "towi",
       "evermaps",
-      "eps"
+      "eps",
+      "daytrade_edge_lab"
     ],
     "regulation": [
       "faie",
       "towi",
-      "portfolio_sentinel"
+      "portfolio_sentinel",
+      "daytrade_edge_lab"
     ],
     "public_policy": [
       "faie",
-      "towi"
+      "towi",
+      "daytrade_edge_lab"
     ],
     "general": [
       "faie",
