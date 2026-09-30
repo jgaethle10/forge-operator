@@ -172,6 +172,7 @@ jobs:
             artifacts/portfolio-sentinel/estate-convergence.json
             artifacts/portfolio-sentinel/admission.json
             artifacts/portfolio-sentinel/repair-memory.json
+            artifacts/portfolio-sentinel/repair-unit-state.json
             artifacts/human-experience/latest.json
             artifacts/saban-multiplier/human-experience-latest.json
             artifacts/customer-gauntlet/latest.json
@@ -188,14 +189,15 @@ jobs:
             echo
             echo "Cadence: 5 minutes"
             echo "Coverage: raw estate reconciliation + public products + conformance + MCP publication + all known canonical URLs (up to 200/cycle) + GitHub + workflows + Systemia resident services + machine discovery + capability-promotion queue"
-            echo "Bounded failed-workflow retry: autonomous for newly observed failures"
+            echo "Repair Unit: persistent bounded repair pressure until verified green or quarantined"
+            echo "Failed-workflow retry: autonomous while incident remains active"
             echo "Architectural invariants: enforced before green"
             echo "Human experience gate: Saban fan-out + owned browser visual receipts; BLOCKED never equals PASS"
             echo "Trigger modes: push + schedule + manual simulated from one shared policy"
             echo "Repair memory: learned failure fingerprints mapped to bounded recipes"
             echo "Health gate: critical/high findings fail closed until cleared"
             echo "Journal freshness floor: checked every cycle; >24h warns and >36h becomes a blocking portfolio finding"
-            echo "Production mutation: human-gated"
+            echo "Production mutation: bounded recipes autonomous; high-blast-radius/identity/legal/payment mutations human-gated"
             echo
             for FILE in artifacts/portfolio-sentinel/latest.json artifacts/portfolio-sentinel/estate-convergence.json artifacts/portfolio-sentinel/repair-queue.json artifacts/portfolio-sentinel/repair-memory.json artifacts/human-experience/latest.json artifacts/capability-promotion/latest.json; do
               if [ -f "$FILE" ]; then
