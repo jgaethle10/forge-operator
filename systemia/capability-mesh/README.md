@@ -226,3 +226,16 @@ free_part_triage
 It creates no charge and can produce an evidence-aware Part Passport. Paid Quick/Deep/Rescue hunts, checkout, vendor contact, purchase, fitment claims, inventory claims and successful resolution are not inherited by this contract.
 
 That lets Systemia route free triage through the shared trust chain while keeping commercial and compatibility claims behind their own evidence and human-confirmation boundaries.
+
+
+## EventWave canary contract
+
+EventWave is the fifth shared-runtime contract and the eighth explicit product contract overall.
+
+The contracted action is bounded public event discovery:
+
+```
+event.search
+```
+
+Paid labeled promotion, publishing, checkout, payment, ticketing, booking and venue-relationship claims remain outside the contract. Search can therefore use the shared trust chain without turning discovery into commerce or publication.
