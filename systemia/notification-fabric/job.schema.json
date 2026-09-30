@@ -99,6 +99,10 @@
     "request_fingerprint": {
       "type": "string",
       "pattern": "^[a-f0-9]{64}$"
+    },
+    "failures": {
+      "type": "integer",
+      "minimum": 0
     }
   },
   "additionalProperties": true
