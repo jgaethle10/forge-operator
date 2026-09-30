@@ -78,3 +78,11 @@ console.log(JSON.stringify({
   forward_paper_gate_only: true,
   live_trade_authority: false,
 }));
+
+
+assert.throws(
+  () => adversarialValidateCandidates({ evaluations, measurements: [] }, {
+    transaction_cost_bps: 2,
+  }),
+  /edge_adversarial_measurement_evidence_missing/
+);
