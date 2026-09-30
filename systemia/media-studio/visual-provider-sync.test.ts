@@ -5,6 +5,7 @@ import path from 'node:path';
 import test from 'node:test';
 import {
   createSyncLabsLipAdapter,
+  stageSyncLabsAsset,
   syncLabsLipEndpoint,
 } from './visual-provider-sync.js';
 import type { VisualModelJob } from './model-fabric.js';
@@ -148,7 +149,76 @@ test('paid generation stays fail-closed until explicitly authorized',async()=>{
   await assert.rejects(()=>adapter.execute(job()),/sync_paid_generation_not_authorized/);
 });
 
-test('refuses local/data references until an owned hosting or upload bridge exists',async()=>{
+test('supports already-staged Sync provider assets in generation inputs',async()=>{
+  const staged=job();
+  staged.references[0].locator={kind:'provider_asset',providerId:'sync',id:'video-asset-1'};
+  staged.references[1].locator={kind:'provider_asset',providerId:'sync',id:'audio-asset-1'};
+  let createBody:any=null;
+  const adapter=createSyncLabsLipAdapter({
+    apiKey:'secret',modelId:'sync-3',
+    outputDir:fs.mkdtempSync(path.join(os.tmpdir(),'fallen-sync-assets-')),
+    verified:true,commercialRights:'allowed',allowPaidGeneration:true,
+    pollIntervalMs:0,maxPolls:1,
+    fetchImpl:async(url,init)=>{
+      if(url.endsWith('/v2/generate')){
+        createBody=JSON.parse(String(init?.body));
+        return response({status:201,json:{id:'generation-asset',status:'PENDING'}}) as any;
+      }
+      if(url.includes('/v2/generate/generation-asset')){
+        return response({json:{id:'generation-asset',status:'COMPLETED',outputUrl:'https://cdn.sync.test/assets.mp4',outputDuration:4}}) as any;
+      }
+      return response({bytes:Buffer.from('asset-output')}) as any;
+    }
+  });
+  await adapter.execute(staged);
+  assert.deepEqual(createBody.input,[
+    {type:'video',assetId:'video-asset-1'},
+    {type:'audio',assetId:'audio-asset-1'},
+  ]);
+});
+
+test('stages local Evercraft media through Sync presign, raw PUT, and asset registration',async()=>{
+  const root=fs.mkdtempSync(path.join(os.tmpdir(),'fallen-sync-stage-'));
+  const file=path.join(root,'eli-dialogue.wav');
+  fs.writeFileSync(file,Buffer.from('dialogue-bytes'));
+  const calls:Array<{url:string;init:any}>=[];
+  const staged=await stageSyncLabsAsset({
+    apiKey:'secret',
+    filePath:file,
+    contentType:'audio/wav',
+    assetType:'AUDIO',
+    fetchImpl:async(url,init)=>{
+      calls.push({url,init});
+      if(url.endsWith('/v2/assets/upload')){
+        return response({status:201,json:{
+          uploadUrl:'https://uploads.sync.test/presigned',
+          url:'https://assets.sync.test/eli-dialogue.wav'
+        }}) as any;
+      }
+      if(url==='https://uploads.sync.test/presigned'){
+        assert.equal(init?.method,'PUT');
+        assert.equal(init?.headers['Content-Type'],'audio/wav');
+        assert.equal(Buffer.isBuffer(init?.body),true);
+        assert.equal((init?.body as Buffer).toString(),'dialogue-bytes');
+        assert.equal(init?.headers['x-api-key'],undefined);
+        return response({}) as any;
+      }
+      if(url.endsWith('/v2/assets')){
+        const body=JSON.parse(String(init?.body));
+        assert.equal(body.type,'AUDIO');
+        assert.equal(body.url,'https://assets.sync.test/eli-dialogue.wav');
+        return response({status:201,json:{id:'asset-audio-123'}}) as any;
+      }
+      throw new Error('unexpected_url:'+url);
+    }
+  });
+  assert.equal(staged.assetId,'asset-audio-123');
+  assert.deepEqual(staged.locator,{kind:'provider_asset',providerId:'sync',id:'asset-audio-123'});
+  assert.equal(staged.sourceSha256.length,64);
+  assert.equal(calls.length,3);
+});
+
+test('refuses unbounded data references instead of silently treating them as uploaded assets',async()=>{
   const bad=job();
   bad.references[0].locator={
     kind:'data_uri',
