@@ -129,9 +129,10 @@ export async function executeSpecialistMcpRpc(
 
 export function registerSpecialistHandoffMcps(
   app: Express,
-  options: { gatewayUrl: string },
+  options: { gatewayUrl?: string; gatewayFetch?: GatewayFetch },
 ) {
-  const gatewayFetch: GatewayFetch = async (action, publicId) => {
+  const resolvedGatewayFetch: GatewayFetch = options.gatewayFetch || (async (action, publicId) => {
+    if (!options.gatewayUrl) throw new Error('Machine Commerce gateway is not configured.');
     const target = new URL(options.gatewayUrl);
     if (target.protocol !== 'https:') throw new Error('Machine Commerce gateway must use HTTPS.');
     target.searchParams.set('action', action);
@@ -155,7 +156,7 @@ export function registerSpecialistHandoffMcps(
     } finally {
       clearTimeout(timer);
     }
-  };
+  });
 
   for (const def of specialistHandoffDefinitions) {
     app.get(def.path, (req: Request, res: Response) => {
@@ -185,7 +186,7 @@ export function registerSpecialistHandoffMcps(
       res.setHeader('Access-Control-Allow-Origin', '*');
       res.setHeader('Cache-Control', 'no-store');
       try {
-        const response = await executeSpecialistMcpRpc(def, req.body, gatewayFetch);
+        const response = await executeSpecialistMcpRpc(def, req.body, resolvedGatewayFetch);
         if (response === null) {
           res.status(202).end();
           return;
