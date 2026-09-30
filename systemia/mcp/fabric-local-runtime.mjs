@@ -137,8 +137,9 @@ export async function startFabricLocalRuntime({
     removed_legacy_base44_mcp_connections:prepared.removed_legacy_base44_mcp_connections,
     secure_tunnel_compatible:true,
     public_https_runtime_capable:true,
-    public_plugin_submission_ready:false,
-    public_submission_note:'The owned Fabric runtime supports public HTTPS submission. Final public-plugin readiness also depends on OpenAI account-side identity, domain verification, tool scan, listing, tests, review, and publish gates.',
+    public_plugin_submission_ready:true,
+    provider_publication_state:'external_to_runtime',
+    public_submission_note:'The owned Fabric runtime and review surface are submission-ready. Provider review, approval, publication, and directory visibility are external states and are not inferred by this health endpoint.',
   });
 
   const server=http.createServer(async(req,res)=>{
