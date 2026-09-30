@@ -2,6 +2,7 @@ import type {
   EvidenceState,
   GeoLayer,
   MetricLayer,
+  PhenomenonLayer,
   TextLayer,
   TimelineLayer,
   VisualLayer,
@@ -62,6 +63,29 @@ function layerMarkup(layer:VisualLayer){
     return `<svg class="layer geo-layer" data-layer="${esc(layer.id)}" viewBox="0 0 ${layer.width} ${layer.height}" style="${base}" xmlns="http://www.w3.org/2000/svg"></svg>`;
   }
 
+  if(layer.kind==='phenomenon'){
+    const phenomenon=layer as PhenomenonLayer;
+    const palette=phenomenon.colorEncoding?.palette?.length
+      ? phenomenon.colorEncoding.palette
+      : ['#2457ff','#00b7ff','#23e6c8','#f6d743','#ff633a'];
+    const colorLegend=phenomenon.colorEncoding
+      ? `<div class="phenomenon-legend-row"><span>${esc(phenomenon.colorEncoding.label)}</span><span class="phenomenon-gradient" style="background:linear-gradient(90deg,${palette.map(esc).join(',')})"></span><span>${phenomenon.colorEncoding.min}${esc(phenomenon.colorEncoding.unit??'')} → ${phenomenon.colorEncoding.max}${esc(phenomenon.colorEncoding.unit??'')}</span></div>`
+      : '';
+    const brightnessLegend=phenomenon.brightnessEncoding
+      ? `<div class="phenomenon-legend-row">BRIGHTNESS = ${esc(phenomenon.brightnessEncoding.label)}</div>`
+      : '';
+    return `<div class="layer phenomenon-layer" data-layer="${esc(layer.id)}" style="${base}">
+      <canvas data-phenomenon-canvas width="${layer.width}" height="${layer.height}"></canvas>
+      <div class="phenomenon-title">${esc(phenomenon.title)}</div>
+      ${phenomenon.subtitle? `<div class="phenomenon-subtitle">${esc(phenomenon.subtitle)}</div>` : ''}
+      <div class="phenomenon-time" data-phenomenon-time></div>
+      ${badge}
+      ${phenomenon.callout? `<div class="phenomenon-callout">${esc(phenomenon.callout)}</div>` : ''}
+      <div class="phenomenon-legend">${colorLegend}${brightnessLegend}<div class="phenomenon-legend-row">MOTION = ${esc(phenomenon.motionLabel)}</div></div>
+      <div class="phenomenon-source">Data: ${esc(phenomenon.sourceLabel)}</div>
+    </div>`;
+  }
+
   if(layer.kind==='timeline'){
     const timeline=layer as TimelineLayer;
     return `<div class="layer timeline-layer" data-layer="${esc(layer.id)}" style="${base}"><div class="timeline-rail"></div><div class="timeline-playhead"></div>${timeline.events.map(event=>`<div class="timeline-event" data-event-t="${event.t}" title="${esc(event.label)}"></div>`).join('')}${badge}</div>`;
@@ -119,6 +143,16 @@ body{display:flex;align-items:center;justify-content:center}
 .timeline-rail{position:absolute;left:0;right:0;top:50%;height:2px;background:var(--ev-timeline-rail)}
 .timeline-playhead{position:absolute;top:25%;bottom:25%;width:2px;background:var(--ev-timeline-playhead)}
 .timeline-event{position:absolute;top:42%;width:8px;height:8px;border-radius:50%;background:var(--ev-text)}
+.phenomenon-layer{overflow:hidden;background:#030609}.phenomenon-layer canvas{position:absolute;inset:0;width:100%;height:100%}
+.phenomenon-title{position:absolute;left:6.5%;top:4.5%;max-width:78%;font:650 52px/1.04 var(--ev-font,Montserrat,Arial,sans-serif);letter-spacing:.02em;text-shadow:0 2px 24px #000}
+.phenomenon-subtitle{position:absolute;left:6.6%;top:8.3%;font:500 22px var(--ev-font,Montserrat,Arial,sans-serif);letter-spacing:.08em;color:rgba(233,244,255,.72);text-transform:uppercase}
+.phenomenon-time{position:absolute;right:6.5%;top:4.7%;font:500 20px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.1em;color:rgba(233,244,255,.76)}
+.phenomenon-layer>.evidence-badge{left:auto;right:6.5%;top:8.2%;bottom:auto;background:rgba(3,6,9,.64)}
+.phenomenon-callout{position:absolute;left:6.5%;bottom:13.5%;max-width:78%;font:560 30px/1.18 var(--ev-font,Montserrat,Arial,sans-serif);text-shadow:0 2px 24px #000}
+.phenomenon-legend{position:absolute;left:6.5%;bottom:5.2%;display:flex;flex-direction:column;gap:8px;min-width:420px}
+.phenomenon-legend-row{display:flex;align-items:center;gap:14px;font:500 14px var(--ev-font,Montserrat,Arial,sans-serif);letter-spacing:.11em;text-transform:uppercase;color:rgba(233,244,255,.72)}
+.phenomenon-gradient{display:inline-block;width:260px;height:10px;border-radius:99px;border:1px solid rgba(255,255,255,.12)}
+.phenomenon-source{position:absolute;right:6.5%;bottom:5.1%;max-width:42%;text-align:right;font:500 13px/1.35 var(--ev-font,Montserrat,Arial,sans-serif);color:rgba(233,244,255,.52)}
 </style>
 </head>
 <body style="--ev-font:${esc(theme.fontFamily)};">
@@ -194,6 +228,28 @@ body{display:flex;align-items:center;justify-content:center}
     }
     return out;
   };
+  const phenCache=new Map();
+  const phenHash=s=>{let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return (h>>>0)/4294967295};
+  const phenHex=h=>{const x=String(h||'').replace('#','');const v=parseInt(x.length===3?x.split('').map(c=>c+c).join(''):x,16);return {r:(v>>16)&255,g:(v>>8)&255,b:v&255}};
+  const phenColor=(v,enc)=>{if(!enc)return {r:52,g:211,b:196};const pal=enc.palette&&enc.palette.length>1?enc.palette:['#2457ff','#00b7ff','#23e6c8','#f6d743','#ff633a'];const p=clamp((v-enc.min)/(enc.max-enc.min),0,1)*(pal.length-1),i=Math.min(pal.length-2,Math.floor(p)),q=p-i,a=phenHex(pal[i]),b=phenHex(pal[i+1]);return {r:Math.round(a.r+(b.r-a.r)*q),g:Math.round(a.g+(b.g-a.g)*q),b:Math.round(a.b+(b.b-a.b)*q)}};
+  const phenLonSpan=b=>b.east>=b.west?b.east-b.west:(180-b.west)+(b.east+180);
+  const phenLonP=(lon,b)=>{let d=lon-b.west;if(d<0)d+=360;return clamp(d/phenLonSpan(b),0,1)};
+  const phenProject=(p,l)=>({x:phenLonP(p.lon,l.bounds)*l.width,y:(l.bounds.north-p.lat)/(l.bounds.north-l.bounds.south)*l.height});
+  const phenPrepare=l=>{
+    if(phenCache.has(l.id))return phenCache.get(l.id);
+    const rows=(l.streamlines||[]).map(s=>{const pts=s.points.map(p=>({...phenProject(p,l),colorValue:p.colorValue,magnitude:p.magnitude})),lens=[0];let total=0;for(let i=1;i<pts.length;i++){total+=Math.hypot(pts[i].x-pts[i-1].x,pts[i].y-pts[i-1].y);lens.push(total)}return {...s,pts,lens,total:Math.max(total,1)}});
+    phenCache.set(l.id,rows);return rows;
+  };
+  const phenSample=(s,p)=>{const target=clamp(p,0,1)*s.total;let i=1;while(i<s.lens.length&&s.lens[i]<target)i++;i=Math.min(i,s.pts.length-1);const a=s.pts[i-1],b=s.pts[i],span=s.lens[i]-s.lens[i-1]||1,q=clamp((target-s.lens[i-1])/span,0,1);return {x:a.x+(b.x-a.x)*q,y:a.y+(b.y-a.y)*q,colorValue:(a.colorValue??0)+((b.colorValue??0)-(a.colorValue??0))*q,magnitude:(a.magnitude??0)+((b.magnitude??0)-(a.magnitude??0))*q}};
+  const drawPhenomenon=(el,l,t)=>{
+    const canvas=el.querySelector('[data-phenomenon-canvas]');if(!canvas)return;const ctx=canvas.getContext('2d'),W=l.width,H=l.height;
+    ctx.clearRect(0,0,W,H);const g=ctx.createRadialGradient(W*.52,H*.47,0,W*.52,H*.47,Math.max(W,H)*.72);g.addColorStop(0,'#07151b');g.addColorStop(1,'#020407');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+    ctx.save();ctx.lineWidth=1.15;ctx.strokeStyle='rgba(170,205,222,.20)';for(const shape of l.outlines||[]){if(!shape.points||shape.points.length<2)continue;ctx.beginPath();shape.points.forEach((p,i)=>{const q=phenProject(p,l);if(i===0)ctx.moveTo(q.x,q.y);else ctx.lineTo(q.x,q.y)});ctx.stroke()}ctx.restore();
+    ctx.save();ctx.globalCompositeOperation='lighter';ctx.lineCap='round';for(const s of phenPrepare(l)){const count=Math.max(1,Math.round((s.particles||Math.max(2,Math.round(s.total/85)))*(l.particleDensity||1))),rate=(s.speed||1)*.035,trail=l.trailFraction||.055;for(let j=0;j<count;j++){const seed=phenHash(s.id+':'+j),head=(seed+t*rate)%1,steps=8;for(let k=0;k<steps;k++){let a=head-trail*(k/steps),b=head-trail*((k+1)/steps);while(a<0)a+=1;while(b<0)b+=1;if(a<b&&head<trail)continue;const p1=phenSample(s,a),p2=phenSample(s,b),col=phenColor(p2.colorValue,l.colorEncoding),mag=l.brightnessEncoding?clamp((p2.magnitude-l.brightnessEncoding.min)/(l.brightnessEncoding.max-l.brightnessEncoding.min),0,1):.65,fade=(steps-k)/steps;ctx.strokeStyle='rgba('+col.r+','+col.g+','+col.b+','+(0.08+0.56*mag*fade)+')';ctx.lineWidth=.65+1.65*mag;ctx.shadowBlur=2+8*mag;ctx.shadowColor='rgba('+col.r+','+col.g+','+col.b+','+(0.15+.35*mag)+')';ctx.beginPath();ctx.moveTo(p1.x,p1.y);ctx.lineTo(p2.x,p2.y);ctx.stroke()}const p=phenSample(s,head),col=phenColor(p.colorValue,l.colorEncoding),mag=l.brightnessEncoding?clamp((p.magnitude-l.brightnessEncoding.min)/(l.brightnessEncoding.max-l.brightnessEncoding.min),0,1):.65;ctx.fillStyle='rgba('+col.r+','+col.g+','+col.b+','+(0.42+.55*mag)+')';ctx.beginPath();ctx.arc(p.x,p.y,1.1+1.4*mag,0,Math.PI*2);ctx.fill()}}ctx.restore();
+    ctx.save();ctx.font='500 18px ui-monospace,SFMono-Regular,Menlo,monospace';ctx.fillStyle='rgba(225,239,247,.72)';for(const item of l.labels||[]){const p=phenProject(item,l);ctx.beginPath();ctx.arc(p.x,p.y,3,0,Math.PI*2);ctx.fill();ctx.fillText(String(item.label||'').toUpperCase(),p.x+10,p.y+5)}ctx.restore();
+    const timeNode=el.querySelector('[data-phenomenon-time]');if(timeNode&&l.time){const a=Date.parse(l.time.startIso),b=Date.parse(l.time.endIso),p=stage.durationSec?clamp(t/stage.durationSec,0,1):0,stamp=new Date(a+(b-a)*p);timeNode.textContent=(l.time.label?l.time.label+' · ':'')+stamp.toISOString().replace('T',' ').slice(0,16)+' UTC'}else if(timeNode)timeNode.textContent='';
+  };
+
   const drawGeo=(el,layer,t)=>{
     const ns='http://www.w3.org/2000/svg';el.replaceChildren();
     if(layer.grid){
@@ -246,6 +302,7 @@ body{display:flex;align-items:center;justify-content:center}
         if(node)node.textContent=v.toFixed(layer.decimals||0)+(layer.unit||'');
       }
       if(layer.kind==='geo') drawGeo(el,layer,t);
+      if(layer.kind==='phenomenon') drawPhenomenon(el,layer,t);
       if(layer.kind==='timeline'){
         const p=clamp(at(layer.playhead,t,t/stage.durationSec),0,1);
         const ph=el.querySelector('.timeline-playhead');if(ph)ph.style.left=(p*100)+'%';
