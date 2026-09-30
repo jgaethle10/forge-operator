@@ -5,7 +5,7 @@ DOMAIN=""
 ACME_EMAIL=""
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 FABRIC_PORT="8787"
-HTTP_PORT="8080"
+HTTP_PORT="18080"
 HTTPS_PORT="8443"
 
 usage() {
@@ -67,7 +67,7 @@ sudo chmod 0644 /etc/evercraft/public-edge.env
 
 sudo tee /etc/evercraft/Caddyfile >/dev/null <<'EOF'
 {
-  http_port 8080
+  http_port 18080
   https_port 8443
   email {$EVERCRAFT_ACME_EMAIL}
   admin off
