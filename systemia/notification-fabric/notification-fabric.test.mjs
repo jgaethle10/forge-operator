@@ -111,3 +111,20 @@ test('transient push failures retry and gateway acceptance is not mislabeled as 
   assert.equal(result.receipts[0].status, 'accepted_by_push_gateway');
   assert.equal(result.receipts[0].attempts, 2);
 });
+
+
+test('server-side product client sends the common intent contract with bearer auth', async () => {
+  const { createNotificationClient } = await import('./client.mjs');
+  const calls = [];
+  const client = createNotificationClient({
+    baseUrl: 'https://notify.evercraft.test',
+    token: 'secret',
+    fetchImpl: async (url, init) => {
+      calls.push({ url, init });
+      return { ok: true, status: 200, json: async () => ({ success: true }) };
+    },
+  });
+  await client.notify({ product: 'rivet', purpose: 'transactional', title: 'Ready', body: 'Open it' });
+  assert.equal(calls[0].url, 'https://notify.evercraft.test/api/notifications/intents');
+  assert.equal(calls[0].init.headers.authorization, 'Bearer secret');
+});
