@@ -65,6 +65,8 @@ jobs:
         run: npm run proof:base44-evac
       - name: Prove Base44 source dependency scanner
         run: npm run proof:base44-source-scan
+      - name: Prove lossless Base44 entity transfer
+        run: npm run proof:base44-entity-transfer
       - name: Prove Evercraft App Fabric
         run: npm run proof:app-fabric
       - name: Prove Base44 SDK compatibility
