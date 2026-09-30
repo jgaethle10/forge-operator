@@ -1,0 +1,59 @@
+name: Fabric Public Probe
+on:
+  push:
+    branches: [fabric-public-probe-20260930]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Probe owned Fabric edge
+        shell: bash
+        run: |
+          set -euo pipefail
+          ORIGIN='https://fabric.systemiacommandcenters.com'
+          echo '=== DNS ==='
+          getent ahostsv4 fabric.systemiacommandcenters.com || true
+
+          echo '=== HEALTH ==='
+          health_code="$(curl -sS -o /tmp/health -w '%{http_code}' --max-time 20 "$ORIGIN/health" || true)"
+          echo "health_http=$health_code"
+          head -c 3000 /tmp/health 2>/dev/null || true
+          echo
+
+          echo '=== CHALLENGE ==='
+          challenge_code="$(curl -sS -o /tmp/challenge -w '%{http_code}' --max-time 20 "$ORIGIN/.well-known/openai-apps-challenge" || true)"
+          challenge_bytes="$(wc -c </tmp/challenge 2>/dev/null || echo 0)"
+          echo "challenge_http=$challenge_code"
+          echo "challenge_bytes=$challenge_bytes"
+
+          echo '=== MCP INITIALIZE ==='
+          init_code="$(curl -sS -o /tmp/init -w '%{http_code}' --max-time 20 -X POST "$ORIGIN/mcp" \
+            -H 'content-type: application/json' \
+            -H 'accept: application/json, text/event-stream' \
+            --data '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"evercraft-public-probe","version":"1"}}}' || true)"
+          echo "init_http=$init_code"
+          cat /tmp/init 2>/dev/null || true
+          echo
+
+          echo '=== MCP TOOLS ==='
+          tools_code="$(curl -sS -o /tmp/tools -w '%{http_code}' --max-time 20 -X POST "$ORIGIN/mcp" \
+            -H 'content-type: application/json' \
+            -H 'accept: application/json, text/event-stream' \
+            --data '{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}' || true)"
+          echo "tools_http=$tools_code"
+          cat /tmp/tools 2>/dev/null || true
+          echo
+
+          test "$health_code" = "200"
+          test "$challenge_code" = "200"
+          test "$challenge_bytes" -ge 16
+          test "$init_code" = "200"
+          test "$tools_code" = "200"
+          jq -e '.result.serverInfo.name=="evercraft-fabric"' /tmp/init >/dev/null
+          jq -e '([.result.tools[].name] | index("match_evercraft_capability")) != null' /tmp/tools >/dev/null
+          jq -e '([.result.tools[].name] | index("list_evercraft_capabilities")) != null' /tmp/tools >/dev/null
+          jq -e '([.result.tools[].name] | index("get_evercraft_connection_options")) != null' /tmp/tools >/dev/null
