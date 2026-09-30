@@ -26,9 +26,11 @@ export function createRelayWorker(options = {}) {
   const leaseMs = Math.max(1000, Math.min(Number(options.leaseMs ?? 30000), 15 * 60 * 1000));
   const batchSize = Math.max(1, Math.min(Number(options.batchSize ?? 10), 100));
   const intervalMs = Math.max(100, Math.min(Number(options.intervalMs ?? 1000), 60000));
+  const pruneIntervalMs = Math.max(60000, Math.min(Number(options.pruneIntervalMs ?? 5 * 60 * 1000), 24 * 60 * 60 * 1000));
   let timer = null;
   let running = false;
   let lastRunAt = null;
+  let lastPruneAt = 0;
   let lastError = null;
 
   async function scheduleAckWatch(intent, result, now = Date.now()) {
@@ -210,7 +212,11 @@ export function createRelayWorker(options = {}) {
         }
       }
       lastError = null;
-      const retention = outbox.prune({ now });
+      let retention = null;
+      if (now - lastPruneAt >= pruneIntervalMs) {
+        retention = outbox.prune({ now });
+        lastPruneAt = now;
+      }
       return { worker_id: workerId, claimed: claimed.length, results, retention };
     } catch (error) {
       lastError = String(error?.message || error);
@@ -245,6 +251,8 @@ export function createRelayWorker(options = {}) {
       lease_ms: leaseMs,
       batch_size: batchSize,
       interval_ms: intervalMs,
+      prune_interval_ms: pruneIntervalMs,
+      last_prune_at: lastPruneAt ? new Date(lastPruneAt).toISOString() : null,
     };
   }
 
