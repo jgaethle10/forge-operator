@@ -398,7 +398,7 @@ jobs:
             if (!body?.value) throw new Error('GitHub OIDC token response did not contain a token.');
             process.stdout.write('::add-mask::' + body.value + '\n');
             fs.appendFileSync(process.env.GITHUB_ENV, [
-              'CHUM_ATTRIBUTION_EXPORT_URL=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommercePaymentExport',
+              'CHUM_ATTRIBUTION_EXPORT_URL=' + String(process.env.CHUM_ATTRIBUTION_EXPORT_URL || ''),
               'CHUM_ATTRIBUTION_EXPORT_TOKEN=' + body.value
             ].join('\n') + '\n');
           })().catch((error) => {
