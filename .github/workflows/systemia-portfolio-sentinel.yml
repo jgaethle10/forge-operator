@@ -104,6 +104,9 @@ jobs:
       - name: Prove human experience contracts
         run: node --test systemia/experience/human-experience-adapter.test.mjs
 
+      - name: Prove autonomous Repair Unit
+        run: node --test systemia/sentinel/repair-unit.test.mjs
+
       - name: Restore latest owned Customer Gauntlet receipt
         continue-on-error: true
         shell: bash
