@@ -31,6 +31,16 @@ const ledger = new ForwardPaperDurableState({ root });
 assert.equal(ledger.enroll(protocol).state, "enrolled");
 assert.equal(ledger.enroll(protocol).state, "duplicate");
 
+const shiftedProtocol = freezeForwardPaperCohort(review, evaluation, {
+  enrolled_at: "2026-10-05T00:00:00Z",
+  transaction_cost_bps: 5,
+  minimum_forward_events: 2,
+  minimum_distinct_origins: 2,
+});
+const shiftedEnroll = ledger.enroll(shiftedProtocol);
+assert.equal(shiftedEnroll.state, "existing_signal_cohort");
+assert.equal(shiftedEnroll.cohort.cohort_id, protocol.cohort_id);
+
 assert.throws(() => ledger.appendMeasurement(protocol.cohort_id, {
   measurement_id: "old",
   signal_key: protocol.signal_key,
@@ -63,9 +73,41 @@ assert.equal(ledger.appendMeasurement(protocol.cohort_id, {
 const score = ledger.score(protocol.cohort_id);
 assert.equal(score.status, "FORWARD_PAPER_PASS");
 
+const ingest = ledger.ingestResearchReport({
+  measurements: [
+    {
+      measurement_id: "m0",
+      signal_key: protocol.signal_key,
+      observed_at: "2026-10-02T20:00:00Z",
+      origin_entity_ref: "sec:cik:a",
+      forward_return: 0.02,
+      benchmark_return: 0.005,
+    },
+    {
+      measurement_id: "m2",
+      signal_key: protocol.signal_key,
+      observed_at: "2026-10-04T20:00:00Z",
+      origin_entity_ref: "sec:cik:c",
+      forward_return: 0.018,
+      benchmark_return: 0.005,
+    },
+    {
+      measurement_id: "wrong-signal",
+      signal_key: "other|signal",
+      observed_at: "2026-10-04T20:00:00Z",
+      origin_entity_ref: "sec:cik:x",
+      forward_return: 1,
+      benchmark_return: 0,
+    },
+  ],
+});
+assert.equal(ingest.cohort_count, 1);
+assert.equal(ingest.cohorts[0].appended, 1);
+assert.equal(ingest.cohorts[0].duplicates, 1);
+
 const restarted = new ForwardPaperDurableState({ root });
 assert.equal(restarted.summary().cohort_count, 1);
-assert.equal(restarted.summary().measurement_count, 2);
+assert.equal(restarted.summary().measurement_count, 3);
 assert.equal(restarted.score(protocol.cohort_id).status, "FORWARD_PAPER_PASS");
 assert.equal(restarted.summary().live_trade_authority, false);
 
@@ -81,6 +123,8 @@ console.log(JSON.stringify({
   hash_linked_journal: true,
   retroactive_rejection: true,
   idempotent_measurements: true,
+  one_signal_one_frozen_cohort: true,
+  research_report_ingestion: true,
   torn_tail_recovery: true,
   live_trade_authority: false,
 }));
