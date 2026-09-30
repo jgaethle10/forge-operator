@@ -43,6 +43,19 @@ test('AliEV canary contract binds the shared trust-chain primitives without clai
   assert.match(aliev.truth_boundary, /do not prove live runtime integration/i);
 });
 
+test('Evercraft Clip public specialist has a complete but deliberately non-publishing contract', () => {
+  const mesh = renderCapabilityMesh(process.cwd());
+  const clip = mesh.products.find((row) => row.product_key === 'evercraft-clip');
+
+  assert.ok(clip);
+  assert.equal(clip.contract_state, 'complete_declaration');
+  assert.equal(clip.direct_door.direct_callable, true);
+  assert.equal(clip.lane_states.meter, 'not_required');
+  assert.equal(clip.lane_states.intake, 'not_required');
+  assert.equal(clip.lane_states.relationship, 'not_required');
+  assert.equal(clip.runtime_verified, false);
+});
+
 test('missing product contracts fail visible instead of being inferred', () => {
   const mesh = renderCapabilityMesh(process.cwd());
   const missing = mesh.products.find((row) => row.product_key === 'findmypart');

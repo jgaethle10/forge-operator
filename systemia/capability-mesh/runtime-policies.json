@@ -1,7 +1,7 @@
 {
   "schema": "evercraft.capability-mesh.runtime-policies.v1",
   "generated_from": "systemia/capability-mesh/contracts.json",
-  "policy_count": 2,
+  "policy_count": 3,
   "policies": [
     {
       "schema": "evercraft.capability-mesh.runtime-policy.v1",
@@ -203,6 +203,122 @@
           "use_universal_router_first": false,
           "registry_name": "io.github.jgaethle10/forensiscope",
           "remote_mcp": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp",
+          "fallback_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+          "fallback_remote_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        },
+        "blocking_gates": [],
+        "next_release_action": "measure_provider_pickup_separately"
+      },
+      "runtime_verified": false,
+      "grants_authority": false,
+      "truth_boundary": "This runtime policy compiles declared product semantics. It does not grant Passport authority, entitlement, payment, live runtime readiness, or provider pickup."
+    },
+    {
+      "schema": "evercraft.capability-mesh.runtime-policy.v1",
+      "product_key": "evercraft-clip",
+      "product_name": "Evercraft Clip",
+      "product_class": "ai_social_video_production_and_governed_distribution",
+      "contract_version": "1.0.0",
+      "owner": "systemia",
+      "authority": {
+        "state": "declared",
+        "passport_product": "evercraft-clip",
+        "scopes": [
+          "get_clip_capabilities",
+          "plan_clip_job"
+        ],
+        "evidence_refs": [
+          "mcp-registry/evercraft-clip.json",
+          "registry/evercraft-clip/README.md",
+          "registry/evercraft-clip/llms.txt"
+        ]
+      },
+      "context": {
+        "state": "declared",
+        "namespace": "evercraft-clip",
+        "read_scope": "context.read.evercraft-clip",
+        "write_scope": "context.write.evercraft-clip",
+        "evidence_refs": [
+          "registry/evercraft-clip/README.md",
+          "systemia/context-fabric/fabric.mjs"
+        ]
+      },
+      "meter": {
+        "state": "not_required",
+        "reason": "The currently contracted public machine actions are read-only capability discovery and non-executing job planning. The $4.99 customer order and paid rendering workflow do not establish a public machine Meter contract, and machine checkout is not enabled."
+      },
+      "intake": {
+        "state": "not_required",
+        "reason": "The currently contracted public MCP tools do not upload private media. Actual source-media submission remains inside authenticated, human-authorized Clip workflows."
+      },
+      "execution": {
+        "state": "declared",
+        "gate_required": true,
+        "scopes": [
+          "get_clip_capabilities",
+          "plan_clip_job"
+        ],
+        "actions": [
+          {
+            "scope": "get_clip_capabilities"
+          },
+          {
+            "scope": "plan_clip_job"
+          }
+        ],
+        "evidence_refs": [
+          "mcp-registry/evercraft-clip.json",
+          "registry/evercraft-clip/README.md",
+          "plugins/evercraft-clip/skills/evercraft-clip-direct/SKILL.md"
+        ]
+      },
+      "relationship": {
+        "state": "not_required",
+        "reason": "The currently contracted public actions discover capabilities and plan clip jobs only. They do not publish to social platforms or contact external recipients."
+      },
+      "receipt_reconciliation": {
+        "state": "declared",
+        "namespace": "evercraft-clip",
+        "evidence_refs": [
+          "systemia/context-fabric/fabric.mjs",
+          "registry/evercraft-clip/README.md"
+        ]
+      },
+      "rollback": {
+        "state": "declared",
+        "policy": "Disable the Clip product contract or specialist route without enabling private media upload, checkout, rendering, publishing, or weakening the authenticated human-authorized production boundary."
+      },
+      "compatibility": {
+        "intended_product_classes": [
+          "ai_social_video_production_and_distribution"
+        ]
+      },
+      "boundaries": {
+        "contracted_machine_surface": [
+          "get_clip_capabilities",
+          "plan_clip_job"
+        ],
+        "public_agent_authority": "read_only_discovery_and_non_executing_job_planning",
+        "private_media_upload_contracted": false,
+        "checkout_contracted": false,
+        "rendering_contracted": false,
+        "publishing_contracted": false,
+        "facebook_linkedin_instagram_code_paths_exist_but_publication_not_proven": true,
+        "tiktok_verified": false,
+        "forensiscope_automatic_media_transfer_claimed": false,
+        "human_confirmation_required_for_execution": true
+      },
+      "route": {
+        "specialist_slug": "evercraft-clip",
+        "state": "registry_published_direct_mcp_existing",
+        "direct_callable": true,
+        "registry_published": true,
+        "preferred_route": {
+          "mode": "direct_specialist",
+          "hops_before_specialist": 0,
+          "use_universal_router_first": false,
+          "registry_name": "io.github.jgaethle10/evercraft-clip",
+          "remote_mcp": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp",
           "fallback_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
           "fallback_remote_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
         },

@@ -132,6 +132,60 @@ test('ForensiScope does not expose an unverified machine media-analysis action',
   );
 });
 
+test('Evercraft Clip exposes only read-only discovery and planning actions', () => {
+  const policy = compileProductRuntimePolicy('evercraft-clip', process.cwd());
+  assert.equal(policy.authority.passport_product, 'evercraft-clip');
+  assert.deepEqual(
+    policy.authority.scopes,
+    ['get_clip_capabilities', 'plan_clip_job']
+  );
+  assert.equal(policy.meter.state, 'not_required');
+  assert.equal(policy.intake.state, 'not_required');
+  assert.equal(policy.boundaries.private_media_upload_contracted, false);
+  assert.equal(policy.boundaries.checkout_contracted, false);
+  assert.equal(policy.boundaries.rendering_contracted, false);
+  assert.equal(policy.boundaries.publishing_contracted, false);
+  assert.equal(policy.boundaries.tiktok_verified, false);
+});
+
+test('Clip planning compiles without inventing rendering, publishing or payment state', () => {
+  const prepared = buildExecutionGateInput({
+    product_key: 'evercraft-clip',
+    actor_ref: 'agent:clip-planner',
+    scope: 'plan_clip_job',
+    request: {
+      goal: 'Turn an authorized interview into three vertical clips',
+      platforms: ['facebook', 'linkedin', 'instagram'],
+    },
+    idempotency_key: 'capability-mesh:clip:plan:001',
+    require_direct_specialist: true,
+  });
+
+  const input = prepared.execution_gate_input;
+  assert.equal(input.passport_product, 'evercraft-clip');
+  assert.equal(input.scope, 'plan_clip_job');
+  assert.equal(input.specialist_slug, 'evercraft-clip');
+  assert.equal(Object.prototype.hasOwnProperty.call(input, 'meter'), false);
+  assert.equal(prepared.payment_state_inferred, false);
+  assert.equal(prepared.grants_execution_authority, false);
+});
+
+test('Clip cannot compile an uncontracted publish or render action', () => {
+  for (const scope of ['publish_clip', 'render_clip', 'create_checkout']) {
+    assert.throws(
+      () =>
+        buildExecutionGateInput({
+          product_key: 'evercraft-clip',
+          actor_ref: 'agent:clip-planner',
+          scope,
+          request: { scope },
+          idempotency_key: 'capability-mesh:clip:blocked:' + scope,
+        }),
+      /scope_not_declared_in_authority_contract/
+    );
+  }
+});
+
 test('missing product contracts fail closed instead of inheriting another product defaults', () => {
   assert.throws(
     () => compileProductRuntimePolicy('findmypart', process.cwd()),
@@ -150,8 +204,11 @@ test('context binding describes scopes but grants no access', () => {
 
 test('generated runtime policy artifact covers only explicitly contracted products', () => {
   const rendered = renderRuntimePolicies(process.cwd());
-  assert.equal(rendered.policy_count, 2);
-  assert.deepEqual(rendered.policies.map((row) => row.product_key), ['aliev', 'forensiscope']);
+  assert.equal(rendered.policy_count, 3);
+  assert.deepEqual(
+    rendered.policies.map((row) => row.product_key),
+    ['aliev', 'forensiscope', 'evercraft-clip']
+  );
   assert.equal(rendered.truth_boundary.undeclared_scope_fails_closed, true);
   assert.equal(rendered.truth_boundary.undeclared_meter_metric_fails_closed, true);
 });

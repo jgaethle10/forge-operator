@@ -166,3 +166,19 @@ Portfolio Sentinel consumes the ratchet state. New adoption debt is high severit
 The rule is intentionally asymmetric:
 
 > We may inherit old debt. We do not create new debt.
+
+
+## Evercraft Clip canary contract
+
+Evercraft Clip is the third explicit contract and demonstrates how Capability Mesh handles a product whose public MCP is intentionally read-only even though deeper authenticated production workflows exist.
+
+The public machine contract declares only:
+
+```
+get_clip_capabilities
+plan_clip_job
+```
+
+It does not contract private-media upload, checkout, paid rendering, or social publishing. Facebook, LinkedIn, and Instagram publishing code paths may exist inside authenticated Clip workflows, but that is not public agent publication proof. TikTok remains explicitly unverified.
+
+The contract therefore compiles planning into the specialist route without inventing Meter charges, payment state, rendering authority, or publishing authority.
