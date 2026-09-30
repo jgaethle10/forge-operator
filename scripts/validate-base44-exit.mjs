@@ -22,6 +22,15 @@ if (policy.invariants?.critical_owned_runtime_hardcoded_base44_network_routes !=
 if (policy.invariants?.route_registry_automatic_cutover !== false) {
   fail('route registry must not allow automatic cutover');
 }
+if (policy.invariants?.public_migration_queue_is_complete_estate_inventory !== false) {
+  fail('public migration queue must not be treated as complete estate inventory');
+}
+if (policy.invariants?.untitled_apps_may_be_silently_discarded !== false) {
+  fail('Untitled apps may not be silently discarded');
+}
+if (policy.invariants?.capped_source_listing_proves_complete_inventory !== false) {
+  fail('capped source listings cannot prove complete inventory');
+}
 
 for (const primitive of [
   'source_dependency_scanner',
@@ -29,6 +38,7 @@ for (const primitive of [
   'identity_challenge_broker',
   'receipt_gated_route_registry',
   'owned_runtime_base44_network_firewall',
+  'estate_coverage_ledger',
 ]) {
   if (!policy.shared_landing_primitives?.includes(primitive)) {
     fail(`missing shared landing primitive ${primitive}`);
@@ -58,6 +68,18 @@ for (const gate of required) {
 
 if (!Number.isInteger(estate.observed_apps_minimum) || estate.observed_apps_minimum < 100) {
   fail('estate snapshot must preserve the observed minimum app count');
+}
+if (estate.listing_ceiling_hit !== true || Number(estate.listing_limit) !== 100) {
+  fail('estate snapshot must preserve the observed 100-app listing ceiling');
+}
+if (estate.inventory_complete_proven !== false) {
+  fail('estate snapshot must not claim inventory completeness from a capped listing');
+}
+if (estate.queue_is_complete_estate_inventory !== false) {
+  fail('estate queue must remain prioritization rather than complete inventory truth');
+}
+if (estate.untitled_apps_require_classification_before_migration_or_archive !== true) {
+  fail('Untitled apps must remain explicitly classification-gated');
 }
 
 for (const item of estate.queue || []) {
