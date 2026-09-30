@@ -8,6 +8,7 @@ import {
   runEdgeResearchBatch,
   persistEdgeResearchBatch,
 } from "./edge-research-factory.mjs";
+import { adversarialValidateCandidates } from "./edge-adversarial-validation.mjs";
 
 async function main() {
   const artifactDir = path.resolve(
@@ -39,6 +40,12 @@ async function main() {
   const reportFile = path.join(artifactDir, "sec-edge-research.json");
   fs.writeFileSync(reportFile, JSON.stringify(report, null, 2) + "\n");
 
+  const adversarial = adversarialValidateCandidates(report, {
+    transaction_cost_bps: Number(process.env.EDGE_LAB_TRANSACTION_COST_BPS || 5),
+  });
+  const adversarialFile = path.join(artifactDir, "sec-edge-adversarial-review.json");
+  fs.writeFileSync(adversarialFile, JSON.stringify(adversarial, null, 2) + "\n");
+
   const persistence = persistEdgeResearchBatch(report, {
     stateDir: process.env.EVERCRAFT_EDGE_LAB_STATE_DIR ||
       path.join(artifactDir, "state"),
@@ -64,6 +71,8 @@ async function main() {
     measurements: report.measurement_count || 0,
     signal_families: report.family_count || 0,
     research_candidates: report.research_candidate_count || 0,
+    candidate_clusters: adversarial.candidate_cluster_count || 0,
+    forward_paper_eligible: adversarial.forward_paper_eligible_count || 0,
     top_screened_families: top,
     exact_public_availability_time_known: false,
     sec_publication_delay_buffer_minutes:
@@ -72,6 +81,7 @@ async function main() {
     files: {
       observations: observationFile,
       research: reportFile,
+      adversarial_review: adversarialFile,
       state_batch: persistence.batch_file,
     },
   };
