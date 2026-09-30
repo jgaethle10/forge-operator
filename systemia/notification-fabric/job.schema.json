@@ -95,6 +95,10 @@
         "string",
         "null"
       ]
+    },
+    "request_fingerprint": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
     }
   },
   "additionalProperties": true
