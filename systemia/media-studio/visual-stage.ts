@@ -127,13 +127,75 @@ export interface TimelineLayer extends BaseLayer {
   events: TimelineEvent[];
 }
 
+export interface PhenomenonStreamSample {
+  lat: number;
+  lon: number;
+  colorValue?: number;
+  magnitude?: number;
+}
+
+export interface PhenomenonStream {
+  id: string;
+  points: PhenomenonStreamSample[];
+  particles?: number;
+  speed?: number;
+  sourceRefs?: string[];
+}
+
+export interface PhenomenonOutline {
+  id: string;
+  points: Array<{ lat: number; lon: number }>;
+}
+
+export interface PhenomenonLabel {
+  label: string;
+  lat: number;
+  lon: number;
+}
+
+export interface PhenomenonLayer extends BaseLayer {
+  kind: 'phenomenon';
+  bounds: {
+    north: number;
+    south: number;
+    east: number;
+    west: number;
+  };
+  outlines?: PhenomenonOutline[];
+  labels?: PhenomenonLabel[];
+  motionLabel: string;
+  colorEncoding?: {
+    label: string;
+    min: number;
+    max: number;
+    unit?: string;
+    palette?: string[];
+  };
+  brightnessEncoding?: {
+    label: string;
+    min: number;
+    max: number;
+    unit?: string;
+  };
+  streamlines: PhenomenonStream[];
+  particleDensity?: number;
+  trailFraction?: number;
+  sourceLabel: string;
+  time?: {
+    startIso: string;
+    endIso: string;
+    label?: string;
+  };
+}
+
 export type VisualLayer =
   | MediaLayer
   | TextLayer
   | ShapeLayer
   | GeoLayer
   | MetricLayer
-  | TimelineLayer;
+  | TimelineLayer
+  | PhenomenonLayer;
 
 export interface VisualStage {
   schema: 'evercraft.fallen.visual-stage.v1';
