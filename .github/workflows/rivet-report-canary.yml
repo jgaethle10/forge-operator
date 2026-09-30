@@ -21,4 +21,5 @@ jobs:
           node-version: 22
       - run: npm run proof:rivet-yard
       - run: node systemia/yard/rivet-resident-runtime.proof.mjs
+      - run: node systemia/yard/rivet-report-edge-controller.proof.mjs
       - run: npm run proof:beast-football
