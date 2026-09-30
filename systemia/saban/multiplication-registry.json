@@ -843,7 +843,7 @@
         "base44 escape",
         "platform evacuation"
       ],
-      "adapter": "systemia/base44-evac/saban-adapter.mjs",
+      "adapter": "systemia/migrations/base44-exit/factory/saban-adapter.mjs",
       "default_logical_agents": 1000,
       "max_logical_agents": 10000,
       "default_physical_workers": 32,
