@@ -12,7 +12,7 @@
     "grok",
     "generic_agent"
   ],
-  "canonical_url": "https://call-proof-vault.base44.app/",
+  "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/callproof-vault",
   "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/callproof-vault/llms.txt",
   "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/callproof-vault/ai-discovery.json",
   "registry_name": null,

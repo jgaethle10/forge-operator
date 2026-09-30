@@ -12,11 +12,11 @@
     "grok",
     "generic_agent"
   ],
-  "canonical_url": "https://evercraft-rewards.base44.app/",
+  "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-rewards",
   "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/llms.txt",
   "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/ai-discovery.json",
   "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-  "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "mcp": null,
   "authority": "public read-only local reward discovery plus account-bound check-ins, Daily Prize Tickets and Game Wallet earning; Game Wallet fulfillment is implemented but production gaming issuance remains gated by provider authorization, credentials, sponsor funding and deployed-runtime verification; merchant enrollment is reversible and owner-confirmed through Evercraft Machine Commerce",
   "human_confirmation_required": true,
   "boundaries": [
@@ -45,12 +45,12 @@
     "evercraft_front_door": {
       "name": "Evercraft Front Door",
       "description": "Fuel and other local utility surfaces can surface eligible nearby Rewards offers without making Rewards the canonical fuel data source.",
-      "public_surface": "https://evercraft.base44.app/"
+      "public_surface": null
     },
     "eventwave": {
       "name": "EventWave",
       "description": "Approved events can participate in event bonuses and local discovery while ticketing and attendance remain separate evidence states.",
-      "public_surface": "https://event-wave.base44.app/"
+      "public_surface": null
     },
     "seasonally": {
       "name": "Season & Story",
@@ -59,7 +59,7 @@
     "game_wallet": {
       "name": "Game Wallet",
       "description": "Evercraft Points can appear in the Game Wallet. Gaming redemption remains closed unless a funded authorized fulfillment rail exists.",
-      "public_surface": "https://evercraft-rewards.base44.app/game-wallet"
+      "public_surface": null
     }
   },
   "proof_library": null,

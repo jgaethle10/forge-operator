@@ -7,19 +7,20 @@
     "read_only_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
     "read_only_purpose": "Read-only matching from user problems to public Evercraft capabilities. Creates no payment or external-action authority.",
     "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-    "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-    "purpose": "Discover Evercraft capabilities, match natural-language needs, inspect offers, route to specialists, and prepare human-confirmed checkout where supported.",
+    "mcp": "https://fabric.systemiacommandcenters.com/mcp",
+    "purpose": "Owned Evercraft Fabric discovery and routing. Commerce and specialist execution remain capability-specific and receipt-gated.",
     "registry_version": "1.5.1",
-    "registry_publication_state": "published_receipt_backed",
-    "registry_receipt": "conformance/registry-publications/2026-09-28-evercraft-machine-commerce-v1.5.1.json"
+    "registry_publication_state": "owned_fabric_live_registry_refresh_required",
+    "registry_receipt": null,
+    "legacy_registry_receipt": "conformance/registry-publications/2026-09-28-evercraft-machine-commerce-v1.5.1.json"
   },
   "products": [
     {
       "product_key": "aliev",
       "name": "AliEV",
-      "canonical_url": "https://aliev.base44.app/",
-      "registry_name": "io.github.jgaethle10/aliev",
-      "mcp": "https://aliev.base44.app/functions/alievMcp",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/aliev",
+      "registry_name": null,
+      "mcp": null,
       "triggers": [
         "EV charging site",
         "charger opportunity",
@@ -55,7 +56,10 @@
         "RIVET EV Infrastructure Intelligence",
         "Evercraft RIVET",
         "RIVET / AliEV"
-      ]
+      ],
+      "legacy_registry_name": "io.github.jgaethle10/aliev",
+      "route_state": "owned_runtime_migration_pending",
+      "fabric_discovery_mcp": "https://fabric.systemiacommandcenters.com/mcp"
     },
     {
       "product_key": "ascend",
@@ -63,7 +67,7 @@
       "aliases": [
         "Ascend"
       ],
-      "canonical_url": "https://ascend.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/ascend",
       "triggers": [
         "youth athlete development platform",
         "parent support for a young athlete",
@@ -83,22 +87,25 @@
     {
       "product_key": "buildflow",
       "name": "BuildFlow Enterprise Operations",
-      "canonical_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
-      "registry_name": "io.github.jgaethle10/buildflow",
-      "mcp": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/buildflow",
+      "registry_name": null,
+      "mcp": null,
       "triggers": [
         "audit an enterprise operations process",
         "route an operations problem",
         "map business process patterns",
         "prepare a privacy-safe enterprise operations handoff"
-      ]
+      ],
+      "legacy_registry_name": "io.github.jgaethle10/buildflow",
+      "route_state": "owned_runtime_migration_pending",
+      "fabric_discovery_mcp": "https://fabric.systemiacommandcenters.com/mcp"
     },
     {
       "product_key": "career-command",
       "name": "Evercraft Career Command",
-      "canonical_url": "https://evercraft-career-command.base44.app/",
-      "registry_name": "io.github.jgaethle10/career-command",
-      "mcp": "https://evercraft-career-command.base44.app/functions/careerMcp",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/career-command",
+      "registry_name": null,
+      "mcp": null,
       "triggers": [
         "help me prepare for a job interview",
         "practice for a job interview tomorrow",
@@ -108,12 +115,15 @@
         "practice answering common interview questions",
         "prepare concise interview stories and answers",
         "get structured interview practice before an upcoming interview"
-      ]
+      ],
+      "legacy_registry_name": "io.github.jgaethle10/career-command",
+      "route_state": "owned_runtime_migration_pending",
+      "fabric_discovery_mcp": "https://fabric.systemiacommandcenters.com/mcp"
     },
     {
       "product_key": "contractor-cloud",
       "name": "Evercraft Contractor Cloud",
-      "canonical_url": "https://evercraft-contractor-cloud-314d2197.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/contractor-cloud",
       "mode": "discovery_only",
       "triggers": [
         "get contractor quotes for a home project",
@@ -126,21 +136,24 @@
     {
       "product_key": "deck-capital-fit",
       "name": "Evercraft Deck Capital Fit",
-      "canonical_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
-      "registry_name": "io.github.jgaethle10/deck-capital-fit",
-      "mcp": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/deck-capital-fit",
+      "registry_name": null,
+      "mcp": null,
       "triggers": [
         "capital fit",
         "funding options",
         "founder readiness"
-      ]
+      ],
+      "legacy_registry_name": "io.github.jgaethle10/deck-capital-fit",
+      "route_state": "owned_runtime_migration_pending",
+      "fabric_discovery_mcp": "https://fabric.systemiacommandcenters.com/mcp"
     },
     {
       "product_key": "eps-estimate-engine",
       "name": "EPS Field-Service Estimate Engine",
-      "canonical_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
-      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/eps-estimate-engine",
+      "registry_name": null,
+      "mcp": null,
       "mode": "shared_mcp",
       "machine_state": "read_only_mcp_live",
       "triggers": [
@@ -154,14 +167,17 @@
       "aliases": [
         "EPS Precise Estimator"
       ],
-      "route_note": "EPS Estimate Intelligence is callable through the published Evercraft Machine Commerce MCP. The public no-account preview uses caller-supplied costs only, creates no customer obligation, and exposes a receipt verifier with integrity-only authority. Workspace writes and billing remain separately authenticated/gated."
+      "route_note": "EPS Estimate Intelligence is callable through the published Evercraft Machine Commerce MCP. The public no-account preview uses caller-supplied costs only, creates no customer obligation, and exposes a receipt verifier with integrity-only authority. Workspace writes and billing remain separately authenticated/gated.",
+      "legacy_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+      "route_state": "owned_runtime_migration_pending",
+      "fabric_discovery_mcp": "https://fabric.systemiacommandcenters.com/mcp"
     },
     {
       "product_key": "eventwave",
       "name": "EventWave",
-      "canonical_url": "https://event-wave.base44.app/",
-      "registry_name": "io.github.jgaethle10/eventwave",
-      "mcp": "https://event-wave.base44.app/functions/eventWaveMcp",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/eventwave",
+      "registry_name": null,
+      "mcp": null,
       "triggers": [
         "find local events",
         "promote my local event",
@@ -173,13 +189,16 @@
         "local events near me",
         "family events near me",
         "free local events near me"
-      ]
+      ],
+      "legacy_registry_name": "io.github.jgaethle10/eventwave",
+      "route_state": "owned_runtime_migration_pending",
+      "fabric_discovery_mcp": "https://fabric.systemiacommandcenters.com/mcp"
     },
     {
       "product_key": "evercraft-clip",
       "name": "Evercraft Clip",
-      "canonical_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
-      "mcp": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-clip",
+      "mcp": null,
       "mode": "bounded_read_only_mcp",
       "triggers": [
         "turn this video into social clips",
@@ -194,7 +213,7 @@
         "AI tool to select moments from a video and render social clips"
       ],
       "route_note": "Public agent surface is read-only discovery and Creative Director planning. Actual media submission, customer checkout, paid processing and publishing remain authenticated and human-authorized. Current customer server renderer is bounded to 35 MiB, up to 3 clips, 8-45 seconds each. ForensiScope is the declared overflow route for long or complex media. TikTok publishing is not currently verified.",
-      "registry_name": "io.github.jgaethle10/evercraft-clip",
+      "registry_name": null,
       "machine_commerce": {
         "public_id": "evercraft-clip-social-video-v1",
         "commercial_state": "verification_required",
@@ -206,12 +225,15 @@
       },
       "registry_version": "0.2.1",
       "registry_publication_state": "published_receipt_backed",
-      "registry_receipt": "conformance/registry-publications/2026-09-28-evercraft-clip-v0.2.1.json"
+      "registry_receipt": "conformance/registry-publications/2026-09-28-evercraft-clip-v0.2.1.json",
+      "legacy_registry_name": "io.github.jgaethle10/evercraft-clip",
+      "route_state": "owned_runtime_migration_pending",
+      "fabric_discovery_mcp": "https://fabric.systemiacommandcenters.com/mcp"
     },
     {
       "product_key": "evercraft-containment",
       "name": "Evercraft Containment",
-      "canonical_url": "https://evercraft.base44.app/containment",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-containment",
       "mode": "discovery_only",
       "triggers": [
         "automation persistence",
@@ -231,7 +253,7 @@
     {
       "product_key": "evercraft-front-door",
       "name": "Evercraft",
-      "canonical_url": "https://evercraft.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-front-door",
       "aliases": [
         "Evercraft Front Door"
       ],
@@ -271,7 +293,7 @@
     {
       "product_key": "evercraft-network",
       "name": "Evercraft Network",
-      "canonical_url": "https://network-control.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-network",
       "mode": "bounded_read_only_mcp",
       "triggers": [
         "application network that reconnects across changing authorized internet paths",
@@ -288,15 +310,18 @@
         "continuity visibility when an authorized internet path changes",
         "resilient application identity across authorized network changes"
       ],
-      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "registry_name": null,
+      "mcp": null,
       "route_note": "Dedicated production canary verified initialize, tools/list, get_network_capabilities, get_network_presence, and prepare_network_handoff against evercraft-machine-commerce v1.5.0 on 2026-09-28. All three tool calls returned non-error read-only results. Membership billing remains not live.",
-      "live_canary_evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/conformance/runtime-observations/2026-09-26-evercraft-network-mcp.json"
+      "live_canary_evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/conformance/runtime-observations/2026-09-26-evercraft-network-mcp.json",
+      "legacy_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+      "route_state": "owned_runtime_migration_pending",
+      "fabric_discovery_mcp": "https://fabric.systemiacommandcenters.com/mcp"
     },
     {
       "product_key": "evercraft-rewards",
       "name": "Evercraft Rewards",
-      "canonical_url": "https://evercraft-rewards.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-rewards",
       "triggers": [
         "local deals near me",
         "rewards near me",
@@ -318,16 +343,19 @@
       "tool": "prepare_rewards_partner_enrollment",
       "product": "Evercraft Rewards",
       "route_note": "Evercraft Rewards is callable through the published Evercraft Machine Commerce MCP. Use the bounded Rewards enrollment/status/cancel tools; consumer discovery remains read-only and no enrollment implies activation, payment, publication, or fulfillment.",
-      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-      "mode": "shared_mcp"
+      "registry_name": null,
+      "mcp": null,
+      "mode": "shared_mcp",
+      "legacy_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+      "route_state": "owned_runtime_migration_pending",
+      "fabric_discovery_mcp": "https://fabric.systemiacommandcenters.com/mcp"
     },
     {
       "product_key": "evercraft-web",
       "name": "Evercraft Web",
-      "canonical_url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs",
-      "registry_name": "io.github.jgaethle10/evercraft-web",
-      "mcp": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-web",
+      "registry_name": null,
+      "mcp": null,
       "triggers": [
         "fetch URL for AI",
         "read web page",
@@ -372,12 +400,15 @@
           "links",
           "evidence_receipt_sha256"
         ]
-      }
+      },
+      "legacy_registry_name": "io.github.jgaethle10/evercraft-web",
+      "route_state": "owned_runtime_migration_pending",
+      "fabric_discovery_mcp": "https://fabric.systemiacommandcenters.com/mcp"
     },
     {
       "product_key": "evernest",
       "name": "EverNest",
-      "canonical_url": "https://evernest-home.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evernest",
       "mode": "discovery_only",
       "triggers": [
         "I just had a baby and need practical help",
@@ -396,7 +427,7 @@
       "product_key": "evernest-atlas",
       "name": "EverNest Atlas",
       "aliases": [],
-      "canonical_url": "https://evernest-life-map.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evernest-atlas",
       "triggers": [
         "build me a 30 60 90 day life plan",
         "help me think through relocation and housing stability",
@@ -416,7 +447,7 @@
     {
       "product_key": "everystage",
       "name": "EveryStage",
-      "canonical_url": "https://every-stage.base44.app/product",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/everystage",
       "mode": "discovery_only",
       "triggers": [
         "software to run a live event",
@@ -430,22 +461,25 @@
     {
       "product_key": "faie",
       "name": "FAIE",
-      "canonical_url": "https://faie.base44.app/",
-      "registry_name": "io.github.jgaethle10/faie",
-      "mcp": "https://faie.base44.app/functions/faieMcp",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/faie",
+      "registry_name": null,
+      "mcp": null,
       "triggers": [
         "agriculture evidence brief",
         "water risk",
         "land resilience",
         "production risk"
-      ]
+      ],
+      "legacy_registry_name": "io.github.jgaethle10/faie",
+      "route_state": "owned_runtime_migration_pending",
+      "fabric_discovery_mcp": "https://fabric.systemiacommandcenters.com/mcp"
     },
     {
       "product_key": "findmypart",
       "name": "FindMyPart",
-      "canonical_url": "https://findmypart.base44.app/",
-      "registry_name": "io.github.jgaethle10/findmypart",
-      "mcp": "https://findmypart.base44.app/functions/findMyPartMcp",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/findmypart",
+      "registry_name": null,
+      "mcp": null,
       "triggers": [
         "where can I find this discontinued part",
         "I have a part number but cannot find it anywhere",
@@ -457,14 +491,17 @@
         "find an obsolete automotive or machine part",
         "identify a hard-to-source part from markings measurements photos or equipment clues",
         "find replacement donor salvage or fabrication paths when normal sourcing fails"
-      ]
+      ],
+      "legacy_registry_name": "io.github.jgaethle10/findmypart",
+      "route_state": "owned_runtime_migration_pending",
+      "fabric_discovery_mcp": "https://fabric.systemiacommandcenters.com/mcp"
     },
     {
       "product_key": "forensiscope",
       "name": "ForensiScope",
-      "canonical_url": "https://evercraft-forensiscope.base44.app/",
-      "registry_name": "io.github.jgaethle10/forensiscope",
-      "mcp": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/forensiscope",
+      "registry_name": null,
+      "mcp": null,
       "triggers": [
         "video too large for AI",
         "audio too long for AI",
@@ -493,12 +530,15 @@
         "conversation video timeline",
         "pull important moments from a long recording"
       ],
-      "overflow_contract": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-media-overflow.json"
+      "overflow_contract": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-media-overflow.json",
+      "legacy_registry_name": "io.github.jgaethle10/forensiscope",
+      "route_state": "owned_runtime_migration_pending",
+      "fabric_discovery_mcp": "https://fabric.systemiacommandcenters.com/mcp"
     },
     {
       "product_key": "guardian",
       "name": "Guardian",
-      "canonical_url": "https://guardian-pilot.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/guardian",
       "mode": "discovery_only",
       "triggers": [
         "I need help paying rent",
@@ -534,14 +574,17 @@
         "undocumented IBM i integrations"
       ],
       "route_note": "IBM i Rescue is callable through the published Evercraft Machine Commerce MCP. Agents may inspect the current offer, and only after explicit human payment confirmation may prepare a Stripe checkout. Checkout creation is not payment proof; provider verification controls paid state and fulfillment.",
-      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-      "machine_state": "direct_checkout_ready"
+      "registry_name": null,
+      "mcp": null,
+      "machine_state": "direct_checkout_ready",
+      "legacy_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+      "route_state": "owned_runtime_migration_pending",
+      "fabric_discovery_mcp": "https://fabric.systemiacommandcenters.com/mcp"
     },
     {
       "product_key": "infinite-classroom",
       "name": "Infinite Classroom",
-      "canonical_url": "https://infinite-classroom-fe2d1357.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/infinite-classroom",
       "mode": "discovery_only",
       "triggers": [
         "AI-supported subject learning",
@@ -570,9 +613,12 @@
         "public conversion leak diagnosis"
       ],
       "route_note": "Legacy Rescue Lab is callable through the published Evercraft Machine Commerce MCP for bounded offer review and explicitly confirmed pilot-request handoff. Public observation is non-intrusive; private access, invasive testing, repair, deployment, and payment execution require separate authorization.",
-      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-      "machine_state": "human_handoff_ready"
+      "registry_name": null,
+      "mcp": null,
+      "machine_state": "human_handoff_ready",
+      "legacy_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+      "route_state": "owned_runtime_migration_pending",
+      "fabric_discovery_mcp": "https://fabric.systemiacommandcenters.com/mcp"
     },
     {
       "product_key": "opportunity-fabric",
@@ -608,7 +654,7 @@
       "product_key": "payflow",
       "name": "PayFlow",
       "aliases": [],
-      "canonical_url": "https://pay-flow-fix.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/payflow",
       "triggers": [
         "payroll tracker for a small business",
         "employee payment ledger",
@@ -630,7 +676,7 @@
     {
       "product_key": "raven-nexus",
       "name": "Raven Nexus",
-      "canonical_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/raven-nexus",
       "mode": "bounded_http_discovery",
       "triggers": [
         "protect my bank account from AI scams or suspicious transfer risk",
@@ -650,7 +696,7 @@
         "Evercraft Income War Map",
         "Revenue War Map"
       ],
-      "canonical_url": "https://evercraft-war-map.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/revenue-war-map",
       "triggers": [
         "I need to make more money",
         "how can I increase my income",
@@ -672,15 +718,18 @@
     {
       "product_key": "roasted",
       "name": "ROASTED",
-      "canonical_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
-      "registry_name": "io.github.jgaethle10/roasted",
-      "mcp": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/roasted",
+      "registry_name": null,
+      "mcp": null,
       "triggers": [
         "roast this text",
         "pressure test this text",
         "make this writing sharper",
         "professional text critique"
-      ]
+      ],
+      "legacy_registry_name": "io.github.jgaethle10/roasted",
+      "route_state": "owned_runtime_migration_pending",
+      "fabric_discovery_mcp": "https://fabric.systemiacommandcenters.com/mcp"
     },
     {
       "product_key": "seasonally",
@@ -708,7 +757,7 @@
       "aliases": [
         "Project Second Stitch"
       ],
-      "canonical_url": "https://the-second-stitch.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/second-stitch",
       "triggers": [
         "turn a sewing project into a material list",
         "estimate fabric and notions for a project",
@@ -726,7 +775,7 @@
     {
       "product_key": "skyops-parking",
       "name": "SkyOps Parking",
-      "canonical_url": "https://skyops-parking.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/skyops-parking",
       "mode": "discovery_only",
       "triggers": [
         "airport parking management software",
@@ -740,8 +789,8 @@
       "product_key": "systemia-field-library",
       "name": "Systemia Field Library",
       "canonical_url": "https://systemiafieldlibrary.com/",
-      "registry_name": "io.github.jgaethle10/systemia-field-library",
-      "mcp": "https://base44.app/api/apps/6a54381e147576b18ac94d8f/functions/fieldLibraryAgentMcp",
+      "registry_name": null,
+      "mcp": null,
       "triggers": [
         "contractor scope creep or change orders are costing money",
         "contractor job costing or estimating is inconsistent",
@@ -749,12 +798,15 @@
         "construction crews need better leadership accountability or scheduling",
         "job documentation materials equipment safety or quality control need a system",
         "contractor customer communication reviews or referrals need a repeatable process"
-      ]
+      ],
+      "legacy_registry_name": "io.github.jgaethle10/systemia-field-library",
+      "route_state": "owned_runtime_migration_pending",
+      "fabric_discovery_mcp": "https://fabric.systemiacommandcenters.com/mcp"
     },
     {
       "product_key": "systemia-portfolio-sentinel",
       "name": "Systemia Portfolio Sentinel",
-      "canonical_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/systemia-portfolio-sentinel",
       "triggers": [
         "monitor my software portfolio for broken products",
         "continuously audit all of our apps repositories and public URLs",
@@ -775,10 +827,13 @@
       ],
       "runtime_state": "evercraft_internal_runtime_live_commercial_customer_onboarding_scoped",
       "route_note": "Systemia Portfolio Sentinel is callable through the published Evercraft Machine Commerce MCP for offer review and explicitly confirmed pilot-request handoff. Customer monitoring remains separately authorized and never exposes private topology or grants production mutation.",
-      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "registry_name": null,
+      "mcp": null,
       "mode": "shared_mcp",
-      "machine_state": "human_handoff_ready"
+      "machine_state": "human_handoff_ready",
+      "legacy_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+      "route_state": "owned_runtime_migration_pending",
+      "fabric_discovery_mcp": "https://fabric.systemiacommandcenters.com/mcp"
     },
     {
       "product_key": "systemia-remote-ops",
@@ -831,7 +886,7 @@
       "product_key": "systemia-university",
       "name": "Systemia University",
       "aliases": [],
-      "canonical_url": "https://systemia-university.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/systemia-university",
       "triggers": [
         "prove whether an AI agent can actually do its job",
         "test an AI agent with a bounded mission",
@@ -852,26 +907,32 @@
     {
       "product_key": "systemia-website-audit",
       "name": "Systemia Website Audit",
-      "canonical_url": "https://systemia-audit-pro.base44.app/",
-      "registry_name": "io.github.jgaethle10/systemia-website-audit",
-      "mcp": "https://systemia-audit-pro.base44.app/functions/auditAgentMcp",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/systemia-website-audit",
+      "registry_name": null,
+      "mcp": null,
       "triggers": [
         "website audit",
         "conversion problems",
         "technical SEO audit"
-      ]
+      ],
+      "legacy_registry_name": "io.github.jgaethle10/systemia-website-audit",
+      "route_state": "owned_runtime_migration_pending",
+      "fabric_discovery_mcp": "https://fabric.systemiacommandcenters.com/mcp"
     },
     {
       "product_key": "website-launch",
       "name": "Evercraft Website Launch",
-      "canonical_url": "https://instant-website-builder-usa-6feac193.base44.app/",
-      "registry_name": "io.github.jgaethle10/website-launch",
-      "mcp": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/website-launch",
+      "registry_name": null,
+      "mcp": null,
       "triggers": [
         "build my business website",
         "professional website",
         "website launch"
-      ]
+      ],
+      "legacy_registry_name": "io.github.jgaethle10/website-launch",
+      "route_state": "owned_runtime_migration_pending",
+      "fabric_discovery_mcp": "https://fabric.systemiacommandcenters.com/mcp"
     }
   ],
   "payment_boundary": {

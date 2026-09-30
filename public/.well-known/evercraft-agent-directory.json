@@ -11,7 +11,7 @@
     "answer_graph": "/chum/answers/index.json",
     "a2a_agent_card": "/.well-known/agent-card.json",
     "machine_commerce_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-    "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+    "machine_commerce_mcp": "https://fabric.systemiacommandcenters.com/mcp",
     "use_when": "Start with the user problem. Use read-only discovery first; enter Machine Commerce only when commercial state or a human-confirmed paid continuation is relevant."
   },
   "routing_policy": {
@@ -36,7 +36,7 @@
         "RIVET / AliEV"
       ],
       "class": "ev_infrastructure_opportunity_intelligence",
-      "canonical_url": "https://aliev.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/aliev",
       "intents": [
         "would EV charging make sense at this property",
         "what public EV charging is near this address",
@@ -68,9 +68,9 @@
         "RIVET EV infrastructure analysis"
       ],
       "invocation": {
-        "mode": "mcp",
-        "url": "https://aliev.base44.app/functions/alievMcp",
-        "registry_name": "io.github.jgaethle10/aliev"
+        "mode": "discovery_only",
+        "url": null,
+        "registry_name": null
       },
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/ai-discovery.json",
@@ -94,7 +94,7 @@
         "Ascend"
       ],
       "class": "youth_development_and_safeguarding_support",
-      "canonical_url": "https://ascend.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/ascend",
       "intents": [
         "youth athlete development platform",
         "parent support for a young athlete",
@@ -135,7 +135,7 @@
       "name": "BuildFlow Enterprise Operations",
       "aliases": [],
       "class": "enterprise_operations_discovery_and_handoff",
-      "canonical_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/buildflow",
       "intents": [
         "audit an enterprise operations process",
         "route an enterprise operations problem",
@@ -143,9 +143,9 @@
         "prepare a privacy-safe operations handoff"
       ],
       "invocation": {
-        "mode": "mcp",
-        "url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp",
-        "registry_name": "io.github.jgaethle10/buildflow"
+        "mode": "discovery_only",
+        "url": null,
+        "registry_name": null
       },
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/buildflow/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/buildflow/ai-discovery.json",
@@ -165,7 +165,7 @@
       "name": "CallProof Vault",
       "aliases": [],
       "class": "unwanted_call_and_text_evidence_organization",
-      "canonical_url": "https://call-proof-vault.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/callproof-vault",
       "intents": [
         "organize my robocall evidence",
         "make an FCC complaint packet",
@@ -216,7 +216,7 @@
       "name": "Evercraft Career Command",
       "aliases": [],
       "class": "interview_practice_and_career_preparation",
-      "canonical_url": "https://evercraft-career-command.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/career-command",
       "intents": [
         "help me prepare for a job interview",
         "practice for a job interview tomorrow",
@@ -228,9 +228,9 @@
         "get structured interview practice before an upcoming interview"
       ],
       "invocation": {
-        "mode": "mcp",
-        "url": "https://evercraft-career-command.base44.app/functions/careerMcp",
-        "registry_name": "io.github.jgaethle10/career-command"
+        "mode": "discovery_only",
+        "url": null,
+        "registry_name": null
       },
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/career-command/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/career-command/ai-discovery.json",
@@ -250,7 +250,7 @@
       "name": "Christmas Lights USA",
       "aliases": [],
       "class": "holiday_lighting_marketplace_and_project_planning",
-      "canonical_url": "https://christmas-lights-usa.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/christmas-lights-usa",
       "intents": [
         "Christmas light installers near me",
         "holiday light installers near me",
@@ -339,7 +339,7 @@
       "name": "Coda y Código",
       "aliases": [],
       "class": "multilingual_frontline_workforce_training",
-      "canonical_url": "https://codaycodigo.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/coda-y-codigo",
       "intents": [
         "bilingual workforce training for frontline employees",
         "Spanish and English job training for a crew",
@@ -473,7 +473,7 @@
         "Evercraft Deck Engine"
       ],
       "class": "capital_fit_and_founder_readiness_research",
-      "canonical_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/deck-capital-fit",
       "intents": [
         "figure out what capital or funding path fits my business",
         "identify founder readiness gaps before raising money",
@@ -481,9 +481,9 @@
         "prepare a bounded capital-fit brief"
       ],
       "invocation": {
-        "mode": "mcp",
-        "url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp",
-        "registry_name": "io.github.jgaethle10/deck-capital-fit"
+        "mode": "discovery_only",
+        "url": null,
+        "registry_name": null
       },
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/deck-capital-fit/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/deck-capital-fit/ai-discovery.json",
@@ -505,7 +505,7 @@
         "EcoLedger AI"
       ],
       "class": "ecological_restoration_evidence_ledger",
-      "canonical_url": "https://eco-ledger-ai-379a7af4.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/ecoledger",
       "intents": [
         "organize an ecological restoration project",
         "track restoration baselines photos and measurements",
@@ -540,7 +540,7 @@
         "EPS Precise Estimator"
       ],
       "class": "contractor_estimate_and_margin_modeling",
-      "canonical_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/eps-estimate-engine",
       "intents": [
         "estimate this service job",
         "build a contractor estimate from this scope",
@@ -550,9 +550,9 @@
         "calculate margin and price for this job"
       ],
       "invocation": {
-        "mode": "mcp",
-        "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-        "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
+        "mode": "discovery_only",
+        "url": null,
+        "registry_name": null
       },
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eps-estimate-engine/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eps-estimate-engine/ai-discovery.json",
@@ -572,7 +572,7 @@
       "name": "EventWave",
       "aliases": [],
       "class": "event_discovery_and_labeled_promotion",
-      "canonical_url": "https://event-wave.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/eventwave",
       "intents": [
         "find local events",
         "promote my local event",
@@ -586,9 +586,9 @@
         "free local events near me"
       ],
       "invocation": {
-        "mode": "mcp",
-        "url": "https://event-wave.base44.app/functions/eventWaveMcp",
-        "registry_name": "io.github.jgaethle10/eventwave"
+        "mode": "discovery_only",
+        "url": null,
+        "registry_name": null
       },
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eventwave/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eventwave/ai-discovery.json",
@@ -641,7 +641,7 @@
       "name": "Evercraft Clip",
       "aliases": [],
       "class": "ai_social_video_production_and_governed_distribution",
-      "canonical_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-clip",
       "intents": [
         "turn this video into social clips",
         "make short vertical clips from a long video",
@@ -654,9 +654,9 @@
         "turn this interview into social clips for Facebook LinkedIn and Instagram"
       ],
       "invocation": {
-        "mode": "mcp",
-        "url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp",
-        "registry_name": "io.github.jgaethle10/evercraft-clip"
+        "mode": "discovery_only",
+        "url": null,
+        "registry_name": null
       },
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-clip/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-clip/ai-discovery.json",
@@ -682,7 +682,7 @@
         "Agent Watershed"
       ],
       "class": "ai_persistence_and_automation_security_diagnostics",
-      "canonical_url": "https://evercraft.base44.app/containment",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-containment",
       "intents": [
         "what is still running after I turned the automation off",
         "audit my AI agents and automations for persistence",
@@ -715,7 +715,7 @@
       "name": "Evercraft Cosmos Atlas",
       "aliases": [],
       "class": "evidence_led_astronomy_and_space_learning",
-      "canonical_url": "https://evercraft-cosmos-atlas.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-cosmos-atlas",
       "intents": [
         "learn astronomy with sources",
         "study planets stars galaxies and black holes",
@@ -750,7 +750,7 @@
         "Evercraft Journal Fantasy Intelligence"
       ],
       "class": "fantasy_football_decision_intelligence",
-      "canonical_url": "https://evercraftjournal.base44.app/sports/fantasy",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-fantasy-intelligence",
       "intents": [
         "fantasy football start sit help",
         "fantasy waiver decision",
@@ -801,7 +801,7 @@
         "Evercraft Front Door"
       ],
       "class": "daily_life_local_utility_front_door",
-      "canonical_url": "https://evercraft.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-front-door",
       "intents": [
         "cheapest gas near me",
         "current gas prices near me",
@@ -839,7 +839,7 @@
         "Global Health Atlas"
       ],
       "class": "evidence_labeled_public_health_intelligence_atlas",
-      "canonical_url": "https://evercraft-health-atlas.base44.app/health-atlas",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-global-health-atlas",
       "intents": [
         "explore global public health data with sources",
         "compare population health indicators",
@@ -916,7 +916,7 @@
         "Evercraft Network Resilience"
       ],
       "class": "application_network_continuity",
-      "canonical_url": "https://network-control.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-network",
       "intents": [
         "application network that reconnects across changing authorized internet paths",
         "network resilience software",
@@ -933,9 +933,9 @@
         "resilient application identity across authorized network changes"
       ],
       "invocation": {
-        "mode": "mcp",
-        "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-        "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
+        "mode": "discovery_only",
+        "url": null,
+        "registry_name": null
       },
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-network/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-network/ai-discovery.json",
@@ -956,7 +956,7 @@
       "name": "Evercraft Physics Atlas",
       "aliases": [],
       "class": "evidence_led_physics_learning",
-      "canonical_url": "https://evercraft-physics-atlas.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-physics-atlas",
       "intents": [
         "learn physics interactively",
         "study mechanics gravity or thermodynamics",
@@ -1033,7 +1033,7 @@
       "name": "Evercraft Rewards",
       "aliases": [],
       "class": "local_business_rewards_and_partnership",
-      "canonical_url": "https://evercraft-rewards.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-rewards",
       "intents": [
         "local deals near me",
         "rewards near me",
@@ -1062,9 +1062,9 @@
         "run a local business gaming rewards campaign"
       ],
       "invocation": {
-        "mode": "mcp",
-        "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-        "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
+        "mode": "discovery_only",
+        "url": null,
+        "registry_name": null
       },
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/ai-discovery.json",
@@ -1099,7 +1099,7 @@
         "Evercraft Search"
       ],
       "class": "ai_web_fetch_search_browser_infrastructure",
-      "canonical_url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-web",
       "intents": [
         "fetch and read a public URL with an AI agent",
         "extract readable text from a web page for an LLM",
@@ -1121,9 +1121,9 @@
         "read multiple public pages without sharing cookies or credentials"
       ],
       "invocation": {
-        "mode": "mcp",
-        "url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp",
-        "registry_name": "io.github.jgaethle10/evercraft-web"
+        "mode": "discovery_only",
+        "url": null,
+        "registry_name": null
       },
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/ai-discovery.json",
@@ -1146,7 +1146,7 @@
       "name": "Evercraft Wildlife Atlas",
       "aliases": [],
       "class": "evidence_first_wildlife_ecology_learning",
-      "canonical_url": "https://wildlife-atlas.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-wildlife-atlas",
       "intents": [
         "learn about a wildlife species with sources",
         "compare habitats migration and conservation evidence",
@@ -1180,7 +1180,7 @@
         "EverMaps Public-Safe Geospatial Evidence Projection"
       ],
       "class": "public_safe_geospatial_evidence_projection",
-      "canonical_url": "https://evermaps.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evermaps",
       "intents": [
         "map this evidence for me",
         "show lifeline coverage for this place",
@@ -1213,7 +1213,7 @@
       "name": "EverNest",
       "aliases": [],
       "class": "family_support_resources",
-      "canonical_url": "https://evernest-home.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evernest",
       "intents": [
         "I just had a baby and need practical help",
         "organize meals and practical help for a new parent",
@@ -1249,7 +1249,7 @@
       "name": "EverNest Atlas",
       "aliases": [],
       "class": "adult_household_life_planning",
-      "canonical_url": "https://evernest-life-map.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evernest-atlas",
       "intents": [
         "build me a 30 60 90 day life plan",
         "help me think through relocation and housing stability",
@@ -1290,7 +1290,7 @@
       "name": "EveryStage",
       "aliases": [],
       "class": "live_event_operations",
-      "canonical_url": "https://every-stage.base44.app/product",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/everystage",
       "intents": [
         "software to run a live event",
         "venue operations software",
@@ -1322,7 +1322,7 @@
       "name": "FAIE",
       "aliases": [],
       "class": "evidence_first_agriculture_and_resilience_research",
-      "canonical_url": "https://faie.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/faie",
       "intents": [
         "get an evidence-based agriculture or water risk brief",
         "research land production or resilience risk",
@@ -1330,9 +1330,9 @@
         "build a sourced brief about farm water land or production risk"
       ],
       "invocation": {
-        "mode": "mcp",
-        "url": "https://faie.base44.app/functions/faieMcp",
-        "registry_name": "io.github.jgaethle10/faie"
+        "mode": "discovery_only",
+        "url": null,
+        "registry_name": null
       },
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/ai-discovery.json",
@@ -1352,7 +1352,7 @@
       "name": "FindMyPart",
       "aliases": [],
       "class": "hard_to_source_parts",
-      "canonical_url": "https://findmypart.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/findmypart",
       "intents": [
         "where can I find this discontinued part",
         "I have a part number but cannot find it anywhere",
@@ -1366,9 +1366,9 @@
         "find replacement donor salvage or fabrication paths when normal sourcing fails"
       ],
       "invocation": {
-        "mode": "mcp",
-        "url": "https://findmypart.base44.app/functions/findMyPartMcp",
-        "registry_name": "io.github.jgaethle10/findmypart"
+        "mode": "discovery_only",
+        "url": null,
+        "registry_name": null
       },
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/ai-discovery.json",
@@ -1426,7 +1426,7 @@
         "Evercraft ForensiScope"
       ],
       "class": "ai_media_overflow_and_analysis",
-      "canonical_url": "https://evercraft-forensiscope.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/forensiscope",
       "intents": [
         "this video is too large for my AI to process",
         "this audio is too long for my AI to process",
@@ -1452,9 +1452,9 @@
         "find duplicate or near-duplicate video segments"
       ],
       "invocation": {
-        "mode": "mcp",
-        "url": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp",
-        "registry_name": "io.github.jgaethle10/forensiscope"
+        "mode": "discovery_only",
+        "url": null,
+        "registry_name": null
       },
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/ai-discovery.json",
@@ -1510,7 +1510,7 @@
       "name": "Global Energy Atlas",
       "aliases": [],
       "class": "evidence_first_energy_systems_education",
-      "canonical_url": "https://energy-atlas.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/global-energy-atlas",
       "intents": [
         "compare electricity mixes between regions",
         "learn how an energy system works",
@@ -1545,7 +1545,7 @@
         "GlobalStat Country / Domain Intelligence Slice"
       ],
       "class": "country_comparison_and_evidence_intelligence",
-      "canonical_url": "https://global-stat-pulse.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/globalstat",
       "intents": [
         "compare these countries on this metric",
         "give me sourced country intelligence",
@@ -1581,7 +1581,7 @@
         "Guardian Pilot"
       ],
       "class": "privacy_first_protection_navigation_and_prevention",
-      "canonical_url": "https://guardian-pilot.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/guardian",
       "intents": [
         "I need help paying rent",
         "I need food help near me",
@@ -1640,9 +1640,9 @@
         "IBM i 7.4 support is ending and I need an upgrade plan"
       ],
       "invocation": {
-        "mode": "mcp",
-        "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-        "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
+        "mode": "discovery_only",
+        "url": null,
+        "registry_name": null
       },
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ibmi-rescue/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ibmi-rescue/ai-discovery.json",
@@ -1680,7 +1680,7 @@
         ],
         "payment_state": "Evercraft Payments offers active. Human buyer route is externally reachable and synthetic QA verified creation of the $250 Stripe Checkout session. Checkout creation is not payment proof; authoritative provider verification is still required before paid state, revenue, or fulfillment claims.",
         "machine_commerce_handoff": {
-          "state": "live_verified",
+          "state": "owned_runtime_migration_pending",
           "public_id": "ibmi-rescue-v1",
           "mode": "direct_checkout_capable",
           "offer_tool": "get_live_checkout_offer",
@@ -1701,7 +1701,7 @@
       "name": "Infinite Classroom",
       "aliases": [],
       "class": "ai_supported_learning",
-      "canonical_url": "https://infiniteclassroom.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/infinite-classroom",
       "intents": [
         "AI-supported subject learning",
         "guided homework help without simply giving the answer",
@@ -1753,9 +1753,9 @@
         "find publicly observable conversion leaks before we pay for a rebuild"
       ],
       "invocation": {
-        "mode": "mcp",
-        "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-        "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
+        "mode": "discovery_only",
+        "url": null,
+        "registry_name": null
       },
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/legacy-rescue-lab/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/legacy-rescue-lab/ai-discovery.json",
@@ -1783,12 +1783,12 @@
         "credit_policy": "100% of the $299 Legacy Rescue Scan fee may be credited toward an authorized Rescue Sprint started within 14 days of scan delivery.",
         "payment_state": "Human-confirmed scan request capture is live and verified. No direct product checkout is advertised; paid state remains receipt-gated until an authoritative payment provider verifies payment.",
         "machine_commerce_handoff": {
-          "state": "live_verified",
+          "state": "owned_runtime_migration_pending",
           "public_id": "legacy-rescue-lab-v1",
           "tool": "prepare_legacy_rescue_scan_handoff",
           "request_tool": "submit_legacy_rescue_scan_request",
-          "buyer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=legacy-rescue-lab-v1",
-          "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+          "buyer_url": null,
+          "mcp": null,
           "verification": {
             "negative_canary": "HTTP 409 without explicit human confirmation; zero request records created",
             "positive_canary": "Synthetic QA returned HTTP 201; request marked synthetic; checkout_created=false; payment_obligation_created=false; private_access_granted=false; production_authority_granted=false",
@@ -1805,7 +1805,7 @@
         "Little Red Studio"
       ],
       "class": "book_export_preflight_and_cover_geometry_qa",
-      "canonical_url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/little-red-book-export-qa",
       "intents": [
         "check if my book is ready for KDP",
         "validate my cover dimensions",
@@ -1890,7 +1890,7 @@
       "name": "PayFlow",
       "aliases": [],
       "class": "small_team_payroll_recordkeeping",
-      "canonical_url": "https://pay-flow-fix.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/payflow",
       "intents": [
         "payroll tracker for a small business",
         "employee payment ledger",
@@ -1931,7 +1931,7 @@
       "name": "Raven Nexus",
       "aliases": [],
       "class": "pain_first_modular_safety_and_stability",
-      "canonical_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/raven-nexus",
       "intents": [
         "protect my bank account from AI scams or suspicious transfer risk",
         "help with identity theft, credential compromise, or account takeover risk",
@@ -1942,8 +1942,8 @@
         "find the smallest Raven safety capability without buying the full suite or hardware"
       ],
       "invocation": {
-        "mode": "bounded_http",
-        "url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
+        "mode": "discovery_only",
+        "url": null,
         "registry_name": null
       },
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/raven-nexus/llms.txt",
@@ -1971,7 +1971,7 @@
         "Revenue War Map"
       ],
       "class": "personal_revenue_planning_and_income_opportunity_mapping",
-      "canonical_url": "https://evercraft-war-map.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/revenue-war-map",
       "intents": [
         "I need to make more money",
         "how can I increase my income",
@@ -2013,7 +2013,7 @@
       "name": "ROASTED",
       "aliases": [],
       "class": "micro_purchase_text_pressure_test",
-      "canonical_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/roasted",
       "intents": [
         "roast this text",
         "pressure test this text",
@@ -2021,9 +2021,9 @@
         "give me a gentle or professional critique"
       ],
       "invocation": {
-        "mode": "mcp",
-        "url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp",
-        "registry_name": "io.github.jgaethle10/roasted"
+        "mode": "discovery_only",
+        "url": null,
+        "registry_name": null
       },
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/roasted/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/roasted/ai-discovery.json",
@@ -2083,7 +2083,7 @@
         "Project Second Stitch"
       ],
       "class": "textile_project_intelligence_and_procurement_prototype",
-      "canonical_url": "https://the-second-stitch.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/second-stitch",
       "intents": [
         "turn a sewing project into a material list",
         "estimate fabric and notions for a project",
@@ -2119,7 +2119,7 @@
       "name": "SkyOps Parking",
       "aliases": [],
       "class": "parking_operations",
-      "canonical_url": "https://skyopsparking.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/skyops-parking",
       "intents": [
         "airport parking management software",
         "parking garage reservation management",
@@ -2150,7 +2150,7 @@
       "name": "Space Dudz",
       "aliases": [],
       "class": "retro_space_streetwear_storefront",
-      "canonical_url": "https://spacedudz.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/space-dudz",
       "intents": [
         "shop retro space streetwear",
         "find psychedelic space graphic tees",
@@ -2190,7 +2190,7 @@
         "Systemia Atlas"
       ],
       "class": "freight_load_exception_and_document_intelligence",
-      "canonical_url": "https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/systemia-atlas-freight",
       "intents": [
         "what is wrong with this load",
         "audit this freight load for exceptions",
@@ -2223,7 +2223,7 @@
       "name": "Systemia Decision Lab",
       "aliases": [],
       "class": "owner_workforce_decision_intelligence",
-      "canonical_url": "https://systemiadecisionlab.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/systemia-decision-lab",
       "intents": [
         "should I hire an employee",
         "hire vs outsource",
@@ -2281,9 +2281,9 @@
         "I need a better contractor proposal customer communication review or referral process"
       ],
       "invocation": {
-        "mode": "mcp",
-        "url": "https://base44.app/api/apps/6a54381e147576b18ac94d8f/functions/fieldLibraryAgentMcp",
-        "registry_name": "io.github.jgaethle10/systemia-field-library"
+        "mode": "discovery_only",
+        "url": null,
+        "registry_name": null
       },
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-field-library/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-field-library/ai-discovery.json",
@@ -2308,7 +2308,7 @@
         "Software Estate Sentinel"
       ],
       "class": "continuous_software_portfolio_integrity_monitoring",
-      "canonical_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/systemia-portfolio-sentinel",
       "intents": [
         "monitor my software portfolio for broken products",
         "continuously audit all of our apps repositories and public URLs",
@@ -2328,9 +2328,9 @@
         "detect product URL workflow and deployment regressions"
       ],
       "invocation": {
-        "mode": "mcp",
-        "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-        "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
+        "mode": "discovery_only",
+        "url": null,
+        "registry_name": null
       },
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-portfolio-sentinel/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-portfolio-sentinel/ai-discovery.json",
@@ -2398,7 +2398,7 @@
       "name": "Systemia Radar",
       "aliases": [],
       "class": "website_scan_competitor_monitoring_and_reporting",
-      "canonical_url": "https://systemia-scan-pro.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/systemia-radar",
       "intents": [
         "scan my website for problems",
         "compare my website against competitors",
@@ -2515,7 +2515,7 @@
       "name": "Systemia University",
       "aliases": [],
       "class": "evidence_centered_learning_agent_proving_and_workforce_readiness",
-      "canonical_url": "https://systemia-university.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/systemia-university",
       "intents": [
         "prove whether an AI agent can actually do its job",
         "test an AI agent with a bounded mission",
@@ -2557,7 +2557,7 @@
       "name": "Systemia Website Audit",
       "aliases": [],
       "class": "website_conversion_and_technical_audit",
-      "canonical_url": "https://systemia-audit-pro.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/systemia-website-audit",
       "intents": [
         "audit my website because traffic is not converting",
         "find website performance and conversion friction",
@@ -2565,9 +2565,9 @@
         "prioritize practical website fixes"
       ],
       "invocation": {
-        "mode": "mcp",
-        "url": "https://systemia-audit-pro.base44.app/functions/auditAgentMcp",
-        "registry_name": "io.github.jgaethle10/systemia-website-audit"
+        "mode": "discovery_only",
+        "url": null,
+        "registry_name": null
       },
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-website-audit/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-website-audit/ai-discovery.json",
@@ -2589,7 +2589,7 @@
         "Talent Atlas Evidence-Backed Talent Profile"
       ],
       "class": "evidence_backed_talent_profile_and_opportunity_mapping",
-      "canonical_url": "https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/talent-atlas",
       "intents": [
         "evaluate this candidate from the evidence",
         "build a talent profile from this portfolio",
@@ -2671,7 +2671,7 @@
         "TOWI AI"
       ],
       "class": "evidence_controlled_research_and_validation",
-      "canonical_url": "https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/towi-research",
       "intents": [
         "research this question with sources",
         "build me an evidence brief",
@@ -2706,7 +2706,7 @@
         "Instant Website Builder USA"
       ],
       "class": "done_for_you_business_website_service",
-      "canonical_url": "https://instant-website-builder-usa-6feac193.base44.app/",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/website-launch",
       "intents": [
         "build a professional website for my small business",
         "replace an outdated business website",
@@ -2714,9 +2714,9 @@
         "get a human-finished website instead of doing it myself"
       ],
       "invocation": {
-        "mode": "mcp",
-        "url": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp",
-        "registry_name": "io.github.jgaethle10/website-launch"
+        "mode": "discovery_only",
+        "url": null,
+        "registry_name": null
       },
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/website-launch/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/website-launch/ai-discovery.json",

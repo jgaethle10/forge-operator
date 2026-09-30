@@ -14,58 +14,34 @@ const offer = {
   commercial_state: 'sell_now'
 };
 
-const review = machineReviewUrl(offer.public_id);
-assert.match(review, /^https:\/\//);
-
+assert.equal(BUYER_FRONTAGE_GATEWAY, '');
+assert.equal(machineReviewUrl(offer.public_id), null);
 assert.equal(configuredChumPublicOrigin(''), null);
 assert.equal(configuredChumPublicOrigin('http://forge.example.com'), null);
 assert.equal(configuredChumPublicOrigin('https://systemiacommandcenters.com'), null);
+assert.equal(configuredChumPublicOrigin('https://aliev.base44.app'), null);
 
-const direct = directHumanBuyerUrl(offer, { surface: 'test_surface' });
-assert.match(direct, /^https:\/\/evercraft-career-command\.base44\.app\//);
-assert.match(direct, /src=chum/);
-assert.match(direct, /campaign=buyer-frontage/);
-assert.match(direct, /ec_surface=test_surface/);
-assert.match(direct, /ec_public_id=career-command-interview-practice-machine-v1/);
-
-const frontage = buyerFrontageUrl(offer, { surface: 'test_surface' });
-assert.match(frontage, /^https:\/\/evercraft-ai-suite-08c4d2b8\.base44\.app\/buy\/career-command-interview-practice-machine-v1\?/);
-assert.match(frontage, /src=chum/);
-assert.match(frontage, /campaign=buyer-frontage/);
-assert.match(frontage, /ec_surface=test_surface/);
-assert.match(frontage, /ec_public_id=career-command-interview-practice-machine-v1/);
-assert.equal(new URL(frontage).origin, new URL(BUYER_FRONTAGE_GATEWAY).origin);
-
+assert.equal(directHumanBuyerUrl(offer, { surface: 'test_surface' }), null);
+assert.equal(buyerFrontageUrl(offer, { surface: 'test_surface' }), null);
 assert.equal(
   humanStartUrl(offer, { publicOrigin: '', surface: 'test_surface' }),
-  frontage,
-  'when Forge origin is unavailable, use branded Evercraft buyer frontage before the downstream product destination'
+  null,
+  'without a verified owned public origin, paid/start routing must stay held instead of falling back to Base44'
 );
 assert.equal(
   humanStartState(offer, { publicOrigin: '' }),
-  'evercraft_buyer_frontage'
+  'migration_hold_no_owned_start_route'
 );
 
-const rivet = {
-  public_id: 'rivet-site-underwriting-v1',
-  commercial_state: 'sell_now'
-};
-assert.match(
-  humanStartUrl(rivet, { publicOrigin: '' }),
-  /^https:\/\/evercraft-ai-suite-08c4d2b8\.base44\.app\/buy\/rivet-site-underwriting-v1\?/
+const ownedReview = machineReviewUrl(
+  offer.public_id,
+  'https://commerce.evercraft.example/review'
 );
-
-const handoffOnly = {
-  public_id: 'foundry-app-escape-audit-v1',
-  commercial_state: 'sell_now'
-};
-assert.match(
-  humanStartUrl(handoffOnly, { publicOrigin: '' }),
-  /^https:\/\/evercraft-ai-suite-08c4d2b8\.base44\.app\/buy\/foundry-app-escape-audit-v1\?/
-);
+assert.match(ownedReview, /^https:\/\/commerce\.evercraft\.example\/review\?/);
+assert.match(ownedReview, /public_id=career-command-interview-practice-machine-v1/);
 assert.equal(
-  humanStartState(handoffOnly, { publicOrigin: '' }),
-  'evercraft_buyer_frontage'
+  machineReviewUrl(offer.public_id, 'https://event-wave.base44.app/functions/gateway'),
+  null
 );
 
 const live = humanStartUrl(offer, {
@@ -88,9 +64,7 @@ assert.equal(
 
 console.log(JSON.stringify({
   ok: true,
-  direct_human_buyer_destination: true,
-  branded_buyer_frontage_default: true,
-  rivet_clean_buyer_frontage: true,
-  machine_review_is_last_fallback: true,
-  tracked_corridor_requires_configured_https_origin: true
+  base44_fallback_forbidden: true,
+  unverified_start_routes_fail_closed: true,
+  tracked_corridor_requires_configured_owned_https_origin: true
 }));

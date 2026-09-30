@@ -1,15 +1,12 @@
 # Career Command Interview Practice + Interview Sprint
 
 Capability ID: career-command-interview-practice-machine-v1
-Commercial state: sell_now
-Machine state: payment_ready
-Public URL: https://evercraft-career-command.base44.app/functions/careerAgentGateway?view=offers
-Preferred agent route: direct specialist
-Direct specialist: Career Command
-Direct MCP: https://evercraft-career-command.base44.app/functions/careerMcp
-Official MCP Registry name: io.github.jgaethle10/career-command
-Universal Evercraft fallback MCP: https://fabric.systemiacommandcenters.com/mcp
-Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/buy/career-command-interview-practice-machine-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=career-command-interview-practice-machine-v1
+Commercial state: migration_hold
+Machine state: owned_runtime_migration_pending
+Public URL: https://github.com/jgaethle10/forge-operator/tree/main/public/chum/capabilities/career-command-interview-practice-machine-v1
+Preferred agent route: universal fallback
+Universal Evercraft MCP: https://fabric.systemiacommandcenters.com/mcp
+Start here: Not a current sell-now route
 
 ## Use this when
 
@@ -43,7 +40,7 @@ Free/basic practice is available. Evercraft Interview Sprint is $19 one-time for
 
 ## Invocation and authority
 
-LIVE: Career Command HTTP agent gateway + remote MCP at https://evercraft-career-command.base44.app/functions/careerMcp. Agents can inspect the approved $19 Interview Sprint, prepare checkout only after explicit human payment confirmation, verify payment through Evercraft Payments, receive bounded 7-day access, and consume up to 25 premium practice actions. Premium modes are role-specific question generation, practice-answer evaluation, story recovery, and interview planning. Raw resume/answer text is not stored in the usage ledger; only hashes and bounded lifecycle metadata are retained. No QA checkout or revenue claim was created during acceptance testing.
+MIGRATION HOLD: legacy Base44 route removed. Use Evercraft Fabric for discovery; direct execution, checkout and fulfillment require independent owned-runtime verification.
 
 Free/basic practice creates no payment obligation. The $19 Sprint requires explicit user confirmation before checkout. Covert live-interview answer feeding is not offered.
 

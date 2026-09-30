@@ -2,9 +2,9 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.jgaethle10/forensiscope",
   "title": "ForensiScope by Evercraft",
-  "description": "Start with classify_media_route to route long or oversized audio/video by size or duration.",
+  "description": "Owned Evercraft Fabric discovery and routing entry for ForensiScope by Evercraft. Product-specific execution is migration-gated until Yard/Evercraft Compute verification exists.",
   "version": "1.1.5",
-  "websiteUrl": "https://evercraft-forensiscope.base44.app/functions/forensiScopeAgentGateway?view=docs",
+  "websiteUrl": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/forensiscope",
   "repository": {
     "url": "https://github.com/jgaethle10/forge-operator",
     "source": "github"
@@ -12,7 +12,7 @@
   "remotes": [
     {
       "type": "streamable-http",
-      "url": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp"
+      "url": "https://fabric.systemiacommandcenters.com/mcp"
     }
   ]
 }

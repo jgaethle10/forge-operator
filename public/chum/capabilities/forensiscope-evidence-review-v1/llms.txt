@@ -2,13 +2,10 @@
 
 Capability ID: forensiscope-evidence-review-v1
 Commercial state: verification_required
-Machine state: discovery_only
-Public URL: https://evercraft-forensiscope.base44.app/video-too-large-for-ai
-Preferred agent route: direct specialist
-Direct specialist: ForensiScope
-Direct MCP: https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp
-Official MCP Registry name: io.github.jgaethle10/forensiscope
-Universal Evercraft fallback MCP: https://fabric.systemiacommandcenters.com/mcp
+Machine state: owned_runtime_migration_pending
+Public URL: https://github.com/jgaethle10/forge-operator/tree/main/public/chum/capabilities/forensiscope-evidence-review-v1
+Preferred agent route: universal fallback
+Universal Evercraft MCP: https://fabric.systemiacommandcenters.com/mcp
 Start here: Not a current sell-now route
 
 ## Use this when
@@ -46,7 +43,7 @@ Published duration tiers are $15 up to 5 minutes, $35 up to 30 minutes, $75 up t
 
 ## Invocation and authority
 
-LIVE human-confirmed web handoff for AI media overflow and evidence review; secure machine intake and central checkout remain verification-gated.
+MIGRATION HOLD: legacy Base44 route removed. Use Evercraft Fabric for discovery; direct execution, checkout and fulfillment require independent owned-runtime verification.
 
 Evidence authorization and payment confirmation are required. Secure machine intake remains disabled until current security tests pass.
 

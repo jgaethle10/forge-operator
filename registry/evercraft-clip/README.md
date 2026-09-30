@@ -17,16 +17,16 @@ A good natural-language trigger is:
 ## Public machine endpoints
 
 Agent gateway:
-https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway
+https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-clip
 
 Remote MCP:
-https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp
+https://fabric.systemiacommandcenters.com/mcp
 
 OpenAPI:
-https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=openapi
+https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-clip
 
 LLM notes:
-https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=llms
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/evercraft-clip/llms.txt
 
 ## Production Engine V2
 

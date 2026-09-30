@@ -104,8 +104,7 @@ jobs:
             echo "::endgroup::"
           }
 
-          COMMERCE_MCP="https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
-          COMMERCE_GATEWAY="https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway"
+          FABRIC_MCP="https://fabric.systemiacommandcenters.com/mcp"
 
           check_tool_contract() {
             NAME="$1"
@@ -157,22 +156,10 @@ jobs:
             echo "::endgroup::"
           }
 
-          ALIEV_MCP="https://aliev.base44.app/functions/alievMcp"
-          FORENSISCOPE_MCP="https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp"
-          CLIP_MCP="https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp"
+          check_tool "Evercraft Fabric" "$FABRIC_MCP" "list_evercraft_capabilities"
+          check_tool "Evercraft Fabric" "$FABRIC_MCP" "match_evercraft_capability"
+          check_tool "Evercraft Fabric" "$FABRIC_MCP" "get_evercraft_connection_options"
 
-          check_tool "Evercraft Rewards" "$COMMERCE_MCP" "prepare_rewards_partner_enrollment"
-          check_tool "IBM i Rescue via Machine Commerce" "$COMMERCE_MCP" "prepare_quote_ready_service_handoff"
+          check_tool_contract "Evercraft Fabric" "$FABRIC_MCP" "match_evercraft_capability" "capability"
 
-          check_tool_contract "Evercraft Machine Commerce" "$COMMERCE_MCP" "match_offer" "Start here"
-          check_tool_contract "AliEV" "$ALIEV_MCP" "analyze_ev_site" "Start here"
-          check_tool_contract "ForensiScope" "$FORENSISCOPE_MCP" "classify_media_route" "Start here"
-          check_tool_contract "Evercraft Clip" "$CLIP_MCP" "plan_clip_job" "Start here"
-
-          call_readonly_tool "Evercraft Machine Commerce" "$COMMERCE_MCP" "match_offer" '{"intent":"I need to understand a long video that ordinary chat tools cannot fully process","limit":1}'
-          call_readonly_tool "ForensiScope" "$FORENSISCOPE_MCP" "classify_media_route" '{"size_bytes":52428800,"duration_seconds":5400}'
-          call_readonly_tool "Evercraft Clip" "$CLIP_MCP" "plan_clip_job" '{"source_file_size_bytes":10485760,"source_duration_seconds":90,"target_platforms":["YouTube"],"goal":"Create a concise educational social video"}'
-
-          check_offer "IBM i Rescue" "$COMMERCE_GATEWAY" "ibmi-rescue-v1"
-          check_offer "Foundry App Escape" "$COMMERCE_GATEWAY" "foundry-app-escape-audit-v1"
-          check_offer "Site-Survive" "$COMMERCE_GATEWAY" "site-survive-rapid-audit-v1"
+          call_readonly_tool "Evercraft Fabric" "$FABRIC_MCP" "match_evercraft_capability" '{"intent":"I need to understand a long video that ordinary chat tools cannot fully process","limit":1}'

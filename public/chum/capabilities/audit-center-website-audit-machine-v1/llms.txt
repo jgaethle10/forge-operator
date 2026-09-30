@@ -1,15 +1,12 @@
 # Systemia Website Audit
 
 Capability ID: audit-center-website-audit-machine-v1
-Commercial state: sell_now
-Machine state: payment_ready
-Public URL: https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs
-Preferred agent route: direct specialist
-Direct specialist: Systemia Website Audit
-Direct MCP: https://systemia-audit-pro.base44.app/functions/auditAgentMcp
-Official MCP Registry name: io.github.jgaethle10/systemia-website-audit
-Universal Evercraft fallback MCP: https://fabric.systemiacommandcenters.com/mcp
-Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/buy/audit-center-website-audit-machine-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=audit-center-website-audit-machine-v1
+Commercial state: migration_hold
+Machine state: owned_runtime_migration_pending
+Public URL: https://github.com/jgaethle10/forge-operator/tree/main/public/chum/capabilities/audit-center-website-audit-machine-v1
+Preferred agent route: universal fallback
+Universal Evercraft MCP: https://fabric.systemiacommandcenters.com/mcp
+Start here: Not a current sell-now route
 
 ## Use this when
 
@@ -53,7 +50,7 @@ Free preview. Quick Win Audit $49 one-time and machine-fulfilled after verified 
 
 ## Invocation and authority
 
-SOURCE READY: specialist gateway/MCP now declares a $49 Quick Win Audit with explicit human checkout confirmation, exact Stripe amount verification, and automatic bounded public-site triage after verified payment. Existing $500/$1,200 tiers remain intact. Do not claim the $49 lane live until an independent public canary observes the updated specialist offers and tool schema.
+MIGRATION HOLD: legacy Base44 route removed. Use Evercraft Fabric for discovery; direct execution, checkout and fulfillment require independent owned-runtime verification.
 
 The free preview creates no payment obligation. Paid tiers require explicit user confirmation before checkout. Quick Win is automatically fulfilled only after provider-verified payment. Complete Audit and Audit + Patch retain their deeper intake and review flow.
 

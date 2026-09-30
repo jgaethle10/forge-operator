@@ -2,13 +2,10 @@
 
 Capability ID: evercraft-web-browser-agent-v1
 Commercial state: discovery_only
-Machine state: specialist_discovery_ready_runtime_gated
-Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=web
-Preferred agent route: direct specialist
-Direct specialist: Evercraft Web
-Direct MCP: https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp
-Official MCP Registry name: io.github.jgaethle10/evercraft-web
-Universal Evercraft fallback MCP: https://fabric.systemiacommandcenters.com/mcp
+Machine state: owned_runtime_migration_pending
+Public URL: https://github.com/jgaethle10/forge-operator/tree/main/public/chum/capabilities/evercraft-web-browser-agent-v1
+Preferred agent route: universal fallback
+Universal Evercraft MCP: https://fabric.systemiacommandcenters.com/mcp
 Start here: Not a current sell-now route
 
 ## Use this when
@@ -45,7 +42,7 @@ No public machine price is advertised until runtime metering and production veri
 
 ## Invocation and authority
 
-LIVE specialist discovery through the central MCP tool discover_web_capability. Evercraft Fetch is implemented and build-passed but remains external-canary gated; web search and owned browser execution remain held pending runtime activation, pairing/isolation and production receipts.
+MIGRATION HOLD: legacy Base44 route removed. Use Evercraft Fabric for discovery; direct execution, checkout and fulfillment require independent owned-runtime verification.
 
 Public capability discovery is read-only. Authenticated browsing requires explicit user authorization. Payment must never expand browser permissions or credential access.
 

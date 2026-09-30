@@ -3,10 +3,10 @@
   "@graph": [
     {
       "@type": "Service",
-      "@id": "https://call-proof-vault.base44.app/#evercraft-capability",
+      "@id": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/capabilities/callproof-complaint-packet-machine-v1#evercraft-capability",
       "name": "CallProof Complaint Evidence Packet",
       "description": "Organize a user's own unwanted-call or text records and evidence into a factual packet for review before optional FCC or FTC filing.",
-      "url": "https://call-proof-vault.base44.app/",
+      "url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/capabilities/callproof-complaint-packet-machine-v1",
       "provider": {
         "@type": "Organization",
         "name": "Evercraft LLC",
@@ -20,7 +20,7 @@
       "name": "CallProof Complaint Evidence Packet | Evercraft capability",
       "description": "Organize a user's own unwanted-call or text records and evidence into a factual packet for review before optional FCC or FTC filing.",
       "about": {
-        "@id": "https://call-proof-vault.base44.app/#evercraft-capability"
+        "@id": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/capabilities/callproof-complaint-packet-machine-v1#evercraft-capability"
       }
     }
   ]

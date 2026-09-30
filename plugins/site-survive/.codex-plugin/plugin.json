@@ -6,7 +6,7 @@
     "name": "Evercraft LLC",
     "url": "https://github.com/jgaethle10/forge-operator"
   },
-  "homepage": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1",
+  "homepage": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/site-survive",
   "repository": "https://github.com/jgaethle10/forge-operator",
   "license": "UNLICENSED",
   "keywords": [
@@ -28,12 +28,12 @@
     "capabilities": [
       "Interactive"
     ],
-    "websiteURL": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1",
+    "websiteURL": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/site-survive",
     "defaultPrompt": [
       "Show me which parts of this site-dependent operation fail first during a realistic connectivity outage and what to prioritize."
     ]
   },
-  "releaseState": "YARD_RUNTIME_PROVEN_PUBLIC_ROUTE_PENDING",
+  "releaseState": "OWNED_RUNTIME_MIGRATION_PENDING",
   "pendingRuntimePath": "/mcp/site-survive",
-  "publicOriginState": "https_route_unbound"
+  "publicOriginState": "owned_runtime_route_pending"
 }

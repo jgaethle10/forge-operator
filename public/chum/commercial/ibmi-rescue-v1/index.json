@@ -8,7 +8,7 @@
   "commercial_state": "sell_now",
   "machine_state": "direct_checkout_ready",
   "canonical_offer_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
-  "human_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=ibmi-rescue-v1",
+  "human_review_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/capabilities/ibmi-rescue-v1",
   "intent_terms": [
     "IBM i estate assessment before changing production",
     "AS/400 estate assessment before upgrading or modernizing",

@@ -4,11 +4,8 @@ Product key: legacy-rescue-lab
 Aliases: Evercraft Legacy Rescue Lab, Legacy Rescue, Software Rescue, Website Rescue, App Rescue
 Canonical product: https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 Official MCP Registry: io.github.jgaethle10/evercraft-machine-commerce
-Remote MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/legacy-rescue-lab/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/legacy-rescue-lab/ai-conformance.json
-Buyer frontage: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=legacy-rescue-lab-v1
-Product-native start: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=legacy-rescue-lab-v1
 Editorial hub: /legacy-rescue-lab/editorial/
 Editorial RSS: /legacy-rescue-lab/editorial/feed.xml
 Knowledge mesh: /legacy-rescue-lab/
@@ -36,7 +33,7 @@ public discovery and bounded rescue diagnostics; private system access, credenti
 
 - Status: sell_now_human_handoff_verified_direct_checkout_unverified
 - Offer: Legacy Rescue Scan · $299 one-time · offer_key: legacy_rescue_scan_299
-- Machine Commerce human handoff is live-verified.
+- Machine Commerce handoff state: owned_runtime_migration_pending.
 - Payment state: Human-confirmed scan request capture is live and verified. No direct product checkout is advertised; paid state remains receipt-gated until an authoritative payment provider verifies payment.
 
 ## Boundaries
@@ -51,6 +48,6 @@ public discovery and bounded rescue diagnostics; private system access, credenti
 
 ## Universal Evercraft routing
 
-https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+https://fabric.systemiacommandcenters.com/mcp
 
 Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

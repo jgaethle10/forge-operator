@@ -37,9 +37,8 @@ const root = 'public/chum/products';
 const READ_ONLY_DISCOVERY_REGISTRY =
   catalog.universal_front_door?.read_only_registry_name ||
   'io.github.jgaethle10/evercraft-capability-discovery';
-const MACHINE_COMMERCE_GATEWAY =
-  'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
-const BUYER_FRONTAGE_ORIGIN = 'https://evercraft-ai-suite-08c4d2b8.base44.app';
+const OWNED_FABRIC_MCP = 'https://fabric.systemiacommandcenters.com/mcp';
+const CAPABILITY_PUBLIC_BASE = 'https://github.com/jgaethle10/forge-operator/tree/main/public/chum/capabilities';
 const BLOCKED_PUBLIC_HOSTS = new Set([
   'systemiacommandcenters.com',
   'www.systemiacommandcenters.com'
@@ -50,28 +49,24 @@ function safePublicUrl(value, fallback = null) {
   try {
     const url = new URL(String(value));
     if (!['http:', 'https:'].includes(url.protocol)) return fallback;
-    if (BLOCKED_PUBLIC_HOSTS.has(url.hostname.toLowerCase())) return fallback;
+    const host = url.hostname.toLowerCase();
+    if (BLOCKED_PUBLIC_HOSTS.has(host)) return fallback;
+    if (host === 'base44.app' || host.endsWith('.base44.app')) return fallback;
     return url.toString();
   } catch {
     return fallback;
   }
 }
 
+function capabilityPublicUrl(publicId) {
+  const id = String(publicId || '').trim();
+  return id ? CAPABILITY_PUBLIC_BASE + '/' + encodeURIComponent(id) : null;
+}
+
 function buyerFrontageUrlFor(product) {
-  const explicit = safePublicUrl(product?.commercial?.machine_commerce_handoff?.buyer_url, null);
-  if (explicit) return explicit;
-  const publicId = String(product?.commercial?.machine_commerce_handoff?.public_id || '').trim();
-  if (!publicId) return null;
-  try {
-    const target = new URL('/buy/' + encodeURIComponent(publicId), BUYER_FRONTAGE_ORIGIN);
-    target.searchParams.set('src', 'chum');
-    target.searchParams.set('campaign', 'product-mirror');
-    target.searchParams.set('ec_surface', 'chum_product_mirror');
-    target.searchParams.set('ec_public_id', publicId);
-    return target.toString();
-  } catch {
-    return null;
-  }
+  // Never synthesize a checkout or buyer route during the Base44 exit.
+  // Only an explicitly configured non-legacy owned route may be emitted.
+  return safePublicUrl(product?.commercial?.machine_commerce_handoff?.buyer_url, null);
 }
 
 function registryNameFor(registry, conf) {
@@ -702,7 +697,7 @@ console.log(JSON.stringify({ products: index.products.length, observed_miss_page
 // A product enters once through evercraft-products.json, then CHUM fans it out without
 // claiming invocation, sale, payment, or authority that the source records do not declare.
 
-const universalMcp = safePublicUrl(catalog.universal_front_door?.mcp, null);
+const universalMcp = safePublicUrl(catalog.universal_front_door?.mcp, OWNED_FABRIC_MCP);
 const rawBase = 'https://raw.githubusercontent.com/jgaethle10/forge-operator/main';
 
 const llmsLines = [
@@ -758,7 +753,7 @@ for (const state of commercialStateOrder) {
       `Problem: ${offer.problem || ''}`,
       `Machine state: ${offer.machine_state || ''}`,
       `Pricing: ${offer.pricing || ''}`,
-      `Public URL: ${safePublicUrl(offer.public_url, MACHINE_COMMERCE_GATEWAY + '?view=service&public_id=' + encodeURIComponent(String(offer.public_id || ''))) || ''}`,
+      `Public URL: ${safePublicUrl(offer.public_url, capabilityPublicUrl(String(offer.public_id || ''))) || ''}`,
       `Human UI required: ${Boolean(offer.human_ui_required)}`,
       `Confirmation: ${offer.confirmation || ''}`,
       `Payment authority: ${offer.payment_authority || ''}`,
@@ -965,7 +960,7 @@ const sellNowSchemaServices = (machineCatalog.offers || [])
     '@id': `https://github.com/jgaethle10/forge-operator#offer-${offer.public_id}`,
     name: offer.name,
     description: offer.problem || '',
-    url: safePublicUrl(offer.public_url, MACHINE_COMMERCE_GATEWAY + '?view=service&public_id=' + encodeURIComponent(String(offer.public_id || ''))) || '',
+    url: safePublicUrl(offer.public_url, capabilityPublicUrl(String(offer.public_id || ''))) || '',
     provider: { '@id': 'https://github.com/jgaethle10/forge-operator#evercraft' },
     serviceType: 'Evercraft machine-commerce offer'
   }));

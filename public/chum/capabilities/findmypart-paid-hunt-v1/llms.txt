@@ -1,15 +1,12 @@
 # FindMyPart Paid Part Hunt
 
 Capability ID: findmypart-paid-hunt-v1
-Commercial state: sell_now
-Machine state: payment_ready
-Public URL: https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs
-Preferred agent route: direct specialist
-Direct specialist: FindMyPart
-Direct MCP: https://findmypart.base44.app/functions/findMyPartMcp
-Official MCP Registry name: io.github.jgaethle10/findmypart
-Universal Evercraft fallback MCP: https://fabric.systemiacommandcenters.com/mcp
-Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/buy/findmypart-paid-hunt-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=findmypart-paid-hunt-v1
+Commercial state: migration_hold
+Machine state: owned_runtime_migration_pending
+Public URL: https://github.com/jgaethle10/forge-operator/tree/main/public/chum/capabilities/findmypart-paid-hunt-v1
+Preferred agent route: universal fallback
+Universal Evercraft MCP: https://fabric.systemiacommandcenters.com/mcp
+Start here: Not a current sell-now route
 
 ## Use this when
 
@@ -43,7 +40,7 @@ Quick Hunt $19 one-time; Deep Hunt $49 one-time; Rescue Hunt $99 one-time.
 
 ## Invocation and authority
 
-LIVE: HTTP agent gateway + OpenAPI + llms guidance + remote MCP. Agents can read offers, prepare checkout only after explicit human confirmation, and read hunt status. Paid fulfillment still requires authoritative provider verification.
+MIGRATION HOLD: legacy Base44 route removed. Use Evercraft Fabric for discovery; direct execution, checkout and fulfillment require independent owned-runtime verification.
 
 User must explicitly choose an offer and confirm payment. Paid fulfillment starts only after independently verified payment.
 

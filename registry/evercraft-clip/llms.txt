@@ -5,9 +5,9 @@ Product key: evercraft-clip
 Class: ai_social_video_production_and_distribution
 Authority: public read-only discovery and job planning
 Human confirmation required for execution: yes
-Declared MCP: https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp
-Agent gateway: https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway
-OpenAPI: https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=openapi
+Declared MCP: https://fabric.systemiacommandcenters.com/mcp
+Agent gateway: https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-clip
+OpenAPI: https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-clip
 
 ## Natural-language intents
 - turn this video into social clips
@@ -29,7 +29,7 @@ OpenAPI: https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgen
 - 8-45 seconds per customer clip
 - 720x1280 MP4 H.264/AAC customer output
 - ForensiScope is recommended upstream for oversized, long, deduplicated, or full-timeline media; no automatic private-media transfer is claimed
-- Facebook, LinkedIn and Instagram code paths exist
+- provider publishing adapters are being migrated to the owned runtime and are not yet claimed live
 - TikTok is not verified
 
 ## Boundaries

@@ -4,7 +4,7 @@
   "name": "PayFlow",
   "aliases": [],
   "class": "small_team_payroll_recordkeeping",
-  "canonical_url": "https://pay-flow-fix.base44.app/",
+  "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/payflow",
   "intents": [
     "payroll tracker for a small business",
     "employee payment ledger",
@@ -35,7 +35,7 @@
   "buyer_frontage_url": null,
   "registry_name": null,
   "mcp": null,
-  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "machine_commerce_mcp": "https://fabric.systemiacommandcenters.com/mcp",
   "developer_surfaces": null,
   "editorial_surfaces": null,
   "knowledge_surfaces": null,

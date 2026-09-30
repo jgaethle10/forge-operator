@@ -64,7 +64,10 @@ function productRecord(root, product, updatedAt) {
   const key = String(product.product_key || '').trim();
   const discoveryFile = path.join(root, 'public', 'chum', 'products', key, 'ai-discovery.json');
   const discovery = readJson(discoveryFile, null);
-  const canonicalUrl = String(discovery?.canonical_url || product.canonical_url || '').trim();
+  const candidateCanonical = String(discovery?.canonical_url || product.canonical_url || '').trim();
+  const canonicalUrl = /(?:^|\.)base44\.app(?:\/|$)/i.test(candidateCanonical)
+    ? 'https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/' + encodeURIComponent(key)
+    : candidateCanonical;
   const intents = array(discovery?.intents || product.triggers).map(String).filter(Boolean);
   const mirrorPath = '/chum/products/' + encodeURIComponent(key) + '/';
   const llmsPath = mirrorPath + 'llms.txt';
@@ -79,7 +82,9 @@ function productRecord(root, product, updatedAt) {
     llms_path: llmsPath,
     discovery_path: discoveryPath,
     registry_name: String(discovery?.registry_name || product.registry_name || ''),
-    mcp: String(discovery?.mcp || product.mcp || ''),
+    mcp: /(?:^|\.)base44\.app(?:\/|$)/i.test(String(discovery?.mcp || product.mcp || ''))
+      ? ''
+      : String(discovery?.mcp || product.mcp || ''),
     class: String(discovery?.class || ''),
     intents,
     authority: String(discovery?.authority || ''),

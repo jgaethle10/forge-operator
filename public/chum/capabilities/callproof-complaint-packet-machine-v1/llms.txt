@@ -2,8 +2,8 @@
 
 Capability ID: callproof-complaint-packet-machine-v1
 Commercial state: verify
-Machine state: human_auth_handoff
-Public URL: https://call-proof-vault.base44.app/
+Machine state: owned_runtime_migration_pending
+Public URL: https://github.com/jgaethle10/forge-operator/tree/main/public/chum/capabilities/callproof-complaint-packet-machine-v1
 Preferred agent route: universal fallback
 Universal Evercraft MCP: https://fabric.systemiacommandcenters.com/mcp
 Start here: Not a current sell-now route
@@ -41,7 +41,7 @@ Published app pricing: $19 one-time packet, $7.99/month Vault, $29/month Pro. Li
 
 ## Invocation and authority
 
-discoverable_authenticated_checkout_required
+MIGRATION HOLD: legacy Base44 route removed. Use Evercraft Fabric for discovery; direct execution, checkout and fulfillment require independent owned-runtime verification.
 
 User authentication and explicit checkout action are required. Paid access is granted only after Stripe verification.
 

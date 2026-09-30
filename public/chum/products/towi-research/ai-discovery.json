@@ -7,7 +7,7 @@
     "TOWI AI"
   ],
   "class": "evidence_controlled_research_and_validation",
-  "canonical_url": "https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs",
+  "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/towi-research",
   "intents": [
     "research this question with sources",
     "build me an evidence brief",
@@ -30,7 +30,7 @@
   "buyer_frontage_url": null,
   "registry_name": null,
   "mcp": null,
-  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "machine_commerce_mcp": "https://fabric.systemiacommandcenters.com/mcp",
   "developer_surfaces": null,
   "editorial_surfaces": null,
   "knowledge_surfaces": null,

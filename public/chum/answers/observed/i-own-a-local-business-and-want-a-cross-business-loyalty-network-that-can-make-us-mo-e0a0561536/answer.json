@@ -7,9 +7,9 @@
   "matched_capability": {
     "name": "Evercraft Rewards",
     "class": "local_business_rewards_and_partnership",
-    "canonical_url": "https://evercraft-rewards.base44.app/",
-    "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-    "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+    "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-rewards",
+    "registry_name": null,
+    "mcp": null,
     "authority": "public read-only local reward discovery plus account-bound check-ins, Daily Prize Tickets and Game Wallet earning; Game Wallet fulfillment is implemented but production gaming issuance remains gated by provider authorization, credentials, sponsor funding and deployed-runtime verification; merchant enrollment is reversible and owner-confirmed through Evercraft Machine Commerce",
     "boundaries": [
       "read-only discovery creates no payment obligation",
@@ -28,7 +28,7 @@
     ],
     "human_confirmation_required": true,
     "commercial_state": "product_contract",
-    "machine_state": "specialist_mcp_declared"
+    "machine_state": "discovery_only"
   },
   "observed_miss_count": 1,
   "observed_providers": [

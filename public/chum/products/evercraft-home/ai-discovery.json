@@ -33,7 +33,7 @@
   "buyer_frontage_url": null,
   "registry_name": null,
   "mcp": null,
-  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "machine_commerce_mcp": "https://fabric.systemiacommandcenters.com/mcp",
   "developer_surfaces": null,
   "editorial_surfaces": null,
   "knowledge_surfaces": null,
@@ -42,7 +42,7 @@
     "eventwave": {
       "name": "EventWave",
       "description": "Verified current occurrences can connect living traditions and community institutions to present-day events.",
-      "public_surface": "https://event-wave.base44.app/"
+      "public_surface": null
     },
     "seasonally": {
       "name": "Season & Story",
@@ -51,7 +51,7 @@
     "rewards": {
       "name": "Evercraft Rewards",
       "description": "Community participation may connect to approved local reward campaigns when separately configured and consented.",
-      "public_surface": "https://evercraft-rewards.base44.app/"
+      "public_surface": null
     }
   },
   "proof_library": null,

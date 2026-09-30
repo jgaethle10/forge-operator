@@ -2,13 +2,13 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.jgaethle10/systemia-website-audit",
   "title": "Systemia Website Audit",
-  "description": "Website, local SEO, performance and conversion audits with human-confirmed checkout.",
+  "description": "Owned Evercraft Fabric discovery and routing entry for Systemia Website Audit. Product-specific execution is migration-gated until Yard/Evercraft Compute verification exists.",
   "version": "1.0.1",
-  "websiteUrl": "https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs",
+  "websiteUrl": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/systemia-website-audit",
   "remotes": [
     {
       "type": "streamable-http",
-      "url": "https://systemia-audit-pro.base44.app/functions/auditAgentMcp"
+      "url": "https://fabric.systemiacommandcenters.com/mcp"
     }
   ]
 }

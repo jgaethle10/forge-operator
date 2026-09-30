@@ -1,15 +1,12 @@
 # Evercraft Website Launch Service
 
 Capability ID: website-launch-service-v1
-Commercial state: sell_now
-Machine state: payment_ready
-Public URL: https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceAgentGateway?view=docs
-Preferred agent route: direct specialist
-Direct specialist: Website Launch
-Direct MCP: https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp
-Official MCP Registry name: io.github.jgaethle10/website-launch
-Universal Evercraft fallback MCP: https://fabric.systemiacommandcenters.com/mcp
-Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/buy/website-launch-service-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=website-launch-service-v1
+Commercial state: migration_hold
+Machine state: owned_runtime_migration_pending
+Public URL: https://github.com/jgaethle10/forge-operator/tree/main/public/chum/capabilities/website-launch-service-v1
+Preferred agent route: universal fallback
+Universal Evercraft MCP: https://fabric.systemiacommandcenters.com/mcp
+Start here: Not a current sell-now route
 
 ## Use this when
 
@@ -43,7 +40,7 @@ Human-Finished Pro Site $500 one-time; Premium Custom Build $999 one-time; Total
 
 ## Invocation and authority
 
-LIVE: agent HTTP gateway + OpenAPI + llms guidance + remote MCP at https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp. Agents can inspect $500/$999/$1,999 website-service tiers, prepare checkout only after explicit human confirmation, and independently verify paid order state.
+MIGRATION HOLD: legacy Base44 route removed. Use Evercraft Fabric for discovery; direct execution, checkout and fulfillment require independent owned-runtime verification.
 
 The buyer must explicitly choose a tier and confirm payment before checkout. Fulfillment begins only after independent payment verification.
 

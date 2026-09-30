@@ -2,13 +2,10 @@
 
 Capability ID: findmypart-repair-shop-desk-v1
 Commercial state: verification_required
-Machine state: discovery_only
-Public URL: https://findmypart.base44.app/
-Preferred agent route: direct specialist
-Direct specialist: FindMyPart
-Direct MCP: https://findmypart.base44.app/functions/findMyPartMcp
-Official MCP Registry name: io.github.jgaethle10/findmypart
-Universal Evercraft fallback MCP: https://fabric.systemiacommandcenters.com/mcp
+Machine state: owned_runtime_migration_pending
+Public URL: https://github.com/jgaethle10/forge-operator/tree/main/public/chum/capabilities/findmypart-repair-shop-desk-v1
+Preferred agent route: universal fallback
+Universal Evercraft MCP: https://fabric.systemiacommandcenters.com/mcp
 Start here: Not a current sell-now route
 
 ## Use this when
@@ -37,7 +34,7 @@ Current hypothesis $99-$499/month by hunt volume/service level; not auto-quotabl
 
 ## Invocation and authority
 
-Discoverable capability; recurring entitlement/payment path still being verified.
+MIGRATION HOLD: legacy Base44 route removed. Use Evercraft Fabric for discovery; direct execution, checkout and fulfillment require independent owned-runtime verification.
 
 Subscription/payment requires explicit user confirmation; vendor outreach or purchases remain separately authorized.
 

@@ -6,7 +6,7 @@
     "name": "Evercraft LLC",
     "url": "https://github.com/jgaethle10/forge-operator"
   },
-  "homepage": "https://faie.base44.app/",
+  "homepage": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/faie",
   "repository": "https://github.com/jgaethle10/forge-operator",
   "license": "UNLICENSED",
   "keywords": [
@@ -30,9 +30,11 @@
     "capabilities": [
       "Interactive"
     ],
-    "websiteURL": "https://faie.base44.app/",
+    "websiteURL": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/faie",
     "defaultPrompt": [
       "Build me a sourced evidence brief for an agriculture, water, land-resilience, or production-risk decision."
     ]
-  }
+  },
+  "releaseState": "OWNED_RUNTIME_MIGRATION_PENDING",
+  "publicOriginState": "owned_runtime_route_pending"
 }

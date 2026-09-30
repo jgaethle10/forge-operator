@@ -1,15 +1,12 @@
 # EventWave Event / Venue Promotion
 
 Capability ID: eventwave-paid-promotion-v1
-Commercial state: sell_now
-Machine state: payment_ready
-Public URL: https://event-wave.base44.app/functions/eventWaveAgentGateway?view=docs
-Preferred agent route: direct specialist
-Direct specialist: EventWave
-Direct MCP: https://event-wave.base44.app/functions/eventWaveMcp
-Official MCP Registry name: io.github.jgaethle10/eventwave
-Universal Evercraft fallback MCP: https://fabric.systemiacommandcenters.com/mcp
-Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/buy/eventwave-paid-promotion-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=eventwave-paid-promotion-v1
+Commercial state: migration_hold
+Machine state: owned_runtime_migration_pending
+Public URL: https://github.com/jgaethle10/forge-operator/tree/main/public/chum/capabilities/eventwave-paid-promotion-v1
+Preferred agent route: universal fallback
+Universal Evercraft MCP: https://fabric.systemiacommandcenters.com/mcp
+Start here: Not a current sell-now route
 
 ## Use this when
 
@@ -47,7 +44,7 @@ Event Boost $49 one-time; Venue Pack $149 one-time.
 
 ## Invocation and authority
 
-LIVE: EventWave HTTP agent gateway + OpenAPI + llms guidance + remote MCP at https://event-wave.base44.app/functions/eventWaveMcp. Agents can search events, inspect $49/$149 promotion offers, prepare checkout only after explicit human confirmation, and verify payment/placement state. Source review still governs public activation.
+MIGRATION HOLD: legacy Base44 route removed. Use Evercraft Fabric for discovery; direct execution, checkout and fulfillment require independent owned-runtime verification.
 
 Explicit purchase confirmation and verified payment are required. Source review must pass before any public placement activates.
 

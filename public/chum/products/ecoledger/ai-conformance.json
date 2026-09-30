@@ -14,7 +14,7 @@
     "grok",
     "generic_agent"
   ],
-  "canonical_url": "https://eco-ledger-ai-379a7af4.base44.app/",
+  "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/ecoledger",
   "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ecoledger/llms.txt",
   "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ecoledger/ai-discovery.json",
   "registry_name": null,

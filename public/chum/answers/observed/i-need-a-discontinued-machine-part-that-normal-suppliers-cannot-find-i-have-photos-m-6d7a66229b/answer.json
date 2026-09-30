@@ -7,9 +7,9 @@
   "matched_capability": {
     "name": "FindMyPart",
     "class": "hard_to_source_parts",
-    "canonical_url": "https://findmypart.base44.app/",
-    "registry_name": "io.github.jgaethle10/findmypart",
-    "mcp": "https://findmypart.base44.app/functions/findMyPartMcp",
+    "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/findmypart",
+    "registry_name": null,
+    "mcp": null,
     "authority": "public discovery and human-confirmed paid sourcing hunts",
     "boundaries": [
       "unknowns may remain unknown",
@@ -19,7 +19,7 @@
     ],
     "human_confirmation_required": true,
     "commercial_state": "product_contract",
-    "machine_state": "specialist_mcp_declared"
+    "machine_state": "discovery_only"
   },
   "observed_miss_count": 1,
   "observed_providers": [

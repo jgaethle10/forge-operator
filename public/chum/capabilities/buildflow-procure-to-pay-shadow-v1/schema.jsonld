@@ -3,10 +3,10 @@
   "@graph": [
     {
       "@type": "Service",
-      "@id": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute#evercraft-capability",
+      "@id": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/capabilities/buildflow-procure-to-pay-shadow-v1#evercraft-capability",
       "name": "BuildFlow Procure-to-Pay Shadow Audit",
       "description": "A business needs to reconstruct purchasing flow, approval state, receipts and invoice references without turning a new product into the authoritative general ledger.",
-      "url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+      "url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/capabilities/buildflow-procure-to-pay-shadow-v1",
       "provider": {
         "@type": "Organization",
         "name": "Evercraft LLC",
@@ -20,7 +20,7 @@
       "name": "BuildFlow Procure-to-Pay Shadow Audit | Evercraft capability",
       "description": "A business needs to reconstruct purchasing flow, approval state, receipts and invoice references without turning a new product into the authoritative general ledger.",
       "about": {
-        "@id": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute#evercraft-capability"
+        "@id": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/capabilities/buildflow-procure-to-pay-shadow-v1#evercraft-capability"
       }
     }
   ]

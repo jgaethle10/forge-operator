@@ -2,13 +2,13 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.jgaethle10/deck-capital-fit",
   "title": "Deck Capital Fit",
-  "description": "Founder capital-fit and funding-readiness analysis with human-confirmed next steps.",
+  "description": "Owned Evercraft Fabric discovery and routing entry for Deck Capital Fit. Product-specific execution is migration-gated until Yard/Evercraft Compute verification exists.",
   "version": "1.0.2",
-  "websiteUrl": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/",
+  "websiteUrl": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/deck-capital-fit",
   "remotes": [
     {
       "type": "streamable-http",
-      "url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp"
+      "url": "https://fabric.systemiacommandcenters.com/mcp"
     }
   ]
 }

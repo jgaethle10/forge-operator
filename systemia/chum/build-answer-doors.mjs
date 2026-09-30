@@ -5,8 +5,7 @@ import path from 'node:path';
 const PAIN_INDEX_PATH = 'public/.well-known/evercraft-pain-index.json';
 const OUTPUT_ROOT = 'public/chum/answers';
 const RAW_ROOT = 'https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers';
-const MACHINE_COMMERCE_GATEWAY =
-  'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
+const CAPABILITY_PUBLIC_BASE = 'https://github.com/jgaethle10/forge-operator/tree/main/public/chum/capabilities';
 
 const readJson = (pathname) => JSON.parse(fs.readFileSync(pathname, 'utf8'));
 const normalize = (value) => String(value || '')
@@ -43,11 +42,9 @@ function candidateFromEntry(entry) {
       ? `/chum/products/${slugify(productKey)}/`
       : null;
   const machineReviewUrl = publicId
-    ? MACHINE_COMMERCE_GATEWAY + '?view=service&public_id=' + encodeURIComponent(publicId)
+    ? CAPABILITY_PUBLIC_BASE + '/' + encodeURIComponent(publicId)
     : null;
-  const machineOfferUrl = publicId && entry.commercial_state === 'sell_now'
-    ? MACHINE_COMMERCE_GATEWAY + '?action=offer&public_id=' + encodeURIComponent(publicId)
-    : null;
+  const machineOfferUrl = null;
 
   return {
     capability_id: entry.capability_id,

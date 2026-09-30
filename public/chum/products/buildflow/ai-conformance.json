@@ -12,11 +12,11 @@
     "grok",
     "generic_agent"
   ],
-  "canonical_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+  "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/buildflow",
   "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/buildflow/llms.txt",
   "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/buildflow/ai-discovery.json",
   "registry_name": "io.github.jgaethle10/buildflow",
-  "mcp": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp",
+  "mcp": null,
   "authority": "public discovery, intent routing and privacy-preserving human handoff only",
   "human_confirmation_required": true,
   "boundaries": [
