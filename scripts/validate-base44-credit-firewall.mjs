@@ -15,6 +15,7 @@ if (cfg.rules?.internal_recurring_base44_schedulers_allowed !== false) fail('int
 if (cfg.rules?.base44_llm_as_default_inference_path_allowed !== false) fail('Base44 LLM cannot be the default inference path');
 if (cfg.rules?.base44_as_runtime_authority_allowed !== false) fail('Base44 cannot be runtime authority');
 if (cfg.rules?.base44_core_integrations_allowed !== false) fail('Base44 Core integrations must be disabled for new active execution paths');
+if (cfg.rules?.base44_sdk_transport_allowed !== false) fail('Base44 generated SDK transport must be disabled for new active execution paths');
 
 if (cfg.replacement?.canonical_source !== 'github') fail('replacement source must be GitHub');
 if (cfg.replacement?.orchestration !== 'systemia') fail('replacement orchestration must be Systemia');
@@ -29,6 +30,10 @@ if (cfg.replacement?.integration_gateway !== 'systemia/core/core-gateway.mjs') f
 if (cfg.replacement?.integration_client_shim !== 'systemia/core/core-client.js') fail('owned integration client shim is missing');
 if (cfg.replacement?.integration_gateway_owner !== 'evercraft') fail('integration gateway must be Evercraft-owned');
 if (cfg.replacement?.integration_gateway_legacy_transport !== false) fail('integration gateway must not route through Base44');
+if (cfg.replacement?.app_runtime_gateway !== 'systemia/app-runtime/app-gateway.mjs') fail('owned app runtime gateway is missing');
+if (cfg.replacement?.app_runtime_client !== 'systemia/app-runtime/app-client.js') fail('owned app runtime client is missing');
+if (cfg.replacement?.entity_store !== 'systemia/app-runtime/entity-store.mjs') fail('owned entity store is missing');
+if (cfg.replacement?.auth_default !== 'fail_closed') fail('app runtime auth must fail closed by default');
 if (Number(cfg.replacement?.kaidance_heartbeat_target_seconds) !== 300) fail('KAIDANCE heartbeat must stay at 300 seconds');
 
 const frozen = new Set(cfg.frozen_internal_workflows || []);
@@ -101,6 +106,7 @@ if (releaseContinuity.named_cloud_required !== false) {
 }
 
 for (const gate of [
+  'app_runtime_proof_pass',
   'core_gateway_proof_pass',
   'replacement_runtime_live',
   'kaidance_pulse_healthy',
