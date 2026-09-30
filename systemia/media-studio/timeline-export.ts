@@ -8,6 +8,7 @@ import type {
   TimelineClip,
   TimelineTrack,
 } from './timeline.js';
+import { buildAudioMasterGraph, type NormalizedAudioMasterPolicy } from './audio-master.js';
 
 const DIMENSIONS = {
   '9:16': { width: 1080, height: 1920 },
@@ -29,12 +30,17 @@ export interface TimelineExportPlan {
   visualClipIds:string[];
   audioClipIds:string[];
   captionClipIds:string[];
+  audioMaster:NormalizedAudioMasterPolicy;
   boundaries:{
     localReadyAssetsOnly:true;
     pendingGenerationAssetsRejected:true;
     deterministicTrackOrdering:true;
     captionsBurnedIntoPicture:true;
     mixedAudioNormalized:true;
+    roleAwareAudioBuses:true;
+    dialogueAwareMusicDucking:true;
+    ebuR128LoudnessTarget:true;
+    truePeakLimited:true;
     inputAssetDigestsVerified:true;
     publicationAuthorityGranted:false;
   };
@@ -54,6 +60,7 @@ export interface TimelineExportReceipt {
   videoCodec?:string;
   audioCodec?:string;
   inputAssetIds:string[];
+  audioMaster:NormalizedAudioMasterPolicy;
   renderedAt:string;
   publicationAuthorityGranted:false;
 }
@@ -207,18 +214,19 @@ export function buildTimelineExportPlan(input:{
     currentVideo=out;
   });
 
-  let audioOut:string|undefined;
   audioBindings.forEach((binding,index)=>{
     filters.push(audioFilter(binding,`aclip${index}`));
   });
-  if(audioBindings.length===1){
-    filters.push(`[aclip0]apad,atrim=duration=${durationSec}[aout];`);
-    audioOut='aout';
-  }else if(audioBindings.length>1){
-    const labels=audioBindings.map((_,index)=>`[aclip${index}]`).join('');
-    filters.push(`${labels}amix=inputs=${audioBindings.length}:duration=longest:dropout_transition=0:normalize=0,alimiter=limit=0.95,apad,atrim=duration=${durationSec}[aout];`);
-    audioOut='aout';
-  }
+  const audioMaster=buildAudioMasterGraph({
+    clips:audioBindings.map((binding,index)=>({
+      label:`aclip${index}`,
+      trackKind:binding.track.kind as 'voice'|'music'|'sfx',
+    })),
+    durationSec,
+    settings:project.audioMaster,
+  });
+  filters.push(...audioMaster.filters);
+  const audioOut=audioMaster.outputLabel;
 
   const filterComplex=filters.join('').replace(/;$/,'');
   args.push('-filter_complex',filterComplex,'-map',`[${currentVideo}]`);
@@ -248,12 +256,17 @@ export function buildTimelineExportPlan(input:{
     visualClipIds:visualBindings.map(item=>item.clip.id),
     audioClipIds:audioBindings.map(item=>item.clip.id),
     captionClipIds:captionBindings.map(item=>item.clip.id),
+    audioMaster:audioMaster.policy,
     boundaries:{
       localReadyAssetsOnly:true,
       pendingGenerationAssetsRejected:true,
       deterministicTrackOrdering:true,
       captionsBurnedIntoPicture:true,
       mixedAudioNormalized:true,
+      roleAwareAudioBuses:true,
+      dialogueAwareMusicDucking:true,
+      ebuR128LoudnessTarget:true,
+      truePeakLimited:true,
       inputAssetDigestsVerified:true,
       publicationAuthorityGranted:false,
     },
@@ -307,6 +320,7 @@ export function renderTimelineExport(input:{
     videoCodec:video?.codec_name,
     audioCodec:audio?.codec_name,
     inputAssetIds:plan.inputAssetIds,
+    audioMaster:plan.audioMaster,
     renderedAt:new Date().toISOString(),
     publicationAuthorityGranted:false,
   };
