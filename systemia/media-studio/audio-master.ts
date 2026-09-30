@@ -61,16 +61,17 @@ function bus(
   kind:'voice'|'music'|'sfx',
   labels:string[],
   filters:string[],
+  sampleRate:number,
 ){
   if(!labels.length) return undefined;
   const output=kind+'bus';
   if(labels.length===1){
-    filters.push(`[${labels[0]}]anull[${output}];`);
+    filters.push(`[${labels[0]}]aresample=${sampleRate}[${output}];`);
     return output;
   }
   filters.push(
     labels.map(label=>`[${label}]`).join('')+
-    `amix=inputs=${labels.length}:duration=longest:dropout_transition=0:normalize=0[${output}];`
+    `amix=inputs=${labels.length}:duration=longest:dropout_transition=0:normalize=0,aresample=${sampleRate}[${output}];`
   );
   return output;
 }
@@ -94,9 +95,9 @@ export function buildAudioMasterGraph(input:{
   const musicLabels=input.clips.filter(item=>item.trackKind==='music').map(item=>item.label);
   const sfxLabels=input.clips.filter(item=>item.trackKind==='sfx').map(item=>item.label);
 
-  let voice=bus('voice',voiceLabels,filters);
-  let music=bus('music',musicLabels,filters);
-  const sfx=bus('sfx',sfxLabels,filters);
+  let voice=bus('voice',voiceLabels,filters,policy.sampleRate);
+  let music=bus('music',musicLabels,filters,policy.sampleRate);
+  const sfx=bus('sfx',sfxLabels,filters,policy.sampleRate);
   let duckedMusic:string|undefined;
 
   if(voice&&music&&policy.dialogueDucking){
