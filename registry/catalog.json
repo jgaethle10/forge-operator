@@ -17,9 +17,9 @@
     {
       "product_key": "aliev",
       "name": "AliEV",
-      "canonical_url": "https://aliev.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/index.html",
       "registry_name": "io.github.jgaethle10/aliev",
-      "mcp": "https://aliev.base44.app/functions/alievMcp",
+      "mcp": null,
       "triggers": [
         "EV charging site",
         "charger opportunity",
@@ -55,7 +55,10 @@
         "RIVET EV Infrastructure Intelligence",
         "Evercraft RIVET",
         "RIVET / AliEV"
-      ]
+      ],
+      "machine_state": "migration_hold",
+      "migration_state": "base44_evacuation",
+      "route_note": "Use the owned CHUM mirror for public discovery. Direct specialist invocation is migration-gated until an owned Evercraft edge passes health and contract verification."
     },
     {
       "product_key": "ascend",
