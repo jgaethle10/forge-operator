@@ -209,6 +209,7 @@ export function createNotificationFabric(options = {}) {
     const sleep = options.sleep || ((ms) => new Promise((resolve) => setTimeout(resolve, ms)));
     let accepted = 0;
     let pushSuppressed = 0;
+    const attentionByPrincipal = new Map();
 
     for (const subscription of matched) {
       const strategy = routeStrategy(intent, Number(realtimeByPrincipal.get(subscription.principal_id) || 0), subscription, options.now ? new Date(options.now) : new Date());
@@ -230,10 +231,14 @@ export function createNotificationFabric(options = {}) {
 
       const budgetExempt = intent.priority === 'critical' || intent.purpose === 'safety';
       if (!budgetExempt) {
-        const budget = store.consumeAttentionBudget(subscription.principal_id, intent.purpose, {
-          now: options.now ? new Date(options.now).getTime() : Date.now(),
-          limits: options.attentionLimits,
-        });
+        let budget = attentionByPrincipal.get(subscription.principal_id);
+        if (!budget) {
+          budget = store.consumeAttentionBudget(subscription.principal_id, intent.purpose, {
+            now: options.now ? new Date(options.now).getTime() : Date.now(),
+            limits: options.attentionLimits,
+          });
+          attentionByPrincipal.set(subscription.principal_id, budget);
+        }
         if (!budget.allowed) {
           pushSuppressed += 1;
           receipts.push(store.recordDelivery({
