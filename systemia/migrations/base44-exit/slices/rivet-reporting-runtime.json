@@ -27,11 +27,15 @@
     "live_yard_route_verified": false,
     "live_fresh_report_ready_verified": false,
     "base44_report_execution_retired": false,
-    "focused_hotfix_release_ref": "513d3e9b4f2f0a0771544cbe20c6e456d65975c2"
+    "focused_hotfix_release_ref": "513d3e9b4f2f0a0771544cbe20c6e456d65975c2",
+    "owned_aliev_source_runtime_landed": true,
+    "owned_aliev_source_contract_proof": "pass",
+    "embedded_owned_source_compute_proof": "pass_pending_ci_current_head",
+    "legacy_base44_source_url_default_removed": true,
+    "legacy_source_url_fail_closed": true
   },
   "migrate": [
     "report_execution_runtime",
-    "aliev_source_adapter",
     "report_progress_telemetry",
     "beast_football_source_snapshot_transport",
     "live_rivet_ui_route",
@@ -54,9 +58,9 @@
   },
   "blockers": [
     "live authenticated Yard report route has not yet been independently verified",
-    "RIVET New Report UI is still temporarily bound to the Base44 generateQuickReport compatibility function",
-    "fresh 6405 W Chestnut live report has not yet reached generation_state=ready through Yard"
+    "RIVET New Report UI is still temporarily bound to a legacy compatibility function",
+    "fresh canary report has not yet reached generation_state=ready through the independently verified public Yard route"
   ],
-  "next_action": "bind_the_new_report_creation_path_to_a_verified_yard_report_route_then_create_a_fresh_6405_w_chestnut_report_and_require_generation_state_ready",
+  "next_action": "verify_the_current_owned_source_ci_then_bind_and_verify_the_public_yard_report_route_and_run_a_fresh_canary_report",
   "destructive_cutover_allowed": false
 }
