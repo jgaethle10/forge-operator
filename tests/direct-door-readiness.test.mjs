@@ -82,9 +82,10 @@ const forensiRoute = resolveProductRoute({
   specs,
   candidates: new Map(),
 });
-assert.equal(forensiRoute.state, 'specialist_direct');
-assert.equal(forensiRoute.route.hops_before_specialist, 0);
-assert.equal(forensiRoute.route.use_universal_router_first, false);
+assert.equal(forensiRoute.state, 'fallback_required');
+assert.equal(forensiRoute.route.hops_before_specialist, 1);
+assert.equal(forensiRoute.route.use_universal_router_first, true);
+assert.equal(forensiRoute.route.remote_mcp, 'https://fabric.systemiacommandcenters.com/mcp');
 
 const unknownRoute = resolveProductRoute({
   slug: 'not-a-product',
@@ -100,7 +101,7 @@ const synthetic = buildDirectDoorReadiness({
     schema: 'evercraft.direct-plugin-specs.v1',
     routing_policy: {
       default: 'specialist_direct_when_clear',
-      fallback: 'evercraft_machine_commerce_when_ambiguous_or_specialist_unavailable',
+      fallback: 'evercraft_fabric_when_ambiguous_or_specialist_unavailable',
     },
     products: [
       {
