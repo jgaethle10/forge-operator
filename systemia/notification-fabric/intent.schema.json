@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evercraft.example/schemas/systemia.notification.intent.v2.json",
+  "title": "Evercraft Relay Notification Intent",
+  "type": "object",
+  "required": [
+    "product",
+    "purpose",
+    "title",
+    "body"
+  ],
+  "properties": {
+    "schema": {
+      "const": "systemia.notification.intent.v2"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "product": {
+      "type": "string",
+      "minLength": 1
+    },
+    "purpose": {
+      "enum": [
+        "transactional",
+        "operational",
+        "safety",
+        "reminder",
+        "marketing"
+      ]
+    },
+    "priority": {
+      "enum": [
+        "low",
+        "normal",
+        "high",
+        "critical"
+      ]
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 140
+    },
+    "body": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1200
+    },
+    "url": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "recipient_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "audiences": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "topics": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "data": {
+      "type": "object"
+    },
+    "evidence_state": {
+      "type": "string"
+    },
+    "consent_basis": {
+      "type": "string"
+    },
+    "ttl_seconds": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 2419200
+    },
+    "dedupe_key": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "dedupe_window_seconds": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "created_at": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": true
+}
