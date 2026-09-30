@@ -41,9 +41,9 @@
     "registry_state": "published",
     "mcp": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp",
     "route_state": "preferred_when_available",
-    "fallback_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+    "fallback_mcp": "https://fabric.systemiacommandcenters.com/mcp"
   },
-  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "machine_commerce_mcp": "https://fabric.systemiacommandcenters.com/mcp",
   "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=forensiscope-evidence-review-v1",
   "start_url": null,
   "start_url_state": "not_sell_now",
