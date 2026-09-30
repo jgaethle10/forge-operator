@@ -52,6 +52,7 @@ export function registerNotificationFabricRoutes(app, options = {}) {
   fabric.outbox = outbox;
   fabric.worker = worker;
   const workerEnabled = String(options.workerEnabled ?? process.env.EVERCRAFT_NOTIFICATION_WORKER_ENABLED ?? 'true').toLowerCase() !== 'false';
+  const maxQueueAgeMs = Math.max(1000, Number(options.maxQueueAgeMs ?? process.env.EVERCRAFT_NOTIFICATION_MAX_QUEUE_AGE_MS ?? 60000));
   if (workerEnabled) worker.start();
   const requireIngest = requireToken(ingestToken, 'Notification ingestion is not configured.');
   const allowedOrigins = new Set(
@@ -108,11 +109,38 @@ export function registerNotificationFabricRoutes(app, options = {}) {
 
   app.get('/api/notifications/health', (_req, res) => {
     res.setHeader('Cache-Control', 'no-store');
+    const queue = outbox.stats();
+    const workerState = worker.snapshot();
     res.json({
       success: true,
       ...fabric.config(),
-      outbox: outbox.stats(),
-      worker: worker.snapshot(),
+      relay_delivery: {
+        worker_enabled: workerEnabled,
+        worker_started: workerState.started,
+        queue_depth: Number(queue.statuses?.pending || 0) + Number(queue.statuses?.retry || 0),
+        processing: Number(queue.statuses?.processing || 0),
+        dead_letters: Number(queue.statuses?.dead_letter || 0),
+        oldest_pending_age_ms: queue.oldest_pending_age_ms,
+      },
+    });
+  });
+
+  app.get('/api/notifications/readiness', (_req, res) => {
+    res.setHeader('Cache-Control', 'no-store');
+    const queue = outbox.stats();
+    const workerState = worker.snapshot();
+    const queueAgeOk = Number(queue.oldest_pending_age_ms || 0) <= maxQueueAgeMs;
+    const workerOk = !workerEnabled || (workerState.started && !workerState.last_error);
+    const ready = queueAgeOk && workerOk;
+    res.status(ready ? 200 : 503).json({
+      success: ready,
+      state: ready ? 'ready' : 'degraded',
+      worker_enabled: workerEnabled,
+      worker_started: workerState.started,
+      queue_age_ok: queueAgeOk,
+      oldest_pending_age_ms: queue.oldest_pending_age_ms,
+      max_queue_age_ms: maxQueueAgeMs,
+      dead_letters: Number(queue.statuses?.dead_letter || 0),
     });
   });
 
