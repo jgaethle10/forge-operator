@@ -301,6 +301,77 @@ function completedWindow(now = new Date()) {
   return { start: start.toISOString(), end: end.toISOString() };
 }
 
+export function performanceMetrics(sessions) {
+  const trades = sessions.flatMap((session) => session.trades || []);
+
+  function measure(rows) {
+    const rowTrades = rows.flatMap((session) => session.trades || []);
+    const pnls = rowTrades.map((trade) => Number(trade.simulated_pnl || 0));
+    const grossProfit = pnls.filter((x) => x > 0).reduce((a,b) => a + b, 0);
+    const grossLoss = pnls.filter((x) => x < 0).reduce((a,b) => a + b, 0);
+    const pnl = pnls.reduce((a,b) => a + b, 0);
+    const wins = pnls.filter((x) => x > 0).length;
+    const losses = pnls.filter((x) => x < 0).length;
+    const expectancy = pnls.length ? pnl / pnls.length : 0;
+    const profitFactor = grossLoss < 0 ? grossProfit / Math.abs(grossLoss) : grossProfit > 0 ? null : 0;
+
+    let equity = 0;
+    let peak = 0;
+    let maxDrawdown = 0;
+    for (const value of pnls) {
+      equity += value;
+      peak = Math.max(peak, equity);
+      maxDrawdown = Math.max(maxDrawdown, peak - equity);
+    }
+
+    const rMultiples = rowTrades
+      .filter((trade) => Number(trade.planned_risk_dollars) > 0)
+      .map((trade) => Number(trade.simulated_pnl || 0) / Number(trade.planned_risk_dollars));
+
+    return {
+      sessions: rows.length,
+      trades: rowTrades.length,
+      pnl,
+      wins,
+      losses,
+      win_rate: rowTrades.length ? wins / rowTrades.length : 0,
+      expectancy_per_trade: expectancy,
+      gross_profit: grossProfit,
+      gross_loss: grossLoss,
+      profit_factor: profitFactor,
+      max_drawdown: maxDrawdown,
+      average_r: rMultiples.length ? rMultiples.reduce((a,b) => a + b, 0) / rMultiples.length : 0,
+    };
+  }
+
+  const splitAt = Math.max(1, Math.floor(sessions.length * 0.70));
+  const developmentSessions = sessions.slice(0, splitAt);
+  const holdoutSessions = sessions.slice(splitAt);
+
+  const total = measure(sessions);
+  const development = measure(developmentSessions);
+  const holdout = measure(holdoutSessions);
+  const profitFactorPass =
+    total.profit_factor === null
+      ? total.gross_profit > 0
+      : total.profit_factor > 1.05;
+
+  return {
+    total,
+    development,
+    holdout,
+    gate: {
+      minimum_trades: trades.length >= 30,
+      positive_total_pnl: total.pnl > 0,
+      positive_total_expectancy: total.expectancy_per_trade > 0,
+      profit_factor_above_1_05: profitFactorPass,
+      holdout_has_sample: holdout.trades >= 5,
+      positive_holdout_pnl: holdout.pnl > 0,
+      positive_holdout_expectancy: holdout.expectancy_per_trade > 0,
+    },
+  };
+}
+
 function summaryMarkdown(report) {
   const lines = [
     "# DayTrade Lens Practice Camp",
@@ -314,9 +385,14 @@ function summaryMarkdown(report) {
     `- Hard rule violations: **${report.summary.hard_violations}**`,
     `- Adversarial drills passed: **${report.summary.drills_passed}/${report.summary.drills_total}**`,
     `- Average discipline score: **${report.summary.average_discipline_score.toFixed(1)}**`,
+    `- Simulated P&L: **${report.summary.simulated_pnl_total.toFixed(4)}**`,
+    `- Expectancy / trade: **${report.summary.expectancy_per_trade.toFixed(4)}**`,
+    `- Profit factor: **${report.summary.profit_factor === null ? "no losing trades" : report.summary.profit_factor.toFixed(3)}**`,
+    `- Holdout P&L: **${report.summary.holdout_pnl.toFixed(4)}**`,
+    `- Holdout expectancy / trade: **${report.summary.holdout_expectancy_per_trade.toFixed(4)}**`,
     `- Promotion gate: **${report.promotion_gate.state}**`,
     "",
-    "Promotion requires at least 20 replay sessions, zero hard-rule violations, 100% adversarial drill pass rate, and average discipline >=95. Promotion never enables live trading automatically.",
+    "Review eligibility requires discipline and positive historical expectancy, including a positive holdout slice after simulated slippage. Promotion never enables live trading automatically.",
   ];
   return lines.join("\n") + "\n";
 }
@@ -347,12 +423,14 @@ export async function runPracticeCamp({
     ? sessions.reduce((sum, s) => sum + s.discipline_score, 0) / sessions.length
     : 0;
   const drillsPassed = drills.filter((d) => d.passed).length;
-
-  const eligible =
+  const performance = performanceMetrics(sessions);
+  const disciplineEligible =
     sessions.length >= 20 &&
     hardViolations === 0 &&
     drillsPassed === drills.length &&
     avgDiscipline >= 95;
+  const performanceEligible = Object.values(performance.gate).every(Boolean);
+  const eligible = disciplineEligible && performanceEligible;
 
   return {
     schema: "evercraft.daytrade-practice-camp.v1",
@@ -373,16 +451,32 @@ export async function runPracticeCamp({
       drills_passed: drillsPassed,
       drills_total: drills.length,
       average_discipline_score: avgDiscipline,
-      simulated_pnl_total: sessions.reduce((sum, s) => sum + s.simulated_pnl, 0),
+      simulated_pnl_total: performance.total.pnl,
+      expectancy_per_trade: performance.total.expectancy_per_trade,
+      profit_factor: performance.total.profit_factor,
+      win_rate: performance.total.win_rate,
+      average_r: performance.total.average_r,
+      max_drawdown: performance.total.max_drawdown,
+      holdout_pnl: performance.holdout.pnl,
+      holdout_expectancy_per_trade: performance.holdout.expectancy_per_trade,
+      holdout_trades: performance.holdout.trades,
     },
+    performance,
     promotion_gate: {
-      state: eligible ? "REVIEW_ELIGIBLE" : "TRAINING",
+      state: eligible ? "REVIEW_ELIGIBLE" : disciplineEligible ? "STRATEGY_RESEARCH" : "TRAINING",
       automatic_live_enablement: false,
       requirements: {
         minimum_replay_sessions: 20,
         hard_rule_violations: 0,
         adversarial_drill_pass_rate: 1,
         minimum_average_discipline_score: 95,
+        minimum_simulated_trades: 30,
+        positive_total_pnl: true,
+        positive_total_expectancy: true,
+        minimum_profit_factor: 1.05,
+        minimum_holdout_trades: 5,
+        positive_holdout_pnl: true,
+        positive_holdout_expectancy: true,
       },
     },
   };
@@ -404,6 +498,10 @@ async function main() {
     drills: `${report.summary.drills_passed}/${report.summary.drills_total}`,
     average_discipline_score: Number(report.summary.average_discipline_score.toFixed(1)),
     simulated_pnl_total: Number(report.summary.simulated_pnl_total.toFixed(4)),
+    expectancy_per_trade: Number(report.summary.expectancy_per_trade.toFixed(4)),
+    profit_factor: report.summary.profit_factor === null ? null : Number(report.summary.profit_factor.toFixed(3)),
+    holdout_pnl: Number(report.summary.holdout_pnl.toFixed(4)),
+    holdout_expectancy_per_trade: Number(report.summary.holdout_expectancy_per_trade.toFixed(4)),
     promotion_gate: report.promotion_gate.state,
     live_order_capability_used: false,
   }, null, 2));
