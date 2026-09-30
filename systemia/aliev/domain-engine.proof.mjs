@@ -21,6 +21,7 @@ const aliev=await startAliEvSourceRuntime({
   systemiaMachineKey:'domain-proof-machine',
   ingestToken:'domain-proof-ingest',
   geocode,
+  refreshDomains:async()=>({schema:'proof.noop-refresh.v1',collectors:{}}),
 });
 
 async function ingest(domain,records){
