@@ -5,6 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { randomBytes } from 'node:crypto';
 import { EvercraftIdentity } from '../identity/identity.mjs';
+import { verifyEvercraftSession } from '../evercraft-home/identity.mjs';
 import { DurableEntityStore } from './entity-store.mjs';
 import { createEvercraftAppClient } from './client.mjs';
 import { startAppFabricGateway } from './gateway.mjs';
@@ -75,7 +76,18 @@ try {
 
     const logout = await client.auth.logout();
     assert.equal(logout.logged_out, true);
-    await assert.rejects(() => client.auth.me(), /session_revoked/);
+
+    const revokedSession = verifyEvercraftSession(login.access_token, {
+      'proof-key': sessionSecret
+    });
+    assert.throws(
+      () => identity.assertSessionActive(revokedSession),
+      /session_revoked/
+    );
+    await assert.rejects(
+      () => client.auth.me(),
+      (error) => error?.code === 'authentication_required'
+    );
   } finally {
     await new Promise((resolve) => gateway.server.close(resolve));
   }
