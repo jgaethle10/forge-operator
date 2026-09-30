@@ -15,18 +15,20 @@ const catalog=[
     connections:[
       {type:'mcp',label:'legacy universal',url:'https://legacy.base44.app/functions/mcp'},
       {type:'mcp',label:'owned direct',url:'https://fabric.evercraft.example/mcp/native'},
-      {type:'website',label:'website',url:'https://example.com/'},
+      {type:'website',label:'legacy website',url:'https://product.base44.app/view'},
+      {type:'website',label:'owned website',url:'https://example.com/'},
     ],
   },
 ];
 
-test('native-only bridge removes Base44 MCP routes but keeps non-MCP and owned MCP routes',()=>{
+test('native-only bridge removes every Base44 handoff while keeping owned/public-safe routes',()=>{
   const prepared=nativeOnlyCatalog(catalog);
+  assert.equal(prepared.removed_legacy_base44_connections,2);
   assert.equal(prepared.removed_legacy_base44_mcp_connections,1);
   const connections=prepared.capabilities[0].connections;
   assert.equal(connections.some((x)=>/base44\.app/.test(x.url)),false);
   assert.equal(connections.some((x)=>x.url==='https://fabric.evercraft.example/mcp/native'),true);
-  assert.equal(connections.some((x)=>x.type==='website'),true);
+  assert.equal(connections.some((x)=>x.type==='website'&&x.url==='https://example.com/'),true);
 });
 
 test('Fabric local runtime is read-only, tunnel-compatible, and makes no Base44 transport available',async()=>{
@@ -37,6 +39,7 @@ test('Fabric local runtime is read-only, tunnel-compatible, and makes no Base44 
     assert.equal(health.base44_transport_enabled,false);
     assert.equal(health.secure_tunnel_compatible,true);
     assert.equal(health.public_plugin_submission_ready,false);
+    assert.equal(health.removed_legacy_base44_connections,2);
     assert.equal(health.removed_legacy_base44_mcp_connections,1);
 
     const init=await fetch(runtime.mcpUrl,{
