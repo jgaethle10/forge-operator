@@ -14,7 +14,7 @@ export function createNotificationClient(options = {}) {
 
   if (!token) throw new Error('Notification Fabric ingest token is required.');
 
-  async function post(pathname, payload) {
+  async function post(pathname, payload, extraHeaders = {}) {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), timeoutMs);
     try {
@@ -23,6 +23,7 @@ export function createNotificationClient(options = {}) {
         headers: {
           'content-type': 'application/json',
           authorization: `Bearer ${token}`,
+          ...extraHeaders,
         },
         body: JSON.stringify(payload),
         signal: controller.signal,
@@ -40,6 +41,14 @@ export function createNotificationClient(options = {}) {
   return {
     notify(intent) { return post('/api/notifications/intents', intent); },
     signal(signal) { return post('/api/notifications/signals', signal); },
+    enqueue(intent, optionsEnqueue = {}) {
+      const headers = optionsEnqueue.idempotencyKey ? { 'idempotency-key': String(optionsEnqueue.idempotencyKey) } : {};
+      return post('/api/notifications/jobs', { intent, max_attempts: optionsEnqueue.maxAttempts }, headers);
+    },
+    enqueueSignal(signal, optionsEnqueue = {}) {
+      const headers = optionsEnqueue.idempotencyKey ? { 'idempotency-key': String(optionsEnqueue.idempotencyKey) } : {};
+      return post('/api/notifications/signal-jobs', { signal, max_attempts: optionsEnqueue.maxAttempts }, headers);
+    },
     issueSession(input) { return post('/api/notifications/session-tokens', input); },
   };
 }
