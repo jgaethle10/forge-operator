@@ -37,6 +37,17 @@ write('package.json', JSON.stringify({
 }, null, 2));
 write('scripts/ok.mjs', 'console.log("ok")\n');
 write('.github/workflows/test.yml', 'name: test\nsteps:\n  - run: npm run absent\n  - run: node scripts/also-missing.mjs\n');
+write('nested/server.mjs', 'console.log("nested")\n');
+write('.github/workflows/working-directory.yml', [
+  'name: working-directory',
+  'jobs:',
+  '  test:',
+  '    steps:',
+  '      - name: nested server',
+  '        working-directory: nested',
+  '        run: node server.mjs',
+  ''
+].join('\n'));
 write('systemia/core/resident-services.json', JSON.stringify({
   schema: 'evercraft.systemia.resident-supervisor-config.v1',
   services: [{
@@ -58,6 +69,11 @@ assert.ok(codes.has('canonical_url_invalid'));
 assert.ok(codes.has('package_script_target_missing'));
 assert.ok(codes.has('workflow_script_missing'));
 assert.ok(codes.has('workflow_target_missing'));
+assert.equal(
+  scan.findings.some((row) => row.code === 'workflow_target_missing' && row.subject.includes('working-directory.yml -> server.mjs')),
+  false,
+  'workflow file targets must resolve against their step working-directory'
+);
 assert.ok(codes.has('resident_service_executable_not_found'));
 
 const first = buildPortfolioDelta({ active_findings: [] }, scan.findings);
