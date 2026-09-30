@@ -375,6 +375,7 @@ export function registerNotificationFabricRoutes(app, options = {}) {
         kind: job.kind,
         status: job.status,
         attempts: job.attempts,
+        failures: job.failures,
         max_attempts: job.max_attempts,
         not_before_at: job.not_before_at,
         created_at: job.created_at,
