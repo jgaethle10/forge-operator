@@ -4,6 +4,10 @@ on:
   pull_request:
     paths:
       - 'systemia/migrations/base44-exit/**'
+      - 'systemia/chum/machine-commerce-owned.mjs'
+      - 'systemia/chum/machine-commerce-http.ts'
+      - 'systemia/chum/machine-commerce-owned.test.mjs'
+      - 'systemia/mcp/specialist-handoff.ts'
       - 'systemia/rewards/**'
       - 'systemia/clip/**'
       - 'server.ts'
@@ -23,6 +27,10 @@ on:
       - main
     paths:
       - 'systemia/migrations/base44-exit/**'
+      - 'systemia/chum/machine-commerce-owned.mjs'
+      - 'systemia/chum/machine-commerce-http.ts'
+      - 'systemia/chum/machine-commerce-owned.test.mjs'
+      - 'systemia/mcp/specialist-handoff.ts'
       - 'systemia/rewards/**'
       - 'systemia/clip/**'
       - 'server.ts'
@@ -57,6 +65,8 @@ jobs:
         run: npm run test:rewards-yard-gateway
       - name: Prove owned Clip public edge
         run: npm run test:clip-yard-gateway
+      - name: Prove owned Machine Commerce edge
+        run: npm run test:machine-commerce-owned
       - name: Prove KAIDANCE collider
         run: node systemia/collider/proof.mjs
       - name: Prove off-Base44 EPS social continuity
