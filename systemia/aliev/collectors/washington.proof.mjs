@@ -5,6 +5,7 @@ import path from 'node:path';
 import {
   collectWashingtonTraffic,
   collectWashingtonUtilityServiceArea,
+  collectWashingtonFreight,
   refreshWashingtonSiteDomains,
   WSDOT_TRAFFIC_URL,
   WA_UTILITY_AREA_URL,
