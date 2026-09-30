@@ -14,8 +14,8 @@ Usage:
   scripts/install-fabric-owned-edge.sh --domain fabric.example.com --email ops@example.com
 
 Installs a Chromebook/Crostini-friendly public HTTPS edge for Evercraft Fabric.
-The public internet must route WAN 80 -> Chromebook 8080 and WAN 443 -> Chromebook 8443.
-ChromeOS Linux port forwarding must expose TCP 8080 and 8443 to the LAN.
+The public internet must route WAN 80 -> Chromebook 18080 and WAN 443 -> Chromebook 8443.
+ChromeOS Linux port forwarding must expose TCP 18080 and 8443 to the LAN.
 EOF
 }
 
