@@ -33,9 +33,11 @@ test('VAPID keys and encrypted request are standards-shaped', () => {
     vapidPublicKey: keys.publicKey,
     vapidPrivateKey: keys.privateKey,
     vapidSubject: 'mailto:ops@example.com',
+    topic: 'relay_topic_123',
   });
   assert.equal(request.headers['Content-Encoding'], 'aes128gcm');
   assert.match(request.headers.Authorization, /^vapid t=.+, k=.+$/);
+  assert.equal(request.headers.Topic, 'relay_topic_123');
   assert.ok(request.body.length > 86);
 });
 
