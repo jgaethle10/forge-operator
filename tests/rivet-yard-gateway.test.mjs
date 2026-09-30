@@ -96,10 +96,8 @@ const fakeGenerate=async({address,systemiaMachineKey,onProgress})=>{
     nearby_observed_usage:[{charging_sessions_count:42,period_start:'2026-08-01',period_granularity:'month'}]
   };
   const runtime=await start({
-    gatewayToken:'gateway-proof',
-    systemiaMachineKey:'machine-proof',
-    sourceUrl:'https://aliev.internal.evercraft.test/rivet-report',
-    stateDir,
+    gatewayToken:'gateway-proof',systemiaMachineKey:'machine-proof',stateDir,
+    sourceUrl:'https://aliev.evercraft.test/rivet-report-snapshot',
     generate:(args)=>generateYardReport({...args,sourceFetch:async()=>new Response(JSON.stringify(sourceSnapshot),{status:200})})
   });
   try{
