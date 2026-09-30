@@ -1,5 +1,5 @@
 Evercraft CHUM Crawler Radar
-Generated: 2026-09-30T08:24:05.332Z
+Generated: 2026-09-30T15:05:33.894Z
 Observed crawler-like requests: 0
 Negative provider pickup receipts: 174
 Strike-now surfaces: 1680
@@ -17,8 +17,8 @@ Strike-now surfaces: 1680
 11. [strike_now] score=239 /chum/products/forensiscope/ :: no_self_identified_crawler_fetch_observed, fresh_content_under_72h, negative_provider_pickup_receipt, indexnow_hash_pending
 12. [strike_now] score=239 /chum/products/forensiscope/ai-conformance.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_72h, negative_provider_pickup_receipt, indexnow_hash_pending
 13. [strike_now] score=239 /chum/products/forensiscope/ai-discovery.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_72h, negative_provider_pickup_receipt, indexnow_hash_pending
-14. [strike_now] score=239 /chum/products/forensiscope/llms.txt :: no_self_identified_crawler_fetch_observed, fresh_content_under_72h, negative_provider_pickup_receipt, indexnow_hash_pending
-15. [strike_now] score=235 /chum/intents/forensiscope-evidence-review-v1/ :: no_self_identified_crawler_fetch_observed, negative_provider_pickup_receipt, indexnow_hash_pending
+14. [strike_now] score=235 /chum/intents/forensiscope-evidence-review-v1/ :: no_self_identified_crawler_fetch_observed, negative_provider_pickup_receipt, indexnow_hash_pending
+15. [strike_now] score=231 /chum/products/forensiscope/llms.txt :: no_self_identified_crawler_fetch_observed, negative_provider_pickup_receipt, indexnow_hash_pending
 16. [strike_now] score=223 /forensiscope/developers/llms.txt :: no_self_identified_crawler_fetch_observed, negative_provider_pickup_receipt, indexnow_hash_pending
 17. [strike_now] score=223 /forensiscope/distribution/llms.txt :: no_self_identified_crawler_fetch_observed, negative_provider_pickup_receipt, indexnow_hash_pending
 18. [strike_now] score=223 /forensiscope/editorial/deduplicate-long-video-segments/llms.txt :: no_self_identified_crawler_fetch_observed, negative_provider_pickup_receipt, indexnow_hash_pending

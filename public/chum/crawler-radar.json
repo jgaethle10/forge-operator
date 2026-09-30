@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.crawler-radar.v1",
-  "generated_at": "2026-09-30T08:24:05.332Z",
+  "generated_at": "2026-09-30T15:05:33.894Z",
   "coordinator": "CHUM",
   "runtime_feedback": {
     "requested": false,
@@ -2380,12 +2380,12 @@
       ]
     },
     {
-      "path": "/chum/products/forensiscope/llms.txt",
+      "path": "/chum/intents/forensiscope-evidence-review-v1/",
       "product_key": "forensiscope",
-      "score": 239,
+      "score": 235,
       "urgency": "strike_now",
-      "crawl_priority": 154,
-      "last_changed": "2026-09-27T14:53:47.616Z",
+      "crawl_priority": 158,
+      "last_changed": "2026-09-25T06:50:26.447Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -2831,7 +2831,6 @@
       ],
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
         "negative_provider_pickup_receipt",
         "indexnow_hash_pending"
       ],
@@ -2843,12 +2842,12 @@
       ]
     },
     {
-      "path": "/chum/intents/forensiscope-evidence-review-v1/",
+      "path": "/chum/products/forensiscope/llms.txt",
       "product_key": "forensiscope",
-      "score": 235,
+      "score": 231,
       "urgency": "strike_now",
-      "crawl_priority": 158,
-      "last_changed": "2026-09-25T06:50:26.447Z",
+      "crawl_priority": 154,
+      "last_changed": "2026-09-27T14:53:47.616Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
