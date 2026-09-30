@@ -19,6 +19,7 @@ import { registerFallenFamilyRoutes } from './systemia/media-studio/family-http.
 import { registerRivetReportGateway } from './systemia/rivet/http-gateway.mjs';
 import { registerRewardsGateway } from './systemia/rewards/http-gateway.mjs';
 import { registerClipGateway } from './systemia/clip/http-gateway.js';
+import { registerSocialProviderGateway } from './systemia/social/http-gateway.js';
 import { registerSpecialistHandoffMcps } from './systemia/mcp/specialist-handoff.js';
 import { registerRemoteOperatorMcp } from './systemia/remote-operator/mcp-gateway.mjs';
 
@@ -212,6 +213,7 @@ app.use(express.json({ limit: '10mb', type: ['application/json', 'application/*+
 registerRivetReportGateway(app);
 registerRewardsGateway(app);
 registerClipGateway(app);
+registerSocialProviderGateway(app);
 registerOwnedMachineCommerce(app, { loadCatalog: () => loadPublicMachineCatalog() });
 registerSpecialistHandoffMcps(app, {
   gatewayUrl: machineCommerceGatewayUrl,
