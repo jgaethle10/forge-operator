@@ -1,6 +1,10 @@
 name: DayTrade Lens Practice Camp
 
 on:
+  pull_request:
+    paths:
+      - "systemia/daytrade-lens/**"
+      - ".github/workflows/daytrade-practice-camp.yml"
   push:
     branches: [main]
     paths:
@@ -31,10 +35,11 @@ jobs:
         run: node systemia/daytrade-lens/practice-camp.test.mjs
 
       - name: Run historical market-data replay only
+        if: github.event_name != 'pull_request'
         run: node systemia/daytrade-lens/practice-camp.mjs
 
       - name: Upload simulation receipt
-        if: always()
+        if: always() && github.event_name != 'pull_request'
         uses: actions/upload-artifact@v4
         with:
           name: daytrade-practice-camp
