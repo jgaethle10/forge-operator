@@ -51,6 +51,7 @@ export function createRelayOutbox(options = {}) {
   function enqueue(input = {}) {
     return mutate((state) => {
       const idempotencyKey = String(input.idempotency_key || '').trim() || null;
+      if (idempotencyKey && idempotencyKey.length > 256) throw new Error('Relay idempotency key exceeds 256 characters.');
       if (idempotencyKey) {
         const existingId = state.idempotency?.[idempotencyKey];
         const existing = existingId ? state.jobs?.[existingId] : null;
@@ -166,8 +167,62 @@ export function createRelayOutbox(options = {}) {
     });
   }
 
-  function stats() {
+  function requeueDeadLetter(jobId, options = {}) {
+    return mutate((state) => {
+      const job = state.jobs?.[String(jobId || '')];
+      if (!job || job.status !== 'dead_letter') return null;
+      const now = Number(options.now ?? Date.now());
+      job.status = 'retry';
+      job.attempts = 0;
+      job.not_before_at = iso(now);
+      job.lease_owner = null;
+      job.lease_expires_at = null;
+      job.last_error = null;
+      job.dead_lettered_at = null;
+      job.updated_at = iso(now);
+      if (options.max_attempts !== undefined) {
+        job.max_attempts = Math.max(1, Math.min(Number(options.max_attempts), 50));
+      }
+      return structuredClone(job);
+    });
+  }
+
+  function prune(options = {}) {
+    return mutate((state) => {
+      const now = Number(options.now ?? Date.now());
+      const completedRetentionMs = Math.max(60_000, Number(options.completed_retention_ms ?? 7 * 24 * 60 * 60 * 1000));
+      const deadRetentionMs = Math.max(completedRetentionMs, Number(options.dead_retention_ms ?? 30 * 24 * 60 * 60 * 1000));
+      const maxRetained = Math.max(100, Math.min(Number(options.max_retained ?? 10_000), 100_000));
+      const removable = [];
+      for (const job of Object.values(state.jobs || {})) {
+        const updated = Date.parse(job.updated_at || job.created_at || '');
+        if (!Number.isFinite(updated)) continue;
+        if (job.status === 'completed' && updated <= now - completedRetentionMs) removable.push(job);
+        if (job.status === 'dead_letter' && updated <= now - deadRetentionMs) removable.push(job);
+      }
+      removable.sort((a, b) => Date.parse(a.updated_at || '') - Date.parse(b.updated_at || ''));
+      const all = Object.values(state.jobs || {});
+      const overage = Math.max(0, all.length - maxRetained);
+      const terminalOldest = all
+        .filter((job) => ['completed', 'dead_letter'].includes(job.status))
+        .sort((a, b) => Date.parse(a.updated_at || '') - Date.parse(b.updated_at || ''));
+      const ids = new Set(removable.map((job) => job.id));
+      for (const job of terminalOldest.slice(0, overage)) ids.add(job.id);
+      for (const id of ids) {
+        const job = state.jobs[id];
+        if (!job) continue;
+        delete state.jobs[id];
+        if (job.idempotency_key && state.idempotency?.[job.idempotency_key] === id) {
+          delete state.idempotency[job.idempotency_key];
+        }
+      }
+      return { removed: ids.size, retained: Object.keys(state.jobs || {}).length };
+    });
+  }
+
+  function stats(options = {}) {
     const state = readState(file);
+    const now = Number(options.now ?? Date.now());
     const statuses = {};
     let oldestPendingAt = null;
     for (const job of Object.values(state.jobs || {})) {
@@ -182,8 +237,9 @@ export function createRelayOutbox(options = {}) {
       total: Object.keys(state.jobs || {}).length,
       statuses,
       oldest_pending_at: oldestPendingAt === null ? null : iso(oldestPendingAt),
+      oldest_pending_age_ms: oldestPendingAt === null ? 0 : Math.max(0, now - oldestPendingAt),
     };
   }
 
-  return { root, file, enqueue, claim, complete, fail, get, stats };
+  return { root, file, enqueue, claim, complete, fail, get, requeueDeadLetter, prune, stats };
 }
