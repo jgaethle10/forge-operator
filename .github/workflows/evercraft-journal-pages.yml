@@ -120,8 +120,8 @@ jobs:
               else if(entry.isFile()&&entry.name.endsWith('.html')){
                 let body=fs.readFileSync(full,'utf8');
                 body=body
-                  .replace(/(href|src|action)="\/(?!\/)/g, `$1="${prefix}`)
-                  .replace(/(href|src|action)='\/(?!\/)/g, `$1='${prefix}`);
+                  .replace(/(href|src|action)="\/(?!\/|forge-operator\/)/g, `$1="${prefix}`)
+                  .replace(/(href|src|action)='\/(?!\/|forge-operator\/)/g, `$1='${prefix}`);
                 fs.writeFileSync(full,body);
               }
             }
@@ -162,3 +162,17 @@ jobs:
       - name: Deploy Evercraft public directory
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Verify Infinite Classroom fallback door
+        shell: bash
+        run: |
+          set -euo pipefail
+          base="${{ steps.deployment.outputs.page_url }}"
+          target="${base%/}/chum/products/infinite-classroom/"
+          body="$(curl --fail --silent --show-error --retry 8 --retry-all-errors --retry-delay 2 "$target")"
+          printf '%s' "$body" | grep -q 'Infinite Classroom'
+          {
+            echo "## Evercraft public fallback live"
+            echo
+            echo "Infinite Classroom: $target"
+          } >> "$GITHUB_STEP_SUMMARY"
