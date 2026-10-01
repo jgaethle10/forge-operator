@@ -101,14 +101,13 @@ export function loadFabricCatalogFromRepository({catalogPath=''}={}){
         state:'fallback_available',
       });
     }
-    if(item.public_url){
-      connections.push({
-        type:'website',
-        label:clean((item.name||'Evercraft')+' public surface',120),
-        url:item.public_url,
-        state:'public',
-      });
-    }
+    const ownedCapabilityUrl='https://fabric.systemiacommandcenters.com/capabilities/'+encodeURIComponent(String(item.public_id||''));
+    connections.push({
+      type:'website',
+      label:clean((item.name||'Evercraft')+' owned public surface',120),
+      url:ownedCapabilityUrl,
+      state:'public',
+    });
     if(item.llms_url){
       connections.push({
         type:'docs',
