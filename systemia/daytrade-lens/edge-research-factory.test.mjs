@@ -10,6 +10,7 @@ import {
   benjaminiHochberg,
   fetchAlpacaBars,
   filterCoreSessionBars,
+  classifyNewYorkMarketPhase,
 } from "./edge-research-factory.mjs";
 
 function bars(start, count, drift) {
@@ -35,6 +36,14 @@ assert.deepEqual(filtered.map((row) => row.t), [
   "2026-09-01T13:30:00Z",
   "2026-09-01T19:55:00Z",
 ]);
+
+assert.equal(classifyNewYorkMarketPhase("2026-09-01T13:24:00Z"),"premarket");
+assert.equal(classifyNewYorkMarketPhase("2026-09-01T13:25:00Z"),"opening_imbalance_window");
+assert.equal(classifyNewYorkMarketPhase("2026-09-01T13:30:00Z"),"immediate_post_open");
+assert.equal(classifyNewYorkMarketPhase("2026-09-01T13:45:00Z"),"continuous_session");
+assert.equal(classifyNewYorkMarketPhase("2026-09-01T19:50:00Z"),"closing_imbalance_window");
+assert.equal(classifyNewYorkMarketPhase("2026-09-01T20:00:00Z"),"after_hours");
+assert.equal(classifyNewYorkMarketPhase("2026-09-05T15:00:00Z"),"closed_weekend");
 
 const hypothesis = {
   hypothesis_id: "edgehyp:proof",
@@ -340,6 +349,7 @@ console.log(JSON.stringify({
   realized_volatility_metrics: true,
   overnight_gap_excluded_from_5m_volatility: true,
   opening_gap_metrics: true,
+  market_phase_tagging: true,
   path_excursion_metrics: true,
   source_diversity_required: true,
   authoritative_multi_origin_screen: true,
