@@ -18,6 +18,24 @@ test('external canary requires field admission evidence before public promotion'
   }
 });
 
+test('external canary proves the purpose-specific OpenAI profile and standalone tool',()=>{
+  for(const required of [
+    '.fabric_openai_mcp_path == "/mcp/openai"',
+    '"${SPECIALIST_ORIGIN%/}/mcp/openai"',
+    '[.result.tools[].name] == ["inspect_public_website"]',
+    '.result.tools[0].annotations.openWorldHint == true',
+    '"inspect_public_website"',
+    '"authorized_to_inspect":true',
+    '"website_inspection"',
+    'openai_profile_verified:true',
+    'openai_mcp_path:"/mcp/openai"',
+    'openai_tools:["inspect_public_website"]',
+    'openai_commerce_enabled:false',
+  ]){
+    assert.ok(workflow.includes(required),'missing OpenAI profile canary contract: '+required);
+  }
+});
+
 test('external canary verifies every resident Systemia Remote Ops tool',()=>{
   const required=[
     '"/mcp/systemia-remote-ops" "systemia-remote-ops"',
