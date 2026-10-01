@@ -4,7 +4,68 @@ import {
   validateFrozenProtocol,
   scoreForwardPaperCohort,
   scoreForwardPaperCluster,
+  loadCanonicalFrozenCohorts,
+  CANONICAL_FORWARD_PAPER_CUTOFF,
+  CANONICAL_FORWARD_PAPER_ARTIFACT_DIGEST,
 } from "./edge-forward-paper.mjs";
+
+const canonical = loadCanonicalFrozenCohorts();
+assert.equal(canonical.cohort_count, 6);
+assert.equal(
+  canonical.source.original_manifest_generated_at,
+  "2026-09-30T23:10:52.172Z"
+);
+assert.equal(
+  canonical.source.github_artifact_digest,
+  "sha256:fad591be832d023188e60908afee9252713545e0cb42ae3cc2ebcea698ac7a96"
+);
+assert.equal(CANONICAL_FORWARD_PAPER_CUTOFF, canonical.source.original_manifest_generated_at);
+assert.equal(CANONICAL_FORWARD_PAPER_ARTIFACT_DIGEST, canonical.source.github_artifact_digest);
+assert.deepEqual(
+  canonical.cohorts.map((row) => row.cohort_id).sort(),
+  [
+    "edgepaper_22ea75a0c57431c6a7f2",
+    "edgepaper_29a22b58b874a6e2e67f",
+    "edgepaper_54602e95f170ad2f4c5f",
+    "edgepaper_d129c116e7639b613c6c",
+    "edgepaper_ead63d28c4c2ff1b4f66",
+    "edgepaper_f50c186a5a795bbe41f6",
+  ]
+);
+assert.ok(canonical.cohorts.every((row) => row.enrolled_at === CANONICAL_FORWARD_PAPER_CUTOFF));
+assert.ok(canonical.cohorts.every((row) => row.observation_cutoff === CANONICAL_FORWARD_PAPER_CUTOFF));
+assert.ok(canonical.cohorts.every((row) => row.minimum_forward_events === 20));
+assert.ok(canonical.cohorts.every((row) => row.minimum_distinct_origins === 5));
+assert.ok(canonical.cohorts.every((row) => row.live_trade_authority === false));
+
+const canonicalHashesBefore = canonical.cohorts.map((row) => row.protocol_hash);
+const hypotheticalLaterHistoricalWinner = {
+  signal_key: "ai_models|sec_8_k|XLK|3d",
+  cluster_key: "ai_models|sec_8_k|SPY",
+  adversarial_status: "FORWARD_PAPER_ELIGIBLE",
+};
+const hypotheticalLaterEvaluation = {
+  signal_key: hypotheticalLaterHistoricalWinner.signal_key,
+  rockies_range: "ai_models",
+  observation_kind: "sec_8_k",
+  instrument: "XLK",
+  benchmark: "SPY",
+  lag_key: "3d",
+  learned_direction: "POSITIVE_EXCESS_RETURN",
+};
+const hypotheticalReplacement = freezeForwardPaperCohort(
+  hypotheticalLaterHistoricalWinner,
+  hypotheticalLaterEvaluation,
+  { enrolled_at: "2026-10-01T18:30:00.000Z" }
+);
+assert.equal(
+  canonical.cohorts.some((row) => row.cohort_id === hypotheticalReplacement.cohort_id),
+  false
+);
+assert.deepEqual(
+  loadCanonicalFrozenCohorts().cohorts.map((row) => row.protocol_hash),
+  canonicalHashesBefore
+);
 
 const review = {
   signal_key: "ai_models|sec_8_k|SOXX|1d",
@@ -159,6 +220,9 @@ console.log(JSON.stringify({
   immutable_protocol_hash: true,
   retroactive_events_excluded: true,
   forward_only_scoring: true,
+  canonical_six_cohorts_recovered_from_original_artifact: true,
+  canonical_cutoff_locked: true,
+  historical_reruns_cannot_refreeze_cohorts: true,
   cluster_level_event_deduplication: true,
   correlated_siblings_not_independent_edges: true,
   live_trade_authority: false,
