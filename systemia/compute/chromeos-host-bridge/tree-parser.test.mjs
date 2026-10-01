@@ -52,3 +52,31 @@ test('fails to unknown rather than inventing state when the settings surface is 
     assert.equal(row.enabled, null);
   }
 });
+
+
+test('does not depend on English accessibility labels when the settings route is verified', () => {
+  const root = node('rootWebArea', 'Configuración', {}, [
+    node('heading', 'Reenvío de puertos'),
+    node('genericContainer', '', {}, [
+      node('staticText', '18080 TCP'),
+      node('staticText', 'Borde HTTP'),
+      node('switch', 'Activar puerto', { checked: true }),
+    ]),
+    node('genericContainer', '', {}, [
+      node('staticText', '8443 TCP'),
+      node('staticText', 'Borde TLS'),
+      node('switch', 'Activar puerto', { checked: false }),
+    ]),
+  ]);
+
+  const result = extractPortForwardingState(
+    root,
+    undefined,
+    { expectedSurface: true },
+  );
+  assert.equal(result.settings_surface_observed, true);
+  assert.equal(result.diagnostics.language_hint_observed, false);
+  assert.equal(result.diagnostics.surface_asserted_by_caller, true);
+  assert.equal(result.ports.find((row) => row.port === 18080)?.enabled, true);
+  assert.equal(result.ports.find((row) => row.port === 8443)?.enabled, false);
+});
