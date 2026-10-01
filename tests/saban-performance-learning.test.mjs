@@ -86,3 +86,42 @@ test('thermal holds and preemptions penalize otherwise fast devices',()=>{
   const adjustment=rankPerformanceAdjustment(p);
   assert.ok(adjustment.score<0);
 });
+
+
+test('three consecutive failures open the performance circuit and later successes heal it',()=>{
+  const ledger=createPerformanceLedger();
+  for(let i=0;i<3;i++){
+    recordPerformanceSample(ledger,{
+      device_id:'flaky-phone',
+      workload_class:'systemia.content-hash.v1',
+      ok:false,
+      duration_ms:20,
+      observed_at:`2026-10-01T03:0${i}:00.000Z`,
+    });
+  }
+  let p=performanceProfile(ledger,{
+    device_id:'flaky-phone',
+    workload_class:'systemia.content-hash.v1',
+    now:new Date('2026-10-01T03:03:00.000Z'),
+  });
+  assert.equal(p.metrics.consecutive_failures,3);
+  assert.equal(p.metrics.circuit_open,true);
+  assert.equal(rankPerformanceAdjustment(p).circuit_open,true);
+
+  for(let i=0;i<6;i++){
+    recordPerformanceSample(ledger,{
+      device_id:'flaky-phone',
+      workload_class:'systemia.content-hash.v1',
+      ok:true,
+      duration_ms:15,
+      observed_at:`2026-10-01T03:1${i}:00.000Z`,
+    });
+  }
+  p=performanceProfile(ledger,{
+    device_id:'flaky-phone',
+    workload_class:'systemia.content-hash.v1',
+    now:new Date('2026-10-01T03:16:00.000Z'),
+  });
+  assert.equal(p.metrics.consecutive_failures,0);
+  assert.equal(p.metrics.circuit_open,false);
+});
