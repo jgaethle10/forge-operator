@@ -21,7 +21,9 @@
     "evercraft.payment-order.v1",
     "evercraft.payment-attempt.v1",
     "evercraft.ledger-entry.v1",
-    "evercraft.revenue-receipt.v1"
+    "evercraft.revenue-receipt.v1",
+    "evercraft.settlement-rail.v1",
+    "evercraft.money-route.v1"
   ],
   "planned_api": {
     "quotes": "POST /v1/quotes",
@@ -37,5 +39,16 @@
     "This source contract does not claim that Evercraft is a bank, card network, money transmitter, or settlement institution.",
     "This source contract does not claim that planned API routes are deployed until separately verified.",
     "A processor checkout session or success redirect is not treated as revenue."
-  ]
+  ],
+  "routing": {
+    "authority": "Evercraft Payments",
+    "processor_role": "replaceable_settlement_adapter",
+    "supported_strategies": [
+      "lowest_cost",
+      "fastest_settlement",
+      "preferred_order"
+    ],
+    "opaque_scoring": false,
+    "no_eligible_rail_behavior": "fail_closed"
+  }
 }
