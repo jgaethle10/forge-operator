@@ -58,11 +58,20 @@ const NY_MARKET_CLOCK = new Intl.DateTimeFormat("en-US", {
 
 function normalizeBars(rows = []) {
   return rows
-    .map((row) => ({
-      t: row?.t || row?.timestamp,
-      o: Number(row?.o ?? row?.open),
-      c: Number(row?.c ?? row?.close),
-    }))
+    .map((row) => {
+      const volume = row?.v ?? row?.volume;
+      return {
+        t: row?.t || row?.timestamp,
+        o: Number(row?.o ?? row?.open),
+        c: Number(row?.c ?? row?.close),
+        v:
+          volume === null || volume === undefined || volume === ""
+            ? null
+            : Number.isFinite(Number(volume))
+              ? Number(volume)
+              : null,
+      };
+    })
     .filter((row) => row.t && Number.isFinite(row.c) && row.c > 0)
     .sort((a,b) => new Date(a.t) - new Date(b.t));
 }
