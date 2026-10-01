@@ -206,6 +206,133 @@ function requestJson({
   });
 }
 
+function readJsonSafe(file, maxBytes = 256 * 1024) {
+  try {
+    const stat = fs.statSync(file);
+    if (!stat.isFile() || stat.size > maxBytes) return null;
+    return JSON.parse(fs.readFileSync(file, 'utf8'));
+  } catch {
+    return null;
+  }
+}
+
+function loopbackHttpTarget(value) {
+  try {
+    const url = new URL(String(value || ''));
+    const hostname = String(url.hostname || '').replace(/^\[|\]$/g, '');
+    if (url.protocol !== 'http:') return null;
+    if (!['127.0.0.1', 'localhost', '::1'].includes(hostname)) return null;
+    if (url.username || url.password || url.search || url.hash) return null;
+    const port = Number(url.port || 80);
+    if (!Number.isInteger(port) || port < 1 || port > 65535) return null;
+    return { hostname, port };
+  } catch {
+    return null;
+  }
+}
+
+async function observeLocalOrganism() {
+  const root = path.join(
+    os.homedir(),
+    '.local',
+    'state',
+    'evercraft',
+    'organism'
+  );
+  const seed = readJsonSafe(path.join(root, 'compute', 'nodeseed-receipt.json'));
+  const organism = readJsonSafe(path.join(root, 'local-organism-receipt.json'));
+  const watch = readJsonSafe(path.join(root, 'health-watch.json'));
+  const target = loopbackHttpTarget(seed?.endpoint);
+
+  const health = target
+    ? await requestJson({
+        protocol: 'http:',
+        hostname: target.hostname,
+        port: target.port,
+        path: '/v1/health',
+      })
+    : {
+        ok: false,
+        status: null,
+        body: null,
+        tls: null,
+        error: 'loopback_nodeseed_endpoint_unavailable',
+      };
+
+  const capacity = target && health.ok
+    ? await requestJson({
+        protocol: 'http:',
+        hostname: target.hostname,
+        port: target.port,
+        path: '/v1/capacity',
+      })
+    : {
+        ok: false,
+        status: null,
+        body: null,
+        tls: null,
+        error: health.error || 'nodeseed_health_unavailable',
+      };
+
+  const remoteOperatorReady =
+    capacity.body?.capacity_hint?.services?.remote_operator?.ready === true;
+
+  return {
+    configured: Boolean(seed || organism),
+    state:
+      health.ok === true
+        ? 'healthy'
+        : seed || organism
+          ? 'degraded'
+          : 'not_installed_or_not_observed',
+    node_id: seed?.node_id || organism?.node_id || health.body?.node_id || null,
+    device_fingerprint:
+      seed?.device_fingerprint || organism?.device_fingerprint || null,
+    nodeseed_endpoint_scope: target ? 'loopback_only' : 'unavailable_or_rejected',
+    nodeseed_health: {
+      ok: health.ok === true,
+      status: health.status,
+      runtime: health.body?.runtime || null,
+      supported_workload_count:
+        Array.isArray(health.body?.supported_workloads)
+          ? health.body.supported_workloads.length
+          : null,
+      error: health.error,
+    },
+    capacity: {
+      ok: capacity.ok === true,
+      protocol: capacity.body?.protocol || null,
+      placement_labels: Array.isArray(capacity.body?.placement_labels)
+        ? capacity.body.placement_labels
+        : [],
+      remote_operator_ready: remoteOperatorReady,
+      remote_operator_transport:
+        capacity.body?.capacity_hint?.services?.remote_operator?.transport || null,
+      public_edge_ready:
+        capacity.body?.capacity_hint?.services?.public_edge?.ready === true,
+      error: capacity.error,
+    },
+    startup_receipt: {
+      remote_operator_enabled:
+        organism?.remote_operator?.enabled === true,
+      remote_admission_configured:
+        organism?.remote_admission?.configured === true,
+      remote_admission_state:
+        organism?.remote_admission?.state || null,
+      release_ref: organism?.release_ref || null,
+      receipt_hash: organism?.receipt_hash || null,
+    },
+    health_watch: watch ? {
+      state: watch.state || null,
+      action: watch.action || null,
+      observed_at: watch.observed_at || null,
+      restart_attempted_at: watch.restart_attempted_at || null,
+      receipt_hash: watch.receipt_hash || null,
+    } : null,
+    secret_material_exposed: false,
+  };
+}
+
 function chromeOsBoundary(interfaces) {
   const crostiniRange = interfaces.some((row) =>
     row.family === 'IPv4' &&
@@ -270,6 +397,7 @@ export async function observeNodeNetwork() {
         error: 'public_host_not_configured',
       };
 
+  const localOrganism = await observeLocalOrganism();
   const chromeBoundary = chromeOsBoundary(interfaces);
   const services = {
     fabric: unitState('evercraft-fabric.service'),
@@ -330,6 +458,7 @@ export async function observeNodeNetwork() {
     diagnosis,
     evercraft: {
       public_host: publicHost || null,
+      local_organism: localOrganism,
       router_mapping: {
         configured: Boolean(
           routerEnv.EVERCRAFT_ROUTER_GATEWAY &&
