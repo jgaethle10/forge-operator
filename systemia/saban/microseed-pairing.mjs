@@ -206,6 +206,112 @@ export function issueMicroSeedPairingTicket({
   return {...issue,ticket_card:formatMicroSeedPairingTicket(issue)};
 }
 
+
+export function listMicroSeedPairingTickets({
+  stateDir,
+  now=new Date(),
+  include_expired=false,
+}={}){
+  if(!stateDir) throw new Error('microseed_pairing_state_dir_required');
+  const dirs=pairingDirs(stateDir);
+  fs.mkdirSync(dirs.tickets,{recursive:true,mode:0o700});
+  fs.mkdirSync(dirs.consumed,{recursive:true,mode:0o700});
+  const nowMs=now instanceof Date?now.getTime():Date.parse(String(now));
+  const tickets=fs.readdirSync(dirs.tickets)
+    .filter(name=>name.endsWith('.json'))
+    .map(name=>JSON.parse(fs.readFileSync(path.join(dirs.tickets,name),'utf8')))
+    .map(ticket=>({
+      schema:ticket.schema,
+      ticket_id:ticket.ticket_id,
+      display_code:null,
+      device_id:ticket.device_id,
+      allowed_device_classes:ticket.allowed_device_classes||[],
+      allowed_workloads:ticket.allowed_workloads||[],
+      issued_at:ticket.issued_at,
+      expires_at:ticket.expires_at,
+      expired:nowMs>=Date.parse(ticket.expires_at),
+      pairing_secret_exposed:false,
+      safe_to_publish:false,
+    }))
+    .filter(ticket=>include_expired||!ticket.expired)
+    .sort((a,b)=>a.expires_at.localeCompare(b.expires_at));
+  return {
+    schema:'evercraft.microseed.pairing-ticket-list.v1',
+    active_count:tickets.filter(x=>!x.expired).length,
+    ticket_count:tickets.length,
+    tickets,
+    pairing_secrets_exposed:false,
+  };
+}
+
+export function showMicroSeedPairingTicket({
+  stateDir,
+  ticket_id,
+  now=new Date(),
+}={}){
+  if(!stateDir) throw new Error('microseed_pairing_state_dir_required');
+  const dirs=pairingDirs(stateDir);
+  const tf=ticketFile(dirs,ticket_id);
+  const sf=secretFile(dirs,ticket_id);
+  if(fs.existsSync(consumedFile(dirs,ticket_id))){
+    throw new Error('microseed_pairing_ticket_already_consumed');
+  }
+  if(!fs.existsSync(tf)||!fs.existsSync(sf)){
+    throw new Error('microseed_pairing_ticket_not_found');
+  }
+  const record=JSON.parse(fs.readFileSync(tf,'utf8'));
+  const nowMs=now instanceof Date?now.getTime():Date.parse(String(now));
+  if(nowMs>=Date.parse(record.expires_at)) throw new Error('microseed_pairing_ticket_expired');
+  const secret=fs.readFileSync(sf,'utf8').trim();
+  if(record.secret_hash!==sha(secret)) throw new Error('microseed_pairing_ticket_secret_integrity_failed');
+  return formatMicroSeedPairingTicket({
+    schema:'evercraft.microseed.pairing-ticket-issue.v1',
+    ticket_id:record.ticket_id,
+    pairing_secret:secret,
+    pairing_secret_exposed_once:false,
+    approval_ref_hash:record.approval_ref_hash,
+    device_id:record.device_id,
+    allowed_device_classes:record.allowed_device_classes,
+    allowed_workloads:record.allowed_workloads,
+    expires_at:record.expires_at,
+    authorization_granted:false,
+    device_credential_created:false,
+  });
+}
+
+export function revokeMicroSeedPairingTicket({
+  stateDir,
+  ticket_id,
+  reason='operator_revoked',
+  now=new Date(),
+}={}){
+  if(!stateDir) throw new Error('microseed_pairing_state_dir_required');
+  const dirs=pairingDirs(stateDir);
+  const tf=ticketFile(dirs,ticket_id);
+  const sf=secretFile(dirs,ticket_id);
+  if(fs.existsSync(consumedFile(dirs,ticket_id))){
+    throw new Error('microseed_pairing_ticket_already_consumed');
+  }
+  if(!fs.existsSync(tf)) throw new Error('microseed_pairing_ticket_not_found');
+  const record=JSON.parse(fs.readFileSync(tf,'utf8'));
+  const receipt={
+    schema:'evercraft.microseed.pairing-revoked.v1',
+    ticket_id:record.ticket_id,
+    device_id:record.device_id,
+    reason:clean(reason)||'operator_revoked',
+    pairing_secret_destroyed:true,
+    authorization_granted:false,
+    device_credential_created:false,
+    revoked_at:(now instanceof Date?now:new Date(now)).toISOString(),
+  };
+  const revokedDir=path.join(dirs.root,'pairing','revoked');
+  fs.mkdirSync(revokedDir,{recursive:true,mode:0o700});
+  atomicJson(path.join(revokedDir,safeId(record.ticket_id)+'.json'),receipt);
+  fs.rmSync(sf,{force:true});
+  fs.rmSync(tf,{force:true});
+  return receipt;
+}
+
 function enrollmentSigningBody(bundle){
   return {
     schema:bundle.schema,
