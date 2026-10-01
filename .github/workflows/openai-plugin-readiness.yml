@@ -10,10 +10,11 @@ on:
       - 'scripts/promote-openai-owned-fabric.mjs'
       - 'systemia/mcp/fabric-directory.mjs'
       - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'systemia/newsroom/**'
+      - 'public/journal/**'
       - 'systemia/mcp/FABRIC_SECURE_TUNNEL.md'
       - 'systemia/mcp/specialist-handoff-runtime.mjs'
       - 'tests/evercraft-fabric-runtime.test.mjs'
-      - 'tests/fabric-local-runtime.test.mjs tests/fabric-owned-edge-installer.test.mjs'
       - 'tests/fabric-owned-edge-installer.test.mjs'
       - 'scripts/install-fabric-owned-edge.sh'
       - 'systemia/mcp/FABRIC_OWNED_PUBLIC_EDGE.md'
@@ -21,6 +22,10 @@ on:
       - 'tests/openai-owned-fabric-promotion.test.mjs'
       - '.github/workflows/openai-plugin-readiness.yml'
   workflow_dispatch:
+
+concurrency:
+  group: openai-plugin-readiness-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -34,6 +39,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Build owned Journal fixture
+        run: npm run journal:build
+
       - name: Prove OpenAI package and Fabric contract
         run: |
           node --test tests/evercraft-openai-plugin-package.test.mjs tests/evercraft-fabric-runtime.test.mjs tests/openai-owned-fabric-promotion.test.mjs tests/fabric-local-runtime.test.mjs

@@ -36,14 +36,35 @@ export async function startMicroSeedPairingApi({
   host='127.0.0.1',
   port=0,
   allowNonLoopback=false,
+  tlsTerminatedUpstream=false,
+  maxConcurrent=4,
+  perTicketAttemptLimit=12,
+  attemptWindowMs=10*60*1000,
 }={}){
   if(!stateDir) throw new Error('microseed_pairing_api_state_dir_required');
   if(!allowNonLoopback&&!loopback(host)) throw new Error('microseed_pairing_api_loopback_required');
+  if(!loopback(host)&&tlsTerminatedUpstream!==true){
+    throw new Error('microseed_pairing_api_nonloopback_requires_tls_termination');
+  }
   const registry=new AmbientDeviceRegistry({
     root:path.resolve(registryRoot||path.join(stateDir,'registry')),
   });
   const instanceId='microseed-pairing-'+randomBytes(8).toString('hex');
+  const attempts=new Map();
+  let active=0;
   let server=null;
+
+  function ticketAttemptAllowed(ticketId,now=Date.now()){
+    const id=clean(ticketId)||'unknown';
+    const row=attempts.get(id)||{window_started_at:now,count:0};
+    if(now-row.window_started_at>=Math.max(60_000,Number(attemptWindowMs||0))){
+      row.window_started_at=now;
+      row.count=0;
+    }
+    row.count+=1;
+    attempts.set(id,row);
+    return row.count<=Math.max(1,Number(perTicketAttemptLimit||12));
+  }
 
   server=http.createServer(async(req,res)=>{
     try{
@@ -55,19 +76,48 @@ export async function startMicroSeedPairingApi({
           instance_id:instanceId,
           host_scope:loopback(host)?'loopback':'explicit_non_loopback',
           can_issue_pairing_tickets:false,
+          ticket_list_surface:false,
+          execution_surface:false,
           pairing_secret_exposed:false,
           device_token_exposed:false,
+          cryptographic_bundle_required:true,
+          active_enrollments:active,
+          max_concurrent:Math.max(1,Number(maxConcurrent||4)),
+          tls_terminated_upstream:tlsTerminatedUpstream===true,
         });
       }
       if(req.method==='POST'&&req.url==='/v1/enroll'){
-        const bundle=await readJson(req);
-        const receipt=consumeMicroSeedPairingBundle({
-          stateDir,
-          registry,
-          bundle,
-          now:new Date(),
-        });
-        return send(res,201,{ok:true,...receipt});
+        if(active>=Math.max(1,Number(maxConcurrent||4))){
+          return send(res,429,{ok:false,error:'microseed_pairing_api_concurrency_limit'});
+        }
+        const body=await readJson(req,256*1024);
+        const bundle=body?.bundle??body;
+        if(!ticketAttemptAllowed(bundle?.ticket_id)){
+          return send(res,429,{
+            ok:false,
+            error:'microseed_pairing_api_ticket_attempt_limit',
+            retry_later:true,
+          });
+        }
+        active+=1;
+        try{
+          const receipt=consumeMicroSeedPairingBundle({
+            stateDir,
+            registry,
+            bundle,
+            now:new Date(),
+          });
+          return send(res,201,{
+            ok:true,
+            ...receipt,
+            production_eligible:false,
+            conformance_required:true,
+            calibration_required:true,
+            ticket_consumed:true,
+          });
+        }finally{
+          active=Math.max(0,active-1);
+        }
       }
       return send(res,404,{ok:false,error:'not_found'});
     }catch(error){

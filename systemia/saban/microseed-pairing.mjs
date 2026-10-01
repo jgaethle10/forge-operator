@@ -298,6 +298,7 @@ export function showMicroSeedPairingTicket({
     device_id:record.device_id,
     allowed_device_classes:record.allowed_device_classes,
     allowed_workloads:record.allowed_workloads,
+    enrollment_url:record.enrollment_url||'',
     expires_at:record.expires_at,
     authorization_granted:false,
     device_credential_created:false,

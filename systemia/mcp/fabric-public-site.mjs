@@ -77,7 +77,15 @@ h2{font-size:clamp(30px,4.5vw,52px);letter-spacing:-.04em;margin:10px 0 14px}
 .capability{padding:18px;border:1px solid var(--line);border-radius:15px;background:rgba(11,19,36,.72)}
 .capability h3{margin:0 0 7px;font-size:17px}.capability p{margin:0;color:var(--muted);line-height:1.5;font-size:14px}
 .badge{display:inline-block;margin-top:12px;border:1px solid #2a4369;background:#0d1a30;color:#bcd5f8;padding:5px 8px;border-radius:999px;font-size:11px}
-.docs-link{display:inline-block;margin-top:12px;color:#9ec8ff;font-size:13px;text-decoration:none}
+.price{margin-top:14px!important;color:#f7f9fc!important;font-weight:700;font-size:14px!important}
+.cardlinks{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+.docs-link{display:inline-block;color:#9ec8ff;font-size:13px;text-decoration:none}
+.detail-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px;margin:28px 0 70px}
+.detail-panel{border:1px solid var(--line);background:linear-gradient(180deg,rgba(14,25,48,.82),rgba(9,16,30,.82));border-radius:16px;padding:22px}
+.detail-panel h2{font-size:24px;margin:0 0 12px}.detail-panel p,.detail-panel li{color:var(--muted);line-height:1.6}
+.detail-panel ul{padding-left:20px}.detail-panel .strong{color:var(--text);font-weight:750}
+.connection-list{display:grid;gap:10px;margin-top:16px}.connection{border:1px solid var(--line);border-radius:12px;padding:12px;text-decoration:none;background:rgba(5,9,20,.42)}
+.connection span{display:block;color:var(--muted);font-size:12px;margin-top:3px}
 .doc{padding:30px;border-radius:18px;margin:30px 0 70px}
 .doc h1{font-size:42px;line-height:1.06;letter-spacing:-.045em;margin:0 0 22px}
 .doc h2{font-size:24px;margin:28px 0 10px}.doc p,.doc li{color:#c0cee0;line-height:1.7}.doc ul{padding-left:22px}
@@ -85,7 +93,7 @@ footer{border-top:1px solid var(--line);padding:30px 0 48px;color:var(--muted);f
 .footerline{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}.footerlinks{display:flex;gap:14px}.footerlinks a{text-decoration:none}
 @media(max-width:780px){
   .navlinks{display:none}.hero{padding-top:48px}.trust{grid-template-columns:repeat(2,1fr)}
-  .grid,.prompts,.capability-grid{grid-template-columns:1fr}
+  .grid,.prompts,.capability-grid,.detail-grid{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -136,8 +144,19 @@ export function renderMarkdownDocument(title,markdown){
   return shell(title,'<main class="doc">'+out.join('')+'</main>');
 }
 
-export function renderFabricHome({capabilityCount=0}={}){
-  const count=Number(capabilityCount)||0;
+export function renderFabricHome({capabilityCount=0,capabilities=[]}={}){
+  const count=Array.isArray(capabilities)&&capabilities.length
+    ? capabilities.length
+    : Number(capabilityCount)||0;
+  const featured=(Array.isArray(capabilities)?capabilities:[])
+    .filter((item)=>item.commercial_state==='sell_now'&&item.pricing)
+    .slice(0,6);
+  const featuredMarkup=featured.length
+    ? featured.map((item)=>{
+        const problem=item.use_when?.[0]||item.description;
+        return `<article class="card"><h3><a href="/capabilities/${encodeURIComponent(item.public_id)}" style="text-decoration:none">${escapeHtml(item.name)}</a></h3><p>${escapeHtml(problem)}</p><p class="price">${escapeHtml(item.pricing)}</p><div class="cardlinks"><a class="docs-link" href="/capabilities/${encodeURIComponent(item.public_id)}">See what it does →</a></div></article>`;
+      }).join('')
+    : '<article class="card"><h3>Capability catalog</h3><p>Current commercial state is available through the live directory.</p></article>';
   return shell('Evercraft Fabric',`
 <main>
   <section class="hero">
@@ -166,6 +185,13 @@ export function renderFabricHome({capabilityCount=0}={}){
   </section>
 
   <section>
+    <div class="eyebrow">Available now</div>
+    <h2>Useful work, not a software scavenger hunt.</h2>
+    <p class="sub">These are current public capabilities whose catalog state says they can be sold now. The offer and pricing shown here come from the same runtime metadata agents see.</p>
+    <div class="grid">${featuredMarkup}</div>
+  </section>
+
+  <section>
     <div class="eyebrow">Try asking</div>
     <h2>Real problems are the interface.</h2>
     <div class="prompts">
@@ -181,11 +207,14 @@ export function renderFabricHome({capabilityCount=0}={}){
 export function renderCapabilities(capabilities=[]){
   const cards=capabilities.map((item)=>{
     const docs=(item.connections||[]).find((connection)=>connection.type==='docs');
+    const detail='/capabilities/'+encodeURIComponent(item.public_id);
+    const commercial=item.commercial_state||item.state;
     return `<article class="capability">
       <h3>${escapeHtml(item.name)}</h3>
       <p>${escapeHtml(item.description)}</p>
-      <span class="badge">${escapeHtml(item.state)}</span>
-      ${docs?.url?`<br><a class="docs-link" href="${escapeHtml(docs.url)}" rel="noreferrer">Public capability guide →</a>`:''}
+      ${item.pricing?`<p class="price">${escapeHtml(item.pricing)}</p>`:''}
+      <span class="badge">${escapeHtml(commercial)}</span>
+      <div class="cardlinks"><a class="docs-link" href="${detail}">View capability →</a>${docs?.url?`<a class="docs-link" href="${escapeHtml(docs.url)}" rel="noreferrer">Machine guide ↗</a>`:''}</div>
     </article>`;
   }).join('');
   return shell('Evercraft Fabric Capabilities',`
@@ -193,8 +222,59 @@ export function renderCapabilities(capabilities=[]){
   <section class="hero">
     <div class="eyebrow">Capability directory</div>
     <h1>What Fabric can route today.</h1>
-    <p class="lede">${capabilities.length} public-safe capabilities. Availability and authority states are shown directly from the runtime catalog.</p>
+    <p class="lede">${capabilities.length} public-safe capabilities. Current offer, availability and authority states come directly from the runtime catalog instead of marketing copy that can drift away from the product.</p>
   </section>
   <div class="capability-grid">${cards}</div>
+</main>`);
+}
+
+export function renderCapabilityDetail(item){
+  const docs=(item.connections||[]).filter((connection)=>connection.type==='docs');
+  const useWhen=(item.use_when||[]).slice(0,10);
+  const commercial=item.commercial_state||item.state;
+  const entry=item.entry_paid_offer||null;
+  const entryPrice=entry?.price||(
+    Number.isFinite(entry?.price_usd_normalized) ? '$'+entry.price_usd_normalized : ''
+  );
+  const resources=docs.length
+    ? `<div class="connection-list">${docs.map((connection)=>`<a class="connection" href="${escapeHtml(connection.url)}" rel="noreferrer"><strong>${escapeHtml(connection.label)}</strong><span>${escapeHtml(connection.type)} · ${escapeHtml(connection.state)}</span></a>`).join('')}</div>`
+    : '<p>No separate public documentation route is represented for this capability yet.</p>';
+  const prompts=useWhen.length
+    ? `<ul>${useWhen.map((value)=>`<li>“${escapeHtml(value)}”</li>`).join('')}</ul>`
+    : '<p>This capability is currently discovered from its published problem description.</p>';
+  const startState=item.start_url_state||'not_declared';
+  return shell(item.name+` · Evercraft Fabric`,`
+<main>
+  <section class="hero">
+    <div class="eyebrow">Evercraft capability</div>
+    <h1>${escapeHtml(item.name)}</h1>
+    <p class="lede">${escapeHtml(item.description)}</p>
+    <div class="actions"><a class="btn primary" href="/capabilities">Browse all capabilities</a><a class="btn" href="/health">Verify Fabric health</a></div>
+  </section>
+  <div class="detail-grid">
+    <section class="detail-panel">
+      <h2>When this is the right tool</h2>
+      ${prompts}
+    </section>
+    <section class="detail-panel">
+      <h2>Current offer</h2>
+      ${item.pricing?`<p class="strong">${escapeHtml(item.pricing)}</p>`:'<p>No fixed public price is currently represented by Fabric.</p>'}
+      ${entry?`<p><strong>Easiest published entry:</strong> ${escapeHtml(entry.name)}${entryPrice?' · '+escapeHtml(entryPrice):''}</p>`:''}
+      <p><strong>Commercial state:</strong> ${escapeHtml(commercial)}</p>
+      <p><strong>Machine state:</strong> ${escapeHtml(item.state)}</p>
+      <p><strong>Verified start-path state:</strong> ${escapeHtml(startState)}</p>
+      <p>Discovery itself does not create a charge, paid engagement, deployment, message, or other external action. Fabric will not invent a checkout or start route that the catalog has not verified.</p>
+    </section>
+    <section class="detail-panel">
+      <h2>Continue deliberately</h2>
+      <p>For an AI or agent, use capability ID <code>${escapeHtml(item.public_id)}</code> through Evercraft Fabric. A paid or human continuation is exposed only when the capability publishes a verified start path.</p>
+      ${resources}
+    </section>
+    <section class="detail-panel">
+      <h2>Why the door is trustworthy</h2>
+      <p>This page is rendered from the same live public-safe capability metadata Fabric exposes to agents. If availability, pricing, or routing state changes in the catalog, this surface changes with it.</p>
+      <p><a class="docs-link" href="/capabilities/${encodeURIComponent(item.public_id)}.json">Machine-readable capability JSON →</a></p>
+    </section>
+  </div>
 </main>`);
 }

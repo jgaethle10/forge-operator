@@ -6,9 +6,9 @@ The product-facing source package lives at `plugins/evercraft-fabric/`. The publ
 
 ## Current transport
 
-The submission packet currently references the existing live universal Evercraft Machine Commerce remote MCP as a compatibility transport. That is the currently reachable universal machine door, not the long-term authority boundary.
+The submission packet now references the Evercraft-owned Fabric MCP at `https://fabric.systemiacommandcenters.com/mcp`. The owned route has recorded public HTTPS and external-canary evidence, while the legacy Base44 transport is retained only as inactive compatibility history.
 
-The owned Evercraft Fabric MCP is implemented in `systemia/mcp/fabric-directory.mjs` and served by the specialist-handoff runtime. Its production cutover is receipt-gated on a verified stable Yard public HTTPS route and an external canary. The current workflow truth remains authoritative; never invent the future origin.
+The owned Evercraft Fabric MCP is implemented in `systemia/mcp/fabric-directory.mjs` and served by the Fabric runtime. Provider review, approval, publication, and directory pickup remain external states and must never be inferred from source readiness alone.
 
 ## Prepared
 
