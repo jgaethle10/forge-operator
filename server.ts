@@ -491,6 +491,7 @@ app.get('/api/capabilities', (_req: Request, res: Response) => {
       health: '/api/radar/health',
       latest: '/api/radar/latest',
       changeWall: '/api/radar/change-wall',
+      sourceHealth: '/api/radar/source-health',
       internalWrites: 'bearer-gated',
       publicationAuthority: false,
     },
