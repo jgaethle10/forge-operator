@@ -17,7 +17,7 @@ Remote Operator fresh-check request
 
 The companion keeps a low-rate heartbeat but also polls the local receiver for fresh-check requests every 30 seconds. A remote operator can therefore request new evidence instead of relying only on the last background snapshot.
 
-It is not a generic remote desktop agent. It does not persist screenshots or the raw accessibility tree, and v0.1.0 accepts no remote mutation commands.
+It is not a generic remote desktop agent. It does not persist screenshots or the raw accessibility tree, and v0.2 accepts no remote mutation commands. Each installed companion now creates a non-extractable ECDSA P-256 observer key. The pairing token bootstraps trust once; subsequent observations are signed by that device key and carry a monotonic sequence so replayed reports fail closed.
 
 ## Why this exists
 
@@ -45,7 +45,15 @@ and starts:
 evercraft-chromeos-host-boundary-bridge.service
 ```
 
-The secret is printed once for local pairing. It is never written into receipts.
+The secret is printed once for local pairing. It is never written into receipts. The first successful companion pairing locks the receiver to that companion's public-key fingerprint.
+
+To intentionally replace or reinstall the companion, reset the node-side pairing:
+
+```bash
+bash systemia/compute/install-chromeos-host-boundary-bridge-user.sh --reset-pairing
+```
+
+That deletes the old observer pairing and host-capability admissions and rotates the bootstrap token. It does not silently trust the replacement companion.
 
 ## Install the ChromeOS companion
 
@@ -63,13 +71,13 @@ The ChromeOS read capability remains a field-gated candidate until the real devi
 npm run chromeos:host-boundary:admit
 ```
 
-That command creates a node-local, integrity-sealed admission bound to the exact ChromeOS companion install ID. Reinstalling or replacing the companion invalidates that local admission until the field proof is repeated.
+That command creates a node-local, integrity-sealed admission bound to the exact ChromeOS companion install ID and cryptographic observer-key fingerprint. Reinstalling, replacing, or re-keying the companion invalidates that local admission until the field proof is repeated.
 
 The source registry can therefore carry candidate capability definitions without silently making them available for generic LLM dispatch.
 
 ## Evidence semantics
 
-A fresh bridge record means the ChromeOS accessibility surface was directly observed recently. It does not, by itself, prove WAN reachability.
+A fresh bridge record means the ChromeOS accessibility surface was directly observed recently and the receiver verified the paired companion's signature. It does not, by itself, prove WAN reachability.
 
 The complete ingress diagnosis should reconcile independent evidence:
 
