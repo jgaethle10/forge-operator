@@ -1,0 +1,62 @@
+name: Chromebook Operator Public Edge Canary
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'systemia/compute/device-identity.mjs'
+      - 'systemia/compute/operator-public-edge-admit.mjs'
+      - 'scripts/fabric-edge-external-canary.mjs'
+      - 'scripts/install-fabric-owned-edge.sh'
+      - '.github/workflows/chromebook-operator-edge-canary.yml'
+  workflow_dispatch:
+  schedule:
+    - cron: '7,17,27,37,47,57 * * * *'
+
+permissions:
+  contents: read
+
+jobs:
+  canary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    env:
+      EVERCRAFT_OPERATOR_EDGE_ORIGIN: https://fabric.systemiacommandcenters.com
+    steps:
+      - name: Checkout exact verifier revision
+        uses: actions/checkout@v4
+
+      - name: Verify Chromebook-owned production edge
+        id: verify
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          set +e
+          node scripts/fabric-edge-external-canary.mjs             --origin "$EVERCRAFT_OPERATOR_EDGE_ORIGIN"             > artifacts/fabric-operator-edge-canary.stdout.json             2> artifacts/fabric-operator-edge-canary.stderr.json
+          status=$?
+          set -e
+          if [ "$status" -eq 0 ]; then
+            mv artifacts/fabric-operator-edge-canary.stdout.json               artifacts/fabric-operator-edge-canary.json
+            rm -f artifacts/fabric-operator-edge-canary.stderr.json
+          else
+            if [ -s artifacts/fabric-operator-edge-canary.stderr.json ]; then
+              mv artifacts/fabric-operator-edge-canary.stderr.json                 artifacts/fabric-operator-edge-canary.json
+            else
+              mv artifacts/fabric-operator-edge-canary.stdout.json                 artifacts/fabric-operator-edge-canary.json
+            fi
+            echo "Operator edge canary failed with status $status." >&2
+            cat artifacts/fabric-operator-edge-canary.json >&2 || true
+            exit "$status"
+          fi
+          cat artifacts/fabric-operator-edge-canary.json
+
+      - name: Upload operator edge receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chromebook-operator-edge-canary
+          path: artifacts/fabric-operator-edge-canary.json
+          if-no-files-found: error
+          retention-days: 90
