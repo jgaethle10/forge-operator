@@ -4,12 +4,15 @@ on:
   pull_request:
     paths:
       - 'systemia/mcp/fabric-directory.mjs'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'systemia/mcp/fabric-mobile-site.mjs'
       - 'systemia/mcp/specialist-handoff-runtime.mjs'
       - 'systemia/compute/runtime-node.mjs'
       - 'systemia/yard/public-edge-controller.mjs'
       - 'systemia/yard/public-edge-activation-watch.mjs'
       - 'systemia/organism/public-edge-activation-watch-runner.mjs'
       - 'tests/evercraft-fabric-runtime.test.mjs'
+      - 'tests/fabric-mobile-runtime.test.mjs'
       - 'tests/specialist-handoff-native-runtime.test.mjs'
       - 'tests/public-edge-native-specialist-invariants.test.mjs'
       - 'tests/public-edge-canary-contract.test.mjs'
@@ -31,8 +34,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Prove Fabric MCP and challenge
-        run: node --test tests/evercraft-fabric-runtime.test.mjs
+      - name: Prove Fabric MCP and mobile door
+        run: node --test tests/evercraft-fabric-runtime.test.mjs tests/fabric-mobile-runtime.test.mjs
       - name: Prove specialist runtime remains safe
         run: |
           npm install --no-audit --no-fund
