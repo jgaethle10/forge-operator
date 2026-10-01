@@ -206,7 +206,12 @@ jobs:
               if [ -f "$FILE" ]; then
                 echo "### $FILE"
                 echo '~~~json'
-                cat "$FILE"
+                BYTES="$(wc -c < "$FILE" | tr -d ' ')"
+                head -c 100000 "$FILE"
+                echo
+                if [ "$BYTES" -gt 100000 ]; then
+                  echo "... truncated in step summary; full receipt remains in uploaded artifacts ($BYTES bytes)"
+                fi
                 echo '~~~'
               fi
             done
