@@ -1,0 +1,33 @@
+{
+  "origin": "edge-canary.evercraftpropertyservices.com.",
+  "serial": 2026100101,
+  "default_ttl": 60,
+  "primary_ns": "ns1.edge-canary.evercraftpropertyservices.com.",
+  "admin": "hostmaster.evercraftpropertyservices.com.",
+  "nameservers": [
+    "ns1.edge-canary.evercraftpropertyservices.com.",
+    "ns2.edge-canary.evercraftpropertyservices.com."
+  ],
+  "records": [
+    {
+      "name": "@",
+      "type": "NS",
+      "value": "ns1.edge-canary.evercraftpropertyservices.com."
+    },
+    {
+      "name": "@",
+      "type": "NS",
+      "value": "ns2.edge-canary.evercraftpropertyservices.com."
+    },
+    {
+      "name": "_evercraft",
+      "type": "TXT",
+      "value": "service=evercraft://edge/canary"
+    },
+    {
+      "name": "health",
+      "type": "TXT",
+      "value": "state=prepared-not-live"
+    }
+  ]
+}
