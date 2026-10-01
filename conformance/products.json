@@ -166,7 +166,7 @@
       },
       "mcp_registry": {
         "name": "io.github.jgaethle10/evercraft-machine-commerce",
-        "version": "1.5.1",
+        "version": "1.6.0",
         "publication_state": "published_shared_server"
       },
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
@@ -321,7 +321,8 @@
       "live_canary_evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/conformance/runtime-observations/2026-09-26-evercraft-network-mcp.json",
       "mcp_registry": {
         "name": "io.github.jgaethle10/evercraft-machine-commerce",
-        "publication_state": "published_shared_server"
+        "publication_state": "published_shared_server",
+        "version": "1.6.0"
       },
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
     },
@@ -350,7 +351,7 @@
       "provider_behavior_state": "not_run",
       "mcp_registry": {
         "name": "io.github.jgaethle10/evercraft-machine-commerce",
-        "version": "1.1.0",
+        "version": "1.6.0",
         "publication_state": "published"
       },
       "origin_llms_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=llms",
@@ -416,6 +417,28 @@
         "private_target_rejection": "pass",
         "observed_on": "2026-09-24"
       }
+    },
+    {
+      "product_key": "evermaps",
+      "name": "EverMaps",
+      "class": "public_safe_geospatial_evidence_projection",
+      "canonical_url": "https://evermaps.base44.app/",
+      "doorway_state": "machine_commerce_live",
+      "conformance_state": "live_read_only_mcp_verified",
+      "provider_behavior_state": "not_inferred_from_publication",
+      "machine_commerce_public_id": "evermaps-evidence-projection-machine-v1",
+      "machine_commerce_tool": "query_evermaps_public_projection",
+      "machine_invocation_url": "https://base44.app/api/apps/6a985aeccbfb6e930a40137b/functions/publicProjectionQuery",
+      "machine_invocation_side_effects": "none",
+      "authority_state": "Verified read-only execution. No payment, publication, outreach, private-record access, or external-action authority is created by this tool.",
+      "payment_state": "not_applicable_read_only",
+      "live_canary_evidence": "GitHubActionsRun:36802891607",
+      "mcp_registry": {
+        "name": "io.github.jgaethle10/evercraft-machine-commerce",
+        "version": "1.6.0",
+        "publication_state": "published_shared_server"
+      },
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
     },
     {
       "product_key": "evernest",
@@ -522,6 +545,28 @@
       "chum_mirror_state": "generated_public_fallback"
     },
     {
+      "product_key": "globalstat",
+      "name": "GlobalStat",
+      "class": "country_comparison_and_evidence_intelligence",
+      "canonical_url": "https://global-stat-pulse.base44.app/",
+      "doorway_state": "machine_commerce_live",
+      "conformance_state": "live_read_only_mcp_verified",
+      "provider_behavior_state": "not_inferred_from_publication",
+      "machine_commerce_public_id": "globalstat-country-intelligence-machine-v1",
+      "machine_commerce_tool": "query_globalstat_country_intelligence",
+      "machine_invocation_url": "https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/countryIntelligence",
+      "machine_invocation_side_effects": "none",
+      "authority_state": "Verified read-only execution. No payment, publication, outreach, private-record access, or external-action authority is created by this tool.",
+      "payment_state": "not_applicable_read_only",
+      "live_canary_evidence": "GitHubActionsRun:36802891607",
+      "mcp_registry": {
+        "name": "io.github.jgaethle10/evercraft-machine-commerce",
+        "version": "1.6.0",
+        "publication_state": "published_shared_server"
+      },
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+    },
+    {
       "product_key": "guardian",
       "name": "Guardian",
       "class": "privacy_first_protection_navigation_and_prevention",
@@ -556,7 +601,7 @@
       "payment_state": "unverified_until_provider_payment",
       "mcp_registry": {
         "name": "io.github.jgaethle10/evercraft-machine-commerce",
-        "version": "1.5.1",
+        "version": "1.6.0",
         "publication_state": "published_shared_server"
       },
       "machine_commerce_offer_tool": "get_live_checkout_offer",
@@ -612,9 +657,31 @@
       },
       "mcp_registry": {
         "name": "io.github.jgaethle10/evercraft-machine-commerce",
-        "version": "1.5.1",
+        "version": "1.6.0",
         "publication_state": "published_shared_server"
       }
+    },
+    {
+      "product_key": "little-red-book-export-qa",
+      "name": "Little Red Studio Book Export QA",
+      "class": "book_export_preflight_and_cover_geometry_qa",
+      "canonical_url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
+      "doorway_state": "machine_commerce_live",
+      "conformance_state": "live_read_only_mcp_verified",
+      "provider_behavior_state": "not_inferred_from_publication",
+      "machine_commerce_public_id": "littlered-kdp-export-qa-machine-v1",
+      "machine_commerce_tool": "check_book_export_preflight",
+      "machine_invocation_url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/kdpExportQa",
+      "machine_invocation_side_effects": "none",
+      "authority_state": "Verified read-only execution. No payment, publication, outreach, private-record access, or external-action authority is created by this tool.",
+      "payment_state": "not_applicable_read_only",
+      "live_canary_evidence": "GitHubActionsRun:36802891607",
+      "mcp_registry": {
+        "name": "io.github.jgaethle10/evercraft-machine-commerce",
+        "version": "1.6.0",
+        "publication_state": "published_shared_server"
+      },
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
     },
     {
       "product_key": "opportunity-fabric",
@@ -825,7 +892,7 @@
       },
       "mcp_registry": {
         "name": "io.github.jgaethle10/evercraft-machine-commerce",
-        "version": "1.5.1",
+        "version": "1.6.0",
         "publication_state": "published_shared_server"
       }
     },
