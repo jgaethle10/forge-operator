@@ -411,4 +411,7 @@ export function createVoluntaryMarketAdapter(options={}){
   return new VoluntaryComputeMarket(options);
 }
 
-export { canonical as canonicalVoluntaryOffer };
+export {
+  canonical as canonicalVoluntaryOffer,
+  cleanOffer as prepareVoluntaryOffer,
+};
