@@ -18,6 +18,7 @@ import { runOverlapFragilityLab } from "./edge-overlap-fragility.mjs";
 import { runMatchedPlaceboLab } from "./edge-matched-placebo.mjs";
 import { runBenchmarkFragilityLab } from "./edge-benchmark-fragility.mjs";
 import { runWalkForwardLab } from "./edge-walk-forward.mjs";
+import { runExecutionTranslationLab } from "./edge-execution-translation.mjs";
 
 async function main() {
   const artifactDir = path.resolve(
@@ -86,6 +87,18 @@ async function main() {
   });
   const walkForwardFile = path.join(artifactDir, "sec-edge-walk-forward.json");
   fs.writeFileSync(walkForwardFile, JSON.stringify(walkForwardLab, null, 2) + "\n");
+
+  const executionTranslationLab = runExecutionTranslationLab(report, {
+    transaction_cost_bps_per_leg: Number(process.env.EDGE_LAB_TRANSACTION_COST_BPS || 5),
+  });
+  const executionTranslationFile = path.join(
+    artifactDir,
+    "sec-edge-execution-translation.json"
+  );
+  fs.writeFileSync(
+    executionTranslationFile,
+    JSON.stringify(executionTranslationLab, null, 2) + "\n"
+  );
 
   const adversarial = adversarialValidateCandidates(report, {
     transaction_cost_bps: Number(process.env.EDGE_LAB_TRANSACTION_COST_BPS || 5),
@@ -220,6 +233,7 @@ async function main() {
     placebo_separated_diagnostics: placeboLab.placebo_separated_count || 0,
     benchmark_fragility_status_counts: benchmarkLab.status_counts || {},
     walk_forward_robust_diagnostics: walkForwardLab.walk_forward_robust_count || 0,
+    execution_translation_status_counts: executionTranslationLab.status_counts || {},
     frozen_forward_paper_cohorts: frozenCohorts.length,
     durable_forward_paper_state_configured: durableState.configured,
     durable_forward_paper_restart_reopen_verified: durableState.restart_reopen_verified,
@@ -238,6 +252,7 @@ async function main() {
       matched_placebo_lab: placeboFile,
       benchmark_fragility_lab: benchmarkFile,
       walk_forward_lab: walkForwardFile,
+      execution_translation_lab: executionTranslationFile,
       adversarial_review: adversarialFile,
       forward_paper_cohorts: forwardPaperFile,
       durable_forward_paper_scores: durableScoreFile,
