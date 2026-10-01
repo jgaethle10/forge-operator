@@ -42,3 +42,23 @@ R&B Chicken and Soul remains explicitly blocked from this machine. High-stakes p
 ## Why this exists
 
 Evercraft has enough research, world-state sensing, mapping, newsroom, visual-production, and distribution machinery that its public pages should feel alive. The goal is not higher post count. The goal is that opening the feed should regularly produce the reaction: **"Wait, what am I looking at?"** and then answer that question with real evidence.
+
+
+## Production loop
+
+The selector is paired with a second resident cycle, `social-spectacle-production`, so an admitted hero candidate does not merely sit in a JSON queue.
+
+For explicit Fallen phenomena, the production cycle now:
+
+1. compiles both vertical 9:16 and landscape 16:9 Phenomenon Canvas stages;
+2. creates the owned distributed-render plan;
+3. holds safely at `ready_to_render` when render workers are unavailable;
+4. when workers are configured, renders the vertical hero through the Fallen distributed worker fabric;
+5. runs master QC on the exact assembled bytes;
+6. runs a ten-check social editorial preflight;
+7. builds an evidence-bound Clip manifest;
+8. stages the verified master into the first-party Evercraft Clip queue.
+
+Clip now accepts SHA-verified distributed Fallen masters in addition to timeline exports. The staged manifest itself is also digest-bound into the intake receipt, so metadata or gate fields cannot be modified after intake and silently published later.
+
+The producer still does not claim a social post happened. A finished package stops at `ready_for_clip_publish` until Clip resolves a real authorized destination adapter and receives provider-visible publication evidence. That distinction is deliberate: **finished media is not the same thing as a published post.**
