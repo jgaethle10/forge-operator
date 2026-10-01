@@ -341,14 +341,15 @@ export function fabricDirectoryTools(){
     },
     {
       name:'inspect_public_website',
-      title:'Inspect a public website',
-      description:'Fetch one user-supplied public website URL and return a bounded, evidence-backed preview of HTTP and on-page website signals. Read-only. Private and local networks, embedded credentials, oversized responses, and unsupported content types are rejected.',
+      title:'Inspect an authorized public website',
+      description:'Inspect one public website the user owns, administers, or has permission to review. Returns bounded, evidence-backed HTTP and on-page signals. Read-only. Private/local networks, embedded credentials, nonstandard ports, unsafe redirects, oversized responses, and unsupported content types are rejected.',
       inputSchema:{
         type:'object',
         properties:{
-          url:{type:'string',minLength:3,maxLength:2048,description:'Public http or https website URL to inspect. If the scheme is omitted, https is assumed.'},
+          url:{type:'string',minLength:3,maxLength:2048,description:'Public http or https website URL the user is authorized to inspect. If the scheme is omitted, https is assumed.'},
+          authorized_to_inspect:{type:'boolean',description:'True only when the user owns, administers, or has permission to inspect the supplied website.'},
         },
-        required:['url'],
+        required:['url','authorized_to_inspect'],
         additionalProperties:false,
       },
       annotations:publicWebSafe,
@@ -454,6 +455,9 @@ export async function executeFabricDirectoryRpc(rpc,catalog=[],{websitePreview=p
     if(name==='inspect_public_website'){
       const url=clean(args.url,2048);
       if(url.length<3) return rpcError(id,-32602,'url must contain at least 3 characters');
+      if(args.authorized_to_inspect!==true){
+        return rpcError(id,-32602,'authorized_to_inspect must be true for a website the user owns, administers, or has permission to review');
+      }
       try{
         return rpcResult(id,toolResult(await websitePreview(url)));
       }catch(error){
