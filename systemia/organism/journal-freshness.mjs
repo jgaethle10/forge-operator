@@ -127,8 +127,18 @@ export async function probeJournalFreshness({
     'optimize your cart for maximum savings'
   ];
   const journalIdentityMarkers = ['evercraft journal', 'news that moves. ideas that become things.'];
+  const strongJournalIdentityMarkers = ['news that moves. ideas that become things.'];
   const hasJournalIdentity = home.ok && journalIdentityMarkers.some((marker) => publicIdentityLower.includes(marker));
-  const identityDrift = home.ok && !hasJournalIdentity && identityDriftMarkers.some((marker) => publicIdentityLower.includes(marker));
+  const hasStrongJournalIdentity = home.ok && strongJournalIdentityMarkers.some(
+    (marker) => publicIdentityLower.includes(marker)
+  );
+  const hasLegacyIdentity = home.ok && identityDriftMarkers.some(
+    (marker) => publicIdentityLower.includes(marker)
+  );
+  // A generic Journal title is not enough to neutralize a conflicting public
+  // description that still identifies the product as the old shopping app.
+  // Explicit editorial identity is strong enough to disambiguate legacy copy.
+  const identityDrift = home.ok && hasLegacyIdentity && !hasStrongJournalIdentity;
   const identityFindings = identityDrift
     ? [{
         ...findingBase,
