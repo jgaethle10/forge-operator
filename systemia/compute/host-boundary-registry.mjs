@@ -23,6 +23,11 @@ function normalizeCapability(raw) {
     throw new Error('host_boundary_capability_operation_invalid');
   }
 
+  const admissionState = String(raw.admission_state || 'candidate').trim().toLowerCase();
+  if (!['candidate', 'candidate_field_gate', 'admitted', 'revoked'].includes(admissionState)) {
+    throw new Error('host_boundary_capability_admission_state_invalid');
+  }
+
   const scope = raw.scope && typeof raw.scope === 'object' && !Array.isArray(raw.scope)
     ? structuredClone(raw.scope)
     : {};
@@ -36,6 +41,8 @@ function normalizeCapability(raw) {
   return {
     capability_id: capabilityId,
     adapter,
+    admission_state: admissionState,
+    requires_field_certification: raw.requires_field_certification === true,
     host_os: String(raw.host_os || '').trim().toLowerCase(),
     surface: String(raw.surface || '').trim(),
     operation,
@@ -111,6 +118,9 @@ export function hostBoundaryCapabilityStatus({
     capabilities: registry.capabilities.map((capability) => ({
       capability_id: capability.capability_id,
       adapter: capability.adapter,
+      admission_state: capability.admission_state,
+      available_for_generic_dispatch: capability.admission_state === 'admitted',
+      requires_field_certification: capability.requires_field_certification,
       host_os: capability.host_os,
       operation: capability.operation,
       surface: capability.surface,
@@ -128,11 +138,20 @@ export function hostBoundaryCapabilityStatus({
 
 export function getHostBoundaryCapability(
   capabilityId,
-  { registryFile = DEFAULT_REGISTRY_FILE } = {},
+  {
+    registryFile = DEFAULT_REGISTRY_FILE,
+    requireAdmitted = false,
+  } = {},
 ) {
   const id = cleanCapabilityId(capabilityId);
   const registry = loadHostBoundaryCapabilityRegistry({ file: registryFile });
   const capability = registry.capabilities.find((row) => row.capability_id === id);
   if (!capability) throw new Error('host_boundary_capability_not_registered');
+  if (capability.admission_state === 'revoked') {
+    throw new Error('host_boundary_capability_revoked');
+  }
+  if (requireAdmitted && capability.admission_state !== 'admitted') {
+    throw new Error('host_boundary_capability_field_gate_required');
+  }
   return capability;
 }
