@@ -272,7 +272,32 @@ body{display:flex;align-items:center;justify-content:center}
     }
     for(const point of layer.points||[]){
       const p=project(point.lat,point.lon,layer);
-      const circle=document.createElementNS(ns,'circle');circle.setAttribute('cx',p.x);circle.setAttribute('cy',p.y);circle.setAttribute('r','5');circle.setAttribute('fill',stage.theme?.palette?.point||'#fff');el.appendChild(circle);if(point.label){const label=document.createElementNS(ns,'text');label.setAttribute('x',p.x+10);label.setAttribute('y',p.y-8);label.setAttribute('fill',stage.theme?.palette?.textPrimary||'rgba(255,255,255,.88)');label.setAttribute('font-size','16');label.setAttribute('font-family',stage.theme?.fontFamily||'Montserrat,Arial,sans-serif');label.textContent=point.label;el.appendChild(label)}
+      const baseRadius=clamp(Number(point.radius)||5,2,24);
+      const intensity=clamp(Number(point.intensity),0,1);
+      const pulse=point.pulse ? 1+0.16*Math.sin(t*2.6) : 1;
+      const color=stage.theme?.palette?.point||'#fff';
+      if(point.pulse){
+        const ring=document.createElementNS(ns,'circle');
+        ring.setAttribute('cx',p.x);ring.setAttribute('cy',p.y);
+        ring.setAttribute('r',String(baseRadius*(1.65+0.22*Math.sin(t*2.6))));
+        ring.setAttribute('fill','none');ring.setAttribute('stroke',color);
+        ring.setAttribute('stroke-width',String(1.25+1.75*intensity));
+        ring.setAttribute('opacity',String(.12+.28*intensity));
+        el.appendChild(ring);
+      }
+      const circle=document.createElementNS(ns,'circle');
+      circle.setAttribute('cx',p.x);circle.setAttribute('cy',p.y);
+      circle.setAttribute('r',String(baseRadius*pulse));
+      circle.setAttribute('fill',color);
+      circle.setAttribute('opacity',String(.58+.4*intensity));
+      el.appendChild(circle);
+      if(point.label){
+        const label=document.createElementNS(ns,'text');label.setAttribute('x',p.x+baseRadius+7);label.setAttribute('y',p.y-8);
+        label.setAttribute('fill',stage.theme?.palette?.textPrimary||'rgba(255,255,255,.88)');
+        label.setAttribute('font-size',String(14+Math.round(3*intensity)));
+        label.setAttribute('font-family',stage.theme?.fontFamily||'Montserrat,Arial,sans-serif');
+        label.textContent=point.label;el.appendChild(label)
+      }
     }
   };
   window.__evercraftRenderAt=async(timeSec)=>{
