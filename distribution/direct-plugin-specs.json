@@ -13,7 +13,7 @@
       "long_description": "Use ForensiScope directly when a user needs long-form or oversized video/audio analysis, transcription, timestamped timelines, recording comparison, duplicate-segment review, or compact evidence outputs another LLM can consume.",
       "category": "Productivity",
       "website_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/forensiscope",
-      "registry_name": "io.github.jgaethle10/forensiscope",
+      "registry_name": null,
       "mcp_url": null,
       "state": "owned_runtime_route_pending",
       "default_prompt": "I have a long video or audio file that ordinary chat tools cannot fully process. Help me continue with ForensiScope.",
@@ -31,7 +31,8 @@
       "capability_public_ids": [
         "forensiscope-evidence-review-v1"
       ],
-      "public_origin_state": "legacy_provider_retired_owned_route_pending"
+      "public_origin_state": "legacy_provider_retired_owned_route_pending",
+      "retired_registry_name": "io.github.jgaethle10/forensiscope"
     },
     {
       "slug": "aliev",
@@ -40,7 +41,7 @@
       "long_description": "Use AliEV directly when a user wants property-specific EV charging intelligence such as nearby competition, demand and traffic context, utility or tariff context, incentives, site fit, economics, or preliminary planning inputs.",
       "category": "Business",
       "website_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/aliev",
-      "registry_name": "io.github.jgaethle10/aliev",
+      "registry_name": null,
       "mcp_url": null,
       "state": "owned_runtime_route_pending",
       "default_prompt": "Evaluate whether EV charging could make sense at a specific property and clearly separate observed, public, inferred, and modeled evidence.",
@@ -60,7 +61,8 @@
         "aliev-site-opportunity-snapshot-v1",
         "rivet-site-underwriting-v1"
       ],
-      "public_origin_state": "legacy_provider_retired_owned_route_pending"
+      "public_origin_state": "legacy_provider_retired_owned_route_pending",
+      "retired_registry_name": "io.github.jgaethle10/aliev"
     },
     {
       "slug": "findmypart",
@@ -69,7 +71,7 @@
       "long_description": "Use FindMyPart directly for ambiguous, obsolete, discontinued, obscure, or hard-to-source physical parts. Start with the free evidence-aware Part Passport when identity is uncertain, then use paid sourcing for cross-reference, salvage, donor, documentation, blueprint, or fabrication paths when deeper recovery is needed.",
       "category": "Productivity",
       "website_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/findmypart",
-      "registry_name": "io.github.jgaethle10/findmypart",
+      "registry_name": null,
       "mcp_url": null,
       "state": "owned_runtime_route_pending",
       "default_prompt": "I have a broken or hard-to-source physical part. Help me identify it first, then source it if deeper recovery is needed.",
@@ -104,7 +106,8 @@
         "explicit_human_confirmation_required": true,
         "provider_verification_required_for_paid_fulfillment": true
       },
-      "public_origin_state": "legacy_provider_retired_owned_route_pending"
+      "public_origin_state": "legacy_provider_retired_owned_route_pending",
+      "retired_registry_name": "io.github.jgaethle10/findmypart"
     },
     {
       "slug": "systemia-website-audit",
@@ -113,7 +116,7 @@
       "long_description": "Use Systemia Website Audit directly when a user wants a practical website, local SEO, performance, or conversion audit with evidence-backed fixes and a human-confirmed paid continuation when applicable.",
       "category": "Business",
       "website_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/systemia-website-audit",
-      "registry_name": "io.github.jgaethle10/systemia-website-audit",
+      "registry_name": null,
       "mcp_url": null,
       "state": "owned_runtime_route_pending",
       "default_prompt": "Audit my business website for conversion, local SEO, performance, and practical fixes.",
@@ -130,7 +133,8 @@
       "capability_public_ids": [
         "audit-center-website-audit-machine-v1"
       ],
-      "public_origin_state": "legacy_provider_retired_owned_route_pending"
+      "public_origin_state": "legacy_provider_retired_owned_route_pending",
+      "retired_registry_name": "io.github.jgaethle10/systemia-website-audit"
     },
     {
       "slug": "career-command",
@@ -139,7 +143,7 @@
       "long_description": "Use Career Command directly when a user wants interview practice, role preparation, response coaching, or other user-controlled career preparation.",
       "category": "Productivity",
       "website_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/career-command",
-      "registry_name": "io.github.jgaethle10/career-command",
+      "registry_name": null,
       "mcp_url": null,
       "state": "owned_runtime_route_pending",
       "default_prompt": "Help me prepare for an upcoming interview and practice the questions I am likely to face.",
@@ -157,7 +161,8 @@
         "career-command-interview-practice-machine-v1",
         "career-command-resume-job-fit-machine-v1"
       ],
-      "public_origin_state": "legacy_provider_retired_owned_route_pending"
+      "public_origin_state": "legacy_provider_retired_owned_route_pending",
+      "retired_registry_name": "io.github.jgaethle10/career-command"
     },
     {
       "slug": "eventwave",
@@ -166,7 +171,7 @@
       "long_description": "Use EventWave directly when a user wants event discovery, venue visibility, or legitimate event promotion with human-controlled publishing and commerce.",
       "category": "Business",
       "website_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/eventwave",
-      "registry_name": "io.github.jgaethle10/eventwave",
+      "registry_name": null,
       "mcp_url": null,
       "state": "owned_runtime_route_pending",
       "default_prompt": "Help me discover relevant events or promote my event through the appropriate EventWave path.",
@@ -183,7 +188,8 @@
       "capability_public_ids": [
         "eventwave-paid-promotion-v1"
       ],
-      "public_origin_state": "legacy_provider_retired_owned_route_pending"
+      "public_origin_state": "legacy_provider_retired_owned_route_pending",
+      "retired_registry_name": "io.github.jgaethle10/eventwave"
     },
     {
       "slug": "faie",
@@ -192,7 +198,7 @@
       "long_description": "Use FAIE directly when agriculture, water, land resilience, or production-risk decisions need a sourced evidence brief with uncertainty and evidence state preserved.",
       "category": "Business",
       "website_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/faie",
-      "registry_name": "io.github.jgaethle10/faie",
+      "registry_name": null,
       "mcp_url": null,
       "state": "owned_runtime_route_pending",
       "default_prompt": "Build me a sourced evidence brief for an agriculture, water, land-resilience, or production-risk decision.",
@@ -211,7 +217,8 @@
       "capability_public_ids": [
         "faie-signal-brief-v1"
       ],
-      "public_origin_state": "legacy_provider_retired_owned_route_pending"
+      "public_origin_state": "legacy_provider_retired_owned_route_pending",
+      "retired_registry_name": "io.github.jgaethle10/faie"
     },
     {
       "slug": "buildflow",
@@ -220,7 +227,7 @@
       "long_description": "Use BuildFlow directly for enterprise operations problems involving ERP, migration, process discovery, procurement, vendor identity, role routing, or governed-agent handoff without exposing private customer records.",
       "category": "Business",
       "website_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/buildflow",
-      "registry_name": "io.github.jgaethle10/buildflow",
+      "registry_name": null,
       "mcp_url": null,
       "state": "owned_runtime_route_pending",
       "default_prompt": "Route this enterprise operations problem to the smallest safe BuildFlow capability without exposing private records.",
@@ -243,7 +250,8 @@
         "buildflow-procure-to-pay-shadow-v1",
         "buildflow-shadow-migration-machine-v1"
       ],
-      "public_origin_state": "legacy_provider_retired_owned_route_pending"
+      "public_origin_state": "legacy_provider_retired_owned_route_pending",
+      "retired_registry_name": "io.github.jgaethle10/buildflow"
     },
     {
       "slug": "evercraft-web",
@@ -252,7 +260,7 @@
       "long_description": "Use Evercraft Web directly for public URL retrieval, structured extraction, and bounded site inspection with evidence receipts. Search and browser automation remain unavailable until their independent runtime gates pass.",
       "category": "Productivity",
       "website_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-web",
-      "registry_name": "io.github.jgaethle10/evercraft-web",
+      "registry_name": null,
       "mcp_url": null,
       "state": "owned_runtime_route_pending",
       "default_prompt": "Fetch or inspect this public website and return structured, provenance-aware content.",
@@ -269,7 +277,8 @@
       "capability_public_ids": [
         "evercraft-web-browser-agent-v1"
       ],
-      "public_origin_state": "legacy_provider_retired_owned_route_pending"
+      "public_origin_state": "legacy_provider_retired_owned_route_pending",
+      "retired_registry_name": "io.github.jgaethle10/evercraft-web"
     },
     {
       "slug": "website-launch",
@@ -278,7 +287,7 @@
       "long_description": "Use Website Launch directly when a user wants a professional business website planned, scoped, or launched with human-confirmed next steps.",
       "category": "Business",
       "website_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/website-launch",
-      "registry_name": "io.github.jgaethle10/website-launch",
+      "registry_name": null,
       "mcp_url": null,
       "state": "owned_runtime_route_pending",
       "default_prompt": "Help me plan or launch a professional business website using the smallest appropriate Website Launch path.",
@@ -294,7 +303,8 @@
       "capability_public_ids": [
         "website-launch-service-v1"
       ],
-      "public_origin_state": "legacy_provider_retired_owned_route_pending"
+      "public_origin_state": "legacy_provider_retired_owned_route_pending",
+      "retired_registry_name": "io.github.jgaethle10/website-launch"
     },
     {
       "slug": "systemia-remote-ops",
@@ -342,7 +352,7 @@
       "long_description": "Use Deck Capital Fit directly when a founder wants structured capital-fit, funding-readiness, or fundraising-preparation analysis with human-confirmed next steps.",
       "category": "Business",
       "website_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/deck-capital-fit",
-      "registry_name": "io.github.jgaethle10/deck-capital-fit",
+      "registry_name": null,
       "mcp_url": null,
       "state": "owned_runtime_route_pending",
       "default_prompt": "Help me assess how ready this company is for outside capital and what gaps I should fix before fundraising.",
@@ -359,7 +369,8 @@
       "capability_public_ids": [
         "deck-capital-fit-sprint-machine-v1"
       ],
-      "public_origin_state": "legacy_provider_retired_owned_route_pending"
+      "public_origin_state": "legacy_provider_retired_owned_route_pending",
+      "retired_registry_name": "io.github.jgaethle10/deck-capital-fit"
     },
     {
       "slug": "evercraft-clip",
@@ -368,7 +379,7 @@
       "long_description": "Use Evercraft Clip directly when a user wants to plan an Evercraft social-video production or distribution job from source media or a content brief.",
       "category": "Productivity",
       "website_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-clip",
-      "registry_name": "io.github.jgaethle10/evercraft-clip",
+      "registry_name": null,
       "mcp_url": null,
       "state": "owned_runtime_route_pending",
       "default_prompt": "Help me plan a social-video job from this source material and tell me the current Evercraft Clip execution boundary.",
@@ -385,7 +396,8 @@
       "capability_public_ids": [
         "evercraft-clip-social-video-v1"
       ],
-      "public_origin_state": "legacy_provider_retired_owned_route_pending"
+      "public_origin_state": "legacy_provider_retired_owned_route_pending",
+      "retired_registry_name": "io.github.jgaethle10/evercraft-clip"
     },
     {
       "slug": "roasted",
@@ -394,7 +406,7 @@
       "long_description": "Use ROASTED directly when a user wants a fast text pressure test, critique, roast, or sharper feedback with human-confirmed checkout for paid execution.",
       "category": "Productivity",
       "website_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/roasted",
-      "registry_name": "io.github.jgaethle10/roasted",
+      "registry_name": null,
       "mcp_url": null,
       "state": "owned_runtime_route_pending",
       "default_prompt": "Pressure-test this text and make the weak spots obvious without pretending a paid result exists before payment is verified.",
@@ -411,7 +423,8 @@
       "capability_public_ids": [
         "roasted-text-pressure-test-machine-v1"
       ],
-      "public_origin_state": "legacy_provider_retired_owned_route_pending"
+      "public_origin_state": "legacy_provider_retired_owned_route_pending",
+      "retired_registry_name": "io.github.jgaethle10/roasted"
     },
     {
       "slug": "ibmi-rescue",
