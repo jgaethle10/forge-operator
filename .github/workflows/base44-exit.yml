@@ -83,6 +83,8 @@ jobs:
         run: npm run proof:base44-sdk-compat
       - name: Prove owned App Fabric identity binding
         run: npm run proof:app-fabric-identity
+      - name: Prove owned connector and webhook integration edge
+        run: npm run proof:integration-edge
       - name: Prove owned registration and recovery challenges
         run: npm run proof:identity-challenges
       - name: Prove realtime, storage, and secret boundaries
