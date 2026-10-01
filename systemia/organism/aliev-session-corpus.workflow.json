@@ -2,10 +2,10 @@
   "schema": "evercraft.systemia.workflow-manifest.v1",
   "workflow_key": "aliev-session-corpus",
   "mission_key": "rivet-us-session-sprawl-001",
-  "runtime": "systemia-core-cycle",
+  "runtime": "aliev-owned-source-runtime",
   "collider_compatible": true,
   "cadence_seconds": 300,
-  "entrypoint": "systemia/aliev/session-corpus-runner.mjs",
+  "entrypoint": "systemia/aliev/source-runtime.mjs",
   "proof": "systemia/aliev/session-corpus.proof.mjs",
   "authority": {
     "read_public_session_sources": "autonomous",
@@ -31,5 +31,6 @@
     "owned_object_store": "artifacts/aliev-session-corpus/object-store",
     "owned_entity_store": "artifacts/aliev-session-corpus/entity-store"
   },
-  "maintenance_owner": "systemia"
+  "maintenance_owner": "systemia",
+  "execution_note": "Activated explicitly by Systemia's aliev-source-runner on the same Evercraft Compute node and durable state root as the canonical AliEV observed_sessions domain."
 }
