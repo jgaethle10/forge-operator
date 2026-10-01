@@ -79,6 +79,14 @@ export function normalizeMicroDeviceManifest(input={}){
       public_ingress:input.public_ingress===true,
       persistent_storage:input.persistent_storage===true,
       labels:uniq(input.placement_labels).map(x=>x.toLowerCase()),
+      failure_domains:Object.fromEntries(
+        Object.entries(input.failure_domains&&typeof input.failure_domains==='object'?input.failure_domains:{})
+          .map(([axis,value])=>[
+            String(axis).trim().toLowerCase(),
+            String(value??'').trim().toLowerCase(),
+          ])
+          .filter(([axis,value])=>axis&&value)
+      ),
     },
     constraints:{
       arbitrary_code_execution:false,
@@ -132,6 +140,7 @@ export function microDeviceToAmbientCapabilities(manifestInput={},options={}){
     placement_labels:manifest.placement.labels,
     public_ingress:manifest.placement.public_ingress,
     persistent_storage:manifest.placement.persistent_storage,
+    failure_domains:manifest.placement.failure_domains||{},
     micro_node:true,
     zero_cost:true,
     attested:Boolean(
