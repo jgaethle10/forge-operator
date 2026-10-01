@@ -58,6 +58,9 @@ export class AmbientWorkQueue{
     if(!idempotency) throw new Error('ambient_job_idempotency_key_required');
     const spec=microSeedWorkloadSpec(workload);
     if(!spec) throw new Error('ambient_job_workload_not_registered');
+    if(spec.product_submission_allowed===false){
+      throw new Error('ambient_job_workload_infrastructure_only');
+    }
     if(private_data===true&&spec.private_data_allowed!==true){
       throw new Error('ambient_job_workload_disallows_private_data');
     }
