@@ -149,6 +149,8 @@ const lab=await runQuoteMicrostructureLab(report,{
       :({
           quotes:[
             {t:"2026-09-01T13:30:00.100Z",bp:99.9,ap:100.1,bs:10,as:11},
+            {t:"2026-09-01T13:30:50.000Z",bp:99.75,ap:99.85,bs:10,as:10},
+            {t:"2026-09-01T13:31:20.000Z",bp:99.80,ap:99.90,bs:10,as:10},
             {t:"2026-09-01T13:35:00.100Z",bp:99.95,ap:100.05,bs:12,as:12},
             {t:"2026-09-01T13:45:00.100Z",bp:99.98,ap:100.02,bs:14,as:13},
             {t:"2026-09-02T13:30:00.100Z",bp:101.4,ap:101.6,bs:16,as:17},
@@ -207,6 +209,13 @@ assert.equal(
 );
 assert.equal(modeledEntry.partial_fill_probability_modeled,false);
 assert.equal(modeledEntry.unfilled_probability_modeled,false);
+assert.ok(modeledEntry.posted_passive_price_improvement_bps>0);
+assert.ok(
+  modeledEntry.touch_supported_passive_price_improvement_upper_bound_bps>0
+);
+assert.ok(modeledEntry.passive_touch_markout_30s_bps<0);
+assert.ok(modeledEntry.passive_touch_markout_60s_bps<0);
+assert.equal(modeledEntry.realized_passive_execution_comparison_claimed,false);
 assert.ok(Number.isFinite(modeledEntry.visible_touch_size));
 assert.ok(Number.isFinite(modeledEntry.top_of_book_size_imbalance));
 assert.equal(modeledEntry.full_market_depth_claimed,false);
@@ -303,6 +312,11 @@ const microRows=Array.from({length:12},(_,i)=>({
   passive_touch_evidence_available:true,
   passive_price_touch_observed:i%2===0,
   passive_touch_delay_ms:1000+i*100,
+  posted_passive_price_improvement_bps:5+i*0.1,
+  touch_supported_passive_price_improvement_upper_bound_bps:
+    i%2===0?5+i*0.1:null,
+  passive_touch_markout_30s_bps:i%2===0?-2-i*0.1:null,
+  passive_touch_markout_60s_bps:i%2===0?-1-i*0.05:null,
 }));
 const microSummary=summarizeQuoteSignal(microRows);
 assert.equal(
@@ -321,6 +335,25 @@ assert.equal(
 );
 assert.equal(
   microSummary.volume_is_not_liquidity_negative_control.volume_equated_with_liquidity,
+  false
+);
+assert.equal(
+  microSummary.aggressive_vs_passive_bounds.status,
+  "AGGRESSIVE_PASSIVE_BOUNDS_READY"
+);
+assert.equal(
+  microSummary.aggressive_vs_passive_bounds.passive_touch_observations,
+  6
+);
+assert.equal(
+  microSummary.aggressive_vs_passive_bounds.passive_no_touch_observations,
+  6
+);
+assert.ok(
+  microSummary.aggressive_vs_passive_bounds.mean_post_touch_markout_30s_bps<0
+);
+assert.equal(
+  microSummary.aggressive_vs_passive_bounds.realized_passive_execution_comparison_claimed,
   false
 );
 assert.equal(
@@ -427,6 +460,9 @@ console.log(JSON.stringify({
   passive_outcome_states_explicit:true,
   no_touch_and_touch_unknown_separated:true,
   partial_fill_probability_not_invented:true,
+  aggressive_vs_passive_bounds:true,
+  passive_touch_markout_adverse_selection:true,
+  realized_passive_fill_comparison_not_claimed:true,
   top_of_book_size_imbalance:true,
   visible_touch_size_not_full_depth:true,
   volume_is_not_liquidity_negative_control:true,
