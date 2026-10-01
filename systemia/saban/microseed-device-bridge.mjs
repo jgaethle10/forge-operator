@@ -39,7 +39,7 @@ export function normalizeMicroDeviceManifest(input={}){
   if(!BRIDGE_MODES.has(mode)) throw new Error('micro_device_bridge_mode_invalid');
   if(!input.authorization_ref) throw new Error('micro_device_authorization_required');
   const workloads=uniq(input.supported_workloads);
-  if(!workloads.length) throw new Error('micro_device_workloads_required');
+  const declaredCapabilities=(input.capabilities||[]).map(normalizeDeclaredCapability);
 
   const computeExecutionMode=String(
     input.compute_execution_mode||
@@ -50,6 +50,12 @@ export function normalizeMicroDeviceManifest(input={}){
   }
   if(computeExecutionMode==='native_device'&&mode!=='native_agent'&&input.native_compute_verified!==true){
     throw new Error('micro_device_native_compute_requires_verified_native_agent');
+  }
+  if(computeExecutionMode!=='none'&&!workloads.length){
+    throw new Error('micro_device_workloads_required_for_compute');
+  }
+  if(computeExecutionMode==='none'&&!declaredCapabilities.length){
+    throw new Error('micro_device_capability_or_compute_required');
   }
 
   const body={
@@ -63,7 +69,7 @@ export function normalizeMicroDeviceManifest(input={}){
     supported_workloads:workloads,
     operations:uniq(input.operations),
     compute_execution_mode:computeExecutionMode,
-    declared_capabilities:(input.capabilities||[]).map(normalizeDeclaredCapability),
+    declared_capabilities:declaredCapabilities,
     resources:{
       cpu_units:Math.max(0,Number(input.resources?.cpu_units||0)),
       memory_mb:Math.max(0,Number(input.resources?.memory_mb||0)),
