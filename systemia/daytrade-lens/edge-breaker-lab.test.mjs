@@ -24,6 +24,18 @@ const dominated=rows.map((r,i)=>({...r,forward_return:r.origin_entity_ref==="iss
 const bad=runEdgeBreakerLab({...report,measurements:dominated});
 assert.equal(bad.breaker_survivor_count,0);
 
+const spiky=rows.map((r,i)=>({
+  ...r,
+  forward_return:i<3?0.25:-0.004,
+  benchmark_return:0,
+}));
+const spikyResult=runEdgeBreakerLab({...report,measurements:spiky});
+assert.equal(spikyResult.breaker_survivor_count,0);
+assert.equal(
+  spikyResult.reviews[0].checks.survives_top_5pct_winner_removal,
+  false
+);
+
 
 const negativeRows=rows.map((r)=>({
   ...r,
@@ -49,5 +61,7 @@ console.log(JSON.stringify({
   trimmed_mean:true,
   sign_consistency:true,
   clustered_bootstrap:true,
+  event_day_clustered_bootstrap:true,
+  top_winner_removal:true,
   live_trade_authority:false,
 }));
