@@ -75,6 +75,27 @@ export function parseBluetoothDevices(text,{salt='test'}={}){
   return out;
 }
 
+export function parseUsbDevices(text,{salt='test'}={}){
+  const out=[];
+  for(const line of String(text||'').split(/\r?\n/)){
+    const m=line.match(/^Bus\s+(\d+)\s+Device\s+(\d+):\s+ID\s+([0-9a-f]{4}):([0-9a-f]{4})\s*(.*)$/i);
+    if(!m) continue;
+    const vendorId=m[3].toLowerCase();
+    const productId=m[4].toLowerCase();
+    const description=(m[5]||'').trim();
+    out.push({
+      source:'lsusb',
+      observation_kind:'usb-device',
+      device_hint_hash:idHash(salt,vendorId+':'+productId+'|'+description),
+      usb_vendor_id_hash:idHash(salt,vendorId),
+      usb_product_id_hash:idHash(salt,productId),
+      display_hint_hash:description?idHash(salt,description):null,
+      raw_identifier_persisted:false,
+    });
+  }
+  return out;
+}
+
 export function parseAvahi(text,{salt='test'}={}){
   const out=[];
   for(const line of String(text||'').split(/\r?\n/)){
@@ -123,6 +144,7 @@ export function runPassiveAmbientCensus({
   const observations=dedupeObservations([
     ...parseIpNeigh(commandRunner('ip',['neigh','show']),{salt}),
     ...parseBluetoothDevices(commandRunner('bluetoothctl',['devices']),{salt}),
+    ...parseUsbDevices(commandRunner('lsusb',[]),{salt}),
     ...parseAvahi(commandRunner('avahi-browse',['-artp']),{salt}),
   ]);
 
@@ -134,6 +156,7 @@ export function runPassiveAmbientCensus({
     raw_mac_persisted:false,
     raw_ip_persisted:false,
     raw_bluetooth_address_persisted:false,
+    raw_usb_identifiers_persisted:false,
     observation_count:observations.length,
     observations,
     observed_at:(now instanceof Date?now:new Date(now)).toISOString(),
