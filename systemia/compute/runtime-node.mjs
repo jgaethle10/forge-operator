@@ -964,6 +964,7 @@ export async function startEvercraftComputeNode({
           placementLabels: nodePlacementLabels,
           processStartedAt,
           bootIdHash: hostBootIdHash,
+          hardwareCapacity,
         });
         return send(res, 200, {
           ok: true,
