@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "evercraft",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "One permission-aware front door into the Evercraft/Systemia capability fabric.",
   "author": {
     "name": "Evercraft LLC",
@@ -103,7 +103,7 @@
         "demo_recording_url": "https://drive.google.com/file/d/1v6KeJMAjH_Hp7IpjFWqNFTcPT2k9iUd_/view?usp=drivesdk"
       },
       "publication": {
-        "release_notes": "v1.0.3: align portable and compatibility metadata for public OpenAI submission on the verified owned Fabric MCP; no expansion of tool authority or transactional behavior."
+        "release_notes": "v1.0.4: harden ChatGPT/Codex transport compatibility and add first-class SSE edge verification; no expansion of tool authority or transactional behavior."
       }
     }
   }
