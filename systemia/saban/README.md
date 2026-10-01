@@ -244,3 +244,38 @@ Unleased quote orders are closed after the negotiation round instead of being le
 The repository does not contain market API keys, wallets or billing credentials. Public Akash supply discovery is live and requires no authentication. The order/bid/lease path is implemented but cannot truthfully claim a paid lease was created unless a runtime supplies valid market credentials and demand-scoped spend authority.
 
 This keeps Saban capable of negotiating real compute without silently turning visibility into authorization or code execution into an open-ended purchasing permission.
+
+
+## Zero-spend ambient compute doctrine
+
+Production placement defaults to **zero spend**. Commercial capacity may be discovered so Systemia knows what exists, but it is visibility-only unless an operator explicitly enables commercial placement and separately grants demand-scoped spend authority.
+
+The default search order is:
+
+```text
+healthy owned/authorized Evercraft nodes
+  -> authorized ambient device capacity
+  -> voluntary zero-cost capacity with declared terms
+  -> hold and report missing capacity
+  -> commercial capacity only after explicit opt-in
+```
+
+Saban does not require every useful device to become a general-purpose server. An authorized device may advertise a narrow set of registered workloads through `evercraft.ambient-capability.v1`. The ambient compute adapter turns those declarations into zero-cost compute offers without granting arbitrary code execution.
+
+Examples of useful micro-node classes include owned/authorized smart appliances, routers, NAS devices, old phones, TVs, kiosks, vehicle computers, SBCs, and other embedded systems whose hardware and firmware permit a compatible adapter. A refrigerator-class device might carry health probes, sensor relay, queue relay, telemetry normalization, content hashing, cache fragments, or bounded chunk transforms. Larger stateful workloads still require a node that actually satisfies their CPU, memory, storage, persistence, and network contracts.
+
+Visibility is never authorization. Seeing a device on Wi-Fi, Bluetooth, LAN, USB, or another ambient surface does not make it usable. Active compute requires an owner/authorization reference or voluntary-compute terms plus a compatible endpoint. Public/open protocols remain read-only unless their protocol explicitly declares an allowed passive operation.
+
+The zero-cost ambient adapter lives at:
+
+```text
+systemia/saban/ambient-compute-fabric.mjs
+```
+
+and production capacity planning defaults to zero-spend in:
+
+```text
+systemia/saban/production-capacity-plan.mjs
+```
+
+Commercial placement must be explicitly enabled with `SABAN_ALLOW_COMMERCIAL_CAPACITY=1`, and that switch alone still does not authorize a market order or spend.
