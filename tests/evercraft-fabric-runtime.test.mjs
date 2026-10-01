@@ -119,24 +119,18 @@ test('Fabric MCP exposes exactly the read-only directory contract',async()=>{
       'match_evercraft_capability',
       'list_evercraft_capabilities',
       'get_evercraft_connection_options',
-      'inspect_public_website',
     ]
   );
   assert.ok(listed.result.tools.every((x)=>x.annotations.readOnlyHint===true));
   assert.ok(listed.result.tools.every((x)=>x.annotations.destructiveHint===false));
-  const inspectTool=listed.result.tools.find((x)=>x.name==='inspect_public_website');
-  assert.equal(inspectTool.annotations.openWorldHint,true);
-  assert.ok(
-    listed.result.tools
-      .filter((x)=>x.name!=='inspect_public_website')
-      .every((x)=>x.annotations.openWorldHint===false)
-  );
-  assert.equal(fabricDirectoryTools().length,4);
+  assert.ok(listed.result.tools.every((x)=>x.annotations.openWorldHint===false));
+  assert.equal(fabricDirectoryTools().length,3);
   assert.deepEqual(fabricOpenAiTools().map((x)=>x.name),['inspect_public_website']);
+  assert.equal(fabricOpenAiTools()[0].annotations.openWorldHint,true);
 });
 
 test('Fabric MCP publishes reviewer-grade argument descriptions',()=>{
-  const tools=fabricDirectoryTools();
+  const tools=[...fabricDirectoryTools(),...fabricOpenAiTools()];
   for(const tool of tools){
     assert.ok(String(tool.description||'').length>20);
     for(const [name,schema] of Object.entries(tool.inputSchema?.properties||{})){
@@ -174,6 +168,7 @@ test('Fabric MCP performs a standalone bounded website preview without transacti
       arguments:{url:'https://evercraftpropertyservices.com/',authorized_to_inspect:true},
     },
   },catalog,{
+    toolProfile:'openai',
     websitePreview:async(url)=>{
       requested=url;
       return {
@@ -271,7 +266,11 @@ test('owned Evercraft Compute MCP runtime serves challenge and Fabric without ga
     });
     assert.equal(toolsResponse.status,200);
     const tools=await toolsResponse.json();
-    assert.equal(tools.result.tools.length,4);
+    assert.deepEqual(tools.result.tools.map((x)=>x.name),[
+      'match_evercraft_capability',
+      'list_evercraft_capabilities',
+      'get_evercraft_connection_options',
+    ]);
     assert.ok(tools.result.tools.every((x)=>x.annotations.readOnlyHint===true));
 
     const publicToolsResponse=await fetch(runtime.url+'/mcp/openai',{
