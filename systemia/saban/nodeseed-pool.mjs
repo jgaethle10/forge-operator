@@ -492,7 +492,7 @@ function pickNode(nodes, cursor) {
   return healthy[cursor % healthy.length];
 }
 
-function meetsResourceProfile(node, profile = null) {
+export function meetsResourceProfile(node, profile = null) {
   if (!profile) return { eligible: true, reason: null };
   const hint = node.capacity_hint;
   if (!hint && profile.require_capacity_hint === true) {
