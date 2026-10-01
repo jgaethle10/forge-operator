@@ -99,8 +99,56 @@
     {
       "product_key": "towi-research",
       "machine_public_id": "towi-evidence-research-machine-v1",
-      "evidence": "TOWI publishes machine discovery. Existing report generation is administrator-gated and the synthetic dry-run is QA-only, so neither is a public research endpoint.",
-      "required_next_primitive": "Expose a bounded read-only research/evidence preview or mission-scope endpoint with provenance and uncertainty; keep consequential conclusions, outreach, publishing, and paid fulfillment separately gated."
+      "evidence": "TOWI now has a committed, Deno-check-clean evidencePacketAudit candidate that evaluates caller-supplied research evidence for provenance completeness, evidence-state mix, primary-source coverage, contradictions, modeled/disputed records and evidence-standard readiness. It performs no external research and makes no consequential recommendation. Live deployment has not yet been independently verified, so TOWI remains discovery-only.",
+      "required_next_primitive": "Independently verify evidencePacketAudit in production, record conformance, then expose it through the existing Machine Commerce MCP as a read-only TOWI evidence-control tool. Keep actual external research, paid work, outreach and publication behind their existing gates.",
+      "implementation_state": "source_implemented_live_verification_pending",
+      "source_system": "Base44",
+      "source_checkpoint": "8ddcbfbee1c2b00fc7f6168e7caa04fb7814660e",
+      "candidate_endpoint": "https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/evidencePacketAudit",
+      "verification_probe": {
+        "method": "POST",
+        "body": {
+          "research_question": "What evidence supports this infrastructure claim?",
+          "geography": "Washington",
+          "evidence_standard": "decision_grade",
+          "evidence": [
+            {
+              "evidence_id": "sample_1",
+              "source_title": "Official sample source",
+              "source_url": "https://example.gov/source",
+              "source_type": "primary_official",
+              "publisher": "Example Agency",
+              "publication_date": "2026-09-30",
+              "claim": "Sample claim for bounded canary verification.",
+              "evidence_state": "verified_primary",
+              "confidence_score": 95
+            },
+            {
+              "evidence_id": "sample_2",
+              "source_title": "Independent technical report",
+              "source_url": "https://example.org/report",
+              "source_type": "technical_report",
+              "publisher": "Example Institute",
+              "publication_date": "2026-09-29",
+              "claim": "Second sample claim for bounded canary verification.",
+              "evidence_state": "verified_secondary",
+              "confidence_score": 85
+            },
+            {
+              "evidence_id": "sample_3",
+              "source_title": "Supporting dataset",
+              "source_url": "https://example.org/data",
+              "source_type": "dataset",
+              "publisher": "Example Data Lab",
+              "publication_date": "2026-09-28",
+              "claim": "Third sample claim for bounded canary verification.",
+              "evidence_state": "reported",
+              "confidence_score": 75
+            }
+          ]
+        },
+        "expected_schema": "evercraft.towi.evidence-packet-audit.v1"
+      }
     }
   ]
 }
