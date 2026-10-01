@@ -82,11 +82,10 @@ jobs:
             printf '%s' "$body" | grep -Fq "$expected"
           }
 
-          verify_listing_page "/" "Evercraft Fabric"
           verify_listing_page "/openai" "Evercraft Website Inspector"
-          verify_listing_page "/support" "Evercraft Fabric Support"
-          verify_listing_page "/privacy" "Evercraft Fabric Privacy Policy"
-          verify_listing_page "/terms" "Evercraft Fabric Terms of Service"
+          verify_listing_page "/openai/support" "Evercraft Support"
+          verify_listing_page "/openai/privacy" "Evercraft Privacy Policy"
+          verify_listing_page "/openai/terms" "Evercraft Terms of Service"
 
           health="$(curl --fail --silent --show-error --max-time 20 "${SPECIALIST_ORIGIN%/}/health")"
           printf '%s' "$health" | jq -e '
@@ -245,7 +244,7 @@ jobs:
               openai_commerce_enabled:false,
               read_only_authority_verified:true,
               listing_pages_verified:true,
-              listing_pages:["/","/openai","/support","/privacy","/terms"],
+              listing_pages:["/openai","/openai/support","/openai/privacy","/openai/terms"],
               founder_login_required:false,
               external_saas_route_provider_required:false,
               observed_at:$observed
