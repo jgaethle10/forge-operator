@@ -12,7 +12,7 @@ function observation() {
     capability_id: 'chromeos.crostini.port-forwarding.read.v1',
     collected_at: new Date().toISOString(),
     observer_version: 'proof',
-    observer_install_id: 'proof_install',
+    observer_install_id: 'cros_proof_install',
     settings_route: 'chrome://os-settings/crostini/portForwarding',
     ports: [
       { port: 8443, protocol: 'TCP', present: true, enabled: true, disabled: false },
@@ -34,7 +34,14 @@ test('field certification requires both direct host settings and LAN witness', (
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'host-boundary-cert-'));
   const stateRoot = path.join(root, 'state');
   const routerReceiptFile = path.join(root, 'router.json');
-  storeChromeOsHostBoundaryObservation(observation(), { stateRoot });
+  storeChromeOsHostBoundaryObservation(observation(), {
+    stateRoot,
+    observerVerification: {
+      verified: true,
+      observer_key_fingerprint:
+        'sha256:' + 'a'.repeat(64),
+    },
+  });
 
   let receipt = certifyChromeOsHostBoundary({ stateRoot, routerReceiptFile });
   assert.equal(receipt.state, 'host_setting_ready_lan_unverified');
@@ -63,7 +70,15 @@ test('field certification requires both direct host settings and LAN witness', (
   }));
   receipt = certifyChromeOsHostBoundary({ stateRoot, routerReceiptFile });
   assert.equal(receipt.state, 'host_setting_and_lan_ready');
-  assert.equal(receipt.host_observation.observer_install_id, 'proof_install');
+  assert.equal(
+    receipt.host_observation.observer_install_id,
+    'cros_proof_install',
+  );
+  assert.equal(receipt.host_observation.observer_signature_verified, true);
+  assert.equal(
+    receipt.host_observation.observer_key_fingerprint,
+    'sha256:' + 'a'.repeat(64),
+  );
   assert.equal(receipt.ready_for_external_canary, true);
   assert.equal(receipt.external_public_route_verified, false);
 });
