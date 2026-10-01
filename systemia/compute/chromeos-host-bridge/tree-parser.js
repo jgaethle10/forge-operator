@@ -77,7 +77,7 @@ function nearestUnambiguousPortContext(rows, index, admittedPorts) {
   for (let hops = 0; cursor >= 0 && hops < 6; hops += 1) {
     const candidate = [toggleText, subtreeText(rows, cursor)].join(' ');
     const matchingPorts = admittedPorts.filter((port) =>
-      new RegExp('\\\\b' + port + '\\\\b').test(candidate)
+      new RegExp('\\b' + port + '\\b').test(candidate)
     );
     if (matchingPorts.length === 1) {
       return { context: candidate, port: matchingPorts[0] };
