@@ -220,7 +220,7 @@ export function routeTask(task) {
     capability_contract_component: productKey ? 'evercraft-capability-mesh' : null,
     capability_contract_state: productKey ? contractInfo.state : 'not_applicable',
     capability_contract_ref: productPolicy
-      ? 'systemia/capability-mesh/runtime-policies.json#' + productKey
+      ? 'systemia/capability-mesh/contracts.json#' + productKey
       : null,
     contract_action_scope: actionScope || null,
     contract_specialist_slug: productPolicy?.route?.specialist_slug || null,
