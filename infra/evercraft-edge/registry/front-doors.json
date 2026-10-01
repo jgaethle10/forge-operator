@@ -1,0 +1,42 @@
+{
+  "schema": "evercraft.edge.front-doors.v1",
+  "state": "candidate_until_public_root_control_verified",
+  "services": [
+    {
+      "service_id": "systemia",
+      "logical_uri": "evercraft://systemia",
+      "public_hosts": []
+    },
+    {
+      "service_id": "rivet",
+      "logical_uri": "evercraft://rivet",
+      "public_hosts": []
+    },
+    {
+      "service_id": "infinite-classroom",
+      "logical_uri": "evercraft://infinite-classroom",
+      "public_hosts": []
+    },
+    {
+      "service_id": "journal",
+      "logical_uri": "evercraft://journal",
+      "public_hosts": []
+    },
+    {
+      "service_id": "fallen",
+      "logical_uri": "evercraft://fallen",
+      "public_hosts": []
+    },
+    {
+      "service_id": "daytrade-lens",
+      "logical_uri": "evercraft://daytrade-lens",
+      "public_hosts": []
+    },
+    {
+      "service_id": "evermaps",
+      "logical_uri": "evercraft://evermaps",
+      "public_hosts": []
+    }
+  ],
+  "rule": "Never invent a public hostname. Populate only after control of the public DNS root is independently verified."
+}
