@@ -38,6 +38,7 @@ import { runHorizonCoherenceLab } from "./edge-horizon-coherence.mjs";
 import { runWalkForwardLab } from "./edge-walk-forward.mjs";
 import { runExecutionTranslationLab } from "./edge-execution-translation.mjs";
 import { runQuoteMicrostructureLab } from "./edge-quote-microstructure.mjs";
+import { runExecutionSpeedBoundsLab } from "./edge-execution-speed-bounds.mjs";
 import { buildClusterAdversarialSummary } from "./edge-cluster-adversarial-summary.mjs";
 import { evaluatePilotReadiness } from "./edge-pilot-readiness.mjs";
 
@@ -119,6 +120,19 @@ async function main() {
   fs.writeFileSync(
     quoteMicrostructureFile,
     JSON.stringify(quoteMicrostructureLab, null, 2) + "\n"
+  );
+
+  const executionSpeedBoundsLab = runExecutionSpeedBoundsLab(
+    report,
+    quoteMicrostructureLab
+  );
+  const executionSpeedBoundsFile = path.join(
+    artifactDir,
+    "sec-edge-execution-speed-bounds.json"
+  );
+  fs.writeFileSync(
+    executionSpeedBoundsFile,
+    JSON.stringify(executionSpeedBoundsLab, null, 2) + "\n"
   );
 
   const searchBurden = summarizeResearchSearchBurden(report);
@@ -728,6 +742,8 @@ async function main() {
     horizon_coherent_diagnostics: horizonCoherenceLab.coherent_count || 0,
     walk_forward_robust_diagnostics: walkForwardLab.walk_forward_robust_count || 0,
     execution_translation_status_counts: executionTranslationLab.status_counts || {},
+    execution_speed_bounds_status_counts:
+      executionSpeedBoundsLab.status_counts || {},
     frozen_forward_paper_cohorts: frozenCohorts.length,
     durable_forward_paper_state_configured: durableState.configured,
     durable_forward_paper_restart_reopen_verified: durableState.restart_reopen_verified,
@@ -754,6 +770,7 @@ async function main() {
       tail_dependence: tailDependenceFile,
       cscv_pbo: cscvPboFile,
       quote_microstructure: quoteMicrostructureFile,
+      execution_speed_bounds: executionSpeedBoundsFile,
       stress_lab: stressFile,
       breaker_lab: breakerFile,
       timing_fragility_lab: timingFile,
