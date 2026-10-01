@@ -247,28 +247,50 @@ function median(values) {
   return x.length % 2 ? x[m] : (x[m-1] + x[m]) / 2;
 }
 
-function stats(samples, costBps) {
+function summarize(values) {
+  const avg = mean(values);
+  const med = median(values);
+  const sign = avg > 0 ? 1 : avg < 0 ? -1 : 0;
+  const aligned = values.filter((x) => sign === 0 ? x === 0 : Math.sign(x) === sign).length;
+  const variance = values.length > 1
+    ? values.reduce((sum, x) => sum + (x - avg) ** 2, 0) / (values.length - 1)
+    : 0;
+  const standardError = values.length > 0 ? Math.sqrt(variance / values.length) : Infinity;
+  const tLike = Number.isFinite(standardError) && standardError > 0 ? avg / standardError : 0;
+  return { avg, med, sign, aligned, tLike };
+}
+
+function grossStats(samples) {
   const excess = samples.map((row) =>
     Number(row.forward_return || 0) - Number(row.benchmark_return || 0)
   );
-  const net = excess.map((x) => x - Math.sign(x || 1) * (costBps / 10000));
-  const avg = mean(net);
-  const med = median(net);
-  const sign = avg > 0 ? 1 : avg < 0 ? -1 : 0;
-  const aligned = net.filter((x) => sign === 0 ? x === 0 : Math.sign(x) === sign).length;
-  const variance = net.length > 1
-    ? net.reduce((sum, x) => sum + (x - avg) ** 2, 0) / (net.length - 1)
-    : 0;
-  const standardError = net.length > 0 ? Math.sqrt(variance / net.length) : Infinity;
-  const tLike = Number.isFinite(standardError) && standardError > 0 ? avg / standardError : 0;
+  const s = summarize(excess);
+  return {
+    samples: excess.length,
+    mean_excess_return_gross: s.avg,
+    median_excess_return_gross: s.med,
+    directional_hit_rate_gross: excess.length ? s.aligned / excess.length : 0,
+    t_like: s.tLike,
+    sign: s.sign,
+  };
+}
 
+function directionalStats(samples, expectedSign, costBps) {
+  const cost = Number(costBps || 0) / 10000;
+  const net = samples.map((row) => {
+    const excess = Number(row.forward_return || 0) - Number(row.benchmark_return || 0);
+    return Number(expectedSign || 0) * excess - cost;
+  });
+  const s = summarize(net);
+  const profitable = net.filter((x) => x > 0).length;
   return {
     samples: net.length,
-    mean_excess_return_net: avg,
-    median_excess_return_net: med,
-    directional_hit_rate: net.length ? aligned / net.length : 0,
-    t_like: tLike,
-    sign,
+    mean_excess_return_net: s.avg,
+    median_excess_return_net: s.med,
+    directional_hit_rate: net.length ? profitable / net.length : 0,
+    t_like: s.tLike,
+    sign: s.sign,
+    expected_sign: expectedSign,
   };
 }
 
@@ -288,17 +310,22 @@ export function evaluateRockiesEdgeCandidate(samples, {
     .sort((a,b) => new Date(a.observed_at) - new Date(b.observed_at));
 
   const splitAt = Math.max(1, Math.floor(rows.length * development_fraction));
-  const development = stats(rows.slice(0, splitAt), transaction_cost_bps);
-  const holdout = stats(rows.slice(splitAt), transaction_cost_bps);
-  const overall = stats(rows, transaction_cost_bps);
+  const developmentRows = rows.slice(0, splitAt);
+  const holdoutRows = rows.slice(splitAt);
+  const developmentGross = grossStats(developmentRows);
+  const holdoutGross = grossStats(holdoutRows);
+  const expectedSign = developmentGross.sign;
+  const development = directionalStats(developmentRows, expectedSign, transaction_cost_bps);
+  const holdout = directionalStats(holdoutRows, expectedSign, transaction_cost_bps);
+  const overall = directionalStats(rows, expectedSign, transaction_cost_bps);
 
   const signAgreement =
-    development.sign !== 0 &&
-    holdout.sign !== 0 &&
-    development.sign === holdout.sign;
+    expectedSign !== 0 &&
+    holdoutGross.sign !== 0 &&
+    expectedSign === holdoutGross.sign;
 
   const holdoutMagnitudePass =
-    Math.abs(holdout.mean_excess_return_net) >= minimum_abs_holdout_mean_bps / 10000;
+    holdout.mean_excess_return_net >= minimum_abs_holdout_mean_bps / 10000;
 
   const checks = {
     minimum_total_sample: rows.length >= minimum_samples,
@@ -319,7 +346,10 @@ export function evaluateRockiesEdgeCandidate(samples, {
     development,
     holdout,
     overall,
-    learned_direction: candidate ? (holdout.sign > 0 ? "POSITIVE_EXCESS_RETURN" : "NEGATIVE_EXCESS_RETURN") : "UNRESOLVED",
+    development_gross: developmentGross,
+    holdout_gross: holdoutGross,
+    expected_sign: expectedSign,
+    learned_direction: candidate ? (expectedSign > 0 ? "POSITIVE_EXCESS_RETURN" : "NEGATIVE_EXCESS_RETURN") : "UNRESOLVED",
     checks,
     research_note: candidate
       ? "Candidate survived this holdout screen; further regime, multiple-testing, and forward-paper validation remain required."
