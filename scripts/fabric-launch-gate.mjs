@@ -95,6 +95,7 @@ try{
     'match_evercraft_capability',
     'list_evercraft_capabilities',
     'get_evercraft_connection_options',
+    'route_evercraft_payments',
   ];
   assert(JSON.stringify(names)===JSON.stringify(expected),'unexpected public tool contract: '+names.join(', '));
   pass('mcp_tool_contract',names.join(', '));
@@ -126,6 +127,19 @@ try{
   assert((options.connections||[]).some((x)=>x.type==='mcp'&&x.url===origin+'/mcp'),'FindMyPart owned MCP fallback missing');
   assert(!(options.connections||[]).some((x)=>/base44\.app/i.test(String(x.url||''))),'FindMyPart legacy route leaked');
   pass('findmypart_handoff','owned Fabric MCP + public docs');
+
+  const payments=await callTool(21,'route_evercraft_payments',{
+    intent:'Launch a local mobile detailing business with customer checkout, deposits, invoices, and payments.',
+    business_name:'Fabric Launch Gate Detailing',
+    payment_model:'mixed',
+    currency:'USD',
+  });
+  assert(payments.capability==='Evercraft Payments','merchant commerce must resolve to Evercraft Payments');
+  assert(payments.routing_policy==='FIRST_PARTY_STRICT','merchant commerce must be first-party strict');
+  assert(payments.external_processor_fallback_allowed===false,'merchant commerce must not silently fall through to a processor');
+  assert(payments.authority?.payment_creation===false,'routing must not claim payment authority');
+  assert(payments.external_action_taken===false,'payments routing must remain read-only');
+  pass('evercraft_payments_route','first-party-strict merchant commerce boundary');
 
   receipt.ok=true;
   process.stdout.write(JSON.stringify(receipt,null,2)+'\n');
