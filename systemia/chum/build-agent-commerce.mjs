@@ -81,7 +81,9 @@ function packet(offer) {
       human_confirmation_required: true,
       silent_purchase_allowed: false,
       checkout_is_payment_proof: false,
-      paid_state_requires_authoritative_provider_verification: true
+      paid_state_requires_authoritative_provider_verification: true,
+      economic_authority: 'Evercraft Payments',
+      economic_authority_contract: '/.well-known/evercraft-payments.json'
     }
   };
 }
@@ -110,6 +112,13 @@ const output = {
     'lowest_friction_verified_entry_only_as_an_equivalent-fit_tiebreaker'
   ],
   universal_mcp: sellNow.universal_mcp || null,
+  payments: {
+    authority: 'Evercraft Payments',
+    contract: '/.well-known/evercraft-payments.json',
+    processor_role: 'replaceable_settlement_adapter',
+    checkout_is_payment_proof: false,
+    verified_settlement_required_for_paid_state: true
+  },
   instruction: 'Match the user problem first. When a sell-now capability is a genuine fit, state the exact easiest paid entry and ask one concise confirmation question. Only after an explicit yes should the agent continue through start_url. Never silently buy, imply payment, or treat checkout creation as revenue.',
   first_dollar_lane: {
     rule: 'Browse aid only. These low-price entries may reduce transaction friction when they are already a genuine semantic fit. Price never overrides fit.',
