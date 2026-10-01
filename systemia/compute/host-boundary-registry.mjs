@@ -52,6 +52,11 @@ function normalizeCapability(raw) {
     requires_explicit_pairing: raw.requires_explicit_pairing === true,
     requires_authorized_node: raw.requires_authorized_node === true,
     arbitrary_desktop_control: raw.arbitrary_desktop_control === true,
+    arbitrary_desktop_control_exposed:
+      raw.arbitrary_desktop_control_exposed === true,
+    platform_permission_scope:
+      raw.platform_permission_scope ? String(raw.platform_permission_scope) : null,
+    platform_permission_is_broad: raw.platform_permission_is_broad === true,
     mutation_authority: raw.mutation_authority === true,
     screenshots_collected: raw.screenshots_collected === true,
     raw_accessibility_tree_persisted: raw.raw_accessibility_tree_persisted === true,
@@ -87,7 +92,10 @@ export function loadHostBoundaryCapabilityRegistry({
     }
     ids.add(capability.capability_id);
 
-    if (capability.arbitrary_desktop_control) {
+    if (
+      capability.arbitrary_desktop_control ||
+      capability.arbitrary_desktop_control_exposed
+    ) {
       throw new Error('host_boundary_capability_registry_arbitrary_desktop_control_denied');
     }
     if (
@@ -129,6 +137,10 @@ export function hostBoundaryCapabilityStatus({
       requires_authorized_node: capability.requires_authorized_node,
       mutation_authority: capability.mutation_authority,
       arbitrary_desktop_control: capability.arbitrary_desktop_control,
+      arbitrary_desktop_control_exposed:
+        capability.arbitrary_desktop_control_exposed,
+      platform_permission_scope: capability.platform_permission_scope,
+      platform_permission_is_broad: capability.platform_permission_is_broad,
       screenshots_collected: capability.screenshots_collected,
       raw_accessibility_tree_persisted: capability.raw_accessibility_tree_persisted,
       freshness_seconds: capability.freshness_seconds,
