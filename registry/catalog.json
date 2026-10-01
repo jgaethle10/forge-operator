@@ -978,5 +978,8 @@
     "json": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-pain-index.json",
     "text": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/pain-index.txt",
     "purpose": "Brand-blind routing from user pain to the smallest relevant public Evercraft capability while preserving commercial, invocation, payment and evidence state."
+  },
+  "runtime_policy": {
+    "legacy_provider_routes_allowed": false
   }
 }

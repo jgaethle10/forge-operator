@@ -5,7 +5,6 @@ import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 
 const MODULE_FILE = fileURLToPath(import.meta.url);
-const LEGACY_SYSTEMIA_APP_ID = '694612db777e391542fd0333';
 const SOCIAL_MISSION_KEY = 'evercraft-social-distribution-engine-2026-09';
 const EPS_WORK_KEY = 'eps-social-continuity-repair-v1';
 const CADENCE_MS = 30 * 60 * 1000;
@@ -115,6 +114,10 @@ export async function runEpsSocialContinuity({
 
   const parsed = new URL(url);
   if (parsed.protocol !== 'https:') throw new Error('Clip EPS ingress must use HTTPS');
+  const host = parsed.hostname.toLowerCase();
+  if (host === 'base44.app' || host.endsWith('.base44.app')) {
+    throw new Error('Legacy provider Clip ingress is retired; configure an Evercraft-owned ingress.');
+  }
 
   const root = path.resolve(stateDir || 'artifacts/eps-social-continuity');
   const stateFile = path.join(root, 'state.json');
@@ -139,7 +142,7 @@ export async function runEpsSocialContinuity({
 
   const startedAt = now.toISOString();
   const requestBody = {
-    source_app_id: LEGACY_SYSTEMIA_APP_ID,
+    source_system: 'evercraft-systemia-yard',
     mission_key: SOCIAL_MISSION_KEY,
     work_key: EPS_WORK_KEY,
     action: 'publish_due_eps_facebook',
@@ -172,7 +175,7 @@ export async function runEpsSocialContinuity({
     work_key: EPS_WORK_KEY,
     scheduler: 'systemia-core-resident-supervisor',
     runtime_target: 'yard_evercraft_compute',
-    compatibility_identity: LEGACY_SYSTEMIA_APP_ID,
+    source_system: 'evercraft-systemia-yard',
     cadence_seconds: 1800,
     bucket,
     started_at: startedAt,
