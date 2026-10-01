@@ -150,6 +150,29 @@ and must state all of the following before production admission:
 
 This lets the Chromebook be Evercraft's public front door without weakening or redefining the separate physical Node 001 evidence contract.
 
+
+## Native specialist runtime
+
+The resident specialist layer now uses the checked-in Evercraft Fabric capability catalog as its default offer and handoff source. A newly provisioned edge no longer silently falls back to the legacy Base44 Machine Commerce gateway.
+
+The production health contract exposes:
+
+```text
+gateway_mode = native_fabric_catalog
+external_gateway_configured = false
+base44_transport_enabled = false
+```
+
+An external gateway can still be supplied deliberately through `EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL` for migration/testing, but that state is visible in health. The public specialist external canary fails production verification whenever `base44_transport_enabled` is true.
+
+Native specialist calls preserve the authority boundary: offer and handoff preparation are read-only, do not create checkout or payment, and filter legacy Base44 URLs out of returned connection options. If no owned public review surface exists yet, the runtime says so instead of inventing one.
+
+## Resident network observation
+
+The edge installer also installs `evercraft-network-observer.timer`. Every two minutes it records the Crostini-visible interfaces, routes, listeners, Evercraft service state, router-map state, Fabric loopback health and hostname-aware local TLS health. ChromeOS host port-forwarding is recorded as an explicit external trust boundary because the Linux guest cannot truthfully inspect or toggle that host setting.
+
+Authorized Remote Operator status carries the same network observation, which lets Systemia distinguish a healthy Linux stack from a ChromeOS host-forwarding or public-ingress failure without requiring repeated terminal archaeology.
+
 ## Independent external witness
 
 GitHub Actions runs `.github/workflows/chromebook-operator-edge-canary.yml` every ten minutes and on relevant edge changes. It is a verifier only, never runtime infrastructure. The workflow runs:
