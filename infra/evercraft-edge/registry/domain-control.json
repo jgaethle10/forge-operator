@@ -7,34 +7,45 @@
         "state": "verified_receipt",
         "provider": "IONOS",
         "evidence_date": "2026-02-02",
-        "evidence": "registration confirmation in owner mailbox"
+        "evidence": "successful registration confirmation in owner mailbox"
       },
       "delegation_control": {
         "state": "unverified"
       },
       "edge_eligible": false,
-      "reason": "Registrar ownership is evidenced, but current nameserver/delegation mutation authority has not yet been independently proven."
+      "production_role": "EPS public site",
+      "canary_risk": "medium"
     },
     {
       "domain": "systemiacommandcenters.com",
       "registrar_evidence": {
-        "state": "unknown"
+        "state": "verified_receipt",
+        "provider": "IONOS",
+        "evidence_date": "2025-12-29",
+        "evidence": "successful registration confirmation in owner mailbox"
       },
       "delegation_control": {
         "state": "unverified"
       },
-      "edge_eligible": false
+      "edge_eligible": false,
+      "production_role": "Systemia public site",
+      "canary_risk": "medium"
     },
     {
       "domain": "havenlycleaning.com",
       "registrar_evidence": {
-        "state": "unknown"
+        "state": "verified_receipt",
+        "provider": "IONOS",
+        "evidence_date": "2025-12-29",
+        "evidence": "successful registration confirmation in owner mailbox"
       },
       "delegation_control": {
         "state": "unverified"
       },
-      "edge_eligible": false
+      "edge_eligible": false,
+      "production_role": "Havenly public site",
+      "canary_risk": "medium"
     }
   ],
-  "policy": "edge_eligible requires registrar/control evidence plus live delegation proof; website reachability alone is insufficient"
+  "policy": "Registrar ownership is necessary but insufficient. edge_eligible requires live delegation observation plus a fresh control mutation challenge. Canary delegation must use a non-production subdomain and preserve apex/MX/TXT records."
 }
