@@ -63,7 +63,8 @@ export class EvercraftWebhookGateway {
     handler,
     signatureHeader = 'x-evercraft-signature',
     timestampHeader = 'x-evercraft-timestamp',
-    eventIdHeader = 'x-evercraft-event-id'
+    eventIdHeader = 'x-evercraft-event-id',
+    verifier = null
   } = {}) {
     const appKey = safeKey(appKeyInput, 'app_key');
     const routeKey = safeKey(routeKeyInput, 'webhook_route');
@@ -77,7 +78,8 @@ export class EvercraftWebhookGateway {
       handler,
       signatureHeader: clean(signatureHeader).toLowerCase(),
       timestampHeader: clean(timestampHeader).toLowerCase(),
-      eventIdHeader: clean(eventIdHeader).toLowerCase()
+      eventIdHeader: clean(eventIdHeader).toLowerCase(),
+      verifier: typeof verifier === 'function' ? verifier : null
     });
     return this;
   }
@@ -106,17 +108,48 @@ export class EvercraftWebhookGateway {
   async handle({ appKey, routeKey, headers = {}, body = Buffer.alloc(0), now = new Date() } = {}) {
     const route = this.#route(appKey, routeKey);
     const normalized = headersLower(headers);
-    const eventId = safeKey(normalized[route.eventIdHeader], 'webhook_event_id');
-    const timestampRaw = normalized[route.timestampHeader];
-    const observedTimestampMs = timestampMs(timestampRaw);
-    const nowMs = new Date(now).getTime();
-    if (Math.abs(nowMs - observedTimestampMs) > this.maxSkewMs) throw new Error('webhook_timestamp_outside_replay_window');
     const payload = Buffer.isBuffer(body) ? Buffer.from(body) : Buffer.from(String(body ?? ''));
-    const provided = Buffer.from(signatureHex(normalized[route.signatureHeader]), 'hex');
     const secret = this.secretStore.getSecretText(route.secretNamespace, route.secretName);
-    const expectedHex = createHmac('sha256', secret).update(`${timestampRaw}.`).update(payload).digest('hex');
-    const expected = Buffer.from(expectedHex, 'hex');
-    if (provided.length !== expected.length || !timingSafeEqual(provided, expected)) throw new Error('webhook_signature_mismatch');
+    const nowMs = new Date(now).getTime();
+
+    let eventId;
+    let timestampRaw;
+    let verificationMetadata = {};
+
+    if (route.verifier) {
+      const verified = await route.verifier({
+        headers: normalized,
+        body: payload,
+        secret,
+        now: new Date(now),
+        maxSkewMs: this.maxSkewMs
+      });
+      if (verified?.verified !== true) throw new Error('webhook_signature_mismatch');
+      eventId = safeKey(verified.eventId, 'webhook_event_id');
+      timestampRaw = clean(verified.timestamp || new Date(now).toISOString());
+      if (verified.enforceReplayWindow !== false) {
+        const observedTimestampMs = timestampMs(timestampRaw);
+        if (Math.abs(nowMs - observedTimestampMs) > this.maxSkewMs) {
+          throw new Error('webhook_timestamp_outside_replay_window');
+        }
+      }
+      verificationMetadata = verified.metadata && typeof verified.metadata === 'object'
+        ? verified.metadata
+        : {};
+    } else {
+      eventId = safeKey(normalized[route.eventIdHeader], 'webhook_event_id');
+      timestampRaw = normalized[route.timestampHeader];
+      const observedTimestampMs = timestampMs(timestampRaw);
+      if (Math.abs(nowMs - observedTimestampMs) > this.maxSkewMs) {
+        throw new Error('webhook_timestamp_outside_replay_window');
+      }
+      const provided = Buffer.from(signatureHex(normalized[route.signatureHeader]), 'hex');
+      const expectedHex = createHmac('sha256', secret).update(`${timestampRaw}.`).update(payload).digest('hex');
+      const expected = Buffer.from(expectedHex, 'hex');
+      if (provided.length !== expected.length || !timingSafeEqual(provided, expected)) {
+        throw new Error('webhook_signature_mismatch');
+      }
+    }
 
     const bodyHash = sha(payload);
     const eventFile = this.#eventFile(route, eventId);
@@ -161,7 +194,8 @@ export class EvercraftWebhookGateway {
         headers: normalized,
         body: payload,
         bodySha256: bodyHash,
-        attempt
+        attempt,
+        verificationMetadata
       });
       const receipt = this.#appendReceipt({
         schema: 'evercraft.webhook.delivery-receipt.v1',
@@ -170,6 +204,7 @@ export class EvercraftWebhookGateway {
         route_key: route.routeKey,
         event_id_hash: sha(eventId),
         body_sha256: bodyHash,
+        verification_metadata_hash: sha(verificationMetadata),
         attempt,
         delivered_at: new Date(now).toISOString(),
         payload_emitted: false
@@ -198,8 +233,9 @@ export class EvercraftWebhookGateway {
       schema: 'evercraft.webhook.health.v1',
       state: 'healthy',
       registered_routes: this.routes.size,
-      signature_verification: 'hmac-sha256',
+      signature_verification: 'route_specific_or_default_hmac_sha256',
       replay_window_ms: this.maxSkewMs,
+      route_specific_verifiers_supported: true,
       idempotent_event_ledger: true,
       payloads_in_receipts: false
     };
