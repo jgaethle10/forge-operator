@@ -34,6 +34,29 @@ const q = splitByCalendarPeriod(measurements, {
 assert.ok(q.period_count >= 4);
 assert.equal(q.sign_preservation_rate, 1);
 
+
+const negativeMeasurements = measurements.map((row) => ({
+  ...row,
+  signal_key: "ai_models|sec_8_k|SOXX|negative",
+  forward_return: -0.010,
+  benchmark_return: 0,
+}));
+const negativeLoo = leaveOneOriginOut(negativeMeasurements, {
+  transaction_cost_bps: 20,
+  expected_sign: -1,
+});
+assert.equal(negativeLoo.all_signs_preserved, true);
+
+const tooWeakNegative = negativeMeasurements.map((row) => ({
+  ...row,
+  forward_return: -0.0005,
+}));
+const weakNegativeLoo = leaveOneOriginOut(tooWeakNegative, {
+  transaction_cost_bps: 20,
+  expected_sign: -1,
+});
+assert.equal(weakNegativeLoo.all_signs_preserved, false);
+
 const evaluations = [{
   signal_key: "ai_models|sec_8_k|SOXX|1d",
   rockies_range: "ai_models",
