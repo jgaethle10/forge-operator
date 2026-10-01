@@ -91,6 +91,9 @@ async function main() {
     secret: process.env.ALPACA_TRADING_SECRET || "",
     feed: process.env.EDGE_LAB_ALPACA_QUOTE_FEED || "iex",
     signal_keys: quoteSignalKeys,
+    transaction_cost_bps: Number(
+      process.env.EDGE_LAB_TRANSACTION_COST_BPS || 5
+    ),
   });
   const quoteMicrostructureFile = path.join(
     artifactDir,
