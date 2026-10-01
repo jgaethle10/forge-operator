@@ -59,6 +59,11 @@ export function registerRadarRoutes(app, {
     });
   });
 
+  app.get('/api/radar/source-health', (_req, res) => {
+    res.setHeader('Cache-Control', 'public, max-age=30, must-revalidate');
+    res.json(resident.sourceHealth());
+  });
+
   app.post('/api/radar/run', requireInternal, async (req, res) => {
     const receipt = await resident.runOnce({
       externalObservations: Array.isArray(req.body?.observations) ? req.body.observations : []
