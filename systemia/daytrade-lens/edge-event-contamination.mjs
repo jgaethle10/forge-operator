@@ -66,6 +66,12 @@ const NY_DATE = new Intl.DateTimeFormat("en-CA", {
   month: "2-digit",
   day: "2-digit",
 });
+const NY_CLOCK = new Intl.DateTimeFormat("en-US", {
+  timeZone: "America/New_York",
+  hour: "2-digit",
+  minute: "2-digit",
+  hourCycle: "h23",
+});
 
 function dateKey(timestamp) {
   const date = new Date(timestamp);
@@ -85,6 +91,59 @@ function dayDistance(a, b) {
 function nearAny(date, dates, days) {
   if (!date) return false;
   return dates.some((candidate) => dayDistance(date, candidate) <= days);
+}
+
+export function classifyAnnouncementProximity(row, {
+  macro_window_minutes = 120,
+} = {}) {
+  const timestamp = row?.observed_at;
+  const eventDate = dateKey(timestamp);
+  const date = new Date(timestamp);
+  if (!eventDate || !Number.isFinite(date.getTime())) {
+    return {
+      event_date: eventDate,
+      fomc_same_day: false,
+      cpi_same_day: false,
+      minutes_from_fomc_statement: null,
+      minutes_from_cpi_release: null,
+      fomc_within_window: false,
+      cpi_within_window: false,
+      major_macro_within_window: false,
+      earnings_related: earningsRelated(row),
+      any_announcement_window: earningsRelated(row),
+      macro_window_minutes: Number(macro_window_minutes),
+    };
+  }
+  const parts = Object.fromEntries(
+    NY_CLOCK.formatToParts(date).map((part) => [part.type, part.value])
+  );
+  const minuteOfDay = Number(parts.hour) * 60 + Number(parts.minute);
+  const fomcSameDay = FOMC_DECISION_DATES.includes(eventDate);
+  const cpiSameDay = CPI_RELEASE_DATES.includes(eventDate);
+  const minutesFromFomc = fomcSameDay ? Math.abs(minuteOfDay - 14 * 60) : null;
+  const minutesFromCpi = cpiSameDay ? Math.abs(minuteOfDay - (8 * 60 + 30)) : null;
+  const window = Number(macro_window_minutes);
+  const fomcWithin = Number.isFinite(minutesFromFomc) && minutesFromFomc <= window;
+  const cpiWithin = Number.isFinite(minutesFromCpi) && minutesFromCpi <= window;
+  const earnings = earningsRelated(row);
+  return {
+    event_date: eventDate,
+    fomc_same_day: fomcSameDay,
+    cpi_same_day: cpiSameDay,
+    minutes_from_fomc_statement: minutesFromFomc,
+    minutes_from_cpi_release: minutesFromCpi,
+    fomc_within_window: fomcWithin,
+    cpi_within_window: cpiWithin,
+    major_macro_within_window: fomcWithin || cpiWithin,
+    earnings_related: earnings,
+    any_announcement_window: fomcWithin || cpiWithin || earnings,
+    macro_window_minutes: window,
+    timing_provenance: {
+      cpi_scheduled_release_et: "08:30",
+      fomc_statement_release_et: "14:00",
+      official_calendar_provenance: OFFICIAL_MACRO_CALENDAR_PROVENANCE,
+    },
+  };
 }
 
 function earningsRelated(row) {
