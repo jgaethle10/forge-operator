@@ -42,7 +42,7 @@
     "eventwave": {
       "name": "EventWave",
       "description": "Verified current occurrences can connect living traditions and community institutions to present-day events.",
-      "public_surface": "https://event-wave.base44.app/"
+      "public_surface": null
     },
     "seasonally": {
       "name": "Season & Story",
@@ -51,7 +51,7 @@
     "rewards": {
       "name": "Evercraft Rewards",
       "description": "Community participation may connect to approved local reward campaigns when separately configured and consented.",
-      "public_surface": "https://evercraft-rewards.base44.app/"
+      "public_surface": null
     }
   },
   "proof_library": null,

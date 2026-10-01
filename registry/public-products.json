@@ -12,20 +12,20 @@
       "product_key": "aliev",
       "name": "AliEV",
       "class": "ev_infrastructure_opportunity_intelligence",
-      "canonical_url": "https://aliev.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/index.html",
       "github_record": "./aliev/README.md",
       "llms": "./aliev/llms.txt",
       "registry_name": "io.github.jgaethle10/aliev",
       "invocation": {
-        "mode": "mcp",
-        "url": "https://aliev.base44.app/functions/alievMcp"
+        "mode": "discovery_only",
+        "url": null
       }
     },
     {
       "product_key": "ascend",
       "name": "Ascend AI",
       "class": "youth_development_and_safeguarding_support",
-      "canonical_url": "https://ascend.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ascend/index.html",
       "github_record": "./ascend/README.md",
       "llms": "./ascend/llms.txt",
       "registry_name": null,
@@ -38,20 +38,20 @@
       "product_key": "buildflow",
       "name": "BuildFlow Enterprise Operations",
       "class": "enterprise_operations_discovery_and_handoff",
-      "canonical_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/buildflow/index.html",
       "github_record": "./buildflow/README.md",
       "llms": "./buildflow/llms.txt",
       "registry_name": "io.github.jgaethle10/buildflow",
       "invocation": {
-        "mode": "mcp",
-        "url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp"
+        "mode": "discovery_only",
+        "url": null
       }
     },
     {
       "product_key": "callproof-vault",
       "name": "CallProof Vault",
       "class": "unwanted_call_and_text_evidence_organization",
-      "canonical_url": "https://call-proof-vault.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/callproof-vault/index.html",
       "github_record": "./callproof-vault/README.md",
       "llms": "./callproof-vault/llms.txt",
       "registry_name": null,
@@ -64,20 +64,20 @@
       "product_key": "career-command",
       "name": "Evercraft Career Command",
       "class": "interview_practice_and_career_preparation",
-      "canonical_url": "https://evercraft-career-command.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/career-command/index.html",
       "github_record": "./career-command/README.md",
       "llms": "./career-command/llms.txt",
       "registry_name": "io.github.jgaethle10/career-command",
       "invocation": {
-        "mode": "mcp",
-        "url": "https://evercraft-career-command.base44.app/functions/careerMcp"
+        "mode": "discovery_only",
+        "url": null
       }
     },
     {
       "product_key": "christmas-lights-usa",
       "name": "Christmas Lights USA",
       "class": "holiday_lighting_marketplace_and_project_planning",
-      "canonical_url": "https://christmas-lights-usa.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/christmas-lights-usa/index.html",
       "github_record": "./christmas-lights-usa/README.md",
       "llms": "./christmas-lights-usa/llms.txt",
       "registry_name": null,
@@ -103,7 +103,7 @@
       "product_key": "coda-y-codigo",
       "name": "Coda y Código",
       "class": "multilingual_frontline_workforce_training",
-      "canonical_url": "https://codaycodigo.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/coda-y-codigo/index.html",
       "github_record": "./coda-y-codigo/README.md",
       "llms": "./coda-y-codigo/llms.txt",
       "registry_name": null,
@@ -142,20 +142,20 @@
       "product_key": "deck-capital-fit",
       "name": "Evercraft Deck Capital Fit",
       "class": "capital_fit_and_founder_readiness_research",
-      "canonical_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/deck-capital-fit/index.html",
       "github_record": "./deck-capital-fit/README.md",
       "llms": "./deck-capital-fit/llms.txt",
       "registry_name": "io.github.jgaethle10/deck-capital-fit",
       "invocation": {
-        "mode": "mcp",
-        "url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp"
+        "mode": "discovery_only",
+        "url": null
       }
     },
     {
       "product_key": "ecoledger",
       "name": "EcoLedger",
       "class": "ecological_restoration_evidence_ledger",
-      "canonical_url": "https://eco-ledger-ai-379a7af4.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ecoledger/index.html",
       "github_record": "./ecoledger/README.md",
       "llms": "./ecoledger/llms.txt",
       "registry_name": null,
@@ -168,26 +168,26 @@
       "product_key": "eps-estimate-engine",
       "name": "EPS Field-Service Estimate Engine",
       "class": "contractor_estimate_and_margin_modeling",
-      "canonical_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eps-estimate-engine/index.html",
       "github_record": "./eps-estimate-engine/README.md",
       "llms": "./eps-estimate-engine/llms.txt",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
       "invocation": {
-        "mode": "mcp",
-        "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "mode": "discovery_only",
+        "url": null
       }
     },
     {
       "product_key": "eventwave",
       "name": "EventWave",
       "class": "event_discovery_and_labeled_promotion",
-      "canonical_url": "https://event-wave.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eventwave/index.html",
       "github_record": "./eventwave/README.md",
       "llms": "./eventwave/llms.txt",
       "registry_name": "io.github.jgaethle10/eventwave",
       "invocation": {
-        "mode": "mcp",
-        "url": "https://event-wave.base44.app/functions/eventWaveMcp"
+        "mode": "discovery_only",
+        "url": null
       }
     },
     {
@@ -207,20 +207,20 @@
       "product_key": "evercraft-clip",
       "name": "Evercraft Clip",
       "class": "ai_social_video_production_and_governed_distribution",
-      "canonical_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-clip/index.html",
       "github_record": "./evercraft-clip/README.md",
       "llms": "./evercraft-clip/llms.txt",
       "registry_name": "io.github.jgaethle10/evercraft-clip",
       "invocation": {
-        "mode": "mcp",
-        "url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp"
+        "mode": "discovery_only",
+        "url": null
       }
     },
     {
       "product_key": "evercraft-containment",
       "name": "Evercraft Containment",
       "class": "ai_persistence_and_automation_security_diagnostics",
-      "canonical_url": "https://evercraft.base44.app/containment",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-containment/index.html",
       "github_record": "./evercraft-containment/README.md",
       "llms": "./evercraft-containment/llms.txt",
       "registry_name": null,
@@ -233,7 +233,7 @@
       "product_key": "evercraft-cosmos-atlas",
       "name": "Evercraft Cosmos Atlas",
       "class": "evidence_led_astronomy_and_space_learning",
-      "canonical_url": "https://evercraft-cosmos-atlas.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-cosmos-atlas/index.html",
       "github_record": "./evercraft-cosmos-atlas/README.md",
       "llms": "./evercraft-cosmos-atlas/llms.txt",
       "registry_name": null,
@@ -246,7 +246,7 @@
       "product_key": "evercraft-fantasy-intelligence",
       "name": "Evercraft Fantasy Intelligence",
       "class": "fantasy_football_decision_intelligence",
-      "canonical_url": "https://evercraftjournal.base44.app/sports/fantasy",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-fantasy-intelligence/index.html",
       "github_record": "./evercraft-fantasy-intelligence/README.md",
       "llms": "./evercraft-fantasy-intelligence/llms.txt",
       "registry_name": null,
@@ -259,7 +259,7 @@
       "product_key": "evercraft-front-door",
       "name": "Evercraft",
       "class": "daily_life_local_utility_front_door",
-      "canonical_url": "https://evercraft.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-front-door/index.html",
       "github_record": "./evercraft-front-door/README.md",
       "llms": "./evercraft-front-door/llms.txt",
       "registry_name": null,
@@ -272,7 +272,7 @@
       "product_key": "evercraft-global-health-atlas",
       "name": "Evercraft Global Health Atlas",
       "class": "evidence_labeled_public_health_intelligence_atlas",
-      "canonical_url": "https://evercraft-health-atlas.base44.app/health-atlas",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-global-health-atlas/index.html",
       "github_record": "./evercraft-global-health-atlas/README.md",
       "llms": "./evercraft-global-health-atlas/llms.txt",
       "registry_name": null,
@@ -298,20 +298,20 @@
       "product_key": "evercraft-network",
       "name": "Evercraft Network",
       "class": "application_network_continuity",
-      "canonical_url": "https://network-control.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-network/index.html",
       "github_record": "./evercraft-network/README.md",
       "llms": "./evercraft-network/llms.txt",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
       "invocation": {
-        "mode": "mcp",
-        "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "mode": "discovery_only",
+        "url": null
       }
     },
     {
       "product_key": "evercraft-physics-atlas",
       "name": "Evercraft Physics Atlas",
       "class": "evidence_led_physics_learning",
-      "canonical_url": "https://evercraft-physics-atlas.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-physics-atlas/index.html",
       "github_record": "./evercraft-physics-atlas/README.md",
       "llms": "./evercraft-physics-atlas/llms.txt",
       "registry_name": null,
@@ -337,33 +337,33 @@
       "product_key": "evercraft-rewards",
       "name": "Evercraft Rewards",
       "class": "local_business_rewards_and_partnership",
-      "canonical_url": "https://evercraft-rewards.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/index.html",
       "github_record": "./evercraft-rewards/README.md",
       "llms": "./evercraft-rewards/llms.txt",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
       "invocation": {
-        "mode": "mcp",
-        "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "mode": "discovery_only",
+        "url": null
       }
     },
     {
       "product_key": "evercraft-web",
       "name": "Evercraft Web",
       "class": "ai_web_fetch_search_browser_infrastructure",
-      "canonical_url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/index.html",
       "github_record": "./evercraft-web/README.md",
       "llms": "./evercraft-web/llms.txt",
       "registry_name": "io.github.jgaethle10/evercraft-web",
       "invocation": {
-        "mode": "mcp",
-        "url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp"
+        "mode": "discovery_only",
+        "url": null
       }
     },
     {
       "product_key": "evercraft-wildlife-atlas",
       "name": "Evercraft Wildlife Atlas",
       "class": "evidence_first_wildlife_ecology_learning",
-      "canonical_url": "https://wildlife-atlas.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-wildlife-atlas/index.html",
       "github_record": "./evercraft-wildlife-atlas/README.md",
       "llms": "./evercraft-wildlife-atlas/llms.txt",
       "registry_name": null,
@@ -376,20 +376,20 @@
       "product_key": "evermaps",
       "name": "EverMaps",
       "class": "public_safe_geospatial_evidence_projection",
-      "canonical_url": "https://evermaps.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evermaps/index.html",
       "github_record": "./evermaps/README.md",
       "llms": "./evermaps/llms.txt",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
       "invocation": {
-        "mode": "mcp",
-        "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "mode": "discovery_only",
+        "url": null
       }
     },
     {
       "product_key": "evernest",
       "name": "EverNest",
       "class": "family_support_resources",
-      "canonical_url": "https://evernest-home.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest/index.html",
       "github_record": "./evernest/README.md",
       "llms": "./evernest/llms.txt",
       "registry_name": null,
@@ -402,7 +402,7 @@
       "product_key": "evernest-atlas",
       "name": "EverNest Atlas",
       "class": "adult_household_life_planning",
-      "canonical_url": "https://evernest-life-map.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest-atlas/index.html",
       "github_record": "./evernest-atlas/README.md",
       "llms": "./evernest-atlas/llms.txt",
       "registry_name": null,
@@ -415,7 +415,7 @@
       "product_key": "everystage",
       "name": "EveryStage",
       "class": "live_event_operations",
-      "canonical_url": "https://every-stage.base44.app/product",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/everystage/index.html",
       "github_record": "./everystage/README.md",
       "llms": "./everystage/llms.txt",
       "registry_name": null,
@@ -428,26 +428,26 @@
       "product_key": "faie",
       "name": "FAIE",
       "class": "evidence_first_agriculture_and_resilience_research",
-      "canonical_url": "https://faie.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html",
       "github_record": "./faie/README.md",
       "llms": "./faie/llms.txt",
       "registry_name": "io.github.jgaethle10/faie",
       "invocation": {
-        "mode": "mcp",
-        "url": "https://faie.base44.app/functions/faieMcp"
+        "mode": "discovery_only",
+        "url": null
       }
     },
     {
       "product_key": "findmypart",
       "name": "FindMyPart",
       "class": "hard_to_source_parts",
-      "canonical_url": "https://findmypart.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/index.html",
       "github_record": "./findmypart/README.md",
       "llms": "./findmypart/llms.txt",
       "registry_name": "io.github.jgaethle10/findmypart",
       "invocation": {
-        "mode": "mcp",
-        "url": "https://findmypart.base44.app/functions/findMyPartMcp"
+        "mode": "discovery_only",
+        "url": null
       }
     },
     {
@@ -467,20 +467,20 @@
       "product_key": "forensiscope",
       "name": "ForensiScope",
       "class": "ai_media_overflow_and_analysis",
-      "canonical_url": "https://evercraft-forensiscope.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/index.html",
       "github_record": "./forensiscope/README.md",
       "llms": "./forensiscope/llms.txt",
       "registry_name": "io.github.jgaethle10/forensiscope",
       "invocation": {
-        "mode": "mcp",
-        "url": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp"
+        "mode": "discovery_only",
+        "url": null
       }
     },
     {
       "product_key": "global-energy-atlas",
       "name": "Global Energy Atlas",
       "class": "evidence_first_energy_systems_education",
-      "canonical_url": "https://energy-atlas.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/global-energy-atlas/index.html",
       "github_record": "./global-energy-atlas/README.md",
       "llms": "./global-energy-atlas/llms.txt",
       "registry_name": null,
@@ -493,20 +493,20 @@
       "product_key": "globalstat",
       "name": "GlobalStat",
       "class": "country_comparison_and_evidence_intelligence",
-      "canonical_url": "https://global-stat-pulse.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/globalstat/index.html",
       "github_record": "./globalstat/README.md",
       "llms": "./globalstat/llms.txt",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
       "invocation": {
-        "mode": "mcp",
-        "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "mode": "discovery_only",
+        "url": null
       }
     },
     {
       "product_key": "guardian",
       "name": "Guardian",
       "class": "privacy_first_protection_navigation_and_prevention",
-      "canonical_url": "https://guardian-pilot.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian/index.html",
       "github_record": "./guardian/README.md",
       "llms": "./guardian/llms.txt",
       "registry_name": null,
@@ -524,15 +524,15 @@
       "llms": "./ibmi-rescue/llms.txt",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
       "invocation": {
-        "mode": "mcp",
-        "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "mode": "discovery_only",
+        "url": null
       }
     },
     {
       "product_key": "infinite-classroom",
       "name": "Infinite Classroom",
       "class": "ai_supported_learning",
-      "canonical_url": "https://infiniteclassroom.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/infinite-classroom/index.html",
       "github_record": "./infinite-classroom/README.md",
       "llms": "./infinite-classroom/llms.txt",
       "registry_name": null,
@@ -550,21 +550,21 @@
       "llms": "./legacy-rescue-lab/llms.txt",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
       "invocation": {
-        "mode": "mcp",
-        "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "mode": "discovery_only",
+        "url": null
       }
     },
     {
       "product_key": "little-red-book-export-qa",
       "name": "Little Red Studio Book Export QA",
       "class": "book_export_preflight_and_cover_geometry_qa",
-      "canonical_url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/little-red-book-export-qa/index.html",
       "github_record": "./little-red-book-export-qa/README.md",
       "llms": "./little-red-book-export-qa/llms.txt",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
       "invocation": {
-        "mode": "mcp",
-        "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "mode": "discovery_only",
+        "url": null
       }
     },
     {
@@ -584,7 +584,7 @@
       "product_key": "payflow",
       "name": "PayFlow",
       "class": "small_team_payroll_recordkeeping",
-      "canonical_url": "https://pay-flow-fix.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/payflow/index.html",
       "github_record": "./payflow/README.md",
       "llms": "./payflow/llms.txt",
       "registry_name": null,
@@ -597,20 +597,20 @@
       "product_key": "raven-nexus",
       "name": "Raven Nexus",
       "class": "pain_first_modular_safety_and_stability",
-      "canonical_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/raven-nexus/index.html",
       "github_record": "./raven-nexus/README.md",
       "llms": "./raven-nexus/llms.txt",
       "registry_name": null,
       "invocation": {
-        "mode": "bounded_http",
-        "url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter"
+        "mode": "discovery_only",
+        "url": null
       }
     },
     {
       "product_key": "revenue-war-map",
       "name": "Evercraft Revenue War Map",
       "class": "personal_revenue_planning_and_income_opportunity_mapping",
-      "canonical_url": "https://evercraft-war-map.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/revenue-war-map/index.html",
       "github_record": "./revenue-war-map/README.md",
       "llms": "./revenue-war-map/llms.txt",
       "registry_name": null,
@@ -623,13 +623,13 @@
       "product_key": "roasted",
       "name": "ROASTED",
       "class": "micro_purchase_text_pressure_test",
-      "canonical_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/roasted/index.html",
       "github_record": "./roasted/README.md",
       "llms": "./roasted/llms.txt",
       "registry_name": "io.github.jgaethle10/roasted",
       "invocation": {
-        "mode": "mcp",
-        "url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp"
+        "mode": "discovery_only",
+        "url": null
       }
     },
     {
@@ -649,7 +649,7 @@
       "product_key": "second-stitch",
       "name": "The Second Stitch",
       "class": "textile_project_intelligence_and_procurement_prototype",
-      "canonical_url": "https://the-second-stitch.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/second-stitch/index.html",
       "github_record": "./second-stitch/README.md",
       "llms": "./second-stitch/llms.txt",
       "registry_name": null,
@@ -662,7 +662,7 @@
       "product_key": "skyops-parking",
       "name": "SkyOps Parking",
       "class": "parking_operations",
-      "canonical_url": "https://skyopsparking.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/skyops-parking/index.html",
       "github_record": "./skyops-parking/README.md",
       "llms": "./skyops-parking/llms.txt",
       "registry_name": null,
@@ -675,7 +675,7 @@
       "product_key": "space-dudz",
       "name": "Space Dudz",
       "class": "retro_space_streetwear_storefront",
-      "canonical_url": "https://spacedudz.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/space-dudz/index.html",
       "github_record": "./space-dudz/README.md",
       "llms": "./space-dudz/llms.txt",
       "registry_name": null,
@@ -688,7 +688,7 @@
       "product_key": "systemia-atlas-freight",
       "name": "Systemia Atlas Freight Load Exception Intelligence",
       "class": "freight_load_exception_and_document_intelligence",
-      "canonical_url": "https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-atlas-freight/index.html",
       "github_record": "./systemia-atlas-freight/README.md",
       "llms": "./systemia-atlas-freight/llms.txt",
       "registry_name": null,
@@ -701,7 +701,7 @@
       "product_key": "systemia-decision-lab",
       "name": "Systemia Decision Lab",
       "class": "owner_workforce_decision_intelligence",
-      "canonical_url": "https://systemiadecisionlab.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-decision-lab/index.html",
       "github_record": "./systemia-decision-lab/README.md",
       "llms": "./systemia-decision-lab/llms.txt",
       "registry_name": null,
@@ -719,28 +719,28 @@
       "llms": "./systemia-field-library/llms.txt",
       "registry_name": "io.github.jgaethle10/systemia-field-library",
       "invocation": {
-        "mode": "mcp",
-        "url": "https://base44.app/api/apps/6a54381e147576b18ac94d8f/functions/fieldLibraryAgentMcp"
+        "mode": "discovery_only",
+        "url": null
       }
     },
     {
       "product_key": "systemia-portfolio-sentinel",
       "name": "Systemia Portfolio Sentinel",
       "class": "continuous_software_portfolio_integrity_monitoring",
-      "canonical_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-portfolio-sentinel/index.html",
       "github_record": "./systemia-portfolio-sentinel/README.md",
       "llms": "./systemia-portfolio-sentinel/llms.txt",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
       "invocation": {
-        "mode": "mcp",
-        "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "mode": "discovery_only",
+        "url": null
       }
     },
     {
       "product_key": "systemia-radar",
       "name": "Systemia Radar",
       "class": "website_scan_competitor_monitoring_and_reporting",
-      "canonical_url": "https://systemia-scan-pro.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-radar/index.html",
       "github_record": "./systemia-radar/README.md",
       "llms": "./systemia-radar/llms.txt",
       "registry_name": null,
@@ -766,7 +766,7 @@
       "product_key": "systemia-university",
       "name": "Systemia University",
       "class": "evidence_centered_learning_agent_proving_and_workforce_readiness",
-      "canonical_url": "https://systemia-university.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/index.html",
       "github_record": "./systemia-university/README.md",
       "llms": "./systemia-university/llms.txt",
       "registry_name": null,
@@ -779,20 +779,20 @@
       "product_key": "systemia-website-audit",
       "name": "Systemia Website Audit",
       "class": "website_conversion_and_technical_audit",
-      "canonical_url": "https://systemia-audit-pro.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-website-audit/index.html",
       "github_record": "./systemia-website-audit/README.md",
       "llms": "./systemia-website-audit/llms.txt",
       "registry_name": "io.github.jgaethle10/systemia-website-audit",
       "invocation": {
-        "mode": "mcp",
-        "url": "https://systemia-audit-pro.base44.app/functions/auditAgentMcp"
+        "mode": "discovery_only",
+        "url": null
       }
     },
     {
       "product_key": "talent-atlas",
       "name": "Talent Atlas",
       "class": "evidence_backed_talent_profile_and_opportunity_mapping",
-      "canonical_url": "https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/talent-atlas/index.html",
       "github_record": "./talent-atlas/README.md",
       "llms": "./talent-atlas/llms.txt",
       "registry_name": null,
@@ -818,7 +818,7 @@
       "product_key": "towi-research",
       "name": "TOWI Evidence-Controlled Research Brief",
       "class": "evidence_controlled_research_and_validation",
-      "canonical_url": "https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/towi-research/index.html",
       "github_record": "./towi-research/README.md",
       "llms": "./towi-research/llms.txt",
       "registry_name": null,
@@ -831,13 +831,13 @@
       "product_key": "website-launch",
       "name": "Evercraft Website Launch",
       "class": "done_for_you_business_website_service",
-      "canonical_url": "https://instant-website-builder-usa-6feac193.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/website-launch/index.html",
       "github_record": "./website-launch/README.md",
       "llms": "./website-launch/llms.txt",
       "registry_name": "io.github.jgaethle10/website-launch",
       "invocation": {
-        "mode": "mcp",
-        "url": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp"
+        "mode": "discovery_only",
+        "url": null
       }
     }
   ]

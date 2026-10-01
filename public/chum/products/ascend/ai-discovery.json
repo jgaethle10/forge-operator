@@ -46,7 +46,7 @@
     "guardian": {
       "name": "Guardian Safeguard",
       "description": "Verified outside-support navigation when a concern needs to leave the activity environment.",
-      "public_surface": "https://guardian-pilot.base44.app/GetHelp"
+      "public_surface": null
     },
     "infinite-classroom": {
       "name": "Infinite Classroom",

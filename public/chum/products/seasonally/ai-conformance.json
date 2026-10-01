@@ -40,12 +40,12 @@
     "rewards": {
       "name": "Evercraft Rewards",
       "description": "Approved local rewards can complement household shopping and seasonal activity discovery without changing grocery evidence rules.",
-      "public_surface": "https://evercraft-rewards.base44.app/"
+      "public_surface": null
     },
     "eventwave": {
       "name": "EventWave",
       "description": "Current local events can feed seasonal adventure discovery while event availability and ticketing remain source-bound.",
-      "public_surface": "https://event-wave.base44.app/"
+      "public_surface": null
     },
     "home": {
       "name": "Evercraft Home",

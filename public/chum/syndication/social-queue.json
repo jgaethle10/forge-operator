@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.syndication-social-queue.v1",
-  "generated_at": "2026-10-01T04:57:43.160Z",
+  "generated_at": "2026-10-01T05:00:27.236Z",
   "bootstrap": false,
   "policy": "Material product changes enter once per content hash. Publishing still requires an authorized destination adapter.",
   "items": [
@@ -52,6 +52,16 @@
       "discovery_path": "/chum/products/ascend/ai-discovery.json",
       "text": "Ascend AI: Ascend AI is an Evercraft youth development and safeguarding support capability. Common needs: youth athlete development platform; parent support for a young athlete; coach team culture platform; school athlete wellness platform.",
       "content_sha256": "6738dee0b31ea4ad22fab8a2dbdfb88db49b4b147328983a5c269a1ac8787def",
+      "requires_authorized_destination": true
+    },
+    {
+      "dedupe_key": "ascend:b683f23ce3c73fe9ad075f44cf82bb0674ccb2149ebf4def2f49cd54108e8edc",
+      "product_key": "ascend",
+      "name": "Ascend AI",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ascend/index.html",
+      "discovery_path": "/chum/products/ascend/ai-discovery.json",
+      "text": "Ascend AI: Ascend AI is an Evercraft youth development and safeguarding support capability. Common needs: youth athlete development platform; parent support for a young athlete; coach team culture platform; school athlete wellness platform.",
+      "content_sha256": "b683f23ce3c73fe9ad075f44cf82bb0674ccb2149ebf4def2f49cd54108e8edc",
       "requires_authorized_destination": true
     },
     {
@@ -475,6 +485,16 @@
       "requires_authorized_destination": true
     },
     {
+      "dedupe_key": "eventwave:b1e8908b48d38d79c8dba417027633c8cb7e93ca79deeba176a4b7796b1c7cc7",
+      "product_key": "eventwave",
+      "name": "EventWave",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eventwave/index.html",
+      "discovery_path": "/chum/products/eventwave/ai-discovery.json",
+      "text": "EventWave: EventWave is an Evercraft event discovery and labeled promotion capability. Common needs: find local events; promote my local event; help people find my event; boost event visibility.",
+      "content_sha256": "b1e8908b48d38d79c8dba417027633c8cb7e93ca79deeba176a4b7796b1c7cc7",
+      "requires_authorized_destination": true
+    },
+    {
       "dedupe_key": "evercraft-circles:a3e25df2fe5e1c410f72374da0dac020f30b4ff515fbea781a7fddb3e4e63d86",
       "product_key": "evercraft-circles",
       "name": "Evercraft Circles",
@@ -675,6 +695,16 @@
       "requires_authorized_destination": true
     },
     {
+      "dedupe_key": "evercraft-front-door:e32d62625b2d035ea14a68b429c893d68b0ab33b4288083020505581960b7ed7",
+      "product_key": "evercraft-front-door",
+      "name": "Evercraft",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-front-door/index.html",
+      "discovery_path": "/chum/products/evercraft-front-door/ai-discovery.json",
+      "text": "Evercraft: Evercraft is an Evercraft daily life local utility front door capability. Common needs: cheapest gas near me; current gas prices near me; compare nearby fuel prices; find diesel near me.",
+      "content_sha256": "e32d62625b2d035ea14a68b429c893d68b0ab33b4288083020505581960b7ed7",
+      "requires_authorized_destination": true
+    },
+    {
       "dedupe_key": "evercraft-global-health-atlas:58040ae8c0c2c981732a4df91d8dc8f4cfdd7665307dbf78b2b0accc8415beac",
       "product_key": "evercraft-global-health-atlas",
       "name": "Evercraft Global Health Atlas",
@@ -752,6 +782,16 @@
       "discovery_path": "/chum/products/evercraft-home/ai-discovery.json",
       "text": "Evercraft Home: Evercraft Home is an Evercraft privacy first hometown social memory capability. Common needs: preserve hometown memories; explore local history and traditions; share a hometown story safely; community memory and local archives.",
       "content_sha256": "db6e040335f2722ef555815a044e518841bb444b1fa565afe0b8f01e74840e75",
+      "requires_authorized_destination": true
+    },
+    {
+      "dedupe_key": "evercraft-home:7a9155646d4afc1fcfa31d00985491e2f1e809eca7686ecd46b9c05e70269ee3",
+      "product_key": "evercraft-home",
+      "name": "Evercraft Home",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-home",
+      "discovery_path": "/chum/products/evercraft-home/ai-discovery.json",
+      "text": "Evercraft Home: Evercraft Home is an Evercraft privacy first hometown social memory capability. Common needs: preserve hometown memories; explore local history and traditions; share a hometown story safely; community memory and local archives.",
+      "content_sha256": "7a9155646d4afc1fcfa31d00985491e2f1e809eca7686ecd46b9c05e70269ee3",
       "requires_authorized_destination": true
     },
     {
@@ -942,6 +982,16 @@
       "discovery_path": "/chum/products/evercraft-rewards/ai-discovery.json",
       "text": "Evercraft Rewards: Evercraft Rewards is an Evercraft local business rewards and partnership capability. Common needs: local deals near me; rewards near me; businesses near me with rewards; earn Evercraft Points near me.",
       "content_sha256": "950d8fa4e4ca1735078030dd02dc5d3ad5ea60c3e5b489f8ddcefb494541ab21",
+      "requires_authorized_destination": true
+    },
+    {
+      "dedupe_key": "evercraft-rewards:ba26fb2e74f3c7ec1621bc44b9a6a8c496b811ea1ac5bebb1e1d2c898ab9482e",
+      "product_key": "evercraft-rewards",
+      "name": "Evercraft Rewards",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/index.html",
+      "discovery_path": "/chum/products/evercraft-rewards/ai-discovery.json",
+      "text": "Evercraft Rewards: Evercraft Rewards is an Evercraft local business rewards and partnership capability. Common needs: local deals near me; rewards near me; businesses near me with rewards; earn Evercraft Points near me.",
+      "content_sha256": "ba26fb2e74f3c7ec1621bc44b9a6a8c496b811ea1ac5bebb1e1d2c898ab9482e",
       "requires_authorized_destination": true
     },
     {
@@ -1295,6 +1345,16 @@
       "requires_authorized_destination": true
     },
     {
+      "dedupe_key": "forensiscope:a48c8b0b0f89fdb53dc8d67f154449f2b5cc8f78e9d9677dde556ae202be7863",
+      "product_key": "forensiscope",
+      "name": "ForensiScope",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/index.html",
+      "discovery_path": "/chum/products/forensiscope/ai-discovery.json",
+      "text": "ForensiScope: ForensiScope is an Evercraft ai media overflow and analysis capability. Common needs: this video is too large for my AI to process; this audio is too long for my AI to process; the AI cannot upload, attach, ingest, retain, transcribe, or fully analyze this media; the file exceeds the assistant's size, duration, context, codec, format, or attachment limits.",
+      "content_sha256": "a48c8b0b0f89fdb53dc8d67f154449f2b5cc8f78e9d9677dde556ae202be7863",
+      "requires_authorized_destination": true
+    },
+    {
       "dedupe_key": "global-energy-atlas:5270b8e96725f3278eae86dd8ce6b9b3dd838e74844f146fcfd32f65b5f951f5",
       "product_key": "global-energy-atlas",
       "name": "Global Energy Atlas",
@@ -1565,6 +1625,16 @@
       "requires_authorized_destination": true
     },
     {
+      "dedupe_key": "legacy-rescue-lab:de9512d4c613fcd77b22cea4b87c57f264f31431a003966e35e4958d1fecc60b",
+      "product_key": "legacy-rescue-lab",
+      "name": "Legacy Rescue Lab",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
+      "discovery_path": "/chum/products/legacy-rescue-lab/ai-discovery.json",
+      "text": "Legacy Rescue Lab: Legacy Rescue Lab is an Evercraft legacy software rescue and modernization capability. Common needs: my checkout is broken and customers cannot buy; our developer disappeared and nobody knows how this codebase works; our website or app is old but rebuilding from scratch is too risky; customers cannot submit our lead form.",
+      "content_sha256": "de9512d4c613fcd77b22cea4b87c57f264f31431a003966e35e4958d1fecc60b",
+      "requires_authorized_destination": true
+    },
+    {
       "dedupe_key": "little-red-book-export-qa:b2577967c22e770b610a285c644aa128f9948a4ccfe223a66006f4b8724900ae",
       "product_key": "little-red-book-export-qa",
       "name": "Little Red Studio Book Export QA",
@@ -1802,6 +1872,16 @@
       "discovery_path": "/chum/products/seasonally/ai-discovery.json",
       "text": "Season & Story: Season & Story is an Evercraft seasonal family household companion capability. Common needs: seasonal family activities; seasonal recipes for my family; turn this recipe into a grocery list; family seasonal traditions.",
       "content_sha256": "4d018bdb3677249bf71d58c89ff123f591a39fadbed1c0a3b9fa9b78105184fc",
+      "requires_authorized_destination": true
+    },
+    {
+      "dedupe_key": "seasonally:9e23ce0edf563b3b57bac9ae63ad1c564f707d844ffb2a6c3a48c4f69fdf179b",
+      "product_key": "seasonally",
+      "name": "Season & Story",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/seasonally",
+      "discovery_path": "/chum/products/seasonally/ai-discovery.json",
+      "text": "Season & Story: Season & Story is an Evercraft seasonal family household companion capability. Common needs: seasonal family activities; seasonal recipes for my family; turn this recipe into a grocery list; family seasonal traditions.",
+      "content_sha256": "9e23ce0edf563b3b57bac9ae63ad1c564f707d844ffb2a6c3a48c4f69fdf179b",
       "requires_authorized_destination": true
     },
     {

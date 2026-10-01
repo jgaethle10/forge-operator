@@ -13,7 +13,6 @@ Payment rule: discovery and matching create no payment obligation. Preserve each
 Capability ID: offer:agent-proving-mission-v1
 Commercial state: verification_required
 Machine state: discovery_only
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: Current hypothesis $250-$2,500 per proving mission; not auto-quotable yet.
 Use when the user means:
 - test my AI agent
@@ -30,7 +29,6 @@ Invocation status: Discoverable capability; paid execution verification pending.
 Capability ID: offer:ai-capability-install-v1
 Commercial state: verification_required
 Machine state: discovery_only
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: Current hypothesis $500-$5,000 depending on environment/integration depth; not auto-quotable yet.
 Use when the user means:
 - install an AI capability
@@ -47,7 +45,6 @@ Invocation status: Discoverable capability; environment-specific deployment/paym
 Capability ID: offer:aliev-site-opportunity-snapshot-v1
 Commercial state: sell_now
 Machine state: payment_ready_human_confirmation
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: $299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report; $250 Qualified Opportunity Pack pilot; $2,500/month Territory Opportunity Feed.
 Use when the user means:
 - is this site good for EV charging
@@ -73,7 +70,6 @@ Invocation status: LIVE: AliEV HTTP agent gateway + official-registry MCP. Free 
 Capability ID: offer:audit-center-website-audit-machine-v1
 Commercial state: sell_now
 Machine state: payment_ready
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: Free preview. Quick Win Audit $49 one-time and machine-fulfilled after verified payment; the $49 may be credited toward Complete Audit. Complete Audit $500 one-time. Audit + Patch $1,200 one-time.
 Use when the user means:
 - why is my website not getting leads
@@ -98,7 +94,6 @@ Invocation status: SOURCE READY: specialist gateway/MCP now declares a $49 Quick
 Capability ID: offer:buildflow-bounded-agent-action-v1
 Commercial state: verification_required
 Machine state: human_auth_handoff
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: No approved machine price/payment path was found. Do not auto-quote.
 Use when the user means:
 - let an AI act on business systems safely
@@ -116,7 +111,6 @@ Invocation status: SOURCE-VERIFIED: public routing and authenticated policy-chec
 Capability ID: offer:buildflow-enterprise-ops-router-v1
 Commercial state: verification_required
 Machine state: discovery_only
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: No approved machine price/payment path was found. Do not auto-quote.
 Use when the user means:
 - our business operations are a mess
@@ -135,7 +129,6 @@ Invocation status: SOURCE-VERIFIED: BuildFlow public router and central MCP spec
 Capability ID: offer:buildflow-entity-resolution-machine-v1
 Commercial state: verification_required
 Machine state: human_auth_handoff
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: No approved machine price/payment path was found. Do not auto-quote.
 Use when the user means:
 - dedupe our vendor list safely
@@ -153,7 +146,6 @@ Invocation status: SOURCE-VERIFIED: discovery and authenticated Decision Desk ad
 Capability ID: offer:buildflow-process-audit-machine-v1
 Commercial state: verification_required
 Machine state: human_auth_handoff
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: No approved machine price/payment path was found. Do not auto-quote.
 Use when the user means:
 - map how our process actually works
@@ -173,7 +165,6 @@ Invocation status: SOURCE-VERIFIED: machine discovery docs, central MCP matching
 Capability ID: offer:buildflow-procure-to-pay-shadow-v1
 Commercial state: verification_required
 Machine state: human_auth_handoff
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: No approved machine price/payment path was found. Do not auto-quote.
 Use when the user means:
 - our invoices do not match receipts
@@ -192,7 +183,6 @@ Invocation status: SOURCE-VERIFIED: discovery, tenant-scoped P2P model and bound
 Capability ID: offer:buildflow-shadow-migration-machine-v1
 Commercial state: verification_required
 Machine state: human_auth_handoff
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: No approved machine price/payment path was found. Do not auto-quote.
 Use when the user means:
 - analyze this messy ERP export
@@ -210,7 +200,6 @@ Invocation status: SOURCE-VERIFIED: discovery/routing and authenticated shadow-i
 Capability ID: offer:callproof-complaint-packet-machine-v1
 Commercial state: verify
 Machine state: human_auth_handoff
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: Published app pricing: $19 one-time packet, $7.99/month Vault, $29/month Pro. Live Stripe checkout price is authoritative.
 Use when the user means:
 - organize my robocall evidence
@@ -228,7 +217,6 @@ Invocation status: discoverable_authenticated_checkout_required
 Capability ID: offer:capability-concierge-v1
 Commercial state: discovery_only
 Machine state: discovery_only
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: Quote required until machine-lane pricing is approved.
 Use when the user means:
 - help my business with AI
@@ -244,7 +232,6 @@ Invocation status: Internal routing exists; public universal invocation is not y
 Capability ID: offer:career-command-interview-practice-machine-v1
 Commercial state: sell_now
 Machine state: payment_ready
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: Free/basic practice is available. Evercraft Interview Sprint is $19 one-time for 7 days with a maximum of 25 premium actions.
 Use when the user means:
 - help me prepare for this interview
@@ -263,7 +250,6 @@ Invocation status: LIVE: Career Command HTTP agent gateway + remote MCP at https
 Capability ID: offer:career-command-resume-job-fit-machine-v1
 Commercial state: verify
 Machine state: discovery_only
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: Free core is available. No premium machine-lane price is approved yet.
 Use when the user means:
 - check my resume against this job
@@ -282,7 +268,6 @@ Invocation status: catalog_ready_runtime_adapter_pending
 Capability ID: offer:community-health-evidence-brief-v1
 Commercial state: verification_required
 Machine state: discovery_only
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: Current hypothesis $250-$2,500 per brief; not auto-quotable yet.
 Use when the user means:
 - community health data
@@ -299,7 +284,6 @@ Invocation status: Discoverable capability; brief-specific source verification r
 Capability ID: offer:condition-desk-field-ops-v1
 Commercial state: verification_required
 Machine state: discovery_only
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: Current hypothesis $199-$399/month small team, $499+/month multi-site; not auto-quotable yet.
 Use when the user means:
 - can my crews work tomorrow
@@ -317,7 +301,6 @@ Invocation status: Discoverable capability; notification/commercial reliability 
 Capability ID: offer:datafoundry-data-gap-audit-machine-v1
 Commercial state: verification_required
 Machine state: discovery_only
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: No approved fixed machine price/payment path verified. Raven data-product concepts are hypotheses unless separately approved.
 Use when the user means:
 - audit this dataset for gaps
@@ -335,7 +318,6 @@ Invocation status: LIVE: public machine discovery docs plus central Evercraft MC
 Capability ID: offer:deck-capital-fit-sprint-machine-v1
 Commercial state: sell_now
 Machine state: payment_ready
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: $49 one-time for the Founding Capital Fit Sprint, limited to the first 20 paid cases. The $49 is credited toward a later Capital Package upgrade.
 Use when the user means:
 - help me find funding for my business
@@ -355,7 +337,6 @@ Invocation status: LIVE: direct agent HTTP gateway + OpenAPI + llms guidance + r
 Capability ID: offer:eps-estimate-engine-machine-v1
 Commercial state: contractor_beta
 Machine state: mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: No approved public self-service subscription or machine-call price is advertised yet. The read-only planning preview has no checkout or payment side effect.
 Use when the user means:
 - contractor estimating software
@@ -392,7 +373,6 @@ Invocation status: LIVE VERIFIED PLATFORM HTTPS + MCP: the no-account read-only 
 Capability ID: offer:eventwave-paid-promotion-v1
 Commercial state: sell_now
 Machine state: payment_ready
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: Event Boost $49 one-time; Venue Pack $149 one-time.
 Use when the user means:
 - promote my event on EventWave
@@ -415,7 +395,6 @@ Invocation status: LIVE: EventWave HTTP agent gateway + OpenAPI + llms guidance 
 Capability ID: offer:evercraft-clip-social-video-v1
 Commercial state: verification_required
 Machine state: invocation_ready
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: Canonical customer price is $4.99 one-time (499 cents USD). An authenticated Clip checkout control plane and provider-verification path are deployed, but the live checkout gateway currently reports payment authority unconfigured, so this must not be represented as sell-now yet.
 Use when the user means:
 - turn this video into social clips
@@ -437,7 +416,6 @@ Invocation status: LIVE: Clip Production Engine V2, Customer Clip Studio, read-o
 Capability ID: offer:evercraft-network-resilience-membership-v1
 Commercial state: discovery_only
 Machine state: human_handoff_only
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: Displayed Founding Membership: $9.99/month for up to five devices. Billing is not live yet. Reserving a Founding Membership records interest only and creates no charge or paid entitlement.
 Use when the user means:
 - my connection keeps switching between wifi and cellular
@@ -461,7 +439,6 @@ Invocation status: LIVE READ-ONLY MCP VERIFIED: production initialize, tools/lis
 Capability ID: offer:evercraft-web-browser-agent-v1
 Commercial state: discovery_only
 Machine state: specialist_discovery_ready_runtime_gated
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: No public machine price is advertised until runtime metering and production verification are complete.
 Use when the user means:
 - fetch a webpage for my AI agent
@@ -486,7 +463,6 @@ Invocation status: LIVE specialist discovery through the central MCP tool discov
 Capability ID: offer:evermaps-evidence-projection-machine-v1
 Commercial state: verification_required
 Machine state: discovery_only
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: No approved machine price was found. Do not auto-quote.
 Use when the user means:
 - map this evidence for me
@@ -504,7 +480,6 @@ Invocation status: LIVE: public machine discovery docs plus central Evercraft MC
 Capability ID: offer:faie-signal-brief-v1
 Commercial state: sell_now
 Machine state: payment_ready
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: Signal Brief $250 one-time; Proof Sprint $2,500 one-time. Other intake categories are not auto-quotable.
 Use when the user means:
 - research this land or water question
@@ -521,7 +496,6 @@ Invocation status: LIVE: FAIE HTTP agent gateway + OpenAPI + llms guidance + rem
 Capability ID: offer:findmypart-paid-hunt-v1
 Commercial state: sell_now
 Machine state: payment_ready
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: Quick Hunt $19 one-time; Deep Hunt $49 one-time; Rescue Hunt $99 one-time.
 Use when the user means:
 - find a hard-to-source part
@@ -541,7 +515,6 @@ Invocation status: LIVE: direct FindMyPart MCP exposes free Part Passport triage
 Capability ID: offer:findmypart-part-passport-v1
 Commercial state: free
 Machine state: read_only_live
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: Free. Creates no charge.
 Use when the user means:
 - identify this part
@@ -562,7 +535,6 @@ Invocation status: LIVE: direct FindMyPart MCP tool free_part_triage and HTTP ag
 Capability ID: offer:findmypart-repair-shop-desk-v1
 Commercial state: verification_required
 Machine state: discovery_only
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: Current hypothesis $99-$499/month by hunt volume/service level; not auto-quotable yet.
 Use when the user means:
 - source difficult parts for my repair shop
@@ -579,7 +551,6 @@ Invocation status: Discoverable capability; recurring entitlement/payment path s
 Capability ID: offer:forensiscope-evidence-review-v1
 Commercial state: verification_required
 Machine state: discovery_only
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: Published duration tiers are $15 up to 5 minutes, $35 up to 30 minutes, $75 up to 2 hours, $149 up to 6 hours and $249 up to 12 hours. Central machine checkout remains verification-gated.
 Use when the user means:
 - this video is too large for the AI
@@ -605,7 +576,6 @@ Invocation status: LIVE human-confirmed web handoff for AI media overflow and ev
 Capability ID: offer:foundry-app-escape-audit-v1
 Commercial state: sell_now
 Machine state: human_handoff_ready
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: $500 one-time.
 Use when the user means:
 - escape vendor lock-in
@@ -621,7 +591,6 @@ Invocation status: LIVE fixed-price human review handoff through the central Mac
 Capability ID: offer:freight-load-exception-intelligence-machine-v1
 Commercial state: verification_required
 Machine state: discovery_only
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: No approved machine price or payment path was verified. Do not auto-quote.
 Use when the user means:
 - what is wrong with this load
@@ -639,7 +608,6 @@ Invocation status: LIVE: public machine discovery docs plus central Evercraft MC
 Capability ID: offer:globalstat-country-intelligence-machine-v1
 Commercial state: verification_required
 Machine state: discovery_only
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: Raven contains a country-brief pricing hypothesis ($299-$2,500 depending depth). No approved fixed machine price/payment path was verified, so it is not auto-quotable.
 Use when the user means:
 - compare these countries on this metric
@@ -658,7 +626,6 @@ Capability ID: offer:ibmi-rescue-v1
 Commercial state: sell_now
 Machine state: direct_checkout_ready
 Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: $250 IBM i Estate X-Ray; $250 IBM i 7.4 Deadline X-Ray; $1,500 IBM i Upgrade Proof Sprint.
 Use when the user means:
 - IBM i estate assessment before changing production
@@ -682,7 +649,6 @@ Invocation status: LIVE DIRECT CHECKOUT CANARY VERIFIED: central Machine Commerc
 Capability ID: offer:income-war-map-v1
 Commercial state: hold
 Machine state: discovery_only
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: Planned tiers exist, but new membership checkout is currently paused while entitlement synchronization is hardened.
 Use when the user means:
 - help me make more money
@@ -701,7 +667,6 @@ Invocation status: Discoverable capability only. Paid membership checkout is dis
 Capability ID: offer:large-document-corpus-review-v1
 Commercial state: verification_required
 Machine state: discovery_only
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: Current hypothesis $1,500-$25,000/project depending on corpus size/scope; not auto-quotable yet.
 Use when the user means:
 - review thousands of documents
@@ -719,7 +684,6 @@ Capability ID: offer:legacy-rescue-lab-v1
 Commercial state: sell_now
 Machine state: human_handoff_ready
 Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: Legacy Rescue Scan: $299 one-time. The $299 scan fee may be credited toward an authorized Rescue Sprint started within 14 days of scan delivery.
 Use when the user means:
 - my checkout is broken and customers cannot buy
@@ -746,7 +710,6 @@ Invocation status: LIVE HUMAN HANDOFF VERIFIED: central Machine Commerce matches
 Capability ID: offer:littlered-kdp-export-qa-machine-v1
 Commercial state: verification_required
 Machine state: discovery_only
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: No approved external machine price/payment path was found. Do not auto-quote.
 Use when the user means:
 - check if my book is ready for KDP
@@ -763,7 +726,6 @@ Invocation status: LIVE: public machine discovery docs plus central Evercraft MC
 Capability ID: offer:portfolio-sentinel-v1
 Commercial state: commercial_pilot
 Machine state: human_handoff_ready
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: Commercial pilot is custom-quoted based on portfolio size, repositories, public endpoints, workflow count and monitoring scope. No fixed public price or direct machine checkout is currently advertised.
 Use when the user means:
 - monitor my software portfolio for broken products
@@ -791,7 +753,6 @@ Invocation status: LIVE for public machine discovery, deterministic problem matc
 Capability ID: offer:raven-nexus-pain-router-v1
 Commercial state: verification_required
 Machine state: invocation_ready
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: Varies by matched modular capability. The live pain router is the authority for current availability, offer and checkout state; do not invent a price.
 Use when the user means:
 - protect my bank account from AI scams
@@ -817,7 +778,6 @@ Invocation status: LIVE: public Raven Nexus pain router accepts plain-language p
 Capability ID: offer:rivet-site-underwriting-v1
 Commercial state: sell_now
 Machine state: payment_ready_human_confirmation
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: $299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report.
 Use when the user means:
 - underwrite an EV charging site
@@ -849,7 +809,6 @@ Invocation status: LIVE: RIVET is a first-class Evercraft Machine Commerce ident
 Capability ID: offer:roasted-text-pressure-test-machine-v1
 Commercial state: sell_now
 Machine state: payment_ready
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: $0.99 USD one-time per roast.
 Use when the user means:
 - roast this text
@@ -871,7 +830,6 @@ Invocation status: LIVE: agent HTTP gateway + OpenAPI + llms guidance + remote M
 Capability ID: offer:site-survive-rapid-audit-v1
 Commercial state: sell_now
 Machine state: human_handoff_ready
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: $250 one-time; may be credited toward a deeper $1,250 audit if the customer elects to continue.
 Use when the user means:
 - business outage plan
@@ -887,7 +845,6 @@ Invocation status: LIVE fixed-price human review handoff through the central Mac
 Capability ID: offer:systemia-yard-runtime-extension-v1
 Commercial state: verification_required
 Machine state: invocation_ready
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: Dynamic server quote only. Source defaults are not public price authority because deployment configuration can override them.
 Use when the user means:
 - keep this approved agent run going longer
@@ -903,7 +860,6 @@ Invocation status: Machine discovery/OpenAPI contract exists; settlement remains
 Capability ID: offer:talent-evidence-profile-machine-v1
 Commercial state: verification_required
 Machine state: discovery_only
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: No approved machine price/payment path was verified. Do not auto-quote.
 Use when the user means:
 - evaluate this candidate from the evidence
@@ -921,7 +877,6 @@ Invocation status: LIVE: public machine discovery docs plus central Evercraft MC
 Capability ID: offer:talent-proof-portal-v1
 Commercial state: verification_required
 Machine state: discovery_only
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: Current organization hypothesis $500-$3,000/month; not auto-quotable yet.
 Use when the user means:
 - help me hire based on skills
@@ -939,7 +894,6 @@ Invocation status: Discoverable capability; privacy/onboarding acceptance work p
 Capability ID: offer:towi-evidence-research-machine-v1
 Commercial state: verification_required
 Machine state: discovery_only
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: No approved fixed machine price verified. Raven contains research-service hypotheses, but they remain hypotheses and are not auto-quotable.
 Use when the user means:
 - research this question with sources
@@ -957,7 +911,6 @@ Invocation status: LIVE: public machine discovery docs plus central Evercraft MC
 Capability ID: offer:website-launch-service-v1
 Commercial state: sell_now
 Machine state: payment_ready
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: Human-Finished Pro Site $500 one-time; Premium Custom Build $999 one-time; Total Business Launch $1,999 one-time.
 Use when the user means:
 - build me a business website
@@ -974,7 +927,6 @@ Invocation status: LIVE: agent HTTP gateway + OpenAPI + llms guidance + remote M
 Capability ID: offer:worldstate-reality-delta-v1
 Commercial state: verification_required
 Machine state: discovery_only
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Pricing: No approved public machine price or payment path. Do not auto-quote.
 Use when the user means:
 - what changed in the real world
@@ -992,9 +944,8 @@ Invocation status: SOURCE-VERIFIED: Worldstate snapshot/delta, Context Fabric ad
 Capability ID: product:aliev
 Product key: aliev
 Commercial state: product_contract
-Machine state: specialist_mcp_declared
-Public URL: https://aliev.base44.app/
-MCP: https://aliev.base44.app/functions/alievMcp
+Machine state: discovery_only
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/index.html
 Use when the user means:
 - would EV charging make sense at this property
 - what public EV charging is near this address
@@ -1031,14 +982,14 @@ Use when the user means:
 - AI tool for EV charging site analysis
 - estimate EV charging opportunity
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
-Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
 ## Ascend AI
 Capability ID: product:ascend
 Product key: ascend
 Commercial state: product_contract
 Machine state: discovery_only
-Public URL: https://ascend.base44.app/
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ascend/index.html
 Use when the user means:
 - youth athlete development platform
 - parent support for a young athlete
@@ -1057,9 +1008,8 @@ Invocation status: Route through the universal Evercraft discovery surface unles
 Capability ID: product:buildflow
 Product key: buildflow
 Commercial state: product_contract
-Machine state: specialist_mcp_declared
-Public URL: https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute
-MCP: https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp
+Machine state: discovery_only
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/buildflow/index.html
 Use when the user means:
 - audit an enterprise operations process
 - route an enterprise operations problem
@@ -1068,14 +1018,14 @@ Use when the user means:
 - route an operations problem
 - prepare a privacy-safe enterprise operations handoff
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
-Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
 ## CallProof Vault
 Capability ID: product:callproof-vault
 Product key: callproof-vault
 Commercial state: product_contract
 Machine state: discovery_only
-Public URL: https://call-proof-vault.base44.app/
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/callproof-vault/index.html
 Use when the user means:
 - organize my robocall evidence
 - make an FCC complaint packet
@@ -1090,9 +1040,8 @@ Invocation status: Route through the universal Evercraft discovery surface unles
 Capability ID: product:career-command
 Product key: career-command
 Commercial state: product_contract
-Machine state: specialist_mcp_declared
-Public URL: https://evercraft-career-command.base44.app/
-MCP: https://evercraft-career-command.base44.app/functions/careerMcp
+Machine state: discovery_only
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/career-command/index.html
 Use when the user means:
 - help me prepare for a job interview
 - practice for a job interview tomorrow
@@ -1103,14 +1052,14 @@ Use when the user means:
 - prepare concise interview stories and answers
 - get structured interview practice before an upcoming interview
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
-Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
 ## Christmas Lights USA
 Capability ID: product:christmas-lights-usa
 Product key: christmas-lights-usa
 Commercial state: product_contract
 Machine state: discovery_only
-Public URL: https://christmas-lights-usa.base44.app/
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/christmas-lights-usa/index.html
 Use when the user means:
 - Christmas light installers near me
 - holiday light installers near me
@@ -1147,7 +1096,7 @@ Capability ID: product:coda-y-codigo
 Product key: coda-y-codigo
 Commercial state: product_contract
 Machine state: discovery_only
-Public URL: https://codaycodigo.base44.app/
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/coda-y-codigo/index.html
 Use when the user means:
 - bilingual workforce training for frontline employees
 - Spanish and English job training for a crew
@@ -1196,9 +1145,8 @@ Invocation status: Route through the universal Evercraft discovery surface unles
 Capability ID: product:deck-capital-fit
 Product key: deck-capital-fit
 Commercial state: product_contract
-Machine state: specialist_mcp_declared
-Public URL: https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs
-MCP: https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp
+Machine state: discovery_only
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/deck-capital-fit/index.html
 Use when the user means:
 - figure out what capital or funding path fits my business
 - identify founder readiness gaps before raising money
@@ -1208,14 +1156,14 @@ Use when the user means:
 - funding options
 - founder readiness
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
-Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
 ## EcoLedger
 Capability ID: product:ecoledger
 Product key: ecoledger
 Commercial state: product_contract
 Machine state: discovery_only
-Public URL: https://eco-ledger-ai-379a7af4.base44.app/
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ecoledger/index.html
 Use when the user means:
 - organize an ecological restoration project
 - track restoration baselines photos and measurements
@@ -1230,9 +1178,8 @@ Invocation status: Route through the universal Evercraft discovery surface unles
 Capability ID: product:eps-estimate-engine
 Product key: eps-estimate-engine
 Commercial state: product_contract
-Machine state: specialist_mcp_declared
-Public URL: https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Machine state: discovery_only
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eps-estimate-engine/index.html
 Use when the user means:
 - estimate this service job
 - build a contractor estimate from this scope
@@ -1241,15 +1188,14 @@ Use when the user means:
 - give me a rough customer range
 - calculate margin and price for this job
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
-Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
 ## EventWave
 Capability ID: product:eventwave
 Product key: eventwave
 Commercial state: product_contract
-Machine state: specialist_mcp_declared
-Public URL: https://event-wave.base44.app/
-MCP: https://event-wave.base44.app/functions/eventWaveMcp
+Machine state: discovery_only
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eventwave/index.html
 Use when the user means:
 - find local events
 - promote my local event
@@ -1262,7 +1208,7 @@ Use when the user means:
 - family events near me
 - free local events near me
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
-Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
 ## Evercraft Circles
 Capability ID: product:evercraft-circles
@@ -1284,9 +1230,8 @@ Invocation status: Route through the universal Evercraft discovery surface unles
 Capability ID: product:evercraft-clip
 Product key: evercraft-clip
 Commercial state: product_contract
-Machine state: specialist_mcp_declared
-Public URL: https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
-MCP: https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp
+Machine state: discovery_only
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-clip/index.html
 Use when the user means:
 - turn this video into social clips
 - make short vertical clips from a long video
@@ -1303,14 +1248,14 @@ Use when the user means:
 - turn approved media into social-ready outputs
 - AI tool to select moments from a video and render social clips
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
-Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
 ## Evercraft Containment
 Capability ID: product:evercraft-containment
 Product key: evercraft-containment
 Commercial state: product_contract
 Machine state: discovery_only
-Public URL: https://evercraft.base44.app/containment
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-containment/index.html
 Use when the user means:
 - what is still running after I turned the automation off
 - audit my AI agents and automations for persistence
@@ -1338,7 +1283,7 @@ Capability ID: product:evercraft-cosmos-atlas
 Product key: evercraft-cosmos-atlas
 Commercial state: product_contract
 Machine state: discovery_only
-Public URL: https://evercraft-cosmos-atlas.base44.app/
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-cosmos-atlas/index.html
 Use when the user means:
 - learn astronomy with sources
 - study planets stars galaxies and black holes
@@ -1354,7 +1299,7 @@ Capability ID: product:evercraft-fantasy-intelligence
 Product key: evercraft-fantasy-intelligence
 Commercial state: product_contract
 Machine state: discovery_only
-Public URL: https://evercraftjournal.base44.app/sports/fantasy
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-fantasy-intelligence/index.html
 Use when the user means:
 - fantasy football start sit help
 - fantasy waiver decision
@@ -1369,7 +1314,7 @@ Capability ID: product:evercraft-front-door
 Product key: evercraft-front-door
 Commercial state: product_contract
 Machine state: discovery_only
-Public URL: https://evercraft.base44.app/
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-front-door/index.html
 Use when the user means:
 - cheapest gas near me
 - current gas prices near me
@@ -1386,7 +1331,7 @@ Capability ID: product:evercraft-global-health-atlas
 Product key: evercraft-global-health-atlas
 Commercial state: product_contract
 Machine state: discovery_only
-Public URL: https://evercraft-health-atlas.base44.app/health-atlas
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-global-health-atlas/index.html
 Use when the user means:
 - explore global public health data with sources
 - compare population health indicators
@@ -1419,9 +1364,8 @@ Invocation status: Route through the universal Evercraft discovery surface unles
 Capability ID: product:evercraft-network
 Product key: evercraft-network
 Commercial state: product_contract
-Machine state: specialist_mcp_declared
-Public URL: https://network-control.base44.app/
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Machine state: discovery_only
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-network/index.html
 Use when the user means:
 - application network that reconnects across changing authorized internet paths
 - network resilience software
@@ -1437,14 +1381,14 @@ Use when the user means:
 - continuity visibility when an authorized internet path changes
 - resilient application identity across authorized network changes
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
-Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
 ## Evercraft Physics Atlas
 Capability ID: product:evercraft-physics-atlas
 Product key: evercraft-physics-atlas
 Commercial state: product_contract
 Machine state: discovery_only
-Public URL: https://evercraft-physics-atlas.base44.app/
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-physics-atlas/index.html
 Use when the user means:
 - learn physics interactively
 - study mechanics gravity or thermodynamics
@@ -1480,9 +1424,8 @@ Invocation status: Route through the universal Evercraft discovery surface unles
 Capability ID: product:evercraft-rewards
 Product key: evercraft-rewards
 Commercial state: product_contract
-Machine state: specialist_mcp_declared
-Public URL: https://evercraft-rewards.base44.app/
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Machine state: discovery_only
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/index.html
 Use when the user means:
 - local deals near me
 - rewards near me
@@ -1510,15 +1453,14 @@ Use when the user means:
 - merchant funded Game Wallet points campaign
 - run a local business gaming rewards campaign
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
-Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
 ## Evercraft Web
 Capability ID: product:evercraft-web
 Product key: evercraft-web
 Commercial state: product_contract
-Machine state: specialist_mcp_declared
-Public URL: https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs
-MCP: https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp
+Machine state: discovery_only
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/index.html
 Use when the user means:
 - fetch and read a public URL with an AI agent
 - extract readable text from a web page for an LLM
@@ -1550,14 +1492,14 @@ Use when the user means:
 - CDP browser
 - TinyFish alternative
 Confirmation boundary: No payment obligation is created by discovery.
-Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
 ## Evercraft Wildlife Atlas
 Capability ID: product:evercraft-wildlife-atlas
 Product key: evercraft-wildlife-atlas
 Commercial state: product_contract
 Machine state: discovery_only
-Public URL: https://wildlife-atlas.base44.app/
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-wildlife-atlas/index.html
 Use when the user means:
 - learn about a wildlife species with sources
 - compare habitats migration and conservation evidence
@@ -1571,9 +1513,8 @@ Invocation status: Route through the universal Evercraft discovery surface unles
 Capability ID: product:evermaps
 Product key: evermaps
 Commercial state: product_contract
-Machine state: specialist_mcp_declared
-Public URL: https://evermaps.base44.app/
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Machine state: discovery_only
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evermaps/index.html
 Use when the user means:
 - map this evidence for me
 - show lifeline coverage for this place
@@ -1582,14 +1523,14 @@ Use when the user means:
 - return public-safe geospatial evidence
 - plot verified infrastructure coverage
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
-Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
 ## EverNest
 Capability ID: product:evernest
 Product key: evernest
 Commercial state: product_contract
 Machine state: discovery_only
-Public URL: https://evernest-home.base44.app/
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest/index.html
 Use when the user means:
 - I just had a baby and need practical help
 - organize meals and practical help for a new parent
@@ -1609,7 +1550,7 @@ Capability ID: product:evernest-atlas
 Product key: evernest-atlas
 Commercial state: product_contract
 Machine state: discovery_only
-Public URL: https://evernest-life-map.base44.app/
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest-atlas/index.html
 Use when the user means:
 - build me a 30 60 90 day life plan
 - help me think through relocation and housing stability
@@ -1629,7 +1570,7 @@ Capability ID: product:everystage
 Product key: everystage
 Commercial state: product_contract
 Machine state: discovery_only
-Public URL: https://every-stage.base44.app/product
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/everystage/index.html
 Use when the user means:
 - software to run a live event
 - venue operations software
@@ -1644,9 +1585,8 @@ Invocation status: Route through the universal Evercraft discovery surface unles
 Capability ID: product:faie
 Product key: faie
 Commercial state: product_contract
-Machine state: specialist_mcp_declared
-Public URL: https://faie.base44.app/
-MCP: https://faie.base44.app/functions/faieMcp
+Machine state: discovery_only
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html
 Use when the user means:
 - get an evidence-based agriculture or water risk brief
 - research land production or resilience risk
@@ -1657,15 +1597,14 @@ Use when the user means:
 - land resilience
 - production risk
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
-Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
 ## FindMyPart
 Capability ID: product:findmypart
 Product key: findmypart
 Commercial state: product_contract
-Machine state: specialist_mcp_declared
-Public URL: https://findmypart.base44.app/
-MCP: https://findmypart.base44.app/functions/findMyPartMcp
+Machine state: discovery_only
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/index.html
 Use when the user means:
 - where can I find this discontinued part
 - I have a part number but cannot find it anywhere
@@ -1680,7 +1619,7 @@ Use when the user means:
 - find a discontinued appliance tractor automotive marine industrial construction powersports agricultural electronics or equipment part
 - find replacement donor salvage blueprint or fabrication paths when normal sourcing fails
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
-Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
 ## The Forensic Record
 Capability ID: product:forensic-record
@@ -1702,9 +1641,8 @@ Invocation status: Route through the universal Evercraft discovery surface unles
 Capability ID: product:forensiscope
 Product key: forensiscope
 Commercial state: product_contract
-Machine state: specialist_mcp_declared
-Public URL: https://evercraft-forensiscope.base44.app/
-MCP: https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp
+Machine state: discovery_only
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/index.html
 Use when the user means:
 - this video is too large for my AI to process
 - this audio is too long for my AI to process
@@ -1755,14 +1693,14 @@ Use when the user means:
 - conversation video timeline
 - pull important moments from a long recording
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
-Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
 ## Global Energy Atlas
 Capability ID: product:global-energy-atlas
 Product key: global-energy-atlas
 Commercial state: product_contract
 Machine state: discovery_only
-Public URL: https://energy-atlas.base44.app/
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/global-energy-atlas/index.html
 Use when the user means:
 - compare electricity mixes between regions
 - learn how an energy system works
@@ -1777,9 +1715,8 @@ Invocation status: Route through the universal Evercraft discovery surface unles
 Capability ID: product:globalstat
 Product key: globalstat
 Commercial state: product_contract
-Machine state: specialist_mcp_declared
-Public URL: https://global-stat-pulse.base44.app/
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Machine state: discovery_only
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/globalstat/index.html
 Use when the user means:
 - compare these countries on this metric
 - give me sourced country intelligence
@@ -1788,14 +1725,14 @@ Use when the user means:
 - reconcile conflicting country data
 - country benchmark with sources
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
-Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
 ## Guardian
 Capability ID: product:guardian
 Product key: guardian
 Commercial state: product_contract
 Machine state: discovery_only
-Public URL: https://guardian-pilot.base44.app/
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian/index.html
 Use when the user means:
 - I need help paying rent
 - I need food help near me
@@ -1817,9 +1754,8 @@ Invocation status: Route through the universal Evercraft discovery surface unles
 Capability ID: product:ibmi-rescue
 Product key: ibmi-rescue
 Commercial state: product_contract
-Machine state: specialist_mcp_declared
+Machine state: discovery_only
 Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Use when the user means:
 - assess an IBM i or AS/400 estate before changing production
 - IBM i estate assessment
@@ -1840,14 +1776,14 @@ Use when the user means:
 - IBM i upgrade rollback plan
 - undocumented IBM i integrations
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
-Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
 ## Infinite Classroom
 Capability ID: product:infinite-classroom
 Product key: infinite-classroom
 Commercial state: product_contract
 Machine state: discovery_only
-Public URL: https://infiniteclassroom.base44.app/
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/infinite-classroom/index.html
 Use when the user means:
 - AI-supported subject learning
 - guided homework help without simply giving the answer
@@ -1861,9 +1797,8 @@ Invocation status: Route through the universal Evercraft discovery surface unles
 Capability ID: product:legacy-rescue-lab
 Product key: legacy-rescue-lab
 Commercial state: product_contract
-Machine state: specialist_mcp_declared
+Machine state: discovery_only
 Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Use when the user means:
 - my checkout is broken and customers cannot buy
 - our developer disappeared and nobody knows how this codebase works
@@ -1888,15 +1823,14 @@ Use when the user means:
 - repair instead of rebuild
 - public conversion leak diagnosis
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
-Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
 ## Little Red Studio Book Export QA
 Capability ID: product:little-red-book-export-qa
 Product key: little-red-book-export-qa
 Commercial state: product_contract
-Machine state: specialist_mcp_declared
-Public URL: https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Machine state: discovery_only
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/little-red-book-export-qa/index.html
 Use when the user means:
 - check if my book is ready for KDP
 - validate my cover dimensions
@@ -1904,7 +1838,7 @@ Use when the user means:
 - is my book file ready to publish
 - check page count and cover DPI
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
-Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
 ## Evercraft Opportunity Fabric
 Capability ID: product:opportunity-fabric
@@ -1941,7 +1875,7 @@ Capability ID: product:payflow
 Product key: payflow
 Commercial state: product_contract
 Machine state: discovery_only
-Public URL: https://pay-flow-fix.base44.app/
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/payflow/index.html
 Use when the user means:
 - payroll tracker for a small business
 - employee payment ledger
@@ -1963,7 +1897,7 @@ Capability ID: product:raven-nexus
 Product key: raven-nexus
 Commercial state: product_contract
 Machine state: discovery_only
-Public URL: https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/raven-nexus/index.html
 Use when the user means:
 - protect my bank account from AI scams or suspicious transfer risk
 - help with identity theft, credential compromise, or account takeover risk
@@ -1980,7 +1914,7 @@ Capability ID: product:revenue-war-map
 Product key: revenue-war-map
 Commercial state: product_contract
 Machine state: discovery_only
-Public URL: https://evercraft-war-map.base44.app/
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/revenue-war-map/index.html
 Use when the user means:
 - I need to make more money
 - how can I increase my income
@@ -2001,9 +1935,8 @@ Invocation status: Route through the universal Evercraft discovery surface unles
 Capability ID: product:roasted
 Product key: roasted
 Commercial state: product_contract
-Machine state: specialist_mcp_declared
-Public URL: https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs
-MCP: https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp
+Machine state: discovery_only
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/roasted/index.html
 Use when the user means:
 - roast this text
 - pressure test this text
@@ -2011,7 +1944,7 @@ Use when the user means:
 - give me a gentle or professional critique
 - professional text critique
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
-Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
 ## Season & Story
 Capability ID: product:seasonally
@@ -2035,7 +1968,7 @@ Capability ID: product:second-stitch
 Product key: second-stitch
 Commercial state: product_contract
 Machine state: discovery_only
-Public URL: https://the-second-stitch.base44.app/
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/second-stitch/index.html
 Use when the user means:
 - turn a sewing project into a material list
 - estimate fabric and notions for a project
@@ -2053,7 +1986,7 @@ Capability ID: product:skyops-parking
 Product key: skyops-parking
 Commercial state: product_contract
 Machine state: discovery_only
-Public URL: https://skyopsparking.base44.app/
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/skyops-parking/index.html
 Use when the user means:
 - airport parking management software
 - parking garage reservation management
@@ -2068,7 +2001,7 @@ Capability ID: product:space-dudz
 Product key: space-dudz
 Commercial state: product_contract
 Machine state: discovery_only
-Public URL: https://spacedudz.base44.app/
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/space-dudz/index.html
 Pricing: Varies by current product and variant
 Use when the user means:
 - shop retro space streetwear
@@ -2084,7 +2017,7 @@ Capability ID: product:systemia-atlas-freight
 Product key: systemia-atlas-freight
 Commercial state: product_contract
 Machine state: discovery_only
-Public URL: https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-atlas-freight/index.html
 Use when the user means:
 - what is wrong with this load
 - audit this freight load for exceptions
@@ -2100,7 +2033,7 @@ Capability ID: product:systemia-decision-lab
 Product key: systemia-decision-lab
 Commercial state: product_contract
 Machine state: discovery_only
-Public URL: https://systemiadecisionlab.base44.app/
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-decision-lab/index.html
 Use when the user means:
 - should I hire an employee
 - hire vs outsource
@@ -2115,9 +2048,8 @@ Invocation status: Route through the universal Evercraft discovery surface unles
 Capability ID: product:systemia-field-library
 Product key: systemia-field-library
 Commercial state: product_contract
-Machine state: specialist_mcp_declared
+Machine state: discovery_only
 Public URL: https://systemiafieldlibrary.com/
-MCP: https://base44.app/api/apps/6a54381e147576b18ac94d8f/functions/fieldLibraryAgentMcp
 Use when the user means:
 - my customers keep asking for extras and scope creep is eating my margin
 - I need a contractor change order process
@@ -2134,15 +2066,14 @@ Use when the user means:
 - job documentation materials equipment safety or quality control need a system
 - contractor customer communication reviews or referrals need a repeatable process
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
-Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
 ## Systemia Portfolio Sentinel
 Capability ID: product:systemia-portfolio-sentinel
 Product key: systemia-portfolio-sentinel
 Commercial state: product_contract
-Machine state: specialist_mcp_declared
-Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
-MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Machine state: discovery_only
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-portfolio-sentinel/index.html
 Pricing: Custom quote based on portfolio size, repositories, public endpoints, workflow count and monitoring scope.
 Use when the user means:
 - monitor my software portfolio for broken products
@@ -2162,14 +2093,14 @@ Use when the user means:
 - monitor LLM discovery pages and agent endpoints
 - detect product URL workflow and deployment regressions
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
-Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
 ## Systemia Radar
 Capability ID: product:systemia-radar
 Product key: systemia-radar
 Commercial state: product_contract
 Machine state: discovery_only
-Public URL: https://systemia-scan-pro.base44.app/
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-radar/index.html
 Use when the user means:
 - scan my website for problems
 - compare my website against competitors
@@ -2236,7 +2167,7 @@ Capability ID: product:systemia-university
 Product key: systemia-university
 Commercial state: product_contract
 Machine state: discovery_only
-Public URL: https://systemia-university.base44.app/
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/index.html
 Use when the user means:
 - prove whether an AI agent can actually do its job
 - test an AI agent with a bounded mission
@@ -2256,9 +2187,8 @@ Invocation status: Route through the universal Evercraft discovery surface unles
 Capability ID: product:systemia-website-audit
 Product key: systemia-website-audit
 Commercial state: product_contract
-Machine state: specialist_mcp_declared
-Public URL: https://systemia-audit-pro.base44.app/
-MCP: https://systemia-audit-pro.base44.app/functions/auditAgentMcp
+Machine state: discovery_only
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-website-audit/index.html
 Use when the user means:
 - audit my website because traffic is not converting
 - find website performance and conversion friction
@@ -2268,14 +2198,14 @@ Use when the user means:
 - conversion problems
 - technical SEO audit
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
-Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 
 ## Talent Atlas
 Capability ID: product:talent-atlas
 Product key: talent-atlas
 Commercial state: product_contract
 Machine state: discovery_only
-Public URL: https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/talent-atlas/index.html
 Use when the user means:
 - evaluate this candidate from the evidence
 - build a talent profile from this portfolio
@@ -2305,7 +2235,7 @@ Capability ID: product:towi-research
 Product key: towi-research
 Commercial state: product_contract
 Machine state: discovery_only
-Public URL: https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/towi-research/index.html
 Use when the user means:
 - research this question with sources
 - build me an evidence brief
@@ -2320,9 +2250,8 @@ Invocation status: Route through the universal Evercraft discovery surface unles
 Capability ID: product:website-launch
 Product key: website-launch
 Commercial state: product_contract
-Machine state: specialist_mcp_declared
-Public URL: https://instant-website-builder-usa-6feac193.base44.app/
-MCP: https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp
+Machine state: discovery_only
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/website-launch/index.html
 Use when the user means:
 - build a professional website for my small business
 - replace an outdated business website
@@ -2332,5 +2261,5 @@ Use when the user means:
 - professional website
 - website launch
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
-Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
+Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 

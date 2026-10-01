@@ -46,7 +46,7 @@
       "llms": "/chum/products/aliev/llms.txt",
       "discovery": "/chum/products/aliev/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/aliev",
-      "mcp": "https://aliev.base44.app/functions/alievMcp",
+      "mcp": null,
       "content_sha256": "32e6dabf7b53521f73c1def4034ce3aa7cf0880f32c5e07e33184626cdde420a"
     },
     {
@@ -58,7 +58,7 @@
       "discovery": "/chum/products/ascend/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "6738dee0b31ea4ad22fab8a2dbdfb88db49b4b147328983a5c269a1ac8787def"
+      "content_sha256": "b683f23ce3c73fe9ad075f44cf82bb0674ccb2149ebf4def2f49cd54108e8edc"
     },
     {
       "product_key": "buildflow",
@@ -68,7 +68,7 @@
       "llms": "/chum/products/buildflow/llms.txt",
       "discovery": "/chum/products/buildflow/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/buildflow",
-      "mcp": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp",
+      "mcp": null,
       "content_sha256": "fac7722957a1166a77310c8ceb7524d5a2dad70f05a061fb1b5d4be2b278fb8b"
     },
     {
@@ -145,7 +145,7 @@
       "llms": "/chum/products/eps-estimate-engine/llms.txt",
       "discovery": "/chum/products/eps-estimate-engine/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "content_sha256": "c9df175763dfb9ccca23c3f6de69ae4eb0f8e189355bef3832b97d47cec36be7"
     },
     {
@@ -156,8 +156,8 @@
       "llms": "/chum/products/eventwave/llms.txt",
       "discovery": "/chum/products/eventwave/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/eventwave",
-      "mcp": "https://event-wave.base44.app/functions/eventWaveMcp",
-      "content_sha256": "bb2bb718d6b13bf4f3cd2071c28f6bdf7008f16870f8781ced0152a36cb18df2"
+      "mcp": null,
+      "content_sha256": "b1e8908b48d38d79c8dba417027633c8cb7e93ca79deeba176a4b7796b1c7cc7"
     },
     {
       "product_key": "evercraft-front-door",
@@ -168,7 +168,7 @@
       "discovery": "/chum/products/evercraft-front-door/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "19939417a4164c2b9e5ed9713259767c05dfd2bf22671f98b7f1588d98e5c6d7"
+      "content_sha256": "e32d62625b2d035ea14a68b429c893d68b0ab33b4288083020505581960b7ed7"
     },
     {
       "product_key": "career-command",
@@ -178,7 +178,7 @@
       "llms": "/chum/products/career-command/llms.txt",
       "discovery": "/chum/products/career-command/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/career-command",
-      "mcp": "https://evercraft-career-command.base44.app/functions/careerMcp",
+      "mcp": null,
       "content_sha256": "110af376be3a0b1784c626b6754df4cf321d6e95bb6b189a66d6f1ebb59665f0"
     },
     {
@@ -200,7 +200,7 @@
       "llms": "/chum/products/evercraft-clip/llms.txt",
       "discovery": "/chum/products/evercraft-clip/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/evercraft-clip",
-      "mcp": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp",
+      "mcp": null,
       "content_sha256": "331c9cec41e918c9720b2596588fa09c00d222fdcc576425324410cd7df0679e"
     },
     {
@@ -244,7 +244,7 @@
       "llms": "/chum/products/deck-capital-fit/llms.txt",
       "discovery": "/chum/products/deck-capital-fit/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/deck-capital-fit",
-      "mcp": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp",
+      "mcp": null,
       "content_sha256": "d308624fabe056826b81bbd9955fbbe1808bd0df51b30a2c3f8ddc547e965d71"
     },
     {
@@ -278,7 +278,7 @@
       "discovery": "/chum/products/evercraft-home/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "db6e040335f2722ef555815a044e518841bb444b1fa565afe0b8f01e74840e75"
+      "content_sha256": "7a9155646d4afc1fcfa31d00985491e2f1e809eca7686ecd46b9c05e70269ee3"
     },
     {
       "product_key": "ibmi-rescue",
@@ -288,7 +288,7 @@
       "llms": "/chum/products/ibmi-rescue/llms.txt",
       "discovery": "/chum/products/ibmi-rescue/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "content_sha256": "f18e321d8b6ae3270fbf2f057f22d3d79abb09dca34e44fc284b60c4e3c6b6a0"
     },
     {
@@ -299,7 +299,7 @@
       "llms": "/chum/products/evercraft-network/llms.txt",
       "discovery": "/chum/products/evercraft-network/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "content_sha256": "999dd9c89e397f3f89bc77babd400d40d1e9026a0b34dde6100ff70e2247f188"
     },
     {
@@ -354,8 +354,8 @@
       "llms": "/chum/products/evercraft-rewards/llms.txt",
       "discovery": "/chum/products/evercraft-rewards/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-      "content_sha256": "950d8fa4e4ca1735078030dd02dc5d3ad5ea60c3e5b489f8ddcefb494541ab21"
+      "mcp": null,
+      "content_sha256": "ba26fb2e74f3c7ec1621bc44b9a6a8c496b811ea1ac5bebb1e1d2c898ab9482e"
     },
     {
       "product_key": "evercraft-web",
@@ -365,7 +365,7 @@
       "llms": "/chum/products/evercraft-web/llms.txt",
       "discovery": "/chum/products/evercraft-web/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/evercraft-web",
-      "mcp": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp",
+      "mcp": null,
       "content_sha256": "c61f12905d6a3e31f3c6563af44673d326fb27746a15cf565a84b99fddb2d207"
     },
     {
@@ -376,7 +376,7 @@
       "llms": "/chum/products/website-launch/llms.txt",
       "discovery": "/chum/products/website-launch/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/website-launch",
-      "mcp": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp",
+      "mcp": null,
       "content_sha256": "3f588edfe3ef23206d8a9b918a023d70f5db33617c72f909f9a7313aad93d0d7"
     },
     {
@@ -398,7 +398,7 @@
       "llms": "/chum/products/evermaps/llms.txt",
       "discovery": "/chum/products/evermaps/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "content_sha256": "af8336f43ed42a23126bd84f996ee9aff1498ffb9d969404e8290ab3ef4a05dd"
     },
     {
@@ -442,7 +442,7 @@
       "llms": "/chum/products/faie/llms.txt",
       "discovery": "/chum/products/faie/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/faie",
-      "mcp": "https://faie.base44.app/functions/faieMcp",
+      "mcp": null,
       "content_sha256": "4baa5b43f45ca06d514df3c90efda4df1355e70acc4b95b2c6fa1c2f19a0cf56"
     },
     {
@@ -453,7 +453,7 @@
       "llms": "/chum/products/findmypart/llms.txt",
       "discovery": "/chum/products/findmypart/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/findmypart",
-      "mcp": "https://findmypart.base44.app/functions/findMyPartMcp",
+      "mcp": null,
       "content_sha256": "daeda7fb261390914481d2097c14394948c19608e9cca746b1280aa520e9f499"
     },
     {
@@ -464,8 +464,8 @@
       "llms": "/chum/products/forensiscope/llms.txt",
       "discovery": "/chum/products/forensiscope/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/forensiscope",
-      "mcp": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp",
-      "content_sha256": "1ba51c447f1e2f775c7d0b90255a5fd717ad11beb81b5b4b5e141f1043853d77"
+      "mcp": null,
+      "content_sha256": "a48c8b0b0f89fdb53dc8d67f154449f2b5cc8f78e9d9677dde556ae202be7863"
     },
     {
       "product_key": "global-energy-atlas",
@@ -486,7 +486,7 @@
       "llms": "/chum/products/globalstat/llms.txt",
       "discovery": "/chum/products/globalstat/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "content_sha256": "a3618fddbb4090a7b255a965333e64be4988b5e5fd568f3c2c1cce70cd325494"
     },
     {
@@ -519,8 +519,8 @@
       "llms": "/chum/products/legacy-rescue-lab/llms.txt",
       "discovery": "/chum/products/legacy-rescue-lab/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-      "content_sha256": "991db784ed0d0197f0da9498b47ede7569ddea9f8915707ce206238c17b75187"
+      "mcp": null,
+      "content_sha256": "de9512d4c613fcd77b22cea4b87c57f264f31431a003966e35e4958d1fecc60b"
     },
     {
       "product_key": "little-red-book-export-qa",
@@ -530,7 +530,7 @@
       "llms": "/chum/products/little-red-book-export-qa/llms.txt",
       "discovery": "/chum/products/little-red-book-export-qa/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "content_sha256": "a07af71b2a6aa76bea7479d9a0b921a98cb0fd315516709566760f557b004a5e"
     },
     {
@@ -563,7 +563,7 @@
       "llms": "/chum/products/roasted/llms.txt",
       "discovery": "/chum/products/roasted/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/roasted",
-      "mcp": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp",
+      "mcp": null,
       "content_sha256": "2376803b356a260ef85472d3d671150366da9c7fe75bb9204f254046e9f65b4b"
     },
     {
@@ -575,7 +575,7 @@
       "discovery": "/chum/products/seasonally/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "4d018bdb3677249bf71d58c89ff123f591a39fadbed1c0a3b9fa9b78105184fc"
+      "content_sha256": "9e23ce0edf563b3b57bac9ae63ad1c564f707d844ffb2a6c3a48c4f69fdf179b"
     },
     {
       "product_key": "skyops-parking",
@@ -629,7 +629,7 @@
       "llms": "/chum/products/systemia-field-library/llms.txt",
       "discovery": "/chum/products/systemia-field-library/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/systemia-field-library",
-      "mcp": "https://base44.app/api/apps/6a54381e147576b18ac94d8f/functions/fieldLibraryAgentMcp",
+      "mcp": null,
       "content_sha256": "3d0d64eb9a28434f631145f14b0d16d14070d76db03c7eb22d66f8a9997cfa70"
     },
     {
@@ -640,7 +640,7 @@
       "llms": "/chum/products/systemia-portfolio-sentinel/llms.txt",
       "discovery": "/chum/products/systemia-portfolio-sentinel/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "content_sha256": "6838b148672caacdfb1213cf6705cfa585d9807ab7bdb2ac009894fa7982d824"
     },
     {
@@ -684,7 +684,7 @@
       "llms": "/chum/products/systemia-website-audit/llms.txt",
       "discovery": "/chum/products/systemia-website-audit/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/systemia-website-audit",
-      "mcp": "https://systemia-audit-pro.base44.app/functions/auditAgentMcp",
+      "mcp": null,
       "content_sha256": "cf7d58464b342e37e61e6eb4f268760d341a8a88e193f761fbd8d10c2e8a4d6e"
     },
     {

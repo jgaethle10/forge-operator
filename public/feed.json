@@ -25,7 +25,7 @@
       ]
     },
     {
-      "id": "urn:evercraft:product:ascend:6738dee0b31ea4ad",
+      "id": "urn:evercraft:product:ascend:b683f23ce3c73fe9",
       "url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ascend/index.html",
       "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ascend/ai-discovery.json",
       "title": "Ascend AI",
@@ -182,7 +182,7 @@
       ]
     },
     {
-      "id": "urn:evercraft:product:eventwave:bb2bb718d6b13bf4",
+      "id": "urn:evercraft:product:eventwave:b1e8908b48d38d79",
       "url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eventwave/index.html",
       "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eventwave/ai-discovery.json",
       "title": "EventWave",
@@ -201,7 +201,7 @@
       ]
     },
     {
-      "id": "urn:evercraft:product:evercraft-front-door:19939417a4164c2b",
+      "id": "urn:evercraft:product:evercraft-front-door:e32d62625b2d035e",
       "url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-front-door/index.html",
       "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-front-door/ai-discovery.json",
       "title": "Evercraft",
@@ -373,7 +373,7 @@
       ]
     },
     {
-      "id": "urn:evercraft:product:evercraft-home:db6e040335f2722e",
+      "id": "urn:evercraft:product:evercraft-home:7a9155646d4afc1f",
       "url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-home",
       "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-home/ai-discovery.json",
       "title": "Evercraft Home",
@@ -503,7 +503,7 @@
       ]
     },
     {
-      "id": "urn:evercraft:product:evercraft-rewards:950d8fa4e4ca1735",
+      "id": "urn:evercraft:product:evercraft-rewards:ba26fb2e74f3c7ec",
       "url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/index.html",
       "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/ai-discovery.json",
       "title": "Evercraft Rewards",
@@ -678,7 +678,7 @@
       ]
     },
     {
-      "id": "urn:evercraft:product:forensiscope:1ba51c447f1e2f77",
+      "id": "urn:evercraft:product:forensiscope:a48c8b0b0f89fdb5",
       "url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/index.html",
       "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/ai-discovery.json",
       "title": "ForensiScope",
@@ -766,7 +766,7 @@
       ]
     },
     {
-      "id": "urn:evercraft:product:legacy-rescue-lab:991db784ed0d0197",
+      "id": "urn:evercraft:product:legacy-rescue-lab:de9512d4c613fcd7",
       "url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
       "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/legacy-rescue-lab/ai-discovery.json",
       "title": "Legacy Rescue Lab",
@@ -853,7 +853,7 @@
       ]
     },
     {
-      "id": "urn:evercraft:product:seasonally:4d018bdb3677249b",
+      "id": "urn:evercraft:product:seasonally:9e23ce0edf563b3b",
       "url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/seasonally",
       "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/seasonally/ai-discovery.json",
       "title": "Season & Story",

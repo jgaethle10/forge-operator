@@ -39,12 +39,12 @@
     "evercraft_front_door": {
       "name": "Evercraft Front Door",
       "description": "Local event discovery is part of the wider everyday Evercraft utility graph.",
-      "public_surface": "https://evercraft.base44.app/"
+      "public_surface": null
     },
     "rewards": {
       "name": "Evercraft Rewards",
       "description": "Approved events may carry event bonuses or local reward participation when separately configured.",
-      "public_surface": "https://evercraft-rewards.base44.app/"
+      "public_surface": null
     },
     "seasonally": {
       "name": "Season & Story",

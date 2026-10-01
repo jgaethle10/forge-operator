@@ -15,7 +15,7 @@
     "read_only_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
     "read_only_purpose": "Read-only matching from user problems to public Evercraft capabilities. Creates no payment or external-action authority.",
     "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-    "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+    "mcp": null,
     "purpose": "Discover Evercraft capabilities, match natural-language needs, inspect offers, route to specialists, and prepare human-confirmed checkout where supported.",
     "registry_version": "1.5.1",
     "registry_publication_state": "published_receipt_backed",
@@ -33,8 +33,8 @@
     "machine_offer_entries": 48,
     "entries_with_pain_language": 112,
     "sell_now_machine_offers": 14,
-    "entries_with_declared_mcp": 71,
-    "callable_or_routable_entries": 51,
+    "entries_with_declared_mcp": 0,
+    "callable_or_routable_entries": 0,
     "suppressed_legacy_marketing_routes": 9
   },
   "entries": [
@@ -58,10 +58,10 @@
       "canonical_url": null,
       "legacy_marketing_route_suppressed": true,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -97,10 +97,10 @@
       "canonical_url": null,
       "legacy_marketing_route_suppressed": true,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -145,10 +145,10 @@
       "canonical_url": null,
       "legacy_marketing_route_suppressed": false,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -217,10 +217,10 @@
       "canonical_url": null,
       "legacy_marketing_route_suppressed": false,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -283,10 +283,10 @@
       "canonical_url": null,
       "legacy_marketing_route_suppressed": false,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -324,10 +324,10 @@
       "canonical_url": null,
       "legacy_marketing_route_suppressed": false,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -364,10 +364,10 @@
       "canonical_url": null,
       "legacy_marketing_route_suppressed": false,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -406,10 +406,10 @@
       "canonical_url": null,
       "legacy_marketing_route_suppressed": false,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -447,10 +447,10 @@
       "canonical_url": null,
       "legacy_marketing_route_suppressed": false,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -487,10 +487,10 @@
       "canonical_url": null,
       "legacy_marketing_route_suppressed": false,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -527,10 +527,10 @@
       "canonical_url": null,
       "legacy_marketing_route_suppressed": false,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -584,10 +584,10 @@
       "canonical_url": null,
       "legacy_marketing_route_suppressed": true,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -625,10 +625,10 @@
       "canonical_url": null,
       "legacy_marketing_route_suppressed": false,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -679,10 +679,10 @@
       "canonical_url": null,
       "legacy_marketing_route_suppressed": false,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -724,10 +724,10 @@
       "canonical_url": null,
       "legacy_marketing_route_suppressed": true,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -764,10 +764,10 @@
       "canonical_url": null,
       "legacy_marketing_route_suppressed": true,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -804,10 +804,10 @@
       "canonical_url": null,
       "legacy_marketing_route_suppressed": false,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -846,10 +846,10 @@
       "canonical_url": null,
       "legacy_marketing_route_suppressed": false,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -913,10 +913,10 @@
       "canonical_url": null,
       "legacy_marketing_route_suppressed": false,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -958,10 +958,10 @@
       "canonical_url": null,
       "legacy_marketing_route_suppressed": false,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -1013,10 +1013,10 @@
       "canonical_url": null,
       "legacy_marketing_route_suppressed": false,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -1059,10 +1059,10 @@
       "canonical_url": null,
       "legacy_marketing_route_suppressed": false,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -1114,10 +1114,10 @@
       "canonical_url": null,
       "legacy_marketing_route_suppressed": false,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -1154,10 +1154,10 @@
       "canonical_url": null,
       "legacy_marketing_route_suppressed": false,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -1193,10 +1193,10 @@
       "canonical_url": null,
       "legacy_marketing_route_suppressed": false,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -1246,10 +1246,10 @@
       "canonical_url": null,
       "legacy_marketing_route_suppressed": false,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -1305,10 +1305,10 @@
       "canonical_url": null,
       "legacy_marketing_route_suppressed": false,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -1344,10 +1344,10 @@
       "canonical_url": null,
       "legacy_marketing_route_suppressed": false,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -1392,10 +1392,10 @@
       "canonical_url": null,
       "legacy_marketing_route_suppressed": false,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -1430,10 +1430,10 @@
       "canonical_url": null,
       "legacy_marketing_route_suppressed": false,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -1477,10 +1477,10 @@
       "canonical_url": null,
       "legacy_marketing_route_suppressed": false,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -1517,10 +1517,10 @@
       "canonical_url": null,
       "legacy_marketing_route_suppressed": false,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -1563,10 +1563,10 @@
       "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
       "legacy_marketing_route_suppressed": false,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -1626,10 +1626,10 @@
       "canonical_url": null,
       "legacy_marketing_route_suppressed": true,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -1665,10 +1665,10 @@
       "canonical_url": null,
       "legacy_marketing_route_suppressed": true,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -1714,10 +1714,10 @@
       "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
       "legacy_marketing_route_suppressed": false,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -1762,10 +1762,10 @@
       "canonical_url": null,
       "legacy_marketing_route_suppressed": false,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -1812,10 +1812,10 @@
       "canonical_url": null,
       "legacy_marketing_route_suppressed": false,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -1867,10 +1867,10 @@
       "canonical_url": null,
       "legacy_marketing_route_suppressed": false,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -1921,10 +1921,10 @@
       "canonical_url": null,
       "legacy_marketing_route_suppressed": false,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -1978,10 +1978,10 @@
       "canonical_url": null,
       "legacy_marketing_route_suppressed": false,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -2022,10 +2022,10 @@
       "canonical_url": null,
       "legacy_marketing_route_suppressed": false,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -2067,10 +2067,10 @@
       "canonical_url": null,
       "legacy_marketing_route_suppressed": false,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -2107,10 +2107,10 @@
       "canonical_url": null,
       "legacy_marketing_route_suppressed": false,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -2147,10 +2147,10 @@
       "canonical_url": null,
       "legacy_marketing_route_suppressed": true,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -2187,10 +2187,10 @@
       "canonical_url": null,
       "legacy_marketing_route_suppressed": false,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -2226,10 +2226,10 @@
       "canonical_url": null,
       "legacy_marketing_route_suppressed": false,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -2282,10 +2282,10 @@
       "canonical_url": null,
       "legacy_marketing_route_suppressed": true,
       "registry_name": null,
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "authority": "Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.",
       "boundaries": [],
@@ -2346,12 +2346,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://aliev.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/index.html",
       "registry_name": "io.github.jgaethle10/aliev",
-      "mcp": "https://aliev.base44.app/functions/alievMcp",
+      "mcp": null,
       "routing": {
-        "preferred": "specialist_mcp",
-        "target": "https://aliev.base44.app/functions/alievMcp"
+        "preferred": "universal_machine_commerce",
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public screening plus bounded machine invocation and human-confirmed paid depth",
@@ -2363,14 +2363,14 @@
         "payment requires authoritative verification"
       ],
       "commercial_state": "product_contract",
-      "machine_state": "specialist_mcp_declared",
+      "machine_state": "discovery_only",
       "pricing": null,
       "offers": [],
       "commercial": null,
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
-      "invocation_status": "Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.",
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
       "source_refs": [
         "public/.well-known/evercraft-products.json",
         "registry/catalog.json"
@@ -2397,12 +2397,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://ascend.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ascend/index.html",
       "registry_name": null,
       "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public discovery and demo of youth-development and safeguarding-support concepts; private role-based records remain account-bound",
@@ -2446,12 +2446,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/buildflow/index.html",
       "registry_name": "io.github.jgaethle10/buildflow",
-      "mcp": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp",
+      "mcp": null,
       "routing": {
-        "preferred": "specialist_mcp",
-        "target": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp"
+        "preferred": "universal_machine_commerce",
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public discovery, intent routing and privacy-preserving human handoff only",
@@ -2461,14 +2461,14 @@
         "handoff does not execute business actions"
       ],
       "commercial_state": "product_contract",
-      "machine_state": "specialist_mcp_declared",
+      "machine_state": "discovery_only",
       "pricing": null,
       "offers": [],
       "commercial": null,
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
-      "invocation_status": "Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.",
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
       "source_refs": [
         "public/.well-known/evercraft-products.json",
         "registry/catalog.json"
@@ -2491,12 +2491,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://call-proof-vault.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/callproof-vault/index.html",
       "registry_name": null,
       "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public product and offer discovery with authenticated handoff for private evidence and checkout",
@@ -2556,12 +2556,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://evercraft-career-command.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/career-command/index.html",
       "registry_name": "io.github.jgaethle10/career-command",
-      "mcp": "https://evercraft-career-command.base44.app/functions/careerMcp",
+      "mcp": null,
       "routing": {
-        "preferred": "specialist_mcp",
-        "target": "https://evercraft-career-command.base44.app/functions/careerMcp"
+        "preferred": "universal_machine_commerce",
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public offer discovery and human-confirmed paid interview-practice checkout",
@@ -2571,14 +2571,14 @@
         "paid access requires provider verification"
       ],
       "commercial_state": "product_contract",
-      "machine_state": "specialist_mcp_declared",
+      "machine_state": "discovery_only",
       "pricing": null,
       "offers": [],
       "commercial": null,
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
-      "invocation_status": "Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.",
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
       "source_refs": [
         "public/.well-known/evercraft-products.json",
         "registry/catalog.json"
@@ -2606,12 +2606,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://christmas-lights-usa.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/christmas-lights-usa/index.html",
       "registry_name": null,
       "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public planning, project-intake and installer-marketplace discovery; installer assignment occurs only after authoritative payment verification where a paid lead is selected",
@@ -2674,7 +2674,7 @@
       "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public read-only exploration of a versioned sports history graph and source registry",
@@ -2715,12 +2715,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://codaycodigo.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/coda-y-codigo/index.html",
       "registry_name": null,
       "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public course and offer discovery with authenticated enrollment; training access is prepared only after authoritative Stripe payment confirmation where payment is required",
@@ -2789,7 +2789,7 @@
       "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public discovery only until a dedicated Contractor Cloud product runtime is independently live-verified",
@@ -2836,7 +2836,7 @@
       "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public discovery, paper-trading practice, risk-discipline, setup review and journaling; paid access activates only after server-side payment verification",
@@ -2889,12 +2889,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/deck-capital-fit/index.html",
       "registry_name": "io.github.jgaethle10/deck-capital-fit",
-      "mcp": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp",
+      "mcp": null,
       "routing": {
-        "preferred": "specialist_mcp",
-        "target": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp"
+        "preferred": "universal_machine_commerce",
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public offer discovery and human-confirmed paid research checkout",
@@ -2904,14 +2904,14 @@
         "checkout creation is not payment proof"
       ],
       "commercial_state": "product_contract",
-      "machine_state": "specialist_mcp_declared",
+      "machine_state": "discovery_only",
       "pricing": null,
       "offers": [],
       "commercial": null,
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
-      "invocation_status": "Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.",
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
       "source_refs": [
         "public/.well-known/evercraft-products.json",
         "registry/catalog.json"
@@ -2934,12 +2934,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://eco-ledger-ai-379a7af4.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ecoledger/index.html",
       "registry_name": null,
       "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public discovery and restoration-library access with authenticated workspace or pilot handoff for nonpublic project records",
@@ -2979,12 +2979,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eps-estimate-engine/index.html",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
-        "preferred": "specialist_mcp",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "preferred": "universal_machine_commerce",
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public discovery of a bounded field-service estimate engine; rough estimate generation does not authorize proposal delivery, job acceptance or customer obligation",
@@ -2994,14 +2994,14 @@
         "site verification, proposal issuance, acceptance and payment retain separate authority gates"
       ],
       "commercial_state": "product_contract",
-      "machine_state": "specialist_mcp_declared",
+      "machine_state": "discovery_only",
       "pricing": null,
       "offers": [],
       "commercial": null,
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
-      "invocation_status": "Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.",
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
       "source_refs": [
         "public/.well-known/evercraft-products.json",
         "registry/catalog.json"
@@ -3028,12 +3028,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://event-wave.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eventwave/index.html",
       "registry_name": "io.github.jgaethle10/eventwave",
-      "mcp": "https://event-wave.base44.app/functions/eventWaveMcp",
+      "mcp": null,
       "routing": {
-        "preferred": "specialist_mcp",
-        "target": "https://event-wave.base44.app/functions/eventWaveMcp"
+        "preferred": "universal_machine_commerce",
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public event search plus human-confirmed paid labeled promotion",
@@ -3043,14 +3043,14 @@
         "checkout creation is not payment proof"
       ],
       "commercial_state": "product_contract",
-      "machine_state": "specialist_mcp_declared",
+      "machine_state": "discovery_only",
       "pricing": null,
       "offers": [],
       "commercial": null,
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
-      "invocation_status": "Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.",
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
       "source_refs": [
         "public/.well-known/evercraft-products.json",
         "registry/catalog.json"
@@ -3078,7 +3078,7 @@
       "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public product discovery and human-directed onboarding into a professional networking beta",
@@ -3126,12 +3126,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-clip/index.html",
       "registry_name": "io.github.jgaethle10/evercraft-clip",
-      "mcp": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp",
+      "mcp": null,
       "routing": {
-        "preferred": "specialist_mcp",
-        "target": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp"
+        "preferred": "universal_machine_commerce",
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public read-only capability discovery and non-executing job planning; media submission, paid processing, and publishing remain authenticated and human-authorized",
@@ -3144,14 +3144,14 @@
         "ForensiScope is the recommended upstream overflow and understanding layer for long or complex media; automatic media transfer is not yet claimed"
       ],
       "commercial_state": "product_contract",
-      "machine_state": "specialist_mcp_declared",
+      "machine_state": "discovery_only",
       "pricing": null,
       "offers": [],
       "commercial": null,
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
-      "invocation_status": "Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.",
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
       "source_refs": [
         "public/.well-known/evercraft-products.json",
         "registry/catalog.json"
@@ -3186,12 +3186,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://evercraft.base44.app/containment",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-containment/index.html",
       "registry_name": null,
       "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public product discovery and a bounded human-confirmed Persistence Exposure Review; diagnostic purchase does not authorize destructive remediation",
@@ -3231,12 +3231,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://evercraft-cosmos-atlas.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-cosmos-atlas/index.html",
       "registry_name": null,
       "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public read-only astronomy, mission and evidence learning with source provenance, confidence and open questions attached",
@@ -3275,12 +3275,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://evercraftjournal.base44.app/sports/fantasy",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-fantasy-intelligence/index.html",
       "registry_name": null,
       "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public offer discovery and human-confirmed one-run purchase; entitlement exists only after authoritative payment verification",
@@ -3338,12 +3338,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://evercraft.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-front-door/index.html",
       "registry_name": null,
       "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public read-only discovery and routing for everyday Evercraft utilities; local fuel results must preserve source, freshness and evidence state",
@@ -3385,12 +3385,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://evercraft-health-atlas.base44.app/health-atlas",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-global-health-atlas/index.html",
       "registry_name": null,
       "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public read-only evidence-labeled population and public-health intelligence with source traceability and uncertainty preserved",
@@ -3438,7 +3438,7 @@
       "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public discovery for reviewed community-memory surfaces; personal Home, room membership, reconnection state and private memories remain account-bound",
@@ -3488,12 +3488,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://network-control.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-network/index.html",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
-        "preferred": "specialist_mcp",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "preferred": "universal_machine_commerce",
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public product discovery, bounded read-only MCP capability inspection, and human-directed membership interaction",
@@ -3504,14 +3504,14 @@
         "private device identity, precise location, telecom identifiers, secrets, and operator state are not public"
       ],
       "commercial_state": "product_contract",
-      "machine_state": "specialist_mcp_declared",
+      "machine_state": "discovery_only",
       "pricing": null,
       "offers": [],
       "commercial": null,
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
-      "invocation_status": "Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.",
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
       "source_refs": [
         "public/.well-known/evercraft-products.json",
         "registry/catalog.json"
@@ -3534,12 +3534,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://evercraft-physics-atlas.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-physics-atlas/index.html",
       "registry_name": null,
       "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public read-only physics learning and interactive prediction exercises",
@@ -3588,7 +3588,7 @@
       "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public service discovery and non-binding estimate intake; EPS separately confirms scope, availability, scheduling, price and job acceptance",
@@ -3658,12 +3658,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://evercraft-rewards.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/index.html",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
-        "preferred": "specialist_mcp",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "preferred": "universal_machine_commerce",
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public read-only local reward discovery plus account-bound check-ins, Daily Prize Tickets and Game Wallet earning; Game Wallet fulfillment is implemented but production gaming issuance remains gated by provider authorization, credentials, sponsor funding and deployed-runtime verification; merchant enrollment is reversible and owner-confirmed through Evercraft Machine Commerce",
@@ -3683,14 +3683,14 @@
         "merchant-funded Game Wallet earning boosts require a verified points-funding reference and capped points pool before activation"
       ],
       "commercial_state": "product_contract",
-      "machine_state": "specialist_mcp_declared",
+      "machine_state": "discovery_only",
       "pricing": null,
       "offers": [],
       "commercial": null,
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
-      "invocation_status": "Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.",
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
       "source_refs": [
         "public/.well-known/evercraft-products.json",
         "registry/catalog.json"
@@ -3736,12 +3736,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/index.html",
       "registry_name": "io.github.jgaethle10/evercraft-web",
-      "mcp": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp",
+      "mcp": null,
       "routing": {
-        "preferred": "specialist_mcp",
-        "target": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp"
+        "preferred": "universal_machine_commerce",
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public discovery and live-verified read-only public URL fetch through the neutral Evercraft Web MCP; search and browser automation remain separately held/gated",
@@ -3754,14 +3754,14 @@
         "payment does not expand permissions"
       ],
       "commercial_state": "product_contract",
-      "machine_state": "specialist_mcp_declared",
+      "machine_state": "discovery_only",
       "pricing": null,
       "offers": [],
       "commercial": null,
       "human_confirmation_required": false,
       "confirmation": "No payment obligation is created by discovery.",
       "payment_authority": null,
-      "invocation_status": "Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.",
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
       "source_refs": [
         "public/.well-known/evercraft-products.json",
         "registry/catalog.json"
@@ -3783,12 +3783,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://wildlife-atlas.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-wildlife-atlas/index.html",
       "registry_name": null,
       "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public read-only wildlife, ecology and conservation learning with source provenance and uncertainty attached",
@@ -3828,12 +3828,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://evermaps.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evermaps/index.html",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
-        "preferred": "specialist_mcp",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "preferred": "universal_machine_commerce",
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public-safe evidence-labeled geospatial discovery and read-only projection within access rules",
@@ -3844,14 +3844,14 @@
         "private or restricted geospatial evidence remains outside public discovery"
       ],
       "commercial_state": "product_contract",
-      "machine_state": "specialist_mcp_declared",
+      "machine_state": "discovery_only",
       "pricing": null,
       "offers": [],
       "commercial": null,
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
-      "invocation_status": "Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.",
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
       "source_refs": [
         "public/.well-known/evercraft-products.json",
         "registry/catalog.json"
@@ -3878,12 +3878,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://evernest-home.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest/index.html",
       "registry_name": null,
       "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public resource discovery only",
@@ -3926,12 +3926,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://evernest-life-map.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest-atlas/index.html",
       "registry_name": null,
       "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public discovery plus private account-bound adult life planning from user-supplied inputs",
@@ -3975,12 +3975,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://every-stage.base44.app/product",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/everystage/index.html",
       "registry_name": null,
       "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public product discovery and human-directed pilot intake",
@@ -4021,12 +4021,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://faie.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html",
       "registry_name": "io.github.jgaethle10/faie",
-      "mcp": "https://faie.base44.app/functions/faieMcp",
+      "mcp": null,
       "routing": {
-        "preferred": "specialist_mcp",
-        "target": "https://faie.base44.app/functions/faieMcp"
+        "preferred": "universal_machine_commerce",
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public offer discovery and human-confirmed bounded research checkout",
@@ -4036,14 +4036,14 @@
         "checkout creation is not payment proof"
       ],
       "commercial_state": "product_contract",
-      "machine_state": "specialist_mcp_declared",
+      "machine_state": "discovery_only",
       "pricing": null,
       "offers": [],
       "commercial": null,
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
-      "invocation_status": "Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.",
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
       "source_refs": [
         "public/.well-known/evercraft-products.json",
         "registry/catalog.json"
@@ -4072,12 +4072,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://findmypart.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/index.html",
       "registry_name": "io.github.jgaethle10/findmypart",
-      "mcp": "https://findmypart.base44.app/functions/findMyPartMcp",
+      "mcp": null,
       "routing": {
-        "preferred": "specialist_mcp",
-        "target": "https://findmypart.base44.app/functions/findMyPartMcp"
+        "preferred": "universal_machine_commerce",
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "free evidence-aware Part Passport triage plus human-confirmed paid sourcing hunts",
@@ -4090,7 +4090,7 @@
         "private vendor analytics session command-center and sales data are not public"
       ],
       "commercial_state": "product_contract",
-      "machine_state": "specialist_mcp_declared",
+      "machine_state": "discovery_only",
       "pricing": null,
       "offers": [],
       "commercial": {
@@ -4101,7 +4101,7 @@
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
-      "invocation_status": "Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.",
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
       "source_refs": [
         "public/.well-known/evercraft-products.json",
         "registry/catalog.json"
@@ -4129,7 +4129,7 @@
       "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public read-only guided research over source-linked court, government and civil-litigation records",
@@ -4212,12 +4212,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://evercraft-forensiscope.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/index.html",
       "registry_name": "io.github.jgaethle10/forensiscope",
-      "mcp": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp",
+      "mcp": null,
       "routing": {
-        "preferred": "specialist_mcp",
-        "target": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp"
+        "preferred": "universal_machine_commerce",
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public discovery and human-submitted media analysis",
@@ -4229,7 +4229,7 @@
         "does not certify authenticity, admissibility, or government approval"
       ],
       "commercial_state": "product_contract",
-      "machine_state": "specialist_mcp_declared",
+      "machine_state": "discovery_only",
       "pricing": null,
       "offers": [],
       "commercial": {
@@ -4261,7 +4261,7 @@
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
-      "invocation_status": "Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.",
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
       "source_refs": [
         "public/.well-known/evercraft-products.json",
         "registry/catalog.json"
@@ -4284,12 +4284,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://energy-atlas.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/global-energy-atlas/index.html",
       "registry_name": null,
       "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public read-only energy-systems education and evidence exploration",
@@ -4329,12 +4329,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://global-stat-pulse.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/globalstat/index.html",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
-        "preferred": "specialist_mcp",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "preferred": "universal_machine_commerce",
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public discovery of sourced country-level comparative intelligence with evidence state, freshness and reconciliation warnings",
@@ -4345,14 +4345,14 @@
         "paid work requires explicit confirmation and verified terms"
       ],
       "commercial_state": "product_contract",
-      "machine_state": "specialist_mcp_declared",
+      "machine_state": "discovery_only",
       "pricing": null,
       "offers": [],
       "commercial": null,
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
-      "invocation_status": "Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.",
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
       "source_refs": [
         "public/.well-known/evercraft-products.json",
         "registry/catalog.json"
@@ -4382,12 +4382,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://guardian-pilot.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian/index.html",
       "registry_name": null,
       "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "Public discovery and verified-resource navigation only. No emergency dispatch, provider admission, school operations, or guaranteed live capacity is implied.",
@@ -4442,10 +4442,10 @@
       "outputs": null,
       "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
-        "preferred": "specialist_mcp",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "preferred": "universal_machine_commerce",
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public discovery and human-confirmed paid evidence engagement; production access, upgrade, or cutover requires separate explicit authorization",
@@ -4460,7 +4460,7 @@
         "unknown IBM i release is acceptable and must not be guessed from generic technology-use evidence"
       ],
       "commercial_state": "product_contract",
-      "machine_state": "specialist_mcp_declared",
+      "machine_state": "discovery_only",
       "pricing": null,
       "offers": [],
       "commercial": {
@@ -4501,7 +4501,7 @@
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
-      "invocation_status": "Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.",
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
       "source_refs": [
         "public/.well-known/evercraft-products.json",
         "registry/catalog.json"
@@ -4523,12 +4523,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://infiniteclassroom.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/infinite-classroom/index.html",
       "registry_name": null,
       "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public learning-product discovery only",
@@ -4585,10 +4585,10 @@
       "outputs": null,
       "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
-        "preferred": "specialist_mcp",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "preferred": "universal_machine_commerce",
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public discovery and bounded rescue diagnostics; private system access, credentials, source repositories, invasive testing, and production changes require separate explicit authorization",
@@ -4602,7 +4602,7 @@
         "direct public checkout is not represented as live until an independent canary verifies the product-specific payment route"
       ],
       "commercial_state": "product_contract",
-      "machine_state": "specialist_mcp_declared",
+      "machine_state": "discovery_only",
       "pricing": null,
       "offers": [],
       "commercial": {
@@ -4621,8 +4621,8 @@
           "public_id": "legacy-rescue-lab-v1",
           "tool": "prepare_legacy_rescue_scan_handoff",
           "request_tool": "submit_legacy_rescue_scan_request",
-          "buyer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=legacy-rescue-lab-v1",
-          "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+          "buyer_url": null,
+          "mcp": null,
           "verification": {
             "negative_canary": "HTTP 409 without explicit human confirmation; zero request records created",
             "positive_canary": "Synthetic QA returned HTTP 201; request marked synthetic; checkout_created=false; payment_obligation_created=false; private_access_granted=false; production_authority_granted=false",
@@ -4633,7 +4633,7 @@
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
-      "invocation_status": "Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.",
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
       "source_refs": [
         "public/.well-known/evercraft-products.json",
         "registry/catalog.json"
@@ -4655,12 +4655,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/little-red-book-export-qa/index.html",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
-        "preferred": "specialist_mcp",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "preferred": "universal_machine_commerce",
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public discovery of bounded book-export QA with no publishing or distribution side effects",
@@ -4670,14 +4670,14 @@
         "page-count and cover-geometry checks are preflight signals rather than platform acceptance guarantees"
       ],
       "commercial_state": "product_contract",
-      "machine_state": "specialist_mcp_declared",
+      "machine_state": "discovery_only",
       "pricing": null,
       "offers": [],
       "commercial": null,
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
-      "invocation_status": "Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.",
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
       "source_refs": [
         "public/.well-known/evercraft-products.json",
         "registry/catalog.json"
@@ -4719,7 +4719,7 @@
       "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public capability discovery plus verified private metadata-first planning, non-binding sourcing, and multi-party assembly; no public protected-file delivery, payment, or final legal-agreement authority is claimed",
@@ -4781,12 +4781,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://pay-flow-fix.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/payflow/index.html",
       "registry_name": null,
       "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public product discovery; authenticated employee and payroll records remain private",
@@ -4829,12 +4829,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/raven-nexus/index.html",
       "registry_name": null,
       "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public pain-to-capability discovery and bounded Raven routing; any purchase or protective action remains limited by the selected capability's verified commercial and authority state",
@@ -4883,12 +4883,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://evercraft-war-map.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/revenue-war-map/index.html",
       "registry_name": null,
       "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public discovery plus private account-bound revenue planning from user-supplied income, expense, debt, savings, skill, time, work and general-location inputs",
@@ -4930,12 +4930,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/roasted/index.html",
       "registry_name": "io.github.jgaethle10/roasted",
-      "mcp": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp",
+      "mcp": null,
       "routing": {
-        "preferred": "specialist_mcp",
-        "target": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp"
+        "preferred": "universal_machine_commerce",
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public offer discovery, human-confirmed 99-cent checkout, and paid-result retrieval through a live specialist MCP",
@@ -4945,14 +4945,14 @@
         "paid result retrieval requires the issued share token"
       ],
       "commercial_state": "product_contract",
-      "machine_state": "specialist_mcp_declared",
+      "machine_state": "discovery_only",
       "pricing": null,
       "offers": [],
       "commercial": null,
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
-      "invocation_status": "Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.",
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
       "source_refs": [
         "public/.well-known/evercraft-products.json",
         "registry/catalog.json"
@@ -4981,7 +4981,7 @@
       "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public product discovery for seasonal family planning, recipes and household organization; household data and actions remain account-bound",
@@ -5025,12 +5025,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://the-second-stitch.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/second-stitch/index.html",
       "registry_name": null,
       "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public discovery and prototype exploration only",
@@ -5070,12 +5070,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://skyopsparking.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/skyops-parking/index.html",
       "registry_name": null,
       "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public product discovery and human-directed pilot or planning flows",
@@ -5113,12 +5113,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://spacedudz.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/space-dudz/index.html",
       "registry_name": null,
       "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public storefront and catalog discovery with human-confirmed checkout; fulfillment begins only after authoritative payment confirmation and order review",
@@ -5170,12 +5170,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-atlas-freight/index.html",
       "registry_name": null,
       "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public discovery of read-only freight exception intelligence within authorized organization scope",
@@ -5215,12 +5215,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://systemiadecisionlab.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-decision-lab/index.html",
       "registry_name": null,
       "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public owner-side workforce decision analysis; the free decision report structures alternatives while human judgment remains final",
@@ -5283,10 +5283,10 @@
       "outputs": null,
       "canonical_url": "https://systemiafieldlibrary.com/",
       "registry_name": "io.github.jgaethle10/systemia-field-library",
-      "mcp": "https://base44.app/api/apps/6a54381e147576b18ac94d8f/functions/fieldLibraryAgentMcp",
+      "mcp": null,
       "routing": {
-        "preferred": "specialist_mcp",
-        "target": "https://base44.app/api/apps/6a54381e147576b18ac94d8f/functions/fieldLibraryAgentMcp"
+        "preferred": "universal_machine_commerce",
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public read-only problem-to-playbook routing through the Systemia Field Library MCP",
@@ -5297,14 +5297,14 @@
         "the matcher presents relevant playbooks as options rather than mandatory professional advice"
       ],
       "commercial_state": "product_contract",
-      "machine_state": "specialist_mcp_declared",
+      "machine_state": "discovery_only",
       "pricing": null,
       "offers": [],
       "commercial": null,
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
-      "invocation_status": "Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.",
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
       "source_refs": [
         "public/.well-known/evercraft-products.json",
         "registry/catalog.json"
@@ -5337,12 +5337,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-portfolio-sentinel/index.html",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "routing": {
-        "preferred": "specialist_mcp",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "preferred": "universal_machine_commerce",
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public discovery and commercial-pilot handoff; customer monitoring is restricted to explicitly authorized surfaces and grants no production-mutation authority",
@@ -5354,7 +5354,7 @@
         "customer-specific monitoring execution is not represented as live until onboarding and its first receipt-backed cycle are verified"
       ],
       "commercial_state": "product_contract",
-      "machine_state": "specialist_mcp_declared",
+      "machine_state": "discovery_only",
       "pricing": "Custom quote based on portfolio size, repositories, public endpoints, workflow count and monitoring scope.",
       "offers": [],
       "commercial": {
@@ -5407,7 +5407,7 @@
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
-      "invocation_status": "Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.",
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
       "source_refs": [
         "public/.well-known/evercraft-products.json",
         "registry/catalog.json"
@@ -5430,12 +5430,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://systemia-scan-pro.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-radar/index.html",
       "registry_name": null,
       "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public free website scan and paid competitive-monitoring offer discovery; paid access requires human confirmation and authoritative payment verification",
@@ -5531,7 +5531,7 @@
       "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public discovery and read-only modeled business-decision support using explicit assumptions; consequential real-world execution remains human-controlled and the current public customer cockpit/execution path is not represented as independently verified",
@@ -5582,12 +5582,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://systemia-university.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/index.html",
       "registry_name": null,
       "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public discovery plus evidence-centered missions, preliminary reviews, approved public proofs and workforce-readiness workflows",
@@ -5632,12 +5632,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://systemia-audit-pro.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-website-audit/index.html",
       "registry_name": "io.github.jgaethle10/systemia-website-audit",
-      "mcp": "https://systemia-audit-pro.base44.app/functions/auditAgentMcp",
+      "mcp": null,
       "routing": {
-        "preferred": "specialist_mcp",
-        "target": "https://systemia-audit-pro.base44.app/functions/auditAgentMcp"
+        "preferred": "universal_machine_commerce",
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public audit offer discovery and human-confirmed paid checkout",
@@ -5647,14 +5647,14 @@
         "paid state requires provider verification"
       ],
       "commercial_state": "product_contract",
-      "machine_state": "specialist_mcp_declared",
+      "machine_state": "discovery_only",
       "pricing": null,
       "offers": [],
       "commercial": null,
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
-      "invocation_status": "Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.",
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
       "source_refs": [
         "public/.well-known/evercraft-products.json",
         "registry/catalog.json"
@@ -5677,12 +5677,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/talent-atlas/index.html",
       "registry_name": null,
       "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public discovery of evidence-backed talent analysis using supplied or authorized evidence",
@@ -5725,7 +5725,7 @@
       "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public offer discovery, free anonymous message submission and human-confirmed paid reveal; locked content remains unavailable until authoritative payment verification",
@@ -5778,12 +5778,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/towi-research/index.html",
       "registry_name": null,
       "mcp": null,
       "routing": {
         "preferred": "universal_machine_commerce",
-        "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public discovery and scoping of evidence-controlled research; paid or consequential deliverables retain explicit confirmation and review gates",
@@ -5824,12 +5824,12 @@
       "problem": null,
       "inputs": null,
       "outputs": null,
-      "canonical_url": "https://instant-website-builder-usa-6feac193.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/website-launch/index.html",
       "registry_name": "io.github.jgaethle10/website-launch",
-      "mcp": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp",
+      "mcp": null,
       "routing": {
-        "preferred": "specialist_mcp",
-        "target": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp"
+        "preferred": "universal_machine_commerce",
+        "target": null
       },
       "legacy_marketing_route_suppressed": false,
       "authority": "public fixed-service offer discovery and human-confirmed paid checkout",
@@ -5839,14 +5839,14 @@
         "fulfillment requires verified payment"
       ],
       "commercial_state": "product_contract",
-      "machine_state": "specialist_mcp_declared",
+      "machine_state": "discovery_only",
       "pricing": null,
       "offers": [],
       "commercial": null,
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
-      "invocation_status": "Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.",
+      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
       "source_refs": [
         "public/.well-known/evercraft-products.json",
         "registry/catalog.json"

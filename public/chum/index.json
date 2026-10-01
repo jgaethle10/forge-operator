@@ -894,7 +894,7 @@
         "status": "/forensiscope/developers/status.json",
         "llms": "/forensiscope/developers/llms.txt",
         "examples": "/forensiscope/developers/examples.json",
-        "remote_mcp": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp",
+        "remote_mcp": null,
         "registry_name": "io.github.jgaethle10/forensiscope",
         "playground": "/forensiscope/developers/playground.html",
         "clients": "/forensiscope/developers/clients/"
@@ -1102,8 +1102,8 @@
           "public_id": "legacy-rescue-lab-v1",
           "tool": "prepare_legacy_rescue_scan_handoff",
           "request_tool": "submit_legacy_rescue_scan_request",
-          "buyer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=legacy-rescue-lab-v1",
-          "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+          "buyer_url": null,
+          "mcp": null,
           "verification": {
             "negative_canary": "HTTP 409 without explicit human confirmation; zero request records created",
             "positive_canary": "Synthetic QA returned HTTP 201; request marked synthetic; checkout_created=false; payment_obligation_created=false; private_access_granted=false; production_authority_granted=false",
@@ -1117,8 +1117,8 @@
       "editorial_surfaces": {
         "hub": "/legacy-rescue-lab/editorial/",
         "rss": "/legacy-rescue-lab/editorial/feed.xml",
-        "journal_article": "https://evercraftjournal.base44.app/journal/save-the-software-before-you-rebuild-it",
-        "journal_guide": "https://evercraftjournal.base44.app/guides/software-rescue-before-rebuild",
+        "journal_article": null,
+        "journal_guide": null,
         "articles": [
           "/legacy-rescue-lab/editorial/save-software-before-rebuild/",
           "/legacy-rescue-lab/editorial/developer-disappeared/",
