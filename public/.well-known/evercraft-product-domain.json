@@ -11,8 +11,8 @@
   "activation_gates": [
     "evercraft.app is registered and controlled by Evercraft",
     "authoritative DNS for evercraft.app is delegated",
-    "evercraft.app and *.evercraft.app resolve to the verified public edge",
-    "TLS is valid for evercraft.app and *.evercraft.app",
+    "*.evercraft.app resolves to the verified public edge",
+    "trusted TLS is valid for *.evercraft.app product hostnames",
     "Evercraft public edge has one admitted wildcard product-route lease into the CHUM product router",
     "public edge health reports product_domain=evercraft.app",
     "Infinite Classroom root, llms.txt, and ai-discovery.json pass the external canary",
