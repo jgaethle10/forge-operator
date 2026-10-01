@@ -149,10 +149,20 @@ export function evaluateComputeOffer(demandInput,offerInput){
 
   const maxHourly=demand.economics.max_hourly_usd;
   const maxTotal=demand.economics.max_total_usd;
-  if(maxHourly!=null&&offer.economics.hourly_usd!=null&&offer.economics.hourly_usd>maxHourly){
+  if(
+    offer.quote_required!==true &&
+    maxHourly!=null &&
+    offer.economics.hourly_usd!=null &&
+    offer.economics.hourly_usd>maxHourly
+  ){
     reasons.push('hourly_budget_exceeded');
   }
-  if(maxTotal!=null&&offer.economics.total_usd!=null&&offer.economics.total_usd>maxTotal){
+  if(
+    offer.quote_required!==true &&
+    maxTotal!=null &&
+    offer.economics.total_usd!=null &&
+    offer.economics.total_usd>maxTotal
+  ){
     reasons.push('total_budget_exceeded');
   }
 
