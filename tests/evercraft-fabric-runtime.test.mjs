@@ -221,6 +221,57 @@ test('owned Evercraft Compute MCP runtime serves challenge and Fabric without ga
     assert.equal(health.openai_challenge_ready,true);
     assert.equal(health.fabric_capability_count,2);
     assert.equal(JSON.stringify(health).includes(challenge),false);
+    const daytradeInfoResponse=await fetch(runtime.url+'/mcp/daytrade-lens');
+    assert.equal(daytradeInfoResponse.status,200);
+    const daytradeInfo=await daytradeInfoResponse.json();
+    assert.equal(daytradeInfo.service,'DayTrade Lens');
+    assert.equal(daytradeInfo.live_trade_authority,false);
+    assert.equal(daytradeInfo.broker_access,false);
+    assert.equal(daytradeInfo.order_placement,false);
+
+    const daytradeToolsResponse=await fetch(runtime.url+'/mcp/daytrade-lens',{
+      method:'POST',
+      headers:{'content-type':'application/json'},
+      body:JSON.stringify({jsonrpc:'2.0',id:7,method:'tools/list',params:{}}),
+    });
+    assert.equal(daytradeToolsResponse.status,200);
+    const daytradeTools=await daytradeToolsResponse.json();
+    assert.deepEqual(
+      daytradeTools.result.tools.map((x)=>x.name),
+      [
+        'get_daytrade_lens_capabilities',
+        'run_daytrade_risk_gate',
+        'run_daytrade_adversarial_drills',
+        'stress_test_return_series',
+      ]
+    );
+    assert.ok(daytradeTools.result.tools.every((x)=>x.annotations.readOnlyHint===true));
+
+    const daytradeStressResponse=await fetch(runtime.url+'/mcp/daytrade-lens',{
+      method:'POST',
+      headers:{'content-type':'application/json'},
+      body:JSON.stringify({
+        jsonrpc:'2.0',
+        id:8,
+        method:'tools/call',
+        params:{
+          name:'stress_test_return_series',
+          arguments:{
+            strategy_returns:[0.01,0.012,0.008,0.011,0.009,0.013],
+            benchmark_returns:[0,0,0,0,0,0],
+            transaction_cost_bps:5,
+            bootstrap_iterations:100,
+            null_iterations:100,
+          },
+        },
+      }),
+    });
+    assert.equal(daytradeStressResponse.status,200);
+    const daytradeStress=await daytradeStressResponse.json();
+    assert.equal(daytradeStress.result.structuredContent.live_trade_authority,false);
+    assert.equal(daytradeStress.result.structuredContent.edge_claimed,false);
+    assert.equal(daytradeStress.result.structuredContent.broker_action_taken,false);
+
     assert.equal(gatewayCalls,0);
   }finally{
     await runtime.close();
