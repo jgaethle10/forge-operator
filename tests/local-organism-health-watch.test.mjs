@@ -162,6 +162,7 @@ test('local organism installer wires the self-healing timer and initial receipt 
   assert.match(installer, /OnUnitActiveSec=60s/);
   assert.match(installer, /StartLimitIntervalSec=0/);
   assert.match(installer, /health-watch\.json/);
-  assert.match(installer, /systemctl --user start evercraft-local-organism-health\.service/);
+  assert.match(installer, /local-organism-health-watch\.mjs/);
+  assert.match(installer, /--observe-only/);
   assert.doesNotMatch(installer, /sudo|ListenStream|0\.0\.0\.0/);
 });
