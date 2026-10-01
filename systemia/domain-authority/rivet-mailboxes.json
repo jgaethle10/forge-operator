@@ -1,10 +1,23 @@
 {
-  "schema": "evercraft.evermail.mailbox-intent.v1",
+  "schema": "evercraft.evermail.mailbox-intent.v2",
   "tenant": "rivet",
   "service_id": "rivet-mail",
   "logical_uri": "evercraft://mail/rivet",
-  "public_domain": "rivet.systemiacommandcenters.com",
-  "public_domain_state": "candidate_no_purchase_bridge_until_standalone_rivet_root_is_selected",
+  "internal_namespace": "rivet.evercraft",
+  "public_identity_policy": {
+    "mode": "standalone_rivet_brand",
+    "public_domain": null,
+    "public_domain_env": "RIVET_PUBLIC_MAIL_DOMAIN",
+    "require_explicit_domain_approval": true,
+    "require_public_delegation_receipt": true,
+    "no_fallback_public_domain": true,
+    "forbidden_public_domain_tokens": [
+      "evercraft",
+      "systemia",
+      "base44"
+    ],
+    "rule": "Public customer-facing email exposes RIVET only. Evercraft remains the internal authority and runtime."
+  },
   "provider_policy": {
     "preferred": "evercraft-owned",
     "fallback": "none",
@@ -13,7 +26,45 @@
   },
   "mailboxes": [
     {
+      "local_part": "paola",
+      "internal_identity": "evercraft://mail/rivet/paola",
+      "public_address_template": "paola@${RIVET_PUBLIC_MAIL_DOMAIN}",
+      "purpose": "RIVET sales, customer communication and invoice delivery",
+      "display_name": "Paola | RIVET",
+      "send": true,
+      "receive": true
+    },
+    {
+      "local_part": "daryl",
+      "internal_identity": "evercraft://mail/rivet/daryl",
+      "public_address_template": "daryl@${RIVET_PUBLIC_MAIL_DOMAIN}",
+      "purpose": "RIVET sales and business development",
+      "display_name": "Daryl | RIVET",
+      "send": true,
+      "receive": true
+    },
+    {
+      "local_part": "jess",
+      "internal_identity": "evercraft://mail/rivet/jess",
+      "public_address_template": "jess@${RIVET_PUBLIC_MAIL_DOMAIN}",
+      "purpose": "RIVET team communication",
+      "display_name": "Jess | RIVET",
+      "send": true,
+      "receive": true
+    },
+    {
+      "local_part": "jesse",
+      "internal_identity": "evercraft://mail/rivet/jesse",
+      "public_address_template": "jesse@${RIVET_PUBLIC_MAIL_DOMAIN}",
+      "purpose": "RIVET founder and product communication",
+      "display_name": "Jesse | RIVET",
+      "send": true,
+      "receive": true
+    },
+    {
       "local_part": "invoices",
+      "internal_identity": "evercraft://mail/rivet/invoices",
+      "public_address_template": "invoices@${RIVET_PUBLIC_MAIL_DOMAIN}",
       "purpose": "customer invoices and invoice replies",
       "display_name": "RIVET",
       "send": true,
@@ -21,6 +72,8 @@
     },
     {
       "local_part": "billing",
+      "internal_identity": "evercraft://mail/rivet/billing",
+      "public_address_template": "billing@${RIVET_PUBLIC_MAIL_DOMAIN}",
       "purpose": "billing and accounts receivable",
       "display_name": "RIVET Billing",
       "send": true,
@@ -28,6 +81,8 @@
     },
     {
       "local_part": "hello",
+      "internal_identity": "evercraft://mail/rivet/hello",
+      "public_address_template": "hello@${RIVET_PUBLIC_MAIL_DOMAIN}",
       "purpose": "general customer communication",
       "display_name": "RIVET",
       "send": true,
@@ -35,6 +90,8 @@
     },
     {
       "local_part": "ops",
+      "internal_identity": "evercraft://mail/rivet/ops",
+      "public_address_template": "ops@${RIVET_PUBLIC_MAIL_DOMAIN}",
       "purpose": "operations and fulfillment",
       "display_name": "RIVET Operations",
       "send": true,
@@ -42,6 +99,8 @@
     },
     {
       "local_part": "postmaster",
+      "internal_identity": "evercraft://mail/rivet/postmaster",
+      "public_address_template": "postmaster@${RIVET_PUBLIC_MAIL_DOMAIN}",
       "purpose": "required mail administration role",
       "display_name": "RIVET Postmaster",
       "send": false,
@@ -49,6 +108,8 @@
     },
     {
       "local_part": "abuse",
+      "internal_identity": "evercraft://mail/rivet/abuse",
+      "public_address_template": "abuse@${RIVET_PUBLIC_MAIL_DOMAIN}",
       "purpose": "required abuse role",
       "display_name": "RIVET Abuse",
       "send": false,
@@ -56,6 +117,8 @@
     },
     {
       "local_part": "dmarc",
+      "internal_identity": "evercraft://mail/rivet/dmarc",
+      "public_address_template": "dmarc@${RIVET_PUBLIC_MAIL_DOMAIN}",
       "purpose": "DMARC aggregate and forensic reports",
       "display_name": "RIVET DMARC",
       "send": false,
@@ -63,29 +126,40 @@
     },
     {
       "local_part": "tlsrpt",
+      "internal_identity": "evercraft://mail/rivet/tlsrpt",
+      "public_address_template": "tlsrpt@${RIVET_PUBLIC_MAIL_DOMAIN}",
       "purpose": "SMTP TLS reporting",
       "display_name": "RIVET TLS Reporting",
       "send": false,
       "receive": true
     }
   ],
+  "sender_policy": {
+    "default_invoice_sender": "invoices@${RIVET_PUBLIC_MAIL_DOMAIN}",
+    "personal_sender_allowed": true,
+    "reply_to_may_be_personal_staff_mailbox": true,
+    "customer_visible_brand": "RIVET"
+  },
   "signing": {
     "dkim_required": true,
-    "dkim_selector": "evercraft1",
+    "dkim_selector": "rivet1",
     "spf_required": true,
     "dmarc_required": true,
     "mta_sts_required": true,
     "tls_reporting_required": true
   },
   "promotion": {
+    "public_domain_must_be_selected": true,
+    "public_domain_must_not_leak_parent_brand": true,
     "live_send_requires_evermail_public_canary_green": true,
     "live_receive_requires_public_mx_green": true,
     "mailbox_auth_receipt_required": true,
     "backup_restore_receipt_required_before_staff_mailbox_promotion": true
   },
   "notes": [
-    "Permanent identity is evercraft://mail/rivet; the public domain is a compatibility mapping.",
-    "Do not claim these mailboxes are publicly live until the Evermail canary proves MX, SPF, DKIM, DMARC, reverse DNS, SMTP STARTTLS and trusted TLS.",
-    "No secrets, DKIM private keys, mailbox passwords or private topology belong in this manifest."
+    "Permanent identities are Evercraft fabric URIs; customer-facing addresses are RIVET-only aliases on an explicitly approved standalone RIVET domain.",
+    "rivet.evercraft is an internal namespace only and must never be advertised as a public Internet email domain.",
+    "There is no systemiacommandcenters.com, evercraft.*, or Base44 fallback for public RIVET email.",
+    "Do not claim these mailboxes are publicly live until the Evermail canary proves MX, SPF, DKIM, DMARC, reverse DNS, SMTP STARTTLS and trusted TLS."
   ]
 }
