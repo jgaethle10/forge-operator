@@ -1383,6 +1383,7 @@
       "contract_state": "complete_declaration",
       "contract_version": "1.0.0",
       "adoption_stage": "shared_runtime",
+      "owner": "systemia",
       "lane_states": {
         "authority": "declared",
         "context": "declared",
@@ -1392,10 +1393,6 @@
         "relationship": "not_required",
         "receipt_reconciliation": "declared"
       },
-      "gaps": [],
-      "next_contract_actions": [],
-      "runtime_verified": false,
-      "owner": "systemia",
       "lane_evidence": {
         "authority": [
           {
@@ -1441,6 +1438,9 @@
           }
         ]
       },
+      "gaps": [],
+      "next_contract_actions": [],
+      "runtime_verified": false,
       "truth_boundary": "Complete declaration and source evidence do not prove live runtime integration. Runtime verification must be produced by product-specific end-to-end receipts."
     },
     {
