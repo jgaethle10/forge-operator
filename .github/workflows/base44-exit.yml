@@ -115,6 +115,10 @@ jobs:
         run: npm run proof:polar-connector
       - name: Prove owned resident scheduler
         run: npm run proof:resident-supervisor
+      - name: Prove owned auto clock-out parity
+        run: npm run proof:auto-clock-out
+      - name: Prove gated auto clock-out registration
+        run: npm run proof:auto-clock-out-registration
       - name: Prove owned auto clock-out scheduled work
         run: npm run proof:auto-clock-out
       - name: Prove owned InternalOps snapshot and intake
