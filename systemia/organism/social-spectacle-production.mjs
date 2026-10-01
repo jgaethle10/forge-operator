@@ -34,10 +34,10 @@ function writeJson(file,value){
   fs.writeFileSync(file,JSON.stringify(value,null,2)+'\n',{mode:0o600});
 }
 
-function run(command,args,{env=process.env,cwd=process.cwd()}={}){
+function run(command,args,{env=process.env,cwd=process.cwd(),acceptedExitCodes=[0]}={}){
   const result=spawnSync(command,args,{cwd,env,encoding:'utf8',maxBuffer:32*1024*1024});
   if(result.error) throw new Error('spectacle_subprocess_failed:'+result.error.message);
-  if(result.status!==0){
+  if(!acceptedExitCodes.includes(Number(result.status))){
     throw new Error('spectacle_subprocess_nonzero:'+command+':'+String(result.stderr||result.stdout||'').slice(-3000));
   }
   return String(result.stdout||'').trim();
@@ -408,8 +408,24 @@ export function produceCandidate(candidate,{
     maxFreezeRatio:.5,
     maxSilenceRatio:1,
   });
-  run(npmCommand(),['run','media:studio','--','master-qc',videoPath,masterQcPath,qcPolicyPath]);
+  run(npmCommand(),['run','media:studio','--','master-qc',videoPath,masterQcPath,qcPolicyPath],{acceptedExitCodes:[0,2]});
   const masterQc=readJson(masterQcPath);
+  if(masterQc.status!=='accepted'){
+    const rejected={
+      schema:'evercraft.social-spectacle.production-receipt.v1',
+      candidate_id:candidate.candidate_id,
+      status:'held',
+      reason:'master_qc_rejected',
+      failures:masterQc.reasons||[],
+      measurements:masterQc.measurements||null,
+      vertical_video:videoPath,
+      master_qc_receipt:masterQcPath,
+      publication_authority:false,
+      at:now.toISOString(),
+    };
+    writeJson(receiptPath,rejected);
+    return rejected;
+  }
   const caption=captionFromCandidate(candidate);
   const editorialGate=assessSpectacleEditorialPreflight({candidate,caption,masterQc});
   const editorialPath=path.join(root,'editorial-preflight.json');
