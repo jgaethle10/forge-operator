@@ -8,6 +8,12 @@ const liveObservation = JSON.parse(fs.readFileSync(
 const waveOneProfile = JSON.parse(fs.readFileSync(
   new URL('../systemia/migrations/base44-exit/wave-1-source-profile-2026-09-30.json', import.meta.url)
 ));
+const waveOneReplacements = JSON.parse(fs.readFileSync(
+  new URL('../systemia/migrations/base44-exit/wave-1-replacement-matrix.json', import.meta.url)
+));
+const waveOneScheduledWork = JSON.parse(fs.readFileSync(
+  new URL('../systemia/migrations/base44-exit/wave-1-scheduled-work.json', import.meta.url)
+));
 
 const fail = (message) => {
   console.error(`BASE44_EXIT_POLICY_FAIL: ${message}`);
@@ -45,6 +51,16 @@ for (const primitive of [
   'receipt_gated_route_registry',
   'owned_runtime_base44_network_firewall',
   'estate_coverage_ledger',
+  'connector_gateway',
+  'webhook_gateway',
+  'commerce_boundary',
+  'resident_scheduler',
+  'fabric_discovery',
+  'object_storage',
+  'secret_store',
+  'route_registry',
+  'active_route_overlay',
+  'integration_edge',
 ]) {
   if (!policy.shared_landing_primitives?.includes(primitive)) {
     fail(`missing shared landing primitive ${primitive}`);
@@ -160,6 +176,70 @@ for (const row of profiledWaveOne) {
   }
 }
 
+if (waveOneReplacements.schema !== 'evercraft.base44.wave-replacement-matrix.v1' || waveOneReplacements.wave !== 1) {
+  fail('wave one replacement matrix schema/wave is invalid');
+}
+const replacementProducts = new Set((waveOneReplacements.products || []).map((row) => row.product));
+if (replacementProducts.size !== waveOneQueueNames.size) fail('wave one replacement matrix product count mismatch');
+for (const product of waveOneQueueNames) {
+  if (!replacementProducts.has(product)) fail(`wave one replacement matrix missing ${product}`);
+}
+if ((waveOneReplacements.products || []).some((row) => row.cutover_ready === true)) {
+  fail('wave one replacement matrix may not claim cutover readiness before evidence');
+}
+let implementationPending = 0;
+for (const row of waveOneReplacements.products || []) {
+  for (const component of row.components || []) {
+    if (component.state === 'implementation_present_ci_pending') {
+      implementationPending += 1;
+      for (const ref of component.refs || []) {
+        if (!fs.existsSync(new URL('../' + ref, import.meta.url))) {
+          fail(`wave one replacement source ref missing: ${ref}`);
+        }
+      }
+    }
+  }
+}
+if (implementationPending !== Number(waveOneReplacements.summary?.implementations_present_ci_pending || 0)) {
+  fail('wave one replacement implementation count does not reconcile');
+}
+if (Number(waveOneReplacements.summary?.products_cutover_ready || 0) !== 0) {
+  fail('wave one replacement summary cannot claim cutover-ready products');
+}
+if (Number(waveOneReplacements.summary?.destination_data_migrated_products || 0) !== 0) {
+  fail('wave one replacement summary cannot claim destination data migration yet');
+}
+if (waveOneReplacements.authority?.traffic_cutover !== false || waveOneReplacements.authority?.source_decommission !== false) {
+  fail('wave one replacement matrix must not carry cutover/decommission authority');
+}
+
+if (waveOneScheduledWork.schema !== 'evercraft.base44.wave-scheduled-work.v1' || waveOneScheduledWork.wave !== 1) {
+  fail('wave one scheduled work schema/wave is invalid');
+}
+const scheduledProducts = new Set((waveOneScheduledWork.jobs || []).map((row) => row.product));
+for (const expected of ['Systemia Remote Ops', 'Evercraft InternalOps']) {
+  if (!scheduledProducts.has(expected)) fail(`wave one scheduled work missing ${expected}`);
+}
+for (const job of waveOneScheduledWork.jobs || []) {
+  if (job.automatic_activation !== false) fail(`scheduled work may not auto-activate for ${job.product}`);
+  if (job.activation_state !== 'held_until_destination_data_live') {
+    fail(`scheduled work must remain held until destination data is live for ${job.product}`);
+  }
+}
+const waveOneSnapshot = estate.wave_profiles?.['1'];
+if (waveOneSnapshot?.replacement_matrix !== 'systemia/migrations/base44-exit/wave-1-replacement-matrix.json') {
+  fail('estate snapshot must bind the wave one replacement matrix');
+}
+if (waveOneSnapshot?.scheduled_work_spec !== 'systemia/migrations/base44-exit/wave-1-scheduled-work.json') {
+  fail('estate snapshot must bind the wave one scheduled work spec');
+}
+if (Number(waveOneSnapshot?.implementations_present_ci_pending || 0) !== implementationPending) {
+  fail('estate snapshot implementation count must match replacement matrix');
+}
+if (Number(waveOneSnapshot?.cutover_ready_products || 0) !== 0 || waveOneSnapshot?.cutover_authority !== false) {
+  fail('estate snapshot may not claim wave one cutover readiness or authority');
+}
+
 const first = estate.queue?.[0];
 if (first?.product !== 'Systemia Command Center' || first?.wave !== 1) {
   fail('Systemia Core / KAIDANCE extraction must remain first');
@@ -177,5 +257,8 @@ console.log(JSON.stringify({
   wave_one_profiled_products: profiledWaveOne.length,
   wave_one_entities: entityTotal,
   wave_one_functions: functionTotal,
-  wave_one_connected_connectors: connectorTotal
+  wave_one_connected_connectors: connectorTotal,
+  wave_one_implementations_present_ci_pending: implementationPending,
+  wave_one_cutover_ready_products: waveOneReplacements.summary.products_cutover_ready,
+  wave_one_scheduled_jobs: (waveOneScheduledWork.jobs || []).length
 }));
