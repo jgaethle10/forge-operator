@@ -27,7 +27,7 @@ try{
     'remote-capacity-broker-proof'
   );
 
-  const internal=buildComputeMarketAdapters({
+  const internal=await buildComputeMarketAdapters({
     acquisition:{auto_discover_markets:true},
     env:{EVERCRAFT_YARD_STATE_DIR:root},
     cwd:root,
@@ -35,7 +35,18 @@ try{
   assert.ok(internal.markets.includes('evercraft-broker'));
   assert.equal(internal.paid_capacity_auto_authorized,false);
 
-  const publicDiscovery=buildComputeMarketAdapters({
+  const voluntary=await buildComputeMarketAdapters({
+    acquisition:{auto_discover_markets:true},
+    env:{EVERCRAFT_VOLUNTARY_COMPUTE_ENDPOINT:'http://127.0.0.1:9999'},
+    cwd:root,
+  });
+  assert.ok(voluntary.markets.includes('evercraft-voluntary'));
+  assert.equal(
+    voluntary.inventory.find((row)=>row.market==='evercraft-voluntary')?.priority,
+    20
+  );
+
+  const publicDiscovery=await buildComputeMarketAdapters({
     acquisition:{
       auto_discover_markets:true,
       public_market_discovery:true,
@@ -49,7 +60,7 @@ try{
     'public_discovery_only'
   );
 
-  const configuredAkash=buildComputeMarketAdapters({
+  const configuredAkash=await buildComputeMarketAdapters({
     acquisition:{auto_discover_markets:true},
     env:{AKASH_API_KEY:'proof-key'},
     cwd:root,
@@ -60,7 +71,7 @@ try{
     true
   );
 
-  const none=buildComputeMarketAdapters({
+  const none=await buildComputeMarketAdapters({
     acquisition:{auto_discover_markets:true},
     env:{},
     cwd:path.join(root,'missing'),
@@ -71,6 +82,8 @@ try{
     ok:true,
     schema:'evercraft.saban.compute-market-factory-proof.v1',
     yard_broker_auto_discovered:true,
+    voluntary_compute_auto_discovered:true,
+    canonical_market_stack_priority_preserved:true,
     public_market_discovery_supported:true,
     configured_market_credentials_detected:true,
     no_paid_capacity_auto_authority:true,
