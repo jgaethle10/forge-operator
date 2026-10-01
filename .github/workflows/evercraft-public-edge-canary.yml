@@ -34,6 +34,25 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Resolve canonical specialist origin
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "${SPECIALIST_ORIGIN:-}" ]; then
+            resolved="$(node - <<'NODE'
+          const fs=require('fs');
+          const config=JSON.parse(fs.readFileSync('plugins/evercraft-fabric/mcp.json','utf8'));
+          const raw=config?.mcpServers?.evercraft?.url;
+          if(!raw) process.exit(2);
+          const url=new URL(raw);
+          if(url.protocol!=='https:') process.exit(3);
+          process.stdout.write(url.origin);
+          NODE
+            )"
+            echo "SPECIALIST_ORIGIN=$resolved" >> "$GITHUB_ENV"
+            echo "Resolved SPECIALIST_ORIGIN from the canonical Evercraft plugin package."
+          fi
+
       - name: Prepare receipt
         shell: bash
         run: |
@@ -44,13 +63,14 @@ jobs:
           {
             "schema": "evercraft.public-edge.external-canary.v1",
             "verified": false,
-            "state": "held_no_public_origin_configured",
+            "state": "blocked_no_public_origin",
             "public_https_verified": false,
             "founder_login_required": false
           }
           JSON
             cat artifacts/evercraft-public-edge-canary.json
-            exit 0
+            echo "No canonical public origin could be resolved." >&2
+            exit 1
           fi
 
           node - <<'NODE'
