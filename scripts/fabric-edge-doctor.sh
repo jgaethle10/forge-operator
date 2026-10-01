@@ -27,6 +27,76 @@ fi
 
 json_bool(){ [[ "$1" == "true" ]] && printf true || printf false; }
 
+RUN_UID="$(id -u "$RUN_USER")"
+USER_RUNTIME_DIR="/run/user/$RUN_UID"
+USER_BUS="unix:path=$USER_RUNTIME_DIR/bus"
+
+run_as_runtime_user(){
+  runuser -u "$RUN_USER" -- env     HOME="$RUN_HOME"     USER="$RUN_USER"     LOGNAME="$RUN_USER"     XDG_RUNTIME_DIR="$USER_RUNTIME_DIR"     DBUS_SESSION_BUS_ADDRESS="$USER_BUS"     "$@"
+}
+
+node_receipt="$RUN_HOME/.local/state/evercraft/organism/compute/nodeseed-receipt.json"
+allocator_file="$RUN_HOME/.local/state/evercraft/organism/.secrets/allocator-token"
+local_organism_install_receipt="/tmp/evercraft-edge-doctor-local-organism-install.log"
+self_update_install_receipt="/tmp/evercraft-edge-doctor-self-update-install.log"
+
+ensure_local_organism(){
+  if [[ -f "$node_receipt" && -f "$allocator_file" ]]; then
+    return 0
+  fi
+  if [[ ! -S "$USER_RUNTIME_DIR/bus" ]]; then
+    echo "ERROR: user systemd bus unavailable at $USER_RUNTIME_DIR/bus" >&2
+    return 31
+  fi
+  if [[ ! -f "$REPO_ROOT/systemia/compute/install-local-organism-user.sh" ]]; then
+    echo "ERROR: local organism installer missing" >&2
+    return 32
+  fi
+
+  echo "[repair] NodeSeed identity missing; installing/reconciling local organism..."
+  set +e
+  run_as_runtime_user bash "$REPO_ROOT/systemia/compute/install-local-organism-user.sh"     >"$local_organism_install_receipt" 2>&1
+  local rc=$?
+  set -e
+  if [[ "$rc" -ne 0 ]]; then
+    cat "$local_organism_install_receipt" >&2 || true
+    return 33
+  fi
+
+  for _ in 1 2 3 4 5 6 7 8 9 10; do
+    [[ -f "$node_receipt" && -f "$allocator_file" ]] && return 0
+    sleep 1
+  done
+  cat "$local_organism_install_receipt" >&2 || true
+  echo "ERROR: local organism started but NodeSeed identity material did not appear" >&2
+  return 34
+}
+
+ensure_fabric_update_timer(){
+  if systemctl list-unit-files evercraft-fabric-update.timer --no-legend 2>/dev/null | grep -q '^evercraft-fabric-update.timer'; then
+    systemctl enable --now evercraft-fabric-update.timer >/dev/null 2>&1 || true
+  else
+    if [[ ! -f "$REPO_ROOT/scripts/install-fabric-self-update.sh" ]]; then
+      echo "ERROR: Fabric self-update installer missing" >&2
+      return 41
+    fi
+    echo "[repair] Fabric updater missing; installing 5-minute verified updater..."
+    set +e
+    bash "$REPO_ROOT/scripts/install-fabric-self-update.sh"       --repo-root "$REPO_ROOT" --cadence 5min       >"$self_update_install_receipt" 2>&1
+    local rc=$?
+    set -e
+    if [[ "$rc" -ne 0 ]]; then
+      cat "$self_update_install_receipt" >&2 || true
+      return 42
+    fi
+  fi
+
+  systemctl daemon-reload
+  systemctl enable --now evercraft-fabric-update.timer >/dev/null 2>&1 || return 43
+  systemctl start evercraft-fabric-update.service >/dev/null 2>&1 || return 44
+  return 0
+}
+
 service_state(){
   local unit="$1"
   systemctl is-active "$unit" 2>/dev/null || true
@@ -54,17 +124,34 @@ echo "=== EVERCRAFT FABRIC EDGE DOCTOR ==="
 echo "repo=$REPO_ROOT"
 echo "domain=$DOMAIN"
 
+local_organism_repair_ok=true
+self_update_repair_ok=true
+local_organism_repair_code=0
+self_update_repair_code=0
+
 if [[ "$REPAIR" == "true" ]]; then
   echo
-  echo "[repair] starting resident services/timers where available..."
+  echo "[repair] reconciling local organism, updater, and resident edge services..."
+
+  set +e
+  ensure_local_organism
+  local_organism_repair_code=$?
+  set -e
+  [[ "$local_organism_repair_code" -eq 0 ]] || local_organism_repair_ok=false
+
+  set +e
+  ensure_fabric_update_timer
+  self_update_repair_code=$?
+  set -e
+  [[ "$self_update_repair_code" -eq 0 ]] || self_update_repair_ok=false
+
   systemctl enable --now evercraft-fabric.service >/dev/null 2>&1 || true
   systemctl enable --now evercraft-public-edge.service >/dev/null 2>&1 || true
   systemctl enable --now evercraft-router-map.timer >/dev/null 2>&1 || true
-  systemctl enable --now evercraft-fabric-update.timer >/dev/null 2>&1 || true
-  systemctl start evercraft-fabric-update.service >/dev/null 2>&1 || true
   systemctl restart evercraft-fabric.service >/dev/null 2>&1 || true
   systemctl restart evercraft-public-edge.service >/dev/null 2>&1 || true
   systemctl start evercraft-router-map.service >/dev/null 2>&1 || true
+  sleep 2
 fi
 
 fabric_state="$(service_state evercraft-fabric.service)"
@@ -78,6 +165,12 @@ echo "evercraft-fabric.service=$fabric_state"
 echo "evercraft-public-edge.service=$edge_state"
 echo "evercraft-router-map.timer=$router_timer_state"
 echo "evercraft-fabric-update.timer=$update_timer_state"
+if [[ "$REPAIR" == "true" ]]; then
+  echo "local_organism_repair_ok=$local_organism_repair_ok"
+  echo "local_organism_repair_code=$local_organism_repair_code"
+  echo "self_update_repair_ok=$self_update_repair_ok"
+  echo "self_update_repair_code=$self_update_repair_code"
+fi
 
 local_health_ok=false
 local_health=""
@@ -143,8 +236,6 @@ echo "[address identity]"
 echo "dns_ipv4=${dns_ip:-unavailable}"
 echo "public_ipv4_seen_inside=${public_ip:-unavailable}"
 
-node_receipt="$RUN_HOME/.local/state/evercraft/organism/compute/nodeseed-receipt.json"
-allocator_file="$RUN_HOME/.local/state/evercraft/organism/.secrets/allocator-token"
 node_identity_ready=false
 [[ -f "$node_receipt" && -f "$allocator_file" ]] && node_identity_ready=true
 
@@ -166,7 +257,11 @@ echo "local_edge_attestation_responding=$attestation_local_ok"
 
 diagnosis="unknown"
 human_gate=false
-if [[ "$local_health_ok" != "true" ]]; then
+if [[ "$REPAIR" == "true" && "$local_organism_repair_ok" != "true" ]]; then
+  diagnosis="local_organism_repair_failed"
+elif [[ "$REPAIR" == "true" && "$self_update_repair_ok" != "true" ]]; then
+  diagnosis="fabric_update_repair_failed"
+elif [[ "$local_health_ok" != "true" ]]; then
   diagnosis="fabric_runtime_unreachable"
 elif [[ -n "$LAN_HOST" && ( "$lan_http_ok" != "true" || "$lan_https_ok" != "true" ) ]]; then
   diagnosis="chromeos_host_forward_unreachable"
@@ -195,6 +290,10 @@ cat > /tmp/evercraft-fabric-edge-doctor.json <<EOF
   "public_edge_service":"$edge_state",
   "router_map_timer":"$router_timer_state",
   "fabric_update_timer":"$update_timer_state",
+  "local_organism_repair_ok":$(json_bool "$local_organism_repair_ok"),
+  "local_organism_repair_code":$local_organism_repair_code,
+  "self_update_repair_ok":$(json_bool "$self_update_repair_ok"),
+  "self_update_repair_code":$self_update_repair_code,
   "lan_http_forward_ok":$(json_bool "$lan_http_ok"),
   "lan_https_forward_ok":$(json_bool "$lan_https_ok"),
   "router_refresh_ok":$(json_bool "$router_refresh_ok"),
