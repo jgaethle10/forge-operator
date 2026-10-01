@@ -84,6 +84,12 @@ const summary=buildClusterAdversarialSummary({
       }],
     }],
   }))},
+  liquidityStateContracts:{reviews:candidates.map((candidate)=>({
+    signal_key:candidate.signal_key,
+    status:"LIQUIDITY_STATE_CONTRACT_READY",
+    full_depth:{measurement_state:"unavailable_not_observed"},
+    impact:{measurement_state:"modeled_sensitivity_not_observed"},
+  }))},
   familyMaxNullLab:{reviews:candidates.map((candidate)=>({
     signal_key:candidate.signal_key,
     status:"MAX_FAMILY_NULL_SEPARATED_DIAGNOSTIC",
@@ -190,6 +196,22 @@ assert.equal(
   -0.002
 );
 assert.equal(
+  summary.clusters[0].diagnostic_counts.liquidity_state_contract_ready,
+  2
+);
+assert.equal(
+  summary.clusters[0].member_receipts[0].liquidity_state_contract_status,
+  "LIQUIDITY_STATE_CONTRACT_READY"
+);
+assert.equal(
+  summary.clusters[0].member_receipts[0].full_depth_measurement_state,
+  "unavailable_not_observed"
+);
+assert.equal(
+  summary.clusters[0].member_receipts[0].impact_measurement_state,
+  "modeled_sensitivity_not_observed"
+);
+assert.equal(
   summary.clusters[0].member_receipts[0].family_max_null_status,
   "MAX_FAMILY_NULL_SEPARATED_DIAGNOSTIC"
 );
@@ -221,6 +243,9 @@ console.log(JSON.stringify({
   signal_decay_cost_decomposition_attached:true,
   execution_speed_bounds_attached:true,
   capital_scale_impact_envelope_attached:true,
+  liquidity_measurement_states_attached:true,
+  full_depth_missing_not_zero:true,
+  modeled_impact_not_observed_impact:true,
   cscv_pbo_attached_at_cluster_unit:true,
   descriptive_only:true,
   eligibility_mutated:false,
