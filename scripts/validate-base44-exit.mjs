@@ -14,6 +14,9 @@ const waveOneReplacements = JSON.parse(fs.readFileSync(
 const waveOneScheduledWork = JSON.parse(fs.readFileSync(
   new URL('../systemia/migrations/base44-exit/wave-1-scheduled-work.json', import.meta.url)
 ));
+const commandCenterShadowCapture = JSON.parse(fs.readFileSync(
+  new URL('../systemia/migrations/base44-exit/wave-1-command-center-shadow-source-capture-2026-10-01.json', import.meta.url)
+));
 
 const fail = (message) => {
   console.error(`BASE44_EXIT_POLICY_FAIL: ${message}`);
@@ -177,6 +180,46 @@ for (const row of profiledWaveOne) {
   }
 }
 
+if (commandCenterShadowCapture.schema !== 'evercraft.base44.live-shadow-source-capture.v1') {
+  fail('Command Center shadow source capture schema is invalid');
+}
+if (commandCenterShadowCapture.product !== 'Systemia Command Center') {
+  fail('Command Center shadow source capture product mismatch');
+}
+if (commandCenterShadowCapture.hash_algorithm !== 'sha256' ||
+    commandCenterShadowCapture.hash_implementation_self_test?.passed !== true) {
+  fail('Command Center shadow source capture must use self-tested SHA-256');
+}
+const shadowEntities = commandCenterShadowCapture.entities || [];
+const shadowRows = shadowEntities.reduce((sum, row) => sum + Number(row.row_count || 0), 0);
+const shadowPages = shadowEntities.reduce((sum, row) => sum + Number(row.pages || 0), 0);
+if (shadowEntities.length !== Number(commandCenterShadowCapture.totals?.entities || 0) ||
+    shadowRows !== Number(commandCenterShadowCapture.totals?.rows || 0) ||
+    shadowPages !== Number(commandCenterShadowCapture.totals?.pages || 0)) {
+  fail('Command Center shadow source capture totals do not reconcile');
+}
+for (const row of shadowEntities) {
+  if (row.terminal_pagination !== true) fail(`shadow capture pagination incomplete for ${row.entity_name}`);
+  if (!/^sha256:[a-f0-9]{64}$/.test(String(row.stream_sha256 || ''))) {
+    fail(`shadow capture stream hash invalid for ${row.entity_name}`);
+  }
+  if (!/^sha256:[a-f0-9]{64}$/.test(String(row.field_set_sha256 || ''))) {
+    fail(`shadow capture field-set hash invalid for ${row.entity_name}`);
+  }
+}
+if (commandCenterShadowCapture.privacy?.raw_app_id_emitted !== false ||
+    commandCenterShadowCapture.privacy?.raw_record_ids_emitted !== false ||
+    commandCenterShadowCapture.privacy?.raw_records_emitted !== false ||
+    commandCenterShadowCapture.privacy?.field_values_emitted !== false) {
+  fail('Command Center shadow source capture privacy boundary failed');
+}
+if (commandCenterShadowCapture.authority?.source_mutation !== false ||
+    commandCenterShadowCapture.authority?.destination_write !== false ||
+    commandCenterShadowCapture.authority?.traffic_cutover !== false ||
+    commandCenterShadowCapture.authority?.source_decommission !== false) {
+  fail('Command Center shadow source capture exceeded read-only authority');
+}
+
 if (waveOneReplacements.schema !== 'evercraft.base44.wave-replacement-matrix.v1' || waveOneReplacements.wave !== 1) {
   fail('wave one replacement matrix schema/wave is invalid');
 }
@@ -287,5 +330,8 @@ console.log(JSON.stringify({
   wave_one_connected_connectors: connectorTotal,
   wave_one_implementations_present_ci_pending: implementationPending,
   wave_one_cutover_ready_products: waveOneReplacements.summary.products_cutover_ready,
-  wave_one_scheduled_jobs: (waveOneScheduledWork.jobs || []).length
+  wave_one_scheduled_jobs: (waveOneScheduledWork.jobs || []).length,
+  command_center_shadow_capture_entities: shadowEntities.length,
+  command_center_shadow_capture_rows: shadowRows,
+  command_center_shadow_capture_pages: shadowPages
 }));
