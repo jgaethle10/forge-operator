@@ -79,6 +79,26 @@ test('FAIE builds a scoped investigation with provenance and unknowns', () => {
   assert.ok(result.investigation.evidence_ledger[0].provenance_refs.length >= 1);
 });
 
+test('FAIE excludes evidence outside the requested time horizon', () => {
+  let state = emptyFaieState();
+  state = ingestFaieObservation(state, observation({
+    observation_id: 'obs:stale-water',
+    observed_at: '2026-07-01T18:00:00.000Z',
+    summary: 'Old Yakima irrigation water observation.'
+  }), { now: NOW }).state;
+
+  const result = buildFaieInvestigation(state, {
+    question: 'What current evidence affects Yakima irrigation?',
+    region_keys: ['yakima-wa'],
+    horizon_days: 7
+  }, { now: NOW });
+
+  assert.equal(result.investigation.status, 'insufficient_evidence');
+  assert.equal(result.investigation.findings.length, 0);
+  assert.equal(result.investigation.coverage.horizon_days, 7);
+  assert.equal(result.investigation.coverage.horizon_start, '2026-09-23T20:00:00.000Z');
+});
+
 test('FAIE consumes only dispatches addressed to faie', () => {
   const ignored = ingestWorldstateDispatch(emptyFaieState(), {
     dispatch: { consumer: 'towi' },
