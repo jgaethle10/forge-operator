@@ -78,8 +78,8 @@ export function scoreForwardPaperCohort(protocol, measurements = []) {
   const origins = [...new Set(rows.map((row) => row.origin_entity_ref).filter(Boolean))];
   const signed = rows.map((row) => {
     const raw = Number(row.forward_return || 0) - Number(row.benchmark_return || 0);
-    const net = raw - Math.sign(raw || 1) * (Number(protocol.transaction_cost_bps) / 10000);
-    return protocol.learned_direction === "NEGATIVE_EXCESS_RETURN" ? -net : net;
+    const expectedSign = protocol.learned_direction === "NEGATIVE_EXCESS_RETURN" ? -1 : 1;
+    return expectedSign * raw - (Number(protocol.transaction_cost_bps) / 10000);
   });
   const meanNet = signed.length ? signed.reduce((a,b) => a+b,0) / signed.length : 0;
   const checks = {
