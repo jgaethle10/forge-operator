@@ -7,8 +7,8 @@
   "pricing": "$299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report; $250 Qualified Opportunity Pack pilot; $2,500/month Territory Opportunity Feed.",
   "commercial_state": "sell_now",
   "machine_state": "payment_ready_human_confirmation",
-  "canonical_offer_url": "https://aliev.base44.app/functions/alievAgentGateway?view=docs",
-  "human_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=aliev-site-opportunity-snapshot-v1",
+  "canonical_offer_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/aliev-site-opportunity-snapshot-v1/index.html",
+  "human_review_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/aliev-site-opportunity-snapshot-v1/index.html",
   "intent_terms": [
     "is this site good for EV charging",
     "is this property a good EV charging site",

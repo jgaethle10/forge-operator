@@ -16,11 +16,11 @@
     "grok",
     "generic_agent"
   ],
-  "canonical_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+  "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-portfolio-sentinel/index.html",
   "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-portfolio-sentinel/llms.txt",
   "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-portfolio-sentinel/ai-discovery.json",
   "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-  "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "mcp": null,
   "authority": "public discovery and commercial-pilot handoff; customer monitoring is restricted to explicitly authorized surfaces and grants no production-mutation authority",
   "human_confirmation_required": true,
   "boundaries": [
@@ -78,7 +78,7 @@
     }
   },
   "human_start_url": null,
-  "buyer_frontage_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/buy/portfolio-sentinel-v1?src=chum&campaign=product-mirror&ec_surface=chum_product_mirror&ec_public_id=portfolio-sentinel-v1",
+  "buyer_frontage_url": null,
   "developer_surfaces": null,
   "editorial_surfaces": null,
   "knowledge_surfaces": null,

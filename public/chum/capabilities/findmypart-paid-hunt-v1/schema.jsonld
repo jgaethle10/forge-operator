@@ -3,10 +3,10 @@
   "@graph": [
     {
       "@type": "Service",
-      "@id": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs#evercraft-capability",
+      "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/findmypart-paid-hunt-v1/index.html#evercraft-capability",
       "name": "FindMyPart Paid Part Hunt",
       "description": "A difficult, identified-enough physical part is still blocking a repair, restoration, machine or project after ordinary sourcing has failed or deeper cross-reference, salvage, documentation, blueprint or fabrication work is needed.",
-      "url": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs",
+      "url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/findmypart-paid-hunt-v1/index.html",
       "provider": {
         "@type": "Organization",
         "name": "Evercraft LLC",
@@ -20,7 +20,7 @@
       "name": "FindMyPart Paid Part Hunt | Evercraft capability",
       "description": "A difficult, identified-enough physical part is still blocking a repair, restoration, machine or project after ordinary sourcing has failed or deeper cross-reference, salvage, documentation, blueprint or fabrication work is needed.",
       "about": {
-        "@id": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs#evercraft-capability"
+        "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/findmypart-paid-hunt-v1/index.html#evercraft-capability"
       }
     }
   ]

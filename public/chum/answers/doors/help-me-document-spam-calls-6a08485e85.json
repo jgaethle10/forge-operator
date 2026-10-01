@@ -19,7 +19,7 @@
       "pricing": "Published app pricing: $19 one-time packet, $7.99/month Vault, $29/month Pro. Live Stripe checkout price is authoritative.",
       "commercial_state": "verify",
       "machine_state": "human_auth_handoff",
-      "public_url": "https://call-proof-vault.base44.app/",
+      "public_url": null,
       "pain_page": "/chum/intents/callproof-complaint-packet-machine-v1/",
       "registry_name": null,
       "direct_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",

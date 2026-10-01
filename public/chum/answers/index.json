@@ -138,7 +138,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/raven-nexus-pain-router-v1/",
-          "public_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -207,7 +207,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-bounded-agent-action-v1/",
-          "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -230,7 +230,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/eventwave-paid-promotion-v1/",
-          "public_url": "https://event-wave.base44.app/functions/eventWaveAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -322,7 +322,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-bounded-agent-action-v1/",
-          "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -391,7 +391,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -414,7 +414,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-entity-resolution-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -437,7 +437,7 @@
           "commercial_state": "commercial_pilot",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -495,7 +495,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/raven-nexus-pain-router-v1/",
-          "public_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -518,7 +518,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-bounded-agent-action-v1/",
-          "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -610,7 +610,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/evercraft-clip-social-video-v1/",
-          "public_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -795,7 +795,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/forensiscope-evidence-review-v1/",
-          "public_url": "https://evercraft-forensiscope.base44.app/video-too-large-for-ai",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -864,7 +864,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/forensiscope-evidence-review-v1/",
-          "public_url": "https://evercraft-forensiscope.base44.app/video-too-large-for-ai",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -887,7 +887,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-process-audit-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -910,7 +910,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-shadow-migration-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -933,7 +933,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-procure-to-pay-shadow-v1/",
-          "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -979,7 +979,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -1037,7 +1037,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "human_handoff_only",
           "pain_page": "/chum/intents/evercraft-network-resilience-membership-v1/",
-          "public_url": "https://network-control.base44.app/join",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -1290,7 +1290,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/forensiscope-evidence-review-v1/",
-          "public_url": "https://evercraft-forensiscope.base44.app/video-too-large-for-ai",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -1359,7 +1359,7 @@
           "commercial_state": "sell_now",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/foundry-app-escape-audit-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=foundry-app-escape-audit-v1",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -1428,7 +1428,7 @@
           "commercial_state": "verify",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/career-command-resume-job-fit-machine-v1/",
-          "public_url": "https://evercraft-career-command.base44.app/",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -1451,7 +1451,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/audit-center-website-audit-machine-v1/",
-          "public_url": "https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -1497,7 +1497,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-process-audit-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -1520,7 +1520,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-procure-to-pay-shadow-v1/",
-          "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -1566,7 +1566,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/datafoundry-data-gap-audit-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6a961b11776ad5ca30439db3/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -1589,7 +1589,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/freight-load-exception-intelligence-machine-v1/",
-          "public_url": "https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -1624,7 +1624,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/littlered-kdp-export-qa-machine-v1/",
-          "public_url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -1705,7 +1705,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/roasted-text-pressure-test-machine-v1/",
-          "public_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -1728,7 +1728,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/career-command-interview-practice-machine-v1/",
-          "public_url": "https://evercraft-career-command.base44.app/functions/careerAgentGateway?view=offers",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -1820,7 +1820,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/eventwave-paid-promotion-v1/",
-          "public_url": "https://event-wave.base44.app/functions/eventWaveAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -1855,7 +1855,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/eventwave-paid-promotion-v1/",
-          "public_url": "https://event-wave.base44.app/functions/eventWaveAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -1970,7 +1970,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "specialist_discovery_ready_runtime_gated",
           "pain_page": "/chum/intents/evercraft-web-browser-agent-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=web",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -2051,7 +2051,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/roasted-text-pressure-test-machine-v1/",
-          "public_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -2074,7 +2074,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -2166,7 +2166,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/deck-capital-fit-sprint-machine-v1/",
-          "public_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -2339,7 +2339,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/talent-evidence-profile-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -2535,7 +2535,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/website-launch-service-v1/",
-          "public_url": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -2581,7 +2581,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/towi-evidence-research-machine-v1/",
-          "public_url": "https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -2662,7 +2662,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/raven-nexus-pain-router-v1/",
-          "public_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -2685,7 +2685,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "human_handoff_only",
           "pain_page": "/chum/intents/evercraft-network-resilience-membership-v1/",
-          "public_url": "https://network-control.base44.app/join",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -2731,7 +2731,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/raven-nexus-pain-router-v1/",
-          "public_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -2800,7 +2800,7 @@
           "commercial_state": "sell_now",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/site-survive-rapid-audit-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -2892,7 +2892,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/eventwave-paid-promotion-v1/",
-          "public_url": "https://event-wave.base44.app/functions/eventWaveAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -2915,7 +2915,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/systemia-yard-runtime-extension-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=systemia-yard-runtime-extension-v1",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -2984,7 +2984,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -3007,7 +3007,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -3122,7 +3122,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "specialist_discovery_ready_runtime_gated",
           "pain_page": "/chum/intents/evercraft-web-browser-agent-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=web",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -3168,7 +3168,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -3237,7 +3237,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/littlered-kdp-export-qa-machine-v1/",
-          "public_url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -3272,7 +3272,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/audit-center-website-audit-machine-v1/",
-          "public_url": "https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -3295,7 +3295,7 @@
           "commercial_state": "verify",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/career-command-resume-job-fit-machine-v1/",
-          "public_url": "https://evercraft-career-command.base44.app/",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -3318,7 +3318,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/littlered-kdp-export-qa-machine-v1/",
-          "public_url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -3353,7 +3353,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/freight-load-exception-intelligence-machine-v1/",
-          "public_url": "https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -3457,7 +3457,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "specialist_discovery_ready_runtime_gated",
           "pain_page": "/chum/intents/evercraft-web-browser-agent-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=web",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -3572,7 +3572,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
-          "public_url": "https://aliev.base44.app/functions/alievAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -4032,7 +4032,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-process-audit-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -4055,7 +4055,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/globalstat-country-intelligence-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -4090,7 +4090,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/forensiscope-evidence-review-v1/",
-          "public_url": "https://evercraft-forensiscope.base44.app/video-too-large-for-ai",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -4136,7 +4136,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/buildflow-enterprise-ops-router-v1/",
-          "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -4251,7 +4251,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "human_handoff_only",
           "pain_page": "/chum/intents/evercraft-network-resilience-membership-v1/",
-          "public_url": "https://network-control.base44.app/join",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -4320,7 +4320,7 @@
           "commercial_state": "commercial_pilot",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -4355,7 +4355,7 @@
           "commercial_state": "commercial_pilot",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -4436,7 +4436,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -4459,7 +4459,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -4574,7 +4574,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -4597,7 +4597,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -4712,7 +4712,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/globalstat-country-intelligence-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -4931,7 +4931,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/evercraft-clip-social-video-v1/",
-          "public_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -4966,7 +4966,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/raven-nexus-pain-router-v1/",
-          "public_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -5058,7 +5058,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -5185,7 +5185,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-entity-resolution-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -5254,7 +5254,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/datafoundry-data-gap-audit-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6a961b11776ad5ca30439db3/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -5277,7 +5277,7 @@
           "commercial_state": "commercial_pilot",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -5312,7 +5312,7 @@
           "commercial_state": "commercial_pilot",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -5393,7 +5393,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "human_handoff_only",
           "pain_page": "/chum/intents/evercraft-network-resilience-membership-v1/",
-          "public_url": "https://network-control.base44.app/join",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -5416,7 +5416,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "human_handoff_only",
           "pain_page": "/chum/intents/evercraft-network-resilience-membership-v1/",
-          "public_url": "https://network-control.base44.app/join",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -5439,7 +5439,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/faie-signal-brief-v1/",
-          "public_url": "https://faie.base44.app/functions/faieAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -5692,7 +5692,7 @@
           "commercial_state": "sell_now",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/foundry-app-escape-audit-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=foundry-app-escape-audit-v1",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -5784,7 +5784,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -5807,7 +5807,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -5876,7 +5876,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
-          "public_url": "https://aliev.base44.app/functions/alievAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -5899,7 +5899,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -5934,7 +5934,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -5969,7 +5969,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -5992,7 +5992,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
-          "public_url": "https://aliev.base44.app/functions/alievAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -6015,7 +6015,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -6050,7 +6050,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -6073,7 +6073,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
-          "public_url": "https://aliev.base44.app/functions/alievAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -6096,7 +6096,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -6131,7 +6131,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
-          "public_url": "https://aliev.base44.app/functions/alievAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -6200,7 +6200,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -6258,7 +6258,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -6362,7 +6362,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -6385,7 +6385,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/talent-evidence-profile-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -6466,7 +6466,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "human_handoff_only",
           "pain_page": "/chum/intents/evercraft-network-resilience-membership-v1/",
-          "public_url": "https://network-control.base44.app/join",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -6524,7 +6524,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/forensiscope-evidence-review-v1/",
-          "public_url": "https://evercraft-forensiscope.base44.app/video-too-large-for-ai",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -6731,7 +6731,7 @@
           "commercial_state": "sell_now",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/foundry-app-escape-audit-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=foundry-app-escape-audit-v1",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -6754,7 +6754,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/systemia-yard-runtime-extension-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=systemia-yard-runtime-extension-v1",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -6846,7 +6846,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/raven-nexus-pain-router-v1/",
-          "public_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -7076,7 +7076,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/eventwave-paid-promotion-v1/",
-          "public_url": "https://event-wave.base44.app/functions/eventWaveAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -7122,7 +7122,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "specialist_discovery_ready_runtime_gated",
           "pain_page": "/chum/intents/evercraft-web-browser-agent-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=web",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -7191,7 +7191,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -7260,7 +7260,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/findmypart-paid-hunt-v1/",
-          "public_url": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -7329,7 +7329,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/findmypart-paid-hunt-v1/",
-          "public_url": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -7352,7 +7352,7 @@
           "commercial_state": "free",
           "machine_state": "read_only_live",
           "pain_page": "/chum/intents/findmypart-part-passport-v1/",
-          "public_url": "https://findmypart.base44.app/free-part-check",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -7375,7 +7375,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/findmypart-paid-hunt-v1/",
-          "public_url": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -7398,7 +7398,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/findmypart-paid-hunt-v1/",
-          "public_url": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -7513,7 +7513,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/findmypart-paid-hunt-v1/",
-          "public_url": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -7594,7 +7594,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-process-audit-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -7617,7 +7617,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/deck-capital-fit-sprint-machine-v1/",
-          "public_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -7663,7 +7663,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-shadow-migration-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -7709,7 +7709,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/audit-center-website-audit-machine-v1/",
-          "public_url": "https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -7755,7 +7755,7 @@
           "commercial_state": "commercial_pilot",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -7836,7 +7836,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
-          "public_url": "https://aliev.base44.app/functions/alievAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -7882,7 +7882,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/talent-evidence-profile-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -7986,7 +7986,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/freight-load-exception-intelligence-machine-v1/",
-          "public_url": "https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -8021,7 +8021,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-procure-to-pay-shadow-v1/",
-          "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -8044,7 +8044,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/findmypart-repair-shop-desk-v1/",
-          "public_url": "https://findmypart.base44.app/",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -8136,7 +8136,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/datafoundry-data-gap-audit-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6a961b11776ad5ca30439db3/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -8378,7 +8378,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/evercraft-clip-social-video-v1/",
-          "public_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -8563,7 +8563,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -8690,7 +8690,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -9012,7 +9012,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-bounded-agent-action-v1/",
-          "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -9081,7 +9081,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/towi-evidence-research-machine-v1/",
-          "public_url": "https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -9116,7 +9116,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/faie-signal-brief-v1/",
-          "public_url": "https://faie.base44.app/functions/faieAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -9139,7 +9139,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/evermaps-evidence-projection-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6a985aeccbfb6e930a40137b/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -9197,7 +9197,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/globalstat-country-intelligence-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -9232,7 +9232,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "specialist_discovery_ready_runtime_gated",
           "pain_page": "/chum/intents/evercraft-web-browser-agent-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=web",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -9278,7 +9278,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/systemia-yard-runtime-extension-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=systemia-yard-runtime-extension-v1",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -9324,7 +9324,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/website-launch-service-v1/",
-          "public_url": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -9370,7 +9370,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "specialist_discovery_ready_runtime_gated",
           "pain_page": "/chum/intents/evercraft-web-browser-agent-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=web",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -9416,7 +9416,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/buildflow-enterprise-ops-router-v1/",
-          "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -9462,7 +9462,7 @@
           "commercial_state": "verify",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/callproof-complaint-packet-machine-v1/",
-          "public_url": "https://call-proof-vault.base44.app/",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -9497,7 +9497,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/deck-capital-fit-sprint-machine-v1/",
-          "public_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -9635,7 +9635,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/deck-capital-fit-sprint-machine-v1/",
-          "public_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -9658,7 +9658,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/career-command-interview-practice-machine-v1/",
-          "public_url": "https://evercraft-career-command.base44.app/functions/careerAgentGateway?view=offers",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -9911,7 +9911,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/eventwave-paid-promotion-v1/",
-          "public_url": "https://event-wave.base44.app/functions/eventWaveAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -10084,7 +10084,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/raven-nexus-pain-router-v1/",
-          "public_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -10107,7 +10107,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/raven-nexus-pain-router-v1/",
-          "public_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -10130,7 +10130,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
-          "public_url": "https://aliev.base44.app/functions/alievAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -10153,7 +10153,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -10188,7 +10188,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "human_handoff_only",
           "pain_page": "/chum/intents/evercraft-network-resilience-membership-v1/",
-          "public_url": "https://network-control.base44.app/join",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -10465,7 +10465,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/career-command-interview-practice-machine-v1/",
-          "public_url": "https://evercraft-career-command.base44.app/functions/careerAgentGateway?view=offers",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -10603,7 +10603,7 @@
           "commercial_state": "free",
           "machine_state": "read_only_live",
           "pain_page": "/chum/intents/findmypart-part-passport-v1/",
-          "public_url": "https://findmypart.base44.app/free-part-check",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -11167,7 +11167,7 @@
           "commercial_state": "free",
           "machine_state": "read_only_live",
           "pain_page": "/chum/intents/findmypart-part-passport-v1/",
-          "public_url": "https://findmypart.base44.app/free-part-check",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -11190,7 +11190,7 @@
           "commercial_state": "free",
           "machine_state": "read_only_live",
           "pain_page": "/chum/intents/findmypart-part-passport-v1/",
-          "public_url": "https://findmypart.base44.app/free-part-check",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -11213,7 +11213,7 @@
           "commercial_state": "free",
           "machine_state": "read_only_live",
           "pain_page": "/chum/intents/findmypart-part-passport-v1/",
-          "public_url": "https://findmypart.base44.app/free-part-check",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -11259,7 +11259,7 @@
           "commercial_state": "free",
           "machine_state": "read_only_live",
           "pain_page": "/chum/intents/findmypart-part-passport-v1/",
-          "public_url": "https://findmypart.base44.app/free-part-check",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -11351,7 +11351,7 @@
           "commercial_state": "free",
           "machine_state": "read_only_live",
           "pain_page": "/chum/intents/findmypart-part-passport-v1/",
-          "public_url": "https://findmypart.base44.app/free-part-check",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -11374,7 +11374,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/raven-nexus-pain-router-v1/",
-          "public_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -11489,7 +11489,7 @@
           "commercial_state": "sell_now",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/site-survive-rapid-audit-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -11535,7 +11535,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/faie-signal-brief-v1/",
-          "public_url": "https://faie.base44.app/functions/faieAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -11581,7 +11581,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/littlered-kdp-export-qa-machine-v1/",
-          "public_url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -11616,7 +11616,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
-          "public_url": "https://aliev.base44.app/functions/alievAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -11639,7 +11639,7 @@
           "commercial_state": "verify",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/career-command-resume-job-fit-machine-v1/",
-          "public_url": "https://evercraft-career-command.base44.app/",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -11662,7 +11662,7 @@
           "commercial_state": "free",
           "machine_state": "read_only_live",
           "pain_page": "/chum/intents/findmypart-part-passport-v1/",
-          "public_url": "https://findmypart.base44.app/free-part-check",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -11685,7 +11685,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
-          "public_url": "https://aliev.base44.app/functions/alievAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -11731,7 +11731,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
-          "public_url": "https://aliev.base44.app/functions/alievAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -11777,7 +11777,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -11961,7 +11961,7 @@
           "commercial_state": "commercial_pilot",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -12019,7 +12019,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "human_handoff_only",
           "pain_page": "/chum/intents/evercraft-network-resilience-membership-v1/",
-          "public_url": "https://network-control.base44.app/join",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -12088,7 +12088,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/systemia-yard-runtime-extension-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=systemia-yard-runtime-extension-v1",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -12134,7 +12134,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -12249,7 +12249,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/website-launch-service-v1/",
-          "public_url": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -12525,7 +12525,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-bounded-agent-action-v1/",
-          "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -12571,7 +12571,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "specialist_discovery_ready_runtime_gated",
           "pain_page": "/chum/intents/evercraft-web-browser-agent-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=web",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -12801,7 +12801,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/forensiscope-evidence-review-v1/",
-          "public_url": "https://evercraft-forensiscope.base44.app/video-too-large-for-ai",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -12847,7 +12847,7 @@
           "commercial_state": "verify",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/callproof-complaint-packet-machine-v1/",
-          "public_url": "https://call-proof-vault.base44.app/",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -12905,7 +12905,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/towi-evidence-research-machine-v1/",
-          "public_url": "https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -12940,7 +12940,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/website-launch-service-v1/",
-          "public_url": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -12986,7 +12986,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/evercraft-clip-social-video-v1/",
-          "public_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -13021,7 +13021,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/evercraft-clip-social-video-v1/",
-          "public_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -13125,7 +13125,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-shadow-migration-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -13171,7 +13171,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-process-audit-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -13229,7 +13229,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/towi-evidence-research-machine-v1/",
-          "public_url": "https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -13264,7 +13264,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/evermaps-evidence-projection-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6a985aeccbfb6e930a40137b/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -13299,7 +13299,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/talent-evidence-profile-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -13334,7 +13334,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-entity-resolution-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -13403,7 +13403,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/forensiscope-evidence-review-v1/",
-          "public_url": "https://evercraft-forensiscope.base44.app/video-too-large-for-ai",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -13518,7 +13518,7 @@
           "commercial_state": "sell_now",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/foundry-app-escape-audit-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=foundry-app-escape-audit-v1",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -13541,7 +13541,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-shadow-migration-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -13587,7 +13587,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/career-command-interview-practice-machine-v1/",
-          "public_url": "https://evercraft-career-command.base44.app/functions/careerAgentGateway?view=offers",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -13702,7 +13702,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/buildflow-enterprise-ops-router-v1/",
-          "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -13725,7 +13725,7 @@
           "commercial_state": "commercial_pilot",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -13760,7 +13760,7 @@
           "commercial_state": "commercial_pilot",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -13795,7 +13795,7 @@
           "commercial_state": "commercial_pilot",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -13980,7 +13980,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "human_handoff_only",
           "pain_page": "/chum/intents/evercraft-network-resilience-membership-v1/",
-          "public_url": "https://network-control.base44.app/join",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -14049,7 +14049,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "human_handoff_only",
           "pain_page": "/chum/intents/evercraft-network-resilience-membership-v1/",
-          "public_url": "https://network-control.base44.app/join",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -14072,7 +14072,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/audit-center-website-audit-machine-v1/",
-          "public_url": "https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -14141,7 +14141,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "human_handoff_only",
           "pain_page": "/chum/intents/evercraft-network-resilience-membership-v1/",
-          "public_url": "https://network-control.base44.app/join",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -14176,7 +14176,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -14199,7 +14199,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/findmypart-paid-hunt-v1/",
-          "public_url": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -14222,7 +14222,7 @@
           "commercial_state": "sell_now",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/site-survive-rapid-audit-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -14268,7 +14268,7 @@
           "commercial_state": "commercial_pilot",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -14372,7 +14372,7 @@
           "commercial_state": "verify",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/callproof-complaint-packet-machine-v1/",
-          "public_url": "https://call-proof-vault.base44.app/",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -14407,7 +14407,7 @@
           "commercial_state": "verify",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/callproof-complaint-packet-machine-v1/",
-          "public_url": "https://call-proof-vault.base44.app/",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -14453,7 +14453,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/buildflow-enterprise-ops-router-v1/",
-          "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -14476,7 +14476,7 @@
           "commercial_state": "commercial_pilot",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -14546,7 +14546,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-procure-to-pay-shadow-v1/",
-          "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -14604,7 +14604,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-procure-to-pay-shadow-v1/",
-          "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -14697,7 +14697,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -14789,7 +14789,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -14847,7 +14847,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/findmypart-repair-shop-desk-v1/",
-          "public_url": "https://findmypart.base44.app/",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -14939,7 +14939,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/audit-center-website-audit-machine-v1/",
-          "public_url": "https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -15008,7 +15008,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/evercraft-clip-social-video-v1/",
-          "public_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -15089,7 +15089,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "specialist_discovery_ready_runtime_gated",
           "pain_page": "/chum/intents/evercraft-web-browser-agent-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=web",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -15135,7 +15135,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/evermaps-evidence-projection-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6a985aeccbfb6e930a40137b/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -15239,7 +15239,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/career-command-interview-practice-machine-v1/",
-          "public_url": "https://evercraft-career-command.base44.app/functions/careerAgentGateway?view=offers",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -15377,7 +15377,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -15504,7 +15504,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/career-command-interview-practice-machine-v1/",
-          "public_url": "https://evercraft-career-command.base44.app/functions/careerAgentGateway?view=offers",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -15527,7 +15527,7 @@
           "commercial_state": "verify",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/callproof-complaint-packet-machine-v1/",
-          "public_url": "https://call-proof-vault.base44.app/",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -15585,7 +15585,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/roasted-text-pressure-test-machine-v1/",
-          "public_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -15608,7 +15608,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/roasted-text-pressure-test-machine-v1/",
-          "public_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -15654,7 +15654,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-bounded-agent-action-v1/",
-          "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -15677,7 +15677,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -15723,7 +15723,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-process-audit-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -15884,7 +15884,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/eventwave-paid-promotion-v1/",
-          "public_url": "https://event-wave.base44.app/functions/eventWaveAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -15907,7 +15907,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/eventwave-paid-promotion-v1/",
-          "public_url": "https://event-wave.base44.app/functions/eventWaveAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -15930,7 +15930,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/eventwave-paid-promotion-v1/",
-          "public_url": "https://event-wave.base44.app/functions/eventWaveAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -15965,7 +15965,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/eventwave-paid-promotion-v1/",
-          "public_url": "https://event-wave.base44.app/functions/eventWaveAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -15988,7 +15988,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/eventwave-paid-promotion-v1/",
-          "public_url": "https://event-wave.base44.app/functions/eventWaveAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -16011,7 +16011,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
-          "public_url": "https://aliev.base44.app/functions/alievAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -16103,7 +16103,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/raven-nexus-pain-router-v1/",
-          "public_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -16149,7 +16149,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/raven-nexus-pain-router-v1/",
-          "public_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -16402,7 +16402,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "specialist_discovery_ready_runtime_gated",
           "pain_page": "/chum/intents/evercraft-web-browser-agent-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=web",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -16425,7 +16425,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/raven-nexus-pain-router-v1/",
-          "public_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -16448,7 +16448,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "specialist_discovery_ready_runtime_gated",
           "pain_page": "/chum/intents/evercraft-web-browser-agent-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=web",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -16517,7 +16517,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/globalstat-country-intelligence-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -16552,7 +16552,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/datafoundry-data-gap-audit-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6a961b11776ad5ca30439db3/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -16575,7 +16575,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-entity-resolution-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -16598,7 +16598,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-shadow-migration-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -16644,7 +16644,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-process-audit-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -16667,7 +16667,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-procure-to-pay-shadow-v1/",
-          "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -16713,7 +16713,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/findmypart-repair-shop-desk-v1/",
-          "public_url": "https://findmypart.base44.app/",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -16759,7 +16759,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/raven-nexus-pain-router-v1/",
-          "public_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -16863,7 +16863,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/findmypart-repair-shop-desk-v1/",
-          "public_url": "https://findmypart.base44.app/",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -16932,7 +16932,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/website-launch-service-v1/",
-          "public_url": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -16978,7 +16978,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/evercraft-clip-social-video-v1/",
-          "public_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -17105,7 +17105,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/faie-signal-brief-v1/",
-          "public_url": "https://faie.base44.app/functions/faieAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -17128,7 +17128,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/towi-evidence-research-machine-v1/",
-          "public_url": "https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -17186,7 +17186,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-entity-resolution-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -17209,7 +17209,7 @@
           "commercial_state": "verify",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/career-command-resume-job-fit-machine-v1/",
-          "public_url": "https://evercraft-career-command.base44.app/",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -17232,7 +17232,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -17290,7 +17290,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/evermaps-evidence-projection-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6a985aeccbfb6e930a40137b/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -17417,7 +17417,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/forensiscope-evidence-review-v1/",
-          "public_url": "https://evercraft-forensiscope.base44.app/video-too-large-for-ai",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -17440,7 +17440,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/deck-capital-fit-sprint-machine-v1/",
-          "public_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -17463,7 +17463,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/audit-center-website-audit-machine-v1/",
-          "public_url": "https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -17509,7 +17509,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/forensiscope-evidence-review-v1/",
-          "public_url": "https://evercraft-forensiscope.base44.app/video-too-large-for-ai",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -17578,7 +17578,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/forensiscope-evidence-review-v1/",
-          "public_url": "https://evercraft-forensiscope.base44.app/video-too-large-for-ai",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -17693,7 +17693,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/roasted-text-pressure-test-machine-v1/",
-          "public_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -17716,7 +17716,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/roasted-text-pressure-test-machine-v1/",
-          "public_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -17739,7 +17739,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/roasted-text-pressure-test-machine-v1/",
-          "public_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -17762,7 +17762,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/roasted-text-pressure-test-machine-v1/",
-          "public_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -17785,7 +17785,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/roasted-text-pressure-test-machine-v1/",
-          "public_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -17889,7 +17889,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -18234,7 +18234,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/career-command-interview-practice-machine-v1/",
-          "public_url": "https://evercraft-career-command.base44.app/functions/careerAgentGateway?view=offers",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -18487,7 +18487,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -18533,7 +18533,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -18809,7 +18809,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -18844,7 +18844,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
-          "public_url": "https://aliev.base44.app/functions/alievAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -18959,7 +18959,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/evermaps-evidence-projection-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6a985aeccbfb6e930a40137b/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -18994,7 +18994,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/evermaps-evidence-projection-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6a985aeccbfb6e930a40137b/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -19052,7 +19052,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/globalstat-country-intelligence-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -19409,7 +19409,7 @@
           "commercial_state": "sell_now",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/site-survive-rapid-audit-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -19432,7 +19432,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -19536,7 +19536,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/evercraft-clip-social-video-v1/",
-          "public_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -19571,7 +19571,7 @@
           "commercial_state": "commercial_pilot",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -19629,7 +19629,7 @@
           "commercial_state": "commercial_pilot",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -19687,7 +19687,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/findmypart-paid-hunt-v1/",
-          "public_url": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -19710,7 +19710,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/findmypart-repair-shop-desk-v1/",
-          "public_url": "https://findmypart.base44.app/",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -19733,7 +19733,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/findmypart-paid-hunt-v1/",
-          "public_url": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -19848,7 +19848,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-shadow-migration-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -20239,7 +20239,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/freight-load-exception-intelligence-machine-v1/",
-          "public_url": "https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -20297,7 +20297,7 @@
           "commercial_state": "verify",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/career-command-resume-job-fit-machine-v1/",
-          "public_url": "https://evercraft-career-command.base44.app/",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -20343,7 +20343,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -20389,7 +20389,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/roasted-text-pressure-test-machine-v1/",
-          "public_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -20458,7 +20458,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/audit-center-website-audit-machine-v1/",
-          "public_url": "https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -20481,7 +20481,7 @@
           "commercial_state": "commercial_pilot",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -20677,7 +20677,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/forensiscope-evidence-review-v1/",
-          "public_url": "https://evercraft-forensiscope.base44.app/video-too-large-for-ai",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -20723,7 +20723,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-entity-resolution-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -20815,7 +20815,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/forensiscope-evidence-review-v1/",
-          "public_url": "https://evercraft-forensiscope.base44.app/video-too-large-for-ai",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -20838,7 +20838,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "specialist_discovery_ready_runtime_gated",
           "pain_page": "/chum/intents/evercraft-web-browser-agent-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=web",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -20919,7 +20919,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-procure-to-pay-shadow-v1/",
-          "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -21172,7 +21172,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/forensiscope-evidence-review-v1/",
-          "public_url": "https://evercraft-forensiscope.base44.app/video-too-large-for-ai",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -21333,7 +21333,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/evercraft-clip-social-video-v1/",
-          "public_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -21368,7 +21368,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -21391,7 +21391,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/deck-capital-fit-sprint-machine-v1/",
-          "public_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -21414,7 +21414,7 @@
           "commercial_state": "verify",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/callproof-complaint-packet-machine-v1/",
-          "public_url": "https://call-proof-vault.base44.app/",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -21506,7 +21506,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/buildflow-enterprise-ops-router-v1/",
-          "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -21552,7 +21552,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/talent-evidence-profile-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -21656,7 +21656,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/evercraft-clip-social-video-v1/",
-          "public_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -21714,7 +21714,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -21829,7 +21829,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -21887,7 +21887,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/littlered-kdp-export-qa-machine-v1/",
-          "public_url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -21922,7 +21922,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/towi-evidence-research-machine-v1/",
-          "public_url": "https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -21957,7 +21957,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/faie-signal-brief-v1/",
-          "public_url": "https://faie.base44.app/functions/faieAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -22072,7 +22072,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -22095,7 +22095,7 @@
           "commercial_state": "contractor_beta",
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -22164,7 +22164,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/forensiscope-evidence-review-v1/",
-          "public_url": "https://evercraft-forensiscope.base44.app/video-too-large-for-ai",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -22210,7 +22210,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/audit-center-website-audit-machine-v1/",
-          "public_url": "https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -22279,7 +22279,7 @@
           "commercial_state": "commercial_pilot",
           "machine_state": "human_handoff_ready",
           "pain_page": "/chum/intents/portfolio-sentinel-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -22395,7 +22395,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/buildflow-enterprise-ops-router-v1/",
-          "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -22418,7 +22418,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/buildflow-enterprise-ops-router-v1/",
-          "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -22568,7 +22568,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "specialist_discovery_ready_runtime_gated",
           "pain_page": "/chum/intents/evercraft-web-browser-agent-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=web",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -22637,7 +22637,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "specialist_discovery_ready_runtime_gated",
           "pain_page": "/chum/intents/evercraft-web-browser-agent-v1/",
-          "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=web",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -22729,7 +22729,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/audit-center-website-audit-machine-v1/",
-          "public_url": "https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -22775,7 +22775,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/deck-capital-fit-sprint-machine-v1/",
-          "public_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -22798,7 +22798,7 @@
           "commercial_state": "verify",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/career-command-resume-job-fit-machine-v1/",
-          "public_url": "https://evercraft-career-command.base44.app/",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -22890,7 +22890,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/datafoundry-data-gap-audit-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6a961b11776ad5ca30439db3/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -22913,7 +22913,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
-          "public_url": "https://aliev.base44.app/functions/alievAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -22936,7 +22936,7 @@
           "commercial_state": "free",
           "machine_state": "read_only_live",
           "pain_page": "/chum/intents/findmypart-part-passport-v1/",
-          "public_url": "https://findmypart.base44.app/free-part-check",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -23005,7 +23005,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
-          "public_url": "https://aliev.base44.app/functions/alievAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -23028,7 +23028,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/freight-load-exception-intelligence-machine-v1/",
-          "public_url": "https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -23109,7 +23109,7 @@
           "commercial_state": "verification_required",
           "machine_state": "invocation_ready",
           "pain_page": "/chum/intents/raven-nexus-pain-router-v1/",
-          "public_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -23132,7 +23132,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/freight-load-exception-intelligence-machine-v1/",
-          "public_url": "https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -23190,7 +23190,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/talent-evidence-profile-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -23248,7 +23248,7 @@
           "commercial_state": "verification_required",
           "machine_state": "human_auth_handoff",
           "pain_page": "/chum/intents/buildflow-process-audit-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -23271,7 +23271,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/datafoundry-data-gap-audit-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6a961b11776ad5ca30439db3/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -23340,7 +23340,7 @@
           "commercial_state": "discovery_only",
           "machine_state": "human_handoff_only",
           "pain_page": "/chum/intents/evercraft-network-resilience-membership-v1/",
-          "public_url": "https://network-control.base44.app/join",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -23363,7 +23363,7 @@
           "commercial_state": "verification_required",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/globalstat-country-intelligence-machine-v1/",
-          "public_url": "https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/machineDiscovery?view=docs",
+          "public_url": null,
           "registry_name": null
         },
         {
@@ -23421,7 +23421,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/deck-capital-fit-sprint-machine-v1/",
-          "public_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -23444,7 +23444,7 @@
           "commercial_state": "verify",
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/career-command-resume-job-fit-machine-v1/",
-          "public_url": "https://evercraft-career-command.base44.app/",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -23467,7 +23467,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/audit-center-website-audit-machine-v1/",
-          "public_url": "https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -23490,7 +23490,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/audit-center-website-audit-machine-v1/",
-          "public_url": "https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -23513,7 +23513,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/audit-center-website-audit-machine-v1/",
-          "public_url": "https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -23536,7 +23536,7 @@
           "commercial_state": "sell_now",
           "machine_state": "payment_ready",
           "pain_page": "/chum/intents/audit-center-website-audit-machine-v1/",
-          "public_url": "https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs",
+          "public_url": null,
           "registry_name": null
         }
       ]

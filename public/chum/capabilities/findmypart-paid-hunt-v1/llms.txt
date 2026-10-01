@@ -3,13 +3,10 @@
 Capability ID: findmypart-paid-hunt-v1
 Commercial state: sell_now
 Machine state: payment_ready
-Public URL: https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs
-Preferred agent route: direct specialist
-Direct specialist: FindMyPart
-Direct MCP: https://findmypart.base44.app/functions/findMyPartMcp
-Official MCP Registry name: io.github.jgaethle10/findmypart
-Universal Evercraft fallback MCP: https://fabric.systemiacommandcenters.com/mcp
-Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/buy/findmypart-paid-hunt-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=findmypart-paid-hunt-v1
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/findmypart-paid-hunt-v1/index.html
+Preferred agent route: universal fallback
+Universal Evercraft MCP: https://fabric.systemiacommandcenters.com/mcp
+Start here: Not a current sell-now route
 
 ## Use this when
 

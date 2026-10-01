@@ -3,10 +3,10 @@
   "@graph": [
     {
       "@type": "Service",
-      "@id": "https://evercraft-career-command.base44.app/#evercraft-capability",
+      "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/career-command-resume-job-fit-machine-v1/index.html#evercraft-capability",
       "name": "Career Command Resume + Job Fit Audit",
       "description": "A job seeker has a real opening and needs an evidence-backed comparison between their supplied background and the target role without fabricated credentials or fake proprietary ATS certainty.",
-      "url": "https://evercraft-career-command.base44.app/",
+      "url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/career-command-resume-job-fit-machine-v1/index.html",
       "provider": {
         "@type": "Organization",
         "name": "Evercraft LLC",
@@ -20,7 +20,7 @@
       "name": "Career Command Resume + Job Fit Audit | Evercraft capability",
       "description": "A job seeker has a real opening and needs an evidence-backed comparison between their supplied background and the target role without fabricated credentials or fake proprietary ATS certainty.",
       "about": {
-        "@id": "https://evercraft-career-command.base44.app/#evercraft-capability"
+        "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/career-command-resume-job-fit-machine-v1/index.html#evercraft-capability"
       }
     }
   ]

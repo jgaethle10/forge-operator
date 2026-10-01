@@ -41,57 +41,57 @@
     {
       "product_key": "aliev",
       "name": "AliEV",
-      "canonical_url": "https://aliev.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/index.html",
       "mirror": "/chum/products/aliev/",
       "llms": "/chum/products/aliev/llms.txt",
       "discovery": "/chum/products/aliev/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/aliev",
       "mcp": "https://aliev.base44.app/functions/alievMcp",
-      "content_sha256": "a29d7233b63011a5152f0c1bbe60c1cba860016bf13e60491c98ff78bb21e0da"
+      "content_sha256": "32e6dabf7b53521f73c1def4034ce3aa7cf0880f32c5e07e33184626cdde420a"
     },
     {
       "product_key": "ascend",
       "name": "Ascend AI",
-      "canonical_url": "https://ascend.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ascend/index.html",
       "mirror": "/chum/products/ascend/",
       "llms": "/chum/products/ascend/llms.txt",
       "discovery": "/chum/products/ascend/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "5d60d533d37112e4f62e78cfb12a3c71cc51fe1ffb55a2e5a689b9af7c7a53c3"
+      "content_sha256": "6738dee0b31ea4ad22fab8a2dbdfb88db49b4b147328983a5c269a1ac8787def"
     },
     {
       "product_key": "buildflow",
       "name": "BuildFlow Enterprise Operations",
-      "canonical_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/buildflow/index.html",
       "mirror": "/chum/products/buildflow/",
       "llms": "/chum/products/buildflow/llms.txt",
       "discovery": "/chum/products/buildflow/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/buildflow",
       "mcp": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp",
-      "content_sha256": "dbd28209b28e210aca120a7ae926988e6b9e9cb6a0b6635a892e089028202845"
+      "content_sha256": "fac7722957a1166a77310c8ceb7524d5a2dad70f05a061fb1b5d4be2b278fb8b"
     },
     {
       "product_key": "callproof-vault",
       "name": "CallProof Vault",
-      "canonical_url": "https://call-proof-vault.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/callproof-vault/index.html",
       "mirror": "/chum/products/callproof-vault/",
       "llms": "/chum/products/callproof-vault/llms.txt",
       "discovery": "/chum/products/callproof-vault/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "11374234943c893646747fea0ca3cfe4eea28daa9f4a284c385c6e191ed42a73"
+      "content_sha256": "ddda29326e0108c775a61a59265d994bcecf5cb7e7a812fb51fc7262ce1a56c8"
     },
     {
       "product_key": "christmas-lights-usa",
       "name": "Christmas Lights USA",
-      "canonical_url": "https://christmas-lights-usa.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/christmas-lights-usa/index.html",
       "mirror": "/chum/products/christmas-lights-usa/",
       "llms": "/chum/products/christmas-lights-usa/llms.txt",
       "discovery": "/chum/products/christmas-lights-usa/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "171a6c9ceda32526fefa650f616ddec3f07a9a3a0ebb8f74492516772e01be01"
+      "content_sha256": "ac3241d6f926c7d19937831c1738b974981397d513e34fcfb74bb64aff5ec2c6"
     },
     {
       "product_key": "chronosport",
@@ -102,18 +102,18 @@
       "discovery": "/chum/products/chronosport/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "f670a22062acdae613d86bb415f689e6af50512bcf57d3dcaa63e3246f0a0b90"
+      "content_sha256": "8a507bfa6e496488d64a01f9d6e056cbc189d902ba4f964a3e3c0e903b48ad82"
     },
     {
       "product_key": "coda-y-codigo",
       "name": "Coda y Código",
-      "canonical_url": "https://codaycodigo.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/coda-y-codigo/index.html",
       "mirror": "/chum/products/coda-y-codigo/",
       "llms": "/chum/products/coda-y-codigo/llms.txt",
       "discovery": "/chum/products/coda-y-codigo/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "67e25955b627c3f67d39fc6afc6336fd53a3b55afa07790d65e9c663c4a76c51"
+      "content_sha256": "c6c3baa6fd37116e9f16d05c2d525014382bbe1ea859f63d2f8a1c4119ea9245"
     },
     {
       "product_key": "daytrade-lens",
@@ -124,62 +124,62 @@
       "discovery": "/chum/products/daytrade-lens/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "99b2a013388ba57ca3284e672db25e8eb91de814b34b455dfcd7457c2d9dc616"
+      "content_sha256": "9d1d4c802c5a884ad9bbc3c1e0ea9a5d89051265141fddd07813a9a6093639c3"
     },
     {
       "product_key": "ecoledger",
       "name": "EcoLedger",
-      "canonical_url": "https://eco-ledger-ai-379a7af4.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ecoledger/index.html",
       "mirror": "/chum/products/ecoledger/",
       "llms": "/chum/products/ecoledger/llms.txt",
       "discovery": "/chum/products/ecoledger/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "9a8bb27ef01a9bcf144837c161814357f9671f4c1c43ca045ccfabcbefe31394"
+      "content_sha256": "0276057a92e522bd961a89d24ef657ab8e872d56ce985c3d284176a8e8b2452a"
     },
     {
       "product_key": "eps-estimate-engine",
       "name": "EPS Field-Service Estimate Engine",
-      "canonical_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eps-estimate-engine/index.html",
       "mirror": "/chum/products/eps-estimate-engine/",
       "llms": "/chum/products/eps-estimate-engine/llms.txt",
       "discovery": "/chum/products/eps-estimate-engine/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-      "content_sha256": "85a73f36a80d68de7bd98d6e532511ef14526fd7f038291354c99da42bb0239c"
+      "content_sha256": "c9df175763dfb9ccca23c3f6de69ae4eb0f8e189355bef3832b97d47cec36be7"
     },
     {
       "product_key": "eventwave",
       "name": "EventWave",
-      "canonical_url": "https://event-wave.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eventwave/index.html",
       "mirror": "/chum/products/eventwave/",
       "llms": "/chum/products/eventwave/llms.txt",
       "discovery": "/chum/products/eventwave/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/eventwave",
       "mcp": "https://event-wave.base44.app/functions/eventWaveMcp",
-      "content_sha256": "ed34317dd97ed87d1072634d3321998ba0e3f82d6a8ce664fd58403c2ccb8679"
+      "content_sha256": "bb2bb718d6b13bf4f3cd2071c28f6bdf7008f16870f8781ced0152a36cb18df2"
     },
     {
       "product_key": "evercraft-front-door",
       "name": "Evercraft",
-      "canonical_url": "https://evercraft.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-front-door/index.html",
       "mirror": "/chum/products/evercraft-front-door/",
       "llms": "/chum/products/evercraft-front-door/llms.txt",
       "discovery": "/chum/products/evercraft-front-door/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "f93c7484bab41a3304b29ee38cd53d933b3438ec6675e429c52adbadd3b199db"
+      "content_sha256": "19939417a4164c2b9e5ed9713259767c05dfd2bf22671f98b7f1588d98e5c6d7"
     },
     {
       "product_key": "career-command",
       "name": "Evercraft Career Command",
-      "canonical_url": "https://evercraft-career-command.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/career-command/index.html",
       "mirror": "/chum/products/career-command/",
       "llms": "/chum/products/career-command/llms.txt",
       "discovery": "/chum/products/career-command/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/career-command",
       "mcp": "https://evercraft-career-command.base44.app/functions/careerMcp",
-      "content_sha256": "246db80fc88166d96cdcd36b28c559adc2fd62c871cfd78a333efd9d789c5088"
+      "content_sha256": "110af376be3a0b1784c626b6754df4cf321d6e95bb6b189a66d6f1ebb59665f0"
     },
     {
       "product_key": "evercraft-circles",
@@ -190,29 +190,29 @@
       "discovery": "/chum/products/evercraft-circles/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "0fd10c960f3cc0d7c5c40d91eb8a49420936613246a5691bd1fef676dde13193"
+      "content_sha256": "9448e74f03b8c7d1f2a073c87bde08cfc7a624097b6491cd4bd96c13b06a425d"
     },
     {
       "product_key": "evercraft-clip",
       "name": "Evercraft Clip",
-      "canonical_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-clip/index.html",
       "mirror": "/chum/products/evercraft-clip/",
       "llms": "/chum/products/evercraft-clip/llms.txt",
       "discovery": "/chum/products/evercraft-clip/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/evercraft-clip",
       "mcp": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp",
-      "content_sha256": "f16785869102850891a4d6266cedc2146cc1ab5451be63909f946471bed6d285"
+      "content_sha256": "331c9cec41e918c9720b2596588fa09c00d222fdcc576425324410cd7df0679e"
     },
     {
       "product_key": "evercraft-containment",
       "name": "Evercraft Containment",
-      "canonical_url": "https://evercraft.base44.app/containment",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-containment/index.html",
       "mirror": "/chum/products/evercraft-containment/",
       "llms": "/chum/products/evercraft-containment/llms.txt",
       "discovery": "/chum/products/evercraft-containment/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "20cd7a0baa72823f0cd106a5793231f0b90abc812ab46f478d189e5472d7640e"
+      "content_sha256": "db32ca5763d99cf81315211774fcec0f922bb2f9cff3e36043e0cf0eb9d3eda9"
     },
     {
       "product_key": "contractor-cloud",
@@ -223,51 +223,51 @@
       "discovery": "/chum/products/contractor-cloud/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "fd26534f70997d14cad97112afb3a684d1861e94443ca27efef8d8a7d13a1a32"
+      "content_sha256": "5b10f2871f551b03b65253100da3c97ae969f38a9ea6065c757a98608ca408cc"
     },
     {
       "product_key": "evercraft-cosmos-atlas",
       "name": "Evercraft Cosmos Atlas",
-      "canonical_url": "https://evercraft-cosmos-atlas.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-cosmos-atlas/index.html",
       "mirror": "/chum/products/evercraft-cosmos-atlas/",
       "llms": "/chum/products/evercraft-cosmos-atlas/llms.txt",
       "discovery": "/chum/products/evercraft-cosmos-atlas/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "22be5f84ba6950f9f15c85ee0c824a279ae5c66826f2e94e24fd0c17a93072c1"
+      "content_sha256": "94e68885693fc9f8356d38df435a109e4acf88ce1ac701fb82b3ace7b8e76686"
     },
     {
       "product_key": "deck-capital-fit",
       "name": "Evercraft Deck Capital Fit",
-      "canonical_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/deck-capital-fit/index.html",
       "mirror": "/chum/products/deck-capital-fit/",
       "llms": "/chum/products/deck-capital-fit/llms.txt",
       "discovery": "/chum/products/deck-capital-fit/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/deck-capital-fit",
       "mcp": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp",
-      "content_sha256": "af5876361e68537939bbd8a305069b077b3c0c1bc9c2fc425b0bb62864ab712f"
+      "content_sha256": "d308624fabe056826b81bbd9955fbbe1808bd0df51b30a2c3f8ddc547e965d71"
     },
     {
       "product_key": "evercraft-fantasy-intelligence",
       "name": "Evercraft Fantasy Intelligence",
-      "canonical_url": "https://evercraftjournal.base44.app/sports/fantasy",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-fantasy-intelligence/index.html",
       "mirror": "/chum/products/evercraft-fantasy-intelligence/",
       "llms": "/chum/products/evercraft-fantasy-intelligence/llms.txt",
       "discovery": "/chum/products/evercraft-fantasy-intelligence/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "007aea8041ef74d2c39d91dfc7361864522492c7bbf6da5e03737d0e2eba987a"
+      "content_sha256": "906234d86ec236c3d33ee24e5ccf55bfc49b25b499f30e378355067d8b17cf73"
     },
     {
       "product_key": "evercraft-global-health-atlas",
       "name": "Evercraft Global Health Atlas",
-      "canonical_url": "https://evercraft-health-atlas.base44.app/health-atlas",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-global-health-atlas/index.html",
       "mirror": "/chum/products/evercraft-global-health-atlas/",
       "llms": "/chum/products/evercraft-global-health-atlas/llms.txt",
       "discovery": "/chum/products/evercraft-global-health-atlas/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "ab0c33e6fbfbe8a633a55e2d7ac93ff89ac41a5b9a40447289954dc629ccd38d"
+      "content_sha256": "b19a9a0804682be195481192d72ad10a7c679c44e1213490e715c9e2621ea230"
     },
     {
       "product_key": "evercraft-home",
@@ -278,7 +278,7 @@
       "discovery": "/chum/products/evercraft-home/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "fc710e7e132644a8f2f38bcf1a1b0eb2d89611881172e1a945bfaf224c7c9699"
+      "content_sha256": "db6e040335f2722ef555815a044e518841bb444b1fa565afe0b8f01e74840e75"
     },
     {
       "product_key": "ibmi-rescue",
@@ -289,18 +289,18 @@
       "discovery": "/chum/products/ibmi-rescue/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-      "content_sha256": "025a87cea0d19f2e43ad7be12338aff1208f7fa45327ab89715fbe1246038603"
+      "content_sha256": "f18e321d8b6ae3270fbf2f057f22d3d79abb09dca34e44fc284b60c4e3c6b6a0"
     },
     {
       "product_key": "evercraft-network",
       "name": "Evercraft Network",
-      "canonical_url": "https://network-control.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-network/index.html",
       "mirror": "/chum/products/evercraft-network/",
       "llms": "/chum/products/evercraft-network/llms.txt",
       "discovery": "/chum/products/evercraft-network/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-      "content_sha256": "80c9a230b5daaa1b1e042170604eba051f395a8779f759b1798011f5dbc9212c"
+      "content_sha256": "999dd9c89e397f3f89bc77babd400d40d1e9026a0b34dde6100ff70e2247f188"
     },
     {
       "product_key": "opportunity-fabric",
@@ -311,18 +311,18 @@
       "discovery": "/chum/products/opportunity-fabric/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "b5e76d5d8cd19ffcff9294b3d2f3d0e67567cdb510cc7660a4bee79f2155db65"
+      "content_sha256": "0605b70db3cb2ec3d462c3d0c595db3cf3aa17fc17bcea38d83dfb4a322d6ea3"
     },
     {
       "product_key": "evercraft-physics-atlas",
       "name": "Evercraft Physics Atlas",
-      "canonical_url": "https://evercraft-physics-atlas.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-physics-atlas/index.html",
       "mirror": "/chum/products/evercraft-physics-atlas/",
       "llms": "/chum/products/evercraft-physics-atlas/llms.txt",
       "discovery": "/chum/products/evercraft-physics-atlas/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "e469dec438a21b93bfd4abe2728a46ce2fc810c1a4af50f792cc9cc01cd1d59e"
+      "content_sha256": "e06b756e93c48a7fc7d891d039c11cb531682253d739240a2ce637e3632dd47e"
     },
     {
       "product_key": "evercraft-property-services",
@@ -333,183 +333,183 @@
       "discovery": "/chum/products/evercraft-property-services/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "8e9891ffa175cd7969335b6eafba43aacc6dab54ec943e448fc5842e032307d3"
+      "content_sha256": "7e64108efbd8d11903f4a10b2e0cab045c6be56fb0a4e1f94dbb4dcc69d14e1e"
     },
     {
       "product_key": "revenue-war-map",
       "name": "Evercraft Revenue War Map",
-      "canonical_url": "https://evercraft-war-map.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/revenue-war-map/index.html",
       "mirror": "/chum/products/revenue-war-map/",
       "llms": "/chum/products/revenue-war-map/llms.txt",
       "discovery": "/chum/products/revenue-war-map/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "938b8968bc1ec33681d5665dffb6778974d3d617c3de36a6481e9ac3b47169fe"
+      "content_sha256": "0cf1b659bd0ed5018e9a8ee217c7e6a1b402965868a72a733f45b7acbd5f58b3"
     },
     {
       "product_key": "evercraft-rewards",
       "name": "Evercraft Rewards",
-      "canonical_url": "https://evercraft-rewards.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/index.html",
       "mirror": "/chum/products/evercraft-rewards/",
       "llms": "/chum/products/evercraft-rewards/llms.txt",
       "discovery": "/chum/products/evercraft-rewards/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-      "content_sha256": "76e31be07fd96f21e5bb588c8d7bb4e899ce84bc0ef30a48c865a4235ca9eac6"
+      "content_sha256": "950d8fa4e4ca1735078030dd02dc5d3ad5ea60c3e5b489f8ddcefb494541ab21"
     },
     {
       "product_key": "evercraft-web",
       "name": "Evercraft Web",
-      "canonical_url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/index.html",
       "mirror": "/chum/products/evercraft-web/",
       "llms": "/chum/products/evercraft-web/llms.txt",
       "discovery": "/chum/products/evercraft-web/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/evercraft-web",
       "mcp": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp",
-      "content_sha256": "bd26bf3645cc82395d438a68437176faafb1942b163dad0b8cbbff82d77f69e1"
+      "content_sha256": "c61f12905d6a3e31f3c6563af44673d326fb27746a15cf565a84b99fddb2d207"
     },
     {
       "product_key": "website-launch",
       "name": "Evercraft Website Launch",
-      "canonical_url": "https://instant-website-builder-usa-6feac193.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/website-launch/index.html",
       "mirror": "/chum/products/website-launch/",
       "llms": "/chum/products/website-launch/llms.txt",
       "discovery": "/chum/products/website-launch/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/website-launch",
       "mcp": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp",
-      "content_sha256": "9d629a8feb30f1c6c2ccb0a0ce38bcedd9bb5364148f724b373743ee33bda4b7"
+      "content_sha256": "3f588edfe3ef23206d8a9b918a023d70f5db33617c72f909f9a7313aad93d0d7"
     },
     {
       "product_key": "evercraft-wildlife-atlas",
       "name": "Evercraft Wildlife Atlas",
-      "canonical_url": "https://wildlife-atlas.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-wildlife-atlas/index.html",
       "mirror": "/chum/products/evercraft-wildlife-atlas/",
       "llms": "/chum/products/evercraft-wildlife-atlas/llms.txt",
       "discovery": "/chum/products/evercraft-wildlife-atlas/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "0d3937a283727d3c94b85c119dba3fce4bd59ef8db068a3044c0b65a077fbf30"
+      "content_sha256": "cebcc340c2fa21daded9dd3132a355daa418ff7d82854a3441b4c69fd9eb387c"
     },
     {
       "product_key": "evermaps",
       "name": "EverMaps",
-      "canonical_url": "https://evermaps.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evermaps/index.html",
       "mirror": "/chum/products/evermaps/",
       "llms": "/chum/products/evermaps/llms.txt",
       "discovery": "/chum/products/evermaps/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-      "content_sha256": "797f10f1814bc6b5a2be383e094a5464460666b3b2a8f90d8d9226d8416daf4f"
+      "content_sha256": "af8336f43ed42a23126bd84f996ee9aff1498ffb9d969404e8290ab3ef4a05dd"
     },
     {
       "product_key": "evernest",
       "name": "EverNest",
-      "canonical_url": "https://evernest-home.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest/index.html",
       "mirror": "/chum/products/evernest/",
       "llms": "/chum/products/evernest/llms.txt",
       "discovery": "/chum/products/evernest/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "66e4585de2dbfea06ef7965ca1c5e4b6a58945c4db7cd92aa469c7cbbb234cc2"
+      "content_sha256": "41a6b99039ed575ca52367d14a8d6943f09ce38b21bf7441351e6494817d24b0"
     },
     {
       "product_key": "evernest-atlas",
       "name": "EverNest Atlas",
-      "canonical_url": "https://evernest-life-map.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest-atlas/index.html",
       "mirror": "/chum/products/evernest-atlas/",
       "llms": "/chum/products/evernest-atlas/llms.txt",
       "discovery": "/chum/products/evernest-atlas/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "d377411ab1b9321d27bce8ac47fa6a06e93d81c266512eb5d8593910642e8e24"
+      "content_sha256": "0be5e6afe3f342ca4876f79cacefb6929f547018c76936d11f6630a82384c625"
     },
     {
       "product_key": "everystage",
       "name": "EveryStage",
-      "canonical_url": "https://every-stage.base44.app/product",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/everystage/index.html",
       "mirror": "/chum/products/everystage/",
       "llms": "/chum/products/everystage/llms.txt",
       "discovery": "/chum/products/everystage/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "13605c7d912582757d519db9b09fce868f6bc5cdc7b528da1d1ab155fb61302c"
+      "content_sha256": "a2784a98c311a2f8c36f5aa37ff3ce5ae1c313ad2a7adad2f02695d687d27a36"
     },
     {
       "product_key": "faie",
       "name": "FAIE",
-      "canonical_url": "https://faie.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html",
       "mirror": "/chum/products/faie/",
       "llms": "/chum/products/faie/llms.txt",
       "discovery": "/chum/products/faie/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/faie",
       "mcp": "https://faie.base44.app/functions/faieMcp",
-      "content_sha256": "fd973183133ff97d6434200106b8eafaf444f1f4b41f4c4113f4dc39dfa82295"
+      "content_sha256": "4baa5b43f45ca06d514df3c90efda4df1355e70acc4b95b2c6fa1c2f19a0cf56"
     },
     {
       "product_key": "findmypart",
       "name": "FindMyPart",
-      "canonical_url": "https://findmypart.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/index.html",
       "mirror": "/chum/products/findmypart/",
       "llms": "/chum/products/findmypart/llms.txt",
       "discovery": "/chum/products/findmypart/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/findmypart",
       "mcp": "https://findmypart.base44.app/functions/findMyPartMcp",
-      "content_sha256": "9eb2711ee3771ee1b424539887090af4d27a6d687f067096f767c671dd5c3171"
+      "content_sha256": "daeda7fb261390914481d2097c14394948c19608e9cca746b1280aa520e9f499"
     },
     {
       "product_key": "forensiscope",
       "name": "ForensiScope",
-      "canonical_url": "https://evercraft-forensiscope.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/index.html",
       "mirror": "/chum/products/forensiscope/",
       "llms": "/chum/products/forensiscope/llms.txt",
       "discovery": "/chum/products/forensiscope/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/forensiscope",
       "mcp": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp",
-      "content_sha256": "6a568e056129656e6b74667cf522067b0a56c747a62382bc952e74fb3eecb681"
+      "content_sha256": "1ba51c447f1e2f775c7d0b90255a5fd717ad11beb81b5b4b5e141f1043853d77"
     },
     {
       "product_key": "global-energy-atlas",
       "name": "Global Energy Atlas",
-      "canonical_url": "https://energy-atlas.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/global-energy-atlas/index.html",
       "mirror": "/chum/products/global-energy-atlas/",
       "llms": "/chum/products/global-energy-atlas/llms.txt",
       "discovery": "/chum/products/global-energy-atlas/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "fbb25bfd6ce0efdecede601e464ac632b0442d1be62a2416d9b957c76d16df88"
+      "content_sha256": "7cd8cc8a7a056a5870dc4f47a1bc741bad5855379e84c2f9a42353b3ac212ea6"
     },
     {
       "product_key": "globalstat",
       "name": "GlobalStat",
-      "canonical_url": "https://global-stat-pulse.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/globalstat/index.html",
       "mirror": "/chum/products/globalstat/",
       "llms": "/chum/products/globalstat/llms.txt",
       "discovery": "/chum/products/globalstat/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-      "content_sha256": "e59982c445166347f51c4b54c96f684683d2026865e119aa8cab93be20596044"
+      "content_sha256": "a3618fddbb4090a7b255a965333e64be4988b5e5fd568f3c2c1cce70cd325494"
     },
     {
       "product_key": "guardian",
       "name": "Guardian",
-      "canonical_url": "https://guardian-pilot.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian/index.html",
       "mirror": "/chum/products/guardian/",
       "llms": "/chum/products/guardian/llms.txt",
       "discovery": "/chum/products/guardian/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "3f03d200a6df71ab2bfbfa0fdad646d53d7fa21a6e7175b289f9943a5c66cc18"
+      "content_sha256": "682dbe7bf98c64df305b737cd8fea991da1ce56184209d93708707d8ca83d038"
     },
     {
       "product_key": "infinite-classroom",
       "name": "Infinite Classroom",
-      "canonical_url": "https://infiniteclassroom.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/infinite-classroom/index.html",
       "mirror": "/chum/products/infinite-classroom/",
       "llms": "/chum/products/infinite-classroom/llms.txt",
       "discovery": "/chum/products/infinite-classroom/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "23ec03ee339efcdd74961d214f62df94212e04b87d1379c1826f4a252d21c502"
+      "content_sha256": "38ecd25891e48b9897763ea96933d98ee1948ce2ef40853efe469ed9957a42b0"
     },
     {
       "product_key": "legacy-rescue-lab",
@@ -520,51 +520,51 @@
       "discovery": "/chum/products/legacy-rescue-lab/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-      "content_sha256": "bec411c235264cefe527cd58943a136e2bbf0a3d87c89d256ced8e152494906e"
+      "content_sha256": "991db784ed0d0197f0da9498b47ede7569ddea9f8915707ce206238c17b75187"
     },
     {
       "product_key": "little-red-book-export-qa",
       "name": "Little Red Studio Book Export QA",
-      "canonical_url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/little-red-book-export-qa/index.html",
       "mirror": "/chum/products/little-red-book-export-qa/",
       "llms": "/chum/products/little-red-book-export-qa/llms.txt",
       "discovery": "/chum/products/little-red-book-export-qa/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-      "content_sha256": "cd14973aaccbe942083f4788079419a1cf63707968fb6ee95e05d5ba3cd5596b"
+      "content_sha256": "a07af71b2a6aa76bea7479d9a0b921a98cb0fd315516709566760f557b004a5e"
     },
     {
       "product_key": "payflow",
       "name": "PayFlow",
-      "canonical_url": "https://pay-flow-fix.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/payflow/index.html",
       "mirror": "/chum/products/payflow/",
       "llms": "/chum/products/payflow/llms.txt",
       "discovery": "/chum/products/payflow/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "5d9d0425323d04d7013d96303dae17f1bdc906fba546ab69ba10c161f6470089"
+      "content_sha256": "d136f6d532a8284249f72c33a64cd03121607469b212d79c3b5dd78bec73a9a2"
     },
     {
       "product_key": "raven-nexus",
       "name": "Raven Nexus",
-      "canonical_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/raven-nexus/index.html",
       "mirror": "/chum/products/raven-nexus/",
       "llms": "/chum/products/raven-nexus/llms.txt",
       "discovery": "/chum/products/raven-nexus/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "37c01da15778cd16c2306a2da2d81f2f446487aeaef40d404ea6ee6fba6cb4b0"
+      "content_sha256": "d9a3446707e75209e85fa21af274455d9a4c11b8d4c7451837c98d1fb177a8ee"
     },
     {
       "product_key": "roasted",
       "name": "ROASTED",
-      "canonical_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/roasted/index.html",
       "mirror": "/chum/products/roasted/",
       "llms": "/chum/products/roasted/llms.txt",
       "discovery": "/chum/products/roasted/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/roasted",
       "mcp": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp",
-      "content_sha256": "e6bb993c0aa0bb4d67bb3d7bd730dac1b98f8c2e7bf61a06892095f0e0effa6e"
+      "content_sha256": "2376803b356a260ef85472d3d671150366da9c7fe75bb9204f254046e9f65b4b"
     },
     {
       "product_key": "seasonally",
@@ -575,51 +575,51 @@
       "discovery": "/chum/products/seasonally/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "f35eaf9c478ce3be7b6a8ec2ce2f7c921fae2fbe372d50459e6d3f2fb7d46b89"
+      "content_sha256": "4d018bdb3677249bf71d58c89ff123f591a39fadbed1c0a3b9fa9b78105184fc"
     },
     {
       "product_key": "skyops-parking",
       "name": "SkyOps Parking",
-      "canonical_url": "https://skyopsparking.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/skyops-parking/index.html",
       "mirror": "/chum/products/skyops-parking/",
       "llms": "/chum/products/skyops-parking/llms.txt",
       "discovery": "/chum/products/skyops-parking/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "69f01a280046d6953f43b43c887acf8540894026b4957d7df647ec99d6ad8791"
+      "content_sha256": "4ffb9000492721eb547a365ce4df49b3df7408830fd3803ff9b18d59412f4715"
     },
     {
       "product_key": "space-dudz",
       "name": "Space Dudz",
-      "canonical_url": "https://spacedudz.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/space-dudz/index.html",
       "mirror": "/chum/products/space-dudz/",
       "llms": "/chum/products/space-dudz/llms.txt",
       "discovery": "/chum/products/space-dudz/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "a900f86c49067681c9735749e9fdde72162390f509eaa8217d7dd56867512427"
+      "content_sha256": "3ba82d9e4f744fa4dcfa041f3d7149a48dd1867728c4841c07cce0cbc4d3fbfc"
     },
     {
       "product_key": "systemia-atlas-freight",
       "name": "Systemia Atlas Freight Load Exception Intelligence",
-      "canonical_url": "https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-atlas-freight/index.html",
       "mirror": "/chum/products/systemia-atlas-freight/",
       "llms": "/chum/products/systemia-atlas-freight/llms.txt",
       "discovery": "/chum/products/systemia-atlas-freight/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "7a7e7bab0450c981a1220ed6d554e0374a1a3e11cdf370a62099ecd785a14bd0"
+      "content_sha256": "eb94fca1f57fff82f98d0a3076c289d4ee2544edb1f3b0b843a5a05cccbf16d5"
     },
     {
       "product_key": "systemia-decision-lab",
       "name": "Systemia Decision Lab",
-      "canonical_url": "https://systemiadecisionlab.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-decision-lab/index.html",
       "mirror": "/chum/products/systemia-decision-lab/",
       "llms": "/chum/products/systemia-decision-lab/llms.txt",
       "discovery": "/chum/products/systemia-decision-lab/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "58325fa0e5618b95ad16b1a68a4eaae070b547b02d9f1db1cf563fb1989cd82c"
+      "content_sha256": "e062d5e8de59ad2a2425b949f982b576ed0cd3a72479c1d1f7788095fd9f0c6d"
     },
     {
       "product_key": "systemia-field-library",
@@ -630,29 +630,29 @@
       "discovery": "/chum/products/systemia-field-library/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/systemia-field-library",
       "mcp": "https://base44.app/api/apps/6a54381e147576b18ac94d8f/functions/fieldLibraryAgentMcp",
-      "content_sha256": "9ea9bb28922570efffaf27b5bf377fe29c20eea978ff0e580a05aa15c761f70a"
+      "content_sha256": "3d0d64eb9a28434f631145f14b0d16d14070d76db03c7eb22d66f8a9997cfa70"
     },
     {
       "product_key": "systemia-portfolio-sentinel",
       "name": "Systemia Portfolio Sentinel",
-      "canonical_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-portfolio-sentinel/index.html",
       "mirror": "/chum/products/systemia-portfolio-sentinel/",
       "llms": "/chum/products/systemia-portfolio-sentinel/llms.txt",
       "discovery": "/chum/products/systemia-portfolio-sentinel/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-      "content_sha256": "5ffe376ab4f2d9a0e9188a12b9a7f8ca92576ad6a4f25e4df0396c2c28525c25"
+      "content_sha256": "6838b148672caacdfb1213cf6705cfa585d9807ab7bdb2ac009894fa7982d824"
     },
     {
       "product_key": "systemia-radar",
       "name": "Systemia Radar",
-      "canonical_url": "https://systemia-scan-pro.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-radar/index.html",
       "mirror": "/chum/products/systemia-radar/",
       "llms": "/chum/products/systemia-radar/llms.txt",
       "discovery": "/chum/products/systemia-radar/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "a664f2a7d856d496b4e9a5d302e686c3b4f6b2fd0b7dbdb35adc37efe980d95b"
+      "content_sha256": "f3ee625d1c0c33fba92239c21c094cf7d73abe913da012fdd44bae60e624c9e1"
     },
     {
       "product_key": "systemia-remote-ops",
@@ -663,40 +663,40 @@
       "discovery": "/chum/products/systemia-remote-ops/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "69bfb29d33f5ea02a4e453e4711e6327e55cce0c94ceb18c269124aec8ca98f2"
+      "content_sha256": "fb7ec6269cc5a9965165af0898efb98ea5ab2eeee39aff3593ed72c045e42e97"
     },
     {
       "product_key": "systemia-university",
       "name": "Systemia University",
-      "canonical_url": "https://systemia-university.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/index.html",
       "mirror": "/chum/products/systemia-university/",
       "llms": "/chum/products/systemia-university/llms.txt",
       "discovery": "/chum/products/systemia-university/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "8df87c5444cf556d9d0945c81844a03bb1b4a6dc53c6b1c1a79f56f88c341777"
+      "content_sha256": "3524761baabd5141c9e8e1ca1629bf24bdae3c121f4f9603c93d5a63cd122b79"
     },
     {
       "product_key": "systemia-website-audit",
       "name": "Systemia Website Audit",
-      "canonical_url": "https://systemia-audit-pro.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-website-audit/index.html",
       "mirror": "/chum/products/systemia-website-audit/",
       "llms": "/chum/products/systemia-website-audit/llms.txt",
       "discovery": "/chum/products/systemia-website-audit/ai-discovery.json",
       "registry_name": "io.github.jgaethle10/systemia-website-audit",
       "mcp": "https://systemia-audit-pro.base44.app/functions/auditAgentMcp",
-      "content_sha256": "53e5c5ad20cb368c4be7207d28d28984222d4d4e04255105d0897112b6f72891"
+      "content_sha256": "cf7d58464b342e37e61e6eb4f268760d341a8a88e193f761fbd8d10c2e8a4d6e"
     },
     {
       "product_key": "talent-atlas",
       "name": "Talent Atlas",
-      "canonical_url": "https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/talent-atlas/index.html",
       "mirror": "/chum/products/talent-atlas/",
       "llms": "/chum/products/talent-atlas/llms.txt",
       "discovery": "/chum/products/talent-atlas/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "7c8ba10447a2e9fca4c6bc7e25eca58c2ec6c861ea6d805f583f7b892b7309b9"
+      "content_sha256": "b4f67e33457fc989a76d4a5e134b27bd174061ba2d4f041cb3b87f17387003dd"
     },
     {
       "product_key": "forensic-record",
@@ -707,18 +707,18 @@
       "discovery": "/chum/products/forensic-record/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "389485b3cb4576de63e5c7a903edf6cca9f5dcacc7ee5d5a85f5b28e4dd86441"
+      "content_sha256": "39c3ab2a2f185aa1131dd0b5616cff2fab23bfcae22c495335ce63ad1ece439a"
     },
     {
       "product_key": "second-stitch",
       "name": "The Second Stitch",
-      "canonical_url": "https://the-second-stitch.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/second-stitch/index.html",
       "mirror": "/chum/products/second-stitch/",
       "llms": "/chum/products/second-stitch/llms.txt",
       "discovery": "/chum/products/second-stitch/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "2d8cdaffa6a9a951d669ff69c537ba8125d0bd541b0f5e9cc210d0abd1d3e778"
+      "content_sha256": "c0949a971bbe13899e268fd6e766b85696564cd7bc1360638cc12c0090554ec4"
     },
     {
       "product_key": "thoughtdrop",
@@ -729,18 +729,18 @@
       "discovery": "/chum/products/thoughtdrop/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "a197c824f3a7264f4e8d32e3f005d46d188809af309afde3289ba197bb39d8c5"
+      "content_sha256": "683c2ff15b458bad96e80511df202f22151eace2c35e3007a25a2d211a8de9e5"
     },
     {
       "product_key": "towi-research",
       "name": "TOWI Evidence-Controlled Research Brief",
-      "canonical_url": "https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/towi-research/index.html",
       "mirror": "/chum/products/towi-research/",
       "llms": "/chum/products/towi-research/llms.txt",
       "discovery": "/chum/products/towi-research/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "8b84c8376c0c4fd84e9d4aaba6c3680c368189cbc32658674b10920e9f7ad60a"
+      "content_sha256": "17d02c1b261a63857aaace32d0315b3da35b3c964912876c1f75be819463af86"
     }
   ],
   "truth_boundary": "These surfaces increase legitimate opportunities for discovery. They cannot force a crawler, search engine, LLM, agent or social network to fetch, index, rank, cite, recommend or publish Evercraft."

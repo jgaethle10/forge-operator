@@ -3,13 +3,10 @@
 Capability ID: faie-signal-brief-v1
 Commercial state: sell_now
 Machine state: payment_ready
-Public URL: https://faie.base44.app/functions/faieAgentGateway?view=docs
-Preferred agent route: direct specialist
-Direct specialist: FAIE
-Direct MCP: https://faie.base44.app/functions/faieMcp
-Official MCP Registry name: io.github.jgaethle10/faie
-Universal Evercraft fallback MCP: https://fabric.systemiacommandcenters.com/mcp
-Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/buy/faie-signal-brief-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=faie-signal-brief-v1
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/faie-signal-brief-v1/index.html
+Preferred agent route: universal fallback
+Universal Evercraft MCP: https://fabric.systemiacommandcenters.com/mcp
+Start here: Not a current sell-now route
 
 ## Use this when
 

@@ -15,7 +15,7 @@
     "grok",
     "generic_agent"
   ],
-  "canonical_url": "https://guardian-pilot.base44.app/",
+  "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian/index.html",
   "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian/llms.txt",
   "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian/ai-discovery.json",
   "registry_name": null,

@@ -3,10 +3,10 @@
   "@graph": [
     {
       "@type": "Service",
-      "@id": "https://evercraft-career-command.base44.app/functions/careerAgentGateway?view=offers#evercraft-capability",
+      "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/career-command-interview-practice-machine-v1/index.html#evercraft-capability",
       "name": "Career Command Interview Practice + Interview Sprint",
       "description": "A candidate needs role-specific practice and candid evidence-based feedback before an interview.",
-      "url": "https://evercraft-career-command.base44.app/functions/careerAgentGateway?view=offers",
+      "url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/career-command-interview-practice-machine-v1/index.html",
       "provider": {
         "@type": "Organization",
         "name": "Evercraft LLC",
@@ -20,7 +20,7 @@
       "name": "Career Command Interview Practice + Interview Sprint | Evercraft capability",
       "description": "A candidate needs role-specific practice and candid evidence-based feedback before an interview.",
       "about": {
-        "@id": "https://evercraft-career-command.base44.app/functions/careerAgentGateway?view=offers#evercraft-capability"
+        "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/career-command-interview-practice-machine-v1/index.html#evercraft-capability"
       }
     }
   ]

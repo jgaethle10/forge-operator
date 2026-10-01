@@ -19,7 +19,7 @@
       "pricing": "No approved external machine price/payment path was found. Do not auto-quote.",
       "commercial_state": "verification_required",
       "machine_state": "discovery_only",
-      "public_url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
+      "public_url": null,
       "pain_page": "/chum/intents/littlered-kdp-export-qa-machine-v1/",
       "registry_name": null,
       "direct_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",

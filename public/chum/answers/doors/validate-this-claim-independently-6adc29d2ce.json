@@ -19,7 +19,7 @@
       "pricing": "No approved fixed machine price verified. Raven contains research-service hypotheses, but they remain hypotheses and are not auto-quotable.",
       "commercial_state": "verification_required",
       "machine_state": "discovery_only",
-      "public_url": "https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs",
+      "public_url": null,
       "pain_page": "/chum/intents/towi-evidence-research-machine-v1/",
       "registry_name": null,
       "direct_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",

@@ -22,7 +22,7 @@
   "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/legacy-rescue-lab/llms.txt",
   "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/legacy-rescue-lab/ai-discovery.json",
   "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-  "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "mcp": null,
   "authority": "public discovery and bounded rescue diagnostics; private system access, credentials, source repositories, invasive testing, and production changes require separate explicit authorization",
   "human_confirmation_required": true,
   "boundaries": [
@@ -59,8 +59,8 @@
       }
     }
   },
-  "human_start_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=legacy-rescue-lab-v1",
-  "buyer_frontage_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=legacy-rescue-lab-v1",
+  "human_start_url": null,
+  "buyer_frontage_url": null,
   "developer_surfaces": null,
   "editorial_surfaces": {
     "hub": "/legacy-rescue-lab/editorial/",

@@ -12,11 +12,11 @@
     "grok",
     "generic_agent"
   ],
-  "canonical_url": "https://evercraft-rewards.base44.app/",
+  "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/index.html",
   "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/llms.txt",
   "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/ai-discovery.json",
   "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-  "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "mcp": null,
   "authority": "public read-only local reward discovery plus account-bound check-ins, Daily Prize Tickets and Game Wallet earning; Game Wallet fulfillment is implemented but production gaming issuance remains gated by provider authorization, credentials, sponsor funding and deployed-runtime verification; merchant enrollment is reversible and owner-confirmed through Evercraft Machine Commerce",
   "human_confirmation_required": true,
   "boundaries": [

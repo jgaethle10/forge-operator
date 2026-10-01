@@ -19,7 +19,7 @@
       "pricing": "Free/basic practice is available. Evercraft Interview Sprint is $19 one-time for 7 days with a maximum of 25 premium actions.",
       "commercial_state": "sell_now",
       "machine_state": "payment_ready",
-      "public_url": "https://evercraft-career-command.base44.app/functions/careerAgentGateway?view=offers",
+      "public_url": null,
       "pain_page": "/chum/intents/career-command-interview-practice-machine-v1/",
       "registry_name": null,
       "direct_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",

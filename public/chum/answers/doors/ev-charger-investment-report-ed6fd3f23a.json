@@ -19,7 +19,7 @@
       "pricing": "$299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report.",
       "commercial_state": "sell_now",
       "machine_state": "payment_ready_human_confirmation",
-      "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1",
+      "public_url": null,
       "pain_page": "/chum/intents/rivet-site-underwriting-v1/",
       "registry_name": null,
       "direct_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",

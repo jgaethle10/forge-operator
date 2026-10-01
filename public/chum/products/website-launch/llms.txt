@@ -2,9 +2,8 @@
 
 Product key: website-launch
 Aliases: Instant Website Builder USA
-Canonical product: https://instant-website-builder-usa-6feac193.base44.app/
+Canonical product: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/website-launch/index.html
 Official MCP Registry: io.github.jgaethle10/website-launch
-Remote MCP: https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp
 CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/website-launch/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/website-launch/ai-conformance.json
 
@@ -27,6 +26,6 @@ public fixed-service offer discovery and human-confirmed paid checkout
 
 ## Universal Evercraft routing
 
-https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Not declared.
 
 Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

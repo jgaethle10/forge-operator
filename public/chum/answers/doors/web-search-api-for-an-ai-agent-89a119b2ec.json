@@ -19,7 +19,7 @@
       "pricing": "No public machine price is advertised until runtime metering and production verification are complete.",
       "commercial_state": "discovery_only",
       "machine_state": "specialist_discovery_ready_runtime_gated",
-      "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=web",
+      "public_url": null,
       "pain_page": "/chum/intents/evercraft-web-browser-agent-v1/",
       "registry_name": null,
       "direct_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",

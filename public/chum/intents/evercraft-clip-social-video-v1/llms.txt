@@ -4,9 +4,9 @@ Problem: An authorized user needs a source video turned into a small set of soci
 Pricing: Canonical customer price is $4.99 one-time (499 cents USD). An authenticated Clip checkout control plane and provider-verification path are deployed, but the live checkout gateway currently reports payment authority unconfigured, so this must not be represented as sell-now yet.
 Commercial state: verification_required
 Machine state: invocation_ready
-Public capability: https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs
+Public capability: null
 Start here: Not exposed until commercial verification is complete
-Human review fallback: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=evercraft-clip-social-video-v1
+Human review fallback: null
 Machine offer JSON: Not exposed until commercial verification is complete
 Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 

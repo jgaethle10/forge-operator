@@ -4,7 +4,7 @@
   "name": "Systemia University",
   "aliases": [],
   "class": "evidence_centered_learning_agent_proving_and_workforce_readiness",
-  "canonical_url": "https://systemia-university.base44.app/",
+  "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/index.html",
   "intents": [
     "prove whether an AI agent can actually do its job",
     "test an AI agent with a bounded mission",
@@ -36,7 +36,7 @@
   "buyer_frontage_url": null,
   "registry_name": null,
   "mcp": null,
-  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "machine_commerce_mcp": null,
   "developer_surfaces": null,
   "editorial_surfaces": null,
   "knowledge_surfaces": null,

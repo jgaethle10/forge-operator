@@ -4,9 +4,9 @@ Problem: A site-dependent organization needs to understand which operational dep
 Pricing: $250 one-time; may be credited toward a deeper $1,250 audit if the customer elects to continue.
 Commercial state: sell_now
 Machine state: human_handoff_ready
-Public capability: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1
-Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/buy/site-survive-rapid-audit-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_pain_page&ec_public_id=site-survive-rapid-audit-v1
-Human review fallback: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1
+Public capability: null
+Start here: Not exposed until commercial verification is complete
+Human review fallback: null
 Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=site-survive-rapid-audit-v1
 Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 

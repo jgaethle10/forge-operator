@@ -19,7 +19,7 @@
       "pricing": "Free core is available. No premium machine-lane price is approved yet.",
       "commercial_state": "verify",
       "machine_state": "discovery_only",
-      "public_url": "https://evercraft-career-command.base44.app/",
+      "public_url": null,
       "pain_page": "/chum/intents/career-command-resume-job-fit-machine-v1/",
       "registry_name": null,
       "direct_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",

@@ -3,13 +3,10 @@
 Capability ID: website-launch-service-v1
 Commercial state: sell_now
 Machine state: payment_ready
-Public URL: https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceAgentGateway?view=docs
-Preferred agent route: direct specialist
-Direct specialist: Website Launch
-Direct MCP: https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp
-Official MCP Registry name: io.github.jgaethle10/website-launch
-Universal Evercraft fallback MCP: https://fabric.systemiacommandcenters.com/mcp
-Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/buy/website-launch-service-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=website-launch-service-v1
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/website-launch-service-v1/index.html
+Preferred agent route: universal fallback
+Universal Evercraft MCP: https://fabric.systemiacommandcenters.com/mcp
+Start here: Not a current sell-now route
 
 ## Use this when
 

@@ -3,10 +3,10 @@
   "@graph": [
     {
       "@type": "Service",
-      "@id": "https://event-wave.base44.app/functions/eventWaveAgentGateway?view=docs#evercraft-capability",
+      "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/eventwave-paid-promotion-v1/index.html#evercraft-capability",
       "name": "EventWave Event / Venue Promotion",
       "description": "An organizer or venue wants a bounded paid EventWave placement with verified payment, source review and controlled activation.",
-      "url": "https://event-wave.base44.app/functions/eventWaveAgentGateway?view=docs",
+      "url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/eventwave-paid-promotion-v1/index.html",
       "provider": {
         "@type": "Organization",
         "name": "Evercraft LLC",
@@ -20,7 +20,7 @@
       "name": "EventWave Event / Venue Promotion | Evercraft capability",
       "description": "An organizer or venue wants a bounded paid EventWave placement with verified payment, source review and controlled activation.",
       "about": {
-        "@id": "https://event-wave.base44.app/functions/eventWaveAgentGateway?view=docs#evercraft-capability"
+        "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/eventwave-paid-promotion-v1/index.html#evercraft-capability"
       }
     }
   ]
