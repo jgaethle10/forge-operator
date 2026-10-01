@@ -1,5 +1,27 @@
 import assert from "node:assert/strict";
+import fs from "node:fs";
 import { ROLE_ATTACKS, runAssignment, reconcile, discoverScholarlySources } from "./saban-learning-adapter.mjs";
+
+const sourcePack=JSON.parse(
+  fs.readFileSync(
+    "systemia/daytrade-lens/learning/market-edge-source-pack-v1.json",
+    "utf8"
+  )
+);
+const registry=JSON.parse(
+  fs.readFileSync("systemia/saban/multiplication-registry.json","utf8")
+);
+const learningContract=registry.software.find(
+  (row)=>row.software_id==="daytrade-learning-lab"
+);
+assert.ok(learningContract);
+assert.equal(sourcePack.lessons.length,12);
+assert.equal(Object.keys(ROLE_ATTACKS).length,11);
+assert.equal(
+  learningContract.default_logical_agents,
+  sourcePack.lessons.length*Object.keys(ROLE_ATTACKS).length
+);
+assert.equal(learningContract.assignment_strategy,"role_item_cartesian");
 
 const lesson={
   lesson_id:"implementation-shortfall",
@@ -112,6 +134,7 @@ console.log(JSON.stringify({
   schema:"evercraft.daytrade.saban-learning-adapter-proof.v1",
   roles:roles.length,
   crossref_read_only_discovery:true,
+  twelve_lessons_by_eleven_roles_exact_cartesian_pass:true,
   lesson_specific_relevance_gate:true,
   irrelevant_cost_paper_rejected:true,
   role_item_attack:true,
