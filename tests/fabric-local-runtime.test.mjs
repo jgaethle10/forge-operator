@@ -82,13 +82,30 @@ test('Fabric local runtime is read-only, tunnel-compatible, and makes no Base44 
       'match_evercraft_capability',
       'list_evercraft_capabilities',
       'get_evercraft_connection_options',
-      'preview_public_website',
+      'inspect_public_website',
     ]);
     assert.ok(tools.result.tools.every((x)=>x.annotations.readOnlyHint===true));
     assert.equal(
-      tools.result.tools.find((x)=>x.name==='preview_public_website')?.annotations.openWorldHint,
+      tools.result.tools.find((x)=>x.name==='inspect_public_website')?.annotations.openWorldHint,
       true
     );
+
+    const publicTools=await fetch(runtime.openAiMcpUrl,{
+      method:'POST',
+      headers:{'content-type':'application/json'},
+      body:JSON.stringify({jsonrpc:'2.0',id:22,method:'tools/list',params:{}}),
+    }).then((r)=>r.json());
+    assert.deepEqual(publicTools.result.tools.map((x)=>x.name),['inspect_public_website']);
+
+    const blockedPublicRouter=await fetch(runtime.openAiMcpUrl,{
+      method:'POST',
+      headers:{'content-type':'application/json'},
+      body:JSON.stringify({
+        jsonrpc:'2.0',id:23,method:'tools/call',
+        params:{name:'match_evercraft_capability',arguments:{intent:'find a product'}},
+      }),
+    }).then((r)=>r.json());
+    assert.equal(blockedPublicRouter.error.code,-32602);
 
     const options=await fetch(runtime.mcpUrl,{
       method:'POST',
