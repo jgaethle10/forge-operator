@@ -11,6 +11,12 @@ const readArg=(name)=>{
 const appId=readArg('--app-id')||process.env.EVERCRAFT_CHATGPT_APP_ID||'';
 const outDir=path.resolve(readArg('--out')||'artifacts/evercraft-mobile-plugin');
 const version=readArg('--version')||'0.1.0';
+const allowWebOnly=argv.includes('--allow-web-only-app-reference');
+
+if(!allowWebOnly){
+  console.error('ERROR: app-backed custom MCP references are currently a web/workspace path, not the canonical private mobile path. Use the ChatGPT Sites bridge for phone testing, or pass --allow-web-only-app-reference deliberately.');
+  process.exit(3);
+}
 
 if(!/^plugin_asdk_app_[A-Za-z0-9_-]+$/.test(appId)){
   console.error('ERROR: --app-id must be a registered ChatGPT MCP app ID beginning with plugin_asdk_app_');
@@ -71,12 +77,14 @@ if(codex.apps!=='./.app.json'){
 }
 
 const receipt={
-  schema:'evercraft.mobile-plugin-build.v1',
+  schema:'evercraft.app-backed-plugin-build.v2',
   app_id:appId,
   version,
   output_dir:outDir,
   direct_mcp_manifests_present:false,
   app_manifest_present:true,
+  expected_surface:'web_or_supported_workspace',
+  canonical_mobile_path:false,
   built_at:new Date().toISOString(),
 };
 fs.writeFileSync(path.join(outDir,'MOBILE-BUILD-RECEIPT.json'),JSON.stringify(receipt,null,2)+'\n');
