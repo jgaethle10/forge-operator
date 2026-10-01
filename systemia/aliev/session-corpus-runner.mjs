@@ -3,6 +3,7 @@ import path from 'node:path';
 import {
   backfillPlugNYCSessionCorpus,
   compactPlugNYCSessionCorpus,
+  reconcilePlugNYCSessionCorpus,
   sessionCorpusStatus,
   PLUGNYC_SOURCE_URL
 } from './session-corpus.mjs';
@@ -25,7 +26,11 @@ const result=await backfillPlugNYCSessionCorpus({
   pageSize,
   maxPagesPerRun:maxPages
 });
+let reconciliation=null;
 let compaction=null;
+if(result.checkpoint.complete){
+  reconciliation=reconcilePlugNYCSessionCorpus({stateDir});
+}
 if(compactAlways || (compactOnComplete && result.checkpoint.complete)){
   compaction=compactPlugNYCSessionCorpus({stateDir});
 }
@@ -33,6 +38,7 @@ console.log(JSON.stringify({
   ok:true,
   schema:'evercraft.aliev.session-corpus-runner.v1',
   backfill:result.receipt,
+  reconciliation,
   compaction:compaction?.receipt||null,
   status:sessionCorpusStatus({stateDir})
 },null,2));
