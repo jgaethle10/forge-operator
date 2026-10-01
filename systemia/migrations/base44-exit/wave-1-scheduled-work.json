@@ -10,15 +10,21 @@
       "runner": "systemia/operations/auto-clock-out-runner.mjs",
       "cutoff_hours": 12,
       "recommended_cadence_seconds": 300,
-      "activation_state": "held_until_destination_data_live",
+      "activation_state": "registered_disabled_until_destination_data_live",
       "activation_requires": [
         "destination_time_log_reconciliation_receipt",
         "destination_action_log_write_receipt",
         "owned_scheduler_deployment_receipt",
         "dry_run_preview_receipt",
+        "explicit_activation_gate_receipt",
         "first_live_cycle_observation_receipt"
       ],
-      "automatic_activation": false
+      "automatic_activation": false,
+      "service_key": "remote-ops-auto-clock-out",
+      "activation_env": "SYSTEMIA_REMOTE_OPS_AUTO_CLOCK_OUT_ENABLED",
+      "destination_app_key": "systemia-remote-ops",
+      "supervisor_config": "systemia/core/resident-services.json",
+      "workflow_manifest": "systemia/operations/auto-clock-out.workflow.json"
     },
     {
       "product": "Evercraft InternalOps",
@@ -27,22 +33,32 @@
       "runner": "systemia/operations/auto-clock-out-runner.mjs",
       "cutoff_hours": 12,
       "recommended_cadence_seconds": 300,
-      "activation_state": "held_until_destination_data_live",
+      "activation_state": "registered_disabled_until_destination_data_live",
       "activation_requires": [
         "destination_time_log_reconciliation_receipt",
         "destination_action_log_write_receipt",
         "owned_scheduler_deployment_receipt",
         "dry_run_preview_receipt",
+        "explicit_activation_gate_receipt",
         "first_live_cycle_observation_receipt"
       ],
-      "automatic_activation": false
+      "automatic_activation": false,
+      "service_key": "internal-ops-auto-clock-out",
+      "activation_env": "SYSTEMIA_INTERNAL_OPS_AUTO_CLOCK_OUT_ENABLED",
+      "destination_app_key": "evercraft-internal-ops",
+      "supervisor_config": "systemia/core/resident-services.json",
+      "workflow_manifest": "systemia/operations/auto-clock-out.workflow.json"
     }
   ],
   "proof_refs": [
     "systemia/operations/auto-clock-out.mjs",
     "systemia/operations/auto-clock-out.proof.mjs",
+    "systemia/operations/auto-clock-out-runner.mjs",
+    "systemia/operations/auto-clock-out.workflow.json",
+    "systemia/operations/auto-clock-out-registration.proof.mjs",
     "systemia/core/resident-supervisor.mjs",
-    "systemia/core/resident-supervisor.proof.mjs"
+    "systemia/core/resident-supervisor.proof.mjs",
+    "systemia/core/resident-services.json"
   ],
   "authority": {
     "source_mutation": false,
