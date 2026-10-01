@@ -13,10 +13,9 @@ export async function startEvercraftEdgeDnsRuntime({
   const initial=loadSnapshot(snapshotPath);
   const instanceId="edge_dns_"+crypto.randomBytes(8).toString("hex");
   const dns=startDns({snapshotPath,host:dnsHost,port:Number(dnsPort)});
-  const health=http.createServer((req,res)=>{
-    if(req.url!=="/health"){res.writeHead(404);return res.end()}
+  const healthState=()=>{
     const snap=dns.getSnapshot();
-    const body={
+    return {
       ok:true,
       service:"evercraft-edge-dns",
       runtime:"Evercraft Compute",
@@ -32,8 +31,11 @@ export async function startEvercraftEdgeDnsRuntime({
       dns_bind_host:dnsHost,
       dns_bind_port:Number(dnsPort)
     };
+  };
+  const health=http.createServer((req,res)=>{
+    if(req.url!=="/health"){res.writeHead(404);return res.end()}
     res.writeHead(200,{"content-type":"application/json"});
-    res.end(JSON.stringify(body));
+    res.end(JSON.stringify(healthState()));
   });
   await new Promise((resolve,reject)=>{
     health.once("error",reject);
@@ -44,6 +46,7 @@ export async function startEvercraftEdgeDnsRuntime({
     instanceId,
     healthUrl:"http://"+healthHost+":"+addr.port+"/health",
     initialSnapshotHash:initial.hash,
+    health:()=>healthState(),
     reload:()=>dns.reload(),
     async close(){
       await Promise.allSettled([
