@@ -61,6 +61,24 @@ Specialized compatibility tools may exist for important capabilities, but the ge
 
 ## ChromeOS v0.2
 
+### Platform permission versus exposed authority
+
+ChromeOS currently requires the companion to request the desktop automation permission to obtain host accessibility evidence. That platform permission is broad. Evercraft must never describe the underlying permission itself as narrow.
+
+The boundary is therefore explicit:
+
+```text
+ChromeOS platform grant: broad desktop automation
+Evercraft exposed capability: Crostini port-forwarding read only
+Network egress: paired localhost receiver only
+Remote mutation command surface: none
+Raw desktop tree persistence: none
+```
+
+The registry and receipts carry both the broad platform permission scope and the narrow authority Evercraft actually exposes. If a future implementation can replace the broad platform grant with a narrower host API, it should.
+
+## ChromeOS v0.2
+
 The ChromeOS companion:
 
 - polls the paired local receiver for fresh-check requests;
