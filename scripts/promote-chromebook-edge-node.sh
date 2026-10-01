@@ -55,8 +55,18 @@ EOF
 systemctl daemon-reload
 systemctl enable --now evercraft-nodeseed.service evercraft-edge-dns-bootstrap.service
 sleep 2
-systemctl is-active --quiet evercraft-nodeseed.service
-systemctl is-active --quiet evercraft-edge-dns-bootstrap.service
+if ! systemctl is-active --quiet evercraft-nodeseed.service; then
+  echo "ERROR: evercraft-nodeseed.service is not active after Edge promotion." >&2
+  systemctl --no-pager --full status evercraft-nodeseed.service >&2 || true
+  journalctl -u evercraft-nodeseed.service -n 80 --no-pager >&2 || true
+  exit 6
+fi
+if ! systemctl is-active --quiet evercraft-edge-dns-bootstrap.service; then
+  echo "ERROR: evercraft-edge-dns-bootstrap.service failed to stay active." >&2
+  systemctl --no-pager --full status evercraft-edge-dns-bootstrap.service >&2 || true
+  journalctl -u evercraft-edge-dns-bootstrap.service -n 100 --no-pager >&2 || true
+  exit 7
+fi
 
 CAPACITY="$(curl -fsS --max-time 3 http://127.0.0.1:42420/v1/capacity)"
 printf '%s' "$CAPACITY" | "$NODE_BIN" -e "
