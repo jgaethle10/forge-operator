@@ -231,16 +231,18 @@ const isCli =
   path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 
 if (isCli) {
-  const root = process.cwd();
-  const out = path.join(root, 'systemia', 'capability-mesh', 'runtime-policies.json');
-  const rendered = JSON.stringify(renderRuntimePolicies(root), null, 2) + '\n';
+  const rendered = renderRuntimePolicies(process.cwd());
 
   if (process.argv.includes('--check')) {
-    if (!fs.existsSync(out)) throw new Error('runtime_policies_missing');
-    if (fs.readFileSync(out, 'utf8') !== rendered) throw new Error('runtime_policies_stale');
-    console.log('CAPABILITY_MESH_RUNTIME_CURRENT');
+    if (rendered.policies.some((policy) => policy.grants_authority !== false)) {
+      throw new Error('runtime_policy_authority_violation');
+    }
+    console.log(JSON.stringify({
+      state: 'CAPABILITY_MESH_RUNTIME_CURRENT',
+      policy_count: rendered.policy_count,
+      products: rendered.policies.map((policy) => policy.product_key),
+    }));
   } else {
-    fs.writeFileSync(out, rendered);
-    console.log(out);
+    console.log(JSON.stringify(rendered, null, 2));
   }
 }
