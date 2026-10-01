@@ -73,13 +73,17 @@ test('resident cycle collects official sources, stages an edition, and leaves pu
       fetchImpl: fakeFetch,
       materialityThreshold: 0.45,
       clock: () => new Date('2026-09-30T20:00:00.000Z'),
-      journalUrl: 'https://journal.evercraft.global/'
+      journalUrl: 'https://journal.evercraft.global/',
+      autoReleaseOwned: true
     });
 
     const receipt = await resident.runOnce();
     assert.equal(receipt.status, 'pass');
     assert.equal(receipt.collected_observations, 3);
     assert.equal(receipt.publication_authority, false);
+    assert.equal(receipt.release_gate_status, 'ready');
+    assert.equal(receipt.owned_release.status, 'released_owned_archive');
+    assert.equal(receipt.owned_release.external_social_publish_performed, false);
 
     const health = resident.health();
     assert.equal(health.ok, true);
@@ -96,6 +100,7 @@ test('resident cycle collects official sources, stages an edition, and leaves pu
       'journal-editorial-packet.json',
       'linkedin-draft.json',
       'facebook-draft.json',
+      'release-candidate.json',
       'receipts.jsonl'
     ]) {
       assert.ok(fs.existsSync(path.join(root, filename)), `${filename} should be persisted`);
@@ -104,6 +109,11 @@ test('resident cycle collects official sources, stages an edition, and leaves pu
     const packet = JSON.parse(fs.readFileSync(path.join(root, 'journal-editorial-packet.json'), 'utf8'));
     assert.equal(packet.publication_authority, false);
     assert.ok(packet.required_gates.includes('freshness_recheck'));
+
+    const releaseState = resident.releaseState();
+    assert.equal(releaseState.index.releases.length, 1);
+    assert.equal(releaseState.latest_release.publication_authority, 'owned_radar_archive_only');
+    assert.equal(releaseState.corrections.corrections.length, 0);
   } finally {
     fs.rmSync(root, { recursive: true, force: true });
   }
