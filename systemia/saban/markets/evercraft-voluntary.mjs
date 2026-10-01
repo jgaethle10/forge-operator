@@ -230,10 +230,14 @@ export async function registerVoluntaryProvider({
   placement={},
   trust={},
   terms_ref='evercraft-voluntary-v1',
+  admission_token='',
 }={}){
   const base=String(endpoint||'').replace(/\/$/,'');
   const registration=await requestJson(`${base}/v1/providers/register`,{
     method:'POST',
+    headers:admission_token
+      ? {'x-evercraft-provider-admission':String(admission_token)}
+      : {},
     body:{
       provider_id,
       resources,
@@ -293,7 +297,13 @@ export async function registerVoluntaryProvider({
         {
           method:'POST',
           headers:providerHeaders,
-          body:{ok,result,error,checkpoint},
+          body:{
+            ok,
+            result,
+            error,
+            checkpoint,
+            delivery_id:job.delivery_id,
+          },
         }
       );
     },
