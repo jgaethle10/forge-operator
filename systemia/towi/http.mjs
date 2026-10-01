@@ -88,6 +88,19 @@ export function registerTowiRoutes(app, {
     res.json(editorialPacketForDossier(dossier));
   });
 
+  app.post('/api/towi/internal/dossiers/:id/evidence', requireInternal, (req, res) => {
+    try {
+      const receipt = resident.addEvidence(String(req.params.id || ''), req.body?.evidence || req.body);
+      res.status(receipt.status === 'deduped' ? 200 : 201).json(receipt);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      res.status(message === 'TOWI dossier not found' ? 404 : 400).json({
+        ok: false,
+        error: message
+      });
+    }
+  });
+
   app.post('/api/towi/run', requireInternal, async (req, res) => {
     const receipt = await resident.runOnce({
       radarEdition: req.body?.radar_edition || null
