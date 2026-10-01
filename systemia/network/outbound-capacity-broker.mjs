@@ -519,6 +519,7 @@ export async function startOutboundCapacityBroker({
     if (![
       'evercraft-owned-browser-worker',
       'specialist-handoff-mcp',
+      'evercraft-fabric-local',
       'rivet-yard-report-runtime',
     ].includes(targetService)) {
       throw new Error('remote_service_relay_target_not_bridgeable');
