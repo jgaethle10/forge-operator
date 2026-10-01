@@ -798,7 +798,7 @@ export async function startEvercraftComputeNode({
     try {
       if (
         (req.method === 'GET' && ['/v1/operator/status', '/v1/operator/host-boundary'].includes(String(req.url || ''))) ||
-        (req.method === 'POST' && /^\/v1\/operator\/(?:fs\/(?:list|read|write)|exec)$/.test(String(req.url || '')))
+        (req.method === 'POST' && /^\/v1\/operator\/(?:fs\/(?:list|read|write)|exec|host-boundary\/check)$/.test(String(req.url || '')))
       ) {
         if (!remoteOperator) return send(res, 404, { error: 'remote_operator_not_enabled' });
         if (!allocatorTokenHash || sha(bearer(req)) !== allocatorTokenHash) {
@@ -815,6 +815,9 @@ export async function startEvercraftComputeNode({
             });
           }
           const body = await readJson(req);
+          if (req.url === '/v1/operator/host-boundary/check') {
+            return send(res, 200, await remoteOperator.hostBoundaryCheck(body));
+          }
           if (req.url === '/v1/operator/fs/list') {
             return send(res, 200, remoteOperator.list(body));
           }
