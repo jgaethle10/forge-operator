@@ -192,6 +192,7 @@ const CHUM_DISCOVERY_LINKS = [
   '</.well-known/evercraft-syndication.json>; rel="service-desc"; type="application/json"; title="Evercraft Syndication Manifest"',
   '</.well-known/evercraft-household-fabric.json>; rel="service-desc"; type="application/json"; title="Evercraft Household Fabric Manifest"',
   '</api/household-fabric/yakima/today>; rel="alternate"; type="application/json"; title="Evercraft Household Fabric Yakima Today"',
+  '</household/>; rel="alternate"; type="text/html"; title="Evercraft Household Fabric Today Page"',
   '</.well-known/agent-card.json>; rel="service-desc"; type="application/json"; title="Evercraft A2A Agent Card"',
   '</chum/freshness.xml>; rel="alternate"; type="application/atom+xml"; title="Evercraft CHUM Freshness Feed"',
   '</chum/freshness.json>; rel="alternate"; type="application/json"; title="Evercraft CHUM Freshness State"',
@@ -220,7 +221,9 @@ function isChumDiscoverySurface(pathname: string): boolean {
     pathname === '/api/discover' ||
     pathname === '/api/revenue-watershed' ||
     pathname === '/api/chum/crawler-radar' ||
-    pathname.startsWith('/api/household-fabric/');
+    pathname.startsWith('/api/household-fabric/') ||
+    pathname.startsWith('/household-fabric') ||
+    pathname.startsWith('/household');
 }
 
 app.use((req: Request, res: Response, next: NextFunction) => {
