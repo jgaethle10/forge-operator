@@ -1,5 +1,5 @@
 {
-  "schema": "evercraft.saban.evermail-formation-request.v1",
+  "schema": "evercraft.saban.evermail-formation-request.v2",
   "formation_id": "rivet-evermail-bootstrap",
   "service_id": "rivet-mail",
   "logical_uri": "evercraft://mail/rivet",
@@ -7,7 +7,9 @@
     "workload_class": "systemia.evermail.v1",
     "runtime_fabric": "Evercraft Compute",
     "provider_policy": "evercraft-owned-only",
-    "public_domain": "rivet.systemiacommandcenters.com",
+    "public_domain_source": "env:RIVET_PUBLIC_MAIL_DOMAIN",
+    "public_identity": "RIVET-only",
+    "public_parent_brand_leakage": "forbidden",
     "minimum_healthy_mail_replicas": 1,
     "attestation_required": true,
     "persistent_storage_required": true,
@@ -16,6 +18,8 @@
   },
   "mailbox_manifest": "systemia/domain-authority/rivet-mailboxes.json",
   "gates": [
+    "rivet_public_domain_selected",
+    "rivet_public_domain_brand_isolation_verified",
     "capacity_discovered",
     "field_attestation_verified",
     "mail_runtime_health_green",
@@ -31,6 +35,12 @@
     "mailbox_auth_receipt_present",
     "backup_restore_receipt_present"
   ],
-  "first_customer_sender": "invoices@rivet.systemiacommandcenters.com",
+  "first_customer_sender_template": "invoices@${RIVET_PUBLIC_MAIL_DOMAIN}",
+  "staff_sender_templates": [
+    "paola@${RIVET_PUBLIC_MAIL_DOMAIN}",
+    "daryl@${RIVET_PUBLIC_MAIL_DOMAIN}",
+    "jess@${RIVET_PUBLIC_MAIL_DOMAIN}",
+    "jesse@${RIVET_PUBLIC_MAIL_DOMAIN}"
+  ],
   "fail_closed": true
 }
