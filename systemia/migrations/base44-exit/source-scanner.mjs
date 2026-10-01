@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
+import { scanBase44AliasDependencies } from './source-scanner-aliases.mjs';
 
 const TEXT_EXTENSIONS = new Set([
   '.js','.jsx','.mjs','.cjs','.ts','.tsx','.json','.html','.css','.md','.yml','.yaml','.env'
@@ -47,6 +48,7 @@ export function scanBase44Source({ sourceDir } = {}) {
   if (!sourceDir) throw new Error('source_dir_required');
   const root = path.resolve(sourceDir);
   if (!fs.statSync(root).isDirectory()) throw new Error('source_dir_must_be_directory');
+  const aliasScan = scanBase44AliasDependencies(root);
 
   const entities = [];
   const entityMethods = [];
@@ -97,7 +99,7 @@ export function scanBase44Source({ sourceDir } = {}) {
     for (const m of text.matchAll(/\b(?:process\.env\.|import\.meta\.env\.)([A-Z][A-Z0-9_]{2,})\b/g)) envKeys.push(m[1]);
   }
 
-  const uniqueMethods = sorted(entityMethods);
+  const uniqueMethods = sorted(entityMethods.concat(aliasScan.entity_methods || []));
   const uniqueAuth = sorted(authMethods);
   const uniqueApp = sorted(appMethods);
   const uniqueAppLogs = sorted(appLogMethods);
@@ -117,6 +119,7 @@ export function scanBase44Source({ sourceDir } = {}) {
   if (unsupportedAppLogMethods.length) blockers.push('unsupported_app_log_method');
   if (hardcodedRoutes) blockers.push('hardcoded_base44_routes_require_repoint');
   if (serviceRoleFiles) blockers.push('service_role_permit_review_required');
+  if ((aliasScan.custom_integration_operations || []).length) blockers.push('custom_integration_mapping_review_required');
 
   return {
     schema: 'evercraft.base44.source-scan.v1',
@@ -129,7 +132,7 @@ export function scanBase44Source({ sourceDir } = {}) {
       get_config_files: getConfigFiles
     },
     entities: {
-      names: sorted(entities),
+      names: sorted(entities.concat(aliasScan.entity_names || [])),
       methods: uniqueMethods,
       unsupported_methods: unsupportedEntityMethods
     },
@@ -149,7 +152,13 @@ export function scanBase44Source({ sourceDir } = {}) {
       unsupported_methods: unsupportedAppLogMethods
     },
     integrations: {
-      operations: sorted(integrationPairs)
+      operations: sorted(integrationPairs),
+      custom_operations: aliasScan.custom_integration_operations || []
+    },
+    aliases: {
+      client_aliases: aliasScan.client_aliases || [],
+      service_role_aliases: aliasScan.service_role_aliases || [],
+      service_role_connector_providers: aliasScan.service_role_connector_providers || []
     },
     cross_app_clients: {
       count: sorted(crossAppFingerprints).length,
@@ -163,6 +172,8 @@ export function scanBase44Source({ sourceDir } = {}) {
     dependencies: {
       ...dependencyCounts,
       service_role_files: serviceRoleFiles,
+      service_role_alias_count: (aliasScan.service_role_aliases || []).length,
+      custom_integration_operation_count: (aliasScan.custom_integration_operations || []).length,
       hardcoded_route_values_emitted: false
     },
     compatibility: {
