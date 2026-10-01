@@ -47,6 +47,13 @@ if ! command -v sudo >/dev/null 2>&1; then echo "ERROR: sudo is required" >&2; e
 
 NODE_BIN="$(command -v node)"
 RUN_USER="${SUDO_USER:-$USER}"
+RUN_HOME="$(getent passwd "$RUN_USER" | cut -d: -f6)"
+if [[ -z "$RUN_HOME" ]]; then
+  echo "ERROR: could not resolve home directory for $RUN_USER" >&2
+  exit 2
+fi
+NODE_RECEIPT="$RUN_HOME/.local/state/evercraft/organism/compute/nodeseed-receipt.json"
+ALLOCATOR_TOKEN_FILE="$RUN_HOME/.local/state/evercraft/organism/.secrets/allocator-token"
 
 echo "[1/7] Installing Caddy from Debian packages..."
 sudo apt-get update
@@ -56,6 +63,8 @@ echo "[2/7] Creating Evercraft edge configuration..."
 sudo install -d -m 0755 /etc/evercraft
 sudo tee /etc/evercraft/fabric.env >/dev/null <<EOF
 EVERCRAFT_OPENAI_CHALLENGE_TOKEN=
+EVERCRAFT_EDGE_NODE_RECEIPT=$NODE_RECEIPT
+EVERCRAFT_EDGE_ALLOCATOR_TOKEN_FILE=$ALLOCATOR_TOKEN_FILE
 EOF
 sudo chmod 0600 /etc/evercraft/fabric.env
 
@@ -149,7 +158,8 @@ if [[ -z "$TOKEN" || ! "$TOKEN" =~ ^[A-Za-z0-9_-]{16,512}$ ]]; then
   exit 2
 fi
 TMP="$(mktemp)"
-printf 'EVERCRAFT_OPENAI_CHALLENGE_TOKEN=%s\n' "$TOKEN" > "$TMP"
+sudo awk -F= '$1 != "EVERCRAFT_OPENAI_CHALLENGE_TOKEN" {print}' /etc/evercraft/fabric.env > "$TMP"
+printf 'EVERCRAFT_OPENAI_CHALLENGE_TOKEN=%s\n' "$TOKEN" >> "$TMP"
 chmod 0600 "$TMP"
 sudo install -o root -g root -m 0600 "$TMP" /etc/evercraft/fabric.env
 rm -f "$TMP"
