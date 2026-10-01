@@ -52,6 +52,12 @@ const common = {
     configured: true,
     restart_reopen_verified: true,
   },
+  trialCemeteryState: {
+    configured: true,
+    restart_reopen_verified: true,
+    run_count: 4,
+    trial_observation_count: 1620,
+  },
 };
 
 const ready = evaluatePilotReadiness(common);
@@ -67,6 +73,27 @@ const noDurability = evaluatePilotReadiness({
 });
 assert.equal(noDurability.evidence_ready_count, 0);
 assert.ok(noDurability.reviews[0].blockers.includes("durable_state_configured"));
+
+const noTrialCemetery = evaluatePilotReadiness({
+  ...common,
+  trialCemeteryState: {
+    configured: false,
+    restart_reopen_verified: false,
+    run_count: 0,
+    trial_observation_count: 0,
+  },
+});
+assert.equal(noTrialCemetery.evidence_ready_count, 0);
+assert.ok(
+  noTrialCemetery.reviews[0].blockers.includes(
+    "durable_trial_cemetery_configured"
+  )
+);
+assert.equal(
+  noTrialCemetery.reviews[0].search_process_memory
+    .ephemeral_artifact_storage_is_not_lifetime_memory,
+  true
+);
 
 const forwardPending = evaluatePilotReadiness({
   ...common,
@@ -148,6 +175,8 @@ console.log(JSON.stringify({
   prospective_forward_pass_required:true,
   correlated_cluster_pass_required:true,
   durable_state_required:true,
+  durable_trial_cemetery_required:true,
+  ephemeral_artifacts_not_lifetime_memory:true,
   pair_only_micro_pilot_blocked:true,
   sip_nbbo_required_for_micro_pilot:true,
   modeled_entry_quote_coverage_required:true,
