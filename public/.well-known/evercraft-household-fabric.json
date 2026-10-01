@@ -11,13 +11,15 @@
     "evidence_ledger": "merged",
     "local_event_collector": "merged",
     "merchant_offer_contract": "merged",
-    "yakima_recurring_runner": "candidate_until_live_browser_edge_receipt",
-    "public_today_gateway": "candidate_until_deployed",
-    "fuel_price_index": "candidate",
-    "grocery_price_index": "candidate",
-    "google_places_fuel_source": "credential_required_not_live",
-    "kroger_grocery_source": "credential_required_not_live",
-    "consumer_today_page": "candidate_until_deployed"
+    "fuel_price_index": "merged",
+    "grocery_price_index": "merged",
+    "google_places_fuel_client": "implemented_candidate_credentials_required_not_live",
+    "kroger_grocery_client": "implemented_candidate_credentials_required_not_live",
+    "provider_credential_intake": "implemented_candidate_until_deployed",
+    "provider_credential_mode": "vault_reference_first",
+    "yakima_recurring_runner": "implemented_candidate_requires_live_browser_edge_receipt",
+    "public_today_gateway": "implemented_candidate_until_deployed",
+    "consumer_today_page": "implemented_candidate_until_deployed"
   },
   "evidence_rules": [
     "Missing data is never treated as zero.",
