@@ -8,6 +8,14 @@
       "cutover_ready": false,
       "components": [
         {
+          "key": "live_registry_shadow_source_capture",
+          "state": "live_source_capture_receipt_present",
+          "refs": [
+            "systemia/migrations/base44-exit/wave-1-command-center-shadow-source-capture-2026-10-01.json"
+          ],
+          "detail": "Six low-risk registry/config entities were read from live Base44 state with terminal pagination and fingerprinted in-memory. Receipt contains 32 total rows and SHA-256 stream/field-set hashes only; no raw records or IDs were emitted. Destination write has not occurred."
+        },
+        {
           "key": "base44_sdk_compatibility",
           "state": "implementation_present_ci_pending",
           "refs": [
@@ -274,7 +282,10 @@
     "products_cutover_ready": 0,
     "implementations_present_ci_pending": 16,
     "destination_data_migrated_products": 0,
-    "public_cutovers_authorized": 0
+    "public_cutovers_authorized": 0,
+    "live_source_capture_products": 1,
+    "live_source_capture_entities": 6,
+    "live_source_capture_rows": 32
   },
   "authority": {
     "source_mutation": false,
