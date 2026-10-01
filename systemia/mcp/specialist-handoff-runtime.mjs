@@ -3,6 +3,7 @@ import { randomBytes } from 'node:crypto';
 import {
   executeFabricDirectoryRpc,
   fabricDirectoryTools,
+  fabricOpenAiTools,
   loadFabricCatalogFromRepository,
   normalizeFabricCatalog,
   validateOpenAiChallengeToken,
@@ -637,6 +638,7 @@ export async function startSpecialistHandoffRuntime({
   remoteOpsPricingFetch = null,
   fabricCatalog = null,
   fabricMcpPath = '/mcp',
+  fabricOpenAiMcpPath = '/mcp/openai',
   openAiChallengeToken = '',
 } = {}) {
   const instanceId = `specialist_handoff_${randomBytes(12).toString('hex')}`;
@@ -656,17 +658,22 @@ export async function startSpecialistHandoffRuntime({
     Promise.resolve(simulateRemoteOpsPricing(payload)));
   void remoteOpsPricingUrl;
   const normalizedFabricPath = String(fabricMcpPath || '/mcp').trim();
-  if (
-    !normalizedFabricPath.startsWith('/') ||
-    normalizedFabricPath.length > 256 ||
-    /[\s?#]/.test(normalizedFabricPath)
-  ) {
-    throw new Error('fabric_mcp_path_invalid');
+  const normalizedFabricOpenAiPath = String(fabricOpenAiMcpPath || '/mcp/openai').trim();
+  for (const [label,value] of [
+    ['fabric_mcp_path',normalizedFabricPath],
+    ['fabric_openai_mcp_path',normalizedFabricOpenAiPath],
+  ]) {
+    if (!value.startsWith('/') || value.length > 256 || /[\s?#]/.test(value)) {
+      throw new Error(label+'_invalid');
+    }
   }
   if (
     normalizedFabricPath === '/health' ||
-    SPECIALIST_HANDOFFS.some((x) => x.path === normalizedFabricPath) ||
-    normalizedFabricPath === SYSTEMIA_REMOTE_OPS.path
+    normalizedFabricOpenAiPath === '/health' ||
+    normalizedFabricOpenAiPath === normalizedFabricPath ||
+    SPECIALIST_HANDOFFS.some((x) => x.path === normalizedFabricPath || x.path === normalizedFabricOpenAiPath) ||
+    normalizedFabricPath === SYSTEMIA_REMOTE_OPS.path ||
+    normalizedFabricOpenAiPath === SYSTEMIA_REMOTE_OPS.path
   ) {
     throw new Error('fabric_mcp_path_collision');
   }
@@ -694,6 +701,7 @@ export async function startSpecialistHandoffRuntime({
     payment_enabled: false,
     fabric_directory_enabled: true,
     fabric_mcp_path: normalizedFabricPath,
+    fabric_openai_mcp_path: normalizedFabricOpenAiPath,
     fabric_capability_count: normalizedFabricCatalog.length,
     removed_legacy_base44_connections:
       nativeCatalog.removed_legacy_base44_connections,
@@ -719,6 +727,12 @@ export async function startSpecialistHandoffRuntime({
         path: normalizedFabricPath,
         public_id: 'evercraft-fabric',
         tools: fabricDirectoryTools().map((tool) => tool.name),
+      },
+      {
+        product: 'Evercraft Public Plugin',
+        path: normalizedFabricOpenAiPath,
+        public_id: 'evercraft-public-plugin',
+        tools: fabricOpenAiTools().map((tool) => tool.name),
       },
       ...SPECIALIST_HANDOFFS.map((x) => ({
         product: x.title,
@@ -767,19 +781,21 @@ export async function startSpecialistHandoffRuntime({
         return res.end(data);
       }
 
-      if (req.url === normalizedFabricPath) {
+      if (req.url === normalizedFabricPath || req.url === normalizedFabricOpenAiPath) {
+        const openAiProfile=req.url === normalizedFabricOpenAiPath;
         if (req.method === 'GET') {
           return sendJson(res, 200, {
             ok: true,
-            service: 'Evercraft Fabric',
+            service: openAiProfile ? 'Evercraft Public Plugin' : 'Evercraft Fabric',
             server: 'evercraft-fabric',
-            version: '1.0.0',
+            version: '1.1.0',
             transport: 'Streamable HTTP',
-            tools: fabricDirectoryTools().map((tool) => tool.name),
-            capability_count: normalizedFabricCatalog.length,
+            tools: (openAiProfile ? fabricOpenAiTools() : fabricDirectoryTools()).map((tool) => tool.name),
+            capability_count: openAiProfile ? null : normalizedFabricCatalog.length,
             transactional: false,
             checkout_enabled: false,
             payment_enabled: false,
+            public_plugin_profile: openAiProfile,
             runtime: 'Evercraft Compute',
             instance_id: instanceId,
             deployment_receipt_bound: Boolean(deploymentReceiptRef),
@@ -792,7 +808,11 @@ export async function startSpecialistHandoffRuntime({
           return sendJson(res, 405, { error: 'method_not_allowed' });
         }
         const rpc = await readJson(req);
-        const response = await executeFabricDirectoryRpc(rpc, normalizedFabricCatalog);
+        const response = await executeFabricDirectoryRpc(
+          rpc,
+          normalizedFabricCatalog,
+          {toolProfile:openAiProfile?'openai':'full'}
+        );
         if (response === null) {
           res.writeHead(202, { 'cache-control': 'no-store' });
           res.end();
