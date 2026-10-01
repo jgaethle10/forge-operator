@@ -57,13 +57,24 @@ export function counterComputeProposal(proposal,counterTerms){
     throw new Error('proposal_schema_invalid');
   }
   if(proposal.state!=='pending') throw new Error('proposal_not_pending');
+
+  const nextTerms={...proposal.terms,...counterTerms};
+  const economicBasisChanged=
+    Object.prototype.hasOwnProperty.call(counterTerms||{},'hourly_usd') ||
+    Object.prototype.hasOwnProperty.call(counterTerms||{},'duration_seconds');
+  const explicitTotal=
+    Object.prototype.hasOwnProperty.call(counterTerms||{},'total_usd');
+  if(economicBasisChanged&&!explicitTotal){
+    nextTerms.total_usd=null;
+  }
+
   return createComputeProposal({
     demand_id:proposal.demand_id,
     provider_id:proposal.provider_id,
     market:proposal.market,
     parent_proposal_id:proposal.proposal_id,
     round:Number(proposal.round||1)+1,
-    terms:{...proposal.terms,...counterTerms},
+    terms:nextTerms,
     expires_at:new Date(Date.now()+120000).toISOString(),
   });
 }
