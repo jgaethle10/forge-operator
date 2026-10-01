@@ -56,3 +56,11 @@ test('external canary proves every OpenAI directory listing page',()=>{
     assert.ok(workflow.includes(required),'missing OpenAI listing-page canary contract: '+required);
   }
 });
+
+
+test('external canary rejects a specialist edge that still routes through Base44',()=>{
+  assert.ok(
+    workflow.includes('.base44_transport_enabled == false'),
+    'public specialist edge must prove Base44 transport is disabled'
+  );
+});
