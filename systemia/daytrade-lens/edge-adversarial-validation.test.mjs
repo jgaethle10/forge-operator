@@ -69,12 +69,34 @@ const rejected = adversarialValidateCandidates({ evaluations, measurements: pois
 });
 assert.equal(rejected.forward_paper_eligible_count, 0);
 
+
+const negativeMeasurements = measurements.map((row) => ({
+  ...row,
+  signal_key: "ai_models|sec_8_k|SOXX|3d",
+  lag_key: "3d",
+  forward_return: -0.012 - (Number(row.origin_entity_ref.slice(-1)) % 3) * 0.001,
+  benchmark_return: -0.002,
+}));
+const negativeEvaluations = [{
+  ...evaluations[0],
+  signal_key: "ai_models|sec_8_k|SOXX|3d",
+  lag_key: "3d",
+  learned_direction: "NEGATIVE_EXCESS_RETURN",
+}];
+const negativeReview = adversarialValidateCandidates({
+  evaluations: negativeEvaluations,
+  measurements: negativeMeasurements,
+}, { transaction_cost_bps: 10 });
+assert.equal(negativeReview.forward_paper_eligible_count, 1);
+
 console.log(JSON.stringify({
   ok: true,
   schema: "evercraft.daytrade.edge-adversarial-proof.v1",
   candidate_clustering: true,
   leave_one_origin_out: true,
   calendar_regime_splits: true,
+  frozen_direction_costs: true,
+  negative_direction_review: true,
   forward_paper_gate_only: true,
   live_trade_authority: false,
 }));
