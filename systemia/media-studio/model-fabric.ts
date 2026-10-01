@@ -41,6 +41,7 @@ export interface VisualReference {
   digest?:string;
   sourceRefs:string[];
   locator?:VisualReferenceLocator;
+  locators?:VisualReferenceLocator[];
 }
 
 export interface VisualModelCapability {
@@ -57,6 +58,7 @@ export interface VisualModelCapability {
   framesExclusiveWithReferences?:boolean;
   referenceImageDurationOptions?:number[];
   locatorKinds?:VisualReferenceLocator['kind'][];
+  providerLocatorId?:string;
   nativeAudio?:boolean;
   batchVariants?:number;
   qualityTier:1|2|3|4|5;
@@ -192,6 +194,46 @@ function referenceModes(references:VisualReference[]):Set<VisualInputMode>{
   return modes;
 }
 
+function referenceLocators(ref:VisualReference){
+  const locators=[
+    ...(ref.locator?[ref.locator]:[]),
+    ...(ref.locators??[]),
+  ];
+  const seen=new Set<string>();
+  return locators.filter(locator=>{
+    const key=JSON.stringify(locator);
+    if(seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+function locatorSupported(
+  locator:VisualReferenceLocator,
+  capability:VisualModelCapability,
+){
+  if(capability.locatorKinds&&!capability.locatorKinds.includes(locator.kind)){
+    return false;
+  }
+  if(
+    capability.providerLocatorId&&
+    (locator.kind==='provider_asset'||locator.kind==='provider_generation')&&
+    locator.providerId!==capability.providerLocatorId
+  ){
+    return false;
+  }
+  return true;
+}
+
+function materializeReferenceForCapability(
+  ref:VisualReference,
+  capability:VisualModelCapability,
+):VisualReference{
+  if(!capability.locatorKinds) return ref;
+  const selected=referenceLocators(ref).find(locator=>locatorSupported(locator,capability));
+  return selected?{...ref,locator:selected}:ref;
+}
+
 function capabilityReasons(
   request:VisualShotRequest,
   endpoint:VisualModelEndpoint,
@@ -240,10 +282,18 @@ function capabilityReasons(
 
   if(capability.locatorKinds){
     for(const ref of compatible){
-      if(!ref.locator){
+      const locators=referenceLocators(ref);
+      if(!locators.length){
         reasons.push('reference_locator_missing:'+ref.role);
-      }else if(!capability.locatorKinds.includes(ref.locator.kind)){
-        reasons.push('reference_locator_unsupported:'+ref.role+':'+ref.locator.kind);
+        continue;
+      }
+      if(!locators.some(locator=>locatorSupported(locator,capability))){
+        const kinds=[...new Set(locators.map(locator=>
+          (locator.kind==='provider_asset'||locator.kind==='provider_generation')
+            ?locator.kind+'@'+locator.providerId
+            :locator.kind
+        ))].join(',');
+        reasons.push('reference_locator_unsupported:'+ref.role+':'+kinds);
       }
     }
   }
@@ -372,7 +422,8 @@ export function buildVisualModelPlan(
     durationSec:request.durationSec,
     aspectRatio:request.aspectRatio,
     targetResolution:request.targetResolution,
-    references:compatibleReferences(request.references,row.capability),
+    references:compatibleReferences(request.references,row.capability)
+      .map(ref=>materializeReferenceForCapability(ref,row.capability)),
     continuityDigest:request.continuityDigest,
     requires:[...request.requires],
     outputContract:{
