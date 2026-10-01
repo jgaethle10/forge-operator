@@ -1,0 +1,147 @@
+{
+  "schema": "evercraft.base44.wave-source-profile.v1",
+  "wave": 1,
+  "observed_at": "2026-09-30",
+  "source": "authenticated_base44_schema_connector_and_function_inventory",
+  "products": [
+    {
+      "product": "Systemia Command Center",
+      "entity_count": 21,
+      "function_count": 8,
+      "connected_connector_count": 0,
+      "observed_surface_signals": [
+        "machine_gateway",
+        "mcp",
+        "web_gateway",
+        "control_plane"
+      ],
+      "migration_requirements": [
+        "structured_data",
+        "identity",
+        "server_functions",
+        "machine_surfaces",
+        "route_cutover",
+        "rollback",
+        "sentinel"
+      ]
+    },
+    {
+      "product": "Systemia Remote Ops",
+      "entity_count": 54,
+      "function_count": 5,
+      "connected_connector_count": 0,
+      "observed_surface_signals": [
+        "scheduled_work_candidate",
+        "provider_event_ingress_candidate",
+        "pricing_runtime",
+        "mcp"
+      ],
+      "migration_requirements": [
+        "structured_data",
+        "identity",
+        "server_functions",
+        "scheduled_work_review",
+        "webhook_review",
+        "route_cutover",
+        "rollback",
+        "sentinel"
+      ]
+    },
+    {
+      "product": "Evercraft AI Workforce",
+      "entity_count": 17,
+      "function_count": 10,
+      "connected_connector_count": 1,
+      "connected_connectors": [
+        {
+          "provider": "polar",
+          "status": "active",
+          "scope_count": 9,
+          "credential_values_emitted": false
+        }
+      ],
+      "observed_surface_signals": [
+        "checkout",
+        "payment_verification",
+        "provider_connector",
+        "premium_execution"
+      ],
+      "migration_requirements": [
+        "structured_data",
+        "identity",
+        "server_functions",
+        "connector_reauthorization",
+        "payment_path",
+        "secret_rekey",
+        "route_cutover",
+        "rollback",
+        "sentinel"
+      ]
+    },
+    {
+      "product": "Evercraft InternalOps",
+      "entity_count": 50,
+      "function_count": 4,
+      "connected_connector_count": 0,
+      "observed_surface_signals": [
+        "scheduled_work_candidate",
+        "systemia_sync",
+        "operations_intake"
+      ],
+      "migration_requirements": [
+        "structured_data",
+        "identity",
+        "server_functions",
+        "scheduled_work_review",
+        "route_cutover",
+        "rollback",
+        "sentinel"
+      ]
+    },
+    {
+      "product": "Systemia Audit Center",
+      "entity_count": 15,
+      "function_count": 10,
+      "connected_connector_count": 0,
+      "observed_surface_signals": [
+        "agent_gateway",
+        "mcp",
+        "checkout",
+        "payment_verification",
+        "payment_webhook",
+        "document_export",
+        "web_fetch"
+      ],
+      "migration_requirements": [
+        "structured_data",
+        "server_functions",
+        "webhook_repoint",
+        "payment_path",
+        "object_storage_review",
+        "route_cutover",
+        "rollback",
+        "sentinel"
+      ]
+    }
+  ],
+  "totals": {
+    "products": 5,
+    "entity_schemas": 157,
+    "server_functions": 37,
+    "connected_connectors": 1
+  },
+  "doctrine": {
+    "observed_function_name_signal_is_not_behavior_parity_proof": true,
+    "connected_connector_requires_direct_provider_reauthorization": true,
+    "provider_credential_copy_forbidden": true,
+    "payment_truth_remains_provider_authoritative": true,
+    "webhook_sender_repoint_requires_separate_verification": true,
+    "source_profile_does_not_authorize_cutover": true,
+    "source_profile_does_not_authorize_decommission": true
+  },
+  "privacy": {
+    "raw_base44_app_ids_emitted": false,
+    "credentials_emitted": false,
+    "private_urls_emitted": false
+  }
+}
