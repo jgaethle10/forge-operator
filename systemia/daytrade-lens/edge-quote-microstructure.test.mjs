@@ -197,6 +197,18 @@ const modeledEntry=lab.overlays.find((row)=>row.label==="modeled_entry");
 assert.equal(modeledEntry.passive_touch_evidence_available,true);
 assert.equal(modeledEntry.passive_price_touch_observed,true);
 assert.ok(modeledEntry.passive_touch_delay_ms>0);
+assert.equal(modeledEntry.passive_observed_touch_trade_count_in_window,1);
+assert.equal(modeledEntry.passive_observed_touch_trade_size_shares_in_window,15);
+assert.equal(
+  modeledEntry.passive_observed_touch_trade_size_by_window["30s"]
+    .observed_trade_size_shares,
+  15
+);
+assert.equal(
+  modeledEntry.passive_observed_touch_trade_size_by_window["60s"]
+    .observed_trade_size_shares,
+  15
+);
 assert.equal(modeledEntry.passive_queue_position_observed,false);
 assert.equal(modeledEntry.passive_hypothetical_fill_claimed,false);
 assert.equal(
@@ -462,6 +474,8 @@ console.log(JSON.stringify({
   partial_fill_probability_not_invented:true,
   aggressive_vs_passive_bounds:true,
   passive_touch_markout_adverse_selection:true,
+  passive_public_tape_size_bound:true,
+  non_touch_trades_excluded_from_passive_capacity:true,
   realized_passive_fill_comparison_not_claimed:true,
   top_of_book_size_imbalance:true,
   visible_touch_size_not_full_depth:true,
