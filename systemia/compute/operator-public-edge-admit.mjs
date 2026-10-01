@@ -68,6 +68,11 @@ export function evaluateOperatorPublicEdgeAdmission({
   const parsed=new URL(origin);
   if(parsed.protocol!=='https:'||/(^|\.)base44\.app$/i.test(parsed.hostname)) throw new Error('owned_https_origin_required');
   if(!externalCanary.tls?.authorized||!clean(externalCanary.tls?.fingerprint256)) throw new Error('trusted_tls_peer_required');
+  if(externalCanary.edge_attestation_verified!==true) throw new Error('external_device_attestation_required');
+  if(!validSha(externalCanary.device_fingerprint)) throw new Error('external_device_fingerprint_invalid');
+  if(clean(externalCanary.device_fingerprint)!==clean(nodeReceipt.device_fingerprint)) throw new Error('external_device_fingerprint_mismatch');
+  if(clean(externalCanary.node_id)!==clean(nodeReceipt.node_id)) throw new Error('external_node_id_mismatch');
+  if(externalCanary.physical_field_claim!==false) throw new Error('external_attestation_may_not_claim_field_status');
 
   if(localHealth?.ok!==true||localHealth?.service!=='evercraft-fabric-local'||localHealth?.server!=='evercraft-fabric'){
     throw new Error('local_fabric_identity_invalid');
@@ -121,9 +126,9 @@ export function evaluateOperatorPublicEdgeAdmission({
     public_edge_configuration_valid:true,
     runtime_advertisement_verified:true,
     ready_for_public_edge_enrollment:true,
-    cryptographic_external_device_binding:false,
-    device_binding_state:'operator_local_identity_plus_independent_external_route',
-    identity_boundary_note:'This receipt binds an Evercraft NodeSeed identity and local resident Fabric services to an independently verified public HTTPS route under operator authorization. It does not claim physical Node 001 certification or cryptographic proof that the external TCP peer is the NodeSeed key.',
+    cryptographic_external_device_binding:true,
+    device_binding_state:'signed_nonce_verified',
+    identity_boundary_note:'This receipt binds the public HTTPS Fabric endpoint to the exact Evercraft NodeSeed device identity through a fresh externally verified Ed25519 nonce signature. It does not claim physical Node 001 certification.',
     private_key_exposed:false,
     certificate_bytes_exposed:false,
     founder_login_required:false,
