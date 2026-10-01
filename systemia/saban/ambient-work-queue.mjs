@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { createHash, randomBytes } from 'node:crypto';
+import { microSeedWorkloadSpec } from './microseed-workload-registry.mjs';
 
 const sha=v=>'sha256:'+createHash('sha256').update(
   typeof v==='string'?v:JSON.stringify(v)
@@ -55,7 +56,12 @@ export class AmbientWorkQueue{
     const idempotency=String(idempotency_key||'').trim();
     if(!workload) throw new Error('ambient_job_workload_required');
     if(!idempotency) throw new Error('ambient_job_idempotency_key_required');
-    if(payloadBytes(payload)>64*1024) throw new Error('ambient_job_payload_too_large');
+    const spec=microSeedWorkloadSpec(workload);
+    if(!spec) throw new Error('ambient_job_workload_not_registered');
+    if(private_data===true&&spec.private_data_allowed!==true){
+      throw new Error('ambient_job_workload_disallows_private_data');
+    }
+    if(payloadBytes(payload)>spec.max_payload_bytes) throw new Error('ambient_job_payload_too_large');
     if(preemptible===true&&checkpointable!==true){
       throw new Error('ambient_job_preemptible_requires_checkpointable');
     }
