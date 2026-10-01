@@ -2,7 +2,12 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { createHash, webcrypto } from 'node:crypto';
 import test from 'node:test';
+import {
+  base64UrlFromBytes,
+  canonicalJson,
+} from './chromeos-host-bridge/crypto-protocol.js';
 import {
   readChromeOsHostBoundaryCheck,
   readChromeOsHostBoundaryStatus,
@@ -12,11 +17,52 @@ import {
   validateChromeOsHostBoundaryObservation,
 } from './chromeos-host-boundary-bridge.mjs';
 
+async function testObserverIdentity() {
+  const pair = await webcrypto.subtle.generateKey(
+    { name: 'ECDSA', namedCurve: 'P-256' },
+    true,
+    ['sign', 'verify'],
+  );
+  const exported = await webcrypto.subtle.exportKey('jwk', pair.publicKey);
+  const publicJwk = {
+    kty: 'EC',
+    crv: 'P-256',
+    x: exported.x,
+    y: exported.y,
+    ext: true,
+    key_ops: ['verify'],
+  };
+  const fingerprint = 'sha256:' + createHash('sha256')
+    .update(canonicalJson(publicJwk))
+    .digest('hex');
+  return {
+    privateKey: pair.privateKey,
+    publicJwk,
+    fingerprint,
+  };
+}
+
+async function signedObservation(observation, identity) {
+  const payload = {
+    ...observation,
+    observer_key_fingerprint: identity.fingerprint,
+  };
+  const signature = await webcrypto.subtle.sign(
+    { name: 'ECDSA', hash: 'SHA-256' },
+    identity.privateKey,
+    new TextEncoder().encode(canonicalJson(payload)),
+  );
+  return {
+    ...payload,
+    observer_signature: base64UrlFromBytes(new Uint8Array(signature)),
+  };
+}
+
 const fixture = () => ({
   schema: 'evercraft.chromeos-host-boundary-observation.v1',
   collected_at: new Date().toISOString(),
-  observer_version: '0.1.0',
-  observer_install_id: 'install_test',
+  observer_version: '0.2.0',
+  observer_install_id: 'cros_install_test',
   settings_route: 'chrome://os-settings/crostini/portForwarding',
   ports: [
     { port: 18080, protocol: 'TCP', present: true, enabled: true, disabled: false },
@@ -137,8 +183,30 @@ test('HTTP bridge authenticates polling and completes a fresh request', async ()
     assert.equal(pendingResponse.status, 200);
     assert.equal(pending.request.request_id, request.request_id);
 
+    const identity = await testObserverIdentity();
+    const pairResponse = await fetch(
+      base + '/v1/chromeos-host-boundary/pair',
+      {
+        method: 'POST',
+        headers: {
+          authorization: 'Bearer ' + token,
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          observer_install_id: 'cros_install_test',
+          observer_key_fingerprint: identity.fingerprint,
+          public_key_jwk: identity.publicJwk,
+        }),
+      },
+    );
+    const pairBody = await pairResponse.json();
+    assert.equal(pairResponse.status, 200);
+    assert.equal(pairBody.paired, true);
+    assert.equal(pairBody.observer_key_fingerprint, identity.fingerprint);
+
     const observation = fixture();
     observation.request_id = request.request_id;
+    const signed = await signedObservation(observation, identity);
     const reportResponse = await fetch(
       base + '/v1/chromeos-host-boundary/report',
       {
@@ -147,7 +215,7 @@ test('HTTP bridge authenticates polling and completes a fresh request', async ()
           authorization: 'Bearer ' + token,
           'content-type': 'application/json',
         },
-        body: JSON.stringify(observation),
+        body: JSON.stringify(signed),
       },
     );
     const report = await reportResponse.json();
@@ -161,6 +229,8 @@ test('HTTP bridge authenticates polling and completes a fresh request', async ()
     const status = await statusResponse.json();
     assert.equal(status.fresh, true);
     assert.equal(status.request_id, request.request_id);
+    assert.equal(status.observer_signature_verified, true);
+    assert.equal(status.observer_key_fingerprint, identity.fingerprint);
     assert.equal(readChromeOsHostBoundaryCheck({ stateRoot }).state, 'completed');
   } finally {
     await new Promise((resolve) => runtime.server.close(resolve));
@@ -186,4 +256,70 @@ test('typed host-boundary registry matches the admitted ChromeOS read capability
   assert.equal(capability.mutation_authority, false);
   assert.deepEqual(capability.scope.ports, [8443, 18080]);
   assert.equal(capability.raw_accessibility_tree_persisted, false);
+});
+
+
+test('HTTP bridge rejects unsigned or incorrectly signed observer reports', async () => {
+  const stateRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'evercraft-host-boundary-signature-'));
+  const token = 's'.repeat(64);
+  const runtime = await startChromeOsHostBoundaryBridge({
+    host: '127.0.0.1',
+    port: 0,
+    token,
+    stateRoot,
+  });
+
+  try {
+    const base = 'http://127.0.0.1:' + runtime.port;
+    const identity = await testObserverIdentity();
+    const pairResponse = await fetch(base + '/v1/chromeos-host-boundary/pair', {
+      method: 'POST',
+      headers: {
+        authorization: 'Bearer ' + token,
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        observer_install_id: 'cros_install_test',
+        observer_key_fingerprint: identity.fingerprint,
+        public_key_jwk: identity.publicJwk,
+      }),
+    });
+    assert.equal(pairResponse.status, 200);
+
+    const unsigned = {
+      ...fixture(),
+      observer_key_fingerprint: identity.fingerprint,
+    };
+    const unsignedResponse = await fetch(
+      base + '/v1/chromeos-host-boundary/report',
+      {
+        method: 'POST',
+        headers: {
+          authorization: 'Bearer ' + token,
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify(unsigned),
+      },
+    );
+    assert.equal(unsignedResponse.status, 422);
+
+    const signed = await signedObservation(fixture(), identity);
+    signed.ports[0].enabled = !signed.ports[0].enabled;
+    const tamperedResponse = await fetch(
+      base + '/v1/chromeos-host-boundary/report',
+      {
+        method: 'POST',
+        headers: {
+          authorization: 'Bearer ' + token,
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify(signed),
+      },
+    );
+    assert.equal(tamperedResponse.status, 422);
+    const tampered = await tamperedResponse.json();
+    assert.equal(tampered.error, 'chromeos_host_boundary_observer_signature_invalid');
+  } finally {
+    await new Promise((resolve) => runtime.server.close(resolve));
+  }
 });
