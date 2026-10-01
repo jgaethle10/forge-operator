@@ -33,7 +33,7 @@ export function bootstrapNativeMicroSeed({
   device_class='linux-host',
   authorization_ref,
   endpoint,
-  supported_workloads=['systemia.health-probe.v1','systemia.content-hash.v1','systemia.telemetry-normalizer.v1','systemia.chunk-transform.v1','systemia.json-canonicalize.v1','systemia.rivet.source-coverage-audit.v1','systemia.aliev.domain-record-digest.v1','systemia.rivet.observed-session-sanity.v1','systemia.blob-store.v1,systemia.secret-share-vault.v1','systemia.secret-share-vault.v1'],
+  supported_workloads=['systemia.health-probe.v1','systemia.content-hash.v1','systemia.telemetry-normalizer.v1','systemia.chunk-transform.v1','systemia.json-canonicalize.v1','systemia.rivet.source-coverage-audit.v1','systemia.aliev.domain-record-digest.v1','systemia.rivet.observed-session-sanity.v1','systemia.blob-store.v1','systemia.secret-share-vault.v1'],
   resources={},
   placement_labels=[],
   max_concurrency=2,
