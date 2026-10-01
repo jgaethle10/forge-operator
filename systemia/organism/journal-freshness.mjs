@@ -124,8 +124,23 @@ export async function probeJournalFreshness({
     'optimize your cart for maximum savings'
   ];
   const journalIdentityMarkers = ['evercraft journal', 'news that moves. ideas that become things.'];
-  const hasJournalIdentity = home.ok && journalIdentityMarkers.some((marker) => homepageLower.includes(marker));
-  const identityDrift = home.ok && !hasJournalIdentity && identityDriftMarkers.some((marker) => homepageLower.includes(marker));
+  const visibleIdentityText = homepageLower
+    .replace(/<script\\b[^>]*>[\\s\\S]*?<\\/script>/gi, ' ')
+    .replace(/<style\\b[^>]*>[\\s\\S]*?<\\/style>/gi, ' ');
+  const hasExplicitJournalIdentity = home.ok &&
+    visibleIdentityText.includes('news that moves. ideas that become things.');
+  const hasJournalName = home.ok && visibleIdentityText.includes('evercraft journal');
+  const identityDriftMarker = identityDriftMarkers.find((marker) => homepageLower.includes(marker)) || null;
+  const escapedDriftMarker = identityDriftMarker
+    ? identityDriftMarker.replace(/[.*+?^$()|[\\]\\\\]/g, '\\\\$&')
+    : null;
+  const markerInPublicMetadata = escapedDriftMarker
+    ? new RegExp('<meta\\\\b[^>]*(?:name|property)=["\\\\\'](?:description|og:description|twitter:description)["\\\\\'][^>]*content=["\\\\\'][^"\\\\\']*'+escapedDriftMarker, 'i').test(home.text)
+      || new RegExp('<meta\\\\b[^>]*content=["\\\\\'][^"\\\\\']*'+escapedDriftMarker+'[^"\\\\\']*["\\\\\'][^>]*(?:name|property)=["\\\\\'](?:description|og:description|twitter:description)["\\\\\']', 'i').test(home.text)
+    : false;
+  const identityDrift = home.ok && Boolean(identityDriftMarker) &&
+    (markerInPublicMetadata || (!hasJournalName && !hasExplicitJournalIdentity));
+  const hasJournalIdentity = hasJournalName || hasExplicitJournalIdentity;
   const identityFindings = identityDrift
     ? [{
         ...findingBase,
