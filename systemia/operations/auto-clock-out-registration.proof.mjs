@@ -38,7 +38,7 @@ for(const row of expected){
   const args=service.static_args||[];
   assert.equal(args[args.indexOf('--app-key')+1],row.app_key);
   assert.equal(args[args.indexOf('--cutoff-hours')+1],'12');
-  assert.equal(service.optional_when_unconfigured,true,false);
+  assert.notEqual(service.optional_when_unconfigured,true);
 }
 
 console.log(JSON.stringify({
