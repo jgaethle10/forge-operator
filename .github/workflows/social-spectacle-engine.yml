@@ -11,6 +11,7 @@ on:
       - "systemia/media-studio/cli.ts"
       - "systemia/core/resident-services.json"
       - "systemia/worldstate/subscriptions.json"
+      - "systemia/radar/collectors*"
       - "package.json"
       - ".github/workflows/social-spectacle-engine.yml"
   push:
@@ -24,6 +25,7 @@ on:
       - "systemia/media-studio/cli.ts"
       - "systemia/core/resident-services.json"
       - "systemia/worldstate/subscriptions.json"
+      - "systemia/radar/collectors*"
       - "package.json"
       - ".github/workflows/social-spectacle-engine.yml"
 
@@ -45,6 +47,9 @@ jobs:
 
       - name: Prove spectacle admission boundaries
         run: npm run proof:social-spectacle
+
+      - name: Prove Radar visual-source geometry
+        run: node --test systemia/radar/collectors.test.mjs
 
       - name: Prove spectacle production packaging
         run: npm run proof:social-spectacle-production
@@ -165,4 +170,62 @@ jobs:
           if(receipt.publication_authority!==false) throw new Error('publication_authority_leak');
           if(!fs.existsSync(receipt.vertical_render_plan)) throw new Error('vertical_render_plan_missing');
           if(!fs.existsSync(receipt.landscape_stage)) throw new Error('landscape_stage_missing');
+          NODE
+
+
+      - name: Compile geolocated Radar story
+        run: |
+          cat >/tmp/social-spectacle-geo-queue.json <<'JSON'
+          {
+            "schema":"evercraft.social-spectacle.queue.v1",
+            "generated_at":"2026-10-01T00:00:00Z",
+            "target_daily_hero_posts":2,
+            "hard_max_daily_publishable_packages":4,
+            "quality_rule":"no filler",
+            "publication_authority":false,
+            "queue_count":1,
+            "queue":[{
+              "schema":"evercraft.social-spectacle.candidate.v1",
+              "candidate_id":"spectacle:ci-earthquake-map",
+              "observation_id":"ci-earthquake-map",
+              "observed_at":"2026-10-01T00:00:00Z",
+              "subject_key":"global::geophysics::seismic_feed_state",
+              "brand_key":"evercraft",
+              "title_seed":"USGS M4.5+ past-day feed contains 7 events; largest is M6.2 Example Region.",
+              "domains":["geophysics","earth_hazards"],
+              "region_keys":["global"],
+              "evidence_state":"observed",
+              "evidence_label":"OBSERVED",
+              "source_family":"USGS Earthquake Hazards",
+              "source_refs":["https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson"],
+              "wonder_score":0.84,
+              "production":{
+                "visual_path":"fallen_geo_explainer",
+                "no_text_card_first":true,
+                "data_payload":{
+                  "facts":{"subject":"USGS M4.5+ earthquakes, past day","count":7,"largest_magnitude":6.2},
+                  "measurements":[
+                    {"event_id":"q1","magnitude":6.2,"place":"Example Region","lat":47.31,"lon":-122.75,"depth_km":18.4,"observed_at":"2026-09-30T23:55:00Z"},
+                    {"event_id":"q2","magnitude":5.4,"place":"Second Region","lat":35.2,"lon":140.1,"depth_km":28.1,"observed_at":"2026-09-30T22:45:00Z"},
+                    {"event_id":"q3","magnitude":5.1,"place":"Third Region","lat":-12.1,"lon":166.8,"depth_km":41.0,"observed_at":"2026-09-30T21:10:00Z"}
+                  ]
+                }
+              }
+            }]
+          }
+          JSON
+          npm run social:spectacle:produce --             --queue /tmp/social-spectacle-geo-queue.json             --out /tmp/social-spectacle-geo-production             --clip-queue /tmp/social-spectacle-geo-clip
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          const dirs=fs.readdirSync('/tmp/social-spectacle-geo-production');
+          if(!dirs.length) throw new Error('geo_production_missing');
+          const root=path.join('/tmp/social-spectacle-geo-production',dirs[0]);
+          const receipt=JSON.parse(fs.readFileSync(path.join(root,'production-receipt.json'),'utf8'));
+          const stage=JSON.parse(fs.readFileSync(receipt.vertical_stage,'utf8'));
+          if(receipt.status!=='ready_to_render') throw new Error('geo_not_ready_to_render');
+          if(!stage.layers.some(layer=>layer.kind==='geo')) throw new Error('geo_layer_missing');
+          if(!stage.layers.some(layer=>layer.kind==='metric')) throw new Error('geo_metric_missing');
+          if(!stage.layers.some(layer=>layer.kind==='timeline')) throw new Error('geo_timeline_missing');
+          if(receipt.publication_authority!==false) throw new Error('geo_publication_authority_leak');
           NODE
