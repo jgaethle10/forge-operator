@@ -310,8 +310,15 @@ export async function startFabricLocalRuntime({
       }
 
       if ((req.method==='GET'||req.method==='HEAD') && String(req.url||'').startsWith('/journal')) {
+        const mirrorReady=fs.existsSync(path.join(journalDir,'index.html'));
+        if(!mirrorReady) return sendJson(res,404,{
+          error:'journal_mirror_not_materialized',
+          journal_mirror_ready:false,
+          canonical_build_command:'npm run journal:build',
+          indexing_state:'noindex_until_dedicated_origin'
+        });
         const asset=resolveJournalAsset(journalDir,String(req.url||''));
-        if(!asset) return sendJson(res,404,{error:'journal_asset_not_found'});
+        if(!asset) return sendJson(res,404,{error:'journal_asset_not_found',journal_mirror_ready:true});
         const data=fs.readFileSync(asset);
         res.writeHead(200,{
           'content-type':journalContentType(asset),
