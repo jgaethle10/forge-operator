@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 
 import { AmbientDeviceRegistry } from './ambient-device-registry.mjs';
 import { runPassiveAmbientCensus, admitCensusObservationsToRegistry } from './ambient-census.mjs';
+import { profileAmbientCensus } from './ambient-candidate-profiler.mjs';
 import { microDeviceToAmbientCapabilities } from './microseed-device-bridge.mjs';
 import { resolveAmbientComputeOffers } from './ambient-compute-fabric.mjs';
 import { composeCapabilityFabric, rivetAliEvCapabilityRoles } from './capability-fabric-composer.mjs';
@@ -140,9 +141,11 @@ export async function runCapacityOrganismOnce({
 
   let census=null;
   let censusAdmission=null;
+  let candidateInventory=null;
   if(runCensus){
     census=runPassiveAmbientCensus({root:resolvedRoot,now});
     censusAdmission=admitCensusObservationsToRegistry({census,registry});
+    candidateInventory=profileAmbientCensus(census);
   }
 
   const registrySnapshot=registry.list({now});
@@ -174,12 +177,21 @@ export async function runCapacityOrganismOnce({
       observed_count:censusAdmission.observed_count,
       authorized_count:censusAdmission.authorized_count,
     }:null,
+    candidate_inventory:candidateInventory?{
+      candidate_count:candidateInventory.candidate_count,
+      family_counts:candidateInventory.family_counts,
+      profiles:candidateInventory.profiles,
+      authorization_granted:candidateInventory.authorization_granted,
+      active_probe_performed:candidateInventory.active_probe_performed,
+      receipt_hash:candidateInventory.receipt_hash,
+    }:null,
   };
 
   atomicJson(path.join(resolvedRoot,'capacity-organism-state.json'),receipt);
   atomicJson(path.join(resolvedRoot,'ambient-registry-snapshot.json'),registrySnapshot);
   atomicJson(path.join(resolvedRoot,'heterogeneous-plan.json'),compiled.workload_plan);
   atomicJson(path.join(resolvedRoot,'rebalance-plan.json'),compiled.rebalance_plan);
+  if(candidateInventory) atomicJson(path.join(resolvedRoot,'ambient-candidate-inventory.json'),candidateInventory);
   return receipt;
 }
 
