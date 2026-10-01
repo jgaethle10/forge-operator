@@ -6,11 +6,11 @@
   "runtime": {
     "provider": "base44",
     "app_id": "6ab85d74fe2093703c6247e0",
-    "checkpoint_id": "6abc0e0f08819ba0d0914e98",
-    "checkpoint_commit": "f964339d2d7c5781a519cb6ce0333785c7721573",
+    "checkpoint_id": "6abdd9bafc5e16a5d35c1637",
+    "checkpoint_commit": "27a9e5e850e5e2b93c1e3ecf544f08b2c59ae45e",
     "public_url": null,
     "publication_state": "not_claimed_public",
-    "runtime_version": "evercraft-opportunity-fabric-runtime-v1.2.1"
+    "runtime_version": "evercraft-opportunity-fabric-runtime-v1.3.0"
   },
   "verified_capabilities": [
     "metadata-first member profiles",
@@ -57,7 +57,16 @@
     "execution blueprint plan ids include project outcome, capability gaps, candidate ids, scores and matched terms",
     "identical blueprint evidence replays the existing owner-private ledger record instead of duplicating it",
     "ExecutionBlueprint records link to the FabricEvent receipt that created them",
-    "ExecutionBlueprint is the ninth protected workflow entity locked to trusted-runtime writes"
+    "ExecutionBlueprint is the ninth protected workflow entity locked to trusted-runtime writes",
+    "accepted-connection-only SourcingRequest flow for capacity and quote requests",
+    "sourcing requests bind to the exact execution blueprint plan, work-package sequence and candidate member",
+    "sourcing recipients can report availability, estimate or firm quote, lead time, available-from date and safe constraints",
+    "sourcing quotes are explicitly non-binding and create no payment obligation",
+    "requester shortlisting creates no team membership, contract or work acceptance",
+    "only shortlisted Available or Limited sourcing responses from one project and one blueprint can seed a sourced execution team",
+    "sourced team invitations preserve sourcing lineage",
+    "accepting a sourced team invitation automatically materializes the exact sourced WorkPackage as Offered and Not accepted",
+    "SourcingRequest is the tenth protected workflow entity locked to trusted-runtime writes"
   ],
   "verification": {
     "app_lint": "pass",
@@ -83,8 +92,8 @@
     },
     "security_smoke": {
       "result": "pass",
-      "trusted_runtime_version": "v1.2.1",
-      "protected_workflow_entities_runtime_write_only": 9,
+      "trusted_runtime_version": "v1.3.0",
+      "protected_workflow_entities_runtime_write_only": 10,
       "private_contact_fields": 2,
       "vault_fingerprint_only": true,
       "immutable_formations_runtime_authoritative": true,
@@ -93,6 +102,11 @@
       "execution_blueprint_returns_no_contact_information": true,
       "execution_blueprint_owner_private_ledger": true,
       "execution_blueprint_idempotent_replay": true,
+      "sourcing_requires_accepted_connection": true,
+      "sourcing_quote_is_nonbinding": true,
+      "sourcing_shortlist_creates_no_membership": true,
+      "sourced_team_requires_shortlisted_available_response": true,
+      "sourced_team_acceptance_materializes_offer_not_acceptance": true,
       "execution_team_source_connections_verified": true,
       "team_invitation_acceptance_server_authoritative": true,
       "work_package_assignment_requires_accepted_invite": true,
@@ -102,7 +116,7 @@
     },
     "authority_contract_test": {
       "result": "pass",
-      "runtime_version": "v1.2.1"
+      "runtime_version": "v1.3.0"
     }
   },
   "known_limits": [
@@ -117,7 +131,9 @@
     "Current multi-party work packages coordinate scope, economics, dependencies and progress but do not execute payment, escrow, legal signature or protected-file delivery",
     "An accepted team invitation or work package is operational assent only and does not itself grant intellectual-property rights or create a final legal agreement",
     "Execution blueprints are heuristic recommendations from safe metadata and are not proof that a candidate is qualified, available, willing or suitable",
-    "Blueprint candidate suggestions do not establish membership, partnership, contract, IP rights or authorization; every candidate still requires the normal protected connection and team gates"
+    "Blueprint candidate suggestions do not establish membership, partnership, contract, IP rights or authorization; every candidate still requires the normal protected connection and team gates",
+    "Sourcing availability and quote responses are participant-supplied commercial signals and are not independently verified by the platform",
+    "A firm quote label in sourcing is still not payment, contract execution, purchase order, escrow or acceptance of the downstream work package"
   ],
   "release_rule": "Do not claim protected-asset disclosure, final legal enforceability, public deployment, or production payment until separately verified."
 }
