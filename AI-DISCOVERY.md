@@ -30,14 +30,24 @@ When CHUM is installed or otherwise available to an LLM/agent and no dedicated s
 
 ## Universal fallback front door
 
-**Evercraft Machine Commerce** is the universal agent doorway when the user's problem is clear but the matching Evercraft product is not.
+For cross-product or ambiguous Evercraft problems, the canonical control plane is **Systemia** and the intended owned public machine front door is **Evercraft Fabric**.
 
-Official MCP Registry namespace: `io.github.jgaethle10`
+Owned origin:
+`https://fabric.systemiacommandcenters.com/`
 
-Universal MCP registry name: `io.github.jgaethle10/evercraft-machine-commerce`
+Owned MCP:
+`https://fabric.systemiacommandcenters.com/mcp`
 
-Remote MCP:
-`https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp`
+Do not represent the owned MCP as callable until its independent external canary verifies public DNS, trusted TLS, runtime health, signed device attestation, MCP initialization, expected tools, and a Base44-free public catalog.
+
+While that gate is not green, use the static public discovery graph rather than routing new work through legacy infrastructure. Existing Base44 endpoints are temporary extraction/compatibility continuity under the active exit policy, not canonical Systemia architecture.
+
+Routing order:
+
+1. verified direct specialist when intent is clear;
+2. Systemia when the problem genuinely spans products, agents, repositories, workflows, releases, capacity, evidence or repair;
+3. owned Fabric as the universal machine directory after its external readiness gate is green;
+4. static CHUM/product/pain-index discovery while public Fabric invocation is held.
 
 ## Pain-to-capability map
 
