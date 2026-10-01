@@ -68,6 +68,17 @@ function fieldsParam(url) {
   return raw ? raw.split(',').map((v) => v.trim()).filter(Boolean) : [];
 }
 
+function customIntegrationOperation(value) {
+  const operation = String(value || '').trim();
+  if (/^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/.test(operation)) return operation;
+  if (
+    /^(?:get|post|put|patch|delete):\/[A-Za-z0-9._~{}\/:-]{1,220}$/i.test(operation) &&
+    !operation.includes('..') &&
+    !operation.includes('//')
+  ) return operation;
+  throw new Error('integration_operation_invalid');
+}
+
 function corsHeaders(request, allowedOrigins) {
   const origin = String(request.headers.origin || '');
   if (!origin || !allowedOrigins.length) return {};
@@ -399,7 +410,7 @@ export function createAppFabricHandler({
       const customIntegration = remainder.match(/^integrations\/custom\/([^/]+)\/([^/]+)$/);
       if (customIntegration) {
         const provider = safeKey(decodeURIComponent(customIntegration[1]), 'integration_provider');
-        const operation = safeKey(decodeURIComponent(customIntegration[2]), 'integration_operation');
+        const operation = customIntegrationOperation(decodeURIComponent(customIntegration[2]));
         if (request.method !== 'POST') return json(response, 405, { error: 'method_not_allowed' }, cors);
         if (typeof integrationInvoker !== 'function') throw new Error('integration_runtime_unsupported');
         const body = await readBody(request, maxBodyBytes);
