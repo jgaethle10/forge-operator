@@ -9,6 +9,7 @@ test('conversion router preserves the full debt queue and routes selected work t
   assert.ok(plan.missions.length<=12);
   assert.ok(plan.missions.every((x)=>x.route_via==='systemia'));
   assert.ok(plan.missions.every((x)=>x.execution_authority==='none_from_queue'));
+  assert.ok(plan.missions.some((x)=>x.stable_id==='platform:evercraft-fabric'&&x.priority==='P0_SHARED_INFRA'));
   assert.equal(plan.mission_snapshot.schema,'evercraft.kaidance.mission-snapshot.v1');
   assert.equal(plan.mission_snapshot.counts.changed,plan.summary.total_debt);
   assert.equal(plan.mission_snapshot.counts.admitted,plan.missions.length);
