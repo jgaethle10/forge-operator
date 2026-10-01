@@ -4,7 +4,9 @@ import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
 import {
+  readChromeOsHostBoundaryCheck,
   readChromeOsHostBoundaryStatus,
+  requestChromeOsHostBoundaryCheck,
   storeChromeOsHostBoundaryObservation,
   validateChromeOsHostBoundaryObservation,
 } from './chromeos-host-boundary-bridge.mjs';
@@ -67,4 +69,31 @@ test('fails closed when a stored receipt is modified', () => {
   const status = readChromeOsHostBoundaryStatus({ stateRoot });
   assert.equal(status.ok, false);
   assert.equal(status.state, 'receipt_integrity_failed');
+});
+
+
+test('on-demand check request is fulfilled only by the matching observation', () => {
+  const stateRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'evercraft-host-boundary-request-'));
+  const request = requestChromeOsHostBoundaryCheck({ stateRoot });
+  assert.match(request.request_id, /^hostcheck_[a-f0-9]+$/);
+
+  const pending = readChromeOsHostBoundaryCheck({ stateRoot });
+  assert.equal(pending.pending, true);
+  assert.equal(pending.state, 'pending');
+
+  const unrelated = fixture();
+  storeChromeOsHostBoundaryObservation(unrelated, { stateRoot });
+  assert.equal(readChromeOsHostBoundaryCheck({ stateRoot }).pending, true);
+
+  const matching = fixture();
+  matching.request_id = request.request_id;
+  const receipt = storeChromeOsHostBoundaryObservation(matching, { stateRoot });
+  const completed = readChromeOsHostBoundaryCheck({ stateRoot });
+  assert.equal(completed.pending, false);
+  assert.equal(completed.state, 'completed');
+  assert.equal(completed.request.result_receipt_hash, receipt.receipt_hash);
+
+  const status = readChromeOsHostBoundaryStatus({ stateRoot });
+  assert.equal(status.request_id, request.request_id);
+  assert.equal(status.fresh, true);
 });
