@@ -189,6 +189,7 @@ export function pairChromeOsHostBoundaryObserver(
     public_key_jwk: publicKeyJwk,
     capability_id: CAPABILITY_ID,
     mutation_authority: false,
+    last_observer_sequence: 0,
   };
   const pairing = sealState(body);
   atomicJson(file, pairing);
@@ -245,6 +246,15 @@ export async function verifyChromeOsHostBoundaryObserverReport(
     throw new Error('chromeos_host_boundary_observer_key_fingerprint_mismatch');
   }
 
+  const observerSequence = Number(input?.observer_sequence);
+  if (
+    !Number.isSafeInteger(observerSequence) ||
+    observerSequence < 1 ||
+    observerSequence <= Number(pairing.last_observer_sequence || 0)
+  ) {
+    throw new Error('chromeos_host_boundary_observer_sequence_replayed');
+  }
+
   const signatureText = safeText(input?.observer_signature || '', 512);
   if (!signatureText || !/^[A-Za-z0-9_-]{40,512}$/.test(signatureText)) {
     throw new Error('chromeos_host_boundary_observer_signature_required');
@@ -285,7 +295,41 @@ export async function verifyChromeOsHostBoundaryObserverReport(
     verified: true,
     observer_install_id: observerInstallId,
     observer_key_fingerprint: fingerprint,
+    observer_sequence: observerSequence,
   };
+}
+
+function commitChromeOsObserverSequence({
+  stateRoot,
+  observerInstallId,
+  observerKeyFingerprint,
+  observerSequence,
+}) {
+  const file = pairingFile(stateRoot);
+  const pairing = readJson(file);
+  if (!pairing || !verifyState(pairing) || pairing.schema !== PAIR_SCHEMA) {
+    throw new Error('chromeos_host_boundary_observer_not_paired');
+  }
+  if (
+    pairing.observer_install_id !== observerInstallId ||
+    pairing.observer_key_fingerprint !== observerKeyFingerprint
+  ) {
+    throw new Error('chromeos_host_boundary_observer_pairing_changed');
+  }
+  if (
+    !Number.isSafeInteger(observerSequence) ||
+    observerSequence <= Number(pairing.last_observer_sequence || 0)
+  ) {
+    throw new Error('chromeos_host_boundary_observer_sequence_replayed');
+  }
+
+  const { state_hash: _ignored, ...body } = pairing;
+  const updated = sealState({
+    ...body,
+    last_observer_sequence: observerSequence,
+  });
+  atomicJson(file, updated);
+  return updated;
 }
 
 export function requestChromeOsHostBoundaryCheck({
@@ -395,6 +439,13 @@ export function validateChromeOsHostBoundaryObservation(
   }
 
   const requestId = normalizedRequestId(input.request_id);
+  const observerSequence = Number(input.observer_sequence);
+  if (
+    input.observer_sequence !== undefined &&
+    (!Number.isSafeInteger(observerSequence) || observerSequence < 1)
+  ) {
+    throw new Error('chromeos_host_boundary_observer_sequence_invalid');
+  }
 
   const ports = [];
   const seen = new Set();
@@ -421,6 +472,8 @@ export function validateChromeOsHostBoundaryObservation(
     capability_id: CAPABILITY_ID,
     collected_at: collectedAt.toISOString(),
     request_id: requestId,
+    observer_sequence:
+      input.observer_sequence === undefined ? null : observerSequence,
     observer_version: safeText(input.observer_version || 'unknown', 48),
     observer_install_id: normalizedObserverInstallId(input.observer_install_id),
     settings_route: safeText(input.settings_route || 'chrome://os-settings/crostini/portForwarding', 256),
@@ -546,6 +599,7 @@ export function readChromeOsHostBoundaryStatus({
     request_id: receipt?.observation?.request_id || null,
     observer_version: receipt?.observation?.observer_version || null,
     observer_install_id: receipt?.observation?.observer_install_id || null,
+    observer_sequence: receipt?.observation?.observer_sequence ?? null,
     observer_key_fingerprint:
       receipt?.authority?.observer_key_fingerprint || null,
     observer_signature_verified:
@@ -665,6 +719,13 @@ export function startChromeOsHostBoundaryBridge({
         const body = await readRequestJson(req);
         const observerVerification =
           await verifyChromeOsHostBoundaryObserverReport(body, { stateRoot });
+        commitChromeOsObserverSequence({
+          stateRoot,
+          observerInstallId: observerVerification.observer_install_id,
+          observerKeyFingerprint:
+            observerVerification.observer_key_fingerprint,
+          observerSequence: observerVerification.observer_sequence,
+        });
         const receipt = storeChromeOsHostBoundaryObservation(body, {
           stateRoot,
           observerVerification,
