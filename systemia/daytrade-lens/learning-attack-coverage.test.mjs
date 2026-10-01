@@ -91,6 +91,18 @@ assert.match(
 );
 
 assert.equal(
+  ATTACK_IMPLEMENTATION_MAP["complete research-trial cemetery"].status,
+  "implemented"
+);
+assert.equal(
+  ATTACK_IMPLEMENTATION_MAP["full trial-count ledger"].status,
+  "implemented"
+);
+assert.equal(
+  ATTACK_IMPLEMENTATION_MAP["durable lifetime research-trial cemetery"].status,
+  "implemented"
+);
+assert.equal(
   ATTACK_IMPLEMENTATION_MAP["AI versus matched non-AI filing control"].status,
   "implemented"
 );
@@ -107,6 +119,7 @@ console.log(JSON.stringify({
   passive_touch_never_promoted_to_fill:true,
   partial_unfilled_states_now_explicit:true,
   queue_position_still_unclaimed:true,
+  durable_trial_cemetery_capability_closed:true,
   volume_not_liquidity_closed:true,
   low_visible_size_high_volatility_partial:true,
   capital_scale_visibility_partial_not_impact_model:true,
