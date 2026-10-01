@@ -30,6 +30,7 @@
     "Inspect my homepage for basic on-page and conversion signals."
   ],
   "remaining_platform_prerequisites": [
+    "Do not cancel or replace the active Evercraft v1.0.0 review until v1.1.0 is fully proven or the provider review resolves",
     "Restore fabric.systemiacommandcenters.com public TCP/HTTPS ingress and capture a fresh passing external canary",
     "Re-run the current OpenAI MCP Scan Tools check against the restored production endpoint",
     "Refresh the reviewer walkthrough to demonstrate inspect_public_website on the purpose-specific OpenAI endpoint",
@@ -50,5 +51,21 @@
       "destructiveHint": "False because the tool cannot delete, overwrite, publish, purchase, deploy, authenticate to, or mutate the inspected website or another external system.",
       "openWorldHint": "True because the tool accesses a user-authorized public internet URL. Private/local/reserved addresses, embedded credentials, nonstandard ports, unsafe redirects, oversized responses, and unsupported content types are rejected."
     }
+  },
+  "current_provider_review": {
+    "observed_at": "2026-10-01",
+    "source": "OpenAI Plugins portal screenshot supplied by Evercraft owner",
+    "plugin_name": "Evercraft",
+    "version": "1.0.0",
+    "review_status": "in_review",
+    "publication_status": "not_published",
+    "sibling_record": {
+      "plugin_name": "Evercraft Fabric",
+      "version": "1.0.0",
+      "review_status": "not_submitted",
+      "publication_status": "not_published",
+      "configuration_status": "incomplete"
+    },
+    "v110_policy": "Do not cancel or replace the active Evercraft v1.0.0 review until v1.1.0 is fully proven or the provider review resolves."
   }
 }
