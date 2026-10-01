@@ -141,6 +141,16 @@ function evaluateOffer(task,offer,nowMs,performanceLedger=null){
     !workloads.has(task.workload_class) &&
     offer.metadata?.generic_container_runtime!==true
   ) reasons.push(workloads.size?'workload_unsupported':'workload_capability_unknown');
+
+  if(offer.metadata?.conformance_required===true){
+    const verified=new Set((offer.metadata?.verified_workloads||[]).map(String));
+    if(!verified.has(task.workload_class)){
+      reasons.push('workload_not_conformance_verified');
+    }else{
+      const expiry=Date.parse(String(offer.metadata?.conformance_expires_at||''));
+      if(!Number.isFinite(expiry)||nowMs>=expiry) reasons.push('workload_conformance_expired');
+    }
+  }
   if(task.required_labels.some(x=>!labels.has(x))) reasons.push('required_label_missing');
   if(task.required_locality_tags.some(x=>!locality.has(x))) reasons.push('required_locality_missing');
   if(task.allowed_device_classes.length&&!task.allowed_device_classes.includes(deviceClass)){
