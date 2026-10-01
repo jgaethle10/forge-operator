@@ -34,7 +34,7 @@ fs.writeFileSync(path.join(publicRoot, 'chum', 'crawl-state.json'), JSON.stringi
 
 const runtime = await startChumPublicOrigin({ publicRoot, host: '127.0.0.1', port: 0 });
 
-function requestWithHost(pathname, hostHeader) {
+function requestWithHost(pathname, hostHeader, extraHeaders = {}) {
   return new Promise((resolve, reject) => {
     const target = new URL(runtime.url);
     const req = http.request({
@@ -42,7 +42,7 @@ function requestWithHost(pathname, hostHeader) {
       port: Number(target.port),
       path: pathname,
       method: 'GET',
-      headers: { host: hostHeader },
+      headers: { host: hostHeader, ...extraHeaders },
     }, (res) => {
       const chunks = [];
       res.on('data', (chunk) => chunks.push(chunk));
@@ -69,6 +69,17 @@ try {
   const productRoot = await requestWithHost('/', 'infinite-classroom.evercraft.app');
   assert.equal(productRoot.status, 200);
   assert.match(productRoot.body, /Infinite Classroom/);
+
+  const proxiedProductRoot = await requestWithHost(
+    '/',
+    '127.0.0.1:4310',
+    {
+      'x-forwarded-host': 'infinite-classroom.evercraft.app',
+      'x-forwarded-proto': 'https',
+    }
+  );
+  assert.equal(proxiedProductRoot.status, 200);
+  assert.match(proxiedProductRoot.body, /Infinite Classroom/);
 
   const productLlms = await requestWithHost('/llms.txt', 'infinite-classroom.evercraft.app');
   assert.equal(productLlms.status, 200);
@@ -127,6 +138,7 @@ try {
     dynamic_robots: true,
     deployment_receipt_binding: true,
     product_subdomain_routing: true,
+    forwarded_public_host_routing: true,
     unknown_product_hosts_fail_closed: true
   }));
 } finally {
