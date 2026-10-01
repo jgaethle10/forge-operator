@@ -92,6 +92,7 @@ export async function startAmbientWorkApi({
             allowed_device_classes:Array.isArray(body.allowed_device_classes)?body.allowed_device_classes:[],
             allowed_workloads:Array.isArray(body.allowed_workloads)?body.allowed_workloads:[],
             ttl_ms:body.ttl_ms??15*60*1000,
+            enrollment_url:body.enrollment_url||'',
             now:new Date(),
           });
           return send(res,201,{
