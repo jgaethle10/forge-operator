@@ -5,7 +5,13 @@ on:
     paths:
       - 'infra/evercraft-edge/**'
       - 'systemia/compute/evercraft-edge-dns-runtime.mjs'
+      - 'systemia/compute/edge-dns-bootstrap-resident.mjs'
+      - 'systemia/compute/install-node-seed.sh'
       - 'systemia/compute/runtime-node.mjs'
+      - 'scripts/evercraft-public-edge-map.mjs'
+      - 'scripts/install-fabric-router-map-resident.sh'
+      - 'scripts/promote-chromebook-edge-node.sh'
+      - 'scripts/make-chromebook-edge-node.sh'
       - 'systemia/yard/operator.mjs'
       - '.github/workflows/evercraft-edge.yml'
   push:
@@ -30,7 +36,13 @@ jobs:
       - name: Syntax-check resident integration
         run: |
           node --check systemia/compute/evercraft-edge-dns-runtime.mjs
+          node --check systemia/compute/edge-dns-bootstrap-resident.mjs
           node --check systemia/compute/runtime-node.mjs
+          node --check scripts/evercraft-public-edge-map.mjs
           node --check systemia/yard/operator.mjs
+          bash -n systemia/compute/install-node-seed.sh
+          bash -n scripts/install-fabric-router-map-resident.sh
+          bash -n scripts/promote-chromebook-edge-node.sh
+          bash -n scripts/make-chromebook-edge-node.sh
       - name: Run Evercraft Edge contract and protocol tests
         run: node --test infra/evercraft-edge/test/*.test.mjs
