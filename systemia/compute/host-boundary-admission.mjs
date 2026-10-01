@@ -96,6 +96,12 @@ export function validateHostBoundaryFieldCertification(
   ) {
     throw new Error('host_boundary_field_certification_observer_signature_missing');
   }
+  if (
+    certification.host_observation?.pairing_active !== true ||
+    certification.host_observation?.pairing_matches_observation !== true
+  ) {
+    throw new Error('host_boundary_field_certification_pairing_invalid');
+  }
 
   return {
     capability_id: expected,
