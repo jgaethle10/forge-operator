@@ -797,7 +797,7 @@ export async function startEvercraftComputeNode({
   const server = http.createServer(async (req, res) => {
     try {
       if (
-        (req.method === 'GET' && req.url === '/v1/operator/status') ||
+        (req.method === 'GET' && ['/v1/operator/status', '/v1/operator/host-boundary'].includes(String(req.url || ''))) ||
         (req.method === 'POST' && /^\/v1\/operator\/(?:fs\/(?:list|read|write)|exec)$/.test(String(req.url || '')))
       ) {
         if (!remoteOperator) return send(res, 404, { error: 'remote_operator_not_enabled' });
@@ -805,6 +805,9 @@ export async function startEvercraftComputeNode({
           return send(res, 401, { error: 'remote_operator_auth_required' });
         }
         try {
+          if (req.method === 'GET' && req.url === '/v1/operator/host-boundary') {
+            return send(res, 200, remoteOperator.hostBoundaryStatus());
+          }
           if (req.method === 'GET') {
             return send(res, 200, {
               ...remoteOperator.status(),
