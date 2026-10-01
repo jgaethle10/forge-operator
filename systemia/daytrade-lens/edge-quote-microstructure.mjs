@@ -467,6 +467,22 @@ export function summarizeQuoteSignal(rows){
         ?evaluable.filter((row)=>row.passive_price_touch_observed===true).length/evaluable.length
         :null;
     })(),
+    passive_outcome_states:Object.fromEntries(
+      [...new Set(modeledEntry.map((row)=>row.passive_outcome_state).filter(Boolean))]
+        .map((state)=>[
+          state,
+          modeledEntry.filter((row)=>row.passive_outcome_state===state).length,
+        ])
+    ),
+    marketable_outcome_states:Object.fromEntries(
+      [...new Set(modeledEntry.map((row)=>row.marketable_outcome_state).filter(Boolean))]
+        .map((state)=>[
+          state,
+          modeledEntry.filter((row)=>row.marketable_outcome_state===state).length,
+        ])
+    ),
+    partial_fill_probability_modeled:false,
+    unfilled_probability_modeled:false,
     median_passive_touch_delay_ms:percentile(
       modeledEntry
         .map((row)=>finite(row.passive_touch_delay_ms))
@@ -698,9 +714,21 @@ export async function runQuoteMicrostructureLab(report,{
         :null;
     const marketableTouchNotionalUsd=
       Number.isFinite(marketableTouchShares) &&
-      Number.isFinite(marketableEntry)
-        ?marketableTouchShares*marketableEntry
+      Number.isFinite(marketableExecution)
+        ?marketableTouchShares*marketableExecution
         :null;
+    const passiveOutcomeState=
+      target.label!=="modeled_entry"
+        ?null
+        :!quote || tradeState.available!==true
+          ?"PASSIVE_OUTCOME_UNOBSERVED"
+          :passiveEvidence?.passive_price_touch_observed===true
+            ?"PASSIVE_PRICE_TOUCHED_FILL_UNDETERMINED"
+            :"PASSIVE_NO_PRICE_TOUCH_OBSERVED_WITHIN_WINDOW";
+    const marketableOutcomeState=
+      !quote
+        ?"MARKETABLE_EXECUTION_UNOBSERVED"
+        :"MARKETABLE_TOUCH_OBSERVED_EXECUTION_NOT_VERIFIED";
     return {
       schema:"evercraft.daytrade.edge-quote-overlay.v1",
       ...target,
@@ -761,6 +789,10 @@ export async function runQuoteMicrostructureLab(report,{
         passiveEvidence?.observed_trade_count_in_window??null,
       passive_queue_position_observed:false,
       passive_hypothetical_fill_claimed:false,
+      passive_outcome_state:passiveOutcomeState,
+      marketable_outcome_state:marketableOutcomeState,
+      partial_fill_probability_modeled:false,
+      unfilled_probability_modeled:false,
       passive_touch_interpretation:
         passiveEvidence?.interpretation||
         "Passive fill cannot be inferred without quote and historical trade evidence; queue position remains unobserved.",
@@ -911,6 +943,7 @@ export async function runQuoteMicrostructureLab(report,{
       exit_execution_quote_adjusted:true,
       benchmark_entry_quote_adjusted:false,
       passive_touch_evidence:"Trade-at-or-through evidence only. It is not a fill claim because queue position and order-specific execution are unobserved.",
+      execution_outcome_states:"Explicit observed/unknown states are emitted for passive and marketable execution. No state is converted into a fill probability.",
       passive_touch_window_ms:Number(passive_touch_window_ms),
       visible_touch_size:"Sum of observed top-of-book bid and ask sizes in the provider's native quote-size units. This is not full market depth and is not compared across symbols.",
       sip_quote_size_units:"SIP quote size is treated as shares only on/after 2025-11-03 per Alpaca's CTA/UTP display-change notice; earlier SIP and IEX sizes remain native round-lot units and are excluded from share-notional scaling.",
