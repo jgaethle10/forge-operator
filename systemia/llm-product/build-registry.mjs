@@ -3,7 +3,8 @@ import path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 
-const ROOT = process.cwd();
+const MODULE_DIR = path.dirname(fileURLToPath(import.meta.url));
+const ROOT = process.env.EVERCRAFT_ROOT ? path.resolve(process.env.EVERCRAFT_ROOT) : path.resolve(MODULE_DIR,'../..');
 const UNIVERSAL_FABRIC = 'https://fabric.systemiacommandcenters.com/mcp';
 
 function exists(p){ return fs.existsSync(path.join(ROOT,p)); }
