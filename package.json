@@ -218,7 +218,7 @@
     "test:sentinel-region-profiles": "node systemia/sentinel/region-profile.test.mjs",
     "test:fabric-directory": "node --test tests/evercraft-fabric-runtime.test.mjs",
     "proof:one-body": "node systemia/organism/one-body.proof.mjs",
-    "test:remote-operator": "node systemia/compute/remote-operator.test.mjs && node systemia/network/remote-operator.proof.mjs && node systemia/remote-operator/mcp-gateway.test.mjs",
+    "test:remote-operator": "node --test systemia/compute/host-boundary-registry.test.mjs systemia/compute/host-boundary-admission.test.mjs systemia/compute/chromeos-host-boundary-bridge.test.mjs systemia/compute/chromeos-host-boundary-field-certify.test.mjs systemia/compute/chromeos-host-bridge/tree-parser.test.mjs systemia/compute/chromeos-host-bridge/crypto-protocol.test.mjs systemia/compute/chromeos-host-bridge/security-contract.test.mjs tests/network-observer-ingress-diagnosis.test.mjs && node systemia/compute/remote-operator.test.mjs && node systemia/network/remote-operator.proof.mjs && node systemia/remote-operator/mcp-gateway.test.mjs",
     "test:node-self-bootstrap": "node --test tests/node-self-bootstrap.test.mjs",
     "test:control-room-canary-contract": "node tests/control-room-canary-contract.test.mjs",
     "proof:saban-hardware-federation": "node systemia/saban/hardware-federation.proof.mjs",
@@ -273,7 +273,9 @@
     "saban:ambient:dispatch": "node systemia/saban/ambient-job-dispatcher.mjs",
     "saban:ambient:api": "node systemia/saban/ambient-work-api-runner.mjs",
     "saban:pairing": "node systemia/saban/microseed-pairing-cli.mjs",
-    "saban:pair-device": "node systemia/saban/microseed-device-pair-cli.mjs"
+    "saban:pair-device": "node systemia/saban/microseed-device-pair-cli.mjs",
+    "chromeos:host-boundary:certify": "node systemia/compute/chromeos-host-boundary-field-certify.mjs",
+    "chromeos:host-boundary:admit": "node systemia/compute/chromeos-host-boundary-field-certify.mjs --admit"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",

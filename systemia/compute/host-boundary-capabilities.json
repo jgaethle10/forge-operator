@@ -1,0 +1,37 @@
+{
+  "schema": "evercraft.host-boundary-capability-registry.v1",
+  "version": "1.0.0",
+  "capabilities": [
+    {
+      "capability_id": "chromeos.crostini.port-forwarding.read.v1",
+      "host_os": "chromeos",
+      "surface": "chrome://os-settings/crostini/portForwarding",
+      "operation": "read",
+      "scope": {
+        "protocols": [
+          "TCP"
+        ],
+        "ports": [
+          8443,
+          18080
+        ]
+      },
+      "evidence_schema": "evercraft.chromeos-host-boundary-observation.v1",
+      "request_schema": "evercraft.chromeos-host-boundary-check-request.v1",
+      "requires_explicit_pairing": true,
+      "requires_authorized_node": true,
+      "arbitrary_desktop_control": false,
+      "mutation_authority": false,
+      "screenshots_collected": false,
+      "raw_accessibility_tree_persisted": false,
+      "freshness_seconds": 300,
+      "notes": "First host-side capability contract. The ChromeOS companion may inspect only the Crostini port-forwarding accessibility surface and returns reduced evidence for the admitted ports.",
+      "adapter": "chromeos_crostini_port_forwarding",
+      "admission_state": "candidate_field_gate",
+      "requires_field_certification": true,
+      "platform_permission_scope": "chromeos_desktop_automation",
+      "platform_permission_is_broad": true,
+      "arbitrary_desktop_control_exposed": false
+    }
+  ]
+}

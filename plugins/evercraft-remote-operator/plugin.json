@@ -1,7 +1,7 @@
 {
   "name": "evercraft-remote-operator",
-  "version": "0.2.0",
-  "description": "Connect ChatGPT or another MCP client to an explicitly authorized Evercraft-owned or user-owned node through Evercraft's outbound-only Remote Operator fabric.",
+  "version": "0.3.0",
+  "description": "Connect ChatGPT or another MCP client to an explicitly authorized Evercraft-owned or user-owned node through Evercraft's outbound-only Remote Operator fabric, including typed field-certified host-boundary capabilities.",
   "author": {
     "name": "Evercraft LLC"
   },
@@ -17,7 +17,9 @@
     "filesystem",
     "terminal",
     "chromebook",
-    "nodeseed"
+    "nodeseed",
+    "host-boundary",
+    "chromeos"
   ],
   "mcpServers": "./mcp.json"
 }

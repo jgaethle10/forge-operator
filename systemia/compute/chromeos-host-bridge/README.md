@@ -1,0 +1,102 @@
+# ChromeOS Host Boundary Bridge
+
+This is the narrow host-side companion for the boundary that a Crostini guest cannot truthfully observe by itself.
+
+The first admitted capability is intentionally small:
+
+```text
+Remote Operator fresh-check request
+  -> paired Crostini receiver
+  -> ChromeOS companion polls for bounded work
+  -> ChromeOS Settings accessibility automation tree
+  -> only Crostini Port Forwarding
+  -> only TCP 18080 + TCP 8443
+  -> receipt-backed observation
+  -> Remote Operator result
+```
+
+The companion keeps a low-rate heartbeat but also polls the local receiver for fresh-check requests every 30 seconds. A remote operator can therefore request new evidence instead of relying only on the last background snapshot.
+
+It is not a generic remote desktop agent. It does not persist screenshots or the raw accessibility tree, and v0.2 accepts no remote mutation commands. Each installed companion now creates a non-extractable ECDSA P-256 observer key. The pairing token bootstraps trust once; subsequent observations are signed by that device key and carry a monotonic sequence so replayed reports fail closed.
+
+## Why this exists
+
+A Linux process inside Crostini can verify the guest listener, the local TLS proxy, and router automation, but the ChromeOS host owns the UI state that exposes a Linux port to the LAN. Treating that unobserved state as green creates a false-health gap.
+
+ChromeOS exposes an extension automation capability for the desktop accessibility tree. The bridge uses that host-side capability to observe the port-forwarding surface, reduces the result to two admitted port records, then posts the reduced observation into Crostini over ChromeOS' ordinary localhost-to-Crostini tunnel.
+
+## Install the Crostini receiver
+
+From the repository root:
+
+```bash
+bash systemia/compute/install-chromeos-host-boundary-bridge-user.sh
+```
+
+The installer creates a 32-byte pairing secret in:
+
+```text
+~/.config/evercraft/chromeos-host-boundary.env
+```
+
+and starts:
+
+```text
+evercraft-chromeos-host-boundary-bridge.service
+```
+
+The secret is printed once for local pairing. It is never written into receipts. The first successful companion pairing locks the receiver to that companion's public-key fingerprint.
+
+To intentionally replace or reinstall the companion, reset the node-side pairing:
+
+```bash
+bash systemia/compute/install-chromeos-host-boundary-bridge-user.sh --reset-pairing
+```
+
+That deletes the old observer pairing and host-capability admissions and rotates the bootstrap token. It does not silently trust the replacement companion.
+
+## Install the ChromeOS companion
+
+Until this becomes a managed Evercraft package, load `systemia/compute/chromeos-host-bridge` as an unpacked Chrome extension on the explicitly authorized Chromebook.
+
+Open the extension options, paste the pairing token, save, and run **Check now**.
+
+The extension performs a bounded background heartbeat every ten minutes and checks for on-demand requests every 30 seconds. Polling does not open Settings unless there is actual work to perform.
+
+## Field admission
+
+The ChromeOS read capability remains a field-gated candidate until the real device proves both sides of the boundary. After the companion has returned a fresh host observation and the LAN witness can reach both admitted forwarded ports, run:
+
+```bash
+npm run chromeos:host-boundary:admit
+```
+
+That command creates a node-local, integrity-sealed admission bound to the exact ChromeOS companion install ID and cryptographic observer-key fingerprint. Reinstalling, replacing, or re-keying the companion invalidates that local admission until the field proof is repeated.
+
+The source registry can therefore carry candidate capability definitions without silently making them available for generic LLM dispatch.
+
+## Evidence semantics
+
+A fresh bridge record means the ChromeOS accessibility surface was directly observed recently and the receiver verified the paired companion's signature. It does not, by itself, prove WAN reachability.
+
+The complete ingress diagnosis should reconcile independent evidence:
+
+1. Crostini listener and service health.
+2. ChromeOS host port-forward setting from this bridge.
+3. Router mapping receipt.
+4. A LAN witness for host reachability.
+5. An external canary for public DNS/TLS reachability.
+
+No inner green layer is allowed to stand in for an outer layer.
+
+## Remote check semantics
+
+`remote_host_boundary_status` reads the latest receipt.
+
+`remote_host_boundary_check` creates a short-lived request with a unique request ID. The ChromeOS companion picks it up, performs the narrow read, and includes that request ID in the returned observation. Remote Operator reports the request as fulfilled only when the matching fresh receipt arrives. A stale heartbeat cannot accidentally satisfy a fresh-check request.
+
+## Future mutation lane
+
+A later version may reassert an already-admitted port toggle, but only through a separate action-specific approval capability. That lane should be exact-port, idempotent, receipt-bound, revocable, and fail closed when the settings accessibility structure changes.
+
+Do not turn the desktop automation permission into a general remote clicker.

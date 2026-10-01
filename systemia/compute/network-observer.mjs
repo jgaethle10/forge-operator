@@ -6,6 +6,7 @@ import http from 'node:http';
 import https from 'node:https';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { readChromeOsHostBoundaryStatus } from './chromeos-host-boundary-bridge.mjs';
 
 const sha = (value) =>
   'sha256:' + createHash('sha256')
@@ -333,7 +334,7 @@ async function observeLocalOrganism() {
   };
 }
 
-function chromeOsBoundary(interfaces) {
+function chromeOsBoundary(interfaces, { hostBoundaryStateRoot } = {}) {
   const crostiniRange = interfaces.some((row) =>
     row.family === 'IPv4' &&
     /^100\.115\.92\./.test(String(row.address || ''))
@@ -346,13 +347,29 @@ function chromeOsBoundary(interfaces) {
   if (fs.existsSync('/mnt/chromeos')) hints.push('chromeos_mount_present');
   if (os.hostname() === 'penguin') hints.push('default_crostini_hostname');
 
+  const companion = readChromeOsHostBoundaryStatus(
+    hostBoundaryStateRoot ? { stateRoot: hostBoundaryStateRoot } : undefined,
+  );
   return {
     likely_crostini: hints.length > 0,
     hints,
     host_port_forwarding: {
       observable_from_guest: false,
-      state: 'not_observable_from_linux_guest',
-      note: 'ChromeOS host port-forward toggles are outside the Crostini guest trust boundary.',
+      observed_by_paired_host_companion: companion.fresh === true,
+      state: companion.fresh === true
+        ? 'observed_by_paired_chromeos_companion'
+        : companion.state === 'stale'
+          ? 'paired_chromeos_companion_stale'
+          : 'not_observable_from_linux_guest',
+      evidence_mode: companion.evidence_mode || null,
+      collected_at: companion.collected_at || null,
+      age_ms: companion.age_ms ?? null,
+      ports: Array.isArray(companion.ports) ? companion.ports : [],
+      source_receipt_hash: companion.receipt_hash || null,
+      raw_accessibility_tree_persisted: false,
+      note: companion.fresh === true
+        ? 'ChromeOS state was observed by the separately paired host-side companion; the Linux guest still does not claim direct host authority.'
+        : 'ChromeOS host port-forward toggles are outside the Crostini guest trust boundary.',
     },
   };
 }
@@ -385,6 +402,38 @@ export function diagnoseNodeIngress({
     return {
       state: 'router_mapping_automation_unhealthy',
       next_boundary: 'evercraft_router_map_timer',
+    };
+  }
+  const hostForward = chromeBoundary?.host_port_forwarding || {};
+  const directHostPorts = Array.isArray(hostForward.ports) ? hostForward.ports : [];
+  const requiredHostPorts = [18080, 8443];
+  const directHostReady =
+    hostForward.observed_by_paired_host_companion === true &&
+    requiredHostPorts.every((port) =>
+      directHostPorts.some((row) =>
+        Number(row?.port) === port &&
+        String(row?.protocol || '').toUpperCase() === 'TCP' &&
+        row?.present === true &&
+        row?.enabled === true
+      )
+    );
+
+  if (
+    hostForward.observed_by_paired_host_companion === true &&
+    !directHostReady
+  ) {
+    return {
+      state: 'chromeos_host_forward_setting_not_ready',
+      next_boundary: 'chromeos_linux_port_forwarding_setting',
+    };
+  }
+  if (
+    directHostReady &&
+    routerMapReceipt?.host_forward_preflight?.ready === false
+  ) {
+    return {
+      state: 'chromeos_host_forward_enabled_but_lan_unreachable',
+      next_boundary: 'chromeos_forwarder_runtime_firewall_or_lan_path',
     };
   }
   if (routerMapReceipt?.host_forward_preflight?.ready === false) {
@@ -425,7 +474,7 @@ export function diagnoseNodeIngress({
   };
 }
 
-export async function observeNodeNetwork() {
+export async function observeNodeNetwork({ hostBoundaryStateRoot } = {}) {
   const interfaces = interfacesFromOs();
   const routes = parseDefaultRoutes();
   const listeners = parseListeners();
@@ -466,7 +515,7 @@ export async function observeNodeNetwork() {
       };
 
   const localOrganism = await observeLocalOrganism();
-  const chromeBoundary = chromeOsBoundary(interfaces);
+  const chromeBoundary = chromeOsBoundary(interfaces, { hostBoundaryStateRoot });
   const routerMapReceipt = readJsonSafe('/var/lib/evercraft/router-map/latest.json');
   const services = {
     fabric: unitState('evercraft-fabric.service'),

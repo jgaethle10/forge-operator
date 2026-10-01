@@ -4,8 +4,20 @@ on:
   pull_request:
     paths:
       - "systemia/compute/remote-operator.mjs"
+      - "systemia/compute/chromeos-host-boundary-bridge.mjs"
+      - "systemia/compute/chromeos-host-boundary-bridge.test.mjs"
+      - "systemia/compute/chromeos-host-boundary-field-certify.mjs"
+      - "systemia/compute/chromeos-host-boundary-field-certify.test.mjs"
+      - "systemia/compute/host-boundary-capabilities.json"
+      - "systemia/compute/host-boundary-registry.mjs"
+      - "systemia/compute/host-boundary-registry.test.mjs"
+      - "systemia/compute/host-boundary-admission.mjs"
+      - "systemia/compute/host-boundary-admission.test.mjs"
+      - "systemia/compute/chromeos-host-bridge/**"
+      - "systemia/compute/install-chromeos-host-boundary-bridge-user.sh"
       - "systemia/compute/network-observer.mjs"
       - "systemia/compute/remote-operator.test.mjs"
+      - "tests/network-observer-ingress-diagnosis.test.mjs"
       - "systemia/compute/runtime-node.mjs"
       - "systemia/compute/node-seed.mjs"
       - "systemia/compute/local-organism.mjs"
@@ -23,8 +35,20 @@ on:
     branches: [main]
     paths:
       - "systemia/compute/remote-operator.mjs"
+      - "systemia/compute/chromeos-host-boundary-bridge.mjs"
+      - "systemia/compute/chromeos-host-boundary-bridge.test.mjs"
+      - "systemia/compute/chromeos-host-boundary-field-certify.mjs"
+      - "systemia/compute/chromeos-host-boundary-field-certify.test.mjs"
+      - "systemia/compute/host-boundary-capabilities.json"
+      - "systemia/compute/host-boundary-registry.mjs"
+      - "systemia/compute/host-boundary-registry.test.mjs"
+      - "systemia/compute/host-boundary-admission.mjs"
+      - "systemia/compute/host-boundary-admission.test.mjs"
+      - "systemia/compute/chromeos-host-bridge/**"
+      - "systemia/compute/install-chromeos-host-boundary-bridge-user.sh"
       - "systemia/compute/network-observer.mjs"
       - "systemia/compute/remote-operator.test.mjs"
+      - "tests/network-observer-ingress-diagnosis.test.mjs"
       - "systemia/compute/runtime-node.mjs"
       - "systemia/compute/node-seed.mjs"
       - "systemia/compute/local-organism.mjs"
@@ -43,6 +67,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: evercraft-remote-operator-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   prove:
     runs-on: ubuntu-latest
@@ -52,6 +80,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Prove ChromeOS host boundary bridge
+        run: node --test systemia/compute/host-boundary-registry.test.mjs systemia/compute/host-boundary-admission.test.mjs systemia/compute/chromeos-host-boundary-bridge.test.mjs systemia/compute/chromeos-host-boundary-field-certify.test.mjs systemia/compute/chromeos-host-bridge/tree-parser.test.mjs systemia/compute/chromeos-host-bridge/crypto-protocol.test.mjs systemia/compute/chromeos-host-bridge/security-contract.test.mjs tests/network-observer-ingress-diagnosis.test.mjs
       - name: Prove operator core
         run: node systemia/compute/remote-operator.test.mjs
       - name: Prove outbound remote operator
@@ -62,3 +92,32 @@ jobs:
         run: node --test tests/fabric-owned-edge-installer.test.mjs
       - name: Typecheck Forge integration
         run: npm install --no-audit --no-fund && npm run lint
+      - name: Package ChromeOS host-boundary field kit
+        run: |
+          set -euo pipefail
+          rm -rf dist/chromeos-host-boundary-field-kit
+          mkdir -p dist/chromeos-host-boundary-field-kit
+          cp -a systemia/compute/chromeos-host-bridge \
+            dist/chromeos-host-boundary-field-kit/chromeos-host-bridge
+          cp systemia/compute/install-chromeos-host-boundary-bridge-user.sh \
+            dist/chromeos-host-boundary-field-kit/
+          cp systemia/compute/HOST_BOUNDARY_CAPABILITY_FABRIC.md \
+            dist/chromeos-host-boundary-field-kit/
+          cp systemia/compute/CHROMEBOOK_EDGE_RESILIENCE.md \
+            dist/chromeos-host-boundary-field-kit/
+          (
+            cd dist
+            zip -qr chromeos-host-boundary-field-kit.zip \
+              chromeos-host-boundary-field-kit
+            sha256sum chromeos-host-boundary-field-kit.zip \
+              > chromeos-host-boundary-field-kit.zip.sha256
+          )
+      - name: Upload ChromeOS host-boundary field kit
+        uses: actions/upload-artifact@v4
+        with:
+          name: chromeos-host-boundary-field-kit
+          path: |
+            dist/chromeos-host-boundary-field-kit.zip
+            dist/chromeos-host-boundary-field-kit.zip.sha256
+          if-no-files-found: error
+          retention-days: 7

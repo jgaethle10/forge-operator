@@ -5,6 +5,20 @@ import { execFile } from 'node:child_process';
 import { createHash, randomBytes } from 'node:crypto';
 import { promisify } from 'node:util';
 import { observeNodeNetwork } from './network-observer.mjs';
+import {
+  readChromeOsHostBoundaryCheck,
+  readChromeOsHostBoundaryStatus,
+  requestChromeOsHostBoundaryCheck,
+} from './chromeos-host-boundary-bridge.mjs';
+import {
+  getHostBoundaryCapability,
+  hostBoundaryCapabilityStatus,
+} from './host-boundary-registry.mjs';
+import {
+  admitHostBoundaryCapability,
+  readHostBoundaryCapabilityAdmission,
+} from './host-boundary-admission.mjs';
+import { certifyChromeOsHostBoundary } from './chromeos-host-boundary-field-certify.mjs';
 
 const execFileAsync = promisify(execFile);
 const sha = (value) => {
@@ -165,6 +179,17 @@ export class EvercraftRemoteOperator {
     maxWriteBytes = 1024 * 1024,
     maxOutputBytes = 1024 * 1024,
     maxExecMs = 60_000,
+    hostBoundaryStateRoot = process.env.EVERCRAFT_CHROMEOS_HOST_BOUNDARY_STATE_DIR || path.join(
+      os.homedir(),
+      '.local',
+      'state',
+      'evercraft',
+      'organism',
+      'chromeos-host-boundary',
+    ),
+    routerMapReceiptFile =
+      process.env.EVERCRAFT_ROUTER_MAP_RECEIPT ||
+      '/var/lib/evercraft/router-map/latest.json',
   } = {}) {
     if (!roots || typeof roots !== 'object' || Array.isArray(roots)) {
       throw new Error('operator_roots_required');
@@ -186,6 +211,8 @@ export class EvercraftRemoteOperator {
     this.maxWriteBytes = boundedInt(maxWriteBytes, 1024 * 1024, 1024, 8 * 1024 * 1024);
     this.maxOutputBytes = boundedInt(maxOutputBytes, 1024 * 1024, 4096, 4 * 1024 * 1024);
     this.maxExecMs = boundedInt(maxExecMs, 60_000, 1000, 300_000);
+    this.hostBoundaryStateRoot = path.resolve(String(hostBoundaryStateRoot));
+    this.routerMapReceiptFile = path.resolve(String(routerMapReceiptFile));
     this.instanceId = 'remote_operator_' + randomBytes(10).toString('hex');
   }
 
@@ -213,12 +240,23 @@ export class EvercraftRemoteOperator {
         chromeos_host_boundary_explicit: true,
         external_route_requires_independent_canary: true,
       },
+      chromeos_host_boundary: {
+        read: true,
+        check_now: true,
+        generic_capability_check: true,
+        field_certification: true,
+        field_admission: true,
+        capabilities: true,
+        mutation: false,
+        source: 'paired_chromeos_extension',
+        raw_accessibility_tree_persisted: false,
+      },
       receipt_semantics: 'hashes_and_metadata_only',
     };
   }
 
   async networkStatus() {
-    const observation = await observeNodeNetwork();
+    const observation = await observeNodeNetwork({ hostBoundaryStateRoot: this.hostBoundaryStateRoot });
     const receipt = this.#receipt('network.status', {
       observation_hash: observation.receipt_hash,
       interface_count: observation.interfaces.length,
@@ -231,6 +269,269 @@ export class EvercraftRemoteOperator {
     });
     return {
       ...observation,
+      operator_receipt: receipt,
+    };
+  }
+
+  hostBoundaryCapabilities() {
+    const status = hostBoundaryCapabilityStatus();
+    const hostStatus = readChromeOsHostBoundaryStatus({
+      stateRoot: this.hostBoundaryStateRoot,
+    });
+    const capabilities = status.capabilities.map((capability) => {
+      const localAdmission = capability.requires_field_certification
+        ? hostStatus.paired === true
+          ? readHostBoundaryCapabilityAdmission({
+              stateRoot: this.hostBoundaryStateRoot,
+              capabilityId: capability.capability_id,
+              observerInstallId:
+                hostStatus.paired_observer_install_id || '',
+              observerKeyFingerprint:
+                hostStatus.paired_observer_key_fingerprint || '',
+            })
+          : {
+              ok: true,
+              admitted: false,
+              state: 'observer_not_paired',
+              capability_id: capability.capability_id,
+            }
+        : null;
+      return {
+        ...capability,
+        local_admission: localAdmission,
+        generic_dispatch_available:
+          capability.admission_state === 'admitted' ||
+          localAdmission?.admitted === true,
+      };
+    });
+    const receipt = this.#receipt('host-boundary.capabilities', {
+      registry_version: status.registry_version,
+      capability_count: status.capability_count,
+      locally_admitted_count: capabilities.filter(
+        (capability) => capability.local_admission?.admitted === true,
+      ).length,
+      mutation_capability_count: capabilities.filter(
+        (capability) => capability.mutation_authority === true,
+      ).length,
+      arbitrary_desktop_control_present: capabilities.some(
+        (capability) => capability.arbitrary_desktop_control === true,
+      ),
+    });
+    return {
+      ...status,
+      capabilities,
+      operator_receipt: receipt,
+    };
+  }
+
+  hostBoundaryCertification() {
+    const certification = certifyChromeOsHostBoundary({
+      stateRoot: this.hostBoundaryStateRoot,
+      routerReceiptFile: this.routerMapReceiptFile,
+    });
+    const receipt = this.#receipt('chromeos-host-boundary.certification', {
+      certification_state: certification.state,
+      capability_id: certification.capability_id,
+      ready_for_external_canary:
+        certification.ready_for_external_canary === true,
+      certification_receipt_hash: certification.receipt_hash,
+      mutation_authority: false,
+    });
+    return {
+      ...certification,
+      operator_receipt: receipt,
+    };
+  }
+
+  hostBoundaryStatus() {
+    const status = readChromeOsHostBoundaryStatus({ stateRoot: this.hostBoundaryStateRoot });
+    const receipt = this.#receipt('chromeos-host-boundary.status', {
+      state: status.state,
+      fresh: status.fresh === true,
+      evidence_mode: status.evidence_mode || null,
+      observed_port_count: Array.isArray(status.ports) ? status.ports.length : 0,
+      source_receipt_hash: status.receipt_hash || null,
+      mutation_supported: false,
+    });
+    return {
+      ...status,
+      operator_receipt: receipt,
+    };
+  }
+
+  hostCapabilityAdmit({
+    capability_id,
+    approval_ref,
+  } = {}) {
+    const approval = String(approval_ref || '').trim();
+    if (!approval || approval.length > 512) {
+      throw new Error('host_boundary_capability_admission_approval_required');
+    }
+    const capability = getHostBoundaryCapability(capability_id);
+    if (
+      capability.operation !== 'read' ||
+      capability.mutation_authority === true ||
+      capability.arbitrary_desktop_control === true ||
+      capability.arbitrary_desktop_control_exposed === true
+    ) {
+      throw new Error('host_boundary_capability_admission_authority_denied');
+    }
+    if (capability.requires_field_certification !== true) {
+      throw new Error('host_boundary_capability_field_certification_not_required');
+    }
+    if (capability.adapter !== 'chromeos_crostini_port_forwarding') {
+      throw new Error('host_boundary_capability_adapter_not_available');
+    }
+
+    const certification = certifyChromeOsHostBoundary({
+      stateRoot: this.hostBoundaryStateRoot,
+      routerReceiptFile: this.routerMapReceiptFile,
+    });
+    if (certification.ready_for_external_canary !== true) {
+      throw new Error('host_boundary_capability_field_gate_required');
+    }
+
+    const admission = admitHostBoundaryCapability({
+      stateRoot: this.hostBoundaryStateRoot,
+      capabilityId: capability.capability_id,
+      certification,
+    });
+    const receipt = this.#receipt('host-capability.admit', {
+      capability_id: capability.capability_id,
+      adapter: capability.adapter,
+      approval_ref: approval,
+      certification_receipt_hash: certification.receipt_hash,
+      admission_hash: admission.admission_hash,
+      observer_install_id: admission.observer_install_id,
+      observer_key_fingerprint: admission.observer_key_fingerprint,
+      mutation_authority: false,
+    });
+    return {
+      ok: true,
+      schema: 'evercraft.host-boundary-capability-admission-result.v1',
+      capability_id: capability.capability_id,
+      admission,
+      certification,
+      host_mutation_performed: false,
+      operator_receipt: receipt,
+    };
+  }
+
+  async hostCapabilityCheck({
+    capability_id,
+    wait_ms = 35_000,
+  } = {}) {
+    const capability = getHostBoundaryCapability(capability_id);
+    if (capability.operation !== 'read') {
+      throw new Error('host_boundary_capability_not_read_only');
+    }
+
+    const pairedHost = readChromeOsHostBoundaryStatus({
+      stateRoot: this.hostBoundaryStateRoot,
+    });
+    const admission = capability.admission_state === 'admitted'
+      ? {
+          ok: true,
+          admitted: true,
+          state: 'source_admitted',
+          capability_id: capability.capability_id,
+        }
+      : pairedHost.paired === true
+        ? readHostBoundaryCapabilityAdmission({
+            stateRoot: this.hostBoundaryStateRoot,
+            capabilityId: capability.capability_id,
+            observerInstallId:
+              pairedHost.paired_observer_install_id || '',
+            observerKeyFingerprint:
+              pairedHost.paired_observer_key_fingerprint || '',
+          })
+        : {
+            ok: true,
+            admitted: false,
+            state: 'observer_not_paired',
+            capability_id: capability.capability_id,
+          };
+    if (!admission.admitted) {
+      throw new Error('host_boundary_capability_field_gate_required');
+    }
+
+    if (capability.adapter === 'chromeos_crostini_port_forwarding') {
+      const result = await this.hostBoundaryCheck({ wait_ms });
+      if (
+        result.fulfilled === true &&
+        admission.observer_install_id &&
+        result.status?.observer_install_id !== admission.observer_install_id
+      ) {
+        throw new Error('host_boundary_capability_observer_changed');
+      }
+      if (
+        result.fulfilled === true &&
+        admission.observer_key_fingerprint &&
+        result.status?.observer_key_fingerprint !==
+          admission.observer_key_fingerprint
+      ) {
+        throw new Error('host_boundary_capability_observer_key_changed');
+      }
+      const receipt = this.#receipt('host-capability.check', {
+        capability_id: capability.capability_id,
+        adapter: capability.adapter,
+        delegated_operation: 'chromeos-host-boundary.check',
+        delegated_receipt_hash: result.operator_receipt?.receipt_hash || null,
+        fulfilled: result.fulfilled === true,
+        mutation_authority: false,
+      });
+      return {
+        ...result,
+        schema: 'evercraft.host-boundary-capability-check-result.v1',
+        capability_id: capability.capability_id,
+        adapter: capability.adapter,
+        capability_operation: capability.operation,
+        admission_state: admission.state,
+        admission_hash: admission.admission_hash || null,
+        arbitrary_desktop_control: capability.arbitrary_desktop_control,
+        mutation_authority: capability.mutation_authority,
+        capability_receipt: receipt,
+      };
+    }
+
+    throw new Error('host_boundary_capability_adapter_not_available');
+  }
+
+  async hostBoundaryCheck({ wait_ms = 35_000 } = {}) {
+    const requested = requestChromeOsHostBoundaryCheck({ stateRoot: this.hostBoundaryStateRoot });
+    const waitMs = boundedInt(wait_ms, 35_000, 0, 45_000);
+    const deadline = Date.now() + waitMs;
+    let check = readChromeOsHostBoundaryCheck({ stateRoot: this.hostBoundaryStateRoot });
+
+    while (check.pending && Date.now() < deadline) {
+      await new Promise((resolve) => setTimeout(resolve, Math.min(250, deadline - Date.now())));
+      check = readChromeOsHostBoundaryCheck({ stateRoot: this.hostBoundaryStateRoot });
+    }
+
+    const status = readChromeOsHostBoundaryStatus({ stateRoot: this.hostBoundaryStateRoot });
+    const fulfilled =
+      check.state === 'completed' &&
+      status.request_id === requested.request_id &&
+      status.fresh === true;
+    const receipt = this.#receipt('chromeos-host-boundary.check', {
+      request_id: requested.request_id,
+      wait_ms: waitMs,
+      request_state: check.state,
+      fulfilled,
+      source_receipt_hash: fulfilled ? status.receipt_hash : null,
+      mutation_supported: false,
+    });
+
+    return {
+      ok: check.ok !== false,
+      schema: 'evercraft.chromeos-host-boundary-check-result.v1',
+      request_id: requested.request_id,
+      request_state: check.state,
+      pending: check.pending === true,
+      fulfilled,
+      waited_ms: waitMs,
+      status,
+      mutation_supported: false,
       operator_receipt: receipt,
     };
   }

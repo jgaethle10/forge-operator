@@ -79,6 +79,100 @@ export function remoteOperatorTools() {
       },
     },
     {
+      name: 'remote_host_capabilities',
+      title: 'List admitted host-side capabilities',
+      description: 'List the typed host-boundary capabilities currently admitted by Evercraft for authorized devices. The registry explicitly reports mutation authority, arbitrary desktop-control status, pairing requirements, and privacy properties.',
+      inputSchema: { type: 'object', properties: {}, additionalProperties: false },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    {
+      name: 'remote_host_boundary_certification',
+      title: 'Certify the ChromeOS host-boundary evidence chain',
+      description: 'Read a receipt-backed field certification that reconciles the fresh ChromeOS port-forward setting observation with the LAN witness. A ready certification advances the read-only capability field gate but still does not claim public-route reachability.',
+      inputSchema: { type: 'object', properties: {}, additionalProperties: false },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    {
+      name: 'remote_host_capability_admit',
+      title: 'Admit a field-certified host capability',
+      description: 'Persist node-local admission for one field-certified read-only host capability. This changes Evercraft trust state, not the host OS. It requires an explicit approval_ref and will fail unless the current signed host evidence and LAN witness satisfy the capability field gate.',
+      inputSchema: {
+        type: 'object',
+        properties: {
+          capability_id: { type: 'string', minLength: 3, maxLength: 128 },
+          approval_ref: { type: 'string', minLength: 1, maxLength: 512 },
+        },
+        required: ['capability_id', 'approval_ref'],
+        additionalProperties: false,
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    {
+      name: 'remote_host_capability_check',
+      title: 'Run an admitted host-side capability check',
+      description: 'Run one typed, explicitly admitted read-only host capability on an authorized device. The capability ID must exist in the host-boundary registry; generic desktop control and unregistered adapters are denied.',
+      inputSchema: {
+        type: 'object',
+        properties: {
+          capability_id: { type: 'string', minLength: 3, maxLength: 128 },
+          wait_ms: { type: 'integer', minimum: 0, maximum: 45000, default: 35000 },
+        },
+        required: ['capability_id'],
+        additionalProperties: false,
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    {
+      name: 'remote_host_boundary_status',
+      title: 'Inspect ChromeOS host port-forward boundary',
+      description: 'Read the latest paired ChromeOS-side observation of the admitted Crostini port-forwarding settings. This is a narrow read-only host-boundary capability; it does not expose screenshots, raw accessibility trees, or arbitrary desktop control.',
+      inputSchema: { type: 'object', properties: {}, additionalProperties: false },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    {
+      name: 'remote_host_boundary_check',
+      title: 'Request a fresh ChromeOS host-boundary check',
+      description: 'Ask the paired ChromeOS companion to perform a fresh read-only check of the admitted Crostini port-forwarding settings. The request may remain pending until the companion polls the local bridge; it cannot change host settings or perform arbitrary desktop actions.',
+      inputSchema: {
+        type: 'object',
+        properties: {
+          wait_ms: { type: 'integer', minimum: 0, maximum: 45000, default: 35000 },
+        },
+        additionalProperties: false,
+      },
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    {
       name: 'remote_list_files',
       title: 'List files on an authorized Evercraft node',
       description: 'List one relative directory inside an admitted named root. Absolute paths and parent traversal are not accepted.',
@@ -225,7 +319,7 @@ export async function executeRemoteOperatorMcpRpc({
     return jsonRpc(id, {
       protocolVersion: '2025-03-26',
       capabilities: { tools: {} },
-      serverInfo: { name: 'evercraft-remote-operator', version: '0.2.0' },
+      serverInfo: { name: 'evercraft-remote-operator', version: '0.8.0' },
       instructions:
         'Evercraft Remote Operator reaches only explicitly authorized Evercraft nodes. Read operations require the client credential. File writes and program execution additionally require an explicit approval_ref and remain constrained by the node-side operator policy.',
     });
@@ -261,6 +355,30 @@ export async function executeRemoteOperatorMcpRpc({
         throw new Error('remote_network_observation_unavailable');
       }
       return jsonRpc(id, toolResult(status.network_observation));
+    }
+    if (name === 'remote_host_capabilities') {
+      return jsonRpc(id, toolResult(await gateway.invoke('/v1/operator/host-capabilities', { method: 'GET' })));
+    }
+    if (name === 'remote_host_boundary_certification') {
+      return jsonRpc(id, toolResult(await gateway.invoke('/v1/operator/host-boundary/certification', { method: 'GET' })));
+    }
+    if (name === 'remote_host_capability_admit') {
+      return jsonRpc(id, toolResult(await gateway.invoke('/v1/operator/host-capabilities/admit', {
+        body: args,
+      })));
+    }
+    if (name === 'remote_host_capability_check') {
+      return jsonRpc(id, toolResult(await gateway.invoke('/v1/operator/host-capabilities/check', {
+        body: args,
+      })));
+    }
+    if (name === 'remote_host_boundary_status') {
+      return jsonRpc(id, toolResult(await gateway.invoke('/v1/operator/host-boundary', { method: 'GET' })));
+    }
+    if (name === 'remote_host_boundary_check') {
+      return jsonRpc(id, toolResult(await gateway.invoke('/v1/operator/host-boundary/check', {
+        body: args,
+      })));
     }
     if (name === 'remote_list_files') {
       return jsonRpc(id, toolResult(await gateway.invoke('/v1/operator/fs/list', { body: args })));
@@ -321,7 +439,7 @@ export function registerRemoteOperatorMcp(app, options = {}) {
     res.json({
       ok: true,
       service: 'evercraft-remote-operator-gateway',
-      version: '0.2.0',
+      version: '0.8.0',
       configured: Boolean(gateway),
       public_node_ingress_required: false,
       node_control_token_exposed: false,
@@ -338,7 +456,7 @@ export function registerRemoteOperatorMcp(app, options = {}) {
     res.json({
       ok: true,
       server: 'evercraft-remote-operator',
-      version: '0.2.0',
+      version: '0.8.0',
       transport: 'Streamable HTTP',
       configured: Boolean(gateway),
       tools: remoteOperatorTools().map((tool) => tool.name),

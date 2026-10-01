@@ -1,0 +1,89 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SOURCE_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+ENV_DIR="$HOME/.config/evercraft"
+ENV_FILE="$ENV_DIR/chromeos-host-boundary.env"
+UNIT_DIR="$HOME/.config/systemd/user"
+UNIT_FILE="$UNIT_DIR/evercraft-chromeos-host-boundary-bridge.service"
+STATE_DIR="$HOME/.local/state/evercraft/organism/chromeos-host-boundary"
+
+mkdir -p "$ENV_DIR" "$UNIT_DIR" "$STATE_DIR"
+chmod 700 "$ENV_DIR" "$STATE_DIR"
+
+RESET_PAIRING=false
+for arg in "$@"; do
+  case "$arg" in
+    --reset-pairing) RESET_PAIRING=true ;;
+    *)
+      echo "Unknown argument: $arg" >&2
+      echo "Usage: $0 [--reset-pairing]" >&2
+      exit 2
+      ;;
+  esac
+done
+
+if [[ "$RESET_PAIRING" == "true" ]]; then
+  rm -f     "$STATE_DIR/paired-observer.json"     "$STATE_DIR/latest.json"     "$STATE_DIR/check-request.json"
+  rm -rf "$STATE_DIR/admissions"
+  echo "ChromeOS host observer pairing and field admissions reset."
+  echo "The pairing bootstrap token will also be rotated."
+fi
+
+NEW_TOKEN=false
+if [[ ! -f "$ENV_FILE" || "$RESET_PAIRING" == "true" ]]; then
+  TOKEN="$(node -e "console.log(require('crypto').randomBytes(32).toString('hex'))")"
+  NEW_TOKEN=true
+  {
+    printf 'EVERCRAFT_CHROMEOS_HOST_BRIDGE_TOKEN=%s\n' "$TOKEN"
+    printf 'EVERCRAFT_CHROMEOS_HOST_BRIDGE_HOST=0.0.0.0\n'
+    printf 'EVERCRAFT_CHROMEOS_HOST_BRIDGE_PORT=18081\n'
+    printf 'EVERCRAFT_CHROMEOS_HOST_BOUNDARY_STATE_DIR=%s\n' "$STATE_DIR"
+  } > "$ENV_FILE"
+  chmod 600 "$ENV_FILE"
+else
+  # shellcheck disable=SC1090
+  source "$ENV_FILE"
+  TOKEN="${EVERCRAFT_CHROMEOS_HOST_BRIDGE_TOKEN:-}"
+fi
+
+if [[ "${#TOKEN}" -lt 32 ]]; then
+  echo "ChromeOS host bridge token is missing or too short." >&2
+  exit 2
+fi
+
+cat > "$UNIT_FILE" <<UNIT
+[Unit]
+Description=Evercraft ChromeOS Host Boundary Bridge
+After=default.target
+
+[Service]
+Type=simple
+WorkingDirectory=$SOURCE_ROOT
+EnvironmentFile=$ENV_FILE
+ExecStart=/usr/bin/env node $SOURCE_ROOT/systemia/compute/chromeos-host-boundary-bridge.mjs
+Restart=on-failure
+RestartSec=2
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=default.target
+UNIT
+
+systemctl --user daemon-reload
+systemctl --user enable --now evercraft-chromeos-host-boundary-bridge.service
+
+echo
+echo "Evercraft ChromeOS Host Boundary Bridge is running."
+if [[ "$NEW_TOKEN" == "true" ]]; then
+  echo "One-time pairing token for the ChromeOS companion:"
+  echo "$TOKEN"
+else
+  echo "Pairing token already exists in $ENV_FILE and was not reprinted."
+fi
+echo
+echo "Receiver: http://127.0.0.1:18081/v1/chromeos-host-boundary/report"
+echo "Pairing:  $STATE_DIR/paired-observer.json"
+echo "State:    $STATE_DIR/latest.json"
+echo "Reset:    $0 --reset-pairing"
