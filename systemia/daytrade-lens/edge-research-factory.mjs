@@ -351,38 +351,51 @@ export function evaluateEdgeFamilies(measurements, {
     const splitAt = Math.max(1, Math.floor(rows.length * development_fraction));
     const holdoutRows = rows.slice(splitAt);
     const holdoutOrigins = uniq(holdoutRows.map((row) => row.origin_entity_ref));
-    const byOrigin = new Map();
+    const byOriginRawNet = new Map();
+    const byOriginStrategyNet = new Map();
+    const expectedSign = evaluation.learned_direction === "NEGATIVE_EXCESS_RETURN"
+      ? -1
+      : evaluation.learned_direction === "POSITIVE_EXCESS_RETURN"
+        ? 1
+        : Number(evaluation.holdout?.expected_sign || 0);
+    const cost = transaction_cost_bps / 10000;
+
     for (const row of holdoutRows) {
       if (!row.origin_entity_ref) continue;
-      if (!byOrigin.has(row.origin_entity_ref)) byOrigin.set(row.origin_entity_ref, []);
+      if (!byOriginRawNet.has(row.origin_entity_ref)) {
+        byOriginRawNet.set(row.origin_entity_ref, []);
+        byOriginStrategyNet.set(row.origin_entity_ref, []);
+      }
       const excess = Number(row.forward_return || 0) - Number(row.benchmark_return || 0);
-      const expectedSign = evaluation.learned_direction === "NEGATIVE_EXCESS_RETURN"
-        ? -1
-        : evaluation.learned_direction === "POSITIVE_EXCESS_RETURN"
-          ? 1
-          : Number(evaluation.holdout?.sign || evaluation.development?.sign || 0);
-      const net = expectedSign === 0
+      const rawDirectionalNet = expectedSign === 0
         ? excess
-        : excess - expectedSign * (transaction_cost_bps / 10000);
-      byOrigin.get(row.origin_entity_ref).push(net);
+        : excess - expectedSign * cost;
+      const strategyNet = expectedSign === 0
+        ? 0
+        : expectedSign * excess - cost;
+      byOriginRawNet.get(row.origin_entity_ref).push(rawDirectionalNet);
+      byOriginStrategyNet.get(row.origin_entity_ref).push(strategyNet);
     }
-    const originMeans = [...byOrigin.values()].map((values) =>
+    const originRawMeans = [...byOriginRawNet.values()].map((values) =>
       values.reduce((a,b) => a + b, 0) / values.length
     );
-    const originBalancedHoldoutMean = originMeans.length
-      ? originMeans.reduce((a,b) => a + b, 0) / originMeans.length
+    const originStrategyMeans = [...byOriginStrategyNet.values()].map((values) =>
+      values.reduce((a,b) => a + b, 0) / values.length
+    );
+    const originBalancedHoldoutMean = originRawMeans.length
+      ? originRawMeans.reduce((a,b) => a + b, 0) / originRawMeans.length
       : 0;
-    const originBalancedSign = originBalancedHoldoutMean > 0
-      ? 1
-      : originBalancedHoldoutMean < 0 ? -1 : 0;
+    const originBalancedStrategyMean = originStrategyMeans.length
+      ? originStrategyMeans.reduce((a,b) => a + b, 0) / originStrategyMeans.length
+      : 0;
     const officialAuthority = authorityClasses.length > 0 &&
       authorityClasses.every((value) => String(value).startsWith("official_"));
     const authoritativeMultiOrigin =
       officialAuthority &&
       originEntities.length >= minimum_authoritative_origins &&
       holdoutOrigins.length >= minimum_holdout_origins &&
-      originBalancedSign !== 0 &&
-      originBalancedSign === evaluation.holdout.sign;
+      expectedSign !== 0 &&
+      originBalancedStrategyMean > 0;
 
     return {
       schema: "evercraft.daytrade.edge-family-evaluation.v1",
@@ -400,6 +413,7 @@ export function evaluateEdgeFamilies(measurements, {
       origin_entities: originEntities,
       source_authority_classes: authorityClasses,
       origin_balanced_holdout_mean_excess_return_net: originBalancedHoldoutMean,
+      origin_balanced_holdout_mean_strategy_return_net: originBalancedStrategyMean,
       development_p_approx: developmentP,
       development_q_bh: 1,
       base_evaluation: evaluation,
