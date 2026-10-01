@@ -40,6 +40,7 @@ import { runExecutionTranslationLab } from "./edge-execution-translation.mjs";
 import { runQuoteMicrostructureLab } from "./edge-quote-microstructure.mjs";
 import { runExecutionSpeedBoundsLab } from "./edge-execution-speed-bounds.mjs";
 import { runCapitalScaleImpactEnvelopeLab } from "./edge-capital-scale-impact-envelope.mjs";
+import { buildLiquidityStateContracts } from "./edge-liquidity-state-contract.mjs";
 import { buildClusterAdversarialSummary } from "./edge-cluster-adversarial-summary.mjs";
 import { evaluatePilotReadiness } from "./edge-pilot-readiness.mjs";
 
@@ -145,6 +146,20 @@ async function main() {
   fs.writeFileSync(
     capitalScaleImpactEnvelopeFile,
     JSON.stringify(capitalScaleImpactEnvelopeLab, null, 2) + "\n"
+  );
+
+  const liquidityStateContracts = buildLiquidityStateContracts(
+    report,
+    quoteMicrostructureLab,
+    capitalScaleImpactEnvelopeLab
+  );
+  const liquidityStateContractsFile = path.join(
+    artifactDir,
+    "sec-edge-liquidity-state-contracts.json"
+  );
+  fs.writeFileSync(
+    liquidityStateContractsFile,
+    JSON.stringify(liquidityStateContracts, null, 2) + "\n"
   );
 
   const searchBurden = summarizeResearchSearchBurden(report);
@@ -760,6 +775,8 @@ async function main() {
       executionSpeedBoundsLab.status_counts || {},
     capital_scale_impact_envelope_status_counts:
       capitalScaleImpactEnvelopeLab.status_counts || {},
+    liquidity_state_contract_status_counts:
+      liquidityStateContracts.status_counts || {},
     frozen_forward_paper_cohorts: frozenCohorts.length,
     durable_forward_paper_state_configured: durableState.configured,
     durable_forward_paper_restart_reopen_verified: durableState.restart_reopen_verified,
@@ -788,6 +805,7 @@ async function main() {
       quote_microstructure: quoteMicrostructureFile,
       execution_speed_bounds: executionSpeedBoundsFile,
       capital_scale_impact_envelope: capitalScaleImpactEnvelopeFile,
+      liquidity_state_contracts: liquidityStateContractsFile,
       stress_lab: stressFile,
       breaker_lab: breakerFile,
       timing_fragility_lab: timingFile,
