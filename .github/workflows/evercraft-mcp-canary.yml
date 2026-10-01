@@ -163,6 +163,9 @@ jobs:
 
           check_tool "Evercraft Rewards" "$COMMERCE_MCP" "prepare_rewards_partner_enrollment"
           check_tool "IBM i Rescue via Machine Commerce" "$COMMERCE_MCP" "prepare_quote_ready_service_handoff"
+          check_tool "GlobalStat via Machine Commerce" "$COMMERCE_MCP" "query_globalstat_country_intelligence"
+          check_tool "EverMaps via Machine Commerce" "$COMMERCE_MCP" "query_evermaps_public_projection"
+          check_tool "Little Red Studio via Machine Commerce" "$COMMERCE_MCP" "check_book_export_preflight"
 
           check_tool_contract "Evercraft Machine Commerce" "$COMMERCE_MCP" "match_offer" "Start here"
           check_tool_contract "AliEV" "$ALIEV_MCP" "analyze_ev_site" "Start here"
@@ -170,6 +173,9 @@ jobs:
           check_tool_contract "Evercraft Clip" "$CLIP_MCP" "plan_clip_job" "Start here"
 
           call_readonly_tool "Evercraft Machine Commerce" "$COMMERCE_MCP" "match_offer" '{"intent":"I need to understand a long video that ordinary chat tools cannot fully process","limit":1}'
+          call_readonly_tool "GlobalStat via Machine Commerce" "$COMMERCE_MCP" "query_globalstat_country_intelligence" '{"countries":["USA","CAN"],"metric_slugs":["gii_2025_rank"],"limit":10}'
+          call_readonly_tool "EverMaps via Machine Commerce" "$COMMERCE_MCP" "query_evermaps_public_projection" '{"layer":"navigation_lights","limit":2}'
+          call_readonly_tool "Little Red Studio via Machine Commerce" "$COMMERCE_MCP" "check_book_export_preflight" '{"page_count":120,"trim_width_in":6,"trim_height_in":9,"interior_type":"black_white","paper_type":"white","spine_text_present":true,"cover_pixel_width":4000,"cover_pixel_height":6000}'
           call_readonly_tool "ForensiScope" "$FORENSISCOPE_MCP" "classify_media_route" '{"size_bytes":52428800,"duration_seconds":5400}'
           call_readonly_tool "Evercraft Clip" "$CLIP_MCP" "plan_clip_job" '{"source_file_size_bytes":10485760,"source_duration_seconds":90,"target_platforms":["YouTube"],"goal":"Create a concise educational social video"}'
 
