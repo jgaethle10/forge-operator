@@ -28,18 +28,34 @@ It:
 - reports parser gaps and warnings rather than silently upgrading them to certainty;
 - makes no runtime, deployment, billing, delivery, or production-health claim.
 
-## Reconciliation layer
+## Reconciliation contract
 
-The scanner is only the declared-topology lane. Internal Systemia deployments should reconcile scan results against runtime observations and durable receipts.
+`tools/systemia_architecture_reconcile.py` merges evidence without collapsing the evidence lanes.
 
-Useful agreement states are:
+For each relationship it preserves whether the edge was:
+
+- declared in source;
+- observed at runtime;
+- confirmed by a durable receipt.
+
+Its agreement states are:
 
 - `declared_only`
 - `observed_only`
 - `declared_and_observed`
 - `receipt_confirmed`
 
-This makes several important failure classes visible: orphaned outputs, dead branches, undeclared runtime coupling, stale dependencies, dependency cycles, duplicate capability paths, single points of failure, and attempted work with no downstream proof.
+The reconciler can surface high-value mismatches such as:
+
+- runtime behavior that is not represented in declared topology;
+- declared critical paths that are not observed in supplied runtime evidence;
+- publishing/routing/write paths that lack durable downstream receipts.
+
+The current reconciler is deliberately bounded. It does not claim that a missing runtime observation means code is dead unless that relation is explicitly in the watched set and relevant runtime evidence was actually supplied.
+
+## Health layer
+
+Later health rules can build on reconciled edges to detect orphaned outputs, dead branches, stale dependencies, cycles, duplicate capability paths, single points of failure, and attempted work with no downstream proof. Findings should carry exact subject edges/nodes and evidence references before they can spawn repair work.
 
 ## Privacy boundary
 
@@ -49,7 +65,7 @@ Public discovery and public repositories must not expose private Systemia/admin 
 
 ```bash
 python tools/systemia_architecture_scan.py --root . --out /tmp/systemia-architecture.json
-python -m unittest tests/test_systemia_architecture_scan.py -v
+python -m unittest discover -s tests -p 'test_systemia_architecture_*.py' -v
 ```
 
-The output is evidence for architecture analysis, not execution authority.
+The output is architecture evidence, not execution authority.
