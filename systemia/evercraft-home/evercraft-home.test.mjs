@@ -16,7 +16,7 @@ test("Evercraft is root authority", () => {
 
 test("owned services never require optional providers", () => {
   const owned = services.services.filter((service) => service.ownership === "evercraft-owned");
-  assert.deepEqual(owned.map((service) => service.id), ["systemia", "raven", "yard", "network", "sovereign-ai"]);
+  assert.deepEqual(owned.map((service) => service.id), ["systemia", "week-in-motion", "raven", "yard", "network", "sovereign-ai"]);
 });
 
 test("runtime has no legacy builder or external AI SDK dependency", () => {
