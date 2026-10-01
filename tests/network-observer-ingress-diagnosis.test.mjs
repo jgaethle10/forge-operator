@@ -65,3 +65,51 @@ test('local TLS failure remains ahead of host/router diagnosis',()=>{
   });
   assert.equal(diagnosis.state,'local_https_edge_unhealthy');
 });
+
+
+test('uses paired ChromeOS observation to distinguish disabled settings from LAN failure',()=>{
+  const settingOff=diagnoseNodeIngress({
+    ...healthy,
+    chromeBoundary:{
+      likely_crostini:true,
+      host_port_forwarding:{
+        observed_by_paired_host_companion:true,
+        ports:[
+          {port:18080,protocol:'TCP',present:true,enabled:true},
+          {port:8443,protocol:'TCP',present:true,enabled:false},
+        ],
+      },
+    },
+    routerMapReceipt:{
+      ok:false,
+      host_forward_preflight:{ready:false},
+    },
+  });
+  assert.equal(settingOff.state,'chromeos_host_forward_setting_not_ready');
+
+  const settingOnButUnreachable=diagnoseNodeIngress({
+    ...healthy,
+    chromeBoundary:{
+      likely_crostini:true,
+      host_port_forwarding:{
+        observed_by_paired_host_companion:true,
+        ports:[
+          {port:18080,protocol:'TCP',present:true,enabled:true},
+          {port:8443,protocol:'TCP',present:true,enabled:true},
+        ],
+      },
+    },
+    routerMapReceipt:{
+      ok:false,
+      host_forward_preflight:{ready:false},
+    },
+  });
+  assert.equal(
+    settingOnButUnreachable.state,
+    'chromeos_host_forward_enabled_but_lan_unreachable'
+  );
+  assert.equal(
+    settingOnButUnreachable.next_boundary,
+    'chromeos_forwarder_runtime_firewall_or_lan_path'
+  );
+});
