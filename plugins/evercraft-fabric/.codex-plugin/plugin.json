@@ -1,7 +1,7 @@
 {
   "name": "evercraft",
   "version": "1.1.0",
-  "description": "Inspect public websites and connect ChatGPT or Codex to the Evercraft/Systemia capability fabric through one truthful, permission-aware front door.",
+  "description": "Inspect authorized public websites through Evercraft's bounded, evidence-backed read-only website inspector.",
   "author": {
     "name": "Evercraft LLC",
     "url": "https://fabric.systemiacommandcenters.com/"
@@ -24,20 +24,20 @@
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "Evercraft",
-    "shortDescription": "Inspect sites & route work",
-    "longDescription": "Inspect a user-supplied public website with a bounded, evidence-backed preview, or route a real problem to the smallest truthful Evercraft capability. Evercraft preserves evidence, availability, and authorization boundaries. Preview and discovery do not grant private access, payment authority, publishing authority, deployment authority, or permission for consequential actions.",
+    "shortDescription": "Inspect public websites",
+    "longDescription": "Inspect a public website you own, administer, or have permission to review. Evercraft returns bounded, evidence-backed HTTP and on-page signals with explicit limitations. It does not modify the site, access private networks, create payments, or perform other consequential actions.",
     "developerName": "Evercraft LLC",
     "category": "Business & Operations",
     "capabilities": [
-      "Public website preview",
-      "Capability discovery",
-      "Bounded next-step guidance"
+      "Authorized public website inspection",
+      "Evidence-backed on-page signals",
+      "Bounded read-only analysis"
     ],
     "websiteURL": "https://fabric.systemiacommandcenters.com/",
     "defaultPrompt": [
-      "Preview this public website and show me the basic signals that need attention.",
-      "Find the smallest Evercraft capability for this problem.",
-      "Show me the safest next step Evercraft can actually perform."
+      "Inspect my public website and show me the basic signals that need attention.",
+      "Check my website for missing title, description, headings, canonical, and contact signals.",
+      "Inspect my homepage for basic on-page and conversion signals."
     ]
   }
 }
