@@ -172,7 +172,7 @@ function rateLimit(maxRequests: number, windowMs: number) {
 
 app.use(express.json({ limit: '10mb', type: ['application/json', 'application/*+json'] }));
 const radarResident = registerRadarRoutes(app, { isProd });
-registerFaieRoutes(app, { isProd, radarResident });
+registerFaieRoutes(app, {\n  isProd,\n  radarResident,\n  publicInvestigateLimiter: rateLimit(60, 60 * 60 * 1000)\n});
 registerNotificationFabricRoutes(app);
 registerRivetReportGateway(app);
 registerSpecialistHandoffMcps(app, { gatewayUrl: machineCommerceGatewayUrl });
