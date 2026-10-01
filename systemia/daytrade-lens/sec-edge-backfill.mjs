@@ -39,6 +39,7 @@ import { runWalkForwardLab } from "./edge-walk-forward.mjs";
 import { runExecutionTranslationLab } from "./edge-execution-translation.mjs";
 import { runQuoteMicrostructureLab } from "./edge-quote-microstructure.mjs";
 import { runExecutionSpeedBoundsLab } from "./edge-execution-speed-bounds.mjs";
+import { runCapitalScaleImpactEnvelopeLab } from "./edge-capital-scale-impact-envelope.mjs";
 import { buildClusterAdversarialSummary } from "./edge-cluster-adversarial-summary.mjs";
 import { evaluatePilotReadiness } from "./edge-pilot-readiness.mjs";
 
@@ -133,6 +134,17 @@ async function main() {
   fs.writeFileSync(
     executionSpeedBoundsFile,
     JSON.stringify(executionSpeedBoundsLab, null, 2) + "\n"
+  );
+
+  const capitalScaleImpactEnvelopeLab =
+    runCapitalScaleImpactEnvelopeLab(report, quoteMicrostructureLab);
+  const capitalScaleImpactEnvelopeFile = path.join(
+    artifactDir,
+    "sec-edge-capital-scale-impact-envelope.json"
+  );
+  fs.writeFileSync(
+    capitalScaleImpactEnvelopeFile,
+    JSON.stringify(capitalScaleImpactEnvelopeLab, null, 2) + "\n"
   );
 
   const searchBurden = summarizeResearchSearchBurden(report);
@@ -745,6 +757,8 @@ async function main() {
     execution_translation_status_counts: executionTranslationLab.status_counts || {},
     execution_speed_bounds_status_counts:
       executionSpeedBoundsLab.status_counts || {},
+    capital_scale_impact_envelope_status_counts:
+      capitalScaleImpactEnvelopeLab.status_counts || {},
     frozen_forward_paper_cohorts: frozenCohorts.length,
     durable_forward_paper_state_configured: durableState.configured,
     durable_forward_paper_restart_reopen_verified: durableState.restart_reopen_verified,
@@ -772,6 +786,7 @@ async function main() {
       cscv_pbo: cscvPboFile,
       quote_microstructure: quoteMicrostructureFile,
       execution_speed_bounds: executionSpeedBoundsFile,
+      capital_scale_impact_envelope: capitalScaleImpactEnvelopeFile,
       stress_lab: stressFile,
       breaker_lab: breakerFile,
       timing_fragility_lab: timingFile,
