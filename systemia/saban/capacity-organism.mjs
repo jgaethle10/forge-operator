@@ -19,6 +19,7 @@ import { AmbientWorkQueue } from './ambient-work-queue.mjs';
 import { buildAmbientDemandRadar, deriveZeroSpendCapacityNeeds } from './ambient-demand-radar.mjs';
 import { evaluateMicroSeedAdapterAvailability } from './microseed-adapter-catalog.mjs';
 import { matchCapacityGapsToAmbientCandidates } from './capacity-gap-matcher.mjs';
+import { buildAmbientCapacityHuntPlan } from './ambient-capacity-hunt.mjs';
 
 const MODULE_FILE=fileURLToPath(import.meta.url);
 
@@ -212,12 +213,18 @@ export async function runCapacityOrganismOnce({
   const checkpoints=fs.existsSync(checkpointFile)
     ? JSON.parse(fs.readFileSync(checkpointFile,'utf8'))
     : {};
+  const workQueue=new AmbientWorkQueue({root:path.join(resolvedRoot,'work-queue')});
+  const demandRadar=buildAmbientDemandRadar({
+    jobs:workQueue.list(),
+    now,
+  });
   const compiled=compileCapacityOrganismState({
     registrySnapshot,
     adapterHealth,
     performanceLedger,
     previousPlan,
     checkpoints,
+    demandRadar,
     now,
   });
   const opportunityMap=candidateInventory
@@ -226,6 +233,12 @@ export async function runCapacityOrganismOnce({
         candidateInventory,
         tasks:rivetAliEvProductionAnatomy().tasks,
         adapterHealth,
+      })
+    : null;
+  const demandHuntPlan=candidateInventory
+    ? buildAmbientCapacityHuntPlan({
+        demandRadar,
+        candidateInventory,
       })
     : null;
 
@@ -256,6 +269,16 @@ export async function runCapacityOrganismOnce({
       adapter_blocked_candidate_count:opportunityMap.adapter_blocked_candidate_count,
       receipt_hash:opportunityMap.receipt_hash,
     }:null,
+    backlog_capacity_hunt:demandHuntPlan?{
+      demand_workloads:demandHuntPlan.demand_workloads,
+      candidate_matches:demandHuntPlan.candidate_matches,
+      opportunities:demandHuntPlan.opportunities,
+      passive_visibility_only:demandHuntPlan.passive_visibility_only,
+      ownership_inferred:demandHuntPlan.ownership_inferred,
+      authorization_inferred:demandHuntPlan.authorization_inferred,
+      commercial_capacity_authorized:false,
+      receipt_hash:demandHuntPlan.receipt_hash,
+    }:null,
   };
 
   atomicJson(path.join(resolvedRoot,'capacity-organism-state.json'),receipt);
@@ -265,6 +288,7 @@ export async function runCapacityOrganismOnce({
   atomicJson(path.join(resolvedRoot,'ambient-demand-radar.json'),demandRadar);
   if(candidateInventory) atomicJson(path.join(resolvedRoot,'ambient-candidate-inventory.json'),candidateInventory);
   if(opportunityMap) atomicJson(path.join(resolvedRoot,'capacity-gap-opportunities.json'),opportunityMap);
+  if(demandHuntPlan) atomicJson(path.join(resolvedRoot,'backlog-capacity-hunt.json'),demandHuntPlan);
   return receipt;
 }
 
