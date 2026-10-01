@@ -1,0 +1,88 @@
+name: AliEV full session corpus one-off
+
+on:
+  push:
+    branches:
+      - systemia/base44-evacuation-factory-20260930
+    paths:
+      - '.github/workflows/aliev-session-full-corpus-oneoff.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  full-corpus:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Prove corpus contract first
+        run: npm run proof:aliev-session-corpus
+
+      - name: Materialize and reconcile the full current PlugNYC corpus
+        shell: bash
+        run: |
+          set -euo pipefail
+          STATE="$RUNNER_TEMP/aliev-full-session-corpus"
+          OUT="artifacts/aliev-full-session-corpus"
+          rm -rf "$STATE" "$OUT"
+          mkdir -p "$OUT"
+          node systemia/aliev/session-corpus-runner.mjs \
+            --state-dir "$STATE" \
+            --page-size 5000 \
+            --max-pages 100 \
+            --compact \
+            | tee "$OUT/runner-receipt.json"
+          cp "$STATE/session-corpus/nyc-plugnyc/checkpoint.json" "$OUT/checkpoint.json"
+          cp "$STATE/session-corpus/nyc-plugnyc/reconciliation-receipts.jsonl" "$OUT/reconciliation-receipts.jsonl"
+          cp "$STATE/session-corpus/nyc-plugnyc/compaction-receipts.jsonl" "$OUT/compaction-receipts.jsonl"
+          cp "$STATE/session-corpus/nyc-plugnyc/receipts.jsonl" "$OUT/backfill-receipts.jsonl"
+
+      - name: Verify complete reconciliation
+        run: |
+          node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+          const result=JSON.parse(fs.readFileSync('artifacts/aliev-full-session-corpus/runner-receipt.json','utf8'));
+          const checkpoint=result?.status?.checkpoint;
+          const reconciliation=result?.reconciliation;
+          const compaction=result?.compaction;
+          if(checkpoint?.complete!==true) throw new Error('full_corpus_checkpoint_incomplete');
+          if(reconciliation?.complete_reconciled!==true) throw new Error('full_corpus_reconciliation_failed');
+          if(reconciliation.raw_rows_materialized!==reconciliation.source_rows) throw new Error('full_corpus_row_total_mismatch');
+          if(reconciliation.rows_reconciled!==true) throw new Error('full_corpus_rows_not_reconciled');
+          if(reconciliation.energy_reconciled!==true) throw new Error('full_corpus_energy_not_reconciled');
+          if(reconciliation.offsets_reconciled!==true) throw new Error('full_corpus_offsets_not_reconciled');
+          if(reconciliation.coverage_dates_reconciled!==true) throw new Error('full_corpus_dates_not_reconciled');
+          if(compaction?.raw_rows_read!==reconciliation.source_rows) throw new Error('full_corpus_compaction_row_mismatch');
+          if(result?.status?.personal_identifiers_persisted!==false) throw new Error('full_corpus_privacy_flag_invalid');
+          console.log(JSON.stringify({
+            ok:true,
+            schema:'evercraft.aliev.full-session-corpus-oneoff.v1',
+            source_rows:reconciliation.source_rows,
+            source_energy_kwh:reconciliation.source_energy_kwh,
+            raw_rows_materialized:reconciliation.raw_rows_materialized,
+            raw_energy_kwh:reconciliation.raw_energy_kwh,
+            valid_usage_rows:reconciliation.valid_usage_rows,
+            valid_usage_energy_kwh:reconciliation.valid_usage_energy_kwh,
+            source_status_counts:reconciliation.source_status_counts,
+            first_materialized_date:reconciliation.first_materialized_date,
+            latest_materialized_date:reconciliation.latest_materialized_date,
+            unique_event_refs:reconciliation.unique_event_refs,
+            duplicate_source_rows:reconciliation.duplicate_source_rows,
+            aggregate_rows:compaction.aggregates_written,
+            complete_reconciled:true,
+            personal_identifiers_persisted:false
+          },null,2));
+          NODE
+
+      - name: Preserve reconciliation receipts only
+        uses: actions/upload-artifact@v4
+        with:
+          name: aliev-full-session-corpus-receipts
+          path: artifacts/aliev-full-session-corpus
+          if-no-files-found: error
+          retention-days: 90
