@@ -184,6 +184,41 @@ export const ATTACK_IMPLEMENTATION_MAP=Object.freeze({
       "systemia/daytrade-lens/edge-breaker-lab.mjs",
       "systemia/daytrade-lens/edge-adversarial-fixtures.test.mjs"
     ]
+  },
+  "durable lifetime research-trial cemetery":{
+    status:"partial",
+    evidence:["systemia/daytrade-lens/edge-search-burden.mjs"],
+    gap:"Current-run search history is explicit, but a canonical lifetime append-only trial ledger still requires owned durable Yard/Node persistence."
+  },
+  "reported-statistics FDR identification warning":{
+    status:"implemented",
+    evidence:["systemia/daytrade-lens/edge-search-burden.mjs"]
+  },
+  "independent frozen validation over candidate-only significance":{
+    status:"implemented",
+    evidence:[
+      "systemia/daytrade-lens/edge-forward-paper-seed.mjs",
+      "systemia/daytrade-lens/edge-forward-paper.mjs",
+      "systemia/daytrade-lens/edge-forward-paper-cluster.mjs"
+    ]
+  },
+  "volatility-clustering and dependence diagnostic":{
+    status:"implemented",
+    evidence:["systemia/daytrade-lens/edge-tail-dependence.mjs"]
+  },
+  "heavy-tail concentration diagnostic":{
+    status:"implemented",
+    evidence:[
+      "systemia/daytrade-lens/edge-tail-dependence.mjs",
+      "systemia/daytrade-lens/edge-breaker-lab.mjs"
+    ]
+  },
+  "correlation-aware empirical null companion to DSR":{
+    status:"implemented",
+    evidence:[
+      "systemia/daytrade-lens/edge-family-max-null.mjs",
+      "systemia/daytrade-lens/edge-deflated-sharpe.mjs"
+    ]
   }
 });
 
