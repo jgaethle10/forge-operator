@@ -76,7 +76,8 @@ test('OpenAI account-side packet keeps public-directory and owned-route truth ga
     assert.equal(submission.compatibility_transport?.active,false);
     assert.equal(submission.compatibility_transport?.owned_fabric_cutover_required,false);
     assert.equal(submission.owned_fabric_transport?.authority,'owned_public_fabric');
-    assert.equal(submission.owned_fabric_transport?.origin_change_requires_new_openai_plugin_submission,true);
+    assert.equal(submission.owned_fabric_transport?.origin_change_requires_new_openai_plugin_submission,false);
+    assert.equal(submission.owned_fabric_transport?.endpoint_path_change_only,true);
   }else{
     assert.equal(submission.compatibility_transport?.active,false);
     assert.equal(submission.owned_fabric_transport?.revalidation_required,true);
