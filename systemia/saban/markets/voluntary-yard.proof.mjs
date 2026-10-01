@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { generateKeyPairSync, sign } from 'node:crypto';
+import { createHash, generateKeyPairSync, sign } from 'node:crypto';
 import {
   createVoluntaryMarketAdapter,
   prepareVoluntaryOffer,
@@ -13,9 +13,9 @@ import {
 
 const {publicKey,privateKey}=generateKeyPairSync('ed25519');
 const publicPem=publicKey.export({type:'spki',format:'pem'});
-const fingerprint='sha256:'+await import('node:crypto').then(({createHash})=>
-  createHash('sha256').update(String(publicPem)).digest('hex')
-);
+const fingerprint='sha256:'+createHash('sha256')
+  .update(String(publicPem))
+  .digest('hex');
 
 const fakeYard={
   async remoteCapacityGrant(_deploymentId,nodeId){
