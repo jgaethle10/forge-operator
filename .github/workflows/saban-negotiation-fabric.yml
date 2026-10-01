@@ -1,0 +1,74 @@
+name: Saban Negotiation Fabric
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/saban/compute-negotiation.mjs'
+      - 'systemia/saban/voluntary-exchange.mjs'
+      - 'systemia/saban/voluntary-exchange.proof.mjs'
+      - 'systemia/saban/voluntary-delivery-safety.proof.mjs'
+      - 'systemia/saban/distributed-executor.mjs'
+      - 'systemia/saban/distributed-voluntary-acquisition.proof.mjs'
+      - 'systemia/saban/voluntary-worker/**'
+      - 'systemia/saban/markets/evercraft-voluntary.mjs'
+      - 'systemia/saban/markets/golem.mjs'
+      - 'systemia/saban/golem-adapter.proof.mjs'
+      - 'systemia/saban/golem-requestor/**'
+      - 'systemia/saban/README.md'
+      - 'systemia/saban/market-stack.mjs'
+      - 'systemia/saban/market-stack.proof.mjs'
+      - '.github/workflows/saban-negotiation-fabric.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/saban/compute-negotiation.mjs'
+      - 'systemia/saban/voluntary-exchange.mjs'
+      - 'systemia/saban/voluntary-exchange.proof.mjs'
+      - 'systemia/saban/voluntary-delivery-safety.proof.mjs'
+      - 'systemia/saban/distributed-executor.mjs'
+      - 'systemia/saban/distributed-voluntary-acquisition.proof.mjs'
+      - 'systemia/saban/voluntary-worker/**'
+      - 'systemia/saban/markets/evercraft-voluntary.mjs'
+      - 'systemia/saban/markets/golem.mjs'
+      - 'systemia/saban/golem-adapter.proof.mjs'
+      - 'systemia/saban/golem-requestor/**'
+      - 'systemia/saban/README.md'
+      - 'systemia/saban/market-stack.mjs'
+      - 'systemia/saban/market-stack.proof.mjs'
+      - '.github/workflows/saban-negotiation-fabric.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  voluntary-negotiation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove offer counteroffer agreement execution release
+        run: node systemia/saban/voluntary-exchange.proof.mjs
+      - name: Prove voluntary delivery replay safety
+        run: node systemia/saban/voluntary-delivery-safety.proof.mjs
+      - name: Prove browser-compatible voluntary worker
+        run: node systemia/saban/voluntary-worker/browser-worker.proof.mjs
+      - name: Prove automatic Saban acquisition on voluntary capacity
+        run: node systemia/saban/distributed-voluntary-acquisition.proof.mjs
+      - name: Prove canonical compute market stack
+        run: node systemia/saban/market-stack.proof.mjs
+
+  golem-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove Golem adapter contract
+        if: ${{ hashFiles('systemia/saban/golem-adapter.proof.mjs') != '' }}
+        run: node systemia/saban/golem-adapter.proof.mjs
