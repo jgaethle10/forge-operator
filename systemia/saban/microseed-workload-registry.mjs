@@ -1,4 +1,6 @@
-import { createHash } from 'node:crypto';
+import fs from 'node:fs';
+import path from 'node:path';
+import { createHash, randomBytes } from 'node:crypto';
 
 const stable=value=>{
   if(Array.isArray(value)) return value.map(stable);
@@ -144,7 +146,109 @@ function observedSessionSanity(payload){
   };
 }
 
+
+function safeDigest(value){
+  const digest=String(value||'').trim().toLowerCase();
+  const m=digest.match(/^sha256:([a-f0-9]{64})$/);
+  if(!m) throw new Error('microseed_blob_digest_invalid');
+  return m[1];
+}
+function blobPath(stateDir,digestHex){
+  if(!stateDir) throw new Error('microseed_blob_state_dir_required');
+  const root=path.resolve(stateDir,'object-store','sha256');
+  fs.mkdirSync(root,{recursive:true,mode:0o700});
+  return path.join(root,digestHex+'.blob');
+}
+function atomicBlob(file,buffer){
+  const tmp=file+'.'+process.pid+'.'+randomBytes(4).toString('hex')+'.tmp';
+  fs.writeFileSync(tmp,buffer,{mode:0o600});
+  fs.renameSync(tmp,file);
+  fs.chmodSync(file,0o600);
+}
+function blobStore(payload,context={}){
+  const operation=String(payload?.operation||'').trim().toLowerCase();
+  const digestHex=safeDigest(payload?.sha256);
+  const expected='sha256:'+digestHex;
+  const file=blobPath(context.stateDir,digestHex);
+
+  if(operation==='put'){
+    const body=Buffer.from(String(payload?.bytes_base64||''),'base64');
+    if(body.byteLength>48*1024) throw new Error('microseed_blob_chunk_too_large');
+    const actual='sha256:'+shaHex(body);
+    if(actual!==expected) throw new Error('microseed_blob_content_hash_mismatch');
+    let deduplicated=false;
+    if(fs.existsSync(file)){
+      const prior=fs.readFileSync(file);
+      if('sha256:'+shaHex(prior)!==expected) throw new Error('microseed_blob_existing_integrity_failed');
+      deduplicated=true;
+    }else{
+      atomicBlob(file,body);
+      const reopened=fs.readFileSync(file);
+      if('sha256:'+shaHex(reopened)!==expected) throw new Error('microseed_blob_reopen_integrity_failed');
+    }
+    return {
+      ok:true,
+      operation:'put',
+      sha256:expected,
+      byte_count:body.byteLength,
+      stored:true,
+      deduplicated,
+    };
+  }
+
+  if(operation==='has'){
+    if(!fs.existsSync(file)) return {ok:true,operation:'has',sha256:expected,present:false};
+    const body=fs.readFileSync(file);
+    const actual='sha256:'+shaHex(body);
+    return {
+      ok:actual===expected,
+      operation:'has',
+      sha256:expected,
+      present:actual===expected,
+      byte_count:body.byteLength,
+      integrity_verified:actual===expected,
+    };
+  }
+
+  if(operation==='get'){
+    if(!fs.existsSync(file)) return {ok:false,operation:'get',sha256:expected,present:false};
+    const body=fs.readFileSync(file);
+    const actual='sha256:'+shaHex(body);
+    if(actual!==expected) throw new Error('microseed_blob_integrity_failed');
+    return {
+      ok:true,
+      operation:'get',
+      sha256:expected,
+      present:true,
+      byte_count:body.byteLength,
+      bytes_base64:body.toString('base64'),
+      integrity_verified:true,
+    };
+  }
+
+  throw new Error('microseed_blob_operation_invalid');
+}
+
 const SPECS=[
+  {
+    workload_class:'systemia.blob-store.v1',
+    description:'Bounded content-addressed put/get/has against the device MicroSeed object namespace.',
+    max_payload_bytes:64*1024,
+    deterministic:false,
+    private_data_allowed:true,
+    preferred_max_memory_mb:96,
+    canary_payload:(()=>{
+      const body=Buffer.from('evercraft-microseed-storage-canary');
+      return {
+        operation:'put',
+        sha256:'sha256:'+shaHex(body),
+        bytes_base64:body.toString('base64'),
+      };
+    })(),
+    validate_canary:r=>r?.ok===true&&r?.operation==='put'&&r?.stored===true&&Boolean(r?.sha256),
+    execute:blobStore,
+  },
+
   {
     workload_class:'systemia.health-probe.v1',
     description:'Bounded device liveness witness.',
@@ -248,11 +352,11 @@ const MAP=new Map(SPECS.map(spec=>[spec.workload_class,Object.freeze(spec)]));
 export function microSeedWorkloadSpec(workloadClass){
   return MAP.get(String(workloadClass||''))||null;
 }
-export function executeRegisteredMicroSeedWorkload(workloadClass,payload){
+export function executeRegisteredMicroSeedWorkload(workloadClass,payload,context={}){
   const spec=microSeedWorkloadSpec(workloadClass);
   if(!spec)return null;
   if(bytes(payload)>spec.max_payload_bytes) throw new Error('microseed_workload_payload_too_large');
-  return spec.execute(payload);
+  return spec.execute(payload,context);
 }
 export function microSeedWorkloadCatalog(){
   return {
