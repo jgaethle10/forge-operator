@@ -1,0 +1,25 @@
+{
+  "schema": "evercraft.edge.acme-contract.v1",
+  "challenge": "dns-01",
+  "authority": "systemia",
+  "allowed_mutation": {
+    "type": "TXT",
+    "name_pattern": "_acme-challenge.<authorized-host>",
+    "ttl_max": 300,
+    "lifetime": "challenge-scoped"
+  },
+  "requirements": [
+    "host belongs to authorized tenant zone",
+    "certificate request maps to registered service",
+    "challenge mutation is receipted",
+    "challenge record removed after validation",
+    "private certificate key never enters DNS serving snapshot",
+    "issuance failure does not alter active certificate"
+  ],
+  "promotion": [
+    "trusted_chain",
+    "hostname_match",
+    "not_expired",
+    "external_tls_canary"
+  ]
+}
