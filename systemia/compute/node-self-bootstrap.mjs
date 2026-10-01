@@ -31,6 +31,27 @@ function readEnv(file){
   }
   return out;
 }
+function setEnvValue(file,key,value){
+  const k=String(key||'').trim();
+  const v=String(value||'').trim();
+  if(!/^[A-Z][A-Z0-9_]{1,127}$/.test(k)) throw new Error('env_key_invalid');
+  if(!v||/[\r\n]/.test(v)) throw new Error('env_value_invalid');
+  const lines=fs.existsSync(file)?fs.readFileSync(file,'utf8').split(/\r?\n/):[];
+  const next=lines.filter(line=>line&&!line.startsWith(k+'='));
+  next.push(k+'='+v);
+  const tmp=file+'.'+process.pid+'.tmp';
+  fs.mkdirSync(path.dirname(file),{recursive:true,mode:0o750});
+  fs.writeFileSync(tmp,next.join('\n')+'\n',{mode:0o600});
+  fs.renameSync(tmp,file);
+}
+function validateBrokerUrl(value){
+  const raw=String(value||'').trim();
+  if(!raw)return '';
+  const url=new URL(raw);
+  const loopback=['127.0.0.1','localhost','::1'].includes(url.hostname);
+  if(url.protocol!=='https:'&&!(loopback&&url.protocol==='http:')) throw new Error('remote_broker_requires_https_or_loopback_proof');
+  return url.toString().replace(/\/$/,'');
+}
 function bootHash(){
   try{
     const value=fs.readFileSync('/proc/sys/kernel/random/boot_id','utf8').trim();
@@ -94,6 +115,7 @@ export function evaluateBootstrap({
     physical_confirmed:physicalConfirmed===true,
     public_edge_admitted:observedPublicEdge(files.public_edge),
     remote_broker_configured:Boolean(String(brokerUrl||'').trim()),
+    outbound_admission_service_installed:files.install?.remote_admission_service==='evercraft-remote-admission.service',
   };
 
   let state='ready_for_systemia_admission';
@@ -136,6 +158,11 @@ export function evaluateBootstrap({
     next_action='supply_systemia_remote_broker_url';
     human_action_required=false;
     reason='outbound_control_lane_not_configured';
+  }else if((role==='private_worker'||role==='virtual_worker')&&!checks.outbound_admission_service_installed){
+    state='outbound_agent_install_required';
+    next_action='rerun_bootstrap_with_--advance_to_install_persistent_outbound_agent';
+    human_action_required=false;
+    reason='persistent_outbound_admission_service_missing';
   }
 
   return {
@@ -192,7 +219,7 @@ function localCapacityEndpoint(nodeReceipt){
 async function main(){
   const root=path.resolve(arg('--root','/var/lib/evercraft/nodeseed'));
   const envFile=path.resolve(arg('--env-file','/etc/evercraft/nodeseed.env'));
-  const brokerUrl=String(arg('--broker-url',process.env.EVERCRAFT_REMOTE_BROKER_URL||'')).trim();
+  const brokerUrl=validateBrokerUrl(arg('--broker-url',process.env.EVERCRAFT_REMOTE_BROKER_URL||''));
   const confirmPhysical=has('--confirm-physical-host');
   const nodeRole=String(arg('--role',process.env.EVERCRAFT_NODE_ROLE||'public_edge')).trim();
   if(!['public_edge','private_worker','virtual_worker'].includes(nodeRole)) throw new Error('node_role_invalid');
@@ -237,6 +264,19 @@ async function main(){
       throw new Error('nodeseed_install_failed:'+String(installed.stderr||installed.stdout||'').slice(0,1000));
     }
     files=fileState(root);
+  }
+
+  if(advance&&brokerUrl&&files.install){
+    ensureRoot('remote_broker_configuration');
+    setEnvValue(envFile,'EVERCRAFT_REMOTE_BROKER_URL',brokerUrl);
+    const enabled=spawnSync('systemctl',['enable','--now','evercraft-remote-admission.service'],{
+      encoding:'utf8',
+      stdio:['ignore','pipe','pipe'],
+      maxBuffer:1024*1024,
+    });
+    if(enabled.status!==0){
+      throw new Error('remote_admission_service_enable_failed:'+String(enabled.stderr||enabled.stdout||'').slice(0,800));
+    }
   }
 
   if(has('--capture-offline')){
