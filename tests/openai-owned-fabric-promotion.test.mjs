@@ -44,6 +44,7 @@ function fixture(){
     mcp_tool_calls_verified:true,
     openai_profile_verified:true,
     read_only_authority_verified:true,
+    openai_public_profile_verified:true,
     external_saas_route_provider_required:false,
     device_fingerprint:'sha256:'+'a'.repeat(64),
     public_edge_admission_receipt_ref:'sha256:'+'b'.repeat(64),
@@ -82,5 +83,7 @@ test('verified canary promotes all OpenAI package pointers to owned Fabric',()=>
   assert.equal(distribution.mcp.url,result.mcp_url);
   assert.equal(distribution.mcp.authority,'owned_public_fabric');
   assert.equal(distribution.mcp.origin_change_requires_new_plugin_submission,true);
+  assert.equal(result.openai_origin_change_requires_new_plugin_submission,false);
+  assert.equal(result.openai_endpoint_path_change_only,true);
   assert.ok(fs.existsSync(path.join(root,'artifacts/openai-owned-fabric-promotion-receipt.json')));
 });
