@@ -158,6 +158,49 @@ test('private worker without broker holds for outbound control but never asks fo
   assert.notEqual(status.next_action,'bind_owned_domain_and_trusted_tls_then_run_--admit-public-edge');
 });
 
+test('operator-authorized Chromebook edge requires public HTTPS but skips physical Node 001 gates',()=>{
+  const files=baseFiles();
+  files.offline=null;
+  files.field=null;
+  files.public_edge=null;
+  const pending=evaluateBootstrap({
+    files,
+    currentBootHash:bootA,
+    physicalConfirmed:false,
+    brokerUrl:'https://fabric-control.example.test',
+    nodeRole:'operator_authorized_public_edge',
+  });
+  assert.equal(pending.state,'public_https_admission_required');
+  assert.equal(pending.next_action,'run_operator_edge_external_canary_then_admit');
+  assert.equal(pending.public_edge_required,true);
+  assert.equal(pending.public_ingress_required,true);
+  assert.equal(pending.inbound_public_port_required,false);
+  assert.equal(pending.chromeos_forwarded_high_port_edge,true);
+  assert.equal(pending.physical_certification_required,false);
+  assert.equal(pending.trust_class,'operator_authorized_public_edge');
+
+  files.public_edge={
+    ready_for_public_edge_enrollment:true,
+    runtime_advertisement_verified:true,
+    public_edge_configuration_valid:true,
+    base_domain:'fabric.systemiacommandcenters.com',
+    public_port:443,
+    certificate_fingerprint256:'AA:BB',
+    external_dns_verified:true,
+    public_reachability_verified:true,
+  };
+  const ready=evaluateBootstrap({
+    files,
+    currentBootHash:bootA,
+    physicalConfirmed:false,
+    brokerUrl:'https://fabric-control.example.test',
+    nodeRole:'operator_authorized_public_edge',
+  });
+  assert.equal(ready.state,'ready_for_systemia_admission');
+  assert.equal(ready.human_action_required,false);
+  assert.equal(ready.trust_class,'operator_authorized_public_edge');
+});
+
 test('public edge role still requires trusted public HTTPS',()=>{
   const files=baseFiles();
   files.public_edge=null;
