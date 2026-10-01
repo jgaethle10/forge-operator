@@ -7,6 +7,7 @@ import {
   normalizeFabricCatalog,
   validateOpenAiChallengeToken,
 } from './fabric-directory.mjs';
+import { nativeOnlyCatalog } from './fabric-local-runtime.mjs';
 
 export const SPECIALIST_HANDOFFS = [
   {
@@ -641,9 +642,11 @@ export async function startSpecialistHandoffRuntime({
   const instanceId = `specialist_handoff_${randomBytes(12).toString('hex')}`;
   let deploymentReceiptRef = '';
   let identityAttestation = null;
-  const normalizedFabricCatalog = Array.isArray(fabricCatalog)
+  const sourceFabricCatalog = Array.isArray(fabricCatalog)
     ? normalizeFabricCatalog(fabricCatalog)
     : loadFabricCatalogFromRepository();
+  const nativeCatalog = nativeOnlyCatalog(sourceFabricCatalog);
+  const normalizedFabricCatalog = nativeCatalog.capabilities;
   const normalizedGatewayUrl = String(gatewayUrl || '').trim();
   const callGateway = gatewayFetch
     || (normalizedGatewayUrl
@@ -692,6 +695,10 @@ export async function startSpecialistHandoffRuntime({
     fabric_directory_enabled: true,
     fabric_mcp_path: normalizedFabricPath,
     fabric_capability_count: normalizedFabricCatalog.length,
+    removed_legacy_base44_connections:
+      nativeCatalog.removed_legacy_base44_connections,
+    removed_legacy_base44_mcp_connections:
+      nativeCatalog.removed_legacy_base44_mcp_connections,
     openai_challenge_path: openAiChallengePath,
     openai_challenge_ready: Boolean(challengeToken),
     gateway_mode: gatewayFetch
