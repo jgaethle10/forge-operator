@@ -213,7 +213,20 @@ if grep -q '^EVERCRAFT_REMOTE_BROKER_URL=.' "${ENV_FILE}"; then
   systemctl restart evercraft-remote-admission.service
 fi
 sleep 2
-systemctl is-active --quiet evercraft-nodeseed.service
+if ! systemctl is-active --quiet evercraft-nodeseed.service; then
+  echo "ERROR: evercraft-nodeseed.service failed to stay active." >&2
+  systemctl --no-pager --full status evercraft-nodeseed.service >&2 || true
+  journalctl -u evercraft-nodeseed.service -n 80 --no-pager >&2 || true
+  echo "[foreground import diagnostic]" >&2
+  runuser -u evercraft -- env \
+    EVERCRAFT_ALLOCATOR_TOKEN="$ALLOCATOR_TOKEN" \
+    EVERCRAFT_BIND_HOST="$BIND_HOST" \
+    EVERCRAFT_ADVERTISE_HOST="$ADVERTISE_HOST" \
+    EVERCRAFT_NODE_ID="$NODE_ID" \
+    EVERCRAFT_NODE_LABELS="$NODE_LABELS" \
+    "$NODE_BIN" -e "import('${INSTALL_ROOT}/systemia/compute/node-seed.mjs').then(()=>console.error('node-seed module import ok')).catch(e=>{console.error(e?.stack||e);process.exit(1)})" >&2 || true
+  exit 6
+fi
 
 echo "Evercraft NodeSeed installed and active."
 if [[ "${NODE_ROLE}" == "private_worker" || "${NODE_ROLE}" == "virtual_worker" ]]; then
