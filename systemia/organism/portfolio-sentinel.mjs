@@ -3,6 +3,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { admitGoalPlan, createGoalState } from './goal-runtime.mjs';
 import { evaluateArchitecturalInvariants } from '../sentinel/architectural-invariants.mjs';
+import { renderCapabilityMesh } from '../capability-mesh/mesh.mjs';
 
 export const PORTFOLIO_SENTINEL = Object.freeze({
   schema: 'evercraft.systemia.workflow.v1',
@@ -417,30 +418,40 @@ export function inspectLocalPortfolio({ rootDir = process.cwd() } = {}) {
     );
   }
 
-  const capabilityMeshResult = safeJson(root, 'systemia/capability-mesh/adoption-coverage.json');
-  if (!capabilityMeshResult.ok) {
+  let mesh = null;
+  try {
+    mesh = renderCapabilityMesh(root);
+  } catch (error) {
     addFinding(report, makeFinding({
-      code: 'capability_mesh_coverage_invalid',
+      code: 'capability_mesh_render_failed',
       severity: 'medium',
-      subject: 'systemia/capability-mesh/adoption-coverage.json',
-      detail: capabilityMeshResult.reason,
-      evidence_refs: ['repo:systemia/capability-mesh/adoption-coverage.json'],
+      subject: 'evercraft-capability-mesh',
+      detail: clean(error?.message || error),
+      evidence_refs: [
+        'repo:systemia/capability-mesh/mesh.mjs',
+        'repo:systemia/capability-mesh/contracts.json',
+        'repo:systemia/capability-mesh/ratchet-baseline.json'
+      ],
       repair_mode: 'capability_contract_migration',
-      repair_command: 'node systemia/capability-mesh/mesh.mjs'
+      repair_command: 'node systemia/capability-mesh/mesh.mjs --check'
     }));
-  } else {
-    const mesh = capabilityMeshResult.value;
+  }
+
+  if (mesh) {
     report.inventory.capability_mesh = mesh.summary || null;
     report.inventory.capability_mesh_ratchet = mesh.ratchet || null;
 
     addCheck(
       report,
-      'capability-mesh-loaded',
+      'capability-mesh-live-render',
       mesh.schema === 'evercraft.capability-mesh.coverage.v1',
       mesh.summary
         ? `${Number(mesh.summary.explicit_contract_count || 0)}/${Number(mesh.summary.public_product_count || 0)} public products have explicit trust-chain contracts`
         : 'capability mesh summary unavailable',
-      ['repo:systemia/capability-mesh/adoption-coverage.json']
+      [
+        'repo:systemia/capability-mesh/mesh.mjs',
+        'repo:systemia/capability-mesh/contracts.json'
+      ]
     );
 
     for (const regression of mesh.ratchet?.blocking_regressions || []) {
@@ -455,7 +466,8 @@ export function inspectLocalPortfolio({ rootDir = process.cwd() } = {}) {
           : 'New Capability Mesh adoption debt appeared after the ratchet baseline. Add a complete product contract before accepting the architectural regression.',
         evidence_refs: [
           'repo:systemia/capability-mesh/ratchet-baseline.json',
-          'repo:systemia/capability-mesh/adoption-coverage.json'
+          'repo:systemia/capability-mesh/contracts.json',
+          'repo:registry/public-products.json'
         ],
         repair_mode: specialistOnly ? 'human_review' : 'capability_contract_migration',
         human_gate_required: specialistOnly,
@@ -474,8 +486,9 @@ export function inspectLocalPortfolio({ rootDir = process.cwd() } = {}) {
           ? 'Product has a public specialist door but no explicit Capability Mesh trust-chain contract.'
           : 'Public product has no explicit Capability Mesh trust-chain contract.',
         evidence_refs: [
-          'repo:systemia/capability-mesh/adoption-coverage.json',
-          'repo:systemia/capability-mesh/contracts.json'
+          'repo:systemia/capability-mesh/contracts.json',
+          'repo:registry/public-products.json',
+          'repo:public/.well-known/evercraft-direct-door-readiness.json'
         ],
         repair_mode: 'capability_contract_migration',
         human_gate_required: false,
@@ -490,7 +503,10 @@ export function inspectLocalPortfolio({ rootDir = process.cwd() } = {}) {
         severity: 'medium',
         subject: productKey,
         detail: `Product trust-chain contract is incomplete: ${(row?.gaps || []).join(', ') || 'unspecified gaps'}.`,
-        evidence_refs: ['repo:systemia/capability-mesh/adoption-coverage.json'],
+        evidence_refs: [
+          'repo:systemia/capability-mesh/contracts.json',
+          'repo:systemia/capability-mesh/mesh.mjs'
+        ],
         repair_mode: 'capability_contract_migration',
         metadata: { product_key: productKey, gaps: row?.gaps || [] }
       }));
@@ -503,7 +519,10 @@ export function inspectLocalPortfolio({ rootDir = process.cwd() } = {}) {
         severity: 'medium',
         subject: productKey,
         detail: `Product has an explicit ${row?.adoption_stage || 'non-shared'} contract, but shared Passport/Context/Meter/Execution integration is not claimed.`,
-        evidence_refs: ['repo:systemia/capability-mesh/adoption-coverage.json'],
+        evidence_refs: [
+          'repo:systemia/capability-mesh/contracts.json',
+          'repo:systemia/capability-mesh/mesh.mjs'
+        ],
         repair_mode: 'capability_contract_migration',
         metadata: { product_key: productKey, adoption_stage: row?.adoption_stage || null }
       }));
@@ -516,8 +535,8 @@ export function inspectLocalPortfolio({ rootDir = process.cwd() } = {}) {
         subject: specialist.specialist_slug,
         detail: 'Specialist door exists outside the public product index. Review whether it should remain held/internal or be separately admitted; never auto-publish it.',
         evidence_refs: [
-          'repo:systemia/capability-mesh/adoption-coverage.json',
-          'repo:public/.well-known/evercraft-direct-door-readiness.json'
+          'repo:public/.well-known/evercraft-direct-door-readiness.json',
+          'repo:registry/public-products.json'
         ],
         repair_mode: 'human_review',
         human_gate_required: true,
