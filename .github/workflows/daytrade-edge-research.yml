@@ -5,12 +5,14 @@ on:
     paths:
       - "systemia/daytrade-lens/**"
       - "systemia/rockies/market-sources/**"
+      - "systemia/saban/multiplication-registry.json"
       - ".github/workflows/daytrade-edge-research.yml"
   push:
     branches: [main]
     paths:
       - "systemia/daytrade-lens/**"
       - "systemia/rockies/market-sources/**"
+      - "systemia/saban/multiplication-registry.json"
       - ".github/workflows/daytrade-edge-research.yml"
   schedule:
     - cron: "15 23 * * 1-5"
@@ -59,7 +61,21 @@ jobs:
           node systemia/daytrade-lens/edge-execution-translation.test.mjs
           node systemia/daytrade-lens/edge-pilot-readiness.test.mjs
           node systemia/daytrade-lens/edge-cluster-adversarial-summary.test.mjs
+          node systemia/daytrade-lens/saban-learning-adapter.test.mjs
+          node systemia/saban/contract-doctor.mjs
           node systemia/daytrade-lens/sec-edge-backfill-contract.test.mjs
+
+      - name: Run Saban DayTrade learning red team
+        run: |
+          mkdir -p artifacts/daytrade-edge
+          node systemia/saban/multiplier.mjs \
+            --software daytrade-learning-lab \
+            --auto \
+            --execute \
+            --reconcile \
+            --state artifacts/daytrade-edge/saban-learning-state.json
+          cp artifacts/saban-multiplier/daytrade-learning-lab-latest.json \
+            artifacts/daytrade-edge/saban-learning-latest.json
 
       - name: Run real SEC to Alpaca event study
         if: github.event_name != 'pull_request'
@@ -72,6 +88,18 @@ jobs:
           EDGE_LAB_SEC_PUBLICATION_DELAY_MINUTES: "10"
           EDGE_LAB_TRANSACTION_COST_BPS: "5"
         run: node systemia/daytrade-lens/sec-edge-backfill.mjs
+
+      - name: Upload Saban DayTrade learning receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: daytrade-saban-learning-${{ github.run_id }}
+          path: |
+            artifacts/saban-multiplier/daytrade-learning-lab-latest.json
+            artifacts/saban-multiplier/contract-doctor.json
+            artifacts/daytrade-edge/saban-learning-state.json
+          if-no-files-found: warn
+          retention-days: 30
 
       - name: Upload Edge Lab research receipts
         if: always() && github.event_name != 'pull_request'
