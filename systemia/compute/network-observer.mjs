@@ -357,6 +357,74 @@ function chromeOsBoundary(interfaces) {
   };
 }
 
+export function diagnoseNodeIngress({
+  fabricLocal,
+  edgeLocal,
+  routerEnv = {},
+  services = {},
+  chromeBoundary = { likely_crostini: false },
+  routerMapReceipt = null,
+} = {}) {
+  if (!fabricLocal?.ok) {
+    return {
+      state: 'fabric_loopback_unhealthy',
+      next_boundary: 'evercraft_fabric_service_or_runtime',
+    };
+  }
+  if (!edgeLocal?.ok) {
+    return {
+      state: 'local_https_edge_unhealthy',
+      next_boundary: 'caddy_tls_or_reverse_proxy',
+    };
+  }
+  if (
+    routerEnv.EVERCRAFT_ROUTER_GATEWAY &&
+    routerEnv.EVERCRAFT_ROUTER_LAN_HOST &&
+    !services.router_map_timer?.active
+  ) {
+    return {
+      state: 'router_mapping_automation_unhealthy',
+      next_boundary: 'evercraft_router_map_timer',
+    };
+  }
+  if (routerMapReceipt?.host_forward_preflight?.ready === false) {
+    return {
+      state: 'chromeos_host_forward_unreachable',
+      next_boundary: 'chromeos_linux_port_forwarding',
+    };
+  }
+  if (
+    routerMapReceipt &&
+    routerMapReceipt.host_forward_preflight?.ready === true &&
+    routerMapReceipt.ok === false
+  ) {
+    return {
+      state: 'router_port_mapping_failed',
+      next_boundary: 'upnp_nat_pmp_or_pcp_mapping',
+    };
+  }
+  if (
+    routerMapReceipt?.ok === true &&
+    routerMapReceipt.host_forward_preflight?.ready === true &&
+    chromeBoundary.likely_crostini
+  ) {
+    return {
+      state: 'local_ingress_chain_reasserted_external_route_unverified',
+      next_boundary: 'independent_external_canary',
+    };
+  }
+  if (chromeBoundary.likely_crostini) {
+    return {
+      state: 'local_stack_healthy_chromeos_boundary_unverified',
+      next_boundary: 'chromeos_host_forwarding_then_external_canary',
+    };
+  }
+  return {
+    state: 'local_stack_healthy_external_route_unverified',
+    next_boundary: 'independent_external_canary',
+  };
+}
+
 export async function observeNodeNetwork() {
   const interfaces = interfacesFromOs();
   const routes = parseDefaultRoutes();
@@ -407,66 +475,14 @@ export async function observeNodeNetwork() {
     router_map_service: unitState('evercraft-router-map.service'),
   };
 
-  const diagnosis = (() => {
-    if (!fabricLocal.ok) {
-      return {
-        state: 'fabric_loopback_unhealthy',
-        next_boundary: 'evercraft_fabric_service_or_runtime',
-      };
-    }
-    if (!edgeLocal.ok) {
-      return {
-        state: 'local_https_edge_unhealthy',
-        next_boundary: 'caddy_tls_or_reverse_proxy',
-      };
-    }
-    if (
-      routerEnv.EVERCRAFT_ROUTER_GATEWAY &&
-      routerEnv.EVERCRAFT_ROUTER_LAN_HOST &&
-      !services.router_map_timer.active
-    ) {
-      return {
-        state: 'router_mapping_automation_unhealthy',
-        next_boundary: 'evercraft_router_map_timer',
-      };
-    }
-    if (routerMapReceipt?.host_forward_preflight?.ready === false) {
-      return {
-        state: 'chromeos_host_forward_unreachable',
-        next_boundary: 'chromeos_linux_port_forwarding',
-      };
-    }
-    if (
-      routerMapReceipt &&
-      routerMapReceipt.host_forward_preflight?.ready === true &&
-      routerMapReceipt.ok === false
-    ) {
-      return {
-        state: 'router_port_mapping_failed',
-        next_boundary: 'upnp_nat_pmp_or_pcp_mapping',
-      };
-    }
-    if (
-      routerMapReceipt?.ok === true &&
-      routerMapReceipt.host_forward_preflight?.ready === true &&
-      chromeBoundary.likely_crostini
-    ) {
-      return {
-        state: 'local_ingress_chain_reasserted_external_route_unverified',
-        next_boundary: 'independent_external_canary',
-      };
-    }
-    if (chromeBoundary.likely_crostini) {
-      return {
-        state: 'local_stack_healthy_chromeos_boundary_unverified',
-        next_boundary: 'chromeos_host_forwarding_then_external_canary',
-      };
-    }
-    return {
-      state: 'local_stack_healthy_external_route_unverified',
-      next_boundary: 'independent_external_canary',
-    };
-  })();
+  const diagnosis = diagnoseNodeIngress({
+    fabricLocal,
+    edgeLocal,
+    routerEnv,
+    services,
+    chromeBoundary,
+    routerMapReceipt,
+  });
 
   const body = {
     schema: 'evercraft.node-network-observation.v1',
