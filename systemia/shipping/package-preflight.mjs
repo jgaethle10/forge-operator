@@ -79,7 +79,7 @@ export function sanitizeClientFilename(value, { fallback = 'Evercraft Deliverabl
     .replace(/[._-]{2,}/g, ' ')
     .replace(/\s+/g, ' ')
     .trim()
-    .replace(/[. ]+$/g, '');
+    .replace(/^[._ -]+|[._ -]+$/g, '');
   if (!stem) stem = fallback;
   const safeExt = ext.replace(/[^.a-z0-9]/g, '');
   return (stem + safeExt).slice(0, 180);
