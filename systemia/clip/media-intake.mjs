@@ -113,13 +113,20 @@ export function inspectClipMediaPackage(manifest){
   }else{
     try{
       const receipt=readJson(renderPath);
-      if(receipt.schema!=='evercraft.fallen.timeline-export-receipt.v1'){
+      if(receipt.schema==='evercraft.fallen.timeline-export-receipt.v1'){
+        if(receipt.sha256!==manifest.media.sha256) reasons.push('render_receipt_media_digest_mismatch');
+        if(receipt.projectId!==manifest.sourceProjectId) reasons.push('render_receipt_project_mismatch');
+        if(receipt.projectVersion!==manifest.sourceProjectVersion) reasons.push('render_receipt_version_mismatch');
+        if(receipt.publicationAuthorityGranted!==false) reasons.push('render_receipt_publication_boundary_invalid');
+      }else if(receipt.schema==='evercraft.fallen.distributed-render-receipt.v1'){
+        if(receipt.output_sha256!==manifest.media.sha256) reasons.push('render_receipt_media_digest_mismatch');
+        if(receipt.stage_id!==manifest.sourceProjectId) reasons.push('render_receipt_project_mismatch');
+        if(receipt.boundaries?.every_frame_sha256_verified!==true) reasons.push('render_receipt_frame_verification_missing');
+        if(receipt.boundaries?.no_gap_no_duplicate_gate!==true) reasons.push('render_receipt_frame_lattice_invalid');
+        if(receipt.boundaries?.publication_authority!==false) reasons.push('render_receipt_publication_boundary_invalid');
+      }else{
         reasons.push('render_receipt_schema_invalid');
       }
-      if(receipt.sha256!==manifest.media.sha256) reasons.push('render_receipt_media_digest_mismatch');
-      if(receipt.projectId!==manifest.sourceProjectId) reasons.push('render_receipt_project_mismatch');
-      if(receipt.projectVersion!==manifest.sourceProjectVersion) reasons.push('render_receipt_version_mismatch');
-      if(receipt.publicationAuthorityGranted!==false) reasons.push('render_receipt_publication_boundary_invalid');
     }catch(error){
       reasons.push('render_receipt_parse_failed');
     }
