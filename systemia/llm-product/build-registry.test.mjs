@@ -12,6 +12,7 @@ assert.ok(output.sources.estate_snapshot_count>=100);
 assert.ok(output.sources.systemia_module_count>0);
 assert.ok(output.sources.plugin_package_count>0);
 assert.ok(output.sources.workflow_count>0);
+assert.equal(output.sources.open_runtime_incident_count,1);
 
 const ids=output.entries.map((row)=>row.stable_id);
 assert.equal(new Set(ids).size,ids.length,'stable IDs must be unique');
@@ -31,6 +32,12 @@ const forensiscope=output.entries.find((row)=>row.stable_id==='product:forensisc
 assert.ok(forensiscope);
 assert.ok(forensiscope.problem_language.length>0);
 assert.ok(forensiscope.machine_endpoint);
+
+const fabric=output.entries.find((row)=>row.stable_id==='platform:evercraft-fabric');
+assert.ok(fabric,'Fabric platform must be registered');
+assert.ok(fabric.blockers.some((x)=>/mcp_sse_probe_404/.test(x)),'fresh external Fabric failure must remain a registry blocker');
+const fabricDebt=output.debt_queue.find((row)=>row.stable_id==='platform:evercraft-fabric');
+assert.equal(fabricDebt?.priority,'P0_SHARED_INFRA');
 
 const fallen=output.entries.find((row)=>row.stable_id==='media:fallen');
 assert.ok(fallen,'historical seed must keep Fallen visible');
