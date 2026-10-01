@@ -29,6 +29,7 @@ import { runNarrativeBlindControlLab } from "./edge-narrative-blind-control.mjs"
 import { runHorizonCoherenceLab } from "./edge-horizon-coherence.mjs";
 import { runWalkForwardLab } from "./edge-walk-forward.mjs";
 import { runExecutionTranslationLab } from "./edge-execution-translation.mjs";
+import { runQuoteMicrostructureLab } from "./edge-quote-microstructure.mjs";
 import { buildClusterAdversarialSummary } from "./edge-cluster-adversarial-summary.mjs";
 import { evaluatePilotReadiness } from "./edge-pilot-readiness.mjs";
 
@@ -77,6 +78,27 @@ async function main() {
 
   const reportFile = path.join(artifactDir, "sec-edge-research.json");
   fs.writeFileSync(reportFile, JSON.stringify(report, null, 2) + "\n");
+
+  const quoteSignalKeys = [...new Set([
+    ...(report.evaluations || [])
+      .filter((row) => row.status === "RESEARCH_CANDIDATE")
+      .map((row) => row.signal_key),
+    ...canonicalEnrollment.cohorts.map((row) => row.signal_key),
+  ].filter(Boolean))];
+  const quoteMicrostructureLab = await runQuoteMicrostructureLab(report, {
+    key: process.env.ALPACA_TRADING || "",
+    secret: process.env.ALPACA_TRADING_SECRET || "",
+    feed: process.env.EDGE_LAB_ALPACA_QUOTE_FEED || "iex",
+    signal_keys: quoteSignalKeys,
+  });
+  const quoteMicrostructureFile = path.join(
+    artifactDir,
+    "sec-edge-quote-microstructure.json"
+  );
+  fs.writeFileSync(
+    quoteMicrostructureFile,
+    JSON.stringify(quoteMicrostructureLab, null, 2) + "\n"
+  );
 
   const searchBurden = summarizeResearchSearchBurden(report);
   const searchBurdenFile = path.join(
@@ -388,6 +410,7 @@ async function main() {
     horizonCoherenceLab,
     walkForwardLab,
     executionTranslationLab,
+    quoteMicrostructureLab,
     currentRunForwardClusterScores,
     durableForwardClusterScores: durableClusterScores,
   });
@@ -411,6 +434,7 @@ async function main() {
     benchmarkLab,
     walkForwardLab,
     executionTranslationLab,
+    quoteMicrostructureLab,
     forwardScores: durableScores,
     forwardClusterScores: durableClusterScores,
     durableState,
@@ -446,6 +470,10 @@ async function main() {
     measurements: report.measurement_count || 0,
     signal_families: report.family_count || 0,
     research_candidates: report.research_candidate_count || 0,
+    quote_microstructure_status: quoteMicrostructureLab.status,
+    quote_microstructure_feed: quoteMicrostructureLab.feed,
+    quote_microstructure_scope: quoteMicrostructureLab.quote_scope,
+    quote_microstructure_coverage: quoteMicrostructureLab.coverage,
     search_burden_signal_families: searchBurden.signal_family_count || 0,
     search_burden_candidate_share: searchBurden.candidate_share || 0,
     candidate_clusters: adversarial.candidate_cluster_count || 0,
@@ -504,6 +532,7 @@ async function main() {
       observations: observationFile,
       research: reportFile,
       search_burden: searchBurdenFile,
+      quote_microstructure: quoteMicrostructureFile,
       stress_lab: stressFile,
       breaker_lab: breakerFile,
       timing_fragility_lab: timingFile,
