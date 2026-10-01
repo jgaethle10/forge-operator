@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "Evercraft ChromeOS Host Boundary Bridge",
+  "version": "0.1.0",
+  "description": "Reads a narrow ChromeOS host setting boundary for an explicitly paired Evercraft node.",
+  "automation": {
+    "desktop": true
+  },
+  "permissions": [
+    "alarms",
+    "storage",
+    "tabs"
+  ],
+  "host_permissions": [
+    "http://127.0.0.1:18081/*",
+    "http://localhost:18081/*"
+  ],
+  "background": {
+    "service_worker": "service-worker.js",
+    "type": "module"
+  },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  }
+}
