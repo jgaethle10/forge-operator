@@ -475,6 +475,12 @@ export class VoluntaryComputeMarket {
       ...lease,
       market:this.market,
       execution_ready:runtime?.execution_ready===true,
+      capacity_endpoint:
+        runtime?.execution_ready===true &&
+        transport==='evercraft-nodeseed' &&
+        endpoint
+          ? String(endpoint)
+          : null,
       zero_cost:agreement.terms?.economics?.zero_cost===true,
       receipt:lease.receipt_hash,
     };
