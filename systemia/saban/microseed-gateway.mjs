@@ -185,6 +185,59 @@ export async function startMicroSeedGateway({
         });
       }
 
+      if(req.method==='POST'&&req.url==='/v1/calibrate'){
+        const body=await readJson(req);
+        const deviceId=clean(body?.device_id);
+        if(!deviceId) return send(res,400,{ok:false,error:'device_id_required'});
+        const record=registry.get(deviceId);
+        const manifest=registry.manifest(deviceId);
+        const conformance=registry.conformance(deviceId);
+        if(!record||!manifest) return send(res,404,{ok:false,error:'microseed_device_not_registered'});
+
+        const trustDecision=evaluateAmbientTrust(record,{now:new Date()});
+        if(!trustDecision.eligible){
+          return send(res,403,{
+            ok:false,
+            error:'microseed_device_not_eligible',
+            trust_state:trustDecision.state,
+            reason:trustDecision.reason,
+          });
+        }
+        if(!body.telemetry||typeof body.telemetry!=='object'){
+          return send(res,400,{ok:false,error:'calibration_telemetry_required'});
+        }
+
+        const calibration=await runMicroSeedCalibration({
+          manifest,
+          conformance,
+          trustDecision,
+          samplesPerWorkload:body.samples_per_workload,
+          maxTotalSamples:body.max_total_samples,
+          execute:({workload_class,idempotency_key,payload})=>
+            executeAndLearn({
+              manifest,
+              trustDecision,
+              telemetry:body.telemetry,
+              request:{
+                device_id:deviceId,
+                workload_class,
+                idempotency_key,
+                payload,
+                requested_memory_mb:64,
+                requested_cpu_fraction:0.05,
+              },
+            }),
+          now:new Date(),
+        });
+        return send(res,200,{
+          ok:true,
+          ...calibration,
+          performance_ledger_updated:true,
+          authorization_changed:false,
+          conformance_changed:false,
+        });
+      }
+
       if(req.method==='POST'&&req.url==='/v1/execute'){
         if(activeGlobal>=Math.max(1,Number(globalMaxConcurrency||8))){
           return send(res,429,{ok:false,error:'microseed_gateway_global_concurrency_limit'});
