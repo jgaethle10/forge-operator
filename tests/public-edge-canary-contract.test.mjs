@@ -63,4 +63,12 @@ test('external canary rejects a specialist edge that still routes through Base44
     workflow.includes('.base44_transport_enabled == false'),
     'public specialist edge must prove Base44 transport is disabled'
   );
+  assert.ok(
+    workflow.includes('handoff_url // ""'),
+    'specialist tool canary must inspect returned handoff URLs'
+  );
+  assert.ok(
+    workflow.includes('test("base44\\\\.app"; "i")'),
+    'specialist tool canary must reject Base44 handoff URLs'
+  );
 });
