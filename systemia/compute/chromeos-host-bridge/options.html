@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Evercraft Host Boundary Bridge</title>
+  <style>
+    body { font: 15px system-ui, sans-serif; margin: 32px; max-width: 760px; line-height: 1.45; }
+    label { display: block; margin: 18px 0 6px; font-weight: 650; }
+    input { width: 100%; box-sizing: border-box; padding: 10px; }
+    button { margin-top: 18px; padding: 10px 14px; }
+    code, pre { background: #f3f3f3; border-radius: 6px; padding: 2px 5px; }
+    pre { padding: 12px; overflow: auto; }
+    .muted { opacity: .72; }
+  </style>
+</head>
+<body>
+  <h1>Evercraft ChromeOS Host Boundary Bridge</h1>
+  <p>This companion reads only the admitted Crostini port-forwarding state and reports it to the paired Evercraft node. It does not take screenshots, persist the accessibility tree, or accept remote UI-control commands.</p>
+
+  <label for="endpoint">Local receiver</label>
+  <input id="endpoint" value="http://127.0.0.1:18081/v1/chromeos-host-boundary/report">
+
+  <label for="token">Pairing token</label>
+  <input id="token" type="password" autocomplete="off" placeholder="Paste the token produced by the Evercraft installer">
+
+  <label><input id="enabled" type="checkbox" style="width:auto"> Enable resident checks</label>
+
+  <button id="save">Save pairing</button>
+  <button id="check">Check now</button>
+
+  <p class="muted">Only TCP 18080 and TCP 8443 are admitted by the receiver in this first version.</p>
+  <pre id="status">Loading…</pre>
+  <script src="options.js"></script>
+</body>
+</html>
