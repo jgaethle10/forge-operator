@@ -21,6 +21,7 @@ import { runTailDependenceLab } from "./edge-tail-dependence.mjs";
 import { runCscvPboLab } from "./edge-cscv-pbo.mjs";
 import { runEdgeBreakerLab } from "./edge-breaker-lab.mjs";
 import { runTimingFragilityLab } from "./edge-timing-fragility.mjs";
+import { runVolatilityDelayInteractionLab } from "./edge-volatility-delay-interaction.mjs";
 import { runOverlapFragilityLab } from "./edge-overlap-fragility.mjs";
 import { runMatchedPlaceboLab } from "./edge-matched-placebo.mjs";
 import { runRandomPlaceboLab } from "./edge-random-placebo.mjs";
@@ -183,6 +184,21 @@ async function main() {
   });
   const timingFile = path.join(artifactDir, "sec-edge-timing-fragility.json");
   fs.writeFileSync(timingFile, JSON.stringify(timingLab, null, 2) + "\n");
+
+  const volatilityDelayInteractionLab =
+    runVolatilityDelayInteractionLab(report, {
+      transaction_cost_bps: Number(
+        process.env.EDGE_LAB_TRANSACTION_COST_BPS || 5
+      ),
+    });
+  const volatilityDelayInteractionFile = path.join(
+    artifactDir,
+    "sec-edge-volatility-delay-interaction.json"
+  );
+  fs.writeFileSync(
+    volatilityDelayInteractionFile,
+    JSON.stringify(volatilityDelayInteractionLab, null, 2) + "\n"
+  );
 
   const overlapLab = runOverlapFragilityLab(report, {
     transaction_cost_bps: Number(process.env.EDGE_LAB_TRANSACTION_COST_BPS || 5),
@@ -586,6 +602,8 @@ async function main() {
     stress_survivors: stressLab.stress_survivor_count || 0,
     breaker_survivors: breakerLab.breaker_survivor_count || 0,
     timing_robust_diagnostics: timingLab.timing_robust_count || 0,
+    volatility_delay_interaction_status_counts:
+      volatilityDelayInteractionLab.status_counts || {},
     overlap_robust_diagnostics: overlapLab.overlap_robust_count || 0,
     placebo_separated_diagnostics: placeboLab.placebo_separated_count || 0,
     random_placebo_separated_diagnostics: randomPlaceboLab.separated_count || 0,
@@ -627,6 +645,7 @@ async function main() {
       stress_lab: stressFile,
       breaker_lab: breakerFile,
       timing_fragility_lab: timingFile,
+      volatility_delay_interaction_lab: volatilityDelayInteractionFile,
       overlap_fragility_lab: overlapFile,
       matched_placebo_lab: placeboFile,
       random_placebo_lab: randomPlaceboFile,
