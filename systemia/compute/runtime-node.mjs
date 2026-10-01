@@ -20,6 +20,7 @@ import {
 import { startRivetReportRuntime } from '../rivet/report-runtime.mjs';
 import { startAliEvSourceRuntime } from '../aliev/source-runtime.mjs';
 import { startSpecialistHandoffRuntime } from '../mcp/specialist-handoff-runtime.mjs';
+import { startFabricLocalRuntime } from '../mcp/fabric-local-runtime.mjs';
 import { startPublicEdgeRuntime } from '../network/public-edge-runtime.mjs';
 import { startFederatedServiceBridge } from '../network/federated-service-bridge.mjs';
 import { startEvercraftHomeServer } from '../evercraft-home/server.mjs';
@@ -84,6 +85,8 @@ function bearer(req) {
 const BRIDGED_WORKLOADS = new Set([
   'systemia.evercraft-web-browser.v1',
   'systemia.specialist-handoff-mcp.v1',
+  'systemia.fabric-local-mcp.v1',
+  'systemia.rivet-report-runtime.v1',
 ]);
 
 const BRIDGE_REQUEST_HEADERS = new Set([
@@ -127,10 +130,31 @@ function bridgeServiceOrigin(entry) {
   if (entry?.workload_class === 'systemia.evercraft-web-browser.v1') {
     return String(entry?.runtime?.localPublicUrl || '');
   }
-  if (entry?.workload_class === 'systemia.specialist-handoff-mcp.v1') {
+  if (
+    entry?.workload_class === 'systemia.specialist-handoff-mcp.v1' ||
+    entry?.workload_class === 'systemia.fabric-local-mcp.v1'
+  ) {
     return String(entry?.runtime?.url || '');
   }
+  if (entry?.workload_class === 'systemia.rivet-report-runtime.v1') {
+    return String(entry?.runtime?.service_url || '');
+  }
   return '';
+}
+
+function bridgeRouteAllowed(entry, method, requestPath) {
+  if (entry?.workload_class !== 'systemia.rivet-report-runtime.v1') return true;
+  if (method === 'GET' && requestPath === '/health') return true;
+  if (method === 'POST' && requestPath === '/v1/reports') return true;
+  if (
+    method === 'GET' &&
+    /^\/v1\/report-jobs\/[^/?#]+\/progress$/.test(requestPath)
+  ) return true;
+  if (
+    method === 'GET' &&
+    /^\/v1\/reports\/[^/?#]+(?:\/source)?$/.test(requestPath)
+  ) return true;
+  return false;
 }
 
 function assertLoopbackBridgeOrigin(value) {
@@ -161,6 +185,9 @@ async function bridgeResidentHttp(entry, input = {}) {
   }
   const origin = assertLoopbackBridgeOrigin(bridgeServiceOrigin(entry));
   const requestPath = normalizeBridgePath(input.path);
+  if (!bridgeRouteAllowed(entry, method, requestPath)) {
+    throw new Error('rivet_report_bridge_route_not_allowed');
+  }
   const target = new URL(requestPath, origin);
   const encoded = String(input.body_base64 || '');
   if (encoded.length > 12 * 1024 * 1024) throw new Error('resident_service_bridge_body_too_large');
@@ -726,6 +753,7 @@ export async function startEvercraftComputeNode({
     'systemia.aliev-source-runtime.v1',
     'systemia.rivet-report-runtime.v1',
     'systemia.specialist-handoff-mcp.v1',
+    'systemia.fabric-local-mcp.v1',
     'systemia.public-edge.v1',
     'systemia.federated-service-bridge.v1',
     'systemia.evercraft-home.v1',
@@ -1429,7 +1457,6 @@ export async function startEvercraftComputeNode({
             public_health_path: '/health',
             report_path: runtime.report_path,
             progress_path_template: runtime.progress_path_template,
-            source_url: sourceUrl,
             instance_id: runtime.instance_id,
             authenticated_report_api: true,
           };
@@ -1642,6 +1669,63 @@ export async function startEvercraftComputeNode({
             route_protocol: 'evercraft.public-route.v1',
             mode,
             instance_id: runtime.instanceId,
+          };
+          const receipt = chain.issue('service.started', {
+            lease_id: body.lease_id,
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            result_schema: result.schema,
+            instance_id: runtime.instanceId,
+          });
+          return send(res, 200, {
+            ok: true,
+            node_id: nodeId,
+            workload_class: body.workload_class,
+            result,
+            receipt,
+          });
+        }
+
+        if (workloadClass === 'systemia.fabric-local-mcp.v1') {
+          if (!deviceIdentity) {
+            return send(res, 422, { error: 'fabric_local_device_identity_required' });
+          }
+          const runtime = await startFabricLocalRuntime({
+            host: '127.0.0.1',
+            port: Number(body.input?.port || 0),
+            catalog: Array.isArray(body.input?.fabric_catalog)
+              ? body.input.fabric_catalog
+              : null,
+            challengeToken: String(body.input?.openai_challenge_token || ''),
+            nodeAttestationProvider: async (nonce) => createNodeAttestation({
+              identity: deviceIdentity,
+              nonce,
+              supportedWorkloads: [...supported],
+              placementLabels: nodePlacementLabels,
+              processStartedAt,
+              bootIdHash: hostBootIdHash,
+            }),
+          });
+          const serviceId = `svc_${randomBytes(8).toString('hex')}`;
+          services.set(serviceId, {
+            lease_id: body.lease_id,
+            workload_class: body.workload_class,
+            runtime,
+            service: runtime,
+          });
+          const result = {
+            schema: 'evercraft.compute.resident-service.v1',
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            service_url: null,
+            local_url: runtime.url,
+            health_path: `/v1/services/${serviceId}/health`,
+            public_route_required: true,
+            public_health_path: '/health',
+            instance_id: runtime.instanceId,
+            outbound_service_relay_supported: true,
+            operator_edge_attestation_supported: true,
+            allocator_authority_exposed: false,
           };
           const receipt = chain.issue('service.started', {
             lease_id: body.lease_id,

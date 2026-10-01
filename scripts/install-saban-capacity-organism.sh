@@ -204,6 +204,39 @@ TimeoutStartSec=20s
 WantedBy=multi-user.target
 EOF
 
+cat >/etc/systemd/system/evercraft-saban-pairing-api.service <<EOF
+[Unit]
+Description=Evercraft Saban loopback MicroSeed pairing enrollment API
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=$RUN_USER
+Group=$RUN_GROUP
+WorkingDirectory=$REPO_ROOT
+Environment=SABAN_AMBIENT_STATE_DIR=$STATE_DIR
+Environment=SABAN_ALLOW_COMMERCIAL_CAPACITY=0
+ExecStart=$NODE_BIN $REPO_ROOT/systemia/saban/microseed-pairing-api-runner.mjs --root $STATE_DIR --host 127.0.0.1 --port 8794
+Restart=always
+RestartSec=5s
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=read-only
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+RestrictRealtime=true
+ReadWritePaths=$STATE_DIR
+TimeoutStartSec=20s
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
 cat >/etc/systemd/system/evercraft-saban-probation.service <<EOF
 [Unit]
 Description=Evercraft Saban MicroSeed probation and calibration organism
@@ -292,6 +325,7 @@ systemctl daemon-reload
 systemctl enable --now evercraft-saban-capacity.timer
 systemctl enable --now evercraft-saban-microseed-gateway.service
 systemctl enable --now evercraft-saban-work-api.service
+systemctl enable --now evercraft-saban-pairing-api.service
 systemctl enable --now evercraft-saban-probation.timer
 systemctl enable --now evercraft-saban-dispatch.timer
 systemctl start evercraft-saban-capacity.service
@@ -304,6 +338,7 @@ echo "State: $STATE_DIR/capacity-organism-state.json"
 echo "Registry: $STATE_DIR/registry"
 echo "MicroSeed gateway: http://127.0.0.1:8791"
 echo "Product work API: http://127.0.0.1:8793"
+echo "Pairing enrollment API: http://127.0.0.1:8794 (loopback only)"
 echo "Probation timer: evercraft-saban-probation.timer"
 echo "Dispatch timer: evercraft-saban-dispatch.timer"
 echo "Gateway token file: $GATEWAY_TOKEN_FILE"

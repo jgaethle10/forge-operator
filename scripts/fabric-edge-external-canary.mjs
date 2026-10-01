@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import dns from 'node:dns/promises';
 import tls from 'node:tls';
+import net from 'node:net';
 import { createHash, randomBytes } from 'node:crypto';
 import { verifyNodeAttestation } from '../systemia/compute/device-identity.mjs';
 import { classifyPublicEdgeIngress } from '../systemia/network/public-edge-ingress-watch.mjs';
@@ -18,6 +19,28 @@ const url=new URL(origin);
 if(url.protocol!=='https:') throw new Error('operator_public_edge_requires_https');
 if(/(^|\.)base44\.app$/i.test(url.hostname)) throw new Error('operator_public_edge_must_not_use_base44');
 if(url.pathname!=='/'&&url.pathname!=='') throw new Error('origin_must_not_include_path');
+
+async function inspectTcp(hostname,port,timeoutMs=4000){
+  return await new Promise((resolve)=>{
+    const startedAt=Date.now();
+    const socket=net.createConnection({host:hostname,port});
+    let settled=false;
+    const done=(reachable,error=null)=>{
+      if(settled) return;
+      settled=true;
+      socket.destroy();
+      resolve({
+        port,
+        reachable,
+        latency_ms:reachable?Date.now()-startedAt:null,
+        error:error?clean(error):null,
+      });
+    };
+    socket.setTimeout(timeoutMs,()=>done(false,'timeout'));
+    socket.once('connect',()=>done(true));
+    socket.once('error',(error)=>done(false,error?.code||error?.message||error));
+  });
+}
 
 async function inspectTls(hostname){
   return await new Promise((resolve,reject)=>{
@@ -117,6 +140,33 @@ try{
   if(!addresses.length) throw new Error('public_dns_no_ipv4');
   receipt.dns_ipv4=addresses;
   receipt.checks.public_dns=true;
+
+  // Keep authoritative DNS provenance in the failure receipt. This lets the
+  // Repair Unit distinguish a dead application edge from a DNS control-plane
+  // problem without asking the founder to reconstruct the zone by hand.
+  const zone=url.hostname.split('.').slice(-2).join('.');
+  receipt.dns_zone=zone;
+  try{
+    receipt.dns_nameservers=(await dns.resolveNs(zone)).sort();
+  }catch(nsError){
+    receipt.dns_nameservers=[];
+    receipt.dns_nameserver_error=clean(nsError?.message||nsError);
+  }
+  try{
+    receipt.dns_cname=(await dns.resolveCname(url.hostname)).sort();
+  }catch{
+    receipt.dns_cname=[];
+  }
+  const [tcp80,tcp443]=await Promise.all([
+    inspectTcp(url.hostname,80),
+    inspectTcp(url.hostname,443),
+  ]);
+  receipt.public_tcp={
+    http_80:tcp80,
+    https_443:tcp443,
+  };
+  receipt.checks.public_tcp_80=tcp80.reachable===true;
+  receipt.checks.public_tcp_443=tcp443.reachable===true;
 
   const tlsPeer=await inspectTls(url.hostname);
   if(tlsPeer.authorized!==true) throw new Error('tls_peer_not_authorized');
@@ -275,6 +325,12 @@ try{
       detail:receipt.error,
     },
   });
+  // This runner cannot see the Chromebook loopback from the public Internet.
+  // Keep public-path classification useful without laundering an assumption
+  // into a local-service health claim.
+  receipt.ingress_diagnosis.local_service_ok=null;
+  receipt.ingress_diagnosis.local_service_observed=false;
+  receipt.ingress_diagnosis.evidence_complete=false;
   receipt.public_https_verified=false;
   receipt.mcp_verified=false;
   receipt.external_route_verified=false;

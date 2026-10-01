@@ -205,3 +205,65 @@ test('gateway-proxied compute requires an explicit bridge adapter and records ex
   assert.equal(receipt.execution_location,'gateway_proxy_to_device');
   assert.equal(receipt.result.remote,true);
 });
+
+
+test('infrastructure secret-share results never enter normal idempotency replay cache',async()=>{
+  const root=fs.mkdtempSync(path.join(os.tmpdir(),'microseed-sensitive-no-cache-'));
+  try{
+    const device=normalizeMicroDeviceManifest({
+      device_id:'recovery-node-01',
+      device_class:'mini-pc',
+      bridge_mode:'native_agent',
+      authorization_ref:'owner-recovery-node',
+      endpoint:'https://recovery.local/evercraft',
+      supported_workloads:['systemia.secret-share-vault.v1'],
+      resources:{cpu_units:1,memory_mb:1024,storage_gb:2},
+      max_concurrency:2,
+      duty_cycle:'always_on',
+      attestation:{mode:'device',device_identity:'recovery-key'},
+    });
+    const share=Buffer.from([1,11,22,33,44]).toString('base64');
+    await executeMicroSeedWorkload({
+      manifest:device,
+      trustDecision:trust,
+      telemetry:safeTelemetry(),
+      request:{
+        device_id:'recovery-node-01',
+        workload_class:'systemia.secret-share-vault.v1',
+        idempotency_key:'share-put',
+        payload:{
+          operation:'put',
+          slot_id:'ambient-memory-master-proof',
+          share_base64:share,
+          metadata:{purpose:'test'},
+        },
+        requested_memory_mb:64,
+        requested_cpu_fraction:0.05,
+      },
+      stateDir:root,
+      now:new Date('2026-10-01T03:00:20.000Z'),
+    });
+    const get=await executeMicroSeedWorkload({
+      manifest:device,
+      trustDecision:trust,
+      telemetry:safeTelemetry(),
+      request:{
+        device_id:'recovery-node-01',
+        workload_class:'systemia.secret-share-vault.v1',
+        idempotency_key:'share-get',
+        payload:{
+          operation:'get',
+          slot_id:'ambient-memory-master-proof',
+        },
+        requested_memory_mb:64,
+        requested_cpu_fraction:0.05,
+      },
+      stateDir:root,
+      now:new Date('2026-10-01T03:00:30.000Z'),
+    });
+    assert.equal(get.result.share_base64,share);
+    assert.equal(fs.existsSync(path.join(root,'idempotency')),false);
+  }finally{
+    fs.rmSync(root,{recursive:true,force:true});
+  }
+});

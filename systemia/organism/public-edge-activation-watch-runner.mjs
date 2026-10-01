@@ -93,12 +93,20 @@ async function delegatedCapacityGrant({
   const requiredWork=new Set(requiredWorkloads.map(String));
   const requiredLabels=new Set(requiredPlacementLabels.map(String));
   const requiredServices=new Set(requiredServiceCapabilities.map(String));
+  const forbiddenLabels=new Set(
+    String(
+      process.env.EVERCRAFT_PUBLIC_EDGE_FORBIDDEN_LABELS||
+      'private,outbound-only'
+    ).split(',').map((value)=>value.trim().toLowerCase()).filter(Boolean)
+  );
 
   const eligible=(inventory.nodes||[]).filter((node)=>{
     if(node.connected!==true) return false;
     const capacity=node.capacity||{};
     const workloads=new Set(capacity.supported_workloads||[]);
-    const labels=new Set(capacity.placement_labels||[]);
+    const labels=new Set(
+      (capacity.placement_labels||[]).map((value)=>String(value).trim().toLowerCase())
+    );
     const edge=capacity.public_edge||{};
     const serviceReady=(key)=>{
       if(key==='public_edge') return edge.ready===true&&edge.public_https===true;
@@ -113,7 +121,8 @@ async function delegatedCapacityGrant({
       capacity.attestation_supported===true &&
       capacity.device_fingerprint===node.device_fingerprint &&
       [...requiredWork].every((key)=>workloads.has(key)) &&
-      [...requiredLabels].every((key)=>labels.has(key)) &&
+      [...requiredLabels].every((key)=>labels.has(String(key).toLowerCase())) &&
+      [...forbiddenLabels].every((key)=>!labels.has(key)) &&
       [...requiredServices].every((key)=>serviceReady(key)) &&
       edge.ready===true &&
       edge.public_https===true
@@ -274,8 +283,8 @@ const watcher=new PublicEdgeActivationWatcher({
     stable_hostname:true,
   },
   requiredPlacementLabels:String(
-    process.env.EVERCRAFT_PUBLIC_EDGE_REQUIRED_LABELS||'public-edge'
-  ).split(',').map(x=>x.trim()).filter(Boolean),
+    process.env.EVERCRAFT_PUBLIC_EDGE_REQUIRED_LABELS||'public-edge,gateway'
+  ).split(',').map(x=>x.trim().toLowerCase()).filter(Boolean),
   requestedHostname:String(
     process.env.EVERCRAFT_PUBLIC_EDGE_REQUESTED_HOSTNAME||'evercraft-fabric'
   ),
