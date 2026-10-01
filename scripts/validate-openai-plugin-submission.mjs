@@ -199,9 +199,6 @@ for (const test of tests.positive || []) {
   if (!test.tools_triggered) errors.push(`positive review case ${test.id || 'unknown'} needs tools_triggered`);
   if (test.tools_triggered!=='inspect_public_website') errors.push(`positive review case ${test.id || 'unknown'} must use inspect_public_website`);
 }
-if(!Array.isArray(review?.test_cases?.positive)||review.test_cases.positive.some((x)=>x.tools_triggered!=='inspect_public_website')){
-  errors.push('portable review cases must use only inspect_public_website');
-}
 const justificationKeys=Object.keys(submission.tool_annotation_justifications||{});
 if(justificationKeys.length!==1||justificationKeys[0]!=='inspect_public_website'){
   errors.push('submission annotation justifications must expose only inspect_public_website');
@@ -209,6 +206,9 @@ if(justificationKeys.length!==1||justificationKeys[0]!=='inspect_public_website'
 
 const review = manifest?.extensions?.['com.openai']?.review || {};
 if(review.commerce!==false) errors.push('public Evercraft v1.1.0 plugin commerce must be false');
+if(!Array.isArray(review?.test_cases?.positive)||review.test_cases.positive.some((x)=>x.tools_triggered!=='inspect_public_website')){
+  errors.push('portable review cases must use only inspect_public_website');
+}
 if(manifest?.extensions?.['com.openai']?.onboardingSkill!=='./skills/evercraft-site-inspector/SKILL.md'){
   errors.push('public Evercraft onboarding skill must be the focused site inspector');
 }
