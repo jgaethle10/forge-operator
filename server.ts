@@ -510,6 +510,7 @@ app.get('/api/capabilities', (_req: Request, res: Response) => {
       latest: '/api/towi/latest',
       dossier: '/api/towi/dossiers/{id}',
       internalDossier: '/api/towi/internal/dossiers/{id}',
+      internalEvidence: { method: 'POST', path: '/api/towi/internal/dossiers/{id}/evidence' },
       internalRun: { method: 'POST', path: '/api/towi/run' },
       residentIntervalMs: Number(process.env.TOWI_INTERVAL_MS || 5 * 60 * 1000),
       publicationAuthority: false,
