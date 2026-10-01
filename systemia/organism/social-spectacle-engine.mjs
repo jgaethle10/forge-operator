@@ -3,6 +3,7 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { pendingContextForConsumer } from '../worldstate/observation-fabric.mjs';
 
 export const SPECTACLE_CONSUMER='social_spectacle';
 const MODULE_FILE=fileURLToPath(import.meta.url);
@@ -38,6 +39,38 @@ function arg(argv,name,fallback=''){
 function readJson(file,fallback=null){
   if(!file||!fs.existsSync(file)) return fallback;
   try{return JSON.parse(fs.readFileSync(file,'utf8'))}catch{return fallback}
+}
+
+function inputItems({inputFile,contextStateFile}={}){
+  if(inputFile){
+    const payload=readJson(path.resolve(inputFile));
+    if(!payload||!Array.isArray(payload.items)) throw new Error('spectacle input must contain items[]');
+    return payload.items;
+  }
+
+  if(contextStateFile&&fs.existsSync(path.resolve(contextStateFile))){
+    const state=readJson(path.resolve(contextStateFile));
+    if(!state||state.schema!=='evercraft.context-fabric.state.v1'){
+      throw new Error('spectacle context state schema invalid');
+    }
+    return pendingContextForConsumer(state,SPECTACLE_CONSUMER).map(row=>({
+      dispatch:{
+        schema:row.schema,
+        dispatch_key:row.dispatch_key,
+        consumer:row.consumer,
+        observation_id:row.observation_id,
+        context_keys:row.context_keys,
+        priority:row.priority,
+        evidence_state:row.evidence_state,
+        provenance_refs:row.provenance_refs,
+        created_at:row.created_at,
+      },
+      observation:row.observation,
+      brand_key:'evercraft',
+    }));
+  }
+
+  return [];
 }
 
 function visualPath(observation){
@@ -251,10 +284,8 @@ export function buildSpectacleQueue({assessments=[],recentSubjects=[],publishedT
   };
 }
 
-export function runSpectacleCycle({inputFile,stateDir,brandKey='evercraft',now=new Date()}={}){
-  if(!inputFile) throw new Error('spectacle input file required');
-  const payload=readJson(path.resolve(inputFile));
-  if(!payload||!Array.isArray(payload.items)) throw new Error('spectacle input must contain items[]');
+export function runSpectacleCycle({inputFile,contextStateFile,stateDir,brandKey='evercraft',now=new Date()}={}){
+  const items=inputItems({inputFile,contextStateFile});
 
   const root=path.resolve(stateDir||'artifacts/social-spectacle');
   const stateFile=path.join(root,'state.json');
@@ -270,7 +301,7 @@ export function runSpectacleCycle({inputFile,stateDir,brandKey='evercraft',now=n
   const today=now.toISOString().slice(0,10);
   const publishedToday=state.daily?.date===today?Number(state.daily?.published_packages||0):0;
 
-  const assessments=payload.items.map(item=>assessSpectacleDispatch({
+  const assessments=items.map(item=>assessSpectacleDispatch({
     dispatch:item.dispatch,
     observation:item.observation,
     recentSubjects:recentRows.map(row=>row.subject_key),
@@ -294,7 +325,7 @@ export function runSpectacleCycle({inputFile,stateDir,brandKey='evercraft',now=n
   const receipt={
     schema:'evercraft.social-spectacle.cycle-receipt.v1',
     ran_at:now.toISOString(),
-    input_count:payload.items.length,
+    input_count:items.length,
     candidate_count:assessments.filter(row=>row.action==='candidate').length,
     held_count:assessments.filter(row=>row.action==='hold').length,
     background_count:assessments.filter(row=>row.action==='background').length,
@@ -313,9 +344,10 @@ export function runSpectacleCycle({inputFile,stateDir,brandKey='evercraft',now=n
 async function cli(){
   const argv=process.argv.slice(2);
   const input=arg(argv,'--input',process.env.SYSTEMIA_SOCIAL_SPECTACLE_INPUT||'');
+  const contextState=arg(argv,'--context-state',process.env.SYSTEMIA_SOCIAL_SPECTACLE_CONTEXT_STATE||'artifacts/worldstate/context-state.json');
   const stateDir=arg(argv,'--state-dir',process.env.SYSTEMIA_SOCIAL_SPECTACLE_STATE_DIR||'artifacts/social-spectacle');
   const brandKey=arg(argv,'--brand',process.env.SYSTEMIA_SOCIAL_SPECTACLE_BRAND||'evercraft');
-  const result=runSpectacleCycle({inputFile:input,stateDir,brandKey});
+  const result=runSpectacleCycle({inputFile:input||undefined,contextStateFile:contextState||undefined,stateDir,brandKey});
   console.log(JSON.stringify({ok:true,...result.receipt,queue:result.queue.queue},null,2));
 }
 
