@@ -102,6 +102,7 @@ async function main() {
     configured: false,
     restart_reopen_verified: false,
     cohort_count: 0,
+    cluster_count: 0,
     journal_records: 0,
     measurement_count: 0,
     head_hash: null,
@@ -109,6 +110,7 @@ async function main() {
     ingest_receipt: null,
   };
   let durableScoreFile = null;
+  let durableClusterScores = [];
 
   const durableRoot = String(process.env.EVERCRAFT_EDGE_LAB_DURABLE_ROOT || "").trim();
   if (durableRoot) {
@@ -130,6 +132,7 @@ async function main() {
     const scores = [...reopened.cohorts.values()].map((protocol) =>
       reopened.score(protocol.cohort_id)
     );
+    durableClusterScores = reopened.scoreAllClusters();
     durableScoreFile = path.join(artifactDir, "durable-forward-paper-scores.json");
     fs.writeFileSync(
       durableScoreFile,
@@ -144,6 +147,8 @@ async function main() {
         })),
         ingest_receipt: ingestReceipt,
         scores,
+        cluster_scores: durableClusterScores,
+        correlated_cluster_members_not_independent_edges: true,
         live_trade_authority: false,
       }, null, 2) + "\n"
     );
@@ -152,6 +157,7 @@ async function main() {
       configured: true,
       restart_reopen_verified: true,
       cohort_count: afterRestart.cohort_count,
+      cluster_count: afterRestart.cluster_count,
       journal_records: afterRestart.journal_records,
       measurement_count: afterRestart.measurement_count,
       head_hash: afterRestart.head_hash,
@@ -213,6 +219,14 @@ async function main() {
     frozen_forward_paper_cohorts: frozenCohorts.length,
     durable_forward_paper_state_configured: durableState.configured,
     durable_forward_paper_restart_reopen_verified: durableState.restart_reopen_verified,
+    durable_forward_paper_cluster_count: durableState.cluster_count || 0,
+    durable_forward_paper_cluster_status_counts: Object.fromEntries(
+      [...new Set(durableClusterScores.map((row) => row.status))].map((status) => [
+        status,
+        durableClusterScores.filter((row) => row.status === status).length,
+      ])
+    ),
+    correlated_cluster_members_not_independent_edges: true,
     top_screened_families: top,
     exact_public_availability_time_known: false,
     sec_publication_delay_buffer_minutes:
