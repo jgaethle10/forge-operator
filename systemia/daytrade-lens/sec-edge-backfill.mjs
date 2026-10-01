@@ -9,7 +9,11 @@ import {
   persistEdgeResearchBatch,
 } from "./edge-research-factory.mjs";
 import { adversarialValidateCandidates } from "./edge-adversarial-validation.mjs";
-import { persistFrozenCohorts } from "./edge-forward-paper.mjs";
+import {
+  loadCanonicalFrozenCohorts,
+  scoreForwardPaperCohort,
+  scoreForwardPaperCluster,
+} from "./edge-forward-paper.mjs";
 import { ForwardPaperDurableState } from "./edge-forward-paper-durable.mjs";
 import { runEdgeStressLab } from "./edge-stress-lab.mjs";
 import { runEdgeBreakerLab } from "./edge-breaker-lab.mjs";
@@ -93,11 +97,40 @@ async function main() {
     stateDir,
   });
 
-  const frozenCohorts = persistFrozenCohorts(adversarial, report, {
-    state_dir: path.join(stateDir, "forward-paper"),
-    enrolled_at: report.generated_at,
-    transaction_cost_bps: Number(process.env.EDGE_LAB_TRANSACTION_COST_BPS || 5),
-  });
+  const canonicalForwardPaper = loadCanonicalFrozenCohorts();
+  const frozenCohorts = canonicalForwardPaper.cohorts;
+
+  const forwardPaperRunScores = frozenCohorts.map((protocol) =>
+    scoreForwardPaperCohort(protocol, report.measurements || [])
+  );
+  const clusterKeys = [...new Set(frozenCohorts.map((protocol) => protocol.cluster_key))];
+  const forwardPaperRunClusterScores = clusterKeys.map((clusterKey) =>
+    scoreForwardPaperCluster(
+      frozenCohorts.filter((protocol) => protocol.cluster_key === clusterKey),
+      report.measurements || []
+    )
+  );
+  const forwardPaperRunScoreFile = path.join(
+    artifactDir,
+    "forward-paper-current-run-scores.json"
+  );
+  fs.writeFileSync(
+    forwardPaperRunScoreFile,
+    JSON.stringify({
+      schema: "evercraft.daytrade.forward-paper-current-run-scores.v1",
+      generated_at: report.generated_at,
+      canonical_enrollment_at:
+        canonicalForwardPaper.source.original_manifest_generated_at,
+      canonical_artifact_digest:
+        canonicalForwardPaper.source.github_artifact_digest,
+      scores: forwardPaperRunScores,
+      cluster_scores: forwardPaperRunClusterScores,
+      durable_cross_run_state_claimed: false,
+      prospective_relative_to_frozen_cutoff: true,
+      eligibility_mutated: false,
+      live_trade_authority: false,
+    }, null, 2) + "\n"
+  );
   let durableState = {
     configured: false,
     restart_reopen_verified: false,
@@ -175,10 +208,14 @@ async function main() {
   fs.writeFileSync(
     forwardPaperFile,
     JSON.stringify({
-      schema: "evercraft.daytrade.forward-paper-enrollment.v1",
-      generated_at: report.generated_at,
+      schema: "evercraft.daytrade.forward-paper-enrollment.v2",
+      generated_at: canonicalForwardPaper.source.original_manifest_generated_at,
+      refreshed_at: report.generated_at,
+      canonical_source: canonicalForwardPaper.source,
       cohort_count: frozenCohorts.length,
       cohorts: frozenCohorts,
+      regenerated_from_current_historical_results: false,
+      eligibility_mutated: false,
       persistent_state_verified: durableState.configured && durableState.restart_reopen_verified,
       persistence_note: durableState.configured
         ? "Frozen cohorts were enrolled into the configured host filesystem journal and successfully reopened in this run. Power-loss behavior remains a separate hardware validation boundary."
@@ -209,7 +246,26 @@ async function main() {
     signal_families: report.family_count || 0,
     research_candidates: report.research_candidate_count || 0,
     candidate_clusters: adversarial.candidate_cluster_count || 0,
-    forward_paper_eligible: adversarial.forward_paper_eligible_count || 0,
+    current_historical_forward_paper_eligible:
+      adversarial.forward_paper_eligible_count || 0,
+    canonical_frozen_forward_paper_cohorts: frozenCohorts.length,
+    canonical_forward_paper_enrollment_at:
+      canonicalForwardPaper.source.original_manifest_generated_at,
+    canonical_forward_paper_artifact_digest:
+      canonicalForwardPaper.source.github_artifact_digest,
+    forward_paper_cohorts_regenerated: false,
+    forward_paper_current_run_status_counts: Object.fromEntries(
+      [...new Set(forwardPaperRunScores.map((row) => row.status))].map((status) => [
+        status,
+        forwardPaperRunScores.filter((row) => row.status === status).length,
+      ])
+    ),
+    forward_paper_current_run_cluster_status_counts: Object.fromEntries(
+      [...new Set(forwardPaperRunClusterScores.map((row) => row.status))].map((status) => [
+        status,
+        forwardPaperRunClusterScores.filter((row) => row.status === status).length,
+      ])
+    ),
     stress_survivors: stressLab.stress_survivor_count || 0,
     breaker_survivors: breakerLab.breaker_survivor_count || 0,
     timing_robust_diagnostics: timingLab.timing_robust_count || 0,
@@ -243,6 +299,7 @@ async function main() {
       benchmark_fragility_lab: benchmarkFile,
       adversarial_review: adversarialFile,
       forward_paper_cohorts: forwardPaperFile,
+      forward_paper_current_run_scores: forwardPaperRunScoreFile,
       durable_forward_paper_scores: durableScoreFile,
       state_batch: persistence.batch_file,
     },
