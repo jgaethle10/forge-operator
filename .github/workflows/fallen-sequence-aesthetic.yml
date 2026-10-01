@@ -1,0 +1,23 @@
+name: Fallen Sequence Aesthetic Gauntlet
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/sequence-aesthetic.ts'
+      - 'systemia/media-studio/sequence-aesthetic.test.ts'
+      - 'systemia/media-studio/cinematic-sequence.ts'
+      - 'systemia/media-studio/visual-observer.ts'
+      - '.github/workflows/fallen-sequence-aesthetic.yml'
+  workflow_dispatch:
+
+jobs:
+  sequence-aesthetic:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-audit --no-fund
+      - run: node --import tsx --test systemia/media-studio/sequence-aesthetic.test.ts systemia/media-studio/cinematic-sequence.test.ts
+      - run: npm run lint
