@@ -6,6 +6,8 @@ INSTALL_ROOT="${EVERCRAFT_USER_INSTALL_ROOT:-$HOME/.local/share/evercraft/forge-
 STATE_ROOT="${EVERCRAFT_LOCAL_ORGANISM_ROOT:-$HOME/.local/state/evercraft/organism}"
 UNIT_DIR="$HOME/.config/systemd/user"
 UNIT_FILE="$UNIT_DIR/evercraft-local-organism.service"
+HEALTH_UNIT_FILE="$UNIT_DIR/evercraft-local-organism-health.service"
+HEALTH_TIMER_FILE="$UNIT_DIR/evercraft-local-organism-health.timer"
 ENV_DIR="$HOME/.config/evercraft"
 ENV_FILE="$ENV_DIR/local-organism.env"
 NODE_BIN="$(command -v node || true)"
@@ -62,6 +64,7 @@ cat > "${UNIT_FILE}" <<EOF
 [Unit]
 Description=Evercraft local organism
 After=default.target
+StartLimitIntervalSec=0
 
 [Service]
 Type=simple
@@ -77,18 +80,60 @@ PrivateTmp=true
 WantedBy=default.target
 EOF
 
+cat > "${HEALTH_UNIT_FILE}" <<EOF
+[Unit]
+Description=Evercraft local organism health watch
+After=evercraft-local-organism.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=${INSTALL_ROOT}
+EnvironmentFile=-${ENV_FILE}
+ExecStart=${NODE_BIN} ${INSTALL_ROOT}/systemia/compute/local-organism-health-watch.mjs --root ${STATE_ROOT}
+NoNewPrivileges=true
+PrivateTmp=true
+TimeoutStartSec=30s
+EOF
+
+cat > "${HEALTH_TIMER_FILE}" <<'EOF'
+[Unit]
+Description=Watch and recover Evercraft local organism
+
+[Timer]
+OnBootSec=30s
+OnUnitActiveSec=60s
+Persistent=true
+Unit=evercraft-local-organism-health.service
+
+[Install]
+WantedBy=timers.target
+EOF
+
 systemctl --user daemon-reload
 systemctl --user enable --now evercraft-local-organism.service
+systemctl --user enable --now evercraft-local-organism-health.timer
 sleep 2
 
 if ! systemctl --user is-active --quiet evercraft-local-organism.service; then
   systemctl --user status evercraft-local-organism.service --no-pager || true
   exit 4
 fi
+if ! systemctl --user is-active --quiet evercraft-local-organism-health.timer; then
+  systemctl --user status evercraft-local-organism-health.timer --no-pager || true
+  exit 5
+fi
+
+"${NODE_BIN}" "${INSTALL_ROOT}/systemia/compute/local-organism-health-watch.mjs" \
+  --root "${STATE_ROOT}" --observe-only >/dev/null
+if [[ ! -s "${STATE_ROOT}/health-watch.json" ]]; then
+  echo "Evercraft health watch did not produce its initial receipt." >&2
+  exit 6
+fi
 
 echo "Evercraft local organism installed and active."
 echo "Runtime: NodeSeed -> Evercraft Compute -> Yard -> KAIDANCE -> Systemia Core"
 echo "Network: loopback-only; no public ingress created."
+echo "Health watch: every 60s with bounded user-service restart and receipt."
 if grep -q '^EVERCRAFT_REMOTE_BROKER_URL=.' "${ENV_FILE}"; then
   echo "Remote admission: configured through private user environment."
 else

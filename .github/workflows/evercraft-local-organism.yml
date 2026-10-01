@@ -4,18 +4,22 @@ on:
   pull_request:
     paths:
       - 'systemia/compute/local-organism.mjs'
+      - 'systemia/compute/local-organism-health-watch.mjs'
       - 'systemia/compute/install-local-organism-user.sh'
       - 'systemia/compute/LOCAL_ORGANISM.md'
       - 'systemia/compute/local-organism.proof.mjs'
+      - 'tests/local-organism-health-watch.test.mjs'
       - '.github/workflows/evercraft-local-organism.yml'
   push:
     branches:
       - main
     paths:
       - 'systemia/compute/local-organism.mjs'
+      - 'systemia/compute/local-organism-health-watch.mjs'
       - 'systemia/compute/install-local-organism-user.sh'
       - 'systemia/compute/LOCAL_ORGANISM.md'
       - 'systemia/compute/local-organism.proof.mjs'
+      - 'tests/local-organism-health-watch.test.mjs'
       - '.github/workflows/evercraft-local-organism.yml'
 
 jobs:
@@ -31,3 +35,5 @@ jobs:
         run: bash -n systemia/compute/install-local-organism-user.sh
       - name: Prove current-stack local organism and restart continuity
         run: node systemia/compute/local-organism.proof.mjs
+      - name: Prove local-organism self-healing health watch
+        run: node --test tests/local-organism-health-watch.test.mjs
