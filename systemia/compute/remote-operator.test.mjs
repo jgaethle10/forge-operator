@@ -24,6 +24,7 @@ try {
     stateDir: state,
     maxExecMs: 10_000,
     hostBoundaryStateRoot: path.join(root, 'host-boundary'),
+    routerMapReceiptFile: path.join(root, 'router-map.json'),
   });
 
   const status = operator.status();
@@ -34,7 +35,17 @@ try {
   assert.equal(status.network_observation.read_only, true);
   assert.equal(status.chromeos_host_boundary.read, true);
   assert.equal(status.chromeos_host_boundary.capabilities, true);
+  assert.equal(status.chromeos_host_boundary.field_certification, true);
   assert.equal(status.chromeos_host_boundary.mutation, false);
+
+  const hostCertification = operator.hostBoundaryCertification();
+  assert.equal(
+    hostCertification.schema,
+    'evercraft.chromeos-host-boundary-field-certification.v1',
+  );
+  assert.equal(hostCertification.state, 'host_observation_unavailable');
+  assert.equal(hostCertification.ready_for_external_canary, false);
+  assert.equal(hostCertification.mutation_authority, false);
 
   const hostCapabilities = operator.hostBoundaryCapabilities();
   assert.equal(hostCapabilities.ok, true);
@@ -198,6 +209,7 @@ try {
     typed_host_capability_registry_available: true,
     generic_typed_host_capability_dispatch_field_gated: true,
     node_local_field_admission_unlocks_generic_dispatch: true,
+    receipt_backed_field_certification_available: true,
   }));
 } finally {
   fs.rmSync(root, { recursive: true, force: true });
