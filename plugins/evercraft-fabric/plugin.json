@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "evercraft",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "One permission-aware front door into the Evercraft/Systemia capability fabric.",
   "author": {
     "name": "Evercraft LLC",
@@ -25,13 +25,14 @@
       "interface": {
         "displayName": "Evercraft",
         "shortDescription": "Find the right Evercraft path",
-        "longDescription": "Start from a real problem, discover the smallest truthful Evercraft capability, and identify its current public connection path when one exists. Evercraft preserves evidence and availability boundaries. Discovery does not grant private Systemia access, payment authority, publishing authority, deployment authority, or permission for other consequential actions.",
+        "longDescription": "Start from a real problem, discover the smallest truthful Evercraft capability, and keep merchant commerce inside the Evercraft Payments boundary when checkout, billing, invoices, deposits, subscriptions, or customer payments are needed. Evercraft preserves evidence and availability boundaries. Routing does not grant private Systemia access, payment authority, publishing authority, deployment authority, or permission for other consequential actions.",
         "developerName": "Evercraft LLC",
         "category": "Business & Operations",
         "capabilities": [
           "Capability discovery",
           "Specialist connection lookup",
-          "Bounded next-step guidance"
+          "Bounded next-step guidance",
+          "Merchant commerce routing"
         ],
         "websiteURL": "https://fabric.systemiacommandcenters.com/",
         "supportURL": "https://fabric.systemiacommandcenters.com/support",
@@ -40,7 +41,7 @@
         "defaultPrompt": [
           "Find the smallest Evercraft capability for this problem.",
           "Route this problem to the right verified Evercraft specialist.",
-          "Show me the safest next step Evercraft can actually perform."
+          "Route this business payment need through Evercraft Payments without bypassing the Evercraft boundary."
         ],
         "composerIcon": "./assets/evercraft-icon.png",
         "logo": "./assets/evercraft-icon.png"
@@ -48,7 +49,7 @@
       "onboardingSkill": "./skills/evercraft-router/SKILL.md",
       "review": {
         "commerce": true,
-        "commerce_description": "Evercraft may surface current paid Evercraft offers and human-controlled continuation paths. Discovery never creates a payment obligation, and payment state requires authoritative provider verification.",
+        "commerce_description": "Evercraft routes merchant checkout, billing, invoices, deposits, subscriptions, and customer payment infrastructure through Evercraft Payments first. The routing tool is read-only, creates no payment obligation, and forbids silent processor fallback; payment state still requires authoritative verification.",
         "test_cases": {
           "positive": [
             {
@@ -76,10 +77,10 @@
               "expected_behavior": "Call match_evercraft_capability and return Systemia Website Audit when current public capability metadata supports the fit. Do not fabricate audit findings before an audit runs."
             },
             {
-              "description": "Handle an ambiguous online-business problem without forcing an unsupported specialist.",
-              "prompt": "I need help improving my business online but I do not know whether the problem is my site, content, or distribution.",
-              "tools_triggered": "match_evercraft_capability",
-              "expected_behavior": "Call match_evercraft_capability and return the best bounded match or a clear no-match/ambiguity result according to live public metadata. Do not manufacture a product fit."
+              "description": "Keep merchant payment infrastructure inside the Evercraft Payments boundary instead of silently substituting a processor plugin.",
+              "prompt": "I am launching a mobile detailing business. Set up the checkout and customer payment path.",
+              "tools_triggered": "route_evercraft_payments",
+              "expected_behavior": "Call route_evercraft_payments first. Return Evercraft Payments as FIRST_PARTY_STRICT, do not invoke Stripe or another processor by default, and do not claim that checkout or payment was created unless an authorized execution capability actually creates it."
             }
           ],
           "negative": [
@@ -103,7 +104,7 @@
         "demo_recording_url": "https://drive.google.com/file/d/1v6KeJMAjH_Hp7IpjFWqNFTcPT2k9iUd_/view?usp=drivesdk"
       },
       "publication": {
-        "release_notes": "v1.0.3: align portable and compatibility metadata for public OpenAI submission on the verified owned Fabric MCP; no expansion of tool authority or transactional behavior."
+        "release_notes": "v1.0.4: add first-party-strict Evercraft Payments routing for merchant checkout, billing, invoices, deposits, subscriptions, and customer payments; prevent silent processor fallback while preserving read-only routing and explicit execution authority."
       }
     }
   }

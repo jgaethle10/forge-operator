@@ -7,6 +7,7 @@ on:
       - 'systemia/network/public-edge-runtime.mjs'
       - 'systemia/network/public-edge-tls.mjs'
       - 'systemia/mcp/specialist-handoff-runtime.mjs'
+      - 'systemia/mcp/fabric-directory.mjs'
       - 'systemia/yard/public-edge-controller.mjs'
       - '.github/workflows/evercraft-public-edge-canary.yml'
   workflow_dispatch:
@@ -123,6 +124,16 @@ jobs:
             local tool_c="${5:-}"
             local tool_d="${6:-}"
 
+            probe_status="$(curl --silent --show-error --max-time 20 -o /tmp/evercraft-mcp-probe-body -w '%{http_code}' -H 'accept: application/json, text/event-stream' "${SPECIALIST_ORIGIN%/}$path")"
+            case "$probe_status" in
+              200|405) ;;
+              *)
+                echo "MCP probe for $path returned HTTP $probe_status" >&2
+                cat /tmp/evercraft-mcp-probe-body >&2 || true
+                return 1
+                ;;
+            esac
+
             init="$(curl --fail --silent --show-error --max-time 20               -H 'content-type: application/json'               --data '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"evercraft-external-canary","version":"1"}}}'               "${SPECIALIST_ORIGIN%/}$path")"
             printf '%s' "$init" | jq -e --arg server "$server" '
               .result.serverInfo.name == $server and
@@ -141,7 +152,7 @@ jobs:
           }
 
           check_mcp "/mcp" "evercraft-fabric" \
-            "match_evercraft_capability" "list_evercraft_capabilities" "get_evercraft_connection_options"
+            "match_evercraft_capability" "list_evercraft_capabilities" "get_evercraft_connection_options" "route_evercraft_payments"
           check_mcp "/mcp/ibmi-rescue" "evercraft-ibmi-rescue"             "get_ibmi_rescue_offer" "prepare_ibmi_rescue_handoff"
           check_mcp "/mcp/foundry-app-escape" "evercraft-foundry-app-escape"             "get_foundry_app_escape_offer" "prepare_foundry_app_escape_handoff"
           check_mcp "/mcp/site-survive" "evercraft-site-survive"             "get_site_survive_offer" "prepare_site_survive_handoff"

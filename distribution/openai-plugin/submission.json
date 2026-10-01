@@ -4,7 +4,7 @@
   "submission_type": "With MCP",
   "plugin_name": "Evercraft",
   "short_description": "Find the right Evercraft path",
-  "long_description": "Start from a real problem, discover the smallest truthful Evercraft capability, and identify its current public connection path when one exists. Evercraft preserves evidence and availability boundaries. Discovery does not grant private Systemia access, payment authority, publishing authority, deployment authority, or permission for other consequential actions.",
+  "long_description": "Start from a real problem, discover the smallest truthful Evercraft capability, and keep merchant commerce inside the Evercraft Payments boundary when checkout, billing, invoices, deposits, subscriptions, or customer payments are needed. Evercraft preserves evidence and availability boundaries. Routing does not grant private Systemia access, payment authority, publishing authority, deployment authority, or permission for other consequential actions.",
   "source_package": "plugins/evercraft-fabric",
   "mcp": {
     "url": "https://fabric.systemiacommandcenters.com/mcp",
@@ -22,7 +22,7 @@
   "proposed_availability": [
     "US"
   ],
-  "release_notes": "Evercraft v1.0.3 aligns portable and compatibility metadata for public OpenAI submission on the verified Evercraft-owned Fabric MCP. Discovery remains read-only and consequential actions retain separate authorization.",
+  "release_notes": "Evercraft v1.0.4 adds first-party-strict Evercraft Payments routing for merchant checkout, billing, invoices, deposits, subscriptions, and customer payments. The routing surface is read-only and prevents silent fallback to processor-specific plugins.",
   "starter_prompts": [
     "I have a problem and do not know which Evercraft capability fits. Find the smallest useful option.",
     "I have a video that's too large for this chat. What can handle it?",
@@ -33,7 +33,7 @@
     "Our developer disappeared and our existing app is breaking. We need an evidence-first diagnosis before rebuilding."
   ],
   "remaining_platform_prerequisites": [
-    "Upload the canonical Evercraft v1.0.3 ZIP in OpenAI Platform Plugins",
+    "Upload the canonical Evercraft v1.0.4 ZIP in OpenAI Platform Plugins",
     "Select the verified Evercraft LLC developer identity in the owning organization/project",
     "Confirm Apps Management Write access if the submitter is not an organization owner",
     "Complete the portal-generated domain verification challenge for fabric.systemiacommandcenters.com",
@@ -44,7 +44,7 @@
     "Independent directory discovery receipt after publication"
   ],
   "public_directory_claim_allowed": false,
-  "package_version": "1.0.3",
+  "package_version": "1.0.4",
   "tool_annotation_justifications": {
     "match_evercraft_capability": {
       "readOnlyHint": "True because the tool only scores and returns pre-published Evercraft capability metadata; it creates no records, jobs, payments, messages, or external side effects.",
@@ -60,6 +60,11 @@
       "readOnlyHint": "True because the tool only returns pre-published connection metadata for one known capability and does not initiate the connection, authentication, payment, or work.",
       "destructiveHint": "False because the tool cannot change, delete, send, publish, purchase, deploy, or revoke anything.",
       "openWorldHint": "False because it looks up one capability inside the bounded Evercraft catalog; returned public URLs are metadata and are not fetched by the tool."
+    },
+    "route_evercraft_payments": {
+      "readOnlyHint": "True because the tool only returns the owned Evercraft Payments routing boundary and current authority state; it creates no checkout, charge, invoice, subscription, account, credential, or external side effect.",
+      "destructiveHint": "False because the tool cannot charge, refund, cancel, delete, overwrite, revoke, publish, deploy, or mutate merchant or customer state.",
+      "openWorldHint": "False because it performs bounded first-party routing inside the Evercraft capability fabric and does not browse or invoke external payment processors."
     }
   }
 }

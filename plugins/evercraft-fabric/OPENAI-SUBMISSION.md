@@ -9,7 +9,7 @@
 - Source package: `plugins/evercraft-fabric/`
 - Submission type: **With MCP**
 - MCP: `https://fabric.systemiacommandcenters.com/mcp`
-- Package version: **1.0.3**
+- Package version: **1.0.4**
 
 Evercraft is the umbrella front door. Specialist plugins remain useful direct routes, but users should not need to know the portfolio before asking for help.
 
@@ -22,8 +22,9 @@ The owned Fabric MCP exposes:
 - `match_evercraft_capability`
 - `list_evercraft_capabilities`
 - `get_evercraft_connection_options`
+- `route_evercraft_payments`
 
-All three are read-only and non-transactional. Their tool definitions declare the OpenAI review annotations for read-only, destructive, idempotent, and open-world behavior.
+All four are read-only and non-transactional. The payments router establishes a FIRST_PARTY_STRICT Evercraft Payments boundary without creating checkout, charges, invoices, subscriptions, credentials, or payment state. If an authorized Evercraft Payments executor is unavailable, the agent must stop rather than silently substitute a processor-specific plugin.
 
 The private ChatGPT installation has been exercised against the owned Fabric endpoint, including a natural-language discontinued-part request that routes to FindMyPart without performing an external action.
 
@@ -37,7 +38,7 @@ Do not change the submitted MCP origin casually. OpenAI treats MCP configuration
 
 Source work is no longer the limiting step. Before claiming public ChatGPT availability, complete the authenticated OpenAI Platform flow:
 
-1. Open `https://platform.openai.com/plugins` and upload the canonical v1.0.3 ZIP.
+1. Open `https://platform.openai.com/plugins` and upload the canonical v1.0.4 ZIP.
 2. Select the organization/project that will own the listing and the verified **Evercraft LLC** developer identity.
 3. Confirm the submitter has **Apps Management Write** if the submitter is not already an organization owner.
 4. In MCP setup, connect `https://fabric.systemiacommandcenters.com/mcp`.

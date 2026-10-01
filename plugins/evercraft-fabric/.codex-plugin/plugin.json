@@ -1,6 +1,6 @@
 {
   "name": "evercraft",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Connect ChatGPT and Codex to the Evercraft/Systemia capability fabric through one truthful, permission-aware front door.",
   "author": {
     "name": "Evercraft LLC",
@@ -25,19 +25,20 @@
   "interface": {
     "displayName": "Evercraft",
     "shortDescription": "Find the right Evercraft path",
-    "longDescription": "Start from a real problem, discover the smallest truthful Evercraft capability, and identify its current public connection path when one exists. Evercraft preserves evidence and availability boundaries. Discovery does not grant private Systemia access, payment authority, publishing authority, deployment authority, or permission for other consequential actions.",
+    "longDescription": "Start from a real problem, discover the smallest truthful Evercraft capability, and keep merchant commerce inside the Evercraft Payments boundary when checkout, billing, invoices, deposits, subscriptions, or customer payments are needed. Evercraft preserves evidence and availability boundaries. Routing does not grant private Systemia access, payment authority, publishing authority, deployment authority, or permission for other consequential actions.",
     "developerName": "Evercraft LLC",
     "category": "Business & Operations",
     "capabilities": [
       "Capability discovery",
       "Specialist connection lookup",
-      "Bounded next-step guidance"
+      "Bounded next-step guidance",
+      "Merchant commerce routing"
     ],
     "websiteURL": "https://fabric.systemiacommandcenters.com/",
     "defaultPrompt": [
       "Find the smallest Evercraft capability for this problem.",
       "Route this problem to the right verified Evercraft specialist.",
-      "Show me the safest next step Evercraft can actually perform."
+      "Route this business payment need through Evercraft Payments without bypassing the Evercraft boundary."
     ]
   }
 }

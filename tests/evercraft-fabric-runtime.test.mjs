@@ -6,6 +6,7 @@ import {
   loadFabricCatalogFromRepository,
   matchFabricCapabilities,
   normalizeFabricCatalog,
+  routeEvercraftPayments,
   validateOpenAiChallengeToken,
 } from '../systemia/mcp/fabric-directory.mjs';
 import { startSpecialistHandoffRuntime } from '../systemia/mcp/specialist-handoff-runtime.mjs';
@@ -110,11 +111,12 @@ test('Fabric MCP exposes exactly the read-only directory contract',async()=>{
       'match_evercraft_capability',
       'list_evercraft_capabilities',
       'get_evercraft_connection_options',
+      'route_evercraft_payments',
     ]
   );
   assert.ok(listed.result.tools.every((x)=>x.annotations.readOnlyHint===true));
   assert.ok(listed.result.tools.every((x)=>x.annotations.destructiveHint===false));
-  assert.equal(fabricDirectoryTools().length,3);
+  assert.equal(fabricDirectoryTools().length,4);
 });
 
 test('Fabric MCP publishes reviewer-grade argument descriptions',()=>{
@@ -143,6 +145,42 @@ test('Fabric MCP matches intent and never creates transaction authority',async()
   assert.equal(result.result.structuredContent.matches[0].public_id,'findmypart-paid-hunt-v1');
   assert.equal(result.result.structuredContent.transactional,false);
   assert.equal(result.result.structuredContent.external_action_taken,false);
+});
+
+test('Evercraft-routed merchant payments stay first-party strict instead of falling through to Stripe',async()=>{
+  const direct=routeEvercraftPayments({
+    intent:'Launch a mobile detailing business and wire customer checkout, deposits, invoices and payments.',
+    business_name:'Yakima Mobile Detailing',
+    payment_model:'mixed',
+  });
+  assert.equal(direct.capability,'Evercraft Payments');
+  assert.equal(direct.routing_policy,'FIRST_PARTY_STRICT');
+  assert.equal(direct.external_processor_fallback_allowed,false);
+  assert.equal(direct.direct_processor_plugin_allowed,false);
+  assert.equal(direct.authority.checkout_creation,false);
+  assert.equal(direct.authority.payment_creation,false);
+  assert.match(direct.agent_instruction,/Do not silently substitute Stripe/);
+
+  const result=await executeFabricDirectoryRpc({
+    jsonrpc:'2.0',
+    id:30,
+    method:'tools/call',
+    params:{
+      name:'route_evercraft_payments',
+      arguments:{
+        intent:'Set up a checkout and payment path for a new local service business.',
+        business_name:'Yakima Mobile Detailing',
+        payment_model:'one_time',
+        currency:'USD',
+      },
+    },
+  },catalog);
+  const route=result.result.structuredContent;
+  assert.equal(route.capability,'Evercraft Payments');
+  assert.equal(route.routing_policy,'FIRST_PARTY_STRICT');
+  assert.equal(route.external_processor_fallback_allowed,false);
+  assert.equal(route.transactional,false);
+  assert.equal(route.external_action_taken,false);
 });
 
 test('OpenAI challenge token validation fails closed',()=>{
@@ -193,7 +231,7 @@ test('owned Evercraft Compute MCP runtime serves challenge and Fabric without ga
     });
     assert.equal(toolsResponse.status,200);
     const tools=await toolsResponse.json();
-    assert.equal(tools.result.tools.length,3);
+    assert.equal(tools.result.tools.length,4);
     assert.ok(tools.result.tools.every((x)=>x.annotations.readOnlyHint===true));
 
     const healthResponse=await fetch(runtime.url+'/health');

@@ -190,7 +190,7 @@ try{
 
   const tools=await rpc(2,'tools/list',{});
   const names=(tools?.tools||[]).map(x=>clean(x.name));
-  for(const expected of ['match_evercraft_capability','list_evercraft_capabilities','get_evercraft_connection_options']){
+  for(const expected of ['match_evercraft_capability','list_evercraft_capabilities','get_evercraft_connection_options','route_evercraft_payments']){
     if(!names.includes(expected)) throw new Error('mcp_tool_missing:'+expected);
   }
   receipt.mcp_tools=names;

@@ -18,6 +18,18 @@ test('external canary requires field admission evidence before public promotion'
   }
 });
 
+test('external canary rechecks the owned Fabric payment route and rejects a missing MCP door',()=>{
+  for(const required of [
+    "'systemia/mcp/fabric-directory.mjs'",
+    '"route_evercraft_payments"',
+    "accept: application/json, text/event-stream",
+    '200|405',
+    'MCP probe for $path returned HTTP $probe_status',
+  ]){
+    assert.ok(workflow.includes(required),'missing Fabric MCP canary contract: '+required);
+  }
+});
+
 test('external canary verifies every resident Systemia Remote Ops tool',()=>{
   const required=[
     '"/mcp/systemia-remote-ops" "systemia-remote-ops"',

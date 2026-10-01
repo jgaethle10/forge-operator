@@ -31,11 +31,11 @@
       "expected_behavior": "Call match_evercraft_capability and return Systemia Website Audit when current public capability metadata supports the fit. Do not fabricate audit findings before an audit runs."
     },
     {
-      "id": "ambiguous-business-problem",
-      "description": "An ambiguous cross-domain business problem should use the universal matcher and avoid forcing an unsupported specialist.",
-      "prompt": "I need help improving my business online but I do not know whether the problem is my website, content or distribution.",
-      "tools_triggered": "match_evercraft_capability",
-      "expected_behavior": "Call match_evercraft_capability and return the best bounded match or a clear no-match/ambiguity result according to live public metadata. Do not manufacture a product fit."
+      "id": "merchant-commerce-routing",
+      "description": "A new business payment-infrastructure request must stay inside the Evercraft Payments boundary rather than silently falling through to a processor plugin.",
+      "prompt": "I am launching a mobile detailing business. Set up the checkout and customer payment path.",
+      "tools_triggered": "route_evercraft_payments",
+      "expected_behavior": "Call route_evercraft_payments first. Return Evercraft Payments as FIRST_PARTY_STRICT, do not invoke Stripe or another processor by default, and do not claim that checkout or payment was created unless an authorized execution capability actually creates it."
     }
   ],
   "negative": [

@@ -3,7 +3,7 @@
   "listing": {
     "name": "Evercraft",
     "short_description": "Find the right Evercraft path",
-    "long_description": "Start from a real problem, discover the smallest truthful Evercraft capability, and identify its current public connection path when one exists. Evercraft preserves evidence and availability boundaries. Discovery does not grant private Systemia access, payment authority, publishing authority, deployment authority, or permission for other consequential actions.",
+    "long_description": "Start from a real problem, discover the smallest truthful Evercraft capability, and keep merchant commerce inside the Evercraft Payments boundary when checkout, billing, invoices, deposits, subscriptions, or customer payments are needed. Evercraft preserves evidence and availability boundaries. Routing does not grant private Systemia access, payment authority, publishing authority, deployment authority, or permission for other consequential actions.",
     "developer": "Evercraft LLC",
     "category": "Business & Operations",
     "website": "https://fabric.systemiacommandcenters.com/",
@@ -28,7 +28,8 @@
     "tools": [
       "match_evercraft_capability",
       "list_evercraft_capabilities",
-      "get_evercraft_connection_options"
+      "get_evercraft_connection_options",
+      "route_evercraft_payments"
     ],
     "read_only": true
   },
@@ -54,9 +55,9 @@
       "expected": "Match ForensiScope when current capability metadata supports it, preserve provenance expectations, and prefer a verified specialist route."
     },
     {
-      "id": "ambiguous-cross-domain-routing",
-      "prompt": "I need help improving my business online but I am not sure whether the problem is my site, content, or distribution.",
-      "expected": "Use the universal Evercraft route to return a bounded set of relevant capabilities rather than forcing one unsupported specialist."
+      "id": "merchant-commerce-routing",
+      "prompt": "I am launching a mobile detailing business. Set up the checkout and customer payment path.",
+      "expected": "Call route_evercraft_payments first. Return Evercraft Payments as FIRST_PARTY_STRICT, do not invoke Stripe or another processor by default, and do not claim that checkout or payment was created unless an authorized execution capability actually creates it."
     }
   ],
   "negative_tests": [
@@ -87,7 +88,7 @@
   "review_support": {
     "demo_recording_url": "https://drive.google.com/file/d/1v6KeJMAjH_Hp7IpjFWqNFTcPT2k9iUd_/view?usp=drivesdk",
     "recording_access": "public_link_reader",
-    "notes": "Walkthrough demonstrates capability listing, natural-language routing to FindMyPart, capability-specific connection lookup, and read-only/non-transactional behavior. Canonical v1.0.3 package metadata is aligned for public submission."
+    "notes": "Walkthrough demonstrates capability listing, natural-language routing to FindMyPart, capability-specific connection lookup, and read-only/non-transactional behavior. Canonical v1.0.4 package metadata is aligned for public submission; the v1.0.4 review cases additionally cover first-party Evercraft Payments routing."
   },
-  "package_version": "1.0.3"
+  "package_version": "1.0.4"
 }
