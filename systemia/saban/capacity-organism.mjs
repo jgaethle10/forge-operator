@@ -12,6 +12,8 @@ import { resolveAmbientComputeOffers } from './ambient-compute-fabric.mjs';
 import { composeCapabilityFabric, rivetAliEvCapabilityRoles } from './capability-fabric-composer.mjs';
 import { rivetAliEvProductionAnatomy, formationWaves } from './workload-anatomy.mjs';
 import { planHeterogeneousFabric } from './heterogeneous-fabric-planner.mjs';
+import { loadPerformanceLedger } from './performance-learning.mjs';
+import { planFabricRebalance } from './fabric-rebalance.mjs';
 
 const MODULE_FILE=fileURLToPath(import.meta.url);
 
@@ -53,6 +55,9 @@ function activeCapabilities(snapshot){
 
 export function compileCapacityOrganismState({
   registrySnapshot,
+  performanceLedger=null,
+  previousPlan=null,
+  checkpoints={},
   now=new Date(),
 }={}){
   const {caps,rejected}=activeCapabilities(registrySnapshot);
@@ -69,6 +74,14 @@ export function compileCapacityOrganismState({
   const workloadPlan=planHeterogeneousFabric({
     tasks:anatomy.tasks,
     offers:compute.offers,
+    performanceLedger,
+    previousPlan,
+    now,
+  });
+  const rebalance=planFabricRebalance({
+    previousPlan,
+    nextPlan:workloadPlan,
+    checkpoints,
     now,
   });
   const waves=formationWaves(anatomy);
@@ -94,6 +107,11 @@ export function compileCapacityOrganismState({
     rejected_devices:rejected,
     capability_plan:capabilityPlan,
     workload_plan:workloadPlan,
+    rebalance_plan:rebalance,
+    performance_learning:{
+      ledger_present:Boolean(performanceLedger),
+      learned_profile_count:Object.keys(performanceLedger?.profiles||{}).length,
+    },
     formation_waves:waves,
     missing_capacity:[...missingCapabilityRoles,...missingWorkUnits],
     production_ready:
@@ -126,7 +144,22 @@ export async function runCapacityOrganismOnce({
   }
 
   const registrySnapshot=registry.list({now});
-  const compiled=compileCapacityOrganismState({registrySnapshot,now});
+  const performanceLedger=loadPerformanceLedger(path.join(resolvedRoot,'performance-ledger.json'));
+  const previousPlanFile=path.join(resolvedRoot,'heterogeneous-plan.json');
+  const previousPlan=fs.existsSync(previousPlanFile)
+    ? JSON.parse(fs.readFileSync(previousPlanFile,'utf8'))
+    : null;
+  const checkpointFile=path.join(resolvedRoot,'fabric-checkpoints.json');
+  const checkpoints=fs.existsSync(checkpointFile)
+    ? JSON.parse(fs.readFileSync(checkpointFile,'utf8'))
+    : {};
+  const compiled=compileCapacityOrganismState({
+    registrySnapshot,
+    performanceLedger,
+    previousPlan,
+    checkpoints,
+    now,
+  });
   const receipt={
     ...compiled,
     census:census?{
@@ -143,6 +176,8 @@ export async function runCapacityOrganismOnce({
 
   atomicJson(path.join(resolvedRoot,'capacity-organism-state.json'),receipt);
   atomicJson(path.join(resolvedRoot,'ambient-registry-snapshot.json'),registrySnapshot);
+  atomicJson(path.join(resolvedRoot,'heterogeneous-plan.json'),compiled.workload_plan);
+  atomicJson(path.join(resolvedRoot,'rebalance-plan.json'),compiled.rebalance_plan);
   return receipt;
 }
 
