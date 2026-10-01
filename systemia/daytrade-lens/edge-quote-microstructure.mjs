@@ -11,6 +11,10 @@ function finite(value){
   const n=Number(value);
   return Number.isFinite(n)?n:null;
 }
+function expectedSign(direction){
+  return direction==="NEGATIVE_EXCESS_RETURN"?-1:1;
+}
+
 
 function percentile(values,p){
   if(!values.length) return null;
@@ -134,12 +138,17 @@ export async function fetchAlpacaQuotes(symbol,{
   throw new Error(`edge_quote_alpaca_${symbol}_pagination_limit`);
 }
 
-function targetRowsForMeasurement(row){
+function targetRowsForMeasurement(row,learnedDirection=null){
   const targets=[];
   if(row?.instrument_start_time){
     targets.push({
       label:"modeled_entry",
       timestamp:row.instrument_start_time,
+      learned_direction:learnedDirection,
+      instrument_start_price:finite(row.instrument_start_price),
+      instrument_end_price:finite(row.instrument_end_price),
+      forward_return:finite(row.forward_return),
+      benchmark_return:finite(row.benchmark_return),
     });
   }
   for(const [key,value] of Object.entries(row?.execution_delay_stress||{})){
@@ -163,16 +172,20 @@ export function buildQuoteMicrostructureTargets(report,{
   signal_keys=null,
 }={}){
   const allowed=signal_keys?new Set(signal_keys):null;
-  const candidateKeys=new Set(
-    (report?.evaluations||[])
-      .filter((row)=>row.status==="RESEARCH_CANDIDATE")
-      .map((row)=>row.signal_key)
+  const candidateEvaluations=(report?.evaluations||[])
+    .filter((row)=>row.status==="RESEARCH_CANDIDATE");
+  const candidateKeys=new Set(candidateEvaluations.map((row)=>row.signal_key));
+  const evaluationBySignal=new Map(
+    candidateEvaluations.map((row)=>[row.signal_key,row])
   );
   const selected=(report?.measurements||[]).filter((row)=>
     allowed?allowed.has(row.signal_key):candidateKeys.has(row.signal_key)
   );
   return selected.flatMap((row)=>
-    targetRowsForMeasurement(row).map((target)=>({
+    targetRowsForMeasurement(
+      row,
+      evaluationBySignal.get(row.signal_key)?.learned_direction || null
+    ).map((target)=>({
       measurement_id:row.measurement_id,
       signal_key:row.signal_key,
       instrument:row.instrument,
@@ -212,6 +225,19 @@ function summarizeSignal(rows){
   const available=rows.filter((row)=>row.quote_available);
   const spreads=available.map((row)=>finite(row.spread_bps)).filter(Number.isFinite);
   const halfSpreads=available.map((row)=>finite(row.half_spread_bps)).filter(Number.isFinite);
+  const modeledEntry=available.filter((row)=>
+    row.label==="modeled_entry" &&
+    Number.isFinite(finite(row.entry_slippage_vs_bar_bps))
+  );
+  const entrySlippage=modeledEntry
+    .map((row)=>finite(row.entry_slippage_vs_bar_bps))
+    .filter(Number.isFinite);
+  const degradation=modeledEntry
+    .map((row)=>finite(row.strategy_net_degradation_from_quote_entry))
+    .filter(Number.isFinite);
+  const quoteNet=modeledEntry
+    .map((row)=>finite(row.quote_entry_strategy_net_partial))
+    .filter(Number.isFinite);
   return {
     target_count:rows.length,
     quote_count:available.length,
@@ -220,6 +246,10 @@ function summarizeSignal(rows){
     median_spread_bps:percentile(spreads,0.50),
     p90_spread_bps:percentile(spreads,0.90),
     mean_half_spread_bps:mean(halfSpreads),
+    modeled_entry_quote_count:modeledEntry.length,
+    mean_entry_slippage_vs_bar_bps:mean(entrySlippage),
+    mean_strategy_net_degradation_from_quote_entry:mean(degradation),
+    mean_quote_entry_strategy_net_partial:mean(quoteNet),
   };
 }
 
@@ -231,6 +261,7 @@ export async function runQuoteMicrostructureLab(report,{
   signal_keys=null,
   max_quote_delay_ms=30000,
   group_padding_seconds=30,
+  transaction_cost_bps=5,
 }={}){
   const targets=buildQuoteMicrostructureTargets(report,{signal_keys});
   const groups=groupTargets(targets,group_padding_seconds);
@@ -264,6 +295,35 @@ export async function runQuoteMicrostructureLab(report,{
     const date=isoDate(target.timestamp);
     const quotes=quoteCache.get(target.instrument+"|"+date)||[];
     const quote=quoteAtOrAfter(quotes,target.timestamp,{max_delay_ms:max_quote_delay_ms});
+    const sign=expectedSign(target.learned_direction);
+    const barStart=finite(target.instrument_start_price);
+    const barEnd=finite(target.instrument_end_price);
+    const benchmarkReturn=finite(target.benchmark_return);
+    const marketableEntry=quote
+      ?(sign>0?finite(quote.ask_price):finite(quote.bid_price))
+      :null;
+    const canPriceEntry=
+      target.label==="modeled_entry" &&
+      Number.isFinite(barStart) &&
+      Number.isFinite(barEnd) &&
+      Number.isFinite(benchmarkReturn) &&
+      Number.isFinite(marketableEntry) &&
+      barStart>0 &&
+      marketableEntry>0;
+    const barStrategyNet=canPriceEntry
+      ?sign*(Number(target.forward_return)-benchmarkReturn)-
+        Number(transaction_cost_bps)/10000
+      :null;
+    const quoteEntryForward=canPriceEntry
+      ?barEnd/marketableEntry-1
+      :null;
+    const quoteEntryStrategyNet=canPriceEntry
+      ?sign*(quoteEntryForward-benchmarkReturn)-
+        Number(transaction_cost_bps)/10000
+      :null;
+    const entrySlippageBps=canPriceEntry
+      ?sign*((marketableEntry-barStart)/barStart)*10000
+      :null;
     return {
       schema:"evercraft.daytrade.edge-quote-overlay.v1",
       ...target,
@@ -285,6 +345,15 @@ export async function runQuoteMicrostructureLab(report,{
         quote_delay_ms:null,
         no_pre_target_quote_used:null,
       }),
+      marketable_entry_price:canPriceEntry?marketableEntry:null,
+      entry_slippage_vs_bar_bps:entrySlippageBps,
+      bar_strategy_net:barStrategyNet,
+      quote_entry_strategy_net_partial:quoteEntryStrategyNet,
+      strategy_net_degradation_from_quote_entry:
+        canPriceEntry?barStrategyNet-quoteEntryStrategyNet:null,
+      entry_execution_adjusted:canPriceEntry,
+      exit_execution_quote_adjusted:false,
+      benchmark_entry_quote_adjusted:false,
       research_only:true,
       live_trade_authority:false,
     };
@@ -327,6 +396,10 @@ export async function runQuoteMicrostructureLab(report,{
     interpretation:{
       full_spread_bps:"Quoted ask minus bid divided by midpoint.",
       half_spread_bps:"One-way midpoint-to-touch cost proxy only; not a realized fill or total implementation shortfall.",
+      marketable_entry_price:"Ask for positive-direction candidates and bid for negative-direction candidates at modeled entry only.",
+      quote_entry_strategy_net_partial:"Entry-side quote-adjusted strategy return using the existing bar exit and benchmark return; not full implementation shortfall.",
+      exit_execution_quote_adjusted:false,
+      benchmark_entry_quote_adjusted:false,
       missing_is_never_zero:true,
       sip_is_nbbo_only_when_feed_is_sip:true,
       iex_is_not_labeled_nbbo:true,
