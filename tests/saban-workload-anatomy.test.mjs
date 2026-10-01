@@ -9,9 +9,9 @@ test('RIVET/AliEV anatomy separates micro shards from stateful core',()=>{
   assert.equal(anatomy.invariants.private_data_requires_authorized_compute,true);
 
   const byId=new Map(anatomy.tasks.map(t=>[t.task_id,t]));
-  assert.equal(byId.get('source-domain-normalize').execution_shape,'shardable');
-  assert.equal(byId.get('source-domain-normalize').shard_count,14);
-  assert.equal(byId.get('source-domain-normalize').continuity.preemptible,true);
+  assert.equal(byId.get('source-domain-record-digest').execution_shape,'shardable');
+  assert.equal(byId.get('source-domain-record-digest').shard_count,14);
+  assert.equal(byId.get('source-domain-record-digest').continuity.preemptible,true);
 
   assert.equal(byId.get('aliev-source-runtime').execution_shape,'atomic');
   assert.equal(byId.get('aliev-source-runtime').trust.private_data,true);
@@ -30,9 +30,12 @@ test('formation waves preserve source-before-report dependencies',()=>{
   for(const wave of waves.waves){
     for(const id of wave.task_ids) waveOf.set(id,wave.wave);
   }
-  assert.ok(waveOf.get('source-domain-normalize')<waveOf.get('aliev-source-runtime'));
-  assert.ok(waveOf.get('source-domain-content-hash')<waveOf.get('aliev-source-runtime'));
+  assert.ok(waveOf.get('source-domain-record-digest')<waveOf.get('aliev-source-runtime'));
+  assert.ok(waveOf.get('source-domain-canonicalize')<waveOf.get('aliev-source-runtime'));
   assert.ok(waveOf.get('aliev-source-runtime')<waveOf.get('rivet-report-runtime'));
+  assert.ok(waveOf.get('source-domain-record-digest')<waveOf.get('rivet-session-semantics-audit'));
+  assert.ok(waveOf.get('rivet-session-semantics-audit')<waveOf.get('rivet-report-runtime'));
+  assert.ok(waveOf.get('rivet-report-runtime')<waveOf.get('rivet-source-coverage-audit'));
   assert.ok(waveOf.get('rivet-report-runtime')<waveOf.get('rivet-report-projection'));
   assert.ok(waveOf.get('aliev-source-runtime')<waveOf.get('aliev-content-addressed-backup'));
 });
@@ -40,9 +43,11 @@ test('formation waves preserve source-before-report dependencies',()=>{
 test('anatomy can scale safe shards without scaling stateful core',()=>{
   const anatomy=rivetAliEvProductionAnatomy({domainParallelism:28,reportParallelism:8});
   const byId=new Map(anatomy.tasks.map(t=>[t.task_id,t]));
-  assert.equal(byId.get('source-domain-normalize').shard_count,28);
-  assert.equal(byId.get('source-domain-content-hash').shard_count,28);
+  assert.equal(byId.get('source-domain-record-digest').shard_count,28);
+  assert.equal(byId.get('source-domain-canonicalize').shard_count,28);
   assert.equal(byId.get('rivet-report-projection').shard_count,8);
+  assert.equal(byId.get('rivet-session-semantics-audit').shard_count,28);
+  assert.equal(byId.get('rivet-source-coverage-audit').shard_count,8);
   assert.equal(byId.get('aliev-source-runtime').shard_count,1);
   assert.equal(byId.get('rivet-report-runtime').shard_count,1);
 });
