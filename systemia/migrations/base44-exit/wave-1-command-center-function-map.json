@@ -50,15 +50,17 @@
     {
       "source_function": "systemiaCoreGateway",
       "behavior": "Authenticated Systemia Core identity/control-plane view plus machine-commerce bridge.",
-      "state": "owned_control_plane_present_machine_route_pending",
+      "state": "owned_implementation_present_ci_pending_machine_commerce_binding",
       "owned_refs": [
-        "systemia/control-plane/control-plane.mjs",
-        "systemia/mcp/specialist-handoff-runtime.mjs",
-        "systemia/migrations/base44-exit/route-registry.mjs"
+        "systemia/command-center/core-gateway.mjs",
+        "systemia/command-center/core-gateway.proof.mjs",
+        "systemia/control-plane/control-plane.mjs"
       ],
       "remaining": [
-        "authenticated_gateway_contract_parity",
-        "owned_machine_commerce_upstream_binding",
+        "owned_identity_resolver_production_binding",
+        "native_machine_commerce_32_tool_parity",
+        "owned_machine_commerce_delegate_binding",
+        "owned_deployment_receipt",
         "public_route_probe"
       ]
     },
@@ -150,7 +152,7 @@
     "functions_with_owned_replacement_path": 8,
     "functions_fully_cutover_ready": 0,
     "legacy_public_registry_routes_remaining": 4,
-    "owned_function_implementations_present": 3
+    "owned_function_implementations_present": 4
   },
   "authority": {
     "source_mutation": false,
