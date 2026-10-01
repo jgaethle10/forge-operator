@@ -75,7 +75,7 @@ test('Fabric self updater reasserts owned ingress without claiming ChromeOS host
   assert.match(updater,/evercraft-router-map\\.timer/);
   assert.match(updater,/systemctl enable --now "\\$ROUTER_MAP_TIMER"/);
   assert.match(updater,/systemctl start "\\$ROUTER_MAP_SERVICE"/);
-  assert.doesNotMatch(updater,/vmc|ChromeOS Settings|chromeos.*port.*toggle/i);
+  assert.doesNotMatch(updater,/\bvmc\b|ChromeOS Settings|\bcrosh\b|chromeos-port-forward/i);
 });
 
 test('Fabric self update timer creates no inbound admin surface and runs on a bounded cadence',()=>{
