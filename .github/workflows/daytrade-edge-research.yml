@@ -97,7 +97,8 @@ jobs:
           EDGE_LAB_SEC_LOOKBACK_DAYS: "365"
           EDGE_LAB_SEC_PUBLICATION_DELAY_MINUTES: "10"
           EDGE_LAB_TRANSACTION_COST_BPS: "5"
-          EDGE_LAB_ALPACA_QUOTE_FEED: "iex"
+          EDGE_LAB_ALPACA_QUOTE_FEED: "sip"
+          EDGE_LAB_QUOTE_REQUEST_INTERVAL_MS: "350"
         run: node systemia/daytrade-lens/sec-edge-backfill.mjs
 
       - name: Upload Saban DayTrade learning receipt

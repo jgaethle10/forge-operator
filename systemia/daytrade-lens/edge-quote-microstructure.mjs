@@ -2,6 +2,25 @@ function clean(value){
   return String(value??"").trim();
 }
 
+const SIP_QUOTE_SIZE_SHARES_EFFECTIVE_DATE="2025-11-03";
+
+function quoteSizeUnit(feed,timestamp){
+  const normalized=clean(feed).toLowerCase();
+  if(normalized==="sip"){
+    const date=isoDate(timestamp);
+    return date && date>=SIP_QUOTE_SIZE_SHARES_EFFECTIVE_DATE
+      ?"shares"
+      :"round_lots";
+  }
+  if(normalized==="iex") return "round_lots";
+  return "unknown";
+}
+
+function sleep(ms){
+  const delay=Math.max(0,Number(ms||0));
+  return delay?new Promise((resolve)=>setTimeout(resolve,delay)):Promise.resolve();
+}
+
 function uniq(values){
   return [...new Set((values||[]).filter(Boolean))];
 }
@@ -354,13 +373,14 @@ export function summarizeQuoteSignal(rows){
   const singleInstrument=instruments.length===1;
   const visibleRows=singleInstrument
     ?modeledEntry.filter((row)=>
-        Number.isFinite(finite(row.visible_touch_size)) &&
-        finite(row.visible_touch_size)>0 &&
+        row.quote_size_unit==="shares" &&
+        Number.isFinite(finite(row.visible_touch_size_shares)) &&
+        finite(row.visible_touch_size_shares)>0 &&
         Number.isFinite(finite(row.instrument_realized_volatility_5m))
       )
     :[];
   const visibleSizeMedian=percentile(
-    visibleRows.map((row)=>finite(row.visible_touch_size)),
+    visibleRows.map((row)=>finite(row.visible_touch_size_shares)),
     0.50
   );
   const volatilityMedian=percentile(
@@ -368,7 +388,7 @@ export function summarizeQuoteSignal(rows){
     0.50
   );
   const lowVisibleHighVol=visibleRows.filter((row)=>
-    finite(row.visible_touch_size)<=visibleSizeMedian &&
+    finite(row.visible_touch_size_shares)<=visibleSizeMedian &&
     finite(row.instrument_realized_volatility_5m)>=volatilityMedian
   );
 
@@ -388,6 +408,28 @@ export function summarizeQuoteSignal(rows){
   const lowVolumeRows=volumeRows.filter(
     (row)=>finite(row.instrument_start_volume)<entryVolumeMedian
   );
+
+  const capitalRows=modeledEntry.filter((row)=>
+    row.quote_size_unit==="shares" &&
+    Number.isFinite(finite(row.marketable_touch_notional_usd)) &&
+    finite(row.marketable_touch_notional_usd)>0
+  );
+  const capitalTiersUsd=[20,100,1000,5000,10000];
+  const capitalVisibility=capitalTiersUsd.map((notional)=>({
+    hypothetical_order_notional_usd:notional,
+    observations:capitalRows.length,
+    visible_touch_sufficient_rate:capitalRows.length
+      ?capitalRows.filter(
+          (row)=>finite(row.marketable_touch_notional_usd)>=notional
+        ).length/capitalRows.length
+      :null,
+    median_order_to_visible_touch_ratio:percentile(
+      capitalRows.map(
+        (row)=>notional/finite(row.marketable_touch_notional_usd)
+      ).filter(Number.isFinite),
+      0.50
+    ),
+  }));
 
   return {
     target_count:rows.length,
@@ -441,6 +483,19 @@ export function summarizeQuoteSignal(rows){
           :"VISIBLE_TOUCH_SIZE_X_VOLATILITY_INSUFFICIENT",
       full_market_depth_claimed:false,
     },
+    capital_scale_visibility:{
+      observations:capitalRows.length,
+      quote_size_unit_required:"shares",
+      tiers:capitalVisibility,
+      status:capitalRows.length>=8
+        ?"CAPITAL_VISIBLE_TOUCH_DIAGNOSTIC_READY"
+        :"CAPITAL_VISIBLE_TOUCH_DIAGNOSTIC_INSUFFICIENT",
+      market_impact_modeled:false,
+      full_depth_modeled:false,
+      scale_invariance_claimed:false,
+      interpretation:
+        "Compares hypothetical order notional only with displayed marketable NBBO touch notional where quote size is explicitly in shares. It does not predict impact, hidden liquidity, replenishment, routing, or fill quality."
+    },
     volume_is_not_liquidity_negative_control:{
       instruments,
       single_instrument_required:true,
@@ -484,6 +539,7 @@ export async function runQuoteMicrostructureLab(report,{
   group_padding_seconds=30,
   transaction_cost_bps=5,
   passive_touch_window_ms=300000,
+  request_interval_ms=0,
 }={}){
   const targets=buildQuoteMicrostructureTargets(report,{
     signal_keys,
@@ -510,6 +566,7 @@ export async function runQuoteMicrostructureLab(report,{
         fetchImpl,
       });
       quoteCache.set(cacheKey,quotes);
+      await sleep(request_interval_ms);
     }catch(error){
       errors.push({
         kind:"quotes",
@@ -532,6 +589,7 @@ export async function runQuoteMicrostructureLab(report,{
         fetchImpl,
       });
       tradeCache.set(cacheKey,{available:true,trades});
+      await sleep(request_interval_ms);
     }catch(error){
       errors.push({
         kind:"trades",
@@ -601,6 +659,21 @@ export async function runQuoteMicrostructureLab(report,{
       bidSize+askSize>0
         ?(bidSize-askSize)/(bidSize+askSize)
         :null;
+    const sizeUnit=quote?quoteSizeUnit(feed,quote.t):null;
+    const visibleTouchSizeShares=
+      sizeUnit==="shares" ? visibleTouchSize : null;
+    const marketableTouchSizeNative=quote
+      ?(sign>0?askSize:bidSize)
+      :null;
+    const marketableTouchShares=
+      sizeUnit==="shares" && Number.isFinite(marketableTouchSizeNative)
+        ?marketableTouchSizeNative
+        :null;
+    const marketableTouchNotionalUsd=
+      Number.isFinite(marketableTouchShares) &&
+      Number.isFinite(marketableEntry)
+        ?marketableTouchShares*marketableEntry
+        :null;
     return {
       schema:"evercraft.daytrade.edge-quote-overlay.v1",
       ...target,
@@ -632,6 +705,11 @@ export async function runQuoteMicrostructureLab(report,{
       exit_execution_quote_adjusted:false,
       benchmark_entry_quote_adjusted:false,
       visible_touch_size:visibleTouchSize,
+      quote_size_unit:sizeUnit,
+      visible_touch_size_shares:visibleTouchSizeShares,
+      marketable_touch_size_native:marketableTouchSizeNative,
+      marketable_touch_shares:marketableTouchShares,
+      marketable_touch_notional_usd:marketableTouchNotionalUsd,
       top_of_book_size_imbalance:topOfBookSizeImbalance,
       direction_adjusted_top_of_book_imbalance:
         Number.isFinite(topOfBookSizeImbalance)
@@ -706,6 +784,8 @@ export async function runQuoteMicrostructureLab(report,{
       passive_touch_evidence:"Trade-at-or-through evidence only. It is not a fill claim because queue position and order-specific execution are unobserved.",
       passive_touch_window_ms:Number(passive_touch_window_ms),
       visible_touch_size:"Sum of observed top-of-book bid and ask sizes in the provider's native quote-size units. This is not full market depth and is not compared across symbols.",
+      sip_quote_size_units:"SIP quote size is treated as shares only on/after 2025-11-03 per Alpaca's CTA/UTP display-change notice; earlier SIP and IEX sizes remain native round-lot units and are excluded from share-notional scaling.",
+      capital_scale_visibility:"Displayed NBBO touch notional only where size units are shares; never a market-impact or full-depth model.",
       top_of_book_size_imbalance:"(bid_size - ask_size) / (bid_size + ask_size) on the selected feed.",
       entry_bar_volume:"Activity measure only. It is never substituted for spread, visible touch size, impact, or fill probability.",
       missing_is_never_zero:true,

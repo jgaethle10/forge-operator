@@ -102,6 +102,9 @@ async function main() {
     transaction_cost_bps: Number(
       process.env.EDGE_LAB_TRANSACTION_COST_BPS || 5
     ),
+    request_interval_ms: Number(
+      process.env.EDGE_LAB_QUOTE_REQUEST_INTERVAL_MS || 0
+    ),
   });
   const quoteMicrostructureFile = path.join(
     artifactDir,

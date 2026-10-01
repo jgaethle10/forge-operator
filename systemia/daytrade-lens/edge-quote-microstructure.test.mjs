@@ -227,6 +227,9 @@ const microRows=Array.from({length:12},(_,i)=>({
   bid_size:i<6?100+i*5:20+i,
   ask_size:i<6?110+i*5:18+i,
   visible_touch_size:i<6?210+i*10:38+i*2,
+  visible_touch_size_shares:i<6?210+i*10:38+i*2,
+  quote_size_unit:"shares",
+  marketable_touch_notional_usd:i<6?25000+i*1000:3000+i*250,
   top_of_book_size_imbalance:0.05,
   instrument:"SOXX",
   instrument_realized_volatility_5m:i<6?0.0005+i*0.00002:0.002+i*0.00005,
@@ -254,10 +257,64 @@ assert.equal(
   microSummary.volume_is_not_liquidity_negative_control.volume_equated_with_liquidity,
   false
 );
+assert.equal(
+  microSummary.capital_scale_visibility.status,
+  "CAPITAL_VISIBLE_TOUCH_DIAGNOSTIC_READY"
+);
+assert.equal(microSummary.capital_scale_visibility.market_impact_modeled,false);
+assert.equal(microSummary.capital_scale_visibility.scale_invariance_claimed,false);
+assert.equal(
+  microSummary.capital_scale_visibility.tiers.find(
+    (row)=>row.hypothetical_order_notional_usd===20
+  ).visible_touch_sufficient_rate,
+  1
+);
 assert.ok(
   microSummary.volume_is_not_liquidity_negative_control.high_volume_mean_spread_bps >
   microSummary.volume_is_not_liquidity_negative_control.low_volume_mean_spread_bps
 );
+
+const sipShareLab=await runQuoteMicrostructureLab({
+  evaluations:[{
+    signal_key:"ai_models|sec_8_k|SOXX|1d",
+    status:"RESEARCH_CANDIDATE",
+    learned_direction:"POSITIVE_EXCESS_RETURN",
+  }],
+  measurements:[{
+    measurement_id:"sip-share",
+    signal_key:"ai_models|sec_8_k|SOXX|1d",
+    instrument:"SOXX",
+    lag_key:"1d",
+    instrument_start_time:"2026-01-05T14:35:00.000Z",
+    instrument_end_time:"2026-01-06T14:35:00.000Z",
+    instrument_start_price:100,
+    instrument_end_price:101,
+    instrument_start_volume:500000,
+    instrument_realized_volatility_5m:0.002,
+    forward_return:0.01,
+    benchmark_return:0.001,
+    execution_delay_stress:{},
+  }],
+},{
+  key:"proof-key",
+  secret:"proof-secret",
+  feed:"sip",
+  request_interval_ms:0,
+  fetchImpl:async(url)=>({
+    ok:true,
+    json:async()=>String(url).includes("/trades")
+      ?({trades:[],next_page_token:null})
+      :({quotes:[{
+          t:"2026-01-05T14:35:00.100Z",
+          bp:99.95,ap:100.05,bs:200,as:300
+        }],next_page_token:null}),
+  }),
+});
+const sipEntry=sipShareLab.overlays.find((row)=>row.label==="modeled_entry");
+assert.equal(sipEntry.quote_size_unit,"shares");
+assert.equal(sipEntry.visible_touch_size_shares,500);
+assert.equal(sipEntry.marketable_touch_shares,300);
+assert.ok(sipEntry.marketable_touch_notional_usd>30000);
 
 const mixedInstrumentSummary=summarizeQuoteSignal([
   ...microRows.slice(0,6),
@@ -302,6 +359,8 @@ console.log(JSON.stringify({
   volume_is_not_liquidity_negative_control:true,
   low_visible_size_high_volatility_cross_stress:true,
   cross_symbol_quote_size_comparison_forbidden:true,
+  sip_post_2025_11_03_sizes_treated_as_shares:true,
+  capital_visible_touch_not_market_impact:true,
   no_silent_feed_fallback:true,
   missing_never_zero:true,
   live_trade_authority:false

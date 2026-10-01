@@ -57,6 +57,15 @@ assert.match(
   /never labeled a fill/
 );
 assert.equal(
+  ATTACK_IMPLEMENTATION_MAP["capital-scale invariance challenge"].status,
+  "partial"
+);
+assert.match(
+  ATTACK_IMPLEMENTATION_MAP["capital-scale invariance challenge"].gap,
+  /market impact/
+);
+
+assert.equal(
   ATTACK_IMPLEMENTATION_MAP["volume-is-not-liquidity negative control"].status,
   "implemented"
 );
@@ -85,6 +94,7 @@ console.log(JSON.stringify({
   passive_touch_never_promoted_to_fill:true,
   volume_not_liquidity_closed:true,
   low_visible_size_high_volatility_partial:true,
+  capital_scale_visibility_partial_not_impact_model:true,
   explicit_evidence_mapping:true,
   frozen_protocol_mutation_forbidden:true,
   live_trade_authority:false

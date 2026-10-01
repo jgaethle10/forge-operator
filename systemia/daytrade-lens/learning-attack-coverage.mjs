@@ -83,9 +83,9 @@ export const ATTACK_IMPLEMENTATION_MAP=Object.freeze({
     ]
   },
   "capital-scale invariance challenge":{
-    status:"missing",
-    evidence:[],
-    gap:"No size/participation/impact scaling model yet."
+    status:"partial",
+    evidence:["systemia/daytrade-lens/edge-quote-microstructure.mjs"],
+    gap:"Historical SIP observations with quote sizes explicitly in shares now compare hypothetical order notionals against displayed marketable NBBO touch notional, but market impact, hidden liquidity, replenishment, routing and participation-rate effects remain unmodeled."
   },
   "spread-depth-imbalance data contract":{
     status:"partial",
