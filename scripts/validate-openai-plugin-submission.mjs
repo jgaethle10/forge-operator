@@ -84,6 +84,8 @@ requireHttps('mcp.url', submission?.mcp?.url);
 if(submission?.mcp?.authority==='owned_public_fabric'){
   const mcpUrl=new URL(submission.mcp.url);
   if(/(^|\.)base44\.app$/i.test(mcpUrl.hostname)) errors.push('owned public Fabric MCP must not use Base44');
+  if(mcpUrl.pathname!=='/mcp/openai') errors.push('OpenAI submission MCP must use the purpose-specific /mcp/openai path');
+  if(submission.mcp.url_type!=='Purpose-specific reviewed endpoint') errors.push('OpenAI submission MCP must be purpose-specific');
   if(submission.mcp.owned_fabric_cutover_required!==false) errors.push('owned public Fabric must close the cutover gate');
   if(submission.mcp.origin_change_requires_new_plugin_submission!==true) errors.push('owned Fabric origin change must require a new OpenAI plugin submission');
 }
@@ -91,6 +93,16 @@ requireHttps('website', submission.website);
 requireHttps('support_url', submission.support_url);
 requireHttps('privacy_policy_url', submission.privacy_policy_url);
 requireHttps('terms_url', submission.terms_url);
+for (const [label,value,pathname] of [
+  ['website',submission.website,'/openai'],
+  ['support_url',submission.support_url,'/openai/support'],
+  ['privacy_policy_url',submission.privacy_policy_url,'/openai/privacy'],
+  ['terms_url',submission.terms_url,'/openai/terms'],
+]) {
+  try {
+    if(new URL(value).pathname!==pathname) errors.push(`${label} must use isolated OpenAI path ${pathname}`);
+  } catch {}
+}
 
 for (const file of ['PRIVACY.md','TERMS.md','SUPPORT.md']) {
   if (!fs.existsSync(file)) errors.push(`${file} is required`);
@@ -185,9 +197,24 @@ for (const test of allCases) {
 }
 for (const test of tests.positive || []) {
   if (!test.tools_triggered) errors.push(`positive review case ${test.id || 'unknown'} needs tools_triggered`);
+  if (test.tools_triggered!=='inspect_public_website') errors.push(`positive review case ${test.id || 'unknown'} must use inspect_public_website`);
+}
+if(!Array.isArray(review?.test_cases?.positive)||review.test_cases.positive.some((x)=>x.tools_triggered!=='inspect_public_website')){
+  errors.push('portable review cases must use only inspect_public_website');
+}
+const justificationKeys=Object.keys(submission.tool_annotation_justifications||{});
+if(justificationKeys.length!==1||justificationKeys[0]!=='inspect_public_website'){
+  errors.push('submission annotation justifications must expose only inspect_public_website');
 }
 
 const review = manifest?.extensions?.['com.openai']?.review || {};
+if(review.commerce!==false) errors.push('public Evercraft v1.1.0 plugin commerce must be false');
+if(manifest?.extensions?.['com.openai']?.onboardingSkill!=='./skills/evercraft-site-inspector/SKILL.md'){
+  errors.push('public Evercraft onboarding skill must be the focused site inspector');
+}
+if(fs.existsSync(path.join(packageRoot,'skills','evercraft-router','SKILL.md'))){
+  errors.push('public Evercraft package must not include the generic router skill');
+}
 if (!Array.isArray(review?.test_cases?.positive) || review.test_cases.positive.length !== 5) {
   errors.push('portable manifest must embed exactly five positive review cases');
 }
