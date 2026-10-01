@@ -31,6 +31,12 @@ test('loads the typed ChromeOS read capability', () => {
   );
   assert.equal(capability.mutation_authority, false);
   assert.equal(capability.arbitrary_desktop_control, false);
+  assert.equal(capability.arbitrary_desktop_control_exposed, false);
+  assert.equal(capability.platform_permission_is_broad, true);
+  assert.equal(
+    capability.platform_permission_scope,
+    'chromeos_desktop_automation',
+  );
   assert.deepEqual(capability.scope.ports, [8443, 18080]);
 });
 
