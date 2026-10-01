@@ -165,7 +165,19 @@ try{
   assert.equal(receipt.node_pool_receipt.completed_assignments,4);
   assert.equal(receipt.node_pool_receipt.failed_assignments,0);
   assert.equal(receipt.sample_results.length,4);
-  assert.ok(receipt.sample_results.every((row)=>row.status==='finding'));
+  assert.deepEqual(
+    receipt.sample_results.map((row)=>row.status),
+    ['clean','finding','finding','finding']
+  );
+  assert.deepEqual(
+    receipt.sample_results.map((row)=>row.role),
+    [
+      'portfolio_archaeologist',
+      'surface_auditor',
+      'intent_cartographer',
+      'answer_door_planner',
+    ]
+  );
   assert.ok(
     receipt.node_pool_receipt.results.every((row)=>
       row.compute_receipt?.startsWith('sha256:')
