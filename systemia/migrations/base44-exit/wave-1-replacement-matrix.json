@@ -72,8 +72,15 @@
           "refs": [
             "systemia/operations/auto-clock-out.mjs",
             "systemia/operations/auto-clock-out.proof.mjs",
+            "systemia/operations/auto-clock-out-runner.mjs",
+            "systemia/operations/auto-clock-out.workflow.json",
+            "systemia/operations/auto-clock-out-registration.proof.mjs",
+            "systemia/core/resident-supervisor.mjs",
+            "systemia/core/resident-services.json",
             "systemia/migrations/base44-exit/wave-1-scheduled-work.json"
-          ]
+          ],
+          "activation_state": "registered_disabled_until_explicit_gate",
+          "automatic_activation": false
         },
         {
           "key": "provider_secret_rekey",
@@ -151,8 +158,15 @@
           "refs": [
             "systemia/operations/auto-clock-out.mjs",
             "systemia/operations/auto-clock-out.proof.mjs",
+            "systemia/operations/auto-clock-out-runner.mjs",
+            "systemia/operations/auto-clock-out.workflow.json",
+            "systemia/operations/auto-clock-out-registration.proof.mjs",
+            "systemia/core/resident-supervisor.mjs",
+            "systemia/core/resident-services.json",
             "systemia/migrations/base44-exit/wave-1-scheduled-work.json"
-          ]
+          ],
+          "activation_state": "registered_disabled_until_explicit_gate",
+          "automatic_activation": false
         },
         {
           "key": "aggregate_snapshot_and_direct_systemia_ingress",
@@ -228,10 +242,12 @@
           "key": "pdf_object_storage",
           "state": "implementation_present_ci_pending",
           "refs": [
+            "systemia/object-store/object-store.mjs",
             "systemia/object-store/delivery-gateway.mjs",
             "systemia/audit-center/export-runtime.mjs",
             "systemia/audit-center/export-runtime.proof.mjs"
-          ]
+          ],
+          "detail": "PDF bytes land in the owned content-addressed Object Store and are delivered only through signed owned URLs. A production PDF renderer and public object-delivery route still require binding before cutover."
         },
         {
           "key": "stripe_secret_rekey",
