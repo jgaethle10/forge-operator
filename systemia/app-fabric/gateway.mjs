@@ -104,6 +104,7 @@ export function createAppFabricHandler({
   functionInvoker = null,
   integrationInvoker = null,
   authHandlers = {},
+  appLogSink = null,
   realtimeBus = null,
   realtimePollMs = 100,
   realtimeHeartbeatMs = 15_000,
@@ -428,7 +429,29 @@ export function createAppFabricHandler({
         return json(response, 200, await maybe(authHandlers.logout({ appKey, subjectRef, identity, request })), cors);
       }
 
-      const authActionMatch = remainder.match(/^auth\/(register|verify-otp|resend-otp|reset-password-request|reset-password)$/);
+      if (remainder === 'app-logs/user-in-app' && request.method === 'POST') {
+        const body = await readBody(request, maxBodyBytes);
+        await require({ kind: 'telemetry', operation: 'log_user_in_app', body });
+        if (typeof appLogSink !== 'function') {
+          return json(response, 202, {
+            recorded: false,
+            state: 'telemetry_sink_not_configured',
+            external_action_taken: false
+          }, cors);
+        }
+        return json(response, 200, await maybe(appLogSink({
+          appKey,
+          subjectRef,
+          identity,
+          pageName: String(body?.page_name || '').slice(0, 240),
+          metadata: body?.metadata && typeof body.metadata === 'object' && !Array.isArray(body.metadata)
+            ? body.metadata
+            : {},
+          request
+        })), cors);
+      }
+
+            const authActionMatch = remainder.match(/^auth\/(register|verify-otp|resend-otp|reset-password-request|reset-password)$/);
       if (authActionMatch) {
         if (request.method !== 'POST') return json(response, 405, { error: 'method_not_allowed' }, cors);
         const handlerName = {
