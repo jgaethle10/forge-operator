@@ -32,6 +32,18 @@ function limitText(value, max = 8192) {
   return text.length > max ? text.slice(-max) : text;
 }
 
+function activationState(service, env) {
+  const envName = String(service.enabled_when_env || '').trim();
+  if (!envName) return { enabled: true, reason: null };
+  const raw = String(env[envName] || '').trim().toLowerCase();
+  const enabled = ['1', 'true', 'yes', 'on', 'enabled'].includes(raw);
+  return {
+    enabled,
+    reason: enabled ? null : 'activation_gate_disabled',
+    env_name: envName
+  };
+}
+
 function resolveArgs(service, env) {
   const args = Array.isArray(service.static_args)
     ? service.static_args.map(String)
@@ -213,6 +225,19 @@ export class SystemiaCoreResidentSupervisor {
 
   async #runCycle(entry) {
     const { config, state } = entry;
+    const activation = activationState(config, this.env);
+    if (!activation.enabled) {
+      const receipt = this.#receipt('cycle.disabled', {
+        service_key: config.service_key,
+        reason: activation.reason,
+        activation_env: activation.env_name
+      });
+      state.status = 'disabled';
+      state.hold_reason = activation.reason;
+      state.last_receipt_hash = receipt.receipt_hash;
+      this.#persistHealth();
+      return;
+    }
     if (state.status === 'running') {
       const receipt = this.#receipt('cycle.held', {
         service_key: config.service_key,
@@ -320,6 +345,20 @@ export class SystemiaCoreResidentSupervisor {
     const { config, state } = entry;
     if (!this.running) return;
     if (this.children.has(config.service_key)) return;
+
+    const activation = activationState(config, this.env);
+    if (!activation.enabled) {
+      const receipt = this.#receipt('resident.disabled', {
+        service_key: config.service_key,
+        reason: activation.reason,
+        activation_env: activation.env_name
+      });
+      state.status = 'disabled';
+      state.hold_reason = activation.reason;
+      state.last_receipt_hash = receipt.receipt_hash;
+      this.#persistHealth();
+      return;
+    }
 
     let args;
     try {
