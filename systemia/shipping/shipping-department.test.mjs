@@ -26,6 +26,7 @@ import { dispatchVerifiedShipment } from './transport-runtime.mjs';
 import { buildReleasePlan, materializeReleasePackage, verifyMaterializedRelease } from './release-station.mjs';
 import { admitShippingOrder, authorizeReissue, assertCurrentRelease, buildShippingExceptionIntent, findShippingExceptions, markShippingOrderState, shippingControlTowerSummary } from './control-tower.mjs';
 import { buildShippingProofBundle } from './proof-bundle.mjs';
+import { buildRecipientResponseSignal, correlateRecipientResponse, dedupeRecipientResponses } from './recipient-response.mjs';
 
 function tempDir() {
   return fs.mkdtempSync(path.join(os.tmpdir(), 'evercraft-shipping-'));
@@ -686,4 +687,56 @@ test('proof bundle refuses broken chain-of-custody and passes a fully consistent
   });
   assert.equal(broken.pass, false);
   assert.ok(broken.reasons.includes('provider_message_id_mismatch'));
+});
+
+
+test('recipient response loop records evidence without silently inferring acceptance', () => {
+  const order = {
+    order_key:'shipping-order:response',
+    state:'verified_delivered'
+  };
+  const shipment = {
+    shipment_key:'shipment:response',
+    state:'verified_delivered',
+    provider_message_id:'gmail:sent-1',
+    provider_thread_id:'gmail:thread-1'
+  };
+  const response = correlateRecipientResponse({
+    order,
+    shipment,
+    inbound_message:{
+      id:'gmail:reply-1',
+      thread_id:'gmail:thread-1',
+      from:'buyer@example.com',
+      to:['sender@example.com'],
+      subject:'Re: Client Package',
+      received_at:'2026-10-01T22:03:34Z'
+    }
+  });
+  assert.equal(response.truth_boundary.proves_inbound_response_observed, true);
+  assert.equal(response.truth_boundary.proves_customer_acceptance, false);
+  assert.equal(response.disposition, 'unknown');
+
+  const signal = buildRecipientResponseSignal(response);
+  assert.equal(signal.signal_type, 'recipient_response_observed');
+  assert.equal(signal.recommended_next_action, 'route_to_owner_review');
+  assert.equal(signal.autonomous_external_action_authorized, false);
+
+  const approved = correlateRecipientResponse({
+    order,
+    shipment,
+    inbound_message:{
+      id:'gmail:reply-2',
+      thread_id:'gmail:thread-1',
+      from:'buyer@example.com',
+      to:['sender@example.com'],
+      subject:'Re: Client Package'
+    },
+    disposition:'approved',
+    disposition_basis:'human_confirmed'
+  });
+  assert.equal(approved.truth_boundary.proves_customer_acceptance, true);
+
+  const deduped = dedupeRecipientResponses([response, response, approved]);
+  assert.equal(deduped.length, 2);
 });
