@@ -27,17 +27,46 @@ export function createMicroSeedNativeAgentAdapter({
     throw new Error('microseed_native_agent_credential_resolver_required');
   }
 
+  async function authContext(manifest){
+    if(manifest?.bridge_mode!=='native_agent'||manifest?.compute_execution_mode!=='native_device'){
+      throw new Error('microseed_native_agent_manifest_required');
+    }
+    const base=validateEndpoint(manifest.endpoint,{allowInsecureLan});
+    const token=clean(await credentialResolver({
+      device_id:manifest.device_id,
+      manifest,
+    }));
+    if(!token) throw new Error('microseed_native_agent_credential_missing');
+    return {base,token};
+  }
+
   return {
-    async execute({manifest,workload_class,payload,idempotency_key}={}){
-      if(manifest?.bridge_mode!=='native_agent'||manifest?.compute_execution_mode!=='native_device'){
-        throw new Error('microseed_native_agent_manifest_required');
+    async telemetry({manifest}={}){
+      const {base,token}=await authContext(manifest);
+      const controller=new AbortController();
+      const timer=setTimeout(()=>controller.abort(),Math.max(1000,Number(timeoutMs||10000)));
+      try{
+        const endpoint=new URL('/v1/telemetry',base);
+        const response=await fetchImpl(endpoint,{
+          method:'GET',
+          headers:{authorization:'Bearer '+token,accept:'application/json'},
+          signal:controller.signal,
+        });
+        const body=await readBoundedJson(response);
+        if(!response.ok||body?.ok!==true||body?.schema!=='evercraft.microseed.device-telemetry.v1'){
+          throw new Error('microseed_native_agent_telemetry_http_'+response.status+':'+clean(body?.error||'telemetry_failed'));
+        }
+        if(body.device_id!==manifest.device_id){
+          throw new Error('microseed_native_agent_telemetry_device_mismatch');
+        }
+        return body.telemetry||{};
+      }finally{
+        clearTimeout(timer);
       }
-      const base=validateEndpoint(manifest.endpoint,{allowInsecureLan});
-      const token=clean(await credentialResolver({
-        device_id:manifest.device_id,
-        manifest,
-      }));
-      if(!token) throw new Error('microseed_native_agent_credential_missing');
+    },
+
+    async execute({manifest,workload_class,payload,idempotency_key}={}){
+      const {base,token}=await authContext(manifest);
 
       const controller=new AbortController();
       const timer=setTimeout(()=>controller.abort(),Math.max(1000,Number(timeoutMs||10000)));
