@@ -1,0 +1,30 @@
+name: FAIE software gate
+
+on:
+  push:
+    branches:
+      - feature/faie-software-v1
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  faie:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install
+        run: npm install --no-audit --no-fund
+      - name: FAIE tests
+        run: npm run test:faie
+      - name: Typecheck
+        run: npm run lint
+      - name: Production build
+        run: npm run build
