@@ -19,6 +19,7 @@ import { runTimingFragilityLab } from "./edge-timing-fragility.mjs";
 import { runOverlapFragilityLab } from "./edge-overlap-fragility.mjs";
 import { runMatchedPlaceboLab } from "./edge-matched-placebo.mjs";
 import { runBenchmarkFragilityLab } from "./edge-benchmark-fragility.mjs";
+import { runHorizonCoherenceLab } from "./edge-horizon-coherence.mjs";
 import { runWalkForwardLab } from "./edge-walk-forward.mjs";
 import { runExecutionTranslationLab } from "./edge-execution-translation.mjs";
 import { evaluatePilotReadiness } from "./edge-pilot-readiness.mjs";
@@ -84,6 +85,18 @@ async function main() {
   });
   const benchmarkFile = path.join(artifactDir, "sec-edge-benchmark-fragility.json");
   fs.writeFileSync(benchmarkFile, JSON.stringify(benchmarkLab, null, 2) + "\n");
+
+  const horizonCoherenceLab = runHorizonCoherenceLab(report, {
+    transaction_cost_bps: Number(process.env.EDGE_LAB_TRANSACTION_COST_BPS || 5),
+  });
+  const horizonCoherenceFile = path.join(
+    artifactDir,
+    "sec-edge-horizon-coherence.json"
+  );
+  fs.writeFileSync(
+    horizonCoherenceFile,
+    JSON.stringify(horizonCoherenceLab, null, 2) + "\n"
+  );
 
   const walkForwardLab = runWalkForwardLab(report, {
     transaction_cost_bps: Number(process.env.EDGE_LAB_TRANSACTION_COST_BPS || 5),
@@ -319,6 +332,7 @@ async function main() {
     overlap_robust_diagnostics: overlapLab.overlap_robust_count || 0,
     placebo_separated_diagnostics: placeboLab.placebo_separated_count || 0,
     benchmark_fragility_status_counts: benchmarkLab.status_counts || {},
+    horizon_coherent_diagnostics: horizonCoherenceLab.coherent_count || 0,
     walk_forward_robust_diagnostics: walkForwardLab.walk_forward_robust_count || 0,
     execution_translation_status_counts: executionTranslationLab.status_counts || {},
     frozen_forward_paper_cohorts: frozenCohorts.length,
@@ -340,6 +354,7 @@ async function main() {
       overlap_fragility_lab: overlapFile,
       matched_placebo_lab: placeboFile,
       benchmark_fragility_lab: benchmarkFile,
+      horizon_coherence_lab: horizonCoherenceFile,
       walk_forward_lab: walkForwardFile,
       execution_translation_lab: executionTranslationFile,
       adversarial_review: adversarialFile,
