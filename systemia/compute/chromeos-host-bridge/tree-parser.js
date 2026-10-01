@@ -92,12 +92,17 @@ function roleLooksToggle(role) {
   return ['switch', 'togglebutton', 'toggle_button', 'checkbox', 'check_box'].includes(normalized);
 }
 
-export function extractPortForwardingState(root, admittedPorts = ADMITTED_PORTS) {
+export function extractPortForwardingState(
+  root,
+  admittedPorts = ADMITTED_PORTS,
+  { expectedSurface = false } = {},
+) {
   const { rows, bounded } = flattenAutomationTree(root);
-  const surfaceObserved = rows.some((row) =>
+  const languageHintObserved = rows.some((row) =>
     /port forwarding/i.test(row.text) ||
     /activate port/i.test(row.text)
   );
+  const surfaceObserved = expectedSurface || languageHintObserved;
 
   const findings = new Map();
   let toggleCandidates = 0;
@@ -143,6 +148,8 @@ export function extractPortForwardingState(root, admittedPorts = ADMITTED_PORTS)
       matched_ports: findings.size,
       unmatched_toggle_candidates: unmatchedToggleCandidates,
       raw_tree_persisted: false,
+      surface_asserted_by_caller: expectedSurface === true,
+      language_hint_observed: languageHintObserved,
     },
     ports: admittedPorts.map((port) => findings.get(port) || {
       port,
