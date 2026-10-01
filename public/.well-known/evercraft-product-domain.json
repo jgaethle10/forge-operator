@@ -1,0 +1,30 @@
+{
+  "schema": "evercraft.public-product-domain.v1",
+  "authority": "Evercraft LLC",
+  "domain": "evercraft.app",
+  "wildcard": "*.evercraft.app",
+  "routing_mode": "host_label_to_admitted_product_key",
+  "product_directory": "/.well-known/evercraft-products.json",
+  "public_surface_pattern": "https://{product_key}.evercraft.app/",
+  "runtime": "systemia.chum.public-origin-runtime.v1",
+  "activation_state": "runtime_route_ready_external_dns_tls_pending",
+  "activation_gates": [
+    "evercraft.app is registered and controlled by Evercraft",
+    "authoritative DNS for evercraft.app is delegated",
+    "evercraft.app and *.evercraft.app resolve to the verified public edge",
+    "TLS is valid for evercraft.app and *.evercraft.app",
+    "public edge health reports product_domain=evercraft.app",
+    "Infinite Classroom root, llms.txt, and ai-discovery.json pass the external canary",
+    "an unadmitted product hostname returns 404"
+  ],
+  "first_cutover": {
+    "product_key": "infinite-classroom",
+    "target_url": "https://infinite-classroom.evercraft.app/",
+    "legacy_url": "https://infinite-classroom.base44.app/",
+    "promotion_rule": "Do not publish target_url as the live human_start_url until the external canary is green."
+  },
+  "legacy_provider_policy": {
+    "base44": "evacuation_source_only",
+    "new_public_authority": "evercraft.app"
+  }
+}
