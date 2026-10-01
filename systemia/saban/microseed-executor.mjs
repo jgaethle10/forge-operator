@@ -98,6 +98,7 @@ export async function executeMicroSeedWorkload({
     : normalizeMicroSeedExecutionRequest(request||{});
 
   if(req.device_id!==manifest.device_id) throw new Error('microseed_execution_device_mismatch');
+  const workloadSpec=microSeedWorkloadSpec(req.workload_class);
   if(!(manifest.supported_workloads||[]).includes(req.workload_class)){
     throw new Error('microseed_workload_not_authorized');
   }
@@ -120,7 +121,7 @@ export async function executeMicroSeedWorkload({
   }
 
   const root=stateDir?path.resolve(stateDir):null;
-  const replayFile=root
+  const replayFile=root&&workloadSpec?.sensitive_result!==true
     ? path.join(root,'idempotency',safeKey(req.device_id),safeKey(req.idempotency_key)+'.json')
     : null;
   if(replayFile&&fs.existsSync(replayFile)){

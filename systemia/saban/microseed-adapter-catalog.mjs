@@ -25,9 +25,9 @@ export const MicroSeedAdapterCatalog=Object.freeze({
   },
   mqtt:{
     mode:'mqtt',
-    implementation_state:'not_implemented',
+    implementation_state:'built_in',
     runtime_dependency:null,
-    supports:[],
+    supports:['observation','actuation','network_ingress','network_egress'],
   },
   ble_proxy:{
     mode:'ble_proxy',

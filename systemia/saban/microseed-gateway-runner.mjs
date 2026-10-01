@@ -8,6 +8,7 @@ import { startMicroSeedGateway } from './microseed-gateway.mjs';
 import { createMicroSeedNativeAgentAdapter } from './microseed-native-agent-adapter.mjs';
 import { createMicroSeedLanApiAdapter } from './microseed-lan-api-adapter.mjs';
 import { createMicroSeedMatterAdapter } from './microseed-matter-adapter.mjs';
+import { createMicroSeedMqttAdapter } from './microseed-mqtt-adapter.mjs';
 import { buildMicroSeedAdapterHealth } from './microseed-adapter-catalog.mjs';
 
 const MODULE_FILE=fileURLToPath(import.meta.url);
@@ -66,6 +67,22 @@ async function main(){
     },
   });
 
+  const mqttCredentialDir=path.join(root,'.secrets','mqtt');
+  const mqttAdapter=createMicroSeedMqttAdapter({
+    credentialResolver:async({device_id})=>{
+      const file=path.join(mqttCredentialDir,safeId(device_id)+'.json');
+      if(!fs.existsSync(file)) return null;
+      const credential=JSON.parse(fs.readFileSync(file,'utf8'));
+      return {
+        ...(credential.username?{username:String(credential.username)}:{}),
+        ...(credential.password?{password:String(credential.password)}:{}),
+        ...(credential.ca_pem?{ca_pem:String(credential.ca_pem)}:{}),
+        ...(credential.cert_pem?{cert_pem:String(credential.cert_pem)}:{}),
+        ...(credential.key_pem?{key_pem:String(credential.key_pem)}:{}),
+      };
+    },
+  });
+
   const adapterHealth=buildMicroSeedAdapterHealth({
     executables:{'chip-tool':commandExists('chip-tool')},
   });
@@ -84,6 +101,7 @@ async function main(){
     bridgeAdapters:{
       native_agent:nativeAdapter,
       lan_api:lanApiAdapter,
+      mqtt:mqttAdapter,
       ...(matterAdapter?{matter:matterAdapter}:{}),
     },
   });

@@ -27,13 +27,26 @@ function atomicWrite(file,content,mode=0o600){
 }
 function atomicJson(file,value){atomicWrite(file,JSON.stringify(value,null,2)+'\n',0o600);}
 function masterKeyFile(stateDir){return path.join(stateDir,'.secrets','ambient-memory-master-key');}
-function loadOrCreateMasterKey(stateDir){
+export function ensureAmbientMemoryMasterKey(stateDir){
   const file=masterKeyFile(stateDir);
   fs.mkdirSync(path.dirname(file),{recursive:true,mode:0o700});
   if(!fs.existsSync(file)) atomicWrite(file,randomBytes(32).toString('base64')+'\n',0o600);
   const key=Buffer.from(fs.readFileSync(file,'utf8').trim(),'base64');
   if(key.length!==32) throw new Error('ambient_memory_master_key_invalid');
   return key;
+}
+export function loadAmbientMemoryMasterKey(stateDir){
+  const file=masterKeyFile(stateDir);
+  if(!fs.existsSync(file)) throw new Error('ambient_memory_master_key_missing_recovery_required');
+  const key=Buffer.from(fs.readFileSync(file,'utf8').trim(),'base64');
+  if(key.length!==32) throw new Error('ambient_memory_master_key_invalid');
+  return key;
+}
+export function persistRecoveredAmbientMemoryMasterKey(stateDir,key){
+  if(!Buffer.isBuffer(key)||key.length!==32) throw new Error('ambient_memory_recovered_key_invalid');
+  const file=masterKeyFile(stateDir);
+  atomicWrite(file,key.toString('base64')+'\n',0o600);
+  return file;
 }
 function objectKey(master,objectDigest){
   return createHmac('sha256',master)
@@ -146,7 +159,7 @@ export async function storeAmbientMemoryObject({
 
   const size=Math.max(1024,Math.min(24*1024,Math.floor(Number(chunkBytes||24*1024))));
   const count=Math.max(1,Math.ceil(body.byteLength/size));
-  const master=loadOrCreateMasterKey(stateDir);
+  const master=ensureAmbientMemoryMasterKey(stateDir);
   const key=objectKey(master,objectDigest);
   const chunks=[];
   for(let index=0;index<count;index++){
@@ -242,7 +255,7 @@ export async function readAmbientMemoryObject({
   const file=manifestFile(stateDir,object_sha256);
   if(!fs.existsSync(file)) throw new Error('ambient_memory_manifest_not_found');
   const manifest=JSON.parse(fs.readFileSync(file,'utf8'));
-  const master=loadOrCreateMasterKey(stateDir);
+  const master=loadAmbientMemoryMasterKey(stateDir);
   const key=objectKey(master,manifest.object_sha256);
   const plainChunks=[];
   const readAttempt=randomBytes(8).toString('hex');

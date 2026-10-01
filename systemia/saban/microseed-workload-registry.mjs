@@ -229,7 +229,108 @@ function blobStore(payload,context={}){
   throw new Error('microseed_blob_operation_invalid');
 }
 
+
+function safeRecoverySlot(value){
+  const slot=String(value||'').trim();
+  if(!/^[a-zA-Z0-9._-]{1,96}$/.test(slot)) throw new Error('microseed_secret_share_slot_invalid');
+  return slot;
+}
+function secretShareVault(payload,context={}){
+  if(!context.stateDir) throw new Error('microseed_secret_share_state_dir_required');
+  const operation=String(payload?.operation||'').trim().toLowerCase();
+  const slot=safeRecoverySlot(payload?.slot_id);
+  const root=path.resolve(context.stateDir,'secret-share-vault');
+  fs.mkdirSync(root,{recursive:true,mode:0o700});
+  const file=path.join(root,slot+'.json');
+
+  if(operation==='put'){
+    const share=String(payload?.share_base64||'').trim();
+    const raw=Buffer.from(share,'base64');
+    if(raw.length<2||raw.length>1024) throw new Error('microseed_secret_share_size_invalid');
+    const metadata=payload?.metadata&&typeof payload.metadata==='object'?stable(payload.metadata):{};
+    const record={
+      schema:'evercraft.microseed.secret-share-slot.v1',
+      slot_id:slot,
+      share_base64:share,
+      share_sha256:sha(raw),
+      metadata,
+      stored_at:new Date().toISOString(),
+    };
+    const tmp=file+'.'+process.pid+'.'+randomBytes(4).toString('hex')+'.tmp';
+    fs.writeFileSync(tmp,JSON.stringify(record,null,2)+'\n',{mode:0o600});
+    fs.renameSync(tmp,file);
+    fs.chmodSync(file,0o600);
+    return {
+      ok:true,
+      operation:'put',
+      slot_id:slot,
+      share_sha256:record.share_sha256,
+      metadata_hash:sha(metadata),
+      stored:true,
+      share_value_exposed:false,
+    };
+  }
+
+  if(operation==='has'){
+    return {ok:true,operation:'has',slot_id:slot,present:fs.existsSync(file)};
+  }
+
+  if(operation==='list'){
+    const slot_ids=fs.readdirSync(root)
+      .filter(name=>name.endsWith('.json'))
+      .map(name=>name.slice(0,-5))
+      .filter(name=>/^[a-zA-Z0-9._-]{1,96}$/.test(name))
+      .sort()
+      .slice(0,128);
+    return {
+      ok:true,
+      operation:'list',
+      slot_id:slot,
+      slot_ids,
+      share_values_exposed:false,
+    };
+  }
+
+  if(operation==='get'){
+    if(!fs.existsSync(file)) return {ok:false,operation:'get',slot_id:slot,present:false};
+    const record=JSON.parse(fs.readFileSync(file,'utf8'));
+    const raw=Buffer.from(String(record.share_base64||''),'base64');
+    if(record.share_sha256!==sha(raw)) throw new Error('microseed_secret_share_integrity_failed');
+    return {
+      ok:true,
+      operation:'get',
+      slot_id:slot,
+      present:true,
+      share_base64:record.share_base64,
+      share_sha256:record.share_sha256,
+      metadata:record.metadata||{},
+      integrity_verified:true,
+    };
+  }
+
+  throw new Error('microseed_secret_share_operation_invalid');
+}
+
 const SPECS=[
+  {
+    workload_class:'systemia.secret-share-vault.v1',
+    description:'Infrastructure-only bounded threshold-secret share slot for ambient memory recovery.',
+    max_payload_bytes:8*1024,
+    deterministic:false,
+    private_data_allowed:true,
+    product_submission_allowed:false,
+    sensitive_result:true,
+    preferred_max_memory_mb:64,
+    canary_payload:{
+      operation:'put',
+      slot_id:'saban-conformance-canary',
+      share_base64:Buffer.from([1,2,3,4]).toString('base64'),
+      metadata:{purpose:'conformance'},
+    },
+    validate_canary:r=>r?.ok===true&&r?.operation==='put'&&r?.share_value_exposed===false,
+    execute:secretShareVault,
+  },
+
   {
     workload_class:'systemia.blob-store.v1',
     description:'Bounded content-addressed put/get/has against the device MicroSeed object namespace.',
@@ -367,6 +468,8 @@ export function microSeedWorkloadCatalog(){
       max_payload_bytes:spec.max_payload_bytes,
       deterministic:spec.deterministic,
       private_data_allowed:spec.private_data_allowed,
+      product_submission_allowed:spec.product_submission_allowed!==false,
+      sensitive_result:spec.sensitive_result===true,
       preferred_max_memory_mb:spec.preferred_max_memory_mb,
       arbitrary_code_execution:false,
     })),

@@ -92,6 +92,11 @@ export async function invokeMicroSeedCapability({
   if(replayFile&&fs.existsSync(replayFile)){
     const prior=JSON.parse(fs.readFileSync(replayFile,'utf8'));
     if(prior.request_hash!==req.request_hash) throw new Error('capability_idempotency_key_conflict');
+    if(prior.schema==='evercraft.microseed.capability-uncertain.v1'){
+      const error=new Error('capability_prior_outcome_unknown_manual_reconciliation_required');
+      error.uncertain_receipt=prior;
+      throw error;
+    }
     return {...prior,deduplicated:true};
   }
 
@@ -100,15 +105,47 @@ export async function invokeMicroSeedCapability({
     throw new Error('capability_bridge_adapter_unavailable:'+manifest.bridge_mode);
   }
 
-  const result=await adapter.invokeCapability({
-    manifest,
-    capability,
-    capability_index:req.capability_index,
-    operation:req.operation,
-    payload:req.payload,
-    idempotency_key:req.idempotency_key,
-    approval_ref:req.approval_ref,
-  });
+  let result;
+  try{
+    result=await adapter.invokeCapability({
+      manifest,
+      capability,
+      capability_index:req.capability_index,
+      operation:req.operation,
+      payload:req.payload,
+      idempotency_key:req.idempotency_key,
+      approval_ref:req.approval_ref,
+    });
+  }catch(error){
+    if(consequential&&error?.outcome_unknown===true){
+      const uncertain={
+        schema:'evercraft.microseed.capability-uncertain.v1',
+        device_id:req.device_id,
+        capability_index:req.capability_index,
+        capability_kind:capability.kind,
+        protocol:capability.protocol||manifest.protocol||null,
+        operation:req.operation,
+        idempotency_key:req.idempotency_key,
+        request_hash:req.request_hash,
+        manifest_hash:manifest.manifest_hash,
+        approval_ref_hash:req.approval_ref?sha(req.approval_ref):null,
+        approval_value_exposed:false,
+        outcome_unknown:true,
+        retry_suppressed:true,
+        manual_reconciliation_required:true,
+        adapter_error:String(error?.message||error),
+        arbitrary_code_execution:false,
+        external_cash_spend_usd:0,
+        observed_at:new Date(now instanceof Date?now.getTime():Date.parse(String(now))).toISOString(),
+      };
+      uncertain.receipt_hash=sha(uncertain);
+      if(replayFile) atomicJson(replayFile,uncertain);
+      const held=new Error('capability_outcome_unknown_manual_reconciliation_required');
+      held.uncertain_receipt=uncertain;
+      throw held;
+    }
+    throw error;
+  }
 
   const body={
     schema:'evercraft.microseed.capability-receipt.v1',

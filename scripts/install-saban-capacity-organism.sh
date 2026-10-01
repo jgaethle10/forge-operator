@@ -77,6 +77,7 @@ chown "$RUN_USER:$RUN_GROUP" "$STATE_DIR"
 chmod 0750 "$STATE_DIR"
 install -d -o "$RUN_USER" -g "$RUN_GROUP" -m 0700 "$STATE_DIR/.secrets"
 install -d -o "$RUN_USER" -g "$RUN_GROUP" -m 0700 "$STATE_DIR/.secrets/device-tokens"
+install -d -o "$RUN_USER" -g "$RUN_GROUP" -m 0700 "$STATE_DIR/.secrets/mqtt"
 
 GATEWAY_TOKEN_FILE="$STATE_DIR/.secrets/microseed-gateway-token"
 if [[ ! -s "$GATEWAY_TOKEN_FILE" ]]; then

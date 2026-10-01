@@ -171,7 +171,9 @@ test('adapter catalog distinguishes implemented Matter code from missing runtime
   assert.equal(health.adapters.native_agent.available,true);
   assert.equal(health.adapters.lan_api.available,true);
   assert.equal(health.adapters.matter.available,true);
-  assert.equal(health.adapters.mqtt.available,false);
-  assert.equal(health.adapters.mqtt.reason,'adapter_not_implemented');
+  assert.equal(health.adapters.mqtt.available,true);
+  assert.equal(health.adapters.mqtt.reason,'built_in');
+  assert.ok(health.adapters.mqtt.supports.includes('observation'));
+  assert.ok(health.adapters.mqtt.supports.includes('actuation'));
   assert.match(health.receipt_hash,/^sha256:/);
 });
