@@ -26,6 +26,9 @@ export interface WorldIntelPointInput {
   lat: number;
   lon: number;
   label?: string;
+  radius?: number;
+  intensity?: number;
+  pulse?: boolean;
   evidenceState: EvidenceState;
   sourceRefs: string[];
 }
