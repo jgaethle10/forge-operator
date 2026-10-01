@@ -13,6 +13,8 @@ EDGE_ATTESTATION_EXPECTED=false
 PUBLIC_EDGE_SERVICE="evercraft-public-edge.service"
 ROUTER_MAP_SERVICE="evercraft-router-map.service"
 ROUTER_MAP_TIMER="evercraft-router-map.timer"
+OUTBOUND_RELAY_SERVICE="evercraft-fabric-outbound-relay.service"
+OUTBOUND_RELAY_ENV="/etc/evercraft/outbound-relay.env"
 ROUTER_MAP_ENV="/etc/evercraft/router-map.env"
 ROUTER_MAP_INSTALLER=""
 
@@ -121,8 +123,20 @@ ensure_router_map_resident_from_saved_config() {
 reassert_owned_public_ingress() {
   local edge_state="not_installed"
   local router_state="not_installed"
+  local relay_state="not_installed"
 
   ensure_router_map_resident_from_saved_config
+
+  if [[ -f "$OUTBOUND_RELAY_ENV" ]] && systemctl cat "$OUTBOUND_RELAY_SERVICE" >/dev/null 2>&1; then
+    systemctl enable "$OUTBOUND_RELAY_SERVICE" >/dev/null 2>&1 || true
+    if systemctl is-active --quiet "$OUTBOUND_RELAY_SERVICE"; then
+      relay_state="active"
+    elif systemctl restart "$OUTBOUND_RELAY_SERVICE"; then
+      relay_state="restarted"
+    else
+      relay_state="restart_failed"
+    fi
+  fi
 
   if systemctl cat "$PUBLIC_EDGE_SERVICE" >/dev/null 2>&1; then
     if systemctl is-active --quiet "$PUBLIC_EDGE_SERVICE"; then
@@ -145,7 +159,7 @@ reassert_owned_public_ingress() {
     fi
   fi
 
-  echo "Evercraft ingress recovery: public_edge=$edge_state router_map=$router_state"
+  echo "Evercraft ingress recovery: outbound_relay=$relay_state public_edge=$edge_state router_map=$router_state"
 }
 
 RUN_HOME="$(getent passwd "$RUN_USER" | cut -d: -f6)"
