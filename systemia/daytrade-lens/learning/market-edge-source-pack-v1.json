@@ -207,6 +207,48 @@
         "Test whether branded themes such as AI outperform matched non-theme filings after identical selection rules.",
         "Require evidence that the semantic label adds information beyond earnings, macro timing and market regime."
       ]
+    },
+    {
+      "lesson_id": "search-selection-identification",
+      "title": "Reported significance cannot reveal the hidden research search",
+      "sources": [
+        {
+          "authority": "Lopez de Prado and Fabozzi",
+          "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6450418",
+          "evidence_kind": "2026 search-adjusted false-discovery methodology",
+          "note": "Shows that false-discovery rates cannot be identified from reported in-sample statistics alone when hidden specification search and selection produced those statistics; independent validation or an explicit search model is required."
+        }
+      ],
+      "principle": "A published or surfaced statistic is the endpoint of a search process. Without the search history, its false-discovery meaning is underidentified.",
+      "attacks": [
+        "Preserve durable lifetime trial history instead of only the current batch denominator.",
+        "Treat candidate-only significance profiles as insufficient to estimate the false-discovery rate.",
+        "Prefer independent frozen validation and explicit search-process receipts over significance storytelling."
+      ]
+    },
+    {
+      "lesson_id": "heavy-tail-dependence-inference",
+      "title": "Sharpe inference can break under volatility clustering and heavy tails",
+      "sources": [
+        {
+          "authority": "Lopez de Prado, Porcu, Zoonekynd, Engle",
+          "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6568702",
+          "evidence_kind": "2026 signal-to-noise inference under conditional heteroskedasticity and heavy tails",
+          "note": "Shows that conventional root-n Gaussian Sharpe inference can fail under volatility clustering and sufficiently heavy tails, including regimes with infinite fourth moment."
+        },
+        {
+          "authority": "Lopez de Prado and Porcu",
+          "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7198158",
+          "evidence_kind": "2026 unified search-adjusted Sharpe inference framework",
+          "note": "Unifies multiple Deflated Sharpe implementations and emphasizes the search distribution and tail calibration behind selection-adjusted inference."
+        }
+      ],
+      "principle": "A DSR or Sharpe-like statistic is only as trustworthy as its dependence and tail assumptions.",
+      "attacks": [
+        "Emit volatility-clustering and return-dependence diagnostics alongside DSR.",
+        "Treat extreme kurtosis and tail concentration as reasons to downgrade classical Gaussian Sharpe inference.",
+        "Require correlation-aware empirical null and clustered/bootstrap evidence as companions to closed-form DSR."
+      ]
     }
   ]
 }
