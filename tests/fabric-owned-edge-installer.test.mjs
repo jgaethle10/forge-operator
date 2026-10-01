@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import { execFileSync } from 'node:child_process';
 
 const script=fs.readFileSync(new URL('../scripts/install-fabric-owned-edge.sh',import.meta.url),'utf8');
 const updater=fs.readFileSync(new URL('../scripts/update-fabric-owned-edge.sh',import.meta.url),'utf8');
@@ -93,4 +94,16 @@ test('self updater proves Remote Operator telemetry and keeps the observer resid
   assert.match(updater,/npm run test:remote-operator/);
   assert.match(updater,/install-fabric-network-observer\.sh/);
   assert.match(updater,/evercraft-network-observer\.timer/);
+});
+
+
+test('edge installer and updater shell remain syntactically valid',()=>{
+  for(const rel of [
+    '../scripts/install-fabric-owned-edge.sh',
+    '../scripts/install-fabric-network-observer.sh',
+    '../scripts/update-fabric-owned-edge.sh',
+  ]){
+    const file=new URL(rel,import.meta.url);
+    execFileSync('bash',['-n',file.pathname],{stdio:'pipe'});
+  }
 });
