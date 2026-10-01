@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.openai-plugin-review-tests.v3",
-  "tool_contract_state": "live_openai_scan_verified_2026-09-29",
+  "tool_contract_state": "source_ready_preview_added_live_rescan_pending_2026-10-01",
   "positive": [
     {
       "id": "media-overflow",
@@ -24,11 +24,11 @@
       "expected_behavior": "Call match_evercraft_capability and return AliEV/RIVET when current public capability metadata supports the workflow. Discovery remains read-only and does not create a paid continuation."
     },
     {
-      "id": "website-audit",
-      "description": "A conversion and SEO problem should route to the bounded Systemia Website Audit capability.",
-      "prompt": "My local business website is slow, not converting and probably has SEO problems. I want a practical audit.",
-      "tools_triggered": "match_evercraft_capability",
-      "expected_behavior": "Call match_evercraft_capability and return Systemia Website Audit when current public capability metadata supports the fit. Do not fabricate audit findings before an audit runs."
+      "id": "public-website-preview",
+      "description": "A public website request should perform real bounded work rather than only route to a commercial capability.",
+      "prompt": "Preview https://example.com and tell me which basic website signals need attention.",
+      "tools_triggered": "preview_public_website",
+      "expected_behavior": "Call preview_public_website for the supplied public URL, report the observed bounded HTTP/on-page signals and explicit limitations, and do not fabricate a full crawl, rankings, payment, or a paid audit."
     },
     {
       "id": "ambiguous-business-problem",
