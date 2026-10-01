@@ -64,13 +64,12 @@ test('external canary preserves authority and provider truth boundaries',()=>{
 
 test('external canary proves every OpenAI directory listing page',()=>{
   for(const required of [
-    'verify_listing_page "/" "Evercraft Fabric"',
     'verify_listing_page "/openai" "Evercraft Website Inspector"',
-    'verify_listing_page "/support" "Evercraft Fabric Support"',
-    'verify_listing_page "/privacy" "Evercraft Fabric Privacy Policy"',
-    'verify_listing_page "/terms" "Evercraft Fabric Terms of Service"',
+    'verify_listing_page "/openai/support" "Evercraft Support"',
+    'verify_listing_page "/openai/privacy" "Evercraft Privacy Policy"',
+    'verify_listing_page "/openai/terms" "Evercraft Terms of Service"',
     'listing_pages_verified:true',
-    'listing_pages:["/","/openai","/support","/privacy","/terms"]',
+    'listing_pages:["/openai","/openai/support","/openai/privacy","/openai/terms"]',
     'bash scripts/build-evercraft-openai-plugin.sh',
   ]){
     assert.ok(workflow.includes(required),'missing OpenAI listing-page canary contract: '+required);
