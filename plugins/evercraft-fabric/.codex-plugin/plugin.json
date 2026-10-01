@@ -4,7 +4,7 @@
   "description": "Inspect authorized public websites through Evercraft's bounded, evidence-backed read-only website inspector.",
   "author": {
     "name": "Evercraft LLC",
-    "url": "https://fabric.systemiacommandcenters.com/"
+    "url": "https://fabric.systemiacommandcenters.com/openai"
   },
   "homepage": "https://fabric.systemiacommandcenters.com/openai",
   "repository": "https://github.com/jgaethle10/forge-operator",
