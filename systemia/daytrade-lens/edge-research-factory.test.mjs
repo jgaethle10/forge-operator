@@ -4,6 +4,7 @@ import {
   EXECUTION_DELAY_STRESS_BARS,
   ALTERNATE_BENCHMARKS_BY_INSTRUMENT,
   buildMatchedPlaceboHypotheses,
+  buildDeterministicRandomPlaceboHypotheses,
   measureRockiesHypotheses,
   evaluateEdgeFamilies,
   benjaminiHochberg,
@@ -56,6 +57,16 @@ assert.equal(placebos.length, 2);
 assert.deepEqual(placebos.map((row) => row.placebo_offset_days).sort((a,b)=>a-b), [-7, 7]);
 assert.ok(placebos.every((row) => row.placebo_for_source_observation_id === hypothesis.source_observation_id));
 assert.ok(placebos.every((row) => new Date(row.observed_at).getUTCDay() === new Date(hypothesis.observed_at).getUTCDay()));
+
+const randomPlacebos = buildDeterministicRandomPlaceboHypotheses([hypothesis]);
+assert.equal(randomPlacebos.length, 2);
+assert.ok(randomPlacebos.every((row) => row.placebo_scheme === "deterministic_random_calendar"));
+assert.ok(randomPlacebos.every((row) => Math.abs(row.placebo_offset_days) >= 14));
+assert.ok(randomPlacebos.every((row) => new Date(row.observed_at).getUTCDay() === new Date(hypothesis.observed_at).getUTCDay()));
+assert.deepEqual(
+  buildDeterministicRandomPlaceboHypotheses([hypothesis]).map((row) => row.placebo_offset_days),
+  randomPlacebos.map((row) => row.placebo_offset_days)
+);
 
 const nearbyReal = {
   ...hypothesis,
@@ -271,6 +282,7 @@ console.log(JSON.stringify({
   delayed_entry_60m: true,
   delayed_entry_90m: true,
   next_session_open_execution_stress: true,
+  deterministic_random_placebo_calendar: true,
   source_diversity_required: true,
   authoritative_multi_origin_screen: true,
   origin_balanced_strategy_cost_accounting: true,
