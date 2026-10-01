@@ -17,6 +17,37 @@ function normalizePlacementLabels(values = []) {
   )].sort().slice(0, 32);
 }
 
+function normalizedNonNegative(value, integer = false) {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed)) return 0;
+  const result = Math.max(0, parsed);
+  return integer ? Math.floor(result) : result;
+}
+
+export function normalizeHardwareCapacity(value = null) {
+  if (!value || typeof value !== 'object') return null;
+  return {
+    cpu_units: normalizedNonNegative(value.cpu_units),
+    memory_mb: normalizedNonNegative(value.memory_mb, true),
+    storage_gb: normalizedNonNegative(value.storage_gb),
+    gpu_units: normalizedNonNegative(value.gpu_units ?? value.gpu_count, true),
+    vram_mb: normalizedNonNegative(value.vram_mb, true),
+    gpu_models: [...new Set(
+      (Array.isArray(value.gpu_models) ? value.gpu_models : [])
+        .map((model) => String(model || '').trim().toLowerCase())
+        .filter(Boolean)
+    )].sort().slice(0, 32),
+    evidence: value.evidence && typeof value.evidence === 'object'
+      ? {
+          cpu: String(value.evidence.cpu || ''),
+          memory: String(value.evidence.memory || ''),
+          storage: String(value.evidence.storage || ''),
+          gpu: String(value.evidence.gpu || ''),
+        }
+      : null,
+  };
+}
+
 function identityPaths(root) {
   const dir = path.join(path.resolve(root), '.identity');
   return {
@@ -86,6 +117,7 @@ export function createNodeAttestation({
   observedAt = new Date(),
   processStartedAt,
   bootIdHash = null,
+  hardwareCapacity = null,
 } = {}) {
   if (!identity?.private_key_pem || !identity?.public_key_pem) {
     throw new Error('device identity is required');
@@ -107,6 +139,7 @@ export function createNodeAttestation({
     placement_labels: normalizePlacementLabels(placementLabels),
     process_started_at: String(processStartedAt || ''),
     boot_id_hash: bootIdHash ? String(bootIdHash) : null,
+    hardware_capacity: normalizeHardwareCapacity(hardwareCapacity),
     observed_at: observedAt.toISOString(),
     field_claim: false,
   };
@@ -154,6 +187,15 @@ export function verifyNodeAttestation({
     return { ok: false, reason: 'attestation_placement_labels_invalid' };
   }
 
+  const rawHardware = statement.hardware_capacity ?? null;
+  const hardwareCapacity = normalizeHardwareCapacity(rawHardware);
+  if (
+    rawHardware !== null &&
+    JSON.stringify(rawHardware) !== JSON.stringify(hardwareCapacity)
+  ) {
+    return { ok: false, reason: 'attestation_hardware_capacity_invalid' };
+  }
+
   const fingerprint = fingerprintPublicKey(attestation.public_key_pem);
   if (fingerprint !== statement.device_fingerprint) {
     return { ok: false, reason: 'attestation_fingerprint_mismatch' };
@@ -181,6 +223,7 @@ export function verifyNodeAttestation({
     boot_id_hash: statement.boot_id_hash,
     process_started_at: statement.process_started_at,
     placement_labels: placementLabels,
+    hardware_capacity: hardwareCapacity,
     field_claim: statement.field_claim,
   };
 }
