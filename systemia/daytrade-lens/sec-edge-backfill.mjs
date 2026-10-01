@@ -15,6 +15,7 @@ import { loadCanonicalFrozenEnrollment } from "./edge-forward-paper-seed.mjs";
 import { ForwardPaperDurableState } from "./edge-forward-paper-durable.mjs";
 import { runEdgeStressLab } from "./edge-stress-lab.mjs";
 import { summarizeResearchSearchBurden } from "./edge-search-burden.mjs";
+import { runFamilyMaxNullLab } from "./edge-family-max-null.mjs";
 import { runEdgeBreakerLab } from "./edge-breaker-lab.mjs";
 import { runTimingFragilityLab } from "./edge-timing-fragility.mjs";
 import { runOverlapFragilityLab } from "./edge-overlap-fragility.mjs";
@@ -108,6 +109,18 @@ async function main() {
   fs.writeFileSync(
     searchBurdenFile,
     JSON.stringify(searchBurden, null, 2) + "\n"
+  );
+
+  const familyMaxNullLab = runFamilyMaxNullLab(report, {
+    transaction_cost_bps: Number(process.env.EDGE_LAB_TRANSACTION_COST_BPS || 5),
+  });
+  const familyMaxNullFile = path.join(
+    artifactDir,
+    "sec-edge-family-max-null.json"
+  );
+  fs.writeFileSync(
+    familyMaxNullFile,
+    JSON.stringify(familyMaxNullLab, null, 2) + "\n"
   );
 
   const stressLab = runEdgeStressLab(report);
@@ -476,6 +489,10 @@ async function main() {
     quote_microstructure_coverage: quoteMicrostructureLab.coverage,
     search_burden_signal_families: searchBurden.signal_family_count || 0,
     search_burden_candidate_share: searchBurden.candidate_share || 0,
+    family_max_null_eligible_families:
+      familyMaxNullLab.null_eligible_family_count || 0,
+    family_max_null_separated_candidates:
+      familyMaxNullLab.separated_count || 0,
     candidate_clusters: adversarial.candidate_cluster_count || 0,
     cluster_adversarial_summary_count:
       clusterAdversarialSummary.cluster_count || 0,
@@ -532,6 +549,7 @@ async function main() {
       observations: observationFile,
       research: reportFile,
       search_burden: searchBurdenFile,
+      family_max_null: familyMaxNullFile,
       quote_microstructure: quoteMicrostructureFile,
       stress_lab: stressFile,
       breaker_lab: breakerFile,
