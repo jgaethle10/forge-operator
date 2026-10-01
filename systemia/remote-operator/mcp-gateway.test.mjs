@@ -58,6 +58,20 @@ const fakeFetch = async (url, options = {}) => {
       ],
     }), { status: 200 });
   }
+  if (route.endsWith('/v1/operator/host-capabilities/check')) {
+    return new Response(JSON.stringify({
+      ok: true,
+      schema: 'evercraft.host-boundary-capability-check-result.v1',
+      capability_id: 'chromeos.crostini.port-forwarding.read.v1',
+      adapter: 'chromeos_crostini_port_forwarding',
+      request_id: 'hostcheck_0123456789abcdef01234567',
+      request_state: 'pending',
+      pending: true,
+      fulfilled: false,
+      mutation_authority: false,
+      arbitrary_desktop_control: false,
+    }), { status: 200 });
+  }
   if (route.endsWith('/v1/operator/host-boundary/check')) {
     return new Response(JSON.stringify({
       ok: true,
@@ -95,7 +109,7 @@ const listed = await executeRemoteOperatorMcpRpc({
   rpc: { jsonrpc: '2.0', id: 2, method: 'tools/list' },
   gateway,
 });
-assert.equal(listed.result.tools.length, 9);
+assert.equal(listed.result.tools.length, 10);
 
 const denied = await executeRemoteOperatorMcpRpc({
   rpc: {
@@ -158,6 +172,32 @@ assert.equal(
   hostCapabilities.result.structuredContent.capabilities[0].mutation_authority,
   false
 );
+
+const genericHostCheck = await executeRemoteOperatorMcpRpc({
+  rpc: {
+    jsonrpc: '2.0',
+    id: 400,
+    method: 'tools/call',
+    params: {
+      name: 'remote_host_capability_check',
+      arguments: {
+        capability_id: 'chromeos.crostini.port-forwarding.read.v1',
+        wait_ms: 0,
+      },
+    },
+  },
+  gateway,
+  authorization: 'Bearer ' + clientToken,
+});
+assert.equal(
+  genericHostCheck.result.structuredContent.schema,
+  'evercraft.host-boundary-capability-check-result.v1'
+);
+assert.equal(
+  genericHostCheck.result.structuredContent.capability_id,
+  'chromeos.crostini.port-forwarding.read.v1'
+);
+assert.equal(genericHostCheck.result.structuredContent.mutation_authority, false);
 
 const hostBoundary = await executeRemoteOperatorMcpRpc({
   rpc: {
@@ -245,4 +285,5 @@ console.log(JSON.stringify({
   read_only_chromeos_host_boundary_exposed: true,
   on_demand_chromeos_host_check_exposed: true,
   typed_host_capability_registry_exposed: true,
+  generic_typed_host_capability_dispatch_exposed: true,
 }));
