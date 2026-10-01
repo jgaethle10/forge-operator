@@ -32,12 +32,15 @@ export class AmbientDeviceRegistry{
     this.root=path.resolve(root);
     this.devicesDir=path.join(this.root,'devices');
     this.manifestsDir=path.join(this.root,'manifests');
+    this.conformanceDir=path.join(this.root,'conformance');
     fs.mkdirSync(this.devicesDir,{recursive:true,mode:0o700});
     fs.mkdirSync(this.manifestsDir,{recursive:true,mode:0o700});
+    fs.mkdirSync(this.conformanceDir,{recursive:true,mode:0o700});
   }
 
   trustFile(deviceId){return path.join(this.devicesDir,safeId(deviceId)+'.json');}
   manifestFile(deviceId){return path.join(this.manifestsDir,safeId(deviceId)+'.json');}
+  conformanceFile(deviceId){return path.join(this.conformanceDir,safeId(deviceId)+'.json');}
 
   get(deviceId){
     const file=this.trustFile(deviceId);
@@ -47,6 +50,25 @@ export class AmbientDeviceRegistry{
   manifest(deviceId){
     const file=this.manifestFile(deviceId);
     return fs.existsSync(file)?readJson(file):null;
+  }
+
+  conformance(deviceId){
+    const file=this.conformanceFile(deviceId);
+    return fs.existsSync(file)?readJson(file):null;
+  }
+
+  setConformance({device_id,receipt}={}){
+    const manifest=this.manifest(device_id);
+    if(!manifest) throw new Error('ambient_registry_manifest_missing');
+    if(receipt?.schema!=='evercraft.microseed.conformance-receipt.v1'){
+      throw new Error('ambient_registry_conformance_receipt_invalid');
+    }
+    if(receipt.device_id!==device_id) throw new Error('ambient_registry_conformance_device_mismatch');
+    if(receipt.manifest_hash!==manifest.manifest_hash){
+      throw new Error('ambient_registry_conformance_manifest_mismatch');
+    }
+    atomicJson(this.conformanceFile(device_id),receipt);
+    return receipt;
   }
 
   observe({device_id,observed_at=new Date().toISOString()}={}){
@@ -109,6 +131,7 @@ export class AmbientDeviceRegistry{
         authorization_expires_at:record.authorization_expires_at,
         last_heartbeat_at:record.last_heartbeat_at,
         manifest:this.manifest(record.device_id),
+        conformance:this.conformance(record.device_id),
       });
     }
     return {
