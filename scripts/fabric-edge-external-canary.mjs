@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import dns from 'node:dns/promises';
+import tls from 'node:tls';
 import { createHash } from 'node:crypto';
 
 const sha=(value)=>'sha256:'+createHash('sha256').update(
@@ -15,6 +16,37 @@ const url=new URL(origin);
 if(url.protocol!=='https:') throw new Error('operator_public_edge_requires_https');
 if(/(^|\.)base44\.app$/i.test(url.hostname)) throw new Error('operator_public_edge_must_not_use_base44');
 if(url.pathname!=='/'&&url.pathname!=='') throw new Error('origin_must_not_include_path');
+
+async function inspectTls(hostname){
+  return await new Promise((resolve,reject)=>{
+    const socket=tls.connect({
+      host:hostname,
+      port:443,
+      servername:hostname,
+      rejectUnauthorized:true,
+    },()=>{
+      try{
+        const cert=socket.getPeerCertificate(true);
+        if(!cert||!cert.fingerprint256) throw new Error('tls_peer_certificate_unavailable');
+        const validTo=Date.parse(cert.valid_to||'');
+        if(!Number.isFinite(validTo)||validTo<=Date.now()) throw new Error('tls_certificate_expired_or_unreadable');
+        resolve({
+          authorized:socket.authorized===true,
+          authorization_error:socket.authorizationError||null,
+          fingerprint256:cert.fingerprint256,
+          subject:cert.subject||null,
+          issuer:cert.issuer||null,
+          valid_from:cert.valid_from||null,
+          valid_to:cert.valid_to||null,
+          days_remaining:Number(((validTo-Date.now())/86400000).toFixed(2)),
+        });
+      }catch(error){reject(error);}
+      finally{socket.end();}
+    });
+    socket.setTimeout(10000,()=>socket.destroy(new Error('tls_probe_timeout')));
+    socket.once('error',reject);
+  });
+}
 
 async function timedFetch(target,options={},timeoutMs=15000){
   const controller=new AbortController();
@@ -64,6 +96,11 @@ try{
   if(!addresses.length) throw new Error('public_dns_no_ipv4');
   receipt.dns_ipv4=addresses;
   receipt.checks.public_dns=true;
+
+  const tlsPeer=await inspectTls(url.hostname);
+  if(tlsPeer.authorized!==true) throw new Error('tls_peer_not_authorized');
+  receipt.tls=tlsPeer;
+  receipt.checks.trusted_tls=true;
 
   const home=await getText('/');
   if(!/Evercraft Fabric|Bring the problem\./i.test(home.text)) throw new Error('fabric_home_identity_missing');
