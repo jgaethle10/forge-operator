@@ -159,3 +159,24 @@ test('HTTP bridge authenticates polling and completes a fresh request', async ()
     await new Promise((resolve) => runtime.server.close(resolve));
   }
 });
+
+
+test('typed host-boundary registry matches the admitted ChromeOS read capability', () => {
+  const registry = JSON.parse(
+    fs.readFileSync(
+      path.join(
+        path.dirname(new URL(import.meta.url).pathname),
+        'host-boundary-capabilities.json',
+      ),
+      'utf8',
+    ),
+  );
+  const capability = registry.capabilities.find(
+    (row) => row.capability_id === 'chromeos.crostini.port-forwarding.read.v1',
+  );
+  assert.ok(capability);
+  assert.equal(capability.operation, 'read');
+  assert.equal(capability.mutation_authority, false);
+  assert.deepEqual(capability.scope.ports, [8443, 18080]);
+  assert.equal(capability.raw_accessibility_tree_persisted, false);
+});
