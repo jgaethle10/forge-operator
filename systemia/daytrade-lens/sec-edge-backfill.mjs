@@ -16,6 +16,7 @@ import { ForwardPaperDurableState } from "./edge-forward-paper-durable.mjs";
 import { runEdgeStressLab } from "./edge-stress-lab.mjs";
 import { summarizeResearchSearchBurden } from "./edge-search-burden.mjs";
 import { runFamilyMaxNullLab } from "./edge-family-max-null.mjs";
+import { runDeflatedSharpeLab } from "./edge-deflated-sharpe.mjs";
 import { runCscvPboLab } from "./edge-cscv-pbo.mjs";
 import { runEdgeBreakerLab } from "./edge-breaker-lab.mjs";
 import { runTimingFragilityLab } from "./edge-timing-fragility.mjs";
@@ -135,6 +136,18 @@ async function main() {
   fs.writeFileSync(
     familyMaxNullFile,
     JSON.stringify(familyMaxNullLab, null, 2) + "\n"
+  );
+
+  const deflatedSharpeLab = runDeflatedSharpeLab(report, {
+    transaction_cost_bps: Number(process.env.EDGE_LAB_TRANSACTION_COST_BPS || 5),
+  });
+  const deflatedSharpeFile = path.join(
+    artifactDir,
+    "sec-edge-deflated-sharpe.json"
+  );
+  fs.writeFileSync(
+    deflatedSharpeFile,
+    JSON.stringify(deflatedSharpeLab, null, 2) + "\n"
   );
 
   const cscvPboLab = runCscvPboLab(report, {
@@ -513,6 +526,8 @@ async function main() {
       familyMaxNullLab.null_eligible_family_count || 0,
     family_max_null_separated_candidates:
       familyMaxNullLab.separated_count || 0,
+    deflated_sharpe_status_counts:
+      deflatedSharpeLab.status_counts || {},
     cscv_pbo_status_counts: cscvPboLab.status_counts || {},
     candidate_clusters: adversarial.candidate_cluster_count || 0,
     cluster_adversarial_summary_count:
@@ -571,6 +586,7 @@ async function main() {
       research: reportFile,
       search_burden: searchBurdenFile,
       family_max_null: familyMaxNullFile,
+      deflated_sharpe: deflatedSharpeFile,
       cscv_pbo: cscvPboFile,
       quote_microstructure: quoteMicrostructureFile,
       stress_lab: stressFile,
