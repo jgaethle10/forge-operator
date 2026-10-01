@@ -18,6 +18,10 @@ import {
   renderFabricHome,
   renderMarkdownDocument,
 } from './fabric-public-site.mjs';
+import {
+  fabricMobileManifest,
+  renderFabricMobileApp,
+} from './fabric-mobile-site.mjs';
 
 function isLegacyBase44Connection(connection={}) {
   try {
@@ -102,6 +106,21 @@ function sendText(res,status,body,{contentType='text/plain; charset=utf-8'}={}) 
     'content-length':data.length,
     'cache-control':'public, max-age=300',
     ...browserSecurityHeaders(),
+  });
+  res.end(data);
+}
+
+function sendMobileHtml(res,status,body) {
+  const data=Buffer.from(String(body));
+  res.writeHead(status,{
+    'content-type':'text/html; charset=utf-8',
+    'content-length':data.length,
+    'cache-control':'no-store',
+    'x-content-type-options':'nosniff',
+    'x-frame-options':'DENY',
+    'referrer-policy':'no-referrer',
+    'permissions-policy':'camera=(), microphone=(), geolocation=()',
+    'content-security-policy':"default-src 'self'; style-src 'unsafe-inline'; img-src 'self'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'",
   });
   res.end(data);
 }
@@ -278,6 +297,8 @@ export async function startFabricLocalRuntime({
         ? 'loopback_nodeseed'
         : null,
     public_plugin_submission_ready:true,
+    mobile_path:'/mobile',
+    mobile_installable:true,
     journal_mirror_path:'/journal/',
     journal_mirror_ready:fs.existsSync(path.join(journalDir,'index.html')),
     journal_mirror_indexing:'noindex_until_dedicated_origin',
@@ -309,6 +330,60 @@ export async function startFabricLocalRuntime({
           200,
           renderFabricHome({capabilities:preparedCatalog().capabilities}),
           {contentType:'text/html; charset=utf-8'}
+        );
+      }
+
+      if (req.method==='GET' && (req.url==='/mobile'||req.url==='/mobile/')) {
+        return sendMobileHtml(
+          res,
+          200,
+          renderFabricMobileApp({
+            capabilityCount:preparedCatalog().capabilities.length,
+          })
+        );
+      }
+
+      if (req.method==='GET' && String(req.url||'').startsWith('/mobile?')) {
+        const parsed=new URL(String(req.url||''),'http://fabric.local');
+        const query=String(parsed.searchParams.get('q')||'').trim().slice(0,4000);
+        let matches=[];
+        let error='';
+        if(query.length>=3){
+          const rpc=await executeFabricDirectoryRpc({
+            jsonrpc:'2.0',
+            id:'mobile-match',
+            method:'tools/call',
+            params:{
+              name:'match_evercraft_capability',
+              arguments:{intent:query,limit:5},
+            },
+          },preparedCatalog().capabilities);
+          if(rpc?.error){
+            error=String(rpc.error.message||'Fabric could not match that request.');
+          }else{
+            matches=rpc?.result?.structuredContent?.matches||[];
+          }
+        }else if(query){
+          error='Describe the problem in at least three characters.';
+        }
+        return sendMobileHtml(
+          res,
+          200,
+          renderFabricMobileApp({
+            query,
+            matches,
+            capabilityCount:preparedCatalog().capabilities.length,
+            error,
+          })
+        );
+      }
+
+      if (req.method==='GET' && req.url==='/mobile/manifest.webmanifest') {
+        return sendText(
+          res,
+          200,
+          JSON.stringify(fabricMobileManifest()),
+          {contentType:'application/manifest+json; charset=utf-8'}
         );
       }
 
