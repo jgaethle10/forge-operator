@@ -41,6 +41,9 @@ A provider error with unclear acceptance is deliberately more conservative than 
 
 - `package-preflight.mjs` - artifact integrity, openability, render QA, naming, package manifest.
 - `release-station.mjs` - physically materializes a frozen client-facing release directory with clean filenames, exact SHA-256 byte verification, channel limits, source lineage, a human-readable release note, and mutation detection before dispatch.
+- `control-tower.mjs` - version-aware shipment orchestration, stale-package supersession, deliberate reissue authority, stuck-shipment detection, repair recipes, and notification-fabric intents for operational exceptions.
+- `proof-bundle.mjs` - end-to-end chain-of-custody proof tying control-tower order, frozen release bytes, shipment ledger, sent-copy verification, provider message ID, and delivery receipt together.
+- `recipient-response.mjs` - correlates inbound replies to verified deliveries, preserves exact linkage evidence, and emits follow-up signals without pretending a reply automatically means approval or authorizing an external action.
 - `shipping-ledger.mjs` - durable shipment reservations, idempotency, attempts, readback state.
 - `shipping-department.mjs` - envelope preparation, route/fallback policy, send-error classification, sent-copy verification.
 - `transport-runtime.mjs` - provider-agnostic dispatch runner with safe thread-to-fresh fallback, resume after interruptions, provider acceptance locks, and readback verification.
@@ -71,3 +74,34 @@ Shipping now has a physical release-station step between production and transpor
 Channel profiles currently distinguish email, customer handoff, ChatGPT attachment delivery, public-records delivery, and internal review. Each profile sets its own size/artifact budget and whether external send authority and post-send readback are mandatory.
 
 The release directory intentionally contains only three classes of object: approved client artifacts, `manifest.json`, and `RELEASE.txt`. If an artifact is mutated, replaced, renamed, added, removed, or has a different byte digest after materialization, verification fails closed.
+
+
+## Control Tower v3
+
+Shipping now treats every outgoing package as a versioned order rather than a loose send action. The Control Tower prevents an older unsent package from leaving after a newer package has been approved, while preserving delivered history as immutable evidence.
+
+An identical package sent to the same recipient is duplicate-suppressed by default. A legitimate resend is a different operation called a **reissue**. Reissues require a fresh human authorization and a reason, and they remain linked to the original verified delivery. This means "please resend that file" is possible without weakening duplicate protection.
+
+The Control Tower also scans for stalled or ambiguous shipments. Provider-accepted-but-unverified messages and ambiguous connector outcomes become explicit operational exceptions with repair recipes. It can emit a deduplicated Systemia Notification Fabric intent for an operator, but the control-tower module itself never sends a notification or customer message.
+
+## Chain of Custody
+
+A completed shipment can now produce an Evercraft Shipping proof bundle. The bundle cross-checks:
+
+- control-tower order and current package version
+- frozen release package digest and artifact hashes
+- transport shipment and idempotency key
+- provider message ID
+- sent-copy recipient, subject, and attachment verification
+- verified delivery receipt
+
+Any mismatch breaks the proof bundle. The evidence boundary remains strict: Shipping can prove what bytes were packaged and what provider message was verified, but it does not infer that the recipient opened the message, accepted the work, was satisfied, or achieved a downstream business result.
+
+
+## Recipient Response Loop
+
+Shipping no longer has to go blind after delivery. A reply can be correlated back to the exact verified shipment by provider message ID, provider thread, or an explicit human linkage reference. The resulting record proves that an inbound response was observed and preserves its source message ID and thread evidence.
+
+Disposition remains evidence-bound. Shipping does not run a vibes engine over customer replies and call them "approved." A response remains `unknown` unless a classification is supplied with an explicit basis. Only an `approved` disposition with a `human_confirmed` basis can assert customer acceptance in the response record. Even then, Shipping does not infer satisfaction, payment, renewal, or downstream business outcome.
+
+Recipient-response signals can route work back into Systemia, for example scheduling, owner review, revision intake, relationship follow-up, or closeout review. Those signals never authorize autonomous customer communication.
