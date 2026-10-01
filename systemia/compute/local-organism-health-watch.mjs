@@ -270,6 +270,9 @@ if (isCli) {
     process.env.EVERCRAFT_LOCAL_ORGANISM_ROOT ||
       path.join(process.env.HOME || '', '.local', 'state', 'evercraft', 'organism')
   );
-  const result = await checkLocalOrganismHealth({ stateRoot });
+  const result = await checkLocalOrganismHealth({
+    stateRoot,
+    restartOnFailure: !process.argv.includes('--observe-only'),
+  });
   console.log(JSON.stringify(result, null, 2));
 }
