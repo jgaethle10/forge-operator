@@ -85,6 +85,12 @@
           "url": "https://www.cfainstitute.org/insights/professional-learning/refresher-readings/2026/trade-strategy-execution",
           "evidence_kind": "professional execution curriculum",
           "note": "Implementation shortfall decomposes delay, execution and opportunity costs and is a standard trade-cost measure."
+        },
+        {
+          "authority": "Dalvi, Deuskar, Glosten, Jagannathan / NBER",
+          "url": "https://www.nber.org/papers/w31127",
+          "evidence_kind": "trader-identity market-microstructure study",
+          "note": "Individual day traders in the studied BSE sample lost 3.2 bp on average on trades with others, about 73% of the half-spread, illustrating the cost of immediacy."
         }
       ],
       "principle": "Entry, fill probability, spread, delay, opportunity cost and exit mechanics belong inside the edge definition.",
