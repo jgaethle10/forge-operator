@@ -1,4 +1,8 @@
 const ROLE_ATTACKS = Object.freeze({
+  academic_source_hunter: {
+    question: "What high-quality scholarly work should the team read next to challenge this lesson?",
+    required_output: "read-only scholarly source candidates with DOI/title provenance"
+  },
   base_rate_skeptic: {
     question: "What does the unconditional base rate say before we look at survivors?",
     required_output: "base-rate threat, denominator requirement, kill condition"
@@ -44,6 +48,47 @@ const ROLE_ATTACKS = Object.freeze({
 function clean(value) {
   return String(value ?? "").trim();
 }
+function discoveryQuery(lesson) {
+  const title=clean(lesson?.title);
+  const principle=clean(lesson?.principle);
+  return [title,principle,"trading market microstructure quantitative finance"]
+    .filter(Boolean)
+    .join(" ");
+}
+
+async function discoverScholarlySources(lesson, fetchImpl=fetch) {
+  const query=discoveryQuery(lesson);
+  const url=new URL("https://api.crossref.org/works");
+  url.searchParams.set("query.bibliographic",query);
+  url.searchParams.set("rows","5");
+  url.searchParams.set("select","DOI,title,publisher,published,URL,type,author");
+  const response=await fetchImpl(url,{
+    headers:{
+      "accept":"application/json",
+      "user-agent":"Evercraft-DayTrade-Learning-Lab/1.0 (research metadata discovery)"
+    }
+  });
+  if(!response.ok) throw new Error("crossref_http_"+response.status);
+  const payload=await response.json();
+  const items=Array.isArray(payload?.message?.items)?payload.message.items:[];
+  return {
+    query,
+    provider:"Crossref",
+    provider_url:url.toString(),
+    candidates:items.slice(0,5).map((item)=>({
+      doi:clean(item?.DOI)||null,
+      title:Array.isArray(item?.title)?clean(item.title[0]):clean(item?.title),
+      publisher:clean(item?.publisher)||null,
+      type:clean(item?.type)||null,
+      url:clean(item?.URL)||null,
+      author_count:Array.isArray(item?.author)?item.author.length:0,
+      publication_date_parts:
+        item?.published?.["date-parts"]?.[0] || null,
+      evidence_state:"metadata_discovered_not_reviewed"
+    })).filter((item)=>item.title||item.doi)
+  };
+}
+
 
 function lessonFromAssignment(assignment) {
   return assignment?.item?.raw || assignment?.work || {};
@@ -137,11 +182,28 @@ function attackSpec(role, lesson) {
   return {...base, proposed_tests:["explicit falsification requirement"]};
 }
 
-export async function runAssignment({assignment} = {}) {
+export async function runAssignment({assignment, executionContext={}} = {}) {
   const role = clean(assignment?.role);
   const lesson = lessonFromAssignment(assignment);
   if (!ROLE_ATTACKS[role]) throw new Error("daytrade_learning_role_unknown:" + role);
   if (!clean(lesson?.lesson_id)) throw new Error("daytrade_learning_lesson_id_required");
+
+  let sourceDiscovery=null;
+  if(role==="academic_source_hunter"){
+    try{
+      sourceDiscovery=await discoverScholarlySources(
+        lesson,
+        executionContext.fetchImpl || fetch
+      );
+    }catch(error){
+      sourceDiscovery={
+        provider:"Crossref",
+        status:"network_error",
+        error:error instanceof Error?error.message:String(error),
+        candidates:[]
+      };
+    }
+  }
 
   return {
     schema:"evercraft.daytrade.saban-learning-assignment.v1",
@@ -151,6 +213,7 @@ export async function runAssignment({assignment} = {}) {
     lesson_id:clean(lesson.lesson_id),
     lesson_title:clean(lesson.title),
     attack:attackSpec(role, lesson),
+    source_discovery:sourceDiscovery,
     status:"completed",
     research_only:true,
     historical_diagnostics_do_not_mutate_frozen_protocols:true,
@@ -182,6 +245,28 @@ export function reconcile({results=[]} = {}) {
     }
   }
 
+  const discoveredByDoi=new Map();
+  for(const row of rows){
+    for(const candidate of row?.source_discovery?.candidates || []){
+      const key=clean(candidate.doi)||clean(candidate.url)||clean(candidate.title);
+      if(!key) continue;
+      if(!discoveredByDoi.has(key)) discoveredByDoi.set(key,{
+        ...candidate,
+        discovered_from_lessons:new Set(),
+      });
+      discoveredByDoi.get(key).discovered_from_lessons.add(row.lesson_id);
+    }
+  }
+  const discovered_sources=[...discoveredByDoi.values()]
+    .map((row)=>({
+      ...row,
+      discovered_from_lessons:[...row.discovered_from_lessons].sort(),
+    }))
+    .sort((a,b)=>
+      b.discovered_from_lessons.length-a.discovered_from_lessons.length ||
+      String(a.title||"").localeCompare(String(b.title||""))
+    );
+
   const attack_queue=[...attackMap.values()]
     .map((row)=>({
       test:row.test,
@@ -208,6 +293,9 @@ export function reconcile({results=[]} = {}) {
     roles,
     lessons,
     attack_queue,
+    discovered_sources,
+    discovered_source_count:discovered_sources.length,
+    discovery_candidates_require_evidence_review:true,
     next_action:"Feed the reconciled attack queue into DayTrade Edge Lab as exploratory falsification work without mutating frozen forward-paper protocols.",
     research_only:true,
     eligibility_mutated:false,
@@ -217,4 +305,4 @@ export function reconcile({results=[]} = {}) {
   };
 }
 
-export { ROLE_ATTACKS };
+export { ROLE_ATTACKS, discoveryQuery, discoverScholarlySources };
