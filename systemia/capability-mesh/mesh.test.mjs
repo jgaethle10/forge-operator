@@ -421,3 +421,93 @@ test('IBM i Rescue is contracted through Machine Commerce without claiming a liv
     false
   );
 });
+
+
+test('missing machine-tool evidence paths make shared-runtime contracts incomplete', () => {
+  const fixture = buildCapabilityMesh({
+    root: process.cwd(),
+    publicProducts: {
+      schema: 'evercraft.saban.public-product-index.v1',
+      products: [{
+        product_key: 'demo-runtime',
+        name: 'Demo Runtime',
+        class: 'demo_runtime',
+        invocation: { mode: 'mcp' },
+        registry_name: null,
+      }],
+    },
+    directDoors: {
+      schema: 'evercraft.direct-door-readiness.v2',
+      products: [],
+    },
+    contracts: {
+      schema: 'evercraft.capability-mesh.contracts.v1',
+      truth_boundary: {},
+      contracts: [{
+        product_key: 'demo-runtime',
+        contract_version: '1.0.0',
+        owner: 'systemia',
+        adoption_stage: 'shared_runtime',
+        authority: {
+          state: 'declared',
+          passport_product: 'demo-runtime',
+          scopes: ['demo.run'],
+          evidence_refs: [],
+        },
+        context: {
+          state: 'not_required',
+          reason: 'No shared context required for this fixture.',
+        },
+        meter: {
+          state: 'not_required',
+          reason: 'No metering required for this fixture.',
+        },
+        intake: {
+          state: 'not_required',
+          reason: 'No intake required for this fixture.',
+        },
+        execution: {
+          state: 'declared',
+          gate_required: true,
+          scopes: ['demo.run'],
+          actions: [{
+            scope: 'demo.run',
+            machine_tool: 'demo_tool',
+            machine_tool_evidence_refs: ['does/not/exist-machine-tool-proof.json'],
+          }],
+          evidence_refs: [],
+        },
+        relationship: {
+          state: 'not_required',
+          reason: 'No relationship action.',
+        },
+        receipt_reconciliation: {
+          state: 'not_required',
+          reason: 'No receipt reconciliation in this fixture.',
+        },
+        rollback: {
+          state: 'declared',
+          policy: 'Disable the demo contract.',
+        },
+        compatibility: {
+          intended_product_classes: ['demo_runtime'],
+        },
+      }],
+    },
+    ratchetBaseline: {
+      schema: 'evercraft.capability-mesh.ratchet-baseline.v1',
+      captured_at: '2026-09-28',
+      public_product_keys: ['demo-runtime'],
+      direct_door_public_product_keys: [],
+      specialist_only_slugs: [],
+    },
+  });
+
+  const demo = fixture.products[0];
+  assert.equal(demo.contract_state, 'incomplete_declaration');
+  assert.ok(
+    demo.gaps.includes(
+      'execution_machine_tool_evidence_path_missing:demo.run:does/not/exist-machine-tool-proof.json'
+    )
+  );
+});
