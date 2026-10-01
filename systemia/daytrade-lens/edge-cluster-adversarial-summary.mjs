@@ -31,6 +31,7 @@ export function buildClusterAdversarialSummary({
   regimeFragilityLab,
   clockStructureLab,
   eventContaminationLab,
+  announcementExecutionStressLab,
   narrativeBlindControlLab,
   benchmarkLab,
   horizonCoherenceLab,
@@ -60,6 +61,7 @@ export function buildClusterAdversarialSummary({
     regime: indexBySignal(regimeFragilityLab?.reviews || []),
     clock: indexBySignal(clockStructureLab?.reviews || []),
     contamination: indexBySignal(eventContaminationLab?.reviews || []),
+    announcementExecution: indexBySignal(announcementExecutionStressLab?.reviews || []),
     narrative: indexBySignal(narrativeBlindControlLab?.reviews || []),
     benchmark: indexBySignal(benchmarkLab?.reviews || []),
     horizon: indexBySignal(horizonCoherenceLab?.reviews || []),
@@ -116,6 +118,11 @@ export function buildClusterAdversarialSummary({
       clock_status: maps.clock.get(signal)?.clock_status || "MISSING",
       contamination_status:
         maps.contamination.get(signal)?.contamination_status || "MISSING",
+      announcement_execution_status:
+        maps.announcementExecution.get(signal)?.status || "MISSING",
+      announcement_execution_any_to_clean_spread_ratio:
+        maps.announcementExecution.get(signal)
+          ?.execution_cost_ratios?.any_to_clean_mean_spread_ratio ?? null,
       narrative_control_status:
         maps.narrative.get(signal)?.narrative_control_status || "MISSING",
       benchmark_status:
@@ -175,6 +182,8 @@ export function buildClusterAdversarialSummary({
           (row) => row.clock_status === "CLOCK_CONCENTRATED_DIAGNOSTIC"),
         contamination_robust: count(memberReceipts,
           (row) => row.contamination_status === "CONTAMINATION_ROBUST_DIAGNOSTIC"),
+        announcement_execution_stress_ready: count(memberReceipts,
+          (row) => row.announcement_execution_status === "ANNOUNCEMENT_EXECUTION_STRESS_READY"),
         narrative_incremental: count(memberReceipts,
           (row) => row.narrative_control_status === "NARRATIVE_INCREMENTAL_DIAGNOSTIC"),
         benchmark_robust: count(memberReceipts,
