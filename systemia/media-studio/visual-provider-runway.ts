@@ -53,6 +53,7 @@ export function runwayGen45Endpoint(verified=false):VisualModelEndpoint{
       framesExclusiveWithReferences:true,
       locatorKinds:['url','data_uri'],
       batchVariants:1,
+      maxCandidateJobs:4,
       qualityTier:5,
       costTier:4,
       latencyTier:3,

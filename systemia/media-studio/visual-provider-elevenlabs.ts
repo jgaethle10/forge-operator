@@ -70,6 +70,7 @@ export function elevenLabsVeoEndpoint(
       providerLocatorId:'elevenlabs',
       nativeAudio:true,
       batchVariants:1,
+      maxCandidateJobs:4,
       qualityTier:modelId==='veo-3.1-generate-001'?5:4,
       costTier:modelId==='veo-3.1-generate-001'?5:4,
       latencyTier:modelId==='veo-3.1-generate-001'?4:3,
