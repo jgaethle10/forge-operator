@@ -74,6 +74,7 @@ jobs:
           node systemia/daytrade-lens/edge-execution-speed-bounds.test.mjs
           node systemia/daytrade-lens/edge-capital-scale-impact-envelope.test.mjs
           node systemia/daytrade-lens/edge-liquidity-state-contract.test.mjs
+          node systemia/daytrade-lens/edge-depth-data-contract.test.mjs
           node systemia/daytrade-lens/edge-order-execution-receipt.test.mjs
           node systemia/daytrade-lens/edge-order-execution-fetch.test.mjs
           node systemia/daytrade-lens/edge-pilot-readiness.test.mjs
