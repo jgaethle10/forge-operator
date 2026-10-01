@@ -91,5 +91,21 @@
     "recording_access": "public_link_reader",
     "notes": "The existing walkthrough documents the older routing prototype and is not sufficient for v1.1.0. Before submission, record a fresh reviewer walkthrough demonstrating inspect_public_website on the restored purpose-specific /mcp/openai endpoint, including authorization and bounded-result behavior, then re-run the production MCP scan."
   },
-  "package_version": "1.1.0"
+  "package_version": "1.1.0",
+  "current_provider_review": {
+    "observed_at": "2026-10-01",
+    "source": "OpenAI Plugins portal screenshot supplied by Evercraft owner",
+    "plugin_name": "Evercraft",
+    "version": "1.0.0",
+    "review_status": "in_review",
+    "publication_status": "not_published",
+    "sibling_record": {
+      "plugin_name": "Evercraft Fabric",
+      "version": "1.0.0",
+      "review_status": "not_submitted",
+      "publication_status": "not_published",
+      "configuration_status": "incomplete"
+    },
+    "v110_policy": "Do not cancel or replace the active Evercraft v1.0.0 review until v1.1.0 is fully proven or the provider review resolves."
+  }
 }
