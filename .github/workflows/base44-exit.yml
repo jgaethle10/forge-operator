@@ -16,6 +16,12 @@ on:
       - 'systemia/connector-gateway/**'
       - 'systemia/webhook-gateway/**'
       - 'systemia/commerce-boundary/**'
+      - 'systemia/aqueduct/**'
+      - 'systemia/exact-output-gate/**'
+      - 'systemia/operations/**'
+      - 'systemia/remote-ops/**'
+      - 'systemia/workforce/**'
+      - 'systemia/audit-center/**'
       - 'systemia/collider/**'
       - 'systemia/organism/eps-social-continuity.mjs'
       - 'systemia/organism/eps-social-continuity.proof.mjs'
@@ -49,6 +55,12 @@ on:
       - 'systemia/connector-gateway/**'
       - 'systemia/webhook-gateway/**'
       - 'systemia/commerce-boundary/**'
+      - 'systemia/aqueduct/**'
+      - 'systemia/exact-output-gate/**'
+      - 'systemia/operations/**'
+      - 'systemia/remote-ops/**'
+      - 'systemia/workforce/**'
+      - 'systemia/audit-center/**'
       - 'systemia/collider/**'
       - 'systemia/organism/eps-social-continuity.mjs'
       - 'systemia/organism/eps-social-continuity.proof.mjs'
@@ -87,6 +99,12 @@ jobs:
         run: npm run proof:base44-wave-execution
       - name: Prove Wave 1 replacement matrix
         run: npm run proof:base44-wave1-replacements
+      - name: Prove Command Center function replacement map
+        run: npm run proof:command-center-function-map
+      - name: Prove owned Systemia Aqueduct
+        run: npm run proof:aqueduct
+      - name: Prove owned Exact Output Gate
+        run: npm run proof:exact-output-gate
       - name: Prove lossless Base44 entity transfer
         run: npm run proof:base44-entity-transfer
       - name: Prove owned AliEV session corpus
@@ -119,8 +137,6 @@ jobs:
         run: npm run proof:auto-clock-out
       - name: Prove gated auto clock-out registration
         run: npm run proof:auto-clock-out-registration
-      - name: Prove owned auto clock-out scheduled work
-        run: npm run proof:auto-clock-out
       - name: Prove owned InternalOps snapshot and intake
         run: npm run proof:internal-ops
       - name: Prove provider-authoritative commerce boundary
