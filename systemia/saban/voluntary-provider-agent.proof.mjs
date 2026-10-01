@@ -16,6 +16,14 @@ const identity={
   private_key_pem:privateKey.export({type:'pkcs8',format:'pem'}),
 };
 
+assert.throws(
+  ()=>new VoluntaryProviderAgent({
+    marketUrl:'http://market.example',
+    identity,
+  }),
+  /https_required/
+);
+
 const market=createVoluntaryMarketAdapter({maxRounds:6});
 const server=await startVoluntaryMarketServer({
   market,
