@@ -119,15 +119,8 @@ function measuredReturnFromIndex(bars, startIndex, lagBars, observedAt) {
   const pathRelative = pathBars.map((bar) => Number(bar.c) / Number(start.c) - 1);
   const startDate = marketDateKey(start.t);
   const sessionStartIndex = bars.findIndex((bar) => marketDateKey(bar.t) === startDate);
-  let previousSessionClose = null;
-  if (sessionStartIndex > 0) {
-    const previousDate = marketDateKey(bars[sessionStartIndex - 1].t);
-    for (let i = sessionStartIndex - 1; i >= 0; i--) {
-      if (marketDateKey(bars[i].t) !== previousDate) break;
-      previousSessionClose = Number(bars[i].c);
-      if (i === 0 || marketDateKey(bars[i - 1].t) !== previousDate) break;
-    }
-  }
+  const previousSessionClose =
+    sessionStartIndex > 0 ? Number(bars[sessionStartIndex - 1].c) : null;
   const sessionOpenPrice = sessionStartIndex >= 0 ? Number(bars[sessionStartIndex].c) : null;
   const openingGap = previousSessionClose && sessionOpenPrice
     ? sessionOpenPrice / previousSessionClose - 1
