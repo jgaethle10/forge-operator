@@ -242,8 +242,8 @@ const missingProductContract = admitMission({
     tasks: [{
       work_key: 'missing-product-contract',
       work_type: 'execute',
-      product_key: 'findmypart',
-      action_scope: 'parts.search',
+      product_key: 'buildflow',
+      action_scope: 'enterprise.run',
     }]
   }
 });
