@@ -17,8 +17,10 @@ const conformanceByCapabilityId = new Map(
 );
 
 function isLegacyProviderUrl(value) {
+  const raw = String(value || '');
+  if (/https?:\/\/(?:base44\.app|[^/\s]+\.base44\.app)(?:\/|$)/i.test(raw)) return true;
   try {
-    const url = new URL(String(value || ''));
+    const url = new URL(raw);
     const host = url.hostname.toLowerCase();
     return host === 'base44.app' || host.endsWith('.base44.app');
   } catch {
@@ -85,8 +87,10 @@ function publicOffer(offer) {
     public_url: sourcePublicUrl || fallbackPublicUrl,
     public_url_source: sourcePublicUrl ? 'source_catalog' : (fallbackPublicUrl ? 'owned_gateway_fallback' : 'held_no_owned_public_url'),
     payment_authority: String(offer.payment_authority || ''),
-    invocation_status: String(offer.invocation_status || ''),
-    live_canary_evidence: liveCanaryEvidence,
+    invocation_status: isLegacyProviderUrl(offer.invocation_status)
+      ? 'HELD: legacy provider runtime retired; awaiting a verified Evercraft-owned route.'
+      : String(offer.invocation_status || ''),
+    live_canary_evidence: isLegacyProviderUrl(liveCanaryEvidence) ? null : liveCanaryEvidence,
     catalog_version: String(offer.catalog_version || '')
   };
 }
