@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
+  auditCapabilityContractsAgainstActionManifest,
   buildMachineActionManifest,
   findObservedTool,
 } from './machine-action-manifest.mjs';
@@ -139,5 +140,98 @@ test('invalid canary receipts fail closed', () => {
   assert.throws(
     () => buildMachineActionManifest({ schema: 'something.else' }),
     /mcp_canary_receipt_schema_invalid/
+  );
+});
+
+
+test('shared-runtime contract audit requires exact observed machine tool bindings', () => {
+  const manifest = buildMachineActionManifest(receipt);
+  const contracts = {
+    schema: 'evercraft.capability-mesh.contracts.v1',
+    contracts: [
+      {
+        product_key: 'aliev',
+        adoption_stage: 'shared_runtime',
+        execution: {
+          actions: [
+            {
+              scope: 'report.generate',
+              machine_tool: 'analyze_ev_site',
+              machine_tool_evidence_refs: ['proof:aliev'],
+            },
+          ],
+        },
+      },
+      {
+        product_key: 'roasted',
+        adoption_stage: 'shared_runtime',
+        execution: {
+          actions: [
+            {
+              scope: 'result.read',
+              machine_tool: 'get_result',
+            },
+          ],
+        },
+      },
+      {
+        product_key: 'private-product',
+        adoption_stage: 'private_runtime',
+        execution: {
+          actions: [{ scope: 'private.run' }],
+        },
+      },
+    ],
+  };
+
+  const audit = auditCapabilityContractsAgainstActionManifest({
+    contracts,
+    manifest,
+  });
+  assert.equal(audit.state, 'pass');
+  assert.equal(audit.summary.shared_runtime_action_count, 2);
+  assert.equal(audit.summary.verified_binding_count, 2);
+  assert.equal(audit.summary.failed_binding_count, 0);
+  assert.equal(
+    audit.bindings.find((row) => row.product_key === 'aliev').machine_tool,
+    'analyze_ev_site'
+  );
+  assert.equal(
+    audit.truth_boundary.verified_binding_means_exact_tool_was_listed_not_called,
+    true
+  );
+});
+
+test('contract audit blocks missing or invented machine tool bindings', () => {
+  const manifest = buildMachineActionManifest(receipt);
+  const contracts = {
+    schema: 'evercraft.capability-mesh.contracts.v1',
+    contracts: [
+      {
+        product_key: 'aliev',
+        adoption_stage: 'shared_runtime',
+        execution: {
+          actions: [
+            { scope: 'report.generate', machine_tool: 'invented_tool' },
+            { scope: 'report.preview' },
+          ],
+        },
+      },
+    ],
+  };
+
+  const audit = auditCapabilityContractsAgainstActionManifest({
+    contracts,
+    manifest,
+  });
+  assert.equal(audit.state, 'blocked');
+  assert.equal(audit.summary.failed_binding_count, 2);
+  assert.deepEqual(
+    audit.bindings.map((row) => row.reason).sort(),
+    ['machine_tool_missing', 'machine_tool_not_observed']
+  );
+  assert.equal(
+    audit.truth_boundary.failed_binding_must_not_fall_back_to_inferred_tool_name,
+    true
   );
 });
