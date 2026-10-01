@@ -16,8 +16,8 @@ UNIT_FILE="/etc/systemd/system/evercraft-nodeseed.service"
 REMOTE_UNIT_FILE="/etc/systemd/system/evercraft-remote-admission.service"
 NODE_BIN="$(command -v node || true)"
 NODE_ROLE="${EVERCRAFT_NODE_ROLE:-public_edge}"
-if [[ "${NODE_ROLE}" != "public_edge" && "${NODE_ROLE}" != "private_worker" && "${NODE_ROLE}" != "virtual_worker" ]]; then
-  echo "EVERCRAFT_NODE_ROLE must be public_edge, private_worker, or virtual_worker." >&2
+if [[ "${NODE_ROLE}" != "public_edge" && "${NODE_ROLE}" != "private_worker" && "${NODE_ROLE}" != "virtual_worker" && "${NODE_ROLE}" != "operator_authorized_public_edge" ]]; then
+  echo "EVERCRAFT_NODE_ROLE must be public_edge, private_worker, virtual_worker, or operator_authorized_public_edge." >&2
   exit 3
 fi
 
@@ -55,8 +55,10 @@ mkdir -p "${INSTALL_ROOT}"
 # Systemia code tree as one immutable field bundle so a newly installed node
 # cannot advertise workload classes whose modules were omitted by the installer.
 cp -a "${SOURCE_ROOT}/systemia" "${INSTALL_ROOT}/systemia"
-find "${INSTALL_ROOT}/systemia" -type d -exec chmod 0755 {} +
-find "${INSTALL_ROOT}/systemia" -type f -exec chmod 0644 {} +
+mkdir -p "${INSTALL_ROOT}/infra"
+cp -a "${SOURCE_ROOT}/infra/evercraft-edge" "${INSTALL_ROOT}/infra/evercraft-edge"
+find "${INSTALL_ROOT}/systemia" "${INSTALL_ROOT}/infra/evercraft-edge" -type d -exec chmod 0755 {} +
+find "${INSTALL_ROOT}/systemia" "${INSTALL_ROOT}/infra/evercraft-edge" -type f -exec chmod 0644 {} +
 
 ALLOCATOR_TOKEN="${EVERCRAFT_ALLOCATOR_TOKEN:-}"
 if [[ -z "${ALLOCATOR_TOKEN}" ]]; then
@@ -80,7 +82,11 @@ else
 fi
 
 NODE_ID="${EVERCRAFT_NODE_ID:-evercraft-$(hostname -s)}"
-NODE_LABELS="${EVERCRAFT_NODE_LABELS:-}"
+DEFAULT_NODE_LABELS=""
+if [[ "${NODE_ROLE}" == "operator_authorized_public_edge" ]]; then
+  DEFAULT_NODE_LABELS="operator-authorized,public-edge-candidate,gateway,evercraft-edge-dns,chromebook"
+fi
+NODE_LABELS="${EVERCRAFT_NODE_LABELS:-${DEFAULT_NODE_LABELS}}"
 
 umask 077
 cat > "${ENV_FILE}" <<EOF
@@ -219,4 +225,8 @@ else
   echo "Outbound admission: unit installed and waiting for EVERCRAFT_REMOTE_BROKER_URL."
 fi
 echo "Device identity and allocator secret remain on this machine."
-echo "Reboot once, capture field-offline-check.mjs while isolated, then run field-certify.mjs."
+if [[ "${NODE_ROLE}" == "operator_authorized_public_edge" ]]; then
+  echo "Operator-authorized edge installed as a candidate. public-ingress is not claimed until an external ingress canary passes."
+else
+  echo "Reboot once, capture field-offline-check.mjs while isolated, then run field-certify.mjs."
+fi
