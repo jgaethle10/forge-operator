@@ -25,6 +25,7 @@ export function buildClusterAdversarialSummary({
   breakerLab,
   timingLab,
   volatilityDelayInteractionLab,
+  signalDecayCostDecompositionLab,
   overlapLab,
   placeboLab,
   randomPlaceboLab,
@@ -56,6 +57,7 @@ export function buildClusterAdversarialSummary({
     breaker: indexBySignal(breakerLab?.reviews || []),
     timing: indexBySignal(timingLab?.reviews || []),
     volatilityDelay: indexBySignal(volatilityDelayInteractionLab?.reviews || []),
+    signalDecayCost: indexBySignal(signalDecayCostDecompositionLab?.reviews || []),
     overlap: indexBySignal(overlapLab?.reviews || []),
     placebo: indexBySignal(placeboLab?.reviews || []),
     randomPlacebo: indexBySignal(randomPlaceboLab?.reviews || []),
@@ -113,6 +115,12 @@ export function buildClusterAdversarialSummary({
         maps.volatilityDelay.get(signal)?.status || "MISSING",
       volatility_delay_differential_decay:
         maps.volatilityDelay.get(signal)?.differential_delay_decay_high_minus_low ?? null,
+      signal_decay_cost_decomposition_status:
+        maps.signalDecayCost.get(signal)?.status || "MISSING",
+      signal_decay_cost_30m_combined_change:
+        maps.signalDecayCost.get(signal)?.delays?.find(
+          (row) => row.delay_key === "30m"
+        )?.mean_combined_relative_change_proxy ?? null,
       overlap_status: maps.overlap.get(signal)?.overlap_status || "MISSING",
       matched_placebo_status:
         maps.placebo.get(signal)?.placebo_status || "MISSING",
@@ -174,6 +182,8 @@ export function buildClusterAdversarialSummary({
           (row) => row.extended_timing_status === "EXTENDED_TIMING_ROBUST_DIAGNOSTIC"),
         volatility_delay_interaction_ready: count(memberReceipts,
           (row) => row.volatility_delay_interaction_status === "VOLATILITY_DELAY_INTERACTION_READY"),
+        signal_decay_cost_decomposition_ready: count(memberReceipts,
+          (row) => row.signal_decay_cost_decomposition_status === "SIGNAL_DECAY_COST_DECOMPOSITION_READY"),
         overlap_robust: count(memberReceipts,
           (row) => row.overlap_status === "OVERLAP_ROBUST_DIAGNOSTIC"),
         matched_placebo_separated: count(memberReceipts,
