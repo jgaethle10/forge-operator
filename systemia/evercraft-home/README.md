@@ -154,3 +154,17 @@ Once authenticated Raven/Home is reachable, `/emergency-import.html` decrypts th
 
 This is a temporary continuity path, not a replacement for the canonical authenticated mobile credential intake.
 
+
+
+### Household Fabric provider credentials
+
+The owner-gated Evercraft credential vault also accepts Household Fabric provider credentials through explicit allowlisted routes:
+
+- `POST /api/credentials/providers/google-places` with `api_key`
+- `GET /api/credentials/providers/google-places/status`
+- `POST /api/credentials/providers/kroger` with `client_id` and `client_secret`
+- `GET /api/credentials/providers/kroger/status`
+
+Google Places stores a fixed non-secret vault key ID while the API key remains encrypted secret material. Kroger maps its client ID and client secret into the generic provider envelope. Status responses return only opaque references, fingerprints, timestamps and non-secret metadata.
+
+`/credentials.html` exposes the supported providers through the private intake surface. Household Fabric runtime consumption is vault-reference-first.
