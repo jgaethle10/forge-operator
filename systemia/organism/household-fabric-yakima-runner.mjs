@@ -3,6 +3,7 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { ingestYvlBrowserResult } from '../household-fabric/yvl-pipeline.mjs';
+import { runYakimaPriceProviderCycle } from '../household-fabric/price-provider-cycle.mjs';
 import { emptyLedger } from '../household-fabric/ingest.mjs';
 
 const CADENCE_SECONDS = 300;
@@ -52,6 +53,81 @@ function materialFingerprint(today) {
   return crypto.createHash('sha256').update(JSON.stringify(payload)).digest('hex');
 }
 
+function finalizeCycle({
+  eventRun,
+  today,
+  ledger,
+  receipts,
+  sourceRuns = [],
+  priceIndex = null,
+  observationCount = 0,
+  previousState,
+  cycleNow,
+  sourceObservedAt,
+} = {}) {
+  const fingerprint = materialFingerprint(today);
+  const materialChange = clean(previousState?.material_fingerprint) !== fingerprint;
+
+  return {
+    schema: 'evercraft.household-fabric.yakima-cycle.v2',
+    workflow_key: 'household-fabric-yakima',
+    mission_key: 'household-flourishing-yakima-2026',
+    cycle_key: cycleKeyFor(cycleNow),
+    cadence_seconds: CADENCE_SECONDS,
+    observed_at: cycleNow.toISOString(),
+    source_observed_at: sourceObservedAt.toISOString(),
+    material_change: materialChange,
+    material_fingerprint: fingerprint,
+    collector: {
+      key: eventRun.collector,
+      source_url: eventRun.source_url,
+      evidence_receipt_sha256: eventRun.browser_evidence_receipt_sha256,
+      collected_count: eventRun.collected_count,
+      accepted_count: eventRun.receipts.filter(row => row.status === 'accepted').length,
+      deduped_count: eventRun.receipts.filter(row => row.status === 'deduped').length,
+    },
+    price_sources: sourceRuns,
+    price_observation_count: observationCount,
+    price_index: priceIndex,
+    today,
+    ledger,
+    receipts,
+    mission_snapshot: {
+      schema: 'evercraft.household-fabric.mission-snapshot.v2',
+      mission_key: 'household-flourishing-yakima-2026',
+      cycle_key: cycleKeyFor(cycleNow),
+      state: today.status,
+      material_change: materialChange,
+      opportunity_count: today.headline.opportunities_shown,
+      money_kept_cents: today.headline.money_kept_cents,
+      money_earned_cents: today.headline.money_earned_cents,
+      degraded_categories: today.coverage.degraded_categories,
+      source_states: sourceRuns.map(row => ({
+        source: row.source,
+        state: row.state,
+      })),
+      evidence_refs: [
+        'url:' + eventRun.source_url,
+        'browser-receipt:' + eventRun.browser_evidence_receipt_sha256,
+      ],
+      observed_at: cycleNow.toISOString(),
+    },
+    state: {
+      schema: 'evercraft.household-fabric.yakima-state.v2',
+      material_fingerprint: fingerprint,
+      last_cycle_key: cycleKeyFor(cycleNow),
+      last_material_change_at: materialChange
+        ? cycleNow.toISOString()
+        : previousState?.last_material_change_at || null,
+      last_source_observed_at: sourceObservedAt.toISOString(),
+      last_price_source_states: sourceRuns.map(row => ({
+        source: row.source,
+        state: row.state,
+      })),
+    },
+  };
+}
+
 export function evaluateYakimaHouseholdCycle({
   browserResult,
   ledger = emptyLedger(),
@@ -64,61 +140,106 @@ export function evaluateYakimaHouseholdCycle({
 
   const cycleNow = now instanceof Date ? now : new Date(now);
   const sourceObservedAt = new Date(browserResult.finished_at || cycleNow);
-  const run = ingestYvlBrowserResult(browserResult, {
+  const eventRun = ingestYvlBrowserResult(browserResult, {
     now: sourceObservedAt,
     ledger,
     geography: 'yakima-wa',
     mode: 'holiday_pressure',
   });
 
-  const fingerprint = materialFingerprint(run.today);
-  const materialChange = clean(previousState?.material_fingerprint) !== fingerprint;
+  return finalizeCycle({
+    eventRun,
+    today: eventRun.today,
+    ledger: eventRun.ledger,
+    receipts: eventRun.receipts,
+    previousState,
+    cycleNow,
+    sourceObservedAt,
+  });
+}
 
+export async function executeYakimaHouseholdCycle({
+  browserResult,
+  ledger = emptyLedger(),
+  previousState = null,
+  now = new Date(),
+  google = {},
+  kroger = {},
+  priceOptions = {},
+  fetchImpl = fetch,
+  priceClients = {},
+} = {}) {
+  if (!browserResult || browserResult.ok !== true) {
+    throw new Error('successful browser result is required');
+  }
+
+  const cycleNow = now instanceof Date ? now : new Date(now);
+  const sourceObservedAt = new Date(browserResult.finished_at || cycleNow);
+  const eventRun = ingestYvlBrowserResult(browserResult, {
+    now: sourceObservedAt,
+    ledger,
+    geography: 'yakima-wa',
+    mode: 'holiday_pressure',
+  });
+
+  const priceRun = await runYakimaPriceProviderCycle({
+    now: cycleNow,
+    ledger: eventRun.ledger,
+    google,
+    kroger,
+    price_options: priceOptions,
+    fetch_impl: fetchImpl,
+    clients: priceClients,
+  });
+
+  return finalizeCycle({
+    eventRun,
+    today: priceRun.today,
+    ledger: priceRun.ledger,
+    receipts: [...eventRun.receipts, ...priceRun.receipts],
+    sourceRuns: priceRun.source_runs,
+    priceIndex: priceRun.price_index,
+    observationCount: priceRun.observation_count,
+    previousState,
+    cycleNow,
+    sourceObservedAt,
+  });
+}
+
+function parseJsonArray(value, fallback = []) {
+  const raw = clean(value);
+  if (!raw) return fallback;
+  try {
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+export function providerConfigFromEnvironment(env = process.env) {
   return {
-    schema: 'evercraft.household-fabric.yakima-cycle.v1',
-    workflow_key: 'household-fabric-yakima',
-    mission_key: 'household-flourishing-yakima-2026',
-    cycle_key: cycleKeyFor(cycleNow),
-    cadence_seconds: CADENCE_SECONDS,
-    observed_at: cycleNow.toISOString(),
-    source_observed_at: sourceObservedAt.toISOString(),
-    material_change: materialChange,
-    material_fingerprint: fingerprint,
-    collector: {
-      key: run.collector,
-      source_url: run.source_url,
-      evidence_receipt_sha256: run.browser_evidence_receipt_sha256,
-      collected_count: run.collected_count,
-      accepted_count: run.receipts.filter(row => row.status === 'accepted').length,
-      deduped_count: run.receipts.filter(row => row.status === 'deduped').length,
+    google: {
+      api_key: clean(env.HOUSEHOLD_GOOGLE_PLACES_API_KEY),
+      latitude: env.HOUSEHOLD_GOOGLE_CENTER_LAT || undefined,
+      longitude: env.HOUSEHOLD_GOOGLE_CENTER_LONG || undefined,
+      radius_meters: env.HOUSEHOLD_GOOGLE_RADIUS_METERS || undefined,
+      max_results: env.HOUSEHOLD_GOOGLE_MAX_RESULTS || undefined,
     },
-    today: run.today,
-    ledger: run.ledger,
-    receipts: run.receipts,
-    mission_snapshot: {
-      schema: 'evercraft.household-fabric.mission-snapshot.v1',
-      mission_key: 'household-flourishing-yakima-2026',
-      cycle_key: cycleKeyFor(cycleNow),
-      state: run.today.status,
-      material_change: materialChange,
-      opportunity_count: run.today.headline.opportunities_shown,
-      money_kept_cents: run.today.headline.money_kept_cents,
-      money_earned_cents: run.today.headline.money_earned_cents,
-      degraded_categories: run.today.coverage.degraded_categories,
-      evidence_refs: [
-        'url:' + run.source_url,
-        'browser-receipt:' + run.browser_evidence_receipt_sha256,
-      ],
-      observed_at: cycleNow.toISOString(),
+    kroger: {
+      client_id: clean(env.HOUSEHOLD_KROGER_CLIENT_ID),
+      client_secret: clean(env.HOUSEHOLD_KROGER_CLIENT_SECRET),
+      zip_code: clean(env.HOUSEHOLD_KROGER_ZIP_CODE) || '98902',
+      locations: parseJsonArray(env.HOUSEHOLD_KROGER_LOCATIONS_JSON, []),
+      terms: clean(env.HOUSEHOLD_KROGER_TERMS)
+        ? clean(env.HOUSEHOLD_KROGER_TERMS).split(',').map(clean).filter(Boolean)
+        : undefined,
+      limit_per_term: env.HOUSEHOLD_KROGER_LIMIT_PER_TERM || undefined,
     },
-    state: {
-      schema: 'evercraft.household-fabric.yakima-state.v1',
-      material_fingerprint: fingerprint,
-      last_cycle_key: cycleKeyFor(cycleNow),
-      last_material_change_at: materialChange
-        ? cycleNow.toISOString()
-        : previousState?.last_material_change_at || null,
-      last_source_observed_at: sourceObservedAt.toISOString(),
+    priceOptions: {
+      mileage_cost_cents: env.HOUSEHOLD_MILEAGE_COST_CENTS || undefined,
+      time_value_cents_per_hour: env.HOUSEHOLD_TIME_VALUE_CENTS_PER_HOUR || undefined,
+      friction_cents_per_step: env.HOUSEHOLD_FRICTION_CENTS_PER_STEP || undefined,
     },
   };
 }
@@ -183,11 +304,13 @@ async function main() {
 
   if (!browserResult) throw new Error('browser_result_unreadable');
 
-  const report = evaluateYakimaHouseholdCycle({
+  const providerConfig = providerConfigFromEnvironment(process.env);
+  const report = await executeYakimaHouseholdCycle({
     browserResult,
     ledger: loadJson(ledgerFile, emptyLedger()),
     previousState: loadJson(stateFile, null),
     now: new Date(),
+    ...providerConfig,
   });
 
   atomicJson(path.join(outDir, 'latest.json'), {
@@ -198,6 +321,8 @@ async function main() {
   atomicJson(path.join(outDir, 'today.json'), report.today);
   atomicJson(path.join(outDir, 'mission-snapshot.json'), report.mission_snapshot);
   atomicJson(path.join(outDir, 'collector-receipts.json'), report.receipts);
+  atomicJson(path.join(outDir, 'price-index.json'), report.price_index);
+  atomicJson(path.join(outDir, 'price-source-runs.json'), report.price_sources);
   atomicJson(stateFile, report.state);
 
   console.log(JSON.stringify({
@@ -205,6 +330,11 @@ async function main() {
     cycle_key: report.cycle_key,
     material_change: report.material_change,
     collected_count: report.collector.collected_count,
+    price_observation_count: report.price_observation_count,
+    price_source_states: report.price_sources.map(row => ({
+      source: row.source,
+      state: row.state,
+    })),
     today_status: report.today.status,
     opportunities_shown: report.today.headline.opportunities_shown,
     degraded_categories: report.today.coverage.degraded_categories,
