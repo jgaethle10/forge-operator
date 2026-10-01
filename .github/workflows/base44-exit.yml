@@ -113,6 +113,8 @@ jobs:
         run: npm run proof:polar-connector
       - name: Prove owned resident scheduler
         run: npm run proof:resident-supervisor
+      - name: Prove owned auto clock-out scheduled work
+        run: npm run proof:auto-clock-out
       - name: Prove provider-authoritative commerce boundary
         run: npm run proof:commerce-boundary
       - name: Prove provider-authoritative Polar commerce
