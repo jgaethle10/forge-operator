@@ -116,7 +116,7 @@ export function captionFromCandidate(candidate){
 
 export function assessSpectacleEditorialPreflight({candidate,caption,masterQc}={}){
   const sourceRefs=unique(candidate?.source_refs||[]);
-  const paragraphs=String(caption||'').split(/\n\s*\n/).map(clean).filter(Boolean);
+  const paragraphs=String(caption||'').split(/\n\s*\n/).map((value)=>clean(value)).filter(Boolean);
   const p=candidate?.production?.phenomenon||{};
   const checks=[
     ['source_lineage',sourceRefs.length>0],
