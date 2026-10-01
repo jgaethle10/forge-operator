@@ -49,6 +49,7 @@ jobs:
           node systemia/daytrade-lens/edge-search-burden.test.mjs
           node systemia/daytrade-lens/edge-family-max-null.test.mjs
           node systemia/daytrade-lens/edge-deflated-sharpe.test.mjs
+          node systemia/daytrade-lens/edge-tail-dependence.test.mjs
           node systemia/daytrade-lens/edge-cscv-pbo.test.mjs
           node systemia/daytrade-lens/edge-breaker-lab.test.mjs
           node systemia/daytrade-lens/edge-adversarial-fixtures.test.mjs
