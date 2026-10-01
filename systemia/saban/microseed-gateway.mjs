@@ -4,6 +4,7 @@ import { AmbientDeviceRegistry } from './ambient-device-registry.mjs';
 import { evaluateAmbientTrust } from './ambient-device-trust.mjs';
 import { executeMicroSeedWorkload } from './microseed-executor.mjs';
 import { loadPerformanceLedger, recordPerformanceSample, savePerformanceLedger } from './performance-learning.mjs';
+import { runMicroSeedConformance } from './microseed-conformance.mjs';
 
 function clean(v){return String(v??'').trim();}
 function loopback(host){
@@ -74,6 +75,89 @@ export async function startMicroSeedGateway({
       const auth=clean(req.headers.authorization);
       if(auth!=='Bearer '+authorizationToken){
         return send(res,401,{ok:false,error:'microseed_gateway_authorization_required'});
+      }
+
+      if(req.method==='POST'&&req.url==='/v1/conformance'){
+        const body=await readJson(req);
+        const deviceId=clean(body?.device_id);
+        if(!deviceId) return send(res,400,{ok:false,error:'device_id_required'});
+        const record=registry.get(deviceId);
+        const manifest=registry.manifest(deviceId);
+        if(!record||!manifest) return send(res,404,{ok:false,error:'microseed_device_not_registered'});
+
+        const trustDecision=evaluateAmbientTrust(record,{now:new Date()});
+        if(!trustDecision.eligible){
+          return send(res,403,{
+            ok:false,
+            error:'microseed_device_not_eligible',
+            trust_state:trustDecision.state,
+            reason:trustDecision.reason,
+          });
+        }
+        if(!body.telemetry||typeof body.telemetry!=='object'){
+          return send(res,400,{ok:false,error:'conformance_telemetry_required'});
+        }
+
+        const conformance=await runMicroSeedConformance({
+          manifest,
+          trustDecision,
+          execute:async({workload_class,idempotency_key,payload})=>{
+            const startedAt=Date.now();
+            try{
+              const receipt=await executeMicroSeedWorkload({
+                manifest,
+                trustDecision,
+                telemetry:body.telemetry,
+                request:{
+                  device_id:deviceId,
+                  workload_class,
+                  idempotency_key,
+                  payload,
+                  requested_memory_mb:64,
+                  requested_cpu_fraction:0.05,
+                },
+                stateDir,
+                bridgeAdapters,
+                executionContext:'gateway',
+                now:new Date(),
+              });
+              const ledger=loadPerformanceLedger(performanceFile);
+              recordPerformanceSample(ledger,{
+                device_id:deviceId,
+                workload_class,
+                ok:true,
+                duration_ms:Math.max(0,Date.now()-startedAt),
+                bytes_processed:
+                  receipt?.result?.byte_count??
+                  receipt?.result?.remote_result?.byte_count??
+                  null,
+                observed_at:new Date().toISOString(),
+              });
+              savePerformanceLedger(performanceFile,ledger);
+              return receipt;
+            }catch(error){
+              const ledger=loadPerformanceLedger(performanceFile);
+              recordPerformanceSample(ledger,{
+                device_id:deviceId,
+                workload_class,
+                ok:false,
+                duration_ms:Math.max(0,Date.now()-startedAt),
+                thermal_hold:String(error?.message||error).includes('temperature'),
+                observed_at:new Date().toISOString(),
+              });
+              savePerformanceLedger(performanceFile,ledger);
+              throw error;
+            }
+          },
+          now:new Date(),
+        });
+        registry.setConformance({device_id:deviceId,receipt:conformance});
+        return send(res,200,{
+          ok:true,
+          ...conformance,
+          authorization_changed:false,
+          production_eligibility_requires_fresh_conformance:true,
+        });
       }
 
       if(req.method==='POST'&&req.url==='/v1/execute'){
