@@ -1,5 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import { createHash } from 'node:crypto';
 
 import {
   executeRegisteredMicroSeedWorkload,
@@ -104,4 +108,58 @@ test('observed-session audit preserves missing-is-not-zero and modeled-is-not-ob
 
 test('unknown workload is not executable',()=>{
   assert.equal(executeRegisteredMicroSeedWorkload('systemia.arbitrary-shell.v1',{}),null);
+});
+
+
+test('blob-store workload is content-addressed, idempotent, and verifies reads',()=>{
+  const root=fs.mkdtempSync(path.join(os.tmpdir(),'microseed-blob-store-'));
+  try{
+    const body=Buffer.from('evercraft-memory-shard');
+    const digest='sha256:'+createHash('sha256').update(body).digest('hex');
+    const payload={operation:'put',sha256:digest,bytes_base64:body.toString('base64')};
+
+    const first=executeRegisteredMicroSeedWorkload(
+      'systemia.blob-store.v1',
+      payload,
+      {stateDir:root,device_id:'storage-node'}
+    );
+    assert.equal(first.ok,true);
+    assert.equal(first.stored,true);
+    assert.equal(first.deduplicated,false);
+
+    const second=executeRegisteredMicroSeedWorkload(
+      'systemia.blob-store.v1',
+      payload,
+      {stateDir:root,device_id:'storage-node'}
+    );
+    assert.equal(second.deduplicated,true);
+
+    const has=executeRegisteredMicroSeedWorkload(
+      'systemia.blob-store.v1',
+      {operation:'has',sha256:digest},
+      {stateDir:root}
+    );
+    assert.equal(has.present,true);
+    assert.equal(has.integrity_verified,true);
+
+    const get=executeRegisteredMicroSeedWorkload(
+      'systemia.blob-store.v1',
+      {operation:'get',sha256:digest},
+      {stateDir:root}
+    );
+    assert.equal(get.ok,true);
+    assert.equal(Buffer.from(get.bytes_base64,'base64').toString(),'evercraft-memory-shard');
+    assert.equal(get.integrity_verified,true);
+
+    assert.throws(
+      ()=>executeRegisteredMicroSeedWorkload(
+        'systemia.blob-store.v1',
+        {operation:'put',sha256:'sha256:'+'0'.repeat(64),bytes_base64:body.toString('base64')},
+        {stateDir:root}
+      ),
+      /content_hash_mismatch/
+    );
+  }finally{
+    fs.rmSync(root,{recursive:true,force:true});
+  }
 });
