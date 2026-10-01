@@ -15,6 +15,7 @@ import {
   hostBoundaryCapabilityStatus,
 } from './host-boundary-registry.mjs';
 import { readHostBoundaryCapabilityAdmission } from './host-boundary-admission.mjs';
+import { certifyChromeOsHostBoundary } from './chromeos-host-boundary-field-certify.mjs';
 
 const execFileAsync = promisify(execFile);
 const sha = (value) => {
@@ -183,6 +184,9 @@ export class EvercraftRemoteOperator {
       'organism',
       'chromeos-host-boundary',
     ),
+    routerMapReceiptFile =
+      process.env.EVERCRAFT_ROUTER_MAP_RECEIPT ||
+      '/var/lib/evercraft/router-map/latest.json',
   } = {}) {
     if (!roots || typeof roots !== 'object' || Array.isArray(roots)) {
       throw new Error('operator_roots_required');
@@ -205,6 +209,7 @@ export class EvercraftRemoteOperator {
     this.maxOutputBytes = boundedInt(maxOutputBytes, 1024 * 1024, 4096, 4 * 1024 * 1024);
     this.maxExecMs = boundedInt(maxExecMs, 60_000, 1000, 300_000);
     this.hostBoundaryStateRoot = path.resolve(String(hostBoundaryStateRoot));
+    this.routerMapReceiptFile = path.resolve(String(routerMapReceiptFile));
     this.instanceId = 'remote_operator_' + randomBytes(10).toString('hex');
   }
 
@@ -236,6 +241,7 @@ export class EvercraftRemoteOperator {
         read: true,
         check_now: true,
         generic_capability_check: true,
+        field_certification: true,
         capabilities: true,
         mutation: false,
         source: 'paired_chromeos_extension',
@@ -300,6 +306,25 @@ export class EvercraftRemoteOperator {
     return {
       ...status,
       capabilities,
+      operator_receipt: receipt,
+    };
+  }
+
+  hostBoundaryCertification() {
+    const certification = certifyChromeOsHostBoundary({
+      stateRoot: this.hostBoundaryStateRoot,
+      routerReceiptFile: this.routerMapReceiptFile,
+    });
+    const receipt = this.#receipt('chromeos-host-boundary.certification', {
+      certification_state: certification.state,
+      capability_id: certification.capability_id,
+      ready_for_external_canary:
+        certification.ready_for_external_canary === true,
+      certification_receipt_hash: certification.receipt_hash,
+      mutation_authority: false,
+    });
+    return {
+      ...certification,
       operator_receipt: receipt,
     };
   }
