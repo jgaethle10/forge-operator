@@ -82,11 +82,16 @@ export function normalizeMicroDeviceManifest(input={}){
       storage_gb:Math.max(0,Number(input.resources?.storage_gb||0)),
     },
     placement:{
-      public_ingress:input.public_ingress===true,
-      persistent_storage:input.persistent_storage===true,
-      labels:uniq(input.placement_labels).map(x=>x.toLowerCase()),
+      public_ingress:(input.public_ingress??input.placement?.public_ingress)===true,
+      persistent_storage:(input.persistent_storage??input.placement?.persistent_storage)===true,
+      labels:uniq(input.placement_labels??input.placement?.labels).map(x=>x.toLowerCase()),
       failure_domains:Object.fromEntries(
-        Object.entries(input.failure_domains&&typeof input.failure_domains==='object'?input.failure_domains:{})
+        Object.entries(
+          (input.failure_domains??input.placement?.failure_domains)&&
+          typeof (input.failure_domains??input.placement?.failure_domains)==='object'
+            ? (input.failure_domains??input.placement?.failure_domains)
+            : {}
+        )
           .map(([axis,value])=>[
             String(axis).trim().toLowerCase(),
             String(value??'').trim().toLowerCase(),
