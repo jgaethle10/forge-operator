@@ -59,3 +59,20 @@ The public control room intentionally shows research state rather than pretendin
 A headline is not the event. A correlation is not causation. A forecast is not an outcome. A model is not an observation. A source count is not source independence. A closed emergency is not the end of the story.
 
 TOWI's job is to open the machine and show the whole system.
+
+
+## Research evidence lane
+
+Opening a dossier is not the same as proving it. Authorized research workers can attach source-bound evidence through:
+
+    POST /api/towi/internal/dossiers/{id}/evidence
+
+Evidence must declare a source family, provenance, observed time, evidence state, and relationship to the dossier: supports, challenges, context, or supersedes. TOWI counts independence groups rather than raw URL count, so mirrors of the same underlying source cannot satisfy corroboration by multiplication.
+
+Challenging evidence is preserved and forces explicit editorial treatment. It is never silently averaged away.
+
+## Intake
+
+TOWI does not scrape headlines as its truth layer. It consumes Systemia Radar editions. Radar now includes official USGS earthquake observations, NOAA space-weather alerts, NOAA/NWS active hazards, and NASA EONET open-event discovery. NASA EONET is explicitly an event-discovery source, not independent corroboration by itself.
+
+Additional Worldstate/Sentinel feeds can enter the same evidence pipeline without changing TOWI's publication rules.
