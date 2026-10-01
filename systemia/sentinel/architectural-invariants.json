@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.portfolio-sentinel.architectural-invariants.v1",
-  "version": "2026-09-26.1",
+  "version": "2026-10-01.1",
   "purpose": "Permanent architectural laws learned from prior production/distribution failures. Sentinel evaluates these before health can be considered trustworthy.",
   "invariants": [
     {
@@ -132,13 +132,18 @@
       "type": "file_contract",
       "file": "systemia/chum/start-corridor.mjs",
       "required_literals": [
-        "DIRECT_HUMAN_BUYER_DESTINATIONS",
-        "'rivet-site-underwriting-v1': 'https://rivet.base44.app/'",
+        "staticCommercialReviewUrl(publicId)",
+        "return '/chum/commercial/' + encodeURIComponent(id) + '/';",
+        "return origin + '/api/chum/go/'",
         "campaign', 'buyer-frontage'",
-        "'direct_human_buyer_destination'",
-        "return machineReviewUrl(offer.public_id, gateway);"
+        "return machineReviewUrl(offer.public_id, gateway)",
+        "return 'owned_static_commercial_surface'"
       ],
-      "repair_recipe_id": "human-buyer-frontage-regression"
+      "repair_recipe_id": "human-buyer-frontage-regression",
+      "forbidden_literals": [
+        "'https://rivet.base44.app/'",
+        "DIRECT_HUMAN_BUYER_DESTINATIONS"
+      ]
     },
     {
       "invariant_id": "money-radar-separates-acquisition-from-payment-proof",
