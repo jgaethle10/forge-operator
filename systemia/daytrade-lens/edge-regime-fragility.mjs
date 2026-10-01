@@ -1,6 +1,12 @@
 function mean(values) {
   return values.length ? values.reduce((a,b) => a + b, 0) / values.length : 0;
 }
+function finiteMetric(value) {
+  if (value === null || value === undefined || value === "") return null;
+  const out = Number(value);
+  return Number.isFinite(out) ? out : null;
+}
+
 
 function percentile(values, p) {
   if (!values.length) return null;
@@ -81,10 +87,10 @@ function bucketSummary(rows, valueOf, sign, costBps, minimumEvents) {
 
 function adverseExcursion(row, sign) {
   if (sign > 0) {
-    const value = Number(row.instrument_max_path_drawdown);
+    const value = finiteMetric(row.instrument_max_path_drawdown);
     return Number.isFinite(value) ? value : null;
   }
-  const gain = Number(row.instrument_max_path_gain);
+  const gain = finiteMetric(row.instrument_max_path_gain);
   return Number.isFinite(gain) ? -gain : null;
 }
 
@@ -96,27 +102,29 @@ export function evaluateRegimeFragility(candidate, rows, {
   const sign = expectedSign(candidate);
   const marketDirection = bucketSummary(
     rows,
-    (row) => Number(row.benchmark_return),
+    (row) => finiteMetric(row.benchmark_return),
     sign,
     transaction_cost_bps,
     minimum_bucket_events
   );
   const volatility = bucketSummary(
     rows,
-    (row) => Number(row.benchmark_realized_volatility_5m),
+    (row) => finiteMetric(row.benchmark_realized_volatility_5m),
     sign,
     transaction_cost_bps,
     minimum_bucket_events
   );
 
   const absGaps = rows
-    .map((row) => Math.abs(Number(row.benchmark_opening_gap_return)))
-    .filter(Number.isFinite);
+    .map((row) => finiteMetric(row.benchmark_opening_gap_return))
+    .filter(Number.isFinite)
+    .map(Math.abs);
   const gapCutoff = percentile(absGaps, gap_exclusion_quantile);
   const gapFiltered = Number.isFinite(gapCutoff)
     ? rows.filter((row) => {
-        const gap = Math.abs(Number(row.benchmark_opening_gap_return));
-        return Number.isFinite(gap) && gap <= gapCutoff;
+        const rawGap = finiteMetric(row.benchmark_opening_gap_return);
+        if (!Number.isFinite(rawGap)) return false;
+        return Math.abs(rawGap) <= gapCutoff;
       })
     : [];
   const gapFilteredValues = gapFiltered.map((row) =>
@@ -169,6 +177,8 @@ export function evaluateRegimeFragility(candidate, rows, {
       exclusion_quantile: gap_exclusion_quantile,
       absolute_gap_cutoff: gapCutoff,
       observations_before: rows.length,
+      available_gap_observations: absGaps.length,
+      missing_gap_observations: rows.length - absGaps.length,
       observations_after: gapFiltered.length,
       excluded: rows.length - gapFiltered.length,
       mean_signed_net_after_exclusion: mean(gapFilteredValues),
