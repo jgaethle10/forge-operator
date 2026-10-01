@@ -16,6 +16,7 @@ import { planHeterogeneousFabric } from './heterogeneous-fabric-planner.mjs';
 import { loadPerformanceLedger } from './performance-learning.mjs';
 import { planFabricRebalance } from './fabric-rebalance.mjs';
 import { evaluateMicroSeedAdapterAvailability } from './microseed-adapter-catalog.mjs';
+import { matchCapacityGapsToAmbientCandidates } from './capacity-gap-matcher.mjs';
 
 const MODULE_FILE=fileURLToPath(import.meta.url);
 
@@ -212,6 +213,15 @@ export async function runCapacityOrganismOnce({
     checkpoints,
     now,
   });
+  const opportunityMap=candidateInventory
+    ? matchCapacityGapsToAmbientCandidates({
+        capacityState:compiled,
+        candidateInventory,
+        tasks:rivetAliEvProductionAnatomy().tasks,
+        adapterHealth,
+      })
+    : null;
+
   const receipt={
     ...compiled,
     census:census?{
@@ -232,6 +242,13 @@ export async function runCapacityOrganismOnce({
       active_probe_performed:candidateInventory.active_probe_performed,
       receipt_hash:candidateInventory.receipt_hash,
     }:null,
+    capacity_gap_opportunities:opportunityMap?{
+      gap_count:opportunityMap.gap_count,
+      matched_gap_count:opportunityMap.matched_gap_count,
+      unmatched_gap_count:opportunityMap.unmatched_gap_count,
+      adapter_blocked_candidate_count:opportunityMap.adapter_blocked_candidate_count,
+      receipt_hash:opportunityMap.receipt_hash,
+    }:null,
   };
 
   atomicJson(path.join(resolvedRoot,'capacity-organism-state.json'),receipt);
@@ -239,6 +256,7 @@ export async function runCapacityOrganismOnce({
   atomicJson(path.join(resolvedRoot,'heterogeneous-plan.json'),compiled.workload_plan);
   atomicJson(path.join(resolvedRoot,'rebalance-plan.json'),compiled.rebalance_plan);
   if(candidateInventory) atomicJson(path.join(resolvedRoot,'ambient-candidate-inventory.json'),candidateInventory);
+  if(opportunityMap) atomicJson(path.join(resolvedRoot,'capacity-gap-opportunities.json'),opportunityMap);
   return receipt;
 }
 
