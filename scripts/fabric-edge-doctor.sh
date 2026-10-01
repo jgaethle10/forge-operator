@@ -7,6 +7,8 @@ FABRIC_PORT=8787
 HTTP_PORT=18080
 HTTPS_PORT=8443
 ROUTER_ENV=/etc/evercraft/router-map.env
+RELAY_ENV=/etc/evercraft/outbound-relay.env
+RELAY_SERVICE=evercraft-fabric-outbound-relay.service
 REPAIR=false
 TRIGGER_CANARY=false
 CANARY_WORKFLOW="${EVERCRAFT_EDGE_CANARY_WORKFLOW:-evercraft-public-edge-canary.yml}"
@@ -227,6 +229,9 @@ if [[ "$REPAIR" == "true" ]]; then
   systemctl enable --now evercraft-fabric.service >/dev/null 2>&1 || true
   systemctl enable --now evercraft-public-edge.service >/dev/null 2>&1 || true
   systemctl enable --now evercraft-router-map.timer >/dev/null 2>&1 || true
+  if systemctl list-unit-files "$RELAY_SERVICE" --no-legend 2>/dev/null | grep -q "^$RELAY_SERVICE"; then
+    systemctl enable --now "$RELAY_SERVICE" >/dev/null 2>&1 || true
+  fi
   systemctl restart evercraft-fabric.service >/dev/null 2>&1 || true
   systemctl restart evercraft-public-edge.service >/dev/null 2>&1 || true
   systemctl start evercraft-router-map.service >/dev/null 2>&1 || true
@@ -243,6 +248,7 @@ saban_probation_timer_state="$(service_state evercraft-saban-probation.timer)"
 saban_dispatch_timer_state="$(service_state evercraft-saban-dispatch.timer)"
 saban_work_api_state="$(service_state evercraft-saban-work-api.service)"
 saban_pairing_api_state="$(service_state evercraft-saban-pairing-api.service)"
+relay_state="$(service_state "$RELAY_SERVICE")"
 
 echo
 echo "[services]"
@@ -256,6 +262,7 @@ echo "evercraft-saban-probation.timer=$saban_probation_timer_state"
 echo "evercraft-saban-dispatch.timer=$saban_dispatch_timer_state"
 echo "evercraft-saban-work-api.service=$saban_work_api_state"
 echo "evercraft-saban-pairing-api.service=$saban_pairing_api_state"
+echo "$RELAY_SERVICE=$relay_state"
 if [[ "$REPAIR" == "true" ]]; then
   echo "local_organism_repair_ok=$local_organism_repair_ok"
   echo "local_organism_repair_code=$local_organism_repair_code"
@@ -350,6 +357,7 @@ echo "local_edge_attestation_responding=$attestation_local_ok"
 
 diagnosis="unknown"
 human_gate=false
+ingress_transport="direct_chromeos_router"
 if [[ "$REPAIR" == "true" && "$local_organism_repair_ok" != "true" ]]; then
   diagnosis="local_organism_repair_failed"
 elif [[ "$REPAIR" == "true" && "$self_update_repair_ok" != "true" ]]; then
@@ -359,8 +367,14 @@ elif [[ "$REPAIR" == "true" && "$saban_capacity_repair_ok" != "true" ]]; then
 elif [[ "$local_health_ok" != "true" ]]; then
   diagnosis="fabric_runtime_unreachable"
 elif [[ -n "$LAN_HOST" && ( "$lan_http_ok" != "true" || "$lan_https_ok" != "true" ) ]]; then
-  diagnosis="chromeos_host_forward_unreachable"
-  human_gate=true
+  if [[ "$relay_state" == "active" && -f "$RELAY_ENV" ]]; then
+    diagnosis="local_edge_path_ready_external_canary_required"
+    human_gate=false
+    ingress_transport="outbound_service_relay"
+  else
+    diagnosis="chromeos_host_forward_unreachable"
+    human_gate=true
+  fi
 elif [[ "$router_refresh_ok" != "true" ]]; then
   diagnosis="router_mapping_refresh_failed"
 elif [[ -n "$dns_ip" && -n "$public_ip" && "$dns_ip" != "$public_ip" ]]; then
@@ -375,6 +389,7 @@ echo
 echo "[diagnosis]"
 echo "state=$diagnosis"
 echo "human_gate=$human_gate"
+echo "ingress_transport=$ingress_transport"
 
 field_action="none"
 if [[ "$diagnosis" == "chromeos_host_forward_unreachable" ]]; then
@@ -434,6 +449,8 @@ cat > /tmp/evercraft-fabric-edge-doctor.json <<EOF
   "saban_dispatch_timer":"$saban_dispatch_timer_state",
   "saban_work_api":"$saban_work_api_state",
   "saban_pairing_api":"$saban_pairing_api_state",
+  "outbound_relay_service":"$relay_state",
+  "ingress_transport":"$ingress_transport",
   "local_organism_repair_ok":$(json_bool "$local_organism_repair_ok"),
   "local_organism_repair_code":$local_organism_repair_code,
   "self_update_repair_ok":$(json_bool "$self_update_repair_ok"),
