@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 
 import { startMicroSeedGateway } from './microseed-gateway.mjs';
 import { createMicroSeedNativeAgentAdapter } from './microseed-native-agent-adapter.mjs';
+import { createMicroSeedLanApiAdapter } from './microseed-lan-api-adapter.mjs';
 
 const MODULE_FILE=fileURLToPath(import.meta.url);
 const arg=(name,fallback='')=>{
@@ -40,13 +41,24 @@ async function main(){
       readSecret(path.join(credentialDir,safeId(device_id)+'.token')),
   });
 
+  const lanApiAdapter=createMicroSeedLanApiAdapter({
+    allowInsecureLan:process.env.SABAN_MICROSEED_ALLOW_INSECURE_LAN==='1',
+    credentialResolver:async({device_id})=>{
+      const bearer=readSecret(path.join(credentialDir,safeId(device_id)+'.token'));
+      return bearer?{bearer}:null;
+    },
+  });
+
   const gateway=await startMicroSeedGateway({
     registryRoot:path.join(root,'registry'),
     stateDir:path.join(root,'execution'),
     host,
     port,
     authorizationToken:gatewayToken,
-    bridgeAdapters:{native_agent:nativeAdapter},
+    bridgeAdapters:{
+      native_agent:nativeAdapter,
+      lan_api:lanApiAdapter,
+    },
   });
 
   process.stdout.write(JSON.stringify({
