@@ -109,13 +109,20 @@
           "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=53501",
           "evidence_kind": "optimal-execution framework",
           "note": "Models the tradeoff between volatility risk and temporary/permanent market impact."
+        },
+        {
+          "authority": "Vasaikar",
+          "url": "https://arxiv.org/abs/2606.24019",
+          "evidence_kind": "2026 U.S. large-cap single-equity empirical square-root market-impact study",
+          "note": "Supports concave square-root functional-form stress. The reported single-stock coefficient is not imported as a universal calibration."
         }
       ],
       "principle": "There is no universal best entry speed; urgency changes impact cost and exposure to price risk.",
       "attacks": [
         "Stress multiple execution speeds and participation assumptions.",
         "Report fill-path risk and maximum adverse excursion alongside terminal return.",
-        "Treat tiny-capital execution as an empirical plumbing test rather than a scale-free proof of profitability."
+        "Treat tiny-capital execution as an empirical plumbing test rather than a scale-free proof of profitability.",
+        "Treat square-root impact coefficients as sensitivity scenarios unless calibrated on matching execution data."
       ]
     },
     {
