@@ -44,6 +44,22 @@ assert.ok(robust.gap_day_control.excluded > 0);
 assert.ok(robust.adverse_excursion.observations > 0);
 assert.equal(robust.eligibility_mutated, false);
 
+const missingMetricRows = rows.map((row, i) => ({
+  ...row,
+  benchmark_opening_gap_return: i < 5 ? null : row.benchmark_opening_gap_return,
+  benchmark_realized_volatility_5m:
+    i < 4 ? null : row.benchmark_realized_volatility_5m,
+  instrument_max_path_drawdown:
+    i < 3 ? null : row.instrument_max_path_drawdown,
+}));
+const missingMetrics = evaluateRegimeFragility(candidate, missingMetricRows, {
+  transaction_cost_bps: 20,
+  minimum_bucket_events: 8,
+});
+assert.equal(missingMetrics.gap_day_control.missing_gap_observations, 5);
+assert.equal(missingMetrics.gap_day_control.available_gap_observations, 55);
+assert.equal(missingMetrics.adverse_excursion.observations, 57);
+
 const fragileRows = rows.map((row, i) => ({
   ...row,
   forward_return:
@@ -98,6 +114,7 @@ console.log(JSON.stringify({
   market_direction_regimes:true,
   realized_volatility_regimes:true,
   leave_one_regime_out:true,
+  missing_metrics_never_zero:true,
   extreme_gap_day_exclusion:true,
   maximum_adverse_excursion:true,
   positive_and_negative_directions_supported:true,
