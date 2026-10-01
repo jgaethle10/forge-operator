@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { runEdgeBreakerLab } from "./edge-breaker-lab.mjs";
+import { runEdgeBreakerLab, eventDayClusteredBootstrap } from "./edge-breaker-lab.mjs";
 
 const rows=[];
 for(let i=0;i<96;i++){
@@ -12,6 +12,14 @@ for(let i=0;i<96;i++){
     benchmark_return:0.003,
   });
 }
+
+const marketDayProof=eventDayClusteredBootstrap([
+  {observed_at:"2026-01-01T23:30:00Z",origin_entity_ref:"a",forward_return:0.01,benchmark_return:0},
+  {observed_at:"2026-01-02T00:30:00Z",origin_entity_ref:"b",forward_return:0.01,benchmark_return:0},
+  {observed_at:"2026-01-02T15:00:00Z",origin_entity_ref:"c",forward_return:0.01,benchmark_return:0},
+],{iterations:50,seed:"market-day-proof"});
+assert.equal(marketDayProof.cluster_count,2);
+
 const report={
   evaluations:[{signal_key:"ai_models|sec_8_k|SOXX|1d",status:"RESEARCH_CANDIDATE",learned_direction:"POSITIVE_EXCESS_RETURN"}],
   measurements:rows,
@@ -62,6 +70,7 @@ console.log(JSON.stringify({
   sign_consistency:true,
   clustered_bootstrap:true,
   event_day_clustered_bootstrap:true,
+  new_york_market_day_clustering:true,
   top_winner_removal:true,
   live_trade_authority:false,
 }));
