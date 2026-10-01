@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {
   normalizeMicroDeviceManifest,
   microDeviceToAmbientCapability,
+  microDeviceToAmbientCapabilities,
   MicroSeedBridgeModes,
 } from '../systemia/saban/microseed-device-bridge.mjs';
 import { resolveAmbientComputeOffers } from '../systemia/saban/ambient-compute-fabric.mjs';
@@ -13,9 +14,20 @@ const fridge={
   bridge_mode:'matter',
   authorization_ref:'owner-approved-home-appliances',
   endpoint:'matter://home-hub/fridge-kitchen-01',
-  protocol:'evercraft.microseed.v1',
-  supported_workloads:['systemia.sensor-relay.v1','systemia.telemetry-normalizer.v1'],
+  protocol:'matter',
+  supported_workloads:[],
   operations:['read_temperature','read_door_state'],
+  capabilities:[
+    {
+      kind:'observation',
+      operations:['observe'],
+      protocol:'matter',
+      metadata:{
+        sensors:['temperature','door_state'],
+        locality_tags:['home','kitchen'],
+      },
+    },
+  ],
   resources:{cpu_units:0.05,memory_mb:64,storage_gb:0.1},
   placement_labels:['home','appliance','micro-node'],
   max_concurrency:1,
@@ -24,27 +36,60 @@ const fridge={
   attestation:{mode:'gateway_bound',gateway_identity:'hub-fingerprint-1'},
 };
 
-test('MicroSeed turns an authorized constrained refrigerator into a bounded ambient capability',()=>{
+test('MicroSeed turns an authorized constrained refrigerator into truthful non-compute capabilities',()=>{
   const manifest=normalizeMicroDeviceManifest(fridge);
   assert.equal(manifest.schema,'evercraft.microseed.device-manifest.v1');
   assert.equal(manifest.device_class,'refrigerator');
+  assert.equal(manifest.compute_execution_mode,'none');
   assert.equal(manifest.constraints.arbitrary_code_execution,false);
   assert.match(manifest.authorization_ref_hash,/^sha256:/);
 
+  const capabilities=microDeviceToAmbientCapabilities(manifest);
+  assert.equal(capabilities.length,1);
+  const observation=capabilities[0];
+  assert.equal(observation.access_class,'authorized_compute');
+  assert.equal(observation.kind,'observation');
+  assert.equal(observation.metadata.bridge_mode,'matter');
+  assert.equal(observation.metadata.execution_location,'device_capability_via_gateway');
+  assert.equal(observation.metadata.arbitrary_code_execution,false);
+
+  assert.throws(
+    ()=>microDeviceToAmbientCapability(manifest),
+    /native_compute_not_declared/
+  );
+
+  const resolved=resolveAmbientComputeOffers({
+    capabilities,
+    workloadClass:'systemia.sensor-relay.v1',
+  });
+  assert.equal(resolved.offers.length,0);
+});
+
+test('native-agent MicroSeed may truthfully advertise bounded compute',()=>{
+  const manifest=normalizeMicroDeviceManifest({
+    device_id:'old-phone-01',
+    device_class:'phone',
+    bridge_mode:'native_agent',
+    authorization_ref:'owner-phone',
+    endpoint:'https://phone.local/evercraft',
+    supported_workloads:['systemia.content-hash.v1'],
+    resources:{cpu_units:0.5,memory_mb:1024,storage_gb:8},
+    max_concurrency:2,
+    duty_cycle:'opportunistic',
+    attestation:{mode:'device',device_identity:'phone-key'},
+  });
+  assert.equal(manifest.compute_execution_mode,'native_device');
+
   const capability=microDeviceToAmbientCapability(manifest);
-  assert.equal(capability.access_class,'authorized_compute');
   assert.equal(capability.kind,'compute');
-  assert.equal(capability.metadata.bridge_mode,'matter');
-  assert.equal(capability.metadata.micro_node,true);
-  assert.equal(capability.metadata.arbitrary_code_execution,false);
+  assert.equal(capability.metadata.execution_location,'device');
+  assert.equal(capability.metadata.device_class,'phone');
 
   const resolved=resolveAmbientComputeOffers({
     capabilities:[capability],
-    workloadClass:'systemia.sensor-relay.v1',
+    workloadClass:'systemia.content-hash.v1',
   });
   assert.equal(resolved.offers.length,1);
-  assert.equal(resolved.offers[0].metadata.device_class,'refrigerator');
-  assert.equal(resolved.offers[0].economics.zero_cost,true);
 });
 
 test('MicroSeed requires owner authorization',()=>{
@@ -58,6 +103,17 @@ test('MicroSeed rejects unsupported bridge modes',()=>{
   assert.throws(
     ()=>normalizeMicroDeviceManifest({...fridge,bridge_mode:'magic-radio'}),
     /micro_device_bridge_mode_invalid/
+  );
+});
+
+test('non-native devices cannot claim native compute without explicit verification',()=>{
+  assert.throws(
+    ()=>normalizeMicroDeviceManifest({
+      ...fridge,
+      compute_execution_mode:'native_device',
+      supported_workloads:['systemia.content-hash.v1'],
+    }),
+    /native_compute_requires_verified_native_agent/
   );
 });
 
