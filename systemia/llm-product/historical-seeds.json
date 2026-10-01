@@ -154,9 +154,13 @@
       ],
       "source_refs": [
         "systemia/media-studio/",
-        ".github/workflows/fallen-studio-delivery.yml"
+        ".github/workflows/fallen-studio-delivery.yml",
+        "systemia/media-studio/mcp.mjs",
+        "systemia/capability-mesh/contracts.json"
       ],
-      "truth_state": "implemented_source_present"
+      "truth_state": "source_implemented_public_planning_live_verification_pending",
+      "candidate_machine_path": "/mcp/fallen",
+      "machine_contract": "read_only_evidence_bound_visual_planning"
     },
     {
       "stable_id": "product:omnicore",
