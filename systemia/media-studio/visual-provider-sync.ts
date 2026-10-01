@@ -71,6 +71,7 @@ export function syncLabsLipEndpoint(
       locatorKinds:['url','provider_asset'],
       providerLocatorId:'sync',
       batchVariants:1,
+      maxCandidateJobs:2,
       qualityTier:quality,
       costTier:cost,
       latencyTier:3,
