@@ -24,6 +24,8 @@ import {
 import { buildVerifiedDeliveryReceipt } from './delivery-receipt.mjs';
 import { dispatchVerifiedShipment } from './transport-runtime.mjs';
 import { buildReleasePlan, materializeReleasePackage, verifyMaterializedRelease } from './release-station.mjs';
+import { admitShippingOrder, authorizeReissue, assertCurrentRelease, buildShippingExceptionIntent, findShippingExceptions, markShippingOrderState, shippingControlTowerSummary } from './control-tower.mjs';
+import { buildShippingProofBundle } from './proof-bundle.mjs';
 
 function tempDir() {
   return fs.mkdtempSync(path.join(os.tmpdir(), 'evercraft-shipping-'));
@@ -446,4 +448,242 @@ test('release station blocks external packages without explicit send authority',
       qa:{ openable:true, render_verified:true, renderer_count:2 }
     }]
   }), /external_send_authorization_required/);
+});
+
+
+test('control tower supersedes stale unsent package versions instead of letting old bytes ship', () => {
+  const dir = tempDir();
+  const towerFile = path.join(dir, 'control-tower.json');
+  const fileA = makePdf(dir, 'package-a.pdf');
+  const planA = buildReleasePlan({
+    release_key:'customer-proposal',
+    channel:'email',
+    recipient_ref:'buyer@example.com',
+    authorization_ref:'approved:a',
+    artifacts:[{
+      path:fileA,
+      client_filename:'Customer Proposal.pdf',
+      mime_type:'application/pdf',
+      qa:{ openable:true, render_verified:true, renderer_count:2 }
+    }]
+  });
+  const first = admitShippingOrder({
+    tower_file:towerFile,
+    release_plan:planA,
+    recipient_ref:'buyer@example.com',
+    subject:'Customer Proposal',
+    authorization_ref:'approved:a',
+    now:new Date('2026-10-01T20:00:00Z')
+  });
+  assert.equal(first.admitted, true);
+  assert.equal(first.order.version, 1);
+
+  const fileB = path.join(dir, 'package-b.pdf');
+  fs.writeFileSync(fileB, Buffer.from('%PDF-1.4\n2 0 obj\n<< /Updated true >>\nendobj\n%%EOF\n','latin1'));
+  const planB = buildReleasePlan({
+    release_key:'customer-proposal',
+    channel:'email',
+    recipient_ref:'buyer@example.com',
+    authorization_ref:'approved:b',
+    artifacts:[{
+      path:fileB,
+      client_filename:'Customer Proposal.pdf',
+      mime_type:'application/pdf',
+      qa:{ openable:true, render_verified:true, renderer_count:2 }
+    }]
+  });
+  const second = admitShippingOrder({
+    tower_file:towerFile,
+    release_plan:planB,
+    recipient_ref:'buyer@example.com',
+    subject:'Customer Proposal',
+    authorization_ref:'approved:b',
+    now:new Date('2026-10-01T20:05:00Z')
+  });
+  assert.equal(second.order.version, 2);
+
+  const oldState = assertCurrentRelease({ tower_file:towerFile, order_key:first.order.order_key });
+  assert.equal(oldState.current, false);
+  assert.equal(oldState.newer_order_key, second.order.order_key);
+
+  const summary = shippingControlTowerSummary({ tower_file:towerFile });
+  assert.equal(summary.by_state.superseded, 1);
+  assert.equal(summary.by_state.admitted, 1);
+});
+
+test('control tower distinguishes intentional reissue from accidental duplicate', () => {
+  const dir = tempDir();
+  const towerFile = path.join(dir, 'control-tower.json');
+  const file = makePdf(dir, 'reissue.pdf');
+  const plan = buildReleasePlan({
+    release_key:'vendor-packet',
+    channel:'email',
+    recipient_ref:'vendor@example.com',
+    authorization_ref:'approved:initial',
+    artifacts:[{
+      path:file,
+      client_filename:'Vendor Packet.pdf',
+      mime_type:'application/pdf',
+      qa:{ openable:true, render_verified:true, renderer_count:2 }
+    }]
+  });
+  const admitted = admitShippingOrder({
+    tower_file:towerFile,
+    release_plan:plan,
+    recipient_ref:'vendor@example.com',
+    subject:'Vendor Packet',
+    authorization_ref:'approved:initial',
+    now:new Date('2026-10-01T20:00:00Z')
+  });
+  markShippingOrderState({
+    tower_file:towerFile,
+    order_key:admitted.order.order_key,
+    state:'verified_delivered',
+    shipment_key:'shipment:1',
+    provider_message_id:'gmail:1',
+    sent_copy_verification_ref:'sha256:verification',
+    delivery_receipt_ref:'delivery-v2:receipt',
+    now:new Date('2026-10-01T20:05:00Z')
+  });
+
+  const duplicate = admitShippingOrder({
+    tower_file:towerFile,
+    release_plan:plan,
+    recipient_ref:'vendor@example.com',
+    subject:'Vendor Packet',
+    authorization_ref:'approved:again',
+    now:new Date('2026-10-01T20:06:00Z')
+  });
+  assert.equal(duplicate.duplicate_suppressed, true);
+
+  const reissue = authorizeReissue({
+    tower_file:towerFile,
+    prior_order_key:admitted.order.order_key,
+    authorization_ref:'human-approved:please-resend',
+    reason:'Recipient explicitly requested another copy',
+    now:new Date('2026-10-01T20:07:00Z')
+  });
+  assert.equal(reissue.order.reissue_of, admitted.order.order_key);
+  assert.equal(reissue.order.state, 'admitted');
+  assert.equal(reissue.order.reissue_count, 1);
+});
+
+test('control tower emits deduplicated operational exception intent without sending anything itself', () => {
+  const dir = tempDir();
+  const towerFile = path.join(dir, 'control-tower.json');
+  const file = makePdf(dir, 'exception.pdf');
+  const plan = buildReleasePlan({
+    release_key:'exception-demo',
+    channel:'email',
+    recipient_ref:'buyer@example.com',
+    authorization_ref:'approved',
+    artifacts:[{
+      path:file,
+      client_filename:'Exception Demo.pdf',
+      mime_type:'application/pdf',
+      qa:{ openable:true, render_verified:true, renderer_count:2 }
+    }]
+  });
+  const admitted = admitShippingOrder({
+    tower_file:towerFile,
+    release_plan:plan,
+    recipient_ref:'buyer@example.com',
+    subject:'Exception Demo',
+    authorization_ref:'approved',
+    now:new Date('2026-10-01T19:00:00Z')
+  });
+  markShippingOrderState({
+    tower_file:towerFile,
+    order_key:admitted.order.order_key,
+    state:'provider_accepted_unverified',
+    provider_message_id:'gmail:pending',
+    now:new Date('2026-10-01T19:05:00Z')
+  });
+  const scan = findShippingExceptions({
+    tower_file:towerFile,
+    now:new Date('2026-10-01T19:30:00Z'),
+    verification_after_minutes:10
+  });
+  assert.equal(scan.exception_count, 1);
+  assert.equal(scan.exceptions[0].code, 'provider_acceptance_unverified');
+
+  const intent = buildShippingExceptionIntent({
+    exception_scan:scan,
+    operator_recipient_ids:['operator:jesse'],
+    now:new Date('2026-10-01T19:30:00Z')
+  });
+  assert.equal(intent.schema, 'systemia.notification.intent.v2');
+  assert.equal(intent.purpose, 'operational');
+  assert.equal(intent.priority, 'high');
+  assert.match(intent.dedupe_key, /^shipping-exception:sha256:/);
+});
+
+test('proof bundle refuses broken chain-of-custody and passes a fully consistent delivery', () => {
+  const artifact = {
+    client_filename:'Client Package.pdf',
+    size_bytes:123,
+    sha256:'sha256:file'
+  };
+  const order = {
+    order_key:'shipping-order:1',
+    logical_package_key:'client-package',
+    version:1,
+    recipient_ref:'buyer@example.com',
+    channel:'email',
+    authorization_ref:'approved',
+    state:'verified_delivered',
+    package_digest:'sha256:package'
+  };
+  const releaseManifest = {
+    release_key:'client-package',
+    release_fingerprint:'sha256:release',
+    package_digest:'sha256:package',
+    materialization_digest:'sha256:materialized',
+    artifacts:[artifact]
+  };
+  const shipment = {
+    shipment_key:'shipment:1',
+    idempotency_key:'shipidem:1',
+    provider_message_id:'gmail:1',
+    state:'verified_delivered'
+  };
+  const verification = {
+    verified:true,
+    verification_digest:'sha256:verification',
+    provider_message_id:'gmail:1',
+    recipient_verified:true,
+    subject_verified:true,
+    attachments_verified:true,
+    attachment_names:['Client Package.pdf']
+  };
+  const receipt = {
+    receipt_key:'delivery-v2:1',
+    integrity_digest:'sha256:receipt',
+    shipment_key:'shipment:1',
+    provider_message_id:'gmail:1',
+    package_digest:'sha256:package',
+    recipient_ref:'buyer@example.com',
+    artifact_manifest:[artifact]
+  };
+
+  const proof = buildShippingProofBundle({
+    order,
+    release_manifest:releaseManifest,
+    shipment,
+    sent_copy_verification:verification,
+    delivery_receipt:receipt,
+    generated_at:'2026-10-01T20:10:00Z'
+  });
+  assert.equal(proof.pass, true);
+  assert.match(proof.proof_digest, /^sha256:/);
+
+  const broken = buildShippingProofBundle({
+    order,
+    release_manifest:releaseManifest,
+    shipment:{ ...shipment, provider_message_id:'gmail:other' },
+    sent_copy_verification:verification,
+    delivery_receipt:receipt
+  });
+  assert.equal(broken.pass, false);
+  assert.ok(broken.reasons.includes('provider_message_id_mismatch'));
 });
