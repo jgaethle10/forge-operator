@@ -29,6 +29,7 @@ import { runBenchmarkFragilityLab } from "./edge-benchmark-fragility.mjs";
 import { runRegimeFragilityLab } from "./edge-regime-fragility.mjs";
 import { runClockStructureLab } from "./edge-clock-structure.mjs";
 import { runEventContaminationLab } from "./edge-event-contamination.mjs";
+import { runAnnouncementExecutionStressLab } from "./edge-announcement-execution-stress.mjs";
 import { runNarrativeBlindControlLab } from "./edge-narrative-blind-control.mjs";
 import { runHorizonCoherenceLab } from "./edge-horizon-coherence.mjs";
 import { runWalkForwardLab } from "./edge-walk-forward.mjs";
@@ -259,6 +260,17 @@ async function main() {
   fs.writeFileSync(
     eventContaminationFile,
     JSON.stringify(eventContaminationLab, null, 2) + "\n"
+  );
+
+  const announcementExecutionStressLab =
+    runAnnouncementExecutionStressLab(report, quoteMicrostructureLab);
+  const announcementExecutionStressFile = path.join(
+    artifactDir,
+    "sec-edge-announcement-execution-stress.json"
+  );
+  fs.writeFileSync(
+    announcementExecutionStressFile,
+    JSON.stringify(announcementExecutionStressLab, null, 2) + "\n"
   );
 
   const narrativeBlindControlLab = runNarrativeBlindControlLab(report, {
@@ -584,6 +596,8 @@ async function main() {
     clock_structure_status_counts: clockStructureLab.status_counts || {},
     event_contamination_status_counts:
       eventContaminationLab.status_counts || {},
+    announcement_execution_stress_status_counts:
+      announcementExecutionStressLab.status_counts || {},
     narrative_blind_control_status_counts:
       narrativeBlindControlLab.status_counts || {},
     benchmark_fragility_status_counts: benchmarkLab.status_counts || {},
@@ -619,6 +633,7 @@ async function main() {
       regime_fragility_lab: regimeFragilityFile,
       clock_structure_lab: clockStructureFile,
       event_contamination_lab: eventContaminationFile,
+      announcement_execution_stress_lab: announcementExecutionStressFile,
       narrative_blind_control_lab: narrativeBlindControlFile,
       benchmark_fragility_lab: benchmarkFile,
       horizon_coherence_lab: horizonCoherenceFile,
