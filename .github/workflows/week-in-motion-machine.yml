@@ -1,6 +1,11 @@
 name: Week in Motion Machine
 
 on:
+  pull_request:
+    paths:
+      - 'systemia/week-in-motion/**'
+      - '.github/workflows/week-in-motion-machine.yml'
+      - 'package.json'
   workflow_dispatch:
     inputs:
       publish:
