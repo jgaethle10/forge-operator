@@ -2,8 +2,12 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { webcrypto } from 'node:crypto';
 import test from 'node:test';
-import { storeChromeOsHostBoundaryObservation } from './chromeos-host-boundary-bridge.mjs';
+import {
+  pairChromeOsHostBoundaryObserver,
+  storeChromeOsHostBoundaryObservation,
+} from './chromeos-host-boundary-bridge.mjs';
 import { certifyChromeOsHostBoundary } from './chromeos-host-boundary-field-certify.mjs';
 
 function observation() {
@@ -30,16 +34,34 @@ function observation() {
   };
 }
 
-test('field certification requires both direct host settings and LAN witness', () => {
+test('field certification requires both direct host settings and LAN witness', async () => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'host-boundary-cert-'));
   const stateRoot = path.join(root, 'state');
   const routerReceiptFile = path.join(root, 'router.json');
+  const keyPair = await webcrypto.subtle.generateKey(
+    { name: 'ECDSA', namedCurve: 'P-256' },
+    true,
+    ['sign', 'verify'],
+  );
+  const exported = await webcrypto.subtle.exportKey('jwk', keyPair.publicKey);
+  const pairing = pairChromeOsHostBoundaryObserver({
+    observer_install_id: 'cros_proof_install',
+    public_key_jwk: {
+      kty: 'EC',
+      crv: 'P-256',
+      x: exported.x,
+      y: exported.y,
+      ext: true,
+      key_ops: ['verify'],
+    },
+  }, { stateRoot });
+
   storeChromeOsHostBoundaryObservation(observation(), {
     stateRoot,
     observerVerification: {
       verified: true,
       observer_key_fingerprint:
-        'sha256:' + 'a'.repeat(64),
+        pairing.observer_key_fingerprint,
     },
   });
 
@@ -77,7 +99,12 @@ test('field certification requires both direct host settings and LAN witness', (
   assert.equal(receipt.host_observation.observer_signature_verified, true);
   assert.equal(
     receipt.host_observation.observer_key_fingerprint,
-    'sha256:' + 'a'.repeat(64),
+    pairing.observer_key_fingerprint,
+  );
+  assert.equal(receipt.host_observation.pairing_active, true);
+  assert.equal(
+    receipt.host_observation.pairing_matches_observation,
+    true,
   );
   assert.equal(receipt.ready_for_external_canary, true);
   assert.equal(receipt.external_public_route_verified, false);
