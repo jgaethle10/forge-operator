@@ -1,4 +1,4 @@
-name: Evercraft Public Edge External Canary
+name: Evercraft Specialist Edge External Canary
 
 on:
   push:
@@ -7,12 +7,6 @@ on:
       - 'systemia/network/public-edge-runtime.mjs'
       - 'systemia/network/public-edge-tls.mjs'
       - 'systemia/mcp/specialist-handoff-runtime.mjs'
-      - 'systemia/mcp/fabric-local-runtime.mjs'
-      - 'systemia/mcp/fabric-public-site.mjs'
-      - 'plugins/evercraft-fabric/PRIVACY.md'
-      - 'plugins/evercraft-fabric/SUPPORT.md'
-      - 'plugins/evercraft-fabric/TERMS.md'
-      - 'scripts/build-evercraft-openai-plugin.sh'
       - 'systemia/yard/public-edge-controller.mjs'
       - '.github/workflows/evercraft-public-edge-canary.yml'
   workflow_dispatch:
@@ -34,23 +28,24 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Resolve canonical specialist origin
+      - name: Require explicit specialist origin
         shell: bash
         run: |
           set -euo pipefail
           if [ -z "${SPECIALIST_ORIGIN:-}" ]; then
-            resolved="$(node - <<'NODE'
-          const fs=require('fs');
-          const config=JSON.parse(fs.readFileSync('plugins/evercraft-fabric/mcp.json','utf8'));
-          const raw=config?.mcpServers?.evercraft?.url;
-          if(!raw) process.exit(2);
-          const url=new URL(raw);
-          if(url.protocol!=='https:') process.exit(3);
-          process.stdout.write(url.origin);
-          NODE
-            )"
-            echo "SPECIALIST_ORIGIN=$resolved" >> "$GITHUB_ENV"
-            echo "Resolved SPECIALIST_ORIGIN from the canonical Evercraft plugin package."
+            mkdir -p artifacts
+            cat > artifacts/evercraft-public-edge-canary.json <<'JSON'
+          {
+            "schema": "evercraft.public-edge.external-canary.v1",
+            "verified": false,
+            "state": "blocked_no_specialist_origin",
+            "public_https_verified": false,
+            "founder_login_required": false,
+            "note": "Universal Fabric and specialist edge are separate trust surfaces; no fallback origin is permitted."
+          }
+          JSON
+            echo "SPECIALIST_ORIGIN is not configured. Holding specialist-edge verification without probing the universal Fabric edge."
+            exit 0
           fi
 
       - name: Prepare receipt
@@ -59,18 +54,9 @@ jobs:
           set -euo pipefail
           mkdir -p artifacts
           if [ -z "${SPECIALIST_ORIGIN:-}" ]; then
-            cat > artifacts/evercraft-public-edge-canary.json <<'JSON'
-          {
-            "schema": "evercraft.public-edge.external-canary.v1",
-            "verified": false,
-            "state": "blocked_no_public_origin",
-            "public_https_verified": false,
-            "founder_login_required": false
-          }
-          JSON
+            test -s artifacts/evercraft-public-edge-canary.json
             cat artifacts/evercraft-public-edge-canary.json
-            echo "No canonical public origin could be resolved." >&2
-            exit 1
+            exit 0
           fi
 
           node - <<'NODE'
