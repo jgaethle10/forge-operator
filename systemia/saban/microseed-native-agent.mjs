@@ -76,6 +76,20 @@ export async function startMicroSeedNativeAgent({
         return send(res,401,{ok:false,error:'microseed_agent_authorization_required'});
       }
 
+      if(req.method==='GET'&&req.url==='/v1/telemetry'){
+        const telemetry=await telemetryProvider({manifest,request:null});
+        return send(res,200,{
+          ok:true,
+          schema:'evercraft.microseed.device-telemetry.v1',
+          device_id:manifest.device_id,
+          telemetry:{
+            ...telemetry,
+            observed_at:telemetry?.observed_at||new Date().toISOString(),
+          },
+          arbitrary_code_execution:false,
+        });
+      }
+
       if(req.method==='POST'&&req.url==='/v1/execute'){
         const max=Math.max(1,Number(manifest.constraints?.max_concurrency||1));
         if(active>=max) return send(res,429,{ok:false,error:'microseed_agent_concurrency_limit'});
