@@ -3,8 +3,8 @@
   "prepared_at": "2026-10-01",
   "submission_type": "With MCP",
   "plugin_name": "Evercraft",
-  "short_description": "Find the right Evercraft path",
-  "long_description": "Start from a real problem, discover the smallest truthful Evercraft capability, and identify its current public connection path when one exists. Evercraft preserves evidence and availability boundaries. Discovery does not grant private Systemia access, payment authority, publishing authority, deployment authority, or permission for other consequential actions.",
+  "short_description": "Inspect sites & route work",
+  "long_description": "Inspect a user-supplied public website with a bounded, evidence-backed preview, or route a real problem to the smallest truthful Evercraft capability. Evercraft preserves evidence, availability, and authorization boundaries. Preview and discovery do not grant private access, payment authority, publishing authority, deployment authority, or permission for consequential actions.",
   "source_package": "plugins/evercraft-fabric",
   "mcp": {
     "url": "https://fabric.systemiacommandcenters.com/mcp",
@@ -22,29 +22,27 @@
   "proposed_availability": [
     "US"
   ],
-  "release_notes": "Evercraft v1.0.4 hardens ChatGPT/Codex transport compatibility and adds first-class SSE edge verification on the verified Evercraft-owned Fabric MCP. Discovery remains read-only and consequential actions retain separate authorization.",
+  "release_notes": "Evercraft v1.1.0 adds a standalone bounded public-website preview with SSRF-resistant public-network enforcement, while preserving read-only capability routing and explicit authority boundaries.",
   "starter_prompts": [
-    "I have a problem and do not know which Evercraft capability fits. Find the smallest useful option.",
-    "I have a video that's too large for this chat. What can handle it?",
-    "Find me a service for a discontinued machine part I cannot locate.",
-    "I want to evaluate whether my property is a good EV charging site.",
-    "My small-business website is slow and not converting. What can audit it?",
-    "I need sourced research on a land, water or resilience problem.",
-    "Our developer disappeared and our existing app is breaking. We need an evidence-first diagnosis before rebuilding."
+    "Preview this public website and show me the basic signals that need attention.",
+    "Find the smallest Evercraft capability for this problem.",
+    "Show me the safest next step Evercraft can actually perform."
   ],
   "remaining_platform_prerequisites": [
-    "Upload the canonical Evercraft v1.0.4 ZIP in OpenAI Platform Plugins",
+    "Restore fabric.systemiacommandcenters.com public TCP/HTTPS ingress and capture a fresh passing external canary",
+    "Re-run the current OpenAI MCP Scan Tools check against the restored production endpoint",
+    "Refresh the reviewer walkthrough to demonstrate preview_public_website plus the existing routing tools",
+    "Upload the canonical Evercraft v1.1.0 ZIP in OpenAI Platform Plugins",
     "Select the verified Evercraft LLC developer identity in the owning organization/project",
     "Confirm Apps Management Write access if the submitter is not an organization owner",
     "Complete the portal-generated domain verification challenge for fabric.systemiacommandcenters.com",
-    "Complete the current portal MCP connection and Scan Tools checks",
     "Confirm the imported five positive and three negative tests plus reviewer walkthrough",
     "Submit for OpenAI review",
     "Explicit Publish after approval",
     "Independent directory discovery receipt after publication"
   ],
   "public_directory_claim_allowed": false,
-  "package_version": "1.0.4",
+  "package_version": "1.1.0",
   "tool_annotation_justifications": {
     "match_evercraft_capability": {
       "readOnlyHint": "True because the tool only scores and returns pre-published Evercraft capability metadata; it creates no records, jobs, payments, messages, or external side effects.",
@@ -60,6 +58,11 @@
       "readOnlyHint": "True because the tool only returns pre-published connection metadata for one known capability and does not initiate the connection, authentication, payment, or work.",
       "destructiveHint": "False because the tool cannot change, delete, send, publish, purchase, deploy, or revoke anything.",
       "openWorldHint": "False because it looks up one capability inside the bounded Evercraft catalog; returned public URLs are metadata and are not fetched by the tool."
+    },
+    "preview_public_website": {
+      "readOnlyHint": "True because the tool only fetches and analyzes one caller-supplied public HTTP/HTTPS URL and does not modify the target or create Evercraft records, jobs, payments, messages, or side effects.",
+      "destructiveHint": "False because the tool cannot delete, overwrite, publish, purchase, deploy, authenticate to, or mutate the inspected website or another external system.",
+      "openWorldHint": "True because the tool accesses a caller-supplied public internet URL. Private/local/reserved addresses, credentials, unsafe redirects, oversized responses, and unsupported content types are rejected."
     }
   }
 }
