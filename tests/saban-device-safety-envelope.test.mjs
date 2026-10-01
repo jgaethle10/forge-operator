@@ -75,7 +75,7 @@ test('thermal, battery, memory, CPU and stale telemetry gates fail closed',()=>{
     requestedCpuFraction:0.5,
     telemetry:{
       primary_function_busy:false,
-      cpu_utilization:0.49,
+      cpu_utilization:0.55,
       memory_free_mb:220,
       temperature_c:70,
       battery_percent:10,
