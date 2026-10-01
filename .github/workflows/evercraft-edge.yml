@@ -7,6 +7,7 @@ on:
       - 'systemia/compute/evercraft-edge-dns-runtime.mjs'
       - 'systemia/compute/edge-dns-bootstrap-resident.mjs'
       - 'systemia/compute/install-node-seed.sh'
+      - 'systemia/compute/field-preflight.mjs'
       - 'systemia/compute/runtime-node.mjs'
       - 'scripts/evercraft-public-edge-map.mjs'
       - 'scripts/install-fabric-router-map-resident.sh'
