@@ -10,19 +10,40 @@ async function refresh() {
     'enabled',
     'lastCheckAt',
     'lastReceiptHash',
+    'observerKeyFingerprint',
+    'lastObserverSequence',
     'lastObservation',
     'lastError',
   ]);
   endpoint.value = stored.bridgeEndpoint || 'http://127.0.0.1:18081/v1/chromeos-host-boundary/report';
   token.value = stored.pairingToken || '';
   enabled.checked = stored.enabled !== false;
+  const receiver = String(stored.pairingToken || '').length >= 32
+    ? await chrome.runtime.sendMessage({
+        type: 'evercraft.hostBoundary.status',
+      }).catch((error) => ({
+        ok: false,
+        state: 'receiver_status_unavailable',
+        error: error.message,
+      }))
+    : { ok: false, state: 'pairing_token_required' };
+
   status.textContent = JSON.stringify({
-    paired: String(stored.pairingToken || '').length >= 32,
+    token_configured: String(stored.pairingToken || '').length >= 32,
+    cryptographic_observer_key:
+      stored.observerKeyFingerprint || null,
+    last_observer_sequence:
+      stored.lastObserverSequence || null,
+    receiver_pairing_state:
+      receiver.pairing_state || receiver.state || null,
+    receiver_paired: receiver.paired === true,
+    receiver_observer_key:
+      receiver.paired_observer_key_fingerprint || null,
     enabled: stored.enabled !== false,
     last_check_at: stored.lastCheckAt || null,
     last_receipt_hash: stored.lastReceiptHash || null,
     last_observation: stored.lastObservation || null,
-    last_error: stored.lastError || null,
+    last_error: stored.lastError || receiver.error || null,
   }, null, 2);
 }
 
