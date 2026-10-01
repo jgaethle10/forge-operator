@@ -116,6 +116,55 @@ fs.appendFileSync(journal, "{broken");
 const recovered = new ForwardPaperDurableState({ root });
 assert.equal(recovered.summary().tail_recovered, true);
 
+const clusterRoot = fs.mkdtempSync(path.join(os.tmpdir(), "edge-paper-cluster-"));
+const clusterLedger = new ForwardPaperDurableState({ root: clusterRoot });
+const siblingReview = {
+  ...review,
+  signal_key: "ai_models|sec_8_k|SMH|1d",
+};
+const siblingEvaluation = {
+  ...evaluation,
+  signal_key: siblingReview.signal_key,
+  instrument: "SMH",
+};
+const siblingProtocol = freezeForwardPaperCohort(siblingReview, siblingEvaluation, {
+  enrolled_at: "2026-10-01T00:00:00Z",
+  transaction_cost_bps: 5,
+  minimum_forward_events: 2,
+  minimum_distinct_origins: 2,
+});
+assert.equal(clusterLedger.enroll(protocol).state, "enrolled");
+assert.equal(clusterLedger.enroll(siblingProtocol).state, "enrolled");
+
+for (const [eventIndex, origin] of ["a","b"].entries()) {
+  const observedAt = `2026-10-0${eventIndex+2}T20:00:00Z`;
+  const sourceObservationId = "filing:" + origin;
+  for (const [memberIndex, memberProtocol] of [protocol, siblingProtocol].entries()) {
+    const result = clusterLedger.appendMeasurement(memberProtocol.cohort_id, {
+      measurement_id: `cluster-${origin}-${memberIndex}`,
+      source_observation_id: sourceObservationId,
+      signal_key: memberProtocol.signal_key,
+      observed_at: observedAt,
+      origin_entity_ref: "sec:cik:" + origin,
+      forward_return: 0.02 - memberIndex * 0.002,
+      benchmark_return: 0.005,
+    });
+    assert.equal(result.state, "appended");
+  }
+}
+
+const clusterScore = clusterLedger.scoreCluster(review.cluster_key);
+assert.equal(clusterScore.raw_member_measurements, 4);
+assert.equal(clusterScore.forward_events, 2);
+assert.equal(clusterScore.status, "FORWARD_PAPER_CLUSTER_PASS");
+assert.equal(clusterScore.correlated_members_not_independent_edges, true);
+assert.equal(clusterLedger.scoreAllClusters().length, 1);
+assert.equal(clusterLedger.summary().cluster_count, 1);
+
+const clusterRestart = new ForwardPaperDurableState({ root: clusterRoot });
+assert.equal(clusterRestart.scoreCluster(review.cluster_key).forward_events, 2);
+assert.equal(clusterRestart.scoreCluster(review.cluster_key).status, "FORWARD_PAPER_CLUSTER_PASS");
+
 console.log(JSON.stringify({
   ok: true,
   schema: "evercraft.daytrade.forward-paper-durable-proof.v1",
@@ -124,6 +173,8 @@ console.log(JSON.stringify({
   retroactive_rejection: true,
   idempotent_measurements: true,
   one_signal_one_frozen_cohort: true,
+  cluster_level_forward_scoring: true,
+  cluster_event_deduplication: true,
   research_report_ingestion: true,
   torn_tail_recovery: true,
   live_trade_authority: false,
