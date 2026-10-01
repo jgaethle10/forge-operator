@@ -42,7 +42,9 @@ test('Fabric local runtime is read-only, tunnel-compatible, and makes no Base44 
     assert.equal(health.ok,true);
     assert.equal(health.base44_transport_enabled,false);
     assert.equal(health.secure_tunnel_compatible,true);
-    assert.equal(health.public_plugin_submission_ready,true);
+    assert.equal(health.public_plugin_source_ready,true);
+    assert.equal(health.public_plugin_external_verification_required,true);
+    assert.equal(health.public_plugin_submission_ready,undefined);
     assert.equal(health.provider_publication_state,'external_to_runtime');
     assert.equal(health.removed_legacy_base44_connections,2);
     assert.equal(health.removed_legacy_base44_mcp_connections,1);
@@ -82,8 +84,30 @@ test('Fabric local runtime is read-only, tunnel-compatible, and makes no Base44 
       'match_evercraft_capability',
       'list_evercraft_capabilities',
       'get_evercraft_connection_options',
+      'inspect_public_website',
     ]);
     assert.ok(tools.result.tools.every((x)=>x.annotations.readOnlyHint===true));
+    assert.equal(
+      tools.result.tools.find((x)=>x.name==='inspect_public_website')?.annotations.openWorldHint,
+      true
+    );
+
+    const publicTools=await fetch(runtime.openAiMcpUrl,{
+      method:'POST',
+      headers:{'content-type':'application/json'},
+      body:JSON.stringify({jsonrpc:'2.0',id:22,method:'tools/list',params:{}}),
+    }).then((r)=>r.json());
+    assert.deepEqual(publicTools.result.tools.map((x)=>x.name),['inspect_public_website']);
+
+    const blockedPublicRouter=await fetch(runtime.openAiMcpUrl,{
+      method:'POST',
+      headers:{'content-type':'application/json'},
+      body:JSON.stringify({
+        jsonrpc:'2.0',id:23,method:'tools/call',
+        params:{name:'match_evercraft_capability',arguments:{intent:'find a product'}},
+      }),
+    }).then((r)=>r.json());
+    assert.equal(blockedPublicRouter.error.code,-32602);
 
     const options=await fetch(runtime.mcpUrl,{
       method:'POST',
@@ -117,6 +141,26 @@ test('Fabric public customer front door is branded, browsable, and policy-safe',
     assert.match(home,/Quick start \$49 one-time/);
     assert.match(home,/\/capabilities\/native-product-v1/);
     assert.match(home,/\/assets\/evercraft-icon\.png/);
+
+    const openAiResponse=await fetch(runtime.url+'/openai');
+    assert.equal(openAiResponse.status,200);
+    assert.match(openAiResponse.headers.get('content-type')||'',/^text\/html/);
+    const openAiHome=await openAiResponse.text();
+    assert.match(openAiHome,/Evercraft Website Inspector/);
+    assert.match(openAiHome,/No hidden commerce/);
+    assert.doesNotMatch(openAiHome,/Quick start|\$49|\$299|Available now|\/capabilities|FindMyPart|RIVET|Systemia Website Audit/);
+
+    for(const [path,pattern] of [
+      ['/openai/support',/Evercraft Support/],
+      ['/openai/privacy',/Evercraft Privacy Policy/],
+      ['/openai/terms',/Evercraft Terms of Service/],
+    ]){
+      const response=await fetch(runtime.url+path);
+      assert.equal(response.status,200);
+      const body=await response.text();
+      assert.match(body,pattern);
+      assert.doesNotMatch(body,/\/capabilities|Quick start|\$49|\$299|Available now|FindMyPart|RIVET/);
+    }
 
     const directoryResponse=await fetch(runtime.url+'/capabilities');
     assert.equal(directoryResponse.status,200);

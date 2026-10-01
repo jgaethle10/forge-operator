@@ -1,43 +1,39 @@
 {
   "name": "evercraft",
-  "version": "1.0.4",
-  "description": "Connect ChatGPT and Codex to the Evercraft/Systemia capability fabric through one truthful, permission-aware front door.",
+  "version": "1.1.0",
+  "description": "Inspect authorized public websites through Evercraft's bounded, evidence-backed read-only website inspector.",
   "author": {
     "name": "Evercraft LLC",
-    "url": "https://fabric.systemiacommandcenters.com/"
+    "url": "https://fabric.systemiacommandcenters.com/openai"
   },
-  "homepage": "https://fabric.systemiacommandcenters.com/",
+  "homepage": "https://fabric.systemiacommandcenters.com/openai",
   "repository": "https://github.com/jgaethle10/forge-operator",
   "license": "UNLICENSED",
   "keywords": [
     "evercraft",
-    "systemia",
-    "mcp",
-    "ai-tools",
-    "business",
-    "research",
-    "media",
-    "infrastructure",
-    "agents"
+    "website-inspection",
+    "on-page",
+    "website-metadata",
+    "business-website"
   ],
   "skills": "./skills/",
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "Evercraft",
-    "shortDescription": "Find the right Evercraft path",
-    "longDescription": "Start from a real problem, discover the smallest truthful Evercraft capability, and identify its current public connection path when one exists. Evercraft preserves evidence and availability boundaries. Discovery does not grant private Systemia access, payment authority, publishing authority, deployment authority, or permission for other consequential actions.",
+    "shortDescription": "Inspect public websites",
+    "longDescription": "Inspect a public website you own, administer, or have permission to review. Evercraft returns bounded, evidence-backed HTTP and on-page signals with explicit limitations. It does not modify the site, access private networks, create payments, or perform other consequential actions.",
     "developerName": "Evercraft LLC",
     "category": "Business & Operations",
     "capabilities": [
-      "Capability discovery",
-      "Specialist connection lookup",
-      "Bounded next-step guidance"
+      "Authorized public website inspection",
+      "Evidence-backed on-page signals",
+      "Bounded read-only analysis"
     ],
-    "websiteURL": "https://fabric.systemiacommandcenters.com/",
+    "websiteURL": "https://fabric.systemiacommandcenters.com/openai",
     "defaultPrompt": [
-      "Find the smallest Evercraft capability for this problem.",
-      "Route this problem to the right verified Evercraft specialist.",
-      "Show me the safest next step Evercraft can actually perform."
+      "Inspect my public website and show me the basic signals that need attention.",
+      "Check my website for missing title, description, headings, canonical, and contact signals.",
+      "Inspect my homepage for basic on-page and conversion signals."
     ]
   }
 }

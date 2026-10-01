@@ -144,6 +144,80 @@ export function renderMarkdownDocument(title,markdown){
   return shell(title,'<main class="doc">'+out.join('')+'</main>');
 }
 
+export function renderOpenAiPluginHome(){
+  return `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#07101f">
+<title>Evercraft Website Inspector</title>
+<meta name="description" content="Bounded, read-only inspection of an authorized public website with evidence-backed HTTP and on-page signals.">
+<link rel="icon" href="/assets/evercraft-icon.png">
+<style>
+:root{color-scheme:dark;--bg:#050914;--panel:#0b1324;--line:#203250;--text:#f7f9fc;--muted:#a9b8cc;--blue:#55a7ff;--green:#72e7b4}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text);background:radial-gradient(circle at 80% 8%,rgba(28,108,255,.22),transparent 30rem),var(--bg)}
+main{width:min(940px,calc(100% - 36px));margin:0 auto;padding:28px 0 70px}
+nav{display:flex;align-items:center;justify-content:space-between;padding:10px 0 62px}.brand{display:flex;gap:12px;align-items:center;text-decoration:none;font-weight:760}.brand img{width:36px;height:36px;border-radius:10px}.links{display:flex;gap:16px}.links a{text-decoration:none;color:var(--muted);font-size:14px}
+.kicker{display:inline-flex;gap:8px;align-items:center;border:1px solid var(--line);background:rgba(11,19,36,.78);padding:8px 12px;border-radius:999px;color:#cad8e9;font-size:13px}.dot{width:7px;height:7px;border-radius:50%;background:var(--green)}
+h1{font-size:clamp(48px,8vw,84px);line-height:.98;letter-spacing:-.06em;margin:22px 0}.lede{font-size:clamp(18px,2.4vw,24px);line-height:1.55;color:#c7d3e3;max-width:780px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:44px}.card{border:1px solid var(--line);background:linear-gradient(180deg,rgba(14,25,48,.82),rgba(9,16,30,.82));border-radius:16px;padding:20px}.card h2{font-size:18px;margin:0 0 9px}.card p{color:var(--muted);line-height:1.6;margin:0}
+.boundary{margin-top:18px;border:1px solid var(--line);border-radius:16px;padding:22px;background:rgba(11,19,36,.72)}.boundary strong{display:block;margin-bottom:8px}.boundary p{color:var(--muted);line-height:1.65;margin:0}
+footer{border-top:1px solid var(--line);margin-top:58px;padding-top:24px;color:var(--muted);font-size:13px}
+@media(max-width:760px){.grid{grid-template-columns:1fr}.links{display:none}}
+</style>
+</head>
+<body>
+<main>
+<nav><a class="brand" href="/openai"><img src="/assets/evercraft-icon.png" alt=""><span>Evercraft</span></a><div class="links"><a href="/openai/support">Support</a><a href="/openai/privacy">Privacy</a><a href="/openai/terms">Terms</a></div></nav>
+<section>
+  <div class="kicker"><span class="dot"></span> Public ChatGPT & Codex tool</div>
+  <h1>Inspect the site.<br>Keep the claims bounded.</h1>
+  <p class="lede">Evercraft inspects a public website you own, administer, or have permission to review and returns evidence-backed HTTP and on-page signals. It is read-only and deliberately limited.</p>
+</section>
+<section class="grid">
+  <article class="card"><h2>Observed signals</h2><p>HTTP status, title, description, viewport, robots, canonical URL, headings, image-alt gaps, forms, JSON-LD presence, and a basic contact signal.</p></article>
+  <article class="card"><h2>Authorization first</h2><p>The public tool runs only when the user confirms they own, administer, or have permission to inspect the website.</p></article>
+  <article class="card"><h2>No hidden commerce</h2><p>The public plugin does not sell, promote, initiate, or facilitate purchases of digital products or services.</p></article>
+</section>
+<section class="boundary"><strong>What this is not</strong><p>It is not a full crawl, Core Web Vitals lab test, accessibility certification, security audit, penetration test, ranking guarantee, private-network scanner, payment flow, or website editor.</p></section>
+<footer>Evercraft LLC · <a href="/openai/support">Support</a> · <a href="/openai/privacy">Privacy</a> · <a href="/openai/terms">Terms</a></footer>
+</main>
+</body>
+</html>`;
+}
+
+export function renderOpenAiPolicyDocument(title,markdown){
+  const lines=String(markdown||'').split(/\r?\n/);
+  const out=[];
+  let listOpen=false;
+  for(const raw of lines){
+    const line=raw.trim();
+    if(!line){
+      if(listOpen){out.push('</ul>');listOpen=false;}
+      continue;
+    }
+    if(line.startsWith('# ')){
+      if(listOpen){out.push('</ul>');listOpen=false;}
+      out.push('<h1>'+inlineMarkdown(line.slice(2))+'</h1>');
+    }else if(line.startsWith('## ')){
+      if(listOpen){out.push('</ul>');listOpen=false;}
+      out.push('<h2>'+inlineMarkdown(line.slice(3))+'</h2>');
+    }else if(line.startsWith('- ')){
+      if(!listOpen){out.push('<ul>');listOpen=true;}
+      out.push('<li>'+inlineMarkdown(line.slice(2))+'</li>');
+    }else{
+      if(listOpen){out.push('</ul>');listOpen=false;}
+      out.push('<p>'+inlineMarkdown(line)+'</p>');
+    }
+  }
+  if(listOpen) out.push('</ul>');
+  return `<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#07101f"><title>${escapeHtml(title)}</title>
+<style>:root{color-scheme:dark;--bg:#050914;--panel:#0b1324;--line:#203250;--text:#f7f9fc;--muted:#b5c3d6}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{width:min(820px,calc(100% - 36px));margin:0 auto;padding:28px 0 70px}nav{padding:12px 0 48px}nav a{color:var(--text);text-decoration:none;font-weight:760}.doc{border:1px solid var(--line);background:var(--panel);border-radius:18px;padding:28px}.doc h1{font-size:38px;letter-spacing:-.04em}.doc h2{margin-top:30px}.doc p,.doc li{color:var(--muted);line-height:1.7}.doc a{color:#9ec8ff}footer{margin-top:30px;color:var(--muted);font-size:13px}footer a{color:inherit}</style></head>
+<body><main><nav><a href="/openai">← Evercraft Website Inspector</a></nav><article class="doc">${out.join('')}</article><footer><a href="/openai">Inspector home</a></footer></main></body></html>`;
+}
+
 export function renderFabricHome({capabilityCount=0,capabilities=[]}={}){
   const count=Array.isArray(capabilities)&&capabilities.length
     ? capabilities.length

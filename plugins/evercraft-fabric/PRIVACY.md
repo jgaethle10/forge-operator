@@ -1,54 +1,40 @@
-# Evercraft Fabric Privacy Policy
+# Evercraft Privacy Policy
 
-Last updated: September 29, 2026
+Last updated: October 1, 2026
 
-Evercraft Fabric is operated by Evercraft LLC. It provides a permissioned connection between supported AI hosts and the Evercraft/Systemia ecosystem.
+Evercraft is operated by Evercraft LLC. The current public ChatGPT/Codex plugin provides a bounded, read-only inspection of a public website that the user owns, administers, or has permission to review.
 
 ## Information processed
 
-Evercraft Fabric processes the information a user or authorized host provides when calling its tools. Depending on the tool, this can include:
-- a plain-language problem, goal, or workflow request;
-- capability and mission-planning inputs;
-- project or workspace context explicitly authorized for retrieval;
-- host events or observations explicitly submitted to Fabric;
-- technical metadata needed for security, abuse prevention, reliability, attribution, and audit receipts.
+For the public website-inspection tool, Evercraft processes only the information needed to perform the requested inspection:
 
-Public capability discovery is designed to use the minimum information needed to identify relevant Evercraft capabilities.
+- the public website URL supplied by the user;
+- the user's explicit confirmation that they are authorized to inspect that website;
+- the public HTTP response and bounded HTML returned by that URL;
+- limited technical information needed to operate, secure, and troubleshoot the service.
 
-## Information not required for public discovery
+The inspection extracts bounded signals such as HTTP status, content type, page title, meta description, viewport and robots metadata, canonical URL, heading counts, image alt-text gaps, form count, JSON-LD presence, and a basic contact-signal observation.
 
-Public discovery does not require passwords, payment-card numbers, private browser cookies, private device secrets, or unrelated sensitive personal information. Users should not include secrets or credentials in discovery prompts.
+## Network and security boundaries
 
-## Authorized private context
+The public plugin does not support localhost, private or reserved network targets, embedded credentials, nonstandard web ports, unsafe redirect pivots, oversized responses, or unsupported content types.
 
-Private Context Fabric retrieval is available only when an authorized host has both the required Fabric scope and the matching Systemia/Passport permission. Connection or installation alone does not grant access to private context.
+Evercraft does not require payment-card numbers, passwords, private browser cookies, device secrets, or private account credentials for public website inspection. Users should not provide those values.
 
-Unauthorized records are filtered before retrieval. Fabric is designed not to expose the names, snippets, counts, credentials, or internal topology of unauthorized private records.
+## Authorization
 
-## Host events and action intents
+The public tool is intended only for websites the user owns, administers, or has permission to inspect. The user must explicitly confirm that authorization before the tool runs.
 
-Host events submitted to Fabric are treated as evidence, not instructions. They may be stored with provenance, trust state, and source references.
+## Commerce and advertising
 
-Action-intent preparation records a requested action for later Systemia admission and policy review. Preparing an intent does not itself execute the action, create a payment obligation, publish content, or authorize an external side effect.
+The current public plugin does not sell, promote, initiate, or facilitate purchases of digital products or services. It does not serve advertisements and does not sell user data to advertisers.
 
-## Service providers and sharing
+## Retention and service providers
 
-Evercraft may use infrastructure, security, hosting, logging, and other service providers as necessary to operate Fabric. Data is shared only as needed to provide, secure, or maintain the service, or when required by law.
-
-Evercraft Fabric does not use the plugin as an advertising-data-sale product.
-
-## Retention
-
-Operational and audit records may be retained for as long as reasonably necessary to provide the service, preserve security and provenance, investigate abuse, satisfy legal obligations, and maintain receipt-backed system integrity. Data that is no longer needed for those purposes may be deleted, anonymized, or aggregated.
-
-Retention for connected Evercraft products can differ when a user explicitly continues into those products.
+Evercraft may retain limited operational or security records for as long as reasonably necessary to operate, protect, debug, and comply with legal obligations for the service. Evercraft may use hosting, security, logging, and infrastructure providers as necessary to run the service.
 
 ## User controls
 
-Users can choose what information to provide, decline private-context authorization, and avoid submitting sensitive information that is not needed for the requested task. Connected-host credentials and permissions can be revoked through the applicable Evercraft authorization surface.
+Users choose which authorized public URL to submit and may decline to use the tool. The plugin does not grant private Systemia access, production access, publishing authority, payment authority, or website modification authority.
 
-For privacy questions or requests, use the support URL listed for Evercraft Fabric in the OpenAI Plugin Directory. Do not post passwords, tokens, payment-card data, or other secrets in a public support ticket.
-
-## Scope
-
-This policy describes Evercraft Fabric. Separate Evercraft products may have additional privacy terms when a user explicitly chooses to use them.
+For privacy questions or requests, use the support URL listed for Evercraft in the OpenAI Plugin Directory. Do not include passwords, tokens, payment-card information, or other secrets in a public support request.

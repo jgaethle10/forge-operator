@@ -1,51 +1,39 @@
-# Evercraft Fabric Terms of Service
+# Evercraft Terms of Service
 
-Last updated: September 29, 2026
+Last updated: October 1, 2026
 
-Evercraft Fabric is operated by Evercraft LLC. It provides public Evercraft capability discovery and permissioned connections into the Evercraft/Systemia ecosystem.
+Evercraft is operated by Evercraft LLC. The current public ChatGPT/Codex plugin provides bounded, read-only inspection of a public website.
 
-## Fabric is a connection and routing layer
+## Authorized use
 
-Installing or connecting Evercraft Fabric does not by itself grant private-data access, payment authority, production authority, publication authority, device control, or permission to contact third parties.
+Use the public website-inspection tool only for a website you own, administer, or have permission to review. Users are responsible for providing truthful authorization information and respecting applicable law and third-party rights.
 
-Public discovery identifies relevant capabilities and current readiness. Mission planning returns candidate stages. Candidate stages are not automatically admitted or executed.
+Do not use the tool to bypass authentication, access controls, private networks, or other technical restrictions.
 
-## Authorization
+## Inspection scope
 
-Private context and state-changing tools require the applicable Fabric scope and Systemia authorization. Users and authorized hosts are responsible for providing only information and permissions they are entitled to provide.
+The public plugin returns bounded HTTP and on-page signals from a standard-port public HTTP or HTTPS URL. It does not modify the target website.
 
-Evercraft may deny, limit, or revoke access when necessary for security, abuse prevention, legal compliance, or system integrity.
+The inspection is not a full crawl, Core Web Vitals lab test, accessibility certification, security audit, penetration test, ranking guarantee, legal review, or guarantee of business performance.
 
-## Action intents
-
-Fabric may prepare an action intent for later Systemia review. An action intent is not execution. Consequential actions remain subject to the applicable admission, confirmation, and execution gates.
+Dynamic or client-rendered content may not be visible in the fetched HTML, and external systems can change after an inspection.
 
 ## Commerce
 
-The public OpenAI plugin does not sell digital products or services, initiate checkout, or create a payment obligation. Any separate Evercraft commercial relationship occurs outside the public plugin and is governed by the applicable product terms.
+The public OpenAI plugin does not sell, promote, initiate, or facilitate purchases of digital products or services and does not create a payment obligation.
 
-## Accuracy and availability
+## Security boundaries
 
-Evercraft works to keep capability, availability, provenance, and routing information current and evidence-backed. External systems, providers, and source data can change. Where current state matters, the live authoritative source controls.
+The service may reject private or reserved addresses, localhost, embedded credentials, nonstandard ports, unsafe redirects, oversized responses, unsupported content types, or other requests that do not fit the public inspection contract.
 
-## Acceptable use
+## Availability
 
-Do not use Evercraft Fabric to:
-- bypass authentication or access controls;
-- access data without authorization;
-- attack, disrupt, or exploit systems;
-- impersonate others or submit deceptive provenance;
-- create unauthorized payments, communications, publications, or device actions;
-- violate applicable law or third-party rights.
-
-## External services
-
-Some Evercraft capabilities rely on third-party infrastructure, APIs, registries, or data sources. Their terms may also apply when a user explicitly chooses to continue into those services.
+Evercraft works to keep the service accurate and available but does not guarantee uninterrupted operation. Evidence returned by an inspection describes the observed response at the time of the request and should be interpreted within the stated limitations.
 
 ## Changes
 
-These terms may be updated as Fabric evolves. Material changes should remain reflected in public documentation and release records.
+These terms may be updated as the public plugin evolves. Material changes should remain reflected in the published documentation and release records.
 
 ## Support
 
-Use the support URL listed for Evercraft Fabric in the OpenAI Plugin Directory. Do not include passwords, authentication tokens, payment-card details, or other secrets in public support requests.
+Use the support URL listed for Evercraft in the OpenAI Plugin Directory. Do not include passwords, authentication tokens, payment-card details, or other secrets in public support requests.
