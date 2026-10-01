@@ -55,6 +55,12 @@ Environment:
 - FAIE_INTERVAL_MS=300000
 - FAIE_STATE_DIR=/persistent/path
 - FAIE_INTERNAL_TOKEN=...
+- FAIE_OFFICIAL_COLLECTORS_ENABLED=true|false
+- FAIE_NWS_ENABLED=true|false
+- FAIE_NWS_AREA=WA (optional; empty means the national active-alert feed)
+- FAIE_USGS_WATER_SITES=USGS-12484500,... (optional)
+- FAIE_USGS_WATER_PARAMETERS=00060,00065
+- FAIE_NWPS_GAUGES=<gauge-id>,... (optional)
 
 Production defaults the FAIE resident on. Development defaults it off unless enabled.
 
@@ -85,6 +91,8 @@ Human UI:
 ## Autonomous loop
 
 The resident runtime can continuously bridge material Systemia Radar signals into FAIE while direct Worldstate dispatches can feed the specialist with the broader domain stream. The Radar bridge is deliberately a fallback/secondary path, not a replacement for the Worldstate subscription contract.
+
+FAIE also reuses existing Sentinel official-source adapters. NWS active alerts are enabled by default. USGS Water Data and NOAA/NWS National Water Prediction Service gauges turn on when monitoring IDs are configured. Their upstream evidence ceilings, reliability, provenance and coarse-location rules are preserved rather than reinterpreted as stronger evidence.
 
 The first release therefore has an actual closed loop:
 
