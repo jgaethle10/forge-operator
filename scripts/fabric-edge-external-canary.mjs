@@ -3,6 +3,7 @@ import dns from 'node:dns/promises';
 import tls from 'node:tls';
 import { createHash, randomBytes } from 'node:crypto';
 import { verifyNodeAttestation } from '../systemia/compute/device-identity.mjs';
+import { classifyPublicEdgeIngress } from '../systemia/network/public-edge-ingress-watch.mjs';
 
 const sha=(value)=>'sha256:'+createHash('sha256').update(
   typeof value==='string'?value:JSON.stringify(value)
@@ -231,6 +232,19 @@ try{
   receipt.catalog_total=Number(payload.total);
   receipt.checks.public_catalog=true;
 
+  receipt.ingress_diagnosis=classifyPublicEdgeIngress({
+    local:{ok:true},
+    dns:{ok:true,addresses:receipt.dns_ipv4||[]},
+    external:{
+      state:'verified',
+      tcp_reachable:true,
+      tls_reachable:true,
+      http_reachable:true,
+      status:200,
+      source:'github_actions_external_canary',
+      observed_at:new Date().toISOString(),
+    },
+  });
   receipt.verified=true;
   receipt.state='public_https_verified';
   receipt.public_https_verified=true;
@@ -242,6 +256,25 @@ try{
   receipt.state='verification_failed';
   receipt.error=error instanceof Error?error.message:String(error);
   receipt.failure_stage=failureStage(receipt.checks,receipt.error);
+  const tcpLike=/timeout|ECONNREFUSED|EHOSTUNREACH|ENETUNREACH|ECONNRESET/i.test(receipt.error);
+  receipt.ingress_diagnosis=classifyPublicEdgeIngress({
+    local:{ok:true},
+    dns:{
+      ok:receipt.checks.public_dns===true,
+      addresses:receipt.dns_ipv4||[],
+    },
+    external:{
+      state:receipt.failure_stage,
+      tcp_reachable:receipt.failure_stage==='public_tcp_tls_ingress'&&tcpLike?false:null,
+      tls_reachable:receipt.checks.trusted_tls===true?true:
+        (receipt.failure_stage==='public_tcp_tls_ingress'||receipt.failure_stage==='trusted_tls'?false:null),
+      http_reachable:receipt.checks.customer_surface===true?true:
+        (receipt.failure_stage==='customer_surface'?false:null),
+      source:'github_actions_external_canary',
+      observed_at:new Date().toISOString(),
+      detail:receipt.error,
+    },
+  });
   receipt.public_https_verified=false;
   receipt.mcp_verified=false;
   receipt.external_route_verified=false;
