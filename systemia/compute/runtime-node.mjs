@@ -769,7 +769,7 @@ export async function startEvercraftComputeNode({
   const server = http.createServer(async (req, res) => {
     try {
       if (
-        (req.method === 'GET' && ['/v1/operator/status', '/v1/operator/network'].includes(String(req.url || ''))) ||
+        (req.method === 'GET' && req.url === '/v1/operator/status') ||
         (req.method === 'POST' && /^\/v1\/operator\/(?:fs\/(?:list|read|write)|exec)$/.test(String(req.url || '')))
       ) {
         if (!remoteOperator) return send(res, 404, { error: 'remote_operator_not_enabled' });
@@ -778,10 +778,10 @@ export async function startEvercraftComputeNode({
         }
         try {
           if (req.method === 'GET') {
-            if (req.url === '/v1/operator/network') {
-              return send(res, 200, await remoteOperator.networkStatus());
-            }
-            return send(res, 200, remoteOperator.status());
+            return send(res, 200, {
+              ...remoteOperator.status(),
+              network_observation: await remoteOperator.networkStatus(),
+            });
           }
           const body = await readJson(req);
           if (req.url === '/v1/operator/fs/list') {
