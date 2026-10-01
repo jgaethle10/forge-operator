@@ -8,7 +8,12 @@ on:
       - 'systemia/compute/runtime-node.mjs'
       - 'systemia/yard/public-edge-controller.mjs'
       - 'systemia/yard/public-edge-activation-watch.mjs'
+      - 'systemia/organism/public-edge-activation-watch-runner.mjs'
       - 'tests/evercraft-fabric-runtime.test.mjs'
+      - 'tests/specialist-handoff-native-runtime.test.mjs'
+      - 'tests/public-edge-native-specialist-invariants.test.mjs'
+      - 'tests/public-edge-canary-contract.test.mjs'
+      - 'package.json'
       - '.github/workflows/evercraft-fabric-native.yml'
   workflow_dispatch:
 
