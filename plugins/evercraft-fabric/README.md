@@ -1,37 +1,31 @@
 # Evercraft plugin for ChatGPT and Codex
 
-This package is the canonical OpenAI-facing front door for the Evercraft/Systemia capability fabric.
+This package is the canonical public OpenAI-facing Evercraft plugin.
 
-Evercraft should be useful before it asks a user to understand the portfolio. Version 1.1.0 therefore combines a standalone bounded public-website preview with problem-first capability routing. A user can supply a public website and receive observed HTTP/on-page signals with explicit limitations, or describe another problem and let Fabric identify the smallest truthful Evercraft capability.
+Version 1.1.0 is intentionally focused on useful standalone work rather than portfolio advertising. The submitted MCP endpoint is:
 
-## Public tools
+`https://fabric.systemiacommandcenters.com/mcp/openai`
 
-The package targets the Evercraft-owned Fabric MCP:
+It exposes one public tool, `inspect_public_website`, which performs bounded read-only inspection of a public website the user owns, administers, or has permission to review.
 
-`https://fabric.systemiacommandcenters.com/mcp`
+## Public behavior
 
-The public contract contains four read-only tools: `preview_public_website`, `match_evercraft_capability`, `list_evercraft_capabilities`, and `get_evercraft_connection_options`.
+The inspection can report bounded signals such as HTTP status, page title, meta description, viewport and robots metadata, canonical URL, heading counts, image alt-text gaps, form count, JSON-LD presence, and a basic contact-signal observation.
 
-The website preview is an open-world read because it accesses one caller-supplied public URL. It rejects private/local/reserved targets, embedded credentials, nonstandard ports, unsafe redirects, oversized responses, and unsupported content types. It returns bounded evidence and limitations rather than pretending to be a full audit.
+It rejects private/local/reserved targets, embedded credentials, nonstandard ports, unsafe redirects, oversized responses, and unsupported content types. It does not modify websites and does not represent its output as a full crawl, Core Web Vitals lab test, accessibility certification, security audit, penetration test, or ranking guarantee.
 
-The routing tools remain bounded to public-safe Evercraft metadata and do not create payment, paid work, publishing, deployment, messaging, credentials, or other consequential authority.
+The current public plugin contains no digital-service checkout or paid-offer promotion.
+
+## Internal Fabric remains broader
+
+Evercraft's internal and human-facing Fabric surfaces can still maintain the broader capability catalog, commercial metadata, and specialist routing. Those surfaces are separate from the purpose-specific OpenAI MCP submitted for public review.
+
+The public plugin can expand later by adding real capabilities as explicit, independently reviewable tools rather than exposing a generic dispatcher.
 
 ## Current transport state
 
-The package is configured for the Evercraft-owned Fabric endpoint and the legacy Base44 compatibility transport is inactive. However, the latest independent public-edge canary on October 1, 2026 timed out on public TCP ports 80 and 443 after DNS resolved successfully. The endpoint therefore requires ingress repair and a fresh passing external canary before v1.1.0 is treated as submission-ready.
-
-Private Evercraft v1.0.4 installations exist in ChatGPT, but current invocation is not being treated as proof while the public ingress path is unhealthy.
-
-## Next public submission
-
-The next package version is **v1.1.0**. Before upload, Evercraft must re-prove the owned public edge, run the current OpenAI MCP scan, and refresh the reviewer walkthrough to include the standalone website preview.
-
-Public-directory state remains **not proven** until the authenticated OpenAI review/publish flow completes and directory pickup is independently observed.
-
-## Why one umbrella plugin
-
-The umbrella plugin is useful for cross-domain or ambiguous requests, but it should not force users into Evercraft products. If the standalone preview answers the request, stop there. If another problem genuinely fits an Evercraft specialist, Fabric can return the smallest supported route. If nothing fits, say so.
+The package points to the Evercraft-owned `/mcp/openai` endpoint and the legacy Base44 compatibility transport is inactive. The latest external canary on October 1, 2026 timed out at public TCP 80/443 after DNS resolved correctly, so the endpoint requires ingress repair and a fresh passing canary before v1.1.0 is treated as submission-ready.
 
 ## Truth boundary
 
-Repository readiness, a private installation, a checkout preparation step, or an old canary receipt is not current provider pickup. Do not claim ChatGPT or Codex can discover or invoke Evercraft publicly until current evidence proves it.
+Repository readiness, a private installation, an old canary receipt, review approval, and publication are separate states. Do not claim public ChatGPT/Codex discovery until the current provider flow and independent directory observation prove it.
