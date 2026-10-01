@@ -37,6 +37,10 @@ export function buildClusterAdversarialSummary({
   walkForwardLab,
   executionTranslationLab,
   quoteMicrostructureLab,
+  familyMaxNullLab,
+  deflatedSharpeLab,
+  tailDependenceLab,
+  cscvPboLab,
   currentRunForwardClusterScores,
   durableForwardClusterScores,
 } = {}) {
@@ -61,7 +65,15 @@ export function buildClusterAdversarialSummary({
     horizon: indexBySignal(horizonCoherenceLab?.reviews || []),
     walk: indexBySignal(walkForwardLab?.reviews || []),
     execution: indexBySignal(executionTranslationLab?.reviews || []),
+    familyMaxNull: indexBySignal(familyMaxNullLab?.reviews || []),
+    deflatedSharpe: indexBySignal(deflatedSharpeLab?.reviews || []),
+    tailDependence: indexBySignal(tailDependenceLab?.reviews || []),
   };
+  const cscvByCluster = new Map(
+    (cscvPboLab?.reviews || [])
+      .filter((row) => row?.cluster_key)
+      .map((row) => [row.cluster_key, row])
+  );
 
   const groups = new Map();
   for (const candidate of candidates) {
@@ -114,6 +126,16 @@ export function buildClusterAdversarialSummary({
         maps.walk.get(signal)?.walk_forward_status || "MISSING",
       execution_translation_status:
         maps.execution.get(signal)?.translation_status || "MISSING",
+      family_max_null_status:
+        maps.familyMaxNull.get(signal)?.status || "MISSING",
+      family_max_null_p_value:
+        maps.familyMaxNull.get(signal)?.empirical_family_wise_p_value ?? null,
+      deflated_sharpe_status:
+        maps.deflatedSharpe.get(signal)?.status || "MISSING",
+      deflated_sharpe_probability:
+        maps.deflatedSharpe.get(signal)?.deflated_sharpe_probability ?? null,
+      tail_dependence_status:
+        maps.tailDependence.get(signal)?.status || "MISSING",
       quote_microstructure:
         quoteMicrostructureLab?.by_signal?.[signal] || null,
     }));
@@ -161,7 +183,14 @@ export function buildClusterAdversarialSummary({
           (row) => row.horizon_coherence_status === "HORIZON_COHERENT_DIAGNOSTIC"),
         walk_forward_robust: count(memberReceipts,
           (row) => row.walk_forward_status === "WALK_FORWARD_ROBUST_DIAGNOSTIC"),
+        family_max_null_separated: count(memberReceipts,
+          (row) => row.family_max_null_status === "MAX_FAMILY_NULL_SEPARATED_DIAGNOSTIC"),
+        deflated_sharpe_separated: count(memberReceipts,
+          (row) => row.deflated_sharpe_status === "DSR_SEPARATED_DIAGNOSTIC"),
+        tail_dependence_fragile: count(memberReceipts,
+          (row) => row.tail_dependence_status === "TAIL_DEPENDENCE_FRAGILE_DIAGNOSTIC"),
       },
+      cscv_pbo_cluster_receipt: cscvByCluster.get(key) || null,
       current_run_forward_cluster_score: currentForwardMap.get(key) || null,
       durable_forward_cluster_score: durableForwardMap.get(key) || null,
       quote_microstructure_feed: quoteMicrostructureLab?.feed || null,
