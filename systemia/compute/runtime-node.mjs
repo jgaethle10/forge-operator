@@ -527,21 +527,40 @@ export async function startEvercraftComputeNode({
     browserContainerAvailable();
 
   const forensiscopeTranscriptionCapability = transcriptionCapabilityStatus();
+  const remoteOperatorCapability = remoteOperator
+    ? (() => {
+        const status = remoteOperator.status();
+        const hostCapabilities = remoteOperator.hostBoundaryCapabilities();
+        return {
+          ready: true,
+          transport: 'evercraft.outbound-capacity.v1',
+          public_ingress: false,
+          roots: status.roots,
+          execution_mode: status.execution.mode,
+          host_boundary: {
+            supported: true,
+            capability_count: hostCapabilities.capability_count,
+            capabilities: hostCapabilities.capabilities.map((capability) => ({
+              capability_id: capability.capability_id,
+              operation: capability.operation,
+              admission_state: capability.admission_state,
+              generic_dispatch_available:
+                capability.generic_dispatch_available === true,
+              mutation_authority: capability.mutation_authority === true,
+            })),
+          },
+        };
+      })()
+    : {
+        ready: false,
+        reason: 'not_enabled',
+      };
   const serviceCapabilities = {
     forensiscope_transcription: forensiscopeTranscriptionCapability.ready === true,
     evercraft_web_browser: browserRuntimeReady,
     evercraft_home_identity: evercraftHomeIdentityCapability,
     public_edge: publicEdgeCapability,
-    remote_operator: remoteOperator ? {
-      ready: true,
-      transport: 'evercraft.outbound-capacity.v1',
-      public_ingress: false,
-      roots: remoteOperator.status().roots,
-      execution_mode: remoteOperator.status().execution.mode,
-    } : {
-      ready: false,
-      reason: 'not_enabled',
-    }
+    remote_operator: remoteOperatorCapability,
   };
   const leases = new Map();
   const services = new Map();
