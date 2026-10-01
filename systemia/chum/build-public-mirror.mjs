@@ -37,29 +37,32 @@ const root = 'public/chum/products';
 const READ_ONLY_DISCOVERY_REGISTRY =
   catalog.universal_front_door?.read_only_registry_name ||
   'io.github.jgaethle10/evercraft-capability-discovery';
-const MACHINE_COMMERCE_GATEWAY =
-  'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
-const BUYER_FRONTAGE_ORIGIN = 'https://evercraft-ai-suite-08c4d2b8.base44.app';
+const MACHINE_COMMERCE_GATEWAY = null;
+const BUYER_FRONTAGE_ORIGIN = null;
 const BLOCKED_PUBLIC_HOSTS = new Set([
   'systemiacommandcenters.com',
   'www.systemiacommandcenters.com'
 ]);
 
 function safePublicUrl(value, fallback = null) {
-  if (!value) return fallback;
-  try {
-    const url = new URL(String(value));
-    if (!['http:', 'https:'].includes(url.protocol)) return fallback;
-    if (BLOCKED_PUBLIC_HOSTS.has(url.hostname.toLowerCase())) return fallback;
-    return url.toString();
-  } catch {
-    return fallback;
+  for (const candidate of [value, fallback]) {
+    if (!candidate) continue;
+    try {
+      const url = new URL(String(candidate));
+      if (!['http:', 'https:'].includes(url.protocol)) continue;
+      const host = url.hostname.toLowerCase();
+      if (BLOCKED_PUBLIC_HOSTS.has(host)) continue;
+      if (host === 'base44.app' || host.endsWith('.base44.app')) continue;
+      return url.toString();
+    } catch {}
   }
+  return null;
 }
 
 function buyerFrontageUrlFor(product) {
   const explicit = safePublicUrl(product?.commercial?.machine_commerce_handoff?.buyer_url, null);
   if (explicit) return explicit;
+  if (!BUYER_FRONTAGE_ORIGIN) return null;
   const publicId = String(product?.commercial?.machine_commerce_handoff?.public_id || '').trim();
   if (!publicId) return null;
   try {
