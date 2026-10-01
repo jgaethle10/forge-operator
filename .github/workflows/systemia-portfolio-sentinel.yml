@@ -105,7 +105,7 @@ jobs:
         run: node --test systemia/experience/human-experience-adapter.test.mjs
 
       - name: Prove autonomous Repair Unit
-        run: node --test systemia/sentinel/repair-unit.test.mjs
+        run: node --test systemia/sentinel/repair-unit.test.mjs systemia/sentinel/repair-strategy.test.mjs
 
       - name: Restore latest owned Customer Gauntlet receipt
         continue-on-error: true
@@ -173,6 +173,7 @@ jobs:
             artifacts/portfolio-sentinel/admission.json
             artifacts/portfolio-sentinel/repair-memory.json
             artifacts/portfolio-sentinel/repair-unit-state.json
+            artifacts/portfolio-sentinel/repair-treatment-memory.json
             artifacts/human-experience/latest.json
             artifacts/saban-multiplier/human-experience-latest.json
             artifacts/customer-gauntlet/latest.json
