@@ -10,13 +10,13 @@ The package now points directly to the verified Evercraft-owned Fabric MCP:
 
 `https://fabric.systemiacommandcenters.com/mcp`
 
-The legacy Base44 compatibility transport is inactive for the OpenAI package. Evercraft Fabric is implemented by `systemia/mcp/fabric-directory.mjs` and exposes three read-only discovery/connection tools with explicit MCP safety annotations. Live ChatGPT testing has confirmed the owned Fabric can list capabilities, match natural-language problems, and return public connection options without creating payments or external side effects.
+The legacy Base44 compatibility transport is inactive for the OpenAI package. Evercraft Fabric is implemented by `systemia/mcp/fabric-directory.mjs` and exposes four read-only routing tools with explicit MCP safety annotations: capability matching, capability listing, connection lookup, and `route_evercraft_payments`. The payments route keeps merchant checkout, billing, invoices, deposits, subscriptions, and customer payments inside the Evercraft Payments boundary without creating a charge or silently falling through to a processor-specific plugin.
 
 ## Current ChatGPT state
 
 Evercraft is installed privately in ChatGPT for the owner account and is usable there through the owned Fabric MCP. Private installation is not public-directory publication.
 
-The canonical package version for the next public submission is **v1.0.3**. It includes the owned MCP endpoint, public Evercraft support/privacy/terms surfaces, directory artwork, the problem-first routing skill, exactly five positive and three negative review cases, and the reviewer walkthrough URL.
+The canonical package version for the next public submission is **v1.0.4**. It includes the owned MCP endpoint, public Evercraft support/privacy/terms surfaces, directory artwork, the problem-first routing skill, exactly five positive and three negative review cases, and the reviewer walkthrough URL.
 
 ## Public-directory status
 
