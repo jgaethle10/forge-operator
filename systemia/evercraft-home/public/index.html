@@ -265,7 +265,7 @@ async function load(afterLogin=false){
     const optional=overview.data.services.filter(s=>s.ownership!=="evercraft-owned");
     document.getElementById("owned").textContent=owned.length;
     document.getElementById("reachable").textContent=owned.filter(s=>s.state==="reachable").length;
-    document.getElementById("services").innerHTML=owned.map((s,i)=>'<article class="surface"><div class="idx">'+String(i+1).padStart(2,"0")+'</div><div><h3>'+esc(s.name)+' <span class="cat">'+esc(s.category)+'</span></h3><p>'+esc(s.description)+'</p></div><div class="state '+esc(s.state)+'"><span class="dot"></span>'+esc(labels[s.state]||"Unknown")+'</div></article>').join("");
+    document.getElementById("services").innerHTML=owned.map((s,i)=>'<article class="surface"><div class="idx">'+String(i+1).padStart(2,"0")+'</div><div><h3>'+(s.launch_url?'<a href="'+esc(s.launch_url)+'" style="color:inherit;text-decoration:none">'+esc(s.name)+'</a>':esc(s.name))+' <span class="cat">'+esc(s.category)+'</span></h3><p>'+esc(s.description)+'</p>'+(s.launch_url?'<p style="margin-top:9px"><a href="'+esc(s.launch_url)+'" style="color:#6d5b34;font-weight:650;text-decoration:none">Open software →</a></p>':'')+'</div><div class="state '+esc(s.state)+'"><span class="dot"></span>'+esc(labels[s.state]||"Unknown")+'</div></article>').join("");
     document.getElementById("providers").innerHTML=optional.map(s=>'<div class="provider"><span>'+esc(s.name)+'</span><span>'+esc(labels[s.state]||"Unknown")+'</span></div>').join("");
     const observed=new Intl.DateTimeFormat("en-US",{hour:"numeric",minute:"2-digit",month:"short",day:"numeric"}).format(new Date());
     document.getElementById("brief-observed").textContent="Observed "+observed+" · evidence-aware";
