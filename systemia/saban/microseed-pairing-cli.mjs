@@ -51,6 +51,7 @@ export function issueMicroSeedPairingKit({
     allowed_device_classes,
     allowed_workloads,
     ttl_ms,
+    enrollment_url,
     now,
   });
   const destination=path.resolve(
