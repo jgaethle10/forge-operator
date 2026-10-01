@@ -30,6 +30,10 @@ const common = {
       label: "modeled_entry",
       quote_available: i < 19,
     })),
+    execution_pairs: Array.from({ length: 20 }, (_, i) => ({
+      signal_key: candidate.signal_key,
+      two_sided_quote_available: i < 19,
+    })),
   },
   forwardScores: [{
     cohort_id: "edgepaper:test",
@@ -105,6 +109,25 @@ const lowQuoteCoverage = evaluatePilotReadiness({
 assert.equal(lowQuoteCoverage.evidence_ready_count, 0);
 assert.ok(lowQuoteCoverage.reviews[0].blockers.includes("modeled_entry_quote_coverage"));
 
+const lowTwoSidedCoverage = evaluatePilotReadiness({
+  ...common,
+  quoteMicrostructureLab: {
+    ...common.quoteMicrostructureLab,
+    execution_pairs: Array.from({ length: 20 }, (_, i) => ({
+      signal_key: candidate.signal_key,
+      two_sided_quote_available: i < 10,
+    })),
+  },
+});
+assert.equal(lowTwoSidedCoverage.evidence_ready_count, 0);
+assert.ok(
+  lowTwoSidedCoverage.reviews[0].blockers.includes("two_sided_quote_coverage")
+);
+assert.equal(
+  lowTwoSidedCoverage.reviews[0].quote_execution_evidence.exit_quote_required_for_pilot,
+  true
+);
+
 const pairOnly = evaluatePilotReadiness({
   ...common,
   executionTranslationLab: {
@@ -128,6 +151,7 @@ console.log(JSON.stringify({
   pair_only_micro_pilot_blocked:true,
   sip_nbbo_required_for_micro_pilot:true,
   modeled_entry_quote_coverage_required:true,
+  two_sided_entry_exit_quote_coverage_required:true,
   iex_bbo_not_mislabeled_nbbo:true,
   capital_authority_zero:true,
   human_authorization_required:true,
