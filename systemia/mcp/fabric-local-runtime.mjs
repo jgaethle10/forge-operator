@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { randomBytes } from 'node:crypto';
 import {
   executeFabricDirectoryRpc,
   fabricDirectoryTools,
@@ -111,6 +112,8 @@ export async function startFabricLocalRuntime({
   allocatorTokenFile='',
   nodeAttestationProvider=null,
 }={}) {
+  const instanceId='fabric_local_'+randomBytes(10).toString('hex');
+  let deploymentReceiptRef='';
   const staticPrepared=Array.isArray(catalog)?nativeOnlyCatalog(catalog):null;
   const preparedCatalog=()=>staticPrepared||nativeOnlyCatalog(loadFabricCatalogFromRepository());
   const token=validateOpenAiChallengeToken(challengeToken);
@@ -196,7 +199,11 @@ export async function startFabricLocalRuntime({
     ok:true,
     service:'evercraft-fabric-local',
     server:'evercraft-fabric',
-    version:'1.0.0',
+    version:'1.1.0',
+    runtime:nodeAttestationProvider?'Evercraft Compute':'Evercraft Fabric local',
+    instance_id:instanceId,
+    deployment_receipt_bound:Boolean(deploymentReceiptRef),
+    deployment_receipt_ref:deploymentReceiptRef||null,
     transport:'Streamable HTTP',
     mcp_path:'/mcp',
     tools:fabricDirectoryTools().map((tool)=>tool.name),
@@ -344,9 +351,18 @@ export async function startFabricLocalRuntime({
 
   return {
     schema:'evercraft.fabric-local-runtime.v1',
+    instanceId,
     url,
     mcpUrl:url+'/mcp',
     health,
+    setDeploymentReceipt(value){
+      const receipt=String(value||'').trim();
+      if(!/^(?:sha256:)?[a-f0-9]{64}$/i.test(receipt)){
+        throw new Error('deployment_receipt_ref_invalid');
+      }
+      deploymentReceiptRef=receipt;
+      return health();
+    },
     close:()=>new Promise((resolve,reject)=>
       server.close((error)=>error?reject(error):resolve())
     ),
