@@ -5,8 +5,7 @@ function uniq(xs){ return [...new Set((xs||[]).filter(Boolean))]; }
 function expectedSign(candidate){ return candidate.learned_direction==="NEGATIVE_EXCESS_RETURN"?-1:1; }
 function signedNet(row, sign, costBps=5){
   const raw=Number(row.forward_return||0)-Number(row.benchmark_return||0);
-  const net=raw-Math.sign(raw||1)*(costBps/10000);
-  return sign*net;
+  return sign*raw-(costBps/10000);
 }
 function shaInt(seed){ return crypto.createHash("sha256").update(String(seed)).digest().readUInt32BE(0); }
 function rng(seed){
