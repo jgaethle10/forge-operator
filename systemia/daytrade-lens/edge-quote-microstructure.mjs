@@ -186,13 +186,12 @@ export function buildQuoteMicrostructureTargets(report,{
       row,
       evaluationBySignal.get(row.signal_key)?.learned_direction || null
     ).map((target)=>({
+      ...target,
       measurement_id:row.measurement_id,
       signal_key:row.signal_key,
       instrument:row.instrument,
       lag_key:row.lag_key,
       observation_market_phase:row.observation_market_phase||null,
-      label:target.label,
-      timestamp:target.timestamp,
     }))
   );
 }
