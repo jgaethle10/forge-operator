@@ -76,6 +76,18 @@
   </div>
   <div class="lower">
     <section class="panel">
+      <h2>Latest Release</h2>
+      <div class="meta">Owned Radar archive publication after the deterministic release gate clears.</div>
+      <div id="latest-release" style="margin-top:20px"></div>
+    </section>
+    <section class="panel">
+      <h2>Corrections</h2>
+      <div class="meta">Released signals remain watched. New evidence can trigger a visible correction candidate.</div>
+      <div id="corrections" style="margin-top:20px"></div>
+    </section>
+  </div>
+  <div class="lower">
+    <section class="panel">
       <h2>Propagation Lab</h2>
       <div class="meta">Cross-domain co-occurrence worth investigating. These are relationship candidates, never automatic causal claims.</div>
       <div id="propagation" style="margin-top:20px"></div>
@@ -103,17 +115,23 @@ async function load() {
   const changes = document.getElementById('changes');
   const propagation = document.getElementById('propagation');
   const sourceHealth = document.getElementById('source-health');
+  const latestRelease = document.getElementById('latest-release');
+  const corrections = document.getElementById('corrections');
   const cutoff = document.getElementById('cutoff');
 
   try {
-    const [healthRes, latestRes, sourceHealthRes] = await Promise.all([
+    const [healthRes, latestRes, sourceHealthRes, releaseIndexRes, correctionsRes] = await Promise.all([
       fetch('/api/radar/health', {cache:'no-store'}),
       fetch('/api/radar/latest', {cache:'no-store'}),
-      fetch('/api/radar/source-health', {cache:'no-store'})
+      fetch('/api/radar/source-health', {cache:'no-store'}),
+      fetch('/api/radar/releases', {cache:'no-store'}),
+      fetch('/api/radar/corrections', {cache:'no-store'})
     ]);
     const health = await healthRes.json();
     const latest = await latestRes.json();
     const sourceState = await sourceHealthRes.json();
+    const releaseIndex = await releaseIndexRes.json();
+    const correctionState = await correctionsRes.json();
 
     statusbar.innerHTML = [
       ['Resident', health.resident ? 'ON' : 'OFF'],
@@ -169,6 +187,27 @@ async function load() {
       </div>
     `).join('') : '<div class="quiet">No cross-domain relationship candidates cleared the current context boundary.</div>';
 
+    const releases = Array.isArray(releaseIndex.releases) ? releaseIndex.releases : [];
+    latestRelease.innerHTML = releases.length ? `
+      <div class="signal">
+        <div class="signal-top"><span class="tag observed">RELEASED</span><span class="tag">${esc(fmt(releases[0].verification_cutoff))}</span></div>
+        <p><a href="${esc(releases[0].public_path)}">${esc(releases[0].title)}</a></p>
+        <small>Evidence digest ${esc(String(releases[0].content_sha256 || '').slice(0,16))}…</small>
+      </div>
+    ` : '<div class="quiet">No owned Radar release has cleared the gate yet.</div>';
+
+    const correctionRows = Array.isArray(correctionState.corrections) ? correctionState.corrections : [];
+    corrections.innerHTML = correctionRows.length ? correctionRows.slice(0,5).map((item) => `
+      <div class="change">
+        <div class="score">!</div>
+        <div>
+          <div class="signal-top"><span class="tag contested">${esc(item.change_state)}</span></div>
+          <p>${esc(item.current_summary || item.previous_summary)}</p>
+          <small class="meta">Detected ${esc(fmt(item.detected_at))}</small>
+        </div>
+      </div>
+    `).join('') : '<div class="quiet">No corrections are pending.</div>';
+
     const sources = Array.isArray(sourceState.sources) ? sourceState.sources : [];
     sourceHealth.innerHTML = sources.length ? sources.map((item) => `
       <div class="source-row">
@@ -185,6 +224,8 @@ async function load() {
     changes.innerHTML = '';
     propagation.innerHTML = '';
     sourceHealth.innerHTML = '';
+    latestRelease.innerHTML = '';
+    corrections.innerHTML = '';
   }
 }
 
