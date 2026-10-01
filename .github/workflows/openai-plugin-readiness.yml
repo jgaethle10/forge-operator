@@ -22,6 +22,8 @@ on:
       - 'systemia/mcp/FABRIC_OWNED_PUBLIC_EDGE.md'
       - 'tests/evercraft-openai-plugin-package.test.mjs'
       - 'tests/openai-owned-fabric-promotion.test.mjs'
+      - 'tests/public-edge-canary-contract.test.mjs'
+      - '.github/workflows/evercraft-public-edge-canary.yml'
       - '.github/workflows/openai-plugin-readiness.yml'
   workflow_dispatch:
 
@@ -46,7 +48,7 @@ jobs:
 
       - name: Prove OpenAI package and Fabric contract
         run: |
-          node --test tests/evercraft-openai-plugin-package.test.mjs tests/evercraft-fabric-runtime.test.mjs tests/openai-owned-fabric-promotion.test.mjs tests/fabric-local-runtime.test.mjs systemia/mcp/public-website-preview.test.mjs
+          node --test tests/evercraft-openai-plugin-package.test.mjs tests/evercraft-fabric-runtime.test.mjs tests/openai-owned-fabric-promotion.test.mjs tests/fabric-local-runtime.test.mjs systemia/mcp/public-website-preview.test.mjs tests/public-edge-canary-contract.test.mjs
           node scripts/validate-openai-plugin-submission.mjs
 
       - name: Build OpenAI upload ZIP
