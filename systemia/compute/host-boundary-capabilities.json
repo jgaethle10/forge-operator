@@ -26,7 +26,9 @@
       "raw_accessibility_tree_persisted": false,
       "freshness_seconds": 300,
       "notes": "First host-side capability contract. The ChromeOS companion may inspect only the Crostini port-forwarding accessibility surface and returns reduced evidence for the admitted ports.",
-      "adapter": "chromeos_crostini_port_forwarding"
+      "adapter": "chromeos_crostini_port_forwarding",
+      "admission_state": "candidate_field_gate",
+      "requires_field_certification": true
     }
   ]
 }
