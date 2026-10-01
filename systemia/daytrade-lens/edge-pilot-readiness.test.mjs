@@ -21,6 +21,16 @@ const common = {
   benchmarkLab: { reviews: [{ signal_key: candidate.signal_key, benchmark_status: "BENCHMARK_ROBUST_DIAGNOSTIC" }] },
   walkForwardLab: { reviews: [{ signal_key: candidate.signal_key, walk_forward_status: "WALK_FORWARD_ROBUST_DIAGNOSTIC" }] },
   executionTranslationLab: { reviews: [{ signal_key: candidate.signal_key, translation_status: "UNHEDGED_AND_PAIR_TRANSLATE_DIAGNOSTIC" }] },
+  quoteMicrostructureLab: {
+    feed: "sip",
+    quote_scope: "consolidated_sip_nbbo",
+    fallback_feed_used: false,
+    overlays: Array.from({ length: 20 }, (_, i) => ({
+      signal_key: candidate.signal_key,
+      label: "modeled_entry",
+      quote_available: i < 19,
+    })),
+  },
   forwardScores: [{
     cohort_id: "edgepaper:test",
     signal_key: candidate.signal_key,
@@ -66,6 +76,35 @@ const forwardPending = evaluatePilotReadiness({
 assert.equal(forwardPending.evidence_ready_count, 0);
 assert.ok(forwardPending.reviews[0].blockers.includes("individual_forward_paper_pass"));
 
+const iexOnly = evaluatePilotReadiness({
+  ...common,
+  quoteMicrostructureLab: {
+    ...common.quoteMicrostructureLab,
+    feed: "iex",
+    quote_scope: "iex_bbo_not_consolidated_nbbo",
+  },
+});
+assert.equal(iexOnly.evidence_ready_count, 0);
+assert.ok(iexOnly.reviews[0].blockers.includes("consolidated_sip_nbbo_scope"));
+assert.equal(
+  iexOnly.reviews[0].quote_execution_evidence.iex_bbo_is_not_consolidated_nbbo,
+  true
+);
+
+const lowQuoteCoverage = evaluatePilotReadiness({
+  ...common,
+  quoteMicrostructureLab: {
+    ...common.quoteMicrostructureLab,
+    overlays: Array.from({ length: 20 }, (_, i) => ({
+      signal_key: candidate.signal_key,
+      label: "modeled_entry",
+      quote_available: i < 10,
+    })),
+  },
+});
+assert.equal(lowQuoteCoverage.evidence_ready_count, 0);
+assert.ok(lowQuoteCoverage.reviews[0].blockers.includes("modeled_entry_quote_coverage"));
+
 const pairOnly = evaluatePilotReadiness({
   ...common,
   executionTranslationLab: {
@@ -87,6 +126,9 @@ console.log(JSON.stringify({
   correlated_cluster_pass_required:true,
   durable_state_required:true,
   pair_only_micro_pilot_blocked:true,
+  sip_nbbo_required_for_micro_pilot:true,
+  modeled_entry_quote_coverage_required:true,
+  iex_bbo_not_mislabeled_nbbo:true,
   capital_authority_zero:true,
   human_authorization_required:true,
   live_trade_authority:false,
