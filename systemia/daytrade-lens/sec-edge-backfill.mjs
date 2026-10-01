@@ -14,6 +14,7 @@ import { scoreForwardPaperClusters } from "./edge-forward-paper-cluster.mjs";
 import { loadCanonicalFrozenEnrollment } from "./edge-forward-paper-seed.mjs";
 import { ForwardPaperDurableState } from "./edge-forward-paper-durable.mjs";
 import { runEdgeStressLab } from "./edge-stress-lab.mjs";
+import { summarizeResearchSearchBurden } from "./edge-search-burden.mjs";
 import { runEdgeBreakerLab } from "./edge-breaker-lab.mjs";
 import { runTimingFragilityLab } from "./edge-timing-fragility.mjs";
 import { runOverlapFragilityLab } from "./edge-overlap-fragility.mjs";
@@ -75,6 +76,16 @@ async function main() {
 
   const reportFile = path.join(artifactDir, "sec-edge-research.json");
   fs.writeFileSync(reportFile, JSON.stringify(report, null, 2) + "\n");
+
+  const searchBurden = summarizeResearchSearchBurden(report);
+  const searchBurdenFile = path.join(
+    artifactDir,
+    "sec-edge-search-burden.json"
+  );
+  fs.writeFileSync(
+    searchBurdenFile,
+    JSON.stringify(searchBurden, null, 2) + "\n"
+  );
 
   const stressLab = runEdgeStressLab(report);
   const stressFile = path.join(artifactDir, "sec-edge-stress-lab.json");
@@ -421,6 +432,8 @@ async function main() {
     measurements: report.measurement_count || 0,
     signal_families: report.family_count || 0,
     research_candidates: report.research_candidate_count || 0,
+    search_burden_signal_families: searchBurden.signal_family_count || 0,
+    search_burden_candidate_share: searchBurden.candidate_share || 0,
     candidate_clusters: adversarial.candidate_cluster_count || 0,
     cluster_adversarial_summary_count:
       clusterAdversarialSummary.cluster_count || 0,
@@ -475,6 +488,7 @@ async function main() {
     files: {
       observations: observationFile,
       research: reportFile,
+      search_burden: searchBurdenFile,
       stress_lab: stressFile,
       breaker_lab: breakerFile,
       timing_fragility_lab: timingFile,
