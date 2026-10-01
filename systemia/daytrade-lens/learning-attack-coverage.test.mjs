@@ -36,11 +36,11 @@ const receipt={
 
 const result=reconcileLearningAttackCoverage(receipt);
 assert.equal(result.attack_count,3);
-assert.equal(result.counts.implemented,1);
+assert.equal(result.counts.implemented,2);
 assert.equal(result.counts.partial,1);
-assert.equal(result.counts.missing,1);
-assert.equal(result.frontier[0].test,"CSCV/PBO diagnostic where structurally valid");
-assert.equal(result.next_frontier.implementation_status,"missing");
+assert.equal(result.counts.missing,0);
+assert.equal(result.frontier[0].test,"decision-to-fill implementation shortfall");
+assert.equal(result.next_frontier.implementation_status,"partial");
 assert.equal(
   ATTACK_IMPLEMENTATION_MAP["AI versus matched non-AI filing control"].status,
   "implemented"
@@ -52,7 +52,8 @@ console.log(JSON.stringify({
   ok:true,
   schema:"evercraft.daytrade.learning-attack-coverage-proof.v1",
   implemented_partial_missing_accounted:true,
-  p0_missing_frontier_first:true,
+  closed_cscv_gap_removed_from_frontier:true,
+  partial_execution_frontier_exposed:true,
   explicit_evidence_mapping:true,
   frozen_protocol_mutation_forbidden:true,
   live_trade_authority:false
