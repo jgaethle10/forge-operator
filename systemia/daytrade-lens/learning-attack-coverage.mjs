@@ -71,12 +71,12 @@ export const ATTACK_IMPLEMENTATION_MAP=Object.freeze({
     gap:"The system now separates no-touch, touch-but-fill-indeterminate, marketable-touch-observed and unobserved states. Queue position and order-specific partial-fill probability remain unknown and are never inferred from a touch."
   },
   "signal-decay versus execution-cost decomposition":{
-    status:"partial",
+    status:"implemented",
     evidence:[
       "systemia/daytrade-lens/edge-timing-fragility.mjs",
-      "systemia/daytrade-lens/edge-stress-lab.mjs"
-    ],
-    gap:"Timing decay and cost stress are separate receipts; decomposition is not yet unified."
+      "systemia/daytrade-lens/edge-quote-microstructure.mjs",
+      "systemia/daytrade-lens/edge-signal-decay-cost-decomposition.mjs"
+    ]
   },
   "execution-speed grid":{
     status:"partial",
