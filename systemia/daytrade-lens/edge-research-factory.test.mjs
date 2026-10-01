@@ -17,9 +17,11 @@ function bars(start, count, drift) {
   const out = [];
   let price = 100;
   for (let i = 0; i < count; i++) {
+    const open = price;
     price *= 1 + drift;
     out.push({
       t: new Date(Date.parse(start) + i * 5 * 60_000).toISOString(),
+      o: open,
       c: price,
     });
   }
@@ -99,6 +101,10 @@ const measured = measureRockiesHypotheses([hypothesis], {
 });
 assert.equal(measured.length, 1);
 assert.equal(measured[0].lag_bars, FIVE_MINUTE_LAG_BARS["15m"]);
+assert.equal(measured[0].instrument_start_interval_time, "2026-09-01T13:30:00.000Z");
+assert.equal(measured[0].instrument_start_time, "2026-09-01T13:35:00.000Z");
+assert.equal(measured[0].instrument_end_interval_time, "2026-09-01T13:45:00.000Z");
+assert.equal(measured[0].instrument_end_time, "2026-09-01T13:50:00.000Z");
 assert.equal(measured[0].live_trade_authority, false);
 assert.ok(measured[0].alternate_benchmarks.QQQ);
 assert.ok(Number.isFinite(measured[0].alternate_benchmarks.QQQ.excess_return));
@@ -140,11 +146,11 @@ const multiSessionMeasured = measureRockiesHypotheses([hypothesis], {
 });
 assert.equal(
   multiSessionMeasured[0].execution_delay_stress.next_session_open.entry_policy,
-  "next_core_session_open"
+  "next_core_session_first_5m_close"
 );
 assert.equal(
   multiSessionMeasured[0].execution_delay_stress.next_session_open.instrument_start_time,
-  "2026-09-02T13:30:00.000Z"
+  "2026-09-02T13:35:00.000Z"
 );
 
 const overnightHypothesis = {
@@ -349,6 +355,8 @@ console.log(JSON.stringify({
   realized_volatility_metrics: true,
   overnight_gap_excluded_from_5m_volatility: true,
   opening_gap_metrics: true,
+  opening_gap_uses_bar_open_not_close: true,
+  bar_close_availability_timestamped_at_interval_end: true,
   market_phase_tagging: true,
   path_excursion_metrics: true,
   source_diversity_required: true,
