@@ -85,6 +85,16 @@ test('OpenAI account-side packet keeps public-directory and owned-route truth ga
   }
 });
 
+test('v1.1 packet preserves the actual active provider review state',()=>{
+  const submission=readJson('openai-submission.json');
+  assert.equal(submission.current_provider_review?.plugin_name,'Evercraft');
+  assert.equal(submission.current_provider_review?.version,'1.0.0');
+  assert.equal(submission.current_provider_review?.review_status,'in_review');
+  assert.equal(submission.current_provider_review?.publication_status,'not_published');
+  assert.equal(submission.current_provider_review?.sibling_record?.plugin_name,'Evercraft Fabric');
+  assert.equal(submission.current_provider_review?.sibling_record?.review_status,'not_submitted');
+});
+
 test('submission denial cases cover authorization, private networks, and commerce or mutation',()=>{
   const submission=readJson('openai-submission.json');
   const negativeText=JSON.stringify(submission.negative_tests).toLowerCase();
