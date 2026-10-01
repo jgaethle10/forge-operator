@@ -1,0 +1,91 @@
+{
+  "schema": "evercraft.evermail.mailbox-intent.v1",
+  "tenant": "rivet",
+  "service_id": "rivet-mail",
+  "logical_uri": "evercraft://mail/rivet",
+  "public_domain": "rivet.systemiacommandcenters.com",
+  "public_domain_state": "candidate_no_purchase_bridge_until_standalone_rivet_root_is_selected",
+  "provider_policy": {
+    "preferred": "evercraft-owned",
+    "fallback": "none",
+    "third_party_mail_relay": false,
+    "new_spend_allowed": false
+  },
+  "mailboxes": [
+    {
+      "local_part": "invoices",
+      "purpose": "customer invoices and invoice replies",
+      "display_name": "RIVET",
+      "send": true,
+      "receive": true
+    },
+    {
+      "local_part": "billing",
+      "purpose": "billing and accounts receivable",
+      "display_name": "RIVET Billing",
+      "send": true,
+      "receive": true
+    },
+    {
+      "local_part": "hello",
+      "purpose": "general customer communication",
+      "display_name": "RIVET",
+      "send": true,
+      "receive": true
+    },
+    {
+      "local_part": "ops",
+      "purpose": "operations and fulfillment",
+      "display_name": "RIVET Operations",
+      "send": true,
+      "receive": true
+    },
+    {
+      "local_part": "postmaster",
+      "purpose": "required mail administration role",
+      "display_name": "RIVET Postmaster",
+      "send": false,
+      "receive": true
+    },
+    {
+      "local_part": "abuse",
+      "purpose": "required abuse role",
+      "display_name": "RIVET Abuse",
+      "send": false,
+      "receive": true
+    },
+    {
+      "local_part": "dmarc",
+      "purpose": "DMARC aggregate and forensic reports",
+      "display_name": "RIVET DMARC",
+      "send": false,
+      "receive": true
+    },
+    {
+      "local_part": "tlsrpt",
+      "purpose": "SMTP TLS reporting",
+      "display_name": "RIVET TLS Reporting",
+      "send": false,
+      "receive": true
+    }
+  ],
+  "signing": {
+    "dkim_required": true,
+    "dkim_selector": "evercraft1",
+    "spf_required": true,
+    "dmarc_required": true,
+    "mta_sts_required": true,
+    "tls_reporting_required": true
+  },
+  "promotion": {
+    "live_send_requires_evermail_public_canary_green": true,
+    "live_receive_requires_public_mx_green": true,
+    "mailbox_auth_receipt_required": true,
+    "backup_restore_receipt_required_before_staff_mailbox_promotion": true
+  },
+  "notes": [
+    "Permanent identity is evercraft://mail/rivet; the public domain is a compatibility mapping.",
+    "Do not claim these mailboxes are publicly live until the Evermail canary proves MX, SPF, DKIM, DMARC, reverse DNS, SMTP STARTTLS and trusted TLS.",
+    "No secrets, DKIM private keys, mailbox passwords or private topology belong in this manifest."
+  ]
+}
