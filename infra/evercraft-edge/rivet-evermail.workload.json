@@ -10,6 +10,18 @@
     "preferred": "evercraft-owned",
     "fallback": "none"
   },
+  "public_identity": {
+    "brand": "RIVET",
+    "domain_source": "env:RIVET_PUBLIC_MAIL_DOMAIN",
+    "standalone_domain_required": true,
+    "parent_brand_leakage_forbidden": true,
+    "fallback_domain": null
+  },
+  "environment": {
+    "promotion_required": [
+      "RIVET_PUBLIC_MAIL_DOMAIN"
+    ]
+  },
   "placement": {
     "node_class": "physical_linux",
     "attestation_required": true,
@@ -43,6 +55,8 @@
     "third_party_relay_allowed": false
   },
   "promotion_gates": [
+    "rivet_public_domain_selected",
+    "rivet_public_domain_brand_isolation_verified",
     "field_attestation_verified",
     "mail_runtime_health_green",
     "public_domain_delegation_verified",
