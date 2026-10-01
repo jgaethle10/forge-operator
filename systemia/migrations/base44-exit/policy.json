@@ -86,7 +86,8 @@
     "estate_coverage_ledger",
     "route_registry",
     "active_route_overlay",
-    "integration_edge"
+    "integration_edge",
+    "object_delivery"
   ],
   "landing_implementations": {
     "app_fabric_compatibility": {
@@ -282,6 +283,15 @@
         "tests/fabric-local-runtime.test.mjs"
       ],
       "boundary": "Owned Fabric discovery is read-only, strips Base44 handoffs from native runtime catalogs and exposes no payment or external-action authority. Product-specific machine surface parity remains required before public route activation."
+    },
+    "object_delivery": {
+      "state": "owned_baseline_proved_local",
+      "source_refs": [
+        "systemia/object-store/delivery-gateway.mjs",
+        "systemia/audit-center/export-runtime.mjs",
+        "systemia/audit-center/export-runtime.proof.mjs"
+      ],
+      "boundary": "Object bytes remain in Evercraft Object Store and are exposed only through short-lived HMAC-signed read URLs. Production origin must be owned HTTPS; raw filesystem paths and permanent public blob URLs are not exposed."
     }
   }
 }
