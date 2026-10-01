@@ -44,9 +44,9 @@ candidate
   -> implementation
   -> synthetic proof
   -> authorized field proof
-  -> admitted registry entry
+  -> node-local admission
   -> monitored production capability
-  -> revoke / supersede
+  -> revoke / expire / supersede
 ```
 
 A capability is not available to an LLM merely because code exists for it. The registry records candidates as well as admitted capabilities, and generic dispatch is allowed only when the entry's admission state is `admitted`. A candidate can still use a dedicated field-test path to collect the evidence required for promotion.
@@ -55,7 +55,7 @@ A capability is not available to an LLM merely because code exists for it. The r
 
 `remote_host_capabilities` lists registered capabilities, their admission state, and their authority/privacy properties.
 
-`remote_host_capability_check` accepts a capability ID and routes only to a registered adapter. Unregistered capability IDs and unavailable adapters fail closed.
+`remote_host_capability_check` accepts a capability ID and routes only to a registered adapter. Candidate capabilities additionally need a valid node-local field admission before generic dispatch. That admission is bound to the exact host companion install and expires; unregistered capability IDs, stale admissions and unavailable adapters fail closed.
 
 Specialized compatibility tools may exist for important capabilities, but the generic typed capability surface is the long-term API.
 
