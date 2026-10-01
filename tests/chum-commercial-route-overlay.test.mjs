@@ -33,10 +33,14 @@ function prepareRoot(){
 try{
   prepareRoot();
   delete process.env.EVERCRAFT_ACTIVE_ROUTE_OVERLAY;
-  const legacy=buildCommercialDiscoveryMesh({root});
-  assert.equal(legacy.machine_gateway_authority,'legacy_fallback');
+  const fallback=buildCommercialDiscoveryMesh({root});
+  assert.equal(fallback.machine_gateway_authority,'static_capability_fallback');
   let record=JSON.parse(fs.readFileSync(path.join(root,'public/chum/commercial/proof-offer-v1/index.json'),'utf8'));
-  assert.match(record.human_review_url,/base44\.app/);
+  assert.equal(
+    record.human_review_url,
+    'https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/proof-offer-v1/index.html'
+  );
+  assert.equal(record.human_review_url.includes('base44.app'),false);
 
   const overlay=buildActiveRouteOverlay([{
     state:'active',
@@ -66,7 +70,7 @@ try{
   console.log(JSON.stringify({
     schema:'evercraft.chum.commercial-route-overlay-proof.v1',
     status:'pass',
-    legacy_preserved_before_active_cutover:true,
+    static_capability_fallback_before_active_cutover:true,
     owned_gateway_selected_after_active_cutover:true,
     generated_review_urls_follow_overlay:true
   }));
