@@ -146,12 +146,16 @@ jobs:
         if: always()
         run: node systemia/organism/estate-convergence.mjs
 
+      - name: Run owned-edge LLM product runtime canary
+        if: always()
+        run: node systemia/llm-product/runtime-canary.mjs --emit
+
       - name: Enforce portfolio LLM product registry and release gate
         if: always()
         run: |
           node systemia/llm-product/build-registry.mjs --emit --check
           node systemia/llm-product/conversion-router.mjs --emit
-          node --test systemia/llm-product/build-registry.test.mjs systemia/llm-product/conversion-router.test.mjs systemia/daytrade-lens/mcp.test.mjs systemia/media-studio/mcp.test.mjs
+          node --test systemia/llm-product/build-registry.test.mjs systemia/llm-product/conversion-router.test.mjs systemia/daytrade-lens/mcp.test.mjs systemia/media-studio/mcp.test.mjs systemia/llm-product/runtime-canary.test.mjs
 
       - name: Prove capability-promotion policy
         if: always()
@@ -201,6 +205,7 @@ jobs:
             artifacts/llm-product/portfolio-matrix.json
             artifacts/llm-product/conversion-debt.json
             artifacts/llm-product/release-gate.json
+            artifacts/llm-product/runtime-canary.json
             artifacts/llm-product/conversion-plan.json
             artifacts/llm-product/mission-snapshot.json
           if-no-files-found: error
