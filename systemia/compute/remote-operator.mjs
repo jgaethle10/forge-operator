@@ -272,9 +272,9 @@ export class EvercraftRemoteOperator {
     };
   }
 
-  async hostBoundaryCheck({ wait_ms = 0 } = {}) {
+  async hostBoundaryCheck({ wait_ms = 35_000 } = {}) {
     const requested = requestChromeOsHostBoundaryCheck({ stateRoot: this.hostBoundaryStateRoot });
-    const waitMs = boundedInt(wait_ms, 0, 0, 45_000);
+    const waitMs = boundedInt(wait_ms, 35_000, 0, 45_000);
     const deadline = Date.now() + waitMs;
     let check = readChromeOsHostBoundaryCheck({ stateRoot: this.hostBoundaryStateRoot });
 
