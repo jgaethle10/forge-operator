@@ -31,6 +31,14 @@ test('OpenAI verification token helper is secret-prompted and validated',()=>{
   assert.match(script,/read -r -s -p "Paste OpenAI domain verification token/);
   assert.match(script,/\[A-Za-z0-9_-\]\{16,512\}/);
   assert.match(script,/chmod 0600/);
+  assert.match(script,/awk -F= '\$1 != "EVERCRAFT_OPENAI_CHALLENGE_TOKEN"/);
+});
+
+test('owned edge wires public nonce attestation to the local NodeSeed identity without exposing secrets',()=>{
+  assert.match(script,/EVERCRAFT_EDGE_NODE_RECEIPT=\$NODE_RECEIPT/);
+  assert.match(script,/EVERCRAFT_EDGE_ALLOCATOR_TOKEN_FILE=\$ALLOCATOR_TOKEN_FILE/);
+  assert.match(script,/\.local\/state\/evercraft\/organism\/compute\/nodeseed-receipt\.json/);
+  assert.match(script,/\.local\/state\/evercraft\/organism\/\.secrets\/allocator-token/);
 });
 
 
