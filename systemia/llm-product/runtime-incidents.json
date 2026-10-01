@@ -1,0 +1,18 @@
+{
+  "schema": "evercraft.llm-product.runtime-incidents.v1",
+  "rule": "Open incidents are evidence-backed conversion blockers. Closing an incident requires a resolution receipt; changing state does not rewrite the original observation.",
+  "incidents": [
+    {
+      "incident_id": "fabric-owned-mcp-sse-404-2026-10-01",
+      "stable_id": "platform:evercraft-fabric",
+      "state": "open",
+      "severity": "P0",
+      "observed_on": "2026-10-01",
+      "observation": "A live ChatGPT-side Evercraft Fabric connector invocation failed before tool execution with an MCP SSE probe 404.",
+      "blocker_code": "external_runtime_canary_failed:mcp_sse_probe_404",
+      "issue_url": "https://github.com/jgaethle10/forge-operator/issues/767",
+      "evidence_state": "observed",
+      "resolution_evidence": []
+    }
+  ]
+}
