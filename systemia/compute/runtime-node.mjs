@@ -26,6 +26,7 @@ import { startEvercraftHomeServer } from '../evercraft-home/server.mjs';
 import { validatePublicEdgeAdmission } from '../network/public-edge-tls.mjs';
 import { transcriptionCapabilityStatus } from '../forensiscope/transcription-engine.mjs';
 import { EvercraftRemoteOperator } from './remote-operator.mjs';
+import { detectHardwareCapacity } from './hardware-inventory.mjs';
 
 const CODE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 
@@ -396,6 +397,7 @@ export async function startEvercraftComputeNode({
     ffmpeg: executableAvailable('ffmpeg'),
     ffprobe: executableAvailable('ffprobe')
   };
+  const hardwareCapacity = detectHardwareCapacity({ root: allowedRoot });
   const publicEdgeCapability = (() => {
     const baseDomain = String(process.env.EVERCRAFT_PUBLIC_EDGE_BASE_DOMAIN || '').trim();
     const tlsKeyPath = String(process.env.EVERCRAFT_PUBLIC_EDGE_TLS_KEY_PATH || '').trim();
@@ -925,8 +927,14 @@ export async function startEvercraftComputeNode({
           device_fingerprint: deviceIdentity?.fingerprint || null,
           attestation_supported: Boolean(deviceIdentity),
           capacity_hint: {
-            cpu_units: Math.max(1, os.cpus()?.length || 1),
-            memory_mb: Math.max(64, Math.floor(os.totalmem() / 1024 / 1024)),
+            cpu_units: hardwareCapacity.cpu_units,
+            memory_mb: hardwareCapacity.memory_mb,
+            storage_gb: hardwareCapacity.storage_gb,
+            gpu_units: hardwareCapacity.gpu_units,
+            gpu_count: hardwareCapacity.gpu_units,
+            vram_mb: hardwareCapacity.vram_mb,
+            gpu_models: hardwareCapacity.gpu_models,
+            hardware_evidence: hardwareCapacity.evidence,
             executables: executableCapabilities,
             services: serviceCapabilities
           },
