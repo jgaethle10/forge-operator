@@ -251,7 +251,11 @@ async function openSettingsTree() {
     }
     for (let attempt = 0; attempt < 8; attempt += 1) {
       const desktopRoot = await getDesktop();
-      const located = locatePortForwardingSurface(desktopRoot);
+      const located = locatePortForwardingSurface(
+        desktopRoot,
+        undefined,
+        { allowStructuralFallback: false },
+      );
       if (located.ok && located.root) {
         const parsed = extractPortForwardingState(
           located.root,
@@ -270,6 +274,8 @@ async function openSettingsTree() {
               reason: located.reason,
               candidate_count: located.candidate_count,
               selected_node_count: located.selected_node_count,
+              full_desktop_text_scanned:
+                located.full_desktop_text_scanned === true,
             },
           };
         }
@@ -398,6 +404,8 @@ async function reportObservation(requestId = null) {
         reason: String(scan.surface_isolation.reason || '').slice(0, 64),
         candidate_count: Number(scan.surface_isolation.candidate_count || 0),
         selected_node_count: Number(scan.surface_isolation.selected_node_count || 0),
+        full_desktop_text_scanned:
+          scan.surface_isolation.full_desktop_text_scanned === true,
       } : null,
       error,
     },
