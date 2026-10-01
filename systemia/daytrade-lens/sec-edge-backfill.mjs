@@ -22,6 +22,7 @@ import { runRandomPlaceboLab } from "./edge-random-placebo.mjs";
 import { runLabelPermutationLab } from "./edge-label-permutation.mjs";
 import { runBenchmarkFragilityLab } from "./edge-benchmark-fragility.mjs";
 import { runRegimeFragilityLab } from "./edge-regime-fragility.mjs";
+import { runEventContaminationLab } from "./edge-event-contamination.mjs";
 import { runHorizonCoherenceLab } from "./edge-horizon-coherence.mjs";
 import { runWalkForwardLab } from "./edge-walk-forward.mjs";
 import { runExecutionTranslationLab } from "./edge-execution-translation.mjs";
@@ -124,6 +125,18 @@ async function main() {
   });
   const benchmarkFile = path.join(artifactDir, "sec-edge-benchmark-fragility.json");
   fs.writeFileSync(benchmarkFile, JSON.stringify(benchmarkLab, null, 2) + "\n");
+
+  const eventContaminationLab = runEventContaminationLab(report, {
+    transaction_cost_bps: Number(process.env.EDGE_LAB_TRANSACTION_COST_BPS || 5),
+  });
+  const eventContaminationFile = path.join(
+    artifactDir,
+    "sec-edge-event-contamination.json"
+  );
+  fs.writeFileSync(
+    eventContaminationFile,
+    JSON.stringify(eventContaminationLab, null, 2) + "\n"
+  );
 
   const horizonCoherenceLab = runHorizonCoherenceLab(report, {
     transaction_cost_bps: Number(process.env.EDGE_LAB_TRANSACTION_COST_BPS || 5),
@@ -376,6 +389,8 @@ async function main() {
     label_permutation_bonferroni_separated_diagnostics:
       labelPermutationLab.bonferroni_separated_count || 0,
     regime_fragility_status_counts: regimeFragilityLab.status_counts || {},
+    event_contamination_status_counts:
+      eventContaminationLab.status_counts || {},
     benchmark_fragility_status_counts: benchmarkLab.status_counts || {},
     horizon_coherent_diagnostics: horizonCoherenceLab.coherent_count || 0,
     walk_forward_robust_diagnostics: walkForwardLab.walk_forward_robust_count || 0,
@@ -401,6 +416,7 @@ async function main() {
       random_placebo_lab: randomPlaceboFile,
       label_permutation_lab: labelPermutationFile,
       regime_fragility_lab: regimeFragilityFile,
+      event_contamination_lab: eventContaminationFile,
       benchmark_fragility_lab: benchmarkFile,
       horizon_coherence_lab: horizonCoherenceFile,
       walk_forward_lab: walkForwardFile,
