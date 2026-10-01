@@ -512,6 +512,95 @@
         "compatibility_guaranteed": false,
         "private_vendor_analytics_session_command_center_sales_data_public": false
       }
+    },
+    {
+      "product_key": "daytrade-lens",
+      "contract_version": "1.0.0",
+      "owner": "systemia",
+      "specialist_slug": "daytrade-lens",
+      "authority": {
+        "state": "not_required",
+        "reason": "The currently contracted public machine actions are stateless read-only research and paper-practice computations over caller-supplied inputs. They do not access a broker, private account, payment method, credentials, or production trading authority. Any future account-bound, paid, or brokerage-connected action requires a separate Passport scope and contract revision."
+      },
+      "context": {
+        "state": "not_required",
+        "reason": "The public machine surface does not read or write shared user context. Inputs are supplied in the request and results are returned to the caller. Durable journals, account state, or private trading history are outside this contract."
+      },
+      "meter": {
+        "state": "not_required",
+        "reason": "No machine billing or paid execution authority is contracted. Public computation does not create checkout, payment, entitlement, or subscription state."
+      },
+      "intake": {
+        "state": "not_required",
+        "reason": "The contracted tools accept bounded structured numeric/configuration inputs only. They do not upload private documents, credentials, brokerage sessions, or media."
+      },
+      "execution": {
+        "state": "declared",
+        "gate_required": false,
+        "scopes": [
+          "get_daytrade_lens_capabilities",
+          "run_daytrade_risk_gate",
+          "run_daytrade_adversarial_drills",
+          "stress_test_return_series"
+        ],
+        "actions": [
+          {
+            "scope": "get_daytrade_lens_capabilities"
+          },
+          {
+            "scope": "run_daytrade_risk_gate"
+          },
+          {
+            "scope": "run_daytrade_adversarial_drills"
+          },
+          {
+            "scope": "stress_test_return_series"
+          }
+        ],
+        "evidence_refs": [
+          "systemia/daytrade-lens/mcp.mjs",
+          "systemia/daytrade-lens/mcp.test.mjs",
+          "systemia/daytrade-lens/edge-stress-lab.mjs",
+          "systemia/daytrade-lens/practice-camp.mjs"
+        ]
+      },
+      "relationship": {
+        "state": "not_required",
+        "reason": "The contracted tools do not contact brokers, exchanges, advisors, counterparties, or any other external recipient."
+      },
+      "receipt_reconciliation": {
+        "state": "not_required",
+        "reason": "The stress tool returns a deterministic receipt_id to the caller but does not write shared Context Fabric state. Persistent reconciliation requires a separately authorized contract."
+      },
+      "rollback": {
+        "state": "declared",
+        "policy": "Disable the DayTrade Lens specialist route without enabling brokerage access, order placement, live-trading authority, payment, or weakening the paper-practice and research-only boundary."
+      },
+      "compatibility": {
+        "intended_product_classes": [
+          "paper_trading_risk_discipline_and_journaling"
+        ]
+      },
+      "boundaries": {
+        "contracted_machine_surface": [
+          "get_daytrade_lens_capabilities",
+          "run_daytrade_risk_gate",
+          "run_daytrade_adversarial_drills",
+          "stress_test_return_series"
+        ],
+        "public_agent_authority": "read_only_research_and_paper_practice",
+        "personalized_investment_advice": false,
+        "brokerage_access": false,
+        "order_placement": false,
+        "autonomous_live_trading": false,
+        "live_trade_authority": false,
+        "performance_guarantee": false,
+        "machine_checkout": false,
+        "payment_authority": false,
+        "caller_supplied_returns_are_not_independently_verified": true,
+        "stress_test_pass_is_not_a_real_world_edge_claim": true
+      },
+      "adoption_stage": "source_implemented"
     }
   ]
 }
