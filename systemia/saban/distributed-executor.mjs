@@ -256,7 +256,7 @@ export async function runPoolWithAcquisition({
       external_spend_requires_human_approval:true,
     };
 
-    const marketFactory=buildComputeMarketAdapters({acquisition});
+    const marketFactory=await buildComputeMarketAdapters({acquisition});
     const localCandidate=buildLocalHostCandidate({acquisition});
     const candidates=[
       ...(acquisition.candidates||[]),
