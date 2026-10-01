@@ -383,6 +383,7 @@ export function compileRadarEdition(inputState, {
     )
     .slice(0, Math.max(1, Math.min(25, Number(max_signals) || 8)));
 
+  const candidateSignalIds = new Set(candidates.map((signal) => signal.signal_id));
   const streamBySignalId = new Map(
     currentSignals.map((signal) => [signal.signal_id, signal])
   );
@@ -391,6 +392,7 @@ export function compileRadarEdition(inputState, {
       previous,
       current: streamBySignalId.get(previous.signal_id) || null
     }))
+    .filter(({ previous }) => !candidateSignalIds.has(previous.signal_id))
     .filter(({ current }) =>
       !current ||
       current.truth_state === 'CLOSED' ||
