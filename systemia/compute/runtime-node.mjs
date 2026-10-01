@@ -129,7 +129,10 @@ function bridgeServiceOrigin(entry) {
   if (entry?.workload_class === 'systemia.evercraft-web-browser.v1') {
     return String(entry?.runtime?.localPublicUrl || '');
   }
-  if (entry?.workload_class === 'systemia.specialist-handoff-mcp.v1') {
+  if (
+    entry?.workload_class === 'systemia.specialist-handoff-mcp.v1' ||
+    entry?.workload_class === 'systemia.fabric-local-mcp.v1'
+  ) {
     return String(entry?.runtime?.url || '');
   }
   return '';
