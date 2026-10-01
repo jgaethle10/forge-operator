@@ -102,6 +102,19 @@ test('Saban gateway relays exactly-once work to a real native MicroSeed agent',a
       bridgeAdapters:{native_agent:nativeAdapter},
     });
 
+    const conformanceResponse=await fetch(gateway.url+'/v1/conformance',{
+      method:'POST',
+      headers:{
+        authorization:'Bearer '+gatewayToken,
+        'content-type':'application/json',
+      },
+      body:JSON.stringify({device_id:'phone-e2e-01'}),
+    });
+    assert.equal(conformanceResponse.status,200);
+    const conformanceBody=await conformanceResponse.json();
+    assert.deepEqual(conformanceBody.verified_workloads,['systemia.content-hash.v1']);
+    const executionsAfterConformance=executionTelemetryCalls;
+
     const requestBody={
       telemetry:{
         primary_function_busy:false,
@@ -142,15 +155,15 @@ test('Saban gateway relays exactly-once work to a real native MicroSeed agent',a
     assert.equal(firstBody.result.remote_arbitrary_code_execution,false);
     assert.equal(firstBody.result.credential_exposed,false);
     assert.match(firstBody.result.remote_receipt_hash,/^sha256:/);
-    assert.equal(telemetryCalls,2);
-    assert.equal(executionTelemetryCalls,1);
+    assert.ok(telemetryCalls>=2);
+    assert.equal(executionTelemetryCalls,executionsAfterConformance+1);
 
     const second=await call();
     assert.equal(second.status,200);
     const secondBody=await second.json();
     assert.equal(secondBody.deduplicated,true);
-    assert.equal(telemetryCalls,3);
-    assert.equal(executionTelemetryCalls,1);
+    assert.ok(telemetryCalls>=3);
+    assert.equal(executionTelemetryCalls,executionsAfterConformance+1);
     assert.equal(secondBody.receipt_hash,firstBody.receipt_hash);
   }finally{
     if(gateway) await gateway.close();
