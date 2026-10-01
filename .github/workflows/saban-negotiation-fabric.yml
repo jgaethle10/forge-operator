@@ -6,6 +6,8 @@ on:
       - 'systemia/saban/compute-negotiation.mjs'
       - 'systemia/saban/voluntary-exchange.mjs'
       - 'systemia/saban/voluntary-exchange.proof.mjs'
+      - 'systemia/saban/distributed-executor.mjs'
+      - 'systemia/saban/distributed-voluntary-acquisition.proof.mjs'
       - 'systemia/saban/voluntary-worker/**'
       - 'systemia/saban/markets/evercraft-voluntary.mjs'
       - 'systemia/saban/markets/golem.mjs'
@@ -19,6 +21,8 @@ on:
       - 'systemia/saban/compute-negotiation.mjs'
       - 'systemia/saban/voluntary-exchange.mjs'
       - 'systemia/saban/voluntary-exchange.proof.mjs'
+      - 'systemia/saban/distributed-executor.mjs'
+      - 'systemia/saban/distributed-voluntary-acquisition.proof.mjs'
       - 'systemia/saban/voluntary-worker/**'
       - 'systemia/saban/markets/evercraft-voluntary.mjs'
       - 'systemia/saban/markets/golem.mjs'
@@ -44,6 +48,8 @@ jobs:
         run: node systemia/saban/voluntary-exchange.proof.mjs
       - name: Prove browser-compatible voluntary worker
         run: node systemia/saban/voluntary-worker/browser-worker.proof.mjs
+      - name: Prove automatic Saban acquisition on voluntary capacity
+        run: node systemia/saban/distributed-voluntary-acquisition.proof.mjs
 
   golem-contract:
     runs-on: ubuntu-latest
