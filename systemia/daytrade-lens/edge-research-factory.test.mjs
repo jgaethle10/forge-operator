@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import {
   FIVE_MINUTE_LAG_BARS,
   EXECUTION_DELAY_STRESS_BARS,
+  ALTERNATE_BENCHMARKS_BY_INSTRUMENT,
   buildMatchedPlaceboHypotheses,
   measureRockiesHypotheses,
   evaluateEdgeFamilies,
@@ -74,10 +75,14 @@ assert.equal(
 const measured = measureRockiesHypotheses([hypothesis], {
   XLU: bars("2026-09-01T13:30:00Z", 10, 0.002),
   SPY: bars("2026-09-01T13:30:00Z", 10, 0.0005),
+  QQQ: bars("2026-09-01T13:30:00Z", 10, 0.001),
 });
 assert.equal(measured.length, 1);
 assert.equal(measured[0].lag_bars, FIVE_MINUTE_LAG_BARS["15m"]);
 assert.equal(measured[0].live_trade_authority, false);
+assert.ok(measured[0].alternate_benchmarks.QQQ);
+assert.ok(Number.isFinite(measured[0].alternate_benchmarks.QQQ.excess_return));
+assert.deepEqual(ALTERNATE_BENCHMARKS_BY_INSTRUMENT.SOXX, ["QQQ", "SMH"]);
 assert.deepEqual(
   Object.keys(measured[0].execution_delay_stress).sort(),
   Object.keys(EXECUTION_DELAY_STRESS_BARS).sort()
