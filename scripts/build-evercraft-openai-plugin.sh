@@ -69,7 +69,7 @@ with zipfile.ZipFile(archive) as zf:
     compatibility=json.loads(zf.read('.codex-plugin/plugin.json'))
     mcp=json.loads(zf.read('mcp.json'))
     iface=plugin['extensions']['com.openai']['interface']
-    assert re.fullmatch(r'\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?', plugin['version'])
+    assert re.fullmatch(r'\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?', plugin['version'])
     assert compatibility['version']==plugin['version']
     assert iface['category']=='Business & Operations'
     assert iface['logo']=='./assets/evercraft-icon.png'
