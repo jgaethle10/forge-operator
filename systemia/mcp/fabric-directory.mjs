@@ -122,6 +122,8 @@ export function loadFabricCatalogFromRepository({catalogPath=''}={}){
       ].slice(0,32),
       state:clean(item.machine_state||item.commercial_state||'available',80),
       category:clean(item.category||'',120)||null,
+      start_url_state:clean(item.start_url_state||'',120)||null,
+      preferred_agent_route:clean(item.preferred_agent_route||'',120)||null,
       connections,
     };
   });
@@ -153,6 +155,8 @@ export function normalizeFabricCatalog(input=[]){
       keywords,
       state:clean(item.state||'available',80),
       category:clean(item.category||'',120)||null,
+      start_url_state:clean(item.start_url_state||'',120)||null,
+      preferred_agent_route:clean(item.preferred_agent_route||'',120)||null,
       connections,
     };
   });
