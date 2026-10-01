@@ -102,6 +102,10 @@ assert.equal(
   result.lease.execution_endpoint,
   'https://broker.example/nodes/chromebook-real-bridge-proof'
 );
+assert.equal(
+  result.lease.capacity_endpoint,
+  'https://broker.example/nodes/chromebook-real-bridge-proof'
+);
 assert.equal(result.lease.transport,'evercraft-nodeseed');
 assert.equal(
   result.lease.runtime_authority.allocator_token,
