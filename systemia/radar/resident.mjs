@@ -9,6 +9,14 @@ import {
 } from './core.mjs';
 import { buildRadarSocialDraft, radarEditionToEditorialPacket } from './journal-bridge.mjs';
 import { emptySourceHealthState, publicSourceHealthProjection, updateSourceHealth } from './source-health.mjs';
+import {
+  buildRadarRelease,
+  listRadarCorrections,
+  listRadarReleases,
+  persistRadarRelease,
+  readRadarRelease,
+  reconcileRadarCorrections
+} from './release-controller.mjs';
 
 function ensureDir(dir) {
   fs.mkdirSync(dir, { recursive: true, mode: 0o700 });
@@ -42,6 +50,7 @@ export function createRadarResident({
   materialityThreshold = 0.58,
   maxSignals = 8,
   journalUrl = '',
+  autoReleaseOwned = false,
   clock = () => new Date()
 } = {}) {
   const stateFile = path.join(stateDir, 'state.json');
@@ -53,6 +62,7 @@ export function createRadarResident({
   const receiptsFile = path.join(stateDir, 'receipts.jsonl');
   const sourceHealthFile = path.join(stateDir, 'source-health.json');
   const publicSourceHealthFile = path.join(stateDir, 'public-source-health.json');
+  const releaseCandidateFile = path.join(stateDir, 'release-candidate.json');
 
   let state = readJson(stateFile, emptyRadarState());
   let sourceHealthState = readJson(sourceHealthFile, emptySourceHealthState());
@@ -60,6 +70,7 @@ export function createRadarResident({
   let running = false;
   let lastRun = null;
   let lastError = null;
+  let lastReleaseDecision = readJson(releaseCandidateFile, null);
 
   async function runOnce({ externalObservations = [] } = {}) {
     if (running) {
@@ -114,6 +125,27 @@ export function createRadarResident({
         journal_url: journalUrl
       });
 
+      const correctionRun = reconcileRadarCorrections({
+        stateDir,
+        radarState: state,
+        currentEdition: edition,
+        at: startedAt
+      });
+      const releaseDecision = buildRadarRelease({
+        edition,
+        editorialPacket: journalPacket,
+        socialDrafts: [linkedinDraft, facebookDraft]
+      });
+      lastReleaseDecision = releaseDecision;
+      let ownedReleaseReceipt = null;
+      if (releaseDecision.status === 'ready' && autoReleaseOwned) {
+        ownedReleaseReceipt = persistRadarRelease({
+          stateDir,
+          release: releaseDecision.release,
+          at: startedAt
+        });
+      }
+
       atomicWrite(stateFile, state);
       atomicWrite(latestFile, edition);
       atomicWrite(publicFile, publicEdition);
@@ -122,6 +154,7 @@ export function createRadarResident({
       atomicWrite(facebookDraftFile, facebookDraft);
       atomicWrite(sourceHealthFile, sourceHealthState);
       atomicWrite(publicSourceHealthFile, publicSourceHealthProjection(sourceHealthState));
+      atomicWrite(releaseCandidateFile, releaseDecision);
 
       const receipt = {
         schema: 'evercraft.systemia-radar.run-receipt.v1',
@@ -138,6 +171,9 @@ export function createRadarResident({
         propagation_candidate_count: edition.propagation_candidates?.length || 0,
         rolled_off_count: edition.rolled_off_count || 0,
         source_health: sourceHealthUpdate.summary,
+        release_gate_status: releaseDecision.status,
+        owned_release: ownedReleaseReceipt,
+        correction_run: correctionRun,
         publication_authority: false
       };
       appendJsonl(receiptsFile, receipt);
@@ -200,6 +236,9 @@ export function createRadarResident({
       latest_signal_count: state.last_edition?.signal_count || 0,
       propagation_candidate_count: state.last_edition?.propagation_candidates?.length || 0,
       source_health: publicSourceHealthProjection(sourceHealthState),
+      release_gate_status: lastReleaseDecision?.status || 'not_evaluated',
+      owned_release_count: listRadarReleases(stateDir).releases?.length || 0,
+      correction_count: listRadarCorrections(stateDir).corrections?.length || 0,
       last_run: lastRun,
       last_error: lastError,
       publication_authority: false
@@ -218,6 +257,35 @@ export function createRadarResident({
     return publicSourceHealthProjection(sourceHealthState);
   }
 
+  function releaseLatestOwned() {
+    if (!lastReleaseDecision || lastReleaseDecision.status !== 'ready' || !lastReleaseDecision.release) {
+      return {
+        schema: 'evercraft.systemia-radar.release-write.v1',
+        status: 'hold',
+        reason: 'latest_release_candidate_not_ready',
+        gate: lastReleaseDecision?.gate || null
+      };
+    }
+    return persistRadarRelease({
+      stateDir,
+      release: lastReleaseDecision.release,
+      at: clock().toISOString()
+    });
+  }
+
+  function releaseState() {
+    const index = listRadarReleases(stateDir);
+    const latestRow = index.releases?.[0] || null;
+    return {
+      schema: 'evercraft.systemia-radar.release-state.v1',
+      auto_release_owned: Boolean(autoReleaseOwned),
+      latest_candidate: lastReleaseDecision,
+      index,
+      latest_release: latestRow ? readRadarRelease(stateDir, latestRow.slug) : null,
+      corrections: listRadarCorrections(stateDir)
+    };
+  }
+
   return {
     runOnce,
     ingest,
@@ -226,6 +294,8 @@ export function createRadarResident({
     health,
     latest,
     internalLatest,
-    sourceHealth
+    sourceHealth,
+    releaseLatestOwned,
+    releaseState
   };
 }
