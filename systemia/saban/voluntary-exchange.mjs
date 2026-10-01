@@ -81,12 +81,19 @@ export async function startVoluntaryComputeExchange({
   port=0,
   providerOfferTtlMs=5*60*1000,
   maxLeaseSeconds=3600,
+  jobDeliveryLeaseMs=30000,
+  providerAdmissionToken='',
 }={}){
   const controlToken=token();
   const providers=new Map();
   const proposals=new Map();
   const agreements=new Map();
   const jobs=new Map();
+  const loopbackHost=new Set(['127.0.0.1','::1','localhost']).has(String(host).toLowerCase());
+  const providerAdmissionRequired=!loopbackHost;
+  if(providerAdmissionRequired&&!String(providerAdmissionToken||'')){
+    throw new Error('provider_admission_token_required_for_non_loopback_exchange');
+  }
 
   const controlOk=(req)=>safeEqual(bearer(req),controlToken);
   const providerForRequest=(req,providerId)=>{
@@ -112,6 +119,15 @@ export async function startVoluntaryComputeExchange({
       }
 
       if(req.method==='POST'&&url.pathname==='/v1/providers/register'){
+        if(
+          providerAdmissionRequired &&
+          !safeEqual(
+            String(req.headers['x-evercraft-provider-admission']||''),
+            providerAdmissionToken
+          )
+        ){
+          return send(res,401,{error:'provider_admission_required'});
+        }
         const body=await readJson(req);
         const providerId=cleanId(body.provider_id||id('provider'));
         const workloadClasses=[...new Set(
@@ -319,16 +335,41 @@ export async function startVoluntaryComputeExchange({
         const body=await readJson(req);
         const gate=agreementUsable(agreement,{workload_class:body.workload_class});
         if(!gate.ok) return send(res,409,{error:gate.reason});
+        const idempotencyKey=String(body.idempotency_key||id('idem'));
+        const requestIdentity=sha({
+          agreement_id:agreement.agreement_id,
+          workload_class:String(body.workload_class),
+          idempotency_key:idempotencyKey,
+          input:body.input??null,
+        });
+        const existing=[...jobs.values()].find((job)=>
+          job.agreement_id===agreement.agreement_id &&
+          job.idempotency_key===idempotencyKey
+        );
+        if(existing){
+          if(existing.request_identity!==requestIdentity){
+            return send(res,409,{error:'idempotency_key_conflict'});
+          }
+          return send(res,200,{
+            ...existing,
+            result:existing.state==='completed'?existing.result:undefined,
+            deduplicated:true,
+          });
+        }
+
         const jobBody={
           schema:'evercraft.saban.voluntary-job.v1',
           job_id:id('job'),
           agreement_id:agreement.agreement_id,
           provider_id:agreement.provider_id,
           workload_class:String(body.workload_class),
-          idempotency_key:String(body.idempotency_key||id('idem')),
+          idempotency_key:idempotencyKey,
+          request_identity:requestIdentity,
           input:body.input??null,
           checkpoint:body.checkpoint??null,
           state:'queued',
+          delivery_id:null,
+          delivery_expires_at:null,
           created_at:new Date().toISOString(),
         };
         jobs.set(jobBody.job_id,{...jobBody,result:null});
@@ -339,10 +380,26 @@ export async function startVoluntaryComputeExchange({
       if(req.method==='GET'&&nextJob){
         const providerId=cleanId(decodeURIComponent(nextJob[1]));
         if(!providerForRequest(req,providerId)) return send(res,401,{error:'provider_auth_required'});
+        const nowMs=Date.now();
+        for(const candidate of jobs.values()){
+          if(
+            candidate.provider_id===providerId &&
+            candidate.state==='leased' &&
+            Date.parse(candidate.delivery_expires_at||0)<=nowMs
+          ){
+            candidate.state='queued';
+            candidate.delivery_id=null;
+            candidate.delivery_expires_at=null;
+          }
+        }
         const job=[...jobs.values()].find((j)=>j.provider_id===providerId&&j.state==='queued');
         if(!job) return send(res,200,{job:null});
         job.state='leased';
         job.leased_at=new Date().toISOString();
+        job.delivery_id=id('delivery');
+        job.delivery_expires_at=new Date(
+          Date.now()+Math.max(1000,Number(jobDeliveryLeaseMs||30000))
+        ).toISOString();
         return send(res,200,{job:{...job,result:undefined}});
       }
 
@@ -357,11 +414,20 @@ export async function startVoluntaryComputeExchange({
         if(!job||job.provider_id!==providerId) return send(res,404,{error:'job_not_found'});
         if(job.state!=='leased') return send(res,409,{error:'job_not_leased'});
         const body=await readJson(req);
+        if(
+          !body.delivery_id ||
+          body.delivery_id!==job.delivery_id ||
+          Date.parse(job.delivery_expires_at||0)<=Date.now()
+        ){
+          return send(res,409,{error:'job_delivery_lease_invalid'});
+        }
         job.state=body.ok===false?'failed':'completed';
         job.result=body.result??null;
         job.error=body.error??null;
         job.checkpoint=body.checkpoint??job.checkpoint;
         job.completed_at=new Date().toISOString();
+        job.delivery_id=null;
+        job.delivery_expires_at=null;
         const receiptBody={
           schema:'evercraft.saban.voluntary-job-result.v1',
           job_id:job.job_id,
@@ -418,6 +484,7 @@ export async function startVoluntaryComputeExchange({
     endpoint,
     health:()=>({
       provider_count:activeProviders().length,
+      provider_admission_required:providerAdmissionRequired,
       proposal_count:proposals.size,
       agreement_count:agreements.size,
       job_count:jobs.size,
