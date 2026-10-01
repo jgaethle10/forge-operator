@@ -27,7 +27,21 @@ try {
   assert.equal(status.execution.ambient_secret_environment_forwarded, false);
   assert.equal(status.network_observation.read_only, true);
   assert.equal(status.chromeos_host_boundary.read, true);
+  assert.equal(status.chromeos_host_boundary.capabilities, true);
   assert.equal(status.chromeos_host_boundary.mutation, false);
+
+  const hostCapabilities = operator.hostBoundaryCapabilities();
+  assert.equal(hostCapabilities.ok, true);
+  assert.equal(hostCapabilities.capability_count >= 1, true);
+  assert.equal(
+    hostCapabilities.capabilities.some(
+      (capability) =>
+        capability.capability_id === 'chromeos.crostini.port-forwarding.read.v1' &&
+        capability.mutation_authority === false &&
+        capability.arbitrary_desktop_control === false
+    ),
+    true,
+  );
 
   const network = await operator.networkStatus();
   assert.equal(network.schema, 'evercraft.node-network-observation.v1');
@@ -130,6 +144,7 @@ try {
     chromeos_host_boundary_not_overclaimed: true,
     chromeos_host_boundary_companion_declared_read_only: true,
     on_demand_host_check_request_available: true,
+    typed_host_capability_registry_available: true,
   }));
 } finally {
   fs.rmSync(root, { recursive: true, force: true });
