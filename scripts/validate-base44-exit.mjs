@@ -5,6 +5,9 @@ const estate = JSON.parse(fs.readFileSync(new URL('../systemia/migrations/base44
 const liveObservation = JSON.parse(fs.readFileSync(
   new URL('../systemia/migrations/base44-exit/live-page-observation-2026-09-30.json', import.meta.url)
 ));
+const waveOneProfile = JSON.parse(fs.readFileSync(
+  new URL('../systemia/migrations/base44-exit/wave-1-source-profile-2026-09-30.json', import.meta.url)
+));
 
 const fail = (message) => {
   console.error(`BASE44_EXIT_POLICY_FAIL: ${message}`);
@@ -131,6 +134,32 @@ if (
   fail('Untitled sources require explicit classification before retirement');
 }
 
+if (waveOneProfile.schema !== 'evercraft.base44.wave-source-profile.v1' || waveOneProfile.wave !== 1) {
+  fail('wave one source profile schema/wave is invalid');
+}
+const waveOneQueue = (estate.queue || []).filter((row) => Number(row.wave) === 1);
+const profiledWaveOne = waveOneProfile.products || [];
+if (profiledWaveOne.length !== waveOneQueue.length) {
+  fail('wave one source profile must cover every wave one queue product');
+}
+const waveOneQueueNames = new Set(waveOneQueue.map((row) => row.product));
+for (const row of profiledWaveOne) {
+  if (!waveOneQueueNames.has(row.product)) fail(`wave one profile contains unknown product: ${row.product}`);
+}
+const entityTotal = profiledWaveOne.reduce((sum, row) => sum + Number(row.entity_count || 0), 0);
+const functionTotal = profiledWaveOne.reduce((sum, row) => sum + Number(row.function_count || 0), 0);
+const connectorTotal = profiledWaveOne.reduce((sum, row) => sum + Number(row.connected_connector_count || 0), 0);
+if (entityTotal !== Number(waveOneProfile.totals?.entity_schemas)) fail('wave one entity total does not reconcile');
+if (functionTotal !== Number(waveOneProfile.totals?.server_functions)) fail('wave one function total does not reconcile');
+if (connectorTotal !== Number(waveOneProfile.totals?.connected_connectors)) fail('wave one connector total does not reconcile');
+if (waveOneProfile.privacy?.raw_base44_app_ids_emitted !== false) fail('wave one profile must not emit Base44 app IDs');
+if (waveOneProfile.privacy?.credentials_emitted !== false) fail('wave one profile must not emit credentials');
+for (const row of profiledWaveOne) {
+  for (const connector of row.connected_connectors || []) {
+    if (connector.credential_values_emitted !== false) fail(`connector credential policy failed for ${row.product}`);
+  }
+}
+
 const first = estate.queue?.[0];
 if (first?.product !== 'Systemia Command Center' || first?.wave !== 1) {
   fail('Systemia Core / KAIDANCE extraction must remain first');
@@ -144,5 +173,9 @@ console.log(JSON.stringify({
   live_observed_apps: liveObservation.observed_apps,
   live_exact_queue_matches: liveObservation.exact_queue_app_matches,
   live_visible_not_exactly_assigned: liveObservation.visible_apps_not_exactly_assigned_to_named_queue,
-  live_untitled_apps: liveObservation.untitled_visible_apps
+  live_untitled_apps: liveObservation.untitled_visible_apps,
+  wave_one_profiled_products: profiledWaveOne.length,
+  wave_one_entities: entityTotal,
+  wave_one_functions: functionTotal,
+  wave_one_connected_connectors: connectorTotal
 }));
