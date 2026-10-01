@@ -314,6 +314,30 @@ export function createEvercraftAppClient({
     }
   };
 
+  const app = {
+    async getPublicSettings() {
+      return await request(
+        'GET',
+        `/api/apps/public/prod/public-settings/by-id/${encodeURIComponent(appKey)}`
+      );
+    }
+  };
+
+  const appLogs = {
+    async logUserInApp(pageName = '', metadata = {}) {
+      return await request(
+        'POST',
+        `/api/apps/${encodeURIComponent(appKey)}/app-logs/user-in-app`,
+        {
+          page_name: String(pageName || '').slice(0, 240),
+          metadata: metadata && typeof metadata === 'object' && !Array.isArray(metadata)
+            ? metadata
+            : {}
+        }
+      );
+    }
+  };
+
   return {
     getConfig() {
       return {
@@ -336,6 +360,8 @@ export function createEvercraftAppClient({
     },
     integrations,
     auth,
+    app,
+    appLogs,
     get asServiceRole() {
       if (!servicePermit) throw new AppFabricError('service_permit_required', { code: 'service_permit_required' });
       return createEvercraftAppClient({
