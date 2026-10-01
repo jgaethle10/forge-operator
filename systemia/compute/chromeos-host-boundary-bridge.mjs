@@ -2,12 +2,13 @@ import fs from 'node:fs';
 import http from 'node:http';
 import os from 'node:os';
 import path from 'node:path';
-import { createHash, timingSafeEqual } from 'node:crypto';
+import { createHash, randomBytes, timingSafeEqual } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 
 const SCHEMA = 'evercraft.chromeos-host-boundary-observation.v1';
 const STATUS_SCHEMA = 'evercraft.chromeos-host-boundary-status.v1';
 const RECEIPT_SCHEMA = 'evercraft.chromeos-host-boundary-receipt.v1';
+const CHECK_SCHEMA = 'evercraft.chromeos-host-boundary-check-request.v1';
 const DEFAULT_PORTS = new Set([18080, 8443]);
 const DEFAULT_STATE_ROOT = path.join(
   os.homedir(),
@@ -75,6 +76,110 @@ function safeText(value, max = 160) {
   return text.slice(0, max);
 }
 
+function checkFile(stateRoot) {
+  return path.join(stateRoot, 'check-request.json');
+}
+
+function sealState(body) {
+  return { ...body, state_hash: sha(body) };
+}
+
+function verifyState(record) {
+  if (!record || typeof record !== 'object') return false;
+  const { state_hash: claimed, ...body } = record;
+  return Boolean(claimed && claimed === sha(body));
+}
+
+function normalizedRequestId(value) {
+  const id = safeText(value, 96);
+  if (!id) return null;
+  if (!/^hostcheck_[a-f0-9]{20,80}$/i.test(id)) {
+    throw new Error('chromeos_host_boundary_request_id_invalid');
+  }
+  return id;
+}
+
+export function requestChromeOsHostBoundaryCheck({
+  stateRoot = DEFAULT_STATE_ROOT,
+  now = Date.now(),
+  ttlMs = 2 * 60_000,
+} = {}) {
+  const existing = readJson(checkFile(stateRoot));
+  if (
+    verifyState(existing) &&
+    existing.status === 'pending' &&
+    new Date(existing.expires_at).getTime() > now
+  ) {
+    return existing;
+  }
+
+  const requestId = 'hostcheck_' + randomBytes(12).toString('hex');
+  const body = {
+    schema: CHECK_SCHEMA,
+    request_id: requestId,
+    status: 'pending',
+    requested_at: new Date(now).toISOString(),
+    expires_at: new Date(now + Math.max(30_000, Math.min(ttlMs, 10 * 60_000))).toISOString(),
+    completed_at: null,
+    result_receipt_hash: null,
+  };
+  const record = sealState(body);
+  atomicJson(checkFile(stateRoot), record);
+  return record;
+}
+
+export function readChromeOsHostBoundaryCheck({
+  stateRoot = DEFAULT_STATE_ROOT,
+  now = Date.now(),
+} = {}) {
+  const record = readJson(checkFile(stateRoot));
+  if (!record) return { ok: true, pending: false, state: 'none', request: null };
+  if (!verifyState(record)) {
+    return { ok: false, pending: false, state: 'integrity_failed', request: null };
+  }
+  const expired =
+    record.status === 'pending' &&
+    new Date(record.expires_at).getTime() <= now;
+  if (expired) {
+    return {
+      ok: true,
+      pending: false,
+      state: 'expired',
+      request: { ...record, state_hash: undefined },
+    };
+  }
+  return {
+    ok: true,
+    pending: record.status === 'pending',
+    state: record.status,
+    request: { ...record, state_hash: undefined },
+  };
+}
+
+function completeChromeOsHostBoundaryCheck({
+  stateRoot,
+  requestId,
+  receiptHash,
+  now,
+}) {
+  if (!requestId) return null;
+  const record = readJson(checkFile(stateRoot));
+  if (!verifyState(record)) return null;
+  if (record.status !== 'pending') return null;
+  if (record.request_id !== requestId) return null;
+  if (new Date(record.expires_at).getTime() <= now) return null;
+
+  const { state_hash: _ignored, ...body } = record;
+  const completed = sealState({
+    ...body,
+    status: 'completed',
+    completed_at: new Date(now).toISOString(),
+    result_receipt_hash: receiptHash,
+  });
+  atomicJson(checkFile(stateRoot), completed);
+  return completed;
+}
+
 export function validateChromeOsHostBoundaryObservation(
   input,
   { allowedPorts = DEFAULT_PORTS, now = Date.now(), maxClockSkewMs = 10 * 60_000 } = {},
@@ -95,6 +200,8 @@ export function validateChromeOsHostBoundaryObservation(
   if (!Array.isArray(input.ports) || input.ports.length > 16) {
     throw new Error('chromeos_host_boundary_ports_invalid');
   }
+
+  const requestId = normalizedRequestId(input.request_id);
 
   const ports = [];
   const seen = new Set();
@@ -119,6 +226,7 @@ export function validateChromeOsHostBoundaryObservation(
   return {
     schema: SCHEMA,
     collected_at: collectedAt.toISOString(),
+    request_id: requestId,
     observer_version: safeText(input.observer_version || 'unknown', 48),
     observer_install_id: safeText(input.observer_install_id || 'unknown', 96),
     settings_route: safeText(input.settings_route || 'chrome://os-settings/crostini/portForwarding', 256),
@@ -157,6 +265,12 @@ export function storeChromeOsHostBoundaryObservation(
   };
   const receipt = { ...body, receipt_hash: sha(body) };
   atomicJson(path.join(stateRoot, 'latest.json'), receipt);
+  completeChromeOsHostBoundaryCheck({
+    stateRoot,
+    requestId: observation.request_id,
+    receiptHash: receipt.receipt_hash,
+    now,
+  });
   return receipt;
 }
 
@@ -256,6 +370,8 @@ export function startChromeOsHostBoundaryBridge({
           schema: 'evercraft.chromeos-host-boundary-bridge-health.v1',
           accepts_mutation_commands: false,
           persists_raw_accessibility_tree: false,
+          supports_on_demand_checks: true,
+          minimum_extension_poll_seconds: 30,
         });
       }
 
@@ -264,6 +380,22 @@ export function startChromeOsHostBoundaryBridge({
           return send(res, 401, { ok: false, error: 'chromeos_host_boundary_auth_required' });
         }
         return send(res, 200, readChromeOsHostBoundaryStatus({ stateRoot }));
+      }
+
+      if (req.method === 'GET' && req.url === '/v1/chromeos-host-boundary/next-request') {
+        if (!equalToken(bearer(req), secret)) {
+          return send(res, 401, { ok: false, error: 'chromeos_host_boundary_auth_required' });
+        }
+        const check = readChromeOsHostBoundaryCheck({ stateRoot });
+        return send(res, 200, {
+          ok: check.ok,
+          state: check.state,
+          request: check.pending ? {
+            request_id: check.request?.request_id || null,
+            requested_at: check.request?.requested_at || null,
+            expires_at: check.request?.expires_at || null,
+          } : null,
+        });
       }
 
       if (req.method === 'POST' && req.url === '/v1/chromeos-host-boundary/report') {
