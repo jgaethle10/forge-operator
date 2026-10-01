@@ -69,6 +69,18 @@ const fakeFetch = async (url, options = {}) => {
       receipt_hash: 'sha256:proof',
     }), { status: 200 });
   }
+  if (route.endsWith('/v1/operator/host-capabilities/admit')) {
+    return new Response(JSON.stringify({
+      ok: true,
+      schema: 'evercraft.host-boundary-capability-admission-result.v1',
+      capability_id: 'chromeos.crostini.port-forwarding.read.v1',
+      host_mutation_performed: false,
+      admission: {
+        admitted_at: new Date().toISOString(),
+        admission_hash: 'sha256:proof-admission',
+      },
+    }), { status: 200 });
+  }
   if (route.endsWith('/v1/operator/host-capabilities/check')) {
     return new Response(JSON.stringify({
       error: 'host_boundary_capability_field_gate_required',
@@ -111,7 +123,7 @@ const listed = await executeRemoteOperatorMcpRpc({
   rpc: { jsonrpc: '2.0', id: 2, method: 'tools/list' },
   gateway,
 });
-assert.equal(listed.result.tools.length, 11);
+assert.equal(listed.result.tools.length, 12);
 
 const denied = await executeRemoteOperatorMcpRpc({
   rpc: {
@@ -195,6 +207,32 @@ assert.equal(
 assert.equal(
   certification.result.structuredContent.ready_for_external_canary,
   false
+);
+
+const admission = await executeRemoteOperatorMcpRpc({
+  rpc: {
+    jsonrpc: '2.0',
+    id: 3991,
+    method: 'tools/call',
+    params: {
+      name: 'remote_host_capability_admit',
+      arguments: {
+        capability_id: 'chromeos.crostini.port-forwarding.read.v1',
+        approval_ref: 'proof:user-approved-host-admission',
+      },
+    },
+  },
+  gateway,
+  authorization: 'Bearer ' + clientToken,
+});
+assert.equal(
+  admission.result.structuredContent.schema,
+  'evercraft.host-boundary-capability-admission-result.v1'
+);
+assert.equal(admission.result.structuredContent.host_mutation_performed, false);
+assert.equal(
+  seen.at(-1).body.approval_ref,
+  'proof:user-approved-host-admission'
 );
 
 const genericHostCheck = await executeRemoteOperatorMcpRpc({
@@ -307,4 +345,5 @@ console.log(JSON.stringify({
   typed_host_capability_registry_exposed: true,
   generic_typed_host_capability_dispatch_field_gated: true,
   host_boundary_field_certification_exposed: true,
+  approval_gated_host_capability_admission_exposed: true,
 }));
