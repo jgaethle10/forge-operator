@@ -14,7 +14,10 @@ import {
   getHostBoundaryCapability,
   hostBoundaryCapabilityStatus,
 } from './host-boundary-registry.mjs';
-import { readHostBoundaryCapabilityAdmission } from './host-boundary-admission.mjs';
+import {
+  admitHostBoundaryCapability,
+  readHostBoundaryCapabilityAdmission,
+} from './host-boundary-admission.mjs';
 import { certifyChromeOsHostBoundary } from './chromeos-host-boundary-field-certify.mjs';
 
 const execFileAsync = promisify(execFile);
@@ -242,6 +245,7 @@ export class EvercraftRemoteOperator {
         check_now: true,
         generic_capability_check: true,
         field_certification: true,
+        field_admission: true,
         capabilities: true,
         mutation: false,
         source: 'paired_chromeos_extension',
@@ -351,6 +355,64 @@ export class EvercraftRemoteOperator {
     });
     return {
       ...status,
+      operator_receipt: receipt,
+    };
+  }
+
+  hostCapabilityAdmit({
+    capability_id,
+    approval_ref,
+  } = {}) {
+    const approval = String(approval_ref || '').trim();
+    if (!approval || approval.length > 512) {
+      throw new Error('host_boundary_capability_admission_approval_required');
+    }
+    const capability = getHostBoundaryCapability(capability_id);
+    if (
+      capability.operation !== 'read' ||
+      capability.mutation_authority === true ||
+      capability.arbitrary_desktop_control === true ||
+      capability.arbitrary_desktop_control_exposed === true
+    ) {
+      throw new Error('host_boundary_capability_admission_authority_denied');
+    }
+    if (capability.requires_field_certification !== true) {
+      throw new Error('host_boundary_capability_field_certification_not_required');
+    }
+    if (capability.adapter !== 'chromeos_crostini_port_forwarding') {
+      throw new Error('host_boundary_capability_adapter_not_available');
+    }
+
+    const certification = certifyChromeOsHostBoundary({
+      stateRoot: this.hostBoundaryStateRoot,
+      routerReceiptFile: this.routerMapReceiptFile,
+    });
+    if (certification.ready_for_external_canary !== true) {
+      throw new Error('host_boundary_capability_field_gate_required');
+    }
+
+    const admission = admitHostBoundaryCapability({
+      stateRoot: this.hostBoundaryStateRoot,
+      capabilityId: capability.capability_id,
+      certification,
+    });
+    const receipt = this.#receipt('host-capability.admit', {
+      capability_id: capability.capability_id,
+      adapter: capability.adapter,
+      approval_ref: approval,
+      certification_receipt_hash: certification.receipt_hash,
+      admission_hash: admission.admission_hash,
+      observer_install_id: admission.observer_install_id,
+      observer_key_fingerprint: admission.observer_key_fingerprint,
+      mutation_authority: false,
+    });
+    return {
+      ok: true,
+      schema: 'evercraft.host-boundary-capability-admission-result.v1',
+      capability_id: capability.capability_id,
+      admission,
+      certification,
+      host_mutation_performed: false,
       operator_receipt: receipt,
     };
   }
