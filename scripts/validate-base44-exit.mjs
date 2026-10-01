@@ -260,8 +260,8 @@ for (const row of commandCenterFunctions) {
 if (Number(commandCenterFunctionMap.summary?.stateful_functions_owned_implementation_present || 0) !== 2) {
   fail('Command Center stateful transplant count must remain two until more parity is proven');
 }
-if (Number(commandCenterFunctionMap.summary?.owned_function_implementations_present || 0) !== 3) {
-  fail('Command Center owned function implementation count must be three');
+if (Number(commandCenterFunctionMap.summary?.owned_function_implementations_present || 0) !== 4) {
+  fail('Command Center owned function implementation count must be four');
 }
 if (Number(commandCenterFunctionMap.summary?.functions_with_owned_replacement_path || 0) !== 8) {
   fail('Command Center all eight source functions must retain an owned replacement path');
@@ -370,8 +370,8 @@ if (Number(waveOneSnapshot?.command_center_source_functions_mapped || 0) !== 8) 
 if (Number(waveOneSnapshot?.command_center_stateful_functions_transplanted || 0) !== 2) {
   fail('estate snapshot must preserve two locally transplanted Command Center stateful functions');
 }
-if (Number(waveOneSnapshot?.command_center_owned_function_implementations || 0) !== 3) {
-  fail('estate snapshot must preserve three owned Command Center function implementations');
+if (Number(waveOneSnapshot?.command_center_owned_function_implementations || 0) !== 4) {
+  fail('estate snapshot must preserve four owned Command Center function implementations');
 }
 if (Number(waveOneSnapshot?.implementations_present_ci_pending || 0) !== implementationPending) {
   fail('estate snapshot implementation count must match replacement matrix');
