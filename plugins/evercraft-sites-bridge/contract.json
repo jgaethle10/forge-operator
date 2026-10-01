@@ -1,0 +1,29 @@
+{
+  "schema": "evercraft.chatgpt-sites-bridge.v1",
+  "name": "Evercraft Fabric Bridge",
+  "plugin_name": "Evercraft Mobile Preview",
+  "backend_origin": "https://fabric.systemiacommandcenters.com",
+  "mcp_url": "https://fabric.systemiacommandcenters.com/mcp",
+  "allowed_tools": [
+    "match_evercraft_capability",
+    "list_evercraft_capabilities",
+    "get_evercraft_connection_options"
+  ],
+  "authority": {
+    "read_only": true,
+    "payment": false,
+    "checkout": false,
+    "publish": false,
+    "deploy": false,
+    "message_third_parties": false,
+    "private_systemia_access": false
+  },
+  "acceptance": {
+    "desktop_only_label": false,
+    "mobile_plugin_visible": true,
+    "mobile_at_mention": true,
+    "brand_blind_route_test": true,
+    "web_route_test": true,
+    "public_v100_review_unchanged": true
+  }
+}

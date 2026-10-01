@@ -1,9 +1,10 @@
-name: Evercraft Mobile Plugin Contract
+name: Evercraft Cross-Surface Plugin Contract
 
 on:
   pull_request:
     paths:
       - 'plugins/evercraft-mobile-template/**'
+      - 'plugins/evercraft-sites-bridge/**'
       - 'scripts/build-evercraft-mobile-plugin.mjs'
       - 'tests/evercraft-mobile-plugin-contract.test.mjs'
       - '.github/workflows/evercraft-mobile-plugin.yml'
@@ -23,9 +24,10 @@ jobs:
           node-version: '22'
       - name: Prove mobile package contract
         run: node --test tests/evercraft-mobile-plugin-contract.test.mjs
-      - name: Build synthetic mobile package
+      - name: Build synthetic web app-reference package
         run: |
           node scripts/build-evercraft-mobile-plugin.mjs \
+            --allow-web-only-app-reference \
             --app-id plugin_asdk_app_test123 \
             --version 0.1.0 \
             --out artifacts/evercraft-mobile-test
