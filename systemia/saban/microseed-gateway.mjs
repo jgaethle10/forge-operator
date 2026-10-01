@@ -5,6 +5,7 @@ import { evaluateAmbientTrust } from './ambient-device-trust.mjs';
 import { executeMicroSeedWorkload } from './microseed-executor.mjs';
 import { loadPerformanceLedger, recordPerformanceSample, savePerformanceLedger } from './performance-learning.mjs';
 import { runMicroSeedConformance } from './microseed-conformance.mjs';
+import { runMicroSeedCalibration } from './microseed-calibration.mjs';
 
 function clean(v){return String(v??'').trim();}
 function loopback(host){
@@ -72,6 +73,58 @@ export async function startMicroSeedGateway({
     eligible_device_count:registry.list({now:new Date()}).eligible_count,
   });
 
+  async function executeAndLearn({manifest,trustDecision,telemetry,request}){
+    const startedAt=Date.now();
+    const deviceId=manifest.device_id;
+    try{
+      const receipt=await executeMicroSeedWorkload({
+        manifest,
+        trustDecision,
+        telemetry:telemetry||{},
+        request,
+        stateDir,
+        bridgeAdapters,
+        executionContext:'gateway',
+        now:new Date(),
+      });
+      const duration=Math.max(0,Date.now()-startedAt);
+      const ledger=loadPerformanceLedger(performanceFile);
+      recordPerformanceSample(ledger,{
+        device_id:deviceId,
+        workload_class:String(request?.workload_class||'unknown'),
+        ok:true,
+        duration_ms:duration,
+        bytes_processed:
+          receipt?.result?.byte_count??
+          receipt?.result?.remote_result?.byte_count??
+          null,
+        checkpointed:Boolean(receipt?.checkpoint),
+        preempted:false,
+        thermal_hold:false,
+        energy_wh:observedEnergyWh(telemetry,duration),
+        observed_at:new Date().toISOString(),
+      });
+      savePerformanceLedger(performanceFile,ledger);
+      return receipt;
+    }catch(error){
+      const duration=Math.max(0,Date.now()-startedAt);
+      const ledger=loadPerformanceLedger(performanceFile);
+      recordPerformanceSample(ledger,{
+        device_id:deviceId,
+        workload_class:String(request?.workload_class||'unknown'),
+        ok:false,
+        duration_ms:duration,
+        checkpointed:false,
+        preempted:String(error?.message||error).includes('preempt'),
+        thermal_hold:String(error?.message||error).includes('temperature'),
+        energy_wh:observedEnergyWh(telemetry,duration),
+        observed_at:new Date().toISOString(),
+      });
+      savePerformanceLedger(performanceFile,ledger);
+      throw error;
+    }
+  }
+
   server=http.createServer(async(req,res)=>{
     try{
       if(req.method==='GET'&&req.url==='/health'){
@@ -107,56 +160,20 @@ export async function startMicroSeedGateway({
         const conformance=await runMicroSeedConformance({
           manifest,
           trustDecision,
-          execute:async({workload_class,idempotency_key,payload})=>{
-            const startedAt=Date.now();
-            try{
-              const receipt=await executeMicroSeedWorkload({
-                manifest,
-                trustDecision,
-                telemetry:body.telemetry,
-                request:{
-                  device_id:deviceId,
-                  workload_class,
-                  idempotency_key,
-                  payload,
-                  requested_memory_mb:64,
-                  requested_cpu_fraction:0.05,
-                },
-                stateDir,
-                bridgeAdapters,
-                executionContext:'gateway',
-                now:new Date(),
-              });
-              const ledger=loadPerformanceLedger(performanceFile);
-              recordPerformanceSample(ledger,{
+          execute:({workload_class,idempotency_key,payload})=>
+            executeAndLearn({
+              manifest,
+              trustDecision,
+              telemetry:body.telemetry,
+              request:{
                 device_id:deviceId,
                 workload_class,
-                ok:true,
-                duration_ms:Math.max(0,Date.now()-startedAt),
-                bytes_processed:
-                  receipt?.result?.byte_count??
-                  receipt?.result?.remote_result?.byte_count??
-                  null,
-                energy_wh:observedEnergyWh(body.telemetry,Math.max(0,Date.now()-startedAt)),
-                observed_at:new Date().toISOString(),
-              });
-              savePerformanceLedger(performanceFile,ledger);
-              return receipt;
-            }catch(error){
-              const ledger=loadPerformanceLedger(performanceFile);
-              recordPerformanceSample(ledger,{
-                device_id:deviceId,
-                workload_class,
-                ok:false,
-                duration_ms:Math.max(0,Date.now()-startedAt),
-                thermal_hold:String(error?.message||error).includes('temperature'),
-                energy_wh:observedEnergyWh(body.telemetry,Math.max(0,Date.now()-startedAt)),
-                observed_at:new Date().toISOString(),
-              });
-              savePerformanceLedger(performanceFile,ledger);
-              throw error;
-            }
-          },
+                idempotency_key,
+                payload,
+                requested_memory_mb:64,
+                requested_cpu_fraction:0.05,
+              },
+            }),
           now:new Date(),
         });
         registry.setConformance({device_id:deviceId,receipt:conformance});
@@ -198,52 +215,15 @@ export async function startMicroSeedGateway({
 
         activeGlobal+=1;
         activeByDevice.set(deviceId,deviceActive+1);
-        const startedAt=Date.now();
         const request=body.request||body;
         try{
-          const receipt=await executeMicroSeedWorkload({
+          const receipt=await executeAndLearn({
             manifest,
             trustDecision,
             telemetry:body.telemetry||{},
             request,
-            stateDir,
-            bridgeAdapters,
-            executionContext:'gateway',
-            now:new Date(),
           });
-          const ledger=loadPerformanceLedger(performanceFile);
-          recordPerformanceSample(ledger,{
-            device_id:deviceId,
-            workload_class:String(request.workload_class||''),
-            ok:true,
-            duration_ms:Math.max(0,Date.now()-startedAt),
-            bytes_processed:
-              receipt?.result?.byte_count??
-              receipt?.result?.remote_result?.byte_count??
-              null,
-            checkpointed:Boolean(receipt?.checkpoint),
-            preempted:false,
-            thermal_hold:false,
-            energy_wh:observedEnergyWh(body.telemetry,Math.max(0,Date.now()-startedAt)),
-            observed_at:new Date().toISOString(),
-          });
-          savePerformanceLedger(performanceFile,ledger);
           return send(res,200,{ok:true,...receipt});
-        }catch(error){
-          const ledger=loadPerformanceLedger(performanceFile);
-          recordPerformanceSample(ledger,{
-            device_id:deviceId,
-            workload_class:String(request?.workload_class||'unknown'),
-            ok:false,
-            duration_ms:Math.max(0,Date.now()-startedAt),
-            checkpointed:false,
-            preempted:String(error?.message||error).includes('preempt'),
-            thermal_hold:String(error?.message||error).includes('temperature'),
-            energy_wh:observedEnergyWh(body.telemetry,Math.max(0,Date.now()-startedAt)),
-            observed_at:new Date().toISOString(),
-          });
-          savePerformanceLedger(performanceFile,ledger);
-          throw error;
         }finally{
           activeGlobal=Math.max(0,activeGlobal-1);
           const next=Math.max(0,Number(activeByDevice.get(deviceId)||1)-1);
