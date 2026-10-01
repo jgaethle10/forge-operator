@@ -56,6 +56,7 @@ export interface VisualModelCapability {
   identityContinuityViaStartFrame?:boolean;
   framesExclusiveWithReferences?:boolean;
   referenceImageDurationOptions?:number[];
+  locatorKinds?:VisualReferenceLocator['kind'][];
   nativeAudio?:boolean;
   batchVariants?:number;
   qualityTier:1|2|3|4|5;
@@ -235,6 +236,16 @@ function capabilityReasons(
   const compatible=compatibleReferences(request.references,capability);
   if(capability.maxReferences!==undefined&&compatible.length>capability.maxReferences){
     reasons.push('too_many_references');
+  }
+
+  if(capability.locatorKinds){
+    for(const ref of compatible){
+      if(!ref.locator){
+        reasons.push('reference_locator_missing:'+ref.role);
+      }else if(!capability.locatorKinds.includes(ref.locator.kind)){
+        reasons.push('reference_locator_unsupported:'+ref.role+':'+ref.locator.kind);
+      }
+    }
   }
 
   const compatibleReferenceImages=compatible.filter(ref=>
