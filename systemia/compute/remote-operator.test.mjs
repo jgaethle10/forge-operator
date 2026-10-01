@@ -2,7 +2,13 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { createHash } from 'node:crypto';
+import { admitHostBoundaryCapability } from './host-boundary-admission.mjs';
 import { EvercraftRemoteOperator } from './remote-operator.mjs';
+
+const sha = (value) => 'sha256:' + createHash('sha256')
+  .update(typeof value === 'string' ? value : JSON.stringify(value))
+  .digest('hex');
 
 const root = fs.mkdtempSync(path.join(os.tmpdir(), 'evercraft-remote-operator-'));
 const state = path.join(root, '.operator-state');
@@ -33,15 +39,14 @@ try {
   const hostCapabilities = operator.hostBoundaryCapabilities();
   assert.equal(hostCapabilities.ok, true);
   assert.equal(hostCapabilities.capability_count >= 1, true);
-  assert.equal(
-    hostCapabilities.capabilities.some(
-      (capability) =>
-        capability.capability_id === 'chromeos.crostini.port-forwarding.read.v1' &&
-        capability.mutation_authority === false &&
-        capability.arbitrary_desktop_control === false
-    ),
-    true,
+  const chromeCapability = hostCapabilities.capabilities.find(
+    (capability) =>
+      capability.capability_id === 'chromeos.crostini.port-forwarding.read.v1'
   );
+  assert.ok(chromeCapability);
+  assert.equal(chromeCapability.mutation_authority, false);
+  assert.equal(chromeCapability.arbitrary_desktop_control, false);
+  assert.equal(chromeCapability.generic_dispatch_available, false);
 
   const network = await operator.networkStatus();
   assert.equal(network.schema, 'evercraft.node-network-observation.v1');
@@ -74,6 +79,44 @@ try {
     }),
     /host_boundary_capability_field_gate_required/,
   );
+
+  const certificationBody = {
+    schema: 'evercraft.chromeos-host-boundary-field-certification.v1',
+    capability_id: 'chromeos.crostini.port-forwarding.read.v1',
+    observed_at: new Date().toISOString(),
+    state: 'host_setting_and_lan_ready',
+    host_observation: { observer_install_id: 'cros_operator_proof' },
+    ready_for_external_canary: true,
+    external_public_route_verified: false,
+    mutation_authority: false,
+    raw_accessibility_tree_persisted: false,
+  };
+  admitHostBoundaryCapability({
+    stateRoot: path.join(root, 'host-boundary'),
+    capabilityId: certificationBody.capability_id,
+    certification: {
+      ...certificationBody,
+      receipt_hash: sha(certificationBody),
+    },
+  });
+
+  const admittedCapabilities = operator.hostBoundaryCapabilities();
+  const admittedChrome = admittedCapabilities.capabilities.find(
+    (capability) => capability.capability_id === certificationBody.capability_id,
+  );
+  assert.equal(admittedChrome.local_admission.admitted, true);
+  assert.equal(admittedChrome.generic_dispatch_available, true);
+
+  const genericHostCheck = await operator.hostCapabilityCheck({
+    capability_id: certificationBody.capability_id,
+    wait_ms: 0,
+  });
+  assert.equal(
+    genericHostCheck.schema,
+    'evercraft.host-boundary-capability-check-result.v1',
+  );
+  assert.equal(genericHostCheck.pending, true);
+  assert.equal(genericHostCheck.mutation_authority, false);
 
   const listed = operator.list({ root_key: 'home', path: '.' });
   assert.ok(listed.entries.some((entry) => entry.name === 'hello.txt'));
@@ -154,6 +197,7 @@ try {
     on_demand_host_check_request_available: true,
     typed_host_capability_registry_available: true,
     generic_typed_host_capability_dispatch_field_gated: true,
+    node_local_field_admission_unlocks_generic_dispatch: true,
   }));
 } finally {
   fs.rmSync(root, { recursive: true, force: true });
