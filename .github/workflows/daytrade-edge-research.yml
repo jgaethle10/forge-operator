@@ -54,6 +54,7 @@ jobs:
           node systemia/daytrade-lens/edge-breaker-lab.test.mjs
           node systemia/daytrade-lens/edge-adversarial-fixtures.test.mjs
           node systemia/daytrade-lens/edge-timing-fragility.test.mjs
+          node systemia/daytrade-lens/edge-volatility-delay-interaction.test.mjs
           node systemia/daytrade-lens/edge-overlap-fragility.test.mjs
           node systemia/daytrade-lens/edge-matched-placebo.test.mjs
           node systemia/daytrade-lens/edge-random-placebo.test.mjs
