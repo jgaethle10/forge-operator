@@ -31,6 +31,12 @@ try {
   assert.equal(network.authority.read_only, true);
   assert.equal(network.authority.mutates_network_configuration, false);
   assert.equal(network.authority.exposes_secret_material, false);
+  assert.equal(network.evercraft.local_organism.secret_material_exposed, false);
+  assert.ok([
+    'healthy',
+    'degraded',
+    'not_installed_or_not_observed',
+  ].includes(network.evercraft.local_organism.state));
   assert.equal(
     network.evercraft.external_public_route.state,
     'requires_external_canary'
