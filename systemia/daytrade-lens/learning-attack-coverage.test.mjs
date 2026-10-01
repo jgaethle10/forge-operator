@@ -74,6 +74,10 @@ assert.equal(
 );
 
 assert.equal(
+  ATTACK_IMPLEMENTATION_MAP["spread/depth/impact separate fields"].status,
+  "implemented"
+);
+assert.equal(
   ATTACK_IMPLEMENTATION_MAP["volume-is-not-liquidity negative control"].status,
   "implemented"
 );
@@ -116,6 +120,7 @@ console.log(JSON.stringify({
   partial_unfilled_states_now_explicit:true,
   queue_position_still_unclaimed:true,
   durable_trial_cemetery_capability_closed:true,
+  spread_depth_impact_separation_closed:true,
   volume_not_liquidity_closed:true,
   low_visible_size_high_volatility_partial:true,
   capital_scale_invariance_challenge_closed:true,
