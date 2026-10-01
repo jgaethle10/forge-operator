@@ -1,0 +1,59 @@
+name: Saban Public Gateway Appliance
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/saban/public-gateway-appliance.mjs'
+      - 'systemia/saban/public-gateway-appliance.proof.mjs'
+      - 'systemia/network/remote-broker-beacon.mjs'
+      - 'systemia/compute/discovered-remote-admission-keeper.mjs'
+      - 'systemia/compute/local-organism.mjs'
+      - 'systemia/compute/install-local-organism-user.sh'
+      - 'scripts/update-fabric-owned-edge.sh'
+      - 'scripts/evercraft-public-edge-map.mjs'
+      - 'scripts/install-fabric-router-map-resident.sh'
+      - 'scripts/install-saban-public-gateway.sh'
+      - 'tests/evercraft-public-edge-map.test.mjs'
+      - '.github/workflows/saban-public-gateway.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/saban/public-gateway-appliance.mjs'
+      - 'systemia/saban/public-gateway-appliance.proof.mjs'
+      - 'systemia/network/remote-broker-beacon.mjs'
+      - 'systemia/compute/discovered-remote-admission-keeper.mjs'
+      - 'systemia/compute/local-organism.mjs'
+      - 'systemia/compute/install-local-organism-user.sh'
+      - 'scripts/update-fabric-owned-edge.sh'
+      - 'scripts/evercraft-public-edge-map.mjs'
+      - 'scripts/install-fabric-router-map-resident.sh'
+      - 'scripts/install-saban-public-gateway.sh'
+      - 'tests/evercraft-public-edge-map.test.mjs'
+      - '.github/workflows/saban-public-gateway.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax check gateway surfaces
+        run: |
+          node --check systemia/network/remote-broker-beacon.mjs
+          node --check systemia/compute/discovered-remote-admission-keeper.mjs
+          node --check systemia/saban/public-gateway-appliance.mjs
+          bash -n scripts/install-fabric-router-map-resident.sh
+          bash -n scripts/install-saban-public-gateway.sh
+          bash -n systemia/compute/install-local-organism-user.sh
+          bash -n scripts/update-fabric-owned-edge.sh
+      - name: Prove router mapper and updater contracts
+        run: node --test tests/evercraft-public-edge-map.test.mjs tests/fabric-owned-edge-installer.test.mjs
+      - name: Prove zero-touch outbound Fabric gateway
+        run: node systemia/saban/public-gateway-appliance.proof.mjs
