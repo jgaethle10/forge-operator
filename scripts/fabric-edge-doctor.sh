@@ -8,10 +8,33 @@ HTTP_PORT=18080
 HTTPS_PORT=8443
 ROUTER_ENV=/etc/evercraft/router-map.env
 REPAIR=false
+TRIGGER_CANARY=false
+CANARY_WORKFLOW="${EVERCRAFT_EDGE_CANARY_WORKFLOW:-evercraft-public-edge-canary.yml}"
+CANARY_REPO="${EVERCRAFT_EDGE_CANARY_REPO:-jgaethle10/forge-operator}"
 
-if [[ "${1:-}" == "--repair" ]]; then
-  REPAIR=true
-fi
+for arg in "$@"; do
+  case "$arg" in
+    --repair) REPAIR=true ;;
+    --trigger-canary) TRIGGER_CANARY=true ;;
+    --help|-h)
+      cat <<'USAGE'
+Usage: sudo bash scripts/fabric-edge-doctor.sh [--repair] [--trigger-canary]
+
+  --repair           Reconcile resident Fabric/edge services and router mapping.
+  --trigger-canary   When the owned edge is locally ready, dispatch the external
+                     GitHub canary immediately if gh is installed/authenticated.
+
+The doctor cannot toggle ChromeOS Linux Port Forwarding. If that is the only
+remaining gate, it exits 20 and prints the exact two ChromeOS host forwards.
+USAGE
+      exit 0
+      ;;
+    *)
+      echo "ERROR: unknown argument: $arg" >&2
+      exit 2
+      ;;
+  esac
+done
 
 if [[ "${EUID}" -ne 0 ]]; then
   echo "ERROR: run with sudo so the doctor can inspect and repair resident services." >&2
@@ -353,6 +376,49 @@ echo "[diagnosis]"
 echo "state=$diagnosis"
 echo "human_gate=$human_gate"
 
+field_action="none"
+if [[ "$diagnosis" == "chromeos_host_forward_unreachable" ]]; then
+  field_action="chromeos_linux_port_forwarding"
+  echo
+  echo "[ChromeOS field gate]"
+  echo "Fabric below ChromeOS is reachable, but the ChromeOS host-forward layer is not."
+  echo "Open: ChromeOS Settings -> Developers -> Linux development environment -> Port forwarding"
+  echo "Required host forwards:"
+  echo "  TCP 18080  status=$([[ "$lan_http_ok" == "true" ]] && echo reachable || echo NOT_REACHABLE)"
+  echo "  TCP 8443   status=$([[ "$lan_https_ok" == "true" ]] && echo reachable || echo NOT_REACHABLE)"
+  echo "If either entry already exists, toggle it off and back on."
+  echo "Then rerun:"
+  echo "  cd $REPO_ROOT"
+  echo "  sudo bash scripts/fabric-edge-doctor.sh --repair --trigger-canary"
+fi
+
+canary_trigger_state="not_requested"
+canary_trigger_ok=false
+if [[ "$TRIGGER_CANARY" == "true" ]]; then
+  if [[ "$diagnosis" != "local_edge_path_ready_external_canary_required" ]]; then
+    canary_trigger_state="blocked_until_local_edge_ready"
+  elif ! command -v gh >/dev/null 2>&1; then
+    canary_trigger_state="gh_not_installed"
+  elif ! run_as_runtime_user gh auth status -h github.com >/dev/null 2>&1; then
+    canary_trigger_state="gh_not_authenticated"
+  else
+    set +e
+    canary_output="$(run_as_runtime_user gh workflow run "$CANARY_WORKFLOW" --repo "$CANARY_REPO" 2>&1)"
+    canary_rc=$?
+    set -e
+    if [[ "$canary_rc" -eq 0 ]]; then
+      canary_trigger_state="dispatched"
+      canary_trigger_ok=true
+    else
+      canary_trigger_state="dispatch_failed"
+    fi
+    echo
+    echo "[external canary trigger]"
+    printf '%s\n' "$canary_output"
+  fi
+  echo "external_canary_trigger_state=$canary_trigger_state"
+fi
+
 cat > /tmp/evercraft-fabric-edge-doctor.json <<EOF
 {
   "schema":"evercraft.fabric-edge-doctor.v1",
@@ -383,6 +449,15 @@ cat > /tmp/evercraft-fabric-edge-doctor.json <<EOF
   "public_ipv4_seen_inside":"${public_ip:-}",
   "diagnosis":"$diagnosis",
   "human_gate":$(json_bool "$human_gate"),
+  "field_action":"$field_action",
+  "required_chromeos_port_forwards":[
+    {"protocol":"tcp","host_port":18080,"reachable":$(json_bool "$lan_http_ok")},
+    {"protocol":"tcp","host_port":8443,"reachable":$(json_bool "$lan_https_ok")}
+  ],
+  "external_canary_trigger_requested":$(json_bool "$TRIGGER_CANARY"),
+  "external_canary_trigger_ok":$(json_bool "$canary_trigger_ok"),
+  "external_canary_trigger_state":"$canary_trigger_state",
+  "next_command":"sudo bash scripts/fabric-edge-doctor.sh --repair --trigger-canary",
   "observed_at":"$(date -u +%FT%TZ)"
 }
 EOF
