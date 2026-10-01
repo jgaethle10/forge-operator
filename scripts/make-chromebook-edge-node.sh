@@ -40,13 +40,11 @@ set -e
 if [[ "$MAP_RC" -ne 0 ]]; then
   cat /tmp/evercraft-edge-router-map.log >&2 || true
   echo
-  echo "HOLD: ChromeOS must expose Linux port 1053 before the router can map public DNS."
-  echo "ChromeOS Settings -> Developers -> Linux development environment -> Port forwarding"
-  echo "Add/enable:"
-  echo "  1053 TCP   label: Evercraft Edge DNS TCP"
-  echo "  1053 UDP   label: Evercraft Edge DNS UDP"
-  echo
-  echo "Then rerun this same command. Everything else is already staged."
+  echo "HOLD: automatic WAN DNS mapping did not succeed."
+  echo "The Crostini-to-ChromeOS LAN self-probe is advisory only and is no longer treated as proof."
+  echo "ChromeOS should still have 1053 TCP and 1053 UDP enabled under Linux port forwarding."
+  echo "The router must map public TCP+UDP 53 to Chromebook TCP+UDP 1053."
+  echo "The mapper attempted UPnP-IGD, NAT-PMP, and PCP; inspect the attempts above for the actual router boundary."
   exit 20
 fi
 
