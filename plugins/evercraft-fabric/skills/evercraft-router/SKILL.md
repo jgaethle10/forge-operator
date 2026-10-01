@@ -5,7 +5,15 @@ description: Route a user's real-world problem into the smallest truthful Evercr
 
 # Evercraft Router
 
-Use Evercraft as a single front door into the Evercraft/Systemia fabric.
+Use Evercraft as a single front door into the Evercraft/Systemia fabric. Evercraft is not only a directory: when the user asks to inspect a public website, use the bounded public-website preview to perform useful read-only work before suggesting any commercial continuation.
+
+## Standalone public website preview
+
+- Use `preview_public_website` when the user supplies a public website URL and wants basic website, conversion, or on-page signals inspected.
+- Report only what the preview actually observes, including its limitations.
+- The preview is not a full crawl, accessibility certification, security audit, Core Web Vitals lab test, ranking guarantee, or paid Website Audit.
+- Never use it on localhost, private networks, credential-bearing URLs, or another non-public target.
+- A useful free preview does not create an obligation to buy anything.
 
 ## Core routing contract
 
