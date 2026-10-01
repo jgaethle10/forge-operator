@@ -9,7 +9,6 @@ const PRODUCT_DIRECTORY = 'public/.well-known/evercraft-products.json';
 const OUT = 'public/chum/commercial';
 const SITEMAPS = 'public/chum/sitemaps';
 const RAW_BASE = 'https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public';
-const LEGACY_MACHINE_GATEWAY = 'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
 
 const readJson = (p) => JSON.parse(fs.readFileSync(p, 'utf8'));
 const slugify = (value) => String(value || '')
@@ -41,8 +40,9 @@ function sitemap(paths) {
     ''
   ].join('\n');
 }
-function gatewayReview(publicId, gatewayUrl = LEGACY_MACHINE_GATEWAY) {
-  return gatewayUrl + '?view=service&public_id=' + encodeURIComponent(publicId);
+function gatewayReview(publicId, gatewayUrl = null) {
+  if (gatewayUrl) return gatewayUrl + '?view=service&public_id=' + encodeURIComponent(publicId);
+  return RAW_BASE + '/chum/capabilities/' + encodeURIComponent(String(publicId || '')) + '/index.html';
 }
 
 export function buildCommercialDiscoveryMesh({ root = process.cwd() } = {}) {
@@ -54,9 +54,9 @@ export function buildCommercialDiscoveryMesh({ root = process.cwd() } = {}) {
       routeOverlay,
       'evercraft-machine-commerce',
       'gateway',
-      { fallbackUrl: LEGACY_MACHINE_GATEWAY }
+      { fallbackUrl: null }
     );
-    const machineGateway = machineGatewayResolution?.url || LEGACY_MACHINE_GATEWAY;
+    const machineGateway = machineGatewayResolution?.url || null;
     const reviewUrl = (publicId) => gatewayReview(publicId, machineGateway);
 
     const catalog = readJson(MACHINE_CATALOG);
@@ -338,7 +338,7 @@ export function buildCommercialDiscoveryMesh({ root = process.cwd() } = {}) {
     return {
       schema: index.schema,
       route_overlay_loaded: Boolean(routeOverlay),
-      machine_gateway_authority: machineGatewayResolution?.authority || 'legacy_fallback',
+      machine_gateway_authority: machineGatewayResolution?.authority || 'static_capability_fallback',
       machine_gateway_cutover_receipt_ref: machineGatewayResolution?.cutover_receipt_ref || null,
       sell_now_clusters: clusters.length,
       commercial_answer_edges: index.answer_door_edges,
