@@ -188,7 +188,7 @@ test('production ratchet passes while grandfathered debt remains visible', () =>
   assert.deepEqual(mesh.ratchet.new_direct_door_without_contract, []);
   assert.deepEqual(mesh.ratchet.new_specialist_only_doors, []);
   assert.ok(mesh.summary.missing_contract_count > 0);
-  assert.equal(mesh.summary.shared_runtime_contract_count, 4);
+  assert.equal(mesh.summary.shared_runtime_contract_count, 5);
   assert.equal(mesh.summary.private_runtime_contract_count, 1);
   assert.equal(mesh.summary.discovery_only_contract_count, 2);
   assert.deepEqual(
@@ -375,4 +375,139 @@ test('FindMyPart direct door is no longer contract debt after free-triage adopti
   assert.equal(part.adoption_stage, 'shared_runtime');
   assert.equal(part.direct_door.direct_callable, true);
   assert.equal(mesh.priority_queues.direct_door_without_contract.includes('findmypart'), false);
+});
+
+
+test('every shared-runtime contract binds exact machine tool evidence', () => {
+  const contracts = JSON.parse(
+    fs.readFileSync(
+      path.join(process.cwd(), 'systemia', 'capability-mesh', 'contracts.json'),
+      'utf8'
+    )
+  );
+
+  for (const contract of contracts.contracts.filter(
+    (row) => row.adoption_stage === 'shared_runtime'
+  )) {
+    assert.ok(Array.isArray(contract.execution.actions));
+    assert.ok(contract.execution.actions.length > 0);
+    for (const action of contract.execution.actions) {
+      assert.ok(String(action.scope || '').trim());
+      assert.ok(String(action.machine_tool || '').trim());
+      assert.ok(Array.isArray(action.machine_tool_evidence_refs));
+      assert.ok(action.machine_tool_evidence_refs.length > 0);
+    }
+  }
+
+  const mesh = renderCapabilityMesh(process.cwd());
+  assert.equal(mesh.summary.incomplete_contract_declaration_count, 0);
+});
+
+
+test('IBM i Rescue is contracted through Machine Commerce without claiming a live direct specialist door', () => {
+  const mesh = renderCapabilityMesh(process.cwd());
+  const ibmi = mesh.products.find((row) => row.product_key === 'ibmi-rescue');
+
+  assert.ok(ibmi);
+  assert.equal(ibmi.contract_state, 'complete_declaration');
+  assert.equal(ibmi.adoption_stage, 'shared_runtime');
+  assert.equal(ibmi.direct_door.direct_callable, false);
+  assert.equal(
+    ibmi.direct_door.state,
+    'yard_runtime_proven_public_route_pending'
+  );
+  assert.equal(
+    mesh.priority_queues.direct_door_without_contract.includes('ibmi-rescue'),
+    false
+  );
+});
+
+
+test('missing machine-tool evidence paths make shared-runtime contracts incomplete', () => {
+  const fixture = buildCapabilityMesh({
+    root: process.cwd(),
+    publicProducts: {
+      schema: 'evercraft.saban.public-product-index.v1',
+      products: [{
+        product_key: 'demo-runtime',
+        name: 'Demo Runtime',
+        class: 'demo_runtime',
+        invocation: { mode: 'mcp' },
+        registry_name: null,
+      }],
+    },
+    directDoors: {
+      schema: 'evercraft.direct-door-readiness.v2',
+      products: [],
+    },
+    contracts: {
+      schema: 'evercraft.capability-mesh.contracts.v1',
+      truth_boundary: {},
+      contracts: [{
+        product_key: 'demo-runtime',
+        contract_version: '1.0.0',
+        owner: 'systemia',
+        adoption_stage: 'shared_runtime',
+        authority: {
+          state: 'declared',
+          passport_product: 'demo-runtime',
+          scopes: ['demo.run'],
+          evidence_refs: [],
+        },
+        context: {
+          state: 'not_required',
+          reason: 'No shared context required for this fixture.',
+        },
+        meter: {
+          state: 'not_required',
+          reason: 'No metering required for this fixture.',
+        },
+        intake: {
+          state: 'not_required',
+          reason: 'No intake required for this fixture.',
+        },
+        execution: {
+          state: 'declared',
+          gate_required: true,
+          scopes: ['demo.run'],
+          actions: [{
+            scope: 'demo.run',
+            machine_tool: 'demo_tool',
+            machine_tool_evidence_refs: ['does/not/exist-machine-tool-proof.json'],
+          }],
+          evidence_refs: [],
+        },
+        relationship: {
+          state: 'not_required',
+          reason: 'No relationship action.',
+        },
+        receipt_reconciliation: {
+          state: 'not_required',
+          reason: 'No receipt reconciliation in this fixture.',
+        },
+        rollback: {
+          state: 'declared',
+          policy: 'Disable the demo contract.',
+        },
+        compatibility: {
+          intended_product_classes: ['demo_runtime'],
+        },
+      }],
+    },
+    ratchetBaseline: {
+      schema: 'evercraft.capability-mesh.ratchet-baseline.v1',
+      captured_at: '2026-09-28',
+      public_product_keys: ['demo-runtime'],
+      direct_door_public_product_keys: [],
+      specialist_only_slugs: [],
+    },
+  });
+
+  const demo = fixture.products[0];
+  assert.equal(demo.contract_state, 'incomplete_declaration');
+  assert.ok(
+    demo.gaps.includes(
+      'execution_machine_tool_evidence_path_missing:demo.run:does/not/exist-machine-tool-proof.json'
+    )
+  );
 });

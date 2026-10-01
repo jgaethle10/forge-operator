@@ -1,0 +1,49 @@
+name: Machine Action Manifest
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/chum/mcp-canary.mjs'
+      - 'systemia/capability-mesh/contracts.json'
+      - 'registry/catalog.json'
+      - 'systemia/chum/machine-action-manifest.mjs'
+      - 'systemia/chum/machine-action-manifest.test.mjs'
+      - '.github/workflows/machine-action-manifest.yml'
+  pull_request:
+    paths:
+      - 'systemia/chum/mcp-canary.mjs'
+      - 'systemia/capability-mesh/contracts.json'
+      - 'registry/catalog.json'
+      - 'systemia/chum/machine-action-manifest.mjs'
+      - 'systemia/chum/machine-action-manifest.test.mjs'
+      - '.github/workflows/machine-action-manifest.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Prove receipt-to-action-manifest boundaries
+        run: node --test systemia/chum/machine-action-manifest.test.mjs
+
+      - name: Observe live public MCP tools and audit shared-runtime bindings
+        run: node systemia/chum/mcp-canary.mjs
+
+      - name: Upload machine-action receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: machine-action-manifest-receipts
+          path: |
+            artifacts/chum/mcp-canary-latest.json
+            artifacts/chum/machine-action-manifest-latest.json
+            artifacts/chum/machine-action-contract-audit-latest.json
+          if-no-files-found: error
+          retention-days: 14

@@ -6,7 +6,9 @@
     "source_presence_is_not_live_readiness": true,
     "missing_lane_is_never_inferred": true,
     "not_required_requires_reason": true,
-    "adoption_stage_is_not_runtime_verification": true
+    "adoption_stage_is_not_runtime_verification": true,
+    "internal_scope_is_not_machine_tool_name": true,
+    "machine_tool_declaration_requires_observation_for_runtime_verification": true
   },
   "contracts": [
     {
@@ -65,7 +67,11 @@
             "scope": "report.generate",
             "meter_metric": "site_reports",
             "meter_quantity": 1,
-            "meter_unit": "report"
+            "meter_unit": "report",
+            "machine_tool": "analyze_ev_site",
+            "machine_tool_evidence_refs": [
+              ".github/workflows/evercraft-mcp-canary.yml"
+            ]
           }
         ]
       },
@@ -133,7 +139,12 @@
         ],
         "actions": [
           {
-            "scope": "classify_media_route"
+            "scope": "classify_media_route",
+            "machine_tool": "classify_media_route",
+            "machine_tool_evidence_refs": [
+              ".github/workflows/evercraft-mcp-canary.yml",
+              "plugins/forensiscope/skills/forensiscope-direct/SKILL.md"
+            ]
           }
         ],
         "evidence_refs": [
@@ -221,10 +232,18 @@
         ],
         "actions": [
           {
-            "scope": "get_clip_capabilities"
+            "scope": "get_clip_capabilities",
+            "machine_tool": "get_clip_capabilities",
+            "machine_tool_evidence_refs": [
+              "registry/evercraft-clip/README.md"
+            ]
           },
           {
-            "scope": "plan_clip_job"
+            "scope": "plan_clip_job",
+            "machine_tool": "plan_clip_job",
+            "machine_tool_evidence_refs": [
+              ".github/workflows/evercraft-mcp-canary.yml"
+            ]
           }
         ],
         "evidence_refs": [
@@ -471,7 +490,12 @@
         ],
         "actions": [
           {
-            "scope": "free_part_triage"
+            "scope": "free_part_triage",
+            "machine_tool": "free_part_triage",
+            "machine_tool_evidence_refs": [
+              "plugins/findmypart/skills/findmypart-direct/SKILL.md",
+              "registry/catalog.json"
+            ]
           }
         ],
         "evidence_refs": [
@@ -511,6 +535,92 @@
         "listing_is_live_inventory_proof": false,
         "compatibility_guaranteed": false,
         "private_vendor_analytics_session_command_center_sales_data_public": false
+      }
+    },
+    {
+      "product_key": "ibmi-rescue",
+      "contract_version": "1.0.0",
+      "owner": "systemia",
+      "adoption_stage": "shared_runtime",
+      "specialist_slug": "ibmi-rescue",
+      "authority": {
+        "state": "declared",
+        "passport_product": "ibmi-rescue",
+        "scopes": [
+          "offer.inspect"
+        ],
+        "evidence_refs": [
+          "registry/ibmi-rescue/README.md",
+          "systemia/chum/ibmi-rescue-canary.mjs"
+        ]
+      },
+      "context": {
+        "state": "not_required",
+        "reason": "The contracted action inspects the current public Machine Commerce offer only. Private IBM i estate evidence is not admitted or retrieved by this action."
+      },
+      "meter": {
+        "state": "not_required",
+        "reason": "Read-only offer inspection creates no charge, entitlement, paid state, or usage-meter obligation."
+      },
+      "intake": {
+        "state": "not_required",
+        "reason": "Read-only public offer inspection accepts no private IBM i estate evidence and does not require Intake Fabric."
+      },
+      "execution": {
+        "state": "declared",
+        "gate_required": true,
+        "scopes": [
+          "offer.inspect"
+        ],
+        "actions": [
+          {
+            "scope": "offer.inspect",
+            "machine_tool": "get_live_checkout_offer",
+            "machine_target_product_key": "evercraft-machine-commerce",
+            "machine_tool_evidence_refs": [
+              "systemia/chum/ibmi-rescue-canary.mjs",
+              "systemia/chum/mcp-canary.mjs"
+            ]
+          }
+        ],
+        "evidence_refs": [
+          "registry/ibmi-rescue/README.md",
+          "systemia/chum/ibmi-rescue-canary.mjs"
+        ]
+      },
+      "relationship": {
+        "state": "not_required",
+        "reason": "Offer inspection does not contact a customer, vendor, operator, or third party."
+      },
+      "receipt_reconciliation": {
+        "state": "not_required",
+        "reason": "The contracted action returns current public offer state only; paid fulfillment and private estate evidence use separate verified receipts and authority paths."
+      },
+      "rollback": {
+        "state": "declared",
+        "policy": "Disable the IBM i Rescue offer-inspection contract or Machine Commerce binding without enabling checkout, payment, private system access, production mutation, upgrade, cutover, credential use, or paid fulfillment."
+      },
+      "compatibility": {
+        "intended_product_classes": [
+          "ibmi_upgrade_and_legacy_modernization_evidence"
+        ]
+      },
+      "boundaries": {
+        "contracted_machine_surface": [
+          "offer.inspect"
+        ],
+        "machine_host": "evercraft-machine-commerce",
+        "dedicated_specialist_public_route": "pending",
+        "dedicated_specialist_direct_callable": false,
+        "checkout_preparation_contracted": false,
+        "checkout_creation_is_payment_proof": false,
+        "paid_state_requires_provider_verification": true,
+        "private_system_access_authorized": false,
+        "production_upgrade_authorized": false,
+        "production_cutover_authorized": false,
+        "credential_use_authorized": false,
+        "paid_fulfillment_contracted": false,
+        "exact_upgrade_path_known_without_authorized_estate_inspection": false
       }
     }
   ]

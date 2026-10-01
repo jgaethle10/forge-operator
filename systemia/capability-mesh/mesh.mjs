@@ -177,6 +177,36 @@ export function buildCapabilityMesh({
       REQUIRED_LANES.map((lane) => [lane, validateLane(product.product_key, lane, contract[lane], root)])
     );
     const gaps = Object.values(laneResults).flatMap((lane) => lane.gaps);
+    if (contract.adoption_stage === 'shared_runtime') {
+      for (const [index, action] of (contract.execution?.actions || []).entries()) {
+        const scope = String(action?.scope || '').trim() || 'action_' + index;
+        if (!String(action?.machine_tool || '').trim()) {
+          gaps.push('execution_machine_tool_missing:' + scope);
+        }
+        if (
+          !Array.isArray(action?.machine_tool_evidence_refs) ||
+          action.machine_tool_evidence_refs.length === 0
+        ) {
+          gaps.push('execution_machine_tool_evidence_missing:' + scope);
+        } else {
+          for (const ref of action.machine_tool_evidence_refs) {
+            const evidenceRef = String(ref || '').trim();
+            if (!evidenceRef) {
+              gaps.push('execution_machine_tool_evidence_missing:' + scope);
+              continue;
+            }
+            if (!fs.existsSync(path.resolve(root, evidenceRef))) {
+              gaps.push(
+                'execution_machine_tool_evidence_path_missing:' +
+                  scope +
+                  ':' +
+                  evidenceRef
+              );
+            }
+          }
+        }
+      }
+    }
     if (contract.specialist_slug && !directDoor) gaps.push('declared_specialist_door_missing');
     if (!contract.rollback || !String(contract.rollback.policy || '').trim()) gaps.push('rollback_policy_missing');
     if (!contract.compatibility || !Array.isArray(contract.compatibility.intended_product_classes) || contract.compatibility.intended_product_classes.length === 0) {

@@ -49,6 +49,12 @@ test('one product action compiles into the exact Execution Gate input and Meter 
     unit: 'report',
   });
   assert.equal(input.require_direct_specialist, true);
+  assert.equal(prepared.machine_binding.scope, 'report.generate');
+  assert.equal(prepared.machine_binding.machine_tool, 'analyze_ev_site');
+  assert.equal(prepared.machine_binding.machine_target_product_key, 'aliev');
+  assert.equal(prepared.machine_binding.specialist_slug, 'aliev');
+  assert.equal(prepared.machine_binding.grants_authority, false);
+  assert.equal(prepared.machine_binding.tools_call_verified_by_compilation, false);
   assert.equal(prepared.grants_execution_authority, false);
   assert.equal(prepared.payment_state_inferred, false);
 });
@@ -89,7 +95,9 @@ test('ForensiScope contract exposes only the currently proven route-classificati
   assert.equal(policy.meter.state, 'not_required');
   assert.equal(policy.intake.state, 'not_required');
   assert.equal(policy.execution.gate_required, true);
-  assert.deepEqual(policy.execution.actions, [{ scope: 'classify_media_route' }]);
+  assert.equal(policy.execution.actions.length, 1);
+  assert.equal(policy.execution.actions[0].scope, 'classify_media_route');
+  assert.equal(policy.execution.actions[0].machine_tool, 'classify_media_route');
   assert.equal(policy.route.specialist_slug, 'forensiscope');
   assert.equal(policy.route.direct_callable, true);
   assert.equal(policy.runtime_verified, false);
@@ -116,6 +124,7 @@ test('ForensiScope route classification compiles without inventing a Meter charg
   assert.equal(input.specialist_slug, 'forensiscope');
   assert.equal(Object.prototype.hasOwnProperty.call(input, 'meter'), false);
   assert.equal(prepared.route_snapshot.direct_callable, true);
+  assert.equal(prepared.machine_binding.machine_tool, 'classify_media_route');
   assert.equal(prepared.grants_execution_authority, false);
 });
 
@@ -166,6 +175,7 @@ test('Clip planning compiles without inventing rendering, publishing or payment 
   assert.equal(input.passport_product, 'evercraft-clip');
   assert.equal(input.scope, 'plan_clip_job');
   assert.equal(input.specialist_slug, 'evercraft-clip');
+  assert.equal(prepared.machine_binding.machine_tool, 'plan_clip_job');
   assert.equal(Object.prototype.hasOwnProperty.call(input, 'meter'), false);
   assert.equal(prepared.payment_state_inferred, false);
   assert.equal(prepared.grants_execution_authority, false);
@@ -209,6 +219,7 @@ test('FindMyPart free triage compiles without inventing checkout, payment or pur
   assert.equal(prepared.execution_gate_input.passport_product, 'findmypart');
   assert.equal(prepared.execution_gate_input.scope, 'free_part_triage');
   assert.equal(prepared.execution_gate_input.specialist_slug, 'findmypart');
+  assert.equal(prepared.machine_binding.machine_tool, 'free_part_triage');
   assert.equal(Object.prototype.hasOwnProperty.call(prepared.execution_gate_input, 'meter'), false);
   assert.equal(prepared.payment_state_inferred, false);
 });
@@ -225,6 +236,70 @@ test('FindMyPart paid hunt is not silently exposed by the free-triage contract',
       }),
     /scope_not_declared_in_authority_contract/
   );
+});
+
+test('IBM i Rescue compiles through the verified Machine Commerce target while its direct specialist remains pending', () => {
+  const policy = compileProductRuntimePolicy('ibmi-rescue', process.cwd());
+  assert.equal(policy.adoption_stage, 'shared_runtime');
+  assert.equal(policy.route.specialist_slug, 'ibmi-rescue');
+  assert.equal(policy.route.direct_callable, false);
+  assert.equal(
+    policy.route.preferred_route.mode,
+    'universal_fallback_until_specialist_promoted'
+  );
+  assert.deepEqual(policy.authority.scopes, ['offer.inspect']);
+  assert.equal(policy.execution.actions[0].machine_tool, 'get_live_checkout_offer');
+  assert.equal(
+    policy.execution.actions[0].machine_target_product_key,
+    'evercraft-machine-commerce'
+  );
+
+  const prepared = buildExecutionGateInput({
+    product_key: 'ibmi-rescue',
+    actor_ref: 'agent:ibmi-offer-inspector',
+    scope: 'offer.inspect',
+    request: { public_id: 'ibmi-rescue-v1' },
+    idempotency_key: 'capability-mesh:ibmi:offer:001',
+  });
+
+  assert.equal(prepared.execution_gate_input.passport_product, 'ibmi-rescue');
+  assert.equal(prepared.execution_gate_input.specialist_slug, 'ibmi-rescue');
+  assert.equal(prepared.execution_gate_input.require_direct_specialist, false);
+  assert.equal(prepared.machine_binding.scope, 'offer.inspect');
+  assert.equal(prepared.machine_binding.machine_tool, 'get_live_checkout_offer');
+  assert.equal(
+    prepared.machine_binding.machine_target_product_key,
+    'evercraft-machine-commerce'
+  );
+  assert.equal(prepared.route_snapshot.direct_callable, false);
+  assert.equal(
+    prepared.route_snapshot.preferred_route.mode,
+    'universal_fallback_until_specialist_promoted'
+  );
+  assert.equal(prepared.payment_state_inferred, false);
+  assert.equal(prepared.grants_execution_authority, false);
+});
+
+test('IBM i Rescue contract does not expose checkout preparation, payment, fulfillment or production change', () => {
+  for (const scope of [
+    'checkout.prepare',
+    'payment.verify',
+    'fulfillment.start',
+    'production.upgrade',
+    'production.cutover',
+  ]) {
+    assert.throws(
+      () =>
+        buildExecutionGateInput({
+          product_key: 'ibmi-rescue',
+          actor_ref: 'agent:ibmi-offer-inspector',
+          scope,
+          request: { scope },
+          idempotency_key: 'capability-mesh:ibmi:blocked:' + scope,
+        }),
+      /scope_not_declared_in_authority_contract/
+    );
+  }
 });
 
 test('missing product contracts fail closed instead of inheriting another product defaults', () => {
@@ -245,7 +320,7 @@ test('context binding describes scopes but grants no access', () => {
 
 test('generated runtime policy artifact covers only explicitly contracted products', () => {
   const rendered = renderRuntimePolicies(process.cwd());
-  assert.equal(rendered.policy_count, 7);
+  assert.equal(rendered.policy_count, 8);
   assert.deepEqual(
     rendered.policies.map((row) => row.product_key),
     [
@@ -256,6 +331,7 @@ test('generated runtime policy artifact covers only explicitly contracted produc
       'opportunity-fabric',
       'systemia-university',
       'findmypart',
+      'ibmi-rescue',
     ]
   );
   assert.equal(rendered.truth_boundary.non_shared_runtime_execution_fails_closed, true);

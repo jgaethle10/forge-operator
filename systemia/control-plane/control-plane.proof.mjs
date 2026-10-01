@@ -194,6 +194,11 @@ const contractDispatch = contractDerived.dispatch[0];
 assert.equal(contractDispatch.capability_contract_state, 'complete_declaration');
 assert.equal(contractDispatch.adoption_stage, 'shared_runtime');
 assert.equal(contractDispatch.contract_specialist_slug, 'aliev');
+assert.equal(contractDispatch.contract_action_scope, 'report.generate');
+assert.equal(contractDispatch.contract_machine_tool, 'analyze_ev_site');
+assert.equal(contractDispatch.contract_machine_target_product_key, 'aliev');
+assert.equal(contractDispatch.contract_machine_tool_declared, true);
+assert.equal(contractDispatch.contract_machine_tool_grants_authority, false);
 assert.equal(contractDispatch.specialist_component, 'aliev');
 assert.equal(contractDispatch.execution_component, 'aliev');
 assert.equal(contractDispatch.contract_context_namespace, 'aliev');
@@ -203,6 +208,45 @@ assert.equal(contractDispatch.execution_gate_required, true);
 assert.equal(contractDispatch.pre_dispatch_gate, 'evercraft-execution-gate');
 assert.equal(contractDispatch.hold, null);
 assert.equal(contractDispatch.execution_authority_granted, false);
+
+const ibmiOfferInspect = admitMission({
+  rootDir: process.cwd(),
+  request: {
+    objective: 'Inspect the current IBM i Rescue public offer through its verified Machine Commerce host.',
+    tasks: [{
+      work_key: 'ibmi-offer-inspect',
+      work_type: 'analyze',
+      product_key: 'ibmi-rescue',
+      action_scope: 'offer.inspect',
+    }]
+  }
+});
+assertControlPlane(ibmiOfferInspect);
+const ibmiDispatch = ibmiOfferInspect.dispatch[0];
+assert.equal(ibmiDispatch.capability_contract_state, 'complete_declaration');
+assert.equal(ibmiDispatch.adoption_stage, 'shared_runtime');
+assert.equal(ibmiDispatch.contract_specialist_slug, 'ibmi-rescue');
+assert.equal(ibmiDispatch.specialist_component, 'ibmi-rescue');
+assert.equal(
+  ibmiDispatch.contract_machine_target_product_key,
+  'evercraft-machine-commerce'
+);
+assert.equal(
+  ibmiDispatch.contract_machine_execution_component,
+  'evercraft-machine-commerce'
+);
+assert.equal(ibmiDispatch.execution_component, 'evercraft-machine-commerce');
+assert.equal(ibmiDispatch.contract_machine_tool, 'get_live_checkout_offer');
+assert.equal(ibmiDispatch.contract_direct_callable, false);
+assert.equal(
+  ibmiDispatch.contract_preferred_route_mode,
+  'universal_fallback_until_specialist_promoted'
+);
+assert.equal(ibmiDispatch.execution_gate_required, true);
+assert.equal(ibmiDispatch.pre_dispatch_gate, 'evercraft-execution-gate');
+assert.equal(ibmiDispatch.hold, null);
+assert.equal(ibmiDispatch.execution_authority_granted, false);
+assert.equal(ibmiDispatch.contract_machine_tool_grants_authority, false);
 
 const contractBadScope = admitMission({
   rootDir: process.cwd(),
@@ -396,6 +440,10 @@ console.log(JSON.stringify({
   product_contract_derives_meter_and_execution_gate:
     contractDispatch.meter_metric === 'site_reports' &&
     contractDispatch.execution_gate_required === true,
+  ibmi_shared_mcp_target_preserves_pending_direct_door:
+    ibmiDispatch.specialist_component === 'ibmi-rescue' &&
+    ibmiDispatch.execution_component === 'evercraft-machine-commerce' &&
+    ibmiDispatch.contract_direct_callable === false,
   undeclared_contract_scope_fails_closed:
     contractBadScope.dispatch[0].hold === 'capability_contract_scope_missing',
   missing_product_contract_action_fails_closed:
