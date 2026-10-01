@@ -208,7 +208,8 @@ chown evercraft:evercraft "${STATE_ROOT}/install-receipt.json"
 chmod 0600 "${STATE_ROOT}/install-receipt.json"
 
 systemctl daemon-reload
-systemctl enable --now evercraft-nodeseed.service
+systemctl enable evercraft-nodeseed.service
+systemctl restart evercraft-nodeseed.service
 systemctl enable evercraft-remote-admission.service
 if grep -q '^EVERCRAFT_REMOTE_BROKER_URL=.' "${ENV_FILE}"; then
   systemctl restart evercraft-remote-admission.service
