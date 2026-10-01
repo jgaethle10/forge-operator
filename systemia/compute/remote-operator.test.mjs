@@ -124,6 +124,8 @@ try {
       observer_install_id: 'cros_operator_proof',
       observer_key_fingerprint: pairedObserver.observer_key_fingerprint,
       observer_signature_verified: true,
+      pairing_active: true,
+      pairing_matches_observation: true,
     },
     ready_for_external_canary: true,
     external_public_route_verified: false,
