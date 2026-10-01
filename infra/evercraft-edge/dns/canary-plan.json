@@ -1,0 +1,41 @@
+{
+  "schema": "evercraft.edge.canary-plan.v1",
+  "parent_domain": "evercraftpropertyservices.com",
+  "canary_label": "edge-canary",
+  "fqdn": "edge-canary.evercraftpropertyservices.com",
+  "state": "prepared_not_delegated",
+  "purpose": "Prove Evercraft authoritative DNS, TLS and HTTP routing without touching apex production traffic.",
+  "required_parent_records": [
+    {
+      "type": "NS",
+      "name": "edge-canary",
+      "values": [
+        "ns1.edge-canary.evercraftpropertyservices.com.",
+        "ns2.edge-canary.evercraftpropertyservices.com."
+      ]
+    },
+    {
+      "type": "A",
+      "name": "ns1.edge-canary",
+      "value": "<evercraft-edge-node-1-ip>"
+    },
+    {
+      "type": "A",
+      "name": "ns2.edge-canary",
+      "value": "<evercraft-edge-node-2-ip>"
+    }
+  ],
+  "gates": [
+    "two_attested_distinct_failure_domain_nodes",
+    "public_udp_53",
+    "public_tcp_53",
+    "parent_delegation_observed",
+    "authoritative_aa_true",
+    "recursion_ra_false",
+    "signed_snapshot_verified",
+    "tls_dns01_issued",
+    "https_frontdoor_correct_service",
+    "rollback_tested"
+  ],
+  "production_impact": "none until parent NS/glue records are explicitly added; apex records remain unchanged"
+}
