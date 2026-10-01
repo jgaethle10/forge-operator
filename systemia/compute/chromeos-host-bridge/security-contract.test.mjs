@@ -65,3 +65,19 @@ test('registry truthfully records the broad platform permission', () => {
   assert.equal(capability.arbitrary_desktop_control_exposed, false);
   assert.equal(capability.mutation_authority, false);
 });
+
+
+test('private observer key is generated non-extractable and never exported', () => {
+  assert.match(
+    worker,
+    /generateKey\([\s\S]*?false,[\s\S]*?\['sign', 'verify'\]/,
+  );
+  assert.equal(
+    /exportKey\([^)]*privateKey/.test(worker),
+    false,
+  );
+  assert.equal(
+    /privateJwk/.test(worker),
+    false,
+  );
+});
