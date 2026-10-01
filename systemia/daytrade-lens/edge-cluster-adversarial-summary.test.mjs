@@ -43,6 +43,11 @@ const summary=buildClusterAdversarialSummary({
   labelPermutationLab:{reviews:rows("label_permutation_status","LABEL_PERMUTATION_SEPARATED_DIAGNOSTIC")},
   regimeFragilityLab:{reviews:rows("regime_status","REGIME_ROBUST_DIAGNOSTIC")},
   eventContaminationLab:{reviews:rows("contamination_status","CONTAMINATION_ROBUST_DIAGNOSTIC")},
+  announcementExecutionStressLab:{reviews:candidates.map((candidate)=>({
+    signal_key:candidate.signal_key,
+    status:"ANNOUNCEMENT_EXECUTION_STRESS_READY",
+    execution_cost_ratios:{any_to_clean_mean_spread_ratio:1.8},
+  }))},
   benchmarkLab:{reviews:rows("benchmark_status","BENCHMARK_ROBUST_DIAGNOSTIC")},
   horizonCoherenceLab:{reviews:rows("horizon_coherence_status","HORIZON_COHERENT_DIAGNOSTIC")},
   walkForwardLab:{reviews:rows("walk_forward_status","WALK_FORWARD_ROBUST_DIAGNOSTIC")},
@@ -87,6 +92,18 @@ assert.equal(summary.clusters[0].diagnostic_counts.family_max_null_separated,2);
 assert.equal(summary.clusters[0].diagnostic_counts.deflated_sharpe_separated,2);
 assert.equal(summary.clusters[0].diagnostic_counts.tail_dependence_fragile,1);
 assert.equal(
+  summary.clusters[0].diagnostic_counts.announcement_execution_stress_ready,
+  2
+);
+assert.equal(
+  summary.clusters[0].member_receipts[0].announcement_execution_status,
+  "ANNOUNCEMENT_EXECUTION_STRESS_READY"
+);
+assert.equal(
+  summary.clusters[0].member_receipts[0].announcement_execution_any_to_clean_spread_ratio,
+  1.8
+);
+assert.equal(
   summary.clusters[0].cscv_pbo_cluster_receipt.status,
   "CSCV_PBO_LOWER_OVERFIT_DIAGNOSTIC"
 );
@@ -118,6 +135,7 @@ console.log(JSON.stringify({
   family_max_null_attached:true,
   deflated_sharpe_attached:true,
   tail_dependence_attached:true,
+  announcement_execution_stress_attached:true,
   cscv_pbo_attached_at_cluster_unit:true,
   descriptive_only:true,
   eligibility_mutated:false,
