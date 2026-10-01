@@ -83,10 +83,12 @@ assert.equal(receipt.private_key_exposed,false);
 assert.equal(receipt.certificate_bytes_exposed,false);
 assert.match(receipt.receipt_hash,/^sha256:[a-f0-9]{64}$/);
 
+const failedRouteBody={...externalBody,verified:false,public_https_verified:false,external_route_verified:false};
+const failedRouteCanary={...failedRouteBody,receipt_hash:sha(failedRouteBody)};
 assert.throws(
   ()=>evaluateOperatorPublicEdgeAdmission({
     nodeReceipt,
-    externalCanary:{...externalCanary,verified:false},
+    externalCanary:failedRouteCanary,
     localHealth,serviceStates,operatorRef:'founder',
   }),
   /external_public_https_not_verified/
