@@ -5,13 +5,17 @@ This is the narrow host-side companion for the boundary that a Crostini guest ca
 The first admitted capability is intentionally small:
 
 ```text
-ChromeOS Settings
-  -> accessibility automation tree
+Remote Operator fresh-check request
+  -> paired Crostini receiver
+  -> ChromeOS companion polls for bounded work
+  -> ChromeOS Settings accessibility automation tree
   -> only Crostini Port Forwarding
   -> only TCP 18080 + TCP 8443
-  -> paired localhost receiver in Crostini
-  -> Remote Operator read-only status
+  -> receipt-backed observation
+  -> Remote Operator result
 ```
+
+The companion keeps a low-rate heartbeat but also polls the local receiver for fresh-check requests every 30 seconds. A remote operator can therefore request new evidence instead of relying only on the last background snapshot.
 
 It is not a generic remote desktop agent. It does not persist screenshots or the raw accessibility tree, and v0.1.0 accepts no remote mutation commands.
 
@@ -49,7 +53,7 @@ Until this becomes a managed Evercraft package, load `systemia/compute/chromeos-
 
 Open the extension options, paste the pairing token, save, and run **Check now**.
 
-The extension will also perform a bounded read-only check every two minutes.
+The extension performs a bounded background heartbeat every ten minutes and checks for on-demand requests every 30 seconds. Polling does not open Settings unless there is actual work to perform.
 
 ## Evidence semantics
 
@@ -64,6 +68,12 @@ The complete ingress diagnosis should reconcile independent evidence:
 5. An external canary for public DNS/TLS reachability.
 
 No inner green layer is allowed to stand in for an outer layer.
+
+## Remote check semantics
+
+`remote_host_boundary_status` reads the latest receipt.
+
+`remote_host_boundary_check` creates a short-lived request with a unique request ID. The ChromeOS companion picks it up, performs the narrow read, and includes that request ID in the returned observation. Remote Operator reports the request as fulfilled only when the matching fresh receipt arrives. A stale heartbeat cannot accidentally satisfy a fresh-check request.
 
 ## Future mutation lane
 
