@@ -21,12 +21,14 @@ function stagedFixture(){
     media:{path:media,sha256:mediaSha},
     metadata:{title:'Original',description:'Original description',tags:['one']},
   }));
+  const stagedManifestSha256=digest(manifestPath);
   const receiptPath=path.join(root,'intake-receipt.json');
   fs.writeFileSync(receiptPath,JSON.stringify({
     schema:'evercraft.clip.intake-receipt.v1',
     deliveryId:'delivery-1',
     status:'staged',
     stagedManifestPath:manifestPath,
+    stagedManifestSha256,
     stagedMediaPath:media,
     mediaSha256:mediaSha,
     manifestDigest:'a'.repeat(64),
@@ -139,4 +141,34 @@ test('provider failures return a failed receipt without inventing a publication'
   assert.match(receipt.error,/provider_down/);
   assert.equal('remoteId' in receipt,false);
   assert.equal(receipt.boundaries.publicationStateAssertedFromProviderResponse,false);
+});
+
+
+test('tampered staged manifests cannot publish even when media bytes still match',async()=>{
+  const f=stagedFixture();
+  const manifest=JSON.parse(fs.readFileSync(f.manifestPath,'utf8'));
+  manifest.metadata.title='Tampered after intake';
+  fs.writeFileSync(f.manifestPath,JSON.stringify(manifest));
+  await assert.rejects(()=>publishClipMedia({
+    request:request(f.receiptPath),
+    adapters:[{destination:'youtube',verified:true,async publish(){throw new Error('must_not_run');}}],
+    policy:{allowPublishing:true,allowedDestinations:['youtube'],blockedBrandKeys:[]},
+  }),/clip_publish_staged_manifest_digest_mismatch/);
+});
+
+test('social spectacle cannot publish without its accepted editorial and production gates',async()=>{
+  const f=stagedFixture();
+  const manifest=JSON.parse(fs.readFileSync(f.manifestPath,'utf8'));
+  manifest.contentClass='social_spectacle';
+  fs.writeFileSync(f.manifestPath,JSON.stringify(manifest));
+  const receipt=JSON.parse(fs.readFileSync(f.receiptPath,'utf8'));
+  receipt.stagedManifestSha256=digest(f.manifestPath);
+  fs.writeFileSync(f.receiptPath,JSON.stringify(receipt));
+  let called=false;
+  await assert.rejects(()=>publishClipMedia({
+    request:request(f.receiptPath),
+    adapters:[{destination:'youtube',verified:true,async publish(){called=true;}}],
+    policy:{allowPublishing:true,allowedDestinations:['youtube'],blockedBrandKeys:[]},
+  }),/clip_publish_social_spectacle_editorial_gate_invalid/);
+  assert.equal(called,false);
 });
