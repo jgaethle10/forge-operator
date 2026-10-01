@@ -23,6 +23,10 @@ on:
       - '.github/workflows/openai-plugin-readiness.yml'
   workflow_dispatch:
 
+concurrency:
+  group: openai-plugin-readiness-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
