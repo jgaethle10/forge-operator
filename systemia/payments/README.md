@@ -25,10 +25,21 @@ Evercraft Payments is the provider-neutral economic authority for Evercraft comm
 
 The first implementation is deliberately provider-neutral and in-memory. It makes the invariants executable before persistence, provider adapters, payouts, refunds, subscriptions, metering, and production API surfaces are connected.
 
+
+## Money Router v1
+
+Evercraft Payments now has a transparent settlement-router primitive. A rail declares provider, supported currencies, capabilities, estimated fee model, settlement time, enabled state, and priority. Routing happens only across eligible rails and supports explicit strategies:
+
+- lowest_cost
+- fastest_settlement
+- preferred_order
+
+The router does not use opaque scoring and fails closed when no rail satisfies the order requirements. A selected rail remains a settlement adapter, not the economic authority.
+
 ## Test
 
 Run:
 
-    node --test systemia/payments/economic-kernel.test.mjs
+    node --test systemia/payments/*.test.mjs
 
 The CI gate in .github/workflows/evercraft-payments-kernel.yml runs this test whenever the kernel or its public machine contract changes.
