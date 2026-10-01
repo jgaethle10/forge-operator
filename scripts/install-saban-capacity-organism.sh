@@ -75,6 +75,16 @@ fi
 RUN_GROUP="$(id -gn "$RUN_USER")"
 chown "$RUN_USER:$RUN_GROUP" "$STATE_DIR"
 chmod 0750 "$STATE_DIR"
+install -d -o "$RUN_USER" -g "$RUN_GROUP" -m 0700 "$STATE_DIR/.secrets"
+install -d -o "$RUN_USER" -g "$RUN_GROUP" -m 0700 "$STATE_DIR/.secrets/device-tokens"
+
+GATEWAY_TOKEN_FILE="$STATE_DIR/.secrets/microseed-gateway-token"
+if [[ ! -s "$GATEWAY_TOKEN_FILE" ]]; then
+  umask 077
+  "$NODE_BIN" -e "process.stdout.write(require('crypto').randomBytes(32).toString('hex')+'\\n')" > "$GATEWAY_TOKEN_FILE"
+  chown "$RUN_USER:$RUN_GROUP" "$GATEWAY_TOKEN_FILE"
+  chmod 0600 "$GATEWAY_TOKEN_FILE"
+fi
 
 cat >/etc/systemd/system/evercraft-saban-capacity.service <<EOF
 [Unit]
