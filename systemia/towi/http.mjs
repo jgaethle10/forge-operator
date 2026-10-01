@@ -78,6 +78,11 @@ export function registerTowiRoutes(app, {
     });
   });
 
+  app.get('/api/towi/internal/production', requireInternal, (_req, res) => {
+    res.setHeader('Cache-Control', 'no-store');
+    res.json(resident.productionQueue());
+  });
+
   app.get('/api/towi/internal/dossiers/:id', requireInternal, (req, res) => {
     const dossier = resident.dossier(String(req.params.id || ''));
     if (!dossier) {
