@@ -55,6 +55,8 @@ export function assessJournalDispatch({ dispatch, observation } = {}) {
       provenance_refs: provenance,
       editorial_signal: Number(editorialSignal.toFixed(3)),
       publication_authority: false,
+      claim_reactor_required: true,
+      claim_reactor_schema: 'evercraft.systemia.claim-reactor.v1',
       required_next_gate: 'journal_editorial_10_of_10_preflight'
     }
   };
