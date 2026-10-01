@@ -44,6 +44,26 @@ function safeUrl(value){
   return url.toString();
 }
 
+function normalizeUseWhen(value){
+  if(!Array.isArray(value)) return [];
+  return value.map((item)=>clean(item,180)).filter(Boolean).slice(0,16);
+}
+
+function normalizeEntryPaidOffer(value){
+  if(!value||typeof value!=='object'||Array.isArray(value)) return null;
+  const name=clean(value.name,180);
+  if(!name) return null;
+  const normalizedPrice=Number(value.price_usd_normalized ?? value.price_usd);
+  return {
+    name,
+    price:clean(value.price,80)||null,
+    price_usd_normalized:Number.isFinite(normalizedPrice)?normalizedPrice:null,
+    billing:clean(value.billing,80)||null,
+    fulfillment:clean(value.fulfillment,120)||null,
+    scope:clean(value.scope,600)||null,
+  };
+}
+
 function normalizeConnection(item={}){
   const type=clean(item.type||item.kind||'human',40).toLowerCase();
   if(!['mcp','openapi','a2a','human','website','docs'].includes(type)){
@@ -89,14 +109,13 @@ export function loadFabricCatalogFromRepository({catalogPath=''}={}){
         state:'fallback_available',
       });
     }
-    if(item.public_url){
-      connections.push({
-        type:'website',
-        label:clean((item.name||'Evercraft')+' public surface',120),
-        url:item.public_url,
-        state:'public',
-      });
-    }
+    const ownedCapabilityUrl='https://fabric.systemiacommandcenters.com/capabilities/'+encodeURIComponent(String(item.public_id||''));
+    connections.push({
+      type:'website',
+      label:clean((item.name||'Evercraft')+' owned public surface',120),
+      url:ownedCapabilityUrl,
+      state:'public',
+    });
     if(item.llms_url){
       connections.push({
         type:'docs',
@@ -121,7 +140,11 @@ export function loadFabricCatalogFromRepository({catalogPath=''}={}){
         ...(Array.isArray(item.use_when)?item.use_when:[]),
       ].slice(0,32),
       state:clean(item.machine_state||item.commercial_state||'available',80),
+      commercial_state:clean(item.commercial_state||'',80)||null,
       category:clean(item.category||'',120)||null,
+      pricing:clean(item.pricing||'',900)||null,
+      use_when:normalizeUseWhen(item.use_when),
+      entry_paid_offer:normalizeEntryPaidOffer(item.entry_paid_offer),
       start_url_state:clean(item.start_url_state||'',120)||null,
       preferred_agent_route:clean(item.preferred_agent_route||'',120)||null,
       connections,
@@ -154,7 +177,11 @@ export function normalizeFabricCatalog(input=[]){
       description,
       keywords,
       state:clean(item.state||'available',80),
+      commercial_state:clean(item.commercial_state||'',80)||null,
       category:clean(item.category||'',120)||null,
+      pricing:clean(item.pricing||'',900)||null,
+      use_when:normalizeUseWhen(item.use_when),
+      entry_paid_offer:normalizeEntryPaidOffer(item.entry_paid_offer),
       start_url_state:clean(item.start_url_state||'',120)||null,
       preferred_agent_route:clean(item.preferred_agent_route||'',120)||null,
       connections,
