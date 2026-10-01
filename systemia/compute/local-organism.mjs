@@ -8,6 +8,7 @@ import { fileURLToPath } from 'node:url';
 import { startNodeSeed } from './node-seed.mjs';
 import { YardOperator } from '../yard/operator.mjs';
 import { RemoteAdmissionKeeper } from './remote-admission-keeper.mjs';
+import { DiscoveredRemoteAdmissionKeeper } from './discovered-remote-admission-keeper.mjs';
 
 const MODULE_FILE = fileURLToPath(import.meta.url);
 const CODE_ROOT = path.resolve(path.dirname(MODULE_FILE), '../..');
@@ -76,6 +77,8 @@ export async function startLocalOrganism({
   heartbeatTargetSeconds = 300,
   graceSeconds = 90,
   remoteBrokerUrl = '',
+  autoDiscoverRemoteBroker = true,
+  fallbackRemoteBrokerUrls = [],
   remoteAdmissionRetryMs = 5_000,
   remoteOperatorEnabled = false,
   clipEpsIngressUrl = '',
@@ -243,6 +246,14 @@ export async function startLocalOrganism({
         retryBaseMs: remoteAdmissionRetryMs,
       });
       remoteAdmission.start();
+    } else if (autoDiscoverRemoteBroker === true) {
+      remoteAdmission = new DiscoveredRemoteAdmissionKeeper({
+        localCapacityEndpoint: seed.endpoint,
+        localAllocatorToken: allocatorToken,
+        retryBaseMs: Math.min(2_000, remoteAdmissionRetryMs),
+        fallbackBrokerUrls: fallbackRemoteBrokerUrls,
+      });
+      remoteAdmission.start();
     }
 
     const body = {
@@ -276,9 +287,16 @@ export async function startLocalOrganism({
         public_ingress: false,
       },
       remote_admission: {
-        configured: Boolean(String(remoteBrokerUrl || '').trim()),
+        configured:
+          Boolean(String(remoteBrokerUrl || '').trim()) ||
+          autoDiscoverRemoteBroker === true,
+        discovery_mode: String(remoteBrokerUrl || '').trim()
+          ? 'explicit_broker'
+          : autoDiscoverRemoteBroker === true
+            ? 'local_multicast'
+            : 'disabled',
         state: remoteAdmission?.status().connected ? 'connected' :
-          String(remoteBrokerUrl || '').trim() ? 'connecting_or_degraded' : 'not_configured',
+          remoteAdmission ? 'discovering_or_connecting' : 'not_configured',
         enrollment_request_receipt: enrollmentRequest.receipt_hash,
         public_ingress: false,
       },
@@ -428,6 +446,12 @@ if (isCli) {
       '--remote-broker',
       process.env.EVERCRAFT_REMOTE_BROKER_URL || ''
     ),
+    autoDiscoverRemoteBroker:
+      String(process.env.EVERCRAFT_REMOTE_BROKER_AUTO_DISCOVERY || 'true').toLowerCase() !== 'false',
+    fallbackRemoteBrokerUrls: String(
+      process.env.EVERCRAFT_REMOTE_BROKER_FALLBACK_URLS ||
+      'https://fabric.systemiacommandcenters.com:9443'
+    ).split(',').map((value)=>value.trim()).filter(Boolean),
     remoteOperatorEnabled: String(
       process.env.EVERCRAFT_REMOTE_OPERATOR_ENABLED || ''
     ).toLowerCase() === 'true',
