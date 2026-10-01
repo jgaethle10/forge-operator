@@ -1,5 +1,6 @@
 import path from 'node:path';
 import { createRadarResident } from './resident.mjs';
+import { readRadarReleaseAsset } from './release-controller.mjs';
 
 function bearer(req) {
   const header = String(req.headers?.authorization || '');
@@ -12,7 +13,10 @@ export function registerRadarRoutes(app, {
   intervalMs = Number(process.env.RADAR_INTERVAL_MS || 5 * 60 * 1000),
   materialityThreshold = Number(process.env.RADAR_MATERIALITY_THRESHOLD || 0.58),
   maxSignals = Number(process.env.RADAR_MAX_SIGNALS || 8),
-  journalUrl = process.env.RADAR_JOURNAL_URL || 'https://journal.evercraft.global/'
+  journalUrl = process.env.RADAR_JOURNAL_URL || 'https://journal.evercraft.global/',
+  autoReleaseOwned = process.env.RADAR_OWNED_RELEASE_ENABLED == null
+    ? isProd
+    : String(process.env.RADAR_OWNED_RELEASE_ENABLED).toLowerCase() === 'true'
 } = {}) {
   const token = String(process.env.RADAR_INTERNAL_TOKEN || '').trim();
   const resident = createRadarResident({
@@ -20,7 +24,8 @@ export function registerRadarRoutes(app, {
     intervalMs,
     materialityThreshold,
     maxSignals,
-    journalUrl
+    journalUrl,
+    autoReleaseOwned
   });
 
   function requireInternal(req, res, next) {
@@ -64,11 +69,66 @@ export function registerRadarRoutes(app, {
     res.json(resident.sourceHealth());
   });
 
+  app.get('/api/radar/releases', (_req, res) => {
+    res.setHeader('Cache-Control', 'public, max-age=30, must-revalidate');
+    res.json(resident.releaseState().index);
+  });
+
+  app.get('/api/radar/releases/latest', (_req, res) => {
+    const release = resident.releaseState().latest_release;
+    if (!release) {
+      res.status(404).json({ ok: false, error: 'No owned Radar release exists yet.' });
+      return;
+    }
+    res.setHeader('Cache-Control', 'public, max-age=30, must-revalidate');
+    res.json(release);
+  });
+
+  app.get('/api/radar/corrections', (_req, res) => {
+    res.setHeader('Cache-Control', 'public, max-age=30, must-revalidate');
+    res.json(resident.releaseState().corrections);
+  });
+
+  app.get('/radar/releases/:slug', (req, res) => {
+    const html = readRadarReleaseAsset(stateDir, String(req.params.slug || ''), 'index.html');
+    if (!html) {
+      res.status(404).type('text/plain').send('Radar release not found.');
+      return;
+    }
+    res.setHeader('Cache-Control', 'public, max-age=60, must-revalidate');
+    res.type('html').send(html);
+  });
+
+  app.get('/radar/releases/:slug/', (req, res) => {
+    const html = readRadarReleaseAsset(stateDir, String(req.params.slug || ''), 'index.html');
+    if (!html) {
+      res.status(404).type('text/plain').send('Radar release not found.');
+      return;
+    }
+    res.setHeader('Cache-Control', 'public, max-age=60, must-revalidate');
+    res.type('html').send(html);
+  });
+
+  app.get('/radar/releases/:slug/hero.svg', (req, res) => {
+    const svg = readRadarReleaseAsset(stateDir, String(req.params.slug || ''), 'hero.svg');
+    if (!svg) {
+      res.status(404).type('text/plain').send('Radar release visual not found.');
+      return;
+    }
+    res.setHeader('Cache-Control', 'public, max-age=300, must-revalidate');
+    res.type('image/svg+xml').send(svg);
+  });
+
   app.post('/api/radar/run', requireInternal, async (req, res) => {
     const receipt = await resident.runOnce({
       externalObservations: Array.isArray(req.body?.observations) ? req.body.observations : []
     });
     res.status(receipt.status === 'failed' ? 503 : 200).json(receipt);
+  });
+
+  app.post('/api/radar/release', requireInternal, (_req, res) => {
+    const receipt = resident.releaseLatestOwned();
+    res.status(receipt.status === 'hold' ? 409 : 200).json(receipt);
   });
 
   app.post('/api/radar/ingest', requireInternal, (req, res) => {

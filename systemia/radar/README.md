@@ -161,3 +161,67 @@ Public source-health state is available at:
 A resident cycle does not republish the same observation every five minutes. Radar remembers the last emitted observation/change-state pair. If nothing materially changed, the next edition is quiet.
 
 Fast-moving signals are also re-evaluated for freshness at compile time. When a previously emitted fast signal ages beyond its valid window, it enters the Change Wall as `ROLLED_OFF` rather than lingering indefinitely.
+
+
+## Owned Release Controller
+
+Radar now has a release controller between evidence selection and public archive publication.
+
+The controller will only auto-release a Radar edition to the owned Radar archive when all of the following are true:
+
+- at least one material signal cleared the edition threshold
+- at least two source records are present
+- every published claim is bound to known sources
+- every selected signal is still fresh at release time
+- no selected signal remains `UNKNOWN`
+- propagation candidates remain `INFERRED` with `causal_claim: false`
+- unattended political/government publication is not present
+- the generated long-form prose clears the developed-paragraph structural gate
+
+Quiet editions remain quiet. Political/government editions can still be staged for sourced editorial review, but the unattended owned-release path fails closed.
+
+Production enables owned Radar archive release by default. Override with:
+
+`RADAR_OWNED_RELEASE_ENABLED=true|false`
+
+A successful owned release writes:
+
+```
+.runtime/radar/releases/
+  index.json
+  receipts.jsonl
+  <release-slug>/
+    release.json
+    index.html
+    hero.svg
+
+.runtime/radar/clip-outbox/
+  <release-slug>.json
+```
+
+The generated visual is an evidence-derived SVG showing the strongest materiality signals. It is explicitly labeled as an editorial triage visualization, not a probability or forecast.
+
+The Clip outbox is a real distribution handoff boundary, but writing the outbox does not claim that Facebook, LinkedIn, Instagram, TikTok, YouTube, or any other external platform was actually published.
+
+### Release surfaces
+
+- `GET /api/radar/releases`
+- `GET /api/radar/releases/latest`
+- `GET /api/radar/corrections`
+- `GET /radar/releases/:slug/`
+- `GET /radar/releases/:slug/hero.svg`
+- `POST /api/radar/release` requires `RADAR_INTERNAL_TOKEN`
+
+## Correction Watch
+
+Publication is not the end of the evidence lifecycle. After an owned release, every resident cycle compares the released signal snapshot with the current Radar state.
+
+A correction candidate is written when a released signal:
+
+- receives a newer underlying observation
+- changes truth state
+- becomes contested
+- closes
+- rolls off its freshness window
+
+Corrections are append-only. The original release remains preserved, which makes the public record auditable instead of silently rewriting history.
