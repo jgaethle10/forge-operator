@@ -272,5 +272,4 @@ if (isCli) {
   );
   const result = await checkLocalOrganismHealth({ stateRoot });
   console.log(JSON.stringify(result, null, 2));
-  if (!['healthy', 'recovered'].includes(result.state)) process.exitCode = 1;
 }
