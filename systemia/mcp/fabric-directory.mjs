@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { previewPublicWebsite } from './public-website-preview.mjs';
 import { fileURLToPath } from 'node:url';
 
 const STOP_WORDS=new Set([
@@ -293,6 +294,12 @@ export function fabricDirectoryTools(){
     idempotentHint:true,
     openWorldHint:false,
   };
+  const publicWebSafe={
+    readOnlyHint:true,
+    destructiveHint:false,
+    idempotentHint:true,
+    openWorldHint:true,
+  };
   return [
     {
       name:'match_evercraft_capability',
@@ -332,6 +339,20 @@ export function fabricDirectoryTools(){
       },
       annotations:safe,
     },
+    {
+      name:'preview_public_website',
+      title:'Preview a public website',
+      description:'Fetch one user-supplied public website URL and return a bounded, evidence-backed preview of HTTP and on-page website signals. Read-only. Private and local networks, embedded credentials, oversized responses, and unsupported content types are rejected.',
+      inputSchema:{
+        type:'object',
+        properties:{
+          url:{type:'string',minLength:3,maxLength:2048,description:'Public http or https website URL to inspect. If the scheme is omitted, https is assumed.'},
+        },
+        required:['url'],
+        additionalProperties:false,
+      },
+      annotations:publicWebSafe,
+    },
   ];
 }
 
@@ -351,7 +372,7 @@ function toolResult(payload){
   };
 }
 
-export async function executeFabricDirectoryRpc(rpc,catalog=[]){
+export async function executeFabricDirectoryRpc(rpc,catalog=[],{websitePreview=previewPublicWebsite}={}){
   const normalized=normalizeFabricCatalog(catalog);
   const method=clean(rpc?.method,120);
   const id=rpc?.id??null;
@@ -360,8 +381,8 @@ export async function executeFabricDirectoryRpc(rpc,catalog=[]){
     return rpcResult(id,{
       protocolVersion:'2025-03-26',
       capabilities:{tools:{}},
-      serverInfo:{name:'evercraft-fabric',version:'1.0.0'},
-      instructions:'Evercraft Fabric is a read-only capability directory and connection layer. Discovery does not authorize payment, paid work, credentials, production access, or external actions.',
+      serverInfo:{name:'evercraft-fabric',version:'1.1.0'},
+      instructions:'Evercraft Fabric provides read-only capability routing plus bounded standalone public-web inspection. Discovery and previews do not authorize payment, paid work, credentials, production access, or external actions.',
     });
   }
 
@@ -418,6 +439,20 @@ export async function executeFabricDirectoryRpc(rpc,catalog=[]){
         transactional:false,
         external_action_taken:false,
       }));
+    }
+
+    if(name==='preview_public_website'){
+      const url=clean(args.url,2048);
+      if(url.length<3) return rpcError(id,-32602,'url must contain at least 3 characters');
+      try{
+        return rpcResult(id,toolResult(await websitePreview(url)));
+      }catch(error){
+        return rpcError(
+          id,
+          -32010,
+          error instanceof Error?error.message:String(error)
+        );
+      }
     }
 
     return rpcError(id,-32602,'Unknown or unsupported Evercraft Fabric tool.');
