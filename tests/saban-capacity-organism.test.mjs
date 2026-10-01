@@ -86,12 +86,25 @@ test('capacity organism compiles only fresh trusted devices into zero-spend offe
     attestation:{mode:'device',device_identity:'phone-key'},
     observed_at:'2026-10-01T03:00:00.000Z',
   });
+  const conformance={
+    schema:'evercraft.microseed.conformance-receipt.v1',
+    device_id:'phone-01',
+    manifest_hash:freshManifest.manifest_hash,
+    verified_workloads:['systemia.content-hash.v1','systemia.telemetry-normalizer.v1'],
+    unverified_workloads:[],
+    execution_receipts:[],
+    arbitrary_code_execution:false,
+    safe_registered_canaries_only:true,
+    verified_at:'2026-10-01T03:00:10.000Z',
+    expires_at:'2026-10-02T03:00:10.000Z',
+    receipt_hash:'sha256:'+'c'.repeat(64),
+  };
   const snapshot={
     schema:'evercraft.saban.ambient-device-registry-snapshot.v1',
     eligible_count:1,
     rows:[
-      {device_id:'phone-01',state:'active',eligible:true,reason:'authorized_fresh',manifest:freshManifest},
-      {device_id:'mystery-01',state:'observed',eligible:false,reason:'not_authorized',manifest:null},
+      {device_id:'phone-01',state:'active',eligible:true,reason:'authorized_fresh',manifest:freshManifest,conformance},
+      {device_id:'mystery-01',state:'observed',eligible:false,reason:'not_authorized',manifest:null,conformance:null},
     ],
   };
   const state=compileCapacityOrganismState({
@@ -100,6 +113,7 @@ test('capacity organism compiles only fresh trusted devices into zero-spend offe
   });
   assert.equal(state.active_device_count,1);
   assert.equal(state.compute_offer_count,1);
+  assert.equal(state.workload_plan.performance_learning_applied,false);
   assert.equal(state.commercial_capacity_considered,false);
   assert.equal(state.commercial_capacity_authorized,false);
   assert.equal(state.observation_never_grants_authority,true);
@@ -118,4 +132,38 @@ test('capacity organism reports missing production capacity instead of inventing
   assert.equal(state.production_ready,false);
   assert.equal(state.compute_offer_count,0);
   assert.ok(state.missing_capacity.length>0);
+});
+
+
+test('capacity organism holds authorized native compute until workload conformance exists',()=>{
+  const manifest=normalizeMicroDeviceManifest({
+    device_id:'unproven-phone',
+    device_class:'phone',
+    bridge_mode:'native_agent',
+    authorization_ref:'owner-phone',
+    endpoint:'evercraft://unproven-phone',
+    supported_workloads:['systemia.content-hash.v1'],
+    resources:{cpu_units:1,memory_mb:2048,storage_gb:16},
+    max_concurrency:2,
+    duty_cycle:'opportunistic',
+    attestation:{mode:'device',device_identity:'phone-key'},
+    observed_at:'2026-10-01T03:00:00.000Z',
+  });
+  const state=compileCapacityOrganismState({
+    registrySnapshot:{
+      schema:'evercraft.saban.ambient-device-registry-snapshot.v1',
+      eligible_count:1,
+      rows:[{
+        device_id:'unproven-phone',
+        state:'active',
+        eligible:true,
+        reason:'authorized_fresh',
+        manifest,
+        conformance:null,
+      }],
+    },
+    now:new Date('2026-10-01T03:01:00.000Z'),
+  });
+  assert.equal(state.compute_offer_count,0);
+  assert.equal(state.production_ready,false);
 });
