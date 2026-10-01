@@ -138,6 +138,27 @@ Run:
 node systemia/research/chronos/pctc-hardware-audit.proof.mjs
 ```
 
+## QEI assumption gate
+
+`qei-ledger.mjs` prevents CHRONOS from treating “negative energy exists” as equivalent to “a wormhole-supporting quantum state is allowed.”
+
+Before a negative-energy pathway can advance, it must explicitly identify the quantum field model, state class, spacetime dimension, background geometry, sampling curve, sampling scale, curvature/boundary scales where relevant, and the exact QEI/averaged-energy bound being invoked.
+
+The first two candidate claims are intentionally **blocked**:
+
+- the ideal Casimir benchmark lacks the boundary-specific QEI needed to turn a scalar energy-density comparison into a physical support claim;
+- the Morris-Thorne short-wormhole candidate lacks an explicit quantum field/state, curvature radius, and bound-specific sampling construction.
+
+The gate also warns when a flat-spacetime bound is being transplanted to a sampling scale that is not clearly small relative to the local curvature radius, and it refuses to silently equate timelike and null QEI statements in four dimensions.
+
+This encodes the lesson from Ford–Roman, Fewster–Roman, and the 2024 Kontou review directly into the research machinery: **field, state, averaging procedure, geometry, and domain of validity are part of the claim.**
+
+Run:
+
+```bash
+node systemia/research/chronos/qei-ledger.proof.mjs
+```
+
 ## Primary literature anchors
 
 - Morris, Thorne & Yurtsever (1988), *Wormholes, Time Machines, and the Weak Energy Condition*, Phys. Rev. Lett. 61, 1446. DOI: 10.1103/PhysRevLett.61.1446
