@@ -1,5 +1,8 @@
 import fs from 'node:fs';
-import { buildMachineActionManifest } from './machine-action-manifest.mjs';
+import {
+  auditCapabilityContractsAgainstActionManifest,
+  buildMachineActionManifest,
+} from './machine-action-manifest.mjs';
 
 const catalog = JSON.parse(fs.readFileSync('registry/catalog.json', 'utf8'));
 const timeoutMs = 20000;
@@ -170,6 +173,18 @@ fs.writeFileSync(
   'artifacts/chum/machine-action-manifest-latest.json',
   JSON.stringify(machineActionManifest, null, 2) + '\n'
 );
+const capabilityContracts = JSON.parse(
+  fs.readFileSync('systemia/capability-mesh/contracts.json', 'utf8')
+);
+const machineActionContractAudit =
+  auditCapabilityContractsAgainstActionManifest({
+    contracts: capabilityContracts,
+    manifest: machineActionManifest,
+  });
+fs.writeFileSync(
+  'artifacts/chum/machine-action-contract-audit-latest.json',
+  JSON.stringify(machineActionContractAudit, null, 2) + '\n'
+);
 fs.writeFileSync('artifacts/chum/mcp-canary-latest.md', [
   '# CHUM MCP / Registry Canary',
   '',
@@ -195,7 +210,16 @@ console.log(JSON.stringify({
     machineActionManifest.summary.verified_tools_list_count,
   machine_action_manifest_observed_tools:
     machineActionManifest.summary.observed_tool_count,
+  machine_action_contract_audit_state:
+    machineActionContractAudit.state,
+  machine_action_contract_verified_bindings:
+    machineActionContractAudit.summary.verified_binding_count,
 }));
+if (machineActionContractAudit.state !== 'pass') {
+  throw new Error(
+    `Machine Action contract audit blocked ${machineActionContractAudit.summary.failed_binding_count} shared-runtime binding(s)`
+  );
+}
 if (failed.length) throw new Error(`CHUM MCP canary found ${failed.length} live MCP failure(s)`);
 if (registryMissing.length) throw new Error(`CHUM Registry canary found ${registryMissing.length} published entry mismatch(es)`);
 if (!machineCommerceHasCommerceTool) throw new Error('Evercraft Machine Commerce MCP is live but exposes no checkout/offer/commerce-capable tool name');
