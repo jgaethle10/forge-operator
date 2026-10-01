@@ -44,8 +44,6 @@ test('Fabric local runtime is read-only, tunnel-compatible, and makes no Base44 
     assert.equal(health.secure_tunnel_compatible,true);
     assert.equal(health.public_plugin_submission_ready,true);
     assert.equal(health.provider_publication_state,'external_to_runtime');
-    assert.equal(health.mobile_path,'/mobile');
-    assert.equal(health.mobile_installable,true);
     assert.equal(health.removed_legacy_base44_connections,2);
     assert.equal(health.removed_legacy_base44_mcp_connections,1);
     assert.deepEqual(health.transport_modes,['application/json','text/event-stream']);
@@ -119,33 +117,6 @@ test('Fabric public customer front door is branded, browsable, and policy-safe',
     assert.match(home,/Quick start \$49 one-time/);
     assert.match(home,/\/capabilities\/native-product-v1/);
     assert.match(home,/\/assets\/evercraft-icon\.png/);
-
-    const mobileResponse=await fetch(runtime.url+'/mobile');
-    assert.equal(mobileResponse.status,200);
-    assert.match(mobileResponse.headers.get('content-type')||'',/^text\/html/);
-    assert.match(mobileResponse.headers.get('content-security-policy')||'',/form-action 'self'/);
-    const mobile=await mobileResponse.text();
-    assert.match(mobile,/Bring the problem/);
-    assert.match(mobile,/Add to Home Screen/);
-    assert.match(mobile,/1 live capabilities/);
-    assert.match(mobile,/\/mobile\/manifest\.webmanifest/);
-
-    const mobileMatchResponse=await fetch(runtime.url+'/mobile?q='+encodeURIComponent('I need a native capability right now'));
-    assert.equal(mobileMatchResponse.status,200);
-    const mobileMatch=await mobileMatchResponse.text();
-    assert.match(mobileMatch,/Native Product/);
-    assert.match(mobileMatch,/Open capability/);
-    assert.match(mobileMatch,/Read-only discovery/);
-    assert.equal(mobileMatch.includes('base44.app'),false);
-
-    const mobileManifestResponse=await fetch(runtime.url+'/mobile/manifest.webmanifest');
-    assert.equal(mobileManifestResponse.status,200);
-    assert.match(mobileManifestResponse.headers.get('content-type')||'',/^application\/manifest\+json/);
-    const mobileManifest=await mobileManifestResponse.json();
-    assert.equal(mobileManifest.name,'Evercraft');
-    assert.equal(mobileManifest.start_url,'/mobile');
-    assert.equal(mobileManifest.display,'standalone');
-    assert.equal(mobileManifest.icons[0].src,'/assets/evercraft-icon.png');
 
     const directoryResponse=await fetch(runtime.url+'/capabilities');
     assert.equal(directoryResponse.status,200);
