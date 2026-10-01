@@ -18,10 +18,11 @@ test('Evercraft is packaged in the current portable Agent Plugins format',()=>{
   assert.equal(openai?.interface?.displayName,'Evercraft');
   assert.ok(String(openai?.interface?.shortDescription||'').length<=30);
   assert.ok(String(openai?.interface?.longDescription||'').length<=4000);
-  assert.equal(openai?.onboardingSkill,'./skills/evercraft-router/SKILL.md');
-  assert.ok(openai?.interface?.supportURL);
-  assert.ok(openai?.interface?.privacyPolicyURL);
-  assert.ok(openai?.interface?.termsOfServiceURL);
+  assert.equal(openai?.onboardingSkill,'./skills/evercraft-site-inspector/SKILL.md');
+  assert.equal(new URL(openai?.interface?.websiteURL).pathname,'/openai');
+  assert.equal(new URL(openai?.interface?.supportURL).pathname,'/openai/support');
+  assert.equal(new URL(openai?.interface?.privacyPolicyURL).pathname,'/openai/privacy');
+  assert.equal(new URL(openai?.interface?.termsOfServiceURL).pathname,'/openai/terms');
   assert.ok((openai?.interface?.defaultPrompt||[]).every((x)=>String(x).length<=128));
 });
 
@@ -35,6 +36,7 @@ test('Evercraft portable MCP configuration uses remote Streamable HTTP without c
   assert.equal(url.protocol,'https:');
   assert.equal(url.username,'');
   assert.equal(url.password,'');
+  assert.equal(url.pathname,'/mcp/openai');
 });
 
 test('Codex compatibility package remains wired while portable manifest is canonical',()=>{
@@ -51,7 +53,8 @@ test('Evercraft plugin includes its safety and support surface',()=>{
   for(const file of ['PRIVACY.md','TERMS.md','SUPPORT.md','README.md','OPENAI-SUBMISSION.md']){
     assert.ok(fs.existsSync(path.join(pluginDir,file)),file+' missing');
   }
-  assert.ok(fs.existsSync(path.join(pluginDir,'skills','evercraft-router','SKILL.md')));
+  assert.ok(fs.existsSync(path.join(pluginDir,'skills','evercraft-site-inspector','SKILL.md')));
+  assert.equal(fs.existsSync(path.join(pluginDir,'skills','evercraft-router','SKILL.md')),false);
 });
 
 test('portable manifest embeds exactly the required MCP review cases',()=>{
@@ -73,25 +76,39 @@ test('OpenAI account-side packet keeps public-directory and owned-route truth ga
     assert.equal(submission.compatibility_transport?.active,false);
     assert.equal(submission.compatibility_transport?.owned_fabric_cutover_required,false);
     assert.equal(submission.owned_fabric_transport?.authority,'owned_public_fabric');
-    assert.equal(submission.owned_fabric_transport?.origin_change_requires_new_openai_plugin_submission,true);
+    assert.equal(submission.owned_fabric_transport?.origin_change_requires_new_openai_plugin_submission,false);
+    assert.equal(submission.owned_fabric_transport?.endpoint_path_change_only,true);
   }else{
-    assert.equal(submission.compatibility_transport?.owned_fabric_cutover_required,true);
+    assert.equal(submission.compatibility_transport?.active,false);
+    assert.equal(submission.owned_fabric_transport?.revalidation_required,true);
+    assert.equal(submission.public_directory_claim_allowed,false);
   }
 });
 
-test('submission denial cases cover payment, privacy, and consequential actions',()=>{
+test('v1.1 packet preserves the actual active provider review state',()=>{
+  const submission=readJson('openai-submission.json');
+  assert.equal(submission.current_provider_review?.plugin_name,'Evercraft');
+  assert.equal(submission.current_provider_review?.version,'1.0.0');
+  assert.equal(submission.current_provider_review?.review_status,'in_review');
+  assert.equal(submission.current_provider_review?.publication_status,'not_published');
+  assert.equal(submission.current_provider_review?.sibling_record?.plugin_name,'Evercraft Fabric');
+  assert.equal(submission.current_provider_review?.sibling_record?.review_status,'not_submitted');
+});
+
+test('submission denial cases cover authorization, private networks, and commerce or mutation',()=>{
   const submission=readJson('openai-submission.json');
   const negativeText=JSON.stringify(submission.negative_tests).toLowerCase();
-  assert.match(negativeText,/payment|charge/);
-  assert.match(negativeText,/private|credential|secret/);
-  assert.match(negativeText,/consequential|publish|deploy/);
+  assert.match(negativeText,/permission|authorized|authorization/);
+  assert.match(negativeText,/private|local|127\.0\.0\.1/);
+  assert.match(negativeText,/purchase|payment|charge|modify|mutation/);
 });
 
 
-test('review test cases reference the live scanned Fabric matcher',()=>{
+test('review test cases use only the purpose-specific public inspection tool',()=>{
   const manifest=readJson('plugin.json');
   const review=manifest.extensions?.['com.openai']?.review;
-  assert.ok(review.test_cases.positive.every((x)=>x.tools_triggered==='match_evercraft_capability'));
+  assert.ok(review.test_cases.positive.every((x)=>x.tools_triggered==='inspect_public_website'));
+  assert.equal(review.commerce,false);
   assert.match(String(manifest.version||''),/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/);
 });
 
