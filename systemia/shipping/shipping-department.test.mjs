@@ -23,6 +23,7 @@ import {
 } from './shipping-ledger.mjs';
 import { buildVerifiedDeliveryReceipt } from './delivery-receipt.mjs';
 import { dispatchVerifiedShipment } from './transport-runtime.mjs';
+import { buildReleasePlan, materializeReleasePackage, verifyMaterializedRelease } from './release-station.mjs';
 
 function tempDir() {
   return fs.mkdtempSync(path.join(os.tmpdir(), 'evercraft-shipping-'));
@@ -386,4 +387,63 @@ test('transport runtime reproduces the safe thread-to-fresh recovery without dup
   assert.equal(second.duplicate_suppressed, true);
   assert.equal(second.delivered, true);
   assert.deepEqual(routes, ['thread_reply','fresh_outbound']);
+});
+
+
+test('release station creates a client-clean deterministic package and catches later mutation', () => {
+  const dir = tempDir();
+  const file = makePdf(dir, 'BBSI_WORLD_CLASS_FINAL.pdf');
+  const artifacts = [{
+    path:file,
+    client_filename:'Yakima Tax Pros x BBSI Partnership Brief.pdf',
+    mime_type:'application/pdf',
+    qa:{ openable:true, render_verified:true, renderer_count:2 }
+  }];
+
+  const plan = buildReleasePlan({
+    release_key:'bbsi-partnership-brief-2026-10-01',
+    channel:'email',
+    recipient_ref:'buyer@example.com',
+    authorization_ref:'human-approved:send',
+    artifacts,
+    source_refs:['mission:bbsi-partnership']
+  });
+  assert.equal(plan.ready, true);
+  assert.equal(plan.package_manifest.artifacts[0].client_filename, 'Yakima Tax Pros x BBSI Partnership Brief.pdf');
+
+  const materialized = materializeReleasePackage({
+    plan,
+    artifacts,
+    output_root:path.join(dir, 'releases')
+  });
+  const firstCheck = verifyMaterializedRelease({ release_dir:materialized.release_dir });
+  assert.equal(firstCheck.verified, true);
+
+  const names = fs.readdirSync(materialized.release_dir).sort();
+  assert.deepEqual(names, [
+    'RELEASE.txt',
+    'Yakima Tax Pros x BBSI Partnership Brief.pdf',
+    'manifest.json'
+  ]);
+
+  fs.appendFileSync(path.join(materialized.release_dir, 'Yakima Tax Pros x BBSI Partnership Brief.pdf'), 'mutation');
+  const mutated = verifyMaterializedRelease({ release_dir:materialized.release_dir });
+  assert.equal(mutated.verified, false);
+  assert.ok(mutated.reasons.some((reason) => reason.includes('digest_mismatch')));
+});
+
+test('release station blocks external packages without explicit send authority', () => {
+  const dir = tempDir();
+  const file = makePdf(dir, 'client.pdf');
+  assert.throws(() => buildReleasePlan({
+    release_key:'no-authority',
+    channel:'email',
+    recipient_ref:'buyer@example.com',
+    artifacts:[{
+      path:file,
+      client_filename:'Client Package.pdf',
+      mime_type:'application/pdf',
+      qa:{ openable:true, render_verified:true, renderer_count:2 }
+    }]
+  }), /external_send_authorization_required/);
 });
