@@ -15,6 +15,12 @@ export const FIVE_MINUTE_LAG_BARS = Object.freeze({
   "5d": 390,
 });
 
+export const EXECUTION_DELAY_STRESS_BARS = Object.freeze({
+  "5m": 1,
+  "15m": 3,
+  "30m": 6,
+});
+
 function sha(value) {
   return crypto.createHash("sha256").update(
     typeof value === "string" ? value : JSON.stringify(value)
@@ -66,11 +72,13 @@ function firstBarAtOrAfter(bars, timestamp) {
   return lo < bars.length ? lo : -1;
 }
 
-function measuredReturn(bars, observedAt, lagBars) {
-  const startIndex = firstBarAtOrAfter(bars, observedAt);
-  if (startIndex < 0) return null;
+function measuredReturn(bars, observedAt, lagBars, entryDelayBars = 0) {
+  const firstIndex = firstBarAtOrAfter(bars, observedAt);
+  if (firstIndex < 0) return null;
+  const delay = Math.max(0, Number(entryDelayBars || 0));
+  const startIndex = firstIndex + delay;
   const endIndex = startIndex + lagBars;
-  if (endIndex >= bars.length) return null;
+  if (startIndex >= bars.length || endIndex >= bars.length) return null;
   const start = bars[startIndex];
   const end = bars[endIndex];
   return {
@@ -106,6 +114,40 @@ export function measureRockiesHypotheses(hypotheses, barsBySymbol, {
           throw new Error("edge_lab_lookahead_violation");
         }
 
+        const executionDelayStress = {};
+        for (const [delayKey, delayBars] of Object.entries(EXECUTION_DELAY_STRESS_BARS)) {
+          const delayedInstrument = measuredReturn(
+            instrumentBars,
+            hypothesis.observed_at,
+            bars,
+            delayBars
+          );
+          const delayedBenchmark = measuredReturn(
+            benchmarkBars,
+            hypothesis.observed_at,
+            bars,
+            delayBars
+          );
+          if (!delayedInstrument || !delayedBenchmark) continue;
+          if (
+            !delayedInstrument.no_pre_observation_price_used ||
+            !delayedBenchmark.no_pre_observation_price_used
+          ) {
+            throw new Error("edge_lab_timing_stress_lookahead_violation");
+          }
+          executionDelayStress[delayKey] = {
+            delay_bars: delayBars,
+            delay_minutes: delayBars * 5,
+            forward_return: delayedInstrument.forward_return,
+            benchmark_return: delayedBenchmark.forward_return,
+            excess_return: delayedInstrument.forward_return - delayedBenchmark.forward_return,
+            instrument_start_time: delayedInstrument.start_time,
+            instrument_end_time: delayedInstrument.end_time,
+            benchmark_start_time: delayedBenchmark.start_time,
+            benchmark_end_time: delayedBenchmark.end_time,
+          };
+        }
+
         rows.push({
           schema: "evercraft.daytrade.edge-measurement.v1",
           measurement_id: "edgemeas:" + sha({
@@ -139,6 +181,7 @@ export function measureRockiesHypotheses(hypotheses, barsBySymbol, {
           instrument_end_time: instrumentMove.end_time,
           benchmark_start_time: benchmarkMove.start_time,
           benchmark_end_time: benchmarkMove.end_time,
+          execution_delay_stress: executionDelayStress,
           provenance_refs: [...(hypothesis.provenance_refs || [])],
           evidence_state: hypothesis.evidence_state,
           anomaly_score: hypothesis.anomaly_score,
@@ -227,7 +270,14 @@ export function evaluateEdgeFamilies(measurements, {
       if (!row.origin_entity_ref) continue;
       if (!byOrigin.has(row.origin_entity_ref)) byOrigin.set(row.origin_entity_ref, []);
       const excess = Number(row.forward_return || 0) - Number(row.benchmark_return || 0);
-      const net = excess - Math.sign(excess || 1) * (transaction_cost_bps / 10000);
+      const expectedSign = evaluation.learned_direction === "NEGATIVE_EXCESS_RETURN"
+        ? -1
+        : evaluation.learned_direction === "POSITIVE_EXCESS_RETURN"
+          ? 1
+          : Number(evaluation.holdout?.sign || evaluation.development?.sign || 0);
+      const net = expectedSign === 0
+        ? excess
+        : excess - expectedSign * (transaction_cost_bps / 10000);
       byOrigin.get(row.origin_entity_ref).push(net);
     }
     const originMeans = [...byOrigin.values()].map((values) =>
