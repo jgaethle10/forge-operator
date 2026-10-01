@@ -96,7 +96,11 @@ try {
     capability_id: 'chromeos.crostini.port-forwarding.read.v1',
     observed_at: new Date().toISOString(),
     state: 'host_setting_and_lan_ready',
-    host_observation: { observer_install_id: 'cros_operator_proof' },
+    host_observation: {
+      observer_install_id: 'cros_operator_proof',
+      observer_key_fingerprint: 'sha256:' + 'c'.repeat(64),
+      observer_signature_verified: true,
+    },
     ready_for_external_canary: true,
     external_public_route_verified: false,
     mutation_authority: false,
