@@ -84,13 +84,9 @@ test('Fabric local runtime is read-only, tunnel-compatible, and makes no Base44 
       'match_evercraft_capability',
       'list_evercraft_capabilities',
       'get_evercraft_connection_options',
-      'inspect_public_website',
     ]);
     assert.ok(tools.result.tools.every((x)=>x.annotations.readOnlyHint===true));
-    assert.equal(
-      tools.result.tools.find((x)=>x.name==='inspect_public_website')?.annotations.openWorldHint,
-      true
-    );
+    assert.ok(tools.result.tools.every((x)=>x.annotations.openWorldHint===false));
 
     const publicTools=await fetch(runtime.openAiMcpUrl,{
       method:'POST',
@@ -98,6 +94,7 @@ test('Fabric local runtime is read-only, tunnel-compatible, and makes no Base44 
       body:JSON.stringify({jsonrpc:'2.0',id:22,method:'tools/list',params:{}}),
     }).then((r)=>r.json());
     assert.deepEqual(publicTools.result.tools.map((x)=>x.name),['inspect_public_website']);
+    assert.equal(publicTools.result.tools[0].annotations.openWorldHint,true);
 
     const blockedPublicRouter=await fetch(runtime.openAiMcpUrl,{
       method:'POST',
