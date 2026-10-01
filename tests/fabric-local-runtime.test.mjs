@@ -113,6 +113,9 @@ test('Fabric public customer front door is branded, browsable, and policy-safe',
     assert.match(home,/Bring the problem/);
     assert.match(home,/Explore 1 capabilities/);
     assert.match(home,/No silent checkout/);
+    assert.match(home,/Available now/);
+    assert.match(home,/Quick start \$49 one-time/);
+    assert.match(home,/\/capabilities\/native-product-v1/);
     assert.match(home,/\/assets\/evercraft-icon\.png/);
 
     const directoryResponse=await fetch(runtime.url+'/capabilities');
