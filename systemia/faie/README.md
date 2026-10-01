@@ -57,7 +57,8 @@ Environment:
 - FAIE_INTERNAL_TOKEN=...
 - FAIE_OFFICIAL_COLLECTORS_ENABLED=true|false
 - FAIE_NWS_ENABLED=true|false
-- FAIE_NWS_AREA=WA (optional; empty means the national active-alert feed)
+- FAIE_REGION_PROFILE=yakima-basin-wa (optional verified Sentinel profile)
+- FAIE_NWS_AREA=WA (optional override; empty means the profile area or national active-alert feed)
 - FAIE_USGS_WATER_SITES=USGS-12484500,... (optional)
 - FAIE_USGS_WATER_PARAMETERS=00060,00065
 - FAIE_NWPS_GAUGES=<gauge-id>,... (optional)
@@ -92,7 +93,7 @@ Human UI:
 
 The resident runtime can continuously bridge material Systemia Radar signals into FAIE while direct Worldstate dispatches can feed the specialist with the broader domain stream. The Radar bridge is deliberately a fallback/secondary path, not a replacement for the Worldstate subscription contract.
 
-FAIE also reuses existing Sentinel official-source adapters. NWS active alerts are enabled by default. USGS Water Data and NOAA/NWS National Water Prediction Service gauges turn on when monitoring IDs are configured. Their upstream evidence ceilings, reliability, provenance and coarse-location rules are preserved rather than reinterpreted as stronger evidence.
+FAIE also reuses existing Sentinel official-source adapters. NWS active alerts are enabled by default. USGS Water Data and NOAA/NWS National Water Prediction Service gauges turn on when monitoring IDs are configured. A verified Sentinel region profile can supply those source IDs as a single bounded configuration; for example, `FAIE_REGION_PROFILE=yakima-basin-wa` inherits the existing Yakima Basin NWS/USGS source set. Their upstream evidence ceilings, reliability, provenance and coarse-location rules are preserved rather than reinterpreted as stronger evidence.
 
 The first release therefore has an actual closed loop:
 
