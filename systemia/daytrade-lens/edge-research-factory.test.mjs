@@ -73,9 +73,9 @@ assert.equal(
 );
 
 const measured = measureRockiesHypotheses([hypothesis], {
-  XLU: bars("2026-09-01T13:30:00Z", 10, 0.002),
-  SPY: bars("2026-09-01T13:30:00Z", 10, 0.0005),
-  QQQ: bars("2026-09-01T13:30:00Z", 10, 0.001),
+  XLU: bars("2026-09-01T13:30:00Z", 25, 0.002),
+  SPY: bars("2026-09-01T13:30:00Z", 25, 0.0005),
+  QQQ: bars("2026-09-01T13:30:00Z", 25, 0.001),
 });
 assert.equal(measured.length, 1);
 assert.equal(measured[0].lag_bars, FIVE_MINUTE_LAG_BARS["15m"]);
@@ -90,6 +90,8 @@ assert.deepEqual(
 assert.equal(measured[0].execution_delay_stress["5m"].delay_bars, 1);
 assert.equal(measured[0].execution_delay_stress["15m"].delay_bars, 3);
 assert.equal(measured[0].execution_delay_stress["30m"].delay_bars, 6);
+assert.equal(measured[0].execution_delay_stress["60m"].delay_bars, 12);
+assert.equal(measured[0].execution_delay_stress["90m"].delay_bars, 18);
 assert.ok(
   new Date(measured[0].execution_delay_stress["30m"].instrument_start_time).getTime() >
     new Date(measured[0].instrument_start_time).getTime()
@@ -97,6 +99,29 @@ assert.ok(
 assert.equal(
   new Date(measured[0].instrument_start_time).getTime() >= new Date(hypothesis.observed_at).getTime(),
   true
+);
+
+const multiSessionMeasured = measureRockiesHypotheses([hypothesis], {
+  XLU: [
+    ...bars("2026-09-01T13:30:00Z", 78, 0.0003),
+    ...bars("2026-09-02T13:30:00Z", 12, 0.0004),
+  ],
+  SPY: [
+    ...bars("2026-09-01T13:30:00Z", 78, 0.0001),
+    ...bars("2026-09-02T13:30:00Z", 12, 0.0001),
+  ],
+  QQQ: [
+    ...bars("2026-09-01T13:30:00Z", 78, 0.0002),
+    ...bars("2026-09-02T13:30:00Z", 12, 0.0002),
+  ],
+});
+assert.equal(
+  multiSessionMeasured[0].execution_delay_stress.next_session_open.entry_policy,
+  "next_core_session_open"
+);
+assert.equal(
+  multiSessionMeasured[0].execution_delay_stress.next_session_open.instrument_start_time,
+  "2026-09-02T13:30:00.000Z"
 );
 
 const many = [];
@@ -241,6 +266,9 @@ console.log(JSON.stringify({
   no_lookahead: true,
   benchmark_adjusted: true,
   core_session_horizons: true,
+  delayed_entry_60m: true,
+  delayed_entry_90m: true,
+  next_session_open_execution_stress: true,
   source_diversity_required: true,
   authoritative_multi_origin_screen: true,
   alpaca_pagination: true,
