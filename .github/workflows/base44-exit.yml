@@ -18,6 +18,7 @@ on:
       - 'systemia/commerce-boundary/**'
       - 'systemia/aqueduct/**'
       - 'systemia/exact-output-gate/**'
+      - 'systemia/capability-router/**'
       - 'systemia/operations/**'
       - 'systemia/remote-ops/**'
       - 'systemia/workforce/**'
@@ -57,6 +58,7 @@ on:
       - 'systemia/commerce-boundary/**'
       - 'systemia/aqueduct/**'
       - 'systemia/exact-output-gate/**'
+      - 'systemia/capability-router/**'
       - 'systemia/operations/**'
       - 'systemia/remote-ops/**'
       - 'systemia/workforce/**'
@@ -105,6 +107,8 @@ jobs:
         run: npm run proof:aqueduct
       - name: Prove owned Exact Output Gate
         run: npm run proof:exact-output-gate
+      - name: Prove owned first-party capability router
+        run: npm run proof:capability-router
       - name: Prove lossless Base44 entity transfer
         run: npm run proof:base44-entity-transfer
       - name: Prove owned AliEV session corpus
