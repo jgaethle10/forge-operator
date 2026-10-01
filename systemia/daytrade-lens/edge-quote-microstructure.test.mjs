@@ -3,6 +3,8 @@ import {
   normalizeAlpacaQuote,
   quoteAtOrAfter,
   fetchAlpacaQuotes,
+  fetchAlpacaTrades,
+  normalizeAlpacaTrade,
   buildQuoteMicrostructureTargets,
   runQuoteMicrostructureLab,
 } from "./edge-quote-microstructure.mjs";
@@ -46,6 +48,20 @@ assert.equal(quoteAtOrAfter([
   {t:"2026-09-01T13:31:00Z",bp:99.95,ap:100.05},
 ],"2026-09-01T13:30:00Z",{max_delay_ms:30000}),null);
 
+const trade=normalizeAlpacaTrade({
+  t:"2026-09-01T13:30:01.000Z",
+  p:99.9,
+  s:25,
+  x:"V",
+  c:["@"],
+  z:"C",
+});
+assert.ok(trade);
+assert.equal(trade.price,99.9);
+assert.equal(trade.size,25);
+assert.equal(normalizeAlpacaTrade({t:"bad",p:100}),null);
+assert.equal(normalizeAlpacaTrade({t:"2026-09-01T13:30:00Z",p:null}),null);
+
 let requestedUrl="";
 const fakeFetch=async(url)=>({
   ok:true,
@@ -70,6 +86,22 @@ const fetched=await fetchAlpacaQuotes("SOXX",{
 assert.equal(fetched.length,1);
 assert.ok(requestedUrl.includes("/v2/stocks/SOXX/quotes"));
 assert.ok(requestedUrl.includes("feed=iex"));
+
+const fetchedTrades=await fetchAlpacaTrades("SOXX",{
+  start:"2026-09-01T13:30:00Z",
+  end:"2026-09-01T13:31:00Z",
+  key:"proof-key",
+  secret:"proof-secret",
+  feed:"iex",
+  fetchImpl:async()=>({
+    ok:true,
+    json:async()=>({
+      trades:[{t:"2026-09-01T13:30:00.500Z",p:100,s:4}],
+      next_page_token:null,
+    }),
+  }),
+});
+assert.equal(fetchedTrades.length,1);
 
 const report={
   evaluations:[{
@@ -101,16 +133,24 @@ const lab=await runQuoteMicrostructureLab(report,{
   key:"proof-key",
   secret:"proof-secret",
   feed:"iex",
-  fetchImpl:async()=>({
+  fetchImpl:async(url)=>({
     ok:true,
-    json:async()=>({
-      quotes:[
-        {t:"2026-09-01T13:30:00.100Z",bp:99.9,ap:100.1,bs:10,as:11},
-        {t:"2026-09-01T13:35:00.100Z",bp:99.95,ap:100.05,bs:12,as:12},
-        {t:"2026-09-01T13:45:00.100Z",bp:99.98,ap:100.02,bs:14,as:13},
-      ],
-      next_page_token:null,
-    }),
+    json:async()=>String(url).includes("/trades")
+      ?({
+          trades:[
+            {t:"2026-09-01T13:30:10.000Z",p:100.00,s:20,x:"V"},
+            {t:"2026-09-01T13:30:20.000Z",p:99.89,s:15,x:"V"},
+          ],
+          next_page_token:null,
+        })
+      :({
+          quotes:[
+            {t:"2026-09-01T13:30:00.100Z",bp:99.9,ap:100.1,bs:10,as:11},
+            {t:"2026-09-01T13:35:00.100Z",bp:99.95,ap:100.05,bs:12,as:12},
+            {t:"2026-09-01T13:45:00.100Z",bp:99.98,ap:100.02,bs:14,as:13},
+          ],
+          next_page_token:null,
+        }),
   }),
 });
 assert.equal(lab.status,"QUOTE_DATA_AVAILABLE");
@@ -134,20 +174,36 @@ assert.ok(
   )
 );
 assert.equal(lab.interpretation.exit_execution_quote_adjusted,false);
+const modeledEntry=lab.overlays.find((row)=>row.label==="modeled_entry");
+assert.equal(modeledEntry.passive_touch_evidence_available,true);
+assert.equal(modeledEntry.passive_price_touch_observed,true);
+assert.ok(modeledEntry.passive_touch_delay_ms>0);
+assert.equal(modeledEntry.passive_queue_position_observed,false);
+assert.equal(modeledEntry.passive_hypothetical_fill_claimed,false);
+assert.equal(
+  lab.by_signal["ai_models|sec_8_k|SOXX|1d"].passive_touch_evaluable_count,
+  1
+);
+assert.equal(
+  lab.by_signal["ai_models|sec_8_k|SOXX|1d"].passive_touch_rate,
+  1
+);
 assert.equal(lab.live_trade_authority,false);
 
 const partial=await runQuoteMicrostructureLab(report,{
   key:"proof-key",
   secret:"proof-secret",
   feed:"iex",
-  fetchImpl:async()=>({
+  fetchImpl:async(url)=>({
     ok:true,
-    json:async()=>({
-      quotes:[
-        {t:"2026-09-01T13:30:00.100Z",bp:99.9,ap:100.1}
-      ],
-      next_page_token:null,
-    }),
+    json:async()=>String(url).includes("/trades")
+      ?({trades:[],next_page_token:null})
+      :({
+          quotes:[
+            {t:"2026-09-01T13:30:00.100Z",bp:99.9,ap:100.1}
+          ],
+          next_page_token:null,
+        }),
   }),
 });
 assert.equal(partial.status,"QUOTE_DATA_PARTIAL");
@@ -175,6 +231,8 @@ console.log(JSON.stringify({
   explicit_feed_provenance:true,
   marketable_entry_friction:true,
   entry_side_partial_strategy_net:true,
+  historical_trade_touch_evidence:true,
+  passive_touch_never_claimed_as_fill:true,
   no_silent_feed_fallback:true,
   missing_never_zero:true,
   live_trade_authority:false
