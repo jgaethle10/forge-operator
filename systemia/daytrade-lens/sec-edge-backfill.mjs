@@ -23,6 +23,7 @@ import { runRandomPlaceboLab } from "./edge-random-placebo.mjs";
 import { runLabelPermutationLab } from "./edge-label-permutation.mjs";
 import { runBenchmarkFragilityLab } from "./edge-benchmark-fragility.mjs";
 import { runRegimeFragilityLab } from "./edge-regime-fragility.mjs";
+import { runClockStructureLab } from "./edge-clock-structure.mjs";
 import { runEventContaminationLab } from "./edge-event-contamination.mjs";
 import { runNarrativeBlindControlLab } from "./edge-narrative-blind-control.mjs";
 import { runHorizonCoherenceLab } from "./edge-horizon-coherence.mjs";
@@ -154,6 +155,18 @@ async function main() {
   });
   const benchmarkFile = path.join(artifactDir, "sec-edge-benchmark-fragility.json");
   fs.writeFileSync(benchmarkFile, JSON.stringify(benchmarkLab, null, 2) + "\n");
+
+  const clockStructureLab = runClockStructureLab(report, {
+    transaction_cost_bps: Number(process.env.EDGE_LAB_TRANSACTION_COST_BPS || 5),
+  });
+  const clockStructureFile = path.join(
+    artifactDir,
+    "sec-edge-clock-structure.json"
+  );
+  fs.writeFileSync(
+    clockStructureFile,
+    JSON.stringify(clockStructureLab, null, 2) + "\n"
+  );
 
   const eventContaminationLab = runEventContaminationLab(report, {
     transaction_cost_bps: Number(process.env.EDGE_LAB_TRANSACTION_COST_BPS || 5),
@@ -368,6 +381,7 @@ async function main() {
     randomPlaceboLab,
     labelPermutationLab,
     regimeFragilityLab,
+    clockStructureLab,
     eventContaminationLab,
     narrativeBlindControlLab,
     benchmarkLab,
@@ -467,6 +481,7 @@ async function main() {
     label_permutation_bonferroni_separated_diagnostics:
       labelPermutationLab.bonferroni_separated_count || 0,
     regime_fragility_status_counts: regimeFragilityLab.status_counts || {},
+    clock_structure_status_counts: clockStructureLab.status_counts || {},
     event_contamination_status_counts:
       eventContaminationLab.status_counts || {},
     narrative_blind_control_status_counts:
@@ -497,6 +512,7 @@ async function main() {
       random_placebo_lab: randomPlaceboFile,
       label_permutation_lab: labelPermutationFile,
       regime_fragility_lab: regimeFragilityFile,
+      clock_structure_lab: clockStructureFile,
       event_contamination_lab: eventContaminationFile,
       narrative_blind_control_lab: narrativeBlindControlFile,
       benchmark_fragility_lab: benchmarkFile,
