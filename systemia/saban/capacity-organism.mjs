@@ -42,7 +42,7 @@ function activeCapabilities(snapshot){
       continue;
     }
     try{
-      caps.push(...microDeviceToAmbientCapabilities(row.manifest));
+      caps.push(...microDeviceToAmbientCapabilities(row.manifest,{conformance:row.conformance||null}));
     }catch(error){
       rejected.push({
         device_id:row.device_id,
@@ -65,6 +65,8 @@ export function compileCapacityOrganismState({
   const compute=resolveAmbientComputeOffers({
     capabilities:caps,
     requireZeroCost:true,
+    requireVerifiedWorkload:true,
+    now,
   });
   const capabilityPlan=composeCapabilityFabric({
     roles:rivetAliEvCapabilityRoles(),
