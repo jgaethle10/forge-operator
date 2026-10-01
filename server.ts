@@ -334,13 +334,8 @@ app.get('/robots.txt', (req: Request, res: Response) => {
       .replace(/^Sitemap:.*$/gmi, '')
       .trimEnd();
     res.type('text/plain').send(raw + (origin
-      ? `
-
-Sitemap: ${origin}/sitemap.xml
-Sitemap: ${origin}/chum/sitemaps/index.xml
-`
-      : '
-'));
+      ? `\n\nSitemap: ${origin}/sitemap.xml\nSitemap: ${origin}/chum/sitemaps/index.xml\n`
+      : '\n'));
   } catch (error: any) {
     res.status(503).type('text/plain').send(`Robots policy unavailable: ${error?.message || String(error)}`);
   }
@@ -831,8 +826,7 @@ function buildA2aAgentCard(req: Request) {
 function sendA2aAgentCard(req: Request, res: Response) {
   try {
     res.setHeader('Cache-Control', 'public, max-age=300, must-revalidate');
-    res.type('application/json').send(JSON.stringify(buildA2aAgentCard(req), null, 2) + '
-');
+    res.type('application/json').send(JSON.stringify(buildA2aAgentCard(req), null, 2) + '\n');
   } catch (error: any) {
     res.status(503).type('application/problem+json').send(JSON.stringify({
       type: 'about:blank',
@@ -864,8 +858,7 @@ app.post(/^\/a2a\/message:send$/, rateLimit(240, 60 * 60 * 1000), (req: Request,
   const q = parts
     .map((part: any) => typeof part?.text === 'string' ? part.text : '')
     .filter(Boolean)
-    .join('
-')
+    .join('\n')
     .trim()
     .slice(0, 4000);
 
@@ -1512,8 +1505,7 @@ ${businessProblem}
 DESIRED OUTCOME:
 ${desiredOutcome}
 
-${businessContext ? `ADDITIONAL OPERATIONAL CONTEXT (Industry, Team Size, Current Tools, Constraints):
-${businessContext}` : ''}
+${businessContext ? `ADDITIONAL OPERATIONAL CONTEXT (Industry, Team Size, Current Tools, Constraints):\n${businessContext}` : ''}
 `;
 
     const result = await generateContentWithFallback({
