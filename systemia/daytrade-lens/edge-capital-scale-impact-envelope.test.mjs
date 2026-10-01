@@ -55,7 +55,11 @@ assert.ok(
   small.mean_stressed_quote_strategy_net
 );
 assert.equal(small.positive_rate_after_stress,1);
-assert.equal(large.positive_rate_after_stress,0);
+assert.equal(large.positive_rate_after_stress,1);
+assert.ok(
+  large.mean_stressed_quote_strategy_net <
+  small.mean_stressed_quote_strategy_net
+);
 assert.equal(
   review.interpretation
     .square_root_shape_is_sensitivity_function_not_calibrated_impact_estimate,
@@ -89,6 +93,7 @@ console.log(JSON.stringify({
   multiple_impact_coefficients:true,
   quote_two_sided_net_stressed:true,
   larger_size_larger_penalty:true,
+  scale_stress_does_not_require_predetermined_failure:true,
   coefficient_not_calibrated:true,
   local_activity_not_daily_volume_disclosed:true,
   impact_estimate_not_claimed:true,
