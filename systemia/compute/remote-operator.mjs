@@ -170,6 +170,14 @@ export class EvercraftRemoteOperator {
     maxWriteBytes = 1024 * 1024,
     maxOutputBytes = 1024 * 1024,
     maxExecMs = 60_000,
+    hostBoundaryStateRoot = process.env.EVERCRAFT_CHROMEOS_HOST_BOUNDARY_STATE_DIR || path.join(
+      os.homedir(),
+      '.local',
+      'state',
+      'evercraft',
+      'organism',
+      'chromeos-host-boundary',
+    ),
   } = {}) {
     if (!roots || typeof roots !== 'object' || Array.isArray(roots)) {
       throw new Error('operator_roots_required');
@@ -191,6 +199,7 @@ export class EvercraftRemoteOperator {
     this.maxWriteBytes = boundedInt(maxWriteBytes, 1024 * 1024, 1024, 8 * 1024 * 1024);
     this.maxOutputBytes = boundedInt(maxOutputBytes, 1024 * 1024, 4096, 4 * 1024 * 1024);
     this.maxExecMs = boundedInt(maxExecMs, 60_000, 1000, 300_000);
+    this.hostBoundaryStateRoot = path.resolve(String(hostBoundaryStateRoot));
     this.instanceId = 'remote_operator_' + randomBytes(10).toString('hex');
   }
 
@@ -248,7 +257,7 @@ export class EvercraftRemoteOperator {
   }
 
   hostBoundaryStatus() {
-    const status = readChromeOsHostBoundaryStatus();
+    const status = readChromeOsHostBoundaryStatus({ stateRoot: this.hostBoundaryStateRoot });
     const receipt = this.#receipt('chromeos-host-boundary.status', {
       state: status.state,
       fresh: status.fresh === true,
@@ -264,17 +273,17 @@ export class EvercraftRemoteOperator {
   }
 
   async hostBoundaryCheck({ wait_ms = 0 } = {}) {
-    const requested = requestChromeOsHostBoundaryCheck();
+    const requested = requestChromeOsHostBoundaryCheck({ stateRoot: this.hostBoundaryStateRoot });
     const waitMs = boundedInt(wait_ms, 0, 0, 45_000);
     const deadline = Date.now() + waitMs;
-    let check = readChromeOsHostBoundaryCheck();
+    let check = readChromeOsHostBoundaryCheck({ stateRoot: this.hostBoundaryStateRoot });
 
     while (check.pending && Date.now() < deadline) {
       await new Promise((resolve) => setTimeout(resolve, Math.min(250, deadline - Date.now())));
-      check = readChromeOsHostBoundaryCheck();
+      check = readChromeOsHostBoundaryCheck({ stateRoot: this.hostBoundaryStateRoot });
     }
 
-    const status = readChromeOsHostBoundaryStatus();
+    const status = readChromeOsHostBoundaryStatus({ stateRoot: this.hostBoundaryStateRoot });
     const fulfilled =
       check.state === 'completed' &&
       status.request_id === requested.request_id &&
