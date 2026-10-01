@@ -138,6 +138,16 @@ assert.ok(
 assert.ok(
   OFFICIAL_MACRO_CALENDAR_PROVENANCE.cpi.dates.includes("2025-10-24")
 );
+assert.ok(
+  OFFICIAL_MACRO_CALENDAR_PROVENANCE.fomc.dates.includes("2026-10-28")
+);
+assert.ok(
+  OFFICIAL_MACRO_CALENDAR_PROVENANCE.cpi.dates.includes("2026-10-14")
+);
+assert.equal(
+  OFFICIAL_MACRO_CALENDAR_PROVENANCE.calendar_as_of,
+  "2026-10-01"
+);
 assert.equal(
   OFFICIAL_MACRO_CALENDAR_PROVENANCE.cpi.dates.includes("2025-11-13"),
   false
