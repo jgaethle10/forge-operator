@@ -27,10 +27,11 @@ if [[ "$RESET_PAIRING" == "true" ]]; then
   rm -f     "$STATE_DIR/paired-observer.json"     "$STATE_DIR/latest.json"     "$STATE_DIR/check-request.json"
   rm -rf "$STATE_DIR/admissions"
   echo "ChromeOS host observer pairing and field admissions reset."
+  echo "The pairing bootstrap token will also be rotated."
 fi
 
 NEW_TOKEN=false
-if [[ ! -f "$ENV_FILE" ]]; then
+if [[ ! -f "$ENV_FILE" || "$RESET_PAIRING" == "true" ]]; then
   TOKEN="$(node -e "console.log(require('crypto').randomBytes(32).toString('hex'))")"
   NEW_TOKEN=true
   {
