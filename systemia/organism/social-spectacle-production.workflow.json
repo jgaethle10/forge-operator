@@ -1,0 +1,36 @@
+{
+  "schema": "evercraft.systemia.workflow-manifest.v1",
+  "workflow_key": "social-spectacle-production",
+  "mission_key": "evercraft-social-spectacle-machine-2026-09",
+  "runtime": "systemia-core+yard-evercraft-compute+fallen+evercraft-clip",
+  "collider_compatible": true,
+  "cadence_seconds": 900,
+  "material_change_only": true,
+  "entrypoint": "systemia/organism/social-spectacle-production.mjs",
+  "runner": "systemia/organism/social-spectacle-production.mjs",
+  "proof": "systemia/organism/social-spectacle-production.proof.mjs",
+  "inputs": {
+    "queue": "artifacts/social-spectacle/latest-queue.json"
+  },
+  "outputs": {
+    "production_root": "artifacts/social-spectacle/production",
+    "clip_queue": "artifacts/clip-intake-queue"
+  },
+  "authority": {
+    "render_without_publish_authority": true,
+    "fallen_master_qc_required": true,
+    "editorial_preflight_score_required": "10/10",
+    "clip_intake_required": true,
+    "clip_publication_authority": false,
+    "provider_visible_publish_receipt_required": true,
+    "blocked_brand_keys": [
+      "rnb-chicken-and-soul",
+      "r-and-b-chicken-and-soul",
+      "r&b-chicken-and-soul"
+    ]
+  },
+  "degraded_mode": {
+    "without_render_workers": "compile vertical and landscape stages plus distributed render plan, then hold ready_to_render",
+    "with_render_workers": "render, master-QC, editorial-preflight, and stage verified master into Evercraft Clip"
+  }
+}
