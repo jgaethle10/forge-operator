@@ -273,7 +273,8 @@ export function evercraftEdgeFederationRoles({
     {
       role_id:'public_ingress',
       required_workloads:['systemia.public-edge.v1'],
-      required_labels:['public-edge'],
+      required_labels:['public-edge','gateway'],
+      forbidden_labels:['outbound-only','private'],
       required_services:['public_edge'],
       public_ingress_required:true,
       require_attestation:true,
