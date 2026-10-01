@@ -1,3 +1,4 @@
+import { verifyMicroSeedExecutionReceipt } from './microseed-receipt-signature.mjs';
 function clean(v){return String(v??'').trim();}
 
 function validateEndpoint(value,{allowInsecureLan=false}={}){
@@ -98,6 +99,19 @@ export function createMicroSeedNativeAgentAdapter({
         if(!response.ok||body?.ok!==true){
           throw new Error('microseed_native_agent_http_'+response.status+':'+clean(body?.error||'execution_failed'));
         }
+
+        const signingRequired=manifest.attestation?.receipt_signing_required===true;
+        let signatureVerification=null;
+        if(signingRequired||body?.device_signature){
+          signatureVerification=verifyMicroSeedExecutionReceipt(body,{
+            publicKey:manifest.attestation?.receipt_public_key_pem||null,
+            expected_device_id:manifest.device_id,
+          });
+          if(signingRequired&&signatureVerification.verified!==true){
+            throw new Error('microseed_native_agent_signature_rejected:'+signatureVerification.reason);
+          }
+        }
+
         return {
           ok:true,
           schema:'evercraft.microseed.native-agent-relay-result.v1',
@@ -106,6 +120,9 @@ export function createMicroSeedNativeAgentAdapter({
           remote_receipt_hash:body.receipt_hash||null,
           remote_result:body.result??null,
           remote_arbitrary_code_execution:body.arbitrary_code_execution===true,
+          remote_signature_verified:signatureVerification?.verified===true,
+          remote_signature_key_id:signatureVerification?.key_id||null,
+          remote_signature_payload_sha256:signatureVerification?.payload_sha256||null,
           credential_exposed:false,
         };
       }finally{
