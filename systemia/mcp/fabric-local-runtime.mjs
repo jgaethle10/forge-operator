@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import http from 'node:http';
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -48,15 +49,39 @@ export function nativeOnlyCatalog(input=[]) {
   };
 }
 
-function sendJson(res,status,body) {
+function sendJson(res,status,body,extraHeaders={}) {
   const data=Buffer.from(JSON.stringify(body));
   res.writeHead(status,{
     'content-type':'application/json; charset=utf-8',
     'content-length':data.length,
     'cache-control':'no-store',
     'x-content-type-options':'nosniff',
+    'mcp-protocol-version':'2025-03-26',
+    ...extraHeaders,
   });
   res.end(data);
+}
+
+function sendEventStream(res,status,body,extraHeaders={}) {
+  const data=Buffer.from(`event: message\ndata: ${JSON.stringify(body)}\n\n`);
+  res.writeHead(status,{
+    'content-type':'text/event-stream; charset=utf-8',
+    'content-length':data.length,
+    'cache-control':'no-store',
+    'connection':'keep-alive',
+    'x-content-type-options':'nosniff',
+    'mcp-protocol-version':'2025-03-26',
+    ...extraHeaders,
+  });
+  res.end(data);
+}
+
+function acceptsEventStream(req) {
+  return String(req.headers.accept||'')
+    .toLowerCase()
+    .split(',')
+    .map((value)=>value.trim())
+    .some((value)=>value==='text/event-stream'||value.startsWith('text/event-stream;'));
 }
 
 function browserSecurityHeaders() {
@@ -172,8 +197,9 @@ export async function startFabricLocalRuntime({
     ok:true,
     service:'evercraft-fabric-local',
     server:'evercraft-fabric',
-    version:'1.0.0',
+    version:'1.0.1',
     transport:'Streamable HTTP',
+    transport_modes:['application/json','text/event-stream'],
     mcp_path:'/mcp',
     tools:fabricDirectoryTools().map((tool)=>tool.name),
     capability_count:preparedCatalog().capabilities.length,
@@ -200,7 +226,8 @@ export async function startFabricLocalRuntime({
       if (req.method==='OPTIONS') {
         res.writeHead(204,{
           'access-control-allow-origin':'*',
-          'access-control-allow-headers':'content-type',
+          'access-control-allow-headers':'content-type, accept, mcp-protocol-version, mcp-session-id',
+          'access-control-expose-headers':'mcp-protocol-version, mcp-session-id',
           'access-control-allow-methods':'GET, POST, OPTIONS',
         });
         return res.end();
@@ -271,27 +298,37 @@ export async function startFabricLocalRuntime({
       if (req.url!=='/mcp') return sendJson(res,404,{error:'not_found'});
 
       if (req.method==='GET') {
-        return sendJson(res,200,{
+        const body={
           ok:true,
           service:'Evercraft Fabric',
           server:'evercraft-fabric',
-          version:'1.0.0',
+          version:'1.0.1',
           transport:'Streamable HTTP',
+          transport_modes:['application/json','text/event-stream'],
           tools:fabricDirectoryTools().map((tool)=>tool.name),
           capability_count:preparedCatalog().capabilities.length,
           read_only:true,
           base44_transport_enabled:false,
-        });
+        };
+        if (acceptsEventStream(req)) return sendEventStream(res,200,body);
+        return sendJson(res,200,body);
       }
 
       if (req.method!=='POST') return sendJson(res,405,{error:'method_not_allowed'});
       const rpc=await readJson(req);
       const response=await executeFabricDirectoryRpc(rpc,preparedCatalog().capabilities);
       if (response===null) {
-        res.writeHead(202,{'cache-control':'no-store'});
+        res.writeHead(202,{
+          'cache-control':'no-store',
+          'mcp-protocol-version':'2025-03-26',
+        });
         return res.end();
       }
-      return sendJson(res,200,response);
+      const sessionHeaders=rpc?.method==='initialize'
+        ? {'mcp-session-id':crypto.randomUUID()}
+        : {};
+      if (acceptsEventStream(req)) return sendEventStream(res,200,response,sessionHeaders);
+      return sendJson(res,200,response,sessionHeaders);
     } catch(error) {
       return sendJson(res,502,{
         jsonrpc:'2.0',
