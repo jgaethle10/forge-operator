@@ -833,6 +833,86 @@
         "memory_mb_per_worker": 128,
         "require_capacity_hint": false
       }
+    },
+    {
+      "software_id": "daytrade-learning-lab",
+      "name": "DayTrade Learning Lab",
+      "aliases": [
+        "daytrade lesson swarm",
+        "market edge learning",
+        "daytrade red team"
+      ],
+      "adapter": "systemia/daytrade-lens/saban-learning-adapter.mjs",
+      "default_logical_agents": 100,
+      "max_logical_agents": 1000,
+      "default_physical_workers": 8,
+      "max_physical_workers": 32,
+      "lease_seconds": 300,
+      "roles": [
+        "base_rate_skeptic",
+        "microstructure_scout",
+        "execution_cost_guard",
+        "overfit_red_team",
+        "regime_adversary",
+        "behavioral_bias_guard",
+        "temporal_integrity_guard",
+        "sample_independence_guard",
+        "falsification_engineer",
+        "evidence_provenance_guard"
+      ],
+      "work_sources": [
+        {
+          "file": "systemia/daytrade-lens/learning/market-edge-source-pack-v1.json",
+          "field": "lessons",
+          "kind": "market_lesson",
+          "key_field": "lesson_id"
+        }
+      ],
+      "reconciler": {
+        "adapter_export": "reconcile",
+        "once_per_swarm": true
+      },
+      "side_effects": {
+        "default": "deny",
+        "local_generated_files": true,
+        "local_receipts": true,
+        "external_network": false,
+        "production_mutation": false,
+        "frozen_protocol_mutation": false,
+        "brokerage_order_submission": false,
+        "autonomous_funding": false,
+        "automatic_publication": false,
+        "unsolicited_human_outreach": false,
+        "automatic_checkout": false,
+        "payment_obligation": false
+      },
+      "max_attempts_per_job": 2,
+      "budget": {
+        "max_logical_agents": 1000,
+        "max_physical_workers": 32,
+        "max_work_items": 1000,
+        "max_attempts_per_job": 2
+      },
+      "assignment_strategy": "role_item_cartesian",
+      "scaling": {
+        "strategy": "coverage_amplification",
+        "target_logical_per_physical_worker": 16,
+        "minimum_role_item_passes": 1
+      },
+      "quality": {
+        "minimum_completion_ratio": 1,
+        "dead_letter_allowed": false,
+        "require_all_roles": true,
+        "require_reconciliation": true,
+        "enforcement": "fail_execution"
+      },
+      "resources": {
+        "minimum_node_cpu_units": 1,
+        "minimum_node_memory_mb": 128,
+        "cpu_units_per_worker": 1,
+        "memory_mb_per_worker": 128,
+        "require_capacity_hint": false
+      }
     }
   ]
 }
