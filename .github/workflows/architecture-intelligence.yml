@@ -5,8 +5,10 @@ on:
     paths:
       - "tools/systemia_architecture_scan.py"
       - "tools/systemia_architecture_reconcile.py"
+      - "tools/systemia_architecture_health.py"
       - "tests/test_systemia_architecture_scan.py"
       - "tests/test_systemia_architecture_reconcile.py"
+      - "tests/test_systemia_architecture_health.py"
       - ".github/workflows/architecture-intelligence.yml"
   push:
     branches: [main]
