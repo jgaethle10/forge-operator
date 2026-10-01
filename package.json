@@ -252,7 +252,8 @@
     "test:fabric-edge-attestation": "node --test tests/fabric-edge-attestation.test.mjs tests/fabric-owned-edge-installer.test.mjs",
     "proof:operator-public-edge": "node systemia/compute/operator-public-edge-admit.proof.mjs",
     "canary:operator-public-edge": "node scripts/fabric-edge-external-canary.mjs --origin https://fabric.systemiacommandcenters.com",
-    "proof:edge-trust": "npm run test:fabric-edge-attestation && npm run proof:operator-public-edge && node --test tests/node-self-bootstrap.test.mjs"
+    "proof:edge-trust": "npm run test:fabric-edge-attestation && npm run proof:operator-public-edge && node --test tests/node-self-bootstrap.test.mjs",
+    "test:local-organism-health-watch": "node --test tests/local-organism-health-watch.test.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
