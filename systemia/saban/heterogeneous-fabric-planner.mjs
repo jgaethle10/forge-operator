@@ -136,7 +136,10 @@ function evaluateOffer(task,offer,nowMs){
   if(offer.trust.uptime_7d<task.trust.minimum_uptime_7d) reasons.push('uptime_below_floor');
   if(ageMs>task.continuity.max_observation_age_ms) reasons.push('offer_stale');
 
-  if(workloads.size&&!workloads.has(task.workload_class)) reasons.push('workload_unsupported');
+  if(
+    !workloads.has(task.workload_class) &&
+    offer.metadata?.generic_container_runtime!==true
+  ) reasons.push(workloads.size?'workload_unsupported':'workload_capability_unknown');
   if(task.required_labels.some(x=>!labels.has(x))) reasons.push('required_label_missing');
   if(task.required_locality_tags.some(x=>!locality.has(x))) reasons.push('required_locality_missing');
   if(task.allowed_device_classes.length&&!task.allowed_device_classes.includes(deviceClass)){
@@ -224,7 +227,9 @@ export function planHeterogeneousFabric({
     cpu_units:o.resources.cpu_units,
     memory_mb:o.resources.memory_mb,
     storage_gb:o.resources.storage_gb,
-    slots:Math.max(1,Math.floor(Number(o.metadata?.max_concurrency||1))),
+    slots:o.metadata?.max_concurrency==null
+      ? 1024
+      : Math.max(1,Math.floor(Number(o.metadata.max_concurrency))),
   }]));
   const placements=[];
   const held=[];
