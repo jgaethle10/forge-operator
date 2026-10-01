@@ -47,6 +47,22 @@ test('Fabric boots from the canonical CHUM capability index without a manual rou
   assert.ok(findMyPart.connections.some((x)=>x.type==='mcp'&&x.url==='https://fabric.systemiacommandcenters.com/mcp'));
 });
 
+test('portfolio registry broadens Fabric beyond brand-known CHUM capabilities without leaking legacy specialist transports',()=>{
+  const canonical=loadFabricCatalogFromRepository();
+  const daytrade=canonical.find((x)=>x.public_id==='product:daytrade-lens');
+  assert.ok(daytrade,'DayTrade Lens product-level problem route must be visible');
+  assert.ok(daytrade.keywords.some((x)=>/paper trade|trading risk|trading journal/i.test(x)));
+
+  const fallen=canonical.find((x)=>x.public_id==='media:fallen');
+  assert.ok(fallen,'Fallen / Studio must be problem-discoverable from the portfolio registry');
+  assert.ok(fallen.keywords.some((x)=>/documentary|cinematic|visual explanation/i.test(x)));
+
+  const alievProduct=canonical.find((x)=>x.public_id==='product:aliev');
+  assert.ok(alievProduct);
+  assert.ok(alievProduct.connections.some((x)=>x.type==='mcp'&&x.url==='https://fabric.systemiacommandcenters.com/mcp'));
+  assert.ok(!alievProduct.connections.some((x)=>/base44\.app/.test(x.url)),'legacy specialist transport must not be reintroduced through portfolio discovery');
+});
+
 test('Fabric catalog normalizes and intent matching finds the problem-native capability',()=>{
   const normalized=normalizeFabricCatalog(catalog);
   assert.equal(normalized.length,2);
