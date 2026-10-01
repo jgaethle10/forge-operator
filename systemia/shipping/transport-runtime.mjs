@@ -25,6 +25,60 @@ function attemptView(attempt = {}) {
   };
 }
 
+async function verifyAcceptedShipment({ shipment, envelope, adapter, ledger_file, now }) {
+  const providerMessageId = clean(shipment.provider_message_id);
+  if (!providerMessageId) {
+    return {
+      state:'verification_required_before_retry',
+      delivered:false,
+      shipment_key:shipment.shipment_key,
+      verification_required:true,
+      reason:'provider_message_id_missing'
+    };
+  }
+
+  const sentMessage = await adapter.readSent({
+    provider_message_id:providerMessageId,
+    envelope
+  });
+  const verification = verifySentCopy({
+    envelope,
+    sent_message:sentMessage
+  });
+
+  if (!verification.verified) {
+    return {
+      state:'provider_accepted_unverified',
+      delivered:false,
+      shipment_key:shipment.shipment_key,
+      provider_message_id:providerMessageId,
+      verification
+    };
+  }
+
+  const verified = markSentCopyVerified({
+    ledger_file,
+    shipment_key:shipment.shipment_key,
+    verification_ref:verification.verification_digest,
+    provider_message_id:providerMessageId,
+    attachment_names:verification.attachment_names,
+    recipient_verified:verification.recipient_verified,
+    subject_verified:verification.subject_verified,
+    attachments_verified:verification.attachments_verified,
+    now:now()
+  });
+
+  return {
+    state:'verified_delivered',
+    delivered:true,
+    duplicate_suppressed:true,
+    resumed:true,
+    shipment:verified.shipment,
+    provider_message_id:providerMessageId,
+    verification
+  };
+}
+
 export async function dispatchVerifiedShipment({
   envelope,
   transport_artifacts = [],
@@ -55,23 +109,67 @@ export async function dispatchVerifiedShipment({
     now:now()
   });
 
-  if (reserved.duplicate_suppressed) {
-    return {
-      state:reserved.shipment.state,
-      delivered:reserved.shipment.state === 'verified_delivered',
-      duplicate_suppressed:true,
-      shipment:reserved.shipment
-    };
-  }
-
-  const shipmentKey = reserved.shipment.shipment_key;
-  const attempts = [];
+  const shipment = reserved.shipment;
+  const shipmentKey = shipment.shipment_key;
+  const attempts = [...(shipment.attempts || [])].map(attemptView);
   let sentCopyState = 'unknown';
 
-  for (let index = 0; index < Number(envelope.route_policy.maximum_pre_acceptance_route_attempts || 2); index += 1) {
+  if (reserved.duplicate_suppressed) {
+    if (shipment.state === 'verified_delivered') {
+      return {
+        state:'verified_delivered',
+        delivered:true,
+        duplicate_suppressed:true,
+        shipment
+      };
+    }
+
+    if (shipment.state === 'provider_accepted') {
+      return verifyAcceptedShipment({
+        shipment,
+        envelope,
+        adapter,
+        ledger_file,
+        now
+      });
+    }
+
+    if (shipment.state === 'verification_required_before_retry') {
+      if (typeof adapter.verifyAbsent !== 'function') {
+        return {
+          state:'verification_required_before_retry',
+          delivered:false,
+          duplicate_suppressed:true,
+          shipment_key:shipmentKey,
+          verification_required:true,
+          attempts
+        };
+      }
+      const absent = await adapter.verifyAbsent({
+        envelope,
+        prior_attempts:attempts
+      });
+      if (absent !== true) {
+        return {
+          state:'verification_required_before_retry',
+          delivered:false,
+          duplicate_suppressed:true,
+          shipment_key:shipmentKey,
+          verification_required:true,
+          attempts
+        };
+      }
+      sentCopyState = 'verified_absent';
+    }
+  }
+
+  const maxAttempts = Number(envelope.route_policy.maximum_pre_acceptance_route_attempts || 2);
+  let preAcceptanceAttempts = attempts.filter((row) => row.outcome !== 'sent').length;
+
+  while (preAcceptanceAttempts < maxAttempts) {
     const route = nextDispatchRoute({
       envelope,
-      attempts:attempts.map(attemptView),
+      attempts,
       sent_copy_state:sentCopyState
     });
 
@@ -95,7 +193,7 @@ export async function dispatchVerifiedShipment({
         body_digest:envelope.body_digest,
         package_manifest:envelope.package_manifest,
         transport_artifacts,
-        idempotency_key:reserved.shipment.idempotency_key
+        idempotency_key:shipment.idempotency_key
       });
 
       const providerMessageId = clean(
@@ -110,9 +208,11 @@ export async function dispatchVerifiedShipment({
           route:route.route,
           ambiguous_provider_acceptance:true,
           error_code:'provider_message_id_missing',
-          error_message:'send returned without a provider message id'
+          error_message:'send returned without a provider message id',
+          error_detail:null
         };
         attempts.push(unknown);
+        preAcceptanceAttempts += 1;
         recordDeliveryAttempt({
           ledger_file,
           shipment_key:shipmentKey,
@@ -120,7 +220,8 @@ export async function dispatchVerifiedShipment({
           provider,
           outcome:'unknown',
           ambiguous_provider_acceptance:true,
-          error_code:'provider_message_id_missing',
+          error_code:unknown.error_code,
+          error_message:unknown.error_message,
           now:now()
         });
 
@@ -220,6 +321,7 @@ export async function dispatchVerifiedShipment({
         }
       };
       attempts.push(attempt);
+      preAcceptanceAttempts += 1;
 
       recordDeliveryAttempt({
         ledger_file,
@@ -228,6 +330,8 @@ export async function dispatchVerifiedShipment({
         provider,
         outcome,
         error_code:attempt.error_code,
+        error_message:attempt.error_message,
+        error_detail:attempt.error_detail,
         ambiguous_provider_acceptance:classification.verification_required === true,
         now:now()
       });
