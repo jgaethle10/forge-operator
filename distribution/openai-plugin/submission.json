@@ -15,9 +15,9 @@
     "origin_change_requires_new_plugin_submission": true
   },
   "website": "https://fabric.systemiacommandcenters.com/openai",
-  "support_url": "https://fabric.systemiacommandcenters.com/support",
-  "privacy_policy_url": "https://fabric.systemiacommandcenters.com/privacy",
-  "terms_url": "https://fabric.systemiacommandcenters.com/terms",
+  "support_url": "https://fabric.systemiacommandcenters.com/openai/support",
+  "privacy_policy_url": "https://fabric.systemiacommandcenters.com/openai/privacy",
+  "terms_url": "https://fabric.systemiacommandcenters.com/openai/terms",
   "proposed_category": "Business & Operations",
   "proposed_availability": [
     "US"
