@@ -485,6 +485,7 @@ async function main() {
     stressLab,
     breakerLab,
     timingLab,
+    volatilityDelayInteractionLab,
     overlapLab,
     placeboLab,
     randomPlaceboLab,
