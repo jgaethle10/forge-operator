@@ -60,6 +60,7 @@ for (const [name, mode] of [
   ['resident', 'resident'],
   ['flapper', 'resident'],
   ['optional', 'resident'],
+  ['gated', 'cycle'],
 ]) {
   fs.writeFileSync(path.join(fixtureDir, `${name}.workflow.json`), JSON.stringify({
     schema: 'evercraft.systemia.workflow-manifest.v1',
@@ -107,6 +108,14 @@ fs.writeFileSync(configPath, JSON.stringify({
         '--unused': 'PROOF_OPTIONAL_REQUIRED',
       },
     },
+    {
+      service_key: 'proof-gated',
+      mode: 'cycle',
+      manifest: 'fixtures/gated.workflow.json',
+      executable: 'fixtures/cycle.mjs',
+      cadence_seconds: 1,
+      enabled_when_env: 'PROOF_GATED_ENABLED',
+    },
   ],
 }, null, 2));
 
@@ -126,7 +135,7 @@ const supervisor = new SystemiaCoreResidentSupervisor({
 try {
   const started = supervisor.start({ immediateCycles: true });
   assert.equal(started.running, true);
-  assert.equal(started.service_count, 4);
+  assert.equal(started.service_count, 5);
 
   await sleep(4500);
 
@@ -143,6 +152,7 @@ try {
   const resident = health.services.find((x) => x.service_key === 'proof-resident');
   const flapper = health.services.find((x) => x.service_key === 'proof-flapper');
   const optional = health.services.find((x) => x.service_key === 'proof-optional');
+  const gated = health.services.find((x) => x.service_key === 'proof-gated');
 
   assert.ok(['idle', 'running'].includes(cycle.status));
   assert.equal(resident.status, 'running');
@@ -151,7 +161,9 @@ try {
   assert.equal(flapper.hold_reason, 'restart_budget_exhausted');
   assert.equal(optional.status, 'disabled');
   assert.equal(optional.hold_reason, 'optional_environment_not_configured');
-  assert.equal(health.disabled_count, 1);
+  assert.equal(gated.status, 'disabled');
+  assert.equal(gated.hold_reason, 'activation_gate_disabled');
+  assert.equal(health.disabled_count, 2);
   assert.equal(health.held_count, 1);
 
   const receipts = fs.readFileSync(path.join(stateDir, 'receipts.jsonl'), 'utf8')
@@ -165,6 +177,12 @@ try {
       x.reason === 'optional_environment_not_configured'
   ));
   assert.ok(receipts.some(
+    (x) => x.type === 'cycle.disabled' &&
+      x.service_key === 'proof-gated' &&
+      x.reason === 'activation_gate_disabled' &&
+      x.activation_env === 'PROOF_GATED_ENABLED'
+  ));
+  assert.ok(receipts.some(
     (x) => x.type === 'resident.held' &&
       x.service_key === 'proof-flapper' &&
       x.reason === 'restart_budget_exhausted'
@@ -175,13 +193,17 @@ try {
   assert.equal(stopped.running, false);
   assert.equal(
     stopped.services
-      .filter((x) => x.service_key !== 'proof-flapper')
+      .filter((x) => !['proof-flapper', 'proof-gated'].includes(x.service_key))
       .every((x) => x.status === 'stopped'),
     true
   );
   assert.equal(
     stopped.services.find((x) => x.service_key === 'proof-flapper').status,
     'held'
+  );
+  assert.equal(
+    stopped.services.find((x) => x.service_key === 'proof-gated').status,
+    'disabled'
   );
 
   const persisted = JSON.parse(fs.readFileSync(path.join(stateDir, 'health.json'), 'utf8'));
@@ -199,6 +221,7 @@ try {
     cycle_children_tracked_for_shutdown: true,
     receipt_chain_present: true,
     optional_unconfigured_service_disabled_not_held: true,
+    explicit_activation_gate_verified: true,
     graceful_stop_verified: true,
   }, null, 2));
 } finally {
