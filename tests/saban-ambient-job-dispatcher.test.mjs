@@ -200,3 +200,22 @@ test('dispatcher holds work when no conformance-proven zero-spend capacity exist
     fs.rmSync(root,{recursive:true,force:true});
   }
 });
+
+
+test('product work queue cannot submit infrastructure-only secret-share jobs',()=>{
+  const root=fs.mkdtempSync(path.join(os.tmpdir(),'saban-work-infra-only-'));
+  try{
+    const queue=new AmbientWorkQueue({root});
+    assert.throws(
+      ()=>queue.submit({
+        workload_class:'systemia.secret-share-vault.v1',
+        idempotency_key:'steal-share',
+        payload:{operation:'get',slot_id:'ambient-memory-master-anything'},
+        private_data:true,
+      }),
+      /workload_infrastructure_only/
+    );
+  }finally{
+    fs.rmSync(root,{recursive:true,force:true});
+  }
+});
