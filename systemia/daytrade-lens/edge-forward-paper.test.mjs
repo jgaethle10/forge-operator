@@ -46,6 +46,8 @@ const score = scoreForwardPaperCohort(protocol, rows);
 assert.equal(score.forward_events, 2);
 assert.equal(score.distinct_origins, 2);
 assert.equal(score.status, "FORWARD_PAPER_PASS");
+assert.equal(score.signal_key, protocol.signal_key);
+assert.equal(score.cluster_key, protocol.cluster_key);
 assert.equal(score.sample_ready, true);
 assert.equal(score.live_trade_authority, false);
 
