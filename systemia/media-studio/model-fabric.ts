@@ -61,6 +61,7 @@ export interface VisualModelCapability {
   providerLocatorId?:string;
   nativeAudio?:boolean;
   batchVariants?:number;
+  maxCandidateJobs?:number;
   qualityTier:1|2|3|4|5;
   costTier:1|2|3|4|5;
   latencyTier:1|2|3|4|5;
@@ -359,6 +360,27 @@ function compatibleReferences(
   });
 }
 
+function expandCandidateCapacity<T extends {
+  endpoint:VisualModelEndpoint;
+  capability:VisualModelCapability;
+  score:number;
+}>(rows:T[]){
+  const capacities=rows.map(row=>Math.max(
+    1,
+    Math.min(8,Math.trunc(row.capability.maxCandidateJobs??row.capability.batchVariants??1))
+  ));
+  const maxCapacity=Math.max(0,...capacities);
+  const expanded:Array<T & {variantIndex:number}>=[];
+  for(let variantIndex=0;variantIndex<maxCapacity;variantIndex+=1){
+    rows.forEach((row,index)=>{
+      if(variantIndex<capacities[index]){
+        expanded.push({...row,variantIndex});
+      }
+    });
+  }
+  return expanded;
+}
+
 function chooseDiverse<T extends {endpoint:VisualModelEndpoint;score:number}>(
   rows:T[],
   count:number,
@@ -408,7 +430,8 @@ export function buildVisualModelPlan(
 
   const desired=Math.max(1,Math.min(8,Math.trunc(request.candidateCount??4)));
   const diversity=Math.max(1,Math.min(4,Math.trunc(request.modelDiversity??1)));
-  const selected=chooseDiverse(eligible,desired,diversity);
+  const candidateSlots=expandCandidateCapacity(eligible);
+  const selected=chooseDiverse(candidateSlots,desired,diversity);
 
   const jobs=selected.map((row,index):VisualModelJob=>({
     schema:'evercraft.fallen.visual-model-job.v1',
