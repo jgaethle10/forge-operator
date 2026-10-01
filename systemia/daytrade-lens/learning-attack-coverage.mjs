@@ -59,12 +59,12 @@ export const ATTACK_IMPLEMENTATION_MAP=Object.freeze({
       "systemia/daytrade-lens/edge-quote-microstructure.mjs",
       "systemia/daytrade-lens/edge-execution-translation.mjs"
     ],
-    gap:"Quote-at-entry spread is now measured, but full decision-to-fill and exit touch reconstruction remains."
+    gap:"Two-sided marketable entry/exit touch reconstruction now measures quoted execution degradation, but realized order-specific fills, benchmark execution, routing, hidden liquidity and impact remain unobserved."
   },
   "partial/unfilled order outcome":{
-    status:"missing",
-    evidence:[],
-    gap:"No queue-position or fill-probability model yet."
+    status:"partial",
+    evidence:["systemia/daytrade-lens/edge-quote-microstructure.mjs"],
+    gap:"The system now separates no-touch, touch-but-fill-indeterminate, marketable-touch-observed and unobserved states. Queue position and order-specific partial-fill probability remain unknown and are never inferred from a touch."
   },
   "signal-decay versus execution-cost decomposition":{
     status:"partial",
