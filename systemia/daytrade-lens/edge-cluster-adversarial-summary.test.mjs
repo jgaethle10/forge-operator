@@ -37,6 +37,11 @@ const summary=buildClusterAdversarialSummary({
     timing_status:"TIMING_ROBUST_DIAGNOSTIC",
     extended_timing_status:"EXTENDED_TIMING_ROBUST_DIAGNOSTIC",
   }))},
+  volatilityDelayInteractionLab:{reviews:candidates.map((candidate)=>({
+    signal_key:candidate.signal_key,
+    status:"VOLATILITY_DELAY_INTERACTION_READY",
+    differential_delay_decay_high_minus_low:-0.003,
+  }))},
   overlapLab:{reviews:rows("overlap_status","OVERLAP_ROBUST_DIAGNOSTIC")},
   placeboLab:{reviews:rows("placebo_status","PLACEBO_SEPARATED_DIAGNOSTIC")},
   randomPlaceboLab:{reviews:rows("random_placebo_status","RANDOM_PLACEBO_SEPARATED_DIAGNOSTIC")},
@@ -87,6 +92,18 @@ assert.equal(summary.candidate_count,2);
 assert.equal(summary.clusters[0].candidate_count,2);
 assert.equal(summary.clusters[0].diagnostic_counts.stress_survivor,2);
 assert.equal(summary.clusters[0].diagnostic_counts.extended_breaker_survivor,2);
+assert.equal(
+  summary.clusters[0].diagnostic_counts.volatility_delay_interaction_ready,
+  2
+);
+assert.equal(
+  summary.clusters[0].member_receipts[0].volatility_delay_interaction_status,
+  "VOLATILITY_DELAY_INTERACTION_READY"
+);
+assert.equal(
+  summary.clusters[0].member_receipts[0].volatility_delay_differential_decay,
+  -0.003
+);
 assert.equal(summary.clusters[0].diagnostic_counts.label_permutation_bh_separated,2);
 assert.equal(summary.clusters[0].diagnostic_counts.family_max_null_separated,2);
 assert.equal(summary.clusters[0].diagnostic_counts.deflated_sharpe_separated,2);
@@ -136,6 +153,7 @@ console.log(JSON.stringify({
   deflated_sharpe_attached:true,
   tail_dependence_attached:true,
   announcement_execution_stress_attached:true,
+  volatility_delay_interaction_attached:true,
   cscv_pbo_attached_at_cluster_unit:true,
   descriptive_only:true,
   eligibility_mutated:false,
