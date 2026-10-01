@@ -31,7 +31,7 @@
   ],
   "remaining_platform_prerequisites": [
     "Do not cancel or replace the active Evercraft v1.0.0 review until v1.1.0 is fully proven or the provider review resolves",
-    "Restore fabric.systemiacommandcenters.com public TCP/HTTPS ingress and capture a fresh passing external canary",
+    "After the active v1.0.0 review resolves or is deliberately cancelled, deploy the staged /mcp/openai profile and capture a fresh passing external canary for that exact endpoint",
     "Re-run the current OpenAI MCP Scan Tools check against the restored production endpoint",
     "Refresh the reviewer walkthrough to demonstrate inspect_public_website on the purpose-specific OpenAI endpoint",
     "Upload the canonical Evercraft v1.1.0 ZIP in OpenAI Platform Plugins",
@@ -67,5 +67,27 @@
       "configuration_status": "incomplete"
     },
     "v110_policy": "Do not cancel or replace the active Evercraft v1.0.0 review until v1.1.0 is fully proven or the provider review resolves."
+  },
+  "public_edge_evidence": {
+    "observed_at": "2026-10-01T20:29:53.875Z",
+    "origin": "https://fabric.systemiacommandcenters.com",
+    "verified": true,
+    "public_dns": true,
+    "public_tcp_80": true,
+    "public_tcp_443": true,
+    "trusted_tls": true,
+    "runtime_health": true,
+    "mcp_initialize": true,
+    "root_tools_list": true,
+    "root_tools": [
+      "match_evercraft_capability",
+      "list_evercraft_capabilities",
+      "get_evercraft_connection_options"
+    ],
+    "capability_catalog_count": 48,
+    "device_attestation": true,
+    "base44_transport_enabled": false,
+    "receipt_hash": "sha256:20df5f2fbeb40016da032e01ce15a53c2e8c8faf6acd022fe8b23235e6325d5d",
+    "evidence_scope": "owned origin and frozen root /mcp contract only; does not prove the staged /mcp/openai v1.1 profile"
   }
 }
