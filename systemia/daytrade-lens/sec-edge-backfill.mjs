@@ -13,6 +13,7 @@ import { persistFrozenCohorts } from "./edge-forward-paper.mjs";
 import { ForwardPaperDurableState } from "./edge-forward-paper-durable.mjs";
 import { runEdgeStressLab } from "./edge-stress-lab.mjs";
 import { runEdgeBreakerLab } from "./edge-breaker-lab.mjs";
+import { runTimingFragilityLab } from "./edge-timing-fragility.mjs";
 
 async function main() {
   const artifactDir = path.resolve(
@@ -51,6 +52,12 @@ async function main() {
   const breakerLab = runEdgeBreakerLab(report);
   const breakerFile = path.join(artifactDir, "sec-edge-breaker-lab.json");
   fs.writeFileSync(breakerFile, JSON.stringify(breakerLab, null, 2) + "\n");
+
+  const timingLab = runTimingFragilityLab(report, {
+    transaction_cost_bps: Number(process.env.EDGE_LAB_TRANSACTION_COST_BPS || 5),
+  });
+  const timingFile = path.join(artifactDir, "sec-edge-timing-fragility.json");
+  fs.writeFileSync(timingFile, JSON.stringify(timingLab, null, 2) + "\n");
 
   const adversarial = adversarialValidateCandidates(report, {
     transaction_cost_bps: Number(process.env.EDGE_LAB_TRANSACTION_COST_BPS || 5),
@@ -178,6 +185,7 @@ async function main() {
     forward_paper_eligible: adversarial.forward_paper_eligible_count || 0,
     stress_survivors: stressLab.stress_survivor_count || 0,
     breaker_survivors: breakerLab.breaker_survivor_count || 0,
+    timing_robust_diagnostics: timingLab.timing_robust_count || 0,
     frozen_forward_paper_cohorts: frozenCohorts.length,
     durable_forward_paper_state_configured: durableState.configured,
     durable_forward_paper_restart_reopen_verified: durableState.restart_reopen_verified,
@@ -191,6 +199,7 @@ async function main() {
       research: reportFile,
       stress_lab: stressFile,
       breaker_lab: breakerFile,
+      timing_fragility_lab: timingFile,
       adversarial_review: adversarialFile,
       forward_paper_cohorts: forwardPaperFile,
       durable_forward_paper_scores: durableScoreFile,
