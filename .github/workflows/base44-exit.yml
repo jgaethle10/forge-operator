@@ -5,6 +5,8 @@ on:
     paths:
       - 'systemia/migrations/base44-exit/**'
       - 'systemia/app-fabric/**'
+      - 'systemia/aliev/session-corpus*.mjs'
+      - 'systemia/organism/aliev-session-corpus.workflow.json'
       - 'systemia/identity/identity.mjs'
       - 'systemia/identity/challenge-broker.mjs'
       - 'systemia/identity/challenge-broker.proof.mjs'
@@ -29,6 +31,8 @@ on:
     paths:
       - 'systemia/migrations/base44-exit/**'
       - 'systemia/app-fabric/**'
+      - 'systemia/aliev/session-corpus*.mjs'
+      - 'systemia/organism/aliev-session-corpus.workflow.json'
       - 'systemia/identity/identity.mjs'
       - 'systemia/identity/challenge-broker.mjs'
       - 'systemia/identity/challenge-broker.proof.mjs'
@@ -73,6 +77,8 @@ jobs:
         run: npm run proof:base44-wave-execution
       - name: Prove lossless Base44 entity transfer
         run: npm run proof:base44-entity-transfer
+      - name: Prove owned AliEV session corpus
+        run: npm run proof:aliev-session-corpus
       - name: Prove receipt-gated migration route registry
         run: npm run proof:base44-route-registry
       - name: Prove active migration route overlay

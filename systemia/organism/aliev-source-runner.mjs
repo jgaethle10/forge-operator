@@ -62,6 +62,15 @@ async function reconcile(){
 
     let source=yard.deploymentStatus(deploymentId);
     let result=null;
+    let releaseUpgrade=false;
+    if(source?.state==='ready' && source.receipt?.release_ref!==release){
+      if(source.receipt?.capacity_node_id!==edge.receipt?.capacity_node_id){
+        throw new Error('aliev_source_and_public_edge_node_drift');
+      }
+      await yard.stopDeployment(deploymentId,{reason:'immutable_release_update'});
+      source=null;
+      releaseUpgrade=true;
+    }
     if(source?.state==='ready'){
       if(source.receipt?.capacity_node_id!==edge.receipt?.capacity_node_id){
         throw new Error('aliev_source_and_public_edge_node_drift');
@@ -81,13 +90,18 @@ async function reconcile(){
         deploymentId,
         releaseRef:release,
         workloadClass:'systemia.aliev-source-runtime.v1',
-        input:{},
+        input:{
+          session_corpus_enabled:true,
+          session_corpus_interval_ms:300000,
+          session_corpus_page_size:5000,
+          session_corpus_max_pages_per_run:8,
+        },
         rollbackTarget:'systemia:aliev-source-runtime-previous',
         leaseTtlMs,
       });
       yard.startLeaseKeeper(deploymentId,{ttlMs:leaseTtlMs,renewEveryMs});
       result={
-        action:'provisioned',
+        action:releaseUpgrade?'upgraded':'provisioned',
         deployment_receipt:source.receipt?.receipt_hash||null,
         source_url:source.result?.source_url||null,
         instance_id:source.result?.instance_id||null,
