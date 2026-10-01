@@ -29,9 +29,12 @@ fi
 # shellcheck disable=SC1090
 source "$ROUTER_ENV"
 
-echo "[3/6] Reasserting WAN mappings, including TCP+UDP 53 -> Chromebook 5353..."
+echo "[3/6] Reasserting DNS-only WAN mappings: TCP+UDP 53 -> Chromebook 5353..."
 set +e
-/usr/local/sbin/evercraft-refresh-router-map >/tmp/evercraft-edge-router-map.log 2>&1
+node "$REPO_ROOT/scripts/evercraft-public-edge-map.mjs" \
+  --gateway "$EVERCRAFT_ROUTER_GATEWAY" \
+  --host "$EVERCRAFT_ROUTER_LAN_HOST" \
+  --scope dns >/tmp/evercraft-edge-router-map.log 2>&1
 MAP_RC=$?
 set -e
 if [[ "$MAP_RC" -ne 0 ]]; then
