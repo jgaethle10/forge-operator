@@ -55,7 +55,16 @@ The current reconciler is deliberately bounded. It does not claim that a missing
 
 ## Health layer
 
-Later health rules can build on reconciled edges to detect orphaned outputs, dead branches, stale dependencies, cycles, duplicate capability paths, single points of failure, and attempted work with no downstream proof. Findings should carry exact subject edges/nodes and evidence references before they can spawn repair work.
+`tools/systemia_architecture_health.py` is the bounded structural health lane. It consumes topology evidence and optional reconciler output without executing application code or querying production.
+
+It currently detects:
+
+- structural dependency cycles from supplied relationships;
+- orphan nodes only when an explicit node watch contract says connectivity is expected;
+- dead-output candidates only when an explicit node watch contract says an outbound consumer is expected;
+- reconciler findings such as observed-not-declared relationships and missing downstream receipts.
+
+The health lane deliberately does **not** infer dead code from missing runtime observations. A node or edge becomes a missing-evidence finding only when a governed watch contract defines the expected relationship. This keeps silence from masquerading as proof.
 
 ## Privacy boundary
 
@@ -65,6 +74,8 @@ Public discovery and public repositories must not expose private Systemia/admin 
 
 ```bash
 python tools/systemia_architecture_scan.py --root . --out /tmp/systemia-architecture.json
+python tools/systemia_architecture_reconcile.py --static /tmp/systemia-architecture.json --out /tmp/systemia-reconciled.json
+python tools/systemia_architecture_health.py --topology /tmp/systemia-architecture.json --reconciled /tmp/systemia-reconciled.json --out /tmp/systemia-health.json
 python -m unittest discover -s tests -p 'test_systemia_architecture_*.py' -v
 ```
 
