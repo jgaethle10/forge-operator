@@ -10,6 +10,8 @@ const canonicalControlPlaneFiles = [
   'systemia/yard/public-edge-activator.mjs',
   'registry/systemia/README.md',
   'registry/systemia/llms.txt',
+  'public/.well-known/evercraft-ai-connect.json',
+  'public/ai-discovery.json',
 ];
 
 for (const path of canonicalControlPlaneFiles) {
