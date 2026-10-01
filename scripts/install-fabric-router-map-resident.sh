@@ -3,6 +3,9 @@ set -euo pipefail
 
 GATEWAY=""
 LAN_HOST=""
+HTTP_PORT="18080"
+HTTPS_PORT="8443"
+BROKER_PORT="0"
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 NODE_BIN="$(command -v node || true)"
 RUN_USER="${SUDO_USER:-$USER}"
@@ -11,13 +14,13 @@ STATE_DIR="/var/lib/evercraft/router-map"
 usage() {
   cat <<'EOF'
 Usage:
-  scripts/install-fabric-router-map-resident.sh --gateway 192.168.88.1 --host 192.168.88.3
+  scripts/install-fabric-router-map-resident.sh --gateway 192.168.88.1 --host 192.168.88.3 [--http-port 18080] [--https-port 8443] [--broker-port 0]
 
-Installs a resident systemd timer that reasserts the two Evercraft Fabric UPnP mappings:
-  WAN 80  -> Chromebook 18080
-  WAN 443 -> Chromebook 8443
+Installs a resident systemd timer that reasserts the two Evercraft Fabric router mappings:
+  WAN 80  -> target host HTTP port
+  WAN 443 -> target host HTTPS port
 
-The router-map helper remains hard-scoped to those two mappings.
+Chromebook/Crostini keeps the 18080/8443 defaults. A dedicated Saban gateway can use 80/443 directly and optionally map its outbound broker port.
 EOF
 }
 
@@ -25,6 +28,9 @@ while [[ $# -gt 0 ]]; do
   case "$1" in
     --gateway) GATEWAY="${2:-}"; shift 2 ;;
     --host) LAN_HOST="${2:-}"; shift 2 ;;
+    --http-port) HTTP_PORT="${2:-}"; shift 2 ;;
+    --https-port) HTTPS_PORT="${2:-}"; shift 2 ;;
+    --broker-port) BROKER_PORT="${2:-}"; shift 2 ;;
     --repo-root) REPO_ROOT="${2:-}"; shift 2 ;;
     -h|--help) usage; exit 0 ;;
     *) echo "Unknown argument: $1" >&2; usage >&2; exit 2 ;;
@@ -33,6 +39,11 @@ done
 
 if [[ -z "$GATEWAY" || -z "$LAN_HOST" ]]; then
   echo "ERROR: --gateway and --host are required" >&2
+  exit 2
+fi
+if ! [[ "$HTTP_PORT" =~ ^[0-9]+$ && "$HTTPS_PORT" =~ ^[0-9]+$ && "$BROKER_PORT" =~ ^[0-9]+$ ]] ||
+   (( HTTP_PORT < 1 || HTTP_PORT > 65535 || HTTPS_PORT < 1 || HTTPS_PORT > 65535 || BROKER_PORT < 0 || BROKER_PORT > 65535 )); then
+  echo "ERROR: --http-port/--https-port must be 1..65535 and --broker-port must be 0..65535" >&2
   exit 2
 fi
 if [[ ! -f "$REPO_ROOT/scripts/evercraft-public-edge-map.mjs" ]]; then
@@ -51,6 +62,9 @@ EVERCRAFT_ROUTER_GATEWAY=$GATEWAY
 EVERCRAFT_ROUTER_LAN_HOST=$LAN_HOST
 EVERCRAFT_ROUTER_REPO_ROOT=$REPO_ROOT
 EVERCRAFT_ROUTER_NODE=$NODE_BIN
+EVERCRAFT_ROUTER_HTTP_PORT=$HTTP_PORT
+EVERCRAFT_ROUTER_HTTPS_PORT=$HTTPS_PORT
+EVERCRAFT_ROUTER_BROKER_PORT=$BROKER_PORT
 EOF
 sudo chmod 0644 /etc/evercraft/router-map.env
 
@@ -65,7 +79,13 @@ STATE_DIR="/var/lib/evercraft/router-map"
 mkdir -p "$STATE_DIR"
 tmp="$(mktemp "$STATE_DIR/latest.XXXXXX")"
 set +e
-"$EVERCRAFT_ROUTER_NODE"   "$EVERCRAFT_ROUTER_REPO_ROOT/scripts/evercraft-public-edge-map.mjs"   --gateway "$EVERCRAFT_ROUTER_GATEWAY"   --host "$EVERCRAFT_ROUTER_LAN_HOST" >"$tmp"
+"$EVERCRAFT_ROUTER_NODE" \
+  "$EVERCRAFT_ROUTER_REPO_ROOT/scripts/evercraft-public-edge-map.mjs" \
+  --gateway "$EVERCRAFT_ROUTER_GATEWAY" \
+  --host "$EVERCRAFT_ROUTER_LAN_HOST" \
+  --http-port "$EVERCRAFT_ROUTER_HTTP_PORT" \
+  --https-port "$EVERCRAFT_ROUTER_HTTPS_PORT" \
+  --broker-port "$EVERCRAFT_ROUTER_BROKER_PORT" >"$tmp"
 code=$?
 set -e
 chmod 0640 "$tmp"
