@@ -59,9 +59,9 @@ Runtime verification remains product-specific and receipt-backed.
 
 ## Adoption coverage
 
-`adoption-coverage.json` is generated across every public product.
+Adoption coverage is rendered live by `mesh.mjs` from the current public-product registry, direct-door ledger, product contracts, repository evidence paths, and ratchet baseline. No checked-in generated coverage file is authoritative.
 
-It exposes:
+The live render exposes:
 
 - complete declarations
 - incomplete declarations
@@ -97,7 +97,7 @@ The compiler turns missing connective tissue into a machine-readable queue that 
 
 ## Executable runtime policies
 
-Capability Mesh now compiles each complete product contract into a runtime policy.
+Capability Mesh compiles each complete product contract into a runtime policy on demand. Runtime policy snapshots are not source authority.
 
 The policy is not a grant. It is the exact machine-readable declaration that downstream Systemia code may use to construct bounded inputs.
 
@@ -226,3 +226,22 @@ free_part_triage
 It creates no charge and can produce an evidence-aware Part Passport. Paid Quick/Deep/Rescue hunts, checkout, vendor contact, purchase, fitment claims, inventory claims and successful resolution are not inherited by this contract.
 
 That lets Systemia route free triage through the shared trust chain while keeping commercial and compatibility claims behind their own evidence and human-confirmation boundaries.
+
+
+## Derived state is disposable
+
+Capability Mesh intentionally keeps derived coverage and compiled runtime policy out of the source-of-truth path.
+
+Authoritative inputs are:
+
+- `registry/public-products.json`
+- `public/.well-known/evercraft-direct-door-readiness.json`
+- `systemia/capability-mesh/contracts.json`
+- `systemia/capability-mesh/ratchet-baseline.json`
+- referenced source evidence
+
+`mesh.mjs --check` renders current coverage in memory and fails on incomplete explicit contracts or ratchet regressions. `runtime.mjs --check` compiles current runtime policies in memory and verifies that none grant authority.
+
+Portfolio Sentinel calls the live renderer directly each cycle.
+
+This prevents a moving `main` branch from invalidating a PR merely because a generated snapshot was computed against an older base. Derived state can be reproduced at any time; source truth cannot be silently replaced by it.
