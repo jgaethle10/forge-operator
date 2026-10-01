@@ -57,6 +57,7 @@ for (const primitive of [
   'resident_scheduler',
   'fabric_discovery',
   'object_storage',
+  'object_delivery',
   'secret_store',
   'route_registry',
   'active_route_overlay',
