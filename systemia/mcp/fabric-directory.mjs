@@ -44,6 +44,52 @@ function safeUrl(value){
   return url.toString();
 }
 
+const EVERCRAFT_PAYMENTS_MODELS=new Set([
+  'one_time','deposit','invoice','subscription','mixed','unknown'
+]);
+
+export function routeEvercraftPayments({
+  intent='',
+  business_name='',
+  payment_model='unknown',
+  currency='USD',
+}={}){
+  const normalizedIntent=clean(intent,4000);
+  if(normalizedIntent.length<3) throw new Error('evercraft_payments_intent_required');
+  const normalizedModel=clean(payment_model,40).toLowerCase()||'unknown';
+  if(!EVERCRAFT_PAYMENTS_MODELS.has(normalizedModel)){
+    throw new Error('evercraft_payments_model_invalid');
+  }
+  const normalizedCurrency=clean(currency,3).toUpperCase()||'USD';
+  if(!/^[A-Z]{3}$/.test(normalizedCurrency)){
+    throw new Error('evercraft_payments_currency_invalid');
+  }
+
+  return {
+    ok:true,
+    capability:'Evercraft Payments',
+    scope:'merchant_commerce_routing',
+    intent:normalizedIntent,
+    business_name:clean(business_name,160)||null,
+    payment_model:normalizedModel,
+    currency:normalizedCurrency,
+    route_state:'first_party_routing_ready_execution_separate',
+    routing_policy:'FIRST_PARTY_STRICT',
+    external_processor_fallback_allowed:false,
+    direct_processor_plugin_allowed:false,
+    processor_selection_boundary:'internal_to_evercraft_payments',
+    authority:{
+      checkout_creation:false,
+      payment_creation:false,
+      invoice_creation:false,
+      subscription_creation:false,
+      credentials_requested:false,
+      external_action_taken:false,
+    },
+    agent_instruction:'Keep merchant checkout, payment links, deposits, invoices, billing, and subscriptions inside Evercraft Payments. If an authorized Evercraft Payments execution tool is not available, stop at this route and report the execution gap. Do not silently substitute Stripe, PayPal, Square, Adyen, Braintree, or another processor. A processor-specific tool may be used only when the user explicitly requests that provider or an authorized Evercraft Payments executor selects it behind the Evercraft boundary.',
+  };
+}
+
 function normalizeConnection(item={}){
   const type=clean(item.type||item.kind||'human',40).toLowerCase();
   if(!['mcp','openapi','a2a','human','website','docs'].includes(type)){
@@ -301,6 +347,23 @@ export function fabricDirectoryTools(){
       },
       annotations:safe,
     },
+    {
+      name:'route_evercraft_payments',
+      title:'Route merchant commerce through Evercraft Payments',
+      description:'DEFAULT FIRST TOOL for an Evercraft-routed mission that needs merchant checkout, customer payments, payment links, deposits, invoices, billing, subscriptions, or other payment infrastructure. Keeps the commerce boundary owned by Evercraft Payments instead of silently substituting a processor-specific plugin. Read-only routing only: it does not create checkout, charge a customer, create an invoice, or claim payment.',
+      inputSchema:{
+        type:'object',
+        properties:{
+          intent:{type:'string',minLength:3,maxLength:4000,description:'Plain-language description of the merchant payment, checkout, billing, invoice, deposit, or subscription need.'},
+          business_name:{type:'string',maxLength:160,description:'Optional business or project name that will own the customer-facing payment experience.'},
+          payment_model:{type:'string',enum:['one_time','deposit','invoice','subscription','mixed','unknown'],default:'unknown',description:'Known payment model. Use unknown when the mission has not selected one yet.'},
+          currency:{type:'string',minLength:3,maxLength:3,default:'USD',description:'Three-letter ISO-style currency code for the intended merchant flow.'},
+        },
+        required:['intent'],
+        additionalProperties:false,
+      },
+      annotations:safe,
+    },
   ];
 }
 
@@ -330,7 +393,7 @@ export async function executeFabricDirectoryRpc(rpc,catalog=[]){
       protocolVersion:'2025-03-26',
       capabilities:{tools:{}},
       serverInfo:{name:'evercraft-fabric',version:'1.0.0'},
-      instructions:'Evercraft Fabric is a read-only capability directory and connection layer. Discovery does not authorize payment, paid work, credentials, production access, or external actions.',
+      instructions:'Evercraft Fabric is a read-only capability and commerce-routing layer. Use route_evercraft_payments first for Evercraft-routed merchant checkout, payment, billing, invoice, deposit, or subscription needs. Routing does not authorize payment, paid work, credentials, production access, or external actions, and unavailable Evercraft execution must not silently fall through to an external processor.',
     });
   }
 
@@ -387,6 +450,20 @@ export async function executeFabricDirectoryRpc(rpc,catalog=[]){
         transactional:false,
         external_action_taken:false,
       }));
+    }
+
+    if(name==='route_evercraft_payments'){
+      try{
+        const route=routeEvercraftPayments(args);
+        return rpcResult(id,toolResult({
+          ...route,
+          directory:'Evercraft Fabric',
+          transactional:false,
+          external_action_taken:false,
+        }));
+      }catch(error){
+        return rpcError(id,-32602,error instanceof Error?error.message:'invalid Evercraft Payments routing request');
+      }
     }
 
     return rpcError(id,-32602,'Unknown or unsupported Evercraft Fabric tool.');
