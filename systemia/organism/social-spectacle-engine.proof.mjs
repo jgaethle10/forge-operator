@@ -166,3 +166,49 @@ const radarFallbackCycle=runSpectacleCycle({
 });
 assert.equal(radarFallbackCycle.receipt.input_count,1);
 assert.equal(radarFallbackCycle.receipt.queue_count,1);
+
+
+const quakeObservation={
+  observation_id:'obs-usgs-quake-visual',
+  source_system:'systemia-radar',
+  source_family:'usgs-earthquake-hazards',
+  observed_at:'2026-09-30T23:55:00Z',
+  region_keys:['global'],
+  domains:['geophysics','earth_hazards'],
+  kind:'seismic_feed_state',
+  evidence_state:'observed',
+  reliability:.98,
+  anomaly_score:.55,
+  provenance_refs:['https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson'],
+  correlation_keys:['usgs:m4.5-plus:past-day'],
+  facts:{subject:'USGS M4.5+ earthquakes, past day',count:7,largest_magnitude:6.2,largest_place:'Example Region'},
+  measurements:[
+    {event_id:'q1',magnitude:6.2,place:'Example Region',lat:47.31,lon:-122.75,depth_km:18.4,observed_at:'2026-09-30T23:55:00Z'},
+    {event_id:'q2',magnitude:5.4,place:'Second Region',lat:35.2,lon:140.1,depth_km:28.1,observed_at:'2026-09-30T22:45:00Z'},
+    {event_id:'q3',magnitude:5.1,place:'Third Region',lat:-12.1,lon:166.8,depth_km:41.0,observed_at:'2026-09-30T21:10:00Z'}
+  ]
+};
+const quakeCandidate=assessSpectacleDispatch({
+  dispatch:{consumer:'social_spectacle',priority:'normal'},
+  observation:quakeObservation,
+  recentSubjects:[],
+  brandKey:'evercraft',
+});
+assert.equal(quakeCandidate.action,'candidate',JSON.stringify(quakeCandidate));
+assert.equal(quakeCandidate.candidate.production.visual_path,'fallen_geo_explainer');
+assert.ok(quakeCandidate.wonder_score>=.70);
+
+const unvisualizedGlobal=assessSpectacleDispatch({
+  dispatch:{consumer:'social_spectacle'},
+  observation:{
+    ...quakeObservation,
+    observation_id:'space-alert-no-visual',
+    domains:['space_weather'],
+    kind:'space_weather_alert',
+    anomaly_score:.9,
+    facts:{subject:'Space weather alert',product_id:'ALTK05',lifecycle:'active',alert_fields:{level:'G3'}},
+    measurements:[]
+  },
+});
+assert.equal(unvisualizedGlobal.action,'background');
+assert.equal(unvisualizedGlobal.reason,'no_visual_story_path');
