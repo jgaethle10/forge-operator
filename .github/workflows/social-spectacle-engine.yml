@@ -229,3 +229,126 @@ jobs:
           if(!stage.layers.some(layer=>layer.kind==='timeline')) throw new Error('geo_timeline_missing');
           if(receipt.publication_authority!==false) throw new Error('geo_publication_authority_leak');
           NODE
+
+
+  geo-render-canary:
+    needs: prove
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install root runtime
+        run: npm install --no-audit --no-fund
+
+      - name: Ensure FFmpeg
+        run: |
+          if ! command -v ffmpeg >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y ffmpeg
+          fi
+
+      - name: Build isolated Fallen worker image
+        run: docker build -t evercraft/fallen-render-worker:spectacle-ci systemia/media-studio/render-worker
+
+      - name: Start two render workers
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/.spectacle-assets"
+          docker run -d --name spectacle-a             -p 8796:8787             -v "$GITHUB_WORKSPACE/.spectacle-assets:/work/assets:ro"             -e FALLEN_RENDER_WORKER_TOKEN=spectacle-a             evercraft/fallen-render-worker:spectacle-ci
+          docker run -d --name spectacle-b             -p 8797:8787             -v "$GITHUB_WORKSPACE/.spectacle-assets:/work/assets:ro"             -e FALLEN_RENDER_WORKER_TOKEN=spectacle-b             evercraft/fallen-render-worker:spectacle-ci
+          for port in 8796 8797; do
+            healthy=0
+            for i in $(seq 1 40); do
+              if curl -fsS "http://127.0.0.1:$port/healthz" >/dev/null; then
+                healthy=1
+                break
+              fi
+              sleep 1
+            done
+            test "$healthy" = "1"
+          done
+
+      - name: Produce watchable earthquake hero through Fallen and Clip intake
+        env:
+          FALLEN_RENDER_WORKERS: >-
+            [{"id":"spectacle-a","url":"http://127.0.0.1:8796","token":"spectacle-a"},{"id":"spectacle-b","url":"http://127.0.0.1:8797","token":"spectacle-b"}]
+        run: |
+          cat >/tmp/earthquake-social-queue.json <<'JSON'
+          {
+            "schema":"evercraft.social-spectacle.queue.v1",
+            "generated_at":"2026-10-01T00:00:00Z",
+            "target_daily_hero_posts":2,
+            "hard_max_daily_publishable_packages":4,
+            "quality_rule":"no filler",
+            "publication_authority":false,
+            "queue_count":1,
+            "queue":[{
+              "schema":"evercraft.social-spectacle.candidate.v1",
+              "candidate_id":"spectacle:ci-earthquake-render",
+              "observation_id":"ci-earthquake-render",
+              "observed_at":"2026-10-01T00:00:00Z",
+              "subject_key":"global::geophysics::seismic_feed_state",
+              "brand_key":"evercraft",
+              "title_seed":"Seven significant earthquakes in one day, mapped by magnitude and time.",
+              "domains":["geophysics","earth_hazards"],
+              "region_keys":["global"],
+              "evidence_state":"observed",
+              "evidence_label":"OBSERVED",
+              "source_family":"USGS Earthquake Hazards",
+              "source_refs":["ci:usgs-earthquake-geometry"],
+              "wonder_score":0.84,
+              "production":{
+                "visual_path":"fallen_geo_explainer",
+                "no_text_card_first":true,
+                "data_payload":{
+                  "duration_sec":4,
+                  "facts":{"subject":"USGS M4.5+ earthquakes, past day","count":7,"largest_magnitude":6.2},
+                  "measurements":[
+                    {"event_id":"q1","magnitude":6.2,"place":"Cascadia","lat":47.31,"lon":-122.75,"depth_km":18.4,"observed_at":"2026-09-30T23:55:00Z"},
+                    {"event_id":"q2","magnitude":5.8,"place":"Japan","lat":35.2,"lon":140.1,"depth_km":28.1,"observed_at":"2026-09-30T22:45:00Z"},
+                    {"event_id":"q3","magnitude":5.5,"place":"Vanuatu","lat":-16.2,"lon":167.8,"depth_km":41.0,"observed_at":"2026-09-30T21:10:00Z"},
+                    {"event_id":"q4","magnitude":5.2,"place":"Alaska","lat":55.1,"lon":-161.8,"depth_km":24.0,"observed_at":"2026-09-30T19:30:00Z"},
+                    {"event_id":"q5","magnitude":5.0,"place":"Chile","lat":-30.4,"lon":-71.2,"depth_km":35.0,"observed_at":"2026-09-30T17:20:00Z"}
+                  ]
+                }
+              }
+            }]
+          }
+          JSON
+          npm run social:spectacle:produce --             --queue /tmp/earthquake-social-queue.json             --out "$GITHUB_WORKSPACE/artifacts/social-spectacle-canary/production"             --clip-queue "$GITHUB_WORKSPACE/artifacts/social-spectacle-canary/clip"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          const root='artifacts/social-spectacle-canary/production';
+          const dir=fs.readdirSync(root)[0];
+          const receipt=JSON.parse(fs.readFileSync(path.join(root,dir,'production-receipt.json'),'utf8'));
+          if(receipt.status!=='ready_for_clip_publish') throw new Error('spectacle_not_ready_for_clip_publish:'+JSON.stringify(receipt));
+          if(receipt.publication_authority!==false) throw new Error('spectacle_publication_authority_leak');
+          const stage=JSON.parse(fs.readFileSync(receipt.vertical_video.replace('vertical-hero.mp4','stage.vertical.json'),'utf8'));
+          const geo=stage.layers.find(layer=>layer.kind==='geo');
+          if(!geo||!geo.points?.some(point=>point.pulse===true&&point.radius>5)) throw new Error('magnitude_encoding_missing');
+          NODE
+          ffprobe -v error -show_entries stream=codec_name,width,height,r_frame_rate -show_entries format=duration,size -of json             artifacts/social-spectacle-canary/production/*/vertical-hero.mp4
+
+      - name: Upload watchable social specimen
+        uses: actions/upload-artifact@v4
+        with:
+          name: social-spectacle-earthquake-canary
+          path: artifacts/social-spectacle-canary/
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Show worker logs on failure
+        if: failure()
+        run: |
+          docker logs spectacle-a || true
+          docker logs spectacle-b || true
+
+      - name: Stop workers
+        if: always()
+        run: |
+          docker rm -f spectacle-a || true
+          docker rm -f spectacle-b || true
