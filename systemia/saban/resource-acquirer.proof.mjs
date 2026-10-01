@@ -201,6 +201,74 @@ assert.ok(rejectedThenMarket.events.some((event)=>
   event.type==='resource.scarcity'
 ));
 
+let adapterExecutions=0;
+const adapterMarket={
+  market:'adapter-proof',
+  async discover(){
+    return {
+      offers:[{
+        offer_id:'adapter-proof:1',
+        provider_id:'adapter-provider',
+        market:'adapter-proof',
+        resources:{
+          cpu_units:8,
+          memory_mb:8192,
+          storage_gb:50,
+          gpu_count:0,
+          gpu_models:[],
+        },
+        placement:{},
+        trust:{
+          uptime_7d:1,
+          audited:true,
+          valid_version:true,
+          attested:false,
+        },
+        economics:{
+          zero_cost:true,
+          quoted:true,
+          hourly_usd:0,
+          total_usd:0,
+        },
+        quote_required:false,
+      }],
+    };
+  },
+  async lease(){
+    return {
+      schema:'proof.adapter-lease.v1',
+      market:'adapter-proof',
+      provider_id:'adapter-provider',
+      execution_ready:true,
+      receipt:'sha256:adapter-lease',
+    };
+  },
+  async execute(){
+    adapterExecutions+=1;
+    return {state:'completed'};
+  },
+};
+
+const adapterReady=await acquireResourceCapacity({
+  need:{...baseNeed,need_id:'adapter-execution-proof'},
+  candidates:[],
+  marketAdapters:[adapterMarket],
+  leaseAuthority:{
+    schema:'evercraft.saban.compute-authority.v1',
+    approved:true,
+    demand_id:'adapter-execution-proof',
+    allowed_markets:['adapter-proof'],
+    max_total_usd:0,
+  },
+});
+assert.equal(adapterReady.state,'ready');
+assert.equal(adapterReady.mode,'compute_exchange_adapter');
+assert.equal(adapterReady.execution_leases.length,0);
+assert.equal(adapterReady.adapter_execution.adapter,adapterMarket);
+assert.equal(adapterReady.adapter_execution.lease.provider_id,'adapter-provider');
+assert.equal(adapterExecutions,0);
+assert.equal(JSON.stringify(adapterReady).includes('adapter_execution'),false);
+
 const held=await acquireResourceCapacity({
   need:{...baseNeed,need_id:'held-without-authority'},
   candidates:[],
@@ -218,6 +286,7 @@ console.log(JSON.stringify({
   missing_local_runtime_authority_falls_through:true,
   unauthorized_capacity_rejected:true,
   compute_exchange_fallback_execution_ready:true,
+  negotiated_adapter_execution_preserved:true,
   secrets_not_serialized:true,
   unresolved_capacity_becomes_engineering_work:true,
 },null,2));
