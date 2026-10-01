@@ -88,6 +88,16 @@ export function scoreForwardPaperCohort(protocol, measurements = []) {
     frozen_direction_positive_after_costs: meanNet > 0,
     no_retroactive_events: rows.every((row) => new Date(row.observed_at).getTime() > cutoff),
   };
+  const sampleReady =
+    checks.minimum_forward_events &&
+    checks.minimum_distinct_origins &&
+    checks.no_retroactive_events;
+  const status = !sampleReady
+    ? "FORWARD_PAPER_PENDING"
+    : checks.frozen_direction_positive_after_costs
+      ? "FORWARD_PAPER_PASS"
+      : "FORWARD_PAPER_FAIL";
+
   return {
     schema: "evercraft.daytrade.forward-paper-score.v1",
     cohort_id: protocol.cohort_id,
@@ -95,8 +105,9 @@ export function scoreForwardPaperCohort(protocol, measurements = []) {
     forward_events: rows.length,
     distinct_origins: origins.length,
     mean_signed_excess_return_net: meanNet,
+    sample_ready: sampleReady,
     checks,
-    status: Object.values(checks).every(Boolean) ? "FORWARD_PAPER_PASS" : "FORWARD_PAPER_PENDING_OR_FAIL",
+    status,
     live_trade_authority: false,
   };
 }
