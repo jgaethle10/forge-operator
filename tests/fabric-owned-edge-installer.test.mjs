@@ -50,12 +50,19 @@ test('Fabric self updater accepts only the authorized Forge repository and fast-
   assert.doesNotMatch(updater,/git reset --hard origin\/main/);
 });
 
-test('Fabric self updater proves the release before restart and rolls back failed health',()=>{
+test('Fabric self updater proves the release, self-heals attestation wiring, and rolls back failed runtime verification',()=>{
   assert.match(updater,/npm run test:fabric-directory/);
   assert.match(updater,/npm run test:fabric-local/);
+  assert.match(updater,/tests\/fabric-edge-attestation\.test\.mjs/);
   assert.match(updater,/npm run proof:specialist-handoff-yard/);
+  assert.match(updater,/reconcile_edge_attestation_env/);
+  assert.match(updater,/EVERCRAFT_EDGE_NODE_RECEIPT/);
+  assert.match(updater,/EVERCRAFT_EDGE_ALLOCATOR_TOKEN_FILE/);
+  assert.match(updater,/verify_edge_attestation_local/);
+  assert.match(updater,/verifyNodeAttestation/);
   assert.match(updater,/systemctl restart "\$SERVICE"/);
-  assert.match(updater,/rollback "health_contract_failed"/);
+  assert.match(updater,/rollback "runtime_verification_failed_\$code"/);
+  assert.match(updater,/restore_edge_attestation_env/);
   assert.match(updater,/capability_count/);
 });
 
