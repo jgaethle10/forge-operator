@@ -165,6 +165,8 @@ assert.equal(authoritativeNegativeEval[0].candidate_checks.authoritative_multi_o
 assert.equal(authoritativeNegativeEval[0].status, "RESEARCH_CANDIDATE");
 assert.equal(authoritativeNegativeEval[0].learned_direction, "NEGATIVE_EXCESS_RETURN");
 assert.ok(authoritativeNegativeEval[0].base_evaluation.holdout.mean_strategy_return_net > 0);
+assert.ok(authoritativeNegativeEval[0].origin_balanced_holdout_mean_strategy_return_net > 0);
+assert.ok(authoritativeNegativeEval[0].origin_balanced_holdout_mean_excess_return_net < 0);
 
 const tooFewOrigins = many.map((row, i) => ({
   ...row,
@@ -243,6 +245,8 @@ console.log(JSON.stringify({
   core_session_horizons: true,
   source_diversity_required: true,
   authoritative_multi_origin_screen: true,
+  origin_balanced_strategy_cost_accounting: true,
+  negative_direction_cost_regression_guard: true,
   alpaca_pagination: true,
   pagination_loop_guard: true,
   false_discovery_control: "benjamini_hochberg",
