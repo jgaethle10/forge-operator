@@ -51,6 +51,7 @@ test('one product action compiles into the exact Execution Gate input and Meter 
   assert.equal(input.require_direct_specialist, true);
   assert.equal(prepared.machine_binding.scope, 'report.generate');
   assert.equal(prepared.machine_binding.machine_tool, 'analyze_ev_site');
+  assert.equal(prepared.machine_binding.machine_target_product_key, 'aliev');
   assert.equal(prepared.machine_binding.specialist_slug, 'aliev');
   assert.equal(prepared.machine_binding.grants_authority, false);
   assert.equal(prepared.machine_binding.tools_call_verified_by_compilation, false);
