@@ -40,6 +40,7 @@ export function buildClusterAdversarialSummary({
   walkForwardLab,
   executionTranslationLab,
   quoteMicrostructureLab,
+  executionSpeedBoundsLab,
   familyMaxNullLab,
   deflatedSharpeLab,
   tailDependenceLab,
@@ -71,6 +72,7 @@ export function buildClusterAdversarialSummary({
     horizon: indexBySignal(horizonCoherenceLab?.reviews || []),
     walk: indexBySignal(walkForwardLab?.reviews || []),
     execution: indexBySignal(executionTranslationLab?.reviews || []),
+    executionSpeed: indexBySignal(executionSpeedBoundsLab?.reviews || []),
     familyMaxNull: indexBySignal(familyMaxNullLab?.reviews || []),
     deflatedSharpe: indexBySignal(deflatedSharpeLab?.reviews || []),
     tailDependence: indexBySignal(tailDependenceLab?.reviews || []),
@@ -147,6 +149,12 @@ export function buildClusterAdversarialSummary({
         maps.walk.get(signal)?.walk_forward_status || "MISSING",
       execution_translation_status:
         maps.execution.get(signal)?.translation_status || "MISSING",
+      execution_speed_bounds_status:
+        maps.executionSpeed.get(signal)?.status || "MISSING",
+      execution_speed_1000_immediate_visible_rate:
+        maps.executionSpeed.get(signal)?.grid?.find(
+          (row) => row.hypothetical_order_notional_usd === 1000
+        )?.immediate_visible_touch_sufficient_rate ?? null,
       family_max_null_status:
         maps.familyMaxNull.get(signal)?.status || "MISSING",
       family_max_null_p_value:
@@ -210,6 +218,8 @@ export function buildClusterAdversarialSummary({
           (row) => row.horizon_coherence_status === "HORIZON_COHERENT_DIAGNOSTIC"),
         walk_forward_robust: count(memberReceipts,
           (row) => row.walk_forward_status === "WALK_FORWARD_ROBUST_DIAGNOSTIC"),
+        execution_speed_bounds_ready: count(memberReceipts,
+          (row) => row.execution_speed_bounds_status === "EXECUTION_SPEED_BOUNDS_READY"),
         family_max_null_separated: count(memberReceipts,
           (row) => row.family_max_null_status === "MAX_FAMILY_NULL_SEPARATED_DIAGNOSTIC"),
         deflated_sharpe_separated: count(memberReceipts,
