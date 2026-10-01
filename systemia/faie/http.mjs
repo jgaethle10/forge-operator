@@ -31,7 +31,8 @@ export function registerFaieRoutes(app, {
   isProd = process.env.NODE_ENV === 'production',
   stateDir = process.env.FAIE_STATE_DIR || path.resolve('.runtime', 'faie'),
   intervalMs = Number(process.env.FAIE_INTERVAL_MS || 5 * 60 * 1000),
-  radarResident = null
+  radarResident = null,
+  publicInvestigateLimiter = (_req, _res, next) => next()
 } = {}) {
   const token = String(process.env.FAIE_INTERNAL_TOKEN || '').trim();
   const runtime = createFaieRuntime({
@@ -66,7 +67,7 @@ export function registerFaieRoutes(app, {
     res.json(runtime.snapshot(limit));
   });
 
-  app.get('/api/faie/investigations', (req, res) => {
+  app.get('/api/faie/investigations', requireInternal, (req, res) => {
     const limit = Math.max(1, Math.min(50, Number(req.query?.limit) || 10));
     res.setHeader('Cache-Control', 'no-store');
     res.json({
@@ -75,7 +76,7 @@ export function registerFaieRoutes(app, {
     });
   });
 
-  app.get('/api/faie/investigations/:id', (req, res) => {
+  app.get('/api/faie/investigations/:id', requireInternal, (req, res) => {
     const investigation = runtime.getInvestigation(String(req.params.id || ''));
     if (!investigation) {
       res.status(404).json({ ok: false, error: 'FAIE investigation not found.' });
@@ -85,7 +86,7 @@ export function registerFaieRoutes(app, {
     res.json(publicInvestigation(investigation));
   });
 
-  app.get('/api/faie/investigations/:id/markdown', (req, res) => {
+  app.get('/api/faie/investigations/:id/markdown', requireInternal, (req, res) => {
     const investigation = runtime.getInvestigation(String(req.params.id || ''));
     if (!investigation) {
       res.status(404).type('text/plain').send('FAIE investigation not found.');
@@ -95,7 +96,7 @@ export function registerFaieRoutes(app, {
     res.type('text/markdown').send(investigationToMarkdown(publicInvestigation(investigation)));
   });
 
-  app.post('/api/faie/investigate', (req, res) => {
+  app.post('/api/faie/investigate', publicInvestigateLimiter, (req, res) => {
     try {
       const question = String(req.body?.question || req.body?.query || '').trim();
       if (!question) {
@@ -107,7 +108,7 @@ export function registerFaieRoutes(app, {
         return;
       }
 
-      const investigation = runtime.investigate({
+      const investigation = runtime.preview({
         question,
         region_keys: req.body?.region_keys || req.body?.regions || req.body?.region,
         asset_types: req.body?.asset_types || req.body?.assets,
@@ -126,6 +127,34 @@ export function registerFaieRoutes(app, {
     }
   });
 
+  app.post('/api/faie/investigations', requireInternal, (req, res) => {
+    try {
+      const question = String(req.body?.question || req.body?.query || '').trim();
+      if (!question) {
+        res.status(400).json({ ok: false, error: 'question is required.' });
+        return;
+      }
+      if (question.length > 1200) {
+        res.status(413).json({ ok: false, error: 'question is too long.' });
+        return;
+      }
+      const investigation = runtime.investigate({
+        question,
+        region_keys: req.body?.region_keys || req.body?.regions || req.body?.region,
+        asset_types: req.body?.asset_types || req.body?.assets,
+        crop: req.body?.crop,
+        water_source: req.body?.water_source,
+        horizon_days: req.body?.horizon_days,
+        include_weak_evidence: req.body?.include_weak_evidence
+      });
+      res.status(201).json(publicInvestigation(investigation));
+    } catch (error) {
+      res.status(400).json({
+        ok: false,
+        error: error instanceof Error ? error.message : String(error)
+      });
+    }
+  });
   app.post('/api/faie/ingest', requireInternal, (req, res) => {
     try {
       const decision = runtime.ingest(req.body?.observation || req.body);
