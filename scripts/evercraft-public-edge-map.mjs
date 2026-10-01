@@ -17,14 +17,28 @@ for (let i = 2; i < process.argv.length; i += 2) {
 
 const gateway = args.get('gateway');
 const host = args.get('host');
+const httpInternal = Number(args.get('http-port') || 18080);
+const httpsInternal = Number(args.get('https-port') || 8443);
+const brokerExternal = Number(args.get('broker-port') || 0);
 if (!gateway || !host) {
-  console.error('Required: --gateway <router-ip> --host <chromebook-lan-ip>');
+  console.error('Required: --gateway <router-ip> --host <lan-ip> [--http-port 18080] [--https-port 8443]');
+  process.exit(2);
+}
+if (
+  !Number.isInteger(httpInternal) || httpInternal < 1 || httpInternal > 65535 ||
+  !Number.isInteger(httpsInternal) || httpsInternal < 1 || httpsInternal > 65535 ||
+  !Number.isInteger(brokerExternal) || brokerExternal < 0 || brokerExternal > 65535
+) {
+  console.error('Internal ports must be 1..65535 and --broker-port must be 0..65535');
   process.exit(2);
 }
 
 const mappings = [
-  { external: 80, internal: 18080, proto: 'TCP', desc: 'Evercraft Fabric HTTP' },
-  { external: 443, internal: 8443, proto: 'TCP', desc: 'Evercraft Fabric HTTPS' },
+  { external: 80, internal: httpInternal, proto: 'TCP', desc: 'Evercraft Fabric HTTP' },
+  { external: 443, internal: httpsInternal, proto: 'TCP', desc: 'Evercraft Fabric HTTPS' },
+  ...(brokerExternal
+    ? [{ external: brokerExternal, internal: brokerExternal, proto: 'TCP', desc: 'Evercraft Saban Broker' }]
+    : []),
 ];
 
 const out = {
@@ -55,14 +69,17 @@ function tcpProbe(hostname,port,timeoutMs=1500){
 }
 
 async function verifyHostForward(){
-  const probes=await Promise.all([
-    tcpProbe(host,18080),
-    tcpProbe(host,8443),
-  ]);
+  const probePorts=[
+    httpInternal,
+    httpsInternal,
+    ...(brokerExternal?[brokerExternal]:[]),
+  ];
+  const probes=await Promise.all(probePorts.map((port)=>tcpProbe(host,port)));
   return {
-    schema:'evercraft.chromeos-host-forward-preflight.v1',
+    schema:'evercraft.router-target-preflight.v2',
     host,
     probes,
+    chromeos_specific:false,
     ready:probes.every(x=>x.ok===true),
     checked_at:new Date().toISOString(),
   };
@@ -407,8 +424,11 @@ async function pcpMap() {
 async function main() {
   out.host_forward_preflight=await verifyHostForward();
   if(out.host_forward_preflight.ready!==true){
-    out.state='chromeos_host_forward_unreachable';
-    out.error='chromeos_host_forward_unreachable';
+    const chromebookDefaults=httpInternal===18080&&httpsInternal===8443&&brokerExternal===0;
+    out.state=chromebookDefaults
+      ? 'chromeos_host_forward_unreachable'
+      : 'router_target_unreachable';
+    out.error=out.state;
     console.log(JSON.stringify(out,null,2));
     process.exit(3);
   }
