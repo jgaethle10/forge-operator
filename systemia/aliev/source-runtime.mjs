@@ -2,9 +2,15 @@ import fs from 'node:fs';
 import http from 'node:http';
 import path from 'node:path';
 import { createHash, randomBytes } from 'node:crypto';
-import { ingestAliEvDomainRecords, aliEvDomainHealth } from './domain-store.mjs';
+import { ingestAliEvDomainRecords, aliEvDomainHealth, readAliEvDomainRecords } from './domain-store.mjs';
 import { buildOwnedAliEvSiteSnapshot, censusOnelineGeocode } from './source-engine.mjs';
 import { refreshOwnedAliEvSiteDomains } from './collectors/us.mjs';
+import {
+  backfillPlugNYCSessionCorpus,
+  compactPlugNYCSessionCorpus,
+  reconcilePlugNYCSessionCorpus,
+  sessionCorpusStatus,
+} from './session-corpus.mjs';
 
 const COVERAGE_SCHEMA='evercraft.rivet.source-coverage.v1';
 const REQUIRED_DOMAINS=[
@@ -115,13 +121,21 @@ export async function startAliEvSourceRuntime({
   domainStateDir='',
   geocode=censusOnelineGeocode,
   refreshDomains=refreshOwnedAliEvSiteDomains,
+  sessionCorpusEnabled=false,
+  sessionCorpusStateDir='',
+  sessionCorpusFetchImpl=fetch,
+  sessionCorpusIntervalMs=300000,
+  sessionCorpusPageSize=5000,
+  sessionCorpusMaxPagesPerRun=8,
 }={}){
   if(!stateDir) throw new Error('stateDir is required');
   if(!clean(systemiaMachineKey)) throw new Error('SYSTEMIA_MACHINE_KEY is required');
   if(!clean(ingestToken)) throw new Error('ALIEV_OWNED_INGEST_TOKEN is required');
   fs.mkdirSync(stateDir,{recursive:true,mode:0o750});
   const domainRoot=path.resolve(domainStateDir||path.join(stateDir,'domain-store'));
+  const corpusRoot=path.resolve(sessionCorpusStateDir||path.join(stateDir,'session-corpus-worker'));
   fs.mkdirSync(domainRoot,{recursive:true,mode:0o750});
+  if(sessionCorpusEnabled) fs.mkdirSync(corpusRoot,{recursive:true,mode:0o750});
   fs.mkdirSync(snapshotDir(stateDir),{recursive:true,mode:0o750});
   if(!fs.existsSync(indexFile(stateDir))) atomicJson(indexFile(stateDir),{schema:'evercraft.aliev.snapshot-index.v1',entries:{},updated_at:new Date().toISOString()});
 
@@ -129,6 +143,93 @@ export async function startAliEvSourceRuntime({
   const startedAt=new Date().toISOString();
   let deploymentReceiptRef='';
   let server=null;
+  let sessionCorpusTimer=null;
+  let sessionCorpusInFlight=false;
+  let lastSessionCorpusCycle=null;
+
+  const runSessionCorpusCycle=async()=>{
+    if(sessionCorpusInFlight) return {ok:true,state:'already_running',last:lastSessionCorpusCycle};
+    sessionCorpusInFlight=true;
+    try{
+      const backfill=await backfillPlugNYCSessionCorpus({
+        stateDir:corpusRoot,
+        fetchImpl:sessionCorpusFetchImpl,
+        pageSize:sessionCorpusPageSize,
+        maxPagesPerRun:sessionCorpusMaxPagesPerRun,
+      });
+      let reconciliation=null;
+      let compaction=null;
+      let domainIngest=null;
+      if(backfill.checkpoint.complete){
+        reconciliation=reconcilePlugNYCSessionCorpus({stateDir:corpusRoot});
+        const compacted=compactPlugNYCSessionCorpus({stateDir:corpusRoot});
+        compaction=compacted.receipt;
+
+        const geometryRows=readAliEvDomainRecords({stateDir:domainRoot,domain:'observed_sessions'});
+        const geometryByStation=new Map();
+        for(const row of geometryRows){
+          const station=clean(row?.station_external_id);
+          const lat=Number(row?.latitude),lon=Number(row?.longitude);
+          if(!station||!Number.isFinite(lat)||!Number.isFinite(lon)) continue;
+          const prior=geometryByStation.get(station);
+          const stamp=Date.parse(String(row?.period_start||row?.retrieved_at||row?._meta?.retrieved_at||''))||0;
+          if(!prior||stamp>=prior.stamp) geometryByStation.set(station,{latitude:lat,longitude:lon,stamp});
+        }
+
+        const publishedAt=new Date().toISOString();
+        const records=compacted.aggregates.map((row)=>{
+          const geo=geometryByStation.get(clean(row.station_external_id));
+          return {
+            ...row,
+            record_key:row.aggregate_key,
+            state:'NY',
+            ...(geo?{latitude:geo.latitude,longitude:geo.longitude}:{}),
+            evidence_state:'OBSERVED_AGGREGATE',
+            retrieved_at:publishedAt,
+            source_name:'NYC DOT PlugNYC',
+            source_url:row.source_url,
+            source_vintage:row.source_vintage,
+            data_status:row.data_status,
+            session_semantics:'Observed individual-session-derived aggregate. INVALID/ABORTED source rows are preserved in raw evidence and excluded from successful utilization. Missing is not zero.',
+          };
+        });
+        domainIngest=ingestAliEvDomainRecords({
+          stateDir:domainRoot,
+          domain:'observed_sessions',
+          records,
+          source:{
+            name:'NYC DOT PlugNYC',
+            url:'https://data.cityofnewyork.us/Transportation/Electric-Vehicle-EV-Charging-Data-Municipal-Lots-a/kj7g-u4gp',
+            evidence_state:'OBSERVED_AGGREGATE',
+            data_status:'verified',
+          }
+        });
+      }
+      lastSessionCorpusCycle={
+        ok:true,
+        schema:'evercraft.aliev.session-corpus-runtime-cycle.v1',
+        backfill:backfill.receipt,
+        reconciliation,
+        compaction,
+        domain_ingest:domainIngest,
+        status:sessionCorpusStatus({stateDir:corpusRoot}),
+        observed_at:new Date().toISOString(),
+      };
+      return lastSessionCorpusCycle;
+    }catch(error){
+      lastSessionCorpusCycle={
+        ok:false,
+        schema:'evercraft.aliev.session-corpus-runtime-cycle.v1',
+        error:error instanceof Error?error.message:String(error),
+        status:sessionCorpusStatus({stateDir:corpusRoot}),
+        observed_at:new Date().toISOString(),
+      };
+      return lastSessionCorpusCycle;
+    }finally{
+      sessionCorpusInFlight=false;
+    }
+  };
+
   const health=()=>{
     const index=loadIndex(stateDir);
     return {
@@ -149,6 +250,14 @@ export async function startAliEvSourceRuntime({
       deployment_receipt_bound:Boolean(deploymentReceiptRef),
       deployment_receipt_ref:deploymentReceiptRef||null,
       base44_runtime_required:false,
+      session_corpus:{
+        enabled:sessionCorpusEnabled===true,
+        in_flight:sessionCorpusInFlight,
+        cadence_ms:sessionCorpusEnabled?Math.max(60000,Number(sessionCorpusIntervalMs)||300000):null,
+        last_cycle:lastSessionCorpusCycle,
+        status:sessionCorpusEnabled?sessionCorpusStatus({stateDir:corpusRoot}):null,
+        publishes_to_domain:'observed_sessions',
+      },
       started_at:startedAt,
     };
   };
@@ -244,6 +353,14 @@ export async function startAliEvSourceRuntime({
   const address=server.address();
   const actualPort=typeof address==='object'&&address?address.port:port;
   const url='http://'+host+':'+actualPort;
+  if(sessionCorpusEnabled){
+    runSessionCorpusCycle().catch(()=>{});
+    sessionCorpusTimer=setInterval(
+      ()=>runSessionCorpusCycle().catch(()=>{}),
+      Math.max(60000,Number(sessionCorpusIntervalMs)||300000)
+    );
+    sessionCorpusTimer.unref?.();
+  }
   return {
     schema:'evercraft.aliev.owned-source-runtime.v1',
     service:'aliev-owned-source-runtime',
@@ -260,7 +377,11 @@ export async function startAliEvSourceRuntime({
       deploymentReceiptRef=clean(receiptRef);
       return health();
     },
-    close:()=>new Promise((resolve,reject)=>server.close(err=>err?reject(err):resolve())),
+    runSessionCorpusCycle,
+    close:()=>new Promise((resolve,reject)=>{
+      if(sessionCorpusTimer) clearInterval(sessionCorpusTimer);
+      server.close(err=>err?reject(err):resolve());
+    }),
   };
 }
 

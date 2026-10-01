@@ -5,6 +5,9 @@ import { createHash, createHmac, randomBytes, randomUUID, scryptSync, timingSafe
 const SESSION_SCHEMA = "evercraft.identity.session.v1";
 const IDENTITY_SCHEMA = "evercraft.identity.subject.v1";
 const SCRYPT = Object.freeze({ N: 32768, r: 8, p: 1, keylen: 64, maxmem: 64 * 1024 * 1024 });
+const TRUSTED_PROVISION_AUTHORITY_STATES = new Set(["challenge_verified", "operator_authorized", "migration_verified"]);
+const TRUSTED_PASSWORD_AUTHORITY_STATES = new Set(["challenge_verified", "operator_authorized", "migration_verified"]);
+const TRUSTED_PROFILE_AUTHORITY_STATES = new Set(["authenticated_self", "operator_authorized", "migration_verified"]);
 
 const sha256 = (value) =>
   "sha256:" + createHash("sha256")
@@ -26,7 +29,10 @@ function atomicJson(file, value) {
 
 function safeLogin(value) {
   const login = required(value, "login").toLowerCase();
-  if (!/^[a-z0-9][a-z0-9._-]{2,63}$/.test(login)) throw new Error("login_invalid");
+  if (login.length > 254 || /[\s\u0000-\u001f\u007f]/.test(login)) throw new Error("login_invalid");
+  const username = /^[a-z0-9][a-z0-9._-]{2,63}$/.test(login);
+  const email = /^[a-z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-z0-9](?:[a-z0-9.-]{0,251}[a-z0-9])?\.[a-z]{2,63}$/.test(login);
+  if (!username && !email) throw new Error("login_invalid");
   return login;
 }
 
@@ -250,6 +256,182 @@ export class EvercraftIdentity {
       },
       receipt: event,
     };
+  }
+
+  provisionSubject({
+    subjectRef = "user:" + randomUUID(),
+    login,
+    displayName,
+    password,
+    authorityState,
+    authorityReceiptRef,
+    createdAt = new Date().toISOString(),
+  } = {}) {
+    const ref = required(subjectRef, "subject_ref");
+    const loginName = safeLogin(login);
+    const name = required(displayName || loginName, "display_name");
+    const secret = validatePassword(password);
+    const authorityStateValue = required(authorityState, "authority_state");
+    if (!TRUSTED_PROVISION_AUTHORITY_STATES.has(authorityStateValue)) {
+      throw new Error("identity_provision_authority_not_verified");
+    }
+    const authority = required(authorityReceiptRef, "authority_receipt_ref");
+    const index = this.#loginIndex();
+
+    if (index[loginName]) throw new Error("identity_login_conflict");
+    if (this.getSubject(ref)) throw new Error("subject_already_exists");
+
+    const salt = randomBytes(24).toString("base64url");
+    const hash = passwordDigest(secret, salt).toString("base64url");
+    const at = new Date(createdAt).toISOString();
+    const subject = receipt({
+      schema: IDENTITY_SCHEMA,
+      subject_ref: ref,
+      login: loginName,
+      display_name: name,
+      status: "active",
+      credential: {
+        scheme: "scrypt-v1",
+        salt,
+        hash,
+        params: { N: SCRYPT.N, r: SCRYPT.r, p: SCRYPT.p, keylen: SCRYPT.keylen },
+      },
+      provision_authority_state: authorityStateValue,
+      provision_authority_receipt_ref: authority,
+      created_at: at,
+      updated_at: at,
+    });
+
+    atomicJson(this.#subjectFile(ref), subject);
+    atomicJson(this.loginIndexFile, { ...index, [loginName]: ref });
+
+    const event = receipt({
+      schema: "evercraft.identity.event.v1",
+      event_id: "identity_event_" + randomUUID(),
+      type: "subject.provisioned",
+      subject_ref: ref,
+      login: loginName,
+      authority_state: authorityStateValue,
+      authority_receipt_ref: authority,
+      occurred_at: at,
+    });
+    this.#appendEvent(event);
+
+    return {
+      state: "provisioned",
+      subject: {
+        schema: subject.schema,
+        subject_ref: subject.subject_ref,
+        login: subject.login,
+        display_name: subject.display_name,
+        status: subject.status,
+        created_at: subject.created_at,
+        receipt_hash: subject.receipt_hash,
+      },
+      receipt: event,
+    };
+  }
+
+  updateProfile({
+    subjectRef,
+    displayName,
+    authorityState = "authenticated_self",
+    authorityReceiptRef,
+    actorRef = null,
+    at = new Date().toISOString(),
+  } = {}) {
+    const ref = required(subjectRef, "subject_ref");
+    const state = required(authorityState, "authority_state");
+    if (!TRUSTED_PROFILE_AUTHORITY_STATES.has(state)) {
+      throw new Error("identity_profile_authority_not_verified");
+    }
+    const actor = required(actorRef || ref, "actor_ref");
+    if (state === "authenticated_self" && actor !== ref) throw new Error("identity_profile_actor_mismatch");
+    const authority = required(authorityReceiptRef, "authority_receipt_ref");
+    const subject = this.getSubject(ref);
+    if (!subject || subject.status !== "active") throw new Error("subject_not_found");
+    const updatedAt = new Date(at).toISOString();
+    const next = receipt({
+      ...subject,
+      display_name: required(displayName, "display_name"),
+      updated_at: updatedAt,
+    });
+    atomicJson(this.#subjectFile(ref), next);
+    const event = receipt({
+      schema: "evercraft.identity.event.v1",
+      event_id: "identity_event_" + randomUUID(),
+      type: "subject.profile.updated",
+      subject_ref: ref,
+      actor_ref: actor,
+      authority_state: state,
+      authority_receipt_ref: authority,
+      occurred_at: updatedAt,
+    });
+    this.#appendEvent(event);
+    return {
+      state: "updated",
+      subject: {
+        schema: next.schema,
+        subject_ref: next.subject_ref,
+        login: next.login,
+        display_name: next.display_name,
+        status: next.status,
+        updated_at: next.updated_at,
+        receipt_hash: next.receipt_hash,
+      },
+      receipt: event,
+    };
+  }
+
+  replacePassword({
+    subjectRef,
+    newPassword,
+    authorityState,
+    authorityReceiptRef,
+    actorRef = null,
+    at = new Date().toISOString(),
+  } = {}) {
+    const ref = required(subjectRef, "subject_ref");
+    const state = required(authorityState, "authority_state");
+    if (!TRUSTED_PASSWORD_AUTHORITY_STATES.has(state)) {
+      throw new Error("identity_password_authority_not_verified");
+    }
+    const authority = required(authorityReceiptRef, "authority_receipt_ref");
+    const actor = required(actorRef || ref, "actor_ref");
+    const subject = this.getSubject(ref);
+    if (!subject || subject.status !== "active") throw new Error("subject_not_found");
+    const secret = validatePassword(newPassword);
+    const salt = randomBytes(24).toString("base64url");
+    const hash = passwordDigest(secret, salt).toString("base64url");
+    const updatedAt = new Date(at).toISOString();
+    const next = receipt({
+      ...subject,
+      credential: {
+        scheme: "scrypt-v1",
+        salt,
+        hash,
+        params: { N: SCRYPT.N, r: SCRYPT.r, p: SCRYPT.p, keylen: SCRYPT.keylen },
+      },
+      updated_at: updatedAt,
+    });
+    atomicJson(this.#subjectFile(ref), next);
+    this.revokeSubjectSessions({
+      subjectRef: ref,
+      reason: "credential_replaced",
+      at: updatedAt,
+    });
+    const event = receipt({
+      schema: "evercraft.identity.event.v1",
+      event_id: "identity_event_" + randomUUID(),
+      type: "subject.password.replaced",
+      subject_ref: ref,
+      actor_ref: actor,
+      authority_state: state,
+      authority_receipt_ref: authority,
+      occurred_at: updatedAt,
+    });
+    this.#appendEvent(event);
+    return { state: "password_replaced", subject_ref: ref, receipt: event };
   }
 
   authenticatePassword({ login, password } = {}) {

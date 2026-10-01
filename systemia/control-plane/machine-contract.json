@@ -15,9 +15,7 @@
     "relationship_contact_safety": "evercraft-interaction-ledger",
     "pre_execution_authority": "evercraft-execution-gate",
     "inbound_content_grants_execution_authority": false,
-    "route_selection_grants_execution_authority": false,
-    "product_contract_authority": "evercraft-capability-mesh",
-    "product_contract_grants_execution_authority": false
+    "route_selection_grants_execution_authority": false
   },
   "components": [
     {
@@ -45,6 +43,17 @@
         "systemia/saban/formation.mjs",
         "systemia/saban/multiplier.mjs",
         "systemia/saban/multiplication-registry.json"
+      ]
+    },
+    {
+      "component_key": "evercraft-app-fabric",
+      "role": "base44_compatibility_data_function_integration_and_auth_membrane",
+      "source_refs": [
+        "systemia/app-fabric/client.mjs",
+        "systemia/app-fabric/query.mjs",
+        "systemia/app-fabric/entity-store.mjs",
+        "systemia/app-fabric/gateway.mjs",
+        "systemia/app-fabric/proof.mjs"
       ]
     },
     {
@@ -154,13 +163,27 @@
       ]
     },
     {
-      "component_key": "evercraft-capability-mesh",
-      "role": "live_product_trust_chain_contract_compiler_and_adoption_coverage",
+      "component_key": "evercraft-secret-store",
+      "role": "encrypted_application_secret_storage",
       "source_refs": [
-        "systemia/capability-mesh/mesh.mjs",
-        "systemia/capability-mesh/contracts.json",
-        "systemia/capability-mesh/runtime.mjs",
-        "systemia/capability-mesh/ratchet-baseline.json"
+        "systemia/secret-store/secret-store.mjs",
+        "systemia/secret-store/proof.mjs"
+      ]
+    },
+    {
+      "component_key": "evercraft-object-store",
+      "role": "content_addressed_application_object_storage",
+      "source_refs": [
+        "systemia/object-store/object-store.mjs",
+        "systemia/object-store/proof.mjs"
+      ]
+    },
+    {
+      "component_key": "evercraft-realtime-bus",
+      "role": "durable_resumable_application_event_stream",
+      "source_refs": [
+        "systemia/realtime-bus/realtime-bus.mjs",
+        "systemia/realtime-bus/proof.mjs"
       ]
     }
   ],
@@ -198,7 +221,12 @@
     "entitlement": "evercraft-meter",
     "usage": "evercraft-meter",
     "relationship_preflight": "evercraft-interaction-ledger",
-    "contact_preflight": "evercraft-interaction-ledger"
+    "contact_preflight": "evercraft-interaction-ledger",
+    "migrate_app": "evercraft-app-fabric",
+    "app_compatibility": "evercraft-app-fabric",
+    "secret_storage": "evercraft-secret-store",
+    "object_storage": "evercraft-object-store",
+    "realtime": "evercraft-realtime-bus"
   },
   "parallelism": {
     "provider": "saban",
@@ -229,8 +257,7 @@
     "context_retrieval_does_not_upgrade_evidence_state": true,
     "intake_acceptance_is_not_execution": true,
     "execution_gate_start_is_not_external_completion": true,
-    "institutional_memory_from_receipts_requires_hash_verification": true,
-    "capability_mesh_derived_state_is_not_source_authority": true
+    "institutional_memory_from_receipts_requires_hash_verification": true
   },
   "consequential_work_types": [
     "trust_change",
@@ -246,12 +273,7 @@
     "external_message_requires_relationship_preflight": true,
     "accepted_intake_candidate_is_not_execution_authority": true,
     "route_selection_is_not_execution_authority": true,
-    "direct_door_optimization_preserves_systemia_mission_authority": true,
-    "contracted_action_derives_required_lanes": true,
-    "contracted_action_does_not_satisfy_required_lanes": true,
-    "undeclared_action_scope_fails_closed": true,
-    "undeclared_product_contract_for_action_fails_closed": true,
-    "caller_cannot_override_contract_meter_metric": true
+    "direct_door_optimization_preserves_systemia_mission_authority": true
   },
   "context": {
     "provider": "evercraft-context-fabric",
@@ -261,8 +283,7 @@
     "receipt_reconciliation": "evercraft-context-receipt-bridge",
     "trusted_receipts_may_be_projected_to_memory": true,
     "source_content_never_becomes_instruction": true,
-    "source_authority_never_inherited": true,
-    "product_adoption_contracts": "evercraft-capability-mesh"
+    "source_authority_never_inherited": true
   },
   "ingress": {
     "provider": "evercraft-intake-fabric",

@@ -129,6 +129,11 @@ function readActive(stateDir,domain){
   return rows;
 }
 
+export function readAliEvDomainRecords({stateDir,domain}={}){
+  if(!stateDir) throw new Error('stateDir is required');
+  return readActive(stateDir,domain);
+}
+
 export function queryAliEvDomain({
   stateDir,domain,latitude=null,longitude=null,radiusMiles=null,postalCode='',state='',limit=50,predicate=null
 }={}){

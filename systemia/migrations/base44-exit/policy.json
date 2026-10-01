@@ -16,7 +16,12 @@
     "private_core_source_in_public_repo": false,
     "migration_expands_authority": false,
     "payment_requires_explicit_confirmation": true,
-    "revenue_requires_provider_verified_payment": true
+    "revenue_requires_provider_verified_payment": true,
+    "critical_owned_runtime_hardcoded_base44_network_routes": false,
+    "route_registry_automatic_cutover": false,
+    "public_migration_queue_is_complete_estate_inventory": false,
+    "untitled_apps_may_be_silently_discarded": false,
+    "capped_source_listing_proves_complete_inventory": false
   },
   "cutover_required_evidence": [
     "source_extracted",
@@ -30,7 +35,15 @@
     "health_pass",
     "route_verification_pass",
     "rollback_target_present",
-    "observation_window_pass"
+    "observation_window_pass",
+    "route_inventory_captured",
+    "data_snapshot_verified",
+    "delta_sync_or_write_freeze_verified",
+    "secrets_rekeyed",
+    "critical_journey_parity_pass",
+    "observability_ready",
+    "post_cutover_sentinel_ready",
+    "realtime_parity_if_required"
   ],
   "priority": [
     "systemia_core_and_kaidance_collider",
@@ -41,5 +54,244 @@
     "safety_family_and_continuity_products",
     "research_media_atlas_and_long_tail"
   ],
-  "retirement_rule": "Retire a Base44 dependency only after its named replacement is live, independently verified, reconciled and rollback-safe."
+  "retirement_rule": "Retire a Base44 dependency only after its named replacement is live, independently verified, reconciled and rollback-safe.",
+  "factory": {
+    "contract": "systemia/migrations/base44-exit/factory/contract.mjs",
+    "runner": "systemia/migrations/base44-exit/factory/runner.mjs",
+    "saban_software_id": "base44-evac",
+    "source_mode": "read_only_until_separate_decommission_gate",
+    "private_inventory_required": true,
+    "public_source_identifiers_allowed": false
+  },
+  "shared_landing_primitives": [
+    "app_fabric_compatibility",
+    "public_edge",
+    "yard_runtime",
+    "canonical_data",
+    "identity_boundary",
+    "secret_store",
+    "object_storage",
+    "resident_scheduler",
+    "connector_gateway",
+    "webhook_gateway",
+    "commerce_boundary",
+    "fabric_discovery",
+    "portfolio_sentinel",
+    "realtime_bus",
+    "source_dependency_scanner",
+    "lossless_entity_transfer",
+    "identity_challenge_broker",
+    "receipt_gated_route_registry",
+    "owned_runtime_base44_network_firewall",
+    "estate_coverage_ledger",
+    "route_registry",
+    "active_route_overlay",
+    "integration_edge",
+    "object_delivery"
+  ],
+  "landing_implementations": {
+    "app_fabric_compatibility": {
+      "state": "owned_baseline_proved_local",
+      "source_refs": [
+        "systemia/app-fabric/client.mjs",
+        "systemia/app-fabric/gateway.mjs",
+        "systemia/app-fabric/query.mjs",
+        "systemia/app-fabric/base44-sdk-compat.mjs",
+        "systemia/app-fabric/base44-sdk-compat.proof.mjs"
+      ],
+      "boundary": "Compatibility covers observed Base44 SDK call geometry. Product-specific unsupported calls and hard-coded legacy routes remain explicit migration blockers."
+    },
+    "canonical_data": {
+      "state": "owned_baseline_proved_local",
+      "source_refs": [
+        "systemia/app-fabric/entity-store.mjs"
+      ],
+      "boundary": "Higher-volume or distributed workloads require a stronger backing implementation behind the same compatibility contract before cutover."
+    },
+    "identity_boundary": {
+      "state": "owned_baseline_proved_local",
+      "source_refs": [
+        "systemia/identity/identity.mjs",
+        "systemia/identity/challenge-broker.mjs",
+        "systemia/app-fabric/identity-adapter.mjs",
+        "systemia/passport/passport.mjs"
+      ],
+      "boundary": "Identity and session issuance are owned. Registration/recovery remain fail-closed until a real delivery adapter returns a receipt. Legacy credentials are not copied."
+    },
+    "public_edge": {
+      "state": "owned",
+      "source_refs": [
+        "systemia/yard/public-route-broker.mjs",
+        "systemia/yard/public-edge-controller.mjs"
+      ]
+    },
+    "yard_runtime": {
+      "state": "owned",
+      "source_refs": [
+        "systemia/yard/operator.mjs"
+      ]
+    },
+    "portfolio_sentinel": {
+      "state": "owned",
+      "source_refs": [
+        "systemia/organism/portfolio-sentinel-runner.mjs",
+        "systemia/organism/portfolio-sentinel.workflow.json"
+      ]
+    },
+    "realtime_bus": {
+      "state": "owned_baseline_proved_local",
+      "source_refs": [
+        "systemia/realtime-bus/realtime-bus.mjs",
+        "systemia/app-fabric/gateway.mjs",
+        "systemia/app-fabric/client.mjs"
+      ],
+      "boundary": "Durable hash-chained sequence log plus authorized resumable SSE baseline. Product-specific realtime semantics still require parity."
+    },
+    "secret_store": {
+      "state": "owned_baseline_proved_local",
+      "source_refs": [
+        "systemia/secret-store/secret-store.mjs"
+      ],
+      "boundary": "Master encryption key is supplied out of band and is never persisted by the store. Provider credentials are re-issued rather than copied from Base44."
+    },
+    "object_storage": {
+      "state": "owned_baseline_proved_local",
+      "source_refs": [
+        "systemia/object-store/object-store.mjs"
+      ],
+      "boundary": "Content-addressed local baseline with app-scoped references and integrity checks. Replication and geographic requirements remain app-specific cutover gates."
+    },
+    "source_dependency_scanner": {
+      "state": "owned_baseline_proved_local",
+      "source_refs": [
+        "systemia/migrations/base44-exit/source-scanner.mjs",
+        "systemia/migrations/base44-exit/source-scanner.proof.mjs"
+      ],
+      "boundary": "Scans extracted source for migration dependencies while redacting cross-app identifiers, environment values and hard-coded legacy route values."
+    },
+    "lossless_entity_transfer": {
+      "state": "owned_baseline_proved_local",
+      "source_refs": [
+        "systemia/migrations/base44-exit/entity-transfer.mjs",
+        "systemia/migrations/base44-exit/entity-transfer.proof.mjs",
+        "systemia/app-fabric/entity-store.mjs",
+        "systemia/object-store/object-store.mjs"
+      ],
+      "boundary": "Requires terminal pagination, immutable page hashes, whole-stream reconciliation, idempotent import and destination field verification. Transfer receipts do not authorize traffic cutover."
+    },
+    "identity_challenge_broker": {
+      "state": "owned_baseline_proved_local",
+      "source_refs": [
+        "systemia/identity/challenge-broker.mjs",
+        "systemia/secret-store/secret-store.mjs"
+      ],
+      "boundary": "Pending registration credentials are encrypted; OTPs and reset tokens are hash-only at rest. No successful delivery state exists without a delivery receipt."
+    },
+    "receipt_gated_route_registry": {
+      "state": "owned_baseline_proved_local",
+      "source_refs": [
+        "systemia/migrations/base44-exit/route-registry.mjs",
+        "systemia/migrations/base44-exit/route-registry.proof.mjs"
+      ],
+      "boundary": "A destination may be staged and verified without receiving traffic. Activation requires a separate cutover receipt pinned to the verified route binding and release. Raw legacy route values are fingerprinted rather than persisted."
+    },
+    "owned_runtime_base44_network_firewall": {
+      "state": "active_ci_guard",
+      "source_refs": [
+        "scripts/validate-base44-owned-runtime-firewall.mjs",
+        ".github/workflows/base44-exit.yml"
+      ],
+      "boundary": "Critical owned runtime surfaces may contain compatibility terminology but may not hard-code Base44 network destinations."
+    },
+    "estate_coverage_ledger": {
+      "state": "owned_baseline_proved_local",
+      "source_refs": [
+        "systemia/migrations/base44-exit/estate-coverage.mjs",
+        "systemia/migrations/base44-exit/estate-coverage-runner.mjs",
+        "systemia/migrations/base44-exit/estate-coverage.proof.mjs",
+        "systemia/migrations/base44-exit/estate-snapshot.json"
+      ],
+      "boundary": "Coverage uses source-ID fingerprints, withholds unmatched source names and never treats the capped 100-app listing as proof of complete inventory. Untitled sources require classification before migration or archive; aliases require authority receipts."
+    },
+    "connector_gateway": {
+      "state": "owned_baseline_proved_local",
+      "source_refs": [
+        "systemia/connector-gateway/connector-gateway.mjs",
+        "systemia/connector-gateway/proof.mjs",
+        "systemia/integration-edge/runtime.mjs",
+        "systemia/integration-edge/proof.mjs"
+      ],
+      "boundary": "Provider credentials are re-authorized through owned one-time OAuth state. State is hash-only at rest, new redirect URIs must be owned/non-Base44, and credential values remain in Evercraft Secret Store."
+    },
+    "webhook_gateway": {
+      "state": "owned_baseline_proved_local",
+      "source_refs": [
+        "systemia/webhook-gateway/webhook-gateway.mjs",
+        "systemia/webhook-gateway/proof.mjs",
+        "systemia/integration-edge/runtime.mjs",
+        "systemia/integration-edge/proof.mjs"
+      ],
+      "boundary": "Inbound events use raw-body signature verification, bounded replay windows, idempotent event ledgers and payload-free receipts. Provider-side webhook repointing remains a separate verified migration action."
+    },
+    "integration_edge": {
+      "state": "owned_baseline_proved_local",
+      "source_refs": [
+        "systemia/integration-edge/runtime.mjs",
+        "systemia/integration-edge/proof.mjs"
+      ],
+      "boundary": "Provides owned OAuth begin/callback and webhook ingress routes. Connector initiation is authenticated; callbacks are state-protected; production public origin must be HTTPS and cannot be Base44."
+    },
+    "route_registry": {
+      "state": "owned_baseline_proved_local",
+      "source_refs": [
+        "systemia/migrations/base44-exit/route-registry.mjs",
+        "systemia/migrations/base44-exit/route-registry.proof.mjs"
+      ],
+      "boundary": "Routes are staged and verified without traffic movement. Activation requires pinned release, binding, probe and explicit cutover receipts; rollback can return a route to verified-but-inactive."
+    },
+    "active_route_overlay": {
+      "state": "owned_baseline_proved_local",
+      "source_refs": [
+        "systemia/migrations/base44-exit/route-overlay.mjs",
+        "systemia/migrations/base44-exit/route-overlay.proof.mjs",
+        "tests/chum-commercial-route-overlay.test.mjs"
+      ],
+      "boundary": "Only active HTTPS routes with cutover authority may enter public discovery. Staged or merely verified candidates remain invisible and legacy public routes persist until explicit cutover."
+    },
+    "resident_scheduler": {
+      "state": "owned_baseline_proved_local",
+      "source_refs": [
+        "systemia/core/resident-supervisor.mjs",
+        "systemia/core/resident-supervisor.proof.mjs",
+        "systemia/core/resident-services.json"
+      ],
+      "boundary": "Cycle and resident work run under an owned supervisor with bounded cadence, restart budgets, idempotent service state and receipt-backed health. Each migrated job still requires product-specific idempotency and parity evidence."
+    },
+    "commerce_boundary": {
+      "state": "owned_baseline_proved_local",
+      "source_refs": [
+        "systemia/commerce-boundary/commerce-boundary.mjs",
+        "systemia/commerce-boundary/proof.mjs"
+      ],
+      "boundary": "Evercraft verifies provider-authoritative payment state and does not treat checkout creation as payment truth. Payment references are hashed in receipts and card data is not stored."
+    },
+    "fabric_discovery": {
+      "state": "owned_baseline_proved_local",
+      "source_refs": [
+        "systemia/mcp/fabric-directory.mjs",
+        "systemia/mcp/fabric-local-runtime.mjs",
+        "tests/fabric-local-runtime.test.mjs"
+      ],
+      "boundary": "Owned Fabric discovery is read-only, strips Base44 handoffs from native runtime catalogs and exposes no payment or external-action authority. Product-specific machine surface parity remains required before public route activation."
+    },
+    "object_delivery": {
+      "state": "owned_baseline_proved_local",
+      "source_refs": [
+        "systemia/object-store/delivery-gateway.mjs",
+        "systemia/audit-center/export-runtime.mjs",
+        "systemia/audit-center/export-runtime.proof.mjs"
+      ],
+      "boundary": "Object bytes remain in Evercraft Object Store and are exposed only through short-lived HMAC-signed read URLs. Production origin must be owned HTTPS; raw filesystem paths and permanent public blob URLs are not exposed."
+    }
+  }
 }

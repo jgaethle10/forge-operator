@@ -4,6 +4,25 @@ on:
   pull_request:
     paths:
       - 'systemia/migrations/base44-exit/**'
+      - 'systemia/app-fabric/**'
+      - 'systemia/aliev/session-corpus*.mjs'
+      - 'systemia/organism/aliev-session-corpus.workflow.json'
+      - 'systemia/identity/identity.mjs'
+      - 'systemia/identity/challenge-broker.mjs'
+      - 'systemia/identity/challenge-broker.proof.mjs'
+      - 'systemia/realtime-bus/**'
+      - 'systemia/object-store/**'
+      - 'systemia/secret-store/**'
+      - 'systemia/connector-gateway/**'
+      - 'systemia/webhook-gateway/**'
+      - 'systemia/commerce-boundary/**'
+      - 'systemia/aqueduct/**'
+      - 'systemia/exact-output-gate/**'
+      - 'systemia/capability-router/**'
+      - 'systemia/operations/**'
+      - 'systemia/remote-ops/**'
+      - 'systemia/workforce/**'
+      - 'systemia/audit-center/**'
       - 'systemia/collider/**'
       - 'systemia/organism/eps-social-continuity.mjs'
       - 'systemia/organism/eps-social-continuity.proof.mjs'
@@ -18,7 +37,6 @@ on:
       - 'registry/catalog.json'
       - 'systemia/chum/**'
       - 'systemia/compute/eps-social-yard-canary.mjs'
-      - 'systemia/organism/eps-social-continuity.mjs'
       - '.github/workflows/eps-social-yard-canary.yml'
       - '.github/workflows/base44-exit.yml'
   push:
@@ -26,6 +44,25 @@ on:
       - main
     paths:
       - 'systemia/migrations/base44-exit/**'
+      - 'systemia/app-fabric/**'
+      - 'systemia/aliev/session-corpus*.mjs'
+      - 'systemia/organism/aliev-session-corpus.workflow.json'
+      - 'systemia/identity/identity.mjs'
+      - 'systemia/identity/challenge-broker.mjs'
+      - 'systemia/identity/challenge-broker.proof.mjs'
+      - 'systemia/realtime-bus/**'
+      - 'systemia/object-store/**'
+      - 'systemia/secret-store/**'
+      - 'systemia/connector-gateway/**'
+      - 'systemia/webhook-gateway/**'
+      - 'systemia/commerce-boundary/**'
+      - 'systemia/aqueduct/**'
+      - 'systemia/exact-output-gate/**'
+      - 'systemia/capability-router/**'
+      - 'systemia/operations/**'
+      - 'systemia/remote-ops/**'
+      - 'systemia/workforce/**'
+      - 'systemia/audit-center/**'
       - 'systemia/collider/**'
       - 'systemia/organism/eps-social-continuity.mjs'
       - 'systemia/organism/eps-social-continuity.proof.mjs'
@@ -52,6 +89,76 @@ jobs:
         run: node scripts/validate-base44-credit-firewall.mjs
       - name: Enforce zero Base44 active hot paths
         run: node scripts/validate-no-base44-hotpath.mjs
+      - name: Prove Base44 evacuation factory
+        run: npm run proof:base44-evac
+      - name: Prove Base44 source dependency scanner
+        run: npm run proof:base44-source-scan
+      - name: Prove privacy-safe estate coverage
+        run: npm run proof:base44-estate-coverage
+      - name: Prove portfolio migration readiness board
+        run: npm run proof:base44-portfolio-board
+      - name: Prove Wave 1 execution packet
+        run: npm run proof:base44-wave-execution
+      - name: Prove Wave 1 replacement matrix
+        run: npm run proof:base44-wave1-replacements
+      - name: Prove Command Center function replacement map
+        run: npm run proof:command-center-function-map
+      - name: Prove owned Systemia Aqueduct
+        run: npm run proof:aqueduct
+      - name: Prove owned Exact Output Gate
+        run: npm run proof:exact-output-gate
+      - name: Prove owned first-party capability router
+        run: npm run proof:capability-router
+      - name: Prove lossless Base44 entity transfer
+        run: npm run proof:base44-entity-transfer
+      - name: Prove owned AliEV session corpus
+        run: npm run proof:aliev-session-corpus
+      - name: Prove receipt-gated migration route registry
+        run: npm run proof:base44-route-registry
+      - name: Prove active migration route overlay
+        run: npm run proof:base44-route-overlay
+      - name: Prove CHUM follows active migration routes
+        run: npm run test:chum-commercial-route-overlay
+      - name: Block hard-coded Base44 routes in owned runtime
+        run: npm run validate:base44-owned-runtime-firewall
+      - name: Prove Evercraft App Fabric
+        run: npm run proof:app-fabric
+      - name: Prove Base44 SDK compatibility
+        run: npm run proof:base44-sdk-compat
+      - name: Prove owned App Fabric identity binding
+        run: npm run proof:app-fabric-identity
+      - name: Prove owned connector and webhook integration edge
+        run: npm run proof:integration-edge
+      - name: Prove Stripe and voice webhook verification
+        run: npm run proof:provider-webhooks
+      - name: Prove owned Remote Ops voice lifecycle
+        run: npm run proof:remote-ops-voice
+      - name: Prove owned Polar connector migration path
+        run: npm run proof:polar-connector
+      - name: Prove owned resident scheduler
+        run: npm run proof:resident-supervisor
+      - name: Prove owned auto clock-out parity
+        run: npm run proof:auto-clock-out
+      - name: Prove gated auto clock-out registration
+        run: npm run proof:auto-clock-out-registration
+      - name: Prove owned InternalOps snapshot and intake
+        run: npm run proof:internal-ops
+      - name: Prove provider-authoritative commerce boundary
+        run: npm run proof:commerce-boundary
+      - name: Prove provider-authoritative Polar commerce
+        run: npm run proof:polar-commerce
+      - name: Prove owned Audit Center Stripe commerce
+        run: npm run proof:audit-commerce
+      - name: Prove owned Audit Center PDF export
+        run: npm run proof:audit-export
+      - name: Prove owned AI Workforce commerce lifecycle
+        run: npm run proof:workforce-commerce
+      - name: Prove native Fabric discovery runtime
+        run: npm run test:fabric-local
+      - name: Prove owned registration and recovery challenges
+        run: npm run proof:identity-challenges
+      - name: Prove realtime, storage, and secret boundaries
+        run: npm run proof:realtime-bus && npm run proof:object-store && npm run proof:secret-store
       - name: Prove KAIDANCE collider
         run: node systemia/collider/proof.mjs
       - name: Prove off-Base44 EPS social continuity

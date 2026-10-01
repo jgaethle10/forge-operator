@@ -7,6 +7,9 @@ import { startEvercraftComputeNode } from '../compute/runtime-node.mjs';
 import { YardOperator } from './operator.mjs';
 import { RivetReportEdgeController } from './rivet-report-edge-controller.mjs';
 
+const reportEdgeRunnerSource=fs.readFileSync(new URL('../organism/rivet-report-edge-runner.mjs',import.meta.url),'utf8');
+const alievSourceRunnerSource=fs.readFileSync(new URL('../organism/aliev-source-runner.mjs',import.meta.url),'utf8');
+
 const root=fs.mkdtempSync(path.join(os.tmpdir(),'rivet-report-edge-proof-'));
 const computeRoot=path.join(root,'compute');
 const yardState=path.join(root,'yard');
@@ -121,6 +124,16 @@ try{
   assert.equal(provisioned.capacity_authority_inherited,true);
   assert.equal(provisioned.capacity_authority_exposed,false);
   assert.match(provisioned.origin,/^http:\/\/127\.0\.0\.1:/);
+  const rivetDeployment=yard.deploymentStatus('rivet-report-runtime');
+  assert.equal(rivetDeployment.result.source_url,sourceUrl,'RIVET deployment must persist its owned AliEV source binding');
+
+  assert.match(reportEdgeRunnerSource,/const sourceDrift=.*result\?\.source_url/s);
+  assert.match(reportEdgeRunnerSource,/const releaseDrift=.*receipt\?\.release_ref!==release/s);
+  assert.match(reportEdgeRunnerSource,/owned_aliev_source_binding_changed/);
+  assert.match(reportEdgeRunnerSource,/source_rebound/);
+  assert.match(alievSourceRunnerSource,/source\.receipt\?\.release_ref!==release/);
+  assert.match(alievSourceRunnerSource,/immutable_release_update/);
+  assert.match(alievSourceRunnerSource,/session_corpus_enabled:true/);
 
   const created=await fetch(provisioned.origin+'/v1/reports',{
     method:'POST',
@@ -171,6 +184,10 @@ try{
     sibling_capacity_authority_reused_privately:true,
     allocator_reentry_required:false,
     restart_resume_without_manual_reprovision:true,
+    owned_source_binding_persisted:true,
+    source_url_drift_forces_report_reprovision:true,
+    immutable_release_drift_forces_aliev_upgrade:true,
+    aliev_upgrade_activates_session_corpus:true,
     route_release_proven:true,
     production_https_gate_remains_fail_closed:true,
     founder_login_required:false,

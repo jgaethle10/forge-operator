@@ -154,6 +154,40 @@
       },
       "max_restarts_per_hour": 12,
       "restart_backoff_ms": 5000
+    },
+    {
+      "service_key": "remote-ops-auto-clock-out",
+      "mode": "cycle",
+      "manifest": "systemia/operations/auto-clock-out.workflow.json",
+      "executable": "systemia/operations/auto-clock-out-runner.mjs",
+      "cadence_seconds": 300,
+      "enabled_when_env": "SYSTEMIA_REMOTE_OPS_AUTO_CLOCK_OUT_ENABLED",
+      "static_args": [
+        "--app-key",
+        "systemia-remote-ops",
+        "--cutoff-hours",
+        "12"
+      ],
+      "env_args": {
+        "--state-dir": "SYSTEMIA_APP_FABRIC_STATE_DIR"
+      }
+    },
+    {
+      "service_key": "internal-ops-auto-clock-out",
+      "mode": "cycle",
+      "manifest": "systemia/operations/auto-clock-out.workflow.json",
+      "executable": "systemia/operations/auto-clock-out-runner.mjs",
+      "cadence_seconds": 300,
+      "enabled_when_env": "SYSTEMIA_INTERNAL_OPS_AUTO_CLOCK_OUT_ENABLED",
+      "static_args": [
+        "--app-key",
+        "evercraft-internal-ops",
+        "--cutoff-hours",
+        "12"
+      ],
+      "env_args": {
+        "--state-dir": "SYSTEMIA_APP_FABRIC_STATE_DIR"
+      }
     }
   ]
 }

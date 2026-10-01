@@ -135,13 +135,22 @@ test('Fabric public customer front door is branded, browsable, and policy-safe',
       assert.match(await response.text(),pattern);
     }
 
+    const health=await fetch(runtime.url+'/health').then((response)=>response.json());
     const journalResponse=await fetch(runtime.url+'/journal/');
-    assert.equal(journalResponse.status,200);
-    assert.match(journalResponse.headers.get('content-type')||'',/^text\/html/);
-    assert.equal(journalResponse.headers.get('x-robots-tag'),'noindex, nofollow');
-    const journal=await journalResponse.text();
-    assert.match(journal,/Evercraft Journal/);
-    assert.doesNotMatch(journal,/Black Friday|shopping assistant|optimize your cart/i);
+    if(health.journal_mirror_ready){
+      assert.equal(journalResponse.status,200);
+      assert.match(journalResponse.headers.get('content-type')||'',/^text\/html/);
+      assert.equal(journalResponse.headers.get('x-robots-tag'),'noindex, nofollow');
+      const journal=await journalResponse.text();
+      assert.match(journal,/Evercraft Journal/);
+      assert.doesNotMatch(journal,/Black Friday|shopping assistant|optimize your cart/i);
+    }else{
+      assert.equal(journalResponse.status,404);
+      const unavailable=await journalResponse.json();
+      assert.equal(unavailable.error,'journal_mirror_not_materialized');
+      assert.equal(unavailable.journal_mirror_ready,false);
+      assert.equal(unavailable.canonical_build_command,'npm run journal:build');
+    }
   } finally {
     await runtime.close();
   }

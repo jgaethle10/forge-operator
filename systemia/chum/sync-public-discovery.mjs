@@ -39,6 +39,13 @@ function safeHttps(value) {
   }
 }
 
+function safePublicContinuation(value) {
+  const raw = String(value || '').trim();
+  if (!raw) return '';
+  if (raw.startsWith('/') && !raw.startsWith('//')) return raw;
+  return safeHttps(raw);
+}
+
 if (CONFIGURED_CATALOG_URL && !safeHttps(CONFIGURED_CATALOG_URL)) {
   throw new Error('EVERCRAFT_MACHINE_CATALOG_URL must be an Evercraft-owned HTTPS endpoint.');
 }
@@ -66,11 +73,12 @@ function publicOffer(offer) {
   const liveCanaryEvidence = String(
     offer?.live_canary_evidence || productConformance?.live_canary_evidence || ''
   ).trim() || null;
-  const sourcePublicUrl = safeHttps(offer.public_url);
+  const sourcePublicUrl = safePublicContinuation(offer.public_url);
   const gateway = safeHttps(CONFIGURED_GATEWAY_URL);
+  const sellNow = String(offer.commercial_state || '') === 'sell_now';
   const fallbackPublicUrl = publicId && gateway
     ? gateway + (gateway.includes('?') ? '&' : '?') + 'view=service&public_id=' + encodeURIComponent(publicId)
-    : '';
+    : (publicId && sellNow ? '/chum/commercial/' + encodeURIComponent(publicId) + '/' : '');
   return {
     public_id: publicId,
     name: String(offer.name || ''),
@@ -85,7 +93,11 @@ function publicOffer(offer) {
     human_ui_required: Boolean(offer.human_ui_required),
     confirmation: String(offer.confirmation || ''),
     public_url: sourcePublicUrl || fallbackPublicUrl,
-    public_url_source: sourcePublicUrl ? 'source_catalog' : (fallbackPublicUrl ? 'owned_gateway_fallback' : 'held_no_owned_public_url'),
+    public_url_source: sourcePublicUrl
+      ? 'source_catalog'
+      : (fallbackPublicUrl
+          ? (fallbackPublicUrl.startsWith('/') ? 'owned_static_commercial_surface' : 'owned_gateway_fallback')
+          : 'held_no_owned_public_url'),
     payment_authority: String(offer.payment_authority || ''),
     invocation_status: isLegacyProviderUrl(offer.invocation_status)
       ? 'HELD: legacy provider runtime retired; awaiting a verified Evercraft-owned route.'

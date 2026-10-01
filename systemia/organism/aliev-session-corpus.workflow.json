@@ -1,0 +1,36 @@
+{
+  "schema": "evercraft.systemia.workflow-manifest.v1",
+  "workflow_key": "aliev-session-corpus",
+  "mission_key": "rivet-us-session-sprawl-001",
+  "runtime": "aliev-owned-source-runtime",
+  "collider_compatible": true,
+  "cadence_seconds": 300,
+  "entrypoint": "systemia/aliev/source-runtime.mjs",
+  "proof": "systemia/aliev/session-corpus.proof.mjs",
+  "authority": {
+    "read_public_session_sources": "autonomous",
+    "write_owned_session_partitions": "autonomous",
+    "write_owned_observed_usage_projections": "autonomous_after_hash_verification",
+    "persist_personal_driver_identifiers": false,
+    "use_base44_as_runtime": false,
+    "create_payment_obligation": false,
+    "external_outreach": false,
+    "purchase_licensed_data": false
+  },
+  "truth_gates": [
+    "source_is_public_or_explicitly_authorized",
+    "privacy_minimized_source_selection",
+    "content_hash_verified_partition",
+    "checkpoint_receipt",
+    "invalid_and_aborted_not_promoted_to_successful_usage",
+    "missing_is_not_zero"
+  ],
+  "outputs": {
+    "checkpoint": "artifacts/aliev-session-corpus/session-corpus/nyc-plugnyc/checkpoint.json",
+    "receipts": "artifacts/aliev-session-corpus/session-corpus/nyc-plugnyc/receipts.jsonl",
+    "owned_object_store": "artifacts/aliev-session-corpus/object-store",
+    "owned_entity_store": "artifacts/aliev-session-corpus/entity-store"
+  },
+  "maintenance_owner": "systemia",
+  "execution_note": "Activated explicitly by Systemia's aliev-source-runner on the same Evercraft Compute node and durable state root as the canonical AliEV observed_sessions domain."
+}

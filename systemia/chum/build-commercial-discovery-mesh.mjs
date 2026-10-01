@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { loadActiveRouteOverlayFromEnv, resolveActiveRoute } from '../migrations/base44-exit/route-overlay.mjs';
 
 const MACHINE_CATALOG = 'public/.well-known/evercraft-machine-catalog.json';
 const ANSWER_GRAPH = 'public/chum/answers/index.json';
@@ -8,7 +9,6 @@ const PRODUCT_DIRECTORY = 'public/.well-known/evercraft-products.json';
 const OUT = 'public/chum/commercial';
 const SITEMAPS = 'public/chum/sitemaps';
 const RAW_BASE = 'https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public';
-const MACHINE_GATEWAY = null;
 
 const readJson = (p) => JSON.parse(fs.readFileSync(p, 'utf8'));
 const slugify = (value) => String(value || '')
@@ -40,10 +40,8 @@ function sitemap(paths) {
     ''
   ].join('\n');
 }
-function gatewayReview(publicId) {
-  if (MACHINE_GATEWAY) {
-    return MACHINE_GATEWAY + '?view=service&public_id=' + encodeURIComponent(publicId);
-  }
+function gatewayReview(publicId, gatewayUrl = null) {
+  if (gatewayUrl) return gatewayUrl + '?view=service&public_id=' + encodeURIComponent(publicId);
   return RAW_BASE + '/chum/capabilities/' + encodeURIComponent(String(publicId || '')) + '/index.html';
 }
 
@@ -51,6 +49,16 @@ export function buildCommercialDiscoveryMesh({ root = process.cwd() } = {}) {
   const cwd = process.cwd();
   process.chdir(root);
   try {
+    const routeOverlay = loadActiveRouteOverlayFromEnv();
+    const machineGatewayResolution = resolveActiveRoute(
+      routeOverlay,
+      'evercraft-machine-commerce',
+      'gateway',
+      { fallbackUrl: null }
+    );
+    const machineGateway = machineGatewayResolution?.url || null;
+    const reviewUrl = (publicId) => gatewayReview(publicId, machineGateway);
+
     const catalog = readJson(MACHINE_CATALOG);
     const answers = readJson(ANSWER_GRAPH);
     const directory = readJson(PRODUCT_DIRECTORY);
@@ -102,8 +110,8 @@ export function buildCommercialDiscoveryMesh({ root = process.cwd() } = {}) {
         pricing: offer.pricing,
         commercial_state: offer.commercial_state,
         machine_state: offer.machine_state,
-        canonical_offer_url: offer.public_url || gatewayReview(publicId),
-        human_review_url: gatewayReview(publicId),
+        canonical_offer_url: offer.public_url || reviewUrl(publicId),
+        human_review_url: reviewUrl(publicId),
         intent_terms: offer.intent_terms || [],
         discovered_user_language: phrases,
         answer_door_count: answerLinks.length,
@@ -135,7 +143,7 @@ export function buildCommercialDiscoveryMesh({ root = process.cwd() } = {}) {
         'Pricing: ' + (offer.pricing || ''),
         'Commercial state: ' + (offer.commercial_state || ''),
         'Machine state: ' + (offer.machine_state || ''),
-        'Human review: ' + gatewayReview(publicId),
+        'Human review: ' + reviewUrl(publicId),
         'Capability contract: ' + capability,
         '',
         '## Brand-blind user language',
@@ -169,7 +177,7 @@ export function buildCommercialDiscoveryMesh({ root = process.cwd() } = {}) {
         '<h1>' + html(offer.name) + '</h1>',
         '<p>' + html(offer.problem || '') + '</p>',
         '<p><strong>Published pricing:</strong> ' + html(offer.pricing || '') + '</p>',
-        '<p><a href="' + html(intent) + '">Offer intent page</a> · <a href="' + html(capability) + '">Machine capability contract</a> · <a href="' + html(gatewayReview(publicId)) + '">Human review</a></p>',
+        '<p><a href="' + html(intent) + '">Offer intent page</a> · <a href="' + html(capability) + '">Machine capability contract</a> · <a href="' + html(reviewUrl(publicId)) + '">Human review</a></p>',
         '<h2>Ways a user may describe the problem</h2>',
         '<ul>',
         ...phrases.map((phrase) => '<li>' + html(phrase) + '</li>'),
@@ -253,7 +261,7 @@ export function buildCommercialDiscoveryMesh({ root = process.cwd() } = {}) {
     const rssItems = clusters.map((cluster) => [
       '<item>',
       '<title>' + xml(cluster.name) + '</title>',
-      '<link>' + xml(gatewayReview(cluster.public_id)) + '</link>',
+      '<link>' + xml(reviewUrl(cluster.public_id)) + '</link>',
       '<guid isPermaLink="false">urn:evercraft:commercial-intent:' + xml(cluster.public_id) + '</guid>',
       '<description>' + xml((cluster.problem || '') + ' User-language doors: ' + cluster.answer_door_count + '.') + '</description>',
       '</item>'
@@ -277,7 +285,7 @@ export function buildCommercialDiscoveryMesh({ root = process.cwd() } = {}) {
       feed_url: RAW_BASE + '/chum/commercial/feed.json',
       items: clusters.map((cluster) => ({
         id: 'urn:evercraft:commercial-intent:' + cluster.public_id,
-        external_url: gatewayReview(cluster.public_id),
+        external_url: reviewUrl(cluster.public_id),
         title: cluster.name,
         summary: cluster.problem,
         tags: ['sell_now', cluster.public_id, ...cluster.answer_doors.slice(0, 12).map((door) => door.phrase)]
@@ -329,6 +337,9 @@ export function buildCommercialDiscoveryMesh({ root = process.cwd() } = {}) {
 
     return {
       schema: index.schema,
+      route_overlay_loaded: Boolean(routeOverlay),
+      machine_gateway_authority: machineGatewayResolution?.authority || 'static_capability_fallback',
+      machine_gateway_cutover_receipt_ref: machineGatewayResolution?.cutover_receipt_ref || null,
       sell_now_clusters: clusters.length,
       commercial_answer_edges: index.answer_door_edges,
       segmented_sitemaps: 4,

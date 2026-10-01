@@ -1,0 +1,339 @@
+{
+  "schema": "evercraft.base44.wave-replacement-matrix.v1",
+  "wave": 1,
+  "observed_at": "2026-10-01",
+  "products": [
+    {
+      "product": "Systemia Command Center",
+      "cutover_ready": false,
+      "components": [
+        {
+          "key": "first_party_capability_router",
+          "state": "implementation_present_ci_pending",
+          "refs": [
+            "systemia/capability-router/runtime.mjs",
+            "systemia/capability-router/runtime.proof.mjs"
+          ],
+          "detail": "Owned App Fabric router preserves Base44 trigger weighting, problem-pattern overlap, active-capability preference and FIRST_PARTY_STRICT behavior. Live CapabilityRegistry and CapabilitySelectionRule rows still require destination import and reconciliation before deployment parity."
+        },
+        {
+          "key": "source_function_map",
+          "state": "mapping_present",
+          "refs": [
+            "systemia/migrations/base44-exit/wave-1-command-center-function-map.json",
+            "systemia/migrations/base44-exit/wave-1-command-center-function-map.proof.mjs"
+          ],
+          "detail": "All eight Base44 server functions have an explicit owned replacement path and remaining evidence gates."
+        },
+        {
+          "key": "exact_output_gate_runtime",
+          "state": "implementation_present_ci_pending",
+          "refs": [
+            "systemia/exact-output-gate/runtime.mjs",
+            "systemia/exact-output-gate/runtime.proof.mjs"
+          ],
+          "detail": "Owned release gate preserves versioned policy checks, dependency pinning/cascade, human-visible mismatch reopen, verification expiry and supersession."
+        },
+        {
+          "key": "aqueduct_pipeline_runtime",
+          "state": "implementation_present_ci_pending",
+          "refs": [
+            "systemia/aqueduct/runtime.mjs",
+            "systemia/aqueduct/runtime.proof.mjs"
+          ],
+          "detail": "Owned pipeline-health runtime preserves seed graph, stage receipts, freshness, drain, consumer-gap, schema-drift, silent-zero, incident and sweep semantics."
+        },
+        {
+          "key": "live_registry_shadow_source_capture",
+          "state": "live_source_capture_receipt_present",
+          "refs": [
+            "systemia/migrations/base44-exit/wave-1-command-center-shadow-source-capture-2026-10-01.json"
+          ],
+          "detail": "Six low-risk registry/config entities were read from live Base44 state with terminal pagination and fingerprinted in-memory. Receipt contains 32 total rows and SHA-256 stream/field-set hashes only; no raw records or IDs were emitted. Destination write has not occurred."
+        },
+        {
+          "key": "base44_sdk_compatibility",
+          "state": "implementation_present_ci_pending",
+          "refs": [
+            "systemia/app-fabric/base44-sdk-compat.mjs",
+            "systemia/app-fabric/base44-sdk-compat.proof.mjs"
+          ]
+        },
+        {
+          "key": "owned_identity",
+          "state": "implementation_present_ci_pending",
+          "refs": [
+            "systemia/app-fabric/identity-adapter.mjs",
+            "systemia/identity/challenge-broker.mjs"
+          ]
+        },
+        {
+          "key": "machine_route_control",
+          "state": "implementation_present_ci_pending",
+          "refs": [
+            "systemia/migrations/base44-exit/route-registry.mjs",
+            "systemia/migrations/base44-exit/route-overlay.mjs"
+          ]
+        },
+        {
+          "key": "source_function_transplant",
+          "state": "partial_pending_public_edge_contracts_and_data_reconciliation",
+          "detail": "Aqueduct and Exact Output Gate are transplanted to owned runtimes. The remaining six functions have owned replacement paths but still require capability/data reconciliation, upstream service parity, deployment receipts and public route/registry repoint evidence.",
+          "refs": [
+            "systemia/migrations/base44-exit/wave-1-command-center-function-map.json"
+          ]
+        },
+        {
+          "key": "destination_data",
+          "state": "not_migrated"
+        },
+        {
+          "key": "public_cutover",
+          "state": "not_authorized"
+        }
+      ]
+    },
+    {
+      "product": "Systemia Remote Ops",
+      "cutover_ready": false,
+      "components": [
+        {
+          "key": "voice_call_and_moment_runtime",
+          "state": "implementation_present_ci_pending",
+          "refs": [
+            "systemia/remote-ops/voice-runtime.mjs",
+            "systemia/remote-ops/voice-runtime.proof.mjs"
+          ]
+        },
+        {
+          "key": "voice_webhook_verification",
+          "state": "implementation_present_ci_pending",
+          "refs": [
+            "systemia/webhook-gateway/provider-verifiers.mjs",
+            "systemia/webhook-gateway/provider-verifiers.proof.mjs"
+          ]
+        },
+        {
+          "key": "auto_clock_out",
+          "state": "implementation_present_ci_pending",
+          "refs": [
+            "systemia/operations/auto-clock-out.mjs",
+            "systemia/operations/auto-clock-out.proof.mjs",
+            "systemia/operations/auto-clock-out-runner.mjs",
+            "systemia/operations/auto-clock-out.workflow.json",
+            "systemia/operations/auto-clock-out-registration.proof.mjs",
+            "systemia/core/resident-supervisor.mjs",
+            "systemia/core/resident-services.json",
+            "systemia/migrations/base44-exit/wave-1-scheduled-work.json"
+          ],
+          "activation_state": "registered_disabled_until_explicit_gate",
+          "automatic_activation": false
+        },
+        {
+          "key": "provider_secret_rekey",
+          "state": "required_before_webhook_repoint",
+          "detail": "EVERCRAFT_VOICE_WEBHOOK_SECRET must be independently provisioned in Evercraft Secret Store; no Base44 secret copy is permitted."
+        },
+        {
+          "key": "elevenlabs_webhook_repoint",
+          "state": "not_performed"
+        },
+        {
+          "key": "destination_data",
+          "state": "not_migrated"
+        },
+        {
+          "key": "public_cutover",
+          "state": "not_authorized"
+        }
+      ]
+    },
+    {
+      "product": "Evercraft AI Workforce",
+      "cutover_ready": false,
+      "components": [
+        {
+          "key": "polar_connector",
+          "state": "implementation_present_ci_pending",
+          "refs": [
+            "systemia/connector-gateway/adapters/polar.mjs",
+            "systemia/connector-gateway/adapters/polar.proof.mjs"
+          ]
+        },
+        {
+          "key": "polar_commerce_truth",
+          "state": "implementation_present_ci_pending",
+          "refs": [
+            "systemia/commerce-boundary/polar-adapter.mjs",
+            "systemia/commerce-boundary/polar-adapter.proof.mjs"
+          ]
+        },
+        {
+          "key": "workforce_checkout_and_entitlement",
+          "state": "implementation_present_ci_pending",
+          "refs": [
+            "systemia/workforce/commerce-runtime.mjs",
+            "systemia/workforce/commerce-runtime.proof.mjs"
+          ]
+        },
+        {
+          "key": "polar_reauthorization",
+          "state": "required_before_live_provider_calls",
+          "detail": "A new Evercraft Polar OAuth client/authorization flow must be explicitly configured and authorized. Base44 connector credentials are not copied."
+        },
+        {
+          "key": "owned_public_origin",
+          "state": "route_binding_required"
+        },
+        {
+          "key": "destination_data",
+          "state": "not_migrated"
+        },
+        {
+          "key": "public_cutover",
+          "state": "not_authorized"
+        }
+      ]
+    },
+    {
+      "product": "Evercraft InternalOps",
+      "cutover_ready": false,
+      "components": [
+        {
+          "key": "auto_clock_out",
+          "state": "implementation_present_ci_pending",
+          "refs": [
+            "systemia/operations/auto-clock-out.mjs",
+            "systemia/operations/auto-clock-out.proof.mjs",
+            "systemia/operations/auto-clock-out-runner.mjs",
+            "systemia/operations/auto-clock-out.workflow.json",
+            "systemia/operations/auto-clock-out-registration.proof.mjs",
+            "systemia/core/resident-supervisor.mjs",
+            "systemia/core/resident-services.json",
+            "systemia/migrations/base44-exit/wave-1-scheduled-work.json"
+          ],
+          "activation_state": "registered_disabled_until_explicit_gate",
+          "automatic_activation": false
+        },
+        {
+          "key": "aggregate_snapshot_and_direct_systemia_ingress",
+          "state": "implementation_present_ci_pending",
+          "refs": [
+            "systemia/internal-ops/snapshot.mjs",
+            "systemia/internal-ops/snapshot-ingress.mjs",
+            "systemia/internal-ops/systemia-sync.mjs",
+            "systemia/internal-ops/runtime.proof.mjs"
+          ]
+        },
+        {
+          "key": "systemia_intake_materialization",
+          "state": "implementation_present_ci_pending",
+          "refs": [
+            "systemia/internal-ops/intake.mjs",
+            "systemia/internal-ops/runtime.proof.mjs"
+          ]
+        },
+        {
+          "key": "legacy_cross_app_snapshot_routes",
+          "state": "owned_replacement_present_ci_pending",
+          "refs": [
+            "systemia/internal-ops/snapshot.mjs",
+            "systemia/internal-ops/snapshot-ingress.mjs",
+            "systemia/internal-ops/systemia-sync.mjs"
+          ],
+          "detail": "Owned sync builds the read-only aggregate in-process and admits it directly to the owned snapshot ledger. The old self-HTTP and Base44-to-Systemia HTTP hops are not required."
+        },
+        {
+          "key": "offline_queue_data_parity",
+          "state": "product_parity_required"
+        },
+        {
+          "key": "destination_data",
+          "state": "not_migrated"
+        },
+        {
+          "key": "public_cutover",
+          "state": "not_authorized"
+        }
+      ]
+    },
+    {
+      "product": "Systemia Audit Center",
+      "cutover_ready": false,
+      "components": [
+        {
+          "key": "stripe_provider_transport",
+          "state": "implementation_present_ci_pending",
+          "refs": [
+            "systemia/commerce-boundary/stripe-provider.mjs"
+          ]
+        },
+        {
+          "key": "stripe_payment_verification",
+          "state": "implementation_present_ci_pending",
+          "refs": [
+            "systemia/commerce-boundary/stripe-adapter.mjs",
+            "systemia/audit-center/commerce-runtime.mjs",
+            "systemia/audit-center/commerce-runtime.proof.mjs"
+          ]
+        },
+        {
+          "key": "stripe_webhook_verification",
+          "state": "implementation_present_ci_pending",
+          "refs": [
+            "systemia/webhook-gateway/provider-verifiers.mjs",
+            "systemia/webhook-gateway/provider-verifiers.proof.mjs"
+          ]
+        },
+        {
+          "key": "pdf_object_storage",
+          "state": "implementation_present_ci_pending",
+          "refs": [
+            "systemia/object-store/object-store.mjs",
+            "systemia/object-store/delivery-gateway.mjs",
+            "systemia/audit-center/export-runtime.mjs",
+            "systemia/audit-center/export-runtime.proof.mjs"
+          ],
+          "detail": "PDF bytes land in the owned content-addressed Object Store and are delivered only through signed owned URLs. A production PDF renderer and public object-delivery route still require binding before cutover."
+        },
+        {
+          "key": "stripe_secret_rekey",
+          "state": "required_before_live_provider_calls",
+          "detail": "STRIPE_SECRET_KEY and STRIPE_WEBHOOK_SECRET must be provisioned directly into owned secret storage. Base44 secret export is forbidden."
+        },
+        {
+          "key": "audit_generation_and_paid_intake",
+          "state": "partial_pending_product_parity"
+        },
+        {
+          "key": "destination_data",
+          "state": "not_migrated"
+        },
+        {
+          "key": "public_cutover",
+          "state": "not_authorized"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "products": 5,
+    "products_cutover_ready": 0,
+    "implementations_present_ci_pending": 19,
+    "destination_data_migrated_products": 0,
+    "public_cutovers_authorized": 0,
+    "live_source_capture_products": 1,
+    "live_source_capture_entities": 6,
+    "live_source_capture_rows": 32,
+    "command_center_stateful_functions_transplanted": 2,
+    "command_center_source_functions_mapped": 8,
+    "command_center_owned_function_implementations": 3
+  },
+  "authority": {
+    "source_mutation": false,
+    "provider_reauthorization": false,
+    "payment_creation": false,
+    "traffic_cutover": false,
+    "source_decommission": false
+  }
+}

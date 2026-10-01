@@ -209,6 +209,51 @@ function nonempty(value) {
   return String(value ?? '').trim().length > 0;
 }
 
+function validateSellNowPublicContinuation(rootDir, value) {
+  const raw = String(value ?? '').trim();
+  if (!raw) return { ok: false, reason: 'missing' };
+
+  if (raw.startsWith('/') && !raw.startsWith('//')) {
+    let pathname;
+    try {
+      pathname = decodeURIComponent(raw.split(/[?#]/, 1)[0]);
+    } catch {
+      return { ok: false, reason: 'relative_path_decode_failed' };
+    }
+    const publicRoot = path.resolve(rootDir, 'public');
+    let target = path.resolve(publicRoot, pathname.replace(/^\/+/, ''));
+    if (raw.split(/[?#]/, 1)[0].endsWith('/')) target = path.join(target, 'index.html');
+    const prefix = publicRoot.endsWith(path.sep) ? publicRoot : publicRoot + path.sep;
+    if (target !== publicRoot && !target.startsWith(prefix)) {
+      return { ok: false, reason: 'relative_path_escapes_public_root' };
+    }
+    if (!fs.existsSync(target) || !fs.statSync(target).isFile()) {
+      return {
+        ok: false,
+        reason: 'relative_public_surface_missing',
+        expected_file: path.relative(rootDir, target).split(path.sep).join('/')
+      };
+    }
+    return {
+      ok: true,
+      kind: 'owned_same_origin',
+      expected_file: path.relative(rootDir, target).split(path.sep).join('/')
+    };
+  }
+
+  try {
+    const url = new URL(raw);
+    const host = url.hostname.toLowerCase();
+    if (url.protocol !== 'https:') return { ok: false, reason: 'absolute_url_must_use_https' };
+    if (host === 'base44.app' || host.endsWith('.base44.app')) {
+      return { ok: false, reason: 'legacy_provider_url_forbidden' };
+    }
+    return { ok: true, kind: 'external_https', host };
+  } catch {
+    return { ok: false, reason: 'invalid_public_url' };
+  }
+}
+
 function evaluateSellNowCatalog(rootDir, invariant) {
   const parsed = readJson(rootDir, invariant.file);
   const evidence = [`repo:${invariant.file}`];
@@ -226,6 +271,23 @@ function evaluateSellNowCatalog(rootDir, invariant) {
         evidence,
         { public_id: offer.public_id || null, missing_fields: [...new Set(missing)] }
       ));
+    }
+
+    if (nonempty(offer?.public_url)) {
+      const continuation = validateSellNowPublicContinuation(rootDir, offer.public_url);
+      if (!continuation.ok) {
+        out.push(violation(
+          invariant,
+          `Sell-now offer ${publicId} has an invalid public continuation: ${continuation.reason}.`,
+          evidence,
+          {
+            public_id: offer.public_id || null,
+            public_url: String(offer.public_url || ''),
+            continuation_reason: continuation.reason,
+            expected_file: continuation.expected_file || null
+          }
+        ));
+      }
     }
   }
   return out;

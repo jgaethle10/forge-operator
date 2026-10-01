@@ -1,0 +1,24 @@
+{
+  "schema": "evercraft.systemia.workflow-manifest.v1",
+  "workflow_key": "owned-auto-clock-out",
+  "runtime": "systemia-organism+collider",
+  "cadence_seconds": 300,
+  "entrypoint": "systemia/operations/auto-clock-out-runner.mjs",
+  "purpose": "Close migrated open TimeLog rows older than the configured cutoff and append an ActionLog exactly once.",
+  "authority": {
+    "source_base44_mutation": false,
+    "destination_time_log_update": true,
+    "destination_action_log_create": true,
+    "traffic_cutover": false,
+    "payment": false
+  },
+  "activation": {
+    "default": "disabled",
+    "requires_product_activation_gate": true,
+    "requires_destination_app_fabric_state": true
+  },
+  "idempotency": {
+    "key": "TimeLog.is_clocked_in",
+    "rerun_on_closed_row": "no_op"
+  }
+}

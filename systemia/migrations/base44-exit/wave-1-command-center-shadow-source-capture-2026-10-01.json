@@ -1,0 +1,81 @@
+{
+  "schema": "evercraft.base44.live-shadow-source-capture.v1",
+  "observed_at": "2026-10-01",
+  "product": "Systemia Command Center",
+  "source": "authenticated_base44_query_entities",
+  "app_fingerprint": "sha256:71ffb948f80782356029efc0cb8b8385175e2875ffdc45fc895cb414c1a6c0a7",
+  "hash_algorithm": "sha256",
+  "hash_implementation_self_test": {
+    "vector": "abc",
+    "expected": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+    "passed": true
+  },
+  "entities": [
+    {
+      "entity_name": "CapabilityRegistry",
+      "row_count": 13,
+      "pages": 1,
+      "terminal_pagination": true,
+      "stream_sha256": "sha256:176b6aa852c55080ddda041e210e6221be0ce462f121ddea3bc2bafa9039c46f",
+      "field_set_sha256": "sha256:4047096c7b11100030f6d2980185238d5338e1c686f69d9c04af1d788c575978"
+    },
+    {
+      "entity_name": "CapabilitySelectionRule",
+      "row_count": 7,
+      "pages": 1,
+      "terminal_pagination": true,
+      "stream_sha256": "sha256:812bf16ced56bc3f8469a578f716f99746843bc6ee75ef0d2a818d9bfcdfb471",
+      "field_set_sha256": "sha256:ce5a8c1c36591ec6e543b2fa6aaebb630fd09666367fc9ad25334f82423a07bd"
+    },
+    {
+      "entity_name": "CapabilityBundle",
+      "row_count": 1,
+      "pages": 1,
+      "terminal_pagination": true,
+      "stream_sha256": "sha256:05415b104c7b2208cae29453ef67d895f5fe1ce7f643fed8c903e20531b5b297",
+      "field_set_sha256": "sha256:0e911627428d920d178d27f27a0613939f2a1adaa6465991ddade4ba95311fb5"
+    },
+    {
+      "entity_name": "SystemiaReleasePolicy",
+      "row_count": 7,
+      "pages": 1,
+      "terminal_pagination": true,
+      "stream_sha256": "sha256:7dfa533a950823eeef358847016389459069f974afaeb02bd09b78d99dddd0ca",
+      "field_set_sha256": "sha256:f84359f7adcd64c110aefad69d5f7ada8eedd09eed367774cd8c52620700f220"
+    },
+    {
+      "entity_name": "AppSurfaceRegistryV2",
+      "row_count": 2,
+      "pages": 1,
+      "terminal_pagination": true,
+      "stream_sha256": "sha256:979d1141a83541c3e625e9271bede68566f46cd2a0f52f0805c339545038ba02",
+      "field_set_sha256": "sha256:208415643c683bb732792cd557a121358586837cd030322162184bdf1f75692e"
+    },
+    {
+      "entity_name": "AppReuseRegistryV2",
+      "row_count": 2,
+      "pages": 1,
+      "terminal_pagination": true,
+      "stream_sha256": "sha256:4871f50fe0a87bde5b20351d1a011d78fff9f28cd02f3200a6e3308f6295e91a",
+      "field_set_sha256": "sha256:aa8fd2e2f14644392d74131d6a129273d6b089a075e19fde980c3fe7ffca74a8"
+    }
+  ],
+  "totals": {
+    "entities": 6,
+    "rows": 32,
+    "pages": 6
+  },
+  "privacy": {
+    "raw_app_id_emitted": false,
+    "raw_record_ids_emitted": false,
+    "raw_records_emitted": false,
+    "field_values_emitted": false
+  },
+  "authority": {
+    "source_mutation": false,
+    "destination_write": false,
+    "traffic_cutover": false,
+    "source_decommission": false
+  },
+  "evidence_state": "live_source_capture_only_not_destination_migration"
+}
