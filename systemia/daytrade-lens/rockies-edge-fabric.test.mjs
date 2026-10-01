@@ -45,6 +45,23 @@ assert.ok(hypotheses.every((x) => x.direction === "LEARN_FROM_DATA"));
 assert.ok(hypotheses.every((x) => x.constraints.no_live_trade_instruction === true));
 assert.ok(hypotheses.every((x) => x.provenance_refs.length === 1));
 
+const secMetadataHypothesis = rockiesObservationToEdgeHypotheses({
+  ...observation,
+  kind: "sec_8_k",
+  facts: {
+    form: "8-K",
+    ticker: "MSFT",
+    items: ["2.02", "9.01"],
+  },
+  metadata: {
+    ...observation.metadata,
+    rockies_range: "ai_models",
+  },
+})[0];
+assert.deepEqual(secMetadataHypothesis.sec_items, ["2.02", "9.01"]);
+assert.equal(secMetadataHypothesis.source_form, "8-K");
+assert.equal(secMetadataHypothesis.source_ticker, "MSFT");
+
 const weak = rockiesObservationToEdgeHypotheses({
   ...observation,
   anomaly_score: 0.1,
@@ -121,6 +138,7 @@ console.log(JSON.stringify({
   schema: "evercraft.daytrade.rockies-edge-fabric-proof.v1",
   hypothesis_direction_is_learned: true,
   provenance_preserved: true,
+  sec_item_metadata_preserved: true,
   holdout_required: true,
   positive_and_negative_costs_reduce_strategy_returns: true,
   strategy_space_cost_gate: true,
