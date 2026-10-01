@@ -178,7 +178,12 @@ async function natPmpMap() {
         result.mappings.push({ requested: m, success: false, error: e.message });
       }
     }
-    result.success = result.mappings.length === mappings.length && result.mappings.every(x => x.success);
+    {
+      const production=result.mappings.filter(x=>x.requested?.production);
+      const diagnostic=result.mappings.filter(x=>x.requested?.diagnostic);
+      result.success=production.length>0&&production.every(x=>x.success===true);
+      result.diagnostic_success=diagnostic.length>0&&diagnostic.every(x=>x.success===true);
+    }
   } finally {
     socket.close();
   }
@@ -452,7 +457,12 @@ async function pcpMap() {
         result.mappings.push({ requested: m, success: false, error: e.message });
       }
     }
-    result.success = result.mappings.length === mappings.length && result.mappings.every(x => x.success);
+    {
+      const production=result.mappings.filter(x=>x.requested?.production);
+      const diagnostic=result.mappings.filter(x=>x.requested?.diagnostic);
+      result.success=production.length>0&&production.every(x=>x.success===true);
+      result.diagnostic_success=diagnostic.length>0&&diagnostic.every(x=>x.success===true);
+    }
     const firstIp = result.mappings.find(x => x.external_ip)?.external_ip;
     if (firstIp) result.external_ip = firstIp;
   } finally {
@@ -485,6 +495,8 @@ async function main() {
     out.ok = true;
     out.method = upnp.method;
     out.external_ip = upnp.external_ip;
+    out.production_mapping_control_ok = true;
+    out.diagnostic_mapping_control_ok = upnp.diagnostic_success === true;
     console.log(JSON.stringify(out, null, 2));
     return;
   }
@@ -495,6 +507,8 @@ async function main() {
     out.ok = true;
     out.method = natpmp.method;
     out.external_ip = natpmp.external_ip;
+    out.production_mapping_control_ok = true;
+    out.diagnostic_mapping_control_ok = natpmp.diagnostic_success === true;
     console.log(JSON.stringify(out, null, 2));
     return;
   }
@@ -505,6 +519,8 @@ async function main() {
     out.ok = true;
     out.method = pcp.method;
     out.external_ip = pcp.external_ip;
+    out.production_mapping_control_ok = true;
+    out.diagnostic_mapping_control_ok = pcp.diagnostic_success === true;
   }
 
   out.production_mapping_control_ok = mappings.filter(m=>m.production).every(m=>
