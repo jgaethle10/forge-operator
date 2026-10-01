@@ -126,19 +126,26 @@ export function worldIntelInputFromCandidate(candidate,{aspectRatio='9:16'}={}){
   const points=measurements
     .filter(row=>Number.isFinite(Number(row?.lat))&&Number.isFinite(Number(row?.lon)))
     .slice(0,24)
-    .map((row,index)=>({
-      id:clean(row.event_id||row.id||'point-'+String(index+1),120),
-      lat:Number(row.lat),
-      lon:Number(row.lon),
-      label:clean(
-        Number.isFinite(Number(row.magnitude))
-          ? 'M'+Number(row.magnitude).toFixed(1)+' '+clean(row.place,80)
-          : row.place||row.label||'',
-        100
-      ),
-      evidenceState:state,
-      sourceRefs:refs,
-    }));
+    .map((row,index)=>{
+      const magnitude=Number(row.magnitude);
+      const intensity=Number.isFinite(magnitude)?Math.max(0,Math.min(1,(magnitude-4)/4)):0.45;
+      return {
+        id:clean(row.event_id||row.id||'point-'+String(index+1),120),
+        lat:Number(row.lat),
+        lon:Number(row.lon),
+        label:clean(
+          Number.isFinite(magnitude)
+            ? 'M'+magnitude.toFixed(1)+' '+clean(row.place,80)
+            : row.place||row.label||'',
+          100
+        ),
+        radius:Number.isFinite(magnitude)?Math.max(5,Math.min(16,4+(magnitude-4)*4)):6,
+        intensity,
+        pulse:Number.isFinite(magnitude)&&magnitude>=5,
+        evidenceState:state,
+        sourceRefs:refs,
+      };
+    });
 
   const metrics=[];
   const pushMetric=(id,label,value,unit='',decimals=0)=>{
