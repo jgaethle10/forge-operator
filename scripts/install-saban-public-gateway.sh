@@ -156,7 +156,7 @@ sudo install -d -m 0755 /etc/evercraft
 sudo tee /etc/evercraft/saban-broker-public.caddy >/dev/null <<EOF
 # commissioning-local-only
 https://$DOMAIN:$PUBLIC_BROKER_PORT {
-  @commissioning_local remote_ip private_ranges
+  @commissioning_local remote_ip 127.0.0.0/8 10.0.0.0/8 100.64.0.0/10 172.16.0.0/12 192.168.0.0/16 ::1 fc00::/7 fe80::/10
   handle @commissioning_local {
     reverse_proxy 127.0.0.1:$BROKER_PORT
     header {
@@ -306,7 +306,7 @@ Type=oneshot
 ExecStart=/usr/local/sbin/evercraft-publish-saban-broker
 NoNewPrivileges=true
 PrivateTmp=true
-ProtectHome=true
+ProtectHome=read-only
 EOF
 
 sudo tee /etc/systemd/system/evercraft-saban-broker-publish.timer >/dev/null <<'EOF'
