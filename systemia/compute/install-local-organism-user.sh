@@ -123,7 +123,8 @@ if ! systemctl --user is-active --quiet evercraft-local-organism-health.timer; t
   exit 5
 fi
 
-systemctl --user start evercraft-local-organism-health.service
+"${NODE_BIN}" "${INSTALL_ROOT}/systemia/compute/local-organism-health-watch.mjs" \
+  --root "${STATE_ROOT}" --observe-only >/dev/null
 if [[ ! -s "${STATE_ROOT}/health-watch.json" ]]; then
   echo "Evercraft health watch did not produce its initial receipt." >&2
   exit 6
