@@ -104,6 +104,50 @@ assert.equal(result.ok, false);
 assert.ok(result.violations[0]?.metadata?.missing_fields?.includes('public_url'));
 assert.ok(result.violations[0]?.metadata?.missing_fields?.includes('offers[]'));
 
+write('catalog.json', JSON.stringify({
+  offers: [{
+    public_id: 'static-sell-now',
+    name: 'Static Sell Now',
+    problem: 'test',
+    commercial_state: 'sell_now',
+    machine_state: 'payment_ready',
+    pricing: '$1',
+    public_url: '/chum/commercial/static-sell-now/',
+    payment_authority: 'test-authority',
+    confirmation: 'explicit human confirmation required',
+    offers: [{ name: 'Test', price: '$1' }]
+  }]
+}));
+result = evaluateArchitecturalInvariants({ rootDir: root, registry: catalogRegistry });
+assert.equal(result.ok, false);
+assert.equal(result.violations[0]?.metadata?.continuation_reason, 'relative_public_surface_missing');
+assert.equal(
+  result.violations[0]?.metadata?.expected_file,
+  'public/chum/commercial/static-sell-now/index.html'
+);
+
+write('public/chum/commercial/static-sell-now/index.html', '<!doctype html><title>Static Sell Now</title>');
+result = evaluateArchitecturalInvariants({ rootDir: root, registry: catalogRegistry });
+assert.equal(result.ok, true);
+
+write('catalog.json', JSON.stringify({
+  offers: [{
+    public_id: 'legacy-sell-now',
+    name: 'Legacy Sell Now',
+    problem: 'test',
+    commercial_state: 'sell_now',
+    machine_state: 'payment_ready',
+    pricing: '$1',
+    public_url: 'https://legacy.example.base44.app/review',
+    payment_authority: 'test-authority',
+    confirmation: 'explicit human confirmation required',
+    offers: [{ name: 'Test', price: '$1' }]
+  }]
+}));
+result = evaluateArchitecturalInvariants({ rootDir: root, registry: catalogRegistry });
+assert.equal(result.ok, false);
+assert.equal(result.violations[0]?.metadata?.continuation_reason, 'legacy_provider_url_forbidden');
+
 const recipes = loadRepairRecipeRegistry(process.cwd());
 assert.equal(recipes.ok, true);
 const recipe = resolveRepairRecipe({
