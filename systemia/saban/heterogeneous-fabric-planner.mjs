@@ -342,6 +342,7 @@ export function planHeterogeneousFabric({
         replica_index:unit.replica_index,
         offer_id:candidate.offer.offer_id,
         provider_id:candidate.offer.provider_id,
+        device_id:candidate.offer.metadata?.device_id||null,
         market:candidate.offer.market,
         access_class:candidate.offer.access_class,
         device_class:candidate.device_class,
