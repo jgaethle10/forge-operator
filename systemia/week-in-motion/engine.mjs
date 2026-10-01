@@ -223,33 +223,66 @@ ${JSON.stringify(packet)}`;
 }
 
 export async function generateEditorial({ window, evidence, endpoint, token, model }) {
-  if (!endpoint) {
-    return { status: 'blocked_editorial_provider', reason: 'EVERCRAFT_EDITORIAL_ENDPOINT is not configured.' };
+  const prompt = editorialPrompt({ window, evidence });
+
+  if (endpoint) {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: JSON.stringify({
+        model: model || 'evercraft-editorial',
+        temperature: 0.2,
+        response_format: { type: 'json_object' },
+        messages: [
+          { role: 'system', content: 'You are an evidence-bound editorial engine. Return only valid JSON.' },
+          { role: 'user', content: prompt },
+        ],
+      }),
+    });
+    if (!response.ok) {
+      return { status: 'blocked_editorial_provider', reason: `Editorial provider ${response.status}: ${await response.text()}` };
+    }
+    const payload = await response.json();
+    const content = payload?.choices?.[0]?.message?.content ?? payload?.output_text ?? payload?.content;
+    if (!content) return { status: 'blocked_editorial_provider', reason: 'Editorial provider returned no content.' };
+    try {
+      return { status: 'generated', provider: 'configured_endpoint', output: typeof content === 'string' ? JSON.parse(content) : content };
+    } catch (error) {
+      return { status: 'blocked_editorial_parse', reason: error instanceof Error ? error.message : String(error), raw: content };
+    }
   }
-  const response = await fetch(endpoint, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+
+  const geminiKey = String(process.env.GEMINI_API_KEY || '').trim();
+  if (!geminiKey) {
+    return { status: 'blocked_editorial_provider', reason: 'No editorial endpoint or GEMINI_API_KEY is configured.' };
+  }
+
+  const geminiModel = model || process.env.WEEK_IN_MOTION_GEMINI_MODEL || 'gemini-2.5-pro';
+  const response = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(geminiModel)}:generateContent?key=${encodeURIComponent(geminiKey)}`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ role: 'user', parts: [{ text: prompt }] }],
+        generationConfig: {
+          temperature: 0.2,
+          responseMimeType: 'application/json',
+        },
+      }),
     },
-    body: JSON.stringify({
-      model: model || 'evercraft-editorial',
-      temperature: 0.2,
-      response_format: { type: 'json_object' },
-      messages: [
-        { role: 'system', content: 'You are an evidence-bound editorial engine. Return only valid JSON.' },
-        { role: 'user', content: editorialPrompt({ window, evidence }) },
-      ],
-    }),
-  });
+  );
   if (!response.ok) {
-    return { status: 'blocked_editorial_provider', reason: `Editorial provider ${response.status}: ${await response.text()}` };
+    return { status: 'blocked_editorial_provider', reason: `Gemini editorial provider ${response.status}: ${await response.text()}` };
   }
   const payload = await response.json();
-  const content = payload?.choices?.[0]?.message?.content ?? payload?.output_text ?? payload?.content;
-  if (!content) return { status: 'blocked_editorial_provider', reason: 'Editorial provider returned no content.' };
+  const content = (payload?.candidates?.[0]?.content?.parts || []).map((part) => part?.text || '').join('').trim();
+  if (!content) return { status: 'blocked_editorial_provider', reason: 'Gemini editorial provider returned no content.' };
   try {
-    return { status: 'generated', output: typeof content === 'string' ? JSON.parse(content) : content };
+    return { status: 'generated', provider: 'gemini_runtime', output: JSON.parse(content) };
   } catch (error) {
     return { status: 'blocked_editorial_parse', reason: error instanceof Error ? error.message : String(error), raw: content };
   }
