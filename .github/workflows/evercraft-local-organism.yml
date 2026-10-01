@@ -4,6 +4,9 @@ on:
   pull_request:
     paths:
       - 'systemia/compute/local-organism.mjs'
+      - 'systemia/compute/runtime-node.mjs'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'systemia/yard/operator.mjs'
       - 'systemia/compute/local-organism-health-watch.mjs'
       - 'systemia/compute/install-local-organism-user.sh'
       - 'systemia/compute/LOCAL_ORGANISM.md'
@@ -15,6 +18,9 @@ on:
       - main
     paths:
       - 'systemia/compute/local-organism.mjs'
+      - 'systemia/compute/runtime-node.mjs'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
+      - 'systemia/yard/operator.mjs'
       - 'systemia/compute/local-organism-health-watch.mjs'
       - 'systemia/compute/install-local-organism-user.sh'
       - 'systemia/compute/LOCAL_ORGANISM.md'
