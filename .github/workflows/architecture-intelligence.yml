@@ -62,7 +62,8 @@ jobs:
           assert topology["evidence_boundary"]["executes_scanned_code"] is False
           assert topology["evidence_boundary"]["claims_runtime_behavior"] is False
           assert topology["counts"]["files"] > 0
-          assert reconciled["evidence_boundary"]["queries_production"] is False
+          assert reconciled["evidence_boundary"]["declared_is_runtime_proof"] is False
+          assert reconciled["evidence_boundary"]["runtime_is_receipt_proof"] is False
           assert health["evidence_boundary"]["queries_production"] is False
           assert query["state"] in {"found","ambiguous"}
           print(json.dumps({
