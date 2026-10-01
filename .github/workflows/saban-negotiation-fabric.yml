@@ -9,6 +9,8 @@ on:
       - 'systemia/saban/voluntary-compute-market.proof.mjs'
       - 'systemia/saban/voluntary-market-server.mjs'
       - 'systemia/saban/voluntary-market-server.proof.mjs'
+      - 'systemia/saban/voluntary-provider-agent.mjs'
+      - 'systemia/saban/voluntary-provider-agent.proof.mjs'
       - 'systemia/saban/golem-market.proof.mjs'
       - 'systemia/saban/golem-live-pilot.mjs'
       - 'systemia/saban/markets/**'
@@ -24,6 +26,8 @@ on:
       - 'systemia/saban/voluntary-compute-market.proof.mjs'
       - 'systemia/saban/voluntary-market-server.mjs'
       - 'systemia/saban/voluntary-market-server.proof.mjs'
+      - 'systemia/saban/voluntary-provider-agent.mjs'
+      - 'systemia/saban/voluntary-provider-agent.proof.mjs'
       - 'systemia/saban/golem-market.proof.mjs'
       - 'systemia/saban/golem-live-pilot.mjs'
       - 'systemia/saban/markets/**'
@@ -54,10 +58,15 @@ jobs:
         run: node systemia/saban/voluntary-compute-market.proof.mjs
       - name: Prove remote-device counteroffers over HTTP
         run: node systemia/saban/voluntary-market-server.proof.mjs
+      - name: Prove reusable voluntary device provider agent
+        run: node systemia/saban/voluntary-provider-agent.proof.mjs
       - name: Prove Golem requestor adapter
         run: node systemia/saban/golem-market.proof.mjs
       - name: Scan live Golem decentralized supply
-        run: node systemia/saban/golem-live-pilot.mjs | tee /tmp/saban-golem-live.json
+        shell: bash
+        run: |
+          set -o pipefail
+          node systemia/saban/golem-live-pilot.mjs | tee /tmp/saban-golem-live.json
       - name: Publish live Golem summary
         run: |
           node - <<'NODE'
