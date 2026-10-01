@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { createHash, randomBytes } from 'node:crypto';
 import { evaluateDeviceSafetyEnvelope } from './device-safety-envelope.mjs';
+import { executeRegisteredMicroSeedWorkload, BuiltinMicroSeedWorkloads, microSeedWorkloadSpec } from './microseed-workload-registry.mjs';
 
 const shaHex=(value)=>createHash('sha256').update(
   value instanceof Uint8Array||Buffer.isBuffer(value)?value:Buffer.from(String(value))
@@ -48,7 +49,9 @@ export function normalizeMicroSeedExecutionRequest(input={}){
   };
   if(!body.device_id) throw new Error('microseed_execution_device_id_required');
   if(!body.workload_class) throw new Error('microseed_execution_workload_required');
-  if(payloadBytes(body.payload)>64*1024) throw new Error('microseed_execution_payload_too_large');
+  const spec=microSeedWorkloadSpec(body.workload_class);
+  const maxPayload=spec?.max_payload_bytes??64*1024;
+  if(payloadBytes(body.payload)>maxPayload) throw new Error('microseed_execution_payload_too_large');
   const identity={
     device_id:body.device_id,
     workload_class:body.workload_class,
@@ -58,47 +61,6 @@ export function normalizeMicroSeedExecutionRequest(input={}){
     requested_cpu_fraction:body.requested_cpu_fraction,
   };
   return {...body,request_hash:sha(identity)};
-}
-
-function executeBuiltin(workload,payload){
-  if(workload==='systemia.health-probe.v1'){
-    return {ok:true,state:'healthy',observed_at:new Date().toISOString()};
-  }
-  if(workload==='systemia.content-hash.v1'){
-    const bytes=Buffer.from(
-      payload?.bytes_base64
-        ? Buffer.from(String(payload.bytes_base64),'base64')
-        : JSON.stringify(stable(payload?.value??payload??null))
-    );
-    return {
-      ok:true,
-      algorithm:'sha256',
-      digest:'sha256:'+shaHex(bytes),
-      byte_count:bytes.byteLength,
-    };
-  }
-  if(workload==='systemia.telemetry-normalizer.v1'){
-    const source=payload?.telemetry&&typeof payload.telemetry==='object'?payload.telemetry:payload;
-    return {
-      ok:true,
-      normalized:stable(source??{}),
-      normalized_hash:sha(stable(source??{})),
-    };
-  }
-  if(workload==='systemia.chunk-transform.v1'){
-    const text=String(payload?.text??'');
-    const start=Math.max(0,Math.floor(Number(payload?.start||0)));
-    const end=Math.min(text.length,Math.max(start,Math.floor(Number(payload?.end??text.length))));
-    const chunk=text.slice(start,end);
-    return {
-      ok:true,
-      start,
-      end,
-      chunk,
-      chunk_hash:sha(chunk),
-    };
-  }
-  return null;
 }
 
 async function executeBridgeOperation({manifest,workload,payload,idempotencyKey,bridgeAdapters}){
@@ -171,7 +133,7 @@ export async function executeMicroSeedWorkload({
     manifest.compute_execution_mode==='native_device' &&
     executionContext==='device';
   const builtin=directDeviceExecution
-    ? executeBuiltin(req.workload_class,req.payload)
+    ? executeRegisteredMicroSeedWorkload(req.workload_class,req.payload)
     : null;
   const result=builtin??await executeBridgeOperation({
     manifest,
@@ -206,9 +168,4 @@ export async function executeMicroSeedWorkload({
   return receipt;
 }
 
-export const BuiltinMicroSeedWorkloads=Object.freeze([
-  'systemia.health-probe.v1',
-  'systemia.content-hash.v1',
-  'systemia.telemetry-normalizer.v1',
-  'systemia.chunk-transform.v1',
-]);
+export { BuiltinMicroSeedWorkloads } from './microseed-workload-registry.mjs';
