@@ -166,9 +166,12 @@ export const ATTACK_IMPLEMENTATION_MAP=Object.freeze({
     ]
   },
   "spread/depth/impact separate fields":{
-    status:"partial",
-    evidence:["systemia/daytrade-lens/edge-quote-microstructure.mjs"],
-    gap:"Spread and top-of-book size are observable; impact remains unmeasured."
+    status:"implemented",
+    evidence:[
+      "systemia/daytrade-lens/edge-quote-microstructure.mjs",
+      "systemia/daytrade-lens/edge-capital-scale-impact-envelope.mjs",
+      "systemia/daytrade-lens/edge-liquidity-state-contract.mjs"
+    ]
   },
   "low-depth high-volatility stress":{
     status:"partial",
