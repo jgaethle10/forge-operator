@@ -927,6 +927,7 @@ export async function runNodeSeedAssignmentPool({
       capacity_hint: node.capacity_hint,
       placement_labels: node.placement_labels || [],
       node_attestation_verified: node.attestation?.verified === true,
+      hardware_attestation_verified: Boolean(node.attestation?.hardware_capacity),
       device_fingerprint: node.attestation?.device_fingerprint || null,
       field_claim: node.attestation?.field_claim ?? null,
       healthy_at_end: node.healthy !== false
