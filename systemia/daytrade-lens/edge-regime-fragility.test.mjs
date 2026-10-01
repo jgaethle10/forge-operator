@@ -32,6 +32,14 @@ const robust = evaluateRegimeFragility(candidate, rows, {
 assert.equal(robust.regime_status, "REGIME_ROBUST_DIAGNOSTIC");
 assert.equal(robust.market_direction_regimes.ready_bucket_count, 3);
 assert.equal(robust.volatility_regimes.ready_bucket_count, 3);
+assert.equal(
+  robust.market_direction_regimes.leave_one_regime_out.all_positive,
+  true
+);
+assert.equal(
+  robust.volatility_regimes.leave_one_regime_out.all_positive,
+  true
+);
 assert.ok(robust.gap_day_control.excluded > 0);
 assert.ok(robust.adverse_excursion.observations > 0);
 assert.equal(robust.eligibility_mutated, false);
@@ -89,6 +97,7 @@ console.log(JSON.stringify({
   schema:"evercraft.daytrade.edge-regime-fragility-proof.v1",
   market_direction_regimes:true,
   realized_volatility_regimes:true,
+  leave_one_regime_out:true,
   extreme_gap_day_exclusion:true,
   maximum_adverse_excursion:true,
   positive_and_negative_directions_supported:true,
