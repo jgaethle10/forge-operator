@@ -8,6 +8,21 @@ import { AmbientDeviceRegistry } from '../systemia/saban/ambient-device-registry
 import { normalizeMicroDeviceManifest } from '../systemia/saban/microseed-device-bridge.mjs';
 import { startMicroSeedGateway } from '../systemia/saban/microseed-gateway.mjs';
 
+function nativeAdapters(){
+  return {
+    native_agent:{
+      async execute({workload_class,payload}){
+        return {
+          ok:true,
+          remote_native_device:true,
+          workload_class,
+          payload_value:payload?.value??null,
+        };
+      },
+    },
+  };
+}
+
 function safeTelemetry(){
   return {
     primary_function_busy:false,
@@ -67,6 +82,7 @@ test('MicroSeed gateway executes authorized native-device work over bounded loop
       registryRoot:path.join(root,'registry'),
       stateDir:path.join(root,'execution'),
       authorizationToken:token,
+      bridgeAdapters:nativeAdapters(),
     });
     try{
       const health=await fetch(gateway.url+'/health').then(r=>r.json());
@@ -100,7 +116,8 @@ test('MicroSeed gateway executes authorized native-device work over bounded loop
       assert.equal(first.status,200);
       const firstBody=await first.json();
       assert.equal(firstBody.ok,true);
-      assert.equal(firstBody.execution_location,'device');
+      assert.equal(firstBody.execution_location,'remote_native_device_via_gateway');
+      assert.equal(firstBody.result.remote_native_device,true);
       assert.equal(firstBody.deduplicated,false);
 
       const replay=await fetch(gateway.url+'/v1/execute',{
@@ -139,6 +156,7 @@ test('revoked device is rejected immediately by gateway',async()=>{
       registryRoot:path.join(root,'registry'),
       stateDir:path.join(root,'execution'),
       authorizationToken:token,
+      bridgeAdapters:nativeAdapters(),
     });
     try{
       const response=await fetch(gateway.url+'/v1/execute',{
