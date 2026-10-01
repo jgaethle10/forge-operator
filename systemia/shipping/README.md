@@ -42,6 +42,7 @@ A provider error with unclear acceptance is deliberately more conservative than 
 - `package-preflight.mjs` - artifact integrity, openability, render QA, naming, package manifest.
 - `shipping-ledger.mjs` - durable shipment reservations, idempotency, attempts, readback state.
 - `shipping-department.mjs` - envelope preparation, route/fallback policy, send-error classification, sent-copy verification.
+- `transport-runtime.mjs` - provider-agnostic dispatch runner with safe thread-to-fresh fallback, resume after interruptions, provider acceptance locks, and readback verification.
 - `delivery-receipt.mjs` - legacy receipt support plus verified v2 delivery receipts.
 - `shipping-department.test.mjs` - invariants covering clean names, package QA, human send authority, thread fallback, ambiguity quarantine, readback and duplicate suppression.
 
