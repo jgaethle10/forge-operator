@@ -100,6 +100,7 @@ function usage() {
     '  npm run media:studio -- model-plan <payload.json> <model-plan.json>',
     '  npm run media:studio -- finish-plan <payload.json> <finish-plan.json>',
     '  npm run media:studio -- production-grade <beats.json> <report.json>',
+    '  npm run media:studio -- master-qc <video.mp4> <receipt.json> [policy.json]',
     '  npm run media:studio -- timeline-export <timeline.json> <output.mp4> [receipt.json]',
     '  npm run media:studio -- studio-create <draft-plan.json> <draft-bundle.json>',
     '  npm run media:studio -- studio-resolve <resolution-payload.json> <resolved-bundle.json> [captions.srt]',
@@ -269,6 +270,25 @@ function main() {
     console.log(`Timeline export rendered: ${receipt.outputPath}`);
     console.log(`SHA-256: ${receipt.sha256}`);
     if (optionalPlan) console.log(`Timeline export receipt created: ${path.resolve(optionalPlan)}`);
+    return;
+  }
+
+  if (command === 'master-qc') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const policy = optionalPlan && fs.existsSync(path.resolve(optionalPlan))
+      ? readJson<Parameters<typeof assessStudioMaster>[0]['policy']>(optionalPlan)
+      : undefined;
+    const receipt = assessStudioMaster({
+      filePath:path.resolve(input),
+      policy,
+    });
+    writeJson(output, receipt);
+    console.log(`Studio master QC: ${receipt.status}; ${path.resolve(output)}`);
+    if (receipt.status !== 'accepted') process.exitCode = 2;
     return;
   }
 
