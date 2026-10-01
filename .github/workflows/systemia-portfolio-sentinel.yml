@@ -151,7 +151,7 @@ jobs:
         run: |
           node systemia/llm-product/build-registry.mjs --emit --check
           node systemia/llm-product/conversion-router.mjs --emit
-          node --test systemia/llm-product/build-registry.test.mjs systemia/llm-product/conversion-router.test.mjs systemia/daytrade-lens/mcp.test.mjs
+          node --test systemia/llm-product/build-registry.test.mjs systemia/llm-product/conversion-router.test.mjs systemia/daytrade-lens/mcp.test.mjs systemia/media-studio/mcp.test.mjs
 
       - name: Prove capability-promotion policy
         if: always()
