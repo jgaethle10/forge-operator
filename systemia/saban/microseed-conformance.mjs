@@ -7,19 +7,19 @@ const sha=(value)=>'sha256:'+createHash('sha256').update(
 const CANARIES={
   'systemia.health-probe.v1':{
     payload:{},
-    validate:(receipt)=>receipt?.result?.ok===true,
+    validate:(result)=>result?.ok===true,
   },
   'systemia.content-hash.v1':{
     payload:{value:{saban:'microseed-canary',version:1}},
-    validate:(receipt)=>/^sha256:[a-f0-9]{64}$/i.test(String(receipt?.result?.digest||'')),
+    validate:(result)=>/^sha256:[a-f0-9]{64}$/i.test(String(result?.digest||'')),
   },
   'systemia.telemetry-normalizer.v1':{
     payload:{telemetry:{alpha:1,beta:'two'}},
-    validate:(receipt)=>receipt?.result?.ok===true&&Boolean(receipt?.result?.normalized_hash),
+    validate:(result)=>result?.ok===true&&Boolean(result?.normalized_hash),
   },
   'systemia.chunk-transform.v1':{
     payload:{text:'evercraft-saban-canary',start:0,end:9},
-    validate:(receipt)=>receipt?.result?.chunk==='evercraft',
+    validate:(result)=>result?.chunk==='evercraft',
   },
 };
 
@@ -60,7 +60,8 @@ export async function runMicroSeedConformance({
         receipt?.device_id===manifest.device_id &&
         receipt?.workload_class===workload &&
         receipt?.arbitrary_code_execution===false;
-      const valid=receiptEnvelopeValid&&canary.validate(receipt);
+      const actualResult=receipt?.result?.remote_result??receipt?.result;
+      const valid=receiptEnvelopeValid&&canary.validate(actualResult);
       receipts.push({
         workload_class:workload,
         receipt_hash:receipt?.receipt_hash||null,
