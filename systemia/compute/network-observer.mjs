@@ -334,7 +334,7 @@ async function observeLocalOrganism() {
   };
 }
 
-function chromeOsBoundary(interfaces) {
+function chromeOsBoundary(interfaces, { hostBoundaryStateRoot } = {}) {
   const crostiniRange = interfaces.some((row) =>
     row.family === 'IPv4' &&
     /^100\.115\.92\./.test(String(row.address || ''))
@@ -347,7 +347,9 @@ function chromeOsBoundary(interfaces) {
   if (fs.existsSync('/mnt/chromeos')) hints.push('chromeos_mount_present');
   if (os.hostname() === 'penguin') hints.push('default_crostini_hostname');
 
-  const companion = readChromeOsHostBoundaryStatus();
+  const companion = readChromeOsHostBoundaryStatus(
+    hostBoundaryStateRoot ? { stateRoot: hostBoundaryStateRoot } : undefined,
+  );
   return {
     likely_crostini: hints.length > 0,
     hints,
@@ -472,7 +474,7 @@ export function diagnoseNodeIngress({
   };
 }
 
-export async function observeNodeNetwork() {
+export async function observeNodeNetwork({ hostBoundaryStateRoot } = {}) {
   const interfaces = interfacesFromOs();
   const routes = parseDefaultRoutes();
   const listeners = parseListeners();
@@ -513,7 +515,7 @@ export async function observeNodeNetwork() {
       };
 
   const localOrganism = await observeLocalOrganism();
-  const chromeBoundary = chromeOsBoundary(interfaces);
+  const chromeBoundary = chromeOsBoundary(interfaces, { hostBoundaryStateRoot });
   const routerMapReceipt = readJsonSafe('/var/lib/evercraft/router-map/latest.json');
   const services = {
     fabric: unitState('evercraft-fabric.service'),
