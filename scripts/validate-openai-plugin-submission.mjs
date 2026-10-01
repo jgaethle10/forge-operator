@@ -87,7 +87,16 @@ if(submission?.mcp?.authority==='owned_public_fabric'){
   if(mcpUrl.pathname!=='/mcp/openai') errors.push('OpenAI submission MCP must use the purpose-specific /mcp/openai path');
   if(submission.mcp.url_type!=='Purpose-specific reviewed endpoint') errors.push('OpenAI submission MCP must be purpose-specific');
   if(submission.mcp.owned_fabric_cutover_required!==false) errors.push('owned public Fabric must close the cutover gate');
-  if(submission.mcp.origin_change_requires_new_plugin_submission!==true) errors.push('owned Fabric origin change must require a new OpenAI plugin submission');
+  if(submission.mcp.endpoint_path_change_only===true){
+    if(submission.mcp.origin_change_requires_new_plugin_submission!==false){
+      errors.push('same-origin endpoint-path update must not be labeled as an origin change');
+    }
+    if(mcpUrl.pathname!=='/mcp/openai'){
+      errors.push('v1.1 endpoint-path update must target /mcp/openai');
+    }
+  }else if(submission.mcp.origin_change_requires_new_plugin_submission!==true){
+    errors.push('true MCP origin changes must require a new OpenAI plugin submission');
+  }
 }
 requireHttps('website', submission.website);
 requireHttps('support_url', submission.support_url);
