@@ -138,6 +138,113 @@ export async function fetchAlpacaQuotes(symbol,{
   throw new Error(`edge_quote_alpaca_${symbol}_pagination_limit`);
 }
 
+export function normalizeAlpacaTrade(row){
+  const timestamp=clean(row?.t||row?.timestamp);
+  const price=finite(row?.p??row?.price);
+  const size=finite(row?.s??row?.size);
+  if(!timestamp||!Number.isFinite(new Date(timestamp).getTime())) return null;
+  if(!(price>0)) return null;
+  return {
+    t:new Date(timestamp).toISOString(),
+    price,
+    size,
+    exchange:clean(row?.x??row?.exchange)||null,
+    conditions:Array.isArray(row?.c)?[...row.c]:[],
+    tape:clean(row?.z??row?.tape)||null,
+  };
+}
+
+export async function fetchAlpacaTrades(symbol,{
+  start,
+  end,
+  key,
+  secret,
+  feed="iex",
+  fetchImpl=fetch,
+  max_pages=100,
+}={}){
+  if(!key||!secret) throw new Error("edge_trade_alpaca_credentials_missing");
+  const normalizedFeed=clean(feed).toLowerCase();
+  if(!["iex","sip"].includes(normalizedFeed)){
+    throw new Error("edge_trade_feed_must_be_iex_or_sip");
+  }
+  const all=[];
+  let pageToken=null;
+  const seen=new Set();
+  for(let page=0;page<max_pages;page++){
+    const url=new URL(
+      `https://data.alpaca.markets/v2/stocks/${encodeURIComponent(symbol)}/trades`
+    );
+    url.searchParams.set("start",start);
+    url.searchParams.set("end",end);
+    url.searchParams.set("feed",normalizedFeed);
+    url.searchParams.set("sort","asc");
+    url.searchParams.set("limit","10000");
+    if(pageToken) url.searchParams.set("page_token",pageToken);
+    const response=await fetchImpl(url,{
+      headers:{
+        "APCA-API-KEY-ID":key,
+        "APCA-API-SECRET-KEY":secret,
+        accept:"application/json",
+      }
+    });
+    if(!response.ok){
+      const error=new Error(`edge_trade_alpaca_${symbol}_${normalizedFeed}_http_${response.status}`);
+      error.status=response.status;
+      throw error;
+    }
+    const payload=await response.json();
+    if(Array.isArray(payload?.trades)) all.push(...payload.trades);
+    const next=clean(payload?.next_page_token);
+    if(!next) return all;
+    if(seen.has(next)) throw new Error(`edge_trade_alpaca_${symbol}_pagination_loop`);
+    seen.add(next);
+    pageToken=next;
+  }
+  throw new Error(`edge_trade_alpaca_${symbol}_pagination_limit`);
+}
+
+function passiveTouchEvidence(trades,quote,direction,{
+  touch_window_ms=300000,
+}={}){
+  if(!quote) return null;
+  const sign=expectedSign(direction);
+  const quoteTime=new Date(quote.t).getTime();
+  const passiveLimit=sign>0?finite(quote.bid_price):finite(quote.ask_price);
+  if(!Number.isFinite(quoteTime)||!(passiveLimit>0)) return null;
+
+  const normalized=(trades||[])
+    .map(normalizeAlpacaTrade)
+    .filter(Boolean)
+    .filter((trade)=>{
+      const time=new Date(trade.t).getTime();
+      return time>=quoteTime && time<=quoteTime+Number(touch_window_ms);
+    })
+    .sort((a,b)=>new Date(a.t)-new Date(b.t));
+
+  const firstTouch=normalized.find((trade)=>
+    sign>0
+      ?trade.price<=passiveLimit
+      :trade.price>=passiveLimit
+  )||null;
+
+  return {
+    passive_limit_price:passiveLimit,
+    touch_window_ms:Number(touch_window_ms),
+    observed_trade_count_in_window:normalized.length,
+    passive_price_touch_observed:Boolean(firstTouch),
+    first_touch_trade_time:firstTouch?.t||null,
+    first_touch_trade_price:firstTouch?.price??null,
+    touch_delay_ms:firstTouch
+      ?new Date(firstTouch.t).getTime()-quoteTime
+      :null,
+    queue_position_observed:false,
+    hypothetical_fill_claimed:false,
+    interpretation:
+      "A trade at or through the passive limit is necessary-but-not-sufficient evidence that a hypothetical order could have filled; queue priority and order-specific execution are unobserved.",
+  };
+}
+
 function targetRowsForMeasurement(row,learnedDirection=null){
   const targets=[];
   if(row?.instrument_start_time){
@@ -249,6 +356,23 @@ function summarizeSignal(rows){
     mean_entry_slippage_vs_bar_bps:mean(entrySlippage),
     mean_strategy_net_degradation_from_quote_entry:mean(degradation),
     mean_quote_entry_strategy_net_partial:mean(quoteNet),
+    passive_touch_evaluable_count:modeledEntry.filter(
+      (row)=>row.passive_touch_evidence_available===true
+    ).length,
+    passive_touch_rate:(()=>{
+      const evaluable=modeledEntry.filter(
+        (row)=>row.passive_touch_evidence_available===true
+      );
+      return evaluable.length
+        ?evaluable.filter((row)=>row.passive_price_touch_observed===true).length/evaluable.length
+        :null;
+    })(),
+    median_passive_touch_delay_ms:percentile(
+      modeledEntry
+        .map((row)=>finite(row.passive_touch_delay_ms))
+        .filter(Number.isFinite),
+      0.50
+    ),
   };
 }
 
@@ -261,13 +385,16 @@ export async function runQuoteMicrostructureLab(report,{
   max_quote_delay_ms=30000,
   group_padding_seconds=30,
   transaction_cost_bps=5,
+  passive_touch_window_ms=300000,
 }={}){
   const targets=buildQuoteMicrostructureTargets(report,{signal_keys});
   const groups=groupTargets(targets,group_padding_seconds);
   const quoteCache=new Map();
+  const tradeCache=new Map();
   const errors=[];
 
   for(const group of groups){
+    const cacheKey=group.symbol+"|"+group.date;
     try{
       const quotes=await fetchAlpacaQuotes(group.symbol,{
         start:group.start,
@@ -277,23 +404,57 @@ export async function runQuoteMicrostructureLab(report,{
         feed,
         fetchImpl,
       });
-      quoteCache.set(group.symbol+"|"+group.date,quotes);
+      quoteCache.set(cacheKey,quotes);
     }catch(error){
       errors.push({
+        kind:"quotes",
         symbol:group.symbol,
         date:group.date,
         start:group.start,
         end:group.end,
         error:error instanceof Error?error.message:String(error),
       });
-      quoteCache.set(group.symbol+"|"+group.date,[]);
+      quoteCache.set(cacheKey,[]);
+    }
+
+    try{
+      const trades=await fetchAlpacaTrades(group.symbol,{
+        start:group.start,
+        end:group.end,
+        key,
+        secret,
+        feed,
+        fetchImpl,
+      });
+      tradeCache.set(cacheKey,{available:true,trades});
+    }catch(error){
+      errors.push({
+        kind:"trades",
+        symbol:group.symbol,
+        date:group.date,
+        start:group.start,
+        end:group.end,
+        error:error instanceof Error?error.message:String(error),
+      });
+      tradeCache.set(cacheKey,{available:false,trades:[]});
     }
   }
 
   const overlays=targets.map((target)=>{
     const date=isoDate(target.timestamp);
-    const quotes=quoteCache.get(target.instrument+"|"+date)||[];
+    const cacheKey=target.instrument+"|"+date;
+    const quotes=quoteCache.get(cacheKey)||[];
+    const tradeState=tradeCache.get(cacheKey)||{available:false,trades:[]};
     const quote=quoteAtOrAfter(quotes,target.timestamp,{max_delay_ms:max_quote_delay_ms});
+    const passiveEvidence=
+      target.label==="modeled_entry" && quote && tradeState.available
+        ?passiveTouchEvidence(
+            tradeState.trades,
+            quote,
+            target.learned_direction,
+            {touch_window_ms:passive_touch_window_ms}
+          )
+        :null;
     const sign=expectedSign(target.learned_direction);
     const barStart=finite(target.instrument_start_price);
     const barEnd=finite(target.instrument_end_price);
@@ -353,6 +514,25 @@ export async function runQuoteMicrostructureLab(report,{
       entry_execution_adjusted:canPriceEntry,
       exit_execution_quote_adjusted:false,
       benchmark_entry_quote_adjusted:false,
+      passive_touch_evidence_available:
+        target.label==="modeled_entry" &&
+        Boolean(quote) &&
+        tradeState.available===true,
+      passive_limit_price:passiveEvidence?.passive_limit_price??null,
+      passive_price_touch_observed:
+        passiveEvidence?.passive_price_touch_observed??null,
+      passive_touch_delay_ms:passiveEvidence?.touch_delay_ms??null,
+      passive_touch_trade_price:
+        passiveEvidence?.first_touch_trade_price??null,
+      passive_touch_trade_time:
+        passiveEvidence?.first_touch_trade_time??null,
+      passive_observed_trade_count_in_window:
+        passiveEvidence?.observed_trade_count_in_window??null,
+      passive_queue_position_observed:false,
+      passive_hypothetical_fill_claimed:false,
+      passive_touch_interpretation:
+        passiveEvidence?.interpretation||
+        "Passive fill cannot be inferred without quote and historical trade evidence; queue position remains unobserved.",
       research_only:true,
       live_trade_authority:false,
     };
@@ -399,6 +579,8 @@ export async function runQuoteMicrostructureLab(report,{
       quote_entry_strategy_net_partial:"Entry-side quote-adjusted strategy return using the existing bar exit and benchmark return; not full implementation shortfall.",
       exit_execution_quote_adjusted:false,
       benchmark_entry_quote_adjusted:false,
+      passive_touch_evidence:"Trade-at-or-through evidence only. It is not a fill claim because queue position and order-specific execution are unobserved.",
+      passive_touch_window_ms:Number(passive_touch_window_ms),
       missing_is_never_zero:true,
       sip_is_nbbo_only_when_feed_is_sip:true,
       iex_is_not_labeled_nbbo:true,
