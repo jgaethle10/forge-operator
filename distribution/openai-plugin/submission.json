@@ -31,7 +31,7 @@
   "remaining_platform_prerequisites": [
     "Restore fabric.systemiacommandcenters.com public TCP/HTTPS ingress and capture a fresh passing external canary",
     "Re-run the current OpenAI MCP Scan Tools check against the restored production endpoint",
-    "Refresh the reviewer walkthrough to demonstrate preview_public_website plus the existing routing tools",
+    "Refresh the reviewer walkthrough to demonstrate inspect_public_website on the purpose-specific OpenAI endpoint",
     "Upload the canonical Evercraft v1.1.0 ZIP in OpenAI Platform Plugins",
     "Select the verified Evercraft LLC developer identity in the owning organization/project",
     "Confirm Apps Management Write access if the submitter is not an organization owner",
