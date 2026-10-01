@@ -10,6 +10,7 @@ import {
   readChromeOsHostBoundaryStatus,
   requestChromeOsHostBoundaryCheck,
 } from './chromeos-host-boundary-bridge.mjs';
+import { hostBoundaryCapabilityStatus } from './host-boundary-registry.mjs';
 
 const execFileAsync = promisify(execFile);
 const sha = (value) => {
@@ -230,6 +231,7 @@ export class EvercraftRemoteOperator {
       chromeos_host_boundary: {
         read: true,
         check_now: true,
+        capabilities: true,
         mutation: false,
         source: 'paired_chromeos_extension',
         raw_accessibility_tree_persisted: false,
@@ -252,6 +254,24 @@ export class EvercraftRemoteOperator {
     });
     return {
       ...observation,
+      operator_receipt: receipt,
+    };
+  }
+
+  hostBoundaryCapabilities() {
+    const status = hostBoundaryCapabilityStatus();
+    const receipt = this.#receipt('host-boundary.capabilities', {
+      registry_version: status.registry_version,
+      capability_count: status.capability_count,
+      mutation_capability_count: status.capabilities.filter(
+        (capability) => capability.mutation_authority === true,
+      ).length,
+      arbitrary_desktop_control_present: status.capabilities.some(
+        (capability) => capability.arbitrary_desktop_control === true,
+      ),
+    });
+    return {
+      ...status,
       operator_receipt: receipt,
     };
   }
