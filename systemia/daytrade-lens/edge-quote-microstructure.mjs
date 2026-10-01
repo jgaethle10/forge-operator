@@ -241,16 +241,37 @@ function passiveTouchEvidence(trades,quote,direction,{
     })
     .sort((a,b)=>new Date(a.t)-new Date(b.t));
 
-  const firstTouch=normalized.find((trade)=>
+  const touchedTrades=normalized.filter((trade)=>
     sign>0
       ?trade.price<=passiveLimit
       :trade.price>=passiveLimit
-  )||null;
+  );
+  const firstTouch=touchedTrades[0]||null;
+  const cumulativeTouchByWindow={};
+  for(const horizonMs of [30000,60000,300000]){
+    const key=Math.round(horizonMs/1000)+"s";
+    const eligible=touchedTrades.filter((trade)=>
+      new Date(trade.t).getTime()<=quoteTime+horizonMs
+    );
+    cumulativeTouchByWindow[key]={
+      observed_trade_count:eligible.length,
+      observed_trade_size_shares:eligible.reduce(
+        (sum,trade)=>sum+(Number.isFinite(finite(trade.size))?finite(trade.size):0),
+        0
+      ),
+    };
+  }
 
   return {
     passive_limit_price:passiveLimit,
     touch_window_ms:Number(touch_window_ms),
     observed_trade_count_in_window:normalized.length,
+    observed_touch_trade_count_in_window:touchedTrades.length,
+    observed_touch_trade_size_shares_in_window:touchedTrades.reduce(
+      (sum,trade)=>sum+(Number.isFinite(finite(trade.size))?finite(trade.size):0),
+      0
+    ),
+    observed_touch_trade_size_by_window:cumulativeTouchByWindow,
     passive_price_touch_observed:Boolean(firstTouch),
     first_touch_trade_time:firstTouch?.t||null,
     first_touch_trade_price:firstTouch?.price??null,
@@ -898,6 +919,12 @@ export async function runQuoteMicrostructureLab(report,{
         passiveEvidence?.first_touch_trade_time??null,
       passive_observed_trade_count_in_window:
         passiveEvidence?.observed_trade_count_in_window??null,
+      passive_observed_touch_trade_count_in_window:
+        passiveEvidence?.observed_touch_trade_count_in_window??null,
+      passive_observed_touch_trade_size_shares_in_window:
+        passiveEvidence?.observed_touch_trade_size_shares_in_window??null,
+      passive_observed_touch_trade_size_by_window:
+        passiveEvidence?.observed_touch_trade_size_by_window||{},
       passive_queue_position_observed:false,
       passive_hypothetical_fill_claimed:false,
       passive_outcome_state:passiveOutcomeState,
@@ -1061,6 +1088,7 @@ export async function runQuoteMicrostructureLab(report,{
       exit_execution_quote_adjusted:true,
       benchmark_entry_quote_adjusted:false,
       passive_touch_evidence:"Trade-at-or-through evidence only. It is not a fill claim because queue position and order-specific execution are unobserved.",
+      passive_touch_trade_size:"Cumulative provider-reported US-equity trade size at or through the passive limit over fixed windows. It is a public-tape capacity upper bound, not evidence that the hypothetical order received those shares.",
       execution_outcome_states:"Explicit observed/unknown states are emitted for passive and marketable execution. No state is converted into a fill probability.",
       aggressive_vs_passive_bounds:"Immediate marketable touch is compared with posted passive price improvement, public-tape touch/no-touch evidence, time-to-touch and post-touch midpoint markouts. Passive fills remain unobserved and no expected fill value is claimed.",
       passive_touch_window_ms:Number(passive_touch_window_ms),
