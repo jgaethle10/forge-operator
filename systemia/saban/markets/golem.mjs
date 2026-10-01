@@ -142,6 +142,7 @@ export function createGolemMarketAdapter({
   appKey=process.env.YAGNA_APPKEY||'',
   sdkLoader=()=>import('@golem-sdk/golem-js'),
   networkFactory=null,
+  fetchImpl=fetch,
   timeoutMs=20_000,
 }={}){
   return {
@@ -152,7 +153,7 @@ export function createGolemMarketAdapter({
       const timer=setTimeout(()=>controller.abort(),timeoutMs);
       let response;
       try{
-        response=await fetch(statsUrl,{
+        response=await fetchImpl(statsUrl,{
           signal:controller.signal,
           headers:{
             accept:'application/json',
