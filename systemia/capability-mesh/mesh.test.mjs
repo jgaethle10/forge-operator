@@ -376,3 +376,29 @@ test('FindMyPart direct door is no longer contract debt after free-triage adopti
   assert.equal(part.direct_door.direct_callable, true);
   assert.equal(mesh.priority_queues.direct_door_without_contract.includes('findmypart'), false);
 });
+
+
+test('every shared-runtime contract binds exact machine tool evidence', () => {
+  const contracts = JSON.parse(
+    fs.readFileSync(
+      path.join(process.cwd(), 'systemia', 'capability-mesh', 'contracts.json'),
+      'utf8'
+    )
+  );
+
+  for (const contract of contracts.contracts.filter(
+    (row) => row.adoption_stage === 'shared_runtime'
+  )) {
+    assert.ok(Array.isArray(contract.execution.actions));
+    assert.ok(contract.execution.actions.length > 0);
+    for (const action of contract.execution.actions) {
+      assert.ok(String(action.scope || '').trim());
+      assert.ok(String(action.machine_tool || '').trim());
+      assert.ok(Array.isArray(action.machine_tool_evidence_refs));
+      assert.ok(action.machine_tool_evidence_refs.length > 0);
+    }
+  }
+
+  const mesh = renderCapabilityMesh(process.cwd());
+  assert.equal(mesh.summary.incomplete_contract_declaration_count, 0);
+});
