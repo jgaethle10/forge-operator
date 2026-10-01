@@ -72,6 +72,7 @@ export function ambientCapabilityToComputeOffer(capability={}){
     metadata:{
       source:'ambient-capability',
       source_type:String(capability.source_type||'unknown'),
+      device_id:meta.device_id?String(meta.device_id):null,
       device_class:String(meta.device_class||'unknown'),
       device_model:meta.device_model?String(meta.device_model):null,
       owner_ref_hash:capability.owner_ref?sha(String(capability.owner_ref)):null,
