@@ -80,6 +80,17 @@ export function verifyClipMediaManifest(manifest){
   }
   if(!manifest?.provenance?.renderReceiptPath) errors.push('render_receipt_path_missing');
   if(!manifest?.provenance?.masterQcReceiptPath) errors.push('master_qc_receipt_path_missing');
+  if(manifest?.contentClass==='social_spectacle'){
+    if(manifest?.editorialGate?.status!=='accepted'||Number(manifest?.editorialGate?.score)!==10||Number(manifest?.editorialGate?.maximum_score)!==10){
+      errors.push('social_spectacle_editorial_gate_invalid');
+    }
+    if(manifest?.editorialGate?.publication_authority!==false){
+      errors.push('social_spectacle_editorial_authority_invalid');
+    }
+    if(manifest?.productionGrade?.status!=='accepted'||manifest?.productionGrade?.text_primary!==false||manifest?.productionGrade?.source_grounded!==true){
+      errors.push('social_spectacle_production_grade_invalid');
+    }
+  }
 
   return {
     schema:'evercraft.clip.media-intake-validation.v1',
