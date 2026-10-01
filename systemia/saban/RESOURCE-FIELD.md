@@ -69,6 +69,36 @@ Unknown or unauthorized hardware is rejected even if it is technically reachable
 
 External paid capacity may be discovered and prepared by Saban, but consequential new spend remains human-gated unless a bounded budget has already been explicitly authorized.
 
+
+## Hardware truth
+
+Hardware-aware placement is evidence-backed, not advisory.
+
+Evercraft Compute inventories CPU, RAM, available disk, GPU count, GPU models, and VRAM. NodeSeed includes a normalized hardware claim inside its signed device attestation. When a workload declares a hardware requirement, Saban requires that signed claim and compares it with the node's advertised capacity before leasing the node.
+
+An unsigned capacity hint may still be useful for discovery, but it cannot satisfy a hardware-sensitive placement decision.
+
+## Execution lanes
+
+The Resource Field preserves multiple execution shapes behind one acquisition decision.
+
+1. Already-running NodeSeed capacity.
+2. An explicitly owned local host bootstrapped into Evercraft Compute on demand.
+3. Authorized Evercraft broker capacity.
+4. Negotiated voluntary compute.
+5. Other enabled decentralized adapters.
+6. Approved external provider capacity.
+
+The canonical market stack keeps Evercraft broker capacity ahead of voluntary and external markets. Visibility is not authorization, and paid execution does not become authorized merely because a provider is discoverable.
+
+Negotiated adapters that expose an execution boundary remain negotiated adapters. The Resource Field does not force every provider to masquerade as a NodeSeed endpoint.
+
+## Formation defaults
+
+Distributed Formation searches for NodeSeed capacity by default and enables resilient acquisition unless the caller explicitly disables it. Public paid-market discovery is not enabled by default, and no paid lease authority is invented by the runtime.
+
+An explicitly owned host can opt into local bootstrap with `EVERCRAFT_OWNED_HOST` or a matching bounded acquisition setting. Installing Evercraft software on a partner or voluntary machine does not silently make that machine Evercraft-owned.
+
 ## Relationship to existing Evercraft systems
 
 The Resource Field sits above existing primitives rather than replacing them:
