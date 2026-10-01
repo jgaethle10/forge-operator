@@ -113,12 +113,12 @@ export const ATTACK_IMPLEMENTATION_MAP=Object.freeze({
     ]
   },
   "volatility-conditioned delay stress":{
-    status:"partial",
+    status:"implemented",
     evidence:[
       "systemia/daytrade-lens/edge-regime-fragility.mjs",
-      "systemia/daytrade-lens/edge-timing-fragility.mjs"
-    ],
-    gap:"Both dimensions exist, but their interaction is not yet crossed."
+      "systemia/daytrade-lens/edge-timing-fragility.mjs",
+      "systemia/daytrade-lens/edge-volatility-delay-interaction.mjs"
+    ]
   },
   "first-tradable-price realism check":{
     status:"implemented",
