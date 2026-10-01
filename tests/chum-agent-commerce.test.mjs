@@ -11,6 +11,13 @@ const wellKnown = JSON.parse(fs.readFileSync('public/.well-known/evercraft-agent
 
 assert.equal(commerce.schema, 'evercraft.agent-commerce.v1');
 assert.equal(wellKnown.schema, commerce.schema);
+assert.equal(commerce.payments.authority, 'Evercraft Payments');
+assert.equal(commerce.payments.contract, '/.well-known/evercraft-payments.json');
+assert.equal(commerce.payments.processor_role, 'replaceable_settlement_adapter');
+for (const offer of commerce.offers) {
+  assert.equal(offer.authority.economic_authority, 'Evercraft Payments');
+  assert.equal(offer.authority.economic_authority_contract, '/.well-known/evercraft-payments.json');
+}
 assert.equal(commerce.offers.length, sellNow.offers.length, 'every sell-now offer must have an agent close packet');
 assert.match(commerce.instruction, /explicit yes/i);
 assert.match(commerce.first_dollar_lane.rule, /Price never overrides fit/i);
