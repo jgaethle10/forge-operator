@@ -87,7 +87,7 @@ fetch("/api/towi/latest")
 }
 
 export function registerTowiRoutes(app, {
-  radarResident,
+  radarResident = null,
   isProd = process.env.NODE_ENV === 'production',
   stateDir = process.env.TOWI_STATE_DIR || path.resolve('.runtime', 'towi'),
   intervalMs = Number(process.env.TOWI_INTERVAL_MS || 5 * 60 * 1000),
