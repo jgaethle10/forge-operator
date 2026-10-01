@@ -26,6 +26,7 @@ import { runEventContaminationLab } from "./edge-event-contamination.mjs";
 import { runHorizonCoherenceLab } from "./edge-horizon-coherence.mjs";
 import { runWalkForwardLab } from "./edge-walk-forward.mjs";
 import { runExecutionTranslationLab } from "./edge-execution-translation.mjs";
+import { buildClusterAdversarialSummary } from "./edge-cluster-adversarial-summary.mjs";
 import { evaluatePilotReadiness } from "./edge-pilot-readiness.mjs";
 
 async function main() {
@@ -317,6 +318,34 @@ async function main() {
     }, null, 2) + "\n"
   );
 
+  const clusterAdversarialSummary = buildClusterAdversarialSummary({
+    report,
+    adversarial,
+    stressLab,
+    breakerLab,
+    timingLab,
+    overlapLab,
+    placeboLab,
+    randomPlaceboLab,
+    labelPermutationLab,
+    regimeFragilityLab,
+    eventContaminationLab,
+    benchmarkLab,
+    horizonCoherenceLab,
+    walkForwardLab,
+    executionTranslationLab,
+    currentRunForwardClusterScores,
+    durableForwardClusterScores: durableClusterScores,
+  });
+  const clusterAdversarialSummaryFile = path.join(
+    artifactDir,
+    "sec-edge-cluster-adversarial-summary.json"
+  );
+  fs.writeFileSync(
+    clusterAdversarialSummaryFile,
+    JSON.stringify(clusterAdversarialSummary, null, 2) + "\n"
+  );
+
   const pilotReadiness = evaluatePilotReadiness({
     report,
     adversarial,
@@ -359,6 +388,8 @@ async function main() {
     signal_families: report.family_count || 0,
     research_candidates: report.research_candidate_count || 0,
     candidate_clusters: adversarial.candidate_cluster_count || 0,
+    cluster_adversarial_summary_count:
+      clusterAdversarialSummary.cluster_count || 0,
     current_historical_forward_paper_eligible:
       adversarial.forward_paper_eligible_count || 0,
     canonical_frozen_forward_paper_cohorts: frozenCohorts.length,
@@ -426,6 +457,7 @@ async function main() {
       forward_paper_current_run_scores: currentRunForwardScoreFile,
       durable_forward_paper_scores: durableScoreFile,
       pilot_readiness: pilotReadinessFile,
+      cluster_adversarial_summary: clusterAdversarialSummaryFile,
       state_batch: persistence.batch_file,
     },
   };
