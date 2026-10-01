@@ -11,7 +11,11 @@ const catalog=[
     name:'Native Product',
     description:'A native Evercraft capability.',
     keywords:['native'],
-    state:'available',
+    state:'payment_ready',
+    commercial_state:'sell_now',
+    pricing:'Quick start $49 one-time.',
+    use_when:['I need a native capability right now','route this problem to Native Product'],
+    entry_paid_offer:{name:'Quick start',price:'$49',billing:'one_time',price_usd_normalized:49},
     connections:[
       {type:'mcp',label:'legacy universal',url:'https://legacy.base44.app/functions/mcp'},
       {type:'mcp',label:'owned direct',url:'https://fabric.evercraft.example/mcp/native'},
@@ -115,8 +119,29 @@ test('Fabric public customer front door is branded, browsable, and policy-safe',
     assert.equal(directoryResponse.status,200);
     const directory=await directoryResponse.text();
     assert.match(directory,/Native Product/);
-    assert.match(directory,/available/);
+    assert.match(directory,/sell_now/);
+    assert.match(directory,/Quick start \$49 one-time/);
+    assert.match(directory,/\/capabilities\/native-product-v1/);
     assert.equal(directory.includes('base44.app'),false);
+
+    const detailResponse=await fetch(runtime.url+'/capabilities/native-product-v1');
+    assert.equal(detailResponse.status,200);
+    const detail=await detailResponse.text();
+    assert.match(detail,/Native Product/);
+    assert.match(detail,/Quick start \$49 one-time/);
+    assert.match(detail,/I need a native capability right now/);
+    assert.equal(detail.includes('base44.app'),false);
+
+    const capabilityJson=await fetch(runtime.url+'/capabilities/native-product-v1.json').then((r)=>r.json());
+    assert.equal(capabilityJson.ok,true);
+    assert.equal(capabilityJson.capability.public_id,'native-product-v1');
+    assert.equal(capabilityJson.capability.commercial_state,'sell_now');
+    assert.equal(capabilityJson.capability.entry_paid_offer.price,'$49');
+    assert.equal(capabilityJson.transactional,false);
+
+    const directoryJson=await fetch(runtime.url+'/capabilities.json').then((r)=>r.json());
+    assert.equal(directoryJson.returned,1);
+    assert.equal(directoryJson.capabilities[0].pricing,'Quick start $49 one-time.');
 
     const iconResponse=await fetch(runtime.url+'/assets/evercraft-icon.png');
     assert.equal(iconResponse.status,200);
