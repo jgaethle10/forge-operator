@@ -128,20 +128,29 @@ export function worldIntelInputFromCandidate(candidate,{aspectRatio='9:16'}={}){
     .slice(0,24)
     .map((row,index)=>{
       const magnitude=Number(row.magnitude);
-      const intensity=Number.isFinite(magnitude)?Math.max(0,Math.min(1,(magnitude-4)/4)):0.45;
+      const rawIntensity=Number(
+        row.intensity ??
+        (Number.isFinite(Number(row.aurora_probability_pct)) ? Number(row.aurora_probability_pct) / 100 : NaN) ??
+        row.value
+      );
+      const intensity=Number.isFinite(magnitude)
+        ? Math.max(0,Math.min(1,(magnitude-4)/4))
+        : Number.isFinite(rawIntensity)
+          ? Math.max(0,Math.min(1,rawIntensity>1?rawIntensity/100:rawIntensity))
+          : 0.45;
+      const semanticLabel=Number.isFinite(magnitude)
+        ? 'M'+magnitude.toFixed(1)+' '+clean(row.place,80)
+        : clean(row.place||row.label||(intensity>=.55?Math.round(intensity*100)+'%':''),80);
       return {
-        id:clean(row.event_id||row.id||'point-'+String(index+1),120),
+        id:clean(row.event_id||row.point_id||row.id||'point-'+String(index+1),120),
         lat:Number(row.lat),
         lon:Number(row.lon),
-        label:clean(
-          Number.isFinite(magnitude)
-            ? 'M'+magnitude.toFixed(1)+' '+clean(row.place,80)
-            : row.place||row.label||'',
-          100
-        ),
-        radius:Number.isFinite(magnitude)?Math.max(5,Math.min(16,4+(magnitude-4)*4)):6,
+        label:clean(semanticLabel,100),
+        radius:Number.isFinite(magnitude)
+          ? Math.max(5,Math.min(16,4+(magnitude-4)*4))
+          : 4+12*intensity,
         intensity,
-        pulse:Number.isFinite(magnitude)&&magnitude>=5,
+        pulse:Number.isFinite(magnitude)?magnitude>=5:intensity>=.45,
         evidenceState:state,
         sourceRefs:refs,
       };
