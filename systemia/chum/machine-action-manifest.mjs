@@ -128,6 +128,8 @@ export function auditCapabilityContractsAgainstActionManifest({
     for (const action of contract.execution?.actions || []) {
       const scope = clean(action.scope);
       const machineTool = clean(action.machine_tool);
+      const machineTargetProductKey =
+        clean(action.machine_target_product_key) || contract.product_key;
       let state = 'verified';
       let reason = null;
       let observed = false;
@@ -137,7 +139,7 @@ export function auditCapabilityContractsAgainstActionManifest({
         reason = 'machine_tool_missing';
       } else {
         const lookup = findObservedTool(manifest, {
-          product_key: contract.product_key,
+          product_key: machineTargetProductKey,
           tool_name: machineTool,
         });
         observed = lookup.observed;
@@ -152,6 +154,7 @@ export function auditCapabilityContractsAgainstActionManifest({
         adoption_stage: contract.adoption_stage,
         scope,
         machine_tool: machineTool || null,
+        machine_target_product_key: machineTargetProductKey,
         state,
         observed_in_live_tools_list: observed,
         tool_call_verified: false,
