@@ -67,14 +67,6 @@ test('Fabric local runtime is read-only, tunnel-compatible, and makes no Base44 
     const initEvent=await initResponse.text();
     assert.match(initEvent,/^event: message\ndata: /);
     const init=JSON.parse(initEvent.split('data: ')[1].trim());
-
-      method:'POST',
-      headers:{'content-type':'application/json'},
-      body:JSON.stringify({
-        jsonrpc:'2.0',id:1,method:'initialize',
-        params:{protocolVersion:'2025-03-26',capabilities:{},clientInfo:{name:'secure-tunnel-test',version:'1'}},
-      }),
-    }).then((r)=>r.json());
     assert.equal(init.result.serverInfo.name,'evercraft-fabric');
 
     const tools=await fetch(runtime.mcpUrl,{
