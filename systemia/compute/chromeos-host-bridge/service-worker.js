@@ -31,6 +31,26 @@ function getTree(tabId) {
   });
 }
 
+function getTab(tabId) {
+  return new Promise((resolve, reject) => {
+    chrome.tabs.get(tabId, (tab) => {
+      const error = chrome.runtime.lastError;
+      if (error) return reject(new Error(error.message));
+      if (!tab) return reject(new Error('settings_tab_unavailable'));
+      resolve(tab);
+    });
+  });
+}
+
+function expectedSettingsUrl(value) {
+  const url = String(value || '').toLowerCase();
+  return (
+    url.startsWith('chrome://os-settings/') &&
+    url.includes('crostini') &&
+    url.includes('portforward')
+  );
+}
+
 function getDesktop() {
   return new Promise((resolve, reject) => {
     try {
@@ -75,9 +95,17 @@ async function openSettingsTree() {
     for (let attempt = 0; attempt < 12; attempt += 1) {
       await delay(attempt === 0 ? 500 : 250);
       try {
+        const tab = await getTab(created.id);
+        if (!expectedSettingsUrl(tab.url)) {
+          throw new Error('chromeos_port_forwarding_route_not_confirmed');
+        }
         const root = await getTree(created.id);
-        const parsed = extractPortForwardingState(root);
-        if (parsed.settings_surface_observed) return { root, source };
+        const parsed = extractPortForwardingState(
+          root,
+          undefined,
+          { expectedSurface: true },
+        );
+        if (parsed.settings_surface_observed) return { root, source, expectedSurface: true };
       } catch {}
     }
 
@@ -85,11 +113,24 @@ async function openSettingsTree() {
     if (created.id !== undefined) {
       await chrome.tabs.update(created.id, { active: true });
       await delay(500);
+      const tab = await getTab(created.id);
+      if (!expectedSettingsUrl(tab.url)) {
+        throw new Error('chromeos_port_forwarding_route_not_confirmed');
+      }
     }
     for (let attempt = 0; attempt < 8; attempt += 1) {
       const root = await getDesktop();
-      const parsed = extractPortForwardingState(root);
-      if (parsed.settings_surface_observed) return { root, source };
+      const parsed = extractPortForwardingState(
+        root,
+        undefined,
+        { expectedSurface: true },
+      );
+      if (
+        parsed.settings_surface_observed &&
+        parsed.diagnostics?.matched_ports > 0
+      ) {
+        return { root, source, expectedSurface: true };
+      }
       await delay(250);
     }
     throw new Error('chromeos_port_forwarding_surface_not_observed');
@@ -112,9 +153,13 @@ async function reportObservation(requestId = null) {
   let treeSource = 'unavailable';
   let error = null;
   try {
-    const { root, source } = await openSettingsTree();
+    const { root, source, expectedSurface } = await openSettingsTree();
     treeSource = source;
-    scan = extractPortForwardingState(root);
+    scan = extractPortForwardingState(
+      root,
+      undefined,
+      { expectedSurface: expectedSurface === true },
+    );
   } catch (cause) {
     error = String(cause?.message || cause).slice(0, 200);
     scan = {
