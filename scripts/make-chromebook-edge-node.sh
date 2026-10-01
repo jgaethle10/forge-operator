@@ -59,93 +59,68 @@ fi
 echo "[4/6] Public candidate IP observed locally."
 
 EDGE_STATE_DIR=/var/lib/evercraft/nodeseed/edge-dns
-REQUEST_FILE="$EDGE_STATE_DIR/external-canary-request.json"
+EXTERNAL_RECEIPT="$EDGE_STATE_DIR/external-public-verification.json"
+IDENTITY_NAME="_evercraft.$DNS_CANARY"
+EXPECTED_TXT="service=evercraft://edge/canary"
 install -d -o evercraft -g evercraft -m 0750 "$EDGE_STATE_DIR"
 
-CAPACITY_JSON="$(curl -fsS --max-time 3 http://127.0.0.1:42420/v1/capacity)"
-NODE_ID="$(printf '%s' "$CAPACITY_JSON" | node -e "
-let s='';process.stdin.on('data',d=>s+=d);process.stdin.on('end',()=>{
- const j=JSON.parse(s); if(!j.node_id)process.exit(2); process.stdout.write(String(j.node_id));
-});")"
-MAPPING_METHOD="$(node -e "
-const fs=require('fs');
-try{const j=JSON.parse(fs.readFileSync('/tmp/evercraft-edge-router-map.log','utf8'));process.stdout.write(String(j.method||'unknown'))}catch{process.stdout.write('unknown')}
-")"
-
-REQUEST_ID=""
-if [[ -f "$REQUEST_FILE" ]]; then
-  REQUEST_ID="$(node -e "
-const fs=require('fs');
-try{
- const j=JSON.parse(fs.readFileSync(process.argv[1],'utf8'));
- if(j.schema==='evercraft.edge.external-canary-request.v1' &&
-    j.node_id===process.argv[2] &&
-    j.public_ipv4===process.argv[3] &&
-    j.canary_name===process.argv[4] &&
-    /^[a-f0-9]{32}$/.test(String(j.request_id||''))) process.stdout.write(j.request_id);
-}catch{}
-" "$REQUEST_FILE" "$NODE_ID" "$PUBLIC_IP" "$DNS_CANARY")"
-fi
-
-if [[ -z "$REQUEST_ID" ]]; then
-  REQUEST_ID="$(node -e "process.stdout.write(require('crypto').randomBytes(16).toString('hex'))")"
-  node -e "
-const fs=require('fs');
-const body={
- schema:'evercraft.edge.external-canary-request.v1',
- request_id:process.argv[2],
- node_id:process.argv[3],
- public_ipv4:process.argv[4],
- canary_name:process.argv[5],
- router_mapping_method:process.argv[6],
- requested_transports:['udp/53','tcp/53'],
- created_at:new Date().toISOString()
-};
-fs.writeFileSync(process.argv[1],JSON.stringify(body,null,2)+'\\n',{mode:0o600});
-" "$REQUEST_FILE" "$REQUEST_ID" "$NODE_ID" "$PUBLIC_IP" "$DNS_CANARY" "$MAPPING_METHOD"
-  chown evercraft:evercraft "$REQUEST_FILE"
-  chmod 0600 "$REQUEST_FILE"
-fi
-
-GRANT_FILE="$REPO_ROOT/infra/evercraft-edge/registry/public-ingress-grants/$REQUEST_ID.json"
-echo "[5/6] Checking for independent external canary grant..."
-if [[ ! -f "$GRANT_FILE" ]]; then
-  echo "HOLD: external verifier has not granted public ingress yet."
-  echo "EXTERNAL_CANARY_REQUEST_ID=$REQUEST_ID"
-  echo "NODE_ID=$NODE_ID"
-  echo "CANARY_NAME=$DNS_CANARY"
-  echo "ROUTER_MAPPING_METHOD=$MAPPING_METHOD"
-  echo "Public IPv4 remains only in local state: $REQUEST_FILE"
-  echo "Node remains public-edge-candidate."
-  exit 26
-fi
-
+echo "[5/6] Running independent external DNS verification..."
 set +e
+node "$REPO_ROOT/infra/evercraft-edge/dns/external-public-verifier.mjs" \
+  --server "$PUBLIC_IP" \
+  --name "$IDENTITY_NAME" \
+  --expected-txt "$EXPECTED_TXT" > "$EXTERNAL_RECEIPT.tmp"
+VERIFY_RC=$?
+set -e
+
+if [[ -s "$EXTERNAL_RECEIPT.tmp" ]]; then
+  mv "$EXTERNAL_RECEIPT.tmp" "$EXTERNAL_RECEIPT"
+  chown evercraft:evercraft "$EXTERNAL_RECEIPT"
+  chmod 0600 "$EXTERNAL_RECEIPT"
+else
+  rm -f "$EXTERNAL_RECEIPT.tmp"
+fi
+
+if [[ "$VERIFY_RC" -ne 0 ]]; then
+  echo "HOLD: independent external DNS verification did not pass."
+  if [[ -f "$EXTERNAL_RECEIPT" ]]; then
+    node -e "
+const fs=require('fs');
+const r=JSON.parse(fs.readFileSync(process.argv[1],'utf8'));
+console.log(JSON.stringify({
+  verified:r.verified,
+  classification:r.classification,
+  tcp53_identity:r.tcp53_identity?.parsed||r.tcp53_identity,
+  tcp53_successes:r.distributed?.tcp53?.success_count||0,
+  udp53_successes:r.distributed?.udp53?.success_count||0,
+  tcp53053_successes:r.distributed?.tcp53053?.success_count||0,
+  udp53053_successes:r.distributed?.udp53053?.success_count||0,
+  tcp53_report:r.distributed?.tcp53?.report_url||null,
+  udp53_report:r.distributed?.udp53?.report_url||null,
+  tcp53053_report:r.distributed?.tcp53053?.report_url||null,
+  udp53053_report:r.distributed?.udp53053?.report_url||null
+},null,2));
+" "$EXTERNAL_RECEIPT"
+  fi
+  echo "Node remains public-edge-candidate."
+  exit 25
+fi
+
 node -e "
 const fs=require('fs');
-const g=JSON.parse(fs.readFileSync(process.argv[1],'utf8'));
-const ok=
- g.schema==='evercraft.edge.public-ingress-grant.v1' &&
- g.request_id===process.argv[2] &&
- g.node_id===process.argv[3] &&
- g.canary_name===process.argv[4] &&
- g.verified===true &&
- g.udp_53_verified===true &&
- g.tcp_53_verified===true &&
- typeof g.evidence_ref==='string' &&
- g.evidence_ref.length>0;
-if(!ok){
- console.error(JSON.stringify({ok:false,grant:g},null,2));
- process.exit(2);
-}
-console.log(JSON.stringify({ok:true,request_id:g.request_id,node_id:g.node_id,verified:g.verified,evidence_ref:g.evidence_ref,verified_at:g.verified_at},null,2));
-" "$GRANT_FILE" "$REQUEST_ID" "$NODE_ID" "$DNS_CANARY"
-GRANT_RC=$?
-set -e
-if [[ "$GRANT_RC" -ne 0 ]]; then
-  echo "HOLD: external canary grant exists but failed admission checks." >&2
-  exit 27
-fi
+const r=JSON.parse(fs.readFileSync(process.argv[1],'utf8'));
+if(r.verified!==true)process.exit(2);
+console.log(JSON.stringify({
+  verified:true,
+  classification:r.classification,
+  identity_name:r.identity_name,
+  tcp53_authoritative:r.tcp53_identity?.parsed?.aa===true,
+  tcp53_recursive:r.tcp53_identity?.parsed?.ra===true,
+  tcp53_successes:r.distributed?.tcp53?.success_count||0,
+  udp53_successes:r.distributed?.udp53?.success_count||0,
+  observed_at:r.observed_at
+},null,2));
+" "$EXTERNAL_RECEIPT"
 
 echo "[6/6] External canary passed. Promoting placement label to public-ingress..."
 CURRENT_LABELS="$(awk -F= '/^EVERCRAFT_NODE_LABELS=/{print substr($0,index($0,"=")+1)}' "$NODE_ENV")"
@@ -171,8 +146,8 @@ cat > /var/lib/evercraft/nodeseed/edge-dns/public-ingress-receipt.json <<EOF
   "schema":"evercraft.edge.chromebook-public-ingress.v1",
   "state":"verified",
   "public_ipv4":"$PUBLIC_IP",
-  "external_canary_request_id":"$REQUEST_ID",
-  "external_canary_grant_ref":"infra/evercraft-edge/registry/public-ingress-grants/$REQUEST_ID.json",
+  "external_verification_receipt":"$EXTERNAL_RECEIPT",
+  "external_identity_name":"$IDENTITY_NAME",
   "udp_53_verified":true,
   "tcp_53_verified":true,
   "placement_label":"public-ingress",
