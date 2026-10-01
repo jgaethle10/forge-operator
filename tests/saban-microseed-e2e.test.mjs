@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { generateKeyPairSync } from 'node:crypto';
 
 import { AmbientDeviceRegistry } from '../systemia/saban/ambient-device-registry.mjs';
 import { normalizeMicroDeviceManifest } from '../systemia/saban/microseed-device-bridge.mjs';
@@ -19,6 +20,8 @@ test('Saban gateway relays exactly-once work to a real native MicroSeed agent',a
   let agent=null;
   let gateway=null;
   try{
+    const {publicKey,privateKey}=generateKeyPairSync('ed25519');
+    const publicKeyPem=publicKey.export({type:'spki',format:'pem'});
     const deviceManifest=normalizeMicroDeviceManifest({
       device_id:'phone-e2e-01',
       device_class:'phone',
@@ -32,13 +35,21 @@ test('Saban gateway relays exactly-once work to a real native MicroSeed agent',a
       cpu_utilization_ceiling:0.8,
       memory_reserve_mb:256,
       battery_floor_percent:20,
-      attestation:{mode:'device',device_identity:'phone-key'},
+      attestation:{
+        mode:'device',
+        device_identity:'phone-key',
+        receipt_signing_required:true,
+        receipt_public_key_pem:publicKeyPem,
+        receipt_key_id:'phone-e2e-key-v1',
+      },
     });
 
     agent=await startMicroSeedNativeAgent({
       manifest:deviceManifest,
       stateDir:path.join(root,'device-state'),
       authorizationToken:deviceToken,
+      receiptSigningPrivateKey:privateKey,
+      receiptSigningKeyId:'phone-e2e-key-v1',
       telemetryProvider:async({request})=>{
         telemetryCalls+=1;
         if(request) executionTelemetryCalls+=1;
@@ -69,7 +80,13 @@ test('Saban gateway relays exactly-once work to a real native MicroSeed agent',a
       cpu_utilization_ceiling:0.8,
       memory_reserve_mb:256,
       battery_floor_percent:20,
-      attestation:{mode:'device',device_identity:'phone-key'},
+      attestation:{
+        mode:'device',
+        device_identity:'phone-key',
+        receipt_signing_required:true,
+        receipt_public_key_pem:publicKeyPem,
+        receipt_key_id:'phone-e2e-key-v1',
+      },
     });
 
     const registry=new AmbientDeviceRegistry({root:path.join(root,'registry')});
@@ -153,6 +170,9 @@ test('Saban gateway relays exactly-once work to a real native MicroSeed agent',a
     assert.equal(firstBody.result.schema,'evercraft.microseed.native-agent-relay-result.v1');
     assert.equal(firstBody.result.remote_execution_location,'device');
     assert.equal(firstBody.result.remote_arbitrary_code_execution,false);
+    assert.equal(firstBody.result.remote_signature_verified,true);
+    assert.equal(firstBody.result.remote_signature_key_id,'phone-e2e-key-v1');
+    assert.match(firstBody.result.remote_signature_payload_sha256,/^sha256:/);
     assert.equal(firstBody.result.credential_exposed,false);
     assert.match(firstBody.result.remote_receipt_hash,/^sha256:/);
     assert.ok(telemetryCalls>=2);
