@@ -10,6 +10,12 @@ function clean(v){return String(v??'').trim();}
 function loopback(host){
   return ['127.0.0.1','localhost','::1'].includes(clean(host).toLowerCase());
 }
+function observedEnergyWh(telemetry,durationMs){
+  if(telemetry?.power_measurement_state!=='observed') return null;
+  const watts=Number(telemetry?.power_watts);
+  if(!Number.isFinite(watts)||watts<0) return null;
+  return Number((watts*Math.max(0,Number(durationMs||0))/3600000).toFixed(9));
+}
 function send(res,status,body){
   const bytes=Buffer.from(JSON.stringify(body));
   res.writeHead(status,{
@@ -131,6 +137,7 @@ export async function startMicroSeedGateway({
                   receipt?.result?.byte_count??
                   receipt?.result?.remote_result?.byte_count??
                   null,
+                energy_wh:observedEnergyWh(body.telemetry,Math.max(0,Date.now()-startedAt)),
                 observed_at:new Date().toISOString(),
               });
               savePerformanceLedger(performanceFile,ledger);
@@ -143,6 +150,7 @@ export async function startMicroSeedGateway({
                 ok:false,
                 duration_ms:Math.max(0,Date.now()-startedAt),
                 thermal_hold:String(error?.message||error).includes('temperature'),
+                energy_wh:observedEnergyWh(body.telemetry,Math.max(0,Date.now()-startedAt)),
                 observed_at:new Date().toISOString(),
               });
               savePerformanceLedger(performanceFile,ledger);
