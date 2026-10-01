@@ -15,6 +15,16 @@ import {
 } from './compute-exchange.mjs';
 
 const market=createVoluntaryMarketAdapter({maxRounds:6});
+
+await assert.rejects(
+  startVoluntaryMarketServer({
+    market,
+    host:'0.0.0.0',
+    port:0,
+    registrationToken:'proof',
+  }),
+  /trusted_tls_termination/
+);
 const server=await startVoluntaryMarketServer({
   market,
   host:'127.0.0.1',
