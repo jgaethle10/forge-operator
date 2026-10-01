@@ -18,7 +18,7 @@ test('Evercraft is packaged in the current portable Agent Plugins format',()=>{
   assert.equal(openai?.interface?.displayName,'Evercraft');
   assert.ok(String(openai?.interface?.shortDescription||'').length<=30);
   assert.ok(String(openai?.interface?.longDescription||'').length<=4000);
-  assert.equal(openai?.onboardingSkill,'./skills/evercraft-router/SKILL.md');
+  assert.equal(openai?.onboardingSkill,'./skills/evercraft-site-inspector/SKILL.md');
   assert.ok(openai?.interface?.supportURL);
   assert.ok(openai?.interface?.privacyPolicyURL);
   assert.ok(openai?.interface?.termsOfServiceURL);
@@ -51,7 +51,7 @@ test('Evercraft plugin includes its safety and support surface',()=>{
   for(const file of ['PRIVACY.md','TERMS.md','SUPPORT.md','README.md','OPENAI-SUBMISSION.md']){
     assert.ok(fs.existsSync(path.join(pluginDir,file)),file+' missing');
   }
-  assert.ok(fs.existsSync(path.join(pluginDir,'skills','evercraft-router','SKILL.md')));
+  assert.ok(fs.existsSync(path.join(pluginDir,'skills','evercraft-site-inspector','SKILL.md')));
 });
 
 test('portable manifest embeds exactly the required MCP review cases',()=>{
@@ -81,21 +81,20 @@ test('OpenAI account-side packet keeps public-directory and owned-route truth ga
   }
 });
 
-test('submission denial cases cover payment, privacy, and consequential actions',()=>{
+test('submission denial cases cover authorization, private networks, and commerce or mutation',()=>{
   const submission=readJson('openai-submission.json');
   const negativeText=JSON.stringify(submission.negative_tests).toLowerCase();
-  assert.match(negativeText,/payment|charge/);
-  assert.match(negativeText,/private|credential|secret/);
-  assert.match(negativeText,/consequential|publish|deploy/);
+  assert.match(negativeText,/permission|authorized|authorization/);
+  assert.match(negativeText,/private|local|127\.0\.0\.1/);
+  assert.match(negativeText,/purchase|payment|charge|modify|mutation/);
 });
 
 
-test('review test cases use only declared Fabric tools and include standalone work',()=>{
+test('review test cases use only the purpose-specific public inspection tool',()=>{
   const manifest=readJson('plugin.json');
   const review=manifest.extensions?.['com.openai']?.review;
-  const allowed=new Set(['match_evercraft_capability','preview_public_website']);
-  assert.ok(review.test_cases.positive.every((x)=>allowed.has(x.tools_triggered)));
-  assert.ok(review.test_cases.positive.some((x)=>x.tools_triggered==='preview_public_website'));
+  assert.ok(review.test_cases.positive.every((x)=>x.tools_triggered==='inspect_public_website'));
+  assert.equal(review.commerce,false);
   assert.match(String(manifest.version||''),/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/);
 });
 
