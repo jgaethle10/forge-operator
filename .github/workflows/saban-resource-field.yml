@@ -10,6 +10,9 @@ on:
       - 'systemia/saban/resource-acquirer.proof.mjs'
       - 'systemia/saban/resource-field-execution.proof.mjs'
       - 'systemia/saban/market-factory.mjs'
+      - 'systemia/saban/market-stack.mjs'
+      - 'systemia/saban/market-stack.proof.mjs'
+      - 'systemia/saban/distributed-voluntary-acquisition.proof.mjs'
       - 'systemia/saban/market-factory.proof.mjs'
       - 'systemia/saban/local-host-capacity.mjs'
       - 'systemia/saban/local-host-capacity.proof.mjs'
@@ -61,8 +64,12 @@ jobs:
         run: node systemia/saban/resource-acquirer.proof.mjs
       - name: Prove owned-host bootstrap
         run: node systemia/saban/local-host-capacity.proof.mjs
+      - name: Prove canonical market stack
+        run: node systemia/saban/market-stack.proof.mjs
       - name: Prove automatic market construction
         run: node systemia/saban/market-factory.proof.mjs
+      - name: Prove negotiated voluntary execution survives Resource Field
+        run: node systemia/saban/distributed-voluntary-acquisition.proof.mjs
       - name: Prove resilient Formation defaults
         run: node systemia/saban/formation-resilience.proof.mjs
       - name: Prove compute exchange boundaries
