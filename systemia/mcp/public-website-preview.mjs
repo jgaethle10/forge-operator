@@ -142,6 +142,7 @@ async function requestPinned(url,address,{timeoutMs,maxBytes}){
       headers:{
         host:url.host,
         accept:'text/html,application/xhtml+xml;q=0.9,text/plain;q=0.5',
+        'accept-encoding':'identity',
         'user-agent':'Evercraft-Fabric-Website-Preview/1.0',
         connection:'close',
       },
