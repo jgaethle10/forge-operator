@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { emptyContextState, ingestContextObservation } from '../worldstate/observation-fabric.mjs';
 import {
   assessSpectacleDispatch,
   buildSpectacleQueue,
@@ -117,3 +118,17 @@ console.log(JSON.stringify({
   repeat_penalty_enforced:true,
   publication_authority_preserved:true,
 },null,2));
+
+
+const contextRoot=fs.mkdtempSync(path.join(os.tmpdir(),'social-spectacle-context-'));
+let contextState=emptyContextState();
+contextState=ingestContextObservation(contextState,phenomenonObservation).state;
+const contextFile=path.join(contextRoot,'context-state.json');
+fs.writeFileSync(contextFile,JSON.stringify(contextState,null,2));
+const contextCycle=runSpectacleCycle({
+  contextStateFile:contextFile,
+  stateDir:path.join(contextRoot,'spectacle-state'),
+  now:new Date('2026-09-30T23:10:00Z'),
+});
+assert.equal(contextCycle.receipt.input_count,1);
+assert.equal(contextCycle.receipt.queue_count,1);
