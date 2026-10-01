@@ -168,6 +168,8 @@ export function buildExecutionGateInput({
     machine_binding: {
       scope: actionScope,
       machine_tool: machineTool,
+      machine_target_product_key:
+        String(action.machine_target_product_key || '').trim() || policy.product_key,
       specialist_slug: requiredString(policy.route.specialist_slug, 'specialist_slug'),
       grants_authority: false,
       tools_call_verified_by_compilation: false,
