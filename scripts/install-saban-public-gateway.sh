@@ -22,9 +22,9 @@ from the public request path.
 The installer:
   - runs the Saban gateway appliance as a resident service
   - runs Caddy on 80/443 for the public Fabric origin
-  - keeps the broker LAN-only during commissioning
-  - publishes the broker on trusted TLS at TCP 9443 only after one device is pinned
-  - maps WAN 80/443 first, then 9443 after authorization, using UPnP/NAT-PMP/PCP
+  - keeps the broker LAN/hairpin-only during commissioning
+  - publishes the broker to all sources on trusted TLS at TCP 9443 only after one device is pinned
+  - maps WAN 80/443/9443 while Caddy/firewall deny nonlocal broker traffic until authorization
   - opens a five-minute, single-device local commissioning window
 EOF
 }
@@ -153,7 +153,21 @@ EOF
 sudo chmod 0644 /etc/evercraft/saban-public-edge.env
 
 sudo install -d -m 0755 /etc/evercraft
-sudo : > /etc/evercraft/saban-broker-public.caddy
+sudo tee /etc/evercraft/saban-broker-public.caddy >/dev/null <<EOF
+# commissioning-local-only
+https://$DOMAIN:$PUBLIC_BROKER_PORT {
+  @commissioning_local remote_ip private_ranges
+  handle @commissioning_local {
+    reverse_proxy 127.0.0.1:$BROKER_PORT
+    header {
+      X-Content-Type-Options "nosniff"
+      Referrer-Policy "no-referrer"
+      -Server
+    }
+  }
+  respond "Saban gateway commissioning is local-only" 403
+}
+EOF
 sudo chmod 0644 /etc/evercraft/saban-broker-public.caddy
 
 sudo tee /etc/evercraft/SabanCaddyfile >/dev/null <<'EOF'
@@ -213,6 +227,7 @@ if command -v ufw >/dev/null 2>&1 && sudo ufw status | grep -q '^Status: active'
   sudo ufw allow 443/tcp >/dev/null
   if [[ -n "$LAN_CIDR" ]]; then
     sudo ufw allow from "$LAN_CIDR" to any port "$BROKER_PORT" proto tcp >/dev/null
+    sudo ufw allow from "$LAN_CIDR" to any port "$PUBLIC_BROKER_PORT" proto tcp >/dev/null
     sudo ufw allow from "$LAN_CIDR" to any port 42425 proto udp >/dev/null
   fi
 fi
@@ -224,7 +239,7 @@ sudo bash "$REPO_ROOT/scripts/install-fabric-router-map-resident.sh" \
   --host "$LAN_HOST" \
   --http-port 80 \
   --https-port 443 \
-  --broker-port 0
+  --broker-port "$PUBLIC_BROKER_PORT"
 
 echo "[8/8] Installing post-commission broker publication gate..."
 sudo tee /usr/local/sbin/evercraft-publish-saban-broker >/dev/null <<'EOF'
@@ -246,7 +261,7 @@ authorized="$(node -e '
 ' "$STATE_FILE")"
 (( authorized >= 1 )) || exit 0
 
-if [[ ! -s "$CADDY_SNIPPET" ]]; then
+if grep -q '^# commissioning-local-only' "$CADDY_SNIPPET" 2>/dev/null; then
   cat > "$CADDY_SNIPPET" <<CADDY
 https://$PUBLIC_HOST:$PUBLIC_BROKER_PORT {
   reverse_proxy 127.0.0.1:$PRIVATE_BROKER_PORT
@@ -341,10 +356,11 @@ will prefer a local gateway beacon and fall back to:
   https://$DOMAIN:$PUBLIC_BROKER_PORT
 
 The first attested Chromebook enrollment during the five-minute commissioning
-window is pinned into the gateway broker authorization ledger. Public broker
-port $PUBLIC_BROKER_PORT is not exposed until that pin exists, so an internet
-client cannot win the commissioning race. After that, new devices do not
-receive authority automatically.
+window is pinned into the gateway broker authorization ledger. During commissioning, broker port $PUBLIC_BROKER_PORT accepts only private-network
+sources; public clients receive no broker authority, so an internet client
+cannot win the commissioning race. Once the first attested Chromebook is
+pinned, the resident publication gate opens the broker for authenticated
+outbound reconnects. New devices still do not receive authority automatically.
 
 External verification:
   node scripts/fabric-edge-external-canary.mjs --origin https://$DOMAIN
