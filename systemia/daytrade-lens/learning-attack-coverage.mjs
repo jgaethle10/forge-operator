@@ -79,9 +79,12 @@ export const ATTACK_IMPLEMENTATION_MAP=Object.freeze({
     ]
   },
   "execution-speed grid":{
-    status:"partial",
-    evidence:["systemia/daytrade-lens/edge-timing-fragility.mjs"],
-    gap:"Delay grid exists; participation-rate/impact execution speeds do not."
+    status:"implemented",
+    evidence:[
+      "systemia/daytrade-lens/edge-timing-fragility.mjs",
+      "systemia/daytrade-lens/edge-quote-microstructure.mjs",
+      "systemia/daytrade-lens/edge-execution-speed-bounds.mjs"
+    ]
   },
   "fill-path maximum adverse excursion":{
     status:"implemented",
