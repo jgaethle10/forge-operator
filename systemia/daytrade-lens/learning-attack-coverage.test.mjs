@@ -70,11 +70,7 @@ assert.match(
 
 assert.equal(
   ATTACK_IMPLEMENTATION_MAP["capital-scale invariance challenge"].status,
-  "partial"
-);
-assert.match(
-  ATTACK_IMPLEMENTATION_MAP["capital-scale invariance challenge"].gap,
-  /market impact/
+  "implemented"
 );
 
 assert.equal(
@@ -122,7 +118,8 @@ console.log(JSON.stringify({
   durable_trial_cemetery_capability_closed:true,
   volume_not_liquidity_closed:true,
   low_visible_size_high_volatility_partial:true,
-  capital_scale_visibility_partial_not_impact_model:true,
+  capital_scale_invariance_challenge_closed:true,
+  impact_envelope_not_calibrated_impact_model:true,
   explicit_evidence_mapping:true,
   frozen_protocol_mutation_forbidden:true,
   live_trade_authority:false
