@@ -5,6 +5,7 @@ on:
     paths:
       - 'systemia/saban/resource-field.mjs'
       - 'systemia/saban/resource-field.proof.mjs'
+      - 'systemia/saban/resource-placement.proof.mjs'
       - 'systemia/saban/resource-acquirer.mjs'
       - 'systemia/saban/resource-acquirer.proof.mjs'
       - 'systemia/saban/resource-field-execution.proof.mjs'
@@ -54,6 +55,8 @@ jobs:
         run: node systemia/compute/hardware-inventory.proof.mjs
       - name: Prove Resource Field planning
         run: node systemia/saban/resource-field.proof.mjs
+      - name: Prove hardware-aware placement
+        run: node systemia/saban/resource-placement.proof.mjs
       - name: Prove live resource acquisition
         run: node systemia/saban/resource-acquirer.proof.mjs
       - name: Prove owned-host bootstrap
