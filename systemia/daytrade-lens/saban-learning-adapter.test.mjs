@@ -69,7 +69,8 @@ for(const role of roles){
           ...lesson,
           lesson_id:lessonId
         }}
-      }
+      },
+      executionContext:{fetchImpl:fakeFetch}
     }));
   }
 }
