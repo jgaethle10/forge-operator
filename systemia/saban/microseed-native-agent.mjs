@@ -2,6 +2,7 @@ import http from 'node:http';
 import { randomBytes } from 'node:crypto';
 import { executeMicroSeedWorkload } from './microseed-executor.mjs';
 import { signMicroSeedExecutionReceipt } from './microseed-receipt-signature.mjs';
+import { signMicroSeedTelemetry } from './microseed-telemetry-signature.mjs';
 
 function clean(v){return String(v??'').trim();}
 function send(res,status,body){
@@ -73,7 +74,9 @@ export async function startMicroSeedNativeAgent({
     arbitrary_code_execution:false,
     active_executions:active,
     signed_receipts_required:manifest.attestation?.receipt_signing_required===true,
+    signed_telemetry_required:manifest.attestation?.telemetry_signing_required===true,
     signed_receipts_enabled:Boolean(receiptSigningPrivateKey),
+    signed_telemetry_enabled:Boolean(receiptSigningPrivateKey),
   });
 
   server=http.createServer(async(req,res)=>{
@@ -86,8 +89,7 @@ export async function startMicroSeedNativeAgent({
 
       if(req.method==='GET'&&req.url==='/v1/telemetry'){
         const telemetry=await telemetryProvider({manifest,request:null});
-        return send(res,200,{
-          ok:true,
+        const envelope={
           schema:'evercraft.microseed.device-telemetry.v1',
           device_id:manifest.device_id,
           telemetry:{
@@ -95,7 +97,14 @@ export async function startMicroSeedNativeAgent({
             observed_at:telemetry?.observed_at||new Date().toISOString(),
           },
           arbitrary_code_execution:false,
-        });
+        };
+        const signed=receiptSigningPrivateKey
+          ? signMicroSeedTelemetry(envelope,{
+              privateKey:receiptSigningPrivateKey,
+              key_id:manifest.attestation?.receipt_key_id||receiptSigningKeyId,
+            })
+          : envelope;
+        return send(res,200,{ok:true,...signed});
       }
 
       if(req.method==='POST'&&req.url==='/v1/execute'){

@@ -1,4 +1,5 @@
 import { verifyMicroSeedExecutionReceipt } from './microseed-receipt-signature.mjs';
+import { verifyMicroSeedTelemetry } from './microseed-telemetry-signature.mjs';
 function clean(v){return String(v??'').trim();}
 
 function validateEndpoint(value,{allowInsecureLan=false}={}){
@@ -60,7 +61,23 @@ export function createMicroSeedNativeAgentAdapter({
         if(body.device_id!==manifest.device_id){
           throw new Error('microseed_native_agent_telemetry_device_mismatch');
         }
-        return body.telemetry||{};
+        const signingRequired=manifest.attestation?.telemetry_signing_required===true;
+        let signatureVerification=null;
+        if(signingRequired||body?.device_signature){
+          signatureVerification=verifyMicroSeedTelemetry(body,{
+            publicKey:manifest.attestation?.receipt_public_key_pem||null,
+            expected_device_id:manifest.device_id,
+          });
+          if(signingRequired&&signatureVerification.verified!==true){
+            throw new Error('microseed_native_agent_telemetry_signature_rejected:'+signatureVerification.reason);
+          }
+        }
+        return {
+          ...(body.telemetry||{}),
+          telemetry_signature_verified:signatureVerification?.verified===true,
+          telemetry_signature_key_id:signatureVerification?.key_id||null,
+          telemetry_signature_payload_sha256:signatureVerification?.payload_sha256||null,
+        };
       }finally{
         clearTimeout(timer);
       }
