@@ -14,6 +14,7 @@ import {
   getHostBoundaryCapability,
   hostBoundaryCapabilityStatus,
 } from './host-boundary-registry.mjs';
+import { readHostBoundaryCapabilityAdmission } from './host-boundary-admission.mjs';
 
 const execFileAsync = promisify(execFile);
 const sha = (value) => {
@@ -264,18 +265,41 @@ export class EvercraftRemoteOperator {
 
   hostBoundaryCapabilities() {
     const status = hostBoundaryCapabilityStatus();
+    const hostStatus = readChromeOsHostBoundaryStatus({
+      stateRoot: this.hostBoundaryStateRoot,
+    });
+    const capabilities = status.capabilities.map((capability) => {
+      const localAdmission = capability.requires_field_certification
+        ? readHostBoundaryCapabilityAdmission({
+            stateRoot: this.hostBoundaryStateRoot,
+            capabilityId: capability.capability_id,
+            observerInstallId: hostStatus.observer_install_id || '',
+          })
+        : null;
+      return {
+        ...capability,
+        local_admission: localAdmission,
+        generic_dispatch_available:
+          capability.admission_state === 'admitted' ||
+          localAdmission?.admitted === true,
+      };
+    });
     const receipt = this.#receipt('host-boundary.capabilities', {
       registry_version: status.registry_version,
       capability_count: status.capability_count,
-      mutation_capability_count: status.capabilities.filter(
+      locally_admitted_count: capabilities.filter(
+        (capability) => capability.local_admission?.admitted === true,
+      ).length,
+      mutation_capability_count: capabilities.filter(
         (capability) => capability.mutation_authority === true,
       ).length,
-      arbitrary_desktop_control_present: status.capabilities.some(
+      arbitrary_desktop_control_present: capabilities.some(
         (capability) => capability.arbitrary_desktop_control === true,
       ),
     });
     return {
       ...status,
+      capabilities,
       operator_receipt: receipt,
     };
   }
@@ -300,13 +324,35 @@ export class EvercraftRemoteOperator {
     capability_id,
     wait_ms = 35_000,
   } = {}) {
-    const capability = getHostBoundaryCapability(capability_id, { requireAdmitted: true });
+    const capability = getHostBoundaryCapability(capability_id);
     if (capability.operation !== 'read') {
       throw new Error('host_boundary_capability_not_read_only');
     }
 
+    const admission = capability.admission_state === 'admitted'
+      ? {
+          ok: true,
+          admitted: true,
+          state: 'source_admitted',
+          capability_id: capability.capability_id,
+        }
+      : readHostBoundaryCapabilityAdmission({
+          stateRoot: this.hostBoundaryStateRoot,
+          capabilityId: capability.capability_id,
+        });
+    if (!admission.admitted) {
+      throw new Error('host_boundary_capability_field_gate_required');
+    }
+
     if (capability.adapter === 'chromeos_crostini_port_forwarding') {
       const result = await this.hostBoundaryCheck({ wait_ms });
+      if (
+        result.fulfilled === true &&
+        admission.observer_install_id &&
+        result.status?.observer_install_id !== admission.observer_install_id
+      ) {
+        throw new Error('host_boundary_capability_observer_changed');
+      }
       const receipt = this.#receipt('host-capability.check', {
         capability_id: capability.capability_id,
         adapter: capability.adapter,
@@ -321,6 +367,8 @@ export class EvercraftRemoteOperator {
         capability_id: capability.capability_id,
         adapter: capability.adapter,
         capability_operation: capability.operation,
+        admission_state: admission.state,
+        admission_hash: admission.admission_hash || null,
         arbitrary_desktop_control: capability.arbitrary_desktop_control,
         mutation_authority: capability.mutation_authority,
         capability_receipt: receipt,
