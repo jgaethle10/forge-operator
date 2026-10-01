@@ -6,9 +6,9 @@ import { evaluateDeviceSafetyEnvelope } from '../systemia/saban/device-safety-en
 const fridge=normalizeMicroDeviceManifest({
   device_id:'fridge-safe-01',
   device_class:'refrigerator',
-  bridge_mode:'matter',
+  bridge_mode:'native_agent',
   authorization_ref:'owner-fridge',
-  endpoint:'matter://hub/fridge-safe-01',
+  endpoint:'https://fridge.local/evercraft',
   supported_workloads:['systemia.content-hash.v1'],
   resources:{cpu_units:0.2,memory_mb:256,storage_gb:0.5},
   max_concurrency:1,
