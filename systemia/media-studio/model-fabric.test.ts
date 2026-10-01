@@ -279,3 +279,94 @@ test('reference-image duration constraints reject an otherwise compatible paid r
   assert.equal(plan.status,'blocked');
   assert.ok(plan.rejectedModels[0].reasons.includes('reference_image_duration_not_supported'));
 });
+
+
+test('one canonical reference can materialize differently for different providers',()=>{
+  const refs=[{
+    id:'eli-canon',
+    kind:'image' as const,
+    role:'identity' as const,
+    digest:'e'.repeat(64),
+    sourceRefs:['canon:eli'],
+    locators:[
+      {kind:'url' as const,value:'https://assets.evercraft.test/eli.png'},
+      {kind:'provider_asset' as const,providerId:'elevenlabs',value:'asset-eli'},
+    ]
+  }];
+  const routeRequest:VisualShotRequest={
+    ...request,
+    targetResolution:undefined,
+    references:refs,
+    candidateCount:2,
+    modelDiversity:1,
+  };
+  const providerEndpoints:VisualModelEndpoint[]=[
+    {
+      id:'runway-like',providerId:'runway',displayName:'Runway-like',enabled:true,executionState:'verified',
+      capabilities:[{
+        task:'video',inputModes:['text','image_reference'],
+        requirements:['reference_identity','commercial_rights','provenance_receipt','timing_control'],
+        referenceRoles:['identity'],locatorKinds:['url'],maxReferences:1,
+        qualityTier:5,costTier:3,latencyTier:2
+      }]
+    },
+    {
+      id:'veo-like',providerId:'elevenlabs',displayName:'Veo-like',enabled:true,executionState:'verified',
+      capabilities:[{
+        task:'video',inputModes:['text','image_reference'],
+        requirements:['reference_identity','commercial_rights','provenance_receipt','timing_control'],
+        referenceRoles:['identity'],locatorKinds:['provider_asset'],providerLocatorId:'elevenlabs',
+        maxReferences:1,qualityTier:5,costTier:3,latencyTier:2
+      }]
+    }
+  ];
+  const plan=buildVisualModelPlan(routeRequest,providerEndpoints);
+  assert.equal(plan.status,'routed');
+  assert.equal(plan.jobs.length,2);
+  const runway=plan.jobs.find(job=>job.providerId==='runway');
+  const veo=plan.jobs.find(job=>job.providerId==='elevenlabs');
+  assert.deepEqual(runway?.references[0].locator,{kind:'url',value:'https://assets.evercraft.test/eli.png'});
+  assert.deepEqual(veo?.references[0].locator,{kind:'provider_asset',providerId:'elevenlabs',value:'asset-eli'});
+});
+
+test('provider asset from the wrong provider does not satisfy locator readiness',()=>{
+  const endpoint:VisualModelEndpoint={
+    id:'sync-only',providerId:'sync',displayName:'Sync-only',enabled:true,executionState:'verified',
+    capabilities:[{
+      task:'video',inputModes:['text','image_reference'],
+      requirements:['reference_identity','commercial_rights','provenance_receipt','timing_control'],
+      referenceRoles:['identity'],locatorKinds:['provider_asset'],providerLocatorId:'sync',
+      maxReferences:1,qualityTier:5,costTier:3,latencyTier:2
+    }]
+  };
+  const plan=buildVisualModelPlan({
+    ...request,targetResolution:undefined,
+    references:[{
+      id:'eli',kind:'image',role:'identity',sourceRefs:['canon:eli'],
+      locators:[{kind:'provider_asset',providerId:'elevenlabs',value:'asset-eli'}]
+    }]
+  },[endpoint]);
+  assert.equal(plan.status,'blocked');
+  assert.ok(plan.rejectedModels[0].reasons.includes('reference_locator_unsupported:identity:provider_asset@elevenlabs'));
+});
+
+test('legacy single locator remains supported alongside the materialization mesh',()=>{
+  const endpoint:VisualModelEndpoint={
+    id:'url-provider',providerId:'url',displayName:'URL provider',enabled:true,executionState:'verified',
+    capabilities:[{
+      task:'video',inputModes:['text','image_reference'],
+      requirements:['reference_identity','commercial_rights','provenance_receipt','timing_control'],
+      referenceRoles:['identity'],locatorKinds:['url'],maxReferences:1,
+      qualityTier:5,costTier:3,latencyTier:2
+    }]
+  };
+  const plan=buildVisualModelPlan({
+    ...request,targetResolution:undefined,
+    references:[{
+      id:'eli',kind:'image',role:'identity',sourceRefs:['canon:eli'],
+      locator:{kind:'url',value:'https://assets.example/eli.png'}
+    }]
+  },[endpoint]);
+  assert.equal(plan.status,'routed');
+  assert.deepEqual(plan.jobs[0].references[0].locator,{kind:'url',value:'https://assets.example/eli.png'});
+});
