@@ -118,6 +118,23 @@ try{
   receipt.dns_ipv4=addresses;
   receipt.checks.public_dns=true;
 
+  // Keep authoritative DNS provenance in the failure receipt. This lets the
+  // Repair Unit distinguish a dead application edge from a DNS control-plane
+  // problem without asking the founder to reconstruct the zone by hand.
+  const zone=url.hostname.split('.').slice(-2).join('.');
+  receipt.dns_zone=zone;
+  try{
+    receipt.dns_nameservers=(await dns.resolveNs(zone)).sort();
+  }catch(nsError){
+    receipt.dns_nameservers=[];
+    receipt.dns_nameserver_error=clean(nsError?.message||nsError);
+  }
+  try{
+    receipt.dns_cname=(await dns.resolveCname(url.hostname)).sort();
+  }catch{
+    receipt.dns_cname=[];
+  }
+
   const tlsPeer=await inspectTls(url.hostname);
   if(tlsPeer.authorized!==true) throw new Error('tls_peer_not_authorized');
   receipt.tls=tlsPeer;
