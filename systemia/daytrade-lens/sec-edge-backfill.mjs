@@ -23,6 +23,7 @@ import { runLabelPermutationLab } from "./edge-label-permutation.mjs";
 import { runBenchmarkFragilityLab } from "./edge-benchmark-fragility.mjs";
 import { runRegimeFragilityLab } from "./edge-regime-fragility.mjs";
 import { runEventContaminationLab } from "./edge-event-contamination.mjs";
+import { runNarrativeBlindControlLab } from "./edge-narrative-blind-control.mjs";
 import { runHorizonCoherenceLab } from "./edge-horizon-coherence.mjs";
 import { runWalkForwardLab } from "./edge-walk-forward.mjs";
 import { runExecutionTranslationLab } from "./edge-execution-translation.mjs";
@@ -153,6 +154,18 @@ async function main() {
   fs.writeFileSync(
     eventContaminationFile,
     JSON.stringify(eventContaminationLab, null, 2) + "\n"
+  );
+
+  const narrativeBlindControlLab = runNarrativeBlindControlLab(report, {
+    transaction_cost_bps: Number(process.env.EDGE_LAB_TRANSACTION_COST_BPS || 5),
+  });
+  const narrativeBlindControlFile = path.join(
+    artifactDir,
+    "sec-edge-narrative-blind-control.json"
+  );
+  fs.writeFileSync(
+    narrativeBlindControlFile,
+    JSON.stringify(narrativeBlindControlLab, null, 2) + "\n"
   );
 
   const horizonCoherenceLab = runHorizonCoherenceLab(report, {
@@ -345,6 +358,7 @@ async function main() {
     labelPermutationLab,
     regimeFragilityLab,
     eventContaminationLab,
+    narrativeBlindControlLab,
     benchmarkLab,
     horizonCoherenceLab,
     walkForwardLab,
@@ -442,6 +456,8 @@ async function main() {
     regime_fragility_status_counts: regimeFragilityLab.status_counts || {},
     event_contamination_status_counts:
       eventContaminationLab.status_counts || {},
+    narrative_blind_control_status_counts:
+      narrativeBlindControlLab.status_counts || {},
     benchmark_fragility_status_counts: benchmarkLab.status_counts || {},
     horizon_coherent_diagnostics: horizonCoherenceLab.coherent_count || 0,
     walk_forward_robust_diagnostics: walkForwardLab.walk_forward_robust_count || 0,
@@ -468,6 +484,7 @@ async function main() {
       label_permutation_lab: labelPermutationFile,
       regime_fragility_lab: regimeFragilityFile,
       event_contamination_lab: eventContaminationFile,
+      narrative_blind_control_lab: narrativeBlindControlFile,
       benchmark_fragility_lab: benchmarkFile,
       horizon_coherence_lab: horizonCoherenceFile,
       walk_forward_lab: walkForwardFile,
