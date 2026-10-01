@@ -1,0 +1,184 @@
+{
+  "schema": "evercraft.base44.live-page-reconciliation.v1",
+  "observed_at": "2026-09-30",
+  "source": "authenticated_base44_owned-app_listing",
+  "observed_apps": 100,
+  "listing_limit": 100,
+  "listing_ceiling_hit": true,
+  "inventory_complete_proven": false,
+  "completeness_note": "The source listing reached its 100-app ceiling. This observation proves at least 100 visible apps, not the total estate size.",
+  "named_queue_products": 24,
+  "queue_products_exactly_observed": 19,
+  "exact_queue_app_matches": 19,
+  "visible_apps_not_exactly_assigned_to_named_queue": 81,
+  "untitled_visible_apps": 10,
+  "source_types": {
+    "s3": 100
+  },
+  "queue_coverage": [
+    {
+      "product": "Systemia Command Center",
+      "wave": 1,
+      "observed_exact_count": 1,
+      "state": "observed_exactly_once"
+    },
+    {
+      "product": "Systemia Remote Ops",
+      "wave": 1,
+      "observed_exact_count": 1,
+      "state": "observed_exactly_once"
+    },
+    {
+      "product": "Evercraft AI Workforce",
+      "wave": 1,
+      "observed_exact_count": 1,
+      "state": "observed_exactly_once"
+    },
+    {
+      "product": "Evercraft InternalOps",
+      "wave": 1,
+      "observed_exact_count": 1,
+      "state": "observed_exactly_once"
+    },
+    {
+      "product": "Systemia Audit Center",
+      "wave": 1,
+      "observed_exact_count": 1,
+      "state": "observed_exactly_once"
+    },
+    {
+      "product": "Evercraft AI Suite",
+      "wave": 2,
+      "observed_exact_count": 1,
+      "state": "observed_exactly_once"
+    },
+    {
+      "product": "Evercraft HQ",
+      "wave": 2,
+      "observed_exact_count": 1,
+      "state": "observed_exactly_once"
+    },
+    {
+      "product": "Raven Nexus",
+      "wave": 3,
+      "observed_exact_count": 1,
+      "state": "observed_exactly_once"
+    },
+    {
+      "product": "ForensiScope",
+      "wave": 3,
+      "observed_exact_count": 1,
+      "state": "observed_exactly_once"
+    },
+    {
+      "product": "AliEV",
+      "wave": 3,
+      "observed_exact_count": 1,
+      "state": "observed_exactly_once"
+    },
+    {
+      "product": "RIVET",
+      "wave": 3,
+      "observed_exact_count": 1,
+      "state": "observed_exactly_once"
+    },
+    {
+      "product": "Evercraft Rewards",
+      "wave": 3,
+      "observed_exact_count": 1,
+      "state": "observed_exactly_once"
+    },
+    {
+      "product": "EPS Field Pass",
+      "wave": 3,
+      "observed_exact_count": 0,
+      "state": "not_observed_exact_name"
+    },
+    {
+      "product": "FindMyPart",
+      "wave": 3,
+      "observed_exact_count": 0,
+      "state": "not_observed_exact_name"
+    },
+    {
+      "product": "SkyOps Parking",
+      "wave": 3,
+      "observed_exact_count": 0,
+      "state": "not_observed_exact_name"
+    },
+    {
+      "product": "Evercraft Property Services",
+      "wave": 3,
+      "observed_exact_count": 1,
+      "state": "observed_exactly_once"
+    },
+    {
+      "product": "Guardian Pilot",
+      "wave": 4,
+      "observed_exact_count": 0,
+      "state": "not_observed_exact_name"
+    },
+    {
+      "product": "EverNest",
+      "wave": 4,
+      "observed_exact_count": 1,
+      "state": "observed_exactly_once"
+    },
+    {
+      "product": "Evercraft Network",
+      "wave": 4,
+      "observed_exact_count": 1,
+      "state": "observed_exactly_once"
+    },
+    {
+      "product": "EventWave AI",
+      "wave": 5,
+      "observed_exact_count": 1,
+      "state": "observed_exactly_once"
+    },
+    {
+      "product": "FAIE",
+      "wave": 5,
+      "observed_exact_count": 1,
+      "state": "observed_exactly_once"
+    },
+    {
+      "product": "Systemia Radar",
+      "wave": 5,
+      "observed_exact_count": 1,
+      "state": "observed_exactly_once"
+    },
+    {
+      "product": "NextHire (Decision Lab)",
+      "wave": 5,
+      "observed_exact_count": 0,
+      "state": "not_observed_exact_name"
+    },
+    {
+      "product": "Systemia Field Library",
+      "wave": 7,
+      "observed_exact_count": 1,
+      "state": "observed_exactly_once"
+    }
+  ],
+  "unresolved_named_queue_products": [
+    "EPS Field Pass",
+    "FindMyPart",
+    "SkyOps Parking",
+    "Guardian Pilot",
+    "NextHire (Decision Lab)"
+  ],
+  "doctrine": {
+    "exact_name_miss_does_not_prove_source_absent": true,
+    "alias_relationship_requires_authority_receipt": true,
+    "unassigned_visible_app_requires_disposition_before_retirement": true,
+    "untitled_app_requires_classification_before_migration_or_archive": true,
+    "observation_does_not_authorize_cutover": true,
+    "observation_does_not_authorize_source_decommission": true
+  },
+  "privacy": {
+    "raw_app_ids_emitted": false,
+    "unmatched_app_names_emitted": false,
+    "credentials_emitted": false
+  }
+}
