@@ -11,6 +11,24 @@ STATE_DIR="$HOME/.local/state/evercraft/organism/chromeos-host-boundary"
 mkdir -p "$ENV_DIR" "$UNIT_DIR" "$STATE_DIR"
 chmod 700 "$ENV_DIR" "$STATE_DIR"
 
+RESET_PAIRING=false
+for arg in "$@"; do
+  case "$arg" in
+    --reset-pairing) RESET_PAIRING=true ;;
+    *)
+      echo "Unknown argument: $arg" >&2
+      echo "Usage: $0 [--reset-pairing]" >&2
+      exit 2
+      ;;
+  esac
+done
+
+if [[ "$RESET_PAIRING" == "true" ]]; then
+  rm -f     "$STATE_DIR/paired-observer.json"     "$STATE_DIR/latest.json"     "$STATE_DIR/check-request.json"
+  rm -rf "$STATE_DIR/admissions"
+  echo "ChromeOS host observer pairing and field admissions reset."
+fi
+
 NEW_TOKEN=false
 if [[ ! -f "$ENV_FILE" ]]; then
   TOKEN="$(node -e "console.log(require('crypto').randomBytes(32).toString('hex'))")"
@@ -65,4 +83,6 @@ else
 fi
 echo
 echo "Receiver: http://127.0.0.1:18081/v1/chromeos-host-boundary/report"
+echo "Pairing:  $STATE_DIR/paired-observer.json"
 echo "State:    $STATE_DIR/latest.json"
+echo "Reset:    $0 --reset-pairing"
