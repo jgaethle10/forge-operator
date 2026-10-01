@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import {
   FIVE_MINUTE_LAG_BARS,
   EXECUTION_DELAY_STRESS_BARS,
+  buildMatchedPlaceboHypotheses,
   measureRockiesHypotheses,
   evaluateEdgeFamilies,
   benjaminiHochberg,
@@ -48,6 +49,27 @@ const hypothesis = {
   anomaly_score: 0.8,
   source_reliability: 0.9,
 };
+
+const placebos = buildMatchedPlaceboHypotheses([hypothesis]);
+assert.equal(placebos.length, 2);
+assert.deepEqual(placebos.map((row) => row.placebo_offset_days).sort((a,b)=>a-b), [-7, 7]);
+assert.ok(placebos.every((row) => row.placebo_for_source_observation_id === hypothesis.source_observation_id));
+assert.ok(placebos.every((row) => new Date(row.observed_at).getUTCDay() === new Date(hypothesis.observed_at).getUTCDay()));
+
+const nearbyReal = {
+  ...hypothesis,
+  hypothesis_id: "edgehyp:nearby",
+  source_observation_id: "ctxobs:nearby",
+  observed_at: "2026-09-08T13:30:00Z",
+};
+const excludedPlacebos = buildMatchedPlaceboHypotheses([hypothesis, nearbyReal]);
+assert.equal(
+  excludedPlacebos.some((row) =>
+    row.placebo_for_source_observation_id === hypothesis.source_observation_id &&
+    row.placebo_offset_days === 7
+  ),
+  false
+);
 
 const measured = measureRockiesHypotheses([hypothesis], {
   XLU: bars("2026-09-01T13:30:00Z", 10, 0.002),
