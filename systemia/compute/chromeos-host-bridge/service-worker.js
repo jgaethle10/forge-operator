@@ -1,11 +1,20 @@
 import { extractPortForwardingState } from './tree-parser.js';
 
-const VERSION = '0.1.0';
+const VERSION = '0.2.0';
 const SETTINGS_URL = 'chrome://os-settings/crostini/portForwarding';
 const DEFAULT_ENDPOINT = 'http://127.0.0.1:18081/v1/chromeos-host-boundary/report';
-const ALARM = 'evercraft-host-boundary-check';
+const HEARTBEAT_ALARM = 'evercraft-host-boundary-heartbeat';
+const REQUEST_POLL_ALARM = 'evercraft-host-boundary-request-poll';
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+function bridgeUrl(reportEndpoint, pathname) {
+  const url = new URL(reportEndpoint);
+  url.pathname = pathname;
+  url.search = '';
+  url.hash = '';
+  return url.toString();
+}
 
 function getTree(tabId) {
   return new Promise((resolve, reject) => {
@@ -94,7 +103,7 @@ async function openSettingsTree() {
   }
 }
 
-async function reportObservation() {
+async function reportObservation(requestId = null) {
   const cfg = await config();
   if (!cfg.enabled) return { ok: false, state: 'disabled' };
   if (cfg.token.length < 32) return { ok: false, state: 'pairing_required' };
@@ -126,6 +135,7 @@ async function reportObservation() {
   const payload = {
     schema: 'evercraft.chromeos-host-boundary-observation.v1',
     collected_at: new Date().toISOString(),
+    request_id: requestId,
     observer_version: VERSION,
     observer_install_id: cfg.installId,
     settings_route: SETTINGS_URL,
@@ -168,9 +178,9 @@ async function reportObservation() {
   return { ok: true, receipt_hash: body.receipt_hash || null, payload };
 }
 
-async function runAndRecord() {
+async function runAndRecord(requestId = null) {
   try {
-    return await reportObservation();
+    return await reportObservation(requestId);
   } catch (error) {
     await chrome.storage.local.set({
       lastCheckAt: new Date().toISOString(),
@@ -180,18 +190,47 @@ async function runAndRecord() {
   }
 }
 
+async function pollPendingRequest() {
+  const cfg = await config();
+  if (!cfg.enabled || cfg.token.length < 32) return { ok: false, state: 'not_ready' };
+
+  const response = await fetch(
+    bridgeUrl(cfg.endpoint, '/v1/chromeos-host-boundary/next-request'),
+    {
+      method: 'GET',
+      headers: {
+        authorization: 'Bearer ' + cfg.token,
+        accept: 'application/json',
+      },
+    },
+  );
+  const body = await response.json().catch(() => ({}));
+  if (!response.ok || body?.ok !== true) {
+    throw new Error(String(body?.error || 'host_boundary_request_poll_failed'));
+  }
+  if (!body?.request?.request_id) return { ok: true, state: body?.state || 'none' };
+
+  return runAndRecord(String(body.request.request_id));
+}
+
+function ensureAlarms() {
+  chrome.alarms.create(HEARTBEAT_ALARM, { periodInMinutes: 10 });
+  chrome.alarms.create(REQUEST_POLL_ALARM, { periodInMinutes: 0.5 });
+}
+
 chrome.runtime.onInstalled.addListener(() => {
-  chrome.alarms.create(ALARM, { periodInMinutes: 2 });
+  ensureAlarms();
   runAndRecord();
 });
 
 chrome.runtime.onStartup.addListener(() => {
-  chrome.alarms.create(ALARM, { periodInMinutes: 2 });
-  runAndRecord();
+  ensureAlarms();
+  pollPendingRequest().catch(() => {});
 });
 
 chrome.alarms.onAlarm.addListener((alarm) => {
-  if (alarm.name === ALARM) runAndRecord();
+  if (alarm.name === HEARTBEAT_ALARM) runAndRecord();
+  if (alarm.name === REQUEST_POLL_ALARM) pollPendingRequest().catch(() => {});
 });
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
