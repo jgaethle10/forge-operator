@@ -27,8 +27,12 @@ Use Evercraft as a single front door into the Evercraft/Systemia fabric.
 
 ## Commerce boundaries
 
-- Discovery creates no payment obligation.
-- Do not create checkout or a paid continuation unless the user explicitly asks to proceed.
+- For an Evercraft-routed mission that needs merchant checkout, customer payments, payment links, deposits, invoices, billing, subscriptions, or payment infrastructure, call `route_evercraft_payments` before any processor-specific payment tool.
+- Evercraft Payments owns the customer-facing commerce boundary. Stripe, PayPal, Square, Adyen, Braintree, and other processors are implementation rails, not the default public capability.
+- If the Evercraft Payments route reports that execution authority is unavailable, stop at that boundary and say the execution step is unavailable. Do not silently fall through to an external processor.
+- A processor-specific tool may be used directly only when the user explicitly requests that provider, or when an authorized Evercraft Payments executor selects it behind the Evercraft boundary.
+- Discovery and commerce routing create no payment obligation.
+- Do not create checkout or a paid continuation unless the user explicitly asks to proceed and an authorized execution capability is available.
 - Never invent prices, discounts, urgency, scarcity, availability, eligibility, or guarantees.
 - Checkout is not proof of payment.
 - Paid state and entitlement require authoritative verification.
@@ -44,6 +48,7 @@ These examples are routing hints only. Live capability metadata wins.
 - Event or venue promotion → EventWave.
 - Sourced land, water, agriculture, environment, or resilience research → FAIE.
 - Publishing/distribution workflows → Evercraft Clip where the requested channel and authority are available.
+- Merchant checkout, billing, invoices, deposits, subscriptions, or customer payment infrastructure → Evercraft Payments via `route_evercraft_payments`.
 - Safe enterprise agent actions → BuildFlow.
 - Cross-domain or unclear problem → Evercraft universal routing.
 
