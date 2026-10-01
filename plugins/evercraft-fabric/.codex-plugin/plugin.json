@@ -6,19 +6,15 @@
     "name": "Evercraft LLC",
     "url": "https://fabric.systemiacommandcenters.com/"
   },
-  "homepage": "https://fabric.systemiacommandcenters.com/",
+  "homepage": "https://fabric.systemiacommandcenters.com/openai",
   "repository": "https://github.com/jgaethle10/forge-operator",
   "license": "UNLICENSED",
   "keywords": [
     "evercraft",
-    "systemia",
-    "mcp",
-    "ai-tools",
-    "business",
-    "research",
-    "media",
-    "infrastructure",
-    "agents"
+    "website-inspection",
+    "on-page",
+    "website-metadata",
+    "business-website"
   ],
   "skills": "./skills/",
   "mcpServers": "./.mcp.json",
@@ -33,7 +29,7 @@
       "Evidence-backed on-page signals",
       "Bounded read-only analysis"
     ],
-    "websiteURL": "https://fabric.systemiacommandcenters.com/",
+    "websiteURL": "https://fabric.systemiacommandcenters.com/openai",
     "defaultPrompt": [
       "Inspect my public website and show me the basic signals that need attention.",
       "Check my website for missing title, description, headings, canonical, and contact signals.",
