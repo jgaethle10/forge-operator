@@ -28,6 +28,7 @@ export function evaluatePilotReadiness({
   executionTranslationLab,
   quoteMicrostructureLab,
   minimumModeledEntryQuoteCoverage = 0.90,
+  minimumTwoSidedQuoteCoverage = 0.90,
   forwardScores = [],
   forwardClusterScores = { scores: [] },
   durableState = {},
@@ -46,6 +47,7 @@ export function evaluatePilotReadiness({
   const walkMap = bySignal(walkForwardLab?.reviews || []);
   const executionMap = bySignal(executionTranslationLab?.reviews || []);
   const quoteOverlays = quoteMicrostructureLab?.overlays || [];
+  const quoteExecutionPairs = quoteMicrostructureLab?.execution_pairs || [];
   const forwardMap = forwardBySignal(forwardScores);
 
   const clusterMap = new Map(
@@ -80,6 +82,15 @@ export function evaluatePilotReadiness({
     const signalModeledEntryQuoteCoverage = signalModeledEntryQuotes.length
       ? signalModeledEntryQuoteCount / signalModeledEntryQuotes.length
       : 0;
+    const signalExecutionPairs = quoteExecutionPairs.filter(
+      (row) => row.signal_key === signal
+    );
+    const signalTwoSidedQuoteCount = signalExecutionPairs.filter(
+      (row) => row.two_sided_quote_available === true
+    ).length;
+    const signalTwoSidedQuoteCoverage = signalExecutionPairs.length
+      ? signalTwoSidedQuoteCount / signalExecutionPairs.length
+      : 0;
     const forwardRow = forwardMap.get(signal);
     const clusterRow = clusterMap.get(clusterKey);
 
@@ -110,6 +121,9 @@ export function evaluatePilotReadiness({
       modeled_entry_quote_coverage:
         signalModeledEntryQuotes.length > 0 &&
         signalModeledEntryQuoteCoverage >= Number(minimumModeledEntryQuoteCoverage),
+      two_sided_quote_coverage:
+        signalExecutionPairs.length > 0 &&
+        signalTwoSidedQuoteCoverage >= Number(minimumTwoSidedQuoteCoverage),
       consolidated_sip_nbbo_scope:
         quoteMicrostructureLab?.quote_scope === "consolidated_sip_nbbo" &&
         quoteMicrostructureLab?.fallback_feed_used === false,
@@ -145,6 +159,11 @@ export function evaluatePilotReadiness({
         modeled_entry_quotes: signalModeledEntryQuoteCount,
         modeled_entry_quote_coverage: signalModeledEntryQuoteCoverage,
         minimum_required_coverage: Number(minimumModeledEntryQuoteCoverage),
+        two_sided_execution_pairs: signalExecutionPairs.length,
+        two_sided_execution_quotes: signalTwoSidedQuoteCount,
+        two_sided_quote_coverage: signalTwoSidedQuoteCoverage,
+        minimum_required_two_sided_coverage: Number(minimumTwoSidedQuoteCoverage),
+        exit_quote_required_for_pilot: true,
         iex_bbo_is_not_consolidated_nbbo:
           quoteMicrostructureLab?.quote_scope === "iex_bbo_not_consolidated_nbbo",
       },
