@@ -37,11 +37,24 @@ const rows = [
   { signal_key: review.signal_key, observed_at: "2026-10-02T20:00:00Z", origin_entity_ref: "a", forward_return: 0.02, benchmark_return: 0.005 },
   { signal_key: review.signal_key, observed_at: "2026-10-03T20:00:00Z", origin_entity_ref: "b", forward_return: 0.015, benchmark_return: 0.005 },
 ];
+const pendingScore = scoreForwardPaperCohort(protocol, rows.slice(0, 2));
+assert.equal(pendingScore.forward_events, 1);
+assert.equal(pendingScore.status, "FORWARD_PAPER_PENDING");
+assert.equal(pendingScore.sample_ready, false);
+
 const score = scoreForwardPaperCohort(protocol, rows);
 assert.equal(score.forward_events, 2);
 assert.equal(score.distinct_origins, 2);
 assert.equal(score.status, "FORWARD_PAPER_PASS");
+assert.equal(score.sample_ready, true);
 assert.equal(score.live_trade_authority, false);
+
+const failScore = scoreForwardPaperCohort(protocol, [
+  { signal_key: review.signal_key, observed_at: "2026-10-02T20:00:00Z", origin_entity_ref: "a", forward_return: -0.02, benchmark_return: 0 },
+  { signal_key: review.signal_key, observed_at: "2026-10-03T20:00:00Z", origin_entity_ref: "b", forward_return: -0.01, benchmark_return: 0 },
+]);
+assert.equal(failScore.status, "FORWARD_PAPER_FAIL");
+assert.equal(failScore.sample_ready, true);
 
 
 const negativeEvaluation = {
