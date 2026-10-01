@@ -6,7 +6,7 @@
     "long_description": "Inspect a public website you own, administer, or have permission to review. Evercraft returns bounded, evidence-backed HTTP and on-page signals with explicit limitations. It does not modify the site, access private networks, create payments, or perform other consequential actions.",
     "developer": "Evercraft LLC",
     "category": "Business & Operations",
-    "website": "https://fabric.systemiacommandcenters.com/",
+    "website": "https://fabric.systemiacommandcenters.com/openai",
     "privacy_document": "plugins/evercraft-fabric/PRIVACY.md",
     "terms_document": "plugins/evercraft-fabric/TERMS.md",
     "support_document": "plugins/evercraft-fabric/SUPPORT.md",
