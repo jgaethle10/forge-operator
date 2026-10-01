@@ -488,6 +488,67 @@ function rpcError(id, code, message) {
   return { jsonrpc: '2.0', id: id ?? null, error: { code, message } };
 }
 
+function isBase44Url(value) {
+  try {
+    const hostname = new URL(String(value || '')).hostname.toLowerCase();
+    return hostname === 'base44.app' || hostname.endsWith('.base44.app');
+  } catch {
+    return false;
+  }
+}
+
+function nativeCatalogGatewayFetch(catalog, action, publicId) {
+  const capability = (catalog || []).find((entry) => entry.public_id === publicId);
+  if (!capability) throw new Error('specialist_capability_not_found');
+
+  const connections = (capability.connections || []).filter(
+    (connection) => !isBase44Url(connection?.url)
+  );
+  const handoff = connections.find((connection) => connection.type === 'website')
+    || connections.find((connection) => connection.type === 'mcp')
+    || connections.find((connection) => connection.type === 'docs')
+    || null;
+
+  const common = {
+    ok: true,
+    source: 'evercraft.fabric.catalog',
+    public_id: capability.public_id,
+    name: capability.name,
+    description: capability.description,
+    machine_state: capability.state,
+    connections,
+    checkout_created: false,
+    payment_created: false,
+    payment_obligation_created: false,
+    base44_transport_enabled: false,
+  };
+
+  if (action === 'offer') {
+    return {
+      ...common,
+      offer: {
+        public_id: capability.public_id,
+        name: capability.name,
+        description: capability.description,
+        state: capability.state,
+      },
+      human_action_required: false,
+    };
+  }
+
+  if (action === 'service_handoff') {
+    return {
+      ...common,
+      handoff_url: handoff?.url || null,
+      handoff_type: handoff?.type || null,
+      human_action_required: true,
+      handoff_state: handoff ? 'public_review_surface_available' : 'public_review_surface_not_available',
+    };
+  }
+
+  throw new Error('specialist_gateway_action_not_supported');
+}
+
 async function defaultGatewayFetch(gatewayUrl, action, publicId) {
   const target = new URL(gatewayUrl);
   if (target.protocol !== 'https:') throw new Error('machine_commerce_gateway_must_use_https');
@@ -563,7 +624,7 @@ export async function executeSpecialistRpc(def, rpc, gatewayFetch) {
 export async function startSpecialistHandoffRuntime({
   host = '127.0.0.1',
   port = 0,
-  gatewayUrl = 'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway',
+  gatewayUrl = '',
   gatewayFetch = null,
   remoteOpsPricingUrl = SYSTEMIA_REMOTE_OPS.pricing_url,
   remoteOpsPricingFetch = null,
@@ -574,13 +635,16 @@ export async function startSpecialistHandoffRuntime({
   const instanceId = `specialist_handoff_${randomBytes(12).toString('hex')}`;
   let deploymentReceiptRef = '';
   let identityAttestation = null;
-  const callGateway = gatewayFetch || ((action, publicId) =>
-    defaultGatewayFetch(gatewayUrl, action, publicId));
-  const callRemoteOpsPricing = remoteOpsPricingFetch || ((payload) =>
-    Promise.resolve(simulateRemoteOpsPricing(payload)));
   const normalizedFabricCatalog = Array.isArray(fabricCatalog)
     ? normalizeFabricCatalog(fabricCatalog)
     : loadFabricCatalogFromRepository();
+  const normalizedGatewayUrl = String(gatewayUrl || '').trim();
+  const callGateway = gatewayFetch
+    || (normalizedGatewayUrl
+      ? ((action, publicId) => defaultGatewayFetch(normalizedGatewayUrl, action, publicId))
+      : ((action, publicId) => nativeCatalogGatewayFetch(normalizedFabricCatalog, action, publicId)));
+  const callRemoteOpsPricing = remoteOpsPricingFetch || ((payload) =>
+    Promise.resolve(simulateRemoteOpsPricing(payload)));
   const normalizedFabricPath = String(fabricMcpPath || '/mcp').trim();
   if (
     !normalizedFabricPath.startsWith('/') ||
@@ -623,7 +687,18 @@ export async function startSpecialistHandoffRuntime({
     fabric_capability_count: normalizedFabricCatalog.length,
     openai_challenge_path: openAiChallengePath,
     openai_challenge_ready: Boolean(challengeToken),
-    legacy_adapter: 'evercraft_machine_commerce_gateway',
+    gateway_mode: gatewayFetch
+      ? 'injected'
+      : normalizedGatewayUrl
+        ? 'external_https'
+        : 'native_fabric_catalog',
+    external_gateway_configured: Boolean(normalizedGatewayUrl),
+    base44_transport_enabled: Boolean(
+      normalizedGatewayUrl && isBase44Url(normalizedGatewayUrl)
+    ),
+    legacy_adapter: normalizedGatewayUrl
+      ? 'evercraft_machine_commerce_gateway'
+      : null,
     specialist_paths: [
       {
         product: 'Evercraft Fabric',
