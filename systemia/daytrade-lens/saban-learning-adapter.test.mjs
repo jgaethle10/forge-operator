@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { ROLE_ATTACKS, runAssignment, reconcile } from "./saban-learning-adapter.mjs";
+import { ROLE_ATTACKS, runAssignment, reconcile, discoverScholarlySources } from "./saban-learning-adapter.mjs";
 
 const lesson={
   lesson_id:"implementation-shortfall",
@@ -22,7 +22,41 @@ assert.equal(one.autonomous_order_authority,false);
 assert.ok(one.attack.proposed_tests.includes("decision-to-fill implementation shortfall"));
 
 const roles=Object.keys(ROLE_ATTACKS);
-assert.equal(roles.length,10);
+assert.equal(roles.length,11);
+
+const fakeFetch=async()=>({
+  ok:true,
+  json:async()=>({
+    message:{
+      items:[
+        {
+          DOI:"10.1234/proof",
+          title:["Proof Market Microstructure Paper"],
+          publisher:"Proof Press",
+          type:"journal-article",
+          URL:"https://doi.org/10.1234/proof",
+          author:[{family:"Proof"}],
+          published:{"date-parts":[[2026,1,1]]}
+        }
+      ]
+    }
+  })
+});
+const discovered=await discoverScholarlySources(lesson,fakeFetch);
+assert.equal(discovered.provider,"Crossref");
+assert.equal(discovered.candidates.length,1);
+assert.equal(discovered.candidates[0].doi,"10.1234/proof");
+
+const sourceHunter=await runAssignment({
+  assignment:{
+    agent_id:"agent:source-hunter",
+    role:"academic_source_hunter",
+    item:{raw:lesson}
+  },
+  executionContext:{fetchImpl:fakeFetch}
+});
+assert.equal(sourceHunter.source_discovery.candidates.length,1);
+assert.equal(sourceHunter.live_trade_authority,false);
 
 const results=[];
 for(const role of roles){
@@ -42,8 +76,8 @@ for(const role of roles){
 
 const receipt=reconcile({results});
 assert.equal(receipt.status,"reconciled");
-assert.equal(receipt.assignments,20);
-assert.equal(receipt.role_count,10);
+assert.equal(receipt.assignments,22);
+assert.equal(receipt.role_count,11);
 assert.equal(receipt.lesson_count,2);
 assert.ok(receipt.attack_queue.length>0);
 assert.ok(receipt.attack_queue.some((row)=>row.test==="full trial-count ledger"));
@@ -60,6 +94,7 @@ console.log(JSON.stringify({
   ok:true,
   schema:"evercraft.daytrade.saban-learning-adapter-proof.v1",
   roles:roles.length,
+  crossref_read_only_discovery:true,
   role_item_attack:true,
   reconciled_attack_queue:true,
   frozen_protocol_mutation_forbidden:true,
