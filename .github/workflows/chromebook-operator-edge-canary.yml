@@ -16,6 +16,7 @@ on:
 
 permissions:
   contents: read
+  statuses: write
 
 jobs:
   canary:
@@ -51,6 +52,24 @@ jobs:
             exit "$status"
           fi
           cat artifacts/fabric-operator-edge-canary.json
+
+      - name: Publish operator edge commit status
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERIFY_OUTCOME: ${{ steps.verify.outcome }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "$VERIFY_OUTCOME" = "success" ]; then
+            state="success"
+            description="Chromebook production edge externally verified"
+          else
+            state="failure"
+            description="Chromebook production edge unreachable or trust gate failed"
+          fi
+          payload="$(jq -cn             --arg state "$state"             --arg context "evercraft/chromebook-operator-edge"             --arg description "$description"             '{state:$state,context:$context,description:$description}')"
+          curl --fail --silent --show-error             -X POST             -H "Authorization: Bearer $GH_TOKEN"             -H "Accept: application/vnd.github+json"             -H "X-GitHub-Api-Version: 2022-11-28"             --data "$payload"             "https://api.github.com/repos/$GITHUB_REPOSITORY/statuses/$GITHUB_SHA" >/dev/null
 
       - name: Upload operator edge receipt
         if: always()
