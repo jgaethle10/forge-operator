@@ -158,6 +158,25 @@ NODE_RECEIPT="$RUN_HOME/.local/state/evercraft/organism/compute/nodeseed-receipt
 ALLOCATOR_TOKEN_FILE="$RUN_HOME/.local/state/evercraft/organism/.secrets/allocator-token"
 NETWORK_OBSERVER_INSTALLER="$REPO_ROOT/scripts/install-fabric-network-observer.sh"
 ROUTER_MAP_INSTALLER="$REPO_ROOT/scripts/install-fabric-router-map-resident.sh"
+LOCAL_ORGANISM_INSTALLER="$REPO_ROOT/systemia/compute/install-local-organism-user.sh"
+LOCAL_ORGANISM_UNIT="$RUN_HOME/.config/systemd/user/evercraft-local-organism.service"
+
+refresh_local_organism_if_installed() {
+  if [[ ! -f "$LOCAL_ORGANISM_UNIT" ]]; then
+    return 0
+  fi
+  if [[ ! -f "$LOCAL_ORGANISM_INSTALLER" ]]; then
+    echo "ERROR: local organism installer missing from deployed Forge revision" >&2
+    return 1
+  fi
+  local run_uid
+  run_uid="$(id -u "$RUN_USER")"
+  runuser -u "$RUN_USER" -- env \
+    HOME="$RUN_HOME" \
+    USER="$RUN_USER" \
+    XDG_RUNTIME_DIR="/run/user/$run_uid" \
+    bash "$LOCAL_ORGANISM_INSTALLER" >/dev/null
+}
 
 mkdir -p "$STATE_DIR"
 chmod 0750 "$STATE_DIR"
@@ -351,6 +370,10 @@ if [[ "$before" == "$target" ]]; then
     echo "ERROR: Fabric is healthy but resident network observer installation failed" >&2
     exit 11
   fi
+  if ! refresh_local_organism_if_installed; then
+    echo "ERROR: local organism refresh failed on current Forge revision" >&2
+    exit 12
+  fi
 
   # Reassert every owned ingress layer we can control from Crostini.
   # ChromeOS host port-forward toggles remain outside the guest boundary.
@@ -372,6 +395,7 @@ rollback() {
   as_user git -C "$REPO_ROOT" reset --hard "$before" >/dev/null
   restore_edge_attestation_env
   systemctl restart "$SERVICE" || true
+  refresh_local_organism_if_installed || true
   printf '{"schema":"evercraft.fabric-update.v1","state":"rolled_back","from_ref":"%s","attempted_ref":"%s","reason":"%s","observed_at":"%s"}\n'     "$before" "$target" "$reason" "$(date -u +%FT%TZ)" > "$STATE_DIR/last-update.json"
   chmod 0640 "$STATE_DIR/last-update.json"
 }
@@ -410,6 +434,10 @@ fi
 if ! ensure_network_observer true; then
   echo "ERROR: Fabric update is healthy but resident network observer installation failed" >&2
   exit 11
+fi
+if ! refresh_local_organism_if_installed; then
+  rollback "local_organism_refresh_failed"
+  exit 12
 fi
 
 # A source update is also an ingress recovery opportunity.
