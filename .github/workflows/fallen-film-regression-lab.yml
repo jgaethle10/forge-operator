@@ -1,0 +1,21 @@
+name: Fallen Film Regression Lab
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/film-regression-lab.ts'
+      - 'systemia/media-studio/film-regression-lab.test.ts'
+      - 'systemia/media-studio/film-regression-cli.ts'
+      - '.github/workflows/fallen-film-regression-lab.yml'
+  workflow_dispatch:
+
+jobs:
+  film-regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-audit --no-fund
+      - run: node --import tsx --test systemia/media-studio/film-regression-lab.test.ts
