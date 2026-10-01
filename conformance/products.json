@@ -425,7 +425,7 @@
       "canonical_url": "https://evermaps.base44.app/",
       "doorway_state": "machine_commerce_live",
       "conformance_state": "live_read_only_mcp_verified",
-      "provider_behavior_state": "not_inferred_from_publication",
+      "provider_behavior_state": "not_run",
       "machine_commerce_public_id": "evermaps-evidence-projection-machine-v1",
       "machine_commerce_tool": "query_evermaps_public_projection",
       "machine_invocation_url": "https://base44.app/api/apps/6a985aeccbfb6e930a40137b/functions/publicProjectionQuery",
@@ -438,7 +438,10 @@
         "version": "1.6.0",
         "publication_state": "published_shared_server"
       },
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evermaps/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evermaps/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evermaps/ai-conformance.json"
     },
     {
       "product_key": "evernest",
@@ -551,7 +554,7 @@
       "canonical_url": "https://global-stat-pulse.base44.app/",
       "doorway_state": "machine_commerce_live",
       "conformance_state": "live_read_only_mcp_verified",
-      "provider_behavior_state": "not_inferred_from_publication",
+      "provider_behavior_state": "not_run",
       "machine_commerce_public_id": "globalstat-country-intelligence-machine-v1",
       "machine_commerce_tool": "query_globalstat_country_intelligence",
       "machine_invocation_url": "https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/countryIntelligence",
@@ -564,7 +567,10 @@
         "version": "1.6.0",
         "publication_state": "published_shared_server"
       },
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/globalstat/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/globalstat/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/globalstat/ai-conformance.json"
     },
     {
       "product_key": "guardian",
@@ -668,7 +674,7 @@
       "canonical_url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
       "doorway_state": "machine_commerce_live",
       "conformance_state": "live_read_only_mcp_verified",
-      "provider_behavior_state": "not_inferred_from_publication",
+      "provider_behavior_state": "not_run",
       "machine_commerce_public_id": "littlered-kdp-export-qa-machine-v1",
       "machine_commerce_tool": "check_book_export_preflight",
       "machine_invocation_url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/kdpExportQa",
@@ -681,7 +687,10 @@
         "version": "1.6.0",
         "publication_state": "published_shared_server"
       },
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/little-red-book-export-qa/llms.txt",
+      "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/little-red-book-export-qa/ai-discovery.json",
+      "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/little-red-book-export-qa/ai-conformance.json"
     },
     {
       "product_key": "opportunity-fabric",
