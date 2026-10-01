@@ -5,7 +5,11 @@ import { execFile } from 'node:child_process';
 import { createHash, randomBytes } from 'node:crypto';
 import { promisify } from 'node:util';
 import { observeNodeNetwork } from './network-observer.mjs';
-import { readChromeOsHostBoundaryStatus } from './chromeos-host-boundary-bridge.mjs';
+import {
+  readChromeOsHostBoundaryCheck,
+  readChromeOsHostBoundaryStatus,
+  requestChromeOsHostBoundaryCheck,
+} from './chromeos-host-boundary-bridge.mjs';
 
 const execFileAsync = promisify(execFile);
 const sha = (value) => {
@@ -216,6 +220,7 @@ export class EvercraftRemoteOperator {
       },
       chromeos_host_boundary: {
         read: true,
+        check_now: true,
         mutation: false,
         source: 'paired_chromeos_extension',
         raw_accessibility_tree_persisted: false,
@@ -254,6 +259,45 @@ export class EvercraftRemoteOperator {
     });
     return {
       ...status,
+      operator_receipt: receipt,
+    };
+  }
+
+  async hostBoundaryCheck({ wait_ms = 0 } = {}) {
+    const requested = requestChromeOsHostBoundaryCheck();
+    const waitMs = boundedInt(wait_ms, 0, 0, 45_000);
+    const deadline = Date.now() + waitMs;
+    let check = readChromeOsHostBoundaryCheck();
+
+    while (check.pending && Date.now() < deadline) {
+      await new Promise((resolve) => setTimeout(resolve, Math.min(250, deadline - Date.now())));
+      check = readChromeOsHostBoundaryCheck();
+    }
+
+    const status = readChromeOsHostBoundaryStatus();
+    const fulfilled =
+      check.state === 'completed' &&
+      status.request_id === requested.request_id &&
+      status.fresh === true;
+    const receipt = this.#receipt('chromeos-host-boundary.check', {
+      request_id: requested.request_id,
+      wait_ms: waitMs,
+      request_state: check.state,
+      fulfilled,
+      source_receipt_hash: fulfilled ? status.receipt_hash : null,
+      mutation_supported: false,
+    });
+
+    return {
+      ok: check.ok !== false,
+      schema: 'evercraft.chromeos-host-boundary-check-result.v1',
+      request_id: requested.request_id,
+      request_state: check.state,
+      pending: check.pending === true,
+      fulfilled,
+      waited_ms: waitMs,
+      status,
+      mutation_supported: false,
       operator_receipt: receipt,
     };
   }
