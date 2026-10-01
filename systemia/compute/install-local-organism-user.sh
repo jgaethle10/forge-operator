@@ -123,6 +123,12 @@ if ! systemctl --user is-active --quiet evercraft-local-organism-health.timer; t
   exit 5
 fi
 
+systemctl --user start evercraft-local-organism-health.service
+if [[ ! -s "${STATE_ROOT}/health-watch.json" ]]; then
+  echo "Evercraft health watch did not produce its initial receipt." >&2
+  exit 6
+fi
+
 echo "Evercraft local organism installed and active."
 echo "Runtime: NodeSeed -> Evercraft Compute -> Yard -> KAIDANCE -> Systemia Core"
 echo "Network: loopback-only; no public ingress created."
