@@ -188,7 +188,7 @@ test('production ratchet passes while grandfathered debt remains visible', () =>
   assert.deepEqual(mesh.ratchet.new_direct_door_without_contract, []);
   assert.deepEqual(mesh.ratchet.new_specialist_only_doors, []);
   assert.ok(mesh.summary.missing_contract_count > 0);
-  assert.equal(mesh.summary.shared_runtime_contract_count, 4);
+  assert.equal(mesh.summary.shared_runtime_contract_count, 5);
   assert.equal(mesh.summary.private_runtime_contract_count, 1);
   assert.equal(mesh.summary.discovery_only_contract_count, 2);
   assert.deepEqual(
@@ -401,4 +401,23 @@ test('every shared-runtime contract binds exact machine tool evidence', () => {
 
   const mesh = renderCapabilityMesh(process.cwd());
   assert.equal(mesh.summary.incomplete_contract_declaration_count, 0);
+});
+
+
+test('IBM i Rescue is contracted through Machine Commerce without claiming a live direct specialist door', () => {
+  const mesh = renderCapabilityMesh(process.cwd());
+  const ibmi = mesh.products.find((row) => row.product_key === 'ibmi-rescue');
+
+  assert.ok(ibmi);
+  assert.equal(ibmi.contract_state, 'complete_declaration');
+  assert.equal(ibmi.adoption_stage, 'shared_runtime');
+  assert.equal(ibmi.direct_door.direct_callable, false);
+  assert.equal(
+    ibmi.direct_door.state,
+    'yard_runtime_proven_public_route_pending'
+  );
+  assert.equal(
+    mesh.priority_queues.direct_door_without_contract.includes('ibmi-rescue'),
+    false
+  );
 });
