@@ -60,6 +60,7 @@ function normalizeBars(rows = []) {
   return rows
     .map((row) => ({
       t: row?.t || row?.timestamp,
+      o: Number(row?.o ?? row?.open),
       c: Number(row?.c ?? row?.close),
     }))
     .filter((row) => row.t && Number.isFinite(row.c) && row.c > 0)
@@ -95,6 +96,13 @@ function marketDateKey(timestamp) {
   );
   return `${parts.year}-${parts.month}-${parts.day}`;
 }
+function barCloseAvailableAt(timestamp, minutes = 5) {
+  const start = new Date(timestamp).getTime();
+  if (!Number.isFinite(start)) return null;
+  return new Date(start + Number(minutes) * 60_000).toISOString();
+}
+
+
 export function classifyNewYorkMarketPhase(timestamp) {
   const date=new Date(timestamp);
   if(!Number.isFinite(date.getTime())) return "invalid";
@@ -151,21 +159,33 @@ function measuredReturnFromIndex(bars, startIndex, lagBars, observedAt) {
   const sessionStartIndex = bars.findIndex((bar) => marketDateKey(bar.t) === startDate);
   const previousSessionClose =
     sessionStartIndex > 0 ? Number(bars[sessionStartIndex - 1].c) : null;
-  const sessionOpenPrice = sessionStartIndex >= 0 ? Number(bars[sessionStartIndex].c) : null;
+  const sessionOpenPrice =
+    sessionStartIndex >= 0 && Number.isFinite(Number(bars[sessionStartIndex].o))
+      ? Number(bars[sessionStartIndex].o)
+      : null;
   const openingGap = previousSessionClose && sessionOpenPrice
     ? sessionOpenPrice / previousSessionClose - 1
     : null;
+  const startAvailableAt = barCloseAvailableAt(start.t);
+  const endAvailableAt = barCloseAvailableAt(end.t);
   return {
-    start_time: start.t,
-    end_time: end.t,
+    start_interval_time: start.t,
+    end_interval_time: end.t,
+    start_time: startAvailableAt,
+    end_time: endAvailableAt,
     start_price: start.c,
     end_price: end.c,
+    price_field: "bar_close",
+    bar_minutes: 5,
     forward_return: end.c / start.c - 1,
     realized_volatility_5m: Math.sqrt(Math.max(0, realizedVariance)),
     max_path_gain: pathRelative.length ? Math.max(...pathRelative) : 0,
     max_path_drawdown: pathRelative.length ? Math.min(...pathRelative) : 0,
     opening_gap_return: openingGap,
-    no_pre_observation_price_used: new Date(start.t) >= new Date(observedAt),
+    opening_gap_price_field: "bar_open",
+    no_pre_observation_price_used:
+      startAvailableAt !== null &&
+      new Date(startAvailableAt) >= new Date(observedAt),
   };
 }
 
@@ -394,7 +414,7 @@ export function measureRockiesHypotheses(hypotheses, barsBySymbol, {
             throw new Error("edge_lab_next_session_lookahead_violation");
           }
           executionDelayStress.next_session_open = {
-            entry_policy: "next_core_session_open",
+            entry_policy: "next_core_session_first_5m_close",
             forward_return: nextSessionInstrument.forward_return,
             benchmark_return: nextSessionBenchmark.forward_return,
             excess_return: nextSessionInstrument.forward_return - nextSessionBenchmark.forward_return,
