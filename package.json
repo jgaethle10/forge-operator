@@ -274,7 +274,8 @@
     "saban:ambient:api": "node systemia/saban/ambient-work-api-runner.mjs",
     "saban:pairing": "node systemia/saban/microseed-pairing-cli.mjs",
     "saban:pair-device": "node systemia/saban/microseed-device-pair-cli.mjs",
-    "test:product-url-fabric": "node tests/product-url-fabric.test.mjs"
+    "test:product-url-fabric": "node tests/product-url-fabric.test.mjs",
+    "test:fabric-outbound-relay": "node --test tests/fabric-outbound-relay.test.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
