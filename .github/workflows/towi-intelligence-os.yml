@@ -29,5 +29,5 @@ jobs:
         with:
           node-version: '22'
       - run: npm install --no-audit --no-fund
-      - run: node --test systemia/towi/core.test.mjs
+      - run: npm run test:towi
       - run: npm run lint
