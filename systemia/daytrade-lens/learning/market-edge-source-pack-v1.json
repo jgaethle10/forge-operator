@@ -1,0 +1,206 @@
+{
+  "schema": "evercraft.daytrade.market-learning-source-pack.v1",
+  "pack_id": "daytrade-market-lesson-2026-10-01-v1",
+  "generated_at": "2026-10-01T19:08:00.000Z",
+  "purpose": "Train and adversarially challenge DayTrade Lens. Evidence is educational/research input, not a live trading recommendation.",
+  "authority_boundary": {
+    "live_trade_authority": false,
+    "autonomous_order_authority": false,
+    "autonomous_funding_authority": false,
+    "historical_findings_do_not_mutate_frozen_forward_protocols": true
+  },
+  "lessons": [
+    {
+      "lesson_id": "base-rate-learning",
+      "title": "Skill must beat the base rate, not just a backtest",
+      "sources": [
+        {
+          "authority": "Barber, Lee, Liu, Odean, Zhang",
+          "url": "https://faculty.haas.berkeley.edu/odean/papers/Day%20Traders/Day%20Trading%20and%20Learning%20110217.pdf",
+          "evidence_kind": "large historical trader-level study",
+          "note": "Taiwan 1992-2006; aggregate net performance negative in every studied year, vast majority unprofitable, with a small skilled minority reported in related work."
+        },
+        {
+          "authority": "U.S. Securities and Exchange Commission",
+          "url": "https://www.sec.gov/about/reports-publications/investorpubsdaytipshtm",
+          "evidence_kind": "regulatory investor education",
+          "note": "Emphasizes severe loss risk, expenses, leverage risk, and skepticism toward easy-profit claims."
+        }
+      ],
+      "principle": "A research program must assume skill is rare until prospective evidence proves otherwise.",
+      "attacks": [
+        "Report base-rate-adjusted evidence, not only conditional survivor performance.",
+        "Track every attempted signal family and dead candidate so failures cannot disappear.",
+        "Require prospective sample readiness before any performance claim."
+      ]
+    },
+    {
+      "lesson_id": "backtest-overfitting",
+      "title": "The search process is part of the hypothesis",
+      "sources": [
+        {
+          "authority": "Bailey, Borwein, Lopez de Prado, Zhu",
+          "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2326253",
+          "evidence_kind": "backtest-overfitting methodology",
+          "note": "Introduces probability of backtest overfitting and warns that ordinary holdouts can be unreliable after strategy selection."
+        }
+      ],
+      "principle": "The more variants we inspect, the less impressive the winner should look.",
+      "attacks": [
+        "Preserve a complete trial ledger across instruments, horizons, benchmarks, delays and filters.",
+        "Estimate family-level multiple-testing burden and probability of backtest overfitting where the data support it.",
+        "Use walk-forward/purged folds and never retune frozen prospective protocols from later outcomes."
+      ]
+    },
+    {
+      "lesson_id": "deflated-performance",
+      "title": "A Sharpe-like statistic is meaningless without its search history",
+      "sources": [
+        {
+          "authority": "Bailey and Lopez de Prado",
+          "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2460551",
+          "evidence_kind": "selection-bias and non-normality methodology",
+          "note": "Deflated Sharpe Ratio adjusts performance claims for multiple testing and non-normal returns."
+        }
+      ],
+      "principle": "Performance statistics must be deflated by trials, skew, kurtosis and finite sample uncertainty.",
+      "attacks": [
+        "Add DSR/PBO-style diagnostics only as exploratory historical evidence unless predeclared.",
+        "Record skew, kurtosis and downside tails rather than mean return alone.",
+        "Penalize strategy families for the full number of research configurations actually attempted."
+      ]
+    },
+    {
+      "lesson_id": "implementation-shortfall",
+      "title": "Paper alpha is not executable alpha",
+      "sources": [
+        {
+          "authority": "CFA Institute",
+          "url": "https://www.cfainstitute.org/insights/professional-learning/refresher-readings/2026/trading-costs-and-electronic-markets",
+          "evidence_kind": "professional market-structure curriculum",
+          "note": "Explicit and implicit costs include spread, market impact, delay and unfilled-trade opportunity costs."
+        },
+        {
+          "authority": "CFA Institute",
+          "url": "https://www.cfainstitute.org/insights/professional-learning/refresher-readings/2026/trade-strategy-execution",
+          "evidence_kind": "professional execution curriculum",
+          "note": "Implementation shortfall decomposes delay, execution and opportunity costs and is a standard trade-cost measure."
+        }
+      ],
+      "principle": "Entry, fill probability, spread, delay, opportunity cost and exit mechanics belong inside the edge definition.",
+      "attacks": [
+        "Score implementation shortfall from decision timestamp to simulated fills.",
+        "Separate signal decay from execution cost.",
+        "Model unfilled or partially filled orders as outcomes, never silently as perfect fills."
+      ]
+    },
+    {
+      "lesson_id": "impact-volatility-frontier",
+      "title": "Execution is a risk-cost frontier",
+      "sources": [
+        {
+          "authority": "Almgren and Chriss",
+          "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=53501",
+          "evidence_kind": "optimal-execution framework",
+          "note": "Models the tradeoff between volatility risk and temporary/permanent market impact."
+        }
+      ],
+      "principle": "There is no universal best entry speed; urgency changes impact cost and exposure to price risk.",
+      "attacks": [
+        "Stress multiple execution speeds and participation assumptions.",
+        "Report fill-path risk and maximum adverse excursion alongside terminal return.",
+        "Treat tiny-capital execution as an empirical plumbing test rather than a scale-free proof of profitability."
+      ]
+    },
+    {
+      "lesson_id": "order-flow-information",
+      "title": "The book is information, not scenery",
+      "sources": [
+        {
+          "authority": "Federal Reserve Bank of New York",
+          "url": "https://www.newyorkfed.org/research/staff_reports/sr381.html",
+          "evidence_kind": "electronic market microstructure study",
+          "note": "Finds both trades and limit orders affect price dynamics, with announcement periods increasing price impact."
+        }
+      ],
+      "principle": "A price-only backtest can miss the state variable that determines whether the signal is tradable.",
+      "attacks": [
+        "When data become available, test spread, depth, imbalance and order-flow state at event time.",
+        "Do not infer liquidity from volume alone.",
+        "Compare aggressive and passive execution assumptions rather than one universal fill rule."
+      ]
+    },
+    {
+      "lesson_id": "announcement-liquidity",
+      "title": "Public information creates a changing microstructure regime",
+      "sources": [
+        {
+          "authority": "Federal Reserve Bank of New York",
+          "url": "https://www.newyorkfed.org/research/staff_reports/sr27.html",
+          "evidence_kind": "high-frequency announcement study",
+          "note": "Around major announcements, volatility can jump before trading volume, while spreads widen and later narrow as trading increases."
+        }
+      ],
+      "principle": "The first tradable minutes after news can have radically different spread, depth and adverse-selection conditions from normal time.",
+      "attacks": [
+        "Condition execution stress on announcement proximity and volatility state.",
+        "Measure delay sensitivity beyond 5/15/30 minutes and next-session open.",
+        "Do not treat the first available bar as equivalent to a realistically obtainable fill."
+      ]
+    },
+    {
+      "lesson_id": "auction-clock",
+      "title": "Clock time is market structure",
+      "sources": [
+        {
+          "authority": "Nasdaq Trader",
+          "url": "https://www.nasdaqtrader.com/Trader.aspx?id=OpenClose",
+          "evidence_kind": "official exchange mechanics",
+          "note": "Opening Cross occurs at 9:30 ET, with imbalance dissemination beginning at 9:25; distinct auction order types and mechanics apply."
+        }
+      ],
+      "principle": "Open, continuous session and close are different mechanisms; a timestamp is not just another row.",
+      "attacks": [
+        "Separate opening-auction, immediate-post-open, continuous-session and next-open entries.",
+        "Flag events whose modeled public time lands near auction/imbalance windows.",
+        "Never use continuous-market fill assumptions for auction timestamps without explicit modeling."
+      ]
+    },
+    {
+      "lesson_id": "liquidity-is-multidimensional",
+      "title": "Volume is not liquidity",
+      "sources": [
+        {
+          "authority": "Federal Reserve Bank of New York",
+          "url": "https://www.newyorkfed.org/research/epr/03v09n3/0309flem/0309flem.html",
+          "evidence_kind": "liquidity measurement research",
+          "note": "Bid-ask spread and price impact are stronger liquidity measures than trading volume/frequency, which can be poor proxies."
+        }
+      ],
+      "principle": "A strategy can look liquid by volume while being expensive in spread or price impact.",
+      "attacks": [
+        "Measure spread, depth and impact separately whenever available.",
+        "Add missing-liquidity-data state instead of substituting volume.",
+        "Stress the edge in low-depth/high-volatility regimes."
+      ]
+    },
+    {
+      "lesson_id": "behavioral-salience",
+      "title": "Familiarity can masquerade as information",
+      "sources": [
+        {
+          "authority": "Chague, Giovannetti, Paiva",
+          "url": "https://www.sciencedirect.com/science/article/pii/S0378426626000257",
+          "evidence_kind": "2026 peer-reviewed day-trading behavior study",
+          "note": "Documents familiarity bias in day trading and argues top-of-mind dominance can explain it."
+        }
+      ],
+      "principle": "A compelling narrative can increase attention without increasing predictive information.",
+      "attacks": [
+        "Create narrative-blind controls that preserve timestamp/issuer structure while hiding the story label.",
+        "Test whether branded themes such as AI outperform matched non-theme filings after identical selection rules.",
+        "Require evidence that the semantic label adds information beyond earnings, macro timing and market regime."
+      ]
+    }
+  ]
+}
