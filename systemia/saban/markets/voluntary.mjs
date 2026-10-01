@@ -356,10 +356,16 @@ export class VoluntaryComputeMarket {
     };
   }
 
-  async lease({demand,offer,quote}={}){
+  async lease({demand,offer,quote,authority}={}){
     const agreement=offer?.metadata?.agreement||quote?.agreement;
     if(!agreement) throw new Error('voluntary_mutual_agreement_required');
     if(agreement.demand_id!==demand.demand_id) throw new Error('voluntary_agreement_demand_mismatch');
+    if(
+      agreement.terms?.economics?.zero_cost!==true &&
+      authority?.allow_spend!==true
+    ){
+      throw new Error('voluntary_spend_authority_required');
+    }
 
     const voluntaryOfferId=
       offer?.metadata?.voluntary_offer_id||
