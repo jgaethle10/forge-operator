@@ -40,6 +40,43 @@ function normalizeOrigin(value) {
   }
 }
 
+function normalizeProductDomain(value) {
+  const domain = String(value || 'evercraft.app').trim().toLowerCase().replace(/\.$/, '');
+  if (!domain || domain.length > 253 || domain.includes('://') || domain.includes('/') || domain.includes(':')) {
+    throw new Error('invalid_product_domain');
+  }
+  for (const label of domain.split('.')) {
+    if (!/^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/.test(label)) {
+      throw new Error('invalid_product_domain');
+    }
+  }
+  return domain;
+}
+
+function requestHostname(req) {
+  const raw = String(req.headers.host || '').trim().toLowerCase();
+  if (!raw) return null;
+  try {
+    return new URL(`http://${raw}`).hostname.toLowerCase().replace(/\.$/, '');
+  } catch {
+    return null;
+  }
+}
+
+function productHostRoute(req, productDomain) {
+  const host = requestHostname(req);
+  if (!host || host === productDomain || !host.endsWith('.' + productDomain)) return null;
+  const slug = host.slice(0, -(productDomain.length + 1));
+  if (
+    !slug ||
+    slug.includes('.') ||
+    !/^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/.test(slug)
+  ) {
+    return { host, slug: null };
+  }
+  return { host, slug };
+}
+
 function requestOrigin(req, configuredOrigin = null) {
   if (configuredOrigin) return configuredOrigin;
   const host = String(req.headers.host || '').trim();
@@ -109,6 +146,20 @@ function contentType(file) {
   return MIME.get(path.extname(file).toLowerCase()) || 'application/octet-stream';
 }
 
+function sendStaticFile(method, res, file) {
+  const stat = fs.statSync(file);
+  res.writeHead(200, {
+    'content-type': contentType(file),
+    'content-length': stat.size,
+    etag: `"${sha(fs.readFileSync(file))}"`,
+  });
+  if (method === 'HEAD') {
+    res.end();
+    return;
+  }
+  fs.createReadStream(file).pipe(res);
+}
+
 function readTrackedSurfaceCount(publicRoot) {
   try {
     const state = JSON.parse(fs.readFileSync(path.join(publicRoot, 'chum', 'crawl-state.json'), 'utf8'));
@@ -138,6 +189,7 @@ export class ChumPublicOriginRuntime {
     host = '127.0.0.1',
     port = 0,
     publicOrigin = '',
+    productDomain = 'evercraft.app',
   } = {}) {
     if (!publicRoot) throw new Error('publicRoot is required');
     const resolvedRoot = path.resolve(publicRoot);
@@ -148,6 +200,7 @@ export class ChumPublicOriginRuntime {
     this.host = String(host || '127.0.0.1');
     this.port = Math.max(0, Math.min(65535, Number(port || 0)));
     this.publicOrigin = normalizeOrigin(publicOrigin);
+    this.productDomain = normalizeProductDomain(productDomain);
     this.instanceId = `chum_${randomBytes(12).toString('hex')}`;
     this.deploymentReceiptRef = '';
     this.startedAt = null;
@@ -164,6 +217,7 @@ export class ChumPublicOriginRuntime {
       instance_id: this.instanceId,
       deployment_receipt_bound: Boolean(this.deploymentReceiptRef),
       deployment_receipt_ref: this.deploymentReceiptRef || null,
+      product_domain: this.productDomain,
       tracked_public_surfaces: readTrackedSurfaceCount(this.publicRoot),
       started_at: this.startedAt,
     };
@@ -213,6 +267,40 @@ export class ChumPublicOriginRuntime {
           if (method === 'HEAD') res.end();
           else res.end(data);
           return;
+        }
+
+        const productRoute = productHostRoute(req, this.productDomain);
+        if (productRoute) {
+          if (!productRoute.slug) {
+            res.writeHead(404, { 'content-type': 'application/json; charset=utf-8' });
+            res.end(JSON.stringify({ error: 'unknown_product_host' }));
+            return;
+          }
+          const productRoot = path.join(this.publicRoot, 'chum', 'products', productRoute.slug);
+          if (
+            !fs.existsSync(productRoot) ||
+            !fs.statSync(productRoot).isDirectory()
+          ) {
+            res.writeHead(404, { 'content-type': 'application/json; charset=utf-8' });
+            res.end(JSON.stringify({
+              error: 'unknown_product_host',
+              product_key: productRoute.slug,
+            }));
+            return;
+          }
+          const productFile = staticFile(productRoot, pathname);
+          if (productFile) {
+            sendStaticFile(method, res, productFile);
+            return;
+          }
+          if (pathname === '/') {
+            res.writeHead(404, { 'content-type': 'application/json; charset=utf-8' });
+            res.end(JSON.stringify({
+              error: 'product_surface_not_found',
+              product_key: productRoute.slug,
+            }));
+            return;
+          }
         }
 
         if (pathname === '/') {
@@ -269,17 +357,7 @@ export class ChumPublicOriginRuntime {
           return;
         }
 
-        const stat = fs.statSync(file);
-        res.writeHead(200, {
-          'content-type': contentType(file),
-          'content-length': stat.size,
-          etag: `"${sha(fs.readFileSync(file))}"`,
-        });
-        if (method === 'HEAD') {
-          res.end();
-          return;
-        }
-        fs.createReadStream(file).pipe(res);
+        sendStaticFile(method, res, file);
       } catch (error) {
         res.writeHead(500, { 'content-type': 'application/json; charset=utf-8' });
         res.end(JSON.stringify({
