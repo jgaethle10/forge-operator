@@ -52,7 +52,7 @@ jobs:
         run: node systemia/llm-product/conversion-router.mjs --emit
 
       - name: Prove registry truth boundaries, routing, and historical retention
-        run: node --test systemia/llm-product/build-registry.test.mjs systemia/llm-product/conversion-router.test.mjs
+        run: node --test systemia/llm-product/build-registry.test.mjs systemia/llm-product/conversion-router.test.mjs systemia/daytrade-lens/mcp.test.mjs
 
       - name: Upload conversion receipts
         if: always()
