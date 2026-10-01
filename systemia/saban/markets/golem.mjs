@@ -113,6 +113,17 @@ function marketOrder(demand,offer,authority){
   if(network==='polygon'&&authority?.allow_mainnet!==true){
     throw new Error('golem_mainnet_authority_required');
   }
+  const providerNetwork=String(offer?.metadata?.network||'').toLowerCase();
+  if(network==='polygon'){
+    if(providerNetwork&&providerNetwork!=='mainnet'){
+      throw new Error('golem_provider_network_mismatch');
+    }
+    if(offer?.metadata?.polygon_payment_ready!==true){
+      throw new Error('golem_provider_polygon_payment_unavailable');
+    }
+  }else if(providerNetwork==='mainnet'){
+    throw new Error('golem_provider_network_mismatch');
+  }
   const providerId=String(offer?.provider_id||'');
   return {
     demand:{
@@ -143,6 +154,7 @@ export function createGolemMarketAdapter({
   sdkLoader=()=>import('@golem-sdk/golem-js'),
   networkFactory=null,
   fetchImpl=fetch,
+  statsNetworks=['mainnet'],
   timeoutMs=20_000,
 }={}){
   return {
@@ -167,15 +179,17 @@ export function createGolemMarketAdapter({
       const providers=await response.json();
       if(!Array.isArray(providers)) throw new Error('golem_stats_shape_invalid');
 
+      const allowedNetworks=new Set(
+        (statsNetworks||[]).map((value)=>String(value).trim().toLowerCase()).filter(Boolean)
+      );
       const offers=providers
-        .filter((p)=>p?.network==='mainnet')
+        .filter((p)=>
+          !allowedNetworks.size ||
+          allowedNetworks.has(String(p?.network||'').toLowerCase())
+        )
         .filter((p)=>p?.reputation?.blacklisted!==true)
         .map(statsOffer)
-        .filter(Boolean)
-        .filter((offer)=>{
-          if(demand?.workload_class!=='saban.multiplier-assignment.v1') return true;
-          return offer.metadata.polygon_payment_ready;
-        });
+        .filter(Boolean);
 
       const body={
         schema:'evercraft.saban.market-discovery.v1',
