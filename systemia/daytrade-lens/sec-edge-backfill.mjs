@@ -476,6 +476,7 @@ async function main() {
     regimeFragilityLab,
     clockStructureLab,
     eventContaminationLab,
+    announcementExecutionStressLab,
     narrativeBlindControlLab,
     benchmarkLab,
     horizonCoherenceLab,
