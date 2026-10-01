@@ -8,6 +8,7 @@ import { fileURLToPath } from 'node:url';
 import {
   executeFabricDirectoryRpc,
   fabricDirectoryTools,
+  fabricOpenAiTools,
   loadFabricCatalogFromRepository,
   normalizeFabricCatalog,
   validateOpenAiChallengeToken,
@@ -259,7 +260,9 @@ export async function startFabricLocalRuntime({
     transport:'Streamable HTTP',
     transport_modes:['application/json','text/event-stream'],
     mcp_path:'/mcp',
+    openai_mcp_path:'/mcp/openai',
     tools:fabricDirectoryTools().map((tool)=>tool.name),
+    openai_tools:fabricOpenAiTools().map((tool)=>tool.name),
     capability_count:preparedCatalog().capabilities.length,
     read_only:true,
     transactional:false,
@@ -413,20 +416,23 @@ export async function startFabricLocalRuntime({
         return res.end(data);
       }
 
-      if (req.url!=='/mcp') return sendJson(res,404,{error:'not_found'});
+      const openAiMcp=req.url==='/mcp/openai';
+      const internalMcp=req.url==='/mcp';
+      if (!openAiMcp&&!internalMcp) return sendJson(res,404,{error:'not_found'});
 
       if (req.method==='GET') {
         const body={
           ok:true,
-          service:'Evercraft Fabric',
+          service:openAiMcp?'Evercraft Public Plugin':'Evercraft Fabric',
           server:'evercraft-fabric',
-          version:'1.0.1',
+          version:'1.1.0',
           transport:'Streamable HTTP',
           transport_modes:['application/json','text/event-stream'],
-          tools:fabricDirectoryTools().map((tool)=>tool.name),
-          capability_count:preparedCatalog().capabilities.length,
+          tools:(openAiMcp?fabricOpenAiTools():fabricDirectoryTools()).map((tool)=>tool.name),
+          capability_count:openAiMcp?null:preparedCatalog().capabilities.length,
           read_only:true,
           base44_transport_enabled:false,
+          public_plugin_profile:openAiMcp,
         };
         if (acceptsEventStream(req)) return sendEventStream(res,200,body);
         return sendJson(res,200,body);
@@ -434,7 +440,11 @@ export async function startFabricLocalRuntime({
 
       if (req.method!=='POST') return sendJson(res,405,{error:'method_not_allowed'});
       const rpc=await readJson(req);
-      const response=await executeFabricDirectoryRpc(rpc,preparedCatalog().capabilities);
+      const response=await executeFabricDirectoryRpc(
+        rpc,
+        preparedCatalog().capabilities,
+        {toolProfile:openAiMcp?'openai':'full'}
+      );
       if (response===null) {
         res.writeHead(202,{
           'cache-control':'no-store',
@@ -473,6 +483,7 @@ export async function startFabricLocalRuntime({
     instanceId,
     url,
     mcpUrl:url+'/mcp',
+    openAiMcpUrl:url+'/mcp/openai',
     health,
     setDeploymentReceipt(value){
       const receipt=String(value||'').trim();
