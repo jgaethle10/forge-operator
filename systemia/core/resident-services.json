@@ -18,6 +18,18 @@
       }
     },
     {
+      "service_key": "social-spectacle-engine",
+      "mode": "cycle",
+      "manifest": "systemia/organism/social-spectacle-engine.workflow.json",
+      "executable": "systemia/organism/social-spectacle-engine.mjs",
+      "cadence_seconds": 900,
+      "optional_env_args": {
+        "--context-state": "SYSTEMIA_SOCIAL_SPECTACLE_CONTEXT_STATE",
+        "--state-dir": "SYSTEMIA_SOCIAL_SPECTACLE_STATE_DIR",
+        "--brand": "SYSTEMIA_SOCIAL_SPECTACLE_BRAND"
+      }
+    },
+    {
       "service_key": "eps-social-continuity",
       "mode": "cycle",
       "manifest": "systemia/organism/eps-social-continuity.workflow.json",
