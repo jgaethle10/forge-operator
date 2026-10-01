@@ -35,7 +35,7 @@ async function start(){
   token:lease.token,
   release_ref:releaseRef,
   workload_class:'systemia.evercraft-edge-dns.v1',
-  input:{snapshot_path:snapshotPath,dns_host:'0.0.0.0',dns_port:5353,allow_public_bind:true,health_port:0}
+  input:{snapshot_path:snapshotPath,dns_host:'0.0.0.0',dns_port:1053,allow_public_bind:true,health_port:0}
  }});
  serviceId=job.result?.service_id||null;
  if(!serviceId) throw new Error('edge_dns_service_id_missing');
