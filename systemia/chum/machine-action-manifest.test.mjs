@@ -235,3 +235,65 @@ test('contract audit blocks missing or invented machine tool bindings', () => {
     true
   );
 });
+
+
+test('contract audit supports exact tools hosted on a shared MCP target', () => {
+  const sharedReceipt = JSON.parse(JSON.stringify(receipt));
+  sharedReceipt.targets = 4;
+  sharedReceipt.rows.push({
+    product_key: 'evercraft-machine-commerce',
+    name: 'Evercraft Machine Commerce',
+    mcp: 'https://example.com/commerce',
+    registry_name: 'io.github.jgaethle10/evercraft-machine-commerce',
+    initialize: { ok: true, status: 200, valid: true },
+    tools_list: {
+      ok: true,
+      status: 200,
+      valid: true,
+      names: ['prepare_quote_ready_service_handoff'],
+      commerce_signals: ['prepare_quote_ready_service_handoff'],
+    },
+    registry: {
+      checked: true,
+      present: true,
+      active: true,
+      latest: true,
+      version: '1.5.1',
+    },
+  });
+
+  const manifest = buildMachineActionManifest(sharedReceipt);
+  const contracts = {
+    schema: 'evercraft.capability-mesh.contracts.v1',
+    contracts: [
+      {
+        product_key: 'ibmi-rescue',
+        adoption_stage: 'shared_runtime',
+        execution: {
+          actions: [{
+            scope: 'quote.prepare',
+            machine_tool: 'prepare_quote_ready_service_handoff',
+            machine_target_product_key: 'evercraft-machine-commerce',
+            machine_tool_evidence_refs: ['proof:commerce'],
+          }],
+        },
+      },
+    ],
+  };
+
+  const audit = auditCapabilityContractsAgainstActionManifest({
+    contracts,
+    manifest,
+  });
+  assert.equal(audit.state, 'pass');
+  assert.equal(audit.bindings[0].product_key, 'ibmi-rescue');
+  assert.equal(
+    audit.bindings[0].machine_target_product_key,
+    'evercraft-machine-commerce'
+  );
+  assert.equal(
+    audit.bindings[0].machine_tool,
+    'prepare_quote_ready_service_handoff'
+  );
+  assert.equal(audit.bindings[0].observed_in_live_tools_list, true);
+});
