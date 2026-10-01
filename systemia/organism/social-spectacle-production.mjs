@@ -122,7 +122,7 @@ export function worldIntelInputFromCandidate(candidate,{aspectRatio='9:16'}={}){
   const facts=payload.facts&&typeof payload.facts==='object'?payload.facts:{};
   const measurements=Array.isArray(payload.measurements)?payload.measurements:[];
   const state=phenomenonEvidenceState(candidate.evidence_state);
-  const durationSec=22;
+  const durationSec=Math.max(4,Math.min(45,Number(payload.duration_sec||22)));
   const points=measurements
     .filter(row=>Number.isFinite(Number(row?.lat))&&Number.isFinite(Number(row?.lon)))
     .slice(0,24)
