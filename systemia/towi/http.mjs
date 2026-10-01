@@ -8,7 +8,82 @@ function bearer(req) {
 }
 
 function renderControlRoom() {
-  return '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TOWI | Evercraft</title><style>:root{color-scheme:dark;--bg:#070b0d;--panel:#10171b;--text:#eef4f5;--muted:#9fb0b8;--accent:#70d6ff;--watch:#ffd166}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 15% 0,#10222a 0,#070b0d 40%);color:var(--text);font-family:Inter,system-ui,sans-serif}main{width:min(1180px,calc(100% - 32px));margin:auto;padding:54px 0 90px}h1{font-size:clamp(3rem,9vw,7rem);margin:0;letter-spacing:-.07em;line-height:.88}header p{color:var(--muted);font-size:1.1rem;max-width:760px}.stats{display:flex;gap:12px;flex-wrap:wrap;margin:30px 0}.stat{background:var(--panel);border:1px solid #223139;border-radius:12px;padding:12px 16px}.grid{display:grid;gap:16px}.card{background:linear-gradient(180deg,#111a1f,#0c1215);border:1px solid #223139;border-radius:16px;padding:20px}.meta{display:flex;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:.86rem}.type{font-weight:800;color:var(--accent)}.WATCH .type{color:var(--watch)}h2{margin:.45rem 0;font-size:1.35rem}.score{font-variant-numeric:tabular-nums}footer{color:var(--muted);margin-top:36px}</style></head><body><main><header><div>TOWI</div><h1>THE WORLD,<br>OPENED UP.</h1><p>Evidence-controlled investigation of the physical systems behind the headline. Radar finds the change. TOWI opens the machine.</p></header><div id="stats" class="stats"></div><section id="grid" class="grid"><div class="card">Loading TOWI desk…</div></section><footer>Observed, reported, modeled, inferred, contested and pending are never silently collapsed into the same thing.</footer></main><script>fetch("/api/towi/latest").then(r=>r.json()).then(d=>{document.getElementById("stats").innerHTML=[["Dossiers",d.dossier_count||0],["Editorial candidates",d.editorial_candidate_count||0],["Watches",d.watch_count||0],["Aftermath",d.aftermath_count||0]].map(x=>"<div class=stat><strong>"+x[1]+"</strong> "+x[0]+"</div>").join("");const rows=d.dossiers||[];document.getElementById("grid").innerHTML=rows.length?rows.map(x=>"<article class=\"card "+x.story_type+"\"><div class=meta><span class=type>"+x.story_type+"</span><span>"+x.status+"</span><span class=score>score "+Number(x.score||0).toFixed(3)+"</span><span>"+(x.truth_state||"UNKNOWN")+"</span></div><h2>"+escapeHtml(x.title_seed||x.summary||"Untitled investigation")+"</h2><div class=meta><span>"+(x.domains||[]).join(" · ")+"</span><span>"+(x.region_keys||[]).join(" · ")+"</span></div></article>").join(""):"<div class=card>No material dossiers yet. Quiet is a valid state.</div>";}).catch(()=>{document.getElementById("grid").innerHTML="<div class=card>TOWI desk is temporarily unavailable.</div>";});function escapeHtml(s){return String(s).replace(/[&<>\"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\\\"":"&quot;","'":"&#39;"}[c]));}</script></body></html>';
+  return `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOWI | Evercraft</title>
+<style>
+:root{color-scheme:dark;--bg:#070b0d;--panel:#10171b;--text:#eef4f5;--muted:#9fb0b8;--accent:#70d6ff;--watch:#ffd166}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at 15% 0,#10222a 0,#070b0d 40%);color:var(--text);font-family:Inter,system-ui,sans-serif}
+main{width:min(1180px,calc(100% - 32px));margin:auto;padding:54px 0 90px}
+h1{font-size:clamp(3rem,9vw,7rem);margin:0;letter-spacing:-.07em;line-height:.88}
+header p{color:var(--muted);font-size:1.1rem;max-width:760px}
+.stats{display:flex;gap:12px;flex-wrap:wrap;margin:30px 0}
+.stat{background:var(--panel);border:1px solid #223139;border-radius:12px;padding:12px 16px}
+.grid{display:grid;gap:16px}
+.card{background:linear-gradient(180deg,#111a1f,#0c1215);border:1px solid #223139;border-radius:16px;padding:20px}
+.meta{display:flex;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:.86rem}
+.type{font-weight:800;color:var(--accent)}
+.WATCH .type{color:var(--watch)}
+h2{margin:.45rem 0;font-size:1.35rem}
+.score{font-variant-numeric:tabular-nums}
+footer{color:var(--muted);margin-top:36px}
+</style>
+</head>
+<body>
+<main>
+<header>
+<div>TOWI</div>
+<h1>THE WORLD,<br>OPENED UP.</h1>
+<p>Evidence-controlled investigation of the physical systems behind the headline. Radar finds the change. TOWI opens the machine.</p>
+</header>
+<div id="stats" class="stats"></div>
+<section id="grid" class="grid"><div class="card">Loading TOWI desk…</div></section>
+<footer>Observed, reported, modeled, inferred, contested and pending are never silently collapsed into the same thing.</footer>
+</main>
+<script>
+function escapeHtml(value){
+  return String(value).replace(/[&<>"']/g,function(char){
+    if(char==="&") return "&amp;";
+    if(char==="<") return "&lt;";
+    if(char===">") return "&gt;";
+    if(char==='"') return "&quot;";
+    return "&#39;";
+  });
+}
+fetch("/api/towi/latest")
+  .then(function(response){ return response.json(); })
+  .then(function(data){
+    document.getElementById("stats").innerHTML=[
+      ["Dossiers",data.dossier_count||0],
+      ["Editorial candidates",data.editorial_candidate_count||0],
+      ["Watches",data.watch_count||0],
+      ["Aftermath",data.aftermath_count||0]
+    ].map(function(item){
+      return "<div class=stat><strong>"+item[1]+"</strong> "+item[0]+"</div>";
+    }).join("");
+    const rows=data.dossiers||[];
+    document.getElementById("grid").innerHTML=rows.length
+      ? rows.map(function(row){
+          return "<article class=\"card "+escapeHtml(row.story_type||"REPORT")+"\"><div class=meta><span class=type>"+
+            escapeHtml(row.story_type||"REPORT")+"</span><span>"+escapeHtml(row.status||"unknown")+
+            "</span><span class=score>score "+Number(row.score||0).toFixed(3)+"</span><span>"+
+            escapeHtml(row.truth_state||"UNKNOWN")+"</span></div><h2>"+
+            escapeHtml(row.title_seed||row.summary||"Untitled investigation")+
+            "</h2><div class=meta><span>"+escapeHtml((row.domains||[]).join(" · "))+
+            "</span><span>"+escapeHtml((row.region_keys||[]).join(" · "))+"</span></div></article>";
+        }).join("")
+      : "<div class=card>No material dossiers yet. Quiet is a valid state.</div>";
+  })
+  .catch(function(){
+    document.getElementById("grid").innerHTML="<div class=card>TOWI desk is temporarily unavailable.</div>";
+  });
+</script>
+</body>
+</html>`;
 }
 
 export function registerTowiRoutes(app, {
