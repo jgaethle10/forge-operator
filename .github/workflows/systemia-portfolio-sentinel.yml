@@ -19,6 +19,11 @@ on:
       - "systemia/core/resident-services.json"
       - "systemia/core/**"
       - "systemia/capability-mesh/**"
+      - "systemia/llm-product/**"
+      - "docs/LLM_PRODUCT_STANDARD.md"
+      - "public/chum/**"
+      - "plugins/**"
+      - "conformance/**"
       - "systemia/collider/mission-sources.json"
       - "public/.well-known/evercraft-products.json"
       - "public/.well-known/evercraft-capabilities.json"
@@ -48,6 +53,11 @@ on:
       - "systemia/core/resident-services.json"
       - "systemia/core/**"
       - "systemia/capability-mesh/**"
+      - "systemia/llm-product/**"
+      - "docs/LLM_PRODUCT_STANDARD.md"
+      - "public/chum/**"
+      - "plugins/**"
+      - "conformance/**"
       - "systemia/collider/mission-sources.json"
       - "package.json"
       - "Dockerfile"
@@ -136,6 +146,12 @@ jobs:
         if: always()
         run: node systemia/organism/estate-convergence.mjs
 
+      - name: Enforce portfolio LLM product registry and release gate
+        if: always()
+        run: |
+          node systemia/llm-product/build-registry.mjs --emit --check
+          node --test systemia/llm-product/build-registry.test.mjs
+
       - name: Prove capability-promotion policy
         if: always()
         run: node --test tests/capability-promotion.test.mjs
@@ -180,6 +196,10 @@ jobs:
             artifacts/saban-multiplier/human-experience-latest.json
             artifacts/customer-gauntlet/latest.json
             artifacts/capability-promotion/latest.json
+            artifacts/llm-product/capability-registry.json
+            artifacts/llm-product/portfolio-matrix.json
+            artifacts/llm-product/conversion-debt.json
+            artifacts/llm-product/release-gate.json
           if-no-files-found: error
           retention-days: 14
 
@@ -191,7 +211,7 @@ jobs:
             echo "## Systemia Portfolio Sentinel"
             echo
             echo "Cadence: 5 minutes"
-            echo "Coverage: raw estate reconciliation + public products + conformance + MCP publication + all known canonical URLs (up to 200/cycle) + GitHub + workflows + Systemia resident services + machine discovery + capability-promotion queue"
+            echo "Coverage: raw estate reconciliation + canonical LLM capability registry + conversion debt + public products + conformance + MCP publication + all known canonical URLs (up to 200/cycle) + GitHub + workflows + Systemia resident services + machine discovery + capability-promotion queue"
             echo "Repair Unit: persistent bounded repair pressure until verified green or quarantined"
             echo "Failed-workflow retry: autonomous while incident remains active"
             echo "Architectural invariants: enforced before green"
@@ -202,7 +222,7 @@ jobs:
             echo "Journal freshness floor: checked every cycle; >24h warns and >36h becomes a blocking portfolio finding"
             echo "Production mutation: bounded recipes autonomous; high-blast-radius/identity/legal/payment mutations human-gated"
             echo
-            for FILE in artifacts/portfolio-sentinel/latest.json artifacts/portfolio-sentinel/estate-convergence.json artifacts/portfolio-sentinel/repair-queue.json artifacts/portfolio-sentinel/repair-memory.json artifacts/human-experience/latest.json artifacts/capability-promotion/latest.json; do
+            for FILE in artifacts/portfolio-sentinel/latest.json artifacts/portfolio-sentinel/estate-convergence.json artifacts/portfolio-sentinel/repair-queue.json artifacts/portfolio-sentinel/repair-memory.json artifacts/human-experience/latest.json artifacts/capability-promotion/latest.json artifacts/llm-product/release-gate.json artifacts/llm-product/conversion-debt.json; do
               if [ -f "$FILE" ]; then
                 echo "### $FILE"
                 echo '~~~json'
