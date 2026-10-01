@@ -40,6 +40,9 @@ jobs:
         with:
           node-version: 22
 
+      - name: Install root runtime
+        run: npm install --no-audit --no-fund
+
       - name: Prove spectacle admission boundaries
         run: npm run proof:social-spectacle
 
