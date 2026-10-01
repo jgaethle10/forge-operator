@@ -13,6 +13,8 @@ const SUPPORTED_AUTH_METHODS = new Set([
   'me','updateMe','isAuthenticated','register','verifyOtp','resendOtp','resetPasswordRequest',
   'resetPassword','loginViaEmailPassword','logout','redirectToLogin','loginWithProvider','setToken'
 ]);
+const SUPPORTED_APP_METHODS = new Set(['getPublicSettings']);
+const SUPPORTED_APP_LOG_METHODS = new Set(['logUserInApp']);
 
 const sha = (value) => 'sha256:' + createHash('sha256').update(String(value)).digest('hex');
 const sorted = (values) => [...new Set(values)].sort();
@@ -50,6 +52,8 @@ export function scanBase44Source({ sourceDir } = {}) {
   const entityMethods = [];
   const functions = [];
   const authMethods = [];
+  const appMethods = [];
+  const appLogMethods = [];
   const integrationPairs = [];
   const crossAppFingerprints = [];
   const envKeys = [];
@@ -81,6 +85,8 @@ export function scanBase44Source({ sourceDir } = {}) {
     }
     for (const m of text.matchAll(/\bbase44\.functions\.invoke\s*\(\s*['"]([^'"]+)['"]/g)) functions.push(m[1]);
     for (const m of text.matchAll(/\bbase44\.auth\.([A-Za-z_$][\w$]*)\s*\(/g)) authMethods.push(m[1]);
+    for (const m of text.matchAll(/\bbase44\.app\.([A-Za-z_$][\w$]*)\s*\(/g)) appMethods.push(m[1]);
+    for (const m of text.matchAll(/\bbase44\.appLogs\.([A-Za-z_$][\w$]*)\s*\(/g)) appLogMethods.push(m[1]);
     for (const m of text.matchAll(/\bbase44\.integrations\.([A-Za-z_$][\w$]*)\.([A-Za-z_$][\w$]*)\s*\(/g)) {
       integrationPairs.push(m[1] + '.' + m[2]);
     }
@@ -93,8 +99,12 @@ export function scanBase44Source({ sourceDir } = {}) {
 
   const uniqueMethods = sorted(entityMethods);
   const uniqueAuth = sorted(authMethods);
+  const uniqueApp = sorted(appMethods);
+  const uniqueAppLogs = sorted(appLogMethods);
   const unsupportedEntityMethods = uniqueMethods.filter((name) => !SUPPORTED_ENTITY_METHODS.has(name));
   const unsupportedAuthMethods = uniqueAuth.filter((name) => !SUPPORTED_AUTH_METHODS.has(name));
+  const unsupportedAppMethods = uniqueApp.filter((name) => !SUPPORTED_APP_METHODS.has(name));
+  const unsupportedAppLogMethods = uniqueAppLogs.filter((name) => !SUPPORTED_APP_LOG_METHODS.has(name));
   const hardcodedRoutes =
     dependencyCounts.hardcoded_base44_app_url_files +
     dependencyCounts.hardcoded_base44_api_url_files +
@@ -103,6 +113,8 @@ export function scanBase44Source({ sourceDir } = {}) {
   const blockers = [];
   if (unsupportedEntityMethods.length) blockers.push('unsupported_entity_method');
   if (unsupportedAuthMethods.length) blockers.push('unsupported_auth_method');
+  if (unsupportedAppMethods.length) blockers.push('unsupported_app_method');
+  if (unsupportedAppLogMethods.length) blockers.push('unsupported_app_log_method');
   if (hardcodedRoutes) blockers.push('hardcoded_base44_routes_require_repoint');
   if (serviceRoleFiles) blockers.push('service_role_permit_review_required');
 
@@ -128,6 +140,14 @@ export function scanBase44Source({ sourceDir } = {}) {
       methods: uniqueAuth,
       unsupported_methods: unsupportedAuthMethods
     },
+    app: {
+      methods: uniqueApp,
+      unsupported_methods: unsupportedAppMethods
+    },
+    app_logs: {
+      methods: uniqueAppLogs,
+      unsupported_methods: unsupportedAppLogMethods
+    },
     integrations: {
       operations: sorted(integrationPairs)
     },
@@ -147,7 +167,10 @@ export function scanBase44Source({ sourceDir } = {}) {
     },
     compatibility: {
       app_fabric_sdk_shape_supported:
-        unsupportedEntityMethods.length === 0 && unsupportedAuthMethods.length === 0,
+        unsupportedEntityMethods.length === 0 &&
+        unsupportedAuthMethods.length === 0 &&
+        unsupportedAppMethods.length === 0 &&
+        unsupportedAppLogMethods.length === 0,
       blockers,
       automatic_source_mutation_allowed: false,
       traffic_cutover_allowed: false
