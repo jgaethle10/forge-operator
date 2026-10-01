@@ -2,14 +2,12 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { createHash, webcrypto } from 'node:crypto';
-import { admitHostBoundaryCapability } from './host-boundary-admission.mjs';
-import { pairChromeOsHostBoundaryObserver } from './chromeos-host-boundary-bridge.mjs';
+import { webcrypto } from 'node:crypto';
+import {
+  pairChromeOsHostBoundaryObserver,
+  storeChromeOsHostBoundaryObservation,
+} from './chromeos-host-boundary-bridge.mjs';
 import { EvercraftRemoteOperator } from './remote-operator.mjs';
-
-const sha = (value) => 'sha256:' + createHash('sha256')
-  .update(typeof value === 'string' ? value : JSON.stringify(value))
-  .digest('hex');
 
 const root = fs.mkdtempSync(path.join(os.tmpdir(), 'evercraft-remote-operator-'));
 const state = path.join(root, '.operator-state');
@@ -115,41 +113,75 @@ try {
     stateRoot: path.join(root, 'host-boundary'),
   });
 
-  const certificationBody = {
-    schema: 'evercraft.chromeos-host-boundary-field-certification.v1',
-    capability_id: 'chromeos.crostini.port-forwarding.read.v1',
-    observed_at: new Date().toISOString(),
-    state: 'host_setting_and_lan_ready',
-    host_observation: {
-      observer_install_id: 'cros_operator_proof',
-      observer_key_fingerprint: pairedObserver.observer_key_fingerprint,
-      observer_signature_verified: true,
-      pairing_active: true,
-      pairing_matches_observation: true,
+  const capabilityId = 'chromeos.crostini.port-forwarding.read.v1';
+  storeChromeOsHostBoundaryObservation({
+    schema: 'evercraft.chromeos-host-boundary-observation.v1',
+    capability_id: capabilityId,
+    collected_at: new Date().toISOString(),
+    observer_version: 'proof',
+    observer_install_id: 'cros_operator_proof',
+    settings_route: 'chrome://os-settings/crostini/portForwarding',
+    ports: [
+      { port: 8443, protocol: 'TCP', present: true, enabled: true, disabled: false },
+      { port: 18080, protocol: 'TCP', present: true, enabled: true, disabled: false },
+    ],
+    scan: {
+      settings_surface_observed: true,
+      tree_source: 'proof',
+      nodes_examined: 10,
+      bounded: true,
+      toggle_candidates: 2,
+      matched_ports: 2,
+      unmatched_toggle_candidates: 0,
     },
-    ready_for_external_canary: true,
-    external_public_route_verified: false,
-    mutation_authority: false,
-    raw_accessibility_tree_persisted: false,
-  };
-  admitHostBoundaryCapability({
+  }, {
     stateRoot: path.join(root, 'host-boundary'),
-    capabilityId: certificationBody.capability_id,
-    certification: {
-      ...certificationBody,
-      receipt_hash: sha(certificationBody),
+    observerVerification: {
+      verified: true,
+      observer_key_fingerprint: pairedObserver.observer_key_fingerprint,
     },
   });
+  fs.writeFileSync(
+    path.join(root, 'router-map.json'),
+    JSON.stringify({
+      host_forward_preflight: {
+        ready: true,
+        probes: [
+          { port: 8443, ok: true },
+          { port: 18080, ok: true },
+        ],
+      },
+    }),
+  );
+
+  const readyCertification = operator.hostBoundaryCertification();
+  assert.equal(readyCertification.state, 'host_setting_and_lan_ready');
+  assert.equal(readyCertification.ready_for_external_canary, true);
+
+  assert.throws(
+    () => operator.hostCapabilityAdmit({ capability_id: capabilityId }),
+    /host_boundary_capability_admission_approval_required/,
+  );
+  const admissionResult = operator.hostCapabilityAdmit({
+    capability_id: capabilityId,
+    approval_ref: 'proof:user-approved-host-admission',
+  });
+  assert.equal(
+    admissionResult.schema,
+    'evercraft.host-boundary-capability-admission-result.v1',
+  );
+  assert.equal(admissionResult.admission.capability_id, capabilityId);
+  assert.equal(admissionResult.host_mutation_performed, false);
 
   const admittedCapabilities = operator.hostBoundaryCapabilities();
   const admittedChrome = admittedCapabilities.capabilities.find(
-    (capability) => capability.capability_id === certificationBody.capability_id,
+    (capability) => capability.capability_id === capabilityId,
   );
   assert.equal(admittedChrome.local_admission.admitted, true);
   assert.equal(admittedChrome.generic_dispatch_available, true);
 
   const genericHostCheck = await operator.hostCapabilityCheck({
-    capability_id: certificationBody.capability_id,
+    capability_id: capabilityId,
     wait_ms: 0,
   });
   assert.equal(
@@ -239,6 +271,7 @@ try {
     typed_host_capability_registry_available: true,
     generic_typed_host_capability_dispatch_field_gated: true,
     node_local_field_admission_unlocks_generic_dispatch: true,
+    approval_gated_field_admission_available: true,
     receipt_backed_field_certification_available: true,
   }));
 } finally {
