@@ -300,7 +300,7 @@ export class EvercraftRemoteOperator {
     capability_id,
     wait_ms = 35_000,
   } = {}) {
-    const capability = getHostBoundaryCapability(capability_id);
+    const capability = getHostBoundaryCapability(capability_id, { requireAdmitted: true });
     if (capability.operation !== 'read') {
       throw new Error('host_boundary_capability_not_read_only');
     }
