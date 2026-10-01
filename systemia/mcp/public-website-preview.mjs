@@ -80,6 +80,7 @@ async function requestPinned(url,address,{timeoutMs,maxBytes}){
   const defaultPort=secure?443:80;
   const port=url.port?Number(url.port):defaultPort;
   if(!Number.isInteger(port)||port<1||port>65535) throw new Error('website_port_invalid');
+  if(port!==defaultPort) throw new Error('website_nonstandard_port_not_allowed');
 
   return await new Promise((resolve,reject)=>{
     let settled=false;
