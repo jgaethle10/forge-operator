@@ -102,12 +102,46 @@ function measuredReturnFromIndex(bars, startIndex, lagBars, observedAt) {
   if (startIndex >= bars.length || endIndex >= bars.length) return null;
   const start = bars[startIndex];
   const end = bars[endIndex];
+  const pathBars = bars.slice(startIndex, endIndex + 1);
+  const pathReturns = [];
+  for (let i = 1; i < pathBars.length; i++) {
+    const previous = Number(pathBars[i - 1].c);
+    const current = Number(pathBars[i].c);
+    if (previous > 0 && current > 0) pathReturns.push(Math.log(current / previous));
+  }
+  const pathMean = pathReturns.length
+    ? pathReturns.reduce((a,b) => a + b, 0) / pathReturns.length
+    : 0;
+  const realizedVariance = pathReturns.length > 1
+    ? pathReturns.reduce((sum, value) => sum + (value - pathMean) ** 2, 0) /
+      (pathReturns.length - 1)
+    : 0;
+  const pathRelative = pathBars.map((bar) => Number(bar.c) / Number(start.c) - 1);
+  const startDate = marketDateKey(start.t);
+  const sessionStartIndex = bars.findIndex((bar) => marketDateKey(bar.t) === startDate);
+  let previousSessionClose = null;
+  if (sessionStartIndex > 0) {
+    const previousDate = marketDateKey(bars[sessionStartIndex - 1].t);
+    for (let i = sessionStartIndex - 1; i >= 0; i--) {
+      if (marketDateKey(bars[i].t) !== previousDate) break;
+      previousSessionClose = Number(bars[i].c);
+      if (i === 0 || marketDateKey(bars[i - 1].t) !== previousDate) break;
+    }
+  }
+  const sessionOpenPrice = sessionStartIndex >= 0 ? Number(bars[sessionStartIndex].c) : null;
+  const openingGap = previousSessionClose && sessionOpenPrice
+    ? sessionOpenPrice / previousSessionClose - 1
+    : null;
   return {
     start_time: start.t,
     end_time: end.t,
     start_price: start.c,
     end_price: end.c,
     forward_return: end.c / start.c - 1,
+    realized_volatility_5m: Math.sqrt(Math.max(0, realizedVariance)),
+    max_path_gain: pathRelative.length ? Math.max(...pathRelative) : 0,
+    max_path_drawdown: pathRelative.length ? Math.min(...pathRelative) : 0,
+    opening_gap_return: openingGap,
     no_pre_observation_price_used: new Date(start.t) >= new Date(observedAt),
   };
 }
@@ -381,6 +415,14 @@ export function measureRockiesHypotheses(hypotheses, barsBySymbol, {
           forward_return: instrumentMove.forward_return,
           benchmark_return: benchmarkMove.forward_return,
           excess_return: instrumentMove.forward_return - benchmarkMove.forward_return,
+          instrument_realized_volatility_5m: instrumentMove.realized_volatility_5m,
+          benchmark_realized_volatility_5m: benchmarkMove.realized_volatility_5m,
+          instrument_max_path_gain: instrumentMove.max_path_gain,
+          instrument_max_path_drawdown: instrumentMove.max_path_drawdown,
+          benchmark_max_path_gain: benchmarkMove.max_path_gain,
+          benchmark_max_path_drawdown: benchmarkMove.max_path_drawdown,
+          instrument_opening_gap_return: instrumentMove.opening_gap_return,
+          benchmark_opening_gap_return: benchmarkMove.opening_gap_return,
           instrument_start_time: instrumentMove.start_time,
           instrument_end_time: instrumentMove.end_time,
           benchmark_start_time: benchmarkMove.start_time,
