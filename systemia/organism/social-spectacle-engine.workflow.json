@@ -1,0 +1,49 @@
+{
+  "schema": "evercraft.systemia.workflow-manifest.v1",
+  "workflow_key": "social-spectacle-engine",
+  "mission_key": "evercraft-social-spectacle-machine-2026-09",
+  "runtime": "systemia-core+yard-evercraft-compute",
+  "collider_compatible": true,
+  "cadence_seconds": 900,
+  "material_change_only": true,
+  "entrypoint": "systemia/organism/social-spectacle-engine.mjs",
+  "runner": "systemia/organism/social-spectacle-engine.mjs",
+  "proof": "systemia/organism/social-spectacle-engine.proof.mjs",
+  "outputs": {
+    "latest_queue": "artifacts/social-spectacle/latest-queue.json",
+    "state": "artifacts/social-spectacle/state.json",
+    "receipt_ledger": "artifacts/social-spectacle/receipts.jsonl"
+  },
+  "content_doctrine": {
+    "target_daily_hero_posts": 2,
+    "hard_max_daily_publishable_packages": 4,
+    "filler_posts_allowed": false,
+    "one_line_staccato_allowed": false,
+    "text_card_first_allowed": false,
+    "real_visuals_before_generated": true,
+    "source_grounding_required": true,
+    "uncertainty_visible": true,
+    "one_phenomenon_one_visual_grammar": true,
+    "preferred_production_runtime": "fallen",
+    "preferred_distribution_runtime": "evercraft_clip"
+  },
+  "authority": {
+    "candidate_admission": "systemia",
+    "production": "fallen",
+    "distribution": "evercraft_clip",
+    "publication_authority": false,
+    "standing_authorization_must_be_resolved_by_clip": true,
+    "provider_visible_verification_required": true,
+    "blocked_brand_keys": [
+      "rnb-chicken-and-soul",
+      "r-and-b-chicken-and-soul",
+      "r&b-chicken-and-soul"
+    ],
+    "high_stakes_domains_require_editorial_gate": [
+      "public_policy",
+      "politics",
+      "election",
+      "public_health"
+    ]
+  }
+}
