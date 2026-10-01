@@ -19,7 +19,9 @@ import { runTimingFragilityLab } from "./edge-timing-fragility.mjs";
 import { runOverlapFragilityLab } from "./edge-overlap-fragility.mjs";
 import { runMatchedPlaceboLab } from "./edge-matched-placebo.mjs";
 import { runRandomPlaceboLab } from "./edge-random-placebo.mjs";
+import { runLabelPermutationLab } from "./edge-label-permutation.mjs";
 import { runBenchmarkFragilityLab } from "./edge-benchmark-fragility.mjs";
+import { runRegimeFragilityLab } from "./edge-regime-fragility.mjs";
 import { runHorizonCoherenceLab } from "./edge-horizon-coherence.mjs";
 import { runWalkForwardLab } from "./edge-walk-forward.mjs";
 import { runExecutionTranslationLab } from "./edge-execution-translation.mjs";
@@ -91,6 +93,30 @@ async function main() {
   fs.writeFileSync(
     randomPlaceboFile,
     JSON.stringify(randomPlaceboLab, null, 2) + "\n"
+  );
+
+  const labelPermutationLab = runLabelPermutationLab(report, {
+    transaction_cost_bps: Number(process.env.EDGE_LAB_TRANSACTION_COST_BPS || 5),
+  });
+  const labelPermutationFile = path.join(
+    artifactDir,
+    "sec-edge-label-permutation.json"
+  );
+  fs.writeFileSync(
+    labelPermutationFile,
+    JSON.stringify(labelPermutationLab, null, 2) + "\n"
+  );
+
+  const regimeFragilityLab = runRegimeFragilityLab(report, {
+    transaction_cost_bps: Number(process.env.EDGE_LAB_TRANSACTION_COST_BPS || 5),
+  });
+  const regimeFragilityFile = path.join(
+    artifactDir,
+    "sec-edge-regime-fragility.json"
+  );
+  fs.writeFileSync(
+    regimeFragilityFile,
+    JSON.stringify(regimeFragilityLab, null, 2) + "\n"
   );
 
   const benchmarkLab = runBenchmarkFragilityLab(report, {
@@ -345,6 +371,11 @@ async function main() {
     overlap_robust_diagnostics: overlapLab.overlap_robust_count || 0,
     placebo_separated_diagnostics: placeboLab.placebo_separated_count || 0,
     random_placebo_separated_diagnostics: randomPlaceboLab.separated_count || 0,
+    label_permutation_bh_separated_diagnostics:
+      labelPermutationLab.bh_separated_count || 0,
+    label_permutation_bonferroni_separated_diagnostics:
+      labelPermutationLab.bonferroni_separated_count || 0,
+    regime_fragility_status_counts: regimeFragilityLab.status_counts || {},
     benchmark_fragility_status_counts: benchmarkLab.status_counts || {},
     horizon_coherent_diagnostics: horizonCoherenceLab.coherent_count || 0,
     walk_forward_robust_diagnostics: walkForwardLab.walk_forward_robust_count || 0,
@@ -368,6 +399,8 @@ async function main() {
       overlap_fragility_lab: overlapFile,
       matched_placebo_lab: placeboFile,
       random_placebo_lab: randomPlaceboFile,
+      label_permutation_lab: labelPermutationFile,
+      regime_fragility_lab: regimeFragilityFile,
       benchmark_fragility_lab: benchmarkFile,
       horizon_coherence_lab: horizonCoherenceFile,
       walk_forward_lab: walkForwardFile,
