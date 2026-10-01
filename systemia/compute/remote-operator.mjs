@@ -10,7 +10,10 @@ import {
   readChromeOsHostBoundaryStatus,
   requestChromeOsHostBoundaryCheck,
 } from './chromeos-host-boundary-bridge.mjs';
-import { hostBoundaryCapabilityStatus } from './host-boundary-registry.mjs';
+import {
+  getHostBoundaryCapability,
+  hostBoundaryCapabilityStatus,
+} from './host-boundary-registry.mjs';
 
 const execFileAsync = promisify(execFile);
 const sha = (value) => {
@@ -231,6 +234,7 @@ export class EvercraftRemoteOperator {
       chromeos_host_boundary: {
         read: true,
         check_now: true,
+        generic_capability_check: true,
         capabilities: true,
         mutation: false,
         source: 'paired_chromeos_extension',
@@ -290,6 +294,40 @@ export class EvercraftRemoteOperator {
       ...status,
       operator_receipt: receipt,
     };
+  }
+
+  async hostCapabilityCheck({
+    capability_id,
+    wait_ms = 35_000,
+  } = {}) {
+    const capability = getHostBoundaryCapability(capability_id);
+    if (capability.operation !== 'read') {
+      throw new Error('host_boundary_capability_not_read_only');
+    }
+
+    if (capability.adapter === 'chromeos_crostini_port_forwarding') {
+      const result = await this.hostBoundaryCheck({ wait_ms });
+      const receipt = this.#receipt('host-capability.check', {
+        capability_id: capability.capability_id,
+        adapter: capability.adapter,
+        delegated_operation: 'chromeos-host-boundary.check',
+        delegated_receipt_hash: result.operator_receipt?.receipt_hash || null,
+        fulfilled: result.fulfilled === true,
+        mutation_authority: false,
+      });
+      return {
+        ...result,
+        schema: 'evercraft.host-boundary-capability-check-result.v1',
+        capability_id: capability.capability_id,
+        adapter: capability.adapter,
+        capability_operation: capability.operation,
+        arbitrary_desktop_control: capability.arbitrary_desktop_control,
+        mutation_authority: capability.mutation_authority,
+        capability_receipt: receipt,
+      };
+    }
+
+    throw new Error('host_boundary_capability_adapter_not_available');
   }
 
   async hostBoundaryCheck({ wait_ms = 35_000 } = {}) {
