@@ -57,7 +57,7 @@ test('Evercraft Clip public specialist has a complete but deliberately non-publi
 
 test('missing product contracts fail visible instead of being inferred', () => {
   const mesh = renderCapabilityMesh(process.cwd());
-  const missing = mesh.products.find((row) => row.product_key === 'findmypart');
+  const missing = mesh.products.find((row) => row.product_key === 'buildflow');
 
   assert.ok(missing);
   assert.equal(missing.contract_state, 'missing');
