@@ -3,10 +3,10 @@
   "@graph": [
     {
       "@type": "Service",
-      "@id": "https://aliev.base44.app/functions/alievAgentGateway?view=docs#evercraft-capability",
+      "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/aliev-site-opportunity-snapshot-v1/index.html#evercraft-capability",
       "name": "AliEV EV Site Opportunity Intelligence",
       "description": "A property owner, fleet, charging developer, broker, installer or investor needs source-backed EV infrastructure opportunity intelligence for a specific address or market without confusing mapped charger inventory, modeled demand, tariff context, incentives or feasibility.",
-      "url": "https://aliev.base44.app/functions/alievAgentGateway?view=docs",
+      "url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/aliev-site-opportunity-snapshot-v1/index.html",
       "provider": {
         "@type": "Organization",
         "name": "Evercraft LLC",
@@ -20,7 +20,7 @@
       "name": "AliEV EV Site Opportunity Intelligence | Evercraft capability",
       "description": "A property owner, fleet, charging developer, broker, installer or investor needs source-backed EV infrastructure opportunity intelligence for a specific address or market without confusing mapped charger inventory, modeled demand, tariff context, incentives or feasibility.",
       "about": {
-        "@id": "https://aliev.base44.app/functions/alievAgentGateway?view=docs#evercraft-capability"
+        "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/aliev-site-opportunity-snapshot-v1/index.html#evercraft-capability"
       }
     }
   ]

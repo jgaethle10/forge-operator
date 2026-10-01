@@ -3,6 +3,7 @@ import dns from 'node:dns/promises';
 import tls from 'node:tls';
 import { createHash, randomBytes } from 'node:crypto';
 import { verifyNodeAttestation } from '../systemia/compute/device-identity.mjs';
+import { classifyPublicEdgeIngress } from '../systemia/network/public-edge-ingress-watch.mjs';
 
 const sha=(value)=>'sha256:'+createHash('sha256').update(
   typeof value==='string'?value:JSON.stringify(value)
@@ -89,6 +90,7 @@ function failureStage(checks={},message=''){
   if(checks.customer_surface!==true) return 'customer_surface';
   if(checks.policy_surfaces!==true) return 'policy_surfaces';
   if(checks.runtime_health!==true) return 'runtime_health';
+  if(checks.mcp_sse_probe!==true) return 'mcp_sse_probe';
   if(checks.device_attestation!==true) return 'device_attestation';
   if(checks.mcp_initialize!==true) return 'mcp_initialize';
   if(checks.mcp_tools!==true) return 'mcp_tools';
@@ -152,6 +154,29 @@ try{
     edge_attestation_supported:health.edge_attestation_supported===true,
   };
   receipt.checks.runtime_health=true;
+
+  // ChatGPT performs a GET/SSE transport probe before normal MCP discovery.
+  // Verify that exact path and content type so a dead plugin connection cannot
+  // hide behind successful POST-only initialize/tool canaries.
+  const sseProbe=await timedFetch(origin+'/mcp',{
+    method:'GET',
+    headers:{
+      accept:'text/event-stream',
+      'user-agent':'Evercraft-ChatGPT-SSE-Canary/1.0',
+    },
+  },10000);
+  const sseContentType=sseProbe.headers.get('content-type')||'';
+  const sseBody=await sseProbe.text();
+  if(!sseProbe.ok) throw new Error('mcp_sse_probe_http_'+sseProbe.status);
+  if(!/^text\/event-stream/i.test(sseContentType)) throw new Error('mcp_sse_probe_content_type');
+  if(!/evercraft-fabric/i.test(sseBody)) throw new Error('mcp_sse_probe_identity_missing');
+  receipt.mcp_sse_probe={
+    status:sseProbe.status,
+    content_type:sseContentType,
+    identity_verified:true,
+  };
+  receipt.checks.mcp_sse_probe=true;
+
   if(health.edge_attestation_supported!==true) throw new Error('edge_attestation_not_supported');
 
   const nonce='edge_'+randomBytes(18).toString('hex');
@@ -207,6 +232,19 @@ try{
   receipt.catalog_total=Number(payload.total);
   receipt.checks.public_catalog=true;
 
+  receipt.ingress_diagnosis=classifyPublicEdgeIngress({
+    local:{ok:true},
+    dns:{ok:true,addresses:receipt.dns_ipv4||[]},
+    external:{
+      state:'verified',
+      tcp_reachable:true,
+      tls_reachable:true,
+      http_reachable:true,
+      status:200,
+      source:'github_actions_external_canary',
+      observed_at:new Date().toISOString(),
+    },
+  });
   receipt.verified=true;
   receipt.state='public_https_verified';
   receipt.public_https_verified=true;
@@ -218,6 +256,25 @@ try{
   receipt.state='verification_failed';
   receipt.error=error instanceof Error?error.message:String(error);
   receipt.failure_stage=failureStage(receipt.checks,receipt.error);
+  const tcpLike=/timeout|ECONNREFUSED|EHOSTUNREACH|ENETUNREACH|ECONNRESET/i.test(receipt.error);
+  receipt.ingress_diagnosis=classifyPublicEdgeIngress({
+    local:{ok:true},
+    dns:{
+      ok:receipt.checks.public_dns===true,
+      addresses:receipt.dns_ipv4||[],
+    },
+    external:{
+      state:receipt.failure_stage,
+      tcp_reachable:receipt.failure_stage==='public_tcp_tls_ingress'&&tcpLike?false:null,
+      tls_reachable:receipt.checks.trusted_tls===true?true:
+        (receipt.failure_stage==='public_tcp_tls_ingress'||receipt.failure_stage==='trusted_tls'?false:null),
+      http_reachable:receipt.checks.customer_surface===true?true:
+        (receipt.failure_stage==='customer_surface'?false:null),
+      source:'github_actions_external_canary',
+      observed_at:new Date().toISOString(),
+      detail:receipt.error,
+    },
+  });
   receipt.public_https_verified=false;
   receipt.mcp_verified=false;
   receipt.external_route_verified=false;

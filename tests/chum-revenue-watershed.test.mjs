@@ -42,32 +42,45 @@ for (const offer of canonicalSellNow) {
   if (canonicalPaidTiers.length && !compact.entry_paid_offer) {
     fail(`sell-now offer missing entry_paid_offer: ${offer.public_id}`);
   }
-  if (!String(compact.start_url || '').startsWith('https://')) {
-    fail(`sell-now offer Start URL is not absolute HTTPS: ${offer.public_id}`);
+  const startUrl = String(compact.start_url || '');
+  const heldNoOwnedOrigin = compact.start_url_state === 'held_no_owned_public_origin';
+  if (startUrl) {
+    if (!startUrl.startsWith('https://')) fail(`sell-now offer Start URL is not absolute HTTPS: ${offer.public_id}`);
+    if (/https?:\/\/(?:base44\.app|[^/]+\.base44\.app)(?:\/|$)/i.test(startUrl)) {
+      fail(`retired provider leaked into Start URL: ${offer.public_id}`);
+    }
+  } else if (!heldNoOwnedOrigin) {
+    fail(`sell-now offer lacks a verified owned Start URL without an explicit held state: ${offer.public_id}`);
   }
-  if (!compact.agent_handoff || typeof compact.agent_handoff !== 'object') {
-    fail(`sell-now offer missing agent_handoff: ${offer.public_id}`);
-  }
-  if (!String(compact.agent_handoff?.continue_via?.human_start_url || '').startsWith('https://')) {
-    fail(`sell-now offer agent handoff missing human Start URL: ${offer.public_id}`);
-  }
-  if (!String(compact.agent_handoff?.continue_via?.machine_offer_url || '').startsWith('https://')) {
-    fail(`sell-now offer agent handoff missing machine offer URL: ${offer.public_id}`);
-  }
-  if (!String(compact.agent_handoff?.continue_via?.universal_mcp || '').startsWith('https://')) {
-    fail(`sell-now offer agent handoff missing universal MCP: ${offer.public_id}`);
-  }
-  if (!/explicit human confirmation/i.test(String(compact.agent_handoff?.consent_gate || ''))) {
-    fail(`sell-now offer agent handoff lost explicit confirmation gate: ${offer.public_id}`);
-  }
-  if (!/authoritative provider verification/i.test(String(compact.agent_handoff?.completion_rule || ''))) {
-    fail(`sell-now offer agent handoff lost payment verification rule: ${offer.public_id}`);
-  }
-  if (!String(compact.machine_review_url || '').startsWith('https://')) {
-    fail(`sell-now offer missing machine review URL: ${offer.public_id}`);
-  }
-  if (compact.start_url_state === 'machine_commerce_review_fallback' && compact.start_url !== compact.machine_review_url) {
-    fail(`fallback Start URL does not equal proven review door: ${offer.public_id}`);
+
+  if (heldNoOwnedOrigin) {
+    if (compact.machine_review_url) fail(`held offer must not expose an unverified machine review URL: ${offer.public_id}`);
+    if (compact.agent_handoff) fail(`held offer must not expose an executable agent handoff: ${offer.public_id}`);
+  } else {
+    if (!compact.agent_handoff || typeof compact.agent_handoff !== 'object') {
+      fail(`sell-now offer missing agent_handoff: ${offer.public_id}`);
+    }
+    if (!String(compact.agent_handoff?.continue_via?.human_start_url || '').startsWith('https://')) {
+      fail(`sell-now offer agent handoff missing human Start URL: ${offer.public_id}`);
+    }
+    if (!String(compact.agent_handoff?.continue_via?.machine_offer_url || '').startsWith('https://')) {
+      fail(`sell-now offer agent handoff missing machine offer URL: ${offer.public_id}`);
+    }
+    if (!String(compact.agent_handoff?.continue_via?.universal_mcp || '').startsWith('https://')) {
+      fail(`sell-now offer agent handoff missing universal MCP: ${offer.public_id}`);
+    }
+    if (!/explicit human confirmation/i.test(String(compact.agent_handoff?.consent_gate || ''))) {
+      fail(`sell-now offer agent handoff lost explicit confirmation gate: ${offer.public_id}`);
+    }
+    if (!/authoritative provider verification/i.test(String(compact.agent_handoff?.completion_rule || ''))) {
+      fail(`sell-now offer agent handoff lost payment verification rule: ${offer.public_id}`);
+    }
+    if (!String(compact.machine_review_url || '').startsWith('https://')) {
+      fail(`sell-now offer missing machine review URL: ${offer.public_id}`);
+    }
+    if (compact.start_url_state === 'machine_commerce_review_fallback' && compact.start_url !== compact.machine_review_url) {
+      fail(`fallback Start URL does not equal proven review door: ${offer.public_id}`);
+    }
   }
   if (String(compact.start_url || '').startsWith('/api/chum/go/')) {
     fail(`unproven relative CHUM handoff leaked into public Start URL: ${offer.public_id}`);

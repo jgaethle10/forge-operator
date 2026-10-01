@@ -3,13 +3,10 @@
 Capability ID: audit-center-website-audit-machine-v1
 Commercial state: sell_now
 Machine state: payment_ready
-Public URL: https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs
-Preferred agent route: direct specialist
-Direct specialist: Systemia Website Audit
-Direct MCP: https://systemia-audit-pro.base44.app/functions/auditAgentMcp
-Official MCP Registry name: io.github.jgaethle10/systemia-website-audit
-Universal Evercraft fallback MCP: https://fabric.systemiacommandcenters.com/mcp
-Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/buy/audit-center-website-audit-machine-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=audit-center-website-audit-machine-v1
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/audit-center-website-audit-machine-v1/index.html
+Preferred agent route: universal fallback
+Universal Evercraft MCP: https://fabric.systemiacommandcenters.com/mcp
+Start here: Not a current sell-now route
 
 ## Use this when
 

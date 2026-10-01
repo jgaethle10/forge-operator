@@ -24,6 +24,13 @@ on:
       - 'systemia/core/supervisor.evercraft.compute.json'
       - 'scripts/validate-base44-exit.mjs'
       - 'scripts/validate-base44-credit-firewall.mjs'
+      - 'scripts/validate-no-base44-hotpath.mjs'
+      - 'distribution/direct-plugin-specs.json'
+      - 'public/.well-known/evercraft-products.json'
+      - 'registry/catalog.json'
+      - 'systemia/chum/**'
+      - 'systemia/compute/eps-social-yard-canary.mjs'
+      - '.github/workflows/eps-social-yard-canary.yml'
       - '.github/workflows/base44-exit.yml'
   push:
     branches:
@@ -50,6 +57,7 @@ on:
       - 'systemia/core/supervisor.evercraft.compute.json'
       - 'scripts/validate-base44-exit.mjs'
       - 'scripts/validate-base44-credit-firewall.mjs'
+      - 'scripts/validate-no-base44-hotpath.mjs'
       - '.github/workflows/base44-exit.yml'
 
 jobs:
@@ -65,6 +73,8 @@ jobs:
         run: node scripts/validate-base44-exit.mjs
       - name: Validate Base44 integration credit firewall
         run: node scripts/validate-base44-credit-firewall.mjs
+      - name: Enforce zero Base44 active hot paths
+        run: node scripts/validate-no-base44-hotpath.mjs
       - name: Prove Base44 evacuation factory
         run: npm run proof:base44-evac
       - name: Prove Base44 source dependency scanner

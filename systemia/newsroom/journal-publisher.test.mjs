@@ -65,7 +65,8 @@ test('publishes an approved source-grounded story with receipts and machine surf
   const outDir = fs.mkdtempSync(path.join(os.tmpdir(), 'journal-owned-'));
   const report = publishJournalStories([story()], {
     outDir,
-    now: new Date('2026-09-30T22:00:00.000Z')
+    now: new Date('2026-09-30T22:00:00.000Z'),
+    publicOrigin: 'https://journal.test.evercraft.local'
   });
   assert.equal(report.story_count, 1);
   assert.ok(fs.existsSync(path.join(outDir, 'index.html')));
@@ -76,6 +77,13 @@ test('publishes an approved source-grounded story with receipts and machine surf
   const html = fs.readFileSync(path.join(outDir, 'index.html'), 'utf8');
   assert.match(html, /Evercraft Journal/);
   assert.doesNotMatch(html, /Black Friday|shopping assistant/i);
+  const articleHtml = fs.readFileSync(path.join(outDir, 'owned-journal-test', 'index.html'), 'utf8');
+  assert.match(articleHtml, /https:\/\/journal\.test\.evercraft\.local\/owned-journal-test\//);
+  const receipt = JSON.parse(fs.readFileSync(path.join(outDir, 'receipts', 'owned-journal-test.json'), 'utf8'));
+  assert.equal(receipt.canonical_url, 'https://journal.test.evercraft.local/owned-journal-test/');
+  const index = JSON.parse(fs.readFileSync(path.join(outDir, 'index.json'), 'utf8'));
+  assert.equal(index.stories[0].canonical_url, 'https://journal.test.evercraft.local/owned-journal-test/');
+  assert.equal(report.public_origin, 'https://journal.test.evercraft.local');
 });
 
 test('fails closed when freshness expires', () => {

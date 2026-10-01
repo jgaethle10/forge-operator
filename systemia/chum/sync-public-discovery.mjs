@@ -1,15 +1,12 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const LIVE_CATALOG_URL =
-  process.env.EVERCRAFT_MACHINE_CATALOG_URL ||
-  'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=catalog';
+const CONFIGURED_CATALOG_URL = String(process.env.EVERCRAFT_MACHINE_CATALOG_URL || '').trim();
+const CONFIGURED_GATEWAY_URL = String(process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL || '').trim();
 const OUTPUT = 'public/.well-known/evercraft-machine-catalog.json';
-const MACHINE_COMMERCE_GATEWAY_URL =
-  process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL ||
-  LIVE_CATALOG_URL.split('?', 1)[0];
 const TIMEOUT_MS = 20000;
 const CONFORMANCE_PATH = 'conformance/products.json';
+
 const conformance = fs.existsSync(CONFORMANCE_PATH)
   ? JSON.parse(fs.readFileSync(CONFORMANCE_PATH, 'utf8'))
   : { products: [] };
@@ -18,6 +15,36 @@ const conformanceByCapabilityId = new Map(
     .filter((product) => product?.machine_commerce_public_id)
     .map((product) => [String(product.machine_commerce_public_id), product])
 );
+
+function isLegacyProviderUrl(value) {
+  const raw = String(value || '');
+  if (/https?:\/\/(?:base44\.app|[^/\s]+\.base44\.app)(?:\/|$)/i.test(raw)) return true;
+  try {
+    const url = new URL(raw);
+    const host = url.hostname.toLowerCase();
+    return host === 'base44.app' || host.endsWith('.base44.app');
+  } catch {
+    return false;
+  }
+}
+
+function safeHttps(value) {
+  const raw = String(value || '').trim();
+  if (!raw || isLegacyProviderUrl(raw)) return '';
+  try {
+    const url = new URL(raw);
+    return url.protocol === 'https:' ? url.toString() : '';
+  } catch {
+    return '';
+  }
+}
+
+if (CONFIGURED_CATALOG_URL && !safeHttps(CONFIGURED_CATALOG_URL)) {
+  throw new Error('EVERCRAFT_MACHINE_CATALOG_URL must be an Evercraft-owned HTTPS endpoint.');
+}
+if (CONFIGURED_GATEWAY_URL && !safeHttps(CONFIGURED_GATEWAY_URL)) {
+  throw new Error('EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL must be an Evercraft-owned HTTPS endpoint.');
+}
 
 function stable(value) {
   if (Array.isArray(value)) return value.map(stable);
@@ -39,9 +66,10 @@ function publicOffer(offer) {
   const liveCanaryEvidence = String(
     offer?.live_canary_evidence || productConformance?.live_canary_evidence || ''
   ).trim() || null;
-  const sourcePublicUrl = String(offer.public_url || '').trim();
-  const fallbackPublicUrl = publicId
-    ? `${MACHINE_COMMERCE_GATEWAY_URL}?view=service&public_id=${encodeURIComponent(publicId)}`
+  const sourcePublicUrl = safeHttps(offer.public_url);
+  const gateway = safeHttps(CONFIGURED_GATEWAY_URL);
+  const fallbackPublicUrl = publicId && gateway
+    ? gateway + (gateway.includes('?') ? '&' : '?') + 'view=service&public_id=' + encodeURIComponent(publicId)
     : '';
   return {
     public_id: publicId,
@@ -57,38 +85,58 @@ function publicOffer(offer) {
     human_ui_required: Boolean(offer.human_ui_required),
     confirmation: String(offer.confirmation || ''),
     public_url: sourcePublicUrl || fallbackPublicUrl,
-    public_url_source: sourcePublicUrl ? 'source_catalog' : 'machine_commerce_review_fallback',
+    public_url_source: sourcePublicUrl ? 'source_catalog' : (fallbackPublicUrl ? 'owned_gateway_fallback' : 'held_no_owned_public_url'),
     payment_authority: String(offer.payment_authority || ''),
-    invocation_status: String(offer.invocation_status || ''),
-    live_canary_evidence: liveCanaryEvidence,
+    invocation_status: isLegacyProviderUrl(offer.invocation_status)
+      ? 'HELD: legacy provider runtime retired; awaiting a verified Evercraft-owned route.'
+      : String(offer.invocation_status || ''),
+    live_canary_evidence: isLegacyProviderUrl(liveCanaryEvidence) ? null : liveCanaryEvidence,
     catalog_version: String(offer.catalog_version || '')
   };
 }
 
-const controller = new AbortController();
-const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
-let response;
-try {
-  response = await fetch(LIVE_CATALOG_URL, {
-    headers: { accept: 'application/json', 'user-agent': 'Evercraft-CHUM/0.2 (+public-catalog-sync)' },
-    signal: controller.signal
-  });
-} finally {
-  clearTimeout(timer);
+let current = null;
+if (fs.existsSync(OUTPUT)) {
+  try { current = JSON.parse(fs.readFileSync(OUTPUT, 'utf8')); } catch {}
 }
-if (!response.ok) throw new Error(`Live catalog returned HTTP ${response.status}`);
-const live = await response.json();
-if (live?.ok !== true || !Array.isArray(live?.offers)) throw new Error('Live catalog response is not a valid Evercraft public catalog.');
 
-const offers = live.offers.map(publicOffer).filter((x) => x.public_id && x.name).sort((a,b) => a.public_id.localeCompare(b.public_id));
+let live = null;
+if (CONFIGURED_CATALOG_URL) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
+  let response;
+  try {
+    response = await fetch(CONFIGURED_CATALOG_URL, {
+      headers: { accept: 'application/json', 'user-agent': 'Evercraft-CHUM/0.3 (+owned-catalog-sync)' },
+      signal: controller.signal
+    });
+  } finally {
+    clearTimeout(timer);
+  }
+  if (!response.ok) throw new Error('Owned catalog returned HTTP ' + response.status);
+  live = await response.json();
+  if (live?.ok !== true || !Array.isArray(live?.offers)) {
+    throw new Error('Owned catalog response is not a valid Evercraft public catalog.');
+  }
+}
+
+const sourceOffers = live?.offers || current?.offers || [];
+if (!Array.isArray(sourceOffers)) throw new Error('No safe catalog snapshot is available.');
+
+const offers = sourceOffers
+  .map(publicOffer)
+  .filter((x) => x.public_id && x.name)
+  .sort((a,b) => a.public_id.localeCompare(b.public_id));
+
 const next = {
   schema: 'evercraft.machine-catalog.snapshot.v1',
   provider: 'Evercraft LLC',
   purpose: 'Public-safe snapshot of the canonical Evercraft machine-commerce catalog for AI/search/agent discovery. This file grants no private access and creates no payment authority.',
-  source_url: LIVE_CATALOG_URL,
-  source_schema_version: String(live.schema_version || ''),
-  gateway_version: String(live.gateway_version || ''),
-  source_generated_at: String(live.generated_at || ''),
+  source_url: live ? safeHttps(CONFIGURED_CATALOG_URL) : null,
+  source_state: live ? 'owned_runtime_live' : 'owned_runtime_unbound_snapshot_sanitized',
+  source_schema_version: String(live?.schema_version || current?.source_schema_version || ''),
+  gateway_version: String(live?.gateway_version || current?.gateway_version || ''),
+  source_generated_at: String(live?.generated_at || current?.source_generated_at || ''),
   generated_at: new Date().toISOString(),
   offer_count: offers.length,
   sell_now_count: offers.filter((x) => x.commercial_state === 'sell_now').length,
@@ -99,15 +147,12 @@ const next = {
     checkout_is_payment_proof: false,
     provider_verification_required_for_paid_state: true,
     private_topology_exposed: false,
-    ...(live.safety && typeof live.safety === 'object' ? live.safety : {})
+    legacy_provider_runtime_allowed: false,
+    ...((live?.safety && typeof live.safety === 'object') ? live.safety : {})
   },
   offers
 };
 
-let current = null;
-if (fs.existsSync(OUTPUT)) {
-  try { current = JSON.parse(fs.readFileSync(OUTPUT, 'utf8')); } catch {}
-}
 if (current && JSON.stringify(semanticSnapshot(current)) === JSON.stringify(semanticSnapshot(next))) {
   console.log(JSON.stringify({ changed:false, offer_count:offers.length, sell_now_count:next.sell_now_count, output:OUTPUT }));
 } else {

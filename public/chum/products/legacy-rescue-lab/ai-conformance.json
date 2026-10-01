@@ -22,7 +22,7 @@
   "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/legacy-rescue-lab/llms.txt",
   "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/legacy-rescue-lab/ai-discovery.json",
   "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-  "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "mcp": null,
   "authority": "public discovery and bounded rescue diagnostics; private system access, credentials, source repositories, invasive testing, and production changes require separate explicit authorization",
   "human_confirmation_required": true,
   "boundaries": [
@@ -50,8 +50,8 @@
       "public_id": "legacy-rescue-lab-v1",
       "tool": "prepare_legacy_rescue_scan_handoff",
       "request_tool": "submit_legacy_rescue_scan_request",
-      "buyer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=legacy-rescue-lab-v1",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "buyer_url": null,
+      "mcp": null,
       "verification": {
         "negative_canary": "HTTP 409 without explicit human confirmation; zero request records created",
         "positive_canary": "Synthetic QA returned HTTP 201; request marked synthetic; checkout_created=false; payment_obligation_created=false; private_access_granted=false; production_authority_granted=false",
@@ -59,14 +59,14 @@
       }
     }
   },
-  "human_start_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=legacy-rescue-lab-v1",
-  "buyer_frontage_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=legacy-rescue-lab-v1",
+  "human_start_url": null,
+  "buyer_frontage_url": null,
   "developer_surfaces": null,
   "editorial_surfaces": {
     "hub": "/legacy-rescue-lab/editorial/",
     "rss": "/legacy-rescue-lab/editorial/feed.xml",
-    "journal_article": "https://evercraftjournal.base44.app/journal/save-the-software-before-you-rebuild-it",
-    "journal_guide": "https://evercraftjournal.base44.app/guides/software-rescue-before-rebuild",
+    "journal_article": null,
+    "journal_guide": null,
     "articles": [
       "/legacy-rescue-lab/editorial/save-software-before-rebuild/",
       "/legacy-rescue-lab/editorial/developer-disappeared/",

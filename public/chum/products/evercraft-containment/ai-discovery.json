@@ -7,7 +7,7 @@
     "Agent Watershed"
   ],
   "class": "ai_persistence_and_automation_security_diagnostics",
-  "canonical_url": "https://evercraft.base44.app/containment",
+  "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-containment/index.html",
   "intents": [
     "what is still running after I turned the automation off",
     "audit my AI agents and automations for persistence",
@@ -30,7 +30,7 @@
   "buyer_frontage_url": null,
   "registry_name": null,
   "mcp": null,
-  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "machine_commerce_mcp": null,
   "developer_surfaces": null,
   "editorial_surfaces": null,
   "knowledge_surfaces": null,

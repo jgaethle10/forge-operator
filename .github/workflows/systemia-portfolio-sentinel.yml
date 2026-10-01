@@ -18,6 +18,7 @@ on:
       - "tests/capability-promotion.test.mjs"
       - "systemia/core/resident-services.json"
       - "systemia/core/**"
+      - "systemia/capability-mesh/**"
       - "systemia/collider/mission-sources.json"
       - "public/.well-known/evercraft-products.json"
       - "public/.well-known/evercraft-capabilities.json"
@@ -46,6 +47,7 @@ on:
       - "tests/capability-promotion.test.mjs"
       - "systemia/core/resident-services.json"
       - "systemia/core/**"
+      - "systemia/capability-mesh/**"
       - "systemia/collider/mission-sources.json"
       - "package.json"
       - "Dockerfile"
@@ -204,7 +206,12 @@ jobs:
               if [ -f "$FILE" ]; then
                 echo "### $FILE"
                 echo '~~~json'
-                cat "$FILE"
+                BYTES="$(wc -c < "$FILE" | tr -d ' ')"
+                head -c 100000 "$FILE"
+                echo
+                if [ "$BYTES" -gt 100000 ]; then
+                  echo "... truncated in step summary; full receipt remains in uploaded artifacts ($BYTES bytes)"
+                fi
                 echo '~~~'
               fi
             done

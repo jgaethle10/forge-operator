@@ -15,7 +15,7 @@ Evercraft Global Health Atlas is an approved public Evercraft discovery record. 
 
 ## Public routes
 
-- Canonical: https://evercraft-health-atlas.base44.app/health-atlas
+- Canonical: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-global-health-atlas/index.html
 - GitHub LLM mirror: ./llms.txt
 
 ## Authority

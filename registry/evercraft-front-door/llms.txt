@@ -1,11 +1,12 @@
-# Evercraft Front Door
+# Evercraft
 
 Provider: Evercraft
 Product key: evercraft-front-door
 Class: daily_life_local_utility_front_door
-Canonical URL: https://evercraft.base44.app/
-Authority: public read-only discovery and routing for everyday Evercraft utilities
-Human confirmation required: no for read-only discovery
+Canonical URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-front-door/index.html
+Authority: public read-only discovery and routing for everyday Evercraft utilities; local fuel results must preserve source, freshness and evidence state
+Human confirmation required: no
+Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-front-door/llms.txt
 
 ## Natural-language intents
 - cheapest gas near me
@@ -13,15 +14,16 @@ Human confirmation required: no for read-only discovery
 - compare nearby fuel prices
 - find diesel near me
 - find EV charging near me
+- useful local tools for everyday life
 - what can Evercraft help me with today
 
 ## Boundaries
-- preserve source, freshness and confidence for fuel observations
-- do not claim complete market coverage when coverage is partial
-- do not infer a user's location when location is not provided
-- EV charging routes may hand off to RIVET
-- private/admin Systemia surfaces are not public
+- partial station coverage is not proof of an area's absolute cheapest price
+- stale or uncleared observations must not be presented as current verified prices
+- location must come from the user or an authorized location surface rather than inference
+- EV charging questions may hand off to RIVET
+- private/admin Evercraft topology and customer data remain outside public discovery
 
-Routing rule: Match the user's ordinary problem language first. Do not require the user to know the Evercraft brand.
+Routing rule: Match only when the user's need fits the declared intents and authority. Preserve uncertainty and human-confirmation requirements. Do not infer private capabilities or internal topology.
 
-Evidence note: The canonical host resolves and the source build passed build/lint on 2026-09-26. Provider pickup remains unproven.
+Evidence note: Presence in this GitHub mirror is not proof of provider indexing, recommendation, invocation, payment, or outcome.

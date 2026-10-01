@@ -1,18 +1,18 @@
 {
   "name": "findmypart",
-  "version": "0.2.0",
-  "description": "Direct evidence-aware Part Passport triage and hard-to-source part recovery with replacement, salvage, blueprint and fabrication paths.",
+  "version": "0.1.0",
+  "description": "Free Part Passport triage plus paid recovery for obsolete and hard-to-source parts",
   "author": {
     "name": "Evercraft LLC"
   },
-  "homepage": "https://findmypart.base44.app/",
+  "homepage": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/findmypart",
   "repository": "https://github.com/jgaethle10/forge-operator",
   "license": "UNLICENSED",
   "keywords": [
     "findmypart",
-    "parts",
     "part-passport",
     "obsolete-parts",
+    "parts-search",
     "salvage",
     "replacement",
     "cross-reference",
@@ -20,5 +20,7 @@
     "mcp"
   ],
   "skills": "./skills/",
-  "mcpServers": "./mcp.json"
+  "mcpServers": "./mcp.json",
+  "releaseState": "OWNED_RUNTIME_ROUTE_PENDING",
+  "publicOriginState": "legacy_provider_retired_owned_route_pending"
 }

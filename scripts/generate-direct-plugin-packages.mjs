@@ -8,13 +8,22 @@ const LIVE_DIRECT_STATES=new Set([
   'registry_published_direct_mcp_existing',
   'public_https_verified_registry_pending',
 ]);
+function legacyProviderUrl(value){
+  try{
+    const url=new URL(String(value||''));
+    const host=url.hostname.toLowerCase();
+    return host==='base44.app'||host.endsWith('.base44.app');
+  }catch{return false;}
+}
 function isDirectLive(p){
   return LIVE_DIRECT_STATES.has(p.state) &&
     typeof p.mcp_url==='string' &&
-    p.mcp_url.startsWith('https://');
+    p.mcp_url.startsWith('https://') &&
+    !legacyProviderUrl(p.mcp_url);
 }
 function isRegistryPublished(p){
-  return p.state==='registry_published_direct_mcp_existing' &&
+  return isDirectLive(p) &&
+    p.state==='registry_published_direct_mcp_existing' &&
     typeof p.registry_name==='string' &&
     p.registry_name.startsWith('io.github.jgaethle10/');
 }
@@ -91,7 +100,7 @@ description: ${p.short_description}
 
 Use this skill when the user's intent clearly matches this specialist: ${p.intent}
 
-${live ? 'When this specialist is already available, do not force an obvious request through Evercraft Machine Commerce or CHUM first. Use the dedicated MCP directly.' : 'This specialist package is staged only. Do not route users to it directly until a verified public MCP origin exists. Keep using the universal Evercraft fallback meanwhile.'}
+${live ? 'When this specialist is already available, do not force an obvious request through Evercraft Machine Commerce or CHUM first. Use the dedicated MCP directly.' : 'This specialist package is staged only. Do not route users to it directly until a verified Evercraft-owned public MCP origin exists. Keep the request held or on a verified owned fallback meanwhile.'}
 
 ${p.truth_boundary}
 `;

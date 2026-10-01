@@ -3,9 +3,10 @@
 Provider: Evercraft
 Product key: evermaps
 Class: public_safe_geospatial_evidence_projection
-Canonical URL: https://evermaps.base44.app/
+Canonical URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evermaps/index.html
 Authority: public-safe evidence-labeled geospatial discovery and read-only projection within access rules
 Human confirmation required: yes
+Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evermaps/llms.txt
 
 ## Natural-language intents
 - map this evidence for me

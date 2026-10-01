@@ -166,5 +166,34 @@
       "protected_content_stored": false,
       "private_contact_information_stored": false
     }
+  },
+  "sourcing": {
+    "enabled_in_verified_private_runtime": true,
+    "accepted_connection_required": true,
+    "bound_to_execution_blueprint": true,
+    "candidate_must_exist_in_blueprint_package": true,
+    "safe_scope_only": true,
+    "protected_material_disclosed": false,
+    "response_fields": [
+      "availability_response",
+      "quote_mode",
+      "quote_amount",
+      "quote_currency",
+      "lead_time_days",
+      "available_from",
+      "valid_until",
+      "response_note"
+    ],
+    "payment_obligation_created": false,
+    "quote_response_is_contract": false,
+    "shortlisting_creates_team_membership": false,
+    "sourced_team_requires_requester_shortlist": true,
+    "sourced_team_requires_availability": [
+      "Available",
+      "Limited"
+    ],
+    "sourced_team_single_project_and_blueprint": true,
+    "team_acceptance_materializes_work_package_as": "Offered",
+    "work_package_acceptance_still_required": true
   }
 }

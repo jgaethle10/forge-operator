@@ -37,9 +37,11 @@ test('Fabric boots from the canonical CHUM capability index without a manual rou
   assert.ok(canonical.some((x)=>x.public_id==='findmypart-paid-hunt-v1'));
   const aliev=canonical.find((x)=>x.public_id==='aliev-site-opportunity-snapshot-v1');
   assert.ok(aliev);
-  assert.ok(aliev.connections.some((x)=>x.type==='mcp'&&/alievMcp/.test(x.url)));
+  assert.ok(!aliev.connections.some((x)=>x.type==='mcp'&&/alievMcp/.test(x.url)));
   assert.ok(aliev.connections.some((x)=>x.type==='mcp'&&x.url==='https://fabric.systemiacommandcenters.com/mcp'));
   assert.ok(aliev.connections.some((x)=>x.type==='docs'));
+  assert.equal(aliev.start_url_state,'held_no_owned_public_origin');
+  assert.equal(aliev.preferred_agent_route,'universal_fallback');
   assert.ok(canonical.every((x)=>x.connections.some((connection)=>connection.type==='mcp')));
   const findMyPart=canonical.find((x)=>x.public_id==='findmypart-paid-hunt-v1');
   assert.ok(findMyPart.connections.some((x)=>x.type==='mcp'&&x.url==='https://fabric.systemiacommandcenters.com/mcp'));

@@ -6,7 +6,7 @@
     "name": "Evercraft LLC",
     "url": "https://github.com/jgaethle10/forge-operator"
   },
-  "homepage": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+  "homepage": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-clip",
   "repository": "https://github.com/jgaethle10/forge-operator",
   "license": "UNLICENSED",
   "keywords": [
@@ -28,9 +28,11 @@
     "capabilities": [
       "Interactive"
     ],
-    "websiteURL": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
+    "websiteURL": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-clip",
     "defaultPrompt": [
       "Help me plan a social-video job from this source material and tell me the current Evercraft Clip execution boundary."
     ]
-  }
+  },
+  "releaseState": "OWNED_RUNTIME_ROUTE_PENDING",
+  "publicOriginState": "legacy_provider_retired_owned_route_pending"
 }

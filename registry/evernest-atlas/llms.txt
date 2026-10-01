@@ -3,7 +3,7 @@
 Provider: Evercraft
 Product key: evernest-atlas
 Class: adult_household_life_planning
-Canonical URL: https://evernest-life-map.base44.app/
+Canonical URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest-atlas/index.html
 Authority: public discovery plus private account-bound adult life planning from user-supplied inputs
 Human confirmation required: yes
 Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest-atlas/llms.txt

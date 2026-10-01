@@ -6,7 +6,7 @@
     "name": "Evercraft LLC",
     "url": "https://github.com/jgaethle10/forge-operator"
   },
-  "homepage": "https://evercraft-career-command.base44.app/",
+  "homepage": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/career-command",
   "repository": "https://github.com/jgaethle10/forge-operator",
   "license": "UNLICENSED",
   "keywords": [
@@ -28,9 +28,11 @@
     "capabilities": [
       "Interactive"
     ],
-    "websiteURL": "https://evercraft-career-command.base44.app/",
+    "websiteURL": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/career-command",
     "defaultPrompt": [
       "Help me prepare for an upcoming interview and practice the questions I am likely to face."
     ]
-  }
+  },
+  "releaseState": "OWNED_RUNTIME_ROUTE_PENDING",
+  "publicOriginState": "legacy_provider_retired_owned_route_pending"
 }

@@ -3,10 +3,10 @@
   "@graph": [
     {
       "@type": "Service",
-      "@id": "https://evercraft-forensiscope.base44.app/video-too-large-for-ai#evercraft-capability",
+      "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/forensiscope-evidence-review-v1/index.html#evercraft-capability",
       "name": "ForensiScope Evidence Review",
       "description": "An authorized user needs traceable analysis of video or long-form evidence while preserving source lineage and integrity boundaries.",
-      "url": "https://evercraft-forensiscope.base44.app/video-too-large-for-ai",
+      "url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/forensiscope-evidence-review-v1/index.html",
       "provider": {
         "@type": "Organization",
         "name": "Evercraft LLC",
@@ -20,7 +20,7 @@
       "name": "ForensiScope Evidence Review | Evercraft capability",
       "description": "An authorized user needs traceable analysis of video or long-form evidence while preserving source lineage and integrity boundaries.",
       "about": {
-        "@id": "https://evercraft-forensiscope.base44.app/video-too-large-for-ai#evercraft-capability"
+        "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/forensiscope-evidence-review-v1/index.html#evercraft-capability"
       }
     }
   ]

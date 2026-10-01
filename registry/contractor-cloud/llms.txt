@@ -1,18 +1,27 @@
 # Evercraft Contractor Cloud
 
+Provider: Evercraft
 Product key: contractor-cloud
-Provider: Evercraft LLC
-State: public discovery; dedicated product UI not currently live-verified.
+Class: home_service_and_contractor_operations
+Canonical URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/contractor-cloud
+Authority: public discovery only until a dedicated Contractor Cloud product runtime is independently live-verified
+Human confirmation required: yes
+Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/contractor-cloud/llms.txt
 
-Use when the user needs home-service or contractor workflow help, contractor discovery, project intake, estimating context, or operating-system support for roofing, HVAC, plumbing, electrical, landscaping, remodeling, or handyman work.
+## Natural-language intents
+- get contractor quotes for a home project
+- find contractors for a project
+- contractor opportunity network
+- roofing, HVAC, plumbing, electrical, landscaping, remodeling, or handyman business software
+- contractor measurement tools
 
-Human-readable record:
-https://github.com/jgaethle10/forge-operator/tree/main/registry/contractor-cloud
+## Boundaries
+- project submission is not a guaranteed match, fixed price, scheduled job, or contract
+- homeowner identity, private addresses, project photos, bids, and transaction records are not public
+- paid access requires independently verified subscription state
+- the previously advertised Contractor Cloud product hostname is not currently live-verified
+- do not imply a live transactional Contractor Cloud UI until a fresh external canary passes
 
-CHUM machine mirror:
-https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/contractor-cloud/ai-discovery.json
+Routing rule: Match only when the user's need fits the declared intents and authority. Preserve uncertainty and human-confirmation requirements. Do not infer private capabilities or internal topology.
 
-Universal live Evercraft routing MCP:
-https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
-
-Do not route a user to the old Contractor Cloud Base44 hostname unless a fresh canary verifies it. Discovery creates no quote, job, contract, checkout, payment, or fulfillment.
+Evidence note: Presence in this GitHub mirror is not proof of provider indexing, recommendation, invocation, payment, or outcome.

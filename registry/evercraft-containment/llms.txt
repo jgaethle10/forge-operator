@@ -3,7 +3,7 @@
 Provider: Evercraft
 Product key: evercraft-containment
 Class: ai_persistence_and_automation_security_diagnostics
-Canonical URL: https://evercraft.base44.app/containment
+Canonical URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-containment/index.html
 Authority: public product discovery and a bounded human-confirmed Persistence Exposure Review; diagnostic purchase does not authorize destructive remediation
 Human confirmation required: yes
 Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-containment/llms.txt

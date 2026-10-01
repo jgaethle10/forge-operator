@@ -6,7 +6,7 @@
     "Instant Website Builder USA"
   ],
   "class": "done_for_you_business_website_service",
-  "canonical_url": "https://instant-website-builder-usa-6feac193.base44.app/",
+  "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/website-launch/index.html",
   "intents": [
     "build a professional website for my small business",
     "replace an outdated business website",
@@ -25,8 +25,8 @@
   "human_start_url": null,
   "buyer_frontage_url": null,
   "registry_name": "io.github.jgaethle10/website-launch",
-  "mcp": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp",
-  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "mcp": null,
+  "machine_commerce_mcp": null,
   "developer_surfaces": null,
   "editorial_surfaces": null,
   "knowledge_surfaces": null,

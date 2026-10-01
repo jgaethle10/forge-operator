@@ -14,7 +14,7 @@ EcoLedger is an approved public Evercraft discovery record. This GitHub mirror e
 
 ## Public routes
 
-- Canonical: https://eco-ledger-ai-379a7af4.base44.app/
+- Canonical: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ecoledger/index.html
 - GitHub LLM mirror: ./llms.txt
 
 ## Authority

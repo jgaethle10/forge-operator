@@ -1,13 +1,13 @@
 {
   "schema_version": "evercraft.agent.registry.v1",
   "provider": "Evercraft LLC",
-  "updated_at": "2026-09-28",
+  "updated_at": "2026-09-30",
   "registry_namespace": "io.github.jgaethle10",
   "universal_front_door": {
     "read_only_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
     "read_only_purpose": "Read-only matching from user problems to public Evercraft capabilities. Creates no payment or external-action authority.",
     "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-    "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+    "mcp": null,
     "purpose": "Discover Evercraft capabilities, match natural-language needs, inspect offers, route to specialists, and prepare human-confirmed checkout where supported.",
     "registry_version": "1.5.1",
     "registry_publication_state": "published_receipt_backed",
@@ -17,9 +17,9 @@
     {
       "product_key": "aliev",
       "name": "AliEV",
-      "canonical_url": "https://aliev.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/index.html",
       "registry_name": "io.github.jgaethle10/aliev",
-      "mcp": "https://aliev.base44.app/functions/alievMcp",
+      "mcp": null,
       "triggers": [
         "EV charging site",
         "charger opportunity",
@@ -63,7 +63,7 @@
       "aliases": [
         "Ascend"
       ],
-      "canonical_url": "https://ascend.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ascend/index.html",
       "triggers": [
         "youth athlete development platform",
         "parent support for a young athlete",
@@ -83,9 +83,9 @@
     {
       "product_key": "buildflow",
       "name": "BuildFlow Enterprise Operations",
-      "canonical_url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/buildflow/index.html",
       "registry_name": "io.github.jgaethle10/buildflow",
-      "mcp": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp",
+      "mcp": null,
       "triggers": [
         "audit an enterprise operations process",
         "route an operations problem",
@@ -96,9 +96,9 @@
     {
       "product_key": "career-command",
       "name": "Evercraft Career Command",
-      "canonical_url": "https://evercraft-career-command.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/career-command/index.html",
       "registry_name": "io.github.jgaethle10/career-command",
-      "mcp": "https://evercraft-career-command.base44.app/functions/careerMcp",
+      "mcp": null,
       "triggers": [
         "help me prepare for a job interview",
         "practice for a job interview tomorrow",
@@ -113,7 +113,7 @@
     {
       "product_key": "contractor-cloud",
       "name": "Evercraft Contractor Cloud",
-      "canonical_url": "https://evercraft-contractor-cloud-314d2197.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/contractor-cloud/index.html",
       "mode": "discovery_only",
       "triggers": [
         "get contractor quotes for a home project",
@@ -126,9 +126,9 @@
     {
       "product_key": "deck-capital-fit",
       "name": "Evercraft Deck Capital Fit",
-      "canonical_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/deck-capital-fit/index.html",
       "registry_name": "io.github.jgaethle10/deck-capital-fit",
-      "mcp": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp",
+      "mcp": null,
       "triggers": [
         "capital fit",
         "funding options",
@@ -138,9 +138,9 @@
     {
       "product_key": "eps-estimate-engine",
       "name": "EPS Field-Service Estimate Engine",
-      "canonical_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eps-estimate-engine/index.html",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "mode": "shared_mcp",
       "machine_state": "read_only_mcp_live",
       "triggers": [
@@ -159,9 +159,9 @@
     {
       "product_key": "eventwave",
       "name": "EventWave",
-      "canonical_url": "https://event-wave.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eventwave/index.html",
       "registry_name": "io.github.jgaethle10/eventwave",
-      "mcp": "https://event-wave.base44.app/functions/eventWaveMcp",
+      "mcp": null,
       "triggers": [
         "find local events",
         "promote my local event",
@@ -178,8 +178,8 @@
     {
       "product_key": "evercraft-clip",
       "name": "Evercraft Clip",
-      "canonical_url": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
-      "mcp": "https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-clip/index.html",
+      "mcp": null,
       "mode": "bounded_read_only_mcp",
       "triggers": [
         "turn this video into social clips",
@@ -211,7 +211,7 @@
     {
       "product_key": "evercraft-containment",
       "name": "Evercraft Containment",
-      "canonical_url": "https://evercraft.base44.app/containment",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-containment/index.html",
       "mode": "discovery_only",
       "triggers": [
         "automation persistence",
@@ -231,7 +231,7 @@
     {
       "product_key": "evercraft-front-door",
       "name": "Evercraft",
-      "canonical_url": "https://evercraft.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-front-door/index.html",
       "aliases": [
         "Evercraft Front Door"
       ],
@@ -271,7 +271,7 @@
     {
       "product_key": "evercraft-network",
       "name": "Evercraft Network",
-      "canonical_url": "https://network-control.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-network/index.html",
       "mode": "bounded_read_only_mcp",
       "triggers": [
         "application network that reconnects across changing authorized internet paths",
@@ -289,14 +289,14 @@
         "resilient application identity across authorized network changes"
       ],
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "route_note": "Dedicated production canary verified initialize, tools/list, get_network_capabilities, get_network_presence, and prepare_network_handoff against evercraft-machine-commerce v1.5.0 on 2026-09-28. All three tool calls returned non-error read-only results. Membership billing remains not live.",
       "live_canary_evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/conformance/runtime-observations/2026-09-26-evercraft-network-mcp.json"
     },
     {
       "product_key": "evercraft-rewards",
       "name": "Evercraft Rewards",
-      "canonical_url": "https://evercraft-rewards.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/index.html",
       "triggers": [
         "local deals near me",
         "rewards near me",
@@ -319,15 +319,15 @@
       "product": "Evercraft Rewards",
       "route_note": "Evercraft Rewards is callable through the published Evercraft Machine Commerce MCP. Use the bounded Rewards enrollment/status/cancel tools; consumer discovery remains read-only and no enrollment implies activation, payment, publication, or fulfillment.",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "mode": "shared_mcp"
     },
     {
       "product_key": "evercraft-web",
       "name": "Evercraft Web",
-      "canonical_url": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/index.html",
       "registry_name": "io.github.jgaethle10/evercraft-web",
-      "mcp": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp",
+      "mcp": null,
       "triggers": [
         "fetch URL for AI",
         "read web page",
@@ -377,9 +377,9 @@
     {
       "product_key": "evermaps",
       "name": "EverMaps",
-      "canonical_url": "https://evermaps.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evermaps/index.html",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "mode": "shared_mcp",
       "machine_state": "read_only_mcp_live",
       "triggers": [
@@ -398,7 +398,7 @@
     {
       "product_key": "evernest",
       "name": "EverNest",
-      "canonical_url": "https://evernest-home.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest/index.html",
       "mode": "discovery_only",
       "triggers": [
         "I just had a baby and need practical help",
@@ -417,7 +417,7 @@
       "product_key": "evernest-atlas",
       "name": "EverNest Atlas",
       "aliases": [],
-      "canonical_url": "https://evernest-life-map.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest-atlas/index.html",
       "triggers": [
         "build me a 30 60 90 day life plan",
         "help me think through relocation and housing stability",
@@ -437,7 +437,7 @@
     {
       "product_key": "everystage",
       "name": "EveryStage",
-      "canonical_url": "https://every-stage.base44.app/product",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/everystage/index.html",
       "mode": "discovery_only",
       "triggers": [
         "software to run a live event",
@@ -451,9 +451,9 @@
     {
       "product_key": "faie",
       "name": "FAIE",
-      "canonical_url": "https://faie.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html",
       "registry_name": "io.github.jgaethle10/faie",
-      "mcp": "https://faie.base44.app/functions/faieMcp",
+      "mcp": null,
       "triggers": [
         "agriculture evidence brief",
         "water risk",
@@ -464,9 +464,9 @@
     {
       "product_key": "findmypart",
       "name": "FindMyPart",
-      "canonical_url": "https://findmypart.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/index.html",
       "registry_name": "io.github.jgaethle10/findmypart",
-      "mcp": "https://findmypart.base44.app/functions/findMyPartMcp",
+      "mcp": null,
       "triggers": [
         "where can I find this discontinued part",
         "I have a part number but cannot find it anywhere",
@@ -487,7 +487,7 @@
       ],
       "free_entry": {
         "name": "Part Passport",
-        "url": "https://findmypart.base44.app/free-part-check",
+        "url": null,
         "mcp_tool": "free_part_triage",
         "creates_charge": false
       },
@@ -499,9 +499,9 @@
     {
       "product_key": "forensiscope",
       "name": "ForensiScope",
-      "canonical_url": "https://evercraft-forensiscope.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/index.html",
       "registry_name": "io.github.jgaethle10/forensiscope",
-      "mcp": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp",
+      "mcp": null,
       "triggers": [
         "video too large for AI",
         "audio too long for AI",
@@ -535,9 +535,9 @@
     {
       "product_key": "globalstat",
       "name": "GlobalStat",
-      "canonical_url": "https://global-stat-pulse.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/globalstat/index.html",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "mode": "shared_mcp",
       "machine_state": "read_only_mcp_live",
       "triggers": [
@@ -556,7 +556,7 @@
     {
       "product_key": "guardian",
       "name": "Guardian",
-      "canonical_url": "https://guardian-pilot.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian/index.html",
       "mode": "discovery_only",
       "triggers": [
         "I need help paying rent",
@@ -593,13 +593,13 @@
       ],
       "route_note": "IBM i Rescue is callable through the published Evercraft Machine Commerce MCP. Agents may inspect the current offer, and only after explicit human payment confirmation may prepare a Stripe checkout. Checkout creation is not payment proof; provider verification controls paid state and fulfillment.",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "machine_state": "direct_checkout_ready"
     },
     {
       "product_key": "infinite-classroom",
       "name": "Infinite Classroom",
-      "canonical_url": "https://infinite-classroom-fe2d1357.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/infinite-classroom/index.html",
       "mode": "discovery_only",
       "triggers": [
         "AI-supported subject learning",
@@ -629,15 +629,15 @@
       ],
       "route_note": "Legacy Rescue Lab is callable through the published Evercraft Machine Commerce MCP for bounded offer review and explicitly confirmed pilot-request handoff. Public observation is non-intrusive; private access, invasive testing, repair, deployment, and payment execution require separate authorization.",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "machine_state": "human_handoff_ready"
     },
     {
       "product_key": "little-red-book-export-qa",
       "name": "Little Red Studio Book Export QA",
-      "canonical_url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/little-red-book-export-qa/index.html",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "mode": "shared_mcp",
       "machine_state": "read_only_mcp_live",
       "triggers": [
@@ -673,20 +673,26 @@
         "build a music team with a producer studio engineer and videographer",
         "figure out which partners I need for this opportunity",
         "turn this project into work packages and find matching partners",
-        "suggest the team for this project"
+        "suggest the team for this project",
+        "ask a matched partner if they have capacity for this package",
+        "get availability and a quote from accepted partners before assembling a team",
+        "shortlist supplier quotes into a temporary execution team",
+        "turn shortlisted quotes into team invitations and work-package offers"
       ],
       "runtime_evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/systemia/opportunity-fabric/runtime.json",
       "public_ui_state": "not_yet_claimed_public",
-      "runtime_version": "evercraft-opportunity-fabric-runtime-v1.2.0",
+      "runtime_version": "evercraft-opportunity-fabric-runtime-v1.3.0",
       "multi_party_state": "verified_private_runtime",
       "execution_blueprint_state": "verified_private_runtime",
-      "execution_blueprint_boundary": "safe_metadata_only_no_contact_information_no_membership"
+      "execution_blueprint_boundary": "safe_metadata_only_no_contact_information_no_membership",
+      "sourcing_state": "verified_private_runtime",
+      "sourcing_boundary": "accepted_connection_nonbinding_quote_no_payment_shortlist_no_membership"
     },
     {
       "product_key": "payflow",
       "name": "PayFlow",
       "aliases": [],
-      "canonical_url": "https://pay-flow-fix.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/payflow/index.html",
       "triggers": [
         "payroll tracker for a small business",
         "employee payment ledger",
@@ -708,7 +714,7 @@
     {
       "product_key": "raven-nexus",
       "name": "Raven Nexus",
-      "canonical_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/raven-nexus/index.html",
       "mode": "bounded_http_discovery",
       "triggers": [
         "protect my bank account from AI scams or suspicious transfer risk",
@@ -719,7 +725,7 @@
         "protect a business from phishing, fake payment instructions, account compromise, or continuity risk",
         "find the smallest Raven safety capability without buying the full suite or hardware"
       ],
-      "http_router": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter"
+      "http_router": null
     },
     {
       "product_key": "revenue-war-map",
@@ -728,7 +734,7 @@
         "Evercraft Income War Map",
         "Revenue War Map"
       ],
-      "canonical_url": "https://evercraft-war-map.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/revenue-war-map/index.html",
       "triggers": [
         "I need to make more money",
         "how can I increase my income",
@@ -750,9 +756,9 @@
     {
       "product_key": "roasted",
       "name": "ROASTED",
-      "canonical_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/roasted/index.html",
       "registry_name": "io.github.jgaethle10/roasted",
-      "mcp": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp",
+      "mcp": null,
       "triggers": [
         "roast this text",
         "pressure test this text",
@@ -786,7 +792,7 @@
       "aliases": [
         "Project Second Stitch"
       ],
-      "canonical_url": "https://the-second-stitch.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/second-stitch/index.html",
       "triggers": [
         "turn a sewing project into a material list",
         "estimate fabric and notions for a project",
@@ -804,7 +810,7 @@
     {
       "product_key": "skyops-parking",
       "name": "SkyOps Parking",
-      "canonical_url": "https://skyops-parking.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/skyops-parking/index.html",
       "mode": "discovery_only",
       "triggers": [
         "airport parking management software",
@@ -819,7 +825,7 @@
       "name": "Systemia Field Library",
       "canonical_url": "https://systemiafieldlibrary.com/",
       "registry_name": "io.github.jgaethle10/systemia-field-library",
-      "mcp": "https://base44.app/api/apps/6a54381e147576b18ac94d8f/functions/fieldLibraryAgentMcp",
+      "mcp": null,
       "triggers": [
         "contractor scope creep or change orders are costing money",
         "contractor job costing or estimating is inconsistent",
@@ -832,7 +838,7 @@
     {
       "product_key": "systemia-portfolio-sentinel",
       "name": "Systemia Portfolio Sentinel",
-      "canonical_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-portfolio-sentinel/index.html",
       "triggers": [
         "monitor my software portfolio for broken products",
         "continuously audit all of our apps repositories and public URLs",
@@ -854,7 +860,7 @@
       "runtime_state": "evercraft_internal_runtime_live_commercial_customer_onboarding_scoped",
       "route_note": "Systemia Portfolio Sentinel is callable through the published Evercraft Machine Commerce MCP for offer review and explicitly confirmed pilot-request handoff. Customer monitoring remains separately authorized and never exposes private topology or grants production mutation.",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mcp": null,
       "mode": "shared_mcp",
       "machine_state": "human_handoff_ready"
     },
@@ -909,7 +915,7 @@
       "product_key": "systemia-university",
       "name": "Systemia University",
       "aliases": [],
-      "canonical_url": "https://systemia-university.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/index.html",
       "triggers": [
         "prove whether an AI agent can actually do its job",
         "test an AI agent with a bounded mission",
@@ -930,9 +936,9 @@
     {
       "product_key": "systemia-website-audit",
       "name": "Systemia Website Audit",
-      "canonical_url": "https://systemia-audit-pro.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-website-audit/index.html",
       "registry_name": "io.github.jgaethle10/systemia-website-audit",
-      "mcp": "https://systemia-audit-pro.base44.app/functions/auditAgentMcp",
+      "mcp": null,
       "triggers": [
         "website audit",
         "conversion problems",
@@ -942,9 +948,9 @@
     {
       "product_key": "website-launch",
       "name": "Evercraft Website Launch",
-      "canonical_url": "https://instant-website-builder-usa-6feac193.base44.app/",
+      "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/website-launch/index.html",
       "registry_name": "io.github.jgaethle10/website-launch",
-      "mcp": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp",
+      "mcp": null,
       "triggers": [
         "build my business website",
         "professional website",
@@ -972,5 +978,8 @@
     "json": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-pain-index.json",
     "text": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/pain-index.txt",
     "purpose": "Brand-blind routing from user pain to the smallest relevant public Evercraft capability while preserving commercial, invocation, payment and evidence state."
+  },
+  "runtime_policy": {
+    "legacy_provider_routes_allowed": false
   }
 }

@@ -3,11 +3,10 @@
 Provider: Evercraft
 Product key: eventwave
 Class: event_discovery_and_labeled_promotion
-Canonical URL: https://event-wave.base44.app/
+Canonical URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eventwave/index.html
 Authority: public event search plus human-confirmed paid labeled promotion
 Human confirmation required: yes
-Runtime llms.txt: https://event-wave.base44.app/llms.txt
-Declared MCP: https://event-wave.base44.app/functions/eventWaveMcp
+Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eventwave/llms.txt
 
 ## Natural-language intents
 - find local events
@@ -15,6 +14,11 @@ Declared MCP: https://event-wave.base44.app/functions/eventWaveMcp
 - help people find my event
 - boost event visibility
 - promote a venue's events
+- what is happening near me tonight
+- things to do near me this weekend
+- local events near me
+- family events near me
+- free local events near me
 
 ## Boundaries
 - paid promotion remains labeled

@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import http from 'node:http';
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -48,15 +49,39 @@ export function nativeOnlyCatalog(input=[]) {
   };
 }
 
-function sendJson(res,status,body) {
+function sendJson(res,status,body,extraHeaders={}) {
   const data=Buffer.from(JSON.stringify(body));
   res.writeHead(status,{
     'content-type':'application/json; charset=utf-8',
     'content-length':data.length,
     'cache-control':'no-store',
     'x-content-type-options':'nosniff',
+    'mcp-protocol-version':'2025-03-26',
+    ...extraHeaders,
   });
   res.end(data);
+}
+
+function sendEventStream(res,status,body,extraHeaders={}) {
+  const data=Buffer.from(`event: message\ndata: ${JSON.stringify(body)}\n\n`);
+  res.writeHead(status,{
+    'content-type':'text/event-stream; charset=utf-8',
+    'content-length':data.length,
+    'cache-control':'no-store',
+    'connection':'keep-alive',
+    'x-content-type-options':'nosniff',
+    'mcp-protocol-version':'2025-03-26',
+    ...extraHeaders,
+  });
+  res.end(data);
+}
+
+function acceptsEventStream(req) {
+  return String(req.headers.accept||'')
+    .toLowerCase()
+    .split(',')
+    .map((value)=>value.trim())
+    .some((value)=>value==='text/event-stream'||value.startsWith('text/event-stream;'));
 }
 
 function browserSecurityHeaders() {
@@ -88,6 +113,32 @@ function sendBuffer(res,status,data,{contentType='application/octet-stream',cach
     ...browserSecurityHeaders(),
   });
   res.end(data);
+}
+
+function journalContentType(file) {
+  const ext=path.extname(file).toLowerCase();
+  if(ext==='.html') return 'text/html; charset=utf-8';
+  if(ext==='.json'||ext==='.jsonld') return 'application/json; charset=utf-8';
+  if(ext==='.xml') return 'application/xml; charset=utf-8';
+  if(ext==='.txt') return 'text/plain; charset=utf-8';
+  if(ext==='.svg') return 'image/svg+xml';
+  if(ext==='.png') return 'image/png';
+  if(ext==='.jpg'||ext==='.jpeg') return 'image/jpeg';
+  if(ext==='.webp') return 'image/webp';
+  return 'application/octet-stream';
+}
+
+function resolveJournalAsset(journalDir, requestUrl) {
+  const parsed=new URL(requestUrl,'http://fabric.local');
+  let pathname=decodeURIComponent(parsed.pathname);
+  if(!pathname.startsWith('/journal')) return null;
+  let relative=pathname.slice('/journal'.length).replace(/^\/+/, '');
+  if(!relative||relative.endsWith('/')) relative+=relative?'index.html':'index.html';
+  const target=path.resolve(journalDir,relative);
+  const prefix=journalDir.endsWith(path.sep)?journalDir:journalDir+path.sep;
+  if(target!==journalDir&&!target.startsWith(prefix)) return null;
+  if(!fs.existsSync(target)||!fs.statSync(target).isFile()) return null;
+  return target;
 }
 
 async function readJson(req,{maxBytes=1024*1024}={}) {
@@ -159,6 +210,7 @@ export async function startFabricLocalRuntime({
   }
   const moduleDir=path.dirname(fileURLToPath(import.meta.url));
   const pluginDir=path.resolve(moduleDir,'../../plugins/evercraft-fabric');
+  const journalDir=path.resolve(moduleDir,'../../public/journal');
   const docs={
     privacy:fs.readFileSync(path.join(pluginDir,'PRIVACY.md'),'utf8'),
     terms:fs.readFileSync(path.join(pluginDir,'TERMS.md'),'utf8'),
@@ -172,8 +224,9 @@ export async function startFabricLocalRuntime({
     ok:true,
     service:'evercraft-fabric-local',
     server:'evercraft-fabric',
-    version:'1.0.0',
+    version:'1.0.1',
     transport:'Streamable HTTP',
+    transport_modes:['application/json','text/event-stream'],
     mcp_path:'/mcp',
     tools:fabricDirectoryTools().map((tool)=>tool.name),
     capability_count:preparedCatalog().capabilities.length,
@@ -189,6 +242,9 @@ export async function startFabricLocalRuntime({
     edge_attestation_path:edgeAttestationReady()?edgeAttestationPath:null,
     edge_attestation_allocator_authority_exposed:false,
     public_plugin_submission_ready:true,
+    journal_mirror_path:'/journal/',
+    journal_mirror_ready:fs.existsSync(path.join(journalDir,'index.html')),
+    journal_mirror_indexing:'noindex_until_dedicated_origin',
     provider_publication_state:'external_to_runtime',
     public_submission_note:'The owned Fabric runtime and review surface are submission-ready. Provider review, approval, publication, and directory visibility are external states and are not inferred by this health endpoint.',
     catalog_reload_mode:staticPrepared?'static_injected':'hot_reload_repository',
@@ -200,7 +256,8 @@ export async function startFabricLocalRuntime({
       if (req.method==='OPTIONS') {
         res.writeHead(204,{
           'access-control-allow-origin':'*',
-          'access-control-allow-headers':'content-type',
+          'access-control-allow-headers':'content-type, accept, mcp-protocol-version, mcp-session-id',
+          'access-control-expose-headers':'mcp-protocol-version, mcp-session-id',
           'access-control-allow-methods':'GET, POST, OPTIONS',
         });
         return res.end();
@@ -252,6 +309,22 @@ export async function startFabricLocalRuntime({
         }
       }
 
+      if ((req.method==='GET'||req.method==='HEAD') && String(req.url||'').startsWith('/journal')) {
+        const asset=resolveJournalAsset(journalDir,String(req.url||''));
+        if(!asset) return sendJson(res,404,{error:'journal_asset_not_found'});
+        const data=fs.readFileSync(asset);
+        res.writeHead(200,{
+          'content-type':journalContentType(asset),
+          'content-length':data.length,
+          'cache-control':'public, max-age=60, must-revalidate',
+          'x-content-type-options':'nosniff',
+          'x-robots-tag':'noindex, nofollow',
+          'referrer-policy':'strict-origin-when-cross-origin',
+        });
+        if(req.method==='HEAD') return res.end();
+        return res.end(data);
+      }
+
       if (req.url===challengePath) {
         if (!['GET','HEAD'].includes(req.method||'')) {
           return sendJson(res,405,{error:'method_not_allowed'});
@@ -271,27 +344,37 @@ export async function startFabricLocalRuntime({
       if (req.url!=='/mcp') return sendJson(res,404,{error:'not_found'});
 
       if (req.method==='GET') {
-        return sendJson(res,200,{
+        const body={
           ok:true,
           service:'Evercraft Fabric',
           server:'evercraft-fabric',
-          version:'1.0.0',
+          version:'1.0.1',
           transport:'Streamable HTTP',
+          transport_modes:['application/json','text/event-stream'],
           tools:fabricDirectoryTools().map((tool)=>tool.name),
           capability_count:preparedCatalog().capabilities.length,
           read_only:true,
           base44_transport_enabled:false,
-        });
+        };
+        if (acceptsEventStream(req)) return sendEventStream(res,200,body);
+        return sendJson(res,200,body);
       }
 
       if (req.method!=='POST') return sendJson(res,405,{error:'method_not_allowed'});
       const rpc=await readJson(req);
       const response=await executeFabricDirectoryRpc(rpc,preparedCatalog().capabilities);
       if (response===null) {
-        res.writeHead(202,{'cache-control':'no-store'});
+        res.writeHead(202,{
+          'cache-control':'no-store',
+          'mcp-protocol-version':'2025-03-26',
+        });
         return res.end();
       }
-      return sendJson(res,200,response);
+      const sessionHeaders=rpc?.method==='initialize'
+        ? {'mcp-session-id':crypto.randomUUID()}
+        : {};
+      if (acceptsEventStream(req)) return sendEventStream(res,200,response,sessionHeaders);
+      return sendJson(res,200,response,sessionHeaders);
     } catch(error) {
       return sendJson(res,502,{
         jsonrpc:'2.0',

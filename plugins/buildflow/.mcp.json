@@ -1,8 +1,3 @@
 {
-  "mcpServers": {
-    "buildflow": {
-      "type": "http",
-      "url": "https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp"
-    }
-  }
+  "mcpServers": {}
 }

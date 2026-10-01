@@ -7,8 +7,8 @@
   "pricing": "$250 one-time; may be credited toward a deeper $1,250 audit if the customer elects to continue.",
   "commercial_state": "sell_now",
   "machine_state": "human_handoff_ready",
-  "canonical_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1",
-  "human_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1",
+  "canonical_offer_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/site-survive-rapid-audit-v1/index.html",
+  "human_review_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/site-survive-rapid-audit-v1/index.html",
   "intent_terms": [
     "business outage plan",
     "internet outage continuity",

@@ -14,7 +14,7 @@ Systemia Decision Lab is an approved public Evercraft discovery record. This Git
 
 ## Public routes
 
-- Canonical: https://systemiadecisionlab.base44.app/
+- Canonical: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-decision-lab/index.html
 - GitHub LLM mirror: ./llms.txt
 
 ## Authority

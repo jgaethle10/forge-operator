@@ -10,6 +10,9 @@ STATE_DIR="/var/lib/evercraft/fabric-update"
 FABRIC_ENV="/etc/evercraft/fabric.env"
 ENV_BACKUP=""
 EDGE_ATTESTATION_EXPECTED=false
+PUBLIC_EDGE_SERVICE="evercraft-public-edge.service"
+ROUTER_MAP_SERVICE="evercraft-router-map.service"
+ROUTER_MAP_TIMER="evercraft-router-map.timer"
 
 usage() {
   cat <<'EOF'
@@ -58,6 +61,34 @@ fi
 
 as_user() {
   runuser -u "$RUN_USER" -- "$@"
+}
+
+reassert_owned_public_ingress() {
+  local edge_state="not_installed"
+  local router_state="not_installed"
+
+  if systemctl cat "$PUBLIC_EDGE_SERVICE" >/dev/null 2>&1; then
+    if systemctl is-active --quiet "$PUBLIC_EDGE_SERVICE"; then
+      edge_state="active"
+    elif systemctl restart "$PUBLIC_EDGE_SERVICE"; then
+      edge_state="restarted"
+    else
+      edge_state="restart_failed"
+    fi
+  fi
+
+  if systemctl cat "$ROUTER_MAP_TIMER" >/dev/null 2>&1; then
+    systemctl enable --now "$ROUTER_MAP_TIMER" >/dev/null 2>&1 || true
+  fi
+  if systemctl cat "$ROUTER_MAP_SERVICE" >/dev/null 2>&1; then
+    if systemctl start "$ROUTER_MAP_SERVICE"; then
+      router_state="reasserted"
+    else
+      router_state="reassert_failed"
+    fi
+  fi
+
+  echo "Evercraft ingress recovery: public_edge=$edge_state router_map=$router_state"
 }
 
 RUN_HOME="$(getent passwd "$RUN_USER" | cut -d: -f6)"
@@ -263,6 +294,10 @@ if [[ "$before" == "$target" ]]; then
     exit 11
   fi
 
+  # Reassert every owned ingress layer we can control from Crostini.
+  # ChromeOS host port-forward toggles remain outside the guest boundary.
+  reassert_owned_public_ingress
+
   clear_env_backup
   printf '{"schema":"evercraft.fabric-update.v1","state":"current","release_ref":"%s","capability_count":%s,"edge_attestation_expected":%s,"edge_attestation_verified":%s,"observed_at":"%s"}\n'     "$before" "$expected_count" "$EDGE_ATTESTATION_EXPECTED" "$EDGE_ATTESTATION_EXPECTED" "$(date -u +%FT%TZ)"     > "$STATE_DIR/last-update.json"
   chmod 0640 "$STATE_DIR/last-update.json"
@@ -318,6 +353,9 @@ if ! ensure_network_observer true; then
   echo "ERROR: Fabric update is healthy but resident network observer installation failed" >&2
   exit 11
 fi
+
+# A source update is also an ingress recovery opportunity.
+reassert_owned_public_ingress
 
 clear_env_backup
 printf '{"schema":"evercraft.fabric-update.v1","state":"updated","from_ref":"%s","release_ref":"%s","capability_count":%s,"edge_attestation_expected":%s,"edge_attestation_verified":%s,"observed_at":"%s"}\n'   "$before" "$target" "$expected_count" "$EDGE_ATTESTATION_EXPECTED" "$EDGE_ATTESTATION_EXPECTED" "$(date -u +%FT%TZ)"   > "$STATE_DIR/last-update.json"

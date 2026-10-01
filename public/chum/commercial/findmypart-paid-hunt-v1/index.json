@@ -7,8 +7,8 @@
   "pricing": "Quick Hunt $19 one-time; Deep Hunt $49 one-time; Rescue Hunt $99 one-time.",
   "commercial_state": "sell_now",
   "machine_state": "payment_ready",
-  "canonical_offer_url": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs",
-  "human_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=findmypart-paid-hunt-v1",
+  "canonical_offer_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/findmypart-paid-hunt-v1/index.html",
+  "human_review_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/findmypart-paid-hunt-v1/index.html",
   "intent_terms": [
     "find a hard-to-source part",
     "find a discontinued part",

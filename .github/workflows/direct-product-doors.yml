@@ -50,7 +50,7 @@ on:
       - 'package.json'
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   direct-doors:
@@ -60,5 +60,25 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Generate direct specialist packages
+        run: npm run direct:generate
+
       - name: Validate direct specialist doors
         run: npm run direct:check
+
+      - name: Publish generated direct-door state
+        if: github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add distribution/direct-product-doors.json public/.well-known/evercraft-direct-doors.json plugins
+          if git diff --cached --quiet; then
+            echo "Direct-door generated state is current."
+            exit 0
+          fi
+          git config user.name "Evercraft Direct Doors"
+          git config user.email "direct-doors@users.noreply.github.com"
+          git commit -m "Regenerate direct specialist packages [skip ci]"
+          git fetch origin main --quiet
+          git rebase origin/main
+          git push origin HEAD:main

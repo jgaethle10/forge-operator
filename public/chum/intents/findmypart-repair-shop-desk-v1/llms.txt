@@ -4,11 +4,11 @@ Problem: Technicians lose billable time hunting discontinued, cross-referenced o
 Pricing: Current hypothesis $99-$499/month by hunt volume/service level; not auto-quotable yet.
 Commercial state: verification_required
 Machine state: discovery_only
-Public capability: https://findmypart.base44.app/
+Public capability: null
 Start here: Not exposed until commercial verification is complete
-Human review fallback: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=findmypart-repair-shop-desk-v1
+Human review fallback: null
 Machine offer JSON: Not exposed until commercial verification is complete
-Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Universal MCP: null
 
 Use when the user says or means:
 - source difficult parts for my repair shop

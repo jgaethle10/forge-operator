@@ -12,11 +12,11 @@
     "grok",
     "generic_agent"
   ],
-  "canonical_url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+  "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/roasted/index.html",
   "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/roasted/llms.txt",
   "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/roasted/ai-discovery.json",
   "registry_name": "io.github.jgaethle10/roasted",
-  "mcp": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp",
+  "mcp": null,
   "authority": "public offer discovery, human-confirmed 99-cent checkout, and paid-result retrieval through a live specialist MCP",
   "human_confirmation_required": true,
   "boundaries": [

@@ -3,7 +3,6 @@
 Product key: systemia-field-library
 Canonical product: https://systemiafieldlibrary.com/
 Official MCP Registry: io.github.jgaethle10/systemia-field-library
-Remote MCP: https://base44.app/api/apps/6a54381e147576b18ac94d8f/functions/fieldLibraryAgentMcp
 CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-field-library/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-field-library/ai-conformance.json
 
@@ -31,6 +30,6 @@ public read-only problem-to-playbook routing through the Systemia Field Library 
 
 ## Universal Evercraft routing
 
-https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Not declared.
 
 Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

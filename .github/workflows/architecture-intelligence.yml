@@ -1,0 +1,64 @@
+name: Systemia architecture intelligence
+
+on:
+  pull_request:
+    paths:
+      - "tools/systemia_architecture_scan.py"
+      - "tools/systemia_architecture_reconcile.py"
+      - "tools/systemia_architecture_health.py"
+      - "tools/systemia_architecture_query.py"
+      - "tests/test_systemia_architecture_scan.py"
+      - "tests/test_systemia_architecture_reconcile.py"
+      - "tests/test_systemia_architecture_health.py"
+      - "tests/test_systemia_architecture_query.py"
+      - "docs/SYSTEMIA_ARCHITECTURE_INTELLIGENCE.md"
+      - ".github/workflows/architecture-intelligence.yml"
+  push:
+    branches: [main]
+    paths:
+      - "tools/systemia_architecture_scan.py"
+      - "tools/systemia_architecture_reconcile.py"
+      - "tools/systemia_architecture_health.py"
+      - "tools/systemia_architecture_query.py"
+      - "tests/test_systemia_architecture_scan.py"
+      - "tests/test_systemia_architecture_reconcile.py"
+      - "tests/test_systemia_architecture_health.py"
+      - "tests/test_systemia_architecture_query.py"
+      - "docs/SYSTEMIA_ARCHITECTURE_INTELLIGENCE.md"
+      - ".github/workflows/architecture-intelligence.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Unit tests
+        run: python -m unittest discover -s tests -p 'test_systemia_architecture_*.py' -v
+
+      - name: Scan this public repository
+        run: |
+          python tools/systemia_architecture_scan.py --root . --out /tmp/systemia-architecture.json
+          python - <<'PY'
+          import json
+          p=json.load(open("/tmp/systemia-architecture.json"))
+          assert p["scan_mode"] == "static_only"
+          assert p["evidence_boundary"]["executes_scanned_code"] is False
+          assert p["evidence_boundary"]["claims_runtime_behavior"] is False
+          assert p["counts"]["files"] > 0
+          print(json.dumps({
+              "scanner_version": p["scanner_version"],
+              "source_revision": p["source_revision"],
+              "counts": p["counts"],
+              "partial_files": sum(1 for row in p["coverage"] if row["state"] == "partial"),
+              "failed_files": sum(1 for row in p["coverage"] if row["state"] == "failed"),
+          }, indent=2))
+          PY

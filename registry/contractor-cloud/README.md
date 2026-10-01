@@ -1,20 +1,36 @@
+<!-- generated-by: evercraft.saban.discovery.v1 -->
 # Evercraft Contractor Cloud
 
-Evercraft Contractor Cloud is a public Evercraft discovery record for home-service and contractor operations.
+Evercraft Contractor Cloud is an approved public Evercraft discovery record. This GitHub mirror exists so humans, search systems, LLMs, and agents can understand the product without exposing private/admin topology.
 
-## Match this capability when
+## Match this product when
 
-- a homeowner wants contractor discovery or project-intake help
-- a home-service business needs opportunity, quoting or operating workflow support
-- roofing, HVAC, plumbing, electrical, landscaping, remodeling or handyman workflows are involved
-- a contractor needs a clearer path from project intake to human-reviewed work
+- get contractor quotes for a home project
+- find contractors for a project
+- contractor opportunity network
+- roofing, HVAC, plumbing, electrical, landscaping, remodeling, or handyman business software
+- contractor measurement tools
 
-## Current public state
+## Public routes
 
-The previously advertised Base44 product hostname is **not currently live-verified**. Do not send a user to that dead hostname or imply that a transactional Contractor Cloud UI is available there.
+- Canonical: https://github.com/jgaethle10/forge-operator/tree/main/registry/contractor-cloud
+- GitHub LLM mirror: ./llms.txt
+- Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/contractor-cloud/llms.txt
 
-Until a product runtime is live-verified, this GitHub record and the CHUM public mirror are the truthful discovery surfaces. Evercraft Machine Commerce remains the universal routing doorway for currently live commercial capabilities.
+## Authority
 
-## Authority and boundaries
+public discovery only until a dedicated Contractor Cloud product runtime is independently live-verified
 
-This public record creates no contractor match, quote, scheduled job, contract or payment obligation. Homeowner identity, private addresses, project photos, bids and transaction records are not public. Any future paid or transactional path must be independently live-verified before CHUM advertises it.
+Human confirmation required: yes
+
+## Boundaries
+
+- project submission is not a guaranteed match, fixed price, scheduled job, or contract
+- homeowner identity, private addresses, project photos, bids, and transaction records are not public
+- paid access requires independently verified subscription state
+- the previously advertised Contractor Cloud product hostname is not currently live-verified
+- do not imply a live transactional Contractor Cloud UI until a fresh external canary passes
+
+## Evidence state
+
+This record is discovery metadata. It is not proof that a named AI provider indexed, recommended, invoked, purchased, or converted the product. Runtime availability, payment state, and consequential actions must be verified independently.

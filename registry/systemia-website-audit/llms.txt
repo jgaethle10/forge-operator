@@ -3,11 +3,10 @@
 Provider: Evercraft
 Product key: systemia-website-audit
 Class: website_conversion_and_technical_audit
-Canonical URL: https://systemia-audit-pro.base44.app/
+Canonical URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-website-audit/index.html
 Authority: public audit offer discovery and human-confirmed paid checkout
 Human confirmation required: yes
 Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-website-audit/llms.txt
-Declared MCP: https://systemia-audit-pro.base44.app/functions/auditAgentMcp
 
 ## Natural-language intents
 - audit my website because traffic is not converting

@@ -14,7 +14,7 @@ TOWI Evidence-Controlled Research Brief is an approved public Evercraft discover
 
 ## Public routes
 
-- Canonical: https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs
+- Canonical: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/towi-research/index.html
 - GitHub LLM mirror: ./llms.txt
 
 ## Authority

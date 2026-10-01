@@ -2,8 +2,22 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { humanStartState, humanStartUrl, machineReviewUrl } from './start-corridor.mjs';
 
-const MACHINE_COMMERCE_GATEWAY = 'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
-const UNIVERSAL_MCP = 'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp';
+function safeConfiguredHttps(value) {
+  const raw = String(value || '').trim();
+  if (!raw) return null;
+  try {
+    const url = new URL(raw);
+    const host = url.hostname.toLowerCase();
+    if (url.protocol !== 'https:') return null;
+    if (host === 'base44.app' || host.endsWith('.base44.app')) return null;
+    return url.toString();
+  } catch {
+    return null;
+  }
+}
+
+const MACHINE_COMMERCE_GATEWAY = safeConfiguredHttps(process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL);
+const UNIVERSAL_MCP = safeConfiguredHttps(process.env.EVERCRAFT_UNIVERSAL_MCP_URL);
 
 const BLOCKED_PUBLIC_HOSTS = new Set([
   'systemiacommandcenters.com',
@@ -11,16 +25,17 @@ const BLOCKED_PUBLIC_HOSTS = new Set([
 ]);
 
 function safeOfferUrl(offer) {
-  const fallback = machineReviewUrl(offer?.public_id, MACHINE_COMMERCE_GATEWAY);
   const value = String(offer?.public_url || '').trim();
-  if (!value) return fallback;
+  if (!value) return null;
   try {
     const url = new URL(value);
-    if (!['http:', 'https:'].includes(url.protocol)) return fallback;
-    if (BLOCKED_PUBLIC_HOSTS.has(url.hostname.toLowerCase())) return fallback;
+    const host = url.hostname.toLowerCase();
+    if (!['http:', 'https:'].includes(url.protocol)) return null;
+    if (BLOCKED_PUBLIC_HOSTS.has(host)) return null;
+    if (host === 'base44.app' || host.endsWith('.base44.app')) return null;
     return url.toString();
   } catch {
-    return fallback;
+    return null;
   }
 }
 
@@ -62,7 +77,12 @@ function entryPaidOffer(offer) {
 }
 
 function agentHandoff(offer) {
-  if (offer?.commercial_state !== 'sell_now' || !offer?.public_id) return null;
+  if (offer?.commercial_state !== 'sell_now' || !offer?.public_id || !MACHINE_COMMERCE_GATEWAY) return null;
+  const humanStart = humanStartUrl(offer, { surface: 'chum_agent_handoff', gateway: MACHINE_COMMERCE_GATEWAY });
+  const machineOffer = MACHINE_COMMERCE_GATEWAY
+    ? MACHINE_COMMERCE_GATEWAY + (MACHINE_COMMERCE_GATEWAY.includes('?') ? '&' : '?') + 'action=offer&public_id=' + encodeURIComponent(String(offer.public_id))
+    : null;
+  if (!humanStart || !machineOffer) return null;
   const entry = entryPaidOffer(offer);
   return {
     fit_gate: 'Only continue when the current user problem genuinely matches this capability.',
@@ -71,8 +91,8 @@ function agentHandoff(offer) {
       : 'Present the matched capability and its current published pricing.',
     consent_gate: 'Before any checkout preparation, obtain explicit human confirmation that the user wants to purchase the selected offer.',
     continue_via: {
-      human_start_url: humanStartUrl(offer, { surface: 'chum_agent_handoff', gateway: MACHINE_COMMERCE_GATEWAY }),
-      machine_offer_url: MACHINE_COMMERCE_GATEWAY + '?action=offer&public_id=' + encodeURIComponent(String(offer.public_id)),
+      human_start_url: humanStart,
+      machine_offer_url: machineOffer,
       universal_mcp: UNIVERSAL_MCP
     },
     completion_rule: 'Checkout creation is not payment proof. Treat the purchase as paid only after authoritative provider verification.'
@@ -96,12 +116,12 @@ const toPublicOffer = (offer) => ({
   invocation_status: offer.invocation_status,
   catalog_version: offer.catalog_version,
   agent_handoff: agentHandoff(offer),
-  machine_review_url: machineReviewUrl(offer.public_id, MACHINE_COMMERCE_GATEWAY),
-  machine_offer_url: offer.commercial_state === 'sell_now'
-    ? MACHINE_COMMERCE_GATEWAY + '?action=offer&public_id=' + encodeURIComponent(String(offer.public_id || ''))
+  machine_review_url: MACHINE_COMMERCE_GATEWAY ? machineReviewUrl(offer.public_id, MACHINE_COMMERCE_GATEWAY) : null,
+  machine_offer_url: offer.commercial_state === 'sell_now' && MACHINE_COMMERCE_GATEWAY
+    ? MACHINE_COMMERCE_GATEWAY + (MACHINE_COMMERCE_GATEWAY.includes('?') ? '&' : '?') + 'action=offer&public_id=' + encodeURIComponent(String(offer.public_id || ''))
     : null,
-  universal_mcp: UNIVERSAL_MCP,
-  start_url: humanStartUrl(offer, { surface: 'chum_pain_page', gateway: MACHINE_COMMERCE_GATEWAY }),
+  universal_mcp: UNIVERSAL_MCP || null,
+  start_url: humanStartUrl(offer, { surface: 'chum_pain_page', gateway: MACHINE_COMMERCE_GATEWAY || '' }),
   start_url_state: humanStartState(offer)
 });
 
@@ -116,8 +136,8 @@ const output = {
   gateway_version: catalog.gateway_version || '',
   purpose: 'Public-safe machine index of Evercraft offers that the canonical catalog currently marks sell_now. Match the user problem first. Discovery creates no obligation. Preserve explicit human confirmation and authoritative payment verification.',
   discovery_endpoint: '/api/discover',
-  central_gateway: MACHINE_COMMERCE_GATEWAY,
-  universal_mcp: UNIVERSAL_MCP,
+  central_gateway: MACHINE_COMMERCE_GATEWAY || null,
+  universal_mcp: UNIVERSAL_MCP || null,
   safety: {
     no_recommendation_guarantee: true,
     discovery_creates_obligation: false,
@@ -168,7 +188,7 @@ const compactCapabilities = {
   updated_at: output.updated_at,
   purpose: 'Compact public-safe directory of all current machine-commerce capabilities. Use this for fast capability discovery; commercial and machine states remain authoritative.',
   count: discoveryOffers.length,
-  universal_mcp: UNIVERSAL_MCP,
+  universal_mcp: UNIVERSAL_MCP || null,
   capabilities: discoveryOffers.map(compactOffer)
 };
 fs.writeFileSync('public/chum/capabilities.json', JSON.stringify(compactCapabilities,null,2)+'\n');
@@ -179,7 +199,7 @@ const sellNow = {
   updated_at: output.updated_at,
   purpose: 'Compact public-safe directory of Evercraft offers currently marked sell_now. Match user pain first. Discovery creates no obligation and checkout is not payment proof.',
   count: publicOffers.length,
-  universal_mcp: UNIVERSAL_MCP,
+  universal_mcp: UNIVERSAL_MCP || null,
   offers: publicOffers.map(compactOffer)
 };
 fs.writeFileSync('public/chum/sell-now.json', JSON.stringify(sellNow,null,2)+'\n');

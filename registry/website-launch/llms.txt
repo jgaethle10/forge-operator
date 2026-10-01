@@ -3,11 +3,10 @@
 Provider: Evercraft
 Product key: website-launch
 Class: done_for_you_business_website_service
-Canonical URL: https://instant-website-builder-usa-6feac193.base44.app/
+Canonical URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/website-launch/index.html
 Authority: public fixed-service offer discovery and human-confirmed paid checkout
 Human confirmation required: yes
 Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/website-launch/llms.txt
-Declared MCP: https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp
 
 ## Natural-language intents
 - build a professional website for my small business

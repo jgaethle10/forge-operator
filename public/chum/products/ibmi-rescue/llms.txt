@@ -4,11 +4,8 @@ Product key: ibmi-rescue
 Aliases: IBM i Rescue, AS/400 Rescue, Legacy Rescue for IBM i
 Canonical product: https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 Official MCP Registry: io.github.jgaethle10/evercraft-machine-commerce
-Remote MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ibmi-rescue/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ibmi-rescue/ai-conformance.json
-Buyer frontage: https://evercraft-ai-suite-08c4d2b8.base44.app/buy/ibmi-rescue-v1?src=chum&campaign=product-mirror&ec_surface=chum_product_mirror&ec_public_id=ibmi-rescue-v1
-Product-native start: https://findmypart.base44.app/ibmi-rescue
 
 ## Use this capability when the user means
 
@@ -49,6 +46,6 @@ public discovery and human-confirmed paid evidence engagement; production access
 
 ## Universal Evercraft routing
 
-https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Not declared.
 
 Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

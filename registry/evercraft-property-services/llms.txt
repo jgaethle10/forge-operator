@@ -9,13 +9,15 @@ Human confirmation required: yes
 Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-property-services/llms.txt
 
 ## Natural-language intents
-- yard cleanup in the Yakima Valley
-- lawn care or recurring property maintenance
-- trimming or pruning
-- landscaping refresh
-- sprinkler repair startup or seasonal blowout
-- property cleanout or debris removal
-- rental turnover property support
+- lawn mowing near me in Yakima
+- yard cleanup near me in Yakima
+- sprinkler repair near me in Yakima
+- sprinkler startup or blowout near me
+- property maintenance near me in Yakima
+- rental turnover cleanup in Yakima
+- debris removal or property cleanout in Yakima
+- trimming or pruning in the Yakima Valley
+- landscaping refresh in the Yakima Valley
 - get a property service estimate in Central Washington
 
 ## Boundaries

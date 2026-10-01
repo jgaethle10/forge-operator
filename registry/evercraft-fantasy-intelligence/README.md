@@ -13,7 +13,7 @@ Evercraft Fantasy Intelligence is an approved public Evercraft discovery record.
 
 ## Public routes
 
-- Canonical: https://evercraftjournal.base44.app/sports/fantasy
+- Canonical: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-fantasy-intelligence/index.html
 - GitHub LLM mirror: ./llms.txt
 
 ## Authority

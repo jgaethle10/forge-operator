@@ -3,10 +3,10 @@
   "@graph": [
     {
       "@type": "Service",
-      "@id": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs#evercraft-capability",
+      "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/roasted-text-pressure-test-machine-v1/index.html#evercraft-capability",
       "name": "ROASTED 99¢ Text Pressure Test",
       "description": "Fast, low-cost critique for short user-supplied text, followed by concrete repair actions.",
-      "url": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
+      "url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/roasted-text-pressure-test-machine-v1/index.html",
       "provider": {
         "@type": "Organization",
         "name": "Evercraft LLC",
@@ -20,7 +20,7 @@
       "name": "ROASTED 99¢ Text Pressure Test | Evercraft capability",
       "description": "Fast, low-cost critique for short user-supplied text, followed by concrete repair actions.",
       "about": {
-        "@id": "https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs#evercraft-capability"
+        "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/roasted-text-pressure-test-machine-v1/index.html#evercraft-capability"
       }
     }
   ]

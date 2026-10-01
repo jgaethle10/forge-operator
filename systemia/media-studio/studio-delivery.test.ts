@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { makeTimelineProject } from './timeline.js';
+import { makeTimelineProject, timelineDigest } from './timeline.js';
+import type { NarrativeFilmAdmissionReceipt } from './narrative-film-admission.js';
 import {
   buildClipDeliveryManifest,
   type StudioDeliveryRequest,
@@ -69,6 +70,39 @@ function request():StudioDeliveryRequest{
       tags:['evercraft',' systemia ','evercraft'],
       language:'en',
     },
+  };
+}
+
+
+
+function narrativeAdmission(r:StudioDeliveryRequest):NarrativeFilmAdmissionReceipt{
+  return {
+    schema:'evercraft.fallen.narrative-film-admission.v1',
+    id:'film-admission',
+    projectId:r.project.id,
+    projectVersion:r.project.version,
+    projectTimelineDigest:timelineDigest(r.project),
+    sequenceId:'sequence-1',
+    sequencePlanDigest:'s'.repeat(64),
+    performancePlanDigest:'p'.repeat(64),
+    aestheticReportDigest:'a'.repeat(64),
+    status:'accepted',
+    reasons:[],
+    warnings:[],
+    shots:[],
+    admissionDigest:'f'.repeat(64),
+    boundaries:{
+      finalTimelineBytesBound:true,
+      everyVisibleCharacterIdentityBound:true,
+      continuousCutsRequireBoundaryAdmission:true,
+      dialogueShotsRequireDialogueAdmission:true,
+      postSelectionFinishesMustBeAdmitted:true,
+      sequenceAestheticAdmissionRequired:true,
+      deliveryMustRequireThisReceiptForNarrativeFilm:true,
+      masterQcStillRequiredAtDelivery:true,
+      publicationAuthorityGranted:false,
+    },
+    admittedAt:'2026-09-30T00:00:00Z',
   };
 }
 
@@ -163,5 +197,52 @@ test('delivery requires an explicit destination and title',()=>{
       masterQcReceiptPath:'/tmp/qc.json',
     }),
     /studio_delivery_title_missing/
+  );
+});
+
+
+test('narrative film delivery fails closed without an exact Film Admission receipt',()=>{
+  const r=request();
+  r.qualityMode='narrative_film';
+  assert.throws(
+    ()=>buildClipDeliveryManifest({
+      request:r,
+      renderReceipt:receipt(),
+      renderReceiptPath:'/tmp/r.json',
+      masterQcReceiptPath:'/tmp/qc.json',
+    }),
+    /studio_delivery_narrative_film_admission_rejected:narrative_film_admission_missing/
+  );
+});
+
+test('accepted narrative film admission is bound into the Clip intake manifest',()=>{
+  const r=request();
+  r.qualityMode='narrative_film';
+  r.narrativeFilmAdmission=narrativeAdmission(r);
+  const manifest=buildClipDeliveryManifest({
+    request:r,
+    renderReceipt:receipt(),
+    renderReceiptPath:'/tmp/r.json',
+    masterQcReceiptPath:'/tmp/qc.json',
+  });
+  assert.equal(manifest.qualityMode,'narrative_film');
+  assert.equal(manifest.boundaries.narrativeFilmAdmissionRequired,true);
+  assert.equal(manifest.provenance.narrativeFilmAdmissionDigest,'f'.repeat(64));
+});
+
+test('editing the timeline after Film Admission invalidates narrative delivery',()=>{
+  const r=request();
+  r.qualityMode='narrative_film';
+  r.narrativeFilmAdmission=narrativeAdmission(r);
+  r.project.version+=1;
+  r.project.tracks[0].clips[0].durationSec=2.5;
+  assert.throws(
+    ()=>buildClipDeliveryManifest({
+      request:r,
+      renderReceipt:{...receipt(),projectVersion:r.project.version},
+      renderReceiptPath:'/tmp/r.json',
+      masterQcReceiptPath:'/tmp/qc.json',
+    }),
+    /narrative_film_project_version_mismatch/
   );
 });

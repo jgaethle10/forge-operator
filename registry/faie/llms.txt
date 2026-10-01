@@ -3,11 +3,10 @@
 Provider: Evercraft
 Product key: faie
 Class: evidence_first_agriculture_and_resilience_research
-Canonical URL: https://faie.base44.app/
+Canonical URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html
 Authority: public offer discovery and human-confirmed bounded research checkout
 Human confirmation required: yes
-Runtime llms.txt: https://faie.base44.app/llms.txt
-Declared MCP: https://faie.base44.app/functions/faieMcp
+Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/llms.txt
 
 ## Natural-language intents
 - get an evidence-based agriculture or water risk brief

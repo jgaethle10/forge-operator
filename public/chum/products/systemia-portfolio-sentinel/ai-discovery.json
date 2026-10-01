@@ -8,7 +8,7 @@
     "Software Estate Sentinel"
   ],
   "class": "continuous_software_portfolio_integrity_monitoring",
-  "canonical_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
+  "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-portfolio-sentinel/index.html",
   "intents": [
     "monitor my software portfolio for broken products",
     "continuously audit all of our apps repositories and public URLs",
@@ -91,10 +91,10 @@
     "state": "live_human_confirmed_pilot_request"
   },
   "human_start_url": null,
-  "buyer_frontage_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/buy/portfolio-sentinel-v1?src=chum&campaign=product-mirror&ec_surface=chum_product_mirror&ec_public_id=portfolio-sentinel-v1",
+  "buyer_frontage_url": null,
   "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-  "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "mcp": null,
+  "machine_commerce_mcp": null,
   "developer_surfaces": null,
   "editorial_surfaces": null,
   "knowledge_surfaces": null,

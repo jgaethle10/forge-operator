@@ -41,6 +41,7 @@ export interface VisualReference {
   digest?:string;
   sourceRefs:string[];
   locator?:VisualReferenceLocator;
+  locators?:VisualReferenceLocator[];
 }
 
 export interface VisualModelCapability {
@@ -52,6 +53,12 @@ export interface VisualModelCapability {
   resolutions?:string[];
   durationOptions?:number[];
   maxReferences?:number;
+  referenceRoles?:VisualReferenceRole[];
+  identityContinuityViaStartFrame?:boolean;
+  framesExclusiveWithReferences?:boolean;
+  referenceImageDurationOptions?:number[];
+  locatorKinds?:VisualReferenceLocator['kind'][];
+  providerLocatorId?:string;
   nativeAudio?:boolean;
   batchVariants?:number;
   qualityTier:1|2|3|4|5;
@@ -187,6 +194,46 @@ function referenceModes(references:VisualReference[]):Set<VisualInputMode>{
   return modes;
 }
 
+function referenceLocators(ref:VisualReference){
+  const locators=[
+    ...(ref.locator?[ref.locator]:[]),
+    ...(ref.locators??[]),
+  ];
+  const seen=new Set<string>();
+  return locators.filter(locator=>{
+    const key=JSON.stringify(locator);
+    if(seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+function locatorSupported(
+  locator:VisualReferenceLocator,
+  capability:VisualModelCapability,
+){
+  if(capability.locatorKinds&&!capability.locatorKinds.includes(locator.kind)){
+    return false;
+  }
+  if(
+    capability.providerLocatorId&&
+    (locator.kind==='provider_asset'||locator.kind==='provider_generation')&&
+    locator.providerId!==capability.providerLocatorId
+  ){
+    return false;
+  }
+  return true;
+}
+
+function materializeReferenceForCapability(
+  ref:VisualReference,
+  capability:VisualModelCapability,
+):VisualReference{
+  if(!capability.locatorKinds) return ref;
+  const selected=referenceLocators(ref).find(locator=>locatorSupported(locator,capability));
+  return selected?{...ref,locator:selected}:ref;
+}
+
 function capabilityReasons(
   request:VisualShotRequest,
   endpoint:VisualModelEndpoint,
@@ -227,13 +274,57 @@ function capabilityReasons(
   if(request.requireNativeAudio===true&&capability.nativeAudio!==true){
     reasons.push('native_audio_not_supported');
   }
-  if(capability.maxReferences!==undefined&&request.references.length>capability.maxReferences){
+
+  const compatible=compatibleReferences(request.references,capability);
+  if(capability.maxReferences!==undefined&&compatible.length>capability.maxReferences){
     reasons.push('too_many_references');
   }
+
+  if(capability.locatorKinds){
+    for(const ref of compatible){
+      const locators=referenceLocators(ref);
+      if(!locators.length){
+        reasons.push('reference_locator_missing:'+ref.role);
+        continue;
+      }
+      if(!locators.some(locator=>locatorSupported(locator,capability))){
+        const kinds=[...new Set(locators.map(locator=>
+          (locator.kind==='provider_asset'||locator.kind==='provider_generation')
+            ?locator.kind+'@'+locator.providerId
+            :locator.kind
+        ))].join(',');
+        reasons.push('reference_locator_unsupported:'+ref.role+':'+kinds);
+      }
+    }
+  }
+
+  const compatibleReferenceImages=compatible.filter(ref=>
+    ref.kind==='image'&&
+    ref.role!=='start_frame'&&
+    ref.role!=='end_frame'
+  );
+  if(
+    compatibleReferenceImages.length&&
+    capability.referenceImageDurationOptions&&
+    request.durationSec!==undefined&&
+    !capability.referenceImageDurationOptions.includes(request.durationSec)
+  ){
+    reasons.push('reference_image_duration_not_supported');
+  }
+
   if(request.requires.includes('reference_identity')){
-    const identity=request.references.filter(ref=>ref.role==='identity'&&(ref.kind==='image'||ref.kind==='video'));
-    if(!identity.length) reasons.push('identity_reference_missing');
-    if(!capability.inputModes.some(mode=>mode==='image_reference'||mode==='video_reference')){
+    const declaredIdentity=request.references.filter(
+      ref=>ref.role==='identity'&&(ref.kind==='image'||ref.kind==='video')
+    );
+    const compatibleIdentity=compatible.filter(
+      ref=>ref.role==='identity'&&(ref.kind==='image'||ref.kind==='video')
+    );
+    const continuityStart=capability.identityContinuityViaStartFrame===true&&
+      compatible.some(ref=>ref.role==='start_frame'&&ref.kind==='image');
+
+    if(!declaredIdentity.length&&!continuityStart){
+      reasons.push('identity_reference_missing');
+    }else if(!compatibleIdentity.length&&!continuityStart){
       reasons.push('identity_reference_mode_not_supported');
     }
   }
@@ -248,7 +339,16 @@ function compatibleReferences(
   refs:VisualReference[],
   capability:VisualModelCapability,
 ){
+  const frameMode=capability.framesExclusiveWithReferences===true&&
+    refs.some(ref=>ref.role==='start_frame'||ref.role==='end_frame');
+
   return refs.filter(ref=>{
+    if(capability.referenceRoles&&!capability.referenceRoles.includes(ref.role)){
+      return false;
+    }
+    if(frameMode&&ref.role!=='start_frame'&&ref.role!=='end_frame'){
+      return false;
+    }
     if(ref.role==='start_frame') return capability.inputModes.includes('start_frame');
     if(ref.role==='end_frame') return capability.inputModes.includes('end_frame');
     if(ref.role==='motion') return capability.inputModes.includes('motion_reference');
@@ -322,7 +422,8 @@ export function buildVisualModelPlan(
     durationSec:request.durationSec,
     aspectRatio:request.aspectRatio,
     targetResolution:request.targetResolution,
-    references:compatibleReferences(request.references,row.capability),
+    references:compatibleReferences(request.references,row.capability)
+      .map(ref=>materializeReferenceForCapability(ref,row.capability)),
     continuityDigest:request.continuityDigest,
     requires:[...request.requires],
     outputContract:{

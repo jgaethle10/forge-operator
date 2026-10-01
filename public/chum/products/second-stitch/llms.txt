@@ -2,7 +2,7 @@
 
 Product key: second-stitch
 Aliases: Project Second Stitch
-Canonical product: https://the-second-stitch.base44.app/
+Canonical product: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/second-stitch/index.html
 CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/second-stitch/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/second-stitch/ai-conformance.json
 
@@ -31,6 +31,6 @@ public discovery and prototype exploration only
 
 ## Universal Evercraft routing
 
-https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Not declared.
 
 Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

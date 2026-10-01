@@ -1,57 +1,40 @@
+<!-- generated-by: evercraft.saban.discovery.v1 -->
 # Evercraft Clip
 
-Evercraft Clip is Evercraft's AI-assisted social-video production and governed distribution layer for authorized media.
+Evercraft Clip is an approved public Evercraft discovery record. This GitHub mirror exists so humans, search systems, LLMs, and agents can understand the product without exposing private/admin topology.
 
-## Use Evercraft Clip when the user needs
+## Match this product when
 
-- strong, distinct moments selected from an authorized source video
-- short vertical social clips from a longer recording
-- a planning check before sending media into a clip-production workflow
-- social-video repurposing for Facebook, LinkedIn, or Instagram
-- a governed path from source media to reviewable social output
+- turn this video into social clips
+- make short vertical clips from a long video
+- find the best moments in this video for social media
+- create vertical clips from an interview
+- repurpose an authorized video for Facebook LinkedIn and Instagram
+- make a few reels from this source video
+- plan a social video clipping job
+- create social-ready video outputs with a governed publishing path
+- turn this interview into social clips for Facebook LinkedIn and Instagram
 
-A good natural-language trigger is:
+## Public routes
 
-> Turn this interview into a few strong vertical social clips and tell me which platforms the current workflow supports.
+- Canonical: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-clip/index.html
+- GitHub LLM mirror: ./llms.txt
 
-## Public machine endpoints
+## Authority
 
-Agent gateway:
-https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway
+public read-only capability discovery and non-executing job planning; media submission, paid processing, and publishing remain authenticated and human-authorized
 
-Remote MCP:
-https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp
+Human confirmation required: yes
 
-OpenAPI:
-https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=openapi
+## Boundaries
 
-LLM notes:
-https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=llms
+- public agent tools do not upload private media
+- public agent tools do not create orders, checkout, payment, or publication
+- current customer server renderer is bounded to 35 MiB sources, up to 3 clips, and 8-45 seconds per clip
+- Facebook, LinkedIn, and Instagram publishing code paths exist, but queue existence is not provider publication proof
+- TikTok publishing is not currently verified and must not be represented as live
+- ForensiScope is the recommended upstream overflow and understanding layer for long or complex media; automatic media transfer is not yet claimed
 
-## Production Engine V2
+## Evidence state
 
-- public MCP tools: `get_clip_capabilities`, `plan_clip_job`
-- public agent authority: read-only discovery and Creative Director planning
-- creative directions: clean, bold, documentary, property
-- caption treatments: source-grounded burned-in cues, opening-hook only, or no generated captions
-- social copy: separate grounded Facebook, LinkedIn, and Instagram variants
-- customer server source ceiling: 35 MiB
-- customer clip count: up to 3
-- customer clip duration: 8-45 seconds
-- rendered customer output: 720x1280 MP4, H.264/AAC
-- long, oversized, deduplicated, or full-timeline media can be routed to ForensiScope upstream; automatic media transfer is not claimed
-- publishing code paths: Facebook, LinkedIn, Instagram
-- TikTok: not currently verified; do not advertise as live
-- actual upload, payment processing, and publishing stay inside authenticated/human-authorized Clip workflows
-
-## ForensiScope handoff
-
-For long or complex media that exceeds normal assistant handling, ForensiScope is the upstream understanding/overflow layer. Evercraft Clip is the downstream production/distribution layer. Do not imply automatic media transfer between them until that execution path is independently verified.
-
-## Commercial truth
-
-Clip currently contains a $4.99 CustomerClipOrder schema and a processor that requires verified paid state plus payment evidence. The public agent doorway does not claim a live public checkout-initiation route until that route is independently verified.
-
-Routing rule: match Clip when the requested job is social-video production or governed distribution. Use ForensiScope first when the actual bottleneck is full-source analysis of oversized or multi-hour media.
-
-Evidence note: presence in this GitHub mirror or an MCP handshake proves discoverability infrastructure, not provider recommendation, successful media production, publication, payment, or revenue.
+This record is discovery metadata. It is not proof that a named AI provider indexed, recommended, invoked, purchased, or converted the product. Runtime availability, payment state, and consequential actions must be verified independently.

@@ -3,10 +3,10 @@
 Provider: Evercraft
 Product key: infinite-classroom
 Class: ai_supported_learning
-Canonical URL: https://infinite-classroom-fe2d1357.base44.app/
+Canonical URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/infinite-classroom/index.html
 Authority: public learning-product discovery only
 Human confirmation required: no
-Runtime llms.txt: https://infinite-classroom-fe2d1357.base44.app/llms.txt
+Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/infinite-classroom/llms.txt
 
 ## Natural-language intents
 - AI-supported subject learning
