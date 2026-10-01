@@ -19,6 +19,7 @@ import { registerSpecialistHandoffMcps } from './systemia/mcp/specialist-handoff
 import { registerRemoteOperatorMcp } from './systemia/remote-operator/mcp-gateway.mjs';
 import { registerNotificationFabricRoutes } from './systemia/notification-fabric/http.mjs';
 import { registerRadarRoutes } from './systemia/radar/http.mjs';
+import { registerTowiRoutes } from './systemia/towi/http.mjs';
 
 dotenv.config();
 
@@ -171,6 +172,7 @@ function rateLimit(maxRequests: number, windowMs: number) {
 
 app.use(express.json({ limit: '10mb', type: ['application/json', 'application/*+json'] }));
 const radarResident = registerRadarRoutes(app, { isProd });
+const towiResident = registerTowiRoutes(app, { radarResident, isProd });
 registerNotificationFabricRoutes(app);
 registerRivetReportGateway(app);
 registerSpecialistHandoffMcps(app, { gatewayUrl: machineCommerceGatewayUrl });
@@ -200,6 +202,7 @@ const CHUM_DISCOVERY_LINKS = [
   '</chum/hot/>; rel="alternate"; type="text/html"; title="Evercraft CHUM Hot Discovery Queue"',
   '</chum/crawler-radar.json>; rel="alternate"; type="application/json"; title="Evercraft CHUM Crawler Radar"',
   '</chum/strike/>; rel="alternate"; type="text/html"; title="Evercraft CHUM Adaptive Strike Hub"',
+  '</towi/>; rel="alternate"; type="text/html"; title="TOWI Intelligence OS"',
   `<${CENTRAL_MACHINE_COMMERCE_MCP}>; rel="service-desc"; title="Evercraft Machine Commerce MCP"`,
 ];
 
@@ -218,6 +221,7 @@ function isChumDiscoverySurface(pathname: string): boolean {
     pathname.startsWith('/chum/') ||
     pathname.startsWith('/forensiscope/') ||
     pathname.startsWith('/rivet/') ||
+    pathname.startsWith('/towi/') ||
     pathname === '/api/capabilities' ||
     pathname === '/api/discover' ||
     pathname === '/api/revenue-watershed' ||
@@ -454,7 +458,7 @@ app.get('/api/health', (_req: Request, res: Response) => {
     ok: true,
     service: 'forge-operator',
     provider: 'Evercraft',
-    version: '2026-09-28',
+    version: '2026-09-30',
     timestamp: new Date().toISOString(),
     forensiscope: {
       transcription_ready: speech.ready,
@@ -463,6 +467,7 @@ app.get('/api/health', (_req: Request, res: Response) => {
       probe_state: speech.probe_state,
     },
     radar: radarResident.health(),
+    towi: towiResident.health(),
   });
 });
 
@@ -497,6 +502,18 @@ app.get('/api/capabilities', (_req: Request, res: Response) => {
       ownedArchive: '/radar/releases/{slug}/',
       internalRelease: { method: 'POST', path: '/api/radar/release' },
       internalWrites: 'bearer-gated',
+      publicationAuthority: false,
+    },
+    towi: {
+      publicControlRoom: '/towi/',
+      health: '/api/towi/health',
+      latest: '/api/towi/latest',
+      dossier: '/api/towi/dossiers/{id}',
+      internalDossier: '/api/towi/internal/dossiers/{id}',
+      internalProduction: '/api/towi/internal/production',
+      internalEvidence: { method: 'POST', path: '/api/towi/internal/dossiers/{id}/evidence' },
+      internalRun: { method: 'POST', path: '/api/towi/run' },
+      residentIntervalMs: Number(process.env.TOWI_INTERVAL_MS || 5 * 60 * 1000),
       publicationAuthority: false,
     },
     discovery: {

@@ -132,6 +132,23 @@
         "notification fabric",
         "evercraft relay"
       ]
+    },
+    {
+      "capability_key": "towi.intelligence-os.v1",
+      "name": "TOWI Intelligence OS",
+      "state": "source_ready_runtime_binding_pending",
+      "first_party_strict": false,
+      "invocation": "Forge/Yard /towi/ and /api/towi/latest",
+      "triggers": [
+        "what is happening in the world",
+        "what materially changed in the world",
+        "investigate this disaster",
+        "investigate this infrastructure failure",
+        "track this developing hazard",
+        "explain what is happening behind this headline",
+        "what happened after this event",
+        "towi"
+      ]
     }
   ]
 }
