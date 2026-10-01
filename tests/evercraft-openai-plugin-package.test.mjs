@@ -20,9 +20,9 @@ test('Evercraft is packaged in the current portable Agent Plugins format',()=>{
   assert.ok(String(openai?.interface?.longDescription||'').length<=4000);
   assert.equal(openai?.onboardingSkill,'./skills/evercraft-site-inspector/SKILL.md');
   assert.equal(new URL(openai?.interface?.websiteURL).pathname,'/openai');
-  assert.ok(openai?.interface?.supportURL);
-  assert.ok(openai?.interface?.privacyPolicyURL);
-  assert.ok(openai?.interface?.termsOfServiceURL);
+  assert.equal(new URL(openai?.interface?.supportURL).pathname,'/openai/support');
+  assert.equal(new URL(openai?.interface?.privacyPolicyURL).pathname,'/openai/privacy');
+  assert.equal(new URL(openai?.interface?.termsOfServiceURL).pathname,'/openai/terms');
   assert.ok((openai?.interface?.defaultPrompt||[]).every((x)=>String(x).length<=128));
 });
 
