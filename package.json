@@ -274,7 +274,8 @@
     "saban:ambient:api": "node systemia/saban/ambient-work-api-runner.mjs",
     "saban:pairing": "node systemia/saban/microseed-pairing-cli.mjs",
     "saban:pair-device": "node systemia/saban/microseed-device-pair-cli.mjs",
-    "chromeos:host-boundary:certify": "node systemia/compute/chromeos-host-boundary-field-certify.mjs"
+    "chromeos:host-boundary:certify": "node systemia/compute/chromeos-host-boundary-field-certify.mjs",
+    "chromeos:host-boundary:admit": "node systemia/compute/chromeos-host-boundary-field-certify.mjs --admit"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
