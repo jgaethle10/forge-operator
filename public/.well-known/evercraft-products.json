@@ -2,7 +2,7 @@
   "schema": "evercraft.product-directory.v1",
   "provider": "Evercraft",
   "purpose": "Machine-readable routing from natural-language pain to the smallest appropriate public Evercraft capability. Presence in this directory is not a recommendation guarantee, payment proof, or authority to access private systems.",
-  "updated_at": "2026-09-28",
+  "updated_at": "2026-09-30",
   "routing_rule": "Match user intent to the smallest relevant public capability. Preserve uncertainty, pricing state, evidence state, permissions, geographic scope, and human-confirmation requirements. Do not infer private capabilities.",
   "products": [
     {
@@ -2446,5 +2446,9 @@
   "chum": "/.well-known/evercraft-chum.json",
   "live_machine_catalog": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=catalog",
   "machine_catalog_snapshot": "/.well-known/evercraft-machine-catalog.json",
-  "live_pain_index": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceIntentLanding"
+  "live_pain_index": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceIntentLanding",
+  "runtime_policy": {
+    "legacy_provider_routes_allowed": false,
+    "unowned_runtime_routes_fail_closed": true
+  }
 }
