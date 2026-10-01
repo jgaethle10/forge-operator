@@ -6,6 +6,7 @@ on:
       - 'systemia/saban/compute-negotiation.mjs'
       - 'systemia/saban/voluntary-exchange.mjs'
       - 'systemia/saban/voluntary-exchange.proof.mjs'
+      - 'systemia/saban/voluntary-worker/**'
       - 'systemia/saban/markets/evercraft-voluntary.mjs'
       - 'systemia/saban/markets/golem.mjs'
       - 'systemia/saban/golem-adapter.proof.mjs'
@@ -18,6 +19,7 @@ on:
       - 'systemia/saban/compute-negotiation.mjs'
       - 'systemia/saban/voluntary-exchange.mjs'
       - 'systemia/saban/voluntary-exchange.proof.mjs'
+      - 'systemia/saban/voluntary-worker/**'
       - 'systemia/saban/markets/evercraft-voluntary.mjs'
       - 'systemia/saban/markets/golem.mjs'
       - 'systemia/saban/golem-adapter.proof.mjs'
@@ -40,6 +42,8 @@ jobs:
           node-version: '22'
       - name: Prove offer counteroffer agreement execution release
         run: node systemia/saban/voluntary-exchange.proof.mjs
+      - name: Prove browser-compatible voluntary worker
+        run: node systemia/saban/voluntary-worker/browser-worker.proof.mjs
 
   golem-contract:
     runs-on: ubuntu-latest
