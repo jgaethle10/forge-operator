@@ -105,7 +105,7 @@ jobs:
         run: node --test systemia/experience/human-experience-adapter.test.mjs
 
       - name: Prove autonomous Repair Unit
-        run: node --test systemia/sentinel/repair-unit.test.mjs systemia/sentinel/repair-strategy.test.mjs
+        run: node --test systemia/sentinel/repair-unit.test.mjs systemia/sentinel/repair-strategy.test.mjs systemia/sentinel/repair-executor.test.mjs
 
       - name: Restore latest owned Customer Gauntlet receipt
         continue-on-error: true
