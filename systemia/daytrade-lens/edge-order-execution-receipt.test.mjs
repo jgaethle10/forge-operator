@@ -117,6 +117,54 @@ assert.equal(partial.unfilled_qty,6);
 assert.equal(partial.fill_fraction,0.4);
 assert.equal(partial.total_implementation_shortfall_complete,false);
 assert.equal(partial.unfilled_remainder_opportunity_cost_measured,false);
+assert.equal(partial.unfilled_remainder_opportunity_cost_usd,null);
+
+const partialWithTerminal=buildOrderExecutionReceipt({
+  order_id:"order-partial-terminal",
+  requested_qty:10,
+  decision_time:"2026-10-01T14:30:00.000Z",
+  decision_reference_price:100,
+  expected_side:"buy",
+  expected_symbol:"QQQ",
+  terminal_status:"canceled",
+  terminal_time:"2026-10-01T14:35:00.000Z",
+  terminal_reference_price:101,
+  known_fees_usd:0.25,
+  activities:[{
+    activity_type:"FILL",
+    id:"pt1",
+    order_id:"order-partial-terminal",
+    symbol:"QQQ",
+    side:"buy",
+    type:"partial_fill",
+    transaction_time:"2026-10-01T14:30:05.000Z",
+    qty:"4",
+    price:"100.10",
+    cum_qty:"4",
+    leaves_qty:"6",
+  }],
+});
+assert.equal(partialWithTerminal.filled_qty,4);
+assert.equal(partialWithTerminal.unfilled_qty,6);
+assert.equal(partialWithTerminal.unfilled_remainder_opportunity_cost_measured,true);
+assert.ok(
+  Math.abs(partialWithTerminal.executed_share_implementation_shortfall_usd-0.4)<1e-12
+);
+assert.ok(
+  Math.abs(partialWithTerminal.unfilled_remainder_opportunity_cost_usd-6)<1e-12
+);
+assert.ok(
+  Math.abs(partialWithTerminal.gross_total_implementation_shortfall_usd-6.4)<1e-12
+);
+assert.ok(
+  Math.abs(partialWithTerminal.gross_total_implementation_shortfall_bps-64)<1e-9
+);
+assert.ok(
+  Math.abs(
+    partialWithTerminal.total_implementation_shortfall_with_known_fees_usd-6.65
+  )<1e-12
+);
+assert.equal(partialWithTerminal.total_implementation_shortfall_complete,true);
 
 const sell=buildOrderExecutionReceipt({
   order_id:"order-sell",
@@ -141,6 +189,11 @@ const sell=buildOrderExecutionReceipt({
 });
 assert.ok(sell.executed_share_implementation_shortfall_bps>0);
 assert.ok(Math.abs(sell.executed_share_implementation_shortfall_bps-50)<1e-9);
+assert.ok(
+  Math.abs(sell.executed_share_implementation_shortfall_usd-5)<1e-12
+);
+assert.equal(sell.unfilled_remainder_opportunity_cost_usd,0);
+assert.equal(sell.total_implementation_shortfall_complete,true);
 
 const noFill=buildOrderExecutionReceipt({
   order_id:"order-empty",
@@ -165,7 +218,10 @@ console.log(JSON.stringify({
   partial_and_full_fill_reconstruction:true,
   side_correct_implementation_shortfall:true,
   fill_latency:true,
-  unfilled_remainder_kept_unknown:true,
+  unfilled_remainder_kept_unknown_without_terminal_reference:true,
+  terminal_reference_opportunity_cost_supported:true,
+  terminal_reference_never_inferred:true,
+  known_fees_optional_and_explicit:true,
   no_order_submission_capability:true,
   read_only:true,
   live_trade_authority:false
