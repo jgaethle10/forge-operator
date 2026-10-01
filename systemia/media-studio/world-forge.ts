@@ -259,7 +259,8 @@ export type WorldForgeOperation =
   | { type:'reparent_node'; nodeId:string; parentId?:string }
   | { type:'add_modifier'; nodeId:string; modifier:WorldForgeModifier }
   | { type:'remove_modifier'; nodeId:string; modifierId:string }
-  | { type:'bind_material'; nodeId:string; materialId:string; slot?:number };
+  | { type:'bind_material'; nodeId:string; materialId:string; slot?:number }
+  | { type:'unbind_material'; nodeId:string; slot?:number };
 
 export interface WorldForgeMutationReceipt {
   schema:'evercraft.fallen.world-forge-mutation-receipt.v1';
@@ -519,8 +520,12 @@ function operationInverse(project:WorldForgeProject,operation:WorldForgeOperatio
   }
   const slot=Math.max(0,operation.slot??0);
   const previous=node.materialIds?.[slot];
-  if(previous) return {type:'bind_material',nodeId:node.id,materialId:previous,slot};
-  return {type:'bind_material',nodeId:node.id,materialId:operation.materialId,slot};
+  if(operation.type==='bind_material'){
+    if(previous) return {type:'bind_material',nodeId:node.id,materialId:previous,slot};
+    return {type:'unbind_material',nodeId:node.id,slot};
+  }
+  if(!previous) throw new Error(`material_slot_empty:${node.id}:${slot}`);
+  return {type:'bind_material',nodeId:node.id,materialId:previous,slot};
 }
 
 function applyOperation(project:WorldForgeProject,operation:WorldForgeOperation){
@@ -579,10 +584,18 @@ function applyOperation(project:WorldForgeProject,operation:WorldForgeOperation)
     return;
   }
 
+  const slot=Math.max(0,operation.slot??0);
+  if(operation.type==='unbind_material'){
+    const materialIds=[...(node.materialIds??[])];
+    if(slot>=materialIds.length) throw new Error(`material_slot_empty:${node.id}:${slot}`);
+    materialIds.splice(slot,1);
+    node.materialIds=materialIds;
+    return;
+  }
+
   if(!project.materials.some(material=>material.id===operation.materialId)){
     throw new Error(`material_missing:${operation.materialId}`);
   }
-  const slot=Math.max(0,operation.slot??0);
   const materialIds=[...(node.materialIds??[])];
   while(materialIds.length<=slot) materialIds.push(operation.materialId);
   materialIds[slot]=operation.materialId;
