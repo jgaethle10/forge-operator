@@ -49,6 +49,11 @@ assert.equal(router.state,'owned_implementation_present_ci_pending_data_reconcil
 assert.ok(router.owned_refs.includes('systemia/capability-router/runtime.mjs'));
 assert.ok(router.remaining.includes('live_source_to_destination_reconciliation'));
 
+const coreGateway=map.functions.find((row)=>row.source_function==='systemiaCoreGateway');
+assert.equal(coreGateway.state,'owned_implementation_present_ci_pending_machine_commerce_binding');
+assert.ok(coreGateway.owned_refs.includes('systemia/command-center/core-gateway.mjs'));
+assert.ok(coreGateway.remaining.includes('native_machine_commerce_32_tool_parity'));
+
 const publicEdgeRows=map.functions.filter((row)=>Array.isArray(row.legacy_registry_refs));
 assert.equal(publicEdgeRows.length,4);
 const registryFiles=new Set();
@@ -64,7 +69,7 @@ assert.equal(registryFiles.size,4);
 
 assert.equal(map.summary.source_functions,8);
 assert.equal(map.summary.stateful_functions_owned_implementation_present,2);
-assert.equal(map.summary.owned_function_implementations_present,3);
+assert.equal(map.summary.owned_function_implementations_present,4);
 assert.equal(map.summary.functions_with_owned_replacement_path,8);
 assert.equal(map.summary.functions_fully_cutover_ready,0);
 assert.equal(map.summary.legacy_public_registry_routes_remaining,4);
