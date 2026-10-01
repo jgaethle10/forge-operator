@@ -843,12 +843,13 @@
         "daytrade red team"
       ],
       "adapter": "systemia/daytrade-lens/saban-learning-adapter.mjs",
-      "default_logical_agents": 100,
-      "max_logical_agents": 1000,
+      "default_logical_agents": 110,
+      "max_logical_agents": 1100,
       "default_physical_workers": 8,
       "max_physical_workers": 32,
       "lease_seconds": 300,
       "roles": [
+        "academic_source_hunter",
         "base_rate_skeptic",
         "microstructure_scout",
         "execution_cost_guard",
@@ -876,7 +877,7 @@
         "default": "deny",
         "local_generated_files": true,
         "local_receipts": true,
-        "external_network": false,
+        "external_network": "read_only",
         "production_mutation": false,
         "frozen_protocol_mutation": false,
         "brokerage_order_submission": false,
@@ -884,11 +885,12 @@
         "automatic_publication": false,
         "unsolicited_human_outreach": false,
         "automatic_checkout": false,
-        "payment_obligation": false
+        "payment_obligation": false,
+        "scholarly_metadata_discovery": "crossref_only_read_only"
       },
       "max_attempts_per_job": 2,
       "budget": {
-        "max_logical_agents": 1000,
+        "max_logical_agents": 1100,
         "max_physical_workers": 32,
         "max_work_items": 1000,
         "max_attempts_per_job": 2
