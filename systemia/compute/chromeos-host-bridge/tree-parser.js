@@ -59,19 +59,32 @@ export function flattenAutomationTree(root, maxNodes = 8000) {
   return { rows, bounded: stack.length === 0 };
 }
 
-function contextText(rows, index) {
-  const chunks = [rows[index]?.text || ''];
+function subtreeText(rows, ancestorIndex, maxRelativeDepth = 4) {
+  if (ancestorIndex < 0 || ancestorIndex >= rows.length) return '';
+  const ancestorDepth = rows[ancestorIndex]?.depth ?? 0;
+  const chunks = [rows[ancestorIndex]?.text || ''];
+  for (let i = ancestorIndex + 1; i < rows.length; i += 1) {
+    const depth = rows[i]?.depth ?? 0;
+    if (depth <= ancestorDepth) break;
+    if (depth <= ancestorDepth + maxRelativeDepth) chunks.push(rows[i]?.text || '');
+  }
+  return chunks.join(' ');
+}
+
+function nearestUnambiguousPortContext(rows, index, admittedPorts) {
+  const toggleText = rows[index]?.text || '';
   let cursor = rows[index]?.parentIndex ?? -1;
-  for (let depth = 0; cursor >= 0 && depth < 3; depth += 1) {
-    chunks.push(rows[cursor]?.text || '');
-    const parentDepth = rows[cursor]?.depth ?? 0;
-    for (let i = cursor + 1; i < rows.length; i += 1) {
-      if ((rows[i]?.depth ?? 0) <= parentDepth) break;
-      if ((rows[i]?.depth ?? 0) <= parentDepth + 2) chunks.push(rows[i]?.text || '');
+  for (let hops = 0; cursor >= 0 && hops < 6; hops += 1) {
+    const candidate = [toggleText, subtreeText(rows, cursor)].join(' ');
+    const matchingPorts = admittedPorts.filter((port) =>
+      new RegExp('\\\\b' + port + '\\\\b').test(candidate)
+    );
+    if (matchingPorts.length === 1) {
+      return { context: candidate, port: matchingPorts[0] };
     }
     cursor = rows[cursor]?.parentIndex ?? -1;
   }
-  return chunks.join(' ');
+  return { context: toggleText, port: null };
 }
 
 function roleLooksToggle(role) {
@@ -94,23 +107,25 @@ export function extractPortForwardingState(root, admittedPorts = ADMITTED_PORTS)
       /activate port/i.test(row.text);
     if (!toggleLike) continue;
 
-    const context = contextText(rows, index);
-    for (const port of admittedPorts) {
-      if (!new RegExp('\\b' + port + '\\b').test(context)) continue;
-      const checked = normalizeChecked(row.node);
-      const disabled = Boolean(
-        row.node?.state?.disabled === true ||
-        row.node?.restriction === 'disabled'
-      );
-      findings.set(port, {
-        port,
-        protocol: /\bUDP\b/i.test(context) ? 'UDP' : 'TCP',
-        present: true,
-        enabled: checked,
-        disabled,
-        evidence: 'automation_accessibility_tree',
-      });
-    }
+    const { context, port } = nearestUnambiguousPortContext(
+      rows,
+      index,
+      admittedPorts,
+    );
+    if (port === null) continue;
+    const checked = normalizeChecked(row.node);
+    const disabled = Boolean(
+      row.node?.state?.disabled === true ||
+      row.node?.restriction === 'disabled'
+    );
+    findings.set(port, {
+      port,
+      protocol: /\bUDP\b/i.test(context) ? 'UDP' : 'TCP',
+      present: true,
+      enabled: checked,
+      disabled,
+      evidence: 'automation_accessibility_tree',
+    });
   }
 
   return {
