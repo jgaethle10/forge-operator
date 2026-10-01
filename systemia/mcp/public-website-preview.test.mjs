@@ -15,6 +15,10 @@ test('public IP guard rejects loopback and private ranges',()=>{
   assert.equal(isPublicIp('169.254.10.1'),false);
   assert.equal(isPublicIp('::1'),false);
   assert.equal(isPublicIp('fd00::1'),false);
+  assert.equal(isPublicIp('::ffff:7f00:1'),false);
+  assert.equal(isPublicIp('64:ff9b::7f00:1'),false);
+  assert.equal(isPublicIp('2002:7f00:1::'),false);
+  assert.equal(isPublicIp('fec0::1'),false);
   assert.equal(isPublicIp('93.184.216.34'),true);
   assert.equal(isPublicIp('2606:4700:4700::1111'),true);
 });
