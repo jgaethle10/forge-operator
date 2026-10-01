@@ -105,9 +105,23 @@ function measuredReturnFromIndex(bars, startIndex, lagBars, observedAt) {
   const pathBars = bars.slice(startIndex, endIndex + 1);
   const pathReturns = [];
   for (let i = 1; i < pathBars.length; i++) {
-    const previous = Number(pathBars[i - 1].c);
-    const current = Number(pathBars[i].c);
-    if (previous > 0 && current > 0) pathReturns.push(Math.log(current / previous));
+    const previousBar = pathBars[i - 1];
+    const currentBar = pathBars[i];
+    const previous = Number(previousBar.c);
+    const current = Number(currentBar.c);
+    const intervalMs =
+      new Date(currentBar.t).getTime() - new Date(previousBar.t).getTime();
+    const contiguousFiveMinuteInterval =
+      intervalMs > 0 &&
+      intervalMs <= 10 * 60_000 &&
+      marketDateKey(previousBar.t) === marketDateKey(currentBar.t);
+    if (
+      previous > 0 &&
+      current > 0 &&
+      contiguousFiveMinuteInterval
+    ) {
+      pathReturns.push(Math.log(current / previous));
+    }
   }
   const pathMean = pathReturns.length
     ? pathReturns.reduce((a,b) => a + b, 0) / pathReturns.length
