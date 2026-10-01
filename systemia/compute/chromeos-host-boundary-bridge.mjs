@@ -2,14 +2,25 @@ import fs from 'node:fs';
 import http from 'node:http';
 import os from 'node:os';
 import path from 'node:path';
-import { createHash, randomBytes, timingSafeEqual } from 'node:crypto';
+import {
+  createHash,
+  randomBytes,
+  timingSafeEqual,
+  webcrypto,
+} from 'node:crypto';
 import { fileURLToPath } from 'node:url';
+import {
+  bytesFromBase64Url,
+  canonicalJson,
+  observerSigningPayload,
+} from './chromeos-host-bridge/crypto-protocol.js';
 
 const SCHEMA = 'evercraft.chromeos-host-boundary-observation.v1';
 const STATUS_SCHEMA = 'evercraft.chromeos-host-boundary-status.v1';
 const RECEIPT_SCHEMA = 'evercraft.chromeos-host-boundary-receipt.v1';
 const CHECK_SCHEMA = 'evercraft.chromeos-host-boundary-check-request.v1';
 const CAPABILITY_ID = 'chromeos.crostini.port-forwarding.read.v1';
+const PAIR_SCHEMA = 'evercraft.chromeos-host-boundary-pairing.v1';
 const DEFAULT_PORTS = new Set([18080, 8443]);
 const DEFAULT_STATE_ROOT = path.join(
   os.homedir(),
@@ -81,6 +92,10 @@ function checkFile(stateRoot) {
   return path.join(stateRoot, 'check-request.json');
 }
 
+function pairingFile(stateRoot) {
+  return path.join(stateRoot, 'paired-observer.json');
+}
+
 function sealState(body) {
   return { ...body, state_hash: sha(body) };
 }
@@ -98,6 +113,179 @@ function normalizedRequestId(value) {
     throw new Error('chromeos_host_boundary_request_id_invalid');
   }
   return id;
+}
+
+function normalizedObserverInstallId(value) {
+  const id = safeText(value, 128);
+  if (!/^cros_[a-z0-9._-]{8,120}$/i.test(id)) {
+    throw new Error('chromeos_host_boundary_observer_install_id_invalid');
+  }
+  return id;
+}
+
+function normalizeObserverPublicJwk(value) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    throw new Error('chromeos_host_boundary_observer_public_key_required');
+  }
+  if (value.d) throw new Error('chromeos_host_boundary_private_key_denied');
+  if (
+    value.kty !== 'EC' ||
+    value.crv !== 'P-256' ||
+    typeof value.x !== 'string' ||
+    typeof value.y !== 'string' ||
+    !/^[A-Za-z0-9_-]{20,120}$/.test(value.x) ||
+    !/^[A-Za-z0-9_-]{20,120}$/.test(value.y)
+  ) {
+    throw new Error('chromeos_host_boundary_observer_public_key_invalid');
+  }
+  return {
+    kty: 'EC',
+    crv: 'P-256',
+    x: value.x,
+    y: value.y,
+    ext: true,
+    key_ops: ['verify'],
+  };
+}
+
+function observerPublicKeyFingerprint(jwk) {
+  return 'sha256:' + createHash('sha256')
+    .update(canonicalJson(jwk))
+    .digest('hex');
+}
+
+export function pairChromeOsHostBoundaryObserver(
+  input,
+  { stateRoot = DEFAULT_STATE_ROOT, now = Date.now() } = {},
+) {
+  const observerInstallId = normalizedObserverInstallId(input?.observer_install_id);
+  const publicKeyJwk = normalizeObserverPublicJwk(input?.public_key_jwk);
+  const fingerprint = observerPublicKeyFingerprint(publicKeyJwk);
+  const claimedFingerprint = safeText(input?.observer_key_fingerprint || '', 96);
+  if (claimedFingerprint && claimedFingerprint !== fingerprint) {
+    throw new Error('chromeos_host_boundary_observer_key_fingerprint_mismatch');
+  }
+
+  const file = pairingFile(stateRoot);
+  const existing = readJson(file);
+  if (existing) {
+    if (!verifyState(existing)) {
+      throw new Error('chromeos_host_boundary_pairing_integrity_failed');
+    }
+    if (
+      existing.observer_install_id !== observerInstallId ||
+      existing.observer_key_fingerprint !== fingerprint
+    ) {
+      throw new Error('chromeos_host_boundary_pairing_locked');
+    }
+    return existing;
+  }
+
+  const body = {
+    schema: PAIR_SCHEMA,
+    paired_at: new Date(now).toISOString(),
+    observer_install_id: observerInstallId,
+    observer_key_fingerprint: fingerprint,
+    public_key_jwk: publicKeyJwk,
+    capability_id: CAPABILITY_ID,
+    mutation_authority: false,
+  };
+  const pairing = sealState(body);
+  atomicJson(file, pairing);
+  return pairing;
+}
+
+export function readChromeOsHostBoundaryPairing({
+  stateRoot = DEFAULT_STATE_ROOT,
+} = {}) {
+  const pairing = readJson(pairingFile(stateRoot));
+  if (!pairing) {
+    return {
+      ok: true,
+      paired: false,
+      state: 'not_paired',
+      observer_install_id: null,
+      observer_key_fingerprint: null,
+    };
+  }
+  if (!verifyState(pairing) || pairing.schema !== PAIR_SCHEMA) {
+    return {
+      ok: false,
+      paired: false,
+      state: 'integrity_failed',
+      observer_install_id: null,
+      observer_key_fingerprint: null,
+    };
+  }
+  return {
+    ok: true,
+    paired: true,
+    state: 'paired',
+    observer_install_id: pairing.observer_install_id,
+    observer_key_fingerprint: pairing.observer_key_fingerprint,
+    paired_at: pairing.paired_at,
+  };
+}
+
+export async function verifyChromeOsHostBoundaryObserverReport(
+  input,
+  { stateRoot = DEFAULT_STATE_ROOT } = {},
+) {
+  const pairing = readJson(pairingFile(stateRoot));
+  if (!pairing || !verifyState(pairing) || pairing.schema !== PAIR_SCHEMA) {
+    throw new Error('chromeos_host_boundary_observer_not_paired');
+  }
+
+  const observerInstallId = normalizedObserverInstallId(input?.observer_install_id);
+  if (observerInstallId !== pairing.observer_install_id) {
+    throw new Error('chromeos_host_boundary_observer_install_id_mismatch');
+  }
+  const fingerprint = safeText(input?.observer_key_fingerprint || '', 96);
+  if (!fingerprint || fingerprint !== pairing.observer_key_fingerprint) {
+    throw new Error('chromeos_host_boundary_observer_key_fingerprint_mismatch');
+  }
+
+  const signatureText = safeText(input?.observer_signature || '', 512);
+  if (!signatureText || !/^[A-Za-z0-9_-]{40,512}$/.test(signatureText)) {
+    throw new Error('chromeos_host_boundary_observer_signature_required');
+  }
+
+  let key;
+  try {
+    key = await webcrypto.subtle.importKey(
+      'jwk',
+      pairing.public_key_jwk,
+      { name: 'ECDSA', namedCurve: 'P-256' },
+      false,
+      ['verify'],
+    );
+  } catch {
+    throw new Error('chromeos_host_boundary_observer_public_key_import_failed');
+  }
+
+  const data = new TextEncoder().encode(
+    canonicalJson(observerSigningPayload(input)),
+  );
+  let verified = false;
+  try {
+    verified = await webcrypto.subtle.verify(
+      { name: 'ECDSA', hash: 'SHA-256' },
+      key,
+      bytesFromBase64Url(signatureText),
+      data,
+    );
+  } catch {
+    verified = false;
+  }
+  if (!verified) {
+    throw new Error('chromeos_host_boundary_observer_signature_invalid');
+  }
+
+  return {
+    verified: true,
+    observer_install_id: observerInstallId,
+    observer_key_fingerprint: fingerprint,
+  };
 }
 
 export function requestChromeOsHostBoundaryCheck({
@@ -234,7 +422,7 @@ export function validateChromeOsHostBoundaryObservation(
     collected_at: collectedAt.toISOString(),
     request_id: requestId,
     observer_version: safeText(input.observer_version || 'unknown', 48),
-    observer_install_id: safeText(input.observer_install_id || 'unknown', 96),
+    observer_install_id: normalizedObserverInstallId(input.observer_install_id),
     settings_route: safeText(input.settings_route || 'chrome://os-settings/crostini/portForwarding', 256),
     ports: ports.sort((a, b) => a.port - b.port || a.protocol.localeCompare(b.protocol)),
     scan: {
@@ -278,7 +466,12 @@ export function validateChromeOsHostBoundaryObservation(
 
 export function storeChromeOsHostBoundaryObservation(
   input,
-  { stateRoot = DEFAULT_STATE_ROOT, allowedPorts = DEFAULT_PORTS, now = Date.now() } = {},
+  {
+    stateRoot = DEFAULT_STATE_ROOT,
+    allowedPorts = DEFAULT_PORTS,
+    now = Date.now(),
+    observerVerification = null,
+  } = {},
 ) {
   const observation = validateChromeOsHostBoundaryObservation(input, { allowedPorts, now });
   const body = {
@@ -289,6 +482,9 @@ export function storeChromeOsHostBoundaryObservation(
     authority: {
       source: 'paired_chromeos_extension',
       bearer_authenticated: true,
+      observer_signature_verified: observerVerification?.verified === true,
+      observer_key_fingerprint:
+        observerVerification?.observer_key_fingerprint || null,
       mutation_authority: false,
     },
   };
@@ -344,6 +540,10 @@ export function readChromeOsHostBoundaryStatus({
     request_id: receipt?.observation?.request_id || null,
     observer_version: receipt?.observation?.observer_version || null,
     observer_install_id: receipt?.observation?.observer_install_id || null,
+    observer_key_fingerprint:
+      receipt?.authority?.observer_key_fingerprint || null,
+    observer_signature_verified:
+      receipt?.authority?.observer_signature_verified === true,
     settings_route: receipt?.observation?.settings_route || null,
     ports: Array.isArray(receipt?.observation?.ports) ? receipt.observation.ports : [],
     scan: receipt?.observation?.scan || null,
@@ -405,6 +605,22 @@ export function startChromeOsHostBoundaryBridge({
           persists_raw_accessibility_tree: false,
           supports_on_demand_checks: true,
           minimum_extension_poll_seconds: 30,
+          signed_observer_reports_required: true,
+        });
+      }
+
+      if (req.method === 'POST' && req.url === '/v1/chromeos-host-boundary/pair') {
+        if (!equalToken(bearer(req), secret)) {
+          return send(res, 401, { ok: false, error: 'chromeos_host_boundary_auth_required' });
+        }
+        const body = await readRequestJson(req);
+        const pairing = pairChromeOsHostBoundaryObserver(body, { stateRoot });
+        return send(res, 200, {
+          ok: true,
+          paired: true,
+          observer_install_id: pairing.observer_install_id,
+          observer_key_fingerprint: pairing.observer_key_fingerprint,
+          capability_id: pairing.capability_id,
         });
       }
 
@@ -436,7 +652,12 @@ export function startChromeOsHostBoundaryBridge({
           return send(res, 401, { ok: false, error: 'chromeos_host_boundary_auth_required' });
         }
         const body = await readRequestJson(req);
-        const receipt = storeChromeOsHostBoundaryObservation(body, { stateRoot });
+        const observerVerification =
+          await verifyChromeOsHostBoundaryObserverReport(body, { stateRoot });
+        const receipt = storeChromeOsHostBoundaryObservation(body, {
+          stateRoot,
+          observerVerification,
+        });
         return send(res, 200, {
           ok: true,
           receipt_hash: receipt.receipt_hash,
