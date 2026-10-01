@@ -53,7 +53,36 @@
     "authenticated_batch_snapshot_ingest": true,
     "one_shot_aliev_extractor_proof": "pass",
     "migration_secret_persistence": false,
-    "owned_runtime_base44_default_removed": true
+    "owned_runtime_base44_default_removed": true,
+    "daryl_seatac_report_recovered_live": true,
+    "daryl_seatac_report_id": "6abd31f12fe0a401bb3089df",
+    "daryl_seatac_report_generation_state": "ready",
+    "daryl_seatac_report_source_status": "ready",
+    "daryl_seatac_report_transport_state": "VERIFIED",
+    "daryl_seatac_full_source_chunks": 5,
+    "daryl_seatac_source_sha256": "38d99dd828ba51cc8c35245553fde710b8a8c53356243a5c708c4a2b02acda1d",
+    "private_worker_bootstrap_contract": "pass",
+    "private_worker_loopback_only": true,
+    "persistent_outbound_admission_service": true,
+    "compute_fabric_capacity_selector": "pass",
+    "failed_node_exclusion": true,
+    "hosting_deployment_generations": true,
+    "hosting_reconcile_self_heal": true,
+    "compatibility_binding_receipt": true,
+    "compatibility_binding_secret_value_embedded": false,
+    "base44_runtime_policy_entity": "RIVETRuntimePolicy",
+    "base44_owned_canary_entity": "RIVETOwnedCanaryReceipt",
+    "cutover_policy_mode": "legacy_only",
+    "cutover_policy_generation": 1,
+    "cutover_policy_promotion_enabled": true,
+    "cutover_auto_promotion": [
+      "legacy_only->shadow_owned",
+      "shadow_owned->owned_primary",
+      "owned_primary->owned_only"
+    ],
+    "cutover_owned_only_auto_demotion": false,
+    "base44_pipeline_contract": "62/62",
+    "base44_security_gate": "77/77"
   },
   "migrate": [
     "report_execution_runtime",
@@ -82,12 +111,12 @@
     "observation_window_required": true
   },
   "blockers": [
-    "owned AliEV source and RIVET resident stack have not yet been admitted on a field/public-edge production node",
-    "production AliEV snapshot store has not yet been seeded with the live migration bundle",
-    "live authenticated Yard report route has not yet been independently verified from outside the production node",
-    "RIVET New Report UI remains on legacy_only until shadow-owned canaries pass the promotion policy",
-    "fresh preliminary and full-site live reports have not yet reached generation_state=ready through the owned production lane"
+    "No field/public-edge Evercraft Compute node is currently admitted for the production RIVET route.",
+    "DigitalOcean account reports droplet_limit=3 and maximum allowed while droplet_list returns zero and current usage is $0; treat as provider account defect, not architecture dependency.",
+    "RIVET_YARD_GATEWAY_URL and RIVET_YARD_GATEWAY_TOKEN remain unset in the Base44 compatibility app until a verified owned public route exists.",
+    "Production AliEV domain store still requires bulk migration/reconciliation from the inventoried legacy source rows.",
+    "Fresh production preliminary and full-site canaries have not yet run through the owned public route."
   ],
-  "next_action": "admit_owned_compute_capacity_extract_and_seed_live_aliev_bundle_run_shadow_owned_preliminary_and_full_canaries_then_promote_to_owned_primary_after_policy_receipts",
+  "next_action": "claim_or_admit_any_eligible_evercraft_compute_worker_and_public_edge_seed_and_reconcile_aliev_bind_verified_rivet_v1_reports_route_into_base44_then_allow_sentinel_to_promote_legacy_to_shadow_to_owned_primary_to_owned_only",
   "destructive_cutover_allowed": false
 }
