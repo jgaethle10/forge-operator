@@ -33,16 +33,18 @@
     {
       "source_function": "firstPartyCapabilityRouter",
       "behavior": "Route intent against capability-selection rules and capability registry while preserving first-party-strict behavior.",
-      "state": "owned_router_present_source_data_reconciliation_pending",
+      "state": "owned_implementation_present_ci_pending_data_reconciliation",
       "owned_refs": [
-        "systemia/mcp/fabric-directory.mjs",
-        "systemia/mcp/fabric-local-runtime.mjs",
+        "systemia/capability-router/runtime.mjs",
+        "systemia/capability-router/runtime.proof.mjs",
+        "systemia/app-fabric/entity-store.mjs",
         "systemia/migrations/base44-exit/wave-1-command-center-shadow-source-capture-2026-10-01.json"
       ],
       "remaining": [
         "capability_registry_destination_import",
-        "selection_rule_parity_receipt",
-        "first_party_strict_parity_receipt"
+        "selection_rule_destination_import",
+        "live_source_to_destination_reconciliation",
+        "owned_deployment_receipt"
       ]
     },
     {
@@ -147,7 +149,8 @@
     "stateful_functions_owned_implementation_present": 2,
     "functions_with_owned_replacement_path": 8,
     "functions_fully_cutover_ready": 0,
-    "legacy_public_registry_routes_remaining": 4
+    "legacy_public_registry_routes_remaining": 4,
+    "owned_function_implementations_present": 3
   },
   "authority": {
     "source_mutation": false,
