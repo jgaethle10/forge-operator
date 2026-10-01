@@ -98,9 +98,15 @@ export function normalizeMicroDeviceManifest(input={}){
       mode:input.attestation?.mode?String(input.attestation.mode):'gateway_bound',
       device_identity:input.attestation?.device_identity?String(input.attestation.device_identity):null,
       gateway_identity:input.attestation?.gateway_identity?String(input.attestation.gateway_identity):null,
+      receipt_signing_required:input.attestation?.receipt_signing_required===true,
+      receipt_public_key_pem:input.attestation?.receipt_public_key_pem?String(input.attestation.receipt_public_key_pem):null,
+      receipt_key_id:input.attestation?.receipt_key_id?String(input.attestation.receipt_key_id):null,
     },
     observed_at:input.observed_at||new Date().toISOString(),
   };
+  if(body.attestation.receipt_signing_required&&!body.attestation.receipt_public_key_pem){
+    throw new Error('micro_device_receipt_public_key_required');
+  }
   return {...body,manifest_hash:sha(body)};
 }
 
@@ -150,6 +156,10 @@ export function microDeviceToAmbientCapabilities(manifestInput={},options={}){
     external_cash_cost_usd:0,
     incremental_energy_cost_state:'not_measured',
     arbitrary_code_execution:false,
+    signed_receipts_required:manifest.attestation.receipt_signing_required===true,
+    receipt_public_key_fingerprint:manifest.attestation.receipt_public_key_pem
+      ? sha(manifest.attestation.receipt_public_key_pem)
+      : null,
     verified_workloads:verifiedWorkloads,
     conformance_receipt_hash:conformance?.receipt_hash||null,
     conformance_verified_at:conformance?.verified_at||null,
