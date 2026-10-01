@@ -84,6 +84,7 @@ function bearer(req) {
 const BRIDGED_WORKLOADS = new Set([
   'systemia.evercraft-web-browser.v1',
   'systemia.specialist-handoff-mcp.v1',
+  'systemia.rivet-report-runtime.v1',
 ]);
 
 const BRIDGE_REQUEST_HEADERS = new Set([
@@ -130,7 +131,25 @@ function bridgeServiceOrigin(entry) {
   if (entry?.workload_class === 'systemia.specialist-handoff-mcp.v1') {
     return String(entry?.runtime?.url || '');
   }
+  if (entry?.workload_class === 'systemia.rivet-report-runtime.v1') {
+    return String(entry?.runtime?.service_url || '');
+  }
   return '';
+}
+
+function bridgeRouteAllowed(entry, method, requestPath) {
+  if (entry?.workload_class !== 'systemia.rivet-report-runtime.v1') return true;
+  if (method === 'GET' && requestPath === '/health') return true;
+  if (method === 'POST' && requestPath === '/v1/reports') return true;
+  if (
+    method === 'GET' &&
+    /^\/v1\/report-jobs\/[^/?#]+\/progress$/.test(requestPath)
+  ) return true;
+  if (
+    method === 'GET' &&
+    /^\/v1\/reports\/[^/?#]+(?:\/source)?$/.test(requestPath)
+  ) return true;
+  return false;
 }
 
 function assertLoopbackBridgeOrigin(value) {
@@ -161,6 +180,9 @@ async function bridgeResidentHttp(entry, input = {}) {
   }
   const origin = assertLoopbackBridgeOrigin(bridgeServiceOrigin(entry));
   const requestPath = normalizeBridgePath(input.path);
+  if (!bridgeRouteAllowed(entry, method, requestPath)) {
+    throw new Error('rivet_report_bridge_route_not_allowed');
+  }
   const target = new URL(requestPath, origin);
   const encoded = String(input.body_base64 || '');
   if (encoded.length > 12 * 1024 * 1024) throw new Error('resident_service_bridge_body_too_large');
