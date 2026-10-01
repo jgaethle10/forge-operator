@@ -17,6 +17,9 @@ const waveOneScheduledWork = JSON.parse(fs.readFileSync(
 const commandCenterShadowCapture = JSON.parse(fs.readFileSync(
   new URL('../systemia/migrations/base44-exit/wave-1-command-center-shadow-source-capture-2026-10-01.json', import.meta.url)
 ));
+const commandCenterFunctionMap = JSON.parse(fs.readFileSync(
+  new URL('../systemia/migrations/base44-exit/wave-1-command-center-function-map.json', import.meta.url)
+));
 
 const fail = (message) => {
   console.error(`BASE44_EXIT_POLICY_FAIL: ${message}`);
@@ -220,6 +223,58 @@ if (commandCenterShadowCapture.authority?.source_mutation !== false ||
   fail('Command Center shadow source capture exceeded read-only authority');
 }
 
+if (commandCenterFunctionMap.schema !== 'evercraft.base44.command-center-function-map.v1') {
+  fail('Command Center function map schema is invalid');
+}
+if (commandCenterFunctionMap.product !== 'Systemia Command Center') {
+  fail('Command Center function map product mismatch');
+}
+const commandCenterFunctions = commandCenterFunctionMap.functions || [];
+if (Number(commandCenterFunctionMap.source_function_count || 0) !== 8 || commandCenterFunctions.length !== 8) {
+  fail('Command Center function map must cover all eight observed source functions');
+}
+const commandCenterFunctionNames = new Set(commandCenterFunctions.map((row) => row.source_function));
+for (const expected of [
+  'aqueductOps',
+  'evercraftCommerceGateway',
+  'evercraftCommerceMcp',
+  'evercraftWebGateway',
+  'evercraftWebMcp',
+  'exactOutputGateOps',
+  'firstPartyCapabilityRouter',
+  'systemiaCoreGateway'
+]) {
+  if (!commandCenterFunctionNames.has(expected)) fail(`Command Center function map missing ${expected}`);
+}
+for (const row of commandCenterFunctions) {
+  if (!Array.isArray(row.owned_refs) || row.owned_refs.length === 0) {
+    fail(`Command Center function map missing owned refs for ${row.source_function}`);
+  }
+  for (const ref of row.owned_refs) {
+    if (!fs.existsSync(new URL('../' + ref, import.meta.url))) {
+      fail(`Command Center function map owned ref missing: ${ref}`);
+    }
+  }
+  if (row.state === 'cutover_ready') fail(`Command Center function prematurely cutover-ready: ${row.source_function}`);
+}
+if (Number(commandCenterFunctionMap.summary?.stateful_functions_owned_implementation_present || 0) !== 2) {
+  fail('Command Center stateful transplant count must remain two until more parity is proven');
+}
+if (Number(commandCenterFunctionMap.summary?.functions_with_owned_replacement_path || 0) !== 8) {
+  fail('Command Center all eight source functions must retain an owned replacement path');
+}
+if (Number(commandCenterFunctionMap.summary?.functions_fully_cutover_ready || 0) !== 0) {
+  fail('Command Center cannot claim cutover-ready functions yet');
+}
+if (Number(commandCenterFunctionMap.summary?.legacy_public_registry_routes_remaining || 0) !== 4) {
+  fail('Command Center must preserve truth that four public registry files still route through Base44');
+}
+for (const key of ['source_mutation','traffic_cutover','registry_repoint','source_decommission']) {
+  if (commandCenterFunctionMap.authority?.[key] !== false) {
+    fail(`Command Center function map exceeded authority boundary: ${key}`);
+  }
+}
+
 if (waveOneReplacements.schema !== 'evercraft.base44.wave-replacement-matrix.v1' || waveOneReplacements.wave !== 1) {
   fail('wave one replacement matrix schema/wave is invalid');
 }
@@ -303,6 +358,15 @@ if (waveOneSnapshot?.replacement_matrix !== 'systemia/migrations/base44-exit/wav
 if (waveOneSnapshot?.scheduled_work_spec !== 'systemia/migrations/base44-exit/wave-1-scheduled-work.json') {
   fail('estate snapshot must bind the wave one scheduled work spec');
 }
+if (waveOneSnapshot?.command_center_function_map !== 'systemia/migrations/base44-exit/wave-1-command-center-function-map.json') {
+  fail('estate snapshot must bind the Command Center function map');
+}
+if (Number(waveOneSnapshot?.command_center_source_functions_mapped || 0) !== 8) {
+  fail('estate snapshot must preserve eight mapped Command Center source functions');
+}
+if (Number(waveOneSnapshot?.command_center_stateful_functions_transplanted || 0) !== 2) {
+  fail('estate snapshot must preserve two locally transplanted Command Center stateful functions');
+}
 if (Number(waveOneSnapshot?.implementations_present_ci_pending || 0) !== implementationPending) {
   fail('estate snapshot implementation count must match replacement matrix');
 }
@@ -333,5 +397,8 @@ console.log(JSON.stringify({
   wave_one_scheduled_jobs: (waveOneScheduledWork.jobs || []).length,
   command_center_shadow_capture_entities: shadowEntities.length,
   command_center_shadow_capture_rows: shadowRows,
-  command_center_shadow_capture_pages: shadowPages
+  command_center_shadow_capture_pages: shadowPages,
+  command_center_source_functions_mapped: commandCenterFunctions.length,
+  command_center_stateful_functions_transplanted: commandCenterFunctionMap.summary.stateful_functions_owned_implementation_present,
+  command_center_legacy_registry_routes_remaining: commandCenterFunctionMap.summary.legacy_public_registry_routes_remaining
 }));
