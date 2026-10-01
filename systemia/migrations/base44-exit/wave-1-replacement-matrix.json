@@ -8,6 +8,15 @@
       "cutover_ready": false,
       "components": [
         {
+          "key": "first_party_capability_router",
+          "state": "implementation_present_ci_pending",
+          "refs": [
+            "systemia/capability-router/runtime.mjs",
+            "systemia/capability-router/runtime.proof.mjs"
+          ],
+          "detail": "Owned App Fabric router preserves Base44 trigger weighting, problem-pattern overlap, active-capability preference and FIRST_PARTY_STRICT behavior. Live CapabilityRegistry and CapabilitySelectionRule rows still require destination import and reconciliation before deployment parity."
+        },
+        {
           "key": "source_function_map",
           "state": "mapping_present",
           "refs": [
@@ -310,14 +319,15 @@
   "summary": {
     "products": 5,
     "products_cutover_ready": 0,
-    "implementations_present_ci_pending": 18,
+    "implementations_present_ci_pending": 19,
     "destination_data_migrated_products": 0,
     "public_cutovers_authorized": 0,
     "live_source_capture_products": 1,
     "live_source_capture_entities": 6,
     "live_source_capture_rows": 32,
     "command_center_stateful_functions_transplanted": 2,
-    "command_center_source_functions_mapped": 8
+    "command_center_source_functions_mapped": 8,
+    "command_center_owned_function_implementations": 3
   },
   "authority": {
     "source_mutation": false,
