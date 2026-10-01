@@ -1,8 +1,3 @@
 {
-  "mcpServers": {
-    "forensiscope": {
-      "type": "http",
-      "url": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp"
-    }
-  }
+  "mcpServers": {}
 }

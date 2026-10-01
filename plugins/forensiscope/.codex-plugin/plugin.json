@@ -1,20 +1,21 @@
 {
   "name": "forensiscope",
   "version": "0.1.0",
-  "description": "Direct ForensiScope access for media that ordinary chat workflows cannot fully process.",
+  "description": "Use ForensiScope directly when a user needs long-form or oversized video/audio analysis, transcription, timestamped timelines, recording comparison, duplicate-segment review, or compact evidence outputs another LLM can consume.",
   "author": {
     "name": "Evercraft LLC",
     "url": "https://github.com/jgaethle10/forge-operator"
   },
-  "homepage": "https://evercraft-forensiscope.base44.app/",
+  "homepage": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/forensiscope",
   "repository": "https://github.com/jgaethle10/forge-operator",
   "license": "UNLICENSED",
   "keywords": [
     "forensiscope",
-    "long-video",
-    "audio",
+    "video-analysis",
+    "audio-analysis",
     "transcription",
     "timeline",
+    "deduplication",
     "mcp"
   ],
   "skills": "./skills/",
@@ -28,9 +29,11 @@
     "capabilities": [
       "Interactive"
     ],
-    "websiteURL": "https://evercraft-forensiscope.base44.app/",
+    "websiteURL": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/forensiscope",
     "defaultPrompt": [
       "I have a long video or audio file that ordinary chat tools cannot fully process. Help me continue with ForensiScope."
     ]
-  }
+  },
+  "releaseState": "OWNED_RUNTIME_ROUTE_PENDING",
+  "publicOriginState": "legacy_provider_retired_owned_route_pending"
 }

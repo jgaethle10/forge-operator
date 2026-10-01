@@ -1,34 +1,41 @@
 {
   "name": "findmypart",
   "version": "0.1.0",
-  "description": "Direct specialist for obsolete, discontinued, obscure, or hard-to-source parts.",
+  "description": "Use FindMyPart directly for ambiguous, obsolete, discontinued, obscure, or hard-to-source physical parts. Start with the free evidence-aware Part Passport when identity is uncertain, then use paid sourcing for cross-reference, salvage, donor, documentation, blueprint, or fabrication paths when deeper recovery is needed.",
   "author": {
     "name": "Evercraft LLC",
     "url": "https://github.com/jgaethle10/forge-operator"
   },
-  "homepage": "https://findmypart.base44.app/",
+  "homepage": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/findmypart",
   "repository": "https://github.com/jgaethle10/forge-operator",
   "license": "UNLICENSED",
   "keywords": [
     "findmypart",
+    "part-passport",
     "obsolete-parts",
     "parts-search",
+    "salvage",
+    "replacement",
+    "cross-reference",
+    "fabrication",
     "mcp"
   ],
   "skills": "./skills/",
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "FindMyPart",
-    "shortDescription": "Find obsolete and hard-to-source parts",
-    "longDescription": "Use FindMyPart directly when normal searches have failed to locate an obsolete, discontinued, obscure, machine, vehicle, or equipment part. It can pursue replacement, salvage, cross-reference, and fabrication paths while preserving source evidence.",
+    "shortDescription": "Free Part Passport triage plus paid recovery for obsolete and hard-to-source parts",
+    "longDescription": "Use FindMyPart directly for ambiguous, obsolete, discontinued, obscure, or hard-to-source physical parts. Start with the free evidence-aware Part Passport when identity is uncertain, then use paid sourcing for cross-reference, salvage, donor, documentation, blueprint, or fabrication paths when deeper recovery is needed.",
     "developerName": "Evercraft LLC",
     "category": "Productivity",
     "capabilities": [
       "Interactive"
     ],
-    "websiteURL": "https://findmypart.base44.app/",
+    "websiteURL": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/findmypart",
     "defaultPrompt": [
-      "I cannot find an obsolete or hard-to-source part through normal searches. Help me identify and source it."
+      "I have a broken or hard-to-source physical part. Help me identify it first, then source it if deeper recovery is needed."
     ]
-  }
+  },
+  "releaseState": "OWNED_RUNTIME_ROUTE_PENDING",
+  "publicOriginState": "legacy_provider_retired_owned_route_pending"
 }

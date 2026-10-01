@@ -6,7 +6,7 @@
     "name": "Evercraft LLC",
     "url": "https://github.com/jgaethle10/forge-operator"
   },
-  "homepage": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs",
+  "homepage": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-web",
   "repository": "https://github.com/jgaethle10/forge-operator",
   "license": "UNLICENSED",
   "keywords": [
@@ -28,9 +28,11 @@
     "capabilities": [
       "Interactive"
     ],
-    "websiteURL": "https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs",
+    "websiteURL": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-web",
     "defaultPrompt": [
       "Fetch or inspect this public website and return structured, provenance-aware content."
     ]
-  }
+  },
+  "releaseState": "OWNED_RUNTIME_ROUTE_PENDING",
+  "publicOriginState": "legacy_provider_retired_owned_route_pending"
 }
