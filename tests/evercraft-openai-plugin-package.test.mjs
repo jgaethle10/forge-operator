@@ -85,6 +85,22 @@ test('OpenAI account-side packet keeps public-directory and owned-route truth ga
   }
 });
 
+test('verified root Fabric edge is not misrepresented as v1.1 OpenAI-profile proof',()=>{
+  const submission=readJson('openai-submission.json');
+  const edge=submission.owned_fabric_transport;
+  assert.equal(edge.public_https_verified,true);
+  assert.equal(edge.origin_external_canary_verified,true);
+  assert.equal(edge.root_contract_external_canary_verified,true);
+  assert.equal(edge.verified_external_canary,false);
+  assert.equal(edge.openai_profile_external_canary_verified,false);
+  assert.equal(edge.revalidation_required,true);
+  assert.equal(
+    edge.external_canary_evidence?.receipt_hash,
+    'sha256:20df5f2fbeb40016da032e01ce15a53c2e8c8faf6acd022fe8b23235e6325d5d'
+  );
+  assert.match(edge.external_canary_evidence?.evidence_scope||'',/does not prove.*\/mcp\/openai/i);
+});
+
 test('v1.1 packet preserves the actual active provider review state',()=>{
   const submission=readJson('openai-submission.json');
   assert.equal(submission.current_provider_review?.plugin_name,'Evercraft');
