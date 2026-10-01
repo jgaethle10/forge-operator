@@ -248,7 +248,7 @@
     "test:radar": "node --test systemia/radar/*.test.mjs",
     "radar:once": "node systemia/radar/cli.mjs --once",
     "radar:resident": "node systemia/radar/cli.mjs --resident",
-    "proof:chronos": "node systemia/research/chronos/chronos.proof.mjs && node systemia/research/chronos/pctc-simulator.proof.mjs && node systemia/research/chronos/pctc-hardware-audit.proof.mjs"
+    "proof:chronos": "node systemia/research/chronos/chronos.proof.mjs && node systemia/research/chronos/pctc-simulator.proof.mjs && node systemia/research/chronos/pctc-hardware-audit.proof.mjs && node systemia/research/chronos/qei-ledger.proof.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
