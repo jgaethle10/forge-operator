@@ -100,7 +100,7 @@ function parseListeners() {
     for (const line of result.stdout.split(/\r?\n/)) {
       const fields = line.trim().split(/\s+/);
       if (fields.length < 5) continue;
-      const local = fields[4] || '';
+      const local = fields[3] || '';
       const bracket = local.match(/^\[([^\]]+)\]:(\d+)$/);
       const plain = local.match(/^(.*):(\d+)$/);
       const address = bracket?.[1] ?? plain?.[1] ?? local;
