@@ -512,6 +512,181 @@
         "compatibility_guaranteed": false,
         "private_vendor_analytics_session_command_center_sales_data_public": false
       }
+    },
+    {
+      "product_key": "daytrade-lens",
+      "contract_version": "1.0.0",
+      "owner": "systemia",
+      "specialist_slug": "daytrade-lens",
+      "authority": {
+        "state": "not_required",
+        "reason": "The currently contracted public machine actions are stateless read-only research and paper-practice computations over caller-supplied inputs. They do not access a broker, private account, payment method, credentials, or production trading authority. Any future account-bound, paid, or brokerage-connected action requires a separate Passport scope and contract revision."
+      },
+      "context": {
+        "state": "not_required",
+        "reason": "The public machine surface does not read or write shared user context. Inputs are supplied in the request and results are returned to the caller. Durable journals, account state, or private trading history are outside this contract."
+      },
+      "meter": {
+        "state": "not_required",
+        "reason": "No machine billing or paid execution authority is contracted. Public computation does not create checkout, payment, entitlement, or subscription state."
+      },
+      "intake": {
+        "state": "not_required",
+        "reason": "The contracted tools accept bounded structured numeric/configuration inputs only. They do not upload private documents, credentials, brokerage sessions, or media."
+      },
+      "execution": {
+        "state": "declared",
+        "gate_required": false,
+        "scopes": [
+          "get_daytrade_lens_capabilities",
+          "run_daytrade_risk_gate",
+          "run_daytrade_adversarial_drills",
+          "stress_test_return_series"
+        ],
+        "actions": [
+          {
+            "scope": "get_daytrade_lens_capabilities"
+          },
+          {
+            "scope": "run_daytrade_risk_gate"
+          },
+          {
+            "scope": "run_daytrade_adversarial_drills"
+          },
+          {
+            "scope": "stress_test_return_series"
+          }
+        ],
+        "evidence_refs": [
+          "systemia/daytrade-lens/mcp.mjs",
+          "systemia/daytrade-lens/mcp.test.mjs",
+          "systemia/daytrade-lens/edge-stress-lab.mjs",
+          "systemia/daytrade-lens/practice-camp.mjs"
+        ]
+      },
+      "relationship": {
+        "state": "not_required",
+        "reason": "The contracted tools do not contact brokers, exchanges, advisors, counterparties, or any other external recipient."
+      },
+      "receipt_reconciliation": {
+        "state": "not_required",
+        "reason": "The stress tool returns a deterministic receipt_id to the caller but does not write shared Context Fabric state. Persistent reconciliation requires a separately authorized contract."
+      },
+      "rollback": {
+        "state": "declared",
+        "policy": "Disable the DayTrade Lens specialist route without enabling brokerage access, order placement, live-trading authority, payment, or weakening the paper-practice and research-only boundary."
+      },
+      "compatibility": {
+        "intended_product_classes": [
+          "paper_trading_risk_discipline_and_journaling"
+        ]
+      },
+      "boundaries": {
+        "contracted_machine_surface": [
+          "get_daytrade_lens_capabilities",
+          "run_daytrade_risk_gate",
+          "run_daytrade_adversarial_drills",
+          "stress_test_return_series"
+        ],
+        "public_agent_authority": "read_only_research_and_paper_practice",
+        "personalized_investment_advice": false,
+        "brokerage_access": false,
+        "order_placement": false,
+        "autonomous_live_trading": false,
+        "live_trade_authority": false,
+        "performance_guarantee": false,
+        "machine_checkout": false,
+        "payment_authority": false,
+        "caller_supplied_returns_are_not_independently_verified": true,
+        "stress_test_pass_is_not_a_real_world_edge_claim": true
+      },
+      "adoption_stage": "source_implemented"
+    },
+    {
+      "product_key": "fallen",
+      "contract_version": "1.0.0",
+      "owner": "systemia",
+      "specialist_slug": "fallen",
+      "authority": {
+        "state": "not_required",
+        "reason": "The contracted public surface is stateless read-only evidence-bound planning and plan audit. It does not access private media, provider credentials, render workers, publishing accounts, checkout, payment, or production mutation. Any future authenticated rendering or distribution action requires a separate Passport scope and contract revision."
+      },
+      "context": {
+        "state": "not_required",
+        "reason": "The public planning tools consume caller-supplied bounded research metadata and return a plan. They do not read or write private project graphs, timelines, series bibles, provider credentials, or shared user context."
+      },
+      "meter": {
+        "state": "not_required",
+        "reason": "Public planning and audit are non-billing actions. Provider generation, rendering, paid services, checkout, and entitlement are outside this contract."
+      },
+      "intake": {
+        "state": "not_required",
+        "reason": "The public tools accept structured research/evidence metadata only. Private media upload and provider asset transfer are explicitly outside the contracted machine surface."
+      },
+      "execution": {
+        "state": "declared",
+        "gate_required": false,
+        "scopes": [
+          "get_fallen_capabilities",
+          "plan_visual_explanation",
+          "audit_visual_explanation_plan"
+        ],
+        "actions": [
+          {
+            "scope": "get_fallen_capabilities"
+          },
+          {
+            "scope": "plan_visual_explanation"
+          },
+          {
+            "scope": "audit_visual_explanation_plan"
+          }
+        ],
+        "evidence_refs": [
+          "systemia/media-studio/mcp.mjs",
+          "systemia/media-studio/mcp.test.mjs",
+          "systemia/media-studio/README.md",
+          "systemia/media-studio/journal-education.ts",
+          "systemia/media-studio/world-intel-stage.ts"
+        ]
+      },
+      "relationship": {
+        "state": "not_required",
+        "reason": "The contracted tools do not contact providers, publishers, platforms, recipients, or third parties."
+      },
+      "receipt_reconciliation": {
+        "state": "not_required",
+        "reason": "Planning returns a deterministic receipt_id but does not persist private project state or write Context Fabric. Authenticated production reconciliation remains inside Fallen."
+      },
+      "rollback": {
+        "state": "declared",
+        "policy": "Disable the public Fallen planning route without enabling render-provider execution, private-media intake, publication, payment, or weakening evidence and rights gates in the authenticated studio."
+      },
+      "compatibility": {
+        "intended_product_classes": [
+          "evidence_bound_media_planning",
+          "documentary_visual_explanation"
+        ]
+      },
+      "boundaries": {
+        "contracted_machine_surface": [
+          "get_fallen_capabilities",
+          "plan_visual_explanation",
+          "audit_visual_explanation_plan"
+        ],
+        "public_agent_authority": "read_only_evidence_bound_visual_planning",
+        "private_media_upload": false,
+        "provider_execution": false,
+        "rendering_authority": false,
+        "publication_authority": false,
+        "checkout_authority": false,
+        "payment_authority": false,
+        "visual_rights_must_be_resolved_before_render": true,
+        "volatile_claims_must_be_fresh_before_render": true,
+        "modeled_inferred_synthetic_visuals_require_labels": true,
+        "human_handoff_required_for_rendering_and_publication": true
+      },
+      "adoption_stage": "source_implemented"
     }
   ]
 }

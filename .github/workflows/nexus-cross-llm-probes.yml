@@ -6,11 +6,38 @@ on:
     branches:
       - main
   workflow_dispatch:
+  schedule:
+    - cron: '41 */6 * * *'
 
 permissions:
   contents: read
 
 jobs:
+  probe:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run brand-blind cross-LLM discovery probes
+        env:
+          NEXUS_PROBE_BRIDGE_URL: ${{ secrets.NEXUS_PROBE_BRIDGE_URL }}
+          NEXUS_PROBE_BRIDGE_TOKEN: ${{ secrets.NEXUS_PROBE_BRIDGE_TOKEN }}
+        run: node scripts/run-nexus-cross-llm-probes.mjs
+      - name: Upload cross-LLM receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nexus-cross-llm-probe-receipts-${{ github.run_id }}
+          path: probe-receipts/*.json
+          if-no-files-found: error
+          retention-days: 30
+
   validate:
     runs-on: ubuntu-latest
     steps:

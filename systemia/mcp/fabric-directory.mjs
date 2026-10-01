@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { registryFabricEntries } from '../llm-product/fabric-adapter.mjs';
 
 const STOP_WORDS=new Set([
   'a','an','and','are','as','at','be','by','for','from','how','i','in','is','it',
@@ -127,7 +128,12 @@ export function loadFabricCatalogFromRepository({catalogPath=''}={}){
       connections,
     };
   });
-  return normalizeFabricCatalog(mapped);
+  const supplemental = catalogPath ? [] : registryFabricEntries();
+  const merged = new Map(mapped.map((entry)=>[entry.public_id,entry]));
+  for(const entry of supplemental){
+    if(!merged.has(entry.public_id)) merged.set(entry.public_id,entry);
+  }
+  return normalizeFabricCatalog([...merged.values()]);
 }
 
 export function normalizeFabricCatalog(input=[]){

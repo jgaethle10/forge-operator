@@ -149,6 +149,23 @@
         },
         "expected_schema": "evercraft.towi.evidence-packet-audit.v1"
       }
+    },
+    {
+      "product_key": "daytrade-lens",
+      "evidence": "DayTrade Lens now has a source-implemented owned-runtime MCP adapter over existing paper-practice risk controls and edge-stress primitives. The adapter is stateless, read-only, accepts caller-supplied structured inputs, returns explicit uncertainty and deterministic receipts, and hard-blocks any claim of brokerage access, order placement, autonomous live trading, live-trade authority, guaranteed returns, or a real-world edge.",
+      "required_next_primitive": "Deploy and independently verify /mcp/daytrade-lens on the owned Evercraft Compute public edge. Record GET, initialize, tools/list, risk-gate, and return-stress canaries. Only after fresh external proof may the specialist route be published in the MCP registry or marked externally reachable.",
+      "implementation_state": "source_implemented_live_verification_pending",
+      "source_system": "Evercraft Compute / Forge",
+      "source_checkpoint": "3d93158d1e4955a3b8615766a6e72b54bbaaa59e",
+      "evidence_refs": [
+        "systemia/daytrade-lens/mcp.mjs",
+        "systemia/daytrade-lens/mcp.test.mjs",
+        "tests/evercraft-fabric-runtime.test.mjs",
+        "systemia/capability-mesh/contracts.json"
+      ],
+      "candidate_endpoint": null,
+      "shared_registry_name": null,
+      "shared_mcp_tool": null
     }
   ]
 }

@@ -47,6 +47,22 @@ test('Fabric boots from the canonical CHUM capability index without a manual rou
   assert.ok(findMyPart.connections.some((x)=>x.type==='mcp'&&x.url==='https://fabric.systemiacommandcenters.com/mcp'));
 });
 
+test('portfolio registry broadens Fabric beyond brand-known CHUM capabilities without leaking legacy specialist transports',()=>{
+  const canonical=loadFabricCatalogFromRepository();
+  const daytrade=canonical.find((x)=>x.public_id==='product:daytrade-lens');
+  assert.ok(daytrade,'DayTrade Lens product-level problem route must be visible');
+  assert.ok(daytrade.keywords.some((x)=>/paper trade|trading risk|trading journal/i.test(x)));
+
+  const fallen=canonical.find((x)=>x.public_id==='media:fallen');
+  assert.ok(fallen,'Fallen / Studio must be problem-discoverable from the portfolio registry');
+  assert.ok(fallen.keywords.some((x)=>/documentary|cinematic|visual explanation/i.test(x)));
+
+  const alievProduct=canonical.find((x)=>x.public_id==='product:aliev');
+  assert.ok(alievProduct);
+  assert.ok(alievProduct.connections.some((x)=>x.type==='mcp'&&x.url==='https://fabric.systemiacommandcenters.com/mcp'));
+  assert.ok(!alievProduct.connections.some((x)=>/base44\.app/.test(x.url)),'legacy specialist transport must not be reintroduced through portfolio discovery');
+});
+
 test('Fabric catalog normalizes and intent matching finds the problem-native capability',()=>{
   const normalized=normalizeFabricCatalog(catalog);
   assert.equal(normalized.length,2);
@@ -205,6 +221,114 @@ test('owned Evercraft Compute MCP runtime serves challenge and Fabric without ga
     assert.equal(health.openai_challenge_ready,true);
     assert.equal(health.fabric_capability_count,2);
     assert.equal(JSON.stringify(health).includes(challenge),false);
+    const daytradeInfoResponse=await fetch(runtime.url+'/mcp/daytrade-lens');
+    assert.equal(daytradeInfoResponse.status,200);
+    const daytradeInfo=await daytradeInfoResponse.json();
+    assert.equal(daytradeInfo.service,'DayTrade Lens');
+    assert.equal(daytradeInfo.live_trade_authority,false);
+    assert.equal(daytradeInfo.broker_access,false);
+    assert.equal(daytradeInfo.order_placement,false);
+
+    const daytradeToolsResponse=await fetch(runtime.url+'/mcp/daytrade-lens',{
+      method:'POST',
+      headers:{'content-type':'application/json'},
+      body:JSON.stringify({jsonrpc:'2.0',id:7,method:'tools/list',params:{}}),
+    });
+    assert.equal(daytradeToolsResponse.status,200);
+    const daytradeTools=await daytradeToolsResponse.json();
+    assert.deepEqual(
+      daytradeTools.result.tools.map((x)=>x.name),
+      [
+        'get_daytrade_lens_capabilities',
+        'run_daytrade_risk_gate',
+        'run_daytrade_adversarial_drills',
+        'stress_test_return_series',
+      ]
+    );
+    assert.ok(daytradeTools.result.tools.every((x)=>x.annotations.readOnlyHint===true));
+
+    const daytradeStressResponse=await fetch(runtime.url+'/mcp/daytrade-lens',{
+      method:'POST',
+      headers:{'content-type':'application/json'},
+      body:JSON.stringify({
+        jsonrpc:'2.0',
+        id:8,
+        method:'tools/call',
+        params:{
+          name:'stress_test_return_series',
+          arguments:{
+            strategy_returns:[0.01,0.012,0.008,0.011,0.009,0.013],
+            benchmark_returns:[0,0,0,0,0,0],
+            transaction_cost_bps:5,
+            bootstrap_iterations:100,
+            null_iterations:100,
+          },
+        },
+      }),
+    });
+    assert.equal(daytradeStressResponse.status,200);
+    const daytradeStress=await daytradeStressResponse.json();
+    assert.equal(daytradeStress.result.structuredContent.live_trade_authority,false);
+    assert.equal(daytradeStress.result.structuredContent.edge_claimed,false);
+    assert.equal(daytradeStress.result.structuredContent.broker_action_taken,false);
+
+    const fallenInfoResponse=await fetch(runtime.url+'/mcp/fallen');
+    assert.equal(fallenInfoResponse.status,200);
+    const fallenInfo=await fallenInfoResponse.json();
+    assert.equal(fallenInfo.service,'Fallen / Evercraft Studio');
+    assert.equal(fallenInfo.provider_execution,false);
+    assert.equal(fallenInfo.rendering_authority,false);
+    assert.equal(fallenInfo.publication_authority,false);
+
+    const fallenToolsResponse=await fetch(runtime.url+'/mcp/fallen',{
+      method:'POST',
+      headers:{'content-type':'application/json'},
+      body:JSON.stringify({jsonrpc:'2.0',id:9,method:'tools/list',params:{}}),
+    });
+    assert.equal(fallenToolsResponse.status,200);
+    const fallenTools=await fallenToolsResponse.json();
+    assert.deepEqual(
+      fallenTools.result.tools.map((x)=>x.name),
+      ['get_fallen_capabilities','plan_visual_explanation','audit_visual_explanation_plan']
+    );
+
+    const fallenPlanResponse=await fetch(runtime.url+'/mcp/fallen',{
+      method:'POST',
+      headers:{'content-type':'application/json'},
+      body:JSON.stringify({
+        jsonrpc:'2.0',
+        id:10,
+        method:'tools/call',
+        params:{
+          name:'plan_visual_explanation',
+          arguments:{
+            title:'Source-grounded explainer',
+            education_goal:'Explain the observed change without overstating causality.',
+            claims:[{
+              claim_id:'c1',
+              claim:'The observed value changed during the measured window.',
+              source_refs:['source:1'],
+              evidence_state:'observed',
+              volatile:true,
+              freshness_state:'fresh'
+            }],
+            visual_assets:[{
+              asset_id:'a1',
+              label:'Verified source chart',
+              source_refs:['source:1'],
+              evidence_state:'observed',
+              rights_state:'verified'
+            }]
+          }
+        }
+      }),
+    });
+    assert.equal(fallenPlanResponse.status,200);
+    const fallenPlan=await fallenPlanResponse.json();
+    assert.equal(fallenPlan.result.structuredContent.rendering_authority,false);
+    assert.equal(fallenPlan.result.structuredContent.publication_authority,false);
+    assert.equal(fallenPlan.result.structuredContent.provider_execution,false);
+
     assert.equal(gatewayCalls,0);
   }finally{
     await runtime.close();

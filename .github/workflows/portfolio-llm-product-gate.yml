@@ -1,0 +1,90 @@
+name: Evercraft Portfolio LLM Product Gate
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'docs/LLM_PRODUCT_STANDARD.md'
+      - 'systemia/llm-product/**'
+      - 'systemia/capability-mesh/**'
+      - 'systemia/saban/estate-inventory.snapshot.json'
+      - 'registry/public-products.json'
+      - 'public/chum/**'
+      - 'public/.well-known/evercraft-*.json'
+      - 'plugins/**'
+      - 'mcp-registry/**'
+      - 'conformance/**'
+      - '.github/workflows/portfolio-llm-product-gate.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'docs/LLM_PRODUCT_STANDARD.md'
+      - 'systemia/llm-product/**'
+      - 'systemia/capability-mesh/**'
+      - 'systemia/saban/estate-inventory.snapshot.json'
+      - 'registry/public-products.json'
+      - 'public/chum/**'
+      - 'public/.well-known/evercraft-*.json'
+      - 'plugins/**'
+      - 'mcp-registry/**'
+      - 'conformance/**'
+      - '.github/workflows/portfolio-llm-product-gate.yml'
+  schedule:
+    - cron: '17 */6 * * *'
+
+permissions:
+  contents: read
+
+jobs:
+  registry-and-release-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Run owned-edge MCP runtime canary
+        run: node systemia/llm-product/runtime-canary.mjs --emit
+
+      - name: Compile canonical capability registry and portfolio matrix
+        run: node systemia/llm-product/build-registry.mjs --emit --check
+
+      - name: Build non-starving Systemia conversion mission queue
+        run: node systemia/llm-product/conversion-router.mjs --emit
+
+      - name: Prove registry truth boundaries, routing, and historical retention
+        run: node --test systemia/llm-product/build-registry.test.mjs systemia/llm-product/conversion-router.test.mjs systemia/daytrade-lens/mcp.test.mjs systemia/media-studio/mcp.test.mjs systemia/llm-product/runtime-canary.test.mjs
+
+      - name: Upload conversion receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-llm-product-registry
+          path: |
+            artifacts/llm-product/capability-registry.json
+            artifacts/llm-product/portfolio-matrix.json
+            artifacts/llm-product/conversion-debt.json
+            artifacts/llm-product/release-gate.json
+            artifacts/llm-product/runtime-canary.json
+            artifacts/llm-product/conversion-plan.json
+            artifacts/llm-product/mission-snapshot.json
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Summarize gate
+        if: always()
+        shell: bash
+        run: |
+          echo '## Evercraft Portfolio LLM Product Gate' >> "$GITHUB_STEP_SUMMARY"
+          echo >> "$GITHUB_STEP_SUMMARY"
+          for FILE in artifacts/llm-product/release-gate.json artifacts/llm-product/conversion-debt.json; do
+            if [ -f "$FILE" ]; then
+              echo "### $FILE" >> "$GITHUB_STEP_SUMMARY"
+              echo '~~~json' >> "$GITHUB_STEP_SUMMARY"
+              head -c 50000 "$FILE" >> "$GITHUB_STEP_SUMMARY"
+              echo >> "$GITHUB_STEP_SUMMARY"
+              echo '~~~' >> "$GITHUB_STEP_SUMMARY"
+            fi
+          done

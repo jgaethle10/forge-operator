@@ -3,7 +3,7 @@ import process from 'node:process';
 
 export const RELEASE_POLICY_VERSION = 'systemia.release.policy.v1';
 
-const TRUST_PATH = /(^|\/)(\.github\/workflows|systemia\/release|auth|authentication|authorization|security|secrets?|credentials?|payments?|billing|stripe)(\/|\.|$)|(^|\/)firestore\.rules$/i;
+const TRUST_PATH = /(^|\/)(\.github\/workflows|systemia\/release|systemia\/llm-product|systemia\/capability-mesh|registry\/public-products\.json|mcp-registry|plugins\/evercraft-fabric|public\/\.well-known\/evercraft-[^/]+\.json|auth|authentication|authorization|security|secrets?|credentials?|payments?|billing|stripe)(\/|\.|$)|(^|\/)firestore\.rules$/i;
 const DESTRUCTIVE_PATH = /(^|\/)(migrations?|destructive|data-purge|schema-drop)(\/|\.|$)/i;
 const DESTRUCTIVE_PATCH = /^\+.*\b(drop\s+(table|database|schema)|truncate\s+table|rm\s+-rf|delete\s+from\s+[^\n]+\s+where\s+1\s*=\s*1)\b/im;
 const TRUST_PATCH = /^\+.*\b(api[_-]?key|private[_-]?key|secret\s*=|password\s*=|authorization\s*:|stripe[_-]?secret)\b/im;
