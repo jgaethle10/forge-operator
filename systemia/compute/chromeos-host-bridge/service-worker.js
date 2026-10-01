@@ -58,6 +58,36 @@ async function identityDatabasePut(key, value) {
   }
 }
 
+async function nextObserverSequence() {
+  const database = await openIdentityDatabase();
+  try {
+    return await new Promise((resolve, reject) => {
+      const transaction = database.transaction('identity', 'readwrite');
+      const store = transaction.objectStore('identity');
+      const request = store.get('observer-sequence');
+      let next = null;
+      request.onerror = () => reject(request.error || new Error('observer_sequence_read_failed'));
+      request.onsuccess = () => {
+        const current = Number(request.result || 0);
+        if (!Number.isSafeInteger(current) || current < 0) {
+          transaction.abort();
+          reject(new Error('observer_sequence_state_invalid'));
+          return;
+        }
+        next = current + 1;
+        store.put(next, 'observer-sequence');
+      };
+      transaction.oncomplete = () => resolve(next);
+      transaction.onerror = () => reject(transaction.error || new Error('observer_sequence_write_failed'));
+      transaction.onabort = () => {
+        if (next !== null) reject(new Error('observer_sequence_transaction_aborted'));
+      };
+    });
+  } finally {
+    database.close();
+  }
+}
+
 function hex(bytes) {
   return [...new Uint8Array(bytes)]
     .map((value) => value.toString(16).padStart(2, '0'))
@@ -349,10 +379,12 @@ async function reportObservation(requestId = null) {
     };
   }
 
+  const observerSequence = await nextObserverSequence();
   const payload = {
     schema: 'evercraft.chromeos-host-boundary-observation.v1',
     capability_id: 'chromeos.crostini.port-forwarding.read.v1',
     collected_at: new Date().toISOString(),
+    observer_sequence: observerSequence,
     request_id: requestId,
     observer_version: VERSION,
     observer_install_id: cfg.installId,
@@ -398,6 +430,7 @@ async function reportObservation(requestId = null) {
     lastCheckAt: payload.collected_at,
     lastReceiptHash: body.receipt_hash || null,
     observerKeyFingerprint: identity.observerKeyFingerprint,
+    lastObserverSequence: observerSequence,
     lastObservation: {
       ports: payload.ports,
       scan: payload.scan,
