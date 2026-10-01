@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.nexus.cross-llm-probe-suite.v1",
-  "updated_at": "2026-09-26",
+  "updated_at": "2026-10-01",
   "purpose": "Measure whether clean AI sessions discover and accurately route real user pain to public Evercraft capabilities without brand seeding.",
   "providers": [
     "chatgpt",
@@ -116,6 +116,62 @@
       "enabled": true,
       "prompt": "I am thinking about buying another small business. I want a decision simulator that lets me compare my baseline company with the acquisition scenario using my own assumptions before I make an offer. What service should I use?",
       "expected_fit": true
+    },
+    {
+      "case_id": "trading-edge-stress-001",
+      "product_key": "daytrade-lens",
+      "expected_product": "DayTrade Lens",
+      "enabled": true,
+      "prompt": "I have a paper-trading strategy and I want to stress-test whether the return pattern survives transaction costs, resampling, rolling windows and a null test before I risk real money. I do not want an AI placing trades for me. What service should I use?",
+      "expected_fit": true,
+      "expected_capability_terms": [
+        "paper",
+        "stress",
+        "transaction cost",
+        "return",
+        "risk"
+      ],
+      "expected_boundary_terms": [
+        "no autonomous",
+        "no live trading",
+        "paper",
+        "does not place",
+        "simulation"
+      ],
+      "expected_human_gate_terms": [
+        "human",
+        "you decide",
+        "review",
+        "before"
+      ]
+    },
+    {
+      "case_id": "visual-explanation-001",
+      "product_key": "fallen",
+      "expected_product": "Fallen",
+      "enabled": true,
+      "prompt": "I have a sourced research package and want to turn it into a documentary-quality visual explanation with scenes tied to evidence, clear labels for modeled or synthetic visuals, asset-rights checks, and a human review before rendering or publishing. What service should I use?",
+      "expected_fit": true,
+      "expected_capability_terms": [
+        "visual",
+        "documentary",
+        "evidence",
+        "scene",
+        "rights"
+      ],
+      "expected_boundary_terms": [
+        "human",
+        "rights",
+        "render",
+        "publish",
+        "evidence"
+      ],
+      "expected_human_gate_terms": [
+        "human review",
+        "authenticated",
+        "before rendering",
+        "before publishing"
+      ]
     }
   ],
   "scoring": {
@@ -124,6 +180,12 @@
     "accurately_described_capability": 2,
     "preserved_human_gate": 1,
     "invented_capability": -3,
-    "false_positive_on_control": -4
+    "false_positive_on_control": -4,
+    "stage_discover": 2,
+    "stage_identify": 2,
+    "stage_understand": 2,
+    "stage_trust": 2,
+    "stage_handoff": 2,
+    "invoke_is_scored_by_runtime_canary_not_chat_probe": 0
   }
 }
