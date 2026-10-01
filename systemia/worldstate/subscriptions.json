@@ -13,7 +13,8 @@
       "towi",
       "evermaps",
       "daytrade_edge_lab",
-      "fallen_phenomenon"
+      "fallen_phenomenon",
+      "social_spectacle"
     ],
     "climate": [
       "weather_desk",
@@ -21,7 +22,8 @@
       "towi",
       "evermaps",
       "daytrade_edge_lab",
-      "fallen_phenomenon"
+      "fallen_phenomenon",
+      "social_spectacle"
     ],
     "water": [
       "weather_desk",
@@ -29,26 +31,30 @@
       "towi",
       "evermaps",
       "daytrade_edge_lab",
-      "fallen_phenomenon"
+      "fallen_phenomenon",
+      "social_spectacle"
     ],
     "environment": [
       "faie",
       "towi",
       "evermaps",
       "daytrade_edge_lab",
-      "fallen_phenomenon"
+      "fallen_phenomenon",
+      "social_spectacle"
     ],
     "earth_hazards": [
       "faie",
       "towi",
       "evermaps",
-      "emergency_command"
+      "emergency_command",
+      "social_spectacle"
     ],
     "geophysics": [
       "faie",
       "towi",
       "evermaps",
-      "emergency_command"
+      "emergency_command",
+      "social_spectacle"
     ],
     "disaster": [
       "faie",
@@ -63,7 +69,8 @@
       "evermaps",
       "rivet",
       "omnicore",
-      "daytrade_edge_lab"
+      "daytrade_edge_lab",
+      "social_spectacle"
     ],
     "transport": [
       "faie",
@@ -72,14 +79,16 @@
       "rivet",
       "omnicore",
       "daytrade_edge_lab",
-      "fallen_phenomenon"
+      "fallen_phenomenon",
+      "social_spectacle"
     ],
     "energy": [
       "faie",
       "towi",
       "evermaps",
       "rivet",
-      "daytrade_edge_lab"
+      "daytrade_edge_lab",
+      "social_spectacle"
     ],
     "ai": [
       "portfolio_sentinel",
@@ -108,7 +117,8 @@
       "weather_desk",
       "omnicore",
       "daytrade_edge_lab",
-      "fallen_phenomenon"
+      "fallen_phenomenon",
+      "social_spectacle"
     ],
     "space_weather": [
       "faie",
@@ -116,7 +126,8 @@
       "evermaps",
       "emergency_command",
       "network",
-      "daytrade_edge_lab"
+      "daytrade_edge_lab",
+      "social_spectacle"
     ],
     "aviation": [
       "faie",
@@ -125,7 +136,8 @@
       "omnicore",
       "skyops",
       "daytrade_edge_lab",
-      "fallen_phenomenon"
+      "fallen_phenomenon",
+      "social_spectacle"
     ],
     "maritime": [
       "faie",
@@ -133,7 +145,8 @@
       "evermaps",
       "omnicore",
       "daytrade_edge_lab",
-      "fallen_phenomenon"
+      "fallen_phenomenon",
+      "social_spectacle"
     ],
     "telecom": [
       "faie",
@@ -141,13 +154,15 @@
       "evermaps",
       "network",
       "portfolio_sentinel",
-      "daytrade_edge_lab"
+      "daytrade_edge_lab",
+      "social_spectacle"
     ],
     "robotics": [
       "faie",
       "towi",
       "portfolio_sentinel",
-      "daytrade_edge_lab"
+      "daytrade_edge_lab",
+      "social_spectacle"
     ],
     "semiconductors": [
       "faie",
@@ -161,7 +176,8 @@
       "towi",
       "evermaps",
       "portfolio_sentinel",
-      "daytrade_edge_lab"
+      "daytrade_edge_lab",
+      "social_spectacle"
     ],
     "supply_chain": [
       "faie",
@@ -176,7 +192,8 @@
       "towi",
       "evermaps",
       "household_fabric",
-      "daytrade_edge_lab"
+      "daytrade_edge_lab",
+      "social_spectacle"
     ],
     "food": [
       "faie",
@@ -193,12 +210,14 @@
     ],
     "biology": [
       "towi",
-      "global_health_atlas"
+      "global_health_atlas",
+      "social_spectacle"
     ],
     "science": [
       "faie",
       "towi",
-      "global_health_atlas"
+      "global_health_atlas",
+      "social_spectacle"
     ],
     "labor": [
       "faie",
