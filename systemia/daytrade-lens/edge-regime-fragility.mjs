@@ -52,11 +52,30 @@ function bucketSummary(rows, valueOf, sign, costBps, minimumEvents) {
     };
   });
   const ready = summaries.filter((row) => row.sample_ready);
+  const leaveOneOut = [...groups.entries()].map(([omitted, group]) => {
+    const kept = [...groups.entries()]
+      .filter(([key]) => key !== omitted)
+      .flatMap(([, rows]) => rows);
+    const values = kept.map((row) => signedNet(row, sign, costBps));
+    return {
+      omitted_regime: omitted,
+      omitted_observations: group.length,
+      kept_observations: kept.length,
+      mean_signed_net_after_omission: mean(values),
+      positive: kept.length >= minimumEvents && mean(values) > 0,
+    };
+  });
   return {
     thresholds: { low, high },
     buckets: summaries,
     ready_bucket_count: ready.length,
     all_ready_positive: ready.length >= 2 && ready.every((row) => row.mean_signed_net > 0),
+    leave_one_regime_out: {
+      scenarios: leaveOneOut,
+      all_positive:
+        leaveOneOut.length === 3 &&
+        leaveOneOut.every((row) => row.positive),
+    },
   };
 }
 
@@ -114,10 +133,14 @@ export function evaluateRegimeFragility(candidate, rows, {
       marketDirection.ready_bucket_count >= 2,
     market_direction_all_ready_regimes_positive:
       marketDirection.all_ready_positive,
+    market_direction_leave_one_regime_out_all_positive:
+      marketDirection.leave_one_regime_out?.all_positive === true,
     volatility_has_two_ready_regimes:
       volatility.ready_bucket_count >= 2,
     volatility_all_ready_regimes_positive:
       volatility.all_ready_positive,
+    volatility_leave_one_regime_out_all_positive:
+      volatility.leave_one_regime_out?.all_positive === true,
     non_extreme_gap_sample_at_least_20:
       gapFiltered.length >= 20,
     survives_extreme_gap_day_exclusion:
