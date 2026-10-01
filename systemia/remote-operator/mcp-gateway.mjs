@@ -67,6 +67,18 @@ export function remoteOperatorTools() {
       },
     },
     {
+      name: 'remote_network_status',
+      title: 'Inspect authorized node network state',
+      description: 'Read the node network observation already attached to Remote Operator status, including interfaces, default routes, listening ports, Evercraft service state, local Fabric/TLS probes, router-map configuration, and an explicit ChromeOS/Crostini host-boundary marker. This tool does not mutate network configuration.',
+      inputSchema: { type: 'object', properties: {}, additionalProperties: false },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    {
       name: 'remote_list_files',
       title: 'List files on an authorized Evercraft node',
       description: 'List one relative directory inside an admitted named root. Absolute paths and parent traversal are not accepted.',
@@ -242,6 +254,13 @@ export async function executeRemoteOperatorMcpRpc({
   try {
     if (name === 'remote_operator_status') {
       return jsonRpc(id, toolResult(await gateway.invoke('/v1/operator/status', { method: 'GET' })));
+    }
+    if (name === 'remote_network_status') {
+      const status = await gateway.invoke('/v1/operator/status', { method: 'GET' });
+      if (!status?.network_observation) {
+        throw new Error('remote_network_observation_unavailable');
+      }
+      return jsonRpc(id, toolResult(status.network_observation));
     }
     if (name === 'remote_list_files') {
       return jsonRpc(id, toolResult(await gateway.invoke('/v1/operator/fs/list', { body: args })));
