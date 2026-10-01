@@ -7,7 +7,8 @@ import { fileURLToPath } from 'node:url';
 
 const MODULE_FILE=fileURLToPath(import.meta.url);
 const BLOCKED_BRANDS=new Set(['rnb-chicken-and-soul','r-and-b-chicken-and-soul','r&b-chicken-and-soul']);
-const DESTINATIONS=['facebook','instagram','linkedin','tiktok','youtube'];
+const DESTINATIONS=['facebook','instagram','linkedin','youtube'];
+const HELD_UNVERIFIED_DESTINATIONS=['tiktok'];
 
 const clean=(value,max=4000)=>String(value??'').replace(/\s+/g,' ').trim().slice(0,max);
 const unique=(values=[])=>[...new Set(values.map(v=>clean(v)).filter(Boolean))];
@@ -128,7 +129,7 @@ export function assessSpectacleEditorialPreflight({candidate,caption,masterQc}={
     ['uncertainty_visible',/modeled data|observed or verified evidence|source-reported evidence/i.test(String(caption||''))],
     ['source_attribution_visible',/Source:/i.test(String(caption||''))],
     ['master_qc',masterQc?.status==='accepted'],
-    ['brand_and_destination_policy',!BLOCKED_BRANDS.has(clean(candidate?.brand_key).toLowerCase())&&DESTINATIONS.length===5],
+    ['brand_and_destination_policy',!BLOCKED_BRANDS.has(clean(candidate?.brand_key).toLowerCase())&&DESTINATIONS.length===4],
   ];
   const failures=checks.filter(([,ok])=>!ok).map(([name])=>name);
   return {
@@ -172,6 +173,7 @@ function buildClipManifest({candidate,stage,videoPath,renderReceiptPath,masterQc
       language:'en',
     },
     destinations:[...DESTINATIONS],
+    heldUnverifiedDestinations:[...HELD_UNVERIFIED_DESTINATIONS],
     provenance:{
       inputAssetIds:[],
       sourceRefs:unique(candidate.source_refs||[]),
