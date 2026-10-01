@@ -62,3 +62,8 @@ For explicit Fallen phenomena, the production cycle now:
 Clip now accepts SHA-verified distributed Fallen masters in addition to timeline exports. The staged manifest itself is also digest-bound into the intake receipt, so metadata or gate fields cannot be modified after intake and silently published later.
 
 The producer still does not claim a social post happened. A finished package stops at `ready_for_clip_publish` until Clip resolves a real authorized destination adapter and receives provider-visible publication evidence. That distinction is deliberate: **finished media is not the same thing as a published post.**
+
+
+## Platform truth
+
+Facebook, Instagram and LinkedIn have connected publishing infrastructure in the current Clip compatibility runtime, and YouTube has an owned first-party publisher path in the Forge stack. TikTok is **not** treated as an autonomous destination yet. Its current connector does not support content upload, so TikTok remains recorded as `held_unverified` until a real provider write and readback path is proven.
