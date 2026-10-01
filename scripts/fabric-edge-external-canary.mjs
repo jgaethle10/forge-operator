@@ -15,6 +15,9 @@ const arg=(name,fallback='')=>{
   return i>=0&&process.argv[i+1]?process.argv[i+1]:fallback;
 };
 const origin=clean(arg('--origin','https://fabric.systemiacommandcenters.com')).replace(/\/+$/,'');
+const openAiMcpPath=clean(arg('--openai-mcp-path','/mcp/openai'))||'/mcp/openai';
+const openAiInspectionUrl=clean(arg('--openai-inspection-url','https://evercraftpropertyservices.com/'))||'https://evercraftpropertyservices.com/';
+if(!openAiMcpPath.startsWith('/')||/[\s?#]/.test(openAiMcpPath)) throw new Error('openai_mcp_path_invalid');
 const url=new URL(origin);
 if(url.protocol!=='https:') throw new Error('operator_public_edge_requires_https');
 if(/(^|\.)base44\.app$/i.test(url.hostname)) throw new Error('operator_public_edge_must_not_use_base44');
@@ -90,8 +93,8 @@ async function getJson(path){
   if(!r.ok||!body) throw new Error('json_http_'+r.status+':'+path);
   return body;
 }
-async function rpc(id,method,params={}){
-  const r=await timedFetch(origin+'/mcp',{
+async function rpcAt(path,id,method,params={}){
+  const r=await timedFetch(origin+path,{
     method:'POST',
     headers:{'content-type':'application/json','user-agent':'Evercraft-Operator-Edge-Canary/1.0'},
     body:JSON.stringify({jsonrpc:'2.0',id,method,params}),
@@ -100,6 +103,12 @@ async function rpc(id,method,params={}){
   if(!r.ok||!body) throw new Error('mcp_http_'+r.status+':'+method);
   if(body.error) throw new Error('mcp_'+method+':'+clean(body.error.message));
   return body.result;
+}
+async function rpc(id,method,params={}){
+  return rpcAt('/mcp',id,method,params);
+}
+async function openAiRpc(id,method,params={}){
+  return rpcAt(openAiMcpPath,id,method,params);
 }
 
 function failureStage(checks={},message=''){
@@ -118,6 +127,10 @@ function failureStage(checks={},message=''){
   if(checks.mcp_initialize!==true) return 'mcp_initialize';
   if(checks.mcp_tools!==true) return 'mcp_tools';
   if(checks.public_catalog!==true) return 'public_catalog';
+  if(checks.openai_sse_probe!==true) return 'openai_sse_probe';
+  if(checks.openai_initialize!==true) return 'openai_initialize';
+  if(checks.openai_tool_contract!==true) return 'openai_tool_contract';
+  if(checks.openai_tool_call!==true) return 'openai_tool_call';
   return 'unknown';
 }
 
@@ -282,6 +295,72 @@ try{
   receipt.catalog_total=Number(payload.total);
   receipt.checks.public_catalog=true;
 
+  const openAiSseProbe=await timedFetch(origin+openAiMcpPath,{
+    method:'GET',
+    headers:{
+      accept:'text/event-stream',
+      'user-agent':'Evercraft-OpenAI-Public-Profile-Canary/1.0',
+    },
+  },10000);
+  const openAiSseType=openAiSseProbe.headers.get('content-type')||'';
+  const openAiSseBody=await openAiSseProbe.text();
+  if(!openAiSseProbe.ok) throw new Error('openai_sse_probe_http_'+openAiSseProbe.status);
+  if(!/^text\/event-stream/i.test(openAiSseType)) throw new Error('openai_sse_probe_content_type');
+  if(!/evercraft/i.test(openAiSseBody)) throw new Error('openai_sse_probe_identity_missing');
+  receipt.openai_sse_probe={
+    path:openAiMcpPath,
+    status:openAiSseProbe.status,
+    content_type:openAiSseType,
+    identity_verified:true,
+  };
+  receipt.checks.openai_sse_probe=true;
+
+  const openAiInit=await openAiRpc(101,'initialize',{
+    protocolVersion:'2025-03-26',
+    capabilities:{},
+    clientInfo:{name:'evercraft-openai-profile-canary',version:'1'},
+  });
+  if(openAiInit?.serverInfo?.name!=='evercraft-fabric') throw new Error('openai_mcp_identity_mismatch');
+  receipt.checks.openai_initialize=true;
+
+  const openAiTools=await openAiRpc(102,'tools/list',{});
+  const openAiNames=(openAiTools?.tools||[]).map((tool)=>clean(tool.name));
+  if(openAiNames.length!==1||openAiNames[0]!=='inspect_public_website'){
+    throw new Error('openai_tool_contract_mismatch:'+openAiNames.join(','));
+  }
+  const publicTool=openAiTools.tools[0];
+  if(publicTool?.annotations?.readOnlyHint!==true||publicTool?.annotations?.destructiveHint!==false||publicTool?.annotations?.openWorldHint!==true){
+    throw new Error('openai_tool_annotations_mismatch');
+  }
+  receipt.openai_tools=openAiNames;
+  receipt.checks.openai_tool_contract=true;
+
+  const openAiInspection=await openAiRpc(103,'tools/call',{
+    name:'inspect_public_website',
+    arguments:{
+      url:openAiInspectionUrl,
+      authorized_to_inspect:true,
+    },
+  });
+  const openAiPayload=openAiInspection?.structuredContent||null;
+  if(!openAiPayload||openAiPayload.ok!==true) throw new Error('openai_inspection_unavailable');
+  if(openAiPayload.transactional!==false||openAiPayload.external_action_taken!==false){
+    throw new Error('openai_inspection_side_effect_boundary_failed');
+  }
+  if(!openAiPayload.observed||!Array.isArray(openAiPayload.findings)||!Array.isArray(openAiPayload.limitations)){
+    throw new Error('openai_inspection_shape_invalid');
+  }
+  receipt.openai_tool_call={
+    tool:'inspect_public_website',
+    inspected_url:openAiInspectionUrl,
+    http_status:openAiPayload.observed.http_status??null,
+    finding_count:openAiPayload.findings.length,
+    limitation_count:openAiPayload.limitations.length,
+    transactional:false,
+    external_action_taken:false,
+  };
+  receipt.checks.openai_tool_call=true;
+
   receipt.ingress_diagnosis=classifyPublicEdgeIngress({
     local:{ok:true},
     dns:{ok:true,addresses:receipt.dns_ipv4||[]},
@@ -299,6 +378,7 @@ try{
   receipt.state='public_https_verified';
   receipt.public_https_verified=true;
   receipt.mcp_verified=true;
+  receipt.openai_public_profile_verified=true;
   receipt.external_route_verified=true;
   receipt.receipt_hash=sha({...receipt,receipt_hash:undefined});
   process.stdout.write(JSON.stringify(receipt,null,2)+'\n');
@@ -333,6 +413,7 @@ try{
   receipt.ingress_diagnosis.evidence_complete=false;
   receipt.public_https_verified=false;
   receipt.mcp_verified=false;
+  receipt.openai_public_profile_verified=false;
   receipt.external_route_verified=false;
   receipt.receipt_hash=sha({...receipt,receipt_hash:undefined});
   process.stderr.write(JSON.stringify(receipt,null,2)+'\n');

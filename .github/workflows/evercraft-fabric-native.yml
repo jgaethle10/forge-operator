@@ -4,6 +4,8 @@ on:
   pull_request:
     paths:
       - 'systemia/mcp/fabric-directory.mjs'
+      - 'systemia/mcp/public-website-preview.mjs'
+      - 'systemia/mcp/public-website-preview.test.mjs'
       - 'systemia/mcp/specialist-handoff-runtime.mjs'
       - 'systemia/compute/runtime-node.mjs'
       - 'systemia/yard/public-edge-controller.mjs'
@@ -32,7 +34,7 @@ jobs:
         with:
           node-version: '22'
       - name: Prove Fabric MCP and challenge
-        run: node --test tests/evercraft-fabric-runtime.test.mjs
+        run: node --test tests/evercraft-fabric-runtime.test.mjs systemia/mcp/public-website-preview.test.mjs
       - name: Prove specialist runtime remains safe
         run: |
           npm install --no-audit --no-fund

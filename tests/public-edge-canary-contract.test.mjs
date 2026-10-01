@@ -18,6 +18,24 @@ test('external canary requires field admission evidence before public promotion'
   }
 });
 
+test('external canary proves the purpose-specific OpenAI profile and standalone tool',()=>{
+  for(const required of [
+    '.fabric_openai_mcp_path == "/mcp/openai"',
+    '"${SPECIALIST_ORIGIN%/}/mcp/openai"',
+    '[.result.tools[].name] == ["inspect_public_website"]',
+    '.result.tools[0].annotations.openWorldHint == true',
+    '"inspect_public_website"',
+    '"authorized_to_inspect":true',
+    '"website_inspection"',
+    'openai_profile_verified:true',
+    'openai_mcp_path:"/mcp/openai"',
+    'openai_tools:["inspect_public_website"]',
+    'openai_commerce_enabled:false',
+  ]){
+    assert.ok(workflow.includes(required),'missing OpenAI profile canary contract: '+required);
+  }
+});
+
 test('external canary verifies every resident Systemia Remote Ops tool',()=>{
   const required=[
     '"/mcp/systemia-remote-ops" "systemia-remote-ops"',
@@ -46,11 +64,12 @@ test('external canary preserves authority and provider truth boundaries',()=>{
 
 test('external canary proves every OpenAI directory listing page',()=>{
   for(const required of [
-    'verify_listing_page "/" "Evercraft Fabric"',
-    'verify_listing_page "/support" "Evercraft Fabric Support"',
-    'verify_listing_page "/privacy" "Evercraft Fabric Privacy Policy"',
-    'verify_listing_page "/terms" "Evercraft Fabric Terms of Service"',
+    'verify_listing_page "/openai" "Evercraft Website Inspector"',
+    'verify_listing_page "/openai/support" "Evercraft Support"',
+    'verify_listing_page "/openai/privacy" "Evercraft Privacy Policy"',
+    'verify_listing_page "/openai/terms" "Evercraft Terms of Service"',
     'listing_pages_verified:true',
+    'listing_pages:["/openai","/openai/support","/openai/privacy","/openai/terms"]',
     'bash scripts/build-evercraft-openai-plugin.sh',
   ]){
     assert.ok(workflow.includes(required),'missing OpenAI listing-page canary contract: '+required);
