@@ -447,6 +447,32 @@ async function runAndRecord(requestId = null) {
   }
 }
 
+async function receiverStatus() {
+  const cfg = await config();
+  if (cfg.token.length < 32) {
+    return { ok: false, state: 'pairing_token_required' };
+  }
+  const response = await fetch(
+    bridgeUrl(cfg.endpoint, '/v1/chromeos-host-boundary/status'),
+    {
+      method: 'GET',
+      headers: {
+        authorization: 'Bearer ' + cfg.token,
+        accept: 'application/json',
+      },
+    },
+  );
+  const body = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    return {
+      ok: false,
+      state: 'receiver_status_failed',
+      error: String(body?.error || 'receiver_status_failed'),
+    };
+  }
+  return body;
+}
+
 async function pollPendingRequest() {
   const cfg = await config();
   if (!cfg.enabled || cfg.token.length < 32) return { ok: false, state: 'not_ready' };
@@ -491,7 +517,13 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 });
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
-  if (message?.type !== 'evercraft.hostBoundary.checkNow') return false;
-  runAndRecord().then(sendResponse);
-  return true;
+  if (message?.type === 'evercraft.hostBoundary.checkNow') {
+    runAndRecord().then(sendResponse);
+    return true;
+  }
+  if (message?.type === 'evercraft.hostBoundary.status') {
+    receiverStatus().then(sendResponse);
+    return true;
+  }
+  return false;
 });
