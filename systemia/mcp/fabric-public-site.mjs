@@ -144,8 +144,19 @@ export function renderMarkdownDocument(title,markdown){
   return shell(title,'<main class="doc">'+out.join('')+'</main>');
 }
 
-export function renderFabricHome({capabilityCount=0}={}){
-  const count=Number(capabilityCount)||0;
+export function renderFabricHome({capabilityCount=0,capabilities=[]}={}){
+  const count=Array.isArray(capabilities)&&capabilities.length
+    ? capabilities.length
+    : Number(capabilityCount)||0;
+  const featured=(Array.isArray(capabilities)?capabilities:[])
+    .filter((item)=>item.commercial_state==='sell_now'&&item.pricing)
+    .slice(0,6);
+  const featuredMarkup=featured.length
+    ? featured.map((item)=>{
+        const problem=item.use_when?.[0]||item.description;
+        return `<article class="card"><h3><a href="/capabilities/${encodeURIComponent(item.public_id)}" style="text-decoration:none">${escapeHtml(item.name)}</a></h3><p>${escapeHtml(problem)}</p><p class="price">${escapeHtml(item.pricing)}</p><div class="cardlinks"><a class="docs-link" href="/capabilities/${encodeURIComponent(item.public_id)}">See what it does →</a></div></article>`;
+      }).join('')
+    : '<article class="card"><h3>Capability catalog</h3><p>Current commercial state is available through the live directory.</p></article>';
   return shell('Evercraft Fabric',`
 <main>
   <section class="hero">
@@ -171,6 +182,13 @@ export function renderFabricHome({capabilityCount=0}={}){
       <article class="card"><h3>2. Match the specialist</h3><p>Fabric ranks current capabilities and favors the narrowest truthful fit.</p></article>
       <article class="card"><h3>3. Continue deliberately</h3><p>Connection options stay explicit. Discovery alone never creates payment or external action.</p></article>
     </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Available now</div>
+    <h2>Useful work, not a software scavenger hunt.</h2>
+    <p class="sub">These are current public capabilities whose catalog state says they can be sold now. The offer and pricing shown here come from the same runtime metadata agents see.</p>
+    <div class="grid">${featuredMarkup}</div>
   </section>
 
   <section>
