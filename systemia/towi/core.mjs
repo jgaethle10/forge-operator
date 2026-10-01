@@ -457,3 +457,136 @@ export function editorialPacketForDossier(dossier) {
     publication_authority: false
   };
 }
+
+
+const TOWI_EVIDENCE_RELATIONSHIPS = new Set(['supports', 'challenges', 'context', 'supersedes']);
+
+function normalizeResearchEvidence(rawEvidence = {}, now = new Date().toISOString()) {
+  const sourceFamily = clean(rawEvidence.source_family);
+  if (!sourceFamily) throw new TypeError('source_family is required');
+  const refs = unique(rawEvidence.provenance_refs || rawEvidence.provenance_ref || []);
+  if (!refs.length) throw new TypeError('provenance_refs are required');
+  const summary = clean(rawEvidence.summary);
+  if (!summary) throw new TypeError('summary is required');
+  const relationship = clean(rawEvidence.relationship || 'context').toLowerCase();
+  if (!TOWI_EVIDENCE_RELATIONSHIPS.has(relationship)) {
+    throw new TypeError('relationship must be supports, challenges, context, or supersedes');
+  }
+  const observedAt = new Date(rawEvidence.observed_at || now);
+  if (!Number.isFinite(observedAt.getTime())) throw new TypeError('observed_at must be a valid timestamp');
+  const evidenceState = clean(rawEvidence.evidence_state || 'reported').toLowerCase();
+  if (!['verified', 'observed', 'reported', 'modeled', 'inferred', 'contested'].includes(evidenceState)) {
+    throw new TypeError('evidence_state is invalid');
+  }
+
+  const row = {
+    evidence_id: clean(rawEvidence.evidence_id) || 'towi-evidence:' + hash({
+      source_family: sourceFamily,
+      independence_group: clean(rawEvidence.independence_group || sourceFamily),
+      refs,
+      summary,
+      observed_at: observedAt.toISOString()
+    }),
+    source_family: sourceFamily,
+    independence_group: clean(rawEvidence.independence_group || sourceFamily),
+    observed_at: observedAt.toISOString(),
+    added_at: new Date(now).toISOString(),
+    evidence_state: evidenceState,
+    relationship,
+    summary,
+    provenance_refs: refs,
+    claims: Array.isArray(rawEvidence.claims) ? rawEvidence.claims.slice(0, 50) : [],
+    reliability: clamp01(rawEvidence.reliability, 0.7)
+  };
+  return row;
+}
+
+function dossierIndependenceCount(dossier) {
+  const groups = new Set();
+  for (const row of dossier.evidence_ledger || []) {
+    const group = clean(row.independence_group || row.source_family).toLowerCase();
+    if (group) groups.add(group);
+  }
+  for (const row of dossier.research_evidence || []) {
+    const group = clean(row.independence_group || row.source_family).toLowerCase();
+    if (group) groups.add(group);
+  }
+  return Math.max(Number(dossier.readiness?.independent_source_families || 0), groups.size);
+}
+
+function refreshReadinessFromResearch(dossier) {
+  const readiness = structuredClone(dossier.readiness || {});
+  const blockers = new Set(readiness.blockers || []);
+  const warnings = new Set(readiness.warnings || []);
+  const independentSources = dossierIndependenceCount(dossier);
+
+  if (independentSources >= 2) blockers.delete('independent_source_family_count_below_two');
+  else blockers.add('independent_source_family_count_below_two');
+
+  if ((dossier.research_evidence || []).some((row) => row.relationship === 'challenges')) {
+    warnings.add('contradictory_or_challenging_evidence_present');
+    readiness.requires_human_editorial_review = true;
+  }
+
+  readiness.independent_source_families = independentSources;
+  readiness.blockers = [...blockers];
+  readiness.warnings = [...warnings];
+  readiness.status = readiness.blockers.length ? 'research_required' : 'editorial_candidate';
+  readiness.next_gate = readiness.blockers.length
+    ? 'towi_research_dossier'
+    : 'journal_editorial_10_of_10_preflight';
+  readiness.publication_authority = false;
+  return readiness;
+}
+
+export function addEvidenceToDossier(inputState, dossierId, rawEvidence, { now = new Date().toISOString() } = {}) {
+  const state = structuredClone(inputState || emptyTowiState());
+  const id = clean(dossierId);
+  const dossier = state.dossiers?.[id];
+  if (!dossier) throw new Error('TOWI dossier not found');
+
+  const row = normalizeResearchEvidence(rawEvidence, now);
+  const existing = (dossier.research_evidence || []).find((item) => item.evidence_id === row.evidence_id);
+  if (existing) {
+    return {
+      state,
+      receipt: {
+        schema: 'evercraft.towi.evidence-receipt.v1',
+        status: 'deduped',
+        dossier_id: id,
+        evidence_id: row.evidence_id,
+        publication_authority: false
+      }
+    };
+  }
+
+  dossier.research_evidence = [...(dossier.research_evidence || []), row].slice(-500);
+  dossier.provenance_refs = unique([
+    ...(dossier.provenance_refs || []),
+    ...row.provenance_refs
+  ]);
+  dossier.updated_at = new Date(now).toISOString();
+  dossier.readiness = refreshReadinessFromResearch(dossier);
+  dossier.status = dossier.readiness.status === 'editorial_candidate'
+    ? 'editorial_candidate'
+    : dossier.story_type === 'WATCH'
+      ? 'watching'
+      : dossier.story_type === 'AFTERMATH'
+        ? 'aftermath_research'
+        : 'researching';
+
+  state.dossiers[id] = dossier;
+  const receipt = {
+    schema: 'evercraft.towi.evidence-receipt.v1',
+    status: 'pass',
+    dossier_id: id,
+    evidence_id: row.evidence_id,
+    relationship: row.relationship,
+    independent_source_families: dossier.readiness.independent_source_families,
+    readiness_status: dossier.readiness.status,
+    at: new Date(now).toISOString(),
+    publication_authority: false
+  };
+  state.receipts = [...(state.receipts || []), receipt].slice(-5000);
+  return { state, receipt };
+}
