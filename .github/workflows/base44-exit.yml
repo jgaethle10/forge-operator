@@ -71,6 +71,10 @@ jobs:
         run: npm run proof:base44-entity-transfer
       - name: Prove receipt-gated migration route registry
         run: npm run proof:base44-route-registry
+      - name: Prove active migration route overlay
+        run: npm run proof:base44-route-overlay
+      - name: Prove CHUM follows active migration routes
+        run: npm run test:chum-commercial-route-overlay
       - name: Block hard-coded Base44 routes in owned runtime
         run: npm run validate:base44-owned-runtime-firewall
       - name: Prove Evercraft App Fabric
