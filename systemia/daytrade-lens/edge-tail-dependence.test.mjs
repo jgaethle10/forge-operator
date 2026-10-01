@@ -10,13 +10,18 @@ const candidate={
   learned_direction:"POSITIVE_EXCESS_RETURN",
 };
 
-const stable=Array.from({length:80},(_,i)=>({
-  measurement_id:"stable:"+i,
-  signal_key:candidate.signal_key,
-  observed_at:new Date(Date.UTC(2025,0,1+i*3)).toISOString(),
-  forward_return:0.004+((i%7)-3)*0.00015,
-  benchmark_return:0.001,
-}));
+let stableSeed=12345;
+const stable=Array.from({length:80},(_,i)=>{
+  stableSeed=(1664525*stableSeed+1013904223)>>>0;
+  const unit=stableSeed/4294967296;
+  return {
+    measurement_id:"stable:"+i,
+    signal_key:candidate.signal_key,
+    observed_at:new Date(Date.UTC(2025,0,1+i*3)).toISOString(),
+    forward_return:0.004+(unit-0.5)*0.0008,
+    benchmark_return:0.001,
+  };
+});
 const stableReview=evaluateTailDependence(candidate,stable,{
   transaction_cost_bps:5,
 });
@@ -29,6 +34,8 @@ assert.equal(
   stableReview.interpretation.finite_sample_cannot_establish_infinite_fourth_moment,
   true
 );
+assert.ok(Math.abs(stableReview.lag1_squared_return_autocorrelation)<0.20);
+assert.equal(stableReview.flags.squared_return_clustering_high,false);
 
 const clustered=Array.from({length:80},(_,i)=>{
   const high=i>=40;
