@@ -11,14 +11,20 @@ on:
       - "tests/test_systemia_architecture_reconcile.py"
       - "tests/test_systemia_architecture_health.py"
       - "tests/test_systemia_architecture_query.py"
+      - "docs/SYSTEMIA_ARCHITECTURE_INTELLIGENCE.md"
       - ".github/workflows/architecture-intelligence.yml"
   push:
     branches: [main]
     paths:
       - "tools/systemia_architecture_scan.py"
       - "tools/systemia_architecture_reconcile.py"
+      - "tools/systemia_architecture_health.py"
+      - "tools/systemia_architecture_query.py"
       - "tests/test_systemia_architecture_scan.py"
       - "tests/test_systemia_architecture_reconcile.py"
+      - "tests/test_systemia_architecture_health.py"
+      - "tests/test_systemia_architecture_query.py"
+      - "docs/SYSTEMIA_ARCHITECTURE_INTELLIGENCE.md"
       - ".github/workflows/architecture-intelligence.yml"
   workflow_dispatch:
 
