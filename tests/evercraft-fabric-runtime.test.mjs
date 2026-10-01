@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {
   executeFabricDirectoryRpc,
   fabricDirectoryTools,
+  fabricOpenAiTools,
   loadFabricCatalogFromRepository,
   matchFabricCapabilities,
   normalizeFabricCatalog,
@@ -118,19 +119,20 @@ test('Fabric MCP exposes exactly the read-only directory contract',async()=>{
       'match_evercraft_capability',
       'list_evercraft_capabilities',
       'get_evercraft_connection_options',
-      'preview_public_website',
+      'inspect_public_website',
     ]
   );
   assert.ok(listed.result.tools.every((x)=>x.annotations.readOnlyHint===true));
   assert.ok(listed.result.tools.every((x)=>x.annotations.destructiveHint===false));
-  const previewTool=listed.result.tools.find((x)=>x.name==='preview_public_website');
-  assert.equal(previewTool.annotations.openWorldHint,true);
+  const inspectTool=listed.result.tools.find((x)=>x.name==='inspect_public_website');
+  assert.equal(inspectTool.annotations.openWorldHint,true);
   assert.ok(
     listed.result.tools
-      .filter((x)=>x.name!=='preview_public_website')
+      .filter((x)=>x.name!=='inspect_public_website')
       .every((x)=>x.annotations.openWorldHint===false)
   );
   assert.equal(fabricDirectoryTools().length,4);
+  assert.deepEqual(fabricOpenAiTools().map((x)=>x.name),['inspect_public_website']);
 });
 
 test('Fabric MCP publishes reviewer-grade argument descriptions',()=>{
@@ -168,8 +170,8 @@ test('Fabric MCP performs a standalone bounded website preview without transacti
     id:31,
     method:'tools/call',
     params:{
-      name:'preview_public_website',
-      arguments:{url:'https://example.com/'},
+      name:'inspect_public_website',
+      arguments:{url:'https://evercraftpropertyservices.com/',authorized_to_inspect:true},
     },
   },catalog,{
     websitePreview:async(url)=>{
@@ -186,10 +188,40 @@ test('Fabric MCP performs a standalone bounded website preview without transacti
       };
     },
   });
-  assert.equal(requested,'https://example.com/');
+  assert.equal(requested,'https://evercraftpropertyservices.com/');
   assert.equal(result.result.structuredContent.schema,'evercraft.public-website-preview.v1');
   assert.equal(result.result.structuredContent.transactional,false);
   assert.equal(result.result.structuredContent.external_action_taken,false);
+});
+test('OpenAI Fabric profile exposes only the individually reviewed website inspection tool',async()=>{
+  const listed=await executeFabricDirectoryRpc(
+    {jsonrpc:'2.0',id:40,method:'tools/list',params:{}},
+    catalog,
+    {toolProfile:'openai'}
+  );
+  assert.deepEqual(listed.result.tools.map((x)=>x.name),['inspect_public_website']);
+
+  const blocked=await executeFabricDirectoryRpc({
+    jsonrpc:'2.0',
+    id:41,
+    method:'tools/call',
+    params:{name:'match_evercraft_capability',arguments:{intent:'find a part'}},
+  },catalog,{toolProfile:'openai'});
+  assert.equal(blocked.error.code,-32602);
+});
+
+test('website inspection requires explicit user authorization',async()=>{
+  const denied=await executeFabricDirectoryRpc({
+    jsonrpc:'2.0',
+    id:42,
+    method:'tools/call',
+    params:{name:'inspect_public_website',arguments:{url:'https://evercraftpropertyservices.com/'}},
+  },catalog,{
+    websitePreview:async()=>{throw new Error('must not run');},
+    toolProfile:'openai',
+  });
+  assert.equal(denied.error.code,-32602);
+  assert.match(denied.error.message,/authorized_to_inspect/);
 });
 test('OpenAI challenge token validation fails closed',()=>{
   assert.equal(
@@ -242,10 +274,20 @@ test('owned Evercraft Compute MCP runtime serves challenge and Fabric without ga
     assert.equal(tools.result.tools.length,4);
     assert.ok(tools.result.tools.every((x)=>x.annotations.readOnlyHint===true));
 
+    const publicToolsResponse=await fetch(runtime.url+'/mcp/openai',{
+      method:'POST',
+      headers:{'content-type':'application/json'},
+      body:JSON.stringify({jsonrpc:'2.0',id:22,method:'tools/list',params:{}}),
+    });
+    assert.equal(publicToolsResponse.status,200);
+    const publicTools=await publicToolsResponse.json();
+    assert.deepEqual(publicTools.result.tools.map((x)=>x.name),['inspect_public_website']);
+
     const healthResponse=await fetch(runtime.url+'/health');
     const health=await healthResponse.json();
     assert.equal(health.fabric_directory_enabled,true);
     assert.equal(health.fabric_mcp_path,'/mcp');
+    assert.equal(health.fabric_openai_mcp_path,'/mcp/openai');
     assert.equal(health.openai_challenge_ready,true);
     assert.equal(health.fabric_capability_count,2);
     assert.equal(JSON.stringify(health).includes(challenge),false);
