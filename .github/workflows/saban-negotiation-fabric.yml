@@ -1,0 +1,74 @@
+name: Saban Negotiation Fabric
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/saban/compute-exchange.mjs'
+      - 'systemia/saban/negotiation-protocol.mjs'
+      - 'systemia/saban/negotiation-protocol.proof.mjs'
+      - 'systemia/saban/voluntary-compute-market.proof.mjs'
+      - 'systemia/saban/golem-market.proof.mjs'
+      - 'systemia/saban/golem-live-pilot.mjs'
+      - 'systemia/saban/markets/**'
+      - 'systemia/saban/README.md'
+      - 'package.json'
+      - '.github/workflows/saban-negotiation-fabric.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/saban/compute-exchange.mjs'
+      - 'systemia/saban/negotiation-protocol.mjs'
+      - 'systemia/saban/negotiation-protocol.proof.mjs'
+      - 'systemia/saban/voluntary-compute-market.proof.mjs'
+      - 'systemia/saban/golem-market.proof.mjs'
+      - 'systemia/saban/golem-live-pilot.mjs'
+      - 'systemia/saban/markets/**'
+      - 'systemia/saban/README.md'
+      - 'package.json'
+      - '.github/workflows/saban-negotiation-fabric.yml'
+  schedule:
+    - cron: '29 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Prove canonical counteroffer protocol
+        run: node systemia/saban/negotiation-protocol.proof.mjs
+      - name: Prove signed voluntary-device negotiation
+        run: node systemia/saban/voluntary-compute-market.proof.mjs
+      - name: Prove Golem requestor adapter
+        run: node systemia/saban/golem-market.proof.mjs
+      - name: Scan live Golem decentralized supply
+        run: node systemia/saban/golem-live-pilot.mjs | tee /tmp/saban-golem-live.json
+      - name: Publish live Golem summary
+        run: |
+          node - <<'NODE'
+          const fs=require('fs');
+          const r=JSON.parse(fs.readFileSync('/tmp/saban-golem-live.json','utf8'));
+          console.log('provider_records_seen='+r.provider_records_seen);
+          console.log('normalized_offer_count='+r.normalized_offer_count);
+          console.log('eligible_offer_count='+r.eligible_offer_count);
+          console.log('selected_provider='+r.selected_provider.provider_id);
+          console.log('selected_cpu_units='+r.selected_provider.cpu_units);
+          console.log('selected_memory_mb='+r.selected_provider.memory_mb);
+          console.log('selected_uptime_7d='+r.selected_provider.uptime_7d);
+          console.log('paid_lease_created='+r.paid_lease_created);
+          console.log('receipt='+r.receipt_hash);
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: saban-golem-live-supply
+          path: /tmp/saban-golem-live.json
+          if-no-files-found: error
