@@ -107,6 +107,8 @@ jobs:
         run: npm run proof:integration-edge
       - name: Prove Stripe and voice webhook verification
         run: npm run proof:provider-webhooks
+      - name: Prove owned Remote Ops voice lifecycle
+        run: npm run proof:remote-ops-voice
       - name: Prove owned Polar connector migration path
         run: npm run proof:polar-connector
       - name: Prove owned resident scheduler
