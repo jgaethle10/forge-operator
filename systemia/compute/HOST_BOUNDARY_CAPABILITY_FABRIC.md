@@ -49,11 +49,11 @@ candidate
   -> revoke / supersede
 ```
 
-A capability is not available to an LLM merely because code exists for it. Admission into `host-boundary-capabilities.json` is the control point.
+A capability is not available to an LLM merely because code exists for it. The registry records candidates as well as admitted capabilities, and generic dispatch is allowed only when the entry's admission state is `admitted`. A candidate can still use a dedicated field-test path to collect the evidence required for promotion.
 
 ## Generic operator surface
 
-`remote_host_capabilities` lists admitted capabilities and their authority/privacy properties.
+`remote_host_capabilities` lists registered capabilities, their admission state, and their authority/privacy properties.
 
 `remote_host_capability_check` accepts a capability ID and routes only to a registered adapter. Unregistered capability IDs and unavailable adapters fail closed.
 
