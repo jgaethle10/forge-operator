@@ -65,7 +65,7 @@ assert.equal(
 );
 assert.match(
   ATTACK_IMPLEMENTATION_MAP["partial/unfilled order outcome"].gap,
-  /never inferred from a touch/
+  /queue-position or counterfactual fill probability is never inferred/
 );
 
 assert.equal(
