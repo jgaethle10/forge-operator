@@ -54,11 +54,15 @@ export async function startVoluntaryMarketServer({
   host='127.0.0.1',
   port=0,
   registrationToken='',
+  trustedTlsTermination=false,
 }={}){
   if(!market||typeof market.registerProvider!=='function'){
     throw new Error('voluntary_market_required');
   }
   const loopback=['127.0.0.1','::1','localhost'].includes(String(host));
+  if(!loopback&&trustedTlsTermination!==true){
+    throw new Error('non_loopback_requires_trusted_tls_termination');
+  }
   if(!loopback&&!registrationToken){
     throw new Error('registration_token_required_for_non_loopback_server');
   }
