@@ -15,6 +15,20 @@ const criticalFiles=[
   'systemia/object-store/object-store.mjs',
   'systemia/secret-store/secret-store.mjs',
   'systemia/realtime-bus/realtime-bus.mjs',
+  'systemia/object-store/delivery-gateway.mjs',
+  'systemia/connector-gateway/adapters/polar.mjs',
+  'systemia/commerce-boundary/polar-adapter.mjs',
+  'systemia/commerce-boundary/stripe-provider.mjs',
+  'systemia/commerce-boundary/stripe-adapter.mjs',
+  'systemia/workforce/commerce-runtime.mjs',
+  'systemia/audit-center/commerce-runtime.mjs',
+  'systemia/audit-center/export-runtime.mjs',
+  'systemia/remote-ops/voice-runtime.mjs',
+  'systemia/operations/auto-clock-out.mjs',
+  'systemia/internal-ops/snapshot.mjs',
+  'systemia/internal-ops/snapshot-ingress.mjs',
+  'systemia/internal-ops/intake.mjs',
+  'systemia/internal-ops/systemia-sync.mjs',
 ];
 
 const forbidden=[
