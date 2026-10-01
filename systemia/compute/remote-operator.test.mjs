@@ -25,6 +25,8 @@ try {
   assert.equal(status.execution.root_privilege, false);
   assert.equal(status.execution.ambient_secret_environment_forwarded, false);
   assert.equal(status.network_observation.read_only, true);
+  assert.equal(status.chromeos_host_boundary.read, true);
+  assert.equal(status.chromeos_host_boundary.mutation, false);
 
   const network = await operator.networkStatus();
   assert.equal(network.schema, 'evercraft.node-network-observation.v1');
@@ -118,6 +120,7 @@ try {
     receipt_contents_redacted: true,
     read_only_network_observation_available: true,
     chromeos_host_boundary_not_overclaimed: true,
+    chromeos_host_boundary_companion_declared_read_only: true,
   }));
 } finally {
   fs.rmSync(root, { recursive: true, force: true });
