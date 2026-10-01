@@ -15,6 +15,7 @@ import { runEdgeStressLab } from "./edge-stress-lab.mjs";
 import { runEdgeBreakerLab } from "./edge-breaker-lab.mjs";
 import { runTimingFragilityLab } from "./edge-timing-fragility.mjs";
 import { runOverlapFragilityLab } from "./edge-overlap-fragility.mjs";
+import { runMatchedPlaceboLab } from "./edge-matched-placebo.mjs";
 
 async function main() {
   const artifactDir = path.resolve(
@@ -65,6 +66,12 @@ async function main() {
   });
   const overlapFile = path.join(artifactDir, "sec-edge-overlap-fragility.json");
   fs.writeFileSync(overlapFile, JSON.stringify(overlapLab, null, 2) + "\n");
+
+  const placeboLab = runMatchedPlaceboLab(report, {
+    transaction_cost_bps: Number(process.env.EDGE_LAB_TRANSACTION_COST_BPS || 5),
+  });
+  const placeboFile = path.join(artifactDir, "sec-edge-matched-placebo.json");
+  fs.writeFileSync(placeboFile, JSON.stringify(placeboLab, null, 2) + "\n");
 
   const adversarial = adversarialValidateCandidates(report, {
     transaction_cost_bps: Number(process.env.EDGE_LAB_TRANSACTION_COST_BPS || 5),
@@ -194,6 +201,7 @@ async function main() {
     breaker_survivors: breakerLab.breaker_survivor_count || 0,
     timing_robust_diagnostics: timingLab.timing_robust_count || 0,
     overlap_robust_diagnostics: overlapLab.overlap_robust_count || 0,
+    placebo_separated_diagnostics: placeboLab.placebo_separated_count || 0,
     frozen_forward_paper_cohorts: frozenCohorts.length,
     durable_forward_paper_state_configured: durableState.configured,
     durable_forward_paper_restart_reopen_verified: durableState.restart_reopen_verified,
@@ -209,6 +217,7 @@ async function main() {
       breaker_lab: breakerFile,
       timing_fragility_lab: timingFile,
       overlap_fragility_lab: overlapFile,
+      matched_placebo_lab: placeboFile,
       adversarial_review: adversarialFile,
       forward_paper_cohorts: forwardPaperFile,
       durable_forward_paper_scores: durableScoreFile,
