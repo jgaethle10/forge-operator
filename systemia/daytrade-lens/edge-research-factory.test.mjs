@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import {
   FIVE_MINUTE_LAG_BARS,
+  EXECUTION_DELAY_STRESS_BARS,
   measureRockiesHypotheses,
   evaluateEdgeFamilies,
   benjaminiHochberg,
@@ -55,6 +56,17 @@ const measured = measureRockiesHypotheses([hypothesis], {
 assert.equal(measured.length, 1);
 assert.equal(measured[0].lag_bars, FIVE_MINUTE_LAG_BARS["15m"]);
 assert.equal(measured[0].live_trade_authority, false);
+assert.deepEqual(
+  Object.keys(measured[0].execution_delay_stress).sort(),
+  Object.keys(EXECUTION_DELAY_STRESS_BARS).sort()
+);
+assert.equal(measured[0].execution_delay_stress["5m"].delay_bars, 1);
+assert.equal(measured[0].execution_delay_stress["15m"].delay_bars, 3);
+assert.equal(measured[0].execution_delay_stress["30m"].delay_bars, 6);
+assert.ok(
+  new Date(measured[0].execution_delay_stress["30m"].instrument_start_time).getTime() >
+    new Date(measured[0].instrument_start_time).getTime()
+);
 assert.equal(
   new Date(measured[0].instrument_start_time).getTime() >= new Date(hypothesis.observed_at).getTime(),
   true
