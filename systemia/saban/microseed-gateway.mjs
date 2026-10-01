@@ -224,7 +224,7 @@ export async function startMicroSeedGateway({
             checkpointed:Boolean(receipt?.checkpoint),
             preempted:false,
             thermal_hold:false,
-            energy_wh:null,
+            energy_wh:observedEnergyWh(body.telemetry,Math.max(0,Date.now()-startedAt)),
             observed_at:new Date().toISOString(),
           });
           savePerformanceLedger(performanceFile,ledger);
@@ -239,7 +239,7 @@ export async function startMicroSeedGateway({
             checkpointed:false,
             preempted:String(error?.message||error).includes('preempt'),
             thermal_hold:String(error?.message||error).includes('temperature'),
-            energy_wh:null,
+            energy_wh:observedEnergyWh(body.telemetry,Math.max(0,Date.now()-startedAt)),
             observed_at:new Date().toISOString(),
           });
           savePerformanceLedger(performanceFile,ledger);
