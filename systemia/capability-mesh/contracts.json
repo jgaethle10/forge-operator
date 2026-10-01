@@ -601,6 +601,92 @@
         "stress_test_pass_is_not_a_real_world_edge_claim": true
       },
       "adoption_stage": "source_implemented"
+    },
+    {
+      "product_key": "fallen",
+      "contract_version": "1.0.0",
+      "owner": "systemia",
+      "specialist_slug": "fallen",
+      "authority": {
+        "state": "not_required",
+        "reason": "The contracted public surface is stateless read-only evidence-bound planning and plan audit. It does not access private media, provider credentials, render workers, publishing accounts, checkout, payment, or production mutation. Any future authenticated rendering or distribution action requires a separate Passport scope and contract revision."
+      },
+      "context": {
+        "state": "not_required",
+        "reason": "The public planning tools consume caller-supplied bounded research metadata and return a plan. They do not read or write private project graphs, timelines, series bibles, provider credentials, or shared user context."
+      },
+      "meter": {
+        "state": "not_required",
+        "reason": "Public planning and audit are non-billing actions. Provider generation, rendering, paid services, checkout, and entitlement are outside this contract."
+      },
+      "intake": {
+        "state": "not_required",
+        "reason": "The public tools accept structured research/evidence metadata only. Private media upload and provider asset transfer are explicitly outside the contracted machine surface."
+      },
+      "execution": {
+        "state": "declared",
+        "gate_required": false,
+        "scopes": [
+          "get_fallen_capabilities",
+          "plan_visual_explanation",
+          "audit_visual_explanation_plan"
+        ],
+        "actions": [
+          {
+            "scope": "get_fallen_capabilities"
+          },
+          {
+            "scope": "plan_visual_explanation"
+          },
+          {
+            "scope": "audit_visual_explanation_plan"
+          }
+        ],
+        "evidence_refs": [
+          "systemia/media-studio/mcp.mjs",
+          "systemia/media-studio/mcp.test.mjs",
+          "systemia/media-studio/README.md",
+          "systemia/media-studio/journal-education.ts",
+          "systemia/media-studio/world-intel-stage.ts"
+        ]
+      },
+      "relationship": {
+        "state": "not_required",
+        "reason": "The contracted tools do not contact providers, publishers, platforms, recipients, or third parties."
+      },
+      "receipt_reconciliation": {
+        "state": "not_required",
+        "reason": "Planning returns a deterministic receipt_id but does not persist private project state or write Context Fabric. Authenticated production reconciliation remains inside Fallen."
+      },
+      "rollback": {
+        "state": "declared",
+        "policy": "Disable the public Fallen planning route without enabling render-provider execution, private-media intake, publication, payment, or weakening evidence and rights gates in the authenticated studio."
+      },
+      "compatibility": {
+        "intended_product_classes": [
+          "evidence_bound_media_planning",
+          "documentary_visual_explanation"
+        ]
+      },
+      "boundaries": {
+        "contracted_machine_surface": [
+          "get_fallen_capabilities",
+          "plan_visual_explanation",
+          "audit_visual_explanation_plan"
+        ],
+        "public_agent_authority": "read_only_evidence_bound_visual_planning",
+        "private_media_upload": false,
+        "provider_execution": false,
+        "rendering_authority": false,
+        "publication_authority": false,
+        "checkout_authority": false,
+        "payment_authority": false,
+        "visual_rights_must_be_resolved_before_render": true,
+        "volatile_claims_must_be_fresh_before_render": true,
+        "modeled_inferred_synthetic_visuals_require_labels": true,
+        "human_handoff_required_for_rendering_and_publication": true
+      },
+      "adoption_stage": "source_implemented"
     }
   ]
 }
