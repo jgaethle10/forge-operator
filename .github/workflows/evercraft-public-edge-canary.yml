@@ -102,6 +102,7 @@ jobs:
             (.specialist_attestation_receipt_ref | type == "string" and test("^(sha256:)?[a-fA-F0-9]{64}$")) and
             .checkout_enabled == false and
             .payment_enabled == false and
+            .base44_transport_enabled == false and
             .fabric_directory_enabled == true and
             .fabric_mcp_path == "/mcp" and
             .openai_challenge_ready == true and
@@ -159,7 +160,9 @@ jobs:
                 .result.isError == false and
                 .result.structuredContent.direct_specialist == true and
                 .result.structuredContent.payment_created == false and
-                .result.structuredContent.payment_obligation_created == false
+                .result.structuredContent.payment_obligation_created == false and
+                .result.structuredContent.base44_transport_enabled == false and
+                (((.result.structuredContent.handoff_url // "") | test("base44\\.app"; "i")) | not)
               ' >/dev/null
             elif [ "$kind" = "remote_ops" ]; then
               printf '%s' "$result" | jq -e '

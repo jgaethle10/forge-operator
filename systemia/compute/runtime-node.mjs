@@ -1669,7 +1669,7 @@ export async function startEvercraftComputeNode({
             gatewayUrl: String(
               body.input?.gateway_url ||
               process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL ||
-              'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway'
+              ''
             ),
             fabricCatalog: Array.isArray(body.input?.fabric_catalog)
               ? body.input.fabric_catalog
