@@ -22,10 +22,10 @@ test('grant issuer requires independent UDP and TCP proof',()=>{
   assert.equal(grant.public_ip_recorded,false);
 });
 
-test('Chromebook promotion no longer requires local GitHub CLI',()=>{
+test('Chromebook promotion uses external verifier without local GitHub CLI',()=>{
   const one=fs.readFileSync(path.join(root,'scripts/make-chromebook-edge-node.sh'),'utf8');
   assert.doesNotMatch(one,/\bgh\s+(workflow|run|auth)\b/);
-  assert.match(one,/external-canary-request\.json/);
-  assert.match(one,/public-ingress-grants/);
+  assert.match(one,/external-public-verifier\.mjs/);
+  assert.match(one,/external-public-verification\.json/);
   assert.match(one,/Node remains public-edge-candidate/);
 });
