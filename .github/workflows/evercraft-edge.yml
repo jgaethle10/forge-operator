@@ -13,6 +13,7 @@ on:
       - 'scripts/install-fabric-router-map-resident.sh'
       - 'scripts/promote-chromebook-edge-node.sh'
       - 'scripts/make-chromebook-edge-node.sh'
+      - 'tests/nodeseed-installed-bundle.test.mjs'
       - 'systemia/yard/operator.mjs'
       - '.github/workflows/evercraft-edge.yml'
   push:
@@ -46,4 +47,6 @@ jobs:
           bash -n scripts/promote-chromebook-edge-node.sh
           bash -n scripts/make-chromebook-edge-node.sh
       - name: Run Evercraft Edge contract and protocol tests
-        run: node --test infra/evercraft-edge/test/*.test.mjs
+        run: |
+          node --test infra/evercraft-edge/test/*.test.mjs
+          node --test tests/nodeseed-installed-bundle.test.mjs
