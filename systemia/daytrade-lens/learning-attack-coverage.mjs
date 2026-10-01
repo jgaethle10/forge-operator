@@ -93,9 +93,9 @@ export const ATTACK_IMPLEMENTATION_MAP=Object.freeze({
     gap:"Bid/ask prices and top-of-book sizes are captured; depth imbalance and order-flow features are not yet scored."
   },
   "aggressive-versus-passive execution comparison":{
-    status:"missing",
-    evidence:[],
-    gap:"No passive queue/fill model yet."
+    status:"partial",
+    evidence:["systemia/daytrade-lens/edge-quote-microstructure.mjs"],
+    gap:"Immediate marketable entry is compared with passive touch evidence from historical quotes/trades, but queue priority and order-specific fill probability remain unobserved; a touched limit is never labeled a fill."
   },
   "missing-microstructure-state hold":{
     status:"implemented",
