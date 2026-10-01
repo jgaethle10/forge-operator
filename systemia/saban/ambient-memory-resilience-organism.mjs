@@ -167,7 +167,6 @@ export async function runAmbientMemoryResilienceOnce({
       };
       atomicJson(protectionFile,protectionState);
       state='protected';
-      action:'protect_master_key';
       action='protect_master_key';
       detail=protectionState;
     }
