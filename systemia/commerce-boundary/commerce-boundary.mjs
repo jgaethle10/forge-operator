@@ -56,6 +56,15 @@ export class EvercraftCommerceBoundary {
     if (fs.existsSync(location.file)) {
       const prior = JSON.parse(fs.readFileSync(location.file, 'utf8'));
       if (prior?.schema !== 'evercraft.commerce.verified-payment.v1') throw new Error('verified_payment_schema_invalid');
+      if (expected.amount_minor != null && Number(expected.amount_minor) !== Number(prior.amount_minor)) {
+        throw new Error('payment_amount_mismatch');
+      }
+      if (
+        expected.currency &&
+        clean(expected.currency).toUpperCase() !== clean(prior.currency).toUpperCase()
+      ) {
+        throw new Error('payment_currency_mismatch');
+      }
       return { replayed: true, payment: structuredClone(prior), receipt: null };
     }
     const adapter = this.adapters.get(location.provider);
