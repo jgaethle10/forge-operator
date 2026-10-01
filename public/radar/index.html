@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Systemia Radar | Reality Before Narrative</title>
+  <meta name="description" content="Systemia Radar is Evercraft's evidence-first world-state publication engine.">
+  <style>
+    :root{
+      color-scheme:dark;
+      --bg:#0b0d0f;--panel:#13171a;--panel2:#171c20;--line:#293036;
+      --text:#f3f0e9;--muted:#aeb6be;--soft:#7d8891;--accent:#c4a464;
+      --blue:#88b9d8;--green:#8db79a;--red:#d29292;--amber:#d9b56d;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:linear-gradient(180deg,#090b0d,#0d1114 70%);color:var(--text);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    a{color:inherit}.shell{width:min(1180px,calc(100% - 32px));margin:auto}
+    header{padding:34px 0 26px;border-bottom:1px solid var(--line)}
+    .eyebrow{letter-spacing:.16em;text-transform:uppercase;font-size:.72rem;color:var(--accent);font-weight:800}
+    h1{font-family:Georgia,"Times New Roman",serif;font-weight:500;font-size:clamp(2.6rem,7vw,5.7rem);
+      letter-spacing:-.055em;line-height:.94;margin:.22em 0 .18em}
+    .lede{max-width:780px;color:#d8d4cc;font-size:clamp(1rem,2vw,1.25rem);line-height:1.6}
+    .statusbar{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}.pill{border:1px solid var(--line);
+      border-radius:999px;padding:8px 11px;background:#111619;color:var(--muted);font-size:.8rem}
+    .pill strong{color:var(--text)}
+    main{padding:28px 0 72px}.grid{display:grid;gap:18px;grid-template-columns:1.25fr .75fr}
+    @media(max-width:850px){.grid{grid-template-columns:1fr}}
+    .panel{background:rgba(19,23,26,.9);border:1px solid var(--line);border-radius:20px;padding:22px}
+    .panel h2{margin:0 0 16px;font-family:Georgia,"Times New Roman",serif;font-size:1.6rem;font-weight:500}
+    .meta{color:var(--muted);font-size:.88rem;line-height:1.5}
+    .signal{padding:18px 0;border-top:1px solid var(--line)}.signal:first-of-type{border-top:0;padding-top:0}
+    .signal-top{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
+    .tag{font-size:.68rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;border-radius:999px;
+      padding:5px 8px;border:1px solid var(--line);color:var(--muted)}
+    .tag.observed,.tag.corroborated{color:var(--green);border-color:#375242}
+    .tag.reported,.tag.pending{color:var(--amber);border-color:#55472d}
+    .tag.contested{color:var(--red);border-color:#563535}
+    .tag.new,.tag.intensified{color:var(--blue);border-color:#365164}
+    .signal p{margin:0;font-size:1rem;line-height:1.58;color:#e5e1da}.signal small{display:block;margin-top:9px;color:var(--soft)}
+    .change{display:grid;grid-template-columns:auto 1fr;gap:12px;padding:14px 0;border-top:1px solid var(--line)}
+    .change:first-of-type{border-top:0}.score{width:52px;height:52px;border-radius:13px;border:1px solid var(--line);
+      display:grid;place-items:center;font-variant-numeric:tabular-nums;color:var(--accent);background:#101416}
+    .change p{margin:1px 0 0;color:#d8d4cc;line-height:1.45}.quiet{padding:28px;text-align:center;color:var(--muted)}
+    footer{border-top:1px solid var(--line);padding:28px 0 50px;color:var(--soft);font-size:.86rem;line-height:1.6}
+    .error{color:var(--red)}.refresh{float:right;background:transparent;border:1px solid var(--line);color:var(--text);
+      border-radius:999px;padding:8px 12px;cursor:pointer}.refresh:hover{border-color:#46535c}
+  </style>
+</head>
+<body>
+<header>
+  <div class="shell">
+    <div class="eyebrow">Evercraft · Systemia</div>
+    <h1>Radar</h1>
+    <div class="lede">Reality before narrative. A timestamped evidence board showing what materially changed, what the strongest available evidence supports, and what remains unresolved.</div>
+    <div class="statusbar" id="statusbar">
+      <span class="pill">Loading Radar state…</span>
+    </div>
+  </div>
+</header>
+
+<main class="shell">
+  <div class="grid">
+    <section class="panel">
+      <button class="refresh" id="refresh">Refresh</button>
+      <h2>Current evidence board</h2>
+      <div class="meta" id="cutoff">Waiting for the latest resident cycle.</div>
+      <div id="signals" style="margin-top:20px"></div>
+    </section>
+
+    <aside class="panel">
+      <h2>Change Wall</h2>
+      <div class="meta">Only material state changes clear this board. Quiet is a valid result.</div>
+      <div id="changes" style="margin-top:20px"></div>
+    </aside>
+  </div>
+</main>
+
+<footer>
+  <div class="shell">Systemia Radar keeps observations, reported claims, forecasts, inference and resolved conditions separate. A public Radar view is not publication authority and does not expose private Systemia context.</div>
+</footer>
+
+<script>
+const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (ch) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+const cls = (value) => esc(String(value || '').toLowerCase().replaceAll('_','-'));
+const fmt = (value) => value ? new Date(value).toLocaleString(undefined,{dateStyle:'medium',timeStyle:'short'}) : 'Unknown';
+
+async function load() {
+  const statusbar = document.getElementById('statusbar');
+  const signals = document.getElementById('signals');
+  const changes = document.getElementById('changes');
+  const cutoff = document.getElementById('cutoff');
+
+  try {
+    const [healthRes, latestRes] = await Promise.all([
+      fetch('/api/radar/health', {cache:'no-store'}),
+      fetch('/api/radar/latest', {cache:'no-store'})
+    ]);
+    const health = await healthRes.json();
+    const latest = await latestRes.json();
+
+    statusbar.innerHTML = [
+      ['Resident', health.resident ? 'ON' : 'OFF'],
+      ['Streams', health.stream_count ?? 0],
+      ['Signals', latest.signal_count ?? 0],
+      ['Sources', latest.independent_source_families ?? 0],
+      ['Status', latest.status || 'no edition']
+    ].map(([label,value]) => '<span class="pill">'+esc(label)+': <strong>'+esc(value)+'</strong></span>').join('');
+
+    cutoff.textContent = latest.generated_at
+      ? 'Verification cutoff: ' + fmt(latest.generated_at) + ' · Truth has a timestamp.'
+      : 'No Radar edition has been staged yet.';
+
+    const rows = Array.isArray(latest.signals) ? latest.signals : [];
+    signals.innerHTML = rows.length ? rows.map((signal) => `
+      <article class="signal">
+        <div class="signal-top">
+          <span class="tag ${cls(signal.truth_state)}">${esc(signal.truth_state)}</span>
+          <span class="tag ${cls(signal.change_state)}">${esc(signal.change_state)}</span>
+          <span class="tag">${esc((signal.domains || []).join(' · '))}</span>
+        </div>
+        <p>${esc(signal.summary)}</p>
+        <small>Observed ${esc(fmt(signal.observed_at))} · verified ${esc(fmt(signal.last_verified_at))} · materiality ${esc(signal.materiality_score)}</small>
+      </article>
+    `).join('') : '<div class="quiet">No material changes cleared the current edition threshold.</div>';
+
+    const wall = Array.isArray(latest.change_wall) ? latest.change_wall : [];
+    changes.innerHTML = wall.length ? wall.map((item) => `
+      <div class="change">
+        <div class="score">${esc(item.materiality_score)}</div>
+        <div>
+          <div class="signal-top">
+            <span class="tag ${cls(item.change_state)}">${esc(item.change_state)}</span>
+            <span class="tag ${cls(item.truth_state)}">${esc(item.truth_state)}</span>
+          </div>
+          <p>${esc(item.summary)}</p>
+        </div>
+      </div>
+    `).join('') : '<div class="quiet">The Change Wall is quiet.</div>';
+  } catch (error) {
+    statusbar.innerHTML = '<span class="pill error">Radar API unavailable</span>';
+    signals.innerHTML = '<div class="quiet error">'+esc(error?.message || error)+'</div>';
+    changes.innerHTML = '';
+  }
+}
+
+document.getElementById('refresh').addEventListener('click', load);
+load();
+setInterval(load, 60000);
+</script>
+</body>
+</html>
