@@ -366,7 +366,12 @@ async function upnpMap() {
         control,
         mapping_results: mapped,
       });
-      result.success = mapped.length === mappings.length && mapped.every(x => x.success);
+      {
+        const production=mapped.filter(x=>x.requested?.production);
+        const diagnostic=mapped.filter(x=>x.requested?.diagnostic);
+        result.success=production.length>0&&production.every(x=>x.success===true);
+        result.diagnostic_success=diagnostic.length>0&&diagnostic.every(x=>x.success===true);
+      }
       if (result.success) {
         result.location = location;
         result.control = control;
