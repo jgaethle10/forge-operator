@@ -2,8 +2,9 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { createHash } from 'node:crypto';
+import { createHash, webcrypto } from 'node:crypto';
 import { admitHostBoundaryCapability } from './host-boundary-admission.mjs';
+import { pairChromeOsHostBoundaryObserver } from './chromeos-host-boundary-bridge.mjs';
 import { EvercraftRemoteOperator } from './remote-operator.mjs';
 
 const sha = (value) => 'sha256:' + createHash('sha256')
@@ -91,6 +92,29 @@ try {
     /host_boundary_capability_field_gate_required/,
   );
 
+  const observerKeyPair = await webcrypto.subtle.generateKey(
+    { name: 'ECDSA', namedCurve: 'P-256' },
+    true,
+    ['sign', 'verify'],
+  );
+  const exportedObserverPublicKey = await webcrypto.subtle.exportKey(
+    'jwk',
+    observerKeyPair.publicKey,
+  );
+  const pairedObserver = pairChromeOsHostBoundaryObserver({
+    observer_install_id: 'cros_operator_proof',
+    public_key_jwk: {
+      kty: 'EC',
+      crv: 'P-256',
+      x: exportedObserverPublicKey.x,
+      y: exportedObserverPublicKey.y,
+      ext: true,
+      key_ops: ['verify'],
+    },
+  }, {
+    stateRoot: path.join(root, 'host-boundary'),
+  });
+
   const certificationBody = {
     schema: 'evercraft.chromeos-host-boundary-field-certification.v1',
     capability_id: 'chromeos.crostini.port-forwarding.read.v1',
@@ -98,7 +122,7 @@ try {
     state: 'host_setting_and_lan_ready',
     host_observation: {
       observer_install_id: 'cros_operator_proof',
-      observer_key_fingerprint: 'sha256:' + 'c'.repeat(64),
+      observer_key_fingerprint: pairedObserver.observer_key_fingerprint,
       observer_signature_verified: true,
     },
     ready_for_external_canary: true,
