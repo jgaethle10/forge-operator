@@ -40,7 +40,7 @@ export function leaveOneOriginOut(rows, {
       observations: kept.length,
       mean_excess_return_net: value,
       sign: sign(value),
-      sign_preserved: sign(value) === expected_sign,
+      sign_preserved: sign(value) === 1,
     };
   });
   return {
@@ -78,7 +78,7 @@ export function splitByCalendarPeriod(rows, {
       observations: group.length,
       mean_excess_return_net: value,
       sign: sign(value),
-      sign_preserved: sign(value) === expected_sign,
+      sign_preserved: sign(value) === 1,
     };
   });
   return {
