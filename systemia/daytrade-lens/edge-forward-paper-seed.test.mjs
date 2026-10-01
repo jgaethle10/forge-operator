@@ -6,6 +6,9 @@ import { freezeForwardPaperCohort } from "./edge-forward-paper.mjs";
 import {
   seedFrozenEnrollment,
   seedFrozenEnrollmentFile,
+  loadCanonicalFrozenEnrollment,
+  CANONICAL_FORWARD_PAPER_CUTOFF,
+  CANONICAL_FORWARD_PAPER_ARTIFACT_DIGEST,
 } from "./edge-forward-paper-seed.mjs";
 
 const root = fs.mkdtempSync(path.join(os.tmpdir(), "edge-seed-root-"));
@@ -61,8 +64,10 @@ assert.equal(fromFile.verification[0].protocol_hash, cohort.protocol_hash);
 const canonicalPath = path.resolve(
   "systemia/daytrade-lens/frozen/forward-paper-cohorts-2026-09-30.json"
 );
-const canonical = JSON.parse(fs.readFileSync(canonicalPath, "utf8"));
+const canonical = loadCanonicalFrozenEnrollment({ enrollmentPath: canonicalPath });
 assert.equal(canonical.cohort_count, 6);
+assert.equal(canonical.generated_at, CANONICAL_FORWARD_PAPER_CUTOFF);
+assert.equal(canonical.source_artifact_digest, CANONICAL_FORWARD_PAPER_ARTIFACT_DIGEST);
 assert.equal(canonical.cohorts.length, 6);
 assert.ok(canonical.cohorts.every((row) => row.enrolled_at === "2026-09-30T23:10:52.172Z"));
 assert.ok(canonical.cohorts.every((row) => row.observation_cutoff === "2026-09-30T23:10:52.172Z"));
@@ -94,5 +99,8 @@ console.log(JSON.stringify({
   idempotent_seed:true,
   restart_reopen_verified:true,
   canonical_six_cohort_receipt_preserved:true,
+  canonical_source_digest_locked:true,
+  canonical_cutoff_locked:true,
+  historical_reruns_cannot_change_seed:true,
   live_trade_authority:false,
 }));
