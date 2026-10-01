@@ -115,6 +115,8 @@ jobs:
         run: npm run proof:commerce-boundary
       - name: Prove provider-authoritative Polar commerce
         run: npm run proof:polar-commerce
+      - name: Prove owned Audit Center Stripe commerce
+        run: npm run proof:audit-commerce
       - name: Prove owned AI Workforce commerce lifecycle
         run: npm run proof:workforce-commerce
       - name: Prove native Fabric discovery runtime
