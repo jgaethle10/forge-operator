@@ -337,8 +337,10 @@ export function compactPlugNYCSessionCorpus({
   const sourceCoverageThrough=clean(checkpoint.source_latest_date)||null;
   const partitions=entityStore.list(appKey,'EVOpsSessionPartition',{sort:'source_offset',limit:10000});
   const groups=new Map();
+  const seenRefs=new Set();
   let rawRows=0;
   let validRows=0;
+  let duplicateSourceRows=0;
   for(const partition of partitions){
     const stored=objectStore.get(appKey,partition.object_ref);
     if(stored.reference.blob_sha256!==partition.object_blob_sha256) throw new Error('session_partition_blob_mismatch');
@@ -346,6 +348,12 @@ export function compactPlugNYCSessionCorpus({
     if(rows.length!==Number(partition.row_count)) throw new Error('session_partition_row_count_mismatch');
     rawRows+=rows.length;
     for(const row of rows){
+      const sourceRef=clean(row.source_ref);
+      if(sourceRef && seenRefs.has(sourceRef)){
+        duplicateSourceRows+=1;
+        continue;
+      }
+      if(sourceRef) seenRefs.add(sourceRef);
       const month=clean(row.source_date).slice(0,7);
       const station=clean(row.station_external_id);
       if(!month||!station) continue;
@@ -420,6 +428,8 @@ export function compactPlugNYCSessionCorpus({
     partitions_read:partitions.length,
     raw_rows_read:rawRows,
     valid_usage_rows:validRows,
+    unique_event_refs:seenRefs.size,
+    duplicate_source_rows_skipped:duplicateSourceRows,
     aggregates_written:write.records.length,
     aggregate_mutation_receipt_hash:write.receipt.receipt_hash,
     observed_at:now()
@@ -428,6 +438,109 @@ export function compactPlugNYCSessionCorpus({
   const receiptFile=path.join(root,'session-corpus',PLUGNYC_SOURCE_ID,'compaction-receipts.jsonl');
   appendJsonl(receiptFile,receipt);
   return {receipt,aggregates};
+}
+
+export function reconcilePlugNYCSessionCorpus({
+  stateDir,
+  appKey=ALIEV_APP_KEY,
+  now=()=>new Date().toISOString(),
+  failOnCompleteMismatch=true
+}={}){
+  if(!stateDir) throw new Error('session_corpus_state_dir_required');
+  const root=path.resolve(stateDir);
+  const checkpoint=readJson(path.join(root,'session-corpus',PLUGNYC_SOURCE_ID,'checkpoint.json'),defaultCheckpoint());
+  const objectStore=new EvercraftObjectStore({stateDir:path.join(root,'object-store')});
+  const entityStore=new DurableEntityStore({stateDir:path.join(root,'entity-store')});
+  const partitions=entityStore.list(appKey,'EVOpsSessionPartition',{sort:'source_offset',limit:10000})
+    .sort((a,b)=>Number(a.source_offset||0)-Number(b.source_offset||0));
+
+  let expectedOffset=0;
+  let rawRows=0;
+  let allEnergy=0;
+  let validRows=0;
+  let validEnergy=0;
+  let firstDate=null;
+  let latestDate=null;
+  const statusCounts={};
+  const seenRefs=new Set();
+  let duplicateSourceRows=0;
+
+  for(const partition of partitions){
+    const offset=Number(partition.source_offset||0);
+    if(offset!==expectedOffset) throw new Error('session_partition_offset_gap:'+expectedOffset+':'+offset);
+    const stored=objectStore.get(appKey,partition.object_ref);
+    if(stored.reference.blob_sha256!==partition.object_blob_sha256) throw new Error('session_partition_blob_mismatch');
+    const rows=rowsFromNdjson(stored.data);
+    if(rows.length!==Number(partition.row_count)) throw new Error('session_partition_row_count_mismatch');
+    expectedOffset+=rows.length;
+    rawRows+=rows.length;
+    for(const row of rows){
+      const date=clean(row.source_date);
+      if(date && (!firstDate||date<firstDate)) firstDate=date;
+      if(date && (!latestDate||date>latestDate)) latestDate=date;
+      const energy=Number(row.energy_kwh||0);
+      allEnergy+=energy;
+      const status=clean(row.source_session_status)||'UNKNOWN';
+      statusCounts[status]=(statusCounts[status]||0)+1;
+      const sourceRef=clean(row.source_ref);
+      if(sourceRef){
+        if(seenRefs.has(sourceRef)) duplicateSourceRows+=1;
+        else seenRefs.add(sourceRef);
+      }
+      if(row.observed_usage_valid===true){
+        validRows+=1;
+        validEnergy+=energy;
+      }
+    }
+  }
+
+  const sourceRows=checkpoint.source_rows_seen==null?null:Number(checkpoint.source_rows_seen);
+  const sourceEnergy=checkpoint.source_energy_kwh==null?null:Number(checkpoint.source_energy_kwh);
+  const energyDelta=sourceEnergy==null?null:Number((allEnergy-sourceEnergy).toFixed(6));
+  const energyTolerance=sourceEnergy==null?null:Math.max(0.01,Math.abs(sourceEnergy)*1e-9);
+  const rowsReconciled=sourceRows==null?false:rawRows===sourceRows;
+  const energyReconciled=sourceEnergy==null?false:Math.abs(energyDelta)<=energyTolerance;
+  const offsetsReconciled=expectedOffset===rawRows && rawRows===Number(checkpoint.raw_rows_materialized||0);
+  const coverageDatesReconciled=checkpoint.complete
+    ? firstDate===checkpoint.source_first_date && latestDate===checkpoint.source_latest_date
+    : true;
+  const completeReconciled=Boolean(
+    checkpoint.complete && rowsReconciled && energyReconciled && offsetsReconciled && coverageDatesReconciled
+  );
+
+  const receipt={
+    schema:'evercraft.aliev.session-corpus-reconciliation-receipt.v1',
+    source:PLUGNYC_SOURCE_ID,
+    checkpoint_complete:Boolean(checkpoint.complete),
+    source_rows:sourceRows,
+    raw_rows_materialized:rawRows,
+    unique_event_refs:seenRefs.size,
+    duplicate_source_rows:duplicateSourceRows,
+    source_energy_kwh:sourceEnergy,
+    raw_energy_kwh:Number(allEnergy.toFixed(6)),
+    energy_delta_kwh:energyDelta,
+    energy_tolerance_kwh:energyTolerance,
+    valid_usage_rows:validRows,
+    valid_usage_energy_kwh:Number(validEnergy.toFixed(6)),
+    source_status_counts:statusCounts,
+    first_materialized_date:firstDate,
+    latest_materialized_date:latestDate,
+    rows_reconciled:rowsReconciled,
+    energy_reconciled:energyReconciled,
+    offsets_reconciled:offsetsReconciled,
+    coverage_dates_reconciled:coverageDatesReconciled,
+    complete_reconciled:completeReconciled,
+    observed_at:now()
+  };
+  receipt.receipt_sha256='sha256:'+shaHex(stableJson(receipt));
+  appendJsonl(path.join(root,'session-corpus',PLUGNYC_SOURCE_ID,'reconciliation-receipts.jsonl'),receipt);
+
+  if(checkpoint.complete && failOnCompleteMismatch && !completeReconciled){
+    const error=new Error('session_corpus_reconciliation_failed');
+    error.receipt=receipt;
+    throw error;
+  }
+  return receipt;
 }
 
 export function sessionCorpusStatus({stateDir,appKey=ALIEV_APP_KEY}={}){
