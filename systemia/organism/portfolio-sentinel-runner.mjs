@@ -16,6 +16,7 @@ import {
   resolveRepairRecipe
 } from '../sentinel/architectural-invariants.mjs';
 import { probeJournalFreshness } from './journal-freshness.mjs';
+import { buildRepairUnitState } from '../sentinel/repair-unit.mjs';
 
 function clean(value) {
   return String(value ?? '').trim();
@@ -384,7 +385,10 @@ async function main() {
   );
 
   const delta = buildPortfolioDelta(previous, activeFindings);
-  const retryCandidates = [...delta.added, ...delta.changed].filter((row) => row.code === 'github_workflow_failed');
+  // Failed workflows are active incidents, not one-shot notifications. Retry bounded
+  // automatable failures every cycle until they recover; GitHub concurrency and the
+  // one-attempt recipe keep each cycle bounded while Systemia keeps pressure on.
+  const retryCandidates = activeFindings.filter((row) => row.code === 'github_workflow_failed');
   const autoHeal = {
     enabled: Boolean(args.autoHeal),
     workflow_reruns: args.autoHeal
@@ -396,6 +400,13 @@ async function main() {
       : []
   };
   const repairQueue = buildPortfolioRepairQueue(activeFindings, delta);
+  const repairUnitFile = path.join(outDir, 'repair-unit-state.json');
+  const treatmentMemoryFile = path.join(outDir, 'repair-treatment-memory.json');
+  const treatmentMemory = loadJson(treatmentMemoryFile, { schema:'evercraft.systemia.repair-treatment-memory.v1', treatments:[] });
+  const repairUnit = buildRepairUnitState(activeFindings, loadJson(repairUnitFile, { items: [] }), {
+    recipeRegistry: recipeRegistryResult.ok ? recipeRegistryResult.registry : { recipes: [] },
+    treatmentMemory: treatmentMemory.treatments || []
+  });
   const evidenceRefs = activeFindings.flatMap((row) => row.evidence_refs || []).slice(0, 500);
   const snapshot = buildPortfolioMissionSnapshot({ scanned, delta, observedAt, evidenceRefs });
   const cycleKey = new Date(Math.floor(observedAt.getTime() / 300000) * 300000).toISOString();
@@ -456,10 +467,11 @@ async function main() {
     },
     repair_queue: repairQueue,
     auto_heal: autoHeal,
+    repair_unit: repairUnit,
     doctrine: {
       material_change_only: true,
       safe_internal_repairs_only: true,
-      bounded_failed_workflow_retry: args.autoHeal ? 'autonomous' : 'disabled',
+      bounded_failed_workflow_retry: args.autoHeal ? 'continuous_until_green' : 'disabled',
       architectural_invariants: 'enforced_before_green',
       repair_recipe_memory: recipeRegistryResult.ok ? 'loaded' : 'invalid',
       human_experience_gate: 'saban_static_evidence_plus_owned_browser_receipts',
@@ -476,6 +488,8 @@ async function main() {
   atomicJson(path.join(outDir, 'mission-snapshot.json'), snapshot);
   atomicJson(path.join(outDir, 'repair-queue.json'), { schema: 'evercraft.portfolio-sentinel.repair-queue.v1', observed_at: report.observed_at, items: repairQueue });
   atomicJson(path.join(outDir, 'inventory.json'), { schema: 'evercraft.portfolio-sentinel.inventory.v1', observed_at: report.observed_at, ...report.inventory });
+  atomicJson(repairUnitFile, repairUnit);
+  atomicJson(treatmentMemoryFile, treatmentMemory);
   atomicJson(path.join(outDir, 'repair-memory.json'), {
     schema: 'evercraft.portfolio-sentinel.repair-memory.v1',
     observed_at: report.observed_at,
@@ -506,6 +520,7 @@ async function main() {
     repair_queue: repairQueue.length,
     blocking_findings: blockingFindings.length,
     auto_heal_reruns: autoHeal.workflow_reruns.length,
+    repair_unit: repairUnit.summary,
     matched_repair_recipes: activeFindings.filter((row) => row.repair_recipe?.recipe_id).length,
     mission_snapshot: path.join(outDir, 'mission-snapshot.json')
   }));

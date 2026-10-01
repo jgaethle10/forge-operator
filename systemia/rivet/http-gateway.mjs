@@ -13,15 +13,19 @@ export function registerRivetReportGateway(app,{
   systemiaMachineKey=process.env.SYSTEMIA_MACHINE_KEY || '',
   sourceUrl=process.env.ALIEV_YARD_SOURCE_URL || '',
   stateDir=process.env.RIVET_REPORT_STATE_DIR || path.join('/tmp','evercraft-rivet-report'),
-  generate=generateYardReport
+  generate=generateYardReport,
+  sourceRequired=generate===generateYardReport
 }={}){
+  const sourceReady=()=>!sourceRequired || Boolean(clean(sourceUrl));
+  const configured=()=>Boolean(clean(gatewayToken) && clean(systemiaMachineKey) && sourceReady());
   app.get('/api/rivet/report-health',(_req,res)=>{
     res.setHeader('cache-control','no-store');
     res.json({
       ok:true,
       service:'rivet-yard-report-gateway',
       runtime:'Forge/Yard',
-      configured:Boolean(clean(gatewayToken) && clean(systemiaMachineKey) && clean(sourceUrl)),
+      configured:configured(),
+      source_required:Boolean(sourceRequired),
       owned_source_configured:Boolean(clean(sourceUrl) && !/(^|\\.)base44\\.app$/i.test((()=>{try{return new URL(sourceUrl).hostname}catch{return ''}})())),
       base44_source_refused:true,
       source_contract:'rivet_report_snapshot_v1',
@@ -32,7 +36,7 @@ export function registerRivetReportGateway(app,{
   });
 
   app.post('/api/rivet/reports',async(req,res)=>{
-    if(!clean(gatewayToken) || !clean(systemiaMachineKey) || !clean(sourceUrl)){
+    if(!configured()){
       res.status(503).json({ok:false,error:'rivet_report_gateway_not_configured'});
       return;
     }

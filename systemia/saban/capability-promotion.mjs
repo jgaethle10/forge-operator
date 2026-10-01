@@ -87,6 +87,11 @@ export function buildCapabilityPromotionQueue({
         state='repairable_binding_drift';
         priority='P0';
         next_action='Reconcile the public product index from current registry/conformance truth. Do not invent a new endpoint.';
+      }else if(clean(linked?.implementation_state)==='source_implemented_live_verification_pending'){
+        state='source_implemented_live_verification_pending';
+        priority='P1';
+        next_action=clean(linked?.required_next_primitive) ||
+          'Independently verify the candidate endpoint in production, record conformance, then bind it to an approved machine route. Source presence alone is not live capability.';
       }else if(offer && callableMachineState(offer.machine_state)){
         state='callable_evidence_needs_binding_or_conformance';
         priority='P1';
@@ -109,6 +114,10 @@ export function buildCapabilityPromotionQueue({
       machine_state:offer?.machine_state||null,
       machine_public_url:offer?.public_url||null,
       match_basis,
+      implementation_state: linked?.implementation_state || null,
+      candidate_endpoint: linked?.candidate_endpoint || null,
+      source_checkpoint: linked?.source_checkpoint || null,
+      source_system: linked?.source_system || null,
       promotion_evidence: linked?.evidence || null,
       required_next_primitive: linked?.required_next_primitive || null,
       conformance_present:Boolean(conf),
@@ -146,6 +155,7 @@ export function buildCapabilityPromotionQueue({
       bounded_http_live:counts.bounded_http_live||0,
       repairable_binding_drift:counts.repairable_binding_drift||0,
       callable_evidence_needs_binding_or_conformance:counts.callable_evidence_needs_binding_or_conformance||0,
+      source_implemented_live_verification_pending:counts.source_implemented_live_verification_pending||0,
       machine_discovery_only:counts.machine_discovery_only||0,
       discovery_only_no_machine_offer:counts.discovery_only_no_machine_offer||0
     },

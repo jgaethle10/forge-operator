@@ -43,16 +43,24 @@ const fakeGenerate=async({address,systemiaMachineKey,onProgress})=>{
 }
 
 {
-  const runtime=await start({
-    gatewayToken:'gateway-proof',
-    systemiaMachineKey:'machine-proof',
-    sourceUrl:'https://owned-source.example.invalid/rivet-report-snapshot',
-    generate:fakeGenerate
-  });
+  const runtime=await start({gatewayToken:'gateway-proof',systemiaMachineKey:'machine-proof'});
+  try{
+    const health=await fetch(runtime.url+'/api/rivet/report-health').then(r=>r.json());
+    assert.equal(health.ok,true);
+    assert.equal(health.configured,false);
+    assert.equal(health.source_required,true);
+    const created=await fetch(runtime.url+'/api/rivet/reports',{method:'POST',headers:{'content-type':'application/json','authorization':'Bearer gateway-proof'},body:JSON.stringify({address:'6405 W Chestnut Ave, Yakima, WA 98908'})});
+    assert.equal(created.status,503);
+  }finally{await runtime.close();}
+}
+
+{
+  const runtime=await start({gatewayToken:'gateway-proof',systemiaMachineKey:'machine-proof',generate:fakeGenerate});
   try{
     const health=await fetch(runtime.url+'/api/rivet/report-health').then(r=>r.json());
     assert.equal(health.ok,true);
     assert.equal(health.configured,true);
+    assert.equal(health.source_required,false);
 
     const denied=await fetch(runtime.url+'/api/rivet/reports',{method:'POST',headers:{'content-type':'application/json','authorization':'Bearer wrong'},body:JSON.stringify({address:'6405 W Chestnut Ave'})});
     assert.equal(denied.status,401);
@@ -88,9 +96,8 @@ const fakeGenerate=async({address,systemiaMachineKey,onProgress})=>{
     nearby_observed_usage:[{charging_sessions_count:42,period_start:'2026-08-01',period_granularity:'month'}]
   };
   const runtime=await start({
-    gatewayToken:'gateway-proof',systemiaMachineKey:'machine-proof',
-    sourceUrl:'https://owned-source.example.invalid/rivet-report-snapshot',
-    stateDir,
+    gatewayToken:'gateway-proof',systemiaMachineKey:'machine-proof',stateDir,
+    sourceUrl:'https://aliev.evercraft.test/rivet-report-snapshot',
     generate:(args)=>generateYardReport({...args,sourceFetch:async()=>new Response(JSON.stringify(sourceSnapshot),{status:200})})
   });
   try{

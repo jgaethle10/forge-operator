@@ -46,6 +46,23 @@ The installer copies the reviewed source into `~/.local/share/evercraft/forge-op
 The service creates no public ingress. Remote Systemia admission can be layered on later as an outbound-only transport without changing the local runtime contracts.
 
 
+
+## Self-healing health watch
+
+The user-mode installer also enables `evercraft-local-organism-health.timer`. Once the Crostini user manager is alive, the timer checks the loopback NodeSeed every 60 seconds and writes:
+
+```text
+~/.local/state/evercraft/organism/health-watch.json
+```
+
+The watcher is intentionally narrow. It may restart only `evercraft-local-organism.service` in the same user systemd scope. It has no sudo/root path, no arbitrary command lane, no public listener, and it never reads or returns allocator tokens.
+
+A healthy check proves the real NodeSeed `/v1/health` endpoint is alive. If the service is active but the NodeSeed is unhealthy, the watcher performs one bounded restart, waits for the real health endpoint to recover, and records either `recovered` or `degraded`. A cooldown prevents restart thrashing.
+
+This does not claim that Crostini itself can survive ChromeOS suspending or stopping the Linux VM. The host boundary remains explicit. It does mean that once Linux is running, a wedged local organism should heal without turning the founder into a process babysitter.
+
+The resident network observer also reads the non-secret organism and health-watch receipts and probes NodeSeed directly. Authorized Remote Operator status can therefore report whether the local organism, Remote Operator capability, Fabric, TLS edge, and router automation are healthy as separate layers.
+
 ## Outbound remote admission
 
 The local organism can attach to the canonical remote-capacity broker without opening any public listener on the Chromebook/Crostini side.

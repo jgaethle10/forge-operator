@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.provider-probe-history.v1",
-  "updated_at": "2026-09-30T22:19:33.530Z",
+  "updated_at": "2026-10-01T02:18:54.562Z",
   "max_records": 500,
   "records": [
     {
@@ -8312,6 +8312,60 @@
       "pickup_observed": true,
       "provider_receipt_sha256": "a66047054924b6681e067811eb78e9ba9929965ef1f5ba96d4378e8767f3920c",
       "response_sha256": "4526023d36f66b2326c906ef88db5073fc77f6ed88dec3d454023cc84c0dc1ae",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "4b7dace3e1511b1837d8882e3bbb2f0b911f02f619bca2bdd711d2dfbb156af3",
+      "observed_at": "2026-10-01T01:52:15.847Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "systemia-remote-ops",
+      "case_id": "business-simulator-pricing-002",
+      "prompt_sha256": "34c097bdc72af624ef6fc1c684a014507d3d51d7aa3bacbe90e7df0cd0ac5655",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "54f7d533826f3398fbea1ccc1197f6a4d4131d03897a88f703572d6c291fb282",
+      "response_sha256": "6f008fc1f5cf170a7c118c0d066ad3c3637d8389b63c7ae1e7ec4d21519b5284",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "f4ca053d9cd87bb0bde4c3a9be080bde2ff277da7201211bdc717091f3a51362",
+      "observed_at": "2026-10-01T01:55:46.659Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "systemia-remote-ops",
+      "case_id": "business-simulator-pricing-002",
+      "prompt_sha256": "34c097bdc72af624ef6fc1c684a014507d3d51d7aa3bacbe90e7df0cd0ac5655",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "9053b64bae2978bf0d1affe979d2131b8b1f19f798f1260bd43da28c9e95afc5",
+      "response_sha256": "6f008fc1f5cf170a7c118c0d066ad3c3637d8389b63c7ae1e7ec4d21519b5284",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "7431d05115e194365c8f740190d88d57d4fb2b981cc638ff67598c8200764eb5",
+      "observed_at": "2026-10-01T02:18:54.562Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "systemia-remote-ops",
+      "case_id": "business-simulator-expansion-003",
+      "prompt_sha256": "7c8667c614ff5c1a5050299b28517d3b4bdc3826ed386fddd9d7818883cc8c08",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "6332aafdfc088625c7b02aff89cdd7c7e4741de96a0830a517787310d47422ed",
+      "response_sha256": "71629bff5ccc0f2d86f48dab22f5f111d77bc6abadb26a2336a0cf984075762c",
       "source": "authorized_provider_probe",
       "privacy": {
         "full_provider_response_persisted": false,

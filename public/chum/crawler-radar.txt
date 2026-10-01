@@ -1,8 +1,8 @@
 Evercraft CHUM Crawler Radar
-Generated: 2026-09-30T22:43:41.455Z
+Generated: 2026-10-01T02:47:07.329Z
 Observed crawler-like requests: 0
 Negative provider pickup receipts: 174
-Strike-now surfaces: 1729
+Strike-now surfaces: 1748
 
 1. [strike_now] score=246 /chum/products/findmypart/ :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, negative_provider_pickup_receipt, indexnow_hash_pending
 2. [strike_now] score=246 /chum/products/findmypart/ai-conformance.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, negative_provider_pickup_receipt, indexnow_hash_pending
@@ -93,16 +93,16 @@ Strike-now surfaces: 1729
 87. [strike_now] score=222 /chum/answers/doors/audit-this-dataset-for-gaps-2587bf5b7d.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, indexnow_hash_pending
 88. [strike_now] score=222 /chum/answers/doors/audit-this-freight-load-for-exceptions-b5dc37f994.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, indexnow_hash_pending
 89. [strike_now] score=222 /chum/answers/doors/audit-this-paperback-export-c84fe388e8.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, indexnow_hash_pending
-90. [strike_now] score=222 /chum/answers/doors/automate-this-workflow-2bf95f92d8.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, indexnow_hash_pending
-91. [strike_now] score=222 /chum/answers/doors/automation-persistence-f812c17c66.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, indexnow_hash_pending
-92. [strike_now] score=222 /chum/answers/doors/be-brutally-honest-about-this-copy-32a18cde5f.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, indexnow_hash_pending
-93. [strike_now] score=222 /chum/answers/doors/behavioral-interview-practice-8dfc51b114.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, indexnow_hash_pending
-94. [strike_now] score=222 /chum/answers/doors/bilingual-field-supervisor-training-bdd1126970.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, indexnow_hash_pending
-95. [strike_now] score=222 /chum/answers/doors/bilingual-workforce-training-for-frontline-employees-cd40ddd943.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, indexnow_hash_pending
-96. [strike_now] score=222 /chum/answers/doors/boost-event-visibility-0b3d061df2.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, indexnow_hash_pending
-97. [strike_now] score=222 /chum/answers/doors/boost-this-event-02f04ebd41.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, indexnow_hash_pending
-98. [strike_now] score=222 /chum/answers/doors/browser-automation-api-0925c49aa4.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, indexnow_hash_pending
-99. [strike_now] score=222 /chum/answers/doors/browser-automation-api-for-an-ai-agent-4865230391.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, indexnow_hash_pending
-100. [strike_now] score=222 /chum/answers/doors/brutally-critique-this-message-d550264762.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, indexnow_hash_pending
+90. [strike_now] score=222 /chum/answers/doors/audit-this-paperback-export-c84fe388e8/ :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, indexnow_hash_pending
+91. [strike_now] score=222 /chum/answers/doors/automate-this-workflow-2bf95f92d8.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, indexnow_hash_pending
+92. [strike_now] score=222 /chum/answers/doors/automation-persistence-f812c17c66.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, indexnow_hash_pending
+93. [strike_now] score=222 /chum/answers/doors/be-brutally-honest-about-this-copy-32a18cde5f.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, indexnow_hash_pending
+94. [strike_now] score=222 /chum/answers/doors/behavioral-interview-practice-8dfc51b114.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, indexnow_hash_pending
+95. [strike_now] score=222 /chum/answers/doors/bilingual-field-supervisor-training-bdd1126970.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, indexnow_hash_pending
+96. [strike_now] score=222 /chum/answers/doors/bilingual-workforce-training-for-frontline-employees-cd40ddd943.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, indexnow_hash_pending
+97. [strike_now] score=222 /chum/answers/doors/boost-event-visibility-0b3d061df2.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, indexnow_hash_pending
+98. [strike_now] score=222 /chum/answers/doors/boost-this-event-02f04ebd41.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, indexnow_hash_pending
+99. [strike_now] score=222 /chum/answers/doors/browser-automation-api-0925c49aa4.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, indexnow_hash_pending
+100. [strike_now] score=222 /chum/answers/doors/browser-automation-api-for-an-ai-agent-4865230391.json :: no_self_identified_crawler_fetch_observed, fresh_content_under_24h, indexnow_hash_pending
 
 Truth boundary: self-identified crawler requests are attention evidence only. They do not prove indexing, ranking, citation, recommendation, training use, or conversion.

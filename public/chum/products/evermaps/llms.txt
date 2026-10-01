@@ -3,6 +3,8 @@
 Product key: evermaps
 Aliases: EverMaps Public-Safe Geospatial Evidence Projection
 Canonical product: https://evermaps.base44.app/
+Official MCP Registry: io.github.jgaethle10/evercraft-machine-commerce
+Remote MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evermaps/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evermaps/ai-conformance.json
 

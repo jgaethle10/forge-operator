@@ -7,6 +7,7 @@ import {
   normalizeFabricCatalog,
   validateOpenAiChallengeToken,
 } from './fabric-directory.mjs';
+import { nativeOnlyCatalog } from './fabric-local-runtime.mjs';
 
 export const SPECIALIST_HANDOFFS = [
   {
@@ -58,7 +59,7 @@ export const SYSTEMIA_REMOTE_OPS = {
 function remoteOpsHumanUrl(pathname = '/') {
   const origin = String(SYSTEMIA_REMOTE_OPS.human_origin || '').trim();
   if (!origin) return null;
-  return new URL(String(pathname || '/'), origin.endsWith('/') ? origin : origin + '/').toString();
+  return origin.replace(/\/+$/, '') + '/' + String(pathname || '').replace(/^\/+/, '');
 }
 
 function remoteOpsTools() {
@@ -494,6 +495,67 @@ function rpcError(id, code, message) {
   return { jsonrpc: '2.0', id: id ?? null, error: { code, message } };
 }
 
+function isBase44Url(value) {
+  try {
+    const hostname = new URL(String(value || '')).hostname.toLowerCase();
+    return hostname === 'base44.app' || hostname.endsWith('.base44.app');
+  } catch {
+    return false;
+  }
+}
+
+function nativeCatalogGatewayFetch(catalog, action, publicId) {
+  const capability = (catalog || []).find((entry) => entry.public_id === publicId);
+  if (!capability) throw new Error('specialist_capability_not_found');
+
+  const connections = (capability.connections || []).filter(
+    (connection) => !isBase44Url(connection?.url)
+  );
+  const handoff = connections.find((connection) => connection.type === 'website')
+    || connections.find((connection) => connection.type === 'mcp')
+    || connections.find((connection) => connection.type === 'docs')
+    || null;
+
+  const common = {
+    ok: true,
+    source: 'evercraft.fabric.catalog',
+    public_id: capability.public_id,
+    name: capability.name,
+    description: capability.description,
+    machine_state: capability.state,
+    connections,
+    checkout_created: false,
+    payment_created: false,
+    payment_obligation_created: false,
+    base44_transport_enabled: false,
+  };
+
+  if (action === 'offer') {
+    return {
+      ...common,
+      offer: {
+        public_id: capability.public_id,
+        name: capability.name,
+        description: capability.description,
+        state: capability.state,
+      },
+      human_action_required: false,
+    };
+  }
+
+  if (action === 'service_handoff') {
+    return {
+      ...common,
+      handoff_url: handoff?.url || null,
+      handoff_type: handoff?.type || null,
+      human_action_required: true,
+      handoff_state: handoff ? 'public_review_surface_available' : 'public_review_surface_not_available',
+    };
+  }
+
+  throw new Error('specialist_gateway_action_not_supported');
+}
+
 async function defaultGatewayFetch(gatewayUrl, action, publicId) {
   const target = new URL(gatewayUrl);
   if (target.protocol !== 'https:') throw new Error('machine_commerce_gateway_must_use_https');
@@ -505,7 +567,7 @@ async function defaultGatewayFetch(gatewayUrl, action, publicId) {
     const response = await fetch(target, {
       headers: {
         accept: 'application/json',
-        'user-agent': 'Evercraft-Specialist-Handoff-Runtime/0.1.0',
+        'user-agent': 'Evercraft-Specialist-Handoff-Runtime/0.2.0',
       },
       signal: controller.signal,
     });
@@ -527,7 +589,7 @@ export async function executeSpecialistRpc(def, rpc, gatewayFetch) {
     return rpcResult(id, {
       protocolVersion: '2025-03-26',
       capabilities: { tools: {} },
-      serverInfo: { name: def.server_name, version: '0.1.0' },
+      serverInfo: { name: def.server_name, version: '0.2.0' },
       instructions: `${def.description} ${def.truth_boundary}`,
     });
   }
@@ -571,7 +633,7 @@ export async function startSpecialistHandoffRuntime({
   port = 0,
   gatewayUrl = '',
   gatewayFetch = null,
-  remoteOpsPricingUrl = '',
+  remoteOpsPricingUrl = null,
   remoteOpsPricingFetch = null,
   fabricCatalog = null,
   fabricMcpPath = '/mcp',
@@ -580,17 +642,19 @@ export async function startSpecialistHandoffRuntime({
   const instanceId = `specialist_handoff_${randomBytes(12).toString('hex')}`;
   let deploymentReceiptRef = '';
   let identityAttestation = null;
-  const configuredGatewayUrl = String(gatewayUrl || '').trim();
-  const callGateway = gatewayFetch || (
-    configuredGatewayUrl
-      ? ((action, publicId) => defaultGatewayFetch(configuredGatewayUrl, action, publicId))
-      : (async () => { throw new Error('machine_commerce_gateway_not_configured'); })
-  );
-  const callRemoteOpsPricing = remoteOpsPricingFetch || ((payload) =>
-    Promise.resolve(simulateRemoteOpsPricing(payload)));
-  const normalizedFabricCatalog = Array.isArray(fabricCatalog)
+  const sourceFabricCatalog = Array.isArray(fabricCatalog)
     ? normalizeFabricCatalog(fabricCatalog)
     : loadFabricCatalogFromRepository();
+  const nativeCatalog = nativeOnlyCatalog(sourceFabricCatalog);
+  const normalizedFabricCatalog = nativeCatalog.capabilities;
+  const normalizedGatewayUrl = String(gatewayUrl || '').trim();
+  const callGateway = gatewayFetch
+    || (normalizedGatewayUrl
+      ? ((action, publicId) => defaultGatewayFetch(normalizedGatewayUrl, action, publicId))
+      : ((action, publicId) => nativeCatalogGatewayFetch(normalizedFabricCatalog, action, publicId)));
+  const callRemoteOpsPricing = remoteOpsPricingFetch || ((payload) =>
+    Promise.resolve(simulateRemoteOpsPricing(payload)));
+  void remoteOpsPricingUrl;
   const normalizedFabricPath = String(fabricMcpPath || '/mcp').trim();
   if (
     !normalizedFabricPath.startsWith('/') ||
@@ -614,7 +678,7 @@ export async function startSpecialistHandoffRuntime({
     service: 'specialist-handoff-mcp',
     runtime: 'Evercraft Compute',
     instance_id: instanceId,
-    version: '0.1.0',
+    version: '0.2.0',
     deployment_receipt_bound: Boolean(deploymentReceiptRef),
     deployment_receipt_ref: deploymentReceiptRef || null,
     identity_attestation_bound: Boolean(identityAttestation),
@@ -631,9 +695,24 @@ export async function startSpecialistHandoffRuntime({
     fabric_directory_enabled: true,
     fabric_mcp_path: normalizedFabricPath,
     fabric_capability_count: normalizedFabricCatalog.length,
+    removed_legacy_base44_connections:
+      nativeCatalog.removed_legacy_base44_connections,
+    removed_legacy_base44_mcp_connections:
+      nativeCatalog.removed_legacy_base44_mcp_connections,
     openai_challenge_path: openAiChallengePath,
     openai_challenge_ready: Boolean(challengeToken),
-    legacy_adapter: 'evercraft_machine_commerce_gateway',
+    gateway_mode: gatewayFetch
+      ? 'injected'
+      : normalizedGatewayUrl
+        ? 'external_https'
+        : 'native_fabric_catalog',
+    external_gateway_configured: Boolean(normalizedGatewayUrl),
+    base44_transport_enabled: Boolean(
+      normalizedGatewayUrl && isBase44Url(normalizedGatewayUrl)
+    ),
+    legacy_adapter: normalizedGatewayUrl
+      ? 'evercraft_machine_commerce_gateway'
+      : null,
     specialist_paths: [
       {
         product: 'Evercraft Fabric',
@@ -768,7 +847,7 @@ export async function startSpecialistHandoffRuntime({
           ok: true,
           service: def.title,
           server: def.server_name,
-          version: '0.1.0',
+          version: '0.2.0',
           public_id: def.public_id,
           transport: 'Streamable HTTP',
           tools: [def.get_offer_tool, def.prepare_handoff_tool],

@@ -117,6 +117,19 @@ test('Fabric MCP exposes exactly the read-only directory contract',async()=>{
   assert.equal(fabricDirectoryTools().length,3);
 });
 
+test('Fabric MCP publishes reviewer-grade argument descriptions',()=>{
+  const tools=fabricDirectoryTools();
+  for(const tool of tools){
+    assert.ok(String(tool.description||'').length>20);
+    for(const [name,schema] of Object.entries(tool.inputSchema?.properties||{})){
+      assert.ok(
+        String(schema.description||'').length>12,
+        `${tool.name} input ${name} needs a useful description`
+      );
+    }
+  }
+});
+
 test('Fabric MCP matches intent and never creates transaction authority',async()=>{
   const result=await executeFabricDirectoryRpc({
     jsonrpc:'2.0',

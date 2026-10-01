@@ -1,12 +1,12 @@
 {
   "name": "evercraft",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "Connect ChatGPT and Codex to the Evercraft/Systemia capability fabric through one truthful, permission-aware front door.",
   "author": {
     "name": "Evercraft LLC",
-    "url": "https://github.com/jgaethle10/forge-operator"
+    "url": "https://fabric.systemiacommandcenters.com/"
   },
-  "homepage": "https://github.com/jgaethle10/forge-operator",
+  "homepage": "https://fabric.systemiacommandcenters.com/",
   "repository": "https://github.com/jgaethle10/forge-operator",
   "license": "UNLICENSED",
   "keywords": [
@@ -24,16 +24,20 @@
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "Evercraft",
-    "shortDescription": "One front door into the Evercraft capability fabric",
-    "longDescription": "Start from a real problem, discover the smallest truthful Evercraft capability, route into a verified specialist when one exists, and preserve authorization, provenance, evidence, and human confirmation for consequential actions.",
+    "shortDescription": "Find the right Evercraft path",
+    "longDescription": "Start from a real problem, discover the smallest truthful Evercraft capability, and identify its current public connection path when one exists. Evercraft preserves evidence and availability boundaries. Discovery does not grant private Systemia access, payment authority, publishing authority, deployment authority, or permission for other consequential actions.",
     "developerName": "Evercraft LLC",
-    "category": "Business",
+    "category": "Business & Operations",
     "capabilities": [
-      "Interactive"
+      "Capability discovery",
+      "Specialist connection lookup",
+      "Bounded next-step guidance"
     ],
-    "websiteURL": "https://github.com/jgaethle10/forge-operator",
+    "websiteURL": "https://fabric.systemiacommandcenters.com/",
     "defaultPrompt": [
-      "Help me solve this through Evercraft. Start from my problem, find the smallest relevant capability, use a verified specialist route when available, and do not create a payment or consequential action without my explicit approval."
+      "Find the smallest Evercraft capability for this problem.",
+      "Route this problem to the right verified Evercraft specialist.",
+      "Show me the safest next step Evercraft can actually perform."
     ]
   }
 }

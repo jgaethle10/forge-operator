@@ -778,7 +778,10 @@ export async function startEvercraftComputeNode({
         }
         try {
           if (req.method === 'GET') {
-            return send(res, 200, remoteOperator.status());
+            return send(res, 200, {
+              ...remoteOperator.status(),
+              network_observation: await remoteOperator.networkStatus(),
+            });
           }
           const body = await readJson(req);
           if (req.url === '/v1/operator/fs/list') {
@@ -1666,7 +1669,7 @@ export async function startEvercraftComputeNode({
             gatewayUrl: String(
               body.input?.gateway_url ||
               process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL ||
-              'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway'
+              ''
             ),
             fabricCatalog: Array.isArray(body.input?.fabric_catalog)
               ? body.input.fabric_catalog

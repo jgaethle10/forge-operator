@@ -49,3 +49,27 @@ test('live MCP products remain maintenance items',()=>{
   assert.equal(report.queue[0].state,'mcp_live');
   assert.equal(report.summary.mcp_live,1);
 });
+
+
+test('source implementation never promotes without independent live verification',()=>{
+  const report=buildCapabilityPromotionQueue({
+    ...base,
+    publicIndex:{products:[{product_key:'x',name:'X',canonical_url:'https://x.example',invocation:{mode:'discovery_only',url:null}}]},
+    machineCatalog:{offers:[{public_id:'x-v1',public_url:'https://machine.example/docs',machine_state:'discovery_only'}]},
+    links:{links:[{
+      product_key:'x',
+      machine_public_id:'x-v1',
+      implementation_state:'source_implemented_live_verification_pending',
+      candidate_endpoint:'https://machine.example/candidate',
+      source_checkpoint:'abc123',
+      required_next_primitive:'Verify the live endpoint first.'
+    }]}
+  });
+  assert.equal(report.queue[0].state,'source_implemented_live_verification_pending');
+  assert.equal(report.queue[0].priority,'P1');
+  assert.equal(report.queue[0].current_mode,'discovery_only');
+  assert.equal(report.queue[0].candidate_endpoint,'https://machine.example/candidate');
+  assert.equal(report.queue[0].source_checkpoint,'abc123');
+  assert.equal(report.queue[0].next_action,'Verify the live endpoint first.');
+  assert.equal(report.summary.source_implemented_live_verification_pending,1);
+});

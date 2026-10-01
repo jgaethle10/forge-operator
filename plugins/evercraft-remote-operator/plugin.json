@@ -1,6 +1,6 @@
 {
   "name": "evercraft-remote-operator",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Connect ChatGPT or another MCP client to an explicitly authorized Evercraft-owned or user-owned node through Evercraft's outbound-only Remote Operator fabric.",
   "author": {
     "name": "Evercraft LLC"

@@ -3,7 +3,8 @@
   "always": [
     "systemia_world_model",
     "sentinel",
-    "journal"
+    "journal",
+    "systemia_radar"
   ],
   "by_domain": {
     "weather": [

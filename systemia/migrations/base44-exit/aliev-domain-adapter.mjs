@@ -28,6 +28,8 @@ function migrationKey(entity,row,index){
 }
 function common(entity,row,index){
   const out=clone(row);
+  const sourceRowSha256=clean(out._migration_row_sha256);
+  delete out._migration_row_sha256;
   const inferred=inferUsAddressParts(out.address);
   const normalized=normalizeUsState(out.state||out.state_code||out.state_name||out.region_code);
   if(normalized)out.state=normalized;
@@ -40,6 +42,7 @@ function common(entity,row,index){
     source_entity:entity,
     source_record_id:clean(row?.id)||null,
     migrated_record_key:out.record_key,
+    source_row_sha256:sourceRowSha256||null,
   };
   return out;
 }

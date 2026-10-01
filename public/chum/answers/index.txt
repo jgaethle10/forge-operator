@@ -477,7 +477,7 @@ Human-readable match: /chum/answers/doors/audit-this-paperback-export-c84fe388e8
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/audit-this-paperback-export-c84fe388e8.json
 Candidates:
 - Book Export QA | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs
-- Little Red Studio Book Export QA | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs
+- Little Red Studio Book Export QA | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs
 
 ## automate this workflow
 Answer ID: intent:2bf95f92d8
@@ -952,7 +952,7 @@ Human-readable match: /chum/answers/doors/check-if-my-book-is-ready-for-kdp-465d
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/check-if-my-book-is-ready-for-kdp-465dd47ba7.json
 Candidates:
 - Book Export QA | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs
-- Little Red Studio Book Export QA | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs
+- Little Red Studio Book Export QA | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs
 
 ## check my local SEO
 Answer ID: intent:e8e838ec7c
@@ -974,7 +974,7 @@ Human-readable match: /chum/answers/doors/check-page-count-and-cover-dpi-512896a
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/check-page-count-and-cover-dpi-512896a3dd.json
 Candidates:
 - Book Export QA | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs
-- Little Red Studio Book Export QA | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs
+- Little Red Studio Book Export QA | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs
 
 ## check this carrier and load paperwork
 Answer ID: intent:ce9a5b3527
@@ -1193,7 +1193,7 @@ Human-readable match: /chum/answers/doors/compare-these-countries-on-this-metric
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-these-countries-on-this-metric-14e53d7a85.json
 Candidates:
 - Country / Domain Intelligence Slice | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/machineDiscovery?view=docs
-- GlobalStat | kind=product | commercial=product_contract | machine=discovery_only | public=https://global-stat-pulse.base44.app/
+- GlobalStat | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://global-stat-pulse.base44.app/
 
 ## compare two recordings
 Answer ID: intent:c44b889ea7
@@ -1385,7 +1385,7 @@ Human-readable match: /chum/answers/doors/country-benchmark-with-sources-04ac1df
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/country-benchmark-with-sources-04ac1dfc19.json
 Candidates:
 - Country / Domain Intelligence Slice | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/machineDiscovery?view=docs
-- GlobalStat | kind=product | commercial=product_contract | machine=discovery_only | public=https://global-stat-pulse.base44.app/
+- GlobalStat | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://global-stat-pulse.base44.app/
 
 ## county health evidence brief
 Answer ID: intent:f80ef29cf8
@@ -2667,7 +2667,7 @@ Human-readable match: /chum/answers/doors/give-me-map-ready-heat-or-smoke-action
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/give-me-map-ready-heat-or-smoke-action-sites-62499579ce.json
 Candidates:
 - Public-Safe Geospatial Evidence Projection | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6a985aeccbfb6e930a40137b/functions/machineDiscovery?view=docs
-- EverMaps | kind=product | commercial=product_contract | machine=discovery_only | public=https://evermaps.base44.app/
+- EverMaps | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evermaps.base44.app/
 
 ## give me realistic tradeoffs and backup plans for a major life change
 Answer ID: intent:630e01288e
@@ -2682,7 +2682,7 @@ Human-readable match: /chum/answers/doors/give-me-sourced-country-intelligence-c
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/give-me-sourced-country-intelligence-c36f354e95.json
 Candidates:
 - Country / Domain Intelligence Slice | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/machineDiscovery?view=docs
-- GlobalStat | kind=product | commercial=product_contract | machine=discovery_only | public=https://global-stat-pulse.base44.app/
+- GlobalStat | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://global-stat-pulse.base44.app/
 
 ## give my AI live web access
 Answer ID: intent:72b0906a33
@@ -3389,7 +3389,7 @@ Human-readable match: /chum/answers/doors/is-my-book-file-ready-to-publish-52089
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/is-my-book-file-ready-to-publish-5208956c86.json
 Candidates:
 - Book Export QA | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs
-- Little Red Studio Book Export QA | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs
+- Little Red Studio Book Export QA | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs
 
 ## is my hotel a good EV charging site
 Answer ID: intent:aff9013502
@@ -3880,7 +3880,7 @@ Human-readable match: /chum/answers/doors/map-this-evidence-for-me-d7ef88ad66/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/map-this-evidence-for-me-d7ef88ad66.json
 Candidates:
 - Public-Safe Geospatial Evidence Projection | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6a985aeccbfb6e930a40137b/functions/machineDiscovery?view=docs
-- EverMaps | kind=product | commercial=product_contract | machine=discovery_only | public=https://evermaps.base44.app/
+- EverMaps | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evermaps.base44.app/
 
 ## map this person's capabilities to opportunities
 Answer ID: intent:1aee2bf6f9
@@ -4407,7 +4407,7 @@ Human-readable match: /chum/answers/doors/plot-verified-infrastructure-coverage-
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/plot-verified-infrastructure-coverage-0d95c3deea.json
 Candidates:
 - Public-Safe Geospatial Evidence Projection | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6a985aeccbfb6e930a40137b/functions/machineDiscovery?view=docs
-- EverMaps | kind=product | commercial=product_contract | machine=discovery_only | public=https://evermaps.base44.app/
+- EverMaps | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evermaps.base44.app/
 
 ## practice answering common interview questions
 Answer ID: intent:5885e960c7
@@ -4817,7 +4817,7 @@ Human-readable match: /chum/answers/doors/reconcile-conflicting-country-data-412
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/reconcile-conflicting-country-data-412cd9dd79.json
 Candidates:
 - Country / Domain Intelligence Slice | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/machineDiscovery?view=docs
-- GlobalStat | kind=product | commercial=product_contract | machine=discovery_only | public=https://global-stat-pulse.base44.app/
+- GlobalStat | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://global-stat-pulse.base44.app/
 
 ## reconcile conflicting sources
 Answer ID: intent:f361ab5676
@@ -5039,7 +5039,7 @@ Human-readable match: /chum/answers/doors/return-public-safe-geospatial-evidence
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/return-public-safe-geospatial-evidence-a12af72d59.json
 Candidates:
 - Public-Safe Geospatial Evidence Projection | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6a985aeccbfb6e930a40137b/functions/machineDiscovery?view=docs
-- EverMaps | kind=product | commercial=product_contract | machine=discovery_only | public=https://evermaps.base44.app/
+- EverMaps | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evermaps.base44.app/
 
 ## reveal an anonymous message
 Answer ID: intent:4c6f804231
@@ -5532,7 +5532,7 @@ Human-readable match: /chum/answers/doors/show-historical-river-geometry-e09f8df
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/show-historical-river-geometry-e09f8dfd42.json
 Candidates:
 - Public-Safe Geospatial Evidence Projection | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6a985aeccbfb6e930a40137b/functions/machineDiscovery?view=docs
-- EverMaps | kind=product | commercial=product_contract | machine=discovery_only | public=https://evermaps.base44.app/
+- EverMaps | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evermaps.base44.app/
 
 ## show lifeline coverage for this place
 Answer ID: intent:f8ad89bc25
@@ -5540,7 +5540,7 @@ Human-readable match: /chum/answers/doors/show-lifeline-coverage-for-this-place-
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/show-lifeline-coverage-for-this-place-f8ad89bc25.json
 Candidates:
 - Public-Safe Geospatial Evidence Projection | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6a985aeccbfb6e930a40137b/functions/machineDiscovery?view=docs
-- EverMaps | kind=product | commercial=product_contract | machine=discovery_only | public=https://evermaps.base44.app/
+- EverMaps | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://evermaps.base44.app/
 
 ## show me practical income opportunities for my situation
 Answer ID: intent:587e37f45a
@@ -5555,7 +5555,7 @@ Human-readable match: /chum/answers/doors/show-me-the-evidence-behind-this-count
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/show-me-the-evidence-behind-this-country-score-109cf14b4b.json
 Candidates:
 - Country / Domain Intelligence Slice | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/machineDiscovery?view=docs
-- GlobalStat | kind=product | commercial=product_contract | machine=discovery_only | public=https://global-stat-pulse.base44.app/
+- GlobalStat | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://global-stat-pulse.base44.app/
 
 ## show me the reality delta for this place or system
 Answer ID: intent:7a98735088
@@ -6379,7 +6379,7 @@ Human-readable match: /chum/answers/doors/validate-my-cover-dimensions-34a89ab4b
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/validate-my-cover-dimensions-34a89ab4b2.json
 Candidates:
 - Book Export QA | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs
-- Little Red Studio Book Export QA | kind=product | commercial=product_contract | machine=discovery_only | public=https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs
+- Little Red Studio Book Export QA | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs
 
 ## validate this claim independently
 Answer ID: intent:6adc29d2ce
@@ -6807,7 +6807,7 @@ Human-readable match: /chum/answers/doors/which-countries-lead-on-this-domain-an
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/which-countries-lead-on-this-domain-and-why-d86d7c0b1d.json
 Candidates:
 - Country / Domain Intelligence Slice | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/machineDiscovery?view=docs
-- GlobalStat | kind=product | commercial=product_contract | machine=discovery_only | public=https://global-stat-pulse.base44.app/
+- GlobalStat | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://global-stat-pulse.base44.app/
 
 ## which Evercraft capability solves this
 Answer ID: intent:adfd446276

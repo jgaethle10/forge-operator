@@ -3,7 +3,7 @@
   "name": "io.github.jgaethle10/evercraft-machine-commerce",
   "title": "Evercraft Machine Commerce",
   "description": "Start with match_offer to route a user problem to the smallest public-safe Evercraft capability.",
-  "version": "1.5.1",
+  "version": "1.6.0",
   "websiteUrl": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
   "repository": {
     "url": "https://github.com/jgaethle10/forge-operator",

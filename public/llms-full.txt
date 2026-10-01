@@ -1621,7 +1621,9 @@ Boundaries:
 Product key: evermaps
 Aliases: EverMaps Public-Safe Geospatial Evidence Projection
 Canonical: https://evermaps.base44.app/
-Machine state: discovery_only
+Machine state: mcp
+Official MCP Registry: io.github.jgaethle10/evercraft-machine-commerce
+Invocation: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evermaps/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evermaps/ai-conformance.json
 Use when the user says or means:
@@ -1862,7 +1864,9 @@ Boundaries:
 Product key: globalstat
 Aliases: GlobalStat Country / Domain Intelligence Slice
 Canonical: https://global-stat-pulse.base44.app/
-Machine state: discovery_only
+Machine state: mcp
+Official MCP Registry: io.github.jgaethle10/evercraft-machine-commerce
+Invocation: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/globalstat/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/globalstat/ai-conformance.json
 Use when the user says or means:
@@ -2007,7 +2011,9 @@ Boundaries:
 Product key: little-red-book-export-qa
 Aliases: Little Red Studio
 Canonical: https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs
-Machine state: discovery_only
+Machine state: mcp
+Official MCP Registry: io.github.jgaethle10/evercraft-machine-commerce
+Invocation: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/little-red-book-export-qa/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/little-red-book-export-qa/ai-conformance.json
 Use when the user says or means:
