@@ -181,6 +181,7 @@ function defaultCheckpoint(){
     source_energy_kwh:null,
     partition_count:0,
     raw_rows_materialized:0,
+    page_size:null,
     complete:false,
     updated_at:null
   };
@@ -192,6 +193,7 @@ export async function backfillPlugNYCSessionCorpus({
   sourceUrl=PLUGNYC_SOURCE_URL,
   pageSize=5000,
   maxPagesPerRun=8,
+  refreshOverlapPages=2,
   fetchImpl=fetch,
   now=()=>new Date().toISOString()
 }={}){
@@ -205,13 +207,46 @@ export async function backfillPlugNYCSessionCorpus({
   const stats=await fetchPlugNYCSourceStats({sourceUrl,fetchImpl});
   const checkpoint=readJson(checkpointFile,defaultCheckpoint());
   if(checkpoint.source!==PLUGNYC_SOURCE_ID) throw new Error('session_checkpoint_source_mismatch');
-  if(checkpoint.source_rows_seen!=null && stats.rows<Number(checkpoint.next_offset||0)){
-    throw new Error('session_source_shrank_below_checkpoint');
-  }
 
   const limit=Math.max(1,Math.min(5000,Number(pageSize)||5000));
   const pageCap=Math.max(1,Math.min(100,Number(maxPagesPerRun)||8));
+  const overlapPages=Math.max(1,Math.min(20,Number(refreshOverlapPages)||2));
+  if(checkpoint.page_size!=null&&Number(checkpoint.page_size)!==limit){
+    throw new Error('session_page_size_checkpoint_mismatch');
+  }
+
+  const previousRows=checkpoint.source_rows_seen==null?null:Number(checkpoint.source_rows_seen);
+  const previousEnergy=checkpoint.source_energy_kwh==null?null:Number(checkpoint.source_energy_kwh);
+  if(previousRows!=null && stats.rows<previousRows){
+    throw new Error('session_source_shrank_after_checkpoint');
+  }
+
   let offset=Math.max(0,Number(checkpoint.next_offset)||0);
+  let refreshReason=null;
+  if(checkpoint.complete===true && previousRows!=null){
+    const firstChanged=Boolean(checkpoint.source_first_date)&&stats.first_date!==checkpoint.source_first_date;
+    const latestChanged=Boolean(checkpoint.source_latest_date)&&stats.latest_date!==checkpoint.source_latest_date;
+    const energyChanged=previousEnergy!=null&&stats.energy_kwh!=null&&Math.abs(Number(stats.energy_kwh)-previousEnergy)>0.000001;
+    if(stats.rows>previousRows){
+      if(!latestChanged){
+        // New rows appeared inside an already-scanned date range. Offset-only append
+        // would be unsafe because the authoritative ordering may have shifted.
+        offset=0;
+        refreshReason='source_row_growth_inside_existing_coverage_full_rescan';
+      }else{
+        const rewindRows=limit*overlapPages;
+        offset=Math.max(0,Math.floor(Math.max(0,previousRows-rewindRows)/limit)*limit);
+        refreshReason='source_advanced_tail_rewind';
+      }
+    }else if(firstChanged||latestChanged||energyChanged){
+      // Same row count but source facts changed. We cannot prove which historical
+      // row moved, so the only truthful repair is a full deterministic rescan.
+      offset=0;
+      refreshReason='source_revision_without_row_growth_full_rescan';
+    }
+  }
+
+  const startedOffset=offset;
   let pagesWritten=0;
   let rawRowsWritten=0;
   let validRows=0;
@@ -290,6 +325,7 @@ export async function backfillPlugNYCSessionCorpus({
     source_energy_kwh:stats.energy_kwh,
     partition_count:partitionState.records.length,
     raw_rows_materialized:offset,
+    page_size:limit,
     complete,
     updated_at:now()
   };
@@ -298,8 +334,10 @@ export async function backfillPlugNYCSessionCorpus({
     schema:'evercraft.aliev.session-corpus-run-receipt.v1',
     source:PLUGNYC_SOURCE_ID,
     source_url:PLUGNYC_SOURCE_PAGE,
-    started_offset:Number(checkpoint.next_offset)||0,
+    started_offset:startedOffset,
     next_offset:offset,
+    refresh_reason:refreshReason,
+    refresh_overlap_pages:overlapPages,
     source_total:stats.rows,
     source_first_date:stats.first_date,
     source_latest_date:stats.latest_date,
