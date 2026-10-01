@@ -4,6 +4,7 @@ import path from 'node:path';
 import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { readChromeOsHostBoundaryStatus } from './chromeos-host-boundary-bridge.mjs';
+import { admitHostBoundaryCapability } from './host-boundary-admission.mjs';
 
 const REQUIRED_PORTS = [8443, 18080];
 
@@ -85,6 +86,7 @@ export function certifyChromeOsHostBoundary({
       collected_at: host.collected_at || null,
       receipt_hash: host.receipt_hash || null,
       request_id: host.request_id || null,
+      observer_install_id: host.observer_install_id || null,
       settings_surface_observed: host.scan?.settings_surface_observed === true,
       admitted_ports: REQUIRED_PORTS.map((port) => {
         const row = (host.ports || []).find((candidate) => Number(candidate?.port) === port);
@@ -117,18 +119,19 @@ export function certifyChromeOsHostBoundary({
 
 const moduleFile = fileURLToPath(import.meta.url);
 if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(moduleFile)) {
-  const receipt = certifyChromeOsHostBoundary({
-    stateRoot: cliArg(
-      '--state-root',
-      process.env.EVERCRAFT_CHROMEOS_HOST_BOUNDARY_STATE_DIR || path.join(
-        os.homedir(),
-        '.local',
-        'state',
-        'evercraft',
-        'organism',
-        'chromeos-host-boundary',
-      ),
+  const stateRoot = cliArg(
+    '--state-root',
+    process.env.EVERCRAFT_CHROMEOS_HOST_BOUNDARY_STATE_DIR || path.join(
+      os.homedir(),
+      '.local',
+      'state',
+      'evercraft',
+      'organism',
+      'chromeos-host-boundary',
     ),
+  );
+  const receipt = certifyChromeOsHostBoundary({
+    stateRoot,
     routerReceiptFile: cliArg(
       '--router-receipt',
       process.env.EVERCRAFT_ROUTER_MAP_RECEIPT || '/var/lib/evercraft/router-map/latest.json',
@@ -136,6 +139,21 @@ if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(moduleFile
   });
   const out = cliArg('--out');
   if (out) atomicJson(path.resolve(out), receipt);
-  console.log(JSON.stringify(receipt, null, 2));
+
+  let admission = null;
+  if (process.argv.includes('--admit')) {
+    if (!receipt.ready_for_external_canary) {
+      console.error('Host-boundary capability cannot be admitted until field certification is ready.');
+      console.log(JSON.stringify({ receipt, admission: null }, null, 2));
+      process.exit(3);
+    }
+    admission = admitHostBoundaryCapability({
+      stateRoot,
+      capabilityId: receipt.capability_id,
+      certification: receipt,
+    });
+  }
+
+  console.log(JSON.stringify({ receipt, admission }, null, 2));
   process.exit(receipt.ready_for_external_canary ? 0 : 2);
 }
