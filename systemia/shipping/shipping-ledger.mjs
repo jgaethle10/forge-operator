@@ -134,6 +134,8 @@ export function recordDeliveryAttempt({
   outcome,
   provider_message_id = null,
   error_code = null,
+  error_message = null,
+  error_detail = null,
   ambiguous_provider_acceptance = false,
   now = new Date()
 } = {}) {
@@ -157,6 +159,8 @@ export function recordDeliveryAttempt({
         outcome:normalizedOutcome,
         provider_message_id:clean(provider_message_id) || null,
         error_code:clean(error_code) || null,
+        error_message:clean(error_message) || null,
+        error_detail:clean(error_detail) || null,
         ambiguous_provider_acceptance:Boolean(ambiguous_provider_acceptance),
         attempted_at:nowIso(now)
       };
