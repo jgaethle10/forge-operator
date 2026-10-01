@@ -141,6 +141,11 @@ try{
   assert.equal(first.action,'created');
   assert.equal(first.health.ok,true);
   assert.equal(first.route.mode,'public_edge');
+  assert.equal(first.compatibility_binding.schema,'evercraft.rivet.compatibility-binding.v1');
+  assert.match(first.compatibility_binding.reports_url,/\/v1\/reports$/);
+  assert.equal(first.compatibility_binding.route_verified,false);
+  assert.equal(first.compatibility_binding.credential_source_env,'RIVET_YARD_TEAM_TOKEN');
+  assert.equal(first.compatibility_binding.secret_value_embedded,false);
   assert.match(first.route.origin,/^http:\/\/127\.0\.0\.1:/);
   assert.equal(first.route.verified,false);
   assert.equal(first.capacity_node_id,'evercraft-hosting-proof-node');
@@ -220,6 +225,8 @@ try{
     same_spec_runtime_recovery:true,
     reconcile_all:true,
     stable_public_route:true,
+    rivet_compatibility_binding_receipt:true,
+    compatibility_secret_value_not_embedded:true,
     authenticated_rivet_report:true,
     full_source_snapshot_persisted:true,
     source_coverage_verified:true,
