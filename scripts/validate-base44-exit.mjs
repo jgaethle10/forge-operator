@@ -2,6 +2,9 @@ import fs from 'node:fs';
 
 const policy = JSON.parse(fs.readFileSync(new URL('../systemia/migrations/base44-exit/policy.json', import.meta.url)));
 const estate = JSON.parse(fs.readFileSync(new URL('../systemia/migrations/base44-exit/estate-snapshot.json', import.meta.url)));
+const liveObservation = JSON.parse(fs.readFileSync(
+  new URL('../systemia/migrations/base44-exit/live-page-observation-2026-09-30.json', import.meta.url)
+));
 
 const fail = (message) => {
   console.error(`BASE44_EXIT_POLICY_FAIL: ${message}`);
@@ -87,6 +90,47 @@ for (const item of estate.queue || []) {
   if (/base44/i.test(item.target)) fail(`${item.product} points back to Base44`);
 }
 
+
+if (liveObservation.schema !== 'evercraft.base44.live-page-reconciliation.v1') {
+  fail('live Base44 page observation schema is invalid');
+}
+if (liveObservation.observed_apps < estate.observed_apps_minimum) {
+  fail('live observation cannot shrink below the established observed minimum');
+}
+if (liveObservation.listing_ceiling_hit !== true) {
+  fail('live observation must preserve the 100-app listing ceiling truth');
+}
+if (liveObservation.inventory_complete_proven !== false) {
+  fail('listing ceiling cannot be represented as complete estate inventory');
+}
+if (liveObservation.named_queue_products !== (estate.queue || []).length) {
+  fail('live observation named queue count must match estate snapshot queue');
+}
+if (
+  Number(liveObservation.exact_queue_app_matches || 0) +
+  Number(liveObservation.visible_apps_not_exactly_assigned_to_named_queue || 0) !==
+  Number(liveObservation.observed_apps || 0)
+) {
+  fail('live observation exact/unassigned counts do not reconcile to observed apps');
+}
+const unresolved = new Set(liveObservation.unresolved_named_queue_products || []);
+const queueNames = new Set((estate.queue || []).map((row) => row.product));
+for (const product of unresolved) {
+  if (!queueNames.has(product)) fail(`live observation unresolved queue product is unknown: ${product}`);
+}
+if (liveObservation.privacy?.raw_app_ids_emitted !== false) {
+  fail('live observation must not emit raw Base44 app IDs');
+}
+if (liveObservation.privacy?.unmatched_app_names_emitted !== false) {
+  fail('live observation must not emit unmatched app names');
+}
+if (
+  Number(liveObservation.untitled_visible_apps || 0) > 0 &&
+  estate.untitled_apps_require_classification_before_migration_or_archive !== true
+) {
+  fail('Untitled sources require explicit classification before retirement');
+}
+
 const first = estate.queue?.[0];
 if (first?.product !== 'Systemia Command Center' || first?.wave !== 1) {
   fail('Systemia Core / KAIDANCE extraction must remain first');
@@ -96,5 +140,9 @@ console.log(JSON.stringify({
   status: 'BASE44_EXIT_POLICY_PASS',
   observed_apps_minimum: estate.observed_apps_minimum,
   queued_products: estate.queue.length,
-  first_target: first.product
+  first_target: first.product,
+  live_observed_apps: liveObservation.observed_apps,
+  live_exact_queue_matches: liveObservation.exact_queue_app_matches,
+  live_visible_not_exactly_assigned: liveObservation.visible_apps_not_exactly_assigned_to_named_queue,
+  live_untitled_apps: liveObservation.untitled_visible_apps
 }));
