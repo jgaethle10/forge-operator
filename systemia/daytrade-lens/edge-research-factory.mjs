@@ -19,6 +19,8 @@ export const EXECUTION_DELAY_STRESS_BARS = Object.freeze({
   "5m": 1,
   "15m": 3,
   "30m": 6,
+  "60m": 12,
+  "90m": 18,
 });
 
 export const ALTERNATE_BENCHMARKS_BY_INSTRUMENT = Object.freeze({
@@ -46,6 +48,9 @@ function uniq(values) {
 const NY_MARKET_CLOCK = new Intl.DateTimeFormat("en-US", {
   timeZone: "America/New_York",
   weekday: "short",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
   hour: "2-digit",
   minute: "2-digit",
   hourCycle: "h23",
@@ -84,11 +89,15 @@ function firstBarAtOrAfter(bars, timestamp) {
   return lo < bars.length ? lo : -1;
 }
 
-function measuredReturn(bars, observedAt, lagBars, entryDelayBars = 0) {
-  const firstIndex = firstBarAtOrAfter(bars, observedAt);
-  if (firstIndex < 0) return null;
-  const delay = Math.max(0, Number(entryDelayBars || 0));
-  const startIndex = firstIndex + delay;
+function marketDateKey(timestamp) {
+  const parts = Object.fromEntries(
+    NY_MARKET_CLOCK.formatToParts(new Date(timestamp)).map((part) => [part.type, part.value])
+  );
+  return `${parts.year}-${parts.month}-${parts.day}`;
+}
+
+function measuredReturnFromIndex(bars, startIndex, lagBars, observedAt) {
+  if (startIndex < 0) return null;
   const endIndex = startIndex + lagBars;
   if (startIndex >= bars.length || endIndex >= bars.length) return null;
   const start = bars[startIndex];
@@ -101,6 +110,22 @@ function measuredReturn(bars, observedAt, lagBars, entryDelayBars = 0) {
     forward_return: end.c / start.c - 1,
     no_pre_observation_price_used: new Date(start.t) >= new Date(observedAt),
   };
+}
+
+function measuredReturnAtNextSessionOpen(bars, observedAt, lagBars) {
+  const observedDate = marketDateKey(observedAt);
+  const startIndex = bars.findIndex((bar) => marketDateKey(bar.t) > observedDate);
+  return measuredReturnFromIndex(bars, startIndex, lagBars, observedAt);
+}
+
+function measuredReturn(bars, observedAt, lagBars, entryDelayBars = 0) {
+  const firstIndex = firstBarAtOrAfter(bars, observedAt);
+  if (firstIndex < 0) return null;
+  const delay = Math.max(0, Number(entryDelayBars || 0));
+  const startIndex = firstIndex + delay;
+  const endIndex = startIndex + lagBars;
+  if (startIndex >= bars.length || endIndex >= bars.length) return null;
+  return measuredReturnFromIndex(bars, startIndex, lagBars, observedAt);
 }
 
 export function buildMatchedPlaceboHypotheses(hypotheses = [], {
@@ -226,6 +251,35 @@ export function measureRockiesHypotheses(hypotheses, barsBySymbol, {
             instrument_end_time: delayedInstrument.end_time,
             benchmark_start_time: delayedBenchmark.start_time,
             benchmark_end_time: delayedBenchmark.end_time,
+          };
+        }
+
+        const nextSessionInstrument = measuredReturnAtNextSessionOpen(
+          instrumentBars,
+          hypothesis.observed_at,
+          bars
+        );
+        const nextSessionBenchmark = measuredReturnAtNextSessionOpen(
+          benchmarkBars,
+          hypothesis.observed_at,
+          bars
+        );
+        if (nextSessionInstrument && nextSessionBenchmark) {
+          if (
+            !nextSessionInstrument.no_pre_observation_price_used ||
+            !nextSessionBenchmark.no_pre_observation_price_used
+          ) {
+            throw new Error("edge_lab_next_session_lookahead_violation");
+          }
+          executionDelayStress.next_session_open = {
+            entry_policy: "next_core_session_open",
+            forward_return: nextSessionInstrument.forward_return,
+            benchmark_return: nextSessionBenchmark.forward_return,
+            excess_return: nextSessionInstrument.forward_return - nextSessionBenchmark.forward_return,
+            instrument_start_time: nextSessionInstrument.start_time,
+            instrument_end_time: nextSessionInstrument.end_time,
+            benchmark_start_time: nextSessionBenchmark.start_time,
+            benchmark_end_time: nextSessionBenchmark.end_time,
           };
         }
 
