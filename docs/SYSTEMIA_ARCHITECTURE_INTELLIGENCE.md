@@ -66,6 +66,18 @@ It currently detects:
 
 The health lane deliberately does **not** infer dead code from missing runtime observations. A node or edge becomes a missing-evidence finding only when a governed watch contract defines the expected relationship. This keeps silence from masquerading as proof.
 
+## Source-grounded query lane
+
+`tools/systemia_architecture_query.py` is the read-only retrieval surface over a supplied topology snapshot. It searches node identity and returns exact locators plus the evidence-stamped relationships touching each match.
+
+It has three explicit states:
+
+- `found`: one strongest match exists;
+- `ambiguous`: multiple equally strong matches exist and callers should inspect exact locators before making a behavior claim;
+- `not_found`: the supplied evidence does not support a behavior claim.
+
+The query lane never fills a missing answer with model intuition. A missing result stays missing.
+
 ## Privacy boundary
 
 Public discovery and public repositories must not expose private Systemia/admin topology, customer data, credentials, or internal authority. The scanner may be used on public code in CI, while private topology snapshots remain on governed internal surfaces.
@@ -76,6 +88,7 @@ Public discovery and public repositories must not expose private Systemia/admin 
 python tools/systemia_architecture_scan.py --root . --out /tmp/systemia-architecture.json
 python tools/systemia_architecture_reconcile.py --static /tmp/systemia-architecture.json --out /tmp/systemia-reconciled.json
 python tools/systemia_architecture_health.py --topology /tmp/systemia-architecture.json --reconciled /tmp/systemia-reconciled.json --out /tmp/systemia-health.json
+python tools/systemia_architecture_query.py --topology /tmp/systemia-architecture.json --query run
 python -m unittest discover -s tests -p 'test_systemia_architecture_*.py' -v
 ```
 
