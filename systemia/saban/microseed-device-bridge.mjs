@@ -121,6 +121,7 @@ export function microDeviceToAmbientCapabilities(manifestInput={},options={}){
   }
 
   const baseMetadata={
+    device_id:manifest.device_id,
     device_class:manifest.device_class,
     placement_labels:manifest.placement.labels,
     public_ingress:manifest.placement.public_ingress,
