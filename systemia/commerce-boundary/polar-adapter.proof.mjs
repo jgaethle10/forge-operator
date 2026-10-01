@@ -117,6 +117,22 @@ try{
       appKey:'workforce',
       provider:'polar',
       paymentRef:'success-proof',
+      expected:{amount_minor:1900,currency:'USD'},
+      context:{
+        expected_metadata:{
+          purchase_token:'different-purchase-token',
+          interview_purchase_id:'different-purchase-id'
+        }
+      }
+    }),
+    /payment_verification_context_mismatch/
+  );
+
+  await assert.rejects(
+    ()=>boundary.verifyPayment({
+      appKey:'workforce',
+      provider:'polar',
+      paymentRef:'success-proof',
       expected:{amount_minor:2000,currency:'USD'}
     }),
     /payment_amount_mismatch/
@@ -143,6 +159,7 @@ try{
     purchase_metadata_binding_required:true,
     amount_currency_match_required:true,
     replay_expectations_revalidated:true,
+    replay_ownership_context_revalidated:true,
     creates_payment_obligations:false,
     checkout_created:false
   }));
