@@ -55,6 +55,18 @@ Open the extension options, paste the pairing token, save, and run **Check now**
 
 The extension performs a bounded background heartbeat every ten minutes and checks for on-demand requests every 30 seconds. Polling does not open Settings unless there is actual work to perform.
 
+## Field admission
+
+The ChromeOS read capability remains a field-gated candidate until the real device proves both sides of the boundary. After the companion has returned a fresh host observation and the LAN witness can reach both admitted forwarded ports, run:
+
+```bash
+npm run chromeos:host-boundary:admit
+```
+
+That command creates a node-local, integrity-sealed admission bound to the exact ChromeOS companion install ID. Reinstalling or replacing the companion invalidates that local admission until the field proof is repeated.
+
+The source registry can therefore carry candidate capability definitions without silently making them available for generic LLM dispatch.
+
 ## Evidence semantics
 
 A fresh bridge record means the ChromeOS accessibility surface was directly observed recently. It does not, by itself, prove WAN reachability.
