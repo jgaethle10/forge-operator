@@ -63,5 +63,13 @@
     "sponsorship_affects_organic_rank": false,
     "credential_missing_degrades_source_not_cycle": true,
     "provider_failure_degrades_source_not_cycle": true
+  },
+  "credential_policy": {
+    "default_mode": "evercraft_vault_reference",
+    "raw_environment_values": "disabled_unless_explicit_development_override",
+    "google_reference_variable": "HOUSEHOLD_GOOGLE_CREDENTIAL_REF",
+    "kroger_reference_variable": "HOUSEHOLD_KROGER_CREDENTIAL_REF",
+    "vault_directory_variable": "EVERCRAFT_CREDENTIAL_STATE_DIR",
+    "secret_material_in_receipts": false
   }
 }

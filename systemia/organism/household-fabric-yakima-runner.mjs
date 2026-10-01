@@ -5,6 +5,7 @@ import path from 'node:path';
 import { ingestYvlBrowserResult } from '../household-fabric/yvl-pipeline.mjs';
 import { runYakimaPriceProviderCycle } from '../household-fabric/price-provider-cycle.mjs';
 import { emptyLedger } from '../household-fabric/ingest.mjs';
+import { householdProviderConfigFromEnvironment } from '../household-fabric/provider-credential-resolver.mjs';
 
 const CADENCE_SECONDS = 300;
 const DEFAULT_OUT = 'artifacts/household-fabric/yakima';
@@ -206,42 +207,8 @@ export async function executeYakimaHouseholdCycle({
   });
 }
 
-function parseJsonArray(value, fallback = []) {
-  const raw = clean(value);
-  if (!raw) return fallback;
-  try {
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : fallback;
-  } catch {
-    return fallback;
-  }
-}
-
 export function providerConfigFromEnvironment(env = process.env) {
-  return {
-    google: {
-      api_key: clean(env.HOUSEHOLD_GOOGLE_PLACES_API_KEY),
-      latitude: env.HOUSEHOLD_GOOGLE_CENTER_LAT || undefined,
-      longitude: env.HOUSEHOLD_GOOGLE_CENTER_LONG || undefined,
-      radius_meters: env.HOUSEHOLD_GOOGLE_RADIUS_METERS || undefined,
-      max_results: env.HOUSEHOLD_GOOGLE_MAX_RESULTS || undefined,
-    },
-    kroger: {
-      client_id: clean(env.HOUSEHOLD_KROGER_CLIENT_ID),
-      client_secret: clean(env.HOUSEHOLD_KROGER_CLIENT_SECRET),
-      zip_code: clean(env.HOUSEHOLD_KROGER_ZIP_CODE) || '98902',
-      locations: parseJsonArray(env.HOUSEHOLD_KROGER_LOCATIONS_JSON, []),
-      terms: clean(env.HOUSEHOLD_KROGER_TERMS)
-        ? clean(env.HOUSEHOLD_KROGER_TERMS).split(',').map(clean).filter(Boolean)
-        : undefined,
-      limit_per_term: env.HOUSEHOLD_KROGER_LIMIT_PER_TERM || undefined,
-    },
-    priceOptions: {
-      mileage_cost_cents: env.HOUSEHOLD_MILEAGE_COST_CENTS || undefined,
-      time_value_cents_per_hour: env.HOUSEHOLD_TIME_VALUE_CENTS_PER_HOUR || undefined,
-      friction_cents_per_step: env.HOUSEHOLD_FRICTION_CENTS_PER_STEP || undefined,
-    },
-  };
+  return householdProviderConfigFromEnvironment(env);
 }
 
 function parseArgs(argv) {
@@ -310,8 +277,11 @@ async function main() {
     ledger: loadJson(ledgerFile, emptyLedger()),
     previousState: loadJson(stateFile, null),
     now: new Date(),
-    ...providerConfig,
+    google: providerConfig.google,
+    kroger: providerConfig.kroger,
+    priceOptions: providerConfig.priceOptions,
   });
+  report.credential_status = providerConfig.credential_status;
 
   atomicJson(path.join(outDir, 'latest.json'), {
     ...report,
@@ -335,6 +305,7 @@ async function main() {
       source: row.source,
       state: row.state,
     })),
+    credential_status: report.credential_status,
     today_status: report.today.status,
     opportunities_shown: report.today.headline.opportunities_shown,
     degraded_categories: report.today.coverage.degraded_categories,

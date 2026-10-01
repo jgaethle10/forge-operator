@@ -102,6 +102,7 @@ assert.equal(JSON.stringify(integrated).includes('proof-google-secret'), false);
 assert.equal(integrated.mission_snapshot.source_states.some(row => row.source === 'google-places-fuel-options'), true);
 
 const config = providerConfigFromEnvironment({
+  HOUSEHOLD_ALLOW_RAW_PROVIDER_SECRETS: 'true',
   HOUSEHOLD_GOOGLE_PLACES_API_KEY: 'google-env-secret',
   HOUSEHOLD_KROGER_CLIENT_ID: 'kroger-id',
   HOUSEHOLD_KROGER_CLIENT_SECRET: 'kroger-env-secret',
@@ -112,5 +113,6 @@ const config = providerConfigFromEnvironment({
 assert.equal(config.google.api_key, 'google-env-secret');
 assert.equal(config.kroger.locations.length, 1);
 assert.deepEqual(config.kroger.terms, ['milk','eggs','bread']);
+assert.equal(config.credential_status.raw_secret_override_enabled, true);
 
 console.log('HOUSEHOLD_FABRIC_YAKIMA_RUNNER_PASS');
