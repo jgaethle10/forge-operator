@@ -36,6 +36,7 @@ export async function createBrowserVoluntaryWorker({
   pollMs=1000,
   heartbeatMs=30000,
   pauseWhenHidden=true,
+  admissionToken='',
 }={}){
   const base=String(exchangeEndpoint||'').replace(/\/$/,'');
   if(!base) throw new Error('exchangeEndpoint_required');
@@ -49,6 +50,9 @@ export async function createBrowserVoluntaryWorker({
 
   const registration=await requestJson(`${base}/v1/providers/register`,{
     method:'POST',
+    headers:admissionToken
+      ? {'x-evercraft-provider-admission':String(admissionToken)}
+      : {},
     body:{
       provider_id:providerId,
       resources:detectedResources(resources),
@@ -126,7 +130,11 @@ export async function createBrowserVoluntaryWorker({
         {
           method:'POST',
           headers,
-          body:{ok:false,error:'workload_handler_not_registered'},
+          body:{
+            ok:false,
+            error:'workload_handler_not_registered',
+            delivery_id:job.delivery_id,
+          },
         }
       );
     }
@@ -146,6 +154,7 @@ export async function createBrowserVoluntaryWorker({
             ok:true,
             result:output?.result??output??null,
             checkpoint:output?.checkpoint??null,
+            delivery_id:job.delivery_id,
           },
         }
       );
@@ -155,7 +164,11 @@ export async function createBrowserVoluntaryWorker({
         {
           method:'POST',
           headers,
-          body:{ok:false,error:String(error?.message||error)},
+          body:{
+            ok:false,
+            error:String(error?.message||error),
+            delivery_id:job.delivery_id,
+          },
         }
       );
     }
