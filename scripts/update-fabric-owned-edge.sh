@@ -127,6 +127,12 @@ clear_env_backup() {
 }
 
 ensure_network_observer() {
+  local force="${1:-false}"
+  if [[ "$force" != "true" ]] &&
+     systemctl is-active --quiet evercraft-network-observer.timer 2>/dev/null &&
+     test -s /var/lib/evercraft/network-observer/latest.json; then
+    return 0
+  fi
   if [[ ! -f "$NETWORK_OBSERVER_INSTALLER" ]]; then
     echo "ERROR: network observer installer missing from deployed Forge revision" >&2
     return 1
@@ -252,7 +258,7 @@ if [[ "$before" == "$target" ]]; then
     exit "$code"
   fi
 
-  if ! ensure_network_observer; then
+  if ! ensure_network_observer false; then
     echo "ERROR: Fabric is healthy but resident network observer installation failed" >&2
     exit 11
   fi
@@ -308,7 +314,7 @@ if [[ "$code" -ne 0 ]]; then
   exit "$code"
 fi
 
-if ! ensure_network_observer; then
+if ! ensure_network_observer true; then
   echo "ERROR: Fabric update is healthy but resident network observer installation failed" >&2
   exit 11
 fi
