@@ -1,0 +1,52 @@
+name: Saban Negotiation Fabric
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/saban/compute-negotiation.mjs'
+      - 'systemia/saban/voluntary-exchange.mjs'
+      - 'systemia/saban/voluntary-exchange.proof.mjs'
+      - 'systemia/saban/markets/evercraft-voluntary.mjs'
+      - 'systemia/saban/markets/golem.mjs'
+      - 'systemia/saban/golem-adapter.proof.mjs'
+      - 'systemia/saban/README.md'
+      - '.github/workflows/saban-negotiation-fabric.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/saban/compute-negotiation.mjs'
+      - 'systemia/saban/voluntary-exchange.mjs'
+      - 'systemia/saban/voluntary-exchange.proof.mjs'
+      - 'systemia/saban/markets/evercraft-voluntary.mjs'
+      - 'systemia/saban/markets/golem.mjs'
+      - 'systemia/saban/golem-adapter.proof.mjs'
+      - 'systemia/saban/README.md'
+      - '.github/workflows/saban-negotiation-fabric.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  voluntary-negotiation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove offer counteroffer agreement execution release
+        run: node systemia/saban/voluntary-exchange.proof.mjs
+
+  golem-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove Golem adapter contract
+        if: ${{ hashFiles('systemia/saban/golem-adapter.proof.mjs') != '' }}
+        run: node systemia/saban/golem-adapter.proof.mjs
