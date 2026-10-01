@@ -200,10 +200,11 @@ for(const product of publicProducts.products||[]){
       ? (direct?.direct_callable===true?'specialist_declared_callable_fresh_canary_required':'specialist_declared_unverified')
       : 'universal_fallback_declared_unverified',
     authentication:contract?.authority ? {
-      state:'declared',
+      state:contract.authority.state||'unknown',
       passport_product:contract.authority.passport_product||null,
       scopes:contract.authority.scopes||[],
-    } : {state:'not_declared',passport_product:null,scopes:[]},
+      reason:contract.authority.reason||null,
+    } : {state:'not_declared',passport_product:null,scopes:[],reason:null},
     structured_output:linked
       .filter((cap)=>String(cap.outputs||'').trim())
       .map((cap)=>({
