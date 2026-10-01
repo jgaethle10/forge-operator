@@ -93,6 +93,8 @@ export function resolveAmbientComputeOffers({
   capabilities=[],
   workloadClass='',
   requireZeroCost=true,
+  requireVerifiedWorkload=false,
+  now=new Date(),
 }={}){
   const offers=[];
   const rejected=[];
@@ -108,6 +110,19 @@ export function resolveAmbientComputeOffers({
       if(workloadClass&&!supported.has(String(workloadClass))){
         rejected.push({id:String(raw?.id||''),reason:'workload_unsupported'});
         continue;
+      }
+      if(requireVerifiedWorkload&&workloadClass){
+        const verified=new Set(offer.metadata.verified_workloads||[]);
+        const expiry=Date.parse(String(offer.metadata.conformance_expires_at||''));
+        const nowMs=now instanceof Date?now.getTime():Date.parse(String(now));
+        if(!verified.has(String(workloadClass))){
+          rejected.push({id:String(raw?.id||''),reason:'workload_not_conformance_verified'});
+          continue;
+        }
+        if(!Number.isFinite(expiry)||nowMs>=expiry){
+          rejected.push({id:String(raw?.id||''),reason:'workload_conformance_expired'});
+          continue;
+        }
       }
       offers.push(offer);
     }catch(error){
@@ -126,6 +141,7 @@ export function resolveAmbientComputeOffers({
     schema:'evercraft.saban.ambient-compute-resolution.v1',
     workload_class:String(workloadClass||''),
     zero_spend_only:requireZeroCost===true,
+    conformance_required:requireVerifiedWorkload===true,
     eligible_count:offers.length,
     rejected_count:rejected.length,
     offers:offers.map(x=>({
