@@ -26,7 +26,10 @@ export async function submitMicroSeedEnrollmentBundle({
     throw new Error('microseed_enrollment_bundle_required');
   }
   const base=validateEnrollmentUrl(enrollmentUrl);
-  const endpoint=new URL('/v1/enroll',base);
+  const endpoint=
+    base.pathname.replace(/\/+$/,'')==='/v1/enroll'
+      ? base
+      : new URL('/v1/enroll',base);
   const controller=new AbortController();
   const timer=setTimeout(()=>controller.abort(),Math.max(1000,Number(timeoutMs||15000)));
   try{
