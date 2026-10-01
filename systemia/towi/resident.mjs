@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {
+  addEvidenceToDossier,
   admitRadarEdition,
   compileTowiDesk,
   editorialPacketForDossier,
@@ -122,6 +123,26 @@ export function createTowiResident({
     }
   }
 
+  function addEvidence(dossierId, evidence) {
+    const now = clock().toISOString();
+    const added = addEvidenceToDossier(state, dossierId, evidence, { now });
+    state = added.state;
+    const compiled = compileTowiDesk(state, { now, max_items: maxItems });
+    state = compiled.state;
+
+    atomicWrite(stateFile, state);
+    atomicWrite(latestFile, compiled.desk);
+    atomicWrite(publicFile, publicTowiProjection(compiled.desk));
+    atomicWrite(editorialFile, {
+      schema: 'evercraft.towi.editorial-queue.v1',
+      generated_at: now,
+      packets: (compiled.desk.dossiers || []).map((dossier) => editorialPacketForDossier(dossier)).filter(Boolean),
+      publication_authority: false
+    });
+    appendJsonl(receiptsFile, added.receipt);
+    return added.receipt;
+  }
+
   function start() {
     if (timer) return;
     runOnce().catch(() => {});
@@ -171,6 +192,7 @@ export function createTowiResident({
 
   return {
     runOnce,
+    addEvidence,
     start,
     stop,
     health,
