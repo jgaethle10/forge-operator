@@ -2,11 +2,15 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-10-01T01:52:18.386Z</updated>
+<updated>2026-10-01T01:54:06.207Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
+<entry><id>urn:evercraft:chum:d8bcbc9c28ec3e0aa29125ea</id><title>/chum/crawler-radar.json</title><updated>2026-10-01T01:54:06.207Z</updated><link href="/chum/crawler-radar.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:aa9b916fd98945db10fa3cab</id><title>/chum/crawler-radar.txt</title><updated>2026-10-01T01:54:06.207Z</updated><link href="/chum/crawler-radar.txt"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-10-01T01:54:06.207Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:bc7689c4c0867339d0001ccc</id><title>/chum/strike/</title><updated>2026-10-01T01:54:06.207Z</updated><link href="/chum/strike/"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:494de3a9b5c21a35fdfdb6c2</id><title>/chum/strike/index.json</title><updated>2026-10-01T01:54:06.207Z</updated><link href="/chum/strike/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:770866315bf12f2c92446bfe</id><title>/chum/hot/</title><updated>2026-10-01T01:52:18.386Z</updated><link href="/chum/hot/"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-10-01T01:52:18.386Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:baaad3ab679d551569c821de</id><title>/chum/answers/doors/audit-this-paperback-export-c84fe388e8.json</title><updated>2026-10-01T01:51:32.805Z</updated><link href="/chum/answers/doors/audit-this-paperback-export-c84fe388e8.json"/><category term="priority-160"/></entry>
 <entry><id>urn:evercraft:chum:3d81455e23b392c23f7b3eae</id><title>/chum/answers/doors/audit-this-paperback-export-c84fe388e8/</title><updated>2026-10-01T01:51:32.805Z</updated><link href="/chum/answers/doors/audit-this-paperback-export-c84fe388e8/"/><category term="priority-160"/></entry>
 <entry><id>urn:evercraft:chum:c287088e5d5e14402c558311</id><title>/chum/answers/doors/check-if-my-book-is-ready-for-kdp-465dd47ba7.json</title><updated>2026-10-01T01:51:32.805Z</updated><link href="/chum/answers/doors/check-if-my-book-is-ready-for-kdp-465dd47ba7.json"/><category term="priority-160"/></entry>
@@ -83,9 +87,6 @@
 <entry><id>urn:evercraft:chum:77a704907d8dde87e8af9c4e</id><title>/chum/syndication/index.json</title><updated>2026-10-01T01:51:32.805Z</updated><link href="/chum/syndication/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:0e4843ab15ffbf513def063d</id><title>/feed.json</title><updated>2026-10-01T01:51:32.805Z</updated><link href="/feed.json"/><category term="priority-60"/></entry>
 <entry><id>urn:evercraft:chum:579b3d9153fd3efe838f0372</id><title>/feed.xml</title><updated>2026-10-01T01:51:32.805Z</updated><link href="/feed.xml"/><category term="priority-60"/></entry>
-<entry><id>urn:evercraft:chum:d8bcbc9c28ec3e0aa29125ea</id><title>/chum/crawler-radar.json</title><updated>2026-10-01T01:14:17.344Z</updated><link href="/chum/crawler-radar.json"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:aa9b916fd98945db10fa3cab</id><title>/chum/crawler-radar.txt</title><updated>2026-10-01T01:14:17.344Z</updated><link href="/chum/crawler-radar.txt"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:494de3a9b5c21a35fdfdb6c2</id><title>/chum/strike/index.json</title><updated>2026-10-01T01:14:17.344Z</updated><link href="/chum/strike/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:6a2156e97d5a76ac182a54d7</id><title>/chum/sitemaps/answers.xml</title><updated>2026-09-30T20:58:29.212Z</updated><link href="/chum/sitemaps/answers.xml"/><category term="priority-108"/></entry>
 <entry><id>urn:evercraft:chum:f9e837c084d4e3038ac8dc5e</id><title>/chum/answers/doors/build-a-provenance-preserving-worldstate-snapshot-da7bba291d.json</title><updated>2026-09-30T20:58:29.212Z</updated><link href="/chum/answers/doors/build-a-provenance-preserving-worldstate-snapshot-da7bba291d.json"/><category term="priority-100"/></entry>
 <entry><id>urn:evercraft:chum:3f6593603ea0046ce3007268</id><title>/chum/answers/doors/build-a-provenance-preserving-worldstate-snapshot-da7bba291d/</title><updated>2026-09-30T20:58:29.212Z</updated><link href="/chum/answers/doors/build-a-provenance-preserving-worldstate-snapshot-da7bba291d/"/><category term="priority-100"/></entry>
@@ -104,5 +105,4 @@
 <entry><id>urn:evercraft:chum:e48d734832c13c5a0a78cd20</id><title>/chum/capabilities/worldstate-reality-delta-v1/</title><updated>2026-09-30T20:58:29.212Z</updated><link href="/chum/capabilities/worldstate-reality-delta-v1/"/><category term="priority-96"/></entry>
 <entry><id>urn:evercraft:chum:0f56b49ee6da336d90bb2485</id><title>/chum/capabilities/worldstate-reality-delta-v1/capability.json</title><updated>2026-09-30T20:58:29.212Z</updated><link href="/chum/capabilities/worldstate-reality-delta-v1/capability.json"/><category term="priority-96"/></entry>
 <entry><id>urn:evercraft:chum:3c051d8c31d6a65b39b79104</id><title>/chum/capabilities/worldstate-reality-delta-v1/llms.txt</title><updated>2026-09-30T20:58:29.212Z</updated><link href="/chum/capabilities/worldstate-reality-delta-v1/llms.txt"/><category term="priority-96"/></entry>
-<entry><id>urn:evercraft:chum:ea5a8f26212d024801571c1f</id><title>/chum/capabilities/worldstate-reality-delta-v1/schema.jsonld</title><updated>2026-09-30T20:58:29.212Z</updated><link href="/chum/capabilities/worldstate-reality-delta-v1/schema.jsonld"/><category term="priority-96"/></entry>
 </feed>
