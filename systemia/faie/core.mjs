@@ -29,8 +29,7 @@ export const FAIE_RELEVANT_DOMAINS = Object.freeze([
   'housing',
   'construction',
   'regulation',
-  'public_policy',
-  'general'
+  'public_policy'
 ]);
 
 const DOMAIN_SET = new Set(FAIE_RELEVANT_DOMAINS);
