@@ -72,7 +72,10 @@ export function planFabricRebalance({
     const oldScore=Number(oldPlacement.effective_score??oldPlacement.score??0);
     const nextScore=Number(newPlacement.effective_score??newPlacement.score??0);
     const delta=nextScore-oldScore;
-    const failedOrIneligible=nextPlan.held?.some(h=>h.unit_id===unitId)===true;
+    const eligibleForTask=new Set(nextPlan.eligible_offers_by_task?.[newPlacement.task_id]||[]);
+    const failedOrIneligible=
+      nextPlan.held?.some(h=>h.unit_id===unitId)===true ||
+      !eligibleForTask.has(oldPlacement.offer_id);
     const checkpointable=newPlacement.checkpointable===true||oldPlacement.checkpointable===true;
 
     if(!failedOrIneligible&&delta<Math.max(0,Number(minimumMoveScoreDelta||0))){
