@@ -1,0 +1,40 @@
+{
+  "schema": "evercraft.edge.domain-control.v1",
+  "domains": [
+    {
+      "domain": "evercraftpropertyservices.com",
+      "registrar_evidence": {
+        "state": "verified_receipt",
+        "provider": "IONOS",
+        "evidence_date": "2026-02-02",
+        "evidence": "registration confirmation in owner mailbox"
+      },
+      "delegation_control": {
+        "state": "unverified"
+      },
+      "edge_eligible": false,
+      "reason": "Registrar ownership is evidenced, but current nameserver/delegation mutation authority has not yet been independently proven."
+    },
+    {
+      "domain": "systemiacommandcenters.com",
+      "registrar_evidence": {
+        "state": "unknown"
+      },
+      "delegation_control": {
+        "state": "unverified"
+      },
+      "edge_eligible": false
+    },
+    {
+      "domain": "havenlycleaning.com",
+      "registrar_evidence": {
+        "state": "unknown"
+      },
+      "delegation_control": {
+        "state": "unverified"
+      },
+      "edge_eligible": false
+    }
+  ],
+  "policy": "edge_eligible requires registrar/control evidence plus live delegation proof; website reachability alone is insufficient"
+}
