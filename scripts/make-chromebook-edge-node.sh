@@ -47,6 +47,8 @@ if [[ "$MAP_RC" -ne 0 ]]; then
   echo "The mapper attempted UPnP-IGD, NAT-PMP, and PCP; inspect the attempts above for the actual router boundary."
   exit 20
 fi
+echo "[router mapping receipt]"
+cat /tmp/evercraft-edge-router-map.log
 
 PUBLIC_IP="$(curl -4fsS --max-time 8 https://api.ipify.org || true)"
 if [[ -z "$PUBLIC_IP" ]]; then
