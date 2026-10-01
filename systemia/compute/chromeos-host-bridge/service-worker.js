@@ -121,6 +121,12 @@ async function reportObservation(requestId = null) {
       settings_surface_observed: false,
       nodes_examined: 0,
       bounded: true,
+      diagnostics: {
+        toggle_candidates: 0,
+        matched_ports: 0,
+        unmatched_toggle_candidates: 0,
+        raw_tree_persisted: false,
+      },
       ports: [18080, 8443].map((port) => ({
         port,
         protocol: 'TCP',
@@ -145,6 +151,9 @@ async function reportObservation(requestId = null) {
       tree_source: treeSource,
       nodes_examined: scan.nodes_examined,
       bounded: scan.bounded,
+      toggle_candidates: Number(scan.diagnostics?.toggle_candidates || 0),
+      matched_ports: Number(scan.diagnostics?.matched_ports || 0),
+      unmatched_toggle_candidates: Number(scan.diagnostics?.unmatched_toggle_candidates || 0),
       error,
     },
     authority: {
