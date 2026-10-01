@@ -59,7 +59,9 @@ test('fails closed when a stored receipt is modified', () => {
   storeChromeOsHostBoundaryObservation(fixture(), { stateRoot });
   const file = path.join(stateRoot, 'latest.json');
   const receipt = JSON.parse(fs.readFileSync(file, 'utf8'));
-  receipt.observation.ports[0].enabled = false;
+  const target = receipt.observation.ports.find((row) => row.port === 18080);
+  assert.ok(target);
+  target.enabled = false;
   fs.writeFileSync(file, JSON.stringify(receipt));
 
   const status = readChromeOsHostBoundaryStatus({ stateRoot });
