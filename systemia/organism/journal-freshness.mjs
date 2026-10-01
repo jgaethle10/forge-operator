@@ -125,18 +125,23 @@ export async function probeJournalFreshness({
   ];
   const journalIdentityMarkers = ['evercraft journal', 'news that moves. ideas that become things.'];
   const visibleIdentityText = homepageLower
-    .replace(/<script\\b[^>]*>[\\s\\S]*?<\\/script>/gi, ' ')
-    .replace(/<style\\b[^>]*>[\\s\\S]*?<\\/style>/gi, ' ');
+    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, ' ')
+    .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, ' ');
   const hasExplicitJournalIdentity = home.ok &&
     visibleIdentityText.includes('news that moves. ideas that become things.');
   const hasJournalName = home.ok && visibleIdentityText.includes('evercraft journal');
   const identityDriftMarker = identityDriftMarkers.find((marker) => homepageLower.includes(marker)) || null;
-  const escapedDriftMarker = identityDriftMarker
-    ? identityDriftMarker.replace(/[.*+?^$()|[\\]\\\\]/g, '\\\\$&')
-    : null;
-  const markerInPublicMetadata = escapedDriftMarker
-    ? new RegExp('<meta\\\\b[^>]*(?:name|property)=["\\\\\'](?:description|og:description|twitter:description)["\\\\\'][^>]*content=["\\\\\'][^"\\\\\']*'+escapedDriftMarker, 'i').test(home.text)
-      || new RegExp('<meta\\\\b[^>]*content=["\\\\\'][^"\\\\\']*'+escapedDriftMarker+'[^"\\\\\']*["\\\\\'][^>]*(?:name|property)=["\\\\\'](?:description|og:description|twitter:description)["\\\\\']', 'i').test(home.text)
+  const metaTags = [...homepageLower.matchAll(/<meta\b[^>]*>/gi)].map((match) => match[0]);
+  const markerInPublicMetadata = identityDriftMarker
+    ? metaTags.some((tag) =>
+        tag.includes(identityDriftMarker) &&
+        (tag.includes('name="description"') ||
+         tag.includes("name='description'") ||
+         tag.includes('property="og:description"') ||
+         tag.includes("property='og:description'") ||
+         tag.includes('name="twitter:description"') ||
+         tag.includes("name='twitter:description'"))
+      )
     : false;
   const identityDrift = home.ok && Boolean(identityDriftMarker) &&
     (markerInPublicMetadata || (!hasJournalName && !hasExplicitJournalIdentity));
