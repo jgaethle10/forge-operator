@@ -17,6 +17,7 @@ import { runTimingFragilityLab } from "./edge-timing-fragility.mjs";
 import { runOverlapFragilityLab } from "./edge-overlap-fragility.mjs";
 import { runMatchedPlaceboLab } from "./edge-matched-placebo.mjs";
 import { runBenchmarkFragilityLab } from "./edge-benchmark-fragility.mjs";
+import { runWalkForwardLab } from "./edge-walk-forward.mjs";
 
 async function main() {
   const artifactDir = path.resolve(
@@ -79,6 +80,12 @@ async function main() {
   });
   const benchmarkFile = path.join(artifactDir, "sec-edge-benchmark-fragility.json");
   fs.writeFileSync(benchmarkFile, JSON.stringify(benchmarkLab, null, 2) + "\n");
+
+  const walkForwardLab = runWalkForwardLab(report, {
+    transaction_cost_bps: Number(process.env.EDGE_LAB_TRANSACTION_COST_BPS || 5),
+  });
+  const walkForwardFile = path.join(artifactDir, "sec-edge-walk-forward.json");
+  fs.writeFileSync(walkForwardFile, JSON.stringify(walkForwardLab, null, 2) + "\n");
 
   const adversarial = adversarialValidateCandidates(report, {
     transaction_cost_bps: Number(process.env.EDGE_LAB_TRANSACTION_COST_BPS || 5),
@@ -212,6 +219,7 @@ async function main() {
     overlap_robust_diagnostics: overlapLab.overlap_robust_count || 0,
     placebo_separated_diagnostics: placeboLab.placebo_separated_count || 0,
     benchmark_fragility_status_counts: benchmarkLab.status_counts || {},
+    walk_forward_robust_diagnostics: walkForwardLab.walk_forward_robust_count || 0,
     frozen_forward_paper_cohorts: frozenCohorts.length,
     durable_forward_paper_state_configured: durableState.configured,
     durable_forward_paper_restart_reopen_verified: durableState.restart_reopen_verified,
@@ -229,6 +237,7 @@ async function main() {
       overlap_fragility_lab: overlapFile,
       matched_placebo_lab: placeboFile,
       benchmark_fragility_lab: benchmarkFile,
+      walk_forward_lab: walkForwardFile,
       adversarial_review: adversarialFile,
       forward_paper_cohorts: forwardPaperFile,
       durable_forward_paper_scores: durableScoreFile,
