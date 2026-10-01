@@ -236,6 +236,12 @@ export function validateChromeOsHostBoundaryObservation(
       tree_source: safeText(scan.tree_source || 'unknown', 48),
       nodes_examined: Math.max(0, Math.min(20_000, Number(scan.nodes_examined || 0))),
       bounded: scan.bounded !== false,
+      toggle_candidates: Math.max(0, Math.min(1000, Number(scan.toggle_candidates || 0))),
+      matched_ports: Math.max(0, Math.min(16, Number(scan.matched_ports || 0))),
+      unmatched_toggle_candidates: Math.max(
+        0,
+        Math.min(1000, Number(scan.unmatched_toggle_candidates || 0)),
+      ),
       error: scan.error ? safeText(scan.error, 200) : null,
     },
     authority: {
