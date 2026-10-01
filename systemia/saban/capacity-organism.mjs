@@ -15,6 +15,7 @@ import { rivetAliEvProductionAnatomy, formationWaves } from './workload-anatomy.
 import { planHeterogeneousFabric } from './heterogeneous-fabric-planner.mjs';
 import { loadPerformanceLedger } from './performance-learning.mjs';
 import { planFabricRebalance } from './fabric-rebalance.mjs';
+import { evaluateMicroSeedAdapterAvailability } from './microseed-adapter-catalog.mjs';
 
 const MODULE_FILE=fileURLToPath(import.meta.url);
 
@@ -30,7 +31,26 @@ function arg(name,fallback=null){
 }
 function has(name){return process.argv.includes(name);}
 
-function activeCapabilities(snapshot){
+function adapterAvailability(mode,adapterHealth){
+  const live=adapterHealth?.schema==='evercraft.saban.microseed-adapter-health.v1'
+    ? adapterHealth.adapters?.[mode]
+    : null;
+  if(live){
+    return {
+      available:live.available===true,
+      reason:String(live.reason||'adapter_health_unknown'),
+      source:'resident_adapter_health',
+    };
+  }
+  const fallback=evaluateMicroSeedAdapterAvailability(mode,{runtime:{executables:{}}});
+  return {
+    available:fallback.available===true,
+    reason:fallback.reason,
+    source:'static_adapter_catalog',
+  };
+}
+
+function activeCapabilities(snapshot,{adapterHealth=null}={}){
   const caps=[];
   const rejected=[];
   for(const row of snapshot.rows||[]){
@@ -40,6 +60,16 @@ function activeCapabilities(snapshot){
     }
     if(!row.manifest){
       rejected.push({device_id:row.device_id,reason:'capability_manifest_missing'});
+      continue;
+    }
+    const bridge=adapterAvailability(row.manifest.bridge_mode,adapterHealth);
+    if(!bridge.available){
+      rejected.push({
+        device_id:row.device_id,
+        reason:'bridge_unavailable:'+bridge.reason,
+        bridge_mode:row.manifest.bridge_mode,
+        adapter_truth_source:bridge.source,
+      });
       continue;
     }
     try{
@@ -56,12 +86,13 @@ function activeCapabilities(snapshot){
 
 export function compileCapacityOrganismState({
   registrySnapshot,
+  adapterHealth=null,
   performanceLedger=null,
   previousPlan=null,
   checkpoints={},
   now=new Date(),
 }={}){
-  const {caps,rejected}=activeCapabilities(registrySnapshot);
+  const {caps,rejected}=activeCapabilities(registrySnapshot,{adapterHealth});
   const anatomy=rivetAliEvProductionAnatomy();
   const compute=resolveAmbientComputeOffers({
     capabilities:caps,
@@ -108,6 +139,17 @@ export function compileCapacityOrganismState({
     compiled_capability_count:caps.length,
     compute_offer_count:compute.offers.length,
     rejected_devices:rejected,
+    adapter_health:{
+      present:adapterHealth?.schema==='evercraft.saban.microseed-adapter-health.v1',
+      receipt_hash:adapterHealth?.receipt_hash||null,
+      active_modes:adapterHealth?.adapters
+        ? Object.entries(adapterHealth.adapters).filter(([,v])=>v?.available===true).map(([mode])=>mode)
+        : ['native_agent','lan_api'],
+      unavailable_modes:adapterHealth?.adapters
+        ? Object.entries(adapterHealth.adapters).filter(([,v])=>v?.available!==true).map(([mode,v])=>({mode,reason:v?.reason||'unavailable'}))
+        : [],
+      rejected_device_count:rejected.filter(x=>String(x.reason||'').startsWith('bridge_unavailable:')).length,
+    },
     capability_plan:capabilityPlan,
     workload_plan:workloadPlan,
     rebalance_plan:rebalance,
@@ -149,6 +191,10 @@ export async function runCapacityOrganismOnce({
   }
 
   const registrySnapshot=registry.list({now});
+  const adapterHealthFile=path.join(resolvedRoot,'adapter-health.json');
+  const adapterHealth=fs.existsSync(adapterHealthFile)
+    ? JSON.parse(fs.readFileSync(adapterHealthFile,'utf8'))
+    : null;
   const performanceLedger=loadPerformanceLedger(path.join(resolvedRoot,'performance-ledger.json'));
   const previousPlanFile=path.join(resolvedRoot,'heterogeneous-plan.json');
   const previousPlan=fs.existsSync(previousPlanFile)
@@ -160,6 +206,7 @@ export async function runCapacityOrganismOnce({
     : {};
   const compiled=compileCapacityOrganismState({
     registrySnapshot,
+    adapterHealth,
     performanceLedger,
     previousPlan,
     checkpoints,
