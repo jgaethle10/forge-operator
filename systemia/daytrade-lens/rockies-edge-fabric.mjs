@@ -247,15 +247,24 @@ function median(values) {
   return x.length % 2 ? x[m] : (x[m-1] + x[m]) / 2;
 }
 
-function stats(samples, costBps) {
+function stats(samples, costBps, expectedSign = null) {
   const excess = samples.map((row) =>
     Number(row.forward_return || 0) - Number(row.benchmark_return || 0)
   );
-  const net = excess.map((x) => x - Math.sign(x || 1) * (costBps / 10000));
+  const rawAvg = mean(excess);
+  const rawSign = rawAvg > 0 ? 1 : rawAvg < 0 ? -1 : 0;
+  const direction = expectedSign === 1 || expectedSign === -1 ? expectedSign : rawSign;
+  const cost = Number(costBps || 0) / 10000;
+  const net = direction === 0
+    ? [...excess]
+    : excess.map((x) => x - direction * cost);
+  const strategyNet = direction === 0
+    ? excess.map(() => 0)
+    : excess.map((x) => direction * x - cost);
   const avg = mean(net);
   const med = median(net);
   const sign = avg > 0 ? 1 : avg < 0 ? -1 : 0;
-  const aligned = net.filter((x) => sign === 0 ? x === 0 : Math.sign(x) === sign).length;
+  const aligned = strategyNet.filter((x) => x > 0).length;
   const variance = net.length > 1
     ? net.reduce((sum, x) => sum + (x - avg) ** 2, 0) / (net.length - 1)
     : 0;
@@ -264,8 +273,12 @@ function stats(samples, costBps) {
 
   return {
     samples: net.length,
+    expected_sign: direction,
+    raw_mean_excess_return: rawAvg,
+    raw_sign: rawSign,
     mean_excess_return_net: avg,
     median_excess_return_net: med,
+    mean_strategy_return_net: mean(strategyNet),
     directional_hit_rate: net.length ? aligned / net.length : 0,
     t_like: tLike,
     sign,
@@ -288,14 +301,16 @@ export function evaluateRockiesEdgeCandidate(samples, {
     .sort((a,b) => new Date(a.observed_at) - new Date(b.observed_at));
 
   const splitAt = Math.max(1, Math.floor(rows.length * development_fraction));
-  const development = stats(rows.slice(0, splitAt), transaction_cost_bps);
-  const holdout = stats(rows.slice(splitAt), transaction_cost_bps);
-  const overall = stats(rows, transaction_cost_bps);
+  const developmentRaw = stats(rows.slice(0, splitAt), 0);
+  const learnedSign = developmentRaw.raw_sign;
+  const development = stats(rows.slice(0, splitAt), transaction_cost_bps, learnedSign);
+  const holdout = stats(rows.slice(splitAt), transaction_cost_bps, learnedSign);
+  const overall = stats(rows, transaction_cost_bps, learnedSign);
 
   const signAgreement =
-    development.sign !== 0 &&
-    holdout.sign !== 0 &&
-    development.sign === holdout.sign;
+    learnedSign !== 0 &&
+    development.sign === learnedSign &&
+    holdout.sign === learnedSign;
 
   const holdoutMagnitudePass =
     Math.abs(holdout.mean_excess_return_net) >= minimum_abs_holdout_mean_bps / 10000;
@@ -319,7 +334,7 @@ export function evaluateRockiesEdgeCandidate(samples, {
     development,
     holdout,
     overall,
-    learned_direction: candidate ? (holdout.sign > 0 ? "POSITIVE_EXCESS_RETURN" : "NEGATIVE_EXCESS_RETURN") : "UNRESOLVED",
+    learned_direction: candidate ? (learnedSign > 0 ? "POSITIVE_EXCESS_RETURN" : "NEGATIVE_EXCESS_RETURN") : "UNRESOLVED",
     checks,
     research_note: candidate
       ? "Candidate survived this holdout screen; further regime, multiple-testing, and forward-paper validation remain required."
