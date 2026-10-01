@@ -333,6 +333,8 @@ export function compactPlugNYCSessionCorpus({
   const root=path.resolve(stateDir);
   const objectStore=new EvercraftObjectStore({stateDir:path.join(root,'object-store')});
   const entityStore=new DurableEntityStore({stateDir:path.join(root,'entity-store')});
+  const checkpoint=readJson(path.join(root,'session-corpus',PLUGNYC_SOURCE_ID,'checkpoint.json'),defaultCheckpoint());
+  const sourceCoverageThrough=clean(checkpoint.source_latest_date)||null;
   const partitions=entityStore.list(appKey,'EVOpsSessionPartition',{sort:'source_offset',limit:10000});
   const groups=new Map();
   let rawRows=0;
@@ -396,12 +398,14 @@ export function compactPlugNYCSessionCorpus({
       connector_count:group.connector_ids.size,
       source_ref:PLUGNYC_SOURCE_ID,
       source_url:PLUGNYC_SOURCE_PAGE,
-      source_vintage:month+(isPartialSourceMonth(month,group.source_max_date)?' partial through '+group.source_max_date:''),
-      data_status:isPartialSourceMonth(month,group.source_max_date)?'partial':'verified',
+      source_vintage:month+(isPartialSourceMonth(month,sourceCoverageThrough)?' partial through '+sourceCoverageThrough:''),
+      data_status:isPartialSourceMonth(month,sourceCoverageThrough)?'partial':'verified',
       confidence_pct:100,
       provenance_notes:'Owned Evercraft projection from privacy-minimized PlugNYC individual-session partitions. PAID/ROAMING/DISCONNECTED count as valid observed usage; INVALID/ABORTED remain preserved in raw partitions and excluded from successful-session totals.',
       derived_metrics_json:JSON.stringify({
         source_rows:group.source_rows,
+        source_coverage_through:sourceCoverageThrough,
+        station_latest_observed_session_date:group.source_max_date,
         status_counts:group.status_counts,
         excluded_invalid_or_aborted:group.source_rows-group.charging_sessions_count,
         semantic_class:'observed_station_month_from_raw_sessions'
