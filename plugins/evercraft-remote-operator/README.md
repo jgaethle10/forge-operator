@@ -32,6 +32,8 @@ The client bearer and node control grant must be different values.
 
 ## Tools
 
+Core node tools:
+
 - `remote_operator_status`
 - `remote_network_status`
 - `remote_list_files`
@@ -39,9 +41,26 @@ The client bearer and node control grant must be different values.
 - `remote_write_file`
 - `remote_exec`
 
-`remote_network_status` is read-only and returns the authorized node's current network observation: interfaces, routes, listeners, Evercraft service state, router-map configuration, loopback Fabric health, hostname-aware local TLS health, and the explicit ChromeOS/Crostini host boundary. It does not toggle forwarding or mutate the network.
+Host-boundary tools:
 
-Read operations still require the client credential. File writes and program execution also require an explicit `approval_ref`, and the node enforces its own filesystem/program policy after the gateway authenticates.
+- `remote_host_capabilities`
+- `remote_host_boundary_status`
+- `remote_host_boundary_check`
+- `remote_host_boundary_certification`
+- `remote_host_capability_admit`
+- `remote_host_capability_check`
+
+`remote_network_status` is read-only and returns the authorized node's current network observation: interfaces, routes, listeners, Evercraft service state, router-map configuration, loopback Fabric health, hostname-aware local TLS health, and explicit guest/host boundaries.
+
+`remote_host_capabilities` exposes the typed capability registry, including candidate/admitted state, platform permission scope, mutation authority, privacy properties and node-local field admission.
+
+`remote_host_boundary_check` requests fresh signed evidence from the paired ChromeOS companion for the current compatibility capability. `remote_host_capability_check` is the long-term generic typed path and fails closed until a candidate capability has passed its field gate.
+
+`remote_host_boundary_certification` reconciles the signed host observation with the LAN witness. It never promotes that evidence into a public-route claim.
+
+`remote_host_capability_admit` mutates Evercraft trust state only. It does not mutate ChromeOS. It requires an explicit `approval_ref` and a passing field certification, and the resulting admission is tied to the exact paired observer install ID and cryptographic key fingerprint.
+
+Read operations still require the client credential. File writes, program execution, and host-capability trust admission require their explicit approval semantics, and the node enforces its own policy after the gateway authenticates.
 
 ## Trust boundary
 
