@@ -5,6 +5,9 @@ on:
       - "systemia/rivet/**"
       - "systemia/compute/**"
       - "systemia/yard/**"
+      - "systemia/network/outbound-capacity-broker.mjs"
+      - "systemia/network/outbound-node-agent.mjs"
+      - "tests/rivet-outbound-service-relay.test.mjs"
       - "systemia/organism/rivet-report-edge-runner.mjs"
       - "systemia/organism/rivet-report-edge.workflow.json"
       - "systemia/core/resident-services.json"
@@ -19,6 +22,9 @@ on:
       - "systemia/rivet/**"
       - "systemia/compute/**"
       - "systemia/yard/**"
+      - "systemia/network/outbound-capacity-broker.mjs"
+      - "systemia/network/outbound-node-agent.mjs"
+      - "tests/rivet-outbound-service-relay.test.mjs"
       - "systemia/organism/rivet-report-edge-runner.mjs"
       - "systemia/organism/rivet-report-edge.workflow.json"
       - "systemia/core/resident-services.json"
@@ -45,4 +51,5 @@ jobs:
       - run: node systemia/yard/rivet-resident-runtime.proof.mjs
       - run: node systemia/yard/rivet-report-edge-controller.proof.mjs
       - run: node systemia/core/rivet-report-resident-wiring.proof.mjs
+      - run: node --test tests/rivet-outbound-service-relay.test.mjs
       - run: npm run proof:beast-football
