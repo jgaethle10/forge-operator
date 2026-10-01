@@ -31,7 +31,7 @@
       "wave": 1,
       "role": "internal_operations",
       "target": "systemia_plus_yard",
-      "state": "source_profile_captured"
+      "state": "source_profile_captured_owned_snapshot_intake_scheduler_ci_pending"
     },
     {
       "product": "Systemia Audit Center",
@@ -189,7 +189,7 @@
       "connected_connectors": 1,
       "cutover_authority": false,
       "replacement_matrix": "systemia/migrations/base44-exit/wave-1-replacement-matrix.json",
-      "implementations_present_ci_pending": 14,
+      "implementations_present_ci_pending": 16,
       "scheduled_work_spec": "systemia/migrations/base44-exit/wave-1-scheduled-work.json",
       "cutover_ready_products": 0,
       "destination_data_migrated_products": 0,
