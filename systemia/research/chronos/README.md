@@ -109,6 +109,35 @@ Run:
 node systemia/research/chronos/pctc-simulator.proof.mjs
 ```
 
+## Published hardware / finite-shot audit
+
+`pctc-hardware-audit.mjs` now captures the published Table I results, the paper's shot counts, and the Appendix C calibration snapshots for Quantinuum H1-1 and IBM `ibm_torino`.
+
+The paper reports **4000 shots per tomography measurement on H1-1** and **40,000 shots per tomography measurement on ibm_torino**.
+
+A deliberately narrow binomial audit asks only one question: *could the observed success-probability shift plausibly be sampling fluctuation around the ideal value, if all other hardware effects were absent?*
+
+Results:
+
+- **H1-1, Uq:** all six reported success probabilities remain inside a simple 95% shot-noise-only envelope around ideal `P=0.25`; the largest shift is about `1.17 sigma`.
+- **ibm_torino, Uq:** five of six reported states fall outside that same shot-only envelope, with the largest shift about `5.50 sigma`.
+- **ibm_torino, Uc:** all six states are far from the ideal `P=0.5` shot-only envelope, around `21.6–23.8 sigma`.
+
+This does **not** indicate anomalous causality. It indicates that finite-shot noise alone is insufficient to explain the IBM deviations, so hardware/compilation/readout/decoherence/systematic effects must be included before comparing experiment with the ideal circuit.
+
+The source ledger also preserves the reported calibration snapshots:
+
+- H1-1: readout error `2.5e-3`, single-qubit gate error `2.1e-5`, two-qubit gate error `8.8e-4`, calibration date 2024-04-10.
+- ibm_torino: mean readout error across the four used qubits `~1.775e-2`, average CZ error `1.62e-3`, calibration date 2024-09-26.
+
+Those calibration numbers are **inputs**, not yet a faithful noise channel.
+
+Run:
+
+```bash
+node systemia/research/chronos/pctc-hardware-audit.proof.mjs
+```
+
 ## Primary literature anchors
 
 - Morris, Thorne & Yurtsever (1988), *Wormholes, Time Machines, and the Weak Energy Condition*, Phys. Rev. Lett. 61, 1446. DOI: 10.1103/PhysRevLett.61.1446
