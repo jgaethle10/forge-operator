@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-01T05:09:39.107Z",
+  "updated_at": "2026-10-01T05:37:29.666Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,32 +11,86 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/revenue.json",
-      "last_changed": "2026-10-01T05:09:39.107Z",
-      "priority": 90
+      "path": "/chum/crawler-radar.json",
+      "last_changed": "2026-10-01T05:37:29.666Z",
+      "priority": 80
     },
     {
-      "path": "/chum/revenue.txt",
-      "last_changed": "2026-10-01T05:09:39.107Z",
-      "priority": 90
-    },
-    {
-      "path": "/.well-known/evercraft-agent-commerce.json",
-      "last_changed": "2026-10-01T05:09:39.107Z",
-      "priority": 84
-    },
-    {
-      "path": "/chum/agent-commerce.json",
-      "last_changed": "2026-10-01T05:09:39.107Z",
+      "path": "/chum/crawler-radar.txt",
+      "last_changed": "2026-10-01T05:37:29.666Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-01T05:09:39.107Z",
+      "last_changed": "2026-10-01T05:37:29.666Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/",
+      "last_changed": "2026-10-01T05:37:29.666Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "last_changed": "2026-10-01T05:37:29.666Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/crawler-radar.json",
+      "url": "/chum/crawler-radar.json",
+      "last_changed": "2026-10-01T05:37:29.666Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/crawler-radar.txt",
+      "url": "/chum/crawler-radar.txt",
+      "last_changed": "2026-10-01T05:37:29.666Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-10-01T05:37:29.666Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/",
+      "url": "/chum/strike/",
+      "last_changed": "2026-10-01T05:37:29.666Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "url": "/chum/strike/index.json",
+      "last_changed": "2026-10-01T05:37:29.666Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/",
+      "url": "/chum/hot/",
+      "last_changed": "2026-10-01T05:37:28.904Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/forensiscope.json",
+      "url": "/chum/proof/forensiscope.json",
+      "last_changed": "2026-10-01T05:37:28.904Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/index.json",
+      "url": "/chum/proof/index.json",
+      "last_changed": "2026-10-01T05:37:28.904Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/rivet.json",
+      "url": "/chum/proof/rivet.json",
+      "last_changed": "2026-10-01T05:37:28.904Z",
+      "priority": 80
+    },
     {
       "path": "/chum/revenue.json",
       "url": "/chum/revenue.json",
@@ -59,18 +113,6 @@
       "path": "/chum/agent-commerce.json",
       "url": "/chum/agent-commerce.json",
       "last_changed": "2026-10-01T05:09:39.107Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-10-01T05:09:39.107Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/",
-      "url": "/chum/hot/",
-      "last_changed": "2026-10-01T05:05:29.350Z",
       "priority": 80
     },
     {
@@ -1492,48 +1534,6 @@
     {
       "path": "/chum/answers/doors/conversion-problems-272215f37a/",
       "url": "/chum/answers/doors/conversion-problems-272215f37a/",
-      "last_changed": "2026-10-01T05:00:27.354Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/country-benchmark-with-sources-04ac1dfc19.json",
-      "url": "/chum/answers/doors/country-benchmark-with-sources-04ac1dfc19.json",
-      "last_changed": "2026-10-01T05:00:27.354Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/country-benchmark-with-sources-04ac1dfc19/",
-      "url": "/chum/answers/doors/country-benchmark-with-sources-04ac1dfc19/",
-      "last_changed": "2026-10-01T05:00:27.354Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/county-health-evidence-brief-f80ef29cf8.json",
-      "url": "/chum/answers/doors/county-health-evidence-brief-f80ef29cf8.json",
-      "last_changed": "2026-10-01T05:00:27.354Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/create-a-website-competitor-comparison-report-7cb7846615.json",
-      "url": "/chum/answers/doors/create-a-website-competitor-comparison-report-7cb7846615.json",
-      "last_changed": "2026-10-01T05:00:27.354Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/create-an-anonymous-inbox-1cf7f12421.json",
-      "url": "/chum/answers/doors/create-an-anonymous-inbox-1cf7f12421.json",
-      "last_changed": "2026-10-01T05:00:27.354Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/create-cross-business-loyalty-rewards-2c3ab05040.json",
-      "url": "/chum/answers/doors/create-cross-business-loyalty-rewards-2c3ab05040.json",
-      "last_changed": "2026-10-01T05:00:27.354Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/create-cross-business-loyalty-rewards-2c3ab05040/",
-      "url": "/chum/answers/doors/create-cross-business-loyalty-rewards-2c3ab05040/",
       "last_changed": "2026-10-01T05:00:27.354Z",
       "priority": 160
     }
