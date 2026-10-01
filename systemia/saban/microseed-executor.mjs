@@ -49,7 +49,15 @@ export function normalizeMicroSeedExecutionRequest(input={}){
   if(!body.device_id) throw new Error('microseed_execution_device_id_required');
   if(!body.workload_class) throw new Error('microseed_execution_workload_required');
   if(payloadBytes(body.payload)>64*1024) throw new Error('microseed_execution_payload_too_large');
-  return {...body,request_hash:sha(body)};
+  const identity={
+    device_id:body.device_id,
+    workload_class:body.workload_class,
+    idempotency_key:body.idempotency_key,
+    payload:body.payload,
+    requested_memory_mb:body.requested_memory_mb,
+    requested_cpu_fraction:body.requested_cpu_fraction,
+  };
+  return {...body,request_hash:sha(identity)};
 }
 
 function executeBuiltin(workload,payload){
