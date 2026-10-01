@@ -155,13 +155,32 @@
           ]
         },
         {
-          "key": "systemia_snapshot_and_intake",
-          "state": "not_transplanted",
-          "detail": "Source still contains service-role snapshot/intake writes and direct legacy Systemia synchronization routes."
+          "key": "aggregate_snapshot_and_direct_systemia_ingress",
+          "state": "implementation_present_ci_pending",
+          "refs": [
+            "systemia/internal-ops/snapshot.mjs",
+            "systemia/internal-ops/snapshot-ingress.mjs",
+            "systemia/internal-ops/systemia-sync.mjs",
+            "systemia/internal-ops/runtime.proof.mjs"
+          ]
         },
         {
-          "key": "legacy_cross_app_routes",
-          "state": "repoint_required"
+          "key": "systemia_intake_materialization",
+          "state": "implementation_present_ci_pending",
+          "refs": [
+            "systemia/internal-ops/intake.mjs",
+            "systemia/internal-ops/runtime.proof.mjs"
+          ]
+        },
+        {
+          "key": "legacy_cross_app_snapshot_routes",
+          "state": "owned_replacement_present_ci_pending",
+          "refs": [
+            "systemia/internal-ops/snapshot.mjs",
+            "systemia/internal-ops/snapshot-ingress.mjs",
+            "systemia/internal-ops/systemia-sync.mjs"
+          ],
+          "detail": "Owned sync builds the read-only aggregate in-process and admits it directly to the owned snapshot ledger. The old self-HTTP and Base44-to-Systemia HTTP hops are not required."
         },
         {
           "key": "offline_queue_data_parity",
@@ -237,7 +256,7 @@
   "summary": {
     "products": 5,
     "products_cutover_ready": 0,
-    "implementations_present_ci_pending": 14,
+    "implementations_present_ci_pending": 16,
     "destination_data_migrated_products": 0,
     "public_cutovers_authorized": 0
   },
