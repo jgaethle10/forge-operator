@@ -32,6 +32,7 @@ export function evaluatePilotReadiness({
   forwardScores = [],
   forwardClusterScores = { scores: [] },
   durableState = {},
+  trialCemeteryState = {},
 } = {}) {
   const candidates = (report?.evaluations || []).filter(
     (row) => row.status === "RESEARCH_CANDIDATE"
@@ -137,6 +138,10 @@ export function evaluatePilotReadiness({
         durableState?.configured === true,
       durable_restart_reopen_verified:
         durableState?.restart_reopen_verified === true,
+      durable_trial_cemetery_configured:
+        trialCemeteryState?.configured === true,
+      durable_trial_cemetery_restart_reopen_verified:
+        trialCemeteryState?.restart_reopen_verified === true,
     };
 
     const ready = Object.values(checks).every(Boolean);
@@ -152,6 +157,15 @@ export function evaluatePilotReadiness({
         .map(([key]) => key),
       pair_only_translation_not_sufficient_for_micro_pilot:
         executionStatus === "PAIR_ONLY_TRANSLATES_DIAGNOSTIC",
+      search_process_memory: {
+        configured: trialCemeteryState?.configured === true,
+        restart_reopen_verified:
+          trialCemeteryState?.restart_reopen_verified === true,
+        run_count: Number(trialCemeteryState?.run_count || 0),
+        trial_observation_count:
+          Number(trialCemeteryState?.trial_observation_count || 0),
+        ephemeral_artifact_storage_is_not_lifetime_memory: true,
+      },
       quote_execution_evidence: {
         feed: quoteMicrostructureLab?.feed || null,
         quote_scope: quoteMicrostructureLab?.quote_scope || null,
