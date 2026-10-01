@@ -15,6 +15,7 @@ test('Saban gateway relays exactly-once work to a real native MicroSeed agent',a
   const deviceToken='device-secret';
   const gatewayToken='gateway-secret';
   let telemetryCalls=0;
+  let executionTelemetryCalls=0;
   let agent=null;
   let gateway=null;
   try{
@@ -38,8 +39,9 @@ test('Saban gateway relays exactly-once work to a real native MicroSeed agent',a
       manifest:deviceManifest,
       stateDir:path.join(root,'device-state'),
       authorizationToken:deviceToken,
-      telemetryProvider:async()=>{
+      telemetryProvider:async({request})=>{
         telemetryCalls+=1;
+        if(request) executionTelemetryCalls+=1;
         return {
           primary_function_busy:false,
           cpu_utilization:0.1,
@@ -140,13 +142,15 @@ test('Saban gateway relays exactly-once work to a real native MicroSeed agent',a
     assert.equal(firstBody.result.remote_arbitrary_code_execution,false);
     assert.equal(firstBody.result.credential_exposed,false);
     assert.match(firstBody.result.remote_receipt_hash,/^sha256:/);
-    assert.equal(telemetryCalls,1);
+    assert.equal(telemetryCalls,2);
+    assert.equal(executionTelemetryCalls,1);
 
     const second=await call();
     assert.equal(second.status,200);
     const secondBody=await second.json();
     assert.equal(secondBody.deduplicated,true);
-    assert.equal(telemetryCalls,1);
+    assert.equal(telemetryCalls,3);
+    assert.equal(executionTelemetryCalls,1);
     assert.equal(secondBody.receipt_hash,firstBody.receipt_hash);
   }finally{
     if(gateway) await gateway.close();
