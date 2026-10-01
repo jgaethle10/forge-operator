@@ -4,7 +4,14 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { issueMicroSeedPairingTicket } from './microseed-pairing.mjs';
+import { AmbientDeviceRegistry } from './ambient-device-registry.mjs';
+import {
+  issueMicroSeedPairingTicket,
+  listMicroSeedPairingTickets,
+  showMicroSeedPairingTicket,
+  revokeMicroSeedPairingTicket,
+  consumeMicroSeedPairingBundle,
+} from './microseed-pairing.mjs';
 
 const MODULE_FILE=fileURLToPath(import.meta.url);
 const arg=(name,fallback='')=>{
@@ -66,6 +73,7 @@ export function issueMicroSeedPairingKit({
   atomicJson(destination,kit);
   return {
     schema:'evercraft.microseed.pairing-kit-issue-receipt.v1',
+    ticket_card:ticket.ticket_card,
     ticket_id:ticket.ticket_id,
     kit_file:destination,
     kit_file_mode:(fs.statSync(destination).mode&0o777).toString(8).padStart(4,'0'),
@@ -82,22 +90,85 @@ export function issueMicroSeedPairingKit({
 
 async function main(){
   const command=process.argv[2]||'issue';
-  if(command!=='issue') throw new Error('microseed_pairing_cli_command_unsupported');
   const stateDir=path.resolve(
     arg('--root',process.env.SABAN_AMBIENT_STATE_DIR||path.join(os.homedir(),'.local/state/evercraft/saban-ambient'))
   );
-  const receipt=issueMicroSeedPairingKit({
-    stateDir,
-    approval_ref:arg('--approval-ref',''),
-    device_id:arg('--device-id','')||null,
-    allowed_device_classes:csv(arg('--device-classes','')),
-    allowed_workloads:csv(arg('--workloads','')),
-    ttl_ms:Number(arg('--ttl-ms',String(15*60*1000))),
-    enrollment_url:arg('--enrollment-url',''),
-    outFile:arg('--out',''),
-    now:new Date(),
-  });
-  process.stdout.write(JSON.stringify(receipt,null,2)+'\n');
+
+  if(command==='issue'){
+    const receipt=issueMicroSeedPairingKit({
+      stateDir,
+      approval_ref:arg('--approval-ref',''),
+      device_id:arg('--device-id','')||null,
+      allowed_device_classes:csv(arg('--device-classes','')),
+      allowed_workloads:csv(arg('--workloads','')),
+      ttl_ms:Number(arg('--ttl-ms',String(15*60*1000))),
+      enrollment_url:arg('--enrollment-url',''),
+      outFile:arg('--out',''),
+      now:new Date(),
+    });
+    process.stdout.write(receipt.ticket_card.card_text+'\n');
+    process.stdout.write('\nPAIRING KIT\n');
+    process.stdout.write(JSON.stringify({
+      schema:receipt.schema,
+      ticket_id:receipt.ticket_id,
+      display_code:receipt.ticket_card.display_code,
+      kit_file:receipt.kit_file,
+      kit_file_mode:receipt.kit_file_mode,
+      expires_at:receipt.expires_at,
+      device_id:receipt.device_id,
+      allowed_device_classes:receipt.allowed_device_classes,
+      allowed_workloads:receipt.allowed_workloads,
+      pairing_secret_exposed_in_card:true,
+      kit_contains_secret:true,
+      authorization_granted:false,
+    },null,2)+'\n');
+    return;
+  }
+
+  if(command==='show'){
+    const card=showMicroSeedPairingTicket({
+      stateDir,
+      ticket_id:arg('--ticket-id',''),
+      now:new Date(),
+    });
+    process.stdout.write(card.card_text+'\n');
+    return;
+  }
+
+  if(command==='list'){
+    process.stdout.write(JSON.stringify(listMicroSeedPairingTickets({
+      stateDir,
+      now:new Date(),
+      include_expired:process.argv.includes('--include-expired'),
+    }),null,2)+'\n');
+    return;
+  }
+
+  if(command==='revoke'){
+    process.stdout.write(JSON.stringify(revokeMicroSeedPairingTicket({
+      stateDir,
+      ticket_id:arg('--ticket-id',''),
+      reason:arg('--reason','operator_revoked'),
+      now:new Date(),
+    }),null,2)+'\n');
+    return;
+  }
+
+  if(command==='consume'){
+    const bundleFile=path.resolve(arg('--bundle-file',''));
+    if(!fs.existsSync(bundleFile)) throw new Error('microseed_pairing_bundle_file_missing');
+    const bundle=JSON.parse(fs.readFileSync(bundleFile,'utf8'));
+    const registry=new AmbientDeviceRegistry({root:path.join(stateDir,'registry')});
+    process.stdout.write(JSON.stringify(consumeMicroSeedPairingBundle({
+      stateDir,
+      registry,
+      bundle,
+      now:new Date(),
+    }),null,2)+'\n');
+    return;
+  }
+
+  throw new Error('microseed_pairing_cli_command_unsupported:'+command);
 }
 
 if(process.argv[1]&&path.resolve(process.argv[1])===MODULE_FILE){
