@@ -22,6 +22,7 @@ import {
   reserveShipment
 } from './shipping-ledger.mjs';
 import { buildVerifiedDeliveryReceipt } from './delivery-receipt.mjs';
+import { dispatchVerifiedShipment } from './transport-runtime.mjs';
 
 function tempDir() {
   return fs.mkdtempSync(path.join(os.tmpdir(), 'evercraft-shipping-'));
@@ -322,4 +323,67 @@ test('v2 delivery receipt requires verified provider delivery and preserves trut
     package_manifest:packageManifest,
     sent_copy_verification:verification
   }), /shipment_not_verified_delivered/);
+});
+
+
+test('transport runtime reproduces the safe thread-to-fresh recovery without duplicate sending', async () => {
+  const dir = tempDir();
+  const ledgerFile = path.join(dir, 'shipping-ledger.json');
+  const file = makePdf(dir);
+  const envelope = prepareShipment({
+    logical_package_key:'bbsi-send',
+    recipient:{ address:'buyer@example.com' },
+    subject:'Yakima Tax Pros x BBSI Partnership Brief',
+    body:'Attached.',
+    authorization_ref:'human-approved:send-now',
+    thread_ref:'gmail:thread:old',
+    artifacts:[{
+      path:file,
+      client_filename:'Yakima Tax Pros x BBSI Partnership Brief.pdf',
+      mime_type:'application/pdf',
+      qa:{ openable:true, render_verified:true, renderer_count:2 }
+    }]
+  });
+
+  const routes = [];
+  const adapter = {
+    async send({ route }) {
+      routes.push(route);
+      if (route === 'thread_reply') {
+        const error = new Error('reply thread failed before send');
+        error.code = 'thread_write_failed';
+        throw error;
+      }
+      return { id:'gmail-message-safe-1' };
+    },
+    async readSent({ provider_message_id }) {
+      return {
+        id:provider_message_id,
+        to:['buyer@example.com'],
+        cc:[],
+        subject:'Yakima Tax Pros x BBSI Partnership Brief',
+        attachments:[{ filename:'Yakima Tax Pros x BBSI Partnership Brief.pdf' }]
+      };
+    }
+  };
+
+  const result = await dispatchVerifiedShipment({
+    envelope,
+    adapter,
+    ledger_file:ledgerFile,
+    provider:'gmail'
+  });
+  assert.equal(result.delivered, true);
+  assert.equal(result.state, 'verified_delivered');
+  assert.deepEqual(routes, ['thread_reply','fresh_outbound']);
+
+  const second = await dispatchVerifiedShipment({
+    envelope,
+    adapter,
+    ledger_file:ledgerFile,
+    provider:'gmail'
+  });
+  assert.equal(second.duplicate_suppressed, true);
+  assert.equal(second.delivered, true);
+  assert.deepEqual(routes, ['thread_reply','fresh_outbound']);
 });
