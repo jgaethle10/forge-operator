@@ -130,6 +130,18 @@ test('ambient executor carries a placement through gateway to device and resumes
       bridgeAdapters:{native_agent:adapter},
     });
 
+    const conformanceResponse=await fetch(gateway.url+'/v1/conformance',{
+      method:'POST',
+      headers:{
+        authorization:'Bearer '+gatewayToken,
+        'content-type':'application/json',
+      },
+      body:JSON.stringify({device_id:deviceId}),
+    });
+    assert.equal(conformanceResponse.status,200);
+    assert.deepEqual((await conformanceResponse.json()).verified_workloads,['systemia.content-hash.v1']);
+    const executionsAfterConformance=deviceExecutions;
+
     const task=normalizeFabricTask({
       task_id:'hash-shard',
       workload_class:'systemia.content-hash.v1',
@@ -154,7 +166,7 @@ test('ambient executor carries a placement through gateway to device and resumes
     assert.equal(first.failed_units,0);
     assert.equal(first.replan_required,false);
     assert.equal(first.results[0].execution_location,'remote_native_device_via_gateway');
-    assert.equal(deviceExecutions,1);
+    assert.equal(deviceExecutions,executionsAfterConformance+1);
     assert.deepEqual(first.checkpoints['hash-shard:s0:r0'].completed,true);
 
     const second=await executeAmbientFabricPlan({
@@ -168,7 +180,7 @@ test('ambient executor carries a placement through gateway to device and resumes
     assert.equal(second.completed_units,1);
     assert.equal(second.results[0].resumed_from_state,true);
     assert.equal(second.results[0].deduplicated,true);
-    assert.equal(deviceExecutions,1);
+    assert.equal(deviceExecutions,executionsAfterConformance+1);
 
     const changed=await executeAmbientFabricPlan({
       plan,
@@ -179,7 +191,7 @@ test('ambient executor carries a placement through gateway to device and resumes
       inputProvider:async()=>({payload:{value:{hello:'changed'}}}),
     });
     assert.equal(changed.completed_units,1);
-    assert.equal(deviceExecutions,2);
+    assert.equal(deviceExecutions,executionsAfterConformance+2);
   }finally{
     if(gateway) await gateway.close();
     if(agent) await agent.close();
