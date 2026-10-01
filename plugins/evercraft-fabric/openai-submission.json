@@ -87,7 +87,7 @@
   "review_support": {
     "demo_recording_url": "https://drive.google.com/file/d/1v6KeJMAjH_Hp7IpjFWqNFTcPT2k9iUd_/view?usp=drivesdk",
     "recording_access": "public_link_reader",
-    "notes": "Walkthrough demonstrates capability listing, natural-language routing to FindMyPart, capability-specific connection lookup, and read-only/non-transactional behavior. Canonical v1.0.3 package metadata is aligned for public submission."
+    "notes": "Walkthrough demonstrates capability listing, natural-language routing to FindMyPart, capability-specific connection lookup, and read-only/non-transactional behavior. Canonical v1.0.4 package metadata is aligned for public submission."
   },
-  "package_version": "1.0.3"
+  "package_version": "1.0.4"
 }
