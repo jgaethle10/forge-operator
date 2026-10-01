@@ -225,7 +225,8 @@ function Metric({ label, value }: { label: string; value: string }) {
 
 const rootView = window.location.pathname.startsWith('/fallen')
   ? <FallenFamilyCartoon />
-  : window.location.pathname.startsWith('/household-fabric')
+  : (window.location.pathname.startsWith('/household-fabric') ||
+      window.location.pathname.startsWith('/household'))
     ? <HouseholdFabricToday />
     : <App />;
 
