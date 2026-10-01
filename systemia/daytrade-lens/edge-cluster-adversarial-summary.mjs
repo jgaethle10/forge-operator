@@ -29,6 +29,7 @@ export function buildClusterAdversarialSummary({
   randomPlaceboLab,
   labelPermutationLab,
   regimeFragilityLab,
+  clockStructureLab,
   eventContaminationLab,
   narrativeBlindControlLab,
   benchmarkLab,
@@ -52,6 +53,7 @@ export function buildClusterAdversarialSummary({
     randomPlacebo: indexBySignal(randomPlaceboLab?.reviews || []),
     labelPermutation: indexBySignal(labelPermutationLab?.reviews || []),
     regime: indexBySignal(regimeFragilityLab?.reviews || []),
+    clock: indexBySignal(clockStructureLab?.reviews || []),
     contamination: indexBySignal(eventContaminationLab?.reviews || []),
     narrative: indexBySignal(narrativeBlindControlLab?.reviews || []),
     benchmark: indexBySignal(benchmarkLab?.reviews || []),
@@ -98,6 +100,7 @@ export function buildClusterAdversarialSummary({
       label_permutation_status:
         maps.labelPermutation.get(signal)?.label_permutation_status || "MISSING",
       regime_status: maps.regime.get(signal)?.regime_status || "MISSING",
+      clock_status: maps.clock.get(signal)?.clock_status || "MISSING",
       contamination_status:
         maps.contamination.get(signal)?.contamination_status || "MISSING",
       narrative_control_status:
@@ -141,6 +144,10 @@ export function buildClusterAdversarialSummary({
           (row) => row.label_permutation_status === "LABEL_PERMUTATION_SEPARATED_DIAGNOSTIC"),
         regime_robust: count(memberReceipts,
           (row) => row.regime_status === "REGIME_ROBUST_DIAGNOSTIC"),
+        clock_robust: count(memberReceipts,
+          (row) => row.clock_status === "CLOCK_ROBUST_DIAGNOSTIC"),
+        clock_concentrated: count(memberReceipts,
+          (row) => row.clock_status === "CLOCK_CONCENTRATED_DIAGNOSTIC"),
         contamination_robust: count(memberReceipts,
           (row) => row.contamination_status === "CONTAMINATION_ROBUST_DIAGNOSTIC"),
         narrative_incremental: count(memberReceipts,
