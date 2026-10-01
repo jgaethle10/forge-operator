@@ -81,7 +81,12 @@ async function reconcile(){
         deploymentId,
         releaseRef:release,
         workloadClass:'systemia.aliev-source-runtime.v1',
-        input:{},
+        input:{
+          session_corpus_enabled:true,
+          session_corpus_interval_ms:300000,
+          session_corpus_page_size:5000,
+          session_corpus_max_pages_per_run:8,
+        },
         rollbackTarget:'systemia:aliev-source-runtime-previous',
         leaseTtlMs,
       });
