@@ -244,3 +244,55 @@ Unleased quote orders are closed after the negotiation round instead of being le
 The repository does not contain market API keys, wallets or billing credentials. Public Akash supply discovery is live and requires no authentication. The order/bid/lease path is implemented but cannot truthfully claim a paid lease was created unless a runtime supplies valid market credentials and demand-scoped spend authority.
 
 This keeps Saban capable of negotiating real compute without silently turning visibility into authorization or code execution into an open-ended purchasing permission.
+
+
+## Negotiation Fabric
+
+Compute Exchange now has a provider-neutral bargaining layer rather than treating every provider price as a take-it-or-leave-it listing.
+
+Canonical receipts cover:
+
+- provider/requestor proposals;
+- counterproposals;
+- alternating negotiation rounds;
+- explicit rejection;
+- mutual acceptance of the same latest proposal;
+- immutable agreement hashes;
+- bounded leases created from accepted agreements;
+- complete negotiation transcripts.
+
+### Voluntary device market
+
+`evercraft-voluntary` is the Evercraft-native market for intentionally offered spare capacity.
+
+A provider registers an identity key and signs the exact capacity offer it intends to expose. Saban verifies the signature before the offer can enter discovery. Offers declare:
+
+- CPU, memory, storage and GPU capacity;
+- allowed workload classes;
+- availability expiration;
+- free or paid economics;
+- execution transport;
+- placement properties;
+- a revocable provider identity.
+
+A signed opening offer may be above Saban's budget. If the market is negotiable, Saban can counter at its approved ceiling instead of discarding the provider before negotiation. Paid agreements still require explicit spend authority before lease creation.
+
+Public visibility of a device never creates a voluntary offer.
+
+### Golem adapter
+
+Golem is a decentralized requestor market adapter.
+
+The discovery side uses the public Golem Stats feed to normalize current online VM providers into the same Compute Exchange offer shape used by Evercraft capacity and Akash.
+
+The execution side uses the official Golem JavaScript requestor SDK and a local Yagna service. It is fail-closed unless:
+
+- `YAGNA_APPKEY` is present;
+- an executable Golem image is declared;
+- native GLM price ceilings are declared;
+- spend authority is explicitly granted;
+- Polygon/mainnet is separately authorized when requested.
+
+Saban constrains the Golem market order to the selected provider and native price ceilings. The resulting rental/network handles are runtime-only and deliberately omitted from serialized receipts. Release finalizes the rental and disconnects the requestor session.
+
+Golem's own market protocol still performs its provider proposal/agreement flow underneath this adapter. Saban remains the policy owner deciding which provider/market is eligible and what budget bounds apply.
