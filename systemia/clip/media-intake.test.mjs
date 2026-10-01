@@ -213,3 +213,34 @@ test('distributed phenomenon master stages after frame-verified render and maste
   assert.equal(receipt.status,'staged');
   assert.equal(receipt.boundaries.publicationAuthorityGranted,false);
 });
+
+
+test('social spectacle manifests fail closed without 10 of 10 editorial and production gates',()=>{
+  const {manifest}=fixture();
+  manifest.contentClass='social_spectacle';
+  const invalid=verifyClipMediaManifest(manifest);
+  assert.equal(invalid.status,'rejected');
+  assert.ok(invalid.errors.includes('social_spectacle_editorial_gate_invalid'));
+  assert.ok(invalid.errors.includes('social_spectacle_production_grade_invalid'));
+
+  manifest.editorialGate={
+    status:'accepted',
+    score:10,
+    maximum_score:10,
+    publication_authority:false,
+  };
+  manifest.productionGrade={
+    status:'accepted',
+    hero_kind:'data_visualization',
+    text_primary:false,
+    source_grounded:true,
+  };
+  assert.equal(verifyClipMediaManifest(manifest).status,'accepted');
+});
+
+test('staged intake receipt binds exact staged manifest bytes',()=>{
+  const {root,manifest}=fixture();
+  const receipt=stageClipMediaIntake({manifest,queueDir:path.join(root,'queue')});
+  assert.match(receipt.stagedManifestSha256,/^[a-f0-9]{64}$/);
+  assert.equal(digest(receipt.stagedManifestPath),receipt.stagedManifestSha256);
+});
