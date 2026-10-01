@@ -88,6 +88,7 @@ export function promoteOpenAiOwnedFabric({
     mcp:mcpUrl,
     authority:'owned_public_fabric',
     verified_external_canary:true,
+    openai_profile_verified:true,
     external_canary_digest:digest,
     origin_change_requires_new_openai_plugin_submission:true,
   };
@@ -124,6 +125,7 @@ export function promoteOpenAiOwnedFabric({
     source_public_edge_admission_receipt_ref:receipt.public_edge_admission_receipt_ref||null,
     legacy_mcp:LEGACY_BASE44_MCP,
     legacy_transport_active:false,
+    openai_profile_verified:true,
     openai_origin_change_requires_new_plugin_submission:true,
   };
 
