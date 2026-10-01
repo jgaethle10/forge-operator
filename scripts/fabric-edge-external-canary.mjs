@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 import dns from 'node:dns/promises';
 import tls from 'node:tls';
-import { createHash } from 'node:crypto';
+import { createHash, randomBytes } from 'node:crypto';
+import { verifyNodeAttestation } from '../systemia/compute/device-identity.mjs';
 
 const sha=(value)=>'sha256:'+createHash('sha256').update(
   typeof value==='string'?value:JSON.stringify(value)
@@ -130,8 +131,36 @@ try{
     transactional:false,
     external_action_authority:false,
     base44_transport_enabled:false,
+    edge_attestation_supported:health.edge_attestation_supported===true,
   };
   receipt.checks.runtime_health=true;
+  if(health.edge_attestation_supported!==true) throw new Error('edge_attestation_not_supported');
+
+  const nonce='edge_'+randomBytes(18).toString('hex');
+  const attestationResponse=await timedFetch(origin+'/.well-known/evercraft-edge-attestation',{
+    method:'POST',
+    headers:{'content-type':'application/json','accept':'application/json','user-agent':'Evercraft-Operator-Edge-Canary/1.0'},
+    body:JSON.stringify({nonce}),
+  },10000);
+  const attestationBody=await attestationResponse.json().catch(()=>null);
+  if(!attestationResponse.ok||attestationBody?.ok!==true||!attestationBody?.attestation){
+    throw new Error('edge_attestation_endpoint_failed');
+  }
+  const verifiedAttestation=verifyNodeAttestation({
+    attestation:attestationBody.attestation,
+    expectedNonce:nonce,
+    maxAgeMs:60000,
+    now:new Date(),
+  });
+  if(verifiedAttestation.ok!==true) throw new Error('edge_attestation_invalid:'+clean(verifiedAttestation.reason));
+  if(verifiedAttestation.field_claim!==false) throw new Error('edge_attestation_may_not_claim_field_status');
+  receipt.edge_attestation_verified=true;
+  receipt.device_fingerprint=verifiedAttestation.device_fingerprint;
+  receipt.node_id=verifiedAttestation.node_id;
+  receipt.attestation_observed_at=verifiedAttestation.observed_at;
+  receipt.attestation_boot_id_hash=verifiedAttestation.boot_id_hash||null;
+  receipt.physical_field_claim=false;
+  receipt.checks.device_attestation=true;
 
   const init=await rpc(1,'initialize',{
     protocolVersion:'2025-03-26',
