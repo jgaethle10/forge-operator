@@ -252,7 +252,10 @@ export function validateChromeOsHostBoundaryObservation(
     },
     authority: {
       read_only: true,
-      arbitrary_ui_automation: false,
+      platform_permission_scope: 'chromeos_desktop_automation',
+      platform_permission_is_broad: true,
+      arbitrary_ui_automation_exposed: false,
+      mutation_command_surface_exposed: false,
       screenshots_collected: false,
       raw_accessibility_tree_persisted: false,
     },
