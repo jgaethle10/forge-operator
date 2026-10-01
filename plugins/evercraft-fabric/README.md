@@ -16,7 +16,7 @@ The legacy Base44 compatibility transport is inactive for the OpenAI package. Ev
 
 Evercraft is installed privately in ChatGPT for the owner account and is usable there through the owned Fabric MCP. Private installation is not public-directory publication.
 
-The canonical package version for the next public submission is **v1.0.3**. It includes the owned MCP endpoint, public Evercraft support/privacy/terms surfaces, directory artwork, the problem-first routing skill, exactly five positive and three negative review cases, and the reviewer walkthrough URL.
+The canonical package version for the next public submission is **v1.0.4**. It includes the owned MCP endpoint, public Evercraft support/privacy/terms surfaces, directory artwork, the problem-first routing skill, exactly five positive and three negative review cases, and the reviewer walkthrough URL.
 
 ## Public-directory status
 

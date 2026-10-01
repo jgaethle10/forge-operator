@@ -9,7 +9,7 @@
 - Source package: `plugins/evercraft-fabric/`
 - Submission type: **With MCP**
 - MCP: `https://fabric.systemiacommandcenters.com/mcp`
-- Package version: **1.0.3**
+- Package version: **1.0.4**
 
 Evercraft is the umbrella front door. Specialist plugins remain useful direct routes, but users should not need to know the portfolio before asking for help.
 
@@ -37,7 +37,7 @@ Do not change the submitted MCP origin casually. OpenAI treats MCP configuration
 
 Source work is no longer the limiting step. Before claiming public ChatGPT availability, complete the authenticated OpenAI Platform flow:
 
-1. Open `https://platform.openai.com/plugins` and upload the canonical v1.0.3 ZIP.
+1. Open `https://platform.openai.com/plugins` and upload the canonical v1.0.4 ZIP.
 2. Select the organization/project that will own the listing and the verified **Evercraft LLC** developer identity.
 3. Confirm the submitter has **Apps Management Write** if the submitter is not already an organization owner.
 4. In MCP setup, connect `https://fabric.systemiacommandcenters.com/mcp`.
