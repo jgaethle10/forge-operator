@@ -105,6 +105,7 @@ jobs:
             .base44_transport_enabled == false and
             .fabric_directory_enabled == true and
             .fabric_mcp_path == "/mcp" and
+            .fabric_openai_mcp_path == "/mcp/openai" and
             .openai_challenge_ready == true and
             .identity_attestation_bound == true and
             .same_device_binding == true and
@@ -142,6 +143,17 @@ jobs:
 
           check_mcp "/mcp" "evercraft-fabric" \
             "match_evercraft_capability" "list_evercraft_capabilities" "get_evercraft_connection_options"
+
+          openai_tools="$(curl --fail --silent --show-error --max-time 20 \
+            -H 'content-type: application/json' \
+            --data '{"jsonrpc":"2.0","id":20,"method":"tools/list","params":{}}' \
+            "${SPECIALIST_ORIGIN%/}/mcp/openai")"
+          printf '%s' "$openai_tools" | jq -e '
+            [.result.tools[].name] == ["inspect_public_website"] and
+            .result.tools[0].annotations.readOnlyHint == true and
+            .result.tools[0].annotations.destructiveHint == false and
+            .result.tools[0].annotations.openWorldHint == true
+          ' >/dev/null
           check_mcp "/mcp/ibmi-rescue" "evercraft-ibmi-rescue"             "get_ibmi_rescue_offer" "prepare_ibmi_rescue_handoff"
           check_mcp "/mcp/foundry-app-escape" "evercraft-foundry-app-escape"             "get_foundry_app_escape_offer" "prepare_foundry_app_escape_handoff"
           check_mcp "/mcp/site-survive" "evercraft-site-survive"             "get_site_survive_offer" "prepare_site_survive_handoff"
@@ -169,6 +181,15 @@ jobs:
                 .result.isError == false and
                 .result.structuredContent.external_action_taken == false
               ' >/dev/null
+            elif [ "$kind" = "website_inspection" ]; then
+              printf '%s' "$result" | jq -e '
+                .result.isError == false and
+                .result.structuredContent.ok == true and
+                .result.structuredContent.schema == "evercraft.public-website-preview.v1" and
+                .result.structuredContent.transactional == false and
+                .result.structuredContent.external_action_taken == false and
+                .result.structuredContent.network_scope == "user_supplied_public_url_only"
+              ' >/dev/null
             else
               echo "Unknown canary tool-call kind: $kind" >&2
               return 1
@@ -183,6 +204,8 @@ jobs:
           call_mcp_tool "/mcp/site-survive" "prepare_site_survive_handoff" '{}' "service"
           call_mcp_tool "/mcp/systemia-remote-ops" "route_business_decision"             '{"intent":"Should I add a new service to this business?"}' "remote_ops"
           call_mcp_tool "/mcp/systemia-remote-ops" "simulate_business_scenario"             '{"scenario_label":"external-canary","decision_intent":"add a new service","baseline":{"monthly_revenue":10000,"gross_margin_percent":40,"fixed_costs_monthly":2000,"payroll_monthly":1000,"other_monthly_costs":500,"cash_on_hand":10000},"adjustments":{"revenue_change_percent":10,"other_cost_delta_monthly":250,"one_time_cash_outlay":500}}' "remote_ops"
+          call_mcp_tool "/mcp/openai" "inspect_public_website" \
+            '{"url":"https://evercraftpropertyservices.com/","authorized_to_inspect":true}' "website_inspection"
 
           instance_id="$(printf '%s' "$health" | jq -r '.instance_id')"
           deployment_receipt="$(printf '%s' "$health" | jq -r '.deployment_receipt_ref')"
@@ -215,6 +238,10 @@ jobs:
               mcp_initialize_verified:true,
               mcp_tools_list_verified:true,
               mcp_tool_calls_verified:true,
+              openai_profile_verified:true,
+              openai_mcp_path:"/mcp/openai",
+              openai_tools:["inspect_public_website"],
+              openai_commerce_enabled:false,
               read_only_authority_verified:true,
               listing_pages_verified:true,
               listing_pages:["/","/support","/privacy","/terms"],
