@@ -53,6 +53,8 @@ export function certifyChromeOsHostBoundary({
 
   const hostSettingsReady =
     host.fresh === true &&
+    host.observer_signature_verified === true &&
+    Boolean(host.observer_key_fingerprint) &&
     REQUIRED_PORTS.every((port) =>
       (host.ports || []).some((row) =>
         Number(row?.port) === port &&
@@ -87,6 +89,9 @@ export function certifyChromeOsHostBoundary({
       receipt_hash: host.receipt_hash || null,
       request_id: host.request_id || null,
       observer_install_id: host.observer_install_id || null,
+      observer_key_fingerprint: host.observer_key_fingerprint || null,
+      observer_signature_verified:
+        host.observer_signature_verified === true,
       settings_surface_observed: host.scan?.settings_surface_observed === true,
       admitted_ports: REQUIRED_PORTS.map((port) => {
         const row = (host.ports || []).find((candidate) => Number(candidate?.port) === port);
