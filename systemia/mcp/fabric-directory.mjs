@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { previewPublicWebsite } from './public-website-preview.mjs';
 import { fileURLToPath } from 'node:url';
 
 const STOP_WORDS=new Set([
@@ -293,6 +294,12 @@ export function fabricDirectoryTools(){
     idempotentHint:true,
     openWorldHint:false,
   };
+  const publicWebSafe={
+    readOnlyHint:true,
+    destructiveHint:false,
+    idempotentHint:true,
+    openWorldHint:true,
+  };
   return [
     {
       name:'match_evercraft_capability',
@@ -332,7 +339,26 @@ export function fabricDirectoryTools(){
       },
       annotations:safe,
     },
+    {
+      name:'inspect_public_website',
+      title:'Inspect an authorized public website',
+      description:'Inspect one public website the user owns, administers, or has permission to review. Returns bounded, evidence-backed HTTP and on-page signals. Read-only. Private/local networks, embedded credentials, nonstandard ports, unsafe redirects, oversized responses, and unsupported content types are rejected.',
+      inputSchema:{
+        type:'object',
+        properties:{
+          url:{type:'string',minLength:3,maxLength:2048,description:'Public http or https website URL the user is authorized to inspect. If the scheme is omitted, https is assumed.'},
+          authorized_to_inspect:{type:'boolean',description:'True only when the user owns, administers, or has permission to inspect the supplied website.'},
+        },
+        required:['url','authorized_to_inspect'],
+        additionalProperties:false,
+      },
+      annotations:publicWebSafe,
+    },
   ];
+}
+
+export function fabricOpenAiTools(){
+  return fabricDirectoryTools().filter((tool)=>tool.name==='inspect_public_website');
 }
 
 function rpcResult(id,result){
@@ -351,7 +377,7 @@ function toolResult(payload){
   };
 }
 
-export async function executeFabricDirectoryRpc(rpc,catalog=[]){
+export async function executeFabricDirectoryRpc(rpc,catalog=[],{websitePreview=previewPublicWebsite,toolProfile='full'}={}){
   const normalized=normalizeFabricCatalog(catalog);
   const method=clean(rpc?.method,120);
   const id=rpc?.id??null;
@@ -360,13 +386,16 @@ export async function executeFabricDirectoryRpc(rpc,catalog=[]){
     return rpcResult(id,{
       protocolVersion:'2025-03-26',
       capabilities:{tools:{}},
-      serverInfo:{name:'evercraft-fabric',version:'1.0.0'},
-      instructions:'Evercraft Fabric is a read-only capability directory and connection layer. Discovery does not authorize payment, paid work, credentials, production access, or external actions.',
+      serverInfo:{name:'evercraft-fabric',version:'1.1.0'},
+      instructions:toolProfile==='openai'
+        ? 'Evercraft public plugin tools are individually reviewed, read-only operations. The current public tool performs bounded inspection of a user-supplied public website and does not create payment, paid work, credentials, production access, or external side effects.'
+        : 'Evercraft Fabric provides read-only capability routing plus bounded standalone public-web inspection. Discovery and previews do not authorize payment, paid work, credentials, production access, or external actions.',
     });
   }
 
   if(method==='tools/list'){
-    return rpcResult(id,{tools:fabricDirectoryTools()});
+    const tools=toolProfile==='openai'?fabricOpenAiTools():fabricDirectoryTools();
+    return rpcResult(id,{tools});
   }
 
   if(method==='notifications/initialized') return null;
@@ -374,6 +403,9 @@ export async function executeFabricDirectoryRpc(rpc,catalog=[]){
   if(method==='tools/call'){
     const name=clean(rpc?.params?.name,160);
     const args=rpc?.params?.arguments||{};
+    if(toolProfile==='openai'&&!fabricOpenAiTools().some((tool)=>tool.name===name)){
+      return rpcError(id,-32602,'Unknown or unsupported Evercraft public plugin tool.');
+    }
 
     if(name==='match_evercraft_capability'){
       const intent=clean(args.intent,4000);
@@ -418,6 +450,23 @@ export async function executeFabricDirectoryRpc(rpc,catalog=[]){
         transactional:false,
         external_action_taken:false,
       }));
+    }
+
+    if(name==='inspect_public_website'){
+      const url=clean(args.url,2048);
+      if(url.length<3) return rpcError(id,-32602,'url must contain at least 3 characters');
+      if(args.authorized_to_inspect!==true){
+        return rpcError(id,-32602,'authorized_to_inspect must be true for a website the user owns, administers, or has permission to review');
+      }
+      try{
+        return rpcResult(id,toolResult(await websitePreview(url)));
+      }catch(error){
+        return rpcError(
+          id,
+          -32010,
+          error instanceof Error?error.message:String(error)
+        );
+      }
     }
 
     return rpcError(id,-32602,'Unknown or unsupported Evercraft Fabric tool.');

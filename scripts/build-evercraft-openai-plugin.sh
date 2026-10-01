@@ -12,7 +12,7 @@ required=(
   ".codex-plugin/plugin.json"
   ".mcp.json"
   "assets/evercraft-icon.png"
-  "skills/evercraft-router/SKILL.md"
+  "skills/evercraft-site-inspector/SKILL.md"
 )
 
 for rel in "${required[@]}"; do
@@ -57,7 +57,7 @@ expected={
     '.codex-plugin/plugin.json',
     '.mcp.json',
     'assets/evercraft-icon.png',
-    'skills/evercraft-router/SKILL.md',
+    'skills/evercraft-site-inspector/SKILL.md',
 }
 with zipfile.ZipFile(archive) as zf:
     names=set(zf.namelist())
@@ -75,7 +75,7 @@ with zipfile.ZipFile(archive) as zf:
     assert iface['logo']=='./assets/evercraft-icon.png'
     assert iface['composerIcon']=='./assets/evercraft-icon.png'
     url=mcp['mcpServers']['evercraft']['url']
-    assert url=='https://fabric.systemiacommandcenters.com/mcp'
+    assert url=='https://fabric.systemiacommandcenters.com/mcp/openai'
 print("Evercraft OpenAI release ZIP validated.")
 PY
 

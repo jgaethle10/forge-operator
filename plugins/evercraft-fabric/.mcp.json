@@ -1,7 +1,8 @@
 {
   "mcpServers": {
     "evercraft": {
-      "url": "https://fabric.systemiacommandcenters.com/mcp"
+      "url": "https://fabric.systemiacommandcenters.com/mcp/openai",
+      "type": "http"
     }
   }
 }

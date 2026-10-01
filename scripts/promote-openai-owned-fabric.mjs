@@ -32,6 +32,7 @@ export function assertVerifiedOwnedCanary(receipt){
     'mcp_initialize_verified',
     'mcp_tools_list_verified',
     'mcp_tool_calls_verified',
+    'openai_profile_verified',
     'read_only_authority_verified',
   ];
   if(receipt?.schema!=='evercraft.public-edge.external-canary.v1') throw new Error('owned_fabric_canary_schema_invalid');
@@ -58,7 +59,7 @@ export function promoteOpenAiOwnedFabric({
   const receiptOrigin=normalizeOwnedOrigin(receipt.origin);
   const origin=originOverride?normalizeOwnedOrigin(originOverride):receiptOrigin;
   if(origin!==receiptOrigin) throw new Error('owned_fabric_origin_receipt_mismatch');
-  const mcpUrl=origin+'/mcp';
+  const mcpUrl=origin+'/mcp/openai';
   const digest=sha256(rawReceipt);
 
   const portablePath=path.join(root,'plugins/evercraft-fabric/mcp.json');
@@ -87,6 +88,7 @@ export function promoteOpenAiOwnedFabric({
     mcp:mcpUrl,
     authority:'owned_public_fabric',
     verified_external_canary:true,
+    openai_profile_verified:true,
     external_canary_digest:digest,
     origin_change_requires_new_openai_plugin_submission:true,
   };
@@ -96,17 +98,17 @@ export function promoteOpenAiOwnedFabric({
   distribution.mcp={
     ...(distribution.mcp||{}),
     url:mcpUrl,
-    url_type:'Universal',
+    url_type:'Purpose-specific reviewed endpoint',
     authority:'owned_public_fabric',
     owned_fabric_cutover_required:false,
     external_canary_digest:digest,
     origin_change_requires_new_plugin_submission:true,
   };
-  distribution.release_notes='Evercraft now targets its externally verified Evercraft-owned Fabric MCP. This changes the MCP origin from the legacy compatibility transport, so OpenAI requires a new plugin submission rather than a normal version update. Discovery remains read-only and consequential actions remain separately authorized.';
+  distribution.release_notes='Evercraft now targets its externally verified purpose-specific OpenAI MCP at /mcp/openai. The submitted endpoint exposes only individually reviewed public tools; the broader internal Fabric directory is not part of the public plugin contract.';
   distribution.remaining_platform_prerequisites=[
     'Create a new OpenAI plugin submission because the MCP origin changed from the compatibility host',
     'Verify the owned Evercraft MCP domain in the OpenAI submission portal',
-    'Run Scan Tools against the owned Fabric MCP',
+    'Run Scan Tools against the purpose-specific owned Fabric OpenAI MCP',
     'Submit the owned-origin plugin for OpenAI review',
     'Publish the approved owned-origin plugin',
     'Capture an independent ChatGPT/Codex directory discovery receipt after publication',
@@ -123,6 +125,7 @@ export function promoteOpenAiOwnedFabric({
     source_public_edge_admission_receipt_ref:receipt.public_edge_admission_receipt_ref||null,
     legacy_mcp:LEGACY_BASE44_MCP,
     legacy_transport_active:false,
+    openai_profile_verified:true,
     openai_origin_change_requires_new_plugin_submission:true,
   };
 
