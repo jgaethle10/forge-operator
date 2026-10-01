@@ -1,0 +1,201 @@
+import { extractPortForwardingState } from './tree-parser.js';
+
+const VERSION = '0.1.0';
+const SETTINGS_URL = 'chrome://os-settings/crostini/portForwarding';
+const DEFAULT_ENDPOINT = 'http://127.0.0.1:18081/v1/chromeos-host-boundary/report';
+const ALARM = 'evercraft-host-boundary-check';
+
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+function getTree(tabId) {
+  return new Promise((resolve, reject) => {
+    try {
+      chrome.automation.getTree(tabId, (root) => {
+        const error = chrome.runtime.lastError;
+        if (error) return reject(new Error(error.message));
+        if (!root) return reject(new Error('automation_tree_unavailable'));
+        resolve(root);
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
+function getDesktop() {
+  return new Promise((resolve, reject) => {
+    try {
+      chrome.automation.getDesktop((root) => {
+        const error = chrome.runtime.lastError;
+        if (error) return reject(new Error(error.message));
+        if (!root) return reject(new Error('automation_desktop_unavailable'));
+        resolve(root);
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
+async function config() {
+  const stored = await chrome.storage.local.get([
+    'bridgeEndpoint',
+    'pairingToken',
+    'installId',
+    'enabled',
+  ]);
+  let installId = String(stored.installId || '');
+  if (!installId) {
+    installId = 'cros_' + crypto.randomUUID();
+    await chrome.storage.local.set({ installId });
+  }
+  return {
+    endpoint: String(stored.bridgeEndpoint || DEFAULT_ENDPOINT),
+    token: String(stored.pairingToken || ''),
+    installId,
+    enabled: stored.enabled !== false,
+  };
+}
+
+async function openSettingsTree() {
+  const previous = await chrome.tabs.query({ active: true, currentWindow: true });
+  const priorTabId = previous?.[0]?.id ?? null;
+  const created = await chrome.tabs.create({ url: SETTINGS_URL, active: false });
+  let source = 'tab_tree';
+  try {
+    for (let attempt = 0; attempt < 12; attempt += 1) {
+      await delay(attempt === 0 ? 500 : 250);
+      try {
+        const root = await getTree(created.id);
+        const parsed = extractPortForwardingState(root);
+        if (parsed.settings_surface_observed) return { root, source };
+      } catch {}
+    }
+
+    source = 'desktop_tree';
+    if (created.id !== undefined) {
+      await chrome.tabs.update(created.id, { active: true });
+      await delay(500);
+    }
+    for (let attempt = 0; attempt < 8; attempt += 1) {
+      const root = await getDesktop();
+      const parsed = extractPortForwardingState(root);
+      if (parsed.settings_surface_observed) return { root, source };
+      await delay(250);
+    }
+    throw new Error('chromeos_port_forwarding_surface_not_observed');
+  } finally {
+    if (priorTabId !== null) {
+      try { await chrome.tabs.update(priorTabId, { active: true }); } catch {}
+    }
+    if (created?.id !== undefined) {
+      try { await chrome.tabs.remove(created.id); } catch {}
+    }
+  }
+}
+
+async function reportObservation() {
+  const cfg = await config();
+  if (!cfg.enabled) return { ok: false, state: 'disabled' };
+  if (cfg.token.length < 32) return { ok: false, state: 'pairing_required' };
+
+  let scan;
+  let treeSource = 'unavailable';
+  let error = null;
+  try {
+    const { root, source } = await openSettingsTree();
+    treeSource = source;
+    scan = extractPortForwardingState(root);
+  } catch (cause) {
+    error = String(cause?.message || cause).slice(0, 200);
+    scan = {
+      settings_surface_observed: false,
+      nodes_examined: 0,
+      bounded: true,
+      ports: [18080, 8443].map((port) => ({
+        port,
+        protocol: 'TCP',
+        present: null,
+        enabled: null,
+        disabled: null,
+        evidence: 'settings_surface_not_observed',
+      })),
+    };
+  }
+
+  const payload = {
+    schema: 'evercraft.chromeos-host-boundary-observation.v1',
+    collected_at: new Date().toISOString(),
+    observer_version: VERSION,
+    observer_install_id: cfg.installId,
+    settings_route: SETTINGS_URL,
+    ports: scan.ports,
+    scan: {
+      settings_surface_observed: scan.settings_surface_observed,
+      tree_source: treeSource,
+      nodes_examined: scan.nodes_examined,
+      bounded: scan.bounded,
+      error,
+    },
+    authority: {
+      read_only: true,
+      mutation_requested: false,
+    },
+  };
+
+  const response = await fetch(cfg.endpoint, {
+    method: 'POST',
+    headers: {
+      authorization: 'Bearer ' + cfg.token,
+      'content-type': 'application/json',
+      accept: 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+  const body = await response.json().catch(() => ({}));
+  if (!response.ok || body?.ok !== true) {
+    throw new Error(String(body?.error || 'host_boundary_report_failed'));
+  }
+  await chrome.storage.local.set({
+    lastCheckAt: payload.collected_at,
+    lastReceiptHash: body.receipt_hash || null,
+    lastObservation: {
+      ports: payload.ports,
+      scan: payload.scan,
+    },
+    lastError: null,
+  });
+  return { ok: true, receipt_hash: body.receipt_hash || null, payload };
+}
+
+async function runAndRecord() {
+  try {
+    return await reportObservation();
+  } catch (error) {
+    await chrome.storage.local.set({
+      lastCheckAt: new Date().toISOString(),
+      lastError: String(error?.message || error).slice(0, 200),
+    });
+    return { ok: false, error: String(error?.message || error) };
+  }
+}
+
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.alarms.create(ALARM, { periodInMinutes: 2 });
+  runAndRecord();
+});
+
+chrome.runtime.onStartup.addListener(() => {
+  chrome.alarms.create(ALARM, { periodInMinutes: 2 });
+  runAndRecord();
+});
+
+chrome.alarms.onAlarm.addListener((alarm) => {
+  if (alarm.name === ALARM) runAndRecord();
+});
+
+chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+  if (message?.type !== 'evercraft.hostBoundary.checkNow') return false;
+  runAndRecord().then(sendResponse);
+  return true;
+});
