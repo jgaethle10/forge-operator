@@ -120,7 +120,7 @@
         <li>Observed and verified evidence stay distinct from reported and modeled material.</li>
         <li>Unknowns are returned explicitly instead of being filled with guesses.</li>
         <li>Source-family diversity is counted so duplicate reporting does not masquerade as corroboration.</li>
-        <li>Every investigation carries a durable receipt and can be exported as Markdown.</li>
+        <li>Public previews are ephemeral. Persisted investigations and exports stay behind the internal workspace boundary.</li>
       </ul>
     </section>
   </div>
@@ -139,9 +139,8 @@ function renderResult(inv) {
   const el = document.getElementById('result');
   const findings = Array.isArray(inv.findings) ? inv.findings : [];
   const unknowns = Array.isArray(inv.unknowns) ? inv.unknowns : [];
-  const id = encodeURIComponent(inv.investigation_id || '');
   let html = '<div class="result-head"><div><h2>Investigation</h2><div class="meta">' + esc(inv.summary) + '</div></div><div class="confidence">' + Math.round((Number(inv.confidence)||0)*100) + '%</div></div>';
-  html += '<div class="meta" style="margin-top:12px">Evidence coverage score, not event probability. · <a href="/api/faie/investigations/' + id + '/markdown">Markdown export</a></div>';
+  html += '<div class="meta" style="margin-top:12px">Evidence coverage score, not event probability. Public investigations are ephemeral previews and are not added to the shared investigation archive.</div>';
 
   if (findings.length) {
     html += '<div style="margin-top:18px">';
