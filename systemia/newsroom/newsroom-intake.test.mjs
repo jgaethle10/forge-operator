@@ -20,6 +20,8 @@ test('admits a material, source-grounded Worldstate signal as a Journal candidat
   });
   assert.equal(result.action, 'candidate');
   assert.equal(result.candidate.publication_authority, false);
+  assert.equal(result.candidate.claim_reactor_required, true);
+  assert.equal(result.candidate.claim_reactor_schema, 'evercraft.systemia.claim-reactor.v1');
   assert.equal(result.candidate.required_next_gate, 'journal_editorial_10_of_10_preflight');
 });
 
