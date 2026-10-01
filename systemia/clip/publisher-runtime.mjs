@@ -41,6 +41,14 @@ function loadVerifiedIntake(request){
   if(manifest.schema!=='evercraft.clip.media-intake.v1') throw new Error('clip_publish_manifest_schema_invalid');
   if(manifest.deliveryId!==receipt.deliveryId) throw new Error('clip_publish_delivery_id_mismatch');
   if(!manifest.destinations?.includes(request.destination)) throw new Error('clip_publish_destination_not_admitted');
+  if(manifest.contentClass==='social_spectacle'){
+    if(manifest.editorialGate?.status!=='accepted'||Number(manifest.editorialGate?.score)!==10||Number(manifest.editorialGate?.maximum_score)!==10){
+      throw new Error('clip_publish_social_spectacle_editorial_gate_invalid');
+    }
+    if(manifest.productionGrade?.status!=='accepted'||manifest.productionGrade?.text_primary!==false||manifest.productionGrade?.source_grounded!==true){
+      throw new Error('clip_publish_social_spectacle_production_grade_invalid');
+    }
+  }
   if(!fs.existsSync(receipt.stagedMediaPath)) throw new Error('clip_publish_staged_media_missing');
 
   const observed=shaFile(receipt.stagedMediaPath);
