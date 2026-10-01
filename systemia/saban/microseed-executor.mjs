@@ -101,7 +101,7 @@ function executeBuiltin(workload,payload){
   return null;
 }
 
-async function executeBridgeOperation({manifest,workload,payload,bridgeAdapters}){
+async function executeBridgeOperation({manifest,workload,payload,idempotencyKey,bridgeAdapters}){
   const adapter=bridgeAdapters?.[manifest.bridge_mode];
   if(!adapter||typeof adapter.execute!=='function'){
     throw new Error('microseed_bridge_adapter_unavailable:'+manifest.bridge_mode);
@@ -110,6 +110,7 @@ async function executeBridgeOperation({manifest,workload,payload,bridgeAdapters}
     manifest,
     workload_class:workload,
     payload,
+    idempotency_key:idempotencyKey,
   });
 }
 
@@ -176,6 +177,7 @@ export async function executeMicroSeedWorkload({
     manifest,
     workload:req.workload_class,
     payload:req.payload,
+    idempotencyKey:req.idempotency_key,
     bridgeAdapters,
   });
 
