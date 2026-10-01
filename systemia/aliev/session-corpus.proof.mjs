@@ -10,6 +10,9 @@ import {
   normalizePlugNYCSession,
   SAFE_SOURCE_FIELDS
 } from './session-corpus.mjs';
+import { ingestAliEvDomainRecords } from './domain-store.mjs';
+import { startAliEvSourceRuntime } from './source-runtime.mjs';
+import { startRivetReportRuntime } from '../rivet/report-runtime.mjs';
 
 const root=fs.mkdtempSync(path.join(os.tmpdir(),'aliev-session-corpus-proof-'));
 const privateDriver='DRIVER-SECRET-DO-NOT-PERSIST';
@@ -104,6 +107,113 @@ try{
   assert.equal(third.receipt.pages_written,0);
   assert.equal(sessionCorpusStatus({stateDir:root}).partition_count,3);
 
+  // End-to-end owned path: raw PlugNYC rows -> reconciled corpus -> observed_sessions domain -> AliEV snapshot -> RIVET report.
+  const runtimeState=path.join(root,'owned-source-runtime');
+  const runtimeDomain=path.join(runtimeState,'domain-store');
+  ingestAliEvDomainRecords({
+    stateDir:runtimeDomain,
+    domain:'observed_sessions',
+    records:[{
+      record_key:'historical-ev0449-geometry',
+      aggregate_key:'nyc-plugnyc:EV0449:2026-08',
+      station_external_id:'nyc-plugnyc:EV0449',
+      address:'DES - Delancey and Essex Municipal Parking Garage',
+      state:'NY',
+      latitude:40.718983402843,
+      longitude:-73.988062273936,
+      period_start:'2026-08-01T00:00:00.000Z',
+      period_end:'2026-09-01T00:00:00.000Z',
+      charging_sessions_count:10,
+      energy_kwh:100,
+      data_status:'verified',
+      evidence_state:'OBSERVED_AGGREGATE',
+      source_name:'Historical verified PlugNYC aggregate',
+      source_url:'https://example.test/historical-plugnyc',
+      retrieved_at:'2026-09-01T00:00:00.000Z'
+    }]
+  });
+
+  const ownedSource=await startAliEvSourceRuntime({
+    stateDir:runtimeState,
+    systemiaMachineKey:'session-proof-machine',
+    ingestToken:'session-proof-ingest',
+    sessionCorpusEnabled:false,
+    sessionCorpusFetchImpl:fakeFetch,
+    sessionCorpusPageSize:3,
+    sessionCorpusMaxPagesPerRun:10,
+    geocode:async()=>({
+      matched_address:'Delancey and Essex Municipal Parking Garage, New York, NY',
+      latitude:40.718983402843,
+      longitude:-73.988062273936,
+      state:'NY',
+      postal_code:'10002',
+      city:'New York',
+      source_name:'Proof Geocoder',
+      source_url:'https://example.test/geocoder',
+      evidence_state:'OFFICIAL_GEOCODE'
+    }),
+    refreshDomains:async()=>({schema:'proof.noop-refresh.v1',collectors:{}})
+  });
+  try{
+    const cycle=await ownedSource.runSessionCorpusCycle();
+    assert.equal(cycle.ok,true);
+    assert.equal(cycle.status.checkpoint.complete,true);
+    assert.equal(cycle.reconciliation.complete_reconciled,true);
+    assert.ok(cycle.domain_ingest?.active_records>=3);
+
+    const sourceResponse=await fetch(ownedSource.source_url,{
+      method:'POST',
+      headers:{'content-type':'application/json','x-systemia-machine-key':'session-proof-machine'},
+      body:JSON.stringify({mode:'rivet_report_snapshot',address:'Delancey and Essex Municipal Parking Garage, New York, NY'})
+    });
+    assert.equal(sourceResponse.status,200);
+    const sourceSnapshot=await sourceResponse.json();
+    const latestObserved=sourceSnapshot.nearby_observed_usage.find(x=>
+      x.station_external_id==='nyc-plugnyc:EV0449' &&
+      String(x.period_start||'').startsWith('2026-09')
+    );
+    assert.ok(latestObserved);
+    assert.equal(latestObserved.charging_sessions_count,1);
+    assert.equal(latestObserved.energy_kwh,15);
+    assert.equal(latestObserved.data_status,'partial');
+    assert.equal(latestObserved.source_vintage,'2026-09 partial through 2026-09-08');
+    assert.equal(latestObserved.latitude,40.718983402843);
+    assert.equal(latestObserved.longitude,-73.988062273936);
+    assert.equal(sourceSnapshot.source_coverage_manifest.domains.observed_sessions.state,'OBSERVED_VERIFIED');
+
+    const rivet=await startRivetReportRuntime({
+      stateDir:path.join(root,'rivet-report-runtime'),
+      sourceUrl:ownedSource.source_url,
+      systemiaMachineKey:'session-proof-machine',
+      teamToken:'session-proof-team'
+    });
+    try{
+      const reportResponse=await fetch(rivet.service_url+'/v1/reports',{
+        method:'POST',
+        headers:{'content-type':'application/json',authorization:'Bearer session-proof-team'},
+        body:JSON.stringify({
+          address:'Delancey and Essex Municipal Parking Garage, New York, NY',
+          report_type:'full_site_opportunity'
+        })
+      });
+      assert.equal(reportResponse.status,201);
+      const report=await reportResponse.json();
+      const reportObserved=report.report.body.evidence.observed_usage.find(x=>
+        x.station_external_id==='nyc-plugnyc:EV0449' &&
+        String(x.period_start||'').startsWith('2026-09')
+      );
+      assert.ok(reportObserved);
+      assert.equal(reportObserved.charging_sessions_count,1);
+      assert.equal(reportObserved.data_status,'partial');
+      assert.equal(reportObserved.source_vintage,'2026-09 partial through 2026-09-08');
+      assert.equal(report.verification.full_source_snapshot_persisted,true);
+    }finally{
+      await rivet.close();
+    }
+  }finally{
+    await ownedSource.close();
+  }
+
   const files=[];
   const walk=(dir)=>{
     for(const name of fs.readdirSync(dir)){
@@ -132,7 +242,11 @@ try{
     full_corpus_reconciliation_verified:true,
     contiguous_partition_offsets_verified:true,
     source_energy_reconciliation_verified:true,
-    duplicate_event_detection_verified:true
+    duplicate_event_detection_verified:true,
+    canonical_observed_sessions_domain_publish_verified:true,
+    station_identity_geometry_carry_forward_verified:true,
+    aliev_snapshot_consumes_session_corpus:true,
+    rivet_report_consumes_session_corpus:true
   },null,2));
 }finally{
   fs.rmSync(root,{recursive:true,force:true});
