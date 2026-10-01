@@ -119,6 +119,26 @@ assert.equal(authoritativeEval[0].distinct_origin_entities, 6);
 assert.ok(authoritativeEval[0].holdout_origin_entities >= 3);
 assert.equal(authoritativeEval[0].status, "RESEARCH_CANDIDATE");
 
+
+const authoritativeNegative = many.map((row, i) => ({
+  ...row,
+  measurement_id: "neg:" + i,
+  source_observation_id: "neg-o:" + i,
+  source_family: "sec_filings",
+  source_authority_class: "official_regulatory_filing",
+  origin_entity_ref: "sec:cik:" + String(i % 6).padStart(10, "0"),
+  forward_return: (i % 5 === 0 ? 0.001 : -0.004) - (i >= 35 ? 0.0005 : 0),
+  benchmark_return: 0,
+}));
+const authoritativeNegativeEval = evaluateEdgeFamilies(authoritativeNegative, {
+  transaction_cost_bps: 20,
+  false_discovery_rate: 0.10,
+});
+assert.equal(authoritativeNegativeEval[0].candidate_checks.authoritative_multi_origin_diversity, true);
+assert.equal(authoritativeNegativeEval[0].status, "RESEARCH_CANDIDATE");
+assert.equal(authoritativeNegativeEval[0].learned_direction, "NEGATIVE_EXCESS_RETURN");
+assert.ok(authoritativeNegativeEval[0].base_evaluation.holdout.mean_strategy_return_net > 0);
+
 const tooFewOrigins = many.map((row, i) => ({
   ...row,
   source_family: "sec_filings",
