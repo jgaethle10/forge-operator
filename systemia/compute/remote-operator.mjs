@@ -5,6 +5,7 @@ import { execFile } from 'node:child_process';
 import { createHash, randomBytes } from 'node:crypto';
 import { promisify } from 'node:util';
 import { observeNodeNetwork } from './network-observer.mjs';
+import { readChromeOsHostBoundaryStatus } from './chromeos-host-boundary-bridge.mjs';
 
 const execFileAsync = promisify(execFile);
 const sha = (value) => {
@@ -213,6 +214,12 @@ export class EvercraftRemoteOperator {
         chromeos_host_boundary_explicit: true,
         external_route_requires_independent_canary: true,
       },
+      chromeos_host_boundary: {
+        read: true,
+        mutation: false,
+        source: 'paired_chromeos_extension',
+        raw_accessibility_tree_persisted: false,
+      },
       receipt_semantics: 'hashes_and_metadata_only',
     };
   }
@@ -231,6 +238,22 @@ export class EvercraftRemoteOperator {
     });
     return {
       ...observation,
+      operator_receipt: receipt,
+    };
+  }
+
+  hostBoundaryStatus() {
+    const status = readChromeOsHostBoundaryStatus();
+    const receipt = this.#receipt('chromeos-host-boundary.status', {
+      state: status.state,
+      fresh: status.fresh === true,
+      evidence_mode: status.evidence_mode || null,
+      observed_port_count: Array.isArray(status.ports) ? status.ports.length : 0,
+      source_receipt_hash: status.receipt_hash || null,
+      mutation_supported: false,
+    });
+    return {
+      ...status,
       operator_receipt: receipt,
     };
   }
