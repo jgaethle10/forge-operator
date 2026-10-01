@@ -1,0 +1,8 @@
+{
+  "apps": {
+    "evercraft": {
+      "id": "plugin_asdk_app_REPLACE_WITH_REGISTERED_CHATGPT_APP_ID",
+      "required": true
+    }
+  }
+}
