@@ -105,12 +105,12 @@ export const ATTACK_IMPLEMENTATION_MAP=Object.freeze({
     evidence:["systemia/daytrade-lens/edge-quote-microstructure.mjs"]
   },
   "announcement-proximity execution stress":{
-    status:"partial",
+    status:"implemented",
     evidence:[
       "systemia/daytrade-lens/edge-event-contamination.mjs",
-      "systemia/daytrade-lens/edge-clock-structure.mjs"
-    ],
-    gap:"Calendar/clock contamination exists; quote-cost response conditional on announcement proximity remains."
+      "systemia/daytrade-lens/edge-announcement-execution-stress.mjs",
+      "systemia/daytrade-lens/edge-quote-microstructure.mjs"
+    ]
   },
   "volatility-conditioned delay stress":{
     status:"partial",
