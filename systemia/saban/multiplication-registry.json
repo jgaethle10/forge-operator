@@ -843,8 +843,8 @@
         "daytrade red team"
       ],
       "adapter": "systemia/daytrade-lens/saban-learning-adapter.mjs",
-      "default_logical_agents": 110,
-      "max_logical_agents": 1100,
+      "default_logical_agents": 132,
+      "max_logical_agents": 1500,
       "default_physical_workers": 8,
       "max_physical_workers": 32,
       "lease_seconds": 300,
@@ -890,7 +890,7 @@
       },
       "max_attempts_per_job": 2,
       "budget": {
-        "max_logical_agents": 1100,
+        "max_logical_agents": 1500,
         "max_physical_workers": 32,
         "max_work_items": 1000,
         "max_attempts_per_job": 2
