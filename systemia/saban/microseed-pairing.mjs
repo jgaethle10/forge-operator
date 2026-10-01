@@ -86,6 +86,90 @@ function decryptCredential({secret,bundle}){
     decipher.final(),
   ]).toString('utf8');
 }
+
+function pairingDisplayCode({ticket_id,pairing_secret}){
+  const digest=shaHex(String(ticket_id)+'|'+String(pairing_secret)).toUpperCase();
+  return ['PAIR',digest.slice(0,4),digest.slice(4,8),digest.slice(8,12)].join('-');
+}
+function validateEnrollmentUrl(value){
+  const raw=clean(value);
+  if(!raw) return '';
+  let url;
+  try{url=new URL(raw);}catch{throw new Error('microseed_pairing_enrollment_url_invalid');}
+  const loopback=['127.0.0.1','localhost','::1'].includes(url.hostname.toLowerCase());
+  if(url.protocol!=='https:'&&!(url.protocol==='http:'&&loopback)){
+    throw new Error('microseed_pairing_enrollment_url_https_required');
+  }
+  if(url.username||url.password) throw new Error('microseed_pairing_enrollment_url_credentials_forbidden');
+  return url.toString();
+}
+function pairingUri({ticket_id,pairing_secret,expires_at,enrollment_url}){
+  const q=new URLSearchParams({
+    ticket:ticket_id,
+    secret:pairing_secret,
+    expires:expires_at,
+  });
+  if(enrollment_url) q.set('enroll',enrollment_url);
+  return 'evercraft://microseed/pair?'+q.toString();
+}
+export function formatMicroSeedPairingTicket(issue={}){
+  if(issue?.schema!=='evercraft.microseed.pairing-ticket-issue.v1'){
+    throw new Error('microseed_pairing_issue_receipt_required');
+  }
+  const displayCode=pairingDisplayCode(issue);
+  const uri=pairingUri(issue);
+  return {
+    schema:'evercraft.microseed.pairing-ticket-card.v1',
+    ticket_id:issue.ticket_id,
+    display_code:displayCode,
+    pairing_uri:uri,
+    expires_at:issue.expires_at,
+    enrollment_url:issue.enrollment_url||null,
+    device_id:issue.device_id||null,
+    allowed_device_classes:issue.allowed_device_classes||[],
+    allowed_workloads:issue.allowed_workloads||[],
+    single_use:true,
+    explicit_owner_approval_required:true,
+    secret_exposed_in_pairing_uri:true,
+    safe_to_publish:false,
+    card_text:[
+      'EVERCRAFT MICROSEED PAIRING TICKET',
+      'Code: '+displayCode,
+      'Ticket: '+issue.ticket_id,
+      'Expires: '+issue.expires_at,
+      issue.device_id?'Device: '+issue.device_id:'Device: any device allowed by this ticket',
+      'Classes: '+((issue.allowed_device_classes||[]).join(', ')||'ticket policy'),
+      'Workloads: '+((issue.allowed_workloads||[]).join(', ')||'ticket policy'),
+      issue.enrollment_url?'Enrollment return: '+issue.enrollment_url:'Enrollment return: local/import required',
+      'PAIR THIS DEVICE:',
+      uri,
+      'Single use. Treat this pairing URI like a password until consumed or expired.',
+    ].join('\n'),
+  };
+}
+
+export function parseMicroSeedPairingUri(value){
+  const raw=clean(value);
+  let url;
+  try{url=new URL(raw);}catch{throw new Error('microseed_pairing_uri_invalid');}
+  if(url.protocol!=='evercraft:'||url.hostname!=='microseed'||url.pathname!=='/pair'){
+    throw new Error('microseed_pairing_uri_invalid');
+  }
+  const ticket_id=clean(url.searchParams.get('ticket'));
+  const pairing_secret=clean(url.searchParams.get('secret'));
+  const expires_at=clean(url.searchParams.get('expires'));
+  const enrollment_url=clean(url.searchParams.get('enroll'));
+  if(!ticket_id||!pairing_secret||!expires_at){
+    throw new Error('microseed_pairing_uri_fields_missing');
+  }
+  return {
+    ticket_id,
+    pairing_secret,
+    expires_at,
+    enrollment_url:enrollment_url?validateEnrollmentUrl(enrollment_url):'',
+  };
+}
+
 function ticketFile(dirs,id){return path.join(dirs.tickets,safeId(id)+'.json');}
 function secretFile(dirs,id){return path.join(dirs.secrets,safeId(id)+'.secret');}
 function consumedFile(dirs,id){return path.join(dirs.consumed,safeId(id)+'.json');}
@@ -97,6 +181,7 @@ export function issueMicroSeedPairingTicket({
   allowed_device_classes=[],
   allowed_workloads=[],
   ttl_ms=15*60*1000,
+  enrollment_url='',
   now=new Date(),
 }={}){
   if(!stateDir) throw new Error('microseed_pairing_state_dir_required');
@@ -115,6 +200,7 @@ export function issueMicroSeedPairingTicket({
     device_id:device_id?clean(device_id):null,
     allowed_device_classes:[...new Set((allowed_device_classes||[]).map(clean).filter(Boolean))],
     allowed_workloads:[...new Set((allowed_workloads||[]).map(clean).filter(Boolean))],
+    enrollment_url:validateEnrollmentUrl(enrollment_url),
     issued_at:at.toISOString(),
     expires_at:new Date(at.getTime()+Math.max(60_000,Number(ttl_ms||0))).toISOString(),
     consumed_at:null,
@@ -127,7 +213,7 @@ export function issueMicroSeedPairingTicket({
   atomicJson(ticketFile(dirs,ticketId),record);
   atomicWrite(secretFile(dirs,ticketId),secret+'\n',0o600);
 
-  return {
+  const issue={
     schema:'evercraft.microseed.pairing-ticket-issue.v1',
     ticket_id:ticketId,
     pairing_secret:secret,
@@ -136,10 +222,119 @@ export function issueMicroSeedPairingTicket({
     device_id:record.device_id,
     allowed_device_classes:record.allowed_device_classes,
     allowed_workloads:record.allowed_workloads,
+    enrollment_url:record.enrollment_url||'',
     expires_at:record.expires_at,
     authorization_granted:false,
     device_credential_created:false,
   };
+  return {...issue,ticket_card:formatMicroSeedPairingTicket(issue)};
+}
+
+
+export function listMicroSeedPairingTickets({
+  stateDir,
+  now=new Date(),
+  include_expired=false,
+}={}){
+  if(!stateDir) throw new Error('microseed_pairing_state_dir_required');
+  const dirs=pairingDirs(stateDir);
+  fs.mkdirSync(dirs.tickets,{recursive:true,mode:0o700});
+  fs.mkdirSync(dirs.consumed,{recursive:true,mode:0o700});
+  const nowMs=now instanceof Date?now.getTime():Date.parse(String(now));
+  const tickets=fs.readdirSync(dirs.tickets)
+    .filter(name=>name.endsWith('.json'))
+    .map(name=>JSON.parse(fs.readFileSync(path.join(dirs.tickets,name),'utf8')))
+    .map(ticket=>({
+      schema:ticket.schema,
+      ticket_id:ticket.ticket_id,
+      display_code:null,
+      device_id:ticket.device_id,
+      allowed_device_classes:ticket.allowed_device_classes||[],
+      allowed_workloads:ticket.allowed_workloads||[],
+      enrollment_url:ticket.enrollment_url||null,
+      issued_at:ticket.issued_at,
+      expires_at:ticket.expires_at,
+      expired:nowMs>=Date.parse(ticket.expires_at),
+      pairing_secret_exposed:false,
+      safe_to_publish:false,
+    }))
+    .filter(ticket=>include_expired||!ticket.expired)
+    .sort((a,b)=>a.expires_at.localeCompare(b.expires_at));
+  return {
+    schema:'evercraft.microseed.pairing-ticket-list.v1',
+    active_count:tickets.filter(x=>!x.expired).length,
+    ticket_count:tickets.length,
+    tickets,
+    pairing_secrets_exposed:false,
+  };
+}
+
+export function showMicroSeedPairingTicket({
+  stateDir,
+  ticket_id,
+  now=new Date(),
+}={}){
+  if(!stateDir) throw new Error('microseed_pairing_state_dir_required');
+  const dirs=pairingDirs(stateDir);
+  const tf=ticketFile(dirs,ticket_id);
+  const sf=secretFile(dirs,ticket_id);
+  if(fs.existsSync(consumedFile(dirs,ticket_id))){
+    throw new Error('microseed_pairing_ticket_already_consumed');
+  }
+  if(!fs.existsSync(tf)||!fs.existsSync(sf)){
+    throw new Error('microseed_pairing_ticket_not_found');
+  }
+  const record=JSON.parse(fs.readFileSync(tf,'utf8'));
+  const nowMs=now instanceof Date?now.getTime():Date.parse(String(now));
+  if(nowMs>=Date.parse(record.expires_at)) throw new Error('microseed_pairing_ticket_expired');
+  const secret=fs.readFileSync(sf,'utf8').trim();
+  if(record.secret_hash!==sha(secret)) throw new Error('microseed_pairing_ticket_secret_integrity_failed');
+  return formatMicroSeedPairingTicket({
+    schema:'evercraft.microseed.pairing-ticket-issue.v1',
+    ticket_id:record.ticket_id,
+    pairing_secret:secret,
+    pairing_secret_exposed_once:false,
+    approval_ref_hash:record.approval_ref_hash,
+    device_id:record.device_id,
+    allowed_device_classes:record.allowed_device_classes,
+    allowed_workloads:record.allowed_workloads,
+    expires_at:record.expires_at,
+    authorization_granted:false,
+    device_credential_created:false,
+  });
+}
+
+export function revokeMicroSeedPairingTicket({
+  stateDir,
+  ticket_id,
+  reason='operator_revoked',
+  now=new Date(),
+}={}){
+  if(!stateDir) throw new Error('microseed_pairing_state_dir_required');
+  const dirs=pairingDirs(stateDir);
+  const tf=ticketFile(dirs,ticket_id);
+  const sf=secretFile(dirs,ticket_id);
+  if(fs.existsSync(consumedFile(dirs,ticket_id))){
+    throw new Error('microseed_pairing_ticket_already_consumed');
+  }
+  if(!fs.existsSync(tf)) throw new Error('microseed_pairing_ticket_not_found');
+  const record=JSON.parse(fs.readFileSync(tf,'utf8'));
+  const receipt={
+    schema:'evercraft.microseed.pairing-revoked.v1',
+    ticket_id:record.ticket_id,
+    device_id:record.device_id,
+    reason:clean(reason)||'operator_revoked',
+    pairing_secret_destroyed:true,
+    authorization_granted:false,
+    device_credential_created:false,
+    revoked_at:(now instanceof Date?now:new Date(now)).toISOString(),
+  };
+  const revokedDir=path.join(dirs.root,'pairing','revoked');
+  fs.mkdirSync(revokedDir,{recursive:true,mode:0o700});
+  atomicJson(path.join(revokedDir,safeId(record.ticket_id)+'.json'),receipt);
+  fs.rmSync(sf,{force:true});
+  fs.rmSync(tf,{force:true});
+  return receipt;
 }
 
 function enrollmentSigningBody(bundle){
