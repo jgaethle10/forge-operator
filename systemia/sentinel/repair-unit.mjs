@@ -1,11 +1,18 @@
+import { fingerprintFinding, selectRepairStrategies } from './repair-strategy.mjs';
 const SAFE = new Set(['github_workflow_failed','public_door_http_failure','public_door_unreachable']);
 const TERMINAL = new Set(['verified_green','quarantined','human_gate']);
 
 function iso(now) { return (now instanceof Date ? now : new Date(now || Date.now())).toISOString(); }
 
-export function planRepairUnit(findings=[], {maxAttempts=3}={}) {
-  return findings.map(f => ({
+export function planRepairUnit(findings=[], {maxAttempts=3, recipeRegistry={recipes:[]}, treatmentMemory=[]}={}) {
+  return findings.map(f => {
+    const fingerprint=fingerprintFinding(f);
+    const strategies=selectRepairStrategies(f,recipeRegistry,treatmentMemory);
+    return ({
     finding_key:f.finding_key, code:f.code, subject:f.subject,
+    fingerprint,
+    strategies:strategies.slice(0,5),
+    selected_strategy:strategies[0]||null,
     severity:f.severity||'medium',
     authority:f.human_gate_required ? 'human_gate' : (SAFE.has(f.code)||f.repair_recipe?.recipe_id ? 'bounded_autonomous' : 'diagnose_only'),
     recipe_id:f.repair_recipe?.recipe_id||null,
@@ -13,7 +20,7 @@ export function planRepairUnit(findings=[], {maxAttempts=3}={}) {
     verify_required:true, rollback_required:true,
     escalation:['diagnose','retry','alternate_recipe','quarantine','human_gate'],
     close_rule:'production evidence must prove recovery; attempted repair is never success'
-  }));
+  });});
 }
 
 export function repairPressure(item, prior={}, now=new Date()) {
