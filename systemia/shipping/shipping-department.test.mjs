@@ -21,6 +21,7 @@ import {
   recordDeliveryAttempt,
   reserveShipment
 } from './shipping-ledger.mjs';
+import { buildVerifiedDeliveryReceipt } from './delivery-receipt.mjs';
 
 function tempDir() {
   return fs.mkdtempSync(path.join(os.tmpdir(), 'evercraft-shipping-'));
@@ -254,4 +255,71 @@ test('dispatch audit distinguishes prepared, accepted and verified states', () =
     attempts:[{ outcome:'sent', provider_message_id:'msg-1' }],
     sent_copy_verification:{ verified:true }
   }).state, 'verified_delivered');
+});
+
+
+test('v2 delivery receipt requires verified provider delivery and preserves truth boundaries', () => {
+  const state = {
+    fulfillment_key:'fulfillment:abc',
+    mission_key:'evercraft-fulfillment',
+    public_id:'website-launch-service-v1',
+    product_name:'Website Launch',
+    payment:{ order_key:'order-1', evidence_ref:'stripe:session:1' },
+    promised_deliverables:['customer-ready package'],
+    qa_contract:['render verified'],
+    evidence_refs:['evidence:root'],
+    tasks:[
+      { work_key:'parallel-quality-pass', state:'completed', evidence_refs:['qa:1'] },
+      { work_key:'delivery-package', state:'completed', evidence_refs:['package:1'] },
+      { work_key:'customer-delivery', state:'completed', evidence_refs:['send:1'] }
+    ]
+  };
+  const packageManifest = {
+    pass:true,
+    package_digest:'sha256:package',
+    artifacts:[{
+      client_filename:'Client Package.pdf',
+      mime_type:'application/pdf',
+      size_bytes:123,
+      sha256:'sha256:file',
+      openability:{ openable:true },
+      render_verified:true
+    }]
+  };
+  const shipment = {
+    shipment_key:'shipment:1',
+    idempotency_key:'shipidem:1',
+    state:'verified_delivered',
+    provider_message_id:'gmail:message:1'
+  };
+  const verification = {
+    verified:true,
+    provider_message_id:'gmail:message:1',
+    verification_digest:'sha256:verify',
+    recipient_verified:true,
+    subject_verified:true,
+    attachments_verified:true,
+    attachment_names:['Client Package.pdf']
+  };
+  const receipt = buildVerifiedDeliveryReceipt({
+    state,
+    recipient_ref:'customer@example.com',
+    shipment,
+    package_manifest:packageManifest,
+    sent_copy_verification:verification,
+    delivered_at:'2026-10-01T20:10:00Z'
+  });
+  assert.equal(receipt.schema, 'evercraft.shipping.delivery-receipt.v2');
+  assert.equal(receipt.provider_message_id, 'gmail:message:1');
+  assert.equal(receipt.truth_boundary.customer_acceptance_not_inferred, true);
+  assert.equal(receipt.truth_boundary.sent_copy_attachment_manifest_verified, true);
+  assert.match(receipt.integrity_digest, /^sha256:/);
+
+  assert.throws(() => buildVerifiedDeliveryReceipt({
+    state,
+    recipient_ref:'customer@example.com',
+    shipment:{ ...shipment, state:'provider_accepted' },
+    package_manifest:packageManifest,
+    sent_copy_verification:verification
+  }), /shipment_not_verified_delivered/);
 });
