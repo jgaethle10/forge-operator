@@ -9,6 +9,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: faie-software-gate-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   faie:
     runs-on: ubuntu-latest
