@@ -44,7 +44,7 @@ function goodOutput() {
       paragraph,
     ].join('\n\n'),
     social_post: paragraph + '\n\n' + paragraph,
-    listen_comment: \"If you'd rather listen along, the deeper audit is in the Evercraft Journal: {{ARTICLE_URL}}\",
+    listen_comment: "If you'd rather listen along, the deeper audit is in the Evercraft Journal: {{ARTICLE_URL}}",
     visual_brief: { thesis: 'Evidence becomes infrastructure.', real_asset_priorities: [], synthetic_allowed: [], synthetic_forbidden: [] },
     claim_refs: evidence().slice(0, 5).map((e) => ({ claim: e.title, evidence_ids: [e.id] })),
   };
