@@ -5,6 +5,7 @@ import path from 'node:path';
 import {
   backfillPlugNYCSessionCorpus,
   compactPlugNYCSessionCorpus,
+  reconcilePlugNYCSessionCorpus,
   sessionCorpusStatus,
   normalizePlugNYCSession,
   SAFE_SOURCE_FIELDS
@@ -66,6 +67,17 @@ try{
   assert.equal(second.checkpoint.complete,true);
   assert.equal(second.receipt.pages_written,2);
 
+  const reconciliation=reconcilePlugNYCSessionCorpus({
+    stateDir:root,
+    now:()=> '2026-10-01T04:05:30.000Z'
+  });
+  assert.equal(reconciliation.complete_reconciled,true);
+  assert.equal(reconciliation.rows_reconciled,true);
+  assert.equal(reconciliation.energy_reconciled,true);
+  assert.equal(reconciliation.offsets_reconciled,true);
+  assert.equal(reconciliation.coverage_dates_reconciled,true);
+  assert.equal(reconciliation.duplicate_source_rows,0);
+
   const compact=compactPlugNYCSessionCorpus({
     stateDir:root,
     now:()=> '2026-10-01T04:06:00.000Z'
@@ -116,7 +128,11 @@ try{
     invalid_and_aborted_not_promoted:true,
     partial_latest_month_preserved:true,
     personal_identifiers_persisted:false,
-    aggregate_projection_verified:true
+    aggregate_projection_verified:true,
+    full_corpus_reconciliation_verified:true,
+    contiguous_partition_offsets_verified:true,
+    source_energy_reconciliation_verified:true,
+    duplicate_event_detection_verified:true
   },null,2));
 }finally{
   fs.rmSync(root,{recursive:true,force:true});
