@@ -15,6 +15,8 @@ import { rivetAliEvProductionAnatomy, formationWaves } from './workload-anatomy.
 import { planHeterogeneousFabric } from './heterogeneous-fabric-planner.mjs';
 import { loadPerformanceLedger } from './performance-learning.mjs';
 import { planFabricRebalance } from './fabric-rebalance.mjs';
+import { AmbientWorkQueue } from './ambient-work-queue.mjs';
+import { buildAmbientDemandRadar, deriveZeroSpendCapacityNeeds } from './ambient-demand-radar.mjs';
 import { evaluateMicroSeedAdapterAvailability } from './microseed-adapter-catalog.mjs';
 import { matchCapacityGapsToAmbientCandidates } from './capacity-gap-matcher.mjs';
 
@@ -91,6 +93,7 @@ export function compileCapacityOrganismState({
   performanceLedger=null,
   previousPlan=null,
   checkpoints={},
+  demandRadar=null,
   now=new Date(),
 }={}){
   const {caps,rejected}=activeCapabilities(registrySnapshot,{adapterHealth});
@@ -158,6 +161,10 @@ export function compileCapacityOrganismState({
       ledger_present:Boolean(performanceLedger),
       learned_profile_count:Object.keys(performanceLedger?.profiles||{}).length,
     },
+    work_demand:demandRadar,
+    zero_spend_capacity_needs:demandRadar
+      ? deriveZeroSpendCapacityNeeds(demandRadar)
+      : [],
     formation_waves:waves,
     missing_capacity:[...missingCapabilityRoles,...missingWorkUnits],
     production_ready:
@@ -255,6 +262,7 @@ export async function runCapacityOrganismOnce({
   atomicJson(path.join(resolvedRoot,'ambient-registry-snapshot.json'),registrySnapshot);
   atomicJson(path.join(resolvedRoot,'heterogeneous-plan.json'),compiled.workload_plan);
   atomicJson(path.join(resolvedRoot,'rebalance-plan.json'),compiled.rebalance_plan);
+  atomicJson(path.join(resolvedRoot,'ambient-demand-radar.json'),demandRadar);
   if(candidateInventory) atomicJson(path.join(resolvedRoot,'ambient-candidate-inventory.json'),candidateInventory);
   if(opportunityMap) atomicJson(path.join(resolvedRoot,'capacity-gap-opportunities.json'),opportunityMap);
   return receipt;
