@@ -150,3 +150,18 @@ test('health watch refuses a non-loopback NodeSeed receipt', async () => {
     fs.rmSync(root, { recursive: true, force: true });
   }
 });
+
+
+test('local organism installer wires the self-healing timer and initial receipt gate', () => {
+  const installer = fs.readFileSync(
+    new URL('../systemia/compute/install-local-organism-user.sh', import.meta.url),
+    'utf8'
+  );
+  assert.match(installer, /evercraft-local-organism-health\.service/);
+  assert.match(installer, /evercraft-local-organism-health\.timer/);
+  assert.match(installer, /OnUnitActiveSec=60s/);
+  assert.match(installer, /StartLimitIntervalSec=0/);
+  assert.match(installer, /health-watch\.json/);
+  assert.match(installer, /systemctl --user start evercraft-local-organism-health\.service/);
+  assert.doesNotMatch(installer, /sudo|ListenStream|0\.0\.0\.0/);
+});
