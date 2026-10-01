@@ -5,6 +5,7 @@ on:
     paths:
       - "systemia/organism/social-spectacle-engine*"
       - "systemia/organism/social-spectacle-production*"
+      - "systemia/organism/social-spectacle-clip-bridge*"
       - "systemia/clip/media-intake*"
       - "systemia/clip/publisher-runtime*"
       - "systemia/media-studio/cli.ts"
@@ -17,6 +18,7 @@ on:
     paths:
       - "systemia/organism/social-spectacle-engine*"
       - "systemia/organism/social-spectacle-production*"
+      - "systemia/organism/social-spectacle-clip-bridge*"
       - "systemia/clip/media-intake*"
       - "systemia/clip/publisher-runtime*"
       - "systemia/media-studio/cli.ts"
@@ -43,6 +45,9 @@ jobs:
 
       - name: Prove spectacle production packaging
         run: npm run proof:social-spectacle-production
+
+      - name: Prove authenticated spectacle Clip bridge
+        run: npm run proof:social-spectacle-clip-bridge
 
       - name: Prove Clip intake and publish gates
         run: |
@@ -130,6 +135,9 @@ jobs:
           const producer=services.services.find(service=>service.service_key==='social-spectacle-production');
           if(!producer) throw new Error('resident_production_service_missing');
           if(producer.cadence_seconds!==900) throw new Error('resident_production_cadence_invalid');
+          const bridge=services.services.find(service=>service.service_key==='social-spectacle-clip-bridge');
+          if(!bridge) throw new Error('resident_clip_bridge_service_missing');
+          if(bridge.cadence_seconds!==900) throw new Error('resident_clip_bridge_cadence_invalid');
           const subscriptions=JSON.parse(fs.readFileSync('systemia/worldstate/subscriptions.json','utf8'));
           for(const domain of ['weather','water','ocean','aviation','science']){
             if(!subscriptions.by_domain?.[domain]?.includes('social_spectacle')) throw new Error('subscription_missing:'+domain);
