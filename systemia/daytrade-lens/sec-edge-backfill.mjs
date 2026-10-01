@@ -87,11 +87,18 @@ async function main() {
       .map((row) => row.signal_key),
     ...canonicalEnrollment.cohorts.map((row) => row.signal_key),
   ].filter(Boolean))];
+  const quoteDirectionBySignal = Object.fromEntries(
+    canonicalEnrollment.cohorts.map((row) => [
+      row.signal_key,
+      row.learned_direction || row.direction || null,
+    ])
+  );
   const quoteMicrostructureLab = await runQuoteMicrostructureLab(report, {
     key: process.env.ALPACA_TRADING || "",
     secret: process.env.ALPACA_TRADING_SECRET || "",
     feed: process.env.EDGE_LAB_ALPACA_QUOTE_FEED || "iex",
     signal_keys: quoteSignalKeys,
+    direction_by_signal: quoteDirectionBySignal,
     transaction_cost_bps: Number(
       process.env.EDGE_LAB_TRANSACTION_COST_BPS || 5
     ),
