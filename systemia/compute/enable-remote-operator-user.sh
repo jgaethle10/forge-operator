@@ -26,6 +26,30 @@ fi
 export EVERCRAFT_REMOTE_OPERATOR_ENABLED=true
 bash "${INSTALLER}"
 
+CHROMEOS_HOST_BOUNDARY_MODE="${EVERCRAFT_CHROMEOS_HOST_BOUNDARY_ENABLED:-auto}"
+case "${CHROMEOS_HOST_BOUNDARY_MODE,,}" in
+  true|false|auto) ;;
+  *)
+    echo "EVERCRAFT_CHROMEOS_HOST_BOUNDARY_ENABLED must be true, false, or auto." >&2
+    exit 2
+    ;;
+esac
+
+CROS_GUEST=false
+if [[ -d /mnt/chromeos ]] || [[ "$(hostname 2>/dev/null || true)" == "penguin" ]]; then
+  CROS_GUEST=true
+fi
+
+if [[ "${CHROMEOS_HOST_BOUNDARY_MODE,,}" == "true" ]] ||    [[ "${CHROMEOS_HOST_BOUNDARY_MODE,,}" == "auto" && "${CROS_GUEST}" == "true" ]]; then
+  HOST_BRIDGE_INSTALLER="${SOURCE_ROOT}/systemia/compute/install-chromeos-host-boundary-bridge-user.sh"
+  if [[ ! -f "${HOST_BRIDGE_INSTALLER}" ]]; then
+    echo "ChromeOS host-boundary bridge installer is missing." >&2
+    exit 4
+  fi
+  chmod +x "${HOST_BRIDGE_INSTALLER}" 2>/dev/null || true
+  bash "${HOST_BRIDGE_INSTALLER}"
+fi
+
 RECEIPT="${STATE_ROOT}/local-organism-receipt.json"
 SEED_RECEIPT="${STATE_ROOT}/compute/nodeseed-receipt.json"
 
@@ -65,6 +89,8 @@ if (!/^http:\/\/(?:127\.0\.0\.1|localhost|\[::1\])(?::\d+)?$/i.test(endpoint)) {
     outbound_only: true,
     public_ingress: false,
     remote_admission_state: receipt.remote_admission?.state || 'unknown',
+    chromeos_host_boundary_bridge_expected:
+      process.env.EVERCRAFT_CHROMEOS_HOST_BOUNDARY_ENABLED !== 'false',
   }, null, 2));
 })().catch((error) => {
   console.error(error.message || String(error));
