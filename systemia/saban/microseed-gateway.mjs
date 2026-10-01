@@ -73,14 +73,38 @@ export async function startMicroSeedGateway({
     eligible_device_count:registry.list({now:new Date()}).eligible_count,
   });
 
+  async function resolveExecutionTelemetry(manifest,provided){
+    const adapter=bridgeAdapters?.[manifest.bridge_mode];
+    if(adapter&&typeof adapter.telemetry==='function'){
+      const deviceTelemetry=await adapter.telemetry({manifest});
+      if(!deviceTelemetry||typeof deviceTelemetry!=='object'){
+        throw new Error('microseed_device_telemetry_invalid');
+      }
+      return {
+        ...deviceTelemetry,
+        observed_at:deviceTelemetry.observed_at||new Date().toISOString(),
+        telemetry_source:'device_agent',
+      };
+    }
+    if(provided&&typeof provided==='object'&&Object.keys(provided).length){
+      return {
+        ...provided,
+        observed_at:provided.observed_at||new Date().toISOString(),
+        telemetry_source:provided.telemetry_source||'caller_bridge',
+      };
+    }
+    throw new Error('microseed_execution_telemetry_required');
+  }
+
   async function executeAndLearn({manifest,trustDecision,telemetry,request}){
     const startedAt=Date.now();
     const deviceId=manifest.device_id;
+    const effectiveTelemetry=await resolveExecutionTelemetry(manifest,telemetry);
     try{
       const receipt=await executeMicroSeedWorkload({
         manifest,
         trustDecision,
-        telemetry:telemetry||{},
+        telemetry:effectiveTelemetry,
         request,
         stateDir,
         bridgeAdapters,
@@ -101,7 +125,7 @@ export async function startMicroSeedGateway({
         checkpointed:Boolean(receipt?.checkpoint),
         preempted:false,
         thermal_hold:false,
-        energy_wh:observedEnergyWh(telemetry,duration),
+        energy_wh:observedEnergyWh(effectiveTelemetry,duration),
         observed_at:new Date().toISOString(),
       });
       savePerformanceLedger(performanceFile,ledger);
@@ -117,7 +141,7 @@ export async function startMicroSeedGateway({
         checkpointed:false,
         preempted:String(error?.message||error).includes('preempt'),
         thermal_hold:String(error?.message||error).includes('temperature'),
-        energy_wh:observedEnergyWh(telemetry,duration),
+        energy_wh:observedEnergyWh(effectiveTelemetry,duration),
         observed_at:new Date().toISOString(),
       });
       savePerformanceLedger(performanceFile,ledger);
@@ -153,10 +177,6 @@ export async function startMicroSeedGateway({
             reason:trustDecision.reason,
           });
         }
-        if(!body.telemetry||typeof body.telemetry!=='object'){
-          return send(res,400,{ok:false,error:'conformance_telemetry_required'});
-        }
-
         const conformance=await runMicroSeedConformance({
           manifest,
           trustDecision,
@@ -203,10 +223,6 @@ export async function startMicroSeedGateway({
             reason:trustDecision.reason,
           });
         }
-        if(!body.telemetry||typeof body.telemetry!=='object'){
-          return send(res,400,{ok:false,error:'calibration_telemetry_required'});
-        }
-
         const calibration=await runMicroSeedCalibration({
           manifest,
           conformance,
