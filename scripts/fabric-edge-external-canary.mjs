@@ -78,6 +78,24 @@ async function rpc(id,method,params={}){
   return body.result;
 }
 
+function failureStage(checks={},message=''){
+  if(checks.public_dns!==true) return 'public_dns';
+  if(checks.trusted_tls!==true) {
+    if(/timeout|ECONNREFUSED|EHOSTUNREACH|ENETUNREACH|ECONNRESET/i.test(message)){
+      return 'public_tcp_tls_ingress';
+    }
+    return 'trusted_tls';
+  }
+  if(checks.customer_surface!==true) return 'customer_surface';
+  if(checks.policy_surfaces!==true) return 'policy_surfaces';
+  if(checks.runtime_health!==true) return 'runtime_health';
+  if(checks.device_attestation!==true) return 'device_attestation';
+  if(checks.mcp_initialize!==true) return 'mcp_initialize';
+  if(checks.mcp_tools!==true) return 'mcp_tools';
+  if(checks.public_catalog!==true) return 'public_catalog';
+  return 'unknown';
+}
+
 const started=new Date().toISOString();
 const receipt={
   schema:'evercraft.operator-public-edge.external-canary.v1',
@@ -199,6 +217,7 @@ try{
 }catch(error){
   receipt.state='verification_failed';
   receipt.error=error instanceof Error?error.message:String(error);
+  receipt.failure_stage=failureStage(receipt.checks,receipt.error);
   receipt.public_https_verified=false;
   receipt.mcp_verified=false;
   receipt.external_route_verified=false;

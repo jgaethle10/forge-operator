@@ -55,11 +55,11 @@ fi
 NODE_RECEIPT="$RUN_HOME/.local/state/evercraft/organism/compute/nodeseed-receipt.json"
 ALLOCATOR_TOKEN_FILE="$RUN_HOME/.local/state/evercraft/organism/.secrets/allocator-token"
 
-echo "[1/7] Installing Caddy from Debian packages..."
+echo "[1/9] Installing Caddy from Debian packages..."
 sudo apt-get update
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y caddy curl ca-certificates
 
-echo "[2/7] Creating Evercraft edge configuration..."
+echo "[2/9] Creating Evercraft edge configuration..."
 sudo install -d -m 0755 /etc/evercraft
 sudo tee /etc/evercraft/fabric.env >/dev/null <<EOF
 EVERCRAFT_OPENAI_CHALLENGE_TOKEN=
@@ -97,7 +97,7 @@ sudo tee /etc/evercraft/Caddyfile >/dev/null <<'EOF'
 }
 EOF
 
-echo "[3/8] Installing resident Evercraft Fabric service..."
+echo "[3/9] Installing resident Evercraft Fabric service..."
 sudo tee /etc/systemd/system/evercraft-fabric.service >/dev/null <<EOF
 [Unit]
 Description=Evercraft Fabric MCP
@@ -121,7 +121,7 @@ ProtectHome=read-only
 WantedBy=multi-user.target
 EOF
 
-echo "[4/8] Installing resident TLS edge service..."
+echo "[4/9] Installing resident TLS edge service..."
 sudo systemctl disable --now caddy.service >/dev/null 2>&1 || true
 sudo tee /etc/systemd/system/evercraft-public-edge.service >/dev/null <<'EOF'
 [Unit]
@@ -147,7 +147,7 @@ ProtectHome=true
 WantedBy=multi-user.target
 EOF
 
-echo "[5/8] Installing safe OpenAI challenge-token helper..."
+echo "[5/9] Installing safe OpenAI challenge-token helper..."
 sudo tee /usr/local/sbin/evercraft-set-openai-challenge >/dev/null <<'EOF'
 #!/usr/bin/env bash
 set -euo pipefail
@@ -168,17 +168,28 @@ echo "OpenAI challenge token installed and Evercraft Fabric restarted."
 EOF
 sudo chmod 0755 /usr/local/sbin/evercraft-set-openai-challenge
 
-echo "[6/8] Enabling services..."
+echo "[6/9] Enabling services..."
 sudo systemctl daemon-reload
 sudo systemctl enable --now evercraft-fabric.service
 sudo systemctl enable --now evercraft-public-edge.service
 
-echo "[7/8] Installing fail-closed Fabric self-update heartbeat..."
+echo "[7/9] Installing fail-closed Fabric self-update heartbeat..."
 bash "$REPO_ROOT/scripts/install-fabric-self-update.sh" --repo-root "$REPO_ROOT" --cadence 5min
 
-echo "[8/8] Local checks..."
+echo "[8/9] Installing read-only node network observer..."
+sudo bash "$REPO_ROOT/scripts/install-fabric-network-observer.sh" \
+  --repo-root "$REPO_ROOT" \
+  --user "$RUN_USER" \
+  --cadence 2min
+
+echo "[9/9] Local checks..."
 curl -fsS "http://127.0.0.1:$FABRIC_PORT/health" >/tmp/evercraft-fabric-health.json
-sudo /usr/bin/caddy validate --config /etc/evercraft/Caddyfile --adapter caddyfile >/dev/null
+sudo bash -c '
+  set -a
+  . /etc/evercraft/public-edge.env
+  set +a
+  /usr/bin/caddy validate --config /etc/evercraft/Caddyfile --adapter caddyfile
+' >/dev/null
 
 cat <<EOF
 
@@ -190,12 +201,20 @@ LOCAL FABRIC:
 PUBLIC TARGET:
   https://$DOMAIN/mcp
 
-NOW COMPLETE THESE TWO NETWORK STEPS:
+NETWORK BOUNDARIES:
   1. ChromeOS Settings -> Developers -> Linux -> Port forwarding
-     Add TCP $HTTP_PORT and TCP $HTTPS_PORT.
-  2. Router port forwarding
+     Add/enable TCP $HTTP_PORT and TCP $HTTPS_PORT.
+     ChromeOS may require these host-level forwards to be re-enabled after reboot.
+  2. Router ingress
      WAN TCP 80  -> Chromebook LAN IP:$HTTP_PORT
      WAN TCP 443 -> Chromebook LAN IP:$HTTPS_PORT
+     On compatible routers, automate this with:
+       sudo bash scripts/install-fabric-router-map-resident.sh --gateway <router-ip> --host <chromebook-lan-ip>
+
+OBSERVABILITY:
+  evercraft-network-observer.timer records the Linux/Crostini side every 2 minutes.
+  It deliberately reports ChromeOS host forwarding as an external trust boundary
+  rather than pretending the guest can verify or toggle it.
 
 DNS:
   Point $DOMAIN to your router's public IPv4 address.

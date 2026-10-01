@@ -33,10 +33,13 @@ The client bearer and node control grant must be different values.
 ## Tools
 
 - `remote_operator_status`
+- `remote_network_status`
 - `remote_list_files`
 - `remote_read_file`
 - `remote_write_file`
 - `remote_exec`
+
+`remote_network_status` is read-only and returns the authorized node's current network observation: interfaces, routes, listeners, Evercraft service state, router-map configuration, loopback Fabric health, hostname-aware local TLS health, and the explicit ChromeOS/Crostini host boundary. It does not toggle forwarding or mutate the network.
 
 Read operations still require the client credential. File writes and program execution also require an explicit `approval_ref`, and the node enforces its own filesystem/program policy after the gateway authenticates.
 

@@ -9,6 +9,9 @@ on:
       - 'systemia/compute/operator-public-edge-admit.mjs'
       - 'scripts/fabric-edge-external-canary.mjs'
       - 'scripts/install-fabric-owned-edge.sh'
+      - 'scripts/install-fabric-network-observer.sh'
+      - 'scripts/update-fabric-owned-edge.sh'
+      - 'systemia/compute/network-observer.mjs'
       - '.github/workflows/chromebook-operator-edge-canary.yml'
   workflow_dispatch:
   schedule:
@@ -66,7 +69,10 @@ jobs:
             description="Chromebook production edge externally verified"
           else
             state="failure"
-            description="Chromebook production edge unreachable or trust gate failed"
+            stage="$(jq -r '.failure_stage // "unknown"' artifacts/fabric-operator-edge-canary.json 2>/dev/null || echo unknown)"
+            error="$(jq -r '.error // "verification_failed"' artifacts/fabric-operator-edge-canary.json 2>/dev/null || echo verification_failed)"
+            description="Edge failure: ${stage} (${error})"
+            description="${description:0:140}"
           fi
           payload="$(jq -cn             --arg state "$state"             --arg context "evercraft/chromebook-operator-edge"             --arg description "$description"             '{state:$state,context:$context,description:$description}')"
           curl --fail --silent --show-error             -X POST             -H "Authorization: Bearer $GH_TOKEN"             -H "Accept: application/vnd.github+json"             -H "X-GitHub-Api-Version: 2022-11-28"             --data "$payload"             "https://api.github.com/repos/$GITHUB_REPOSITORY/statuses/$GITHUB_SHA" >/dev/null

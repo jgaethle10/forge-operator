@@ -778,7 +778,10 @@ export async function startEvercraftComputeNode({
         }
         try {
           if (req.method === 'GET') {
-            return send(res, 200, remoteOperator.status());
+            return send(res, 200, {
+              ...remoteOperator.status(),
+              network_observation: await remoteOperator.networkStatus(),
+            });
           }
           const body = await readJson(req);
           if (req.url === '/v1/operator/fs/list') {
