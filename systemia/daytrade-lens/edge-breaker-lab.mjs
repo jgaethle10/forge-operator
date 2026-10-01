@@ -331,6 +331,33 @@ export function quarterRemovalProfile(rows,{sign=1,cost_bps=5}={}){
   };
 }
 
+export function eventDensityWeightedStress(rows,{sign=1,cost_bps=5}={}){
+  const byDay=new Map();
+  for(const row of rows){
+    const key=dayKey(row);
+    if(!byDay.has(key)) byDay.set(key,[]);
+    byDay.get(key).push(row);
+  }
+  const dayMeans=[...byDay.entries()].map(([day,group])=>({
+    day,
+    observations:group.length,
+    mean_signed_net:mean(group.map(r=>signedNet(r,sign,cost_bps))),
+  }));
+  const densityWeightedMean=mean(dayMeans.map(x=>x.mean_signed_net));
+  const rawMean=mean(rows.map(r=>signedNet(r,sign,cost_bps)));
+  const maxEventsPerDay=Math.max(0,...dayMeans.map(x=>x.observations));
+  return {
+    event_days:dayMeans.length,
+    original_observations:rows.length,
+    maximum_events_on_one_day:maxEventsPerDay,
+    raw_mean_signed_net:rawMean,
+    event_day_equal_weight_mean_signed_net:densityWeightedMean,
+    concentration_ratio:rows.length?maxEventsPerDay/rows.length:0,
+    pass:dayMeans.length>0&&densityWeightedMean>0,
+    days:dayMeans,
+  };
+}
+
 export function breakCandidate(candidate,rows){
   const sign=expectedSign(candidate);
   const deduped=dedupeOriginDay(rows);
@@ -348,6 +375,7 @@ export function breakCandidate(candidate,rows){
   const topWinnerRemoval=topWinnerRemovalStress(deduped,{sign});
   const topKWinnerRemoval=topKWinnerRemovalStress(deduped,{sign});
   const quarterRemoval=quarterRemovalProfile(deduped,{sign});
+  const eventDensity=eventDensityWeightedStress(deduped,{sign});
 
   const checks={
     deduped_sample_at_least_40:deduped.length>=40,
@@ -368,6 +396,7 @@ export function breakCandidate(candidate,rows){
     winsorized_mean_positive:winsorized.pass,
     median_signed_net_positive:winsorized.median_positive,
     survives_best_quarter_removal:quarterRemoval.survives_best_quarter_removal,
+    event_density_weighted_mean_positive:eventDensity.pass,
   };
 
   return {
@@ -389,6 +418,7 @@ export function breakCandidate(candidate,rows){
     top_winner_removal_stress:topWinnerRemoval,
     top_k_winner_removal_stress:topKWinnerRemoval,
     quarter_removal_profile:quarterRemoval,
+    event_density_weighted_stress:eventDensity,
     checks,
     exploratory_checks:exploratoryChecks,
     breaker_status:Object.values(checks).every(Boolean)?"BREAKER_SURVIVOR":"BREAKER_CRACKED",
