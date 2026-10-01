@@ -111,6 +111,7 @@ export async function startMicroSeedGateway({
             request:body.request||body,
             stateDir,
             bridgeAdapters,
+            executionContext:'gateway',
             now:new Date(),
           });
           return send(res,200,{ok:true,...receipt});
