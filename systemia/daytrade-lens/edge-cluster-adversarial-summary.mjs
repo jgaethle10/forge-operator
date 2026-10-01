@@ -30,6 +30,7 @@ export function buildClusterAdversarialSummary({
   labelPermutationLab,
   regimeFragilityLab,
   eventContaminationLab,
+  narrativeBlindControlLab,
   benchmarkLab,
   horizonCoherenceLab,
   walkForwardLab,
@@ -52,6 +53,7 @@ export function buildClusterAdversarialSummary({
     labelPermutation: indexBySignal(labelPermutationLab?.reviews || []),
     regime: indexBySignal(regimeFragilityLab?.reviews || []),
     contamination: indexBySignal(eventContaminationLab?.reviews || []),
+    narrative: indexBySignal(narrativeBlindControlLab?.reviews || []),
     benchmark: indexBySignal(benchmarkLab?.reviews || []),
     horizon: indexBySignal(horizonCoherenceLab?.reviews || []),
     walk: indexBySignal(walkForwardLab?.reviews || []),
@@ -98,6 +100,8 @@ export function buildClusterAdversarialSummary({
       regime_status: maps.regime.get(signal)?.regime_status || "MISSING",
       contamination_status:
         maps.contamination.get(signal)?.contamination_status || "MISSING",
+      narrative_control_status:
+        maps.narrative.get(signal)?.narrative_control_status || "MISSING",
       benchmark_status:
         maps.benchmark.get(signal)?.benchmark_status || "MISSING",
       horizon_coherence_status:
@@ -139,6 +143,8 @@ export function buildClusterAdversarialSummary({
           (row) => row.regime_status === "REGIME_ROBUST_DIAGNOSTIC"),
         contamination_robust: count(memberReceipts,
           (row) => row.contamination_status === "CONTAMINATION_ROBUST_DIAGNOSTIC"),
+        narrative_incremental: count(memberReceipts,
+          (row) => row.narrative_control_status === "NARRATIVE_INCREMENTAL_DIAGNOSTIC"),
         benchmark_robust: count(memberReceipts,
           (row) => row.benchmark_status === "BENCHMARK_ROBUST_DIAGNOSTIC"),
         horizon_coherent: count(memberReceipts,
