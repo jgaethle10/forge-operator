@@ -165,6 +165,8 @@ export function rankPerformanceAdjustment(profile){
     confidence,
     reliability,
     p95_duration_ms:p95||null,
+    average_energy_wh:m.average_energy_wh==null?null:Number(m.average_energy_wh),
+    throughput_bytes_per_second:m.throughput_bytes_per_second==null?null:Number(m.throughput_bytes_per_second),
   };
 }
 
