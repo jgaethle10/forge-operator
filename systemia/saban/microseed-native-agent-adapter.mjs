@@ -28,7 +28,7 @@ export function createMicroSeedNativeAgentAdapter({
   }
 
   return {
-    async execute({manifest,workload_class,payload}={}){
+    async execute({manifest,workload_class,payload,idempotency_key}={}){
       if(manifest?.bridge_mode!=='native_agent'||manifest?.compute_execution_mode!=='native_device'){
         throw new Error('microseed_native_agent_manifest_required');
       }
@@ -43,12 +43,9 @@ export function createMicroSeedNativeAgentAdapter({
       const timer=setTimeout(()=>controller.abort(),Math.max(1000,Number(timeoutMs||10000)));
       try{
         const endpoint=new URL('/v1/execute',base);
-        const idempotencyKey=
-          clean(payload?.__microseed_idempotency_key)||
-          'relay-'+Date.now().toString(36);
-        const requestPayload=payload&&typeof payload==='object'
-          ? Object.fromEntries(Object.entries(payload).filter(([key])=>key!=='__microseed_idempotency_key'))
-          : payload;
+        const idempotencyKey=clean(idempotency_key);
+        if(!idempotencyKey) throw new Error('microseed_native_agent_idempotency_key_required');
+        const requestPayload=payload;
         const response=await fetchImpl(endpoint,{
           method:'POST',
           headers:{
