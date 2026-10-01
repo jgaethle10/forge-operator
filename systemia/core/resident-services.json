@@ -55,7 +55,8 @@
         "--production-root": "SYSTEMIA_SOCIAL_SPECTACLE_PRODUCTION_DIR",
         "--upload-url": "EVERCRAFT_CLIP_SPECTACLE_UPLOAD_URL",
         "--ingress-url": "EVERCRAFT_CLIP_SYSTEMIA_INGRESS_URL",
-        "--pulse-url": "EVERCRAFT_CLIP_UNIFIED_PULSE_URL"
+        "--pulse-url": "EVERCRAFT_CLIP_UNIFIED_PULSE_URL",
+        "--status-url": "EVERCRAFT_CLIP_PUBLICATION_STATUS_URL"
       }
     },
     {
