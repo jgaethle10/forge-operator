@@ -208,7 +208,13 @@ export async function startLocalOrganism({
     const kaidanceRoute = await yard.verifyRoute('kaidance-local-resident');
     const coreRoute = await yard.verifyRoute('systemia-core-local-resident');
     const fabricRoute = await yard.verifyRoute('evercraft-fabric-local-resident');
-    if (!kaidanceRoute.ok || !coreRoute.ok || !fabricRoute.ok) {
+    const fabricLocalHealthy =
+      fabricRoute.ok === true ||
+      (
+        fabricRoute.state === 'public_route_unbound' &&
+        fabricRoute.local_health_ok === true
+      );
+    if (!kaidanceRoute.ok || !coreRoute.ok || !fabricLocalHealthy) {
       throw new Error('local organism route verification failed');
     }
 
@@ -316,7 +322,16 @@ export async function startLocalOrganism({
         return {
           schema: 'evercraft.local-organism-health.v1',
           node_id: seed.node_id,
-          ok: kaidanceHealth.ok && coreHealth.ok && fabricHealth.ok,
+          ok:
+            kaidanceHealth.ok &&
+            coreHealth.ok &&
+            (
+              fabricHealth.ok === true ||
+              (
+                fabricHealth.state === 'public_route_unbound' &&
+                fabricHealth.local_health_ok === true
+              )
+            ),
           kaidance: {
             ok: kaidanceHealth.ok,
             state: kaidanceHealth.state,
@@ -326,7 +341,12 @@ export async function startLocalOrganism({
             state: coreHealth.state,
           },
           fabric: {
-            ok: fabricHealth.ok,
+            ok:
+              fabricHealth.ok === true ||
+              (
+                fabricHealth.state === 'public_route_unbound' &&
+                fabricHealth.local_health_ok === true
+              ),
             state: fabricHealth.state,
             service_id: fabric.result.service_id,
             outbound_service_relay_supported:
