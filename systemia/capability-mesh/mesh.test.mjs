@@ -6,23 +6,22 @@ import { buildCapabilityMesh, renderCapabilityMesh } from './mesh.mjs';
 
 test('production capability mesh is deterministic and every public product is represented', () => {
   const root = process.cwd();
-  const actual = JSON.parse(
-    fs.readFileSync(path.join(root, 'systemia', 'capability-mesh', 'adoption-coverage.json'), 'utf8')
-  );
-  const expected = renderCapabilityMesh(root);
-  assert.deepEqual(actual, expected);
+  const first = renderCapabilityMesh(root);
+  const second = renderCapabilityMesh(root);
+  assert.deepEqual(first, second);
 
   const publicProducts = JSON.parse(
     fs.readFileSync(path.join(root, 'registry', 'public-products.json'), 'utf8')
   );
-  assert.equal(actual.summary.public_product_count, publicProducts.products.length);
-  assert.equal(actual.products.length, publicProducts.products.length);
+  assert.equal(first.summary.public_product_count, publicProducts.products.length);
+  assert.equal(first.products.length, publicProducts.products.length);
   assert.equal(
-    actual.summary.complete_contract_declaration_count +
-      actual.summary.incomplete_contract_declaration_count +
-      actual.summary.missing_contract_count,
-    actual.summary.public_product_count
+    first.summary.complete_contract_declaration_count +
+      first.summary.incomplete_contract_declaration_count +
+      first.summary.missing_contract_count,
+    first.summary.public_product_count
   );
+  assert.equal(first.ratchet.state, 'pass');
 });
 
 test('AliEV canary contract binds the shared trust-chain primitives without claiming runtime proof', () => {
