@@ -1,0 +1,34 @@
+name: Evercraft Capability Mesh
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/capability-mesh/**'
+      - 'registry/public-products.json'
+      - 'public/.well-known/evercraft-direct-door-readiness.json'
+      - '.github/workflows/evercraft-capability-mesh.yml'
+  pull_request:
+    paths:
+      - 'systemia/capability-mesh/**'
+      - 'registry/public-products.json'
+      - 'public/.well-known/evercraft-direct-door-readiness.json'
+      - '.github/workflows/evercraft-capability-mesh.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  capability-mesh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify product adoption contracts and coverage
+        run: |
+          node systemia/capability-mesh/mesh.mjs --check
+          node --test systemia/capability-mesh/mesh.test.mjs
+          node systemia/capability-mesh/runtime.mjs --check
+          node --test systemia/capability-mesh/runtime.test.mjs
