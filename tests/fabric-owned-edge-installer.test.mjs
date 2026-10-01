@@ -70,11 +70,11 @@ test('Fabric self updater proves the release, self-heals attestation wiring, and
 
 test('Fabric self updater reasserts owned ingress without claiming ChromeOS host control',()=>{
   assert.match(updater,/reassert_owned_public_ingress/);
-  assert.match(updater,/evercraft-public-edge\\.service/);
-  assert.match(updater,/evercraft-router-map\\.service/);
-  assert.match(updater,/evercraft-router-map\\.timer/);
-  assert.match(updater,/systemctl enable --now "\\$ROUTER_MAP_TIMER"/);
-  assert.match(updater,/systemctl start "\\$ROUTER_MAP_SERVICE"/);
+  assert.match(updater,/evercraft-public-edge\.service/);
+  assert.match(updater,/evercraft-router-map\.service/);
+  assert.match(updater,/evercraft-router-map\.timer/);
+  assert.match(updater,/systemctl enable --now "\$ROUTER_MAP_TIMER"/);
+  assert.match(updater,/systemctl start "\$ROUTER_MAP_SERVICE"/);
   assert.doesNotMatch(updater,/\bvmc\b|ChromeOS Settings|\bcrosh\b|chromeos-port-forward/i);
 });
 
