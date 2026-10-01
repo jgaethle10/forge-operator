@@ -55,13 +55,18 @@ export function elevenLabsVeoEndpoint(
     executionState:verified?'verified':'declared',
     capabilities:[{
       task:'video',
-      inputModes:['text','start_frame','end_frame'],
-      requirements:['commercial_rights','provenance_receipt','timing_control'],
+      inputModes:['text','image_reference','start_frame','end_frame'],
+      requirements:['reference_identity','commercial_rights','provenance_receipt','timing_control'],
       aspectRatios:['16:9','9:16'],
       maxDurationSec:8,
       durationOptions:[4,6,8],
       resolutions:['720p','1080p','4K'],
-      maxReferences:2,
+      maxReferences:3,
+      referenceRoles:['identity','environment','style','start_frame','end_frame'],
+      identityContinuityViaStartFrame:true,
+      framesExclusiveWithReferences:true,
+      referenceImageDurationOptions:[8],
+      locatorKinds:['inline_base64','provider_asset','provider_generation'],
       nativeAudio:true,
       batchVariants:1,
       qualityTier:modelId==='veo-3.1-generate-001'?5:4,
@@ -115,7 +120,18 @@ function validateJob(job:VisualModelJob,config:ElevenLabsVeoAdapterConfig){
   if(job.targetResolution&&!['720p','1080p','4K'].includes(job.targetResolution)) throw new Error('elevenlabs_veo_resolution_unsupported');
   const end=job.references.find(item=>item.role==='end_frame');
   const start=job.references.find(item=>item.role==='start_frame');
+  const imageRefs=job.references.filter(item=>
+    item.kind==='image'&&
+    (item.role==='identity'||item.role==='environment'||item.role==='style')
+  );
   if(end&&!start) throw new Error('elevenlabs_end_frame_requires_start_frame');
+  if((start||end)&&imageRefs.length){
+    throw new Error('elevenlabs_reference_images_cannot_mix_with_frames');
+  }
+  if(imageRefs.length>3) throw new Error('elevenlabs_reference_image_limit_exceeded');
+  if(imageRefs.length&&job.durationSec!==8){
+    throw new Error('elevenlabs_reference_images_require_eight_seconds');
+  }
 }
 
 function outputName(job:VisualModelJob){
@@ -150,8 +166,18 @@ export function createElevenLabsVeoAdapter(
       };
       const start=roleReference(job,'start_frame');
       const end=roleReference(job,'end_frame');
+      const images=job.references
+        .filter(ref=>
+          ref.kind==='image'&&
+          (ref.role==='identity'||ref.role==='environment'||ref.role==='style')
+        )
+        .map(ref=>({
+          image:providerReference(ref.locator),
+          role:ref.role==='style'?'style':'subject',
+        }));
       if(start) body.start_frame=start;
       if(end) body.end_frame=end;
+      if(images.length) body.images=images;
 
       const created=await fetchImpl(`${base}/v1/flows/video`,{
         method:'POST',

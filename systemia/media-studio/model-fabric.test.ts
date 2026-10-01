@@ -183,3 +183,99 @@ test('finishing compiles lip-sync and upscale as governed post-tournament passes
   assert.equal(plan.steps[1].modelPlan.status,'routed');
   assert.equal(plan.boundaries.finishAfterTournament,true);
 });
+
+
+test('verified continuity start frame can satisfy reference identity when provider carries identity through the frame',()=>{
+  const endpoint:VisualModelEndpoint={
+    id:'frame-continuity',
+    providerId:'frame-provider',
+    displayName:'Frame Continuity',
+    enabled:true,
+    executionState:'verified',
+    capabilities:[{
+      task:'video',
+      inputModes:['text','start_frame'],
+      requirements:['reference_identity','commercial_rights','provenance_receipt','timing_control'],
+      referenceRoles:['start_frame'],
+      identityContinuityViaStartFrame:true,
+      framesExclusiveWithReferences:true,
+      locatorKinds:['url'],
+      maxReferences:1,
+      qualityTier:5,costTier:3,latencyTier:2
+    }]
+  };
+  const plan=buildVisualModelPlan({
+    ...request,
+    requiredInputModes:['start_frame'],
+    references:[
+      {
+        id:'canon-face',kind:'image',role:'identity',
+        sourceRefs:['canon:face'],locator:{kind:'url',value:'https://assets.example/canon.png'}
+      },
+      {
+        id:'prior-end',kind:'image',role:'start_frame',
+        sourceRefs:['continuity:prior-end'],locator:{kind:'url',value:'https://assets.example/prior-end.png'}
+      }
+    ]
+  },[endpoint]);
+  assert.equal(plan.status,'routed');
+  assert.equal(plan.jobs.length,1);
+  assert.deepEqual(plan.jobs[0].references.map(ref=>ref.role),['start_frame']);
+});
+
+test('provider locator mismatch blocks routing before execution',()=>{
+  const endpoint:VisualModelEndpoint={
+    id:'asset-only',
+    providerId:'asset-provider',
+    displayName:'Asset only',
+    enabled:true,
+    executionState:'verified',
+    capabilities:[{
+      task:'video',
+      inputModes:['text','image_reference'],
+      requirements:['reference_identity','commercial_rights','provenance_receipt','timing_control'],
+      referenceRoles:['identity'],
+      locatorKinds:['provider_asset'],
+      maxReferences:1,
+      qualityTier:5,costTier:3,latencyTier:2
+    }]
+  };
+  const plan=buildVisualModelPlan({
+    ...request,
+    references:[{
+      id:'face',kind:'image',role:'identity',sourceRefs:['canon:face'],
+      locator:{kind:'url',value:'https://assets.example/face.png'}
+    }]
+  },[endpoint]);
+  assert.equal(plan.status,'blocked');
+  assert.ok(plan.rejectedModels[0].reasons.includes('reference_locator_unsupported:identity:url'));
+});
+
+test('reference-image duration constraints reject an otherwise compatible paid route early',()=>{
+  const endpoint:VisualModelEndpoint={
+    id:'eight-second-reference-model',
+    providerId:'provider',
+    displayName:'Eight second references',
+    enabled:true,
+    executionState:'verified',
+    capabilities:[{
+      task:'video',
+      inputModes:['text','image_reference'],
+      requirements:['reference_identity','commercial_rights','provenance_receipt','timing_control'],
+      referenceRoles:['identity'],
+      referenceImageDurationOptions:[8],
+      maxReferences:3,
+      qualityTier:5,costTier:5,latencyTier:3
+    }]
+  };
+  const plan=buildVisualModelPlan({
+    ...request,
+    durationSec:6,
+    targetResolution:undefined,
+    references:[{
+      id:'face',kind:'image',role:'identity',sourceRefs:['canon:face']
+    }]
+  },[endpoint]);
+  assert.equal(plan.status,'blocked');
+  assert.ok(plan.rejectedModels[0].reasons.includes('reference_image_duration_not_supported'));
+});

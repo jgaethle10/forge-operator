@@ -52,6 +52,11 @@ export interface VisualModelCapability {
   resolutions?:string[];
   durationOptions?:number[];
   maxReferences?:number;
+  referenceRoles?:VisualReferenceRole[];
+  identityContinuityViaStartFrame?:boolean;
+  framesExclusiveWithReferences?:boolean;
+  referenceImageDurationOptions?:number[];
+  locatorKinds?:VisualReferenceLocator['kind'][];
   nativeAudio?:boolean;
   batchVariants?:number;
   qualityTier:1|2|3|4|5;
@@ -227,13 +232,49 @@ function capabilityReasons(
   if(request.requireNativeAudio===true&&capability.nativeAudio!==true){
     reasons.push('native_audio_not_supported');
   }
-  if(capability.maxReferences!==undefined&&request.references.length>capability.maxReferences){
+
+  const compatible=compatibleReferences(request.references,capability);
+  if(capability.maxReferences!==undefined&&compatible.length>capability.maxReferences){
     reasons.push('too_many_references');
   }
+
+  if(capability.locatorKinds){
+    for(const ref of compatible){
+      if(!ref.locator){
+        reasons.push('reference_locator_missing:'+ref.role);
+      }else if(!capability.locatorKinds.includes(ref.locator.kind)){
+        reasons.push('reference_locator_unsupported:'+ref.role+':'+ref.locator.kind);
+      }
+    }
+  }
+
+  const compatibleReferenceImages=compatible.filter(ref=>
+    ref.kind==='image'&&
+    ref.role!=='start_frame'&&
+    ref.role!=='end_frame'
+  );
+  if(
+    compatibleReferenceImages.length&&
+    capability.referenceImageDurationOptions&&
+    request.durationSec!==undefined&&
+    !capability.referenceImageDurationOptions.includes(request.durationSec)
+  ){
+    reasons.push('reference_image_duration_not_supported');
+  }
+
   if(request.requires.includes('reference_identity')){
-    const identity=request.references.filter(ref=>ref.role==='identity'&&(ref.kind==='image'||ref.kind==='video'));
-    if(!identity.length) reasons.push('identity_reference_missing');
-    if(!capability.inputModes.some(mode=>mode==='image_reference'||mode==='video_reference')){
+    const declaredIdentity=request.references.filter(
+      ref=>ref.role==='identity'&&(ref.kind==='image'||ref.kind==='video')
+    );
+    const compatibleIdentity=compatible.filter(
+      ref=>ref.role==='identity'&&(ref.kind==='image'||ref.kind==='video')
+    );
+    const continuityStart=capability.identityContinuityViaStartFrame===true&&
+      compatible.some(ref=>ref.role==='start_frame'&&ref.kind==='image');
+
+    if(!declaredIdentity.length&&!continuityStart){
+      reasons.push('identity_reference_missing');
+    }else if(!compatibleIdentity.length&&!continuityStart){
       reasons.push('identity_reference_mode_not_supported');
     }
   }
@@ -248,7 +289,16 @@ function compatibleReferences(
   refs:VisualReference[],
   capability:VisualModelCapability,
 ){
+  const frameMode=capability.framesExclusiveWithReferences===true&&
+    refs.some(ref=>ref.role==='start_frame'||ref.role==='end_frame');
+
   return refs.filter(ref=>{
+    if(capability.referenceRoles&&!capability.referenceRoles.includes(ref.role)){
+      return false;
+    }
+    if(frameMode&&ref.role!=='start_frame'&&ref.role!=='end_frame'){
+      return false;
+    }
     if(ref.role==='start_frame') return capability.inputModes.includes('start_frame');
     if(ref.role==='end_frame') return capability.inputModes.includes('end_frame');
     if(ref.role==='motion') return capability.inputModes.includes('motion_reference');

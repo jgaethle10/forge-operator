@@ -67,6 +67,8 @@ export function syncLabsLipEndpoint(
         'timing_control',
       ],
       maxReferences:2,
+      referenceRoles:['identity','dialogue_audio'],
+      locatorKinds:['url','provider_asset'],
       batchVariants:1,
       qualityTier:quality,
       costTier:cost,
