@@ -99,12 +99,14 @@ export async function buildOwnedAliEvSiteSnapshot({
         predicate:(row)=>nearbyChargerIds.has(clean(row.station_external_id||row.charger_external_id||row.source_id))
       })
     : [];
-  const observedUsage=[...new Map(
-    [...spatialObservedUsage,...linkedObservedUsage].map((row,i)=>[
-      clean(row.aggregate_key||row.record_key||row.id||row.source_ref)||'usage-'+i,
-      row
-    ])
-  ).values()].slice(0,60);
+  const observedUsageMap=new Map();
+  [...spatialObservedUsage,...linkedObservedUsage].forEach((row,i)=>{
+    const key=clean(row.aggregate_key||row.record_key||row.id||row.source_ref)||'usage-'+i;
+    // Domain queries are freshness-sorted. Preserve the first occurrence so a
+    // stale migrated duplicate cannot overwrite a fresher owned projection.
+    if(!observedUsageMap.has(key)) observedUsageMap.set(key,row);
+  });
+  const observedUsage=[...observedUsageMap.values()].slice(0,60);
   const nearbyUtilityAreas=near('utility_service_area',0.5,30);
   const utilityAreas=nearbyUtilityAreas.length?nearbyUtilityAreas:postalRows('utility_service_area',30);
   const tariffs=postalRows('utility_tariff',40);
