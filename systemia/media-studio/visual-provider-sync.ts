@@ -69,6 +69,7 @@ export function syncLabsLipEndpoint(
       maxReferences:2,
       referenceRoles:['identity','dialogue_audio'],
       locatorKinds:['url','provider_asset'],
+      providerLocatorId:'sync',
       batchVariants:1,
       qualityTier:quality,
       costTier:cost,
