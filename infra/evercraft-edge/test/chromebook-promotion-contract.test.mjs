@@ -18,15 +18,15 @@ test("promotion starts native Edge DNS through NodeSeed",()=>{
  assert.match(promote,/systemia\.evercraft-edge-dns\.v1/);
  assert.match(promote,/1053/);
 });
-test("public-ingress label is granted only after external canary grant admission",()=>{
- const grantCheck=one.indexOf("public-ingress-grants");
- const grantVerified=one.indexOf("g.verified===true");
+test("public-ingress label is granted only after distributed external verification",()=>{
+ const verifier=one.indexOf("external-public-verifier.mjs");
+ const receiptCheck=one.indexOf("r.verified!==true");
  const promotion=one.indexOf('echo "[6/6] External canary passed. Promoting placement label to public-ingress..."');
- assert.ok(grantCheck>=0);
- assert.ok(grantVerified>grantCheck);
- assert.ok(promotion>grantVerified);
- assert.match(one,/g\.udp_53_verified===true/);
- assert.match(one,/g\.tcp_53_verified===true/);
+ assert.ok(verifier>=0);
+ assert.ok(receiptCheck>verifier);
+ assert.ok(promotion>receiptCheck);
+ assert.match(one,/udp53_successes/);
+ assert.match(one,/tcp53_authoritative/);
 });
 
 test("operator-authorized Crostini edge has lightweight bounded preflight",()=>{
