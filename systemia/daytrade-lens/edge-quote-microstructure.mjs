@@ -350,11 +350,15 @@ export function summarizeQuoteSignal(rows){
     .map((row)=>finite(row.quote_entry_strategy_net_partial))
     .filter(Number.isFinite);
 
-  const visibleRows=modeledEntry.filter((row)=>
-    Number.isFinite(finite(row.visible_touch_size)) &&
-    finite(row.visible_touch_size)>0 &&
-    Number.isFinite(finite(row.instrument_realized_volatility_5m))
-  );
+  const instruments=uniq(modeledEntry.map((row)=>row.instrument).filter(Boolean));
+  const singleInstrument=instruments.length===1;
+  const visibleRows=singleInstrument
+    ?modeledEntry.filter((row)=>
+        Number.isFinite(finite(row.visible_touch_size)) &&
+        finite(row.visible_touch_size)>0 &&
+        Number.isFinite(finite(row.instrument_realized_volatility_5m))
+      )
+    :[];
   const visibleSizeMedian=percentile(
     visibleRows.map((row)=>finite(row.visible_touch_size)),
     0.50
@@ -368,10 +372,12 @@ export function summarizeQuoteSignal(rows){
     finite(row.instrument_realized_volatility_5m)>=volatilityMedian
   );
 
-  const volumeRows=modeledEntry.filter((row)=>
-    Number.isFinite(finite(row.instrument_start_volume)) &&
-    Number.isFinite(finite(row.spread_bps))
-  );
+  const volumeRows=singleInstrument
+    ?modeledEntry.filter((row)=>
+        Number.isFinite(finite(row.instrument_start_volume)) &&
+        Number.isFinite(finite(row.spread_bps))
+      )
+    :[];
   const entryVolumeMedian=percentile(
     volumeRows.map((row)=>finite(row.instrument_start_volume)),
     0.50
@@ -413,6 +419,10 @@ export function summarizeQuoteSignal(rows){
       0.50
     ),
     top_of_book_state:{
+      instruments,
+      single_instrument_required:true,
+      quote_size_native_units_not_normalized_to_shares:true,
+      cross_symbol_size_comparison_forbidden:true,
       observations:visibleRows.length,
       median_visible_touch_size:visibleSizeMedian,
       median_realized_volatility_5m:volatilityMedian,
@@ -432,6 +442,9 @@ export function summarizeQuoteSignal(rows){
       full_market_depth_claimed:false,
     },
     volume_is_not_liquidity_negative_control:{
+      instruments,
+      single_instrument_required:true,
+      cross_symbol_volume_comparison_forbidden:true,
       observations:volumeRows.length,
       median_entry_bar_volume:entryVolumeMedian,
       high_volume_observations:highVolumeRows.length,
@@ -692,7 +705,7 @@ export async function runQuoteMicrostructureLab(report,{
       benchmark_entry_quote_adjusted:false,
       passive_touch_evidence:"Trade-at-or-through evidence only. It is not a fill claim because queue position and order-specific execution are unobserved.",
       passive_touch_window_ms:Number(passive_touch_window_ms),
-      visible_touch_size:"Sum of observed top-of-book bid and ask sizes on the selected feed. This is not full market depth.",
+      visible_touch_size:"Sum of observed top-of-book bid and ask sizes in the provider's native quote-size units. This is not full market depth and is not compared across symbols.",
       top_of_book_size_imbalance:"(bid_size - ask_size) / (bid_size + ask_size) on the selected feed.",
       entry_bar_volume:"Activity measure only. It is never substituted for spread, visible touch size, impact, or fill probability.",
       missing_is_never_zero:true,

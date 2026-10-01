@@ -228,6 +228,7 @@ const microRows=Array.from({length:12},(_,i)=>({
   ask_size:i<6?110+i*5:18+i,
   visible_touch_size:i<6?210+i*10:38+i*2,
   top_of_book_size_imbalance:0.05,
+  instrument:"SOXX",
   instrument_realized_volatility_5m:i<6?0.0005+i*0.00002:0.002+i*0.00005,
   instrument_start_volume:i<6?50000+i*1000:500000+i*10000,
   passive_touch_evidence_available:true,
@@ -240,6 +241,8 @@ assert.equal(
   "VISIBLE_TOUCH_SIZE_X_VOLATILITY_STRESS_READY"
 );
 assert.equal(microSummary.top_of_book_state.full_market_depth_claimed,false);
+assert.equal(microSummary.top_of_book_state.single_instrument_required,true);
+assert.equal(microSummary.top_of_book_state.cross_symbol_size_comparison_forbidden,true);
 assert.ok(
   microSummary.top_of_book_state.low_visible_size_high_volatility_count>=2
 );
@@ -254,6 +257,20 @@ assert.equal(
 assert.ok(
   microSummary.volume_is_not_liquidity_negative_control.high_volume_mean_spread_bps >
   microSummary.volume_is_not_liquidity_negative_control.low_volume_mean_spread_bps
+);
+
+const mixedInstrumentSummary=summarizeQuoteSignal([
+  ...microRows.slice(0,6),
+  ...microRows.slice(6).map((row)=>({...row,instrument:"QQQ"})),
+]);
+assert.equal(
+  mixedInstrumentSummary.top_of_book_state.status,
+  "VISIBLE_TOUCH_SIZE_X_VOLATILITY_INSUFFICIENT"
+);
+assert.equal(mixedInstrumentSummary.top_of_book_state.observations,0);
+assert.equal(
+  mixedInstrumentSummary.volume_is_not_liquidity_negative_control.status,
+  "VOLUME_LIQUIDITY_NEGATIVE_CONTROL_INSUFFICIENT"
 );
 
 await assert.rejects(
@@ -284,6 +301,7 @@ console.log(JSON.stringify({
   visible_touch_size_not_full_depth:true,
   volume_is_not_liquidity_negative_control:true,
   low_visible_size_high_volatility_cross_stress:true,
+  cross_symbol_quote_size_comparison_forbidden:true,
   no_silent_feed_fallback:true,
   missing_never_zero:true,
   live_trade_authority:false
