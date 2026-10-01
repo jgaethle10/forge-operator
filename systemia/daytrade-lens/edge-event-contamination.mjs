@@ -7,6 +7,8 @@ const FOMC_DECISION_DATES = Object.freeze([
   "2026-06-17",
   "2026-07-29",
   "2026-09-16",
+  "2026-10-28",
+  "2026-12-09",
 ]);
 
 const CPI_RELEASE_DATES = Object.freeze([
@@ -21,9 +23,14 @@ const CPI_RELEASE_DATES = Object.freeze([
   "2026-07-14",
   "2026-08-12",
   "2026-09-11",
+  "2026-10-14",
+  "2026-11-10",
+  "2026-12-10",
 ]);
 
 export const OFFICIAL_MACRO_CALENDAR_PROVENANCE = Object.freeze({
+  calendar_as_of: "2026-10-01",
+  scheduled_dates_may_change: true,
   fomc: {
     authority: "Board of Governors of the Federal Reserve System",
     source: "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
