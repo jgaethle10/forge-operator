@@ -276,14 +276,21 @@ export class EvercraftRemoteOperator {
     });
     const capabilities = status.capabilities.map((capability) => {
       const localAdmission = capability.requires_field_certification
-        ? readHostBoundaryCapabilityAdmission({
-            stateRoot: this.hostBoundaryStateRoot,
-            capabilityId: capability.capability_id,
-            observerInstallId:
-              hostStatus.paired_observer_install_id || '',
-            observerKeyFingerprint:
-              hostStatus.paired_observer_key_fingerprint || '',
-          })
+        ? hostStatus.paired === true
+          ? readHostBoundaryCapabilityAdmission({
+              stateRoot: this.hostBoundaryStateRoot,
+              capabilityId: capability.capability_id,
+              observerInstallId:
+                hostStatus.paired_observer_install_id || '',
+              observerKeyFingerprint:
+                hostStatus.paired_observer_key_fingerprint || '',
+            })
+          : {
+              ok: true,
+              admitted: false,
+              state: 'observer_not_paired',
+              capability_id: capability.capability_id,
+            }
         : null;
       return {
         ...capability,
@@ -367,14 +374,21 @@ export class EvercraftRemoteOperator {
           state: 'source_admitted',
           capability_id: capability.capability_id,
         }
-      : readHostBoundaryCapabilityAdmission({
-          stateRoot: this.hostBoundaryStateRoot,
-          capabilityId: capability.capability_id,
-          observerInstallId:
-            pairedHost.paired_observer_install_id || '',
-          observerKeyFingerprint:
-            pairedHost.paired_observer_key_fingerprint || '',
-        });
+      : pairedHost.paired === true
+        ? readHostBoundaryCapabilityAdmission({
+            stateRoot: this.hostBoundaryStateRoot,
+            capabilityId: capability.capability_id,
+            observerInstallId:
+              pairedHost.paired_observer_install_id || '',
+            observerKeyFingerprint:
+              pairedHost.paired_observer_key_fingerprint || '',
+          })
+        : {
+            ok: true,
+            admitted: false,
+            state: 'observer_not_paired',
+            capability_id: capability.capability_id,
+          };
     if (!admission.admitted) {
       throw new Error('host_boundary_capability_field_gate_required');
     }
