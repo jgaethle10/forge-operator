@@ -39,7 +39,7 @@ function childrenOf(node) {
   return children;
 }
 
-export function flattenAutomationTree(root, maxNodes = 8000) {
+function flattenAutomationNodes(root, maxNodes = 8000) {
   const rows = [];
   const stack = root ? [{ node: root, parentIndex: -1, depth: 0 }] : [];
   while (stack.length && rows.length < maxNodes) {
@@ -49,7 +49,6 @@ export function flattenAutomationTree(root, maxNodes = 8000) {
       node: current.node,
       parentIndex: current.parentIndex,
       depth: current.depth,
-      text: nodeText(current.node),
     });
     const children = childrenOf(current.node);
     for (let i = children.length - 1; i >= 0; i -= 1) {
@@ -57,6 +56,17 @@ export function flattenAutomationTree(root, maxNodes = 8000) {
     }
   }
   return { rows, bounded: stack.length === 0 };
+}
+
+export function flattenAutomationTree(root, maxNodes = 8000) {
+  const flattened = flattenAutomationNodes(root, maxNodes);
+  return {
+    bounded: flattened.bounded,
+    rows: flattened.rows.map((row) => ({
+      ...row,
+      text: nodeText(row.node),
+    })),
+  };
 }
 
 function subtreeText(rows, ancestorIndex, maxRelativeDepth = 4) {
@@ -140,10 +150,10 @@ function structuralSurfaceCandidate(rows, index, admittedPorts) {
 export function locatePortForwardingSurface(
   root,
   admittedPorts = ADMITTED_PORTS,
+  { allowStructuralFallback = true } = {},
 ) {
-  const { rows, bounded } = flattenAutomationTree(root);
-
-  const urlCandidates = rows
+  const nodeTree = flattenAutomationNodes(root);
+  const urlCandidates = nodeTree.rows
     .map((row, index) => ({
       row,
       index,
@@ -154,8 +164,18 @@ export function locatePortForwardingSurface(
         '',
     }))
     .filter(({ url }) => looksLikePortForwardingSettingsUrl(url))
-    .map(({ index }) => structuralSurfaceCandidate(rows, index, admittedPorts))
-    .filter(Boolean)
+    .map(({ row, index }) => {
+      const depth = row.depth ?? 0;
+      let nodeCount = 1;
+      for (let i = index + 1; i < nodeTree.rows.length; i += 1) {
+        if ((nodeTree.rows[i]?.depth ?? 0) <= depth) break;
+        nodeCount += 1;
+      }
+      return {
+        node: row.node,
+        node_count: nodeCount,
+      };
+    })
     .sort((a, b) => a.node_count - b.node_count);
 
   if (urlCandidates.length) {
@@ -168,21 +188,36 @@ export function locatePortForwardingSurface(
         ok: true,
         root: best.node,
         reason: 'target_url',
-        bounded,
+        bounded: nodeTree.bounded,
         candidate_count: urlCandidates.length,
         selected_node_count: best.node_count,
+        full_desktop_text_scanned: false,
       };
     }
     return {
       ok: false,
       root: null,
       reason: 'ambiguous_target_url_candidates',
-      bounded,
+      bounded: nodeTree.bounded,
       candidate_count: equallySpecific.length,
       selected_node_count: null,
+      full_desktop_text_scanned: false,
     };
   }
 
+  if (!allowStructuralFallback) {
+    return {
+      ok: false,
+      root: null,
+      reason: 'target_url_not_observed',
+      bounded: nodeTree.bounded,
+      candidate_count: 0,
+      selected_node_count: null,
+      full_desktop_text_scanned: false,
+    };
+  }
+
+  const { rows, bounded } = flattenAutomationTree(root);
   const structural = rows
     .map((_row, index) => structuralSurfaceCandidate(rows, index, admittedPorts))
     .filter(Boolean)
@@ -196,6 +231,7 @@ export function locatePortForwardingSurface(
       bounded,
       candidate_count: 0,
       selected_node_count: null,
+      full_desktop_text_scanned: true,
     };
   }
 
@@ -211,6 +247,7 @@ export function locatePortForwardingSurface(
       bounded,
       candidate_count: equallySpecific.length,
       selected_node_count: null,
+      full_desktop_text_scanned: true,
     };
   }
 
@@ -221,6 +258,7 @@ export function locatePortForwardingSurface(
     bounded,
     candidate_count: structural.length,
     selected_node_count: best.node_count,
+    full_desktop_text_scanned: true,
   };
 }
 
