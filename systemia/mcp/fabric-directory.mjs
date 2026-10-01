@@ -294,12 +294,6 @@ export function fabricDirectoryTools(){
     idempotentHint:true,
     openWorldHint:false,
   };
-  const publicWebSafe={
-    readOnlyHint:true,
-    destructiveHint:false,
-    idempotentHint:true,
-    openWorldHint:true,
-  };
   return [
     {
       name:'match_evercraft_capability',
@@ -339,6 +333,11 @@ export function fabricDirectoryTools(){
       },
       annotations:safe,
     },
+  ];
+}
+
+export function fabricOpenAiTools(){
+  return [
     {
       name:'inspect_public_website',
       title:'Inspect an authorized public website',
@@ -352,13 +351,14 @@ export function fabricDirectoryTools(){
         required:['url','authorized_to_inspect'],
         additionalProperties:false,
       },
-      annotations:publicWebSafe,
+      annotations:{
+        readOnlyHint:true,
+        destructiveHint:false,
+        idempotentHint:true,
+        openWorldHint:true,
+      },
     },
   ];
-}
-
-export function fabricOpenAiTools(){
-  return fabricDirectoryTools().filter((tool)=>tool.name==='inspect_public_website');
 }
 
 function rpcResult(id,result){
@@ -388,8 +388,8 @@ export async function executeFabricDirectoryRpc(rpc,catalog=[],{websitePreview=p
       capabilities:{tools:{}},
       serverInfo:{name:'evercraft-fabric',version:'1.1.0'},
       instructions:toolProfile==='openai'
-        ? 'Evercraft public plugin tools are individually reviewed, read-only operations. The current public tool performs bounded inspection of a user-supplied public website and does not create payment, paid work, credentials, production access, or external side effects.'
-        : 'Evercraft Fabric provides read-only capability routing plus bounded standalone public-web inspection. Discovery and previews do not authorize payment, paid work, credentials, production access, or external actions.',
+        ? 'Evercraft public plugin tools are individually reviewed, read-only operations. The current public tool performs bounded inspection of a user-authorized public website and does not create payment, paid work, credentials, production access, or external side effects.'
+        : 'Evercraft Fabric is a read-only capability directory and connection layer. Discovery does not authorize payment, paid work, credentials, production access, or external actions.',
     });
   }
 
@@ -403,8 +403,15 @@ export async function executeFabricDirectoryRpc(rpc,catalog=[],{websitePreview=p
   if(method==='tools/call'){
     const name=clean(rpc?.params?.name,160);
     const args=rpc?.params?.arguments||{};
-    if(toolProfile==='openai'&&!fabricOpenAiTools().some((tool)=>tool.name===name)){
-      return rpcError(id,-32602,'Unknown or unsupported Evercraft public plugin tool.');
+    const allowedTools=toolProfile==='openai'?fabricOpenAiTools():fabricDirectoryTools();
+    if(!allowedTools.some((tool)=>tool.name===name)){
+      return rpcError(
+        id,
+        -32602,
+        toolProfile==='openai'
+          ? 'Unknown or unsupported Evercraft public plugin tool.'
+          : 'Unknown or unsupported Evercraft Fabric tool.'
+      );
     }
 
     if(name==='match_evercraft_capability'){
