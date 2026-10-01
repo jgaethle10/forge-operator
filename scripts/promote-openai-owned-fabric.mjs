@@ -126,7 +126,8 @@ export function promoteOpenAiOwnedFabric({
     legacy_mcp:LEGACY_BASE44_MCP,
     legacy_transport_active:false,
     openai_profile_verified:true,
-    openai_origin_change_requires_new_plugin_submission:true,
+    openai_origin_change_requires_new_plugin_submission:false,
+    openai_endpoint_path_change_only:true,
   };
 
   if(!dryRun){
