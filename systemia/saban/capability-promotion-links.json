@@ -17,7 +17,15 @@
       "implementation_state": "source_implemented_live_verification_pending",
       "source_system": "Base44",
       "source_checkpoint": "bce995a3931e946a2b5ce785f793f6bb961072af",
-      "candidate_endpoint": "https://base44.app/api/apps/6a985aeccbfb6e930a40137b/functions/publicProjectionQuery"
+      "candidate_endpoint": "https://base44.app/api/apps/6a985aeccbfb6e930a40137b/functions/publicProjectionQuery",
+      "verification_probe": {
+        "method": "POST",
+        "body": {
+          "layer": "navigation_lights",
+          "limit": 2
+        },
+        "expected_schema": "evercraft.evermaps.public-projection-query.v1"
+      }
     },
     {
       "product_key": "globalstat",
@@ -27,7 +35,21 @@
       "implementation_state": "source_implemented_live_verification_pending",
       "source_system": "Base44",
       "source_checkpoint": "72d3662df8ae6d83eb5915f80049c397c8d6a750",
-      "candidate_endpoint": "https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/countryIntelligence"
+      "candidate_endpoint": "https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/countryIntelligence",
+      "verification_probe": {
+        "method": "POST",
+        "body": {
+          "countries": [
+            "USA",
+            "CAN"
+          ],
+          "metric_slugs": [
+            "gii_2025_rank"
+          ],
+          "limit": 10
+        },
+        "expected_schema": "evercraft.globalstat.country-intelligence.v1"
+      }
     },
     {
       "product_key": "little-red-book-export-qa",
@@ -37,7 +59,21 @@
       "implementation_state": "source_implemented_live_verification_pending",
       "source_system": "Base44",
       "source_checkpoint": "c1647bf7bf07c3dc062c8c260aa43dee30c3447c",
-      "candidate_endpoint": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/kdpExportQa"
+      "candidate_endpoint": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/kdpExportQa",
+      "verification_probe": {
+        "method": "POST",
+        "body": {
+          "page_count": 120,
+          "trim_width_in": 6,
+          "trim_height_in": 9,
+          "interior_type": "black_white",
+          "paper_type": "white",
+          "spine_text_present": true,
+          "cover_pixel_width": 4000,
+          "cover_pixel_height": 6000
+        },
+        "expected_schema": "evercraft.little-red.kdp-export-preflight.v1"
+      }
     },
     {
       "product_key": "systemia-atlas-freight",
