@@ -1,5 +1,8 @@
 import dns from 'node:dns/promises';
+import http from 'node:http';
+import https from 'node:https';
 import net from 'node:net';
+import tls from 'node:tls';
 
 const DEFAULT_MAX_BYTES=750_000;
 const DEFAULT_TIMEOUT_MS=8_000;
@@ -71,24 +74,83 @@ async function assertPublicHost(hostname,{lookup=dns.lookup}={}){
   return rows;
 }
 
-async function readBoundedBody(response,maxBytes){
-  if(!response.body) return '';
-  const reader=response.body.getReader();
-  const chunks=[];
-  let total=0;
-  while(true){
-    const {done,value}=await reader.read();
-    if(done) break;
-    total+=value.byteLength;
-    if(total>maxBytes){
-      await reader.cancel().catch(()=>{});
-      throw new Error('website_response_too_large');
+async function requestPinned(url,address,{timeoutMs,maxBytes}){
+  const secure=url.protocol==='https:';
+  const transport=secure?https:http;
+  const defaultPort=secure?443:80;
+  const port=url.port?Number(url.port):defaultPort;
+  if(!Number.isInteger(port)||port<1||port>65535) throw new Error('website_port_invalid');
+
+  return await new Promise((resolve,reject)=>{
+    let settled=false;
+    const fail=(error)=>{
+      if(settled) return;
+      settled=true;
+      reject(error instanceof Error?error:new Error(String(error)));
+    };
+    const options={
+      protocol:url.protocol,
+      hostname:address,
+      family:net.isIP(address),
+      port,
+      method:'GET',
+      path:(url.pathname||'/')+(url.search||''),
+      headers:{
+        host:url.host,
+        accept:'text/html,application/xhtml+xml;q=0.9,text/plain;q=0.5',
+        'user-agent':'Evercraft-Fabric-Website-Preview/1.0',
+        connection:'close',
+      },
+    };
+    if(secure){
+      options.servername=url.hostname;
+      options.rejectUnauthorized=true;
+      options.checkServerIdentity=(_host,cert)=>tls.checkServerIdentity(url.hostname,cert);
     }
-    chunks.push(value);
-  }
-  return new TextDecoder('utf-8',{fatal:false}).decode(
-    chunks.length===1 ? chunks[0] : Buffer.concat(chunks.map((x)=>Buffer.from(x)))
-  );
+
+    const req=transport.request(options,(res)=>{
+      const status=Number(res.statusCode||0);
+      const headers=Object.fromEntries(
+        Object.entries(res.headers).map(([key,value])=>[
+          key.toLowerCase(),
+          Array.isArray(value)?value.join(', '):String(value??''),
+        ])
+      );
+      const declared=Number(headers['content-length']||0);
+      if(Number.isFinite(declared)&&declared>maxBytes){
+        res.destroy();
+        return fail(new Error('website_response_too_large'));
+      }
+
+      const chunks=[];
+      let total=0;
+      res.on('data',(chunk)=>{
+        total+=chunk.length;
+        if(total>maxBytes){
+          res.destroy();
+          fail(new Error('website_response_too_large'));
+          return;
+        }
+        chunks.push(chunk);
+      });
+      res.on('error',fail);
+      res.on('end',()=>{
+        if(settled) return;
+        settled=true;
+        resolve({
+          status,
+          headers,
+          body:Buffer.concat(chunks).toString('utf8'),
+        });
+      });
+    });
+    req.setTimeout(timeoutMs,()=>req.destroy(new Error('website_fetch_timeout')));
+    req.on('error',(error)=>{
+      if(error?.message==='website_fetch_timeout') return fail(error);
+      fail(new Error('website_fetch_failed'));
+    });
+    req.end();
+  });
 }
 
 function tagAttributes(tag){
@@ -233,39 +295,23 @@ export function analyzePublicWebsiteHtml({url,status,headers={},html,fetchDurati
 
 export async function previewPublicWebsite(value,{
   lookup=dns.lookup,
-  fetchImpl=globalThis.fetch,
+  requestImpl=requestPinned,
   timeoutMs=DEFAULT_TIMEOUT_MS,
   maxBytes=DEFAULT_MAX_BYTES,
   maxRedirects=DEFAULT_MAX_REDIRECTS,
 }={}){
-  if(typeof fetchImpl!=='function') throw new Error('website_fetch_unavailable');
+  if(typeof requestImpl!=='function') throw new Error('website_fetch_unavailable');
   let url=normalizeUrl(value);
   const started=Date.now();
 
   for(let redirects=0;redirects<=maxRedirects;redirects+=1){
-    await assertPublicHost(url.hostname,{lookup});
-    const controller=new AbortController();
-    const timer=setTimeout(()=>controller.abort(),timeoutMs);
-    let response;
-    try{
-      response=await fetchImpl(url,{
-        method:'GET',
-        redirect:'manual',
-        headers:{
-          accept:'text/html,application/xhtml+xml;q=0.9,text/plain;q=0.5',
-          'user-agent':'Evercraft-Fabric-Website-Preview/1.0',
-        },
-        signal:controller.signal,
-      });
-    }catch(error){
-      if(error?.name==='AbortError') throw new Error('website_fetch_timeout');
-      throw new Error('website_fetch_failed');
-    }finally{
-      clearTimeout(timer);
-    }
+    const resolved=await assertPublicHost(url.hostname,{lookup});
+    const address=resolved[0]?.address;
+    if(!address||!isPublicIp(address)) throw new Error('website_dns_resolution_failed');
 
+    const response=await requestImpl(url,address,{timeoutMs,maxBytes});
     if([301,302,303,307,308].includes(response.status)){
-      const location=response.headers.get('location');
+      const location=response.headers?.location;
       if(!location) throw new Error('website_redirect_missing_location');
       if(redirects>=maxRedirects) throw new Error('website_redirect_limit');
       url=new URL(location,url);
@@ -275,14 +321,12 @@ export async function previewPublicWebsite(value,{
       continue;
     }
 
-    const contentType=clean(response.headers.get('content-type')||'',200).toLowerCase();
+    const contentType=clean(response.headers?.['content-type']||'',200).toLowerCase();
     if(contentType&&!/^(text\/html|application\/xhtml\+xml|text\/plain)\b/.test(contentType)){
       throw new Error('website_content_type_not_supported');
     }
-    const declared=Number(response.headers.get('content-length')||0);
-    if(Number.isFinite(declared)&&declared>maxBytes) throw new Error('website_response_too_large');
 
-    const html=await readBoundedBody(response,maxBytes);
+    const html=String(response.body||'');
     const headerObject={'content-type':contentType||null};
     return {
       ok:true,
