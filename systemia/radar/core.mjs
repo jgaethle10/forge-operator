@@ -1,5 +1,6 @@
 import crypto from 'node:crypto';
 import { normalizeContextObservation } from '../worldstate/observation-fabric.mjs';
+import { buildPropagationCandidates } from './correlation.mjs';
 
 export const TRUTH_STATES = Object.freeze([
   'OBSERVED',
@@ -266,6 +267,7 @@ export function ingestRadarObservation(inputState, rawObservation, { now = new D
     last_verified_at: nowIso,
     domains: [...observation.domains],
     region_keys: [...observation.region_keys],
+    correlation_keys: [...observation.correlation_keys],
     kind: observation.kind,
     summary: observation.summary,
     source_family: observation.source_family,
@@ -336,59 +338,144 @@ export function compileRadarEdition(inputState, {
 } = {}) {
   const state = structuredClone(inputState || emptyRadarState());
   const nowIso = iso(now, 'now');
-  const candidates = Object.values(state.streams || {})
+  const priorEdition = state.last_edition || null;
+  const priorEmissions = new Map(
+    (priorEdition?.signals || []).map((signal) => [
+      signal.signal_id,
+      `${signal.observation_id || ''}::${signal.change_state || ''}`
+    ])
+  );
+
+  const currentSignals = Object.values(state.streams || {})
     .map((stream) => stream.current)
     .filter(Boolean)
+    .map((signal) => {
+      const maxAgeHours = Number(signal.review?.freshness?.max_age_hours || 24);
+      const ageMs = Math.max(0, new Date(nowIso).getTime() - new Date(signal.observed_at).getTime());
+      const freshnessState = ageMs <= maxAgeHours * 60 * 60 * 1000 ? 'fresh' : 'stale';
+      return {
+        ...signal,
+        review: {
+          ...signal.review,
+          freshness: {
+            ...(signal.review?.freshness || {}),
+            age_ms: ageMs,
+            max_age_hours: maxAgeHours,
+            state: freshnessState
+          }
+        }
+      };
+    });
+
+  const candidates = currentSignals
     .filter((signal) => signal.review?.status === 'pass')
     .filter((signal) => signal.review?.freshness?.state === 'fresh')
     .filter((signal) => signal.change_state !== 'UNCHANGED')
     .filter((signal) => signal.materiality_score >= materiality_threshold)
+    .filter((signal) => {
+      const priorKey = priorEmissions.get(signal.signal_id);
+      const currentKey = `${signal.observation_id || ''}::${signal.change_state || ''}`;
+      return priorKey !== currentKey;
+    })
     .sort((a, b) =>
       b.materiality_score - a.materiality_score ||
       b.observed_at.localeCompare(a.observed_at)
     )
     .slice(0, Math.max(1, Math.min(25, Number(max_signals) || 8)));
 
-  const sourceFamilies = [...new Set(candidates.map((row) => row.source_family))];
-  const domains = [...new Set(candidates.flatMap((row) => row.domains || []))];
-  const edition = {
-    schema: 'evercraft.systemia-radar.edition.v1',
-    edition_id: `radar-edition:${hash({
-      at: nowIso,
-      signals: candidates.map((row) => [row.signal_id, row.observation_id])
-    })}`,
-    generated_at: nowIso,
-    title: 'Systemia Radar',
-    tagline: 'Reality Before Narrative',
-    status: candidates.length ? 'editorial_candidate' : 'quiet',
-    publication_authority: false,
-    materiality_threshold,
-    signal_count: candidates.length,
-    independent_source_families: sourceFamilies.length,
-    domains,
-    signals: candidates.map((signal) => ({
-      signal_id: signal.signal_id,
-      subject_key: signal.subject_key,
-      summary: signal.summary,
-      truth_state: signal.truth_state,
-      change_state: signal.change_state,
-      materiality_score: signal.materiality_score,
-      observed_at: signal.observed_at,
-      last_verified_at: signal.last_verified_at,
-      domains: signal.domains,
-      region_keys: signal.region_keys,
-      source_family: signal.source_family,
-      provenance_refs: signal.provenance_refs,
-      review: signal.review
-    })),
-    change_wall: candidates.map((signal) => ({
+  const streamBySignalId = new Map(
+    currentSignals.map((signal) => [signal.signal_id, signal])
+  );
+  const rolloffs = (priorEdition?.signals || [])
+    .map((previous) => ({
+      previous,
+      current: streamBySignalId.get(previous.signal_id) || null
+    }))
+    .filter(({ current }) =>
+      !current ||
+      current.truth_state === 'CLOSED' ||
+      current.review?.freshness?.state === 'stale'
+    )
+    .map(({ previous, current }) => ({
+      signal_id: previous.signal_id,
+      subject_key: previous.subject_key,
+      observation_id: current?.observation_id || previous.observation_id || null,
+      change_state: current?.truth_state === 'CLOSED' ? 'CLOSED' : 'ROLLED_OFF',
+      truth_state: current?.truth_state || previous.truth_state,
+      summary: current?.summary || previous.summary,
+      materiality_score: current?.materiality_score ?? previous.materiality_score,
+      observed_at: current?.observed_at || previous.observed_at,
+      last_verified_at: nowIso,
+      domains: current?.domains || previous.domains || [],
+      region_keys: current?.region_keys || previous.region_keys || [],
+      correlation_keys: current?.correlation_keys || previous.correlation_keys || [],
+      source_family: current?.source_family || previous.source_family || null,
+      provenance_refs: current?.provenance_refs || previous.provenance_refs || [],
+      review: current?.review || previous.review || {}
+    }));
+
+  const activeSignals = candidates.map((signal) => ({
+    signal_id: signal.signal_id,
+    subject_key: signal.subject_key,
+    observation_id: signal.observation_id,
+    summary: signal.summary,
+    truth_state: signal.truth_state,
+    change_state: signal.change_state,
+    materiality_score: signal.materiality_score,
+    observed_at: signal.observed_at,
+    last_verified_at: signal.last_verified_at,
+    domains: signal.domains,
+    region_keys: signal.region_keys,
+    correlation_keys: signal.correlation_keys || [],
+    kind: signal.kind,
+    source_family: signal.source_family,
+    provenance_refs: signal.provenance_refs,
+    review: signal.review
+  }));
+
+  const propagationCandidates = buildPropagationCandidates(activeSignals);
+  const sourceFamilies = [...new Set(activeSignals.map((row) => row.source_family))];
+  const domains = [...new Set(activeSignals.flatMap((row) => row.domains || []))];
+  const changeWall = [
+    ...activeSignals.map((signal) => ({
       signal_id: signal.signal_id,
       change_state: signal.change_state,
       truth_state: signal.truth_state,
       summary: signal.summary,
       materiality_score: signal.materiality_score
     })),
-    evidence_ledger: candidates.map((signal) => ({
+    ...rolloffs.map((signal) => ({
+      signal_id: signal.signal_id,
+      change_state: signal.change_state,
+      truth_state: signal.truth_state,
+      summary: signal.summary,
+      materiality_score: signal.materiality_score
+    }))
+  ];
+
+  const edition = {
+    schema: 'evercraft.systemia-radar.edition.v1',
+    edition_id: `radar-edition:${hash({
+      at: nowIso,
+      signals: activeSignals.map((row) => [row.signal_id, row.observation_id]),
+      rolloffs: rolloffs.map((row) => [row.signal_id, row.change_state])
+    })}`,
+    generated_at: nowIso,
+    title: 'Systemia Radar',
+    tagline: 'Reality Before Narrative',
+    status: activeSignals.length || rolloffs.length ? 'editorial_candidate' : 'quiet',
+    publication_authority: false,
+    materiality_threshold,
+    signal_count: activeSignals.length,
+    rolled_off_count: rolloffs.filter((row) => row.change_state === 'ROLLED_OFF').length,
+    closed_count: rolloffs.filter((row) => row.change_state === 'CLOSED').length,
+    independent_source_families: sourceFamilies.length,
+    domains,
+    signals: activeSignals,
+    change_wall: changeWall,
+    rolled_off_signals: rolloffs,
+    propagation_candidates: propagationCandidates,
+    evidence_ledger: activeSignals.map((signal) => ({
       signal_id: signal.signal_id,
       evidence_state: signal.truth_state,
       source_family: signal.source_family,
@@ -398,7 +485,7 @@ export function compileRadarEdition(inputState, {
       freshness_state: signal.review.freshness.state,
       adversarial_warnings: signal.review.warnings
     })),
-    next_gate: candidates.length ? 'radar_editorial_compiler' : null,
+    next_gate: activeSignals.length || rolloffs.length ? 'radar_editorial_compiler' : null,
     rule: 'A Radar edition is a timestamped evidence state, not a permanent description of reality.'
   };
 
@@ -441,6 +528,19 @@ export function publicRadarProjection(edition) {
       freshness_state: signal.review?.freshness?.state || 'unknown'
     })),
     change_wall: edition.change_wall || [],
+    propagation_candidates: (edition.propagation_candidates || []).map((candidate) => ({
+      propagation_id: candidate.propagation_id,
+      relationship_state: candidate.relationship_state,
+      truth_state: candidate.truth_state,
+      causal_claim: candidate.causal_claim,
+      signal_ids: candidate.signal_ids,
+      domains: candidate.domains,
+      region_keys: candidate.region_keys,
+      independent_source_families: candidate.independent_source_families,
+      explanation: candidate.explanation
+    })),
+    rolled_off_count: edition.rolled_off_count || 0,
+    closed_count: edition.closed_count || 0,
     publication_authority: false,
     rule: edition.rule
   };
