@@ -101,6 +101,8 @@ export function scoreForwardPaperCohort(protocol, measurements = []) {
   return {
     schema: "evercraft.daytrade.forward-paper-score.v1",
     cohort_id: protocol.cohort_id,
+    signal_key: protocol.signal_key,
+    cluster_key: protocol.cluster_key,
     protocol_hash: protocol.protocol_hash,
     forward_events: rows.length,
     distinct_origins: origins.length,
