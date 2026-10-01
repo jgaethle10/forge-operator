@@ -504,6 +504,7 @@ export function readChromeOsHostBoundaryStatus({
   now = Date.now(),
   maxAgeMs = 5 * 60_000,
 } = {}) {
+  const pairing = readChromeOsHostBoundaryPairing({ stateRoot });
   const file = path.join(stateRoot, 'latest.json');
   const receipt = readJson(file);
   if (!receipt) {
@@ -516,6 +517,11 @@ export function readChromeOsHostBoundaryStatus({
       ports: [],
       source: 'paired_chromeos_extension',
       mutation_supported: false,
+      paired: pairing.paired === true,
+      pairing_state: pairing.state,
+      paired_observer_install_id: pairing.observer_install_id || null,
+      paired_observer_key_fingerprint:
+        pairing.observer_key_fingerprint || null,
       receipt_hash: null,
     };
   }
@@ -548,6 +554,11 @@ export function readChromeOsHostBoundaryStatus({
     ports: Array.isArray(receipt?.observation?.ports) ? receipt.observation.ports : [],
     scan: receipt?.observation?.scan || null,
     source: 'paired_chromeos_extension',
+    paired: pairing.paired === true,
+    pairing_state: pairing.state,
+    paired_observer_install_id: pairing.observer_install_id || null,
+    paired_observer_key_fingerprint:
+      pairing.observer_key_fingerprint || null,
     evidence_mode: 'direct_chromeos_accessibility_observation',
     mutation_supported: false,
     raw_accessibility_tree_persisted: false,
