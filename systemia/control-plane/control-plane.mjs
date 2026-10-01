@@ -224,6 +224,8 @@ export function routeTask(task) {
       : null,
     contract_action_scope: actionScope || null,
     contract_machine_tool: clean(contractAction?.machine_tool) || null,
+    contract_machine_target_product_key:
+      clean(contractAction?.machine_target_product_key) || productKey || null,
     contract_machine_tool_declared: Boolean(clean(contractAction?.machine_tool)),
     contract_machine_tool_grants_authority: false,
     contract_specialist_slug: productPolicy?.route?.specialist_slug || null,
