@@ -220,7 +220,7 @@ export function assessSpectacleDispatch({dispatch,observation,recentSubjects=[],
         preferred_runtime:'fallen',
         preferred_delivery:'evercraft_clip',
         derivatives:[
-          {format:'vertical_hero',aspect_ratio:'9:16',target_duration_sec:[20,45],destinations:['instagram','facebook','tiktok','youtube']},
+          {format:'vertical_hero',aspect_ratio:'9:16',target_duration_sec:[20,45],destinations:['instagram','facebook','youtube']},
           {format:'landscape_explainer',aspect_ratio:'16:9',target_duration_sec:[60,150],destinations:['youtube','linkedin']},
           {format:'loop_or_still',aspect_ratio:'4:5',target_duration_sec:[4,12],destinations:['instagram','facebook','linkedin']},
         ],
