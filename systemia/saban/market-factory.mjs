@@ -1,8 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { YardOperator } from '../yard/operator.mjs';
-import { createEvercraftBrokerMarketAdapter } from './markets/evercraft-broker.mjs';
-import { createAkashMarketAdapter } from './markets/akash.mjs';
+import { buildSabanComputeMarketStack } from './market-stack.mjs';
 
 const uniq=(values)=>[...new Set((values||[]).map((value)=>String(value).trim()).filter(Boolean))];
 
@@ -54,13 +53,24 @@ function explicitAdapters(acquisition){
     : [];
 }
 
-export function buildComputeMarketAdapters({
+function voluntaryControlHeaders(acquisition,env){
+  if(acquisition.voluntary_control_headers&&typeof acquisition.voluntary_control_headers==='object'){
+    return {...acquisition.voluntary_control_headers};
+  }
+  const token=String(
+    acquisition.voluntary_control_token||
+    env.EVERCRAFT_VOLUNTARY_CONTROL_TOKEN||
+    ''
+  ).trim();
+  return token?{authorization:`Bearer ${token}`}:null;
+}
+
+export async function buildComputeMarketAdapters({
   acquisition={},
   env=process.env,
   cwd=process.cwd(),
 }={}){
-  const adapters=[...explicitAdapters(acquisition)];
-  const diagnostics=[];
+  const explicit=explicitAdapters(acquisition);
   const requested=new Set(uniq([
     ...(acquisition.markets||[]),
     ...(acquisition.adapter_specs||[]),
@@ -80,45 +90,19 @@ export function buildComputeMarketAdapters({
     (yardStateDir?discoverRemoteBrokerDeployment(yardStateDir):'')||
     ''
   ).trim();
+  const yard=yardStateDir?new YardOperator({stateDir:yardStateDir}):null;
 
-  const wantBroker=
-    requested.has('evercraft-broker') ||
-    requested.has('evercraft_broker') ||
-    (automatic&&Boolean(yardStateDir&&brokerDeploymentId));
-
-  if(wantBroker){
-    if(yardStateDir&&brokerDeploymentId){
-      try{
-        adapters.push(createEvercraftBrokerMarketAdapter({
-          yard:new YardOperator({stateDir:yardStateDir}),
-          brokerDeploymentId,
-        }));
-        diagnostics.push({
-          market:'evercraft-broker',
-          state:'ready',
-          source:'yard',
-          broker_deployment_id:brokerDeploymentId,
-        });
-      }catch(error){
-        diagnostics.push({
-          market:'evercraft-broker',
-          state:'unavailable',
-          reason:String(error?.message||error),
-        });
-      }
-    }else{
-      diagnostics.push({
-        market:'evercraft-broker',
-        state:'unavailable',
-        reason:'yard_or_broker_deployment_not_found',
-      });
-    }
-  }
+  const voluntaryEndpoint=String(
+    acquisition.voluntary_endpoint||
+    env.EVERCRAFT_VOLUNTARY_COMPUTE_ENDPOINT||
+    ''
+  ).trim();
 
   const publicMarketDiscovery =
     acquisition.public_market_discovery===true ||
     truthy(env.SABAN_PUBLIC_MARKET_DISCOVERY);
-  const wantAkash=
+
+  const includeAkash=
     requested.has('akash') ||
     (
       automatic &&
@@ -128,37 +112,87 @@ export function buildComputeMarketAdapters({
       )
     );
 
-  if(wantAkash){
-    adapters.push(createAkashMarketAdapter({
+  const includeGolem=
+    requested.has('golem') ||
+    acquisition.include_golem===true ||
+    truthy(env.SABAN_GOLEM_DISCOVERY);
+
+  const wantBroker=
+    requested.has('evercraft-broker') ||
+    requested.has('evercraft_broker') ||
+    (automatic&&Boolean(yard&&brokerDeploymentId));
+
+  const wantVoluntary=
+    requested.has('evercraft-voluntary') ||
+    requested.has('evercraft_voluntary') ||
+    (automatic&&Boolean(voluntaryEndpoint));
+
+  const stack=await buildSabanComputeMarketStack({
+    yard:wantBroker?yard:null,
+    brokerDeploymentId:wantBroker?brokerDeploymentId:'',
+    voluntaryEndpoint:wantVoluntary?voluntaryEndpoint:'',
+    voluntaryControlHeaders:wantVoluntary?voluntaryControlHeaders(acquisition,env):null,
+    includeAkash,
+    akash:{
       apiKey:String(env.AKASH_API_KEY||''),
       baseUrl:acquisition.akash_base_url||env.AKASH_BASE_URL||'https://console-api.akash.network',
       quoteTimeoutMs:Number(acquisition.akash_quote_timeout_ms||45000),
-    }));
-    diagnostics.push({
-      market:'akash',
-      state:'ready',
-      source:String(env.AKASH_API_KEY||'').trim()?'configured_api':'public_discovery_only',
-      lease_credentials_present:Boolean(String(env.AKASH_API_KEY||'').trim()),
-    });
-  }
+    },
+    includeGolem,
+    golem:acquisition.golem||{},
+  });
 
-  const deduped=[];
+  const adapters=[];
   const seen=new Set();
-  for(const adapter of adapters){
+  for(const adapter of [...explicit,...stack.adapters]){
     const market=String(adapter?.market||'unknown').toLowerCase();
     if(seen.has(market)) continue;
     seen.add(market);
-    deduped.push(adapter);
+    adapters.push(adapter);
+  }
+
+  const diagnostics=[
+    ...stack.inventory.map((row)=>({
+      market:row.market,
+      state:row.configured?'ready':'unavailable',
+      class:row.class,
+      priority:row.priority,
+      execution_capable:row.execution_capable,
+      execution_hold:row.execution_hold||null,
+    })),
+  ];
+  if(
+    (requested.has('evercraft-broker')||requested.has('evercraft_broker')) &&
+    !wantBroker
+  ){
+    diagnostics.push({
+      market:'evercraft-broker',
+      state:'unavailable',
+      reason:'yard_or_broker_deployment_not_found',
+    });
+  }
+  if(
+    (requested.has('evercraft-voluntary')||requested.has('evercraft_voluntary')) &&
+    !wantVoluntary
+  ){
+    diagnostics.push({
+      market:'evercraft-voluntary',
+      state:'unavailable',
+      reason:'voluntary_exchange_endpoint_not_configured',
+    });
   }
 
   return {
-    schema:'evercraft.saban.compute-market-factory.v1',
-    adapters:deduped,
-    markets:deduped.map((adapter)=>String(adapter.market||'unknown')),
+    schema:'evercraft.saban.compute-market-factory.v2',
+    adapters,
+    markets:adapters.map((adapter)=>String(adapter.market||'unknown')),
+    inventory:stack.inventory,
+    doctrine:stack.doctrine,
     diagnostics,
     automatic,
     yard_state_dir:yardStateDir,
     broker_deployment_id:brokerDeploymentId||null,
+    voluntary_endpoint_configured:Boolean(voluntaryEndpoint),
     paid_capacity_auto_authorized:false,
   };
 }
