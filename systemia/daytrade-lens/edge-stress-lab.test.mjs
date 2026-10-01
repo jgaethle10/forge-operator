@@ -27,6 +27,16 @@ assert.equal(origin.origin_count,6);
 assert.ok(origin.p05>0);
 const costs=costStress(rows);
 assert.ok(costs.find(x=>x.transaction_cost_bps===20).mean_signed_net>0);
+assert.ok(costs.some(x=>x.transaction_cost_bps===100));
+assert.ok(costs.some(x=>x.transaction_cost_bps===150));
+assert.ok(
+  costs.find(x=>x.transaction_cost_bps===75).mean_signed_net >
+  costs.find(x=>x.transaction_cost_bps===100).mean_signed_net
+);
+assert.ok(
+  costs.find(x=>x.transaction_cost_bps===100).mean_signed_net >
+  costs.find(x=>x.transaction_cost_bps===150).mean_signed_net
+);
 const rolling=rollingWindowStress(rows);
 assert.ok(rolling.positive_rate>=0.75);
 const nullTest=permutationNullTest(rows,{iterations:500,seed:"null-proof"});
@@ -67,6 +77,7 @@ console.log(JSON.stringify({
   bootstrap:true,
   origin_balanced_bootstrap:true,
   cost_stress:true,
+  cost_stress_to_150bps:true,
   rolling_window_stress:true,
   permutation_null:true,
   live_trade_authority:false,
