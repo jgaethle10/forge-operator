@@ -225,3 +225,13 @@ A correction candidate is written when a released signal:
 - rolls off its freshness window
 
 Corrections are append-only. The original release remains preserved, which makes the public record auditable instead of silently rewriting history.
+
+
+## Expanded event intake for TOWI
+
+Radar's official collector set also feeds TOWI's continuous investigation desk:
+
+- NOAA/NWS active hazard alerts, with severity/certainty/urgency retained and forecast state preserved.
+- NASA EONET open natural events for global event discovery across hazards such as storms, floods, fires, drought, volcanoes, landslides, and ice.
+
+EONET remains one source family even when its event record links to multiple underlying URLs. Those URLs are useful research leads but do not automatically become independent corroboration.
