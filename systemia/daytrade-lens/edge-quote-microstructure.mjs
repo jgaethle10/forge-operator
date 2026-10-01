@@ -279,6 +279,19 @@ function targetRowsForMeasurement(row,learnedDirection=null){
       instrument_realized_volatility_5m:finite(row.instrument_realized_volatility_5m),
     });
   }
+  if(row?.instrument_end_time){
+    targets.push({
+      label:"modeled_exit",
+      timestamp:row.instrument_end_time,
+      learned_direction:learnedDirection,
+      instrument_start_price:finite(row.instrument_start_price),
+      instrument_end_price:finite(row.instrument_end_price),
+      forward_return:finite(row.forward_return),
+      benchmark_return:finite(row.benchmark_return),
+      instrument_start_volume:finite(row.instrument_start_volume),
+      instrument_realized_volatility_5m:finite(row.instrument_realized_volatility_5m),
+    });
+  }
   for(const [key,value] of Object.entries(row?.execution_delay_stress||{})){
     const timestamp=value?.instrument_start_time;
     if(!timestamp) continue;
@@ -622,17 +635,28 @@ export async function runQuoteMicrostructureLab(report,{
     const barStart=finite(target.instrument_start_price);
     const barEnd=finite(target.instrument_end_price);
     const benchmarkReturn=finite(target.benchmark_return);
-    const marketableEntry=quote
-      ?(sign>0?finite(quote.ask_price):finite(quote.bid_price))
+    const isModeledEntry=target.label==="modeled_entry";
+    const isModeledExit=target.label==="modeled_exit";
+    const executionSideSign=isModeledExit?-sign:sign;
+    const marketableExecution=quote
+      ?(executionSideSign>0?finite(quote.ask_price):finite(quote.bid_price))
       :null;
+    const marketableEntry=isModeledEntry?marketableExecution:null;
+    const marketableExit=isModeledExit?marketableExecution:null;
     const canPriceEntry=
-      target.label==="modeled_entry" &&
+      isModeledEntry &&
       Number.isFinite(barStart) &&
       Number.isFinite(barEnd) &&
       Number.isFinite(benchmarkReturn) &&
       Number.isFinite(marketableEntry) &&
       barStart>0 &&
       marketableEntry>0;
+    const canPriceExit=
+      isModeledExit &&
+      Number.isFinite(barEnd) &&
+      Number.isFinite(marketableExit) &&
+      barEnd>0 &&
+      marketableExit>0;
     const barStrategyNet=canPriceEntry
       ?sign*(Number(target.forward_return)-benchmarkReturn)-
         Number(transaction_cost_bps)/10000
@@ -646,6 +670,9 @@ export async function runQuoteMicrostructureLab(report,{
       :null;
     const entrySlippageBps=canPriceEntry
       ?sign*((marketableEntry-barStart)/barStart)*10000
+      :null;
+    const exitSlippageBps=canPriceExit
+      ?sign*((barEnd-marketableExit)/barEnd)*10000
       :null;
     const bidSize=quote?finite(quote.bid_size):null;
     const askSize=quote?finite(quote.ask_size):null;
@@ -663,7 +690,7 @@ export async function runQuoteMicrostructureLab(report,{
     const visibleTouchSizeShares=
       sizeUnit==="shares" ? visibleTouchSize : null;
     const marketableTouchSizeNative=quote
-      ?(sign>0?askSize:bidSize)
+      ?(executionSideSign>0?askSize:bidSize)
       :null;
     const marketableTouchShares=
       sizeUnit==="shares" && Number.isFinite(marketableTouchSizeNative)
@@ -696,7 +723,9 @@ export async function runQuoteMicrostructureLab(report,{
         no_pre_target_quote_used:null,
       }),
       marketable_entry_price:canPriceEntry?marketableEntry:null,
+      marketable_exit_price:canPriceExit?marketableExit:null,
       entry_slippage_vs_bar_bps:entrySlippageBps,
+      exit_slippage_vs_bar_bps:exitSlippageBps,
       bar_strategy_net:barStrategyNet,
       quote_entry_strategy_net_partial:quoteEntryStrategyNet,
       strategy_net_degradation_from_quote_entry:
@@ -740,9 +769,106 @@ export async function runQuoteMicrostructureLab(report,{
     };
   });
 
+  const overlaysByMeasurement=new Map();
+  for(const row of overlays){
+    if(!overlaysByMeasurement.has(row.measurement_id)){
+      overlaysByMeasurement.set(row.measurement_id,[]);
+    }
+    overlaysByMeasurement.get(row.measurement_id).push(row);
+  }
+  const executionPairs=[];
+  for(const [measurementId,rows] of overlaysByMeasurement.entries()){
+    const entry=rows.find((row)=>row.label==="modeled_entry")||null;
+    const exit=rows.find((row)=>row.label==="modeled_exit")||null;
+    if(!entry&&!exit) continue;
+    const direction=entry?.learned_direction||exit?.learned_direction||null;
+    const sign=expectedSign(direction);
+    const entryPrice=finite(entry?.marketable_entry_price);
+    const exitPrice=finite(exit?.marketable_exit_price);
+    const benchmarkReturn=finite(entry?.benchmark_return??exit?.benchmark_return);
+    const canPrice=
+      Number.isFinite(entryPrice) &&
+      Number.isFinite(exitPrice) &&
+      Number.isFinite(benchmarkReturn) &&
+      entryPrice>0 &&
+      exitPrice>0;
+    const quoteForward=canPrice?exitPrice/entryPrice-1:null;
+    const quoteStrategyNet=canPrice
+      ?sign*(quoteForward-benchmarkReturn)-
+        Number(transaction_cost_bps)/10000
+      :null;
+    const barStrategyNet=finite(entry?.bar_strategy_net);
+    const entrySlip=finite(entry?.entry_slippage_vs_bar_bps);
+    const exitSlip=finite(exit?.exit_slippage_vs_bar_bps);
+    executionPairs.push({
+      schema:"evercraft.daytrade.edge-two-sided-execution-pair.v1",
+      measurement_id:measurementId,
+      signal_key:entry?.signal_key||exit?.signal_key||null,
+      instrument:entry?.instrument||exit?.instrument||null,
+      lag_key:entry?.lag_key||exit?.lag_key||null,
+      learned_direction:direction,
+      feed:entry?.feed||exit?.feed||null,
+      quote_scope:entry?.quote_scope||exit?.quote_scope||null,
+      entry_quote_available:entry?.quote_available===true,
+      exit_quote_available:exit?.quote_available===true,
+      two_sided_quote_available:canPrice,
+      marketable_entry_price:entryPrice,
+      marketable_exit_price:exitPrice,
+      quote_adjusted_forward_return:quoteForward,
+      benchmark_return:benchmarkReturn,
+      bar_strategy_net:barStrategyNet,
+      quote_two_sided_strategy_net:quoteStrategyNet,
+      strategy_net_degradation_from_two_sided_quotes:
+        canPrice&&Number.isFinite(barStrategyNet)
+          ?barStrategyNet-quoteStrategyNet
+          :null,
+      entry_slippage_vs_bar_bps:entrySlip,
+      exit_slippage_vs_bar_bps:exitSlip,
+      total_touch_slippage_vs_bar_bps:
+        Number.isFinite(entrySlip)&&Number.isFinite(exitSlip)
+          ?entrySlip+exitSlip
+          :null,
+      entry_quote_time:entry?.t||null,
+      exit_quote_time:exit?.t||null,
+      benchmark_execution_quote_adjusted:false,
+      realized_fill_claimed:false,
+      research_only:true,
+      live_trade_authority:false,
+    });
+  }
+
+  function summarizeExecutionPairs(rows){
+    const priced=rows.filter((row)=>row.two_sided_quote_available===true);
+    const degradation=priced
+      .map((row)=>finite(row.strategy_net_degradation_from_two_sided_quotes))
+      .filter(Number.isFinite);
+    const quoteNet=priced
+      .map((row)=>finite(row.quote_two_sided_strategy_net))
+      .filter(Number.isFinite);
+    const totalSlip=priced
+      .map((row)=>finite(row.total_touch_slippage_vs_bar_bps))
+      .filter(Number.isFinite);
+    return {
+      pair_count:rows.length,
+      two_sided_quote_count:priced.length,
+      two_sided_quote_coverage:rows.length?priced.length/rows.length:0,
+      mean_quote_two_sided_strategy_net:mean(quoteNet),
+      mean_strategy_net_degradation_from_two_sided_quotes:mean(degradation),
+      median_total_touch_slippage_vs_bar_bps:percentile(totalSlip,0.50),
+      p90_total_touch_slippage_vs_bar_bps:percentile(totalSlip,0.90),
+      benchmark_execution_quote_adjusted:false,
+      realized_fill_claimed:false,
+    };
+  }
+
   const bySignal={};
   for(const signal of uniq(overlays.map((row)=>row.signal_key))){
-    bySignal[signal]=summarizeQuoteSignal(overlays.filter((row)=>row.signal_key===signal));
+    bySignal[signal]={
+      ...summarizeQuoteSignal(overlays.filter((row)=>row.signal_key===signal)),
+      two_sided_execution:summarizeExecutionPairs(
+        executionPairs.filter((row)=>row.signal_key===signal)
+      ),
+    };
   }
   const byLabel={};
   for(const label of uniq(overlays.map((row)=>row.label))){
@@ -774,12 +900,15 @@ export async function runQuoteMicrostructureLab(report,{
     by_signal:bySignal,
     by_entry_label:byLabel,
     overlays,
+    execution_pairs:executionPairs,
+    two_sided_execution:summarizeExecutionPairs(executionPairs),
     interpretation:{
       full_spread_bps:"Quoted ask minus bid divided by midpoint.",
       half_spread_bps:"One-way midpoint-to-touch cost proxy only; not a realized fill or total implementation shortfall.",
       marketable_entry_price:"Ask for positive-direction candidates and bid for negative-direction candidates at modeled entry only.",
-      quote_entry_strategy_net_partial:"Entry-side quote-adjusted strategy return using the existing bar exit and benchmark return; not full implementation shortfall.",
-      exit_execution_quote_adjusted:false,
+      quote_entry_strategy_net_partial:"Entry-side quote-adjusted strategy return using the existing bar exit and benchmark return; retained as a decomposition component.",
+      quote_two_sided_strategy_net:"Instrument entry is priced at the marketable touch after the modeled entry timestamp and exit is priced at the opposite marketable touch after the modeled exit timestamp; benchmark execution remains bar-based.",
+      exit_execution_quote_adjusted:true,
       benchmark_entry_quote_adjusted:false,
       passive_touch_evidence:"Trade-at-or-through evidence only. It is not a fill claim because queue position and order-specific execution are unobserved.",
       passive_touch_window_ms:Number(passive_touch_window_ms),
