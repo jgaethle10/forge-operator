@@ -93,7 +93,13 @@
     "chromebook_edge_self_heal_update_contract": "pass",
     "chromebook_external_canary_workflow": ".github/workflows/chromebook-operator-edge-canary.yml",
     "chromebook_external_reachability_currently_verified": false,
-    "specialist_and_universal_fabric_canaries_separated": true
+    "specialist_and_universal_fabric_canaries_separated": true,
+    "outbound_rivet_service_relay_transport_proof": "pass",
+    "outbound_relay_team_auth_preserved": true,
+    "outbound_relay_arbitrary_rivet_routes_denied": true,
+    "direct_chromebook_public_ingress_state": "nat_or_firewall_ingress_blocked",
+    "direct_chromebook_public_ingress_failure": "tls_probe_timeout",
+    "direct_chromebook_public_ingress_last_verified_at": "2026-10-01T14:11:29Z"
   },
   "migrate": [
     "report_execution_runtime",
@@ -126,8 +132,9 @@
     "The Chromebook's resident self-update timer must pull the signed-attestation release and successfully reconcile its local NodeSeed identity into the Fabric edge.",
     "RIVET_YARD_GATEWAY_URL and RIVET_YARD_GATEWAY_TOKEN remain unset in the Base44 compatibility app until a verified owned RIVET public route exists.",
     "Production AliEV domain store still requires bulk migration/reconciliation from the inventoried legacy source rows.",
-    "Fresh production preliminary and full-site RIVET canaries have not yet run through the owned public route."
+    "Fresh production preliminary and full-site RIVET canaries have not yet run through the owned public route.",
+    "Outbound-only RIVET relay transport is proven through an authorized NodeSeed, but production activation still requires an independently verified Evercraft remote-capacity broker public route before the team can use the owned relay outside the private node."
   ],
-  "next_action": "allow_chromebook_resident_updater_to_pull_signed_edge_attestation_release_obtain_fresh_external_canary_issue_operator_public_edge_admission_then_route_owned_rivet_through_that_edge_seed_aliev_bind_base44_compatibility_and_promote_cutover_policy",
+  "next_action": "activate_or_select_verified_evercraft_remote_capacity_broker_route_bind_rivet_outbound_relay_seed_and_reconcile_owned_aliev_run_preliminary_and_full_owned_canaries_then_promote_cutover_policy",
   "destructive_cutover_allowed": false
 }
