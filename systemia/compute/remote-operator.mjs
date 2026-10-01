@@ -280,6 +280,8 @@ export class EvercraftRemoteOperator {
             stateRoot: this.hostBoundaryStateRoot,
             capabilityId: capability.capability_id,
             observerInstallId: hostStatus.observer_install_id || '',
+            observerKeyFingerprint:
+              hostStatus.observer_key_fingerprint || '',
           })
         : null;
       return {
@@ -364,6 +366,14 @@ export class EvercraftRemoteOperator {
       : readHostBoundaryCapabilityAdmission({
           stateRoot: this.hostBoundaryStateRoot,
           capabilityId: capability.capability_id,
+          observerInstallId:
+            readChromeOsHostBoundaryStatus({
+              stateRoot: this.hostBoundaryStateRoot,
+            }).observer_install_id || '',
+          observerKeyFingerprint:
+            readChromeOsHostBoundaryStatus({
+              stateRoot: this.hostBoundaryStateRoot,
+            }).observer_key_fingerprint || '',
         });
     if (!admission.admitted) {
       throw new Error('host_boundary_capability_field_gate_required');
@@ -377,6 +387,14 @@ export class EvercraftRemoteOperator {
         result.status?.observer_install_id !== admission.observer_install_id
       ) {
         throw new Error('host_boundary_capability_observer_changed');
+      }
+      if (
+        result.fulfilled === true &&
+        admission.observer_key_fingerprint &&
+        result.status?.observer_key_fingerprint !==
+          admission.observer_key_fingerprint
+      ) {
+        throw new Error('host_boundary_capability_observer_key_changed');
       }
       const receipt = this.#receipt('host-capability.check', {
         capability_id: capability.capability_id,
