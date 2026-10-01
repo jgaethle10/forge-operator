@@ -46,6 +46,21 @@ function fakeFetch(url){
   return Promise.resolve(new Response(JSON.stringify(rows.slice(offset,offset+limit)),{status:200,headers:{'content-type':'application/json'}}));
 }
 
+let transientPageCalls=0;
+function transientFetch(url){
+  const parsed=new URL(url);
+  const select=parsed.searchParams.get('$select')||'';
+  if(select.startsWith('count(*)')) return fakeFetch(url);
+  transientPageCalls+=1;
+  if(transientPageCalls===1){
+    return Promise.resolve(new Response(JSON.stringify({error:'temporary upstream unavailable'}),{
+      status:503,
+      headers:{'content-type':'application/json','retry-after':'0'}
+    }));
+  }
+  return fakeFetch(url);
+}
+
 try{
   assert.equal(SAFE_SOURCE_FIELDS.includes('driver_id'),false);
   assert.equal(SAFE_SOURCE_FIELDS.includes('id_tag'),false);
@@ -53,6 +68,16 @@ try{
   assert.equal('driver_id' in normalized,false);
   assert.equal('id_tag' in normalized,false);
   assert.equal(normalized.observed_usage_valid,true);
+
+  const retryRoot=path.join(root,'transient-source-retry');
+  const retried=await backfillPlugNYCSessionCorpus({
+    stateDir:retryRoot,pageSize:3,maxPagesPerRun:1,fetchImpl:transientFetch,
+    now:()=> '2026-10-01T03:55:00.000Z'
+  });
+  assert.equal(transientPageCalls,2);
+  assert.equal(retried.receipt.pages_written,1);
+  assert.equal(retried.checkpoint.next_offset,3);
+  assert.equal(retried.checkpoint.complete,false);
 
   const first=await backfillPlugNYCSessionCorpus({
     stateDir:root,pageSize:3,maxPagesPerRun:1,fetchImpl:fakeFetch,
@@ -326,7 +351,8 @@ try{
     freshest_owned_aggregate_wins_over_migrated_duplicate:true,
     append_refresh_tail_rewind_verified:true,
     same_date_growth_full_rescan_verified:true,
-    continuous_freshness_offset_shift_guard_verified:true
+    continuous_freshness_offset_shift_guard_verified:true,
+    transient_source_retry_verified:true
   },null,2));
 }finally{
   fs.rmSync(root,{recursive:true,force:true});
