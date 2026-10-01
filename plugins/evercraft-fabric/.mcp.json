@@ -1,7 +1,6 @@
 {
   "mcpServers": {
     "evercraft": {
-      "type": "http",
       "url": "https://fabric.systemiacommandcenters.com/mcp"
     }
   }
