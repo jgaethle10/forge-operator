@@ -111,6 +111,60 @@ export function clusteredBootstrap(rows,{sign=1,cost_bps=5,iterations=2000,seed=
   };
 }
 
+
+export function eventDayClusteredBootstrap(rows,{sign=1,cost_bps=5,iterations=2000,seed="edge-day-cluster"}={}){
+  const clusters=new Map();
+  for(const row of rows){
+    const key=dayKey(row);
+    if(!clusters.has(key)) clusters.set(key,[]);
+    clusters.get(key).push(row);
+  }
+  const groups=[...clusters.values()];
+  if(groups.length<2) return {cluster_count:groups.length,iterations:0,p05:0,probability_positive:0,pass:false};
+  const random=rng(seed);
+  const draws=[];
+  for(let i=0;i<iterations;i++){
+    const sample=[];
+    for(let j=0;j<groups.length;j++){
+      sample.push(...groups[Math.floor(random()*groups.length)]);
+    }
+    draws.push(mean(sample.map(r=>signedNet(r,sign,cost_bps))));
+  }
+  const p05=percentile(draws,.05);
+  return {
+    cluster_unit:"event_day",
+    cluster_count:groups.length,
+    iterations,
+    p05,
+    p50:percentile(draws,.50),
+    p95:percentile(draws,.95),
+    probability_positive:draws.filter(x=>x>0).length/draws.length,
+    pass:p05>0,
+  };
+}
+
+export function topWinnerRemovalStress(rows,{sign=1,cost_bps=5,remove_fraction=0.05}={}){
+  const values=rows.map(r=>signedNet(r,sign,cost_bps)).sort((a,b)=>b-a);
+  if(!values.length) return {
+    observations:0,
+    removed:0,
+    remove_fraction,
+    mean_after_removal:0,
+    pass:false,
+  };
+  const removeCount=Math.max(1,Math.floor(values.length*remove_fraction));
+  const kept=values.slice(removeCount);
+  const value=mean(kept);
+  return {
+    observations:values.length,
+    removed:removeCount,
+    remove_fraction,
+    removed_winner_floor:values[Math.max(0,removeCount-1)]||0,
+    mean_after_removal:value,
+    pass:kept.length>0&&value>0,
+  };
+}
+
 export function breakCandidate(candidate,rows){
   const sign=expectedSign(candidate);
   const deduped=dedupeOriginDay(rows);
@@ -119,6 +173,8 @@ export function breakCandidate(candidate,rows){
   const trimmed=trimmedStress(deduped,{sign});
   const signs=signConsistency(deduped,{sign});
   const clustered=clusteredBootstrap(deduped,{sign,seed:candidate.signal_key+":cluster"});
+  const dayClustered=eventDayClusteredBootstrap(deduped,{sign,seed:candidate.signal_key+":day-cluster"});
+  const topWinnerRemoval=topWinnerRemovalStress(deduped,{sign});
   const checks={
     deduped_sample_at_least_40:deduped.length>=40,
     leave_one_quarter_out_all_positive:looQ.all_positive,
@@ -126,6 +182,8 @@ export function breakCandidate(candidate,rows){
     trimmed_mean_positive:trimmed.pass,
     event_sign_consistency:signs.pass,
     clustered_bootstrap_p05_positive:clustered.pass,
+    event_day_clustered_bootstrap_p05_positive:dayClustered.pass,
+    survives_top_5pct_winner_removal:topWinnerRemoval.pass,
   };
   return {
     schema:"evercraft.daytrade.edge-breaker-candidate.v1",
@@ -137,6 +195,8 @@ export function breakCandidate(candidate,rows){
     trimmed_stress:trimmed,
     sign_consistency:signs,
     clustered_bootstrap:clustered,
+    event_day_clustered_bootstrap:dayClustered,
+    top_winner_removal_stress:topWinnerRemoval,
     checks,
     breaker_status:Object.values(checks).every(Boolean)?"BREAKER_SURVIVOR":"BREAKER_CRACKED",
     live_trade_authority:false,
