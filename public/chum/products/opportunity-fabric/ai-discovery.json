@@ -21,9 +21,13 @@
     "build a music team with a producer studio engineer and videographer",
     "figure out which partners I need for this opportunity",
     "turn this project into work packages and find matching partners",
-    "suggest the team for this project"
+    "suggest the team for this project",
+    "ask a matched partner if they have capacity for this package",
+    "get availability and a quote from accepted partners before assembling a team",
+    "shortlist supplier quotes into a temporary execution team",
+    "turn shortlisted quotes into team invitations and work-package offers"
   ],
-  "authority": "public capability discovery plus verified private metadata-first execution planning and multi-party assembly; no public protected-file delivery, payment, or final legal-agreement authority is claimed",
+  "authority": "public capability discovery plus verified private metadata-first planning, non-binding sourcing, and multi-party assembly; no public protected-file delivery, payment, or final legal-agreement authority is claimed",
   "human_confirmation_required": true,
   "boundaries": [
     "public matching must not require protected creative files or confidential material",
@@ -40,7 +44,12 @@
     "execution blueprints return no private contact information or protected content",
     "execution blueprint recommendations are not membership qualification proof agreement authority or license",
     "unmatched capabilities remain explicit gaps rather than invented partners",
-    "suggested candidates still require the protected connection handshake"
+    "suggested candidates still require the protected connection handshake",
+    "sourcing requests require an already-accepted protected connection",
+    "sourcing availability and quote responses create no payment obligation or work acceptance",
+    "shortlisting a sourcing response creates no team membership or contract",
+    "only shortlisted Available or Limited responses from one project and one blueprint can seed sourced team invitations",
+    "accepting a sourced team invitation materializes the package as Offered and Not accepted"
   ],
   "commercial": null,
   "machine_commerce_handoff": null,
@@ -61,5 +70,18 @@
     "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/opportunity-fabric/ai-discovery.json",
     "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/opportunity-fabric/ai-conformance.json",
     "page": "/chum/products/opportunity-fabric/"
+  },
+  "sourcing": {
+    "verified_private_runtime": true,
+    "accepted_connection_required": true,
+    "bound_to_execution_blueprint": true,
+    "protected_material_disclosed": false,
+    "payment_obligation_created": false,
+    "quote_response_is_contract": false,
+    "shortlisting_creates_team_membership": false,
+    "sourced_team_requires_shortlisted_available_response": true,
+    "sourced_team_single_project_and_blueprint": true,
+    "team_acceptance_materializes_work_package_as": "Offered",
+    "work_package_acceptance_still_required": true
   }
 }
