@@ -183,16 +183,32 @@ export function createFaieRuntime({
   }
 
   function health() {
+    const collectorReceipts = Array.isArray(state.last_cycle?.official_collector_receipts)
+      ? state.last_cycle.official_collector_receipts
+      : [];
+    const configuredCollectors = collectorReceipts.filter((row) => row.status !== 'disabled');
+    const healthyCollectors = configuredCollectors.filter((row) => row.status === 'ok');
+    const degradedCollectors = configuredCollectors.filter((row) => ['error', 'partial'].includes(row.status));
     return {
       schema: 'evercraft.faie.health.v1',
-      ok: true,
+      ok: state.last_cycle?.status !== 'failed',
+      degraded: state.last_cycle?.status === 'partial' || degradedCollectors.length > 0,
       resident: Boolean(timer),
       running,
-      interval_ms: intervalMs,
+      interval_ms: Math.max(60_000, Number(intervalMs) || 5 * 60 * 1000),
       signal_count: Object.keys(state.signals || {}).length,
       observation_count: Object.keys(state.observations || {}).length,
       investigation_count: Object.keys(state.investigations || {}).length,
       radar_bridge: Boolean(radarResident),
+      official_collectors: {
+        enabled: Boolean(collectorConfig?.enabled),
+        nws_enabled: Boolean(collectorConfig?.nws_enabled),
+        usgs_water_site_count: Array.isArray(collectorConfig?.usgs_water_sites) ? collectorConfig.usgs_water_sites.length : 0,
+        nwps_gauge_count: Array.isArray(collectorConfig?.nwps_gauges) ? collectorConfig.nwps_gauges.length : 0,
+        configured_source_count: configuredCollectors.length,
+        healthy_source_count: healthyCollectors.length,
+        degraded_source_count: degradedCollectors.length
+      },
       last_cycle: state.last_cycle || null,
       decision_authority: false,
       publication_authority: false
@@ -259,7 +275,7 @@ export function createFaieRuntime({
       const finishedAt = new Date().toISOString();
       const receipt = {
         schema: 'evercraft.faie.cycle-receipt.v1',
-        status: errors.length ? 'partial' : 'ok',
+        status: errors.length || (officialCollectorRun.receipts || []).some((row) => row.status === 'error') ? 'partial' : 'ok',
         started_at: startedAt,
         finished_at: finishedAt,
         radar_signals_seen: radarSignalsSeen,
@@ -287,7 +303,7 @@ export function createFaieRuntime({
     runOnce().catch(() => {});
     timer = setInterval(() => {
       runOnce().catch(() => {});
-    }, intervalMs);
+    }, Math.max(60_000, Number(intervalMs) || 5 * 60 * 1000));
     timer.unref?.();
   }
 
