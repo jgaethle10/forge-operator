@@ -628,6 +628,7 @@ async function main() {
     executionTranslationLab,
     quoteMicrostructureLab,
     executionSpeedBoundsLab,
+    capitalScaleImpactEnvelopeLab,
     familyMaxNullLab,
     deflatedSharpeLab,
     tailDependenceLab,
