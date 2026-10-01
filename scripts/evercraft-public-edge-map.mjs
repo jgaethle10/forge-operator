@@ -25,6 +25,8 @@ if (!gateway || !host) {
 const mappings = [
   { external: 80, internal: 18080, proto: 'TCP', desc: 'Evercraft Fabric HTTP' },
   { external: 443, internal: 8443, proto: 'TCP', desc: 'Evercraft Fabric HTTPS' },
+  { external: 53, internal: 5353, proto: 'TCP', desc: 'Evercraft Edge authoritative DNS TCP' },
+  { external: 53, internal: 5353, proto: 'UDP', desc: 'Evercraft Edge authoritative DNS UDP' },
 ];
 
 const out = {
@@ -54,10 +56,48 @@ function tcpProbe(hostname,port,timeoutMs=1500){
   });
 }
 
+function dnsQuery(name='edge-canary.evercraftpropertyservices.com.'){
+  const labels=name.replace(/\.$/,'').split('.');
+  const qname=Buffer.concat([
+    ...labels.map(label=>Buffer.concat([Buffer.from([Buffer.byteLength(label)]),Buffer.from(label)])),
+    Buffer.from([0])
+  ]);
+  const header=Buffer.alloc(12);
+  header.writeUInt16BE(0x4556,0);
+  header.writeUInt16BE(0x0100,2);
+  header.writeUInt16BE(1,4);
+  return Buffer.concat([header,qname,Buffer.from([0,16,0,1])]);
+}
+
+function udpDnsProbe(hostname,port=5353,timeoutMs=1500){
+  return new Promise((resolve)=>{
+    const socket=dgram.createSocket('udp4');
+    let settled=false;
+    const done=(ok,error='')=>{
+      if(settled)return;
+      settled=true;
+      socket.close();
+      resolve({protocol:'udp',port,ok,error:error?String(error):null});
+    };
+    const timer=setTimeout(()=>done(false,'timeout'),timeoutMs);
+    socket.once('error',e=>{clearTimeout(timer);done(false,e.message)});
+    socket.once('message',msg=>{
+      clearTimeout(timer);
+      const valid=msg.length>=12 && msg.readUInt16BE(0)===0x4556 && Boolean(msg.readUInt16BE(2)&0x8000);
+      done(valid,valid?'':'invalid_dns_response');
+    });
+    socket.send(dnsQuery(),port,hostname,e=>{
+      if(e){clearTimeout(timer);done(false,e.message)}
+    });
+  });
+}
+
 async function verifyHostForward(){
   const probes=await Promise.all([
     tcpProbe(host,18080),
     tcpProbe(host,8443),
+    tcpProbe(host,5353),
+    udpDnsProbe(host,5353),
   ]);
   return {
     schema:'evercraft.chromeos-host-forward-preflight.v1',
