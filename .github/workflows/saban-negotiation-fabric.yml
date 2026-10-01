@@ -14,6 +14,8 @@ on:
       - 'systemia/saban/golem-adapter.proof.mjs'
       - 'systemia/saban/golem-requestor/**'
       - 'systemia/saban/README.md'
+      - 'systemia/saban/market-stack.mjs'
+      - 'systemia/saban/market-stack.proof.mjs'
       - '.github/workflows/saban-negotiation-fabric.yml'
   push:
     branches: [main]
@@ -29,6 +31,8 @@ on:
       - 'systemia/saban/golem-adapter.proof.mjs'
       - 'systemia/saban/golem-requestor/**'
       - 'systemia/saban/README.md'
+      - 'systemia/saban/market-stack.mjs'
+      - 'systemia/saban/market-stack.proof.mjs'
       - '.github/workflows/saban-negotiation-fabric.yml'
   workflow_dispatch:
 
@@ -50,6 +54,8 @@ jobs:
         run: node systemia/saban/voluntary-worker/browser-worker.proof.mjs
       - name: Prove automatic Saban acquisition on voluntary capacity
         run: node systemia/saban/distributed-voluntary-acquisition.proof.mjs
+      - name: Prove canonical compute market stack
+        run: node systemia/saban/market-stack.proof.mjs
 
   golem-contract:
     runs-on: ubuntu-latest
