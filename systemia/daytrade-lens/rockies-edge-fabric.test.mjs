@@ -86,6 +86,21 @@ const negativeCandidate = evaluateRockiesEdgeCandidate(negativeSamples, { transa
 assert.equal(negativeCandidate.status, "RESEARCH_CANDIDATE");
 assert.equal(negativeCandidate.learned_direction, "NEGATIVE_EXCESS_RETURN");
 assert.ok(negativeCandidate.overall.mean_strategy_return_net > 0);
+assert.equal(negativeCandidate.checks.development_strategy_return_positive_after_costs, true);
+assert.equal(negativeCandidate.checks.holdout_strategy_return_positive_after_costs, true);
+
+const weakNegativeNoCost = evaluateRockiesEdgeCandidate(negativeSamples, { transaction_cost_bps: 0 });
+const weakNegativeHeavyCost = evaluateRockiesEdgeCandidate(negativeSamples, { transaction_cost_bps: 40 });
+assert.ok(
+  weakNegativeNoCost.overall.mean_strategy_return_net >
+    weakNegativeHeavyCost.overall.mean_strategy_return_net
+);
+assert.ok(
+  Math.abs(
+    (weakNegativeNoCost.overall.mean_strategy_return_net -
+      weakNegativeHeavyCost.overall.mean_strategy_return_net) - 0.004
+  ) < 1e-12
+);
 
 const overfit = Array.from({ length: 50 }, (_, i) => ({
   observed_at: new Date(Date.parse("2026-01-01T15:00:00Z") + i * 86400000).toISOString(),
@@ -107,6 +122,8 @@ console.log(JSON.stringify({
   hypothesis_direction_is_learned: true,
   provenance_preserved: true,
   holdout_required: true,
+  positive_and_negative_costs_reduce_strategy_returns: true,
+  strategy_space_cost_gate: true,
   overfit_candidate_rejected: true,
   live_trade_authority: false,
   mapped_ranges: ranges.length,
