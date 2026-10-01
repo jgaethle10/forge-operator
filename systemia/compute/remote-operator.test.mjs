@@ -17,6 +17,7 @@ try {
     roots: { home },
     stateDir: state,
     maxExecMs: 10_000,
+    hostBoundaryStateRoot: path.join(root, 'host-boundary'),
   });
 
   const status = operator.status();
@@ -44,6 +45,13 @@ try {
     'requires_external_canary'
   );
   assert.ok(network.operator_receipt?.receipt_hash);
+
+  const hostCheck = await operator.hostBoundaryCheck({ wait_ms: 0 });
+  assert.equal(hostCheck.ok, true);
+  assert.equal(hostCheck.pending, true);
+  assert.equal(hostCheck.fulfilled, false);
+  assert.match(hostCheck.request_id, /^hostcheck_/);
+  assert.equal(hostCheck.mutation_supported, false);
 
   const listed = operator.list({ root_key: 'home', path: '.' });
   assert.ok(listed.entries.some((entry) => entry.name === 'hello.txt'));
@@ -121,6 +129,7 @@ try {
     read_only_network_observation_available: true,
     chromeos_host_boundary_not_overclaimed: true,
     chromeos_host_boundary_companion_declared_read_only: true,
+    on_demand_host_check_request_available: true,
   }));
 } finally {
   fs.rmSync(root, { recursive: true, force: true });
