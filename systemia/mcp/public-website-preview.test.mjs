@@ -69,6 +69,15 @@ test('preview rejects localhost and direct private IPs before any request',async
   assert.equal(calls,0);
 });
 
+test('preview rejects nonstandard public web ports',async()=>{
+  await assert.rejects(
+    previewPublicWebsite('https://example.com:8443/',{
+      lookup:publicLookup,
+      requestImpl:async()=>({status:200,headers:{'content-type':'text/html'},body:'<html></html>'}),
+    }),
+    /website_nonstandard_port_not_allowed/
+  );
+});
 test('preview rejects a hostname that resolves to a private address',async()=>{
   let calls=0;
   await assert.rejects(
