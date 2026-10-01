@@ -25,7 +25,7 @@ const water = ingestContextObservation(state, {
 state = water.state;
 
 assert.equal(water.decision.action, 'propagate');
-for (const consumer of ['systemia_world_model', 'sentinel', 'weather_desk', 'faie', 'towi', 'evermaps']) {
+for (const consumer of ['systemia_world_model', 'sentinel', 'journal', 'weather_desk', 'faie', 'towi', 'evermaps']) {
   assert.ok(water.decision.consumers.includes(consumer), `water observation should reach ${consumer}`);
 }
 assert.equal(water.decision.priority, 'background');
@@ -84,7 +84,7 @@ const infrastructure = ingestContextObservation(state, {
 });
 state = infrastructure.state;
 
-for (const consumer of ['systemia_world_model', 'sentinel', 'faie', 'towi', 'evermaps', 'rivet', 'omnicore']) {
+for (const consumer of ['systemia_world_model', 'sentinel', 'journal', 'faie', 'towi', 'evermaps', 'rivet', 'omnicore']) {
   assert.ok(infrastructure.decision.consumers.includes(consumer), `infrastructure observation should reach ${consumer}`);
 }
 
@@ -105,7 +105,7 @@ const quake = ingestContextObservation(state, {
 state = quake.state;
 
 assert.equal(quake.decision.priority, 'background');
-for (const consumer of ['sentinel', 'faie', 'towi', 'evermaps', 'emergency_command']) {
+for (const consumer of ['sentinel', 'journal', 'faie', 'towi', 'evermaps', 'emergency_command']) {
   assert.ok(quake.decision.consumers.includes(consumer), `geophysics observation should reach ${consumer}`);
 }
 

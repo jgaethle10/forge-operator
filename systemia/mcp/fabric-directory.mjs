@@ -6,7 +6,7 @@ const STOP_WORDS=new Set([
   'a','an','and','are','as','at','be','by','for','from','how','i','in','is','it',
   'me','my','of','on','or','the','this','to','we','what','with','you','your',
   'can','cannot','cant','could','need','needs','please','trying','want','wants',
-  'help','helps','through','normal'
+  'help','helps','through','normal','have','has','had','but','not','know','see','take','old','original','some','thing','things'
 ]);
 
 function clean(value,max=4000){
@@ -211,7 +211,36 @@ function scoreEntry(intent,entry,{frequency,total}){
 
   const phrase=clean(intent).toLowerCase();
   if(phrase&&entry.name.toLowerCase().includes(phrase)) score+=20;
-  return Math.round(score*100)/100;
+
+  // Physical-part routing guardrails. Rare generic words such as "broken" must not
+  // let software-health capabilities outrank a specialist when the user is holding
+  // a real component, while deep sourcing language should still favor the paid hunt.
+  const physicalSignals=['part','component','replacement','obsolete','discontinu','salvage','donor','supersession','cross','reference','serial','marking','label','fragment','fitment','fabrication','blueprint','appliance','tractor','machine'];
+  const identitySignals=['identify','photo','marking','label','serial','fragment','diagram','invoice','evidence','model','number','measurement','call'];
+  const deepSourceSignals=['obsolete','discontinu','salvage','donor','supersession','cross','reference','blueprint','fabrication','aftermarket','nos'];
+  const softwareSignals=['software','app','repository','repo','codebase','website','endpoint','workflow','deployment','api','saas'];
+  const hasPhysicalPartIntent=intentSet.has('part')||intentSet.has('component')||physicalSignals.filter((token)=>intentSet.has(token)).length>=2;
+  const hasSoftwareIntent=softwareSignals.some((token)=>intentSet.has(token));
+
+  if(entry.public_id==='findmypart-part-passport-v1'&&hasPhysicalPartIntent){
+    score+=55;
+    if(identitySignals.some((token)=>intentSet.has(token))) score+=45;
+  }
+
+  if(entry.public_id==='findmypart-paid-hunt-v1'&&hasPhysicalPartIntent){
+    score+=40;
+    if(deepSourceSignals.filter((token)=>intentSet.has(token)).length>=2) score+=55;
+  }
+
+  if(
+    hasPhysicalPartIntent &&
+    !hasSoftwareIntent &&
+    ['portfolio-sentinel-v1','legacy-rescue-lab-v1','audit-center-website-audit-machine-v1'].includes(entry.public_id)
+  ){
+    score-=120;
+  }
+
+  return Math.max(0,Math.round(score*100)/100);
 }
 
 export function matchFabricCapabilities(intent,catalog,{limit=5}={}){
@@ -241,8 +270,8 @@ export function fabricDirectoryTools(){
       inputSchema:{
         type:'object',
         properties:{
-          intent:{type:'string',minLength:3,maxLength:4000},
-          limit:{type:'integer',minimum:1,maximum:20,default:5},
+          intent:{type:'string',minLength:3,maxLength:4000,description:'Plain-language problem or goal to match against the published Evercraft capability catalog.'},
+          limit:{type:'integer',minimum:1,maximum:20,default:5,description:'Maximum number of ranked capability matches to return.'},
         },
         required:['intent'],
         additionalProperties:false,
@@ -255,7 +284,7 @@ export function fabricDirectoryTools(){
       description:'Return the current public-safe Evercraft capability directory. Read-only and non-transactional.',
       inputSchema:{
         type:'object',
-        properties:{limit:{type:'integer',minimum:1,maximum:100,default:25}},
+        properties:{limit:{type:'integer',minimum:1,maximum:100,default:25,description:'Maximum number of published capabilities to return.'}},
         additionalProperties:false,
       },
       annotations:safe,
@@ -266,7 +295,7 @@ export function fabricDirectoryTools(){
       description:'Return public connection surfaces for one published Evercraft capability, such as MCP, OpenAPI, A2A, website, or documentation URLs. Does not initiate payment or paid work.',
       inputSchema:{
         type:'object',
-        properties:{public_id:{type:'string',minLength:1,maxLength:160}},
+        properties:{public_id:{type:'string',minLength:1,maxLength:160,description:'Exact public capability identifier returned by Evercraft capability matching or listing.'}},
         required:['public_id'],
         additionalProperties:false,
       },

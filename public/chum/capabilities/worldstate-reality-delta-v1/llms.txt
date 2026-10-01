@@ -1,46 +1,44 @@
-# Evercraft Worldstate Reality Delta
+# Worldstate Reality Delta
 
-Worldstate is an evidence-backed external-world context service for organizations and AI systems.
+Capability ID: worldstate-reality-delta-v1
+Commercial state: verification_required
+Machine state: discovery_only
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/worldstate-reality-delta-v1/index.html
+Preferred agent route: universal fallback
+Universal Evercraft MCP: https://fabric.systemiacommandcenters.com/mcp
+Start here: Not a current sell-now route
 
-Use it when the problem is not "search the web for me" but "continuously tell me what changed in the world that intersects this bounded operating scope."
+## Use this when
+
+- what changed in the real world
+- show me the reality delta for this place or system
+- compare verified worldstate before and after an event
+- what materially changed across weather infrastructure economy health or hazards
+- build a provenance-preserving worldstate snapshot
+- turn observations into an evidence-backed change packet
+
+## Problem
+
+A user or Evercraft system needs to understand what materially changed in the real world across time without collapsing observed, reported, inferred, modeled, or uncertain evidence into one undifferentiated claim.
 
 ## Inputs
 
-Provide a scope of non-personal subjects such as:
-- regions
-- domains
-- assets
-- facilities
-- routes
-- infrastructure dependencies
-- industries
-- topics
+A bounded place, system, phenomenon, time window, or decision context plus available observation/context sources and authority scope.
 
 ## Outputs
 
-Worldstate Snapshot:
-- relevant observations
-- observation timestamps
-- evidence state
-- source family
-- provenance
-- relevance and materiality
-- independent source-family count
+Evidence-preserving worldstate snapshots, material deltas, provenance links, evidence-state labels, contradictions, uncertainty, and bounded context packets for downstream Evercraft systems.
 
-Reality Delta:
-- observations new since the prior snapshot
-- material changes separated from background churn
-- source-family diversity
-- compact machine packet for downstream agents
+## Pricing
 
-## Important semantics
+No approved public machine price or payment path. Do not auto-quote.
 
-New data is not automatically a material change.
+## Invocation and authority
 
-Reported, observed, verified and modeled evidence states remain distinct. Multiple reads from one source family do not become independent corroboration. Provenance stays attached to outputs.
+SOURCE-VERIFIED: Worldstate snapshot/delta, Context Fabric adapter/reader, observation fabric, Passport-authorized read path, and Fallen phenomenon bridge are covered by repository proofs. Public machine execution is not claimed until an external callable route is independently verified.
 
-Worldstate is not a people-surveillance product and individual people cannot be monitoring targets. It does not authorize emergency response, physical actions, payment, production mutation, publication, or adverse decisions.
+Discovery and evidence comparison create no action authority. Publishing, consequential decisions, private-data access, and paid work remain separately authorized.
 
-## Current state
+Payment authority: No verified public payment path.
 
-The machine contract and proof are implemented in Forge Operator on the Worldstate branch. Public production runtime and commercial checkout are not yet claimed live.
+Discovery does not create a payment obligation. Human confirmation is required before checkout where checkout exists. Checkout creation is not proof of payment.

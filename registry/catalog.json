@@ -375,6 +375,27 @@
       }
     },
     {
+      "product_key": "evermaps",
+      "name": "EverMaps",
+      "canonical_url": "https://evermaps.base44.app/",
+      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mode": "shared_mcp",
+      "machine_state": "read_only_mcp_live",
+      "triggers": [
+        "map this evidence for me",
+        "show lifeline coverage for this place",
+        "give me map-ready heat or smoke action sites",
+        "show historical river geometry",
+        "return public-safe geospatial evidence",
+        "plot verified infrastructure coverage"
+      ],
+      "aliases": [
+        "EverMaps Public-Safe Geospatial Evidence Projection"
+      ],
+      "route_note": "EverMaps is callable through the published Evercraft Machine Commerce MCP via query_evermaps_public_projection. The verified tool is read-only and does not create payment, publication, outreach, operational change, or external action authority."
+    },
+    {
       "product_key": "evernest",
       "name": "EverNest",
       "canonical_url": "https://evernest-home.base44.app/",
@@ -512,6 +533,27 @@
       "overflow_contract": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-media-overflow.json"
     },
     {
+      "product_key": "globalstat",
+      "name": "GlobalStat",
+      "canonical_url": "https://global-stat-pulse.base44.app/",
+      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mode": "shared_mcp",
+      "machine_state": "read_only_mcp_live",
+      "triggers": [
+        "compare these countries on this metric",
+        "give me sourced country intelligence",
+        "which countries lead on this domain and why",
+        "show me the evidence behind this country score",
+        "reconcile conflicting country data",
+        "country benchmark with sources"
+      ],
+      "aliases": [
+        "GlobalStat Country / Domain Intelligence Slice"
+      ],
+      "route_note": "GlobalStat is callable through the published Evercraft Machine Commerce MCP via query_globalstat_country_intelligence. The verified tool is read-only and does not create payment, publication, outreach, operational change, or external action authority."
+    },
+    {
       "product_key": "guardian",
       "name": "Guardian",
       "canonical_url": "https://guardian-pilot.base44.app/",
@@ -589,6 +631,26 @@
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
       "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "machine_state": "human_handoff_ready"
+    },
+    {
+      "product_key": "little-red-book-export-qa",
+      "name": "Little Red Studio Book Export QA",
+      "canonical_url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
+      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "mode": "shared_mcp",
+      "machine_state": "read_only_mcp_live",
+      "triggers": [
+        "check if my book is ready for KDP",
+        "validate my cover dimensions",
+        "audit this paperback export",
+        "is my book file ready to publish",
+        "check page count and cover DPI"
+      ],
+      "aliases": [
+        "Little Red Studio"
+      ],
+      "route_note": "Little Red Studio Book Export QA is callable through the published Evercraft Machine Commerce MCP via check_book_export_preflight. The verified tool is read-only and does not create payment, publication, outreach, operational change, or external action authority."
     },
     {
       "product_key": "opportunity-fabric",

@@ -7,6 +7,10 @@ on:
       - 'systemia/compute/**'
       - 'systemia/network/**'
       - 'systemia/mcp/**'
+      - 'public/chum/capabilities.json'
+      - 'tests/evercraft-fabric-runtime.test.mjs'
+      - 'scripts/update-fabric-owned-edge.sh'
+      - 'scripts/install-fabric-self-update.sh'
       - 'systemia/core/bootstrap/**'
       - '.github/workflows/yard-operator.yml'
   push:
@@ -17,6 +21,10 @@ on:
       - 'systemia/compute/**'
       - 'systemia/network/**'
       - 'systemia/mcp/**'
+      - 'public/chum/capabilities.json'
+      - 'tests/evercraft-fabric-runtime.test.mjs'
+      - 'scripts/update-fabric-owned-edge.sh'
+      - 'scripts/install-fabric-self-update.sh'
       - 'systemia/core/bootstrap/**'
       - '.github/workflows/yard-operator.yml'
 
@@ -31,6 +39,10 @@ jobs:
           node-version: '22'
       - name: Prove Yard Operator over Evercraft Compute
         run: node systemia/yard/proof.mjs
+      - name: Prove Evercraft Fabric directory routing
+        run: npm run test:fabric-directory
+      - name: Prove owned Fabric edge updater safety
+        run: npm run test:fabric-owned-edge
       - name: Prove specialist MCP resident runtime
         run: node systemia/yard/specialist-handoff.proof.mjs
       - name: Prove Systemia Remote Ops specialist runtime

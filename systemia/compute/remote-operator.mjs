@@ -4,6 +4,7 @@ import path from 'node:path';
 import { execFile } from 'node:child_process';
 import { createHash, randomBytes } from 'node:crypto';
 import { promisify } from 'node:util';
+import { observeNodeNetwork } from './network-observer.mjs';
 
 const execFileAsync = promisify(execFile);
 const sha = (value) => {
@@ -207,7 +208,30 @@ export class EvercraftRemoteOperator {
         programs: [...DEFAULT_PROGRAMS].sort(),
         ambient_secret_environment_forwarded: false,
       },
+      network_observation: {
+        read_only: true,
+        chromeos_host_boundary_explicit: true,
+        external_route_requires_independent_canary: true,
+      },
       receipt_semantics: 'hashes_and_metadata_only',
+    };
+  }
+
+  async networkStatus() {
+    const observation = await observeNodeNetwork();
+    const receipt = this.#receipt('network.status', {
+      observation_hash: observation.receipt_hash,
+      interface_count: observation.interfaces.length,
+      listener_count: observation.listeners.length,
+      crostini_likely: observation.chromeos_boundary.likely_crostini,
+      local_fabric_ok: observation.evercraft.probes.fabric_loopback.ok,
+      local_tls_edge_ok: observation.evercraft.probes.hostname_aware_tls_loopback.ok,
+      external_public_route_verified:
+        observation.evercraft.external_public_route.verified,
+    });
+    return {
+      ...observation,
+      operator_receipt: receipt,
     };
   }
 

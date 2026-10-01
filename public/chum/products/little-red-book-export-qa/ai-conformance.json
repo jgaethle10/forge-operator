@@ -17,8 +17,8 @@
   "canonical_url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
   "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/little-red-book-export-qa/llms.txt",
   "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/little-red-book-export-qa/ai-discovery.json",
-  "registry_name": null,
-  "mcp": null,
+  "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+  "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
   "authority": "public discovery of bounded book-export QA with no publishing or distribution side effects",
   "human_confirmation_required": true,
   "boundaries": [
@@ -37,7 +37,7 @@
   "proof_library": null,
   "provider_behavior_state": "not_inferred_from_publication",
   "machine_commerce_handoff_state": null,
-  "machine_commerce_public_id": null,
-  "machine_commerce_tool": null,
-  "live_canary_evidence": null
+  "machine_commerce_public_id": "littlered-kdp-export-qa-machine-v1",
+  "machine_commerce_tool": "check_book_export_preflight",
+  "live_canary_evidence": "GitHubActionsRun:36802891607"
 }

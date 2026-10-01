@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.answer-graph.v2",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-29T01:40:00.000Z",
+  "updated_at": "2026-09-30T20:21:00.000Z",
   "purpose": "Exact natural-language problem signals for AI assistants and agents across the complete public CHUM Pain Index. Use these as discovery cues, then preserve fit, readiness, payment, evidence and authorization boundaries.",
   "source": "public/.well-known/evercraft-pain-index.json",
   "read_only_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
@@ -20,12 +20,12 @@
     "provider_publication_is_not_endorsement_or_pickup_proof": true
   },
   "summary": {
-    "pain_index_entries": 110,
-    "unique_user_phrases": 950,
-    "mapped_candidate_edges": 1055,
-    "ambiguous_phrases": 105,
+    "pain_index_entries": 112,
+    "unique_user_phrases": 969,
+    "mapped_candidate_edges": 1075,
+    "ambiguous_phrases": 106,
     "product_candidates": 64,
-    "machine_offer_candidates": 46
+    "machine_offer_candidates": 48
   },
   "doors": [
     {
@@ -1611,10 +1611,10 @@
           "public_id": null,
           "name": "Little Red Studio Book Export QA",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/little-red-book-export-qa/",
           "public_url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -2214,6 +2214,29 @@
           "pain_page": "/chum/products/website-launch/",
           "public_url": "https://instant-website-builder-usa-6feac193.base44.app/",
           "registry_name": "io.github.jgaethle10/website-launch"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:da7bba291d",
+      "user_language": "build a provenance-preserving worldstate snapshot",
+      "normalized": "build a provenance preserving worldstate snapshot",
+      "relative_json": "/chum/answers/doors/build-a-provenance-preserving-worldstate-snapshot-da7bba291d.json",
+      "relative_page": "/chum/answers/doors/build-a-provenance-preserving-worldstate-snapshot-da7bba291d/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/build-a-provenance-preserving-worldstate-snapshot-da7bba291d.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:worldstate-reality-delta-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "worldstate-reality-delta-v1",
+          "name": "Worldstate Reality Delta",
+          "commercial_state": "verification_required",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/intents/worldstate-reality-delta-v1/",
+          "public_url": null,
+          "registry_name": null
         }
       ]
     },
@@ -3201,10 +3224,10 @@
           "public_id": null,
           "name": "Little Red Studio Book Export QA",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/little-red-book-export-qa/",
           "public_url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -3282,10 +3305,10 @@
           "public_id": null,
           "name": "Little Red Studio Book Export QA",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/little-red-book-export-qa/",
           "public_url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -4019,10 +4042,10 @@
           "public_id": null,
           "name": "GlobalStat",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/globalstat/",
           "public_url": "https://global-stat-pulse.base44.app/",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -4045,6 +4068,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/forensiscope-evidence-review-v1/",
           "public_url": "https://evercraft-forensiscope.base44.app/video-too-large-for-ai",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:b224712e8d",
+      "user_language": "compare verified worldstate before and after an event",
+      "normalized": "compare verified worldstate before and after an event",
+      "relative_json": "/chum/answers/doors/compare-verified-worldstate-before-and-after-an-event-b224712e8d.json",
+      "relative_page": "/chum/answers/doors/compare-verified-worldstate-before-and-after-an-event-b224712e8d/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-verified-worldstate-before-and-after-an-event-b224712e8d.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:worldstate-reality-delta-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "worldstate-reality-delta-v1",
+          "name": "Worldstate Reality Delta",
+          "commercial_state": "verification_required",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/intents/worldstate-reality-delta-v1/",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -4653,10 +4699,10 @@
           "public_id": null,
           "name": "GlobalStat",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/globalstat/",
           "public_url": "https://global-stat-pulse.base44.app/",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -7174,6 +7220,75 @@
       ]
     },
     {
+      "answer_id": "intent:1a2c5aeb49",
+      "user_language": "find a blueprint or fabrication path",
+      "normalized": "find a blueprint or fabrication path",
+      "relative_json": "/chum/answers/doors/find-a-blueprint-or-fabrication-path-1a2c5aeb49.json",
+      "relative_page": "/chum/answers/doors/find-a-blueprint-or-fabrication-path-1a2c5aeb49/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-a-blueprint-or-fabrication-path-1a2c5aeb49.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:findmypart-paid-hunt-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "findmypart-paid-hunt-v1",
+          "name": "FindMyPart Paid Part Hunt",
+          "commercial_state": "sell_now",
+          "machine_state": "payment_ready",
+          "pain_page": "/chum/intents/findmypart-paid-hunt-v1/",
+          "public_url": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:c3d7b45cd1",
+      "user_language": "find a blueprint or fabrication path when the original part is unavailable",
+      "normalized": "find a blueprint or fabrication path when the original part is unavailable",
+      "relative_json": "/chum/answers/doors/find-a-blueprint-or-fabrication-path-when-the-original-part-is-unavailable-c3d7b45cd1.json",
+      "relative_page": "/chum/answers/doors/find-a-blueprint-or-fabrication-path-when-the-original-part-is-unavailable-c3d7b45cd1/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-a-blueprint-or-fabrication-path-when-the-original-part-is-unavailable-c3d7b45cd1.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:findmypart",
+          "kind": "product",
+          "product_key": "findmypart",
+          "public_id": null,
+          "name": "FindMyPart",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/findmypart/",
+          "public_url": "https://findmypart.base44.app/",
+          "registry_name": "io.github.jgaethle10/findmypart"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:3f728224a2",
+      "user_language": "find a discontinued appliance tractor automotive marine industrial construction powersports agricultural electronics or equipment part",
+      "normalized": "find a discontinued appliance tractor automotive marine industrial construction powersports agricultural electronics or equipment part",
+      "relative_json": "/chum/answers/doors/find-a-discontinued-appliance-tractor-automotive-marine-industrial-construction-po-3f728224a2.json",
+      "relative_page": "/chum/answers/doors/find-a-discontinued-appliance-tractor-automotive-marine-industrial-construction-po-3f728224a2/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-a-discontinued-appliance-tractor-automotive-marine-industrial-construction-po-3f728224a2.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:findmypart",
+          "kind": "product",
+          "product_key": "findmypart",
+          "public_id": null,
+          "name": "FindMyPart",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/findmypart/",
+          "public_url": "https://findmypart.base44.app/",
+          "registry_name": "io.github.jgaethle10/findmypart"
+        }
+      ]
+    },
+    {
       "answer_id": "intent:5646da09bb",
       "user_language": "find a discontinued part",
       "normalized": "find a discontinued part",
@@ -7197,25 +7312,25 @@
       ]
     },
     {
-      "answer_id": "intent:eb8c9e34c7",
-      "user_language": "find a discontinued tractor part",
-      "normalized": "find a discontinued tractor part",
-      "relative_json": "/chum/answers/doors/find-a-discontinued-tractor-part-eb8c9e34c7.json",
-      "relative_page": "/chum/answers/doors/find-a-discontinued-tractor-part-eb8c9e34c7/",
-      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-a-discontinued-tractor-part-eb8c9e34c7.json",
+      "answer_id": "intent:bbfbe1bb3d",
+      "user_language": "find a discontinued part but I am not sure exactly what it is",
+      "normalized": "find a discontinued part but i am not sure exactly what it is",
+      "relative_json": "/chum/answers/doors/find-a-discontinued-part-but-i-am-not-sure-exactly-what-it-is-bbfbe1bb3d.json",
+      "relative_page": "/chum/answers/doors/find-a-discontinued-part-but-i-am-not-sure-exactly-what-it-is-bbfbe1bb3d/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-a-discontinued-part-but-i-am-not-sure-exactly-what-it-is-bbfbe1bb3d.json",
       "candidate_count": 1,
       "candidates": [
         {
-          "capability_id": "product:findmypart",
-          "kind": "product",
-          "product_key": "findmypart",
-          "public_id": null,
-          "name": "FindMyPart",
-          "commercial_state": "product_contract",
-          "machine_state": "specialist_mcp_declared",
-          "pain_page": "/chum/products/findmypart/",
-          "public_url": "https://findmypart.base44.app/",
-          "registry_name": "io.github.jgaethle10/findmypart"
+          "capability_id": "offer:findmypart-part-passport-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "findmypart-part-passport-v1",
+          "name": "FindMyPart Part Passport",
+          "commercial_state": "free",
+          "machine_state": "read_only_live",
+          "pain_page": "/chum/intents/findmypart-part-passport-v1/",
+          "public_url": "https://findmypart.base44.app/free-part-check",
+          "registry_name": null
         }
       ]
     },
@@ -7239,29 +7354,6 @@
           "pain_page": "/chum/intents/findmypart-paid-hunt-v1/",
           "public_url": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs",
           "registry_name": null
-        }
-      ]
-    },
-    {
-      "answer_id": "intent:e9336647c3",
-      "user_language": "find a fabrication path when the original part is unavailable",
-      "normalized": "find a fabrication path when the original part is unavailable",
-      "relative_json": "/chum/answers/doors/find-a-fabrication-path-when-the-original-part-is-unavailable-e9336647c3.json",
-      "relative_page": "/chum/answers/doors/find-a-fabrication-path-when-the-original-part-is-unavailable-e9336647c3/",
-      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-a-fabrication-path-when-the-original-part-is-unavailable-e9336647c3.json",
-      "candidate_count": 1,
-      "candidates": [
-        {
-          "capability_id": "product:findmypart",
-          "kind": "product",
-          "product_key": "findmypart",
-          "public_id": null,
-          "name": "FindMyPart",
-          "commercial_state": "product_contract",
-          "machine_state": "specialist_mcp_declared",
-          "pain_page": "/chum/products/findmypart/",
-          "public_url": "https://findmypart.base44.app/",
-          "registry_name": "io.github.jgaethle10/findmypart"
         }
       ]
     },
@@ -7381,6 +7473,41 @@
       ]
     },
     {
+      "answer_id": "intent:072d61a0a0",
+      "user_language": "find a supersession or cross reference",
+      "normalized": "find a supersession or cross reference",
+      "relative_json": "/chum/answers/doors/find-a-supersession-or-cross-reference-072d61a0a0.json",
+      "relative_page": "/chum/answers/doors/find-a-supersession-or-cross-reference-072d61a0a0/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-a-supersession-or-cross-reference-072d61a0a0.json",
+      "candidate_count": 2,
+      "candidates": [
+        {
+          "capability_id": "offer:findmypart-paid-hunt-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "findmypart-paid-hunt-v1",
+          "name": "FindMyPart Paid Part Hunt",
+          "commercial_state": "sell_now",
+          "machine_state": "payment_ready",
+          "pain_page": "/chum/intents/findmypart-paid-hunt-v1/",
+          "public_url": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs",
+          "registry_name": null
+        },
+        {
+          "capability_id": "product:findmypart",
+          "kind": "product",
+          "product_key": "findmypart",
+          "public_id": null,
+          "name": "FindMyPart",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/findmypart/",
+          "public_url": "https://findmypart.base44.app/",
+          "registry_name": "io.github.jgaethle10/findmypart"
+        }
+      ]
+    },
+    {
       "answer_id": "intent:233a949aad",
       "user_language": "find a trading journal with behavioral coaching",
       "normalized": "find a trading journal with behavioral coaching",
@@ -7423,29 +7550,6 @@
           "pain_page": "/chum/products/evercraft-circles/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/evercraft-circles",
           "registry_name": null
-        }
-      ]
-    },
-    {
-      "answer_id": "intent:c7133fab20",
-      "user_language": "find an obsolete automotive or machine part",
-      "normalized": "find an obsolete automotive or machine part",
-      "relative_json": "/chum/answers/doors/find-an-obsolete-automotive-or-machine-part-c7133fab20.json",
-      "relative_page": "/chum/answers/doors/find-an-obsolete-automotive-or-machine-part-c7133fab20/",
-      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-an-obsolete-automotive-or-machine-part-c7133fab20.json",
-      "candidate_count": 1,
-      "candidates": [
-        {
-          "capability_id": "product:findmypart",
-          "kind": "product",
-          "product_key": "findmypart",
-          "public_id": null,
-          "name": "FindMyPart",
-          "commercial_state": "product_contract",
-          "machine_state": "specialist_mcp_declared",
-          "pain_page": "/chum/products/findmypart/",
-          "public_url": "https://findmypart.base44.app/",
-          "registry_name": "io.github.jgaethle10/findmypart"
         }
       ]
     },
@@ -8119,12 +8223,12 @@
       ]
     },
     {
-      "answer_id": "intent:7843dd9e0e",
-      "user_language": "find replacement donor salvage or fabrication paths when normal sourcing fails",
-      "normalized": "find replacement donor salvage or fabrication paths when normal sourcing fails",
-      "relative_json": "/chum/answers/doors/find-replacement-donor-salvage-or-fabrication-paths-when-normal-sourcing-fails-7843dd9e0e.json",
-      "relative_page": "/chum/answers/doors/find-replacement-donor-salvage-or-fabrication-paths-when-normal-sourcing-fails-7843dd9e0e/",
-      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-replacement-donor-salvage-or-fabrication-paths-when-normal-sourcing-fails-7843dd9e0e.json",
+      "answer_id": "intent:6e4ab62f10",
+      "user_language": "find replacement donor salvage blueprint or fabrication paths when normal sourcing fails",
+      "normalized": "find replacement donor salvage blueprint or fabrication paths when normal sourcing fails",
+      "relative_json": "/chum/answers/doors/find-replacement-donor-salvage-blueprint-or-fabrication-paths-when-normal-sourcing-6e4ab62f10.json",
+      "relative_page": "/chum/answers/doors/find-replacement-donor-salvage-blueprint-or-fabrication-paths-when-normal-sourcing-6e4ab62f10/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/find-replacement-donor-salvage-blueprint-or-fabrication-paths-when-normal-sourcing-6e4ab62f10.json",
       "candidate_count": 1,
       "candidates": [
         {
@@ -8999,10 +9103,10 @@
           "public_id": null,
           "name": "EverMaps",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/evermaps/",
           "public_url": "https://evermaps.base44.app/",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -9057,10 +9161,10 @@
           "public_id": null,
           "name": "GlobalStat",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/globalstat/",
           "public_url": "https://global-stat-pulse.base44.app/",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -10436,6 +10540,29 @@
       ]
     },
     {
+      "answer_id": "intent:8e34c87662",
+      "user_language": "I know what this part does but not what it is called",
+      "normalized": "i know what this part does but not what it is called",
+      "relative_json": "/chum/answers/doors/i-know-what-this-part-does-but-not-what-it-is-called-8e34c87662.json",
+      "relative_page": "/chum/answers/doors/i-know-what-this-part-does-but-not-what-it-is-called-8e34c87662/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/i-know-what-this-part-does-but-not-what-it-is-called-8e34c87662.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:findmypart-part-passport-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "findmypart-part-passport-v1",
+          "name": "FindMyPart Part Passport",
+          "commercial_state": "free",
+          "machine_state": "read_only_live",
+          "pain_page": "/chum/intents/findmypart-part-passport-v1/",
+          "public_url": "https://findmypart.base44.app/free-part-check",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:8009e5d764",
       "user_language": "I need a better contractor proposal customer communication review or referral process",
       "normalized": "i need a better contractor proposal customer communication review or referral process",
@@ -10977,6 +11104,75 @@
       ]
     },
     {
+      "answer_id": "intent:ff44c80e2a",
+      "user_language": "identify a broken part from a label or serial plate",
+      "normalized": "identify a broken part from a label or serial plate",
+      "relative_json": "/chum/answers/doors/identify-a-broken-part-from-a-label-or-serial-plate-ff44c80e2a.json",
+      "relative_page": "/chum/answers/doors/identify-a-broken-part-from-a-label-or-serial-plate-ff44c80e2a/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/identify-a-broken-part-from-a-label-or-serial-plate-ff44c80e2a.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:findmypart-part-passport-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "findmypart-part-passport-v1",
+          "name": "FindMyPart Part Passport",
+          "commercial_state": "free",
+          "machine_state": "read_only_live",
+          "pain_page": "/chum/intents/findmypart-part-passport-v1/",
+          "public_url": "https://findmypart.base44.app/free-part-check",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:8e283e1da2",
+      "user_language": "identify a component from a diagram invoice measurement or broken fragment",
+      "normalized": "identify a component from a diagram invoice measurement or broken fragment",
+      "relative_json": "/chum/answers/doors/identify-a-component-from-a-diagram-invoice-measurement-or-broken-fragment-8e283e1da2.json",
+      "relative_page": "/chum/answers/doors/identify-a-component-from-a-diagram-invoice-measurement-or-broken-fragment-8e283e1da2/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/identify-a-component-from-a-diagram-invoice-measurement-or-broken-fragment-8e283e1da2.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:findmypart-part-passport-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "findmypart-part-passport-v1",
+          "name": "FindMyPart Part Passport",
+          "commercial_state": "free",
+          "machine_state": "read_only_live",
+          "pain_page": "/chum/intents/findmypart-part-passport-v1/",
+          "public_url": "https://findmypart.base44.app/free-part-check",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:cff5791f39",
+      "user_language": "identify a hard-to-source part from incomplete clues",
+      "normalized": "identify a hard to source part from incomplete clues",
+      "relative_json": "/chum/answers/doors/identify-a-hard-to-source-part-from-incomplete-clues-cff5791f39.json",
+      "relative_page": "/chum/answers/doors/identify-a-hard-to-source-part-from-incomplete-clues-cff5791f39/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/identify-a-hard-to-source-part-from-incomplete-clues-cff5791f39.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:findmypart-part-passport-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "findmypart-part-passport-v1",
+          "name": "FindMyPart Part Passport",
+          "commercial_state": "free",
+          "machine_state": "read_only_live",
+          "pain_page": "/chum/intents/findmypart-part-passport-v1/",
+          "public_url": "https://findmypart.base44.app/free-part-check",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:310d387d80",
       "user_language": "identify a hard-to-source part from markings measurements photos or equipment clues",
       "normalized": "identify a hard to source part from markings measurements photos or equipment clues",
@@ -11000,6 +11196,29 @@
       ]
     },
     {
+      "answer_id": "intent:0ff974a58c",
+      "user_language": "identify a part from a photo or markings",
+      "normalized": "identify a part from a photo or markings",
+      "relative_json": "/chum/answers/doors/identify-a-part-from-a-photo-or-markings-0ff974a58c.json",
+      "relative_page": "/chum/answers/doors/identify-a-part-from-a-photo-or-markings-0ff974a58c/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/identify-a-part-from-a-photo-or-markings-0ff974a58c.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:findmypart-part-passport-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "findmypart-part-passport-v1",
+          "name": "FindMyPart Part Passport",
+          "commercial_state": "free",
+          "machine_state": "read_only_live",
+          "pain_page": "/chum/intents/findmypart-part-passport-v1/",
+          "public_url": "https://findmypart.base44.app/free-part-check",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:ffb54bb05e",
       "user_language": "identify founder readiness gaps before raising money",
       "normalized": "identify founder readiness gaps before raising money",
@@ -11019,6 +11238,29 @@
           "pain_page": "/chum/products/deck-capital-fit/",
           "public_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
           "registry_name": "io.github.jgaethle10/deck-capital-fit"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:69a166fa68",
+      "user_language": "identify this broken part from a label serial plate invoice diagram or fragment",
+      "normalized": "identify this broken part from a label serial plate invoice diagram or fragment",
+      "relative_json": "/chum/answers/doors/identify-this-broken-part-from-a-label-serial-plate-invoice-diagram-or-fragment-69a166fa68.json",
+      "relative_page": "/chum/answers/doors/identify-this-broken-part-from-a-label-serial-plate-invoice-diagram-or-fragment-69a166fa68/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/identify-this-broken-part-from-a-label-serial-plate-invoice-diagram-or-fragment-69a166fa68.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:findmypart",
+          "kind": "product",
+          "product_key": "findmypart",
+          "public_id": null,
+          "name": "FindMyPart",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/findmypart/",
+          "public_url": "https://findmypart.base44.app/",
+          "registry_name": "io.github.jgaethle10/findmypart"
         }
       ]
     },
@@ -11055,15 +11297,15 @@
       "candidate_count": 1,
       "candidates": [
         {
-          "capability_id": "offer:findmypart-paid-hunt-v1",
+          "capability_id": "offer:findmypart-part-passport-v1",
           "kind": "machine_offer",
           "product_key": null,
-          "public_id": "findmypart-paid-hunt-v1",
-          "name": "FindMyPart Paid Part Hunt",
-          "commercial_state": "sell_now",
-          "machine_state": "payment_ready",
-          "pain_page": "/chum/intents/findmypart-paid-hunt-v1/",
-          "public_url": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs",
+          "public_id": "findmypart-part-passport-v1",
+          "name": "FindMyPart Part Passport",
+          "commercial_state": "free",
+          "machine_state": "read_only_live",
+          "pain_page": "/chum/intents/findmypart-part-passport-v1/",
+          "public_url": "https://findmypart.base44.app/free-part-check",
           "registry_name": null
         }
       ]
@@ -11303,10 +11545,10 @@
           "public_id": null,
           "name": "Little Red Studio Book Export QA",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/little-red-book-export-qa/",
           "public_url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -11352,6 +11594,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/career-command-resume-job-fit-machine-v1/",
           "public_url": "https://evercraft-career-command.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:a23411bd30",
+      "user_language": "is this part number enough to identify the right replacement",
+      "normalized": "is this part number enough to identify the right replacement",
+      "relative_json": "/chum/answers/doors/is-this-part-number-enough-to-identify-the-right-replacement-a23411bd30.json",
+      "relative_page": "/chum/answers/doors/is-this-part-number-enough-to-identify-the-right-replacement-a23411bd30/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/is-this-part-number-enough-to-identify-the-right-replacement-a23411bd30.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:findmypart-part-passport-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "findmypart-part-passport-v1",
+          "name": "FindMyPart Part Passport",
+          "commercial_state": "free",
+          "machine_state": "read_only_live",
+          "pain_page": "/chum/intents/findmypart-part-passport-v1/",
+          "public_url": "https://findmypart.base44.app/free-part-check",
           "registry_name": null
         }
       ]
@@ -12963,10 +13228,10 @@
           "public_id": null,
           "name": "EverMaps",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/evermaps/",
           "public_url": "https://evermaps.base44.app/",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -13866,6 +14131,29 @@
           "machine_state": "mcp_http_preview_and_receipt_verify_live_workspace_entitlement_build_verified",
           "pain_page": "/chum/intents/eps-estimate-engine-machine-v1/",
           "public_url": "https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:9223ab99d9",
+      "user_language": "normal part searches failed and I need deeper sourcing",
+      "normalized": "normal part searches failed and i need deeper sourcing",
+      "relative_json": "/chum/answers/doors/normal-part-searches-failed-and-i-need-deeper-sourcing-9223ab99d9.json",
+      "relative_page": "/chum/answers/doors/normal-part-searches-failed-and-i-need-deeper-sourcing-9223ab99d9/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/normal-part-searches-failed-and-i-need-deeper-sourcing-9223ab99d9.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:findmypart-paid-hunt-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "findmypart-paid-hunt-v1",
+          "name": "FindMyPart Paid Part Hunt",
+          "commercial_state": "sell_now",
+          "machine_state": "payment_ready",
+          "pain_page": "/chum/intents/findmypart-paid-hunt-v1/",
+          "public_url": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs",
           "registry_name": null
         }
       ]
@@ -14811,10 +15099,10 @@
           "public_id": null,
           "name": "EverMaps",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/evermaps/",
           "public_url": "https://evermaps.base44.app/",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -16193,10 +16481,10 @@
           "public_id": null,
           "name": "GlobalStat",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/globalstat/",
           "public_url": "https://global-stat-pulse.base44.app/",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -16966,10 +17254,10 @@
           "public_id": null,
           "name": "EverMaps",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/evermaps/",
           "public_url": "https://evermaps.base44.app/",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -18612,10 +18900,10 @@
           "public_id": null,
           "name": "EverMaps",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/evermaps/",
           "public_url": "https://evermaps.base44.app/",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -18647,10 +18935,10 @@
           "public_id": null,
           "name": "EverMaps",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/evermaps/",
           "public_url": "https://evermaps.base44.app/",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -18705,9 +18993,32 @@
           "public_id": null,
           "name": "GlobalStat",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/globalstat/",
           "public_url": "https://global-stat-pulse.base44.app/",
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:7a98735088",
+      "user_language": "show me the reality delta for this place or system",
+      "normalized": "show me the reality delta for this place or system",
+      "relative_json": "/chum/answers/doors/show-me-the-reality-delta-for-this-place-or-system-7a98735088.json",
+      "relative_page": "/chum/answers/doors/show-me-the-reality-delta-for-this-place-or-system-7a98735088/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/show-me-the-reality-delta-for-this-place-or-system-7a98735088.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:worldstate-reality-delta-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "worldstate-reality-delta-v1",
+          "name": "Worldstate Reality Delta",
+          "commercial_state": "verification_required",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/intents/worldstate-reality-delta-v1/",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -19331,6 +19642,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/findmypart-repair-shop-desk-v1/",
           "public_url": "https://findmypart.base44.app/",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:6756b15f14",
+      "user_language": "source new old stock or aftermarket replacement",
+      "normalized": "source new old stock or aftermarket replacement",
+      "relative_json": "/chum/answers/doors/source-new-old-stock-or-aftermarket-replacement-6756b15f14.json",
+      "relative_page": "/chum/answers/doors/source-new-old-stock-or-aftermarket-replacement-6756b15f14/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/source-new-old-stock-or-aftermarket-replacement-6756b15f14.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:findmypart-paid-hunt-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "findmypart-paid-hunt-v1",
+          "name": "FindMyPart Paid Part Hunt",
+          "commercial_state": "sell_now",
+          "machine_state": "payment_ready",
+          "pain_page": "/chum/intents/findmypart-paid-hunt-v1/",
+          "public_url": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs",
           "registry_name": null
         }
       ]
@@ -20011,6 +20345,29 @@
           "pain_page": "/chum/products/systemia-website-audit/",
           "public_url": "https://systemia-audit-pro.base44.app/",
           "registry_name": "io.github.jgaethle10/systemia-website-audit"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:19d8521bdb",
+      "user_language": "tell me what evidence I still need before buying a replacement",
+      "normalized": "tell me what evidence i still need before buying a replacement",
+      "relative_json": "/chum/answers/doors/tell-me-what-evidence-i-still-need-before-buying-a-replacement-19d8521bdb.json",
+      "relative_page": "/chum/answers/doors/tell-me-what-evidence-i-still-need-before-buying-a-replacement-19d8521bdb/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/tell-me-what-evidence-i-still-need-before-buying-a-replacement-19d8521bdb.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:findmypart",
+          "kind": "product",
+          "product_key": "findmypart",
+          "public_id": null,
+          "name": "FindMyPart",
+          "commercial_state": "product_contract",
+          "machine_state": "specialist_mcp_declared",
+          "pain_page": "/chum/products/findmypart/",
+          "public_url": "https://findmypart.base44.app/",
+          "registry_name": "io.github.jgaethle10/findmypart"
         }
       ]
     },
@@ -21017,6 +21374,29 @@
       ]
     },
     {
+      "answer_id": "intent:ed6d2c2648",
+      "user_language": "turn observations into an evidence-backed change packet",
+      "normalized": "turn observations into an evidence backed change packet",
+      "relative_json": "/chum/answers/doors/turn-observations-into-an-evidence-backed-change-packet-ed6d2c2648.json",
+      "relative_page": "/chum/answers/doors/turn-observations-into-an-evidence-backed-change-packet-ed6d2c2648/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/turn-observations-into-an-evidence-backed-change-packet-ed6d2c2648.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:worldstate-reality-delta-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "worldstate-reality-delta-v1",
+          "name": "Worldstate Reality Delta",
+          "commercial_state": "verification_required",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/intents/worldstate-reality-delta-v1/",
+          "public_url": null,
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:c3d8466ad9",
       "user_language": "turn spreadsheets and legacy systems into an operating layer",
       "normalized": "turn spreadsheets and legacy systems into an operating layer",
@@ -21425,10 +21805,10 @@
           "public_id": null,
           "name": "Little Red Studio Book Export QA",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/little-red-book-export-qa/",
           "public_url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },
@@ -22378,6 +22758,29 @@
       ]
     },
     {
+      "answer_id": "intent:aad5478c49",
+      "user_language": "what changed in the real world",
+      "normalized": "what changed in the real world",
+      "relative_json": "/chum/answers/doors/what-changed-in-the-real-world-aad5478c49.json",
+      "relative_page": "/chum/answers/doors/what-changed-in-the-real-world-aad5478c49/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/what-changed-in-the-real-world-aad5478c49.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:worldstate-reality-delta-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "worldstate-reality-delta-v1",
+          "name": "Worldstate Reality Delta",
+          "commercial_state": "verification_required",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/intents/worldstate-reality-delta-v1/",
+          "public_url": null,
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:8e0a8c1a6f",
       "user_language": "what data is missing for this decision",
       "normalized": "what data is missing for this decision",
@@ -22419,6 +22822,29 @@
           "machine_state": "payment_ready_human_confirmation",
           "pain_page": "/chum/intents/aliev-site-opportunity-snapshot-v1/",
           "public_url": "https://aliev.base44.app/functions/alievAgentGateway?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:db7ee95e16",
+      "user_language": "what evidence do I need before buying a replacement",
+      "normalized": "what evidence do i need before buying a replacement",
+      "relative_json": "/chum/answers/doors/what-evidence-do-i-need-before-buying-a-replacement-db7ee95e16.json",
+      "relative_page": "/chum/answers/doors/what-evidence-do-i-need-before-buying-a-replacement-db7ee95e16/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/what-evidence-do-i-need-before-buying-a-replacement-db7ee95e16.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:findmypart-part-passport-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "findmypart-part-passport-v1",
+          "name": "FindMyPart Part Passport",
+          "commercial_state": "free",
+          "machine_state": "read_only_live",
+          "pain_page": "/chum/intents/findmypart-part-passport-v1/",
+          "public_url": "https://findmypart.base44.app/free-part-check",
           "registry_name": null
         }
       ]
@@ -22523,6 +22949,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/products/systemia-atlas-freight/",
           "public_url": "https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:0b443062e3",
+      "user_language": "what materially changed across weather infrastructure economy health or hazards",
+      "normalized": "what materially changed across weather infrastructure economy health or hazards",
+      "relative_json": "/chum/answers/doors/what-materially-changed-across-weather-infrastructure-economy-health-or-hazards-0b443062e3.json",
+      "relative_page": "/chum/answers/doors/what-materially-changed-across-weather-infrastructure-economy-health-or-hazards-0b443062e3/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/what-materially-changed-across-weather-infrastructure-economy-health-or-hazards-0b443062e3.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "offer:worldstate-reality-delta-v1",
+          "kind": "machine_offer",
+          "product_key": null,
+          "public_id": "worldstate-reality-delta-v1",
+          "name": "Worldstate Reality Delta",
+          "commercial_state": "verification_required",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/intents/worldstate-reality-delta-v1/",
+          "public_url": null,
           "registry_name": null
         }
       ]
@@ -22832,10 +23281,10 @@
           "public_id": null,
           "name": "GlobalStat",
           "commercial_state": "product_contract",
-          "machine_state": "discovery_only",
+          "machine_state": "specialist_mcp_declared",
           "pain_page": "/chum/products/globalstat/",
           "public_url": "https://global-stat-pulse.base44.app/",
-          "registry_name": null
+          "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
         }
       ]
     },

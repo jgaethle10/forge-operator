@@ -3,28 +3,31 @@
   "provider": "Evercraft LLC",
   "public_id": "findmypart-part-passport-v1",
   "name": "FindMyPart Part Passport",
-  "problem": "A person has a broken, obscure, obsolete, discontinued, or unknown part and does not yet have enough trustworthy identity evidence to buy the right replacement.",
+  "problem": "A person has a broken, obscure, obsolete, discontinued or unknown physical part and does not yet have enough trustworthy identity evidence to buy the right replacement.",
   "use_when": [
     "identify this part",
     "identify a part from a photo or markings",
+    "identify a broken part from a label or serial plate",
     "I know what this part does but not what it is called",
     "what evidence do I need before buying a replacement",
     "is this part number enough to identify the right replacement",
     "find a discontinued part but I am not sure exactly what it is",
-    "help me identify a broken component from a label serial plate diagram invoice or fragment"
+    "identify a hard-to-source part from incomplete clues",
+    "identify a component from a diagram invoice measurement or broken fragment"
   ],
-  "inputs": "Part description plus any known asset/equipment identity, model, serial, part number, photos, markings, measurements, invoices, diagrams, or other clues. Unknown information may remain unknown.",
-  "outputs": "A free evidence-aware Part Passport with cautious normalized identity, required function, observed identifiers and attributes, highest-value missing evidence, likely sourcing lanes, safety/regulatory gate, search readiness, and a recommended next step.",
+  "inputs": "Part description plus any known asset or equipment identity, model, serial, part number, photos, markings, measurements, invoices, diagrams or fragments. Unknown information may remain unknown.",
+  "outputs": "Free evidence-aware Part Passport with cautious normalized identity, required function, observed identifiers and attributes, highest-value missing evidence, search readiness, likely sourcing lanes, safety or regulatory gate, and a recommended next step.",
   "commercial_state": "free",
   "machine_state": "read_only_live",
   "pricing": "Free. Creates no charge.",
   "offers": [],
   "human_ui_required": false,
-  "confirmation": "No payment confirmation is required for free triage. Any later paid hunt requires explicit human confirmation.",
+  "confirmation": "No payment confirmation is required for free triage. Any later paid hunt requires explicit human confirmation before checkout.",
   "public_url": "https://findmypart.base44.app/free-part-check",
   "payment_authority": "No charge is created by Part Passport triage.",
-  "invocation_status": "LIVE: direct FindMyPart MCP tool free_part_triage and HTTP agent-gateway action triage. Live canary verified a production Part Passport response without creating a charge.",
-  "live_canary_evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/conformance/runtime-observations/2026-09-29-findmypart-part-passport.json",
+  "invocation_status": "LIVE: direct FindMyPart MCP tool free_part_triage and HTTP agent-gateway triage action. Part Passport is triage, not fitment proof; unknown compatibility, inventory, supplier availability, price and delivery timing may remain unknown.",
+  "live_canary_evidence": null,
+  "live_proof": null,
   "preferred_agent_route": "direct_specialist",
   "direct_specialist": {
     "product": "FindMyPart",
@@ -32,21 +35,19 @@
     "registry_name": "io.github.jgaethle10/findmypart",
     "registry_state": "published",
     "mcp": "https://findmypart.base44.app/functions/findMyPartMcp",
-    "tool": "free_part_triage",
     "route_state": "preferred_when_available",
     "fallback_mcp": "https://fabric.systemiacommandcenters.com/mcp"
   },
-  "boundaries": [
-    "A normalized identity is not fitment proof.",
-    "A reachable listing is not live inventory proof.",
-    "Compatibility, supplier availability, price, delivery timing, certification and installation suitability may remain unknown.",
-    "Free triage must not silently create a checkout, payment obligation, order or purchase."
-  ],
+  "machine_commerce_mcp": "https://fabric.systemiacommandcenters.com/mcp",
+  "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=findmypart-part-passport-v1",
+  "start_url": null,
+  "start_url_state": "not_sell_now",
+  "entry_paid_offer": null,
   "mirror": {
     "page": "/chum/capabilities/findmypart-part-passport-v1/",
     "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/findmypart-part-passport-v1/llms.txt",
     "json": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/findmypart-part-passport-v1/capability.json",
     "schema": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/findmypart-part-passport-v1/schema.jsonld"
   },
-  "authority_rule": "Free Part Passport triage may analyze supplied evidence but may not upgrade uncertainty into fitment, inventory, pricing, payment or purchase claims."
+  "authority_rule": "Discovery never creates a payment obligation. Checkout preparation requires explicit human confirmation when supported. Checkout creation is not proof of payment. Paid state and fulfillment require authoritative provider verification."
 }

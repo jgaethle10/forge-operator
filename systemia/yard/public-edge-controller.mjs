@@ -157,7 +157,7 @@ export class PublicEdgeController {
       public_port:443,
     },
     specialist={
-      gateway_url:'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway',
+      gateway_url:'',
     },
     browser={
       enabled:false,

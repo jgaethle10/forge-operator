@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.capability-promotion-links.v1",
-  "updated_on": "2026-09-28",
+  "updated_on": "2026-09-30",
   "rule": "These links associate an already-public product record with an already-public Machine Commerce offer. A link is evidence for review only and never grants new authority, payment rights, private access, or MCP publication.",
   "links": [
     {
@@ -12,20 +12,77 @@
     {
       "product_key": "evermaps",
       "machine_public_id": "evermaps-evidence-projection-machine-v1",
-      "evidence": "EverMaps publishes machine discovery and has internal/admin snapshot machinery, but public execution remains discovery-only.",
-      "required_next_primitive": "Expose a public-safe read-only projection query returning map-ready geometry, evidence state, freshness, source refs, and coverage cautions without writing snapshots or exposing private records."
+      "evidence": "EverMaps now has a committed, Deno-check-clean publicProjectionQuery candidate over explicitly public_safe, read_only projection entities. It supports bounded queries across climate/ocean fields, river history, observation platforms, navigation lights, heat/smoke action sites and access gaps, volcanic lakes, and aggregate lifeline coverage. Exact lifeline asset topology is deliberately excluded. Live deployment has not yet been independently verified, so EverMaps remains discovery-only.",
+      "required_next_primitive": "Maintain external canary, source/data freshness, conformance and registry publication. Any authority expansion requires a new proof cycle.",
+      "implementation_state": "live_verified_shared_mcp",
+      "source_system": "Base44",
+      "source_checkpoint": "bce995a3931e946a2b5ce785f793f6bb961072af",
+      "candidate_endpoint": "https://base44.app/api/apps/6a985aeccbfb6e930a40137b/functions/publicProjectionQuery",
+      "verification_probe": {
+        "method": "POST",
+        "body": {
+          "layer": "navigation_lights",
+          "limit": 2
+        },
+        "expected_schema": "evercraft.evermaps.public-projection-query.v1"
+      },
+      "live_canary_evidence": "GitHubActionsRun:36802891607",
+      "shared_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+      "shared_mcp_tool": "query_evermaps_public_projection"
     },
     {
       "product_key": "globalstat",
       "machine_public_id": "globalstat-country-intelligence-machine-v1",
-      "evidence": "GlobalStat publishes machine discovery for sourced country/domain intelligence, but no public execution endpoint is currently declared.",
-      "required_next_primitive": "Expose a read-only sourced comparison query with freshness, evidence state, reconciliation warnings, and no opaque winner/ranking inference."
+      "evidence": "GlobalStat now has a committed and Deno-check-clean read-only countryIntelligence candidate. It returns public evidence rows, source URLs, reconciliation findings, signals, methodology context and explicit coverage gaps while preserving missing-vs-zero and modeled-vs-observed boundaries. Live deployment has not yet been independently verified, so the product remains discovery-only.",
+      "required_next_primitive": "Maintain external canary, source/data freshness, conformance and registry publication. Any authority expansion requires a new proof cycle.",
+      "implementation_state": "live_verified_shared_mcp",
+      "source_system": "Base44",
+      "source_checkpoint": "72d3662df8ae6d83eb5915f80049c397c8d6a750",
+      "candidate_endpoint": "https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/countryIntelligence",
+      "verification_probe": {
+        "method": "POST",
+        "body": {
+          "countries": [
+            "USA",
+            "CAN"
+          ],
+          "metric_slugs": [
+            "gii_2025_rank"
+          ],
+          "limit": 10
+        },
+        "expected_schema": "evercraft.globalstat.country-intelligence.v1"
+      },
+      "live_canary_evidence": "GitHubActionsRun:36802891607",
+      "shared_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+      "shared_mcp_tool": "query_globalstat_country_intelligence"
     },
     {
       "product_key": "little-red-book-export-qa",
       "machine_public_id": "littlered-kdp-export-qa-machine-v1",
-      "evidence": "Little Red publishes a machine-discovery contract for bounded book-export preflight, but the current public function is metadata/docs only.",
-      "required_next_primitive": "Expose a deterministic read-only export-preflight function for caller-supplied page count and geometry, with missing inputs reported as unknown and no publication/upload authority."
+      "evidence": "Little Red now has a committed deterministic read-only KDP export-preflight candidate using caller-supplied page count, trim, cover geometry and pixel dimensions. It preserves KDP source URLs, does not assert variable maximum-page limits, and has no upload, publishing, checkout or payment authority. Live deployment has not yet been independently verified, so the product remains discovery-only.",
+      "required_next_primitive": "Maintain external canary, source/data freshness, conformance and registry publication. Any authority expansion requires a new proof cycle.",
+      "implementation_state": "live_verified_shared_mcp",
+      "source_system": "Base44",
+      "source_checkpoint": "c1647bf7bf07c3dc062c8c260aa43dee30c3447c",
+      "candidate_endpoint": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/kdpExportQa",
+      "verification_probe": {
+        "method": "POST",
+        "body": {
+          "page_count": 120,
+          "trim_width_in": 6,
+          "trim_height_in": 9,
+          "interior_type": "black_white",
+          "paper_type": "white",
+          "spine_text_present": true,
+          "cover_pixel_width": 4000,
+          "cover_pixel_height": 6000
+        },
+        "expected_schema": "evercraft.little-red.kdp-export-preflight.v1"
+      },
+      "live_canary_evidence": "GitHubActionsRun:36802891607",
+      "shared_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+      "shared_mcp_tool": "check_book_export_preflight"
     },
     {
       "product_key": "systemia-atlas-freight",
@@ -42,8 +99,56 @@
     {
       "product_key": "towi-research",
       "machine_public_id": "towi-evidence-research-machine-v1",
-      "evidence": "TOWI publishes machine discovery. Existing report generation is administrator-gated and the synthetic dry-run is QA-only, so neither is a public research endpoint.",
-      "required_next_primitive": "Expose a bounded read-only research/evidence preview or mission-scope endpoint with provenance and uncertainty; keep consequential conclusions, outreach, publishing, and paid fulfillment separately gated."
+      "evidence": "TOWI now has a committed, Deno-check-clean evidencePacketAudit candidate that evaluates caller-supplied research evidence for provenance completeness, evidence-state mix, primary-source coverage, contradictions, modeled/disputed records and evidence-standard readiness. It performs no external research and makes no consequential recommendation. Live deployment has not yet been independently verified, so TOWI remains discovery-only.",
+      "required_next_primitive": "Independently verify evidencePacketAudit in production, record conformance, then expose it through the existing Machine Commerce MCP as a read-only TOWI evidence-control tool. Keep actual external research, paid work, outreach and publication behind their existing gates.",
+      "implementation_state": "source_implemented_live_verification_pending",
+      "source_system": "Base44",
+      "source_checkpoint": "8ddcbfbee1c2b00fc7f6168e7caa04fb7814660e",
+      "candidate_endpoint": "https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/evidencePacketAudit",
+      "verification_probe": {
+        "method": "POST",
+        "body": {
+          "research_question": "What evidence supports this infrastructure claim?",
+          "geography": "Washington",
+          "evidence_standard": "decision_grade",
+          "evidence": [
+            {
+              "evidence_id": "sample_1",
+              "source_title": "Official sample source",
+              "source_url": "https://example.gov/source",
+              "source_type": "primary_official",
+              "publisher": "Example Agency",
+              "publication_date": "2026-09-30",
+              "claim": "Sample claim for bounded canary verification.",
+              "evidence_state": "verified_primary",
+              "confidence_score": 95
+            },
+            {
+              "evidence_id": "sample_2",
+              "source_title": "Independent technical report",
+              "source_url": "https://example.org/report",
+              "source_type": "technical_report",
+              "publisher": "Example Institute",
+              "publication_date": "2026-09-29",
+              "claim": "Second sample claim for bounded canary verification.",
+              "evidence_state": "verified_secondary",
+              "confidence_score": 85
+            },
+            {
+              "evidence_id": "sample_3",
+              "source_title": "Supporting dataset",
+              "source_url": "https://example.org/data",
+              "source_type": "dataset",
+              "publisher": "Example Data Lab",
+              "publication_date": "2026-09-28",
+              "claim": "Third sample claim for bounded canary verification.",
+              "evidence_state": "reported",
+              "confidence_score": 75
+            }
+          ]
+        },
+        "expected_schema": "evercraft.towi.evidence-packet-audit.v1"
+      }
     }
   ]
 }

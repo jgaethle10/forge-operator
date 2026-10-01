@@ -11,6 +11,7 @@ on:
       - "systemia/core/rivet-report-resident-wiring.proof.mjs"
       - "systemia/migrations/base44-exit/slices/rivet-reporting-runtime.json"
       - "package.json"
+      - "tests/rivet-yard-gateway.test.mjs"
       - ".github/workflows/rivet-report-canary.yml"
   push:
     branches: [main]
@@ -24,6 +25,7 @@ on:
       - "systemia/core/rivet-report-resident-wiring.proof.mjs"
       - "systemia/migrations/base44-exit/slices/rivet-reporting-runtime.json"
       - "package.json"
+      - "tests/rivet-yard-gateway.test.mjs"
       - ".github/workflows/rivet-report-canary.yml"
   workflow_dispatch:
 permissions:
@@ -37,6 +39,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - run: node systemia/rivet/http-gateway-readiness.proof.mjs
       - run: npm run proof:rivet-yard
       - run: node systemia/rivet/report-domain-projection.proof.mjs
       - run: node systemia/yard/rivet-resident-runtime.proof.mjs

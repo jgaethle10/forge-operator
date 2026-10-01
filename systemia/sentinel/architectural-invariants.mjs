@@ -97,19 +97,67 @@ function evaluateFileContract(rootDir, invariant) {
   return out;
 }
 
-function directRuntimeImports(source, prefix) {
+function moduleSpecifiers(source) {
   const imports = [];
   const patterns = [
     /\bfrom\s+['"]([^'"]+)['"]/g,
-    /\bimport\s+['"]([^'"]+)['"]/g
+    /\bimport\s+['"]([^'"]+)['"]/g,
+    /\bimport\s*\(\s*['"]([^'"]+)['"]\s*\)/g
   ];
   for (const re of patterns) {
     for (const match of source.matchAll(re)) {
-      const target = String(match[1] || '');
-      if (target.startsWith(prefix)) imports.push(target.replace(/^\.\//, ''));
+      const target = String(match[1] || '').trim();
+      if (target) imports.push(target);
     }
   }
-  return [...new Set(imports)].sort();
+  return [...new Set(imports)];
+}
+
+function resolveRepositoryModule(rootDir, fromRelative, specifier) {
+  if (!specifier.startsWith('.')) return null;
+  const base = path.resolve(rootDir, path.dirname(fromRelative), specifier);
+  const candidates = [
+    base,
+    base + '.js',
+    base + '.mjs',
+    base + '.cjs',
+    base + '.ts',
+    base + '.tsx',
+    base + '.jsx',
+    path.join(base, 'index.js'),
+    path.join(base, 'index.mjs'),
+    path.join(base, 'index.ts')
+  ];
+  for (const candidate of candidates) {
+    if (!fs.existsSync(candidate) || !fs.statSync(candidate).isFile()) continue;
+    const relative = path.relative(rootDir, candidate).split(path.sep).join('/');
+    if (relative === 'systemia' || relative.startsWith('systemia/')) return relative;
+  }
+  return null;
+}
+
+function runtimeImportGraph(rootDir, entrypoint) {
+  const root = path.resolve(rootDir);
+  const queue = [entrypoint];
+  const visited = new Set();
+  const runtimeImports = new Set();
+
+  while (queue.length) {
+    const relative = queue.shift();
+    if (!relative || visited.has(relative)) continue;
+    visited.add(relative);
+    const loaded = readText(root, relative);
+    if (!loaded.ok) continue;
+
+    for (const specifier of moduleSpecifiers(loaded.text)) {
+      const resolved = resolveRepositoryModule(root, relative, specifier);
+      if (!resolved) continue;
+      runtimeImports.add(resolved);
+      if (!visited.has(resolved)) queue.push(resolved);
+    }
+  }
+
+  return [...runtimeImports].sort();
 }
 
 function dockerRuntimeCopies(text) {
@@ -143,15 +191,15 @@ function evaluateDockerCoverage(rootDir, invariant) {
     return [violation(invariant, `Runtime coverage inputs unavailable: entrypoint=${entry.reason || 'ok'}, dockerfile=${docker.reason || 'ok'}.`, evidence)];
   }
 
-  const imports = directRuntimeImports(entry.text, invariant.import_prefix || './systemia/');
+  const imports = runtimeImportGraph(rootDir, invariant.entrypoint);
   const copies = dockerRuntimeCopies(docker.text);
   const uncovered = imports.filter((target) => !coveredByDockerCopy(target, copies));
   if (!uncovered.length) return [];
   return [violation(
     invariant,
-    `Production image does not copy ${uncovered.length} direct runtime import(s): ${uncovered.join(', ')}.`,
+    `Production image does not copy ${uncovered.length} runtime dependency import(s): ${uncovered.join(', ')}.`,
     evidence,
-    { runtime_imports: imports, uncovered_imports: uncovered, runtime_copies: copies }
+    { runtime_imports: imports, uncovered_imports: uncovered, runtime_copies: copies, traversal: 'transitive_repository_graph' }
   )];
 }
 

@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import dgram from 'node:dgram';
+import net from 'node:net';
 import process from 'node:process';
 import { randomBytes } from 'node:crypto';
 
@@ -32,9 +33,40 @@ const out = {
   host,
   attempts: [],
   mappings,
+  host_forward_preflight: null,
 };
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function tcpProbe(hostname,port,timeoutMs=1500){
+  return new Promise((resolve)=>{
+    const socket=net.createConnection({host:hostname,port});
+    let settled=false;
+    const done=(ok,error='')=>{
+      if(settled) return;
+      settled=true;
+      socket.destroy();
+      resolve({port,ok,error:error?String(error):null});
+    };
+    socket.setTimeout(timeoutMs,()=>done(false,'timeout'));
+    socket.once('connect',()=>done(true));
+    socket.once('error',(error)=>done(false,error.message));
+  });
+}
+
+async function verifyHostForward(){
+  const probes=await Promise.all([
+    tcpProbe(host,18080),
+    tcpProbe(host,8443),
+  ]);
+  return {
+    schema:'evercraft.chromeos-host-forward-preflight.v1',
+    host,
+    probes,
+    ready:probes.every(x=>x.ok===true),
+    checked_at:new Date().toISOString(),
+  };
+}
 
 async function natPmpMap() {
   const socket = dgram.createSocket('udp4');
@@ -373,6 +405,14 @@ async function pcpMap() {
 }
 
 async function main() {
+  out.host_forward_preflight=await verifyHostForward();
+  if(out.host_forward_preflight.ready!==true){
+    out.state='chromeos_host_forward_unreachable';
+    out.error='chromeos_host_forward_unreachable';
+    console.log(JSON.stringify(out,null,2));
+    process.exit(3);
+  }
+
   const upnp = await upnpMap().catch(e => ({ method: 'UPnP-IGD', success: false, error: e.message }));
   out.attempts.push(upnp);
   if (upnp.success) {

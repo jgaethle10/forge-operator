@@ -1,5 +1,6 @@
 import type { ShotCandidate } from './shot-tournament.js';
 import type { ShotSelectionReceipt } from './types.js';
+import type { BoundaryContinuityAdmission } from './continuity-boundary.js';
 import type { VisualExecutionResult } from './model-fabric-runtime.js';
 import {
   replaceTimelineClipAsset,
@@ -41,6 +42,10 @@ export function applySelectedExecutionToTimeline(input:{
   execution:VisualExecutionResult;
   selection:ShotSelectionReceipt;
   expectedVersion:number;
+  continuity?:{
+    required:boolean;
+    admission?:BoundaryContinuityAdmission;
+  };
 }):{
   project:FallenTimelineProject;
   receipt:TimelineMutationReceipt;
@@ -56,6 +61,22 @@ export function applySelectedExecutionToTimeline(input:{
     throw new Error('timeline_ingest_need_id_mismatch');
   }
 
+  const continuity=input.continuity;
+  if(continuity?.required){
+    if(!continuity.admission){
+      throw new Error('timeline_ingest_continuity_admission_missing');
+    }
+    if(continuity.admission.schema!=='evercraft.fallen.boundary-continuity-admission.v1'){
+      throw new Error('timeline_ingest_continuity_schema_invalid');
+    }
+    if(continuity.admission.status!=='accepted'){
+      throw new Error('timeline_ingest_continuity_rejected:'+continuity.admission.reasons.join('|'));
+    }
+    if(continuity.admission.currentArtifactDigest!==selected.artifact.digest){
+      throw new Error('timeline_ingest_continuity_artifact_mismatch');
+    }
+  }
+
   return replaceTimelineClipAsset({
     project:input.project,
     clipId:input.clipId,
@@ -67,6 +88,9 @@ export function applySelectedExecutionToTimeline(input:{
       kind:'video',
       sourceRefs:[
         `shot-selection:${input.selection.tournamentReceiptDigest}`,
+        ...(continuity?.required&&continuity.admission
+          ?[`continuity-boundary:${continuity.admission.receiptDigest}`]
+          :[]),
         ...selected.sourceRefs,
       ],
       evidenceState:'synthetic_visualization',

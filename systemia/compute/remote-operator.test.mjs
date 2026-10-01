@@ -24,6 +24,24 @@ try {
   assert.deepEqual(status.roots, ['home']);
   assert.equal(status.execution.root_privilege, false);
   assert.equal(status.execution.ambient_secret_environment_forwarded, false);
+  assert.equal(status.network_observation.read_only, true);
+
+  const network = await operator.networkStatus();
+  assert.equal(network.schema, 'evercraft.node-network-observation.v1');
+  assert.equal(network.authority.read_only, true);
+  assert.equal(network.authority.mutates_network_configuration, false);
+  assert.equal(network.authority.exposes_secret_material, false);
+  assert.equal(network.evercraft.local_organism.secret_material_exposed, false);
+  assert.ok([
+    'healthy',
+    'degraded',
+    'not_installed_or_not_observed',
+  ].includes(network.evercraft.local_organism.state));
+  assert.equal(
+    network.evercraft.external_public_route.state,
+    'requires_external_canary'
+  );
+  assert.ok(network.operator_receipt?.receipt_hash);
 
   const listed = operator.list({ root_key: 'home', path: '.' });
   assert.ok(listed.entries.some((entry) => entry.name === 'hello.txt'));
@@ -98,6 +116,8 @@ try {
     system_service_control_blocked: true,
     mutation_approval_required: true,
     receipt_contents_redacted: true,
+    read_only_network_observation_available: true,
+    chromeos_host_boundary_not_overclaimed: true,
   }));
 } finally {
   fs.rmSync(root, { recursive: true, force: true });

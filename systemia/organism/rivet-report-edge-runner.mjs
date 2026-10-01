@@ -24,7 +24,7 @@ const sharedStateRoot=path.resolve(
 );
 const yardState=path.resolve(arg('--yard-state',path.join(sharedStateRoot,'yard')));
 const controllerState=path.resolve(arg('--controller-state',path.join(sharedStateRoot,'rivet-report-controller')));
-const sourceUrl=String(arg('--source-url',process.env.ALIEV_YARD_SOURCE_URL||'')).trim();
+const configuredSourceUrl=String(arg('--source-url',process.env.ALIEV_YARD_SOURCE_URL||'')).trim();
 const requestedHostname=String(process.env.RIVET_YARD_HOSTNAME||'rivet-reports');
 const intervalMs=Math.max(5000,Number(arg('--interval-ms','60000')));
 const leaseTtlMs=Math.max(60000,Number(arg('--lease-ttl-ms','3600000')));
@@ -67,14 +67,6 @@ async function reconcile(){
   if(closing||inFlight) return;
   inFlight=true;
   try{
-    const sourceGate=ownedAliEvSourceReady(sourceUrl);
-    if(!sourceGate.ok){
-      if(lastState!==sourceGate.reason){
-        lastState=sourceGate.reason;
-        emit({ok:true,state:lastState,retrying:true});
-      }
-      return;
-    }
     const yard=new YardOperator({stateDir:yardState});
     const controller=new RivetReportEdgeController({
       yard,
@@ -90,6 +82,25 @@ async function reconcile(){
       if(lastState!=='held_waiting_for_public_edge'){
         lastState='held_waiting_for_public_edge';
         emit({ok:true,state:lastState,retrying:true});
+      }
+      return;
+    }
+
+    const aliev=yard.deploymentStatus('aliev-source-runtime');
+    let sourceUrl=configuredSourceUrl;
+    let sourceDiscovery='configured';
+    if(!sourceUrl&&aliev?.state==='ready'){
+      if(aliev.receipt?.capacity_node_id!==edge.receipt?.capacity_node_id){
+        throw new Error('aliev_source_and_public_edge_node_drift');
+      }
+      sourceUrl=String(aliev.result?.source_url||'').trim();
+      sourceDiscovery='yard_resident';
+    }
+    const sourceGate=ownedAliEvSourceReady(sourceUrl);
+    if(!sourceGate.ok){
+      if(lastState!==sourceGate.reason){
+        lastState=sourceGate.reason;
+        emit({ok:true,state:lastState,retrying:true,source_discovery:sourceDiscovery});
       }
       return;
     }
@@ -116,6 +127,8 @@ async function reconcile(){
       route_verified:result.route_verified===true,
       authenticated_report_api:result.authenticated_report_api===true,
       receipt_hash:result.receipt_hash,
+      source_discovery:sourceDiscovery,
+      source_runtime_owned:true,
       retrying:false,
     });
   }catch(error){

@@ -43,3 +43,32 @@ test('external canary preserves authority and provider truth boundaries',()=>{
     assert.ok(workflow.includes(required),'missing public-edge truth contract: '+required);
   }
 });
+
+test('external canary proves every OpenAI directory listing page',()=>{
+  for(const required of [
+    'verify_listing_page "/" "Evercraft Fabric"',
+    'verify_listing_page "/support" "Evercraft Fabric Support"',
+    'verify_listing_page "/privacy" "Evercraft Fabric Privacy Policy"',
+    'verify_listing_page "/terms" "Evercraft Fabric Terms of Service"',
+    'listing_pages_verified:true',
+    'bash scripts/build-evercraft-openai-plugin.sh',
+  ]){
+    assert.ok(workflow.includes(required),'missing OpenAI listing-page canary contract: '+required);
+  }
+});
+
+
+test('external canary rejects a specialist edge that still routes through Base44',()=>{
+  assert.ok(
+    workflow.includes('.base44_transport_enabled == false'),
+    'public specialist edge must prove Base44 transport is disabled'
+  );
+  assert.ok(
+    workflow.includes('handoff_url // ""'),
+    'specialist tool canary must inspect returned handoff URLs'
+  );
+  assert.ok(
+    workflow.includes('test("base44\\\\.app"; "i")'),
+    'specialist tool canary must reject Base44 handoff URLs'
+  );
+});

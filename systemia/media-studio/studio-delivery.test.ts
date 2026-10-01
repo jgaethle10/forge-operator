@@ -87,6 +87,17 @@ function receipt():TimelineExportReceipt{
     videoCodec:'h264',
     audioCodec:'aac',
     inputAssetIds:['shot','captions'],
+    audioMaster:{
+      targetLufs:-14,
+      truePeakDb:-1,
+      lra:11,
+      dialogueDucking:true,
+      duckThreshold:.05,
+      duckRatio:8,
+      attackMs:20,
+      releaseMs:350,
+      sampleRate:48000,
+    },
     renderedAt:'2026-09-30T00:00:00Z',
     publicationAuthorityGranted:false,
   };
@@ -97,6 +108,7 @@ test('builds a Clip-ready manifest without claiming publication',()=>{
     request:request(),
     renderReceipt:receipt(),
     renderReceiptPath:'/tmp/final.render-receipt.json',
+    masterQcReceiptPath:'/tmp/final.master-qc.json',
   });
   assert.equal(manifest.schema,'evercraft.clip.media-intake.v1');
   assert.equal(manifest.state,'ready_for_clip_intake');
@@ -111,6 +123,7 @@ test('builds a Clip-ready manifest without claiming publication',()=>{
   assert.equal(manifest.boundaries.platformCredentialsConsumed,false);
   assert.equal(manifest.boundaries.platformPublishStateAsserted,false);
   assert.equal(manifest.boundaries.downstreamClipGateRequired,true);
+  assert.match(manifest.provenance.masterQcReceiptPath,/final\.master-qc\.json$/);
 });
 
 test('render receipt must belong to the exact project version',()=>{
@@ -121,6 +134,7 @@ test('render receipt must belong to the exact project version',()=>{
       request:request(),
       renderReceipt:r,
       renderReceiptPath:'/tmp/r.json',
+      masterQcReceiptPath:'/tmp/qc.json',
     }),
     /studio_delivery_render_version_mismatch/
   );
@@ -134,6 +148,7 @@ test('delivery requires an explicit destination and title',()=>{
       request:noDest,
       renderReceipt:receipt(),
       renderReceiptPath:'/tmp/r.json',
+      masterQcReceiptPath:'/tmp/qc.json',
     }),
     /studio_delivery_destinations_missing/
   );
@@ -145,6 +160,7 @@ test('delivery requires an explicit destination and title',()=>{
       request:noTitle,
       renderReceipt:receipt(),
       renderReceiptPath:'/tmp/r.json',
+      masterQcReceiptPath:'/tmp/qc.json',
     }),
     /studio_delivery_title_missing/
   );

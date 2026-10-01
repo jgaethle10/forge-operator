@@ -36,6 +36,7 @@ No approved machine price was found. Do not auto-quote.
 ## Invocation and authority
 
 LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.
+Live canary evidence: GitHubActionsRun:36802891607
 
 Public-safe reads can be served within access rules. Any paid packaging requires explicit terms/confirmation first.
 

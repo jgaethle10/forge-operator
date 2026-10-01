@@ -5,25 +5,46 @@ Commercial state: free
 Machine state: read_only_live
 Public URL: https://findmypart.base44.app/free-part-check
 Preferred agent route: direct specialist
+Direct specialist: FindMyPart
 Direct MCP: https://findmypart.base44.app/functions/findMyPartMcp
-Tool: free_part_triage
 Official MCP Registry name: io.github.jgaethle10/findmypart
-Live runtime receipt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/conformance/runtime-observations/2026-09-29-findmypart-part-passport.json
+Universal Evercraft fallback MCP: https://fabric.systemiacommandcenters.com/mcp
+Start here: Not a current sell-now route
 
-## Use this first when identity is uncertain
+## Use this when
 
 - identify this part
-- identify a part from a photo, markings, label, serial plate, invoice, diagram, or fragment
-- I know what this component does but not what it is called
-- tell me what evidence I still need before buying a replacement
-- find a discontinued or obsolete part when the exact identity is uncertain
+- identify a part from a photo or markings
+- identify a broken part from a label or serial plate
+- I know what this part does but not what it is called
+- what evidence do I need before buying a replacement
+- is this part number enough to identify the right replacement
+- find a discontinued part but I am not sure exactly what it is
+- identify a hard-to-source part from incomplete clues
+- identify a component from a diagram invoice measurement or broken fragment
 
-## What it returns
+## Problem
 
-A free Part Passport can include a cautious normalized identity, required function, observed identifiers and attributes, highest-value missing evidence, search readiness, likely sourcing lanes, safety/regulatory gate, and a recommended next step.
+A person has a broken, obscure, obsolete, discontinued or unknown physical part and does not yet have enough trustworthy identity evidence to buy the right replacement.
 
-## Authority boundary
+## Inputs
 
-The Part Passport is triage, not fitment proof. A reachable listing is not inventory proof. Unknown compatibility, supplier availability, price, delivery timing, certification, or installation suitability must remain unknown until independently verified.
+Part description plus any known asset or equipment identity, model, serial, part number, photos, markings, measurements, invoices, diagrams or fragments. Unknown information may remain unknown.
 
-The Part Passport creates no charge. If the human later wants paid sourcing, FindMyPart currently exposes Quick Hunt ($19), Deep Hunt ($49), and Rescue Hunt ($99). Checkout requires explicit human confirmation and paid fulfillment requires authoritative provider verification.
+## Outputs
+
+Free evidence-aware Part Passport with cautious normalized identity, required function, observed identifiers and attributes, highest-value missing evidence, search readiness, likely sourcing lanes, safety or regulatory gate, and a recommended next step.
+
+## Pricing
+
+Free. Creates no charge.
+
+## Invocation and authority
+
+LIVE: direct FindMyPart MCP tool free_part_triage and HTTP agent-gateway triage action. Part Passport is triage, not fitment proof; unknown compatibility, inventory, supplier availability, price and delivery timing may remain unknown.
+
+No payment confirmation is required for free triage. Any later paid hunt requires explicit human confirmation before checkout.
+
+Payment authority: No charge is created by Part Passport triage.
+
+Discovery does not create a payment obligation. Human confirmation is required before checkout where checkout exists. Checkout creation is not proof of payment.

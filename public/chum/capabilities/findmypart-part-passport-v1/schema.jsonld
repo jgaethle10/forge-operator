@@ -1,18 +1,27 @@
 {
   "@context": "https://schema.org",
-  "@type": "Service",
-  "name": "FindMyPart Part Passport",
-  "serviceType": "Free evidence-aware part identification triage",
-  "provider": {
-    "@type": "Organization",
-    "name": "Evercraft LLC"
-  },
-  "url": "https://findmypart.base44.app/free-part-check",
-  "description": "Free evidence-aware triage for ambiguous, obsolete, discontinued and hard-to-source parts before paid sourcing.",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD",
-    "availability": "https://schema.org/InStock"
-  }
+  "@graph": [
+    {
+      "@type": "Service",
+      "@id": "https://findmypart.base44.app/free-part-check#evercraft-capability",
+      "name": "FindMyPart Part Passport",
+      "description": "A person has a broken, obscure, obsolete, discontinued or unknown physical part and does not yet have enough trustworthy identity evidence to buy the right replacement.",
+      "url": "https://findmypart.base44.app/free-part-check",
+      "provider": {
+        "@type": "Organization",
+        "name": "Evercraft LLC",
+        "url": "https://github.com/jgaethle10/forge-operator"
+      },
+      "serviceType": "Evercraft public machine capability",
+      "identifier": "findmypart-part-passport-v1"
+    },
+    {
+      "@type": "WebPage",
+      "name": "FindMyPart Part Passport | Evercraft capability",
+      "description": "A person has a broken, obscure, obsolete, discontinued or unknown physical part and does not yet have enough trustworthy identity evidence to buy the right replacement.",
+      "about": {
+        "@id": "https://findmypart.base44.app/free-part-check#evercraft-capability"
+      }
+    }
+  ]
 }

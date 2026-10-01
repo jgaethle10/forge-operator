@@ -50,6 +50,18 @@ import type { FallenTimelineProject } from './timeline.js';
 import { compileStudioDraft, type StudioDraftPlan, type StudioDraftBundle } from './studio-create.js';
 import { resolveStudioDraft, type StudioResolutionItem } from './studio-resolve.js';
 import { finalizeStudioDelivery, type StudioDeliveryRequest } from './studio-delivery.js';
+import {
+  buildCinematicVisualRequest,
+  compileCinematicSequence,
+  type CinematicSequenceInput,
+  type CinematicShotBinding,
+  type CinematicShotContract,
+} from './cinematic-sequence.js';
+import {
+  applyPerformanceDirection,
+  compilePerformancePlan,
+  type PerformancePlanInput,
+} from './performance-director.js';
 
 function readJson<T>(filePath: string): T {
   return JSON.parse(fs.readFileSync(path.resolve(filePath), 'utf8')) as T;
@@ -92,6 +104,9 @@ function usage() {
     '  npm run media:studio -- studio-create <draft-plan.json> <draft-bundle.json>',
     '  npm run media:studio -- studio-resolve <resolution-payload.json> <resolved-bundle.json> [captions.srt]',
     '  npm run media:studio -- studio-deliver <delivery-request.json> <output-dir>',
+    '  npm run media:studio -- cinematic-sequence <sequence.json> <sequence-plan.json>',
+    '  npm run media:studio -- cinematic-shot <shot-binding.json> <visual-request.json>',
+    '  npm run media:studio -- performance-direct <payload.json> <directed-sequence.json> [performance-plan.json]',
   ].join('\n'));
 }
 
@@ -141,6 +156,56 @@ function main() {
     const plan = buildVisualFinishPlan(payload.request, payload.endpoints);
     writeJson(output, plan);
     console.log(`Visual finish plan created: ${path.resolve(output)}`);
+    return;
+  }
+
+  if (command === 'performance-direct') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const payload = readJson<{ sequence:CinematicSequenceInput; performance:PerformancePlanInput }>(input);
+    const plan = compilePerformancePlan(payload);
+    if (optionalPlan) writeJson(optionalPlan, plan);
+    if (plan.status !== 'accepted') {
+      writeJson(output, payload.sequence);
+      console.error(`Performance plan rejected: ${plan.errors.join(' | ')}`);
+      process.exitCode = 2;
+      return;
+    }
+    const directed = applyPerformanceDirection({ sequence:payload.sequence, plan });
+    writeJson(output, directed);
+    console.log(`Performance-directed cinematic sequence created: ${path.resolve(output)}`);
+    if (optionalPlan) console.log(`Performance plan created: ${path.resolve(optionalPlan)}`);
+    return;
+  }
+
+  if (command === 'cinematic-sequence') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const sequence = readJson<CinematicSequenceInput>(input);
+    const plan = compileCinematicSequence(sequence);
+    writeJson(output, plan);
+    console.log(`Cinematic sequence plan created: ${path.resolve(output)}`);
+    console.log(`Status: ${plan.status}; shots: ${plan.shots.length}; warnings: ${plan.warnings.length}`);
+    if (plan.status === 'rejected') process.exitCode = 2;
+    return;
+  }
+
+  if (command === 'cinematic-shot') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const payload = readJson<{ shot:CinematicShotContract; binding?:CinematicShotBinding }>(input);
+    const request = buildCinematicVisualRequest(payload.shot, payload.binding ?? {});
+    writeJson(output, request);
+    console.log(`Cinematic visual request created: ${path.resolve(output)}`);
     return;
   }
 

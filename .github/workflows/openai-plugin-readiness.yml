@@ -6,6 +6,7 @@ on:
       - 'plugins/evercraft-fabric/**'
       - 'distribution/openai-plugin/**'
       - 'scripts/validate-openai-plugin-submission.mjs'
+      - 'scripts/build-evercraft-openai-plugin.sh'
       - 'scripts/promote-openai-owned-fabric.mjs'
       - 'systemia/mcp/fabric-directory.mjs'
       - 'systemia/mcp/fabric-local-runtime.mjs'
@@ -41,15 +42,8 @@ jobs:
       - name: Build OpenAI upload ZIP
         run: |
           set -euo pipefail
-          mkdir -p artifacts
-          (
-            cd plugins/evercraft-fabric
-            zip -qr ../../artifacts/evercraft-openai-plugin.zip .               -x '*.DS_Store'
-          )
+          bash scripts/build-evercraft-openai-plugin.sh
           test -s artifacts/evercraft-openai-plugin.zip
-          unzip -l artifacts/evercraft-openai-plugin.zip | grep -q 'plugin.json'
-          unzip -l artifacts/evercraft-openai-plugin.zip | grep -q 'mcp.json'
-          unzip -l artifacts/evercraft-openai-plugin.zip | grep -q 'skills/evercraft-router/SKILL.md'
 
       - name: Upload OpenAI submission artifact
         uses: actions/upload-artifact@v4

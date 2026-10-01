@@ -1,17 +1,31 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>FindMyPart Part Passport | Evercraft capability</title>
-<meta name="description" content="Free evidence-aware part identification triage before paid sourcing.">
+<meta name="description" content="A person has a broken, obscure, obsolete, discontinued or unknown physical part and does not yet have enough trustworthy identity evidence to buy the right replacement.">
 <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
-<link rel="alternate" type="text/plain" href="./llms.txt"><link rel="alternate" type="application/json" href="./capability.json">
+<link rel="alternate" type="text/plain" href="./llms.txt">
+<link rel="alternate" type="application/json" href="./capability.json">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Service","@id":"https://findmypart.base44.app/free-part-check#evercraft-capability","name":"FindMyPart Part Passport","description":"A person has a broken, obscure, obsolete, discontinued or unknown physical part and does not yet have enough trustworthy identity evidence to buy the right replacement.","url":"https://findmypart.base44.app/free-part-check","provider":{"@type":"Organization","name":"Evercraft LLC","url":"https://github.com/jgaethle10/forge-operator"},"serviceType":"Evercraft public machine capability","identifier":"findmypart-part-passport-v1"},{"@type":"WebPage","name":"FindMyPart Part Passport | Evercraft capability","description":"A person has a broken, obscure, obsolete, discontinued or unknown physical part and does not yet have enough trustworthy identity evidence to buy the right replacement.","about":{"@id":"https://findmypart.base44.app/free-part-check#evercraft-capability"}}]}</script>
 <style>body{font-family:system-ui,sans-serif;max-width:920px;margin:56px auto;padding:0 24px;line-height:1.6;background:#09090b;color:#fafafa}a{color:#93c5fd}.card{border:1px solid #27272a;border-radius:16px;padding:20px;margin:18px 0}.muted{color:#a1a1aa}code{background:#18181b;padding:.15rem .35rem;border-radius:.3rem}</style>
 </head><body><main>
 <p class="muted">EVERCRAFT · PUBLIC MACHINE CAPABILITY</p>
 <h1>FindMyPart Part Passport</h1>
-<p>Free evidence-aware triage for a broken, obscure, obsolete, discontinued, or unknown part before somebody risks buying the wrong thing.</p>
-<div class="card"><h2>Current state</h2><p>Commercial: <code>free</code></p><p>Machine: <code>read_only_live</code></p><p>Creates charge: <code>false</code></p></div>
-<div class="card"><h2>What it does</h2><p>Builds a cautious Part Passport from descriptions, asset identity, labels, markings, photos, serial information, diagrams, invoices, measurements, or fragments. It returns identity clues, function, missing evidence, search lanes, a safety gate, and the next best step.</p></div>
-<div class="card"><h2>Agent route</h2><p><strong>MCP:</strong> <code>https://findmypart.base44.app/functions/findMyPartMcp</code></p><p><strong>Tool:</strong> <code>free_part_triage</code></p><p><strong>Registry:</strong> <code>io.github.jgaethle10/findmypart</code></p></div>
-<div class="card"><h2>Start</h2><p><a href="https://findmypart.base44.app/free-part-check"><strong>Run the free Part Passport</strong></a></p><p><a href="./llms.txt">LLM guidance</a> · <a href="./capability.json">Capability JSON</a> · <a href="./schema.jsonld">JSON-LD</a></p></div>
-<div class="card"><h2>Evidence boundary</h2><p>A normalized identity is not fitment proof. A reachable listing is not inventory proof. Unknown compatibility, supplier availability, price, delivery timing, certification, or installation suitability stays unknown until verified.</p></div>
+<p>A person has a broken, obscure, obsolete, discontinued or unknown physical part and does not yet have enough trustworthy identity evidence to buy the right replacement.</p>
+<div class="card"><h2>Current state</h2><p>Commercial: <code>free</code></p><p>Machine: <code>read_only_live</code></p><p>Pricing: Free. Creates no charge.</p></div>
+<div class="card"><h2>Use this when</h2><ul>
+<li>identify this part</li>
+<li>identify a part from a photo or markings</li>
+<li>identify a broken part from a label or serial plate</li>
+<li>I know what this part does but not what it is called</li>
+<li>what evidence do I need before buying a replacement</li>
+<li>is this part number enough to identify the right replacement</li>
+<li>find a discontinued part but I am not sure exactly what it is</li>
+<li>identify a hard-to-source part from incomplete clues</li>
+<li>identify a component from a diagram invoice measurement or broken fragment</li>
+</ul></div>
+<div class="card"><h2>Inputs and outputs</h2><p><strong>Inputs:</strong> Part description plus any known asset or equipment identity, model, serial, part number, photos, markings, measurements, invoices, diagrams or fragments. Unknown information may remain unknown.</p><p><strong>Outputs:</strong> Free evidence-aware Part Passport with cautious normalized identity, required function, observed identifiers and attributes, highest-value missing evidence, search readiness, likely sourcing lanes, safety or regulatory gate, and a recommended next step.</p></div>
+<div class="card"><h2>Agent route</h2><p><strong>Preferred:</strong> direct specialist</p><p><strong>Specialist MCP:</strong> <code>https://findmypart.base44.app/functions/findMyPartMcp</code></p><p><strong>Registry:</strong> <code>io.github.jgaethle10/findmypart</code></p><p class="muted">Use Evercraft Machine Commerce only when this specialist is unavailable or the user intent is ambiguous.</p></div>
+<div class="card"><h2>Open capability</h2><p><a href="https://findmypart.base44.app/free-part-check">Capability details</a></p><p><a href="./llms.txt">LLM guidance</a> · <a href="./capability.json">Capability JSON</a> · <a href="./schema.jsonld">JSON-LD</a></p></div>
+<div class="card"><h2>Authority and payment boundary</h2><p>No payment confirmation is required for free triage. Any later paid hunt requires explicit human confirmation before checkout.</p><p>Payment authority: No charge is created by Part Passport triage.</p></div>
+<p class="muted">Publication is not proof of provider pickup, recommendation, payment, entitlement or fulfillment. CHUM preserves current source state without upgrading it by inference.</p>
 </main></body></html>

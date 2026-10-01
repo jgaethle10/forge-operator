@@ -68,6 +68,30 @@ test('Fabric ranks the direct parts specialist for natural discontinued-part lan
   assert.ok(hits[0].match_score>0);
 });
 
+test('Fabric routes unknown physical-part identity to the free Part Passport before software-health tools',()=>{
+  const canonical=loadFabricCatalogFromRepository();
+  assert.ok(canonical.some((x)=>x.public_id==='findmypart-part-passport-v1'));
+  const hits=matchFabricCapabilities(
+    'I have an old machine with a broken part. I can see some markings and take a photo but I do not know what the part is called or what replacement fits.',
+    canonical,
+    {limit:8}
+  );
+  assert.equal(hits[0].public_id,'findmypart-part-passport-v1');
+  const sentinel=hits.find((x)=>x.public_id==='portfolio-sentinel-v1');
+  assert.ok(!sentinel || sentinel.match_score < hits[0].match_score);
+});
+
+test('Fabric routes explicit salvage blueprint and fabrication sourcing to the paid FindMyPart hunt',()=>{
+  const canonical=loadFabricCatalogFromRepository();
+  const hits=matchFabricCapabilities(
+    'The original part is obsolete and I may need a salvage donor, cross reference, blueprint, or fabrication path.',
+    canonical,
+    {limit:5}
+  );
+  assert.equal(hits[0].public_id,'findmypart-paid-hunt-v1');
+  assert.ok(hits[0].match_score>0);
+});
+
 test('Fabric MCP exposes exactly the read-only directory contract',async()=>{
   const init=await executeFabricDirectoryRpc({
     jsonrpc:'2.0',id:1,method:'initialize',
@@ -91,6 +115,19 @@ test('Fabric MCP exposes exactly the read-only directory contract',async()=>{
   assert.ok(listed.result.tools.every((x)=>x.annotations.readOnlyHint===true));
   assert.ok(listed.result.tools.every((x)=>x.annotations.destructiveHint===false));
   assert.equal(fabricDirectoryTools().length,3);
+});
+
+test('Fabric MCP publishes reviewer-grade argument descriptions',()=>{
+  const tools=fabricDirectoryTools();
+  for(const tool of tools){
+    assert.ok(String(tool.description||'').length>20);
+    for(const [name,schema] of Object.entries(tool.inputSchema?.properties||{})){
+      assert.ok(
+        String(schema.description||'').length>12,
+        `${tool.name} input ${name} needs a useful description`
+      );
+    }
+  }
 });
 
 test('Fabric MCP matches intent and never creates transaction authority',async()=>{

@@ -918,8 +918,8 @@
       "mirror_path": "/chum/products/evermaps/",
       "llms_path": "/chum/products/evermaps/llms.txt",
       "discovery_path": "/chum/products/evermaps/ai-discovery.json",
-      "registry_name": "",
-      "mcp": "",
+      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "class": "public_safe_geospatial_evidence_projection",
       "intents": [
         "map this evidence for me",
@@ -933,7 +933,7 @@
       "human_confirmation_required": true,
       "commercial_status": "",
       "description": "EverMaps is an Evercraft public safe geospatial evidence projection capability. Common needs: map this evidence for me; show lifeline coverage for this place; give me map-ready heat or smoke action sites; show historical river geometry.",
-      "content_sha256": "376dbe811df93f8b6cf10ca7960fa655c31429f3c3f1ae44ead3a4459883e0c0",
+      "content_sha256": "797f10f1814bc6b5a2be383e094a5464460666b3b2a8f90d8d9226d8416daf4f",
       "updated_at": "2026-09-28T00:00:00.000Z"
     },
     {
@@ -1056,19 +1056,19 @@
         "where can I find this discontinued part",
         "I have a part number but cannot find it anywhere",
         "identify this machine part from a photo or markings",
+        "identify this broken part from a label serial plate invoice diagram or fragment",
+        "tell me what evidence I still need before buying a replacement",
+        "find a supersession or cross reference",
         "find a replacement for an obsolete part",
         "find a salvage or donor part",
-        "find a fabrication path when the original part is unavailable",
-        "find a discontinued tractor part",
-        "find an obsolete automotive or machine part",
-        "identify a hard-to-source part from markings measurements photos or equipment clues",
-        "find replacement donor salvage or fabrication paths when normal sourcing fails"
+        "find a blueprint or fabrication path when the original part is unavailable",
+        "identify a hard-to-source part from markings measurements photos or equipment clues"
       ],
-      "authority": "public discovery and human-confirmed paid sourcing hunts",
+      "authority": "free evidence-aware Part Passport triage plus human-confirmed paid sourcing hunts",
       "human_confirmation_required": true,
-      "commercial_status": "",
-      "description": "FindMyPart is an Evercraft hard to source parts capability. Common needs: where can I find this discontinued part; I have a part number but cannot find it anywhere; identify this machine part from a photo or markings; find a replacement for an obsolete part.",
-      "content_sha256": "23f2836c96cdfe9f7347846345dd8fa51dab5ca5912dafb4dddb5d66a1704d76",
+      "commercial_status": "sell_now",
+      "description": "FindMyPart is an Evercraft hard to source parts capability. Common needs: where can I find this discontinued part; I have a part number but cannot find it anywhere; identify this machine part from a photo or markings; identify this broken part from a label serial plate invoice diagram or fragment.",
+      "content_sha256": "9eb2711ee3771ee1b424539887090af4d27a6d687f067096f767c671dd5c3171",
       "updated_at": "2026-09-28T00:00:00.000Z"
     },
     {
@@ -1144,8 +1144,8 @@
       "mirror_path": "/chum/products/globalstat/",
       "llms_path": "/chum/products/globalstat/llms.txt",
       "discovery_path": "/chum/products/globalstat/ai-discovery.json",
-      "registry_name": "",
-      "mcp": "",
+      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "class": "country_comparison_and_evidence_intelligence",
       "intents": [
         "compare these countries on this metric",
@@ -1159,7 +1159,7 @@
       "human_confirmation_required": true,
       "commercial_status": "",
       "description": "GlobalStat is an Evercraft country comparison and evidence intelligence capability. Common needs: compare these countries on this metric; give me sourced country intelligence; which countries lead on this domain and why; show me the evidence behind this country score.",
-      "content_sha256": "3f8e3d42e4b338d53ffe53065fe71f79a4a30dbc3ecdb37154614e3f2155e1c1",
+      "content_sha256": "e59982c445166347f51c4b54c96f684683d2026865e119aa8cab93be20596044",
       "updated_at": "2026-09-28T00:00:00.000Z"
     },
     {
@@ -1255,8 +1255,8 @@
       "mirror_path": "/chum/products/little-red-book-export-qa/",
       "llms_path": "/chum/products/little-red-book-export-qa/llms.txt",
       "discovery_path": "/chum/products/little-red-book-export-qa/ai-discovery.json",
-      "registry_name": "",
-      "mcp": "",
+      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "class": "book_export_preflight_and_cover_geometry_qa",
       "intents": [
         "check if my book is ready for KDP",
@@ -1269,7 +1269,7 @@
       "human_confirmation_required": true,
       "commercial_status": "",
       "description": "Little Red Studio Book Export QA is an Evercraft book export preflight and cover geometry qa capability. Common needs: check if my book is ready for KDP; validate my cover dimensions; audit this paperback export; is my book file ready to publish.",
-      "content_sha256": "a3e2ac942438ca5591a5af0bdc3c16b5fb89620e656b9a964665dae67eeb7796",
+      "content_sha256": "cd14973aaccbe942083f4788079419a1cf63707968fb6ee95e05d5ba3cd5596b",
       "updated_at": "2026-09-28T00:00:00.000Z"
     },
     {

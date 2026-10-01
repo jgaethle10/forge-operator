@@ -2,9 +2,9 @@
 
 Start from the user's problem. Do not require an Evercraft product name.
 
-Entries: 110
+Entries: 112
 Product entries: 64
-Machine-offer entries: 46
+Machine-offer entries: 48
 Sell-now machine offers: 14
 
 Payment rule: discovery and matching create no payment obligation. Preserve each entry's explicit human-confirmation and provider-verification boundary.
@@ -546,14 +546,39 @@ MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c
 Pricing: Quick Hunt $19 one-time; Deep Hunt $49 one-time; Rescue Hunt $99 one-time.
 Use when the user means:
 - find a hard-to-source part
-- identify this part
 - find a discontinued part
 - source an obsolete component
+- find a supersession or cross reference
 - find a donor or salvage part
-Problem: A difficult, ambiguous, obsolete, discontinued or hard-to-source part is blocking a repair, restoration, machine or project.
-Outputs: Evidence-backed sourcing hunt with candidate parts, source evidence, compatibility reasoning, sourcing options and escalation paths when ordinary sourcing fails.
+- find a blueprint or fabrication path
+- source new old stock or aftermarket replacement
+- normal part searches failed and I need deeper sourcing
+Problem: A difficult, identified-enough physical part is still blocking a repair, restoration, machine or project after ordinary sourcing has failed or deeper cross-reference, salvage, documentation, blueprint or fabrication work is needed.
+Outputs: Evidence-backed paid sourcing hunt with tier-dependent source lanes, customer-safe Part Passport state, candidate source evidence, verification state, and escalation paths when ordinary sourcing fails.
 Confirmation boundary: User must explicitly choose an offer and confirm payment. Paid fulfillment starts only after independently verified payment.
-Invocation status: LIVE: HTTP agent gateway + OpenAPI + llms guidance + remote MCP. Agents can read offers, prepare checkout only after explicit human confirmation, and read hunt status. Paid fulfillment still requires authoritative provider verification.
+Invocation status: LIVE: direct FindMyPart MCP exposes free Part Passport triage, current paid offers, human-confirmed checkout preparation, and private-token hunt status. Use free_part_triage first when identity or sourcing path is unclear. Paid fulfillment still requires authoritative provider verification.
+
+## FindMyPart Part Passport
+Capability ID: offer:findmypart-part-passport-v1
+Commercial state: free
+Machine state: read_only_live
+Public URL: https://findmypart.base44.app/free-part-check
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: Free. Creates no charge.
+Use when the user means:
+- identify this part
+- identify a part from a photo or markings
+- identify a broken part from a label or serial plate
+- I know what this part does but not what it is called
+- what evidence do I need before buying a replacement
+- is this part number enough to identify the right replacement
+- find a discontinued part but I am not sure exactly what it is
+- identify a hard-to-source part from incomplete clues
+- identify a component from a diagram invoice measurement or broken fragment
+Problem: A person has a broken, obscure, obsolete, discontinued or unknown physical part and does not yet have enough trustworthy identity evidence to buy the right replacement.
+Outputs: Free evidence-aware Part Passport with cautious normalized identity, required function, observed identifiers and attributes, highest-value missing evidence, search readiness, likely sourcing lanes, safety or regulatory gate, and a recommended next step.
+Confirmation boundary: No payment confirmation is required for free triage. Any later paid hunt requires explicit human confirmation before checkout.
+Invocation status: LIVE: direct FindMyPart MCP tool free_part_triage and HTTP agent-gateway triage action. Part Passport is triage, not fitment proof; unknown compatibility, inventory, supplier availability, price and delivery timing may remain unknown.
 
 ## Repair Shop Sourcing Desk
 Capability ID: offer:findmypart-repair-shop-desk-v1
@@ -981,6 +1006,24 @@ Problem: A business needs a professional website built or upgraded without opera
 Outputs: A bounded paid website-service order and completed website/service outcome through the existing fulfillment workflow.
 Confirmation boundary: The buyer must explicitly choose a tier and confirm payment before checkout. Fulfillment begins only after independent payment verification.
 Invocation status: LIVE: agent HTTP gateway + OpenAPI + llms guidance + remote MCP at https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp. Agents can inspect $500/$999/$1,999 website-service tiers, prepare checkout only after explicit human confirmation, and independently verify paid order state.
+
+## Worldstate Reality Delta
+Capability ID: offer:worldstate-reality-delta-v1
+Commercial state: verification_required
+Machine state: discovery_only
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Pricing: No approved public machine price or payment path. Do not auto-quote.
+Use when the user means:
+- what changed in the real world
+- show me the reality delta for this place or system
+- compare verified worldstate before and after an event
+- what materially changed across weather infrastructure economy health or hazards
+- build a provenance-preserving worldstate snapshot
+- turn observations into an evidence-backed change packet
+Problem: A user or Evercraft system needs to understand what materially changed in the real world across time without collapsing observed, reported, inferred, modeled, or uncertain evidence into one undifferentiated claim.
+Outputs: Evidence-preserving worldstate snapshots, material deltas, provenance links, evidence-state labels, contradictions, uncertainty, and bounded context packets for downstream Evercraft systems.
+Confirmation boundary: Discovery and evidence comparison create no action authority. Publishing, consequential decisions, private-data access, and paid work remain separately authorized.
+Invocation status: SOURCE-VERIFIED: Worldstate snapshot/delta, Context Fabric adapter/reader, observation fabric, Passport-authorized read path, and Fallen phenomenon bridge are covered by repository proofs. Public machine execution is not claimed until an external callable route is independently verified.
 
 ## AliEV
 Capability ID: product:aliev
@@ -1565,8 +1608,9 @@ Invocation status: Route through the universal Evercraft discovery surface unles
 Capability ID: product:evermaps
 Product key: evermaps
 Commercial state: product_contract
-Machine state: discovery_only
+Machine state: specialist_mcp_declared
 Public URL: https://evermaps.base44.app/
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Use when the user means:
 - map this evidence for me
 - show lifeline coverage for this place
@@ -1575,7 +1619,7 @@ Use when the user means:
 - return public-safe geospatial evidence
 - plot verified infrastructure coverage
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
-Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
 
 ## EverNest
 Capability ID: product:evernest
@@ -1663,13 +1707,15 @@ Use when the user means:
 - where can I find this discontinued part
 - I have a part number but cannot find it anywhere
 - identify this machine part from a photo or markings
+- identify this broken part from a label serial plate invoice diagram or fragment
+- tell me what evidence I still need before buying a replacement
+- find a supersession or cross reference
 - find a replacement for an obsolete part
 - find a salvage or donor part
-- find a fabrication path when the original part is unavailable
-- find a discontinued tractor part
-- find an obsolete automotive or machine part
+- find a blueprint or fabrication path when the original part is unavailable
 - identify a hard-to-source part from markings measurements photos or equipment clues
-- find replacement donor salvage or fabrication paths when normal sourcing fails
+- find a discontinued appliance tractor automotive marine industrial construction powersports agricultural electronics or equipment part
+- find replacement donor salvage blueprint or fabrication paths when normal sourcing fails
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
 
@@ -1768,8 +1814,9 @@ Invocation status: Route through the universal Evercraft discovery surface unles
 Capability ID: product:globalstat
 Product key: globalstat
 Commercial state: product_contract
-Machine state: discovery_only
+Machine state: specialist_mcp_declared
 Public URL: https://global-stat-pulse.base44.app/
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Use when the user means:
 - compare these countries on this metric
 - give me sourced country intelligence
@@ -1778,7 +1825,7 @@ Use when the user means:
 - reconcile conflicting country data
 - country benchmark with sources
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
-Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
 
 ## Guardian
 Capability ID: product:guardian
@@ -1884,8 +1931,9 @@ Invocation status: Specialist MCP declared in the Evercraft registry. Runtime he
 Capability ID: product:little-red-book-export-qa
 Product key: little-red-book-export-qa
 Commercial state: product_contract
-Machine state: discovery_only
+Machine state: specialist_mcp_declared
 Public URL: https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Use when the user means:
 - check if my book is ready for KDP
 - validate my cover dimensions
@@ -1893,7 +1941,7 @@ Use when the user means:
 - is my book file ready to publish
 - check page count and cover DPI
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
-Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
 
 ## Evercraft Opportunity Fabric
 Capability ID: product:opportunity-fabric

@@ -4,6 +4,7 @@ import { executionToShotCandidates, applySelectedExecutionToTimeline } from './t
 import { makeTimelineProject } from './timeline.js';
 import type { VisualExecutionResult } from './model-fabric-runtime.js';
 import type { ShotSelectionReceipt } from './types.js';
+import type { BoundaryContinuityAdmission } from './continuity-boundary.js';
 
 const execution:VisualExecutionResult={
   schema:'evercraft.fallen.visual-model-execution.v1',
@@ -140,4 +141,124 @@ test('cannot inject an artifact that did not win the recorded tournament',()=>{
   assert.throws(()=>applySelectedExecutionToTimeline({
     project,clipId:'shot',execution,selection,expectedVersion:1
   }),/timeline_ingest_selected_artifact_missing/);
+});
+
+
+function continuityAdmission(
+  status:'accepted'|'rejected'='accepted',
+  currentArtifactDigest='b'.repeat(64),
+):BoundaryContinuityAdmission{
+  return {
+    schema:'evercraft.fallen.boundary-continuity-admission.v1',
+    packetDigest:'p'.repeat(64),
+    previousArtifactDigest:'a'.repeat(64),
+    currentArtifactDigest,
+    status,
+    reasons:status==='accepted'?[]:['identity_drift'],
+    warnings:[],
+    verifiedMetrics:['identity','wardrobe','environment','lighting','action_phase','screen_geography'],
+    receiptDigest:'r'.repeat(64),
+    boundaries:{
+      exactBoundaryFramesBound:true,
+      verifierReceiptsRequired:true,
+      localSimilarityIsNotIdentityProof:true,
+      timelineAdmissionMayFailClosed:true,
+      publicationAuthorityGranted:false,
+    },
+    admittedAt:'2026-09-30T00:00:00Z',
+  };
+}
+
+test('continuous cinematic shot cannot enter the timeline without continuity admission',()=>{
+  const project=makeTimelineProject({
+    id:'week-continuity',title:'Week',aspectRatio:'16:9',
+    assets:[{
+      id:'placeholder',path:'/tmp/p.mp4',digest:'p'.repeat(64),kind:'video',
+      sourceRefs:['placeholder']
+    }],
+    tracks:[{id:'picture',kind:'video',name:'Picture',clips:[{
+      id:'shot',trackId:'picture',assetId:'placeholder',startSec:0,durationSec:5
+    }]}]
+  });
+  const selection:ShotSelectionReceipt={
+    schema:'evercraft.fallen.shot-selection-receipt.v1',
+    needId:'need-1',candidateId:'candidate-b',artifactDigest:'b'.repeat(64),
+    creativeGenomeDigest:'g'.repeat(64),tournamentReceiptDigest:'t'.repeat(64),
+    selectedAt:'2026-09-30T00:00:00Z'
+  };
+  assert.throws(()=>applySelectedExecutionToTimeline({
+    project,clipId:'shot',execution,selection,expectedVersion:1,
+    continuity:{required:true}
+  }),/timeline_ingest_continuity_admission_missing/);
+});
+
+test('rejected continuity evidence blocks even a tournament-winning artifact',()=>{
+  const project=makeTimelineProject({
+    id:'week-continuity-reject',title:'Week',aspectRatio:'16:9',
+    assets:[{
+      id:'placeholder',path:'/tmp/p.mp4',digest:'p'.repeat(64),kind:'video',
+      sourceRefs:['placeholder']
+    }],
+    tracks:[{id:'picture',kind:'video',name:'Picture',clips:[{
+      id:'shot',trackId:'picture',assetId:'placeholder',startSec:0,durationSec:5
+    }]}]
+  });
+  const selection:ShotSelectionReceipt={
+    schema:'evercraft.fallen.shot-selection-receipt.v1',
+    needId:'need-1',candidateId:'candidate-b',artifactDigest:'b'.repeat(64),
+    creativeGenomeDigest:'g'.repeat(64),tournamentReceiptDigest:'t'.repeat(64),
+    selectedAt:'2026-09-30T00:00:00Z'
+  };
+  assert.throws(()=>applySelectedExecutionToTimeline({
+    project,clipId:'shot',execution,selection,expectedVersion:1,
+    continuity:{required:true,admission:continuityAdmission('rejected')}
+  }),/timeline_ingest_continuity_rejected:identity_drift/);
+});
+
+test('accepted exact-artifact continuity evidence is preserved in timeline provenance',()=>{
+  const project=makeTimelineProject({
+    id:'week-continuity-pass',title:'Week',aspectRatio:'16:9',
+    assets:[{
+      id:'placeholder',path:'/tmp/p.mp4',digest:'p'.repeat(64),kind:'video',
+      sourceRefs:['placeholder']
+    }],
+    tracks:[{id:'picture',kind:'video',name:'Picture',clips:[{
+      id:'shot',trackId:'picture',assetId:'placeholder',startSec:0,durationSec:5
+    }]}]
+  });
+  const selection:ShotSelectionReceipt={
+    schema:'evercraft.fallen.shot-selection-receipt.v1',
+    needId:'need-1',candidateId:'candidate-b',artifactDigest:'b'.repeat(64),
+    creativeGenomeDigest:'g'.repeat(64),tournamentReceiptDigest:'t'.repeat(64),
+    selectedAt:'2026-09-30T00:00:00Z'
+  };
+  const result=applySelectedExecutionToTimeline({
+    project,clipId:'shot',execution,selection,expectedVersion:1,
+    continuity:{required:true,admission:continuityAdmission()}
+  });
+  const asset=result.project.assets.find(item=>item.id==='candidate-b-selected');
+  assert.ok(asset?.sourceRefs.includes('continuity-boundary:'+'r'.repeat(64)));
+});
+
+test('continuity receipt cannot be reused for a different selected artifact',()=>{
+  const project=makeTimelineProject({
+    id:'week-continuity-mismatch',title:'Week',aspectRatio:'16:9',
+    assets:[{
+      id:'placeholder',path:'/tmp/p.mp4',digest:'p'.repeat(64),kind:'video',
+      sourceRefs:['placeholder']
+    }],
+    tracks:[{id:'picture',kind:'video',name:'Picture',clips:[{
+      id:'shot',trackId:'picture',assetId:'placeholder',startSec:0,durationSec:5
+    }]}]
+  });
+  const selection:ShotSelectionReceipt={
+    schema:'evercraft.fallen.shot-selection-receipt.v1',
+    needId:'need-1',candidateId:'candidate-b',artifactDigest:'b'.repeat(64),
+    creativeGenomeDigest:'g'.repeat(64),tournamentReceiptDigest:'t'.repeat(64),
+    selectedAt:'2026-09-30T00:00:00Z'
+  };
+  assert.throws(()=>applySelectedExecutionToTimeline({
+    project,clipId:'shot',execution,selection,expectedVersion:1,
+    continuity:{required:true,admission:continuityAdmission('accepted','z'.repeat(64))}
+  }),/timeline_ingest_continuity_artifact_mismatch/);
 });

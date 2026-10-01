@@ -249,8 +249,7 @@ const watcher=new PublicEdgeActivationWatcher({
   },
   specialist:{
     gateway_url:String(
-      process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL||
-      'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway'
+      process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL||''
     ),
     fabric_mcp_path:String(
       process.env.EVERCRAFT_FABRIC_MCP_PATH||'/mcp'

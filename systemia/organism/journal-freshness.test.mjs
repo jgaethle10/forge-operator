@@ -106,3 +106,11 @@ test('makes stale Black Friday shopping metadata a blocking identity finding', a
   assert.equal(result.observation.identity_state, 'drifted');
   assert.equal(result.findings.some((row) => row.code === 'journal_public_identity_drift' && row.severity === 'high'), true);
 });
+
+
+test('does not false-block when legacy copy is embedded behind explicit Journal identity', async () => {
+  const fetchImpl = async (url) => ({ok:true,status:200,url,async text(){return url.endsWith('sitemap.xml') ? '<urlset><url><lastmod>2026-09-30T19:30:00Z</lastmod></url></urlset>' : '<html><title>Evercraft Journal</title><body>News that moves. Ideas that become things.<script>all-in-one ai shopping assistant for black friday</script></body></html>';}});
+  const result=await probeJournalFreshness({url:'https://evercraftjournal.example',now:new Date('2026-09-30T20:00:00Z'),fetchImpl});
+  assert.equal(result.observation.identity_state,'expected');
+  assert.equal(result.findings.some(row=>row.code==='journal_public_identity_drift'),false);
+});

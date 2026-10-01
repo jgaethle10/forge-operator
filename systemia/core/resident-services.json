@@ -93,6 +93,19 @@
       "restart_backoff_ms": 5000
     },
     {
+      "service_key": "aliev-owned-source",
+      "mode": "resident",
+      "manifest": "systemia/organism/aliev-source.workflow.json",
+      "executable": "systemia/organism/aliev-source-runner.mjs",
+      "optional_env_args": {
+        "--lease-ttl-ms": "ALIEV_YARD_LEASE_TTL_MS",
+        "--renew-every-ms": "ALIEV_YARD_RENEW_EVERY_MS",
+        "--interval-ms": "ALIEV_YARD_RECONCILE_INTERVAL_MS"
+      },
+      "max_restarts_per_hour": 12,
+      "restart_backoff_ms": 5000
+    },
+    {
       "service_key": "rivet-report-edge",
       "mode": "resident",
       "manifest": "systemia/organism/rivet-report-edge.workflow.json",

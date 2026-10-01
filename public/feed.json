@@ -572,7 +572,7 @@
       ]
     },
     {
-      "id": "urn:evercraft:product:evermaps:376dbe811df93f8b",
+      "id": "urn:evercraft:product:evermaps:797f10f1814bc6b5",
       "url": "https://evermaps.base44.app/",
       "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evermaps/ai-discovery.json",
       "title": "EverMaps",
@@ -659,22 +659,22 @@
       ]
     },
     {
-      "id": "urn:evercraft:product:findmypart:23f2836c96cdfe9f",
+      "id": "urn:evercraft:product:findmypart:9eb2711ee3771ee1",
       "url": "https://findmypart.base44.app/",
       "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/ai-discovery.json",
       "title": "FindMyPart",
-      "summary": "FindMyPart is an Evercraft hard to source parts capability. Common needs: where can I find this discontinued part; I have a part number but cannot find it anywhere; identify this machine part from a photo or markings; find a replacement for an obsolete part.",
+      "summary": "FindMyPart is an Evercraft hard to source parts capability. Common needs: where can I find this discontinued part; I have a part number but cannot find it anywhere; identify this machine part from a photo or markings; identify this broken part from a label serial plate invoice diagram or fragment.",
       "date_modified": "2026-09-28T00:00:00.000Z",
       "tags": [
         "hard_to_source_parts",
         "where can I find this discontinued part",
         "I have a part number but cannot find it anywhere",
         "identify this machine part from a photo or markings",
+        "identify this broken part from a label serial plate invoice diagram or fragment",
+        "tell me what evidence I still need before buying a replacement",
+        "find a supersession or cross reference",
         "find a replacement for an obsolete part",
-        "find a salvage or donor part",
-        "find a fabrication path when the original part is unavailable",
-        "find a discontinued tractor part",
-        "find an obsolete automotive or machine part"
+        "find a salvage or donor part"
       ]
     },
     {
@@ -714,7 +714,7 @@
       ]
     },
     {
-      "id": "urn:evercraft:product:globalstat:3f8e3d42e4b338d5",
+      "id": "urn:evercraft:product:globalstat:e59982c445166347",
       "url": "https://global-stat-pulse.base44.app/",
       "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/globalstat/ai-discovery.json",
       "title": "GlobalStat",
@@ -785,7 +785,7 @@
       ]
     },
     {
-      "id": "urn:evercraft:product:little-red-book-export-qa:a3e2ac942438ca55",
+      "id": "urn:evercraft:product:little-red-book-export-qa:cd14973aaccbe942",
       "url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
       "external_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/little-red-book-export-qa/ai-discovery.json",
       "title": "Little Red Studio Book Export QA",

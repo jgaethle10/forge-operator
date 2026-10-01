@@ -23,8 +23,14 @@
   "public_url": "https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/machineDiscovery?view=docs",
   "payment_authority": "No verified Evercraft Payments path for this capability.",
   "invocation_status": "LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.",
-  "live_canary_evidence": null,
-  "live_proof": null,
+  "live_canary_evidence": "GitHubActionsRun:36802891607",
+  "live_proof": {
+    "conformance_state": "live_read_only_mcp_verified",
+    "machine_commerce_handoff_state": null,
+    "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+    "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+    "evidence": "GitHubActionsRun:36802891607"
+  },
   "preferred_agent_route": "universal_fallback",
   "direct_specialist": null,
   "machine_commerce_mcp": "https://fabric.systemiacommandcenters.com/mcp",

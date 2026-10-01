@@ -471,13 +471,16 @@
       "@type": "Service",
       "@id": "https://findmypart.base44.app/#evercraft-service",
       "name": "FindMyPart",
-      "alternateName": [],
+      "alternateName": [
+        "Find My Part",
+        "Part Passport"
+      ],
       "url": "https://findmypart.base44.app/",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"
       },
       "serviceType": "hard_to_source_parts",
-      "description": "where can I find this discontinued part; I have a part number but cannot find it anywhere; identify this machine part from a photo or markings; find a replacement for an obsolete part"
+      "description": "where can I find this discontinued part; I have a part number but cannot find it anywhere; identify this machine part from a photo or markings; identify this broken part from a label serial plate invoice diagram or fragment"
     },
     {
       "@type": "Service",
@@ -957,7 +960,7 @@
       "@type": "Service",
       "@id": "https://github.com/jgaethle10/forge-operator#offer-findmypart-paid-hunt-v1",
       "name": "FindMyPart Paid Part Hunt",
-      "description": "A difficult, ambiguous, obsolete, discontinued or hard-to-source part is blocking a repair, restoration, machine or project.",
+      "description": "A difficult, identified-enough physical part is still blocking a repair, restoration, machine or project after ordinary sourcing has failed or deeper cross-reference, salvage, documentation, blueprint or fabrication work is needed.",
       "url": "https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs",
       "provider": {
         "@id": "https://github.com/jgaethle10/forge-operator#evercraft"

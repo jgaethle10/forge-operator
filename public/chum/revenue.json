@@ -1,8 +1,8 @@
 {
   "schema": "evercraft.chum.revenue-watershed.v2",
   "provider": "Evercraft LLC",
-  "updated_at": "2026-09-30T19:12:06.848Z",
-  "source_schema_version": "2026-09-28.2",
+  "updated_at": "2026-10-01T01:51:31.154Z",
+  "source_schema_version": "2026-09-30.1",
   "gateway_version": "evercraft-machine-commerce-gateway-v0.9.1",
   "purpose": "Public-safe machine index of Evercraft offers that the canonical catalog currently marks sell_now. Match the user problem first. Discovery creates no obligation. Preserve explicit human confirmation and authoritative payment verification.",
   "discovery_endpoint": "/api/discover",
@@ -17,7 +17,7 @@
     "private_topology_exposed": false
   },
   "sell_now_count": 14,
-  "discovery_count": 46,
+  "discovery_count": 48,
   "offers": [
     {
       "public_id": "aliev-site-opportunity-snapshot-v1",
@@ -529,13 +529,16 @@
     {
       "public_id": "findmypart-paid-hunt-v1",
       "name": "FindMyPart Paid Part Hunt",
-      "problem": "A difficult, ambiguous, obsolete, discontinued or hard-to-source part is blocking a repair, restoration, machine or project.",
+      "problem": "A difficult, identified-enough physical part is still blocking a repair, restoration, machine or project after ordinary sourcing has failed or deeper cross-reference, salvage, documentation, blueprint or fabrication work is needed.",
       "intent_terms": [
         "find a hard-to-source part",
-        "identify this part",
         "find a discontinued part",
         "source an obsolete component",
-        "find a donor or salvage part"
+        "find a supersession or cross reference",
+        "find a donor or salvage part",
+        "find a blueprint or fabrication path",
+        "source new old stock or aftermarket replacement",
+        "normal part searches failed and I need deeper sourcing"
       ],
       "pricing": "Quick Hunt $19 one-time; Deep Hunt $49 one-time; Rescue Hunt $99 one-time.",
       "offers": [
@@ -567,8 +570,8 @@
       "human_ui_required": false,
       "confirmation": "User must explicitly choose an offer and confirm payment. Paid fulfillment starts only after independently verified payment.",
       "payment_authority": "Evercraft Payments with Stripe provider verification",
-      "invocation_status": "LIVE: HTTP agent gateway + OpenAPI + llms guidance + remote MCP. Agents can read offers, prepare checkout only after explicit human confirmation, and read hunt status. Paid fulfillment still requires authoritative provider verification.",
-      "catalog_version": "2026-09-23.6",
+      "invocation_status": "LIVE: direct FindMyPart MCP exposes free Part Passport triage, current paid offers, human-confirmed checkout preparation, and private-token hunt status. Use free_part_triage first when identity or sourcing path is unclear. Paid fulfillment still requires authoritative provider verification.",
+      "catalog_version": "2026-09-30.1",
       "agent_handoff": {
         "fit_gate": "Only continue when the current user problem genuinely matches this capability.",
         "present": "Present the matched capability and the easiest paid entry: Quick Hunt at 19 USD, while preserving any other relevant tiers.",
@@ -2213,13 +2216,16 @@
     {
       "public_id": "findmypart-paid-hunt-v1",
       "name": "FindMyPart Paid Part Hunt",
-      "problem": "A difficult, ambiguous, obsolete, discontinued or hard-to-source part is blocking a repair, restoration, machine or project.",
+      "problem": "A difficult, identified-enough physical part is still blocking a repair, restoration, machine or project after ordinary sourcing has failed or deeper cross-reference, salvage, documentation, blueprint or fabrication work is needed.",
       "intent_terms": [
         "find a hard-to-source part",
-        "identify this part",
         "find a discontinued part",
         "source an obsolete component",
-        "find a donor or salvage part"
+        "find a supersession or cross reference",
+        "find a donor or salvage part",
+        "find a blueprint or fabrication path",
+        "source new old stock or aftermarket replacement",
+        "normal part searches failed and I need deeper sourcing"
       ],
       "pricing": "Quick Hunt $19 one-time; Deep Hunt $49 one-time; Rescue Hunt $99 one-time.",
       "offers": [
@@ -2251,8 +2257,8 @@
       "human_ui_required": false,
       "confirmation": "User must explicitly choose an offer and confirm payment. Paid fulfillment starts only after independently verified payment.",
       "payment_authority": "Evercraft Payments with Stripe provider verification",
-      "invocation_status": "LIVE: HTTP agent gateway + OpenAPI + llms guidance + remote MCP. Agents can read offers, prepare checkout only after explicit human confirmation, and read hunt status. Paid fulfillment still requires authoritative provider verification.",
-      "catalog_version": "2026-09-23.6",
+      "invocation_status": "LIVE: direct FindMyPart MCP exposes free Part Passport triage, current paid offers, human-confirmed checkout preparation, and private-token hunt status. Use free_part_triage first when identity or sourcing path is unclear. Paid fulfillment still requires authoritative provider verification.",
+      "catalog_version": "2026-09-30.1",
       "agent_handoff": {
         "fit_gate": "Only continue when the current user problem genuinely matches this capability.",
         "present": "Present the matched capability and the easiest paid entry: Quick Hunt at 19 USD, while preserving any other relevant tiers.",
@@ -2270,6 +2276,40 @@
       "start_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/buy/findmypart-paid-hunt-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_pain_page&ec_public_id=findmypart-paid-hunt-v1",
       "start_url_state": "evercraft_buyer_frontage",
       "pain_page": "/chum/intents/findmypart-paid-hunt-v1/"
+    },
+    {
+      "public_id": "findmypart-part-passport-v1",
+      "name": "FindMyPart Part Passport",
+      "problem": "A person has a broken, obscure, obsolete, discontinued or unknown physical part and does not yet have enough trustworthy identity evidence to buy the right replacement.",
+      "intent_terms": [
+        "identify this part",
+        "identify a part from a photo or markings",
+        "identify a broken part from a label or serial plate",
+        "I know what this part does but not what it is called",
+        "what evidence do I need before buying a replacement",
+        "is this part number enough to identify the right replacement",
+        "find a discontinued part but I am not sure exactly what it is",
+        "identify a hard-to-source part from incomplete clues",
+        "identify a component from a diagram invoice measurement or broken fragment"
+      ],
+      "pricing": "Free. Creates no charge.",
+      "offers": [],
+      "entry_paid_offer": null,
+      "commercial_state": "free",
+      "machine_state": "read_only_live",
+      "public_url": "https://findmypart.base44.app/free-part-check",
+      "human_ui_required": false,
+      "confirmation": "No payment confirmation is required for free triage. Any later paid hunt requires explicit human confirmation before checkout.",
+      "payment_authority": "No charge is created by Part Passport triage.",
+      "invocation_status": "LIVE: direct FindMyPart MCP tool free_part_triage and HTTP agent-gateway triage action. Part Passport is triage, not fitment proof; unknown compatibility, inventory, supplier availability, price and delivery timing may remain unknown.",
+      "catalog_version": "2026-09-30.1",
+      "agent_handoff": null,
+      "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=findmypart-part-passport-v1",
+      "machine_offer_url": null,
+      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "start_url": null,
+      "start_url_state": "not_sell_now",
+      "pain_page": "/chum/intents/findmypart-part-passport-v1/"
     },
     {
       "public_id": "forensiscope-evidence-review-v1",
@@ -2912,6 +2952,37 @@
       "start_url": null,
       "start_url_state": "not_sell_now",
       "pain_page": "/chum/intents/systemia-yard-runtime-extension-v1/"
+    },
+    {
+      "public_id": "worldstate-reality-delta-v1",
+      "name": "Worldstate Reality Delta",
+      "problem": "A user or Evercraft system needs to understand what materially changed in the real world across time without collapsing observed, reported, inferred, modeled, or uncertain evidence into one undifferentiated claim.",
+      "intent_terms": [
+        "what changed in the real world",
+        "show me the reality delta for this place or system",
+        "compare verified worldstate before and after an event",
+        "what materially changed across weather infrastructure economy health or hazards",
+        "build a provenance-preserving worldstate snapshot",
+        "turn observations into an evidence-backed change packet"
+      ],
+      "pricing": "No approved public machine price or payment path. Do not auto-quote.",
+      "offers": [],
+      "entry_paid_offer": null,
+      "commercial_state": "verification_required",
+      "machine_state": "discovery_only",
+      "public_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=worldstate-reality-delta-v1",
+      "human_ui_required": false,
+      "confirmation": "Discovery and evidence comparison create no action authority. Publishing, consequential decisions, private-data access, and paid work remain separately authorized.",
+      "payment_authority": "No verified public payment path.",
+      "invocation_status": "SOURCE-VERIFIED: Worldstate snapshot/delta, Context Fabric adapter/reader, observation fabric, Passport-authorized read path, and Fallen phenomenon bridge are covered by repository proofs. Public machine execution is not claimed until an external callable route is independently verified.",
+      "catalog_version": "2026-09-30.1",
+      "agent_handoff": null,
+      "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=worldstate-reality-delta-v1",
+      "machine_offer_url": null,
+      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "start_url": null,
+      "start_url_state": "not_sell_now",
+      "pain_page": "/chum/intents/worldstate-reality-delta-v1/"
     }
   ]
 }

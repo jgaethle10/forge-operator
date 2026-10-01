@@ -145,10 +145,13 @@ Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/buy/findmypart-paid-h
 Machine state: payment_ready
 Use this when:
 - find a hard-to-source part
-- identify this part
 - find a discontinued part
 - source an obsolete component
+- find a supersession or cross reference
 - find a donor or salvage part
+- find a blueprint or fabrication path
+- source new old stock or aftermarket replacement
+- normal part searches failed and I need deeper sourcing
 LLM contract: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/findmypart-paid-hunt-v1/llms.txt
 
 ## Evercraft Foundry App Escape Audit

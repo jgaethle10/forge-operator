@@ -1,7 +1,7 @@
 {
   "schema": "evercraft.chum.capability-index.v1",
-  "updated_at": "2026-09-30T19:12:06.848Z",
-  "count": 46,
+  "updated_at": "2026-10-01T01:51:31.154Z",
+  "count": 48,
   "sell_now_count": 14,
   "universal_mcp": "https://fabric.systemiacommandcenters.com/mcp",
   "capabilities": [
@@ -905,10 +905,50 @@
       },
       "use_when": [
         "find a hard-to-source part",
-        "identify this part",
         "find a discontinued part",
         "source an obsolete component",
-        "find a donor or salvage part"
+        "find a supersession or cross reference",
+        "find a donor or salvage part",
+        "find a blueprint or fabrication path",
+        "source new old stock or aftermarket replacement",
+        "normal part searches failed and I need deeper sourcing"
+      ]
+    },
+    {
+      "public_id": "findmypart-part-passport-v1",
+      "name": "FindMyPart Part Passport",
+      "commercial_state": "free",
+      "machine_state": "read_only_live",
+      "pricing": "Free. Creates no charge.",
+      "public_url": "https://findmypart.base44.app/free-part-check",
+      "page_url": "/chum/capabilities/findmypart-part-passport-v1/",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/findmypart-part-passport-v1/llms.txt",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/findmypart-part-passport-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/findmypart-part-passport-v1/schema.jsonld",
+      "start_url": null,
+      "start_url_state": "not_sell_now",
+      "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=findmypart-part-passport-v1",
+      "entry_paid_offer": null,
+      "preferred_agent_route": "direct_specialist",
+      "direct_specialist": {
+        "product": "FindMyPart",
+        "plugin_package": "plugins/findmypart",
+        "registry_name": "io.github.jgaethle10/findmypart",
+        "registry_state": "published",
+        "mcp": "https://findmypart.base44.app/functions/findMyPartMcp",
+        "route_state": "preferred_when_available",
+        "fallback_mcp": "https://fabric.systemiacommandcenters.com/mcp"
+      },
+      "use_when": [
+        "identify this part",
+        "identify a part from a photo or markings",
+        "identify a broken part from a label or serial plate",
+        "I know what this part does but not what it is called",
+        "what evidence do I need before buying a replacement",
+        "is this part number enough to identify the right replacement",
+        "find a discontinued part but I am not sure exactly what it is",
+        "identify a hard-to-source part from incomplete clues",
+        "identify a component from a diagram invoice measurement or broken fragment"
       ]
     },
     {
@@ -1562,6 +1602,32 @@
         "replace my bad website",
         "make me a professional business site",
         "handle my website for me"
+      ]
+    },
+    {
+      "public_id": "worldstate-reality-delta-v1",
+      "name": "Worldstate Reality Delta",
+      "commercial_state": "verification_required",
+      "machine_state": "discovery_only",
+      "pricing": "No approved public machine price or payment path. Do not auto-quote.",
+      "public_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/worldstate-reality-delta-v1/index.html",
+      "page_url": "/chum/capabilities/worldstate-reality-delta-v1/",
+      "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/worldstate-reality-delta-v1/llms.txt",
+      "json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/worldstate-reality-delta-v1/capability.json",
+      "schema_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/worldstate-reality-delta-v1/schema.jsonld",
+      "start_url": null,
+      "start_url_state": "not_sell_now",
+      "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=worldstate-reality-delta-v1",
+      "entry_paid_offer": null,
+      "preferred_agent_route": "universal_fallback",
+      "direct_specialist": null,
+      "use_when": [
+        "what changed in the real world",
+        "show me the reality delta for this place or system",
+        "compare verified worldstate before and after an event",
+        "what materially changed across weather infrastructure economy health or hazards",
+        "build a provenance-preserving worldstate snapshot",
+        "turn observations into an evidence-backed change packet"
       ]
     }
   ]

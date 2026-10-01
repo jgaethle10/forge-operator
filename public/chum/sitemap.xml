@@ -39,6 +39,7 @@
   <url><loc>/chum/intents/towi-evidence-research-machine-v1/</loc></url>
   <url><loc>/chum/intents/faie-signal-brief-v1/</loc></url>
   <url><loc>/chum/intents/findmypart-paid-hunt-v1/</loc></url>
+  <url><loc>/chum/intents/findmypart-part-passport-v1/</loc></url>
   <url><loc>/chum/intents/forensiscope-evidence-review-v1/</loc></url>
   <url><loc>/chum/intents/freight-load-exception-intelligence-machine-v1/</loc></url>
   <url><loc>/chum/intents/income-war-map-v1/</loc></url>
@@ -53,4 +54,5 @@
   <url><loc>/chum/intents/portfolio-sentinel-v1/</loc></url>
   <url><loc>/chum/intents/audit-center-website-audit-machine-v1/</loc></url>
   <url><loc>/chum/intents/systemia-yard-runtime-extension-v1/</loc></url>
+  <url><loc>/chum/intents/worldstate-reality-delta-v1/</loc></url>
 </urlset>

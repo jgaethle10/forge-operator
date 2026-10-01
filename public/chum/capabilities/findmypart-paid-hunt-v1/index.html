@@ -1,25 +1,28 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>FindMyPart Paid Part Hunt | Evercraft capability</title>
-<meta name="description" content="A difficult, ambiguous, obsolete, discontinued or hard-to-source part is blocking a repair, restoration, machine or project.">
+<meta name="description" content="A difficult, identified-enough physical part is still blocking a repair, restoration, machine or project after ordinary sourcing has failed or deeper cross-reference, salvage, documentation, blueprint or fabrication work is needed.">
 <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
 <link rel="alternate" type="text/plain" href="./llms.txt">
 <link rel="alternate" type="application/json" href="./capability.json">
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Service","@id":"https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs#evercraft-capability","name":"FindMyPart Paid Part Hunt","description":"A difficult, ambiguous, obsolete, discontinued or hard-to-source part is blocking a repair, restoration, machine or project.","url":"https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs","provider":{"@type":"Organization","name":"Evercraft LLC","url":"https://github.com/jgaethle10/forge-operator"},"serviceType":"Evercraft public machine capability","identifier":"findmypart-paid-hunt-v1"},{"@type":"WebPage","name":"FindMyPart Paid Part Hunt | Evercraft capability","description":"A difficult, ambiguous, obsolete, discontinued or hard-to-source part is blocking a repair, restoration, machine or project.","about":{"@id":"https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs#evercraft-capability"}}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Service","@id":"https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs#evercraft-capability","name":"FindMyPart Paid Part Hunt","description":"A difficult, identified-enough physical part is still blocking a repair, restoration, machine or project after ordinary sourcing has failed or deeper cross-reference, salvage, documentation, blueprint or fabrication work is needed.","url":"https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs","provider":{"@type":"Organization","name":"Evercraft LLC","url":"https://github.com/jgaethle10/forge-operator"},"serviceType":"Evercraft public machine capability","identifier":"findmypart-paid-hunt-v1"},{"@type":"WebPage","name":"FindMyPart Paid Part Hunt | Evercraft capability","description":"A difficult, identified-enough physical part is still blocking a repair, restoration, machine or project after ordinary sourcing has failed or deeper cross-reference, salvage, documentation, blueprint or fabrication work is needed.","about":{"@id":"https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs#evercraft-capability"}}]}</script>
 <style>body{font-family:system-ui,sans-serif;max-width:920px;margin:56px auto;padding:0 24px;line-height:1.6;background:#09090b;color:#fafafa}a{color:#93c5fd}.card{border:1px solid #27272a;border-radius:16px;padding:20px;margin:18px 0}.muted{color:#a1a1aa}code{background:#18181b;padding:.15rem .35rem;border-radius:.3rem}</style>
 </head><body><main>
 <p class="muted">EVERCRAFT · PUBLIC MACHINE CAPABILITY</p>
 <h1>FindMyPart Paid Part Hunt</h1>
-<p>A difficult, ambiguous, obsolete, discontinued or hard-to-source part is blocking a repair, restoration, machine or project.</p>
+<p>A difficult, identified-enough physical part is still blocking a repair, restoration, machine or project after ordinary sourcing has failed or deeper cross-reference, salvage, documentation, blueprint or fabrication work is needed.</p>
 <div class="card"><h2>Current state</h2><p>Commercial: <code>sell_now</code></p><p>Machine: <code>payment_ready</code></p><p>Pricing: Quick Hunt $19 one-time; Deep Hunt $49 one-time; Rescue Hunt $99 one-time.</p></div>
 <div class="card"><h2>Use this when</h2><ul>
 <li>find a hard-to-source part</li>
-<li>identify this part</li>
 <li>find a discontinued part</li>
 <li>source an obsolete component</li>
+<li>find a supersession or cross reference</li>
 <li>find a donor or salvage part</li>
+<li>find a blueprint or fabrication path</li>
+<li>source new old stock or aftermarket replacement</li>
+<li>normal part searches failed and I need deeper sourcing</li>
 </ul></div>
-<div class="card"><h2>Inputs and outputs</h2><p><strong>Inputs:</strong> Part description plus any known equipment identity, model/serial/part numbers, photos, measurements or functional clues.</p><p><strong>Outputs:</strong> Evidence-backed sourcing hunt with candidate parts, source evidence, compatibility reasoning, sourcing options and escalation paths when ordinary sourcing fails.</p></div>
+<div class="card"><h2>Inputs and outputs</h2><p><strong>Inputs:</strong> Part description plus any known equipment identity, model/serial/part numbers, photos, measurements or functional clues.</p><p><strong>Outputs:</strong> Evidence-backed paid sourcing hunt with tier-dependent source lanes, customer-safe Part Passport state, candidate source evidence, verification state, and escalation paths when ordinary sourcing fails.</p></div>
 <div class="card"><h2>Agent route</h2><p><strong>Preferred:</strong> direct specialist</p><p><strong>Specialist MCP:</strong> <code>https://findmypart.base44.app/functions/findMyPartMcp</code></p><p><strong>Registry:</strong> <code>io.github.jgaethle10/findmypart</code></p><p class="muted">Use Evercraft Machine Commerce only when this specialist is unavailable or the user intent is ambiguous.</p></div>
 <div class="card"><h2>Open capability</h2><p><a href="https://evercraft-ai-suite-08c4d2b8.base44.app/buy/findmypart-paid-hunt-v1?src=chum&amp;campaign=buyer-frontage&amp;ec_surface=chum_capability_page&amp;ec_public_id=findmypart-paid-hunt-v1"><strong>Start here</strong></a></p><p><strong>Easiest paid entry:</strong> Quick Hunt · &#36;19</p><p><a href="https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs">Capability details</a></p><p><a href="./llms.txt">LLM guidance</a> · <a href="./capability.json">Capability JSON</a> · <a href="./schema.jsonld">JSON-LD</a></p></div>
 <div class="card"><h2>Authority and payment boundary</h2><p>User must explicitly choose an offer and confirm payment. Paid fulfillment starts only after independently verified payment.</p><p>Payment authority: Evercraft Payments with Stripe provider verification</p></div>
