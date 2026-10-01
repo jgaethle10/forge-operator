@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.capability-promotion-links.v1",
-  "updated_on": "2026-09-28",
+  "updated_on": "2026-09-30",
   "rule": "These links associate an already-public product record with an already-public Machine Commerce offer. A link is evidence for review only and never grants new authority, payment rights, private access, or MCP publication.",
   "links": [
     {
@@ -18,14 +18,22 @@
     {
       "product_key": "globalstat",
       "machine_public_id": "globalstat-country-intelligence-machine-v1",
-      "evidence": "GlobalStat publishes machine discovery for sourced country/domain intelligence, but no public execution endpoint is currently declared.",
-      "required_next_primitive": "Expose a read-only sourced comparison query with freshness, evidence state, reconciliation warnings, and no opaque winner/ranking inference."
+      "evidence": "GlobalStat now has a committed and Deno-check-clean read-only countryIntelligence candidate. It returns public evidence rows, source URLs, reconciliation findings, signals, methodology context and explicit coverage gaps while preserving missing-vs-zero and modeled-vs-observed boundaries. Live deployment has not yet been independently verified, so the product remains discovery-only.",
+      "required_next_primitive": "Independently verify the countryIntelligence endpoint in production with source-backed sample queries, record conformance, then bind it to the existing Machine Commerce MCP as a read-only tool. Do not expose an opaque overall winner or promote from source presence alone.",
+      "implementation_state": "source_implemented_live_verification_pending",
+      "source_system": "Base44",
+      "source_checkpoint": "72d3662df8ae6d83eb5915f80049c397c8d6a750",
+      "candidate_endpoint": "https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/countryIntelligence"
     },
     {
       "product_key": "little-red-book-export-qa",
       "machine_public_id": "littlered-kdp-export-qa-machine-v1",
-      "evidence": "Little Red publishes a machine-discovery contract for bounded book-export preflight, but the current public function is metadata/docs only.",
-      "required_next_primitive": "Expose a deterministic read-only export-preflight function for caller-supplied page count and geometry, with missing inputs reported as unknown and no publication/upload authority."
+      "evidence": "Little Red now has a committed deterministic read-only KDP export-preflight candidate using caller-supplied page count, trim, cover geometry and pixel dimensions. It preserves KDP source URLs, does not assert variable maximum-page limits, and has no upload, publishing, checkout or payment authority. Live deployment has not yet been independently verified, so the product remains discovery-only.",
+      "required_next_primitive": "Independently verify the kdpExportQa endpoint in production, record conformance, then expose it through the existing Machine Commerce MCP as a read-only tool. Do not promote from source presence alone.",
+      "implementation_state": "source_implemented_live_verification_pending",
+      "source_system": "Base44",
+      "source_checkpoint": "c1647bf7bf07c3dc062c8c260aa43dee30c3447c",
+      "candidate_endpoint": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/kdpExportQa"
     },
     {
       "product_key": "systemia-atlas-freight",
