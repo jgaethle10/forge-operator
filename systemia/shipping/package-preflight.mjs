@@ -7,8 +7,8 @@ const INTERNAL_NAME_PATTERNS = [
   /(^|[\s._-])draft([\s._-]|$)/i,
   /(^|[\s._-])internal([\s._-]|$)/i,
   /(^|[\s._-])tmp([\s._-]|$)/i,
-  /(^|[\s._-])final([\s._-]|$)/i,
-  /(^|[\s._-])v\d+([\s._-]|$)/i
+  /(^|[\s._-])v\d+$/i,
+  /(^|[\s._-])final$/i
 ];
 
 const MIME_BY_EXT = {
@@ -74,7 +74,8 @@ export function sanitizeClientFilename(value, { fallback = 'Evercraft Deliverabl
   const ext = path.extname(raw).toLowerCase();
   let stem = path.basename(raw, ext)
     .replace(/world[\s._-]*class/ig, '')
-    .replace(/(^|[\s._-])(draft|internal|tmp|final|v\d+)(?=[\s._-]|$)/ig, ' ')
+    .replace(/(^|[\s._-])(draft|internal|tmp)(?=[\s._-]|$)/ig, ' ')
+    .replace(/(^|[\s._-])(final|v\d+)$/ig, ' ')
     .replace(/[<>:"/\\|?*\x00-\x1f]/g, ' ')
     .replace(/[._-]{2,}/g, ' ')
     .replace(/\s+/g, ' ')
@@ -87,7 +88,8 @@ export function sanitizeClientFilename(value, { fallback = 'Evercraft Deliverabl
 
 export function hasInternalFilenameMarkers(filename) {
   const base = path.basename(clean(filename));
-  return INTERNAL_NAME_PATTERNS.some((pattern) => pattern.test(base));
+  const stem = path.basename(base, path.extname(base));
+  return INTERNAL_NAME_PATTERNS.some((pattern) => pattern.test(stem));
 }
 
 function loadArtifactBytes(artifact) {
