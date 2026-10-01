@@ -1,0 +1,30 @@
+name: Evercraft Payments kernel
+
+on:
+  push:
+    paths:
+      - 'systemia/payments/**'
+      - 'public/.well-known/evercraft-payments.json'
+      - '.github/workflows/evercraft-payments-kernel.yml'
+  pull_request:
+    paths:
+      - 'systemia/payments/**'
+      - 'public/.well-known/evercraft-payments.json'
+      - '.github/workflows/evercraft-payments-kernel.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  payments-kernel:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove Evercraft Payments invariants
+        run: node --test systemia/payments/economic-kernel.test.mjs
+      - name: Validate public Payments machine contract
+        run: node -e "const fs=require('fs'); const p=JSON.parse(fs.readFileSync('public/.well-known/evercraft-payments.json','utf8')); if(p.schema!=='evercraft.payments-capability.v1'||p.doctrine.checkout_is_payment_proof!==false||p.doctrine.authoritative_server_verification_required!==true) process.exit(1);"
