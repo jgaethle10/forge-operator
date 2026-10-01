@@ -466,10 +466,7 @@ export class VoluntaryComputeMarket {
     const result={
       ...lease,
       market:this.market,
-      execution_ready:Boolean(
-        runtime?.execution_ready===true ||
-        (endpoint&&['evercraft-nodeseed','pull-worker'].includes(transport))
-      ),
+      execution_ready:runtime?.execution_ready===true,
       zero_cost:agreement.terms?.economics?.zero_cost===true,
       receipt:lease.receipt_hash,
     };
