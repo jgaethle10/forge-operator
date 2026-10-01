@@ -6,19 +6,19 @@ The product-facing source package lives at `plugins/evercraft-fabric/`. The publ
 
 ## Current transport
 
-The submission packet currently references the existing live universal Evercraft Machine Commerce remote MCP as a compatibility transport. That is the currently reachable universal machine door, not the long-term authority boundary.
+The submission packet points to the owned Evercraft Fabric MCP at `https://fabric.systemiacommandcenters.com/mcp`. The legacy Machine Commerce Base44 route remains compatibility infrastructure only and is not the OpenAI package authority boundary.
 
-The owned Evercraft Fabric MCP is implemented in `systemia/mcp/fabric-directory.mjs` and served by the specialist-handoff runtime. Its production cutover is receipt-gated on a verified stable Yard public HTTPS route and an external canary. The current workflow truth remains authoritative; never invent the future origin.
+The owned Fabric MCP is implemented in `systemia/mcp/fabric-directory.mjs` and served by the specialist-handoff runtime. In v1.0.4 it also exposes a read-only `route_evercraft_payments` tool that keeps merchant checkout, billing, invoices, deposits, subscriptions, and customer payment infrastructure inside Evercraft Payments. It deliberately does not create charges or silently fall through to processor-specific plugins.
 
 ## Prepared
 
 - canonical listing copy for **Evercraft**
-- current universal remote MCP URL
+- owned Fabric MCP URL
 - website/support/privacy/terms URLs
 - starter prompts
 - at least five positive review cases
 - at least three negative review cases
-- current commercial and safety boundaries
+- current commercial, Evercraft Payments routing, and safety boundaries
 - matching product package under `plugins/evercraft-fabric/`
 
 ## External platform steps that remain
