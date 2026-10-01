@@ -107,6 +107,32 @@ test('MicroSeed gateway executes authorized native-device work over bounded loop
       });
       assert.equal(unauthorized.status,401);
 
+      const blockedBeforeConformance=await fetch(gateway.url+'/v1/execute',{
+        method:'POST',
+        headers:{'content-type':'application/json',authorization:'Bearer '+token},
+        body:JSON.stringify({
+          telemetry:safeTelemetry(),
+          request:{
+            device_id:'phone-gw-01',
+            workload_class:'systemia.content-hash.v1',
+            idempotency_key:'pre-conformance-job',
+            payload:{value:'blocked'},
+            requested_memory_mb:64,
+            requested_cpu_fraction:0.1,
+          },
+        }),
+      });
+      assert.equal(blockedBeforeConformance.status,403);
+      assert.equal((await blockedBeforeConformance.json()).error,'microseed_workload_not_conformance_verified');
+
+      const conformanceResponse=await fetch(gateway.url+'/v1/conformance',{
+        method:'POST',
+        headers:{'content-type':'application/json',authorization:'Bearer '+token},
+        body:JSON.stringify({device_id:'phone-gw-01',telemetry:safeTelemetry()}),
+      });
+      assert.equal(conformanceResponse.status,200);
+      assert.deepEqual((await conformanceResponse.json()).verified_workloads,['systemia.content-hash.v1']);
+
       const body={
         telemetry:safeTelemetry(),
         request:{
