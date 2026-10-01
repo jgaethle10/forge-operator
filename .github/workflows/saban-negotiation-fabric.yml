@@ -11,6 +11,8 @@ on:
       - 'systemia/saban/voluntary-market-server.proof.mjs'
       - 'systemia/saban/voluntary-provider-agent.mjs'
       - 'systemia/saban/voluntary-provider-agent.proof.mjs'
+      - 'systemia/saban/markets/voluntary-yard.mjs'
+      - 'systemia/saban/markets/voluntary-yard.proof.mjs'
       - 'systemia/saban/golem-market.proof.mjs'
       - 'systemia/saban/golem-live-pilot.mjs'
       - 'systemia/saban/markets/**'
@@ -28,6 +30,8 @@ on:
       - 'systemia/saban/voluntary-market-server.proof.mjs'
       - 'systemia/saban/voluntary-provider-agent.mjs'
       - 'systemia/saban/voluntary-provider-agent.proof.mjs'
+      - 'systemia/saban/markets/voluntary-yard.mjs'
+      - 'systemia/saban/markets/voluntary-yard.proof.mjs'
       - 'systemia/saban/golem-market.proof.mjs'
       - 'systemia/saban/golem-live-pilot.mjs'
       - 'systemia/saban/markets/**'
@@ -60,6 +64,8 @@ jobs:
         run: node systemia/saban/voluntary-market-server.proof.mjs
       - name: Prove reusable voluntary device provider agent
         run: node systemia/saban/voluntary-provider-agent.proof.mjs
+      - name: Prove signed device to Yard execution bridge
+        run: node systemia/saban/markets/voluntary-yard.proof.mjs
       - name: Prove Golem requestor adapter
         run: node systemia/saban/golem-market.proof.mjs
       - name: Scan live Golem decentralized supply
