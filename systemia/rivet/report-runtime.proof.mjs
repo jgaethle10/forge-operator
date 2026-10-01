@@ -27,7 +27,7 @@ const sourceSnapshot={
   traffic:[{aadt:22100,source:'proof'}],
   chargers:[{name:'Proof charger'}],
   incentives:[{name:'Proof program'}],
-  nearby_observed_usage:[{evidence_state:'observed'}]
+  nearby_observed_usage:[{evidence_state:'observed',station_external_id:'nyc-plugnyc:101336',charging_sessions_count:222,energy_kwh:5008.374,data_status:'partial',source_vintage:'2026-09 partial through 2026-09-08'}]
 };
 const sourceFetch=async(_url,options)=>{
   assert.equal(options.headers['x-systemia-machine-key'],'proof-machine-key');
@@ -60,6 +60,9 @@ assert.equal(record.source_snapshot.coverage_manifest.schema,'evercraft.rivet.so
 assert.equal(Object.keys(record.source_snapshot.coverage_manifest.domains).length,14);
 assert.equal(record.report.body.source.snapshot_sha256,record.source_snapshot.sha256);
 assert.equal(record.report.body.source.snapshot_ref,record.source_snapshot.store_ref);
+assert.equal(record.report.body.evidence.observed_usage[0].charging_sessions_count,222);
+assert.equal(record.report.body.evidence.observed_usage[0].data_status,'partial');
+assert.equal(record.report.body.evidence.observed_usage[0].source_vintage,'2026-09 partial through 2026-09-08');
 assert.deepEqual(progress.map(x=>x.stage),['address_admitted','site_intelligence','source_verified','football_packing','football_transfer','evidence_integrity','report_render','ready']);
 assert.deepEqual(progress.map(x=>x.percent),[13,25,38,50,63,75,88,100]);
 assert.equal(progress.find(x=>x.stage==='source_verified').detail.charger_records,1);
@@ -135,6 +138,7 @@ try{
     full_source_snapshot_persisted:true,
     source_retrieval_verified:true,
     explicit_source_coverage_verified:true,
+    partial_session_vintage_preserved:true,
     report_id:made.report_id
   },null,2));
 }finally{
