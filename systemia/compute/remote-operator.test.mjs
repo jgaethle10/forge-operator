@@ -67,6 +67,22 @@ try {
   assert.match(hostCheck.request_id, /^hostcheck_/);
   assert.equal(hostCheck.mutation_supported, false);
 
+  const genericHostCheck = await operator.hostCapabilityCheck({
+    capability_id: 'chromeos.crostini.port-forwarding.read.v1',
+    wait_ms: 0,
+  });
+  assert.equal(
+    genericHostCheck.schema,
+    'evercraft.host-boundary-capability-check-result.v1',
+  );
+  assert.equal(
+    genericHostCheck.capability_id,
+    'chromeos.crostini.port-forwarding.read.v1',
+  );
+  assert.equal(genericHostCheck.adapter, 'chromeos_crostini_port_forwarding');
+  assert.equal(genericHostCheck.mutation_authority, false);
+  assert.equal(genericHostCheck.arbitrary_desktop_control, false);
+
   const listed = operator.list({ root_key: 'home', path: '.' });
   assert.ok(listed.entries.some((entry) => entry.name === 'hello.txt'));
 
@@ -145,6 +161,7 @@ try {
     chromeos_host_boundary_companion_declared_read_only: true,
     on_demand_host_check_request_available: true,
     typed_host_capability_registry_available: true,
+    generic_typed_host_capability_dispatch_available: true,
   }));
 } finally {
   fs.rmSync(root, { recursive: true, force: true });
