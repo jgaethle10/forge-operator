@@ -150,6 +150,18 @@ test('Fabric public customer front door is branded, browsable, and policy-safe',
     assert.match(openAiHome,/No hidden commerce/);
     assert.doesNotMatch(openAiHome,/Quick start|\$49|\$299|Available now|\/capabilities|FindMyPart|RIVET|Systemia Website Audit/);
 
+    for(const [path,pattern] of [
+      ['/openai/support',/Evercraft Support/],
+      ['/openai/privacy',/Evercraft Privacy Policy/],
+      ['/openai/terms',/Evercraft Terms of Service/],
+    ]){
+      const response=await fetch(runtime.url+path);
+      assert.equal(response.status,200);
+      const body=await response.text();
+      assert.match(body,pattern);
+      assert.doesNotMatch(body,/\/capabilities|Quick start|\$49|\$299|Available now|FindMyPart|RIVET/);
+    }
+
     const directoryResponse=await fetch(runtime.url+'/capabilities');
     assert.equal(directoryResponse.status,200);
     const directory=await directoryResponse.text();
