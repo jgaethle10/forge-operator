@@ -16,6 +16,8 @@ try {
     await base44.entities.Widget.bulkCreate([]);
     await base44.functions.invoke('refreshWorld', {});
     await base44.auth.register({ email: 'person@example.invalid' });
+    await base44.app.getPublicSettings();
+    await base44.appLogs.logUserInApp('Home');
     await base44.integrations.Core.UploadFile({ file: null });
     base44.getConfig();
     const legacy = 'https://example-legacy.base44.app/api/apps/opaque/functions/run';
@@ -37,6 +39,8 @@ try {
   assert.ok(result.entities.methods.includes('updateMany'));
   assert.deepEqual(result.functions.invoked, ['refreshWorld']);
   assert.ok(result.auth.methods.includes('register'));
+  assert.deepEqual(result.app.methods, ['getPublicSettings']);
+  assert.deepEqual(result.app_logs.methods, ['logUserInApp']);
   assert.deepEqual(result.integrations.operations, ['Core.UploadFile']);
   assert.equal(result.cross_app_clients.count, 1);
   assert.equal(result.cross_app_clients.raw_app_ids_emitted, false);
@@ -54,6 +58,8 @@ try {
     schema: 'evercraft.base44.source-scan-proof.v1',
     status: 'pass',
     sdk_shape_detected: true,
+    app_namespace_detected: true,
+    app_logs_namespace_detected: true,
     hardcoded_routes_detected_without_emitting_values: true,
     cross_app_ids_fingerprinted: true,
     environment_values_not_emitted: true,
