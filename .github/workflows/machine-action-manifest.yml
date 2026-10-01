@@ -5,12 +5,16 @@ on:
     branches: [main]
     paths:
       - 'systemia/chum/mcp-canary.mjs'
+      - 'systemia/capability-mesh/contracts.json'
+      - 'registry/catalog.json'
       - 'systemia/chum/machine-action-manifest.mjs'
       - 'systemia/chum/machine-action-manifest.test.mjs'
       - '.github/workflows/machine-action-manifest.yml'
   pull_request:
     paths:
       - 'systemia/chum/mcp-canary.mjs'
+      - 'systemia/capability-mesh/contracts.json'
+      - 'registry/catalog.json'
       - 'systemia/chum/machine-action-manifest.mjs'
       - 'systemia/chum/machine-action-manifest.test.mjs'
       - '.github/workflows/machine-action-manifest.yml'
