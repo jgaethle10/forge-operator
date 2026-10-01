@@ -97,7 +97,7 @@ export function remoteOperatorTools() {
       inputSchema: {
         type: 'object',
         properties: {
-          wait_ms: { type: 'integer', minimum: 0, maximum: 45000, default: 0 },
+          wait_ms: { type: 'integer', minimum: 0, maximum: 45000, default: 35000 },
         },
         additionalProperties: false,
       },
