@@ -48,19 +48,93 @@ const ROLE_ATTACKS = Object.freeze({
 function clean(value) {
   return String(value ?? "").trim();
 }
+
+const DISCOVERY_PROFILES=Object.freeze({
+  "base-rate-learning":{
+    query:"day trading profitability individual traders performance persistence",
+    required_groups:[["day","trading"],["profit","performance","return","skill"]],
+  },
+  "backtest-overfitting":{
+    query:"backtest overfitting selection bias investment strategies multiple testing",
+    required_groups:[["backtest","strategy","investment"],["overfit","selection","multiple","false"]],
+  },
+  "deflated-performance":{
+    query:"deflated Sharpe ratio selection bias multiple testing non normal returns",
+    required_groups:[["sharpe"],["deflat","selection","multiple","probabilistic"]],
+  },
+  "implementation-shortfall":{
+    query:"implementation shortfall execution cost market impact equities",
+    required_groups:[["execution","trading"],["cost","shortfall","impact","slippage"]],
+  },
+  "impact-volatility-frontier":{
+    query:"optimal execution market impact volatility trading cost",
+    required_groups:[["execution","trading"],["impact","volatility","cost","risk"]],
+  },
+  "order-flow-information":{
+    query:"limit order book order flow price impact market microstructure",
+    required_groups:[["order","microstructure","book"],["flow","impact","liquidity","price"]],
+  },
+  "announcement-liquidity":{
+    query:"macroeconomic announcement liquidity bid ask spread volatility equity market",
+    required_groups:[["announcement","news","macro"],["liquidity","spread","volatility","market"]],
+  },
+  "auction-clock":{
+    query:"stock market opening auction price discovery imbalance",
+    required_groups:[["auction","open","opening"],["market","price","imbalance","exchange"]],
+  },
+  "liquidity-is-multidimensional":{
+    query:"liquidity bid ask spread market depth price impact equities",
+    required_groups:[["liquidity","spread","depth"],["market","price","impact","trading"]],
+  },
+  "behavioral-salience":{
+    query:"investor attention familiarity salience bias day trading market",
+    required_groups:[["investor","trading","market"],["attention","familiarity","salience","bias"]],
+  },
+});
+
+function normalizedText(value){
+  return clean(value)
+    .normalize("NFKD")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g," ")
+    .trim();
+}
+
+function discoveryProfile(lesson){
+  return DISCOVERY_PROFILES[clean(lesson?.lesson_id)] || {
+    query:[
+      clean(lesson?.title),
+      clean(lesson?.principle),
+      "trading market microstructure quantitative finance",
+    ].filter(Boolean).join(" "),
+    required_groups:[["trading","market","finance"]],
+  };
+}
+
+function relevanceForTitle(title,profile){
+  const normalized=normalizedText(title);
+  const groups=profile.required_groups || [];
+  const matches=groups.map((group)=>
+    group.some((term)=>normalized.includes(normalizedText(term)))
+  );
+  return {
+    accepted:groups.length>0 && matches.every(Boolean),
+    matched_groups:matches.filter(Boolean).length,
+    required_groups:groups.length,
+    score:groups.length?matches.filter(Boolean).length/groups.length:0,
+  };
+}
+
 function discoveryQuery(lesson) {
-  const title=clean(lesson?.title);
-  const principle=clean(lesson?.principle);
-  return [title,principle,"trading market microstructure quantitative finance"]
-    .filter(Boolean)
-    .join(" ");
+  return discoveryProfile(lesson).query;
 }
 
 async function discoverScholarlySources(lesson, fetchImpl=fetch) {
-  const query=discoveryQuery(lesson);
+  const profile=discoveryProfile(lesson);
+  const query=profile.query;
   const url=new URL("https://api.crossref.org/works");
   url.searchParams.set("query.bibliographic",query);
-  url.searchParams.set("rows","5");
+  url.searchParams.set("rows","10");
   url.searchParams.set("select","DOI,title,publisher,published,URL,type,author");
   const response=await fetchImpl(url,{
     headers:{
@@ -71,21 +145,38 @@ async function discoverScholarlySources(lesson, fetchImpl=fetch) {
   if(!response.ok) throw new Error("crossref_http_"+response.status);
   const payload=await response.json();
   const items=Array.isArray(payload?.message?.items)?payload.message.items:[];
-  return {
-    query,
-    provider:"Crossref",
-    provider_url:url.toString(),
-    candidates:items.slice(0,5).map((item)=>({
+  const reviewed=items.map((item)=>{
+    const title=Array.isArray(item?.title)?clean(item.title[0]):clean(item?.title);
+    const relevance=relevanceForTitle(title,profile);
+    return {
       doi:clean(item?.DOI)||null,
-      title:Array.isArray(item?.title)?clean(item.title[0]):clean(item?.title),
+      title,
       publisher:clean(item?.publisher)||null,
       type:clean(item?.type)||null,
       url:clean(item?.URL)||null,
       author_count:Array.isArray(item?.author)?item.author.length:0,
       publication_date_parts:
         item?.published?.["date-parts"]?.[0] || null,
-      evidence_state:"metadata_discovered_not_reviewed"
-    })).filter((item)=>item.title||item.doi)
+      relevance,
+      evidence_state:"metadata_discovered_not_reviewed",
+    };
+  }).filter((item)=>item.title||item.doi);
+  const accepted=reviewed
+    .filter((item)=>item.relevance.accepted)
+    .slice(0,5);
+  return {
+    query,
+    provider:"Crossref",
+    provider_url:url.toString(),
+    relevance_policy:{
+      lesson_id:clean(lesson?.lesson_id),
+      required_title_groups:profile.required_groups,
+      all_groups_required:true,
+      metadata_only:true,
+    },
+    candidates:accepted,
+    rejected_candidate_count:reviewed.length-accepted.length,
+    raw_candidate_count:reviewed.length,
   };
 }
 
