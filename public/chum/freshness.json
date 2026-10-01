@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-01T01:51:32.805Z",
+  "updated_at": "2026-10-01T01:52:18.386Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,392 +11,29 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/answers/doors/audit-this-paperback-export-c84fe388e8.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/audit-this-paperback-export-c84fe388e8/",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/check-if-my-book-is-ready-for-kdp-465dd47ba7.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/check-if-my-book-is-ready-for-kdp-465dd47ba7/",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/check-page-count-and-cover-dpi-512896a3dd.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/check-page-count-and-cover-dpi-512896a3dd/",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/compare-these-countries-on-this-metric-14e53d7a85.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/compare-these-countries-on-this-metric-14e53d7a85/",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/country-benchmark-with-sources-04ac1dfc19.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/country-benchmark-with-sources-04ac1dfc19/",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 160
-    },
-    {
-      "path": "/.well-known/agent-card.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 104
-    },
-    {
-      "path": "/.well-known/agent.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 102
-    },
-    {
-      "path": "/chum/answers/doors/give-me-map-ready-heat-or-smoke-action-sites-62499579ce.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/give-me-map-ready-heat-or-smoke-action-sites-62499579ce/",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/give-me-sourced-country-intelligence-c36f354e95.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/give-me-sourced-country-intelligence-c36f354e95/",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/is-my-book-file-ready-to-publish-5208956c86.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/is-my-book-file-ready-to-publish-5208956c86/",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/map-this-evidence-for-me-d7ef88ad66.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/map-this-evidence-for-me-d7ef88ad66/",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/plot-verified-infrastructure-coverage-0d95c3deea.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/plot-verified-infrastructure-coverage-0d95c3deea/",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/reconcile-conflicting-country-data-412cd9dd79.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/reconcile-conflicting-country-data-412cd9dd79/",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/return-public-safe-geospatial-evidence-a12af72d59.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/return-public-safe-geospatial-evidence-a12af72d59/",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/show-historical-river-geometry-e09f8dfd42.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/show-historical-river-geometry-e09f8dfd42/",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/show-lifeline-coverage-for-this-place-f8ad89bc25.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/show-lifeline-coverage-for-this-place-f8ad89bc25/",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/show-me-the-evidence-behind-this-country-score-109cf14b4b.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/show-me-the-evidence-behind-this-country-score-109cf14b4b/",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/validate-my-cover-dimensions-34a89ab4b2.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/validate-my-cover-dimensions-34a89ab4b2/",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/which-countries-lead-on-this-domain-and-why-d86d7c0b1d.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/which-countries-lead-on-this-domain-and-why-d86d7c0b1d/",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/capabilities/evermaps-evidence-projection-machine-v1/capability.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/evermaps-evidence-projection-machine-v1/llms.txt",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/globalstat-country-intelligence-machine-v1/capability.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/globalstat-country-intelligence-machine-v1/llms.txt",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/littlered-kdp-export-qa-machine-v1/capability.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/littlered-kdp-export-qa-machine-v1/llms.txt",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/products/evermaps/",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evermaps/ai-conformance.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evermaps/ai-discovery.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/evermaps/llms.txt",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/globalstat/",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/globalstat/ai-conformance.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/globalstat/ai-discovery.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/globalstat/llms.txt",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/little-red-book-export-qa/",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/little-red-book-export-qa/ai-conformance.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/little-red-book-export-qa/ai-discovery.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/products/little-red-book-export-qa/llms.txt",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 94
-    },
-    {
-      "path": "/chum/sell-now.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 92
-    },
-    {
-      "path": "/.well-known/evercraft-pain-index.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 90
-    },
-    {
-      "path": "/chum/revenue.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 90
-    },
-    {
-      "path": "/llms-full.txt",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 86
-    },
-    {
-      "path": "/.well-known/evercraft-agent-commerce.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-agent-directory.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-machine-catalog.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 84
-    },
-    {
-      "path": "/.well-known/evercraft-syndication.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 84
-    },
-    {
-      "path": "/chum/agent-commerce.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/index.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/answers/index.txt",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/capabilities.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
+      "path": "/chum/hot/",
+      "last_changed": "2026-10-01T01:52:18.386Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
+      "last_changed": "2026-10-01T01:52:18.386Z",
       "priority": 80
-    },
-    {
-      "path": "/chum/index.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.txt",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/proof/forensiscope.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/proof/index.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/proof/rivet.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/syndication/index.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 80
-    },
-    {
-      "path": "/feed.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.xml",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 60
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/hot/",
+      "url": "/chum/hot/",
+      "last_changed": "2026-10-01T01:52:18.386Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-10-01T01:52:18.386Z",
+      "priority": 80
+    },
     {
       "path": "/chum/answers/doors/audit-this-paperback-export-c84fe388e8.json",
       "url": "/chum/answers/doors/audit-this-paperback-export-c84fe388e8.json",
@@ -800,12 +437,6 @@
       "priority": 80
     },
     {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-10-01T01:51:32.805Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/index.json",
       "url": "/chum/index.json",
       "last_changed": "2026-10-01T01:51:32.805Z",
@@ -875,12 +506,6 @@
       "path": "/chum/strike/index.json",
       "url": "/chum/strike/index.json",
       "last_changed": "2026-10-01T01:14:17.344Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/",
-      "url": "/chum/hot/",
-      "last_changed": "2026-09-30T21:01:13.414Z",
       "priority": 80
     },
     {
