@@ -19,3 +19,22 @@ test("NXDOMAIN is authoritative and carries SOA",()=>{
 test("out of zone is REFUSED",()=>{
  const r=answer(query("elsewhere.invalid."),zone);assert.equal(r.readUInt16BE(2)&0xf,5);
 });
+
+test("apex SOA query returns SOA in answer section",()=>{
+ const r=answer(query("edge.invalid.",6),zone);
+ assert.equal(r.readUInt16BE(6),1);
+ assert.equal(r.readUInt16BE(8),0);
+});
+test("empty nonterminal is NODATA, not NXDOMAIN",()=>{
+ const z={...zone,records:[...zone.records,{name:"leaf.branch",type:"A",value:"192.0.2.20"}]};
+ const r=answer(query("branch.edge.invalid.",1),z);
+ assert.equal(r.readUInt16BE(2)&0xf,0);
+ assert.equal(r.readUInt16BE(6),0);
+ assert.equal(r.readUInt16BE(8),1);
+});
+test("RD bit is echoed but RA remains clear",()=>{
+ const r=answer(query("www.edge.invalid."),zone);
+ const flags=r.readUInt16BE(2);
+ assert.equal(Boolean(flags&0x0100),true);
+ assert.equal(Boolean(flags&0x0080),false);
+});
