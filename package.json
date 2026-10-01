@@ -244,7 +244,7 @@
     "journal:build": "node systemia/newsroom/journal-publisher.mjs systemia/newsroom/stories public/journal",
     "test:industrial-base": "node --test systemia/industrial-base/*.test.mjs",
     "proof:compute-fabric": "node systemia/compute/capacity-fabric.proof.mjs && node systemia/compute/federated-bridge.proof.mjs && node systemia/network/outbound-capacity.proof.mjs",
-    "proof:owned-rivet-stack": "node systemia/compute/hosting-control-plane.proof.mjs && node systemia/aliev/geo-normalization.proof.mjs && node systemia/aliev/collectors/washington.proof.mjs && node systemia/aliev/collectors/us.proof.mjs && node systemia/aliev/domain-engine.proof.mjs && node systemia/aliev/snapshot-bundle.proof.mjs && node systemia/migrations/base44-exit/aliev-domain-adapter.proof.mjs && node systemia/migrations/base44-exit/aliev-extractor.proof.mjs && node systemia/compute/aliev-rivet-owned-lane.proof.mjs && node systemia/rivet/report-runtime.proof.mjs && node systemia/rivet/cutover-controller.proof.mjs && node systemia/core/rivet-report-resident-wiring.proof.mjs && node systemia/compute/capacity-fabric.proof.mjs && node systemia/compute/federated-bridge.proof.mjs",
+    "proof:owned-rivet-stack": "node systemia/compute/hosting-control-plane.proof.mjs && node systemia/aliev/geo-normalization.proof.mjs && node systemia/aliev/collectors/washington.proof.mjs && node systemia/aliev/collectors/us.proof.mjs && node systemia/aliev/domain-engine.proof.mjs && node systemia/aliev/snapshot-bundle.proof.mjs && node systemia/migrations/base44-exit/aliev-domain-adapter.proof.mjs && node systemia/migrations/base44-exit/aliev-extractor.proof.mjs && node systemia/compute/aliev-rivet-owned-lane.proof.mjs && node systemia/rivet/report-runtime.proof.mjs && node systemia/rivet/cutover-controller.proof.mjs && node systemia/core/rivet-report-resident-wiring.proof.mjs && node systemia/compute/capacity-fabric.proof.mjs && node systemia/compute/federated-bridge.proof.mjs && node systemia/domain-authority/rivet-public-mail.proof.mjs",
     "test:radar": "node --test systemia/radar/*.test.mjs",
     "radar:once": "node systemia/radar/cli.mjs --once",
     "radar:resident": "node systemia/radar/cli.mjs --resident",
@@ -274,7 +274,8 @@
     "saban:ambient:api": "node systemia/saban/ambient-work-api-runner.mjs",
     "saban:pairing": "node systemia/saban/microseed-pairing-cli.mjs",
     "saban:pair-device": "node systemia/saban/microseed-device-pair-cli.mjs",
-    "test:product-url-fabric": "node tests/product-url-fabric.test.mjs"
+    "test:product-url-fabric": "node tests/product-url-fabric.test.mjs",
+    "proof:rivet-mail": "node systemia/domain-authority/rivet-public-mail.proof.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
