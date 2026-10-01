@@ -36,15 +36,22 @@ const receipt={
         roles:["execution_cost_guard"],
         support_count:1,
         priority:"P0"
+      },
+      {
+        test:"partial/unfilled order outcome",
+        lesson_ids:["implementation-shortfall"],
+        roles:["execution_cost_guard"],
+        support_count:1,
+        priority:"P0"
       }
     ]
   }
 };
 
 const result=reconcileLearningAttackCoverage(receipt);
-assert.equal(result.attack_count,4);
+assert.equal(result.attack_count,5);
 assert.equal(result.counts.implemented,2);
-assert.equal(result.counts.partial,2);
+assert.equal(result.counts.partial,3);
 assert.equal(result.counts.missing,0);
 assert.equal(result.frontier[0].test,"aggressive-versus-passive execution comparison");
 assert.equal(result.next_frontier.implementation_status,"partial");
@@ -56,6 +63,15 @@ assert.match(
   ATTACK_IMPLEMENTATION_MAP["aggressive-versus-passive execution comparison"].gap,
   /never labeled a fill/
 );
+assert.equal(
+  ATTACK_IMPLEMENTATION_MAP["partial/unfilled order outcome"].status,
+  "partial"
+);
+assert.match(
+  ATTACK_IMPLEMENTATION_MAP["partial/unfilled order outcome"].gap,
+  /never inferred from a touch/
+);
+
 assert.equal(
   ATTACK_IMPLEMENTATION_MAP["capital-scale invariance challenge"].status,
   "partial"
@@ -92,6 +108,8 @@ console.log(JSON.stringify({
   closed_cscv_gap_removed_from_frontier:true,
   partial_execution_frontier_exposed:true,
   passive_touch_never_promoted_to_fill:true,
+  partial_unfilled_states_now_explicit:true,
+  queue_position_still_unclaimed:true,
   volume_not_liquidity_closed:true,
   low_visible_size_high_volatility_partial:true,
   capital_scale_visibility_partial_not_impact_model:true,
