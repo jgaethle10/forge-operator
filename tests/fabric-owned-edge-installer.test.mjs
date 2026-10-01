@@ -124,12 +124,29 @@ test('self updater proves Remote Operator telemetry and keeps the observer resid
 });
 
 
+test('Fabric self updater prefers a configured outbound relay before bounded router recovery',()=>{
+  assert.match(updater,/OUTBOUND_RELAY_SERVICE="evercraft-fabric-outbound-relay\.service"/);
+  assert.match(updater,/OUTBOUND_RELAY_ENV="\/etc\/evercraft\/outbound-relay\.env"/);
+  assert.match(updater,/systemctl restart "\$OUTBOUND_RELAY_SERVICE"/);
+  assert.match(updater,/outbound_relay=\$relay_state/);
+});
+
+test('Fabric doctor can route around an unavailable ChromeOS host forward with an active outbound relay',()=>{
+  const doctor=fs.readFileSync(new URL('../scripts/fabric-edge-doctor.sh',import.meta.url),'utf8');
+  assert.match(doctor,/RELAY_SERVICE=evercraft-fabric-outbound-relay\.service/);
+  assert.match(doctor,/ingress_transport="outbound_service_relay"/);
+  assert.match(doctor,/diagnosis="local_edge_path_ready_external_canary_required"/);
+  assert.match(doctor,/outbound_relay_service/);
+});
+
 test('edge installer and updater shell remain syntactically valid',()=>{
   for(const rel of [
     '../scripts/install-fabric-owned-edge.sh',
     '../scripts/install-fabric-network-observer.sh',
     '../scripts/install-fabric-router-map-resident.sh',
     '../scripts/update-fabric-owned-edge.sh',
+    '../scripts/install-fabric-outbound-relay.sh',
+    '../scripts/install-fabric-relay-node.sh',
   ]){
     const file=new URL(rel,import.meta.url);
     execFileSync('bash',['-n',file.pathname],{stdio:'pipe'});
