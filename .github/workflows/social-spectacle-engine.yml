@@ -1,0 +1,165 @@
+name: Social Spectacle Engine
+
+on:
+  pull_request:
+    paths:
+      - "systemia/organism/social-spectacle-engine*"
+      - "systemia/organism/social-spectacle-production*"
+      - "systemia/organism/social-spectacle-clip-bridge*"
+      - "systemia/clip/media-intake*"
+      - "systemia/clip/publisher-runtime*"
+      - "systemia/media-studio/cli.ts"
+      - "systemia/core/resident-services.json"
+      - "systemia/worldstate/subscriptions.json"
+      - "package.json"
+      - ".github/workflows/social-spectacle-engine.yml"
+  push:
+    branches: [main]
+    paths:
+      - "systemia/organism/social-spectacle-engine*"
+      - "systemia/organism/social-spectacle-production*"
+      - "systemia/organism/social-spectacle-clip-bridge*"
+      - "systemia/clip/media-intake*"
+      - "systemia/clip/publisher-runtime*"
+      - "systemia/media-studio/cli.ts"
+      - "systemia/core/resident-services.json"
+      - "systemia/worldstate/subscriptions.json"
+      - "package.json"
+      - ".github/workflows/social-spectacle-engine.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Prove spectacle admission boundaries
+        run: npm run proof:social-spectacle
+
+      - name: Prove spectacle production packaging
+        run: npm run proof:social-spectacle-production
+
+      - name: Prove authenticated spectacle Clip bridge
+        run: npm run proof:social-spectacle-clip-bridge
+
+      - name: Prove Clip intake and publish gates
+        run: |
+          node --test systemia/clip/media-intake.test.mjs systemia/clip/publisher-runtime.test.mjs
+
+      - name: Build a bounded spectacle queue
+        run: |
+          cat >/tmp/social-spectacle-input.json <<'JSON'
+          {
+            "items": [
+              {
+                "brand_key": "evercraft",
+                "dispatch": {
+                  "consumer": "social_spectacle",
+                  "priority": "high"
+                },
+                "observation": {
+                  "observation_id": "ci-ocean-flow",
+                  "source_system": "worldstate",
+                  "source_family": "Synthetic CI physical-world source",
+                  "observed_at": "2026-09-30T23:00:00Z",
+                  "region_keys": ["puget-sound"],
+                  "domains": ["ocean", "water"],
+                  "kind": "surface_currents",
+                  "evidence_state": "modeled",
+                  "reliability": 0.96,
+                  "anomaly_score": 0.91,
+                  "novelty_score": 0.93,
+                  "provenance_refs": ["ci:worldstate:ocean-flow"],
+                  "correlation_keys": ["puget-sound::ocean::surface_currents"],
+                  "facts": {
+                    "phenomenon": {
+                      "kind": "flow",
+                      "title": "Currents through a narrow inland sea",
+                      "geography": {
+                        "bounds": {
+                          "north": 48.5,
+                          "south": 46.9,
+                          "west": -123.5,
+                          "east": -121.8
+                        }
+                      },
+                      "encoding": {
+                        "motionLabel": "surface-current direction"
+                      },
+                      "streamlines": [
+                        {
+                          "id": "ci-stream",
+                          "points": [
+                            {"lat": 47.7, "lon": -122.8},
+                            {"lat": 47.3, "lon": -122.5}
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            ]
+          }
+          JSON
+          npm run social:spectacle -- --input /tmp/social-spectacle-input.json --state-dir /tmp/social-spectacle-state
+          test -f /tmp/social-spectacle-state/latest-queue.json
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const queue=JSON.parse(fs.readFileSync('/tmp/social-spectacle-state/latest-queue.json','utf8'));
+          if(queue.queue_count!==1) throw new Error('hero_candidate_not_admitted');
+          const candidate=queue.queue[0];
+          if(candidate.production.visual_path!=='fallen_phenomenon') throw new Error('wrong_visual_path');
+          if(candidate.production.no_text_card_first!==true) throw new Error('text_card_boundary_missing');
+          if(candidate.editorial.no_one_line_staccato!==true) throw new Error('caption_standard_missing');
+          if(candidate.gates.publication_authority!==false) throw new Error('publication_authority_leak');
+          if(!candidate.distribution.blocked_brand_keys.includes('rnb-chicken-and-soul')) throw new Error('blocked_brand_policy_missing');
+          console.log(JSON.stringify({wonder_score:candidate.wonder_score,visual_path:candidate.production.visual_path}));
+          NODE
+
+      - name: Verify resident registration
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const services=JSON.parse(fs.readFileSync('systemia/core/resident-services.json','utf8'));
+          const row=services.services.find(service=>service.service_key==='social-spectacle-engine');
+          if(!row) throw new Error('resident_service_missing');
+          if(row.cadence_seconds!==900) throw new Error('resident_cadence_invalid');
+          const producer=services.services.find(service=>service.service_key==='social-spectacle-production');
+          if(!producer) throw new Error('resident_production_service_missing');
+          if(producer.cadence_seconds!==900) throw new Error('resident_production_cadence_invalid');
+          const bridge=services.services.find(service=>service.service_key==='social-spectacle-clip-bridge');
+          if(!bridge) throw new Error('resident_clip_bridge_service_missing');
+          if(bridge.cadence_seconds!==900) throw new Error('resident_clip_bridge_cadence_invalid');
+          const subscriptions=JSON.parse(fs.readFileSync('systemia/worldstate/subscriptions.json','utf8'));
+          for(const domain of ['weather','water','ocean','aviation','science']){
+            if(!subscriptions.by_domain?.[domain]?.includes('social_spectacle')) throw new Error('subscription_missing:'+domain);
+          }
+          NODE
+
+
+      - name: Compile spectacle production without render workers
+        run: |
+          mkdir -p /tmp/social-spectacle-prod
+          cp /tmp/social-spectacle-state/latest-queue.json /tmp/social-spectacle-prod/queue.json
+          npm run social:spectacle:produce --             --queue /tmp/social-spectacle-prod/queue.json             --out /tmp/social-spectacle-prod/production             --clip-queue /tmp/social-spectacle-prod/clip
+          test -f /tmp/social-spectacle-prod/production/spectacle-ci-ocean-flow/production-receipt.json ||             test -n "$(find /tmp/social-spectacle-prod/production -name production-receipt.json -print -quit)"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          const root='/tmp/social-spectacle-prod/production';
+          const dirs=fs.readdirSync(root);
+          if(!dirs.length) throw new Error('production_candidate_missing');
+          const receipt=JSON.parse(fs.readFileSync(path.join(root,dirs[0],'production-receipt.json'),'utf8'));
+          if(receipt.status!=='ready_to_render') throw new Error('expected_ready_to_render');
+          if(receipt.publication_authority!==false) throw new Error('publication_authority_leak');
+          if(!fs.existsSync(receipt.vertical_render_plan)) throw new Error('vertical_render_plan_missing');
+          if(!fs.existsSync(receipt.landscape_stage)) throw new Error('landscape_stage_missing');
+          NODE
