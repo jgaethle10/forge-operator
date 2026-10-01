@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.openai-plugin-submission-prep.v2",
-  "prepared_at": "2026-09-30",
+  "prepared_at": "2026-10-01",
   "submission_type": "With MCP",
   "plugin_name": "Evercraft",
   "short_description": "Find the right Evercraft path",
@@ -22,7 +22,7 @@
   "proposed_availability": [
     "US"
   ],
-  "release_notes": "Evercraft v1.0.3 aligns portable and compatibility metadata for public OpenAI submission on the verified Evercraft-owned Fabric MCP. Discovery remains read-only and consequential actions retain separate authorization.",
+  "release_notes": "Evercraft v1.0.4 hardens ChatGPT/Codex transport compatibility and adds first-class SSE edge verification on the verified Evercraft-owned Fabric MCP. Discovery remains read-only and consequential actions retain separate authorization.",
   "starter_prompts": [
     "I have a problem and do not know which Evercraft capability fits. Find the smallest useful option.",
     "I have a video that's too large for this chat. What can handle it?",
@@ -33,7 +33,7 @@
     "Our developer disappeared and our existing app is breaking. We need an evidence-first diagnosis before rebuilding."
   ],
   "remaining_platform_prerequisites": [
-    "Upload the canonical Evercraft v1.0.3 ZIP in OpenAI Platform Plugins",
+    "Upload the canonical Evercraft v1.0.4 ZIP in OpenAI Platform Plugins",
     "Select the verified Evercraft LLC developer identity in the owning organization/project",
     "Confirm Apps Management Write access if the submitter is not an organization owner",
     "Complete the portal-generated domain verification challenge for fabric.systemiacommandcenters.com",
@@ -44,7 +44,7 @@
     "Independent directory discovery receipt after publication"
   ],
   "public_directory_claim_allowed": false,
-  "package_version": "1.0.3",
+  "package_version": "1.0.4",
   "tool_annotation_justifications": {
     "match_evercraft_capability": {
       "readOnlyHint": "True because the tool only scores and returns pre-published Evercraft capability metadata; it creates no records, jobs, payments, messages, or external side effects.",
