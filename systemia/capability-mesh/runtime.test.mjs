@@ -49,6 +49,11 @@ test('one product action compiles into the exact Execution Gate input and Meter 
     unit: 'report',
   });
   assert.equal(input.require_direct_specialist, true);
+  assert.equal(prepared.machine_binding.scope, 'report.generate');
+  assert.equal(prepared.machine_binding.machine_tool, 'analyze_ev_site');
+  assert.equal(prepared.machine_binding.specialist_slug, 'aliev');
+  assert.equal(prepared.machine_binding.grants_authority, false);
+  assert.equal(prepared.machine_binding.tools_call_verified_by_compilation, false);
   assert.equal(prepared.grants_execution_authority, false);
   assert.equal(prepared.payment_state_inferred, false);
 });
@@ -89,7 +94,9 @@ test('ForensiScope contract exposes only the currently proven route-classificati
   assert.equal(policy.meter.state, 'not_required');
   assert.equal(policy.intake.state, 'not_required');
   assert.equal(policy.execution.gate_required, true);
-  assert.deepEqual(policy.execution.actions, [{ scope: 'classify_media_route' }]);
+  assert.equal(policy.execution.actions.length, 1);
+  assert.equal(policy.execution.actions[0].scope, 'classify_media_route');
+  assert.equal(policy.execution.actions[0].machine_tool, 'classify_media_route');
   assert.equal(policy.route.specialist_slug, 'forensiscope');
   assert.equal(policy.route.direct_callable, true);
   assert.equal(policy.runtime_verified, false);
@@ -116,6 +123,7 @@ test('ForensiScope route classification compiles without inventing a Meter charg
   assert.equal(input.specialist_slug, 'forensiscope');
   assert.equal(Object.prototype.hasOwnProperty.call(input, 'meter'), false);
   assert.equal(prepared.route_snapshot.direct_callable, true);
+  assert.equal(prepared.machine_binding.machine_tool, 'classify_media_route');
   assert.equal(prepared.grants_execution_authority, false);
 });
 
@@ -166,6 +174,7 @@ test('Clip planning compiles without inventing rendering, publishing or payment 
   assert.equal(input.passport_product, 'evercraft-clip');
   assert.equal(input.scope, 'plan_clip_job');
   assert.equal(input.specialist_slug, 'evercraft-clip');
+  assert.equal(prepared.machine_binding.machine_tool, 'plan_clip_job');
   assert.equal(Object.prototype.hasOwnProperty.call(input, 'meter'), false);
   assert.equal(prepared.payment_state_inferred, false);
   assert.equal(prepared.grants_execution_authority, false);
@@ -209,6 +218,7 @@ test('FindMyPart free triage compiles without inventing checkout, payment or pur
   assert.equal(prepared.execution_gate_input.passport_product, 'findmypart');
   assert.equal(prepared.execution_gate_input.scope, 'free_part_triage');
   assert.equal(prepared.execution_gate_input.specialist_slug, 'findmypart');
+  assert.equal(prepared.machine_binding.machine_tool, 'free_part_triage');
   assert.equal(Object.prototype.hasOwnProperty.call(prepared.execution_gate_input, 'meter'), false);
   assert.equal(prepared.payment_state_inferred, false);
 });
