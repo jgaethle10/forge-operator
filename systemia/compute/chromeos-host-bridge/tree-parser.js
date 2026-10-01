@@ -100,19 +100,25 @@ export function extractPortForwardingState(root, admittedPorts = ADMITTED_PORTS)
   );
 
   const findings = new Map();
+  let toggleCandidates = 0;
+  let unmatchedToggleCandidates = 0;
   for (let index = 0; index < rows.length; index += 1) {
     const row = rows[index];
     const toggleLike =
       roleLooksToggle(row.node?.role) ||
       /activate port/i.test(row.text);
     if (!toggleLike) continue;
+    toggleCandidates += 1;
 
     const { context, port } = nearestUnambiguousPortContext(
       rows,
       index,
       admittedPorts,
     );
-    if (port === null) continue;
+    if (port === null) {
+      unmatchedToggleCandidates += 1;
+      continue;
+    }
     const checked = normalizeChecked(row.node);
     const disabled = Boolean(
       row.node?.state?.disabled === true ||
@@ -132,6 +138,12 @@ export function extractPortForwardingState(root, admittedPorts = ADMITTED_PORTS)
     settings_surface_observed: surfaceObserved,
     nodes_examined: rows.length,
     bounded,
+    diagnostics: {
+      toggle_candidates: toggleCandidates,
+      matched_ports: findings.size,
+      unmatched_toggle_candidates: unmatchedToggleCandidates,
+      raw_tree_persisted: false,
+    },
     ports: admittedPorts.map((port) => findings.get(port) || {
       port,
       protocol: 'TCP',
