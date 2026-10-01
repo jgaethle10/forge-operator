@@ -42,7 +42,9 @@ test('Fabric local runtime is read-only, tunnel-compatible, and makes no Base44 
     assert.equal(health.ok,true);
     assert.equal(health.base44_transport_enabled,false);
     assert.equal(health.secure_tunnel_compatible,true);
-    assert.equal(health.public_plugin_submission_ready,true);
+    assert.equal(health.public_plugin_source_ready,true);
+    assert.equal(health.public_plugin_external_verification_required,true);
+    assert.equal(health.public_plugin_submission_ready,undefined);
     assert.equal(health.provider_publication_state,'external_to_runtime');
     assert.equal(health.removed_legacy_base44_connections,2);
     assert.equal(health.removed_legacy_base44_mcp_connections,1);
@@ -139,6 +141,14 @@ test('Fabric public customer front door is branded, browsable, and policy-safe',
     assert.match(home,/Quick start \$49 one-time/);
     assert.match(home,/\/capabilities\/native-product-v1/);
     assert.match(home,/\/assets\/evercraft-icon\.png/);
+
+    const openAiResponse=await fetch(runtime.url+'/openai');
+    assert.equal(openAiResponse.status,200);
+    assert.match(openAiResponse.headers.get('content-type')||'',/^text\/html/);
+    const openAiHome=await openAiResponse.text();
+    assert.match(openAiHome,/Evercraft Website Inspector/);
+    assert.match(openAiHome,/No hidden commerce/);
+    assert.doesNotMatch(openAiHome,/Quick start|\$49|\$299|Available now|\/capabilities|FindMyPart|RIVET|Systemia Website Audit/);
 
     const directoryResponse=await fetch(runtime.url+'/capabilities');
     assert.equal(directoryResponse.status,200);
