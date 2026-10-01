@@ -243,6 +243,7 @@ export function stageClipMediaIntake({manifest,queueDir}){
   };
   const stagedManifestPath=path.join(root,'manifest.json');
   fs.writeFileSync(stagedManifestPath,JSON.stringify(stagedManifest,null,2)+'\n','utf8');
+  const stagedManifestSha256=digestFile(stagedManifestPath);
 
   const receipt={
     schema:'evercraft.clip.intake-receipt.v1',
@@ -250,6 +251,7 @@ export function stageClipMediaIntake({manifest,queueDir}){
     status:'staged',
     queueRoot:root,
     stagedManifestPath,
+    stagedManifestSha256,
     stagedMediaPath,
     stagedCaptionPaths:stagedCaptions.map(item=>item.path),
     manifestDigest,
