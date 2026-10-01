@@ -54,11 +54,5 @@
   "machine_commerce_handoff_state": null,
   "machine_commerce_public_id": null,
   "machine_commerce_tool": null,
-  "live_canary_evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/systemia/opportunity-fabric/runtime.json",
-  "runtime_state": "base44_private_runtime_v1_3_sourcing_authority_security_matching_and_build_verified",
-  "sourcing_state": "verified_private_runtime",
-  "sourcing_payment_obligation_created": false,
-  "sourcing_shortlist_creates_membership": false,
-  "sourced_team_acceptance_materializes": "Offered_Not_accepted",
-  "protected_workflow_entities_runtime_write_only": 10
+  "live_canary_evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/systemia/opportunity-fabric/runtime.json"
 }

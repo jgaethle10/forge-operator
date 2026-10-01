@@ -21,8 +21,8 @@
   },
   "summary": {
     "pain_index_entries": 112,
-    "unique_user_phrases": 969,
-    "mapped_candidate_edges": 1075,
+    "unique_user_phrases": 973,
+    "mapped_candidate_edges": 1079,
     "ambiguous_phrases": 106,
     "product_candidates": 64,
     "machine_offer_candidates": 48
@@ -1153,6 +1153,29 @@
           "machine_state": "direct_checkout_ready",
           "pain_page": "/chum/intents/ibmi-rescue-v1/",
           "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:380612cfce",
+      "user_language": "ask a matched partner if they have capacity for this package",
+      "normalized": "ask a matched partner if they have capacity for this package",
+      "relative_json": "/chum/answers/doors/ask-a-matched-partner-if-they-have-capacity-for-this-package-380612cfce.json",
+      "relative_page": "/chum/answers/doors/ask-a-matched-partner-if-they-have-capacity-for-this-package-380612cfce/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ask-a-matched-partner-if-they-have-capacity-for-this-package-380612cfce.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:opportunity-fabric",
+          "kind": "product",
+          "product_key": "opportunity-fabric",
+          "public_id": null,
+          "name": "Evercraft Opportunity Fabric",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/opportunity-fabric/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric",
           "registry_name": null
         }
       ]
@@ -8899,6 +8922,29 @@
           "pain_page": "/chum/products/faie/",
           "public_url": "https://faie.base44.app/",
           "registry_name": "io.github.jgaethle10/faie"
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:1651ccaaeb",
+      "user_language": "get availability and a quote from accepted partners before assembling a team",
+      "normalized": "get availability and a quote from accepted partners before assembling a team",
+      "relative_json": "/chum/answers/doors/get-availability-and-a-quote-from-accepted-partners-before-assembling-a-team-1651ccaaeb.json",
+      "relative_page": "/chum/answers/doors/get-availability-and-a-quote-from-accepted-partners-before-assembling-a-team-1651ccaaeb/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/get-availability-and-a-quote-from-accepted-partners-before-assembling-a-team-1651ccaaeb.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:opportunity-fabric",
+          "kind": "product",
+          "product_key": "opportunity-fabric",
+          "public_id": null,
+          "name": "Evercraft Opportunity Fabric",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/opportunity-fabric/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric",
+          "registry_name": null
         }
       ]
     },
@@ -18585,6 +18631,29 @@
       ]
     },
     {
+      "answer_id": "intent:452cc63da8",
+      "user_language": "shortlist supplier quotes into a temporary execution team",
+      "normalized": "shortlist supplier quotes into a temporary execution team",
+      "relative_json": "/chum/answers/doors/shortlist-supplier-quotes-into-a-temporary-execution-team-452cc63da8.json",
+      "relative_page": "/chum/answers/doors/shortlist-supplier-quotes-into-a-temporary-execution-team-452cc63da8/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/shortlist-supplier-quotes-into-a-temporary-execution-team-452cc63da8.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:opportunity-fabric",
+          "kind": "product",
+          "product_key": "opportunity-fabric",
+          "public_id": null,
+          "name": "Evercraft Opportunity Fabric",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/opportunity-fabric/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:7f1977a5a2",
       "user_language": "should I add a new product or service to my business",
       "normalized": "should i add a new product or service to my business",
@@ -21392,6 +21461,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/worldstate-reality-delta-v1/",
           "public_url": null,
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:ea9c8b64c5",
+      "user_language": "turn shortlisted quotes into team invitations and work-package offers",
+      "normalized": "turn shortlisted quotes into team invitations and work package offers",
+      "relative_json": "/chum/answers/doors/turn-shortlisted-quotes-into-team-invitations-and-work-package-offers-ea9c8b64c5.json",
+      "relative_page": "/chum/answers/doors/turn-shortlisted-quotes-into-team-invitations-and-work-package-offers-ea9c8b64c5/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/turn-shortlisted-quotes-into-team-invitations-and-work-package-offers-ea9c8b64c5.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:opportunity-fabric",
+          "kind": "product",
+          "product_key": "opportunity-fabric",
+          "public_id": null,
+          "name": "Evercraft Opportunity Fabric",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/opportunity-fabric/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric",
           "registry_name": null
         }
       ]

@@ -7,8 +7,8 @@ Each phrase below maps to public capability candidates without upgrading readine
 Discovery creates no payment obligation. Checkout requires explicit human confirmation and paid state requires authoritative provider verification.
 
 Pain-index entries: 112
-Unique user phrases: 969
-Candidate edges: 1075
+Unique user phrases: 973
+Candidate edges: 1079
 Ambiguous phrases: 106
 
 ## 15 GB video analysis
@@ -343,6 +343,13 @@ Human-readable match: /chum/answers/doors/as-400-modernization-assessment-49430f
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/as-400-modernization-assessment-49430f448e.json
 Candidates:
 - Evercraft IBM i Rescue | kind=machine_offer | commercial=sell_now | machine=direct_checkout_ready | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
+
+## ask a matched partner if they have capacity for this package
+Answer ID: intent:380612cfce
+Human-readable match: /chum/answers/doors/ask-a-matched-partner-if-they-have-capacity-for-this-package-380612cfce/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/ask-a-matched-partner-if-they-have-capacity-for-this-package-380612cfce.json
+Candidates:
+- Evercraft Opportunity Fabric | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric
 
 ## ASL and Deaf culture learning
 Answer ID: intent:960d5b1784
@@ -2610,6 +2617,13 @@ Human-readable match: /chum/answers/doors/get-an-evidence-based-agriculture-or-w
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/get-an-evidence-based-agriculture-or-water-risk-brief-6fe5b60c84.json
 Candidates:
 - FAIE | kind=product | commercial=product_contract | machine=specialist_mcp_declared | public=https://faie.base44.app/
+
+## get availability and a quote from accepted partners before assembling a team
+Answer ID: intent:1651ccaaeb
+Human-readable match: /chum/answers/doors/get-availability-and-a-quote-from-accepted-partners-before-assembling-a-team-1651ccaaeb/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/get-availability-and-a-quote-from-accepted-partners-before-assembling-a-team-1651ccaaeb.json
+Candidates:
+- Evercraft Opportunity Fabric | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric
 
 ## get contractor quotes for a home project
 Answer ID: intent:7af7ca513e
@@ -5441,6 +5455,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Space Dudz | kind=product | commercial=product_contract | machine=discovery_only | public=https://spacedudz.base44.app/
 
+## shortlist supplier quotes into a temporary execution team
+Answer ID: intent:452cc63da8
+Human-readable match: /chum/answers/doors/shortlist-supplier-quotes-into-a-temporary-execution-team-452cc63da8/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/shortlist-supplier-quotes-into-a-temporary-execution-team-452cc63da8.json
+Candidates:
+- Evercraft Opportunity Fabric | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric
+
 ## should I add a new product or service to my business
 Answer ID: intent:7f1977a5a2
 Human-readable match: /chum/answers/doors/should-i-add-a-new-product-or-service-to-my-business-7f1977a5a2/
@@ -6264,6 +6285,13 @@ Human-readable match: /chum/answers/doors/turn-observations-into-an-evidence-bac
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/turn-observations-into-an-evidence-backed-change-packet-ed6d2c2648.json
 Candidates:
 - Worldstate Reality Delta | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=/chum/intents/worldstate-reality-delta-v1/
+
+## turn shortlisted quotes into team invitations and work-package offers
+Answer ID: intent:ea9c8b64c5
+Human-readable match: /chum/answers/doors/turn-shortlisted-quotes-into-team-invitations-and-work-package-offers-ea9c8b64c5/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/turn-shortlisted-quotes-into-team-invitations-and-work-package-offers-ea9c8b64c5.json
+Candidates:
+- Evercraft Opportunity Fabric | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric
 
 ## turn spreadsheets and legacy systems into an operating layer
 Answer ID: intent:c3d8466ad9

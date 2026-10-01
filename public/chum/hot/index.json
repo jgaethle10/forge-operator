@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.hot-discovery.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-01T02:47:07.555Z",
+  "updated_at": "2026-10-01T03:57:59.889Z",
   "purpose": "High-priority public discovery surfaces for crawler fan-out. The queue reserves limited cold-start frontage for current commercial and sitemap surfaces, then fills remaining slots by observed priority. This is a crawl-order hint, not a ranking or recommendation claim.",
   "surfaces": [
     {
@@ -291,7 +291,7 @@
       "path": "/chum/sitemaps/answers.xml",
       "url": "/chum/sitemaps/answers.xml",
       "priority": 108,
-      "last_changed": "2026-09-30T20:58:29.212Z"
+      "last_changed": "2026-10-01T03:57:59.889Z"
     },
     {
       "path": "/chum/sitemaps/sell-now.xml",
@@ -339,7 +339,7 @@
       "path": "/.well-known/evercraft-pain-index.json",
       "url": "/.well-known/evercraft-pain-index.json",
       "priority": 90,
-      "last_changed": "2026-10-01T01:51:32.805Z"
+      "last_changed": "2026-10-01T03:57:59.889Z"
     },
     {
       "path": "/chum/revenue.json",

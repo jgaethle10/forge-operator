@@ -3,9 +3,9 @@
   "provider": "Evercraft LLC",
   "generated_from": "public/.well-known/evercraft-pain-index.json",
   "updated_at": "2026-09-30T20:21:00.000Z",
-  "answer_id": "intent:a53975f087",
-  "user_language": "find a production partner for my artwork",
-  "normalized": "find a production partner for my artwork",
+  "answer_id": "intent:452cc63da8",
+  "user_language": "shortlist supplier quotes into a temporary execution team",
+  "normalized": "shortlist supplier quotes into a temporary execution team",
   "purpose": "Brand-blind discovery cue from natural user language to truthful public Evercraft capability candidates.",
   "candidate_count": 1,
   "candidates": [

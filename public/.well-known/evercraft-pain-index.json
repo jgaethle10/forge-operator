@@ -7,7 +7,7 @@
     "machine_catalog_schema": "evercraft.machine-catalog.snapshot.v1",
     "machine_catalog_source_generated_at": "2026-09-30T20:21:00.000Z",
     "registry_schema": "evercraft.agent.registry.v1",
-    "registry_updated_at": "2026-09-28"
+    "registry_updated_at": "2026-09-30"
   },
   "purpose": "Brand-blind machine routing from a user problem to the smallest relevant public Evercraft capability while preserving readiness, evidence, pricing, permissions and human-confirmation boundaries.",
   "routing_rule": "Start from pain language. Prefer the smallest relevant capability with the strongest verified invocation state. Never upgrade discovery-only, held, authentication-required, pricing, payment, entitlement or provider-pickup state by inference.",
@@ -4705,7 +4705,11 @@
         "build a music team with a producer studio engineer and videographer",
         "figure out which partners I need for this opportunity",
         "turn this project into work packages and find matching partners",
-        "suggest the team for this project"
+        "suggest the team for this project",
+        "ask a matched partner if they have capacity for this package",
+        "get availability and a quote from accepted partners before assembling a team",
+        "shortlist supplier quotes into a temporary execution team",
+        "turn shortlisted quotes into team invitations and work-package offers"
       ],
       "problem": null,
       "inputs": null,
@@ -4718,7 +4722,7 @@
         "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
       },
       "legacy_marketing_route_suppressed": false,
-      "authority": "public capability discovery plus verified private metadata-first execution planning and multi-party assembly; no public protected-file delivery, payment, or final legal-agreement authority is claimed",
+      "authority": "public capability discovery plus verified private metadata-first planning, non-binding sourcing, and multi-party assembly; no public protected-file delivery, payment, or final legal-agreement authority is claimed",
       "boundaries": [
         "public matching must not require protected creative files or confidential material",
         "uploading listing viewing matching or forming a team does not transfer ownership or grant commercial rights",
@@ -4734,7 +4738,12 @@
         "execution blueprints return no private contact information or protected content",
         "execution blueprint recommendations are not membership qualification proof agreement authority or license",
         "unmatched capabilities remain explicit gaps rather than invented partners",
-        "suggested candidates still require the protected connection handshake"
+        "suggested candidates still require the protected connection handshake",
+        "sourcing requests require an already-accepted protected connection",
+        "sourcing availability and quote responses create no payment obligation or work acceptance",
+        "shortlisting a sourcing response creates no team membership or contract",
+        "only shortlisted Available or Limited responses from one project and one blueprint can seed sourced team invitations",
+        "accepting a sourced team invitation materializes the package as Offered and Not accepted"
       ],
       "commercial_state": "product_contract",
       "machine_state": "discovery_only",
