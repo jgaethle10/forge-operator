@@ -1,4 +1,5 @@
 import { createHash } from 'node:crypto';
+import { verifyMicroSeedExecutionReceipt } from './microseed-receipt-signature.mjs';
 
 const sha=(value)=>'sha256:'+createHash('sha256').update(
   typeof value==='string'?value:JSON.stringify(value)
@@ -60,13 +61,25 @@ export async function runMicroSeedConformance({
         receipt?.device_id===manifest.device_id &&
         receipt?.workload_class===workload &&
         receipt?.arbitrary_code_execution===false;
+      let signatureValid=true;
+      if(manifest.attestation?.receipt_signing_required===true){
+        if(receipt?.result?.remote_signature_verified===true){
+          signatureValid=true;
+        }else{
+          signatureValid=verifyMicroSeedExecutionReceipt(receipt,{
+            publicKey:manifest.attestation?.receipt_public_key_pem||null,
+            expected_device_id:manifest.device_id,
+          }).verified===true;
+        }
+      }
       const actualResult=receipt?.result?.remote_result??receipt?.result;
-      const valid=receiptEnvelopeValid&&canary.validate(actualResult);
+      const valid=receiptEnvelopeValid&&signatureValid&&canary.validate(actualResult);
       receipts.push({
         workload_class:workload,
         receipt_hash:receipt?.receipt_hash||null,
         execution_location:receipt?.execution_location||null,
         envelope_valid:receiptEnvelopeValid,
+        signature_valid:signatureValid,
         valid,
       });
       if(valid) verified.push(workload);
