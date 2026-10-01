@@ -86,6 +86,14 @@ if [[ ! -s "$GATEWAY_TOKEN_FILE" ]]; then
   chmod 0600 "$GATEWAY_TOKEN_FILE"
 fi
 
+WORK_API_TOKEN_FILE="$STATE_DIR/.secrets/ambient-work-api-token"
+if [[ ! -s "$WORK_API_TOKEN_FILE" ]]; then
+  umask 077
+  "$NODE_BIN" -e "process.stdout.write(require('crypto').randomBytes(32).toString('hex')+'\\n')" > "$WORK_API_TOKEN_FILE"
+  chown "$RUN_USER:$RUN_GROUP" "$WORK_API_TOKEN_FILE"
+  chmod 0600 "$WORK_API_TOKEN_FILE"
+fi
+
 cat >/etc/systemd/system/evercraft-saban-capacity.service <<EOF
 [Unit]
 Description=Evercraft Saban zero-spend ambient capacity organism
@@ -143,6 +151,39 @@ Environment=SABAN_AMBIENT_STATE_DIR=$STATE_DIR
 Environment=SABAN_ALLOW_COMMERCIAL_CAPACITY=0
 Environment=SABAN_MICROSEED_ALLOW_INSECURE_LAN=0
 ExecStart=$NODE_BIN $REPO_ROOT/systemia/saban/microseed-gateway-runner.mjs --root $STATE_DIR --host 127.0.0.1 --port 8791 --gateway-token-file $GATEWAY_TOKEN_FILE
+Restart=always
+RestartSec=5s
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=read-only
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+RestrictRealtime=true
+ReadWritePaths=$STATE_DIR
+TimeoutStartSec=20s
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+cat >/etc/systemd/system/evercraft-saban-work-api.service <<EOF
+[Unit]
+Description=Evercraft Saban loopback product work intake API
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=$RUN_USER
+Group=$RUN_GROUP
+WorkingDirectory=$REPO_ROOT
+Environment=SABAN_AMBIENT_STATE_DIR=$STATE_DIR
+Environment=SABAN_ALLOW_COMMERCIAL_CAPACITY=0
+ExecStart=$NODE_BIN $REPO_ROOT/systemia/saban/ambient-work-api-runner.mjs --root $STATE_DIR --host 127.0.0.1 --port 8793 --token-file $WORK_API_TOKEN_FILE
 Restart=always
 RestartSec=5s
 NoNewPrivileges=true
@@ -249,6 +290,7 @@ EOF
 systemctl daemon-reload
 systemctl enable --now evercraft-saban-capacity.timer
 systemctl enable --now evercraft-saban-microseed-gateway.service
+systemctl enable --now evercraft-saban-work-api.service
 systemctl enable --now evercraft-saban-probation.timer
 systemctl enable --now evercraft-saban-dispatch.timer
 systemctl start evercraft-saban-capacity.service
@@ -260,7 +302,9 @@ echo
 echo "State: $STATE_DIR/capacity-organism-state.json"
 echo "Registry: $STATE_DIR/registry"
 echo "MicroSeed gateway: http://127.0.0.1:8791"
+echo "Product work API: http://127.0.0.1:8793"
 echo "Probation timer: evercraft-saban-probation.timer"
 echo "Dispatch timer: evercraft-saban-dispatch.timer"
 echo "Gateway token file: $GATEWAY_TOKEN_FILE"
+echo "Work API token file: $WORK_API_TOKEN_FILE"
 echo "Device token directory: $STATE_DIR/.secrets/device-tokens"
