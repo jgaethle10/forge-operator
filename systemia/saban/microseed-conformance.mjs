@@ -55,11 +55,17 @@ export async function runMicroSeedConformance({
         idempotency_key:idempotency,
         payload:canary.payload,
       });
-      const valid=canary.validate(receipt);
+      const receiptEnvelopeValid=
+        receipt?.schema==='evercraft.microseed.execution-receipt.v1' &&
+        receipt?.device_id===manifest.device_id &&
+        receipt?.workload_class===workload &&
+        receipt?.arbitrary_code_execution===false;
+      const valid=receiptEnvelopeValid&&canary.validate(receipt);
       receipts.push({
         workload_class:workload,
         receipt_hash:receipt?.receipt_hash||null,
         execution_location:receipt?.execution_location||null,
+        envelope_valid:receiptEnvelopeValid,
         valid,
       });
       if(valid) verified.push(workload);
