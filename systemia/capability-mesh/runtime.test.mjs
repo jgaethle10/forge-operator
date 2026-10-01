@@ -229,7 +229,7 @@ test('FindMyPart paid hunt is not silently exposed by the free-triage contract',
 
 test('missing product contracts fail closed instead of inheriting another product defaults', () => {
   assert.throws(
-    () => compileProductRuntimePolicy('findmypart', process.cwd()),
+    () => compileProductRuntimePolicy('buildflow', process.cwd()),
     /product_contract_missing/
   );
 });
