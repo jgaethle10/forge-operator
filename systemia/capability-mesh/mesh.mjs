@@ -360,18 +360,21 @@ const isCli =
   path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 
 if (isCli) {
-  const root = process.cwd();
-  const out = path.join(root, 'systemia', 'capability-mesh', 'adoption-coverage.json');
-  const rendered = JSON.stringify(renderCapabilityMesh(root), null, 2) + '\n';
+  const rendered = renderCapabilityMesh(process.cwd());
 
   if (process.argv.includes('--check')) {
-    if (!fs.existsSync(out)) throw new Error('capability_mesh_coverage_missing');
-    if (fs.readFileSync(out, 'utf8') !== rendered) {
-      throw new Error('capability_mesh_coverage_stale');
+    if (rendered.summary.incomplete_contract_declaration_count > 0) {
+      throw new Error('capability_mesh_incomplete_contracts');
     }
-    console.log('CAPABILITY_MESH_CURRENT');
+    if (rendered.ratchet.state !== 'pass') {
+      throw new Error('capability_mesh_ratchet_blocked');
+    }
+    console.log(JSON.stringify({
+      state: 'CAPABILITY_MESH_CURRENT',
+      summary: rendered.summary,
+      ratchet: rendered.ratchet,
+    }));
   } else {
-    fs.writeFileSync(out, rendered);
-    console.log(out);
+    console.log(JSON.stringify(rendered, null, 2));
   }
 }
