@@ -17,6 +17,7 @@ const arg=(name,fallback='')=>{
   return i>=0&&process.argv[i+1]?process.argv[i+1]:fallback;
 };
 const has=name=>process.argv.includes(name);
+const clean=v=>String(v??'').trim();
 const csv=v=>String(v||'').split(',').map(x=>x.trim()).filter(Boolean);
 
 function atomicJson(file,value){
@@ -113,6 +114,32 @@ export function createDeviceEnrollmentFromPairing({
   };
 }
 
+async function submitEnrollmentBundle({url,bundle,fetchImpl=fetch}={}){
+  const raw=clean(url);
+  if(!raw) throw new Error('microseed_pairing_enrollment_url_required');
+  let endpoint;
+  try{endpoint=new URL(raw);}catch{throw new Error('microseed_pairing_enrollment_url_invalid');}
+  const loopback=['127.0.0.1','localhost','::1'].includes(endpoint.hostname.toLowerCase());
+  if(endpoint.protocol!=='https:'&&!(endpoint.protocol==='http:'&&loopback)){
+    throw new Error('microseed_pairing_enrollment_url_https_required');
+  }
+  if(endpoint.username||endpoint.password){
+    throw new Error('microseed_pairing_enrollment_url_credentials_forbidden');
+  }
+  const response=await fetchImpl(endpoint,{
+    method:'POST',
+    headers:{'content-type':'application/json',accept:'application/json'},
+    body:JSON.stringify({bundle}),
+  });
+  const text=await response.text();
+  let body;
+  try{body=text?JSON.parse(text):{};}catch{throw new Error('microseed_pairing_enrollment_response_invalid_json');}
+  if(!response.ok||body?.ok!==true){
+    throw new Error('microseed_pairing_enrollment_http_'+response.status+':'+clean(body?.error||'enrollment_failed'));
+  }
+  return body;
+}
+
 async function main(){
   const uri=pairingUri();
   const root=path.resolve(
@@ -136,7 +163,35 @@ async function main(){
     outFile:arg('--out',''),
     now:new Date(),
   });
-  process.stdout.write(JSON.stringify(receipt,null,2)+'\n');
+  if(has('--submit')){
+    const parsed=parseMicroSeedPairingUri(uri);
+    if(!parsed.enrollment_url){
+      throw new Error('microseed_pairing_ticket_has_no_enrollment_return_url');
+    }
+    const bundle=JSON.parse(fs.readFileSync(receipt.bundle_file,'utf8'));
+    const enrollment=await submitEnrollmentBundle({
+      url:parsed.enrollment_url,
+      bundle,
+    });
+    process.stdout.write(JSON.stringify({
+      ...receipt,
+      enrollment_submitted:true,
+      enrollment_url:parsed.enrollment_url,
+      enrollment_receipt:enrollment.receipt||enrollment,
+      production_eligible:enrollment.production_eligible===true,
+      conformance_required:enrollment.conformance_required!==false,
+      calibration_required:enrollment.calibration_required!==false,
+      private_key_exposed:false,
+      device_token_exposed:false,
+      pairing_secret_exposed:false,
+    },null,2)+'\n');
+    return;
+  }
+  process.stdout.write(JSON.stringify({
+    ...receipt,
+    enrollment_submitted:false,
+    enrollment_url:parseMicroSeedPairingUri(uri).enrollment_url||null,
+  },null,2)+'\n');
 }
 
 if(process.argv[1]&&path.resolve(process.argv[1])===MODULE_FILE){
