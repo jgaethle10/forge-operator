@@ -401,7 +401,12 @@ async function main() {
   };
   const repairQueue = buildPortfolioRepairQueue(activeFindings, delta);
   const repairUnitFile = path.join(outDir, 'repair-unit-state.json');
-  const repairUnit = buildRepairUnitState(activeFindings, loadJson(repairUnitFile, { items: [] }));
+  const treatmentMemoryFile = path.join(outDir, 'repair-treatment-memory.json');
+  const treatmentMemory = loadJson(treatmentMemoryFile, { schema:'evercraft.systemia.repair-treatment-memory.v1', treatments:[] });
+  const repairUnit = buildRepairUnitState(activeFindings, loadJson(repairUnitFile, { items: [] }), {
+    recipeRegistry: recipeRegistryResult.ok ? recipeRegistryResult.registry : { recipes: [] },
+    treatmentMemory: treatmentMemory.treatments || []
+  });
   const evidenceRefs = activeFindings.flatMap((row) => row.evidence_refs || []).slice(0, 500);
   const snapshot = buildPortfolioMissionSnapshot({ scanned, delta, observedAt, evidenceRefs });
   const cycleKey = new Date(Math.floor(observedAt.getTime() / 300000) * 300000).toISOString();
@@ -484,6 +489,7 @@ async function main() {
   atomicJson(path.join(outDir, 'repair-queue.json'), { schema: 'evercraft.portfolio-sentinel.repair-queue.v1', observed_at: report.observed_at, items: repairQueue });
   atomicJson(path.join(outDir, 'inventory.json'), { schema: 'evercraft.portfolio-sentinel.inventory.v1', observed_at: report.observed_at, ...report.inventory });
   atomicJson(repairUnitFile, repairUnit);
+  atomicJson(treatmentMemoryFile, treatmentMemory);
   atomicJson(path.join(outDir, 'repair-memory.json'), {
     schema: 'evercraft.portfolio-sentinel.repair-memory.v1',
     observed_at: report.observed_at,
