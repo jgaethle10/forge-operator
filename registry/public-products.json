@@ -379,10 +379,10 @@
       "canonical_url": "https://evermaps.base44.app/",
       "github_record": "./evermaps/README.md",
       "llms": "./evermaps/llms.txt",
-      "registry_name": null,
+      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
       "invocation": {
-        "mode": "discovery_only",
-        "url": null
+        "mode": "mcp",
+        "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
       }
     },
     {
@@ -496,10 +496,10 @@
       "canonical_url": "https://global-stat-pulse.base44.app/",
       "github_record": "./globalstat/README.md",
       "llms": "./globalstat/llms.txt",
-      "registry_name": null,
+      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
       "invocation": {
-        "mode": "discovery_only",
-        "url": null
+        "mode": "mcp",
+        "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
       }
     },
     {
@@ -561,10 +561,10 @@
       "canonical_url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
       "github_record": "./little-red-book-export-qa/README.md",
       "llms": "./little-red-book-export-qa/llms.txt",
-      "registry_name": null,
+      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
       "invocation": {
-        "mode": "discovery_only",
-        "url": null
+        "mode": "mcp",
+        "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
       }
     },
     {
