@@ -10,9 +10,9 @@
     "privacy_document": "plugins/evercraft-fabric/PRIVACY.md",
     "terms_document": "plugins/evercraft-fabric/TERMS.md",
     "support_document": "plugins/evercraft-fabric/SUPPORT.md",
-    "privacy_url": "https://fabric.systemiacommandcenters.com/privacy",
-    "terms_url": "https://fabric.systemiacommandcenters.com/terms",
-    "support_url": "https://fabric.systemiacommandcenters.com/support"
+    "privacy_url": "https://fabric.systemiacommandcenters.com/openai/privacy",
+    "terms_url": "https://fabric.systemiacommandcenters.com/openai/terms",
+    "support_url": "https://fabric.systemiacommandcenters.com/openai/support"
   },
   "submission_state": "owned_public_fabric_ingress_repair_and_preview_rescan_pending",
   "public_directory_claim_allowed": false,
