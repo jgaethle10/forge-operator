@@ -130,7 +130,7 @@ const report={
     },
   }],
 };
-assert.equal(buildQuoteMicrostructureTargets(report).length,3);
+assert.equal(buildQuoteMicrostructureTargets(report).length,4);
 
 const lab=await runQuoteMicrostructureLab(report,{
   key:"proof-key",
@@ -151,14 +151,15 @@ const lab=await runQuoteMicrostructureLab(report,{
             {t:"2026-09-01T13:30:00.100Z",bp:99.9,ap:100.1,bs:10,as:11},
             {t:"2026-09-01T13:35:00.100Z",bp:99.95,ap:100.05,bs:12,as:12},
             {t:"2026-09-01T13:45:00.100Z",bp:99.98,ap:100.02,bs:14,as:13},
+            {t:"2026-09-02T13:30:00.100Z",bp:101.4,ap:101.6,bs:16,as:17},
           ],
           next_page_token:null,
         }),
   }),
 });
 assert.equal(lab.status,"QUOTE_DATA_AVAILABLE");
-assert.equal(lab.target_count,3);
-assert.equal(lab.grouped_query_count,1);
+assert.equal(lab.target_count,4);
+assert.equal(lab.grouped_query_count,2);
 assert.equal(lab.coverage,1);
 assert.equal(lab.quote_scope,"iex_bbo_not_consolidated_nbbo");
 assert.equal(lab.fallback_feed_used,false);
@@ -176,7 +177,20 @@ assert.ok(
     lab.by_signal["ai_models|sec_8_k|SOXX|1d"].mean_quote_entry_strategy_net_partial
   )
 );
-assert.equal(lab.interpretation.exit_execution_quote_adjusted,false);
+assert.equal(lab.interpretation.exit_execution_quote_adjusted,true);
+assert.equal(lab.execution_pairs.length,1);
+assert.equal(lab.execution_pairs[0].two_sided_quote_available,true);
+assert.ok(lab.execution_pairs[0].marketable_entry_price>100);
+assert.ok(lab.execution_pairs[0].marketable_exit_price<101.5);
+assert.ok(lab.execution_pairs[0].total_touch_slippage_vs_bar_bps>0);
+assert.ok(
+  lab.execution_pairs[0].quote_two_sided_strategy_net <
+  lab.execution_pairs[0].bar_strategy_net
+);
+assert.equal(
+  lab.by_signal["ai_models|sec_8_k|SOXX|1d"].two_sided_execution.two_sided_quote_coverage,
+  1
+);
 const modeledEntry=lab.overlays.find((row)=>row.label==="modeled_entry");
 assert.equal(modeledEntry.passive_touch_evidence_available,true);
 assert.equal(modeledEntry.passive_price_touch_observed,true);
@@ -195,6 +209,48 @@ assert.equal(
   1
 );
 assert.equal(lab.live_trade_authority,false);
+
+const shortReport={
+  evaluations:[{
+    signal_key:"ai_models|sec_8_k|SOXX|1d:short-proof",
+    status:"RESEARCH_CANDIDATE",
+    learned_direction:"NEGATIVE_EXCESS_RETURN",
+  }],
+  measurements:[{
+    measurement_id:"short-m1",
+    signal_key:"ai_models|sec_8_k|SOXX|1d:short-proof",
+    instrument:"SOXX",
+    lag_key:"1d",
+    instrument_start_time:"2026-09-03T13:35:00.000Z",
+    instrument_end_time:"2026-09-04T13:35:00.000Z",
+    instrument_start_price:100,
+    instrument_end_price:98,
+    forward_return:-0.02,
+    benchmark_return:0,
+    execution_delay_stress:{},
+  }],
+};
+const shortLab=await runQuoteMicrostructureLab(shortReport,{
+  key:"proof-key",
+  secret:"proof-secret",
+  feed:"sip",
+  fetchImpl:async(url)=>({
+    ok:true,
+    json:async()=>String(url).includes("/trades")
+      ?({trades:[],next_page_token:null})
+      :({quotes:[
+          {t:"2026-09-03T13:35:00.100Z",bp:99.9,ap:100.1,bs:100,as:100},
+          {t:"2026-09-04T13:35:00.100Z",bp:97.9,ap:98.1,bs:100,as:100},
+        ],next_page_token:null}),
+  }),
+});
+const shortPair=shortLab.execution_pairs[0];
+assert.equal(shortPair.two_sided_quote_available,true);
+assert.equal(shortPair.marketable_entry_price,99.9);
+assert.equal(shortPair.marketable_exit_price,98.1);
+assert.ok(shortPair.quote_two_sided_strategy_net>0);
+assert.ok(shortPair.total_touch_slippage_vs_bar_bps>0);
+assert.ok(shortPair.quote_two_sided_strategy_net<shortPair.bar_strategy_net);
 
 const partial=await runQuoteMicrostructureLab(report,{
   key:"proof-key",
@@ -352,6 +408,10 @@ console.log(JSON.stringify({
   explicit_feed_provenance:true,
   marketable_entry_friction:true,
   entry_side_partial_strategy_net:true,
+  two_sided_marketable_execution:true,
+  long_entry_ask_exit_bid:true,
+  short_entry_bid_exit_ask:true,
+  total_touch_slippage_degrades_bar_result:true,
   historical_trade_touch_evidence:true,
   passive_touch_never_claimed_as_fill:true,
   top_of_book_size_imbalance:true,
