@@ -40,7 +40,7 @@
     "test:chum-router": "node systemia/chum/discovery-router.test.mjs",
     "proof:organism": "node systemia/organism/proof.mjs",
     "proof:goal-runtime": "node systemia/organism/goal-runtime.proof.mjs",
-    "proof:systemia": "npm run proof:organism && npm run proof:goal-runtime && npm run proof:goal-store && npm run proof:one-body && npm run proof:legacy-rescue-watch && npm run proof:portfolio-sentinel && npm run proof:ibmi-rescue-fulfillment && npm run proof:universal-fulfillment && npm run proof:portfolio-fulfillment-router && npm run proof:portfolio-fulfillment-e2e && npm run proof:portfolio-fulfillment-all && npm run proof:rockies && npm run proof:worldstate-observation-fabric && npm run proof:worldstate-context-adapter && npm run proof:worldstate-context-reader && npm run proof:worldstate-phenomenon && npm run proof:social-spectacle",
+    "proof:systemia": "npm run proof:organism && npm run proof:goal-runtime && npm run proof:goal-store && npm run proof:one-body && npm run proof:legacy-rescue-watch && npm run proof:portfolio-sentinel && npm run proof:ibmi-rescue-fulfillment && npm run proof:universal-fulfillment && npm run proof:portfolio-fulfillment-router && npm run proof:portfolio-fulfillment-e2e && npm run proof:portfolio-fulfillment-all && npm run proof:rockies && npm run proof:worldstate-observation-fabric && npm run proof:worldstate-context-adapter && npm run proof:worldstate-context-reader && npm run proof:worldstate-phenomenon && npm run proof:social-spectacle && npm run proof:social-spectacle-production",
     "goal": "node systemia/organism/goal-cli.mjs",
     "proof:goal-store": "node systemia/organism/goal-store.proof.mjs",
     "chum:index": "node systemia/chum/build-pain-index.mjs",
@@ -246,7 +246,9 @@
     "proof:compute-fabric": "node systemia/compute/capacity-fabric.proof.mjs && node systemia/compute/federated-bridge.proof.mjs && node systemia/network/outbound-capacity.proof.mjs",
     "proof:owned-rivet-stack": "node systemia/compute/hosting-control-plane.proof.mjs && node systemia/aliev/geo-normalization.proof.mjs && node systemia/aliev/collectors/washington.proof.mjs && node systemia/aliev/collectors/us.proof.mjs && node systemia/aliev/domain-engine.proof.mjs && node systemia/aliev/snapshot-bundle.proof.mjs && node systemia/migrations/base44-exit/aliev-domain-adapter.proof.mjs && node systemia/migrations/base44-exit/aliev-extractor.proof.mjs && node systemia/compute/aliev-rivet-owned-lane.proof.mjs && node systemia/rivet/report-runtime.proof.mjs && node systemia/rivet/cutover-controller.proof.mjs && node systemia/core/rivet-report-resident-wiring.proof.mjs && node systemia/compute/capacity-fabric.proof.mjs && node systemia/compute/federated-bridge.proof.mjs",
     "proof:social-spectacle": "node systemia/organism/social-spectacle-engine.proof.mjs",
-    "social:spectacle": "node systemia/organism/social-spectacle-engine.mjs"
+    "social:spectacle": "node systemia/organism/social-spectacle-engine.mjs",
+    "proof:social-spectacle-production": "node systemia/organism/social-spectacle-production.proof.mjs",
+    "social:spectacle:produce": "node systemia/organism/social-spectacle-production.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
