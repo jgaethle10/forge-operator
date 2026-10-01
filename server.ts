@@ -18,6 +18,7 @@ import { registerRivetReportGateway } from './systemia/rivet/http-gateway.mjs';
 import { registerSpecialistHandoffMcps } from './systemia/mcp/specialist-handoff.js';
 import { registerRemoteOperatorMcp } from './systemia/remote-operator/mcp-gateway.mjs';
 import { registerNotificationFabricRoutes } from './systemia/notification-fabric/http.mjs';
+import { registerWeekInMotionRoutes } from './systemia/week-in-motion/http.mjs';
 
 dotenv.config();
 
@@ -170,6 +171,7 @@ function rateLimit(maxRequests: number, windowMs: number) {
 
 app.use(express.json({ limit: '10mb', type: ['application/json', 'application/*+json'] }));
 registerNotificationFabricRoutes(app);
+registerWeekInMotionRoutes(app);
 registerRivetReportGateway(app);
 registerSpecialistHandoffMcps(app, { gatewayUrl: machineCommerceGatewayUrl });
 registerRemoteOperatorMcp(app);
