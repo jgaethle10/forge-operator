@@ -1,0 +1,158 @@
+{
+  "schema": "evercraft.base44.command-center-function-map.v1",
+  "product": "Systemia Command Center",
+  "observed_at": "2026-10-01",
+  "source_function_count": 8,
+  "functions": [
+    {
+      "source_function": "aqueductOps",
+      "behavior": "Pipeline edge registration, stage receipts, freshness/drain/consumer/schema/silent-zero evaluation, incident lifecycle and graph.",
+      "state": "owned_implementation_present_ci_pending",
+      "owned_refs": [
+        "systemia/aqueduct/runtime.mjs",
+        "systemia/aqueduct/runtime.proof.mjs"
+      ],
+      "remaining": [
+        "destination_data_reconciliation",
+        "owned_deployment_receipt"
+      ]
+    },
+    {
+      "source_function": "exactOutputGateOps",
+      "behavior": "Versioned release policy evaluation, dependency pinning, human-visible mismatch reopen, downstream cascade, expiry and supersession.",
+      "state": "owned_implementation_present_ci_pending",
+      "owned_refs": [
+        "systemia/exact-output-gate/runtime.mjs",
+        "systemia/exact-output-gate/runtime.proof.mjs"
+      ],
+      "remaining": [
+        "destination_data_reconciliation",
+        "owned_deployment_receipt"
+      ]
+    },
+    {
+      "source_function": "firstPartyCapabilityRouter",
+      "behavior": "Route intent against capability-selection rules and capability registry while preserving first-party-strict behavior.",
+      "state": "owned_router_present_source_data_reconciliation_pending",
+      "owned_refs": [
+        "systemia/mcp/fabric-directory.mjs",
+        "systemia/mcp/fabric-local-runtime.mjs",
+        "systemia/migrations/base44-exit/wave-1-command-center-shadow-source-capture-2026-10-01.json"
+      ],
+      "remaining": [
+        "capability_registry_destination_import",
+        "selection_rule_parity_receipt",
+        "first_party_strict_parity_receipt"
+      ]
+    },
+    {
+      "source_function": "systemiaCoreGateway",
+      "behavior": "Authenticated Systemia Core identity/control-plane view plus machine-commerce bridge.",
+      "state": "owned_control_plane_present_machine_route_pending",
+      "owned_refs": [
+        "systemia/control-plane/control-plane.mjs",
+        "systemia/mcp/specialist-handoff-runtime.mjs",
+        "systemia/migrations/base44-exit/route-registry.mjs"
+      ],
+      "remaining": [
+        "authenticated_gateway_contract_parity",
+        "owned_machine_commerce_upstream_binding",
+        "public_route_probe"
+      ]
+    },
+    {
+      "source_function": "evercraftCommerceGateway",
+      "behavior": "Public HTTP edge forwarding to Machine Commerce.",
+      "state": "owned_route_control_present_upstream_and_public_binding_pending",
+      "owned_refs": [
+        "systemia/yard/public-route-broker.mjs",
+        "systemia/migrations/base44-exit/route-registry.mjs",
+        "systemia/migrations/base44-exit/route-overlay.mjs",
+        "systemia/chum/build-commercial-discovery-mesh.mjs"
+      ],
+      "legacy_registry_refs": [
+        "mcp-registry/evercraft-machine-commerce.json",
+        "registry/evercraft-machine-commerce/server.json"
+      ],
+      "remaining": [
+        "owned_machine_commerce_http_runtime",
+        "yard_deployment_receipt",
+        "verified_public_route_binding",
+        "registry_repoint_after_active_cutover"
+      ]
+    },
+    {
+      "source_function": "evercraftCommerceMcp",
+      "behavior": "Streamable HTTP MCP edge forwarding to Machine Commerce MCP.",
+      "state": "owned_route_control_present_upstream_and_public_binding_pending",
+      "owned_refs": [
+        "systemia/mcp/fabric-local-runtime.mjs",
+        "systemia/yard/public-route-broker.mjs",
+        "systemia/migrations/base44-exit/route-registry.mjs"
+      ],
+      "legacy_registry_refs": [
+        "mcp-registry/evercraft-machine-commerce.json",
+        "registry/evercraft-machine-commerce/server.json"
+      ],
+      "remaining": [
+        "owned_machine_commerce_mcp_runtime",
+        "yard_deployment_receipt",
+        "verified_public_route_binding",
+        "registry_repoint_after_active_cutover"
+      ]
+    },
+    {
+      "source_function": "evercraftWebGateway",
+      "behavior": "Public HTTP edge forwarding to Evercraft Web.",
+      "state": "owned_browser_edge_present_public_contract_binding_pending",
+      "owned_refs": [
+        "systemia/evercraft-web/browser-worker/public-adapter.mjs",
+        "systemia/evercraft-web/browser-worker/server.mjs",
+        "systemia/yard/public-route-broker.mjs"
+      ],
+      "legacy_registry_refs": [
+        "mcp-registry/evercraft-web.json",
+        "mcp/evercraft-web/server.json"
+      ],
+      "remaining": [
+        "web_gateway_contract_parity",
+        "yard_deployment_receipt",
+        "verified_public_route_binding",
+        "registry_repoint_after_active_cutover"
+      ]
+    },
+    {
+      "source_function": "evercraftWebMcp",
+      "behavior": "Streamable HTTP MCP edge forwarding to Evercraft Web MCP.",
+      "state": "owned_web_runtime_present_mcp_public_binding_pending",
+      "owned_refs": [
+        "systemia/evercraft-web/browser-worker/public-adapter.mjs",
+        "systemia/mcp/fabric-local-runtime.mjs",
+        "systemia/yard/public-route-broker.mjs"
+      ],
+      "legacy_registry_refs": [
+        "mcp-registry/evercraft-web.json",
+        "mcp/evercraft-web/server.json"
+      ],
+      "remaining": [
+        "evercraft_web_mcp_contract_parity",
+        "yard_deployment_receipt",
+        "verified_public_route_binding",
+        "registry_repoint_after_active_cutover"
+      ]
+    }
+  ],
+  "summary": {
+    "source_functions": 8,
+    "stateful_functions_owned_implementation_present": 2,
+    "functions_with_owned_replacement_path": 8,
+    "functions_fully_cutover_ready": 0,
+    "legacy_public_registry_routes_remaining": 4
+  },
+  "authority": {
+    "source_mutation": false,
+    "traffic_cutover": false,
+    "registry_repoint": false,
+    "source_decommission": false
+  }
+}
