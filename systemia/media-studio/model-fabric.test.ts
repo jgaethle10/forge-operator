@@ -370,3 +370,90 @@ test('legacy single locator remains supported alongside the materialization mesh
   assert.equal(plan.status,'routed');
   assert.deepEqual(plan.jobs[0].references[0].locator,{kind:'url',value:'https://assets.example/eli.png'});
 });
+
+
+test('candidateCount produces multiple independently receipted jobs from one capable model',()=>{
+  const endpoint:VisualModelEndpoint={
+    id:'solo-cinema',providerId:'solo',displayName:'Solo Cinema',
+    enabled:true,executionState:'verified',
+    capabilities:[{
+      task:'video',inputModes:['text','image_reference'],
+      requirements:['reference_identity','commercial_rights','provenance_receipt','timing_control'],
+      maxReferences:2,maxCandidateJobs:4,
+      qualityTier:5,costTier:4,latencyTier:3
+    }]
+  };
+  const plan=buildVisualModelPlan({...request,candidateCount:4,modelDiversity:2,targetResolution:undefined},[endpoint]);
+  assert.equal(plan.status,'routed');
+  assert.equal(plan.jobs.length,4);
+  assert.equal(new Set(plan.jobs.map(job=>job.id)).size,4);
+  assert.deepEqual([...new Set(plan.jobs.map(job=>job.modelId))],['solo-cinema']);
+  assert.ok(plan.jobs.every(job=>job.providerId==='solo'));
+});
+
+test('candidate fan-out still prefers provider diversity before repeating a model',()=>{
+  const providerEndpoints:VisualModelEndpoint[]=[
+    {
+      id:'a',providerId:'provider-a',displayName:'A',enabled:true,executionState:'verified',
+      capabilities:[{
+        task:'video',inputModes:['text','image_reference'],
+        requirements:['reference_identity','commercial_rights','provenance_receipt','timing_control'],
+        maxCandidateJobs:4,qualityTier:5,costTier:2,latencyTier:2
+      }]
+    },
+    {
+      id:'b',providerId:'provider-b',displayName:'B',enabled:true,executionState:'verified',
+      capabilities:[{
+        task:'video',inputModes:['text','image_reference'],
+        requirements:['reference_identity','commercial_rights','provenance_receipt','timing_control'],
+        maxCandidateJobs:4,qualityTier:4,costTier:2,latencyTier:2
+      }]
+    }
+  ];
+  const plan=buildVisualModelPlan({...request,candidateCount:4,modelDiversity:1,targetResolution:undefined},providerEndpoints);
+  assert.equal(plan.jobs.length,4);
+  assert.deepEqual(plan.jobs.slice(0,2).map(job=>job.providerId),['provider-a','provider-b']);
+  assert.equal(new Set(plan.jobs.map(job=>job.providerId)).size,2);
+});
+
+test('finish pass can request two Sync-style alternatives from one endpoint',()=>{
+  const endpoint:VisualModelEndpoint={
+    id:'lip-solo',providerId:'sync',displayName:'Lip Solo',
+    enabled:true,executionState:'verified',
+    capabilities:[{
+      task:'lip_sync',inputModes:['video_reference','audio_reference'],
+      requirements:['reference_identity','commercial_rights','provenance_receipt','timing_control'],
+      maxReferences:2,maxCandidateJobs:2,
+      qualityTier:5,costTier:3,latencyTier:2
+    }]
+  };
+  const finish=buildVisualFinishPlan({
+    schema:'evercraft.fallen.visual-finish-request.v1',
+    id:'finish-fanout',needId:'need-systemia',
+    sourceVideoRef:{
+      id:'winner',kind:'video',role:'product',digest:'a'.repeat(64),
+      sourceRefs:['selection:winner']
+    },
+    dialogueAudioRef:{
+      id:'dialogue',kind:'audio',role:'dialogue_audio',digest:'b'.repeat(64),
+      sourceRefs:['voice:approved']
+    },
+    continuityDigest:'continuity-123',sourceRefs:['episode:test']
+  },[endpoint]);
+  assert.equal(finish.steps[0].modelPlan.jobs.length,2);
+  assert.equal(new Set(finish.steps[0].modelPlan.jobs.map(job=>job.id)).size,2);
+});
+
+test('candidate fan-out never exceeds the endpoint capacity',()=>{
+  const endpoint:VisualModelEndpoint={
+    id:'two-max',providerId:'solo',displayName:'Two Max',
+    enabled:true,executionState:'verified',
+    capabilities:[{
+      task:'video',inputModes:['text','image_reference'],
+      requirements:['reference_identity','commercial_rights','provenance_receipt','timing_control'],
+      maxCandidateJobs:2,qualityTier:5,costTier:4,latencyTier:3
+    }]
+  };
+  const plan=buildVisualModelPlan({...request,candidateCount:8,targetResolution:undefined},[endpoint]);
+  assert.equal(plan.jobs.length,2);
+});
