@@ -80,6 +80,17 @@ export function verifyClipMediaManifest(manifest){
   }
   if(!manifest?.provenance?.renderReceiptPath) errors.push('render_receipt_path_missing');
   if(!manifest?.provenance?.masterQcReceiptPath) errors.push('master_qc_receipt_path_missing');
+  if(manifest?.contentClass==='social_spectacle'){
+    if(manifest?.editorialGate?.status!=='accepted'||Number(manifest?.editorialGate?.score)!==10||Number(manifest?.editorialGate?.maximum_score)!==10){
+      errors.push('social_spectacle_editorial_gate_invalid');
+    }
+    if(manifest?.editorialGate?.publication_authority!==false){
+      errors.push('social_spectacle_editorial_authority_invalid');
+    }
+    if(manifest?.productionGrade?.status!=='accepted'||manifest?.productionGrade?.text_primary!==false||manifest?.productionGrade?.source_grounded!==true){
+      errors.push('social_spectacle_production_grade_invalid');
+    }
+  }
 
   return {
     schema:'evercraft.clip.media-intake-validation.v1',
@@ -113,13 +124,20 @@ export function inspectClipMediaPackage(manifest){
   }else{
     try{
       const receipt=readJson(renderPath);
-      if(receipt.schema!=='evercraft.fallen.timeline-export-receipt.v1'){
+      if(receipt.schema==='evercraft.fallen.timeline-export-receipt.v1'){
+        if(receipt.sha256!==manifest.media.sha256) reasons.push('render_receipt_media_digest_mismatch');
+        if(receipt.projectId!==manifest.sourceProjectId) reasons.push('render_receipt_project_mismatch');
+        if(receipt.projectVersion!==manifest.sourceProjectVersion) reasons.push('render_receipt_version_mismatch');
+        if(receipt.publicationAuthorityGranted!==false) reasons.push('render_receipt_publication_boundary_invalid');
+      }else if(receipt.schema==='evercraft.fallen.distributed-render-receipt.v1'){
+        if(receipt.output_sha256!==manifest.media.sha256) reasons.push('render_receipt_media_digest_mismatch');
+        if(receipt.stage_id!==manifest.sourceProjectId) reasons.push('render_receipt_project_mismatch');
+        if(receipt.boundaries?.every_frame_sha256_verified!==true) reasons.push('render_receipt_frame_verification_missing');
+        if(receipt.boundaries?.no_gap_no_duplicate_gate!==true) reasons.push('render_receipt_frame_lattice_invalid');
+        if(receipt.boundaries?.publication_authority!==false) reasons.push('render_receipt_publication_boundary_invalid');
+      }else{
         reasons.push('render_receipt_schema_invalid');
       }
-      if(receipt.sha256!==manifest.media.sha256) reasons.push('render_receipt_media_digest_mismatch');
-      if(receipt.projectId!==manifest.sourceProjectId) reasons.push('render_receipt_project_mismatch');
-      if(receipt.projectVersion!==manifest.sourceProjectVersion) reasons.push('render_receipt_version_mismatch');
-      if(receipt.publicationAuthorityGranted!==false) reasons.push('render_receipt_publication_boundary_invalid');
     }catch(error){
       reasons.push('render_receipt_parse_failed');
     }
@@ -225,6 +243,7 @@ export function stageClipMediaIntake({manifest,queueDir}){
   };
   const stagedManifestPath=path.join(root,'manifest.json');
   fs.writeFileSync(stagedManifestPath,JSON.stringify(stagedManifest,null,2)+'\n','utf8');
+  const stagedManifestSha256=digestFile(stagedManifestPath);
 
   const receipt={
     schema:'evercraft.clip.intake-receipt.v1',
@@ -232,6 +251,7 @@ export function stageClipMediaIntake({manifest,queueDir}){
     status:'staged',
     queueRoot:root,
     stagedManifestPath,
+    stagedManifestSha256,
     stagedMediaPath,
     stagedCaptionPaths:stagedCaptions.map(item=>item.path),
     manifestDigest,
