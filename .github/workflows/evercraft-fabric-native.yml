@@ -12,7 +12,7 @@ on:
       - 'systemia/yard/public-edge-activation-watch.mjs'
       - 'systemia/organism/public-edge-activation-watch-runner.mjs'
       - 'tests/evercraft-fabric-runtime.test.mjs'
-      - 'tests/fabric-local-runtime.test.mjs'
+      - 'tests/fabric-mobile-runtime.test.mjs'
       - 'tests/specialist-handoff-native-runtime.test.mjs'
       - 'tests/public-edge-native-specialist-invariants.test.mjs'
       - 'tests/public-edge-canary-contract.test.mjs'
@@ -34,8 +34,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Prove Fabric MCP, customer surface, and mobile door
-        run: node --test tests/evercraft-fabric-runtime.test.mjs tests/fabric-local-runtime.test.mjs
+      - name: Prove Fabric MCP and mobile door
+        run: node --test tests/evercraft-fabric-runtime.test.mjs tests/fabric-mobile-runtime.test.mjs
       - name: Prove specialist runtime remains safe
         run: |
           npm install --no-audit --no-fund
