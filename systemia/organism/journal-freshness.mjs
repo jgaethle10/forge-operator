@@ -128,7 +128,7 @@ export async function probeJournalFreshness({
   ];
   const journalIdentityMarkers = ['evercraft journal', 'news that moves. ideas that become things.'];
   const hasJournalIdentity = home.ok && journalIdentityMarkers.some((marker) => publicIdentityLower.includes(marker));
-  const identityDrift = home.ok && identityDriftMarkers.some((marker) => publicIdentityLower.includes(marker));
+  const identityDrift = home.ok && !hasJournalIdentity && identityDriftMarkers.some((marker) => publicIdentityLower.includes(marker));
   const identityFindings = identityDrift
     ? [{
         ...findingBase,
