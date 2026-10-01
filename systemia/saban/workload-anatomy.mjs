@@ -27,8 +27,8 @@ export function rivetAliEvProductionAnatomy({
       required_labels:['edge-observer'],
     }),
     task({
-      task_id:'source-domain-normalize',
-      workload_class:'systemia.telemetry-normalizer.v1',
+      task_id:'source-domain-record-digest',
+      workload_class:'systemia.aliev.domain-record-digest.v1',
       execution_shape:'shardable',
       shard_count:Math.max(1,Math.floor(Number(domainParallelism||DOMAIN_COUNT))),
       resources:{cpu_units:0.08,memory_mb:96,storage_gb:0},
@@ -43,8 +43,8 @@ export function rivetAliEvProductionAnatomy({
       max_power_budget_watts:200,
     }),
     task({
-      task_id:'source-domain-content-hash',
-      workload_class:'systemia.content-hash.v1',
+      task_id:'source-domain-canonicalize',
+      workload_class:'systemia.json-canonicalize.v1',
       execution_shape:'shardable',
       shard_count:Math.max(1,Math.floor(Number(domainParallelism||DOMAIN_COUNT))),
       resources:{cpu_units:0.05,memory_mb:64,storage_gb:0},
@@ -101,8 +101,21 @@ export function rivetAliEvProductionAnatomy({
       minimum_uptime_7d:0.70,
     }),
     task({
-      task_id:'rivet-source-integrity',
-      workload_class:'systemia.content-hash.v1',
+      task_id:'rivet-session-semantics-audit',
+      workload_class:'systemia.rivet.observed-session-sanity.v1',
+      execution_shape:'shardable',
+      shard_count:Math.max(1,Math.floor(Number(domainParallelism||DOMAIN_COUNT))),
+      resources:{cpu_units:0.08,memory_mb:160,storage_gb:0},
+      preemptible:true,
+      checkpointable:true,
+      require_attestation:true,
+      private_data:true,
+      minimum_uptime_7d:0.60,
+      max_observation_age_ms:120000,
+    }),
+    task({
+      task_id:'rivet-source-coverage-audit',
+      workload_class:'systemia.rivet.source-coverage-audit.v1',
       execution_shape:'shardable',
       shard_count:Math.max(1,Math.floor(Number(reportParallelism||4))),
       resources:{cpu_units:0.05,memory_mb:64,storage_gb:0},
@@ -115,12 +128,14 @@ export function rivetAliEvProductionAnatomy({
   ];
 
   const dependencies=[
-    ['source-domain-normalize','aliev-source-runtime'],
-    ['source-domain-content-hash','aliev-source-runtime'],
+    ['source-domain-record-digest','aliev-source-runtime'],
+    ['source-domain-canonicalize','aliev-source-runtime'],
     ['aliev-source-runtime','rivet-report-runtime'],
+    ['source-domain-record-digest','rivet-session-semantics-audit'],
+    ['rivet-session-semantics-audit','rivet-report-runtime'],
     ['aliev-source-runtime','aliev-content-addressed-backup'],
     ['rivet-report-runtime','rivet-report-projection'],
-    ['rivet-report-runtime','rivet-source-integrity'],
+    ['rivet-report-runtime','rivet-source-coverage-audit'],
     ['edge-health-witness','rivet-report-runtime'],
   ];
 
