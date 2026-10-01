@@ -277,6 +277,7 @@ function targetRowsForMeasurement(row,learnedDirection=null){
 
 export function buildQuoteMicrostructureTargets(report,{
   signal_keys=null,
+  direction_by_signal={},
 }={}){
   const allowed=signal_keys?new Set(signal_keys):null;
   const candidateEvaluations=(report?.evaluations||[])
@@ -291,7 +292,9 @@ export function buildQuoteMicrostructureTargets(report,{
   return selected.flatMap((row)=>
     targetRowsForMeasurement(
       row,
-      evaluationBySignal.get(row.signal_key)?.learned_direction || null
+      evaluationBySignal.get(row.signal_key)?.learned_direction ||
+        direction_by_signal?.[row.signal_key] ||
+        null
     ).map((target)=>({
       ...target,
       measurement_id:row.measurement_id,
@@ -382,13 +385,21 @@ export async function runQuoteMicrostructureLab(report,{
   feed="iex",
   fetchImpl=fetch,
   signal_keys=null,
+  direction_by_signal={},
   max_quote_delay_ms=30000,
   group_padding_seconds=30,
   transaction_cost_bps=5,
   passive_touch_window_ms=300000,
 }={}){
-  const targets=buildQuoteMicrostructureTargets(report,{signal_keys});
-  const groups=groupTargets(targets,group_padding_seconds);
+  const targets=buildQuoteMicrostructureTargets(report,{
+    signal_keys,
+    direction_by_signal,
+  });
+  const requiredPaddingSeconds=Math.max(
+    Number(group_padding_seconds),
+    Math.ceil(Number(passive_touch_window_ms)/1000)
+  );
+  const groups=groupTargets(targets,requiredPaddingSeconds);
   const quoteCache=new Map();
   const tradeCache=new Map();
   const errors=[];
