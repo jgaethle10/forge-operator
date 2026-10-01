@@ -1,4 +1,4 @@
-name: Evercraft Journal public static release
+name: Evercraft Journal portable public release
 
 on:
   push:
@@ -15,13 +15,15 @@ permissions:
   id-token: write
 
 concurrency:
-  group: evercraft-journal-pages
+  group: evercraft-journal-portable-release
   cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 8
+    outputs:
+      pages_enabled: ${{ steps.pages.outcome == 'success' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -32,39 +34,70 @@ jobs:
       - name: Prove owned Journal contracts
         run: npm run journal:test
 
-      - name: Build Journal for independent public origin
+      - name: Build canonical portable Journal artifact
         env:
-          EVERCRAFT_JOURNAL_ORIGIN: https://jgaethle10.github.io/forge-operator
+          EVERCRAFT_JOURNAL_ORIGIN: https://journal.evercraft.global
         run: |
-          rm -rf _journal_site
-          node systemia/newsroom/journal-publisher.mjs systemia/newsroom/stories _journal_site
+          rm -rf _journal_release
+          node systemia/newsroom/journal-publisher.mjs systemia/newsroom/stories _journal_release
 
-      - name: Verify crawler-facing Journal artifact
+      - name: Verify canonical portable artifact
         shell: bash
         run: |
           set -euo pipefail
-          test -f _journal_site/index.html
-          test -f _journal_site/index.json
-          test -f _journal_site/feed.xml
-          test -f _journal_site/llms.txt
-          grep -q 'Evercraft Journal' _journal_site/index.html
-          grep -q 'https://jgaethle10.github.io/forge-operator/' _journal_site/index.json
-          if grep -RniE 'Black Friday|shopping assistant|optimize your cart' _journal_site; then
-            echo "Legacy shopping identity detected in independent Journal artifact."
+          test -f _journal_release/index.html
+          test -f _journal_release/index.json
+          test -f _journal_release/feed.xml
+          test -f _journal_release/llms.txt
+          grep -q 'Evercraft Journal' _journal_release/index.html
+          grep -q 'https://journal.evercraft.global/' _journal_release/index.json
+          if grep -RniE 'Black Friday|shopping assistant|optimize your cart' _journal_release; then
+            echo "Legacy shopping identity detected in canonical Journal artifact."
             exit 1
           fi
 
-      - name: Configure Pages
+      - name: Preserve portable Journal release
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-journal-portable
+          path: _journal_release
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Check or enable GitHub Pages
+        id: pages
+        continue-on-error: true
         uses: actions/configure-pages@v5
         with:
           enablement: true
 
-      - name: Upload Journal Pages artifact
+      - name: Build Pages-specific artifact
+        if: steps.pages.outcome == 'success'
+        env:
+          EVERCRAFT_JOURNAL_ORIGIN: https://jgaethle10.github.io/forge-operator
+        run: |
+          rm -rf _journal_pages
+          node systemia/newsroom/journal-publisher.mjs systemia/newsroom/stories _journal_pages
+
+      - name: Upload Pages artifact
+        if: steps.pages.outcome == 'success'
         uses: actions/upload-pages-artifact@v3
         with:
-          path: _journal_site
+          path: _journal_pages
 
-  deploy:
+      - name: Record Pages gate without failing canonical release
+        if: steps.pages.outcome != 'success'
+        run: |
+          {
+            echo "## Evercraft Journal portable release"
+            echo
+            echo "Canonical Journal artifact passed and was preserved."
+            echo "GitHub Pages publication is held by repository/account enablement."
+            echo "This workflow does not treat that external account gate as a failed Journal build."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  deploy-pages:
+    if: needs.build.outputs.pages_enabled == 'true'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
