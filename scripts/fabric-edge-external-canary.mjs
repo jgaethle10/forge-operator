@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import dns from 'node:dns/promises';
 import tls from 'node:tls';
+import net from 'node:net';
 import { createHash, randomBytes } from 'node:crypto';
 import { verifyNodeAttestation } from '../systemia/compute/device-identity.mjs';
 import { classifyPublicEdgeIngress } from '../systemia/network/public-edge-ingress-watch.mjs';
@@ -18,6 +19,28 @@ const url=new URL(origin);
 if(url.protocol!=='https:') throw new Error('operator_public_edge_requires_https');
 if(/(^|\.)base44\.app$/i.test(url.hostname)) throw new Error('operator_public_edge_must_not_use_base44');
 if(url.pathname!=='/'&&url.pathname!=='') throw new Error('origin_must_not_include_path');
+
+async function inspectTcp(hostname,port,timeoutMs=4000){
+  return await new Promise((resolve)=>{
+    const startedAt=Date.now();
+    const socket=net.createConnection({host:hostname,port});
+    let settled=false;
+    const done=(reachable,error=null)=>{
+      if(settled) return;
+      settled=true;
+      socket.destroy();
+      resolve({
+        port,
+        reachable,
+        latency_ms:reachable?Date.now()-startedAt:null,
+        error:error?clean(error):null,
+      });
+    };
+    socket.setTimeout(timeoutMs,()=>done(false,'timeout'));
+    socket.once('connect',()=>done(true));
+    socket.once('error',(error)=>done(false,error?.code||error?.message||error));
+  });
+}
 
 async function inspectTls(hostname){
   return await new Promise((resolve,reject)=>{
@@ -134,6 +157,16 @@ try{
   }catch{
     receipt.dns_cname=[];
   }
+  const [tcp80,tcp443]=await Promise.all([
+    inspectTcp(url.hostname,80),
+    inspectTcp(url.hostname,443),
+  ]);
+  receipt.public_tcp={
+    http_80:tcp80,
+    https_443:tcp443,
+  };
+  receipt.checks.public_tcp_80=tcp80.reachable===true;
+  receipt.checks.public_tcp_443=tcp443.reachable===true;
 
   const tlsPeer=await inspectTls(url.hostname);
   if(tlsPeer.authorized!==true) throw new Error('tls_peer_not_authorized');
