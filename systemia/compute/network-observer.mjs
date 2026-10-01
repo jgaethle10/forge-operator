@@ -4,6 +4,8 @@ import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import http from 'node:http';
 import https from 'node:https';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const sha = (value) =>
   'sha256:' + createHash('sha256')
@@ -124,11 +126,21 @@ function parseListeners() {
 function unitState(unit) {
   const active = boundedExec('systemctl', ['is-active', unit]);
   const enabled = boundedExec('systemctl', ['is-enabled', unit]);
+  const detail = boundedExec('systemctl', [
+    'show',
+    unit,
+    '--property=Result,ExecMainStatus,ExecMainExitTimestamp',
+    '--value',
+  ]);
+  const detailLines = detail.stdout ? detail.stdout.split(/\r?\n/) : [];
   return {
     active: active.ok && active.stdout === 'active',
     active_state: active.stdout || active.error || 'unknown',
     enabled: enabled.ok && ['enabled', 'static', 'indirect'].includes(enabled.stdout),
     enabled_state: enabled.stdout || enabled.error || 'unknown',
+    last_result: detailLines[0] || null,
+    last_exit_status: detailLines[1] ? Number(detailLines[1]) : null,
+    last_exit_at: detailLines[2] || null,
   };
 }
 
@@ -258,6 +270,49 @@ export async function observeNodeNetwork() {
         error: 'public_host_not_configured',
       };
 
+  const chromeBoundary = chromeOsBoundary(interfaces);
+  const services = {
+    fabric: unitState('evercraft-fabric.service'),
+    public_edge: unitState('evercraft-public-edge.service'),
+    router_map_timer: unitState('evercraft-router-map.timer'),
+    router_map_service: unitState('evercraft-router-map.service'),
+  };
+
+  const diagnosis = (() => {
+    if (!fabricLocal.ok) {
+      return {
+        state: 'fabric_loopback_unhealthy',
+        next_boundary: 'evercraft_fabric_service_or_runtime',
+      };
+    }
+    if (!edgeLocal.ok) {
+      return {
+        state: 'local_https_edge_unhealthy',
+        next_boundary: 'caddy_tls_or_reverse_proxy',
+      };
+    }
+    if (
+      routerEnv.EVERCRAFT_ROUTER_GATEWAY &&
+      routerEnv.EVERCRAFT_ROUTER_LAN_HOST &&
+      !services.router_map_timer.active
+    ) {
+      return {
+        state: 'router_mapping_automation_unhealthy',
+        next_boundary: 'evercraft_router_map_timer',
+      };
+    }
+    if (chromeBoundary.likely_crostini) {
+      return {
+        state: 'local_stack_healthy_chromeos_boundary_unverified',
+        next_boundary: 'chromeos_host_forwarding_then_external_canary',
+      };
+    }
+    return {
+      state: 'local_stack_healthy_external_route_unverified',
+      next_boundary: 'independent_external_canary',
+    };
+  })();
+
   const body = {
     schema: 'evercraft.node-network-observation.v1',
     observed_at: new Date().toISOString(),
@@ -271,7 +326,8 @@ export async function observeNodeNetwork() {
     interfaces,
     default_routes: routes,
     listeners,
-    chromeos_boundary: chromeOsBoundary(interfaces),
+    chromeos_boundary: chromeBoundary,
+    diagnosis,
     evercraft: {
       public_host: publicHost || null,
       router_mapping: {
@@ -283,12 +339,7 @@ export async function observeNodeNetwork() {
         lan_host: routerEnv.EVERCRAFT_ROUTER_LAN_HOST || null,
         state_is_configuration_not_external_reachability: true,
       },
-      services: {
-        fabric: unitState('evercraft-fabric.service'),
-        public_edge: unitState('evercraft-public-edge.service'),
-        router_map_timer: unitState('evercraft-router-map.timer'),
-        router_map_service: unitState('evercraft-router-map.service'),
-      },
+      services,
       probes: {
         fabric_loopback: {
           ok: fabricLocal.ok,
@@ -330,11 +381,35 @@ export async function observeNodeNetwork() {
   };
 }
 
+function cliArg(name, fallback = '') {
+  const index = process.argv.indexOf(name);
+  return index >= 0 && process.argv[index + 1] ? process.argv[index + 1] : fallback;
+}
+
+function atomicJson(file, value) {
+  fs.mkdirSync(path.dirname(file), { recursive: true, mode: 0o750 });
+  const tmp = file + '.' + process.pid + '.tmp';
+  fs.writeFileSync(tmp, JSON.stringify(value, null, 2) + '\n', { mode: 0o640 });
+  fs.renameSync(tmp, file);
+}
+
+function appendJsonl(file, value) {
+  fs.mkdirSync(path.dirname(file), { recursive: true, mode: 0o750 });
+  fs.appendFileSync(file, JSON.stringify(value) + '\n', { mode: 0o640 });
+}
+
+const MODULE_FILE = fileURLToPath(import.meta.url);
 const isCli =
   process.argv[1] &&
-  new URL(import.meta.url).pathname === process.argv[1];
+  path.resolve(process.argv[1]) === path.resolve(MODULE_FILE);
 
 if (isCli) {
   const observation = await observeNodeNetwork();
-  console.log(JSON.stringify(observation, null, 2));
+  const out = cliArg('--out');
+  const history = cliArg('--history');
+  if (out) atomicJson(path.resolve(out), observation);
+  if (history) appendJsonl(path.resolve(history), observation);
+  if (!process.argv.includes('--quiet')) {
+    console.log(JSON.stringify(observation, null, 2));
+  }
 }
