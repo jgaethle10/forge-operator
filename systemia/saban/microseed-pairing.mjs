@@ -91,12 +91,25 @@ function pairingDisplayCode({ticket_id,pairing_secret}){
   const digest=shaHex(String(ticket_id)+'|'+String(pairing_secret)).toUpperCase();
   return ['PAIR',digest.slice(0,4),digest.slice(4,8),digest.slice(8,12)].join('-');
 }
-function pairingUri({ticket_id,pairing_secret,expires_at}){
+function validateEnrollmentUrl(value){
+  const raw=clean(value);
+  if(!raw) return '';
+  let url;
+  try{url=new URL(raw);}catch{throw new Error('microseed_pairing_enrollment_url_invalid');}
+  const loopback=['127.0.0.1','localhost','::1'].includes(url.hostname.toLowerCase());
+  if(url.protocol!=='https:'&&!(url.protocol==='http:'&&loopback)){
+    throw new Error('microseed_pairing_enrollment_url_https_required');
+  }
+  if(url.username||url.password) throw new Error('microseed_pairing_enrollment_url_credentials_forbidden');
+  return url.toString();
+}
+function pairingUri({ticket_id,pairing_secret,expires_at,enrollment_url}){
   const q=new URLSearchParams({
     ticket:ticket_id,
     secret:pairing_secret,
     expires:expires_at,
   });
+  if(enrollment_url) q.set('enroll',enrollment_url);
   return 'evercraft://microseed/pair?'+q.toString();
 }
 export function formatMicroSeedPairingTicket(issue={}){
@@ -111,6 +124,7 @@ export function formatMicroSeedPairingTicket(issue={}){
     display_code:displayCode,
     pairing_uri:uri,
     expires_at:issue.expires_at,
+    enrollment_url:issue.enrollment_url||null,
     device_id:issue.device_id||null,
     allowed_device_classes:issue.allowed_device_classes||[],
     allowed_workloads:issue.allowed_workloads||[],
@@ -126,6 +140,7 @@ export function formatMicroSeedPairingTicket(issue={}){
       issue.device_id?'Device: '+issue.device_id:'Device: any device allowed by this ticket',
       'Classes: '+((issue.allowed_device_classes||[]).join(', ')||'ticket policy'),
       'Workloads: '+((issue.allowed_workloads||[]).join(', ')||'ticket policy'),
+      issue.enrollment_url?'Enrollment return: '+issue.enrollment_url:'Enrollment return: local/import required',
       'PAIR THIS DEVICE:',
       uri,
       'Single use. Treat this pairing URI like a password until consumed or expired.',
@@ -143,10 +158,16 @@ export function parseMicroSeedPairingUri(value){
   const ticket_id=clean(url.searchParams.get('ticket'));
   const pairing_secret=clean(url.searchParams.get('secret'));
   const expires_at=clean(url.searchParams.get('expires'));
+  const enrollment_url=clean(url.searchParams.get('enroll'));
   if(!ticket_id||!pairing_secret||!expires_at){
     throw new Error('microseed_pairing_uri_fields_missing');
   }
-  return {ticket_id,pairing_secret,expires_at};
+  return {
+    ticket_id,
+    pairing_secret,
+    expires_at,
+    enrollment_url:enrollment_url?validateEnrollmentUrl(enrollment_url):'',
+  };
 }
 
 function ticketFile(dirs,id){return path.join(dirs.tickets,safeId(id)+'.json');}
@@ -160,6 +181,7 @@ export function issueMicroSeedPairingTicket({
   allowed_device_classes=[],
   allowed_workloads=[],
   ttl_ms=15*60*1000,
+  enrollment_url='',
   now=new Date(),
 }={}){
   if(!stateDir) throw new Error('microseed_pairing_state_dir_required');
@@ -178,6 +200,7 @@ export function issueMicroSeedPairingTicket({
     device_id:device_id?clean(device_id):null,
     allowed_device_classes:[...new Set((allowed_device_classes||[]).map(clean).filter(Boolean))],
     allowed_workloads:[...new Set((allowed_workloads||[]).map(clean).filter(Boolean))],
+    enrollment_url:validateEnrollmentUrl(enrollment_url),
     issued_at:at.toISOString(),
     expires_at:new Date(at.getTime()+Math.max(60_000,Number(ttl_ms||0))).toISOString(),
     consumed_at:null,
@@ -199,6 +222,7 @@ export function issueMicroSeedPairingTicket({
     device_id:record.device_id,
     allowed_device_classes:record.allowed_device_classes,
     allowed_workloads:record.allowed_workloads,
+    enrollment_url:record.enrollment_url||'',
     expires_at:record.expires_at,
     authorization_granted:false,
     device_credential_created:false,
@@ -227,6 +251,7 @@ export function listMicroSeedPairingTickets({
       device_id:ticket.device_id,
       allowed_device_classes:ticket.allowed_device_classes||[],
       allowed_workloads:ticket.allowed_workloads||[],
+      enrollment_url:ticket.enrollment_url||null,
       issued_at:ticket.issued_at,
       expires_at:ticket.expires_at,
       expired:nowMs>=Date.parse(ticket.expires_at),
