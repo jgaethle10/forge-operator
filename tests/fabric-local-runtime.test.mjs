@@ -82,8 +82,13 @@ test('Fabric local runtime is read-only, tunnel-compatible, and makes no Base44 
       'match_evercraft_capability',
       'list_evercraft_capabilities',
       'get_evercraft_connection_options',
+      'preview_public_website',
     ]);
     assert.ok(tools.result.tools.every((x)=>x.annotations.readOnlyHint===true));
+    assert.equal(
+      tools.result.tools.find((x)=>x.name==='preview_public_website')?.annotations.openWorldHint,
+      true
+    );
 
     const options=await fetch(runtime.mcpUrl,{
       method:'POST',
