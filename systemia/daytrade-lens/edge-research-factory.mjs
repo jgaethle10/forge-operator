@@ -91,6 +91,55 @@ function measuredReturn(bars, observedAt, lagBars, entryDelayBars = 0) {
   };
 }
 
+export function buildMatchedPlaceboHypotheses(hypotheses = [], {
+  offsets_days = [-7, 7],
+  exclusion_hours = 24,
+} = {}) {
+  const byOrigin = new Map();
+  for (const hypothesis of hypotheses) {
+    const origin = hypothesis.origin_entity_ref || "unknown";
+    if (!byOrigin.has(origin)) byOrigin.set(origin, []);
+    const time = new Date(hypothesis.observed_at).getTime();
+    if (Number.isFinite(time)) byOrigin.get(origin).push(time);
+  }
+
+  const exclusionMs = Number(exclusion_hours) * 60 * 60 * 1000;
+  const out = [];
+  for (const hypothesis of hypotheses) {
+    const base = new Date(hypothesis.observed_at).getTime();
+    if (!Number.isFinite(base)) continue;
+    const origin = hypothesis.origin_entity_ref || "unknown";
+    const realTimes = byOrigin.get(origin) || [];
+
+    for (const offsetDays of offsets_days) {
+      const shifted = base + Number(offsetDays) * 86400000;
+      if (
+        realTimes.some((real) =>
+          real !== base && Math.abs(real - shifted) <= exclusionMs
+        )
+      ) continue;
+
+      out.push({
+        ...hypothesis,
+        hypothesis_id: "edgeplacebo:" + sha({
+          hypothesis_id: hypothesis.hypothesis_id,
+          offset_days: Number(offsetDays),
+        }).slice(0,24),
+        source_observation_id: "placebo:" + sha({
+          source_observation_id: hypothesis.source_observation_id,
+          offset_days: Number(offsetDays),
+        }).slice(0,24),
+        observed_at: new Date(shifted).toISOString(),
+        placebo_for_source_observation_id: hypothesis.source_observation_id,
+        placebo_offset_days: Number(offsetDays),
+        research_only: true,
+        live_trade_authority: false,
+      });
+    }
+  }
+  return out;
+}
+
 export function measureRockiesHypotheses(hypotheses, barsBySymbol, {
   benchmark = "SPY",
   lagBars = FIVE_MINUTE_LAG_BARS,
@@ -163,6 +212,10 @@ export function measureRockiesHypotheses(hypotheses, barsBySymbol, {
           ].join("|"),
           hypothesis_id: hypothesis.hypothesis_id,
           source_observation_id: hypothesis.source_observation_id,
+          placebo_for_source_observation_id: hypothesis.placebo_for_source_observation_id || null,
+          placebo_offset_days: Number.isFinite(Number(hypothesis.placebo_offset_days))
+            ? Number(hypothesis.placebo_offset_days)
+            : null,
           observed_at: hypothesis.observed_at,
           source_family: hypothesis.source_family,
           origin_entity_ref: hypothesis.origin_entity_ref || null,
@@ -460,10 +513,12 @@ export async function runEdgeResearchBatch({
     };
   }
 
-  const window = dateWindow(hypotheses);
+  const placeboHypotheses = buildMatchedPlaceboHypotheses(hypotheses);
+  const window = dateWindow([...hypotheses, ...placeboHypotheses]);
   const symbols = uniq([
     "SPY",
     ...hypotheses.flatMap((row) => row.research_instruments || []),
+    ...placeboHypotheses.flatMap((row) => row.research_instruments || []),
   ]);
 
   const barsBySymbol = {};
@@ -477,6 +532,7 @@ export async function runEdgeResearchBatch({
   }
 
   const measurements = measureRockiesHypotheses(hypotheses, barsBySymbol);
+  const placeboMeasurements = measureRockiesHypotheses(placeboHypotheses, barsBySymbol);
   const evaluations = evaluateEdgeFamilies(measurements, { transaction_cost_bps });
   const candidates = evaluations.filter((row) => row.status === "RESEARCH_CANDIDATE");
 
@@ -486,9 +542,18 @@ export async function runEdgeResearchBatch({
     observation_count: observations.length,
     hypothesis_count: hypotheses.length,
     measurement_count: measurements.length,
+    placebo_hypothesis_count: placeboHypotheses.length,
+    placebo_measurement_count: placeboMeasurements.length,
     family_count: evaluations.length,
     research_candidate_count: candidates.length,
     measurements,
+    placebo_measurements: placeboMeasurements,
+    placebo_policy: {
+      offsets_days: [-7, 7],
+      exclusion_hours_from_other_same_origin_events: 24,
+      same_weekday_preserved: true,
+      historical_diagnostic_only: true,
+    },
     date_window: window,
     transaction_cost_bps,
     no_lookahead_policy: true,
