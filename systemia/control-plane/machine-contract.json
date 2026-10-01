@@ -155,13 +155,12 @@
     },
     {
       "component_key": "evercraft-capability-mesh",
-      "role": "product_trust_chain_contract_and_adoption_coverage",
+      "role": "live_product_trust_chain_contract_compiler_and_adoption_coverage",
       "source_refs": [
         "systemia/capability-mesh/mesh.mjs",
         "systemia/capability-mesh/contracts.json",
-        "systemia/capability-mesh/adoption-coverage.json",
         "systemia/capability-mesh/runtime.mjs",
-        "systemia/capability-mesh/runtime-policies.json"
+        "systemia/capability-mesh/ratchet-baseline.json"
       ]
     }
   ],
@@ -230,7 +229,8 @@
     "context_retrieval_does_not_upgrade_evidence_state": true,
     "intake_acceptance_is_not_execution": true,
     "execution_gate_start_is_not_external_completion": true,
-    "institutional_memory_from_receipts_requires_hash_verification": true
+    "institutional_memory_from_receipts_requires_hash_verification": true,
+    "capability_mesh_derived_state_is_not_source_authority": true
   },
   "consequential_work_types": [
     "trust_change",
