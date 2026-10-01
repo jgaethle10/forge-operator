@@ -307,7 +307,7 @@ export async function startFabricLocalRuntime({
         return sendText(
           res,
           200,
-          renderFabricHome({capabilityCount:preparedCatalog().capabilities.length}),
+          renderFabricHome({capabilities:preparedCatalog().capabilities}),
           {contentType:'text/html; charset=utf-8'}
         );
       }
