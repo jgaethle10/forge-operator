@@ -43,11 +43,14 @@ export function runwayGen45Endpoint(verified=false):VisualModelEndpoint{
     executionState:verified?'verified':'declared',
     capabilities:[{
       task:'video',
-      inputModes:['text','start_frame'],
-      requirements:['commercial_rights','provenance_receipt','timing_control'],
+      inputModes:['text','image_reference','start_frame'],
+      requirements:['reference_identity','commercial_rights','provenance_receipt','timing_control'],
       aspectRatios:['16:9','9:16'],
       maxDurationSec:10,
       maxReferences:1,
+      referenceRoles:['identity','start_frame'],
+      identityContinuityViaStartFrame:true,
+      framesExclusiveWithReferences:true,
       batchVariants:1,
       qualityTier:5,
       costTier:4,
@@ -85,6 +88,12 @@ function validateJob(job:VisualModelJob){
   if(job.references.some(ref=>ref.role==='end_frame')){
     throw new Error('runway_gen45_end_frame_not_supported_by_adapter');
   }
+  const promptRefs=job.references.filter(
+    ref=>ref.role==='start_frame'||(ref.role==='identity'&&ref.kind==='image')
+  );
+  if(promptRefs.length>1){
+    throw new Error('runway_gen45_multiple_prompt_images_unsupported');
+  }
 }
 
 function ratio(job:VisualModelJob){
@@ -108,13 +117,15 @@ export function createRunwayGen45Adapter(
       if(config.allowPaidGeneration!==true) throw new Error('runway_paid_generation_not_authorized');
       const fetchImpl=fetcher(config);
       const start=job.references.find(ref=>ref.role==='start_frame');
+      const identity=job.references.find(ref=>ref.role==='identity'&&ref.kind==='image');
+      const promptRef=start??identity;
       const body:any={
         model:'gen4.5',
         promptText:job.prompt,
         ratio:ratio(job),
         duration:job.durationSec??5,
       };
-      if(start) body.promptImage=promptImage(start.locator);
+      if(promptRef) body.promptImage=promptImage(promptRef.locator);
 
       const created=await fetchImpl(`${base}/v1/image_to_video`,{
         method:'POST',
