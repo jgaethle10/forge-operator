@@ -140,6 +140,7 @@ async function reportObservation(requestId = null) {
 
   const payload = {
     schema: 'evercraft.chromeos-host-boundary-observation.v1',
+    capability_id: 'chromeos.crostini.port-forwarding.read.v1',
     collected_at: new Date().toISOString(),
     request_id: requestId,
     observer_version: VERSION,
