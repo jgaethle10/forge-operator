@@ -1,0 +1,33 @@
+name: Raven Private Runtime Core
+
+on:
+  pull_request:
+    paths:
+      - "systemia/raven/**"
+      - ".github/workflows/raven-private-runtime-core.yml"
+  push:
+    branches: [main]
+    paths:
+      - "systemia/raven/**"
+      - ".github/workflows/raven-private-runtime-core.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prove-raven-private-core:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Check Raven private runtime source
+        run: node --check systemia/raven/private-runtime.mjs
+
+      - name: Prove Raven private runtime core
+        run: node systemia/raven/private-runtime.proof.mjs
