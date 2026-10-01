@@ -10,6 +10,7 @@ on:
       - 'public/chum/capabilities.json'
       - 'tests/evercraft-fabric-runtime.test.mjs'
       - 'tests/public-edge-ingress-watch.test.mjs'
+      - 'tests/network-observer-ingress-diagnosis.test.mjs'
       - 'scripts/update-fabric-owned-edge.sh'
       - 'scripts/install-fabric-self-update.sh'
       - 'systemia/core/bootstrap/**'
@@ -25,6 +26,7 @@ on:
       - 'public/chum/capabilities.json'
       - 'tests/evercraft-fabric-runtime.test.mjs'
       - 'tests/public-edge-ingress-watch.test.mjs'
+      - 'tests/network-observer-ingress-diagnosis.test.mjs'
       - 'scripts/update-fabric-owned-edge.sh'
       - 'scripts/install-fabric-self-update.sh'
       - 'systemia/core/bootstrap/**'
@@ -57,6 +59,8 @@ jobs:
         run: node systemia/yard/public-edge-tls.proof.mjs
       - name: Prove direct-ingress diagnosis and relay preference
         run: npm run test:public-edge-ingress
+      - name: Prove node-side ChromeOS/router boundary diagnosis
+        run: npm run test:network-observer-ingress
       - name: Prove persistent public edge controller lifecycle
         run: node systemia/yard/public-edge-controller.proof.mjs
       - name: Prove automatic public edge activation
