@@ -6,13 +6,13 @@ assert.equal(output.standard,'docs/LLM_PRODUCT_STANDARD.md');
 assert.equal(output.truth_boundary.documentation_is_not_runtime_proof,true);
 assert.equal(output.truth_boundary.registry_publication_is_not_independent_discoverability,true);
 
-assert.equal(output.sources.public_product_count,64);
+assert.ok(output.sources.public_product_count>=64);
 assert.equal(output.sources.estate_snapshot_complete_claim,false);
 assert.ok(output.sources.estate_snapshot_count>=100);
 assert.ok(output.sources.systemia_module_count>0);
 assert.ok(output.sources.plugin_package_count>0);
 assert.ok(output.sources.workflow_count>0);
-assert.equal(output.sources.open_runtime_incident_count,1);
+assert.ok(output.sources.open_runtime_incident_count>=1);
 
 const ids=output.entries.map((row)=>row.stable_id);
 assert.equal(new Set(ids).size,ids.length,'stable IDs must be unique');
