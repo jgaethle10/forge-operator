@@ -26,6 +26,8 @@ export function evaluatePilotReadiness({
   benchmarkLab,
   walkForwardLab,
   executionTranslationLab,
+  quoteMicrostructureLab,
+  minimumModeledEntryQuoteCoverage = 0.90,
   forwardScores = [],
   forwardClusterScores = { scores: [] },
   durableState = {},
@@ -43,6 +45,7 @@ export function evaluatePilotReadiness({
   const benchmarkMap = bySignal(benchmarkLab?.reviews || []);
   const walkMap = bySignal(walkForwardLab?.reviews || []);
   const executionMap = bySignal(executionTranslationLab?.reviews || []);
+  const quoteOverlays = quoteMicrostructureLab?.overlays || [];
   const forwardMap = forwardBySignal(forwardScores);
 
   const clusterMap = new Map(
@@ -68,6 +71,15 @@ export function evaluatePilotReadiness({
     const benchmarkRow = benchmarkMap.get(signal);
     const walkRow = walkMap.get(signal);
     const executionRow = executionMap.get(signal);
+    const signalModeledEntryQuotes = quoteOverlays.filter(
+      (row) => row.signal_key === signal && row.label === "modeled_entry"
+    );
+    const signalModeledEntryQuoteCount = signalModeledEntryQuotes.filter(
+      (row) => row.quote_available === true
+    ).length;
+    const signalModeledEntryQuoteCoverage = signalModeledEntryQuotes.length
+      ? signalModeledEntryQuoteCount / signalModeledEntryQuotes.length
+      : 0;
     const forwardRow = forwardMap.get(signal);
     const clusterRow = clusterMap.get(clusterKey);
 
@@ -95,6 +107,12 @@ export function evaluatePilotReadiness({
         walkRow?.walk_forward_status === "WALK_FORWARD_ROBUST_DIAGNOSTIC",
       unhedged_execution_translation:
         unhedgedExecutableDiagnostic,
+      modeled_entry_quote_coverage:
+        signalModeledEntryQuotes.length > 0 &&
+        signalModeledEntryQuoteCoverage >= Number(minimumModeledEntryQuoteCoverage),
+      consolidated_sip_nbbo_scope:
+        quoteMicrostructureLab?.quote_scope === "consolidated_sip_nbbo" &&
+        quoteMicrostructureLab?.fallback_feed_used === false,
       individual_forward_paper_pass:
         forwardRow?.status === "FORWARD_PAPER_PASS" &&
         forwardRow?.sample_ready === true,
@@ -120,6 +138,16 @@ export function evaluatePilotReadiness({
         .map(([key]) => key),
       pair_only_translation_not_sufficient_for_micro_pilot:
         executionStatus === "PAIR_ONLY_TRANSLATES_DIAGNOSTIC",
+      quote_execution_evidence: {
+        feed: quoteMicrostructureLab?.feed || null,
+        quote_scope: quoteMicrostructureLab?.quote_scope || null,
+        modeled_entry_targets: signalModeledEntryQuotes.length,
+        modeled_entry_quotes: signalModeledEntryQuoteCount,
+        modeled_entry_quote_coverage: signalModeledEntryQuoteCoverage,
+        minimum_required_coverage: Number(minimumModeledEntryQuoteCoverage),
+        iex_bbo_is_not_consolidated_nbbo:
+          quoteMicrostructureLab?.quote_scope === "iex_bbo_not_consolidated_nbbo",
+      },
       human_funding_authorization_required: true,
       human_trade_authorization_required: true,
       live_trade_authority: false,
