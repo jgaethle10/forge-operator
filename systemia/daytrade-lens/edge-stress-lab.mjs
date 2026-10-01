@@ -100,7 +100,7 @@ export function originBalancedBootstrap(rows, options = {}) {
 
 export function costStress(rows, {
   expected_sign = 1,
-  costs_bps = [5,10,20,40,75],
+  costs_bps = [5,10,20,40,75,100,150],
 } = {}) {
   return costs_bps.map(cost=>({
     transaction_cost_bps:cost,
