@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
+import { fileURLToPath } from 'node:url';
 
 const ROOT = process.cwd();
 const UNIVERSAL_FABRIC = 'https://fabric.systemiacommandcenters.com/mcp';
@@ -466,9 +467,11 @@ function emit(){
   fs.writeFileSync(path.join(outDir,'release-gate.json'),JSON.stringify(output.release_gate,null,2)+'\n');
 }
 
-if(process.argv.includes('--emit')) emit();
+const isCli = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 
-if(process.argv.includes('--check')){
+if(isCli && process.argv.includes('--emit')) emit();
+
+if(isCli && process.argv.includes('--check')){
   if(publicProducts.schema!=='evercraft.saban.public-product-index.v1') throw new Error('public_product_schema_invalid');
   if(!String(estate.schema||'').startsWith('evercraft.private-estate-name-snapshot.')) throw new Error('estate_snapshot_schema_invalid');
   if(seeds.schema!=='evercraft.llm-product.historical-seeds.v1') throw new Error('historical_seed_schema_invalid');
@@ -477,8 +480,8 @@ if(process.argv.includes('--check')){
   if(dupes.length) throw new Error('duplicate_stable_ids:'+dupes.join(','));
   if(output.release_gate.state!=='pass') throw new Error('llm_product_release_gate_blocked');
   process.stdout.write(JSON.stringify({state:'LLM_PRODUCT_GATE_CURRENT',summary:output.summary,release_gate:output.release_gate},null,2)+'\n');
-} else {
+} else if(isCli) {
   process.stdout.write(JSON.stringify(output,null,2)+'\n');
 }
 
-export { output, minimumAdmissionViolations, fullShipViolations };
+export { output, emit, minimumAdmissionViolations, fullShipViolations };
