@@ -45,6 +45,8 @@ export function summarizeResearchSearchBurden(report,{
     doctrine:{
       survivor_count_is_never_the_search_denominator:true,
       failed_and_rejected_families_remain_part_of_research_history:true,
+      candidate_only_false_discovery_rate_not_identified_without_search_model:true,
+      independent_frozen_validation_required:true,
       historical_diagnostic_only:true,
       eligibility_mutated:false,
       live_trade_authority:false,
