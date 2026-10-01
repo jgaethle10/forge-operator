@@ -699,7 +699,7 @@ function dateWindow(observations) {
   if (!times.length) throw new Error("edge_lab_observation_timestamps_missing");
   const min = new Date(Math.min(...times));
   const max = new Date(Math.max(...times));
-  min.setUTCDate(min.getUTCDate() - 1);
+  min.setUTCDate(min.getUTCDate() - 7);
   max.setUTCDate(max.getUTCDate() + 14);
   return { start: min.toISOString(), end: max.toISOString() };
 }
