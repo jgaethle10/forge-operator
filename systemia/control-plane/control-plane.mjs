@@ -178,6 +178,18 @@ export function routeTask(task) {
       ? clean(productPolicy.route.specialist_slug)
       : defaultSpecialist;
 
+  const machineTargetProductKey =
+    actionScope && contractAction
+      ? clean(contractAction.machine_target_product_key) || productKey
+      : null;
+  const machineExecutionComponent =
+    actionScope &&
+    contractAction &&
+    productPolicy?.adoption_stage === 'shared_runtime' &&
+    machineTargetProductKey
+      ? machineTargetProductKey
+      : specialist;
+
   const parallelRequested = task.parallel === true || Number(task.logical_agents || 0) > 1 || Boolean(softwareId);
   const allowed = sabanSoftwareIds();
   const sabanRequested = parallelRequested && softwareId && allowed.has(softwareId);
@@ -213,7 +225,7 @@ export function routeTask(task) {
     work_key: task.work_key,
     mission_authority: contract.authority.mission_authority,
     specialist_component: specialist,
-    execution_component: sabanRequested ? 'saban' : specialist,
+    execution_component: sabanRequested ? 'saban' : machineExecutionComponent,
     authorization_component: 'evercraft-passport',
     usage_component: metered ? 'evercraft-meter' : null,
     context_component: contextAccessRecommended ? 'evercraft-context-fabric' : null,
@@ -224,11 +236,14 @@ export function routeTask(task) {
       : null,
     contract_action_scope: actionScope || null,
     contract_machine_tool: clean(contractAction?.machine_tool) || null,
-    contract_machine_target_product_key:
-      clean(contractAction?.machine_target_product_key) || productKey || null,
+    contract_machine_target_product_key: machineTargetProductKey || null,
     contract_machine_tool_declared: Boolean(clean(contractAction?.machine_tool)),
     contract_machine_tool_grants_authority: false,
     contract_specialist_slug: productPolicy?.route?.specialist_slug || null,
+    contract_direct_callable: productPolicy?.route?.direct_callable === true,
+    contract_preferred_route_mode:
+      clean(productPolicy?.route?.preferred_route?.mode) || null,
+    contract_machine_execution_component: machineExecutionComponent || null,
     contract_context_namespace: productPolicy?.context?.namespace || null,
     contract_meter_metric: contractMeterMetric || null,
     contract_runtime_verified: productPolicy?.runtime_verified === true,
