@@ -26,6 +26,9 @@ export interface WorldIntelPointInput {
   lat: number;
   lon: number;
   label?: string;
+  radius?: number;
+  intensity?: number;
+  pulse?: boolean;
   evidenceState: EvidenceState;
   sourceRefs: string[];
 }
@@ -324,7 +327,9 @@ export function compileWorldIntelStage(input:WorldIntelStageInput):VisualStage{
     schema:'evercraft.fallen.visual-stage.v1',
     id:input.id,
     width,height,fps:30,durationSec,
-    background:EVERCRAFT_VISUAL_THEME_V1.palette.background,
+    background:input.setPlate
+      ? EVERCRAFT_VISUAL_THEME_V1.palette.background
+      : EVERCRAFT_VISUAL_THEME_V1.palette.surfaceRaised,
     theme:EVERCRAFT_VISUAL_THEME_V1,
     camera:{
       keyframes:[

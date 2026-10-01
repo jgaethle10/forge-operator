@@ -1,0 +1,355 @@
+name: Social Spectacle Engine
+
+on:
+  pull_request:
+    paths:
+      - "systemia/organism/social-spectacle-engine*"
+      - "systemia/organism/social-spectacle-production*"
+      - "systemia/organism/social-spectacle-clip-bridge*"
+      - "systemia/clip/media-intake*"
+      - "systemia/clip/publisher-runtime*"
+      - "systemia/media-studio/cli.ts"
+      - "systemia/core/resident-services.json"
+      - "systemia/worldstate/subscriptions.json"
+      - "systemia/radar/collectors*"
+      - ".github/workflows/social-spectacle-engine.yml"
+  push:
+    branches: [main]
+    paths:
+      - "systemia/organism/social-spectacle-engine*"
+      - "systemia/organism/social-spectacle-production*"
+      - "systemia/organism/social-spectacle-clip-bridge*"
+      - "systemia/clip/media-intake*"
+      - "systemia/clip/publisher-runtime*"
+      - "systemia/media-studio/cli.ts"
+      - "systemia/core/resident-services.json"
+      - "systemia/worldstate/subscriptions.json"
+      - "systemia/radar/collectors*"
+      - ".github/workflows/social-spectacle-engine.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install root runtime
+        run: npm install --no-audit --no-fund
+
+      - name: Prove spectacle admission boundaries
+        run: node systemia/organism/social-spectacle-engine.proof.mjs
+
+      - name: Prove Radar visual-source geometry
+        run: node --test systemia/radar/collectors.test.mjs
+
+      - name: Prove spectacle production packaging
+        run: node systemia/organism/social-spectacle-production.proof.mjs
+
+      - name: Prove authenticated spectacle Clip bridge
+        run: node systemia/organism/social-spectacle-clip-bridge.proof.mjs
+
+      - name: Prove Clip intake and publish gates
+        run: |
+          node --test systemia/clip/media-intake.test.mjs systemia/clip/publisher-runtime.test.mjs
+
+      - name: Build a bounded spectacle queue
+        run: |
+          cat >/tmp/social-spectacle-input.json <<'JSON'
+          {
+            "items": [
+              {
+                "brand_key": "evercraft",
+                "dispatch": {
+                  "consumer": "social_spectacle",
+                  "priority": "high"
+                },
+                "observation": {
+                  "observation_id": "ci-ocean-flow",
+                  "source_system": "worldstate",
+                  "source_family": "Synthetic CI physical-world source",
+                  "observed_at": "2026-09-30T23:00:00Z",
+                  "region_keys": ["puget-sound"],
+                  "domains": ["ocean", "water"],
+                  "kind": "surface_currents",
+                  "evidence_state": "modeled",
+                  "reliability": 0.96,
+                  "anomaly_score": 0.91,
+                  "novelty_score": 0.93,
+                  "provenance_refs": ["ci:worldstate:ocean-flow"],
+                  "correlation_keys": ["puget-sound::ocean::surface_currents"],
+                  "facts": {
+                    "phenomenon": {
+                      "kind": "flow",
+                      "title": "Currents through a narrow inland sea",
+                      "geography": {
+                        "bounds": {
+                          "north": 48.5,
+                          "south": 46.9,
+                          "west": -123.5,
+                          "east": -121.8
+                        }
+                      },
+                      "encoding": {
+                        "motionLabel": "surface-current direction"
+                      },
+                      "streamlines": [
+                        {
+                          "id": "ci-stream",
+                          "points": [
+                            {"lat": 47.7, "lon": -122.8},
+                            {"lat": 47.3, "lon": -122.5}
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            ]
+          }
+          JSON
+          node systemia/organism/social-spectacle-engine.mjs --input /tmp/social-spectacle-input.json --state-dir /tmp/social-spectacle-state
+          test -f /tmp/social-spectacle-state/latest-queue.json
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const queue=JSON.parse(fs.readFileSync('/tmp/social-spectacle-state/latest-queue.json','utf8'));
+          if(queue.queue_count!==1) throw new Error('hero_candidate_not_admitted');
+          const candidate=queue.queue[0];
+          if(candidate.production.visual_path!=='fallen_phenomenon') throw new Error('wrong_visual_path');
+          if(candidate.production.no_text_card_first!==true) throw new Error('text_card_boundary_missing');
+          if(candidate.editorial.no_one_line_staccato!==true) throw new Error('caption_standard_missing');
+          if(candidate.gates.publication_authority!==false) throw new Error('publication_authority_leak');
+          if(!candidate.distribution.blocked_brand_keys.includes('rnb-chicken-and-soul')) throw new Error('blocked_brand_policy_missing');
+          console.log(JSON.stringify({wonder_score:candidate.wonder_score,visual_path:candidate.production.visual_path}));
+          NODE
+
+      - name: Verify resident registration
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const services=JSON.parse(fs.readFileSync('systemia/core/resident-services.json','utf8'));
+          const row=services.services.find(service=>service.service_key==='social-spectacle-engine');
+          if(!row) throw new Error('resident_service_missing');
+          if(row.cadence_seconds!==900) throw new Error('resident_cadence_invalid');
+          const producer=services.services.find(service=>service.service_key==='social-spectacle-production');
+          if(!producer) throw new Error('resident_production_service_missing');
+          if(producer.cadence_seconds!==900) throw new Error('resident_production_cadence_invalid');
+          const bridge=services.services.find(service=>service.service_key==='social-spectacle-clip-bridge');
+          if(!bridge) throw new Error('resident_clip_bridge_service_missing');
+          if(bridge.cadence_seconds!==900) throw new Error('resident_clip_bridge_cadence_invalid');
+          const subscriptions=JSON.parse(fs.readFileSync('systemia/worldstate/subscriptions.json','utf8'));
+          for(const domain of ['weather','water','ocean','aviation','science']){
+            if(!subscriptions.by_domain?.[domain]?.includes('social_spectacle')) throw new Error('subscription_missing:'+domain);
+          }
+          NODE
+
+
+      - name: Compile spectacle production without render workers
+        run: |
+          mkdir -p /tmp/social-spectacle-prod
+          cp /tmp/social-spectacle-state/latest-queue.json /tmp/social-spectacle-prod/queue.json
+          node systemia/organism/social-spectacle-production.mjs \
+            --queue /tmp/social-spectacle-prod/queue.json             --out /tmp/social-spectacle-prod/production             --clip-queue /tmp/social-spectacle-prod/clip
+          test -f /tmp/social-spectacle-prod/production/spectacle-ci-ocean-flow/production-receipt.json ||             test -n "$(find /tmp/social-spectacle-prod/production -name production-receipt.json -print -quit)"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          const root='/tmp/social-spectacle-prod/production';
+          const dirs=fs.readdirSync(root);
+          if(!dirs.length) throw new Error('production_candidate_missing');
+          const receipt=JSON.parse(fs.readFileSync(path.join(root,dirs[0],'production-receipt.json'),'utf8'));
+          if(receipt.status!=='ready_to_render') throw new Error('expected_ready_to_render');
+          if(receipt.publication_authority!==false) throw new Error('publication_authority_leak');
+          if(!fs.existsSync(receipt.vertical_render_plan)) throw new Error('vertical_render_plan_missing');
+          if(!fs.existsSync(receipt.landscape_stage)) throw new Error('landscape_stage_missing');
+          NODE
+
+
+      - name: Compile geolocated Radar story
+        run: |
+          cat >/tmp/social-spectacle-geo-queue.json <<'JSON'
+          {
+            "schema":"evercraft.social-spectacle.queue.v1",
+            "generated_at":"2026-10-01T00:00:00Z",
+            "target_daily_hero_posts":2,
+            "hard_max_daily_publishable_packages":4,
+            "quality_rule":"no filler",
+            "publication_authority":false,
+            "queue_count":1,
+            "queue":[{
+              "schema":"evercraft.social-spectacle.candidate.v1",
+              "candidate_id":"spectacle:ci-earthquake-map",
+              "observation_id":"ci-earthquake-map",
+              "observed_at":"2026-10-01T00:00:00Z",
+              "subject_key":"global::geophysics::seismic_feed_state",
+              "brand_key":"evercraft",
+              "title_seed":"USGS M4.5+ past-day feed contains 7 events; largest is M6.2 Example Region.",
+              "domains":["geophysics","earth_hazards"],
+              "region_keys":["global"],
+              "evidence_state":"observed",
+              "evidence_label":"OBSERVED",
+              "source_family":"USGS Earthquake Hazards",
+              "source_refs":["https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson"],
+              "wonder_score":0.84,
+              "production":{
+                "visual_path":"fallen_geo_explainer",
+                "no_text_card_first":true,
+                "data_payload":{
+                  "facts":{"subject":"USGS M4.5+ earthquakes, past day","count":7,"largest_magnitude":6.2},
+                  "measurements":[
+                    {"event_id":"q1","magnitude":6.2,"place":"Example Region","lat":47.31,"lon":-122.75,"depth_km":18.4,"observed_at":"2026-09-30T23:55:00Z"},
+                    {"event_id":"q2","magnitude":5.4,"place":"Second Region","lat":35.2,"lon":140.1,"depth_km":28.1,"observed_at":"2026-09-30T22:45:00Z"},
+                    {"event_id":"q3","magnitude":5.1,"place":"Third Region","lat":-12.1,"lon":166.8,"depth_km":41.0,"observed_at":"2026-09-30T21:10:00Z"}
+                  ]
+                }
+              }
+            }]
+          }
+          JSON
+          node systemia/organism/social-spectacle-production.mjs \
+            --queue /tmp/social-spectacle-geo-queue.json             --out /tmp/social-spectacle-geo-production             --clip-queue /tmp/social-spectacle-geo-clip
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          const dirs=fs.readdirSync('/tmp/social-spectacle-geo-production');
+          if(!dirs.length) throw new Error('geo_production_missing');
+          const root=path.join('/tmp/social-spectacle-geo-production',dirs[0]);
+          const receipt=JSON.parse(fs.readFileSync(path.join(root,'production-receipt.json'),'utf8'));
+          const stage=JSON.parse(fs.readFileSync(receipt.vertical_stage,'utf8'));
+          if(receipt.status!=='ready_to_render') throw new Error('geo_not_ready_to_render');
+          if(!stage.layers.some(layer=>layer.kind==='geo')) throw new Error('geo_layer_missing');
+          if(!stage.layers.some(layer=>layer.kind==='metric')) throw new Error('geo_metric_missing');
+          if(!stage.layers.some(layer=>layer.kind==='timeline')) throw new Error('geo_timeline_missing');
+          if(receipt.publication_authority!==false) throw new Error('geo_publication_authority_leak');
+          NODE
+
+
+  geo-render-canary:
+    needs: prove
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install root runtime
+        run: npm install --no-audit --no-fund
+
+      - name: Ensure FFmpeg
+        run: |
+          if ! command -v ffmpeg >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y ffmpeg
+          fi
+
+      - name: Build isolated Fallen worker image
+        run: docker build -t evercraft/fallen-render-worker:spectacle-ci systemia/media-studio/render-worker
+
+      - name: Start two render workers
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/.spectacle-assets"
+          docker run -d --name spectacle-a             -p 8796:8787             -v "$GITHUB_WORKSPACE/.spectacle-assets:/work/assets:ro"             -e FALLEN_RENDER_WORKER_TOKEN=spectacle-a             evercraft/fallen-render-worker:spectacle-ci
+          docker run -d --name spectacle-b             -p 8797:8787             -v "$GITHUB_WORKSPACE/.spectacle-assets:/work/assets:ro"             -e FALLEN_RENDER_WORKER_TOKEN=spectacle-b             evercraft/fallen-render-worker:spectacle-ci
+          for port in 8796 8797; do
+            healthy=0
+            for i in $(seq 1 40); do
+              if curl -fsS "http://127.0.0.1:$port/healthz" >/dev/null; then
+                healthy=1
+                break
+              fi
+              sleep 1
+            done
+            test "$healthy" = "1"
+          done
+
+      - name: Produce watchable earthquake hero through Fallen and Clip intake
+        env:
+          FALLEN_RENDER_WORKERS: >-
+            [{"id":"spectacle-a","url":"http://127.0.0.1:8796","token":"spectacle-a"},{"id":"spectacle-b","url":"http://127.0.0.1:8797","token":"spectacle-b"}]
+        run: |
+          cat >/tmp/earthquake-social-queue.json <<'JSON'
+          {
+            "schema":"evercraft.social-spectacle.queue.v1",
+            "generated_at":"2026-10-01T00:00:00Z",
+            "target_daily_hero_posts":2,
+            "hard_max_daily_publishable_packages":4,
+            "quality_rule":"no filler",
+            "publication_authority":false,
+            "queue_count":1,
+            "queue":[{
+              "schema":"evercraft.social-spectacle.candidate.v1",
+              "candidate_id":"spectacle:ci-earthquake-render",
+              "observation_id":"ci-earthquake-render",
+              "observed_at":"2026-10-01T00:00:00Z",
+              "subject_key":"global::geophysics::seismic_feed_state",
+              "brand_key":"evercraft",
+              "title_seed":"Seven significant earthquakes in one day, mapped by magnitude and time.",
+              "domains":["geophysics","earth_hazards"],
+              "region_keys":["global"],
+              "evidence_state":"observed",
+              "evidence_label":"OBSERVED",
+              "source_family":"USGS Earthquake Hazards",
+              "source_refs":["ci:usgs-earthquake-geometry"],
+              "wonder_score":0.84,
+              "production":{
+                "visual_path":"fallen_geo_explainer",
+                "no_text_card_first":true,
+                "data_payload":{
+                  "duration_sec":4,
+                  "facts":{"subject":"USGS M4.5+ earthquakes, past day","count":7,"largest_magnitude":6.2},
+                  "measurements":[
+                    {"event_id":"q1","magnitude":6.2,"place":"Cascadia","lat":47.31,"lon":-122.75,"depth_km":18.4,"observed_at":"2026-09-30T23:55:00Z"},
+                    {"event_id":"q2","magnitude":5.8,"place":"Japan","lat":35.2,"lon":140.1,"depth_km":28.1,"observed_at":"2026-09-30T22:45:00Z"},
+                    {"event_id":"q3","magnitude":5.5,"place":"Vanuatu","lat":-16.2,"lon":167.8,"depth_km":41.0,"observed_at":"2026-09-30T21:10:00Z"},
+                    {"event_id":"q4","magnitude":5.2,"place":"Alaska","lat":55.1,"lon":-161.8,"depth_km":24.0,"observed_at":"2026-09-30T19:30:00Z"},
+                    {"event_id":"q5","magnitude":5.0,"place":"Chile","lat":-30.4,"lon":-71.2,"depth_km":35.0,"observed_at":"2026-09-30T17:20:00Z"}
+                  ]
+                }
+              }
+            }]
+          }
+          JSON
+          node systemia/organism/social-spectacle-production.mjs \
+            --queue /tmp/earthquake-social-queue.json             --out "$GITHUB_WORKSPACE/artifacts/social-spectacle-canary/production"             --clip-queue "$GITHUB_WORKSPACE/artifacts/social-spectacle-canary/clip"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          const root='artifacts/social-spectacle-canary/production';
+          const dir=fs.readdirSync(root)[0];
+          const receipt=JSON.parse(fs.readFileSync(path.join(root,dir,'production-receipt.json'),'utf8'));
+          if(receipt.status!=='ready_for_clip_publish') throw new Error('spectacle_not_ready_for_clip_publish:'+JSON.stringify(receipt));
+          if(receipt.publication_authority!==false) throw new Error('spectacle_publication_authority_leak');
+          const stage=JSON.parse(fs.readFileSync(receipt.vertical_video.replace('vertical-hero.mp4','stage.vertical.json'),'utf8'));
+          const geo=stage.layers.find(layer=>layer.kind==='geo');
+          if(!geo||!geo.points?.some(point=>point.pulse===true&&point.radius>5)) throw new Error('magnitude_encoding_missing');
+          NODE
+          ffprobe -v error -show_entries stream=codec_name,width,height,r_frame_rate -show_entries format=duration,size -of json             artifacts/social-spectacle-canary/production/*/vertical-hero.mp4
+
+      - name: Upload watchable social specimen
+        uses: actions/upload-artifact@v4
+        with:
+          name: social-spectacle-earthquake-canary
+          path: artifacts/social-spectacle-canary/
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Show worker logs on failure
+        if: failure()
+        run: |
+          docker logs spectacle-a || true
+          docker logs spectacle-b || true
+
+      - name: Stop workers
+        if: always()
+        run: |
+          docker rm -f spectacle-a || true
+          docker rm -f spectacle-b || true
