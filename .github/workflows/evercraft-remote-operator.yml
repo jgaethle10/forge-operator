@@ -58,5 +58,7 @@ jobs:
         run: node systemia/network/remote-operator.proof.mjs
       - name: Prove MCP gateway boundary
         run: node systemia/remote-operator/mcp-gateway.test.mjs
+      - name: Prove Chromebook edge resident wiring
+        run: node --test tests/fabric-owned-edge-installer.test.mjs
       - name: Typecheck Forge integration
         run: npm install --no-audit --no-fund && npm run lint
