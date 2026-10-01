@@ -13,6 +13,13 @@ on:
       - 'scripts/validate-base44-exit.mjs'
       - 'scripts/validate-base44-credit-firewall.mjs'
       - 'scripts/validate-no-base44-hotpath.mjs'
+      - 'distribution/direct-plugin-specs.json'
+      - 'public/.well-known/evercraft-products.json'
+      - 'registry/catalog.json'
+      - 'systemia/chum/**'
+      - 'systemia/compute/eps-social-yard-canary.mjs'
+      - 'systemia/organism/eps-social-continuity.mjs'
+      - '.github/workflows/eps-social-yard-canary.yml'
       - '.github/workflows/base44-exit.yml'
   push:
     branches:
