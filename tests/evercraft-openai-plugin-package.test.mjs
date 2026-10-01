@@ -75,7 +75,9 @@ test('OpenAI account-side packet keeps public-directory and owned-route truth ga
     assert.equal(submission.owned_fabric_transport?.authority,'owned_public_fabric');
     assert.equal(submission.owned_fabric_transport?.origin_change_requires_new_openai_plugin_submission,true);
   }else{
-    assert.equal(submission.compatibility_transport?.owned_fabric_cutover_required,true);
+    assert.equal(submission.compatibility_transport?.active,false);
+    assert.equal(submission.owned_fabric_transport?.revalidation_required,true);
+    assert.equal(submission.public_directory_claim_allowed,false);
   }
 });
 
@@ -88,10 +90,12 @@ test('submission denial cases cover payment, privacy, and consequential actions'
 });
 
 
-test('review test cases reference the live scanned Fabric matcher',()=>{
+test('review test cases use only declared Fabric tools and include standalone work',()=>{
   const manifest=readJson('plugin.json');
   const review=manifest.extensions?.['com.openai']?.review;
-  assert.ok(review.test_cases.positive.every((x)=>x.tools_triggered==='match_evercraft_capability'));
+  const allowed=new Set(['match_evercraft_capability','preview_public_website']);
+  assert.ok(review.test_cases.positive.every((x)=>allowed.has(x.tools_triggered)));
+  assert.ok(review.test_cases.positive.some((x)=>x.tools_triggered==='preview_public_website'));
   assert.match(String(manifest.version||''),/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/);
 });
 
