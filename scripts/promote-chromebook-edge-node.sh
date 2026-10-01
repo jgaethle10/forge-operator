@@ -78,5 +78,5 @@ let s='';process.stdin.on('data',d=>s+=d);process.stdin.on('end',()=>{
 
 echo
 echo "Chromebook is now an Evercraft Edge DNS candidate NodeSeed."
-echo "DNS candidate listens inside Linux on TCP+UDP 5353."
+echo "DNS candidate listens inside Linux on TCP+UDP 1053."
 echo "public-ingress label is intentionally withheld until an external canary proves reachability."
