@@ -222,6 +222,11 @@ export function rockiesObservationToEdgeHypotheses(rawObservation, {
       source_family: observation.source_family,
       origin_entity_ref: observation.metadata?.origin_entity_ref || null,
       source_authority_class: observation.metadata?.authority_class || null,
+      sec_items: Array.isArray(observation.facts?.items)
+        ? [...observation.facts.items]
+        : [],
+      source_form: observation.facts?.form || null,
+      source_ticker: observation.facts?.ticker || null,
       summary: observation.summary,
       constraints: {
         no_live_trade_instruction: true,
