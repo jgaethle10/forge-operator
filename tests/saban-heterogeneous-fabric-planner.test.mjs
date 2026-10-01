@@ -214,6 +214,7 @@ test('performance circuit ejects a repeatedly failing device and calibration-sty
     resources:{cpu_units:0.1,memory_mb:64,storage_gb:0},
     preemptible:true,
     checkpointable:true,
+    max_observation_age_ms:2*60*60*1000,
   };
   let plan=planHeterogeneousFabric({
     now:new Date('2026-10-01T03:03:00.000Z'),
