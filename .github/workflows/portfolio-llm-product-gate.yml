@@ -48,8 +48,11 @@ jobs:
       - name: Compile canonical capability registry and portfolio matrix
         run: node systemia/llm-product/build-registry.mjs --emit --check
 
-      - name: Prove registry truth boundaries and historical retention
-        run: node --test systemia/llm-product/build-registry.test.mjs
+      - name: Build non-starving Systemia conversion mission queue
+        run: node systemia/llm-product/conversion-router.mjs --emit
+
+      - name: Prove registry truth boundaries, routing, and historical retention
+        run: node --test systemia/llm-product/build-registry.test.mjs systemia/llm-product/conversion-router.test.mjs
 
       - name: Upload conversion receipts
         if: always()
@@ -61,6 +64,8 @@ jobs:
             artifacts/llm-product/portfolio-matrix.json
             artifacts/llm-product/conversion-debt.json
             artifacts/llm-product/release-gate.json
+            artifacts/llm-product/conversion-plan.json
+            artifacts/llm-product/mission-snapshot.json
           if-no-files-found: error
           retention-days: 30
 
