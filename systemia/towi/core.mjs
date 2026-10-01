@@ -34,6 +34,8 @@ const CHANGE_WEIGHT = Object.freeze({
   UNCHANGED: 0.08
 });
 
+const POLITICAL_DOMAINS = new Set(['politics', 'government', 'public_policy', 'regulation', 'elections']);
+
 const DOMAIN_QUESTIONS = Object.freeze({
   weather: [
     'Which observed conditions changed, and over what time window?',
@@ -210,6 +212,8 @@ function publishReadiness(signal, score) {
   if (truth === 'INFERRED') warnings.push('inference_must_not_be_presented_as_observation');
   if (truth === 'PENDING') warnings.push('forecast_or_pending_state_must_not_be_presented_as_outcome');
   if (truth === 'CONTESTED') warnings.push('contested_evidence_requires_explicit_treatment');
+  const requiresHumanEditorialReview = unique(signal?.domains || []).some((domain) => POLITICAL_DOMAINS.has(String(domain).toLowerCase()));
+  if (requiresHumanEditorialReview) warnings.push('political_or_government_material_requires_explicit_human_editorial_review');
   if (sources < 2) blockers.push('independent_source_family_count_below_two');
   if (score < 0.62) blockers.push('towi_story_score_below_editorial_threshold');
 
@@ -218,6 +222,7 @@ function publishReadiness(signal, score) {
     blockers,
     warnings,
     independent_source_families: sources,
+    requires_human_editorial_review: requiresHumanEditorialReview,
     publication_authority: false,
     next_gate: blockers.length ? 'towi_research_dossier' : 'journal_editorial_10_of_10_preflight'
   };
