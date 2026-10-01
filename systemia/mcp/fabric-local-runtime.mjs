@@ -8,6 +8,7 @@ import { fileURLToPath } from 'node:url';
 import {
   executeFabricDirectoryRpc,
   fabricDirectoryTools,
+  fabricOpenAiTools,
   loadFabricCatalogFromRepository,
   normalizeFabricCatalog,
   validateOpenAiChallengeToken,
@@ -16,6 +17,8 @@ import {
   renderCapabilities,
   renderCapabilityDetail,
   renderFabricHome,
+  renderOpenAiPluginHome,
+  renderOpenAiPolicyDocument,
   renderMarkdownDocument,
 } from './fabric-public-site.mjs';
 
@@ -259,7 +262,9 @@ export async function startFabricLocalRuntime({
     transport:'Streamable HTTP',
     transport_modes:['application/json','text/event-stream'],
     mcp_path:'/mcp',
+    openai_mcp_path:'/mcp/openai',
     tools:fabricDirectoryTools().map((tool)=>tool.name),
+    openai_tools:fabricOpenAiTools().map((tool)=>tool.name),
     capability_count:preparedCatalog().capabilities.length,
     read_only:true,
     transactional:false,
@@ -277,12 +282,13 @@ export async function startFabricLocalRuntime({
       : edgeAttestationReady()
         ? 'loopback_nodeseed'
         : null,
-    public_plugin_submission_ready:true,
+    public_plugin_source_ready:true,
+    public_plugin_external_verification_required:true,
     journal_mirror_path:'/journal/',
     journal_mirror_ready:fs.existsSync(path.join(journalDir,'index.html')),
     journal_mirror_indexing:'noindex_until_dedicated_origin',
     provider_publication_state:'external_to_runtime',
-    public_submission_note:'The owned Fabric runtime and review surface are submission-ready. Provider review, approval, publication, and directory visibility are external states and are not inferred by this health endpoint.',
+    public_submission_note:'This runtime reports source capability only. Submission readiness additionally requires a fresh external HTTPS/OpenAI-profile canary, provider scan, and account-side review gates.',
     catalog_reload_mode:staticPrepared?'static_injected':'hot_reload_repository',
   });
   };
@@ -310,6 +316,25 @@ export async function startFabricLocalRuntime({
           renderFabricHome({capabilities:preparedCatalog().capabilities}),
           {contentType:'text/html; charset=utf-8'}
         );
+      }
+
+      if (req.method==='GET' && req.url==='/openai') {
+        return sendText(
+          res,
+          200,
+          renderOpenAiPluginHome(),
+          {contentType:'text/html; charset=utf-8'}
+        );
+      }
+
+      if (req.method==='GET' && req.url==='/openai/privacy') {
+        return sendText(res,200,renderOpenAiPolicyDocument('Evercraft Privacy Policy',docs.privacy),{contentType:'text/html; charset=utf-8'});
+      }
+      if (req.method==='GET' && req.url==='/openai/terms') {
+        return sendText(res,200,renderOpenAiPolicyDocument('Evercraft Terms of Service',docs.terms),{contentType:'text/html; charset=utf-8'});
+      }
+      if (req.method==='GET' && req.url==='/openai/support') {
+        return sendText(res,200,renderOpenAiPolicyDocument('Evercraft Support',docs.support),{contentType:'text/html; charset=utf-8'});
       }
 
       if (req.method==='GET' && req.url==='/capabilities') {
@@ -413,20 +438,23 @@ export async function startFabricLocalRuntime({
         return res.end(data);
       }
 
-      if (req.url!=='/mcp') return sendJson(res,404,{error:'not_found'});
+      const openAiMcp=req.url==='/mcp/openai';
+      const internalMcp=req.url==='/mcp';
+      if (!openAiMcp&&!internalMcp) return sendJson(res,404,{error:'not_found'});
 
       if (req.method==='GET') {
         const body={
           ok:true,
-          service:'Evercraft Fabric',
+          service:openAiMcp?'Evercraft Public Plugin':'Evercraft Fabric',
           server:'evercraft-fabric',
-          version:'1.0.1',
+          version:'1.1.0',
           transport:'Streamable HTTP',
           transport_modes:['application/json','text/event-stream'],
-          tools:fabricDirectoryTools().map((tool)=>tool.name),
-          capability_count:preparedCatalog().capabilities.length,
+          tools:(openAiMcp?fabricOpenAiTools():fabricDirectoryTools()).map((tool)=>tool.name),
+          capability_count:openAiMcp?null:preparedCatalog().capabilities.length,
           read_only:true,
           base44_transport_enabled:false,
+          public_plugin_profile:openAiMcp,
         };
         if (acceptsEventStream(req)) return sendEventStream(res,200,body);
         return sendJson(res,200,body);
@@ -434,7 +462,11 @@ export async function startFabricLocalRuntime({
 
       if (req.method!=='POST') return sendJson(res,405,{error:'method_not_allowed'});
       const rpc=await readJson(req);
-      const response=await executeFabricDirectoryRpc(rpc,preparedCatalog().capabilities);
+      const response=await executeFabricDirectoryRpc(
+        rpc,
+        preparedCatalog().capabilities,
+        {toolProfile:openAiMcp?'openai':'full'}
+      );
       if (response===null) {
         res.writeHead(202,{
           'cache-control':'no-store',
@@ -473,6 +505,7 @@ export async function startFabricLocalRuntime({
     instanceId,
     url,
     mcpUrl:url+'/mcp',
+    openAiMcpUrl:url+'/mcp/openai',
     health,
     setDeploymentReceipt(value){
       const receipt=String(value||'').trim();
