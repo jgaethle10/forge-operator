@@ -30,6 +30,21 @@ const fakeFetch = async (url, options = {}) => {
       },
     }), { status: 200 });
   }
+  if (route.endsWith('/v1/operator/host-capabilities')) {
+    return new Response(JSON.stringify({
+      ok: true,
+      schema: 'evercraft.host-boundary-capability-status.v1',
+      registry_version: '1.0.0',
+      capability_count: 1,
+      capabilities: [{
+        capability_id: 'chromeos.crostini.port-forwarding.read.v1',
+        host_os: 'chromeos',
+        operation: 'read',
+        mutation_authority: false,
+        arbitrary_desktop_control: false,
+      }],
+    }), { status: 200 });
+  }
   if (route.endsWith('/v1/operator/host-boundary')) {
     return new Response(JSON.stringify({
       ok: true,
@@ -80,7 +95,7 @@ const listed = await executeRemoteOperatorMcpRpc({
   rpc: { jsonrpc: '2.0', id: 2, method: 'tools/list' },
   gateway,
 });
-assert.equal(listed.result.tools.length, 8);
+assert.equal(listed.result.tools.length, 9);
 
 const denied = await executeRemoteOperatorMcpRpc({
   rpc: {
@@ -123,6 +138,26 @@ assert.equal(
   'evercraft.node-network-observation.v1'
 );
 assert.equal(network.result.structuredContent.authority.read_only, true);
+
+const hostCapabilities = await executeRemoteOperatorMcpRpc({
+  rpc: {
+    jsonrpc: '2.0',
+    id: 40,
+    method: 'tools/call',
+    params: { name: 'remote_host_capabilities', arguments: {} },
+  },
+  gateway,
+  authorization: 'Bearer ' + clientToken,
+});
+assert.equal(
+  hostCapabilities.result.structuredContent.schema,
+  'evercraft.host-boundary-capability-status.v1'
+);
+assert.equal(hostCapabilities.result.structuredContent.capability_count, 1);
+assert.equal(
+  hostCapabilities.result.structuredContent.capabilities[0].mutation_authority,
+  false
+);
 
 const hostBoundary = await executeRemoteOperatorMcpRpc({
   rpc: {
@@ -209,4 +244,5 @@ console.log(JSON.stringify({
   read_only_network_status_exposed: true,
   read_only_chromeos_host_boundary_exposed: true,
   on_demand_chromeos_host_check_exposed: true,
+  typed_host_capability_registry_exposed: true,
 }));
