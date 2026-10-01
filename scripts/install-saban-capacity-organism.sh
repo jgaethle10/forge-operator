@@ -95,6 +95,14 @@ if [[ ! -s "$WORK_API_TOKEN_FILE" ]]; then
   chmod 0600 "$WORK_API_TOKEN_FILE"
 fi
 
+PAIRING_API_TOKEN_FILE="$STATE_DIR/.secrets/pairing-api-token"
+if [[ ! -s "$PAIRING_API_TOKEN_FILE" ]]; then
+  umask 077
+  "$NODE_BIN" -e "process.stdout.write(require('crypto').randomBytes(32).toString('hex')+'\\n')" > "$PAIRING_API_TOKEN_FILE"
+  chown "$RUN_USER:$RUN_GROUP" "$PAIRING_API_TOKEN_FILE"
+  chmod 0600 "$PAIRING_API_TOKEN_FILE"
+fi
+
 cat >/etc/systemd/system/evercraft-saban-capacity.service <<EOF
 [Unit]
 Description=Evercraft Saban zero-spend ambient capacity organism
@@ -184,7 +192,7 @@ Group=$RUN_GROUP
 WorkingDirectory=$REPO_ROOT
 Environment=SABAN_AMBIENT_STATE_DIR=$STATE_DIR
 Environment=SABAN_ALLOW_COMMERCIAL_CAPACITY=0
-ExecStart=$NODE_BIN $REPO_ROOT/systemia/saban/ambient-work-api-runner.mjs --root $STATE_DIR --host 127.0.0.1 --port 8793 --token-file $WORK_API_TOKEN_FILE
+ExecStart=$NODE_BIN $REPO_ROOT/systemia/saban/ambient-work-api-runner.mjs --root $STATE_DIR --host 127.0.0.1 --port 8793 --token-file $WORK_API_TOKEN_FILE --pairing-token-file $PAIRING_API_TOKEN_FILE
 Restart=always
 RestartSec=5s
 NoNewPrivileges=true
@@ -343,4 +351,5 @@ echo "Probation timer: evercraft-saban-probation.timer"
 echo "Dispatch timer: evercraft-saban-dispatch.timer"
 echo "Gateway token file: $GATEWAY_TOKEN_FILE"
 echo "Work API token file: $WORK_API_TOKEN_FILE"
+echo "Pairing authority token file: $PAIRING_API_TOKEN_FILE"
 echo "Device token directory: $STATE_DIR/.secrets/device-tokens"
