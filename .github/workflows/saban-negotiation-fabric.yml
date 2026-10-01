@@ -9,6 +9,7 @@ on:
       - 'systemia/saban/markets/evercraft-voluntary.mjs'
       - 'systemia/saban/markets/golem.mjs'
       - 'systemia/saban/golem-adapter.proof.mjs'
+      - 'systemia/saban/golem-requestor/**'
       - 'systemia/saban/README.md'
       - '.github/workflows/saban-negotiation-fabric.yml'
   push:
@@ -20,6 +21,7 @@ on:
       - 'systemia/saban/markets/evercraft-voluntary.mjs'
       - 'systemia/saban/markets/golem.mjs'
       - 'systemia/saban/golem-adapter.proof.mjs'
+      - 'systemia/saban/golem-requestor/**'
       - 'systemia/saban/README.md'
       - '.github/workflows/saban-negotiation-fabric.yml'
   workflow_dispatch:
