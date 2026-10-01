@@ -35,16 +35,46 @@ function humanTheme(key: string) {
 export default function WeekInMotionMachine() {
   const [status, setStatus] = useState<StatusResponse | null>(null);
   const [error, setError] = useState('');
+  const [adminToken, setAdminToken] = useState('');
+  const [operatorState, setOperatorState] = useState('');
+  const [running, setRunning] = useState(false);
   const current = status?.current;
 
+  async function refresh() {
+    const response = await fetch('/api/week-in-motion/status');
+    if (!response.ok) throw new Error('Week in Motion status is unavailable.');
+    setStatus(await response.json());
+  }
+
+  async function runMachine(publish: boolean) {
+    if (!adminToken.trim()) {
+      setOperatorState('Operator token required.');
+      return;
+    }
+    setRunning(true);
+    setOperatorState(publish ? 'Running full weekly cycle and publishing only if every gate passes…' : 'Running weekly cycle without publication…');
+    try {
+      const response = await fetch('/api/week-in-motion/run', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${adminToken.trim()}`,
+        },
+        body: JSON.stringify({ publish }),
+      });
+      const payload = await response.json();
+      if (!response.ok) throw new Error(payload?.error || payload?.result?.gate?.reasons?.join(', ') || 'Run blocked.');
+      setOperatorState(payload?.result?.status === 'published' ? 'Published and receipted.' : 'Run completed. Review state is ready.');
+      await refresh();
+    } catch (err) {
+      setOperatorState(err instanceof Error ? err.message : String(err));
+    } finally {
+      setRunning(false);
+    }
+  }
+
   useEffect(() => {
-    fetch('/api/week-in-motion/status')
-      .then(async (response) => {
-        if (!response.ok) throw new Error('Week in Motion status is unavailable.');
-        return response.json();
-      })
-      .then(setStatus)
-      .catch((err) => setError(err instanceof Error ? err.message : String(err)));
+    refresh().catch((err) => setError(err instanceof Error ? err.message : String(err)));
   }, []);
 
   return (
@@ -140,6 +170,30 @@ export default function WeekInMotionMachine() {
             ['08','Clip package','Prepare the substantive social master, platform derivatives and listen-along comment.'],
             ['09','Institutional memory','Archive the evidence ledger, failures, corrections, receipts and next-week obligations.'],
           ].map(([n,title,copy]) => <article key={n}><b>{n}</b><div><strong>{title}</strong><p>{copy}</p></div></article>)}
+        </div>
+      </section>
+
+      <section className="wim-shell wim-operator">
+        <div className="wim-section-title">
+          <div><span>Operator console</span><h2>Intervene without becoming the workflow</h2></div>
+          <small>The resident worker runs on its own. These controls are for inspection, recovery and deliberate reruns.</small>
+        </div>
+        <div className="wim-operator-panel">
+          <label>
+            Operator token
+            <input
+              type="password"
+              autoComplete="off"
+              value={adminToken}
+              onChange={(event) => setAdminToken(event.target.value)}
+              placeholder="WEEK_IN_MOTION_ADMIN_TOKEN"
+            />
+          </label>
+          <div className="wim-actions">
+            <button disabled={running} onClick={() => runMachine(false)}>Run audit only</button>
+            <button className="publish" disabled={running} onClick={() => runMachine(true)}>Run + publish if gates pass</button>
+          </div>
+          {operatorState && <p className="wim-operator-state">{operatorState}</p>}
         </div>
       </section>
 
