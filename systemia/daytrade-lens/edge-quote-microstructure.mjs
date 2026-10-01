@@ -256,6 +256,8 @@ function targetRowsForMeasurement(row,learnedDirection=null){
       instrument_end_price:finite(row.instrument_end_price),
       forward_return:finite(row.forward_return),
       benchmark_return:finite(row.benchmark_return),
+      instrument_start_volume:finite(row.instrument_start_volume),
+      instrument_realized_volatility_5m:finite(row.instrument_realized_volatility_5m),
     });
   }
   for(const [key,value] of Object.entries(row?.execution_delay_stress||{})){
@@ -330,7 +332,7 @@ function groupTargets(targets,paddingSeconds){
   });
 }
 
-function summarizeSignal(rows){
+export function summarizeQuoteSignal(rows){
   const available=rows.filter((row)=>row.quote_available);
   const spreads=available.map((row)=>finite(row.spread_bps)).filter(Number.isFinite);
   const halfSpreads=available.map((row)=>finite(row.half_spread_bps)).filter(Number.isFinite);
@@ -347,6 +349,40 @@ function summarizeSignal(rows){
   const quoteNet=modeledEntry
     .map((row)=>finite(row.quote_entry_strategy_net_partial))
     .filter(Number.isFinite);
+
+  const visibleRows=modeledEntry.filter((row)=>
+    Number.isFinite(finite(row.visible_touch_size)) &&
+    finite(row.visible_touch_size)>0 &&
+    Number.isFinite(finite(row.instrument_realized_volatility_5m))
+  );
+  const visibleSizeMedian=percentile(
+    visibleRows.map((row)=>finite(row.visible_touch_size)),
+    0.50
+  );
+  const volatilityMedian=percentile(
+    visibleRows.map((row)=>finite(row.instrument_realized_volatility_5m)),
+    0.50
+  );
+  const lowVisibleHighVol=visibleRows.filter((row)=>
+    finite(row.visible_touch_size)<=visibleSizeMedian &&
+    finite(row.instrument_realized_volatility_5m)>=volatilityMedian
+  );
+
+  const volumeRows=modeledEntry.filter((row)=>
+    Number.isFinite(finite(row.instrument_start_volume)) &&
+    Number.isFinite(finite(row.spread_bps))
+  );
+  const entryVolumeMedian=percentile(
+    volumeRows.map((row)=>finite(row.instrument_start_volume)),
+    0.50
+  );
+  const highVolumeRows=volumeRows.filter(
+    (row)=>finite(row.instrument_start_volume)>=entryVolumeMedian
+  );
+  const lowVolumeRows=volumeRows.filter(
+    (row)=>finite(row.instrument_start_volume)<entryVolumeMedian
+  );
+
   return {
     target_count:rows.length,
     quote_count:available.length,
@@ -376,6 +412,51 @@ function summarizeSignal(rows){
         .filter(Number.isFinite),
       0.50
     ),
+    top_of_book_state:{
+      observations:visibleRows.length,
+      median_visible_touch_size:visibleSizeMedian,
+      median_realized_volatility_5m:volatilityMedian,
+      low_visible_size_high_volatility_count:lowVisibleHighVol.length,
+      low_visible_size_high_volatility_mean_spread_bps:mean(
+        lowVisibleHighVol.map((row)=>finite(row.spread_bps)).filter(Number.isFinite)
+      ),
+      low_visible_size_high_volatility_mean_quote_entry_strategy_net_partial:mean(
+        lowVisibleHighVol
+          .map((row)=>finite(row.quote_entry_strategy_net_partial))
+          .filter(Number.isFinite)
+      ),
+      status:
+        visibleRows.length>=8 && lowVisibleHighVol.length>=2
+          ?"VISIBLE_TOUCH_SIZE_X_VOLATILITY_STRESS_READY"
+          :"VISIBLE_TOUCH_SIZE_X_VOLATILITY_INSUFFICIENT",
+      full_market_depth_claimed:false,
+    },
+    volume_is_not_liquidity_negative_control:{
+      observations:volumeRows.length,
+      median_entry_bar_volume:entryVolumeMedian,
+      high_volume_observations:highVolumeRows.length,
+      low_volume_observations:lowVolumeRows.length,
+      high_volume_mean_spread_bps:mean(
+        highVolumeRows.map((row)=>finite(row.spread_bps)).filter(Number.isFinite)
+      ),
+      low_volume_mean_spread_bps:mean(
+        lowVolumeRows.map((row)=>finite(row.spread_bps)).filter(Number.isFinite)
+      ),
+      high_volume_wide_spread_rate:(()=>{
+        const overallMedianSpread=percentile(
+          volumeRows.map((row)=>finite(row.spread_bps)).filter(Number.isFinite),
+          0.50
+        );
+        if(!highVolumeRows.length || !Number.isFinite(overallMedianSpread)) return null;
+        return highVolumeRows.filter(
+          (row)=>finite(row.spread_bps)>=overallMedianSpread
+        ).length/highVolumeRows.length;
+      })(),
+      status:volumeRows.length>=8
+        ?"VOLUME_LIQUIDITY_NEGATIVE_CONTROL_READY"
+        :"VOLUME_LIQUIDITY_NEGATIVE_CONTROL_INSUFFICIENT",
+      volume_equated_with_liquidity:false,
+    },
   };
 }
 
@@ -495,6 +576,18 @@ export async function runQuoteMicrostructureLab(report,{
     const entrySlippageBps=canPriceEntry
       ?sign*((marketableEntry-barStart)/barStart)*10000
       :null;
+    const bidSize=quote?finite(quote.bid_size):null;
+    const askSize=quote?finite(quote.ask_size):null;
+    const visibleTouchSize=
+      Number.isFinite(bidSize) && Number.isFinite(askSize)
+        ?bidSize+askSize
+        :null;
+    const topOfBookSizeImbalance=
+      Number.isFinite(bidSize) &&
+      Number.isFinite(askSize) &&
+      bidSize+askSize>0
+        ?(bidSize-askSize)/(bidSize+askSize)
+        :null;
     return {
       schema:"evercraft.daytrade.edge-quote-overlay.v1",
       ...target,
@@ -525,6 +618,13 @@ export async function runQuoteMicrostructureLab(report,{
       entry_execution_adjusted:canPriceEntry,
       exit_execution_quote_adjusted:false,
       benchmark_entry_quote_adjusted:false,
+      visible_touch_size:visibleTouchSize,
+      top_of_book_size_imbalance:topOfBookSizeImbalance,
+      direction_adjusted_top_of_book_imbalance:
+        Number.isFinite(topOfBookSizeImbalance)
+          ?sign*topOfBookSizeImbalance
+          :null,
+      full_market_depth_claimed:false,
       passive_touch_evidence_available:
         target.label==="modeled_entry" &&
         Boolean(quote) &&
@@ -551,11 +651,11 @@ export async function runQuoteMicrostructureLab(report,{
 
   const bySignal={};
   for(const signal of uniq(overlays.map((row)=>row.signal_key))){
-    bySignal[signal]=summarizeSignal(overlays.filter((row)=>row.signal_key===signal));
+    bySignal[signal]=summarizeQuoteSignal(overlays.filter((row)=>row.signal_key===signal));
   }
   const byLabel={};
   for(const label of uniq(overlays.map((row)=>row.label))){
-    byLabel[label]=summarizeSignal(overlays.filter((row)=>row.label===label));
+    byLabel[label]=summarizeQuoteSignal(overlays.filter((row)=>row.label===label));
   }
   const quoteCount=overlays.filter((row)=>row.quote_available).length;
   const status=targets.length===0
@@ -592,6 +692,9 @@ export async function runQuoteMicrostructureLab(report,{
       benchmark_entry_quote_adjusted:false,
       passive_touch_evidence:"Trade-at-or-through evidence only. It is not a fill claim because queue position and order-specific execution are unobserved.",
       passive_touch_window_ms:Number(passive_touch_window_ms),
+      visible_touch_size:"Sum of observed top-of-book bid and ask sizes on the selected feed. This is not full market depth.",
+      top_of_book_size_imbalance:"(bid_size - ask_size) / (bid_size + ask_size) on the selected feed.",
+      entry_bar_volume:"Activity measure only. It is never substituted for spread, visible touch size, impact, or fill probability.",
       missing_is_never_zero:true,
       sip_is_nbbo_only_when_feed_is_sip:true,
       iex_is_not_labeled_nbbo:true,

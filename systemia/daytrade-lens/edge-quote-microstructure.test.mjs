@@ -6,6 +6,7 @@ import {
   fetchAlpacaTrades,
   normalizeAlpacaTrade,
   buildQuoteMicrostructureTargets,
+  summarizeQuoteSignal,
   runQuoteMicrostructureLab,
 } from "./edge-quote-microstructure.mjs";
 
@@ -121,6 +122,8 @@ const report={
     instrument_end_price:101.5,
     forward_return:0.015,
     benchmark_return:0.002,
+    instrument_start_volume:250000,
+    instrument_realized_volatility_5m:0.0015,
     execution_delay_stress:{
       "5m":{instrument_start_time:"2026-09-01T13:35:00.000Z"},
       "15m":{instrument_start_time:"2026-09-01T13:45:00.000Z"},
@@ -180,6 +183,9 @@ assert.equal(modeledEntry.passive_price_touch_observed,true);
 assert.ok(modeledEntry.passive_touch_delay_ms>0);
 assert.equal(modeledEntry.passive_queue_position_observed,false);
 assert.equal(modeledEntry.passive_hypothetical_fill_claimed,false);
+assert.ok(Number.isFinite(modeledEntry.visible_touch_size));
+assert.ok(Number.isFinite(modeledEntry.top_of_book_size_imbalance));
+assert.equal(modeledEntry.full_market_depth_claimed,false);
 assert.equal(
   lab.by_signal["ai_models|sec_8_k|SOXX|1d"].passive_touch_evaluable_count,
   1
@@ -209,6 +215,47 @@ const partial=await runQuoteMicrostructureLab(report,{
 assert.equal(partial.status,"QUOTE_DATA_PARTIAL");
 assert.equal(partial.quote_overlay_count,1);
 
+
+const microRows=Array.from({length:12},(_,i)=>({
+  label:"modeled_entry",
+  quote_available:true,
+  entry_slippage_vs_bar_bps:2+i*0.1,
+  quote_entry_strategy_net_partial:0.01-i*0.0001,
+  strategy_net_degradation_from_quote_entry:0.0002+i*0.00001,
+  spread_bps:i>=6?18+i:6+i*0.2,
+  half_spread_bps:i>=6?9+i/2:3+i*0.1,
+  bid_size:i<6?100+i*5:20+i,
+  ask_size:i<6?110+i*5:18+i,
+  visible_touch_size:i<6?210+i*10:38+i*2,
+  top_of_book_size_imbalance:0.05,
+  instrument_realized_volatility_5m:i<6?0.0005+i*0.00002:0.002+i*0.00005,
+  instrument_start_volume:i<6?50000+i*1000:500000+i*10000,
+  passive_touch_evidence_available:true,
+  passive_price_touch_observed:i%2===0,
+  passive_touch_delay_ms:1000+i*100,
+}));
+const microSummary=summarizeQuoteSignal(microRows);
+assert.equal(
+  microSummary.top_of_book_state.status,
+  "VISIBLE_TOUCH_SIZE_X_VOLATILITY_STRESS_READY"
+);
+assert.equal(microSummary.top_of_book_state.full_market_depth_claimed,false);
+assert.ok(
+  microSummary.top_of_book_state.low_visible_size_high_volatility_count>=2
+);
+assert.equal(
+  microSummary.volume_is_not_liquidity_negative_control.status,
+  "VOLUME_LIQUIDITY_NEGATIVE_CONTROL_READY"
+);
+assert.equal(
+  microSummary.volume_is_not_liquidity_negative_control.volume_equated_with_liquidity,
+  false
+);
+assert.ok(
+  microSummary.volume_is_not_liquidity_negative_control.high_volume_mean_spread_bps >
+  microSummary.volume_is_not_liquidity_negative_control.low_volume_mean_spread_bps
+);
+
 await assert.rejects(
   ()=>fetchAlpacaQuotes("SOXX",{
     start:"2026-09-01T13:30:00Z",
@@ -233,6 +280,10 @@ console.log(JSON.stringify({
   entry_side_partial_strategy_net:true,
   historical_trade_touch_evidence:true,
   passive_touch_never_claimed_as_fill:true,
+  top_of_book_size_imbalance:true,
+  visible_touch_size_not_full_depth:true,
+  volume_is_not_liquidity_negative_control:true,
+  low_visible_size_high_volatility_cross_stress:true,
   no_silent_feed_fallback:true,
   missing_never_zero:true,
   live_trade_authority:false

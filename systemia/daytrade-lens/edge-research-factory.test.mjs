@@ -23,6 +23,7 @@ function bars(start, count, drift) {
       t: new Date(Date.parse(start) + i * 5 * 60_000).toISOString(),
       o: open,
       c: price,
+      v: 1000 + i,
     });
   }
   return out;
@@ -119,6 +120,7 @@ assert.equal(measured[0].execution_delay_stress["30m"].delay_bars, 6);
 assert.equal(measured[0].execution_delay_stress["60m"].delay_bars, 12);
 assert.equal(measured[0].execution_delay_stress["90m"].delay_bars, 18);
 assert.ok(Number.isFinite(measured[0].instrument_realized_volatility_5m));
+assert.ok(Number.isFinite(measured[0].instrument_start_volume));
 assert.ok(Number.isFinite(measured[0].benchmark_realized_volatility_5m));
 assert.ok(measured[0].instrument_max_path_gain >= measured[0].instrument_max_path_drawdown);
 assert.ok(
@@ -353,6 +355,7 @@ console.log(JSON.stringify({
   next_session_open_execution_stress: true,
   deterministic_random_placebo_calendar: true,
   realized_volatility_metrics: true,
+  entry_bar_volume_preserved_without_liquidity_claim: true,
   overnight_gap_excluded_from_5m_volatility: true,
   opening_gap_metrics: true,
   opening_gap_uses_bar_open_not_close: true,

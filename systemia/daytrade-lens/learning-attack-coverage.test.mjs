@@ -57,6 +57,19 @@ assert.match(
   /never labeled a fill/
 );
 assert.equal(
+  ATTACK_IMPLEMENTATION_MAP["volume-is-not-liquidity negative control"].status,
+  "implemented"
+);
+assert.equal(
+  ATTACK_IMPLEMENTATION_MAP["low-depth high-volatility stress"].status,
+  "partial"
+);
+assert.match(
+  ATTACK_IMPLEMENTATION_MAP["low-depth high-volatility stress"].gap,
+  /not full market depth/
+);
+
+assert.equal(
   ATTACK_IMPLEMENTATION_MAP["AI versus matched non-AI filing control"].status,
   "implemented"
 );
@@ -70,6 +83,8 @@ console.log(JSON.stringify({
   closed_cscv_gap_removed_from_frontier:true,
   partial_execution_frontier_exposed:true,
   passive_touch_never_promoted_to_fill:true,
+  volume_not_liquidity_closed:true,
+  low_visible_size_high_volatility_partial:true,
   explicit_evidence_mapping:true,
   frozen_protocol_mutation_forbidden:true,
   live_trade_authority:false

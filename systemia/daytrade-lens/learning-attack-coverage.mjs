@@ -90,7 +90,7 @@ export const ATTACK_IMPLEMENTATION_MAP=Object.freeze({
   "spread-depth-imbalance data contract":{
     status:"partial",
     evidence:["systemia/daytrade-lens/edge-quote-microstructure.mjs"],
-    gap:"Bid/ask prices and top-of-book sizes are captured; depth imbalance and order-flow features are not yet scored."
+    gap:"Spread, visible top-of-book size, and top-of-book size imbalance are scored on the selected feed; full depth and richer order-flow features remain unobserved."
   },
   "aggressive-versus-passive execution comparison":{
     status:"partial",
@@ -140,9 +140,11 @@ export const ATTACK_IMPLEMENTATION_MAP=Object.freeze({
     ]
   },
   "volume-is-not-liquidity negative control":{
-    status:"missing",
-    evidence:[],
-    gap:"No explicit volume-vs-spread/depth falsification yet."
+    status:"implemented",
+    evidence:[
+      "systemia/daytrade-lens/edge-research-factory.mjs",
+      "systemia/daytrade-lens/edge-quote-microstructure.mjs"
+    ]
   },
   "spread/depth/impact separate fields":{
     status:"partial",
@@ -150,9 +152,12 @@ export const ATTACK_IMPLEMENTATION_MAP=Object.freeze({
     gap:"Spread and top-of-book size are observable; impact remains unmeasured."
   },
   "low-depth high-volatility stress":{
-    status:"missing",
-    evidence:[],
-    gap:"Requires crossed quote-depth and volatility regimes."
+    status:"partial",
+    evidence:[
+      "systemia/daytrade-lens/edge-research-factory.mjs",
+      "systemia/daytrade-lens/edge-quote-microstructure.mjs"
+    ],
+    gap:"Realized volatility is crossed with visible top-of-book size and quote-adjusted entry returns, but visible touch size is not full market depth."
   },
   "narrative-blind label permutation":{
     status:"implemented",
