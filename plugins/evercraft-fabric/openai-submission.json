@@ -2,10 +2,10 @@
   "schema": "evercraft.openai-plugin-submission.v1",
   "listing": {
     "name": "Evercraft",
-    "short_description": "Find and use the right Evercraft capability from one connected front door.",
-    "long_description": "Evercraft starts from the problem you are trying to solve, matches it to the smallest relevant Evercraft capability, prefers a verified specialist route when one exists, and preserves provenance, authorization, receipts, and human confirmation for consequential actions.",
+    "short_description": "Find the right Evercraft path",
+    "long_description": "Start from a real problem, discover the smallest truthful Evercraft capability, and identify its current public connection path when one exists. Evercraft preserves evidence and availability boundaries. Discovery does not grant private Systemia access, payment authority, publishing authority, deployment authority, or permission for other consequential actions.",
     "developer": "Evercraft LLC",
-    "category": "Business",
+    "category": "Business & Operations",
     "website": "https://fabric.systemiacommandcenters.com/",
     "privacy_document": "plugins/evercraft-fabric/PRIVACY.md",
     "terms_document": "plugins/evercraft-fabric/TERMS.md",
@@ -14,7 +14,7 @@
     "terms_url": "https://fabric.systemiacommandcenters.com/terms",
     "support_url": "https://fabric.systemiacommandcenters.com/support"
   },
-  "submission_state": "owned_public_fabric_live_account_gates_pending",
+  "submission_state": "owned_public_fabric_live_platform_upload_pending",
   "public_directory_claim_allowed": false,
   "compatibility_transport": {
     "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
@@ -87,6 +87,7 @@
   "review_support": {
     "demo_recording_url": "https://drive.google.com/file/d/1v6KeJMAjH_Hp7IpjFWqNFTcPT2k9iUd_/view?usp=drivesdk",
     "recording_access": "public_link_reader",
-    "notes": "Walkthrough demonstrates capability listing, natural-language routing to FindMyPart, capability-specific connection lookup, and read-only/non-transactional behavior."
-  }
+    "notes": "Walkthrough demonstrates capability listing, natural-language routing to FindMyPart, capability-specific connection lookup, and read-only/non-transactional behavior. Canonical v1.0.3 package metadata is aligned for public submission."
+  },
+  "package_version": "1.0.3"
 }

@@ -43,3 +43,16 @@ test('external canary preserves authority and provider truth boundaries',()=>{
     assert.ok(workflow.includes(required),'missing public-edge truth contract: '+required);
   }
 });
+
+test('external canary proves every OpenAI directory listing page',()=>{
+  for(const required of [
+    'verify_listing_page "/" "Evercraft Fabric"',
+    'verify_listing_page "/support" "Evercraft Fabric Support"',
+    'verify_listing_page "/privacy" "Evercraft Fabric Privacy Policy"',
+    'verify_listing_page "/terms" "Evercraft Fabric Terms of Service"',
+    'listing_pages_verified:true',
+    'bash scripts/build-evercraft-openai-plugin.sh',
+  ]){
+    assert.ok(workflow.includes(required),'missing OpenAI listing-page canary contract: '+required);
+  }
+});

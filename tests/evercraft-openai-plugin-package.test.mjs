@@ -92,9 +92,19 @@ test('review test cases reference the live scanned Fabric matcher',()=>{
   const manifest=readJson('plugin.json');
   const review=manifest.extensions?.['com.openai']?.review;
   assert.ok(review.test_cases.positive.every((x)=>x.tools_triggered==='match_evercraft_capability'));
-  assert.equal(manifest.version,'1.0.2');
+  assert.equal(manifest.version,'1.0.3');
 });
 
+
+test('portable and compatibility manifests agree on release identity',()=>{
+  const portable=readJson('plugin.json');
+  const compatibility=readJson('.codex-plugin/plugin.json');
+  assert.equal(compatibility.version,portable.version);
+  assert.equal(compatibility.name,portable.name);
+  assert.equal(compatibility.interface?.category,portable.extensions?.['com.openai']?.interface?.category);
+  assert.equal(portable.extensions?.['com.openai']?.interface?.category,'Business & Operations');
+  assert.equal(compatibility.interface?.websiteURL,portable.homepage);
+});
 
 test('review package includes an accessible demo recording and release notes',()=>{
   const manifest=readJson('plugin.json');

@@ -107,11 +107,17 @@ test('Fabric public customer front door is branded, browsable, and policy-safe',
     assert.equal(iconResponse.headers.get('content-type'),'image/png');
     assert.ok((await iconResponse.arrayBuffer()).byteLength>1000);
 
-    const privacyResponse=await fetch(runtime.url+'/privacy');
-    assert.equal(privacyResponse.status,200);
-    const privacy=await privacyResponse.text();
-    assert.match(privacy,/Evercraft Fabric Privacy Policy/);
-    assert.match(privacy,/Information processed/);
+    const listingPages=[
+      ['support',/Evercraft Fabric Support/],
+      ['privacy',/Evercraft Fabric Privacy Policy/],
+      ['terms',/Evercraft Fabric Terms of Service/],
+    ];
+    for(const [page,pattern] of listingPages){
+      const response=await fetch(runtime.url+'/'+page);
+      assert.equal(response.status,200);
+      assert.match(response.headers.get('content-type')||'',/^text\/html/);
+      assert.match(await response.text(),pattern);
+    }
   } finally {
     await runtime.close();
   }
