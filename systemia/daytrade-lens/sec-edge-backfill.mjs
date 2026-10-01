@@ -19,6 +19,7 @@ import { runMatchedPlaceboLab } from "./edge-matched-placebo.mjs";
 import { runBenchmarkFragilityLab } from "./edge-benchmark-fragility.mjs";
 import { runWalkForwardLab } from "./edge-walk-forward.mjs";
 import { runExecutionTranslationLab } from "./edge-execution-translation.mjs";
+import { evaluatePilotReadiness } from "./edge-pilot-readiness.mjs";
 
 async function main() {
   const artifactDir = path.resolve(
@@ -129,6 +130,8 @@ async function main() {
     ingest_receipt: null,
   };
   let durableScoreFile = null;
+  let durableScores = [];
+  let durableClusterScores = { scores: [] };
 
   const durableRoot = String(process.env.EVERCRAFT_EDGE_LAB_DURABLE_ROOT || "").trim();
   if (durableRoot) {
@@ -151,6 +154,8 @@ async function main() {
       reopened.score(protocol.cohort_id)
     );
     const clusterScores = reopened.scoreClusters();
+    durableScores = scores;
+    durableClusterScores = clusterScores;
     durableScoreFile = path.join(artifactDir, "durable-forward-paper-scores.json");
     fs.writeFileSync(
       durableScoreFile,
@@ -204,6 +209,27 @@ async function main() {
     }, null, 2) + "\n"
   );
 
+  const pilotReadiness = evaluatePilotReadiness({
+    report,
+    adversarial,
+    stressLab,
+    breakerLab,
+    timingLab,
+    overlapLab,
+    placeboLab,
+    benchmarkLab,
+    walkForwardLab,
+    executionTranslationLab,
+    forwardScores: durableScores,
+    forwardClusterScores: durableClusterScores,
+    durableState,
+  });
+  const pilotReadinessFile = path.join(artifactDir, "sec-edge-pilot-readiness.json");
+  fs.writeFileSync(
+    pilotReadinessFile,
+    JSON.stringify(pilotReadiness, null, 2) + "\n"
+  );
+
   const top = (report.evaluations || []).slice(0, 10).map((row) => ({
     signal_key: row.signal_key,
     status: row.status,
@@ -237,6 +263,8 @@ async function main() {
     frozen_forward_paper_cohorts: frozenCohorts.length,
     durable_forward_paper_state_configured: durableState.configured,
     durable_forward_paper_restart_reopen_verified: durableState.restart_reopen_verified,
+    pilot_evidence_ready_count: pilotReadiness.evidence_ready_count || 0,
+    pilot_readiness_status: pilotReadiness.overall_status,
     top_screened_families: top,
     exact_public_availability_time_known: false,
     sec_publication_delay_buffer_minutes:
@@ -256,6 +284,7 @@ async function main() {
       adversarial_review: adversarialFile,
       forward_paper_cohorts: forwardPaperFile,
       durable_forward_paper_scores: durableScoreFile,
+      pilot_readiness: pilotReadinessFile,
       state_batch: persistence.batch_file,
     },
   };
