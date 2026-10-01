@@ -175,7 +175,7 @@ function addCheck(report, key, ok, detail = '', evidence_refs = []) {
   });
 }
 
-export function inspectLocalPortfolio({ rootDir = process.cwd() } = {}) {
+export function inspectLocalPortfolio({ rootDir = process.cwd(), capabilityMesh = null } = {}) {
   const root = path.resolve(rootDir);
   const report = {
     schema: 'evercraft.portfolio-sentinel.local-scan.v1',
@@ -418,9 +418,9 @@ export function inspectLocalPortfolio({ rootDir = process.cwd() } = {}) {
     );
   }
 
-  let mesh = null;
+  let mesh = capabilityMesh;
   try {
-    mesh = renderCapabilityMesh(root);
+    if (!mesh) mesh = renderCapabilityMesh(root);
   } catch (error) {
     addFinding(report, makeFinding({
       code: 'capability_mesh_render_failed',
