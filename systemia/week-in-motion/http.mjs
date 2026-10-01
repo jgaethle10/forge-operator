@@ -1,10 +1,25 @@
 import express from 'express';
 import { listWeekInMotionRuns, readWeekInMotionRun, runWeekInMotionMachine } from './machine.mjs';
+import { appendEvidenceEvent, readAllEvidenceEvents } from './ledger.mjs';
 
 function requireAdmin(req, res, next) {
   const expected = String(process.env.WEEK_IN_MOTION_ADMIN_TOKEN || '').trim();
   if (!expected) {
     res.status(503).json({ ok: false, error: 'Week in Motion admin token is not configured.' });
+    return;
+  }
+  const supplied = String(req.headers.authorization || '');
+  if (supplied !== `Bearer ${expected}`) {
+    res.status(401).json({ ok: false, error: 'Unauthorized.' });
+    return;
+  }
+  next();
+}
+
+function requireIngest(req, res, next) {
+  const expected = String(process.env.WEEK_IN_MOTION_INGEST_TOKEN || process.env.WEEK_IN_MOTION_ADMIN_TOKEN || '').trim();
+  if (!expected) {
+    res.status(503).json({ ok: false, error: 'Week in Motion ingest token is not configured.' });
     return;
   }
   const supplied = String(req.headers.authorization || '');
@@ -60,6 +75,20 @@ export function registerWeekInMotionRoutes(app) {
         timezone: 'America/Los_Angeles',
       },
     });
+  });
+
+  router.post('/evidence', requireIngest, async (req, res) => {
+    try {
+      const result = await appendEvidenceEvent(req.body || {});
+      res.status(result.status === 'accepted' ? 202 : 200).json({ ok: true, ...result });
+    } catch (error) {
+      res.status(400).json({ ok: false, error: error instanceof Error ? error.message : String(error) });
+    }
+  });
+
+  router.get('/evidence', requireAdmin, async (_req, res) => {
+    const evidence = await readAllEvidenceEvents();
+    res.json({ ok: true, evidence_count: evidence.length, evidence });
   });
 
   router.get('/history', requireAdmin, async (_req, res) => {
