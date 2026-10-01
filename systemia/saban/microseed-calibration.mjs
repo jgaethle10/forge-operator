@@ -1,16 +1,11 @@
 import { createHash } from 'node:crypto';
 import { evaluateMicroSeedConformance, MicroSeedConformanceCanaries } from './microseed-conformance.mjs';
+import { microSeedConformanceDefinition } from './microseed-workload-registry.mjs';
 
 const sha=(value)=>'sha256:'+createHash('sha256').update(
   typeof value==='string'?value:JSON.stringify(value)
 ).digest('hex');
 
-const SAFE_PAYLOADS={
-  'systemia.health-probe.v1':{},
-  'systemia.content-hash.v1':{value:{saban:'calibration',payload:'0123456789abcdef'.repeat(16)}},
-  'systemia.telemetry-normalizer.v1':{telemetry:{alpha:1,beta:2,gamma:'three'}},
-  'systemia.chunk-transform.v1':{text:'evercraft-saban-calibration-'.repeat(8),start:0,end:64},
-};
 
 function q(values,p){
   if(!values.length)return null;
@@ -64,7 +59,7 @@ export async function runMicroSeedCalibration({
         const receipt=await execute({
           workload_class:workload,
           idempotency_key:idempotency,
-          payload:SAFE_PAYLOADS[workload],
+          payload:microSeedConformanceDefinition(workload)?.payload,
         });
         const duration=Math.max(0,Date.now()-started);
         const valid=
