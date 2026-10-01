@@ -26,6 +26,7 @@ test('issued pairing ticket is a visible human card with a copyable machine URI'
         'systemia.rivet.source-coverage-audit.v1',
       ],
       ttl_ms:15*60*1000,
+      enrollment_url:'https://fabric.example.test/v1/enroll',
       now:new Date('2026-10-01T09:00:00.000Z'),
     });
 
@@ -42,6 +43,9 @@ test('issued pairing ticket is a visible human card with a copyable machine URI'
     assert.equal(parsed.ticket_id,issue.ticket_id);
     assert.equal(parsed.pairing_secret,issue.pairing_secret);
     assert.equal(parsed.expires_at,issue.expires_at);
+    assert.equal(parsed.enrollment_url,'https://fabric.example.test/v1/enroll');
+    assert.equal(card.enrollment_url,'https://fabric.example.test/v1/enroll');
+    assert.match(card.card_text,/Enrollment return: https:\/\/fabric\.example\.test\/v1\/enroll/);
 
     const shown=showMicroSeedPairingTicket({
       stateDir:root,
@@ -112,6 +116,7 @@ test('local API exposes pairing desk only with separate pairing authority',async
         allowed_device_classes:['linux-host'],
         allowed_workloads:['systemia.content-hash.v1'],
         ttl_ms:10*60*1000,
+        enrollment_url:'https://fabric.example.test',
       }),
     });
     assert.equal(created.status,201);
@@ -119,6 +124,10 @@ test('local API exposes pairing desk only with separate pairing authority',async
     assert.equal(body.ok,true);
     assert.match(body.ticket.card_text,/MICROSEED PAIRING TICKET/);
     assert.match(body.ticket.pairing_uri,/evercraft:\/\/microseed\/pair/);
+    assert.equal(
+      parseMicroSeedPairingUri(body.ticket.pairing_uri).enrollment_url,
+      'https://fabric.example.test/'
+    );
     assert.equal(body.execution_gateway_authority,false);
 
     const listed=await fetch(api.url+'/v1/pairing/tickets',{
