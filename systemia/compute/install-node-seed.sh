@@ -57,8 +57,9 @@ mkdir -p "${INSTALL_ROOT}"
 cp -a "${SOURCE_ROOT}/systemia" "${INSTALL_ROOT}/systemia"
 mkdir -p "${INSTALL_ROOT}/infra"
 cp -a "${SOURCE_ROOT}/infra/evercraft-edge" "${INSTALL_ROOT}/infra/evercraft-edge"
-find "${INSTALL_ROOT}/systemia" "${INSTALL_ROOT}/infra/evercraft-edge" -type d -exec chmod 0755 {} +
-find "${INSTALL_ROOT}/systemia" "${INSTALL_ROOT}/infra/evercraft-edge" -type f -exec chmod 0644 {} +
+cp -a "${SOURCE_ROOT}/registry" "${INSTALL_ROOT}/registry"
+find "${INSTALL_ROOT}/systemia" "${INSTALL_ROOT}/infra/evercraft-edge" "${INSTALL_ROOT}/registry" -type d -exec chmod 0755 {} +
+find "${INSTALL_ROOT}/systemia" "${INSTALL_ROOT}/infra/evercraft-edge" "${INSTALL_ROOT}/registry" -type f -exec chmod 0644 {} +
 
 ALLOCATOR_TOKEN="${EVERCRAFT_ALLOCATOR_TOKEN:-}"
 if [[ -z "${ALLOCATOR_TOKEN}" ]]; then
