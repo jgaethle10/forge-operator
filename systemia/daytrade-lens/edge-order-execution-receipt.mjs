@@ -121,12 +121,18 @@ export function buildOrderExecutionReceipt({
   expected_symbol=null,
   activities=[],
   terminal_status=null,
+  terminal_time=null,
+  terminal_reference_price=null,
+  known_fees_usd=null,
 }={}){
   const orderId=clean(order_id);
   const requested=finite(requested_qty);
   const decisionAt=iso(decision_time);
   const submittedAt=submitted_time?iso(submitted_time):null;
   const reference=finite(decision_reference_price);
+  const terminalAt=terminal_time?iso(terminal_time):null;
+  const terminalReference=finite(terminal_reference_price);
+  const knownFees=finite(known_fees_usd);
   if(!orderId) throw new Error("edge_order_receipt_order_id_required");
   if(!(requested>0)) throw new Error("edge_order_receipt_requested_qty_required");
   if(!decisionAt) throw new Error("edge_order_receipt_decision_time_required");
@@ -180,6 +186,44 @@ export function buildOrderExecutionReceipt({
   const submittedMs=submittedAt?new Date(submittedAt).getTime():null;
   const firstMs=first?new Date(first.executed_at).getTime():null;
   const lastMs=last?new Date(last.executed_at).getTime():null;
+  const terminalMs=terminalAt?new Date(terminalAt).getTime():null;
+  const executedShortfallUsd=side
+    ?normalized.reduce((sum,row)=>{
+        const perShare=side==="buy"
+          ?row.price-reference
+          :reference-row.price;
+        return sum+row.qty*perShare;
+      },0)
+    :null;
+  const terminalOpportunityEvidence=
+    unfilledQty>0 &&
+    Number.isFinite(terminalReference) &&
+    terminalReference>0 &&
+    Number.isFinite(terminalMs);
+  const unfilledOpportunityCostUsd=
+    terminalOpportunityEvidence && side
+      ?unfilledQty*(
+          side==="buy"
+            ?terminalReference-reference
+            :reference-terminalReference
+        )
+      :unfilledQty===0
+        ?0
+        :null;
+  const grossTotalShortfallUsd=
+    Number.isFinite(executedShortfallUsd) &&
+    Number.isFinite(unfilledOpportunityCostUsd)
+      ?executedShortfallUsd+unfilledOpportunityCostUsd
+      :null;
+  const requestedDecisionNotional=requested*reference;
+  const grossTotalShortfallBps=
+    Number.isFinite(grossTotalShortfallUsd) && requestedDecisionNotional>0
+      ?grossTotalShortfallUsd/requestedDecisionNotional*10000
+      :null;
+  const totalWithKnownFeesUsd=
+    Number.isFinite(grossTotalShortfallUsd) && Number.isFinite(knownFees)
+      ?grossTotalShortfallUsd+knownFees
+      :null;
 
   return {
     schema:"evercraft.daytrade.order-execution-receipt.v1",
@@ -197,6 +241,7 @@ export function buildOrderExecutionReceipt({
     final_fill_event_observed:finalFillObserved,
     execution_complete:complete,
     terminal_status:clean(terminal_status)||null,
+    terminal_time:terminalAt,
     decision_time:decisionAt,
     submitted_time:submittedAt,
     first_fill_time:first?.executed_at||null,
@@ -220,6 +265,15 @@ export function buildOrderExecutionReceipt({
       side&&Number.isFinite(vwap)
         ?sideShortfallBps(side,vwap,reference)
         :null,
+    executed_share_implementation_shortfall_usd:executedShortfallUsd,
+    terminal_reference_price:
+      Number.isFinite(terminalReference)?terminalReference:null,
+    unfilled_remainder_opportunity_cost_usd:unfilledOpportunityCostUsd,
+    gross_total_implementation_shortfall_usd:grossTotalShortfallUsd,
+    gross_total_implementation_shortfall_bps:grossTotalShortfallBps,
+    known_fees_usd:Number.isFinite(knownFees)?knownFees:null,
+    total_implementation_shortfall_with_known_fees_usd:
+      totalWithKnownFeesUsd,
     last_reported_cum_qty:Number.isFinite(lastCum)?lastCum:null,
     last_reported_leaves_qty:Number.isFinite(lastLeaves)?lastLeaves:null,
     execution_state:normalized.length===0
@@ -227,16 +281,20 @@ export function buildOrderExecutionReceipt({
       :complete
         ?"FULL_FILL_ACTIVITY_OBSERVED"
         :"PARTIAL_FILL_ACTIVITY_OBSERVED",
-    unfilled_remainder_opportunity_cost_measured:false,
+    unfilled_remainder_opportunity_cost_measured:
+      unfilledQty===0 || terminalOpportunityEvidence,
     total_implementation_shortfall_complete:
-      complete && normalized.length>0,
+      normalized.length>0 &&
+      (complete || terminalOpportunityEvidence) &&
+      Number.isFinite(grossTotalShortfallUsd),
     fill_activities:normalized,
     interpretation:{
       fill_activity_is_order_specific_execution_evidence:true,
       executed_share_shortfall_uses_vwap_vs_decision_reference:true,
       buy_positive_shortfall_is_worse_execution:true,
       sell_positive_shortfall_is_worse_execution:true,
-      incomplete_order_shortfall_excludes_unfilled_opportunity_cost:true,
+      incomplete_order_requires_terminal_reference_for_opportunity_cost:true,
+      terminal_reference_is_never_inferred:true,
       commission_and_fees_not_included_unless_separately_supplied:true,
       lifecycle_nonfill_events_not_inferred_from_fill_activity:true,
       no_order_submission_capability:true,
