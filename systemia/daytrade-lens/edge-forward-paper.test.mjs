@@ -3,6 +3,7 @@ import {
   freezeForwardPaperCohort,
   validateFrozenProtocol,
   scoreForwardPaperCohort,
+  scoreForwardPaperCluster,
 } from "./edge-forward-paper.mjs";
 
 const review = {
@@ -86,11 +87,79 @@ const weakNegativeScore = scoreForwardPaperCohort(negativeProtocol, [
 assert.notEqual(weakNegativeScore.status, "FORWARD_PAPER_PASS");
 assert.ok(weakNegativeScore.mean_signed_excess_return_net < 0);
 
+const siblingReview = {
+  ...review,
+  signal_key: "ai_models|sec_8_k|SMH|1d",
+};
+const siblingEvaluation = {
+  ...evaluation,
+  signal_key: siblingReview.signal_key,
+  instrument: "SMH",
+};
+const siblingProtocol = freezeForwardPaperCohort(siblingReview, siblingEvaluation, {
+  enrolled_at: enrolled,
+  transaction_cost_bps: 5,
+  minimum_forward_events: 2,
+  minimum_distinct_origins: 2,
+});
+
+const clusterScore = scoreForwardPaperCluster(
+  [protocol, siblingProtocol],
+  [
+    {
+      measurement_id: "cluster-a-soxx",
+      source_observation_id: "filing:a",
+      signal_key: protocol.signal_key,
+      observed_at: "2026-10-02T20:00:00Z",
+      origin_entity_ref: "sec:cik:a",
+      forward_return: 0.02,
+      benchmark_return: 0.005,
+    },
+    {
+      measurement_id: "cluster-a-smh",
+      source_observation_id: "filing:a",
+      signal_key: siblingProtocol.signal_key,
+      observed_at: "2026-10-02T20:00:00Z",
+      origin_entity_ref: "sec:cik:a",
+      forward_return: 0.018,
+      benchmark_return: 0.005,
+    },
+    {
+      measurement_id: "cluster-b-soxx",
+      source_observation_id: "filing:b",
+      signal_key: protocol.signal_key,
+      observed_at: "2026-10-03T20:00:00Z",
+      origin_entity_ref: "sec:cik:b",
+      forward_return: 0.015,
+      benchmark_return: 0.005,
+    },
+    {
+      measurement_id: "cluster-b-smh",
+      source_observation_id: "filing:b",
+      signal_key: siblingProtocol.signal_key,
+      observed_at: "2026-10-03T20:00:00Z",
+      origin_entity_ref: "sec:cik:b",
+      forward_return: 0.014,
+      benchmark_return: 0.005,
+    },
+  ]
+);
+assert.equal(clusterScore.raw_member_measurements, 4);
+assert.equal(clusterScore.forward_events, 2);
+assert.equal(clusterScore.effective_independent_events, 2);
+assert.equal(clusterScore.distinct_origins, 2);
+assert.equal(clusterScore.independence_ratio, 0.5);
+assert.equal(clusterScore.status, "FORWARD_PAPER_CLUSTER_PASS");
+assert.equal(clusterScore.correlated_members_not_independent_edges, true);
+assert.equal(clusterScore.live_trade_authority, false);
+
 console.log(JSON.stringify({
   ok: true,
   schema: "evercraft.daytrade.forward-paper-proof.v1",
   immutable_protocol_hash: true,
   retroactive_events_excluded: true,
   forward_only_scoring: true,
+  cluster_level_event_deduplication: true,
+  correlated_siblings_not_independent_edges: true,
   live_trade_authority: false,
 }));
