@@ -43,6 +43,36 @@ assert.equal(score.distinct_origins, 2);
 assert.equal(score.status, "FORWARD_PAPER_PASS");
 assert.equal(score.live_trade_authority, false);
 
+
+const negativeEvaluation = {
+  ...evaluation,
+  signal_key: "ai_models|sec_8_k|SOXX|negative",
+  learned_direction: "NEGATIVE_EXCESS_RETURN",
+};
+const negativeReview = {
+  ...review,
+  signal_key: negativeEvaluation.signal_key,
+};
+const negativeProtocol = freezeForwardPaperCohort(negativeReview, negativeEvaluation, {
+  enrolled_at: enrolled,
+  transaction_cost_bps: 20,
+  minimum_forward_events: 2,
+  minimum_distinct_origins: 2,
+});
+const negativeScore = scoreForwardPaperCohort(negativeProtocol, [
+  { signal_key: negativeEvaluation.signal_key, observed_at: "2026-10-02T20:00:00Z", origin_entity_ref: "a", forward_return: -0.010, benchmark_return: 0 },
+  { signal_key: negativeEvaluation.signal_key, observed_at: "2026-10-03T20:00:00Z", origin_entity_ref: "b", forward_return: -0.008, benchmark_return: 0 },
+]);
+assert.equal(negativeScore.status, "FORWARD_PAPER_PASS");
+assert.ok(negativeScore.mean_signed_excess_return_net > 0);
+
+const weakNegativeScore = scoreForwardPaperCohort(negativeProtocol, [
+  { signal_key: negativeEvaluation.signal_key, observed_at: "2026-10-02T20:00:00Z", origin_entity_ref: "a", forward_return: -0.0005, benchmark_return: 0 },
+  { signal_key: negativeEvaluation.signal_key, observed_at: "2026-10-03T20:00:00Z", origin_entity_ref: "b", forward_return: -0.0004, benchmark_return: 0 },
+]);
+assert.notEqual(weakNegativeScore.status, "FORWARD_PAPER_PASS");
+assert.ok(weakNegativeScore.mean_signed_excess_return_net < 0);
+
 console.log(JSON.stringify({
   ok: true,
   schema: "evercraft.daytrade.forward-paper-proof.v1",
