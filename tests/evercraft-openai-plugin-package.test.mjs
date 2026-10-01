@@ -19,6 +19,7 @@ test('Evercraft is packaged in the current portable Agent Plugins format',()=>{
   assert.ok(String(openai?.interface?.shortDescription||'').length<=30);
   assert.ok(String(openai?.interface?.longDescription||'').length<=4000);
   assert.equal(openai?.onboardingSkill,'./skills/evercraft-site-inspector/SKILL.md');
+  assert.equal(new URL(openai?.interface?.websiteURL).pathname,'/openai');
   assert.ok(openai?.interface?.supportURL);
   assert.ok(openai?.interface?.privacyPolicyURL);
   assert.ok(openai?.interface?.termsOfServiceURL);
@@ -35,6 +36,7 @@ test('Evercraft portable MCP configuration uses remote Streamable HTTP without c
   assert.equal(url.protocol,'https:');
   assert.equal(url.username,'');
   assert.equal(url.password,'');
+  assert.equal(url.pathname,'/mcp/openai');
 });
 
 test('Codex compatibility package remains wired while portable manifest is canonical',()=>{
@@ -52,6 +54,7 @@ test('Evercraft plugin includes its safety and support surface',()=>{
     assert.ok(fs.existsSync(path.join(pluginDir,file)),file+' missing');
   }
   assert.ok(fs.existsSync(path.join(pluginDir,'skills','evercraft-site-inspector','SKILL.md')));
+  assert.equal(fs.existsSync(path.join(pluginDir,'skills','evercraft-router','SKILL.md')),false);
 });
 
 test('portable manifest embeds exactly the required MCP review cases',()=>{
