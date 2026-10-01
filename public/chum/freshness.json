@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-01T05:02:13.810Z",
+  "updated_at": "2026-10-01T05:05:29.350Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,332 +11,29 @@
   },
   "latest_change_batch": [
     {
-      "path": "/chum/answers/doors/advertise-my-event-3fa1b3cf42.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/be-brutally-honest-about-this-copy-32a18cde5f.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/behavioral-interview-practice-8dfc51b114.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/boost-event-visibility-0b3d061df2.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/boost-this-event-02f04ebd41.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/brutally-critique-this-message-d550264762.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/build-a-lender-ready-deck-592e365c97.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/build-me-a-business-website-47014a0bbb.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/buy-event-promotion-785fc960f0.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/do-a-resilience-investigation-227f8bd16b.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/feature-my-venue-on-eventwave-91a643633e.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/find-capital-options-for-this-project-9a78204138.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/give-me-an-evidence-brief-on-this-region-6033eecd70.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/handle-my-website-for-me-53ad580370.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/help-me-find-funding-for-my-business-395c92114e.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/help-me-prepare-for-sba-financing-3cd8855170.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/help-me-prepare-for-this-interview-770b1355ac.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/help-people-find-my-event-89faf273d0.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/i-have-an-interview-tomorrow-0fe9809d38.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/investigate-this-agriculture-signal-76deb8c556.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/launch-a-website-for-my-company-0a8c7a11d2.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/make-me-a-professional-business-site-6eeab93ed2.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/mock-interview-me-for-this-job-4e6bf5b695.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/practice-interview-questions-9e971de76a.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/prepare-me-for-a-recruiter-screen-6cd9e7277e.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/pressure-test-my-writing-54816ae317.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/pressure-test-this-copy-d8d2f695ba.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/promote-an-event-4c36cf74f5.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/promote-my-event-on-eventwave-4d9493a571.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/promote-my-local-event-dd500e0967.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/promote-my-venue-ed041bf0ac.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/promote-this-venue-s-events-4c6b8a43d1.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/replace-my-bad-website-b7db22c7e5.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/research-this-land-or-water-question-db58edbbad.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/review-my-funding-pitch-93d8c535f5.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/roast-my-bio-49d4d55cb1.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/roast-my-linkedin-headline-becf323358.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/roast-my-resume-e37bed1eb7.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/roast-this-post-078e06dff6.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/roast-this-text-2bc1522bb2.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/score-my-interview-answer-5e08f2c4f0.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/tear-apart-this-pitch-e926058d23.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/turn-my-business-info-into-a-funding-deck-9eb111ed84.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/validate-this-environmental-signal-bffe897b1e.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/what-am-i-missing-before-i-seek-funding-ee5dbd15c2.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/which-lenders-or-programs-fit-my-business-cd052bad8e.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/capabilities/career-command-interview-practice-machine-v1/capability.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/career-command-interview-practice-machine-v1/llms.txt",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/deck-capital-fit-sprint-machine-v1/capability.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/deck-capital-fit-sprint-machine-v1/llms.txt",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/eventwave-paid-promotion-v1/capability.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/eventwave-paid-promotion-v1/llms.txt",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/faie-signal-brief-v1/capability.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/faie-signal-brief-v1/llms.txt",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/roasted-text-pressure-test-machine-v1/capability.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/roasted-text-pressure-test-machine-v1/llms.txt",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/website-launch-service-v1/capability.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 96
-    },
-    {
-      "path": "/chum/capabilities/website-launch-service-v1/llms.txt",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 96
-    },
-    {
-      "path": "/.well-known/evercraft-pain-index.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 90
-    },
-    {
-      "path": "/chum/revenue.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 90
-    },
-    {
-      "path": "/.well-known/evercraft-machine-catalog.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 84
-    },
-    {
       "path": "/chum/hot/",
-      "last_changed": "2026-10-01T05:02:13.810Z",
+      "last_changed": "2026-10-01T05:05:29.350Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/pain-index.txt",
-      "last_changed": "2026-10-01T05:02:13.810Z",
+      "last_changed": "2026-10-01T05:05:29.350Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/hot/",
+      "url": "/chum/hot/",
+      "last_changed": "2026-10-01T05:05:29.350Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-10-01T05:05:29.350Z",
+      "priority": 80
+    },
     {
       "path": "/chum/answers/doors/advertise-my-event-3fa1b3cf42.json",
       "url": "/chum/answers/doors/advertise-my-event-3fa1b3cf42.json",
@@ -702,18 +399,6 @@
       "url": "/.well-known/evercraft-machine-catalog.json",
       "last_changed": "2026-10-01T05:02:13.810Z",
       "priority": 84
-    },
-    {
-      "path": "/chum/hot/",
-      "url": "/chum/hot/",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 80
     },
     {
       "path": "/chum/pain-index.json",
