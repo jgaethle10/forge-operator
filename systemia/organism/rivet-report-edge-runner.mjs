@@ -105,8 +105,16 @@ async function reconcile(){
       return;
     }
 
-    const rivet=yard.deploymentStatus(controller.rivetDeploymentId);
+    let rivet=yard.deploymentStatus(controller.rivetDeploymentId);
     let result;
+    const releaseDrift=rivet?.state==='ready'&&rivet.receipt?.release_ref!==release;
+    const sourceDrift=rivet?.state==='ready'&&String(rivet.result?.source_url||'').trim()!==sourceUrl;
+    if(rivet?.state==='ready'&&(releaseDrift||sourceDrift)){
+      await controller.close({
+        reason:sourceDrift?'owned_aliev_source_binding_changed':'immutable_release_update'
+      });
+      rivet=null;
+    }
     if(rivet?.state==='ready'){
       result=await controller.resume({rebindIfNeeded:true});
     }else{
@@ -117,6 +125,9 @@ async function reconcile(){
         stableHostname:true,
         rollbackTarget:'systemia:rivet-report-edge-previous',
       });
+      if(releaseDrift||sourceDrift){
+        result={...result,action:sourceDrift?'source_rebound':'upgraded'};
+      }
     }
     lastState=result.action;
     emit({
