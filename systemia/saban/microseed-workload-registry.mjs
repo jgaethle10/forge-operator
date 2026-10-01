@@ -275,6 +275,22 @@ function secretShareVault(payload,context={}){
     return {ok:true,operation:'has',slot_id:slot,present:fs.existsSync(file)};
   }
 
+  if(operation==='list'){
+    const slot_ids=fs.readdirSync(root)
+      .filter(name=>name.endsWith('.json'))
+      .map(name=>name.slice(0,-5))
+      .filter(name=>/^[a-zA-Z0-9._-]{1,96}$/.test(name))
+      .sort()
+      .slice(0,128);
+    return {
+      ok:true,
+      operation:'list',
+      slot_id:slot,
+      slot_ids,
+      share_values_exposed:false,
+    };
+  }
+
   if(operation==='get'){
     if(!fs.existsSync(file)) return {ok:false,operation:'get',slot_id:slot,present:false};
     const record=JSON.parse(fs.readFileSync(file,'utf8'));
