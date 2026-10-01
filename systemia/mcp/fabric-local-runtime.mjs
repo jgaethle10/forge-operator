@@ -18,6 +18,7 @@ import {
   renderCapabilityDetail,
   renderFabricHome,
   renderOpenAiPluginHome,
+  renderOpenAiPolicyDocument,
   renderMarkdownDocument,
 } from './fabric-public-site.mjs';
 
@@ -324,6 +325,16 @@ export async function startFabricLocalRuntime({
           renderOpenAiPluginHome(),
           {contentType:'text/html; charset=utf-8'}
         );
+      }
+
+      if (req.method==='GET' && req.url==='/openai/privacy') {
+        return sendText(res,200,renderOpenAiPolicyDocument('Evercraft Privacy Policy',docs.privacy),{contentType:'text/html; charset=utf-8'});
+      }
+      if (req.method==='GET' && req.url==='/openai/terms') {
+        return sendText(res,200,renderOpenAiPolicyDocument('Evercraft Terms of Service',docs.terms),{contentType:'text/html; charset=utf-8'});
+      }
+      if (req.method==='GET' && req.url==='/openai/support') {
+        return sendText(res,200,renderOpenAiPolicyDocument('Evercraft Support',docs.support),{contentType:'text/html; charset=utf-8'});
       }
 
       if (req.method==='GET' && req.url==='/capabilities') {
