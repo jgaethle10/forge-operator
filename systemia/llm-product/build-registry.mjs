@@ -465,7 +465,7 @@ const debt=rows.filter(r=>r.blockers?.length).map(r=>({
   blocker_count:r.blockers.length,blockers:r.blockers,
   priority:
     r.stable_id==='platform:evercraft-fabric'?'P0_SHARED_INFRA':
-    r.kind==='product'&&r.public_safe===true?'P1_PUBLIC_PRODUCT':
+    r.public_safe===true&&['product','platform','media_system','research_system'].includes(r.kind)?'P1_PUBLIC_PRODUCT':
     r.kind==='plugin'||r.kind==='mcp_registration'?'P1_MACHINE_DOOR':
     r.kind==='internal_system'||r.kind==='agent_system'?'P2_INTERNAL_CAPABILITY':
     'P3_ARCHAEOLOGY',
