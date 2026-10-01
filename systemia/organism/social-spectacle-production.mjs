@@ -111,14 +111,109 @@ export function phenomenonInputFromCandidate(candidate,{aspectRatio='9:16'}={}){
   };
 }
 
+export function worldIntelInputFromCandidate(candidate,{aspectRatio='9:16'}={}){
+  if(candidate?.schema!=='evercraft.social-spectacle.candidate.v1') throw new Error('spectacle_candidate_schema_invalid');
+  if(!['fallen_geo_explainer','fallen_data_cinematic'].includes(candidate?.production?.visual_path)){
+    throw new Error('spectacle_candidate_not_world_intel');
+  }
+  const refs=unique(candidate.source_refs||[]);
+  if(!refs.length) throw new Error('spectacle_source_refs_missing');
+  const payload=candidate.production?.data_payload||{};
+  const facts=payload.facts&&typeof payload.facts==='object'?payload.facts:{};
+  const measurements=Array.isArray(payload.measurements)?payload.measurements:[];
+  const state=phenomenonEvidenceState(candidate.evidence_state);
+  const durationSec=22;
+  const points=measurements
+    .filter(row=>Number.isFinite(Number(row?.lat))&&Number.isFinite(Number(row?.lon)))
+    .slice(0,24)
+    .map((row,index)=>({
+      id:clean(row.event_id||row.id||'point-'+String(index+1),120),
+      lat:Number(row.lat),
+      lon:Number(row.lon),
+      label:clean(
+        Number.isFinite(Number(row.magnitude))
+          ? 'M'+Number(row.magnitude).toFixed(1)+' '+clean(row.place,80)
+          : row.place||row.label||'',
+        100
+      ),
+      evidenceState:state,
+      sourceRefs:refs,
+    }));
+
+  const metrics=[];
+  const pushMetric=(id,label,value,unit='',decimals=0)=>{
+    if(Number.isFinite(Number(value))){
+      metrics.push({id,label,value:Number(value),unit,decimals,evidenceState:state,sourceRefs:refs});
+    }
+  };
+  pushMetric('count','EVENTS',facts.count,'',0);
+  pushMetric('largest','LARGEST',facts.largest_magnitude,' M',1);
+  const depths=measurements.map(row=>Number(row?.depth_km)).filter(Number.isFinite);
+  if(depths.length) pushMetric('depth','DEEPEST',Math.max(...depths),' km',1);
+  if(!metrics.length){
+    const numericFacts=Object.entries(facts)
+      .filter(([,value])=>Number.isFinite(Number(value)))
+      .slice(0,3);
+    for(const [key,value] of numericFacts){
+      pushMetric(key,clean(key.replace(/_/g,' ').toUpperCase(),40),value,'',1);
+    }
+  }
+
+  const dated=measurements
+    .map(row=>({...row,_time:Date.parse(String(row?.observed_at||''))}))
+    .filter(row=>Number.isFinite(row._time))
+    .sort((a,b)=>a._time-b._time)
+    .slice(-10);
+  const timeline=dated.length>=2?{
+    startSec:0,
+    endSec:durationSec,
+    events:dated.map((row,index)=>({
+      id:clean(row.event_id||row.id||'event-'+String(index+1),120),
+      t:dated.length===1?0:index/(dated.length-1)*durationSec,
+      label:clean(
+        Number.isFinite(Number(row.magnitude))
+          ? 'M'+Number(row.magnitude).toFixed(1)+' '+clean(row.place,70)
+          : row.place||row.label||'event',
+        90
+      ),
+      evidenceState:state,
+      sourceRefs:refs,
+    }))
+  }:undefined;
+
+  return {
+    id:safeId(candidate.candidate_id+'-'+aspectRatio.replace(':','x')),
+    headline:clean(candidate.title_seed||facts.subject||'A changing physical system',180),
+    subhead:clean([candidate.evidence_label||candidate.evidence_state,candidate.source_family].filter(Boolean).join(' · '),180),
+    durationSec,
+    aspectRatio,
+    ...(points.length?{
+      map:{
+        projection:'mercator',
+        centerLat:0,
+        centerLon:0,
+        zoom:1,
+        points,
+      }
+    }:{}),
+    metrics:metrics.slice(0,4),
+    ...(timeline?{timeline}:{}),
+  };
+}
+
 export function captionFromCandidate(candidate){
   const p=candidate.production?.phenomenon||{};
   const title=clean(p.title||candidate.title_seed||'The world is moving');
-  const motion=clean(p.encoding?.motionLabel||'movement through the system');
   const region=unique(candidate.region_keys||[]).join(', ')||'this system';
   const source=clean(candidate.source_family||'the cited source');
   const callout=clean(p.callout||candidate.title_seed||'');
-  const first=`${title}. This animation turns ${motion} across ${region} into something you can actually watch instead of burying it in a dashboard. ${callout ? callout+' ' : ''}The motion is the story: direction, timing, and the encoded measurements are all tied to the underlying evidence rather than decorative movement.`;
+  const visualPath=candidate.production?.visual_path;
+  const visualSentence=visualPath==='fallen_phenomenon'
+    ? `This animation turns ${clean(p.encoding?.motionLabel||'movement through the system')} across ${region} into something you can actually watch instead of burying it in a dashboard.`
+    : visualPath==='fallen_geo_explainer'
+      ? `This visual maps the recorded events across ${region}, then lets their location, timing, and measured scale carry the story instead of reducing the event to a headline.`
+      : `This visual turns the source measurements across ${region} into a time-and-scale story instead of leaving the signal trapped in a table.`;
+  const first=`${title}. ${visualSentence} ${callout ? callout+' ' : ''}Every plotted point and displayed measurement stays tied to the underlying evidence rather than decorative movement.`;
   const second=`${uncertaintyFor(candidate)} Evidence state: ${clean(candidate.evidence_label||candidate.evidence_state).toUpperCase()}. Source: ${source}. Evercraft keeps the source references attached to the production package so the pretty version does not outrun the evidence.`;
   return first+'\n\n'+second;
 }
@@ -130,7 +225,10 @@ export function assessSpectacleEditorialPreflight({candidate,caption,masterQc}={
   const checks=[
     ['source_lineage',sourceRefs.length>0],
     ['evidence_state_explicit',Boolean(clean(candidate?.evidence_label||candidate?.evidence_state))],
-    ['visual_semantics',Boolean(clean(p?.encoding?.motionLabel))],
+    ['visual_semantics',candidate?.production?.visual_path==='fallen_phenomenon'
+      ? Boolean(clean(p?.encoding?.motionLabel))
+      : ['fallen_geo_explainer','fallen_data_cinematic'].includes(candidate?.production?.visual_path)
+        && Boolean(candidate?.production?.data_payload)],
     ['not_text_card_first',candidate?.production?.no_text_card_first===true],
     ['specific_title',clean(p?.title||candidate?.title_seed).length>=12],
     ['substantive_caption',String(caption||'').length>=320&&paragraphs.length>=2],
@@ -230,15 +328,38 @@ export function produceCandidate(candidate,{
     return held;
   }
 
-  const phenomenon=phenomenonInputFromCandidate(candidate,{aspectRatio:'9:16'});
-  const phenomenonPath=path.join(root,'phenomenon.vertical.json');
+  const visualPath=candidate.production?.visual_path;
   const stagePath=path.join(root,'stage.vertical.json');
-  const phenomenonReceiptPath=path.join(root,'phenomenon.vertical.receipt.json');
   const renderInputPath=path.join(root,'render-input.vertical.json');
   const renderPlanPath=path.join(root,'render-plan.vertical.json');
-  writeJson(phenomenonPath,phenomenon);
+  const landscapeStage=path.join(root,'stage.landscape.json');
 
-  run(npmCommand(),['run','media:studio','--','phenomenon-stage',phenomenonPath,stagePath,phenomenonReceiptPath]);
+  if(visualPath==='fallen_phenomenon'){
+    const phenomenon=phenomenonInputFromCandidate(candidate,{aspectRatio:'9:16'});
+    const phenomenonPath=path.join(root,'phenomenon.vertical.json');
+    const phenomenonReceiptPath=path.join(root,'phenomenon.vertical.receipt.json');
+    writeJson(phenomenonPath,phenomenon);
+    run(npmCommand(),['run','media:studio','--','phenomenon-stage',phenomenonPath,stagePath,phenomenonReceiptPath]);
+
+    const landscape=phenomenonInputFromCandidate(candidate,{aspectRatio:'16:9'});
+    const landscapeInput=path.join(root,'phenomenon.landscape.json');
+    const landscapeReceipt=path.join(root,'phenomenon.landscape.receipt.json');
+    writeJson(landscapeInput,landscape);
+    run(npmCommand(),['run','media:studio','--','phenomenon-stage',landscapeInput,landscapeStage,landscapeReceipt]);
+  }else if(['fallen_geo_explainer','fallen_data_cinematic'].includes(visualPath)){
+    const verticalIntel=worldIntelInputFromCandidate(candidate,{aspectRatio:'9:16'});
+    const verticalInput=path.join(root,'world-intel.vertical.json');
+    writeJson(verticalInput,verticalIntel);
+    run(npmCommand(),['run','media:studio','--','world-intel',verticalInput,stagePath]);
+
+    const landscapeIntel=worldIntelInputFromCandidate(candidate,{aspectRatio:'16:9'});
+    const landscapeInput=path.join(root,'world-intel.landscape.json');
+    writeJson(landscapeInput,landscapeIntel);
+    run(npmCommand(),['run','media:studio','--','world-intel',landscapeInput,landscapeStage]);
+  }else{
+    throw new Error('spectacle_visual_path_not_automated:'+String(visualPath||'unknown'));
+  }
+
   const stage=readJson(stagePath);
   writeJson(renderInputPath,{
     id:safeId(candidate.candidate_id+'-vertical'),
@@ -248,13 +369,6 @@ export function produceCandidate(candidate,{
     maxFramesPerShard:60,
   });
   run(npmCommand(),['run','media:studio','--','render-plan',renderInputPath,renderPlanPath]);
-
-  const landscape=phenomenonInputFromCandidate(candidate,{aspectRatio:'16:9'});
-  const landscapeInput=path.join(root,'phenomenon.landscape.json');
-  const landscapeStage=path.join(root,'stage.landscape.json');
-  const landscapeReceipt=path.join(root,'phenomenon.landscape.receipt.json');
-  writeJson(landscapeInput,landscape);
-  run(npmCommand(),['run','media:studio','--','phenomenon-stage',landscapeInput,landscapeStage,landscapeReceipt]);
 
   if(!executeRender){
     const ready={
@@ -354,7 +468,7 @@ export function produceQueue({
   if(queue?.schema!=='evercraft.social-spectacle.queue.v1') throw new Error('spectacle_queue_schema_invalid');
   const items=[];
   for(const candidate of queue.queue||[]){
-    if(candidate?.production?.visual_path!=='fallen_phenomenon'){
+    if(!['fallen_phenomenon','fallen_geo_explainer','fallen_data_cinematic'].includes(candidate?.production?.visual_path)){
       items.push({candidate_id:candidate?.candidate_id||null,status:'held',reason:'production_path_not_yet_automated'});
       continue;
     }
