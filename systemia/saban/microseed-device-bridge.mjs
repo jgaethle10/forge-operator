@@ -104,10 +104,17 @@ export function normalizeMicroDeviceManifest(input={}){
   return {...body,manifest_hash:sha(body)};
 }
 
-export function microDeviceToAmbientCapabilities(manifestInput={}){
+export function microDeviceToAmbientCapabilities(manifestInput={},options={}){
   const manifest=manifestInput?.schema==='evercraft.microseed.device-manifest.v1'
     ? manifestInput
     : normalizeMicroDeviceManifest(manifestInput);
+  const conformance=options?.conformance||null;
+  const verifiedWorkloads=
+    conformance?.schema==='evercraft.microseed.conformance-receipt.v1' &&
+    conformance?.device_id===manifest.device_id &&
+    conformance?.manifest_hash===manifest.manifest_hash
+      ? uniq(conformance.verified_workloads)
+      : [];
 
   if(!manifest.endpoint&&manifest.bridge_mode!=='native_agent'&&!manifest.declared_capabilities?.every(x=>x.endpoint)){
     throw new Error('micro_device_bridge_endpoint_required');
@@ -142,6 +149,10 @@ export function microDeviceToAmbientCapabilities(manifestInput={}){
     external_cash_cost_usd:0,
     incremental_energy_cost_state:'not_measured',
     arbitrary_code_execution:false,
+    verified_workloads:verifiedWorkloads,
+    conformance_receipt_hash:conformance?.receipt_hash||null,
+    conformance_verified_at:conformance?.verified_at||null,
+    conformance_expires_at:conformance?.expires_at||null,
   };
 
   const capabilities=[];
@@ -194,8 +205,8 @@ export function microDeviceToAmbientCapabilities(manifestInput={}){
   return capabilities;
 }
 
-export function microDeviceToAmbientCapability(manifestInput={}){
-  const capabilities=microDeviceToAmbientCapabilities(manifestInput);
+export function microDeviceToAmbientCapability(manifestInput={},options={}){
+  const capabilities=microDeviceToAmbientCapabilities(manifestInput,options);
   const compute=capabilities.find(x=>x.kind==='compute');
   if(!compute) throw new Error('micro_device_native_compute_not_declared');
   return compute;
