@@ -122,3 +122,49 @@ test('MicroSeed supports multiple constrained-device bridge families',()=>{
     assert.ok(MicroSeedBridgeModes.includes(mode));
   }
 });
+
+
+test('normalizing an already-normalized MicroSeed preserves nested constraints and rehashes intentional edits',()=>{
+  const first=normalizeMicroDeviceManifest({
+    device_id:'stable-phone',
+    device_class:'phone',
+    bridge_mode:'native_agent',
+    authorization_ref:'owner-phone',
+    endpoint:'http://127.0.0.1:8792',
+    supported_workloads:['systemia.content-hash.v1'],
+    resources:{cpu_units:1,memory_mb:1024,storage_gb:4},
+    placement_labels:['owned','home'],
+    public_ingress:false,
+    persistent_storage:true,
+    max_concurrency:3,
+    duty_cycle:'always_on',
+    thermal_budget:'moderate',
+    power_budget_watts:8,
+    primary_function_priority:true,
+    cpu_utilization_ceiling:0.72,
+    memory_reserve_mb:192,
+    temperature_ceiling_c:70,
+    battery_floor_percent:25,
+    require_external_power:true,
+    network_utilization_ceiling:0.55,
+    attestation:{mode:'device',device_identity:'key'},
+  });
+
+  const second=normalizeMicroDeviceManifest({
+    ...first,
+    endpoint:'http://127.0.0.1:9999',
+  });
+
+  assert.equal(second.authorization_ref_hash,first.authorization_ref_hash);
+  assert.equal(second.constraints.duty_cycle,'always_on');
+  assert.equal(second.constraints.max_concurrency,3);
+  assert.equal(second.constraints.memory_reserve_mb,192);
+  assert.equal(second.constraints.cpu_utilization_ceiling,0.72);
+  assert.equal(second.constraints.temperature_ceiling_c,70);
+  assert.equal(second.constraints.battery_floor_percent,25);
+  assert.equal(second.constraints.require_external_power,true);
+  assert.equal(second.constraints.network_utilization_ceiling,0.55);
+  assert.deepEqual(second.placement.labels,['owned','home']);
+  assert.equal(second.placement.persistent_storage,true);
+  assert.notEqual(second.manifest_hash,first.manifest_hash);
+});

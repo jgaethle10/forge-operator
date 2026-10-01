@@ -204,10 +204,53 @@ Unit=evercraft-saban-probation.service
 WantedBy=timers.target
 EOF
 
+cat >/etc/systemd/system/evercraft-saban-dispatch.service <<EOF
+[Unit]
+Description=Evercraft Saban zero-spend ambient job dispatcher
+After=network-online.target evercraft-saban-capacity.service evercraft-saban-probation.service evercraft-saban-microseed-gateway.service
+Requires=evercraft-saban-microseed-gateway.service
+
+[Service]
+Type=oneshot
+User=$RUN_USER
+Group=$RUN_GROUP
+WorkingDirectory=$REPO_ROOT
+Environment=SABAN_AMBIENT_STATE_DIR=$STATE_DIR
+Environment=SABAN_ALLOW_COMMERCIAL_CAPACITY=0
+ExecStart=$NODE_BIN $REPO_ROOT/systemia/saban/ambient-job-dispatcher.mjs --root $STATE_DIR --gateway-url http://127.0.0.1:8791 --gateway-token-file $GATEWAY_TOKEN_FILE --max-jobs 16
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=read-only
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+RestrictRealtime=true
+ReadWritePaths=$STATE_DIR
+TimeoutStartSec=120s
+EOF
+
+cat >/etc/systemd/system/evercraft-saban-dispatch.timer <<EOF
+[Unit]
+Description=Drain bounded Evercraft product work through Saban ambient fabric
+
+[Timer]
+OnBootSec=75s
+OnUnitActiveSec=$CADENCE
+Persistent=true
+Unit=evercraft-saban-dispatch.service
+
+[Install]
+WantedBy=timers.target
+EOF
+
 systemctl daemon-reload
 systemctl enable --now evercraft-saban-capacity.timer
 systemctl enable --now evercraft-saban-microseed-gateway.service
 systemctl enable --now evercraft-saban-probation.timer
+systemctl enable --now evercraft-saban-dispatch.timer
 systemctl start evercraft-saban-capacity.service
 systemctl start evercraft-saban-probation.service || true
 
@@ -218,5 +261,6 @@ echo "State: $STATE_DIR/capacity-organism-state.json"
 echo "Registry: $STATE_DIR/registry"
 echo "MicroSeed gateway: http://127.0.0.1:8791"
 echo "Probation timer: evercraft-saban-probation.timer"
+echo "Dispatch timer: evercraft-saban-dispatch.timer"
 echo "Gateway token file: $GATEWAY_TOKEN_FILE"
 echo "Device token directory: $STATE_DIR/.secrets/device-tokens"

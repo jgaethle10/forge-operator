@@ -12,6 +12,10 @@ test('resident Saban capacity organism is zero-spend and unprivileged',()=>{
   assert.match(installer,/SABAN_ALLOW_COMMERCIAL_CAPACITY=0/);
   assert.match(installer,/capacity-organism\.mjs --once/);
   assert.match(installer,/microseed-gateway-runner\.mjs/);
+  assert.match(installer,/microseed-probation-organism\.mjs/);
+  assert.match(installer,/evercraft-saban-probation\.timer/);
+  assert.match(installer,/ambient-job-dispatcher\.mjs/);
+  assert.match(installer,/evercraft-saban-dispatch\.timer/);
   assert.match(installer,/--host 127\.0\.0\.1 --port 8791/);
   assert.match(installer,/microseed-gateway-token/);
   assert.match(installer,/\.secrets\/device-tokens/);
@@ -29,5 +33,7 @@ test('Chromebook edge doctor installs and revives Saban capacity organism',()=>{
   assert.match(doctor,/install-saban-capacity-organism\.sh/);
   assert.match(doctor,/evercraft-saban-capacity\.timer/);
   assert.match(doctor,/evercraft-saban-microseed-gateway\.service/);
+  assert.match(doctor,/evercraft-saban-probation\.timer/);
+  assert.match(doctor,/evercraft-saban-dispatch\.timer/);
   assert.match(doctor,/saban_capacity_repair_failed/);
 });

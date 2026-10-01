@@ -37,9 +37,15 @@ export function normalizeMicroDeviceManifest(input={}){
   if(!id) throw new Error('micro_device_id_required');
   const mode=String(input.bridge_mode||'').trim();
   if(!BRIDGE_MODES.has(mode)) throw new Error('micro_device_bridge_mode_invalid');
-  if(!input.authorization_ref) throw new Error('micro_device_authorization_required');
+  const normalizedInput=input.schema==='evercraft.microseed.device-manifest.v1';
+  const authorizationRefHash=input.authorization_ref
+    ? sha(String(input.authorization_ref))
+    : normalizedInput&&input.authorization_ref_hash
+      ? String(input.authorization_ref_hash)
+      : null;
+  if(!authorizationRefHash) throw new Error('micro_device_authorization_required');
   const workloads=uniq(input.supported_workloads);
-  const declaredCapabilities=(input.capabilities||[]).map(normalizeDeclaredCapability);
+  const declaredCapabilities=(input.capabilities||input.declared_capabilities||[]).map(normalizeDeclaredCapability);
 
   const computeExecutionMode=String(
     input.compute_execution_mode||
@@ -63,7 +69,7 @@ export function normalizeMicroDeviceManifest(input={}){
     device_id:id,
     device_class:String(input.device_class||'embedded-device'),
     bridge_mode:mode,
-    authorization_ref_hash:sha(String(input.authorization_ref)),
+    authorization_ref_hash:authorizationRefHash,
     endpoint:input.endpoint?String(input.endpoint):null,
     protocol:input.protocol?String(input.protocol):null,
     supported_workloads:workloads,
@@ -90,17 +96,33 @@ export function normalizeMicroDeviceManifest(input={}){
     },
     constraints:{
       arbitrary_code_execution:false,
-      max_concurrency:Math.max(1,Math.floor(Number(input.max_concurrency||1))),
-      duty_cycle:input.duty_cycle?String(input.duty_cycle):'opportunistic',
-      thermal_budget:input.thermal_budget?String(input.thermal_budget):'device_defined',
-      power_budget_watts:input.power_budget_watts==null?null:Number(input.power_budget_watts),
-      primary_function_priority:input.primary_function_priority!==false,
-      cpu_utilization_ceiling:input.cpu_utilization_ceiling==null?0.60:Math.max(0.05,Math.min(0.95,Number(input.cpu_utilization_ceiling))),
-      memory_reserve_mb:Math.max(0,Number(input.memory_reserve_mb||64)),
-      temperature_ceiling_c:input.temperature_ceiling_c==null?null:Number(input.temperature_ceiling_c),
-      battery_floor_percent:input.battery_floor_percent==null?null:Math.max(0,Math.min(100,Number(input.battery_floor_percent))),
-      require_external_power:input.require_external_power===true,
-      network_utilization_ceiling:input.network_utilization_ceiling==null?0.70:Math.max(0.05,Math.min(0.95,Number(input.network_utilization_ceiling))),
+      max_concurrency:Math.max(1,Math.floor(Number(input.max_concurrency??input.constraints?.max_concurrency??1))),
+      duty_cycle:String(input.duty_cycle??input.constraints?.duty_cycle??'opportunistic'),
+      thermal_budget:String(input.thermal_budget??input.constraints?.thermal_budget??'device_defined'),
+      power_budget_watts:(input.power_budget_watts??input.constraints?.power_budget_watts)==null
+        ? null
+        : Number(input.power_budget_watts??input.constraints?.power_budget_watts),
+      primary_function_priority:
+        (input.primary_function_priority??input.constraints?.primary_function_priority)!==false,
+      cpu_utilization_ceiling:
+        (input.cpu_utilization_ceiling??input.constraints?.cpu_utilization_ceiling)==null
+          ? 0.60
+          : Math.max(0.05,Math.min(0.95,Number(input.cpu_utilization_ceiling??input.constraints?.cpu_utilization_ceiling))),
+      memory_reserve_mb:Math.max(0,Number(input.memory_reserve_mb??input.constraints?.memory_reserve_mb??64)),
+      temperature_ceiling_c:
+        (input.temperature_ceiling_c??input.constraints?.temperature_ceiling_c)==null
+          ? null
+          : Number(input.temperature_ceiling_c??input.constraints?.temperature_ceiling_c),
+      battery_floor_percent:
+        (input.battery_floor_percent??input.constraints?.battery_floor_percent)==null
+          ? null
+          : Math.max(0,Math.min(100,Number(input.battery_floor_percent??input.constraints?.battery_floor_percent))),
+      require_external_power:
+        (input.require_external_power??input.constraints?.require_external_power)===true,
+      network_utilization_ceiling:
+        (input.network_utilization_ceiling??input.constraints?.network_utilization_ceiling)==null
+          ? 0.70
+          : Math.max(0.05,Math.min(0.95,Number(input.network_utilization_ceiling??input.constraints?.network_utilization_ceiling))),
     },
     attestation:{
       mode:input.attestation?.mode?String(input.attestation.mode):'gateway_bound',
