@@ -41,6 +41,11 @@ const externalBody={
   },
   mcp_tools:['match_evercraft_capability','list_evercraft_capabilities','get_evercraft_connection_options'],
   catalog_total:46,
+  edge_attestation_verified:true,
+  device_fingerprint:nodeReceipt.device_fingerprint,
+  node_id:nodeReceipt.node_id,
+  attestation_observed_at:'2026-10-01T01:00:00.000Z',
+  physical_field_claim:false,
   state:'public_https_verified',
   public_https_verified:true,
   mcp_verified:true,
@@ -77,7 +82,8 @@ assert.equal(receipt.ready_for_public_edge_enrollment,true);
 assert.equal(receipt.public_https_verified,true);
 assert.equal(receipt.physical_field_certified,false);
 assert.equal(receipt.node001_claimed,false);
-assert.equal(receipt.cryptographic_external_device_binding,false);
+assert.equal(receipt.cryptographic_external_device_binding,true);
+assert.equal(receipt.device_binding_state,'signed_nonce_verified');
 assert.equal(receipt.base44_transport_required,false);
 assert.equal(receipt.private_key_exposed,false);
 assert.equal(receipt.certificate_bytes_exposed,false);
@@ -118,6 +124,15 @@ assert.throws(
   /external_canary_receipt_hash_invalid/
 );
 
+const mismatchBody={...externalBody,device_fingerprint:'sha256:'+'b'.repeat(64)};
+const mismatchCanary={...mismatchBody,receipt_hash:sha(mismatchBody)};
+assert.throws(
+  ()=>evaluateOperatorPublicEdgeAdmission({
+    nodeReceipt,externalCanary:mismatchCanary,localHealth,serviceStates,operatorRef:'founder',
+  }),
+  /external_device_fingerprint_mismatch/
+);
+
 console.log(JSON.stringify({
   ok:true,
   schema:'evercraft.operator-public-edge-admission-proof.v1',
@@ -128,5 +143,6 @@ console.log(JSON.stringify({
   resident_services_required:true,
   router_map_residency_required:true,
   local_base44_transport_forbidden:true,
+  signed_nonce_device_binding_required:true,
   external_device_binding_not_overstated:true,
 },null,2));
