@@ -187,7 +187,13 @@
       "entity_schemas": 157,
       "server_functions": 37,
       "connected_connectors": 1,
-      "cutover_authority": false
+      "cutover_authority": false,
+      "replacement_matrix": "systemia/migrations/base44-exit/wave-1-replacement-matrix.json",
+      "implementations_present_ci_pending": 14,
+      "scheduled_work_spec": "systemia/migrations/base44-exit/wave-1-scheduled-work.json",
+      "cutover_ready_products": 0,
+      "destination_data_migrated_products": 0,
+      "provider_reauthorization_complete": false
     }
   }
 }
