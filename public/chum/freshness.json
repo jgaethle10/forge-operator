@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-30T23:39:14.174Z",
+  "updated_at": "2026-10-01T00:58:42.195Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -12,37 +12,22 @@
   "latest_change_batch": [
     {
       "path": "/chum/crawler-radar.json",
-      "last_changed": "2026-09-30T23:39:14.174Z",
+      "last_changed": "2026-10-01T00:58:42.195Z",
       "priority": 80
     },
     {
       "path": "/chum/crawler-radar.txt",
-      "last_changed": "2026-09-30T23:39:14.174Z",
+      "last_changed": "2026-10-01T00:58:42.195Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-09-30T23:39:14.174Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/proof/forensiscope.json",
-      "last_changed": "2026-09-30T23:39:14.174Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/proof/index.json",
-      "last_changed": "2026-09-30T23:39:14.174Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/proof/rivet.json",
-      "last_changed": "2026-09-30T23:39:14.174Z",
+      "last_changed": "2026-10-01T00:58:42.195Z",
       "priority": 80
     },
     {
       "path": "/chum/strike/index.json",
-      "last_changed": "2026-09-30T23:39:14.174Z",
+      "last_changed": "2026-10-01T00:58:42.195Z",
       "priority": 80
     }
   ],
@@ -50,20 +35,38 @@
     {
       "path": "/chum/crawler-radar.json",
       "url": "/chum/crawler-radar.json",
-      "last_changed": "2026-09-30T23:39:14.174Z",
+      "last_changed": "2026-10-01T00:58:42.195Z",
       "priority": 80
     },
     {
       "path": "/chum/crawler-radar.txt",
       "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-09-30T23:39:14.174Z",
+      "last_changed": "2026-10-01T00:58:42.195Z",
       "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
       "url": "/chum/hot/index.json",
-      "last_changed": "2026-09-30T23:39:14.174Z",
+      "last_changed": "2026-10-01T00:58:42.195Z",
       "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "url": "/chum/strike/index.json",
+      "last_changed": "2026-10-01T00:58:42.195Z",
+      "priority": 80
+    },
+    {
+      "path": "/.well-known/agent-card.json",
+      "url": "/.well-known/agent-card.json",
+      "last_changed": "2026-10-01T00:58:41.602Z",
+      "priority": 104
+    },
+    {
+      "path": "/.well-known/agent.json",
+      "url": "/.well-known/agent.json",
+      "last_changed": "2026-10-01T00:58:41.602Z",
+      "priority": 102
     },
     {
       "path": "/chum/proof/forensiscope.json",
@@ -80,12 +83,6 @@
     {
       "path": "/chum/proof/rivet.json",
       "url": "/chum/proof/rivet.json",
-      "last_changed": "2026-09-30T23:39:14.174Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/strike/index.json",
-      "url": "/chum/strike/index.json",
       "last_changed": "2026-09-30T23:39:14.174Z",
       "priority": 80
     },
@@ -1532,18 +1529,6 @@
     {
       "path": "/chum/answers/doors/find-a-donor-or-salvage-part-310843faf9/",
       "url": "/chum/answers/doors/find-a-donor-or-salvage-part-310843faf9/",
-      "last_changed": "2026-09-30T20:55:21.460Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/find-a-hard-to-source-part-78dcd37ecc.json",
-      "url": "/chum/answers/doors/find-a-hard-to-source-part-78dcd37ecc.json",
-      "last_changed": "2026-09-30T20:55:21.460Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/find-a-hard-to-source-part-78dcd37ecc/",
-      "url": "/chum/answers/doors/find-a-hard-to-source-part-78dcd37ecc/",
       "last_changed": "2026-09-30T20:55:21.460Z",
       "priority": 160
     }
