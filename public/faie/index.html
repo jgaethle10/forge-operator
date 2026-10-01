@@ -34,10 +34,10 @@
     .panel h2{margin:0 0 8px;font-family:Georgia,"Times New Roman",serif;font-size:1.6rem;font-weight:500}
     .meta{color:var(--muted);font-size:.88rem;line-height:1.55}
     label{display:block;margin:18px 0 7px;color:#d8ded9;font-size:.84rem;font-weight:760}
-    textarea,input{width:100%;border:1px solid var(--line);border-radius:14px;background:#0b130f;color:var(--text);
+    textarea,input,select{width:100%;border:1px solid var(--line);border-radius:14px;background:#0b130f;color:var(--text);
       padding:13px 14px;font:inherit;outline:none}
     textarea{min-height:132px;resize:vertical;line-height:1.5}
-    textarea:focus,input:focus{border-color:#59735f;box-shadow:0 0 0 3px rgba(126,161,133,.1)}
+    textarea:focus,input:focus,select:focus{border-color:#59735f;box-shadow:0 0 0 3px rgba(126,161,133,.1)}
     .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:560px){.two{grid-template-columns:1fr}}
     button{border:1px solid #728f76;background:#b9d4b7;color:#102016;border-radius:999px;padding:11px 16px;
       font-weight:850;cursor:pointer;margin-top:18px}
@@ -90,6 +90,22 @@
           <div>
             <label for="crop">Crop or production type</label>
             <input id="crop" placeholder="apples">
+          </div>
+        </div>
+
+        <div class="two">
+          <div>
+            <label for="water">Water source or dependency</label>
+            <input id="water" placeholder="Yakima River / irrigation district">
+          </div>
+          <div>
+            <label for="horizon">Evidence horizon</label>
+            <select id="horizon">
+              <option value="7">7 days</option>
+              <option value="30">30 days</option>
+              <option value="90" selected>90 days</option>
+              <option value="365">1 year</option>
+            </select>
           </div>
         </div>
 
@@ -176,10 +192,19 @@ async function loadState() {
     const health = await healthRes.json();
     const state = await signalsRes.json();
 
+    const sources = health.official_collectors || {};
+    const sourceLabel = sources.enabled === false
+      ? 'OFF'
+      : sources.configured_source_count
+        ? String(sources.healthy_source_count || 0) + '/' + String(sources.configured_source_count) + ' healthy'
+        : sources.nws_enabled
+          ? 'NWS ready'
+          : 'IDLE';
     statusbar.innerHTML = [
       ['Resident', health.resident ? 'ON' : 'OFF'],
       ['Signals', health.signal_count || 0],
-      ['Investigations', health.investigation_count || 0],
+      ['Official feeds', sourceLabel],
+      ['Profile', sources.region_profile_id || 'GLOBAL'],
       ['Radar bridge', health.radar_bridge ? 'CONNECTED' : 'IDLE']
     ].map((row) => '<span class="pill">' + esc(row[0]) + ': <strong>' + esc(row[1]) + '</strong></span>').join('');
 
@@ -199,6 +224,8 @@ document.getElementById('form').addEventListener('submit', async (event) => {
   const question = document.getElementById('question').value.trim();
   const region = document.getElementById('region').value.trim();
   const crop = document.getElementById('crop').value.trim();
+  const waterSource = document.getElementById('water').value.trim();
+  const horizonDays = Number(document.getElementById('horizon').value) || 90;
 
   if (!question) return;
   button.disabled = true;
@@ -212,7 +239,9 @@ document.getElementById('form').addEventListener('submit', async (event) => {
       body:JSON.stringify({
         question,
         region_keys:region ? [region] : [],
-        crop:crop || undefined
+        crop:crop || undefined,
+        water_source:waterSource || undefined,
+        horizon_days:horizonDays
       })
     });
     const payload = await response.json();
