@@ -127,6 +127,9 @@ jobs:
           const row=services.services.find(service=>service.service_key==='social-spectacle-engine');
           if(!row) throw new Error('resident_service_missing');
           if(row.cadence_seconds!==900) throw new Error('resident_cadence_invalid');
+          const producer=services.services.find(service=>service.service_key==='social-spectacle-production');
+          if(!producer) throw new Error('resident_production_service_missing');
+          if(producer.cadence_seconds!==900) throw new Error('resident_production_cadence_invalid');
           const subscriptions=JSON.parse(fs.readFileSync('systemia/worldstate/subscriptions.json','utf8'));
           for(const domain of ['weather','water','ocean','aviation','science']){
             if(!subscriptions.by_domain?.[domain]?.includes('social_spectacle')) throw new Error('subscription_missing:'+domain);
