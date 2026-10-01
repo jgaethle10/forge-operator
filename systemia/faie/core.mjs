@@ -365,7 +365,12 @@ export function buildFaieInvestigation(inputState, input, { now = new Date().toI
   const scope = normalizeScope(input);
   const nowIso = iso(now);
 
+  const horizonCutoffMs = new Date(nowIso).getTime() - scope.horizon_days * 24 * 60 * 60 * 1000;
   const ranked = Object.values(state.signals || {})
+    .filter((signal) => {
+      const observedMs = new Date(signal.observed_at).getTime();
+      return Number.isFinite(observedMs) && observedMs >= horizonCutoffMs;
+    })
     .map((signal) => ({ signal, relevance: relevanceScore(signal, scope) }))
     .filter(({ signal, relevance }) =>
       relevance >= (scope.include_weak_evidence ? 0.08 : 0.16) &&
@@ -436,6 +441,8 @@ export function buildFaieInvestigation(inputState, input, { now = new Date().toI
     findings,
     evidence_ledger: evidenceLedger,
     coverage: {
+      horizon_days: scope.horizon_days,
+      horizon_start: new Date(horizonCutoffMs).toISOString(),
       matched_signal_count: findings.length,
       strong_finding_count: strongFindings.length,
       independent_source_family_count: sourceFamilies.length,
