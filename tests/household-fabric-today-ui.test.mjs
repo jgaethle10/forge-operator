@@ -23,7 +23,7 @@ assert.ok(server.includes("pathname.startsWith('/household-fabric')"));
 assert.ok(server.includes("pathname.startsWith('/household')"));
 
 assert.equal(manifest.human_today_url, '/household/');
-assert.equal(manifest.current_capability_state.consumer_today_page, 'candidate_until_deployed');
+assert.equal(manifest.current_capability_state.consumer_today_page, 'implemented_candidate_until_deployed');
 assert.equal(manifest.dignity_rules.includes('No poverty score.'), true);
 assert.equal(manifest.evidence_rules.includes('Sponsorship does not improve organic ranking.'), true);
 
