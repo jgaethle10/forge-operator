@@ -9,12 +9,17 @@ import { createAxiosClient, createClient } from './base44-sdk-compat.mjs';
 
 const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), 'evercraft-sdk-compat-proof-'));
 const store = new DurableEntityStore({ stateDir: path.join(stateDir, 'entities') });
+const appLogEvents = [];
 
 const gateway = await startAppFabricGateway({
   store,
   authorize: async ({ subjectRef }) => subjectRef === 'proof-subject',
   identityResolver: async ({ token }) =>
     token === 'proof-session' ? { subject_ref: 'proof-subject', display_name: 'Proof User' } : null,
+  appLogSink: async (event) => {
+    appLogEvents.push(event);
+    return { recorded: true, page_name: event.pageName };
+  },
   authHandlers: {
     publicSettings: async ({ appKey }) => ({ id: appKey, public_settings: { platform: 'evercraft' } }),
     me: async ({ subjectRef }) => ({ id: subjectRef, subject_ref: subjectRef }),
@@ -56,6 +61,14 @@ try {
   const settings = await publicClient.get('/prod/public-settings/by-id/proof-app');
   assert.equal(settings.public_settings.platform, 'evercraft');
 
+  const appSettings = await client.app.getPublicSettings();
+  assert.equal(appSettings.public_settings.platform, 'evercraft');
+  const appLog = await client.appLogs.logUserInApp('Home', { source: 'proof' });
+  assert.equal(appLog.recorded, true);
+  assert.equal(appLog.page_name, 'Home');
+  assert.equal(appLogEvents.length, 1);
+  assert.equal(appLogEvents[0].subjectRef, 'proof-subject');
+
   const crossApp = createClient({
     appId: 'second-proof-app',
     token: 'proof-session',
@@ -71,6 +84,8 @@ try {
     auth_legacy_shapes: true,
     entity_import_surface: true,
     public_settings_surface: true,
+    app_namespace_surface: true,
+    app_logs_surface: true,
     cross_app_client: true,
     source_platform_dependency: false
   }));
