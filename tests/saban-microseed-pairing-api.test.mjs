@@ -20,13 +20,14 @@ test('signed encrypted bundle enrolls over loopback API and burns ticket',async(
   const deviceRoot=path.join(root,'device');
   let api=null;
   try{
+    const baseNow=new Date();
     const ticket=issueMicroSeedPairingTicket({
       stateDir,
       approval_ref:'explicit-owner-spare-02',
       device_id:'spare-02',
       allowed_device_classes:['mini-pc'],
       allowed_workloads:['systemia.content-hash.v1','systemia.blob-store.v1'],
-      now:new Date('2026-10-01T05:00:00.000Z'),
+      now:baseNow,
     });
     const boot=bootstrapNativeMicroSeed({
       root:deviceRoot,
@@ -36,7 +37,7 @@ test('signed encrypted bundle enrolls over loopback API and burns ticket',async(
       endpoint:'https://spare-02.local/evercraft',
       supported_workloads:['systemia.content-hash.v1','systemia.blob-store.v1'],
       resources:{cpu_units:2,memory_mb:4096,storage_gb:40},
-      now:new Date('2026-10-01T05:01:00.000Z'),
+      now:new Date(baseNow.getTime()+1000),
     });
     const manifest=JSON.parse(fs.readFileSync(boot.manifest_file,'utf8'));
     const identity=loadMicroSeedDeviceIdentity({
