@@ -31,21 +31,32 @@
       "function_count": 5,
       "connected_connector_count": 0,
       "observed_surface_signals": [
-        "scheduled_work_candidate",
-        "provider_event_ingress_candidate",
+        "mcp",
         "pricing_runtime",
-        "mcp"
+        "voice_webhook_ingress",
+        "elevenlabs_caller_context",
+        "elevenlabs_conversation_event",
+        "scheduled_clockout_function",
+        "legacy_cross_product_links"
       ],
       "migration_requirements": [
         "structured_data",
         "identity",
         "server_functions",
         "scheduled_work_review",
-        "webhook_review",
+        "webhook_repoint",
+        "secret_rekey",
+        "machine_surfaces",
         "route_cutover",
         "rollback",
         "sentinel"
-      ]
+      ],
+      "function_level_findings": {
+        "base44_service_role_references": 5,
+        "legacy_route_references": 10,
+        "voice_webhook_functions": 2,
+        "direct_provider_api_references": 0
+      }
     },
     {
       "product": "Evercraft AI Workforce",
@@ -61,10 +72,13 @@
         }
       ],
       "observed_surface_signals": [
-        "checkout",
-        "payment_verification",
-        "provider_connector",
-        "premium_execution"
+        "polar_oauth_connector",
+        "polar_products",
+        "polar_checkouts",
+        "checkout_creation",
+        "provider_authoritative_payment_verification",
+        "interview_premium_entitlement",
+        "seo_canonical_routes"
       ],
       "migration_requirements": [
         "structured_data",
@@ -76,6 +90,17 @@
         "route_cutover",
         "rollback",
         "sentinel"
+      ],
+      "function_level_findings": {
+        "base44_service_role_references": 25,
+        "legacy_route_references": 42,
+        "polar_custom_integration_calls": 4,
+        "direct_polar_api_references": 12
+      },
+      "owned_replacement_refs": [
+        "systemia/connector-gateway/adapters/polar.mjs",
+        "systemia/commerce-boundary/polar-adapter.mjs",
+        "systemia/workforce/commerce-runtime.mjs"
       ]
     },
     {
@@ -104,13 +129,14 @@
       "function_count": 10,
       "connected_connector_count": 0,
       "observed_surface_signals": [
+        "stripe_checkout",
+        "stripe_payment_verification",
+        "stripe_webhook",
+        "paid_audit_order",
+        "pdf_export",
         "agent_gateway",
         "mcp",
-        "checkout",
-        "payment_verification",
-        "payment_webhook",
-        "document_export",
-        "web_fetch"
+        "seo_canonical_routes"
       ],
       "migration_requirements": [
         "structured_data",
@@ -118,17 +144,27 @@
         "webhook_repoint",
         "payment_path",
         "object_storage_review",
+        "machine_surfaces",
+        "secret_rekey",
         "route_cutover",
         "rollback",
         "sentinel"
-      ]
+      ],
+      "function_level_findings": {
+        "base44_service_role_references": 14,
+        "legacy_route_references": 50,
+        "direct_stripe_api_references": 3,
+        "stripe_webhook_signature_references": 14,
+        "core_upload_file_references": 1
+      }
     }
   ],
   "totals": {
     "products": 5,
     "entity_schemas": 157,
     "server_functions": 37,
-    "connected_connectors": 1
+    "connected_connectors": 1,
+    "function_level_profiled_products": 3
   },
   "doctrine": {
     "observed_function_name_signal_is_not_behavior_parity_proof": true,
@@ -137,7 +173,8 @@
     "payment_truth_remains_provider_authoritative": true,
     "webhook_sender_repoint_requires_separate_verification": true,
     "source_profile_does_not_authorize_cutover": true,
-    "source_profile_does_not_authorize_decommission": true
+    "source_profile_does_not_authorize_decommission": true,
+    "function_name_inventory_is_supplemented_by_function_level_dependency_scan": true
   },
   "privacy": {
     "raw_base44_app_ids_emitted": false,
