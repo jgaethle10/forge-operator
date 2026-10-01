@@ -144,6 +144,7 @@ export async function bridgeSpectacleProduction({
   uploadUrl=`${DEFAULT_BASE}/systemiaSpectacleMediaUpload`,
   ingressUrl=`${DEFAULT_BASE}/systemiaPublicationClipIngress`,
   pulseUrl=`${DEFAULT_BASE}/publishUnifiedSocialQueue`,
+  statusUrl=`${DEFAULT_BASE}/systemiaPublicationStatus`,
   now=new Date(),
   fetchEnabled=true,
 }={}){
@@ -211,6 +212,7 @@ export async function bridgeSpectacleProduction({
         upload_url:uploadUrl,
         ingress_url:ingressUrl,
         pulse_url:pulseUrl,
+        status_url:statusUrl,
         publication_claimed:false,
         at:now.toISOString(),
       });
@@ -229,10 +231,13 @@ export async function bridgeSpectacleProduction({
     if(!ingress.ok) throw new Error('spectacle_bridge_clip_ingress_failed:'+ingress.status+':'+clean(ingress.data?.error||'',1200));
 
     const pulse=await postJson(pulseUrl,secret,{source:'systemia-social-spectacle',candidate_id:receipt.candidate_id});
-    const publicationRows=[
-      ...(pulse.data?.lanes||[]).flatMap(row=>Array.isArray(row?.published)?row.published:[])
-    ];
-    const observedPublication=publicationRows.length>0;
+    const status=await postJson(statusUrl,secret,{
+      source_app_id:LEGACY_SYSTEMIA_APP_ID,
+      publication_key:receipt.candidate_id,
+    });
+    const verifiedDestinations=unique(status.data?.verified_destinations||[]);
+    const providerWriteDestinations=unique(status.data?.provider_write_destinations||[]);
+    const observedPublication=status.ok&&status.data?.publication_claimed===true&&verifiedDestinations.length>0;
     const bridgeReceipt={
       schema:'evercraft.social-spectacle.clip-bridge-receipt.v1',
       candidate_id:receipt.candidate_id,
@@ -244,9 +249,15 @@ export async function bridgeSpectacleProduction({
       uploaded_media_sha256:upload.media_sha256,
       pulse_http_status:pulse.status,
       pulse_ok:pulse.ok,
-      published:publicationRows,
+      status_http_status:status.status,
+      status_ok:status.ok,
+      verified_destinations:verifiedDestinations,
+      provider_write_destinations:providerWriteDestinations,
+      facebook:status.data?.facebook||null,
+      cross_platform:status.data?.cross_platform||[],
       publication_claimed:observedPublication,
       provider_receipts_required:true,
+      evidence_rule:'Publication is claimed only when systemiaPublicationStatus reports provider-verified destination evidence for this exact publication_key.',
       at:now.toISOString(),
     };
     writeJson(bridgeReceiptPath,bridgeReceipt);
@@ -269,7 +280,8 @@ async function cli(){
   const uploadUrl=arg(argv,'--upload-url',process.env.EVERCRAFT_CLIP_SPECTACLE_UPLOAD_URL||`${DEFAULT_BASE}/systemiaSpectacleMediaUpload`);
   const ingressUrl=arg(argv,'--ingress-url',process.env.EVERCRAFT_CLIP_SYSTEMIA_INGRESS_URL||`${DEFAULT_BASE}/systemiaPublicationClipIngress`);
   const pulseUrl=arg(argv,'--pulse-url',process.env.EVERCRAFT_CLIP_UNIFIED_PULSE_URL||`${DEFAULT_BASE}/publishUnifiedSocialQueue`);
-  const result=await bridgeSpectacleProduction({productionRoot,sharedSecretFile,uploadUrl,ingressUrl,pulseUrl});
+  const statusUrl=arg(argv,'--status-url',process.env.EVERCRAFT_CLIP_PUBLICATION_STATUS_URL||`${DEFAULT_BASE}/systemiaPublicationStatus`);
+  const result=await bridgeSpectacleProduction({productionRoot,sharedSecretFile,uploadUrl,ingressUrl,pulseUrl,statusUrl});
   console.log(JSON.stringify(result,null,2));
 }
 
