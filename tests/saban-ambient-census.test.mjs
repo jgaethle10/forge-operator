@@ -4,6 +4,7 @@ import {
   parseIpNeigh,
   parseBluetoothDevices,
   parseAvahi,
+  parseUsbDevices,
   dedupeObservations,
 } from '../systemia/saban/ambient-census.mjs';
 
@@ -43,4 +44,20 @@ test('mDNS census retains service type but hashes instance identity',()=>{
 test('census dedupes repeated passive observations',()=>{
   const row={source:'x',observation_kind:'lan-neighbor',device_hint_hash:'sha256:abc'};
   assert.equal(dedupeObservations([row,row]).length,1);
+});
+
+
+test('USB census hashes vendor, product, and display identity before persistence',()=>{
+  const rows=parseUsbDevices(
+    'Bus 001 Device 004: ID 0781:5583 SanDisk Corp. Ultra Fit\n',
+    {salt:'secret'}
+  );
+  assert.equal(rows.length,1);
+  const serialized=JSON.stringify(rows);
+  assert.equal(serialized.includes('0781'),false);
+  assert.equal(serialized.includes('5583'),false);
+  assert.equal(serialized.includes('SanDisk'),false);
+  assert.match(rows[0].device_hint_hash,/^sha256:/);
+  assert.match(rows[0].usb_vendor_id_hash,/^sha256:/);
+  assert.equal(rows[0].raw_identifier_persisted,false);
 });
