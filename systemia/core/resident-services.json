@@ -42,6 +42,23 @@
       }
     },
     {
+      "service_key": "social-spectacle-clip-bridge",
+      "mode": "cycle",
+      "manifest": "systemia/organism/social-spectacle-clip-bridge.workflow.json",
+      "executable": "systemia/organism/social-spectacle-clip-bridge.mjs",
+      "cadence_seconds": 900,
+      "optional_when_unconfigured": true,
+      "env_args": {
+        "--secret-file": "SYSTEMIA_CLIP_SHARED_SECRET_FILE"
+      },
+      "optional_env_args": {
+        "--production-root": "SYSTEMIA_SOCIAL_SPECTACLE_PRODUCTION_DIR",
+        "--upload-url": "EVERCRAFT_CLIP_SPECTACLE_UPLOAD_URL",
+        "--ingress-url": "EVERCRAFT_CLIP_SYSTEMIA_INGRESS_URL",
+        "--pulse-url": "EVERCRAFT_CLIP_UNIFIED_PULSE_URL"
+      }
+    },
+    {
       "service_key": "eps-social-continuity",
       "mode": "cycle",
       "manifest": "systemia/organism/eps-social-continuity.workflow.json",
