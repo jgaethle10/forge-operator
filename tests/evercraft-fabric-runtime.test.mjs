@@ -118,11 +118,19 @@ test('Fabric MCP exposes exactly the read-only directory contract',async()=>{
       'match_evercraft_capability',
       'list_evercraft_capabilities',
       'get_evercraft_connection_options',
+      'preview_public_website',
     ]
   );
   assert.ok(listed.result.tools.every((x)=>x.annotations.readOnlyHint===true));
   assert.ok(listed.result.tools.every((x)=>x.annotations.destructiveHint===false));
-  assert.equal(fabricDirectoryTools().length,3);
+  const previewTool=listed.result.tools.find((x)=>x.name==='preview_public_website');
+  assert.equal(previewTool.annotations.openWorldHint,true);
+  assert.ok(
+    listed.result.tools
+      .filter((x)=>x.name!=='preview_public_website')
+      .every((x)=>x.annotations.openWorldHint===false)
+  );
+  assert.equal(fabricDirectoryTools().length,4);
 });
 
 test('Fabric MCP publishes reviewer-grade argument descriptions',()=>{
@@ -153,6 +161,36 @@ test('Fabric MCP matches intent and never creates transaction authority',async()
   assert.equal(result.result.structuredContent.external_action_taken,false);
 });
 
+test('Fabric MCP performs a standalone bounded website preview without transaction authority',async()=>{
+  let requested='';
+  const result=await executeFabricDirectoryRpc({
+    jsonrpc:'2.0',
+    id:31,
+    method:'tools/call',
+    params:{
+      name:'preview_public_website',
+      arguments:{url:'https://example.com/'},
+    },
+  },catalog,{
+    websitePreview:async(url)=>{
+      requested=url;
+      return {
+        ok:true,
+        schema:'evercraft.public-website-preview.v1',
+        requested_url:url,
+        observed:{http_status:200,title:'Example'},
+        findings:[{severity:'low',code:'example',finding:'Example finding',evidence:'Observed.'}],
+        limitations:['bounded preview'],
+        transactional:false,
+        external_action_taken:false,
+      };
+    },
+  });
+  assert.equal(requested,'https://example.com/');
+  assert.equal(result.result.structuredContent.schema,'evercraft.public-website-preview.v1');
+  assert.equal(result.result.structuredContent.transactional,false);
+  assert.equal(result.result.structuredContent.external_action_taken,false);
+});
 test('OpenAI challenge token validation fails closed',()=>{
   assert.equal(
     validateOpenAiChallengeToken('abcdefghijklmnopqrstuvwxyz_123456'),
@@ -201,7 +239,7 @@ test('owned Evercraft Compute MCP runtime serves challenge and Fabric without ga
     });
     assert.equal(toolsResponse.status,200);
     const tools=await toolsResponse.json();
-    assert.equal(tools.result.tools.length,3);
+    assert.equal(tools.result.tools.length,4);
     assert.ok(tools.result.tools.every((x)=>x.annotations.readOnlyHint===true));
 
     const healthResponse=await fetch(runtime.url+'/health');
