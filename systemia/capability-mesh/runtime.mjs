@@ -159,10 +159,19 @@ export function buildExecutionGateInput({
     };
   }
 
+  const machineTool = requiredString(action.machine_tool, 'machine_tool');
+
   return {
     schema: 'evercraft.capability-mesh.execution-preparation.v1',
     product_key: policy.product_key,
     contract_version: policy.contract_version,
+    machine_binding: {
+      scope: actionScope,
+      machine_tool: machineTool,
+      specialist_slug: requiredString(policy.route.specialist_slug, 'specialist_slug'),
+      grants_authority: false,
+      tools_call_verified_by_compilation: false,
+    },
     execution_gate_input: {
       ...(lease_id ? { lease_id: requiredString(lease_id, 'lease_id') } : {}),
       idempotency_key: idempotencyKey,
