@@ -71,6 +71,9 @@ jobs:
           }
           NODE
 
+      - name: Verify production runtime import closure
+        run: node --test tests/docker-runtime-closure.test.mjs
+
       - name: Build production container
         run: docker build -t forge-operator:${{ github.sha }} .
 

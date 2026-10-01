@@ -48,3 +48,18 @@ test("Home inline application JavaScript remains syntactically valid",()=>{
   assert.ok(match,"inline script missing");
   assert.doesNotThrow(()=>new Function(match[1]));
 });
+
+
+test("Raven Command Desk is visibly Systemia routing, not fake AI chat",()=>{
+  for(const required of [
+    "Command Desk",
+    "Route through Systemia",
+    "Routing only. No AI response or execution occurs from this desk.",
+    "/api/raven/command-plan",
+    "No execution performed.",
+  ]){
+    assert.ok(html.includes(required)||server.includes(required),"missing Raven Command Desk boundary: "+required);
+  }
+  assert.equal(html.includes("Ask Raven AI"),false);
+  assert.equal(html.includes("Raven is typing"),false);
+});

@@ -9,6 +9,7 @@ import { authorizeEvercraftHome, verifyEvercraftSession } from "./identity.mjs";
 import { planSystemiaMission, readSystemiaInventory } from "./systemia-adapter.mjs";
 import { readNetworkOverview, readYardOverview } from "./operations-adapter.mjs";
 import { readRavenOverview } from "./raven-adapter.mjs";
+import { planRavenCommand } from "./raven-command-adapter.mjs";
 import { ProviderCredentialVault } from "./credential-vault.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -411,6 +412,29 @@ export async function startEvercraftHomeServer({
         return json(res, 200, { ok: true, subject: session.subject, ...result });
       } catch (error) {
         return json(res, 400, { ok: false, state: error?.message || "mission_plan_invalid" });
+      }
+    }
+
+    if (req.method === "POST" && url.pathname === "/api/raven/command-plan") {
+      const session = sessionFor(req, "home.systemia.plan");
+      if (!session.ok) return json(res, session.status, session);
+      try {
+        const body = await readJsonBody(req, 32768);
+        const result = planRavenCommand({
+          message: body.message,
+          lane: body.lane,
+        }, repoRoot);
+        return json(res, 200, {
+          ok: true,
+          subject: session.subject,
+          ...result,
+        });
+      } catch (error) {
+        return json(res, 400, {
+          ok: false,
+          state: error?.message || "raven_command_plan_failed",
+          execution_authority_granted: false,
+        });
       }
     }
 
