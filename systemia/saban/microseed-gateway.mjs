@@ -4,7 +4,7 @@ import { AmbientDeviceRegistry } from './ambient-device-registry.mjs';
 import { evaluateAmbientTrust } from './ambient-device-trust.mjs';
 import { executeMicroSeedWorkload } from './microseed-executor.mjs';
 import { loadPerformanceLedger, recordPerformanceSample, savePerformanceLedger } from './performance-learning.mjs';
-import { runMicroSeedConformance } from './microseed-conformance.mjs';
+import { runMicroSeedConformance, evaluateMicroSeedConformance } from './microseed-conformance.mjs';
 import { runMicroSeedCalibration } from './microseed-calibration.mjs';
 
 function clean(v){return String(v??'').trim();}
@@ -276,6 +276,23 @@ export async function startMicroSeedGateway({
           });
         }
 
+        const request=body.request||body;
+        const conformanceDecision=evaluateMicroSeedConformance({
+          conformance:registry.conformance(deviceId),
+          manifest,
+          workload_class:String(request?.workload_class||''),
+          now:new Date(),
+        });
+        if(!conformanceDecision.verified){
+          return send(res,403,{
+            ok:false,
+            error:'microseed_workload_not_conformance_verified',
+            reason:conformanceDecision.reason,
+            device_id:deviceId,
+            workload_class:String(request?.workload_class||''),
+          });
+        }
+
         const deviceActive=Number(activeByDevice.get(deviceId)||0);
         const deviceMax=Math.max(1,Number(manifest.constraints?.max_concurrency||1));
         if(deviceActive>=deviceMax){
@@ -284,7 +301,6 @@ export async function startMicroSeedGateway({
 
         activeGlobal+=1;
         activeByDevice.set(deviceId,deviceActive+1);
-        const request=body.request||body;
         try{
           const receipt=await executeAndLearn({
             manifest,
