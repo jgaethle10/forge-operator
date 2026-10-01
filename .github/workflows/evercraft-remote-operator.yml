@@ -67,6 +67,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: evercraft-remote-operator-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   prove:
     runs-on: ubuntu-latest
