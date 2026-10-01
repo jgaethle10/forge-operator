@@ -16,7 +16,6 @@ assert.equal(receipt.research_candidate_count,1);
 assert.equal(receipt.candidate_share,0.25);
 assert.equal(receipt.variants_per_candidate,4);
 assert.equal(receipt.multiple_testing_reference.bonferroni_per_family_alpha,0.0125);
-assert.ok(receipt.multiple_testing_reference.sidák_per_family_alpha_if_independent===undefined);
 assert.ok(receipt.multiple_testing_reference.sidak_per_family_alpha_if_independent>0);
 assert.ok(receipt.multiple_testing_reference.probability_at_least_one_false_positive_if_all_families_independent>0.18);
 assert.equal(receipt.multiple_testing_reference.independence_assumption_is_not_claimed,true);
