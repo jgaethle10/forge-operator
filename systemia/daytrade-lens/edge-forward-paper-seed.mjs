@@ -4,6 +4,60 @@ import { fileURLToPath } from "node:url";
 import { validateFrozenProtocol } from "./edge-forward-paper.mjs";
 import { ForwardPaperDurableState } from "./edge-forward-paper-durable.mjs";
 
+export const CANONICAL_FORWARD_PAPER_CUTOFF = "2026-09-30T23:10:52.172Z";
+export const CANONICAL_FORWARD_PAPER_ARTIFACT_DIGEST =
+  "sha256:fad591be832d023188e60908afee9252713545e0cb42ae3cc2ebcea698ac7a96";
+export const DEFAULT_FROZEN_ENROLLMENT_PATH = path.join(
+  path.dirname(fileURLToPath(import.meta.url)),
+  "frozen",
+  "forward-paper-cohorts-2026-09-30.json"
+);
+
+export function loadCanonicalFrozenEnrollment({
+  enrollmentPath = DEFAULT_FROZEN_ENROLLMENT_PATH,
+} = {}) {
+  const parsed = JSON.parse(fs.readFileSync(path.resolve(enrollmentPath), "utf8"));
+  if (parsed?.schema !== "evercraft.daytrade.forward-paper-canonical-enrollment.v1") {
+    throw new Error("edge_forward_seed_canonical_schema_mismatch");
+  }
+  if (parsed?.generated_at !== CANONICAL_FORWARD_PAPER_CUTOFF) {
+    throw new Error("edge_forward_seed_canonical_cutoff_mismatch");
+  }
+  if (parsed?.source_artifact_digest !== CANONICAL_FORWARD_PAPER_ARTIFACT_DIGEST) {
+    throw new Error("edge_forward_seed_canonical_artifact_digest_mismatch");
+  }
+
+  const cohorts = Array.isArray(parsed.cohorts) ? parsed.cohorts : [];
+  if (parsed.cohort_count !== 6 || cohorts.length !== 6) {
+    throw new Error("edge_forward_seed_canonical_cohort_count_mismatch");
+  }
+
+  const signalKeys = new Set();
+  const cohortIds = new Set();
+  for (const cohort of cohorts) {
+    validateFrozenProtocol(cohort);
+    if (
+      cohort.enrolled_at !== CANONICAL_FORWARD_PAPER_CUTOFF ||
+      cohort.observation_cutoff !== CANONICAL_FORWARD_PAPER_CUTOFF
+    ) {
+      throw new Error("edge_forward_seed_canonical_protocol_cutoff_mismatch");
+    }
+    if (cohort.minimum_forward_events !== 20 || cohort.minimum_distinct_origins !== 5) {
+      throw new Error("edge_forward_seed_canonical_sample_gate_mismatch");
+    }
+    if (cohort.live_trade_authority !== false || cohort.immutable !== true) {
+      throw new Error("edge_forward_seed_canonical_authority_mismatch");
+    }
+    if (signalKeys.has(cohort.signal_key) || cohortIds.has(cohort.cohort_id)) {
+      throw new Error("edge_forward_seed_canonical_duplicate");
+    }
+    signalKeys.add(cohort.signal_key);
+    cohortIds.add(cohort.cohort_id);
+  }
+
+  return JSON.parse(JSON.stringify(parsed));
+}
+
 export function seedFrozenEnrollment(enrollment, { root } = {}) {
   if (!root) throw new Error("edge_forward_seed_durable_root_required");
   const cohorts = Array.isArray(enrollment?.cohorts) ? enrollment.cohorts : [];
@@ -62,9 +116,13 @@ export function seedFrozenEnrollment(enrollment, { root } = {}) {
   };
 }
 
-export function seedFrozenEnrollmentFile({ enrollmentPath, root } = {}) {
-  if (!enrollmentPath) throw new Error("edge_forward_seed_enrollment_path_required");
-  const parsed = JSON.parse(fs.readFileSync(path.resolve(enrollmentPath), "utf8"));
+export function seedFrozenEnrollmentFile({
+  enrollmentPath = DEFAULT_FROZEN_ENROLLMENT_PATH,
+  root,
+} = {}) {
+  const parsed = enrollmentPath === DEFAULT_FROZEN_ENROLLMENT_PATH
+    ? loadCanonicalFrozenEnrollment({ enrollmentPath })
+    : JSON.parse(fs.readFileSync(path.resolve(enrollmentPath), "utf8"));
   return seedFrozenEnrollment(parsed, { root });
 }
 
@@ -72,7 +130,7 @@ async function main() {
   const enrollmentPath =
     process.env.EDGE_FORWARD_PAPER_ENROLLMENT_PATH ||
     process.argv[2] ||
-    "";
+    DEFAULT_FROZEN_ENROLLMENT_PATH;
   const root =
     process.env.EVERCRAFT_EDGE_LAB_DURABLE_ROOT ||
     process.argv[3] ||
