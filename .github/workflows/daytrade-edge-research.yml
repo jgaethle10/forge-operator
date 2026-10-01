@@ -56,6 +56,7 @@ jobs:
           node systemia/daytrade-lens/edge-label-permutation.test.mjs
           node systemia/daytrade-lens/edge-benchmark-fragility.test.mjs
           node systemia/daytrade-lens/edge-regime-fragility.test.mjs
+          node systemia/daytrade-lens/edge-clock-structure.test.mjs
           node systemia/daytrade-lens/edge-event-contamination.test.mjs
           node systemia/daytrade-lens/edge-narrative-blind-control.test.mjs
           node systemia/daytrade-lens/edge-horizon-coherence.test.mjs
