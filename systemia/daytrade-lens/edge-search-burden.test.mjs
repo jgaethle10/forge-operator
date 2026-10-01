@@ -20,6 +20,11 @@ assert.ok(receipt.multiple_testing_reference.sidak_per_family_alpha_if_independe
 assert.ok(receipt.multiple_testing_reference.probability_at_least_one_false_positive_if_all_families_independent>0.18);
 assert.equal(receipt.multiple_testing_reference.independence_assumption_is_not_claimed,true);
 assert.equal(receipt.doctrine.survivor_count_is_never_the_search_denominator,true);
+assert.equal(
+  receipt.doctrine.candidate_only_false_discovery_rate_not_identified_without_search_model,
+  true
+);
+assert.equal(receipt.doctrine.independent_frozen_validation_required,true);
 assert.equal(receipt.doctrine.eligibility_mutated,false);
 assert.equal(receipt.doctrine.live_trade_authority,false);
 
@@ -30,6 +35,8 @@ console.log(JSON.stringify({
   bonferroni_reference:true,
   sidak_reference_labeled_independence_only:true,
   survivor_denominator_forbidden:true,
+  candidate_only_fdr_not_identified:true,
+  frozen_validation_required:true,
   eligibility_mutated:false,
   live_trade_authority:false
 }));
