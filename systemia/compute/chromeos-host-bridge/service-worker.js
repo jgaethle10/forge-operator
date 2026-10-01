@@ -2,6 +2,10 @@ import {
   extractPortForwardingState,
   locatePortForwardingSurface,
 } from './tree-parser.js';
+import {
+  base64UrlFromBytes,
+  canonicalJson,
+} from './crypto-protocol.js';
 
 const VERSION = '0.2.0';
 const SETTINGS_URL = 'chrome://os-settings/crostini/portForwarding';
@@ -10,6 +14,105 @@ const HEARTBEAT_ALARM = 'evercraft-host-boundary-heartbeat';
 const REQUEST_POLL_ALARM = 'evercraft-host-boundary-request-poll';
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const textEncoder = new TextEncoder();
+
+function openIdentityDatabase() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open('evercraft-host-boundary-identity', 1);
+    request.onerror = () => reject(request.error || new Error('identity_database_open_failed'));
+    request.onupgradeneeded = () => {
+      const database = request.result;
+      if (!database.objectStoreNames.contains('identity')) {
+        database.createObjectStore('identity');
+      }
+    };
+    request.onsuccess = () => resolve(request.result);
+  });
+}
+
+async function identityDatabaseGet(key) {
+  const database = await openIdentityDatabase();
+  try {
+    return await new Promise((resolve, reject) => {
+      const transaction = database.transaction('identity', 'readonly');
+      const request = transaction.objectStore('identity').get(key);
+      request.onerror = () => reject(request.error || new Error('identity_database_read_failed'));
+      request.onsuccess = () => resolve(request.result || null);
+    });
+  } finally {
+    database.close();
+  }
+}
+
+async function identityDatabasePut(key, value) {
+  const database = await openIdentityDatabase();
+  try {
+    await new Promise((resolve, reject) => {
+      const transaction = database.transaction('identity', 'readwrite');
+      transaction.oncomplete = () => resolve();
+      transaction.onerror = () => reject(transaction.error || new Error('identity_database_write_failed'));
+      transaction.objectStore('identity').put(value, key);
+    });
+  } finally {
+    database.close();
+  }
+}
+
+function hex(bytes) {
+  return [...new Uint8Array(bytes)]
+    .map((value) => value.toString(16).padStart(2, '0'))
+    .join('');
+}
+
+async function publicKeyFingerprint(publicJwk) {
+  const digest = await crypto.subtle.digest(
+    'SHA-256',
+    textEncoder.encode(canonicalJson(publicJwk)),
+  );
+  return 'sha256:' + hex(digest);
+}
+
+async function getObserverIdentity() {
+  const stored = await identityDatabaseGet('primary');
+  if (
+    stored?.privateKey &&
+    stored?.publicJwk &&
+    stored?.observerKeyFingerprint
+  ) {
+    return stored;
+  }
+
+  const generated = await crypto.subtle.generateKey(
+    { name: 'ECDSA', namedCurve: 'P-256' },
+    true,
+    ['sign', 'verify'],
+  );
+  const publicJwk = await crypto.subtle.exportKey('jwk', generated.publicKey);
+  const privateJwk = await crypto.subtle.exportKey('jwk', generated.privateKey);
+  const privateKey = await crypto.subtle.importKey(
+    'jwk',
+    privateJwk,
+    { name: 'ECDSA', namedCurve: 'P-256' },
+    false,
+    ['sign'],
+  );
+  const normalizedPublicJwk = {
+    kty: 'EC',
+    crv: 'P-256',
+    x: publicJwk.x,
+    y: publicJwk.y,
+    ext: true,
+    key_ops: ['verify'],
+  };
+  const observerKeyFingerprint = await publicKeyFingerprint(normalizedPublicJwk);
+  const identity = {
+    privateKey,
+    publicJwk: normalizedPublicJwk,
+    observerKeyFingerprint,
+  };
+  await identityDatabasePut('primary', identity);
+  return identity;
+}
 
 function bridgeUrl(reportEndpoint, pathname) {
   const url = new URL(reportEndpoint);
@@ -159,10 +262,52 @@ async function openSettingsTree() {
   }
 }
 
+async function ensureObserverPairing(cfg, identity) {
+  const response = await fetch(
+    bridgeUrl(cfg.endpoint, '/v1/chromeos-host-boundary/pair'),
+    {
+      method: 'POST',
+      headers: {
+        authorization: 'Bearer ' + cfg.token,
+        'content-type': 'application/json',
+        accept: 'application/json',
+      },
+      body: JSON.stringify({
+        observer_install_id: cfg.installId,
+        observer_key_fingerprint: identity.observerKeyFingerprint,
+        public_key_jwk: identity.publicJwk,
+      }),
+    },
+  );
+  const body = await response.json().catch(() => ({}));
+  if (!response.ok || body?.ok !== true || body?.paired !== true) {
+    throw new Error(String(body?.error || 'host_boundary_pairing_failed'));
+  }
+  if (
+    body.observer_install_id !== cfg.installId ||
+    body.observer_key_fingerprint !== identity.observerKeyFingerprint
+  ) {
+    throw new Error('host_boundary_pairing_identity_mismatch');
+  }
+  return body;
+}
+
+async function signObservation(payload, privateKey) {
+  const signature = await crypto.subtle.sign(
+    { name: 'ECDSA', hash: 'SHA-256' },
+    privateKey,
+    textEncoder.encode(canonicalJson(payload)),
+  );
+  return base64UrlFromBytes(new Uint8Array(signature));
+}
+
 async function reportObservation(requestId = null) {
   const cfg = await config();
   if (!cfg.enabled) return { ok: false, state: 'disabled' };
   if (cfg.token.length < 32) return { ok: false, state: 'pairing_required' };
+
+  const identity = await getObserverIdentity();
+  await ensureObserverPairing(cfg, identity);
 
   let scan;
   let treeSource = 'unavailable';
@@ -211,6 +356,7 @@ async function reportObservation(requestId = null) {
     request_id: requestId,
     observer_version: VERSION,
     observer_install_id: cfg.installId,
+    observer_key_fingerprint: identity.observerKeyFingerprint,
     settings_route: SETTINGS_URL,
     ports: scan.ports,
     scan: {
@@ -233,6 +379,7 @@ async function reportObservation(requestId = null) {
       mutation_requested: false,
     },
   };
+  payload.observer_signature = await signObservation(payload, identity.privateKey);
 
   const response = await fetch(cfg.endpoint, {
     method: 'POST',
@@ -250,6 +397,7 @@ async function reportObservation(requestId = null) {
   await chrome.storage.local.set({
     lastCheckAt: payload.collected_at,
     lastReceiptHash: body.receipt_hash || null,
+    observerKeyFingerprint: identity.observerKeyFingerprint,
     lastObservation: {
       ports: payload.ports,
       scan: payload.scan,
