@@ -99,8 +99,13 @@ ensure_fabric_update_timer(){
 }
 
 ensure_saban_capacity_timer(){
-  if systemctl list-unit-files evercraft-saban-capacity.timer --no-legend 2>/dev/null | grep -q '^evercraft-saban-capacity.timer'; then
+  local has_timer=false
+  local has_gateway=false
+  systemctl list-unit-files evercraft-saban-capacity.timer --no-legend 2>/dev/null | grep -q '^evercraft-saban-capacity.timer' && has_timer=true || true
+  systemctl list-unit-files evercraft-saban-microseed-gateway.service --no-legend 2>/dev/null | grep -q '^evercraft-saban-microseed-gateway.service' && has_gateway=true || true
+  if [[ "$has_timer" == "true" && "$has_gateway" == "true" ]]; then
     systemctl enable --now evercraft-saban-capacity.timer >/dev/null 2>&1 || true
+    systemctl enable --now evercraft-saban-microseed-gateway.service >/dev/null 2>&1 || true
   else
     if [[ ! -f "$REPO_ROOT/scripts/install-saban-capacity-organism.sh" ]]; then
       echo "ERROR: Saban capacity organism installer missing" >&2
@@ -119,7 +124,8 @@ ensure_saban_capacity_timer(){
 
   systemctl daemon-reload
   systemctl enable --now evercraft-saban-capacity.timer >/dev/null 2>&1 || return 53
-  systemctl start evercraft-saban-capacity.service >/dev/null 2>&1 || return 54
+  systemctl enable --now evercraft-saban-microseed-gateway.service >/dev/null 2>&1 || return 54
+  systemctl start evercraft-saban-capacity.service >/dev/null 2>&1 || return 55
   return 0
 }
 
@@ -193,6 +199,7 @@ edge_state="$(service_state evercraft-public-edge.service)"
 router_timer_state="$(service_state evercraft-router-map.timer)"
 update_timer_state="$(service_state evercraft-fabric-update.timer)"
 saban_capacity_timer_state="$(service_state evercraft-saban-capacity.timer)"
+saban_gateway_state="$(service_state evercraft-saban-microseed-gateway.service)"
 
 echo
 echo "[services]"
@@ -201,6 +208,7 @@ echo "evercraft-public-edge.service=$edge_state"
 echo "evercraft-router-map.timer=$router_timer_state"
 echo "evercraft-fabric-update.timer=$update_timer_state"
 echo "evercraft-saban-capacity.timer=$saban_capacity_timer_state"
+echo "evercraft-saban-microseed-gateway.service=$saban_gateway_state"
 if [[ "$REPAIR" == "true" ]]; then
   echo "local_organism_repair_ok=$local_organism_repair_ok"
   echo "local_organism_repair_code=$local_organism_repair_code"
@@ -331,6 +339,7 @@ cat > /tmp/evercraft-fabric-edge-doctor.json <<EOF
   "router_map_timer":"$router_timer_state",
   "fabric_update_timer":"$update_timer_state",
   "saban_capacity_timer":"$saban_capacity_timer_state",
+  "saban_microseed_gateway":"$saban_gateway_state",
   "local_organism_repair_ok":$(json_bool "$local_organism_repair_ok"),
   "local_organism_repair_code":$local_organism_repair_code,
   "self_update_repair_ok":$(json_bool "$self_update_repair_ok"),
