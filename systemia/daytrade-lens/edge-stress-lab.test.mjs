@@ -32,6 +32,15 @@ assert.ok(rolling.positive_rate>=0.75);
 const nullTest=permutationNullTest(rows,{iterations:500,seed:"null-proof"});
 assert.ok(nullTest.null_p_value<0.05);
 
+
+const mixedCostRows = [
+  { forward_return: 0.010, benchmark_return: 0.000 },
+  { forward_return: -0.010, benchmark_return: 0.000 },
+];
+const mixed5 = costStress(mixedCostRows, { expected_sign: 1, costs_bps: [5] })[0].mean_signed_net;
+const mixed75 = costStress(mixedCostRows, { expected_sign: 1, costs_bps: [75] })[0].mean_signed_net;
+assert.ok(mixed75 < mixed5);
+
 const report={
   evaluations:[{
     signal_key:"ai_models|sec_8_k|SOXX|1d",
@@ -57,5 +66,6 @@ console.log(JSON.stringify({
   cost_stress:true,
   rolling_window_stress:true,
   permutation_null:true,
+  directional_costs_strictly_adverse:true,
   live_trade_authority:false,
 }));
