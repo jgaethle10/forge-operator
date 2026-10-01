@@ -487,7 +487,7 @@
       ],
       "free_entry": {
         "name": "Part Passport",
-        "url": "https://findmypart.base44.app/free-part-check",
+        "url": null,
         "mcp_tool": "free_part_triage",
         "creates_charge": false
       },
