@@ -1,0 +1,53 @@
+{
+  "schema": "evercraft.base44.wave-scheduled-work.v1",
+  "wave": 1,
+  "observed_at": "2026-10-01",
+  "jobs": [
+    {
+      "product": "Systemia Remote Ops",
+      "job_key": "auto_clock_out",
+      "source_behavior": "Close still-open TimeLog rows older than 12 hours, mark them Submitted/Completed, preserve notes, compute total hours, and append an ActionLog.",
+      "runner": "systemia/operations/auto-clock-out-runner.mjs",
+      "cutoff_hours": 12,
+      "recommended_cadence_seconds": 300,
+      "activation_state": "held_until_destination_data_live",
+      "activation_requires": [
+        "destination_time_log_reconciliation_receipt",
+        "destination_action_log_write_receipt",
+        "owned_scheduler_deployment_receipt",
+        "dry_run_preview_receipt",
+        "first_live_cycle_observation_receipt"
+      ],
+      "automatic_activation": false
+    },
+    {
+      "product": "Evercraft InternalOps",
+      "job_key": "auto_clock_out",
+      "source_behavior": "Close still-open TimeLog rows older than 12 hours, mark them Submitted/Completed, preserve notes, compute total hours, and append an ActionLog.",
+      "runner": "systemia/operations/auto-clock-out-runner.mjs",
+      "cutoff_hours": 12,
+      "recommended_cadence_seconds": 300,
+      "activation_state": "held_until_destination_data_live",
+      "activation_requires": [
+        "destination_time_log_reconciliation_receipt",
+        "destination_action_log_write_receipt",
+        "owned_scheduler_deployment_receipt",
+        "dry_run_preview_receipt",
+        "first_live_cycle_observation_receipt"
+      ],
+      "automatic_activation": false
+    }
+  ],
+  "proof_refs": [
+    "systemia/operations/auto-clock-out.mjs",
+    "systemia/operations/auto-clock-out.proof.mjs",
+    "systemia/core/resident-supervisor.mjs",
+    "systemia/core/resident-supervisor.proof.mjs"
+  ],
+  "authority": {
+    "source_mutation": false,
+    "destination_mutation_before_activation": false,
+    "automatic_scheduler_activation": false,
+    "traffic_cutover": false
+  }
+}
