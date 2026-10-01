@@ -40,7 +40,7 @@
     "test:chum-router": "node systemia/chum/discovery-router.test.mjs",
     "proof:organism": "node systemia/organism/proof.mjs",
     "proof:goal-runtime": "node systemia/organism/goal-runtime.proof.mjs",
-    "proof:systemia": "npm run proof:organism && npm run proof:goal-runtime && npm run proof:goal-store && npm run proof:one-body && npm run proof:legacy-rescue-watch && npm run proof:portfolio-sentinel && npm run proof:ibmi-rescue-fulfillment && npm run proof:universal-fulfillment && npm run proof:portfolio-fulfillment-router && npm run proof:portfolio-fulfillment-e2e && npm run proof:portfolio-fulfillment-all && npm run proof:rockies && npm run proof:worldstate-observation-fabric && npm run proof:worldstate-context-adapter && npm run proof:worldstate-context-reader && npm run proof:worldstate-phenomenon && npm run proof:social-spectacle && npm run proof:social-spectacle-production",
+    "proof:systemia": "npm run proof:organism && npm run proof:goal-runtime && npm run proof:goal-store && npm run proof:one-body && npm run proof:legacy-rescue-watch && npm run proof:portfolio-sentinel && npm run proof:ibmi-rescue-fulfillment && npm run proof:universal-fulfillment && npm run proof:portfolio-fulfillment-router && npm run proof:portfolio-fulfillment-e2e && npm run proof:portfolio-fulfillment-all && npm run proof:rockies && npm run proof:worldstate-observation-fabric && npm run proof:worldstate-context-adapter && npm run proof:worldstate-context-reader && npm run proof:worldstate-phenomenon && npm run proof:social-spectacle && npm run proof:social-spectacle-production && npm run proof:social-spectacle-clip-bridge",
     "goal": "node systemia/organism/goal-cli.mjs",
     "proof:goal-store": "node systemia/organism/goal-store.proof.mjs",
     "chum:index": "node systemia/chum/build-pain-index.mjs",
@@ -248,7 +248,9 @@
     "proof:social-spectacle": "node systemia/organism/social-spectacle-engine.proof.mjs",
     "social:spectacle": "node systemia/organism/social-spectacle-engine.mjs",
     "proof:social-spectacle-production": "node systemia/organism/social-spectacle-production.proof.mjs",
-    "social:spectacle:produce": "node systemia/organism/social-spectacle-production.mjs"
+    "social:spectacle:produce": "node systemia/organism/social-spectacle-production.mjs",
+    "proof:social-spectacle-clip-bridge": "node systemia/organism/social-spectacle-clip-bridge.proof.mjs",
+    "social:spectacle:bridge": "node systemia/organism/social-spectacle-clip-bridge.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
