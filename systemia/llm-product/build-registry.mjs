@@ -70,6 +70,7 @@ const chum=readJson('public/chum/capabilities.json',{capabilities:[],universal_m
 const seeds=readJson('systemia/llm-product/historical-seeds.json',{entries:[]});
 const baseline=readJson('systemia/llm-product/ratchet-baseline.json',{public_product_keys:[]});
 const incidents=readJson('systemia/llm-product/runtime-incidents.json',{incidents:[]});
+const liveRuntimeCanary=readJson('artifacts/llm-product/runtime-canary.json',{routes:[],summary:null});
 
 const directBySlug=new Map((directDoors.products||[]).map(x=>[x.slug,x]));
 const contractByKey=new Map((contracts.contracts||[]).map(x=>[x.product_key,x]));
@@ -406,6 +407,41 @@ for(const incident of incidents.incidents||[]){
   });
 }
 
+for(const route of liveRuntimeCanary.routes||[]){
+  const stableId=String(route.stable_id||'').trim();
+  if(!stableId) continue;
+  const row=records.get(stableId);
+  if(!row) continue;
+  const ref='artifacts/llm-product/runtime-canary.json#'+String(route.receipt_id||stableId);
+  row.runtime_observation_refs=unique([...(row.runtime_observation_refs||[]),ref]);
+  row.source_refs=unique([...(row.source_refs||[]),'artifacts/llm-product/runtime-canary.json']);
+  row.test_state={
+    ...(row.test_state||{}),
+    runtime_observation_present:true,
+    passing_external_invocation_proven:route.route_state==='pass' && route.stages?.invoke===true && route.stages?.useful_output===true,
+  };
+  if(route.route_state==='pass'){
+    row.lifecycle={
+      ...(row.lifecycle||{}),
+      tested:true,
+      externally_reachable:true,
+    };
+    row.machine_endpoint=route.route||row.machine_endpoint||null;
+    row.machine_endpoint_state='external_canary_passed';
+    row.invocation_state='external_canary_passed';
+    row.blockers=unique((row.blockers||[]).filter((blocker)=>
+      !['fresh_external_reachability_not_verified','runtime_reachability_not_proven','runtime_canary_not_passed'].includes(blocker)
+    ));
+  }else{
+    row.lifecycle={...(row.lifecycle||{}),externally_reachable:false};
+    row.blockers=unique([
+      ...(row.blockers||[]),
+      'runtime_canary_not_passed',
+      ...(route.required===true?['required_external_runtime_canary_failed']:[]),
+    ]);
+  }
+}
+
 const rows=[...records.values()].sort((a,b)=>a.stable_id.localeCompare(b.stable_id));
 
 for(const row of rows){
@@ -513,6 +549,8 @@ const output={
     workflow_count:workflowFiles.length,
     dataset_registry_candidate_count:dataCandidates.length,
     open_runtime_incident_count:(incidents.incidents||[]).filter((x)=>String(x.state||'').toLowerCase()==='open').length,
+    live_runtime_canary_route_count:(liveRuntimeCanary.routes||[]).length,
+    live_runtime_canary_required_failure_count:(liveRuntimeCanary.summary?.required_failures||[]).length,
   },
   summary:{
     registry_entry_count:rows.length,
