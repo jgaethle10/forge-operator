@@ -87,10 +87,20 @@ export function validateHostBoundaryFieldCertification(
   if (!observerInstallId) {
     throw new Error('host_boundary_field_certification_observer_missing');
   }
+  const observerKeyFingerprint = String(
+    certification.host_observation?.observer_key_fingerprint || '',
+  ).trim();
+  if (
+    certification.host_observation?.observer_signature_verified !== true ||
+    !/^sha256:[a-f0-9]{64}$/i.test(observerKeyFingerprint)
+  ) {
+    throw new Error('host_boundary_field_certification_observer_signature_missing');
+  }
 
   return {
     capability_id: expected,
     observer_install_id: observerInstallId,
+    observer_key_fingerprint: observerKeyFingerprint,
     certification_receipt_hash: certification.receipt_hash,
   };
 }
@@ -112,6 +122,7 @@ export function admitHostBoundaryCapability({
     schema: ADMISSION_SCHEMA,
     capability_id: validated.capability_id,
     observer_install_id: validated.observer_install_id,
+    observer_key_fingerprint: validated.observer_key_fingerprint,
     admitted_at: new Date(now).toISOString(),
     expires_at: new Date(now + ttl).toISOString(),
     certification_receipt_hash: validated.certification_receipt_hash,
@@ -131,6 +142,7 @@ export function readHostBoundaryCapabilityAdmission({
   stateRoot,
   capabilityId,
   observerInstallId = '',
+  observerKeyFingerprint = '',
   now = Date.now(),
 } = {}) {
   if (!stateRoot) throw new Error('host_boundary_admission_state_root_required');
@@ -182,6 +194,20 @@ export function readHostBoundaryCapabilityAdmission({
     };
   }
   if (
+    observerKeyFingerprint &&
+    String(record.observer_key_fingerprint || '') !==
+      String(observerKeyFingerprint)
+  ) {
+    return {
+      ok: true,
+      admitted: false,
+      state: 'observer_key_changed',
+      capability_id: id,
+      expected_observer_key_fingerprint:
+        record.observer_key_fingerprint || null,
+    };
+  }
+  if (
     record.mutation_authority !== false ||
     record.arbitrary_desktop_control !== false
   ) {
@@ -199,6 +225,7 @@ export function readHostBoundaryCapabilityAdmission({
     state: 'admitted',
     capability_id: id,
     observer_install_id: record.observer_install_id,
+    observer_key_fingerprint: record.observer_key_fingerprint,
     admitted_at: record.admitted_at,
     expires_at: record.expires_at,
     certification_receipt_hash: record.certification_receipt_hash,
