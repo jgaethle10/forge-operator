@@ -68,6 +68,7 @@ fi
 
 NODE_RECEIPT="$RUN_HOME/.local/state/evercraft/organism/compute/nodeseed-receipt.json"
 ALLOCATOR_TOKEN_FILE="$RUN_HOME/.local/state/evercraft/organism/.secrets/allocator-token"
+NETWORK_OBSERVER_INSTALLER="$REPO_ROOT/scripts/install-fabric-network-observer.sh"
 
 mkdir -p "$STATE_DIR"
 chmod 0750 "$STATE_DIR"
@@ -123,6 +124,19 @@ clear_env_backup() {
     rm -f "$ENV_BACKUP"
   fi
   ENV_BACKUP=""
+}
+
+ensure_network_observer() {
+  if [[ ! -f "$NETWORK_OBSERVER_INSTALLER" ]]; then
+    echo "ERROR: network observer installer missing from deployed Forge revision" >&2
+    return 1
+  fi
+  bash "$NETWORK_OBSERVER_INSTALLER" \
+    --repo-root "$REPO_ROOT" \
+    --user "$RUN_USER" \
+    --cadence 2min >/dev/null
+  systemctl is-active --quiet evercraft-network-observer.timer
+  test -s /var/lib/evercraft/network-observer/latest.json
 }
 
 read_health() {
@@ -238,6 +252,11 @@ if [[ "$before" == "$target" ]]; then
     exit "$code"
   fi
 
+  if ! ensure_network_observer; then
+    echo "ERROR: Fabric is healthy but resident network observer installation failed" >&2
+    exit 11
+  fi
+
   clear_env_backup
   printf '{"schema":"evercraft.fabric-update.v1","state":"current","release_ref":"%s","capability_count":%s,"edge_attestation_expected":%s,"edge_attestation_verified":%s,"observed_at":"%s"}\n'     "$before" "$expected_count" "$EDGE_ATTESTATION_EXPECTED" "$EDGE_ATTESTATION_EXPECTED" "$(date -u +%FT%TZ)"     > "$STATE_DIR/last-update.json"
   chmod 0640 "$STATE_DIR/last-update.json"
@@ -264,6 +283,7 @@ if ! (
   cd "$REPO_ROOT"
   as_user npm run test:fabric-directory &&
   as_user npm run test:fabric-local &&
+  as_user npm run test:remote-operator &&
   as_user node --test tests/fabric-edge-attestation.test.mjs tests/fabric-owned-edge-installer.test.mjs &&
   as_user npm run proof:specialist-handoff-yard
 ); then
@@ -286,6 +306,11 @@ set -e
 if [[ "$code" -ne 0 ]]; then
   rollback "runtime_verification_failed_$code"
   exit "$code"
+fi
+
+if ! ensure_network_observer; then
+  echo "ERROR: Fabric update is healthy but resident network observer installation failed" >&2
+  exit 11
 fi
 
 clear_env_backup
