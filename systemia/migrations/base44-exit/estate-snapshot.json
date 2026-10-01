@@ -189,11 +189,14 @@
       "connected_connectors": 1,
       "cutover_authority": false,
       "replacement_matrix": "systemia/migrations/base44-exit/wave-1-replacement-matrix.json",
-      "implementations_present_ci_pending": 16,
+      "implementations_present_ci_pending": 18,
       "scheduled_work_spec": "systemia/migrations/base44-exit/wave-1-scheduled-work.json",
       "cutover_ready_products": 0,
       "destination_data_migrated_products": 0,
-      "provider_reauthorization_complete": false
+      "provider_reauthorization_complete": false,
+      "command_center_function_map": "systemia/migrations/base44-exit/wave-1-command-center-function-map.json",
+      "command_center_source_functions_mapped": 8,
+      "command_center_stateful_functions_transplanted": 2
     }
   }
 }
