@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict';
-import { startVoluntaryComputeExchange } from './voluntary-exchange.mjs';
-import { createBrowserVoluntaryWorker } from './voluntary-worker/browser-worker.mjs';
-import { createEvercraftVoluntaryMarketAdapter } from './markets/evercraft-voluntary.mjs';
-import { negotiateCompute } from './compute-exchange.mjs';
+import { startVoluntaryComputeExchange } from '../voluntary-exchange.mjs';
+import { createBrowserVoluntaryWorker } from './browser-worker.mjs';
+import { createEvercraftVoluntaryMarketAdapter } from '../markets/evercraft-voluntary.mjs';
+import { negotiateCompute } from '../compute-exchange.mjs';
 
 const exchange=await startVoluntaryComputeExchange({
   host:'127.0.0.1',
