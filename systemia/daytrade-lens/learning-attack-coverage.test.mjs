@@ -50,18 +50,14 @@ const receipt={
 
 const result=reconcileLearningAttackCoverage(receipt);
 assert.equal(result.attack_count,5);
-assert.equal(result.counts.implemented,2);
-assert.equal(result.counts.partial,3);
+assert.equal(result.counts.implemented,3);
+assert.equal(result.counts.partial,2);
 assert.equal(result.counts.missing,0);
-assert.equal(result.frontier[0].test,"aggressive-versus-passive execution comparison");
+assert.equal(result.frontier[0].test,"partial/unfilled order outcome");
 assert.equal(result.next_frontier.implementation_status,"partial");
 assert.equal(
   ATTACK_IMPLEMENTATION_MAP["aggressive-versus-passive execution comparison"].status,
-  "partial"
-);
-assert.match(
-  ATTACK_IMPLEMENTATION_MAP["aggressive-versus-passive execution comparison"].gap,
-  /never labeled a fill/
+  "implemented"
 );
 assert.equal(
   ATTACK_IMPLEMENTATION_MAP["partial/unfilled order outcome"].status,
@@ -106,6 +102,7 @@ console.log(JSON.stringify({
   schema:"evercraft.daytrade.learning-attack-coverage-proof.v1",
   implemented_partial_missing_accounted:true,
   closed_cscv_gap_removed_from_frontier:true,
+  aggressive_passive_comparison_closed:true,
   partial_execution_frontier_exposed:true,
   passive_touch_never_promoted_to_fill:true,
   partial_unfilled_states_now_explicit:true,
