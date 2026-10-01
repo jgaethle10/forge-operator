@@ -658,12 +658,14 @@ export async function startSpecialistHandoffRuntime({
     Promise.resolve(simulateRemoteOpsPricing(payload)));
   void remoteOpsPricingUrl;
   const normalizedFabricPath = String(fabricMcpPath || '/mcp').trim();
-  if (
-    !normalizedFabricPath.startsWith('/') ||
-    normalizedFabricPath.length > 256 ||
-    /[\s?#]/.test(normalizedFabricPath)
-  ) {
-    throw new Error('fabric_mcp_path_invalid');
+  const normalizedFabricOpenAiPath = String(fabricOpenAiMcpPath || '/mcp/openai').trim();
+  for (const [label,value] of [
+    ['fabric_mcp_path',normalizedFabricPath],
+    ['fabric_openai_mcp_path',normalizedFabricOpenAiPath],
+  ]) {
+    if (!value.startsWith('/') || value.length > 256 || /[\s?#]/.test(value)) {
+      throw new Error(label+'_invalid');
+    }
   }
   if (
     normalizedFabricPath === '/health' ||
