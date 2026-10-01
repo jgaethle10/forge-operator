@@ -112,6 +112,120 @@ export function scoreForwardPaperCohort(protocol, measurements = []) {
   };
 }
 
+function forwardEventKey(row) {
+  const source = String(row?.source_observation_id || "").trim();
+  if (source) return "source:" + source;
+  return [
+    "fallback",
+    String(row?.origin_entity_ref || "unknown"),
+    String(row?.observed_at || "unknown"),
+  ].join("|");
+}
+
+export function scoreForwardPaperCluster(protocols = [], measurements = []) {
+  const members = (protocols || []).filter(Boolean);
+  if (!members.length) throw new Error("edge_forward_paper_cluster_protocols_required");
+  for (const protocol of members) validateFrozenProtocol(protocol);
+
+  const clusterKeys = [...new Set(members.map((protocol) => String(protocol.cluster_key || "")))];
+  if (clusterKeys.length !== 1 || !clusterKeys[0]) {
+    throw new Error("edge_forward_paper_cluster_mismatch");
+  }
+
+  const bySignal = new Map(members.map((protocol) => [protocol.signal_key, protocol]));
+  const eventMap = new Map();
+  let rawMemberMeasurements = 0;
+  let retroactiveRowsIgnored = 0;
+
+  for (const row of measurements || []) {
+    const protocol = bySignal.get(row?.signal_key);
+    if (!protocol) continue;
+    const observed = new Date(row?.observed_at).getTime();
+    const cutoff = new Date(protocol.observation_cutoff).getTime();
+    if (!Number.isFinite(observed) || observed <= cutoff) {
+      retroactiveRowsIgnored += 1;
+      continue;
+    }
+
+    const raw = Number(row.forward_return || 0) - Number(row.benchmark_return || 0);
+    const expectedSign = protocol.learned_direction === "NEGATIVE_EXCESS_RETURN" ? -1 : 1;
+    const signedNet = expectedSign * raw - (Number(protocol.transaction_cost_bps) / 10000);
+    const key = forwardEventKey(row);
+    if (!eventMap.has(key)) {
+      eventMap.set(key, {
+        event_key: key,
+        observed_at: row.observed_at,
+        origins: new Set(),
+        signals: new Set(),
+        signed_net_values: [],
+      });
+    }
+    const event = eventMap.get(key);
+    if (row.origin_entity_ref) event.origins.add(row.origin_entity_ref);
+    event.signals.add(protocol.signal_key);
+    event.signed_net_values.push(signedNet);
+    rawMemberMeasurements += 1;
+  }
+
+  const events = [...eventMap.values()]
+    .map((event) => ({
+      event_key: event.event_key,
+      observed_at: event.observed_at,
+      origin_entities: [...event.origins].sort(),
+      member_signal_count: event.signals.size,
+      member_measurement_count: event.signed_net_values.length,
+      mean_signed_excess_return_net:
+        event.signed_net_values.reduce((a,b) => a + b, 0) / event.signed_net_values.length,
+    }))
+    .sort((a,b) => new Date(a.observed_at) - new Date(b.observed_at));
+
+  const origins = [...new Set(events.flatMap((event) => event.origin_entities))];
+  const meanNet = events.length
+    ? events.reduce((sum, event) => sum + event.mean_signed_excess_return_net, 0) / events.length
+    : 0;
+  const minimumForwardEvents = Math.max(...members.map((protocol) => Number(protocol.minimum_forward_events || 0)));
+  const minimumDistinctOrigins = Math.max(...members.map((protocol) => Number(protocol.minimum_distinct_origins || 0)));
+
+  const checks = {
+    minimum_forward_events: events.length >= minimumForwardEvents,
+    minimum_distinct_origins: origins.length >= minimumDistinctOrigins,
+    frozen_cluster_direction_positive_after_costs: meanNet > 0,
+    correlated_members_counted_by_underlying_event: true,
+    no_retroactive_events_counted: true,
+  };
+  const sampleReady =
+    checks.minimum_forward_events &&
+    checks.minimum_distinct_origins &&
+    checks.no_retroactive_events_counted;
+  const status = !sampleReady
+    ? "FORWARD_PAPER_CLUSTER_PENDING"
+    : checks.frozen_cluster_direction_positive_after_costs
+      ? "FORWARD_PAPER_CLUSTER_PASS"
+      : "FORWARD_PAPER_CLUSTER_FAIL";
+
+  return {
+    schema: "evercraft.daytrade.forward-paper-cluster-score.v1",
+    cluster_key: clusterKeys[0],
+    member_cohort_count: members.length,
+    member_signal_keys: members.map((protocol) => protocol.signal_key).sort(),
+    raw_member_measurements: rawMemberMeasurements,
+    forward_events: events.length,
+    effective_independent_events: events.length,
+    distinct_origins: origins.length,
+    minimum_forward_events: minimumForwardEvents,
+    minimum_distinct_origins: minimumDistinctOrigins,
+    mean_signed_excess_return_net: meanNet,
+    independence_ratio: rawMemberMeasurements ? events.length / rawMemberMeasurements : 0,
+    retroactive_rows_ignored: retroactiveRowsIgnored,
+    events,
+    checks,
+    sample_ready: sampleReady,
+    status,
+    correlated_members_not_independent_edges: true,
+    live_trade_authority: false,
+  };
+}
+
 export function persistFrozenCohorts(adversarialReview, researchReport, {
   state_dir,
   enrolled_at = new Date().toISOString(),
