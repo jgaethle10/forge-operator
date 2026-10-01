@@ -33,8 +33,8 @@
     "machine_offer_entries": 48,
     "entries_with_pain_language": 112,
     "sell_now_machine_offers": 14,
-    "entries_with_declared_mcp": 68,
-    "callable_or_routable_entries": 48,
+    "entries_with_declared_mcp": 71,
+    "callable_or_routable_entries": 51,
     "suppressed_legacy_marketing_routes": 9
   },
   "entries": [
@@ -3829,10 +3829,10 @@
       "inputs": null,
       "outputs": null,
       "canonical_url": "https://evermaps.base44.app/",
-      "registry_name": null,
-      "mcp": null,
+      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
-        "preferred": "universal_machine_commerce",
+        "preferred": "specialist_mcp",
         "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
       },
       "legacy_marketing_route_suppressed": false,
@@ -3844,16 +3844,17 @@
         "private or restricted geospatial evidence remains outside public discovery"
       ],
       "commercial_state": "product_contract",
-      "machine_state": "discovery_only",
+      "machine_state": "specialist_mcp_declared",
       "pricing": null,
       "offers": [],
       "commercial": null,
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
-      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "invocation_status": "Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.",
       "source_refs": [
-        "public/.well-known/evercraft-products.json"
+        "public/.well-known/evercraft-products.json",
+        "registry/catalog.json"
       ]
     },
     {
@@ -4329,10 +4330,10 @@
       "inputs": null,
       "outputs": null,
       "canonical_url": "https://global-stat-pulse.base44.app/",
-      "registry_name": null,
-      "mcp": null,
+      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
-        "preferred": "universal_machine_commerce",
+        "preferred": "specialist_mcp",
         "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
       },
       "legacy_marketing_route_suppressed": false,
@@ -4344,16 +4345,17 @@
         "paid work requires explicit confirmation and verified terms"
       ],
       "commercial_state": "product_contract",
-      "machine_state": "discovery_only",
+      "machine_state": "specialist_mcp_declared",
       "pricing": null,
       "offers": [],
       "commercial": null,
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
-      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "invocation_status": "Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.",
       "source_refs": [
-        "public/.well-known/evercraft-products.json"
+        "public/.well-known/evercraft-products.json",
+        "registry/catalog.json"
       ]
     },
     {
@@ -4654,10 +4656,10 @@
       "inputs": null,
       "outputs": null,
       "canonical_url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
-      "registry_name": null,
-      "mcp": null,
+      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "routing": {
-        "preferred": "universal_machine_commerce",
+        "preferred": "specialist_mcp",
         "target": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
       },
       "legacy_marketing_route_suppressed": false,
@@ -4668,16 +4670,17 @@
         "page-count and cover-geometry checks are preflight signals rather than platform acceptance guarantees"
       ],
       "commercial_state": "product_contract",
-      "machine_state": "discovery_only",
+      "machine_state": "specialist_mcp_declared",
       "pricing": null,
       "offers": [],
       "commercial": null,
       "human_confirmation_required": true,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "payment_authority": null,
-      "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
+      "invocation_status": "Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.",
       "source_refs": [
-        "public/.well-known/evercraft-products.json"
+        "public/.well-known/evercraft-products.json",
+        "registry/catalog.json"
       ]
     },
     {

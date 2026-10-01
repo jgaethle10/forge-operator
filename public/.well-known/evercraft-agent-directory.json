@@ -1190,9 +1190,9 @@
         "plot verified infrastructure coverage"
       ],
       "invocation": {
-        "mode": "discovery_only",
-        "url": null,
-        "registry_name": null
+        "mode": "mcp",
+        "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+        "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
       },
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evermaps/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evermaps/ai-discovery.json",
@@ -1564,9 +1564,9 @@
         "country benchmark with sources"
       ],
       "invocation": {
-        "mode": "discovery_only",
-        "url": null,
-        "registry_name": null
+        "mode": "mcp",
+        "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+        "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
       },
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/globalstat/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/globalstat/ai-discovery.json",
@@ -1823,9 +1823,9 @@
         "check page count and cover DPI"
       ],
       "invocation": {
-        "mode": "discovery_only",
-        "url": null,
-        "registry_name": null
+        "mode": "mcp",
+        "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+        "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
       },
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/little-red-book-export-qa/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/little-red-book-export-qa/ai-discovery.json",

@@ -6,7 +6,7 @@
   "source_schema_version": "2026-09-30.1",
   "gateway_version": "evercraft-machine-commerce-gateway-v0.9.1",
   "source_generated_at": "2026-09-30T20:21:00.000Z",
-  "generated_at": "2026-09-30T20:58:30.000Z",
+  "generated_at": "2026-10-01T01:51:31.154Z",
   "offer_count": 48,
   "sell_now_count": 14,
   "discovery_count": 34,
@@ -843,7 +843,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "No verified Evercraft Payments path for this capability.",
       "invocation_status": "LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.",
-      "live_canary_evidence": null,
+      "live_canary_evidence": "GitHubActionsRun:36802891607",
       "catalog_version": "2026-09-23.12"
     },
     {
@@ -1102,7 +1102,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "No verified Evercraft Payments path for this capability.",
       "invocation_status": "LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.",
-      "live_canary_evidence": null,
+      "live_canary_evidence": "GitHubActionsRun:36802891607",
       "catalog_version": "2026-09-23.12"
     },
     {
@@ -1282,7 +1282,7 @@
       "public_url_source": "source_catalog",
       "payment_authority": "No verified Evercraft Payments path.",
       "invocation_status": "LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.",
-      "live_canary_evidence": null,
+      "live_canary_evidence": "GitHubActionsRun:36802891607",
       "catalog_version": "2026-09-23.12"
     },
     {

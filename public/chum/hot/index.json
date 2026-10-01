@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.hot-discovery.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-01T01:14:17.344Z",
+  "updated_at": "2026-10-01T01:51:32.805Z",
   "purpose": "High-priority public discovery surfaces for crawler fan-out. The queue reserves limited cold-start frontage for current commercial and sitemap surfaces, then fills remaining slots by observed priority. This is a crawl-order hint, not a ranking or recommendation claim.",
   "surfaces": [
     {
@@ -321,7 +321,7 @@
       "path": "/chum/sell-now.json",
       "url": "/chum/sell-now.json",
       "priority": 92,
-      "last_changed": "2026-09-30T20:58:29.212Z"
+      "last_changed": "2026-10-01T01:51:32.805Z"
     },
     {
       "path": "/chum/sell-now.txt",
@@ -339,13 +339,13 @@
       "path": "/.well-known/evercraft-pain-index.json",
       "url": "/.well-known/evercraft-pain-index.json",
       "priority": 90,
-      "last_changed": "2026-09-30T20:58:29.212Z"
+      "last_changed": "2026-10-01T01:51:32.805Z"
     },
     {
       "path": "/chum/revenue.json",
       "url": "/chum/revenue.json",
       "priority": 90,
-      "last_changed": "2026-09-30T20:58:29.212Z"
+      "last_changed": "2026-10-01T01:51:32.805Z"
     },
     {
       "path": "/chum/revenue.html",
@@ -363,7 +363,67 @@
       "path": "/.well-known/evercraft-machine-catalog.json",
       "url": "/.well-known/evercraft-machine-catalog.json",
       "priority": 84,
-      "last_changed": "2026-09-30T20:58:02.408Z"
+      "last_changed": "2026-10-01T01:51:32.805Z"
+    },
+    {
+      "path": "/chum/answers/doors/audit-this-paperback-export-c84fe388e8.json",
+      "url": "/chum/answers/doors/audit-this-paperback-export-c84fe388e8.json",
+      "priority": 160,
+      "last_changed": "2026-10-01T01:51:32.805Z"
+    },
+    {
+      "path": "/chum/answers/doors/audit-this-paperback-export-c84fe388e8/",
+      "url": "/chum/answers/doors/audit-this-paperback-export-c84fe388e8/",
+      "priority": 160,
+      "last_changed": "2026-10-01T01:51:32.805Z"
+    },
+    {
+      "path": "/chum/answers/doors/check-if-my-book-is-ready-for-kdp-465dd47ba7.json",
+      "url": "/chum/answers/doors/check-if-my-book-is-ready-for-kdp-465dd47ba7.json",
+      "priority": 160,
+      "last_changed": "2026-10-01T01:51:32.805Z"
+    },
+    {
+      "path": "/chum/answers/doors/check-if-my-book-is-ready-for-kdp-465dd47ba7/",
+      "url": "/chum/answers/doors/check-if-my-book-is-ready-for-kdp-465dd47ba7/",
+      "priority": 160,
+      "last_changed": "2026-10-01T01:51:32.805Z"
+    },
+    {
+      "path": "/chum/answers/doors/check-page-count-and-cover-dpi-512896a3dd.json",
+      "url": "/chum/answers/doors/check-page-count-and-cover-dpi-512896a3dd.json",
+      "priority": 160,
+      "last_changed": "2026-10-01T01:51:32.805Z"
+    },
+    {
+      "path": "/chum/answers/doors/check-page-count-and-cover-dpi-512896a3dd/",
+      "url": "/chum/answers/doors/check-page-count-and-cover-dpi-512896a3dd/",
+      "priority": 160,
+      "last_changed": "2026-10-01T01:51:32.805Z"
+    },
+    {
+      "path": "/chum/answers/doors/compare-these-countries-on-this-metric-14e53d7a85.json",
+      "url": "/chum/answers/doors/compare-these-countries-on-this-metric-14e53d7a85.json",
+      "priority": 160,
+      "last_changed": "2026-10-01T01:51:32.805Z"
+    },
+    {
+      "path": "/chum/answers/doors/compare-these-countries-on-this-metric-14e53d7a85/",
+      "url": "/chum/answers/doors/compare-these-countries-on-this-metric-14e53d7a85/",
+      "priority": 160,
+      "last_changed": "2026-10-01T01:51:32.805Z"
+    },
+    {
+      "path": "/chum/answers/doors/country-benchmark-with-sources-04ac1dfc19.json",
+      "url": "/chum/answers/doors/country-benchmark-with-sources-04ac1dfc19.json",
+      "priority": 160,
+      "last_changed": "2026-10-01T01:51:32.805Z"
+    },
+    {
+      "path": "/chum/answers/doors/country-benchmark-with-sources-04ac1dfc19/",
+      "url": "/chum/answers/doors/country-benchmark-with-sources-04ac1dfc19/",
+      "priority": 160,
+      "last_changed": "2026-10-01T01:51:32.805Z"
     },
     {
       "path": "/chum/answers/doors/15-gb-video-analysis-0f57ef2f90.json",
@@ -684,12 +744,6 @@
       "last_changed": "2026-09-30T20:55:21.460Z"
     },
     {
-      "path": "/chum/answers/doors/audit-this-paperback-export-c84fe388e8.json",
-      "url": "/chum/answers/doors/audit-this-paperback-export-c84fe388e8.json",
-      "priority": 160,
-      "last_changed": "2026-09-30T20:55:21.460Z"
-    },
-    {
       "path": "/chum/answers/doors/automate-this-workflow-2bf95f92d8.json",
       "url": "/chum/answers/doors/automate-this-workflow-2bf95f92d8.json",
       "priority": 160,
@@ -948,12 +1002,6 @@
       "last_changed": "2026-09-30T20:55:21.460Z"
     },
     {
-      "path": "/chum/answers/doors/check-if-my-book-is-ready-for-kdp-465dd47ba7.json",
-      "url": "/chum/answers/doors/check-if-my-book-is-ready-for-kdp-465dd47ba7.json",
-      "priority": 160,
-      "last_changed": "2026-09-30T20:55:21.460Z"
-    },
-    {
       "path": "/chum/answers/doors/check-my-local-seo-e8e838ec7c.json",
       "url": "/chum/answers/doors/check-my-local-seo-e8e838ec7c.json",
       "priority": 160,
@@ -962,12 +1010,6 @@
     {
       "path": "/chum/answers/doors/check-my-resume-against-this-job-e3b72379fe.json",
       "url": "/chum/answers/doors/check-my-resume-against-this-job-e3b72379fe.json",
-      "priority": 160,
-      "last_changed": "2026-09-30T20:55:21.460Z"
-    },
-    {
-      "path": "/chum/answers/doors/check-page-count-and-cover-dpi-512896a3dd.json",
-      "url": "/chum/answers/doors/check-page-count-and-cover-dpi-512896a3dd.json",
       "priority": 160,
       "last_changed": "2026-09-30T20:55:21.460Z"
     },
@@ -1080,12 +1122,6 @@
       "last_changed": "2026-09-30T20:55:21.460Z"
     },
     {
-      "path": "/chum/answers/doors/compare-these-countries-on-this-metric-14e53d7a85.json",
-      "url": "/chum/answers/doors/compare-these-countries-on-this-metric-14e53d7a85.json",
-      "priority": 160,
-      "last_changed": "2026-09-30T20:55:21.460Z"
-    },
-    {
       "path": "/chum/answers/doors/compare-two-recordings-c44b889ea7.json",
       "url": "/chum/answers/doors/compare-two-recordings-c44b889ea7.json",
       "priority": 160,
@@ -1166,42 +1202,6 @@
     {
       "path": "/chum/answers/doors/contractor-scope-creep-or-change-orders-are-costing-money-9c1b5a9c0a.json",
       "url": "/chum/answers/doors/contractor-scope-creep-or-change-orders-are-costing-money-9c1b5a9c0a.json",
-      "priority": 160,
-      "last_changed": "2026-09-30T20:55:21.460Z"
-    },
-    {
-      "path": "/chum/answers/doors/conversation-video-timeline-14d07826b9.json",
-      "url": "/chum/answers/doors/conversation-video-timeline-14d07826b9.json",
-      "priority": 160,
-      "last_changed": "2026-09-30T20:55:21.460Z"
-    },
-    {
-      "path": "/chum/answers/doors/conversion-problems-272215f37a.json",
-      "url": "/chum/answers/doors/conversion-problems-272215f37a.json",
-      "priority": 160,
-      "last_changed": "2026-09-30T20:55:21.460Z"
-    },
-    {
-      "path": "/chum/answers/doors/country-benchmark-with-sources-04ac1dfc19.json",
-      "url": "/chum/answers/doors/country-benchmark-with-sources-04ac1dfc19.json",
-      "priority": 160,
-      "last_changed": "2026-09-30T20:55:21.460Z"
-    },
-    {
-      "path": "/chum/answers/doors/county-health-evidence-brief-f80ef29cf8.json",
-      "url": "/chum/answers/doors/county-health-evidence-brief-f80ef29cf8.json",
-      "priority": 160,
-      "last_changed": "2026-09-30T20:55:21.460Z"
-    },
-    {
-      "path": "/chum/answers/doors/create-a-website-competitor-comparison-report-7cb7846615.json",
-      "url": "/chum/answers/doors/create-a-website-competitor-comparison-report-7cb7846615.json",
-      "priority": 160,
-      "last_changed": "2026-09-30T20:55:21.460Z"
-    },
-    {
-      "path": "/chum/answers/doors/create-an-anonymous-inbox-1cf7f12421.json",
-      "url": "/chum/answers/doors/create-an-anonymous-inbox-1cf7f12421.json",
       "priority": 160,
       "last_changed": "2026-09-30T20:55:21.460Z"
     }

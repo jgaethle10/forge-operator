@@ -397,9 +397,9 @@
       "mirror": "/chum/products/evermaps/",
       "llms": "/chum/products/evermaps/llms.txt",
       "discovery": "/chum/products/evermaps/ai-discovery.json",
-      "registry_name": null,
-      "mcp": null,
-      "content_sha256": "376dbe811df93f8b6cf10ca7960fa655c31429f3c3f1ae44ead3a4459883e0c0"
+      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "content_sha256": "797f10f1814bc6b5a2be383e094a5464460666b3b2a8f90d8d9226d8416daf4f"
     },
     {
       "product_key": "evernest",
@@ -485,9 +485,9 @@
       "mirror": "/chum/products/globalstat/",
       "llms": "/chum/products/globalstat/llms.txt",
       "discovery": "/chum/products/globalstat/ai-discovery.json",
-      "registry_name": null,
-      "mcp": null,
-      "content_sha256": "3f8e3d42e4b338d53ffe53065fe71f79a4a30dbc3ecdb37154614e3f2155e1c1"
+      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "content_sha256": "e59982c445166347f51c4b54c96f684683d2026865e119aa8cab93be20596044"
     },
     {
       "product_key": "guardian",
@@ -529,9 +529,9 @@
       "mirror": "/chum/products/little-red-book-export-qa/",
       "llms": "/chum/products/little-red-book-export-qa/llms.txt",
       "discovery": "/chum/products/little-red-book-export-qa/ai-discovery.json",
-      "registry_name": null,
-      "mcp": null,
-      "content_sha256": "a3e2ac942438ca5591a5af0bdc3c16b5fb89620e656b9a964665dae67eeb7796"
+      "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+      "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "content_sha256": "cd14973aaccbe942083f4788079419a1cf63707968fb6ee95e05d5ba3cd5596b"
     },
     {
       "product_key": "payflow",

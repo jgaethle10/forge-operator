@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.syndication-social-queue.v1",
-  "generated_at": "2026-09-30T20:35:42.321Z",
+  "generated_at": "2026-10-01T01:51:32.635Z",
   "bootstrap": false,
   "policy": "Material product changes enter once per content hash. Publishing still requires an authorized destination adapter.",
   "items": [
@@ -755,6 +755,16 @@
       "requires_authorized_destination": true
     },
     {
+      "dedupe_key": "evermaps:797f10f1814bc6b5a2be383e094a5464460666b3b2a8f90d8d9226d8416daf4f",
+      "product_key": "evermaps",
+      "name": "EverMaps",
+      "canonical_url": "https://evermaps.base44.app/",
+      "discovery_path": "/chum/products/evermaps/ai-discovery.json",
+      "text": "EverMaps: EverMaps is an Evercraft public safe geospatial evidence projection capability. Common needs: map this evidence for me; show lifeline coverage for this place; give me map-ready heat or smoke action sites; show historical river geometry.",
+      "content_sha256": "797f10f1814bc6b5a2be383e094a5464460666b3b2a8f90d8d9226d8416daf4f",
+      "requires_authorized_destination": true
+    },
+    {
       "dedupe_key": "evernest:c46b96c72ef9501e4ed1941def34cac34c337e8ac93a2780b5fe740baef69b41",
       "product_key": "evernest",
       "name": "EverNest",
@@ -965,6 +975,16 @@
       "requires_authorized_destination": true
     },
     {
+      "dedupe_key": "globalstat:e59982c445166347f51c4b54c96f684683d2026865e119aa8cab93be20596044",
+      "product_key": "globalstat",
+      "name": "GlobalStat",
+      "canonical_url": "https://global-stat-pulse.base44.app/",
+      "discovery_path": "/chum/products/globalstat/ai-discovery.json",
+      "text": "GlobalStat: GlobalStat is an Evercraft country comparison and evidence intelligence capability. Common needs: compare these countries on this metric; give me sourced country intelligence; which countries lead on this domain and why; show me the evidence behind this country score.",
+      "content_sha256": "e59982c445166347f51c4b54c96f684683d2026865e119aa8cab93be20596044",
+      "requires_authorized_destination": true
+    },
+    {
       "dedupe_key": "guardian:57baac1d802f9e80fe7fe786c6045fbc339189785c423d68096af62b4330a560",
       "product_key": "guardian",
       "name": "Guardian",
@@ -1142,6 +1162,16 @@
       "discovery_path": "/chum/products/little-red-book-export-qa/ai-discovery.json",
       "text": "Little Red Studio Book Export QA: Little Red Studio Book Export QA is an Evercraft book export preflight and cover geometry qa capability. Common needs: check if my book is ready for KDP; validate my cover dimensions; audit this paperback export; is my book file ready to publish.",
       "content_sha256": "a3e2ac942438ca5591a5af0bdc3c16b5fb89620e656b9a964665dae67eeb7796",
+      "requires_authorized_destination": true
+    },
+    {
+      "dedupe_key": "little-red-book-export-qa:cd14973aaccbe942083f4788079419a1cf63707968fb6ee95e05d5ba3cd5596b",
+      "product_key": "little-red-book-export-qa",
+      "name": "Little Red Studio Book Export QA",
+      "canonical_url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
+      "discovery_path": "/chum/products/little-red-book-export-qa/ai-discovery.json",
+      "text": "Little Red Studio Book Export QA: Little Red Studio Book Export QA is an Evercraft book export preflight and cover geometry qa capability. Common needs: check if my book is ready for KDP; validate my cover dimensions; audit this paperback export; is my book file ready to publish.",
+      "content_sha256": "cd14973aaccbe942083f4788079419a1cf63707968fb6ee95e05d5ba3cd5596b",
       "requires_authorized_destination": true
     },
     {

@@ -1608,8 +1608,9 @@ Invocation status: Route through the universal Evercraft discovery surface unles
 Capability ID: product:evermaps
 Product key: evermaps
 Commercial state: product_contract
-Machine state: discovery_only
+Machine state: specialist_mcp_declared
 Public URL: https://evermaps.base44.app/
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Use when the user means:
 - map this evidence for me
 - show lifeline coverage for this place
@@ -1618,7 +1619,7 @@ Use when the user means:
 - return public-safe geospatial evidence
 - plot verified infrastructure coverage
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
-Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
 
 ## EverNest
 Capability ID: product:evernest
@@ -1813,8 +1814,9 @@ Invocation status: Route through the universal Evercraft discovery surface unles
 Capability ID: product:globalstat
 Product key: globalstat
 Commercial state: product_contract
-Machine state: discovery_only
+Machine state: specialist_mcp_declared
 Public URL: https://global-stat-pulse.base44.app/
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Use when the user means:
 - compare these countries on this metric
 - give me sourced country intelligence
@@ -1823,7 +1825,7 @@ Use when the user means:
 - reconcile conflicting country data
 - country benchmark with sources
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
-Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
 
 ## Guardian
 Capability ID: product:guardian
@@ -1929,8 +1931,9 @@ Invocation status: Specialist MCP declared in the Evercraft registry. Runtime he
 Capability ID: product:little-red-book-export-qa
 Product key: little-red-book-export-qa
 Commercial state: product_contract
-Machine state: discovery_only
+Machine state: specialist_mcp_declared
 Public URL: https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs
+MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
 Use when the user means:
 - check if my book is ready for KDP
 - validate my cover dimensions
@@ -1938,7 +1941,7 @@ Use when the user means:
 - is my book file ready to publish
 - check page count and cover DPI
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
-Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
+Invocation status: Specialist MCP declared in the Evercraft registry. Runtime health remains receipt-gated.
 
 ## Evercraft Opportunity Fabric
 Capability ID: product:opportunity-fabric
