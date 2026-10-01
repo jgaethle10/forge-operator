@@ -188,6 +188,22 @@ export function buildCapabilityMesh({
           action.machine_tool_evidence_refs.length === 0
         ) {
           gaps.push('execution_machine_tool_evidence_missing:' + scope);
+        } else {
+          for (const ref of action.machine_tool_evidence_refs) {
+            const evidenceRef = String(ref || '').trim();
+            if (!evidenceRef) {
+              gaps.push('execution_machine_tool_evidence_missing:' + scope);
+              continue;
+            }
+            if (!fs.existsSync(path.resolve(root, evidenceRef))) {
+              gaps.push(
+                'execution_machine_tool_evidence_path_missing:' +
+                  scope +
+                  ':' +
+                  evidenceRef
+              );
+            }
+          }
         }
       }
     }
