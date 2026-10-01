@@ -51,3 +51,12 @@ test("Chromebook Edge DNS avoids the standardized mDNS host port",()=>{
  assert.match(mapper,/external: 53, internal: 1053, proto: 'TCP'/);
  assert.match(mapper,/external: 53, internal: 1053, proto: 'UDP'/);
 });
+
+test("WAN diagnosis distinguishes production DNS 53 from temporary high-port evidence",()=>{
+ assert.match(mapper,/external: 53, internal: 1053, proto: 'TCP'/);
+ assert.match(mapper,/external: 53, internal: 1053, proto: 'UDP'/);
+ assert.match(mapper,/external: 53053, internal: 1053, proto: 'TCP'/);
+ assert.match(mapper,/external: 53053, internal: 1053, proto: 'UDP'/);
+ assert.match(mapper,/production_mapping_control_ok/);
+ assert.match(mapper,/diagnostic_mapping_control_ok/);
+});
