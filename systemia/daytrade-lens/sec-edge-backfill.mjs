@@ -35,9 +35,25 @@ async function main() {
   );
   fs.mkdirSync(artifactDir, { recursive: true });
 
+  const canonicalEnrollment = loadCanonicalFrozenEnrollment();
+  const requestedLookbackDays = Number(
+    process.env.EDGE_LAB_SEC_LOOKBACK_DAYS || 365
+  );
+  const cutoffAgeDays = Math.max(
+    0,
+    Math.ceil(
+      (Date.now() - new Date(canonicalEnrollment.generated_at).getTime()) /
+        86400000
+    )
+  );
+  const effectiveLookbackDays = Math.max(
+    requestedLookbackDays,
+    cutoffAgeDays + 14
+  );
+
   const observationBatch = await buildSecRockyObservationBatch({
     universe: DEFAULT_SEC_RESEARCH_UNIVERSE,
-    lookback_days: Number(process.env.EDGE_LAB_SEC_LOOKBACK_DAYS || 365),
+    lookback_days: effectiveLookbackDays,
     publication_delay_buffer_minutes: Number(
       process.env.EDGE_LAB_SEC_PUBLICATION_DELAY_MINUTES || 10
     ),
@@ -182,7 +198,6 @@ async function main() {
     stateDir,
   });
 
-  const canonicalEnrollment = loadCanonicalFrozenEnrollment();
   const frozenCohorts = canonicalEnrollment.cohorts;
 
   const currentRunMeasurementsByCohort = new Map();
@@ -383,6 +398,11 @@ async function main() {
     schema: "evercraft.daytrade.sec-edge-backfill-receipt.v1",
     sec_observations: observationBatch.observation_count,
     sec_misses: observationBatch.misses.length,
+    requested_sec_lookback_days: requestedLookbackDays,
+    effective_sec_lookback_days: effectiveLookbackDays,
+    frozen_cutoff_age_days: cutoffAgeDays,
+    frozen_cutoff_retained_in_source_window:
+      effectiveLookbackDays >= cutoffAgeDays,
     hypotheses: report.hypothesis_count || 0,
     measurements: report.measurement_count || 0,
     signal_families: report.family_count || 0,
