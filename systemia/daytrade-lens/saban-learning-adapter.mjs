@@ -90,6 +90,14 @@ const DISCOVERY_PROFILES=Object.freeze({
     query:"investor attention familiarity salience bias day trading market",
     required_groups:[["investor","trading","market"],["attention","familiarity","salience","bias"]],
   },
+  "search-selection-identification":{
+    query:"financial false discovery rate specification search selection bias investment research",
+    required_groups:[["finance","financial","investment"],["false","discovery","selection","search","multiple"]],
+  },
+  "heavy-tail-dependence-inference":{
+    query:"Sharpe ratio volatility clustering heavy tails dependence inference finance",
+    required_groups:[["sharpe","signal"],["volatility","heavy","tail","dependence","garch"]],
+  },
 });
 
 function normalizedText(value){
@@ -268,6 +276,20 @@ function attackSpec(role, lesson) {
       "narrative-blind label permutation",
       "AI versus matched non-AI filing control",
       "semantic-label incremental-information test"
+    ]};
+  }
+  if (id === "search-selection-identification") {
+    return {...base, proposed_tests:[
+      "durable lifetime research-trial cemetery",
+      "reported-statistics FDR identification warning",
+      "independent frozen validation over candidate-only significance"
+    ]};
+  }
+  if (id === "heavy-tail-dependence-inference") {
+    return {...base, proposed_tests:[
+      "volatility-clustering and dependence diagnostic",
+      "heavy-tail concentration diagnostic",
+      "correlation-aware empirical null companion to DSR"
     ]};
   }
   return {...base, proposed_tests:["explicit falsification requirement"]};
