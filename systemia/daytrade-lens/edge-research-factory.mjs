@@ -177,6 +177,71 @@ export function buildMatchedPlaceboHypotheses(hypotheses = [], {
   return out;
 }
 
+export function buildDeterministicRandomPlaceboHypotheses(hypotheses = [], {
+  offset_pool_days = [-35, -28, -21, -14, 14, 21, 28, 35],
+  per_observation = 2,
+  exclusion_hours = 24,
+} = {}) {
+  const byOrigin = new Map();
+  for (const hypothesis of hypotheses) {
+    const origin = hypothesis.origin_entity_ref || "unknown";
+    if (!byOrigin.has(origin)) byOrigin.set(origin, []);
+    const time = new Date(hypothesis.observed_at).getTime();
+    if (Number.isFinite(time)) byOrigin.get(origin).push(time);
+  }
+
+  const exclusionMs = Number(exclusion_hours) * 60 * 60 * 1000;
+  const out = [];
+  for (const hypothesis of hypotheses) {
+    const base = new Date(hypothesis.observed_at).getTime();
+    if (!Number.isFinite(base)) continue;
+    const origin = hypothesis.origin_entity_ref || "unknown";
+    const realTimes = byOrigin.get(origin) || [];
+    const rankedOffsets = [...offset_pool_days]
+      .map((offsetDays) => ({
+        offsetDays: Number(offsetDays),
+        rank: sha({
+          hypothesis_id: hypothesis.hypothesis_id,
+          source_observation_id: hypothesis.source_observation_id,
+          offset_days: Number(offsetDays),
+          scheme: "deterministic_random_calendar",
+        }),
+      }))
+      .sort((a,b) => a.rank.localeCompare(b.rank));
+
+    let selected = 0;
+    for (const { offsetDays } of rankedOffsets) {
+      if (selected >= Number(per_observation)) break;
+      const shifted = base + offsetDays * 86400000;
+      if (
+        realTimes.some((real) =>
+          real !== base && Math.abs(real - shifted) <= exclusionMs
+        )
+      ) continue;
+
+      out.push({
+        ...hypothesis,
+        hypothesis_id: "edgerandomplacebo:" + sha({
+          hypothesis_id: hypothesis.hypothesis_id,
+          offset_days: offsetDays,
+        }).slice(0,24),
+        source_observation_id: "random-placebo:" + sha({
+          source_observation_id: hypothesis.source_observation_id,
+          offset_days: offsetDays,
+        }).slice(0,24),
+        observed_at: new Date(shifted).toISOString(),
+        placebo_for_source_observation_id: hypothesis.source_observation_id,
+        placebo_offset_days: offsetDays,
+        placebo_scheme: "deterministic_random_calendar",
+        research_only: true,
+        live_trade_authority: false,
+      });
+      selected += 1;
+    }
+  }
+  return out;
+}
+
 export function measureRockiesHypotheses(hypotheses, barsBySymbol, {
   benchmark = "SPY",
   lagBars = FIVE_MINUTE_LAG_BARS,
@@ -615,10 +680,16 @@ export async function runEdgeResearchBatch({
   }
 
   const placeboHypotheses = buildMatchedPlaceboHypotheses(hypotheses);
-  const window = dateWindow([...hypotheses, ...placeboHypotheses]);
+  const randomPlaceboHypotheses = buildDeterministicRandomPlaceboHypotheses(hypotheses);
+  const window = dateWindow([
+    ...hypotheses,
+    ...placeboHypotheses,
+    ...randomPlaceboHypotheses,
+  ]);
   const researchInstruments = uniq([
     ...hypotheses.flatMap((row) => row.research_instruments || []),
     ...placeboHypotheses.flatMap((row) => row.research_instruments || []),
+    ...randomPlaceboHypotheses.flatMap((row) => row.research_instruments || []),
   ]);
   const symbols = uniq([
     "SPY",
@@ -638,6 +709,10 @@ export async function runEdgeResearchBatch({
 
   const measurements = measureRockiesHypotheses(hypotheses, barsBySymbol);
   const placeboMeasurements = measureRockiesHypotheses(placeboHypotheses, barsBySymbol);
+  const randomPlaceboMeasurements = measureRockiesHypotheses(
+    randomPlaceboHypotheses,
+    barsBySymbol
+  );
   const evaluations = evaluateEdgeFamilies(measurements, { transaction_cost_bps });
   const candidates = evaluations.filter((row) => row.status === "RESEARCH_CANDIDATE");
 
@@ -649,12 +724,22 @@ export async function runEdgeResearchBatch({
     measurement_count: measurements.length,
     placebo_hypothesis_count: placeboHypotheses.length,
     placebo_measurement_count: placeboMeasurements.length,
+    random_placebo_hypothesis_count: randomPlaceboHypotheses.length,
+    random_placebo_measurement_count: randomPlaceboMeasurements.length,
     family_count: evaluations.length,
     research_candidate_count: candidates.length,
     measurements,
     placebo_measurements: placeboMeasurements,
+    random_placebo_measurements: randomPlaceboMeasurements,
     placebo_policy: {
       offsets_days: [-7, 7],
+      exclusion_hours_from_other_same_origin_events: 24,
+      same_weekday_preserved: true,
+      historical_diagnostic_only: true,
+    },
+    random_placebo_policy: {
+      offset_pool_days: [-35, -28, -21, -14, 14, 21, 28, 35],
+      deterministic_selection_per_observation: 2,
       exclusion_hours_from_other_same_origin_events: 24,
       same_weekday_preserved: true,
       historical_diagnostic_only: true,
