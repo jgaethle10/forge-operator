@@ -75,6 +75,7 @@ const report={
   evaluations:[{
     signal_key:"ai_models|sec_8_k|SOXX|1d",
     status:"RESEARCH_CANDIDATE",
+    learned_direction:"POSITIVE_EXCESS_RETURN",
   }],
   measurements:[{
     measurement_id:"m1",
@@ -83,6 +84,11 @@ const report={
     lag_key:"1d",
     observation_market_phase:"continuous_session",
     instrument_start_time:"2026-09-01T13:30:00.000Z",
+    instrument_end_time:"2026-09-02T13:30:00.000Z",
+    instrument_start_price:100,
+    instrument_end_price:101.5,
+    forward_return:0.015,
+    benchmark_return:0.002,
     execution_delay_stress:{
       "5m":{instrument_start_time:"2026-09-01T13:35:00.000Z"},
       "15m":{instrument_start_time:"2026-09-01T13:45:00.000Z"},
@@ -115,6 +121,19 @@ assert.equal(lab.quote_scope,"iex_bbo_not_consolidated_nbbo");
 assert.equal(lab.fallback_feed_used,false);
 assert.equal(lab.interpretation.missing_is_never_zero,true);
 assert.ok(lab.by_signal["ai_models|sec_8_k|SOXX|1d"].mean_spread_bps>0);
+assert.equal(
+  lab.by_signal["ai_models|sec_8_k|SOXX|1d"].modeled_entry_quote_count,
+  1
+);
+assert.ok(
+  lab.by_signal["ai_models|sec_8_k|SOXX|1d"].mean_entry_slippage_vs_bar_bps>0
+);
+assert.ok(
+  Number.isFinite(
+    lab.by_signal["ai_models|sec_8_k|SOXX|1d"].mean_quote_entry_strategy_net_partial
+  )
+);
+assert.equal(lab.interpretation.exit_execution_quote_adjusted,false);
 assert.equal(lab.live_trade_authority,false);
 
 const partial=await runQuoteMicrostructureLab(report,{
@@ -154,6 +173,8 @@ console.log(JSON.stringify({
   spread_and_half_spread:true,
   grouped_target_queries:true,
   explicit_feed_provenance:true,
+  marketable_entry_friction:true,
+  entry_side_partial_strategy_net:true,
   no_silent_feed_fallback:true,
   missing_never_zero:true,
   live_trade_authority:false
