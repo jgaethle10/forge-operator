@@ -129,6 +129,9 @@ export async function executeMicroSeedWorkload({
   if(!(manifest.supported_workloads||[]).includes(req.workload_class)){
     throw new Error('microseed_workload_not_authorized');
   }
+  if(manifest.compute_execution_mode==='none'){
+    throw new Error('microseed_compute_execution_not_declared');
+  }
 
   const safety=evaluateDeviceSafetyEnvelope({
     manifest,
@@ -154,7 +157,9 @@ export async function executeMicroSeedWorkload({
     return {...prior,deduplicated:true};
   }
 
-  const builtin=executeBuiltin(req.workload_class,req.payload);
+  const builtin=manifest.compute_execution_mode==='native_device'
+    ? executeBuiltin(req.workload_class,req.payload)
+    : null;
   const result=builtin??await executeBridgeOperation({
     manifest,
     workload:req.workload_class,
@@ -171,6 +176,7 @@ export async function executeMicroSeedWorkload({
     manifest_hash:manifest.manifest_hash,
     safety_receipt_ref:safety.receipt_hash,
     result,
+    execution_location:manifest.compute_execution_mode==='native_device'?'device':'gateway_proxy_to_device',
     deduplicated:false,
     arbitrary_code_execution:false,
     primary_function_priority:true,
