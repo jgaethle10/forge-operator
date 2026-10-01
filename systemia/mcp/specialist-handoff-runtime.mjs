@@ -566,7 +566,7 @@ async function defaultGatewayFetch(gatewayUrl, action, publicId) {
     const response = await fetch(target, {
       headers: {
         accept: 'application/json',
-        'user-agent': 'Evercraft-Specialist-Handoff-Runtime/0.1.0',
+        'user-agent': 'Evercraft-Specialist-Handoff-Runtime/0.2.0',
       },
       signal: controller.signal,
     });
@@ -588,7 +588,7 @@ export async function executeSpecialistRpc(def, rpc, gatewayFetch) {
     return rpcResult(id, {
       protocolVersion: '2025-03-26',
       capabilities: { tools: {} },
-      serverInfo: { name: def.server_name, version: '0.1.0' },
+      serverInfo: { name: def.server_name, version: '0.2.0' },
       instructions: `${def.description} ${def.truth_boundary}`,
     });
   }
@@ -675,7 +675,7 @@ export async function startSpecialistHandoffRuntime({
     service: 'specialist-handoff-mcp',
     runtime: 'Evercraft Compute',
     instance_id: instanceId,
-    version: '0.1.0',
+    version: '0.2.0',
     deployment_receipt_bound: Boolean(deploymentReceiptRef),
     deployment_receipt_ref: deploymentReceiptRef || null,
     identity_attestation_bound: Boolean(identityAttestation),
@@ -840,7 +840,7 @@ export async function startSpecialistHandoffRuntime({
           ok: true,
           service: def.title,
           server: def.server_name,
-          version: '0.1.0',
+          version: '0.2.0',
           public_id: def.public_id,
           transport: 'Streamable HTTP',
           tools: [def.get_offer_tool, def.prepare_handoff_tool],
