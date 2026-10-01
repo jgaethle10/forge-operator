@@ -1,4 +1,5 @@
 import { createHash } from 'node:crypto';
+import { performanceProfile, rankPerformanceAdjustment } from './performance-learning.mjs';
 
 const sha=(value)=>'sha256:'+createHash('sha256').update(
   typeof value==='string'?value:JSON.stringify(value)
@@ -119,7 +120,7 @@ function offerLocalityTags(offer){
   ].map(x=>String(x||'').trim().toLowerCase()).filter(Boolean));
 }
 
-function evaluateOffer(task,offer,nowMs){
+function evaluateOffer(task,offer,nowMs,performanceLedger=null){
   const reasons=[];
   const workloads=new Set((offer.metadata?.supported_workloads||[]).map(String));
   const labels=new Set((offer.metadata?.placement_labels||[]).map(x=>String(x).toLowerCase()));
@@ -171,6 +172,7 @@ function evaluateOffer(task,offer,nowMs){
   }
 
   let score=0;
+  let performance=null;
   if(!reasons.length){
     if(offer.economics?.zero_cost===true) score+=10000;
     if(offer.access_class==='authorized_compute') score+=1500;
@@ -186,6 +188,16 @@ function evaluateOffer(task,offer,nowMs){
     }
     score-=Math.min(500,Math.round(ageMs/1000));
     score+=Math.min(300,Math.round((offer.resources.memory_mb/Math.max(1,r.memory_mb))*10));
+
+    if(performanceLedger){
+      const profile=performanceProfile(performanceLedger,{
+        device_id:offer.provider_id,
+        workload_class:task.workload_class,
+        now:new Date(nowMs),
+      });
+      performance=rankPerformanceAdjustment(profile);
+      score+=performance.score;
+    }
   }
 
   return {
@@ -195,6 +207,7 @@ function evaluateOffer(task,offer,nowMs){
     failure_domain:offerFailureDomain(offer),
     age_ms:ageMs,
     device_class:deviceClass,
+    performance,
     offer,
   };
 }
@@ -216,6 +229,9 @@ function executionUnits(task){
 export function planHeterogeneousFabric({
   tasks=[],
   offers=[],
+  performanceLedger=null,
+  previousPlan=null,
+  stickinessScore=250,
   now=new Date(),
 }={}){
   const nowMs=now instanceof Date?now.getTime():Date.parse(String(now));
@@ -243,7 +259,7 @@ export function planHeterogeneousFabric({
 
   for(const task of sortedTasks){
     const evals=normalizedOffers
-      .map(o=>evaluateOffer(task,o,nowMs))
+      .map(o=>evaluateOffer(task,o,nowMs,performanceLedger))
       .filter(x=>x.eligible)
       .sort((a,b)=>b.score-a.score||a.offer.offer_id.localeCompare(b.offer.offer_id));
 
@@ -251,7 +267,13 @@ export function planHeterogeneousFabric({
 
     for(const unit of executionUnits(task)){
       let chosen=null;
-      for(const candidate of evals){
+      const priorOfferId=previousPlan?.placements?.find(x=>x.unit_id===unit.unit_id)?.offer_id||null;
+      const ranked=evals.map(candidate=>({
+        ...candidate,
+        effective_score:candidate.score+(candidate.offer.offer_id===priorOfferId?Math.max(0,Number(stickinessScore||0)):0),
+        sticky:candidate.offer.offer_id===priorOfferId,
+      })).sort((a,b)=>b.effective_score-a.effective_score||a.offer.offer_id.localeCompare(b.offer.offer_id));
+      for(const candidate of ranked){
         const left=residual.get(candidate.offer.offer_id);
         if(!left||left.slots<1) continue;
         const r=task.resources_per_execution;
@@ -274,7 +296,7 @@ export function planHeterogeneousFabric({
           replica_index:unit.replica_index,
           reason:'no_eligible_capacity',
           candidate_rejections:normalizedOffers.map(o=>{
-            const ev=evaluateOffer(task,o,nowMs);
+            const ev=evaluateOffer(task,o,nowMs,performanceLedger);
             return {offer_id:o.offer_id,reasons:ev.reasons};
           }),
         });
@@ -302,6 +324,9 @@ export function planHeterogeneousFabric({
         device_class:candidate.device_class,
         failure_domain:candidate.failure_domain,
         score:candidate.score,
+        effective_score:candidate.effective_score??candidate.score,
+        sticky_reuse:candidate.sticky===true,
+        performance_adjustment:candidate.performance||null,
         zero_cost:candidate.offer.economics?.zero_cost===true,
         attested:candidate.offer.trust.attested===true,
         preemptible:task.continuity.preemptible,
@@ -327,6 +352,8 @@ export function planHeterogeneousFabric({
     private_data_never_expands_authority:true,
     cross_device_memory_aggregation:false,
     replica_failure_domain_separation:true,
+    performance_learning_applied:Boolean(performanceLedger),
+    placement_stickiness_applied:Boolean(previousPlan),
     generated_at:new Date(nowMs).toISOString(),
   };
   return {...body,receipt_hash:sha(body)};
