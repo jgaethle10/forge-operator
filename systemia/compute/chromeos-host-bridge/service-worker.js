@@ -1,4 +1,7 @@
-import { extractPortForwardingState } from './tree-parser.js';
+import {
+  extractPortForwardingState,
+  locatePortForwardingSurface,
+} from './tree-parser.js';
 
 const VERSION = '0.2.0';
 const SETTINGS_URL = 'chrome://os-settings/crostini/portForwarding';
@@ -119,17 +122,29 @@ async function openSettingsTree() {
       }
     }
     for (let attempt = 0; attempt < 8; attempt += 1) {
-      const root = await getDesktop();
-      const parsed = extractPortForwardingState(
-        root,
-        undefined,
-        { expectedSurface: true },
-      );
-      if (
-        parsed.settings_surface_observed &&
-        parsed.diagnostics?.matched_ports > 0
-      ) {
-        return { root, source, expectedSurface: true };
+      const desktopRoot = await getDesktop();
+      const located = locatePortForwardingSurface(desktopRoot);
+      if (located.ok && located.root) {
+        const parsed = extractPortForwardingState(
+          located.root,
+          undefined,
+          { expectedSurface: true },
+        );
+        if (
+          parsed.settings_surface_observed &&
+          parsed.diagnostics?.matched_ports > 0
+        ) {
+          return {
+            root: located.root,
+            source,
+            expectedSurface: true,
+            surfaceIsolation: {
+              reason: located.reason,
+              candidate_count: located.candidate_count,
+              selected_node_count: located.selected_node_count,
+            },
+          };
+        }
       }
       await delay(250);
     }
@@ -153,13 +168,19 @@ async function reportObservation(requestId = null) {
   let treeSource = 'unavailable';
   let error = null;
   try {
-    const { root, source, expectedSurface } = await openSettingsTree();
+    const {
+      root,
+      source,
+      expectedSurface,
+      surfaceIsolation = null,
+    } = await openSettingsTree();
     treeSource = source;
     scan = extractPortForwardingState(
       root,
       undefined,
       { expectedSurface: expectedSurface === true },
     );
+    scan.surface_isolation = surfaceIsolation;
   } catch (cause) {
     error = String(cause?.message || cause).slice(0, 200);
     scan = {
@@ -200,6 +221,11 @@ async function reportObservation(requestId = null) {
       toggle_candidates: Number(scan.diagnostics?.toggle_candidates || 0),
       matched_ports: Number(scan.diagnostics?.matched_ports || 0),
       unmatched_toggle_candidates: Number(scan.diagnostics?.unmatched_toggle_candidates || 0),
+      surface_isolation: scan.surface_isolation ? {
+        reason: String(scan.surface_isolation.reason || '').slice(0, 64),
+        candidate_count: Number(scan.surface_isolation.candidate_count || 0),
+        selected_node_count: Number(scan.surface_isolation.selected_node_count || 0),
+      } : null,
       error,
     },
     authority: {
