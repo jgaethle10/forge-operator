@@ -6,6 +6,7 @@ import {
   ingestFaieObservation,
   publicFaieSnapshot
 } from './core.mjs';
+import { collectFaieOfficialSources, faieCollectorConfigFromEnv } from './collectors.mjs';
 
 function ensureDir(dir) {
   fs.mkdirSync(dir, { recursive: true });
@@ -122,7 +123,9 @@ export function investigationToMarkdown(investigation) {
 export function createFaieRuntime({
   stateDir = path.resolve('.runtime', 'faie'),
   intervalMs = Number(process.env.FAIE_INTERVAL_MS || 5 * 60 * 1000),
-  radarResident = null
+  radarResident = null,
+  fetchImpl = globalThis.fetch,
+  collectorConfig = faieCollectorConfigFromEnv()
 } = {}) {
   ensureDir(stateDir);
   const stateFile = path.join(stateDir, 'state.json');
@@ -215,7 +218,21 @@ export function createFaieRuntime({
     const errors = [];
 
     try {
-      const observations = [...externalObservations];
+      let officialCollectorRun = { observations: [], receipts: [] };
+      try {
+        officialCollectorRun = await collectFaieOfficialSources({
+          fetchImpl,
+          checkedAt: startedAt,
+          config: collectorConfig
+        });
+      } catch (error) {
+        errors.push('official_collectors: ' + (error instanceof Error ? error.message : String(error)));
+      }
+
+      const observations = [
+        ...(officialCollectorRun.observations || []),
+        ...externalObservations
+      ];
 
       if (radarResident && typeof radarResident.latest === 'function') {
         try {
@@ -246,6 +263,8 @@ export function createFaieRuntime({
         started_at: startedAt,
         finished_at: finishedAt,
         radar_signals_seen: radarSignalsSeen,
+        official_observations_seen: officialCollectorRun.observations?.length || 0,
+        official_collector_receipts: officialCollectorRun.receipts || [],
         external_observations_seen: externalObservations.length,
         admitted,
         deduped,
