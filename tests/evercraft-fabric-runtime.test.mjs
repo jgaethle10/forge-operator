@@ -272,6 +272,63 @@ test('owned Evercraft Compute MCP runtime serves challenge and Fabric without ga
     assert.equal(daytradeStress.result.structuredContent.edge_claimed,false);
     assert.equal(daytradeStress.result.structuredContent.broker_action_taken,false);
 
+    const fallenInfoResponse=await fetch(runtime.url+'/mcp/fallen');
+    assert.equal(fallenInfoResponse.status,200);
+    const fallenInfo=await fallenInfoResponse.json();
+    assert.equal(fallenInfo.service,'Fallen / Evercraft Studio');
+    assert.equal(fallenInfo.provider_execution,false);
+    assert.equal(fallenInfo.rendering_authority,false);
+    assert.equal(fallenInfo.publication_authority,false);
+
+    const fallenToolsResponse=await fetch(runtime.url+'/mcp/fallen',{
+      method:'POST',
+      headers:{'content-type':'application/json'},
+      body:JSON.stringify({jsonrpc:'2.0',id:9,method:'tools/list',params:{}}),
+    });
+    assert.equal(fallenToolsResponse.status,200);
+    const fallenTools=await fallenToolsResponse.json();
+    assert.deepEqual(
+      fallenTools.result.tools.map((x)=>x.name),
+      ['get_fallen_capabilities','plan_visual_explanation','audit_visual_explanation_plan']
+    );
+
+    const fallenPlanResponse=await fetch(runtime.url+'/mcp/fallen',{
+      method:'POST',
+      headers:{'content-type':'application/json'},
+      body:JSON.stringify({
+        jsonrpc:'2.0',
+        id:10,
+        method:'tools/call',
+        params:{
+          name:'plan_visual_explanation',
+          arguments:{
+            title:'Source-grounded explainer',
+            education_goal:'Explain the observed change without overstating causality.',
+            claims:[{
+              claim_id:'c1',
+              claim:'The observed value changed during the measured window.',
+              source_refs:['source:1'],
+              evidence_state:'observed',
+              volatile:true,
+              freshness_state:'fresh'
+            }],
+            visual_assets:[{
+              asset_id:'a1',
+              label:'Verified source chart',
+              source_refs:['source:1'],
+              evidence_state:'observed',
+              rights_state:'verified'
+            }]
+          }
+        }
+      }),
+    });
+    assert.equal(fallenPlanResponse.status,200);
+    const fallenPlan=await fallenPlanResponse.json();
+    assert.equal(fallenPlan.result.structuredContent.rendering_authority,false);
+    assert.equal(fallenPlan.result.structuredContent.publication_authority,false);
+    assert.equal(fallenPlan.result.structuredContent.provider_execution,false);
+
     assert.equal(gatewayCalls,0);
   }finally{
     await runtime.close();
