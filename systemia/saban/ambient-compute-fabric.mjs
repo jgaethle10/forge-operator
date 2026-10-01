@@ -117,12 +117,16 @@ export function resolveAmbientComputeOffers({
         rejected.push({id:String(raw?.id||''),reason:'workload_unsupported'});
         continue;
       }
-      if(requireVerifiedWorkload&&workloadClass){
+      if(requireVerifiedWorkload){
         const verified=new Set(offer.metadata.verified_workloads||[]);
         const expiry=Date.parse(String(offer.metadata.conformance_expires_at||''));
         const nowMs=now instanceof Date?now.getTime():Date.parse(String(now));
-        if(!verified.has(String(workloadClass))){
+        if(workloadClass&&!verified.has(String(workloadClass))){
           rejected.push({id:String(raw?.id||''),reason:'workload_not_conformance_verified'});
+          continue;
+        }
+        if(!workloadClass&&verified.size===0){
+          rejected.push({id:String(raw?.id||''),reason:'no_conformance_verified_workloads'});
           continue;
         }
         if(!Number.isFinite(expiry)||nowMs>=expiry){
