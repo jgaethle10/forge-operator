@@ -18,6 +18,17 @@ test('loads the typed ChromeOS read capability', () => {
   );
   assert.equal(capability.operation, 'read');
   assert.equal(capability.adapter, 'chromeos_crostini_port_forwarding');
+  assert.equal(capability.admission_state, 'candidate_field_gate');
+  assert.equal(capability.requires_field_certification, true);
+
+  const statusRow = status.capabilities.find(
+    (row) => row.capability_id === capability.capability_id,
+  );
+  assert.equal(statusRow.available_for_generic_dispatch, false);
+  assert.throws(
+    () => getHostBoundaryCapability(capability.capability_id, { requireAdmitted: true }),
+    /field_gate_required/,
+  );
   assert.equal(capability.mutation_authority, false);
   assert.equal(capability.arbitrary_desktop_control, false);
   assert.deepEqual(capability.scope.ports, [8443, 18080]);
