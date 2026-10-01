@@ -4,8 +4,13 @@ on:
   pull_request:
     paths:
       - "systemia/compute/remote-operator.mjs"
+      - "systemia/compute/chromeos-host-boundary-bridge.mjs"
+      - "systemia/compute/chromeos-host-boundary-bridge.test.mjs"
+      - "systemia/compute/chromeos-host-bridge/**"
+      - "systemia/compute/install-chromeos-host-boundary-bridge-user.sh"
       - "systemia/compute/network-observer.mjs"
       - "systemia/compute/remote-operator.test.mjs"
+      - "tests/network-observer-ingress-diagnosis.test.mjs"
       - "systemia/compute/runtime-node.mjs"
       - "systemia/compute/node-seed.mjs"
       - "systemia/compute/local-organism.mjs"
@@ -23,8 +28,13 @@ on:
     branches: [main]
     paths:
       - "systemia/compute/remote-operator.mjs"
+      - "systemia/compute/chromeos-host-boundary-bridge.mjs"
+      - "systemia/compute/chromeos-host-boundary-bridge.test.mjs"
+      - "systemia/compute/chromeos-host-bridge/**"
+      - "systemia/compute/install-chromeos-host-boundary-bridge-user.sh"
       - "systemia/compute/network-observer.mjs"
       - "systemia/compute/remote-operator.test.mjs"
+      - "tests/network-observer-ingress-diagnosis.test.mjs"
       - "systemia/compute/runtime-node.mjs"
       - "systemia/compute/node-seed.mjs"
       - "systemia/compute/local-organism.mjs"
@@ -52,6 +62,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Prove ChromeOS host boundary bridge
+        run: node --test systemia/compute/chromeos-host-boundary-bridge.test.mjs systemia/compute/chromeos-host-bridge/tree-parser.test.mjs tests/network-observer-ingress-diagnosis.test.mjs
       - name: Prove operator core
         run: node systemia/compute/remote-operator.test.mjs
       - name: Prove outbound remote operator
