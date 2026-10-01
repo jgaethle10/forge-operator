@@ -132,8 +132,10 @@ if(direct){
   }
   const radar=JSON.parse(fs.readFileSync(radarFile,'utf8'));
   const chromebookFile=clean(process.argv[3]);
-  const chromebook=chromebookFile&&fs.existsSync(chromebookFile)
+  const observation=chromebookFile&&fs.existsSync(chromebookFile)
     ? JSON.parse(fs.readFileSync(chromebookFile,'utf8'))
-    : undefined;
-  console.log(JSON.stringify(planProductionCapacity({radar,chromebook}),null,2));
+    : null;
+  const chromebook=observation?.chromebook||observation||undefined;
+  const broker=observation?.broker||undefined;
+  console.log(JSON.stringify(planProductionCapacity({radar,chromebook,broker}),null,2));
 }
