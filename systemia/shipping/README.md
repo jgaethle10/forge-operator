@@ -43,6 +43,7 @@ A provider error with unclear acceptance is deliberately more conservative than 
 - `release-station.mjs` - physically materializes a frozen client-facing release directory with clean filenames, exact SHA-256 byte verification, channel limits, source lineage, a human-readable release note, and mutation detection before dispatch.
 - `control-tower.mjs` - version-aware shipment orchestration, stale-package supersession, deliberate reissue authority, stuck-shipment detection, repair recipes, and notification-fabric intents for operational exceptions.
 - `proof-bundle.mjs` - end-to-end chain-of-custody proof tying control-tower order, frozen release bytes, shipment ledger, sent-copy verification, provider message ID, and delivery receipt together.
+- `recipient-response.mjs` - correlates inbound replies to verified deliveries, preserves exact linkage evidence, and emits follow-up signals without pretending a reply automatically means approval or authorizing an external action.
 - `shipping-ledger.mjs` - durable shipment reservations, idempotency, attempts, readback state.
 - `shipping-department.mjs` - envelope preparation, route/fallback policy, send-error classification, sent-copy verification.
 - `transport-runtime.mjs` - provider-agnostic dispatch runner with safe thread-to-fresh fallback, resume after interruptions, provider acceptance locks, and readback verification.
@@ -95,3 +96,12 @@ A completed shipment can now produce an Evercraft Shipping proof bundle. The bun
 - verified delivery receipt
 
 Any mismatch breaks the proof bundle. The evidence boundary remains strict: Shipping can prove what bytes were packaged and what provider message was verified, but it does not infer that the recipient opened the message, accepted the work, was satisfied, or achieved a downstream business result.
+
+
+## Recipient Response Loop
+
+Shipping no longer has to go blind after delivery. A reply can be correlated back to the exact verified shipment by provider message ID, provider thread, or an explicit human linkage reference. The resulting record proves that an inbound response was observed and preserves its source message ID and thread evidence.
+
+Disposition remains evidence-bound. Shipping does not run a vibes engine over customer replies and call them "approved." A response remains `unknown` unless a classification is supplied with an explicit basis. Only an `approved` disposition with a `human_confirmed` basis can assert customer acceptance in the response record. Even then, Shipping does not infer satisfaction, payment, renewal, or downstream business outcome.
+
+Recipient-response signals can route work back into Systemia, for example scheduling, owner review, revision intake, relationship follow-up, or closeout review. Those signals never authorize autonomous customer communication.
