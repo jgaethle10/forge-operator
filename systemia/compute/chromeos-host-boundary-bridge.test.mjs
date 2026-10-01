@@ -389,3 +389,67 @@ test('HTTP bridge rejects a replayed signed observer sequence', async () => {
     await new Promise((resolve) => runtime.server.close(resolve));
   }
 });
+
+
+test('HTTP bridge locks pairing to the first cryptographic observer', async () => {
+  const stateRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'evercraft-host-boundary-pair-lock-'));
+  const token = 'p'.repeat(64);
+  const runtime = await startChromeOsHostBoundaryBridge({
+    host: '127.0.0.1',
+    port: 0,
+    token,
+    stateRoot,
+  });
+
+  try {
+    const base = 'http://127.0.0.1:' + runtime.port;
+    const firstIdentity = await testObserverIdentity();
+    const firstPayload = {
+      observer_install_id: 'cros_pair_lock',
+      observer_key_fingerprint: firstIdentity.fingerprint,
+      public_key_jwk: firstIdentity.publicJwk,
+    };
+
+    const first = await fetch(base + '/v1/chromeos-host-boundary/pair', {
+      method: 'POST',
+      headers: {
+        authorization: 'Bearer ' + token,
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify(firstPayload),
+    });
+    assert.equal(first.status, 200);
+
+    const idempotent = await fetch(base + '/v1/chromeos-host-boundary/pair', {
+      method: 'POST',
+      headers: {
+        authorization: 'Bearer ' + token,
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify(firstPayload),
+    });
+    assert.equal(idempotent.status, 200);
+
+    const replacementIdentity = await testObserverIdentity();
+    const replacement = await fetch(base + '/v1/chromeos-host-boundary/pair', {
+      method: 'POST',
+      headers: {
+        authorization: 'Bearer ' + token,
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        observer_install_id: 'cros_pair_lock',
+        observer_key_fingerprint: replacementIdentity.fingerprint,
+        public_key_jwk: replacementIdentity.publicJwk,
+      }),
+    });
+    assert.equal(replacement.status, 422);
+    const replacementBody = await replacement.json();
+    assert.equal(
+      replacementBody.error,
+      'chromeos_host_boundary_pairing_locked',
+    );
+  } finally {
+    await new Promise((resolve) => runtime.server.close(resolve));
+  }
+});
