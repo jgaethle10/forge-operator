@@ -56,7 +56,8 @@
       "optional_env_args": {
         "--context-state": "SYSTEMIA_SOCIAL_SPECTACLE_CONTEXT_STATE",
         "--state-dir": "SYSTEMIA_SOCIAL_SPECTACLE_STATE_DIR",
-        "--brand": "SYSTEMIA_SOCIAL_SPECTACLE_BRAND"
+        "--brand": "SYSTEMIA_SOCIAL_SPECTACLE_BRAND",
+        "--radar-state": "SYSTEMIA_SOCIAL_SPECTACLE_RADAR_STATE"
       }
     },
     {
