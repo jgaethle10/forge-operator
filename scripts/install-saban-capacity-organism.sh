@@ -162,10 +162,54 @@ TimeoutStartSec=20s
 WantedBy=multi-user.target
 EOF
 
+cat >/etc/systemd/system/evercraft-saban-probation.service <<EOF
+[Unit]
+Description=Evercraft Saban MicroSeed probation and calibration organism
+After=network-online.target evercraft-saban-microseed-gateway.service evercraft-saban-capacity.service
+Requires=evercraft-saban-microseed-gateway.service
+
+[Service]
+Type=oneshot
+User=$RUN_USER
+Group=$RUN_GROUP
+WorkingDirectory=$REPO_ROOT
+Environment=SABAN_AMBIENT_STATE_DIR=$STATE_DIR
+Environment=SABAN_ALLOW_COMMERCIAL_CAPACITY=0
+ExecStart=$NODE_BIN $REPO_ROOT/systemia/saban/microseed-probation-organism.mjs --root $STATE_DIR --gateway-url http://127.0.0.1:8791 --gateway-token-file $GATEWAY_TOKEN_FILE
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=read-only
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+RestrictRealtime=true
+ReadWritePaths=$STATE_DIR
+TimeoutStartSec=90s
+EOF
+
+cat >/etc/systemd/system/evercraft-saban-probation.timer <<EOF
+[Unit]
+Description=Continuously conform and calibrate authorized MicroSeed devices
+
+[Timer]
+OnBootSec=55s
+OnUnitActiveSec=$CADENCE
+Persistent=true
+Unit=evercraft-saban-probation.service
+
+[Install]
+WantedBy=timers.target
+EOF
+
 systemctl daemon-reload
 systemctl enable --now evercraft-saban-capacity.timer
 systemctl enable --now evercraft-saban-microseed-gateway.service
+systemctl enable --now evercraft-saban-probation.timer
 systemctl start evercraft-saban-capacity.service
+systemctl start evercraft-saban-probation.service || true
 
 echo "Saban capacity organism installed."
 systemctl --no-pager --full status evercraft-saban-capacity.timer | sed -n '1,12p'
@@ -173,5 +217,6 @@ echo
 echo "State: $STATE_DIR/capacity-organism-state.json"
 echo "Registry: $STATE_DIR/registry"
 echo "MicroSeed gateway: http://127.0.0.1:8791"
+echo "Probation timer: evercraft-saban-probation.timer"
 echo "Gateway token file: $GATEWAY_TOKEN_FILE"
 echo "Device token directory: $STATE_DIR/.secrets/device-tokens"
