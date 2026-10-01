@@ -71,6 +71,7 @@ export function ambientCapabilityToComputeOffer(capability={}){
     quote_required:false,
     metadata:{
       source:'ambient-capability',
+      source_type:String(capability.source_type||'unknown'),
       device_class:String(meta.device_class||'unknown'),
       device_model:meta.device_model?String(meta.device_model):null,
       owner_ref_hash:capability.owner_ref?sha(String(capability.owner_ref)):null,
@@ -83,6 +84,11 @@ export function ambientCapabilityToComputeOffer(capability={}){
       thermal_budget:meta.thermal_budget||null,
       authorization_required:true,
       arbitrary_code_execution:false,
+      verified_workloads:uniq(meta.verified_workloads),
+      conformance_receipt_hash:meta.conformance_receipt_hash||null,
+      conformance_verified_at:meta.conformance_verified_at||null,
+      conformance_expires_at:meta.conformance_expires_at||null,
+      conformance_required:capability.source_type==='microseed-device',
     },
     observed_at:capability.observed_at||new Date().toISOString(),
   };
