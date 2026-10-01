@@ -105,8 +105,15 @@ function inputItems({inputFile,contextStateFile,radarStateFile}={}){
 function visualPath(observation){
   const facts=observation?.facts||{};
   if(facts?.phenomenon?.kind==='flow') return {kind:'fallen_phenomenon',strength:1};
-  if(Array.isArray(facts?.timeline)||Array.isArray(facts?.series)||Array.isArray(observation?.measurements)){
-    const count=(facts.timeline?.length||0)+(facts.series?.length||0)+(observation.measurements?.length||0);
+  const measurements=Array.isArray(observation?.measurements)?observation.measurements:[];
+  const geolocatedMeasurements=measurements.filter(row=>
+    Number.isFinite(Number(row?.lat))&&Number.isFinite(Number(row?.lon))
+  );
+  if(geolocatedMeasurements.length>=3){
+    return {kind:'fallen_geo_explainer',strength:.92};
+  }
+  if(Array.isArray(facts?.timeline)||Array.isArray(facts?.series)||measurements.length){
+    const count=(facts.timeline?.length||0)+(facts.series?.length||0)+measurements.length;
     if(count>=3) return {kind:'fallen_data_cinematic',strength:.82};
   }
   const mediaRefs=unique([...(observation?.media_refs||[]),...(facts?.media_refs||[])]);
