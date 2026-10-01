@@ -33,14 +33,18 @@ export const ATTACK_IMPLEMENTATION_MAP=Object.freeze({
     evidence:["systemia/daytrade-lens/edge-walk-forward.mjs"]
   },
   "deflated Sharpe exploratory diagnostic":{
-    status:"missing",
-    evidence:[],
-    gap:"No Deflated Sharpe implementation yet."
+    status:"implemented",
+    evidence:[
+      "systemia/daytrade-lens/edge-deflated-sharpe.mjs",
+      "systemia/daytrade-lens/edge-family-max-null.mjs"
+    ]
   },
   "skew-kurtosis-tail receipt":{
-    status:"partial",
-    evidence:["systemia/daytrade-lens/edge-breaker-lab.mjs"],
-    gap:"Tail, median and winsorized diagnostics exist; explicit skew and kurtosis are not yet emitted."
+    status:"implemented",
+    evidence:[
+      "systemia/daytrade-lens/edge-breaker-lab.mjs",
+      "systemia/daytrade-lens/edge-deflated-sharpe.mjs"
+    ]
   },
   "family-wide trial penalty":{
     status:"implemented",
