@@ -9,6 +9,9 @@ on:
       - 'systemia/compute/operator-public-edge-admit.mjs'
       - 'scripts/fabric-edge-external-canary.mjs'
       - 'scripts/install-fabric-owned-edge.sh'
+      - 'scripts/install-fabric-network-observer.sh'
+      - 'scripts/update-fabric-owned-edge.sh'
+      - 'systemia/compute/network-observer.mjs'
       - '.github/workflows/chromebook-operator-edge-canary.yml'
   workflow_dispatch:
   schedule:
