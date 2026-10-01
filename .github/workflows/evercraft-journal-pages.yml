@@ -1,0 +1,77 @@
+name: Evercraft Journal public static release
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'systemia/newsroom/**'
+      - '.github/workflows/evercraft-journal-pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: evercraft-journal-pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Prove owned Journal contracts
+        run: npm run journal:test
+
+      - name: Build Journal for independent public origin
+        env:
+          EVERCRAFT_JOURNAL_ORIGIN: https://jgaethle10.github.io/forge-operator
+        run: |
+          rm -rf _journal_site
+          node systemia/newsroom/journal-publisher.mjs systemia/newsroom/stories _journal_site
+
+      - name: Verify crawler-facing Journal artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f _journal_site/index.html
+          test -f _journal_site/index.json
+          test -f _journal_site/feed.xml
+          test -f _journal_site/llms.txt
+          grep -q 'Evercraft Journal' _journal_site/index.html
+          grep -q 'https://jgaethle10.github.io/forge-operator/' _journal_site/index.json
+          if grep -RniE 'Black Friday|shopping assistant|optimize your cart' _journal_site; then
+            echo "Legacy shopping identity detected in independent Journal artifact."
+            exit 1
+          fi
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Upload Journal Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _journal_site
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    timeout-minutes: 8
+    steps:
+      - name: Deploy Evercraft Journal
+        id: deployment
+        uses: actions/deploy-pages@v4
