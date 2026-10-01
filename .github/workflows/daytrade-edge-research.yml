@@ -47,6 +47,7 @@ jobs:
           node systemia/daytrade-lens/edge-forward-paper-seed.test.mjs
           node systemia/daytrade-lens/edge-stress-lab.test.mjs
           node systemia/daytrade-lens/edge-search-burden.test.mjs
+          node systemia/daytrade-lens/edge-research-trial-cemetery.test.mjs
           node systemia/daytrade-lens/edge-family-max-null.test.mjs
           node systemia/daytrade-lens/edge-deflated-sharpe.test.mjs
           node systemia/daytrade-lens/edge-tail-dependence.test.mjs
