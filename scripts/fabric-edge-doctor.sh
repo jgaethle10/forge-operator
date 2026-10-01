@@ -39,6 +39,7 @@ node_receipt="$RUN_HOME/.local/state/evercraft/organism/compute/nodeseed-receipt
 allocator_file="$RUN_HOME/.local/state/evercraft/organism/.secrets/allocator-token"
 local_organism_install_receipt="/tmp/evercraft-edge-doctor-local-organism-install.log"
 self_update_install_receipt="/tmp/evercraft-edge-doctor-self-update-install.log"
+saban_capacity_install_receipt="/tmp/evercraft-edge-doctor-saban-capacity-install.log"
 
 ensure_local_organism(){
   if [[ -f "$node_receipt" && -f "$allocator_file" ]]; then
@@ -97,6 +98,31 @@ ensure_fabric_update_timer(){
   return 0
 }
 
+ensure_saban_capacity_timer(){
+  if systemctl list-unit-files evercraft-saban-capacity.timer --no-legend 2>/dev/null | grep -q '^evercraft-saban-capacity.timer'; then
+    systemctl enable --now evercraft-saban-capacity.timer >/dev/null 2>&1 || true
+  else
+    if [[ ! -f "$REPO_ROOT/scripts/install-saban-capacity-organism.sh" ]]; then
+      echo "ERROR: Saban capacity organism installer missing" >&2
+      return 51
+    fi
+    echo "[repair] Saban capacity organism missing; installing zero-spend resident fabric..."
+    set +e
+    bash "$REPO_ROOT/scripts/install-saban-capacity-organism.sh"       --repo-root "$REPO_ROOT"       --user "$RUN_USER"       --cadence 2min       >"$saban_capacity_install_receipt" 2>&1
+    local rc=$?
+    set -e
+    if [[ "$rc" -ne 0 ]]; then
+      cat "$saban_capacity_install_receipt" >&2 || true
+      return 52
+    fi
+  fi
+
+  systemctl daemon-reload
+  systemctl enable --now evercraft-saban-capacity.timer >/dev/null 2>&1 || return 53
+  systemctl start evercraft-saban-capacity.service >/dev/null 2>&1 || return 54
+  return 0
+}
+
 service_state(){
   local unit="$1"
   systemctl is-active "$unit" 2>/dev/null || true
@@ -125,9 +151,11 @@ echo "repo=$REPO_ROOT"
 echo "domain=$DOMAIN"
 
 local_organism_repair_ok=true
+saban_capacity_repair_ok=true
 self_update_repair_ok=true
 local_organism_repair_code=0
 self_update_repair_code=0
+saban_capacity_repair_code=0
 
 if [[ "$REPAIR" == "true" ]]; then
   echo
@@ -145,6 +173,12 @@ if [[ "$REPAIR" == "true" ]]; then
   set -e
   [[ "$self_update_repair_code" -eq 0 ]] || self_update_repair_ok=false
 
+  set +e
+  ensure_saban_capacity_timer
+  saban_capacity_repair_code=$?
+  set -e
+  [[ "$saban_capacity_repair_code" -eq 0 ]] || saban_capacity_repair_ok=false
+
   systemctl enable --now evercraft-fabric.service >/dev/null 2>&1 || true
   systemctl enable --now evercraft-public-edge.service >/dev/null 2>&1 || true
   systemctl enable --now evercraft-router-map.timer >/dev/null 2>&1 || true
@@ -158,6 +192,7 @@ fabric_state="$(service_state evercraft-fabric.service)"
 edge_state="$(service_state evercraft-public-edge.service)"
 router_timer_state="$(service_state evercraft-router-map.timer)"
 update_timer_state="$(service_state evercraft-fabric-update.timer)"
+saban_capacity_timer_state="$(service_state evercraft-saban-capacity.timer)"
 
 echo
 echo "[services]"
@@ -165,11 +200,14 @@ echo "evercraft-fabric.service=$fabric_state"
 echo "evercraft-public-edge.service=$edge_state"
 echo "evercraft-router-map.timer=$router_timer_state"
 echo "evercraft-fabric-update.timer=$update_timer_state"
+echo "evercraft-saban-capacity.timer=$saban_capacity_timer_state"
 if [[ "$REPAIR" == "true" ]]; then
   echo "local_organism_repair_ok=$local_organism_repair_ok"
   echo "local_organism_repair_code=$local_organism_repair_code"
   echo "self_update_repair_ok=$self_update_repair_ok"
   echo "self_update_repair_code=$self_update_repair_code"
+  echo "saban_capacity_repair_ok=$saban_capacity_repair_ok"
+  echo "saban_capacity_repair_code=$saban_capacity_repair_code"
 fi
 
 local_health_ok=false
@@ -261,6 +299,8 @@ if [[ "$REPAIR" == "true" && "$local_organism_repair_ok" != "true" ]]; then
   diagnosis="local_organism_repair_failed"
 elif [[ "$REPAIR" == "true" && "$self_update_repair_ok" != "true" ]]; then
   diagnosis="fabric_update_repair_failed"
+elif [[ "$REPAIR" == "true" && "$saban_capacity_repair_ok" != "true" ]]; then
+  diagnosis="saban_capacity_repair_failed"
 elif [[ "$local_health_ok" != "true" ]]; then
   diagnosis="fabric_runtime_unreachable"
 elif [[ -n "$LAN_HOST" && ( "$lan_http_ok" != "true" || "$lan_https_ok" != "true" ) ]]; then
@@ -290,10 +330,13 @@ cat > /tmp/evercraft-fabric-edge-doctor.json <<EOF
   "public_edge_service":"$edge_state",
   "router_map_timer":"$router_timer_state",
   "fabric_update_timer":"$update_timer_state",
+  "saban_capacity_timer":"$saban_capacity_timer_state",
   "local_organism_repair_ok":$(json_bool "$local_organism_repair_ok"),
   "local_organism_repair_code":$local_organism_repair_code,
   "self_update_repair_ok":$(json_bool "$self_update_repair_ok"),
   "self_update_repair_code":$self_update_repair_code,
+  "saban_capacity_repair_ok":$(json_bool "$saban_capacity_repair_ok"),
+  "saban_capacity_repair_code":$saban_capacity_repair_code,
   "lan_http_forward_ok":$(json_bool "$lan_http_ok"),
   "lan_https_forward_ok":$(json_bool "$lan_https_ok"),
   "router_refresh_ok":$(json_bool "$router_refresh_ok"),

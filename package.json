@@ -88,7 +88,7 @@
     "proof:saban-kernel": "node systemia/saban/kernel-proof.mjs",
     "proof:saban-chum": "node systemia/saban/multiplier.mjs --software chum --agents 512 --workers 16 --execute",
     "proof:saban-media": "node systemia/saban/multiplier.mjs --software media-pipeline --inventory systemia/saban/fixtures/media-job.json --agents 32 --workers 4 --execute --reconcile",
-    "check:saban-contracts": "node systemia/saban/contract-doctor.mjs",
+    "check:saban-contracts": "node systemia/saban/contract-doctor.mjs && npm run proof:saban-ambient-fabric",
     "saban:formation": "node systemia/saban/formation.mjs",
     "proof:saban-formation": "node systemia/saban/formation.mjs --request systemia/saban/fixtures/formation-proof.json --execute",
     "proof:saban-nodeseed-multiplier": "node systemia/network/saban-multiplier-nodeseed-proof.mjs",
@@ -261,6 +261,10 @@
     "proof:saban-zero-spend-fabric": "npm run test:saban-ambient-compute && npm run test:saban-production-capacity",
     "test:sentinel-live-canary": "node systemia/sentinel/live-profile-canary.test.mjs",
     "canary:sentinel-live-profile": "node systemia/sentinel/live-profile-canary.mjs --profile yakima-basin-wa",
+    "test:saban-ambient-fabric": "node --test tests/saban-ambient-compute-fabric.test.mjs tests/saban-microseed-device-bridge.test.mjs tests/saban-ambient-device-trust.test.mjs tests/saban-ambient-census.test.mjs tests/saban-capability-fabric-composer.test.mjs tests/saban-heterogeneous-fabric-planner.test.mjs tests/saban-workload-anatomy.test.mjs tests/saban-capacity-organism.test.mjs tests/saban-device-safety-envelope.test.mjs tests/saban-capacity-resident.test.mjs",
+    "proof:saban-ambient-fabric": "npm run test:saban-ambient-fabric && npm run test:saban-production-capacity",
+    "saban:capacity:once": "node systemia/saban/capacity-organism.mjs --once",
+    "saban:device": "node systemia/saban/ambient-device-cli.mjs",
     "test:towi": "node --test systemia/towi/*.test.mjs"
   },
   "dependencies": {
