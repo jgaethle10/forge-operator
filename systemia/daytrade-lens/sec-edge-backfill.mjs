@@ -15,6 +15,7 @@ import { loadCanonicalFrozenEnrollment } from "./edge-forward-paper-seed.mjs";
 import { ForwardPaperDurableState } from "./edge-forward-paper-durable.mjs";
 import { runEdgeStressLab } from "./edge-stress-lab.mjs";
 import { summarizeResearchSearchBurden } from "./edge-search-burden.mjs";
+import { ResearchTrialCemetery } from "./edge-research-trial-cemetery.mjs";
 import { runFamilyMaxNullLab } from "./edge-family-max-null.mjs";
 import { runDeflatedSharpeLab } from "./edge-deflated-sharpe.mjs";
 import { runTailDependenceLab } from "./edge-tail-dependence.mjs";
@@ -394,7 +395,90 @@ async function main() {
   let durableScores = [];
   let durableClusterScores = { scores: [] };
 
+  let trialCemeteryState = {
+    configured: false,
+    restart_reopen_verified: false,
+    run_count: 0,
+    trial_observation_count: 0,
+    unique_trial_configuration_count: 0,
+    journal_records: 0,
+    head_hash: null,
+    root: null,
+    ingest_receipt: null,
+  };
+  const trialCemeteryFile = path.join(
+    artifactDir,
+    "research-trial-cemetery-summary.json"
+  );
+
   const durableRoot = String(process.env.EVERCRAFT_EDGE_LAB_DURABLE_ROOT || "").trim();
+  const configuredTrialCemeteryRoot = String(
+    process.env.EVERCRAFT_EDGE_LAB_TRIAL_CEMETERY_ROOT ||
+      (durableRoot ? path.join(durableRoot, "research-trial-cemetery") : "")
+  ).trim();
+
+  if (configuredTrialCemeteryRoot) {
+    const cemetery = new ResearchTrialCemetery({
+      root: configuredTrialCemeteryRoot,
+    });
+    const ingestReceipt = cemetery.ingestReport(report, {
+      research_config: {
+        transaction_cost_bps: Number(
+          process.env.EDGE_LAB_TRANSACTION_COST_BPS || 5
+        ),
+        sec_publication_delay_buffer_minutes:
+          observationBatch.publication_delay_buffer_minutes,
+        bar_minutes: 5,
+        development_fraction: 0.70,
+        false_discovery_rate: 0.10,
+      },
+      source_digest:
+        report.source_digest ||
+        observationBatch.source_digest ||
+        null,
+    });
+    const beforeRestart = cemetery.summary();
+    const reopenedCemetery = new ResearchTrialCemetery({
+      root: configuredTrialCemeteryRoot,
+    });
+    const afterRestart = reopenedCemetery.summary();
+    if (
+      beforeRestart.trial_observation_count !==
+        afterRestart.trial_observation_count ||
+      beforeRestart.run_count !== afterRestart.run_count ||
+      beforeRestart.head_hash !== afterRestart.head_hash
+    ) {
+      throw new Error("edge_trial_cemetery_reopen_mismatch");
+    }
+    trialCemeteryState = {
+      configured: true,
+      restart_reopen_verified: true,
+      run_count: afterRestart.run_count,
+      trial_observation_count: afterRestart.trial_observation_count,
+      unique_trial_configuration_count:
+        afterRestart.unique_trial_configuration_count,
+      journal_records: afterRestart.journal_records,
+      head_hash: afterRestart.head_hash,
+      root: path.resolve(configuredTrialCemeteryRoot),
+      ingest_receipt: ingestReceipt,
+      all_statuses_retained: afterRestart.all_statuses_retained,
+      winner_only_storage_forbidden:
+        afterRestart.winner_only_storage_forbidden,
+    };
+  }
+
+  fs.writeFileSync(
+    trialCemeteryFile,
+    JSON.stringify({
+      schema: "evercraft.daytrade.research-trial-cemetery-runtime-receipt.v1",
+      ...trialCemeteryState,
+      configured_storage_required_for_cross_run_claim: true,
+      ephemeral_artifact_storage_is_not_lifetime_memory: true,
+      live_trade_authority: false,
+    }, null, 2) + "\n"
+  );
+
+
   if (durableRoot) {
     const durable = new ForwardPaperDurableState({ root: durableRoot });
     const enrollment = frozenCohorts.map((cohort) => durable.enroll(cohort));
@@ -531,6 +615,7 @@ async function main() {
     forwardScores: durableScores,
     forwardClusterScores: durableClusterScores,
     durableState,
+    trialCemeteryState,
   });
   const pilotReadinessFile = path.join(artifactDir, "sec-edge-pilot-readiness.json");
   fs.writeFileSync(
@@ -627,6 +712,12 @@ async function main() {
     frozen_forward_paper_cohorts: frozenCohorts.length,
     durable_forward_paper_state_configured: durableState.configured,
     durable_forward_paper_restart_reopen_verified: durableState.restart_reopen_verified,
+    research_trial_cemetery_configured: trialCemeteryState.configured,
+    research_trial_cemetery_restart_reopen_verified:
+      trialCemeteryState.restart_reopen_verified,
+    research_trial_cemetery_run_count: trialCemeteryState.run_count,
+    research_trial_cemetery_trial_observation_count:
+      trialCemeteryState.trial_observation_count,
     pilot_evidence_ready_count: pilotReadiness.evidence_ready_count || 0,
     pilot_readiness_status: pilotReadiness.overall_status,
     top_screened_families: top,
@@ -638,6 +729,7 @@ async function main() {
       observations: observationFile,
       research: reportFile,
       search_burden: searchBurdenFile,
+      research_trial_cemetery: trialCemeteryFile,
       family_max_null: familyMaxNullFile,
       deflated_sharpe: deflatedSharpeFile,
       tail_dependence: tailDependenceFile,
