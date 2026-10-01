@@ -28,3 +28,18 @@ jobs:
           node-version: 22
       - name: Prove receipt-to-action-manifest boundaries
         run: node --test systemia/chum/machine-action-manifest.test.mjs
+
+      - name: Observe live public MCP tools and audit shared-runtime bindings
+        run: node systemia/chum/mcp-canary.mjs
+
+      - name: Upload machine-action receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: machine-action-manifest-receipts
+          path: |
+            artifacts/chum/mcp-canary-latest.json
+            artifacts/chum/machine-action-manifest-latest.json
+            artifacts/chum/machine-action-contract-audit-latest.json
+          if-no-files-found: error
+          retention-days: 14
