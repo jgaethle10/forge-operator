@@ -13,6 +13,19 @@ import { EvercraftAuditExportRuntime } from './export-runtime.mjs';
 const root=fs.mkdtempSync(path.join(os.tmpdir(),'evercraft-audit-export-proof-'));
 let now=new Date('2026-10-01T15:00:00.000Z');
 const signingKey='object-delivery-proof-signing-key-0000000000000001';
+function diskText(dir){
+  const chunks=[];
+  const walk=(current)=>{
+    if(!fs.existsSync(current)) return;
+    for(const entry of fs.readdirSync(current,{withFileTypes:true})){
+      const full=path.join(current,entry.name);
+      if(entry.isDirectory()) walk(full);
+      else if(entry.isFile()) chunks.push(fs.readFileSync(full));
+    }
+  };
+  walk(dir);
+  return Buffer.concat(chunks).toString('utf8');
+}
 
 try{
   const secrets=new EvercraftSecretStore({
@@ -139,8 +152,7 @@ try{
     now=new Date('2026-10-01T15:01:00.000Z');
     assert.equal((await fetch(short)).status,403);
 
-    const disk=fs.readFileSync(path.join(root,'secrets','secrets.json'),'utf8');
-    assert.equal(disk.includes(signingKey),false);
+    assert.equal(diskText(path.join(root,'secrets')).includes(signingKey),false);
 
     console.log(JSON.stringify({
       schema:'evercraft.audit-center.export-runtime-proof.v1',
