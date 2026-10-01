@@ -117,9 +117,10 @@ function normalizeAsComputeOffer(offer,{quoted=false,agreement=null,transcript=n
 }
 
 export class VoluntaryComputeMarket {
-  constructor({maxRounds=6}={}){
+  constructor({maxRounds=6,leaseResolver=null}={}){
     this.market='evercraft-voluntary';
     this.maxRounds=Math.max(1,Number(maxRounds)||6);
+    this.leaseResolver=typeof leaseResolver==='function'?leaseResolver:null;
     this.providers=new Map();
     this.offers=new Map();
   }
@@ -138,6 +139,7 @@ export class VoluntaryComputeMarket {
       provider_id:id,
       public_key:key,
       public_key_pem:String(public_key_pem),
+      fingerprint:sha(String(public_key_pem)),
       negotiator:typeof negotiator==='function'?negotiator:null,
       leaseFactory:typeof leaseFactory==='function'?leaseFactory:null,
       provider_token:randomBytes(32).toString('hex'),
@@ -150,7 +152,7 @@ export class VoluntaryComputeMarket {
       schema:'evercraft.saban.voluntary-provider-registration.v1',
       provider_id:id,
       registered_at:this.providers.get(id).registered_at,
-      fingerprint:sha(key.export({type:'spki',format:'der'})),
+      fingerprint:sha(String(public_key_pem)),
     };
     Object.defineProperty(result,'provider_token',{
       value:this.providers.get(id).provider_token,
@@ -447,11 +449,17 @@ export class VoluntaryComputeMarket {
     if(!provider) throw new Error('voluntary_provider_unavailable');
 
     let runtime=null;
-    if(provider.leaseFactory){
-      runtime=await provider.leaseFactory({
+    const resolver=provider.leaseFactory||this.leaseResolver;
+    if(resolver){
+      runtime=await resolver({
         demand:structuredClone(demand),
         agreement:structuredClone(agreement),
         offer:structuredClone(source),
+        provider:{
+          provider_id:provider.provider_id,
+          fingerprint:provider.fingerprint,
+          public_key_pem:provider.public_key_pem,
+        },
       });
     }
 
