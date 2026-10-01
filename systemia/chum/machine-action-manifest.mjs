@@ -109,3 +109,74 @@ export function findObservedTool(manifest, { product_key = null, registry_name =
       'Observed means the exact tool name appeared in a live tools/list receipt. It does not prove tools/call success or grant authority.',
   };
 }
+
+
+export function auditCapabilityContractsAgainstActionManifest({
+  contracts,
+  manifest,
+} = {}) {
+  if (contracts?.schema !== 'evercraft.capability-mesh.contracts.v1') {
+    throw new Error('capability_contract_schema_invalid');
+  }
+  if (manifest?.schema !== 'evercraft.machine-action-manifest.v1') {
+    throw new Error('machine_action_manifest_schema_invalid');
+  }
+
+  const bindings = [];
+  for (const contract of contracts.contracts || []) {
+    if (contract.adoption_stage !== 'shared_runtime') continue;
+    for (const action of contract.execution?.actions || []) {
+      const scope = clean(action.scope);
+      const machineTool = clean(action.machine_tool);
+      let state = 'verified';
+      let reason = null;
+      let observed = false;
+
+      if (!machineTool) {
+        state = 'unbound';
+        reason = 'machine_tool_missing';
+      } else {
+        const lookup = findObservedTool(manifest, {
+          product_key: contract.product_key,
+          tool_name: machineTool,
+        });
+        observed = lookup.observed;
+        if (!observed) {
+          state = 'unverified';
+          reason = 'machine_tool_not_observed';
+        }
+      }
+
+      bindings.push({
+        product_key: contract.product_key,
+        adoption_stage: contract.adoption_stage,
+        scope,
+        machine_tool: machineTool || null,
+        state,
+        observed_in_live_tools_list: observed,
+        tool_call_verified: false,
+        reason,
+        evidence_refs: uniqueSorted(action.machine_tool_evidence_refs || []),
+      });
+    }
+  }
+
+  const failed = bindings.filter((binding) => binding.state !== 'verified');
+  return {
+    schema: 'evercraft.machine-action-contract-audit.v1',
+    observed_at: manifest.observed_at,
+    source_manifest_sha256: manifest.source_receipt_sha256,
+    summary: {
+      shared_runtime_action_count: bindings.length,
+      verified_binding_count: bindings.length - failed.length,
+      failed_binding_count: failed.length,
+    },
+    bindings,
+    state: failed.length === 0 ? 'pass' : 'blocked',
+    truth_boundary: {
+      verified_binding_means_exact_tool_was_listed_not_called: true,
+      verified_binding_grants_authority: false,
+      failed_binding_must_not_fall_back_to_inferred_tool_name: true,
+    },
+  };
+}
