@@ -1,8 +1,8 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "evercraft",
-  "version": "1.0.4",
-  "description": "One permission-aware front door into the Evercraft/Systemia capability fabric.",
+  "version": "1.1.0",
+  "description": "Bounded public website inspection and permission-aware routing into the Evercraft/Systemia capability fabric.",
   "author": {
     "name": "Evercraft LLC",
     "url": "https://fabric.systemiacommandcenters.com/"
@@ -24,13 +24,13 @@
     "com.openai": {
       "interface": {
         "displayName": "Evercraft",
-        "shortDescription": "Find the right Evercraft path",
-        "longDescription": "Start from a real problem, discover the smallest truthful Evercraft capability, and identify its current public connection path when one exists. Evercraft preserves evidence and availability boundaries. Discovery does not grant private Systemia access, payment authority, publishing authority, deployment authority, or permission for other consequential actions.",
+        "shortDescription": "Inspect sites & route work",
+        "longDescription": "Inspect a user-supplied public website with a bounded, evidence-backed preview, or route a real problem to the smallest truthful Evercraft capability. Evercraft preserves evidence, availability, and authorization boundaries. Preview and discovery do not grant private access, payment authority, publishing authority, deployment authority, or permission for consequential actions.",
         "developerName": "Evercraft LLC",
         "category": "Business & Operations",
         "capabilities": [
+          "Public website preview",
           "Capability discovery",
-          "Specialist connection lookup",
           "Bounded next-step guidance"
         ],
         "websiteURL": "https://fabric.systemiacommandcenters.com/",
@@ -38,8 +38,8 @@
         "privacyPolicyURL": "https://fabric.systemiacommandcenters.com/privacy",
         "termsOfServiceURL": "https://fabric.systemiacommandcenters.com/terms",
         "defaultPrompt": [
+          "Preview this public website and show me the basic signals that need attention.",
           "Find the smallest Evercraft capability for this problem.",
-          "Route this problem to the right verified Evercraft specialist.",
           "Show me the safest next step Evercraft can actually perform."
         ],
         "composerIcon": "./assets/evercraft-icon.png",
@@ -70,10 +70,10 @@
               "expected_behavior": "Call match_evercraft_capability and return AliEV/RIVET when current public capability metadata supports the workflow. Discovery remains read-only and does not create a paid continuation."
             },
             {
-              "description": "Route a website conversion problem to the bounded Systemia Website Audit capability.",
-              "prompt": "My local business website gets traffic but almost nobody contacts us. What can audit it?",
-              "tools_triggered": "match_evercraft_capability",
-              "expected_behavior": "Call match_evercraft_capability and return Systemia Website Audit when current public capability metadata supports the fit. Do not fabricate audit findings before an audit runs."
+              "description": "Inspect one user-supplied public website and return a bounded evidence-backed preview.",
+              "prompt": "Preview https://example.com and tell me which basic website signals need attention.",
+              "tools_triggered": "preview_public_website",
+              "expected_behavior": "Call preview_public_website for the supplied public URL, report only observed bounded HTTP/on-page signals and the tool's limitations, and do not invent a full crawl, ranking result, payment, or paid audit."
             },
             {
               "description": "Handle an ambiguous online-business problem without forcing an unsupported specialist.",
@@ -103,7 +103,7 @@
         "demo_recording_url": "https://drive.google.com/file/d/1v6KeJMAjH_Hp7IpjFWqNFTcPT2k9iUd_/view?usp=drivesdk"
       },
       "publication": {
-        "release_notes": "v1.0.4: harden ChatGPT/Codex transport compatibility and add first-class SSE edge verification; no expansion of tool authority or transactional behavior."
+        "release_notes": "v1.1.0: add a standalone bounded public-website preview with private-network protections, while preserving read-only routing and explicit authority boundaries."
       }
     }
   }
