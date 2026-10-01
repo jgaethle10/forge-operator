@@ -42,7 +42,9 @@ function fixture(){
     mcp_initialize_verified:true,
     mcp_tools_list_verified:true,
     mcp_tool_calls_verified:true,
+    openai_profile_verified:true,
     read_only_authority_verified:true,
+    openai_public_profile_verified:true,
     external_saas_route_provider_required:false,
     device_fingerprint:'sha256:'+'a'.repeat(64),
     public_edge_admission_receipt_ref:'sha256:'+'b'.repeat(64),
@@ -65,7 +67,7 @@ test('canary validation fails closed',()=>{
 test('verified canary promotes all OpenAI package pointers to owned Fabric',()=>{
   const root=fixture();
   const result=promoteOpenAiOwnedFabric({root,receiptPath:'artifacts/canary.json'});
-  assert.equal(result.mcp_url,'https://fabric.evercraft.example/mcp');
+  assert.equal(result.mcp_url,'https://fabric.evercraft.example/mcp/openai');
 
   const portable=JSON.parse(fs.readFileSync(path.join(root,'plugins/evercraft-fabric/mcp.json'),'utf8'));
   const compat=JSON.parse(fs.readFileSync(path.join(root,'plugins/evercraft-fabric/.mcp.json'),'utf8'));
@@ -77,8 +79,12 @@ test('verified canary promotes all OpenAI package pointers to owned Fabric',()=>
   assert.equal(source.owned_fabric_transport.mcp,result.mcp_url);
   assert.equal(source.compatibility_transport.active,false);
   assert.equal(source.compatibility_transport.owned_fabric_cutover_required,false);
+  assert.equal(source.owned_fabric_transport.openai_profile_verified,true);
   assert.equal(distribution.mcp.url,result.mcp_url);
   assert.equal(distribution.mcp.authority,'owned_public_fabric');
-  assert.equal(distribution.mcp.origin_change_requires_new_plugin_submission,true);
+  assert.equal(distribution.mcp.origin_change_requires_new_plugin_submission,false);
+  assert.equal(distribution.mcp.endpoint_path_change_only,true);
+  assert.equal(result.openai_origin_change_requires_new_plugin_submission,false);
+  assert.equal(result.openai_endpoint_path_change_only,true);
   assert.ok(fs.existsSync(path.join(root,'artifacts/openai-owned-fabric-promotion-receipt.json')));
 });
