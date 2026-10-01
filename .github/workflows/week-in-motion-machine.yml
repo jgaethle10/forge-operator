@@ -46,7 +46,7 @@ jobs:
           node-version: 22
 
       - name: Prove weekly window and publishing standards
-        run: node --test systemia/week-in-motion/engine.test.mjs
+        run: node --test systemia/week-in-motion/engine.test.mjs systemia/week-in-motion/resident.test.mjs
 
       - name: Build and publish Week in Motion
         if: ${{ github.event_name == 'schedule' || inputs.publish == true }}
