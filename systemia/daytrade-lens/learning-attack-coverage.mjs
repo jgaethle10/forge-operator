@@ -108,9 +108,12 @@ export const ATTACK_IMPLEMENTATION_MAP=Object.freeze({
     ]
   },
   "spread-depth-imbalance data contract":{
-    status:"partial",
-    evidence:["systemia/daytrade-lens/edge-quote-microstructure.mjs"],
-    gap:"Spread, visible top-of-book size, and top-of-book size imbalance are scored on the selected feed; full depth and richer order-flow features remain unobserved."
+    status:"implemented",
+    evidence:[
+      "systemia/daytrade-lens/edge-quote-microstructure.mjs",
+      "systemia/daytrade-lens/edge-liquidity-state-contract.mjs",
+      "systemia/daytrade-lens/edge-depth-data-contract.mjs"
+    ]
   },
   "aggressive-versus-passive execution comparison":{
     status:"implemented",
@@ -177,9 +180,10 @@ export const ATTACK_IMPLEMENTATION_MAP=Object.freeze({
     status:"partial",
     evidence:[
       "systemia/daytrade-lens/edge-research-factory.mjs",
-      "systemia/daytrade-lens/edge-quote-microstructure.mjs"
+      "systemia/daytrade-lens/edge-quote-microstructure.mjs",
+      "systemia/daytrade-lens/edge-depth-data-contract.mjs"
     ],
-    gap:"Realized volatility is crossed with visible top-of-book size and quote-adjusted entry returns, but visible touch size is not full market depth."
+    gap:"The multi-level depth schema is ready, but no real historical multi-level depth provider is connected. Visible NBBO touch size remains insufficient evidence for true low-depth stress."
   },
   "narrative-blind label permutation":{
     status:"implemented",
