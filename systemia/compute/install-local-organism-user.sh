@@ -49,6 +49,8 @@ set_env_value() {
 if [[ -n "${EVERCRAFT_REMOTE_BROKER_URL:-}" ]]; then
   set_env_value "EVERCRAFT_REMOTE_BROKER_URL" "${EVERCRAFT_REMOTE_BROKER_URL}"
 fi
+set_env_value "EVERCRAFT_REMOTE_BROKER_AUTO_DISCOVERY" "${EVERCRAFT_REMOTE_BROKER_AUTO_DISCOVERY:-true}"
+set_env_value "EVERCRAFT_REMOTE_BROKER_FALLBACK_URLS" "${EVERCRAFT_REMOTE_BROKER_FALLBACK_URLS:-https://fabric.systemiacommandcenters.com:9443}"
 
 if [[ -n "${EVERCRAFT_REMOTE_OPERATOR_ENABLED:-}" ]]; then
   case "${EVERCRAFT_REMOTE_OPERATOR_ENABLED,,}" in
@@ -135,9 +137,9 @@ echo "Runtime: NodeSeed -> Evercraft Compute -> Yard -> KAIDANCE -> Systemia Cor
 echo "Network: loopback-only; no public ingress created."
 echo "Health watch: every 60s with bounded user-service restart and receipt."
 if grep -q '^EVERCRAFT_REMOTE_BROKER_URL=.' "${ENV_FILE}"; then
-  echo "Remote admission: configured through private user environment."
+  echo "Remote admission: explicit broker configured."
 else
-  echo "Remote admission: not configured; enrollment request will still be generated."
+  echo "Remote admission: Saban gateway auto-discovery enabled with stable HTTPS fallback."
 fi
 if grep -q '^EVERCRAFT_REMOTE_OPERATOR_ENABLED=true$' "${ENV_FILE}"; then
   echo "Remote Operator: enabled; outbound control grant required."
