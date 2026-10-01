@@ -11,8 +11,10 @@ STATE_DIR="$HOME/.local/state/evercraft/organism/chromeos-host-boundary"
 mkdir -p "$ENV_DIR" "$UNIT_DIR" "$STATE_DIR"
 chmod 700 "$ENV_DIR" "$STATE_DIR"
 
+NEW_TOKEN=false
 if [[ ! -f "$ENV_FILE" ]]; then
   TOKEN="$(node -e "console.log(require('crypto').randomBytes(32).toString('hex'))")"
+  NEW_TOKEN=true
   {
     printf 'EVERCRAFT_CHROMEOS_HOST_BRIDGE_TOKEN=%s\n' "$TOKEN"
     printf 'EVERCRAFT_CHROMEOS_HOST_BRIDGE_HOST=0.0.0.0\n'
@@ -55,8 +57,12 @@ systemctl --user enable --now evercraft-chromeos-host-boundary-bridge.service
 
 echo
 echo "Evercraft ChromeOS Host Boundary Bridge is running."
-echo "Paste this pairing token into the extension options:"
-echo "$TOKEN"
+if [[ "$NEW_TOKEN" == "true" ]]; then
+  echo "One-time pairing token for the ChromeOS companion:"
+  echo "$TOKEN"
+else
+  echo "Pairing token already exists in $ENV_FILE and was not reprinted."
+fi
 echo
 echo "Receiver: http://127.0.0.1:18081/v1/chromeos-host-boundary/report"
 echo "State:    $STATE_DIR/latest.json"
