@@ -699,6 +699,29 @@ export class YardOperator {
         }
         healthState = 'healthy';
         routeVerification = 'private_route_provider_health_verified';
+      } else if (workloadClass === 'systemia.fabric-local-mcp.v1') {
+        const fabricHealthy =
+          health.ok === true &&
+          health.service === 'evercraft-fabric-local' &&
+          health.server === 'evercraft-fabric' &&
+          health.runtime === 'Evercraft Compute' &&
+          health.instance_id === job.result?.instance_id &&
+          health.read_only === true &&
+          health.transactional === false &&
+          health.external_action_authority === false &&
+          health.base44_transport_enabled === false &&
+          health.edge_attestation_supported === true;
+        if (!fabricHealthy) {
+          try {
+            await request(`${capacityEndpoint}/v1/services/${job.result.service_id}/stop`, {
+              method: 'POST',
+              body: JSON.stringify({ token: lease.token }),
+            });
+          } catch {}
+          throw new Error('Evercraft Fabric resident service failed initial health verification');
+        }
+        healthState = 'healthy';
+        routeVerification = 'local_fabric_health_verified_public_route_unbound';
       } else if (workloadClass === 'systemia.specialist-handoff-mcp.v1') {
         const specialistHealthy =
           health.ok === true &&
@@ -1363,6 +1386,9 @@ export class YardOperator {
     } else if (workloadClass === 'systemia.federated-service-bridge.v1') {
       service = 'evercraft-federated-service-bridge';
       healthPath = '/__evercraft/health';
+    } else if (workloadClass === 'systemia.fabric-local-mcp.v1') {
+      service = 'evercraft-fabric-local';
+      healthPath = '/health';
     } else if (workloadClass === 'systemia.specialist-handoff-mcp.v1') {
       service = 'specialist-handoff-mcp';
       healthPath = '/health';
@@ -1403,8 +1429,18 @@ export class YardOperator {
         health.external_ai_required === false &&
         health.legacy_provider_required === false
       );
+    const fabricMatch =
+      workloadClass !== 'systemia.fabric-local-mcp.v1' ||
+      (
+        health.server === 'evercraft-fabric' &&
+        health.read_only === true &&
+        health.transactional === false &&
+        health.external_action_authority === false &&
+        health.base44_transport_enabled === false &&
+        health.edge_attestation_supported === true
+      );
 
-    if (!commonMatch || !brokerMatch || !browserMatch || !homeMatch) {
+    if (!commonMatch || !brokerMatch || !browserMatch || !homeMatch || !fabricMatch) {
       throw new Error('public route health does not match this deployment receipt and instance');
     }
 
@@ -1852,6 +1888,7 @@ export class YardOperator {
       record.receipt?.workload_class === 'systemia.chum-public-origin.v1' ||
       record.receipt?.workload_class === 'systemia.remote-capacity-broker.v1' ||
       record.receipt?.workload_class === 'systemia.rivet-report-runtime.v1' ||
+      record.receipt?.workload_class === 'systemia.fabric-local-mcp.v1' ||
       record.receipt?.workload_class === 'systemia.specialist-handoff-mcp.v1' ||
       record.receipt?.workload_class === 'systemia.evercraft-web-browser.v1' ||
       record.receipt?.workload_class === 'systemia.evercraft-home.v1'
@@ -1860,6 +1897,8 @@ export class YardOperator {
         record.receipt?.workload_class === 'systemia.remote-capacity-broker.v1';
       const rivet =
         record.receipt?.workload_class === 'systemia.rivet-report-runtime.v1';
+      const fabric =
+        record.receipt?.workload_class === 'systemia.fabric-local-mcp.v1';
       const specialist =
         record.receipt?.workload_class === 'systemia.specialist-handoff-mcp.v1';
       const browser =
@@ -1874,16 +1913,18 @@ export class YardOperator {
           ? 'remote-capacity-broker'
           : rivet
             ? 'rivet-yard-report-runtime'
-            : specialist
-              ? 'specialist-handoff-mcp'
-              : 'chum-public-origin';
+            : fabric
+              ? 'evercraft-fabric-local'
+              : specialist
+                ? 'specialist-handoff-mcp'
+                : 'chum-public-origin';
       const healthPath = home
         ? '/api/health'
         : browser
           ? '/health'
           : broker
           ? '/v1/remote/health'
-          : rivet || specialist
+          : rivet || fabric || specialist
             ? '/health'
             : '/api/health';
 
@@ -1955,7 +1996,15 @@ export class YardOperator {
                     : health.service === service
               ) &&
               health.instance_id === record.result?.instance_id &&
-              (!broker || health.secure_envelope_schema === 'evercraft.secure-envelope.v1'),
+              (!broker || health.secure_envelope_schema === 'evercraft.secure-envelope.v1') &&
+              (!fabric || (
+                health.server === 'evercraft-fabric' &&
+                health.read_only === true &&
+                health.transactional === false &&
+                health.external_action_authority === false &&
+                health.base44_transport_enabled === false &&
+                health.edge_attestation_supported === true
+              )),
             health,
           };
         } catch (error) {
