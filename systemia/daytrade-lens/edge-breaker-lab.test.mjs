@@ -1,5 +1,12 @@
 import assert from "node:assert/strict";
-import { runEdgeBreakerLab, eventDayClusteredBootstrap } from "./edge-breaker-lab.mjs";
+import {
+  runEdgeBreakerLab,
+  eventDayClusteredBootstrap,
+  leaveOneIssuerOut,
+  topKWinnerRemovalStress,
+  winsorizedStress,
+  temporalBlockBootstrap,
+} from "./edge-breaker-lab.mjs";
 
 const rows=[];
 for(let i=0;i<96;i++){
@@ -20,15 +27,34 @@ const marketDayProof=eventDayClusteredBootstrap([
 ],{iterations:50,seed:"market-day-proof"});
 assert.equal(marketDayProof.cluster_count,2);
 
+const looIssuer=leaveOneIssuerOut(rows);
+assert.equal(looIssuer.origin_count,6);
+assert.equal(looIssuer.all_positive,true);
+
+const topK=topKWinnerRemovalStress(rows);
+assert.deepEqual(topK.scenarios.map(x=>x.removed),[1,3,5]);
+assert.equal(topK.all_positive,true);
+
+const winsorized=winsorizedStress(rows);
+assert.equal(winsorized.pass,true);
+assert.equal(winsorized.median_positive,true);
+
+const block=temporalBlockBootstrap(rows,{iterations:100,seed:"block-proof",block_size_days:5});
+assert.equal(block.pass,true);
+assert.equal(block.block_size_days,5);
+
 const report={
   evaluations:[{signal_key:"ai_models|sec_8_k|SOXX|1d",status:"RESEARCH_CANDIDATE",learned_direction:"POSITIVE_EXCESS_RETURN"}],
   measurements:rows,
 };
 const good=runEdgeBreakerLab(report);
 assert.equal(good.breaker_survivor_count,1);
+assert.equal(good.extended_breaker_survivor_count,1);
 assert.equal(good.reviews[0].live_trade_authority,false);
+assert.equal(good.reviews[0].historical_exploratory_only,true);
+assert.equal(good.reviews[0].eligibility_mutated,false);
 
-const dominated=rows.map((r,i)=>({...r,forward_return:r.origin_entity_ref==="issuer:0"?0.2:0.002}));
+const dominated=rows.map((r)=>({...r,forward_return:r.origin_entity_ref==="issuer:0"?0.2:0.002}));
 const bad=runEdgeBreakerLab({...report,measurements:dominated});
 assert.equal(bad.breaker_survivor_count,0);
 
@@ -43,7 +69,18 @@ assert.equal(
   spikyResult.reviews[0].checks.survives_top_5pct_winner_removal,
   false
 );
+assert.equal(
+  spikyResult.reviews[0].exploratory_checks.survives_top_1_top_3_top_5_winner_removal,
+  false
+);
 
+const issuerDependent=rows.map((r)=>({
+  ...r,
+  forward_return:r.origin_entity_ref==="issuer:0"?0.30:-0.001,
+  benchmark_return:0,
+}));
+const issuerDependentLoo=leaveOneIssuerOut(issuerDependent);
+assert.equal(issuerDependentLoo.all_positive,false);
 
 const negativeRows=rows.map((r)=>({
   ...r,
@@ -56,21 +93,30 @@ const negativeReport={
   measurements:negativeRows,
 };
 assert.equal(runEdgeBreakerLab(negativeReport).breaker_survivor_count,1);
+assert.equal(runEdgeBreakerLab(negativeReport).extended_breaker_survivor_count,1);
 
 const weakNegativeRows=negativeRows.map((r)=>({...r,forward_return:-0.0002}));
 assert.equal(runEdgeBreakerLab({...negativeReport,measurements:weakNegativeRows}).breaker_survivor_count,0);
 
 console.log(JSON.stringify({
   ok:true,
-  schema:"evercraft.daytrade.edge-breaker-lab-proof.v1",
+  schema:"evercraft.daytrade.edge-breaker-lab-proof.v2",
   origin_day_dedupe:true,
   leave_one_quarter_out:true,
+  leave_one_issuer_out:true,
   issuer_contribution_cap:true,
   trimmed_mean:true,
-  sign_consistency:true,
+  winsorized_mean:true,
+  median_performance:true,
+  downside_tail_analysis:true,
   clustered_bootstrap:true,
+  issuer_clustered_bootstrap:true,
   event_day_clustered_bootstrap:true,
+  temporal_block_bootstrap:true,
   new_york_market_day_clustering:true,
   top_winner_removal:true,
+  top_1_top_3_top_5_winner_removal:true,
+  exploratory_only:true,
+  eligibility_mutated:false,
   live_trade_authority:false,
 }));
