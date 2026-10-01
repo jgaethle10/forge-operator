@@ -9,11 +9,13 @@ function mean(values){
 function percentile(values,p){
   if(!values.length) return null;
   const sorted=[...values].sort((a,b)=>a-b);
-  const index=Math.max(
-    0,
-    Math.min(sorted.length-1,Math.floor((sorted.length-1)*p))
-  );
-  return sorted[index];
+  if(sorted.length===1) return sorted[0];
+  const position=Math.max(0,Math.min(sorted.length-1,(sorted.length-1)*p));
+  const lower=Math.floor(position);
+  const upper=Math.ceil(position);
+  if(lower===upper) return sorted[lower];
+  const weight=position-lower;
+  return sorted[lower]*(1-weight)+sorted[upper]*weight;
 }
 function expectedSign(candidate){
   return candidate?.learned_direction==="NEGATIVE_EXCESS_RETURN"?-1:1;
