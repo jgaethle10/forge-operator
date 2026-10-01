@@ -6,7 +6,8 @@ import {
   directHumanBuyerUrl,
   humanStartState,
   humanStartUrl,
-  machineReviewUrl
+  machineReviewUrl,
+  staticCommercialReviewUrl
 } from '../systemia/chum/start-corridor.mjs';
 
 const offer = {
@@ -22,8 +23,15 @@ assert.equal(configuredChumPublicOrigin('https://systemiacommandcenters.com'), n
 assert.equal(configuredChumPublicOrigin('https://legacy.example.base44.app/'), null);
 assert.equal(directHumanBuyerUrl(offer, { surface: 'test_surface' }), null);
 assert.equal(buyerFrontageUrl(offer, { surface: 'test_surface' }), null);
-assert.equal(humanStartUrl(offer, { publicOrigin: '', surface: 'test_surface' }), null);
-assert.equal(humanStartState(offer, { publicOrigin: '' }), 'held_no_owned_public_origin');
+assert.equal(
+  staticCommercialReviewUrl(offer.public_id),
+  '/chum/commercial/career-command-interview-practice-machine-v1/'
+);
+assert.equal(
+  humanStartUrl(offer, { publicOrigin: '', surface: 'test_surface' }),
+  '/chum/commercial/career-command-interview-practice-machine-v1/'
+);
+assert.equal(humanStartState(offer, { publicOrigin: '' }), 'owned_static_commercial_surface');
 
 const live = humanStartUrl(offer, {
   publicOrigin: 'https://forge.evercraft.example/some/path',
@@ -58,5 +66,6 @@ console.log(JSON.stringify({
   ok: true,
   legacy_provider_default_routes_removed: true,
   no_unowned_fallback: true,
-  tracked_corridor_requires_configured_https_origin: true
+  owned_static_sell_now_fallback: true,
+  configured_https_origin_upgrades_static_fallback: true
 }));
