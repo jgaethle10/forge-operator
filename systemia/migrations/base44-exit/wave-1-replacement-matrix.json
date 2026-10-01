@@ -8,6 +8,15 @@
       "cutover_ready": false,
       "components": [
         {
+          "key": "systemia_core_gateway",
+          "state": "implementation_present_ci_pending",
+          "refs": [
+            "systemia/command-center/core-gateway.mjs",
+            "systemia/command-center/core-gateway.proof.mjs"
+          ],
+          "detail": "Owned authenticated Systemia Core gateway preserves control-plane invariants and fails closed when native Machine Commerce is not explicitly bound. Native Machine Commerce 32-tool parity remains a separate gate."
+        },
+        {
           "key": "first_party_capability_router",
           "state": "implementation_present_ci_pending",
           "refs": [
@@ -319,7 +328,7 @@
   "summary": {
     "products": 5,
     "products_cutover_ready": 0,
-    "implementations_present_ci_pending": 19,
+    "implementations_present_ci_pending": 20,
     "destination_data_migrated_products": 0,
     "public_cutovers_authorized": 0,
     "live_source_capture_products": 1,
@@ -327,7 +336,7 @@
     "live_source_capture_rows": 32,
     "command_center_stateful_functions_transplanted": 2,
     "command_center_source_functions_mapped": 8,
-    "command_center_owned_function_implementations": 3
+    "command_center_owned_function_implementations": 4
   },
   "authority": {
     "source_mutation": false,
