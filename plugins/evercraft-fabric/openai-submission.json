@@ -80,10 +80,11 @@
     "mcp": "https://fabric.systemiacommandcenters.com/mcp/openai",
     "authority": "owned_public_fabric",
     "public_https_verified": false,
-    "origin_change_requires_new_openai_plugin_submission": true,
+    "origin_change_requires_new_openai_plugin_submission": false,
     "verified_external_canary": false,
     "external_canary_evidence": "Latest independent GitHub Actions canary on 2026-10-01 resolved DNS correctly but timed out on public TCP 80 and 443; public HTTPS and MCP must be re-proven after the ChromeOS/Crostini ingress repair.",
-    "revalidation_required": true
+    "revalidation_required": true,
+    "endpoint_path_change_only": true
   },
   "review_support": {
     "demo_recording_url": "https://drive.google.com/file/d/1v6KeJMAjH_Hp7IpjFWqNFTcPT2k9iUd_/view?usp=drivesdk",
