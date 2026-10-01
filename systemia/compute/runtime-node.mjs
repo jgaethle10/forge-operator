@@ -1637,7 +1637,7 @@ export async function startEvercraftComputeNode({
           const runtime = await startEvercraftEdgeDnsRuntime({
             snapshotPath,
             dnsHost,
-            dnsPort: Number(body.input?.dns_port || 5353),
+            dnsPort: Number(body.input?.dns_port || 1053),
             healthHost: '127.0.0.1',
             healthPort: Number(body.input?.health_port || 0),
           });
@@ -1659,7 +1659,7 @@ export async function startEvercraftComputeNode({
             authoritative_dns: true,
             recursive_dns: false,
             dns_host: dnsHost,
-            dns_port: Number(body.input?.dns_port || 5353),
+            dns_port: Number(body.input?.dns_port || 1053),
             snapshot_sha256: runtime.initialSnapshotHash,
             instance_id: runtime.instanceId,
           };

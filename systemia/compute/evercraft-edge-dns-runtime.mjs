@@ -5,7 +5,7 @@ import { start as startDns, loadSnapshot } from "../../infra/evercraft-edge/dns/
 export async function startEvercraftEdgeDnsRuntime({
   snapshotPath,
   dnsHost="127.0.0.1",
-  dnsPort=5353,
+  dnsPort=1053,
   healthHost="127.0.0.1",
   healthPort=0,
 }={}){

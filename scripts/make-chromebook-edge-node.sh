@@ -18,7 +18,7 @@ echo "[1/6] Promoting Chromebook into an attested Edge DNS candidate NodeSeed...
 bash "$REPO_ROOT/scripts/promote-chromebook-edge-node.sh"
 
 echo "[2/6] Verifying DNS inside Crostini..."
-node "$REPO_ROOT/infra/evercraft-edge/dns/probe.mjs"   --server 127.0.0.1 --port 5353 --name "$DNS_CANARY" >/tmp/evercraft-edge-dns-local-canary.json
+node "$REPO_ROOT/infra/evercraft-edge/dns/probe.mjs"   --server 127.0.0.1 --port 1053 --name "$DNS_CANARY" >/tmp/evercraft-edge-dns-local-canary.json
 
 if [[ ! -f "$ROUTER_ENV" ]]; then
   echo "HOLD: router-map configuration is missing at $ROUTER_ENV" >&2
@@ -29,19 +29,22 @@ fi
 # shellcheck disable=SC1090
 source "$ROUTER_ENV"
 
-echo "[3/6] Reasserting WAN mappings, including TCP+UDP 53 -> Chromebook 5353..."
+echo "[3/6] Reasserting DNS-only WAN mappings: TCP+UDP 53 -> Chromebook 1053..."
 set +e
-/usr/local/sbin/evercraft-refresh-router-map >/tmp/evercraft-edge-router-map.log 2>&1
+node "$REPO_ROOT/scripts/evercraft-public-edge-map.mjs" \
+  --gateway "$EVERCRAFT_ROUTER_GATEWAY" \
+  --host "$EVERCRAFT_ROUTER_LAN_HOST" \
+  --scope dns >/tmp/evercraft-edge-router-map.log 2>&1
 MAP_RC=$?
 set -e
 if [[ "$MAP_RC" -ne 0 ]]; then
   cat /tmp/evercraft-edge-router-map.log >&2 || true
   echo
-  echo "HOLD: ChromeOS must expose Linux port 5353 before the router can map public DNS."
+  echo "HOLD: ChromeOS must expose Linux port 1053 before the router can map public DNS."
   echo "ChromeOS Settings -> Developers -> Linux development environment -> Port forwarding"
   echo "Add/enable:"
-  echo "  5353 TCP   label: Evercraft Edge DNS TCP"
-  echo "  5353 UDP   label: Evercraft Edge DNS UDP"
+  echo "  1053 TCP   label: Evercraft Edge DNS TCP"
+  echo "  1053 UDP   label: Evercraft Edge DNS UDP"
   echo
   echo "Then rerun this same command. Everything else is already staged."
   exit 20

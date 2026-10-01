@@ -16,8 +16,8 @@ Usage:
 Installs a resident systemd timer that reasserts the Evercraft public-edge mappings:
   WAN 80/TCP  -> Chromebook 18080/TCP
   WAN 443/TCP -> Chromebook 8443/TCP
-  WAN 53/TCP  -> Chromebook 5353/TCP
-  WAN 53/UDP  -> Chromebook 5353/UDP
+  WAN 53/TCP  -> Chromebook 1053/TCP
+  WAN 53/UDP  -> Chromebook 1053/UDP
 
 The router-map helper remains hard-scoped to these Evercraft ingress mappings.
 EOF

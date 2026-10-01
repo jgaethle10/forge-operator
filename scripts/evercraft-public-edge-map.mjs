@@ -17,23 +17,32 @@ for (let i = 2; i < process.argv.length; i += 2) {
 
 const gateway = args.get('gateway');
 const host = args.get('host');
+const scope = String(args.get('scope') || 'all').toLowerCase();
 if (!gateway || !host) {
-  console.error('Required: --gateway <router-ip> --host <chromebook-lan-ip>');
+  console.error('Required: --gateway <router-ip> --host <chromebook-lan-ip> [--scope all|web|dns]');
+  process.exit(2);
+}
+if (!['all','web','dns'].includes(scope)) {
+  console.error('Invalid --scope. Expected all, web, or dns.');
   process.exit(2);
 }
 
-const mappings = [
-  { external: 80, internal: 18080, proto: 'TCP', desc: 'Evercraft Fabric HTTP' },
-  { external: 443, internal: 8443, proto: 'TCP', desc: 'Evercraft Fabric HTTPS' },
-  { external: 53, internal: 5353, proto: 'TCP', desc: 'Evercraft Edge authoritative DNS TCP' },
-  { external: 53, internal: 5353, proto: 'UDP', desc: 'Evercraft Edge authoritative DNS UDP' },
+const allMappings = [
+  { external: 80, internal: 18080, proto: 'TCP', desc: 'Evercraft Fabric HTTP', scope:'web' },
+  { external: 443, internal: 8443, proto: 'TCP', desc: 'Evercraft Fabric HTTPS', scope:'web' },
+  { external: 53, internal: 1053, proto: 'TCP', desc: 'Evercraft Edge authoritative DNS TCP', scope:'dns' },
+  { external: 53, internal: 1053, proto: 'UDP', desc: 'Evercraft Edge authoritative DNS UDP', scope:'dns' },
 ];
+const mappings = scope === 'all'
+  ? allMappings
+  : allMappings.filter(m => m.scope === scope);
 
 const out = {
   ok: false,
   gateway,
   host,
   attempts: [],
+  scope,
   mappings,
   host_forward_preflight: null,
 };
@@ -69,7 +78,7 @@ function dnsQuery(name='edge-canary.evercraftpropertyservices.com.'){
   return Buffer.concat([header,qname,Buffer.from([0,16,0,1])]);
 }
 
-function udpDnsProbe(hostname,port=5353,timeoutMs=1500){
+function udpDnsProbe(hostname,port=1053,timeoutMs=1500){
   return new Promise((resolve)=>{
     const socket=dgram.createSocket('udp4');
     let settled=false;
@@ -93,17 +102,21 @@ function udpDnsProbe(hostname,port=5353,timeoutMs=1500){
 }
 
 async function verifyHostForward(){
-  const probes=await Promise.all([
-    tcpProbe(host,18080),
-    tcpProbe(host,8443),
-    tcpProbe(host,5353),
-    udpDnsProbe(host,5353),
-  ]);
+  const probes=[];
+  if(scope==='all'||scope==='web'){
+    probes.push(await tcpProbe(host,18080));
+    probes.push(await tcpProbe(host,8443));
+  }
+  if(scope==='all'||scope==='dns'){
+    probes.push(await tcpProbe(host,1053));
+    probes.push(await udpDnsProbe(host,1053));
+  }
   return {
     schema:'evercraft.chromeos-host-forward-preflight.v1',
+    scope,
     host,
     probes,
-    ready:probes.every(x=>x.ok===true),
+    ready:probes.length>0&&probes.every(x=>x.ok===true),
     checked_at:new Date().toISOString(),
   };
 }
