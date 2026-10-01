@@ -34,6 +34,13 @@ test('validates only admitted host-boundary ports', () => {
   const normalized = validateChromeOsHostBoundaryObservation(fixture());
   assert.equal(normalized.ports.length, 2);
   assert.equal(normalized.authority.read_only, true);
+  assert.equal(
+    normalized.authority.platform_permission_scope,
+    'chromeos_desktop_automation',
+  );
+  assert.equal(normalized.authority.platform_permission_is_broad, true);
+  assert.equal(normalized.authority.arbitrary_ui_automation_exposed, false);
+  assert.equal(normalized.authority.mutation_command_surface_exposed, false);
 
   const bad = fixture();
   bad.ports.push({ port: 22, protocol: 'TCP', present: true, enabled: true });
