@@ -130,6 +130,7 @@ async function main() {
     const scores = [...reopened.cohorts.values()].map((protocol) =>
       reopened.score(protocol.cohort_id)
     );
+    const clusterScores = reopened.scoreClusters();
     durableScoreFile = path.join(artifactDir, "durable-forward-paper-scores.json");
     fs.writeFileSync(
       durableScoreFile,
@@ -144,6 +145,7 @@ async function main() {
         })),
         ingest_receipt: ingestReceipt,
         scores,
+        cluster_scores: clusterScores,
         live_trade_authority: false,
       }, null, 2) + "\n"
     );
