@@ -10,6 +10,25 @@ function safeKey(value, field) {
 }
 function sha(value) { return 'sha256:' + createHash('sha256').update(typeof value === 'string' ? value : JSON.stringify(value)).digest('hex'); }
 function appHash(appKey) { return createHash('sha256').update(appKey).digest('hex').slice(0, 32); }
+function normalizeOwnedRedirectUri(value, { allowLoopbackProof = false } = {}) {
+  const url = new URL(clean(value));
+  if (url.username || url.password) throw new Error('connector_redirect_credentials_forbidden');
+  const host = url.hostname.toLowerCase();
+  const loopback = host === 'localhost' || host === '127.0.0.1' || host === '::1' || host === '[::1]';
+  if (loopback) {
+    if (!allowLoopbackProof) throw new Error('connector_redirect_loopback_forbidden');
+    if (!['http:', 'https:'].includes(url.protocol)) throw new Error('connector_redirect_protocol_invalid');
+  } else if (url.protocol !== 'https:') {
+    throw new Error('connector_redirect_https_required');
+  }
+  if (host === 'base44.app' || host.endsWith('.base44.app')) {
+    throw new Error('connector_redirect_base44_forbidden');
+  }
+  return url.toString();
+}
+function stateHash(value) {
+  return createHash('sha256').update(clean(value)).digest('hex');
+}
 function atomicJson(file, value) {
   fs.mkdirSync(path.dirname(file), { recursive: true, mode: 0o700 });
   const tmp = `${file}.${process.pid}.${randomBytes(4).toString('hex')}.tmp`;
@@ -18,13 +37,15 @@ function atomicJson(file, value) {
 }
 
 export class EvercraftConnectorGateway {
-  constructor({ stateDir, secretStore, adapters = {} } = {}) {
+  constructor({ stateDir, secretStore, adapters = {}, allowLoopbackProof = false } = {}) {
     if (!stateDir) throw new Error('connector_state_dir_required');
     if (!secretStore) throw new Error('connector_secret_store_required');
     this.stateDir = path.resolve(stateDir);
     this.secretStore = secretStore;
     this.connectionsDir = path.join(this.stateDir, 'connections');
+    this.oauthStatesDir = path.join(this.stateDir, 'oauth-states');
     this.receiptsFile = path.join(this.stateDir, 'receipts.jsonl');
+    this.allowLoopbackProof = Boolean(allowLoopbackProof);
     this.adapters = new Map();
     for (const [provider, adapter] of Object.entries(adapters || {})) this.registerProvider(provider, adapter);
   }
@@ -69,6 +90,141 @@ export class EvercraftConnectorGateway {
     if (connection?.schema !== 'evercraft.connector.connection.v1') throw new Error('connector_connection_schema_invalid');
     if (connection.app_key_hash !== sha(location.appKey) || connection.provider !== location.provider) throw new Error('connector_connection_identity_mismatch');
     return connection;
+  }
+
+  #oauthStateFile(appKey, provider, state) {
+    const location = this.#location(appKey, provider);
+    const digest = stateHash(state);
+    return {
+      ...location,
+      digest,
+      file: path.join(this.oauthStatesDir, appHash(location.appKey), location.provider, digest + '.json')
+    };
+  }
+
+  async beginAuthorization(appKey, provider, {
+    redirectUri,
+    scopes = [],
+    providerContext = {},
+    ttlSeconds = 600,
+    now = new Date()
+  } = {}) {
+    const location = this.#location(appKey, provider);
+    const adapter = this.#adapter(location.provider);
+    if (typeof adapter.buildAuthorizationUrl !== 'function') {
+      throw new Error('connector_authorization_start_not_supported');
+    }
+    const redirect = normalizeOwnedRedirectUri(redirectUri, {
+      allowLoopbackProof: this.allowLoopbackProof
+    });
+    const requestedScopes = [...new Set((scopes || []).map((scope) => clean(scope)).filter(Boolean))].sort();
+    const state = randomBytes(24).toString('base64url');
+    const stateLocation = this.#oauthStateFile(location.appKey, location.provider, state);
+    const at = new Date(now);
+    const ttl = Math.max(120, Math.min(1800, Number(ttlSeconds) || 600));
+    const expiresAt = new Date(at.getTime() + ttl * 1000).toISOString();
+
+    const authorizationUrl = await adapter.buildAuthorizationUrl({
+      appKey: location.appKey,
+      provider: location.provider,
+      state,
+      redirectUri: redirect,
+      scopes: requestedScopes,
+      context: providerContext
+    });
+    const target = new URL(clean(authorizationUrl));
+    if (target.protocol !== 'https:' || target.username || target.password) {
+      throw new Error('connector_authorization_url_invalid');
+    }
+
+    const record = {
+      schema: 'evercraft.connector.oauth-state.v1',
+      app_key_hash: sha(location.appKey),
+      provider: location.provider,
+      state_hash: 'sha256:' + stateLocation.digest,
+      redirect_uri: redirect,
+      scopes: requestedScopes,
+      status: 'pending',
+      created_at: at.toISOString(),
+      expires_at: expiresAt,
+      consumed_at: null
+    };
+    atomicJson(stateLocation.file, record);
+    const receipt = this.#appendReceipt({
+      schema: 'evercraft.connector.receipt.v1',
+      receipt_id: `connector_receipt_${randomUUID()}`,
+      operation: 'authorization_begin',
+      app_key_hash: record.app_key_hash,
+      provider: record.provider,
+      state_hash: record.state_hash,
+      redirect_uri: redirect,
+      scopes: requestedScopes,
+      authorization_code_emitted: false,
+      credential_value_emitted: false,
+      occurred_at: at.toISOString()
+    });
+    return {
+      authorization_url: target.toString(),
+      state,
+      expires_at: expiresAt,
+      receipt
+    };
+  }
+
+  async completeAuthorization(appKey, provider, {
+    state,
+    authorizationCode,
+    redirectUri,
+    providerContext = {},
+    now = new Date()
+  } = {}) {
+    const rawState = clean(state);
+    if (!rawState) throw new Error('connector_oauth_state_required');
+    const location = this.#oauthStateFile(appKey, provider, rawState);
+    if (!fs.existsSync(location.file)) throw new Error('connector_oauth_state_not_found');
+    const record = JSON.parse(fs.readFileSync(location.file, 'utf8'));
+    if (record?.schema !== 'evercraft.connector.oauth-state.v1') {
+      throw new Error('connector_oauth_state_schema_invalid');
+    }
+    if (record.state_hash !== 'sha256:' + location.digest) throw new Error('connector_oauth_state_hash_mismatch');
+    if (record.status !== 'pending' || record.consumed_at) throw new Error('connector_oauth_state_consumed');
+    const at = new Date(now);
+    if (at >= new Date(record.expires_at)) throw new Error('connector_oauth_state_expired');
+    const redirect = normalizeOwnedRedirectUri(redirectUri, {
+      allowLoopbackProof: this.allowLoopbackProof
+    });
+    if (redirect !== record.redirect_uri) throw new Error('connector_oauth_redirect_mismatch');
+
+    const connected = await this.connect(location.appKey, location.provider, {
+      authorizationCode,
+      redirectUri: redirect,
+      providerContext,
+      now: at
+    });
+    const consumed = {
+      ...record,
+      status: 'consumed',
+      consumed_at: at.toISOString()
+    };
+    atomicJson(location.file, consumed);
+    const receipt = this.#appendReceipt({
+      schema: 'evercraft.connector.receipt.v1',
+      receipt_id: `connector_receipt_${randomUUID()}`,
+      operation: 'authorization_complete',
+      connection_id: connected.connection.connection_id,
+      app_key_hash: record.app_key_hash,
+      provider: record.provider,
+      state_hash: record.state_hash,
+      redirect_uri: redirect,
+      credential_value_emitted: false,
+      authorization_code_emitted: false,
+      occurred_at: at.toISOString()
+    });
+    return {
+      connection: connected.connection,
+      connection_receipt: connected.receipt,
+      authorization_receipt: receipt
+    };
   }
 
   async connect(appKey, provider, {
@@ -180,7 +336,10 @@ export class EvercraftConnectorGateway {
       state: 'healthy',
       registered_providers: [...this.adapters.keys()].sort(),
       credentials_stored_in_secret_store: true,
-      plaintext_credentials_in_connector_state: false
+      plaintext_credentials_in_connector_state: false,
+      oauth_state_hash_only_at_rest: true,
+      owned_redirect_required_for_new_authorization: true,
+      base44_redirect_for_new_authorization_allowed: false
     };
   }
 }
