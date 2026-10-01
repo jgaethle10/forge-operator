@@ -313,13 +313,17 @@ export function evaluateRockiesEdgeCandidate(samples, {
     holdout.sign === learnedSign;
 
   const holdoutMagnitudePass =
-    Math.abs(holdout.mean_excess_return_net) >= minimum_abs_holdout_mean_bps / 10000;
+    holdout.mean_strategy_return_net >= minimum_abs_holdout_mean_bps / 10000;
 
   const checks = {
     minimum_total_sample: rows.length >= minimum_samples,
     minimum_holdout_sample: holdout.samples >= minimum_holdout_samples,
     train_holdout_sign_agreement: signAgreement,
+    development_strategy_return_positive_after_costs:
+      development.mean_strategy_return_net > 0,
     holdout_effect_survives_costs: holdoutMagnitudePass,
+    holdout_strategy_return_positive_after_costs:
+      holdout.mean_strategy_return_net > 0,
     holdout_directional_hit_rate_above_half: holdout.directional_hit_rate > 0.5,
   };
 
