@@ -82,7 +82,18 @@
     ],
     "cutover_owned_only_auto_demotion": false,
     "base44_pipeline_contract": "62/62",
-    "base44_security_gate": "77/77"
+    "base44_security_gate": "77/77",
+    "chromebook_public_edge_candidate": true,
+    "chromebook_public_edge_origin": "https://fabric.systemiacommandcenters.com",
+    "chromebook_public_edge_dns_ipv4": "50.46.190.39",
+    "chromebook_public_edge_trust_class": "operator_authorized_public_edge",
+    "chromebook_physical_node001_claimed": false,
+    "chromebook_signed_nonce_edge_attestation_code": "pass",
+    "chromebook_operator_edge_admission_proof": "pass",
+    "chromebook_edge_self_heal_update_contract": "pass",
+    "chromebook_external_canary_workflow": ".github/workflows/chromebook-operator-edge-canary.yml",
+    "chromebook_external_reachability_currently_verified": false,
+    "specialist_and_universal_fabric_canaries_separated": true
   },
   "migrate": [
     "report_execution_runtime",
@@ -111,12 +122,12 @@
     "observation_window_required": true
   },
   "blockers": [
-    "No field/public-edge Evercraft Compute node is currently admitted for the production RIVET route.",
-    "DigitalOcean account reports droplet_limit=3 and maximum allowed while droplet_list returns zero and current usage is $0; treat as provider account defect, not architecture dependency.",
-    "RIVET_YARD_GATEWAY_URL and RIVET_YARD_GATEWAY_TOKEN remain unset in the Base44 compatibility app until a verified owned public route exists.",
+    "The Chromebook is the canonical operator-authorized public-edge candidate, but a fresh external canary currently times out; current reachability must be re-verified before issuing the production admission receipt.",
+    "The Chromebook's resident self-update timer must pull the signed-attestation release and successfully reconcile its local NodeSeed identity into the Fabric edge.",
+    "RIVET_YARD_GATEWAY_URL and RIVET_YARD_GATEWAY_TOKEN remain unset in the Base44 compatibility app until a verified owned RIVET public route exists.",
     "Production AliEV domain store still requires bulk migration/reconciliation from the inventoried legacy source rows.",
-    "Fresh production preliminary and full-site canaries have not yet run through the owned public route."
+    "Fresh production preliminary and full-site RIVET canaries have not yet run through the owned public route."
   ],
-  "next_action": "claim_or_admit_any_eligible_evercraft_compute_worker_and_public_edge_seed_and_reconcile_aliev_bind_verified_rivet_v1_reports_route_into_base44_then_allow_sentinel_to_promote_legacy_to_shadow_to_owned_primary_to_owned_only",
+  "next_action": "allow_chromebook_resident_updater_to_pull_signed_edge_attestation_release_obtain_fresh_external_canary_issue_operator_public_edge_admission_then_route_owned_rivet_through_that_edge_seed_aliev_bind_base44_compatibility_and_promote_cutover_policy",
   "destructive_cutover_allowed": false
 }
