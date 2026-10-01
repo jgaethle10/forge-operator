@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 
 import { AmbientDeviceRegistry } from './ambient-device-registry.mjs';
 import { runPassiveAmbientCensus, admitCensusObservationsToRegistry } from './ambient-census.mjs';
-import { microDeviceToAmbientCapability } from './microseed-device-bridge.mjs';
+import { microDeviceToAmbientCapabilities } from './microseed-device-bridge.mjs';
 import { resolveAmbientComputeOffers } from './ambient-compute-fabric.mjs';
 import { composeCapabilityFabric, rivetAliEvCapabilityRoles } from './capability-fabric-composer.mjs';
 import { rivetAliEvProductionAnatomy, formationWaves } from './workload-anatomy.mjs';
@@ -40,7 +40,7 @@ function activeCapabilities(snapshot){
       continue;
     }
     try{
-      caps.push(microDeviceToAmbientCapability(row.manifest));
+      caps.push(...microDeviceToAmbientCapabilities(row.manifest));
     }catch(error){
       rejected.push({
         device_id:row.device_id,
