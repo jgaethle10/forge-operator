@@ -40,18 +40,59 @@ function ipv4Public(address){
   return true;
 }
 
-function ipv6Public(address){
-  const value=address.toLowerCase();
-  if(value==='::'||value==='::1') return false;
-  if(value.startsWith('fc')||value.startsWith('fd')) return false;
-  if(/^fe[89ab]/.test(value)) return false;
-  if(value.startsWith('ff')) return false;
-  if(value.startsWith('2001:db8:')) return false;
-  if(value.startsWith('::ffff:')){
-    const mapped=value.slice('::ffff:'.length);
-    if(net.isIP(mapped)===4) return ipv4Public(mapped);
+function ipv6ToBigInt(address){
+  let value=String(address||'').toLowerCase().split('%')[0];
+  if(value.includes('.')){
+    const lastColon=value.lastIndexOf(':');
+    const ipv4=value.slice(lastColon+1);
+    if(net.isIP(ipv4)!==4) return null;
+    const octets=ipv4.split('.').map(Number);
+    value=value.slice(0,lastColon+1)+
+      ((octets[0]<<8)|octets[1]).toString(16)+':'+
+      ((octets[2]<<8)|octets[3]).toString(16);
   }
-  return true;
+  const pieces=value.split('::');
+  if(pieces.length>2) return null;
+  const left=pieces[0]?pieces[0].split(':').filter(Boolean):[];
+  const right=pieces.length===2&&pieces[1]?pieces[1].split(':').filter(Boolean):[];
+  const missing=8-left.length-right.length;
+  if(missing<0||(pieces.length===1&&missing!==0)) return null;
+  const groups=pieces.length===2
+    ? [...left,...Array(missing).fill('0'),...right]
+    : left;
+  if(groups.length!==8||groups.some((x)=>!/^[0-9a-f]{1,4}$/.test(x))) return null;
+  return groups.reduce((acc,x)=>(acc<<16n)+BigInt(parseInt(x,16)),0n);
+}
+
+function ipv6InCidr(value,base,bits){
+  const v=ipv6ToBigInt(value);
+  const b=ipv6ToBigInt(base);
+  if(v===null||b===null) return false;
+  const shift=128n-BigInt(bits);
+  return (v>>shift)===(b>>shift);
+}
+
+const IPV6_BLOCKED_RANGES=[
+  ['::',96],
+  ['::ffff:0:0',96],
+  ['64:ff9b::',96],
+  ['64:ff9b:1::',48],
+  ['100::',64],
+  ['2001:db8::',32],
+  ['2001:10::',28],
+  ['2001:20::',28],
+  ['2002::',16],
+  ['fc00::',7],
+  ['fe80::',10],
+  ['fec0::',10],
+  ['ff00::',8],
+];
+
+function ipv6Public(address){
+  const value=String(address||'').toLowerCase();
+  const parsed=ipv6ToBigInt(value);
+  if(parsed===null) return false;
+  return !IPV6_BLOCKED_RANGES.some(([base,bits])=>ipv6InCidr(value,base,bits));
 }
 
 export function isPublicIp(address){
