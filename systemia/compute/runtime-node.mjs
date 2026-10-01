@@ -1452,6 +1452,7 @@ export async function startEvercraftComputeNode({
             workload_class: body.workload_class,
             service_url: null,
             local_url: runtime.service_url,
+            source_url: sourceUrl,
             health_path: `/v1/services/${serviceId}/health`,
             public_route_required: true,
             public_health_path: '/health',
