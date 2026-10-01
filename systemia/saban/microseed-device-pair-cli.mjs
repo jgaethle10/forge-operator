@@ -10,6 +10,7 @@ import {
   parseMicroSeedPairingUri,
   createMicroSeedEnrollmentBundle,
 } from './microseed-pairing.mjs';
+import { submitMicroSeedEnrollmentBundle } from './microseed-enrollment-client.mjs';
 
 const MODULE_FILE=fileURLToPath(import.meta.url);
 const arg=(name,fallback='')=>{
@@ -114,32 +115,6 @@ export function createDeviceEnrollmentFromPairing({
   };
 }
 
-async function submitEnrollmentBundle({url,bundle,fetchImpl=fetch}={}){
-  const raw=clean(url);
-  if(!raw) throw new Error('microseed_pairing_enrollment_url_required');
-  let endpoint;
-  try{endpoint=new URL(raw);}catch{throw new Error('microseed_pairing_enrollment_url_invalid');}
-  const loopback=['127.0.0.1','localhost','::1'].includes(endpoint.hostname.toLowerCase());
-  if(endpoint.protocol!=='https:'&&!(endpoint.protocol==='http:'&&loopback)){
-    throw new Error('microseed_pairing_enrollment_url_https_required');
-  }
-  if(endpoint.username||endpoint.password){
-    throw new Error('microseed_pairing_enrollment_url_credentials_forbidden');
-  }
-  const response=await fetchImpl(endpoint,{
-    method:'POST',
-    headers:{'content-type':'application/json',accept:'application/json'},
-    body:JSON.stringify({bundle}),
-  });
-  const text=await response.text();
-  let body;
-  try{body=text?JSON.parse(text):{};}catch{throw new Error('microseed_pairing_enrollment_response_invalid_json');}
-  if(!response.ok||body?.ok!==true){
-    throw new Error('microseed_pairing_enrollment_http_'+response.status+':'+clean(body?.error||'enrollment_failed'));
-  }
-  return body;
-}
-
 async function main(){
   const uri=pairingUri();
   const root=path.resolve(
@@ -169,8 +144,8 @@ async function main(){
       throw new Error('microseed_pairing_ticket_has_no_enrollment_return_url');
     }
     const bundle=JSON.parse(fs.readFileSync(receipt.bundle_file,'utf8'));
-    const enrollment=await submitEnrollmentBundle({
-      url:parsed.enrollment_url,
+    const enrollment=await submitMicroSeedEnrollmentBundle({
+      enrollmentUrl:parsed.enrollment_url,
       bundle,
     });
     process.stdout.write(JSON.stringify({
