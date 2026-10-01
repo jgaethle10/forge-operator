@@ -89,6 +89,7 @@ function failureStage(checks={},message=''){
   if(checks.customer_surface!==true) return 'customer_surface';
   if(checks.policy_surfaces!==true) return 'policy_surfaces';
   if(checks.runtime_health!==true) return 'runtime_health';
+  if(checks.mcp_sse_probe!==true) return 'mcp_sse_probe';
   if(checks.device_attestation!==true) return 'device_attestation';
   if(checks.mcp_initialize!==true) return 'mcp_initialize';
   if(checks.mcp_tools!==true) return 'mcp_tools';
@@ -152,6 +153,29 @@ try{
     edge_attestation_supported:health.edge_attestation_supported===true,
   };
   receipt.checks.runtime_health=true;
+
+  // ChatGPT performs a GET/SSE transport probe before normal MCP discovery.
+  // Verify that exact path and content type so a dead plugin connection cannot
+  // hide behind successful POST-only initialize/tool canaries.
+  const sseProbe=await timedFetch(origin+'/mcp',{
+    method:'GET',
+    headers:{
+      accept:'text/event-stream',
+      'user-agent':'Evercraft-ChatGPT-SSE-Canary/1.0',
+    },
+  },10000);
+  const sseContentType=sseProbe.headers.get('content-type')||'';
+  const sseBody=await sseProbe.text();
+  if(!sseProbe.ok) throw new Error('mcp_sse_probe_http_'+sseProbe.status);
+  if(!/^text\/event-stream/i.test(sseContentType)) throw new Error('mcp_sse_probe_content_type');
+  if(!/evercraft-fabric/i.test(sseBody)) throw new Error('mcp_sse_probe_identity_missing');
+  receipt.mcp_sse_probe={
+    status:sseProbe.status,
+    content_type:sseContentType,
+    identity_verified:true,
+  };
+  receipt.checks.mcp_sse_probe=true;
+
   if(health.edge_attestation_supported!==true) throw new Error('edge_attestation_not_supported');
 
   const nonce='edge_'+randomBytes(18).toString('hex');
