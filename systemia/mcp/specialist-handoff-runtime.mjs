@@ -13,6 +13,11 @@ import {
   dayTradeLensTools,
   executeDayTradeLensRpc,
 } from '../daytrade-lens/mcp.mjs';
+import {
+  FALLEN_MCP,
+  fallenMachineTools,
+  executeFallenRpc,
+} from '../media-studio/mcp.mjs';
 
 export const SPECIALIST_HANDOFFS = [
   {
@@ -672,7 +677,8 @@ export async function startSpecialistHandoffRuntime({
     normalizedFabricPath === '/health' ||
     SPECIALIST_HANDOFFS.some((x) => x.path === normalizedFabricPath) ||
     normalizedFabricPath === SYSTEMIA_REMOTE_OPS.path ||
-    normalizedFabricPath === DAYTRADE_LENS_MCP.path
+    normalizedFabricPath === DAYTRADE_LENS_MCP.path ||
+    normalizedFabricPath === FALLEN_MCP.path
   ) {
     throw new Error('fabric_mcp_path_collision');
   }
@@ -743,6 +749,12 @@ export async function startSpecialistHandoffRuntime({
         path: DAYTRADE_LENS_MCP.path,
         public_id: 'product:daytrade-lens',
         tools: dayTradeLensTools().map((tool) => tool.name),
+      },
+      {
+        product: FALLEN_MCP.title,
+        path: FALLEN_MCP.path,
+        public_id: 'media:fallen',
+        tools: fallenMachineTools().map((tool) => tool.name),
       },
     ],
   });
@@ -880,6 +892,42 @@ export async function startSpecialistHandoffRuntime({
         }
         const rpc = await readJson(req);
         const response = await executeDayTradeLensRpc(rpc);
+        if (response === null) {
+          res.writeHead(202, { 'cache-control': 'no-store' });
+          res.end();
+          return;
+        }
+        return sendJson(res, 200, response);
+      }
+
+      if (req.url === FALLEN_MCP.path) {
+        if (req.method === 'GET') {
+          return sendJson(res, 200, {
+            ok: true,
+            service: FALLEN_MCP.title,
+            server: FALLEN_MCP.server_name,
+            version: FALLEN_MCP.version,
+            transport: 'Streamable HTTP',
+            tools: fallenMachineTools().map((tool) => tool.name),
+            machine_surface: 'read_only_evidence_bound_visual_planning',
+            provider_execution: false,
+            rendering_authority: false,
+            publication_authority: false,
+            checkout_enabled: false,
+            payment_enabled: false,
+            runtime: 'Evercraft Compute',
+            instance_id: instanceId,
+            deployment_receipt_bound: Boolean(deploymentReceiptRef),
+            identity_attestation_bound: Boolean(identityAttestation),
+            same_device_binding: Boolean(identityAttestation?.same_device_binding),
+            truth_boundary: FALLEN_MCP.truth_boundary,
+          });
+        }
+        if (req.method !== 'POST') {
+          return sendJson(res, 405, { error: 'method_not_allowed' });
+        }
+        const rpc = await readJson(req);
+        const response = await executeFallenRpc(rpc);
         if (response === null) {
           res.writeHead(202, { 'cache-control': 'no-store' });
           res.end();
