@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.provider-probe-history.v1",
-  "updated_at": "2026-10-01T05:07:33.312Z",
+  "updated_at": "2026-10-01T05:10:16.612Z",
   "max_records": 500,
   "records": [
     {
@@ -8473,6 +8473,24 @@
       "prompt_sha256": "9324e8f7da1c1dc9db9393f24af14bd3f3d89d8e584a9a312b756bf954042970",
       "pickup_observed": true,
       "provider_receipt_sha256": "bfafb50cefeaad5a0c2e364a65e4d522f5095dcc2d054b477d9947a0ea6c371e",
+      "response_sha256": "4526023d36f66b2326c906ef88db5073fc77f6ed88dec3d454023cc84c0dc1ae",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "9453634626c996dac0f772b1cbd55ebc27c9ecc715aa61a68c2928ad11a2b3eb",
+      "observed_at": "2026-10-01T05:10:16.612Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "legacy-rescue-lab",
+      "case_id": "legacy-rescue-broken-checkout-002",
+      "prompt_sha256": "9324e8f7da1c1dc9db9393f24af14bd3f3d89d8e584a9a312b756bf954042970",
+      "pickup_observed": true,
+      "provider_receipt_sha256": "a9b82dc962b0c6d446eac6f1b31fa4e556c4a2770ee4f029ec47ef0f5e87a5a5",
       "response_sha256": "4526023d36f66b2326c906ef88db5073fc77f6ed88dec3d454023cc84c0dc1ae",
       "source": "authorized_provider_probe",
       "privacy": {
