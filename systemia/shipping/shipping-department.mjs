@@ -151,6 +151,14 @@ export function nextDispatchRoute({
       verification_required:true
     };
   }
+  if (ambiguous && sent_copy_state === 'verified_absent') {
+    return {
+      allowed:true,
+      route:envelope.route_policy.fallback_route,
+      thread_ref:null,
+      reason:'sent_copy_verified_absent_after_ambiguous_attempt'
+    };
+  }
 
   if (attempts.length === 0) {
     return {
