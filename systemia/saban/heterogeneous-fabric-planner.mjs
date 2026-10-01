@@ -249,6 +249,7 @@ export function planHeterogeneousFabric({
   }]));
   const placements=[];
   const held=[];
+  const eligibleOffersByTask={};
 
   const sortedTasks=[...normalizedTasks].sort((a,b)=>
     Number(b.trust.private_data)-Number(a.trust.private_data) ||
@@ -263,6 +264,7 @@ export function planHeterogeneousFabric({
       .filter(x=>x.eligible)
       .sort((a,b)=>b.score-a.score||a.offer.offer_id.localeCompare(b.offer.offer_id));
 
+    eligibleOffersByTask[task.task_id]=evals.map(x=>x.offer.offer_id);
     const shardDomains=new Map();
 
     for(const unit of executionUnits(task)){
@@ -347,6 +349,7 @@ export function planHeterogeneousFabric({
     selected_offer_count:new Set(placements.map(p=>p.offer_id)).size,
     placements,
     held,
+    eligible_offers_by_task:eligibleOffersByTask,
     residual_capacity:[...residual.entries()].map(([offer_id,r])=>({offer_id,...r})),
     zero_cost_plan:zeroCost,
     private_data_never_expands_authority:true,
