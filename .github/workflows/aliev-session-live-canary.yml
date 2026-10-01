@@ -1,0 +1,81 @@
+name: AliEV live session source canary
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/aliev/session-corpus*.mjs'
+      - 'systemia/aliev/source-*.mjs'
+      - 'systemia/organism/aliev-source-runner.mjs'
+      - '.github/workflows/aliev-session-live-canary.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'systemia/aliev/session-corpus*.mjs'
+      - 'systemia/aliev/source-*.mjs'
+      - 'systemia/organism/aliev-source-runner.mjs'
+      - '.github/workflows/aliev-session-live-canary.yml'
+  schedule:
+    - cron: '17 */6 * * *'
+  workflow_dispatch:
+
+jobs:
+  live-source-canary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove deterministic corpus contract
+        run: npm run proof:aliev-session-corpus
+      - name: Pull one privacy-minimized live source page
+        run: |
+          rm -rf "$RUNNER_TEMP/aliev-session-canary"
+          node systemia/aliev/session-corpus-runner.mjs \
+            --state-dir "$RUNNER_TEMP/aliev-session-canary" \
+            --page-size 250 \
+            --max-pages 1
+      - name: Verify live checkpoint and raw partition privacy
+        run: |
+          node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import { sessionCorpusStatus } from './systemia/aliev/session-corpus.mjs';
+
+          const root=path.join(process.env.RUNNER_TEMP,'aliev-session-canary');
+          const status=sessionCorpusStatus({stateDir:root});
+          if(status.checkpoint.raw_rows_materialized!==250) throw new Error('live_canary_expected_250_rows');
+          if(!(Number(status.checkpoint.source_rows_seen)>=250)) throw new Error('live_canary_source_total_invalid');
+          if(!status.checkpoint.source_first_date||!status.checkpoint.source_latest_date) throw new Error('live_canary_source_dates_missing');
+          if(status.personal_identifiers_persisted!==false) throw new Error('live_canary_privacy_flag_invalid');
+
+          const blobRoot=path.join(root,'object-store','blobs');
+          const files=[];
+          const walk=(dir)=>{
+            if(!fs.existsSync(dir)) return;
+            for(const name of fs.readdirSync(dir)){
+              const file=path.join(dir,name);
+              const stat=fs.statSync(file);
+              if(stat.isDirectory()) walk(file); else files.push(file);
+            }
+          };
+          walk(blobRoot);
+          if(!files.length) throw new Error('live_canary_partition_blob_missing');
+          for(const file of files){
+            const body=fs.readFileSync(file,'utf8');
+            if(body.includes('"driver_id"')||body.includes('"id_tag"')) throw new Error('live_canary_personal_identifier_persisted');
+          }
+
+          console.log(JSON.stringify({
+            ok:true,
+            schema:'evercraft.aliev.live-session-source-canary.v1',
+            source_rows_seen:status.checkpoint.source_rows_seen,
+            source_first_date:status.checkpoint.source_first_date,
+            source_latest_date:status.checkpoint.source_latest_date,
+            raw_rows_materialized:status.checkpoint.raw_rows_materialized,
+            partition_count:status.partition_count,
+            personal_identifiers_persisted:false
+          }));
+          NODE
