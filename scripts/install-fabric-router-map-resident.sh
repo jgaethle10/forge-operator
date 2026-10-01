@@ -13,11 +13,13 @@ usage() {
 Usage:
   scripts/install-fabric-router-map-resident.sh --gateway 192.168.88.1 --host 192.168.88.3
 
-Installs a resident systemd timer that reasserts the two Evercraft Fabric UPnP mappings:
-  WAN 80  -> Chromebook 18080
-  WAN 443 -> Chromebook 8443
+Installs a resident systemd timer that reasserts the Evercraft public-edge mappings:
+  WAN 80/TCP  -> Chromebook 18080/TCP
+  WAN 443/TCP -> Chromebook 8443/TCP
+  WAN 53/TCP  -> Chromebook 5353/TCP
+  WAN 53/UDP  -> Chromebook 5353/UDP
 
-The router-map helper remains hard-scoped to those two mappings.
+The router-map helper remains hard-scoped to these Evercraft ingress mappings.
 EOF
 }
 
