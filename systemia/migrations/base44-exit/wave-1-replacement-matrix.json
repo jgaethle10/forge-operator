@@ -8,6 +8,33 @@
       "cutover_ready": false,
       "components": [
         {
+          "key": "source_function_map",
+          "state": "mapping_present",
+          "refs": [
+            "systemia/migrations/base44-exit/wave-1-command-center-function-map.json",
+            "systemia/migrations/base44-exit/wave-1-command-center-function-map.proof.mjs"
+          ],
+          "detail": "All eight Base44 server functions have an explicit owned replacement path and remaining evidence gates."
+        },
+        {
+          "key": "exact_output_gate_runtime",
+          "state": "implementation_present_ci_pending",
+          "refs": [
+            "systemia/exact-output-gate/runtime.mjs",
+            "systemia/exact-output-gate/runtime.proof.mjs"
+          ],
+          "detail": "Owned release gate preserves versioned policy checks, dependency pinning/cascade, human-visible mismatch reopen, verification expiry and supersession."
+        },
+        {
+          "key": "aqueduct_pipeline_runtime",
+          "state": "implementation_present_ci_pending",
+          "refs": [
+            "systemia/aqueduct/runtime.mjs",
+            "systemia/aqueduct/runtime.proof.mjs"
+          ],
+          "detail": "Owned pipeline-health runtime preserves seed graph, stage receipts, freshness, drain, consumer-gap, schema-drift, silent-zero, incident and sweep semantics."
+        },
+        {
           "key": "live_registry_shadow_source_capture",
           "state": "live_source_capture_receipt_present",
           "refs": [
@@ -41,8 +68,11 @@
         },
         {
           "key": "source_function_transplant",
-          "state": "partial_pending_product_parity",
-          "detail": "Source profile contains eight functions including control-plane, MCP and gateway surfaces. Product-specific function parity and source data reconciliation are still required."
+          "state": "partial_pending_public_edge_contracts_and_data_reconciliation",
+          "detail": "Aqueduct and Exact Output Gate are transplanted to owned runtimes. The remaining six functions have owned replacement paths but still require capability/data reconciliation, upstream service parity, deployment receipts and public route/registry repoint evidence.",
+          "refs": [
+            "systemia/migrations/base44-exit/wave-1-command-center-function-map.json"
+          ]
         },
         {
           "key": "destination_data",
@@ -280,12 +310,14 @@
   "summary": {
     "products": 5,
     "products_cutover_ready": 0,
-    "implementations_present_ci_pending": 16,
+    "implementations_present_ci_pending": 18,
     "destination_data_migrated_products": 0,
     "public_cutovers_authorized": 0,
     "live_source_capture_products": 1,
     "live_source_capture_entities": 6,
-    "live_source_capture_rows": 32
+    "live_source_capture_rows": 32,
+    "command_center_stateful_functions_transplanted": 2,
+    "command_center_source_functions_mapped": 8
   },
   "authority": {
     "source_mutation": false,
