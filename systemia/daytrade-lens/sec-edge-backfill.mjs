@@ -12,6 +12,7 @@ import { adversarialValidateCandidates } from "./edge-adversarial-validation.mjs
 import { persistFrozenCohorts } from "./edge-forward-paper.mjs";
 import { ForwardPaperDurableState } from "./edge-forward-paper-durable.mjs";
 import { runEdgeStressLab } from "./edge-stress-lab.mjs";
+import { runEdgeBreakerLab } from "./edge-breaker-lab.mjs";
 
 async function main() {
   const artifactDir = path.resolve(
@@ -46,6 +47,10 @@ async function main() {
   const stressLab = runEdgeStressLab(report);
   const stressFile = path.join(artifactDir, "sec-edge-stress-lab.json");
   fs.writeFileSync(stressFile, JSON.stringify(stressLab, null, 2) + "\n");
+
+  const breakerLab = runEdgeBreakerLab(report);
+  const breakerFile = path.join(artifactDir, "sec-edge-breaker-lab.json");
+  fs.writeFileSync(breakerFile, JSON.stringify(breakerLab, null, 2) + "\n");
 
   const adversarial = adversarialValidateCandidates(report, {
     transaction_cost_bps: Number(process.env.EDGE_LAB_TRANSACTION_COST_BPS || 5),
@@ -172,6 +177,7 @@ async function main() {
     candidate_clusters: adversarial.candidate_cluster_count || 0,
     forward_paper_eligible: adversarial.forward_paper_eligible_count || 0,
     stress_survivors: stressLab.stress_survivor_count || 0,
+    breaker_survivors: breakerLab.breaker_survivor_count || 0,
     frozen_forward_paper_cohorts: frozenCohorts.length,
     durable_forward_paper_state_configured: durableState.configured,
     durable_forward_paper_restart_reopen_verified: durableState.restart_reopen_verified,
@@ -184,6 +190,7 @@ async function main() {
       observations: observationFile,
       research: reportFile,
       stress_lab: stressFile,
+      breaker_lab: breakerFile,
       adversarial_review: adversarialFile,
       forward_paper_cohorts: forwardPaperFile,
       durable_forward_paper_scores: durableScoreFile,
