@@ -16,7 +16,8 @@
     "fuel_price_index": "candidate",
     "grocery_price_index": "candidate",
     "google_places_fuel_source": "credential_required_not_live",
-    "kroger_grocery_source": "credential_required_not_live"
+    "kroger_grocery_source": "credential_required_not_live",
+    "consumer_today_page": "candidate_until_deployed"
   },
   "evidence_rules": [
     "Missing data is never treated as zero.",
@@ -38,5 +39,6 @@
     "hours returned to households",
     "opportunities discovered",
     "needs solved before emergency"
-  ]
+  ],
+  "human_today_url": "/household/"
 }
