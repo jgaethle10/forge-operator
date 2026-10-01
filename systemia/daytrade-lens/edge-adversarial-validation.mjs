@@ -8,9 +8,9 @@ function mean(values) {
   return values.length ? values.reduce((a,b) => a + b, 0) / values.length : 0;
 }
 
-function netExcess(row, transactionCostBps) {
+function directionalNetExcess(row, transactionCostBps, expectedSign = 1) {
   const excess = Number(row.forward_return || 0) - Number(row.benchmark_return || 0);
-  return excess - Math.sign(excess || 1) * (transactionCostBps / 10000);
+  return expectedSign * excess - (transactionCostBps / 10000);
 }
 
 function sign(value) {
@@ -32,13 +32,13 @@ export function leaveOneOriginOut(rows, {
   const origins = uniq(rows.map((row) => row.origin_entity_ref));
   const folds = origins.map((origin) => {
     const kept = rows.filter((row) => row.origin_entity_ref !== origin);
-    const value = mean(kept.map((row) => netExcess(row, transaction_cost_bps)));
+    const value = mean(kept.map((row) => directionalNetExcess(row, transaction_cost_bps, expected_sign)));
     return {
       omitted_origin: origin,
       observations: kept.length,
       mean_excess_return_net: value,
       sign: sign(value),
-      sign_preserved: sign(value) === expected_sign,
+      sign_preserved: value > 0,
     };
   });
   return {
@@ -68,13 +68,13 @@ export function splitByCalendarPeriod(rows, {
     groups.get(key).push(row);
   }
   const periods = [...groups.entries()].sort(([a],[b]) => a.localeCompare(b)).map(([key, group]) => {
-    const value = mean(group.map((row) => netExcess(row, transaction_cost_bps)));
+    const value = mean(group.map((row) => directionalNetExcess(row, transaction_cost_bps, expected_sign)));
     return {
       period: key,
       observations: group.length,
       mean_excess_return_net: value,
       sign: sign(value),
-      sign_preserved: sign(value) === expected_sign,
+      sign_preserved: value > 0,
     };
   });
   return {
