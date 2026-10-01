@@ -79,6 +79,9 @@ export function ambientCapabilityToComputeOffer(capability={}){
       terms_ref:capability.terms_ref||null,
       supported_workloads:workloads,
       placement_labels:uniq(meta.placement_labels).map(x=>x.toLowerCase()),
+      failure_domains:meta.failure_domains&&typeof meta.failure_domains==='object'
+        ? Object.fromEntries(Object.entries(meta.failure_domains).map(([k,v])=>[String(k).toLowerCase(),String(v).toLowerCase()]))
+        : {},
       micro_node:meta.micro_node===true,
       duty_cycle:meta.duty_cycle||null,
       power_budget_watts:meta.power_budget_watts==null?null:Number(meta.power_budget_watts),
