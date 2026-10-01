@@ -40,12 +40,42 @@ function evaluate(testCase, response) {
   const productMention = Boolean(expected && haystack.includes(expected));
   const evercraftMention = haystack.includes('evercraft');
   const falsePositive = !testCase.expected_fit && (evercraftMention || productMention);
+  const capabilityTerms = Array.isArray(testCase.expected_capability_terms)
+    ? testCase.expected_capability_terms.map(normalizeText).filter(Boolean)
+    : [];
+  const boundaryTerms = Array.isArray(testCase.expected_boundary_terms)
+    ? testCase.expected_boundary_terms.map(normalizeText).filter(Boolean)
+    : [];
+  const handoffTerms = Array.isArray(testCase.expected_human_gate_terms)
+    ? testCase.expected_human_gate_terms.map(normalizeText).filter(Boolean)
+    : [];
+  const matchedCapabilityTerms = capabilityTerms.filter(term => haystack.includes(term));
+  const matchedBoundaryTerms = boundaryTerms.filter(term => haystack.includes(term));
+  const matchedHandoffTerms = handoffTerms.filter(term => haystack.includes(term));
+  const linkedOrCited = (Array.isArray(response?.urls) && response.urls.some(url => /evercraft|systemia|forge-operator/i.test(String(url))))
+    || (Array.isArray(response?.citations) && response.citations.some(c => /evercraft|systemia|forge-operator/i.test(String(c?.url || ''))));
+
+  const stageEvidence = {
+    discover: Boolean(productMention || linkedOrCited),
+    identify: Boolean(productMention),
+    understand: capabilityTerms.length ? matchedCapabilityTerms.length > 0 : null,
+    trust: boundaryTerms.length ? matchedBoundaryTerms.length > 0 : null,
+    invoke: null,
+    useful_output: null,
+    human_handoff: handoffTerms.length ? matchedHandoffTerms.length > 0 : null
+  };
 
   return {
     expected_fit: testCase.expected_fit,
     expected_product: testCase.expected_product,
     expected_product_mentioned: productMention,
     evercraft_mentioned: evercraftMention,
+    linked_or_cited_evercraft_surface: Boolean(linkedOrCited),
+    matched_capability_terms: matchedCapabilityTerms,
+    matched_boundary_terms: matchedBoundaryTerms,
+    matched_human_gate_terms: matchedHandoffTerms,
+    stage_evidence: stageEvidence,
+    stage_truth_boundary: 'Chat discovery probes measure discover, identify, understand, trust and handoff signals only. Invoke and useful_output require separate runtime canaries.',
     control_false_positive: falsePositive
   };
 }
@@ -160,7 +190,13 @@ receipt.summary = {
   blocked: receipt.results.filter(r => r.status === 'blocked').length,
   failed: receipt.results.filter(r => r.status === 'failed').length,
   expected_product_mentions: receipt.results.filter(r => r.evaluation?.expected_product_mentioned).length,
-  control_false_positives: receipt.results.filter(r => r.evaluation?.control_false_positive).length
+  control_false_positives: receipt.results.filter(r => r.evaluation?.control_false_positive).length,
+  stage_discover_passes: receipt.results.filter(r => r.evaluation?.stage_evidence?.discover === true).length,
+  stage_identify_passes: receipt.results.filter(r => r.evaluation?.stage_evidence?.identify === true).length,
+  stage_understand_passes: receipt.results.filter(r => r.evaluation?.stage_evidence?.understand === true).length,
+  stage_trust_passes: receipt.results.filter(r => r.evaluation?.stage_evidence?.trust === true).length,
+  stage_handoff_passes: receipt.results.filter(r => r.evaluation?.stage_evidence?.human_handoff === true).length,
+  invoke_and_useful_output_scored_elsewhere: true
 };
 
 const outputDir = path.join(root, 'probe-receipts');
