@@ -427,7 +427,7 @@ assert.match(sdl,/amount: 100/);
 console.log(JSON.stringify({
   ok:true,
   schema:'evercraft.saban.compute-exchange-proof.v1',
-  zero_cost_owned_capacity_preferred:true,
+  zero_cost_owned_capacity_preferred:true,\n  zero_cost_internal_capacity_needs_no_duplicate_lease_gate:true,
   commercial_fallback_when_owned_capacity_insufficient:true,
   budget_enforcement:true,
   quote_orders_cleaned_up_when_not_leased:true,
