@@ -51,6 +51,7 @@ export function runwayGen45Endpoint(verified=false):VisualModelEndpoint{
       referenceRoles:['identity','start_frame'],
       identityContinuityViaStartFrame:true,
       framesExclusiveWithReferences:true,
+      locatorKinds:['url','data_uri'],
       batchVariants:1,
       qualityTier:5,
       costTier:4,
