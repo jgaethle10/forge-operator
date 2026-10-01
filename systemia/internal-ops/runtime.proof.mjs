@@ -98,12 +98,12 @@ try{
   const restrictedRequest=store.get(appKey,'WorkRequest',restricted.work_request_id);
   assert.equal(restrictedRequest.execution_authority_granted,false);
 
-  await assert.rejects(
-    ()=>Promise.resolve(materializeInternalOpsIntake({
+  assert.throws(
+    ()=>materializeInternalOpsIntake({
       entityStore:store,appKey,now,
       admission:{...admission,execution_authority_granted:true},
       body:{idempotency_key:'bad-authority',request_type:'other'}
-    })),
+    }),
     /internal_ops_intake_execution_authority_forbidden/
   );
 
