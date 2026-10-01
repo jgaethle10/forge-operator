@@ -1,0 +1,41 @@
+version: 1
+authority: systemia
+policy:
+  identity_is_provider_independent: true
+  require_health_before_cutover: true
+  require_rollback_target: true
+  audit_all_mutations: true
+  external_tenants_default_deny: true
+services:
+  - service_id: systemia
+    logical_uri: evercraft://systemia
+    tenant: evercraft
+    endpoints: []
+  - service_id: fabric
+    logical_uri: evercraft://fabric
+    tenant: evercraft
+    endpoints: []
+  - service_id: rivet
+    logical_uri: evercraft://rivet
+    tenant: evercraft
+    endpoints: []
+  - service_id: infinite-classroom
+    logical_uri: evercraft://infinite-classroom
+    tenant: evercraft
+    endpoints: []
+  - service_id: journal
+    logical_uri: evercraft://journal
+    tenant: evercraft
+    endpoints: []
+  - service_id: fallen
+    logical_uri: evercraft://fallen
+    tenant: evercraft
+    endpoints: []
+  - service_id: daytrade-lens
+    logical_uri: evercraft://daytrade-lens
+    tenant: evercraft
+    endpoints: []
+  - service_id: evermaps
+    logical_uri: evercraft://evermaps
+    tenant: evercraft
+    endpoints: []
