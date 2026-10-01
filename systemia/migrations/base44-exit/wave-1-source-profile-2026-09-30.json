@@ -109,9 +109,11 @@
       "function_count": 4,
       "connected_connector_count": 0,
       "observed_surface_signals": [
-        "scheduled_work_candidate",
-        "systemia_sync",
-        "operations_intake"
+        "owned_aggregate_snapshot_candidate",
+        "owned_systemia_intake_candidate",
+        "owned_direct_snapshot_ingress_candidate",
+        "scheduled_clockout_function",
+        "offline_queue_data_writes"
       ],
       "migration_requirements": [
         "structured_data",
@@ -121,6 +123,13 @@
         "route_cutover",
         "rollback",
         "sentinel"
+      ],
+      "owned_replacement_refs": [
+        "systemia/internal-ops/snapshot.mjs",
+        "systemia/internal-ops/snapshot-ingress.mjs",
+        "systemia/internal-ops/intake.mjs",
+        "systemia/internal-ops/systemia-sync.mjs",
+        "systemia/operations/auto-clock-out.mjs"
       ]
     },
     {
