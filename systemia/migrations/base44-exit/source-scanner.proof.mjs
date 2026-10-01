@@ -49,7 +49,7 @@ try {
   assert.deepEqual(result.app_logs.methods, ['logUserInApp']);
   assert.deepEqual(result.integrations.operations, ['Core.UploadFile']);
   assert.deepEqual(result.integrations.custom_operations, ['polar :: get:/v1/products']);
-  assert.deepEqual(result.aliases.client_aliases, ['b', 'base44']);
+  assert.deepEqual(result.aliases.client_aliases, ['b']);
   assert.deepEqual(result.aliases.service_role_aliases, ['sr']);
   assert.deepEqual(result.aliases.service_role_connector_providers, ['polar']);
   assert.equal(result.cross_app_clients.count, 1);
