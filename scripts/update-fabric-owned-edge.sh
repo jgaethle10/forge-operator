@@ -18,7 +18,8 @@ Usage:
 
 Fail-closed update cycle for the owned Evercraft Fabric edge:
   fetch authorized Forge main -> fast-forward only -> run Fabric/Yard proofs
-  -> restart Evercraft Fabric -> verify local health -> rollback on failure.
+  -> reconcile local edge-attestation wiring -> restart Evercraft Fabric
+  -> verify local health + signed NodeSeed nonce -> rollback on failure.
 
 Must run as root (normally from the resident systemd timer). The repository
 commands themselves run as the ordinary owner of the checkout.
@@ -59,21 +60,29 @@ as_user() {
   runuser -u "$RUN_USER" -- "$@"
 }
 
-run_home="$(getent passwd "$RUN_USER" | cut -d: -f6)"
-if [[ -z "$run_home" ]]; then
+RUN_HOME="$(getent passwd "$RUN_USER" | cut -d: -f6)"
+if [[ -z "$RUN_HOME" ]]; then
   echo "ERROR: could not resolve home directory for $RUN_USER" >&2
   exit 2
 fi
-NODE_RECEIPT="$run_home/.local/state/evercraft/organism/compute/nodeseed-receipt.json"
-ALLOCATOR_TOKEN_FILE="$run_home/.local/state/evercraft/organism/.secrets/allocator-token"
+
+NODE_RECEIPT="$RUN_HOME/.local/state/evercraft/organism/compute/nodeseed-receipt.json"
+ALLOCATOR_TOKEN_FILE="$RUN_HOME/.local/state/evercraft/organism/.secrets/allocator-token"
+
+mkdir -p "$STATE_DIR"
+chmod 0750 "$STATE_DIR"
 
 reconcile_edge_attestation_env() {
   EDGE_ATTESTATION_EXPECTED=false
+
+  # The public Fabric edge may exist before the local organism does. In that
+  # state we do not invent identity proof. The external canary remains held.
   if [[ ! -f "$NODE_RECEIPT" || ! -f "$ALLOCATOR_TOKEN_FILE" ]]; then
     return 0
   fi
+
   EDGE_ATTESTATION_EXPECTED=true
-  mkdir -p "$(dirname "$FABRIC_ENV")" "$STATE_DIR"
+  mkdir -p "$(dirname "$FABRIC_ENV")"
   if [[ ! -f "$FABRIC_ENV" ]]; then
     : > "$FABRIC_ENV"
     chmod 0600 "$FABRIC_ENV"
@@ -82,6 +91,7 @@ reconcile_edge_attestation_env() {
   local current_node current_token
   current_node="$(grep '^EVERCRAFT_EDGE_NODE_RECEIPT=' "$FABRIC_ENV" 2>/dev/null | tail -1 | cut -d= -f2- || true)"
   current_token="$(grep '^EVERCRAFT_EDGE_ALLOCATOR_TOKEN_FILE=' "$FABRIC_ENV" 2>/dev/null | tail -1 | cut -d= -f2- || true)"
+
   if [[ "$current_node" == "$NODE_RECEIPT" && "$current_token" == "$ALLOCATOR_TOKEN_FILE" ]]; then
     return 0
   fi
@@ -108,26 +118,78 @@ restore_edge_attestation_env() {
   fi
 }
 
+clear_env_backup() {
+  if [[ -n "$ENV_BACKUP" && -f "$ENV_BACKUP" ]]; then
+    rm -f "$ENV_BACKUP"
+  fi
+  ENV_BACKUP=""
+}
+
+read_health() {
+  curl -fsS --max-time 5 "$HEALTH_URL" 2>/dev/null || true
+}
+
+health_supports_attestation() {
+  local health="$1"
+  runuser -u "$RUN_USER" -- env HEALTH_JSON="$health" node -e "
+    const h=JSON.parse(process.env.HEALTH_JSON||'{}');
+    if(h.ok!==true || h.service!=='evercraft-fabric-local') process.exit(2);
+    if(h.edge_attestation_supported!==true) process.exit(3);
+    if(h.edge_attestation_allocator_authority_exposed!==false) process.exit(4);
+  "
+}
+
 verify_edge_attestation_local() {
   if [[ "$EDGE_ATTESTATION_EXPECTED" != "true" ]]; then
     return 0
   fi
+
   local nonce body
-  nonce="edge_local_$(openssl rand -hex 18)"
+  nonce="edge_local_$(as_user node -e "process.stdout.write(require('crypto').randomBytes(18).toString('hex'))")"
   body="$(curl -fsS --max-time 5     -H 'content-type: application/json'     --data "{\"nonce\":\"$nonce\"}"     "http://127.0.0.1:8787/.well-known/evercraft-edge-attestation")"
-  EDGE_ATTESTATION_JSON="$body" EDGE_ATTESTATION_NONCE="$nonce" REPO_ROOT="$REPO_ROOT" as_user node --input-type=module - <<'NODE'
-import { verifyNodeAttestation } from process.env.REPO_ROOT + '/systemia/compute/device-identity.mjs';
+
+  runuser -u "$RUN_USER" -- env     EDGE_ATTESTATION_JSON="$body"     EDGE_ATTESTATION_NONCE="$nonce"     REPO_ROOT="$REPO_ROOT"     node --input-type=module - <<'NODE'
+import { pathToFileURL } from 'node:url';
+const moduleUrl=pathToFileURL(
+  process.env.REPO_ROOT+'/systemia/compute/device-identity.mjs'
+).href;
+const { verifyNodeAttestation }=await import(moduleUrl);
 const payload=JSON.parse(process.env.EDGE_ATTESTATION_JSON||'{}');
 if(payload.ok!==true || payload.schema!=='evercraft.operator-public-edge.attestation.v1') process.exit(2);
 if(payload.allocator_authority_exposed!==false || payload.allocator_authority_persisted!==false) process.exit(3);
+if(payload.physical_field_claim!==false) process.exit(4);
 const verified=verifyNodeAttestation({
   attestation:payload.attestation,
   expectedNonce:process.env.EDGE_ATTESTATION_NONCE,
   maxAgeMs:60000,
   now:new Date(),
 });
-if(verified.ok!==true || verified.field_claim!==false) process.exit(4);
+if(verified.ok!==true || verified.field_claim!==false) process.exit(5);
 NODE
+}
+
+verify_current_runtime() {
+  local expected_count="$1"
+  local health=""
+  for _ in 1 2 3 4 5 6 7 8 9 10; do
+    health="$(read_health)"
+    [[ -n "$health" ]] && break
+    sleep 1
+  done
+  [[ -n "$health" ]] || return 8
+
+  runuser -u "$RUN_USER" -- env     HEALTH_JSON="$health"     EXPECTED_COUNT="$expected_count"     EDGE_ATTESTATION_EXPECTED="$EDGE_ATTESTATION_EXPECTED"     node -e "
+      const h=JSON.parse(process.env.HEALTH_JSON||'{}');
+      const expected=Number(process.env.EXPECTED_COUNT||0);
+      if(h.ok!==true || h.service!=='evercraft-fabric-local') process.exit(2);
+      if(Number(h.capability_count)!==expected) process.exit(3);
+      if(process.env.EDGE_ATTESTATION_EXPECTED==='true') {
+        if(h.edge_attestation_supported!==true) process.exit(4);
+        if(h.edge_attestation_allocator_authority_exposed!==false) process.exit(5);
+      }
+    " || return 9
+
+  verify_edge_attestation_local || return 10
 }
 
 remote_url="$(as_user git -C "$REPO_ROOT" remote get-url "$REMOTE")"
@@ -141,48 +203,40 @@ if [[ -n "$(as_user git -C "$REPO_ROOT" status --porcelain)" ]]; then
   exit 4
 fi
 
-mkdir -p "$STATE_DIR"
-chmod 0750 "$STATE_DIR"
-
 before="$(as_user git -C "$REPO_ROOT" rev-parse HEAD)"
 as_user git -C "$REPO_ROOT" fetch --prune "$REMOTE" "$BRANCH"
 target="$(as_user git -C "$REPO_ROOT" rev-parse "$REMOTE/$BRANCH")"
 
+expected_count_for_current() {
+  as_user node -e "
+    const fs=require('fs');
+    const x=JSON.parse(fs.readFileSync('$REPO_ROOT/public/chum/capabilities.json','utf8'));
+    process.stdout.write(String((x.capabilities||[]).length));
+  "
+}
+
 if [[ "$before" == "$target" ]]; then
   reconcile_edge_attestation_env
   if [[ -n "$ENV_BACKUP" ]]; then
-    reconcile_edge_attestation_env
-
-if ! systemctl restart "$SERVICE"; then
+    if ! systemctl restart "$SERVICE"; then
       restore_edge_attestation_env
       systemctl restart "$SERVICE" || true
       echo "ERROR: Fabric restart failed during edge-attestation env reconciliation" >&2
       exit 7
     fi
-    sleep 2
   fi
-  health="$(curl -fsS --max-time 5 "$HEALTH_URL" 2>/dev/null || true)"
-  if [[ -z "$health" ]]; then
+
+  expected_count="$(expected_count_for_current)"
+  if ! verify_current_runtime "$expected_count"; then
+    code=$?
     restore_edge_attestation_env
     [[ -n "$ENV_BACKUP" ]] && systemctl restart "$SERVICE" || true
-    echo "ERROR: current Fabric health unavailable" >&2
-    exit 8
+    echo "ERROR: current Fabric verification failed ($code)" >&2
+    exit "$code"
   fi
-  if [[ "$EDGE_ATTESTATION_EXPECTED" == "true" ]]; then
-    if ! HEALTH_JSON="$health" as_user node -e "const h=JSON.parse(process.env.HEALTH_JSON||'{}'); if(h.edge_attestation_supported!==true) process.exit(2);"; then
-      restore_edge_attestation_env
-      [[ -n "$ENV_BACKUP" ]] && systemctl restart "$SERVICE" || true
-      echo "ERROR: current Fabric did not advertise edge attestation" >&2
-      exit 9
-    fi
-    if ! verify_edge_attestation_local; then
-      restore_edge_attestation_env
-      [[ -n "$ENV_BACKUP" ]] && systemctl restart "$SERVICE" || true
-      echo "ERROR: local signed edge attestation failed" >&2
-      exit 10
-    fi
-  fi
-  printf '{"schema":"evercraft.fabric-update.v1","state":"current","release_ref":"%s","edge_attestation_expected":%s,"edge_attestation_verified":%s,"observed_at":"%s"}\n'     "$before" "$EDGE_ATTESTATION_EXPECTED" "$EDGE_ATTESTATION_EXPECTED" "$(date -u +%FT%TZ)" > "$STATE_DIR/last-update.json"
+
+  clear_env_backup
+  printf '{"schema":"evercraft.fabric-update.v1","state":"current","release_ref":"%s","capability_count":%s,"edge_attestation_expected":%s,"edge_attestation_verified":%s,"observed_at":"%s"}\n'     "$before" "$expected_count" "$EDGE_ATTESTATION_EXPECTED" "$EDGE_ATTESTATION_EXPECTED" "$(date -u +%FT%TZ)"     > "$STATE_DIR/last-update.json"
   chmod 0640 "$STATE_DIR/last-update.json"
   exit 0
 fi
@@ -214,41 +268,21 @@ if ! (
   exit 6
 fi
 
+reconcile_edge_attestation_env
+
 if ! systemctl restart "$SERVICE"; then
   rollback "service_restart_failed"
   exit 7
 fi
 
-health=""
-for _ in 1 2 3 4 5 6 7 8 9 10; do
-  if health="$(curl -fsS --max-time 3 "$HEALTH_URL" 2>/dev/null)"; then
-    break
-  fi
-  sleep 1
-done
-
-if [[ -z "$health" ]]; then
-  rollback "health_unreachable"
-  exit 8
+expected_count="$(expected_count_for_current)"
+if ! verify_current_runtime "$expected_count"; then
+  code=$?
+  rollback "runtime_verification_failed_$code"
+  exit "$code"
 fi
 
-expected_count="$(as_user node -e "const fs=require('fs'); const x=JSON.parse(fs.readFileSync('$REPO_ROOT/public/chum/capabilities.json','utf8')); process.stdout.write(String((x.capabilities||[]).length));")"
-if ! HEALTH_JSON="$health" EXPECTED_COUNT="$expected_count" EDGE_ATTESTATION_EXPECTED="$EDGE_ATTESTATION_EXPECTED" as_user node -e "
-  const h=JSON.parse(process.env.HEALTH_JSON||'{}');
-  const expected=Number(process.env.EXPECTED_COUNT||0);
-  if(h.ok!==true || h.service!=='evercraft-fabric-local') process.exit(2);
-  if(Number(h.capability_count)!==expected) process.exit(3);
-  if(process.env.EDGE_ATTESTATION_EXPECTED==='true' && h.edge_attestation_supported!==true) process.exit(4);
-"; then
-  rollback "health_contract_failed"
-  exit 9
-fi
-
-if ! verify_edge_attestation_local; then
-  rollback "edge_attestation_failed"
-  exit 10
-fi
-
-printf '{"schema":"evercraft.fabric-update.v1","state":"updated","from_ref":"%s","release_ref":"%s","capability_count":%s,"edge_attestation_expected":%s,"edge_attestation_verified":%s,"observed_at":"%s"}\n'   "$before" "$target" "$expected_count" "$EDGE_ATTESTATION_EXPECTED" "$EDGE_ATTESTATION_EXPECTED" "$(date -u +%FT%TZ)" > "$STATE_DIR/last-update.json"
+clear_env_backup
+printf '{"schema":"evercraft.fabric-update.v1","state":"updated","from_ref":"%s","release_ref":"%s","capability_count":%s,"edge_attestation_expected":%s,"edge_attestation_verified":%s,"observed_at":"%s"}\n'   "$before" "$target" "$expected_count" "$EDGE_ATTESTATION_EXPECTED" "$EDGE_ATTESTATION_EXPECTED" "$(date -u +%FT%TZ)"   > "$STATE_DIR/last-update.json"
 chmod 0640 "$STATE_DIR/last-update.json"
 echo "Evercraft Fabric updated to $target with $expected_count capabilities."
