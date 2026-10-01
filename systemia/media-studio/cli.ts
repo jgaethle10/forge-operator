@@ -50,6 +50,7 @@ import type { FallenTimelineProject } from './timeline.js';
 import { compileStudioDraft, type StudioDraftPlan, type StudioDraftBundle } from './studio-create.js';
 import { resolveStudioDraft, type StudioResolutionItem } from './studio-resolve.js';
 import { finalizeStudioDelivery, type StudioDeliveryRequest } from './studio-delivery.js';
+import { assessStudioMaster } from './master-qc.js';
 import {
   buildCinematicVisualRequest,
   compileCinematicSequence,
