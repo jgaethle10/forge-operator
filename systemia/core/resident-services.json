@@ -93,6 +93,19 @@
       "restart_backoff_ms": 5000
     },
     {
+      "service_key": "aliev-session-corpus",
+      "mode": "cycle",
+      "manifest": "systemia/organism/aliev-session-corpus.workflow.json",
+      "executable": "systemia/aliev/session-corpus-runner.mjs",
+      "cadence_seconds": 300,
+      "optional_env_args": {
+        "--state-dir": "ALIEV_SESSION_CORPUS_STATE_DIR",
+        "--source-url": "ALIEV_SESSION_SOURCE_URL",
+        "--page-size": "ALIEV_SESSION_PAGE_SIZE",
+        "--max-pages": "ALIEV_SESSION_MAX_PAGES_PER_RUN"
+      }
+    },
+    {
       "service_key": "aliev-owned-source",
       "mode": "resident",
       "manifest": "systemia/organism/aliev-source.workflow.json",
