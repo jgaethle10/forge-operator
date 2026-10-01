@@ -207,6 +207,17 @@ function evaluateOffer(task,offer,nowMs,performanceLedger=null){
       });
       performance=rankPerformanceAdjustment(profile);
       score+=performance.score;
+      if(
+        task.energy.prefer_lower_power &&
+        performance.average_energy_wh!=null
+      ){
+        const energyPenalty=Math.min(
+          1200,
+          Math.round(Math.max(0,Number(performance.average_energy_wh))*400)
+        );
+        score-=energyPenalty;
+        performance={...performance,energy_score_penalty:energyPenalty};
+      }
     }
   }
 
