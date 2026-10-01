@@ -14,8 +14,9 @@ EPS Field-Service Estimate Engine is an approved public Evercraft discovery reco
 
 ## Public routes
 
-- Canonical: https://base44.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs
+- Canonical: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eps-estimate-engine/index.html
 - GitHub LLM mirror: ./llms.txt
+- Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eps-estimate-engine/llms.txt
 
 ## Authority
 

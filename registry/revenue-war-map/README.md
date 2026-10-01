@@ -20,7 +20,7 @@ Evercraft Revenue War Map is an approved public Evercraft discovery record. This
 
 ## Public routes
 
-- Canonical: https://evercraft-war-map.base44.app/
+- Canonical: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/revenue-war-map/index.html
 - GitHub LLM mirror: ./llms.txt
 - Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/revenue-war-map/llms.txt
 

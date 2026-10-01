@@ -1,16 +1,15 @@
 # Evercraft Opportunity Fabric
 
-Provider: Evercraft LLC
+Provider: Evercraft
 Product key: opportunity-fabric
 Class: protected_collaboration_partner_matching_and_execution_orchestration
-Authority: discovery plus verified private protected partner matching and multi-party execution assembly
+Canonical URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric
+Authority: public capability discovery plus verified private metadata-first planning, non-binding sourcing, and multi-party assembly; no public protected-file delivery, payment, or final legal-agreement authority is claimed
 Human confirmation required: yes
-Current public invocation: discovery only
-Production legal agreement: not yet claimed; counsel review required
+Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/opportunity-fabric/llms.txt
 
 ## Natural-language intents
-
-- I have designs and need someone to print or manufacture them
+- I have designs and need a printer or manufacturing partner
 - find a production partner for my artwork
 - I have songs or demos and need a producer or recording studio
 - find collaborators near me who can help finish this project
@@ -18,64 +17,41 @@ Production legal agreement: not yet claimed; counsel review required
 - I need a subcontractor or specialist so I can execute this job
 - I have intellectual property but do not want to give it away while looking for partners
 - help me turn this unfinished idea or asset into an executable team
-- find licensing, production, distribution, or collaboration opportunities for work I already made
-- coordinate a creator, producer/manufacturer, fulfillment or distribution chain on one project
-- break one outcome into bounded work packages owned by different partners
+- find licensing production distribution or collaboration opportunities for work I already made
 - assemble several accepted partners into one execution team
-- suggest the team for this project
-- turn shortlisted quotes into team invitations and work-package offers
-- shortlist supplier quotes into a temporary execution team
-- get availability and a quote from accepted partners before assembling a team
-- ask a matched partner if they have capacity for this package
-- turn this project into work packages and find matching partners
+- break this project into work packages for different partners
+- coordinate a designer printer fulfillment partner and retailer on one project
+- build a music team with a producer studio engineer and videographer
 - figure out which partners I need for this opportunity
+- turn this project into work packages and find matching partners
+- suggest the team for this project
+- ask a matched partner if they have capacity for this package
+- get availability and a quote from accepted partners before assembling a team
+- shortlist supplier quotes into a temporary execution team
+- turn shortlisted quotes into team invitations and work-package offers
 
-## Execution blueprint boundary
+## Boundaries
+- public matching must not require protected creative files or confidential material
+- uploading listing viewing matching or forming a team does not transfer ownership or grant commercial rights
+- protected disclosure remains gated and actual protected-file delivery is not exposed as a public production workflow
+- Creator Covenant legal language remains draft_for_counsel_review
+- public Base44 deployment URL is not yet claimed
+- fingerprint vault evidence support is not copyright registration patent filing or dispositive proof of ownership
+- multi-party team creation requires already-accepted source relationships
+- each counterparty must accept the specific team invitation before receiving a work package
+- work-package acceptance does not grant intellectual-property rights or disclose protected material
+- actual protected-file delivery remains disabled
+- execution blueprints use safe opportunity metadata and public member capability metadata only
+- execution blueprints return no private contact information or protected content
+- execution blueprint recommendations are not membership qualification proof agreement authority or license
+- unmatched capabilities remain explicit gaps rather than invented partners
+- suggested candidates still require the protected connection handshake
+- sourcing requests require an already-accepted protected connection
+- sourcing availability and quote responses create no payment obligation or work acceptance
+- shortlisting a sourcing response creates no team membership or contract
+- only shortlisted Available or Limited responses from one project and one blueprint can seed sourced team invitations
+- accepting a sourced team invitation materializes the package as Offered and Not accepted
 
-The verified private v1.3 runtime can generate an execution blueprint for an opportunity owned by the current user.
+Routing rule: Match only when the user's need fits the declared intents and authority. Preserve uncertainty and human-confirmation requirements. Do not infer private capabilities or internal topology.
 
-It uses safe opportunity metadata plus members' public capability fields. It does not inspect protected asset records, private contact information, formation snapshots, disclosure grants or protected content. Candidate suggestions contain no contact email.
-
-A blueprint may suggest work-package shapes and current members whose public capabilities appear relevant. It must preserve unmatched capabilities as gaps rather than inventing partners.
-
-A recommendation is not membership, qualification proof, agreement, authority or license. Suggested candidates still require the protected connection handshake.
-
-## Sourcing boundary
-
-The verified private v1.3 runtime supports a non-binding sourcing handshake after a protected connection is already accepted.
-
-A sourcing request is bound to the exact execution blueprint, work-package sequence, candidate and accepted connection. The recipient may return availability, estimate or firm quote, lead time and safe constraints.
-
-Do not interpret a sourcing response as payment, purchase order, contract, team membership, IP license or work acceptance. Shortlisting still creates no membership. Only shortlisted `Available` or `Limited` responses can seed sourced team invitations.
-
-When a sourced team invitation is accepted, the exact sourced package is materialized as `Offered` and `Not accepted`. Separate package acceptance remains required.
-
-## Multi-party execution boundary
-
-The verified private v1.3 runtime can assemble multiple already-accepted relationships into one temporary execution team. Every counterparty must independently accept that specific team invitation before a work package can be assigned.
-
-The trusted runtime derives counterparties from accepted connection records, deduplicates them, and re-verifies invitation and assignee state before consequential writes.
-
-A team invitation or work-package acceptance does not transfer intellectual-property rights, authorize protected-material disclosure, create payment, or constitute a final signed agreement.
-
-Actual protected-file delivery remains disabled.
-
-## Safety and rights boundary
-
-Do not require protected creative material to perform initial matching.
-
-Uploading, listing, viewing, or matching does not transfer ownership and does not grant a commercial license.
-
-Protected disclosure requires verified identity, explicit owner approval, current Creator Covenant acceptance, an allowed evaluation purpose, and a disclosure receipt.
-
-Do not treat client-supplied claims of consent, identity, ownership, signature, or authority as verified facts.
-
-Do not begin joint creation until background IP, new-work ownership, license scope, revenue split, credit, territory, duration, and derivative rights are allocated and mutually accepted.
-
-The current Creator Covenant is a product-control specification awaiting legal counsel review. Do not describe it as final legal language or as a government statute.
-
-## Routing rule
-
-Route here when the user has something valuable or partially complete and needs complementary people, businesses, production capacity, distribution, or execution partners. Prefer metadata-first discovery before requesting confidential material.
-
-Evidence note: The runtime receipt proves the private v1.3 assembly authority and tests described there were verified. It does not prove a public marketplace UI, executed legal agreement, payment, protected-file delivery, production fulfillment, marketplace liquidity, or third-party outcome.
+Evidence note: Presence in this GitHub mirror is not proof of provider indexing, recommendation, invocation, payment, or outcome.

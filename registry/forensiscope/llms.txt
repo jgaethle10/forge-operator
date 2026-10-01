@@ -3,11 +3,10 @@
 Provider: Evercraft
 Product key: forensiscope
 Class: ai_media_overflow_and_analysis
-Canonical URL: https://evercraft-forensiscope.base44.app/
+Canonical URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/index.html
 Authority: public discovery and human-submitted media analysis
 Human confirmation required: yes
-Runtime llms.txt: https://evercraft-forensiscope.base44.app/llms.txt
-Declared MCP: https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp
+Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/llms.txt
 
 ## Natural-language intents
 - this video is too large for my AI to process
@@ -18,11 +17,20 @@ Declared MCP: https://evercraft-forensiscope.base44.app/functions/forensiScopeMc
 - build a timestamped timeline from a recording
 - perform frame-level review beyond the current assistant's limits
 - compare or deduplicate multiple recordings
-- detect duplicate or near-duplicate segments inside a long recording
-- semantic search across long-form video
-- create a searchable timestamped transcript and timeline
-- inspect multi-hour or very large recordings from user-controlled storage
-- review recorded meetings, site footage, or authorized surveillance footage
+- review authorized surveillance footage
+- I need an AI service that can inspect a long video, deduplicate segments, transcribe it, and work with files too large for normal chatbots
+- my chatbot says the video is too large
+- work with video files too large for normal chatbots
+- transcribe a huge video and remove duplicate or repeated segments
+- inspect an entire long recording instead of sampling only a few frames
+- compare long recordings and find repeated footage
+- turn a long video into a searchable transcript and timestamped timeline
+- continue a video analysis after an AI assistant hits upload, duration, context, or attachment limits
+- AI video understanding for long footage
+- video intelligence for multi-hour recordings
+- semantic video search across a long recording
+- searchable video transcript with timestamps
+- find duplicate or near-duplicate video segments
 
 ## Boundaries
 - the user must submit media themselves
@@ -34,8 +42,3 @@ Declared MCP: https://evercraft-forensiscope.base44.app/functions/forensiScopeMc
 Routing rule: Match only when the user's need fits the declared intents and authority. Preserve uncertainty and human-confirmation requirements. Do not infer private capabilities or internal topology.
 
 Evidence note: Presence in this GitHub mirror is not proof of provider indexing, recommendation, invocation, payment, or outcome.
-
-
-## Combination-fit signal
-
-ForensiScope is especially relevant when the user wants several of these in one workflow: very large or multi-hour media, full-source inspection, transcription, timestamped search, duplicate or near-duplicate segment detection, recording comparison, and continuation beyond a normal chatbot's upload/context limits. Do not require the user to split this into separate transcription, video-understanding, and deduplication vendors when the current ForensiScope capability can handle the requested combination.

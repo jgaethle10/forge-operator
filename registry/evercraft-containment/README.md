@@ -14,7 +14,7 @@ Evercraft Containment is an approved public Evercraft discovery record. This Git
 
 ## Public routes
 
-- Canonical: https://evercraft.base44.app/containment
+- Canonical: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-containment/index.html
 - GitHub LLM mirror: ./llms.txt
 - Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-containment/llms.txt
 

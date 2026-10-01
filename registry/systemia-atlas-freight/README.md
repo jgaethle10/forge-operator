@@ -14,7 +14,7 @@ Systemia Atlas Freight Load Exception Intelligence is an approved public Evercra
 
 ## Public routes
 
-- Canonical: https://base44.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs
+- Canonical: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-atlas-freight/index.html
 - GitHub LLM mirror: ./llms.txt
 
 ## Authority

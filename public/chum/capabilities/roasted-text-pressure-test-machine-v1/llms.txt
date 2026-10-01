@@ -41,7 +41,7 @@ $0.99 USD one-time per roast.
 
 ## Invocation and authority
 
-LIVE: agent HTTP gateway + OpenAPI + llms guidance + remote MCP at https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp. Agents can read the 99¢ offer, prepare checkout only after explicit human confirmation, and retrieve the paid roast result. Generation requires Stripe verification of paid + complete + USD 0.99 + bound roast ID.
+LIVE: agent HTTP gateway + OpenAPI + llms guidance + remote MCP at [retired provider route removed] Agents can read the 99¢ offer, prepare checkout only after explicit human confirmation, and retrieve the paid roast result. Generation requires Stripe verification of paid + complete + USD 0.99 + bound roast ID.
 
 Explicit user confirmation is required before checkout. Paid output is generated only after independent Stripe verification.
 

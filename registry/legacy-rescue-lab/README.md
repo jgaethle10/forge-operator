@@ -1,12 +1,9 @@
+<!-- generated-by: evercraft.saban.discovery.v1 -->
 # Legacy Rescue Lab
 
-Legacy Rescue Lab is Evercraft's bounded rescue path for existing software that still has business value but is broken, fragile, abandoned, slow, undocumented, or too risky to replace blindly.
+Legacy Rescue Lab is an approved public Evercraft discovery record. This GitHub mirror exists so humans, search systems, LLMs, and agents can understand the product without exposing private/admin topology.
 
-## Core job
-
-Start from the failure the customer can feel, preserve what is still valuable, gather evidence, and recommend the smallest responsible rescue path.
-
-Use Legacy Rescue Lab when a customer says things like:
+## Match this product when
 
 - my checkout is broken and customers cannot buy
 - our developer disappeared and nobody knows how this codebase works
@@ -20,28 +17,19 @@ Use Legacy Rescue Lab when a customer says things like:
 - repair an existing system instead of replacing it
 - find publicly observable conversion leaks before we pay for a rebuild
 
-## First commercial doorway
+## Public routes
 
-**Legacy Rescue Scan: $299 one-time**
+- Canonical: https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
+- GitHub LLM mirror: ./llms.txt
+- Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/legacy-rescue-lab/llms.txt
 
-The scan is a bounded diagnostic. It can review public customer-facing surfaces using ordinary non-intrusive browsing and can evaluate customer-supplied evidence that the customer is authorized to share. It produces observed failures, evidence, prioritized repair hypotheses, and a proposed next step.
+## Authority
 
-The $299 fee may be credited in full toward an authorized Rescue Sprint started within 14 days of scan delivery.
+public discovery and bounded rescue diagnostics; private system access, credentials, source repositories, invasive testing, and production changes require separate explicit authorization
 
-## Live human handoff
+Human confirmation required: yes
 
-Legacy Rescue Lab is live in Evercraft Machine Commerce as `legacy-rescue-lab-v1`. Brand-blind problem matching can surface the Lab, the public review page exposes the $299 Rescue Scan, and a human-confirmed scan request can be recorded without creating checkout, payment obligation, private access, testing authority, deployment authority, migration authority, cutover authority, or production mutation.
-
-- Human review/intake: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=legacy-rescue-lab-v1
-- Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
-- MCP review tool: `prepare_legacy_rescue_scan_handoff`
-- MCP request tool: `submit_legacy_rescue_scan_request`
-- Negative canary: missing human confirmation returned HTTP 409 and created no record.
-- Positive canary: a clearly marked synthetic QA request returned HTTP 201 while checkout, payment obligation, private access, and production authority all remained false.
-
-Direct product checkout is still not represented as live.
-
-## Authority boundary
+## Boundaries
 
 - public-surface diagnostics use ordinary non-intrusive browsing and observation only; no credential bypass, exploitation, destructive actions, or unauthorized load testing
 - private repositories, admin panels, credentials, customer data, staging systems, and production systems require explicit authorization and defined scope
@@ -51,11 +39,6 @@ Direct product checkout is still not represented as live.
 - discovery and matching create no payment obligation; paid state requires authoritative provider verification
 - direct public checkout is not represented as live until an independent canary verifies the product-specific payment route
 
-## Machine discovery
+## Evidence state
 
-- Product key: `legacy-rescue-lab`
-- CHUM mirror: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/legacy-rescue-lab/ai-discovery.json
-- LLM guide: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/legacy-rescue-lab/llms.txt
-- Universal Evercraft discovery: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-pain-index.json
-
-Publication makes the capability discoverable. It does not prove that any particular AI provider has indexed or recommended it, and it does not prove checkout, payment, or fulfillment.
+This record is discovery metadata. It is not proof that a named AI provider indexed, recommended, invoked, purchased, or converted the product. Runtime availability, payment state, and consequential actions must be verified independently.

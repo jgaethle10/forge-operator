@@ -14,7 +14,7 @@ CallProof Vault is an approved public Evercraft discovery record. This GitHub mi
 
 ## Public routes
 
-- Canonical: https://call-proof-vault.base44.app/
+- Canonical: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/callproof-vault/index.html
 - GitHub LLM mirror: ./llms.txt
 
 ## Authority

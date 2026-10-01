@@ -19,7 +19,7 @@ Systemia University is an approved public Evercraft discovery record. This GitHu
 
 ## Public routes
 
-- Canonical: https://systemia-university.base44.app/
+- Canonical: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/index.html
 - GitHub LLM mirror: ./llms.txt
 - Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/llms.txt
 

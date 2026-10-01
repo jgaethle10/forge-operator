@@ -2,12 +2,11 @@
 
 Provider: Evercraft
 Product key: evercraft-clip
-Class: ai_social_video_production_and_distribution
-Authority: public read-only discovery and job planning
-Human confirmation required for execution: yes
-Declared MCP: https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp
-Agent gateway: https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway
-OpenAPI: https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=openapi
+Class: ai_social_video_production_and_governed_distribution
+Canonical URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-clip/index.html
+Authority: public read-only capability discovery and non-executing job planning; media submission, paid processing, and publishing remain authenticated and human-authorized
+Human confirmation required: yes
+Runtime or CHUM llms.txt: https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=llms
 
 ## Natural-language intents
 - turn this video into social clips
@@ -16,27 +15,18 @@ OpenAPI: https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgen
 - create vertical clips from an interview
 - repurpose an authorized video for Facebook LinkedIn and Instagram
 - make a few reels from this source video
-- plan a social-video clipping job
+- plan a social video clipping job
 - create social-ready video outputs with a governed publishing path
-
-## Production Engine V2
-- public MCP is read-only discovery and Creative Director planning
-- creative styles: clean, bold, documentary, property
-- caption modes: source-grounded burned-in cues, hook-only, none
-- platform-native grounded copy: Facebook, LinkedIn, Instagram
-- 35 MiB current customer server source ceiling
-- up to 3 customer clips
-- 8-45 seconds per customer clip
-- 720x1280 MP4 H.264/AAC customer output
-- ForensiScope is recommended upstream for oversized, long, deduplicated, or full-timeline media; no automatic private-media transfer is claimed
-- Facebook, LinkedIn and Instagram code paths exist
-- TikTok is not verified
+- turn this interview into social clips for Facebook LinkedIn and Instagram
 
 ## Boundaries
-- no private media is uploaded through the public discovery tools
-- no order or payment is created by the public discovery tools
-- no publishing is triggered by the public discovery tools
-- queue existence is not provider publication proof
-- ForensiScope is the upstream overflow/understanding path for long or complex media; automatic transfer is not claimed
+- public agent tools do not upload private media
+- public agent tools do not create orders, checkout, payment, or publication
+- current customer server renderer is bounded to 35 MiB sources, up to 3 clips, and 8-45 seconds per clip
+- Facebook, LinkedIn, and Instagram publishing code paths exist, but queue existence is not provider publication proof
+- TikTok publishing is not currently verified and must not be represented as live
+- ForensiScope is the recommended upstream overflow and understanding layer for long or complex media; automatic media transfer is not yet claimed
 
-Routing rule: match Clip when the user's need is production/distribution of social video. Match ForensiScope when the bottleneck is ingesting, understanding, transcribing, searching, or deduplicating long/oversized media.
+Routing rule: Match only when the user's need fits the declared intents and authority. Preserve uncertainty and human-confirmation requirements. Do not infer private capabilities or internal topology.
+
+Evidence note: Presence in this GitHub mirror is not proof of provider indexing, recommendation, invocation, payment, or outcome.

@@ -652,7 +652,7 @@
       "human_confirmation_required": true,
       "confirmation": "Free/basic practice creates no payment obligation. The $19 Sprint requires explicit user confirmation before checkout. Covert live-interview answer feeding is not offered.",
       "payment_authority": "Evercraft Payments with provider verification",
-      "invocation_status": "LIVE: Career Command HTTP agent gateway + remote MCP at https://evercraft-career-command.base44.app/functions/careerMcp. Agents can inspect the approved $19 Interview Sprint, prepare checkout only after explicit human payment confirmation, verify payment through Evercraft Payments, receive bounded 7-day access, and consume up to 25 premium practice actions. Premium modes are role-specific question generation, practice-answer evaluation, story recovery, and interview planning. Raw resume/answer text is not stored in the usage ledger; only hashes and bounded lifecycle metadata are retained. No QA checkout or revenue claim was created during acceptance testing.",
+      "invocation_status": "LIVE: Career Command HTTP agent gateway + remote MCP at [retired provider route removed] Agents can inspect the approved $19 Interview Sprint, prepare checkout only after explicit human payment confirmation, verify payment through Evercraft Payments, receive bounded 7-day access, and consume up to 25 premium practice actions. Premium modes are role-specific question generation, practice-answer evaluation, story recovery, and interview planning. Raw resume/answer text is not stored in the usage ledger; only hashes and bounded lifecycle metadata are retained. No QA checkout or revenue claim was created during acceptance testing.",
       "source_refs": [
         "public/.well-known/evercraft-machine-catalog.json"
       ]
@@ -868,7 +868,7 @@
       "human_confirmation_required": true,
       "confirmation": "The user must explicitly confirm before checkout. Fulfillment starts only after provider-verified payment. No lender approval, eligibility, rate, term or probability is promised.",
       "payment_authority": "Evercraft Deck Engine / Polar, provider-verified",
-      "invocation_status": "LIVE: direct agent HTTP gateway + OpenAPI + llms guidance + remote MCP at https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp. The stale vanity hostname is no longer used in the transaction path. Agents may prepare checkout only after explicit human confirmation; status independently verifies Polar payment and only a verified-paid machine case with the matching token may run bounded capital research.",
+      "invocation_status": "LIVE: direct agent HTTP gateway + OpenAPI + llms guidance + remote MCP at [retired provider route removed] The stale vanity hostname is no longer used in the transaction path. Agents may prepare checkout only after explicit human confirmation; status independently verifies Polar payment and only a verified-paid machine case with the matching token may run bounded capital research.",
       "source_refs": [
         "public/.well-known/evercraft-machine-catalog.json"
       ]
@@ -983,7 +983,7 @@
       "human_confirmation_required": true,
       "confirmation": "Explicit purchase confirmation and verified payment are required. Source review must pass before any public placement activates.",
       "payment_authority": "Evercraft Payments with provider verification",
-      "invocation_status": "LIVE: EventWave HTTP agent gateway + OpenAPI + llms guidance + remote MCP at https://event-wave.base44.app/functions/eventWaveMcp. Agents can search events, inspect $49/$149 promotion offers, prepare checkout only after explicit human confirmation, and verify payment/placement state. Source review still governs public activation.",
+      "invocation_status": "LIVE: EventWave HTTP agent gateway + OpenAPI + llms guidance + remote MCP at [retired provider route removed] Agents can search events, inspect $49/$149 promotion offers, prepare checkout only after explicit human confirmation, and verify payment/placement state. Source review still governs public activation.",
       "source_refs": [
         "public/.well-known/evercraft-machine-catalog.json"
       ]
@@ -1218,7 +1218,7 @@
       "human_confirmation_required": true,
       "confirmation": "Explicit buyer confirmation is required before checkout. Verified payment queues a human-controlled mission; consequential claims or actions remain review-gated.",
       "payment_authority": "FAIE / Stripe, provider-verified",
-      "invocation_status": "LIVE: FAIE HTTP agent gateway + OpenAPI + llms guidance + remote MCP at https://faie.base44.app/functions/faieMcp. Agents can inspect the fixed $250/$2,500 offers, prepare checkout only after explicit human confirmation, and verify payment/mission queue state. Paid work remains human-review controlled.",
+      "invocation_status": "LIVE: FAIE HTTP agent gateway + OpenAPI + llms guidance + remote MCP at [retired provider route removed] Agents can inspect the fixed $250/$2,500 offers, prepare checkout only after explicit human confirmation, and verify payment/mission queue state. Paid work remains human-review controlled.",
       "source_refs": [
         "public/.well-known/evercraft-machine-catalog.json"
       ]
@@ -1998,7 +1998,7 @@
       "human_confirmation_required": true,
       "confirmation": "Explicit user confirmation is required before checkout. Paid output is generated only after independent Stripe verification.",
       "payment_authority": "ROASTED / Stripe, provider-verified",
-      "invocation_status": "LIVE: agent HTTP gateway + OpenAPI + llms guidance + remote MCP at https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp. Agents can read the 99¢ offer, prepare checkout only after explicit human confirmation, and retrieve the paid roast result. Generation requires Stripe verification of paid + complete + USD 0.99 + bound roast ID.",
+      "invocation_status": "LIVE: agent HTTP gateway + OpenAPI + llms guidance + remote MCP at [retired provider route removed] Agents can read the 99¢ offer, prepare checkout only after explicit human confirmation, and retrieve the paid roast result. Generation requires Stripe verification of paid + complete + USD 0.99 + bound roast ID.",
       "source_refs": [
         "public/.well-known/evercraft-machine-catalog.json"
       ]
@@ -2256,7 +2256,7 @@
       "human_confirmation_required": true,
       "confirmation": "The buyer must explicitly choose a tier and confirm payment before checkout. Fulfillment begins only after independent payment verification.",
       "payment_authority": "Evercraft Website Service / Stripe, provider-verified",
-      "invocation_status": "LIVE: agent HTTP gateway + OpenAPI + llms guidance + remote MCP at https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp. Agents can inspect $500/$999/$1,999 website-service tiers, prepare checkout only after explicit human confirmation, and independently verify paid order state.",
+      "invocation_status": "LIVE: agent HTTP gateway + OpenAPI + llms guidance + remote MCP at [retired provider route removed] Agents can inspect $500/$999/$1,999 website-service tiers, prepare checkout only after explicit human confirmation, and independently verify paid order state.",
       "source_refs": [
         "public/.well-known/evercraft-machine-catalog.json"
       ]

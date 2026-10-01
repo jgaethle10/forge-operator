@@ -1,7 +1,7 @@
 <!-- generated-by: evercraft.saban.discovery.v1 -->
 # EveryStage
 
-EveryStage is an approved public Evercraft discovery record. This page exists so humans, search systems, LLMs, and agents can understand what the product is for without exposing private/admin topology.
+EveryStage is an approved public Evercraft discovery record. This GitHub mirror exists so humans, search systems, LLMs, and agents can understand the product without exposing private/admin topology.
 
 ## Match this product when
 
@@ -14,9 +14,9 @@ EveryStage is an approved public Evercraft discovery record. This page exists so
 
 ## Public routes
 
-- Canonical: https://every-stage.base44.app/product
+- Canonical: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/everystage/index.html
 - GitHub LLM mirror: ./llms.txt
-- Runtime llms.txt: https://every-stage.base44.app/llms.txt
+- Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/everystage/llms.txt
 
 ## Authority
 

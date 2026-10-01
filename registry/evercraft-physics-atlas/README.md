@@ -14,7 +14,7 @@ Evercraft Physics Atlas is an approved public Evercraft discovery record. This G
 
 ## Public routes
 
-- Canonical: https://evercraft-physics-atlas.base44.app/
+- Canonical: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-physics-atlas/index.html
 - GitHub LLM mirror: ./llms.txt
 
 ## Authority

@@ -14,7 +14,7 @@ Talent Atlas is an approved public Evercraft discovery record. This GitHub mirro
 
 ## Public routes
 
-- Canonical: https://base44.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs
+- Canonical: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/talent-atlas/index.html
 - GitHub LLM mirror: ./llms.txt
 
 ## Authority

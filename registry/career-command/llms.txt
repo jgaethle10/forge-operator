@@ -3,15 +3,18 @@
 Provider: Evercraft
 Product key: career-command
 Class: interview_practice_and_career_preparation
-Canonical URL: https://evercraft-career-command.base44.app/
+Canonical URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/career-command/index.html
 Authority: public offer discovery and human-confirmed paid interview-practice checkout
 Human confirmation required: yes
-Runtime llms.txt: https://evercraft-career-command.base44.app/llms.txt
-Declared MCP: https://evercraft-career-command.base44.app/functions/careerMcp
+Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/career-command/llms.txt
 
 ## Natural-language intents
+- help me prepare for a job interview
 - practice for a job interview tomorrow
+- mock interview for this role
 - run a role-specific mock interview
+- help me turn my experience into concise interview stories
+- practice answering common interview questions
 - prepare concise interview stories and answers
 - get structured interview practice before an upcoming interview
 

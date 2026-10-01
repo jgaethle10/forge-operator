@@ -3,9 +3,10 @@
 Provider: Evercraft
 Product key: little-red-book-export-qa
 Class: book_export_preflight_and_cover_geometry_qa
-Canonical URL: https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs
+Canonical URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/little-red-book-export-qa/index.html
 Authority: public discovery of bounded book-export QA with no publishing or distribution side effects
 Human confirmation required: yes
+Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/little-red-book-export-qa/llms.txt
 
 ## Natural-language intents
 - check if my book is ready for KDP

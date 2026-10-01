@@ -18,7 +18,7 @@ EverNest Atlas is an approved public Evercraft discovery record. This GitHub mir
 
 ## Public routes
 
-- Canonical: https://evernest-life-map.base44.app/
+- Canonical: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest-atlas/index.html
 - GitHub LLM mirror: ./llms.txt
 - Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest-atlas/llms.txt
 

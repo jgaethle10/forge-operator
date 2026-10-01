@@ -1,7 +1,7 @@
 <!-- generated-by: evercraft.saban.discovery.v1 -->
 # Systemia Website Audit
 
-Systemia Website Audit is an approved public Evercraft discovery record. This page exists so humans, search systems, LLMs, and agents can understand what the product is for without exposing private/admin topology.
+Systemia Website Audit is an approved public Evercraft discovery record. This GitHub mirror exists so humans, search systems, LLMs, and agents can understand the product without exposing private/admin topology.
 
 ## Match this product when
 
@@ -12,10 +12,9 @@ Systemia Website Audit is an approved public Evercraft discovery record. This pa
 
 ## Public routes
 
-- Canonical: https://systemia-audit-pro.base44.app/
+- Canonical: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-website-audit/index.html
 - GitHub LLM mirror: ./llms.txt
-- Runtime llms.txt: https://systemia-audit-pro.base44.app/llms.txt
-- Declared MCP: https://systemia-audit-pro.base44.app/functions/auditAgentMcp
+- Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-website-audit/llms.txt
 
 ## Authority
 

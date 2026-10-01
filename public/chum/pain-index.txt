@@ -244,7 +244,7 @@ Use when the user means:
 Problem: A candidate needs role-specific practice and candid evidence-based feedback before an interview.
 Outputs: Role-specific practice question, answer verdict, what landed, weaknesses, evidence gaps, improved answer structure, pressure follow-up and re-drill instruction.
 Confirmation boundary: Free/basic practice creates no payment obligation. The $19 Sprint requires explicit user confirmation before checkout. Covert live-interview answer feeding is not offered.
-Invocation status: LIVE: Career Command HTTP agent gateway + remote MCP at https://evercraft-career-command.base44.app/functions/careerMcp. Agents can inspect the approved $19 Interview Sprint, prepare checkout only after explicit human payment confirmation, verify payment through Evercraft Payments, receive bounded 7-day access, and consume up to 25 premium practice actions. Premium modes are role-specific question generation, practice-answer evaluation, story recovery, and interview planning. Raw resume/answer text is not stored in the usage ledger; only hashes and bounded lifecycle metadata are retained. No QA checkout or revenue claim was created during acceptance testing.
+Invocation status: LIVE: Career Command HTTP agent gateway + remote MCP at [retired provider route removed] Agents can inspect the approved $19 Interview Sprint, prepare checkout only after explicit human payment confirmation, verify payment through Evercraft Payments, receive bounded 7-day access, and consume up to 25 premium practice actions. Premium modes are role-specific question generation, practice-answer evaluation, story recovery, and interview planning. Raw resume/answer text is not stored in the usage ledger; only hashes and bounded lifecycle metadata are retained. No QA checkout or revenue claim was created during acceptance testing.
 
 ## Career Command Resume + Job Fit Audit
 Capability ID: offer:career-command-resume-job-fit-machine-v1
@@ -331,7 +331,7 @@ Use when the user means:
 Problem: A founder, operator or project owner needs bounded capital-path research, readiness gaps and evidence-led deck direction without fake approval odds or invented financing terms.
 Outputs: Research summary, capital-readiness notes, 3-6 public-source provider/program candidates, requirements and evidence links, recommended audience and a 6-14 slide deck outline.
 Confirmation boundary: The user must explicitly confirm before checkout. Fulfillment starts only after provider-verified payment. No lender approval, eligibility, rate, term or probability is promised.
-Invocation status: LIVE: direct agent HTTP gateway + OpenAPI + llms guidance + remote MCP at https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp. The stale vanity hostname is no longer used in the transaction path. Agents may prepare checkout only after explicit human confirmation; status independently verifies Polar payment and only a verified-paid machine case with the matching token may run bounded capital research.
+Invocation status: LIVE: direct agent HTTP gateway + OpenAPI + llms guidance + remote MCP at [retired provider route removed] The stale vanity hostname is no longer used in the transaction path. Agents may prepare checkout only after explicit human confirmation; status independently verifies Polar payment and only a verified-paid machine case with the matching token may run bounded capital research.
 
 ## EPS Estimate Intelligence
 Capability ID: offer:eps-estimate-engine-machine-v1
@@ -389,7 +389,7 @@ Use when the user means:
 Problem: An organizer or venue wants a bounded paid EventWave placement with verified payment, source review and controlled activation.
 Outputs: Verified order state, source-review state, bounded activated placement, placement expiry and activation evidence.
 Confirmation boundary: Explicit purchase confirmation and verified payment are required. Source review must pass before any public placement activates.
-Invocation status: LIVE: EventWave HTTP agent gateway + OpenAPI + llms guidance + remote MCP at https://event-wave.base44.app/functions/eventWaveMcp. Agents can search events, inspect $49/$149 promotion offers, prepare checkout only after explicit human confirmation, and verify payment/placement state. Source review still governs public activation.
+Invocation status: LIVE: EventWave HTTP agent gateway + OpenAPI + llms guidance + remote MCP at [retired provider route removed] Agents can search events, inspect $49/$149 promotion offers, prepare checkout only after explicit human confirmation, and verify payment/placement state. Source review still governs public activation.
 
 ## Evercraft Clip Social Video Production
 Capability ID: offer:evercraft-clip-social-video-v1
@@ -490,7 +490,7 @@ Use when the user means:
 Problem: A buyer has one bounded agriculture, land, water, production or resilience question and needs a sourced evidence-first investigation.
 Outputs: A bounded evidence-first mission packet with findings, source references, uncertainty/evidence-needed items, challenge notes and human-review items.
 Confirmation boundary: Explicit buyer confirmation is required before checkout. Verified payment queues a human-controlled mission; consequential claims or actions remain review-gated.
-Invocation status: LIVE: FAIE HTTP agent gateway + OpenAPI + llms guidance + remote MCP at https://faie.base44.app/functions/faieMcp. Agents can inspect the fixed $250/$2,500 offers, prepare checkout only after explicit human confirmation, and verify payment/mission queue state. Paid work remains human-review controlled.
+Invocation status: LIVE: FAIE HTTP agent gateway + OpenAPI + llms guidance + remote MCP at [retired provider route removed] Agents can inspect the fixed $250/$2,500 offers, prepare checkout only after explicit human confirmation, and verify payment/mission queue state. Paid work remains human-review controlled.
 
 ## FindMyPart Paid Part Hunt
 Capability ID: offer:findmypart-paid-hunt-v1
@@ -824,7 +824,7 @@ Use when the user means:
 Problem: Fast, low-cost critique for short user-supplied text, followed by concrete repair actions.
 Outputs: A roast, three practical fixes and a shareable result.
 Confirmation boundary: Explicit user confirmation is required before checkout. Paid output is generated only after independent Stripe verification.
-Invocation status: LIVE: agent HTTP gateway + OpenAPI + llms guidance + remote MCP at https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp. Agents can read the 99¢ offer, prepare checkout only after explicit human confirmation, and retrieve the paid roast result. Generation requires Stripe verification of paid + complete + USD 0.99 + bound roast ID.
+Invocation status: LIVE: agent HTTP gateway + OpenAPI + llms guidance + remote MCP at [retired provider route removed] Agents can read the 99¢ offer, prepare checkout only after explicit human confirmation, and retrieve the paid roast result. Generation requires Stripe verification of paid + complete + USD 0.99 + bound roast ID.
 
 ## Site-Survive Rapid Audit
 Capability ID: offer:site-survive-rapid-audit-v1
@@ -921,7 +921,7 @@ Use when the user means:
 Problem: A business needs a professional website built or upgraded without operating a site-builder interface.
 Outputs: A bounded paid website-service order and completed website/service outcome through the existing fulfillment workflow.
 Confirmation boundary: The buyer must explicitly choose a tier and confirm payment before checkout. Fulfillment begins only after independent payment verification.
-Invocation status: LIVE: agent HTTP gateway + OpenAPI + llms guidance + remote MCP at https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp. Agents can inspect $500/$999/$1,999 website-service tiers, prepare checkout only after explicit human confirmation, and independently verify paid order state.
+Invocation status: LIVE: agent HTTP gateway + OpenAPI + llms guidance + remote MCP at [retired provider route removed] Agents can inspect $500/$999/$1,999 website-service tiers, prepare checkout only after explicit human confirmation, and independently verify paid order state.
 
 ## Worldstate Reality Delta
 Capability ID: offer:worldstate-reality-delta-v1

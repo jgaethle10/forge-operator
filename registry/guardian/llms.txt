@@ -3,15 +3,22 @@
 Provider: Evercraft
 Product key: guardian
 Class: privacy_first_protection_navigation_and_prevention
-Canonical URL: https://guardian-pilot.base44.app/
+Canonical URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian/index.html
 Authority: Public discovery and verified-resource navigation only. No emergency dispatch, provider admission, school operations, or guaranteed live capacity is implied.
 Human confirmation required: no
 Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian/llms.txt
 
 ## Natural-language intents
+- I need help paying rent
+- I need food help near me
+- help with utility bills
+- childcare assistance near me
+- transportation assistance near me
+- free or low-cost legal aid near me
+- benefits or public resources I may qualify for
+- find Spanish-language or interpreter-supported help near me
 - find verified help for housing shelter food benefits transportation childcare income or legal aid
 - find public safety or stability resources without creating an account
-- find Spanish-language or interpreter-supported help
 - find outside support when I do not want to route through my school workplace family or usual authority
 - find prevention and protective infrastructure resources
 - give my organization a privacy-minimized public doorway to verified help

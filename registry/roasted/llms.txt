@@ -3,11 +3,10 @@
 Provider: Evercraft
 Product key: roasted
 Class: micro_purchase_text_pressure_test
-Canonical URL: https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs
+Canonical URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/roasted/index.html
 Authority: public offer discovery, human-confirmed 99-cent checkout, and paid-result retrieval through a live specialist MCP
 Human confirmation required: yes
 Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/roasted/llms.txt
-Declared MCP: https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp
 
 ## Natural-language intents
 - roast this text

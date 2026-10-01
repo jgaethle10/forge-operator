@@ -38,7 +38,7 @@ Signal Brief $250 one-time; Proof Sprint $2,500 one-time. Other intake categorie
 
 ## Invocation and authority
 
-LIVE: FAIE HTTP agent gateway + OpenAPI + llms guidance + remote MCP at https://faie.base44.app/functions/faieMcp. Agents can inspect the fixed $250/$2,500 offers, prepare checkout only after explicit human confirmation, and verify payment/mission queue state. Paid work remains human-review controlled.
+LIVE: FAIE HTTP agent gateway + OpenAPI + llms guidance + remote MCP at [retired provider route removed] Agents can inspect the fixed $250/$2,500 offers, prepare checkout only after explicit human confirmation, and verify payment/mission queue state. Paid work remains human-review controlled.
 
 Explicit buyer confirmation is required before checkout. Verified payment queues a human-controlled mission; consequential claims or actions remain review-gated.
 

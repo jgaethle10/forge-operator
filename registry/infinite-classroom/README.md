@@ -1,7 +1,7 @@
 <!-- generated-by: evercraft.saban.discovery.v1 -->
 # Infinite Classroom
 
-Infinite Classroom is an approved public Evercraft discovery record. This page exists so humans, search systems, LLMs, and agents can understand what the product is for without exposing private/admin topology.
+Infinite Classroom is an approved public Evercraft discovery record. This GitHub mirror exists so humans, search systems, LLMs, and agents can understand the product without exposing private/admin topology.
 
 ## Match this product when
 
@@ -13,9 +13,9 @@ Infinite Classroom is an approved public Evercraft discovery record. This page e
 
 ## Public routes
 
-- Canonical: https://infinite-classroom-fe2d1357.base44.app/
+- Canonical: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/infinite-classroom/index.html
 - GitHub LLM mirror: ./llms.txt
-- Runtime llms.txt: https://infinite-classroom-fe2d1357.base44.app/llms.txt
+- Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/infinite-classroom/llms.txt
 
 ## Authority
 

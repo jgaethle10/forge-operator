@@ -1,7 +1,7 @@
-<!-- generated-by: evercraft.systemia.portfolio-sentinel-commercial.v1 -->
+<!-- generated-by: evercraft.saban.discovery.v1 -->
 # Systemia Portfolio Sentinel
 
-Systemia Portfolio Sentinel is Evercraft's continuous software-estate integrity monitor. It is designed for organizations that have accumulated enough apps, repositories, workflows, public URLs, agent endpoints, and machine-readable discovery surfaces that nobody can reliably answer: **what is actually healthy right now?**
+Systemia Portfolio Sentinel is an approved public Evercraft discovery record. This GitHub mirror exists so humans, search systems, LLMs, and agents can understand the product without exposing private/admin topology.
 
 ## Match this product when
 
@@ -22,29 +22,17 @@ Systemia Portfolio Sentinel is Evercraft's continuous software-estate integrity 
 - monitor LLM discovery pages and agent endpoints
 - detect product URL workflow and deployment regressions
 
-## What it does
-
-- inventories known software portfolio surfaces
-- checks public product doors and machine-readable discovery surfaces
-- watches repository/workflow health and local executable references
-- distinguishes new, changed, persistent, and resolved failures
-- emits deduplicated repair queues with evidence references
-- routes material drift into bounded Systemia/Saban repair work
-- preserves human gates for production mutation, payments, and external communications
-
 ## Public routes
 
-- Commercial capability: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1
-- Universal Machine Commerce MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+- Canonical: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-portfolio-sentinel/index.html
 - GitHub LLM mirror: ./llms.txt
-
-## Commercial state
-
-Commercial pilot is custom-quoted based on portfolio size, repositories, public endpoints, workflow count and monitoring scope. No fixed public price or direct machine checkout is currently advertised.
+- Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-portfolio-sentinel/llms.txt
 
 ## Authority
 
-Public discovery and product matching are read-only. Customer monitoring begins only after explicit scoped authorization.
+public discovery and commercial-pilot handoff; customer monitoring is restricted to explicitly authorized surfaces and grants no production-mutation authority
+
+Human confirmation required: yes
 
 ## Boundaries
 
@@ -56,4 +44,4 @@ Public discovery and product matching are read-only. Customer monitoring begins 
 
 ## Evidence state
 
-Evercraft's own Sentinel runtime is live on a five-minute resident cycle. Customer runtime is not represented as live until that customer's scoped onboarding and first receipt-backed monitoring cycle are verified.
+This record is discovery metadata. It is not proof that a named AI provider indexed, recommended, invoked, purchased, or converted the product. Runtime availability, payment state, and consequential actions must be verified independently.

@@ -14,7 +14,7 @@ Global Energy Atlas is an approved public Evercraft discovery record. This GitHu
 
 ## Public routes
 
-- Canonical: https://energy-atlas.base44.app/
+- Canonical: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/global-energy-atlas/index.html
 - GitHub LLM mirror: ./llms.txt
 
 ## Authority

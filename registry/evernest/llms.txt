@@ -3,15 +3,19 @@
 Provider: Evercraft
 Product key: evernest
 Class: family_support_resources
-Canonical URL: https://evernest-home.base44.app/
+Canonical URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest/index.html
 Authority: public resource discovery only
 Human confirmation required: no
-Runtime llms.txt: https://evernest-home.base44.app/llms.txt
+Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest/llms.txt
 
 ## Natural-language intents
+- I just had a baby and need practical help
+- organize meals and practical help for a new parent
+- build a trusted family support circle
+- help my family prepare for a new baby
+- family support checklist after having a baby
+- maternal and family support resources
 - family support resources
-- maternal support resources
-- organize practical help after having a baby
 - trusted support circle concepts
 - family preparedness resources
 - Spanish-language family support resources

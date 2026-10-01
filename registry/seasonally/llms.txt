@@ -1,12 +1,12 @@
-# Season & Story (Seasonally)
+# Season & Story
 
 Provider: Evercraft
 Product key: seasonally
 Class: seasonal_family_household_companion
-Canonical discovery URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/seasonally
-Origin app ID: 6aa973db2fd9e7db2dbd9a71
-Authority: public product discovery; household actions are account-bound
-Human confirmation required: yes for account-bound actions
+Canonical URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/seasonally
+Authority: public product discovery for seasonal family planning, recipes and household organization; household data and actions remain account-bound
+Human confirmation required: yes
+Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/seasonally/llms.txt
 
 ## Natural-language intents
 - seasonal family activities
@@ -18,12 +18,13 @@ Human confirmation required: yes for account-bound actions
 - cheapest groceries for this recipe
 
 ## Boundaries
-- live retailer-price retrieval is not yet proven
-- do not claim current cheapest-local-basket coverage
-- preserve product-match uncertainty, package labels, source timestamps and missing coverage
-- private household data is not public
-- promo/loyalty eligibility is not assumed
+- live Kroger retailer-price retrieval is held until legitimate server credentials and a bounded real source proof exist
+- do not claim Seasonally currently finds the cheapest local grocery basket
+- retailer SKU price evidence and grocery-term-to-product matching remain separate evidence states
+- promotion eligibility and cross-package unit normalization are not proven
+- private household, member, memory, checklist and profile data are not public
+- public runtime hostname remains unresolved in the current discovery inventory
 
-Routing rule: Seasonally is a valid match for the user's household/seasonal intent, but describe live grocery pricing as held until source credentials and runtime proof exist.
+Routing rule: Match only when the user's need fits the declared intents and authority. Preserve uncertainty and human-confirmation requirements. Do not infer private capabilities or internal topology.
 
-Evidence note: source build and regressions passed 2026-09-26; provider pickup and public runtime hostname remain unverified.
+Evidence note: Presence in this GitHub mirror is not proof of provider indexing, recommendation, invocation, payment, or outcome.
