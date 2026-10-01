@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-01T05:06:51.760Z",
+  "updated_at": "2026-10-01T05:09:39.107Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,16 +11,60 @@
   },
   "latest_change_batch": [
     {
+      "path": "/chum/revenue.json",
+      "last_changed": "2026-10-01T05:09:39.107Z",
+      "priority": 90
+    },
+    {
+      "path": "/chum/revenue.txt",
+      "last_changed": "2026-10-01T05:09:39.107Z",
+      "priority": 90
+    },
+    {
+      "path": "/.well-known/evercraft-agent-commerce.json",
+      "last_changed": "2026-10-01T05:09:39.107Z",
+      "priority": 84
+    },
+    {
+      "path": "/chum/agent-commerce.json",
+      "last_changed": "2026-10-01T05:09:39.107Z",
+      "priority": 80
+    },
+    {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-01T05:06:51.760Z",
+      "last_changed": "2026-10-01T05:09:39.107Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
     {
+      "path": "/chum/revenue.json",
+      "url": "/chum/revenue.json",
+      "last_changed": "2026-10-01T05:09:39.107Z",
+      "priority": 90
+    },
+    {
+      "path": "/chum/revenue.txt",
+      "url": "/chum/revenue.txt",
+      "last_changed": "2026-10-01T05:09:39.107Z",
+      "priority": 90
+    },
+    {
+      "path": "/.well-known/evercraft-agent-commerce.json",
+      "url": "/.well-known/evercraft-agent-commerce.json",
+      "last_changed": "2026-10-01T05:09:39.107Z",
+      "priority": 84
+    },
+    {
+      "path": "/chum/agent-commerce.json",
+      "url": "/chum/agent-commerce.json",
+      "last_changed": "2026-10-01T05:09:39.107Z",
+      "priority": 80
+    },
+    {
       "path": "/chum/hot/index.json",
       "url": "/chum/hot/index.json",
-      "last_changed": "2026-10-01T05:06:51.760Z",
+      "last_changed": "2026-10-01T05:09:39.107Z",
       "priority": 80
     },
     {
@@ -380,12 +424,6 @@
     {
       "path": "/.well-known/evercraft-pain-index.json",
       "url": "/.well-known/evercraft-pain-index.json",
-      "last_changed": "2026-10-01T05:02:13.810Z",
-      "priority": 90
-    },
-    {
-      "path": "/chum/revenue.json",
-      "url": "/chum/revenue.json",
       "last_changed": "2026-10-01T05:02:13.810Z",
       "priority": 90
     },
@@ -1496,24 +1534,6 @@
     {
       "path": "/chum/answers/doors/create-cross-business-loyalty-rewards-2c3ab05040/",
       "url": "/chum/answers/doors/create-cross-business-loyalty-rewards-2c3ab05040/",
-      "last_changed": "2026-10-01T05:00:27.354Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/credit-builder-d667e52872.json",
-      "url": "/chum/answers/doors/credit-builder-d667e52872.json",
-      "last_changed": "2026-10-01T05:00:27.354Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/cron-job-audit-7941dee6af.json",
-      "url": "/chum/answers/doors/cron-job-audit-7941dee6af.json",
-      "last_changed": "2026-10-01T05:00:27.354Z",
-      "priority": 160
-    },
-    {
-      "path": "/chum/answers/doors/cross-subject-learning-32bd20f557.json",
-      "url": "/chum/answers/doors/cross-subject-learning-32bd20f557.json",
       "last_changed": "2026-10-01T05:00:27.354Z",
       "priority": 160
     }

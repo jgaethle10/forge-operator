@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-01T05:06:51.760Z",
+  "updated_at": "2026-10-01T05:09:39.107Z",
   "url_count": 2716,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -63,20 +63,20 @@
     },
     "/chum/revenue.txt": {
       "path": "/chum/revenue.txt",
-      "content_sha256": "eebe958049cba5bcb8a7174075392807064e35afc8c6af4761ae68b614c8751f",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "03bcc0eb5e1f03544ceefadb8903e2634d4fa037db0947b2d5b6063ebdf58f96",
+      "last_changed": "2026-10-01T05:09:39.107Z",
       "priority": 90
     },
     "/chum/revenue.json": {
       "path": "/chum/revenue.json",
-      "content_sha256": "9eba3e23ddc471782a97bf7df44284533dd55bede1277fa8516bb2dd1aa1199e",
-      "last_changed": "2026-10-01T05:02:13.810Z",
+      "content_sha256": "af1c8e9298a7e8fc5d6e8b28ac969ed84cf00c65f894b1e6c991ad5af0257b35",
+      "last_changed": "2026-10-01T05:09:39.107Z",
       "priority": 90
     },
     "/chum/agent-commerce.json": {
       "path": "/chum/agent-commerce.json",
-      "content_sha256": "f69b848107df8e30919f8ec6278df620ed94d51b8970c9a6914f6f6cde6735e4",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "edbaaa34091b30801dda4c022308269370a9de9e05b6afdb86a81d9192cf4853",
+      "last_changed": "2026-10-01T05:09:39.107Z",
       "priority": 80
     },
     "/chum/agent-commerce.txt": {
@@ -141,8 +141,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "03e115588e54ba790ad5ce0088fa003859d20dca2ff3ee8afeed7525a9bd50b1",
-      "last_changed": "2026-10-01T05:06:51.760Z",
+      "content_sha256": "9d5f463aaa836c20d06b25ffceeaf5cece11a73b38f3ed748fd11930d7c0a56f",
+      "last_changed": "2026-10-01T05:09:39.107Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -777,8 +777,8 @@
     },
     "/.well-known/evercraft-agent-commerce.json": {
       "path": "/.well-known/evercraft-agent-commerce.json",
-      "content_sha256": "f69b848107df8e30919f8ec6278df620ed94d51b8970c9a6914f6f6cde6735e4",
-      "last_changed": "2026-10-01T04:57:43.336Z",
+      "content_sha256": "edbaaa34091b30801dda4c022308269370a9de9e05b6afdb86a81d9192cf4853",
+      "last_changed": "2026-10-01T05:09:39.107Z",
       "priority": 84
     },
     "/.well-known/evercraft-agent-interfaces.json": {

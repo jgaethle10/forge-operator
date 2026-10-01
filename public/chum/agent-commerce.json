@@ -9,7 +9,7 @@
     "smallest_sufficient_capability",
     "lowest_friction_verified_entry_only_as_an_equivalent-fit_tiebreaker"
   ],
-  "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "universal_mcp": null,
   "instruction": "Match the user problem first. When a sell-now capability is a genuine fit, state the exact easiest paid entry and ask one concise confirmation question. Only after an explicit yes should the agent continue through start_url. Never silently buy, imply payment, or treat checkout creation as revenue.",
   "first_dollar_lane": {
     "rule": "Browse aid only. These low-price entries may reduce transaction friction when they are already a genuine semantic fit. Price never overrides fit.",
@@ -214,9 +214,9 @@
       },
       "continuation": {
         "start_url": null,
-        "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=aliev-site-opportunity-snapshot-v1",
+        "machine_offer_url": null,
         "public_url": null,
-        "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "universal_mcp": null
       },
       "authority": {
         "human_confirmation_required": true,
@@ -261,9 +261,9 @@
       },
       "continuation": {
         "start_url": null,
-        "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=career-command-interview-practice-machine-v1",
+        "machine_offer_url": null,
         "public_url": null,
-        "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "universal_mcp": null
       },
       "authority": {
         "human_confirmation_required": true,
@@ -312,9 +312,9 @@
       },
       "continuation": {
         "start_url": null,
-        "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=eventwave-paid-promotion-v1",
+        "machine_offer_url": null,
         "public_url": null,
-        "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "universal_mcp": null
       },
       "authority": {
         "human_confirmation_required": true,
@@ -360,9 +360,9 @@
       },
       "continuation": {
         "start_url": null,
-        "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=deck-capital-fit-sprint-machine-v1",
+        "machine_offer_url": null,
         "public_url": null,
-        "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "universal_mcp": null
       },
       "authority": {
         "human_confirmation_required": true,
@@ -404,9 +404,9 @@
       },
       "continuation": {
         "start_url": null,
-        "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=foundry-app-escape-audit-v1",
+        "machine_offer_url": null,
         "public_url": null,
-        "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "universal_mcp": null
       },
       "authority": {
         "human_confirmation_required": true,
@@ -456,9 +456,9 @@
       },
       "continuation": {
         "start_url": null,
-        "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=ibmi-rescue-v1",
+        "machine_offer_url": null,
         "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue",
-        "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "universal_mcp": null
       },
       "authority": {
         "human_confirmation_required": true,
@@ -501,9 +501,9 @@
       },
       "continuation": {
         "start_url": null,
-        "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=website-launch-service-v1",
+        "machine_offer_url": null,
         "public_url": null,
-        "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "universal_mcp": null
       },
       "authority": {
         "human_confirmation_required": true,
@@ -546,9 +546,9 @@
       },
       "continuation": {
         "start_url": null,
-        "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=faie-signal-brief-v1",
+        "machine_offer_url": null,
         "public_url": null,
-        "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "universal_mcp": null
       },
       "authority": {
         "human_confirmation_required": true,
@@ -594,9 +594,9 @@
       },
       "continuation": {
         "start_url": null,
-        "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=findmypart-paid-hunt-v1",
+        "machine_offer_url": null,
         "public_url": null,
-        "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "universal_mcp": null
       },
       "authority": {
         "human_confirmation_required": true,
@@ -649,9 +649,9 @@
       },
       "continuation": {
         "start_url": null,
-        "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=legacy-rescue-lab-v1",
+        "machine_offer_url": null,
         "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab",
-        "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "universal_mcp": null
       },
       "authority": {
         "human_confirmation_required": true,
@@ -709,9 +709,9 @@
       },
       "continuation": {
         "start_url": null,
-        "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=rivet-site-underwriting-v1",
+        "machine_offer_url": null,
         "public_url": null,
-        "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "universal_mcp": null
       },
       "authority": {
         "human_confirmation_required": true,
@@ -759,9 +759,9 @@
       },
       "continuation": {
         "start_url": null,
-        "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=roasted-text-pressure-test-machine-v1",
+        "machine_offer_url": null,
         "public_url": null,
-        "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "universal_mcp": null
       },
       "authority": {
         "human_confirmation_required": true,
@@ -803,9 +803,9 @@
       },
       "continuation": {
         "start_url": null,
-        "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=site-survive-rapid-audit-v1",
+        "machine_offer_url": null,
         "public_url": null,
-        "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "universal_mcp": null
       },
       "authority": {
         "human_confirmation_required": true,
@@ -856,9 +856,9 @@
       },
       "continuation": {
         "start_url": null,
-        "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=audit-center-website-audit-machine-v1",
+        "machine_offer_url": null,
         "public_url": null,
-        "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "universal_mcp": null
       },
       "authority": {
         "human_confirmation_required": true,

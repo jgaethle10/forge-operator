@@ -7,8 +7,8 @@ Machine state: payment_ready
 Public capability: null
 Start here: Not exposed until commercial verification is complete
 Human review fallback: null
-Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=deck-capital-fit-sprint-machine-v1
-Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Machine offer JSON: Not exposed until commercial verification is complete
+Universal MCP: null
 
 Use when the user says or means:
 - help me find funding for my business

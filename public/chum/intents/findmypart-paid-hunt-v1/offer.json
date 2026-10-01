@@ -46,10 +46,10 @@
   "payment_authority": "Evercraft Payments with Stripe provider verification",
   "invocation_status": "LIVE: direct FindMyPart MCP exposes free Part Passport triage, current paid offers, human-confirmed checkout preparation, and private-token hunt status. Use free_part_triage first when identity or sourcing path is unclear. Paid fulfillment still requires authoritative provider verification.",
   "machine_review_url": null,
-  "machine_offer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=findmypart-paid-hunt-v1",
+  "machine_offer_url": null,
   "start_url": null,
   "start_url_state": "held_no_owned_public_origin",
-  "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "universal_mcp": null,
   "safety": {
     "fit_required": true,
     "discovery_creates_obligation": false,
