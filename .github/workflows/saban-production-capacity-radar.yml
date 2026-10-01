@@ -1,0 +1,36 @@
+name: Saban Production Capacity Radar
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'systemia/saban/production-capacity-radar.mjs'
+      - 'systemia/saban/compute-exchange.mjs'
+      - 'systemia/saban/markets/akash.mjs'
+      - 'tests/saban-production-capacity-radar.test.mjs'
+      - '.github/workflows/saban-production-capacity-radar.yml'
+  workflow_dispatch:
+  schedule:
+    - cron: '23 * * * *'
+
+permissions:
+  contents: read
+
+jobs:
+  radar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run contract
+        run: node --test tests/saban-production-capacity-radar.test.mjs
+      - name: Scan live capacity
+        run: |
+          mkdir -p artifacts
+          node systemia/saban/production-capacity-radar.mjs             | tee artifacts/saban-production-capacity-radar.json
+      - name: Upload capacity receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: saban-production-capacity-radar
+          path: artifacts/saban-production-capacity-radar.json
+          retention-days: 30
