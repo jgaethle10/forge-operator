@@ -364,7 +364,8 @@ export function startChromeOsHostBoundaryBridge({
   token = process.env.EVERCRAFT_CHROMEOS_HOST_BRIDGE_TOKEN || '',
   stateRoot = process.env.EVERCRAFT_CHROMEOS_HOST_BOUNDARY_STATE_DIR || DEFAULT_STATE_ROOT,
 } = {}) {
-  const listenPort = boundedPort(port);
+  const loopbackHost = ['127.0.0.1', 'localhost', '::1'].includes(String(host));
+  const listenPort = Number(port) === 0 && loopbackHost ? 0 : boundedPort(port);
   const secret = String(token || '').trim();
   if (secret.length < 32) throw new Error('chromeos_host_boundary_bridge_token_required');
 
