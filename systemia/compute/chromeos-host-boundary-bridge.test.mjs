@@ -7,6 +7,7 @@ import {
   readChromeOsHostBoundaryCheck,
   readChromeOsHostBoundaryStatus,
   requestChromeOsHostBoundaryCheck,
+  startChromeOsHostBoundaryBridge,
   storeChromeOsHostBoundaryObservation,
   validateChromeOsHostBoundaryObservation,
 } from './chromeos-host-boundary-bridge.mjs';
@@ -96,4 +97,65 @@ test('on-demand check request is fulfilled only by the matching observation', ()
   const status = readChromeOsHostBoundaryStatus({ stateRoot });
   assert.equal(status.request_id, request.request_id);
   assert.equal(status.fresh, true);
+});
+
+
+test('HTTP bridge authenticates polling and completes a fresh request', async () => {
+  const stateRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'evercraft-host-boundary-http-'));
+  const token = 't'.repeat(64);
+  const runtime = await startChromeOsHostBoundaryBridge({
+    host: '127.0.0.1',
+    port: 0,
+    token,
+    stateRoot,
+  });
+
+  try {
+    const base = 'http://127.0.0.1:' + runtime.port;
+    const health = await fetch(base + '/health').then((response) => response.json());
+    assert.equal(health.ok, true);
+    assert.equal(health.supports_on_demand_checks, true);
+
+    const denied = await fetch(base + '/v1/chromeos-host-boundary/next-request', {
+      headers: { authorization: 'Bearer wrong' },
+    });
+    assert.equal(denied.status, 401);
+
+    const request = requestChromeOsHostBoundaryCheck({ stateRoot });
+    const pendingResponse = await fetch(
+      base + '/v1/chromeos-host-boundary/next-request',
+      { headers: { authorization: 'Bearer ' + token } },
+    );
+    const pending = await pendingResponse.json();
+    assert.equal(pendingResponse.status, 200);
+    assert.equal(pending.request.request_id, request.request_id);
+
+    const observation = fixture();
+    observation.request_id = request.request_id;
+    const reportResponse = await fetch(
+      base + '/v1/chromeos-host-boundary/report',
+      {
+        method: 'POST',
+        headers: {
+          authorization: 'Bearer ' + token,
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify(observation),
+      },
+    );
+    const report = await reportResponse.json();
+    assert.equal(reportResponse.status, 200);
+    assert.equal(report.ok, true);
+
+    const statusResponse = await fetch(
+      base + '/v1/chromeos-host-boundary/status',
+      { headers: { authorization: 'Bearer ' + token } },
+    );
+    const status = await statusResponse.json();
+    assert.equal(status.fresh, true);
+    assert.equal(status.request_id, request.request_id);
+    assert.equal(readChromeOsHostBoundaryCheck({ stateRoot }).state, 'completed');
+  } finally {
+    await new Promise((resolve) => runtime.server.close(resolve));
+  }
 });
