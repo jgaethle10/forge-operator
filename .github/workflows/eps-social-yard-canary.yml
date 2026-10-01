@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 6
     env:
-      EVERCRAFT_CLIP_EPS_INGRESS_URL: https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/systemiaEPSPublishIngress
+      EVERCRAFT_CLIP_EPS_INGRESS_URL: ${{ vars.EVERCRAFT_CLIP_EPS_INGRESS_URL }}
       CLIP_SHARED_SECRET: ${{ secrets.SYSTEMIA_CLIP_SHARED_SECRET }}
     steps:
       - uses: actions/checkout@v4
@@ -62,23 +62,6 @@ jobs:
           fi
           echo "SYSTEMIA_CLIP_SHARED_SECRET_FILE=$SECRET_FILE" >> "$GITHUB_ENV"
 
-      - name: Probe Clip ingress deployment state
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p artifacts/base44-exit
-          STATUS="$(curl --silent --show-error --max-time 20 -o artifacts/base44-exit/clip-ingress-probe.json -w '%{http_code}' \
-            -H 'content-type: application/json' \
-            --data '{}' \
-            "$EVERCRAFT_CLIP_EPS_INGRESS_URL" || true)"
-          printf '%s\n' "$STATUS" > artifacts/base44-exit/clip-ingress-probe-status.txt
-          echo "clip_ingress_probe_status=$STATUS" >> "$GITHUB_STEP_SUMMARY"
-          if jq -e '.migration_probe == "github-oidc-ready-20260929"' artifacts/base44-exit/clip-ingress-probe.json >/dev/null 2>&1; then
-            echo "clip_source_change_live=true" >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "clip_source_change_live=false" >> "$GITHUB_STEP_SUMMARY"
-          fi
-
       - name: Run EPS continuity through Systemia Core, Yard and Evercraft Compute
         run: node systemia/compute/eps-social-yard-canary.mjs
 
@@ -89,8 +72,6 @@ jobs:
           name: eps-social-yard-canary
           path: |
             artifacts/base44-exit/eps-social-yard-canary.json
-            artifacts/base44-exit/clip-ingress-probe.json
-            artifacts/base44-exit/clip-ingress-probe-status.txt
             artifacts/base44-exit/github-oidc-claims.json
           if-no-files-found: error
           retention-days: 90
