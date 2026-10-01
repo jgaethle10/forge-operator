@@ -41,7 +41,7 @@ function readJson(file,fallback=null){
   try{return JSON.parse(fs.readFileSync(file,'utf8'))}catch{return fallback}
 }
 
-function inputItems({inputFile,contextStateFile,radarStateFile}={}){
+function inputItems({inputFile,contextStateFile,radarStateFile,now=new Date()}={}){
   if(inputFile){
     const payload=readJson(path.resolve(inputFile));
     if(!payload||!Array.isArray(payload.items)) throw new Error('spectacle input must contain items[]');
@@ -80,7 +80,11 @@ function inputItems({inputFile,contextStateFile,radarStateFile}={}){
       .map(stream=>stream?.current)
       .filter(Boolean)
       .filter(signal=>signal?.review?.status==='pass')
-      .filter(signal=>signal?.review?.freshness?.state==='fresh')
+      .filter(signal=>{
+        const observed=Date.parse(String(signal?.observed_at||signal?.observation?.observed_at||''));
+        const maxAgeHours=Number(signal?.review?.freshness?.max_age_hours||24);
+        return Number.isFinite(observed)&&now.getTime()-observed>=0&&now.getTime()-observed<=maxAgeHours*60*60*1000;
+      })
       .filter(signal=>signal?.publication_state==='eligible_for_editorial_selection')
       .map(signal=>({
         dispatch:{
@@ -329,7 +333,7 @@ export function buildSpectacleQueue({assessments=[],recentSubjects=[],publishedT
 }
 
 export function runSpectacleCycle({inputFile,contextStateFile,radarStateFile,stateDir,brandKey='evercraft',now=new Date()}={}){
-  const items=inputItems({inputFile,contextStateFile,radarStateFile});
+  const items=inputItems({inputFile,contextStateFile,radarStateFile,now});
 
   const root=path.resolve(stateDir||'artifacts/social-spectacle');
   const stateFile=path.join(root,'state.json');
