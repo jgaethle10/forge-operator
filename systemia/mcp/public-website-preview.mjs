@@ -18,6 +18,14 @@ function normalizeUrl(value){
   if(!/^[a-z][a-z0-9+.-]*:\/\//i.test(raw)) raw='https://'+raw;
   const url=new URL(raw);
   if(!['http:','https:'].includes(url.protocol)) throw new Error('website_url_protocol_not_allowed');
+  const host=url.hostname.toLowerCase();
+  if(
+    host==='localhost' ||
+    host.endsWith('.localhost') ||
+    host.endsWith('.local') ||
+    host.endsWith('.internal') ||
+    (net.isIP(host)&&!isPublicIp(host))
+  ) throw new Error('website_private_host_not_allowed');
   const standardPort=url.protocol==='https:'?'443':'80';
   if(url.port&&url.port!==standardPort) throw new Error('website_nonstandard_port_not_allowed');
   if(url.username||url.password) throw new Error('website_url_credentials_not_allowed');
