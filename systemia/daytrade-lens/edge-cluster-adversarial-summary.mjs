@@ -36,6 +36,7 @@ export function buildClusterAdversarialSummary({
   horizonCoherenceLab,
   walkForwardLab,
   executionTranslationLab,
+  quoteMicrostructureLab,
   currentRunForwardClusterScores,
   durableForwardClusterScores,
 } = {}) {
@@ -113,6 +114,8 @@ export function buildClusterAdversarialSummary({
         maps.walk.get(signal)?.walk_forward_status || "MISSING",
       execution_translation_status:
         maps.execution.get(signal)?.translation_status || "MISSING",
+      quote_microstructure:
+        quoteMicrostructureLab?.by_signal?.[signal] || null,
     }));
 
     return {
@@ -161,6 +164,9 @@ export function buildClusterAdversarialSummary({
       },
       current_run_forward_cluster_score: currentForwardMap.get(key) || null,
       durable_forward_cluster_score: durableForwardMap.get(key) || null,
+      quote_microstructure_feed: quoteMicrostructureLab?.feed || null,
+      quote_microstructure_scope: quoteMicrostructureLab?.quote_scope || null,
+      quote_microstructure_status: quoteMicrostructureLab?.status || "MISSING",
       correlated_members_not_independent_edges: true,
       cluster_is_independence_reporting_unit: true,
       historical_diagnostics_do_not_mutate_frozen_eligibility: true,
