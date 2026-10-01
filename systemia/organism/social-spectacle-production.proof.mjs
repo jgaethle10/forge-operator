@@ -3,6 +3,7 @@ import {
   assessSpectacleEditorialPreflight,
   captionFromCandidate,
   phenomenonInputFromCandidate,
+  worldIntelInputFromCandidate,
 } from './social-spectacle-production.mjs';
 
 const candidate={
@@ -86,3 +87,48 @@ console.log(JSON.stringify({
   blocked_brand_preserved:true,
   publication_authority:false,
 },null,2));
+
+
+const geoCandidate={
+  ...candidate,
+  candidate_id:'spectacle:earthquake-proof',
+  title_seed:'USGS M4.5+ past-day feed contains 7 events; largest is M6.2 Example Region.',
+  domains:['geophysics','earth_hazards'],
+  region_keys:['global'],
+  evidence_state:'observed',
+  evidence_label:'OBSERVED',
+  source_family:'USGS Earthquake Hazards',
+  source_refs:['https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson'],
+  production:{
+    visual_path:'fallen_geo_explainer',
+    no_text_card_first:true,
+    data_payload:{
+      facts:{
+        subject:'USGS M4.5+ earthquakes, past day',
+        count:7,
+        largest_magnitude:6.2,
+        largest_place:'Example Region'
+      },
+      measurements:[
+        {event_id:'q1',magnitude:6.2,place:'Example Region',lat:47.31,lon:-122.75,depth_km:18.4,observed_at:'2026-09-30T23:55:00Z'},
+        {event_id:'q2',magnitude:5.4,place:'Second Region',lat:35.2,lon:140.1,depth_km:28.1,observed_at:'2026-09-30T22:45:00Z'},
+        {event_id:'q3',magnitude:5.1,place:'Third Region',lat:-12.1,lon:166.8,depth_km:41.0,observed_at:'2026-09-30T21:10:00Z'}
+      ]
+    }
+  }
+};
+const geoVertical=worldIntelInputFromCandidate(geoCandidate,{aspectRatio:'9:16'});
+assert.equal(geoVertical.aspectRatio,'9:16');
+assert.equal(geoVertical.map.points.length,3);
+assert.equal(geoVertical.metrics[0].value,7);
+assert.equal(geoVertical.metrics[1].value,6.2);
+assert.equal(geoVertical.timeline.events.length,3);
+const geoCaption=captionFromCandidate(geoCandidate);
+assert.match(geoCaption,/maps the recorded events/i);
+const geoEditorial=assessSpectacleEditorialPreflight({
+  candidate:geoCandidate,
+  caption:geoCaption,
+  masterQc:{status:'accepted'}
+});
+assert.equal(geoEditorial.status,'accepted',JSON.stringify(geoEditorial));
+assert.equal(geoEditorial.score,10);
