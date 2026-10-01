@@ -227,8 +227,11 @@ if [[ "$before" == "$target" ]]; then
   fi
 
   expected_count="$(expected_count_for_current)"
-  if ! verify_current_runtime "$expected_count"; then
-    code=$?
+  set +e
+  verify_current_runtime "$expected_count"
+  code=$?
+  set -e
+  if [[ "$code" -ne 0 ]]; then
     restore_edge_attestation_env
     [[ -n "$ENV_BACKUP" ]] && systemctl restart "$SERVICE" || true
     echo "ERROR: current Fabric verification failed ($code)" >&2
@@ -276,8 +279,11 @@ if ! systemctl restart "$SERVICE"; then
 fi
 
 expected_count="$(expected_count_for_current)"
-if ! verify_current_runtime "$expected_count"; then
-  code=$?
+set +e
+verify_current_runtime "$expected_count"
+code=$?
+set -e
+if [[ "$code" -ne 0 ]]; then
   rollback "runtime_verification_failed_$code"
   exit "$code"
 fi
