@@ -13,6 +13,8 @@ EDGE_ATTESTATION_EXPECTED=false
 PUBLIC_EDGE_SERVICE="evercraft-public-edge.service"
 ROUTER_MAP_SERVICE="evercraft-router-map.service"
 ROUTER_MAP_TIMER="evercraft-router-map.timer"
+ROUTER_MAP_ENV="/etc/evercraft/router-map.env"
+ROUTER_MAP_INSTALLER=""
 
 usage() {
   cat <<'EOF'
@@ -63,9 +65,64 @@ as_user() {
   runuser -u "$RUN_USER" -- "$@"
 }
 
+valid_ipv4() {
+  local value="${1:-}"
+  [[ "$value" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]] || return 1
+  local IFS=.
+  local octet
+  read -r -a octets <<<"$value"
+  [[ "${#octets[@]}" -eq 4 ]] || return 1
+  for octet in "${octets[@]}"; do
+    [[ "$octet" =~ ^[0-9]+$ ]] || return 1
+    (( 10#$octet >= 0 && 10#$octet <= 255 )) || return 1
+  done
+}
+
+router_map_config_value() {
+  local key="$1"
+  [[ -f "$ROUTER_MAP_ENV" ]] || return 0
+  grep -E "^${key}=" "$ROUTER_MAP_ENV" 2>/dev/null | tail -1 | cut -d= -f2- || true
+}
+
+ensure_router_map_resident_from_saved_config() {
+  # Never invent or scan router credentials. This recovery path only reuses
+  # the previously operator-approved gateway + Chromebook LAN host.
+  [[ -f "$ROUTER_MAP_ENV" ]] || {
+    echo "Evercraft ingress recovery: router_map_config=absent"
+    return 0
+  }
+
+  if systemctl cat "$ROUTER_MAP_SERVICE" >/dev/null 2>&1 &&
+     systemctl cat "$ROUTER_MAP_TIMER" >/dev/null 2>&1; then
+    return 0
+  fi
+
+  local gateway lan_host
+  gateway="$(router_map_config_value EVERCRAFT_ROUTER_GATEWAY)"
+  lan_host="$(router_map_config_value EVERCRAFT_ROUTER_LAN_HOST)"
+  if ! valid_ipv4 "$gateway" || ! valid_ipv4 "$lan_host"; then
+    echo "Evercraft ingress recovery: router_map_config=invalid"
+    return 0
+  fi
+
+  if [[ ! -f "$ROUTER_MAP_INSTALLER" ]]; then
+    echo "Evercraft ingress recovery: router_map_installer=missing"
+    return 0
+  fi
+
+  echo "Evercraft ingress recovery: restoring bounded router-map resident from saved config"
+  if ! SUDO_USER="$RUN_USER" bash "$ROUTER_MAP_INSTALLER"       --gateway "$gateway"       --host "$lan_host"       --repo-root "$REPO_ROOT" >/dev/null; then
+    echo "Evercraft ingress recovery: router_map_restore=failed"
+    return 0
+  fi
+  echo "Evercraft ingress recovery: router_map_restore=installed"
+}
+
 reassert_owned_public_ingress() {
   local edge_state="not_installed"
   local router_state="not_installed"
+
+  ensure_router_map_resident_from_saved_config
 
   if systemctl cat "$PUBLIC_EDGE_SERVICE" >/dev/null 2>&1; then
     if systemctl is-active --quiet "$PUBLIC_EDGE_SERVICE"; then
@@ -100,6 +157,7 @@ fi
 NODE_RECEIPT="$RUN_HOME/.local/state/evercraft/organism/compute/nodeseed-receipt.json"
 ALLOCATOR_TOKEN_FILE="$RUN_HOME/.local/state/evercraft/organism/.secrets/allocator-token"
 NETWORK_OBSERVER_INSTALLER="$REPO_ROOT/scripts/install-fabric-network-observer.sh"
+ROUTER_MAP_INSTALLER="$REPO_ROOT/scripts/install-fabric-router-map-resident.sh"
 
 mkdir -p "$STATE_DIR"
 chmod 0750 "$STATE_DIR"
