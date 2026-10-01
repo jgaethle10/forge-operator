@@ -95,7 +95,13 @@ write('systemia/organism/test.workflow.json', '{"schema":"test"}\n');
 fs.mkdirSync(path.join(root, 'registry', 'alpha'), { recursive: true });
 fs.mkdirSync(path.join(root, 'public', 'chum', 'products', 'alpha'), { recursive: true });
 
-const scan = inspectLocalPortfolio({ rootDir: root });
+const capabilityMeshFixture = JSON.parse(
+  fs.readFileSync(path.join(root, 'systemia/capability-mesh/adoption-coverage.json'), 'utf8')
+);
+const scan = inspectLocalPortfolio({
+  rootDir: root,
+  capabilityMesh: capabilityMeshFixture
+});
 const codes = new Set(scan.findings.map((row) => row.code));
 assert.ok(codes.has('machine_surface_missing'));
 assert.ok(codes.has('duplicate_product_key'));
