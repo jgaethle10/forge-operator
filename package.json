@@ -246,7 +246,7 @@
     "proof:compute-fabric": "node systemia/compute/capacity-fabric.proof.mjs && node systemia/compute/federated-bridge.proof.mjs && node systemia/network/outbound-capacity.proof.mjs",
     "proof:owned-rivet-stack": "node systemia/compute/hosting-control-plane.proof.mjs && node systemia/aliev/geo-normalization.proof.mjs && node systemia/aliev/collectors/washington.proof.mjs && node systemia/aliev/collectors/us.proof.mjs && node systemia/aliev/domain-engine.proof.mjs && node systemia/aliev/snapshot-bundle.proof.mjs && node systemia/migrations/base44-exit/aliev-domain-adapter.proof.mjs && node systemia/migrations/base44-exit/aliev-extractor.proof.mjs && node systemia/compute/aliev-rivet-owned-lane.proof.mjs && node systemia/rivet/report-runtime.proof.mjs && node systemia/rivet/cutover-controller.proof.mjs && node systemia/core/rivet-report-resident-wiring.proof.mjs && node systemia/compute/capacity-fabric.proof.mjs && node systemia/compute/federated-bridge.proof.mjs",
     "week-in-motion:run": "node systemia/week-in-motion/runner.mjs",
-    "test:week-in-motion": "TZ=America/Los_Angeles node --test systemia/week-in-motion/engine.test.mjs"
+    "test:week-in-motion": "TZ=America/Los_Angeles node --test systemia/week-in-motion/engine.test.mjs systemia/week-in-motion/resident.test.mjs systemia/week-in-motion/ledger.test.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
