@@ -1,6 +1,7 @@
 import { pollNwsActiveAlerts } from '../sentinel/sources/nws-alerts.mjs';
 import { pollUsgsWaterLatest } from '../sentinel/sources/usgs-water.mjs';
 import { pollNwpsRiverGauges } from '../sentinel/sources/nwps-rivers.mjs';
+import { resolveSentinelRegionConfig } from '../sentinel/region-profile.mjs';
 
 const clean = (value) => String(value ?? '').replace(/\s+/g, ' ').trim();
 
@@ -19,13 +20,24 @@ function bool(value, fallback = false) {
 }
 
 export function faieCollectorConfigFromEnv(env = process.env) {
+  const profileId = clean(env.FAIE_REGION_PROFILE || '') || null;
+  const explicitWaterSites = csv(env.FAIE_USGS_WATER_SITES, 100);
+  const explicitGauges = csv(env.FAIE_NWPS_GAUGES, 50);
+  const resolved = resolveSentinelRegionConfig({
+    profileId,
+    nwsArea: clean(env.FAIE_NWS_AREA || '').toUpperCase() || null,
+    nwpsGaugeIds: explicitGauges,
+    usgsWaterLocationIds: explicitWaterSites
+  });
+
   return {
     enabled: bool(env.FAIE_OFFICIAL_COLLECTORS_ENABLED, true),
+    region_profile: resolved.profile,
     nws_enabled: bool(env.FAIE_NWS_ENABLED, true),
-    nws_area: clean(env.FAIE_NWS_AREA || '').toUpperCase() || null,
-    usgs_water_sites: csv(env.FAIE_USGS_WATER_SITES, 100),
+    nws_area: resolved.nws_area,
+    usgs_water_sites: resolved.usgs_water_locations,
     usgs_water_parameters: csv(env.FAIE_USGS_WATER_PARAMETERS || '00060,00065', 20),
-    nwps_gauges: csv(env.FAIE_NWPS_GAUGES, 50)
+    nwps_gauges: resolved.nwps_gauges
   };
 }
 
