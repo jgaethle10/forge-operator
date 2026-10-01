@@ -24,6 +24,7 @@ export function buildClusterAdversarialSummary({
   stressLab,
   breakerLab,
   timingLab,
+  volatilityDelayInteractionLab,
   overlapLab,
   placeboLab,
   randomPlaceboLab,
@@ -54,6 +55,7 @@ export function buildClusterAdversarialSummary({
     stress: indexBySignal(stressLab?.reviews || []),
     breaker: indexBySignal(breakerLab?.reviews || []),
     timing: indexBySignal(timingLab?.reviews || []),
+    volatilityDelay: indexBySignal(volatilityDelayInteractionLab?.reviews || []),
     overlap: indexBySignal(overlapLab?.reviews || []),
     placebo: indexBySignal(placeboLab?.reviews || []),
     randomPlacebo: indexBySignal(randomPlaceboLab?.reviews || []),
@@ -107,6 +109,10 @@ export function buildClusterAdversarialSummary({
       timing_status: maps.timing.get(signal)?.timing_status || "MISSING",
       extended_timing_status:
         maps.timing.get(signal)?.extended_timing_status || "MISSING",
+      volatility_delay_interaction_status:
+        maps.volatilityDelay.get(signal)?.status || "MISSING",
+      volatility_delay_differential_decay:
+        maps.volatilityDelay.get(signal)?.differential_delay_decay_high_minus_low ?? null,
       overlap_status: maps.overlap.get(signal)?.overlap_status || "MISSING",
       matched_placebo_status:
         maps.placebo.get(signal)?.placebo_status || "MISSING",
@@ -166,6 +172,8 @@ export function buildClusterAdversarialSummary({
           (row) => row.timing_status === "TIMING_ROBUST_DIAGNOSTIC"),
         extended_timing_robust: count(memberReceipts,
           (row) => row.extended_timing_status === "EXTENDED_TIMING_ROBUST_DIAGNOSTIC"),
+        volatility_delay_interaction_ready: count(memberReceipts,
+          (row) => row.volatility_delay_interaction_status === "VOLATILITY_DELAY_INTERACTION_READY"),
         overlap_robust: count(memberReceipts,
           (row) => row.overlap_status === "OVERLAP_ROBUST_DIAGNOSTIC"),
         matched_placebo_separated: count(memberReceipts,
