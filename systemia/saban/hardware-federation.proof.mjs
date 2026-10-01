@@ -84,6 +84,20 @@ const nodes=[
     services:{},
   }),
   node({
+    id:'chromebook-private-edge-shaped',
+    fingerprintChar:'9',
+    cpu:4,
+    memory:8192,
+    workloads:['systemia.public-edge.v1'],
+    labels:['public-edge','gateway','private','outbound-only','personal-compute'],
+    services:{
+      public_edge:{
+        ready:true,
+        public_https:true,
+      },
+    },
+  }),
+  node({
     id:'visible-but-not-authorized',
     fingerprintChar:'d',
     cpu:32,
@@ -117,6 +131,10 @@ assert.equal(plan.visible_device_implies_authorization,false);
 
 const assigned=Object.fromEntries(plan.assignments.map((x)=>[x.role_id,x.node_id]));
 assert.equal(assigned.public_ingress,'gateway-mini');
+const privateIngressRejected=(plan.rejected_by_role.public_ingress||[])
+  .find((x)=>x.node_id==='chromebook-private-edge-shaped');
+assert.ok(privateIngressRejected);
+assert.ok(privateIngressRejected.reasons.includes('forbidden_label_present'));
 assert.equal(assigned.control_room,'living-room-workstation');
 assert.equal(assigned.fabric,'spare-linux-box');
 
