@@ -146,6 +146,10 @@ export function recordDeliveryAttempt({
     now,
     mutate(shipment) {
       if (shipment.state === 'verified_delivered') throw new Error('shipment_already_verified_delivered');
+      if (
+        normalizedOutcome === 'sent' &&
+        (shipment.attempts || []).some((row) => row.outcome === 'sent' && row.provider_message_id)
+      ) throw new Error('provider_acceptance_already_recorded');
       const attempt = {
         attempt_key:'attempt:' + crypto.randomUUID(),
         route:clean(route) || 'unknown',
@@ -189,7 +193,12 @@ export function markSentCopyVerified({
     mutate(shipment) {
       if (!clean(provider_message_id || shipment.provider_message_id)) throw new Error('provider_message_id_required');
       if (!recipient_verified || !subject_verified || !attachments_verified) throw new Error('sent_copy_verification_failed');
-      shipment.provider_message_id = clean(provider_message_id || shipment.provider_message_id);
+      const expectedMessageId = clean(provider_message_id || shipment.provider_message_id);
+      const acceptedAttempt = (shipment.attempts || []).find((row) =>
+        row.outcome === 'sent' && clean(row.provider_message_id) === expectedMessageId
+      );
+      if (!acceptedAttempt) throw new Error('provider_acceptance_evidence_required');
+      shipment.provider_message_id = expectedMessageId;
       shipment.sent_copy_verification = {
         verification_ref:clean(verification_ref),
         provider_message_id:shipment.provider_message_id,
