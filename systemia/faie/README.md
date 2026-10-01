@@ -64,13 +64,16 @@ Public evidence-support surfaces:
 
 - GET /api/faie/health
 - GET /api/faie/signals
+- POST /api/faie/investigate
+
+Public investigation requests are ephemeral previews. They are rate limited by the Forge runtime and are not written into the shared investigation archive.
+
+Internal investigation and write surfaces require FAIE_INTERNAL_TOKEN:
+
 - GET /api/faie/investigations
 - GET /api/faie/investigations/:id
 - GET /api/faie/investigations/:id/markdown
-- POST /api/faie/investigate
-
-Internal write surfaces require FAIE_INTERNAL_TOKEN:
-
+- POST /api/faie/investigations
 - POST /api/faie/ingest
 - POST /api/faie/worldstate-dispatch
 - POST /api/faie/run
@@ -104,6 +107,6 @@ The first release therefore has an actual closed loop:
 
 ## Boundaries
 
-FAIE is evidence support. It does not autonomously publish, move money, make regulatory determinations, issue emergency orders, prescribe agricultural chemicals, control irrigation equipment, or make other consequential decisions. Those actions require the appropriate human or separately authorized system.
+FAIE is evidence support. Public previews do not persist the visitor's question into the shared archive. FAIE does not autonomously publish, move money, make regulatory determinations, issue emergency orders, prescribe agricultural chemicals, control irrigation equipment, or make other consequential decisions. Those actions require the appropriate human or separately authorized system.
 
 Unknown is a valid result.
