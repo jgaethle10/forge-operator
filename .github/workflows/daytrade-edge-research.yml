@@ -55,6 +55,7 @@ jobs:
           node systemia/daytrade-lens/edge-walk-forward.test.mjs
           node systemia/daytrade-lens/edge-execution-translation.test.mjs
           node systemia/daytrade-lens/edge-pilot-readiness.test.mjs
+          node systemia/daytrade-lens/sec-edge-backfill-contract.test.mjs
 
       - name: Run real SEC to Alpaca event study
         if: github.event_name != 'pull_request'
