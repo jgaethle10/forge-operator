@@ -6,7 +6,9 @@
     "source_presence_is_not_live_readiness": true,
     "missing_lane_is_never_inferred": true,
     "not_required_requires_reason": true,
-    "adoption_stage_is_not_runtime_verification": true
+    "adoption_stage_is_not_runtime_verification": true,
+    "internal_scope_is_not_machine_tool_name": true,
+    "machine_tool_declaration_requires_observation_for_runtime_verification": true
   },
   "contracts": [
     {
@@ -65,7 +67,11 @@
             "scope": "report.generate",
             "meter_metric": "site_reports",
             "meter_quantity": 1,
-            "meter_unit": "report"
+            "meter_unit": "report",
+            "machine_tool": "analyze_ev_site",
+            "machine_tool_evidence_refs": [
+              ".github/workflows/evercraft-mcp-canary.yml"
+            ]
           }
         ]
       },
@@ -133,7 +139,12 @@
         ],
         "actions": [
           {
-            "scope": "classify_media_route"
+            "scope": "classify_media_route",
+            "machine_tool": "classify_media_route",
+            "machine_tool_evidence_refs": [
+              ".github/workflows/evercraft-mcp-canary.yml",
+              "plugins/forensiscope/skills/forensiscope-direct/SKILL.md"
+            ]
           }
         ],
         "evidence_refs": [
@@ -221,10 +232,18 @@
         ],
         "actions": [
           {
-            "scope": "get_clip_capabilities"
+            "scope": "get_clip_capabilities",
+            "machine_tool": "get_clip_capabilities",
+            "machine_tool_evidence_refs": [
+              "registry/evercraft-clip/README.md"
+            ]
           },
           {
-            "scope": "plan_clip_job"
+            "scope": "plan_clip_job",
+            "machine_tool": "plan_clip_job",
+            "machine_tool_evidence_refs": [
+              ".github/workflows/evercraft-mcp-canary.yml"
+            ]
           }
         ],
         "evidence_refs": [
@@ -471,7 +490,12 @@
         ],
         "actions": [
           {
-            "scope": "free_part_triage"
+            "scope": "free_part_triage",
+            "machine_tool": "free_part_triage",
+            "machine_tool_evidence_refs": [
+              "plugins/findmypart/skills/findmypart-direct/SKILL.md",
+              "registry/catalog.json"
+            ]
           }
         ],
         "evidence_refs": [
