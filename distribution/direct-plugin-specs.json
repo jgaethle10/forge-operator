@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "routing_policy": {
     "default": "specialist_direct_when_clear",
-    "fallback": "evercraft_machine_commerce_when_ambiguous_or_specialist_unavailable"
+    "fallback": "owned_fabric_after_external_verification_else_static_discovery",
+    "fallback_state": "external_https_verification_required",
+    "owned_fabric_mcp": "https://fabric.systemiacommandcenters.com/mcp",
+    "static_discovery": "/.well-known/evercraft-products.json"
   },
   "products": [
     {
