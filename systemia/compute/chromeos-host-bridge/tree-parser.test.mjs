@@ -170,3 +170,65 @@ test('matching target settings URL wins over unrelated structural candidates', (
   assert.equal(located.reason, 'target_url');
   assert.equal(located.root, target);
 });
+
+
+test('URL-only desktop locator does not read unrelated accessibility text', () => {
+  const unrelated = {
+    role: 'window',
+    children: [],
+    get name() {
+      throw new Error('unrelated_accessibility_text_was_read');
+    },
+  };
+  const target = node(
+    'rootWebArea',
+    'Settings',
+    { url: 'chrome://os-settings/crostini/portForwarding' },
+    [
+      node('genericContainer', '', {}, [
+        node('staticText', '18080 TCP'),
+        node('switch', 'toggle', { checked: true }),
+      ]),
+      node('genericContainer', '', {}, [
+        node('staticText', '8443 TCP'),
+        node('switch', 'toggle', { checked: true }),
+      ]),
+    ],
+  );
+  const desktop = {
+    role: 'desktop',
+    children: [unrelated, target],
+  };
+
+  const located = locatePortForwardingSurface(
+    desktop,
+    undefined,
+    { allowStructuralFallback: false },
+  );
+  assert.equal(located.ok, true);
+  assert.equal(located.root, target);
+  assert.equal(located.full_desktop_text_scanned, false);
+});
+
+test('URL-only desktop locator fails closed without inspecting unrelated text', () => {
+  const unrelated = {
+    role: 'window',
+    children: [],
+    get name() {
+      throw new Error('unrelated_accessibility_text_was_read');
+    },
+  };
+  const desktop = {
+    role: 'desktop',
+    children: [unrelated],
+  };
+
+  const located = locatePortForwardingSurface(
+    desktop,
+    undefined,
+    { allowStructuralFallback: false },
+  );
+  assert.equal(located.ok, false);
+  assert.equal(located.reason, 'target_url_not_observed');
+  assert.equal(located.full_desktop_text_scanned, false);
+});
