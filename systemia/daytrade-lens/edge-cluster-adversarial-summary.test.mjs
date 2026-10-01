@@ -65,6 +65,14 @@ const summary=buildClusterAdversarialSummary({
   horizonCoherenceLab:{reviews:rows("horizon_coherence_status","HORIZON_COHERENT_DIAGNOSTIC")},
   walkForwardLab:{reviews:rows("walk_forward_status","WALK_FORWARD_ROBUST_DIAGNOSTIC")},
   executionTranslationLab:{reviews:rows("translation_status","UNHEDGED_ONLY_TRANSLATES_DIAGNOSTIC")},
+  executionSpeedBoundsLab:{reviews:candidates.map((candidate)=>({
+    signal_key:candidate.signal_key,
+    status:"EXECUTION_SPEED_BOUNDS_READY",
+    grid:[{
+      hypothetical_order_notional_usd:1000,
+      immediate_visible_touch_sufficient_rate:0.75,
+    }],
+  }))},
   familyMaxNullLab:{reviews:candidates.map((candidate)=>({
     signal_key:candidate.signal_key,
     status:"MAX_FAMILY_NULL_SEPARATED_DIAGNOSTIC",
@@ -146,6 +154,18 @@ assert.equal(
 );
 assert.equal(summary.clusters[0].cscv_pbo_cluster_receipt.pbo,0.20);
 assert.equal(
+  summary.clusters[0].diagnostic_counts.execution_speed_bounds_ready,
+  2
+);
+assert.equal(
+  summary.clusters[0].member_receipts[0].execution_speed_bounds_status,
+  "EXECUTION_SPEED_BOUNDS_READY"
+);
+assert.equal(
+  summary.clusters[0].member_receipts[0].execution_speed_1000_immediate_visible_rate,
+  0.75
+);
+assert.equal(
   summary.clusters[0].member_receipts[0].family_max_null_status,
   "MAX_FAMILY_NULL_SEPARATED_DIAGNOSTIC"
 );
@@ -175,6 +195,7 @@ console.log(JSON.stringify({
   announcement_execution_stress_attached:true,
   volatility_delay_interaction_attached:true,
   signal_decay_cost_decomposition_attached:true,
+  execution_speed_bounds_attached:true,
   cscv_pbo_attached_at_cluster_unit:true,
   descriptive_only:true,
   eligibility_mutated:false,
