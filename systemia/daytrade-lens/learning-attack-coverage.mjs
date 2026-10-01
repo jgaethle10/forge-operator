@@ -61,14 +61,18 @@ export const ATTACK_IMPLEMENTATION_MAP=Object.freeze({
     status:"partial",
     evidence:[
       "systemia/daytrade-lens/edge-quote-microstructure.mjs",
-      "systemia/daytrade-lens/edge-execution-translation.mjs"
+      "systemia/daytrade-lens/edge-execution-translation.mjs",
+      "systemia/daytrade-lens/edge-order-execution-receipt.mjs"
     ],
-    gap:"Two-sided marketable entry/exit touch reconstruction now measures quoted execution degradation, but realized order-specific fills, benchmark execution, routing, hidden liquidity and impact remain unobserved."
+    gap:"The read-only order receipt path can reconstruct realized fill VWAP, partial fills, fill fraction, latency and executed-share shortfall from explicit order activities. No authorized forward order-specific activity dataset has been ingested yet, and unfilled opportunity cost, routing, hidden liquidity and calibrated impact remain unobserved."
   },
   "partial/unfilled order outcome":{
     status:"partial",
-    evidence:["systemia/daytrade-lens/edge-quote-microstructure.mjs"],
-    gap:"The system now separates no-touch, touch-but-fill-indeterminate, marketable-touch-observed and unobserved states. Queue position and order-specific partial-fill probability remain unknown and are never inferred from a touch."
+    evidence:[
+      "systemia/daytrade-lens/edge-quote-microstructure.mjs",
+      "systemia/daytrade-lens/edge-order-execution-receipt.mjs"
+    ],
+    gap:"Historical public data separates no-touch and touch-but-fill-indeterminate states. Explicit order activities can now represent observed partial fills and leaves, but no authorized forward order dataset has been ingested and queue-position or counterfactual fill probability is never inferred."
   },
   "signal-decay versus execution-cost decomposition":{
     status:"implemented",
