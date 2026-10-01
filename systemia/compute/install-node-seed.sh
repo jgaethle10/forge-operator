@@ -190,6 +190,10 @@ cat > "${STATE_ROOT}/install-receipt.json" <<EOF
   "install_boot_id_hash": "${INSTALL_BOOT_HASH}",
   "installed_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
   "service": "evercraft-nodeseed.service",
+  "remote_admission_service": "evercraft-remote-admission.service",
+  "bind_host": "${BIND_HOST}",
+  "advertise_host": "${ADVERTISE_HOST}",
+  "outbound_only": $( [[ "${NODE_ROLE}" == "private_worker" || "${NODE_ROLE}" == "virtual_worker" ]] && echo true || echo false ),
   "state_root": "${STATE_ROOT}"
 }
 EOF
