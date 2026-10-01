@@ -370,6 +370,22 @@ export class EvercraftHostingControlPlane {
           broker_deployment_id:clean((spec.placement||{}).broker_deployment_id)||null,
           remote_node_id:candidate.receipt?.capacity_node_id||null,
         }:{mode:'none',origin:null,verified:false},
+        compatibility_binding:
+          clean(spec.workload_class)==='systemia.rivet-report-runtime.v1' && binding
+            ? {
+                schema:'evercraft.rivet.compatibility-binding.v1',
+                reports_url:new URL('/v1/reports',binding.origin).toString(),
+                health_url:new URL('/health',binding.origin).toString(),
+                route_verified:binding.route_verified===true,
+                credential_source_env:'RIVET_YARD_TEAM_TOKEN',
+                target_app:'RIVET Base44 compatibility bridge',
+                target_secret_names:{
+                  url:'RIVET_YARD_GATEWAY_URL',
+                  token:'RIVET_YARD_GATEWAY_TOKEN',
+                },
+                secret_value_embedded:false,
+              }
+            : null,
         previous:previous?{
           desired_spec:previous.desired_spec,
           deployment_id:previous.active_deployment_id,
