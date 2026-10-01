@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.portfolio-sentinel.architectural-invariants.v1",
-  "version": "2026-10-01.1",
+  "version": "2026-10-01.2",
   "purpose": "Permanent architectural laws learned from prior production/distribution failures. Sentinel evaluates these before health can be considered trustworthy.",
   "invariants": [
     {
@@ -135,7 +135,7 @@
         "staticCommercialReviewUrl(publicId)",
         "return '/chum/commercial/' + encodeURIComponent(id) + '/';",
         "return origin + '/api/chum/go/'",
-        "campaign', 'buyer-frontage'",
+        "campaign = 'buyer-frontage'",
         "const review = machineReviewUrl(offer.public_id, gateway);",
         "return 'owned_static_commercial_surface'"
       ],
