@@ -24,6 +24,22 @@ const dominated=rows.map((r,i)=>({...r,forward_return:r.origin_entity_ref==="iss
 const bad=runEdgeBreakerLab({...report,measurements:dominated});
 assert.equal(bad.breaker_survivor_count,0);
 
+
+const negativeRows=rows.map((r)=>({
+  ...r,
+  signal_key:"ai_models|sec_8_k|SOXX|negative",
+  forward_return:-0.012,
+  benchmark_return:0,
+}));
+const negativeReport={
+  evaluations:[{signal_key:"ai_models|sec_8_k|SOXX|negative",status:"RESEARCH_CANDIDATE",learned_direction:"NEGATIVE_EXCESS_RETURN"}],
+  measurements:negativeRows,
+};
+assert.equal(runEdgeBreakerLab(negativeReport).breaker_survivor_count,1);
+
+const weakNegativeRows=negativeRows.map((r)=>({...r,forward_return:-0.0002}));
+assert.equal(runEdgeBreakerLab({...negativeReport,measurements:weakNegativeRows}).breaker_survivor_count,0);
+
 console.log(JSON.stringify({
   ok:true,
   schema:"evercraft.daytrade.edge-breaker-lab-proof.v1",
