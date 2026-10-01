@@ -7,6 +7,8 @@ on:
       - 'systemia/saban/negotiation-protocol.mjs'
       - 'systemia/saban/negotiation-protocol.proof.mjs'
       - 'systemia/saban/voluntary-compute-market.proof.mjs'
+      - 'systemia/saban/voluntary-market-server.mjs'
+      - 'systemia/saban/voluntary-market-server.proof.mjs'
       - 'systemia/saban/golem-market.proof.mjs'
       - 'systemia/saban/golem-live-pilot.mjs'
       - 'systemia/saban/markets/**'
@@ -20,6 +22,8 @@ on:
       - 'systemia/saban/negotiation-protocol.mjs'
       - 'systemia/saban/negotiation-protocol.proof.mjs'
       - 'systemia/saban/voluntary-compute-market.proof.mjs'
+      - 'systemia/saban/voluntary-market-server.mjs'
+      - 'systemia/saban/voluntary-market-server.proof.mjs'
       - 'systemia/saban/golem-market.proof.mjs'
       - 'systemia/saban/golem-live-pilot.mjs'
       - 'systemia/saban/markets/**'
@@ -48,6 +52,8 @@ jobs:
         run: node systemia/saban/negotiation-protocol.proof.mjs
       - name: Prove signed voluntary-device negotiation
         run: node systemia/saban/voluntary-compute-market.proof.mjs
+      - name: Prove remote-device counteroffers over HTTP
+        run: node systemia/saban/voluntary-market-server.proof.mjs
       - name: Prove Golem requestor adapter
         run: node systemia/saban/golem-market.proof.mjs
       - name: Scan live Golem decentralized supply
