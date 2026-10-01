@@ -110,100 +110,156 @@ for(const seed of seeds.entries||[]) add({...seed,origin:'historical_seed'});
 for(const product of publicProducts.products||[]){
   const key=product.product_key;
   const llmsPath='public/chum/products/'+key+'/llms.txt';
-  const problemLanguage=exists(llmsPath)?bulletsUnderUseWhen(readText(llmsPath)):[];
+  const discoveryPath='public/chum/products/'+key+'/ai-discovery.json';
+  const conformancePath='public/chum/products/'+key+'/ai-conformance.json';
+  const discovery=exists(discoveryPath)?readJson(discoveryPath,{}):{};
+  const productConformance=exists(conformancePath)?readJson(conformancePath,{}):{};
+  const problemLanguage=unique([
+    ...(Array.isArray(discovery.intents)?discovery.intents:[]),
+    ...(exists(llmsPath)?bulletsUnderUseWhen(readText(llmsPath)):[]),
+  ]).slice(0,64);
   const direct=directBySlug.get(key)||null;
   const contract=contractByKey.get(key)||null;
-  const linked=(chum.capabilities||[]).filter(c=>{
-    const id=String(c.public_id||'').toLowerCase();
-    const name=norm(c.name);
+  const linkedSummaries=(chum.capabilities||[]).filter(cap=>{
+    const id=String(cap.public_id||'').toLowerCase();
+    const name=norm(cap.name);
     const pnorm=norm(product.name);
     return id.startsWith(key+'-') || id.includes('-'+key+'-') || (pnorm.length>4 && name.includes(pnorm));
   });
-  const machineEndpoint=direct?.preferred_route?.remote_mcp || null;
+  const linked=linkedSummaries.map((cap)=>{
+    const detailPath='public/chum/capabilities/'+cap.public_id+'/capability.json';
+    return exists(detailPath)?{...cap,...readJson(detailPath,{})}:cap;
+  });
+  const machineEndpoint=direct?.preferred_route?.remote_mcp || productConformance.mcp || discovery.mcp || null;
   const universalDeclared=(chum.universal_mcp||UNIVERSAL_FABRIC);
+  const humanCandidates=[
+    discovery.human_start_url,
+    discovery.buyer_frontage_url,
+    productConformance.human_start_url,
+    productConformance.buyer_frontage_url,
+    ...linked.map((cap)=>cap.start_url),
+  ].filter((value)=>typeof value==='string'&&/^https:\/\//i.test(value));
+  const humanUrl=humanCandidates[0]||null;
+  const githubRecord=product.github_record?String(product.github_record).replace(/^\.\//,''):null;
   const sourceRefs=[
     'registry/public-products.json',
-    product.github_record?('public/chum/products/'+key+'/'+String(product.github_record).replace(/^\.\//,'')):null,
+    githubRecord&&exists(githubRecord)?githubRecord:null,
     exists(llmsPath)?llmsPath:null,
+    exists(discoveryPath)?discoveryPath:null,
+    exists(conformancePath)?conformancePath:null,
     direct?'public/.well-known/evercraft-direct-door-readiness.json':null,
     contract?'systemia/capability-mesh/contracts.json':null,
-    ...linked.map(c=>'public/chum/capabilities/'+c.public_id+'/capability.json').filter(exists),
+    ...linked.map((cap)=>'public/chum/capabilities/'+cap.public_id+'/capability.json').filter(exists),
   ].filter(Boolean);
-  const needles=unique([key,slugify(product.name)]);
+  const needles=unique([key,slugify(product.name),...(discovery.aliases||[]).map(slugify)]);
   const matchedTests=testFiles.filter(p=>needles.some(n=>n.length>3&&relSourceMatches(p,n)));
   const matchedWorkflows=workflowFiles.filter(p=>needles.some(n=>n.length>3&&relSourceMatches(p,n)));
   const matchedProvider=providerObs.filter(p=>needles.some(n=>n.length>3&&relSourceMatches(p,n)));
   const matchedRuntime=runtimeObs.filter(p=>needles.some(n=>n.length>3&&relSourceMatches(p,n)));
+  const proofLibrary=productConformance.proof_library||discovery.proof_library||null;
+  const executionProofPassed=String(proofLibrary?.evidence_state||'').toLowerCase()==='execution_proofs_passed';
+  const declaredTests=matchedTests.length>0||matchedWorkflows.length>0||Number(proofLibrary?.required_proofs||0)>0;
+  const runtimeObservation=matchedRuntime.length>0||Boolean(productConformance.live_canary_evidence);
+  const implementationEvidence=
+    executionProofPassed ||
+    matchedTests.length>0 ||
+    matchedWorkflows.length>0 ||
+    ['shared_runtime','private_runtime'].includes(String(contract?.adoption_stage||''));
 
   const blockers=[];
   if(problemLanguage.length===0) blockers.push('problem_language_not_verified');
-  if(!product.canonical_url) blockers.push('human_url_missing');
+  if(!humanUrl) blockers.push('human_handoff_not_verified');
   if(!machineEndpoint) blockers.push('specialist_machine_endpoint_missing');
   if(!contract) blockers.push('capability_mesh_contract_missing');
-  if(linked.length===0) blockers.push('structured_output_or_commercial_contract_not_linked');
-  if(matchedTests.length===0 && matchedWorkflows.length===0) blockers.push('machine_test_surface_not_found');
+  if(!linked.some((cap)=>String(cap.outputs||'').trim())) blockers.push('structured_output_contract_missing');
+  if(!declaredTests) blockers.push('machine_test_surface_not_found');
   if(matchedProvider.length===0) blockers.push('independent_llm_discovery_not_observed');
   if(machineEndpoint && /base44\.app/i.test(machineEndpoint)) blockers.push('legacy_base44_machine_endpoint_dependency');
+  if(githubRecord && !exists(githubRecord)) blockers.push('declared_source_ref_missing:'+githubRecord);
+  if(!implementationEvidence) blockers.push('implementation_evidence_not_verified');
+  if(direct?.direct_callable===true && !runtimeObservation) blockers.push('fresh_external_reachability_not_verified');
 
   const releaseClaim=String(product.ship_state||product.release_state||'').toLowerCase();
   add({
     stable_id:'product:'+key,
     kind:'product',
     name:product.name,
-    aliases:[key],
+    aliases:unique([key,...(discovery.aliases||[]),...(productConformance.aliases||[])]),
     product_key:key,
-    class:product.class||null,
+    class:product.class||discovery.class||null,
     origin:'public_product_index',
     public_safe:true,
     problem_language:problemLanguage,
-    human_url:product.canonical_url||null,
+    discovery_url:product.canonical_url||discovery.canonical_url||null,
+    human_url:humanUrl,
+    authority:discovery.authority||productConformance.authority||null,
+    human_confirmation_required:discovery.human_confirmation_required===true||productConformance.human_confirmation_required===true,
+    boundaries:unique([...(discovery.boundaries||[]),...(productConformance.boundaries||[])]),
     machine_endpoint:machineEndpoint||universalDeclared||null,
     machine_endpoint_state:machineEndpoint
-      ? (direct?.direct_callable===true?'direct_declared_reachable':'direct_declared_unverified')
+      ? (direct?.direct_callable===true?'specialist_declared_callable_fresh_canary_required':'specialist_declared_unverified')
       : 'universal_fallback_declared_unverified',
     authentication:contract?.authority ? {
       state:'declared',
       passport_product:contract.authority.passport_product||null,
       scopes:contract.authority.scopes||[],
     } : {state:'not_declared',passport_product:null,scopes:[]},
-    structured_output:linked.length?linked.map(c=>({public_id:c.public_id,outputs:c.outputs||null,evidence_state:c.evidence_state||null})):[],
+    structured_output:linked
+      .filter((cap)=>String(cap.outputs||'').trim())
+      .map((cap)=>({
+        public_id:cap.public_id,
+        outputs:cap.outputs,
+        evidence_state:cap.evidence_state||null,
+        as_of_semantics:cap.as_of_semantics||null,
+      })),
     evidence_provenance:{
       source_refs:sourceRefs,
+      proof_library:proofLibrary,
+      live_canary_evidence:productConformance.live_canary_evidence||null,
       contract_truth_boundary:contracts.truth_boundary||null,
     },
-    commercial_path:linked.map(c=>({
-      public_id:c.public_id,
-      commercial_state:c.commercial_state||null,
-      pricing:c.pricing||null,
-      start_url_state:c.start_url_state||null,
-      human_confirmation:c.human_ui_required===true || /confirm/i.test(String(c.confirmation||'')),
-    })),
+    commercial_path:[
+      ...(discovery.commercial?[{source:'product_discovery',...discovery.commercial}]:[]),
+      ...linked.map((cap)=>({
+        source:'capability',
+        public_id:cap.public_id,
+        commercial_state:cap.commercial_state||null,
+        pricing:cap.pricing||null,
+        start_url:cap.start_url||null,
+        start_url_state:cap.start_url_state||null,
+        human_confirmation:cap.human_ui_required===true || /confirm/i.test(String(cap.confirmation||'')),
+      })),
+    ],
     llm_discovery_state:{
-      repository_surface:exists(llmsPath),
+      repository_surface:exists(llmsPath)&&exists(discoveryPath)&&exists(conformancePath),
+      providers_declared:Array.isArray(productConformance.providers)?productConformance.providers:[],
+      provider_behavior_state:productConformance.provider_behavior_state||null,
       mcp_registry_published:direct?.registry_published===true,
       independent_provider_observation_present:matchedProvider.length>0,
       independently_discoverable_proven:false,
     },
-    invocation_state:direct?.direct_callable===true?'direct_specialist_declared':'discovery_or_universal_fallback',
+    invocation_state:direct?.direct_callable===true?'specialist_route_declared_fresh_canary_required':'discovery_or_universal_fallback',
     test_state:{
-      declared_test_surface:matchedTests.length>0||matchedWorkflows.length>0,
-      runtime_observation_present:matchedRuntime.length>0,
-      passing_external_invocation_proven:false,
+      declared_test_surface:declaredTests,
+      execution_proofs_passed:executionProofPassed,
+      runtime_observation_present:runtimeObservation,
+      passing_external_invocation_proven:Boolean(productConformance.live_canary_evidence),
     },
     lifecycle:{
       planned:true,
-      implemented:sourceRefs.length>0,
-      tested:matchedRuntime.length>0,
+      implemented:implementationEvidence,
+      tested:executionProofPassed||matchedRuntime.length>0,
       deployed:direct?.registry_published===true,
-      externally_reachable:direct?.direct_callable===true,
+      externally_reachable:Boolean(productConformance.live_canary_evidence),
       independently_discoverable:false,
     },
     human_handoff:{
-      state:product.canonical_url?'available':'missing',
-      url:product.canonical_url||null,
+      state:humanUrl?'available':'missing',
+      url:humanUrl,
+      discovery_only_url:product.canonical_url||discovery.canonical_url||null,
     },
     release_claim:releaseClaim||null,
-    linked_capabilities:linked.map(c=>c.public_id),
+    linked_capabilities:linked.map((cap)=>cap.public_id),
     source_refs:sourceRefs,
     test_refs:unique([...matchedTests,...matchedWorkflows]),
     provider_observation_refs:matchedProvider,
@@ -211,7 +267,6 @@ for(const product of publicProducts.products||[]){
     blockers,
   });
 }
-
 for(const app of estate.apps||[]){
   const name=String(app.name||'').trim();
   if(!name || /^untitled$/i.test(name)) continue;
@@ -355,6 +410,16 @@ const rows=[...records.values()].sort((a,b)=>a.stable_id.localeCompare(b.stable_
 for(const row of rows){
   row.problem_language=unique(row.problem_language);
   row.source_refs=unique(row.source_refs);
+  row.blockers=unique(row.blockers);
+  row.source_evidence=row.source_refs.map((ref)=>({
+    ref,
+    state:exists(ref)?'present':'missing',
+  }));
+  for(const evidence of row.source_evidence){
+    if(evidence.state==='missing'){
+      row.blockers.push('source_ref_missing:'+evidence.ref);
+    }
+  }
   row.blockers=unique(row.blockers);
   if(row.public_safe===true && row.problem_language.length===0 && !row.blockers.includes('problem_language_not_verified')){
     row.blockers.push('problem_language_not_verified');
