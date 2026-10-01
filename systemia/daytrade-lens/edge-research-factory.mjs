@@ -21,6 +21,18 @@ export const EXECUTION_DELAY_STRESS_BARS = Object.freeze({
   "30m": 6,
 });
 
+export const ALTERNATE_BENCHMARKS_BY_INSTRUMENT = Object.freeze({
+  SOXX: Object.freeze(["QQQ", "SMH"]),
+  SMH: Object.freeze(["QQQ", "SOXX"]),
+  QQQ: Object.freeze(["XLK"]),
+});
+
+function alternateBenchmarksFor(instrument) {
+  const configured = ALTERNATE_BENCHMARKS_BY_INSTRUMENT[instrument];
+  const values = configured || ["QQQ"];
+  return [...new Set(values)].filter((symbol) => symbol && symbol !== instrument);
+}
+
 function sha(value) {
   return crypto.createHash("sha256").update(
     typeof value === "string" ? value : JSON.stringify(value)
@@ -163,6 +175,26 @@ export function measureRockiesHypotheses(hypotheses, barsBySymbol, {
           throw new Error("edge_lab_lookahead_violation");
         }
 
+        const alternateBenchmarks = {};
+        for (const alternateBenchmark of alternateBenchmarksFor(instrument)) {
+          const alternateBars = filterCoreSessionBars(
+            barsBySymbol?.[alternateBenchmark] || []
+          );
+          if (!alternateBars.length) continue;
+          const alternateMove = measuredReturn(
+            alternateBars,
+            hypothesis.observed_at,
+            bars
+          );
+          if (!alternateMove || !alternateMove.no_pre_observation_price_used) continue;
+          alternateBenchmarks[alternateBenchmark] = {
+            benchmark_return: alternateMove.forward_return,
+            benchmark_start_time: alternateMove.start_time,
+            benchmark_end_time: alternateMove.end_time,
+            excess_return: instrumentMove.forward_return - alternateMove.forward_return,
+          };
+        }
+
         const executionDelayStress = {};
         for (const [delayKey, delayBars] of Object.entries(EXECUTION_DELAY_STRESS_BARS)) {
           const delayedInstrument = measuredReturn(
@@ -234,6 +266,7 @@ export function measureRockiesHypotheses(hypotheses, barsBySymbol, {
           instrument_end_time: instrumentMove.end_time,
           benchmark_start_time: benchmarkMove.start_time,
           benchmark_end_time: benchmarkMove.end_time,
+          alternate_benchmarks: alternateBenchmarks,
           execution_delay_stress: executionDelayStress,
           provenance_refs: [...(hypothesis.provenance_refs || [])],
           evidence_state: hypothesis.evidence_state,
@@ -515,10 +548,14 @@ export async function runEdgeResearchBatch({
 
   const placeboHypotheses = buildMatchedPlaceboHypotheses(hypotheses);
   const window = dateWindow([...hypotheses, ...placeboHypotheses]);
-  const symbols = uniq([
-    "SPY",
+  const researchInstruments = uniq([
     ...hypotheses.flatMap((row) => row.research_instruments || []),
     ...placeboHypotheses.flatMap((row) => row.research_instruments || []),
+  ]);
+  const symbols = uniq([
+    "SPY",
+    ...researchInstruments,
+    ...researchInstruments.flatMap((instrument) => alternateBenchmarksFor(instrument)),
   ]);
 
   const barsBySymbol = {};
