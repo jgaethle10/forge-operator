@@ -9,6 +9,7 @@ const SCHEMA = 'evercraft.chromeos-host-boundary-observation.v1';
 const STATUS_SCHEMA = 'evercraft.chromeos-host-boundary-status.v1';
 const RECEIPT_SCHEMA = 'evercraft.chromeos-host-boundary-receipt.v1';
 const CHECK_SCHEMA = 'evercraft.chromeos-host-boundary-check-request.v1';
+const CAPABILITY_ID = 'chromeos.crostini.port-forwarding.read.v1';
 const DEFAULT_PORTS = new Set([18080, 8443]);
 const DEFAULT_STATE_ROOT = path.join(
   os.homedir(),
@@ -116,6 +117,7 @@ export function requestChromeOsHostBoundaryCheck({
   const requestId = 'hostcheck_' + randomBytes(12).toString('hex');
   const body = {
     schema: CHECK_SCHEMA,
+    capability_id: CAPABILITY_ID,
     request_id: requestId,
     status: 'pending',
     requested_at: new Date(now).toISOString(),
@@ -188,6 +190,9 @@ export function validateChromeOsHostBoundaryObservation(
     throw new Error('chromeos_host_boundary_observation_required');
   }
   if (input.schema !== SCHEMA) throw new Error('chromeos_host_boundary_schema_invalid');
+  if (input.capability_id && input.capability_id !== CAPABILITY_ID) {
+    throw new Error('chromeos_host_boundary_capability_invalid');
+  }
 
   const collectedAt = new Date(String(input.collected_at || ''));
   if (!Number.isFinite(collectedAt.getTime())) {
@@ -225,6 +230,7 @@ export function validateChromeOsHostBoundaryObservation(
   const scan = input.scan && typeof input.scan === 'object' ? input.scan : {};
   return {
     schema: SCHEMA,
+    capability_id: CAPABILITY_ID,
     collected_at: collectedAt.toISOString(),
     request_id: requestId,
     observer_version: safeText(input.observer_version || 'unknown', 48),
@@ -291,6 +297,7 @@ export function readChromeOsHostBoundaryStatus({
     return {
       ok: false,
       schema: STATUS_SCHEMA,
+      capability_id: CAPABILITY_ID,
       state: 'never_reported',
       fresh: false,
       ports: [],
@@ -311,6 +318,7 @@ export function readChromeOsHostBoundaryStatus({
   return {
     ok: fresh,
     schema: STATUS_SCHEMA,
+    capability_id: CAPABILITY_ID,
     state: !integrityOk ? 'receipt_integrity_failed' : fresh ? 'fresh' : 'stale',
     fresh,
     age_ms: Number.isFinite(ageMs) ? ageMs : null,
