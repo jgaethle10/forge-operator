@@ -25,6 +25,21 @@ function readJson(file){
   if(!fs.existsSync(file)) throw new Error('file_not_found:'+file);
   return JSON.parse(fs.readFileSync(file,'utf8'));
 }
+function safeId(value){
+  const id=String(value||'').trim().replace(/[^a-zA-Z0-9._-]/g,'_').slice(0,160);
+  if(!id) throw new Error('device_id_required');
+  return id;
+}
+function credentialFile(deviceId){
+  return path.join(root,'.secrets','device-tokens',safeId(deviceId)+'.token');
+}
+function writeSecretAtomic(file,value){
+  fs.mkdirSync(path.dirname(file),{recursive:true,mode:0o700});
+  const tmp=file+'.'+process.pid+'.tmp';
+  fs.writeFileSync(tmp,value.endsWith('\n')?value:value+'\n',{mode:0o600});
+  fs.renameSync(tmp,file);
+  fs.chmodSync(file,0o600);
+}
 
 if(cmd==='list'){
   console.log(JSON.stringify(registry.list({now:new Date()}),null,2));
@@ -65,6 +80,40 @@ if(cmd==='list'){
     reason:arg('--reason','operator_revoked'),
     revoked_at:new Date().toISOString(),
   }),null,2));
+}else if(cmd==='credential-set'){
+  const deviceId=required('--device');
+  const record=registry.get(deviceId);
+  if(!record) throw new Error('ambient_registry_device_unknown');
+  if(!['authorized','active','degraded'].includes(record.state)){
+    throw new Error('device_must_be_authorized_before_credential');
+  }
+  const source=path.resolve(required('--token-file'));
+  if(!fs.existsSync(source)) throw new Error('credential_source_file_missing');
+  const token=fs.readFileSync(source,'utf8').trim();
+  if(!token) throw new Error('credential_source_file_empty');
+  if(Buffer.byteLength(token)>4096) throw new Error('credential_too_large');
+  const dest=credentialFile(deviceId);
+  writeSecretAtomic(dest,token);
+  console.log(JSON.stringify({
+    ok:true,
+    schema:'evercraft.saban.device-credential-write.v1',
+    device_id:deviceId,
+    credential_present:true,
+    credential_value_exposed:false,
+    destination:path.relative(root,dest),
+  },null,2));
+}else if(cmd==='credential-delete'){
+  const deviceId=required('--device');
+  const dest=credentialFile(deviceId);
+  const existed=fs.existsSync(dest);
+  if(existed) fs.rmSync(dest,{force:true});
+  console.log(JSON.stringify({
+    ok:true,
+    schema:'evercraft.saban.device-credential-delete.v1',
+    device_id:deviceId,
+    credential_removed:existed,
+    credential_value_exposed:false,
+  },null,2));
 }else{
   throw new Error('unsupported_command:'+cmd);
 }
