@@ -91,6 +91,18 @@ export function remoteOperatorTools() {
       },
     },
     {
+      name: 'remote_host_boundary_certification',
+      title: 'Certify the ChromeOS host-boundary evidence chain',
+      description: 'Read a receipt-backed field certification that reconciles the fresh ChromeOS port-forward setting observation with the LAN witness. A ready certification advances the read-only capability field gate but still does not claim public-route reachability.',
+      inputSchema: { type: 'object', properties: {}, additionalProperties: false },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    {
       name: 'remote_host_capability_check',
       title: 'Run an admitted host-side capability check',
       description: 'Run one typed, explicitly admitted read-only host capability on an authorized device. The capability ID must exist in the host-boundary registry; generic desktop control and unregistered adapters are denied.',
@@ -287,7 +299,7 @@ export async function executeRemoteOperatorMcpRpc({
     return jsonRpc(id, {
       protocolVersion: '2025-03-26',
       capabilities: { tools: {} },
-      serverInfo: { name: 'evercraft-remote-operator', version: '0.6.0' },
+      serverInfo: { name: 'evercraft-remote-operator', version: '0.7.0' },
       instructions:
         'Evercraft Remote Operator reaches only explicitly authorized Evercraft nodes. Read operations require the client credential. File writes and program execution additionally require an explicit approval_ref and remain constrained by the node-side operator policy.',
     });
@@ -326,6 +338,9 @@ export async function executeRemoteOperatorMcpRpc({
     }
     if (name === 'remote_host_capabilities') {
       return jsonRpc(id, toolResult(await gateway.invoke('/v1/operator/host-capabilities', { method: 'GET' })));
+    }
+    if (name === 'remote_host_boundary_certification') {
+      return jsonRpc(id, toolResult(await gateway.invoke('/v1/operator/host-boundary/certification', { method: 'GET' })));
     }
     if (name === 'remote_host_capability_check') {
       return jsonRpc(id, toolResult(await gateway.invoke('/v1/operator/host-capabilities/check', {
@@ -399,7 +414,7 @@ export function registerRemoteOperatorMcp(app, options = {}) {
     res.json({
       ok: true,
       service: 'evercraft-remote-operator-gateway',
-      version: '0.6.0',
+      version: '0.7.0',
       configured: Boolean(gateway),
       public_node_ingress_required: false,
       node_control_token_exposed: false,
@@ -416,7 +431,7 @@ export function registerRemoteOperatorMcp(app, options = {}) {
     res.json({
       ok: true,
       server: 'evercraft-remote-operator',
-      version: '0.6.0',
+      version: '0.7.0',
       transport: 'Streamable HTTP',
       configured: Boolean(gateway),
       tools: remoteOperatorTools().map((tool) => tool.name),
