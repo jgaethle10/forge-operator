@@ -17,6 +17,16 @@
       "description": "Mission authority, orchestration, routing, receipts, dependencies and company execution."
     },
     {
+      "id": "week-in-motion",
+      "name": "Week in Motion",
+      "category": "Publishing & Institutional Memory",
+      "ownership": "evercraft-owned",
+      "origin_env": "WEEK_IN_MOTION_ORIGIN",
+      "health_path": "/api/week-in-motion/status",
+      "launch_path": "/week-in-motion",
+      "description": "Resident weekly evidence, editorial, visual, Journal and distribution machine."
+    },
+    {
       "id": "raven",
       "name": "Raven Nexus",
       "category": "Intelligence & Team",
