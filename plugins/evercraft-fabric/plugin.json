@@ -2,23 +2,20 @@
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "evercraft",
   "version": "1.1.0",
-  "description": "Bounded public website inspection and permission-aware routing into the Evercraft/Systemia capability fabric.",
+  "description": "Inspect authorized public websites with bounded, evidence-backed HTTP and on-page analysis.",
   "author": {
     "name": "Evercraft LLC",
     "url": "https://fabric.systemiacommandcenters.com/"
   },
-  "homepage": "https://fabric.systemiacommandcenters.com/",
+  "homepage": "https://fabric.systemiacommandcenters.com/openai",
   "repository": "https://github.com/jgaethle10/forge-operator",
   "license": "UNLICENSED",
   "keywords": [
     "evercraft",
-    "systemia",
-    "mcp",
-    "agents",
-    "business",
-    "research",
-    "media",
-    "infrastructure"
+    "website-inspection",
+    "on-page",
+    "website-metadata",
+    "business-website"
   ],
   "extensions": {
     "com.openai": {
@@ -33,7 +30,7 @@
           "Evidence-backed on-page signals",
           "Bounded read-only analysis"
         ],
-        "websiteURL": "https://fabric.systemiacommandcenters.com/",
+        "websiteURL": "https://fabric.systemiacommandcenters.com/openai",
         "supportURL": "https://fabric.systemiacommandcenters.com/support",
         "privacyPolicyURL": "https://fabric.systemiacommandcenters.com/privacy",
         "termsOfServiceURL": "https://fabric.systemiacommandcenters.com/terms",
