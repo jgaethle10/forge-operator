@@ -6,6 +6,7 @@ import {
   topKWinnerRemovalStress,
   winsorizedStress,
   temporalBlockBootstrap,
+  eventDensityWeightedStress,
 } from "./edge-breaker-lab.mjs";
 
 const rows=[];
@@ -42,6 +43,26 @@ assert.equal(winsorized.median_positive,true);
 const block=temporalBlockBootstrap(rows,{iterations:100,seed:"block-proof",block_size_days:5});
 assert.equal(block.pass,true);
 assert.equal(block.block_size_days,5);
+
+const densityRows=[
+  ...Array.from({length:20},(_,i)=>({
+    observed_at:"2026-02-02T15:"+String(i).padStart(2,"0")+":00Z",
+    origin_entity_ref:"crowded:"+i,
+    forward_return:0.05,
+    benchmark_return:0,
+  })),
+  ...Array.from({length:20},(_,i)=>({
+    observed_at:new Date(Date.UTC(2026,1,3+i,15,0)).toISOString(),
+    origin_entity_ref:"spread:"+i,
+    forward_return:-0.004,
+    benchmark_return:0,
+  })),
+];
+const densityStress=eventDensityWeightedStress(densityRows);
+assert.ok(densityStress.raw_mean_signed_net>0);
+assert.ok(densityStress.event_day_equal_weight_mean_signed_net<0);
+assert.equal(densityStress.pass,false);
+assert.equal(densityStress.event_days,21);
 
 const report={
   evaluations:[{signal_key:"ai_models|sec_8_k|SOXX|1d",status:"RESEARCH_CANDIDATE",learned_direction:"POSITIVE_EXCESS_RETURN"}],
@@ -116,6 +137,7 @@ console.log(JSON.stringify({
   new_york_market_day_clustering:true,
   top_winner_removal:true,
   top_1_top_3_top_5_winner_removal:true,
+  event_density_weighting:true,
   exploratory_only:true,
   eligibility_mutated:false,
   live_trade_authority:false,
