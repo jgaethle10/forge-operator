@@ -193,9 +193,108 @@ export async function collectNoaaSpaceWeather({
   };
 }
 
+
+function parseIsoOrFallback(value,fallback){
+  const parsed=Date.parse(String(value||''));
+  return Number.isFinite(parsed)?new Date(parsed).toISOString():new Date(fallback).toISOString();
+}
+
+export async function collectNoaaOvationAurora({
+  fetchImpl = globalThis.fetch,
+  now = new Date().toISOString(),
+  url = 'https://services.swpc.noaa.gov/json/ovation_aurora_latest.json',
+  max_points = 48
+} = {}) {
+  const payload = await fetchJson(url, { fetchImpl });
+  const coordinates = Array.isArray(payload?.coordinates) ? payload.coordinates : [];
+  const rows = coordinates
+    .map((row) => Array.isArray(row) ? {
+      lon: Number(row[0]),
+      lat: Number(row[1]),
+      probability: Number(row[2])
+    } : null)
+    .filter((row) => row &&
+      Number.isFinite(row.lon) && row.lon >= -180 && row.lon <= 360 &&
+      Number.isFinite(row.lat) && row.lat >= -90 && row.lat <= 90 &&
+      Number.isFinite(row.probability) && row.probability >= 0
+    )
+    .map((row) => ({
+      ...row,
+      lon: row.lon > 180 ? row.lon - 360 : row.lon,
+      probability: Math.max(0, Math.min(100, row.probability))
+    }));
+
+  const active = rows.filter((row) => row.probability > 0);
+  const bestByBucket = new Map();
+  for (const row of active) {
+    const bucket = `${row.lat >= 0 ? 'n' : 's'}:${Math.floor((row.lon + 180) / 10)}`;
+    const prior = bestByBucket.get(bucket);
+    if (!prior || row.probability > prior.probability) bestByBucket.set(bucket, row);
+  }
+  const strongest = [...bestByBucket.values()]
+    .sort((a, b) => b.probability - a.probability)
+    .slice(0, Math.max(8, Math.min(72, max_points)));
+
+  const maximum = active.reduce((max, row) => Math.max(max, row.probability), 0);
+  const forecastAt = parseIsoOrFallback(
+    payload?.['Forecast Time'] || payload?.forecast_time,
+    now
+  );
+  const modelObservedAt = parseIsoOrFallback(
+    payload?.['Observation Time'] || payload?.observation_time,
+    now
+  );
+  const anomaly = Number(clamp01((maximum - 20) / 70, 0.15).toFixed(3));
+
+  return {
+    collector: 'noaa-ovation-aurora',
+    source_url: url,
+    observations: [{
+      source_system: 'systemia-radar',
+      source_family: 'noaa-swpc-ovation-prime',
+      observed_at: forecastAt,
+      region_key: 'global',
+      domains: ['space_weather', 'atmosphere'],
+      kind: 'aurora_forecast_field',
+      evidence_state: 'modeled',
+      reliability: 0.95,
+      anomaly_score: anomaly,
+      summary: `NOAA OVATION aurora model forecasts a maximum visible-aurora probability near ${maximum.toFixed(0)}% for ${forecastAt}.`,
+      provenance_refs: [url],
+      correlation_keys: ['noaa-swpc:ovation-aurora'],
+      facts: {
+        subject_key: 'noaa-swpc:ovation-aurora',
+        subject: 'NOAA OVATION 30-minute aurora forecast',
+        forecast_time: forecastAt,
+        model_observation_time: modelObservedAt,
+        maximum_visible_aurora_probability_pct: maximum,
+        active_grid_cells: active.length,
+        model: 'OVATION',
+        durable_record: false
+      },
+      measurements: strongest.map((row, index) => ({
+        point_id: `aurora-${index + 1}`,
+        lat: row.lat,
+        lon: row.lon,
+        aurora_probability_pct: row.probability,
+        intensity: row.probability / 100,
+        observed_at: forecastAt,
+        modeled: true
+      })),
+      metadata: {
+        collector: 'noaa-ovation-aurora',
+        coordinate_format: clean(payload?.['Data Format'] || payload?.data_format),
+        source_grid_cells: rows.length,
+        visual_points: strongest.length
+      }
+    }]
+  };
+}
+
 export const OFFICIAL_COLLECTORS = Object.freeze([
   { id: 'usgs-earthquakes', run: collectUsgsEarthquakes },
-  { id: 'noaa-space-weather', run: collectNoaaSpaceWeather }
+  { id: 'noaa-space-weather', run: collectNoaaSpaceWeather },
+  { id: 'noaa-ovation-aurora', run: collectNoaaOvationAurora }
 ]);
 
 export async function runOfficialCollectors({
