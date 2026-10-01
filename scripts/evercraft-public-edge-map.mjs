@@ -459,11 +459,20 @@ async function pcpMap() {
 
 async function main() {
   out.host_forward_preflight=await verifyHostForward();
+  // Crostini probing the Chromebook's own LAN address is not authoritative
+  // proof of ChromeOS host forwarding. Hairpin/self-reflection may be blocked
+  // even when another LAN host or the public WAN path can reach the forwarded
+  // port. Preserve this observation as advisory for DNS scope and continue to
+  // the router + independent external canary.
   if(out.host_forward_preflight.ready!==true){
-    out.state='chromeos_host_forward_unreachable';
-    out.error='chromeos_host_forward_unreachable';
-    console.log(JSON.stringify(out,null,2));
-    process.exit(3);
+    out.host_forward_preflight.advisory=true;
+    out.host_forward_preflight.authoritative=false;
+    if(scope!=='dns'){
+      out.state='chromeos_host_forward_unreachable';
+      out.error='chromeos_host_forward_unreachable';
+      console.log(JSON.stringify(out,null,2));
+      process.exit(3);
+    }
   }
 
   const upnp = await upnpMap().catch(e => ({ method: 'UPnP-IGD', success: false, error: e.message }));
