@@ -1,18 +1,39 @@
 import fs from 'node:fs';
+import {
+  auditCapabilityContractsAgainstActionManifest,
+  buildMachineActionManifest,
+} from './machine-action-manifest.mjs';
 
 const catalog = JSON.parse(fs.readFileSync('registry/catalog.json', 'utf8'));
 const timeoutMs = 20000;
 const seen = new Set();
 const targets = [];
 
-function add(name, mcp, registryName) {
+function add(name, mcp, registryName, productKey = null) {
   if (!mcp || seen.has(mcp)) return;
   seen.add(mcp);
-  targets.push({ name, mcp, registry_name: registryName || null });
+  targets.push({
+    name,
+    mcp,
+    registry_name: registryName || null,
+    product_key: productKey || null,
+  });
 }
 
-add('Evercraft Machine Commerce', catalog.universal_front_door?.mcp, catalog.universal_front_door?.registry_name);
-for (const p of catalog.products || []) add(p.name || p.product_key || p.registry_name, p.mcp, p.registry_name);
+add(
+  'Evercraft Machine Commerce',
+  catalog.universal_front_door?.mcp,
+  catalog.universal_front_door?.registry_name,
+  'evercraft-machine-commerce'
+);
+for (const p of catalog.products || []) {
+  add(
+    p.name || p.product_key || p.registry_name,
+    p.mcp,
+    p.registry_name,
+    p.product_key || null
+  );
+}
 
 async function postMcp(url, payload) {
   const controller = new AbortController();
@@ -147,6 +168,23 @@ const receipt = {
 
 fs.mkdirSync('artifacts/chum', { recursive: true });
 fs.writeFileSync('artifacts/chum/mcp-canary-latest.json', JSON.stringify(receipt, null, 2) + '\n');
+const machineActionManifest = buildMachineActionManifest(receipt);
+fs.writeFileSync(
+  'artifacts/chum/machine-action-manifest-latest.json',
+  JSON.stringify(machineActionManifest, null, 2) + '\n'
+);
+const capabilityContracts = JSON.parse(
+  fs.readFileSync('systemia/capability-mesh/contracts.json', 'utf8')
+);
+const machineActionContractAudit =
+  auditCapabilityContractsAgainstActionManifest({
+    contracts: capabilityContracts,
+    manifest: machineActionManifest,
+  });
+fs.writeFileSync(
+  'artifacts/chum/machine-action-contract-audit-latest.json',
+  JSON.stringify(machineActionContractAudit, null, 2) + '\n'
+);
 fs.writeFileSync('artifacts/chum/mcp-canary-latest.md', [
   '# CHUM MCP / Registry Canary',
   '',
@@ -162,7 +200,26 @@ fs.writeFileSync('artifacts/chum/mcp-canary-latest.md', [
   ...rows.map((r) => `| ${r.name} | ${r.initialize.valid ? 'pass' : 'FAIL'} | ${r.tools_list.valid ? 'pass' : 'FAIL'} | ${r.registry.present === true && r.registry.active === true && r.registry.latest === true ? `active/latest ${r.registry.version || ''}`.trim() : r.registry.present === false ? 'MISSING' : r.registry.active === false ? 'INACTIVE' : r.registry.latest === false ? 'NOT_LATEST' : 'unknown'} |`)
 ].join('\n') + '\n');
 
-console.log(JSON.stringify({ targets: receipt.targets, failed_mcp: receipt.failed_mcp, registry_missing: receipt.registry_missing, machine_commerce_checkout_capability_visible: receipt.machine_commerce_checkout_capability_visible, machine_commerce_commerce_signals: receipt.machine_commerce_commerce_signals }));
+console.log(JSON.stringify({
+  targets: receipt.targets,
+  failed_mcp: receipt.failed_mcp,
+  registry_missing: receipt.registry_missing,
+  machine_commerce_checkout_capability_visible: receipt.machine_commerce_checkout_capability_visible,
+  machine_commerce_commerce_signals: receipt.machine_commerce_commerce_signals,
+  machine_action_manifest_verified_targets:
+    machineActionManifest.summary.verified_tools_list_count,
+  machine_action_manifest_observed_tools:
+    machineActionManifest.summary.observed_tool_count,
+  machine_action_contract_audit_state:
+    machineActionContractAudit.state,
+  machine_action_contract_verified_bindings:
+    machineActionContractAudit.summary.verified_binding_count,
+}));
+if (machineActionContractAudit.state !== 'pass') {
+  throw new Error(
+    `Machine Action contract audit blocked ${machineActionContractAudit.summary.failed_binding_count} shared-runtime binding(s)`
+  );
+}
 if (failed.length) throw new Error(`CHUM MCP canary found ${failed.length} live MCP failure(s)`);
 if (registryMissing.length) throw new Error(`CHUM Registry canary found ${registryMissing.length} published entry mismatch(es)`);
 if (!machineCommerceHasCommerceTool) throw new Error('Evercraft Machine Commerce MCP is live but exposes no checkout/offer/commerce-capable tool name');
