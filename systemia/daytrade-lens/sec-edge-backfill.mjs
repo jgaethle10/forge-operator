@@ -41,6 +41,7 @@ import { runQuoteMicrostructureLab } from "./edge-quote-microstructure.mjs";
 import { runExecutionSpeedBoundsLab } from "./edge-execution-speed-bounds.mjs";
 import { runCapitalScaleImpactEnvelopeLab } from "./edge-capital-scale-impact-envelope.mjs";
 import { buildLiquidityStateContracts } from "./edge-liquidity-state-contract.mjs";
+import { buildDepthDataContract } from "./edge-depth-data-contract.mjs";
 import { buildClusterAdversarialSummary } from "./edge-cluster-adversarial-summary.mjs";
 import { evaluatePilotReadiness } from "./edge-pilot-readiness.mjs";
 
@@ -160,6 +161,20 @@ async function main() {
   fs.writeFileSync(
     liquidityStateContractsFile,
     JSON.stringify(liquidityStateContracts, null, 2) + "\n"
+  );
+
+  const depthDataContract = buildDepthDataContract({
+    provider_connected: false,
+    provider: null,
+    scope: null,
+  });
+  const depthDataContractFile = path.join(
+    artifactDir,
+    "sec-edge-depth-data-contract.json"
+  );
+  fs.writeFileSync(
+    depthDataContractFile,
+    JSON.stringify(depthDataContract, null, 2) + "\n"
   );
 
   const searchBurden = summarizeResearchSearchBurden(report);
@@ -778,6 +793,10 @@ async function main() {
       capitalScaleImpactEnvelopeLab.status_counts || {},
     liquidity_state_contract_status_counts:
       liquidityStateContracts.status_counts || {},
+    multi_level_depth_provider_connected:
+      depthDataContract.provider_connected === true,
+    multi_level_depth_measurement_state:
+      depthDataContract.current_measurement_state,
     frozen_forward_paper_cohorts: frozenCohorts.length,
     durable_forward_paper_state_configured: durableState.configured,
     durable_forward_paper_restart_reopen_verified: durableState.restart_reopen_verified,
@@ -807,6 +826,7 @@ async function main() {
       execution_speed_bounds: executionSpeedBoundsFile,
       capital_scale_impact_envelope: capitalScaleImpactEnvelopeFile,
       liquidity_state_contracts: liquidityStateContractsFile,
+      depth_data_contract: depthDataContractFile,
       stress_lab: stressFile,
       breaker_lab: breakerFile,
       timing_fragility_lab: timingFile,
