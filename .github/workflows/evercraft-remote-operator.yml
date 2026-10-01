@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - "systemia/compute/remote-operator.mjs"
+      - "systemia/compute/network-observer.mjs"
       - "systemia/compute/remote-operator.test.mjs"
       - "systemia/compute/runtime-node.mjs"
       - "systemia/compute/node-seed.mjs"
@@ -22,6 +23,7 @@ on:
     branches: [main]
     paths:
       - "systemia/compute/remote-operator.mjs"
+      - "systemia/compute/network-observer.mjs"
       - "systemia/compute/remote-operator.test.mjs"
       - "systemia/compute/runtime-node.mjs"
       - "systemia/compute/node-seed.mjs"
