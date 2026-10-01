@@ -9,9 +9,17 @@ const DIRECT_CALLABLE_STATES = new Set([
 ]);
 
 export const UNIVERSAL_FALLBACK = {
-  registry_name: 'io.github.jgaethle10/evercraft-machine-commerce',
-  remote_mcp:
-    'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp',
+  name: 'Evercraft Fabric / Systemia',
+  registry_name: null,
+  remote_mcp: null,
+  pending_remote_mcp: 'https://fabric.systemiacommandcenters.com/mcp',
+  state: 'external_https_verification_required',
+  callable: false,
+  static_discovery: {
+    products: '/.well-known/evercraft-products.json',
+    pain_index: '/.well-known/evercraft-pain-index.json',
+    direct_doors: '/.well-known/evercraft-direct-doors.json',
+  },
 };
 
 function arg(name, fallback = null) {
@@ -79,6 +87,8 @@ export function classifyDirectDoor(product, candidate = null) {
         remote_mcp: product.mcp_url,
         fallback_registry_name: UNIVERSAL_FALLBACK.registry_name,
         fallback_remote_mcp: UNIVERSAL_FALLBACK.remote_mcp,
+        fallback_pending_remote_mcp: UNIVERSAL_FALLBACK.pending_remote_mcp,
+        fallback_state: UNIVERSAL_FALLBACK.state,
       }
     : {
         mode: 'universal_fallback_until_specialist_promoted',
@@ -86,6 +96,14 @@ export function classifyDirectDoor(product, candidate = null) {
         use_universal_router_first: true,
         registry_name: UNIVERSAL_FALLBACK.registry_name,
         remote_mcp: UNIVERSAL_FALLBACK.remote_mcp,
+        pending_remote_mcp: UNIVERSAL_FALLBACK.pending_remote_mcp,
+        fallback_state: UNIVERSAL_FALLBACK.state,
+        fallback_callable: UNIVERSAL_FALLBACK.callable,
+        static_discovery: UNIVERSAL_FALLBACK.static_discovery,
+        pending_remote_mcp: UNIVERSAL_FALLBACK.pending_remote_mcp,
+        fallback_state: UNIVERSAL_FALLBACK.state,
+        fallback_callable: UNIVERSAL_FALLBACK.callable,
+        static_discovery: UNIVERSAL_FALLBACK.static_discovery,
         desired_specialist_registry_name: candidate?.desired_registry_name || null,
         pending_specialist_runtime_path: product.runtime_path || null,
       };
