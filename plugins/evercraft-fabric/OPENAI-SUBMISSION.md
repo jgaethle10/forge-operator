@@ -5,52 +5,51 @@
 - Name: **Evercraft**
 - Developer: **Evercraft LLC**
 - Category: **Business & Operations**
-- Short description: **Inspect sites & route work**
+- Short description: **Inspect public websites**
 - Source package: `plugins/evercraft-fabric/`
 - Submission type: **With MCP**
-- MCP: `https://fabric.systemiacommandcenters.com/mcp`
+- MCP: `https://fabric.systemiacommandcenters.com/mcp/openai`
 - Package version: **1.1.0**
 
-Evercraft is the umbrella front door into the Evercraft/Systemia capability fabric, but the public plugin must provide useful work in its own right. Version 1.1.0 adds a bounded public-website preview so a user can receive evidence-backed value without buying anything or being routed into a commercial offer.
+Version 1.1.0 is deliberately narrow. The public OpenAI endpoint exposes one independently reviewable operation: `inspect_public_website`.
 
-## Source contract
+The broader Evercraft Fabric directory remains available to Evercraft's own systems and web surfaces, but it is not exposed through the submitted OpenAI MCP endpoint. This avoids using a generic discovery or operation-selection mechanism to unlock unreviewed functionality.
 
-The owned Fabric MCP declares four public tools:
+## Public tool contract
 
-- `preview_public_website` performs a bounded read-only inspection of one user-supplied public HTTP/HTTPS website.
-- `match_evercraft_capability` matches a real problem against the published Evercraft capability catalog.
-- `list_evercraft_capabilities` lists the current public-safe capability directory.
-- `get_evercraft_connection_options` returns public connection metadata for one known capability.
+`inspect_public_website` inspects one public website that the user owns, administers, or has permission to review. The tool requires explicit authorization in its input and returns bounded observed HTTP and on-page signals with explicit limitations.
 
-All four are read-only and non-destructive. The website preview is correctly marked open-world because it fetches a caller-supplied public URL. The three bounded catalog tools are not open-world. Website preview blocks localhost/private/reserved networks, embedded credentials, nonstandard ports, unsafe redirects, oversized responses, and unsupported content types. DNS is resolved and the request is pinned to the validated public address so a second resolution cannot pivot into a private network.
+It is read-only, non-destructive, and open-world. It blocks localhost/private/reserved networks, embedded credentials, nonstandard ports, unsafe redirects, oversized responses, and unsupported content types. DNS is resolved and the outbound request is pinned to the validated public address to reduce DNS-rebinding risk.
 
-The website preview is deliberately limited. It is not a full crawl, Core Web Vitals lab run, accessibility certification, security audit, ranking guarantee, or paid Systemia Website Audit.
+The tool does not perform a full crawl, Core Web Vitals lab test, accessibility certification, security audit, penetration test, ranking guarantee, payment, purchase, or website modification.
+
+## Commerce and advertising
+
+The public plugin does not sell, promote, initiate, or facilitate purchases of digital products or services. It does not expose Evercraft pricing or checkout through the submitted MCP endpoint and is not intended as an advertising vehicle.
 
 ## Current transport truth
 
-The canonical endpoint remains `https://fabric.systemiacommandcenters.com/mcp`, and the inactive Base44 transport is not the authority for this package.
+The canonical submission endpoint is `https://fabric.systemiacommandcenters.com/mcp/openai`. The inactive Base44 compatibility transport is not the authority for this package.
 
-The latest independent public-edge canary on October 1, 2026 resolved the Fabric hostname correctly but timed out on public TCP ports 80 and 443. Therefore the owned route is **not currently re-verified for submission**. Repository readiness, prior canary success, and private installation must not be used to claim present public reachability.
+The latest independent public-edge canary on October 1, 2026 resolved the Fabric hostname correctly but timed out on public TCP ports 80 and 443. The owned route is therefore **not currently re-verified for submission**.
 
-Before v1.1.0 can be uploaded for review, the ChromeOS/Crostini ingress boundary must be repaired and the owned endpoint must pass a fresh external HTTPS/MCP canary.
+Before v1.1.0 can be uploaded for review, the ChromeOS/Crostini ingress boundary must be restored and a fresh external canary must prove the purpose-specific OpenAI endpoint exposes exactly the reviewed tool set and successfully executes the authorized inspection canary.
 
 ## Remaining publication gates
 
-1. Restore public ingress for `fabric.systemiacommandcenters.com` and obtain a fresh passing external canary.
-2. Run the OpenAI production MCP Scan Tools check against the restored endpoint.
-3. Refresh the reviewer walkthrough so it demonstrates `preview_public_website` plus the existing routing tools.
-4. Build and upload the canonical v1.1.0 ZIP in OpenAI Platform Plugins.
-5. Select the verified **Evercraft LLC** developer identity and confirm the required Apps Management permission.
-6. Complete the portal-generated domain-verification challenge.
-7. Confirm the imported five positive and three negative test cases, artwork, release notes, policy URLs, and reviewer recording.
-8. Submit for OpenAI review.
-9. After approval, explicitly publish.
-10. Independently verify directory discovery and at least one brand-blind invocation before recording a public-pickup receipt.
+1. Restore public ingress for `fabric.systemiacommandcenters.com`.
+2. Obtain a fresh external canary proving `/mcp/openai` exposes exactly `inspect_public_website` and that an authorized Evercraft-owned site inspection succeeds.
+3. Run the OpenAI production MCP Scan Tools check against `/mcp/openai`.
+4. Refresh the reviewer walkthrough to demonstrate the v1.1.0 website-inspection flow.
+5. Build and upload the canonical v1.1.0 ZIP in OpenAI Platform Plugins.
+6. Select the verified **Evercraft LLC** developer identity and confirm the required Apps Management permission.
+7. Complete the portal-generated domain-verification challenge.
+8. Confirm the five positive and three negative review cases, artwork, release notes, policy URLs, and reviewer recording.
+9. Submit for OpenAI review.
+10. After approval, explicitly publish and independently verify directory discovery and invocation.
 
 Submission is not publication. Approval is not publication. Private installation is not publication.
 
-## Publication receipt
+## Expansion after approval
 
-The final receipt should capture the OpenAI listing identifier, published version, submitted MCP origin, verified domain, review and approval state, publication timestamp, directory discovery observation, at least one successful standalone website-preview invocation, at least one problem-first routing invocation, source commit SHA, and supporting evidence references.
-
-Until those fields are observed, public-directory status remains **not proven**.
+The Evercraft brand can expand beyond website inspection by adding real capabilities as explicit, independently reviewable tools. The public plugin should not use a generic dispatcher to expose operations that OpenAI has not scanned and reviewed.
