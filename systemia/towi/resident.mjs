@@ -8,6 +8,7 @@ import {
   emptyTowiState,
   publicTowiProjection
 } from './core.mjs';
+import { buildTowiProductionQueue } from './production.mjs';
 
 function ensureDir(dir) {
   fs.mkdirSync(dir, { recursive: true, mode: 0o700 });
@@ -46,6 +47,7 @@ export function createTowiResident({
   const publicFile = path.join(stateDir, 'public-latest.json');
   const editorialFile = path.join(stateDir, 'editorial-queue.json');
   const receiptsFile = path.join(stateDir, 'receipts.jsonl');
+  const productionFile = path.join(stateDir, 'production-queue.json');
 
   let state = readJson(stateFile, emptyTowiState());
   let timer = null;
@@ -87,6 +89,7 @@ export function createTowiResident({
         packets: editorialQueue,
         publication_authority: false
       });
+      atomicWrite(productionFile, buildTowiProductionQueue(compiled.desk.dossiers || [], { now: startedAt }));
 
       const receipt = {
         schema: 'evercraft.towi.run-receipt.v1',
@@ -139,6 +142,7 @@ export function createTowiResident({
       packets: (compiled.desk.dossiers || []).map((dossier) => editorialPacketForDossier(dossier)).filter(Boolean),
       publication_authority: false
     });
+    atomicWrite(productionFile, buildTowiProductionQueue(compiled.desk.dossiers || [], { now }));
     appendJsonl(receiptsFile, added.receipt);
     return added.receipt;
   }
@@ -185,6 +189,10 @@ export function createTowiResident({
     return state.last_desk ? structuredClone(state.last_desk.dossiers || []) : [];
   }
 
+  function productionQueue() {
+    return buildTowiProductionQueue(state.last_desk?.dossiers || [], { now: clock().toISOString() });
+  }
+
   function dossier(id) {
     const row = state.dossiers?.[String(id || '')] || null;
     return row ? structuredClone(row) : null;
@@ -198,6 +206,7 @@ export function createTowiResident({
     health,
     latest,
     queue,
+    productionQueue,
     dossier
   };
 }
