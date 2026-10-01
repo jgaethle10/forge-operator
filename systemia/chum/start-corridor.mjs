@@ -11,6 +11,12 @@ const BLOCKED_PUBLIC_HOSTS = new Set([
 export const BUYER_FRONTAGE_ORIGIN = null;
 export const BUYER_FRONTAGE_GATEWAY = null;
 
+export function staticCommercialReviewUrl(publicId) {
+  const id = String(publicId || '').trim();
+  if (!id) return null;
+  return '/chum/commercial/' + encodeURIComponent(id) + '/';
+}
+
 function allowedHttpsUrl(value) {
   const raw = String(value || '').trim();
   if (!raw) return null;
@@ -77,7 +83,9 @@ export function humanStartUrl(offer, {
   }
   const frontage = buyerFrontageUrl(offer, { surface });
   if (frontage) return frontage;
-  return machineReviewUrl(offer.public_id, gateway);
+  const review = machineReviewUrl(offer.public_id, gateway);
+  if (review) return review;
+  return staticCommercialReviewUrl(offer.public_id);
 }
 
 export function humanStartState(offer, {
@@ -87,5 +95,6 @@ export function humanStartState(offer, {
   if (configuredChumPublicOrigin(publicOrigin)) return 'tracked_chum_handoff_configured_origin';
   if (buyerFrontageUrl(offer)) return 'owned_buyer_frontage';
   if (machineReviewUrl(offer.public_id)) return 'owned_machine_review';
+  if (staticCommercialReviewUrl(offer.public_id)) return 'owned_static_commercial_surface';
   return 'held_no_owned_public_origin';
 }
