@@ -11,7 +11,12 @@ const files = [
   'systemia/chum/build-commercial-discovery-mesh.mjs',
   'distribution/direct-plugin-specs.json',
   'public/.well-known/evercraft-products.json',
-  'registry/catalog.json'
+  'registry/catalog.json',
+  'public/.well-known/evercraft-machine-catalog.json',
+  'public/.well-known/evercraft-direct-doors.json',
+  'public/.well-known/evercraft-discovery.json',
+  'public/ai-discovery.json',
+  '.github/workflows/chum-watershed.yml'
 ];
 
 const legacyUrl = /https?:\/\/[^\s"'\x60<>]*base44\.app[^\s"'\x60<>]*/ig;
