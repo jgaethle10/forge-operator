@@ -155,6 +155,18 @@ function evaluateOffer(task,offer,nowMs,performanceLedger=null){
   const observedAt=Date.parse(String(offer.observed_at||''))||0;
   const ageMs=Math.max(0,nowMs-observedAt);
   const failureDomains=offerFailureDomains(offer);
+  let performance=null;
+  if(performanceLedger){
+    const profile=performanceProfile(performanceLedger,{
+      device_id:offer.metadata?.device_id||offer.provider_id,
+      workload_class:task.workload_class,
+      now:new Date(nowMs),
+    });
+    performance=rankPerformanceAdjustment(profile);
+    if(performance.circuit_open===true){
+      reasons.push('performance_circuit_open');
+    }
+  }
 
   if(!task.trust.allowed_access_classes.includes(offer.access_class)) reasons.push('access_class_not_allowed');
   if(task.trust.require_attestation&&offer.trust.attested!==true) reasons.push('attestation_required');
@@ -213,7 +225,6 @@ function evaluateOffer(task,offer,nowMs,performanceLedger=null){
   }
 
   let score=0;
-  let performance=null;
   if(!reasons.length){
     if(offer.economics?.zero_cost===true) score+=10000;
     if(offer.access_class==='authorized_compute') score+=1500;
@@ -230,13 +241,7 @@ function evaluateOffer(task,offer,nowMs,performanceLedger=null){
     score-=Math.min(500,Math.round(ageMs/1000));
     score+=Math.min(300,Math.round((offer.resources.memory_mb/Math.max(1,r.memory_mb))*10));
 
-    if(performanceLedger){
-      const profile=performanceProfile(performanceLedger,{
-        device_id:offer.provider_id,
-        workload_class:task.workload_class,
-        now:new Date(nowMs),
-      });
-      performance=rankPerformanceAdjustment(profile);
+    if(performance){
       score+=performance.score;
       if(
         task.energy.prefer_lower_power &&
