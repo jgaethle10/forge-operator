@@ -1890,6 +1890,7 @@ export async function startEvercraftComputeNode({
             host: serviceHost,
             port: Number(body.input?.port || 0),
             publicOrigin: String(body.input?.public_origin || ''),
+            productDomain: String(body.input?.product_domain || 'evercraft.app'),
           });
           const serviceId = `svc_${randomBytes(8).toString('hex')}`;
           services.set(serviceId, {
@@ -1907,6 +1908,7 @@ export async function startEvercraftComputeNode({
             local_url: runtime.url,
             health_path: `/v1/services/${serviceId}/health`,
             public_origin_candidate: runtime.publicOrigin || null,
+            product_domain: runtime.productDomain,
             instance_id: runtime.instanceId,
             read_only_public_origin: true,
           };

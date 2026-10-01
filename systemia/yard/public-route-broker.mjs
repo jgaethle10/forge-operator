@@ -97,6 +97,7 @@ export class YardPublicRouteBroker {
     requestedHostname='',
     ttlMs=3600000,
     stableHostname=false,
+    wildcardSubdomains=false,
   }={}){
     const record=this.yard.deploymentStatus(deploymentId);
     if(!record) throw new Error('deployment_not_found');
@@ -105,6 +106,9 @@ export class YardPublicRouteBroker {
     if(!record.result?.instance_id) throw new Error('resident_instance_id_unavailable');
 
     const offer=await this.capabilities();
+    if(wildcardSubdomains===true && offer?.wildcard_catchall_lease_supported!==true){
+      throw new Error('public_route_provider_wildcard_catchall_not_supported');
+    }
 
     if(
       offer?.https_required===true &&
@@ -138,6 +142,7 @@ export class YardPublicRouteBroker {
       upstream_origin:record.result.local_url,
       requested_hostname:String(requestedHostname||'').trim()||null,
       stable_hostname:stableHostname===true,
+      wildcard_subdomains:wildcardSubdomains===true,
       requested_ttl_ms:Math.max(60000,Math.min(86400000,Number(ttlMs||3600000))),
     };
     const lease=await this.#createLease(routeRequest);
@@ -184,6 +189,8 @@ export class YardPublicRouteBroker {
       provider_transport:this.providerClient?'compute_lease':'http_provider',
       route_lease_id:lease.lease_id||null,
       stable_hostname:lease.stable_hostname===true,
+      wildcard_subdomains:lease.wildcard_subdomains===true,
+      wildcard_hostname:lease.wildcard_hostname||null,
       route_lease_receipt_hash:lease.receipt_hash||null,
       provider_management_receipt_hash:lease.compute_management_receipt_hash||null,
       origin:verified.origin,
