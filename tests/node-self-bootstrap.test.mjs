@@ -9,7 +9,7 @@ const fingerprint='sha256:'+'c'.repeat(64);
 function baseFiles(){
   return {
     preflight:{passed:true},
-    install:{install_boot_id_hash:bootA},
+    install:{install_boot_id_hash:bootA,remote_admission_service:'evercraft-remote-admission.service',bind_host:'127.0.0.1',outbound_only:true},
     node:{node_id:'evercraft-field-01',device_fingerprint:fingerprint,endpoint:'http://192.168.1.50:42420'},
     offline:{verified:true},
     field:{ready_for_yard_enrollment:true},
@@ -125,6 +125,22 @@ test('private worker skips public edge and needs only outbound broker after fiel
   assert.equal(status.public_edge_required,false);
   assert.equal(status.inbound_public_port_required,false);
   assert.equal(status.outbound_only_eligible,true);
+});
+
+test('private worker with legacy install must add persistent outbound service before admission',()=>{
+  const files=baseFiles();
+  files.public_edge=null;
+  delete files.install.remote_admission_service;
+  const status=evaluateBootstrap({
+    files,
+    currentBootHash:bootB,
+    physicalConfirmed:true,
+    brokerUrl:'https://fabric-control.example.test',
+    nodeRole:'private_worker',
+  });
+  assert.equal(status.state,'outbound_agent_install_required');
+  assert.equal(status.human_action_required,false);
+  assert.equal(status.next_action,'rerun_bootstrap_with_--advance_to_install_persistent_outbound_agent');
 });
 
 test('private worker without broker holds for outbound control but never asks for TLS',()=>{
