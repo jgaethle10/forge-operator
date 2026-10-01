@@ -18,14 +18,34 @@ function percentile(values,p){
   const i=Math.max(0,Math.min(s.length-1,Math.floor((s.length-1)*p)));
   return s[i];
 }
-function quarterKey(row){
+const NY_EVENT_DATE = new Intl.DateTimeFormat("en-US", {
+  timeZone: "America/New_York",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+});
+
+function marketDateParts(row){
   const d=new Date(row.observed_at);
-  if(!Number.isFinite(d.getTime())) return "invalid";
-  return `${d.getUTCFullYear()}-Q${Math.floor(d.getUTCMonth()/3)+1}`;
+  if(!Number.isFinite(d.getTime())) return null;
+  const parts=Object.fromEntries(
+    NY_EVENT_DATE.formatToParts(d).map((part)=>[part.type,part.value])
+  );
+  return {
+    year:Number(parts.year),
+    month:Number(parts.month),
+    day:Number(parts.day),
+  };
+}
+function quarterKey(row){
+  const p=marketDateParts(row);
+  if(!p) return "invalid";
+  return `${p.year}-Q${Math.floor((p.month-1)/3)+1}`;
 }
 function dayKey(row){
-  const d=new Date(row.observed_at);
-  return Number.isFinite(d.getTime())?d.toISOString().slice(0,10):"invalid";
+  const p=marketDateParts(row);
+  if(!p) return "invalid";
+  return `${String(p.year).padStart(4,"0")}-${String(p.month).padStart(2,"0")}-${String(p.day).padStart(2,"0")}`;
 }
 
 export function dedupeOriginDay(rows){
