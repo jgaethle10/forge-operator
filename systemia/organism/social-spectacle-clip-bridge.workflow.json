@@ -1,0 +1,27 @@
+{
+  "schema": "evercraft.systemia.workflow-manifest.v1",
+  "workflow_key": "social-spectacle-clip-bridge",
+  "mission_key": "evercraft-social-spectacle-machine-2026-09",
+  "runtime": "systemia-core+yard-evercraft-compute+evercraft-clip-compatibility",
+  "collider_compatible": true,
+  "cadence_seconds": 900,
+  "material_change_only": true,
+  "entrypoint": "systemia/organism/social-spectacle-clip-bridge.mjs",
+  "runner": "systemia/organism/social-spectacle-clip-bridge.mjs",
+  "proof": "systemia/organism/social-spectacle-clip-bridge.proof.mjs",
+  "authority": {
+    "shared_secret_required": true,
+    "staged_manifest_digest_required": true,
+    "freshness_state_required": "fresh",
+    "editorial_preflight_score_required": "10/10",
+    "provider_publication_claim_requires_observed_published_rows": true,
+    "blocked_brand_policy_remains_upstream": true,
+    "tiktok_state": "held_unverified"
+  },
+  "compatibility_endpoints": {
+    "media_upload_env": "EVERCRAFT_CLIP_SPECTACLE_UPLOAD_URL",
+    "publication_ingress_env": "EVERCRAFT_CLIP_SYSTEMIA_INGRESS_URL",
+    "publisher_pulse_env": "EVERCRAFT_CLIP_UNIFIED_PULSE_URL",
+    "shared_secret_file_env": "SYSTEMIA_CLIP_SHARED_SECRET_FILE"
+  }
+}
