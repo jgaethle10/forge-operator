@@ -17,6 +17,7 @@ import {
   renderCapabilities,
   renderCapabilityDetail,
   renderFabricHome,
+  renderOpenAiPluginHome,
   renderMarkdownDocument,
 } from './fabric-public-site.mjs';
 
@@ -311,6 +312,15 @@ export async function startFabricLocalRuntime({
           res,
           200,
           renderFabricHome({capabilities:preparedCatalog().capabilities}),
+          {contentType:'text/html; charset=utf-8'}
+        );
+      }
+
+      if (req.method==='GET' && req.url==='/openai') {
+        return sendText(
+          res,
+          200,
+          renderOpenAiPluginHome(),
           {contentType:'text/html; charset=utf-8'}
         );
       }
