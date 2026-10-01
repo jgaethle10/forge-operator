@@ -2392,28 +2392,32 @@
     },
     {
       "product_key": "towi-research",
-      "name": "TOWI Evidence-Controlled Research Brief",
+      "name": "TOWI Intelligence OS",
       "aliases": [
         "TOWI",
-        "TOWI AI"
+        "TOWI AI",
+        "TOWI Research"
       ],
-      "class": "evidence_controlled_research_and_validation",
-      "canonical_url": "https://base44.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs",
+      "class": "physical_world_intelligence_and_evidence_controlled_investigation",
+      "canonical_url": "https://fabric.systemiacommandcenters.com/towi/",
       "intents": [
+        "what major things are happening in the physical world",
+        "what materially changed in the world",
+        "investigate this disaster or infrastructure failure",
+        "track this developing hazard or physical system",
+        "explain what is happening behind this headline",
+        "what happened after this event",
         "research this question with sources",
-        "build me an evidence brief",
-        "validate this claim independently",
-        "make me a decision grade research report",
-        "map the evidence for this issue",
-        "give me a sourced validation memo"
+        "build me an evidence-controlled report"
       ],
-      "authority": "public discovery and scoping of evidence-controlled research; paid or consequential deliverables retain explicit confirmation and review gates",
-      "human_confirmation_required": true,
+      "authority": "read-only public intelligence desk plus evidence-controlled investigation staging; publication and consequential actions remain separately gated",
+      "human_confirmation_required": false,
       "boundaries": [
-        "no approved fixed machine price is verified",
-        "research scoping creates no payment obligation",
-        "consequential-domain deliverables retain existing human review gates",
-        "provenance, contradictions and uncertainty must remain visible"
+        "observed, verified, reported, inferred, modeled, contested and pending states must remain distinct",
+        "correlation and temporal co-occurrence do not establish causation",
+        "a TOWI dossier does not itself grant publication authority",
+        "Journal publication still requires source, freshness, rights, production and 10/10 editorial gates",
+        "political and government material requires explicit editorial review rather than unattended release"
       ]
     },
     {
