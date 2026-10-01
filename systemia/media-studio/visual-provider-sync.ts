@@ -93,7 +93,7 @@ function providerInput(
   if(!locator) throw new Error(`sync_${label}_locator_missing`);
   if(locator.kind==='url') return {type,url:locator.value};
   if(locator.kind==='provider_asset'&&locator.providerId==='sync'){
-    return {type,assetId:locator.id};
+    return {type,assetId:locator.value};
   }
   throw new Error(`sync_${label}_locator_unsupported:${locator.kind}`);
 }
@@ -162,7 +162,7 @@ export async function stageSyncLabsAsset(input:{
   return {
     providerId:'sync',
     assetId,
-    locator:{kind:'provider_asset',providerId:'sync',id:assetId},
+    locator:{kind:'provider_asset',providerId:'sync',value:assetId},
     sourcePath:path.resolve(input.filePath),
     sourceSha256:crypto.createHash('sha256').update(bytes).digest('hex'),
     providerUrl,
