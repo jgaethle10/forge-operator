@@ -96,7 +96,7 @@ export function evaluateBootstrap({
   nodeRole='public_edge',
 }={}){
   const role=String(nodeRole||'public_edge').trim();
-  if(!['public_edge','private_worker','virtual_worker'].includes(role)){
+  if(!['public_edge','private_worker','virtual_worker','operator_authorized_public_edge'].includes(role)){
     throw new Error('node_role_invalid');
   }
   const checks={
@@ -121,36 +121,36 @@ export function evaluateBootstrap({
   let state='ready_for_systemia_admission';
   let next_action='none';
   let human_action_required=false;
-  let reason=role==='virtual_worker'?'virtual_compute_gates_complete':'all_local_field_gates_complete';
+  let reason=role==='virtual_worker'?'virtual_compute_gates_complete':role==='operator_authorized_public_edge'?'operator_public_edge_gates_complete':'all_local_field_gates_complete';
 
   if(!checks.preflight_passed){
-    state=role==='virtual_worker'?'ineligible_for_compute_worker':'ineligible_for_field_public_edge';
-    next_action=role==='virtual_worker'?'use_another_eligible_machine':'use_another_owned_machine';
+    state=['virtual_worker','operator_authorized_public_edge'].includes(role)?'ineligible_for_compute_worker':'ineligible_for_field_public_edge';
+    next_action=['virtual_worker','operator_authorized_public_edge'].includes(role)?'use_another_eligible_machine':'use_another_owned_machine';
     human_action_required=true;
-    reason=role==='virtual_worker'?'compute_worker_preflight_failed':'field_preflight_failed';
+    reason=['virtual_worker','operator_authorized_public_edge'].includes(role)?'compute_worker_preflight_failed':'field_preflight_failed';
   }else if(!checks.installed||!checks.node_receipt){
     state='install_ready';
     next_action='run_bootstrap_with_--advance_as_root';
     human_action_required=false;
     reason='nodeseed_not_installed';
-  }else if(role!=='virtual_worker'&&!checks.rebooted_after_install){
+  }else if(!['virtual_worker','operator_authorized_public_edge'].includes(role)&&!checks.rebooted_after_install){
     state='reboot_required';
     next_action='reboot_machine_once_then_rerun_bootstrap';
     human_action_required=true;
     reason='reboot_persistence_not_yet_observed';
-  }else if(role!=='virtual_worker'&&!checks.offline_verified){
+  }else if(!['virtual_worker','operator_authorized_public_edge'].includes(role)&&!checks.offline_verified){
     state='offline_check_required';
     next_action='disconnect_network_then_run_--capture-offline';
     human_action_required=true;
     reason='offline_survival_receipt_missing';
-  }else if(role!=='virtual_worker'&&(!checks.physical_confirmed||!checks.field_certified)){
+  }else if(!['virtual_worker','operator_authorized_public_edge'].includes(role)&&(!checks.physical_confirmed||!checks.field_certified)){
     state='physical_confirmation_required';
     next_action='rerun_with_--confirm-physical-host_--advance';
     human_action_required=true;
     reason='physical_host_claim_must_be_explicit';
-  }else if(role==='public_edge'&&!checks.public_edge_admitted){
+  }else if(['public_edge','operator_authorized_public_edge'].includes(role)&&!checks.public_edge_admitted){
     state='public_https_admission_required';
-    next_action='bind_owned_domain_and_trusted_tls_then_run_--admit-public-edge';
+    next_action=role==='operator_authorized_public_edge'?'run_operator_edge_external_canary_then_admit':'bind_owned_domain_and_trusted_tls_then_run_--admit-public-edge';
     human_action_required=false;
     reason='public_https_not_yet_verified';
   }else if(!checks.remote_broker_configured){
@@ -173,11 +173,13 @@ export function evaluateBootstrap({
     human_action_required,
     checks,
     node_role:role,
-    public_edge_required:role==='public_edge',
+    public_edge_required:['public_edge','operator_authorized_public_edge'].includes(role),
+    public_ingress_required:['public_edge','operator_authorized_public_edge'].includes(role),
     inbound_public_port_required:role==='public_edge',
+    chromeos_forwarded_high_port_edge:role==='operator_authorized_public_edge',
     outbound_only_eligible:role==='private_worker'||role==='virtual_worker',
-    physical_certification_required:role!=='virtual_worker',
-    trust_class:role==='virtual_worker'?'operator_authorized_virtual':role==='public_edge'?'field_certified_public_edge':'field_certified_private_worker',
+    physical_certification_required:!['virtual_worker','operator_authorized_public_edge'].includes(role),
+    trust_class:role==='virtual_worker'?'operator_authorized_virtual':role==='operator_authorized_public_edge'?'operator_authorized_public_edge':role==='public_edge'?'field_certified_public_edge':'field_certified_private_worker',
     node_id:files.node?.node_id||null,
     device_fingerprint:files.node?.device_fingerprint||null,
     public_edge:files.public_edge?{
@@ -222,7 +224,7 @@ async function main(){
   const brokerUrl=validateBrokerUrl(arg('--broker-url',process.env.EVERCRAFT_REMOTE_BROKER_URL||''));
   const confirmPhysical=has('--confirm-physical-host');
   const nodeRole=String(arg('--role',process.env.EVERCRAFT_NODE_ROLE||'public_edge')).trim();
-  if(!['public_edge','private_worker','virtual_worker'].includes(nodeRole)) throw new Error('node_role_invalid');
+  if(!['public_edge','private_worker','virtual_worker','operator_authorized_public_edge'].includes(nodeRole)) throw new Error('node_role_invalid');
   const advance=has('--advance');
   const sourceRoot=path.resolve(arg('--source-root',path.join(here,'../..')));
 
@@ -288,7 +290,7 @@ async function main(){
     files=fileState(root);
   }
 
-  if(nodeRole!=='virtual_worker'&&advance&&files.offline?.verified===true&&!files.field?.ready_for_yard_enrollment){
+  if(!['virtual_worker','operator_authorized_public_edge'].includes(nodeRole)&&advance&&files.offline?.verified===true&&!files.field?.ready_for_yard_enrollment){
     if(!confirmPhysical){
       const status=evaluateBootstrap({
         files,currentBootHash:bootHash(),brokerUrl,physicalConfirmed:false,nodeRole,
