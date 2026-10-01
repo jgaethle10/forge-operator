@@ -429,6 +429,7 @@ export function publicTowiProjection(desk) {
       change_state: row.change_state,
       updated_at: row.updated_at,
       independent_source_families: row.readiness?.independent_source_families || 0,
+      research_evidence_count: (row.research_evidence || []).length,
       next_gate: row.readiness?.next_gate || null
     })),
     publication_authority: false
@@ -450,6 +451,7 @@ export function editorialPacketForDossier(dossier) {
     change_state: dossier.change_state,
     research_questions: dossier.research_questions,
     evidence_ledger: dossier.evidence_ledger,
+    research_evidence: dossier.research_evidence || [],
     provenance_refs: dossier.provenance_refs,
     readiness: dossier.readiness,
     distribution_plan: dossier.distribution_plan,
