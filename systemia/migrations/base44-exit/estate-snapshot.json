@@ -193,19 +193,7 @@
       "scheduled_work_spec": "systemia/migrations/base44-exit/wave-1-scheduled-work.json",
       "cutover_ready_products": 0,
       "destination_data_migrated_products": 0,
-      "provider_reauthorization_complete": false,
-      "parity_map": "systemia/migrations/base44-exit/wave-1-parity-map-2026-10-01.json",
-      "owned_replacement_products": 5,
-      "locally_proved_products": 5,
-      "provider_rebinds_pending": [
-        "polar",
-        "stripe_webhook",
-        "voice_webhook"
-      ],
-      "scheduled_work_activation_pending": [
-        "remote-ops-auto-clock-out",
-        "internal-ops-auto-clock-out"
-      ]
+      "provider_reauthorization_complete": false
     }
   }
 }
