@@ -41,7 +41,7 @@ function readJson(file,fallback=null){
   try{return JSON.parse(fs.readFileSync(file,'utf8'))}catch{return fallback}
 }
 
-function inputItems({inputFile,contextStateFile}={}){
+function inputItems({inputFile,contextStateFile,radarStateFile}={}){
   if(inputFile){
     const payload=readJson(path.resolve(inputFile));
     if(!payload||!Array.isArray(payload.items)) throw new Error('spectacle input must contain items[]');
@@ -53,7 +53,7 @@ function inputItems({inputFile,contextStateFile}={}){
     if(!state||state.schema!=='evercraft.context-fabric.state.v1'){
       throw new Error('spectacle context state schema invalid');
     }
-    return pendingContextForConsumer(state,SPECTACLE_CONSUMER).map(row=>({
+    const rows=pendingContextForConsumer(state,SPECTACLE_CONSUMER).map(row=>({
       dispatch:{
         schema:row.schema,
         dispatch_key:row.dispatch_key,
@@ -68,6 +68,35 @@ function inputItems({inputFile,contextStateFile}={}){
       observation:row.observation,
       brand_key:'evercraft',
     }));
+    if(rows.length) return rows;
+  }
+
+  if(radarStateFile&&fs.existsSync(path.resolve(radarStateFile))){
+    const radar=readJson(path.resolve(radarStateFile));
+    if(!radar||radar.schema!=='evercraft.systemia-radar.state.v1'){
+      throw new Error('spectacle radar state schema invalid');
+    }
+    return Object.values(radar.streams||{})
+      .map(stream=>stream?.current)
+      .filter(Boolean)
+      .filter(signal=>signal?.review?.status==='pass')
+      .filter(signal=>signal?.review?.freshness?.state==='fresh')
+      .filter(signal=>signal?.publication_state==='eligible_for_editorial_selection')
+      .map(signal=>({
+        dispatch:{
+          schema:'evercraft.context.dispatch.v1',
+          dispatch_key:'radar-spectacle:'+clean(signal.signal_id,180),
+          consumer:SPECTACLE_CONSUMER,
+          observation_id:signal.observation_id,
+          context_keys:signal.correlation_keys||[],
+          priority:Number(signal.materiality_score||0)>=.8?'high':'normal',
+          evidence_state:signal.observation?.evidence_state||'reported',
+          provenance_refs:signal.provenance_refs||[],
+          created_at:signal.last_verified_at||signal.observed_at,
+        },
+        observation:signal.observation,
+        brand_key:'evercraft',
+      }));
   }
 
   return [];
@@ -210,6 +239,13 @@ export function assessSpectacleDispatch({dispatch,observation,recentSubjects=[],
       production:{
         visual_path:visual.kind,
         phenomenon:visual.kind==='fallen_phenomenon'?observation.facts?.phenomenon:null,
+        data_payload:{
+          facts:observation.facts||{},
+          measurements:Array.isArray(observation.measurements)?observation.measurements.slice(0,100):[],
+          observed_at:observation.observed_at,
+          region_keys:observation.region_keys||[],
+          kind:observation.kind,
+        },
         media_refs:visual.media_refs||[],
         creative_rule:'one phenomenon, one unforgettable visual grammar, one clear explanation',
         no_text_card_first:true,
@@ -285,8 +321,8 @@ export function buildSpectacleQueue({assessments=[],recentSubjects=[],publishedT
   };
 }
 
-export function runSpectacleCycle({inputFile,contextStateFile,stateDir,brandKey='evercraft',now=new Date()}={}){
-  const items=inputItems({inputFile,contextStateFile});
+export function runSpectacleCycle({inputFile,contextStateFile,radarStateFile,stateDir,brandKey='evercraft',now=new Date()}={}){
+  const items=inputItems({inputFile,contextStateFile,radarStateFile});
 
   const root=path.resolve(stateDir||'artifacts/social-spectacle');
   const stateFile=path.join(root,'state.json');
@@ -346,9 +382,11 @@ async function cli(){
   const argv=process.argv.slice(2);
   const input=arg(argv,'--input',process.env.SYSTEMIA_SOCIAL_SPECTACLE_INPUT||'');
   const contextState=arg(argv,'--context-state',process.env.SYSTEMIA_SOCIAL_SPECTACLE_CONTEXT_STATE||'artifacts/worldstate/context-state.json');
+  const radarStateDefault=process.env.RADAR_STATE_DIR?path.join(process.env.RADAR_STATE_DIR,'state.json'):'.runtime/radar/state.json';
+  const radarState=arg(argv,'--radar-state',process.env.SYSTEMIA_SOCIAL_SPECTACLE_RADAR_STATE||radarStateDefault);
   const stateDir=arg(argv,'--state-dir',process.env.SYSTEMIA_SOCIAL_SPECTACLE_STATE_DIR||'artifacts/social-spectacle');
   const brandKey=arg(argv,'--brand',process.env.SYSTEMIA_SOCIAL_SPECTACLE_BRAND||'evercraft');
-  const result=runSpectacleCycle({inputFile:input||undefined,contextStateFile:contextState||undefined,stateDir,brandKey});
+  const result=runSpectacleCycle({inputFile:input||undefined,contextStateFile:contextState||undefined,radarStateFile:radarState||undefined,stateDir,brandKey});
   console.log(JSON.stringify({ok:true,...result.receipt,queue:result.queue.queue},null,2));
 }
 
