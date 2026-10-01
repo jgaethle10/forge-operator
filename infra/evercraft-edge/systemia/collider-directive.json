@@ -1,0 +1,16 @@
+{
+  "schema": "evercraft.edge.collider-directive.v1",
+  "mission_id": "evercraft-edge-owned-infrastructure-v1",
+  "cadence": "on_each_systemia_collider_run",
+  "steps": [
+    "read latest authorized Saban capacity observation",
+    "evaluate systemia.evercraft-edge-dns.v1 admission",
+    "if fewer than two distinct attested zero-cost public-ingress nodes exist, preserve capacity_needed and continue discovery",
+    "if two nodes qualify, stage signed canary zone",
+    "probe UDP and TCP DNS before parent delegation",
+    "after delegation, run independent authoritative and recursion-disabled canary",
+    "only then admit TLS DNS-01 and HTTP front-door proof"
+  ],
+  "publish_state": false,
+  "financial_policy": "no new financial obligation without explicit authority"
+}

@@ -24,6 +24,7 @@ import { startFabricLocalRuntime } from '../mcp/fabric-local-runtime.mjs';
 import { startPublicEdgeRuntime } from '../network/public-edge-runtime.mjs';
 import { startFederatedServiceBridge } from '../network/federated-service-bridge.mjs';
 import { startEvercraftHomeServer } from '../evercraft-home/server.mjs';
+import { startEvercraftEdgeDnsRuntime } from './evercraft-edge-dns-runtime.mjs';
 import { validatePublicEdgeAdmission } from '../network/public-edge-tls.mjs';
 import { transcriptionCapabilityStatus } from '../forensiscope/transcription-engine.mjs';
 import { EvercraftRemoteOperator } from './remote-operator.mjs';
@@ -755,6 +756,7 @@ export async function startEvercraftComputeNode({
     'systemia.specialist-handoff-mcp.v1',
     'systemia.fabric-local-mcp.v1',
     'systemia.public-edge.v1',
+    'systemia.evercraft-edge-dns.v1',
     'systemia.federated-service-bridge.v1',
     'systemia.evercraft-home.v1',
     'saban.logical-agent',
@@ -1605,6 +1607,74 @@ export async function startEvercraftComputeNode({
             ok:true,
             node_id:nodeId,
             workload_class:body.workload_class,
+            result,
+            receipt,
+          });
+        }
+
+        if (workloadClass === 'systemia.evercraft-edge-dns.v1') {
+          const rawSnapshot = String(body.input?.snapshot_path || '').trim();
+          if (!rawSnapshot) {
+            return send(res, 422, { error: 'edge_dns_snapshot_path_required' });
+          }
+          const snapshotPath = path.resolve(rawSnapshot);
+          if (!isWithin(allowedRoot, snapshotPath)) {
+            return send(res, 403, { error: 'edge_dns_snapshot_outside_admitted_root' });
+          }
+          if (!fs.existsSync(snapshotPath) || !fs.statSync(snapshotPath).isFile()) {
+            return send(res, 404, { error: 'edge_dns_snapshot_missing' });
+          }
+
+          const dnsHost = String(body.input?.dns_host || '127.0.0.1');
+          const loopbackDns =
+            dnsHost === '127.0.0.1' ||
+            dnsHost === '::1' ||
+            dnsHost === 'localhost';
+          if (!loopbackDns && body.input?.allow_public_bind !== true) {
+            return send(res, 403, { error: 'edge_dns_public_bind_requires_explicit_authority' });
+          }
+
+          const runtime = await startEvercraftEdgeDnsRuntime({
+            snapshotPath,
+            dnsHost,
+            dnsPort: Number(body.input?.dns_port || 5353),
+            healthHost: '127.0.0.1',
+            healthPort: Number(body.input?.health_port || 0),
+          });
+          const serviceId = `svc_${randomBytes(8).toString('hex')}`;
+          services.set(serviceId, {
+            lease_id: body.lease_id,
+            workload_class: body.workload_class,
+            runtime,
+            service: runtime,
+          });
+          const result = {
+            schema: 'evercraft.compute.resident-service.v1',
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            service_url: null,
+            local_url: runtime.healthUrl.replace(/\/health$/, ''),
+            health_path: `/v1/services/${serviceId}/health`,
+            public_route_required: false,
+            authoritative_dns: true,
+            recursive_dns: false,
+            dns_host: dnsHost,
+            dns_port: Number(body.input?.dns_port || 5353),
+            snapshot_sha256: runtime.initialSnapshotHash,
+            instance_id: runtime.instanceId,
+          };
+          const receipt = chain.issue('service.started', {
+            lease_id: body.lease_id,
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            result_schema: result.schema,
+            instance_id: runtime.instanceId,
+            snapshot_sha256: runtime.initialSnapshotHash,
+          });
+          return send(res, 200, {
+            ok: true,
+            node_id: nodeId,
+            workload_class: body.workload_class,
             result,
             receipt,
           });

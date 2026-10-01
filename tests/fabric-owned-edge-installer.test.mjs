@@ -87,10 +87,14 @@ test('Fabric self updater can reconstruct only the bounded router mapper from sa
   assert.match(updater,/EVERCRAFT_ROUTER_LAN_HOST/);
   assert.match(updater,/install-fabric-router-map-resident\.sh/);
   assert.match(updater,/SUDO_USER="\$RUN_USER" bash "\$ROUTER_MAP_INSTALLER"/);
-  assert.match(routerMapInstaller,/WAN 80  -> Chromebook 18080/);
-  assert.match(routerMapInstaller,/WAN 443 -> Chromebook 8443/);
+  assert.match(routerMapInstaller,/WAN 80\/TCP  -> Chromebook 18080\/TCP/);
+  assert.match(routerMapInstaller,/WAN 443\/TCP -> Chromebook 8443\/TCP/);
+  assert.match(routerMapInstaller,/WAN 53\/TCP  -> Chromebook 5353\/TCP/);
+  assert.match(routerMapInstaller,/WAN 53\/UDP  -> Chromebook 5353\/UDP/);
   assert.match(routerMapper,/external: 80, internal: 18080/);
   assert.match(routerMapper,/external: 443, internal: 8443/);
+  assert.match(routerMapper,/external: 53, internal: 5353, proto: 'TCP'/);
+  assert.match(routerMapper,/external: 53, internal: 5353, proto: 'UDP'/);
   assert.doesNotMatch(routerMapper,/external:\s*(22|3389|8787|3000)/);
 });
 
@@ -124,12 +128,29 @@ test('self updater proves Remote Operator telemetry and keeps the observer resid
 });
 
 
+test('Fabric self updater prefers a configured outbound relay before bounded router recovery',()=>{
+  assert.match(updater,/OUTBOUND_RELAY_SERVICE="evercraft-fabric-outbound-relay\.service"/);
+  assert.match(updater,/OUTBOUND_RELAY_ENV="\/etc\/evercraft\/outbound-relay\.env"/);
+  assert.match(updater,/systemctl restart "\$OUTBOUND_RELAY_SERVICE"/);
+  assert.match(updater,/outbound_relay=\$relay_state/);
+});
+
+test('Fabric doctor can route around an unavailable ChromeOS host forward with an active outbound relay',()=>{
+  const doctor=fs.readFileSync(new URL('../scripts/fabric-edge-doctor.sh',import.meta.url),'utf8');
+  assert.match(doctor,/RELAY_SERVICE=evercraft-fabric-outbound-relay\.service/);
+  assert.match(doctor,/ingress_transport="outbound_service_relay"/);
+  assert.match(doctor,/diagnosis="local_edge_path_ready_external_canary_required"/);
+  assert.match(doctor,/outbound_relay_service/);
+});
+
 test('edge installer and updater shell remain syntactically valid',()=>{
   for(const rel of [
     '../scripts/install-fabric-owned-edge.sh',
     '../scripts/install-fabric-network-observer.sh',
     '../scripts/install-fabric-router-map-resident.sh',
     '../scripts/update-fabric-owned-edge.sh',
+    '../scripts/install-fabric-outbound-relay.sh',
+    '../scripts/install-fabric-relay-node.sh',
   ]){
     const file=new URL(rel,import.meta.url);
     execFileSync('bash',['-n',file.pathname],{stdio:'pipe'});

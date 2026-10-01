@@ -56,20 +56,23 @@ export function answer(packet,zone){
  const q=readName(packet,12);const qtype=packet.readUInt16BE(q.end),qclass=packet.readUInt16BE(q.end+2);
  const question=packet.subarray(12,q.end+4), origin=zone.origin.toLowerCase();
  if(qclass!==1||!q.name.endsWith(origin))return Buffer.concat([id,u16(0x8405),u16(1),u16(0),u16(0),u16(0),question]);
+ const fqdn=r=>r.name==="@"?origin:(String(r.name).endsWith(".")?String(r.name).toLowerCase():String(r.name).toLowerCase()+"."+origin);
  const records=(zone.records||[]).map(r=>({...r,type:String(r.type).toUpperCase()}));
- const exists=q.name===origin||records.some(r=>{
-   const n=r.name==="@"?origin:(String(r.name).endsWith(".")?String(r.name).toLowerCase():String(r.name).toLowerCase()+"."+origin);
-   return n===q.name;
- });
+ const exact=records.filter(r=>fqdn(r)===q.name);
+ const hasDescendant=records.some(r=>fqdn(r).endsWith("."+q.name));
+ const exists=q.name===origin||exact.length>0||hasDescendant;
  const want=TYPE_NAME[qtype];
- const hits=records.filter(r=>{
-   const n=r.name==="@"?origin:(String(r.name).endsWith(".")?String(r.name).toLowerCase():String(r.name).toLowerCase()+"."+origin);
-   return n===q.name&&(r.type===want||qtype===255);
- });
- const answers=hits.map(r=>rr(q.name,r.type,r,r.ttl??zone.default_ttl??300));
+ const answers=[];
+ if(q.name===origin&&(qtype===TYPE.SOA||qtype===255)) answers.push(soa(zone));
+ if(q.name===origin&&(qtype===TYPE.NS||qtype===255)&&!exact.some(r=>r.type==="NS")){
+   for(const ns of zone.nameservers||[]) answers.push(rr(origin,"NS",{value:ns},zone.default_ttl??300));
+ }
+ for(const r of exact){
+   if(r.type===want||qtype===255) answers.push(rr(q.name,r.type,r,r.ttl??zone.default_ttl??300));
+ }
  const authority=answers.length?[]:[soa(zone)];
  const rcode=exists?0:3;
- const responseFlags=0x8400|rcode; // QR + AA, recursion unavailable
+ const responseFlags=0x8400|(flags&0x0100)|rcode; // QR + AA, echo RD, RA remains false
  return Buffer.concat([id,u16(responseFlags),u16(1),u16(answers.length),u16(authority.length),u16(0),question,...answers,...authority]);
 }
 export function start({snapshotPath,host="0.0.0.0",port=5353}){

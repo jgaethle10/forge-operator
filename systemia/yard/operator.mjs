@@ -705,6 +705,29 @@ export class YardOperator {
         }
         healthState = 'healthy';
         routeVerification = 'local_fabric_health_verified_public_route_unbound';
+      } else if (workloadClass === 'systemia.evercraft-edge-dns.v1') {
+        const edgeDnsHealthy =
+          health.ok === true &&
+          health.service === 'evercraft-edge-dns' &&
+          health.runtime === 'Evercraft Compute' &&
+          health.workload_class === 'systemia.evercraft-edge-dns.v1' &&
+          health.authoritative === true &&
+          health.recursive === false &&
+          health.dns_udp === true &&
+          health.dns_tcp === true &&
+          /^sha256:[a-f0-9]{64}$/i.test(String(health.snapshot_sha256 || '')) &&
+          health.instance_id === job.result?.instance_id;
+        if (!edgeDnsHealthy) {
+          try {
+            await request(`${capacityEndpoint}/v1/services/${job.result.service_id}/stop`, {
+              method: 'POST',
+              body: JSON.stringify({ token: lease.token }),
+            });
+          } catch {}
+          throw new Error('Evercraft Edge DNS failed initial authoritative health verification');
+        }
+        healthState = 'healthy';
+        routeVerification = 'authoritative_dns_health_verified_delegation_unbound';
       } else if (workloadClass === 'systemia.public-edge.v1') {
         const edgeHealthy =
           health.ok === true &&

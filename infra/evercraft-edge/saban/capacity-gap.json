@@ -1,0 +1,40 @@
+{
+  "schema": "evercraft.edge.capacity-gap.v1",
+  "observed_at": "2026-10-01T03:14:43Z",
+  "source": "systemia/migrations/base44-exit/runtime-capacity-2026-10-01.json",
+  "workload_class": "systemia.evercraft-edge-dns.v1",
+  "desired": {
+    "authorized_nodes": 2,
+    "distinct_failure_domains": 2,
+    "public_udp_53": true,
+    "public_tcp_53": true,
+    "attestation": true,
+    "zero_spend": true
+  },
+  "observed": {
+    "chromebook": {
+      "authorized": true,
+      "online": true,
+      "public_ingress_ready": false,
+      "node_identity_ready": false
+    },
+    "broker": {
+      "ready": false,
+      "authorized_node_count": 0
+    }
+  },
+  "state": "capacity_needed",
+  "admission_policy": {
+    "ambient_authorized_capacity_first": true,
+    "commercial_capacity": false,
+    "paid_lease": false,
+    "require_explicit_authorization": true,
+    "no_visibility_as_authority": true
+  },
+  "next_actions": [
+    "scan ambient Saban capacity for public-ingress-capable attested nodes",
+    "admit only explicitly authorized zero-cost nodes",
+    "require distinct failure domains",
+    "run UDP/TCP 53 canary before DNS delegation"
+  ]
+}

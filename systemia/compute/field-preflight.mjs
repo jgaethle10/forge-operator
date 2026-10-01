@@ -112,9 +112,28 @@ const computeWorkerChecks = {
   memory_at_least_4_gib: memoryGiB >= 4,
   free_disk_at_least_8_gib: checks.free_disk_at_least_8_gib,
 };
+
+// An operator-authorized public edge is intentionally a separate trust class
+// from a physically certified field node. ChromeOS/Crostini is virtualized by
+// design, and the Edge DNS workload is lightweight. Admission here proves only
+// that the host can run the bounded candidate workload. Public-ingress authority
+// is still withheld until the independent UDP+TCP external canary passes.
+const operatorPublicEdgeChecks = {
+  linux: checks.linux,
+  supported_distribution: checks.supported_distribution,
+  systemd: checks.systemd,
+  memory_at_least_2_gib: memoryGiB >= 2,
+  free_disk_at_least_4_gib: freeDiskGiB >= 4,
+};
 const fieldEligible = Object.values(checks).every(Boolean);
 const computeWorkerEligible = Object.values(computeWorkerChecks).every(Boolean);
-const roleEligible = ['virtual_worker','operator_authorized_public_edge'].includes(requestedRole) ? computeWorkerEligible : fieldEligible;
+const operatorPublicEdgeEligible = Object.values(operatorPublicEdgeChecks).every(Boolean);
+const roleEligible =
+  requestedRole === 'operator_authorized_public_edge'
+    ? operatorPublicEdgeEligible
+    : requestedRole === 'virtual_worker'
+      ? computeWorkerEligible
+      : fieldEligible;
 
 const receipt = {
   schema: 'evercraft.node001.preflight.v1',
@@ -122,9 +141,10 @@ const receipt = {
   requested_role: requestedRole,
   field_eligible: fieldEligible,
   compute_worker_eligible: computeWorkerEligible,
-  operator_public_edge_eligible: requestedRole === 'operator_authorized_public_edge' ? computeWorkerEligible : null,
+  operator_public_edge_eligible: requestedRole === 'operator_authorized_public_edge' ? operatorPublicEdgeEligible : null,
   checks,
   compute_worker_checks: computeWorkerChecks,
+  operator_public_edge_checks: operatorPublicEdgeChecks,
   observed: {
     platform: process.platform,
     architecture: process.arch,

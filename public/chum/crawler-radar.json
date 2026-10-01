@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.chum.crawler-radar.v1",
-  "generated_at": "2026-10-01T19:52:58.149Z",
+  "generated_at": "2026-10-01T21:43:11.000Z",
   "coordinator": "CHUM",
   "runtime_feedback": {
     "requested": false,
@@ -16246,28 +16246,6 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/find-a-discontinued-part-5646da09bb/",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-09-30T20:55:21.460Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/find-a-donor-or-salvage-part-310843faf9.json",
       "product_key": null,
       "score": 222,
@@ -16290,56 +16268,12 @@
       ]
     },
     {
-      "path": "/chum/answers/doors/find-a-donor-or-salvage-part-310843faf9/",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-09-30T20:55:21.460Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
       "path": "/chum/answers/doors/find-a-hard-to-source-part-78dcd37ecc.json",
       "product_key": null,
       "score": 222,
       "urgency": "strike_now",
       "crawl_priority": 160,
       "last_changed": "2026-10-01T05:00:27.354Z",
-      "last_observed_crawler_fetch": null,
-      "last_observed_crawler_family": null,
-      "indexnow_pending": true,
-      "negative_provider_pickup_receipts": [],
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ],
-      "recommended_actions": [
-        "verify_live_bytes_then_indexnow",
-        "promote_in_hot_discovery_queue",
-        "increase_internal_crosslinks_from_relevant_public_surfaces"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/find-a-hard-to-source-part-78dcd37ecc/",
-      "product_key": null,
-      "score": 222,
-      "urgency": "strike_now",
-      "crawl_priority": 160,
-      "last_changed": "2026-09-30T20:55:21.460Z",
       "last_observed_crawler_fetch": null,
       "last_observed_crawler_family": null,
       "indexnow_pending": true,
@@ -17007,6 +16941,72 @@
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
         "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/find-a-discontinued-part-5646da09bb/",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-09-30T20:55:21.460Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/find-a-donor-or-salvage-part-310843faf9/",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-09-30T20:55:21.460Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
+        "indexnow_hash_pending"
+      ],
+      "recommended_actions": [
+        "verify_live_bytes_then_indexnow",
+        "promote_in_hot_discovery_queue",
+        "increase_internal_crosslinks_from_relevant_public_surfaces"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/find-a-hard-to-source-part-78dcd37ecc/",
+      "product_key": null,
+      "score": 215,
+      "urgency": "strike_now",
+      "crawl_priority": 160,
+      "last_changed": "2026-09-30T20:55:21.460Z",
+      "last_observed_crawler_fetch": null,
+      "last_observed_crawler_family": null,
+      "indexnow_pending": true,
+      "negative_provider_pickup_receipts": [],
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_72h",
         "indexnow_hash_pending"
       ],
       "recommended_actions": [
