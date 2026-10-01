@@ -159,6 +159,18 @@ export async function buildComputeMarketAdapters({
       priority:row.priority,
       execution_capable:row.execution_capable,
       execution_hold:row.execution_hold||null,
+      source:
+        row.market==='evercraft-broker'?'yard':
+        row.market==='evercraft-voluntary'?'voluntary_exchange':
+        row.market==='akash'
+          ? (String(env.AKASH_API_KEY||'').trim()?'configured_api':'public_discovery_only')
+          : row.market,
+      lease_credentials_present:
+        row.market==='akash'
+          ? Boolean(String(env.AKASH_API_KEY||'').trim())
+          : null,
+      broker_deployment_id:
+        row.market==='evercraft-broker'?brokerDeploymentId||null:null,
     })),
   ];
   if(
