@@ -6,15 +6,19 @@ import { fileURLToPath } from 'node:url';
 
 const src=fs.readFileSync(new URL('../scripts/evercraft-public-edge-map.mjs',import.meta.url),'utf8');
 
-test('public edge mapper is credential-free and scoped to Fabric ports',()=>{
+test('public edge mapper is credential-free and supports Chromebook or dedicated gateway targets',()=>{
   assert.match(src,/18080/);
   assert.match(src,/8443/);
+  assert.match(src,/httpInternal/);
+  assert.match(src,/httpsInternal/);
+  assert.match(src,/brokerExternal/);
   assert.match(src,/host_forward_preflight/);
   assert.match(src,/chromeos_host_forward_unreachable/);
-  assert.match(src,/tcpProbe\(host,18080\)/);
-  assert.match(src,/tcpProbe\(host,8443\)/);
+  assert.match(src,/router_target_unreachable/);
+  assert.match(src,/probePorts/);
   assert.match(src,/external: 80/);
   assert.match(src,/external: 443/);
+  assert.match(src,/Evercraft Saban Broker/);
   assert.doesNotMatch(src,/password|token|secret/i);
 });
 
