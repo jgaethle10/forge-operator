@@ -1,28 +1,11 @@
 import { createHash } from 'node:crypto';
 import { verifyMicroSeedExecutionReceipt } from './microseed-receipt-signature.mjs';
+import { microSeedConformanceDefinition, BuiltinMicroSeedWorkloads } from './microseed-workload-registry.mjs';
 
 const sha=(value)=>'sha256:'+createHash('sha256').update(
   typeof value==='string'?value:JSON.stringify(value)
 ).digest('hex');
 
-const CANARIES={
-  'systemia.health-probe.v1':{
-    payload:{},
-    validate:(result)=>result?.ok===true,
-  },
-  'systemia.content-hash.v1':{
-    payload:{value:{saban:'microseed-canary',version:1}},
-    validate:(result)=>/^sha256:[a-f0-9]{64}$/i.test(String(result?.digest||'')),
-  },
-  'systemia.telemetry-normalizer.v1':{
-    payload:{telemetry:{alpha:1,beta:'two'}},
-    validate:(result)=>result?.ok===true&&Boolean(result?.normalized_hash),
-  },
-  'systemia.chunk-transform.v1':{
-    payload:{text:'evercraft-saban-canary',start:0,end:9},
-    validate:(result)=>result?.chunk==='evercraft',
-  },
-};
 
 export async function runMicroSeedConformance({
   manifest,
@@ -44,7 +27,7 @@ export async function runMicroSeedConformance({
   const receipts=[];
 
   for(const workload of manifest.supported_workloads||[]){
-    const canary=CANARIES[workload];
+    const canary=microSeedConformanceDefinition(workload);
     if(!canary){
       unverified.push({workload_class:workload,reason:'no_safe_conformance_canary_registered'});
       continue;
@@ -142,4 +125,4 @@ export function evaluateMicroSeedConformance({
   };
 }
 
-export const MicroSeedConformanceCanaries=Object.freeze(Object.keys(CANARIES));
+export const MicroSeedConformanceCanaries=BuiltinMicroSeedWorkloads;
