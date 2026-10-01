@@ -256,6 +256,32 @@
         "tests/chum-commercial-route-overlay.test.mjs"
       ],
       "boundary": "Only active HTTPS routes with cutover authority may enter public discovery. Staged or merely verified candidates remain invisible and legacy public routes persist until explicit cutover."
+    },
+    "resident_scheduler": {
+      "state": "owned_baseline_proved_local",
+      "source_refs": [
+        "systemia/core/resident-supervisor.mjs",
+        "systemia/core/resident-supervisor.proof.mjs",
+        "systemia/core/resident-services.json"
+      ],
+      "boundary": "Cycle and resident work run under an owned supervisor with bounded cadence, restart budgets, idempotent service state and receipt-backed health. Each migrated job still requires product-specific idempotency and parity evidence."
+    },
+    "commerce_boundary": {
+      "state": "owned_baseline_proved_local",
+      "source_refs": [
+        "systemia/commerce-boundary/commerce-boundary.mjs",
+        "systemia/commerce-boundary/proof.mjs"
+      ],
+      "boundary": "Evercraft verifies provider-authoritative payment state and does not treat checkout creation as payment truth. Payment references are hashed in receipts and card data is not stored."
+    },
+    "fabric_discovery": {
+      "state": "owned_baseline_proved_local",
+      "source_refs": [
+        "systemia/mcp/fabric-directory.mjs",
+        "systemia/mcp/fabric-local-runtime.mjs",
+        "tests/fabric-local-runtime.test.mjs"
+      ],
+      "boundary": "Owned Fabric discovery is read-only, strips Base44 handoffs from native runtime catalogs and exposes no payment or external-action authority. Product-specific machine surface parity remains required before public route activation."
     }
   }
 }
