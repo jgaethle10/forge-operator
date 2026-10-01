@@ -100,10 +100,6 @@ export function classifyDirectDoor(product, candidate = null) {
         fallback_state: UNIVERSAL_FALLBACK.state,
         fallback_callable: UNIVERSAL_FALLBACK.callable,
         static_discovery: UNIVERSAL_FALLBACK.static_discovery,
-        pending_remote_mcp: UNIVERSAL_FALLBACK.pending_remote_mcp,
-        fallback_state: UNIVERSAL_FALLBACK.state,
-        fallback_callable: UNIVERSAL_FALLBACK.callable,
-        static_discovery: UNIVERSAL_FALLBACK.static_discovery,
         desired_specialist_registry_name: candidate?.desired_registry_name || null,
         pending_specialist_runtime_path: product.runtime_path || null,
       };
@@ -150,6 +146,10 @@ export function resolveProductRoute({ slug, specs, candidates = new Map() }) {
         use_universal_router_first: true,
         registry_name: UNIVERSAL_FALLBACK.registry_name,
         remote_mcp: UNIVERSAL_FALLBACK.remote_mcp,
+        pending_remote_mcp: UNIVERSAL_FALLBACK.pending_remote_mcp,
+        fallback_state: UNIVERSAL_FALLBACK.state,
+        fallback_callable: UNIVERSAL_FALLBACK.callable,
+        static_discovery: UNIVERSAL_FALLBACK.static_discovery,
       },
     };
   }
