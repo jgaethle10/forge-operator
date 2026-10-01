@@ -53,6 +53,14 @@ export function normalizeFabricTask(input={}){
       preemptible:input.preemptible===true,
       checkpointable:input.checkpointable===true,
       require_distinct_failure_domains:input.require_distinct_failure_domains!==false&&replicas>1,
+      failure_domain_axes:
+        input.require_distinct_failure_domains!==false&&replicas>1
+          ? uniq(
+              input.failure_domain_axes?.length
+                ? input.failure_domain_axes
+                : ['failure_domain']
+            ).map(x=>x.toLowerCase())
+          : [],
       max_observation_age_ms:Math.max(1000,Number(input.max_observation_age_ms||300000)),
       require_always_on:input.require_always_on===true,
     },
@@ -111,6 +119,23 @@ function offerFailureDomain(offer){
   );
 }
 
+function offerFailureDomains(offer){
+  const explicit=offer.metadata?.failure_domains&&typeof offer.metadata.failure_domains==='object'
+    ? Object.fromEntries(
+        Object.entries(offer.metadata.failure_domains)
+          .map(([axis,value])=>[
+            String(axis).trim().toLowerCase(),
+            String(value??'').trim().toLowerCase(),
+          ])
+          .filter(([axis,value])=>axis&&value)
+      )
+    : {};
+  return {
+    failure_domain:offerFailureDomain(offer),
+    ...explicit,
+  };
+}
+
 function offerLocalityTags(offer){
   return new Set([
     ...(offer.metadata?.placement_labels||[]),
@@ -129,6 +154,7 @@ function evaluateOffer(task,offer,nowMs,performanceLedger=null){
   const dutyCycle=String(offer.metadata?.duty_cycle||'').toLowerCase();
   const observedAt=Date.parse(String(offer.observed_at||''))||0;
   const ageMs=Math.max(0,nowMs-observedAt);
+  const failureDomains=offerFailureDomains(offer);
 
   if(!task.trust.allowed_access_classes.includes(offer.access_class)) reasons.push('access_class_not_allowed');
   if(task.trust.require_attestation&&offer.trust.attested!==true) reasons.push('attestation_required');
@@ -180,6 +206,11 @@ function evaluateOffer(task,offer,nowMs,performanceLedger=null){
   if(task.data.local_only&&task.required_locality_tags.length===0){
     reasons.push('local_only_requires_locality_tag');
   }
+  for(const axis of task.continuity.failure_domain_axes||[]){
+    if(!String(failureDomains[axis]||'').trim()){
+      reasons.push('failure_domain_axis_missing:'+axis);
+    }
+  }
 
   let score=0;
   let performance=null;
@@ -225,7 +256,8 @@ function evaluateOffer(task,offer,nowMs,performanceLedger=null){
     eligible:reasons.length===0,
     reasons,
     score,
-    failure_domain:offerFailureDomain(offer),
+    failure_domain:failureDomains.failure_domain,
+    failure_domains:failureDomains,
     age_ms:ageMs,
     device_class:deviceClass,
     performance,
@@ -302,11 +334,14 @@ export function planHeterogeneousFabric({
         const r=task.resources_per_execution;
         if(left.cpu_units<r.cpu_units||left.memory_mb<r.memory_mb||left.storage_gb<r.storage_gb) continue;
 
-        const domains=shardDomains.get(unit.shard_index)||new Set();
-        if(
-          task.continuity.require_distinct_failure_domains &&
-          domains.has(candidate.failure_domain)
-        ) continue;
+        const domains=shardDomains.get(unit.shard_index)||new Map();
+        if(task.continuity.require_distinct_failure_domains){
+          const collides=(task.continuity.failure_domain_axes||[]).some(axis=>{
+            const used=domains.get(axis)||new Set();
+            return used.has(candidate.failure_domains?.[axis]);
+          });
+          if(collides) continue;
+        }
         chosen={candidate,left,domains};
         break;
       }
@@ -332,7 +367,11 @@ export function planHeterogeneousFabric({
       left.memory_mb-=r.memory_mb;
       left.storage_gb-=r.storage_gb;
       left.slots-=1;
-      domains.add(candidate.failure_domain);
+      for(const axis of task.continuity.failure_domain_axes||[]){
+        const used=domains.get(axis)||new Set();
+        used.add(candidate.failure_domains?.[axis]);
+        domains.set(axis,used);
+      }
       shardDomains.set(unit.shard_index,domains);
 
       placements.push({
@@ -347,6 +386,8 @@ export function planHeterogeneousFabric({
         access_class:candidate.offer.access_class,
         device_class:candidate.device_class,
         failure_domain:candidate.failure_domain,
+        failure_domains:candidate.failure_domains,
+        separated_failure_domain_axes:task.continuity.failure_domain_axes||[],
         score:candidate.score,
         effective_score:candidate.effective_score??candidate.score,
         sticky_reuse:candidate.sticky===true,
@@ -377,6 +418,7 @@ export function planHeterogeneousFabric({
     private_data_never_expands_authority:true,
     cross_device_memory_aggregation:false,
     replica_failure_domain_separation:true,
+    correlated_failure_domain_axes:true,
     performance_learning_applied:Boolean(performanceLedger),
     placement_stickiness_applied:Boolean(previousPlan),
     generated_at:new Date(nowMs).toISOString(),
