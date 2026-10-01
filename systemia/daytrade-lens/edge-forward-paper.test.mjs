@@ -43,11 +43,42 @@ assert.equal(score.distinct_origins, 2);
 assert.equal(score.status, "FORWARD_PAPER_PASS");
 assert.equal(score.live_trade_authority, false);
 
+
+const negativeReview = {
+  ...review,
+  signal_key: "ai_models|sec_8_k|SOXX|3d",
+};
+const negativeEvaluation = {
+  ...evaluation,
+  signal_key: negativeReview.signal_key,
+  lag_key: "3d",
+  learned_direction: "NEGATIVE_EXCESS_RETURN",
+};
+const negativeProtocol = freezeForwardPaperCohort(
+  { ...negativeReview, adversarial_status: "FORWARD_PAPER_ELIGIBLE" },
+  negativeEvaluation,
+  {
+    enrolled_at: enrolled,
+    transaction_cost_bps: 10,
+    minimum_forward_events: 2,
+    minimum_distinct_origins: 2,
+  }
+);
+const negativeRows = [
+  { signal_key: negativeReview.signal_key, observed_at: "2026-10-02T20:00:00Z", origin_entity_ref: "a", forward_return: -0.020, benchmark_return: -0.005 },
+  { signal_key: negativeReview.signal_key, observed_at: "2026-10-03T20:00:00Z", origin_entity_ref: "b", forward_return: -0.015, benchmark_return: -0.004 },
+];
+const negativeScore = scoreForwardPaperCohort(negativeProtocol, negativeRows);
+assert.equal(negativeScore.status, "FORWARD_PAPER_PASS");
+assert.ok(negativeScore.mean_signed_excess_return_net > 0);
+
 console.log(JSON.stringify({
   ok: true,
   schema: "evercraft.daytrade.forward-paper-proof.v1",
   immutable_protocol_hash: true,
   retroactive_events_excluded: true,
   forward_only_scoring: true,
+  directional_costs_strictly_adverse: true,
+  negative_direction_scoring: true,
   live_trade_authority: false,
 }));
