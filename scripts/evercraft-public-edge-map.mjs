@@ -28,14 +28,18 @@ if (!['all','web','dns'].includes(scope)) {
 }
 
 const allMappings = [
-  { external: 80, internal: 18080, proto: 'TCP', desc: 'Evercraft Fabric HTTP', scope:'web' },
-  { external: 443, internal: 8443, proto: 'TCP', desc: 'Evercraft Fabric HTTPS', scope:'web' },
-  { external: 53, internal: 1053, proto: 'TCP', desc: 'Evercraft Edge authoritative DNS TCP', scope:'dns' },
-  { external: 53, internal: 1053, proto: 'UDP', desc: 'Evercraft Edge authoritative DNS UDP', scope:'dns' },
+  { external: 80, internal: 18080, proto: 'TCP', desc: 'Evercraft Fabric HTTP', scope:'web', lifetime:86400 },
+  { external: 443, internal: 8443, proto: 'TCP', desc: 'Evercraft Fabric HTTPS', scope:'web', lifetime:86400 },
+  { external: 53, internal: 1053, proto: 'TCP', desc: 'Evercraft Edge authoritative DNS TCP', scope:'dns', lifetime:86400, production:true },
+  { external: 53, internal: 1053, proto: 'UDP', desc: 'Evercraft Edge authoritative DNS UDP', scope:'dns', lifetime:86400, production:true },
+  { external: 53053, internal: 1053, proto: 'TCP', desc: 'Evercraft Edge DNS diagnostic TCP', scope:'dns-diagnostic', lifetime:600, diagnostic:true },
+  { external: 53053, internal: 1053, proto: 'UDP', desc: 'Evercraft Edge DNS diagnostic UDP', scope:'dns-diagnostic', lifetime:600, diagnostic:true },
 ];
 const mappings = scope === 'all'
   ? allMappings
-  : allMappings.filter(m => m.scope === scope);
+  : scope === 'dns'
+    ? allMappings.filter(m => m.scope === 'dns' || m.scope === 'dns-diagnostic')
+    : allMappings.filter(m => m.scope === scope);
 
 const out = {
   ok: false,
@@ -161,7 +165,7 @@ async function natPmpMap() {
       buf.writeUInt16BE(0, 2);
       buf.writeUInt16BE(m.internal, 4);
       buf.writeUInt16BE(m.external, 6);
-      buf.writeUInt32BE(86400, 8);
+      buf.writeUInt32BE(Number(m.lifetime || 86400), 8);
       try {
         const resp = await request(buf);
         if (resp.length < 16) throw new Error('short response');
@@ -342,7 +346,7 @@ async function upnpMap() {
           `<NewInternalClient>${host}</NewInternalClient>` +
           '<NewEnabled>1</NewEnabled>' +
           `<NewPortMappingDescription>${m.desc}</NewPortMappingDescription>` +
-          '<NewLeaseDuration>0</NewLeaseDuration>';
+          `<NewLeaseDuration>${Number(m.lifetime || 86400)}</NewLeaseDuration>`;
         try {
           await soap(control, service.serviceType, 'AddPortMapping', b);
           mapped.push({ requested: m, success: true });
@@ -413,7 +417,7 @@ async function pcpMap() {
       const buf = Buffer.alloc(60);
       buf[0] = 2;
       buf[1] = 1;
-      buf.writeUInt32BE(86400, 4);
+      buf.writeUInt32BE(Number(m.lifetime || 86400), 4);
       ipv4Mapped(host).copy(buf, 8);
       nonce.copy(buf, 24);
       buf[36] = m.proto === 'TCP' ? 6 : 17;
@@ -503,6 +507,16 @@ async function main() {
     out.external_ip = pcp.external_ip;
   }
 
+  out.production_mapping_control_ok = mappings.filter(m=>m.production).every(m=>
+    out.attempts.some(a=>Array.isArray(a.mappings)&&a.mappings.some(x=>
+      x.success===true && x.requested?.external===m.external && x.requested?.internal===m.internal && x.requested?.proto===m.proto
+    ))
+  );
+  out.diagnostic_mapping_control_ok = mappings.filter(m=>m.diagnostic).every(m=>
+    out.attempts.some(a=>Array.isArray(a.mappings)&&a.mappings.some(x=>
+      x.success===true && x.requested?.external===m.external && x.requested?.internal===m.internal && x.requested?.proto===m.proto
+    ))
+  );
   console.log(JSON.stringify(out, null, 2));
   process.exit(out.ok ? 0 : 1);
 }
