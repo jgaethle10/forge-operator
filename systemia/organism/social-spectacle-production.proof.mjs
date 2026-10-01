@@ -66,7 +66,7 @@ const editorial=assessSpectacleEditorialPreflight({
   caption,
   masterQc:{status:'accepted'}
 });
-assert.equal(editorial.status,'accepted');
+assert.equal(editorial.status,'accepted',JSON.stringify(editorial));
 assert.equal(editorial.score,10);
 assert.equal(editorial.publication_authority,false);
 
