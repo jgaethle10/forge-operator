@@ -22,7 +22,15 @@ on:
     paths:
       - 'infra/evercraft-edge/**'
       - 'systemia/compute/evercraft-edge-dns-runtime.mjs'
+      - 'systemia/compute/edge-dns-bootstrap-resident.mjs'
+      - 'systemia/compute/install-node-seed.sh'
+      - 'systemia/compute/field-preflight.mjs'
       - 'systemia/compute/runtime-node.mjs'
+      - 'scripts/evercraft-public-edge-map.mjs'
+      - 'scripts/install-fabric-router-map-resident.sh'
+      - 'scripts/promote-chromebook-edge-node.sh'
+      - 'scripts/make-chromebook-edge-node.sh'
+      - 'tests/nodeseed-installed-bundle.test.mjs'
       - 'systemia/yard/operator.mjs'
       - '.github/workflows/evercraft-edge.yml'
 
