@@ -221,10 +221,36 @@ const scheduledProducts = new Set((waveOneScheduledWork.jobs || []).map((row) =>
 for (const expected of ['Systemia Remote Ops', 'Evercraft InternalOps']) {
   if (!scheduledProducts.has(expected)) fail(`wave one scheduled work missing ${expected}`);
 }
+const scheduledExpectations = {
+  'Systemia Remote Ops': {
+    service_key: 'remote-ops-auto-clock-out',
+    activation_env: 'SYSTEMIA_REMOTE_OPS_AUTO_CLOCK_OUT_ENABLED',
+    destination_app_key: 'systemia-remote-ops'
+  },
+  'Evercraft InternalOps': {
+    service_key: 'internal-ops-auto-clock-out',
+    activation_env: 'SYSTEMIA_INTERNAL_OPS_AUTO_CLOCK_OUT_ENABLED',
+    destination_app_key: 'evercraft-internal-ops'
+  }
+};
 for (const job of waveOneScheduledWork.jobs || []) {
   if (job.automatic_activation !== false) fail(`scheduled work may not auto-activate for ${job.product}`);
-  if (job.activation_state !== 'held_until_destination_data_live') {
-    fail(`scheduled work must remain held until destination data is live for ${job.product}`);
+  if (job.activation_state !== 'registered_disabled_until_destination_data_live') {
+    fail(`scheduled work must remain registered but disabled until destination data is live for ${job.product}`);
+  }
+  const expected = scheduledExpectations[job.product];
+  if (!expected) fail(`unexpected wave one scheduled job product ${job.product}`);
+  if (job.service_key !== expected.service_key) fail(`scheduled service key mismatch for ${job.product}`);
+  if (job.activation_env !== expected.activation_env) fail(`scheduled activation env mismatch for ${job.product}`);
+  if (job.destination_app_key !== expected.destination_app_key) fail(`scheduled destination app key mismatch for ${job.product}`);
+  if (job.supervisor_config !== 'systemia/core/resident-services.json') {
+    fail(`scheduled supervisor config mismatch for ${job.product}`);
+  }
+  if (job.workflow_manifest !== 'systemia/operations/auto-clock-out.workflow.json') {
+    fail(`scheduled workflow manifest mismatch for ${job.product}`);
+  }
+  if (!(job.activation_requires || []).includes('explicit_activation_gate_receipt')) {
+    fail(`scheduled work missing explicit activation receipt gate for ${job.product}`);
   }
 }
 const waveOneSnapshot = estate.wave_profiles?.['1'];
