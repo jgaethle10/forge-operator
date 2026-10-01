@@ -138,6 +138,33 @@ assert.equal(
   "2026-09-02T13:30:00.000Z"
 );
 
+const overnightHypothesis = {
+  ...hypothesis,
+  hypothesis_id: "edgehyp:overnight-vol-proof",
+  source_observation_id: "ctxobs:overnight-vol-proof",
+  lag_windows: [{ key: "1d", minutes: 390 }],
+};
+const flatDayOne = bars("2026-09-01T13:30:00Z", 78, 0).map((row) => ({
+  ...row,
+  c: 100,
+}));
+const gappedDayTwoInstrument = bars("2026-09-02T13:30:00Z", 5, 0).map((row) => ({
+  ...row,
+  c: 150,
+}));
+const gappedDayTwoBenchmark = bars("2026-09-02T13:30:00Z", 5, 0).map((row) => ({
+  ...row,
+  c: 120,
+}));
+const overnightMeasured = measureRockiesHypotheses([overnightHypothesis], {
+  XLU: [...flatDayOne, ...gappedDayTwoInstrument],
+  SPY: [...flatDayOne, ...gappedDayTwoBenchmark],
+  QQQ: [...flatDayOne, ...gappedDayTwoBenchmark],
+});
+assert.equal(overnightMeasured.length, 1);
+assert.equal(overnightMeasured[0].instrument_realized_volatility_5m, 0);
+assert.ok(overnightMeasured[0].instrument_max_path_gain >= 0.49);
+
 const gapHypothesis = {
   ...hypothesis,
   hypothesis_id: "edgehyp:gap-proof",
@@ -311,6 +338,7 @@ console.log(JSON.stringify({
   next_session_open_execution_stress: true,
   deterministic_random_placebo_calendar: true,
   realized_volatility_metrics: true,
+  overnight_gap_excluded_from_5m_volatility: true,
   opening_gap_metrics: true,
   path_excursion_metrics: true,
   source_diversity_required: true,
