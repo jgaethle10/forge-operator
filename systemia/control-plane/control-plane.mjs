@@ -223,6 +223,9 @@ export function routeTask(task) {
       ? 'systemia/capability-mesh/contracts.json#' + productKey
       : null,
     contract_action_scope: actionScope || null,
+    contract_machine_tool: clean(contractAction?.machine_tool) || null,
+    contract_machine_tool_declared: Boolean(clean(contractAction?.machine_tool)),
+    contract_machine_tool_grants_authority: false,
     contract_specialist_slug: productPolicy?.route?.specialist_slug || null,
     contract_context_namespace: productPolicy?.context?.namespace || null,
     contract_meter_metric: contractMeterMetric || null,
