@@ -60,6 +60,11 @@ export class VoluntaryProviderAgent {
     pollWaitMs=20_000,
   }={}){
     if(!marketUrl) throw new Error('voluntary_market_url_required');
+    const parsedMarketUrl=new URL(String(marketUrl));
+    const localMarket=['127.0.0.1','::1','localhost'].includes(parsedMarketUrl.hostname);
+    if(parsedMarketUrl.protocol!=='https:'&&!localMarket){
+      throw new Error('voluntary_market_https_required');
+    }
     if(!identity?.node_id||!identity?.public_key_pem||!identity?.private_key_pem){
       throw new Error('voluntary_provider_device_identity_required');
     }
