@@ -10,35 +10,35 @@
       "wave": 1,
       "role": "core_control_plane_shell",
       "target": "private_systemia_core_plus_yard",
-      "state": "extract_first"
+      "state": "source_profile_captured"
     },
     {
       "product": "Systemia Remote Ops",
       "wave": 1,
       "role": "core_operations",
       "target": "private_systemia_core_plus_yard",
-      "state": "queued"
+      "state": "source_profile_captured"
     },
     {
       "product": "Evercraft AI Workforce",
       "wave": 1,
       "role": "agent_execution",
       "target": "systemia_plus_yard",
-      "state": "queued"
+      "state": "source_profile_captured_connector_payment_review_required"
     },
     {
       "product": "Evercraft InternalOps",
       "wave": 1,
       "role": "internal_operations",
       "target": "systemia_plus_yard",
-      "state": "queued"
+      "state": "source_profile_captured"
     },
     {
       "product": "Systemia Audit Center",
       "wave": 1,
       "role": "audit_and_receipts",
       "target": "systemia_plus_github",
-      "state": "queued"
+      "state": "source_profile_captured_payment_webhook_review_required"
     },
     {
       "product": "Evercraft AI Suite",
@@ -179,5 +179,15 @@
   "inventory_complete_proven": false,
   "coverage_model": "private_inventory_fingerprint_ledger",
   "queue_is_complete_estate_inventory": false,
-  "untitled_apps_require_classification_before_migration_or_archive": true
+  "untitled_apps_require_classification_before_migration_or_archive": true,
+  "wave_profiles": {
+    "1": {
+      "source_profile": "systemia/migrations/base44-exit/wave-1-source-profile-2026-09-30.json",
+      "profiled_products": 5,
+      "entity_schemas": 157,
+      "server_functions": 37,
+      "connected_connectors": 1,
+      "cutover_authority": false
+    }
+  }
 }
