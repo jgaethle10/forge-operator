@@ -501,6 +501,8 @@ export function validateChromeOsHostBoundaryObservation(
                 0,
                 Math.min(20_000, Number(scan.surface_isolation.selected_node_count || 0)),
               ),
+              full_desktop_text_scanned:
+                scan.surface_isolation.full_desktop_text_scanned === true,
             }
           : null,
       error: scan.error ? safeText(scan.error, 200) : null,
