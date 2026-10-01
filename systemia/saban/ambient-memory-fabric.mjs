@@ -245,6 +245,7 @@ export async function readAmbientMemoryObject({
   const master=loadOrCreateMasterKey(stateDir);
   const key=objectKey(master,manifest.object_sha256);
   const plainChunks=[];
+  const readAttempt=randomBytes(8).toString('hex');
 
   for(const chunk of manifest.chunks||[]){
     let recovered=null;
@@ -270,7 +271,7 @@ export async function readAmbientMemoryObject({
           preemptible:true,
           checkpointable:true,
         },
-        suffix:'replica'+ri,
+        suffix:'replica'+ri+':'+readAttempt,
       });
       const execution=await executeAmbientFabricPlan({
         plan,
