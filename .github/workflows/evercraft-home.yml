@@ -112,7 +112,7 @@ jobs:
           const fs = require('fs');
           const overview = JSON.parse(fs.readFileSync('/tmp/home-overview.json','utf8'));
           if (!overview.ok) throw new Error('Overview endpoint failed');
-          if (overview.control_plane.owned_services !== 5) throw new Error('Owned service registry drift');
+          if (overview.control_plane.owned_services !== 6) throw new Error('Owned service registry drift');
           if (overview.control_plane.reachable !== 0) throw new Error('Unconfigured services were falsely reported reachable');
           NODE
 

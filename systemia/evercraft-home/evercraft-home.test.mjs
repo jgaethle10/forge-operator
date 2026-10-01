@@ -16,7 +16,7 @@ test("Evercraft is root authority", () => {
 
 test("owned services never require optional providers", () => {
   const owned = services.services.filter((service) => service.ownership === "evercraft-owned");
-  assert.deepEqual(owned.map((service) => service.id), ["systemia", "raven", "yard", "network", "sovereign-ai"]);
+  assert.deepEqual(owned.map((service) => service.id), ["systemia", "week-in-motion", "raven", "yard", "network", "sovereign-ai"]);
 });
 
 test("runtime has no legacy builder or external AI SDK dependency", () => {
@@ -38,4 +38,13 @@ test("runtime has no legacy builder or external AI SDK dependency", () => {
     assert.equal(server.includes(needle), false, "forbidden runtime dependency: " + needle);
   }
   assert.equal(home.includes("base44-sdk"), false);
+});
+
+
+test("Week in Motion is a first-class owned service", () => {
+  const service = services.services.find((item) => item.id === "week-in-motion");
+  assert.ok(service);
+  assert.equal(service.ownership, "evercraft-owned");
+  assert.equal(service.launch_path, "/week-in-motion");
+  assert.equal(service.health_path, "/api/week-in-motion/status");
 });

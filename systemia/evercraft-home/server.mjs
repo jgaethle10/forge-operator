@@ -195,6 +195,10 @@ export async function startEvercraftHomeServer({
 
   function publicService(service) {
     const origin = String(serviceOrigins?.[service.origin_env] || "").trim();
+    let launchUrl = null;
+    if (origin && service.launch_path) {
+      try { launchUrl = new URL(service.launch_path, origin).toString(); } catch {}
+    }
     return {
       id: service.id,
       name: service.name,
@@ -202,6 +206,7 @@ export async function startEvercraftHomeServer({
       ownership: service.ownership,
       description: service.description,
       configured: Boolean(origin),
+      launch_url: launchUrl,
     };
   }
 

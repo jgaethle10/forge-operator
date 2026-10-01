@@ -1,0 +1,47 @@
+{
+  "schema": "evercraft.software.v1",
+  "id": "week-in-motion",
+  "name": "Evercraft Week in Motion",
+  "owner": "Systemia",
+  "class": "resident_publication_machine",
+  "state": "source_complete",
+  "authority": {
+    "mission_authority": "Systemia",
+    "editorial_authority": "Week in Motion quality gate",
+    "publication_authority": "Systemia Journal ingress",
+    "visual_authority": "Fallen",
+    "distribution_authority": "Evercraft Clip"
+  },
+  "resident": {
+    "timezone": "America/Los_Angeles",
+    "week_boundary": "Monday-Sunday",
+    "wake_policy": "Monday morning after the previous completed week closes",
+    "retry_policy": "six-hour backoff until published or deliberately held"
+  },
+  "inputs": [
+    "GitHub commits, merged PRs and workflow outcomes",
+    "Authenticated Week in Motion evidence inbox",
+    "Future Systemia mission receipts",
+    "Future Journal, Clip, commerce, field, research and product receipts"
+  ],
+  "outputs": [
+    "evidence ledger",
+    "deep Journal edition",
+    "substantive social master",
+    "listen-along comment",
+    "Fallen visual brief",
+    "quality-gate report",
+    "publication receipt",
+    "next-week obligations"
+  ],
+  "hard_boundaries": [
+    "No publication when quality gate fails",
+    "No unsupported numeric claims",
+    "No stacked short one-sentence cadence",
+    "No em dash or en dash",
+    "No promotion of designed to built, built to runtime-proven, runtime-proven to deployed, deployed to adopted, checkout to payment, or modeled to observed",
+    "Synthetic visuals never become documentary evidence"
+  ],
+  "operator_surface": "/week-in-motion",
+  "api_base": "/api/week-in-motion"
+}
