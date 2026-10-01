@@ -62,6 +62,15 @@ async function reconcile(){
 
     let source=yard.deploymentStatus(deploymentId);
     let result=null;
+    let releaseUpgrade=false;
+    if(source?.state==='ready' && source.receipt?.release_ref!==release){
+      if(source.receipt?.capacity_node_id!==edge.receipt?.capacity_node_id){
+        throw new Error('aliev_source_and_public_edge_node_drift');
+      }
+      await yard.stopDeployment(deploymentId,{reason:'immutable_release_update'});
+      source=null;
+      releaseUpgrade=true;
+    }
     if(source?.state==='ready'){
       if(source.receipt?.capacity_node_id!==edge.receipt?.capacity_node_id){
         throw new Error('aliev_source_and_public_edge_node_drift');
@@ -92,7 +101,7 @@ async function reconcile(){
       });
       yard.startLeaseKeeper(deploymentId,{ttlMs:leaseTtlMs,renewEveryMs});
       result={
-        action:'provisioned',
+        action:releaseUpgrade?'upgraded':'provisioned',
         deployment_receipt:source.receipt?.receipt_hash||null,
         source_url:source.result?.source_url||null,
         instance_id:source.result?.instance_id||null,
