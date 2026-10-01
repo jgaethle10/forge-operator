@@ -103,6 +103,9 @@ assert.equal(measured[0].execution_delay_stress["15m"].delay_bars, 3);
 assert.equal(measured[0].execution_delay_stress["30m"].delay_bars, 6);
 assert.equal(measured[0].execution_delay_stress["60m"].delay_bars, 12);
 assert.equal(measured[0].execution_delay_stress["90m"].delay_bars, 18);
+assert.ok(Number.isFinite(measured[0].instrument_realized_volatility_5m));
+assert.ok(Number.isFinite(measured[0].benchmark_realized_volatility_5m));
+assert.ok(measured[0].instrument_max_path_gain >= measured[0].instrument_max_path_drawdown);
 assert.ok(
   new Date(measured[0].execution_delay_stress["30m"].instrument_start_time).getTime() >
     new Date(measured[0].instrument_start_time).getTime()
@@ -134,6 +137,30 @@ assert.equal(
   multiSessionMeasured[0].execution_delay_stress.next_session_open.instrument_start_time,
   "2026-09-02T13:30:00.000Z"
 );
+
+const gapHypothesis = {
+  ...hypothesis,
+  hypothesis_id: "edgehyp:gap-proof",
+  source_observation_id: "ctxobs:gap-proof",
+  observed_at: "2026-09-02T13:30:00Z",
+};
+const gapMeasured = measureRockiesHypotheses([gapHypothesis], {
+  XLU: [
+    ...bars("2026-09-01T13:30:00Z", 78, 0),
+    ...bars("2026-09-02T13:30:00Z", 25, 0.001),
+  ],
+  SPY: [
+    ...bars("2026-09-01T13:30:00Z", 78, 0),
+    ...bars("2026-09-02T13:30:00Z", 25, 0.0002),
+  ],
+  QQQ: [
+    ...bars("2026-09-01T13:30:00Z", 78, 0),
+    ...bars("2026-09-02T13:30:00Z", 25, 0.0003),
+  ],
+});
+assert.equal(gapMeasured.length, 1);
+assert.ok(Number.isFinite(gapMeasured[0].instrument_opening_gap_return));
+assert.ok(Number.isFinite(gapMeasured[0].benchmark_opening_gap_return));
 
 const many = [];
 for (let i = 0; i < 50; i++) {
@@ -283,6 +310,9 @@ console.log(JSON.stringify({
   delayed_entry_90m: true,
   next_session_open_execution_stress: true,
   deterministic_random_placebo_calendar: true,
+  realized_volatility_metrics: true,
+  opening_gap_metrics: true,
+  path_excursion_metrics: true,
   source_diversity_required: true,
   authoritative_multi_origin_screen: true,
   origin_balanced_strategy_cost_accounting: true,
