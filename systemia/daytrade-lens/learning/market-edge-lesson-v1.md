@@ -104,3 +104,20 @@ The last question is mandatory. A thesis without a kill condition is marketing.
 ## Team handoff
 
 Systemia owns admission and research state. Rockies discovers candidate relationships. Saban multiplies independent lesson/attack roles and reconciles their receipts. Edge Lab measures and falsifies. Practice Camp remains separate execution research. Frozen forward-paper cohorts remain immutable. No component may turn a historical diagnostic into live-trade authority.
+
+
+## 11. Search selection is an identification problem
+
+A 2026 search-adjusted false-discovery paper makes the uncomfortable point explicit: once a reported statistic is the winner of an unknown specification search, the cross-section of reported statistics does not tell us the underlying false-discovery rate by itself. The hidden search path matters.
+
+**Team challenge:** preserve the lifetime trial cemetery, distinguish observed candidate statistics from the research process that selected them, and prefer frozen independent evidence over candidate-only significance profiles.
+
+**Kill condition:** if a claim needs us to forget how many specifications were tried or cannot survive independent validation, the reported significance does not identify a real edge.
+
+## 12. Sharpe inference can break before the Sharpe looks broken
+
+2026 work on signal-to-noise inference under conditional heteroskedasticity shows that volatility clustering, higher-order dependence and heavy tails can invalidate classical Gaussian Sharpe inference. In sufficiently heavy-tailed regimes, even the usual root-n logic can fail.
+
+**Team challenge:** every Sharpe/DSR receipt must travel with return-dependence, squared-return clustering, kurtosis, tail concentration, clustered/bootstrap evidence and an empirical search null. Closed-form inference is never allowed to silently override contradictory resampling evidence.
+
+**Kill condition:** if the result depends on Gaussian/root-n inference while the observed event returns show severe clustering or tail concentration, downgrade the statistic and require the empirical/forward evidence to carry the thesis.
