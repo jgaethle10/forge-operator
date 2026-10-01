@@ -29,18 +29,33 @@ const receipt={
         roles:["execution_cost_guard"],
         support_count:1,
         priority:"P1"
+      },
+      {
+        test:"aggressive-versus-passive execution comparison",
+        lesson_ids:["order-flow-information"],
+        roles:["execution_cost_guard"],
+        support_count:1,
+        priority:"P0"
       }
     ]
   }
 };
 
 const result=reconcileLearningAttackCoverage(receipt);
-assert.equal(result.attack_count,3);
+assert.equal(result.attack_count,4);
 assert.equal(result.counts.implemented,2);
-assert.equal(result.counts.partial,1);
+assert.equal(result.counts.partial,2);
 assert.equal(result.counts.missing,0);
-assert.equal(result.frontier[0].test,"decision-to-fill implementation shortfall");
+assert.equal(result.frontier[0].test,"aggressive-versus-passive execution comparison");
 assert.equal(result.next_frontier.implementation_status,"partial");
+assert.equal(
+  ATTACK_IMPLEMENTATION_MAP["aggressive-versus-passive execution comparison"].status,
+  "partial"
+);
+assert.match(
+  ATTACK_IMPLEMENTATION_MAP["aggressive-versus-passive execution comparison"].gap,
+  /never labeled a fill/
+);
 assert.equal(
   ATTACK_IMPLEMENTATION_MAP["AI versus matched non-AI filing control"].status,
   "implemented"
@@ -54,6 +69,7 @@ console.log(JSON.stringify({
   implemented_partial_missing_accounted:true,
   closed_cscv_gap_removed_from_frontier:true,
   partial_execution_frontier_exposed:true,
+  passive_touch_never_promoted_to_fill:true,
   explicit_evidence_mapping:true,
   frozen_protocol_mutation_forbidden:true,
   live_trade_authority:false
