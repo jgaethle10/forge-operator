@@ -92,6 +92,138 @@ function roleLooksToggle(role) {
   return ['switch', 'togglebutton', 'toggle_button', 'checkbox', 'check_box'].includes(normalized);
 }
 
+function looksLikePortForwardingSettingsUrl(value) {
+  const url = text(value).toLowerCase();
+  return (
+    url.startsWith('chrome://os-settings/') &&
+    url.includes('crostini') &&
+    url.includes('portforward')
+  );
+}
+
+function subtreeRows(rows, ancestorIndex) {
+  if (ancestorIndex < 0 || ancestorIndex >= rows.length) return [];
+  const ancestorDepth = rows[ancestorIndex]?.depth ?? 0;
+  const result = [rows[ancestorIndex]];
+  for (let i = ancestorIndex + 1; i < rows.length; i += 1) {
+    const depth = rows[i]?.depth ?? 0;
+    if (depth <= ancestorDepth) break;
+    result.push(rows[i]);
+  }
+  return result;
+}
+
+function structuralSurfaceCandidate(rows, index, admittedPorts) {
+  const subtree = subtreeRows(rows, index);
+  if (!subtree.length) return null;
+
+  const textBlob = subtree.map((row) => row.text).join(' ');
+  const ports = admittedPorts.filter((port) =>
+    new RegExp('\\b' + port + '\\b').test(textBlob)
+  );
+  if (ports.length !== admittedPorts.length) return null;
+
+  const toggleCount = subtree.filter((row) =>
+    roleLooksToggle(row.node?.role) ||
+    /activate port/i.test(row.text)
+  ).length;
+  if (toggleCount < admittedPorts.length) return null;
+
+  return {
+    index,
+    node: rows[index].node,
+    node_count: subtree.length,
+    toggle_count: toggleCount,
+  };
+}
+
+export function locatePortForwardingSurface(
+  root,
+  admittedPorts = ADMITTED_PORTS,
+) {
+  const { rows, bounded } = flattenAutomationTree(root);
+
+  const urlCandidates = rows
+    .map((row, index) => ({
+      row,
+      index,
+      url:
+        row.node?.url ||
+        row.node?.documentUrl ||
+        row.node?.document_url ||
+        '',
+    }))
+    .filter(({ url }) => looksLikePortForwardingSettingsUrl(url))
+    .map(({ index }) => structuralSurfaceCandidate(rows, index, admittedPorts))
+    .filter(Boolean)
+    .sort((a, b) => a.node_count - b.node_count);
+
+  if (urlCandidates.length) {
+    const best = urlCandidates[0];
+    const equallySpecific = urlCandidates.filter(
+      (candidate) => candidate.node_count === best.node_count,
+    );
+    if (equallySpecific.length === 1) {
+      return {
+        ok: true,
+        root: best.node,
+        reason: 'target_url',
+        bounded,
+        candidate_count: urlCandidates.length,
+        selected_node_count: best.node_count,
+      };
+    }
+    return {
+      ok: false,
+      root: null,
+      reason: 'ambiguous_target_url_candidates',
+      bounded,
+      candidate_count: equallySpecific.length,
+      selected_node_count: null,
+    };
+  }
+
+  const structural = rows
+    .map((_row, index) => structuralSurfaceCandidate(rows, index, admittedPorts))
+    .filter(Boolean)
+    .sort((a, b) => a.node_count - b.node_count);
+
+  if (!structural.length) {
+    return {
+      ok: false,
+      root: null,
+      reason: 'surface_not_found',
+      bounded,
+      candidate_count: 0,
+      selected_node_count: null,
+    };
+  }
+
+  const best = structural[0];
+  const equallySpecific = structural.filter(
+    (candidate) => candidate.node_count === best.node_count,
+  );
+  if (equallySpecific.length !== 1) {
+    return {
+      ok: false,
+      root: null,
+      reason: 'ambiguous_structural_candidates',
+      bounded,
+      candidate_count: equallySpecific.length,
+      selected_node_count: null,
+    };
+  }
+
+  return {
+    ok: true,
+    root: best.node,
+    reason: 'smallest_structural_surface',
+    bounded,
+    candidate_count: structural.length,
+    selected_node_count: best.node_count,
+  };
+}
+
 export function extractPortForwardingState(
   root,
   admittedPorts = ADMITTED_PORTS,
