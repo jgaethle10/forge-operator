@@ -43,7 +43,12 @@ const fakeGenerate=async({address,systemiaMachineKey,onProgress})=>{
 }
 
 {
-  const runtime=await start({gatewayToken:'gateway-proof',systemiaMachineKey:'machine-proof',generate:fakeGenerate});
+  const runtime=await start({
+    gatewayToken:'gateway-proof',
+    systemiaMachineKey:'machine-proof',
+    sourceUrl:'https://owned-source.example.invalid/rivet-report-snapshot',
+    generate:fakeGenerate
+  });
   try{
     const health=await fetch(runtime.url+'/api/rivet/report-health').then(r=>r.json());
     assert.equal(health.ok,true);
@@ -83,7 +88,9 @@ const fakeGenerate=async({address,systemiaMachineKey,onProgress})=>{
     nearby_observed_usage:[{charging_sessions_count:42,period_start:'2026-08-01',period_granularity:'month'}]
   };
   const runtime=await start({
-    gatewayToken:'gateway-proof',systemiaMachineKey:'machine-proof',stateDir,
+    gatewayToken:'gateway-proof',systemiaMachineKey:'machine-proof',
+    sourceUrl:'https://owned-source.example.invalid/rivet-report-snapshot',
+    stateDir,
     generate:(args)=>generateYardReport({...args,sourceFetch:async()=>new Response(JSON.stringify(sourceSnapshot),{status:200})})
   });
   try{
