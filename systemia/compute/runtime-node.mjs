@@ -1327,6 +1327,10 @@ export async function startEvercraftComputeNode({
             port: Number(body.input?.port || 0),
             systemiaMachineKey: process.env.SYSTEMIA_MACHINE_KEY || '',
             ingestToken: process.env.ALIEV_OWNED_INGEST_TOKEN || '',
+            sessionCorpusEnabled: body.input?.session_corpus_enabled === true,
+            sessionCorpusIntervalMs: Number(body.input?.session_corpus_interval_ms || 300000),
+            sessionCorpusPageSize: Number(body.input?.session_corpus_page_size || 5000),
+            sessionCorpusMaxPagesPerRun: Number(body.input?.session_corpus_max_pages_per_run || 8),
           });
           const serviceId = `svc_${randomBytes(8).toString('hex')}`;
           services.set(serviceId, {
@@ -1349,6 +1353,7 @@ export async function startEvercraftComputeNode({
             health_path: `/v1/services/${serviceId}/health`,
             public_route_required: false,
             private_source_runtime: true,
+            session_corpus_enabled: body.input?.session_corpus_enabled === true,
             instance_id: runtime.instance_id,
           };
           const receipt = chain.issue('service.started', {
