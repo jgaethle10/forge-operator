@@ -30,6 +30,18 @@
       }
     },
     {
+      "service_key": "social-spectacle-production",
+      "mode": "cycle",
+      "manifest": "systemia/organism/social-spectacle-production.workflow.json",
+      "executable": "systemia/organism/social-spectacle-production.mjs",
+      "cadence_seconds": 900,
+      "optional_env_args": {
+        "--queue": "SYSTEMIA_SOCIAL_SPECTACLE_QUEUE",
+        "--out": "SYSTEMIA_SOCIAL_SPECTACLE_PRODUCTION_DIR",
+        "--clip-queue": "EVERCRAFT_CLIP_QUEUE_DIR"
+      }
+    },
+    {
       "service_key": "eps-social-continuity",
       "mode": "cycle",
       "manifest": "systemia/organism/eps-social-continuity.workflow.json",
