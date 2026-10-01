@@ -160,7 +160,9 @@ jobs:
                 .result.isError == false and
                 .result.structuredContent.direct_specialist == true and
                 .result.structuredContent.payment_created == false and
-                .result.structuredContent.payment_obligation_created == false
+                .result.structuredContent.payment_obligation_created == false and
+                .result.structuredContent.base44_transport_enabled == false and
+                (((.result.structuredContent.handoff_url // "") | test("base44\\.app"; "i")) | not)
               ' >/dev/null
             elif [ "$kind" = "remote_ops" ]; then
               printf '%s' "$result" | jq -e '
