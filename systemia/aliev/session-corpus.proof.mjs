@@ -33,8 +33,8 @@ function fakeFetch(url){
   if(select.startsWith('count(*)')){
     return Promise.resolve(new Response(JSON.stringify([{
       rows:String(rows.length),
-      first_date:'2026-08-01T00:00:00.000',
-      latest_date:'2026-09-08T00:00:00.000',
+      first_date:[...rows].map(x=>String(x.date)).sort()[0],
+      latest_date:[...rows].map(x=>String(x.date)).sort().at(-1),
       energy_kwh:String(rows.reduce((n,x)=>n+Number(x.energy_provided_kwh||0),0))
     }]),{status:200,headers:{'content-type':'application/json'}}));
   }
@@ -233,6 +233,63 @@ try{
     await ownedSource.close();
   }
 
+  // Continuous freshness: an advanced source date rewinds a bounded tail so
+  // rows inserted inside the latest ordered day cannot be skipped by offset append.
+  rows.push({
+    date:'2026-09-09T00:00:00.000',station_name:'101336',
+    location_name:'QBO - Queens Borough Hall Municipal Parking Garage',country:'USA',
+    charge_box_id:'box-a',connector_id:'1',driver_id:privateDriver,id_tag:privateTag,
+    connected_time:'17:00:00',disconnected_time:'18:00:00',
+    charge_duration_min:'60',connected_duration_min:'60',energy_provided_kwh:'19',
+    session_status:'PAID',invalidity_reason:'NULL'
+  });
+  const advanced=await backfillPlugNYCSessionCorpus({
+    stateDir:root,pageSize:3,maxPagesPerRun:10,fetchImpl:fakeFetch,
+    now:()=> '2026-10-01T04:20:00.000Z'
+  });
+  assert.equal(advanced.receipt.refresh_reason,'source_advanced_tail_rewind');
+  assert.equal(advanced.receipt.started_offset,0);
+  assert.equal(advanced.checkpoint.next_offset,8);
+  assert.equal(advanced.checkpoint.complete,true);
+  const advancedReconciliation=reconcilePlugNYCSessionCorpus({
+    stateDir:root,now:()=> '2026-10-01T04:20:30.000Z'
+  });
+  assert.equal(advancedReconciliation.complete_reconciled,true);
+  assert.equal(advancedReconciliation.raw_rows_materialized,8);
+  const advancedCompact=compactPlugNYCSessionCorpus({
+    stateDir:root,now:()=> '2026-10-01T04:21:00.000Z'
+  });
+  assert.ok(
+    advancedCompact.aggregates
+      .filter(x=>x.period_start.startsWith('2026-09'))
+      .every(x=>x.source_vintage.includes('partial through 2026-09-09'))
+  );
+
+  // Same-date row growth is more dangerous because it can reorder existing rows.
+  // Fail safe by rescanning from zero instead of pretending the new row is append-only.
+  rows.push({
+    date:'2026-09-09T00:00:00.000',station_name:'101337',
+    location_name:'QBO - Queens Borough Hall Municipal Parking Garage',country:'USA',
+    charge_box_id:'box-b',connector_id:'1',driver_id:privateDriver,id_tag:privateTag,
+    connected_time:'07:00:00',disconnected_time:'07:30:00',
+    charge_duration_min:'30',connected_duration_min:'30',energy_provided_kwh:'9',
+    session_status:'PAID',invalidity_reason:'NULL'
+  });
+  const sameDateGrowth=await backfillPlugNYCSessionCorpus({
+    stateDir:root,pageSize:3,maxPagesPerRun:10,fetchImpl:fakeFetch,
+    now:()=> '2026-10-01T04:25:00.000Z'
+  });
+  assert.equal(sameDateGrowth.receipt.refresh_reason,'source_row_growth_inside_existing_coverage_full_rescan');
+  assert.equal(sameDateGrowth.receipt.started_offset,0);
+  assert.equal(sameDateGrowth.checkpoint.next_offset,9);
+  assert.equal(sameDateGrowth.checkpoint.complete,true);
+  const sameDateReconciliation=reconcilePlugNYCSessionCorpus({
+    stateDir:root,now:()=> '2026-10-01T04:25:30.000Z'
+  });
+  assert.equal(sameDateReconciliation.complete_reconciled,true);
+  assert.equal(sameDateReconciliation.raw_rows_materialized,9);
+  assert.equal(sameDateReconciliation.duplicate_source_rows,0);
+
   const files=[];
   const walk=(dir)=>{
     for(const name of fs.readdirSync(dir)){
@@ -266,7 +323,10 @@ try{
     station_identity_geometry_carry_forward_verified:true,
     aliev_snapshot_consumes_session_corpus:true,
     rivet_report_consumes_session_corpus:true,
-    freshest_owned_aggregate_wins_over_migrated_duplicate:true
+    freshest_owned_aggregate_wins_over_migrated_duplicate:true,
+    append_refresh_tail_rewind_verified:true,
+    same_date_growth_full_rescan_verified:true,
+    continuous_freshness_offset_shift_guard_verified:true
   },null,2));
 }finally{
   fs.rmSync(root,{recursive:true,force:true});
