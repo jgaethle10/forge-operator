@@ -29,6 +29,40 @@ write('public/.well-known/evercraft-products.json', JSON.stringify({
     { product_key: 'alpha', name: 'Alpha Duplicate', canonical_url: 'not-a-url' }
   ]
 }, null, 2));
+write('systemia/capability-mesh/adoption-coverage.json', JSON.stringify({
+  schema: 'evercraft.capability-mesh.coverage.v1',
+  summary: {
+    public_product_count: 4,
+    explicit_contract_count: 1,
+    missing_contract_count: 3
+  },
+  priority_queues: {
+    direct_door_without_contract: ['alpha'],
+    incomplete_contracts: [],
+    all_missing_contracts: ['alpha', 'beta', 'gamma'],
+    contracted_not_shared_runtime: ['private-product']
+  },
+  ratchet: {
+    schema: 'evercraft.capability-mesh.ratchet-state.v1',
+    state: 'blocked',
+    blocking_regressions: [
+      { code: 'new_public_product_without_contract', product_key: 'beta' },
+      { code: 'new_direct_door_without_contract', product_key: 'alpha' },
+      { code: 'new_specialist_only_door_requires_review', specialist_slug: 'new-held' }
+    ]
+  },
+  specialist_only: [{
+    specialist_slug: 'held-specialist',
+    direct_door_state: 'yard_runtime_proven_public_route_pending'
+  }],
+  products: [
+    { product_key: 'alpha', contract_state: 'missing', adoption_stage: 'missing', gaps: ['product_contract_missing'] },
+    { product_key: 'beta', contract_state: 'missing', adoption_stage: 'missing', gaps: ['product_contract_missing'] },
+    { product_key: 'gamma', contract_state: 'missing', adoption_stage: 'missing', gaps: ['product_contract_missing'] },
+    { product_key: 'private-product', contract_state: 'complete_declaration', adoption_stage: 'private_runtime', gaps: [] }
+  ]
+}, null, 2));
+
 write('package.json', JSON.stringify({
   scripts: {
     ok: 'node scripts/ok.mjs',
@@ -61,7 +95,13 @@ write('systemia/organism/test.workflow.json', '{"schema":"test"}\n');
 fs.mkdirSync(path.join(root, 'registry', 'alpha'), { recursive: true });
 fs.mkdirSync(path.join(root, 'public', 'chum', 'products', 'alpha'), { recursive: true });
 
-const scan = inspectLocalPortfolio({ rootDir: root });
+const capabilityMeshFixture = JSON.parse(
+  fs.readFileSync(path.join(root, 'systemia/capability-mesh/adoption-coverage.json'), 'utf8')
+);
+const scan = inspectLocalPortfolio({
+  rootDir: root,
+  capabilityMesh: capabilityMeshFixture
+});
 const codes = new Set(scan.findings.map((row) => row.code));
 assert.ok(codes.has('machine_surface_missing'));
 assert.ok(codes.has('duplicate_product_key'));
@@ -75,6 +115,32 @@ assert.equal(
   'workflow file targets must resolve against their step working-directory'
 );
 assert.ok(codes.has('resident_service_executable_not_found'));
+assert.ok(codes.has('direct_door_contract_missing'));
+assert.ok(codes.has('product_trust_chain_contract_missing'));
+assert.ok(codes.has('product_contracted_not_shared_runtime'));
+assert.ok(codes.has('specialist_door_not_in_public_product_index'));
+assert.ok(codes.has('new_public_product_without_contract'));
+assert.ok(codes.has('new_direct_door_without_contract'));
+assert.ok(codes.has('new_specialist_only_door_requires_review'));
+assert.equal(scan.inventory.capability_mesh.missing_contract_count, 3);
+assert.equal(scan.inventory.capability_mesh_ratchet.state, 'blocked');
+
+const newProductRegression = scan.findings.find(
+  (row) => row.code === 'new_public_product_without_contract'
+);
+assert.equal(newProductRegression.severity, 'high');
+
+const newSpecialistRegression = scan.findings.find(
+  (row) => row.code === 'new_specialist_only_door_requires_review'
+);
+assert.equal(newSpecialistRegression.severity, 'high');
+assert.equal(newSpecialistRegression.human_gate_required, true);
+
+const nonShared = scan.findings.find(
+  (row) => row.code === 'product_contracted_not_shared_runtime'
+);
+assert.equal(nonShared.severity, 'medium');
+assert.equal(nonShared.metadata.adoption_stage, 'private_runtime');
 
 const first = buildPortfolioDelta({ active_findings: [] }, scan.findings);
 assert.equal(first.added.length, scan.findings.length);

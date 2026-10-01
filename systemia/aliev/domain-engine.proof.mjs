@@ -21,6 +21,7 @@ const aliev=await startAliEvSourceRuntime({
   systemiaMachineKey:'domain-proof-machine',
   ingestToken:'domain-proof-ingest',
   geocode,
+  refreshDomains:async()=>({schema:'proof.noop-refresh.v1',collectors:{}}),
 });
 
 async function ingest(domain,records){
@@ -35,7 +36,7 @@ async function ingest(domain,records){
 
 try{
   await ingest('charging_inventory',[
-    {record_key:'charger-a',station_name:'Owned Fast Site',latitude:47.425,longitude:-122.297,state:'WA',postal_code:'98188',ports:8,power_kw:250,source_name:'Owned Charger Feed',source_url:'https://example.test/chargers',retrieved_at:'2026-09-30T18:00:00Z'}
+    {record_key:'charger-a',external_id:'owned:charger-a',station_name:'Owned Fast Site',latitude:47.425,longitude:-122.297,state:'WA',postal_code:'98188',ports:8,power_kw:250,source_name:'Owned Charger Feed',source_url:'https://example.test/chargers',retrieved_at:'2026-09-30T18:00:00Z'}
   ]);
   await ingest('traffic',[
     {record_key:'traffic-a',latitude:47.423,longitude:-122.294,state:'WA',aadt:47000,source_name:'Owned Traffic Feed',source_url:'https://example.test/traffic',retrieved_at:'2026-09-30T18:00:00Z'}
@@ -44,7 +45,8 @@ try{
     {record_key:'traffic-profile-a',latitude:47.423,longitude:-122.294,state:'WA',profile_type:'peak_hour_volume',bucket_count:200,source_name:'Owned Traffic Feed',source_url:'https://example.test/traffic-profile',retrieved_at:'2026-09-30T18:00:00Z'}
   ]);
   await ingest('observed_sessions',[
-    {record_key:'sessions-a',latitude:47.425,longitude:-122.297,state:'WA',charging_sessions_count:120,period_start:'2026-08-01',period_granularity:'month',evidence_state:'observed',source_name:'Permissioned Sessions',source_url:'https://example.test/sessions',retrieved_at:'2026-09-30T18:00:00Z'}
+    {record_key:'sessions-a',latitude:47.425,longitude:-122.297,state:'WA',charging_sessions_count:120,period_start:'2026-08-01',period_granularity:'month',evidence_state:'observed',source_name:'Permissioned Sessions',source_url:'https://example.test/sessions',retrieved_at:'2026-09-30T18:00:00Z'},
+    {record_key:'sessions-linked-no-coords',station_external_id:'owned:charger-a',state:'WA',charging_sessions_count:77,period_start:'2026-09-01',period_granularity:'month',evidence_state:'observed',source_name:'Permissioned Sessions',source_url:'https://example.test/sessions-linked',retrieved_at:'2026-09-30T19:00:00Z'}
   ]);
   await ingest('utility_service_area',[
     {record_key:'utility-area-a',state:'WA',postal_code:'98188',utility_name:'Owned Utility Candidate',source_name:'Owned Utility Feed',source_url:'https://example.test/utility-area',retrieved_at:'2026-09-30T18:00:00Z'}
@@ -82,7 +84,9 @@ try{
   assert.equal(snapshot.owned_domain_engine.precomputed_snapshot_required,false);
   assert.equal(snapshot.traffic[0].aadt,47000);
   assert.equal(snapshot.chargers[0].ports,8);
-  assert.equal(snapshot.nearby_observed_usage[0].charging_sessions_count,120);
+  assert.ok(snapshot.nearby_observed_usage.some(x=>x.charging_sessions_count===120));
+  assert.ok(snapshot.nearby_observed_usage.some(x=>x.charging_sessions_count===77));
+  assert.equal(snapshot.observed_usage_join.station_linked_records,1);
   assert.equal(snapshot.utility_rate_candidates[0].rate_name,'EV-1');
   assert.equal(snapshot.utility_service_area_candidates[0].utility_name,'Owned Utility Candidate');
   assert.equal(snapshot.parcel_planning[0].parking_spaces,80);
@@ -130,6 +134,7 @@ try{
     owned_domain_ingest:true,
     source_coverage_explicit:true,
     observed_sessions_preserved:true,
+    no_coordinate_sessions_joined_by_charger_id:true,
     utility_and_parcel_evidence_preserved:true,
     verified_snapshot_cache_after_first_build:true,
     full_rivet_report_ready:true,

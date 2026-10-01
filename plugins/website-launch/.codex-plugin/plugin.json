@@ -6,7 +6,7 @@
     "name": "Evercraft LLC",
     "url": "https://github.com/jgaethle10/forge-operator"
   },
-  "homepage": "https://instant-website-builder-usa-6feac193.base44.app/",
+  "homepage": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/website-launch",
   "repository": "https://github.com/jgaethle10/forge-operator",
   "license": "UNLICENSED",
   "keywords": [
@@ -27,9 +27,11 @@
     "capabilities": [
       "Interactive"
     ],
-    "websiteURL": "https://instant-website-builder-usa-6feac193.base44.app/",
+    "websiteURL": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/website-launch",
     "defaultPrompt": [
       "Help me plan or launch a professional business website using the smallest appropriate Website Launch path."
     ]
-  }
+  },
+  "releaseState": "OWNED_RUNTIME_ROUTE_PENDING",
+  "publicOriginState": "legacy_provider_retired_owned_route_pending"
 }

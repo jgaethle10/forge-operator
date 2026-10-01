@@ -3,11 +3,10 @@
 Provider: Evercraft
 Product key: deck-capital-fit
 Class: capital_fit_and_founder_readiness_research
-Canonical URL: https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs
+Canonical URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/deck-capital-fit/index.html
 Authority: public offer discovery and human-confirmed paid research checkout
 Human confirmation required: yes
-Runtime llms.txt: https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=llms
-Declared MCP: https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp
+Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/deck-capital-fit/llms.txt
 
 ## Natural-language intents
 - figure out what capital or funding path fits my business

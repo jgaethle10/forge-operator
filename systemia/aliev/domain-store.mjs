@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { createHash, randomBytes } from 'node:crypto';
+import { regionMatchesRecord } from './geo-normalization.mjs';
 
 const clean=(v)=>String(v??'').trim();
 const sha=(bytes)=>createHash('sha256').update(bytes).digest('hex');
@@ -140,10 +141,7 @@ export function queryAliEvDomain({
     return {...row,_distance_miles:distance};
   }).filter(row=>{
     if(postal&&clean(row.postal_code).toLowerCase()!==postal) return false;
-    if(region){
-      const rv=clean(row.state||row.state_code||row.jurisdiction).toLowerCase();
-      if(rv&&rv!==region&&!rv.includes(region)) return false;
-    }
+    if(region&&!regionMatchesRecord(row,region)) return false;
     if(radius!==null&&row._distance_miles!==null&&row._distance_miles>radius) return false;
     if(radius!==null&&lat!==null&&lon!==null&&row._distance_miles===null) return false;
     if(typeof predicate==='function'&&!predicate(row)) return false;

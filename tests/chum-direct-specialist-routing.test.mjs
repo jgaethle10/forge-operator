@@ -11,10 +11,12 @@ const LIVE_DIRECT_STATES=new Set([
   'registry_published_direct_mcp_existing',
   'public_https_verified_registry_pending',
 ]);
+const isLegacyProvider=(value)=>typeof value==='string' && /(^https?:\/\/base44\.app(?:\/|$))|(^https?:\/\/[^/]+\.base44\.app(?:\/|$))/i.test(value);
 const isDirectLive=(product)=>
   LIVE_DIRECT_STATES.has(product.state) &&
   typeof product.mcp_url==='string' &&
-  product.mcp_url.startsWith('https://');
+  product.mcp_url.startsWith('https://') &&
+  !isLegacyProvider(product.mcp_url);
 const isRegistryPublished=(product)=>
   product.state==='registry_published_direct_mcp_existing' &&
   typeof product.registry_name==='string';
@@ -67,14 +69,27 @@ assert.equal(control.direct_specialist,null);
 
 const sellNow=JSON.parse(fs.readFileSync('public/chum/sell-now.json','utf8'));
 const sellById=new Map(sellNow.offers.map(x=>[x.public_id,x]));
+const specialistByCapability=new Map();
+for(const product of specs.products){
+  for(const id of product.capability_public_ids||[]) specialistByCapability.set(id,product);
+}
 for(const id of ['aliev-site-opportunity-snapshot-v1','audit-center-website-audit-machine-v1','eventwave-paid-promotion-v1']){
   const row=sellById.get(id);
   if(!row) continue;
-  assert.equal(row.preferred_agent_route,'direct_specialist',id+': sell-now route should be direct');
-  assert.ok(row.direct_specialist?.mcp,id+': sell-now specialist MCP missing');
+  const product=specialistByCapability.get(id);
+  if(product&&isDirectLive(product)){
+    assert.equal(row.preferred_agent_route,'direct_specialist',id+': verified owned sell-now specialist should be direct');
+    assert.ok(row.direct_specialist?.mcp,id+': verified owned specialist MCP missing');
+  }else{
+    assert.equal(row.preferred_agent_route,'universal_fallback',id+': unverified specialist must fail closed to fallback');
+    assert.equal(row.direct_specialist,null,id+': unverified specialist must not expose a direct MCP');
+  }
 }
 
-assert.ok(mapped>=10,'expected at least ten capability records with direct specialist routing');
+const expectedMapped=specs.products
+  .filter(isDirectLive)
+  .flatMap(p=>p.capability_public_ids||[]).length;
+assert.equal(mapped,expectedMapped,'generated direct routes must exactly match verified owned specialist routes');
 
 console.log('CHUM_DIRECT_SPECIALIST_ROUTING_PASS',JSON.stringify({
   mapped_capabilities:mapped,

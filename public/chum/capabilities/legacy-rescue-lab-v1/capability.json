@@ -60,9 +60,9 @@
   "preferred_agent_route": "universal_fallback",
   "direct_specialist": null,
   "machine_commerce_mcp": "https://fabric.systemiacommandcenters.com/mcp",
-  "machine_review_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=legacy-rescue-lab-v1",
-  "start_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/buy/legacy-rescue-lab-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_capability_page&ec_public_id=legacy-rescue-lab-v1",
-  "start_url_state": "evercraft_buyer_frontage",
+  "machine_review_url": null,
+  "start_url": null,
+  "start_url_state": "held_no_owned_public_origin",
   "entry_paid_offer": {
     "offer_key": "legacy_rescue_scan_299",
     "name": "Legacy Rescue Scan",

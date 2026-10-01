@@ -1,19 +1,22 @@
 {
   "name": "aliev",
   "version": "0.1.0",
-  "description": "Direct EV charging site intelligence by address.",
+  "description": "Use AliEV directly when a user wants property-specific EV charging intelligence such as nearby competition, demand and traffic context, utility or tariff context, incentives, site fit, economics, or preliminary planning inputs.",
   "author": {
     "name": "Evercraft LLC",
     "url": "https://github.com/jgaethle10/forge-operator"
   },
-  "homepage": "https://aliev.base44.app/",
+  "homepage": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/aliev",
   "repository": "https://github.com/jgaethle10/forge-operator",
   "license": "UNLICENSED",
   "keywords": [
     "aliev",
     "rivet",
-    "ev-infrastructure",
+    "ev-charging",
     "site-analysis",
+    "property",
+    "incentives",
+    "tariffs",
     "mcp"
   ],
   "skills": "./skills/",
@@ -27,9 +30,11 @@
     "capabilities": [
       "Interactive"
     ],
-    "websiteURL": "https://aliev.base44.app/",
+    "websiteURL": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/aliev",
     "defaultPrompt": [
       "Evaluate whether EV charging could make sense at a specific property and clearly separate observed, public, inferred, and modeled evidence."
     ]
-  }
+  },
+  "releaseState": "OWNED_RUNTIME_ROUTE_PENDING",
+  "publicOriginState": "legacy_provider_retired_owned_route_pending"
 }

@@ -2,9 +2,8 @@
 
 Product key: aliev
 Aliases: AliEV EV Charging Opportunity Intelligence, AliEV EV Site Analysis, RIVET, RIVET EV Infrastructure Intelligence, Evercraft RIVET, RIVET / AliEV
-Canonical product: https://aliev.base44.app/
+Canonical product: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/index.html
 Official MCP Registry: io.github.jgaethle10/aliev
-Remote MCP: https://aliev.base44.app/functions/alievMcp
 CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/ai-conformance.json
 Receipt-backed proof: /chum/proof/rivet.json
@@ -59,6 +58,6 @@ public screening plus bounded machine invocation and human-confirmed paid depth
 
 ## Universal Evercraft routing
 
-https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Not declared.
 
 Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

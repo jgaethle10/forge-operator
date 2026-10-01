@@ -12,10 +12,9 @@ BuildFlow Enterprise Operations is an approved public Evercraft discovery record
 
 ## Public routes
 
-- Canonical: https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute
+- Canonical: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/buildflow/index.html
 - GitHub LLM mirror: ./llms.txt
 - Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/buildflow/llms.txt
-- Declared MCP: https://base44.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp
 
 ## Authority
 

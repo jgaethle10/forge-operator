@@ -5,13 +5,15 @@ Evercraft Property Services is an approved public Evercraft discovery record. Th
 
 ## Match this product when
 
-- yard cleanup in the Yakima Valley
-- lawn care or recurring property maintenance
-- trimming or pruning
-- landscaping refresh
-- sprinkler repair startup or seasonal blowout
-- property cleanout or debris removal
-- rental turnover property support
+- lawn mowing near me in Yakima
+- yard cleanup near me in Yakima
+- sprinkler repair near me in Yakima
+- sprinkler startup or blowout near me
+- property maintenance near me in Yakima
+- rental turnover cleanup in Yakima
+- debris removal or property cleanout in Yakima
+- trimming or pruning in the Yakima Valley
+- landscaping refresh in the Yakima Valley
 - get a property service estimate in Central Washington
 
 ## Public routes

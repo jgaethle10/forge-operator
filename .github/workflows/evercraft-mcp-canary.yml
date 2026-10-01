@@ -38,7 +38,7 @@ jobs:
               -H 'Content-Type: application/json' \
               -H 'Accept: application/json, text/event-stream' \
               --data "$PAYLOAD")"
-            printf '%s\n' "$BODY" | head -c 2500
+            printf '%s\n' "$BODY" | head -c 2500 || true
             echo
             printf '%s' "$BODY" | grep -q '"serverInfo"' || {
               echo "MCP initialize did not return serverInfo for $NAME" >&2
@@ -80,7 +80,7 @@ jobs:
               -H 'Content-Type: application/json' \
               -H 'Accept: application/json, text/event-stream' \
               --data '{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}')"
-            printf '%s\n' "$BODY" | head -c 4000
+            printf '%s\n' "$BODY" | head -c 4000 || true
             echo
             printf '%s' "$BODY" | grep -q "$TOOL" || {
               echo "MCP tools/list did not expose $TOOL for $NAME" >&2
@@ -144,7 +144,7 @@ jobs:
               -H 'Content-Type: application/json' \
               -H 'Accept: application/json, text/event-stream' \
               --data "$(jq -cn --arg tool "$TOOL" --argjson args "$ARGS" '{jsonrpc:"2.0",id:4,method:"tools/call",params:{name:$tool,arguments:$args}}')")"
-            printf '%s\n' "$BODY" | head -c 5000
+            printf '%s\n' "$BODY" | head -c 5000 || true
             echo
             printf '%s' "$BODY" | grep -Eq '"result"|"structuredContent"' || {
               echo "Read-only MCP invocation did not return a result for $NAME / $TOOL" >&2
@@ -163,6 +163,10 @@ jobs:
 
           check_tool "Evercraft Rewards" "$COMMERCE_MCP" "prepare_rewards_partner_enrollment"
           check_tool "IBM i Rescue via Machine Commerce" "$COMMERCE_MCP" "prepare_quote_ready_service_handoff"
+          check_tool "GlobalStat via Machine Commerce" "$COMMERCE_MCP" "query_globalstat_country_intelligence"
+          check_tool "EverMaps via Machine Commerce" "$COMMERCE_MCP" "query_evermaps_public_projection"
+          check_tool "Little Red Studio via Machine Commerce" "$COMMERCE_MCP" "check_book_export_preflight"
+          check_tool "TOWI via Machine Commerce" "$COMMERCE_MCP" "audit_towi_evidence_packet"
 
           check_tool_contract "Evercraft Machine Commerce" "$COMMERCE_MCP" "match_offer" "Start here"
           check_tool_contract "AliEV" "$ALIEV_MCP" "analyze_ev_site" "Start here"
@@ -170,6 +174,10 @@ jobs:
           check_tool_contract "Evercraft Clip" "$CLIP_MCP" "plan_clip_job" "Start here"
 
           call_readonly_tool "Evercraft Machine Commerce" "$COMMERCE_MCP" "match_offer" '{"intent":"I need to understand a long video that ordinary chat tools cannot fully process","limit":1}'
+          call_readonly_tool "GlobalStat via Machine Commerce" "$COMMERCE_MCP" "query_globalstat_country_intelligence" '{"countries":["USA","CAN"],"metric_slugs":["gii_2025_rank"],"limit":10}'
+          call_readonly_tool "EverMaps via Machine Commerce" "$COMMERCE_MCP" "query_evermaps_public_projection" '{"layer":"navigation_lights","limit":2}'
+          call_readonly_tool "Little Red Studio via Machine Commerce" "$COMMERCE_MCP" "check_book_export_preflight" '{"page_count":120,"trim_width_in":6,"trim_height_in":9,"interior_type":"black_white","paper_type":"white","spine_text_present":true,"cover_pixel_width":4000,"cover_pixel_height":6000}'
+          call_readonly_tool "TOWI via Machine Commerce" "$COMMERCE_MCP" "audit_towi_evidence_packet" '{"research_question":"What evidence supports this infrastructure claim?","geography":"Washington","evidence_standard":"decision_grade","evidence":[{"evidence_id":"sample_1","source_title":"Official sample source","source_url":"https://example.gov/source","source_type":"primary_official","publisher":"Example Agency","publication_date":"2026-09-30","claim":"Sample claim for bounded canary verification.","evidence_state":"verified_primary","confidence_score":95},{"evidence_id":"sample_2","source_title":"Independent technical report","source_url":"https://example.org/report","source_type":"technical_report","publisher":"Example Institute","publication_date":"2026-09-29","claim":"Second sample claim for bounded canary verification.","evidence_state":"verified_secondary","confidence_score":85},{"evidence_id":"sample_3","source_title":"Supporting dataset","source_url":"https://example.org/data","source_type":"dataset","publisher":"Example Data Lab","publication_date":"2026-09-28","claim":"Third sample claim for bounded canary verification.","evidence_state":"reported","confidence_score":75}]}'
           call_readonly_tool "ForensiScope" "$FORENSISCOPE_MCP" "classify_media_route" '{"size_bytes":52428800,"duration_seconds":5400}'
           call_readonly_tool "Evercraft Clip" "$CLIP_MCP" "plan_clip_job" '{"source_file_size_bytes":10485760,"source_duration_seconds":90,"target_platforms":["YouTube"],"goal":"Create a concise educational social video"}'
 

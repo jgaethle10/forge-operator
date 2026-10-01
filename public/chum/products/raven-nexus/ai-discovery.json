@@ -4,7 +4,7 @@
   "name": "Raven Nexus",
   "aliases": [],
   "class": "pain_first_modular_safety_and_stability",
-  "canonical_url": "https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
+  "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/raven-nexus/index.html",
   "intents": [
     "protect my bank account from AI scams or suspicious transfer risk",
     "help with identity theft, credential compromise, or account takeover risk",
@@ -31,7 +31,7 @@
   "buyer_frontage_url": null,
   "registry_name": null,
   "mcp": null,
-  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "machine_commerce_mcp": null,
   "developer_surfaces": null,
   "editorial_surfaces": null,
   "knowledge_surfaces": null,

@@ -43,6 +43,10 @@ The Chromebook local organism admits three roots when enabled:
 - `evercraft` — the installed Forge/organism source tree;
 - `state` — the local organism state tree.
 
+Operator status now includes a read-only `network_observation` receipt. The MCP gateway exposes that same payload as `remote_network_status`, so an authorized operator can inspect the node's Linux interfaces, default routes, listening ports, Evercraft service state, router-map configuration, local Fabric health and hostname-aware local TLS health without asking the user to manually retype terminal diagnostics.
+
+The observation deliberately marks ChromeOS host-level port forwarding as **not observable from the Crostini guest**. It never treats visibility as authority and never claims external reachability from a node-local probe. Public reachability remains the job of the independent external edge canary.
+
 Filesystem routes:
 
 - `GET /v1/operator/status`
@@ -87,6 +91,14 @@ bash systemia/compute/enable-remote-operator-user.sh
 The enable script reuses the normal local-organism installer, preserves existing private configuration, restarts the user service, and verifies that the loopback NodeSeed advertises Remote Operator as ready. It does not print the allocator token, broker control grant, device private key or any provider credential.
 
 The node remains outbound-only.
+
+## Network observability
+
+`systemia/compute/network-observer.mjs` is the canonical read-only node-side topology observer. It produces `evercraft.node-network-observation.v1` and records an explicit diagnosis boundary rather than guessing across trust zones.
+
+On the Chromebook public-edge host, `scripts/install-fabric-network-observer.sh` installs a resident systemd timer that snapshots the observation every two minutes under `/var/lib/evercraft/network-observer/`. The Fabric self-updater reasserts that resident observer after verified source updates.
+
+The observer does **not** create router mappings, toggle ChromeOS port forwarding, edit firewall rules, open listeners, or declare the public origin healthy. Those are distinct authorities and evidence classes.
 
 ## Acceptance
 

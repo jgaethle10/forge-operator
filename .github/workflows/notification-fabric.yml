@@ -1,0 +1,51 @@
+name: Evercraft Relay
+
+on:
+  push:
+    branches:
+      - main
+      - feat/evercraft-relay-v2
+    paths:
+      - "systemia/notification-fabric/**"
+      - "systemia/signal-fabric/**"
+      - "public/evercraft-push-sw.js"
+      - ".github/workflows/notification-fabric.yml"
+  pull_request:
+    paths:
+      - "systemia/notification-fabric/**"
+      - "systemia/signal-fabric/**"
+      - "public/evercraft-push-sw.js"
+      - ".github/workflows/notification-fabric.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: relay-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  relay:
+    name: Notification Fabric proof
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Run focused Relay suite
+        run: node --test systemia/notification-fabric/notification-fabric.test.mjs
+
+      - name: Syntax-check runtime modules
+        run: |
+          node --check systemia/notification-fabric/fabric.mjs
+          node --check systemia/notification-fabric/http.mjs
+          node --check systemia/notification-fabric/store.mjs
+          node --check systemia/notification-fabric/realtime-hub.mjs
+          node --check systemia/notification-fabric/session-token.mjs
+          node --check systemia/notification-fabric/web-push.mjs

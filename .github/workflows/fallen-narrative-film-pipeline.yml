@@ -1,0 +1,22 @@
+name: Fallen Narrative Film Pipeline
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/narrative-film-pipeline.ts'
+      - 'systemia/media-studio/narrative-film-pipeline.test.ts'
+      - 'systemia/media-studio/dialogue-sync-gate.ts'
+      - 'systemia/media-studio/sequence-aesthetic.ts'
+      - '.github/workflows/fallen-narrative-film-pipeline.yml'
+  workflow_dispatch:
+
+jobs:
+  narrative-film-pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-audit --no-fund
+      - run: node --import tsx --test systemia/media-studio/narrative-film-pipeline.test.ts

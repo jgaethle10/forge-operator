@@ -67,6 +67,7 @@ export async function buildOwnedAliEvSiteSnapshot({
   address,
   domainStateDir,
   geocode=censusOnelineGeocode,
+  refreshDomains=async()=>null,
   now=()=>new Date().toISOString(),
 }={}){
   if(!clean(address)) throw new Error('address_required');
@@ -76,6 +77,8 @@ export async function buildOwnedAliEvSiteSnapshot({
   if(latitude===null||longitude===null) throw new Error('geocoding_coordinates_required');
   const state=clean(geo?.state);
   const postal=clean(geo?.postal_code);
+  const collectedAt=now();
+  const liveRefresh=await refreshDomains({stateDir:domainStateDir,state,latitude,longitude,retrievedAt:collectedAt});
   const near=(domain,radiusMiles,limit=50)=>records(domainStateDir,domain,{latitude,longitude,radiusMiles,limit});
   const regional=(domain,limit=50)=>records(domainStateDir,domain,{state,limit});
   const postalRows=(domain,limit=50)=>{
@@ -86,8 +89,24 @@ export async function buildOwnedAliEvSiteSnapshot({
   const chargers=near('charging_inventory',15,80);
   const traffic=near('traffic',15,40);
   const trafficProfiles=near('traffic_temporal',20,40);
-  const observedUsage=near('observed_sessions',20,60);
-  const utilityAreas=postalRows('utility_service_area',30);
+  const spatialObservedUsage=near('observed_sessions',20,60);
+  const nearbyChargerIds=new Set(chargers.flatMap((row)=>[
+    clean(row.external_id),clean(row.station_external_id),clean(row.source_id),clean(row.id)
+  ]).filter(Boolean));
+  const linkedObservedUsage=nearbyChargerIds.size
+    ? records(domainStateDir,'observed_sessions',{
+        limit:500,
+        predicate:(row)=>nearbyChargerIds.has(clean(row.station_external_id||row.charger_external_id||row.source_id))
+      })
+    : [];
+  const observedUsage=[...new Map(
+    [...spatialObservedUsage,...linkedObservedUsage].map((row,i)=>[
+      clean(row.aggregate_key||row.record_key||row.id||row.source_ref)||'usage-'+i,
+      row
+    ])
+  ).values()].slice(0,60);
+  const nearbyUtilityAreas=near('utility_service_area',0.5,30);
+  const utilityAreas=nearbyUtilityAreas.length?nearbyUtilityAreas:postalRows('utility_service_area',30);
   const tariffs=postalRows('utility_tariff',40);
   const incentives=regional('incentives',60);
   const parcel=near('parcel_planning',1.5,20);
@@ -112,7 +131,7 @@ export async function buildOwnedAliEvSiteSnapshot({
     incentives:coverage(incentives.length?'CONNECTED_ELIGIBILITY_UNVERIFIED':'NOT_OBSERVABLE',incentives.length,incentives.length?'owned_domain_store':'no_matching_records'),
     parcel_planning:coverage(parcel.length?'CONNECTED':'NOT_OBSERVABLE',parcel.length,parcel.length?'owned_domain_store':'no_records_in_radius'),
     local_ev_stock:coverage(stock.length?'STATE_LEVEL_PROXY_ONLY':'NOT_OBSERVABLE',stock.length,stock.length?'owned_domain_store':'no_matching_records'),
-    observed_sessions:coverage(observedUsage.length?'OBSERVED_VERIFIED':'NOT_OBSERVABLE',observedUsage.length,observedUsage.length?'owned_domain_store':'no_permissioned_records_in_radius'),
+    observed_sessions:coverage(observedUsage.length?'OBSERVED_VERIFIED':'NOT_OBSERVABLE',observedUsage.length,observedUsage.length?'owned_domain_store_spatial_or_station_join':'no_permissioned_records_in_radius_or_linked_charger'),
     freight:coverage(freight.length?'REGIONAL_EVIDENCE_PRESENT_ADDRESS_BINDING_UNVERIFIED':'NOT_OBSERVABLE',freight.length,freight.length?'owned_domain_store':'no_records_in_radius'),
     dwell_context:coverage(dwell.length?'CONTEXT_PRESENT':'NOT_OBSERVABLE',dwell.length,dwell.length?'owned_domain_store':'no_records_in_radius'),
     deep_market_evidence:coverage(market.length?'CONNECTED':'NOT_OBSERVABLE',market.length,market.length?'owned_domain_store':'no_matching_records'),
@@ -126,10 +145,10 @@ export async function buildOwnedAliEvSiteSnapshot({
     matched_address:clean(geo?.matched_address||address),
     requested_address:clean(address),
     latitude,longitude,state,postal_code:postal,city:clean(geo?.city),
-    retrieved_at:now(),
+    retrieved_at:collectedAt,
     source_coverage_manifest:{
       schema:'evercraft.rivet.source-coverage.v1',
-      generated_at:now(),
+      generated_at:collectedAt,
       domains,
       semantics:'Every report-relevant source domain is explicit. Missing is never zero; candidate utility, tariff and incentive records remain unverified until site-specific eligibility is confirmed.'
     },
@@ -147,6 +166,7 @@ export async function buildOwnedAliEvSiteSnapshot({
     charger_source_status:domains.charging_inventory.state,
     charger_source_name:clean(chargers[0]?.source_name)||null,
     nearby_observed_usage:observedUsage,
+    observed_usage_join:{spatial_records:spatialObservedUsage.length,station_linked_records:linkedObservedUsage.length,nearby_charger_ids:nearbyChargerIds.size},
     utility_service_area_candidates:utilityAreas,
     utility_rate_candidates:tariffs,
     utility_rate_candidate_utilities:[...new Set(tariffs.map(x=>clean(x.utility_name)).filter(Boolean))],
@@ -167,8 +187,9 @@ export async function buildOwnedAliEvSiteSnapshot({
     owned_domain_engine:{
       schema:'evercraft.aliev.owned-domain-engine.v1',
       required_domains:REQUIRED_DOMAINS.length,
-      queried_at:now(),
+      queried_at:collectedAt,
       precomputed_snapshot_required:false,
+      live_refresh:liveRefresh,
     }
   };
 }

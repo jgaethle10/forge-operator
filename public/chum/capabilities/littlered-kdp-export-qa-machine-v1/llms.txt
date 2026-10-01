@@ -3,7 +3,7 @@
 Capability ID: littlered-kdp-export-qa-machine-v1
 Commercial state: verification_required
 Machine state: discovery_only
-Public URL: https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/littlered-kdp-export-qa-machine-v1/index.html
 Preferred agent route: universal fallback
 Universal Evercraft MCP: https://fabric.systemiacommandcenters.com/mcp
 Start here: Not a current sell-now route
@@ -35,6 +35,7 @@ No approved external machine price/payment path was found. Do not auto-quote.
 ## Invocation and authority
 
 LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.
+Live canary evidence: GitHubActionsRun:36802891607
 
 QA may report readiness state but must not publish, upload or distribute the book without separate explicit authority.
 

@@ -141,9 +141,15 @@ try{
   assert.equal(first.action,'created');
   assert.equal(first.health.ok,true);
   assert.equal(first.route.mode,'public_edge');
+  assert.equal(first.compatibility_binding.schema,'evercraft.rivet.compatibility-binding.v1');
+  assert.match(first.compatibility_binding.reports_url,/\/v1\/reports$/);
+  assert.equal(first.compatibility_binding.route_verified,false);
+  assert.equal(first.compatibility_binding.credential_source_env,'RIVET_YARD_TEAM_TOKEN');
+  assert.equal(first.compatibility_binding.secret_value_embedded,false);
   assert.match(first.route.origin,/^http:\/\/127\.0\.0\.1:/);
   assert.equal(first.route.verified,false);
   assert.equal(first.capacity_node_id,'evercraft-hosting-proof-node');
+  assert.equal(first.deployment_generation,1);
 
   const reportResponse=await fetch(first.route.origin+'/v1/reports',{
     method:'POST',
@@ -173,10 +179,24 @@ try{
   assert.equal(second.action,'promoted');
   assert.notEqual(second.active_deployment_id,first.active_deployment_id);
   assert.equal(second.previous.release_ref,'1'.repeat(40));
+  assert.equal(second.deployment_generation,2);
 
   const rolled=await hosting.rollback('rivet-report-production');
   assert.equal(rolled.state,'ready');
   assert.equal(rolled.active_release_ref,'1'.repeat(40));
+  assert.equal(rolled.deployment_generation,3);
+
+  await yard.stopDeployment(rolled.active_deployment_id,{reason:'simulate_runtime_loss'});
+  const healed=await hosting.reconcile('rivet-report-production');
+  assert.equal(healed.state,'ready');
+  assert.equal(healed.active_release_ref,'1'.repeat(40));
+  assert.equal(healed.deployment_generation,4);
+  assert.notEqual(healed.active_deployment_id,rolled.active_deployment_id);
+
+  const reconcileAll=await hosting.reconcileAll();
+  assert.equal(reconcileAll.service_count,1);
+  assert.equal(reconcileAll.healthy_count,1);
+  assert.equal(reconcileAll.degraded_count,0);
 
   const removed=await hosting.remove('rivet-report-production',{reason:'proof_complete'});
   assert.equal(removed.state,'stopped');
@@ -201,7 +221,12 @@ try{
     failed_candidate_preserves_active_service:true,
     blue_green_promotion:true,
     rollback:true,
+    deployment_generations:true,
+    same_spec_runtime_recovery:true,
+    reconcile_all:true,
     stable_public_route:true,
+    rivet_compatibility_binding_receipt:true,
+    compatibility_secret_value_not_embedded:true,
     authenticated_rivet_report:true,
     full_source_snapshot_persisted:true,
     source_coverage_verified:true,

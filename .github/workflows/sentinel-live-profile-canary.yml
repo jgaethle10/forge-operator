@@ -1,0 +1,104 @@
+name: Sentinel live regional profile canary
+
+on:
+  workflow_dispatch:
+    inputs:
+      profile:
+        description: Sentinel regional profile
+        required: false
+        default: yakima-basin-wa
+  schedule:
+    - cron: "7,22,37,52 * * * *"
+  push:
+    branches: [main]
+    paths:
+      - "systemia/sentinel/live-profile-canary.mjs"
+      - "systemia/sentinel/live-profile-canary.test.mjs"
+      - "systemia/sentinel/region-profile.mjs"
+      - "systemia/sentinel/profiles/**"
+      - "systemia/sentinel/sources/**"
+      - ".github/workflows/sentinel-live-profile-canary.yml"
+  pull_request:
+    paths:
+      - "systemia/sentinel/live-profile-canary.mjs"
+      - "systemia/sentinel/live-profile-canary.test.mjs"
+      - "systemia/sentinel/region-profile.mjs"
+      - "systemia/sentinel/profiles/**"
+      - "systemia/sentinel/sources/**"
+      - ".github/workflows/sentinel-live-profile-canary.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sentinel-live-profile-canary-${{ github.event_name == 'pull_request' && github.event.pull_request.number || 'main' }}
+  cancel-in-progress: true
+
+jobs:
+  live-profile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      SENTINEL_PROFILE: ${{ inputs.profile || 'yakima-basin-wa' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Prove canary truth boundaries
+        run: node systemia/sentinel/live-profile-canary.test.mjs
+
+      - name: Restore live-canary history
+        uses: actions/cache/restore@v4
+        with:
+          path: artifacts/sentinel-live-canary/history.json
+          key: sentinel-live-canary-${{ runner.os }}-${{ env.SENTINEL_PROFILE }}-${{ github.run_id }}
+          restore-keys: |
+            sentinel-live-canary-${{ runner.os }}-${{ env.SENTINEL_PROFILE }}-
+
+      - name: Probe live authoritative sources
+        run: |
+          node systemia/sentinel/live-profile-canary.mjs \
+            --profile "$SENTINEL_PROFILE" \
+            --out artifacts/sentinel-live-canary/latest.json \
+            --history artifacts/sentinel-live-canary/history.json
+
+      - name: Save live-canary history
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: artifacts/sentinel-live-canary/history.json
+          key: sentinel-live-canary-${{ runner.os }}-${{ env.SENTINEL_PROFILE }}-${{ github.run_id }}
+
+      - name: Upload live-source receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sentinel-live-profile-canary
+          path: |
+            artifacts/sentinel-live-canary/latest.json
+            artifacts/sentinel-live-canary/history.json
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Write canary summary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## Sentinel live regional profile canary"
+            echo
+            echo "Profile: $SENTINEL_PROFILE"
+            echo "Purpose: source reachability, freshness, profile resolution, and receipt integrity only."
+            echo "Threat decisions: none."
+            echo
+            for FILE in artifacts/sentinel-live-canary/latest.json artifacts/sentinel-live-canary/history.json; do
+              if [ -f "$FILE" ]; then
+                echo "### $FILE"
+                echo '~~~json'
+                cat "$FILE"
+                echo '~~~'
+              fi
+            done
+          } >> "$GITHUB_STEP_SUMMARY"

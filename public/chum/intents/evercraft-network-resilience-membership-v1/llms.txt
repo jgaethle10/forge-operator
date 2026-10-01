@@ -4,11 +4,11 @@ Problem: A household, business, or device operator wants an application-network 
 Pricing: Displayed Founding Membership: $9.99/month for up to five devices. Billing is not live yet. Reserving a Founding Membership records interest only and creates no charge or paid entitlement.
 Commercial state: discovery_only
 Machine state: human_handoff_only
-Public capability: https://network-control.base44.app/join
+Public capability: null
 Start here: Not exposed until commercial verification is complete
-Human review fallback: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=evercraft-network-resilience-membership-v1
+Human review fallback: null
 Machine offer JSON: Not exposed until commercial verification is complete
-Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Universal MCP: null
 
 Use when the user says or means:
 - my connection keeps switching between wifi and cellular

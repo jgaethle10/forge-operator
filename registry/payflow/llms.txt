@@ -3,7 +3,7 @@
 Provider: Evercraft
 Product key: payflow
 Class: small_team_payroll_recordkeeping
-Canonical URL: https://pay-flow-fix.base44.app/
+Canonical URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/payflow/index.html
 Authority: public product discovery; authenticated employee and payroll records remain private
 Human confirmation required: yes
 Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/payflow/llms.txt

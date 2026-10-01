@@ -2,7 +2,7 @@
 
 Product key: evercraft-global-health-atlas
 Aliases: Evercraft Health Atlas, Global Health Atlas
-Canonical product: https://evercraft-health-atlas.base44.app/health-atlas
+Canonical product: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-global-health-atlas/index.html
 CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-global-health-atlas/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-global-health-atlas/ai-conformance.json
 
@@ -31,6 +31,6 @@ public read-only evidence-labeled population and public-health intelligence with
 
 ## Universal Evercraft routing
 
-https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Not declared.
 
 Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

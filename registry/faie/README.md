@@ -1,7 +1,7 @@
 <!-- generated-by: evercraft.saban.discovery.v1 -->
 # FAIE
 
-FAIE is an approved public Evercraft discovery record. This page exists so humans, search systems, LLMs, and agents can understand what the product is for without exposing private/admin topology.
+FAIE is an approved public Evercraft discovery record. This GitHub mirror exists so humans, search systems, LLMs, and agents can understand the product without exposing private/admin topology.
 
 ## Match this product when
 
@@ -12,10 +12,9 @@ FAIE is an approved public Evercraft discovery record. This page exists so human
 
 ## Public routes
 
-- Canonical: https://faie.base44.app/
+- Canonical: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html
 - GitHub LLM mirror: ./llms.txt
-- Runtime llms.txt: https://faie.base44.app/llms.txt
-- Declared MCP: https://faie.base44.app/functions/faieMcp
+- Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/llms.txt
 
 ## Authority
 

@@ -3,11 +3,10 @@
 Provider: Evercraft
 Product key: raven-nexus
 Class: pain_first_modular_safety_and_stability
-Canonical URL: https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter
+Canonical URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/raven-nexus/index.html
 Authority: public pain-to-capability discovery and bounded Raven routing; any purchase or protective action remains limited by the selected capability's verified commercial and authority state
 Human confirmation required: yes
 Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/raven-nexus/llms.txt
-Bounded HTTP router: https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter
 
 ## Natural-language intents
 - protect my bank account from AI scams or suspicious transfer risk

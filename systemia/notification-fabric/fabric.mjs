@@ -2,6 +2,7 @@ import crypto from 'node:crypto';
 import path from 'node:path';
 import { emptyState, ingest } from '../signal-fabric/engine.mjs';
 import { createNotificationStore } from './store.mjs';
+import { createRealtimeHub } from './realtime-hub.mjs';
 import { sendWebPush } from './web-push.mjs';
 
 const PURPOSES = new Set(['transactional', 'operational', 'safety', 'reminder', 'marketing']);
@@ -31,7 +32,7 @@ function validateIntent(raw) {
   }
   const now = new Date().toISOString();
   return {
-    schema: 'systemia.notification.intent.v1',
+    schema: 'systemia.notification.intent.v2',
     id: String(raw.id || crypto.randomUUID()),
     product: String(raw.product || 'unknown').trim(),
     purpose,
@@ -65,7 +66,7 @@ function matchesSubscription(subscription, intent) {
 
 function safeNotificationPayload(intent) {
   return {
-    schema: 'systemia.notification.payload.v1',
+    schema: 'systemia.notification.payload.v2',
     id: intent.id,
     product: intent.product,
     purpose: intent.purpose,
@@ -80,9 +81,56 @@ function safeNotificationPayload(intent) {
   };
 }
 
+function minutesOfDay(value) {
+  const match = /^(\d{2}):(\d{2})$/.exec(String(value || ''));
+  if (!match) return null;
+  const hours = Number(match[1]);
+  const minutes = Number(match[2]);
+  if (hours > 23 || minutes > 59) return null;
+  return hours * 60 + minutes;
+}
+
+function localMinutes(timeZone, now = new Date()) {
+  try {
+    const parts = new Intl.DateTimeFormat('en-US', {
+      timeZone: timeZone || 'UTC',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    }).formatToParts(now);
+    const hour = Number(parts.find((part) => part.type === 'hour')?.value);
+    const minute = Number(parts.find((part) => part.type === 'minute')?.value);
+    return hour * 60 + minute;
+  } catch {
+    return now.getUTCHours() * 60 + now.getUTCMinutes();
+  }
+}
+
+function isQuietHours(subscription, now = new Date()) {
+  const quiet = subscription.quiet_hours;
+  if (!quiet || quiet.enabled === false) return false;
+  const start = minutesOfDay(quiet.start);
+  const end = minutesOfDay(quiet.end);
+  if (start === null || end === null || start === end) return false;
+  const current = localMinutes(quiet.timezone || subscription.timezone || 'UTC', now);
+  return start < end ? current >= start && current < end : current >= start || current < end;
+}
+
+function routeStrategy(intent, realtimeDelivered, subscription, now = new Date()) {
+  const urgent = intent.priority === 'critical' || intent.purpose === 'safety';
+  if (!urgent && isQuietHours(subscription, now)) {
+    return { push: false, reason: 'quiet_hours_inbox_only' };
+  }
+  if (urgent) return { push: true, reason: 'critical_fanout' };
+  if (realtimeDelivered) return { push: false, reason: 'realtime_present_suppress_push' };
+  return { push: true, reason: 'offline_push_fallback' };
+}
+
 export function createNotificationFabric(options = {}) {
   const dataDir = options.dataDir || process.env.EVERCRAFT_NOTIFICATION_DATA_DIR || path.resolve('.systemia-state/notifications');
-  const store = options.store || createNotificationStore({ dataDir });
+  const receiptSecret = options.receiptSecret ?? process.env.EVERCRAFT_NOTIFICATION_RECEIPT_SECRET ?? '';
+  const store = options.store || createNotificationStore({ dataDir, receiptSecret });
+  const realtimeHub = options.realtimeHub || createRealtimeHub(options.realtimeOptions);
   const sendPush = options.sendPush || sendWebPush;
   const vapidPublicKey = options.vapidPublicKey ?? process.env.EVERCRAFT_VAPID_PUBLIC_KEY ?? '';
   const vapidPrivateKey = options.vapidPrivateKey ?? process.env.EVERCRAFT_VAPID_PRIVATE_KEY ?? '';
@@ -93,29 +141,128 @@ export function createNotificationFabric(options = {}) {
     const intent = validateIntent(rawIntent);
     const dedupeKey = intent.dedupe_key ? `${intent.product}|${intent.dedupe_key}` : null;
     if (dedupeKey && store.seenDedupe(dedupeKey, intent.dedupe_window_seconds)) {
-      const event = { schema: 'systemia.notification.delivery.v1', notification_id: intent.id, status: 'deduped', at: new Date().toISOString(), intent };
-      store.recordDelivery(event);
-      return { intent, matched: 0, delivered: 0, deduped: true, receipts: [event] };
+      const event = store.recordDelivery({ schema: 'systemia.notification.delivery.v2', notification_id: intent.id, status: 'deduped', at: new Date().toISOString(), intent });
+      return { intent, matched: 0, accepted: 0, realtime_delivered: 0, inboxed: 0, deduped: true, receipts: [event] };
     }
 
     const matched = store.listSubscriptions().filter((sub) => matchesSubscription(sub, intent));
+    const livePrincipals = realtimeHub.matchPrincipals({
+      recipient_ids: intent.recipient_ids,
+      audiences: intent.audiences,
+      product: intent.product,
+    });
+    const principals = new Set();
+    for (const sub of matched) principals.add(sub.principal_id);
+    for (const principal of livePrincipals) principals.add(principal);
+    if (intent.purpose !== 'marketing') {
+      for (const principal of intent.recipient_ids) principals.add(principal);
+    }
+
+    const payload = safeNotificationPayload(intent);
     const receipts = [];
-    if (!matched.length) {
-      const event = { schema: 'systemia.notification.delivery.v1', notification_id: intent.id, status: 'no_target', at: new Date().toISOString(), intent };
-      store.recordDelivery(event);
-      return { intent, matched: 0, delivered: 0, deduped: false, receipts: [event] };
+    let inboxed = 0;
+    let realtimeDelivered = 0;
+    const realtimeByPrincipal = new Map();
+
+    for (const principal of principals) {
+      const inboxItem = store.appendInbox(principal, payload);
+      inboxed += 1;
+      receipts.push(store.recordDelivery({
+        schema: 'systemia.notification.delivery.v2',
+        notification_id: intent.id,
+        principal_id: principal,
+        product: intent.product,
+        purpose: intent.purpose,
+        status: 'inboxed',
+        inboxed_at: inboxItem.inboxed_at,
+        at: new Date().toISOString(),
+      }));
+      const realtime = realtimeHub.deliver(principal, payload);
+      realtimeByPrincipal.set(principal, realtime.delivered);
+      realtimeDelivered += realtime.delivered;
+      if (realtime.delivered > 0) {
+        receipts.push(store.recordDelivery({
+          schema: 'systemia.notification.delivery.v2',
+          notification_id: intent.id,
+          principal_id: principal,
+          product: intent.product,
+          purpose: intent.purpose,
+          status: 'delivered_realtime',
+          connections: realtime.delivered,
+          at: new Date().toISOString(),
+        }));
+      }
+    }
+
+    if (!matched.length && !principals.size) {
+      receipts.push(store.recordDelivery({
+        schema: 'systemia.notification.delivery.v2',
+        notification_id: intent.id,
+        status: 'no_target',
+        at: new Date().toISOString(),
+        intent,
+      }));
+      return { intent, matched: 0, accepted: 0, realtime_delivered: 0, inboxed: 0, deduped: false, receipts };
     }
 
     const maxAttempts = Math.max(1, Math.min(Number(options.pushAttempts ?? process.env.EVERCRAFT_NOTIFICATION_PUSH_ATTEMPTS ?? 3), 5));
     const sleep = options.sleep || ((ms) => new Promise((resolve) => setTimeout(resolve, ms)));
+    let accepted = 0;
+    let pushSuppressed = 0;
+    const attentionByPrincipal = new Map();
 
     for (const subscription of matched) {
+      const strategy = routeStrategy(intent, Number(realtimeByPrincipal.get(subscription.principal_id) || 0), subscription, options.now ? new Date(options.now) : new Date());
+      if (!strategy.push) {
+        pushSuppressed += 1;
+        receipts.push(store.recordDelivery({
+          schema: 'systemia.notification.delivery.v2',
+          notification_id: intent.id,
+          subscription_id: subscription.id,
+          principal_id: subscription.principal_id,
+          product: intent.product,
+          purpose: intent.purpose,
+          status: 'push_suppressed',
+          reason: strategy.reason,
+          at: new Date().toISOString(),
+        }));
+        continue;
+      }
+
+      const budgetExempt = intent.priority === 'critical' || intent.purpose === 'safety';
+      if (!budgetExempt) {
+        let budget = attentionByPrincipal.get(subscription.principal_id);
+        if (!budget) {
+          budget = store.consumeAttentionBudget(subscription.principal_id, intent.purpose, {
+            now: options.now ? new Date(options.now).getTime() : Date.now(),
+            limits: options.attentionLimits,
+          });
+          attentionByPrincipal.set(subscription.principal_id, budget);
+        }
+        if (!budget.allowed) {
+          pushSuppressed += 1;
+          receipts.push(store.recordDelivery({
+            schema: 'systemia.notification.delivery.v2',
+            notification_id: intent.id,
+            subscription_id: subscription.id,
+            principal_id: subscription.principal_id,
+            product: intent.product,
+            purpose: intent.purpose,
+            status: 'push_suppressed',
+            reason: 'attention_budget',
+            attention_budget: budget,
+            at: new Date().toISOString(),
+          }));
+          continue;
+        }
+      }
+
       let result = { ok: false, status: 0, responseBody: 'No delivery attempt completed.' };
       let attempts = 0;
       for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
         attempts = attempt;
         try {
-          result = await sendPush(subscription, safeNotificationPayload(intent), {
+          result = await sendPush(subscription, payload, {
             vapidPublicKey,
             vapidPrivateKey,
             vapidSubject,
@@ -137,8 +284,8 @@ export function createNotificationFabric(options = {}) {
       if (result.status === 404 || result.status === 410) {
         store.disableSubscription(subscription.id, `push_endpoint_${result.status}`);
       }
-      const receipt = {
-        schema: 'systemia.notification.delivery.v1',
+      const receipt = store.recordDelivery({
+        schema: 'systemia.notification.delivery.v2',
         notification_id: intent.id,
         subscription_id: subscription.id,
         principal_id: subscription.principal_id,
@@ -148,20 +295,32 @@ export function createNotificationFabric(options = {}) {
         http_status: result.status,
         retry_after: result.retryAfter || null,
         attempts,
+        route_reason: strategy.reason,
         at: new Date().toISOString(),
-      };
+      });
       receipts.push(receipt);
-      store.recordDelivery(receipt);
+      if (result.ok) accepted += 1;
     }
-    const accepted = receipts.filter((r) => r.status === 'accepted_by_push_gateway').length;
-    return { intent, matched: matched.length, accepted, delivered: accepted, deduped: false, receipts };
+
+    return {
+      intent,
+      matched: matched.length,
+      targeted_principals: principals.size,
+      accepted,
+      delivered: accepted,
+      realtime_delivered: realtimeDelivered,
+      inboxed,
+      push_suppressed: pushSuppressed,
+      deduped: false,
+      receipts,
+    };
   }
 
   async function dispatchSignal(rawSignal) {
     const priorState = store.loadSignalState(emptyState());
     const { state, decision } = ingest(priorState, rawSignal, { immediateBudgetPerHour });
     store.saveSignalState(state);
-    store.recordDelivery({ schema: 'systemia.notification.signal-receipt.v1', decision, at: new Date().toISOString() });
+    store.recordDelivery({ schema: 'systemia.notification.signal-receipt.v2', decision, at: new Date().toISOString() });
 
     if (decision.routes.includes('digest')) store.queueDigest({ decision, raw_signal: rawSignal, queued_at: new Date().toISOString() });
     if (decision.routes.includes('owner_queue')) store.queueOwner({ decision, raw_signal: rawSignal, queued_at: new Date().toISOString() });
@@ -183,14 +342,52 @@ export function createNotificationFabric(options = {}) {
     return { decision, push };
   }
 
+  function acknowledge(principalId, notificationId) {
+    const item = store.acknowledgeInbox(principalId, notificationId);
+    if (!item) return null;
+    store.recordDelivery({
+      schema: 'systemia.notification.delivery.v2',
+      notification_id: notificationId,
+      principal_id: principalId,
+      product: item.product,
+      purpose: item.purpose,
+      status: 'human_acknowledged',
+      at: item.acknowledged_at,
+    });
+    return item;
+  }
+
+  function seen(principalId, notificationId) {
+    const item = store.markInboxSeen(principalId, notificationId);
+    if (!item) return null;
+    store.recordDelivery({
+      schema: 'systemia.notification.delivery.v2',
+      notification_id: notificationId,
+      principal_id: principalId,
+      product: item.product,
+      purpose: item.purpose,
+      status: 'human_seen',
+      at: item.seen_at,
+    });
+    return item;
+  }
+
   return {
     store,
+    realtimeHub,
     config() {
       return {
-        schema: 'systemia.notification.config.v1',
+        schema: 'systemia.notification.config.v2',
+        brand: 'Evercraft Relay',
         web_push_enabled: Boolean(vapidPublicKey && vapidPrivateKey && vapidSubject),
         vapid_public_key: vapidPublicKey || null,
-        transport: 'web_push_vapid',
+        transports: {
+          realtime_sse: true,
+          durable_inbox: true,
+          web_push_vapid: Boolean(vapidPublicKey && vapidPrivateKey && vapidSubject),
+        },
+        receipt_ledger: store.deliveryLedgerHead(),
+        realtime_presence: realtimeHub.snapshot(),
       };
     },
     subscribe(input) {
@@ -199,7 +396,16 @@ export function createNotificationFabric(options = {}) {
       if (!input?.keys?.p256dh || !input?.keys?.auth) throw new Error('Push subscription keys are required.');
       return store.upsertSubscription(input);
     },
-    unsubscribe(id) { return store.removeSubscription(String(id || '')); },
+    unsubscribe(id, principalId = null) {
+      if (principalId) {
+        const subscription = store.getSubscription(id);
+        if (!subscription || subscription.principal_id !== principalId) return false;
+      }
+      return store.removeSubscription(String(id || ''));
+    },
+    listInbox(principalId, options = {}) { return store.listInbox(principalId, options); },
+    acknowledge,
+    seen,
     dispatchIntent,
     dispatchSignal,
   };

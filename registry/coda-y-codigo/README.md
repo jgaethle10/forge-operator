@@ -15,7 +15,7 @@ Coda y Código is an approved public Evercraft discovery record. This GitHub mir
 
 ## Public routes
 
-- Canonical: https://codaycodigo.base44.app/
+- Canonical: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/coda-y-codigo/index.html
 - GitHub LLM mirror: ./llms.txt
 
 ## Authority

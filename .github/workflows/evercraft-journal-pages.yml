@@ -1,0 +1,110 @@
+name: Evercraft Journal portable public release
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'systemia/newsroom/**'
+      - '.github/workflows/evercraft-journal-pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: evercraft-journal-portable-release
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    outputs:
+      pages_enabled: ${{ steps.pages.outcome == 'success' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Prove owned Journal contracts
+        run: npm run journal:test
+
+      - name: Build canonical portable Journal artifact
+        env:
+          EVERCRAFT_JOURNAL_ORIGIN: https://journal.evercraft.global
+        run: |
+          rm -rf _journal_release
+          node systemia/newsroom/journal-publisher.mjs systemia/newsroom/stories _journal_release
+
+      - name: Verify canonical portable artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f _journal_release/index.html
+          test -f _journal_release/index.json
+          test -f _journal_release/feed.xml
+          test -f _journal_release/llms.txt
+          grep -q 'Evercraft Journal' _journal_release/index.html
+          grep -q 'https://journal.evercraft.global/' _journal_release/index.json
+          if grep -RniE 'Black Friday|shopping assistant|optimize your cart' _journal_release; then
+            echo "Legacy shopping identity detected in canonical Journal artifact."
+            exit 1
+          fi
+
+      - name: Preserve portable Journal release
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-journal-portable
+          path: _journal_release
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Check or enable GitHub Pages
+        id: pages
+        continue-on-error: true
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Build Pages-specific artifact
+        if: steps.pages.outcome == 'success'
+        env:
+          EVERCRAFT_JOURNAL_ORIGIN: https://jgaethle10.github.io/forge-operator
+        run: |
+          rm -rf _journal_pages
+          node systemia/newsroom/journal-publisher.mjs systemia/newsroom/stories _journal_pages
+
+      - name: Upload Pages artifact
+        if: steps.pages.outcome == 'success'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _journal_pages
+
+      - name: Record Pages gate without failing canonical release
+        if: steps.pages.outcome != 'success'
+        run: |
+          {
+            echo "## Evercraft Journal portable release"
+            echo
+            echo "Canonical Journal artifact passed and was preserved."
+            echo "GitHub Pages publication is held by repository/account enablement."
+            echo "This workflow does not treat that external account gate as a failed Journal build."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  deploy-pages:
+    if: needs.build.outputs.pages_enabled == 'true'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    timeout-minutes: 8
+    steps:
+      - name: Deploy Evercraft Journal
+        id: deployment
+        uses: actions/deploy-pages@v4

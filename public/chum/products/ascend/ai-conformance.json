@@ -14,7 +14,7 @@
     "grok",
     "generic_agent"
   ],
-  "canonical_url": "https://ascend.base44.app/",
+  "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ascend/index.html",
   "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ascend/llms.txt",
   "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ascend/ai-discovery.json",
   "registry_name": null,
@@ -42,7 +42,7 @@
     "guardian": {
       "name": "Guardian Safeguard",
       "description": "Verified outside-support navigation when a concern needs to leave the activity environment.",
-      "public_surface": "https://guardian-pilot.base44.app/GetHelp"
+      "public_surface": null
     },
     "infinite-classroom": {
       "name": "Infinite Classroom",

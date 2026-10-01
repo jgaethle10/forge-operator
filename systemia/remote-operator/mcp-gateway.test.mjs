@@ -20,7 +20,15 @@ const fakeFetch = async (url, options = {}) => {
   }
   const route = new URL(url).pathname;
   if (route.endsWith('/v1/operator/status')) {
-    return new Response(JSON.stringify({ ok: true, roots: ['home'] }), { status: 200 });
+    return new Response(JSON.stringify({
+      ok: true,
+      roots: ['home'],
+      network_observation: {
+        ok: true,
+        schema: 'evercraft.node-network-observation.v1',
+        authority: { read_only: true },
+      },
+    }), { status: 200 });
   }
   if (route.endsWith('/v1/operator/fs/read')) {
     return new Response(JSON.stringify({ ok: true, content: 'hello' }), { status: 200 });
@@ -48,7 +56,7 @@ const listed = await executeRemoteOperatorMcpRpc({
   rpc: { jsonrpc: '2.0', id: 2, method: 'tools/list' },
   gateway,
 });
-assert.equal(listed.result.tools.length, 5);
+assert.equal(listed.result.tools.length, 6);
 
 const denied = await executeRemoteOperatorMcpRpc({
   rpc: {
@@ -75,6 +83,22 @@ const status = await executeRemoteOperatorMcpRpc({
 });
 assert.equal(status.result.structuredContent.ok, true);
 assert.equal(seen[0].authorization, 'Bearer ' + controlToken);
+
+const network = await executeRemoteOperatorMcpRpc({
+  rpc: {
+    jsonrpc: '2.0',
+    id: 41,
+    method: 'tools/call',
+    params: { name: 'remote_network_status', arguments: {} },
+  },
+  gateway,
+  authorization: 'Bearer ' + clientToken,
+});
+assert.equal(
+  network.result.structuredContent.schema,
+  'evercraft.node-network-observation.v1'
+);
+assert.equal(network.result.structuredContent.authority.read_only, true);
 
 const read = await executeRemoteOperatorMcpRpc({
   rpc: {
@@ -123,4 +147,5 @@ console.log(JSON.stringify({
   client_token_separated_from_node_control_grant: true,
   unauthenticated_tool_calls_blocked: true,
   control_grant_not_returned_to_client: true,
+  read_only_network_status_exposed: true,
 }));

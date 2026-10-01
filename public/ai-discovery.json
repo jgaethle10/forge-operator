@@ -2,7 +2,7 @@
   "schema": "evercraft.discovery-watershed.v3",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-28",
+  "updated_at": "2026-09-30",
   "purpose": "One public map for AI systems, agents and crawlers to route natural-language pain into truthful Evercraft capability discovery and human-confirmed commerce.",
   "start_here": {
     "human_directory": "/ai",
@@ -47,7 +47,7 @@
   "universal_front_door": {
     "read_only_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
     "machine_commerce_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-    "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+    "machine_commerce_mcp": null
   },
   "state_semantics": {
     "discovery_only": "May be surfaced and explained; no machine invocation is claimed.",

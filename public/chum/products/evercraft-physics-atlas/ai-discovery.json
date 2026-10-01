@@ -4,7 +4,7 @@
   "name": "Evercraft Physics Atlas",
   "aliases": [],
   "class": "evidence_led_physics_learning",
-  "canonical_url": "https://evercraft-physics-atlas.base44.app/",
+  "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-physics-atlas/index.html",
   "intents": [
     "learn physics interactively",
     "study mechanics gravity or thermodynamics",
@@ -27,7 +27,7 @@
   "buyer_frontage_url": null,
   "registry_name": null,
   "mcp": null,
-  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "machine_commerce_mcp": null,
   "developer_surfaces": null,
   "editorial_surfaces": null,
   "knowledge_surfaces": null,

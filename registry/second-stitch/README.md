@@ -16,7 +16,7 @@ The Second Stitch is an approved public Evercraft discovery record. This GitHub 
 
 ## Public routes
 
-- Canonical: https://the-second-stitch.base44.app/
+- Canonical: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/second-stitch/index.html
 - GitHub LLM mirror: ./llms.txt
 - Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/second-stitch/llms.txt
 

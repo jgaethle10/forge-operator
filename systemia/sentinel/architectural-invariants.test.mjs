@@ -41,11 +41,15 @@ const dockerRegistry = {
   }]
 };
 
+write('systemia/mcp/example.js', "export const x = 1;\n");
+
 let result = evaluateArchitecturalInvariants({ rootDir: root, registry: dockerRegistry });
 assert.equal(result.ok, false);
 assert.equal(result.violations[0]?.invariant_id, 'docker-test');
 assert.ok(result.violations[0]?.metadata?.uncovered_imports?.includes('systemia/mcp/example.js'));
 
+write('systemia/mcp/example.js', "import '../signal-fabric/engine.mjs';\n");
+write('systemia/signal-fabric/engine.mjs', "export const x = 1;\n");
 write('Dockerfile', [
   'FROM node:22-alpine AS build',
   'WORKDIR /app',
@@ -54,6 +58,21 @@ write('Dockerfile', [
   'WORKDIR /app',
   'COPY --from=build /app/server.ts ./server.ts',
   'COPY --from=build /app/systemia/mcp ./systemia/mcp'
+].join('\n') + '\n');
+result = evaluateArchitecturalInvariants({ rootDir: root, registry: dockerRegistry });
+assert.equal(result.ok, false);
+assert.ok(result.violations[0]?.metadata?.uncovered_imports?.includes('systemia/signal-fabric/engine.mjs'));
+assert.equal(result.violations[0]?.metadata?.traversal, 'transitive_repository_graph');
+
+write('Dockerfile', [
+  'FROM node:22-alpine AS build',
+  'WORKDIR /app',
+  'COPY . .',
+  'FROM node:22-alpine AS runtime',
+  'WORKDIR /app',
+  'COPY --from=build /app/server.ts ./server.ts',
+  'COPY --from=build /app/systemia/mcp ./systemia/mcp',
+  'COPY --from=build /app/systemia/signal-fabric ./systemia/signal-fabric'
 ].join('\n') + '\n');
 result = evaluateArchitecturalInvariants({ rootDir: root, registry: dockerRegistry });
 assert.equal(result.ok, true);

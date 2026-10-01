@@ -122,6 +122,8 @@ export function loadFabricCatalogFromRepository({catalogPath=''}={}){
       ].slice(0,32),
       state:clean(item.machine_state||item.commercial_state||'available',80),
       category:clean(item.category||'',120)||null,
+      start_url_state:clean(item.start_url_state||'',120)||null,
+      preferred_agent_route:clean(item.preferred_agent_route||'',120)||null,
       connections,
     };
   });
@@ -153,6 +155,8 @@ export function normalizeFabricCatalog(input=[]){
       keywords,
       state:clean(item.state||'available',80),
       category:clean(item.category||'',120)||null,
+      start_url_state:clean(item.start_url_state||'',120)||null,
+      preferred_agent_route:clean(item.preferred_agent_route||'',120)||null,
       connections,
     };
   });
@@ -270,8 +274,8 @@ export function fabricDirectoryTools(){
       inputSchema:{
         type:'object',
         properties:{
-          intent:{type:'string',minLength:3,maxLength:4000},
-          limit:{type:'integer',minimum:1,maximum:20,default:5},
+          intent:{type:'string',minLength:3,maxLength:4000,description:'Plain-language problem or goal to match against the published Evercraft capability catalog.'},
+          limit:{type:'integer',minimum:1,maximum:20,default:5,description:'Maximum number of ranked capability matches to return.'},
         },
         required:['intent'],
         additionalProperties:false,
@@ -284,7 +288,7 @@ export function fabricDirectoryTools(){
       description:'Return the current public-safe Evercraft capability directory. Read-only and non-transactional.',
       inputSchema:{
         type:'object',
-        properties:{limit:{type:'integer',minimum:1,maximum:100,default:25}},
+        properties:{limit:{type:'integer',minimum:1,maximum:100,default:25,description:'Maximum number of published capabilities to return.'}},
         additionalProperties:false,
       },
       annotations:safe,
@@ -295,7 +299,7 @@ export function fabricDirectoryTools(){
       description:'Return public connection surfaces for one published Evercraft capability, such as MCP, OpenAPI, A2A, website, or documentation URLs. Does not initiate payment or paid work.',
       inputSchema:{
         type:'object',
-        properties:{public_id:{type:'string',minLength:1,maxLength:160}},
+        properties:{public_id:{type:'string',minLength:1,maxLength:160,description:'Exact public capability identifier returned by Evercraft capability matching or listing.'}},
         required:['public_id'],
         additionalProperties:false,
       },

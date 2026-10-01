@@ -1,0 +1,21 @@
+name: Fallen Film Proof Bundle
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/film-proof-bundle.ts'
+      - 'systemia/media-studio/film-proof-bundle.test.ts'
+      - 'systemia/media-studio/film-proof-cli.ts'
+      - '.github/workflows/fallen-film-proof-bundle.yml'
+  workflow_dispatch:
+
+jobs:
+  film-proof:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-audit --no-fund
+      - run: node --import tsx --test systemia/media-studio/film-proof-bundle.test.ts

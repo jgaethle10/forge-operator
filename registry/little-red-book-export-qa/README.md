@@ -13,8 +13,9 @@ Little Red Studio Book Export QA is an approved public Evercraft discovery recor
 
 ## Public routes
 
-- Canonical: https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs
+- Canonical: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/little-red-book-export-qa/index.html
 - GitHub LLM mirror: ./llms.txt
+- Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/little-red-book-export-qa/llms.txt
 
 ## Authority
 

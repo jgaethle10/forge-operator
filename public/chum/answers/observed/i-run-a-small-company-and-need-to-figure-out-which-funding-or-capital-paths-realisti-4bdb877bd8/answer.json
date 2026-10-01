@@ -7,9 +7,9 @@
   "matched_capability": {
     "name": "Evercraft Deck Capital Fit",
     "class": "capital_fit_and_founder_readiness_research",
-    "canonical_url": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
+    "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/deck-capital-fit/index.html",
     "registry_name": "io.github.jgaethle10/deck-capital-fit",
-    "mcp": "https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp",
+    "mcp": null,
     "authority": "public offer discovery and human-confirmed paid research checkout",
     "boundaries": [
       "does not make lending or investment decisions",
@@ -18,7 +18,7 @@
     ],
     "human_confirmation_required": true,
     "commercial_state": "product_contract",
-    "machine_state": "specialist_mcp_declared"
+    "machine_state": "discovery_only"
   },
   "observed_miss_count": 1,
   "observed_providers": [

@@ -1,8 +1,3 @@
 {
-  "mcpServers": {
-    "findmypart": {
-      "type": "http",
-      "url": "https://findmypart.base44.app/functions/findMyPartMcp"
-    }
-  }
+  "mcpServers": {}
 }

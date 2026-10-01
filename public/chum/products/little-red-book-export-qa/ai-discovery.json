@@ -6,7 +6,7 @@
     "Little Red Studio"
   ],
   "class": "book_export_preflight_and_cover_geometry_qa",
-  "canonical_url": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
+  "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/little-red-book-export-qa/index.html",
   "intents": [
     "check if my book is ready for KDP",
     "validate my cover dimensions",
@@ -25,9 +25,9 @@
   "machine_commerce_handoff": null,
   "human_start_url": null,
   "buyer_frontage_url": null,
-  "registry_name": null,
+  "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
   "mcp": null,
-  "machine_commerce_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+  "machine_commerce_mcp": null,
   "developer_surfaces": null,
   "editorial_surfaces": null,
   "knowledge_surfaces": null,

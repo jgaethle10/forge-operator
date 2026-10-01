@@ -9,10 +9,18 @@ const LIVE_DIRECT_STATES=new Set([
   'registry_published_direct_mcp_existing',
   'public_https_verified_registry_pending',
 ]);
+const isLegacyProviderUrl=(value)=>{
+  try{
+    const url=new URL(String(value||''));
+    const host=url.hostname.toLowerCase();
+    return host==='base44.app'||host.endsWith('.base44.app');
+  }catch{return false;}
+};
 const isDirectLive=(product)=>
   LIVE_DIRECT_STATES.has(product.state) &&
   typeof product.mcp_url==='string' &&
-  product.mcp_url.startsWith('https://');
+  product.mcp_url.startsWith('https://') &&
+  !isLegacyProviderUrl(product.mcp_url);
 const isRegistryPublished=(product)=>
   product.state==='registry_published_direct_mcp_existing' &&
   typeof product.registry_name==='string' &&
@@ -41,13 +49,18 @@ function escapeHtml(value){
   return String(value??'').replace(/[&<>"']/g,(ch)=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 }
 function safePublicUrl(value,fallback){
-  if(!value) return fallback;
-  try{
-    const url=new URL(String(value));
-    if(!['http:','https:'].includes(url.protocol)) return fallback;
-    if(BLOCKED_PUBLIC_HOSTS.has(url.hostname.toLowerCase())) return fallback;
-    return url.toString();
-  }catch{return fallback;}
+  for(const candidate of [value,fallback]){
+    if(!candidate) continue;
+    try{
+      const url=new URL(String(candidate));
+      if(!['http:','https:'].includes(url.protocol)) continue;
+      const host=url.hostname.toLowerCase();
+      if(BLOCKED_PUBLIC_HOSTS.has(host)) continue;
+      if(host==='base44.app'||host.endsWith('.base44.app')) continue;
+      return url.toString();
+    }catch{}
+  }
+  return null;
 }
 function priceUsd(tier){
   const numeric=Number(tier?.price_usd);
@@ -127,7 +140,7 @@ for(const offer of catalog.offers||[]){
     live_proof: productConformance && liveCanaryEvidence ? {
       conformance_state: productConformance.conformance_state || null,
       machine_commerce_handoff_state: productConformance.machine_commerce_handoff_state || null,
-      mcp: productConformance.mcp || null,
+      mcp: safePublicUrl(productConformance.mcp, null),
       registry_name: productConformance.mcp_registry?.name || null,
       evidence: liveCanaryEvidence
     } : null,

@@ -244,3 +244,101 @@ Unleased quote orders are closed after the negotiation round instead of being le
 The repository does not contain market API keys, wallets or billing credentials. Public Akash supply discovery is live and requires no authentication. The order/bid/lease path is implemented but cannot truthfully claim a paid lease was created unless a runtime supplies valid market credentials and demand-scoped spend authority.
 
 This keeps Saban capable of negotiating real compute without silently turning visibility into authorization or code execution into an open-ended purchasing permission.
+
+
+## Zero-spend ambient compute doctrine
+
+Production placement defaults to **zero spend**. Commercial capacity may be discovered so Systemia knows what exists, but it is visibility-only unless an operator explicitly enables commercial placement and separately grants demand-scoped spend authority.
+
+The default search order is:
+
+```text
+healthy owned/authorized Evercraft nodes
+  -> authorized ambient device capacity
+  -> voluntary zero-cost capacity with declared terms
+  -> hold and report missing capacity
+  -> commercial capacity only after explicit opt-in
+```
+
+Saban does not require every useful device to become a general-purpose server. An authorized device may advertise a narrow set of registered workloads through `evercraft.ambient-capability.v1`. The ambient compute adapter turns those declarations into zero-cost compute offers without granting arbitrary code execution.
+
+Examples of useful micro-node classes include owned/authorized smart appliances, routers, NAS devices, old phones, TVs, kiosks, vehicle computers, SBCs, and other embedded systems whose hardware and firmware permit a compatible adapter. A refrigerator-class device might carry health probes, sensor relay, queue relay, telemetry normalization, content hashing, cache fragments, or bounded chunk transforms. Larger stateful workloads still require a node that actually satisfies their CPU, memory, storage, persistence, and network contracts.
+
+Visibility is never authorization. Seeing a device on Wi-Fi, Bluetooth, LAN, USB, or another ambient surface does not make it usable. Active compute requires an owner/authorization reference or voluntary-compute terms plus a compatible endpoint. Public/open protocols remain read-only unless their protocol explicitly declares an allowed passive operation.
+
+The zero-cost ambient adapter lives at:
+
+```text
+systemia/saban/ambient-compute-fabric.mjs
+```
+
+and production capacity planning defaults to zero-spend in:
+
+```text
+systemia/saban/production-capacity-plan.mjs
+```
+
+Commercial placement must be explicitly enabled with `SABAN_ALLOW_COMMERCIAL_CAPACITY=1`, and that switch alone still does not authorize a market order or spend.
+
+
+## Ambient Fabric + MicroSeed
+
+Saban now treats useful infrastructure as a **capability fabric**, not only as a pool of conventional servers.
+
+The zero-spend resident path is:
+
+```text
+passive census
+  -> observed device candidate
+  -> explicit owner authorization
+  -> MicroSeed manifest
+  -> fresh heartbeat / attestation
+  -> capability compilation
+  -> workload anatomy
+  -> heterogeneous placement
+  -> bounded execution
+  -> receipt / checkpoint / replay
+```
+
+Core modules:
+
+- `ambient-census.mjs`: passive LAN/mDNS/Bluetooth observation with raw identifiers hashed before persistence. Observation never grants authority.
+- `ambient-device-trust.mjs`: expiring, revocable trust lifecycle with manifest-drift and identity-drift holds.
+- `ambient-device-registry.mjs`: persistent local registry for trust records and MicroSeed manifests.
+- `microseed-device-bridge.mjs`: distinguishes real native-device compute from gateway-bridged observation, storage, network, or actuation capabilities.
+- `ambient-compute-fabric.mjs`: turns only truthful compute capabilities into bounded zero-external-spend compute offers.
+- `capability-fabric-composer.mjs`: composes network ingress, egress, storage, observation, and other capabilities across different authorized devices.
+- `heterogeneous-fabric-planner.mjs`: shards and places work across mismatched devices with privacy, freshness, duty-cycle, power, and failure-domain constraints.
+- `workload-anatomy.mjs`: decomposes larger products such as RIVET/AliEV into tiny shards, stateful core services, integrity work, backups, and witnesses.
+- `device-safety-envelope.mjs`: primary-function-first resource governor. The appliance/router/phone's normal job always outranks Saban work.
+- `capacity-organism.mjs`: resident zero-spend cycle that recompiles what capacity is actually usable now and reports missing capacity instead of inventing it.
+- `microseed-executor.mjs`: bounded registered-workload executor with stable idempotency and safety enforcement.
+- `microseed-gateway.mjs`: loopback-first trust-aware gateway for local Saban execution.
+- `microseed-native-agent.mjs` + `microseed-native-agent-adapter.mjs`: exact-device execution path for hardware that truly runs a native agent, with credentials isolated from manifests and receipts.
+- `ambient-device-cli.mjs`: explicit authorization, revocation, heartbeat, and local device-credential operations.
+
+### Truthful appliance participation
+
+A refrigerator discovered through Matter is not called a compute node merely because a nearby gateway can talk to it. It may advertise observation capabilities such as temperature or door state. It becomes compute only when the device itself has a verified native execution path or a specifically declared remote-compute interface.
+
+That distinction applies to routers, televisions, kiosks, vehicles, chargers, phones, appliances, SBCs, and other embedded hardware.
+
+### Primary function always wins
+
+Saban evaluates CPU slack, memory reserve, thermal ceiling, battery floor, power state, network load, telemetry freshness, and a primary-function busy signal before ambient work runs. Unsafe or stale capacity disappears from placement automatically.
+
+“Zero spend” means zero external compute-provider cash spend. It does **not** claim that electricity or incremental device energy is free. Ambient receipts preserve `incremental_energy_cost_state = not_measured` until it is actually measured.
+
+### Resident deployment
+
+`scripts/install-saban-capacity-organism.sh` installs:
+
+```text
+evercraft-saban-capacity.timer
+evercraft-saban-capacity.service
+evercraft-saban-microseed-gateway.service
+```
+
+The capacity organism refreshes every two minutes by default. The MicroSeed gateway binds to `127.0.0.1:8791` and uses locally generated secrets under the Saban state directory. Commercial-capacity use remains disabled.
+
+The Chromebook Fabric edge doctor also installs or repairs this Saban resident stack when run with `--repair`.

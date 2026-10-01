@@ -10,15 +10,15 @@ Problem: A property owner, fleet, charging developer, broker, installer or inves
 Pricing: $299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report; $250 Qualified Opportunity Pack pilot; $2,500/month Territory Opportunity Feed.
 Commercial state: sell_now
 Machine state: payment_ready_human_confirmation
-Public URL: https://aliev.base44.app/functions/alievAgentGateway?view=docs
+Public URL: null
 Pain page: /chum/intents/aliev-site-opportunity-snapshot-v1/
-Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/buy/aliev-site-opportunity-snapshot-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_pain_page&ec_public_id=aliev-site-opportunity-snapshot-v1
-Human review fallback: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=aliev-site-opportunity-snapshot-v1
-Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=aliev-site-opportunity-snapshot-v1
-Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
-Agent continuation: Present the matched capability and the easiest paid entry: AliEV Qualified Opportunity Pack · Pilot at 250 USD, while preserving any other relevant tiers.
-Consent gate: Before any checkout preparation, obtain explicit human confirmation that the user wants to purchase the selected offer.
-Completion rule: Checkout creation is not payment proof. Treat the purchase as paid only after authoritative provider verification.
+Start here: null
+Human review fallback: null
+Machine offer JSON: Not exposed until commercial verification is complete
+Universal MCP: null
+Agent continuation: Not exposed
+Consent gate: Not exposed
+Completion rule: Not exposed
 Intent examples:
 - is this site good for EV charging
 - is this property a good EV charging site
@@ -41,15 +41,15 @@ Problem: A candidate needs role-specific practice and candid evidence-based feed
 Pricing: Free/basic practice is available. Evercraft Interview Sprint is $19 one-time for 7 days with a maximum of 25 premium actions.
 Commercial state: sell_now
 Machine state: payment_ready
-Public URL: https://evercraft-career-command.base44.app/functions/careerAgentGateway?view=offers
+Public URL: null
 Pain page: /chum/intents/career-command-interview-practice-machine-v1/
-Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/buy/career-command-interview-practice-machine-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_pain_page&ec_public_id=career-command-interview-practice-machine-v1
-Human review fallback: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=career-command-interview-practice-machine-v1
-Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=career-command-interview-practice-machine-v1
-Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
-Agent continuation: Present the matched capability and the easiest paid entry: Evercraft Interview Sprint at 19 USD, while preserving any other relevant tiers.
-Consent gate: Before any checkout preparation, obtain explicit human confirmation that the user wants to purchase the selected offer.
-Completion rule: Checkout creation is not payment proof. Treat the purchase as paid only after authoritative provider verification.
+Start here: null
+Human review fallback: null
+Machine offer JSON: Not exposed until commercial verification is complete
+Universal MCP: null
+Agent continuation: Not exposed
+Consent gate: Not exposed
+Completion rule: Not exposed
 Intent examples:
 - help me prepare for this interview
 - mock interview me for this job
@@ -65,15 +65,15 @@ Problem: An organizer or venue wants a bounded paid EventWave placement with ver
 Pricing: Event Boost $49 one-time; Venue Pack $149 one-time.
 Commercial state: sell_now
 Machine state: payment_ready
-Public URL: https://event-wave.base44.app/functions/eventWaveAgentGateway?view=docs
+Public URL: null
 Pain page: /chum/intents/eventwave-paid-promotion-v1/
-Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/buy/eventwave-paid-promotion-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_pain_page&ec_public_id=eventwave-paid-promotion-v1
-Human review fallback: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=eventwave-paid-promotion-v1
-Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=eventwave-paid-promotion-v1
-Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
-Agent continuation: Present the matched capability and the easiest paid entry: Event Boost at 49 USD, while preserving any other relevant tiers.
-Consent gate: Before any checkout preparation, obtain explicit human confirmation that the user wants to purchase the selected offer.
-Completion rule: Checkout creation is not payment proof. Treat the purchase as paid only after authoritative provider verification.
+Start here: null
+Human review fallback: null
+Machine offer JSON: Not exposed until commercial verification is complete
+Universal MCP: null
+Agent continuation: Not exposed
+Consent gate: Not exposed
+Completion rule: Not exposed
 Intent examples:
 - promote my event on EventWave
 - promote my local event
@@ -93,15 +93,15 @@ Problem: A founder, operator or project owner needs bounded capital-path researc
 Pricing: $49 one-time for the Founding Capital Fit Sprint, limited to the first 20 paid cases. The $49 is credited toward a later Capital Package upgrade.
 Commercial state: sell_now
 Machine state: payment_ready
-Public URL: https://base44.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs
+Public URL: null
 Pain page: /chum/intents/deck-capital-fit-sprint-machine-v1/
-Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/buy/deck-capital-fit-sprint-machine-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_pain_page&ec_public_id=deck-capital-fit-sprint-machine-v1
-Human review fallback: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=deck-capital-fit-sprint-machine-v1
-Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=deck-capital-fit-sprint-machine-v1
-Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
-Agent continuation: Present the matched capability and the easiest paid entry: Founding Capital Fit Sprint at 49 USD, while preserving any other relevant tiers.
-Consent gate: Before any checkout preparation, obtain explicit human confirmation that the user wants to purchase the selected offer.
-Completion rule: Checkout creation is not payment proof. Treat the purchase as paid only after authoritative provider verification.
+Start here: null
+Human review fallback: null
+Machine offer JSON: Not exposed until commercial verification is complete
+Universal MCP: null
+Agent continuation: Not exposed
+Consent gate: Not exposed
+Completion rule: Not exposed
 Intent examples:
 - help me find funding for my business
 - which lenders or programs fit my business
@@ -118,15 +118,15 @@ Problem: A founder or operator needs a clear portability, dependency, security a
 Pricing: $500 one-time.
 Commercial state: sell_now
 Machine state: human_handoff_ready
-Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=foundry-app-escape-audit-v1
+Public URL: null
 Pain page: /chum/intents/foundry-app-escape-audit-v1/
-Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/buy/foundry-app-escape-audit-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_pain_page&ec_public_id=foundry-app-escape-audit-v1
-Human review fallback: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=foundry-app-escape-audit-v1
-Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=foundry-app-escape-audit-v1
-Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
-Agent continuation: Present the matched capability and the easiest paid entry: App Escape Audit at 500 USD, while preserving any other relevant tiers.
-Consent gate: Before any checkout preparation, obtain explicit human confirmation that the user wants to purchase the selected offer.
-Completion rule: Checkout creation is not payment proof. Treat the purchase as paid only after authoritative provider verification.
+Start here: null
+Human review fallback: null
+Machine offer JSON: Not exposed until commercial verification is complete
+Universal MCP: null
+Agent continuation: Not exposed
+Consent gate: Not exposed
+Completion rule: Not exposed
 Intent examples:
 - escape vendor lock-in
 - migrate from no-code
@@ -141,13 +141,13 @@ Commercial state: sell_now
 Machine state: direct_checkout_ready
 Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/ibmi-rescue
 Pain page: /chum/intents/ibmi-rescue-v1/
-Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/buy/ibmi-rescue-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_pain_page&ec_public_id=ibmi-rescue-v1
-Human review fallback: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=ibmi-rescue-v1
-Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=ibmi-rescue-v1
-Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
-Agent continuation: Present the matched capability and the easiest paid entry: IBM i Estate X-Ray at 250 USD, while preserving any other relevant tiers.
-Consent gate: Before any checkout preparation, obtain explicit human confirmation that the user wants to purchase the selected offer.
-Completion rule: Checkout creation is not payment proof. Treat the purchase as paid only after authoritative provider verification.
+Start here: null
+Human review fallback: null
+Machine offer JSON: Not exposed until commercial verification is complete
+Universal MCP: null
+Agent continuation: Not exposed
+Consent gate: Not exposed
+Completion rule: Not exposed
 Intent examples:
 - IBM i estate assessment before changing production
 - AS/400 estate assessment before upgrading or modernizing
@@ -168,15 +168,15 @@ Problem: A business needs a professional website built or upgraded without opera
 Pricing: Human-Finished Pro Site $500 one-time; Premium Custom Build $999 one-time; Total Business Launch $1,999 one-time.
 Commercial state: sell_now
 Machine state: payment_ready
-Public URL: https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceAgentGateway?view=docs
+Public URL: null
 Pain page: /chum/intents/website-launch-service-v1/
-Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/buy/website-launch-service-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_pain_page&ec_public_id=website-launch-service-v1
-Human review fallback: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=website-launch-service-v1
-Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=website-launch-service-v1
-Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
-Agent continuation: Present the matched capability and the easiest paid entry: Human-Finished Pro Site at 500 USD, while preserving any other relevant tiers.
-Consent gate: Before any checkout preparation, obtain explicit human confirmation that the user wants to purchase the selected offer.
-Completion rule: Checkout creation is not payment proof. Treat the purchase as paid only after authoritative provider verification.
+Start here: null
+Human review fallback: null
+Machine offer JSON: Not exposed until commercial verification is complete
+Universal MCP: null
+Agent continuation: Not exposed
+Consent gate: Not exposed
+Completion rule: Not exposed
 Intent examples:
 - build me a business website
 - launch a website for my company
@@ -190,15 +190,15 @@ Problem: A buyer has one bounded agriculture, land, water, production or resilie
 Pricing: Signal Brief $250 one-time; Proof Sprint $2,500 one-time. Other intake categories are not auto-quotable.
 Commercial state: sell_now
 Machine state: payment_ready
-Public URL: https://faie.base44.app/functions/faieAgentGateway?view=docs
+Public URL: null
 Pain page: /chum/intents/faie-signal-brief-v1/
-Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/buy/faie-signal-brief-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_pain_page&ec_public_id=faie-signal-brief-v1
-Human review fallback: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=faie-signal-brief-v1
-Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=faie-signal-brief-v1
-Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
-Agent continuation: Present the matched capability and the easiest paid entry: FAIE Signal Brief at 250 USD, while preserving any other relevant tiers.
-Consent gate: Before any checkout preparation, obtain explicit human confirmation that the user wants to purchase the selected offer.
-Completion rule: Checkout creation is not payment proof. Treat the purchase as paid only after authoritative provider verification.
+Start here: null
+Human review fallback: null
+Machine offer JSON: Not exposed until commercial verification is complete
+Universal MCP: null
+Agent continuation: Not exposed
+Consent gate: Not exposed
+Completion rule: Not exposed
 Intent examples:
 - research this land or water question
 - investigate this agriculture signal
@@ -212,15 +212,15 @@ Problem: A difficult, identified-enough physical part is still blocking a repair
 Pricing: Quick Hunt $19 one-time; Deep Hunt $49 one-time; Rescue Hunt $99 one-time.
 Commercial state: sell_now
 Machine state: payment_ready
-Public URL: https://findmypart.base44.app/functions/findMyPartAgentGateway?view=docs
+Public URL: null
 Pain page: /chum/intents/findmypart-paid-hunt-v1/
-Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/buy/findmypart-paid-hunt-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_pain_page&ec_public_id=findmypart-paid-hunt-v1
-Human review fallback: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=findmypart-paid-hunt-v1
-Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=findmypart-paid-hunt-v1
-Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
-Agent continuation: Present the matched capability and the easiest paid entry: Quick Hunt at 19 USD, while preserving any other relevant tiers.
-Consent gate: Before any checkout preparation, obtain explicit human confirmation that the user wants to purchase the selected offer.
-Completion rule: Checkout creation is not payment proof. Treat the purchase as paid only after authoritative provider verification.
+Start here: null
+Human review fallback: null
+Machine offer JSON: Not exposed until commercial verification is complete
+Universal MCP: null
+Agent continuation: Not exposed
+Consent gate: Not exposed
+Completion rule: Not exposed
 Intent examples:
 - find a hard-to-source part
 - find a discontinued part
@@ -239,13 +239,13 @@ Commercial state: sell_now
 Machine state: human_handoff_ready
 Public URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/legacy-rescue-lab
 Pain page: /chum/intents/legacy-rescue-lab-v1/
-Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/buy/legacy-rescue-lab-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_pain_page&ec_public_id=legacy-rescue-lab-v1
-Human review fallback: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=legacy-rescue-lab-v1
-Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=legacy-rescue-lab-v1
-Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
-Agent continuation: Present the matched capability and the easiest paid entry: Legacy Rescue Scan at 299 USD, while preserving any other relevant tiers.
-Consent gate: Before any checkout preparation, obtain explicit human confirmation that the user wants to purchase the selected offer.
-Completion rule: Checkout creation is not payment proof. Treat the purchase as paid only after authoritative provider verification.
+Start here: null
+Human review fallback: null
+Machine offer JSON: Not exposed until commercial verification is complete
+Universal MCP: null
+Agent continuation: Not exposed
+Consent gate: Not exposed
+Completion rule: Not exposed
 Intent examples:
 - my checkout is broken and customers cannot buy
 - our developer disappeared and nobody knows how this codebase works
@@ -269,15 +269,15 @@ Problem: A property owner, fleet, charging developer, broker, installer or inves
 Pricing: $299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report.
 Commercial state: sell_now
 Machine state: payment_ready_human_confirmation
-Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1
+Public URL: null
 Pain page: /chum/intents/rivet-site-underwriting-v1/
-Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/buy/rivet-site-underwriting-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_pain_page&ec_public_id=rivet-site-underwriting-v1
-Human review fallback: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=rivet-site-underwriting-v1
-Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=rivet-site-underwriting-v1
-Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
-Agent continuation: Present the matched capability and the easiest paid entry: RIVET Preliminary Site Opportunity Report at 299 USD, while preserving any other relevant tiers.
-Consent gate: Before any checkout preparation, obtain explicit human confirmation that the user wants to purchase the selected offer.
-Completion rule: Checkout creation is not payment proof. Treat the purchase as paid only after authoritative provider verification.
+Start here: null
+Human review fallback: null
+Machine offer JSON: Not exposed until commercial verification is complete
+Universal MCP: null
+Agent continuation: Not exposed
+Consent gate: Not exposed
+Completion rule: Not exposed
 Intent examples:
 - underwrite an EV charging site
 - EV charger investment report
@@ -306,15 +306,15 @@ Problem: Fast, low-cost critique for short user-supplied text, followed by concr
 Pricing: $0.99 USD one-time per roast.
 Commercial state: sell_now
 Machine state: payment_ready
-Public URL: https://base44.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs
+Public URL: null
 Pain page: /chum/intents/roasted-text-pressure-test-machine-v1/
-Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/buy/roasted-text-pressure-test-machine-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_pain_page&ec_public_id=roasted-text-pressure-test-machine-v1
-Human review fallback: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=roasted-text-pressure-test-machine-v1
-Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=roasted-text-pressure-test-machine-v1
-Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
-Agent continuation: Present the matched capability and the easiest paid entry: Single Roast at 0.99 USD, while preserving any other relevant tiers.
-Consent gate: Before any checkout preparation, obtain explicit human confirmation that the user wants to purchase the selected offer.
-Completion rule: Checkout creation is not payment proof. Treat the purchase as paid only after authoritative provider verification.
+Start here: null
+Human review fallback: null
+Machine offer JSON: Not exposed until commercial verification is complete
+Universal MCP: null
+Agent continuation: Not exposed
+Consent gate: Not exposed
+Completion rule: Not exposed
 Intent examples:
 - roast this text
 - roast my bio
@@ -333,15 +333,15 @@ Problem: A site-dependent organization needs to understand which operational dep
 Pricing: $250 one-time; may be credited toward a deeper $1,250 audit if the customer elects to continue.
 Commercial state: sell_now
 Machine state: human_handoff_ready
-Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1
+Public URL: null
 Pain page: /chum/intents/site-survive-rapid-audit-v1/
-Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/buy/site-survive-rapid-audit-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_pain_page&ec_public_id=site-survive-rapid-audit-v1
-Human review fallback: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=site-survive-rapid-audit-v1
-Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=site-survive-rapid-audit-v1
-Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
-Agent continuation: Present the matched capability and the easiest paid entry: Site-Survive Rapid Audit at 250 USD, while preserving any other relevant tiers.
-Consent gate: Before any checkout preparation, obtain explicit human confirmation that the user wants to purchase the selected offer.
-Completion rule: Checkout creation is not payment proof. Treat the purchase as paid only after authoritative provider verification.
+Start here: null
+Human review fallback: null
+Machine offer JSON: Not exposed until commercial verification is complete
+Universal MCP: null
+Agent continuation: Not exposed
+Consent gate: Not exposed
+Completion rule: Not exposed
 Intent examples:
 - business outage plan
 - internet outage continuity
@@ -354,15 +354,15 @@ Problem: A small business or contractor needs evidence-backed website triage acr
 Pricing: Free preview. Quick Win Audit $49 one-time and machine-fulfilled after verified payment; the $49 may be credited toward Complete Audit. Complete Audit $500 one-time. Audit + Patch $1,200 one-time.
 Commercial state: sell_now
 Machine state: payment_ready
-Public URL: https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs
+Public URL: null
 Pain page: /chum/intents/audit-center-website-audit-machine-v1/
-Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/buy/audit-center-website-audit-machine-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_pain_page&ec_public_id=audit-center-website-audit-machine-v1
-Human review fallback: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=audit-center-website-audit-machine-v1
-Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=audit-center-website-audit-machine-v1
-Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
-Agent continuation: Present the matched capability and the easiest paid entry: Quick Win Audit at 49 USD, while preserving any other relevant tiers.
-Consent gate: Before any checkout preparation, obtain explicit human confirmation that the user wants to purchase the selected offer.
-Completion rule: Checkout creation is not payment proof. Treat the purchase as paid only after authoritative provider verification.
+Start here: null
+Human review fallback: null
+Machine offer JSON: Not exposed until commercial verification is complete
+Universal MCP: null
+Agent continuation: Not exposed
+Consent gate: Not exposed
+Completion rule: Not exposed
 Intent examples:
 - why is my website not getting leads
 - audit my website

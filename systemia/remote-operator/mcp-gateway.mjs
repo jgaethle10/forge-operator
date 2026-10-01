@@ -67,6 +67,18 @@ export function remoteOperatorTools() {
       },
     },
     {
+      name: 'remote_network_status',
+      title: 'Inspect authorized node network state',
+      description: 'Read the node network observation already attached to Remote Operator status, including interfaces, default routes, listening ports, Evercraft service state, local Fabric/TLS probes, router-map configuration, and an explicit ChromeOS/Crostini host-boundary marker. This tool does not mutate network configuration.',
+      inputSchema: { type: 'object', properties: {}, additionalProperties: false },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    {
       name: 'remote_list_files',
       title: 'List files on an authorized Evercraft node',
       description: 'List one relative directory inside an admitted named root. Absolute paths and parent traversal are not accepted.',
@@ -213,7 +225,7 @@ export async function executeRemoteOperatorMcpRpc({
     return jsonRpc(id, {
       protocolVersion: '2025-03-26',
       capabilities: { tools: {} },
-      serverInfo: { name: 'evercraft-remote-operator', version: '0.1.0' },
+      serverInfo: { name: 'evercraft-remote-operator', version: '0.2.0' },
       instructions:
         'Evercraft Remote Operator reaches only explicitly authorized Evercraft nodes. Read operations require the client credential. File writes and program execution additionally require an explicit approval_ref and remain constrained by the node-side operator policy.',
     });
@@ -242,6 +254,13 @@ export async function executeRemoteOperatorMcpRpc({
   try {
     if (name === 'remote_operator_status') {
       return jsonRpc(id, toolResult(await gateway.invoke('/v1/operator/status', { method: 'GET' })));
+    }
+    if (name === 'remote_network_status') {
+      const status = await gateway.invoke('/v1/operator/status', { method: 'GET' });
+      if (!status?.network_observation) {
+        throw new Error('remote_network_observation_unavailable');
+      }
+      return jsonRpc(id, toolResult(status.network_observation));
     }
     if (name === 'remote_list_files') {
       return jsonRpc(id, toolResult(await gateway.invoke('/v1/operator/fs/list', { body: args })));
@@ -302,7 +321,7 @@ export function registerRemoteOperatorMcp(app, options = {}) {
     res.json({
       ok: true,
       service: 'evercraft-remote-operator-gateway',
-      version: '0.1.0',
+      version: '0.2.0',
       configured: Boolean(gateway),
       public_node_ingress_required: false,
       node_control_token_exposed: false,
@@ -319,7 +338,7 @@ export function registerRemoteOperatorMcp(app, options = {}) {
     res.json({
       ok: true,
       server: 'evercraft-remote-operator',
-      version: '0.1.0',
+      version: '0.2.0',
       transport: 'Streamable HTTP',
       configured: Boolean(gateway),
       tools: remoteOperatorTools().map((tool) => tool.name),

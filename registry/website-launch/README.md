@@ -12,10 +12,9 @@ Evercraft Website Launch is an approved public Evercraft discovery record. This 
 
 ## Public routes
 
-- Canonical: https://instant-website-builder-usa-6feac193.base44.app/
+- Canonical: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/website-launch/index.html
 - GitHub LLM mirror: ./llms.txt
 - Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/website-launch/llms.txt
-- Declared MCP: https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp
 
 ## Authority
 

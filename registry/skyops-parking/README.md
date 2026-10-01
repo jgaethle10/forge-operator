@@ -1,7 +1,7 @@
 <!-- generated-by: evercraft.saban.discovery.v1 -->
 # SkyOps Parking
 
-SkyOps Parking is an approved public Evercraft discovery record. This page exists so humans, search systems, LLMs, and agents can understand what the product is for without exposing private/admin topology.
+SkyOps Parking is an approved public Evercraft discovery record. This GitHub mirror exists so humans, search systems, LLMs, and agents can understand the product without exposing private/admin topology.
 
 ## Match this product when
 
@@ -13,9 +13,9 @@ SkyOps Parking is an approved public Evercraft discovery record. This page exist
 
 ## Public routes
 
-- Canonical: https://skyops-parking.base44.app/
+- Canonical: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/skyops-parking/index.html
 - GitHub LLM mirror: ./llms.txt
-- Runtime llms.txt: https://skyops-parking.base44.app/llms.txt
+- Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/skyops-parking/llms.txt
 
 ## Authority
 

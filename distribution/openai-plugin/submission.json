@@ -1,10 +1,10 @@
 {
   "schema": "evercraft.openai-plugin-submission-prep.v2",
-  "prepared_at": "2026-09-29",
+  "prepared_at": "2026-09-30",
   "submission_type": "With MCP",
   "plugin_name": "Evercraft",
-  "short_description": "Find and use the right Evercraft capability from one connected front door.",
-  "long_description": "Evercraft is a problem-first front door into the Evercraft/Systemia capability fabric. It matches a real-world goal to the smallest truthful Evercraft capability, prefers a verified specialist route when one exists, preserves evidence and availability boundaries, and keeps private context, payments, publishing, deployment and other consequential actions behind the applicable authorization and explicit human confirmation.",
+  "short_description": "Find the right Evercraft path",
+  "long_description": "Start from a real problem, discover the smallest truthful Evercraft capability, and identify its current public connection path when one exists. Evercraft preserves evidence and availability boundaries. Discovery does not grant private Systemia access, payment authority, publishing authority, deployment authority, or permission for other consequential actions.",
   "source_package": "plugins/evercraft-fabric",
   "mcp": {
     "url": "https://fabric.systemiacommandcenters.com/mcp",
@@ -18,11 +18,11 @@
   "support_url": "https://fabric.systemiacommandcenters.com/support",
   "privacy_policy_url": "https://fabric.systemiacommandcenters.com/privacy",
   "terms_url": "https://fabric.systemiacommandcenters.com/terms",
-  "proposed_category": "Business",
+  "proposed_category": "Business & Operations",
   "proposed_availability": [
     "US"
   ],
-  "release_notes": "Evercraft now uses its Evercraft-owned public Fabric MCP at fabric.systemiacommandcenters.com. The public discovery tools are read-only and preserve separate authorization for consequential actions.",
+  "release_notes": "Evercraft v1.0.3 aligns portable and compatibility metadata for public OpenAI submission on the verified Evercraft-owned Fabric MCP. Discovery remains read-only and consequential actions retain separate authorization.",
   "starter_prompts": [
     "I have a problem and do not know which Evercraft capability fits. Find the smallest useful option.",
     "I have a video that's too large for this chat. What can handle it?",
@@ -33,15 +33,33 @@
     "Our developer disappeared and our existing app is breaking. We need an evidence-first diagnosis before rebuilding."
   ],
   "remaining_platform_prerequisites": [
-    "OpenAI Platform Apps Management write permission",
-    "Verified Evercraft LLC business identity",
-    "Portal-generated domain verification challenge",
-    "Successful current Scan Tools result against the owned Fabric MCP",
-    "Demo recording URL showing the main use cases and tools",
-    "Exactly five positive and three negative test cases",
+    "Upload the canonical Evercraft v1.0.3 ZIP in OpenAI Platform Plugins",
+    "Select the verified Evercraft LLC developer identity in the owning organization/project",
+    "Confirm Apps Management Write access if the submitter is not an organization owner",
+    "Complete the portal-generated domain verification challenge for fabric.systemiacommandcenters.com",
+    "Complete the current portal MCP connection and Scan Tools checks",
+    "Confirm the imported five positive and three negative tests plus reviewer walkthrough",
     "Submit for OpenAI review",
     "Explicit Publish after approval",
     "Independent directory discovery receipt after publication"
   ],
-  "public_directory_claim_allowed": false
+  "public_directory_claim_allowed": false,
+  "package_version": "1.0.3",
+  "tool_annotation_justifications": {
+    "match_evercraft_capability": {
+      "readOnlyHint": "True because the tool only scores and returns pre-published Evercraft capability metadata; it creates no records, jobs, payments, messages, or external side effects.",
+      "destructiveHint": "False because the tool cannot delete, overwrite, revoke, send, purchase, publish, deploy, or otherwise mutate external state.",
+      "openWorldHint": "False because the tool evaluates a bounded Evercraft capability catalog and does not browse, fetch arbitrary public internet resources, or operate on open-ended external entities."
+    },
+    "list_evercraft_capabilities": {
+      "readOnlyHint": "True because the tool only lists pre-published public-safe capability metadata from the bounded Evercraft catalog.",
+      "destructiveHint": "False because listing capabilities cannot modify or remove user, Evercraft, or third-party state.",
+      "openWorldHint": "False because the tool reads a bounded Evercraft catalog rather than the public internet or arbitrary external entities."
+    },
+    "get_evercraft_connection_options": {
+      "readOnlyHint": "True because the tool only returns pre-published connection metadata for one known capability and does not initiate the connection, authentication, payment, or work.",
+      "destructiveHint": "False because the tool cannot change, delete, send, publish, purchase, deploy, or revoke anything.",
+      "openWorldHint": "False because it looks up one capability inside the bounded Evercraft catalog; returned public URLs are metadata and are not fetched by the tool."
+    }
+  }
 }

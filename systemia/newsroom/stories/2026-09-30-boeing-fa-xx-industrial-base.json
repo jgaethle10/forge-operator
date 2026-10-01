@@ -1,0 +1,255 @@
+{
+  "schema": "evercraft.journal.story.v1",
+  "story_id": "journal:2026-09-30:boeing-fa-xx-industrial-base",
+  "slug": "boeing-fa-xx-industrial-base",
+  "title": "The $20 Billion Fighter Award Is Also an Industrial-Base Test",
+  "dek": "Boeing's F/A-XX selection is a major aircraft-development story, but the public record also points to a quieter constraint: whether facilities, suppliers and skilled people can support another advanced program at scale.",
+  "desk": "Aviation & Industry",
+  "story_type": "Analysis",
+  "status": "approved",
+  "published_at": "2026-09-30T22:00:00.000Z",
+  "updated_at": "2026-09-30T22:00:00.000Z",
+  "freshness_expires_at": "2026-10-01T22:00:00.000Z",
+  "evidence_state": "verified_and_reported_public_sources",
+  "sensitivity": {
+    "state": "public_unclassified",
+    "classified_detail_policy": "do_not_infer_or_expand",
+    "note": "Technical and programmatic details identified by Boeing as classified are intentionally not reconstructed, estimated or inferred."
+  },
+  "sources": [
+    {
+      "source_id": "boeing-fa-xx-2026-09-29",
+      "label": "U.S. Navy Selects Boeing for F/A-XX Program",
+      "publisher": "Boeing",
+      "url": "https://investors.boeing.com/investors/news/press-release-details/2026/U-S--Navy-Selects-Boeing-for-FA-XX-Program/default.aspx",
+      "evidence_state": "verified",
+      "published_at": "2026-09-29"
+    },
+    {
+      "source_id": "usni-fa-xx-2026-09-29",
+      "label": "Boeing Picked to Build Navy's F/A-XX Carrier Fighter in Estimated $20B Deal",
+      "publisher": "USNI News",
+      "url": "https://news.usni.org/2026/09/29/boeing-picked-to-build-navys-f-a-xx-carrier-fighter-in-20b-contract",
+      "evidence_state": "reported",
+      "published_at": "2026-09-29"
+    },
+    {
+      "source_id": "boeing-supplier-registration",
+      "label": "Becoming a Supplier",
+      "publisher": "Boeing Suppliers",
+      "url": "https://www.boeingsuppliers.com/become",
+      "evidence_state": "verified"
+    },
+    {
+      "source_id": "boeing-supplier-development",
+      "label": "Globalization & Supplier Development and Strategic Sourcing & Partnerships",
+      "publisher": "Boeing Suppliers",
+      "url": "https://www.boeingsuppliers.com/supplier-principles/supplier-sourcing",
+      "evidence_state": "verified"
+    }
+  ],
+  "claims": [
+    {
+      "claim": "Boeing announced on September 29, 2026 that the U.S. Navy selected it for the F/A-XX program.",
+      "evidence_state": "verified",
+      "source_refs": [
+        "boeing-fa-xx-2026-09-29"
+      ]
+    },
+    {
+      "claim": "USNI News reported that the full-scale development contract is valued at more than $20 billion and includes multiple test aircraft.",
+      "evidence_state": "reported",
+      "source_refs": [
+        "usni-fa-xx-2026-09-29"
+      ]
+    },
+    {
+      "claim": "Boeing says construction is continuing on a secure St. Louis manufacturing facility intended to support an all-digital aerospace design and manufacturing system.",
+      "evidence_state": "verified",
+      "source_refs": [
+        "boeing-fa-xx-2026-09-29"
+      ]
+    },
+    {
+      "claim": "Boeing's public supplier process lets prospective companies register capabilities in its Enterprise Supplier LifeCycle portal, while explicitly stating that registration does not guarantee business.",
+      "evidence_state": "verified",
+      "source_refs": [
+        "boeing-supplier-registration",
+        "boeing-supplier-development"
+      ]
+    }
+  ],
+  "sections": [
+    {
+      "heading": "The aircraft headline is only half the story",
+      "body": "The public announcement is naturally dominated by the aircraft itself. Boeing says the Navy selected the company to design, build and deliver F/A-XX, which is intended to replace the F/A-18 Super Hornet. USNI News, citing the Pentagon announcement, reports that the full-scale development phase is valued at more than $20 billion and will include multiple test aircraft. Those are enormous numbers, but the more revealing public detail may be capacity. USNI reported that Chief of Naval Operations Adm. Daryl Caudle had previously described production capacity as central to the Navy's decision process. That makes the award not only an aerospace design program, but also a long-duration test of whether the surrounding industrial system can absorb another demanding program."
+    },
+    {
+      "heading": "Boeing is building for concurrency",
+      "body": "Boeing is not presenting F/A-XX as a stand-alone factory effort. The company says it planned to deliver two advanced fighter programs in parallel, following its earlier F-47 selection, and points to continuing construction of a secure St. Louis manufacturing facility as part of an all-digital aerospace design and manufacturing system. The public evidence does not tell outsiders how work will be divided among facilities, programs or suppliers, and Boeing says the technical and programmatic details of F/A-XX remain classified. What the public evidence does establish is that Boeing is making facilities, technology and workforce capacity part of its execution story."
+    },
+    {
+      "heading": "The supplier aperture is broader than exotic aircraft hardware",
+      "body": "For companies trying to understand where they might fit, Boeing's own supplier material is more useful than guessing at classified subsystems. Its public purchasing categories include aerospace support, engineering services, ground-support equipment, specialized part handling and distribution, common aerospace commodities, testing and evaluation, research, nonproduction prototypes and other technology work. Prospective suppliers can register capabilities through Boeing's Enterprise Supplier LifeCycle process, which makes those capabilities searchable inside Boeing. The company is equally clear that registration does not guarantee a contract. In other words, the practical opportunity is not to reverse-engineer what F/A-XX secretly needs. It is to build verifiable capability, quality, delivery performance and documentation that can survive a real sourcing process."
+    },
+    {
+      "heading": "Where an intelligence layer could matter",
+      "body": "The industrial-base problem is fragmented by nature. A small manufacturer may know its machines and certifications but not which programs are creating new demand. A prime contractor may know its requirements but still face supplier-capacity, quality, schedule and visibility problems across a large network. A useful software layer would map public solicitations, supplier capabilities, facilities, certifications, capacity signals, workforce constraints, part families and evidence of delivery performance without pretending that public data reveals classified requirements. The value is coordination: helping qualified organizations become legible to buyers and helping buyers discover credible capacity faster."
+    },
+    {
+      "heading": "What we will not infer",
+      "body": "F/A-XX is a national-security program, and Boeing explicitly says its technical and programmatic details remain classified under U.S. national-security and export laws. This analysis therefore stops at the public industrial-base boundary. It does not estimate classified performance, identify likely sensitive suppliers from circumstantial clues, reconstruct controlled technical requirements, or turn public fragments into a speculative system design. Future Evercraft coverage can responsibly follow public contract actions, facilities, hiring, supplier programs, congressional funding, schedule statements and other openly released industrial signals while keeping that boundary intact."
+    }
+  ],
+  "uncertainty_notes": [
+    "The public sources do not disclose the F/A-XX supplier list or allocation of work across Boeing facilities.",
+    "USNI's contract value is attributed to the Pentagon announcement; Boeing's own release describes the award as multi-billion-dollar without publishing the same figure.",
+    "Boeing's general supplier categories show the types of goods and services it buys, not F/A-XX-specific procurement requirements."
+  ],
+  "hero_visual": {
+    "url": "https://mmx.prnewswire.com/media/MS1999175/20260903catapult-8K.jpg?id=OA2978248",
+    "alt": "Navy public-release artist rendering associated with Boeing's F/A-XX announcement.",
+    "caption": "Artist rendering released by the Navy for the Boeing F/A-XX announcement. Boeing identifies it as NAVAIR Public Release SPR-2026-0601, Distribution Statement A.",
+    "source_ref": "boeing-fa-xx-2026-09-29",
+    "rights_state": "verified"
+  },
+  "production_grade": {
+    "status": "accepted",
+    "hero_kind": "licensed_media",
+    "text_primary": false,
+    "note": "Public-release hero art is labeled as an artist rendering. Fallen companion package uses source-bound data visualization."
+  },
+  "editorial_gate": {
+    "status": "accepted",
+    "score": 10,
+    "checks": [
+      "evidence_integrity",
+      "attribution",
+      "causal_and_uncertainty",
+      "adversarial_read",
+      "brand_compliance",
+      "platform_limits",
+      "visual_authenticity_and_rights",
+      "editorial_qa"
+    ]
+  },
+  "fallen_brief": {
+    "contract": "evercraft.fallen.journal.production.v1",
+    "package_key": "journal:2026-09-30:boeing-fa-xx-industrial-base",
+    "mission_key": "evercraft-journal-owned-newsroom",
+    "work_key": "boeing-fa-xx-industrial-base-companion",
+    "story": {
+      "title": "The $20 Billion Fighter Award Is Also an Industrial-Base Test",
+      "thesis": "The public F/A-XX award reveals an industrial capacity and supplier-readiness story alongside the aircraft program.",
+      "education_goal": "Explain the public contract scale, capacity signal and supplier entry path without inferring classified technical details.",
+      "desk": "aviation-industry"
+    },
+    "evidence": {
+      "source_refs": [
+        "boeing-fa-xx-2026-09-29",
+        "usni-fa-xx-2026-09-29",
+        "boeing-supplier-registration",
+        "boeing-supplier-development"
+      ],
+      "evidence_refs": [
+        "boeing-fa-xx-2026-09-29",
+        "usni-fa-xx-2026-09-29"
+      ],
+      "evidence_state": "public_source_grounded",
+      "confidence": "high_on_public_facts_bounded_on_program_detail",
+      "freshness_state": "fresh",
+      "volatile_claims": [
+        {
+          "claim_key": "contract-value",
+          "claim": "Full-scale development value reported as more than $20 billion",
+          "source_ref": "usni-fa-xx-2026-09-29",
+          "verified_at": "2026-09-30T22:00:00.000Z",
+          "expires_at": "2026-10-01T22:00:00.000Z",
+          "freshness_state": "fresh"
+        }
+      ],
+      "uncertainty_notes": "Programmatic and technical details beyond the public announcements remain intentionally out of scope."
+    },
+    "rights": {
+      "visual_rights_state": "not_required"
+    },
+    "derivative_plan": [
+      {
+        "format": "youtube_short",
+        "angle": "Why a $20B fighter award is also a supplier-capacity story"
+      },
+      {
+        "format": "linkedin",
+        "angle": "What Boeing publicly buys and how suppliers enter the pipeline"
+      }
+    ],
+    "visual_story": {
+      "id": "fa-xx-industrial-base-public-view",
+      "headline": "The F/A-XX industrial-base story",
+      "subhead": "Public facts only. Classified program detail stays outside the frame.",
+      "durationSec": 30,
+      "aspectRatio": "16:9",
+      "metrics": [
+        {
+          "id": "development-contract",
+          "label": "Reported full-scale development value",
+          "value": 20,
+          "unit": "B+ USD",
+          "evidenceState": "public_source",
+          "sourceRefs": [
+            "usni-fa-xx-2026-09-29"
+          ]
+        },
+        {
+          "id": "advanced-fighter-programs",
+          "label": "Advanced fighter programs Boeing says it plans to build in parallel",
+          "value": 2,
+          "unit": "programs",
+          "evidenceState": "public_source",
+          "sourceRefs": [
+            "boeing-fa-xx-2026-09-29"
+          ]
+        }
+      ],
+      "timeline": {
+        "startSec": 0,
+        "endSec": 30,
+        "events": [
+          {
+            "id": "award",
+            "t": 8,
+            "label": "Navy selects Boeing for F/A-XX",
+            "evidenceState": "public_source",
+            "sourceRefs": [
+              "boeing-fa-xx-2026-09-29"
+            ]
+          },
+          {
+            "id": "transition",
+            "t": 22,
+            "label": "Fleet transition expected as early Super Hornets leave service in the 2030s",
+            "evidenceState": "public_source",
+            "sourceRefs": [
+              "usni-fa-xx-2026-09-29"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "derivatives": [
+    {
+      "platform": "linkedin",
+      "copy": "Boeing's F/A-XX selection is not only an aircraft story. The public record points to an industrial-capacity test involving facilities, workforce and a supplier base capable of supporting another advanced program. Our latest Evercraft Journal analysis stays deliberately on the public side of that boundary and maps what Boeing itself says prospective suppliers can do next."
+    },
+    {
+      "platform": "facebook",
+      "copy": "The Navy's F/A-XX award is huge, but the quieter story may be whether the industrial base can actually carry the load. We looked at the public evidence, Boeing's supplier process and what this could mean for companies trying to become useful capacity without pretending public data reveals classified details."
+    },
+    {
+      "platform": "youtube_short",
+      "hook": "A $20B fighter contract is also a supply-chain stress test.",
+      "duration_sec": 45
+    }
+  ]
+}

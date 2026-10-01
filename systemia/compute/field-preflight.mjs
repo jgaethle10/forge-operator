@@ -83,6 +83,10 @@ function distroAllowed(id, version) {
 }
 
 const targetRoot = path.resolve(arg('--root', '/var/lib/evercraft/nodeseed'));
+const requestedRole = String(arg('--role', process.env.EVERCRAFT_NODE_ROLE || 'public_edge')).trim();
+if (!['public_edge','private_worker','virtual_worker','operator_authorized_public_edge'].includes(requestedRole)) {
+  throw new Error('node_role_invalid');
+}
 const osRelease = readOsRelease();
 const distro = String(osRelease.ID || '').toLowerCase();
 const version = String(osRelease.VERSION_ID || '');
@@ -101,11 +105,26 @@ const checks = {
   free_disk_at_least_8_gib: freeDiskGiB >= 8,
   virtualization_not_detected: virtualization.state !== 'virtual_detected',
 };
+const computeWorkerChecks = {
+  linux: checks.linux,
+  supported_distribution: checks.supported_distribution,
+  systemd: checks.systemd,
+  memory_at_least_4_gib: memoryGiB >= 4,
+  free_disk_at_least_8_gib: checks.free_disk_at_least_8_gib,
+};
+const fieldEligible = Object.values(checks).every(Boolean);
+const computeWorkerEligible = Object.values(computeWorkerChecks).every(Boolean);
+const roleEligible = ['virtual_worker','operator_authorized_public_edge'].includes(requestedRole) ? computeWorkerEligible : fieldEligible;
 
 const receipt = {
   schema: 'evercraft.node001.preflight.v1',
-  passed: Object.values(checks).every(Boolean),
+  passed: roleEligible,
+  requested_role: requestedRole,
+  field_eligible: fieldEligible,
+  compute_worker_eligible: computeWorkerEligible,
+  operator_public_edge_eligible: requestedRole === 'operator_authorized_public_edge' ? computeWorkerEligible : null,
   checks,
+  compute_worker_checks: computeWorkerChecks,
   observed: {
     platform: process.platform,
     architecture: process.arch,

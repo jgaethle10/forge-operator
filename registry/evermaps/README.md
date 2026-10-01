@@ -14,8 +14,9 @@ EverMaps is an approved public Evercraft discovery record. This GitHub mirror ex
 
 ## Public routes
 
-- Canonical: https://evermaps.base44.app/
+- Canonical: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evermaps/index.html
 - GitHub LLM mirror: ./llms.txt
+- Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evermaps/llms.txt
 
 ## Authority
 

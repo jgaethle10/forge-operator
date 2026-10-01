@@ -1,0 +1,517 @@
+{
+  "schema": "evercraft.capability-mesh.contracts.v1",
+  "version": "1.0.0",
+  "truth_boundary": {
+    "contract_declaration_is_not_runtime_verification": true,
+    "source_presence_is_not_live_readiness": true,
+    "missing_lane_is_never_inferred": true,
+    "not_required_requires_reason": true,
+    "adoption_stage_is_not_runtime_verification": true
+  },
+  "contracts": [
+    {
+      "product_key": "aliev",
+      "contract_version": "1.0.0",
+      "owner": "systemia",
+      "specialist_slug": "aliev",
+      "authority": {
+        "state": "declared",
+        "passport_product": "rivet",
+        "scopes": [
+          "report.generate"
+        ],
+        "evidence_refs": [
+          "systemia/execution-gate/gate.test.mjs"
+        ]
+      },
+      "context": {
+        "state": "declared",
+        "namespace": "aliev",
+        "read_scope": "context.read.aliev",
+        "write_scope": "context.write.aliev",
+        "evidence_refs": [
+          "systemia/context-fabric/fabric.mjs"
+        ]
+      },
+      "meter": {
+        "state": "declared",
+        "metrics": [
+          {
+            "metric": "site_reports",
+            "unit": "report"
+          }
+        ],
+        "evidence_refs": [
+          "systemia/execution-gate/gate.test.mjs"
+        ],
+        "product": "rivet"
+      },
+      "intake": {
+        "state": "not_required",
+        "reason": "Core AliEV/RIVET report invocation is a direct specialist/API path. Portfolio-wide inbound work may still enter through Intake Fabric before Systemia routing."
+      },
+      "execution": {
+        "state": "declared",
+        "gate_required": true,
+        "scopes": [
+          "report.generate"
+        ],
+        "evidence_refs": [
+          "systemia/execution-gate/gate.mjs",
+          "systemia/execution-gate/gate.test.mjs"
+        ],
+        "actions": [
+          {
+            "scope": "report.generate",
+            "meter_metric": "site_reports",
+            "meter_quantity": 1,
+            "meter_unit": "report"
+          }
+        ]
+      },
+      "relationship": {
+        "state": "not_required",
+        "reason": "Core site-report generation does not itself perform outbound relationship contact."
+      },
+      "receipt_reconciliation": {
+        "state": "declared",
+        "namespace": "aliev",
+        "evidence_refs": [
+          "systemia/context-fabric/fabric.mjs"
+        ]
+      },
+      "rollback": {
+        "state": "declared",
+        "policy": "Disable the product contract or specialist route without weakening Passport, Meter, Context, Intake, or Execution Gate defaults."
+      },
+      "compatibility": {
+        "intended_product_classes": [
+          "ev_infrastructure_opportunity_intelligence"
+        ]
+      },
+      "adoption_stage": "shared_runtime"
+    },
+    {
+      "product_key": "forensiscope",
+      "contract_version": "1.0.0",
+      "owner": "systemia",
+      "specialist_slug": "forensiscope",
+      "authority": {
+        "state": "declared",
+        "passport_product": "forensiscope",
+        "scopes": [
+          "classify_media_route"
+        ],
+        "evidence_refs": [
+          "registry/forensiscope/server.json",
+          "registry/forensiscope/overflow-contract.json"
+        ]
+      },
+      "context": {
+        "state": "declared",
+        "namespace": "forensiscope",
+        "read_scope": "context.read.forensiscope",
+        "write_scope": "context.write.forensiscope",
+        "evidence_refs": [
+          "systemia/forensiscope/evidence-graph.mjs",
+          "systemia/context-fabric/fabric.mjs"
+        ]
+      },
+      "meter": {
+        "state": "not_required",
+        "reason": "The currently contracted machine action is media-route classification only. Published duration pricing and paid review do not establish a machine usage-meter contract, and paid state remains authoritative elsewhere."
+      },
+      "intake": {
+        "state": "not_required",
+        "reason": "The currently contracted machine action does not ingest media. Public secure machine media intake remains verification-gated; actual media handoff is human-confirmed and the user submits authorized media through the product boundary."
+      },
+      "execution": {
+        "state": "declared",
+        "gate_required": true,
+        "scopes": [
+          "classify_media_route"
+        ],
+        "actions": [
+          {
+            "scope": "classify_media_route"
+          }
+        ],
+        "evidence_refs": [
+          "registry/forensiscope/server.json",
+          "public/forensiscope/developers/status.json",
+          "registry/forensiscope/overflow-contract.json"
+        ]
+      },
+      "relationship": {
+        "state": "not_required",
+        "reason": "Media-route classification does not itself perform outbound relationship contact."
+      },
+      "receipt_reconciliation": {
+        "state": "declared",
+        "namespace": "forensiscope",
+        "evidence_refs": [
+          "systemia/context-fabric/fabric.mjs",
+          "systemia/forensiscope/evidence-graph.mjs"
+        ]
+      },
+      "rollback": {
+        "state": "declared",
+        "policy": "Disable the ForensiScope product contract or specialist route without enabling machine media intake, weakening human-confirmed handoff, or changing Passport, Context, or Execution Gate defaults."
+      },
+      "compatibility": {
+        "intended_product_classes": [
+          "ai_media_overflow_and_analysis"
+        ]
+      },
+      "boundaries": {
+        "contracted_machine_surface": [
+          "classify_media_route"
+        ],
+        "secure_machine_media_intake": "verification_gated",
+        "human_confirmed_media_handoff": true,
+        "automatic_media_transfer_allowed": false,
+        "user_must_have_right_or_lawful_authority_to_submit": true,
+        "published_duration_pricing_is_not_technical_ingestion_guarantee": true,
+        "runtime_analysis_action_contracted": false
+      },
+      "adoption_stage": "shared_runtime"
+    },
+    {
+      "product_key": "evercraft-clip",
+      "contract_version": "1.0.0",
+      "owner": "systemia",
+      "specialist_slug": "evercraft-clip",
+      "authority": {
+        "state": "declared",
+        "passport_product": "evercraft-clip",
+        "scopes": [
+          "get_clip_capabilities",
+          "plan_clip_job"
+        ],
+        "evidence_refs": [
+          "mcp-registry/evercraft-clip.json",
+          "registry/evercraft-clip/README.md",
+          "registry/evercraft-clip/llms.txt"
+        ]
+      },
+      "context": {
+        "state": "declared",
+        "namespace": "evercraft-clip",
+        "read_scope": "context.read.evercraft-clip",
+        "write_scope": "context.write.evercraft-clip",
+        "evidence_refs": [
+          "registry/evercraft-clip/README.md",
+          "systemia/context-fabric/fabric.mjs"
+        ]
+      },
+      "meter": {
+        "state": "not_required",
+        "reason": "The currently contracted public machine actions are read-only capability discovery and non-executing job planning. The $4.99 customer order and paid rendering workflow do not establish a public machine Meter contract, and machine checkout is not enabled."
+      },
+      "intake": {
+        "state": "not_required",
+        "reason": "The currently contracted public MCP tools do not upload private media. Actual source-media submission remains inside authenticated, human-authorized Clip workflows."
+      },
+      "execution": {
+        "state": "declared",
+        "gate_required": true,
+        "scopes": [
+          "get_clip_capabilities",
+          "plan_clip_job"
+        ],
+        "actions": [
+          {
+            "scope": "get_clip_capabilities"
+          },
+          {
+            "scope": "plan_clip_job"
+          }
+        ],
+        "evidence_refs": [
+          "mcp-registry/evercraft-clip.json",
+          "registry/evercraft-clip/README.md",
+          "plugins/evercraft-clip/skills/evercraft-clip-direct/SKILL.md"
+        ]
+      },
+      "relationship": {
+        "state": "not_required",
+        "reason": "The currently contracted public actions discover capabilities and plan clip jobs only. They do not publish to social platforms or contact external recipients."
+      },
+      "receipt_reconciliation": {
+        "state": "declared",
+        "namespace": "evercraft-clip",
+        "evidence_refs": [
+          "systemia/context-fabric/fabric.mjs",
+          "registry/evercraft-clip/README.md"
+        ]
+      },
+      "rollback": {
+        "state": "declared",
+        "policy": "Disable the Clip product contract or specialist route without enabling private media upload, checkout, rendering, publishing, or weakening the authenticated human-authorized production boundary."
+      },
+      "compatibility": {
+        "intended_product_classes": [
+          "ai_social_video_production_and_distribution"
+        ]
+      },
+      "boundaries": {
+        "contracted_machine_surface": [
+          "get_clip_capabilities",
+          "plan_clip_job"
+        ],
+        "public_agent_authority": "read_only_discovery_and_non_executing_job_planning",
+        "private_media_upload_contracted": false,
+        "checkout_contracted": false,
+        "rendering_contracted": false,
+        "publishing_contracted": false,
+        "facebook_linkedin_instagram_code_paths_exist_but_publication_not_proven": true,
+        "tiktok_verified": false,
+        "forensiscope_automatic_media_transfer_claimed": false,
+        "human_confirmation_required_for_execution": true
+      },
+      "adoption_stage": "shared_runtime"
+    },
+    {
+      "product_key": "evernest-atlas",
+      "contract_version": "1.0.0",
+      "owner": "systemia",
+      "adoption_stage": "discovery_only",
+      "authority": {
+        "state": "not_required",
+        "reason": "Public admission is discovery-only. Private account-bound life planning remains inside the authenticated product and is not yet exposed through shared Passport scopes."
+      },
+      "context": {
+        "state": "not_required",
+        "reason": "Private household, financial, career, values, location, stress, plan and account data remain product-private; no shared Context Fabric namespace is declared yet."
+      },
+      "meter": {
+        "state": "not_required",
+        "reason": "Displayed subscription tiers or prices are not proof of active billing or entitlement, and no shared Meter contract is established."
+      },
+      "intake": {
+        "state": "not_required",
+        "reason": "No public machine intake contract is declared; user-supplied planning inputs remain inside the authenticated product boundary."
+      },
+      "execution": {
+        "state": "not_required",
+        "reason": "No shared machine execution action is declared. Generated plans are guidance and consequential actions require separate verification and human confirmation."
+      },
+      "relationship": {
+        "state": "not_required",
+        "reason": "The public discovery surface does not contact third parties or perform outbound relationship actions."
+      },
+      "receipt_reconciliation": {
+        "state": "not_required",
+        "reason": "No shared receipt-to-Context reconciliation contract has been established for private life-planning sessions."
+      },
+      "rollback": {
+        "state": "declared",
+        "policy": "Remove the public discovery admission or disable future shared-runtime bindings without exposing private household data or changing private account authority."
+      },
+      "compatibility": {
+        "intended_product_classes": [
+          "adult_household_life_planning"
+        ]
+      },
+      "boundaries": {
+        "adults_only": true,
+        "planning_guidance_not_guaranteed_outcome": true,
+        "private_household_and_financial_data_not_public": true,
+        "financial_legal_medical_tax_housing_safety_professional_advice_not_claimed": true,
+        "discovery_creates_payment_obligation": false,
+        "shared_runtime_contracted": false
+      }
+    },
+    {
+      "product_key": "opportunity-fabric",
+      "contract_version": "1.0.0",
+      "owner": "systemia",
+      "adoption_stage": "private_runtime",
+      "authority": {
+        "state": "not_required",
+        "reason": "The verified v1.2.1 private runtime uses its own authenticated service-role and state re-verification. Shared Passport authority has not yet replaced or wrapped that private runtime."
+      },
+      "context": {
+        "state": "not_required",
+        "reason": "Safe metadata and protected workflow records remain inside the private Opportunity Fabric runtime; no shared Context Fabric namespace is declared yet."
+      },
+      "meter": {
+        "state": "not_required",
+        "reason": "No shared usage-meter or payment/escrow rail is claimed for the verified private runtime."
+      },
+      "intake": {
+        "state": "not_required",
+        "reason": "Public discovery is metadata-only and the private runtime has its own opportunity/member inputs. A shared Intake Fabric adapter has not yet been contracted."
+      },
+      "execution": {
+        "state": "not_required",
+        "reason": "Private execution blueprints, team invitations and work-package state are verified in the product runtime, but no shared Execution Gate action or public transactional route is declared yet."
+      },
+      "relationship": {
+        "state": "not_required",
+        "reason": "Protected connection requests and team invitations use Opportunity Fabric state, not the shared Interaction Ledger today."
+      },
+      "receipt_reconciliation": {
+        "state": "not_required",
+        "reason": "Opportunity Fabric has its own FabricEvent/disclosure receipts, but shared Context Receipt Bridge reconciliation has not yet been contracted."
+      },
+      "rollback": {
+        "state": "declared",
+        "policy": "Keep the public product discovery-only or disable future shared-runtime bindings without weakening metadata-first matching, purpose-bound disclosure, team-invitation, IP, or counsel-review gates."
+      },
+      "compatibility": {
+        "intended_product_classes": [
+          "protected_collaboration_partner_matching_and_execution_orchestration"
+        ]
+      },
+      "boundaries": {
+        "verified_private_runtime": true,
+        "public_transactional_marketplace_claimed": false,
+        "protected_matching_metadata_first": true,
+        "protected_file_delivery_enabled": false,
+        "client_supplied_identity_or_consent_authoritative": false,
+        "creator_covenant_final_legal_agreement": false,
+        "payment_or_escrow_claimed": false,
+        "shared_runtime_contracted": false
+      }
+    },
+    {
+      "product_key": "systemia-university",
+      "contract_version": "1.0.0",
+      "owner": "systemia",
+      "adoption_stage": "discovery_only",
+      "authority": {
+        "state": "not_required",
+        "reason": "Public admission is discovery-only. Evidence-centered missions and workforce workflows are not yet exposed as shared Passport-authorized machine actions."
+      },
+      "context": {
+        "state": "not_required",
+        "reason": "No shared Context Fabric namespace is declared for proving missions, preliminary reviews, proofs, or workforce profiles."
+      },
+      "meter": {
+        "state": "not_required",
+        "reason": "Discovery creates no payment obligation and no shared Meter contract is established."
+      },
+      "intake": {
+        "state": "not_required",
+        "reason": "External-lab submissions and mission inputs have no shared Intake Fabric contract yet."
+      },
+      "execution": {
+        "state": "not_required",
+        "reason": "Mission exercises are bounded simulations/evidence exercises unless live execution is separately verified; no shared execution action is declared."
+      },
+      "relationship": {
+        "state": "not_required",
+        "reason": "Public discovery does not contact people, publish externally, or perform staffing changes."
+      },
+      "receipt_reconciliation": {
+        "state": "not_required",
+        "reason": "No shared receipt-reconciliation contract has been established for mission evidence or competency reviews."
+      },
+      "rollback": {
+        "state": "declared",
+        "policy": "Disable public discovery or future shared-runtime bindings without converting simulations, provisional evidence, or human-reviewed competency claims into live authority."
+      },
+      "compatibility": {
+        "intended_product_classes": [
+          "evidence_centered_learning_agent_proving_and_workforce_readiness"
+        ]
+      },
+      "boundaries": {
+        "simulations_not_live_execution": true,
+        "missions_do_not_authorize_contact_spend_publish_staffing_or_production_mutation": true,
+        "one_success_not_broad_competency_proof": true,
+        "provisional_evidence_not_verified_evidence": true,
+        "competency_verification_human_reviewed": true,
+        "public_proof_requires_explicit_approval": true,
+        "discovery_creates_credential_or_employment_authority": false,
+        "shared_runtime_contracted": false
+      }
+    },
+    {
+      "product_key": "findmypart",
+      "contract_version": "1.0.0",
+      "owner": "systemia",
+      "adoption_stage": "shared_runtime",
+      "specialist_slug": "findmypart",
+      "authority": {
+        "state": "declared",
+        "passport_product": "findmypart",
+        "scopes": [
+          "free_part_triage"
+        ],
+        "evidence_refs": [
+          "plugins/findmypart/skills/findmypart-direct/SKILL.md",
+          "mcp-registry/findmypart.json"
+        ]
+      },
+      "context": {
+        "state": "declared",
+        "namespace": "findmypart",
+        "read_scope": "context.read.findmypart",
+        "write_scope": "context.write.findmypart",
+        "evidence_refs": [
+          "registry/findmypart/README.md",
+          "systemia/context-fabric/fabric.mjs"
+        ]
+      },
+      "meter": {
+        "state": "not_required",
+        "reason": "The contracted action is the live free_part_triage tool, which explicitly creates no charge. Paid sourcing hunts remain separately human-confirmed and live MCP commercial state remains authoritative."
+      },
+      "intake": {
+        "state": "not_required",
+        "reason": "The contracted public action accepts bounded part clues through the specialist tool; no shared Intake Fabric adapter is declared."
+      },
+      "execution": {
+        "state": "declared",
+        "gate_required": true,
+        "scopes": [
+          "free_part_triage"
+        ],
+        "actions": [
+          {
+            "scope": "free_part_triage"
+          }
+        ],
+        "evidence_refs": [
+          "plugins/findmypart/skills/findmypart-direct/SKILL.md",
+          "mcp-registry/findmypart.json"
+        ]
+      },
+      "relationship": {
+        "state": "not_required",
+        "reason": "Free Part Passport triage does not itself contact vendors, buy parts, or perform outbound relationship actions."
+      },
+      "receipt_reconciliation": {
+        "state": "declared",
+        "namespace": "findmypart",
+        "evidence_refs": [
+          "systemia/context-fabric/fabric.mjs",
+          "registry/findmypart/README.md"
+        ]
+      },
+      "rollback": {
+        "state": "declared",
+        "policy": "Disable the FindMyPart contract or specialist route without enabling paid hunts, checkout, vendor contact, purchasing, or weakening evidence/fitment boundaries."
+      },
+      "compatibility": {
+        "intended_product_classes": [
+          "hard_to_source_parts"
+        ]
+      },
+      "boundaries": {
+        "contracted_machine_surface": [
+          "free_part_triage"
+        ],
+        "free_action_creates_charge": false,
+        "paid_hunts_contracted": false,
+        "checkout_creation_is_payment_proof": false,
+        "normalized_identity_is_fitment_proof": false,
+        "listing_is_live_inventory_proof": false,
+        "compatibility_guaranteed": false,
+        "private_vendor_analytics_session_command_center_sales_data_public": false
+      }
+    }
+  ]
+}
