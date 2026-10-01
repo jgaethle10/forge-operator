@@ -165,3 +165,57 @@ npm run validate:base44-owned-runtime-firewall
 ```
 
 The firewall blocks hard-coded Base44 network destinations from critical owned runtime surfaces while still allowing compatibility terminology and migration tooling.
+
+
+## Portfolio readiness board
+
+The private estate should be evaluated as one migration portfolio, not as disconnected app rewrites.
+
+`systemia/migrations/base44-exit/portfolio-board.mjs` combines redacted evacuation plans, the named migration queue, and the canonical landing-primitive policy. It reports:
+
+- per-wave blocked gates,
+- shared destination primitive coverage,
+- unqueued private-source counts,
+- shared blockers by affected-app count,
+- exact or authority-backed alias queue matches,
+- cutover-ready versus blocked state.
+
+Unmatched source names remain private; their board rows use source fingerprints only. The board has no traffic, payment, source-mutation or decommission authority.
+
+Run it against a private inventory with:
+
+```bash
+npm run base44:portfolio-board -- --inventory /secure/path/base44-estate.json
+```
+
+The authenticated live app listing was reconciled on 2026-09-30 in `live-page-observation-2026-09-30.json`. The listing again reached the 100-app ceiling, so 100 remains a minimum. Nineteen of the 24 named queue products were exact-name matches on the visible page, five require source/alias resolution, 81 visible apps were not exact-name assigned to the named queue, and ten visible apps were titled `Untitled`. Those counts are evidence of inventory work still required, not proof that the unmatched sources are disposable or unrelated.
+
+## Owned integration edge
+
+`systemia/integration-edge/runtime.mjs` is the shared public ingress for migrated OAuth connectors and signed webhooks.
+
+For new connector authorization:
+
+- connector initiation is authenticated,
+- OAuth state is random and hash-only at rest,
+- the exact callback URI is bound into the state record,
+- production callbacks require HTTPS,
+- Base44 callback origins are refused,
+- provider credentials are exchanged directly into Evercraft Secret Store,
+- successful callback state is one-time and replay-resistant.
+
+For webhooks:
+
+- the raw body is verified before dispatch,
+- HMAC signatures and timestamp replay windows are enforced,
+- event IDs are idempotent,
+- duplicate delivery does not redispatch work,
+- payload bytes do not enter delivery receipts.
+
+Provider-side OAuth redirect registration and webhook repointing remain explicit migration actions. Creating an owned endpoint does not claim the provider has been reconfigured.
+
+## Public route overlay
+
+The receipt-gated route registry can export active routes into the public discovery build without exposing staged candidates.
+
+`systemia/migrations/base44-exit/route-overlay.mjs` admits only active HTTPS routes with release, deployment, binding, probe and cutover receipts. CHUM's commercial discovery generator now resolves Machine Commerce through this overlay when `EVERCRAFT_ACTIVE_ROUTE_OVERLAY` is supplied. With no active route, the existing legacy public door remains in place. Staging or verification alone never changes generated public routing.
