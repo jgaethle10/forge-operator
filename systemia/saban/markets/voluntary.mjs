@@ -329,7 +329,7 @@ export class VoluntaryComputeMarket {
       });
     }
 
-    if(provider.negotiator||provider.proposal_waiters||provider.proposal_queue){
+    if(latest.issuer==='requestor'){
       for(let i=0;i<this.maxRounds;i+=1){
         const payload={
           demand:structuredClone(demand),
