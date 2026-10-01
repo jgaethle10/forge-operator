@@ -12,8 +12,12 @@
     {
       "product_key": "evermaps",
       "machine_public_id": "evermaps-evidence-projection-machine-v1",
-      "evidence": "EverMaps publishes machine discovery and has internal/admin snapshot machinery, but public execution remains discovery-only.",
-      "required_next_primitive": "Expose a public-safe read-only projection query returning map-ready geometry, evidence state, freshness, source refs, and coverage cautions without writing snapshots or exposing private records."
+      "evidence": "EverMaps now has a committed, Deno-check-clean publicProjectionQuery candidate over explicitly public_safe, read_only projection entities. It supports bounded queries across climate/ocean fields, river history, observation platforms, navigation lights, heat/smoke action sites and access gaps, volcanic lakes, and aggregate lifeline coverage. Exact lifeline asset topology is deliberately excluded. Live deployment has not yet been independently verified, so EverMaps remains discovery-only.",
+      "required_next_primitive": "Independently verify publicProjectionQuery in production across at least three layer families, confirm only public_safe/read_only records can escape, record conformance, then bind it to the existing Machine Commerce MCP as a read-only EverMaps tool. Do not promote from source presence alone.",
+      "implementation_state": "source_implemented_live_verification_pending",
+      "source_system": "Base44",
+      "source_checkpoint": "bce995a3931e946a2b5ce785f793f6bb961072af",
+      "candidate_endpoint": "https://base44.app/api/apps/6a985aeccbfb6e930a40137b/functions/publicProjectionQuery"
     },
     {
       "product_key": "globalstat",
