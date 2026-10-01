@@ -197,6 +197,16 @@ assert.equal(modeledEntry.passive_price_touch_observed,true);
 assert.ok(modeledEntry.passive_touch_delay_ms>0);
 assert.equal(modeledEntry.passive_queue_position_observed,false);
 assert.equal(modeledEntry.passive_hypothetical_fill_claimed,false);
+assert.equal(
+  modeledEntry.passive_outcome_state,
+  "PASSIVE_PRICE_TOUCHED_FILL_UNDETERMINED"
+);
+assert.equal(
+  modeledEntry.marketable_outcome_state,
+  "MARKETABLE_TOUCH_OBSERVED_EXECUTION_NOT_VERIFIED"
+);
+assert.equal(modeledEntry.partial_fill_probability_modeled,false);
+assert.equal(modeledEntry.unfilled_probability_modeled,false);
 assert.ok(Number.isFinite(modeledEntry.visible_touch_size));
 assert.ok(Number.isFinite(modeledEntry.top_of_book_size_imbalance));
 assert.equal(modeledEntry.full_market_depth_claimed,false);
@@ -414,6 +424,9 @@ console.log(JSON.stringify({
   total_touch_slippage_degrades_bar_result:true,
   historical_trade_touch_evidence:true,
   passive_touch_never_claimed_as_fill:true,
+  passive_outcome_states_explicit:true,
+  no_touch_and_touch_unknown_separated:true,
+  partial_fill_probability_not_invented:true,
   top_of_book_size_imbalance:true,
   visible_touch_size_not_full_depth:true,
   volume_is_not_liquidity_negative_control:true,
