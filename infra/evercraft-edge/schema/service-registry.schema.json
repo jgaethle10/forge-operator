@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Evercraft Edge Service Registry",
+  "type": "object",
+  "required": [
+    "service_id",
+    "logical_uri",
+    "tenant",
+    "endpoints"
+  ],
+  "properties": {
+    "service_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{0,62}$"
+    },
+    "logical_uri": {
+      "type": "string",
+      "pattern": "^evercraft://"
+    },
+    "tenant": {
+      "type": "string"
+    },
+    "aliases": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "endpoints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "url",
+          "protocol",
+          "state"
+        ],
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "protocol": {
+            "enum": [
+              "https",
+              "http",
+              "mcp",
+              "grpc",
+              "tcp",
+              "udp"
+            ]
+          },
+          "state": {
+            "enum": [
+              "candidate",
+              "healthy",
+              "degraded",
+              "held",
+              "retired"
+            ]
+          },
+          "provider": {
+            "type": "string"
+          },
+          "health_url": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "discovery": {
+      "type": "object",
+      "properties": {
+        "website": {
+          "type": "string"
+        },
+        "mcp": {
+          "type": "string"
+        },
+        "openapi": {
+          "type": "string"
+        },
+        "docs": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

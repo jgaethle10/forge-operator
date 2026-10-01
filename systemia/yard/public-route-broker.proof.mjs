@@ -29,6 +29,7 @@ async function startProvider(){
         provider:'proof-route-provider',
         https_required:false,
         lease_supported:true,
+        wildcard_catchall_lease_supported:true,
       });
     }
     if(req.method==='POST'&&req.url==='/v1/public-route/leases'){
@@ -40,6 +41,9 @@ async function startProvider(){
         origin:body.upstream_origin,
         deployment_receipt_hash:body.deployment_receipt_hash,
         instance_id:corruptNext?'wrong-instance':body.instance_id,
+        stable_hostname:body.stable_hostname===true,
+        wildcard_subdomains:body.wildcard_subdomains===true,
+        wildcard_hostname:body.wildcard_subdomains===true?'*.evercraft.test':null,
       };
       corruptNext=false;
       leases.set(id,lease);
@@ -99,6 +103,28 @@ try{
   assert.equal(binding.deployment_receipt_hash,deployment.receipt.receipt_hash);
   assert.equal(binding.instance_id,deployment.result.instance_id);
 
+  const chum=await yard.deployRelease({
+    deploymentId:'route-broker-chum-proof',
+    releaseRef:'39840bb7f068551d41b513750c66d72f6310ad92',
+    workloadClass:'systemia.chum-public-origin.v1',
+    capacityEndpoint:compute.endpoint,
+    input:{product_domain:'evercraft.test'},
+    rollbackTarget:'proof:previous-chum-runtime',
+    leaseTtlMs:120000,
+  });
+  assert.equal(chum.state,'ready');
+  assert.equal(chum.result.product_domain,'evercraft.test');
+
+  const wildcardBinding=await broker.bindDeployment('route-broker-chum-proof',{
+    requestedHostname:'product-router-check',
+    stableHostname:true,
+    wildcardSubdomains:true,
+    ttlMs:120000,
+  });
+  assert.equal(wildcardBinding.wildcard_subdomains,true);
+  assert.equal(wildcardBinding.wildcard_hostname,'*.evercraft.test');
+  assert.equal(wildcardBinding.stable_hostname,true);
+
   const second=await yard.deployRelease({
     deploymentId:'route-broker-mismatch-proof',
     releaseRef:'39840bb7f068551d41b513750c66d72f6310ad92',
@@ -118,6 +144,7 @@ try{
   assert.equal(provider.releaseCount(),before+1);
 
   await yard.stopDeployment('route-broker-specialist-proof',{reason:'proof_complete'});
+  await yard.stopDeployment('route-broker-chum-proof',{reason:'proof_complete'});
   await yard.stopDeployment('route-broker-mismatch-proof',{reason:'proof_complete'});
 
   console.log(JSON.stringify({
@@ -130,6 +157,8 @@ try{
     loopback_is_proof_only:true,
     public_https_still_required_for_live_promotion:true,
     route_provider_is_pluggable:true,
+    wildcard_product_route_authority_proven:true,
+    chum_product_domain_propagated:true,
     founder_login_required:false,
     binding_receipt:binding.receipt_hash,
   },null,2));
