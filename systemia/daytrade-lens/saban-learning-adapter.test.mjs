@@ -31,12 +31,21 @@ const fakeFetch=async()=>({
       items:[
         {
           DOI:"10.1234/proof",
-          title:["Proof Market Microstructure Paper"],
+          title:["Execution Cost and Implementation Shortfall in Trading"],
           publisher:"Proof Press",
           type:"journal-article",
           URL:"https://doi.org/10.1234/proof",
           author:[{family:"Proof"}],
           published:{"date-parts":[[2026,1,1]]}
+        },
+        {
+          DOI:"10.1234/fish",
+          title:["Feeding Cost Risk in Aquaculture"],
+          publisher:"Fish Press",
+          type:"journal-article",
+          URL:"https://doi.org/10.1234/fish",
+          author:[{family:"Fish"}],
+          published:{"date-parts":[[2026,1,2]]}
         }
       ]
     }
@@ -46,6 +55,13 @@ const discovered=await discoverScholarlySources(lesson,fakeFetch);
 assert.equal(discovered.provider,"Crossref");
 assert.equal(discovered.candidates.length,1);
 assert.equal(discovered.candidates[0].doi,"10.1234/proof");
+assert.equal(discovered.raw_candidate_count,2);
+assert.equal(discovered.rejected_candidate_count,1);
+assert.equal(
+  discovered.candidates.some((row)=>row.doi==="10.1234/fish"),
+  false
+);
+assert.equal(discovered.relevance_policy.all_groups_required,true);
 
 const sourceHunter=await runAssignment({
   assignment:{
@@ -96,6 +112,8 @@ console.log(JSON.stringify({
   schema:"evercraft.daytrade.saban-learning-adapter-proof.v1",
   roles:roles.length,
   crossref_read_only_discovery:true,
+  lesson_specific_relevance_gate:true,
+  irrelevant_cost_paper_rejected:true,
   role_item_attack:true,
   reconciled_attack_queue:true,
   frozen_protocol_mutation_forbidden:true,
