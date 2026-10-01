@@ -78,6 +78,7 @@ export function buildPropagationCandidates(signals = [], {
     const correlationKeys = unique(component.flatMap((row) => row.correlation_keys || [])).sort();
     const sourceFamilies = unique(component.map((row) => row.source_family)).sort();
     const times = component.map((row) => timeMs(row.observed_at)).filter((value) => value != null).sort((a, b) => a - b);
+    if (times.length >= 2 && times[times.length - 1] - times[0] > windowMs) continue;
     const maxMateriality = Math.max(...component.map((row) => Number(row.materiality_score || 0)));
     const avgMateriality = component.reduce((sum, row) => sum + Number(row.materiality_score || 0), 0) / component.length;
 
