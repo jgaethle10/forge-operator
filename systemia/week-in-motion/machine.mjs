@@ -10,6 +10,7 @@ import {
   summarizeEvidence,
   writeArtifacts,
 } from './engine.mjs';
+import { readEvidenceWindow } from './ledger.mjs';
 
 function safeDate(value) {
   if (!value) return new Date();
@@ -25,8 +26,13 @@ export async function runWeekInMotionMachine(options = {}) {
   const outDir = options.outDir || process.env.WEEK_IN_MOTION_STATE_DIR || 'artifacts/week-in-motion';
   const shouldPublish = options.publish === true;
 
-  const evidence = await collectGitHubEvidence({ repo, token, window });
+  const githubEvidence = await collectGitHubEvidence({ repo, token, window });
+  const inboxEvidence = await readEvidenceWindow(window);
+  const byDigest = new Map();
+  for (const item of [...githubEvidence, ...inboxEvidence]) byDigest.set(item.digest || item.id, item);
+  const evidence = [...byDigest.values()].sort((a, b) => String(a.occurredAt).localeCompare(String(b.occurredAt)));
   const summary = summarizeEvidence(evidence);
+  summary.collectors = { github: githubEvidence.length, inbox: inboxEvidence.length };
 
   let editorial = { status: 'blocked_no_evidence', reason: 'No evidence was collected.' };
   let gate = { pass: false, reasons: ['blocked_no_evidence'], metrics: {} };
