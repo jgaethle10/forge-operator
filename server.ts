@@ -18,6 +18,7 @@ import { registerRivetReportGateway } from './systemia/rivet/http-gateway.mjs';
 import { registerSpecialistHandoffMcps } from './systemia/mcp/specialist-handoff.js';
 import { registerRemoteOperatorMcp } from './systemia/remote-operator/mcp-gateway.mjs';
 import { registerNotificationFabricRoutes } from './systemia/notification-fabric/http.mjs';
+import { registerRadarRoutes } from './systemia/radar/http.mjs';
 
 dotenv.config();
 
@@ -169,6 +170,7 @@ function rateLimit(maxRequests: number, windowMs: number) {
 }
 
 app.use(express.json({ limit: '10mb', type: ['application/json', 'application/*+json'] }));
+const radarResident = registerRadarRoutes(app, { isProd });
 registerNotificationFabricRoutes(app);
 registerRivetReportGateway(app);
 registerSpecialistHandoffMcps(app, { gatewayUrl: machineCommerceGatewayUrl });
@@ -460,6 +462,7 @@ app.get('/api/health', (_req: Request, res: Response) => {
       engine_id: speech.engine_id,
       probe_state: speech.probe_state,
     },
+    radar: radarResident.health(),
   });
 });
 
@@ -483,6 +486,14 @@ app.get('/api/capabilities', (_req: Request, res: Response) => {
         probeState: speech.probe_state,
       };
     })(),
+    radar: {
+      publicControlRoom: '/radar/',
+      health: '/api/radar/health',
+      latest: '/api/radar/latest',
+      changeWall: '/api/radar/change-wall',
+      internalWrites: 'bearer-gated',
+      publicationAuthority: false,
+    },
     discovery: {
       llms: '/llms.txt',
       manifest: '/.well-known/evercraft-capabilities.json',
