@@ -136,7 +136,7 @@
         "return '/chum/commercial/' + encodeURIComponent(id) + '/';",
         "return origin + '/api/chum/go/'",
         "campaign', 'buyer-frontage'",
-        "return machineReviewUrl(offer.public_id, gateway)",
+        "const review = machineReviewUrl(offer.public_id, gateway);",
         "return 'owned_static_commercial_surface'"
       ],
       "repair_recipe_id": "human-buyer-frontage-regression",
