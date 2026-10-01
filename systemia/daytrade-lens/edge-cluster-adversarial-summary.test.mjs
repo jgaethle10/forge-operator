@@ -73,6 +73,17 @@ const summary=buildClusterAdversarialSummary({
       immediate_visible_touch_sufficient_rate:0.75,
     }],
   }))},
+  capitalScaleImpactEnvelopeLab:{reviews:candidates.map((candidate)=>({
+    signal_key:candidate.signal_key,
+    status:"CAPITAL_SCALE_IMPACT_ENVELOPE_READY",
+    grid:[{
+      hypothetical_order_notional_usd:10000,
+      scenarios:[{
+        impact_coefficient:1,
+        mean_stressed_quote_strategy_net:-0.002,
+      }],
+    }],
+  }))},
   familyMaxNullLab:{reviews:candidates.map((candidate)=>({
     signal_key:candidate.signal_key,
     status:"MAX_FAMILY_NULL_SEPARATED_DIAGNOSTIC",
@@ -166,6 +177,19 @@ assert.equal(
   0.75
 );
 assert.equal(
+  summary.clusters[0].diagnostic_counts.capital_scale_impact_envelope_ready,
+  2
+);
+assert.equal(
+  summary.clusters[0].member_receipts[0].capital_scale_impact_envelope_status,
+  "CAPITAL_SCALE_IMPACT_ENVELOPE_READY"
+);
+assert.equal(
+  summary.clusters[0].member_receipts[0]
+    .capital_scale_10000_coefficient_1_mean_stressed_net,
+  -0.002
+);
+assert.equal(
   summary.clusters[0].member_receipts[0].family_max_null_status,
   "MAX_FAMILY_NULL_SEPARATED_DIAGNOSTIC"
 );
@@ -196,6 +220,7 @@ console.log(JSON.stringify({
   volatility_delay_interaction_attached:true,
   signal_decay_cost_decomposition_attached:true,
   execution_speed_bounds_attached:true,
+  capital_scale_impact_envelope_attached:true,
   cscv_pbo_attached_at_cluster_unit:true,
   descriptive_only:true,
   eligibility_mutated:false,
