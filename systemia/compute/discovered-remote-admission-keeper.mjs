@@ -50,6 +50,7 @@ export class DiscoveredRemoteAdmissionKeeper {
           this.discoveryAttempts+=1;
           this.lastDiscoveryAt=this.clock().toISOString();
           const found=await this.brokerDiscovery({timeoutMs:this.discoveryTimeoutMs});
+          if(!this.running) break;
           const selected=found[0]||(
             this.fallbackBrokerUrls.length
               ? {
