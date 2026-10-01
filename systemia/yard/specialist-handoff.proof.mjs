@@ -76,6 +76,7 @@ try{
       'match_evercraft_capability',
       'list_evercraft_capabilities',
       'get_evercraft_connection_options',
+      'route_evercraft_payments',
     ]
   );
   assert.ok(fabricTools.result.tools.every(x=>x.annotations.readOnlyHint===true));
