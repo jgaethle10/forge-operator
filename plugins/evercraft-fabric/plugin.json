@@ -41,7 +41,6 @@
         "defaultPrompt": [
           "Find the smallest Evercraft capability for this problem.",
           "Route this problem to the right verified Evercraft specialist.",
-          "Show me the safest next step Evercraft can actually perform.",
           "Route this business payment need through Evercraft Payments without bypassing the Evercraft boundary."
         ],
         "composerIcon": "./assets/evercraft-icon.png",
