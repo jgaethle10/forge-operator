@@ -131,6 +131,7 @@ export async function startLocalOrganism({
   const yard = new YardOperator({ stateDir: yardState });
   let kaidance = null;
   let core = null;
+  let fabric = null;
   let remoteAdmission = null;
 
   try {
@@ -187,9 +188,27 @@ export async function startLocalOrganism({
       renewEveryMs: 1_800_000,
     });
 
+    fabric = await yard.deployRelease({
+      deploymentId: 'evercraft-fabric-local-resident',
+      releaseRef,
+      workloadClass: 'systemia.fabric-local-mcp.v1',
+      capacityEndpoint: seed.endpoint,
+      allocatorToken,
+      input: {
+        port: 0,
+      },
+      rollbackTarget: 'local-organism:fabric-previous',
+      leaseTtlMs: 3_600_000,
+    });
+    yard.startLeaseKeeper('evercraft-fabric-local-resident', {
+      ttlMs: 3_600_000,
+      renewEveryMs: 1_800_000,
+    });
+
     const kaidanceRoute = await yard.verifyRoute('kaidance-local-resident');
     const coreRoute = await yard.verifyRoute('systemia-core-local-resident');
-    if (!kaidanceRoute.ok || !coreRoute.ok) {
+    const fabricRoute = await yard.verifyRoute('evercraft-fabric-local-resident');
+    if (!kaidanceRoute.ok || !coreRoute.ok || !fabricRoute.ok) {
       throw new Error('local organism route verification failed');
     }
 
@@ -242,6 +261,16 @@ export async function startLocalOrganism({
         supervised_service_count: coreRoute.health.service_count,
         state: coreRoute.state,
       },
+      fabric: {
+        deployment_receipt: fabric.receipt.receipt_hash,
+        service_id: fabric.result.service_id,
+        state: fabricRoute.state,
+        outbound_service_relay_supported:
+          fabric.result.outbound_service_relay_supported === true,
+        operator_edge_attestation_supported:
+          fabric.result.operator_edge_attestation_supported === true,
+        public_ingress: false,
+      },
       remote_admission: {
         configured: Boolean(String(remoteBrokerUrl || '').trim()),
         state: remoteAdmission?.status().connected ? 'connected' :
@@ -273,19 +302,21 @@ export async function startLocalOrganism({
       yard,
       kaidance,
       core,
+      fabric,
       pulse,
       receipt,
       enrollment_request: enrollmentRequest,
       remote_admission: remoteAdmission,
       health: async () => {
-        const [kaidanceHealth, coreHealth] = await Promise.all([
+        const [kaidanceHealth, coreHealth, fabricHealth] = await Promise.all([
           yard.verifyRoute('kaidance-local-resident'),
           yard.verifyRoute('systemia-core-local-resident'),
+          yard.verifyRoute('evercraft-fabric-local-resident'),
         ]);
         return {
           schema: 'evercraft.local-organism-health.v1',
           node_id: seed.node_id,
-          ok: kaidanceHealth.ok && coreHealth.ok,
+          ok: kaidanceHealth.ok && coreHealth.ok && fabricHealth.ok,
           kaidance: {
             ok: kaidanceHealth.ok,
             state: kaidanceHealth.state,
@@ -293,6 +324,13 @@ export async function startLocalOrganism({
           systemia_core: {
             ok: coreHealth.ok,
             state: coreHealth.state,
+          },
+          fabric: {
+            ok: fabricHealth.ok,
+            state: fabricHealth.state,
+            service_id: fabric.result.service_id,
+            outbound_service_relay_supported:
+              fabric.result.outbound_service_relay_supported === true,
           },
           remote_admission: remoteAdmission
             ? remoteAdmission.status()
@@ -316,8 +354,14 @@ export async function startLocalOrganism({
         if (remoteAdmission) {
           try { await remoteAdmission.close(); } catch {}
         }
+        yard.stopLeaseKeeper('evercraft-fabric-local-resident');
         yard.stopLeaseKeeper('systemia-core-local-resident');
         yard.stopContinuityKeeper('kaidance-local-resident');
+        try {
+          await yard.stopDeployment('evercraft-fabric-local-resident', {
+            reason: 'local_organism_shutdown',
+          });
+        } catch {}
         try {
           await yard.stopDeployment('systemia-core-local-resident', {
             reason: 'local_organism_shutdown',
@@ -334,6 +378,13 @@ export async function startLocalOrganism({
   } catch (error) {
     if (remoteAdmission) {
       try { await remoteAdmission.close(); } catch {}
+    }
+    if (fabric) {
+      try {
+        await yard.stopDeployment('evercraft-fabric-local-resident', {
+          reason: 'local_organism_start_failed',
+        });
+      } catch {}
     }
     if (core) {
       try {
