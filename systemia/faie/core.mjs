@@ -93,11 +93,23 @@ function textCorpus(observation) {
   ].join(' ').toLowerCase();
 }
 
+function corpusHasTerm(corpus, term) {
+  const normalize = (value) => String(value || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  const haystack = normalize(corpus);
+  const candidate = normalize(term);
+  if (!candidate) return false;
+  return (' ' + haystack + ' ').includes(' ' + candidate + ' ');
+}
+
 function classifyDimensions(observation) {
   const corpus = textCorpus(observation);
   const dimensions = [];
   for (const [dimension, terms] of Object.entries(DIMENSION_RULES)) {
-    if (terms.some((term) => corpus.includes(term))) dimensions.push(dimension);
+    if (terms.some((term) => corpusHasTerm(corpus, term))) dimensions.push(dimension);
   }
   if (!dimensions.length && (observation.domains || []).includes('agriculture')) dimensions.push('crop_health');
   if (!dimensions.length && (observation.domains || []).includes('water')) dimensions.push('water');
@@ -149,7 +161,7 @@ function signalScore(observation, now) {
 function signalRelevant(observation) {
   if ((observation.domains || []).some((domain) => DOMAIN_SET.has(domain))) return true;
   const corpus = textCorpus(observation);
-  return Object.values(DIMENSION_RULES).flat().some((term) => corpus.includes(term));
+  return Object.values(DIMENSION_RULES).flat().some((term) => corpusHasTerm(corpus, term));
 }
 
 function normalizeScope(input = {}) {
