@@ -69,6 +69,7 @@ const contracts=readJson('systemia/capability-mesh/contracts.json',{contracts:[]
 const chum=readJson('public/chum/capabilities.json',{capabilities:[],universal_mcp:UNIVERSAL_FABRIC});
 const seeds=readJson('systemia/llm-product/historical-seeds.json',{entries:[]});
 const baseline=readJson('systemia/llm-product/ratchet-baseline.json',{public_product_keys:[]});
+const incidents=readJson('systemia/llm-product/runtime-incidents.json',{incidents:[]});
 
 const directBySlug=new Map((directDoors.products||[]).map(x=>[x.slug,x]));
 const contractByKey=new Map((contracts.contracts||[]).map(x=>[x.product_key,x]));
@@ -330,6 +331,25 @@ for(const rel of dataCandidates){
   });
 }
 
+for(const incident of incidents.incidents||[]){
+  if(String(incident.state||'').toLowerCase()!=='open') continue;
+  const stableId=String(incident.stable_id||'').trim();
+  if(!stableId) continue;
+  const row=records.get(stableId);
+  if(!row) continue;
+  add({
+    stable_id:stableId,
+    blockers:[
+      incident.blocker_code||('open_runtime_incident:'+incident.incident_id),
+      'runtime_reachability_not_proven',
+    ],
+    runtime_observation_refs:[
+      incident.issue_url||('systemia/llm-product/runtime-incidents.json#'+incident.incident_id),
+    ],
+    source_refs:['systemia/llm-product/runtime-incidents.json'],
+  });
+}
+
 const rows=[...records.values()].sort((a,b)=>a.stable_id.localeCompare(b.stable_id));
 
 for(const row of rows){
@@ -426,6 +446,7 @@ const output={
     mcp_registry_count:listFiles('mcp-registry').filter(x=>x.endsWith('.json')).length,
     workflow_count:workflowFiles.length,
     dataset_registry_candidate_count:dataCandidates.length,
+    open_runtime_incident_count:(incidents.incidents||[]).filter((x)=>String(x.state||'').toLowerCase()==='open').length,
   },
   summary:{
     registry_entry_count:rows.length,
