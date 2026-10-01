@@ -63,7 +63,7 @@ for(let i=0;i<48;i++){
       source_observation_id:"switch-event:"+i,
       signal_key:families[f],
       observed_at:new Date(Date.UTC(2025,0,1+i*5)).toISOString(),
-      forward_return:f===block?0.03:-0.006,
+      forward_return:f===block?0.03:0,
       benchmark_return:0,
     });
   }
