@@ -46,6 +46,16 @@ test('FAIE collector config defaults to NWS but requires explicit water gauge li
   assert.deepEqual(config.nwps_gauges, []);
 });
 
+test('FAIE can inherit a verified Sentinel region profile', () => {
+  const config = faieCollectorConfigFromEnv({
+    FAIE_REGION_PROFILE: 'yakima-basin-wa'
+  });
+  assert.equal(config.region_profile.profile_id, 'yakima-basin-wa');
+  assert.equal(config.nws_area, 'WA');
+  assert.equal(config.usgs_water_sites.length, 4);
+  assert.ok(config.usgs_water_sites.includes('USGS-12484500'));
+});
+
 test('FAIE official collector run reuses owned pollers and preserves receipts', async () => {
   const result = await collectFaieOfficialSources({
     checkedAt: '2026-09-30T20:05:00.000Z',
