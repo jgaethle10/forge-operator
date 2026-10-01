@@ -32,10 +32,15 @@ export function normalizeCapabilityRole(input={}){
       bandwidth_mbps:Math.max(0,Number(input.resources?.bandwidth_mbps||0)),
     },
     continuity:{
-      always_on:input.always_on===true,
-      replicas:Math.max(1,Math.floor(Number(input.replicas||1))),
-      distinct_failure_domains:input.distinct_failure_domains!==false&&Number(input.replicas||1)>1,
-      max_observation_age_ms:Math.max(1000,Number(input.max_observation_age_ms||300000)),
+      always_on:input.always_on===true||input.continuity?.always_on===true,
+      replicas:Math.max(1,Math.floor(Number(input.replicas??input.continuity?.replicas??1))),
+      distinct_failure_domains:
+        (input.distinct_failure_domains??input.continuity?.distinct_failure_domains)!==false &&
+        Number(input.replicas??input.continuity?.replicas??1)>1,
+      max_observation_age_ms:Math.max(
+        1000,
+        Number(input.max_observation_age_ms??input.continuity?.max_observation_age_ms??300000)
+      ),
     },
     private_data:input.private_data===true,
   };
