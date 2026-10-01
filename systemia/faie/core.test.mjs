@@ -41,7 +41,7 @@ test('FAIE admits relevant evidence and preserves evidence state', () => {
 test('FAIE ignores unrelated evidence without fabricating relevance', () => {
   const result = ingestFaieObservation(emptyFaieState(), observation({
     observation_id: 'obs:unrelated',
-    domains: ['entertainment'],
+    domains: ['general'],
     kind: 'movie_release',
     summary: 'A film opened in theaters.',
     facts: {}
