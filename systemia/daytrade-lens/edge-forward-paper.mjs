@@ -1,6 +1,7 @@
 import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 function stable(value) {
   if (Array.isArray(value)) return value.map(stable);
@@ -12,6 +13,60 @@ function stable(value) {
 
 function digest(value) {
   return crypto.createHash("sha256").update(JSON.stringify(stable(value))).digest("hex");
+}
+
+export const CANONICAL_FORWARD_PAPER_CUTOFF = "2026-09-30T23:10:52.172Z";
+export const CANONICAL_FORWARD_PAPER_ARTIFACT_DIGEST =
+  "sha256:fad591be832d023188e60908afee9252713545e0cb42ae3cc2ebcea698ac7a96";
+
+const DEFAULT_CANONICAL_MANIFEST_FILE = path.join(
+  path.dirname(fileURLToPath(import.meta.url)),
+  "frozen-forward-paper-cohorts.v1.json"
+);
+
+export function loadCanonicalFrozenCohorts({
+  manifest_file = DEFAULT_CANONICAL_MANIFEST_FILE,
+} = {}) {
+  const manifest = JSON.parse(fs.readFileSync(path.resolve(manifest_file), "utf8"));
+  if (manifest?.schema !== "evercraft.daytrade.forward-paper-canonical-manifest.v1") {
+    throw new Error("edge_forward_paper_canonical_manifest_schema_mismatch");
+  }
+  if (manifest?.source?.github_artifact_digest !== CANONICAL_FORWARD_PAPER_ARTIFACT_DIGEST) {
+    throw new Error("edge_forward_paper_canonical_artifact_digest_mismatch");
+  }
+  if (manifest?.source?.original_manifest_generated_at !== CANONICAL_FORWARD_PAPER_CUTOFF) {
+    throw new Error("edge_forward_paper_canonical_cutoff_mismatch");
+  }
+
+  const cohorts = Array.isArray(manifest.cohorts) ? manifest.cohorts : [];
+  if (manifest.cohort_count !== 6 || cohorts.length !== 6) {
+    throw new Error("edge_forward_paper_canonical_cohort_count_mismatch");
+  }
+
+  const signalKeys = new Set();
+  const cohortIds = new Set();
+  for (const cohort of cohorts) {
+    validateFrozenProtocol(cohort);
+    if (
+      cohort.enrolled_at !== CANONICAL_FORWARD_PAPER_CUTOFF ||
+      cohort.observation_cutoff !== CANONICAL_FORWARD_PAPER_CUTOFF
+    ) {
+      throw new Error("edge_forward_paper_canonical_protocol_cutoff_mismatch");
+    }
+    if (cohort.minimum_forward_events !== 20 || cohort.minimum_distinct_origins !== 5) {
+      throw new Error("edge_forward_paper_canonical_sample_gate_mismatch");
+    }
+    if (cohort.live_trade_authority !== false || cohort.immutable !== true) {
+      throw new Error("edge_forward_paper_canonical_authority_mismatch");
+    }
+    if (signalKeys.has(cohort.signal_key) || cohortIds.has(cohort.cohort_id)) {
+      throw new Error("edge_forward_paper_canonical_duplicate");
+    }
+    signalKeys.add(cohort.signal_key);
+    cohortIds.add(cohort.cohort_id);
+  }
+
+  return JSON.parse(JSON.stringify(manifest));
 }
 
 export function freezeForwardPaperCohort(candidateReview, evaluation, {
