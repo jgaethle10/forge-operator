@@ -6,6 +6,7 @@ const installer=fs.readFileSync(new URL("../../../systemia/compute/install-node-
 const preflight=fs.readFileSync(new URL("../../../systemia/compute/field-preflight.mjs",import.meta.url),"utf8");
 const promote=fs.readFileSync(new URL("../../../scripts/promote-chromebook-edge-node.sh",import.meta.url),"utf8");
 const one=fs.readFileSync(new URL("../../../scripts/make-chromebook-edge-node.sh",import.meta.url),"utf8");
+const mapper=fs.readFileSync(new URL("../../../scripts/evercraft-public-edge-map.mjs",import.meta.url),"utf8");
 
 test("NodeSeed installer admits operator-authorized Chromebook edge role",()=>{
  assert.match(installer,/operator_authorized_public_edge/);
@@ -33,4 +34,11 @@ test("operator-authorized Crostini edge has lightweight bounded preflight",()=>{
  const block=preflight.slice(preflight.indexOf("const operatorPublicEdgeChecks"),preflight.indexOf("const fieldEligible"));
  assert.doesNotMatch(block,/virtualization_not_detected/);
  assert.match(preflight,/requestedRole === 'operator_authorized_public_edge'[\s\S]*operatorPublicEdgeEligible/);
+});
+
+test("DNS promotion scopes host-forward and router mapping checks to DNS only",()=>{
+ assert.match(one,/--scope dns/);
+ assert.match(mapper,/\['all','web','dns'\]/);
+ assert.match(mapper,/scope==='all'\|\|scope==='dns'/);
+ assert.match(mapper,/scope==='all'\|\|scope==='web'/);
 });
