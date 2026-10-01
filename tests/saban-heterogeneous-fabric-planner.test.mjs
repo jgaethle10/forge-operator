@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { planHeterogeneousFabric } from '../systemia/saban/heterogeneous-fabric-planner.mjs';
+import { createPerformanceLedger, recordPerformanceSample } from '../systemia/saban/performance-learning.mjs';
 
 function offer({
   id,deviceClass,cpu,memory,storage,workloads,
@@ -22,6 +23,7 @@ function offer({
     economics:{zero_cost:zeroCost,quoted:true,hourly_usd:0,total_usd:0,native_price:null},
     quote_required:false,
     metadata:{
+      device_id:id,
       device_class:deviceClass,
       supported_workloads:workloads,
       placement_labels:labels,
@@ -187,4 +189,57 @@ test('stale devices disappear from placement instead of lingering forever',()=>{
   });
   assert.equal(plan.state,'held');
   assert.ok(plan.held[0].candidate_rejections[0].reasons.includes('offer_stale'));
+});
+
+
+test('performance circuit ejects a repeatedly failing device and calibration-style successes restore eligibility',()=>{
+  const bad=offer({
+    id:'learned-phone',deviceClass:'phone',cpu:1,memory:2048,storage:8,
+    workloads:['systemia.content-hash.v1'],
+    duty:'always_on',
+  });
+  const ledger=createPerformanceLedger();
+  for(let i=0;i<3;i++){
+    recordPerformanceSample(ledger,{
+      device_id:'learned-phone',
+      workload_class:'systemia.content-hash.v1',
+      ok:false,
+      duration_ms:25,
+      observed_at:`2026-10-01T03:0${i}:00.000Z`,
+    });
+  }
+  const task={
+    task_id:'learned-hash',
+    workload_class:'systemia.content-hash.v1',
+    resources:{cpu_units:0.1,memory_mb:64,storage_gb:0},
+    preemptible:true,
+    checkpointable:true,
+  };
+  let plan=planHeterogeneousFabric({
+    now:new Date('2026-10-01T03:03:00.000Z'),
+    offers:[bad],
+    tasks:[task],
+    performanceLedger:ledger,
+  });
+  assert.equal(plan.state,'held');
+  assert.ok(plan.held[0].candidate_rejections[0].reasons.includes('performance_circuit_open'));
+
+  for(let i=0;i<6;i++){
+    recordPerformanceSample(ledger,{
+      device_id:'learned-phone',
+      workload_class:'systemia.content-hash.v1',
+      ok:true,
+      duration_ms:15,
+      observed_at:`2026-10-01T03:1${i}:00.000Z`,
+    });
+  }
+  plan=planHeterogeneousFabric({
+    now:new Date('2026-10-01T03:16:00.000Z'),
+    offers:[bad],
+    tasks:[task],
+    performanceLedger:ledger,
+  });
+  assert.equal(plan.state,'ready');
+  assert.equal(plan.placements[0].provider_id,'learned-phone');
+  assert.equal(plan.placements[0].performance_adjustment.circuit_open,false);
 });
