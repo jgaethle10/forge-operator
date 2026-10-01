@@ -40,6 +40,7 @@ A provider error with unclear acceptance is deliberately more conservative than 
 ## Modules
 
 - `package-preflight.mjs` - artifact integrity, openability, render QA, naming, package manifest.
+- `release-station.mjs` - physically materializes a frozen client-facing release directory with clean filenames, exact SHA-256 byte verification, channel limits, source lineage, a human-readable release note, and mutation detection before dispatch.
 - `shipping-ledger.mjs` - durable shipment reservations, idempotency, attempts, readback state.
 - `shipping-department.mjs` - envelope preparation, route/fallback policy, send-error classification, sent-copy verification.
 - `transport-runtime.mjs` - provider-agnostic dispatch runner with safe thread-to-fresh fallback, resume after interruptions, provider acceptance locks, and readback verification.
@@ -61,3 +62,12 @@ A provider error with unclear acceptance is deliberately more conservative than 
 If a Gmail thread reply fails before provider acceptance, Shipping may retry once as a fresh outbound message. If that fresh send returns a provider message ID, retries stop. Shipping reads the sent copy and confirms the intended PDF is really attached under its client-safe filename. Only then does the shipment become `verified_delivered`.
 
 That exact sequence is designed to turn today's manual recovery pattern into permanent infrastructure.
+
+
+## Release Station
+
+Shipping now has a physical release-station step between production and transport. Internal working files are never handed directly to a provider. The Release Station copies only the approved bytes into a client-facing directory under their frozen client names, writes an immutable package manifest, and verifies the directory immediately before dispatch.
+
+Channel profiles currently distinguish email, customer handoff, ChatGPT attachment delivery, public-records delivery, and internal review. Each profile sets its own size/artifact budget and whether external send authority and post-send readback are mandatory.
+
+The release directory intentionally contains only three classes of object: approved client artifacts, `manifest.json`, and `RELEASE.txt`. If an artifact is mutated, replaced, renamed, added, removed, or has a different byte digest after materialization, verification fails closed.
