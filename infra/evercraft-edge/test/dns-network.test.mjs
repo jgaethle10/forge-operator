@@ -4,6 +4,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import dgram from "node:dgram";
+import {once} from "node:events";
 import {start} from "../dns/runtime.mjs";
 import {probeUdp,probeTcp} from "../dns/probe.mjs";
 
@@ -26,9 +27,11 @@ test("authoritative runtime answers real UDP and TCP DNS",async()=>{
  const port=await freePort();
  const runtime=start({snapshotPath:file,host:"127.0.0.1",port});
  try{
+  let udpReady=false;
+  try{runtime.udp.address();udpReady=true}catch{}
   await Promise.all([
-   runtime.udp.address().port?Promise.resolve():new Promise(r=>runtime.udp.once("listening",r)),
-   runtime.tcp.listening?Promise.resolve():new Promise(r=>runtime.tcp.once("listening",r))
+   udpReady?Promise.resolve():once(runtime.udp,"listening"),
+   runtime.tcp.listening?Promise.resolve():once(runtime.tcp,"listening")
   ]);
   const [udp,tcp]=await Promise.all([
    probeUdp({server:"127.0.0.1",port,name:"_evercraft.edge.invalid."}),
