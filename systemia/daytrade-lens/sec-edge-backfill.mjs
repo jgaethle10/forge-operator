@@ -644,6 +644,7 @@ async function main() {
     quoteMicrostructureLab,
     executionSpeedBoundsLab,
     capitalScaleImpactEnvelopeLab,
+    liquidityStateContracts,
     familyMaxNullLab,
     deflatedSharpeLab,
     tailDependenceLab,
