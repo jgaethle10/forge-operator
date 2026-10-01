@@ -26,6 +26,8 @@ function certification() {
       observer_install_id: 'cros_proof_install',
       observer_key_fingerprint: 'sha256:' + 'b'.repeat(64),
       observer_signature_verified: true,
+      pairing_active: true,
+      pairing_matches_observation: true,
     },
     ready_for_external_canary: true,
     external_public_route_verified: false,
