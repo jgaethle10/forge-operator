@@ -89,6 +89,8 @@ jobs:
         run: npm run proof:app-fabric-identity
       - name: Prove owned connector and webhook integration edge
         run: npm run proof:integration-edge
+      - name: Prove owned Polar connector migration path
+        run: npm run proof:polar-connector
       - name: Prove owned resident scheduler
         run: npm run proof:resident-supervisor
       - name: Prove provider-authoritative commerce boundary
