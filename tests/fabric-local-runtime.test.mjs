@@ -134,6 +134,14 @@ test('Fabric public customer front door is branded, browsable, and policy-safe',
       assert.match(response.headers.get('content-type')||'',/^text\/html/);
       assert.match(await response.text(),pattern);
     }
+
+    const journalResponse=await fetch(runtime.url+'/journal/');
+    assert.equal(journalResponse.status,200);
+    assert.match(journalResponse.headers.get('content-type')||'',/^text\/html/);
+    assert.equal(journalResponse.headers.get('x-robots-tag'),'noindex, nofollow');
+    const journal=await journalResponse.text();
+    assert.match(journal,/Evercraft Journal/);
+    assert.doesNotMatch(journal,/Black Friday|shopping assistant|optimize your cart/i);
   } finally {
     await runtime.close();
   }
