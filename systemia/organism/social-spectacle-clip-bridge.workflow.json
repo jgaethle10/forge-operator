@@ -16,12 +16,14 @@
     "editorial_preflight_score_required": "10/10",
     "provider_publication_claim_requires_observed_published_rows": true,
     "blocked_brand_policy_remains_upstream": true,
-    "tiktok_state": "held_unverified"
+    "tiktok_state": "held_unverified",
+    "provider_publication_claim_requires_exact_status_readback": true
   },
   "compatibility_endpoints": {
     "media_upload_env": "EVERCRAFT_CLIP_SPECTACLE_UPLOAD_URL",
     "publication_ingress_env": "EVERCRAFT_CLIP_SYSTEMIA_INGRESS_URL",
     "publisher_pulse_env": "EVERCRAFT_CLIP_UNIFIED_PULSE_URL",
-    "shared_secret_file_env": "SYSTEMIA_CLIP_SHARED_SECRET_FILE"
+    "shared_secret_file_env": "SYSTEMIA_CLIP_SHARED_SECRET_FILE",
+    "publication_status_env": "EVERCRAFT_CLIP_PUBLICATION_STATUS_URL"
   }
 }
