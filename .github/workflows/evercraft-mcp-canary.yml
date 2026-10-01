@@ -38,7 +38,7 @@ jobs:
               -H 'Content-Type: application/json' \
               -H 'Accept: application/json, text/event-stream' \
               --data "$PAYLOAD")"
-            printf '%s\n' "$BODY" | head -c 2500
+            printf '%s\n' "$BODY" | head -c 2500 || true
             echo
             printf '%s' "$BODY" | grep -q '"serverInfo"' || {
               echo "MCP initialize did not return serverInfo for $NAME" >&2
@@ -80,7 +80,7 @@ jobs:
               -H 'Content-Type: application/json' \
               -H 'Accept: application/json, text/event-stream' \
               --data '{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}')"
-            printf '%s\n' "$BODY" | head -c 4000
+            printf '%s\n' "$BODY" | head -c 4000 || true
             echo
             printf '%s' "$BODY" | grep -q "$TOOL" || {
               echo "MCP tools/list did not expose $TOOL for $NAME" >&2
@@ -144,7 +144,7 @@ jobs:
               -H 'Content-Type: application/json' \
               -H 'Accept: application/json, text/event-stream' \
               --data "$(jq -cn --arg tool "$TOOL" --argjson args "$ARGS" '{jsonrpc:"2.0",id:4,method:"tools/call",params:{name:$tool,arguments:$args}}')")"
-            printf '%s\n' "$BODY" | head -c 5000
+            printf '%s\n' "$BODY" | head -c 5000 || true
             echo
             printf '%s' "$BODY" | grep -Eq '"result"|"structuredContent"' || {
               echo "Read-only MCP invocation did not return a result for $NAME / $TOOL" >&2
