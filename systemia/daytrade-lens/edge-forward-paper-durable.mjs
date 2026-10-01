@@ -1,7 +1,11 @@
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
-import { validateFrozenProtocol, scoreForwardPaperCohort } from "./edge-forward-paper.mjs";
+import {
+  validateFrozenProtocol,
+  scoreForwardPaperCohort,
+  scoreForwardPaperCluster,
+} from "./edge-forward-paper.mjs";
 
 function sha(value) {
   return crypto.createHash("sha256").update(
@@ -182,10 +186,11 @@ export class ForwardPaperDurableState {
     }
 
     return {
-      schema: "evercraft.daytrade.forward-paper-ingest-receipt.v1",
+      schema: "evercraft.daytrade.forward-paper-ingest-receipt.v2",
       cohort_count: results.length,
       measurement_rows_seen: rows.length,
       cohorts: results,
+      clusters: this.scoreAllClusters(),
       live_trade_authority: false,
     };
   }
@@ -228,10 +233,34 @@ export class ForwardPaperDurableState {
     );
   }
 
+  scoreCluster(clusterKey) {
+    const key = String(clusterKey || "");
+    const protocols = [...this.cohorts.values()].filter(
+      (protocol) => String(protocol.cluster_key || "") === key
+    );
+    if (!protocols.length) throw new Error("edge_forward_paper_unknown_cluster");
+    const measurements = protocols.flatMap(
+      (protocol) => this.measurements.get(protocol.cohort_id) || []
+    );
+    return scoreForwardPaperCluster(protocols, measurements);
+  }
+
+  scoreAllClusters() {
+    const keys = [...new Set(
+      [...this.cohorts.values()]
+        .map((protocol) => String(protocol.cluster_key || ""))
+        .filter(Boolean)
+    )].sort();
+    return keys.map((key) => this.scoreCluster(key));
+  }
+
   summary() {
     return {
       schema: "evercraft.daytrade.forward-paper-durable-summary.v1",
       cohort_count: this.cohorts.size,
+      cluster_count: new Set(
+        [...this.cohorts.values()].map((protocol) => protocol.cluster_key).filter(Boolean)
+      ).size,
       measurement_count: [...this.measurements.values()].reduce((n, rows) => n + rows.length, 0),
       journal_records: this.state.records.length,
       head_hash: this.state.head_hash,
