@@ -122,8 +122,11 @@ function visualPath(observation){
   }
   const mediaRefs=unique([...(observation?.media_refs||[]),...(facts?.media_refs||[])]);
   if(mediaRefs.length) return {kind:'verified_real_media',strength:.88,media_refs:mediaRefs};
-  if((observation?.region_keys||[]).length&&Object.keys(facts).length>=3){
-    return {kind:'fallen_geo_explainer',strength:.68};
+  const factLat=Number(facts?.lat??facts?.latitude);
+  const factLon=Number(facts?.lon??facts?.longitude);
+  const specificRegion=(observation?.region_keys||[]).some(region=>clean(region).toLowerCase()!=='global');
+  if(specificRegion&&Number.isFinite(factLat)&&Number.isFinite(factLon)){
+    return {kind:'fallen_geo_explainer',strength:.72};
   }
   return {kind:'none',strength:0};
 }
