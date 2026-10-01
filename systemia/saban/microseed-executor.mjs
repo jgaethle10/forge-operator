@@ -120,6 +120,7 @@ export async function executeMicroSeedWorkload({
   request,
   stateDir='',
   bridgeAdapters={},
+  executionContext='device',
   now=new Date(),
 }={}){
   if(manifest?.schema!=='evercraft.microseed.device-manifest.v1'){
@@ -165,7 +166,10 @@ export async function executeMicroSeedWorkload({
     return {...prior,deduplicated:true};
   }
 
-  const builtin=manifest.compute_execution_mode==='native_device'
+  const directDeviceExecution=
+    manifest.compute_execution_mode==='native_device' &&
+    executionContext==='device';
+  const builtin=directDeviceExecution
     ? executeBuiltin(req.workload_class,req.payload)
     : null;
   const result=builtin??await executeBridgeOperation({
@@ -184,7 +188,10 @@ export async function executeMicroSeedWorkload({
     manifest_hash:manifest.manifest_hash,
     safety_receipt_ref:safety.receipt_hash,
     result,
-    execution_location:manifest.compute_execution_mode==='native_device'?'device':'gateway_proxy_to_device',
+    execution_location:
+      manifest.compute_execution_mode==='native_device'
+        ? (executionContext==='device'?'device':'remote_native_device_via_gateway')
+        : 'gateway_proxy_to_device',
     deduplicated:false,
     arbitrary_code_execution:false,
     primary_function_priority:true,
