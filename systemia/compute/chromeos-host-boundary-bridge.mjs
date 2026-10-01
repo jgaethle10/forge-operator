@@ -310,6 +310,7 @@ export function readChromeOsHostBoundaryStatus({
     age_ms: Number.isFinite(ageMs) ? ageMs : null,
     collected_at: receipt?.observation?.collected_at || null,
     received_at: receipt?.received_at || null,
+    request_id: receipt?.observation?.request_id || null,
     observer_version: receipt?.observation?.observer_version || null,
     observer_install_id: receipt?.observation?.observer_install_id || null,
     settings_route: receipt?.observation?.settings_route || null,
