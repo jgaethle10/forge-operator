@@ -281,12 +281,13 @@ export async function startFabricLocalRuntime({
       : edgeAttestationReady()
         ? 'loopback_nodeseed'
         : null,
-    public_plugin_submission_ready:true,
+    public_plugin_source_ready:true,
+    public_plugin_external_verification_required:true,
     journal_mirror_path:'/journal/',
     journal_mirror_ready:fs.existsSync(path.join(journalDir,'index.html')),
     journal_mirror_indexing:'noindex_until_dedicated_origin',
     provider_publication_state:'external_to_runtime',
-    public_submission_note:'The owned Fabric runtime and review surface are submission-ready. Provider review, approval, publication, and directory visibility are external states and are not inferred by this health endpoint.',
+    public_submission_note:'This runtime reports source capability only. Submission readiness additionally requires a fresh external HTTPS/OpenAI-profile canary, provider scan, and account-side review gates.',
     catalog_reload_mode:staticPrepared?'static_injected':'hot_reload_repository',
   });
   };
