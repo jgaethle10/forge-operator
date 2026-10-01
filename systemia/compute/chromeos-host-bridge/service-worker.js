@@ -114,18 +114,13 @@ async function getObserverIdentity() {
 
   const generated = await crypto.subtle.generateKey(
     { name: 'ECDSA', namedCurve: 'P-256' },
-    true,
+    false,
     ['sign', 'verify'],
   );
+  if (generated.privateKey.extractable !== false) {
+    throw new Error('observer_private_key_must_be_non_extractable');
+  }
   const publicJwk = await crypto.subtle.exportKey('jwk', generated.publicKey);
-  const privateJwk = await crypto.subtle.exportKey('jwk', generated.privateKey);
-  const privateKey = await crypto.subtle.importKey(
-    'jwk',
-    privateJwk,
-    { name: 'ECDSA', namedCurve: 'P-256' },
-    false,
-    ['sign'],
-  );
   const normalizedPublicJwk = {
     kty: 'EC',
     crv: 'P-256',
@@ -136,7 +131,7 @@ async function getObserverIdentity() {
   };
   const observerKeyFingerprint = await publicKeyFingerprint(normalizedPublicJwk);
   const identity = {
-    privateKey,
+    privateKey: generated.privateKey,
     publicJwk: normalizedPublicJwk,
     observerKeyFingerprint,
   };
