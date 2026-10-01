@@ -8,7 +8,21 @@ function safeKey(value, field, max = 255) {
   if (!key || key.length > max || !/^[A-Za-z0-9][A-Za-z0-9._:-]*$/.test(key)) throw new Error(`${field}_invalid`);
   return key;
 }
-function sha(value) { return 'sha256:' + createHash('sha256').update(typeof value === 'string' ? value : JSON.stringify(value)).digest('hex'); }
+function stableValue(value) {
+  if (Array.isArray(value)) return value.map(stableValue);
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(Object.keys(value).sort().map((key) => [key, stableValue(value[key])]));
+  }
+  return value;
+}
+function sha(value) {
+  const input = typeof value === 'string' ? value : JSON.stringify(stableValue(value));
+  return 'sha256:' + createHash('sha256').update(input).digest('hex');
+}
+function contextHash(context = {}) {
+  const safe = context && typeof context === 'object' && !Array.isArray(context) ? context : {};
+  return sha(safe);
+}
 function appHash(appKey) { return createHash('sha256').update(appKey).digest('hex').slice(0, 32); }
 function atomicJson(file, value) {
   fs.mkdirSync(path.dirname(file), { recursive: true, mode: 0o700 });
@@ -65,6 +79,13 @@ export class EvercraftCommerceBoundary {
       ) {
         throw new Error('payment_currency_mismatch');
       }
+      const requestedContextHash = contextHash(context);
+      if (prior.verification_context_hash && prior.verification_context_hash !== requestedContextHash) {
+        throw new Error('payment_verification_context_mismatch');
+      }
+      if (!prior.verification_context_hash && Object.keys(context || {}).length) {
+        throw new Error('payment_verification_context_unbound');
+      }
       return { replayed: true, payment: structuredClone(prior), receipt: null };
     }
     const adapter = this.adapters.get(location.provider);
@@ -94,6 +115,7 @@ export class EvercraftCommerceBoundary {
       status,
       amount_minor: amountMinor,
       currency,
+      verification_context_hash: contextHash(context),
       verified_at: at,
       provider_authoritative: true,
       card_data_stored: false
@@ -109,6 +131,7 @@ export class EvercraftCommerceBoundary {
       payment_ref_hash: payment.payment_ref_hash,
       amount_minor: payment.amount_minor,
       currency: payment.currency,
+      verification_context_hash: payment.verification_context_hash,
       provider_authoritative: true,
       card_data_stored: false,
       occurred_at: at
