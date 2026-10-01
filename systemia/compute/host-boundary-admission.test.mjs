@@ -24,6 +24,8 @@ function certification() {
     state: 'host_setting_and_lan_ready',
     host_observation: {
       observer_install_id: 'cros_proof_install',
+      observer_key_fingerprint: 'sha256:' + 'b'.repeat(64),
+      observer_signature_verified: true,
     },
     ready_for_external_canary: true,
     external_public_route_verified: false,
@@ -53,6 +55,7 @@ test('field certification admits only the exact observer and capability', () => 
     stateRoot,
     capabilityId: cert.capability_id,
     observerInstallId: 'cros_proof_install',
+    observerKeyFingerprint: 'sha256:' + 'b'.repeat(64),
   });
   assert.equal(status.admitted, true);
 
@@ -60,6 +63,7 @@ test('field certification admits only the exact observer and capability', () => 
     stateRoot,
     capabilityId: cert.capability_id,
     observerInstallId: 'cros_reinstalled',
+    observerKeyFingerprint: 'sha256:' + 'b'.repeat(64),
   });
   assert.equal(changedObserver.admitted, false);
   assert.equal(changedObserver.state, 'observer_changed');
