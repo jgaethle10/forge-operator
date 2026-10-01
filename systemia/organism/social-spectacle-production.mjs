@@ -54,6 +54,14 @@ function phenomenonEvidenceState(value){
   return 'public_source';
 }
 
+function freshnessState(candidate,createdAt){
+  const observed=Date.parse(String(candidate?.observed_at||''));
+  const built=Date.parse(String(createdAt||''));
+  if(!Number.isFinite(observed)||!Number.isFinite(built)) return 'unknown';
+  const age=built-observed;
+  return age>=0&&age<=24*60*60*1000?'fresh':'stale';
+}
+
 function uncertaintyFor(candidate){
   if(candidate.evidence_state==='modeled'){
     return 'This visualization is driven by modeled data. It can reveal structure and motion in the system, but it should not be read as a direct instrument measurement at every point shown.';
@@ -172,6 +180,8 @@ function buildClipManifest({candidate,stage,videoPath,renderReceiptPath,masterQc
       tags:unique(['evercraft',...(candidate.domains||[]),...(candidate.region_keys||[])]).slice(0,20),
       language:'en',
     },
+    sourceObservedAt:clean(candidate.observed_at,100),
+    freshnessState:freshnessState(candidate,createdAt),
     destinations:[...DESTINATIONS],
     heldUnverifiedDestinations:[...HELD_UNVERIFIED_DESTINATIONS],
     provenance:{
