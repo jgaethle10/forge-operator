@@ -4,9 +4,11 @@ import { pathToFileURL } from "node:url";
 
 export const ATTACK_IMPLEMENTATION_MAP=Object.freeze({
   "complete research-trial cemetery":{
-    status:"partial",
-    evidence:["systemia/daytrade-lens/edge-search-burden.mjs"],
-    gap:"Current signal-family denominator is retained, but a durable lifetime ledger of every historical research configuration remains required."
+    status:"implemented",
+    evidence:[
+      "systemia/daytrade-lens/edge-search-burden.mjs",
+      "systemia/daytrade-lens/edge-research-trial-cemetery.mjs"
+    ]
   },
   "unconditional candidate-family denominator":{
     status:"implemented",
@@ -20,9 +22,11 @@ export const ATTACK_IMPLEMENTATION_MAP=Object.freeze({
     ]
   },
   "full trial-count ledger":{
-    status:"partial",
-    evidence:["systemia/daytrade-lens/edge-search-burden.mjs"],
-    gap:"Current batch trial count exists; persistent lifetime search-history lineage remains incomplete."
+    status:"implemented",
+    evidence:[
+      "systemia/daytrade-lens/edge-search-burden.mjs",
+      "systemia/daytrade-lens/edge-research-trial-cemetery.mjs"
+    ]
   },
   "CSCV/PBO diagnostic where structurally valid":{
     status:"implemented",
@@ -185,9 +189,12 @@ export const ATTACK_IMPLEMENTATION_MAP=Object.freeze({
     ]
   },
   "durable lifetime research-trial cemetery":{
-    status:"partial",
-    evidence:["systemia/daytrade-lens/edge-search-burden.mjs"],
-    gap:"Current-run search history is explicit, but a canonical lifetime append-only trial ledger still requires owned durable Yard/Node persistence."
+    status:"implemented",
+    evidence:[
+      "systemia/daytrade-lens/edge-research-trial-cemetery.mjs",
+      "systemia/daytrade-lens/sec-edge-backfill.mjs",
+      "systemia/daytrade-lens/edge-pilot-readiness.mjs"
+    ]
   },
   "reported-statistics FDR identification warning":{
     status:"implemented",
