@@ -7,6 +7,7 @@ import { runNodeSeedAssignmentPool } from './nodeseed-pool.mjs';
 import { normalizeComputeDemand } from './compute-exchange.mjs';
 import { acquireResourceCapacity } from './resource-acquirer.mjs';
 import { buildComputeMarketAdapters } from './market-factory.mjs';
+import { buildLocalHostCandidate, createLocalHostSpawnAdapter } from './local-host-capacity.mjs';
 
 async function reconcileResults({ contract, plan, results, rootDir }) {
   if (contract.reconciler?.once_per_swarm !== true) {
@@ -53,9 +54,9 @@ export function computeDemandFromDistributedPlan({
       resources.minimum_node_memory_mb||
       resources.memory_mb_per_worker||
       512,
-    storage_gb:acquisition.storage_gb||0,
-    gpu_count:acquisition.gpu_count||0,
-    gpu_models:acquisition.gpu_models||[],
+    storage_gb:acquisition.storage_gb||resources.minimum_node_storage_gb||0,
+    gpu_count:acquisition.gpu_count||resources.minimum_node_gpu_units||resources.minimum_node_gpu_count||0,
+    gpu_models:acquisition.gpu_models||resources.required_gpu_models||[],
     regions:acquisition.regions||[],
     countries:acquisition.countries||[],
     require_public_ingress:acquisition.require_public_ingress===true,
@@ -109,7 +110,7 @@ export async function runPoolWithAcquisition({
         storage_gb:demand.resources.storage_gb,
         gpu_units:demand.resources.gpu_count,
         gpu_models:demand.resources.gpu_models,
-        vram_mb:Number(acquisition.vram_mb||0),
+        vram_mb:Number(acquisition.vram_mb||resources.minimum_node_vram_mb||0),
       },
       required_labels:acquisition.required_labels||[],
       forbidden_labels:acquisition.forbidden_labels||[],
@@ -119,11 +120,23 @@ export async function runPoolWithAcquisition({
     };
 
     const marketFactory=buildComputeMarketAdapters({acquisition});
+    const localCandidate=buildLocalHostCandidate({acquisition});
+    const candidates=[
+      ...(acquisition.candidates||[]),
+      ...(localCandidate?[localCandidate]:[]),
+    ];
+    const spawnAdapters={
+      ...(acquisition.spawnAdapters||{}),
+      ...(localCandidate?{
+        owned_bootstrap_target:createLocalHostSpawnAdapter({acquisition}),
+        local_owned_host:createLocalHostSpawnAdapter({acquisition}),
+      }:{}),
+    };
     const resourceAcquisition=await acquireResourceCapacity({
       need,
-      candidates:acquisition.candidates||[],
+      candidates,
       runtimeAuthorities:acquisition.runtimeAuthorities||{},
-      spawnAdapters:acquisition.spawnAdapters||{},
+      spawnAdapters,
       marketAdapters:marketFactory.adapters,
       quoteAuthority:acquisition.quoteAuthority||acquisition.quote_authority||null,
       leaseAuthority:acquisition.leaseAuthority||acquisition.lease_authority||null,
@@ -173,6 +186,7 @@ export async function runPoolWithAcquisition({
           markets:marketFactory.markets,
           diagnostics:marketFactory.diagnostics,
         },
+        local_host_candidate_added:Boolean(localCandidate),
         market:resourceAcquisition.exchange?.selected_offer?.market||
           resourceAcquisition.exchange?.selected_market||
           null,
