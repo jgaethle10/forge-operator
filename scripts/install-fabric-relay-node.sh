@@ -4,6 +4,7 @@ set -euo pipefail
 DOMAIN=""
 ACME_EMAIL=""
 TUNNEL_PORT=18787
+ENROLLMENT_RECEIPT="/var/lib/evercraft/relay-enrollment/latest.json"
 
 usage(){
   cat <<'EOF'
@@ -14,6 +15,7 @@ Usage:
     [--tunnel-port 18787]
 
 Installs the HTTPS termination side of an Evercraft outbound relay node.
+Run install-fabric-relay-account.sh first; this installer requires its verified receipt.
 The SSH daemon on this public node must independently restrict the relay account
 to remote forwarding with GatewayPorts disabled and PermitListen limited to
 127.0.0.1:<tunnel-port>. This installer does not weaken sshd policy.
@@ -34,6 +36,26 @@ done
 [[ "$DOMAIN" == *.* && "$DOMAIN" =~ ^[A-Za-z0-9.-]+$ ]] || { echo "ERROR: invalid domain" >&2; exit 2; }
 [[ "$ACME_EMAIL" == *@*.* ]] || { echo "ERROR: invalid ACME email" >&2; exit 2; }
 [[ "$TUNNEL_PORT" =~ ^[0-9]+$ ]] && (( TUNNEL_PORT >= 1 && TUNNEL_PORT <= 65535 )) || { echo "ERROR: invalid tunnel port" >&2; exit 2; }
+
+[[ -s "$ENROLLMENT_RECEIPT" ]] || { echo "ERROR: relay account enrollment receipt missing; run install-fabric-relay-account.sh first" >&2; exit 2; }
+if ! node - "$ENROLLMENT_RECEIPT" "$TUNNEL_PORT" <<'NODE'
+const fs=require('fs');
+const file=process.argv[2];
+const port=Number(process.argv[3]);
+const x=JSON.parse(fs.readFileSync(file,'utf8'));
+if(
+  x.schema!=='evercraft.fabric-relay-enrollment.v1' ||
+  x.remote_bind!=='127.0.0.1' ||
+  Number(x.remote_port)!==port ||
+  x.authentication!=='publickey_only' ||
+  x.gateway_ports!==false ||
+  Number(x.max_sessions)!==0
+) process.exit(1);
+NODE
+then
+  echo "ERROR: relay enrollment receipt does not satisfy the bounded edge contract" >&2
+  exit 2
+fi
 
 apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get install -y caddy curl ca-certificates
