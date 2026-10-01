@@ -4,6 +4,10 @@ on:
   pull_request:
     paths:
       - "systemia/organism/social-spectacle-engine*"
+      - "systemia/organism/social-spectacle-production*"
+      - "systemia/clip/media-intake*"
+      - "systemia/clip/publisher-runtime*"
+      - "systemia/media-studio/cli.ts"
       - "systemia/core/resident-services.json"
       - "systemia/worldstate/subscriptions.json"
       - "package.json"
@@ -12,6 +16,10 @@ on:
     branches: [main]
     paths:
       - "systemia/organism/social-spectacle-engine*"
+      - "systemia/organism/social-spectacle-production*"
+      - "systemia/clip/media-intake*"
+      - "systemia/clip/publisher-runtime*"
+      - "systemia/media-studio/cli.ts"
       - "systemia/core/resident-services.json"
       - "systemia/worldstate/subscriptions.json"
       - "package.json"
@@ -32,6 +40,13 @@ jobs:
 
       - name: Prove spectacle admission boundaries
         run: npm run proof:social-spectacle
+
+      - name: Prove spectacle production packaging
+        run: npm run proof:social-spectacle-production
+
+      - name: Prove Clip intake and publish gates
+        run: |
+          node --test systemia/clip/media-intake.test.mjs systemia/clip/publisher-runtime.test.mjs
 
       - name: Build a bounded spectacle queue
         run: |
@@ -116,4 +131,24 @@ jobs:
           for(const domain of ['weather','water','ocean','aviation','science']){
             if(!subscriptions.by_domain?.[domain]?.includes('social_spectacle')) throw new Error('subscription_missing:'+domain);
           }
+          NODE
+
+
+      - name: Compile spectacle production without render workers
+        run: |
+          mkdir -p /tmp/social-spectacle-prod
+          cp /tmp/social-spectacle-state/latest-queue.json /tmp/social-spectacle-prod/queue.json
+          npm run social:spectacle:produce --             --queue /tmp/social-spectacle-prod/queue.json             --out /tmp/social-spectacle-prod/production             --clip-queue /tmp/social-spectacle-prod/clip
+          test -f /tmp/social-spectacle-prod/production/spectacle-ci-ocean-flow/production-receipt.json ||             test -n "$(find /tmp/social-spectacle-prod/production -name production-receipt.json -print -quit)"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          const root='/tmp/social-spectacle-prod/production';
+          const dirs=fs.readdirSync(root);
+          if(!dirs.length) throw new Error('production_candidate_missing');
+          const receipt=JSON.parse(fs.readFileSync(path.join(root,dirs[0],'production-receipt.json'),'utf8'));
+          if(receipt.status!=='ready_to_render') throw new Error('expected_ready_to_render');
+          if(receipt.publication_authority!==false) throw new Error('publication_authority_leak');
+          if(!fs.existsSync(receipt.vertical_render_plan)) throw new Error('vertical_render_plan_missing');
+          if(!fs.existsSync(receipt.landscape_stage)) throw new Error('landscape_stage_missing');
           NODE
