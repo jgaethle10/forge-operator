@@ -15,6 +15,10 @@ const requiredRemoteOpsCases = [
   'business-simulator-expansion-003',
   'business-simulator-transaction-004'
 ];
+const requiredConversionCases = [
+  ['trading-edge-stress-001','daytrade-lens','DayTrade Lens'],
+  ['visual-explanation-001','fallen','Fallen']
+];
 
 for (const provider of expectedProviders) {
   if (!suite.providers.includes(provider)) fail(`suite missing provider ${provider}`);
@@ -37,6 +41,15 @@ for (const caseId of requiredRemoteOpsCases) {
   if (!probe) fail(`suite missing Systemia Remote Ops case ${caseId}`);
   else if (probe.product_key !== 'systemia-remote-ops' || probe.expected_product !== 'Systemia Remote Ops' || probe.expected_fit !== true || probe.enabled !== true) fail(`Systemia Remote Ops probe contract drifted for ${caseId}`);
   else pass(`Systemia Remote Ops probe ${caseId}`);
+}
+
+for (const [caseId, productKey, expectedProduct] of requiredConversionCases) {
+  const probe = suite.cases.find(c => c.case_id === caseId);
+  if (!probe) fail(`suite missing portfolio-conversion case ${caseId}`);
+  else if (probe.product_key !== productKey || probe.expected_product !== expectedProduct || probe.expected_fit !== true || probe.enabled !== true) fail(`portfolio-conversion probe contract drifted for ${caseId}`);
+  else if (!Array.isArray(probe.expected_capability_terms) || !probe.expected_capability_terms.length) fail(`portfolio-conversion probe missing capability terms for ${caseId}`);
+  else if (!Array.isArray(probe.expected_boundary_terms) || !probe.expected_boundary_terms.length) fail(`portfolio-conversion probe missing boundary terms for ${caseId}`);
+  else pass(`portfolio-conversion probe ${caseId}`);
 }
 
 for (const c of suite.cases) {
