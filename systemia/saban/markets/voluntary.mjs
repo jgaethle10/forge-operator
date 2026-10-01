@@ -1,6 +1,8 @@
 import {
   createHash,
   createPublicKey,
+  randomBytes,
+  randomUUID,
   verify as verifySignature,
 } from 'node:crypto';
 import {
@@ -138,14 +140,90 @@ export class VoluntaryComputeMarket {
       public_key_pem:String(public_key_pem),
       negotiator:typeof negotiator==='function'?negotiator:null,
       leaseFactory:typeof leaseFactory==='function'?leaseFactory:null,
+      provider_token:randomBytes(32).toString('hex'),
+      proposal_queue:[],
+      proposal_waiters:[],
+      response_waiters:new Map(),
       registered_at:new Date().toISOString(),
     });
-    return {
+    const result={
       schema:'evercraft.saban.voluntary-provider-registration.v1',
       provider_id:id,
       registered_at:this.providers.get(id).registered_at,
       fingerprint:sha(key.export({type:'spki',format:'der'})),
     };
+    Object.defineProperty(result,'provider_token',{
+      value:this.providers.get(id).provider_token,
+      enumerable:false,
+      writable:false,
+    });
+    return result;
+  }
+
+  authenticateProvider(providerId,token){
+    const provider=this.providers.get(String(providerId||''));
+    if(!provider) return null;
+    const expected=Buffer.from(provider.provider_token);
+    const observed=Buffer.from(String(token||''));
+    if(expected.length!==observed.length) return null;
+    let diff=0;
+    for(let i=0;i<expected.length;i+=1) diff|=expected[i]^observed[i];
+    return diff===0?provider:null;
+  }
+
+  async nextProviderProposal(providerId,{timeoutMs=20_000}={}){
+    const provider=this.providers.get(String(providerId||''));
+    if(!provider) throw new Error('voluntary_provider_not_registered');
+    if(provider.proposal_queue.length){
+      return provider.proposal_queue.shift();
+    }
+    return await new Promise((resolve)=>{
+      const waiter={resolve,timer:null};
+      waiter.timer=setTimeout(()=>{
+        const index=provider.proposal_waiters.indexOf(waiter);
+        if(index>=0) provider.proposal_waiters.splice(index,1);
+        resolve(null);
+      },Math.max(100,Math.min(30_000,Number(timeoutMs)||20_000)));
+      provider.proposal_waiters.push(waiter);
+    });
+  }
+
+  respondToProposal({provider_id,proposal_id,decision}={}){
+    const provider=this.providers.get(String(provider_id||''));
+    if(!provider) throw new Error('voluntary_provider_not_registered');
+    const key=String(proposal_id||'');
+    const waiter=provider.response_waiters.get(key);
+    if(!waiter) throw new Error('voluntary_proposal_not_pending');
+    provider.response_waiters.delete(key);
+    clearTimeout(waiter.timer);
+    waiter.resolve(structuredClone(decision||{action:'reject',reason:'empty_provider_response'}));
+    return true;
+  }
+
+  async #askRemoteProvider(provider,payload,{timeoutMs=20_000}={}){
+    const proposalId=randomUUID();
+    const message={
+      schema:'evercraft.saban.voluntary-negotiation-request.v1',
+      proposal_request_id:proposalId,
+      provider_id:provider.provider_id,
+      payload:structuredClone(payload),
+      created_at:new Date().toISOString(),
+    };
+    const waiterPromise=new Promise((resolve,reject)=>{
+      const timer=setTimeout(()=>{
+        provider.response_waiters.delete(proposalId);
+        reject(new Error('voluntary_provider_response_timeout'));
+      },Math.max(100,Math.min(60_000,Number(timeoutMs)||20_000)));
+      provider.response_waiters.set(proposalId,{resolve,reject,timer});
+    });
+    const waiter=provider.proposal_waiters.shift();
+    if(waiter){
+      clearTimeout(waiter.timer);
+      waiter.resolve(message);
+    }else{
+      provider.proposal_queue.push(message);
+    }
+    return await waiterPromise;
   }
 
   submitSignedOffer({offer:raw,signature_base64}={}){
@@ -238,16 +316,6 @@ export class VoluntaryComputeMarket {
       offeredHourly!=null &&
       offeredHourly>maxHourly
     ){
-      if(!provider.negotiator){
-        session.reject({issuer:'requestor',reason:'provider_price_above_budget'});
-        const transcript=session.transcript();
-        return {
-          schema:'evercraft.saban.voluntary-quote-round.v1',
-          offers:[],
-          transcript,
-          receipt:{receipt_hash:transcript.receipt_hash},
-        };
-      }
       latest=session.counter({
         issuer:'requestor',
         terms:{
@@ -261,13 +329,16 @@ export class VoluntaryComputeMarket {
       });
     }
 
-    if(provider.negotiator){
+    if(provider.negotiator||provider.proposal_waiters||provider.proposal_queue){
       for(let i=0;i<this.maxRounds;i+=1){
-        const decision=await provider.negotiator({
+        const payload={
           demand:structuredClone(demand),
           proposal:structuredClone(latest),
           transcript:session.transcript(),
-        });
+        };
+        const decision=provider.negotiator
+          ? await provider.negotiator(payload)
+          : await this.#askRemoteProvider(provider,payload);
         const action=String(decision?.action||'accept').toLowerCase();
         if(action==='reject'){
           session.reject({issuer:'provider',reason:decision?.reason||'provider_rejected'});
