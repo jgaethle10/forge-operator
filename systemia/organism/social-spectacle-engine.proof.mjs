@@ -132,3 +132,37 @@ const contextCycle=runSpectacleCycle({
 });
 assert.equal(contextCycle.receipt.input_count,1);
 assert.equal(contextCycle.receipt.queue_count,1);
+
+
+const radarRoot=fs.mkdtempSync(path.join(os.tmpdir(),'social-spectacle-radar-'));
+const radarStateFile=path.join(radarRoot,'state.json');
+fs.writeFileSync(radarStateFile,JSON.stringify({
+  schema:'evercraft.systemia-radar.state.v1',
+  observations:{},
+  streams:{
+    'puget-current':{
+      subject_key:'puget-current',
+      current:{
+        signal_id:'radar:puget-current',
+        observation_id:phenomenonObservation.observation_id,
+        materiality_score:.92,
+        publication_state:'eligible_for_editorial_selection',
+        review:{status:'pass',freshness:{state:'fresh'}},
+        provenance_refs:phenomenonObservation.provenance_refs,
+        correlation_keys:phenomenonObservation.correlation_keys,
+        observed_at:phenomenonObservation.observed_at,
+        last_verified_at:'2026-09-30T23:09:00Z',
+        observation:phenomenonObservation
+      }
+    }
+  },
+  receipts:[],
+  last_edition:null
+},null,2));
+const radarFallbackCycle=runSpectacleCycle({
+  radarStateFile,
+  stateDir:path.join(radarRoot,'spectacle-state'),
+  now:new Date('2026-09-30T23:10:00Z'),
+});
+assert.equal(radarFallbackCycle.receipt.input_count,1);
+assert.equal(radarFallbackCycle.receipt.queue_count,1);
