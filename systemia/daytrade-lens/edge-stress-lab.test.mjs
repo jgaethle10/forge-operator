@@ -32,6 +32,18 @@ assert.ok(rolling.positive_rate>=0.75);
 const nullTest=permutationNullTest(rows,{iterations:500,seed:"null-proof"});
 assert.ok(nullTest.null_p_value<0.05);
 
+
+const negativeRows=rows.map((row)=>({
+  ...row,
+  signal_key:"ai_models|sec_8_k|SOXX|neg",
+  forward_return:-0.012,
+  benchmark_return:0,
+}));
+const negativeCosts=costStress(negativeRows,{expected_sign:-1,costs_bps:[5,20,75]});
+assert.ok(negativeCosts[0].mean_signed_net>negativeCosts[1].mean_signed_net);
+assert.ok(negativeCosts[1].mean_signed_net>negativeCosts[2].mean_signed_net);
+assert.ok(negativeCosts[2].mean_signed_net>0);
+
 const report={
   evaluations:[{
     signal_key:"ai_models|sec_8_k|SOXX|1d",
