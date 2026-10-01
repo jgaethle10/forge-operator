@@ -42,11 +42,23 @@ assert.equal(fomcNear.fomc_same_day,true);
 assert.equal(fomcNear.minutes_from_fomc_statement,5);
 assert.equal(fomcNear.fomc_within_window,true);
 
+const cleanObservedAt=[
+  "2026-01-05T15:00:00Z",
+  "2026-01-08T15:00:00Z",
+  "2026-01-15T15:00:00Z",
+  "2026-01-22T15:00:00Z",
+  "2026-02-03T15:00:00Z",
+  "2026-02-18T15:00:00Z",
+  "2026-02-24T15:00:00Z",
+  "2026-03-03T15:00:00Z",
+  "2026-03-24T15:00:00Z",
+  "2026-04-02T15:00:00Z",
+];
 const rows=[];
 const overlays=[];
 const pairs=[];
 for(let i=0;i<14;i++){
-  let observedAt=new Date(Date.UTC(2026,0,5+i*4,15,0)).toISOString();
+  let observedAt=cleanObservedAt[i]||cleanObservedAt[0];
   let secItems=["1.01"];
   let sourceForm="8-K";
   let hot=false;
