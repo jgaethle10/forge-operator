@@ -105,6 +105,8 @@ jobs:
         run: npm run proof:app-fabric-identity
       - name: Prove owned connector and webhook integration edge
         run: npm run proof:integration-edge
+      - name: Prove Stripe and voice webhook verification
+        run: npm run proof:provider-webhooks
       - name: Prove owned Polar connector migration path
         run: npm run proof:polar-connector
       - name: Prove owned resident scheduler
