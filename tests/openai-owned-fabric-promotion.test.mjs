@@ -82,7 +82,8 @@ test('verified canary promotes all OpenAI package pointers to owned Fabric',()=>
   assert.equal(source.owned_fabric_transport.openai_profile_verified,true);
   assert.equal(distribution.mcp.url,result.mcp_url);
   assert.equal(distribution.mcp.authority,'owned_public_fabric');
-  assert.equal(distribution.mcp.origin_change_requires_new_plugin_submission,true);
+  assert.equal(distribution.mcp.origin_change_requires_new_plugin_submission,false);
+  assert.equal(distribution.mcp.endpoint_path_change_only,true);
   assert.equal(result.openai_origin_change_requires_new_plugin_submission,false);
   assert.equal(result.openai_endpoint_path_change_only,true);
   assert.ok(fs.existsSync(path.join(root,'artifacts/openai-owned-fabric-promotion-receipt.json')));
