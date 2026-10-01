@@ -13,8 +13,8 @@
       "product_key": "evermaps",
       "machine_public_id": "evermaps-evidence-projection-machine-v1",
       "evidence": "EverMaps now has a committed, Deno-check-clean publicProjectionQuery candidate over explicitly public_safe, read_only projection entities. It supports bounded queries across climate/ocean fields, river history, observation platforms, navigation lights, heat/smoke action sites and access gaps, volcanic lakes, and aggregate lifeline coverage. Exact lifeline asset topology is deliberately excluded. Live deployment has not yet been independently verified, so EverMaps remains discovery-only.",
-      "required_next_primitive": "Independently verify publicProjectionQuery in production across at least three layer families, confirm only public_safe/read_only records can escape, record conformance, then bind it to the existing Machine Commerce MCP as a read-only EverMaps tool. Do not promote from source presence alone.",
-      "implementation_state": "source_implemented_live_verification_pending",
+      "required_next_primitive": "Maintain external canary, source/data freshness, conformance and registry publication. Any authority expansion requires a new proof cycle.",
+      "implementation_state": "live_verified_shared_mcp",
       "source_system": "Base44",
       "source_checkpoint": "bce995a3931e946a2b5ce785f793f6bb961072af",
       "candidate_endpoint": "https://base44.app/api/apps/6a985aeccbfb6e930a40137b/functions/publicProjectionQuery",
@@ -25,14 +25,17 @@
           "limit": 2
         },
         "expected_schema": "evercraft.evermaps.public-projection-query.v1"
-      }
+      },
+      "live_canary_evidence": "GitHubActionsRun:36802891607",
+      "shared_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+      "shared_mcp_tool": "query_evermaps_public_projection"
     },
     {
       "product_key": "globalstat",
       "machine_public_id": "globalstat-country-intelligence-machine-v1",
       "evidence": "GlobalStat now has a committed and Deno-check-clean read-only countryIntelligence candidate. It returns public evidence rows, source URLs, reconciliation findings, signals, methodology context and explicit coverage gaps while preserving missing-vs-zero and modeled-vs-observed boundaries. Live deployment has not yet been independently verified, so the product remains discovery-only.",
-      "required_next_primitive": "Independently verify the countryIntelligence endpoint in production with source-backed sample queries, record conformance, then bind it to the existing Machine Commerce MCP as a read-only tool. Do not expose an opaque overall winner or promote from source presence alone.",
-      "implementation_state": "source_implemented_live_verification_pending",
+      "required_next_primitive": "Maintain external canary, source/data freshness, conformance and registry publication. Any authority expansion requires a new proof cycle.",
+      "implementation_state": "live_verified_shared_mcp",
       "source_system": "Base44",
       "source_checkpoint": "72d3662df8ae6d83eb5915f80049c397c8d6a750",
       "candidate_endpoint": "https://base44.app/api/apps/6a97a3d3e2940a7aadbf3078/functions/countryIntelligence",
@@ -49,14 +52,17 @@
           "limit": 10
         },
         "expected_schema": "evercraft.globalstat.country-intelligence.v1"
-      }
+      },
+      "live_canary_evidence": "GitHubActionsRun:36802891607",
+      "shared_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+      "shared_mcp_tool": "query_globalstat_country_intelligence"
     },
     {
       "product_key": "little-red-book-export-qa",
       "machine_public_id": "littlered-kdp-export-qa-machine-v1",
       "evidence": "Little Red now has a committed deterministic read-only KDP export-preflight candidate using caller-supplied page count, trim, cover geometry and pixel dimensions. It preserves KDP source URLs, does not assert variable maximum-page limits, and has no upload, publishing, checkout or payment authority. Live deployment has not yet been independently verified, so the product remains discovery-only.",
-      "required_next_primitive": "Independently verify the kdpExportQa endpoint in production, record conformance, then expose it through the existing Machine Commerce MCP as a read-only tool. Do not promote from source presence alone.",
-      "implementation_state": "source_implemented_live_verification_pending",
+      "required_next_primitive": "Maintain external canary, source/data freshness, conformance and registry publication. Any authority expansion requires a new proof cycle.",
+      "implementation_state": "live_verified_shared_mcp",
       "source_system": "Base44",
       "source_checkpoint": "c1647bf7bf07c3dc062c8c260aa43dee30c3447c",
       "candidate_endpoint": "https://base44.app/api/apps/698c1f429cfd9b61a605bfc7/functions/kdpExportQa",
@@ -73,7 +79,10 @@
           "cover_pixel_height": 6000
         },
         "expected_schema": "evercraft.little-red.kdp-export-preflight.v1"
-      }
+      },
+      "live_canary_evidence": "GitHubActionsRun:36802891607",
+      "shared_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
+      "shared_mcp_tool": "check_book_export_preflight"
     },
     {
       "product_key": "systemia-atlas-freight",
