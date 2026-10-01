@@ -58,6 +58,17 @@ const fakeFetch = async (url, options = {}) => {
       ],
     }), { status: 200 });
   }
+  if (route.endsWith('/v1/operator/host-boundary/certification')) {
+    return new Response(JSON.stringify({
+      schema: 'evercraft.chromeos-host-boundary-field-certification.v1',
+      capability_id: 'chromeos.crostini.port-forwarding.read.v1',
+      state: 'host_setting_ready_lan_unverified',
+      ready_for_external_canary: false,
+      external_public_route_verified: false,
+      mutation_authority: false,
+      receipt_hash: 'sha256:proof',
+    }), { status: 200 });
+  }
   if (route.endsWith('/v1/operator/host-capabilities/check')) {
     return new Response(JSON.stringify({
       error: 'host_boundary_capability_field_gate_required',
@@ -100,7 +111,7 @@ const listed = await executeRemoteOperatorMcpRpc({
   rpc: { jsonrpc: '2.0', id: 2, method: 'tools/list' },
   gateway,
 });
-assert.equal(listed.result.tools.length, 10);
+assert.equal(listed.result.tools.length, 11);
 
 const denied = await executeRemoteOperatorMcpRpc({
   rpc: {
@@ -161,6 +172,28 @@ assert.equal(
 assert.equal(hostCapabilities.result.structuredContent.capability_count, 1);
 assert.equal(
   hostCapabilities.result.structuredContent.capabilities[0].mutation_authority,
+  false
+);
+
+const certification = await executeRemoteOperatorMcpRpc({
+  rpc: {
+    jsonrpc: '2.0',
+    id: 399,
+    method: 'tools/call',
+    params: {
+      name: 'remote_host_boundary_certification',
+      arguments: {},
+    },
+  },
+  gateway,
+  authorization: 'Bearer ' + clientToken,
+});
+assert.equal(
+  certification.result.structuredContent.schema,
+  'evercraft.chromeos-host-boundary-field-certification.v1'
+);
+assert.equal(
+  certification.result.structuredContent.ready_for_external_canary,
   false
 );
 
@@ -273,4 +306,5 @@ console.log(JSON.stringify({
   on_demand_chromeos_host_check_exposed: true,
   typed_host_capability_registry_exposed: true,
   generic_typed_host_capability_dispatch_field_gated: true,
+  host_boundary_field_certification_exposed: true,
 }));
