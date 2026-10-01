@@ -88,11 +88,13 @@ test('submission denial cases cover payment, privacy, and consequential actions'
 });
 
 
-test('review test cases reference the live scanned Fabric matcher',()=>{
+test('review test cases reference live scanned Fabric routing tools',()=>{
   const manifest=readJson('plugin.json');
   const review=manifest.extensions?.['com.openai']?.review;
-  assert.ok(review.test_cases.positive.every((x)=>x.tools_triggered==='match_evercraft_capability'));
-  assert.equal(manifest.version,'1.0.3');
+  const allowed=new Set(['match_evercraft_capability','route_evercraft_payments']);
+  assert.ok(review.test_cases.positive.every((x)=>allowed.has(x.tools_triggered)));
+  assert.ok(review.test_cases.positive.some((x)=>x.tools_triggered==='route_evercraft_payments'));
+  assert.equal(manifest.version,'1.0.4');
 });
 
 
