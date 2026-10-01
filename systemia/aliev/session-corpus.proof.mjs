@@ -130,6 +130,24 @@ try{
       source_name:'Historical verified PlugNYC aggregate',
       source_url:'https://example.test/historical-plugnyc',
       retrieved_at:'2026-09-01T00:00:00.000Z'
+    },{
+      record_key:'legacy-september-duplicate-ev0449',
+      aggregate_key:'nyc-plugnyc:EV0449:2026-09',
+      station_external_id:'nyc-plugnyc:EV0449',
+      address:'DES - Delancey and Essex Municipal Parking Garage',
+      state:'NY',
+      latitude:40.718983402843,
+      longitude:-73.988062273936,
+      period_start:'2026-09-01T00:00:00.000Z',
+      period_end:'2026-10-01T00:00:00.000Z',
+      charging_sessions_count:999,
+      energy_kwh:9999,
+      data_status:'partial',
+      evidence_state:'OBSERVED_AGGREGATE',
+      source_name:'Stale migrated duplicate',
+      source_url:'https://example.test/stale-migrated-duplicate',
+      source_vintage:'2026-09 stale migration copy',
+      retrieved_at:'2026-09-09T00:00:00.000Z'
     }]
   });
 
@@ -175,6 +193,7 @@ try{
     assert.ok(latestObserved);
     assert.equal(latestObserved.charging_sessions_count,1);
     assert.equal(latestObserved.energy_kwh,15);
+    assert.notEqual(latestObserved.charging_sessions_count,999,'stale migrated duplicate must not overwrite fresher owned aggregate');
     assert.equal(latestObserved.data_status,'partial');
     assert.equal(latestObserved.source_vintage,'2026-09 partial through 2026-09-08');
     assert.equal(latestObserved.latitude,40.718983402843);
@@ -246,7 +265,8 @@ try{
     canonical_observed_sessions_domain_publish_verified:true,
     station_identity_geometry_carry_forward_verified:true,
     aliev_snapshot_consumes_session_corpus:true,
-    rivet_report_consumes_session_corpus:true
+    rivet_report_consumes_session_corpus:true,
+    freshest_owned_aggregate_wins_over_migrated_duplicate:true
   },null,2));
 }finally{
   fs.rmSync(root,{recursive:true,force:true});
