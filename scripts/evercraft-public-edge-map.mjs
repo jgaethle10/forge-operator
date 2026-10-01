@@ -30,8 +30,8 @@ if (!['all','web','dns'].includes(scope)) {
 const allMappings = [
   { external: 80, internal: 18080, proto: 'TCP', desc: 'Evercraft Fabric HTTP', scope:'web' },
   { external: 443, internal: 8443, proto: 'TCP', desc: 'Evercraft Fabric HTTPS', scope:'web' },
-  { external: 53, internal: 5353, proto: 'TCP', desc: 'Evercraft Edge authoritative DNS TCP', scope:'dns' },
-  { external: 53, internal: 5353, proto: 'UDP', desc: 'Evercraft Edge authoritative DNS UDP', scope:'dns' },
+  { external: 53, internal: 1053, proto: 'TCP', desc: 'Evercraft Edge authoritative DNS TCP', scope:'dns' },
+  { external: 53, internal: 1053, proto: 'UDP', desc: 'Evercraft Edge authoritative DNS UDP', scope:'dns' },
 ];
 const mappings = scope === 'all'
   ? allMappings
@@ -78,7 +78,7 @@ function dnsQuery(name='edge-canary.evercraftpropertyservices.com.'){
   return Buffer.concat([header,qname,Buffer.from([0,16,0,1])]);
 }
 
-function udpDnsProbe(hostname,port=5353,timeoutMs=1500){
+function udpDnsProbe(hostname,port=1053,timeoutMs=1500){
   return new Promise((resolve)=>{
     const socket=dgram.createSocket('udp4');
     let settled=false;
@@ -108,8 +108,8 @@ async function verifyHostForward(){
     probes.push(await tcpProbe(host,8443));
   }
   if(scope==='all'||scope==='dns'){
-    probes.push(await tcpProbe(host,5353));
-    probes.push(await udpDnsProbe(host,5353));
+    probes.push(await tcpProbe(host,1053));
+    probes.push(await udpDnsProbe(host,1053));
   }
   return {
     schema:'evercraft.chromeos-host-forward-preflight.v1',
