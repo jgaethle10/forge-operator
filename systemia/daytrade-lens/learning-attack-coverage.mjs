@@ -25,9 +25,8 @@ export const ATTACK_IMPLEMENTATION_MAP=Object.freeze({
     gap:"Current batch trial count exists; persistent lifetime search-history lineage remains incomplete."
   },
   "CSCV/PBO diagnostic where structurally valid":{
-    status:"missing",
-    evidence:[],
-    gap:"No CSCV/PBO implementation yet."
+    status:"implemented",
+    evidence:["systemia/daytrade-lens/edge-cscv-pbo.mjs"]
   },
   "purged expanding walk-forward":{
     status:"implemented",
