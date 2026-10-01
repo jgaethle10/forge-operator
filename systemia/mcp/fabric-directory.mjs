@@ -340,8 +340,8 @@ export function fabricDirectoryTools(){
       annotations:safe,
     },
     {
-      name:'preview_public_website',
-      title:'Preview a public website',
+      name:'inspect_public_website',
+      title:'Inspect a public website',
       description:'Fetch one user-supplied public website URL and return a bounded, evidence-backed preview of HTTP and on-page website signals. Read-only. Private and local networks, embedded credentials, oversized responses, and unsupported content types are rejected.',
       inputSchema:{
         type:'object',
@@ -354,6 +354,10 @@ export function fabricDirectoryTools(){
       annotations:publicWebSafe,
     },
   ];
+}
+
+export function fabricOpenAiTools(){
+  return fabricDirectoryTools().filter((tool)=>tool.name==='inspect_public_website');
 }
 
 function rpcResult(id,result){
@@ -372,7 +376,7 @@ function toolResult(payload){
   };
 }
 
-export async function executeFabricDirectoryRpc(rpc,catalog=[],{websitePreview=previewPublicWebsite}={}){
+export async function executeFabricDirectoryRpc(rpc,catalog=[],{websitePreview=previewPublicWebsite,toolProfile='full'}={}){
   const normalized=normalizeFabricCatalog(catalog);
   const method=clean(rpc?.method,120);
   const id=rpc?.id??null;
@@ -382,12 +386,15 @@ export async function executeFabricDirectoryRpc(rpc,catalog=[],{websitePreview=p
       protocolVersion:'2025-03-26',
       capabilities:{tools:{}},
       serverInfo:{name:'evercraft-fabric',version:'1.1.0'},
-      instructions:'Evercraft Fabric provides read-only capability routing plus bounded standalone public-web inspection. Discovery and previews do not authorize payment, paid work, credentials, production access, or external actions.',
+      instructions:toolProfile==='openai'
+        ? 'Evercraft public plugin tools are individually reviewed, read-only operations. The current public tool performs bounded inspection of a user-supplied public website and does not create payment, paid work, credentials, production access, or external side effects.'
+        : 'Evercraft Fabric provides read-only capability routing plus bounded standalone public-web inspection. Discovery and previews do not authorize payment, paid work, credentials, production access, or external actions.',
     });
   }
 
   if(method==='tools/list'){
-    return rpcResult(id,{tools:fabricDirectoryTools()});
+    const tools=toolProfile==='openai'?fabricOpenAiTools():fabricDirectoryTools();
+    return rpcResult(id,{tools});
   }
 
   if(method==='notifications/initialized') return null;
@@ -395,6 +402,9 @@ export async function executeFabricDirectoryRpc(rpc,catalog=[],{websitePreview=p
   if(method==='tools/call'){
     const name=clean(rpc?.params?.name,160);
     const args=rpc?.params?.arguments||{};
+    if(toolProfile==='openai'&&!fabricOpenAiTools().some((tool)=>tool.name===name)){
+      return rpcError(id,-32602,'Unknown or unsupported Evercraft public plugin tool.');
+    }
 
     if(name==='match_evercraft_capability'){
       const intent=clean(args.intent,4000);
@@ -441,7 +451,7 @@ export async function executeFabricDirectoryRpc(rpc,catalog=[],{websitePreview=p
       }));
     }
 
-    if(name==='preview_public_website'){
+    if(name==='inspect_public_website'){
       const url=clean(args.url,2048);
       if(url.length<3) return rpcError(id,-32602,'url must contain at least 3 characters');
       try{
