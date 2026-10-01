@@ -47,6 +47,27 @@ const summary=buildClusterAdversarialSummary({
   horizonCoherenceLab:{reviews:rows("horizon_coherence_status","HORIZON_COHERENT_DIAGNOSTIC")},
   walkForwardLab:{reviews:rows("walk_forward_status","WALK_FORWARD_ROBUST_DIAGNOSTIC")},
   executionTranslationLab:{reviews:rows("translation_status","UNHEDGED_ONLY_TRANSLATES_DIAGNOSTIC")},
+  familyMaxNullLab:{reviews:candidates.map((candidate)=>({
+    signal_key:candidate.signal_key,
+    status:"MAX_FAMILY_NULL_SEPARATED_DIAGNOSTIC",
+    empirical_family_wise_p_value:0.02,
+  }))},
+  deflatedSharpeLab:{reviews:candidates.map((candidate)=>({
+    signal_key:candidate.signal_key,
+    status:"DSR_SEPARATED_DIAGNOSTIC",
+    deflated_sharpe_probability:0.97,
+  }))},
+  tailDependenceLab:{reviews:candidates.map((candidate,index)=>({
+    signal_key:candidate.signal_key,
+    status:index===0
+      ?"TAIL_DEPENDENCE_LOWER_FRAGILITY_DIAGNOSTIC"
+      :"TAIL_DEPENDENCE_FRAGILE_DIAGNOSTIC",
+  }))},
+  cscvPboLab:{reviews:[{
+    cluster_key:"ai_models|sec_8_k|SPY",
+    status:"CSCV_PBO_LOWER_OVERFIT_DIAGNOSTIC",
+    pbo:0.20,
+  }]},
   currentRunForwardClusterScores:{
     scores:[{
       cluster_key:"ai_models|sec_8_k|SPY",
@@ -62,6 +83,23 @@ assert.equal(summary.clusters[0].candidate_count,2);
 assert.equal(summary.clusters[0].diagnostic_counts.stress_survivor,2);
 assert.equal(summary.clusters[0].diagnostic_counts.extended_breaker_survivor,2);
 assert.equal(summary.clusters[0].diagnostic_counts.label_permutation_bh_separated,2);
+assert.equal(summary.clusters[0].diagnostic_counts.family_max_null_separated,2);
+assert.equal(summary.clusters[0].diagnostic_counts.deflated_sharpe_separated,2);
+assert.equal(summary.clusters[0].diagnostic_counts.tail_dependence_fragile,1);
+assert.equal(
+  summary.clusters[0].cscv_pbo_cluster_receipt.status,
+  "CSCV_PBO_LOWER_OVERFIT_DIAGNOSTIC"
+);
+assert.equal(summary.clusters[0].cscv_pbo_cluster_receipt.pbo,0.20);
+assert.equal(
+  summary.clusters[0].member_receipts[0].family_max_null_status,
+  "MAX_FAMILY_NULL_SEPARATED_DIAGNOSTIC"
+);
+assert.equal(
+  summary.clusters[0].member_receipts[0].deflated_sharpe_status,
+  "DSR_SEPARATED_DIAGNOSTIC"
+);
+
 assert.equal(
   summary.clusters[0].current_run_forward_cluster_score.status,
   "FORWARD_CLUSTER_PENDING"
@@ -77,6 +115,10 @@ console.log(JSON.stringify({
   correlated_siblings_grouped:true,
   candidate_and_cluster_receipts_preserved:true,
   forward_cluster_score_attached:true,
+  family_max_null_attached:true,
+  deflated_sharpe_attached:true,
+  tail_dependence_attached:true,
+  cscv_pbo_attached_at_cluster_unit:true,
   descriptive_only:true,
   eligibility_mutated:false,
   live_trade_authority:false,
