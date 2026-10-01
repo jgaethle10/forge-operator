@@ -326,6 +326,53 @@ export async function acquireResourceCapacity({
     };
   }
 
+  if(marketLease?.execution_ready===true){
+    const selectedMarket=String(
+      exchange.selected_offer?.market||
+      marketLease.market||
+      ''
+    ).toLowerCase();
+    const selectedAdapter=marketAdapters.find((adapter)=>
+      String(adapter?.market||'').toLowerCase()===selectedMarket
+    );
+    if(selectedAdapter&&typeof selectedAdapter.execute==='function'){
+      const body={
+        schema:'evercraft.saban.resource-acquisition.v1',
+        state:'ready',
+        mode:'compute_exchange_adapter',
+        execution_kind:'negotiated_adapter',
+        need_id:need.need_id,
+        resource_field_receipt:plan.receipt_hash,
+        lease_count:0,
+        leases:[],
+        exchange:{
+          demand_hash:demand.demand_hash,
+          negotiation_receipt:exchange.receipt_hash,
+          market:selectedMarket||null,
+          provider_id:exchange.selected_offer?.provider_id||marketLease.provider_id||null,
+          lease_receipt:marketLease.receipt||null,
+        },
+        events,
+        completed_at:new Date().toISOString(),
+      };
+      const result={
+        ...body,
+        execution_leases:[],
+        exchange,
+        receipt_hash:sha(body),
+      };
+      Object.defineProperty(result,'adapter_execution',{
+        value:Object.freeze({
+          adapter:selectedAdapter,
+          lease:marketLease,
+        }),
+        enumerable:false,
+        writable:false,
+      });
+      return result;
+    }
+  }
+
   const body={
     schema:'evercraft.saban.resource-acquisition.v1',
     state:'held',
