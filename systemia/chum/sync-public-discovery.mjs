@@ -71,6 +71,17 @@ function publicOffer(offer) {
   const fallbackPublicUrl = publicId && gateway
     ? gateway + (gateway.includes('?') ? '&' : '?') + 'view=service&public_id=' + encodeURIComponent(publicId)
     : '';
+  const publicUrl = sourcePublicUrl || fallbackPublicUrl;
+  const sourceCommercialState = String(offer.commercial_state || '');
+  const publicCommercialState = sourceCommercialState === 'sell_now' && !publicUrl
+    ? 'held_no_owned_public_url'
+    : sourceCommercialState;
+  const sourceInvocationStatus = String(offer.invocation_status || '');
+  const publicInvocationStatus = sourceCommercialState === 'sell_now' && !publicUrl
+    ? 'HELD: source marks this offer sell_now, but no verified Evercraft-owned public continuation URL is bound. Discovery may continue; public purchase continuation is not advertised.'
+    : (isLegacyProviderUrl(sourceInvocationStatus)
+      ? 'HELD: legacy provider runtime retired; awaiting a verified Evercraft-owned route.'
+      : sourceInvocationStatus);
   return {
     public_id: publicId,
     name: String(offer.name || ''),
@@ -78,18 +89,18 @@ function publicOffer(offer) {
     problem: String(offer.problem || ''),
     inputs: String(offer.inputs || ''),
     outputs: String(offer.outputs || ''),
-    commercial_state: String(offer.commercial_state || ''),
+    commercial_state: publicCommercialState,
+    source_commercial_state: sourceCommercialState,
     machine_state: String(offer.machine_state || ''),
     pricing: String(offer.pricing || ''),
     offers: Array.isArray(offer.offers) ? offer.offers : [],
     human_ui_required: Boolean(offer.human_ui_required),
     confirmation: String(offer.confirmation || ''),
-    public_url: sourcePublicUrl || fallbackPublicUrl,
+    public_url: publicUrl,
     public_url_source: sourcePublicUrl ? 'source_catalog' : (fallbackPublicUrl ? 'owned_gateway_fallback' : 'held_no_owned_public_url'),
     payment_authority: String(offer.payment_authority || ''),
-    invocation_status: isLegacyProviderUrl(offer.invocation_status)
-      ? 'HELD: legacy provider runtime retired; awaiting a verified Evercraft-owned route.'
-      : String(offer.invocation_status || ''),
+    invocation_status: publicInvocationStatus,
+    source_invocation_status: sourceInvocationStatus,
     live_canary_evidence: isLegacyProviderUrl(liveCanaryEvidence) ? null : liveCanaryEvidence,
     catalog_version: String(offer.catalog_version || '')
   };
