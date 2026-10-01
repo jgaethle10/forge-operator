@@ -92,7 +92,7 @@ test('review test cases reference the live scanned Fabric matcher',()=>{
   const manifest=readJson('plugin.json');
   const review=manifest.extensions?.['com.openai']?.review;
   assert.ok(review.test_cases.positive.every((x)=>x.tools_triggered==='match_evercraft_capability'));
-  assert.match(String(manifest.version||''),/^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?$/);
+  assert.match(String(manifest.version||''),/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/);
 });
 
 
