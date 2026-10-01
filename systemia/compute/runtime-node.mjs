@@ -18,11 +18,11 @@ import {
   startBrowserContainer,
 } from '../evercraft-web/browser-worker/container-runtime.mjs';
 import { startRivetReportRuntime } from '../rivet/report-runtime.mjs';
-import { startAliEvSourceRuntime } from '../aliev/source-runtime.mjs';
 import { startSpecialistHandoffRuntime } from '../mcp/specialist-handoff-runtime.mjs';
 import { startPublicEdgeRuntime } from '../network/public-edge-runtime.mjs';
 import { startFederatedServiceBridge } from '../network/federated-service-bridge.mjs';
 import { startEvercraftHomeServer } from '../evercraft-home/server.mjs';
+import { startRavenPrivateRuntime } from '../raven/private-runtime.mjs';
 import { validatePublicEdgeAdmission } from '../network/public-edge-tls.mjs';
 import { transcriptionCapabilityStatus } from '../forensiscope/transcription-engine.mjs';
 import { EvercraftRemoteOperator } from './remote-operator.mjs';
@@ -84,6 +84,7 @@ function bearer(req) {
 const BRIDGED_WORKLOADS = new Set([
   'systemia.evercraft-web-browser.v1',
   'systemia.specialist-handoff-mcp.v1',
+  'systemia.raven-private-runtime.v1',
 ]);
 
 const BRIDGE_REQUEST_HEADERS = new Set([
@@ -130,6 +131,9 @@ function bridgeServiceOrigin(entry) {
   if (entry?.workload_class === 'systemia.specialist-handoff-mcp.v1') {
     return String(entry?.runtime?.url || '');
   }
+  if (entry?.workload_class === 'systemia.raven-private-runtime.v1') {
+    return String(entry?.runtime?.url || '');
+  }
   return '';
 }
 
@@ -167,9 +171,15 @@ async function bridgeResidentHttp(entry, input = {}) {
   const body = encoded ? Buffer.from(encoded, 'base64') : null;
   if (body && body.length > 8 * 1024 * 1024) throw new Error('resident_service_bridge_body_too_large');
 
+  const requestHeaders = bridgeHeaders(input.headers, BRIDGE_REQUEST_HEADERS);
+  if (entry.workload_class === 'systemia.raven-private-runtime.v1') {
+    if (!entry.private_control_token) throw new Error('raven_private_control_authority_unavailable');
+    requestHeaders.authorization = 'Bearer ' + entry.private_control_token;
+  }
+
   const response = await fetch(target, {
     method,
-    headers: bridgeHeaders(input.headers, BRIDGE_REQUEST_HEADERS),
+    headers: requestHeaders,
     body: ['GET','HEAD'].includes(method) ? undefined : body,
     redirect: 'manual',
   });
@@ -723,12 +733,12 @@ export async function startEvercraftComputeNode({
     'systemia.kaidance-collider.v1',
     'systemia.chum-public-origin.v1',
     'systemia.remote-capacity-broker.v1',
-    'systemia.aliev-source-runtime.v1',
     'systemia.rivet-report-runtime.v1',
     'systemia.specialist-handoff-mcp.v1',
     'systemia.public-edge.v1',
     'systemia.federated-service-bridge.v1',
     'systemia.evercraft-home.v1',
+    'systemia.raven-private-runtime.v1',
     'saban.logical-agent',
     'saban.multiplier-assignment.v1',
   ]);
@@ -1311,59 +1321,6 @@ export async function startEvercraftComputeNode({
           });
         }
 
-        if (workloadClass === 'systemia.aliev-source-runtime.v1') {
-          const stateRoot = path.resolve(String(
-            body.input?.state_root || path.join(allowedRoot, '.evercraft', 'aliev-source-runtime')
-          ));
-          if (!isWithin(allowedRoot, stateRoot)) {
-            return send(res, 403, { error: 'aliev_source_state_outside_admitted_root' });
-          }
-          const runtime = await startAliEvSourceRuntime({
-            stateDir: stateRoot,
-            host: '127.0.0.1',
-            port: Number(body.input?.port || 0),
-            systemiaMachineKey: process.env.SYSTEMIA_MACHINE_KEY || '',
-            ingestToken: process.env.ALIEV_OWNED_INGEST_TOKEN || '',
-          });
-          const serviceId = `svc_${randomBytes(8).toString('hex')}`;
-          services.set(serviceId, {
-            lease_id: body.lease_id,
-            workload_class: body.workload_class,
-            runtime,
-            service: runtime,
-          });
-          const result = {
-            schema: 'evercraft.compute.resident-service.v1',
-            service_id: serviceId,
-            workload_class: body.workload_class,
-            service_url: null,
-            local_url: runtime.service_url,
-            source_url: runtime.source_url,
-            ingest_url: runtime.ingest_url,
-            batch_ingest_url: runtime.batch_ingest_url,
-            domain_ingest_url: runtime.domain_ingest_url,
-            domain_health_url: runtime.domain_health_url,
-            health_path: `/v1/services/${serviceId}/health`,
-            public_route_required: false,
-            private_source_runtime: true,
-            instance_id: runtime.instance_id,
-          };
-          const receipt = chain.issue('service.started', {
-            lease_id: body.lease_id,
-            service_id: serviceId,
-            workload_class: body.workload_class,
-            result_schema: result.schema,
-            instance_id: runtime.instance_id,
-          });
-          return send(res, 200, {
-            ok: true,
-            node_id: nodeId,
-            workload_class: body.workload_class,
-            result,
-            receipt,
-          });
-        }
-
         if (workloadClass === 'systemia.rivet-report-runtime.v1') {
           const stateRoot = path.resolve(String(
             body.input?.state_root || path.join(allowedRoot, '.evercraft', 'rivet-report-runtime')
@@ -1430,6 +1387,76 @@ export async function startEvercraftComputeNode({
             workload_class: body.workload_class,
             result_schema: result.schema,
             instance_id: runtime.instance_id,
+          });
+          return send(res, 200, {
+            ok: true,
+            node_id: nodeId,
+            workload_class: body.workload_class,
+            result,
+            receipt,
+          });
+        }
+
+        if (workloadClass === 'systemia.raven-private-runtime.v1') {
+          const stateValue = String(
+            body.input?.state_dir ||
+            process.env.RAVEN_PRIVATE_STATE_DIR ||
+            ''
+          ).trim();
+          if (!stateValue) {
+            return send(res, 422, { error: 'raven_private_state_dir_required' });
+          }
+          const stateRoot = path.resolve(stateValue);
+          if (!isWithin(allowedRoot, stateRoot)) {
+            return send(res, 403, { error: 'raven_private_state_outside_admitted_root' });
+          }
+
+          const controlToken = randomBytes(32).toString('hex');
+          const runtime = await startRavenPrivateRuntime({
+            stateDir: stateRoot,
+            repoRoot: CODE_ROOT,
+            host: '127.0.0.1',
+            port: Number(body.input?.port || 0),
+            controlToken,
+            runtimeLabel: 'Evercraft Compute',
+            workloadClass: 'systemia.raven-private-runtime.v1',
+          });
+
+          const serviceId = `svc_${randomBytes(8).toString('hex')}`;
+          services.set(serviceId, {
+            lease_id: body.lease_id,
+            workload_class: body.workload_class,
+            runtime,
+            service: runtime,
+            private_control_token: controlToken,
+          });
+
+          const result = {
+            schema: 'evercraft.compute.resident-service.v1',
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            service_url: null,
+            local_url: runtime.url,
+            health_path: `/v1/services/${serviceId}/health`,
+            public_route_required: false,
+            private_origin_only: true,
+            service_bridge_supported: true,
+            service_bridge_path: `/v1/services/${serviceId}/http-bridge`,
+            instance_id: runtime.instanceId,
+            provider_independent_boot: true,
+            ai_inference_enabled: false,
+            execution_authority_granted: false,
+            control_authority_generated_server_side: true,
+            control_authority_exposed: false,
+            control_authority_persisted_in_receipt: false,
+          };
+          const receipt = chain.issue('service.started', {
+            lease_id: body.lease_id,
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            result_schema: result.schema,
+            instance_id: runtime.instanceId,
+            control_authority_exposed: false,
           });
           return send(res, 200, {
             ok: true,
