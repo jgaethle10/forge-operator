@@ -203,6 +203,7 @@ export function createFaieRuntime({
       official_collectors: {
         enabled: Boolean(collectorConfig?.enabled),
         nws_enabled: Boolean(collectorConfig?.nws_enabled),
+        region_profile_id: collectorConfig?.region_profile?.profile_id || null,
         usgs_water_site_count: Array.isArray(collectorConfig?.usgs_water_sites) ? collectorConfig.usgs_water_sites.length : 0,
         nwps_gauge_count: Array.isArray(collectorConfig?.nwps_gauges) ? collectorConfig.nwps_gauges.length : 0,
         configured_source_count: configuredCollectors.length,
