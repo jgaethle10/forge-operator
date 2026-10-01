@@ -87,7 +87,7 @@ export class EvercraftWorkforceCommerce {
     const now=nowMs(this.clock());
     const recent=this.#recent(entity,customerEmail,offerKey);
     if(recent.some((purchase)=>
-      ['checkout_preparing','checkout_started'].includes(String(purchase.payment_status||'')) &&
+      ['checkout_preparing','checkout_started','paid'].includes(String(purchase.payment_status||'')) &&
       now-new Date(purchase.created_date||purchase.created_at).getTime()<2*60*1000
     )){
       throw new Error('checkout_recent_attempt_exists');
