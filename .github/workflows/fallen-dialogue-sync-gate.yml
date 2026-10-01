@@ -22,9 +22,9 @@ jobs:
       - name: Ensure FFmpeg
         run: |
           if ! command -v ffmpeg >/dev/null 2>&1; then
-            timeout 300s sudo apt-get update -qq
-            timeout 300s sudo apt-get install -y -qq ffmpeg
+            timeout 180s sudo apt-get install -y -qq ffmpeg
           fi
+          command -v ffmpeg
           ffmpeg -version | head -n 1
       - run: node --import tsx --test systemia/media-studio/dialogue-sync-gate.test.ts systemia/media-studio/model-fabric.test.ts
       - run: npm run lint
