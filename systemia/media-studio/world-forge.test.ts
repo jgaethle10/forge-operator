@@ -122,6 +122,32 @@ test('World Forge refuses destructive edits without explicit authority',()=>{
   assert.match(result.receipt.rejectedOperations[0].reason,/destructive_authority_required/);
 });
 
+
+test('World Forge material bindings carry a real inverse operation',()=>{
+  const project=specimen();
+  project.materials.push({
+    id:'mat-gold',
+    name:'Gold',
+    model:'pbr',
+    baseColor:[.72,.55,.23,1],
+    metallic:.8,
+    roughness:.22,
+  });
+
+  const result=applyWorldForgeOperations({
+    project,
+    expectedVersion:1,
+    operations:[{type:'bind_material',nodeId:'table',materialId:'mat-gold',slot:0}],
+  });
+
+  assert.equal(result.status,'completed');
+  assert.equal(result.project.nodes.find(node=>node.id==='table')?.materialIds?.[0],'mat-gold');
+  assert.deepEqual(
+    result.receipt.inverseOperations[0],
+    {type:'bind_material',nodeId:'table',materialId:'mat-black',slot:0},
+  );
+});
+
 test('World Forge render planning blocks uncleared assets',()=>{
   const project=specimen();
   const accepted=buildWorldForgeRenderPlan({project,renderIntentId:'preview'});
