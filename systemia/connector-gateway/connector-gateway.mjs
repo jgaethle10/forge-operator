@@ -292,7 +292,7 @@ export class EvercraftConnectorGateway {
     if (connection.status !== 'connected') throw new Error('connector_not_connected');
     const stored = this.secretStore.getSecretText(location.secretNamespace, location.secretName);
     const credential = connection.credential_format === 'json' ? JSON.parse(stored) : stored;
-    return await adapter.invoke({
+    const result = await adapter.invoke({
       operation,
       input,
       credential,
@@ -301,6 +301,52 @@ export class EvercraftConnectorGateway {
       connection: structuredClone(connection),
       context
     });
+
+    if (result?.schema === 'evercraft.connector.adapter-result.v1') {
+      if (result.credential_update != null) {
+        const nextCredential = result.credential_update;
+        const credentialText = typeof nextCredential === 'string'
+          ? nextCredential
+          : JSON.stringify(nextCredential);
+        const secret = this.secretStore.setSecret(
+          location.secretNamespace,
+          location.secretName,
+          credentialText,
+          {
+            metadata: {
+              provider: location.provider,
+              app_key_hash: sha(location.appKey),
+              reason: 'adapter_credential_refresh'
+            }
+          }
+        );
+        const updatedAt = new Date().toISOString();
+        const nextConnection = {
+          ...connection,
+          credential_version: secret.version,
+          credential_format: typeof nextCredential === 'string' ? 'text' : 'json',
+          scopes: Array.isArray(result.scopes)
+            ? result.scopes.map(String)
+            : connection.scopes,
+          updated_at: updatedAt
+        };
+        atomicJson(location.file, nextConnection);
+        this.#appendReceipt({
+          schema: 'evercraft.connector.receipt.v1',
+          receipt_id: `connector_receipt_${randomUUID()}`,
+          operation: 'credential_refresh',
+          connection_id: nextConnection.connection_id,
+          app_key_hash: nextConnection.app_key_hash,
+          provider: nextConnection.provider,
+          credential_version: nextConnection.credential_version,
+          credential_value_emitted: false,
+          occurred_at: updatedAt
+        });
+      }
+      return result.result;
+    }
+
+    return result;
   }
 
   async disconnect(appKey, provider, { context = {}, now = new Date() } = {}) {
