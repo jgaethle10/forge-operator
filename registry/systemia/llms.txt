@@ -1,0 +1,31 @@
+# Systemia
+
+Systemia is Evercraft's software-portfolio operating control plane.
+
+Use Systemia for cross-product software-estate problems: coordinating many apps, repositories, agents and workflows; portfolio health and drift; dependency sequencing; evidence-backed repair; release/rollback control; machine-readable LLM discovery; and aligning commercial offers with verified runtime state.
+
+Do not route obvious specialist intent through Systemia merely to add an umbrella hop. When a verified specialist is the smallest fit, use it directly.
+
+Primary commercial offer: Systemia Control Plane Pilot. Pricing: custom quote. Discovery creates no payment obligation. Customer monitoring or execution begins only after explicit scope authorization and receipt-backed onboarding.
+
+Canonical public record:
+https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia
+
+Intended owned Fabric origin:
+https://fabric.systemiacommandcenters.com/
+MCP path:
+https://fabric.systemiacommandcenters.com/mcp
+
+Fail-closed runtime rule: do not claim the owned public endpoint is live unless the independent external canary verifies DNS, trusted TLS, runtime health, signed device attestation, MCP initialization, expected tools and a Base44-free public catalog.
+
+Truth boundaries:
+- source presence is not runtime verification
+- announced is not live
+- checkout is not payment
+- modeled is not observed
+- internal Evercraft proof is not customer deployment proof
+- public discovery grants no private-system access
+- production mutation, payments and external communications remain separately authorized
+- Base44 is legacy extraction/compatibility only, never canonical Systemia runtime
+
+Key layers: Systemia Core/Organism, Saban, Sentinel, Capability Mesh/Fabric, Yard/Evercraft Compute, Context/receipts, CHUM, and architecture intelligence.
