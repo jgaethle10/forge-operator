@@ -43,6 +43,17 @@ const fakeFetch = async (url, options = {}) => {
       ],
     }), { status: 200 });
   }
+  if (route.endsWith('/v1/operator/host-boundary/check')) {
+    return new Response(JSON.stringify({
+      ok: true,
+      schema: 'evercraft.chromeos-host-boundary-check-result.v1',
+      request_id: 'hostcheck_0123456789abcdef01234567',
+      request_state: 'pending',
+      pending: true,
+      fulfilled: false,
+      mutation_supported: false,
+    }), { status: 200 });
+  }
   if (route.endsWith('/v1/operator/fs/read')) {
     return new Response(JSON.stringify({ ok: true, content: 'hello' }), { status: 200 });
   }
@@ -69,7 +80,7 @@ const listed = await executeRemoteOperatorMcpRpc({
   rpc: { jsonrpc: '2.0', id: 2, method: 'tools/list' },
   gateway,
 });
-assert.equal(listed.result.tools.length, 7);
+assert.equal(listed.result.tools.length, 8);
 
 const denied = await executeRemoteOperatorMcpRpc({
   rpc: {
@@ -130,6 +141,24 @@ assert.equal(
 assert.equal(hostBoundary.result.structuredContent.fresh, true);
 assert.equal(hostBoundary.result.structuredContent.mutation_supported, false);
 
+const hostCheck = await executeRemoteOperatorMcpRpc({
+  rpc: {
+    jsonrpc: '2.0',
+    id: 43,
+    method: 'tools/call',
+    params: { name: 'remote_host_boundary_check', arguments: { wait_ms: 5000 } },
+  },
+  gateway,
+  authorization: 'Bearer ' + clientToken,
+});
+assert.equal(
+  hostCheck.result.structuredContent.schema,
+  'evercraft.chromeos-host-boundary-check-result.v1'
+);
+assert.equal(hostCheck.result.structuredContent.pending, true);
+assert.equal(hostCheck.result.structuredContent.mutation_supported, false);
+assert.equal(seen.at(-1).body.wait_ms, 5000);
+
 const read = await executeRemoteOperatorMcpRpc({
   rpc: {
     jsonrpc: '2.0',
@@ -179,4 +208,5 @@ console.log(JSON.stringify({
   control_grant_not_returned_to_client: true,
   read_only_network_status_exposed: true,
   read_only_chromeos_host_boundary_exposed: true,
+  on_demand_chromeos_host_check_exposed: true,
 }));
