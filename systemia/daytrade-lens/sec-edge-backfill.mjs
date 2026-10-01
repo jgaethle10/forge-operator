@@ -16,6 +16,7 @@ import { ForwardPaperDurableState } from "./edge-forward-paper-durable.mjs";
 import { runEdgeStressLab } from "./edge-stress-lab.mjs";
 import { summarizeResearchSearchBurden } from "./edge-search-burden.mjs";
 import { runFamilyMaxNullLab } from "./edge-family-max-null.mjs";
+import { runCscvPboLab } from "./edge-cscv-pbo.mjs";
 import { runEdgeBreakerLab } from "./edge-breaker-lab.mjs";
 import { runTimingFragilityLab } from "./edge-timing-fragility.mjs";
 import { runOverlapFragilityLab } from "./edge-overlap-fragility.mjs";
@@ -125,6 +126,12 @@ async function main() {
     familyMaxNullFile,
     JSON.stringify(familyMaxNullLab, null, 2) + "\n"
   );
+
+  const cscvPboLab = runCscvPboLab(report, {
+    transaction_cost_bps: Number(process.env.EDGE_LAB_TRANSACTION_COST_BPS || 5),
+  });
+  const cscvPboFile = path.join(artifactDir, "sec-edge-cscv-pbo.json");
+  fs.writeFileSync(cscvPboFile, JSON.stringify(cscvPboLab, null, 2) + "\n");
 
   const stressLab = runEdgeStressLab(report);
   const stressFile = path.join(artifactDir, "sec-edge-stress-lab.json");
@@ -496,6 +503,7 @@ async function main() {
       familyMaxNullLab.null_eligible_family_count || 0,
     family_max_null_separated_candidates:
       familyMaxNullLab.separated_count || 0,
+    cscv_pbo_status_counts: cscvPboLab.status_counts || {},
     candidate_clusters: adversarial.candidate_cluster_count || 0,
     cluster_adversarial_summary_count:
       clusterAdversarialSummary.cluster_count || 0,
@@ -553,6 +561,7 @@ async function main() {
       research: reportFile,
       search_burden: searchBurdenFile,
       family_max_null: familyMaxNullFile,
+      cscv_pbo: cscvPboFile,
       quote_microstructure: quoteMicrostructureFile,
       stress_lab: stressFile,
       breaker_lab: breakerFile,
