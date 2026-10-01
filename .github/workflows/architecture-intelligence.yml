@@ -48,7 +48,7 @@ jobs:
         run: |
           mkdir -p /tmp/systemia-architecture
           python tools/systemia_architecture_scan.py --root . --out /tmp/systemia-architecture/topology.json
-          python tools/systemia_architecture_reconcile.py             --static /tmp/systemia-architecture/topology.json             --out /tmp/systemia-architecture/reconciled.json
+          python tools/systemia_architecture_reconcile.py             --declared /tmp/systemia-architecture/topology.json             --out /tmp/systemia-architecture/reconciled.json
           python tools/systemia_architecture_health.py             --topology /tmp/systemia-architecture/topology.json             --reconciled /tmp/systemia-architecture/reconciled.json             --out /tmp/systemia-architecture/health.json
           python tools/systemia_architecture_query.py             --topology /tmp/systemia-architecture/topology.json             --query systemia_architecture_scan             --out /tmp/systemia-architecture/query-smoke.json
           python - <<'PY'
