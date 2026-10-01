@@ -7,6 +7,8 @@ const script=fs.readFileSync(new URL('../scripts/install-fabric-owned-edge.sh',i
 const updater=fs.readFileSync(new URL('../scripts/update-fabric-owned-edge.sh',import.meta.url),'utf8');
 const updaterInstaller=fs.readFileSync(new URL('../scripts/install-fabric-self-update.sh',import.meta.url),'utf8');
 const networkObserverInstaller=fs.readFileSync(new URL('../scripts/install-fabric-network-observer.sh',import.meta.url),'utf8');
+const routerMapInstaller=fs.readFileSync(new URL('../scripts/install-fabric-router-map-resident.sh',import.meta.url),'utf8');
+const routerMapper=fs.readFileSync(new URL('../scripts/evercraft-public-edge-map.mjs',import.meta.url),'utf8');
 
 test('owned edge installer keeps Fabric private behind the TLS proxy',()=>{
   assert.match(script,/--host 127\.0\.0\.1 --port \$FABRIC_PORT/);
@@ -78,6 +80,21 @@ test('Fabric self updater reasserts owned ingress without claiming ChromeOS host
   assert.doesNotMatch(updater,/\bvmc\b|ChromeOS Settings|\bcrosh\b|chromeos-port-forward/i);
 });
 
+test('Fabric self updater can reconstruct only the bounded router mapper from saved approved config',()=>{
+  assert.match(updater,/ensure_router_map_resident_from_saved_config/);
+  assert.match(updater,/ROUTER_MAP_ENV="\/etc\/evercraft\/router-map\.env"/);
+  assert.match(updater,/EVERCRAFT_ROUTER_GATEWAY/);
+  assert.match(updater,/EVERCRAFT_ROUTER_LAN_HOST/);
+  assert.match(updater,/install-fabric-router-map-resident\.sh/);
+  assert.match(updater,/SUDO_USER="\$RUN_USER" bash "\$ROUTER_MAP_INSTALLER"/);
+  assert.match(routerMapInstaller,/WAN 80  -> Chromebook 18080/);
+  assert.match(routerMapInstaller,/WAN 443 -> Chromebook 8443/);
+  assert.match(routerMapper,/external: 80, internal: 18080/);
+  assert.match(routerMapper,/external: 443, internal: 8443/);
+  assert.doesNotMatch(routerMapper,/external:\s*(22|3389|8787|3000)/);
+});
+
+
 test('Fabric self update timer creates no inbound admin surface and runs on a bounded cadence',()=>{
   assert.match(updaterInstaller,/OnUnitActiveSec=\$CADENCE/);
   assert.match(updaterInstaller,/evercraft-fabric-update\.service/);
@@ -111,6 +128,7 @@ test('edge installer and updater shell remain syntactically valid',()=>{
   for(const rel of [
     '../scripts/install-fabric-owned-edge.sh',
     '../scripts/install-fabric-network-observer.sh',
+    '../scripts/install-fabric-router-map-resident.sh',
     '../scripts/update-fabric-owned-edge.sh',
   ]){
     const file=new URL(rel,import.meta.url);
