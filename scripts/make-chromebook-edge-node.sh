@@ -56,48 +56,95 @@ if [[ -z "$PUBLIC_IP" ]]; then
   exit 21
 fi
 
-echo "[4/6] Public candidate IP: $PUBLIC_IP"
-if ! command -v gh >/dev/null 2>&1; then
-  echo "HOLD: GitHub CLI is unavailable, so the independent outside-network canary cannot be dispatched." >&2
-  exit 22
-fi
-if ! runuser -u "$RUN_USER" -- gh auth status -h github.com >/dev/null 2>&1; then
-  echo "HOLD: GitHub CLI is not authenticated for the runtime user." >&2
-  exit 23
-fi
+echo "[4/6] Public candidate IP observed locally."
 
-echo "[5/6] Dispatching independent GitHub UDP/TCP 53 canary..."
-START_EPOCH="$(date -u +%s)"
-runuser -u "$RUN_USER" -- gh workflow run "$WORKFLOW" --repo "$REPO"   -f server_ip="$PUBLIC_IP" -f name="$DNS_CANARY"
+EDGE_STATE_DIR=/var/lib/evercraft/nodeseed/edge-dns
+REQUEST_FILE="$EDGE_STATE_DIR/external-canary-request.json"
+install -d -o evercraft -g evercraft -m 0750 "$EDGE_STATE_DIR"
 
-RUN_ID=""
-for _ in $(seq 1 30); do
-  RUN_JSON="$(runuser -u "$RUN_USER" -- gh run list --repo "$REPO" --workflow "$WORKFLOW" --event workflow_dispatch --limit 5 --json databaseId,createdAt,status,conclusion 2>/dev/null || true)"
-  RUN_ID="$(printf '%s' "$RUN_JSON" | node -e "
+CAPACITY_JSON="$(curl -fsS --max-time 3 http://127.0.0.1:42420/v1/capacity)"
+NODE_ID="$(printf '%s' "$CAPACITY_JSON" | node -e "
 let s='';process.stdin.on('data',d=>s+=d);process.stdin.on('end',()=>{
- try{
-  const start=Number(process.argv[1]);
-  const rows=JSON.parse(s);
-  const row=rows.find(x=>Date.parse(x.createdAt)/1000>=start-5);
-  if(row)process.stdout.write(String(row.databaseId));
- }catch{}
-});" "$START_EPOCH")"
-  [[ -n "$RUN_ID" ]] && break
-  sleep 2
-done
-if [[ -z "$RUN_ID" ]]; then
-  echo "HOLD: external canary was dispatched but its run could not be resolved." >&2
-  exit 24
+ const j=JSON.parse(s); if(!j.node_id)process.exit(2); process.stdout.write(String(j.node_id));
+});")"
+MAPPING_METHOD="$(node -e "
+const fs=require('fs');
+try{const j=JSON.parse(fs.readFileSync('/tmp/evercraft-edge-router-map.log','utf8'));process.stdout.write(String(j.method||'unknown'))}catch{process.stdout.write('unknown')}
+")"
+
+REQUEST_ID=""
+if [[ -f "$REQUEST_FILE" ]]; then
+  REQUEST_ID="$(node -e "
+const fs=require('fs');
+try{
+ const j=JSON.parse(fs.readFileSync(process.argv[1],'utf8'));
+ if(j.schema==='evercraft.edge.external-canary-request.v1' &&
+    j.node_id===process.argv[2] &&
+    j.public_ipv4===process.argv[3] &&
+    j.canary_name===process.argv[4] &&
+    /^[a-f0-9]{32}$/.test(String(j.request_id||''))) process.stdout.write(j.request_id);
+}catch{}
+" "$REQUEST_FILE" "$NODE_ID" "$PUBLIC_IP" "$DNS_CANARY")"
+fi
+
+if [[ -z "$REQUEST_ID" ]]; then
+  REQUEST_ID="$(node -e "process.stdout.write(require('crypto').randomBytes(16).toString('hex'))")"
+  node -e "
+const fs=require('fs');
+const body={
+ schema:'evercraft.edge.external-canary-request.v1',
+ request_id:process.argv[2],
+ node_id:process.argv[3],
+ public_ipv4:process.argv[4],
+ canary_name:process.argv[5],
+ router_mapping_method:process.argv[6],
+ requested_transports:['udp/53','tcp/53'],
+ created_at:new Date().toISOString()
+};
+fs.writeFileSync(process.argv[1],JSON.stringify(body,null,2)+'\\n',{mode:0o600});
+" "$REQUEST_FILE" "$REQUEST_ID" "$NODE_ID" "$PUBLIC_IP" "$DNS_CANARY" "$MAPPING_METHOD"
+  chown evercraft:evercraft "$REQUEST_FILE"
+  chmod 0600 "$REQUEST_FILE"
+fi
+
+GRANT_FILE="$REPO_ROOT/infra/evercraft-edge/registry/public-ingress-grants/$REQUEST_ID.json"
+echo "[5/6] Checking for independent external canary grant..."
+if [[ ! -f "$GRANT_FILE" ]]; then
+  echo "HOLD: external verifier has not granted public ingress yet."
+  echo "EXTERNAL_CANARY_REQUEST_ID=$REQUEST_ID"
+  echo "NODE_ID=$NODE_ID"
+  echo "CANARY_NAME=$DNS_CANARY"
+  echo "ROUTER_MAPPING_METHOD=$MAPPING_METHOD"
+  echo "Public IPv4 remains only in local state: $REQUEST_FILE"
+  echo "Node remains public-edge-candidate."
+  exit 26
 fi
 
 set +e
-runuser -u "$RUN_USER" -- gh run watch "$RUN_ID" --repo "$REPO" --exit-status
-CANARY_RC=$?
+node -e "
+const fs=require('fs');
+const g=JSON.parse(fs.readFileSync(process.argv[1],'utf8'));
+const ok=
+ g.schema==='evercraft.edge.public-ingress-grant.v1' &&
+ g.request_id===process.argv[2] &&
+ g.node_id===process.argv[3] &&
+ g.canary_name===process.argv[4] &&
+ g.verified===true &&
+ g.udp_53_verified===true &&
+ g.tcp_53_verified===true &&
+ typeof g.evidence_ref==='string' &&
+ g.evidence_ref.length>0;
+if(!ok){
+ console.error(JSON.stringify({ok:false,grant:g},null,2));
+ process.exit(2);
+}
+console.log(JSON.stringify({ok:true,request_id:g.request_id,node_id:g.node_id,verified:g.verified,evidence_ref:g.evidence_ref,verified_at:g.verified_at},null,2));
+" "$GRANT_FILE" "$REQUEST_ID" "$NODE_ID" "$DNS_CANARY"
+GRANT_RC=$?
 set -e
-if [[ "$CANARY_RC" -ne 0 ]]; then
-  echo "HOLD: the internet cannot yet verify this Chromebook over both UDP and TCP port 53." >&2
-  echo "Node remains public-edge-candidate. Saban will not receive a false public-ingress claim." >&2
-  exit 25
+if [[ "$GRANT_RC" -ne 0 ]]; then
+  echo "HOLD: external canary grant exists but failed admission checks." >&2
+  exit 27
 fi
 
 echo "[6/6] External canary passed. Promoting placement label to public-ingress..."
@@ -124,7 +171,8 @@ cat > /var/lib/evercraft/nodeseed/edge-dns/public-ingress-receipt.json <<EOF
   "schema":"evercraft.edge.chromebook-public-ingress.v1",
   "state":"verified",
   "public_ipv4":"$PUBLIC_IP",
-  "external_canary_run_id":"$RUN_ID",
+  "external_canary_request_id":"$REQUEST_ID",
+  "external_canary_grant_ref":"infra/evercraft-edge/registry/public-ingress-grants/$REQUEST_ID.json",
   "udp_53_verified":true,
   "tcp_53_verified":true,
   "placement_label":"public-ingress",
