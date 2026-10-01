@@ -95,6 +95,22 @@ function marketDateKey(timestamp) {
   );
   return `${parts.year}-${parts.month}-${parts.day}`;
 }
+export function classifyNewYorkMarketPhase(timestamp) {
+  const date=new Date(timestamp);
+  if(!Number.isFinite(date.getTime())) return "invalid";
+  const parts=Object.fromEntries(
+    NY_MARKET_CLOCK.formatToParts(date).map((part)=>[part.type,part.value])
+  );
+  if(parts.weekday==="Sat"||parts.weekday==="Sun") return "closed_weekend";
+  const minute=Number(parts.hour)*60+Number(parts.minute);
+  if(minute<565) return "premarket";
+  if(minute<570) return "opening_imbalance_window";
+  if(minute<585) return "immediate_post_open";
+  if(minute<950) return "continuous_session";
+  if(minute<960) return "closing_imbalance_window";
+  return "after_hours";
+}
+
 
 function measuredReturnFromIndex(bars, startIndex, lagBars, observedAt) {
   if (startIndex < 0) return null;
@@ -409,6 +425,8 @@ export function measureRockiesHypotheses(hypotheses, barsBySymbol, {
             ? Number(hypothesis.placebo_offset_days)
             : null,
           observed_at: hypothesis.observed_at,
+          observation_market_phase: classifyNewYorkMarketPhase(hypothesis.observed_at),
+          modeled_entry_market_phase: classifyNewYorkMarketPhase(instrumentMove.start_time),
           source_family: hypothesis.source_family,
           origin_entity_ref: hypothesis.origin_entity_ref || null,
           source_authority_class: hypothesis.source_authority_class || null,
