@@ -470,6 +470,10 @@ async function main() {
     walkForwardLab,
     executionTranslationLab,
     quoteMicrostructureLab,
+    familyMaxNullLab,
+    deflatedSharpeLab,
+    tailDependenceLab,
+    cscvPboLab,
     currentRunForwardClusterScores,
     durableForwardClusterScores: durableClusterScores,
   });
