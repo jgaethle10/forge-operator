@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {spawnSync} from 'node:child_process';
 import path from 'node:path';
+import fs from 'node:fs';
 import {fileURLToPath} from 'node:url';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../../..');
@@ -22,7 +23,6 @@ test('grant issuer requires independent UDP and TCP proof',()=>{
 });
 
 test('Chromebook promotion no longer requires local GitHub CLI',()=>{
-  const fs=require('node:fs');
   const one=fs.readFileSync(path.join(root,'scripts/make-chromebook-edge-node.sh'),'utf8');
   assert.doesNotMatch(one,/\bgh\s+(workflow|run|auth)\b/);
   assert.match(one,/external-canary-request\.json/);
