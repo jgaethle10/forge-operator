@@ -18,7 +18,8 @@ import { registerRivetReportGateway } from './systemia/rivet/http-gateway.mjs';
 import { registerSpecialistHandoffMcps } from './systemia/mcp/specialist-handoff.js';
 import { registerRemoteOperatorMcp } from './systemia/remote-operator/mcp-gateway.mjs';
 import { registerNotificationFabricRoutes } from './systemia/notification-fabric/http.mjs';
-import { registerRadarRoutes } from './systemia/radar/http.mjs';\nimport { registerFaieRoutes } from './systemia/faie/http.mjs';
+import { registerRadarRoutes } from './systemia/radar/http.mjs';
+import { registerFaieRoutes } from './systemia/faie/http.mjs';
 
 dotenv.config();
 
@@ -170,7 +171,8 @@ function rateLimit(maxRequests: number, windowMs: number) {
 }
 
 app.use(express.json({ limit: '10mb', type: ['application/json', 'application/*+json'] }));
-const radarResident = registerRadarRoutes(app, { isProd });\nregisterFaieRoutes(app, { isProd, radarResident });
+const radarResident = registerRadarRoutes(app, { isProd });
+registerFaieRoutes(app, { isProd, radarResident });
 registerNotificationFabricRoutes(app);
 registerRivetReportGateway(app);
 registerSpecialistHandoffMcps(app, { gatewayUrl: machineCommerceGatewayUrl });
@@ -328,8 +330,13 @@ app.get('/robots.txt', (req: Request, res: Response) => {
       .replace(/^Sitemap:.*$/gmi, '')
       .trimEnd();
     res.type('text/plain').send(raw + (origin
-      ? `\n\nSitemap: ${origin}/sitemap.xml\nSitemap: ${origin}/chum/sitemaps/index.xml\n`
-      : '\n'));
+      ? `
+
+Sitemap: ${origin}/sitemap.xml
+Sitemap: ${origin}/chum/sitemaps/index.xml
+`
+      : '
+'));
   } catch (error: any) {
     res.status(503).type('text/plain').send(`Robots policy unavailable: ${error?.message || String(error)}`);
   }
@@ -820,7 +827,8 @@ function buildA2aAgentCard(req: Request) {
 function sendA2aAgentCard(req: Request, res: Response) {
   try {
     res.setHeader('Cache-Control', 'public, max-age=300, must-revalidate');
-    res.type('application/json').send(JSON.stringify(buildA2aAgentCard(req), null, 2) + '\n');
+    res.type('application/json').send(JSON.stringify(buildA2aAgentCard(req), null, 2) + '
+');
   } catch (error: any) {
     res.status(503).type('application/problem+json').send(JSON.stringify({
       type: 'about:blank',
@@ -852,7 +860,8 @@ app.post(/^\/a2a\/message:send$/, rateLimit(240, 60 * 60 * 1000), (req: Request,
   const q = parts
     .map((part: any) => typeof part?.text === 'string' ? part.text : '')
     .filter(Boolean)
-    .join('\n')
+    .join('
+')
     .trim()
     .slice(0, 4000);
 
@@ -1499,7 +1508,8 @@ ${businessProblem}
 DESIRED OUTCOME:
 ${desiredOutcome}
 
-${businessContext ? `ADDITIONAL OPERATIONAL CONTEXT (Industry, Team Size, Current Tools, Constraints):\n${businessContext}` : ''}
+${businessContext ? `ADDITIONAL OPERATIONAL CONTEXT (Industry, Team Size, Current Tools, Constraints):
+${businessContext}` : ''}
 `;
 
     const result = await generateContentWithFallback({
