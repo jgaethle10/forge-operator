@@ -1,0 +1,277 @@
+{
+  "schema": "evercraft.llm-product.historical-seeds.v1",
+  "rule": "Seeds preserve historically known useful identities that may not appear in the current public-product index or the bounded estate snapshot. A seed is inventory evidence, not runtime proof.",
+  "entries": [
+    {
+      "stable_id": "platform:systemia",
+      "kind": "platform",
+      "name": "Systemia",
+      "aliases": [
+        "Systemia Command Center"
+      ],
+      "public_safe": false,
+      "problem_language": [
+        "coordinate work across the Evercraft portfolio",
+        "route a mission through dependencies, permissions, QA and receipts"
+      ],
+      "source_refs": [
+        "systemia/"
+      ],
+      "truth_state": "implemented_source_present"
+    },
+    {
+      "stable_id": "platform:evercraft-fabric",
+      "kind": "platform",
+      "name": "Evercraft Fabric",
+      "aliases": [
+        "Fabric"
+      ],
+      "public_safe": true,
+      "problem_language": [
+        "connect my application or AI agent to Evercraft capabilities",
+        "find which Evercraft capability solves this problem"
+      ],
+      "source_refs": [
+        "plugins/evercraft-fabric/",
+        "systemia/mcp/fabric-directory.mjs"
+      ],
+      "truth_state": "implemented_source_present"
+    },
+    {
+      "stable_id": "platform:passport",
+      "kind": "platform",
+      "name": "Evercraft Passport",
+      "aliases": [
+        "Passport"
+      ],
+      "public_safe": false,
+      "problem_language": [
+        "authorize an agent for a bounded Evercraft action",
+        "control scopes and permissions for Evercraft machine access"
+      ],
+      "source_refs": [
+        "systemia/passport/"
+      ],
+      "truth_state": "implemented_source_present"
+    },
+    {
+      "stable_id": "platform:raven",
+      "kind": "platform",
+      "name": "Raven Nexus",
+      "aliases": [
+        "Raven"
+      ],
+      "public_safe": true,
+      "problem_language": [
+        "route a safety or stability problem to the smallest protective capability"
+      ],
+      "source_refs": [
+        "systemia/raven/"
+      ],
+      "truth_state": "implemented_source_present"
+    },
+    {
+      "stable_id": "platform:yard",
+      "kind": "platform",
+      "name": "The Yard",
+      "aliases": [
+        "Yard Runtime"
+      ],
+      "public_safe": false,
+      "problem_language": [
+        "run an Evercraft capability on owned runtime",
+        "hand work from Systemia to an owned execution surface"
+      ],
+      "source_refs": [
+        "systemia/yard/"
+      ],
+      "truth_state": "implemented_source_present"
+    },
+    {
+      "stable_id": "agent:saban",
+      "kind": "agent_system",
+      "name": "Saban",
+      "aliases": [
+        "Saban swarm"
+      ],
+      "public_safe": false,
+      "problem_language": [
+        "fan out a hard engineering or discovery problem across parallel workers",
+        "stress-test and reconcile a portfolio change"
+      ],
+      "source_refs": [
+        "systemia/saban/"
+      ],
+      "truth_state": "implemented_source_present"
+    },
+    {
+      "stable_id": "agent:kaidance",
+      "kind": "agent_system",
+      "name": "Kaidance",
+      "aliases": [
+        "KAIDANCE"
+      ],
+      "public_safe": false,
+      "problem_language": [
+        "continuously push every historically touched Evercraft domain forward",
+        "find neglected portfolio edges and carry blockers forward"
+      ],
+      "source_refs": [
+        "systemia/kaidance/"
+      ],
+      "truth_state": "implemented_source_present"
+    },
+    {
+      "stable_id": "research:rockies",
+      "kind": "research_system",
+      "name": "Rockies",
+      "aliases": [
+        "Rockies signal system"
+      ],
+      "public_safe": false,
+      "problem_language": [
+        "find physical-world signals that may create an operational or market edge",
+        "correlate real-world observations across domains"
+      ],
+      "source_refs": [
+        "systemia/rockies/"
+      ],
+      "truth_state": "implemented_source_present"
+    },
+    {
+      "stable_id": "media:fallen",
+      "kind": "media_system",
+      "name": "Fallen / Evercraft Studio",
+      "aliases": [
+        "Fallen",
+        "Evercraft Studio",
+        "Media Studio"
+      ],
+      "public_safe": true,
+      "problem_language": [
+        "turn research into a documentary-quality visual explanation",
+        "produce cinematic video or film assets from an evidence-backed story"
+      ],
+      "source_refs": [
+        "systemia/media-studio/",
+        ".github/workflows/fallen-studio-delivery.yml"
+      ],
+      "truth_state": "implemented_source_present"
+    },
+    {
+      "stable_id": "product:omnicore",
+      "kind": "product",
+      "name": "Omnicore",
+      "aliases": [
+        "ATH-Pro Omnicore"
+      ],
+      "public_safe": false,
+      "problem_language": [
+        "turn a trip into a structured itinerary with evidence, weather, events, charging and mission context"
+      ],
+      "source_refs": [
+        "systemia/omnicore/"
+      ],
+      "truth_state": "inventory_only"
+    },
+    {
+      "stable_id": "product:evercraft-journal",
+      "kind": "product",
+      "name": "Evercraft Journal",
+      "aliases": [
+        "Journal",
+        "Journal Newsroom OS"
+      ],
+      "public_safe": true,
+      "problem_language": [
+        "turn verified events and research into sourced educational journalism and media",
+        "publish an evidence-backed explainer with reusable media"
+      ],
+      "source_refs": [
+        "public/",
+        "systemia/journal/"
+      ],
+      "truth_state": "implemented_source_present"
+    },
+    {
+      "stable_id": "product:emergency-command",
+      "kind": "product",
+      "name": "Evercraft Emergency Command",
+      "aliases": [
+        "Emergency Command"
+      ],
+      "public_safe": false,
+      "problem_language": [
+        "coordinate emergency information, field evidence and response status"
+      ],
+      "source_refs": [
+        "systemia/emergency-command/"
+      ],
+      "truth_state": "inventory_only"
+    },
+    {
+      "stable_id": "product:evercraft-wgs",
+      "kind": "product",
+      "name": "Evercraft WGS",
+      "aliases": [
+        "WGS"
+      ],
+      "public_safe": false,
+      "problem_language": [
+        "navigate family or youth safeguarding support with explicit privacy boundaries"
+      ],
+      "source_refs": [],
+      "truth_state": "inventory_only"
+    },
+    {
+      "stable_id": "product:node-001",
+      "kind": "product",
+      "name": "Evercraft AI Node 001",
+      "aliases": [
+        "Node 001"
+      ],
+      "public_safe": false,
+      "problem_language": [
+        "run a sovereign local AI gateway when cloud access is unavailable or inappropriate"
+      ],
+      "source_refs": [
+        "systemia/network/"
+      ],
+      "truth_state": "implemented_source_present"
+    },
+    {
+      "stable_id": "product:household-fabric",
+      "kind": "product",
+      "name": "Evercraft Household Fabric",
+      "aliases": [
+        "Household Fabric"
+      ],
+      "public_safe": true,
+      "problem_language": [
+        "find local ways to lower everyday household costs without applying for charity",
+        "compare nearby fuel, grocery, utility, transportation and opportunity signals"
+      ],
+      "source_refs": [
+        "systemia/household-fabric/"
+      ],
+      "truth_state": "implemented_source_present"
+    },
+    {
+      "stable_id": "product:newsroom-os",
+      "kind": "product",
+      "name": "Evercraft Newsroom OS",
+      "aliases": [
+        "Newsroom OS"
+      ],
+      "public_safe": false,
+      "problem_language": [
+        "operate a continuously sourced newsroom and education engine",
+        "turn verified research into publishable stories, visuals and clips"
+      ],
+      "source_refs": [
+        "systemia/journal/"
+      ],
+      "truth_state": "inventory_only"
+    }
+  ]
+}
