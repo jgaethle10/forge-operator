@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.portfolio-sentinel.architectural-invariants.v1",
-  "version": "2026-10-01.2",
+  "version": "2026-10-01.3",
   "purpose": "Permanent architectural laws learned from prior production/distribution failures. Sentinel evaluates these before health can be considered trustworthy.",
   "invariants": [
     {
@@ -159,6 +159,31 @@
         "measured_acquisition_only"
       ],
       "repair_recipe_id": "money-radar-funnel-trust-regression"
+    },
+    {
+      "invariant_id": "journal-runner-never-defaults-to-base44",
+      "severity": "high",
+      "type": "file_contract",
+      "file": "systemia/organism/portfolio-sentinel-runner.mjs",
+      "required_literals": [
+        "journal_public_origin_unverified",
+        "journal_legacy_origin_retired",
+        "held_no_verified_public_origin"
+      ],
+      "forbidden_literals": [
+        "https://evercraftjournal.base44.app/"
+      ],
+      "repair_recipe_id": "journal-public-origin-regression"
+    },
+    {
+      "invariant_id": "journal-sentinel-workflow-never-targets-base44",
+      "severity": "high",
+      "type": "file_contract",
+      "file": ".github/workflows/systemia-portfolio-sentinel.yml",
+      "forbidden_literals": [
+        "evercraftjournal.base44.app"
+      ],
+      "repair_recipe_id": "journal-public-origin-regression"
     }
   ]
 }
