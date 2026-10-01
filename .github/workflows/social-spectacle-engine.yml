@@ -12,7 +12,6 @@ on:
       - "systemia/core/resident-services.json"
       - "systemia/worldstate/subscriptions.json"
       - "systemia/radar/collectors*"
-      - "package.json"
       - ".github/workflows/social-spectacle-engine.yml"
   push:
     branches: [main]
@@ -26,7 +25,6 @@ on:
       - "systemia/core/resident-services.json"
       - "systemia/worldstate/subscriptions.json"
       - "systemia/radar/collectors*"
-      - "package.json"
       - ".github/workflows/social-spectacle-engine.yml"
 
 permissions:
@@ -46,16 +44,16 @@ jobs:
         run: npm install --no-audit --no-fund
 
       - name: Prove spectacle admission boundaries
-        run: npm run proof:social-spectacle
+        run: node systemia/organism/social-spectacle-engine.proof.mjs
 
       - name: Prove Radar visual-source geometry
         run: node --test systemia/radar/collectors.test.mjs
 
       - name: Prove spectacle production packaging
-        run: npm run proof:social-spectacle-production
+        run: node systemia/organism/social-spectacle-production.proof.mjs
 
       - name: Prove authenticated spectacle Clip bridge
-        run: npm run proof:social-spectacle-clip-bridge
+        run: node systemia/organism/social-spectacle-clip-bridge.proof.mjs
 
       - name: Prove Clip intake and publish gates
         run: |
@@ -117,7 +115,7 @@ jobs:
             ]
           }
           JSON
-          npm run social:spectacle -- --input /tmp/social-spectacle-input.json --state-dir /tmp/social-spectacle-state
+          node systemia/organism/social-spectacle-engine.mjs --input /tmp/social-spectacle-input.json --state-dir /tmp/social-spectacle-state
           test -f /tmp/social-spectacle-state/latest-queue.json
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
@@ -157,7 +155,8 @@ jobs:
         run: |
           mkdir -p /tmp/social-spectacle-prod
           cp /tmp/social-spectacle-state/latest-queue.json /tmp/social-spectacle-prod/queue.json
-          npm run social:spectacle:produce --             --queue /tmp/social-spectacle-prod/queue.json             --out /tmp/social-spectacle-prod/production             --clip-queue /tmp/social-spectacle-prod/clip
+          node systemia/organism/social-spectacle-production.mjs \
+            --queue /tmp/social-spectacle-prod/queue.json             --out /tmp/social-spectacle-prod/production             --clip-queue /tmp/social-spectacle-prod/clip
           test -f /tmp/social-spectacle-prod/production/spectacle-ci-ocean-flow/production-receipt.json ||             test -n "$(find /tmp/social-spectacle-prod/production -name production-receipt.json -print -quit)"
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
@@ -214,7 +213,8 @@ jobs:
             }]
           }
           JSON
-          npm run social:spectacle:produce --             --queue /tmp/social-spectacle-geo-queue.json             --out /tmp/social-spectacle-geo-production             --clip-queue /tmp/social-spectacle-geo-clip
+          node systemia/organism/social-spectacle-production.mjs \
+            --queue /tmp/social-spectacle-geo-queue.json             --out /tmp/social-spectacle-geo-production             --clip-queue /tmp/social-spectacle-geo-clip
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
           import path from 'node:path';
@@ -318,7 +318,8 @@ jobs:
             }]
           }
           JSON
-          npm run social:spectacle:produce --             --queue /tmp/earthquake-social-queue.json             --out "$GITHUB_WORKSPACE/artifacts/social-spectacle-canary/production"             --clip-queue "$GITHUB_WORKSPACE/artifacts/social-spectacle-canary/clip"
+          node systemia/organism/social-spectacle-production.mjs \
+            --queue /tmp/earthquake-social-queue.json             --out "$GITHUB_WORKSPACE/artifacts/social-spectacle-canary/production"             --clip-queue "$GITHUB_WORKSPACE/artifacts/social-spectacle-canary/clip"
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
           import path from 'node:path';
