@@ -32,16 +32,29 @@ try {
   assert.equal(firstHealth.ok, true);
   assert.equal(firstHealth.kaidance.ok, true);
   assert.equal(firstHealth.systemia_core.ok, true);
+  assert.equal(firstHealth.fabric.ok, true);
+  assert.equal(first.receipt.fabric.outbound_service_relay_supported, true);
+  assert.equal(first.receipt.fabric.operator_edge_attestation_supported, true);
+  assert.equal(first.fabric.result.workload_class, 'systemia.fabric-local-mcp.v1');
+
+  const fabricHealth = await fetch(first.fabric.result.local_url + '/health').then((r) => r.json());
+  assert.equal(fabricHealth.ok, true);
+  assert.equal(fabricHealth.service, 'evercraft-fabric-local');
+  assert.equal(fabricHealth.runtime, 'Evercraft Compute');
+  assert.equal(fabricHealth.base44_transport_enabled, false);
+  assert.equal(fabricHealth.edge_attestation_source, 'in_process_nodeseed_identity');
 
   const firstFingerprint = first.seed.device_fingerprint;
   const firstCycleNumber = first.pulse.cycle_number;
   const firstKaidanceReceipt = first.kaidance.receipt.receipt_hash;
   const firstCoreReceipt = first.core.receipt.receipt_hash;
+  const firstFabricReceipt = first.fabric.receipt.receipt_hash;
 
   assert.ok(firstFingerprint.startsWith('sha256:'));
   assert.ok(firstCycleNumber >= 1);
   assert.ok(firstKaidanceReceipt);
   assert.ok(firstCoreReceipt);
+  assert.ok(firstFabricReceipt);
 
   const coreWorkspace = path.join(
     root,
@@ -73,9 +86,11 @@ try {
   assert.ok(second.pulse.cycle_number >= firstCycleNumber);
   assert.notEqual(second.kaidance.receipt.receipt_hash, firstKaidanceReceipt);
   assert.notEqual(second.core.receipt.receipt_hash, firstCoreReceipt);
+  assert.notEqual(second.fabric.receipt.receipt_hash, firstFabricReceipt);
 
   const secondHealth = await second.health();
   assert.equal(secondHealth.ok, true);
+  assert.equal(secondHealth.fabric.ok, true);
 
   const allocatorSecret = fs.readFileSync(
     path.join(root, '.secrets', 'allocator-token'),
@@ -104,6 +119,7 @@ try {
       'Yard Operator',
       'KAIDANCE',
       'Systemia Core',
+      'Evercraft Fabric',
     ],
     loopback_only: true,
     public_ingress: false,
@@ -111,6 +127,8 @@ try {
     persistent_device_identity: true,
     kaidance_state_survives_restart: true,
     core_redeploys_through_yard: true,
+    fabric_redeploys_through_yard: true,
+    fabric_outbound_service_relay_ready: true,
     allocator_secret_redacted: true,
     field_attestation: second.pulse.field_attestation.state,
     physical_field_certification_claimed: false,

@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { randomBytes } from 'node:crypto';
 import {
   executeFabricDirectoryRpc,
   fabricDirectoryTools,
@@ -109,7 +110,10 @@ export async function startFabricLocalRuntime({
   challengeToken='',
   nodeReceiptPath='',
   allocatorTokenFile='',
+  nodeAttestationProvider=null,
 }={}) {
+  const instanceId='fabric_local_'+randomBytes(10).toString('hex');
+  let deploymentReceiptRef='';
   const staticPrepared=Array.isArray(catalog)?nativeOnlyCatalog(catalog):null;
   const preparedCatalog=()=>staticPrepared||nativeOnlyCatalog(loadFabricCatalogFromRepository());
   const token=validateOpenAiChallengeToken(challengeToken);
@@ -121,12 +125,35 @@ export async function startFabricLocalRuntime({
   const resolvedAllocatorToken=path.resolve(
     allocatorTokenFile||path.join(os.homedir(),'.local/state/evercraft/organism/.secrets/allocator-token')
   );
-  const edgeAttestationReady=()=>fs.existsSync(resolvedNodeReceipt)&&fs.existsSync(resolvedAllocatorToken);
+  if (
+    nodeAttestationProvider !== null &&
+    typeof nodeAttestationProvider !== 'function'
+  ) {
+    throw new Error('node_attestation_provider_invalid');
+  }
+  const edgeAttestationReady=()=>Boolean(nodeAttestationProvider)||
+    (fs.existsSync(resolvedNodeReceipt)&&fs.existsSync(resolvedAllocatorToken));
 
   async function nodeAttestation(nonce){
     const nonceValue=String(nonce||'').trim();
     if(!/^[A-Za-z0-9._:-]{16,256}$/.test(nonceValue)) throw new Error('edge_attestation_nonce_invalid');
     if(!edgeAttestationReady()) throw new Error('edge_attestation_not_configured');
+    if(nodeAttestationProvider){
+      const provided=await nodeAttestationProvider(nonceValue);
+      const attestation=provided?.attestation||provided;
+      if(!attestation||typeof attestation!=='object'){
+        throw new Error('edge_attestation_provider_invalid');
+      }
+      return {
+        schema:'evercraft.operator-public-edge.attestation.v1',
+        trust_class:'operator_authorized_public_edge',
+        attestation,
+        allocator_authority_exposed:false,
+        allocator_authority_persisted:false,
+        physical_field_claim:false,
+        observed_at:new Date().toISOString(),
+      };
+    }
     const receipt=JSON.parse(fs.readFileSync(resolvedNodeReceipt,'utf8'));
     const endpoint=new URL(String(receipt?.endpoint||''));
     if(endpoint.protocol!=='http:'||!['127.0.0.1','localhost','::1'].includes(endpoint.hostname.toLowerCase())){
@@ -172,7 +199,11 @@ export async function startFabricLocalRuntime({
     ok:true,
     service:'evercraft-fabric-local',
     server:'evercraft-fabric',
-    version:'1.0.0',
+    version:'1.1.0',
+    runtime:nodeAttestationProvider?'Evercraft Compute':'Evercraft Fabric local',
+    instance_id:instanceId,
+    deployment_receipt_bound:Boolean(deploymentReceiptRef),
+    deployment_receipt_ref:deploymentReceiptRef||null,
     transport:'Streamable HTTP',
     mcp_path:'/mcp',
     tools:fabricDirectoryTools().map((tool)=>tool.name),
@@ -188,6 +219,11 @@ export async function startFabricLocalRuntime({
     edge_attestation_supported:edgeAttestationReady(),
     edge_attestation_path:edgeAttestationReady()?edgeAttestationPath:null,
     edge_attestation_allocator_authority_exposed:false,
+    edge_attestation_source:nodeAttestationProvider
+      ? 'in_process_nodeseed_identity'
+      : edgeAttestationReady()
+        ? 'loopback_nodeseed'
+        : null,
     public_plugin_submission_ready:true,
     provider_publication_state:'external_to_runtime',
     public_submission_note:'The owned Fabric runtime and review surface are submission-ready. Provider review, approval, publication, and directory visibility are external states and are not inferred by this health endpoint.',
@@ -315,9 +351,18 @@ export async function startFabricLocalRuntime({
 
   return {
     schema:'evercraft.fabric-local-runtime.v1',
+    instanceId,
     url,
     mcpUrl:url+'/mcp',
     health,
+    setDeploymentReceipt(value){
+      const receipt=String(value||'').trim();
+      if(!/^(?:sha256:)?[a-f0-9]{64}$/i.test(receipt)){
+        throw new Error('deployment_receipt_ref_invalid');
+      }
+      deploymentReceiptRef=receipt;
+      return health();
+    },
     close:()=>new Promise((resolve,reject)=>
       server.close((error)=>error?reject(error):resolve())
     ),
