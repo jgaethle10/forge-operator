@@ -147,6 +147,9 @@ export function createFaieRuntime({
     return result.decision;
   }
 
+  function preview(input, options = {}) {
+    return buildFaieInvestigation(state, input, options).investigation;
+  }
   function investigate(input, options = {}) {
     const result = buildFaieInvestigation(state, input, options);
     state = result.state;
@@ -279,6 +282,7 @@ export function createFaieRuntime({
 
   return {
     ingest,
+    preview,
     investigate,
     latestInvestigations,
     getInvestigation,
