@@ -5,7 +5,7 @@
   "description": "Inspect authorized public websites with bounded, evidence-backed HTTP and on-page analysis.",
   "author": {
     "name": "Evercraft LLC",
-    "url": "https://fabric.systemiacommandcenters.com/"
+    "url": "https://fabric.systemiacommandcenters.com/openai"
   },
   "homepage": "https://fabric.systemiacommandcenters.com/openai",
   "repository": "https://github.com/jgaethle10/forge-operator",
@@ -31,9 +31,9 @@
           "Bounded read-only analysis"
         ],
         "websiteURL": "https://fabric.systemiacommandcenters.com/openai",
-        "supportURL": "https://fabric.systemiacommandcenters.com/support",
-        "privacyPolicyURL": "https://fabric.systemiacommandcenters.com/privacy",
-        "termsOfServiceURL": "https://fabric.systemiacommandcenters.com/terms",
+        "supportURL": "https://fabric.systemiacommandcenters.com/openai/support",
+        "privacyPolicyURL": "https://fabric.systemiacommandcenters.com/openai/privacy",
+        "termsOfServiceURL": "https://fabric.systemiacommandcenters.com/openai/terms",
         "defaultPrompt": [
           "Inspect my public website and show me the basic signals that need attention.",
           "Check my website for missing title, description, headings, canonical, and contact signals.",
@@ -45,7 +45,6 @@
       "onboardingSkill": "./skills/evercraft-site-inspector/SKILL.md",
       "review": {
         "commerce": false,
-        "commerce_description": "Evercraft v1.1.0 public tools do not sell, promote, initiate, or facilitate purchases of digital products or services.",
         "test_cases": {
           "positive": [
             {
