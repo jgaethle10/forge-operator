@@ -81,6 +81,34 @@ For an earlier record `X`, a later independently generated choice `Y`, and a lat
 
 Any effect that disappears when all preregistered trials are restored fails this gate.
 
+## T1 PCTC reproduction
+
+`pctc-simulator.mjs` now reproduces the ideal four-qubit laboratory protocol in Huang et al. (2026) directly from Fig. 4 and Eqs. 11–13.
+
+The simulator explicitly models the chronology-respecting laboratory sequence:
+
+1. initialize H as a two-qubit maximally mixed state and E,E' as a Bell pair;
+2. apply the three-qubit decoder `U†`;
+3. record Bob's tomography outcome before the later input state exists;
+4. reset that wire and freely prepare Alice's later state;
+5. apply the three-qubit scrambler `U`;
+6. Bell-project E,E' and postselect the matching outcome;
+7. reconstruct Bob's earlier density matrix from the surviving branches.
+
+The exact ideal benchmarks reproduce the paper:
+
+- strong quantum scrambler `Uq`: `P=0.25`, `F=1` for all six Pauli-axis input states;
+- classical-only scrambler `Uc`: `P=0.5`; `F=1` for z± and `F=0.5` for x±/y±;
+- the earlier **unconditioned** Bob record has Bloch vector `(0,0,0)` for both scramblers.
+
+That final point is the causal control: the apparent future-state recovery exists only after the later Bell result is used to select earlier records. Before that postselection, Bob's earlier record is maximally mixed and contains no usable information about Alice's later freely prepared state.
+
+Run:
+
+```bash
+node systemia/research/chronos/pctc-simulator.proof.mjs
+```
+
 ## Primary literature anchors
 
 - Morris, Thorne & Yurtsever (1988), *Wormholes, Time Machines, and the Weak Energy Condition*, Phys. Rev. Lett. 61, 1446. DOI: 10.1103/PhysRevLett.61.1446
@@ -100,9 +128,9 @@ The proof checks the current relativistic benchmarks, the 1 m throat / 1 nm Casi
 
 ## Next gates
 
-1. Reproduce the Huang et al. four-qubit PCTC circuit at the state-vector level.
-2. Compare the paper's postselected fidelity and success probability against the unconditioned record.
-3. Add a source-provenance ledger for every formula and result.
+1. Add a source-provenance ledger for every formula and result.
+2. Extend the PCTC simulator with finite-shot sampling and paper-calibrated noise so ideal predictions can be compared with the published Quantinuum and IBM results.
+3. Add a preregistered **no-postselection** analysis that treats all trials as the primary endpoint.
 4. Replace the single wormhole shape benchmark with a family of parameterized geometries.
 5. Add QEI assumption tracking before any negative-energy pathway may advance.
 6. Require independent red-team replication before any claim can move above simulation/model status.
