@@ -82,6 +82,8 @@ test('specialist runtime defaults to native Fabric catalog with no Base44 transp
     assert.equal(health.external_gateway_configured, false);
     assert.equal(health.base44_transport_enabled, false);
     assert.equal(health.legacy_adapter, null);
+    assert.equal(health.removed_legacy_base44_connections, 1);
+    assert.equal(health.removed_legacy_base44_mcp_connections, 0);
 
     const offer = await rpc(
       runtime.url,
