@@ -325,6 +325,12 @@ try{
       detail:receipt.error,
     },
   });
+  // This runner cannot see the Chromebook loopback from the public Internet.
+  // Keep public-path classification useful without laundering an assumption
+  // into a local-service health claim.
+  receipt.ingress_diagnosis.local_service_ok=null;
+  receipt.ingress_diagnosis.local_service_observed=false;
+  receipt.ingress_diagnosis.evidence_complete=false;
   receipt.public_https_verified=false;
   receipt.mcp_verified=false;
   receipt.external_route_verified=false;
