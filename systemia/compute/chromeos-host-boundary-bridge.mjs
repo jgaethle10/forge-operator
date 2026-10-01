@@ -248,6 +248,20 @@ export function validateChromeOsHostBoundaryObservation(
         0,
         Math.min(1000, Number(scan.unmatched_toggle_candidates || 0)),
       ),
+      surface_isolation:
+        scan.surface_isolation && typeof scan.surface_isolation === 'object'
+          ? {
+              reason: safeText(scan.surface_isolation.reason || '', 64),
+              candidate_count: Math.max(
+                0,
+                Math.min(1000, Number(scan.surface_isolation.candidate_count || 0)),
+              ),
+              selected_node_count: Math.max(
+                0,
+                Math.min(20_000, Number(scan.surface_isolation.selected_node_count || 0)),
+              ),
+            }
+          : null,
       error: scan.error ? safeText(scan.error, 200) : null,
     },
     authority: {
