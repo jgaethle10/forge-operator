@@ -1429,6 +1429,7 @@ export async function startEvercraftComputeNode({
             public_health_path: '/health',
             report_path: runtime.report_path,
             progress_path_template: runtime.progress_path_template,
+            source_url: sourceUrl,
             instance_id: runtime.instance_id,
             authenticated_report_api: true,
           };
