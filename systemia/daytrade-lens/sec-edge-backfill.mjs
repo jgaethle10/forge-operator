@@ -12,6 +12,11 @@ import { adversarialValidateCandidates } from "./edge-adversarial-validation.mjs
 import { persistFrozenCohorts } from "./edge-forward-paper.mjs";
 import { ForwardPaperDurableState } from "./edge-forward-paper-durable.mjs";
 import { runEdgeStressLab } from "./edge-stress-lab.mjs";
+import { runEdgeBreakerLab } from "./edge-breaker-lab.mjs";
+import { runTimingFragilityLab } from "./edge-timing-fragility.mjs";
+import { runOverlapFragilityLab } from "./edge-overlap-fragility.mjs";
+import { runMatchedPlaceboLab } from "./edge-matched-placebo.mjs";
+import { runBenchmarkFragilityLab } from "./edge-benchmark-fragility.mjs";
 
 async function main() {
   const artifactDir = path.resolve(
@@ -46,6 +51,34 @@ async function main() {
   const stressLab = runEdgeStressLab(report);
   const stressFile = path.join(artifactDir, "sec-edge-stress-lab.json");
   fs.writeFileSync(stressFile, JSON.stringify(stressLab, null, 2) + "\n");
+
+  const breakerLab = runEdgeBreakerLab(report);
+  const breakerFile = path.join(artifactDir, "sec-edge-breaker-lab.json");
+  fs.writeFileSync(breakerFile, JSON.stringify(breakerLab, null, 2) + "\n");
+
+  const timingLab = runTimingFragilityLab(report, {
+    transaction_cost_bps: Number(process.env.EDGE_LAB_TRANSACTION_COST_BPS || 5),
+  });
+  const timingFile = path.join(artifactDir, "sec-edge-timing-fragility.json");
+  fs.writeFileSync(timingFile, JSON.stringify(timingLab, null, 2) + "\n");
+
+  const overlapLab = runOverlapFragilityLab(report, {
+    transaction_cost_bps: Number(process.env.EDGE_LAB_TRANSACTION_COST_BPS || 5),
+  });
+  const overlapFile = path.join(artifactDir, "sec-edge-overlap-fragility.json");
+  fs.writeFileSync(overlapFile, JSON.stringify(overlapLab, null, 2) + "\n");
+
+  const placeboLab = runMatchedPlaceboLab(report, {
+    transaction_cost_bps: Number(process.env.EDGE_LAB_TRANSACTION_COST_BPS || 5),
+  });
+  const placeboFile = path.join(artifactDir, "sec-edge-matched-placebo.json");
+  fs.writeFileSync(placeboFile, JSON.stringify(placeboLab, null, 2) + "\n");
+
+  const benchmarkLab = runBenchmarkFragilityLab(report, {
+    transaction_cost_bps: Number(process.env.EDGE_LAB_TRANSACTION_COST_BPS || 5),
+  });
+  const benchmarkFile = path.join(artifactDir, "sec-edge-benchmark-fragility.json");
+  fs.writeFileSync(benchmarkFile, JSON.stringify(benchmarkLab, null, 2) + "\n");
 
   const adversarial = adversarialValidateCandidates(report, {
     transaction_cost_bps: Number(process.env.EDGE_LAB_TRANSACTION_COST_BPS || 5),
@@ -97,6 +130,7 @@ async function main() {
     const scores = [...reopened.cohorts.values()].map((protocol) =>
       reopened.score(protocol.cohort_id)
     );
+    const clusterScores = reopened.scoreClusters();
     durableScoreFile = path.join(artifactDir, "durable-forward-paper-scores.json");
     fs.writeFileSync(
       durableScoreFile,
@@ -111,6 +145,7 @@ async function main() {
         })),
         ingest_receipt: ingestReceipt,
         scores,
+        cluster_scores: clusterScores,
         live_trade_authority: false,
       }, null, 2) + "\n"
     );
@@ -172,6 +207,11 @@ async function main() {
     candidate_clusters: adversarial.candidate_cluster_count || 0,
     forward_paper_eligible: adversarial.forward_paper_eligible_count || 0,
     stress_survivors: stressLab.stress_survivor_count || 0,
+    breaker_survivors: breakerLab.breaker_survivor_count || 0,
+    timing_robust_diagnostics: timingLab.timing_robust_count || 0,
+    overlap_robust_diagnostics: overlapLab.overlap_robust_count || 0,
+    placebo_separated_diagnostics: placeboLab.placebo_separated_count || 0,
+    benchmark_fragility_status_counts: benchmarkLab.status_counts || {},
     frozen_forward_paper_cohorts: frozenCohorts.length,
     durable_forward_paper_state_configured: durableState.configured,
     durable_forward_paper_restart_reopen_verified: durableState.restart_reopen_verified,
@@ -184,6 +224,11 @@ async function main() {
       observations: observationFile,
       research: reportFile,
       stress_lab: stressFile,
+      breaker_lab: breakerFile,
+      timing_fragility_lab: timingFile,
+      overlap_fragility_lab: overlapFile,
+      matched_placebo_lab: placeboFile,
+      benchmark_fragility_lab: benchmarkFile,
       adversarial_review: adversarialFile,
       forward_paper_cohorts: forwardPaperFile,
       durable_forward_paper_scores: durableScoreFile,

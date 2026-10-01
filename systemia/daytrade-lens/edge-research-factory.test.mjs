@@ -1,6 +1,9 @@
 import assert from "node:assert/strict";
 import {
   FIVE_MINUTE_LAG_BARS,
+  EXECUTION_DELAY_STRESS_BARS,
+  ALTERNATE_BENCHMARKS_BY_INSTRUMENT,
+  buildMatchedPlaceboHypotheses,
   measureRockiesHypotheses,
   evaluateEdgeFamilies,
   benjaminiHochberg,
@@ -48,13 +51,49 @@ const hypothesis = {
   source_reliability: 0.9,
 };
 
+const placebos = buildMatchedPlaceboHypotheses([hypothesis]);
+assert.equal(placebos.length, 2);
+assert.deepEqual(placebos.map((row) => row.placebo_offset_days).sort((a,b)=>a-b), [-7, 7]);
+assert.ok(placebos.every((row) => row.placebo_for_source_observation_id === hypothesis.source_observation_id));
+assert.ok(placebos.every((row) => new Date(row.observed_at).getUTCDay() === new Date(hypothesis.observed_at).getUTCDay()));
+
+const nearbyReal = {
+  ...hypothesis,
+  hypothesis_id: "edgehyp:nearby",
+  source_observation_id: "ctxobs:nearby",
+  observed_at: "2026-09-08T13:30:00Z",
+};
+const excludedPlacebos = buildMatchedPlaceboHypotheses([hypothesis, nearbyReal]);
+assert.equal(
+  excludedPlacebos.some((row) =>
+    row.placebo_for_source_observation_id === hypothesis.source_observation_id &&
+    row.placebo_offset_days === 7
+  ),
+  false
+);
+
 const measured = measureRockiesHypotheses([hypothesis], {
   XLU: bars("2026-09-01T13:30:00Z", 10, 0.002),
   SPY: bars("2026-09-01T13:30:00Z", 10, 0.0005),
+  QQQ: bars("2026-09-01T13:30:00Z", 10, 0.001),
 });
 assert.equal(measured.length, 1);
 assert.equal(measured[0].lag_bars, FIVE_MINUTE_LAG_BARS["15m"]);
 assert.equal(measured[0].live_trade_authority, false);
+assert.ok(measured[0].alternate_benchmarks.QQQ);
+assert.ok(Number.isFinite(measured[0].alternate_benchmarks.QQQ.excess_return));
+assert.deepEqual(ALTERNATE_BENCHMARKS_BY_INSTRUMENT.SOXX, ["QQQ", "SMH"]);
+assert.deepEqual(
+  Object.keys(measured[0].execution_delay_stress).sort(),
+  Object.keys(EXECUTION_DELAY_STRESS_BARS).sort()
+);
+assert.equal(measured[0].execution_delay_stress["5m"].delay_bars, 1);
+assert.equal(measured[0].execution_delay_stress["15m"].delay_bars, 3);
+assert.equal(measured[0].execution_delay_stress["30m"].delay_bars, 6);
+assert.ok(
+  new Date(measured[0].execution_delay_stress["30m"].instrument_start_time).getTime() >
+    new Date(measured[0].instrument_start_time).getTime()
+);
 assert.equal(
   new Date(measured[0].instrument_start_time).getTime() >= new Date(hypothesis.observed_at).getTime(),
   true
@@ -106,6 +145,26 @@ assert.equal(authoritativeEval[0].candidate_checks.evidence_diversity_pass, true
 assert.equal(authoritativeEval[0].distinct_origin_entities, 6);
 assert.ok(authoritativeEval[0].holdout_origin_entities >= 3);
 assert.equal(authoritativeEval[0].status, "RESEARCH_CANDIDATE");
+
+
+const authoritativeNegative = many.map((row, i) => ({
+  ...row,
+  measurement_id: "neg:" + i,
+  source_observation_id: "neg-o:" + i,
+  source_family: "sec_filings",
+  source_authority_class: "official_regulatory_filing",
+  origin_entity_ref: "sec:cik:" + String(i % 6).padStart(10, "0"),
+  forward_return: (i % 5 === 0 ? 0.001 : -0.004) - (i >= 35 ? 0.0005 : 0),
+  benchmark_return: 0,
+}));
+const authoritativeNegativeEval = evaluateEdgeFamilies(authoritativeNegative, {
+  transaction_cost_bps: 20,
+  false_discovery_rate: 0.10,
+});
+assert.equal(authoritativeNegativeEval[0].candidate_checks.authoritative_multi_origin_diversity, true);
+assert.equal(authoritativeNegativeEval[0].status, "RESEARCH_CANDIDATE");
+assert.equal(authoritativeNegativeEval[0].learned_direction, "NEGATIVE_EXCESS_RETURN");
+assert.ok(authoritativeNegativeEval[0].base_evaluation.holdout.mean_strategy_return_net > 0);
 
 const tooFewOrigins = many.map((row, i) => ({
   ...row,
