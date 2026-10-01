@@ -63,6 +63,7 @@ test('field certification requires both direct host settings and LAN witness', (
   }));
   receipt = certifyChromeOsHostBoundary({ stateRoot, routerReceiptFile });
   assert.equal(receipt.state, 'host_setting_and_lan_ready');
+  assert.equal(receipt.host_observation.observer_install_id, 'proof_install');
   assert.equal(receipt.ready_for_external_canary, true);
   assert.equal(receipt.external_public_route_verified, false);
 });
