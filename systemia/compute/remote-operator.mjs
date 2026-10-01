@@ -241,7 +241,7 @@ export class EvercraftRemoteOperator {
   }
 
   async networkStatus() {
-    const observation = await observeNodeNetwork();
+    const observation = await observeNodeNetwork({ hostBoundaryStateRoot: this.hostBoundaryStateRoot });
     const receipt = this.#receipt('network.status', {
       observation_hash: observation.receipt_hash,
       interface_count: observation.interfaces.length,
