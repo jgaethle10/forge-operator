@@ -41,6 +41,7 @@ export function buildClusterAdversarialSummary({
   executionTranslationLab,
   quoteMicrostructureLab,
   executionSpeedBoundsLab,
+  capitalScaleImpactEnvelopeLab,
   familyMaxNullLab,
   deflatedSharpeLab,
   tailDependenceLab,
@@ -73,6 +74,7 @@ export function buildClusterAdversarialSummary({
     walk: indexBySignal(walkForwardLab?.reviews || []),
     execution: indexBySignal(executionTranslationLab?.reviews || []),
     executionSpeed: indexBySignal(executionSpeedBoundsLab?.reviews || []),
+    capitalScaleImpact: indexBySignal(capitalScaleImpactEnvelopeLab?.reviews || []),
     familyMaxNull: indexBySignal(familyMaxNullLab?.reviews || []),
     deflatedSharpe: indexBySignal(deflatedSharpeLab?.reviews || []),
     tailDependence: indexBySignal(tailDependenceLab?.reviews || []),
@@ -155,6 +157,14 @@ export function buildClusterAdversarialSummary({
         maps.executionSpeed.get(signal)?.grid?.find(
           (row) => row.hypothetical_order_notional_usd === 1000
         )?.immediate_visible_touch_sufficient_rate ?? null,
+      capital_scale_impact_envelope_status:
+        maps.capitalScaleImpact.get(signal)?.status || "MISSING",
+      capital_scale_10000_coefficient_1_mean_stressed_net:
+        maps.capitalScaleImpact.get(signal)?.grid?.find(
+          (row) => row.hypothetical_order_notional_usd === 10000
+        )?.scenarios?.find(
+          (row) => row.impact_coefficient === 1
+        )?.mean_stressed_quote_strategy_net ?? null,
       family_max_null_status:
         maps.familyMaxNull.get(signal)?.status || "MISSING",
       family_max_null_p_value:
@@ -220,6 +230,8 @@ export function buildClusterAdversarialSummary({
           (row) => row.walk_forward_status === "WALK_FORWARD_ROBUST_DIAGNOSTIC"),
         execution_speed_bounds_ready: count(memberReceipts,
           (row) => row.execution_speed_bounds_status === "EXECUTION_SPEED_BOUNDS_READY"),
+        capital_scale_impact_envelope_ready: count(memberReceipts,
+          (row) => row.capital_scale_impact_envelope_status === "CAPITAL_SCALE_IMPACT_ENVELOPE_READY"),
         family_max_null_separated: count(memberReceipts,
           (row) => row.family_max_null_status === "MAX_FAMILY_NULL_SEPARATED_DIAGNOSTIC"),
         deflated_sharpe_separated: count(memberReceipts,
