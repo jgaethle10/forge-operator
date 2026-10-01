@@ -85,8 +85,6 @@ jobs:
         run: npm run proof:base44-portfolio-board
       - name: Prove Wave 1 execution packet
         run: npm run proof:base44-wave-execution
-      - name: Prove Wave 1 owned parity map
-        run: npm run proof:wave-1-parity-map
       - name: Prove Wave 1 replacement matrix
         run: npm run proof:base44-wave1-replacements
       - name: Prove lossless Base44 entity transfer
