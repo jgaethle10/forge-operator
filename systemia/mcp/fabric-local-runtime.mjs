@@ -14,6 +14,7 @@ import {
 } from './fabric-directory.mjs';
 import {
   renderCapabilities,
+  renderCapabilityDetail,
   renderFabricHome,
   renderMarkdownDocument,
 } from './fabric-public-site.mjs';
@@ -318,6 +319,42 @@ export async function startFabricLocalRuntime({
           renderCapabilities(preparedCatalog().capabilities),
           {contentType:'text/html; charset=utf-8'}
         );
+      }
+
+      if (req.method==='GET' && req.url==='/capabilities.json') {
+        const prepared=preparedCatalog();
+        return sendJson(res,200,{
+          ok:true,
+          directory:'Evercraft Fabric',
+          capabilities:prepared.capabilities,
+          returned:prepared.capabilities.length,
+          transactional:false,
+          external_action_taken:false,
+        });
+      }
+
+      if (req.method==='GET' && String(req.url||'').startsWith('/capabilities/')) {
+        const parsed=new URL(String(req.url||''),'http://fabric.local');
+        const raw=decodeURIComponent(parsed.pathname.slice('/capabilities/'.length));
+        if(raw&&!raw.includes('/')){
+          const wantsJson=raw.endsWith('.json');
+          const publicId=wantsJson?raw.slice(0,-5):raw;
+          const capability=preparedCatalog().capabilities.find((item)=>item.public_id===publicId);
+          if(!capability) return sendJson(res,404,{error:'capability_not_found'});
+          if(wantsJson) return sendJson(res,200,{
+            ok:true,
+            directory:'Evercraft Fabric',
+            capability,
+            transactional:false,
+            external_action_taken:false,
+          });
+          return sendText(
+            res,
+            200,
+            renderCapabilityDetail(capability),
+            {contentType:'text/html; charset=utf-8'}
+          );
+        }
       }
 
       if (req.method==='GET' && req.url==='/assets/evercraft-icon.png') {
