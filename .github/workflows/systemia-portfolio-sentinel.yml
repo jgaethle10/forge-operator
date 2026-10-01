@@ -150,7 +150,8 @@ jobs:
         if: always()
         run: |
           node systemia/llm-product/build-registry.mjs --emit --check
-          node --test systemia/llm-product/build-registry.test.mjs
+          node systemia/llm-product/conversion-router.mjs --emit
+          node --test systemia/llm-product/build-registry.test.mjs systemia/llm-product/conversion-router.test.mjs
 
       - name: Prove capability-promotion policy
         if: always()
@@ -200,6 +201,8 @@ jobs:
             artifacts/llm-product/portfolio-matrix.json
             artifacts/llm-product/conversion-debt.json
             artifacts/llm-product/release-gate.json
+            artifacts/llm-product/conversion-plan.json
+            artifacts/llm-product/mission-snapshot.json
           if-no-files-found: error
           retention-days: 14
 
@@ -222,7 +225,7 @@ jobs:
             echo "Journal freshness floor: checked every cycle; >24h warns and >36h becomes a blocking portfolio finding"
             echo "Production mutation: bounded recipes autonomous; high-blast-radius/identity/legal/payment mutations human-gated"
             echo
-            for FILE in artifacts/portfolio-sentinel/latest.json artifacts/portfolio-sentinel/estate-convergence.json artifacts/portfolio-sentinel/repair-queue.json artifacts/portfolio-sentinel/repair-memory.json artifacts/human-experience/latest.json artifacts/capability-promotion/latest.json artifacts/llm-product/release-gate.json artifacts/llm-product/conversion-debt.json; do
+            for FILE in artifacts/portfolio-sentinel/latest.json artifacts/portfolio-sentinel/estate-convergence.json artifacts/portfolio-sentinel/repair-queue.json artifacts/portfolio-sentinel/repair-memory.json artifacts/human-experience/latest.json artifacts/capability-promotion/latest.json artifacts/llm-product/release-gate.json artifacts/llm-product/conversion-debt.json artifacts/llm-product/conversion-plan.json; do
               if [ -f "$FILE" ]; then
                 echo "### $FILE"
                 echo '~~~json'
