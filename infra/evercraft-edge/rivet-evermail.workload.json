@@ -1,0 +1,74 @@
+{
+  "schema": "evercraft.compute.workload.v1",
+  "workload_id": "rivet-evermail",
+  "owner": "RIVET",
+  "control_plane": "Systemia",
+  "deployment_surface": "Yard Operator",
+  "runtime_fabric": "Evercraft Compute",
+  "logical_uri": "evercraft://mail/rivet",
+  "provider_policy": {
+    "preferred": "evercraft-owned",
+    "fallback": "none"
+  },
+  "public_identity": {
+    "brand": "RIVET",
+    "domain_source": "env:RIVET_PUBLIC_MAIL_DOMAIN",
+    "standalone_domain_required": true,
+    "parent_brand_leakage_forbidden": true,
+    "fallback_domain": null
+  },
+  "environment": {
+    "promotion_required": [
+      "RIVET_PUBLIC_MAIL_DOMAIN"
+    ]
+  },
+  "placement": {
+    "node_class": "physical_linux",
+    "attestation_required": true,
+    "public_ingress_required": true,
+    "persistent_storage_required": true
+  },
+  "network": {
+    "smtp_inbound_tcp": 25,
+    "smtp_submission_tcp": 587,
+    "mail_access_tls_tcp": 993,
+    "https_policy_tcp": 443,
+    "starttls_required": true
+  },
+  "authority": {
+    "mailbox_intent": "systemia_control_plane_only",
+    "dns_zone_authority": "evercraft_edge",
+    "identity_authority": "evercraft_identity",
+    "wire_daemons": "replaceable_standard_adapters"
+  },
+  "security": {
+    "authenticated_submission_required": true,
+    "dkim_signing_required": true,
+    "spf_enforced": true,
+    "dmarc_enforced": true,
+    "anti_abuse_required": true,
+    "open_relay_forbidden": true,
+    "secrets_must_not_enter_git": true
+  },
+  "economics": {
+    "new_spend_allowed": false,
+    "third_party_relay_allowed": false
+  },
+  "promotion_gates": [
+    "rivet_public_domain_selected",
+    "rivet_public_domain_brand_isolation_verified",
+    "field_attestation_verified",
+    "mail_runtime_health_green",
+    "public_domain_delegation_verified",
+    "mx_publicly_resolvable",
+    "spf_present",
+    "dkim_present",
+    "dmarc_present",
+    "tls_reporting_present",
+    "mta_sts_present",
+    "reverse_dns_matches_mail_host",
+    "smtp_starttls_trusted",
+    "mailbox_auth_receipt_present",
+    "backup_restore_receipt_present"
+  ]
+}
