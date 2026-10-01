@@ -15,6 +15,8 @@ on:
       - 'tests/specialist-handoff-native-runtime.test.mjs'
       - 'tests/public-edge-native-specialist-invariants.test.mjs'
       - 'tests/public-edge-canary-contract.test.mjs'
+      - 'tests/fabric-edge-doctor-contract.test.mjs'
+      - 'scripts/fabric-edge-doctor.sh'
       - 'package.json'
       - '.github/workflows/evercraft-fabric-native.yml'
   workflow_dispatch:
@@ -43,3 +45,7 @@ jobs:
           node systemia/yard/public-route-broker.proof.mjs
       - name: Prove Public Edge invariants
         run: node --test tests/public-edge-mainline-invariants.test.mjs
+      - name: Prove Fabric edge doctor field gate
+        run: |
+          bash -n scripts/fabric-edge-doctor.sh
+          node --test tests/fabric-edge-doctor-contract.test.mjs
