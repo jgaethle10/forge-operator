@@ -26,7 +26,7 @@ function normalizeOrigin(value,{allowLoopbackProof=false}={}){
   return url.origin;
 }
 function constantTimeHex(left,right){
-  if(!/^[a-f0-9]{64}$/i.test(String(left||''))||!/[a-f0-9]{64}/i.test(String(right||''))) return false;
+  if(!/^[a-f0-9]{64}$/i.test(String(left||''))||!/^[a-f0-9]{64}$/i.test(String(right||''))) return false;
   const a=Buffer.from(String(left).toLowerCase(),'hex');
   const b=Buffer.from(String(right).toLowerCase(),'hex');
   return a.length===b.length&&timingSafeEqual(a,b);
