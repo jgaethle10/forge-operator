@@ -66,6 +66,7 @@ export function elevenLabsVeoEndpoint(
       identityContinuityViaStartFrame:true,
       framesExclusiveWithReferences:true,
       referenceImageDurationOptions:[8],
+      locatorKinds:['inline_base64','provider_asset','provider_generation'],
       nativeAudio:true,
       batchVariants:1,
       qualityTier:modelId==='veo-3.1-generate-001'?5:4,
