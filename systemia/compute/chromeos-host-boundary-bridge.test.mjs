@@ -45,6 +45,10 @@ async function testObserverIdentity() {
 async function signedObservation(observation, identity) {
   const payload = {
     ...observation,
+    observer_sequence:
+      Number.isSafeInteger(observation.observer_sequence)
+        ? observation.observer_sequence
+        : 1,
     observer_key_fingerprint: identity.fingerprint,
   };
   const signature = await webcrypto.subtle.sign(
@@ -288,6 +292,7 @@ test('HTTP bridge rejects unsigned or incorrectly signed observer reports', asyn
 
     const unsigned = {
       ...fixture(),
+      observer_sequence: 1,
       observer_key_fingerprint: identity.fingerprint,
     };
     const unsignedResponse = await fetch(
@@ -319,6 +324,67 @@ test('HTTP bridge rejects unsigned or incorrectly signed observer reports', asyn
     assert.equal(tamperedResponse.status, 422);
     const tampered = await tamperedResponse.json();
     assert.equal(tampered.error, 'chromeos_host_boundary_observer_signature_invalid');
+  } finally {
+    await new Promise((resolve) => runtime.server.close(resolve));
+  }
+});
+
+
+test('HTTP bridge rejects a replayed signed observer sequence', async () => {
+  const stateRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'evercraft-host-boundary-replay-'));
+  const token = 'r'.repeat(64);
+  const runtime = await startChromeOsHostBoundaryBridge({
+    host: '127.0.0.1',
+    port: 0,
+    token,
+    stateRoot,
+  });
+
+  try {
+    const base = 'http://127.0.0.1:' + runtime.port;
+    const identity = await testObserverIdentity();
+    const pairResponse = await fetch(base + '/v1/chromeos-host-boundary/pair', {
+      method: 'POST',
+      headers: {
+        authorization: 'Bearer ' + token,
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        observer_install_id: 'cros_install_test',
+        observer_key_fingerprint: identity.fingerprint,
+        public_key_jwk: identity.publicJwk,
+      }),
+    });
+    assert.equal(pairResponse.status, 200);
+
+    const signed = await signedObservation(
+      { ...fixture(), observer_sequence: 7 },
+      identity,
+    );
+    const first = await fetch(base + '/v1/chromeos-host-boundary/report', {
+      method: 'POST',
+      headers: {
+        authorization: 'Bearer ' + token,
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify(signed),
+    });
+    assert.equal(first.status, 200);
+
+    const replay = await fetch(base + '/v1/chromeos-host-boundary/report', {
+      method: 'POST',
+      headers: {
+        authorization: 'Bearer ' + token,
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify(signed),
+    });
+    assert.equal(replay.status, 422);
+    const replayBody = await replay.json();
+    assert.equal(
+      replayBody.error,
+      'chromeos_host_boundary_observer_sequence_replayed',
+    );
   } finally {
     await new Promise((resolve) => runtime.server.close(resolve));
   }
