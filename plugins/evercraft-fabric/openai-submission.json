@@ -88,7 +88,7 @@
   "review_support": {
     "demo_recording_url": "https://drive.google.com/file/d/1v6KeJMAjH_Hp7IpjFWqNFTcPT2k9iUd_/view?usp=drivesdk",
     "recording_access": "public_link_reader",
-    "notes": "Existing walkthrough proves the original read-only routing tools. Before v1.1.0 submission, refresh the reviewer recording to demonstrate preview_public_website on the restored owned Fabric edge and re-run the production MCP scan."
+    "notes": "The existing walkthrough documents the older routing prototype and is not sufficient for v1.1.0. Before submission, record a fresh reviewer walkthrough demonstrating inspect_public_website on the restored purpose-specific /mcp/openai endpoint, including authorization and bounded-result behavior, then re-run the production MCP scan."
   },
   "package_version": "1.1.0"
 }
