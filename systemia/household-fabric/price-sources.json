@@ -1,6 +1,6 @@
 {
   "schema": "systemia.household-fabric.price-sources.v1",
-  "updated_at": "2026-09-28",
+  "updated_at": "2026-09-29",
   "sources": [
     {
       "source_key": "google-places-fuel-options",
@@ -17,6 +17,11 @@
         "Google Maps Platform terms and required attribution must be satisfied before production display.",
         "Preserve provider updateTime as observed_at when present.",
         "Do not mark this source live until credentials and an end-to-end Yakima canary pass."
+      ],
+      "client": "systemia/household-fabric/clients/google-places-fuel-client.mjs",
+      "client_state": "implemented_not_credentialed",
+      "credential_contract": [
+        "Google Places API key"
       ]
     },
     {
@@ -34,7 +39,14 @@
         "A locationId is mandatory for price observations.",
         "Capture observed_at at retrieval because the surfaced product contract does not expose a price update timestamp.",
         "Do not mark this source live until credentials and an end-to-end Yakima/Fred Meyer canary pass."
-      ]
+      ],
+      "client": "systemia/household-fabric/clients/kroger-client.mjs",
+      "client_state": "implemented_not_credentialed",
+      "credential_contract": [
+        "Kroger client ID",
+        "Kroger client secret"
+      ],
+      "oauth_flow": "client_credentials / product.compact"
     }
   ]
 }
