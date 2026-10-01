@@ -196,6 +196,7 @@ assert.equal(contractDispatch.adoption_stage, 'shared_runtime');
 assert.equal(contractDispatch.contract_specialist_slug, 'aliev');
 assert.equal(contractDispatch.contract_action_scope, 'report.generate');
 assert.equal(contractDispatch.contract_machine_tool, 'analyze_ev_site');
+assert.equal(contractDispatch.contract_machine_target_product_key, 'aliev');
 assert.equal(contractDispatch.contract_machine_tool_declared, true);
 assert.equal(contractDispatch.contract_machine_tool_grants_authority, false);
 assert.equal(contractDispatch.specialist_component, 'aliev');
