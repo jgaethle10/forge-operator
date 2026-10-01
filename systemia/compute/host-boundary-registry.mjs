@@ -28,8 +28,14 @@ function normalizeCapability(raw) {
     : {};
   const freshness = Number(raw.freshness_seconds);
 
+  const adapter = String(raw.adapter || '').trim();
+  if (!/^[a-z0-9][a-z0-9_-]{2,95}$/i.test(adapter)) {
+    throw new Error('host_boundary_capability_adapter_invalid');
+  }
+
   return {
     capability_id: capabilityId,
+    adapter,
     host_os: String(raw.host_os || '').trim().toLowerCase(),
     surface: String(raw.surface || '').trim(),
     operation,
@@ -104,6 +110,7 @@ export function hostBoundaryCapabilityStatus({
     capability_count: registry.capabilities.length,
     capabilities: registry.capabilities.map((capability) => ({
       capability_id: capability.capability_id,
+      adapter: capability.adapter,
       host_os: capability.host_os,
       operation: capability.operation,
       surface: capability.surface,
