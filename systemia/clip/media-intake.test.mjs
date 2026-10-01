@@ -136,3 +136,111 @@ test('staging the same delivery id with a different manifest fails closed',()=>{
     /clip_intake_idempotency_conflict/
   );
 });
+
+
+test('distributed phenomenon master stages after frame-verified render and master QC',()=>{
+  const root=fs.mkdtempSync(path.join(os.tmpdir(),'clip-distributed-intake-'));
+  const media=path.join(root,'phenomenon.mp4');
+  fs.writeFileSync(media,Buffer.from('distributed-phenomenon-video'));
+  const mediaSha=digest(media);
+  const render=path.join(root,'render.json');
+  const qc=path.join(root,'qc.json');
+  fs.writeFileSync(render,JSON.stringify({
+    schema:'evercraft.fallen.distributed-render-receipt.v1',
+    plan_id:'spectacle-plan-1',
+    stage_id:'spectacle-stage-1',
+    stage_digest:'a'.repeat(64),
+    total_frames:48,
+    fps:12,
+    shard_count:4,
+    workers:['worker-a','worker-b'],
+    frame_set_sha256:'b'.repeat(64),
+    output_path:media,
+    output_bytes:fs.statSync(media).size,
+    output_sha256:mediaSha,
+    boundaries:{
+      every_frame_materialized:true,
+      every_frame_sha256_verified:true,
+      no_gap_no_duplicate_gate:true,
+      worker_artifact_paths_not_trusted:true,
+      publication_authority:false,
+    }
+  }));
+  fs.writeFileSync(qc,JSON.stringify({
+    schema:'evercraft.fallen.master-qc-receipt.v1',
+    status:'accepted',
+    sha256:mediaSha,
+    boundaries:{publicationAuthorityGranted:false},
+  }));
+  const manifest={
+    schema:'evercraft.clip.media-intake.v1',
+    deliveryId:'spectacle-delivery-1',
+    sourceApp:'fallen',
+    sourceProjectId:'spectacle-stage-1',
+    sourceProjectVersion:1,
+    state:'ready_for_clip_intake',
+    media:{
+      path:media,
+      sha256:mediaSha,
+      sizeBytes:fs.statSync(media).size,
+      width:1080,
+      height:1920,
+      fps:12,
+      durationSec:4,
+      videoCodec:'h264',
+    },
+    captions:[],
+    metadata:{title:'Phenomenon proof',tags:['evercraft','worldstate']},
+    destinations:['youtube','instagram','facebook','tiktok'],
+    provenance:{
+      inputAssetIds:[],
+      sourceRefs:['source:physical-world-proof'],
+      continuityDigests:['spectacle:proof'],
+      renderReceiptPath:render,
+      masterQcReceiptPath:qc,
+    },
+    boundaries:{
+      publicationAuthorityGranted:false,
+      platformCredentialsConsumed:false,
+      platformPublishStateAsserted:false,
+      downstreamClipGateRequired:true,
+    },
+    createdAt:'2026-10-01T00:00:00Z',
+  };
+  const inspection=inspectClipMediaPackage(manifest);
+  assert.equal(inspection.status,'accepted');
+  const receipt=stageClipMediaIntake({manifest,queueDir:path.join(root,'queue')});
+  assert.equal(receipt.status,'staged');
+  assert.equal(receipt.boundaries.publicationAuthorityGranted,false);
+});
+
+
+test('social spectacle manifests fail closed without 10 of 10 editorial and production gates',()=>{
+  const {manifest}=fixture();
+  manifest.contentClass='social_spectacle';
+  const invalid=verifyClipMediaManifest(manifest);
+  assert.equal(invalid.status,'rejected');
+  assert.ok(invalid.errors.includes('social_spectacle_editorial_gate_invalid'));
+  assert.ok(invalid.errors.includes('social_spectacle_production_grade_invalid'));
+
+  manifest.editorialGate={
+    status:'accepted',
+    score:10,
+    maximum_score:10,
+    publication_authority:false,
+  };
+  manifest.productionGrade={
+    status:'accepted',
+    hero_kind:'data_visualization',
+    text_primary:false,
+    source_grounded:true,
+  };
+  assert.equal(verifyClipMediaManifest(manifest).status,'accepted');
+});
+
+test('staged intake receipt binds exact staged manifest bytes',()=>{
+  const {root,manifest}=fixture();
+  const receipt=stageClipMediaIntake({manifest,queueDir:path.join(root,'queue')});
+  assert.match(receipt.stagedManifestSha256,/^[a-f0-9]{64}$/);
+  assert.equal(digest(receipt.stagedManifestPath),receipt.stagedManifestSha256);
+});
