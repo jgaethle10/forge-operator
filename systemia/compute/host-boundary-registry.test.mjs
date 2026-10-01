@@ -17,6 +17,7 @@ test('loads the typed ChromeOS read capability', () => {
     'chromeos.crostini.port-forwarding.read.v1',
   );
   assert.equal(capability.operation, 'read');
+  assert.equal(capability.adapter, 'chromeos_crostini_port_forwarding');
   assert.equal(capability.mutation_authority, false);
   assert.equal(capability.arbitrary_desktop_control, false);
   assert.deepEqual(capability.scope.ports, [8443, 18080]);
@@ -30,6 +31,7 @@ test('registry rejects read capabilities that secretly grant mutation', () => {
     version: 'test',
     capabilities: [{
       capability_id: 'chromeos.bad.read.v1',
+      adapter: 'proof_adapter',
       host_os: 'chromeos',
       surface: 'proof',
       operation: 'read',
@@ -51,6 +53,7 @@ test('registry rejects generic arbitrary desktop control', () => {
     version: 'test',
     capabilities: [{
       capability_id: 'chromeos.desktop.anything.v1',
+      adapter: 'desktop_anything',
       host_os: 'chromeos',
       surface: '*',
       operation: 'action',
