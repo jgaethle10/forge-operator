@@ -92,3 +92,32 @@ jobs:
         run: node --test tests/fabric-owned-edge-installer.test.mjs
       - name: Typecheck Forge integration
         run: npm install --no-audit --no-fund && npm run lint
+      - name: Package ChromeOS host-boundary field kit
+        run: |
+          set -euo pipefail
+          rm -rf dist/chromeos-host-boundary-field-kit
+          mkdir -p dist/chromeos-host-boundary-field-kit
+          cp -a systemia/compute/chromeos-host-bridge \
+            dist/chromeos-host-boundary-field-kit/chromeos-host-bridge
+          cp systemia/compute/install-chromeos-host-boundary-bridge-user.sh \
+            dist/chromeos-host-boundary-field-kit/
+          cp systemia/compute/HOST_BOUNDARY_CAPABILITY_FABRIC.md \
+            dist/chromeos-host-boundary-field-kit/
+          cp systemia/compute/CHROMEBOOK_EDGE_RESILIENCE.md \
+            dist/chromeos-host-boundary-field-kit/
+          (
+            cd dist
+            zip -qr chromeos-host-boundary-field-kit.zip \
+              chromeos-host-boundary-field-kit
+            sha256sum chromeos-host-boundary-field-kit.zip \
+              > chromeos-host-boundary-field-kit.zip.sha256
+          )
+      - name: Upload ChromeOS host-boundary field kit
+        uses: actions/upload-artifact@v4
+        with:
+          name: chromeos-host-boundary-field-kit
+          path: |
+            dist/chromeos-host-boundary-field-kit.zip
+            dist/chromeos-host-boundary-field-kit.zip.sha256
+          if-no-files-found: error
+          retention-days: 7
