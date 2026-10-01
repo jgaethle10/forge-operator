@@ -133,7 +133,7 @@ export async function executeMicroSeedWorkload({
     manifest.compute_execution_mode==='native_device' &&
     executionContext==='device';
   const builtin=directDeviceExecution
-    ? executeRegisteredMicroSeedWorkload(req.workload_class,req.payload)
+    ? executeRegisteredMicroSeedWorkload(req.workload_class,req.payload,{stateDir:root,device_id:req.device_id})
     : null;
   const result=builtin??await executeBridgeOperation({
     manifest,
