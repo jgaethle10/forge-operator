@@ -115,6 +115,32 @@ function sendBuffer(res,status,data,{contentType='application/octet-stream',cach
   res.end(data);
 }
 
+function journalContentType(file) {
+  const ext=path.extname(file).toLowerCase();
+  if(ext==='.html') return 'text/html; charset=utf-8';
+  if(ext==='.json'||ext==='.jsonld') return 'application/json; charset=utf-8';
+  if(ext==='.xml') return 'application/xml; charset=utf-8';
+  if(ext==='.txt') return 'text/plain; charset=utf-8';
+  if(ext==='.svg') return 'image/svg+xml';
+  if(ext==='.png') return 'image/png';
+  if(ext==='.jpg'||ext==='.jpeg') return 'image/jpeg';
+  if(ext==='.webp') return 'image/webp';
+  return 'application/octet-stream';
+}
+
+function resolveJournalAsset(journalDir, requestUrl) {
+  const parsed=new URL(requestUrl,'http://fabric.local');
+  let pathname=decodeURIComponent(parsed.pathname);
+  if(!pathname.startsWith('/journal')) return null;
+  let relative=pathname.slice('/journal'.length).replace(/^\/+/, '');
+  if(!relative||relative.endsWith('/')) relative+=relative?'index.html':'index.html';
+  const target=path.resolve(journalDir,relative);
+  const prefix=journalDir.endsWith(path.sep)?journalDir:journalDir+path.sep;
+  if(target!==journalDir&&!target.startsWith(prefix)) return null;
+  if(!fs.existsSync(target)||!fs.statSync(target).isFile()) return null;
+  return target;
+}
+
 async function readJson(req,{maxBytes=1024*1024}={}) {
   const chunks=[];
   let bytes=0;
@@ -184,6 +210,7 @@ export async function startFabricLocalRuntime({
   }
   const moduleDir=path.dirname(fileURLToPath(import.meta.url));
   const pluginDir=path.resolve(moduleDir,'../../plugins/evercraft-fabric');
+  const journalDir=path.resolve(moduleDir,'../../public/journal');
   const docs={
     privacy:fs.readFileSync(path.join(pluginDir,'PRIVACY.md'),'utf8'),
     terms:fs.readFileSync(path.join(pluginDir,'TERMS.md'),'utf8'),
@@ -215,6 +242,9 @@ export async function startFabricLocalRuntime({
     edge_attestation_path:edgeAttestationReady()?edgeAttestationPath:null,
     edge_attestation_allocator_authority_exposed:false,
     public_plugin_submission_ready:true,
+    journal_mirror_path:'/journal/',
+    journal_mirror_ready:fs.existsSync(path.join(journalDir,'index.html')),
+    journal_mirror_indexing:'noindex_until_dedicated_origin',
     provider_publication_state:'external_to_runtime',
     public_submission_note:'The owned Fabric runtime and review surface are submission-ready. Provider review, approval, publication, and directory visibility are external states and are not inferred by this health endpoint.',
     catalog_reload_mode:staticPrepared?'static_injected':'hot_reload_repository',
@@ -277,6 +307,22 @@ export async function startFabricLocalRuntime({
         }catch{
           return sendJson(res,503,{ok:false,error:'edge_attestation_unavailable'});
         }
+      }
+
+      if ((req.method==='GET'||req.method==='HEAD') && String(req.url||'').startsWith('/journal')) {
+        const asset=resolveJournalAsset(journalDir,String(req.url||''));
+        if(!asset) return sendJson(res,404,{error:'journal_asset_not_found'});
+        const data=fs.readFileSync(asset);
+        res.writeHead(200,{
+          'content-type':journalContentType(asset),
+          'content-length':data.length,
+          'cache-control':'public, max-age=60, must-revalidate',
+          'x-content-type-options':'nosniff',
+          'x-robots-tag':'noindex, nofollow',
+          'referrer-policy':'strict-origin-when-cross-origin',
+        });
+        if(req.method==='HEAD') return res.end();
+        return res.end(data);
       }
 
       if (req.url===challengePath) {
