@@ -151,8 +151,8 @@ test('paid generation stays fail-closed until explicitly authorized',async()=>{
 
 test('supports already-staged Sync provider assets in generation inputs',async()=>{
   const staged=job();
-  staged.references[0].locator={kind:'provider_asset',providerId:'sync',id:'video-asset-1'};
-  staged.references[1].locator={kind:'provider_asset',providerId:'sync',id:'audio-asset-1'};
+  staged.references[0].locator={kind:'provider_asset',providerId:'sync',value:'video-asset-1'};
+  staged.references[1].locator={kind:'provider_asset',providerId:'sync',value:'audio-asset-1'};
   let createBody:any=null;
   const adapter=createSyncLabsLipAdapter({
     apiKey:'secret',modelId:'sync-3',
@@ -213,7 +213,7 @@ test('stages local Evercraft media through Sync presign, raw PUT, and asset regi
     }
   });
   assert.equal(staged.assetId,'asset-audio-123');
-  assert.deepEqual(staged.locator,{kind:'provider_asset',providerId:'sync',id:'asset-audio-123'});
+  assert.deepEqual(staged.locator,{kind:'provider_asset',providerId:'sync',value:'asset-audio-123'});
   assert.equal(staged.sourceSha256.length,64);
   assert.equal(calls.length,3);
 });
