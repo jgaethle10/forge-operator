@@ -264,6 +264,41 @@ function passiveTouchEvidence(trades,quote,direction,{
   };
 }
 
+function passiveTouchMarkouts(quotes,passiveEvidence,direction,{
+  horizons_ms=[30000,60000],
+  max_quote_delay_ms=30000,
+}={}){
+  const touchTime=passiveEvidence?.first_touch_trade_time;
+  const limit=finite(passiveEvidence?.passive_limit_price);
+  if(!touchTime||!(limit>0)) return {};
+  const sign=expectedSign(direction);
+  const base=new Date(touchTime).getTime();
+  if(!Number.isFinite(base)) return {};
+  const out={};
+  for(const horizon of horizons_ms){
+    const ms=Math.max(0,Number(horizon||0));
+    const quote=quoteAtOrAfter(
+      quotes,
+      new Date(base+ms).toISOString(),
+      {max_delay_ms:max_quote_delay_ms}
+    );
+    const midpoint=finite(quote?.midpoint);
+    const key=Math.round(ms/1000)+"s";
+    out[key]={
+      target_time:new Date(base+ms).toISOString(),
+      quote_time:quote?.t||null,
+      midpoint,
+      markout_bps:
+        Number.isFinite(midpoint)&&limit>0
+          ?sign*((midpoint-limit)/limit)*10000
+          :null,
+      interpretation:
+        "Direction-adjusted midpoint move after the first public-tape touch. It is an adverse-selection diagnostic, not proof the hypothetical passive order filled.",
+    };
+  }
+  return out;
+}
+
 function targetRowsForMeasurement(row,learnedDirection=null){
   const targets=[];
   if(row?.instrument_start_time){
@@ -483,6 +518,48 @@ export function summarizeQuoteSignal(rows){
     ),
     partial_fill_probability_modeled:false,
     unfilled_probability_modeled:false,
+    aggressive_vs_passive_bounds:(()=>{
+      const evaluable=modeledEntry.filter(
+        (row)=>row.passive_touch_evidence_available===true
+      );
+      const touched=evaluable.filter(
+        (row)=>row.passive_price_touch_observed===true
+      );
+      const noTouch=evaluable.filter(
+        (row)=>row.passive_price_touch_observed===false
+      );
+      const posted=evaluable
+        .map((row)=>finite(row.posted_passive_price_improvement_bps))
+        .filter(Number.isFinite);
+      const touchBound=touched
+        .map((row)=>finite(row.touch_supported_passive_price_improvement_upper_bound_bps))
+        .filter(Number.isFinite);
+      const markout30=touched
+        .map((row)=>finite(row.passive_touch_markout_30s_bps))
+        .filter(Number.isFinite);
+      const markout60=touched
+        .map((row)=>finite(row.passive_touch_markout_60s_bps))
+        .filter(Number.isFinite);
+      return {
+        marketable_entry_observations:modeledEntry.length,
+        passive_evaluable_observations:evaluable.length,
+        passive_touch_observations:touched.length,
+        passive_no_touch_observations:noTouch.length,
+        passive_touch_rate:evaluable.length?touched.length/evaluable.length:null,
+        mean_posted_passive_price_improvement_bps:mean(posted),
+        mean_touch_supported_price_improvement_upper_bound_bps:mean(touchBound),
+        mean_post_touch_markout_30s_bps:mean(markout30),
+        mean_post_touch_markout_60s_bps:mean(markout60),
+        status:
+          evaluable.length>=8 && touched.length>=2 && noTouch.length>=2
+            ?"AGGRESSIVE_PASSIVE_BOUNDS_READY"
+            :"AGGRESSIVE_PASSIVE_BOUNDS_INSUFFICIENT",
+        marketable_touch_is_observed_quote_not_realized_fill:true,
+        passive_touch_is_not_fill:true,
+        realized_passive_execution_comparison_claimed:false,
+        queue_position_observed:false,
+      };
+    })(),
     median_passive_touch_delay_ms:percentile(
       modeledEntry
         .map((row)=>finite(row.passive_touch_delay_ms))
@@ -568,15 +645,24 @@ export async function runQuoteMicrostructureLab(report,{
   group_padding_seconds=30,
   transaction_cost_bps=5,
   passive_touch_window_ms=300000,
+  passive_markout_horizons_ms=[30000,60000],
+  passive_markout_max_quote_delay_ms=30000,
   request_interval_ms=0,
 }={}){
   const targets=buildQuoteMicrostructureTargets(report,{
     signal_keys,
     direction_by_signal,
   });
+  const maxPassiveMarkoutMs=Math.max(
+    0,
+    ...(passive_markout_horizons_ms||[]).map((value)=>Number(value||0))
+  );
   const requiredPaddingSeconds=Math.max(
     Number(group_padding_seconds),
-    Math.ceil(Number(passive_touch_window_ms)/1000)
+    Math.ceil(
+      (Number(passive_touch_window_ms)+maxPassiveMarkoutMs+
+        Number(passive_markout_max_quote_delay_ms))/1000
+    )
   );
   const groups=groupTargets(targets,requiredPaddingSeconds);
   const quoteCache=new Map();
@@ -647,6 +733,18 @@ export async function runQuoteMicrostructureLab(report,{
             {touch_window_ms:passive_touch_window_ms}
           )
         :null;
+    const passiveMarkouts=
+      passiveEvidence?.passive_price_touch_observed===true
+        ?passiveTouchMarkouts(
+            quotes,
+            passiveEvidence,
+            target.learned_direction,
+            {
+              horizons_ms:passive_markout_horizons_ms,
+              max_quote_delay_ms:passive_markout_max_quote_delay_ms,
+            }
+          )
+        :{};
     const sign=expectedSign(target.learned_direction);
     const barStart=finite(target.instrument_start_price);
     const barEnd=finite(target.instrument_end_price);
@@ -729,6 +827,19 @@ export async function runQuoteMicrostructureLab(report,{
       !quote
         ?"MARKETABLE_EXECUTION_UNOBSERVED"
         :"MARKETABLE_TOUCH_OBSERVED_EXECUTION_NOT_VERIFIED";
+    const passiveLimit=finite(passiveEvidence?.passive_limit_price);
+    const postedPassivePriceImprovementBps=
+      target.label==="modeled_entry" &&
+      Number.isFinite(marketableEntry) &&
+      marketableEntry>0 &&
+      Number.isFinite(passiveLimit) &&
+      passiveLimit>0
+        ?sign*((marketableEntry-passiveLimit)/marketableEntry)*10000
+        :null;
+    const touchSupportedPassivePriceImprovementUpperBoundBps=
+      passiveEvidence?.passive_price_touch_observed===true
+        ?postedPassivePriceImprovementBps
+        :null;
     return {
       schema:"evercraft.daytrade.edge-quote-overlay.v1",
       ...target,
@@ -791,6 +902,13 @@ export async function runQuoteMicrostructureLab(report,{
       passive_hypothetical_fill_claimed:false,
       passive_outcome_state:passiveOutcomeState,
       marketable_outcome_state:marketableOutcomeState,
+      posted_passive_price_improvement_bps:postedPassivePriceImprovementBps,
+      touch_supported_passive_price_improvement_upper_bound_bps:
+        touchSupportedPassivePriceImprovementUpperBoundBps,
+      passive_touch_markouts:passiveMarkouts,
+      passive_touch_markout_30s_bps:finite(passiveMarkouts?.["30s"]?.markout_bps),
+      passive_touch_markout_60s_bps:finite(passiveMarkouts?.["60s"]?.markout_bps),
+      realized_passive_execution_comparison_claimed:false,
       partial_fill_probability_modeled:false,
       unfilled_probability_modeled:false,
       passive_touch_interpretation:
@@ -944,6 +1062,7 @@ export async function runQuoteMicrostructureLab(report,{
       benchmark_entry_quote_adjusted:false,
       passive_touch_evidence:"Trade-at-or-through evidence only. It is not a fill claim because queue position and order-specific execution are unobserved.",
       execution_outcome_states:"Explicit observed/unknown states are emitted for passive and marketable execution. No state is converted into a fill probability.",
+      aggressive_vs_passive_bounds:"Immediate marketable touch is compared with posted passive price improvement, public-tape touch/no-touch evidence, time-to-touch and post-touch midpoint markouts. Passive fills remain unobserved and no expected fill value is claimed.",
       passive_touch_window_ms:Number(passive_touch_window_ms),
       visible_touch_size:"Sum of observed top-of-book bid and ask sizes in the provider's native quote-size units. This is not full market depth and is not compared across symbols.",
       sip_quote_size_units:"SIP quote size is treated as shares only on/after 2025-11-03 per Alpaca's CTA/UTP display-change notice; earlier SIP and IEX sizes remain native round-lot units and are excluded from share-notional scaling.",
