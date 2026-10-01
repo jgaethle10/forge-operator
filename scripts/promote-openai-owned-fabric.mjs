@@ -76,7 +76,7 @@ export function promoteOpenAiOwnedFabric({
   compat.mcpServers.evercraft.type='http';
 
   const source=readJson(sourcePath);
-  source.submission_state='owned_fabric_ready_new_plugin_submission_required';
+  source.submission_state='owned_fabric_ready_version_review_pending';
   source.compatibility_transport={
     ...(source.compatibility_transport||{}),
     mcp:LEGACY_BASE44_MCP,
@@ -90,7 +90,8 @@ export function promoteOpenAiOwnedFabric({
     verified_external_canary:true,
     openai_profile_verified:true,
     external_canary_digest:digest,
-    origin_change_requires_new_openai_plugin_submission:true,
+    origin_change_requires_new_openai_plugin_submission:false,
+    endpoint_path_change_only:true,
   };
 
   const distribution=readJson(distributionPath);
@@ -102,15 +103,17 @@ export function promoteOpenAiOwnedFabric({
     authority:'owned_public_fabric',
     owned_fabric_cutover_required:false,
     external_canary_digest:digest,
-    origin_change_requires_new_plugin_submission:true,
+    origin_change_requires_new_plugin_submission:false,
+    endpoint_path_change_only:true,
   };
   distribution.release_notes='Evercraft now targets its externally verified purpose-specific OpenAI MCP at /mcp/openai. The submitted endpoint exposes only individually reviewed public tools; the broader internal Fabric directory is not part of the public plugin contract.';
   distribution.remaining_platform_prerequisites=[
-    'Create a new OpenAI plugin submission because the MCP origin changed from the compatibility host',
-    'Verify the owned Evercraft MCP domain in the OpenAI submission portal',
-    'Run Scan Tools against the purpose-specific owned Fabric OpenAI MCP',
-    'Submit the owned-origin plugin for OpenAI review',
-    'Publish the approved owned-origin plugin',
+    'Keep the currently reviewed Evercraft v1.0.0 submission untouched until v1.1.0 is fully proven or the review resolves',
+    'Verify the owned Evercraft MCP domain remains valid in the OpenAI submission portal',
+    'Run Scan Tools against the purpose-specific owned Fabric OpenAI MCP profile',
+    'Upload Evercraft v1.1.0 through the normal new-version flow when the active review state permits it',
+    'Submit v1.1.0 for OpenAI review',
+    'Explicitly publish only the approved version Evercraft intends to make public',
     'Capture an independent ChatGPT/Codex directory discovery receipt after publication',
   ];
 
