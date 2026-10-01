@@ -118,8 +118,43 @@ Unit=evercraft-saban-capacity.service
 WantedBy=timers.target
 EOF
 
+cat >/etc/systemd/system/evercraft-saban-microseed-gateway.service <<EOF
+[Unit]
+Description=Evercraft Saban bounded MicroSeed execution gateway
+After=network-online.target evercraft-saban-capacity.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=$RUN_USER
+Group=$RUN_GROUP
+WorkingDirectory=$REPO_ROOT
+Environment=SABAN_AMBIENT_STATE_DIR=$STATE_DIR
+Environment=SABAN_ALLOW_COMMERCIAL_CAPACITY=0
+Environment=SABAN_MICROSEED_ALLOW_INSECURE_LAN=0
+ExecStart=$NODE_BIN $REPO_ROOT/systemia/saban/microseed-gateway-runner.mjs --root $STATE_DIR --host 127.0.0.1 --port 8791 --gateway-token-file $GATEWAY_TOKEN_FILE
+Restart=always
+RestartSec=5s
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=read-only
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+RestrictRealtime=true
+ReadWritePaths=$STATE_DIR
+TimeoutStartSec=20s
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
 systemctl daemon-reload
 systemctl enable --now evercraft-saban-capacity.timer
+systemctl enable --now evercraft-saban-microseed-gateway.service
 systemctl start evercraft-saban-capacity.service
 
 echo "Saban capacity organism installed."
@@ -127,3 +162,6 @@ systemctl --no-pager --full status evercraft-saban-capacity.timer | sed -n '1,12
 echo
 echo "State: $STATE_DIR/capacity-organism-state.json"
 echo "Registry: $STATE_DIR/registry"
+echo "MicroSeed gateway: http://127.0.0.1:8791"
+echo "Gateway token file: $GATEWAY_TOKEN_FILE"
+echo "Device token directory: $STATE_DIR/.secrets/device-tokens"
