@@ -147,7 +147,7 @@
     "direct:generate": "node scripts/generate-direct-plugin-packages.mjs",
     "direct:check": "node scripts/generate-direct-plugin-packages.mjs --check && node tests/direct-product-doors.test.mjs && npm run test:chum-direct-specialist-routing && npm run test:promote-specialist-edge && npm run test:mcp-registry-candidates && npm run test:mcp-registry-field-gate && npm run test:materialize-mcp-registry-candidates && npm run test:record-mcp-registry-publication",
     "test:chum-direct-specialist-routing": "node tests/chum-direct-specialist-routing.test.mjs",
-    "test:specialist-handoff-mcp": "node --import tsx --test tests/specialist-handoff-mcp.test.ts && node --test tests/specialist-handoff-native-runtime.test.mjs",
+    "test:specialist-handoff-mcp": "node --import tsx --test tests/specialist-handoff-mcp.test.ts && node --test tests/specialist-handoff-native-runtime.test.mjs tests/public-edge-native-specialist-invariants.test.mjs",
     "test:sentinel": "node systemia/sentinel/engine.test.mjs",
     "proof:sentinel": "node systemia/sentinel/proof.mjs",
     "chum:pickup-consistency": "node systemia/chum/provider-pickup-consistency.mjs",
