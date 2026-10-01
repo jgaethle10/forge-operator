@@ -128,3 +128,36 @@ npm run radar:resident
 A headline is not the event. A statement is not a policy action. A policy action is not its predicted consequence. A market move is not proof of a single cause. A model is not an observation. A cluster is not a forecast. A forecast is not an outcome. Unknown is a legitimate state.
 
 Truth has a timestamp.
+
+
+## Propagation Lab
+
+Radar now searches for cross-domain signals that share a meaningful context boundary and occur close together in time. A weather observation and an aviation disruption in the same region may become a propagation candidate, for example.
+
+The engine deliberately does **not** infer causation from timing alone. Every propagation candidate carries:
+
+- `relationship_state: co_occurrence_candidate`
+- `truth_state: INFERRED`
+- `causal_claim: false`
+- the participating signal IDs
+- domain and region boundaries
+- independent source-family count
+- an explicit statement of what evidence would be required to strengthen the relationship
+
+Unrelated global signals are not linked merely because they occurred near one another.
+
+## Source-health watchdog
+
+Every collector is audited across cycles. Radar tracks total runs, successes, failures, consecutive failures, last success, last failure, and current collector state.
+
+A source enters `warning` after a failed cycle and `degraded` after three consecutive failures by default. A later successful run recovers the source to `healthy`. Missing collection therefore becomes visible state rather than invisible absence.
+
+Public source-health state is available at:
+
+`GET /api/radar/source-health`
+
+## Emission discipline
+
+A resident cycle does not republish the same observation every five minutes. Radar remembers the last emitted observation/change-state pair. If nothing materially changed, the next edition is quiet.
+
+Fast-moving signals are also re-evaluated for freshness at compile time. When a previously emitted fast signal ages beyond its valid window, it enters the Change Wall as `ROLLED_OFF` rather than lingering indefinitely.

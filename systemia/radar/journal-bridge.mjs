@@ -89,6 +89,7 @@ export function radarEditionToEditorialPacket(edition) {
     claims,
     sections: groupedSections(edition),
     change_wall: edition.change_wall || [],
+    propagation_candidates: edition.propagation_candidates || [],
     evidence_ledger: edition.evidence_ledger || [],
     uncertainty_notes: [
       'This is a timestamped state of evidence, not a permanent description of reality.',
@@ -99,6 +100,7 @@ export function radarEditionToEditorialPacket(edition) {
       'source_lineage_complete',
       'political_neutrality_review',
       'causal_language_review',
+      'propagation_candidates_remain_inferred_until_mechanism_is_verified',
       'freshness_recheck',
       'visual_rights_verified',
       'journal_editorial_10_of_10_preflight',

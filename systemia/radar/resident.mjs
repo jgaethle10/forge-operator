@@ -8,6 +8,7 @@ import {
   publicRadarProjection
 } from './core.mjs';
 import { buildRadarSocialDraft, radarEditionToEditorialPacket } from './journal-bridge.mjs';
+import { emptySourceHealthState, publicSourceHealthProjection, updateSourceHealth } from './source-health.mjs';
 
 function ensureDir(dir) {
   fs.mkdirSync(dir, { recursive: true, mode: 0o700 });
@@ -50,8 +51,11 @@ export function createRadarResident({
   const linkedinDraftFile = path.join(stateDir, 'linkedin-draft.json');
   const facebookDraftFile = path.join(stateDir, 'facebook-draft.json');
   const receiptsFile = path.join(stateDir, 'receipts.jsonl');
+  const sourceHealthFile = path.join(stateDir, 'source-health.json');
+  const publicSourceHealthFile = path.join(stateDir, 'public-source-health.json');
 
   let state = readJson(stateFile, emptyRadarState());
+  let sourceHealthState = readJson(sourceHealthFile, emptySourceHealthState());
   let timer = null;
   let running = false;
   let lastRun = null;
@@ -74,6 +78,10 @@ export function createRadarResident({
         fetchImpl,
         now: startedAt
       });
+      const sourceHealthUpdate = updateSourceHealth(sourceHealthState, collectorRun.receipts, {
+        at: startedAt
+      });
+      sourceHealthState = sourceHealthUpdate.state;
 
       const observations = [
         ...(collectorRun.observations || []),
@@ -112,6 +120,8 @@ export function createRadarResident({
       atomicWrite(journalPacketFile, journalPacket);
       atomicWrite(linkedinDraftFile, linkedinDraft);
       atomicWrite(facebookDraftFile, facebookDraft);
+      atomicWrite(sourceHealthFile, sourceHealthState);
+      atomicWrite(publicSourceHealthFile, publicSourceHealthProjection(sourceHealthState));
 
       const receipt = {
         schema: 'evercraft.systemia-radar.run-receipt.v1',
@@ -125,6 +135,9 @@ export function createRadarResident({
         edition_id: edition.edition_id,
         edition_status: edition.status,
         signal_count: edition.signal_count,
+        propagation_candidate_count: edition.propagation_candidates?.length || 0,
+        rolled_off_count: edition.rolled_off_count || 0,
+        source_health: sourceHealthUpdate.summary,
         publication_authority: false
       };
       appendJsonl(receiptsFile, receipt);
@@ -185,6 +198,8 @@ export function createRadarResident({
       stream_count: Object.keys(state.streams || {}).length,
       latest_edition_id: state.last_edition?.edition_id || null,
       latest_signal_count: state.last_edition?.signal_count || 0,
+      propagation_candidate_count: state.last_edition?.propagation_candidates?.length || 0,
+      source_health: publicSourceHealthProjection(sourceHealthState),
       last_run: lastRun,
       last_error: lastError,
       publication_authority: false
@@ -199,6 +214,10 @@ export function createRadarResident({
     return state.last_edition ? structuredClone(state.last_edition) : null;
   }
 
+  function sourceHealth() {
+    return publicSourceHealthProjection(sourceHealthState);
+  }
+
   return {
     runOnce,
     ingest,
@@ -206,6 +225,7 @@ export function createRadarResident({
     stop,
     health,
     latest,
-    internalLatest
+    internalLatest,
+    sourceHealth
   };
 }

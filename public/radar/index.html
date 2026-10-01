@@ -41,7 +41,7 @@
     .change{display:grid;grid-template-columns:auto 1fr;gap:12px;padding:14px 0;border-top:1px solid var(--line)}
     .change:first-of-type{border-top:0}.score{width:52px;height:52px;border-radius:13px;border:1px solid var(--line);
       display:grid;place-items:center;font-variant-numeric:tabular-nums;color:var(--accent);background:#101416}
-    .change p{margin:1px 0 0;color:#d8d4cc;line-height:1.45}.quiet{padding:28px;text-align:center;color:var(--muted)}
+    .change p{margin:1px 0 0;color:#d8d4cc;line-height:1.45}.quiet{padding:28px;text-align:center;color:var(--muted)}\n    .lower{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}@media(max-width:850px){.lower{grid-template-columns:1fr}}\n    .source-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 0;border-top:1px solid var(--line)}.source-row:first-of-type{border-top:0}\n    .source-state{font-size:.7rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}.source-state.healthy{color:var(--green)}.source-state.warning{color:var(--amber)}.source-state.degraded{color:var(--red)}
     footer{border-top:1px solid var(--line);padding:28px 0 50px;color:var(--soft);font-size:.86rem;line-height:1.6}
     .error{color:var(--red)}.refresh{float:right;background:transparent;border:1px solid var(--line);color:var(--text);
       border-radius:999px;padding:8px 12px;cursor:pointer}.refresh:hover{border-color:#46535c}
@@ -74,6 +74,18 @@
       <div id="changes" style="margin-top:20px"></div>
     </aside>
   </div>
+  <div class="lower">
+    <section class="panel">
+      <h2>Propagation Lab</h2>
+      <div class="meta">Cross-domain co-occurrence worth investigating. These are relationship candidates, never automatic causal claims.</div>
+      <div id="propagation" style="margin-top:20px"></div>
+    </section>
+    <section class="panel">
+      <h2>Source Health</h2>
+      <div class="meta">Radar audits its own eyes. Failing collectors become visible instead of silently producing gaps.</div>
+      <div id="source-health" style="margin-top:20px"></div>
+    </section>
+  </div>
 </main>
 
 <footer>
@@ -89,15 +101,19 @@ async function load() {
   const statusbar = document.getElementById('statusbar');
   const signals = document.getElementById('signals');
   const changes = document.getElementById('changes');
+  const propagation = document.getElementById('propagation');
+  const sourceHealth = document.getElementById('source-health');
   const cutoff = document.getElementById('cutoff');
 
   try {
-    const [healthRes, latestRes] = await Promise.all([
+    const [healthRes, latestRes, sourceHealthRes] = await Promise.all([
       fetch('/api/radar/health', {cache:'no-store'}),
-      fetch('/api/radar/latest', {cache:'no-store'})
+      fetch('/api/radar/latest', {cache:'no-store'}),
+      fetch('/api/radar/source-health', {cache:'no-store'})
     ]);
     const health = await healthRes.json();
     const latest = await latestRes.json();
+    const sourceState = await sourceHealthRes.json();
 
     statusbar.innerHTML = [
       ['Resident', health.resident ? 'ON' : 'OFF'],
@@ -137,10 +153,38 @@ async function load() {
         </div>
       </div>
     `).join('') : '<div class="quiet">The Change Wall is quiet.</div>';
+
+    const chains = Array.isArray(latest.propagation_candidates) ? latest.propagation_candidates : [];
+    propagation.innerHTML = chains.length ? chains.map((item) => `
+      <div class="change">
+        <div class="score">${esc(item.signal_ids?.length || 0)}×</div>
+        <div>
+          <div class="signal-top">
+            <span class="tag inferred">INFERRED</span>
+            <span class="tag">${esc((item.domains || []).join(' · '))}</span>
+          </div>
+          <p>${esc(item.explanation)}</p>
+          <small class="meta">${esc(item.independent_source_families)} independent source families · causal claim: ${item.causal_claim ? 'yes' : 'no'}</small>
+        </div>
+      </div>
+    `).join('') : '<div class="quiet">No cross-domain relationship candidates cleared the current context boundary.</div>';
+
+    const sources = Array.isArray(sourceState.sources) ? sourceState.sources : [];
+    sourceHealth.innerHTML = sources.length ? sources.map((item) => `
+      <div class="source-row">
+        <div>
+          <strong>${esc(item.collector)}</strong>
+          <div class="meta">${esc(item.total_runs)} runs · last success ${esc(fmt(item.last_success_at))}</div>
+        </div>
+        <span class="source-state ${cls(item.state)}">${esc(item.state)}</span>
+      </div>
+    `).join('') : '<div class="quiet">Source health appears after the first resident cycle.</div>';
   } catch (error) {
     statusbar.innerHTML = '<span class="pill error">Radar API unavailable</span>';
     signals.innerHTML = '<div class="quiet error">'+esc(error?.message || error)+'</div>';
     changes.innerHTML = '';
+    propagation.innerHTML = '';
+    sourceHealth.innerHTML = '';
   }
 }
 
