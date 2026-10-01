@@ -62,6 +62,7 @@ test('Fabric local runtime is read-only, tunnel-compatible, and makes no Base44 
       'match_evercraft_capability',
       'list_evercraft_capabilities',
       'get_evercraft_connection_options',
+      'route_evercraft_payments',
     ]);
     assert.ok(tools.result.tools.every((x)=>x.annotations.readOnlyHint===true));
 
