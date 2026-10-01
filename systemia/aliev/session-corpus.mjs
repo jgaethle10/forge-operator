@@ -70,18 +70,46 @@ function endpointUrl(base,params){
   for(const [key,value] of Object.entries(params)) url.searchParams.set(key,String(value));
   return url.toString();
 }
+const RETRYABLE_SOURCE_STATUS=new Set([408,425,429,500,502,503,504]);
+const wait=(ms)=>new Promise(resolve=>setTimeout(resolve,ms));
+function retryDelayMs(response,attempt){
+  const raw=clean(response?.headers?.get?.('retry-after'));
+  if(raw){
+    const seconds=Number(raw);
+    if(Number.isFinite(seconds)&&seconds>=0) return Math.min(10000,seconds*1000);
+    const at=Date.parse(raw);
+    if(Number.isFinite(at)) return Math.max(0,Math.min(10000,at-Date.now()));
+  }
+  return Math.min(5000,250*(2**attempt));
+}
 async function jsonFetch(url,fetchImpl){
-  const response=await fetchImpl(url,{
-    headers:{
-      accept:'application/json',
-      'user-agent':'Evercraft-Systemia-AliEV-Session-Corpus/1.0'
-    },
-    signal:AbortSignal.timeout(45000)
-  });
-  const body=await response.json().catch(()=>null);
-  if(!response.ok) throw new Error('plugnyc_http_'+response.status);
-  if(body==null) throw new Error('plugnyc_json_required');
-  return body;
+  let lastError=null;
+  for(let attempt=0;attempt<4;attempt+=1){
+    let response=null;
+    try{
+      response=await fetchImpl(url,{
+        headers:{
+          accept:'application/json',
+          'user-agent':'Evercraft-Systemia-AliEV-Session-Corpus/1.0'
+        },
+        signal:AbortSignal.timeout(45000)
+      });
+    }catch(error){
+      lastError=error instanceof Error?error:new Error(String(error));
+      if(attempt===3) throw lastError;
+      await wait(Math.min(5000,250*(2**attempt)));
+      continue;
+    }
+    const body=await response.json().catch(()=>null);
+    if(response.ok){
+      if(body==null) throw new Error('plugnyc_json_required');
+      return body;
+    }
+    lastError=new Error('plugnyc_http_'+response.status);
+    if(!RETRYABLE_SOURCE_STATUS.has(response.status)||attempt===3) throw lastError;
+    await wait(retryDelayMs(response,attempt));
+  }
+  throw lastError||new Error('plugnyc_fetch_failed');
 }
 
 export function normalizePlugNYCSession(row){
