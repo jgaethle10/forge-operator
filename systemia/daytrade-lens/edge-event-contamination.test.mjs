@@ -77,6 +77,36 @@ assert.equal(robust.contamination_counts.cpi,1);
 assert.equal(robust.contamination_counts.earnings_related,1);
 assert.equal(robust.contamination_counts.item_2_02,1);
 assert.equal(robust.contamination_status,"CONTAMINATION_ROBUST_DIAGNOSTIC");
+
+const periodicReportRows = [
+  ...cleanRows,
+  {
+    measurement_id:"ten-q",
+    signal_key:candidate.signal_key,
+    observed_at:"2026-08-26T15:00:00Z",
+    origin_entity_ref:"issuer:3",
+    source_form:"10-Q",
+    sec_items:[],
+    forward_return:0.02,
+    benchmark_return:0,
+  },
+  {
+    measurement_id:"ten-k",
+    signal_key:candidate.signal_key,
+    observed_at:"2026-08-27T15:00:00Z",
+    origin_entity_ref:"issuer:4",
+    source_form:"10-K",
+    sec_items:[],
+    forward_return:0.02,
+    benchmark_return:0,
+  },
+];
+const periodicControl = evaluateEventContamination(
+  candidate,
+  periodicReportRows,
+  { transaction_cost_bps:20, minimum_clean_events:20, minimum_clean_origins:5 }
+);
+assert.equal(periodicControl.contamination_counts.earnings_related,2);
 assert.ok(robust.fully_clean.mean_signed_net > 0);
 
 const earningsDriven = cleanRows.map((row) => ({
