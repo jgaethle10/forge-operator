@@ -53,8 +53,15 @@ function normalizeProductDomain(value) {
   return domain;
 }
 
+function requestHostHeader(req) {
+  const forwarded = String(req.headers['x-forwarded-host'] || '')
+    .split(',')[0]
+    .trim();
+  return forwarded || String(req.headers.host || '').trim();
+}
+
 function requestHostname(req) {
-  const raw = String(req.headers.host || '').trim().toLowerCase();
+  const raw = requestHostHeader(req).toLowerCase();
   if (!raw) return null;
   try {
     return new URL(`http://${raw}`).hostname.toLowerCase().replace(/\.$/, '');
@@ -79,7 +86,7 @@ function productHostRoute(req, productDomain) {
 
 function requestOrigin(req, configuredOrigin = null) {
   if (configuredOrigin) return configuredOrigin;
-  const host = String(req.headers.host || '').trim();
+  const host = requestHostHeader(req);
   if (!host) return null;
   const forwarded = String(req.headers['x-forwarded-proto'] || '')
     .split(',')[0]
