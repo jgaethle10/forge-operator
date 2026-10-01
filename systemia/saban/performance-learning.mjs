@@ -69,6 +69,7 @@ export function recordPerformanceSample(ledger,{
     duration_ms_samples:[],
     bytes_samples:[],
     energy_wh_samples:[],
+    recent_outcomes:[],
     first_observed_at:observed_at,
     last_observed_at:observed_at,
   };
@@ -79,6 +80,13 @@ export function recordPerformanceSample(ledger,{
   if(preempted===true) prior.preemptions+=1;
   if(checkpointed===true) prior.checkpoints+=1;
   if(thermal_hold===true) prior.thermal_holds+=1;
+  prior.recent_outcomes.push({
+    ok:ok===true,
+    preempted:preempted===true,
+    thermal_hold:thermal_hold===true,
+    observed_at,
+  });
+  prior.recent_outcomes=prior.recent_outcomes.slice(-20);
   prior.duration_ms_samples.push(duration);
   prior.duration_ms_samples=prior.duration_ms_samples.slice(-100);
   if(bytes_processed!=null&&Number.isFinite(Number(bytes_processed))){
@@ -106,8 +114,18 @@ export function recordPerformanceSample(ledger,{
     ? prior.energy_wh_samples.reduce((a,b)=>a+b,0)/prior.energy_wh_samples.length
     : null;
 
+  const recent=prior.recent_outcomes||[];
+  const recentSuccesses=recent.filter(x=>x.ok===true).length;
+  let consecutiveFailures=0;
+  for(let i=recent.length-1;i>=0;i--){
+    if(recent[i].ok===true) break;
+    consecutiveFailures+=1;
+  }
+
   prior.metrics={
     success_rate:Number(successRate.toFixed(6)),
+    recent_success_rate:recent.length?Number((recentSuccesses/recent.length).toFixed(6)):0,
+    consecutive_failures:consecutiveFailures,
     bayesian_reliability:Number(reliability.toFixed(6)),
     average_duration_ms:durations.length
       ? Math.round(durations.reduce((a,b)=>a+b,0)/durations.length)
@@ -118,6 +136,10 @@ export function recordPerformanceSample(ledger,{
     average_energy_wh:avgEnergy==null?null:Number(avgEnergy.toFixed(6)),
     preemption_rate:Number((prior.preemptions/prior.samples).toFixed(6)),
     thermal_hold_rate:Number((prior.thermal_holds/prior.samples).toFixed(6)),
+    circuit_open:
+      consecutiveFailures>=3 ||
+      (recent.length>=8&&recentSuccesses/recent.length<0.5) ||
+      (prior.samples>=6&&prior.thermal_holds/prior.samples>=0.5),
     confidence:Number(Math.min(1,prior.samples/20).toFixed(6)),
   };
   prior.profile_hash=sha({
@@ -165,6 +187,9 @@ export function rankPerformanceAdjustment(profile){
     confidence,
     reliability,
     p95_duration_ms:p95||null,
+    recent_success_rate:m.recent_success_rate==null?null:Number(m.recent_success_rate),
+    consecutive_failures:Math.max(0,Number(m.consecutive_failures||0)),
+    circuit_open:m.circuit_open===true,
     average_energy_wh:m.average_energy_wh==null?null:Number(m.average_energy_wh),
     throughput_bytes_per_second:m.throughput_bytes_per_second==null?null:Number(m.throughput_bytes_per_second),
   };
