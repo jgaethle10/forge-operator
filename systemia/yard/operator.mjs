@@ -926,6 +926,86 @@ export class YardOperator {
     return record;
   }
 
+  async invokeRavenPrivate(deploymentId, {
+    method = 'GET',
+    path: requestPath = '/v1/teams',
+    body = null,
+  } = {}) {
+    const record = this.deploymentStatus(deploymentId);
+    const secret = this.#loadLeaseSecret(deploymentId);
+    if (!record || !secret) throw new Error('deployment lease authority unavailable');
+    if (record.receipt?.workload_class !== 'systemia.raven-private-runtime.v1') {
+      throw new Error('deployment is not a Raven private runtime');
+    }
+    if (
+      record.state !== 'ready' ||
+      record.receipt?.health_verification !== 'healthy' ||
+      record.receipt?.route_verification !== 'private_raven_health_verified_no_public_route'
+    ) {
+      throw new Error('Raven private runtime is not verified ready');
+    }
+    if (!record.result?.service_bridge_supported || !record.result?.service_bridge_path) {
+      throw new Error('Raven private service bridge is unavailable');
+    }
+    if (!secret.allocator_token || !secret.capacity_endpoint) {
+      throw new Error('Raven private bridge authority unavailable');
+    }
+
+    const verb = String(method || 'GET').toUpperCase();
+    const route = String(requestPath || '');
+    const allowed =
+      (verb === 'GET' && route === '/v1/teams') ||
+      (verb === 'POST' && route === '/v1/sessions') ||
+      (verb === 'GET' && /^\/v1\/sessions\/raven_session_[a-zA-Z0-9-]+$/.test(route)) ||
+      (verb === 'POST' && /^\/v1\/sessions\/raven_session_[a-zA-Z0-9-]+\/commands$/.test(route));
+    if (!allowed) throw new Error('Raven private route is not allowed through Yard');
+
+    const encodedBody = body === null || body === undefined
+      ? ''
+      : Buffer.from(JSON.stringify(body), 'utf8').toString('base64');
+    if (encodedBody.length > 256 * 1024) throw new Error('Raven private request body is too large');
+
+    const bridged = await request(
+      new URL(record.result.service_bridge_path, secret.capacity_endpoint).toString(),
+      {
+        method: 'POST',
+        headers: { authorization: `Bearer ${secret.allocator_token}` },
+        body: JSON.stringify({
+          method: verb,
+          path: route,
+          headers: encodedBody ? { 'content-type': 'application/json' } : {},
+          body_base64: encodedBody,
+        }),
+      }
+    );
+
+    const raw = bridged.body_base64
+      ? Buffer.from(String(bridged.body_base64), 'base64').toString('utf8')
+      : '';
+    let responseBody = null;
+    if (raw) {
+      try {
+        responseBody = JSON.parse(raw);
+      } catch {
+        throw new Error('Raven private bridge returned non-JSON content');
+      }
+    }
+
+    return {
+      schema: 'evercraft.yard.raven-private-gateway.v1',
+      deployment_id: deploymentId,
+      status: Number(bridged.status || 0),
+      body: responseBody,
+      compute_bridge_receipt_hash: bridged.receipt?.receipt_hash || null,
+      allocator_authority_exposed: false,
+      raven_control_authority_exposed: false,
+      request_content_recorded_in_bridge_receipt:
+        bridged.receipt?.request_content_recorded === true,
+      response_content_recorded_in_bridge_receipt:
+        bridged.receipt?.response_content_recorded === true,
+    };
+  }
+
   async invokeBrowser(deploymentId, job = {}) {
     const record = this.deploymentStatus(deploymentId);
     const secret = this.#loadLeaseSecret(deploymentId);
