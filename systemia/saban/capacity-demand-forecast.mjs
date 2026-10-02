@@ -39,6 +39,8 @@ export function appendDemandHistory(history=null,radar,{maxSnapshots=96}={}){
       max_cpu_units:Number(row.max_cpu_units||0),
       max_memory_mb:Number(row.max_memory_mb||0),
       max_storage_gb:Number(row.max_storage_gb||0),
+      max_gpu_count:Math.max(0,Math.floor(Number(row.max_gpu_count||0))),
+      gpu_models:Array.isArray(row.gpu_models)?row.gpu_models.map(String).sort():[],
       checkpointable_fraction:Number(row.checkpointable_fraction||0),
       private_fraction:Number(row.private_fraction||0),
     })),
