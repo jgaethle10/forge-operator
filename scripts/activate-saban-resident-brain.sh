@@ -33,6 +33,7 @@ for unit in \
   evercraft-saban-capacity.timer \
   evercraft-saban-probation.timer \
   evercraft-saban-dispatch.timer \
+  evercraft-saban-watchdog.timer \
   evercraft-saban-microseed-gateway.service \
   evercraft-saban-work-api.service \
   evercraft-saban-pairing-api.service
