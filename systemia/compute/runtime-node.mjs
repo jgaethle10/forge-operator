@@ -24,6 +24,7 @@ import { startFabricLocalRuntime } from '../mcp/fabric-local-runtime.mjs';
 import { startPublicEdgeRuntime } from '../network/public-edge-runtime.mjs';
 import { startFederatedServiceBridge } from '../network/federated-service-bridge.mjs';
 import { startEvercraftHomeServer } from '../evercraft-home/server.mjs';
+import { startRavenPrivateRuntime } from '../raven/private-runtime.mjs';
 import { startEvercraftEdgeDnsRuntime } from './evercraft-edge-dns-runtime.mjs';
 import { validatePublicEdgeAdmission } from '../network/public-edge-tls.mjs';
 import { transcriptionCapabilityStatus } from '../forensiscope/transcription-engine.mjs';
@@ -89,6 +90,7 @@ const BRIDGED_WORKLOADS = new Set([
   'systemia.specialist-handoff-mcp.v1',
   'systemia.fabric-local-mcp.v1',
   'systemia.rivet-report-runtime.v1',
+  'systemia.raven-private-runtime.v1',
 ]);
 
 const BRIDGE_REQUEST_HEADERS = new Set([
@@ -140,6 +142,9 @@ function bridgeServiceOrigin(entry) {
   }
   if (entry?.workload_class === 'systemia.rivet-report-runtime.v1') {
     return String(entry?.runtime?.service_url || '');
+  }
+  if (entry?.workload_class === 'systemia.raven-private-runtime.v1') {
+    return String(entry?.runtime?.url || '');
   }
   return '';
 }
@@ -196,9 +201,15 @@ async function bridgeResidentHttp(entry, input = {}) {
   const body = encoded ? Buffer.from(encoded, 'base64') : null;
   if (body && body.length > 8 * 1024 * 1024) throw new Error('resident_service_bridge_body_too_large');
 
+  const requestHeaders = bridgeHeaders(input.headers, BRIDGE_REQUEST_HEADERS);
+  if (entry.workload_class === 'systemia.raven-private-runtime.v1') {
+    if (!entry.private_control_token) throw new Error('raven_private_control_authority_unavailable');
+    requestHeaders.authorization = 'Bearer ' + entry.private_control_token;
+  }
+
   const response = await fetch(target, {
     method,
-    headers: bridgeHeaders(input.headers, BRIDGE_REQUEST_HEADERS),
+    headers: requestHeaders,
     body: ['GET','HEAD'].includes(method) ? undefined : body,
     redirect: 'manual',
   });
@@ -771,6 +782,7 @@ export async function startEvercraftComputeNode({
     'systemia.evercraft-edge-dns.v1',
     'systemia.federated-service-bridge.v1',
     'systemia.evercraft-home.v1',
+    'systemia.raven-private-runtime.v1',
     'saban.logical-agent',
     'saban.multiplier-assignment.v1',
   ]);
@@ -1529,6 +1541,76 @@ export async function startEvercraftComputeNode({
             workload_class: body.workload_class,
             result_schema: result.schema,
             instance_id: runtime.instance_id,
+          });
+          return send(res, 200, {
+            ok: true,
+            node_id: nodeId,
+            workload_class: body.workload_class,
+            result,
+            receipt,
+          });
+        }
+
+        if (workloadClass === 'systemia.raven-private-runtime.v1') {
+          const stateValue = String(
+            body.input?.state_dir ||
+            process.env.RAVEN_PRIVATE_STATE_DIR ||
+            ''
+          ).trim();
+          if (!stateValue) {
+            return send(res, 422, { error: 'raven_private_state_dir_required' });
+          }
+          const stateRoot = path.resolve(stateValue);
+          if (!isWithin(allowedRoot, stateRoot)) {
+            return send(res, 403, { error: 'raven_private_state_outside_admitted_root' });
+          }
+
+          const controlToken = randomBytes(32).toString('hex');
+          const runtime = await startRavenPrivateRuntime({
+            stateDir: stateRoot,
+            repoRoot: CODE_ROOT,
+            host: '127.0.0.1',
+            port: Number(body.input?.port || 0),
+            controlToken,
+            runtimeLabel: 'Evercraft Compute',
+            workloadClass: 'systemia.raven-private-runtime.v1',
+          });
+
+          const serviceId = `svc_${randomBytes(8).toString('hex')}`;
+          services.set(serviceId, {
+            lease_id: body.lease_id,
+            workload_class: body.workload_class,
+            runtime,
+            service: runtime,
+            private_control_token: controlToken,
+          });
+
+          const result = {
+            schema: 'evercraft.compute.resident-service.v1',
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            service_url: null,
+            local_url: runtime.url,
+            health_path: `/v1/services/${serviceId}/health`,
+            public_route_required: false,
+            private_origin_only: true,
+            service_bridge_supported: true,
+            service_bridge_path: `/v1/services/${serviceId}/http-bridge`,
+            instance_id: runtime.instanceId,
+            provider_independent_boot: true,
+            ai_inference_enabled: false,
+            execution_authority_granted: false,
+            control_authority_generated_server_side: true,
+            control_authority_exposed: false,
+            control_authority_persisted_in_receipt: false,
+          };
+          const receipt = chain.issue('service.started', {
+            lease_id: body.lease_id,
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            result_schema: result.schema,
+            instance_id: runtime.instanceId,
+            control_authority_exposed: false,
           });
           return send(res, 200, {
             ok: true,
