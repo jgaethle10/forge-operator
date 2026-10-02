@@ -142,9 +142,10 @@
       "action": {
         "type": "contract_repair_recipe",
         "targets": [
+          "systemia/chum/sync-public-discovery.mjs",
           "public/.well-known/evercraft-machine-catalog.json"
         ],
-        "instructions": "Every sell-now offer must retain a concrete public continuation, pricing, payment authority, confirmation boundary, and at least one offer record."
+        "instructions": "Every sell-now offer must retain a concrete non-legacy public details continuation, pricing, payment authority, confirmation boundary, and at least one offer record. A static capability mirror is discovery/details only and must remain explicitly non-transactional until an owned checkout continuation is independently verified."
       },
       "verification": [
         "npm run chum:commerce-canary",
@@ -215,7 +216,7 @@
           "systemia/chum/start-corridor.mjs",
           "tests/chum-start-corridor.test.mjs"
         ],
-        "instructions": "Restore verified clean product buyer destinations before exposing Machine Commerce plumbing. Preserve tracked Forge handoff when a verified CHUM public origin exists and retain Machine Commerce only as last fallback."
+        "instructions": "Restore the sovereign buyer corridor without reviving retired provider routes. Keep legacy Base44 URLs out of active defaults, preserve tracked CHUM handoff when a verified owned public origin exists, preserve owned buyer-frontage/review only when explicitly configured, and fail closed otherwise."
       },
       "verification": [
         "npm run test:chum-start-corridor",
