@@ -15,6 +15,15 @@ function clean(value) {
   return String(value ?? '').trim();
 }
 
+function safeCycleErrorCode(error) {
+  const message = clean(error?.message || error).toLowerCase();
+  if (message.includes('browser')) return 'browser_collection_failed';
+  if (message.includes('credential') || message.includes('vault')) return 'credential_resolution_failed';
+  if (message.includes('google')) return 'google_provider_failed';
+  if (message.includes('kroger')) return 'kroger_provider_failed';
+  return 'household_fabric_cycle_failed';
+}
+
 function json(res, status, value) {
   const body = Buffer.from(JSON.stringify(value));
   res.writeHead(status, {
@@ -90,7 +99,7 @@ export async function startHouseholdFabricYakimaRuntime({
         material_change: report.material_change,
       };
     } catch (error) {
-      lastError = clean(error?.message || error || 'household_fabric_cycle_failed');
+      lastError = safeCycleErrorCode(error);
       return { ok: false, state: 'held', error: lastError };
     } finally {
       inFlight = false;
