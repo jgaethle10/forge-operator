@@ -1339,6 +1339,22 @@ export class YardOperator {
           compute_management_receipt_hash: computeReceipt?.receipt_hash || null,
         };
       },
+      renewLease: async (routeLeaseId, ttlMs = 3600000) => {
+        const response = await request(
+          `${serviceBase}/public-route-leases/${encodeURIComponent(routeLeaseId)}/renew`,
+          {
+            method: 'POST',
+            body: JSON.stringify({
+              token: secret.token,
+              ttl_ms: Math.max(60000, Math.min(86400000, Number(ttlMs || 3600000))),
+            }),
+          }
+        );
+        return {
+          ...response,
+          compute_management_receipt_hash: response.receipt?.receipt_hash || null,
+        };
+      },
       releaseLease: async (routeLeaseId, reason = 'operator_requested') => {
         const response = await request(
           `${serviceBase}/public-route-leases/${encodeURIComponent(routeLeaseId)}/release`,
