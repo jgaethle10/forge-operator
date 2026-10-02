@@ -10,16 +10,23 @@ on:
       - 'systemia/organism/eps-social-continuity.workflow.json'
       - 'systemia/core/resident-services.json'
       - 'systemia/core/supervisor.evercraft.compute.json'
+      - 'systemia/clip/**'
+      - 'systemia/newsroom/**'
+      - 'systemia/autonomy/github-revenue-heartbeat.mjs'
       - 'scripts/validate-base44-exit.mjs'
       - 'scripts/validate-base44-credit-firewall.mjs'
       - 'scripts/validate-no-base44-hotpath.mjs'
+      - 'scripts/validate-owned-execution-ratchet.mjs'
       - 'distribution/direct-plugin-specs.json'
       - 'public/.well-known/evercraft-products.json'
       - 'registry/catalog.json'
       - 'systemia/chum/**'
       - 'systemia/compute/eps-social-yard-canary.mjs'
-      - 'systemia/organism/eps-social-continuity.mjs'
       - '.github/workflows/eps-social-yard-canary.yml'
+      - '.github/workflows/clip-native-facebook-page-publisher.yml'
+      - '.github/workflows/evercraft-journal-pages.yml'
+      - '.github/workflows/evercraft-journal-owned.yml'
+      - '.github/workflows/revenue-autonomy-heartbeat.yml'
       - '.github/workflows/base44-exit.yml'
   push:
     branches:
@@ -32,9 +39,20 @@ on:
       - 'systemia/organism/eps-social-continuity.workflow.json'
       - 'systemia/core/resident-services.json'
       - 'systemia/core/supervisor.evercraft.compute.json'
+      - 'systemia/clip/**'
+      - 'systemia/newsroom/**'
+      - 'systemia/autonomy/github-revenue-heartbeat.mjs'
       - 'scripts/validate-base44-exit.mjs'
       - 'scripts/validate-base44-credit-firewall.mjs'
       - 'scripts/validate-no-base44-hotpath.mjs'
+      - 'scripts/validate-owned-execution-ratchet.mjs'
+      - 'systemia/chum/**'
+      - 'systemia/compute/eps-social-yard-canary.mjs'
+      - '.github/workflows/eps-social-yard-canary.yml'
+      - '.github/workflows/clip-native-facebook-page-publisher.yml'
+      - '.github/workflows/evercraft-journal-pages.yml'
+      - '.github/workflows/evercraft-journal-owned.yml'
+      - '.github/workflows/revenue-autonomy-heartbeat.yml'
       - '.github/workflows/base44-exit.yml'
 
 jobs:
@@ -50,6 +68,8 @@ jobs:
         run: node scripts/validate-base44-exit.mjs
       - name: Validate Base44 integration credit firewall
         run: node scripts/validate-base44-credit-firewall.mjs
+      - name: Validate owned execution ratchet
+        run: node scripts/validate-owned-execution-ratchet.mjs
       - name: Enforce zero Base44 active hot paths
         run: node scripts/validate-no-base44-hotpath.mjs
       - name: Prove KAIDANCE collider

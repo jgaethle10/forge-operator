@@ -1,0 +1,51 @@
+{
+  "schema": "evercraft.systemia.base44-migration-slice.v1",
+  "slice": "competition_foundry_raven_provider_runtime",
+  "priority": 1,
+  "source": {
+    "platform": "base44",
+    "role": "legacy_integration_path_only",
+    "authority": "none_for_new_execution"
+  },
+  "target": {
+    "orchestration": "systemia",
+    "secret_boundary": "raven_nexus",
+    "provider_transport": "direct_provider_api",
+    "runtime": "yard_evercraft_compute",
+    "public_fabric_required": false,
+    "base44_required": false
+  },
+  "observed": {
+    "kaggle_credentials_reported_in_raven_nexus": true,
+    "numerai_credentials_reported_in_raven_nexus": true,
+    "credential_values_public": false,
+    "github_provider_executor_verified": false,
+    "provider_auth_receipt_verified": false,
+    "provider_listing_receipt_verified": false,
+    "provider_submission_receipt_verified": false,
+    "base44_integration_credit_dependency_allowed": false,
+    "public_fabric_dependency_allowed": false
+  },
+  "safety_and_authority": {
+    "kaggle_terms_or_competition_acceptance_requires_human_action_when_needed": true,
+    "numerai_staking_default": false,
+    "secret_values_must_not_enter_public_github": true,
+    "failed_provider_auth_must_fail_closed": true,
+    "submission_without_provider_receipt_must_not_be_called_complete": true
+  },
+  "acceptance": {
+    "systemia_to_raven_route_required": true,
+    "raven_to_provider_api_required": true,
+    "read_only_auth_probe_required": true,
+    "provider_listing_probe_required": true,
+    "submission_receipt_required_before_autonomous_submission_claim": true,
+    "base44_calls_allowed": false,
+    "public_fabric_transit_allowed": false
+  },
+  "blockers": [
+    "No verified Kaggle or Numerai provider executor is present on current GitHub main.",
+    "No provider-auth, provider-listing, or accepted-submission receipt is currently recorded for the owned path."
+  ],
+  "next_action": "bind Kaggle and Numerai provider clients inside the Raven Nexus secret boundary, prove read-only authentication and listing through Systemia, then enable bounded submission only after provider receipts exist",
+  "destructive_cutover_allowed": false
+}
