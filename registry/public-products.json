@@ -688,7 +688,7 @@
       "product_key": "systemia",
       "name": "Systemia",
       "class": "software_portfolio_operating_control_plane",
-      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/systemia",
       "github_record": "./systemia/README.md",
       "llms": "./systemia/llms.txt",
       "registry_name": null,
