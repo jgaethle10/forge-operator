@@ -112,6 +112,14 @@ export function createEvercraftPaymentOrder({
       offer_key: selected.offer_key,
       offer_name: selected.name,
     },
+    fulfillment: {
+      coordinator: 'Systemia',
+      execution_fabric: 'Saban',
+      delivery: 'Evercraft Shipping',
+      contract: 'evercraft.product-fulfillment.v1',
+      completion_receipt_required: true,
+      starts_only_after_verified_payment: true,
+    },
     doctrine: {
       checkout_creation_is_not_payment_proof: true,
       paid_state_requires_authoritative_provider_verification: true,
