@@ -44,6 +44,21 @@ function array(value) {
   return Array.isArray(value) ? value : [];
 }
 
+function safePublicUrl(value) {
+  const raw = String(value || '').trim();
+  if (!raw) return null;
+  try {
+    const url = new URL(raw);
+    const host = url.hostname.toLowerCase().replace(/\.$/, '');
+    if (url.protocol !== 'https:') return null;
+    if (host === 'base44.app' || host.endsWith('.base44.app')) return null;
+    if (host === 'localhost' || host === '::1' || host.endsWith('.local')) return null;
+    return url.toString();
+  } catch {
+    return null;
+  }
+}
+
 function isoFromDate(value, fallback) {
   const raw = String(value || '').trim();
   if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) return raw + 'T00:00:00.000Z';
@@ -64,7 +79,7 @@ function productRecord(root, product, updatedAt) {
   const key = String(product.product_key || '').trim();
   const discoveryFile = path.join(root, 'public', 'chum', 'products', key, 'ai-discovery.json');
   const discovery = readJson(discoveryFile, null);
-  const canonicalUrl = String(discovery?.canonical_url || product.canonical_url || '').trim();
+  const canonicalUrl = safePublicUrl(discovery?.canonical_url || product.canonical_url);
   const intents = array(discovery?.intents || product.triggers).map(String).filter(Boolean);
   const mirrorPath = '/chum/products/' + encodeURIComponent(key) + '/';
   const llmsPath = mirrorPath + 'llms.txt';
@@ -79,7 +94,7 @@ function productRecord(root, product, updatedAt) {
     llms_path: llmsPath,
     discovery_path: discoveryPath,
     registry_name: String(discovery?.registry_name || product.registry_name || ''),
-    mcp: String(discovery?.mcp || product.mcp || ''),
+    mcp: safePublicUrl(discovery?.mcp || product.mcp),
     class: String(discovery?.class || ''),
     intents,
     authority: String(discovery?.authority || ''),
@@ -318,19 +333,33 @@ export function buildSyndicationMesh({
   writeJson(path.join(publicRoot, '.well-known', 'evercraft-syndication.json'), manifest);
 
   const previousQueue = readJson(path.join(syndicationRoot, 'social-queue.json'), null);
-  const newQueueItems = changedProducts.map((product) => ({
-    dedupe_key: product.product_key + ':' + product.content_sha256,
-    product_key: product.product_key,
-    name: product.name,
-    canonical_url: product.canonical_url,
-    discovery_path: product.discovery_path,
-    text: product.name + ': ' + product.description,
-    content_sha256: product.content_sha256,
-    requires_authorized_destination: true
-  }));
+  const newQueueItems = changedProducts
+    .filter((product) => Boolean(product.canonical_url))
+    .map((product) => ({
+      dedupe_key: product.product_key + ':' + product.content_sha256,
+      product_key: product.product_key,
+      name: product.name,
+      canonical_url: product.canonical_url,
+      discovery_path: product.discovery_path,
+      text: product.name + ': ' + product.description,
+      content_sha256: product.content_sha256,
+      requires_authorized_destination: true,
+      requires_anonymous_link_preflight: true
+    }));
   const queueByKey = new Map();
+  let droppedUnsafePreviousItems = 0;
   for (const item of array(previousQueue?.items)) {
-    if (item?.dedupe_key) queueByKey.set(item.dedupe_key, item);
+    if (!item?.dedupe_key) continue;
+    const safeUrl = safePublicUrl(item.canonical_url);
+    if (!safeUrl) {
+      droppedUnsafePreviousItems += 1;
+      continue;
+    }
+    queueByKey.set(item.dedupe_key, {
+      ...item,
+      canonical_url: safeUrl,
+      requires_anonymous_link_preflight: true
+    });
   }
   for (const item of newQueueItems) queueByKey.set(item.dedupe_key, item);
   const socialQueue = {
@@ -340,8 +369,8 @@ export function buildSyndicationMesh({
       : (previousQueue?.generated_at || previous?.updated_at || now),
     bootstrap: baselineExpansion,
     policy: baselineExpansion
-      ? 'Baseline inventory recorded without blasting every existing product. Future material product changes enter this queue once per content hash.'
-      : 'Material product changes enter once per content hash. Publishing still requires an authorized destination adapter.',
+      ? 'Baseline inventory recorded without blasting every existing product. Future material product changes enter once per content hash only when a safe HTTPS canonical destination exists; Evercraft Clip must independently preflight that destination before publication.'
+      : 'Material product changes enter once per content hash only when a safe HTTPS canonical destination exists. Legacy-provider URLs are rejected, stale unsafe queue items are dropped, and Evercraft Clip must independently preflight the customer destination before publication.',
     items: [...queueByKey.values()].sort((a, b) => String(a.product_key).localeCompare(String(b.product_key)))
   };
   writeJson(path.join(syndicationRoot, 'social-queue.json'), socialQueue);
@@ -426,7 +455,9 @@ export function buildSyndicationMesh({
     generated_at: now,
     product_count: products.length,
     bootstrap: baselineExpansion,
-    queued_social_changes: changedProducts.length,
+    queued_social_changes: newQueueItems.length,
+    held_social_changes_without_safe_public_url: changedProducts.length - newQueueItems.length,
+    dropped_unsafe_previous_queue_items: droppedUnsafePreviousItems,
     outputs: [
       'public/feed.xml',
       'public/feed.json',
