@@ -24,7 +24,7 @@
   "invocation_status": "LIVE: public machine discovery docs plus central Evercraft MCP matching. Commercial execution remains verification-gated; no automatic checkout or payment obligation.",
   "live_canary_evidence": "GitHubActionsRun:36802891607",
   "live_proof": {
-    "conformance_state": "live_read_only_mcp_verified",
+    "conformance_state": "owned_runtime_reverification_pending",
     "machine_commerce_handoff_state": null,
     "mcp": null,
     "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",

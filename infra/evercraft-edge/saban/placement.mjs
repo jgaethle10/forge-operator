@@ -3,15 +3,21 @@ import crypto from "node:crypto";
 export function selectDnsNodes(nodes,{replicas=2}={}){
   const eligible=(nodes||[]).filter(n=>{
     const labels=new Set((n.placement_labels||[]).map(x=>String(x).toLowerCase()));
-    return n.attestation?.verified===true &&
+    const workloads=new Set((n.supported_workloads||[]).map(String));
+    return n.authorized===true &&
+      n.connected===true &&
+      n.attestation?.verified===true &&
       labels.has("public-ingress") &&
-      n.zero_cost!==false &&
-      n.public_ingress!==false;
+      n.zero_cost===true &&
+      n.public_ingress===true &&
+      n.udp53===true &&
+      n.tcp53===true &&
+      workloads.has("systemia.evercraft-edge-dns.v1");
   });
   const selected=[];
   const domains=new Set();
   for(const node of eligible){
-    const domain=String(node.failure_domain||node.network_provider||node.endpoint||"");
+    const domain=String(node.failure_domain||node.network_provider||"");
     if(!domain||domains.has(domain)) continue;
     selected.push(node); domains.add(domain);
     if(selected.length===replicas) break;

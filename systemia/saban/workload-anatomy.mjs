@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto';
 import { normalizeFabricTask } from './heterogeneous-fabric-planner.mjs';
+import { microSeedWorkloadSpec } from './microseed-workload-registry.mjs';
 
 const sha=(value)=>'sha256:'+createHash('sha256').update(
   typeof value==='string'?value:JSON.stringify(value)
@@ -191,4 +192,95 @@ export function formationWaves(anatomy){
     wave_count:waves.length,
     waves:waves.map((task_ids,index)=>({wave:index+1,task_ids})),
   };
+}
+
+
+function safeTaskId(workload){
+  return String(workload||'workload')
+    .toLowerCase()
+    .replace(/[^a-z0-9._-]+/g,'-')
+    .replace(/^-+|-+$/g,'')
+    .slice(0,120)||'workload';
+}
+
+export function portfolioWorkloadAnatomy({
+  demandRadar=null,
+  includeRivetAliEv=true,
+  reportParallelism=4,
+  domainParallelism=DOMAIN_COUNT,
+}={}){
+  const base=includeRivetAliEv
+    ? rivetAliEvProductionAnatomy({reportParallelism,domainParallelism})
+    : {
+        schema:'evercraft.saban.workload-anatomy.v1',
+        anatomy_id:'empty',
+        owner:'Systemia',
+        tasks:[],
+        dependencies:[],
+        invariants:{},
+      };
+
+  const tasks=[...(base.tasks||[])];
+  const dependencies=[...(base.dependencies||[])];
+  const represented=new Set(tasks.map(t=>String(t.workload_class||'')));
+  const demandRows=demandRadar?.schema==='evercraft.saban.ambient-demand-radar.v1'
+    ? (demandRadar.workloads||[])
+    : [];
+
+  for(const row of demandRows){
+    const workload=String(row.workload_class||'').trim();
+    if(!workload||represented.has(workload)||Number(row.jobs||0)<=0)continue;
+    const registered=microSeedWorkloadSpec(workload);
+    const jobs=Math.max(1,Math.floor(Number(row.jobs||1)));
+    const fullyPreemptible=Number(row.preemptible_jobs||0)===jobs;
+    const fullyCheckpointable=Number(row.checkpointable_jobs||0)===jobs;
+    const privateData=Number(row.private_jobs||0)>0;
+    const shardable=jobs>1&&fullyPreemptible&&fullyCheckpointable;
+
+    tasks.push(task({
+      task_id:'queued-'+safeTaskId(workload),
+      workload_class:workload,
+      execution_shape:shardable?'shardable':'atomic',
+      shard_count:shardable?Math.min(64,jobs):1,
+      resources:{
+        cpu_units:Math.max(0.001,Number(row.max_cpu_units||0.05)),
+        memory_mb:Math.max(1,Number(row.max_memory_mb||64)),
+        storage_gb:Math.max(0,Number(row.max_storage_gb||0)),
+        gpu_count:Math.max(0,Math.floor(Number(row.max_gpu_count||0))),
+        gpu_models:Array.isArray(row.gpu_models)?row.gpu_models:[],
+      },
+      preemptible:fullyPreemptible,
+      checkpointable:fullyCheckpointable,
+      require_attestation:true,
+      private_data:privateData,
+      minimum_uptime_7d:fullyPreemptible?0:0.85,
+      max_observation_age_ms:120000,
+      allowed_device_classes:registered
+        ? ['phone','tablet','router','raspberry-pi','sbc','nas','desktop','laptop','server','general-compute','unknown']
+        : [],
+      max_power_budget_watts:registered?250:null,
+    }));
+    represented.add(workload);
+  }
+
+  const body={
+    schema:'evercraft.saban.workload-anatomy.v1',
+    anatomy_id:'evercraft-portfolio-live',
+    owner:'Systemia',
+    tasks,
+    dependencies,
+    source_anatomies:includeRivetAliEv?['rivet-aliev-production']:[],
+    live_demand_workload_count:demandRows.length,
+    live_demand_tasks_added:tasks.length-(base.tasks?.length||0),
+    invariants:{
+      ...(base.invariants||{}),
+      live_queue_can_extend_anatomy:true,
+      unregistered_workloads_require_explicit_node_support_or_generic_runtime:true,
+      private_data_requires_authorized_compute:true,
+      observation_never_grants_authority:true,
+      commercial_spend_requires_explicit_authority:true,
+    },
+    generated_at:demandRadar?.generated_at||new Date().toISOString(),
+  };
+  return {...body,receipt_hash:sha(body)};
 }

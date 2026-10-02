@@ -1,3 +1,4 @@
+import fs from 'node:fs';
 import http from 'node:http';
 import path from 'node:path';
 import { randomBytes } from 'node:crypto';
@@ -33,6 +34,31 @@ async function readJson(req,maxBytes=96*1024){
   }
   const raw=Buffer.concat(chunks).toString('utf8');
   return raw?JSON.parse(raw):{};
+}
+
+function readAuthorityQueue(stateDir){
+  const file=path.join(stateDir,'authority-requests.json');
+  if(!fs.existsSync(file)){
+    return {
+      schema:'evercraft.saban.capacity-authority-queue.v1',
+      authority_requests:[],
+      observed_authority_leads:[],
+      generated_at:null,
+      receipt_hash:null,
+    };
+  }
+  const queue=JSON.parse(fs.readFileSync(file,'utf8'));
+  if(queue?.schema!=='evercraft.saban.capacity-authority-queue.v1'){
+    throw new Error('saban_authority_queue_invalid');
+  }
+  return queue;
+}
+
+function authorityRequestById(stateDir,requestId){
+  const queue=readAuthorityQueue(stateDir);
+  return (queue.authority_requests||[]).find(
+    row=>String(row?.request_id||'')===String(requestId||'')
+  )||null;
 }
 
 export async function startAmbientWorkApi({
@@ -81,6 +107,72 @@ export async function startAmbientWorkApi({
         }
         if(clean(req.headers['x-evercraft-pairing-token'])!==pairingAuthorizationToken){
           return send(res,401,{ok:false,error:'pairing_authorization_required'});
+        }
+
+        if(req.method==='POST'&&req.url?.startsWith('/v1/pairing/authority-requests/')&&req.url?.endsWith('/approve')){
+          const requestId=decodeURIComponent(
+            req.url
+              .slice('/v1/pairing/authority-requests/'.length,-'/approve'.length)
+              .replace(/\/$/,'')
+          );
+          const body=await readJson(req);
+          const approvalRef=clean(body.approval_ref);
+          if(!approvalRef) throw new Error('authority_request_approval_ref_required');
+          const authorityRequest=authorityRequestById(resolvedStateDir,requestId);
+          if(!authorityRequest){
+            return send(res,404,{ok:false,error:'saban_authority_request_not_found'});
+          }
+          if(authorityRequest.schema!=='evercraft.saban.capacity-authority-request.v1'){
+            return send(res,409,{ok:false,error:'saban_authority_request_not_pairable'});
+          }
+          const deviceId=clean(authorityRequest.device_id);
+          const record=registry.get(deviceId);
+          const manifest=registry.manifest(deviceId);
+          if(!record||!manifest){
+            return send(res,409,{ok:false,error:'saban_authority_request_device_no_longer_candidate'});
+          }
+          if(String(manifest.manifest_hash||'')!==String(authorityRequest.manifest_hash||'')){
+            return send(res,409,{ok:false,error:'saban_authority_request_manifest_changed'});
+          }
+          if(!['candidate','expired'].includes(String(record.state||''))){
+            return send(res,409,{
+              ok:false,
+              error:'saban_authority_request_state_changed',
+              current_state:record.state||null,
+            });
+          }
+          const allowedWorkloads=[...(authorityRequest.requested_scope?.workloads||[])].map(String);
+          const issue=issueMicroSeedPairingTicket({
+            stateDir:resolvedStateDir,
+            approval_ref:approvalRef,
+            device_id:deviceId,
+            allowed_device_classes:[String(manifest.device_class||'unknown')],
+            allowed_workloads:allowedWorkloads,
+            ttl_ms:body.ttl_ms??15*60*1000,
+            enrollment_url:body.enrollment_url||'',
+            now:new Date(),
+          });
+          return send(res,201,{
+            ok:true,
+            schema:'evercraft.saban.authority-request-pairing-ticket.v1',
+            request_id:requestId,
+            device_id:deviceId,
+            manifest_hash:manifest.manifest_hash,
+            ticket:issue.ticket_card,
+            authority_source:'explicit_pairing_desk_approval',
+            approval_ref_recorded:true,
+            pairing_secret_exposed_in_ticket:true,
+            execution_gateway_authority:false,
+            production_eligible:false,
+            next_steps:[
+              'device_cryptographic_enrollment',
+              'attested_heartbeat',
+              'registered_workload_conformance',
+              'calibration',
+              'offer_compilation',
+              'placement'
+            ],
+          });
         }
 
         if(req.method==='POST'&&req.url==='/v1/pairing/tickets'){
@@ -161,6 +253,23 @@ export async function startAmbientWorkApi({
 
       if(clean(req.headers.authorization)!=='Bearer '+authorizationToken){
         return send(res,401,{ok:false,error:'ambient_work_api_authorization_required'});
+      }
+
+      if(req.method==='GET'&&req.url==='/v1/capacity/authority-requests'){
+        const authorityQueue=readAuthorityQueue(resolvedStateDir);
+        return send(res,200,{
+          ok:true,
+          schema:'evercraft.saban.capacity-authority-api.v1',
+          authority_requests:authorityQueue.authority_requests||[],
+          observed_authority_leads:authorityQueue.observed_authority_leads||[],
+          authority_request_count:(authorityQueue.authority_requests||[]).length,
+          observed_authority_lead_count:(authorityQueue.observed_authority_leads||[]).length,
+          authority_granted_by_read:false,
+          pairing_desk_required_for_ticket:true,
+          observation_is_not_authority:true,
+          receipt_hash:authorityQueue.receipt_hash||null,
+          generated_at:authorityQueue.generated_at||null,
+        });
       }
 
       if(req.method==='POST'&&req.url==='/v1/jobs'){

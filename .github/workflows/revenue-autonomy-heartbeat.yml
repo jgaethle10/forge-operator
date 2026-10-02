@@ -1,0 +1,61 @@
+name: Revenue Autonomy Heartbeat
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/5 * * * *"
+  push:
+    branches:
+      - main
+    paths:
+      - "systemia/autonomy/**"
+      - "systemia/saban/revenue-swarm.mjs"
+      - "public/.well-known/evercraft-machine-catalog.json"
+      - "public/.well-known/evercraft-agent-commerce.json"
+      - ".github/workflows/revenue-autonomy-heartbeat.yml"
+
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: revenue-autonomy-heartbeat
+  cancel-in-progress: true
+
+jobs:
+  heartbeat:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Prove liveness supervisor
+        run: node --test systemia/autonomy/revenue-liveness.test.mjs
+
+      - name: Run revenue autonomy supervisor
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node systemia/autonomy/github-revenue-heartbeat.mjs artifacts/autonomy-revenue
+
+      - name: Refresh Saban revenue formation
+        run: npm run saban:revenue
+
+      - name: Upload revenue autonomy receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: revenue-autonomy-heartbeat
+          path: |
+            artifacts/autonomy-revenue/workflows.json
+            artifacts/autonomy-revenue/liveness.json
+            artifacts/autonomy-revenue/heartbeat.json
+            artifacts/saban-revenue/latest.json
+            artifacts/saban-revenue/latest.md
+          if-no-files-found: warn
+          retention-days: 14

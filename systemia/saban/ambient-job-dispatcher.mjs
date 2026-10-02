@@ -11,6 +11,9 @@ import { normalizeFabricTask, planHeterogeneousFabric } from './heterogeneous-fa
 import { loadPerformanceLedger } from './performance-learning.mjs';
 import { executeAmbientFabricPlan } from './ambient-fabric-executor.mjs';
 import { AmbientWorkQueue } from './ambient-work-queue.mjs';
+import { nodeSeedInventoryToComputeOffers } from './nodeseed-capacity-offer.mjs';
+import { readSafeNodeSeedInventory } from './nodeseed-inventory-ingest.mjs';
+import { createNodeSeedExecutionIntent } from './nodeseed-execution-intent.mjs';
 
 const MODULE_FILE=fileURLToPath(import.meta.url);
 const arg=(name,fallback='')=>{
@@ -49,7 +52,28 @@ export async function dispatchAmbientJobsOnce({
   const registry=new AmbientDeviceRegistry({root:path.join(resolvedRoot,'registry')});
   const performance=loadPerformanceLedger(path.join(resolvedRoot,'performance-ledger.json'));
   const snapshot=registry.list({now});
-  const caps=activeCapabilities(snapshot);
+  const autonomyFile=path.join(resolvedRoot,'capacity-autonomy-plan.json');
+  const autonomyPlan=fs.existsSync(autonomyFile)
+    ? JSON.parse(fs.readFileSync(autonomyFile,'utf8'))
+    : null;
+  const suspendedDevices=new Set(
+    autonomyPlan?.schema==='evercraft.saban.capacity-autonomy-plan.v1'
+      ? (autonomyPlan.safe_autonomous_actions||[])
+          .filter(x=>String(x.action||'')==='suspend_new_assignments')
+          .map(x=>String(x.device_id||''))
+          .filter(Boolean)
+      : []
+  );
+  const caps=activeCapabilities(snapshot).filter(cap=>
+    !suspendedDevices.has(String(cap.metadata?.device_id||''))
+  );
+  const nodeSeedInventoryFile=path.join(resolvedRoot,'nodeseed-capacity-inventory.json');
+  const nodeSeedInventory=fs.existsSync(nodeSeedInventoryFile)
+    ? readSafeNodeSeedInventory(nodeSeedInventoryFile)
+    : null;
+  const nodeSeedCompute=nodeSeedInventory
+    ? nodeSeedInventoryToComputeOffers({inventory:nodeSeedInventory,requireZeroCost:true})
+    : {offers:[],eligible_count:0,rejected_count:0,rejected:[]};
 
   const jobs=queue.list({states:['queued','held','retry_wait']}).slice(
     0,Math.max(1,Math.floor(Number(maxJobs||16)))
@@ -93,9 +117,15 @@ export async function dispatchAmbientJobsOnce({
       requireVerifiedWorkload:true,
       now,
     });
+    const combinedOffers=[
+      ...compute.offers,
+      ...nodeSeedCompute.offers.filter(offer=>
+        (offer.metadata?.supported_workloads||[]).includes(job.workload_class)
+      ),
+    ];
     const plan=planHeterogeneousFabric({
       tasks:[task],
-      offers:compute.offers,
+      offers:combinedOffers,
       performanceLedger:performance,
       now,
     });
@@ -106,6 +136,7 @@ export async function dispatchAmbientJobsOnce({
         last_hold:{
           reason:'no_current_eligible_zero_spend_capacity',
           rejected_compute:compute.rejected,
+          rejected_nodeseed_compute:nodeSeedCompute.rejected||[],
           planner_held:plan.held,
           observed_at:(now instanceof Date?now:new Date(now)).toISOString(),
         },
@@ -126,6 +157,44 @@ export async function dispatchAmbientJobsOnce({
         task_id:task.task_id,
       })),
     };
+
+    const chosen=executionPlan.placements[0];
+    if(chosen?.market==='evercraft-nodeseed'){
+      const intent=createNodeSeedExecutionIntent({
+        root:resolvedRoot,
+        job,
+        task,
+        placement:chosen,
+        plan:executionPlan,
+        now,
+      });
+      queue.update(job.job_id,{
+        state:'handoff_wait',
+        last_hold:null,
+        last_error:null,
+        execution_receipt:{
+          mode:'nodeseed_yard_handoff',
+          intent_id:intent.intent_id,
+          node_id:intent.node_id,
+          offer_id:intent.offer_id,
+          plan_receipt:intent.plan_receipt,
+          payload_hash:intent.payload_hash,
+          authority_boundary:intent.authority_boundary,
+          allocator_token_persisted:false,
+          payload_persisted:false,
+          created_at:intent.created_at,
+        },
+      });
+      rows.push({
+        job_id:job.job_id,
+        state:'handoff_wait',
+        intent_id:intent.intent_id,
+        node_id:intent.node_id,
+        workload_class:intent.workload_class,
+        authority_boundary:intent.authority_boundary,
+      });
+      continue;
+    }
 
     const execReceipt=await executeAmbientFabricPlan({
       plan:executionPlan,
@@ -198,9 +267,14 @@ export async function dispatchAmbientJobsOnce({
     held:rows.filter(x=>x.state==='held').length,
     retry_wait:rows.filter(x=>x.state==='retry_wait').length,
     dead_letter:rows.filter(x=>x.state==='dead_letter').length,
+    handoff_wait:rows.filter(x=>x.state==='handoff_wait').length,
+    nodeseed_compute_offer_count:nodeSeedCompute.offers.length,
     commercial_capacity_considered:false,
     commercial_capacity_authorized:false,
     arbitrary_code_execution:false,
+    autonomy_plan_present:autonomyPlan?.schema==='evercraft.saban.capacity-autonomy-plan.v1',
+    autonomy_plan_receipt:autonomyPlan?.receipt_hash||null,
+    suspended_device_count:suspendedDevices.size,
     rows,
     generated_at:(now instanceof Date?now:new Date(now)).toISOString(),
   };

@@ -203,6 +203,7 @@ export type CreativeTaskKind =
 
 export type CreativeRequirement =
   | 'reference_identity'
+  | 'reference_environment'
   | 'voice_profile'
   | 'seed_control'
   | 'commercial_rights'

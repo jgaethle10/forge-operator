@@ -50,7 +50,7 @@
     "verifier_result_boundary": "verified=true means receipt integrity only; identity_verified=false"
   },
   "live_proof": {
-    "conformance_state": "live_read_only_mcp_verified",
+    "conformance_state": "owned_runtime_reverification_pending",
     "machine_commerce_handoff_state": null,
     "mcp": null,
     "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",

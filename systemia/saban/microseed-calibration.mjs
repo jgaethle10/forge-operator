@@ -20,6 +20,7 @@ export async function runMicroSeedCalibration({
   execute,
   samplesPerWorkload=3,
   maxTotalSamples=16,
+  workloadClasses=[],
   now=new Date(),
 }={}){
   if(manifest?.schema!=='evercraft.microseed.device-manifest.v1'){
@@ -30,8 +31,10 @@ export async function runMicroSeedCalibration({
   }
   if(typeof execute!=='function') throw new Error('microseed_calibration_executor_required');
 
+  const requested=new Set((workloadClasses||[]).map(String).filter(Boolean));
   const supported=(manifest.supported_workloads||[])
     .filter(w=>MicroSeedConformanceCanaries.includes(w))
+    .filter(w=>requested.size===0||requested.has(w))
     .filter(w=>evaluateMicroSeedConformance({
       conformance,manifest,workload_class:w,now
     }).verified===true);
@@ -96,6 +99,8 @@ export async function runMicroSeedCalibration({
     conformance_receipt_hash:conformance.receipt_hash,
     workloads:rows,
     total_samples:rows.reduce((n,r)=>n+r.completed_samples,0),
+    targeted_workloads:requested.size?[...requested].sort():[],
+    targeted:requested.size>0,
     safe_registered_canaries_only:true,
     arbitrary_code_execution:false,
     calibrated_at:(now instanceof Date?now:new Date(now)).toISOString(),

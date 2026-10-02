@@ -19,7 +19,7 @@ import os
 from pathlib import Path
 import re
 
-VERSION = "systemia-architecture-scan/1.0"
+VERSION = "systemia-architecture-scan/1.2"
 
 EXTENSIONS = {".py", ".js", ".jsx", ".ts", ".tsx", ".mjs", ".cjs"}
 EXCLUDES = {
@@ -33,6 +33,17 @@ JS_IMPORT_PATTERNS = [
     re.compile(r"""\brequire\s*\(\s*["']([^"']+)["']\s*\)"""),
     re.compile(r"""\bimport\s*\(\s*["']([^"']+)["']\s*\)"""),
 ]
+
+BASE44_ENTITY_PATTERN = re.compile(
+    r"""\bentities\.([A-Za-z_$][A-Za-z0-9_$]*)\s*\.\s*(filter|list|get|create|update|delete|bulkCreate|bulkUpdate)\b""",
+    re.MULTILINE,
+)
+BASE44_FUNCTION_INVOKE_PATTERN = re.compile(
+    r"""\bfunctions\s*\.\s*invoke\s*\(\s*["']([^"']+)["']""",
+    re.MULTILINE,
+)
+BASE44_READ_METHODS = {"filter", "list", "get"}
+BASE44_WRITE_METHODS = {"create", "update", "delete", "bulkCreate", "bulkUpdate"}
 
 
 def digest(value: str) -> str:
@@ -110,6 +121,18 @@ def module_node(name: str, nodes: dict) -> str:
     return key
 
 
+def entity_node(name: str, nodes: dict) -> str:
+    key = stable_key("entity", name)
+    add_node(nodes, key, "entity", name, f"entity:{name}")
+    return key
+
+
+def workflow_node(name: str, nodes: dict) -> str:
+    key = stable_key("workflow", name)
+    add_node(nodes, key, "workflow", name, f"workflow:{name}")
+    return key
+
+
 def symbol_node(rel: str, name: str, kind: str, nodes: dict) -> str:
     key = stable_key(kind, rel, name)
     add_node(
@@ -180,7 +203,9 @@ def scan_python(root: Path, path: Path, nodes: dict, edges: dict, coverage: list
 
 def scan_js_family(root: Path, path: Path, nodes: dict, edges: dict, coverage: list) -> None:
     file_key, rel, source = file_node(root, path, nodes)
-    for line_number, raw in enumerate(source.splitlines(), 1):
+    source_lines = source.splitlines()
+
+    for line_number, raw in enumerate(source_lines, 1):
         line = raw.split("//", 1)[0]
         for pattern in JS_IMPORT_PATTERNS:
             for match in pattern.finditer(line):
@@ -196,14 +221,52 @@ def scan_js_family(root: Path, path: Path, nodes: dict, edges: dict, coverage: l
                     confidence="high",
                 )
 
+    source_for_access = "\n".join(line.split("//", 1)[0] for line in source_lines)
+
+    for match in BASE44_ENTITY_PATTERN.finditer(source_for_access):
+        entity_name = match.group(1)
+        method = match.group(2)
+        relation = "reads" if method in BASE44_READ_METHODS else "writes"
+        line_number = source_for_access.count("\n", 0, match.start()) + 1
+        excerpt = re.sub(r"\s*\.\s*", ".", " ".join(match.group(0).split()))
+        add_edge(
+            edges,
+            file_key,
+            entity_node(entity_name, nodes),
+            relation,
+            rel,
+            line_number,
+            excerpt,
+            "base44_entity_literal_access",
+            confidence="high",
+        )
+
+    for match in BASE44_FUNCTION_INVOKE_PATTERN.finditer(source_for_access):
+        line_number = source_for_access.count("\n", 0, match.start()) + 1
+        excerpt = re.sub(r"\s*\.\s*", ".", " ".join(match.group(0).split()))
+        add_edge(
+            edges,
+            file_key,
+            workflow_node(match.group(1), nodes),
+            "invokes",
+            rel,
+            line_number,
+            excerpt,
+            "base44_function_literal_invoke",
+            confidence="high",
+        )
+
     coverage.append({
         "file_path": rel,
-        "parser_mode": "js_ts_literal_imports",
+        "parser_mode": "js_ts_literal_plus_base44_access",
         "state": "partial",
         "notes": [
-            "Literal import/export/require patterns only.",
+            "Literal import/export/require patterns are extracted.",
+            "Literal Base44 entity accesses are classified as reads or writes across whitespace/newlines.",
+            "Literal functions.invoke targets are extracted across whitespace/newlines as workflow invocations.",
+            "Line comments are removed before Base44 access matching; block-comment parsing is not claimed.",
             "This is not a full JS/TS parser.",
-            "Computed imports, bundler resolution, call graph, and runtime behavior are not claimed.",
+            "Computed entity names, computed function targets, bundler resolution, general call graph, and runtime behavior are not claimed.",
         ],
     })
 
@@ -248,7 +311,7 @@ def scan(root: Path) -> dict:
             "executes_scanned_code": False,
             "claims_runtime_behavior": False,
             "python_parser": "stdlib ast",
-            "js_ts_parser": "literal imports; partial",
+            "js_ts_parser": "literal imports + Base44 literal entity/function access across whitespace; partial",
         },
         "counts": {
             "nodes": len(nodes),

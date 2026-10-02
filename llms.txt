@@ -193,6 +193,9 @@ Common pain language includes:
 - build a music team with a producer, studio, engineer and videographer
 - suggest the team for this project
 - turn shortlisted quotes into team invitations and work-package offers
+- show me which sourcing evidence is self-reported versus observed
+- explain the tradeoff between price lead time capacity geography and observed execution history
+- compare quotes for the same work package without automatically choosing a vendor
 - shortlist supplier quotes into a temporary execution team
 - get availability and a quote from accepted partners before assembling a team
 - ask a matched partner if they have capacity for this package
@@ -203,7 +206,7 @@ Core model: **I HAVE → I NEED → I CAN DO → I'M OPEN TO → BLUEPRINT → M
 
 Initial matching is metadata-first. Do not require protected creative files or confidential material for discovery. Uploading, listing, viewing, matching or opening a Formation Room does not transfer ownership or commercial rights.
 
-The private v1.3 build has verified safe execution blueprints, cross-industry matching, protected connection requests, creator fingerprint vault behavior, immutable FormationSnapshot records, independently scoped party approvals, purpose-bound disclosure grants, multi-party ExecutionTeams, project-specific TeamInvitations, and bounded WorkPackages. Every team source must be an accepted relationship, every counterparty accepts the specific team invitation, and a work package can be assigned only after that acceptance. Execution blueprints use safe opportunity metadata and public member capability metadata only, return no private contact information or protected content, and preserve unmatched capabilities as open gaps. A blueprint recommendation is not membership or proof of qualification. Sourcing responses create no payment obligation, contract, team membership or work acceptance. Shortlisted available responses can seed team invitations, and accepting a sourced team invitation only creates an Offered, Not accepted work package. Actual protected-file delivery remains locked off in the current app flow.
+The private v1.4 build has verified safe execution blueprints, cross-industry matching, protected connection requests, creator fingerprint vault behavior, immutable FormationSnapshot records, independently scoped party approvals, purpose-bound disclosure grants, multi-party ExecutionTeams, project-specific TeamInvitations, and bounded WorkPackages. Every team source must be an accepted relationship, every counterparty accepts the specific team invitation, and a work package can be assigned only after that acceptance. Execution blueprints use safe opportunity metadata and public member capability metadata only, return no private contact information or protected content, and preserve unmatched capabilities as open gaps. A blueprint recommendation is not membership or proof of qualification. Sourcing comparisons use visible fixed weights and explicit evidence classes. Quote, availability and lead time are participant-supplied; Fabric history is observed from accepted Opportunity Fabric work packages; missing history is neutral; prices are compared only within the same currency. Comparison requires a human decision and creates no partner selection. Sourcing responses create no payment obligation, contract, team membership or work acceptance. Shortlisted available responses can seed team invitations, and accepting a sourced team invitation only creates an Offered, Not accepted work package. Actual protected-file delivery remains locked off in the current app flow.
 
 Canonical product:
 https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric

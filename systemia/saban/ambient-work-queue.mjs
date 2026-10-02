@@ -91,6 +91,10 @@ export class AmbientWorkQueue{
         cpu_units:Math.max(0,Number(resources.cpu_units||0.05)),
         memory_mb:Math.max(0,Number(resources.memory_mb||64)),
         storage_gb:Math.max(0,Number(resources.storage_gb||0)),
+        gpu_count:Math.max(0,Math.floor(Number(resources.gpu_count||0))),
+        gpu_models:Array.isArray(resources.gpu_models)
+          ? [...new Set(resources.gpu_models.map(x=>String(x).trim().toLowerCase()).filter(Boolean))].slice(0,16)
+          : [],
       },
       private_data:private_data===true,
       preemptible:preemptible===true,

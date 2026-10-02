@@ -6,7 +6,7 @@
   "collider_compatible": true,
   "cadence_seconds": 300,
   "material_change_only": true,
-  "entrypoint": "systemia/household-fabric/yvl-pipeline.mjs",
+  "entrypoint": "systemia/household-fabric/price-provider-cycle.mjs",
   "runner": "systemia/organism/household-fabric-yakima-runner.mjs",
   "proof": "systemia/organism/household-fabric-yakima.proof.mjs",
   "outputs": {
@@ -15,7 +15,9 @@
     "today": "artifacts/household-fabric/yakima/today.json",
     "mission_snapshot": "artifacts/household-fabric/yakima/mission-snapshot.json",
     "collector_receipts": "artifacts/household-fabric/yakima/collector-receipts.json",
-    "state": "artifacts/household-fabric/yakima/state.json"
+    "state": "artifacts/household-fabric/yakima/state.json",
+    "price_index": "artifacts/household-fabric/yakima/price-index.json",
+    "price_source_runs": "artifacts/household-fabric/yakima/price-source-runs.json"
   },
   "sources": [
     {
@@ -24,6 +26,22 @@
       "collector": "systemia/household-fabric/collectors/yvl-events.mjs",
       "transport": "evercraft-owned-browser",
       "evidence_receipt_required": true
+    },
+    {
+      "source_key": "google-places-fuel-options",
+      "source_url": "https://places.googleapis.com/v1/places:searchNearby",
+      "collector": "systemia/household-fabric/clients/google-places-fuel-client.mjs",
+      "transport": "provider-api",
+      "credential_state": "required_at_runtime",
+      "evidence_receipt_required": false
+    },
+    {
+      "source_key": "kroger-public-products",
+      "source_url": "https://api.kroger.com/v1/products",
+      "collector": "systemia/household-fabric/clients/kroger-client.mjs",
+      "transport": "provider-api",
+      "credential_state": "required_at_runtime",
+      "evidence_receipt_required": false
     }
   ],
   "authority": {
@@ -42,6 +60,16 @@
     "collector_live_is_not_fresh_observation": true,
     "fresh_observation_is_not_user_claim_until_ingested": true,
     "stale_money_claims": "blocked",
-    "sponsorship_affects_organic_rank": false
+    "sponsorship_affects_organic_rank": false,
+    "credential_missing_degrades_source_not_cycle": true,
+    "provider_failure_degrades_source_not_cycle": true
+  },
+  "credential_policy": {
+    "default_mode": "evercraft_vault_reference",
+    "raw_environment_values": "disabled_unless_explicit_development_override",
+    "google_reference_variable": "HOUSEHOLD_GOOGLE_CREDENTIAL_REF",
+    "kroger_reference_variable": "HOUSEHOLD_KROGER_CREDENTIAL_REF",
+    "vault_directory_variable": "EVERCRAFT_CREDENTIAL_STATE_DIR",
+    "secret_material_in_receipts": false
   }
 }

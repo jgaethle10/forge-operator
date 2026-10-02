@@ -207,6 +207,36 @@ export async function runSentinelLiveProfileCanary({
   };
 }
 
+export function buildLiveCanaryMissionSnapshot(receipt) {
+  if (!receipt || receipt.schema !== 'systemia.sentinel.live-profile-canary.v1') {
+    throw new TypeError('live profile canary receipt is required');
+  }
+
+  const failed = (receipt.sources || []).filter((source) => source.status === 'fail');
+  const evidenceRefs = (receipt.sources || []).map((source) => {
+    const suffix = source.errors?.length
+      ? ':' + source.errors.join(',')
+      : ':pass';
+    return 'sentinel-canary:' + receipt.profile_id + ':' + source.source_id + suffix;
+  });
+
+  return {
+    schema: 'evercraft.kaidance.mission-snapshot.v1',
+    snapshot_ref: 'sentinel-source-health:' + receipt.profile_id + ':' + receipt.observed_at,
+    mission_key: 'evercraft-life-safety-sentinel-source-health',
+    workflow_key: 'sentinel-live-profile-canary',
+    cadence_seconds: 900,
+    counts: {
+      scanned: Number(receipt.source_count || 0),
+      changed: failed.length,
+      admitted: 0,
+      held: failed.length
+    },
+    evidence_refs: evidenceRefs.slice(0, 100),
+    observed_at: receipt.observed_at
+  };
+}
+
 export function updateCanaryHistory(previous, receipt) {
   const priorRuns = Array.isArray(previous?.runs) ? previous.runs : [];
   const compact = {
@@ -257,6 +287,7 @@ async function main() {
   const profileId = arg('--profile', process.env.SYSTEMIA_SENTINEL_REGION_PROFILE || DEFAULT_PROFILE);
   const out = path.resolve(arg('--out', 'artifacts/sentinel-live-canary/latest.json'));
   const historyPath = path.resolve(arg('--history', 'artifacts/sentinel-live-canary/history.json'));
+  const missionPath = path.resolve(arg('--mission', 'artifacts/sentinel-live-canary/mission-snapshot.json'));
   const receipt = await runSentinelLiveProfileCanary({ profileId });
   const history = updateCanaryHistory(
     readJson(historyPath, { schema: 'systemia.sentinel.live-profile-canary-history.v1', profile_id: profileId, runs: [] }),
@@ -264,6 +295,7 @@ async function main() {
   );
   writeJson(out, receipt);
   writeJson(historyPath, history);
+  writeJson(missionPath, buildLiveCanaryMissionSnapshot(receipt));
   process.stdout.write(JSON.stringify({
     pass: receipt.pass,
     profile_id: receipt.profile_id,

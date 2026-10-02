@@ -53,7 +53,7 @@
   "invocation_status": "LIVE READ-ONLY MCP VERIFIED: canonical product conformance records a verified bounded read-only Machine Commerce route with live canary evidence. Evidence: GitHubActionsRun:36495507434",
   "live_canary_evidence": "GitHubActionsRun:36495507434",
   "live_proof": {
-    "conformance_state": "machine_commerce_direct_checkout_live_verified",
+    "conformance_state": "owned_runtime_reverification_pending",
     "machine_commerce_handoff_state": "live_verified",
     "mcp": null,
     "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",

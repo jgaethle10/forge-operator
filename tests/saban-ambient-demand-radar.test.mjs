@@ -1,10 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 
 import {
   buildAmbientDemandRadar,
   deriveZeroSpendCapacityNeeds,
 } from '../systemia/saban/ambient-demand-radar.mjs';
+import {AmbientWorkQueue} from '../systemia/saban/ambient-work-queue.mjs';
 
 test('demand radar summarizes exact backlog shape by workload',()=>{
   const jobs=[
@@ -68,6 +72,8 @@ test('demand radar summarizes exact backlog shape by workload',()=>{
     cpu_units:0.4,
     memory_mb:256,
     storage_gb:0,
+    gpu_count:0,
+    gpu_models:[],
   });
   assert.equal(hashNeed.authorized_only,true);
   assert.equal(hashNeed.checkpoint_friendly,true);
@@ -85,4 +91,40 @@ test('completed and dead-letter jobs do not inflate current capacity demand',()=
   assert.equal(radar.active_jobs,0);
   assert.equal(radar.workload_count,0);
   assert.deepEqual(deriveZeroSpendCapacityNeeds(radar),[]);
+});
+
+
+test('ambient demand radar preserves accelerator requirements from queued work',()=>{
+  const queue=new AmbientWorkQueue({root:fs.mkdtempSync(path.join(os.tmpdir(),'saban-gpu-demand-'))});
+  try{
+    queue.submit({
+      workload_class:'systemia.content-hash.v1',
+      payload:{value:'gpu-pressure-proof'},
+      idempotency_key:'gpu-pressure-proof',
+      resources:{
+        cpu_units:1,
+        memory_mb:1024,
+        storage_gb:1,
+        gpu_count:1,
+        gpu_models:['proof-gpu'],
+      },
+      preemptible:true,
+      checkpointable:true,
+      requested_at:'2026-10-02T04:00:00.000Z',
+    });
+    const radar=buildAmbientDemandRadar({
+      jobs:queue.list(),
+      now:new Date('2026-10-02T04:01:00.000Z'),
+    });
+    const row=radar.workloads.find(x=>x.workload_class==='systemia.content-hash.v1');
+    assert.ok(row);
+    assert.equal(row.total_gpu_count,1);
+    assert.equal(row.max_gpu_count,1);
+    assert.deepEqual(row.gpu_models,['proof-gpu']);
+    const need=deriveZeroSpendCapacityNeeds(radar)[0];
+    assert.equal(need.minimum_single_execution.gpu_count,1);
+    assert.deepEqual(need.minimum_single_execution.gpu_models,['proof-gpu']);
+  }finally{
+    fs.rmSync(queue.root,{recursive:true,force:true});
+  }
 });

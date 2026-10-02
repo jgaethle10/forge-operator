@@ -6,7 +6,7 @@ Class: ai_social_video_production_and_governed_distribution
 Canonical URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-clip/index.html
 Authority: public read-only capability discovery and non-executing job planning; media submission, paid processing, and publishing remain authenticated and human-authorized
 Human confirmation required: yes
-Runtime or CHUM llms.txt: https://base44.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=llms
+Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-clip/llms.txt
 
 ## Natural-language intents
 - turn this video into social clips

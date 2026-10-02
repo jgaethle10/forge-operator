@@ -75,14 +75,52 @@ export function answer(packet,zone){
  const responseFlags=0x8400|(flags&0x0100)|rcode; // QR + AA, echo RD, RA remains false
  return Buffer.concat([id,u16(responseFlags),u16(1),u16(answers.length),u16(authority.length),u16(0),question,...answers,...authority]);
 }
-export function start({snapshotPath,host="0.0.0.0",port=5353}){
+export function describeExchange(packet,response,{protocol,remoteAddress=null,remotePort=null}={}){
+ if(!packet||packet.length<12||!response||response.length<12)return null;
+ const q=readName(packet,12);
+ const qtype=packet.readUInt16BE(q.end);
+ const responseFlags=response.readUInt16BE(2);
+ return {
+  transaction_id:packet.readUInt16BE(0),
+  qname:q.name,
+  qtype:TYPE_NAME[qtype]||String(qtype),
+  protocol:String(protocol||'').toLowerCase(),
+  remote_address:remoteAddress,
+  remote_port:remotePort,
+  aa:Boolean(responseFlags&0x0400),
+  ra:Boolean(responseFlags&0x0080),
+  rcode:responseFlags&0x000f,
+  answer_count:response.readUInt16BE(6),
+  response_sha256:"sha256:"+crypto.createHash("sha256").update(response).digest("hex")
+ };
+}
+export function start({snapshotPath,host="0.0.0.0",port=5353,onExchange=null}){
  let snap=loadSnapshot(snapshotPath);
  const udp=dgram.createSocket("udp4");
- udp.on("message",(msg,r)=>{const out=answer(msg,snap.zone);if(out)udp.send(out,r.port,r.address)});
+ udp.on("message",(msg,r)=>{
+  const out=answer(msg,snap.zone);
+  if(out){
+   try{onExchange?.(describeExchange(msg,out,{protocol:"udp",remoteAddress:r.address,remotePort:r.port}))}catch{}
+   udp.send(out,r.port,r.address);
+  }
+ });
  udp.bind(port,host);
  const tcp=net.createServer(sock=>{
   let buf=Buffer.alloc(0);
-  sock.on("data",chunk=>{buf=Buffer.concat([buf,chunk]);while(buf.length>=2){const n=buf.readUInt16BE(0);if(buf.length<n+2)break;const out=answer(buf.subarray(2,n+2),snap.zone);if(out)sock.write(Buffer.concat([u16(out.length),out]));buf=buf.subarray(n+2)}});
+  sock.on("data",chunk=>{
+   buf=Buffer.concat([buf,chunk]);
+   while(buf.length>=2){
+    const n=buf.readUInt16BE(0);
+    if(buf.length<n+2)break;
+    const packet=buf.subarray(2,n+2);
+    const out=answer(packet,snap.zone);
+    if(out){
+     try{onExchange?.(describeExchange(packet,out,{protocol:"tcp",remoteAddress:sock.remoteAddress,remotePort:sock.remotePort}))}catch{}
+     sock.write(Buffer.concat([u16(out.length),out]));
+    }
+    buf=buf.subarray(n+2);
+   }
+  });
  });
  tcp.listen(port,host);
  return {udp,tcp,getSnapshot:()=>snap,reload:()=>{snap=loadSnapshot(snapshotPath);return snap}};

@@ -25,6 +25,9 @@ Evercraft Opportunity Fabric is an approved public Evercraft discovery record. T
 - get availability and a quote from accepted partners before assembling a team
 - shortlist supplier quotes into a temporary execution team
 - turn shortlisted quotes into team invitations and work-package offers
+- compare quotes for the same work package without automatically choosing a vendor
+- explain the tradeoff between price lead time capacity geography and observed execution history
+- show me which sourcing evidence is self-reported versus observed
 
 ## Public routes
 
@@ -34,7 +37,7 @@ Evercraft Opportunity Fabric is an approved public Evercraft discovery record. T
 
 ## Authority
 
-public capability discovery plus verified private metadata-first planning, non-binding sourcing, and multi-party assembly; no public protected-file delivery, payment, or final legal-agreement authority is claimed
+public capability discovery plus verified private metadata-first planning, non-binding sourcing, transparent sourcing comparison, and multi-party assembly; no public protected-file delivery, payment, or final legal-agreement authority is claimed
 
 Human confirmation required: yes
 
@@ -60,6 +63,11 @@ Human confirmation required: yes
 - shortlisting a sourcing response creates no team membership or contract
 - only shortlisted Available or Limited responses from one project and one blueprint can seed sourced team invitations
 - accepting a sourced team invitation materializes the package as Offered and Not accepted
+- sourcing comparison uses explicit fixed weights and preserves evidence classes
+- quote availability and lead time are participant-supplied rather than independently observed
+- Fabric history uses accepted Opportunity Fabric work-package records only and missing history is neutral
+- prices are compared only against same-currency peers; no FX normalization is claimed
+- comparison ordering requires human decision and creates no partner selection shortlist membership contract rights work acceptance or payment
 
 ## Evidence state
 

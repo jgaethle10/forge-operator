@@ -18,13 +18,17 @@ test("promotion starts native Edge DNS through NodeSeed",()=>{
  assert.match(promote,/systemia\.evercraft-edge-dns\.v1/);
  assert.match(promote,/1053/);
 });
-test("public-ingress label is granted only after external canary success",()=>{
- const canary=one.indexOf("gh run watch");
- const promotion=one.indexOf("public-ingress");
- assert.ok(canary>=0);
- assert.ok(promotion>canary);
- assert.match(one,/UDP/);
- assert.match(one,/TCP/);
+test("public-ingress label is granted only after distributed external verification",()=>{
+ const verifier=one.indexOf("external-public-verifier.mjs");
+ const receiptCheck=one.indexOf("r.verified!==true");
+ const promotion=one.indexOf('echo "[6/6] External canary passed. Promoting placement label to public-ingress..."');
+ assert.ok(verifier>=0);
+ assert.ok(receiptCheck>verifier);
+ assert.ok(promotion>receiptCheck);
+ assert.match(one,/udp53_successes/);
+ assert.match(one,/runtime_identity_verified/);
+ assert.match(one,/runtime_identity_distinct_sources/);
+ assert.match(one,/tcp_proof_mode/);
 });
 
 test("operator-authorized Crostini edge has lightweight bounded preflight",()=>{
@@ -50,4 +54,13 @@ test("Chromebook Edge DNS avoids the standardized mDNS host port",()=>{
  assert.match(one,/1053/);
  assert.match(mapper,/external: 53, internal: 1053, proto: 'TCP'/);
  assert.match(mapper,/external: 53, internal: 1053, proto: 'UDP'/);
+});
+
+test("WAN diagnosis distinguishes production DNS 53 from temporary high-port evidence",()=>{
+ assert.match(mapper,/external: 53, internal: 1053, proto: 'TCP'/);
+ assert.match(mapper,/external: 53, internal: 1053, proto: 'UDP'/);
+ assert.match(mapper,/external: 53053, internal: 1053, proto: 'TCP'/);
+ assert.match(mapper,/external: 53053, internal: 1053, proto: 'UDP'/);
+ assert.match(mapper,/production_mapping_control_ok/);
+ assert.match(mapper,/diagnostic_mapping_control_ok/);
 });

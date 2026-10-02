@@ -1,0 +1,169 @@
+name: FAIE software gate
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/faie/**'
+      - 'public/faie/**'
+      - 'systemia/sentinel/sources/**'
+      - 'systemia/sentinel/region-profile.mjs'
+      - 'systemia/sentinel/profiles/**'
+      - 'systemia/worldstate/observation-fabric.mjs'
+      - 'server.ts'
+      - 'package.json'
+      - '.github/workflows/faie-software-gate.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'systemia/faie/**'
+      - 'public/faie/**'
+      - 'systemia/sentinel/sources/**'
+      - 'systemia/sentinel/region-profile.mjs'
+      - 'systemia/sentinel/profiles/**'
+      - 'systemia/worldstate/observation-fabric.mjs'
+      - 'server.ts'
+      - 'package.json'
+      - '.github/workflows/faie-software-gate.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: faie-software-gate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  faie:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install
+        run: npm install --no-audit --no-fund
+
+      - name: FAIE tests
+        run: npm run test:faie
+
+      - name: Typecheck
+        run: npm run lint
+
+      - name: Production build
+        run: npm run build
+
+      - name: HTTP privacy and runtime smoke
+        env:
+          PORT: '4179'
+          NODE_ENV: development
+          FAIE_RESIDENT_ENABLED: 'false'
+          FAIE_OFFICIAL_COLLECTORS_ENABLED: 'false'
+          RADAR_RESIDENT_ENABLED: 'false'
+        run: |
+          rm -rf .runtime/faie
+          npm start > /tmp/faie-server.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID 2>/dev/null || true' EXIT
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4179/api/faie/health >/tmp/faie-health.json; then
+              break
+            fi
+            sleep 0.5
+          done
+          if ! kill -0 $SERVER_PID 2>/dev/null; then
+            cat /tmp/faie-server.log
+            exit 1
+          fi
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+
+          const origin = 'http://127.0.0.1:4179';
+          const json = async (path, init) => {
+            const response = await fetch(origin + path, init);
+            const body = await response.json();
+            return { response, body };
+          };
+
+          const before = await json('/api/faie/health');
+          assert.equal(before.response.status, 200);
+          assert.equal(before.body.ok, true);
+          assert.equal(before.body.investigation_count, 0);
+
+          const page = await fetch(origin + '/faie/');
+          assert.equal(page.status, 200);
+          assert.match(await page.text(), /Evidence for the physical world/);
+
+          const mcpHealth = await json('/mcp/faie?action=health');
+          assert.equal(mcpHealth.response.status, 200);
+          assert.equal(mcpHealth.body.server, 'evercraft-faie');
+          assert.deepEqual(mcpHealth.body.tools, [
+            'investigate_faie_evidence',
+            'get_faie_signal_snapshot',
+            'get_faie_health'
+          ]);
+          assert.equal(mcpHealth.body.persisted_public_investigations, false);
+
+          const mcpInit = await json('/mcp/faie', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({
+              jsonrpc: '2.0',
+              id: 1,
+              method: 'initialize',
+              params: {
+                protocolVersion: '2025-03-26',
+                capabilities: {},
+                clientInfo: { name: 'faie-smoke', version: '1' }
+              }
+            })
+          });
+          assert.equal(mcpInit.response.status, 200);
+          assert.equal(mcpInit.body.result.serverInfo.name, 'evercraft-faie');
+
+          const mcpTools = await json('/mcp/faie', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({
+              jsonrpc: '2.0',
+              id: 2,
+              method: 'tools/list',
+              params: {}
+            })
+          });
+          assert.deepEqual(
+            mcpTools.body.result.tools.map((tool) => tool.name),
+            [
+              'investigate_faie_evidence',
+              'get_faie_signal_snapshot',
+              'get_faie_health'
+            ]
+          );
+
+          const preview = await json('/api/faie/investigate', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({
+              question: 'What current evidence affects irrigation resilience in Yakima?',
+              region_keys: ['yakima-wa'],
+              horizon_days: 7
+            })
+          });
+          assert.equal(preview.response.status, 200);
+          assert.equal(preview.body.schema, 'evercraft.faie.investigation.v1');
+          assert.equal(preview.body.status, 'insufficient_evidence');
+
+          const after = await json('/api/faie/health');
+          assert.equal(after.body.investigation_count, 0, 'public preview must not persist');
+
+          const archive = await json('/api/faie/investigations');
+          assert.equal(archive.response.status, 503, 'internal archive must be unavailable without token');
+
+          console.log('FAIE HTTP PRIVACY AND RUNTIME SMOKE PASS');
+          NODE

@@ -4,6 +4,12 @@ on:
   pull_request:
     paths:
       - 'systemia/yard/**'
+      - 'systemia/saban/nodeseed-intent-executor.mjs'
+      - 'systemia/saban/nodeseed-execution-intent.mjs'
+      - 'systemia/saban/nodeseed-inventory-ingest.mjs'
+      - 'scripts/install-yard-saban-intent-drainer.sh'
+      - 'tests/saban-yard-intent-drainer.test.mjs'
+      - 'tests/saban-nodeseed-automatic-failover.test.mjs'
       - 'systemia/compute/**'
       - 'systemia/network/**'
       - 'systemia/mcp/**'
@@ -20,6 +26,12 @@ on:
       - main
     paths:
       - 'systemia/yard/**'
+      - 'systemia/saban/nodeseed-intent-executor.mjs'
+      - 'systemia/saban/nodeseed-execution-intent.mjs'
+      - 'systemia/saban/nodeseed-inventory-ingest.mjs'
+      - 'scripts/install-yard-saban-intent-drainer.sh'
+      - 'tests/saban-yard-intent-drainer.test.mjs'
+      - 'tests/saban-nodeseed-automatic-failover.test.mjs'
       - 'systemia/compute/**'
       - 'systemia/network/**'
       - 'systemia/mcp/**'
@@ -71,3 +83,5 @@ jobs:
         run: node systemia/yard/public-edge-private-yard-authority.proof.mjs
       - name: Prove authenticated field enrollment packet
         run: node systemia/yard/field-enrollment-packet.proof.mjs
+      - name: Prove Yard Saban resident execution bridge
+        run: node --test tests/saban-yard-intent-drainer.test.mjs tests/saban-nodeseed-automatic-failover.test.mjs

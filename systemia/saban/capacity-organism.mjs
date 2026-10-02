@@ -11,7 +11,7 @@ import { profileAmbientCensus } from './ambient-candidate-profiler.mjs';
 import { microDeviceToAmbientCapabilities } from './microseed-device-bridge.mjs';
 import { resolveAmbientComputeOffers } from './ambient-compute-fabric.mjs';
 import { composeCapabilityFabric, rivetAliEvCapabilityRoles } from './capability-fabric-composer.mjs';
-import { rivetAliEvProductionAnatomy, formationWaves } from './workload-anatomy.mjs';
+import { portfolioWorkloadAnatomy, formationWaves } from './workload-anatomy.mjs';
 import { planHeterogeneousFabric } from './heterogeneous-fabric-planner.mjs';
 import { loadPerformanceLedger } from './performance-learning.mjs';
 import { planFabricRebalance } from './fabric-rebalance.mjs';
@@ -20,6 +20,11 @@ import { buildAmbientDemandRadar, deriveZeroSpendCapacityNeeds } from './ambient
 import { evaluateMicroSeedAdapterAvailability } from './microseed-adapter-catalog.mjs';
 import { matchCapacityGapsToAmbientCandidates } from './capacity-gap-matcher.mjs';
 import { buildAmbientCapacityHuntPlan } from './ambient-capacity-hunt.mjs';
+import { buildCapacityAutonomyPlan } from './capacity-autonomy-conductor.mjs';
+import { nodeSeedInventoryToComputeOffers } from './nodeseed-capacity-offer.mjs';
+import { readSafeNodeSeedInventory } from './nodeseed-inventory-ingest.mjs';
+import { appendDemandHistory, forecastCapacityDemand, prewarmActionsForAuthorizedCapacity } from './capacity-demand-forecast.mjs';
+import { buildForecastHeadroomReservations } from './capacity-headroom.mjs';
 
 const MODULE_FILE=fileURLToPath(import.meta.url);
 
@@ -95,16 +100,43 @@ export function compileCapacityOrganismState({
   previousPlan=null,
   checkpoints={},
   demandRadar=null,
+  nodeSeedInventory=null,
+  demandForecast=null,
   now=new Date(),
 }={}){
   const {caps,rejected}=activeCapabilities(registrySnapshot,{adapterHealth});
-  const anatomy=rivetAliEvProductionAnatomy();
+  const anatomy=portfolioWorkloadAnatomy({demandRadar});
   const compute=resolveAmbientComputeOffers({
     capabilities:caps,
     requireZeroCost:true,
     requireVerifiedWorkload:true,
     now,
   });
+  const nodeSeedCompute=nodeSeedInventory
+    ? nodeSeedInventoryToComputeOffers({inventory:nodeSeedInventory,requireZeroCost:true})
+    : {
+        schema:'evercraft.saban.nodeseed-compute-resolution.v1',
+        eligible_count:0,
+        rejected_count:0,
+        offers:[],
+        rejected:[],
+        zero_spend_only:true,
+      };
+  const combinedOffers=[...compute.offers,...nodeSeedCompute.offers];
+  const headroomPlan=demandForecast
+    ? buildForecastHeadroomReservations({
+        forecast:demandForecast,
+        tasks:anatomy.tasks,
+        offers:combinedOffers,
+      })
+    : {
+        schema:'evercraft.saban.capacity-headroom-plan.v1',
+        reservations:[],
+        reservation_count:0,
+        skipped:[],
+        authority_expansion:false,
+        commercial_spend_usd:0,
+      };
   const capabilityPlan=composeCapabilityFabric({
     roles:rivetAliEvCapabilityRoles(),
     capabilities:caps,
@@ -112,9 +144,10 @@ export function compileCapacityOrganismState({
   });
   const workloadPlan=planHeterogeneousFabric({
     tasks:anatomy.tasks,
-    offers:compute.offers,
+    offers:combinedOffers,
     performanceLedger,
     previousPlan,
+    reservations:headroomPlan.reservations,
     now,
   });
   const rebalance=planFabricRebalance({
@@ -142,7 +175,15 @@ export function compileCapacityOrganismState({
     mode:'zero_spend_ambient_first',
     active_device_count:Number(registrySnapshot?.eligible_count||0),
     compiled_capability_count:caps.length,
-    compute_offer_count:compute.offers.length,
+    compute_offer_count:combinedOffers.length,
+    microseed_compute_offer_count:compute.offers.length,
+    nodeseed_compute_offer_count:nodeSeedCompute.offers.length,
+    nodeseed_compute:{
+      eligible_count:nodeSeedCompute.eligible_count,
+      rejected_count:nodeSeedCompute.rejected_count,
+      rejected:nodeSeedCompute.rejected,
+      authority_material_exposed:false,
+    },
     rejected_devices:rejected,
     adapter_health:{
       present:adapterHealth?.schema==='evercraft.saban.microseed-adapter-health.v1',
@@ -166,6 +207,7 @@ export function compileCapacityOrganismState({
     zero_spend_capacity_needs:demandRadar
       ? deriveZeroSpendCapacityNeeds(demandRadar)
       : [],
+    workload_anatomy:anatomy,
     formation_waves:waves,
     missing_capacity:[...missingCapabilityRoles,...missingWorkUnits],
     production_ready:
@@ -213,10 +255,28 @@ export async function runCapacityOrganismOnce({
   const checkpoints=fs.existsSync(checkpointFile)
     ? JSON.parse(fs.readFileSync(checkpointFile,'utf8'))
     : {};
+  const nodeSeedInventoryFile=path.join(resolvedRoot,'nodeseed-capacity-inventory.json');
+  const nodeSeedInventory=fs.existsSync(nodeSeedInventoryFile)
+    ? readSafeNodeSeedInventory(nodeSeedInventoryFile)
+    : null;
   const workQueue=new AmbientWorkQueue({root:path.join(resolvedRoot,'work-queue')});
   const demandRadar=buildAmbientDemandRadar({
     jobs:workQueue.list(),
     now,
+  });
+  const demandHistoryFile=path.join(resolvedRoot,'demand-history.json');
+  const priorDemandHistory=fs.existsSync(demandHistoryFile)
+    ? readJson(demandHistoryFile,null)
+    : null;
+  const demandHistory=appendDemandHistory(priorDemandHistory,demandRadar,{maxSnapshots:96});
+  const demandForecast=forecastCapacityDemand({
+    demandHistory,
+    currentRadar:demandRadar,
+    horizonCycles:3,
+  });
+  const prewarmPlan=prewarmActionsForAuthorizedCapacity({
+    forecast:demandForecast,
+    registrySnapshot,
   });
   const compiled=compileCapacityOrganismState({
     registrySnapshot,
@@ -225,13 +285,15 @@ export async function runCapacityOrganismOnce({
     previousPlan,
     checkpoints,
     demandRadar,
+    nodeSeedInventory,
+    demandForecast,
     now,
   });
   const opportunityMap=candidateInventory
     ? matchCapacityGapsToAmbientCandidates({
         capacityState:compiled,
         candidateInventory,
-        tasks:rivetAliEvProductionAnatomy().tasks,
+        tasks:compiled.workload_anatomy?.tasks||[],
         adapterHealth,
       })
     : null;
@@ -241,6 +303,13 @@ export async function runCapacityOrganismOnce({
         candidateInventory,
       })
     : null;
+  const autonomyPlan=buildCapacityAutonomyPlan({
+    registrySnapshot,
+    opportunityMap,
+    performanceLedger,
+    prewarmPlan,
+    now,
+  });
 
   const receipt={
     ...compiled,
@@ -269,6 +338,31 @@ export async function runCapacityOrganismOnce({
       adapter_blocked_candidate_count:opportunityMap.adapter_blocked_candidate_count,
       receipt_hash:opportunityMap.receipt_hash,
     }:null,
+    demand_forecast:{
+      source_snapshot_count:demandForecast.source_snapshot_count,
+      prewarm_workloads:demandForecast.prewarm_workloads,
+      prewarm_action_count:prewarmPlan.action_count,
+      receipt_hash:demandForecast.receipt_hash,
+      commercial_spend_usd:0,
+      authority_expansion:false,
+    },
+    capacity_headroom:{
+      reservation_count:headroomPlan.reservation_count,
+      reservations:headroomPlan.reservations,
+      skipped:headroomPlan.skipped,
+      current_pressure_always_wins:headroomPlan.current_pressure_always_wins!==false,
+      authority_expansion:false,
+      commercial_spend_usd:0,
+      receipt_hash:headroomPlan.receipt_hash||null,
+    },
+    capacity_autonomy:{
+      safe_autonomous_action_count:autonomyPlan.safe_autonomous_action_count,
+      authority_request_count:autonomyPlan.authority_request_count,
+      observed_authority_lead_count:autonomyPlan.observed_authority_lead_count,
+      post_authority_pipeline_count:autonomyPlan.post_authority_pipeline_count,
+      hold_count:autonomyPlan.hold_count,
+      receipt_hash:autonomyPlan.receipt_hash,
+    },
     backlog_capacity_hunt:demandHuntPlan?{
       demand_workloads:demandHuntPlan.demand_workloads,
       candidate_matches:demandHuntPlan.candidate_matches,
@@ -289,6 +383,17 @@ export async function runCapacityOrganismOnce({
   if(candidateInventory) atomicJson(path.join(resolvedRoot,'ambient-candidate-inventory.json'),candidateInventory);
   if(opportunityMap) atomicJson(path.join(resolvedRoot,'capacity-gap-opportunities.json'),opportunityMap);
   if(demandHuntPlan) atomicJson(path.join(resolvedRoot,'backlog-capacity-hunt.json'),demandHuntPlan);
+  atomicJson(demandHistoryFile,demandHistory);
+  atomicJson(path.join(resolvedRoot,'capacity-demand-forecast.json'),demandForecast);
+  atomicJson(path.join(resolvedRoot,'capacity-prewarm-plan.json'),prewarmPlan);
+  atomicJson(path.join(resolvedRoot,'capacity-autonomy-plan.json'),autonomyPlan);
+  atomicJson(path.join(resolvedRoot,'authority-requests.json'),{
+    schema:'evercraft.saban.capacity-authority-queue.v1',
+    authority_requests:autonomyPlan.authority_requests,
+    observed_authority_leads:autonomyPlan.observed_authority_leads,
+    generated_at:autonomyPlan.generated_at,
+    receipt_hash:autonomyPlan.receipt_hash,
+  });
   return receipt;
 }
 
@@ -305,7 +410,14 @@ async function main(){
       production_ready:receipt.production_ready,
       active_device_count:receipt.active_device_count,
       compute_offer_count:receipt.compute_offer_count,
+      microseed_compute_offer_count:receipt.microseed_compute_offer_count||0,
+      nodeseed_compute_offer_count:receipt.nodeseed_compute_offer_count||0,
       missing_capacity_count:receipt.missing_capacity.length,
+      safe_autonomous_action_count:receipt.capacity_autonomy?.safe_autonomous_action_count||0,
+      authority_request_count:receipt.capacity_autonomy?.authority_request_count||0,
+      forecast_prewarm_workload_count:receipt.demand_forecast?.prewarm_workloads?.length||0,
+      forecast_prewarm_action_count:receipt.demand_forecast?.prewarm_action_count||0,
+      forecast_headroom_reservation_count:receipt.capacity_headroom?.reservation_count||0,
       commercial_capacity_authorized:false,
       generated_at:receipt.generated_at,
     })+'\n');

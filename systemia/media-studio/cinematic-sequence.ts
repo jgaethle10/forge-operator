@@ -419,6 +419,7 @@ export function buildCinematicVisualRequest(
     'provenance_receipt',
     'timing_control',
   ];
+  requirements.unshift('reference_environment');
   if(shot.characters.length) requirements.unshift('reference_identity');
 
   return {

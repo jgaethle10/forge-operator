@@ -28,6 +28,7 @@ import { startEvercraftEdgeDnsRuntime } from './evercraft-edge-dns-runtime.mjs';
 import { validatePublicEdgeAdmission } from '../network/public-edge-tls.mjs';
 import { transcriptionCapabilityStatus } from '../forensiscope/transcription-engine.mjs';
 import { EvercraftRemoteOperator } from './remote-operator.mjs';
+import { NodeSeedMicroWorkloads, runNodeSeedRegisteredWorkload } from './nodeseed-registered-worker.mjs';
 
 const CODE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 
@@ -308,6 +309,76 @@ function executableAvailable(command) {
   return result.status === 0;
 }
 
+function safeCommandText(command,args=[]){
+  try{
+    const result=spawnSync(command,args,{
+      encoding:'utf8',
+      timeout:3000,
+      maxBuffer:256*1024,
+      stdio:['ignore','pipe','ignore'],
+    });
+    return result.status===0?String(result.stdout||'').trim():'';
+  }catch{
+    return '';
+  }
+}
+
+function detectedGpuModels(){
+  const models=[];
+  const nvidia=safeCommandText('nvidia-smi',[
+    '--query-gpu=name',
+    '--format=csv,noheader'
+  ]);
+  for(const line of nvidia.split(/\r?\n/).map(x=>x.trim()).filter(Boolean)){
+    models.push(line.slice(0,160));
+  }
+  if(!models.length){
+    const pci=safeCommandText('lspci',[]);
+    for(const line of pci.split(/\r?\n/)){
+      if(!/(vga compatible controller|3d controller|display controller)/i.test(line))continue;
+      const cleaned=line.replace(/^[0-9a-f:.]+\s+/i,'').trim();
+      if(cleaned)models.push(cleaned.slice(0,160));
+    }
+  }
+  return [...new Set(models)].slice(0,16);
+}
+
+function safeHardwareSummary({memoryMb,storageGb}={}){
+  const cpus=os.cpus()||[];
+  const cpuModel=String(cpus[0]?.model||'').trim().slice(0,160)||null;
+  const gpuModels=detectedGpuModels();
+  const logicalThreads=Math.max(1,cpus.length||1);
+  const memory=Math.max(64,Number(memoryMb||0));
+  const recommendedConcurrency=Math.max(
+    1,
+    Math.min(
+      logicalThreads,
+      Math.floor(memory/512),
+      64
+    )
+  );
+  return {
+    schema:'evercraft.compute.safe-hardware-summary.v1',
+    cpu:{
+      architecture:os.arch(),
+      model:cpuModel,
+      logical_threads:logicalThreads,
+    },
+    memory_mb:memory,
+    free_storage_gb:Math.max(0,Number(storageGb||0)),
+    accelerators:{
+      gpu_count:gpuModels.length,
+      gpu_models:gpuModels,
+      detection_state:gpuModels.length?'observed_local':'none_observed',
+    },
+    recommended_concurrency:{
+      value:recommendedConcurrency,
+      state:'inferred_from_cpu_and_memory',
+    },
+    sensitive_identifiers_included:false,
+  };
+}
+
 async function writeHashedRequest(req, target, maxBytes) {
   const hash = createHash('sha256');
   let bytes = 0;
@@ -392,6 +463,8 @@ export async function startEvercraftComputeNode({
   allocatorToken = '',
   deviceIdentity = null,
   placementLabels = [],
+  failureDomain = '',
+  zeroCost = false,
   browserRuntimeFactory = null,
   remoteOperatorRoots = null,
   remoteOperatorStateDir = '',
@@ -424,6 +497,20 @@ export async function startEvercraftComputeNode({
     ffmpeg: executableAvailable('ffmpeg'),
     ffprobe: executableAvailable('ffprobe')
   };
+  const freeStorageGb = (() => {
+    try {
+      const stat = fs.statfsSync(allowedRoot);
+      const bytes = Number(stat.bavail) * Number(stat.bsize);
+      return Number.isFinite(bytes) ? Number((bytes / (1024 ** 3)).toFixed(3)) : 0;
+    } catch {
+      return 0;
+    }
+  })();
+  const totalMemoryMb=Math.max(64,Math.floor(os.totalmem()/1024/1024));
+  const hardwareSummary=safeHardwareSummary({
+    memoryMb:totalMemoryMb,
+    storageGb:freeStorageGb,
+  });
   const publicEdgeCapability = (() => {
     const baseDomain = String(process.env.EVERCRAFT_PUBLIC_EDGE_BASE_DOMAIN || '').trim();
     const tlsKeyPath = String(process.env.EVERCRAFT_PUBLIC_EDGE_TLS_KEY_PATH || '').trim();
@@ -762,6 +849,9 @@ export async function startEvercraftComputeNode({
     'saban.logical-agent',
     'saban.multiplier-assignment.v1',
   ]);
+  for (const workloadClass of NodeSeedMicroWorkloads) {
+    supported.add(workloadClass);
+  }
   if (browserRuntimeReady) {
     supported.add('systemia.evercraft-web-browser.v1');
   }
@@ -951,6 +1041,9 @@ export async function startEvercraftComputeNode({
           platform: `${process.platform}/${process.arch}`,
           supported_workloads: [...supported],
           placement_labels: nodePlacementLabels,
+          failure_domain: String(failureDomain || '') || null,
+          zero_cost: zeroCost === true,
+          public_ingress: nodePlacementLabels.includes('public-ingress'),
           allocation: 'explicit_lease',
           allocation_auth: allocatorTokenHash ? 'bearer' : 'loopback_only',
           resident_services_supported: true,
@@ -959,7 +1052,10 @@ export async function startEvercraftComputeNode({
           attestation_supported: Boolean(deviceIdentity),
           capacity_hint: {
             cpu_units: Math.max(1, os.cpus()?.length || 1),
-            memory_mb: Math.max(64, Math.floor(os.totalmem() / 1024 / 1024)),
+            memory_mb: totalMemoryMb,
+            storage_gb: freeStorageGb,
+            recommended_concurrency:hardwareSummary.recommended_concurrency.value,
+            hardware:hardwareSummary,
             executables: executableCapabilities,
             services: serviceCapabilities
           },
@@ -1142,6 +1238,53 @@ export async function startEvercraftComputeNode({
         const workloadClass = String(body.workload_class || lease.workload_class || '');
         if (workloadClass !== lease.workload_class || !supported.has(workloadClass)) {
           return send(res, 422, { error: 'workload_not_admitted' });
+        }
+
+        if (NodeSeedMicroWorkloads.includes(workloadClass)) {
+          const idempotencyKey = String(
+            body.idempotency_key ||
+            body.input?.idempotency_key ||
+            ''
+          ).trim();
+          if (!idempotencyKey) {
+            return send(res, 422, { error: 'registered_worker_idempotency_key_required' });
+          }
+          let worker;
+          try {
+            worker = runNodeSeedRegisteredWorkload({
+              nodeId,
+              workloadClass,
+              payload: body.input?.payload ?? body.payload ?? null,
+              idempotencyKey,
+              stateDir: path.join(allowedRoot, '.evercraft', 'registered-worker'),
+            });
+          } catch (error) {
+            const message = error instanceof Error ? error.message : String(error);
+            if (message === 'nodeseed_registered_worker_idempotency_conflict') {
+              return send(res, 409, { error: message });
+            }
+            return send(res, 422, { error: message });
+          }
+          return send(res, 200, {
+            ok: true,
+            node_id: nodeId,
+            workload_class: workloadClass,
+            result: worker.result,
+            worker_receipt: worker,
+            deduplicated: worker.deduplicated === true,
+            idempotency_key: idempotencyKey,
+            receipt: chain.issue(
+              worker.deduplicated === true
+                ? 'registered-workload.reused'
+                : 'registered-workload.executed',
+              {
+                lease_id: body.lease_id,
+                workload_class: workloadClass,
+                idempotency_key: idempotencyKey,
+                worker_receipt_hash: worker.receipt_hash,
+              }
+            ),
+          });
         }
 
         if (workloadClass === 'saban.logical-agent') {
@@ -1625,6 +1768,12 @@ export async function startEvercraftComputeNode({
             return send(res, 404, { error: 'edge_dns_snapshot_missing' });
           }
 
+          const rawQueryReceiptPath = String(body.input?.query_receipt_path || '').trim();
+          const queryReceiptPath = rawQueryReceiptPath ? path.resolve(rawQueryReceiptPath) : '';
+          if (queryReceiptPath && !isWithin(allowedRoot, queryReceiptPath)) {
+            return send(res, 403, { error: 'edge_dns_query_receipt_outside_admitted_root' });
+          }
+
           const dnsHost = String(body.input?.dns_host || '127.0.0.1');
           const loopbackDns =
             dnsHost === '127.0.0.1' ||
@@ -1640,6 +1789,8 @@ export async function startEvercraftComputeNode({
             dnsPort: Number(body.input?.dns_port || 1053),
             healthHost: '127.0.0.1',
             healthPort: Number(body.input?.health_port || 0),
+            queryReceiptPath,
+            receiptQname: String(body.input?.receipt_qname || ''),
           });
           const serviceId = `svc_${randomBytes(8).toString('hex')}`;
           services.set(serviceId, {

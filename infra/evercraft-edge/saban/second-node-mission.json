@@ -1,0 +1,63 @@
+{
+  "schema": "evercraft.edge.second-node-mission.v1",
+  "mission_id": "edge-dns-second-failure-domain-2026-10-01",
+  "workload_class": "systemia.evercraft-edge-dns.v1",
+  "state": "revalidation_required",
+  "first_node": {
+    "node_id": "evercraft-penguin",
+    "admitted": true,
+    "placement_label": "public-ingress",
+    "failure_domain": "home-wan-1",
+    "authoritative_dns_candidate": true,
+    "production_delegation_allowed": false
+  },
+  "candidates": [
+    {
+      "candidate_id": "evernode-one-external-linux",
+      "rank": 1,
+      "source": "prior Evercraft Node 001 / Evernode One external Linux test environment",
+      "historical_state": "Evernode One previously exercised as Evercraft Node 001 lineage; current authority must be refreshed",
+      "current_authorization": "must_refresh",
+      "current_connectivity": "unverified",
+      "current_attestation": "unverified",
+      "failure_domain": "must_prove_distinct_from_home-wan-1",
+      "zero_cost": "must_reconfirm",
+      "public_ingress": "unverified",
+      "action": "attempt_reenrollment_only_after_current_operator_authorization",
+      "canonical_hardware_name": "Evernode One",
+      "legacy_name_excluded": "Megatron"
+    },
+    {
+      "candidate_id": "old-hp-owned-desktop",
+      "rank": 2,
+      "source": "previously identified owned Evercraft infrastructure candidate",
+      "historical_state": "owned hardware candidate",
+      "current_authorization": "owner_control_previously_stated_but_refresh_required",
+      "current_connectivity": "unverified",
+      "current_attestation": "unverified",
+      "failure_domain": "unverified",
+      "zero_cost": true,
+      "public_ingress": "unverified",
+      "action": "use_if_deployed_on_distinct_network_and_power_domain"
+    }
+  ],
+  "admission_gates": {
+    "authorized_now": true,
+    "connected_now": true,
+    "attestation_verified": true,
+    "zero_cost": true,
+    "public_ingress_label": true,
+    "tcp53_verified": true,
+    "udp53_verified": true,
+    "workload_supported": "systemia.evercraft-edge-dns.v1",
+    "distinct_failure_domain_from": "home-wan-1"
+  },
+  "production_policy": {
+    "authoritative_replicas_required": 2,
+    "production_ns_delegation_before_two_nodes": false,
+    "stale_historical_receipts_are_authority": false,
+    "ambient_visibility_is_authority": false,
+    "commercial_spend_allowed": false
+  },
+  "next_action": "revalidate Evernode One first; if unavailable, stage old HP only on a different WAN/power failure domain"
+}

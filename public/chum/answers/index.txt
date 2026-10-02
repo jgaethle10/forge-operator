@@ -7,8 +7,8 @@ Each phrase below maps to public capability candidates without upgrading readine
 Discovery creates no payment obligation. Checkout requires explicit human confirmation and paid state requires authoritative provider verification.
 
 Pain-index entries: 112
-Unique user phrases: 973
-Candidate edges: 1079
+Unique user phrases: 976
+Candidate edges: 1082
 Ambiguous phrases: 106
 
 ## 15 GB video analysis
@@ -1180,6 +1180,13 @@ Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main
 Candidates:
 - Systemia Remote Ops | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia-remote-ops
 
+## compare quotes for the same work package without automatically choosing a vendor
+Answer ID: intent:020562ac85
+Human-readable match: /chum/answers/doors/compare-quotes-for-the-same-work-package-without-automatically-choosing-a-vendor-020562ac85/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-quotes-for-the-same-work-package-without-automatically-choosing-a-vendor-020562ac85.json
+Candidates:
+- Evercraft Opportunity Fabric | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric
+
 ## compare the real cost of hiring before adding payroll
 Answer ID: intent:15edc18e4b
 Human-readable match: /chum/answers/doors/compare-the-real-cost-of-hiring-before-adding-payroll-15edc18e4b/
@@ -1909,6 +1916,13 @@ Human-readable match: /chum/answers/doors/evidence-timeline-review-2e05014564/
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/evidence-timeline-review-2e05014564.json
 Candidates:
 - ForensiScope Evidence Review | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=/chum/intents/forensiscope-evidence-review-v1/
+
+## explain the tradeoff between price lead time capacity geography and observed execution history
+Answer ID: intent:22aeb563b2
+Human-readable match: /chum/answers/doors/explain-the-tradeoff-between-price-lead-time-capacity-geography-and-observed-execu-22aeb563b2/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/explain-the-tradeoff-between-price-lead-time-capacity-geography-and-observed-execu-22aeb563b2.json
+Candidates:
+- Evercraft Opportunity Fabric | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric
 
 ## explore an ecological restoration evidence library
 Answer ID: intent:07360762f8
@@ -5584,6 +5598,13 @@ Human-readable match: /chum/answers/doors/show-me-the-reality-delta-for-this-pla
 Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/show-me-the-reality-delta-for-this-place-or-system-7a98735088.json
 Candidates:
 - Worldstate Reality Delta | kind=machine_offer | commercial=verification_required | machine=discovery_only | public=/chum/intents/worldstate-reality-delta-v1/
+
+## show me which sourcing evidence is self-reported versus observed
+Answer ID: intent:7af3a4d1d9
+Human-readable match: /chum/answers/doors/show-me-which-sourcing-evidence-is-self-reported-versus-observed-7af3a4d1d9/
+Machine detail: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/show-me-which-sourcing-evidence-is-self-reported-versus-observed-7af3a4d1d9.json
+Candidates:
+- Evercraft Opportunity Fabric | kind=product | commercial=product_contract | machine=discovery_only | public=https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric
 
 ## show sourced energy data and provenance
 Answer ID: intent:cd19abcb4e

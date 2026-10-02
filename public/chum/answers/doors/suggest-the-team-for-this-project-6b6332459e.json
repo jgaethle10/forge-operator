@@ -28,7 +28,7 @@
       "universal_mcp": null,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
-      "authority": "public capability discovery plus verified private metadata-first planning, non-binding sourcing, and multi-party assembly; no public protected-file delivery, payment, or final legal-agreement authority is claimed",
+      "authority": "public capability discovery plus verified private metadata-first planning, non-binding sourcing, transparent sourcing comparison, and multi-party assembly; no public protected-file delivery, payment, or final legal-agreement authority is claimed",
       "boundaries": [
         "public matching must not require protected creative files or confidential material",
         "uploading listing viewing matching or forming a team does not transfer ownership or grant commercial rights",
@@ -49,7 +49,12 @@
         "sourcing availability and quote responses create no payment obligation or work acceptance",
         "shortlisting a sourcing response creates no team membership or contract",
         "only shortlisted Available or Limited responses from one project and one blueprint can seed sourced team invitations",
-        "accepting a sourced team invitation materializes the package as Offered and Not accepted"
+        "accepting a sourced team invitation materializes the package as Offered and Not accepted",
+        "sourcing comparison uses explicit fixed weights and preserves evidence classes",
+        "quote availability and lead time are participant-supplied rather than independently observed",
+        "Fabric history uses accepted Opportunity Fabric work-package records only and missing history is neutral",
+        "prices are compared only against same-currency peers; no FX normalization is claimed",
+        "comparison ordering requires human decision and creates no partner selection shortlist membership contract rights work acceptance or payment"
       ]
     }
   ],

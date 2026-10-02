@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { planHeterogeneousFabric } from '../systemia/saban/heterogeneous-fabric-planner.mjs';
+import { planHeterogeneousFabric, normalizeFabricTask } from '../systemia/saban/heterogeneous-fabric-planner.mjs';
 import { createPerformanceLedger, recordPerformanceSample } from '../systemia/saban/performance-learning.mjs';
 
 function offer({
@@ -9,6 +9,7 @@ function offer({
   zeroCost=true,persistent=false,publicIngress=false,
   labels=[],locality=[],duty='always_on',power=5,
   failureDomain=id,maxConcurrency=8,observedAt='2026-10-01T03:00:00.000Z',
+  gpuCount=0,gpuModels=[],
 }){
   return {
     schema:'evercraft.saban.compute-offer.v1',
@@ -17,7 +18,13 @@ function offer({
     market:'ambient-fabric',
     access_class:access,
     endpoint:'evercraft://'+id,
-    resources:{cpu_units:cpu,memory_mb:memory,storage_gb:storage,gpu_count:0,gpu_models:[]},
+    resources:{
+      cpu_units:cpu,
+      memory_mb:memory,
+      storage_gb:storage,
+      gpu_count:gpuCount,
+      gpu_models:gpuModels,
+    },
     placement:{public_ingress:publicIngress,persistent_storage:persistent},
     trust:{uptime_7d:uptime,audited:false,valid_version:true,attested},
     economics:{zero_cost:zeroCost,quoted:true,hourly_usd:0,total_usd:0,native_price:null},
@@ -243,4 +250,207 @@ test('performance circuit ejects a repeatedly failing device and calibration-sty
   assert.equal(plan.state,'ready');
   assert.equal(plan.placements[0].provider_id,'learned-phone');
   assert.equal(plan.placements[0].performance_adjustment.circuit_open,false);
+});
+
+
+test('fabric task normalization is idempotent and preserves placement semantics',()=>{
+  const input={
+    task_id:'semantic-proof',
+    workload_class:'systemia.content-hash.v1',
+    execution_shape:'shardable',
+    shard_count:3,
+    replicas:2,
+    resources:{cpu_units:0.25,memory_mb:512,storage_gb:2},
+    required_labels:['edge'],
+    allowed_device_classes:['phone','server'],
+    require_attestation:true,
+    allowed_access_classes:['authorized_compute'],
+    private_data:true,
+    minimum_uptime_7d:0.72,
+    preemptible:true,
+    checkpointable:true,
+    require_distinct_failure_domains:true,
+    failure_domain_axes:['failure_domain','power_domain'],
+    max_observation_age_ms:123456,
+    require_always_on:false,
+    max_power_budget_watts:40,
+    thermal_tolerance:'bounded',
+    prefer_lower_power:true,
+    input_bytes:1234,
+    output_bytes:567,
+    local_only:false,
+    created_at:'2026-10-02T03:00:00.000Z',
+  };
+  const once=normalizeFabricTask(input);
+  const twice=normalizeFabricTask(once);
+  assert.deepEqual(twice,once);
+  assert.deepEqual(twice.resources_per_execution,{
+    cpu_units:0.25,
+    memory_mb:512,
+    storage_gb:2,
+    gpu_count:0,
+    gpu_models:[],
+  });
+  assert.equal(twice.trust.private_data,true);
+  assert.equal(twice.trust.minimum_uptime_7d,0.72);
+  assert.equal(twice.continuity.preemptible,true);
+  assert.equal(twice.continuity.checkpointable,true);
+  assert.deepEqual(twice.continuity.failure_domain_axes,['failure_domain','power_domain']);
+  assert.equal(twice.continuity.max_observation_age_ms,123456);
+  assert.equal(twice.energy.max_power_budget_watts,40);
+  assert.equal(twice.data.input_bytes,1234);
+});
+
+
+test('tiny checkpointable work prefers right-sized micro capacity over a huge general node',()=>{
+  const tiny=offer({
+    id:'tiny-phone',deviceClass:'phone',cpu:1,memory:2048,storage:16,
+    workloads:['systemia.telemetry-normalizer.v1'],
+    duty:'opportunistic',power:4,maxConcurrency:2,failureDomain:'battery-tiny',
+  });
+  const huge=offer({
+    id:'huge-node',deviceClass:'general-compute',cpu:16,memory:32768,storage:1000,
+    workloads:['systemia.telemetry-normalizer.v1'],
+    duty:'always_on',power:80,maxConcurrency:16,failureDomain:'rack-a',
+  });
+  const plan=planHeterogeneousFabric({
+    now:new Date('2026-10-01T03:01:00.000Z'),
+    offers:[tiny,huge],
+    tasks:[{
+      task_id:'tiny-normalization',
+      workload_class:'systemia.telemetry-normalizer.v1',
+      resources:{cpu_units:0.1,memory_mb:96,storage_gb:0},
+      allowed_device_classes:['phone','general-compute'],
+      preemptible:true,
+      checkpointable:true,
+      minimum_uptime_7d:0,
+      max_observation_age_ms:300000,
+    }],
+  });
+  assert.equal(plan.state,'ready');
+  assert.equal(plan.placements[0].provider_id,'tiny-phone');
+});
+
+
+test('forecast headroom reservation consumes a real future execution slot before placement',()=>{
+  const node=offer({
+    id:'reserve-node',
+    deviceClass:'server',
+    cpu:1,
+    memory:1024,
+    storage:8,
+    workloads:['systemia.content-hash.v1'],
+    duty:'always_on',
+    power:20,
+    maxConcurrency:1,
+    failureDomain:'reserve-domain',
+  });
+  const task={
+    task_id:'current-hash',
+    workload_class:'systemia.content-hash.v1',
+    resources:{cpu_units:0.1,memory_mb:64,storage_gb:0},
+    preemptible:true,
+    checkpointable:true,
+    allowed_device_classes:['server'],
+    minimum_uptime_7d:0,
+  };
+  const plan=planHeterogeneousFabric({
+    offers:[node],
+    tasks:[task],
+    reservations:[{
+      schema:'evercraft.saban.capacity-headroom-reservation.v1',
+      reservation_id:'reserve:hash:reserve-node',
+      offer_id:node.offer_id,
+      provider_id:node.provider_id,
+      workload_class:'systemia.content-hash.v1',
+      resources:{cpu_units:0.1,memory_mb:64,storage_gb:0},
+      reason:'forecast_growth_without_current_queue_pressure',
+    }],
+    now:new Date('2026-10-01T03:01:00.000Z'),
+  });
+  assert.equal(plan.forecast_headroom_applied,true);
+  assert.equal(plan.applied_headroom_reservations.length,1);
+  assert.equal(plan.placed_execution_units,0);
+  assert.equal(plan.held_execution_units,1);
+  assert.equal(plan.held[0].reason,'no_eligible_capacity');
+});
+
+
+test('GPU workloads require real accelerator capacity and consume GPU residuals',()=>{
+  const cpuOnly=offer({
+    id:'cpu-only',
+    deviceClass:'general-compute',
+    cpu:16,memory:32768,storage:500,
+    workloads:['systemia.render-frame.v1'],
+    maxConcurrency:8,
+  });
+  const gpu=offer({
+    id:'gpu-node',
+    deviceClass:'general-compute',
+    cpu:8,memory:16384,storage:500,
+    workloads:['systemia.render-frame.v1'],
+    gpuCount:1,
+    gpuModels:['evercraft-proof-gpu'],
+    maxConcurrency:8,
+  });
+  const plan=planHeterogeneousFabric({
+    now:new Date('2026-10-01T03:01:00.000Z'),
+    offers:[cpuOnly,gpu],
+    tasks:[{
+      task_id:'render',
+      workload_class:'systemia.render-frame.v1',
+      execution_shape:'shardable',
+      shard_count:2,
+      resources:{
+        cpu_units:1,
+        memory_mb:1024,
+        storage_gb:1,
+        gpu_count:1,
+      },
+      preemptible:true,
+      checkpointable:true,
+      allowed_device_classes:['general-compute'],
+    }],
+  });
+  assert.equal(plan.placed_execution_units,1);
+  assert.equal(plan.held_execution_units,1);
+  assert.equal(plan.placements[0].provider_id,'gpu-node');
+  assert.ok(
+    plan.held[0].candidate_rejections
+      .find(x=>x.offer_id==='ambient:cpu-only')
+      .reasons.includes('insufficient_gpu_count')
+  );
+  const residual=plan.residual_capacity.find(x=>x.offer_id==='ambient:gpu-node');
+  assert.equal(residual.gpu_count,0);
+});
+
+test('exact GPU model requirements fail closed when the accelerator model differs',()=>{
+  const gpu=offer({
+    id:'gpu-wrong-model',
+    deviceClass:'general-compute',
+    cpu:8,memory:16384,storage:500,
+    workloads:['systemia.render-frame.v1'],
+    gpuCount:1,
+    gpuModels:['model-a'],
+  });
+  const plan=planHeterogeneousFabric({
+    now:new Date('2026-10-01T03:01:00.000Z'),
+    offers:[gpu],
+    tasks:[{
+      task_id:'render-specific',
+      workload_class:'systemia.render-frame.v1',
+      resources:{
+        cpu_units:1,
+        memory_mb:1024,
+        storage_gb:1,
+        gpu_count:1,
+        gpu_models:['model-b'],
+      },
+      allowed_device_classes:['general-compute'],
+    }],
+  });
+  assert.equal(plan.state,'held');
+  assert.ok(
+    plan.held[0].candidate_rejections[0].reasons.includes('required_gpu_model_missing')
+  );
 });

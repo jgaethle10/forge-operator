@@ -260,6 +260,7 @@ export async function startMicroSeedGateway({
           trustDecision,
           samplesPerWorkload:body.samples_per_workload,
           maxTotalSamples:body.max_total_samples,
+          workloadClasses:Array.isArray(body.workload_classes)?body.workload_classes:[],
           execute:({workload_class,idempotency_key,payload})=>
             executeAndLearn({
               manifest,

@@ -103,14 +103,14 @@ export function buildUniversalFulfillmentPlan({ payment, publicId, now = new Dat
       owner:'Evercraft Shipping',
       state:'blocked_dependency',
       dependency_keys:[humanReview ? 'human-delivery-review' : 'delivery-package'],
-      completion_rule:'Authorized customer delivery is provider-accepted exactly once, then the sent copy is read back to verify recipient, subject and attachment manifest. Thread failure may fall back to fresh outbound only when the prior attempt is proven pre-acceptance or sent-copy absence is verified.'
+      completion_rule:'The current non-superseded Shipping v3 order is provider-accepted exactly once, then the sent copy is read back to verify recipient, subject and attachment manifest. Thread failure may fall back to fresh outbound only when the prior attempt is proven pre-acceptance or sent-copy absence is verified. Deliberate resends require a separately authorized reissue linked to the original delivery.'
     },
     {
       work_key:'completion-receipt',
       owner:'Systemia',
       state:'blocked_dependency',
       dependency_keys:['customer-delivery'],
-      completion_rule:'A verified Shipping v2 delivery receipt records product, order/payment evidence, package digest, customer-safe artifact manifest, provider message ID, sent-copy verification, QA state and delivered_at.'
+      completion_rule:'A verified Shipping v2 delivery receipt plus Shipping v3 chain-of-custody proof records product, order/payment evidence, current package version, package digest, customer-safe artifact manifest, provider message ID, sent-copy verification, QA state and delivered_at.'
     },
     {
       work_key:'expansion-review',
@@ -151,7 +151,7 @@ export function buildUniversalFulfillmentPlan({ payment, publicId, now = new Dat
       discovery_and_context:'CHUM',
       specialist_roles:profile.specialist_roles,
       packaging:'Evercraft Shipping',
-      shipping_contract:'evercraft.shipping.department.v2',
+      shipping_contract:'evercraft.shipping.control-tower.v3',
       final_authority:'human gates preserved'
     },
     tasks,

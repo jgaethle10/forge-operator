@@ -16,6 +16,8 @@ test('resident Saban capacity organism is zero-spend and unprivileged',()=>{
   assert.match(installer,/evercraft-saban-probation\.timer/);
   assert.match(installer,/ambient-job-dispatcher\.mjs/);
   assert.match(installer,/evercraft-saban-dispatch\.timer/);
+  assert.match(installer,/evercraft-saban-watchdog\.timer/);
+  assert.match(installer,/saban-resident-watchdog\.sh/);
   assert.match(installer,/ambient-work-api-runner\.mjs/);
   assert.match(installer,/evercraft-saban-work-api\.service/);
   assert.match(installer,/ambient-work-api-token/);
@@ -44,5 +46,8 @@ test('Chromebook edge doctor installs and revives Saban capacity organism',()=>{
   assert.match(doctor,/evercraft-saban-dispatch\.timer/);
   assert.match(doctor,/evercraft-saban-work-api\.service/);
   assert.match(doctor,/evercraft-saban-pairing-api\.service/);
-  assert.match(doctor,/saban_capacity_repair_failed/);
+  assert.match(doctor,/evercraft-saban-watchdog\.timer/);
+  assert.match(doctor,/saban_capacity_repair_ok/);
+  assert.match(doctor,/saban_capacity_repair_code/);
+  assert.match(doctor,/saban_capacity_degraded/);
 });

@@ -5,6 +5,7 @@ import { allocatorTokenForOffer, discoverEligibleCapacity } from './capacity-res
 import { verifyNodeAttestation } from '../compute/device-identity.mjs';
 import { buildKaidancePulse } from '../collider/pulse.mjs';
 import { createFieldEnrollment, evaluateFieldAttestation } from './field-attestation.mjs';
+import { drainNodeSeedExecutionIntents } from '../saban/nodeseed-intent-executor.mjs';
 
 const sha = (value) => createHash('sha256').update(
   typeof value === 'string' ? value : JSON.stringify(value)
@@ -1801,6 +1802,25 @@ export class YardOperator {
       public_route_receipt_hash: route.receipt_hash,
       route_scope: route.scope,
     };
+  }
+
+  async drainSabanNodeSeedIntents({
+    sabanRoot,
+    brokerDeploymentId,
+    maxIntents = 16,
+    timeoutMs = 10_000,
+    now = new Date(),
+  } = {}) {
+    if (!sabanRoot) throw new Error('sabanRoot is required');
+    if (!brokerDeploymentId) throw new Error('brokerDeploymentId is required');
+    return await drainNodeSeedExecutionIntents({
+      root: sabanRoot,
+      yard: this,
+      brokerDeploymentId,
+      maxIntents,
+      timeoutMs,
+      now,
+    });
   }
 
   remoteCapacityBrokerReceipt(deploymentId) {
