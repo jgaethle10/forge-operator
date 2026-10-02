@@ -64,7 +64,9 @@
     "credential_missing_degrades_source_not_cycle": true,
     "provider_failure_degrades_source_not_cycle": true,
     "resident_service_health_is_not_live_public_coverage": true,
-    "provider_credentials_configured_is_not_source_freshness": true
+    "provider_credentials_configured_is_not_source_freshness": true,
+    "resident_discovered_is_not_publicly_promoted": true,
+    "identity_attested_is_not_fresh_source_evidence": true
   },
   "credential_policy": {
     "default_mode": "evercraft_vault_reference",
@@ -86,5 +88,17 @@
       "/today"
     ],
     "public_route_required": false
+  },
+  "resident_activation": {
+    "runner": "systemia/organism/household-fabric-resident-runner.mjs",
+    "reconcile_seconds": 60,
+    "placement": "yard-capacity-beacon-discovery",
+    "allocator_authority": "existing_private_yard_authority_only",
+    "immutable_release_required": true,
+    "identity_attestation_required": true,
+    "lease_keeper": true,
+    "founder_login_required": false,
+    "payment_authority": false,
+    "external_capacity_provision_authority": false
   }
 }
