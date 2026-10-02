@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-10-02T09:01:27.248Z</updated>
+<updated>2026-10-02T12:34:45.421Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
-<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-10-02T09:01:27.248Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-10-02T12:34:45.421Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:770866315bf12f2c92446bfe</id><title>/chum/hot/</title><updated>2026-10-02T07:25:42.936Z</updated><link href="/chum/hot/"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:6a2156e97d5a76ac182a54d7</id><title>/chum/sitemaps/answers.xml</title><updated>2026-10-02T06:57:33.829Z</updated><link href="/chum/sitemaps/answers.xml"/><category term="priority-108"/></entry>
 <entry><id>urn:evercraft:chum:e610b2719a363b9cd7a32d50</id><title>/.well-known/agent-card.json</title><updated>2026-10-02T06:57:33.829Z</updated><link href="/.well-known/agent-card.json"/><category term="priority-104"/></entry>
