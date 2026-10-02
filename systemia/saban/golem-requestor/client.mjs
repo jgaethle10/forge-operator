@@ -1,3 +1,39 @@
+export async function executePortableWorkerOnRental({
+  rental,
+  localWorkerPath,
+  payload,
+}={}){
+  if(!rental) throw new Error('golem_rental_required');
+  if(!localWorkerPath) throw new Error('golem_portable_worker_path_required');
+  if(!payload||payload.schema!=='evercraft.saban.portable-assignment.v1'){
+    throw new Error('golem_portable_payload_invalid');
+  }
+  const exe=await rental.getExeUnit();
+  const remoteWorker='/golem/work/evercraft-portable-worker.mjs';
+  const remoteInput='/golem/work/evercraft-portable-input.json';
+  await exe.uploadFile(String(localWorkerPath),remoteWorker);
+  await exe.uploadJson(payload,remoteInput);
+  const result=await exe.run(
+    'node',
+    [remoteWorker,remoteInput]
+  );
+  if(String(result?.result||'').toLowerCase()!=='ok'){
+    throw new Error(
+      'golem_portable_worker_execution_failed:'+
+      String(result?.message||result?.stderr||'unknown')
+    );
+  }
+  const stdout=String(result?.stdout||'').trim();
+  if(!stdout) throw new Error('golem_portable_worker_empty_result');
+  let receipt;
+  try{receipt=JSON.parse(stdout);}
+  catch{throw new Error('golem_portable_worker_invalid_json');}
+  if(receipt?.schema!=='evercraft.saban.portable-worker-receipt.v1'){
+    throw new Error('golem_portable_worker_receipt_schema_invalid');
+  }
+  return receipt;
+}
+
 export async function createGolemSdkClient({
   apiKey=process.env.YAGNA_APPKEY||'',
   url=process.env.YAGNA_API_BASEPATH||'http://127.0.0.1:7465',
@@ -53,40 +89,8 @@ export async function createGolemSdkClient({
       return exe.run(String(command));
     },
 
-    async executePortableWorker({
-      rental,
-      localWorkerPath,
-      payload,
-    }={}){
-      if(!rental) throw new Error('golem_rental_required');
-      if(!localWorkerPath) throw new Error('golem_portable_worker_path_required');
-      if(!payload||payload.schema!=='evercraft.saban.portable-assignment.v1'){
-        throw new Error('golem_portable_payload_invalid');
-      }
-      const exe=await rental.getExeUnit();
-      const remoteWorker='/golem/work/evercraft-portable-worker.mjs';
-      const remoteInput='/golem/work/evercraft-portable-input.json';
-      await exe.uploadFile(String(localWorkerPath),remoteWorker);
-      await exe.uploadJson(payload,remoteInput);
-      const result=await exe.run(
-        'node',
-        [remoteWorker,remoteInput]
-      );
-      if(String(result?.result||'').toLowerCase()!=='ok'){
-        throw new Error(
-          'golem_portable_worker_execution_failed:'+
-          String(result?.message||result?.stderr||'unknown')
-        );
-      }
-      const stdout=String(result?.stdout||'').trim();
-      if(!stdout) throw new Error('golem_portable_worker_empty_result');
-      let receipt;
-      try{receipt=JSON.parse(stdout);}
-      catch{throw new Error('golem_portable_worker_invalid_json');}
-      if(receipt?.schema!=='evercraft.saban.portable-worker-receipt.v1'){
-        throw new Error('golem_portable_worker_receipt_schema_invalid');
-      }
-      return receipt;
+    async executePortableWorker(args={}){
+      return executePortableWorkerOnRental(args);
     },
 
     async release({rental}={}){
