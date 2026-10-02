@@ -1,6 +1,6 @@
 import crypto from 'node:crypto';
 
-const DEFAULT_BLOCKED_HOST_SUFFIXES=['base44.app','raw.githubusercontent.com'];
+const DEFAULT_BLOCKED_HOST_SUFFIXES=['base44.app','raw.githubusercontent.com','github.com'];
 
 function hostMatchesSuffix(host,suffix){
   return host===suffix||host.endsWith('.'+suffix);
