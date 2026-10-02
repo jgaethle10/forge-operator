@@ -281,14 +281,20 @@ function scoreEntry(intent,entry,{frequency,total}){
   const hasPhysicalPartIntent=intentSet.has('part')||intentSet.has('component')||physicalSignals.filter((token)=>intentSet.has(token)).length>=2;
   const hasSoftwareIntent=softwareSignals.some((token)=>intentSet.has(token));
 
-  if(entry.public_id==='findmypart-part-passport-v1'&&hasPhysicalPartIntent){
-    score+=55;
-    if(identitySignals.some((token)=>intentSet.has(token))) score+=45;
+  if(entry.public_id==='findmypart-part-passport-v1'){
+    if(!hasPhysicalPartIntent) score-=180;
+    else {
+      score+=55;
+      if(identitySignals.some((token)=>intentSet.has(token))) score+=45;
+    }
   }
 
-  if(entry.public_id==='findmypart-paid-hunt-v1'&&hasPhysicalPartIntent){
-    score+=40;
-    if(deepSourceSignals.filter((token)=>intentSet.has(token)).length>=2) score+=55;
+  if(entry.public_id==='findmypart-paid-hunt-v1'){
+    if(!hasPhysicalPartIntent) score-=180;
+    else {
+      score+=40;
+      if(deepSourceSignals.filter((token)=>intentSet.has(token)).length>=2) score+=55;
+    }
   }
 
   if(
