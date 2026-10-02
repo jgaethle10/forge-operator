@@ -117,3 +117,39 @@ test('active workflow does not get mislabeled stale while it is executing', () =
   assert.equal(result.workflows.find((state) => state.lane === 'revenue_watershed').state, 'active');
   assert.equal(result.status, 'healthy');
 });
+
+test('failed workflow retries only after its cooldown instead of hot-looping', () => {
+  const target = WORKFLOW_REQUIREMENTS.find((row) => row.lane === 'portfolio_sentinel');
+
+  const recent = healthyRuns();
+  const recentRow = recent.find((run) => run.path === target.workflow);
+  recentRow.conclusion = 'failure';
+  recentRow.created_at = new Date(now.getTime() - 5 * 60_000).toISOString();
+
+  let result = evaluateRevenueAutonomy({
+    workflowSnapshot: { workflow_runs: recent },
+    machineCatalog: { offers: [] },
+    agentCommerce: { offers: [] },
+    now,
+  });
+  assert.equal(result.status, 'critical');
+  assert.equal(result.repairs.some((repair) => repair.workflow === target.workflow), false);
+
+  const cooled = healthyRuns();
+  const cooledRow = cooled.find((run) => run.path === target.workflow);
+  cooledRow.conclusion = 'failure';
+  cooledRow.created_at = new Date(
+    now.getTime() - (target.retry_failed_after_minutes + 1) * 60_000
+  ).toISOString();
+
+  result = evaluateRevenueAutonomy({
+    workflowSnapshot: { workflow_runs: cooled },
+    machineCatalog: { offers: [] },
+    agentCommerce: { offers: [] },
+    now,
+  });
+  assert.ok(result.repairs.some((repair) =>
+    repair.workflow === target.workflow &&
+    repair.reason === 'failed_after_cooldown'
+  ));
+});
