@@ -222,8 +222,11 @@ test('verified continuity start frame can satisfy reference identity when provid
     ]
   },[endpoint]);
   assert.equal(plan.status,'routed');
-  assert.equal(plan.jobs.length,1);
-  assert.deepEqual(plan.jobs[0].references.map(ref=>ref.role),['start_frame']);
+  assert.equal(plan.jobs.length,3);
+  assert.deepEqual(plan.jobs.map(job=>job.modelVariantIndex),[1,2,3]);
+  assert.deepEqual(plan.jobs.map(job=>job.references.map(ref=>ref.role)),[
+    ['start_frame'],['start_frame'],['start_frame']
+  ]);
 });
 
 test('provider locator mismatch blocks routing before execution',()=>{
