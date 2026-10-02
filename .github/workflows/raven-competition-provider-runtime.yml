@@ -33,7 +33,7 @@ jobs:
         with:
           node-version: "22"
       - name: Prove Raven competition provider runtime
-        run: node --test systemia/competition/provider-runtime.test.mjs
+        run: node --test systemia/competition/provider-runtime.test.mjs systemia/competition/resident-wiring.test.mjs
       - name: Prove fail-closed unconfigured resident scout
         run: |
           rm -rf artifacts/competition-provider
