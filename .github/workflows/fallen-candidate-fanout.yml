@@ -1,0 +1,23 @@
+name: Fallen Candidate Fanout
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/model-fabric.ts'
+      - 'systemia/media-studio/model-fabric.test.ts'
+      - 'systemia/media-studio/shot-tournament.ts'
+      - 'systemia/media-studio/shot-tournament.test.ts'
+      - '.github/workflows/fallen-candidate-fanout.yml'
+  workflow_dispatch:
+
+jobs:
+  candidate-fanout:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-audit --no-fund
+      - run: |
+          node --import tsx --test             systemia/media-studio/model-fabric.test.ts             systemia/media-studio/shot-tournament.test.ts
