@@ -21,11 +21,11 @@
   "first_cutover": {
     "product_key": "infinite-classroom",
     "target_url": "https://infinite-classroom.evercraft.app/",
-    "legacy_url": "https://infinite-classroom.base44.app/",
-    "promotion_rule": "Do not publish target_url as the live human_start_url until the external canary is green."
+    "promotion_rule": "Do not publish target_url as the live human_start_url until the external canary is green.",
+    "legacy_provider_state": "retired"
   },
   "legacy_provider_policy": {
-    "base44": "evacuation_source_only",
+    "legacy_provider": "retired_no_public_runtime",
     "new_public_authority": "evercraft.app"
   },
   "edge_route_mode": "single_wildcard_lease_to_product_router"
