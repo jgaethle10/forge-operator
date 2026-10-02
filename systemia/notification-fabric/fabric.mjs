@@ -153,7 +153,22 @@ export function createNotificationFabric(options = {}) {
   const immediateBudgetPerHour = Number(options.immediateBudgetPerHour ?? process.env.EVERCRAFT_NOTIFICATION_IMMEDIATE_BUDGET ?? 4);
 
   function resolveTargets(intent) {
-    const { matched, principals } = resolveTargets(intent);
+    const matched = store.listSubscriptions().filter((sub) => matchesSubscription(sub, intent));
+    const matchedPrincipals = new Set(matched.map((sub) => sub.principal_id));
+    const livePrincipals = realtimeHub.matchPrincipals({
+      recipient_ids: intent.recipient_ids,
+      audiences: intent.audiences,
+      product: intent.product,
+    });
+    const principals = new Set(matchedPrincipals);
+    if (intent.purpose === 'marketing') {
+      for (const principal of livePrincipals) {
+        if (matchedPrincipals.has(principal)) principals.add(principal);
+      }
+    } else {
+      for (const principal of livePrincipals) principals.add(principal);
+      for (const principal of intent.recipient_ids) principals.add(principal);
+    }
     return { matched, principals };
   }
 
@@ -165,18 +180,7 @@ export function createNotificationFabric(options = {}) {
       return { intent, matched: 0, accepted: 0, realtime_delivered: 0, inboxed: 0, targeted_principal_ids: [], deduped: true, receipts: [event] };
     }
 
-    const matched = store.listSubscriptions().filter((sub) => matchesSubscription(sub, intent));
-    const livePrincipals = realtimeHub.matchPrincipals({
-      recipient_ids: intent.recipient_ids,
-      audiences: intent.audiences,
-      product: intent.product,
-    });
-    const principals = new Set();
-    for (const sub of matched) principals.add(sub.principal_id);
-    for (const principal of livePrincipals) principals.add(principal);
-    if (intent.purpose !== 'marketing') {
-      for (const principal of intent.recipient_ids) principals.add(principal);
-    }
+    const { matched, principals } = resolveTargets(intent);
 
     const payload = safeNotificationPayload(intent);
     const receipts = [];
