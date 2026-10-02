@@ -25,6 +25,7 @@ import { startPublicEdgeRuntime } from '../network/public-edge-runtime.mjs';
 import { startFederatedServiceBridge } from '../network/federated-service-bridge.mjs';
 import { startEvercraftHomeServer } from '../evercraft-home/server.mjs';
 import { startHouseholdFabricYakimaRuntime } from '../household-fabric/resident-runtime.mjs';
+import { startHouseholdFabricPublicOrigin } from '../household-fabric/public-origin-runtime.mjs';
 import { startEvercraftEdgeDnsRuntime } from './evercraft-edge-dns-runtime.mjs';
 import { validatePublicEdgeAdmission } from '../network/public-edge-tls.mjs';
 import { transcriptionCapabilityStatus } from '../forensiscope/transcription-engine.mjs';
@@ -857,7 +858,8 @@ export async function startEvercraftComputeNode({
     'systemia.household-fabric-yakima.v1',
     'saban.logical-agent',
     'saban.multiplier-assignment.v1',
-  ]);
+      'systemia.household-fabric-public-origin.v1',
+]);
   for (const workloadClass of NodeSeedMicroWorkloads) {
     supported.add(workloadClass);
   }
@@ -1615,6 +1617,63 @@ export async function startEvercraftComputeNode({
             workload_class: body.workload_class,
             result_schema: result.schema,
             instance_id: runtime.instance_id,
+          });
+          return send(res, 200, {
+            ok: true,
+            node_id: nodeId,
+            workload_class: body.workload_class,
+            result,
+            receipt,
+          });
+        }
+
+        if (workloadClass === 'systemia.household-fabric-public-origin.v1') {
+          const sourceUrl = String(body.input?.source_url || '').trim();
+          if (!sourceUrl) {
+            return send(res, 422, { error: 'household_public_origin_source_url_required' });
+          }
+          const runtime = await startHouseholdFabricPublicOrigin({
+            sourceUrl,
+            host: '127.0.0.1',
+            port: Number(body.input?.port || 0),
+          });
+          const initialHealth = await runtime.health();
+          if (initialHealth.ok !== true || initialHealth.source_ready !== true) {
+            await runtime.close();
+            return send(res, 503, { error: 'household_public_origin_source_not_ready' });
+          }
+
+          const serviceId = `svc_${randomBytes(8).toString('hex')}`;
+          services.set(serviceId, {
+            lease_id: body.lease_id,
+            workload_class: body.workload_class,
+            runtime,
+            service: runtime,
+          });
+          const result = {
+            schema: 'evercraft.compute.resident-service.v1',
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            service_url: null,
+            local_url: runtime.url,
+            health_path: `/v1/services/${serviceId}/health`,
+            public_route_required: true,
+            public_health_path: '/health',
+            public_today_path: '/api/household-fabric/yakima/today',
+            instance_id: runtime.instanceId,
+            source_loopback_only: true,
+            source_authority_exposed: false,
+            allocator_authority_exposed: false,
+            credential_material_exposed: false,
+          };
+          const receipt = chain.issue('service.started', {
+            lease_id: body.lease_id,
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            result_schema: result.schema,
+            instance_id: runtime.instanceId,
+            source_loopback_only: true,
+            source_authority_exposed: false,
           });
           return send(res, 200, {
             ok: true,

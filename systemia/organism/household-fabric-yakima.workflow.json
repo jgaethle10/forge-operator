@@ -66,7 +66,9 @@
     "resident_service_health_is_not_live_public_coverage": true,
     "provider_credentials_configured_is_not_source_freshness": true,
     "resident_discovered_is_not_publicly_promoted": true,
-    "identity_attested_is_not_fresh_source_evidence": true
+    "identity_attested_is_not_fresh_source_evidence": true,
+    "public_origin_routable_is_not_live_today": true,
+    "fresh_today_canary_required_before_public_promotion": true
   },
   "credential_policy": {
     "default_mode": "evercraft_vault_reference",
@@ -103,5 +105,21 @@
     "public_edge_affinity_preferred": true,
     "capacity_discovery_fallback": true,
     "manual_endpoint_required": false
+  },
+  "public_origin": {
+    "workload_class": "systemia.household-fabric-public-origin.v1",
+    "deployment_id": "household-fabric-public-origin",
+    "placement": "same-node-sibling-of-household-fabric-yakima",
+    "source_transport": "loopback-only",
+    "endpoints": {
+      "health": "/health",
+      "today": "/api/household-fabric/yakima/today"
+    },
+    "public_projection": true,
+    "read_only": true,
+    "allocator_authority_exposed": false,
+    "credential_material_exposed": false,
+    "deployment_receipt_binding_required": true,
+    "public_edge_route_verification_required": true
   }
 }

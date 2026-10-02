@@ -1,0 +1,42 @@
+name: Household Fabric public origin
+
+on:
+  pull_request:
+    paths:
+      - "systemia/household-fabric/public-origin-runtime.mjs"
+      - "systemia/compute/runtime-node.mjs"
+      - "systemia/compute/household-fabric-public-origin.proof.mjs"
+      - "systemia/yard/operator.mjs"
+      - "systemia/organism/household-fabric-yakima.workflow.json"
+      - ".github/workflows/household-fabric-public-origin.yml"
+      - "package.json"
+  push:
+    branches:
+      - main
+      - "systemia/**"
+    paths:
+      - "systemia/household-fabric/public-origin-runtime.mjs"
+      - "systemia/compute/runtime-node.mjs"
+      - "systemia/compute/household-fabric-public-origin.proof.mjs"
+      - "systemia/yard/operator.mjs"
+      - "systemia/organism/household-fabric-yakima.workflow.json"
+      - ".github/workflows/household-fabric-public-origin.yml"
+      - "package.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install
+        run: npm install --no-audit --no-fund
+      - name: Verify private resident to public origin boundary
+        run: npm run proof:household-fabric-public-origin
