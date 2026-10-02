@@ -20,6 +20,14 @@ function boundedText(value, label, maxLength) {
   return text;
 }
 
+function boundedInteger(value, label, fallback, minimum, maximum) {
+  const candidate = value === undefined || value === null || value === '' ? fallback : Number(value);
+  if (!Number.isFinite(candidate) || !Number.isInteger(candidate) || candidate < minimum || candidate > maximum) {
+    throw new Error(`${label} must be an integer between ${minimum} and ${maximum}.`);
+  }
+  return candidate;
+}
+
 function normalizedData(value) {
   if (value === undefined || value === null) return {};
   if (!value || typeof value !== 'object' || Array.isArray(value)) {
@@ -76,10 +84,10 @@ function validateIntent(raw) {
   const acknowledgement = raw?.acknowledgement?.required === true ? {
     required: true,
     mode: raw.acknowledgement.mode === 'all' ? 'all' : 'any',
-    within_seconds: Math.max(15, Math.min(Number(raw.acknowledgement.within_seconds ?? 300), 7 * 24 * 60 * 60)),
-    max_escalations: Math.max(0, Math.min(Number(raw.acknowledgement.max_escalations ?? 2), 5)),
-    escalation_interval_seconds: Math.max(15, Math.min(Number(raw.acknowledgement.escalation_interval_seconds ?? 300), 24 * 60 * 60)),
-    title_prefix: String(raw.acknowledgement.title_prefix || 'UNACKNOWLEDGED').slice(0, 40),
+    within_seconds: boundedInteger(raw.acknowledgement.within_seconds, 'acknowledgement.within_seconds', 300, 15, 7 * 24 * 60 * 60),
+    max_escalations: boundedInteger(raw.acknowledgement.max_escalations, 'acknowledgement.max_escalations', 2, 0, 5),
+    escalation_interval_seconds: boundedInteger(raw.acknowledgement.escalation_interval_seconds, 'acknowledgement.escalation_interval_seconds', 300, 15, 24 * 60 * 60),
+    title_prefix: boundedText(raw.acknowledgement.title_prefix || 'UNACKNOWLEDGED', 'acknowledgement.title_prefix', 40),
     due_at: raw.acknowledgement.due_at ? String(raw.acknowledgement.due_at) : null,
   } : null;
   return {
@@ -88,8 +96,8 @@ function validateIntent(raw) {
     product: boundedText(raw.product || 'unknown', 'Product', 120),
     purpose,
     priority,
-    title: title.slice(0, 140),
-    body: body.slice(0, 1200),
+    title: boundedText(title, 'Notification title', 140),
+    body: boundedText(body, 'Notification body', 1200),
     url: safeDeliveryUrl(raw.url, 'Notification URL'),
     icon: safeDeliveryUrl(raw.icon || '/favicon.ico', 'Notification icon'),
     badge: safeDeliveryUrl(raw.badge, 'Notification badge'),
@@ -100,10 +108,10 @@ function validateIntent(raw) {
     acknowledgement,
     evidence_state: boundedText(raw.evidence_state || 'not_applicable', 'evidence_state', 120),
     consent_basis: boundedText(raw.consent_basis || (purpose === 'safety' ? 'safety_service' : 'service_relationship'), 'consent_basis', 120),
-    ttl_seconds: Math.max(0, Math.min(Number(raw.ttl_seconds ?? 3600), 2419200)),
+    ttl_seconds: boundedInteger(raw.ttl_seconds, 'ttl_seconds', 3600, 0, 2419200),
     expires_at: optionalExpiry(raw.expires_at),
     dedupe_key: raw.dedupe_key ? boundedText(raw.dedupe_key, 'dedupe_key', 256) : null,
-    dedupe_window_seconds: Math.max(0, Number(raw.dedupe_window_seconds ?? 900)),
+    dedupe_window_seconds: boundedInteger(raw.dedupe_window_seconds, 'dedupe_window_seconds', 900, 0, 2419200),
     created_at: raw.created_at || now,
   };
 }
@@ -194,8 +202,20 @@ export function createNotificationFabric(options = {}) {
   const vapidPublicKey = options.vapidPublicKey ?? process.env.EVERCRAFT_VAPID_PUBLIC_KEY ?? '';
   const vapidPrivateKey = options.vapidPrivateKey ?? process.env.EVERCRAFT_VAPID_PRIVATE_KEY ?? '';
   const vapidSubject = options.vapidSubject ?? process.env.EVERCRAFT_VAPID_SUBJECT ?? '';
-  const immediateBudgetPerHour = Number(options.immediateBudgetPerHour ?? process.env.EVERCRAFT_NOTIFICATION_IMMEDIATE_BUDGET ?? 4);
-  const pushTimeoutMs = Math.max(250, Math.min(Number(options.pushTimeoutMs ?? process.env.EVERCRAFT_NOTIFICATION_PUSH_TIMEOUT_MS ?? 10000), 30000));
+  const immediateBudgetPerHour = boundedInteger(
+    options.immediateBudgetPerHour ?? process.env.EVERCRAFT_NOTIFICATION_IMMEDIATE_BUDGET,
+    'EVERCRAFT_NOTIFICATION_IMMEDIATE_BUDGET',
+    4,
+    1,
+    1000
+  );
+  const pushTimeoutMs = boundedInteger(
+    options.pushTimeoutMs ?? process.env.EVERCRAFT_NOTIFICATION_PUSH_TIMEOUT_MS,
+    'EVERCRAFT_NOTIFICATION_PUSH_TIMEOUT_MS',
+    10000,
+    250,
+    30000
+  );
 
   function resolveTargets(intent) {
     const matched = store.listSubscriptions().filter((sub) => matchesSubscription(sub, intent));
