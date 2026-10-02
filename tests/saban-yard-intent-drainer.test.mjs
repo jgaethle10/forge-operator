@@ -31,8 +31,8 @@ test('resident bridge persists no allocator or control authority into Saban conf
 
 test('Yard refreshes safe capacity inventory before draining frozen Saban intents',()=>{
   const inventory=runner.indexOf('listRemoteCapacityNodes');
-  const sanitized=runner.indexOf('writeSafeNodeSeedInventory');
-  const drain=runner.indexOf('drainSabanNodeSeedIntents');
+  const sanitized=runner.indexOf('const safeInventory=writeSafeNodeSeedInventory');
+  const drain=runner.indexOf('const drained=await yard.drainSabanNodeSeedIntents');
   assert.ok(inventory>=0);
   assert.ok(sanitized>inventory);
   assert.ok(drain>sanitized);
