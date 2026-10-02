@@ -55,7 +55,7 @@ const fakeGenerate=async({address,systemiaMachineKey,onProgress})=>{
 }
 
 {
-  const runtime=await start({gatewayToken:'gateway-proof',systemiaMachineKey:'machine-proof',generate:fakeGenerate});
+  const runtime=await start({gatewayToken:'gateway-proof',systemiaMachineKey:'machine-proof',sourceUrl:'https://owned-source.invalid/site-snapshot',generate:fakeGenerate});
   try{
     const health=await fetch(runtime.url+'/api/rivet/report-health').then(r=>r.json());
     assert.equal(health.ok,true);

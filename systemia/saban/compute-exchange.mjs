@@ -186,6 +186,17 @@ export function rankComputeOffers(demand,offers=[]){
 }
 
 function authorityAllows(authority,demand,offer,kind){
+  const internalZeroCostLease =
+    kind==='lease' &&
+    offer?.market==='evercraft-broker' &&
+    offer?.economics?.zero_cost===true &&
+    offer?.trust?.attested===true &&
+    ['authorized_compute','voluntary_compute'].includes(String(offer?.access_class||''));
+
+  if(internalZeroCostLease){
+    return {ok:true,reason:'preauthorized_internal_capacity'};
+  }
+
   if(!authority||typeof authority!=='object') return {ok:false,reason:`${kind}_authority_missing`};
   if(authority.schema!=='evercraft.saban.compute-authority.v1'){
     return {ok:false,reason:`${kind}_authority_schema_invalid`};
