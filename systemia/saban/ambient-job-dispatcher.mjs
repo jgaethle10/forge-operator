@@ -49,7 +49,21 @@ export async function dispatchAmbientJobsOnce({
   const registry=new AmbientDeviceRegistry({root:path.join(resolvedRoot,'registry')});
   const performance=loadPerformanceLedger(path.join(resolvedRoot,'performance-ledger.json'));
   const snapshot=registry.list({now});
-  const caps=activeCapabilities(snapshot);
+  const autonomyFile=path.join(resolvedRoot,'capacity-autonomy-plan.json');
+  const autonomyPlan=fs.existsSync(autonomyFile)
+    ? JSON.parse(fs.readFileSync(autonomyFile,'utf8'))
+    : null;
+  const suspendedDevices=new Set(
+    autonomyPlan?.schema==='evercraft.saban.capacity-autonomy-plan.v1'
+      ? (autonomyPlan.safe_autonomous_actions||[])
+          .filter(x=>String(x.action||'')==='suspend_new_assignments')
+          .map(x=>String(x.device_id||''))
+          .filter(Boolean)
+      : []
+  );
+  const caps=activeCapabilities(snapshot).filter(cap=>
+    !suspendedDevices.has(String(cap.metadata?.device_id||''))
+  );
 
   const jobs=queue.list({states:['queued','held','retry_wait']}).slice(
     0,Math.max(1,Math.floor(Number(maxJobs||16)))
@@ -201,6 +215,9 @@ export async function dispatchAmbientJobsOnce({
     commercial_capacity_considered:false,
     commercial_capacity_authorized:false,
     arbitrary_code_execution:false,
+    autonomy_plan_present:autonomyPlan?.schema==='evercraft.saban.capacity-autonomy-plan.v1',
+    autonomy_plan_receipt:autonomyPlan?.receipt_hash||null,
+    suspended_device_count:suspendedDevices.size,
     rows,
     generated_at:(now instanceof Date?now:new Date(now)).toISOString(),
   };
