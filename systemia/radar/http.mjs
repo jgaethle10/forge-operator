@@ -16,7 +16,14 @@ export function registerRadarRoutes(app, {
   journalUrl = process.env.RADAR_JOURNAL_URL || 'https://journal.evercraft.global/',
   autoReleaseOwned = process.env.RADAR_OWNED_RELEASE_ENABLED == null
     ? isProd
-    : String(process.env.RADAR_OWNED_RELEASE_ENABLED).toLowerCase() === 'true'
+    : String(process.env.RADAR_OWNED_RELEASE_ENABLED).toLowerCase() === 'true',
+  clipAutoPublishEnabled = String(process.env.RADAR_CLIP_AUTOPUBLISH_ENABLED || '').toLowerCase() === 'true',
+  radarPublicOrigin = process.env.RADAR_PUBLIC_ORIGIN || '',
+  clipAuthorizationRef = process.env.RADAR_CLIP_AUTHORIZATION_REF || '',
+  facebookPageId = process.env.RADAR_FACEBOOK_PAGE_ID || '',
+  facebookPageAccessToken = process.env.RADAR_FACEBOOK_PAGE_ACCESS_TOKEN || '',
+  facebookAdapterVerified = String(process.env.RADAR_FACEBOOK_ADAPTER_VERIFIED || '').toLowerCase() === 'true',
+  facebookGraphVersion = process.env.RADAR_FACEBOOK_GRAPH_VERSION || 'v26.0'
 } = {}) {
   const token = String(process.env.RADAR_INTERNAL_TOKEN || '').trim();
   const resident = createRadarResident({
@@ -25,7 +32,14 @@ export function registerRadarRoutes(app, {
     materialityThreshold,
     maxSignals,
     journalUrl,
-    autoReleaseOwned
+    autoReleaseOwned,
+    clipAutoPublishEnabled,
+    radarPublicOrigin,
+    clipAuthorizationRef,
+    facebookPageId,
+    facebookPageAccessToken,
+    facebookAdapterVerified,
+    facebookGraphVersion
   });
 
   function requireInternal(req, res, next) {
@@ -89,6 +103,11 @@ export function registerRadarRoutes(app, {
     res.json(resident.releaseState().corrections);
   });
 
+  app.get('/api/radar/distribution', (_req, res) => {
+    res.setHeader('Cache-Control', 'no-store');
+    res.json(resident.distributionState());
+  });
+
   app.get('/radar/releases/:slug', (req, res) => {
     const html = readRadarReleaseAsset(stateDir, String(req.params.slug || ''), 'index.html');
     if (!html) {
@@ -129,6 +148,14 @@ export function registerRadarRoutes(app, {
   app.post('/api/radar/release', requireInternal, (_req, res) => {
     const receipt = resident.releaseLatestOwned();
     res.status(receipt.status === 'hold' ? 409 : 200).json(receipt);
+  });
+
+  app.post('/api/radar/distribute', requireInternal, async (req, res) => {
+    const receipt = await resident.distribute({
+      retryFailed: req.body?.retry_failed === true,
+      maxItems: Number(req.body?.max_items || 1)
+    });
+    res.status(receipt.failed > 0 ? 502 : 200).json(receipt);
   });
 
   app.post('/api/radar/ingest', requireInternal, (req, res) => {
