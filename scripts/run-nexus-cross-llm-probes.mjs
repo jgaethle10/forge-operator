@@ -13,6 +13,16 @@ const requestedProviders = String(process.env.NEXUS_PROBE_PROVIDERS || '')
   .map(v => v.trim())
   .filter(Boolean);
 const providers = requestedProviders.length ? requestedProviders : suite.providers;
+const requestedCases = String(process.env.NEXUS_PROBE_CASES || '')
+  .split(',')
+  .map(v => v.trim())
+  .filter(Boolean);
+const cases = requestedCases.length
+  ? suite.cases.filter(testCase => requestedCases.includes(testCase.case_id))
+  : suite.cases;
+const unknownRequestedCases = requestedCases.filter(
+  caseId => !suite.cases.some(testCase => testCase.case_id === caseId)
+);
 
 const now = new Date();
 const runId = `nexus-cross-llm-${now.toISOString().replace(/[:.]/g, '-')}`;
@@ -23,6 +33,9 @@ const receipt = {
   bridge_configured: Boolean(bridgeUrl && bridgeToken),
   provider_matrix_version: matrix.updated_at,
   suite_version: suite.updated_at,
+  requested_cases: requestedCases,
+  selected_cases: cases.map(testCase => testCase.case_id),
+  unknown_requested_cases: unknownRequestedCases,
   results: []
 };
 
@@ -138,7 +151,7 @@ for (const provider of providers) {
     continue;
   }
 
-  for (const testCase of suite.cases) {
+  for (const testCase of cases) {
     try {
       receipt.results.push(await runProbe(provider, testCase));
     } catch (error) {
@@ -167,4 +180,11 @@ const outputDir = path.join(root, 'probe-receipts');
 fs.mkdirSync(outputDir, { recursive: true });
 const outputPath = path.join(outputDir, `${runId}.json`);
 fs.writeFileSync(outputPath, JSON.stringify(receipt, null, 2) + '\n');
-console.log(JSON.stringify({ outputPath, summary: receipt.summary }, null, 2));
+console.log(JSON.stringify({ outputPath, requested_cases: requestedCases, selected_cases: cases.map(testCase => testCase.case_id), summary: receipt.summary }, null, 2));
+
+if (requestedCases.length && unknownRequestedCases.length) {
+  throw new Error(`Nexus provider probe requested unknown case(s): ${unknownRequestedCases.join(', ')}`);
+}
+if (requestedCases.length && cases.length === 0) {
+  throw new Error('Nexus provider probe case filter selected zero cases.');
+}

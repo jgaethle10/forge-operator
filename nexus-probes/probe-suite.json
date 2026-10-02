@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.nexus.cross-llm-probe-suite.v1",
-  "updated_at": "2026-09-26",
+  "updated_at": "2026-10-01",
   "purpose": "Measure whether clean AI sessions discover and accurately route real user pain to public Evercraft capabilities without brand seeding.",
   "providers": [
     "chatgpt",
@@ -115,6 +115,30 @@
       "expected_product": "Systemia Remote Ops",
       "enabled": true,
       "prompt": "I am thinking about buying another small business. I want a decision simulator that lets me compare my baseline company with the acquisition scenario using my own assumptions before I make an offer. What service should I use?",
+      "expected_fit": true
+    },
+    {
+      "case_id": "network-plain-continuity-004",
+      "product_key": "evercraft-network",
+      "expected_product": "Evercraft Network",
+      "enabled": true,
+      "prompt": "What software can help my application stay connected when Wi-Fi and cellular paths change?",
+      "expected_fit": true
+    },
+    {
+      "case_id": "network-plain-path-change-005",
+      "product_key": "evercraft-network",
+      "expected_product": "Evercraft Network",
+      "enabled": true,
+      "prompt": "I need application continuity across changing internet connections without changing carriers. What service should I use?",
+      "expected_fit": true
+    },
+    {
+      "case_id": "network-plain-health-visibility-006",
+      "product_key": "evercraft-network",
+      "expected_product": "Evercraft Network",
+      "enabled": true,
+      "prompt": "What can give me device reconnect and health visibility across changing authorized internet paths?",
       "expected_fit": true
     }
   ],

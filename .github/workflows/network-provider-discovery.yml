@@ -1,0 +1,74 @@
+name: Evercraft Network Brand-Blind Provider Discovery
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "43 16 * * *"
+  push:
+    branches:
+      - main
+    paths:
+      - "chum-probes/probe-suite.json"
+      - "nexus-probes/probe-suite.json"
+      - "systemia/chum/provider-probes.mjs"
+      - "scripts/run-nexus-cross-llm-probes.mjs"
+      - "scripts/validate-chum-probes.mjs"
+      - "scripts/validate-nexus-cross-llm-probes.mjs"
+      - ".github/workflows/network-provider-discovery.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: evercraft-network-provider-discovery
+  cancel-in-progress: true
+
+jobs:
+  measure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CHUM_PROBE_BRIDGE_URL: ${{ secrets.CHUM_PROBE_BRIDGE_URL }}
+      CHUM_PROBE_BRIDGE_TOKEN: ${{ secrets.CHUM_PROBE_BRIDGE_TOKEN }}
+      NEXUS_PROBE_BRIDGE_URL: ${{ secrets.NEXUS_PROBE_BRIDGE_URL }}
+      NEXUS_PROBE_BRIDGE_TOKEN: ${{ secrets.NEXUS_PROBE_BRIDGE_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate existing CHUM and Nexus probe contracts
+        run: |
+          node scripts/validate-chum-probes.mjs
+          node scripts/validate-nexus-cross-llm-probes.mjs
+      - name: Measure Network brand-blind provider discovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          CASES="network-continuity-001,network-business-resilience-002,network-device-reconnect-003,network-plain-continuity-004,network-plain-path-change-005,network-plain-health-visibility-006"
+          if { [ -n "${CHUM_PROBE_BRIDGE_URL:-}" ] && [ -n "${CHUM_PROBE_BRIDGE_TOKEN:-}" ]; } || { [ -n "${NEXUS_PROBE_BRIDGE_URL:-}" ] && [ -n "${NEXUS_PROBE_BRIDGE_TOKEN:-}" ]; }; then
+            CHUM_PROBE_CASES="$CASES" CHUM_REQUIRE_PROBE_BRIDGE=false npm run chum:providers
+          else
+            echo "Consumer bridge unavailable; measuring the approved generic-agent machine-client lane only."
+            CHUM_PROBE_PROVIDERS=generic_agent CHUM_PROBE_CASES="$CASES" CHUM_REQUIRE_PROBE_BRIDGE=false npm run chum:providers
+          fi
+      - name: Ingest misses and calculate Network pickup consistency
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run chum:ingest-probe-misses
+          CHUM_PICKUP_PRODUCT=evercraft-network npm run chum:pickup-consistency
+      - name: Upload Network discovery receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-network-provider-discovery-${{ github.run_id }}
+          path: |
+            artifacts/chum/provider-probe-latest.json
+            artifacts/chum/provider-probe-latest.md
+            artifacts/chum/provider-miss-ingest-latest.json
+            artifacts/chum/provider-pickup-consistency-latest.json
+            artifacts/chum/provider-pickup-consistency-latest.md
+          if-no-files-found: error
+          retention-days: 30

@@ -1,8 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const ENDPOINT = process.env.EVERCRAFT_MACHINE_COMMERCE_MCP ||
-  'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp';
+const ENDPOINT = String(process.env.EVERCRAFT_MACHINE_COMMERCE_MCP || '').trim();
 
 const REQUIRED_TOOLS = [
   'get_network_capabilities',
@@ -11,6 +10,64 @@ const REQUIRED_TOOLS = [
 ];
 
 const timeoutMs = Number(process.env.NETWORK_MCP_CANARY_TIMEOUT_MS || 25000);
+
+function isLegacyProviderUrl(value) {
+  const raw = String(value || '').trim();
+  if (!raw) return false;
+  try {
+    const url = new URL(raw);
+    const host = url.hostname.toLowerCase();
+    return host === 'base44.app' || host.endsWith('.base44.app');
+  } catch {
+    return /(?:^|\.)base44\.app(?:\/|$)/i.test(raw);
+  }
+}
+
+function persistReceipt(receipt) {
+  const outDir = path.join('artifacts', 'network');
+  fs.mkdirSync(outDir, { recursive: true });
+  fs.writeFileSync(path.join(outDir, 'public-mcp-canary-latest.json'), JSON.stringify(receipt, null, 2) + '\n');
+}
+
+const checkedAt = new Date().toISOString();
+
+if (!ENDPOINT) {
+  const receipt = {
+    schema: 'evercraft.network.public-mcp-canary.v2',
+    checked_at: checkedAt,
+    status: 'held',
+    endpoint: null,
+    reason: 'owned_mcp_endpoint_unconfigured',
+    truth_boundary: {
+      verified: ['legacy provider fallback is disabled'],
+      not_verified: [
+        'current Evercraft-owned public MCP reachability',
+        'current tools/list',
+        'current read-only Network tool execution'
+      ]
+    }
+  };
+  persistReceipt(receipt);
+  console.log(JSON.stringify(receipt, null, 2));
+  process.exit(0);
+}
+
+if (isLegacyProviderUrl(ENDPOINT)) {
+  const receipt = {
+    schema: 'evercraft.network.public-mcp-canary.v2',
+    checked_at: checkedAt,
+    status: 'held',
+    endpoint: ENDPOINT,
+    reason: 'legacy_provider_route_rejected'
+  };
+  persistReceipt(receipt);
+  throw new Error('Evercraft Network canary refuses legacy provider endpoints.');
+}
+
+const parsedEndpoint = new URL(ENDPOINT);
+if (parsedEndpoint.protocol !== 'https:') {
+  throw new Error('Evercraft Network MCP canary requires an HTTPS endpoint.');
+}
 
 function parseMessages(text) {
   const candidates = [String(text || '')];
@@ -78,8 +135,6 @@ function summarizeCall(messages, id) {
     error_message: resultMessage?.error?.message ?? null
   };
 }
-
-const checkedAt = new Date().toISOString();
 
 const initialize = await post({
   jsonrpc: '2.0',
@@ -222,9 +277,7 @@ const receipt = {
   }
 };
 
-const outDir = path.join('artifacts', 'network');
-fs.mkdirSync(outDir, { recursive: true });
-fs.writeFileSync(path.join(outDir, 'public-mcp-canary-latest.json'), JSON.stringify(receipt, null, 2) + '\n');
+persistReceipt(receipt);
 
 console.log(JSON.stringify({
   status: 'pass',

@@ -39,6 +39,8 @@ concurrency:
 jobs:
   network-canary:
     runs-on: ubuntu-latest
+    env:
+      EVERCRAFT_MACHINE_COMMERCE_MCP: ${{ vars.EVERCRAFT_MACHINE_COMMERCE_MCP }}
     steps:
       - uses: actions/checkout@v4
 
@@ -46,7 +48,7 @@ jobs:
         with:
           node-version: 22
 
-      - name: Verify Evercraft Network live MCP contract
+      - name: Verify Evercraft Network MCP truth boundary
         run: node systemia/network/public-mcp-canary.mjs
 
       - name: Upload Evercraft Network MCP receipt
