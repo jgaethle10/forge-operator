@@ -284,7 +284,13 @@ test('fabric task normalization is idempotent and preserves placement semantics'
   const once=normalizeFabricTask(input);
   const twice=normalizeFabricTask(once);
   assert.deepEqual(twice,once);
-  assert.deepEqual(twice.resources_per_execution,{cpu_units:0.25,memory_mb:512,storage_gb:2});
+  assert.deepEqual(twice.resources_per_execution,{
+    cpu_units:0.25,
+    memory_mb:512,
+    storage_gb:2,
+    gpu_count:0,
+    gpu_models:[],
+  });
   assert.equal(twice.trust.private_data,true);
   assert.equal(twice.trust.minimum_uptime_7d,0.72);
   assert.equal(twice.continuity.preemptible,true);
