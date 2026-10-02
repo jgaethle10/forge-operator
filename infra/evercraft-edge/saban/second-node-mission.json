@@ -13,7 +13,7 @@
   },
   "candidates": [
     {
-      "candidate_id": "megaton-external-linux",
+      "candidate_id": "megatron-external-linux",
       "rank": 1,
       "source": "prior Evercraft Node 001 external test environment",
       "historical_state": "Evercraft Node 001 previously installed and exercised",
