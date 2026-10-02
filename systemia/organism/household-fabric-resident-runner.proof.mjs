@@ -40,19 +40,24 @@ const seed = await startNodeSeed({
 const yard = new YardOperator({ stateDir: yardState });
 
 try {
-  const authoritySeed = await yard.deployRelease({
-    deploymentId: 'household-authority-seed',
+  const edge = await yard.deployRelease({
+    deploymentId: 'evercraft-public-edge',
     releaseRef: 'a'.repeat(40),
-    workloadClass: 'systemia.private-core-origin.v1',
+    workloadClass: 'systemia.public-edge.v1',
     capacityEndpoint: seed.endpoint,
     allocatorToken: token,
     input: {
-      target_path: path.join(computeRoot, 'authority-origin.git'),
+      mode: 'proof_loopback',
+      control_host: '127.0.0.1',
+      control_port: 0,
+      public_host: '127.0.0.1',
+      public_port: 0,
+      allow_private_upstream: false,
     },
-    rollbackTarget: 'proof:authority-seed-previous',
+    rollbackTarget: 'proof:public-edge-previous',
     leaseTtlMs: 120000,
   });
-  assert.equal(authoritySeed.state, 'ready');
+  assert.equal(edge.state, 'ready');
 
   const privateAuthorities = yard.privateCapacityAuthorities();
   assert.equal(privateAuthorities.source_record_count >= 1, true);
@@ -83,6 +88,9 @@ try {
   assert.equal(result.eligible_count, 1);
   assert.equal(result.identity_verified, true);
   assert.equal(result.resident_health_verified, true);
+  assert.equal(result.placement, 'public_edge_affinity');
+  assert.equal(result.public_edge_node_id, 'household-capacity-node');
+  assert.equal(result.colocated_with_public_edge, true);
   assert.equal(result.allocator_authority_exposed, false);
   assert.equal(result.authority_source_records >= 1, true);
   assert.equal(JSON.stringify(result).includes(token), false);
@@ -112,7 +120,7 @@ try {
   assert.equal(attached.allocator_authority_exposed, false);
 
   await yard.stopDeployment('household-fabric-yakima', { reason: 'proof_complete' });
-  await yard.stopDeployment('household-authority-seed', { reason: 'proof_complete' });
+  await yard.stopDeployment('evercraft-public-edge', { reason: 'proof_complete' });
 
   console.log(JSON.stringify({
     ok: true,
@@ -120,6 +128,8 @@ try {
     endpoint_supplied_manually_to_household: false,
     credential_free_beacon_discovery: true,
     private_allocator_authority_reused: true,
+    public_edge_affinity_preferred: true,
+    colocated_with_public_edge: true,
     allocator_authority_exposed: false,
     immutable_release_required: true,
     identity_attestation_verified: true,
@@ -130,7 +140,7 @@ try {
   }, null, 2));
 } finally {
   try { yard.stopLeaseKeeper('household-fabric-yakima'); } catch {}
-  try { yard.stopLeaseKeeper('household-authority-seed'); } catch {}
+  try { yard.stopLeaseKeeper('evercraft-public-edge'); } catch {}
   await seed.close();
   fs.rmSync(root, { recursive: true, force: true });
 }
