@@ -1,9 +1,18 @@
+import fs from 'node:fs';
 import assert from 'node:assert/strict';
 import {
   buildInstantWorkCatalog,
   createEvercraftPaymentOrder,
 } from '../systemia/commerce/instant-work.mjs';
 import { getFulfillmentProfile } from '../systemia/organism/universal-product-fulfillment.mjs';
+
+const liveCatalog = JSON.parse(fs.readFileSync('public/.well-known/evercraft-machine-catalog.json', 'utf8'));
+const liveInstantWork = buildInstantWorkCatalog(liveCatalog);
+assert.ok(liveInstantWork.length > 0);
+assert.equal(liveInstantWork.some((row) => row.public_id === 'rivet-site-underwriting-v1'), false);
+for (const offer of liveInstantWork) {
+  assert.ok(getFulfillmentProfile(offer.public_id), `live sell-now offer missing fulfillment profile: ${offer.public_id}`);
+}
 
 const fixture = {
   offers: [
@@ -90,7 +99,7 @@ assert.match(order.continue_url, /order_id=epo_/);
 
 console.log(JSON.stringify({
   ok: true,
-  instant_work_offers: catalog.length,
+  instant_work_offers: liveInstantWork.length,
   rivet_excluded: true,
   payment_authority: order.authority,
   settlement_router: order.settlement_router,
