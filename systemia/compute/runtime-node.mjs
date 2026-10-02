@@ -309,6 +309,76 @@ function executableAvailable(command) {
   return result.status === 0;
 }
 
+function safeCommandText(command,args=[]){
+  try{
+    const result=spawnSync(command,args,{
+      encoding:'utf8',
+      timeout:3000,
+      maxBuffer:256*1024,
+      stdio:['ignore','pipe','ignore'],
+    });
+    return result.status===0?String(result.stdout||'').trim():'';
+  }catch{
+    return '';
+  }
+}
+
+function detectedGpuModels(){
+  const models=[];
+  const nvidia=safeCommandText('nvidia-smi',[
+    '--query-gpu=name',
+    '--format=csv,noheader'
+  ]);
+  for(const line of nvidia.split(/\r?\n/).map(x=>x.trim()).filter(Boolean)){
+    models.push(line.slice(0,160));
+  }
+  if(!models.length){
+    const pci=safeCommandText('lspci',[]);
+    for(const line of pci.split(/\r?\n/)){
+      if(!/(vga compatible controller|3d controller|display controller)/i.test(line))continue;
+      const cleaned=line.replace(/^[0-9a-f:.]+\s+/i,'').trim();
+      if(cleaned)models.push(cleaned.slice(0,160));
+    }
+  }
+  return [...new Set(models)].slice(0,16);
+}
+
+function safeHardwareSummary({memoryMb,storageGb}={}){
+  const cpus=os.cpus()||[];
+  const cpuModel=String(cpus[0]?.model||'').trim().slice(0,160)||null;
+  const gpuModels=detectedGpuModels();
+  const logicalThreads=Math.max(1,cpus.length||1);
+  const memory=Math.max(64,Number(memoryMb||0));
+  const recommendedConcurrency=Math.max(
+    1,
+    Math.min(
+      logicalThreads,
+      Math.floor(memory/512),
+      64
+    )
+  );
+  return {
+    schema:'evercraft.compute.safe-hardware-summary.v1',
+    cpu:{
+      architecture:os.arch(),
+      model:cpuModel,
+      logical_threads:logicalThreads,
+    },
+    memory_mb:memory,
+    free_storage_gb:Math.max(0,Number(storageGb||0)),
+    accelerators:{
+      gpu_count:gpuModels.length,
+      gpu_models:gpuModels,
+      detection_state:gpuModels.length?'observed_local':'none_observed',
+    },
+    recommended_concurrency:{
+      value:recommendedConcurrency,
+      state:'inferred_from_cpu_and_memory',
+    },
+    sensitive_identifiers_included:false,
+  };
+}
+
 async function writeHashedRequest(req, target, maxBytes) {
   const hash = createHash('sha256');
   let bytes = 0;
@@ -436,6 +506,11 @@ export async function startEvercraftComputeNode({
       return 0;
     }
   })();
+  const totalMemoryMb=Math.max(64,Math.floor(os.totalmem()/1024/1024));
+  const hardwareSummary=safeHardwareSummary({
+    memoryMb:totalMemoryMb,
+    storageGb:freeStorageGb,
+  });
   const publicEdgeCapability = (() => {
     const baseDomain = String(process.env.EVERCRAFT_PUBLIC_EDGE_BASE_DOMAIN || '').trim();
     const tlsKeyPath = String(process.env.EVERCRAFT_PUBLIC_EDGE_TLS_KEY_PATH || '').trim();
@@ -977,8 +1052,10 @@ export async function startEvercraftComputeNode({
           attestation_supported: Boolean(deviceIdentity),
           capacity_hint: {
             cpu_units: Math.max(1, os.cpus()?.length || 1),
-            memory_mb: Math.max(64, Math.floor(os.totalmem() / 1024 / 1024)),
+            memory_mb: totalMemoryMb,
             storage_gb: freeStorageGb,
+            recommended_concurrency:hardwareSummary.recommended_concurrency.value,
+            hardware:hardwareSummary,
             executables: executableCapabilities,
             services: serviceCapabilities
           },
