@@ -155,9 +155,12 @@ test('reference identity fails closed when no identity reference is supplied',()
   assert.ok(videoRejections.every(row=>row.reasons.includes('identity_reference_missing')));
 });
 
-test('native audio requirement narrows routing to a capable model',()=>{
+test('native audio requirement narrows routing to a capable model and fans out the requested takes',()=>{
   const plan=buildVisualModelPlan({...request,requireNativeAudio:true,candidateCount:4},endpoints);
-  assert.deepEqual(plan.jobs.map(job=>job.modelId),['cinema-b']);
+  assert.equal(plan.jobs.length,4);
+  assert.deepEqual(plan.jobs.map(job=>job.modelId),['cinema-b','cinema-b','cinema-b','cinema-b']);
+  assert.deepEqual(plan.jobs.map(job=>job.modelVariantIndex),[1,2,3,4]);
+  assert.equal(new Set(plan.jobs.map(job=>job.id)).size,4);
 });
 
 test('finishing compiles lip-sync and upscale as governed post-tournament passes',()=>{
@@ -369,4 +372,24 @@ test('legacy single locator remains supported alongside the materialization mesh
   },[endpoint]);
   assert.equal(plan.status,'routed');
   assert.deepEqual(plan.jobs[0].references[0].locator,{kind:'url',value:'https://assets.example/eli.png'});
+});
+
+
+test('one eligible model can still produce enough governed candidates for a Shot Tournament',()=>{
+  const only=[endpoints[0]];
+  const plan=buildVisualModelPlan({...request,candidateCount:4,modelDiversity:2},only);
+  assert.equal(plan.status,'routed');
+  assert.equal(plan.jobs.length,4);
+  assert.deepEqual(plan.jobs.map(job=>job.modelVariantIndex),[1,2,3,4]);
+  assert.equal(new Set(plan.jobs.map(job=>job.id)).size,4);
+  assert.ok(plan.jobs.every(job=>job.outputContract.tournamentCandidateRequired));
+});
+
+test('fan-out preserves model diversity before repeating higher-ranked endpoints',()=>{
+  const plan=buildVisualModelPlan({...request,candidateCount:5,modelDiversity:1},endpoints);
+  assert.equal(plan.jobs.length,5);
+  const firstThree=new Set(plan.jobs.slice(0,3).map(job=>job.modelId));
+  assert.equal(firstThree.size,3);
+  assert.equal(plan.jobs[3].modelId,plan.jobs[0].modelId);
+  assert.equal(plan.jobs[4].modelId,plan.jobs[1].modelId);
 });
