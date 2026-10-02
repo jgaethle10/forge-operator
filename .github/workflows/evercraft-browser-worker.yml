@@ -8,9 +8,12 @@ on:
       - "systemia/compute/runtime-node.mjs"
       - "systemia/yard/browser-worker-proof.mjs"
       - "systemia/yard/browser-public-route-proof.mjs"
+      - "systemia/yard/browser-edge-attachment.mjs"
+      - "systemia/yard/browser-edge-attachment.proof.mjs"
       - "systemia/yard/operator.mjs"
       - "package.json"
       - ".github/workflows/evercraft-browser-worker.yml"
+  workflow_dispatch:
   push:
     branches: [main]
     paths:
@@ -96,3 +99,45 @@ jobs:
         run: node systemia/yard/browser-worker-proof.mjs
       - name: Prove Browser through Evercraft public edge
         run: node systemia/yard/browser-public-route-proof.mjs
+      - name: Prove Browser attaches to shared Evercraft edge
+        run: node systemia/yard/browser-edge-attachment.proof.mjs
+
+  publish-browser-image:
+    name: publish-owned-browser-image
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [browser-worker, yard-browser-route]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Log in to Evercraft GitHub container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and publish receipt-bound browser image
+        uses: docker/build-push-action@v6
+        with:
+          context: systemia/evercraft-web/browser-worker
+          push: true
+          tags: |
+            ghcr.io/jgaethle10/evercraft-browser-worker:sha-${{ github.sha }}
+            ghcr.io/jgaethle10/evercraft-browser-worker:main
+          labels: |
+            org.opencontainers.image.source=https://github.com/jgaethle10/forge-operator
+            org.opencontainers.image.revision=${{ github.sha }}
+            io.evercraft.capability=systemia.evercraft-web-browser.v1
+      - name: Record image publication receipt
+        shell: bash
+        run: |
+          {
+            echo "## Evercraft Browser image receipt"
+            echo "- Engine: **Evercraft-owned Playwright/Chromium worker**"
+            echo "- Revision: \`${{ github.sha }}\`"
+            echo "- Image: \`ghcr.io/jgaethle10/evercraft-browser-worker:sha-${{ github.sha }}\`"
+            echo "- Public Browser capability remains HELD until persistent runtime + external canary gates pass."
+            echo "- No external browser-agent fallback is authorized by this workflow."
+          } >> "$GITHUB_STEP_SUMMARY"
