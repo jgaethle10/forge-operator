@@ -258,6 +258,25 @@ The output is one Visual Stage suitable for the existing private Fallen Render W
 
 The production boundary is deliberate: Fallen can move an approved host reference through the world, but it will not fabricate a founder identity merely because a script asks for one. A real Week in Motion host pass requires an approved Jesse reference/performance asset or another explicitly licensed host asset.
 
+## Native Motion Engine
+
+Fallen now has an Evercraft-owned deterministic motion renderer for scenes that should not depend on a third-party visual generation provider. The first kernel, `evercraft-native-canvas-2d-v1`, is deliberately narrow but real: it draws and animates scene geometry, vehicles, snow, plow spray, lighting, camera movement and timed typography from an editable scene contract.
+
+This is not a Ken Burns shortcut. Every frame is recomputed from scene state at an exact time using `window.__evercraftRenderAt(seconds)` and `window.__evercraftRenderFrame(frame)`. The same scene seed must produce the same motion, which gives the studio reproducible renders, receipts and regression tests.
+
+The first production specimen is the EPS commercial winter route spot:
+
+```bash
+npm run media:studio -- native-motion \
+  systemia/media-studio/eps-snow-commercial.native-motion.json \
+  ./tmp/eps-snow-commercial.html \
+  ./tmp/eps-snow-commercial.receipt.json
+```
+
+Current native primitives include snowplow trucks, tractor/loaders, commercial buildings, streetlights, snowbanks, trees, signs, basic shapes, deterministic snow and spray particle emitters, camera keyframes and timed copy. Synthetic scenes are labeled `synthetic_visualization`; factual title-card claims require explicit claim lineage.
+
+The engine boundary is owned by Evercraft. External image/video models may still contribute optional source material through the Visual Model Fabric, but they are no longer the definition of motion generation. The native path is intended to grow toward WebGPU scene rendering, physically based materials and lights, rigid-body/particle simulation, procedural environments, native character/performance systems, learned Evercraft motion models and distributed GPU rendering while preserving the same project graph and exact-frame receipt contract.
+
 ## Visual Model Fabric
 
 Fallen's visual quality ceiling cannot be the browser/FFmpeg compositor. The compositor is the stage and finishing room; cinematic generation belongs behind a provider-neutral model fabric.
