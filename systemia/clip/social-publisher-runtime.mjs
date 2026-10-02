@@ -1,4 +1,5 @@
 import crypto from 'node:crypto';
+import { preflightPublicLink } from './public-link-preflight.mjs';
 
 function hash(value){
   return crypto.createHash('sha256').update(value).digest('hex');
@@ -25,8 +26,17 @@ function validateRequest(request){
   return metadata;
 }
 
+function contentDigestFor(request,metadata){
+  return hash(JSON.stringify({
+    schema:'evercraft.clip.social-content.v1',
+    destination:request.destination,
+    brandKey:request.brandKey,
+    metadata,
+  }));
+}
+
 export async function publishClipSocialPost({request,adapters,policy}){
-  const metadata=validateRequest(request);
+  let metadata=validateRequest(request);
   if(policy?.allowPublishing!==true) throw new Error('clip_social_publish_policy_disabled');
 
   const allowedDestinations=new Set(policy.allowedDestinations||[]);
@@ -38,15 +48,25 @@ export async function publishClipSocialPost({request,adapters,policy}){
   const adapter=(adapters||[]).find(item=>item.destination===request.destination&&item.verified===true);
   if(!adapter) throw new Error('clip_social_publish_verified_adapter_missing');
 
-  const contentDigest=hash(JSON.stringify({
-    schema:'evercraft.clip.social-content.v1',
-    destination:request.destination,
-    brandKey:request.brandKey,
-    metadata,
-  }));
-
   const startedAt=new Date().toISOString();
+  let contentDigest=contentDigestFor(request,metadata);
+  let linkPreflight=null;
+
   try{
+    if(metadata.link){
+      const linkPolicy=policy?.publicLinkPreflight||{};
+      linkPreflight=await preflightPublicLink({
+        url:metadata.link,
+        fetchImpl:linkPolicy.fetchImpl??globalThis.fetch,
+        blockedHostSuffixes:linkPolicy.blockedHostSuffixes,
+        expectedText:linkPolicy.expectedText,
+        maxRedirects:linkPolicy.maxRedirects,
+        timeoutMs:linkPolicy.timeoutMs,
+      });
+      metadata={...metadata,link:linkPreflight.finalUrl};
+      contentDigest=contentDigestFor(request,metadata);
+    }
+
     const result=await adapter.publish({
       requestId:request.id,
       metadata,
@@ -71,8 +91,10 @@ export async function publishClipSocialPost({request,adapters,policy}){
       url:result.url,
       providerRequestId:result.providerRequestId||result.remoteId,
       authorizationRef:request.authorization.authorizationRef,
+      publicLinkPreflight:linkPreflight,
       sourceRefs:[
         'clip-social-content:'+contentDigest,
+        ...(linkPreflight?['clip-public-link:'+linkPreflight.bodyFingerprint]:[]),
         ...result.sourceRefs,
       ],
       boundaries:{
@@ -82,6 +104,9 @@ export async function publishClipSocialPost({request,adapters,policy}){
         explicitAuthorizationRequired:true,
         providerReceiptRequired:true,
         publicationStateAssertedFromProviderResponse:true,
+        publicLinkPreflightRequired:metadata.link?true:false,
+        anonymousPublicLinkVerified:metadata.link?linkPreflight?.verified===true:false,
+        legacyProviderPublicLinksBlocked:true,
       },
       startedAt,
       publishedAt:new Date().toISOString(),
@@ -95,6 +120,7 @@ export async function publishClipSocialPost({request,adapters,policy}){
       brandKey:request.brandKey,
       contentDigest,
       authorizationRef:request.authorization.authorizationRef,
+      publicLinkPreflight:linkPreflight,
       error:error instanceof Error?error.message:String(error),
       boundaries:{
         firstPartyClipRuntime:true,
@@ -103,6 +129,9 @@ export async function publishClipSocialPost({request,adapters,policy}){
         explicitAuthorizationRequired:true,
         providerReceiptRequired:true,
         publicationStateAssertedFromProviderResponse:false,
+        publicLinkPreflightRequired:metadata.link?true:false,
+        anonymousPublicLinkVerified:false,
+        legacyProviderPublicLinksBlocked:true,
       },
       startedAt,
       failedAt:new Date().toISOString(),

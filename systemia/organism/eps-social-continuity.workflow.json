@@ -21,13 +21,15 @@
     "caller_controlled_copy": false,
     "caller_controlled_destination": false,
     "provider_visible_verification_required": true,
+    "anonymous_public_link_preflight_required": true,
+    "legacy_provider_public_links_forbidden": true,
     "secret_source": "private file binding only",
     "new_outreach_authority": false,
     "payment_authority": false
   },
   "migration": {
     "replaces_base44_schedule": "systemia_eps_social_continuity_every_30_minutes",
-    "legacy_clip_ingress_compatible": true,
+    "legacy_clip_ingress_compatible": false,
     "base44_schedule_retirement_gate": "yard_cycle_live_plus_verified_clip_response_plus_observation_window",
     "source_presence_is_not_live_cutover_proof": true
   }
