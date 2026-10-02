@@ -10,9 +10,13 @@ on:
       - 'systemia/saban/distributed-executor.mjs'
       - 'systemia/saban/distributed-voluntary-acquisition.proof.mjs'
       - 'systemia/saban/voluntary-worker/**'
+      - 'systemia/saban/formation.mjs'
+      - 'systemia/saban/formation-auto-acquisition.proof.mjs'
       - 'systemia/saban/markets/evercraft-voluntary.mjs'
       - 'systemia/saban/markets/golem.mjs'
       - 'systemia/saban/golem-adapter.proof.mjs'
+      - 'systemia/saban/distributed-golem-acquisition.proof.mjs'
+      - 'systemia/saban/portable-workers/**'
       - 'systemia/saban/golem-requestor/**'
       - 'systemia/saban/README.md'
       - 'systemia/saban/market-stack.mjs'
@@ -28,9 +32,13 @@ on:
       - 'systemia/saban/distributed-executor.mjs'
       - 'systemia/saban/distributed-voluntary-acquisition.proof.mjs'
       - 'systemia/saban/voluntary-worker/**'
+      - 'systemia/saban/formation.mjs'
+      - 'systemia/saban/formation-auto-acquisition.proof.mjs'
       - 'systemia/saban/markets/evercraft-voluntary.mjs'
       - 'systemia/saban/markets/golem.mjs'
       - 'systemia/saban/golem-adapter.proof.mjs'
+      - 'systemia/saban/distributed-golem-acquisition.proof.mjs'
+      - 'systemia/saban/portable-workers/**'
       - 'systemia/saban/golem-requestor/**'
       - 'systemia/saban/README.md'
       - 'systemia/saban/market-stack.mjs'
@@ -60,6 +68,8 @@ jobs:
         run: node systemia/saban/distributed-voluntary-acquisition.proof.mjs
       - name: Prove canonical compute market stack
         run: node systemia/saban/market-stack.proof.mjs
+      - name: Prove formation-level automatic compute acquisition
+        run: node systemia/saban/formation-auto-acquisition.proof.mjs
 
   golem-contract:
     runs-on: ubuntu-latest
@@ -69,6 +79,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Prove Golem requestor portable execution primitive
+        run: node systemia/saban/golem-requestor/client.proof.mjs
       - name: Prove Golem adapter contract
         if: ${{ hashFiles('systemia/saban/golem-adapter.proof.mjs') != '' }}
         run: node systemia/saban/golem-adapter.proof.mjs
+      - name: Prove automatic Saban acquisition on Golem capacity
+        run: node systemia/saban/distributed-golem-acquisition.proof.mjs

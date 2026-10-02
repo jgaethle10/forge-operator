@@ -58,6 +58,11 @@ export function normalizeComputeDemand(input={}){
         ? structuredClone(input.market_price_ceiling)
         : {},
     },
+    execution:{
+      software_id:input.portable_software_id?String(input.portable_software_id).trim():null,
+      portable_worker_id:input.portable_worker_id?String(input.portable_worker_id).trim():null,
+      portable_worker_version:input.portable_worker_version?String(input.portable_worker_version).trim():null,
+    },
     duration_seconds:duration,
     negotiation_level:negotiationLevel,
     created_at:new Date().toISOString(),
@@ -72,6 +77,10 @@ export function normalizeComputeOffer(input={}){
     offer_id:String(input.offer_id||'').trim(),
     provider_id:String(input.provider_id||'').trim(),
     market:String(input.market||'unknown').trim().toLowerCase(),
+    routing_priority:Math.max(
+      0,
+      Math.floor(n(input.routing_priority,100))
+    ),
     access_class:String(input.access_class||'commercial_capacity').trim(),
     endpoint:input.endpoint?String(input.endpoint).trim():null,
     resources:{
@@ -176,6 +185,7 @@ export function evaluateComputeOffer(demandInput,offerInput){
 export function rankComputeOffers(demand,offers=[]){
   const evaluated=offers.map((offer)=>evaluateComputeOffer(demand,offer));
   const eligible=evaluated.filter((x)=>x.eligible).sort((a,b)=>
+    Number(a.offer.routing_priority||100)-Number(b.offer.routing_priority||100) ||
     b.score-a.score ||
     String(a.offer.offer_id).localeCompare(String(b.offer.offer_id))
   );
@@ -198,7 +208,14 @@ function authorityAllows(authority,demand,offer,kind){
     return {ok:false,reason:`${kind}_authority_expired`};
   }
   if(kind==='lease'){
+    const paid=offer.economics.zero_cost!==true;
+    if(paid&&authority.allow_spend!==true){
+      return {ok:false,reason:'lease_spend_not_authorized'};
+    }
     const ceiling=authority.max_total_usd==null?null:Math.max(0,n(authority.max_total_usd));
+    if(paid&&offer.economics.total_usd!=null&&ceiling==null){
+      return {ok:false,reason:'lease_authority_budget_missing'};
+    }
     if(ceiling!=null&&offer.economics.total_usd!=null&&offer.economics.total_usd>ceiling){
       return {ok:false,reason:'lease_authority_budget_exceeded'};
     }
@@ -227,7 +244,14 @@ export async function negotiateCompute({
     try{
       const result=await adapter.discover({demand});
       for(const raw of result?.offers||[]){
-        discovered.push(normalizeComputeOffer({...raw,market:raw.market||market}));
+        discovered.push(normalizeComputeOffer({
+          ...raw,
+          market:raw.market||market,
+          routing_priority:
+            raw.routing_priority??
+            adapter.routing_priority??
+            100,
+        }));
       }
       events.push({
         type:'market.discovered',
@@ -240,103 +264,224 @@ export async function negotiateCompute({
     }
   }
 
-  let ranking=rankComputeOffers(demand,discovered);
-  let selected=ranking.eligible[0]?.offer||null;
+  const ranking=rankComputeOffers(demand,discovered);
+  const candidates=ranking.eligible.map((row)=>row.offer);
+  const requestedLevel=LEVELS.get(demand.negotiation_level);
+  let selected=null;
   let quote=null;
   let lease=null;
+  let leaseAttempted=false;
+  let quoteReconciliationRequired=false;
+  let candidateAttempts=0;
 
-  if(selected&&LEVELS.get(demand.negotiation_level)>=LEVELS.get('quote')&&selected.quote_required){
-    const adapter=adapters.find((x)=>String(x?.market||'').toLowerCase()===selected.market);
-    if(!adapter||typeof adapter.requestQuotes!=='function'){
-      events.push({type:'quote.held',market:selected.market,reason:'quote_adapter_missing'});
-    }else{
-      const gate=authorityAllows(quoteAuthority,demand,selected,'quote');
-      if(!gate.ok){
-        events.push({type:'quote.held',market:selected.market,reason:gate.reason});
-      }else{
-        try{
-          quote=await adapter.requestQuotes({demand,offer:selected,authority:quoteAuthority});
-          events.push({
-            type:'quote.received',
-            market:selected.market,
-            quote_count:Number(quote?.offers?.length||0),
-            receipt:quote?.receipt||null,
-          });
-          const quoted=(quote?.offers||[]).map((raw)=>normalizeComputeOffer({...raw,market:raw.market||selected.market}));
-          ranking=rankComputeOffers(demand,quoted);
-          selected=ranking.eligible[0]?.offer||null;
-        }catch(error){
-          events.push({
-            type:'quote.failed',
-            market:selected.market,
-            reason:String(error?.message||error),
-          });
-          selected=null;
-        }
-      }
+  async function cleanupQuote(adapter,quoteValue,market){
+    if(!quoteValue||!adapter||typeof adapter.cancelQuote!=='function') return true;
+    try{
+      const cleanup=await adapter.cancelQuote({demand,quote:quoteValue});
+      events.push({
+        type:'quote.cleaned_up',
+        market,
+        receipt:cleanup?.receipt_hash||cleanup?.receipt||null,
+      });
+      return true;
+    }catch(error){
+      events.push({
+        type:'quote.cleanup_failed',
+        market,
+        reason:String(error?.message||error),
+        outcome:'reconciliation_required',
+      });
+      quoteReconciliationRequired=true;
+      return false;
     }
   }
 
-  let leaseAttempted=false;
-  if(
-    selected &&
-    selected.quote_required!==true &&
-    LEVELS.get(demand.negotiation_level)>=LEVELS.get('lease')
-  ){
-    const adapter=adapters.find((x)=>String(x?.market||'').toLowerCase()===selected.market);
-    if(!adapter||typeof adapter.lease!=='function'){
-      events.push({type:'lease.held',market:selected.market,reason:'lease_adapter_missing'});
-    }else{
-      const gate=authorityAllows(leaseAuthority,demand,selected,'lease');
-      if(!gate.ok){
-        events.push({type:'lease.held',market:selected.market,reason:gate.reason});
-      }else{
-        leaseAttempted=true;
+  if(requestedLevel===LEVELS.get('discover')){
+    selected=candidates[0]||null;
+  }else{
+    candidate_loop:
+    for(const candidate of candidates){
+      candidateAttempts+=1;
+      const market=String(candidate.market||'').toLowerCase();
+      const adapter=adapters.find((x)=>
+        String(x?.market||'').toLowerCase()===market
+      );
+      let workingOffer=candidate;
+      let workingQuote=null;
+
+      events.push({
+        type:'candidate.considered',
+        market,
+        offer_id:candidate.offer_id,
+        routing_priority:candidate.routing_priority,
+      });
+
+      if(workingOffer.quote_required){
+        if(!adapter||typeof adapter.requestQuotes!=='function'){
+          events.push({
+            type:'quote.held',
+            market,
+            reason:'quote_adapter_missing',
+          });
+          if(requestedLevel>=LEVELS.get('lease')){
+            events.push({
+              type:'lease.held',
+              market,
+              reason:'quote_required_before_lease',
+            });
+          }
+          continue;
+        }
+
+        const quoteGate=authorityAllows(
+          quoteAuthority,
+          demand,
+          workingOffer,
+          'quote'
+        );
+        if(!quoteGate.ok){
+          events.push({
+            type:'quote.held',
+            market,
+            reason:quoteGate.reason,
+          });
+          if(requestedLevel>=LEVELS.get('lease')){
+            events.push({
+              type:'lease.held',
+              market,
+              reason:'quote_required_before_lease',
+            });
+          }
+          continue;
+        }
+
         try{
-          lease=await adapter.lease({demand,offer:selected,authority:leaseAuthority,quote});
-          events.push({type:'lease.granted',market:selected.market,receipt:lease?.receipt||null});
+          workingQuote=await adapter.requestQuotes({
+            demand,
+            offer:workingOffer,
+            authority:quoteAuthority,
+          });
+          events.push({
+            type:'quote.received',
+            market,
+            quote_count:Number(workingQuote?.offers?.length||0),
+            receipt:workingQuote?.receipt||null,
+          });
+        }catch(error){
+          events.push({
+            type:'quote.failed',
+            market,
+            reason:String(error?.message||error),
+            outcome:error?.quote_cleanup_failed
+              ? 'reconciliation_required'
+              : 'fallback_allowed',
+          });
+          if(error?.quote_cleanup_failed){
+            quoteReconciliationRequired=true;
+            break candidate_loop;
+          }
+          continue;
+        }
+
+        const quoted=(workingQuote?.offers||[]).map((raw)=>
+          normalizeComputeOffer({
+            ...raw,
+            market:raw.market||market,
+            routing_priority:
+              raw.routing_priority??
+              workingOffer.routing_priority??
+              adapter.routing_priority??
+              100,
+          })
+        );
+        const quotedRanking=rankComputeOffers(demand,quoted);
+        const quotedOffer=quotedRanking.eligible[0]?.offer||null;
+        if(!quotedOffer){
+          events.push({
+            type:'quote.no_eligible_offer',
+            market,
+            quote_count:quoted.length,
+          });
+          const cleaned=await cleanupQuote(adapter,workingQuote,market);
+          if(!cleaned) break candidate_loop;
+          continue;
+        }
+        workingOffer=quotedOffer;
+
+        if(requestedLevel===LEVELS.get('quote')){
+          selected=workingOffer;
+          quote=workingQuote;
+          await cleanupQuote(adapter,workingQuote,market);
+          break candidate_loop;
+        }
+      }else if(requestedLevel===LEVELS.get('quote')){
+        selected=workingOffer;
+        break candidate_loop;
+      }
+
+      if(requestedLevel>=LEVELS.get('lease')){
+        if(workingOffer.quote_required){
+          events.push({
+            type:'lease.held',
+            market,
+            reason:'quote_required_before_lease',
+          });
+          const cleaned=await cleanupQuote(adapter,workingQuote,market);
+          if(!cleaned) break candidate_loop;
+          continue;
+        }
+        if(!adapter||typeof adapter.lease!=='function'){
+          events.push({
+            type:'lease.held',
+            market,
+            reason:'lease_adapter_missing',
+          });
+          const cleaned=await cleanupQuote(adapter,workingQuote,market);
+          if(!cleaned) break candidate_loop;
+          continue;
+        }
+
+        const leaseGate=authorityAllows(
+          leaseAuthority,
+          demand,
+          workingOffer,
+          'lease'
+        );
+        if(!leaseGate.ok){
+          events.push({
+            type:'lease.held',
+            market,
+            reason:leaseGate.reason,
+          });
+          const cleaned=await cleanupQuote(adapter,workingQuote,market);
+          if(!cleaned) break candidate_loop;
+          continue;
+        }
+
+        leaseAttempted=true;
+        selected=workingOffer;
+        quote=workingQuote;
+        try{
+          lease=await adapter.lease({
+            demand,
+            offer:workingOffer,
+            authority:leaseAuthority,
+            quote:workingQuote,
+          });
+          events.push({
+            type:'lease.granted',
+            market,
+            receipt:lease?.receipt||null,
+          });
         }catch(error){
           events.push({
             type:'lease.failed',
-            market:selected.market,
+            market,
             reason:String(error?.message||error),
             outcome:'reconciliation_required',
           });
         }
-      }
-    }
-  }else if(
-    selected?.quote_required===true &&
-    LEVELS.get(demand.negotiation_level)>=LEVELS.get('lease')
-  ){
-    events.push({
-      type:'lease.held',
-      market:selected.market,
-      reason:'quote_required_before_lease',
-    });
-  }
-
-  if(quote&&!lease&&!leaseAttempted){
-    const quotedMarket=String(
-      selected?.market ||
-      quote?.offers?.[0]?.market ||
-      ''
-    ).toLowerCase();
-    const adapter=adapters.find((x)=>String(x?.market||'').toLowerCase()===quotedMarket);
-    if(adapter&&typeof adapter.cancelQuote==='function'){
-      try{
-        const cleanup=await adapter.cancelQuote({demand,quote});
-        events.push({
-          type:'quote.cleaned_up',
-          market:quotedMarket,
-          receipt:cleanup?.receipt_hash||cleanup?.receipt||null,
-        });
-      }catch(error){
-        events.push({
-          type:'quote.cleanup_failed',
-          market:quotedMarket,
-          reason:String(error?.message||error),
-        });
+        break candidate_loop;
       }
     }
   }
@@ -354,7 +499,10 @@ export async function negotiateCompute({
       offer_count:Number(quote.offers?.length||0),
     }:null,
     lease:lease||null,
-    manual_reconciliation_required:leaseAttempted&&!lease,
+    candidate_attempts:candidateAttempts,
+    manual_reconciliation_required:
+      (leaseAttempted&&!lease)||
+      quoteReconciliationRequired,
     events,
     completed_at:new Date().toISOString(),
   };

@@ -21,6 +21,7 @@ export async function buildSabanComputeMarketStack({
       yard,
       brokerDeploymentId,
     });
+    adapter.routing_priority=10;
     adapters.push(adapter);
     inventory.push({
       market:'evercraft-broker',
@@ -36,6 +37,7 @@ export async function buildSabanComputeMarketStack({
       endpoint:voluntaryEndpoint,
       controlHeaders:voluntaryControlHeaders,
     });
+    adapter.routing_priority=20;
     adapters.push(adapter);
     inventory.push({
       market:'evercraft-voluntary',
@@ -48,19 +50,21 @@ export async function buildSabanComputeMarketStack({
 
   if(includeGolem){
     const adapter=await createGolemMarketAdapter(golem);
+    adapter.routing_priority=30;
     adapters.push(adapter);
     inventory.push({
       market:'golem',
       class:'decentralized',
       priority:30,
-      execution_capable:false,
+      execution_capable:true,
+      portable_workloads_only:true,
       configured:true,
-      execution_hold:'registered_saban_worker_image_not_yet_wired',
     });
   }
 
   if(includeAkash){
     const adapter=createAkashMarketAdapter(akash);
+    adapter.routing_priority=40;
     adapters.push(adapter);
     inventory.push({
       market:'akash',
