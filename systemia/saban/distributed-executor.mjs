@@ -8,6 +8,7 @@ import { normalizeComputeDemand } from './compute-exchange.mjs';
 import { acquireResourceCapacity } from './resource-acquirer.mjs';
 import { buildComputeMarketAdapters } from './market-factory.mjs';
 import { buildLocalHostCandidate, createLocalHostSpawnAdapter } from './local-host-capacity.mjs';
+import { discoverResourceFieldCandidates } from './resource-discovery.mjs';
 
 async function reconcileResults({ contract, plan, results, rootDir }) {
   if (contract.reconciler?.once_per_swarm !== true) {
@@ -257,11 +258,60 @@ export async function runPoolWithAcquisition({
     };
 
     const marketFactory=await buildComputeMarketAdapters({acquisition});
+    const liveDiscovery=acquisition.auto_discover_capacity===false
+      ? {
+          schema:'evercraft.saban.resource-discovery.v1',
+          candidates:[],
+          rejected:[],
+          runtime_authorities:new Map(),
+          discovered_count:0,
+          yard_eligible_count:0,
+          attested_authorized_count:0,
+          resolution_receipt:null,
+          observed_at:new Date().toISOString(),
+        }
+      : await discoverResourceFieldCandidates({
+          need,
+          discovery:poolOptions.discoveryOptions||{},
+          allocatorToken:poolOptions.allocatorToken||'',
+          allocatorTokens:poolOptions.allocatorTokens||{},
+          timeoutMs:poolOptions.timeoutMs||1500,
+        }).catch((discoveryError)=>({
+          schema:'evercraft.saban.resource-discovery.v1',
+          candidates:[],
+          rejected:[{
+            node_id:null,
+            endpoint:null,
+            reason:String(discoveryError?.message||discoveryError),
+          }],
+          runtime_authorities:new Map(),
+          discovered_count:0,
+          yard_eligible_count:0,
+          attested_authorized_count:0,
+          resolution_receipt:null,
+          observed_at:new Date().toISOString(),
+        }));
+
     const localCandidate=buildLocalHostCandidate({acquisition});
     const candidates=[
       ...(acquisition.candidates||[]),
+      ...(liveDiscovery.candidates||[]),
       ...(localCandidate?[localCandidate]:[]),
     ];
+    const runtimeAuthorities=new Map();
+    const configuredAuthorities=acquisition.runtimeAuthorities||{};
+    if(configuredAuthorities instanceof Map){
+      for(const [key,value] of configuredAuthorities.entries()){
+        runtimeAuthorities.set(key,value);
+      }
+    }else{
+      for(const [key,value] of Object.entries(configuredAuthorities)){
+        runtimeAuthorities.set(key,value);
+      }
+    }
+    for(const [key,value] of liveDiscovery.runtime_authorities.entries()){
+      runtimeAuthorities.set(key,value);
+    }
     const spawnAdapters={
       ...(acquisition.spawnAdapters||{}),
       ...(localCandidate?{
@@ -273,7 +323,7 @@ export async function runPoolWithAcquisition({
     const resourceAcquisition=await acquireResourceCapacity({
       need,
       candidates,
-      runtimeAuthorities:acquisition.runtimeAuthorities||{},
+      runtimeAuthorities,
       spawnAdapters,
       marketAdapters:marketFactory.adapters,
       quoteAuthority:acquisition.quoteAuthority||acquisition.quote_authority||null,
@@ -320,6 +370,12 @@ export async function runPoolWithAcquisition({
           resource_field_receipt:resourceAcquisition.resource_field_receipt,
           acquired_endpoint_count:endpoints.length,
           local_host_candidate_added:Boolean(localCandidate),
+          live_discovery:{
+            discovered_count:liveDiscovery.discovered_count,
+            attested_authorized_count:liveDiscovery.attested_authorized_count,
+            rejected_count:(liveDiscovery.rejected||[]).length,
+            resolution_receipt:liveDiscovery.resolution_receipt,
+          },
           market_factory:{
             markets:marketFactory.markets,
             diagnostics:marketFactory.diagnostics,
@@ -358,6 +414,12 @@ export async function runPoolWithAcquisition({
           resource_field_receipt:resourceAcquisition.resource_field_receipt,
           acquired_endpoint_count:0,
           local_host_candidate_added:Boolean(localCandidate),
+          live_discovery:{
+            discovered_count:liveDiscovery.discovered_count,
+            attested_authorized_count:liveDiscovery.attested_authorized_count,
+            rejected_count:(liveDiscovery.rejected||[]).length,
+            resolution_receipt:liveDiscovery.resolution_receipt,
+          },
           market_factory:{
             markets:marketFactory.markets,
             diagnostics:marketFactory.diagnostics,
