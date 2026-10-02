@@ -53,6 +53,26 @@ The execution flow is now:
 
 `SAFE OPPORTUNITY -> BLUEPRINT -> PROTECTED CONNECTION -> SOURCING -> SHORTLIST -> TEAM INVITATION -> OFFERED WORK PACKAGE -> PACKAGE ACCEPTANCE -> RIGHTS / PAYMENT GATES -> EXECUTION`
 
+## Sourcing comparisons
+
+v1.4 adds a receipt-backed comparison layer for like-for-like sourcing responses on the same project, blueprint and suggested work package.
+
+The comparison makes its weights visible:
+
+- price: 30%
+- lead time: 25%
+- availability: 15%
+- observed Fabric history: 20%
+- geography: 10%
+
+Evidence states remain explicit. Quote, availability and lead time are participant-supplied. Geography comes from declared profile/opportunity metadata. Fabric history is calculated only from work packages the recipient actually accepted inside Opportunity Fabric. No observed work history is treated as neutral, not as positive proof.
+
+Price is compared only against responses using the same currency. v1.4 does not silently perform FX conversion. Missing numeric quote or lead-time fields are treated as missing rather than coerced to zero.
+
+The resulting decision score orders the evidence for human review. It does not select a partner, shortlist a response, create team membership, accept work, grant rights, create a contract or create a payment obligation.
+
+Every new evidence state receives a deterministic owner-private `SourcingComparison` ledger record and `FabricEvent` receipt. If the underlying evidence changes, the comparison id changes instead of rewriting the earlier decision context.
+
 ## Multi-party assembly
 
 v1.1 extends the one-to-one protected collaboration model into temporary execution teams.
@@ -100,7 +120,7 @@ This policy is a product-control contract specification. It is NOT represented a
 
 ## Trust model
 
-The verified v1.3 implementation sits behind an authenticated service-role runtime. Direct client mutation is locked for protected workflow entities, and the runtime re-verifies identity, relationship state, invitation state, and package authority before consequential writes. Client-supplied booleans or user ids must never be treated as proof of identity, signature, ownership, relationship, or authority.
+The verified v1.4 implementation sits behind an authenticated service-role runtime. Direct client mutation is locked for protected workflow entities, and the runtime re-verifies identity, relationship state, invitation state, and package authority before consequential writes. Client-supplied booleans or user ids must never be treated as proof of identity, signature, ownership, relationship, or authority.
 
 Authentication, e-signature identity proof, payment authority, durable storage, protected-file delivery, and legal record retention remain separate gates.
 
@@ -112,4 +132,4 @@ Discovery exposes opportunity, not crown-jewel content.
 
 ## Status
 
-v1.3 establishes metadata-first matching, safe execution blueprints, protected one-to-one formation, immutable terms snapshots, purpose-bound disclosure grants, multi-party execution teams, project-specific invitations, bounded work packages, evidence receipts, and conformance tests. The private runtime is verified, but it does not yet claim a production-ready legal agreement, payment/escrow rail, production identity proofing, protected-file delivery, or a publicly deployed transactional marketplace.
+v1.4 establishes metadata-first matching, safe execution blueprints, protected one-to-one formation, immutable terms snapshots, purpose-bound disclosure grants, multi-party execution teams, project-specific invitations, bounded work packages, evidence receipts, and conformance tests. The private runtime is verified, but it does not yet claim a production-ready legal agreement, payment/escrow rail, production identity proofing, protected-file delivery, or a publicly deployed transactional marketplace.
