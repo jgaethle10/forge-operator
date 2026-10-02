@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 
 const files = [
+  '.github/workflows/evercraft-mcp-canary.yml',
   'server.ts',
   '.github/workflows/eps-social-yard-canary.yml',
   '.github/workflows/clip-native-facebook-page-publisher.yml',
