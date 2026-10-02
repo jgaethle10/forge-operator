@@ -18,6 +18,7 @@ import {
   startBrowserContainer,
 } from '../evercraft-web/browser-worker/container-runtime.mjs';
 import { startRivetReportRuntime } from '../rivet/report-runtime.mjs';
+import { startFaieYardRuntime } from '../faie/yard-runtime.mjs';
 import { startAliEvSourceRuntime } from '../aliev/source-runtime.mjs';
 import { startSpecialistHandoffRuntime } from '../mcp/specialist-handoff-runtime.mjs';
 import { startFabricLocalRuntime } from '../mcp/fabric-local-runtime.mjs';
@@ -89,6 +90,7 @@ const BRIDGED_WORKLOADS = new Set([
   'systemia.specialist-handoff-mcp.v1',
   'systemia.fabric-local-mcp.v1',
   'systemia.rivet-report-runtime.v1',
+  'systemia.faie.v1',
 ]);
 
 const BRIDGE_REQUEST_HEADERS = new Set([
@@ -840,6 +842,7 @@ export async function startEvercraftComputeNode({
     'systemia.remote-capacity-broker.v1',
     'systemia.aliev-source-runtime.v1',
     'systemia.rivet-report-runtime.v1',
+    'systemia.faie.v1',
     'systemia.specialist-handoff-mcp.v1',
     'systemia.fabric-local-mcp.v1',
     'systemia.public-edge.v1',
@@ -1885,6 +1888,78 @@ export async function startEvercraftComputeNode({
             route_protocol: 'evercraft.public-route.v1',
             mode,
             instance_id: runtime.instanceId,
+          };
+          const receipt = chain.issue('service.started', {
+            lease_id: body.lease_id,
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            result_schema: result.schema,
+            instance_id: runtime.instanceId,
+          });
+          return send(res, 200, {
+            ok: true,
+            node_id: nodeId,
+            workload_class: body.workload_class,
+            result,
+            receipt,
+          });
+        }
+
+        if (workloadClass === 'systemia.faie.v1') {
+          const stateRoot = path.resolve(String(
+            body.input?.state_root || path.join(allowedRoot, '.evercraft', 'faie')
+          ));
+          if (!isWithin(allowedRoot, stateRoot)) {
+            return send(res, 403, { error: 'faie_state_outside_admitted_root' });
+          }
+
+          const serviceHost = String(body.input?.host || '127.0.0.1');
+          const loopbackService =
+            serviceHost === '127.0.0.1' ||
+            serviceHost === '::1' ||
+            serviceHost === 'localhost';
+          if (!loopbackService && body.input?.allow_public_bind !== true) {
+            return send(res, 403, { error: 'explicit_public_bind_authority_required' });
+          }
+
+          const runtime = await startFaieYardRuntime({
+            stateDir: stateRoot,
+            host: serviceHost,
+            port: Number(body.input?.port || 0),
+            intervalMs: Number(body.input?.interval_ms || process.env.FAIE_INTERVAL_MS || 5 * 60 * 1000),
+            regionProfile: String(body.input?.region_profile || process.env.FAIE_REGION_PROFILE || ''),
+            nwsArea: String(body.input?.nws_area || process.env.FAIE_NWS_AREA || ''),
+            usgsWaterSites: body.input?.usgs_water_sites || process.env.FAIE_USGS_WATER_SITES || [],
+            usgsWaterParameters: body.input?.usgs_water_parameters || process.env.FAIE_USGS_WATER_PARAMETERS || ['00060', '00065'],
+            nwpsGauges: body.input?.nwps_gauges || process.env.FAIE_NWPS_GAUGES || [],
+            officialCollectorsEnabled: body.input?.official_collectors_enabled !== false,
+            nwsEnabled: body.input?.nws_enabled !== false,
+            internalToken: String(process.env.FAIE_INTERNAL_TOKEN || body.input?.internal_token || '')
+          });
+          const serviceId = `svc_${randomBytes(8).toString('hex')}`;
+          services.set(serviceId, {
+            lease_id: body.lease_id,
+            workload_class: body.workload_class,
+            runtime,
+            service: runtime,
+          });
+          const result = {
+            schema: 'evercraft.compute.resident-service.v1',
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            service_url: null,
+            local_url: runtime.url,
+            health_path: `/v1/services/${serviceId}/health`,
+            public_route_required: true,
+            public_health_path: '/health',
+            instance_id: runtime.instanceId,
+            human_ui_path: '/faie/',
+            mcp_path: '/mcp/faie',
+            public_investigate_path: '/api/faie/investigate',
+            public_signals_path: '/api/faie/signals',
+            read_only_public: true,
+            public_investigations_persisted: false,
+            base44_required: false,
           };
           const receipt = chain.issue('service.started', {
             lease_id: body.lease_id,
