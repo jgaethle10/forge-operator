@@ -5,6 +5,8 @@ on:
     paths:
       - 'systemia/migrations/base44-exit/**'
       - 'systemia/app-fabric/**'
+      - 'systemia/yard/public-relay-host-controller.mjs'
+      - 'systemia/yard/public-relay-host.proof.mjs'
       - 'systemia/aliev/session-corpus*.mjs'
       - 'systemia/organism/aliev-session-corpus.workflow.json'
       - 'systemia/identity/identity.mjs'
@@ -46,6 +48,8 @@ on:
     paths:
       - 'systemia/migrations/base44-exit/**'
       - 'systemia/app-fabric/**'
+      - 'systemia/yard/public-relay-host-controller.mjs'
+      - 'systemia/yard/public-relay-host.proof.mjs'
       - 'systemia/aliev/session-corpus*.mjs'
       - 'systemia/organism/aliev-session-corpus.workflow.json'
       - 'systemia/identity/identity.mjs'
@@ -117,6 +121,8 @@ jobs:
         run: npm run proof:base44-entity-transfer
       - name: Prove owned AliEV session corpus
         run: npm run proof:aliev-session-corpus
+      - name: Prove provider-neutral public relay host
+        run: npm run proof:public-relay-host
       - name: Prove receipt-gated migration route registry
         run: npm run proof:base44-route-registry
       - name: Prove active migration route overlay
