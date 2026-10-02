@@ -1,7 +1,7 @@
 import crypto from 'node:crypto';
 import type { VisualReference, VisualReferenceLocator } from './model-fabric.js';
 
-export type CanonEntityKind='character'|'location'|'prop'|'style';
+export type CanonEntityKind='character'|'location'|'prop'|'style'|'voice';
 export type CanonRights='owned'|'licensed';
 export type CanonApprovalState='approved';
 
@@ -106,6 +106,7 @@ function expectedRole(kind:CanonEntityKind){
   if(kind==='character') return 'identity';
   if(kind==='location') return 'environment';
   if(kind==='prop') return 'product';
+  if(kind==='voice') return 'dialogue_audio';
   return 'style';
 }
 
@@ -158,6 +159,9 @@ export function buildCanonReferencePack(
         (entity.kind==='character'||entity.kind==='location')&&
         asset.reference.kind!=='image'&&asset.reference.kind!=='video'
       ){
+        throw new Error('canon_reference_media_kind_invalid:'+asset.id);
+      }
+      if(entity.kind==='voice'&&asset.reference.kind!=='audio'){
         throw new Error('canon_reference_media_kind_invalid:'+asset.id);
       }
       const referenceLocators=locators(asset.reference);
@@ -266,6 +270,24 @@ export function environmentReferencesFromCanon(
       id:ref.id,
       kind:ref.kind,
       role:'environment',
+      digest:ref.digest,
+      sourceRefs:ref.sourceRefs,
+      locators:ref.locators,
+    }));
+  }
+  return out;
+}
+
+
+export function dialogueAudioReferencesFromCanon(
+  pack:CanonReferencePack,
+):Record<string,VisualReference[]>{
+  const out:Record<string,VisualReference[]>={};
+  for(const entity of pack.entities.filter(entity=>entity.kind==='voice')){
+    out[entity.entityId]=entity.references.map(ref=>({
+      id:ref.id,
+      kind:'audio',
+      role:'dialogue_audio',
       digest:ref.digest,
       sourceRefs:ref.sourceRefs,
       locators:ref.locators,
