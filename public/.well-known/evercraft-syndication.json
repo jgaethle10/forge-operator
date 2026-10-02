@@ -2,7 +2,7 @@
   "schema": "evercraft.syndication.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-09-30T00:00:00.000Z",
+  "updated_at": "2026-10-01T00:00:00.000Z",
   "purpose": "Fan one truthful public product graph into standard crawler, search, LLM, agent, feed and authorized publishing surfaces without duplicate doorway spam.",
   "canonical_sources": {
     "registry": "/.well-known/evercraft-products.json",
@@ -311,7 +311,7 @@
       "discovery": "/chum/products/opportunity-fabric/ai-discovery.json",
       "registry_name": null,
       "mcp": null,
-      "content_sha256": "0605b70db3cb2ec3d462c3d0c595db3cf3aa17fc17bcea38d83dfb4a322d6ea3"
+      "content_sha256": "cdc61d1405960e954965d3255a51ab99bc3ed910fcb38fffee9c5540b9a42341"
     },
     {
       "product_key": "evercraft-physics-atlas",

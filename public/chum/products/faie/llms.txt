@@ -23,19 +23,8 @@ public offer discovery and human-confirmed bounded research checkout
 - unknowns remain labeled
 - checkout creation is not payment proof
 
-## Native runtime
-
-FAIE is implemented in the owned Forge/Systemia runtime with:
-- human UI path: /faie/
-- public-safe investigate API: /api/faie/investigate
-- signal snapshot API: /api/faie/signals
-- health API: /api/faie/health
-- native read-only MCP path: /mcp/faie
-
-The direct public hostname is not declared until Evercraft edge verification binds one. Public MCP investigations are ephemeral and are not written into the shared investigation archive.
-
 ## Universal Evercraft routing
 
-Verified discovery fallback: https://fabric.systemiacommandcenters.com/mcp
+Not declared.
 
 Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

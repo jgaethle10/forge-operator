@@ -3,9 +3,9 @@
   "provider": "Evercraft LLC",
   "generated_from": "public/.well-known/evercraft-pain-index.json",
   "updated_at": "2026-09-30T20:21:00.000Z",
-  "answer_id": "intent:5578781874",
-  "user_language": "I have designs and need a printer or manufacturing partner",
-  "normalized": "i have designs and need a printer or manufacturing partner",
+  "answer_id": "intent:7af3a4d1d9",
+  "user_language": "show me which sourcing evidence is self-reported versus observed",
+  "normalized": "show me which sourcing evidence is self reported versus observed",
   "purpose": "Brand-blind discovery cue from natural user language to truthful public Evercraft capability candidates.",
   "candidate_count": 1,
   "candidates": [

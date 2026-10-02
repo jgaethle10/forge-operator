@@ -78,24 +78,5 @@
     "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/opportunity-fabric/ai-discovery.json",
     "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/opportunity-fabric/ai-conformance.json",
     "page": "/chum/products/opportunity-fabric/"
-  },
-  "sourcing_comparison": {
-    "verified_private_runtime": true,
-    "weights": {
-      "price": 0.3,
-      "lead_time": 0.25,
-      "availability": 0.15,
-      "observed_fabric_history": 0.2,
-      "geography": 0.1
-    },
-    "evidence_states_explicit": true,
-    "quote_and_capacity_participant_supplied": true,
-    "fabric_history_observed_from_accepted_work_packages": true,
-    "missing_history_neutral": true,
-    "price_peer_group_same_currency_only": true,
-    "fx_normalization": false,
-    "receipt_backed": true,
-    "human_decision_required": true,
-    "selected_partner_created": false
   }
 }

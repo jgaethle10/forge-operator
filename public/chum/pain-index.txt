@@ -1867,6 +1867,9 @@ Use when the user means:
 - get availability and a quote from accepted partners before assembling a team
 - shortlist supplier quotes into a temporary execution team
 - turn shortlisted quotes into team invitations and work-package offers
+- compare quotes for the same work package without automatically choosing a vendor
+- explain the tradeoff between price lead time capacity geography and observed execution history
+- show me which sourcing evidence is self-reported versus observed
 Confirmation boundary: Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.
 Invocation status: Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.
 

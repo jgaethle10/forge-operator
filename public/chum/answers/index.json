@@ -21,8 +21,8 @@
   },
   "summary": {
     "pain_index_entries": 112,
-    "unique_user_phrases": 973,
-    "mapped_candidate_edges": 1079,
+    "unique_user_phrases": 976,
+    "mapped_candidate_edges": 1082,
     "ambiguous_phrases": 106,
     "product_candidates": 64,
     "machine_offer_candidates": 48
@@ -3992,6 +3992,29 @@
       ]
     },
     {
+      "answer_id": "intent:020562ac85",
+      "user_language": "compare quotes for the same work package without automatically choosing a vendor",
+      "normalized": "compare quotes for the same work package without automatically choosing a vendor",
+      "relative_json": "/chum/answers/doors/compare-quotes-for-the-same-work-package-without-automatically-choosing-a-vendor-020562ac85.json",
+      "relative_page": "/chum/answers/doors/compare-quotes-for-the-same-work-package-without-automatically-choosing-a-vendor-020562ac85/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/compare-quotes-for-the-same-work-package-without-automatically-choosing-a-vendor-020562ac85.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:opportunity-fabric",
+          "kind": "product",
+          "product_key": "opportunity-fabric",
+          "public_id": null,
+          "name": "Evercraft Opportunity Fabric",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/opportunity-fabric/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric",
+          "registry_name": null
+        }
+      ]
+    },
+    {
       "answer_id": "intent:15edc18e4b",
       "user_language": "compare the real cost of hiring before adding payroll",
       "normalized": "compare the real cost of hiring before adding payroll",
@@ -6525,6 +6548,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/forensiscope-evidence-review-v1/",
           "public_url": null,
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:22aeb563b2",
+      "user_language": "explain the tradeoff between price lead time capacity geography and observed execution history",
+      "normalized": "explain the tradeoff between price lead time capacity geography and observed execution history",
+      "relative_json": "/chum/answers/doors/explain-the-tradeoff-between-price-lead-time-capacity-geography-and-observed-execu-22aeb563b2.json",
+      "relative_page": "/chum/answers/doors/explain-the-tradeoff-between-price-lead-time-capacity-geography-and-observed-execu-22aeb563b2/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/explain-the-tradeoff-between-price-lead-time-capacity-geography-and-observed-execu-22aeb563b2.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:opportunity-fabric",
+          "kind": "product",
+          "product_key": "opportunity-fabric",
+          "public_id": null,
+          "name": "Evercraft Opportunity Fabric",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/opportunity-fabric/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric",
           "registry_name": null
         }
       ]
@@ -19088,6 +19134,29 @@
           "machine_state": "discovery_only",
           "pain_page": "/chum/intents/worldstate-reality-delta-v1/",
           "public_url": null,
+          "registry_name": null
+        }
+      ]
+    },
+    {
+      "answer_id": "intent:7af3a4d1d9",
+      "user_language": "show me which sourcing evidence is self-reported versus observed",
+      "normalized": "show me which sourcing evidence is self reported versus observed",
+      "relative_json": "/chum/answers/doors/show-me-which-sourcing-evidence-is-self-reported-versus-observed-7af3a4d1d9.json",
+      "relative_page": "/chum/answers/doors/show-me-which-sourcing-evidence-is-self-reported-versus-observed-7af3a4d1d9/",
+      "raw_json_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers/doors/show-me-which-sourcing-evidence-is-self-reported-versus-observed-7af3a4d1d9.json",
+      "candidate_count": 1,
+      "candidates": [
+        {
+          "capability_id": "product:opportunity-fabric",
+          "kind": "product",
+          "product_key": "opportunity-fabric",
+          "public_id": null,
+          "name": "Evercraft Opportunity Fabric",
+          "commercial_state": "product_contract",
+          "machine_state": "discovery_only",
+          "pain_page": "/chum/products/opportunity-fabric/",
+          "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric",
           "registry_name": null
         }
       ]
