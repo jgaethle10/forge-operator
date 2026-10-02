@@ -51,7 +51,7 @@
     "saban:discovery:check": "node systemia/saban/discovery-swarm.mjs --strict",
     "saban:watershed": "npm run saban:discovery && npm run saban:revenue && npm run chum:all",
     "chum:capabilities": "node systemia/chum/build-capability-mirror.mjs && node scripts/apply-rivet-brand.mjs",
-    "test:chum-revenue": "npm run chum:revenue && npm run test:chum-start-corridor && node tests/chum-revenue-watershed.test.mjs && node tests/chum-agent-commerce.test.mjs",
+    "test:chum-revenue": "npm run chum:revenue && npm run test:chum-start-corridor && npm run test:chum-catalog-truth && node tests/chum-revenue-watershed.test.mjs && node tests/chum-agent-commerce.test.mjs",
     "test:chum-capabilities": "npm run chum:capabilities && node tests/chum-capability-mirrors.test.mjs",
     "test:signal-fabric": "node systemia/signal-fabric/router.test.mjs",
     "test:signal-fabric-engine": "node systemia/signal-fabric/engine.test.mjs && node systemia/signal-fabric/adapters/github-actions.test.mjs",
@@ -276,7 +276,8 @@
     "saban:pair-device": "node systemia/saban/microseed-device-pair-cli.mjs",
     "test:product-url-fabric": "node tests/product-url-fabric.test.mjs",
     "proof:rivet-mail": "node systemia/domain-authority/rivet-public-mail.proof.mjs",
-    "test:shipping": "node --test systemia/shipping/shipping-department.test.mjs"
+    "test:shipping": "node --test systemia/shipping/shipping-department.test.mjs",
+    "test:chum-catalog-truth": "node tests/chum-public-catalog-sync.test.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
