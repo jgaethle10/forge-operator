@@ -10,6 +10,7 @@ ROUTER_ENV=/etc/evercraft/router-map.env
 RELAY_ENV=/etc/evercraft/outbound-relay.env
 RELAY_SERVICE=evercraft-fabric-outbound-relay.service
 REPAIR=false
+MAINTAIN_SABAN=false
 TRIGGER_CANARY=false
 CANARY_WORKFLOW="${EVERCRAFT_EDGE_CANARY_WORKFLOW:-evercraft-public-edge-canary.yml}"
 CANARY_REPO="${EVERCRAFT_EDGE_CANARY_REPO:-jgaethle10/forge-operator}"
@@ -17,12 +18,15 @@ CANARY_REPO="${EVERCRAFT_EDGE_CANARY_REPO:-jgaethle10/forge-operator}"
 for arg in "$@"; do
   case "$arg" in
     --repair) REPAIR=true ;;
+    --maintain-saban) MAINTAIN_SABAN=true ;;
     --trigger-canary) TRIGGER_CANARY=true ;;
     --help|-h)
       cat <<'USAGE'
-Usage: sudo bash scripts/fabric-edge-doctor.sh [--repair] [--trigger-canary]
+Usage: sudo bash scripts/fabric-edge-doctor.sh [--repair] [--maintain-saban] [--trigger-canary]
 
-  --repair           Reconcile resident Fabric/edge services and router mapping.
+  --repair           Reconcile the critical Fabric/edge path and router mapping.
+  --maintain-saban   Separately install/repair Saban resident capacity services.
+                     Saban maintenance is intentionally NOT part of edge recovery.
   --trigger-canary   When the owned edge is locally ready, dispatch the external
                      GitHub canary immediately if gh is installed/authenticated.
 
@@ -224,12 +228,7 @@ if [[ "$REPAIR" == "true" ]]; then
   set -e
   [[ "$self_update_repair_code" -eq 0 ]] || self_update_repair_ok=false
 
-  set +e
-  ensure_saban_capacity_timer
-  saban_capacity_repair_code=$?
-  set -e
-  [[ "$saban_capacity_repair_code" -eq 0 ]] || saban_capacity_repair_ok=false
-
+  # Restore the critical public edge before touching optional resident capacity.
   systemctl enable --now evercraft-fabric.service >/dev/null 2>&1 || true
   systemctl enable --now evercraft-public-edge.service >/dev/null 2>&1 || true
   systemctl enable --now evercraft-router-map.timer >/dev/null 2>&1 || true
@@ -240,6 +239,16 @@ if [[ "$REPAIR" == "true" ]]; then
   systemctl restart evercraft-public-edge.service >/dev/null 2>&1 || true
   systemctl start evercraft-router-map.service >/dev/null 2>&1 || true
   sleep 2
+
+  if [[ "$MAINTAIN_SABAN" == "true" ]]; then
+    echo
+    echo "[maintenance] reconciling Saban resident capacity services after edge recovery..."
+    set +e
+    ensure_saban_capacity_timer
+    saban_capacity_repair_code=$?
+    set -e
+    [[ "$saban_capacity_repair_code" -eq 0 ]] || saban_capacity_repair_ok=false
+  fi
 fi
 
 fabric_state="$(service_state evercraft-fabric.service)"
@@ -274,6 +283,7 @@ if [[ "$REPAIR" == "true" ]]; then
   echo "local_organism_repair_code=$local_organism_repair_code"
   echo "self_update_repair_ok=$self_update_repair_ok"
   echo "self_update_repair_code=$self_update_repair_code"
+  echo "saban_maintenance_requested=$MAINTAIN_SABAN"
   echo "saban_capacity_repair_ok=$saban_capacity_repair_ok"
   echo "saban_capacity_repair_code=$saban_capacity_repair_code"
 fi
@@ -368,8 +378,6 @@ if [[ "$REPAIR" == "true" && "$local_organism_repair_ok" != "true" ]]; then
   diagnosis="local_organism_repair_failed"
 elif [[ "$REPAIR" == "true" && "$self_update_repair_ok" != "true" ]]; then
   diagnosis="fabric_update_repair_failed"
-elif [[ "$REPAIR" == "true" && "$saban_capacity_repair_ok" != "true" ]]; then
-  diagnosis="saban_capacity_repair_failed"
 elif [[ "$local_health_ok" != "true" ]]; then
   diagnosis="fabric_runtime_unreachable"
 elif [[ -n "$LAN_HOST" && ( "$lan_http_ok" != "true" || "$lan_https_ok" != "true" ) ]]; then
@@ -411,6 +419,11 @@ if [[ "$diagnosis" == "chromeos_host_forward_unreachable" ]]; then
   echo "Then rerun:"
   echo "  cd $REPO_ROOT"
   echo "  sudo bash scripts/fabric-edge-doctor.sh --repair --trigger-canary"
+fi
+
+saban_capacity_degraded=false
+if [[ "$MAINTAIN_SABAN" == "true" && "$saban_capacity_repair_ok" != "true" ]]; then
+  saban_capacity_degraded=true
 fi
 
 canary_trigger_state="not_requested"
@@ -462,8 +475,10 @@ cat > /tmp/evercraft-fabric-edge-doctor.json <<EOF
   "local_organism_repair_code":$local_organism_repair_code,
   "self_update_repair_ok":$(json_bool "$self_update_repair_ok"),
   "self_update_repair_code":$self_update_repair_code,
+  "saban_maintenance_requested":$(json_bool "$MAINTAIN_SABAN"),
   "saban_capacity_repair_ok":$(json_bool "$saban_capacity_repair_ok"),
   "saban_capacity_repair_code":$saban_capacity_repair_code,
+  "saban_capacity_degraded":$(json_bool "$saban_capacity_degraded"),
   "lan_http_forward_ok":$(json_bool "$lan_http_ok"),
   "lan_https_forward_ok":$(json_bool "$lan_https_ok"),
   "router_refresh_ok":$(json_bool "$router_refresh_ok"),

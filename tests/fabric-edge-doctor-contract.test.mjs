@@ -37,3 +37,21 @@ test('Fabric edge doctor preserves human-gate exit semantics',()=>{
   assert.ok(script.includes('if [[ "$diagnosis" != "local_edge_path_ready_external_canary_required" ]]; then'));
   assert.ok(script.includes('exit 10'));
 });
+
+
+test('Fabric edge recovery is not blocked by optional Saban maintenance',()=>{
+  assert.ok(script.includes('MAINTAIN_SABAN=false'));
+  assert.ok(script.includes('--maintain-saban'));
+  assert.ok(script.includes('Saban maintenance is intentionally NOT part of edge recovery'));
+  const edgeRestart=script.indexOf('systemctl restart evercraft-public-edge.service');
+  const sabanMaintenance=script.indexOf('if [[ "$MAINTAIN_SABAN" == "true" ]]');
+  assert.ok(edgeRestart>=0,'missing public edge restart');
+  assert.ok(sabanMaintenance>edgeRestart,'Saban maintenance must happen after edge restart');
+  const diagnosisBlock=script.slice(
+    script.indexOf('diagnosis="unknown"'),
+    script.indexOf('echo\necho "[diagnosis]"')
+  );
+  assert.equal(diagnosisBlock.includes('saban_capacity_repair_failed'),false);
+  assert.ok(script.includes('"saban_maintenance_requested"'));
+  assert.ok(script.includes('"saban_capacity_degraded"'));
+});
