@@ -65,21 +65,29 @@ try{
   assert.equal(relayHost.production_ready,false);
   assert.equal(relayHost.private_nodes_require_public_ingress,false);
   assert.equal(relayHost.private_nodes_connect_outbound,true);
+  assert.equal(relayHost.continuity_renewal_supported,true);
+
+  const renewedRelayHost=await controller.renewRelayHost(relayHost,{ttlMs:180000});
+  assert.equal(renewedRelayHost.broker_origin,relayHost.broker_origin);
+  assert.equal(renewedRelayHost.broker_route_lease_id,relayHost.broker_route_lease_id);
+  assert.equal(renewedRelayHost.route_origin_changed,false);
+  assert.notEqual(renewedRelayHost.receipt_hash,relayHost.receipt_hash);
+  assert.ok(renewedRelayHost.route_expires_at);
 
   agent=await startOutboundNodeAgent({
-    brokerUrl:relayHost.broker_origin,
+    brokerUrl:renewedRelayHost.broker_origin,
     localCapacityEndpoint:remote.endpoint,
     localAllocatorToken:remoteAllocator,
     pollBackoffMs:25,
   });
 
-  const inventory=await yard.listRemoteCapacityNodes(relayHost.broker_deployment_id);
+  const inventory=await yard.listRemoteCapacityNodes(renewedRelayHost.broker_deployment_id);
   assert.equal(inventory.count,1);
   assert.equal(inventory.nodes[0].node_id,remote.node_id);
   assert.equal(inventory.nodes[0].connected,true);
 
   const grant=await yard.remoteCapacityGrant(
-    relayHost.broker_deployment_id,
+    renewedRelayHost.broker_deployment_id,
     remote.node_id,
     {allowLoopbackProof:true}
   );
@@ -100,7 +108,7 @@ try{
   assert.equal(specialist.receipt.capacity_node_id,remote.node_id);
 
   const published=await controller.publishRemoteService({
-    relayHost,
+    relayHost:renewedRelayHost,
     remoteNodeId:remote.node_id,
     remoteServiceId:specialist.result.service_id,
     bridgeDeploymentId:'public-bridge-to-private-specialist-proof',
@@ -118,8 +126,34 @@ try{
   assert.equal(published.route_verified,false);
   assert.equal(published.production_ready,false);
   assert.equal(published.relay_token_persisted,false);
+  assert.equal(published.continuity_renewal_supported,true);
+  assert.ok(published.remote_service_relay_expires_at);
 
-  const health=await fetch(published.public_origin+'/health')
+  const bridgeBefore=yard.deploymentStatus('public-bridge-to-private-specialist-proof');
+  const bridgeReceiptBefore=bridgeBefore.receipt.receipt_hash;
+  const bridgeServiceBefore=bridgeBefore.result.service_id;
+
+  const renewedPublication=await controller.renewRemotePublication(
+    published,
+    {ttlMs:180000}
+  );
+  assert.equal(
+    renewedPublication.remote_service_relay_id,
+    published.remote_service_relay_id
+  );
+  assert.equal(renewedPublication.public_route_lease_id,published.public_route_lease_id);
+  assert.equal(renewedPublication.public_origin,published.public_origin);
+  assert.equal(renewedPublication.relay_token_rotated,false);
+  assert.equal(renewedPublication.route_origin_changed,false);
+  assert.notEqual(renewedPublication.receipt_hash,published.receipt_hash);
+  assert.ok(renewedPublication.remote_service_relay_expires_at);
+  assert.ok(renewedPublication.public_route_expires_at);
+
+  const bridgeAfter=yard.deploymentStatus('public-bridge-to-private-specialist-proof');
+  assert.equal(bridgeAfter.receipt.receipt_hash,bridgeReceiptBefore);
+  assert.equal(bridgeAfter.result.service_id,bridgeServiceBefore);
+
+  const health=await fetch(renewedPublication.public_origin+'/health')
     .then(async r=>({status:r.status,body:await r.json()}));
   assert.equal(health.status,200);
   assert.equal(health.body.ok,true);
@@ -132,8 +166,8 @@ try{
   console.log(JSON.stringify({
     ok:true,
     schema:'evercraft.yard.public-relay-host-proof.v1',
-    public_host_node:relayHost.capacity_node_id,
-    broker_route_scope:relayHost.route_scope,
+    public_host_node:renewedRelayHost.capacity_node_id,
+    broker_route_scope:renewedRelayHost.route_scope,
     private_node:remote.node_id,
     private_node_public_ingress:false,
     private_node_connected_outbound:true,
@@ -142,6 +176,12 @@ try{
     federated_bridge_deployed_on_public_host:true,
     second_public_route_created:true,
     end_to_end_remote_health_verified:true,
+    broker_route_renewal_verified:true,
+    remote_service_relay_renewal_verified:true,
+    public_service_route_renewal_verified:true,
+    relay_token_rotated:false,
+    bridge_rebuilt_for_renewal:false,
+    route_origin_changed:false,
     relay_token_persisted:false,
     allocator_authority_exposed:false,
     proof_claims_public_https:false,
