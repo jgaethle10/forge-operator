@@ -284,7 +284,8 @@
     "faie:resident": "node systemia/faie/cli.mjs --resident",
     "test:world-engine": "node --import tsx --test systemia/world-engine/world-engine.test.ts",
     "proof:world-engine": "node --import tsx systemia/world-engine/proof.mjs",
-    "proof:saban-world-engine": "node systemia/saban/multiplier.mjs --software world-engine-review --inventory systemia/saban/fixtures/world-engine-review-job.json --agents 16 --workers 4 --execute --reconcile"
+    "proof:saban-world-engine": "node systemia/saban/multiplier.mjs --software world-engine-review --inventory systemia/saban/fixtures/world-engine-review-job.json --agents 16 --workers 4 --execute --reconcile",
+    "proof:public-relay-host": "node systemia/yard/public-relay-host.proof.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
