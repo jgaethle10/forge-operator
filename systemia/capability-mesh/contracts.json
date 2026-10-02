@@ -92,6 +92,91 @@
       "adoption_stage": "shared_runtime"
     },
     {
+      "product_key": "forensiscope",
+      "contract_version": "1.0.0",
+      "owner": "systemia",
+      "specialist_slug": "forensiscope",
+      "authority": {
+        "state": "declared",
+        "passport_product": "forensiscope",
+        "scopes": [
+          "classify_media_route"
+        ],
+        "evidence_refs": [
+          "registry/forensiscope/server.json",
+          "registry/forensiscope/overflow-contract.json"
+        ]
+      },
+      "context": {
+        "state": "declared",
+        "namespace": "forensiscope",
+        "read_scope": "context.read.forensiscope",
+        "write_scope": "context.write.forensiscope",
+        "evidence_refs": [
+          "systemia/forensiscope/evidence-graph.mjs",
+          "systemia/context-fabric/fabric.mjs"
+        ]
+      },
+      "meter": {
+        "state": "not_required",
+        "reason": "The currently contracted machine action is media-route classification only. Published duration pricing and paid review do not establish a machine usage-meter contract, and paid state remains authoritative elsewhere."
+      },
+      "intake": {
+        "state": "not_required",
+        "reason": "The currently contracted machine action does not ingest media. Public secure machine media intake remains verification-gated; actual media handoff is human-confirmed and the user submits authorized media through the product boundary."
+      },
+      "execution": {
+        "state": "declared",
+        "gate_required": true,
+        "scopes": [
+          "classify_media_route"
+        ],
+        "actions": [
+          {
+            "scope": "classify_media_route"
+          }
+        ],
+        "evidence_refs": [
+          "registry/forensiscope/server.json",
+          "public/forensiscope/developers/status.json",
+          "registry/forensiscope/overflow-contract.json"
+        ]
+      },
+      "relationship": {
+        "state": "not_required",
+        "reason": "Media-route classification does not itself perform outbound relationship contact."
+      },
+      "receipt_reconciliation": {
+        "state": "declared",
+        "namespace": "forensiscope",
+        "evidence_refs": [
+          "systemia/context-fabric/fabric.mjs",
+          "systemia/forensiscope/evidence-graph.mjs"
+        ]
+      },
+      "rollback": {
+        "state": "declared",
+        "policy": "Disable the ForensiScope product contract or specialist route without enabling machine media intake, weakening human-confirmed handoff, or changing Passport, Context, or Execution Gate defaults."
+      },
+      "compatibility": {
+        "intended_product_classes": [
+          "ai_media_overflow_and_analysis"
+        ]
+      },
+      "boundaries": {
+        "contracted_machine_surface": [
+          "classify_media_route"
+        ],
+        "secure_machine_media_intake": "verification_gated",
+        "human_confirmed_media_handoff": true,
+        "automatic_media_transfer_allowed": false,
+        "user_must_have_right_or_lawful_authority_to_submit": true,
+        "published_duration_pricing_is_not_technical_ingestion_guarantee": true,
+        "runtime_analysis_action_contracted": false
+      },
+      "adoption_stage": "shared_runtime"
+    },
+    {
       "product_key": "evercraft-clip",
       "contract_version": "1.0.0",
       "owner": "systemia",
@@ -238,6 +323,112 @@
       }
     },
     {
+      "product_key": "opportunity-fabric",
+      "contract_version": "1.0.0",
+      "owner": "systemia",
+      "adoption_stage": "private_runtime",
+      "authority": {
+        "state": "not_required",
+        "reason": "The verified v1.2.1 private runtime uses its own authenticated service-role and state re-verification. Shared Passport authority has not yet replaced or wrapped that private runtime."
+      },
+      "context": {
+        "state": "not_required",
+        "reason": "Safe metadata and protected workflow records remain inside the private Opportunity Fabric runtime; no shared Context Fabric namespace is declared yet."
+      },
+      "meter": {
+        "state": "not_required",
+        "reason": "No shared usage-meter or payment/escrow rail is claimed for the verified private runtime."
+      },
+      "intake": {
+        "state": "not_required",
+        "reason": "Public discovery is metadata-only and the private runtime has its own opportunity/member inputs. A shared Intake Fabric adapter has not yet been contracted."
+      },
+      "execution": {
+        "state": "not_required",
+        "reason": "Private execution blueprints, team invitations and work-package state are verified in the product runtime, but no shared Execution Gate action or public transactional route is declared yet."
+      },
+      "relationship": {
+        "state": "not_required",
+        "reason": "Protected connection requests and team invitations use Opportunity Fabric state, not the shared Interaction Ledger today."
+      },
+      "receipt_reconciliation": {
+        "state": "not_required",
+        "reason": "Opportunity Fabric has its own FabricEvent/disclosure receipts, but shared Context Receipt Bridge reconciliation has not yet been contracted."
+      },
+      "rollback": {
+        "state": "declared",
+        "policy": "Keep the public product discovery-only or disable future shared-runtime bindings without weakening metadata-first matching, purpose-bound disclosure, team-invitation, IP, or counsel-review gates."
+      },
+      "compatibility": {
+        "intended_product_classes": [
+          "protected_collaboration_partner_matching_and_execution_orchestration"
+        ]
+      },
+      "boundaries": {
+        "verified_private_runtime": true,
+        "public_transactional_marketplace_claimed": false,
+        "protected_matching_metadata_first": true,
+        "protected_file_delivery_enabled": false,
+        "client_supplied_identity_or_consent_authoritative": false,
+        "creator_covenant_final_legal_agreement": false,
+        "payment_or_escrow_claimed": false,
+        "shared_runtime_contracted": false
+      }
+    },
+    {
+      "product_key": "systemia-university",
+      "contract_version": "1.0.0",
+      "owner": "systemia",
+      "adoption_stage": "discovery_only",
+      "authority": {
+        "state": "not_required",
+        "reason": "Public admission is discovery-only. Evidence-centered missions and workforce workflows are not yet exposed as shared Passport-authorized machine actions."
+      },
+      "context": {
+        "state": "not_required",
+        "reason": "No shared Context Fabric namespace is declared for proving missions, preliminary reviews, proofs, or workforce profiles."
+      },
+      "meter": {
+        "state": "not_required",
+        "reason": "Discovery creates no payment obligation and no shared Meter contract is established."
+      },
+      "intake": {
+        "state": "not_required",
+        "reason": "External-lab submissions and mission inputs have no shared Intake Fabric contract yet."
+      },
+      "execution": {
+        "state": "not_required",
+        "reason": "Mission exercises are bounded simulations/evidence exercises unless live execution is separately verified; no shared execution action is declared."
+      },
+      "relationship": {
+        "state": "not_required",
+        "reason": "Public discovery does not contact people, publish externally, or perform staffing changes."
+      },
+      "receipt_reconciliation": {
+        "state": "not_required",
+        "reason": "No shared receipt-reconciliation contract has been established for mission evidence or competency reviews."
+      },
+      "rollback": {
+        "state": "declared",
+        "policy": "Disable public discovery or future shared-runtime bindings without converting simulations, provisional evidence, or human-reviewed competency claims into live authority."
+      },
+      "compatibility": {
+        "intended_product_classes": [
+          "evidence_centered_learning_agent_proving_and_workforce_readiness"
+        ]
+      },
+      "boundaries": {
+        "simulations_not_live_execution": true,
+        "missions_do_not_authorize_contact_spend_publish_staffing_or_production_mutation": true,
+        "one_success_not_broad_competency_proof": true,
+        "provisional_evidence_not_verified_evidence": true,
+        "competency_verification_human_reviewed": true,
+        "public_proof_requires_explicit_approval": true,
+        "discovery_creates_credential_or_employment_authority": false,
+        "shared_runtime_contracted": false
+      }
+    },
+    {
       "product_key": "findmypart",
       "contract_version": "1.0.0",
       "owner": "systemia",
@@ -323,144 +514,6 @@
       }
     },
     {
-      "product_key": "forensiscope",
-      "contract_version": "1.0.0",
-      "owner": "systemia",
-      "specialist_slug": "forensiscope",
-      "authority": {
-        "state": "declared",
-        "passport_product": "forensiscope",
-        "scopes": [
-          "classify_media_route"
-        ],
-        "evidence_refs": [
-          "registry/forensiscope/server.json",
-          "registry/forensiscope/overflow-contract.json"
-        ]
-      },
-      "context": {
-        "state": "declared",
-        "namespace": "forensiscope",
-        "read_scope": "context.read.forensiscope",
-        "write_scope": "context.write.forensiscope",
-        "evidence_refs": [
-          "systemia/forensiscope/evidence-graph.mjs",
-          "systemia/context-fabric/fabric.mjs"
-        ]
-      },
-      "meter": {
-        "state": "not_required",
-        "reason": "The currently contracted machine action is media-route classification only. Published duration pricing and paid review do not establish a machine usage-meter contract, and paid state remains authoritative elsewhere."
-      },
-      "intake": {
-        "state": "not_required",
-        "reason": "The currently contracted machine action does not ingest media. Public secure machine media intake remains verification-gated; actual media handoff is human-confirmed and the user submits authorized media through the product boundary."
-      },
-      "execution": {
-        "state": "declared",
-        "gate_required": true,
-        "scopes": [
-          "classify_media_route"
-        ],
-        "actions": [
-          {
-            "scope": "classify_media_route"
-          }
-        ],
-        "evidence_refs": [
-          "registry/forensiscope/server.json",
-          "public/forensiscope/developers/status.json",
-          "registry/forensiscope/overflow-contract.json"
-        ]
-      },
-      "relationship": {
-        "state": "not_required",
-        "reason": "Media-route classification does not itself perform outbound relationship contact."
-      },
-      "receipt_reconciliation": {
-        "state": "declared",
-        "namespace": "forensiscope",
-        "evidence_refs": [
-          "systemia/context-fabric/fabric.mjs",
-          "systemia/forensiscope/evidence-graph.mjs"
-        ]
-      },
-      "rollback": {
-        "state": "declared",
-        "policy": "Disable the ForensiScope product contract or specialist route without enabling machine media intake, weakening human-confirmed handoff, or changing Passport, Context, or Execution Gate defaults."
-      },
-      "compatibility": {
-        "intended_product_classes": [
-          "ai_media_overflow_and_analysis"
-        ]
-      },
-      "boundaries": {
-        "contracted_machine_surface": [
-          "classify_media_route"
-        ],
-        "secure_machine_media_intake": "verification_gated",
-        "human_confirmed_media_handoff": true,
-        "automatic_media_transfer_allowed": false,
-        "user_must_have_right_or_lawful_authority_to_submit": true,
-        "published_duration_pricing_is_not_technical_ingestion_guarantee": true,
-        "runtime_analysis_action_contracted": false
-      },
-      "adoption_stage": "shared_runtime"
-    },
-    {
-      "product_key": "opportunity-fabric",
-      "contract_version": "1.0.0",
-      "owner": "systemia",
-      "adoption_stage": "private_runtime",
-      "authority": {
-        "state": "not_required",
-        "reason": "The verified v1.2.1 private runtime uses its own authenticated service-role and state re-verification. Shared Passport authority has not yet replaced or wrapped that private runtime."
-      },
-      "context": {
-        "state": "not_required",
-        "reason": "Safe metadata and protected workflow records remain inside the private Opportunity Fabric runtime; no shared Context Fabric namespace is declared yet."
-      },
-      "meter": {
-        "state": "not_required",
-        "reason": "No shared usage-meter or payment/escrow rail is claimed for the verified private runtime."
-      },
-      "intake": {
-        "state": "not_required",
-        "reason": "Public discovery is metadata-only and the private runtime has its own opportunity/member inputs. A shared Intake Fabric adapter has not yet been contracted."
-      },
-      "execution": {
-        "state": "not_required",
-        "reason": "Private execution blueprints, team invitations and work-package state are verified in the product runtime, but no shared Execution Gate action or public transactional route is declared yet."
-      },
-      "relationship": {
-        "state": "not_required",
-        "reason": "Protected connection requests and team invitations use Opportunity Fabric state, not the shared Interaction Ledger today."
-      },
-      "receipt_reconciliation": {
-        "state": "not_required",
-        "reason": "Opportunity Fabric has its own FabricEvent/disclosure receipts, but shared Context Receipt Bridge reconciliation has not yet been contracted."
-      },
-      "rollback": {
-        "state": "declared",
-        "policy": "Keep the public product discovery-only or disable future shared-runtime bindings without weakening metadata-first matching, purpose-bound disclosure, team-invitation, IP, or counsel-review gates."
-      },
-      "compatibility": {
-        "intended_product_classes": [
-          "protected_collaboration_partner_matching_and_execution_orchestration"
-        ]
-      },
-      "boundaries": {
-        "verified_private_runtime": true,
-        "public_transactional_marketplace_claimed": false,
-        "protected_matching_metadata_first": true,
-        "protected_file_delivery_enabled": false,
-        "client_supplied_identity_or_consent_authoritative": false,
-        "creator_covenant_final_legal_agreement": false,
-        "payment_or_escrow_claimed": false,
-        "shared_runtime_contracted": false
-      }
-    },
-    {
       "product_key": "systemia",
       "contract_version": "1.0.0",
       "owner": "systemia",
@@ -501,59 +554,6 @@
         ]
       },
       "adoption_stage": "discovery_only"
-    },
-    {
-      "product_key": "systemia-university",
-      "contract_version": "1.0.0",
-      "owner": "systemia",
-      "adoption_stage": "discovery_only",
-      "authority": {
-        "state": "not_required",
-        "reason": "Public admission is discovery-only. Evidence-centered missions and workforce workflows are not yet exposed as shared Passport-authorized machine actions."
-      },
-      "context": {
-        "state": "not_required",
-        "reason": "No shared Context Fabric namespace is declared for proving missions, preliminary reviews, proofs, or workforce profiles."
-      },
-      "meter": {
-        "state": "not_required",
-        "reason": "Discovery creates no payment obligation and no shared Meter contract is established."
-      },
-      "intake": {
-        "state": "not_required",
-        "reason": "External-lab submissions and mission inputs have no shared Intake Fabric contract yet."
-      },
-      "execution": {
-        "state": "not_required",
-        "reason": "Mission exercises are bounded simulations/evidence exercises unless live execution is separately verified; no shared execution action is declared."
-      },
-      "relationship": {
-        "state": "not_required",
-        "reason": "Public discovery does not contact people, publish externally, or perform staffing changes."
-      },
-      "receipt_reconciliation": {
-        "state": "not_required",
-        "reason": "No shared receipt-reconciliation contract has been established for mission evidence or competency reviews."
-      },
-      "rollback": {
-        "state": "declared",
-        "policy": "Disable public discovery or future shared-runtime bindings without converting simulations, provisional evidence, or human-reviewed competency claims into live authority."
-      },
-      "compatibility": {
-        "intended_product_classes": [
-          "evidence_centered_learning_agent_proving_and_workforce_readiness"
-        ]
-      },
-      "boundaries": {
-        "simulations_not_live_execution": true,
-        "missions_do_not_authorize_contact_spend_publish_staffing_or_production_mutation": true,
-        "one_success_not_broad_competency_proof": true,
-        "provisional_evidence_not_verified_evidence": true,
-        "competency_verification_human_reviewed": true,
-        "public_proof_requires_explicit_approval": true,
-        "discovery_creates_credential_or_employment_authority": false,
-        "shared_runtime_contracted": false
-      }
     }
   ]
 }
