@@ -45,8 +45,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p artifacts/autonomy-revenue
-          printf '{"workflow_runs":[]}
-' > artifacts/autonomy-revenue/workflows.json
+          echo '{"workflow_runs":[]}' > artifacts/autonomy-revenue/workflows.json
 
           capture() {
             FULL_PATH="$1"
@@ -89,11 +88,9 @@ jobs:
             [ -n "$WORKFLOW" ] || continue
             FILE_NAME="${WORKFLOW##*/}"
             if gh workflow run "$FILE_NAME" --ref main; then
-              printf '%s	%s	%s	%s
-' "$WORKFLOW" "$LANE" "$REASON" "dispatched" >> artifacts/autonomy-revenue/dispatches.tsv
+              echo "$WORKFLOW|$LANE|$REASON|dispatched" >> artifacts/autonomy-revenue/dispatches.tsv
             else
-              printf '%s	%s	%s	%s
-' "$WORKFLOW" "$LANE" "$REASON" "dispatch_failed" >> artifacts/autonomy-revenue/dispatches.tsv
+              echo "$WORKFLOW|$LANE|$REASON|dispatch_failed" >> artifacts/autonomy-revenue/dispatches.tsv
             fi
           done
           COUNT="$(wc -l < artifacts/autonomy-revenue/dispatches.tsv | tr -d ' ')"
