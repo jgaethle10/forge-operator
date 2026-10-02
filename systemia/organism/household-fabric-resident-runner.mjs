@@ -35,6 +35,7 @@ export async function reconcileHouseholdFabricResident({
   yard,
   releaseRef,
   deploymentId = 'household-fabric-yakima',
+  edgeDeploymentId = 'evercraft-public-edge',
   discovery = {},
   input = {},
   leaseTtlMs = 60 * 60 * 1000,
@@ -85,28 +86,60 @@ export async function reconcileHouseholdFabricResident({
     };
   }
 
-  let deployment;
-  try {
-    deployment = await yard.deployDiscoveredRelease({
-      deploymentId,
-      releaseRef,
-      workloadClass: 'systemia.household-fabric-yakima.v1',
-      input,
-      rollbackTarget: 'systemia:household-fabric-yakima-previous',
-      leaseTtlMs,
-      allocatorTokens: authorities.allocatorTokens,
-      discovery,
-    });
-  } catch (error) {
-    return {
-      ok: false,
-      action: 'held_capacity_deployment_failed',
-      deployment_id: deploymentId,
-      error_code: 'household_fabric_capacity_deployment_failed',
-      allocator_authority_exposed: false,
-      authority_source_records: Number(authorities.source_record_count || 0),
-      detail_recorded: false,
-    };
+  let deployment = null;
+  let placement = 'capacity_discovery';
+  const edge = yard.deploymentStatus(edgeDeploymentId);
+  const edgeNodeId = clean(edge?.receipt?.capacity_node_id);
+  const edgeEndpoint = clean(edge?.lease?.capacity_endpoint);
+  const edgeAllocator = edgeNodeId ? clean(authorities.allocatorTokens?.[edgeNodeId]) : '';
+
+  if (
+    edge?.state === 'ready' &&
+    edge?.receipt?.workload_class === 'systemia.public-edge.v1' &&
+    edgeNodeId &&
+    edgeEndpoint &&
+    edgeAllocator
+  ) {
+    try {
+      deployment = await yard.deployRelease({
+        deploymentId,
+        releaseRef,
+        workloadClass: 'systemia.household-fabric-yakima.v1',
+        capacityEndpoint: edgeEndpoint,
+        allocatorToken: edgeAllocator,
+        input,
+        rollbackTarget: 'systemia:household-fabric-yakima-previous',
+        leaseTtlMs,
+      });
+      placement = 'public_edge_affinity';
+    } catch {}
+  }
+
+  if (!deployment) {
+    try {
+      deployment = await yard.deployDiscoveredRelease({
+        deploymentId,
+        releaseRef,
+        workloadClass: 'systemia.household-fabric-yakima.v1',
+        input,
+        rollbackTarget: 'systemia:household-fabric-yakima-previous',
+        leaseTtlMs,
+        allocatorTokens: authorities.allocatorTokens,
+        discovery,
+      });
+      placement = 'capacity_discovery';
+    } catch {
+      return {
+        ok: false,
+        action: 'held_capacity_deployment_failed',
+        deployment_id: deploymentId,
+        error_code: 'household_fabric_capacity_deployment_failed',
+        allocator_authority_exposed: false,
+        authority_source_records: Number(authorities.source_record_count || 0),
+        public_edge_affinity_attempted: Boolean(edgeNodeId && edgeEndpoint && edgeAllocator),
+        detail_recorded: false,
+      };
+    }
   }
 
   const attestation = await yard.attestDeployment(deploymentId);
@@ -141,6 +174,9 @@ export async function reconcileHouseholdFabricResident({
     identity_verified: attestation.identity_verified === true,
     field_verified: attestation.field_verified === true,
     resident_health_verified: deployment.receipt?.health_verification === 'healthy',
+    placement,
+    public_edge_node_id: edgeNodeId || null,
+    colocated_with_public_edge: Boolean(edgeNodeId && deployment.receipt?.capacity_node_id === edgeNodeId),
     allocator_authority_exposed: false,
     authority_source_records: Number(authorities.source_record_count || 0),
   };
