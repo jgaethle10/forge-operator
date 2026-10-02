@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { negotiateCompute } from './compute-exchange.mjs';
+import { runPortableChumAssignment } from './portable-workers/chum.mjs';
 import {
   buildGolemOrder,
   estimateGolemCeilingGlm,
@@ -13,7 +14,7 @@ const fakeRental={id:'golem-rental-proof'};
 const fakeClient={
   async scan({order}={}){
     scanCount+=1;
-    assert.equal(order.demand.workload.imageTag,'golem/alpine:latest');
+    assert.equal(order.demand.workload.imageTag,'golem/node:20-alpine');
     assert.equal(order.demand.workload.minCpuThreads,2);
     assert.equal(order.demand.workload.minMemGib,2);
     assert.equal(order.demand.workload.minStorageGib,4);
@@ -31,6 +32,12 @@ const fakeClient={
     rented=true;
     return {rental:fakeRental,provider_id:providerId};
   },
+  async executePortableWorker({rental,localWorkerPath,payload}={}){
+    assert.equal(rental,fakeRental);
+    assert.match(localWorkerPath,/systemia\/saban\/portable-workers\/chum\.mjs$/);
+    assert.equal(payload.portable_worker_id,'chum-portable-v1');
+    return runPortableChumAssignment(payload);
+  },
   async release({rental}={}){
     assert.equal(rental,fakeRental);
     released=true;
@@ -42,7 +49,9 @@ const fakeClient={
 const demand={
   demand_id:'golem-proof-demand',
   workload_class:'saban.multiplier-assignment.v1',
-  container_image:'golem/alpine:latest',
+  container_image:'golem/node:20-alpine',
+  portable_worker_id:'chum-portable-v1',
+  portable_worker_version:'1',
   cpu_units:2,
   memory_mb:2048,
   storage_gb:4,
@@ -62,7 +71,7 @@ const order=buildGolemOrder({
   resources:{cpu_units:2,memory_mb:2048,storage_gb:4,gpu_count:0,gpu_models:[]},
   economics:{market_price_ceiling:demand.market_price_ceiling},
   duration_seconds:900,
-  container_image:'golem/alpine:latest',
+  container_image:'golem/node:20-alpine',
 });
 assert.equal(order.market.rentHours,0.25);
 assert.equal(estimateGolemCeilingGlm(
@@ -104,13 +113,47 @@ assert.equal(negotiation.selected_offer.economics.native_price.denom,'GLM');
 assert.equal(negotiation.selected_offer.economics.native_price.ceiling_total_glm,0.0225);
 assert.ok(negotiation.lease);
 assert.equal(negotiation.lease.maximum_cost_glm,0.0225);
-assert.equal(negotiation.lease.execution_ready,false);
-assert.equal(
-  negotiation.lease.execution_hold,
-  'registered_saban_worker_image_not_yet_wired'
-);
+assert.equal(negotiation.lease.execution_ready,true);
+assert.equal(negotiation.lease.portable_worker_id,'chum-portable-v1');
+assert.equal(negotiation.lease.max_concurrency,1);
 assert.equal(rented,true);
 assert.equal(JSON.stringify(negotiation).includes('golem-rental-proof'),false);
+
+const execution=await market.execute({
+  lease:negotiation.lease,
+  workload_class:'saban.multiplier-assignment.v1',
+  input:{
+    software:'chum',
+    assignment:{
+      agent_id:'golem-portable-chum-00001',
+      idempotency_key:'sha256:portable-proof',
+      role:'surface_auditor',
+      work:{kind:'product',key:'portable-proof'},
+      item:{
+        kind:'product',
+        key:'portable-proof',
+        raw:{
+          canonical_url:'https://example.com/portable-proof',
+          intents:['discover','evaluate','route'],
+          authority:'proof',
+          boundaries:['public only'],
+        },
+      },
+    },
+  },
+  idempotency_key:'sha256:portable-proof',
+});
+assert.equal(execution.schema,'evercraft.saban.golem-portable-execution.v1');
+assert.equal(execution.portable_worker_id,'chum-portable-v1');
+assert.equal(execution.result.role,'surface_auditor');
+assert.equal(execution.result.status,'finding');
+assert.ok(
+  execution.result.actions.some((row)=>
+    row.type==='verify_llms_and_structured_discovery_surfaces'
+  )
+);
+assert.equal(execution.checkpoint.state,'portable_assignment_completed');
+assert.ok(execution.result_receipt.startsWith('sha256:'));
 
 await market.release({lease:negotiation.lease});
 assert.equal(released,true);
@@ -157,7 +200,9 @@ console.log(JSON.stringify({
   glm_native_budget_preserved:true,
   glm_spend_ceiling_enforced:true,
   runtime_rental_not_serialized:true,
-  execution_truthfully_held_until_registered_worker_image:true,
+  portable_chum_worker_executed:true,
+  arbitrary_remote_shell_not_required:true,
+  result_receipt:execution.result_receipt,
   release_path:true,
   negotiation_receipt:negotiation.receipt_hash,
 },null,2));
