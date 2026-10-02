@@ -67,14 +67,18 @@ function publicOffer(offer) {
   const liveCanaryEvidence = String(
     offer?.live_canary_evidence || productConformance?.live_canary_evidence || ''
   ).trim() || null;
-  const sourcePublicUrl = safeHttps(offer.public_url);
+  const inheritedStaticPublicUrl =
+    offer.public_url_source === 'static_capability_mirror'
+      ? safeHttps(offer.public_url)
+      : '';
+  const sourcePublicUrl = inheritedStaticPublicUrl ? '' : safeHttps(offer.public_url);
   const gateway = safeHttps(CONFIGURED_GATEWAY_URL);
   const ownedGatewayPublicUrl = publicId && gateway
     ? gateway + (gateway.includes('?') ? '&' : '?') + 'view=service&public_id=' + encodeURIComponent(publicId)
     : '';
-  const staticCapabilityPublicUrl = publicId
+  const staticCapabilityPublicUrl = inheritedStaticPublicUrl || (publicId
     ? STATIC_CAPABILITY_BASE + encodeURIComponent(publicId) + '/index.html'
-    : '';
+    : '');
   const fallbackPublicUrl = ownedGatewayPublicUrl || staticCapabilityPublicUrl;
   return {
     public_id: publicId,
