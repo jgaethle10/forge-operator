@@ -464,3 +464,24 @@ test('real Relay fabric reconstructs principals after a deduped recovery', async
   assert.ok(watch);
   assert.deepEqual(watch.payload.principal_ids, ['owner']);
 });
+
+
+test('outbox health separates scheduled retries from due backlog', () => {
+  const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'relay-queue-health-'));
+  const outbox = createRelayOutbox({ dataDir });
+  outbox.enqueue({
+    kind: 'intent',
+    payload: { intent: { id: 'scheduled-1' } },
+    not_before_ms: 20_000,
+    now: 10_000,
+  });
+  const scheduled = outbox.stats({ now: 15_000 });
+  assert.equal(scheduled.scheduled, 1);
+  assert.equal(scheduled.due, 0);
+  assert.equal(scheduled.oldest_due_age_ms, 0);
+
+  const due = outbox.stats({ now: 25_000 });
+  assert.equal(due.scheduled, 0);
+  assert.equal(due.due, 1);
+  assert.equal(due.oldest_due_age_ms, 5_000);
+});
