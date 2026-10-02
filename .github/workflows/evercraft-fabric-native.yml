@@ -17,6 +17,7 @@ on:
       - 'tests/public-edge-native-specialist-invariants.test.mjs'
       - 'tests/public-edge-canary-contract.test.mjs'
       - 'tests/fabric-edge-doctor-contract.test.mjs'
+      - 'tests/fabric-edge-external-canary-contract.test.mjs'
       - 'tests/fabric-owned-edge-updater-contract.test.mjs'
       - 'scripts/fabric-edge-doctor.sh'
       - 'scripts/update-fabric-owned-edge.sh'
@@ -52,4 +53,4 @@ jobs:
         run: |
           bash -n scripts/fabric-edge-doctor.sh
           bash -n scripts/update-fabric-owned-edge.sh
-          node --test tests/fabric-edge-doctor-contract.test.mjs tests/fabric-owned-edge-updater-contract.test.mjs
+          node --test tests/fabric-edge-doctor-contract.test.mjs tests/fabric-owned-edge-updater-contract.test.mjs tests/fabric-edge-external-canary-contract.test.mjs
