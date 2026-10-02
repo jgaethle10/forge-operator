@@ -31,7 +31,7 @@ test('AliEV canary contract binds the shared trust-chain primitives without clai
   assert.ok(aliev);
   assert.equal(aliev.contract_state, 'complete_declaration');
   assert.equal(aliev.specialist_slug, 'aliev');
-  assert.equal(aliev.direct_door.direct_callable, true);
+  assert.equal(aliev.direct_door.direct_callable, false);
   assert.equal(aliev.lane_states.authority, 'declared');
   assert.equal(aliev.lane_states.context, 'declared');
   assert.equal(aliev.lane_states.meter, 'declared');
@@ -48,7 +48,7 @@ test('Evercraft Clip public specialist has a complete but deliberately non-publi
 
   assert.ok(clip);
   assert.equal(clip.contract_state, 'complete_declaration');
-  assert.equal(clip.direct_door.direct_callable, true);
+  assert.equal(clip.direct_door.direct_callable, false);
   assert.equal(clip.lane_states.meter, 'not_required');
   assert.equal(clip.lane_states.intake, 'not_required');
   assert.equal(clip.lane_states.relationship, 'not_required');
@@ -368,11 +368,11 @@ test('new current-trunk products are explicitly contracted without overclaiming 
 });
 
 
-test('FindMyPart direct door is no longer contract debt after free-triage adoption', () => {
+test('FindMyPart contract is complete even while its retired public route stays held', () => {
   const mesh = renderCapabilityMesh(process.cwd());
   const part = mesh.products.find((row) => row.product_key === 'findmypart');
   assert.equal(part.contract_state, 'complete_declaration');
   assert.equal(part.adoption_stage, 'shared_runtime');
-  assert.equal(part.direct_door.direct_callable, true);
+  assert.equal(part.direct_door.direct_callable, false);
   assert.equal(mesh.priority_queues.direct_door_without_contract.includes('findmypart'), false);
 });
