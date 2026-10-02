@@ -311,8 +311,9 @@ fi
 LAN_HOST=""
 GATEWAY=""
 if [[ -f "$ROUTER_ENV" ]]; then
-  # This file contains only bounded router mapping coordinates, not secrets.
-  # The resident router-map service runs unprivileged and must be able to read it.
+  # This directory/file contain only bounded router mapping coordinates, not secrets.
+  # The resident router-map service runs unprivileged and must be able to traverse/read them.
+  chmod 0755 "$(dirname "$ROUTER_ENV")" 2>/dev/null || true
   chmod 0644 "$ROUTER_ENV" 2>/dev/null || true
   # shellcheck disable=SC1090
   source "$ROUTER_ENV"
