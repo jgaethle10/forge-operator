@@ -95,7 +95,7 @@ jobs:
             echo "Purpose: source reachability, freshness, profile resolution, and receipt integrity only."
             echo "Threat decisions: none."
             echo
-            for FILE in artifacts/sentinel-live-canary/latest.json artifacts/sentinel-live-canary/history.json; do
+            for FILE in artifacts/sentinel-live-canary/latest.json artifacts/sentinel-live-canary/history.json artifacts/sentinel-live-canary/mission-snapshot.json; do
               if [ -f "$FILE" ]; then
                 echo "### $FILE"
                 echo '~~~json'
