@@ -1696,7 +1696,6 @@ export async function startEvercraftComputeNode({
             public_route_required: false,
             today_path: '/today',
             instance_id: runtime.instanceId,
-            state_dir: stateRoot,
             credential_state_bound: Boolean(credentialStateRoot),
             credential_refs_are_opaque: true,
             raw_provider_secrets_in_input: false,
