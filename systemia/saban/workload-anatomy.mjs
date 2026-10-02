@@ -246,6 +246,8 @@ export function portfolioWorkloadAnatomy({
         cpu_units:Math.max(0.001,Number(row.max_cpu_units||0.05)),
         memory_mb:Math.max(1,Number(row.max_memory_mb||64)),
         storage_gb:Math.max(0,Number(row.max_storage_gb||0)),
+        gpu_count:Math.max(0,Math.floor(Number(row.max_gpu_count||0))),
+        gpu_models:Array.isArray(row.gpu_models)?row.gpu_models:[],
       },
       preemptible:shardable,
       checkpointable:shardable,
