@@ -19,7 +19,7 @@ test('AliEV contract compiles into a fail-closed runtime policy', () => {
   assert.deepEqual(policy.meter.metrics, [{ metric: 'site_reports', unit: 'report' }]);
   assert.equal(policy.execution.gate_required, true);
   assert.equal(policy.route.specialist_slug, 'aliev');
-  assert.equal(policy.route.direct_callable, true);
+  assert.equal(policy.route.direct_callable, false);
   assert.equal(policy.runtime_verified, false);
   assert.equal(policy.grants_authority, false);
 });
@@ -34,7 +34,7 @@ test('one product action compiles into the exact Execution Gate input and Meter 
     meter_subject_ref: 'org:demo',
     idempotency_key: 'capability-mesh:aliev:prepare:001',
     lease_id: 'lease_mesh_001',
-    require_direct_specialist: true,
+    require_direct_specialist: false,
   });
 
   const input = prepared.execution_gate_input;
@@ -48,7 +48,7 @@ test('one product action compiles into the exact Execution Gate input and Meter 
     quantity: 1,
     unit: 'report',
   });
-  assert.equal(input.require_direct_specialist, true);
+  assert.equal(input.require_direct_specialist, false);
   assert.equal(prepared.grants_execution_authority, false);
   assert.equal(prepared.payment_state_inferred, false);
 });
@@ -91,7 +91,7 @@ test('ForensiScope contract exposes only the currently proven route-classificati
   assert.equal(policy.execution.gate_required, true);
   assert.deepEqual(policy.execution.actions, [{ scope: 'classify_media_route' }]);
   assert.equal(policy.route.specialist_slug, 'forensiscope');
-  assert.equal(policy.route.direct_callable, true);
+  assert.equal(policy.route.direct_callable, false);
   assert.equal(policy.runtime_verified, false);
   assert.equal(policy.boundaries?.runtime_analysis_action_contracted, false);
 });
@@ -107,7 +107,7 @@ test('ForensiScope route classification compiles without inventing a Meter charg
       failureCode: 'duration_exceeded',
     },
     idempotency_key: 'capability-mesh:forensiscope:route:001',
-    require_direct_specialist: true,
+    require_direct_specialist: false,
   });
 
   const input = prepared.execution_gate_input;
@@ -115,7 +115,7 @@ test('ForensiScope route classification compiles without inventing a Meter charg
   assert.equal(input.scope, 'classify_media_route');
   assert.equal(input.specialist_slug, 'forensiscope');
   assert.equal(Object.prototype.hasOwnProperty.call(input, 'meter'), false);
-  assert.equal(prepared.route_snapshot.direct_callable, true);
+  assert.equal(prepared.route_snapshot.direct_callable, false);
   assert.equal(prepared.grants_execution_authority, false);
 });
 
@@ -159,7 +159,7 @@ test('Clip planning compiles without inventing rendering, publishing or payment 
       platforms: ['facebook', 'linkedin', 'instagram'],
     },
     idempotency_key: 'capability-mesh:clip:plan:001',
-    require_direct_specialist: true,
+    require_direct_specialist: false,
   });
 
   const input = prepared.execution_gate_input;
@@ -204,7 +204,7 @@ test('FindMyPart free triage compiles without inventing checkout, payment or pur
     scope: 'free_part_triage',
     request: { markings: 'ABC-123', equipment: 'legacy tractor' },
     idempotency_key: 'capability-mesh:findmypart:triage:001',
-    require_direct_specialist: true,
+    require_direct_specialist: false,
   });
   assert.equal(prepared.execution_gate_input.passport_product, 'findmypart');
   assert.equal(prepared.execution_gate_input.scope, 'free_part_triage');
@@ -289,6 +289,33 @@ test('discovery-only and private-runtime contracts cannot be compiled into share
           idempotency_key: 'non-shared:' + product_key,
         }),
       /product_not_shared_runtime/
+    );
+  }
+});
+
+
+test('shared-runtime contracts cannot resurrect retired public routes', () => {
+  const attempts = [
+    ['aliev', 'report.generate', { report: 'preliminary' }, { meter_subject_ref: 'org:demo' }],
+    ['forensiscope', 'classify_media_route', { mediaType: 'video' }, {}],
+    ['evercraft-clip', 'plan_clip_job', { goal: 'plan only' }, {}],
+    ['findmypart', 'free_part_triage', { markings: 'ABC-123' }, {}],
+  ];
+
+  for (const [product_key, scope, request, extra] of attempts) {
+    assert.throws(
+      () =>
+        buildExecutionGateInput({
+          product_key,
+          actor_ref: 'agent:route-truth',
+          scope,
+          request,
+          idempotency_key: 'direct-held:' + product_key,
+          require_direct_specialist: true,
+          ...extra,
+        }),
+      /direct_specialist_not_ready/,
+      product_key + ' must stay held until an owned public route is verified'
     );
   }
 });
