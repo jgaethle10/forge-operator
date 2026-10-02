@@ -278,7 +278,10 @@
     "proof:rivet-mail": "node systemia/domain-authority/rivet-public-mail.proof.mjs",
     "test:shipping": "node --test systemia/shipping/shipping-department.test.mjs",
     "test:household-fabric-gateway": "node tests/household-fabric-gateway.test.mjs",
-    "test:household-fabric-ui": "node tests/household-fabric-today-ui.test.mjs"
+    "test:household-fabric-ui": "node tests/household-fabric-today-ui.test.mjs",
+    "test:world-engine": "node --import tsx --test systemia/world-engine/world-engine.test.ts",
+    "proof:world-engine": "node --import tsx systemia/world-engine/proof.mjs",
+    "proof:saban-world-engine": "node systemia/saban/multiplier.mjs --software world-engine-review --inventory systemia/saban/fixtures/world-engine-review-job.json --agents 16 --workers 4 --execute --reconcile"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
