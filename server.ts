@@ -19,6 +19,7 @@ import { registerSpecialistHandoffMcps } from './systemia/mcp/specialist-handoff
 import { registerRemoteOperatorMcp } from './systemia/remote-operator/mcp-gateway.mjs';
 import { registerNotificationFabricRoutes } from './systemia/notification-fabric/http.mjs';
 import { registerRadarRoutes } from './systemia/radar/http.mjs';
+import { registerFaieRoutes } from './systemia/faie/http.mjs';
 
 dotenv.config();
 
@@ -171,6 +172,11 @@ function rateLimit(maxRequests: number, windowMs: number) {
 
 app.use(express.json({ limit: '10mb', type: ['application/json', 'application/*+json'] }));
 const radarResident = registerRadarRoutes(app, { isProd });
+registerFaieRoutes(app, {
+  isProd,
+  radarResident,
+  publicInvestigateLimiter: rateLimit(60, 60 * 60 * 1000)
+});
 registerNotificationFabricRoutes(app);
 registerRivetReportGateway(app);
 registerSpecialistHandoffMcps(app, { gatewayUrl: machineCommerceGatewayUrl });
