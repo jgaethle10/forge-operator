@@ -133,6 +133,7 @@ const paidFallback=await negotiateCompute({
     schema:'evercraft.saban.compute-authority.v1',
     approved:true,
     demand_id:'proof-large',
+    allow_spend:true,
     allowed_markets:['paid-proof'],
     max_total_usd:1,
   },
@@ -315,6 +316,7 @@ const uncertainLease=await negotiateCompute({
     schema:'evercraft.saban.compute-authority.v1',
     approved:true,
     demand_id:'proof-uncertain-lease',
+    allow_spend:true,
     allowed_markets:['uncertain-lease-proof'],
   },
   leaseAuthority:{
@@ -397,6 +399,7 @@ const safeQuoteFallback=await negotiateCompute({
     schema:'evercraft.saban.compute-authority.v1',
     approved:true,
     demand_id:'proof-safe-quote-fallback',
+    allow_spend:true,
     allowed_markets:['quote-failure-primary','quote-failure-fallback'],
   },
   leaseAuthority:{
@@ -491,6 +494,7 @@ const unsafeQuoteCleanup=await negotiateCompute({
     schema:'evercraft.saban.compute-authority.v1',
     approved:true,
     demand_id:'proof-unsafe-quote-cleanup',
+    allow_spend:true,
     allowed_markets:['cleanup-uncertain-primary','cleanup-uncertain-fallback'],
   },
   leaseAuthority:{
