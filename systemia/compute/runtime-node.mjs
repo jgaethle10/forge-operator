@@ -1172,13 +1172,22 @@ export async function startEvercraftComputeNode({
           if (!idempotencyKey) {
             return send(res, 422, { error: 'registered_worker_idempotency_key_required' });
           }
-          const worker = runNodeSeedRegisteredWorkload({
-            nodeId,
-            workloadClass,
-            payload: body.input?.payload ?? body.payload ?? null,
-            idempotencyKey,
-            stateDir: path.join(allowedRoot, '.evercraft', 'registered-worker'),
-          });
+          let worker;
+          try {
+            worker = runNodeSeedRegisteredWorkload({
+              nodeId,
+              workloadClass,
+              payload: body.input?.payload ?? body.payload ?? null,
+              idempotencyKey,
+              stateDir: path.join(allowedRoot, '.evercraft', 'registered-worker'),
+            });
+          } catch (error) {
+            const message = error instanceof Error ? error.message : String(error);
+            if (message === 'nodeseed_registered_worker_idempotency_conflict') {
+              return send(res, 409, { error: message });
+            }
+            return send(res, 422, { error: message });
+          }
           return send(res, 200, {
             ok: true,
             node_id: nodeId,
