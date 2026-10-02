@@ -600,6 +600,37 @@ export async function startOutboundCapacityBroker({
     };
   }
 
+  function renewServiceRelay(relayId, ttlMs = 30 * 60_000) {
+    const id = String(relayId || '').trim();
+    const relay = serviceRelays.get(id);
+    if (!relay) return { ok: false, renewed: false, relay_id: id };
+    const node = nodes.get(relay.node_id);
+    if (!node || Date.now() - node.last_seen_at > capacityFreshMs) {
+      throw new Error('remote_node_unavailable');
+    }
+    const previousExpiresAt = relay.expires_at;
+    relay.expires_at = new Date(
+      Date.now() + Math.max(60_000, Math.min(60 * 60_000, Number(ttlMs || 30 * 60_000)))
+    ).toISOString();
+    serviceRelays.set(id, relay);
+    const body = {
+      schema: 'evercraft.remote-capacity.service-relay-renewal.v1',
+      relay_id: id,
+      node_id: relay.node_id,
+      service_id: relay.service_id,
+      previous_expires_at: previousExpiresAt,
+      expires_at: relay.expires_at,
+      relay_token_rotated: false,
+      renewed_at: new Date().toISOString(),
+    };
+    return {
+      ok: true,
+      renewed: true,
+      ...body,
+      receipt_hash: 'sha256:' + sha(JSON.stringify(body)),
+    };
+  }
+
   function releaseServiceRelay(relayId, reason = 'released') {
     const id = String(relayId || '').trim();
     const relay = serviceRelays.get(id);
@@ -1157,6 +1188,7 @@ export async function startOutboundCapacityBroker({
       }));
     },
     createServiceRelay,
+    renewServiceRelay,
     releaseServiceRelay,
     controlGrant(nodeId) {
       const id = safeNodeId(nodeId);
