@@ -92,13 +92,16 @@
   "resident_activation": {
     "runner": "systemia/organism/household-fabric-resident-runner.mjs",
     "reconcile_seconds": 60,
-    "placement": "yard-capacity-beacon-discovery",
+    "placement": "prefer-public-edge-affinity-then-yard-capacity-beacon-discovery",
     "allocator_authority": "existing_private_yard_authority_only",
     "immutable_release_required": true,
     "identity_attestation_required": true,
     "lease_keeper": true,
     "founder_login_required": false,
     "payment_authority": false,
-    "external_capacity_provision_authority": false
+    "external_capacity_provision_authority": false,
+    "public_edge_affinity_preferred": true,
+    "capacity_discovery_fallback": true,
+    "manual_endpoint_required": false
   }
 }
