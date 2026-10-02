@@ -42,7 +42,18 @@ export function computeDemandFromDistributedPlan({
     demand_id:acquisition.demand_id||
       `distributed:${contract?.software_id||'unknown'}:${plan?.generated_at||Date.now()}`,
     workload_class:'saban.multiplier-assignment.v1',
-    container_image:acquisition.container_image||null,
+    container_image:
+      acquisition.container_image||
+      contract?.portable_execution?.golem?.image_tag||
+      null,
+    portable_worker_id:
+      acquisition.portable_worker_id||
+      contract?.portable_execution?.golem?.worker_id||
+      null,
+    portable_worker_version:
+      acquisition.portable_worker_version||
+      contract?.portable_execution?.golem?.worker_version||
+      null,
     cpu_units:acquisition.cpu_units||
       resources.minimum_node_cpu_units||
       resources.cpu_units_per_worker||
