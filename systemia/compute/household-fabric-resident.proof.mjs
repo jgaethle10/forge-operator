@@ -123,6 +123,8 @@ try {
   assert.equal(health.body.secret_material_exposed, false);
   assert.equal(health.body.raw_provider_secrets_required, false);
   assert.equal(health.body.today_available, true);
+  assert.equal(health.body.deployment_receipt_bound, true);
+  assert.equal(health.body.deployment_receipt_ref, deployed.receipt.receipt_hash);
 
   const denied = await fetch(node.endpoint + deployed.result.bridge_path, {
     method: 'POST',
