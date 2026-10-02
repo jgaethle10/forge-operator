@@ -4,11 +4,11 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 export const WORKFLOW_REQUIREMENTS = Object.freeze([
-  { lane: 'portfolio_sentinel', workflow: '.github/workflows/systemia-portfolio-sentinel.yml', max_age_minutes: 20, repair: 'dispatch' },
-  { lane: 'legacy_rescue', workflow: '.github/workflows/systemia-legacy-rescue-watch.yml', max_age_minutes: 20, repair: 'dispatch' },
-  { lane: 'commercial_discovery', workflow: '.github/workflows/portfolio-sentinel-commercial-discovery.yml', max_age_minutes: 45, repair: 'dispatch' },
-  { lane: 'revenue_watershed', workflow: '.github/workflows/chum-watershed.yml', max_age_minutes: 95, repair: 'dispatch' },
-  { lane: 'owned_newsroom', workflow: '.github/workflows/evercraft-journal-owned.yml', max_age_minutes: 95, repair: 'dispatch' },
+  { lane: 'portfolio_sentinel', workflow: '.github/workflows/systemia-portfolio-sentinel.yml', max_age_minutes: 20, retry_failed_after_minutes: 20, repair: 'dispatch' },
+  { lane: 'legacy_rescue', workflow: '.github/workflows/systemia-legacy-rescue-watch.yml', max_age_minutes: 20, retry_failed_after_minutes: 20, repair: 'dispatch' },
+  { lane: 'commercial_discovery', workflow: '.github/workflows/portfolio-sentinel-commercial-discovery.yml', max_age_minutes: 45, retry_failed_after_minutes: 30, repair: 'dispatch' },
+  { lane: 'revenue_watershed', workflow: '.github/workflows/chum-watershed.yml', max_age_minutes: 95, retry_failed_after_minutes: 45, repair: 'dispatch' },
+  { lane: 'owned_newsroom', workflow: '.github/workflows/evercraft-journal-owned.yml', max_age_minutes: 95, retry_failed_after_minutes: 45, repair: 'dispatch' },
 ]);
 
 export const EXTERNAL_REVENUE_LANES = Object.freeze([
@@ -128,6 +128,22 @@ export function evaluateRevenueAutonomy({
         run_id: run.id || null,
         detail: `Latest run concluded ${run.conclusion || 'non-success'}.`,
       });
+      const retryAfter = Number(requirement.retry_failed_after_minutes || requirement.max_age_minutes || 20);
+      if (
+        requirement.repair === 'dispatch' &&
+        ageMinutes != null &&
+        ageMinutes >= retryAfter
+      ) {
+        repairs.push({
+          lane: requirement.lane,
+          action: 'dispatch',
+          workflow: requirement.workflow,
+          reason: 'failed_after_cooldown',
+          failed_run_id: run.id || null,
+          failed_age_minutes: Number(ageMinutes.toFixed(1)),
+          retry_failed_after_minutes: retryAfter,
+        });
+      }
     } else if (stale) {
       workflowFindings.push({
         severity: 'critical',
