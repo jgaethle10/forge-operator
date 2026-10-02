@@ -1,0 +1,35 @@
+{
+  "schema": "evercraft.systemia.workflow-manifest.v1",
+  "workflow_key": "raven-private-runtime",
+  "mission_key": "raven-private-runtime-owned-2026-10-02",
+  "runtime": "systemia-core+evercraft-compute",
+  "collider_compatible": true,
+  "material_change_only": false,
+  "entrypoint": "systemia/raven/private-runtime.mjs",
+  "proof": "systemia/raven/resident-runner.test.mjs",
+  "notification_policy": {
+    "chat_scheduler": false,
+    "notify_only_on_material_change": true
+  },
+  "authority": {
+    "private_session_planning": "authorized_internal_only",
+    "systemia_mission_admission": "plan_only",
+    "specialist_execution": "held",
+    "external_communication": "held",
+    "publication": "held",
+    "payment": "held",
+    "deployment": "held"
+  },
+  "runner": "systemia/raven/resident-runner.mjs",
+  "network": {
+    "bind": "127.0.0.1",
+    "public_bind_allowed": false,
+    "public_fabric_required": false,
+    "base44_required": false
+  },
+  "secret_boundary": {
+    "control_token_source": "private_file",
+    "raw_token_in_cli_args": false,
+    "raw_token_in_receipts": false
+  }
+}
