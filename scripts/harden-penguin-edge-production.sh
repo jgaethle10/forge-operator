@@ -30,7 +30,7 @@ systemctl is-active --quiet evercraft-nodeseed.service || {
   exit 12
 }
 
-echo "[1/2] Verifying Penguin placement metadata..."
+echo "[1/3] Verifying Penguin placement metadata..."
 curl -fsS http://127.0.0.1:42420/v1/capacity | node -e "
 let s='';process.stdin.on('data',d=>s+=d);process.stdin.on('end',()=>{
  const j=JSON.parse(s);
@@ -51,8 +51,11 @@ let s='';process.stdin.on('data',d=>s+=d);process.stdin.on('end',()=>{
  if(!ok)process.exit(3);
 });"
 
-echo "[2/2] Proving direct external DNS-over-TCP authority..."
+echo "[2/3] Proving direct external DNS-over-TCP authority..."
 bash "$REPO_ROOT/scripts/prove-edge-direct-tcp-authority.sh"
 
+echo "[3/3] Activating resident Saban capacity brain..."
+bash "$REPO_ROOT/scripts/activate-saban-resident-brain.sh"
+
 echo
-echo "PASS: Penguin now carries placement metadata plus direct external TCP authority proof."
+echo "PASS: Penguin carries placement metadata, direct external TCP authority proof, and a resident Saban autonomy organism."
