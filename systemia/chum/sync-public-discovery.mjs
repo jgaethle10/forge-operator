@@ -6,6 +6,7 @@ const CONFIGURED_GATEWAY_URL = String(process.env.EVERCRAFT_MACHINE_COMMERCE_GAT
 const OUTPUT = 'public/.well-known/evercraft-machine-catalog.json';
 const TIMEOUT_MS = 20000;
 const CONFORMANCE_PATH = 'conformance/products.json';
+const STATIC_CAPABILITY_BASE = 'https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/';
 
 const conformance = fs.existsSync(CONFORMANCE_PATH)
   ? JSON.parse(fs.readFileSync(CONFORMANCE_PATH, 'utf8'))
@@ -68,9 +69,13 @@ function publicOffer(offer) {
   ).trim() || null;
   const sourcePublicUrl = safeHttps(offer.public_url);
   const gateway = safeHttps(CONFIGURED_GATEWAY_URL);
-  const fallbackPublicUrl = publicId && gateway
+  const ownedGatewayPublicUrl = publicId && gateway
     ? gateway + (gateway.includes('?') ? '&' : '?') + 'view=service&public_id=' + encodeURIComponent(publicId)
     : '';
+  const staticCapabilityPublicUrl = publicId
+    ? STATIC_CAPABILITY_BASE + encodeURIComponent(publicId) + '/index.html'
+    : '';
+  const fallbackPublicUrl = ownedGatewayPublicUrl || staticCapabilityPublicUrl;
   return {
     public_id: publicId,
     name: String(offer.name || ''),
@@ -85,7 +90,11 @@ function publicOffer(offer) {
     human_ui_required: Boolean(offer.human_ui_required),
     confirmation: String(offer.confirmation || ''),
     public_url: sourcePublicUrl || fallbackPublicUrl,
-    public_url_source: sourcePublicUrl ? 'source_catalog' : (fallbackPublicUrl ? 'owned_gateway_fallback' : 'held_no_owned_public_url'),
+    public_url_source: sourcePublicUrl
+      ? 'source_catalog'
+      : (ownedGatewayPublicUrl ? 'owned_gateway_fallback' : 'static_capability_mirror'),
+    public_url_transactional: Boolean(sourcePublicUrl || ownedGatewayPublicUrl),
+    checkout_continuation_verified: Boolean(sourcePublicUrl || ownedGatewayPublicUrl),
     payment_authority: String(offer.payment_authority || ''),
     invocation_status: isLegacyProviderUrl(offer.invocation_status)
       ? 'HELD: legacy provider runtime retired; awaiting a verified Evercraft-owned route.'
@@ -148,6 +157,8 @@ const next = {
     provider_verification_required_for_paid_state: true,
     private_topology_exposed: false,
     legacy_provider_runtime_allowed: false,
+    static_capability_public_url_is_not_checkout: true,
+    public_url_does_not_imply_payment_authority: true,
     ...((live?.safety && typeof live.safety === 'object') ? live.safety : {})
   },
   offers
