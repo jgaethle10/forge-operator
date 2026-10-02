@@ -1,13 +1,21 @@
 import crypto from 'node:crypto';
 
+function boundedInteger(value, label, fallback, minimum, maximum) {
+  const candidate = value === undefined || value === null || value === '' ? fallback : Number(value);
+  if (!Number.isFinite(candidate) || !Number.isInteger(candidate) || candidate < minimum || candidate > maximum) {
+    throw new Error(`${label} must be an integer between ${minimum} and ${maximum}.`);
+  }
+  return candidate;
+}
+
 function normalizeAckPolicy(value = {}) {
   if (!value || value.required !== true) return null;
   return {
     required: true,
     mode: value.mode === 'all' ? 'all' : 'any',
-    within_seconds: Math.max(15, Math.min(Number(value.within_seconds ?? 300), 7 * 24 * 60 * 60)),
-    max_escalations: Math.max(0, Math.min(Number(value.max_escalations ?? 2), 5)),
-    escalation_interval_seconds: Math.max(15, Math.min(Number(value.escalation_interval_seconds ?? 300), 24 * 60 * 60)),
+    within_seconds: boundedInteger(value.within_seconds, 'acknowledgement.within_seconds', 300, 15, 7 * 24 * 60 * 60),
+    max_escalations: boundedInteger(value.max_escalations, 'acknowledgement.max_escalations', 2, 0, 5),
+    escalation_interval_seconds: boundedInteger(value.escalation_interval_seconds, 'acknowledgement.escalation_interval_seconds', 300, 15, 24 * 60 * 60),
     title_prefix: String(value.title_prefix || 'UNACKNOWLEDGED').slice(0, 40),
   };
 }
@@ -23,10 +31,10 @@ export function createRelayWorker(options = {}) {
   const outbox = options.outbox;
   if (!fabric || !outbox) throw new Error('Relay worker requires fabric and outbox.');
   const workerId = String(options.workerId || `relay-${process.pid}-${crypto.randomUUID()}`);
-  const leaseMs = Math.max(1000, Math.min(Number(options.leaseMs ?? 30000), 15 * 60 * 1000));
-  const batchSize = Math.max(1, Math.min(Number(options.batchSize ?? 10), 100));
-  const intervalMs = Math.max(100, Math.min(Number(options.intervalMs ?? 1000), 60000));
-  const pruneIntervalMs = Math.max(60000, Math.min(Number(options.pruneIntervalMs ?? 5 * 60 * 1000), 24 * 60 * 60 * 1000));
+  const leaseMs = boundedInteger(options.leaseMs, 'Relay worker leaseMs', 30000, 1000, 15 * 60 * 1000);
+  const batchSize = boundedInteger(options.batchSize, 'Relay worker batchSize', 10, 1, 100);
+  const intervalMs = boundedInteger(options.intervalMs, 'Relay worker intervalMs', 1000, 100, 60000);
+  const pruneIntervalMs = boundedInteger(options.pruneIntervalMs, 'Relay worker pruneIntervalMs', 5 * 60 * 1000, 60000, 24 * 60 * 60 * 1000);
   let timer = null;
   let running = false;
   let lastRunAt = null;
