@@ -1,0 +1,38 @@
+name: Household Fabric public route
+
+on:
+  pull_request:
+    paths:
+      - "systemia/organism/household-fabric-public-route-runner.mjs"
+      - "systemia/organism/household-fabric-public-route-runner.proof.mjs"
+      - "systemia/organism/household-fabric-yakima.workflow.json"
+      - ".github/workflows/household-fabric-public-route.yml"
+      - "package.json"
+  push:
+    branches:
+      - main
+      - "systemia/**"
+    paths:
+      - "systemia/organism/household-fabric-public-route-runner.mjs"
+      - "systemia/organism/household-fabric-public-route-runner.proof.mjs"
+      - "systemia/organism/household-fabric-yakima.workflow.json"
+      - ".github/workflows/household-fabric-public-route.yml"
+      - "package.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install
+        run: npm install --no-audit --no-fund
+      - name: Verify edge route and fresh Today promotion gate
+        run: npm run proof:household-fabric-public-route
