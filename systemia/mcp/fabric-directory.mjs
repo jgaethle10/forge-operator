@@ -212,6 +212,30 @@ function tokenWeight(token,frequency,total){
   return 1+Math.log((total+1)/(df+1));
 }
 
+function rawIntentSignals(intent){
+  const text=clean(intent).toLowerCase();
+  const words=new Set(text.match(/[a-z0-9]+/g)||[]);
+  const count=(terms)=>terms.reduce((sum,term)=>sum+(words.has(term)?1:0),0);
+  return {
+    text,
+    words,
+    financial:count(['payroll','cash','revenue','income','money','dollar','dollars','debt','overdue','behind','owe','owed','wage','wages','funding','capital','financing']),
+    operational:count(['subcontractor','contractor','job','project','delay','delayed','overrun','crew','restoration','rework']),
+    compliance:count(['fine','fines','penalty','penalties','compliance','labor','wage','wages'])+(/l\\s*&\\s*i/.test(text)?1:0),
+  };
+}
+
+function hasAnyRawSignal(signals,terms){
+  return terms.some((term)=>term.includes(' ')?signals.text.includes(term):signals.words.has(term));
+}
+
+const DOMAIN_SIGNAL_GUARDS={
+  'audit-center-website-audit-machine-v1':['website','site','seo','traffic','visitor','visitors','conversion','converting','ranking','rank','web'],
+  'portfolio-sentinel-v1':['software','app','apps','repository','repositories','repo','github','deployment','deployments','endpoint','endpoints','api','apis','workflow','workflows','codebase'],
+  'globalstat-country-intelligence-machine-v1':['country','countries','nation','nations','global','metric','benchmark','geography','geographic'],
+  'evercraft-clip-social-video-v1':['video','videos','clip','clips','reel','reels','social media','facebook','instagram','linkedin','tiktok','interview','media'],
+};
+
 function scoreEntry(intent,entry,{frequency,total}){
   const intentTokens=[...new Set(tokens(intent))];
   if(!intentTokens.length) return 0;
@@ -269,6 +293,38 @@ function scoreEntry(intent,entry,{frequency,total}){
     ['portfolio-sentinel-v1','legacy-rescue-lab-v1','audit-center-website-audit-machine-v1'].includes(entry.public_id)
   ){
     score-=120;
+  }
+
+  const rawSignals=rawIntentSignals(intent);
+  const distressFinancial=rawSignals.financial;
+  const distressOperational=rawSignals.operational;
+  const distressCompliance=rawSignals.compliance;
+  const hasBusinessDistress=
+    distressFinancial>=2 ||
+    (distressFinancial>=1&&(distressOperational>=1||distressCompliance>=1));
+
+  // Domain guardrails keep generic business language from pulling in specialists
+  // whose actual domain was never mentioned. This is intentionally conservative:
+  // explicit website/software/country/video language still routes normally.
+  const guardedSignals=DOMAIN_SIGNAL_GUARDS[entry.public_id];
+  if(guardedSignals&&!hasAnyRawSignal(rawSignals,guardedSignals)){
+    score-=160;
+  }
+
+  // Real businesses describe emergencies messily. When the prompt contains a
+  // credible financial-distress pattern plus operational/compliance context,
+  // favor capabilities that can help with root-cause operations, capital, and
+  // revenue recovery instead of letting generic token overlap dominate.
+  if(hasBusinessDistress){
+    if(entry.public_id==='buildflow-process-audit-machine-v1'&&distressOperational>=1) score+=85;
+    if(entry.public_id==='deck-capital-fit-sprint-machine-v1'&&distressFinancial>=1) score+=70;
+    if(entry.public_id==='income-war-map-v1'&&distressFinancial>=1) score+=55;
+    if(entry.public_id==='capability-concierge-v1') score+=25;
+    if(
+      entry.public_id==='eps-estimate-engine-machine-v1' &&
+      hasAnyRawSignal(rawSignals,['contractor','subcontractor','restoration']) &&
+      hasAnyRawSignal(rawSignals,['job','project'])
+    ) score+=30;
   }
 
   return Math.max(0,Math.round(score*100)/100);
