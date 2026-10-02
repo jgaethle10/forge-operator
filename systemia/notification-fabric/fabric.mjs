@@ -151,6 +151,7 @@ export function createNotificationFabric(options = {}) {
   const vapidPrivateKey = options.vapidPrivateKey ?? process.env.EVERCRAFT_VAPID_PRIVATE_KEY ?? '';
   const vapidSubject = options.vapidSubject ?? process.env.EVERCRAFT_VAPID_SUBJECT ?? '';
   const immediateBudgetPerHour = Number(options.immediateBudgetPerHour ?? process.env.EVERCRAFT_NOTIFICATION_IMMEDIATE_BUDGET ?? 4);
+  const pushTimeoutMs = Math.max(250, Math.min(Number(options.pushTimeoutMs ?? process.env.EVERCRAFT_NOTIFICATION_PUSH_TIMEOUT_MS ?? 10000), 30000));
 
   function resolveTargets(intent) {
     const matched = store.listSubscriptions().filter((sub) => matchesSubscription(sub, intent));
@@ -285,6 +286,9 @@ export function createNotificationFabric(options = {}) {
       let attempts = 0;
       for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
         attempts = attempt;
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), pushTimeoutMs);
+        timeout.unref?.();
         try {
           result = await sendPush(subscription, payload, {
             vapidPublicKey,
@@ -293,9 +297,17 @@ export function createNotificationFabric(options = {}) {
             ttlSeconds: intent.ttl_seconds,
             urgency: urgency(intent.priority),
             topic: pushTopic(intent.id),
+            signal: controller.signal,
           });
         } catch (error) {
-          result = { ok: false, status: 0, responseBody: String(error?.message || error) };
+          const timedOut = controller.signal.aborted;
+          result = {
+            ok: false,
+            status: 0,
+            responseBody: timedOut ? 'Push transport timed out.' : String(error?.message || error),
+          };
+        } finally {
+          clearTimeout(timeout);
         }
         if (result.ok || result.status === 404 || result.status === 410) break;
         const retryable = result.status === 0 || result.status === 429 || result.status >= 500;
