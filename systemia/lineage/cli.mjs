@@ -3,6 +3,7 @@ import { LineageStore } from './core.mjs';
 import { semanticDiff } from './semantic-diff.mjs';
 import { LargeObjectStore } from './large-object.mjs';
 import { exportLineageSnapshotToGit, importGitHistory } from './git-bridge.mjs';
+import { buildHistoryGraph, writeHistoryBundle } from './history-view.mjs';
 import { LocalLineageRemote, fetchCommitGraph, pushCommitGraph } from './remote-protocol.mjs';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -125,8 +126,24 @@ async function main() {
       }), null, 2));
       break;
     }
+    case 'history': {
+      console.log(JSON.stringify(await buildHistoryGraph(store, {
+        ref: args[0] || 'HEAD',
+        limit: Number(args[1] || 100)
+      }), null, 2));
+      break;
+    }
+    case 'history-export': {
+      if (!args[0]) throw new Error('Usage: lineage history-export <out-dir> [ref] [limit]');
+      console.log(JSON.stringify(await writeHistoryBundle(store, {
+        outDir: args[0],
+        ref: args[1] || 'HEAD',
+        limit: Number(args[2] || 100)
+      }), null, 2));
+      break;
+    }
     default:
-      console.log(`Evercraft Lineage\n\nCommands:\n  init [branch]\n  commit [message]\n  branch <name> [from]\n  switch <branch>\n  log [ref] [limit]\n  diff [from] [to]\n  restore <ref> [target]\n  rollback <ref>\n  merge-preview <branch>\n  merge <branch>\n  large-put <file> [media-type]\n  large-verify <manifest-id>\n  remote-refs <remote-dir>\n  remote-push <remote-dir> [branch] [expected-head]\n  remote-fetch <remote-dir> [remote-branch] [local-branch]\n  git-import <git-repo-dir> [git-ref] [lineage-branch]\n  git-export <git-repo-dir> [lineage-ref] [git-branch] [expected-git-head]`);
+      console.log(`Evercraft Lineage\n\nCommands:\n  init [branch]\n  commit [message]\n  branch <name> [from]\n  switch <branch>\n  log [ref] [limit]\n  diff [from] [to]\n  restore <ref> [target]\n  rollback <ref>\n  merge-preview <branch>\n  merge <branch>\n  large-put <file> [media-type]\n  large-verify <manifest-id>\n  remote-refs <remote-dir>\n  remote-push <remote-dir> [branch] [expected-head]\n  remote-fetch <remote-dir> [remote-branch] [local-branch]\n  git-import <git-repo-dir> [git-ref] [lineage-branch]\n  git-export <git-repo-dir> [lineage-ref] [git-branch] [expected-git-head]\n  history [ref] [limit]\n  history-export <out-dir> [ref] [limit]`);
   }
 }
 
