@@ -47,7 +47,14 @@ function lineOf(text,index) {
 }
 function classify(file) {
   const normalized="/"+file;
-  if (EVIDENCE_ONLY_SEGMENTS.some(segment=>normalized.includes(segment))) return "evidence_or_migration";
+  const base=path.basename(file).toLowerCase();
+  if (
+    EVIDENCE_ONLY_SEGMENTS.some(segment=>normalized.includes(segment)) ||
+    /(?:^|\.)(?:test|spec|proof)\.[^.]+$/.test(base) ||
+    base.includes(".test.") ||
+    base.includes(".spec.") ||
+    base.includes(".proof.")
+  ) return "evidence_or_migration";
   if (file.startsWith("public/") || file.startsWith("registry/") || file.startsWith("distribution/")) return "public_surface";
   if (ACTIVE_ROOTS.some(root=>file.startsWith(root)) || ["server.ts","server.js"].includes(file)) return "active_runtime_candidate";
   return "other_source";
