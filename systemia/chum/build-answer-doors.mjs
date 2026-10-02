@@ -5,8 +5,21 @@ import path from 'node:path';
 const PAIN_INDEX_PATH = 'public/.well-known/evercraft-pain-index.json';
 const OUTPUT_ROOT = 'public/chum/answers';
 const RAW_ROOT = 'https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/answers';
-const MACHINE_COMMERCE_GATEWAY =
-  'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
+function safeConfiguredHttps(value) {
+  const raw = String(value || '').trim();
+  if (!raw) return null;
+  try {
+    const url = new URL(raw);
+    const host = url.hostname.toLowerCase();
+    if (url.protocol !== 'https:') return null;
+    if (host === 'base44.app' || host.endsWith('.base44.app')) return null;
+    return url.toString();
+  } catch {
+    return null;
+  }
+}
+
+const MACHINE_COMMERCE_GATEWAY = safeConfiguredHttps(process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL);
 
 const readJson = (pathname) => JSON.parse(fs.readFileSync(pathname, 'utf8'));
 const normalize = (value) => String(value || '')
@@ -42,11 +55,11 @@ function candidateFromEntry(entry) {
     : productKey
       ? `/chum/products/${slugify(productKey)}/`
       : null;
-  const machineReviewUrl = publicId
-    ? MACHINE_COMMERCE_GATEWAY + '?view=service&public_id=' + encodeURIComponent(publicId)
+  const machineReviewUrl = publicId && MACHINE_COMMERCE_GATEWAY
+    ? MACHINE_COMMERCE_GATEWAY + (MACHINE_COMMERCE_GATEWAY.includes('?') ? '&' : '?') + 'view=service&public_id=' + encodeURIComponent(publicId)
     : null;
-  const machineOfferUrl = publicId && entry.commercial_state === 'sell_now'
-    ? MACHINE_COMMERCE_GATEWAY + '?action=offer&public_id=' + encodeURIComponent(publicId)
+  const machineOfferUrl = publicId && entry.commercial_state === 'sell_now' && MACHINE_COMMERCE_GATEWAY
+    ? MACHINE_COMMERCE_GATEWAY + (MACHINE_COMMERCE_GATEWAY.includes('?') ? '&' : '?') + 'action=offer&public_id=' + encodeURIComponent(publicId)
     : null;
 
   return {
