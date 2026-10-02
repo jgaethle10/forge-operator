@@ -24,7 +24,15 @@
     "provider_listing_receipt_verified": false,
     "provider_submission_receipt_verified": false,
     "base44_integration_credit_dependency_allowed": false,
-    "public_fabric_dependency_allowed": false
+    "public_fabric_dependency_allowed": false,
+    "github_provider_executor_source_present": true,
+    "provider_executor_contract_proof_pending": true,
+    "raven_provider_secret_boundary_source_present": true,
+    "resident_scout_registered": true,
+    "resident_scout_cadence_seconds": 900,
+    "live_raven_secret_injection_verified": false,
+    "live_kaggle_read_only_probe_verified": false,
+    "live_numerai_read_only_probe_verified": false
   },
   "safety_and_authority": {
     "kaggle_terms_or_competition_acceptance_requires_human_action_when_needed": true,
@@ -43,9 +51,10 @@
     "public_fabric_transit_allowed": false
   },
   "blockers": [
-    "No verified Kaggle or Numerai provider executor is present on current GitHub main.",
-    "No provider-auth, provider-listing, or accepted-submission receipt is currently recorded for the owned path."
+    "Raven provider credentials have not yet been injected into an owned resident Systemia runtime and proven by a live sanitized receipt.",
+    "Live Kaggle and Numerai read-only authentication/listing receipts are still required before the provider executor can be called production-verified.",
+    "Submission authority remains deliberately disabled until read-only provider receipts are green and a separate bounded submission lane has its own provider receipt."
   ],
-  "next_action": "bind Kaggle and Numerai provider clients inside the Raven Nexus secret boundary, prove read-only authentication and listing through Systemia, then enable bounded submission only after provider receipts exist",
+  "next_action": "deploy the resident competition-provider-scout on an owned Systemia/Yard runtime with Raven-injected credentials, capture sanitized Kaggle and Numerai read-only receipts, then build a separate submission lane without enabling Numerai staking",
   "destructive_cutover_allowed": false
 }

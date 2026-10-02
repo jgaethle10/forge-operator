@@ -33,6 +33,20 @@
       }
     },
     {
+      "service_key": "competition-provider-scout",
+      "mode": "cycle",
+      "manifest": "systemia/organism/competition-provider-scout.workflow.json",
+      "executable": "systemia/competition/provider-probe-runner.mjs",
+      "cadence_seconds": 900,
+      "optional_when_unconfigured": true,
+      "env_args": {
+        "--raven-credentials-ready": "RAVEN_COMPETITION_PROVIDER_CREDENTIALS_READY"
+      },
+      "optional_env_args": {
+        "--out": "SYSTEMIA_COMPETITION_PROVIDER_RECEIPT"
+      }
+    },
+    {
       "service_key": "legacy-rescue-opportunity-watch",
       "mode": "cycle",
       "manifest": "systemia/organism/legacy-rescue-watch.workflow.json",

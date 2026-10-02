@@ -1,0 +1,41 @@
+{
+  "schema": "evercraft.systemia.workflow-manifest.v1",
+  "workflow_key": "competition-provider-scout",
+  "mission_key": "competition-provider-owned-runtime-2026-10-02",
+  "runtime": "systemia-organism+resident-supervisor",
+  "collider_compatible": true,
+  "cadence_seconds": 900,
+  "material_change_only": true,
+  "entrypoint": "systemia/competition/provider-runtime.mjs",
+  "proof": "systemia/competition/provider-runtime.test.mjs",
+  "notification_policy": {
+    "chat_scheduler": false,
+    "notify_only_on_material_change": true
+  },
+  "authority": {
+    "provider_listing": "autonomous_read_only",
+    "provider_auth_probe": "autonomous_read_only",
+    "competition_participation": "human_gate_when_provider_terms_require_acceptance",
+    "submission": "held_until_provider_receipt_and_explicit_runtime_authority",
+    "staking": "disabled",
+    "payment_request": "human_gate",
+    "production_mutation": "explicit_authorization_required"
+  },
+  "runner": "systemia/competition/provider-probe-runner.mjs",
+  "outputs": {
+    "provider_receipt": "artifacts/competition-provider/latest.json"
+  },
+  "routing": {
+    "canonical_path": [
+      "systemia",
+      "raven_nexus",
+      "provider_api"
+    ],
+    "base44_allowed": false,
+    "public_fabric_transit_allowed": false
+  },
+  "collider": {
+    "heartbeat_seconds": 300,
+    "material_change_only": true
+  }
+}
