@@ -4,12 +4,16 @@ on:
   pull_request:
     paths:
       - 'systemia/**'
+      - 'public/faie/**'
+      - 'tests/nodeseed-installed-bundle.test.mjs'
       - '.github/workflows/evercraft-nodeseed.yml'
   push:
     branches:
       - main
     paths:
       - 'systemia/**'
+      - 'public/faie/**'
+      - 'tests/nodeseed-installed-bundle.test.mjs'
       - '.github/workflows/evercraft-nodeseed.yml'
 
 jobs:
@@ -25,3 +29,5 @@ jobs:
         run: node systemia/compute/node-seed-proof.mjs
       - name: Prove public edge field admission
         run: node systemia/compute/public-edge-field-admit.proof.mjs
+      - name: Prove installed NodeSeed bundle completeness
+        run: node --test tests/nodeseed-installed-bundle.test.mjs

@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'systemia/yard/**'
+      - 'systemia/faie/**'
       - 'systemia/saban/nodeseed-intent-executor.mjs'
       - 'systemia/saban/nodeseed-execution-intent.mjs'
       - 'systemia/saban/nodeseed-inventory-ingest.mjs'
@@ -26,6 +27,7 @@ on:
       - main
     paths:
       - 'systemia/yard/**'
+      - 'systemia/faie/**'
       - 'systemia/saban/nodeseed-intent-executor.mjs'
       - 'systemia/saban/nodeseed-execution-intent.mjs'
       - 'systemia/saban/nodeseed-inventory-ingest.mjs'
@@ -63,6 +65,8 @@ jobs:
         run: node systemia/yard/specialist-handoff.proof.mjs
       - name: Prove Systemia Remote Ops specialist runtime
         run: node systemia/yard/remote-ops-specialist.proof.mjs
+      - name: Prove FAIE resident runtime
+        run: node systemia/yard/faie-runtime.proof.mjs
       - name: Prove provider-neutral public route broker
         run: node systemia/yard/public-route-broker.proof.mjs
       - name: Prove specialist MCP through Evercraft public edge

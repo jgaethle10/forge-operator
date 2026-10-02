@@ -16,6 +16,9 @@ test('installed NodeSeed bundle resolves every runtime import without repository
   fs.mkdirSync(path.join(root,'infra'),{recursive:true});
   await cp(path.join(ROOT,'infra/evercraft-edge'),path.join(root,'infra/evercraft-edge'),{recursive:true});
   await cp(path.join(ROOT,'registry'),path.join(root,'registry'),{recursive:true});
+  fs.mkdirSync(path.join(root,'public'),{recursive:true});
+  await cp(path.join(ROOT,'public/faie'),path.join(root,'public/faie'),{recursive:true});
+  assert.equal(fs.existsSync(path.join(root,'public/faie/index.html')),true);
   const target=pathToFileURL(path.join(root,'systemia/compute/node-seed.mjs')).href;
   await assert.doesNotReject(()=>import(target));
  }finally{

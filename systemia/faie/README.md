@@ -129,3 +129,21 @@ The first release therefore has an actual closed loop:
 FAIE is evidence support. Public previews do not persist the visitor's question into the shared archive. FAIE does not autonomously publish, move money, make regulatory determinations, issue emergency orders, prescribe agricultural chemicals, control irrigation equipment, or make other consequential decisions. Those actions require the appropriate human or separately authorized system.
 
 Unknown is a valid result.
+
+
+## Yard / Evercraft Compute
+
+FAIE is deployable as workload class `systemia.faie.v1`.
+
+The Yard resident owns one canonical process for:
+
+- the `/faie/` human control room
+- public-safe FAIE HTTP APIs
+- the read-only `/mcp/faie` surface
+- the resident official-source cycle
+- durable FAIE state and receipts
+- deployment-receipt binding for route verification
+
+Compute starts FAIE loopback-only. Direct public binding is refused; Evercraft Public Edge is the separate verified exposure path. Yard verifies the workload identity and truth boundaries before issuing a ready deployment receipt.
+
+The resident reports `base44_required: false` and `external_ai_required: false`. Public investigation requests remain ephemeral; persisted investigations remain behind the internal-token boundary.
