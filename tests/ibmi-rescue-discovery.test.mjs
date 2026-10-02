@@ -31,7 +31,7 @@ assert.notEqual(product.canonical_url, product.origin_product_url, 'unverified p
 const cat = catalog.products.find((row) => row.product_key === 'ibmi-rescue');
 assert(cat, 'ibmi-rescue missing from registry catalog');
 assert.equal(cat.mode, 'shared_mcp');
-assert.match(cat.mcp || '', /machineCommerceMcp$/);
+assert.equal(cat.mcp, null, 'retired provider MCP must not remain an executable public route');
 assert.equal(cat.registry_name, 'io.github.jgaethle10/evercraft-machine-commerce');
 assert.equal(cat.machine_state, 'direct_checkout_ready');
 
@@ -49,26 +49,26 @@ assert.equal(conf.mcp_registry?.publication_state, 'published_shared_server');
 
 const idx = publicIndex.products.find((row) => row.product_key === 'ibmi-rescue');
 assert(idx, 'ibmi-rescue missing from public registry index');
-assert.equal(idx.invocation?.mode, 'mcp');
-assert.match(idx.invocation?.url || '', /machineCommerceMcp$/);
+assert.equal(idx.invocation?.mode, 'discovery_only');
+assert.equal(idx.invocation?.url, null);
 assert.equal(idx.registry_name, 'io.github.jgaethle10/evercraft-machine-commerce');
 
 assert.equal(discovery.product_key, 'ibmi-rescue');
 assert.equal(discovery.human_confirmation_required, true);
 assert.equal(discovery.commercial?.offers?.length, 3);
-assert.match(discovery.mcp || '', /machineCommerceMcp$/);
+assert.equal(discovery.mcp, null);
 assert.equal(discovery.registry_name, 'io.github.jgaethle10/evercraft-machine-commerce');
-assert.match(discovery.buyer_frontage_url || '', /\/buy\/ibmi-rescue-v1/);
-assert.equal(discovery.human_start_url, 'https://findmypart.base44.app/ibmi-rescue');
+assert.equal(discovery.buyer_frontage_url, null, 'static discovery must not invent an unconfigured owned buyer origin');
+assert.equal(discovery.human_start_url, null, 'retired Base44 product origin must not be a public continuation route');
 assert.equal(aiConformance.provider_behavior_state, 'not_inferred_from_publication');
 assert.equal(aiConformance.machine_commerce_handoff_state, 'live_verified');
 
-assert.match(llms, /Buyer frontage:/);
-assert.match(mirrorHtml, /Review current offer/);
-assert.match(mirrorHtml, /\/buy\/ibmi-rescue-v1/);
+assert.doesNotMatch(llms, /base44\.app/i);
+assert.doesNotMatch(mirrorHtml, /base44\.app/i);
+assert.doesNotMatch(mirrorHtml, /\/buy\/ibmi-rescue-v1/);
 assert.match(mirrorHtml, /IBM i Estate X-Ray/);
 assert.match(chumIndexHtml, /\/buy\/ibmi-rescue-v1/);
-assert.match(llms, /Product-native start:/);
+assert.doesNotMatch(llms, /Product-native start:\s*https:\/\/.*base44\.app/i);
 assert.match(llms, /IBM i Estate X-Ray/);
 assert.match(llms, /IBM i 7\.4 Deadline X-Ray/);
 assert.match(llms, /\$250 one-time/);
