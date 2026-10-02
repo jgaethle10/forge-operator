@@ -75,7 +75,8 @@
       "systemia.chum-public-origin.v1",
       "systemia.specialist-handoff-mcp.v1",
       "systemia.public-edge.v1",
-      "systemia.evercraft-home.v1"
+      "systemia.evercraft-home.v1",
+      "systemia.raven-private-runtime.v1"
     ],
     "public_origin": {
       "workload_class": "systemia.chum-public-origin.v1",
@@ -117,6 +118,20 @@
       "identity": "evercraft-owned",
       "identity_state_required": true,
       "passport_state_required": true
+    },
+    "raven_private_runtime": {
+      "workload_class": "systemia.raven-private-runtime.v1",
+      "mode": "private_command_runtime",
+      "authority": "systemia-organism",
+      "private_origin_only": true,
+      "public_route_required": false,
+      "resident_http_bridge": true,
+      "persistent_session_ledger": true,
+      "provider_independent_boot": true,
+      "ai_inference_enabled": false,
+      "execution_authority_granted": false,
+      "control_authority_generated_server_side": true,
+      "control_authority_exposed": false
     }
   },
   "release_gates": [
