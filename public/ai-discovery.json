@@ -46,8 +46,12 @@
   },
   "universal_front_door": {
     "read_only_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
-    "machine_commerce_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-    "machine_commerce_mcp": null
+    "machine_commerce_registry_name": null,
+    "machine_commerce_mcp": null,
+    "fallback_state": "verification_required",
+    "fallback_candidate_origin": "https://fabric.systemiacommandcenters.com",
+    "fallback_candidate_mcp": "https://fabric.systemiacommandcenters.com/mcp",
+    "fallback_verification_source": ".github/workflows/chromebook-operator-edge-canary.yml"
   },
   "state_semantics": {
     "discovery_only": "May be surfaced and explained; no machine invocation is claimed.",
@@ -56,8 +60,8 @@
     "checkout_ready": "An exact current checkout rail exists for that offer.",
     "paid": "Authoritative provider payment verification exists."
   },
-  "routing_mode": "direct_specialist_zero_hop_then_universal_fallback",
-  "routing_rule": "Start from the user problem, route to a matching verified direct specialist with zero umbrella hops when one exists, otherwise use the universal fallback. Choose the smallest truthful public capability, preserve evidence/permission/geography/safety/payment boundaries, and never infer provider pickup from publication.",
+  "routing_mode": "verified_specialist_then_verified_evercraft_fabric_else_hold",
+  "routing_rule": "Start from the user problem. Use a verified direct specialist with zero umbrella hops when one exists. Otherwise use Evercraft Fabric only when its current external edge is independently verified; if neither route is verified, hold instead of routing through a retired or unverified provider. Preserve evidence, permission, geography, safety and payment boundaries, and never infer provider pickup from publication.",
   "private_surfaces": "not advertised",
   "freshness_broadcast": {
     "coordinator": "CHUM",
