@@ -195,5 +195,46 @@
     "sourced_team_single_project_and_blueprint": true,
     "team_acceptance_materializes_work_package_as": "Offered",
     "work_package_acceptance_still_required": true
+  },
+  "sourcing_comparison": {
+    "enabled_in_verified_private_runtime": true,
+    "owner_only": true,
+    "same_project_blueprint_and_package": true,
+    "eligible_availability": [
+      "Available",
+      "Limited"
+    ],
+    "weights": {
+      "price": 0.3,
+      "lead_time": 0.25,
+      "availability": 0.15,
+      "observed_fabric_history": 0.2,
+      "geography": 0.1
+    },
+    "evidence_states": {
+      "quote": "participant_supplied_quote",
+      "lead_time": "participant_supplied",
+      "availability": "participant_supplied",
+      "history": "observed_fabric_history_or_neutral_missing",
+      "geography": "profile_metadata_or_insufficient_metadata"
+    },
+    "missing_history_is_neutral": true,
+    "missing_numeric_values_are_not_zero": true,
+    "cross_currency_price_normalization": false,
+    "price_peer_group_same_currency_only": true,
+    "human_decision_required": true,
+    "selected_partner_created": false,
+    "creates_payment_obligation": false,
+    "grants_rights": false,
+    "creates_team_membership": false,
+    "ledger": {
+      "entity": "SourcingComparison",
+      "owner_private_read": true,
+      "direct_client_mutation": false,
+      "trusted_runtime_write_required": true,
+      "deterministic_comparison_id": true,
+      "identical_evidence_idempotent_replay": true,
+      "fabric_event_receipt_link_required": true
+    }
   }
 }
