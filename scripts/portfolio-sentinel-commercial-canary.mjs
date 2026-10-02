@@ -2,16 +2,62 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const GATEWAY = 'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway';
-const MCP = 'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp';
+function ownedHttpsRoute(value, name) {
+  const raw = String(value || '').trim();
+  if (!raw) return '';
+  let url;
+  try {
+    url = new URL(raw);
+  } catch {
+    throw new Error(`${name} must be a valid owned HTTPS URL`);
+  }
+  const host = url.hostname.toLowerCase();
+  if (url.protocol !== 'https:') throw new Error(`${name} must use HTTPS`);
+  if (host === 'base44.app' || host.endsWith('.base44.app')) {
+    throw new Error(`${name} points to retired Base44 infrastructure`);
+  }
+  return url.toString();
+}
+
+const GATEWAY = ownedHttpsRoute(
+  process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL,
+  'Evercraft Machine Commerce gateway'
+);
+const MCP = ownedHttpsRoute(
+  process.env.EVERCRAFT_MACHINE_COMMERCE_MCP_URL,
+  'Evercraft Machine Commerce MCP'
+);
 const PUBLIC_ID = 'portfolio-sentinel-v1';
 const NAME = 'Systemia Portfolio Sentinel';
+const out = path.resolve('artifacts/portfolio-sentinel-commercial-canary/latest.json');
 const PROBES = [
   'software portfolio health monitoring',
   'our company has too many apps and we do not know what is broken',
   'monitor LLM discovery pages and agent endpoints',
   'watch GitHub Actions and public product doors for failures'
 ];
+
+if (!GATEWAY || !MCP) {
+  const receipt = {
+    schema: 'evercraft.portfolio-sentinel.commercial-discovery-canary.v1',
+    status: 'held',
+    observed_at: new Date().toISOString(),
+    public_id: PUBLIC_ID,
+    probe_count: 0,
+    checks: [],
+    route_state: 'held_no_owned_public_origin',
+    missing_routes: [
+      ...(!GATEWAY ? ['machine_commerce_gateway'] : []),
+      ...(!MCP ? ['machine_commerce_mcp'] : [])
+    ],
+    base44_used: false,
+    truth_boundary: 'The commercial canary did not run because verified Evercraft-owned Machine Commerce routes are not configured. It did not fall back to Base44.'
+  };
+  fs.mkdirSync(path.dirname(out), { recursive: true });
+  fs.writeFileSync(out, JSON.stringify(receipt, null, 2) + '\n');
+  console.log(JSON.stringify(receipt));
+  process.exit(0);
+}
 
 function ensure(condition, message) {
   if (!condition) throw new Error(message);
@@ -200,7 +246,6 @@ const receipt = {
   truth_boundary: 'This proves Evercraft public discovery surfaces currently route the tested pain language to Sentinel. It does not prove any third-party LLM has independently indexed, recommended, purchased, or deployed the product.'
 };
 
-const out = path.resolve('artifacts/portfolio-sentinel-commercial-canary/latest.json');
 fs.mkdirSync(path.dirname(out), { recursive: true });
 fs.writeFileSync(out, JSON.stringify(receipt, null, 2) + '\n');
 console.log(JSON.stringify(receipt));

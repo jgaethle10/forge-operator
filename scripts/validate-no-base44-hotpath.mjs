@@ -1,6 +1,9 @@
 import fs from 'node:fs';
 
 const files = [
+  'scripts/portfolio-sentinel-commercial-canary.mjs',
+  'systemia/organism/portfolio-sentinel-runner.mjs',
+  '.github/workflows/systemia-portfolio-sentinel.yml',
   '.github/workflows/evercraft-mcp-canary.yml',
   'server.ts',
   '.github/workflows/eps-social-yard-canary.yml',
@@ -30,6 +33,8 @@ const files = [
 ];
 
 const runtimeFiles = new Set([
+  'scripts/portfolio-sentinel-commercial-canary.mjs',
+  'systemia/organism/portfolio-sentinel-runner.mjs',
   'server.ts',
   'systemia/compute/eps-social-yard-canary.mjs',
   'systemia/organism/eps-social-continuity.mjs',
