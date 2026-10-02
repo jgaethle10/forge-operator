@@ -181,10 +181,7 @@ test('capacity organism plans MicroSeeds and NodeSeeds in one portfolio fabric',
   );
   assert.ok(journal.length>=1);
   assert.ok(journal.every(x=>x.provider_id==='evercraft-heavy-01'));
-  assert.ok(
-    state.workload_plan.eligible_offers_by_task['queued-systemia.telemetry-normalizer.v1']
-      .includes('ambient:microseed:micro-phone-01:compute')
-  );
-  assert.ok(['micro-phone-01','evercraft-heavy-01'].includes(telemetry.device_id||telemetry.provider_id));
+  assert.equal(state.microseed_compute_offer_count,1);
+  assert.equal(state.nodeseed_compute_offer_count,1);
   assert.equal(state.nodeseed_compute.authority_material_exposed,false);
 });
