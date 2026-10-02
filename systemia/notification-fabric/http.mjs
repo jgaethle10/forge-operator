@@ -30,6 +30,23 @@ function requireToken(expected, unavailableMessage) {
   };
 }
 
+function boundedInteger(value, label, fallback, minimum, maximum) {
+  const candidate = value === undefined || value === null || value === '' ? fallback : Number(value);
+  if (!Number.isFinite(candidate) || !Number.isInteger(candidate) || candidate < minimum || candidate > maximum) {
+    throw new Error(`${label} must be an integer between ${minimum} and ${maximum}.`);
+  }
+  return candidate;
+}
+
+function booleanOption(value, label, fallback) {
+  if (value === undefined || value === null || value === '') return fallback;
+  if (typeof value === 'boolean') return value;
+  const normalized = String(value).trim().toLowerCase();
+  if (normalized === 'true') return true;
+  if (normalized === 'false') return false;
+  throw new Error(`${label} must be true or false.`);
+}
+
 function intersect(requested, allowed) {
   const allow = new Set(Array.isArray(allowed) ? allowed.map(String) : []);
   return (Array.isArray(requested) ? requested.map(String) : []).filter((value) => allow.has(value));
@@ -96,8 +113,18 @@ export function registerNotificationFabricRoutes(app, options = {}) {
     });
     return { job };
   };
-  const workerEnabled = String(options.workerEnabled ?? process.env.EVERCRAFT_NOTIFICATION_WORKER_ENABLED ?? 'true').toLowerCase() !== 'false';
-  const maxQueueAgeMs = Math.max(1000, Number(options.maxQueueAgeMs ?? process.env.EVERCRAFT_NOTIFICATION_MAX_QUEUE_AGE_MS ?? 60000));
+  const workerEnabled = booleanOption(
+    options.workerEnabled ?? process.env.EVERCRAFT_NOTIFICATION_WORKER_ENABLED,
+    'EVERCRAFT_NOTIFICATION_WORKER_ENABLED',
+    true
+  );
+  const maxQueueAgeMs = boundedInteger(
+    options.maxQueueAgeMs ?? process.env.EVERCRAFT_NOTIFICATION_MAX_QUEUE_AGE_MS,
+    'EVERCRAFT_NOTIFICATION_MAX_QUEUE_AGE_MS',
+    60000,
+    1000,
+    24 * 60 * 60 * 1000
+  );
   if (workerEnabled) worker.start();
   const requireIngest = requireToken(ingestToken, 'Notification ingestion is not configured.');
   const allowedOrigins = new Set(
