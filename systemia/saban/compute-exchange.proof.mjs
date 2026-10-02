@@ -324,6 +324,7 @@ const uncertainLease=await negotiateCompute({
     approved:true,
     demand_id:'proof-uncertain-lease',
     allowed_markets:['uncertain-lease-proof'],
+    allow_spend:true,
     max_total_usd:1,
   },
 });
@@ -407,6 +408,7 @@ const safeQuoteFallback=await negotiateCompute({
     approved:true,
     demand_id:'proof-safe-quote-fallback',
     allowed_markets:['quote-failure-primary','quote-failure-fallback'],
+    allow_spend:true,
     max_total_usd:1,
   },
 });
@@ -502,6 +504,7 @@ const unsafeQuoteCleanup=await negotiateCompute({
     approved:true,
     demand_id:'proof-unsafe-quote-cleanup',
     allowed_markets:['cleanup-uncertain-primary','cleanup-uncertain-fallback'],
+    allow_spend:true,
     max_total_usd:1,
   },
 });
