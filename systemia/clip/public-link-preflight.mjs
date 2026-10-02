@@ -1,6 +1,6 @@
 import crypto from 'node:crypto';
 
-const DEFAULT_BLOCKED_HOST_SUFFIXES=['base44.app'];
+const DEFAULT_BLOCKED_HOST_SUFFIXES=['base44.app','raw.githubusercontent.com'];
 
 function hostMatchesSuffix(host,suffix){
   return host===suffix||host.endsWith('.'+suffix);
@@ -101,6 +101,11 @@ export async function preflightPublicLink({
 
     if(status<200||status>=300) throw new Error('clip_public_link_http_status_'+status);
 
+    const contentType=String(response.headers?.get?.('content-type')||'').toLowerCase();
+    if(contentType&&!(contentType.includes('text/html')||contentType.includes('application/xhtml+xml')||contentType.includes('application/pdf'))){
+      throw new Error('clip_public_link_non_browsable_content_type');
+    }
+
     const body=typeof response.text==='function'?await response.text():'';
     if(bodyLooksLikeHoldingPage(body)) throw new Error('clip_public_link_holding_page_detected');
 
@@ -119,7 +124,7 @@ export async function preflightPublicLink({
       finalUrl,
       status,
       redirects,
-      contentType:String(response.headers?.get?.('content-type')||''),
+      contentType,
       bodyFingerprint:'sha256:'+digest(body.slice(0,131072)),
       checkedAt:new Date().toISOString(),
       boundaries:{
@@ -127,6 +132,8 @@ export async function preflightPublicLink({
         httpsRequired:true,
         nonPublicHostsBlocked:true,
         legacyProviderBlocked:true,
+        rawSourceHostsBlocked:true,
+        browserRenderableContentRequired:true,
         redirectsRevalidated:true,
         holdingPageRejected:true,
       },
