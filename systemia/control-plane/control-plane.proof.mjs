@@ -204,6 +204,32 @@ assert.equal(contractDispatch.pre_dispatch_gate, 'evercraft-execution-gate');
 assert.equal(contractDispatch.hold, null);
 assert.equal(contractDispatch.execution_authority_granted, false);
 
+const remoteOpsContract = admitMission({
+  rootDir: process.cwd(),
+  request: {
+    objective: 'Run a read-only business simulation through the proven Remote Ops specialist.',
+    tasks: [{
+      work_key: 'remote-ops-pricing',
+      work_type: 'analyze',
+      product_key: 'systemia-remote-ops',
+      action_scope: 'simulate_pricing_change',
+    }]
+  }
+});
+assertControlPlane(remoteOpsContract);
+const remoteOpsDispatch = remoteOpsContract.dispatch[0];
+assert.equal(remoteOpsDispatch.capability_contract_state, 'complete_declaration');
+assert.equal(remoteOpsDispatch.adoption_stage, 'shared_runtime');
+assert.equal(remoteOpsDispatch.contract_specialist_slug, 'systemia-remote-ops');
+assert.equal(remoteOpsDispatch.specialist_component, 'systemia-remote-ops');
+assert.equal(remoteOpsDispatch.execution_component, 'systemia-remote-ops');
+assert.equal(remoteOpsDispatch.contract_context_namespace, 'systemia-remote-ops');
+assert.equal(remoteOpsDispatch.metered, false);
+assert.equal(remoteOpsDispatch.execution_gate_required, true);
+assert.equal(remoteOpsDispatch.pre_dispatch_gate, 'evercraft-execution-gate');
+assert.equal(remoteOpsDispatch.hold, null);
+assert.equal(remoteOpsDispatch.execution_authority_granted, false);
+
 const contractBadScope = admitMission({
   rootDir: process.cwd(),
   request: {
@@ -396,6 +422,10 @@ console.log(JSON.stringify({
   product_contract_derives_meter_and_execution_gate:
     contractDispatch.meter_metric === 'site_reports' &&
     contractDispatch.execution_gate_required === true,
+  remote_ops_contract_routes_to_internal_specialist_without_granting_authority:
+    remoteOpsDispatch.specialist_component === 'systemia-remote-ops' &&
+    remoteOpsDispatch.execution_gate_required === true &&
+    remoteOpsDispatch.execution_authority_granted === false,
   undeclared_contract_scope_fails_closed:
     contractBadScope.dispatch[0].hold === 'capability_contract_scope_missing',
   missing_product_contract_action_fails_closed:
