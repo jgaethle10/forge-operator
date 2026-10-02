@@ -80,24 +80,23 @@ async function fetchWithTimeout(url,options={},timeoutMs=8000){
 }
 
 async function isitdnsTcp({server,identityName,expectedTxt}){
+  const name=String(identityName||'').replace(/\.$/,'');
   const qs=new URLSearchParams({
-    name:identityName,
-    type:'TXT',
-    resolver:'custom',
     transport:'tcp53',
-    ip:server,
     norec:'1',
     dnssec:'0',
     family:'v4'
   });
-  const url='https://isitdns.net/api/query?'+qs.toString();
+  const url='https://isitdns.net/dig/'+encodeURIComponent(name)+'/TXT/'+encodeURIComponent(server)+'?'+qs.toString();
   const res=await fetchWithTimeout(url,{headers:{accept:'text/plain','user-agent':'curl/8.0'}},10000);
   const text=await res.text();
+  const parsed=parseDigAuthority(text,{identityName,expectedTxt});
   return {
     ok:res.ok,
     status:res.status,
+    evidence_surface:'isitdns-dig-custom-ip-tcp53',
     evidence_url:url.replace(server,'<candidate-ip>'),
-    parsed:parseDigAuthority(text,{identityName,expectedTxt}),
+    parsed,
     excerpt:text.slice(0,4000),
   };
 }
@@ -149,15 +148,22 @@ export async function verifyExternalDns({server,identityName,expectedTxt}){
     runCheck('tcp',{server,port:53053}).catch(e=>({error:String(e?.message||e),success_count:0})),
     runCheck('udp',{server,port:53053,payload}).catch(e=>({error:String(e?.message||e),success_count:0})),
   ]);
+  const tcp53Reachable=Number(tcp53?.success_count||0)>=2;
+  const udp53Reachable=Number(udp53?.success_count||0)>=2;
+  const diagnosticReachable=
+    Number(tcpDiag?.success_count||0)>=1 ||
+    Number(udpDiag?.success_count||0)>=1;
   const verified=
     tcpIdentity?.parsed?.verified===true &&
-    Number(tcp53?.success_count||0)>=2 &&
-    Number(udp53?.success_count||0)>=2;
+    tcp53Reachable &&
+    udp53Reachable;
   const classification=verified
     ? 'public_dns_verified'
-    : (Number(tcpDiag?.success_count||0)>=1||Number(udpDiag?.success_count||0)>=1)
-      ? 'high_port_reachable_production_53_blocked_or_intercepted'
-      : 'no_external_path_to_candidate';
+    : (tcp53Reachable||udp53Reachable)
+      ? 'production_53_reachable_identity_unverified'
+      : diagnosticReachable
+        ? 'diagnostic_high_port_reachable_production_53_unreachable'
+        : 'no_external_path_to_candidate';
   return {
     schema:'evercraft.edge.external-public-verification.v1',
     verified,
