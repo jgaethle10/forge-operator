@@ -1339,6 +1339,22 @@ export class YardOperator {
           compute_management_receipt_hash: computeReceipt?.receipt_hash || null,
         };
       },
+      renewLease: async (routeLeaseId, ttlMs = 3600000) => {
+        const response = await request(
+          `${serviceBase}/public-route-leases/${encodeURIComponent(routeLeaseId)}/renew`,
+          {
+            method: 'POST',
+            body: JSON.stringify({
+              token: secret.token,
+              ttl_ms: Math.max(60000, Math.min(86400000, Number(ttlMs || 3600000))),
+            }),
+          }
+        );
+        return {
+          ...response,
+          compute_management_receipt_hash: response.receipt?.receipt_hash || null,
+        };
+      },
       releaseLease: async (routeLeaseId, reason = 'operator_requested') => {
         const response = await request(
           `${serviceBase}/public-route-leases/${encodeURIComponent(routeLeaseId)}/release`,
@@ -1718,6 +1734,42 @@ export class YardOperator {
       allocator_token_exposed:false,
       relay_token_persisted:false,
       compute_management_receipt_hash:relay.receipt?.receipt_hash || null,
+    };
+  }
+
+  async renewRemoteServiceRelay(deploymentId, relayId, {
+    ttlMs = 30 * 60_000,
+  } = {}) {
+    const record = this.deploymentStatus(deploymentId);
+    const secret = this.#loadLeaseSecret(deploymentId);
+    if (!record || !secret) throw new Error('deployment lease authority unavailable');
+    if (record.receipt?.workload_class !== 'systemia.remote-capacity-broker.v1') {
+      throw new Error('deployment is not a remote capacity broker');
+    }
+    if (!record.result?.service_id) {
+      throw new Error('remote capacity broker service is unavailable');
+    }
+
+    const renewed = await request(
+      `${secret.capacity_endpoint}/v1/services/${record.result.service_id}/remote-service-relay/${encodeURIComponent(String(relayId || ''))}/renew`,
+      {
+        method:'POST',
+        body:JSON.stringify({
+          token:secret.token,
+          ttl_ms:Math.max(60_000,Math.min(60 * 60_000,Number(ttlMs || 30 * 60_000))),
+        }),
+      }
+    );
+    return {
+      schema:'evercraft.yard.remote-service-relay-renewal.v1',
+      broker_deployment_id:deploymentId,
+      relay_id:String(relayId || ''),
+      renewed:renewed.renewed===true,
+      previous_expires_at:renewed.previous_expires_at||null,
+      expires_at:renewed.expires_at||null,
+      relay_token_rotated:renewed.relay_token_rotated===true,
+      compute_management_receipt_hash:renewed.receipt?.receipt_hash||null,
+      renewed_at:renewed.renewed_at||new Date().toISOString(),
     };
   }
 
