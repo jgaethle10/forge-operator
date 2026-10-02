@@ -110,6 +110,8 @@ export function forecastCapacityDemand({
     forecasts.push({
       workload_class:workload,
       current_jobs:Number(current.jobs||0),
+      current_held:Number(current.held||0),
+      current_retry_wait:Number(current.retry_wait||0),
       recent_average_jobs:Number(average.toFixed(3)),
       jobs_per_cycle_slope:Number(slope.toFixed(3)),
       held_per_cycle_slope:Number(heldSlope.toFixed(3)),
