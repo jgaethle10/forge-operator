@@ -4,7 +4,9 @@ export function selectDnsNodes(nodes,{replicas=2}={}){
   const eligible=(nodes||[]).filter(n=>{
     const labels=new Set((n.placement_labels||[]).map(x=>String(x).toLowerCase()));
     const workloads=new Set((n.supported_workloads||[]).map(String));
-    return n.attestation?.verified===true &&
+    return n.authorized===true &&
+      n.connected===true &&
+      n.attestation?.verified===true &&
       labels.has("public-ingress") &&
       n.zero_cost===true &&
       n.public_ingress===true &&
