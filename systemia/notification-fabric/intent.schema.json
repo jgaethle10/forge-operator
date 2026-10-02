@@ -15,11 +15,13 @@
     },
     "id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "maxLength": 160
     },
     "product": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "maxLength": 120
     },
     "purpose": {
       "enum": [
@@ -59,30 +61,36 @@
       "items": {
         "type": "string"
       },
-      "uniqueItems": true
+      "uniqueItems": true,
+      "maxItems": 500
     },
     "audiences": {
       "type": "array",
       "items": {
         "type": "string"
       },
-      "uniqueItems": true
+      "uniqueItems": true,
+      "maxItems": 100
     },
     "topics": {
       "type": "array",
       "items": {
         "type": "string"
       },
-      "uniqueItems": true
+      "uniqueItems": true,
+      "maxItems": 100
     },
     "data": {
-      "type": "object"
+      "type": "object",
+      "x-evercraft-maxBytes": 16384
     },
     "evidence_state": {
-      "type": "string"
+      "type": "string",
+      "maxLength": 120
     },
     "consent_basis": {
-      "type": "string"
+      "type": "string",
+      "maxLength": 120
     },
     "ttl_seconds": {
       "type": "integer",
@@ -93,7 +101,8 @@
       "type": [
         "string",
         "null"
-      ]
+      ],
+      "maxLength": 256
     },
     "dedupe_window_seconds": {
       "type": "integer",
@@ -147,6 +156,26 @@
         "required"
       ],
       "additionalProperties": false
+    },
+    "expires_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time",
+      "description": "Business freshness deadline. Relay must not deliver or escalate the event after this instant."
+    },
+    "icon": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "badge": {
+      "type": [
+        "string",
+        "null"
+      ]
     }
   },
   "additionalProperties": true
