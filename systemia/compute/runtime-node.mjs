@@ -20,12 +20,15 @@ import {
 import { startRivetReportRuntime } from '../rivet/report-runtime.mjs';
 import { startAliEvSourceRuntime } from '../aliev/source-runtime.mjs';
 import { startSpecialistHandoffRuntime } from '../mcp/specialist-handoff-runtime.mjs';
+import { startFabricLocalRuntime } from '../mcp/fabric-local-runtime.mjs';
 import { startPublicEdgeRuntime } from '../network/public-edge-runtime.mjs';
 import { startFederatedServiceBridge } from '../network/federated-service-bridge.mjs';
 import { startEvercraftHomeServer } from '../evercraft-home/server.mjs';
+import { startEvercraftEdgeDnsRuntime } from './evercraft-edge-dns-runtime.mjs';
 import { validatePublicEdgeAdmission } from '../network/public-edge-tls.mjs';
 import { transcriptionCapabilityStatus } from '../forensiscope/transcription-engine.mjs';
 import { EvercraftRemoteOperator } from './remote-operator.mjs';
+import { NodeSeedMicroWorkloads, runNodeSeedRegisteredWorkload } from './nodeseed-registered-worker.mjs';
 import { detectHardwareCapacity } from './hardware-inventory.mjs';
 
 const CODE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
@@ -85,6 +88,8 @@ function bearer(req) {
 const BRIDGED_WORKLOADS = new Set([
   'systemia.evercraft-web-browser.v1',
   'systemia.specialist-handoff-mcp.v1',
+  'systemia.fabric-local-mcp.v1',
+  'systemia.rivet-report-runtime.v1',
 ]);
 
 const BRIDGE_REQUEST_HEADERS = new Set([
@@ -128,10 +133,31 @@ function bridgeServiceOrigin(entry) {
   if (entry?.workload_class === 'systemia.evercraft-web-browser.v1') {
     return String(entry?.runtime?.localPublicUrl || '');
   }
-  if (entry?.workload_class === 'systemia.specialist-handoff-mcp.v1') {
+  if (
+    entry?.workload_class === 'systemia.specialist-handoff-mcp.v1' ||
+    entry?.workload_class === 'systemia.fabric-local-mcp.v1'
+  ) {
     return String(entry?.runtime?.url || '');
   }
+  if (entry?.workload_class === 'systemia.rivet-report-runtime.v1') {
+    return String(entry?.runtime?.service_url || '');
+  }
   return '';
+}
+
+function bridgeRouteAllowed(entry, method, requestPath) {
+  if (entry?.workload_class !== 'systemia.rivet-report-runtime.v1') return true;
+  if (method === 'GET' && requestPath === '/health') return true;
+  if (method === 'POST' && requestPath === '/v1/reports') return true;
+  if (
+    method === 'GET' &&
+    /^\/v1\/report-jobs\/[^/?#]+\/progress$/.test(requestPath)
+  ) return true;
+  if (
+    method === 'GET' &&
+    /^\/v1\/reports\/[^/?#]+(?:\/source)?$/.test(requestPath)
+  ) return true;
+  return false;
 }
 
 function assertLoopbackBridgeOrigin(value) {
@@ -162,6 +188,9 @@ async function bridgeResidentHttp(entry, input = {}) {
   }
   const origin = assertLoopbackBridgeOrigin(bridgeServiceOrigin(entry));
   const requestPath = normalizeBridgePath(input.path);
+  if (!bridgeRouteAllowed(entry, method, requestPath)) {
+    throw new Error('rivet_report_bridge_route_not_allowed');
+  }
   const target = new URL(requestPath, origin);
   const encoded = String(input.body_base64 || '');
   if (encoded.length > 12 * 1024 * 1024) throw new Error('resident_service_bridge_body_too_large');
@@ -281,6 +310,76 @@ function executableAvailable(command) {
   return result.status === 0;
 }
 
+function safeCommandText(command,args=[]){
+  try{
+    const result=spawnSync(command,args,{
+      encoding:'utf8',
+      timeout:3000,
+      maxBuffer:256*1024,
+      stdio:['ignore','pipe','ignore'],
+    });
+    return result.status===0?String(result.stdout||'').trim():'';
+  }catch{
+    return '';
+  }
+}
+
+function detectedGpuModels(){
+  const models=[];
+  const nvidia=safeCommandText('nvidia-smi',[
+    '--query-gpu=name',
+    '--format=csv,noheader'
+  ]);
+  for(const line of nvidia.split(/\r?\n/).map(x=>x.trim()).filter(Boolean)){
+    models.push(line.slice(0,160));
+  }
+  if(!models.length){
+    const pci=safeCommandText('lspci',[]);
+    for(const line of pci.split(/\r?\n/)){
+      if(!/(vga compatible controller|3d controller|display controller)/i.test(line))continue;
+      const cleaned=line.replace(/^[0-9a-f:.]+\s+/i,'').trim();
+      if(cleaned)models.push(cleaned.slice(0,160));
+    }
+  }
+  return [...new Set(models)].slice(0,16);
+}
+
+function safeHardwareSummary({memoryMb,storageGb}={}){
+  const cpus=os.cpus()||[];
+  const cpuModel=String(cpus[0]?.model||'').trim().slice(0,160)||null;
+  const gpuModels=detectedGpuModels();
+  const logicalThreads=Math.max(1,cpus.length||1);
+  const memory=Math.max(64,Number(memoryMb||0));
+  const recommendedConcurrency=Math.max(
+    1,
+    Math.min(
+      logicalThreads,
+      Math.floor(memory/512),
+      64
+    )
+  );
+  return {
+    schema:'evercraft.compute.safe-hardware-summary.v1',
+    cpu:{
+      architecture:os.arch(),
+      model:cpuModel,
+      logical_threads:logicalThreads,
+    },
+    memory_mb:memory,
+    free_storage_gb:Math.max(0,Number(storageGb||0)),
+    accelerators:{
+      gpu_count:gpuModels.length,
+      gpu_models:gpuModels,
+      detection_state:gpuModels.length?'observed_local':'none_observed',
+    },
+    recommended_concurrency:{
+      value:recommendedConcurrency,
+      state:'inferred_from_cpu_and_memory',
+    },
+    sensitive_identifiers_included:false,
+  };
+}
+
 async function writeHashedRequest(req, target, maxBytes) {
   const hash = createHash('sha256');
   let bytes = 0;
@@ -365,6 +464,8 @@ export async function startEvercraftComputeNode({
   allocatorToken = '',
   deviceIdentity = null,
   placementLabels = [],
+  failureDomain = '',
+  zeroCost = false,
   browserRuntimeFactory = null,
   remoteOperatorRoots = null,
   remoteOperatorStateDir = '',
@@ -397,7 +498,21 @@ export async function startEvercraftComputeNode({
     ffmpeg: executableAvailable('ffmpeg'),
     ffprobe: executableAvailable('ffprobe')
   };
-  const hardwareCapacity = detectHardwareCapacity({ root: allowedRoot });
+  const freeStorageGb = (() => {
+    try {
+      const stat = fs.statfsSync(allowedRoot);
+      const bytes = Number(stat.bavail) * Number(stat.bsize);
+      return Number.isFinite(bytes) ? Number((bytes / (1024 ** 3)).toFixed(3)) : 0;
+    } catch {
+      return 0;
+    }
+  })();
+  const totalMemoryMb=Math.max(64,Math.floor(os.totalmem()/1024/1024));
+  const hardwareSummary=safeHardwareSummary({
+    memoryMb:totalMemoryMb,
+    storageGb:freeStorageGb,
+  });
+  const hardwareCapacity=detectHardwareCapacity({root:allowedRoot});
   const publicEdgeCapability = (() => {
     const baseDomain = String(process.env.EVERCRAFT_PUBLIC_EDGE_BASE_DOMAIN || '').trim();
     const tlsKeyPath = String(process.env.EVERCRAFT_PUBLIC_EDGE_TLS_KEY_PATH || '').trim();
@@ -728,12 +843,17 @@ export async function startEvercraftComputeNode({
     'systemia.aliev-source-runtime.v1',
     'systemia.rivet-report-runtime.v1',
     'systemia.specialist-handoff-mcp.v1',
+    'systemia.fabric-local-mcp.v1',
     'systemia.public-edge.v1',
+    'systemia.evercraft-edge-dns.v1',
     'systemia.federated-service-bridge.v1',
     'systemia.evercraft-home.v1',
     'saban.logical-agent',
     'saban.multiplier-assignment.v1',
   ]);
+  for (const workloadClass of NodeSeedMicroWorkloads) {
+    supported.add(workloadClass);
+  }
   if (browserRuntimeReady) {
     supported.add('systemia.evercraft-web-browser.v1');
   }
@@ -923,6 +1043,9 @@ export async function startEvercraftComputeNode({
           platform: `${process.platform}/${process.arch}`,
           supported_workloads: [...supported],
           placement_labels: nodePlacementLabels,
+          failure_domain: String(failureDomain || '') || null,
+          zero_cost: zeroCost === true,
+          public_ingress: nodePlacementLabels.includes('public-ingress'),
           allocation: 'explicit_lease',
           allocation_auth: allocatorTokenHash ? 'bearer' : 'loopback_only',
           resident_services_supported: true,
@@ -931,13 +1054,15 @@ export async function startEvercraftComputeNode({
           attestation_supported: Boolean(deviceIdentity),
           capacity_hint: {
             cpu_units: hardwareCapacity.cpu_units,
-            memory_mb: hardwareCapacity.memory_mb,
-            storage_gb: hardwareCapacity.storage_gb,
+            memory_mb: totalMemoryMb,
+            storage_gb: freeStorageGb,
             gpu_units: hardwareCapacity.gpu_units,
             gpu_count: hardwareCapacity.gpu_units,
             vram_mb: hardwareCapacity.vram_mb,
             gpu_models: hardwareCapacity.gpu_models,
             hardware_evidence: hardwareCapacity.evidence,
+            recommended_concurrency:hardwareSummary.recommended_concurrency.value,
+            hardware:hardwareSummary,
             executables: executableCapabilities,
             services: serviceCapabilities
           },
@@ -964,7 +1089,6 @@ export async function startEvercraftComputeNode({
           placementLabels: nodePlacementLabels,
           processStartedAt,
           bootIdHash: hostBootIdHash,
-          hardwareCapacity,
         });
         return send(res, 200, {
           ok: true,
@@ -1121,6 +1245,53 @@ export async function startEvercraftComputeNode({
         const workloadClass = String(body.workload_class || lease.workload_class || '');
         if (workloadClass !== lease.workload_class || !supported.has(workloadClass)) {
           return send(res, 422, { error: 'workload_not_admitted' });
+        }
+
+        if (NodeSeedMicroWorkloads.includes(workloadClass)) {
+          const idempotencyKey = String(
+            body.idempotency_key ||
+            body.input?.idempotency_key ||
+            ''
+          ).trim();
+          if (!idempotencyKey) {
+            return send(res, 422, { error: 'registered_worker_idempotency_key_required' });
+          }
+          let worker;
+          try {
+            worker = runNodeSeedRegisteredWorkload({
+              nodeId,
+              workloadClass,
+              payload: body.input?.payload ?? body.payload ?? null,
+              idempotencyKey,
+              stateDir: path.join(allowedRoot, '.evercraft', 'registered-worker'),
+            });
+          } catch (error) {
+            const message = error instanceof Error ? error.message : String(error);
+            if (message === 'nodeseed_registered_worker_idempotency_conflict') {
+              return send(res, 409, { error: message });
+            }
+            return send(res, 422, { error: message });
+          }
+          return send(res, 200, {
+            ok: true,
+            node_id: nodeId,
+            workload_class: workloadClass,
+            result: worker.result,
+            worker_receipt: worker,
+            deduplicated: worker.deduplicated === true,
+            idempotency_key: idempotencyKey,
+            receipt: chain.issue(
+              worker.deduplicated === true
+                ? 'registered-workload.reused'
+                : 'registered-workload.executed',
+              {
+                lease_id: body.lease_id,
+                workload_class: workloadClass,
+                idempotency_key: idempotencyKey,
+                worker_receipt_hash: worker.receipt_hash,
+              }
+            ),
+          });
         }
 
         if (workloadClass === 'saban.logical-agent') {
@@ -1591,6 +1762,82 @@ export async function startEvercraftComputeNode({
           });
         }
 
+        if (workloadClass === 'systemia.evercraft-edge-dns.v1') {
+          const rawSnapshot = String(body.input?.snapshot_path || '').trim();
+          if (!rawSnapshot) {
+            return send(res, 422, { error: 'edge_dns_snapshot_path_required' });
+          }
+          const snapshotPath = path.resolve(rawSnapshot);
+          if (!isWithin(allowedRoot, snapshotPath)) {
+            return send(res, 403, { error: 'edge_dns_snapshot_outside_admitted_root' });
+          }
+          if (!fs.existsSync(snapshotPath) || !fs.statSync(snapshotPath).isFile()) {
+            return send(res, 404, { error: 'edge_dns_snapshot_missing' });
+          }
+
+          const rawQueryReceiptPath = String(body.input?.query_receipt_path || '').trim();
+          const queryReceiptPath = rawQueryReceiptPath ? path.resolve(rawQueryReceiptPath) : '';
+          if (queryReceiptPath && !isWithin(allowedRoot, queryReceiptPath)) {
+            return send(res, 403, { error: 'edge_dns_query_receipt_outside_admitted_root' });
+          }
+
+          const dnsHost = String(body.input?.dns_host || '127.0.0.1');
+          const loopbackDns =
+            dnsHost === '127.0.0.1' ||
+            dnsHost === '::1' ||
+            dnsHost === 'localhost';
+          if (!loopbackDns && body.input?.allow_public_bind !== true) {
+            return send(res, 403, { error: 'edge_dns_public_bind_requires_explicit_authority' });
+          }
+
+          const runtime = await startEvercraftEdgeDnsRuntime({
+            snapshotPath,
+            dnsHost,
+            dnsPort: Number(body.input?.dns_port || 1053),
+            healthHost: '127.0.0.1',
+            healthPort: Number(body.input?.health_port || 0),
+            queryReceiptPath,
+            receiptQname: String(body.input?.receipt_qname || ''),
+          });
+          const serviceId = `svc_${randomBytes(8).toString('hex')}`;
+          services.set(serviceId, {
+            lease_id: body.lease_id,
+            workload_class: body.workload_class,
+            runtime,
+            service: runtime,
+          });
+          const result = {
+            schema: 'evercraft.compute.resident-service.v1',
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            service_url: null,
+            local_url: runtime.healthUrl.replace(/\/health$/, ''),
+            health_path: `/v1/services/${serviceId}/health`,
+            public_route_required: false,
+            authoritative_dns: true,
+            recursive_dns: false,
+            dns_host: dnsHost,
+            dns_port: Number(body.input?.dns_port || 1053),
+            snapshot_sha256: runtime.initialSnapshotHash,
+            instance_id: runtime.instanceId,
+          };
+          const receipt = chain.issue('service.started', {
+            lease_id: body.lease_id,
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            result_schema: result.schema,
+            instance_id: runtime.instanceId,
+            snapshot_sha256: runtime.initialSnapshotHash,
+          });
+          return send(res, 200, {
+            ok: true,
+            node_id: nodeId,
+            workload_class: body.workload_class,
+            result,
+            receipt,
+          });
+        }
+
         if (workloadClass === 'systemia.public-edge.v1') {
           const controlHost = String(body.input?.control_host || '127.0.0.1');
           const mode = String(body.input?.mode || 'proof_loopback');
@@ -1645,6 +1892,63 @@ export async function startEvercraftComputeNode({
             route_protocol: 'evercraft.public-route.v1',
             mode,
             instance_id: runtime.instanceId,
+          };
+          const receipt = chain.issue('service.started', {
+            lease_id: body.lease_id,
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            result_schema: result.schema,
+            instance_id: runtime.instanceId,
+          });
+          return send(res, 200, {
+            ok: true,
+            node_id: nodeId,
+            workload_class: body.workload_class,
+            result,
+            receipt,
+          });
+        }
+
+        if (workloadClass === 'systemia.fabric-local-mcp.v1') {
+          if (!deviceIdentity) {
+            return send(res, 422, { error: 'fabric_local_device_identity_required' });
+          }
+          const runtime = await startFabricLocalRuntime({
+            host: '127.0.0.1',
+            port: Number(body.input?.port || 0),
+            catalog: Array.isArray(body.input?.fabric_catalog)
+              ? body.input.fabric_catalog
+              : null,
+            challengeToken: String(body.input?.openai_challenge_token || ''),
+            nodeAttestationProvider: async (nonce) => createNodeAttestation({
+              identity: deviceIdentity,
+              nonce,
+              supportedWorkloads: [...supported],
+              placementLabels: nodePlacementLabels,
+              processStartedAt,
+              bootIdHash: hostBootIdHash,
+            }),
+          });
+          const serviceId = `svc_${randomBytes(8).toString('hex')}`;
+          services.set(serviceId, {
+            lease_id: body.lease_id,
+            workload_class: body.workload_class,
+            runtime,
+            service: runtime,
+          });
+          const result = {
+            schema: 'evercraft.compute.resident-service.v1',
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            service_url: null,
+            local_url: runtime.url,
+            health_path: `/v1/services/${serviceId}/health`,
+            public_route_required: true,
+            public_health_path: '/health',
+            instance_id: runtime.instanceId,
+            outbound_service_relay_supported: true,
+            operator_edge_attestation_supported: true,
+            allocator_authority_exposed: false,
           };
           const receipt = chain.issue('service.started', {
             lease_id: body.lease_id,
@@ -1814,6 +2118,7 @@ export async function startEvercraftComputeNode({
             host: serviceHost,
             port: Number(body.input?.port || 0),
             publicOrigin: String(body.input?.public_origin || ''),
+            productDomain: String(body.input?.product_domain || 'evercraft.app'),
           });
           const serviceId = `svc_${randomBytes(8).toString('hex')}`;
           services.set(serviceId, {
@@ -1831,6 +2136,7 @@ export async function startEvercraftComputeNode({
             local_url: runtime.url,
             health_path: `/v1/services/${serviceId}/health`,
             public_origin_candidate: runtime.publicOrigin || null,
+            product_domain: runtime.productDomain,
             instance_id: runtime.instanceId,
             read_only_public_origin: true,
           };
