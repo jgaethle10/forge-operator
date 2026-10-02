@@ -399,6 +399,9 @@ human_gate=false
 ingress_transport="direct_chromeos_router"
 if [[ "$local_health_ok" != "true" ]]; then
   diagnosis="fabric_runtime_unreachable"
+elif [[ "$relay_state" == "active" && -f "$RELAY_ENV" ]]; then
+  diagnosis="local_edge_path_ready_external_canary_required"
+  ingress_transport="outbound_service_relay"
 elif [[ "$local_edge_http_ok" != "true" || "$local_edge_https_ok" != "true" ]]; then
   diagnosis="public_edge_listener_unreachable"
 elif [[ -n "$dns_ip" && -n "$public_ip" && "$dns_ip" != "$public_ip" ]]; then
