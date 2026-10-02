@@ -73,3 +73,13 @@ test('rejects successful responses that are not browser landing content',async()
     fetchImpl:async()=>response(200,'{"ok":true}',{'content-type':'application/json'}),
   }),/clip_public_link_non_browsable_content_type/);
 });
+
+
+test('blocks developer repository pages from customer publication links',async()=>{
+  let calls=0;
+  await assert.rejects(()=>preflightPublicLink({
+    url:'https://github.com/example/repo/tree/main/public/product',
+    fetchImpl:async()=>{calls+=1;return response(200,'<title>repo</title>',{'content-type':'text/html'});},
+  }),/clip_public_link_legacy_provider_blocked/);
+  assert.equal(calls,0);
+});
