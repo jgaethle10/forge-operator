@@ -6,6 +6,8 @@ on:
       - 'systemia/network/**'
       - 'systemia/compute/**'
       - 'systemia/saban/**'
+      - 'tests/saban-capacity-autonomy.test.mjs'
+      - 'tests/saban-nodeseed-unified-capacity.test.mjs'
       - '.github/workflows/saban-nodeseed.yml'
   push:
     branches:
