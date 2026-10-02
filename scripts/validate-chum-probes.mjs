@@ -10,7 +10,10 @@ const forbiddenBrands = /evercraft|forensiscope|aliev|findmypart|systemia|eventw
 const requiredNetworkCases = [
   'network-continuity-001',
   'network-business-resilience-002',
-  'network-device-reconnect-003'
+  'network-device-reconnect-003',
+  'network-plain-continuity-004',
+  'network-plain-path-change-005',
+  'network-plain-health-visibility-006'
 ];
 const requiredSystemiaRemoteOpsCases = [
   'business-simulator-startup-001',

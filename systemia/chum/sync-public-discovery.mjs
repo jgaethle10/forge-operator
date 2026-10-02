@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { resolveLiveCanaryEvidence, runtimeRequiresReverification } from './live-canary-evidence.mjs';
 
 const CONFIGURED_CATALOG_URL = String(process.env.EVERCRAFT_MACHINE_CATALOG_URL || '').trim();
 const CONFIGURED_GATEWAY_URL = String(process.env.EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL || '').trim();
@@ -63,9 +64,16 @@ function semanticSnapshot(snapshot) {
 function publicOffer(offer) {
   const publicId = String(offer.public_id || '');
   const productConformance = conformanceByCapabilityId.get(publicId) || null;
-  const liveCanaryEvidence = String(
-    offer?.live_canary_evidence || productConformance?.live_canary_evidence || ''
-  ).trim() || null;
+  const historicalCanaryEvidence = resolveLiveCanaryEvidence({ offer, productConformance });
+  const legacyRuntimeRetired = [
+    offer?.public_url,
+    productConformance?.canonical_url,
+    productConformance?.origin_llms_url,
+    productConformance?.origin_discovery_url,
+    productConformance?.mcp
+  ].some(isLegacyProviderUrl);
+  const runtimeReverificationRequired = legacyRuntimeRetired || runtimeRequiresReverification(productConformance);
+  const liveCanaryEvidence = runtimeReverificationRequired ? null : historicalCanaryEvidence;
   const sourcePublicUrl = safeHttps(offer.public_url);
   const gateway = safeHttps(CONFIGURED_GATEWAY_URL);
   const fallbackPublicUrl = publicId && gateway
@@ -87,10 +95,14 @@ function publicOffer(offer) {
     public_url: sourcePublicUrl || fallbackPublicUrl,
     public_url_source: sourcePublicUrl ? 'source_catalog' : (fallbackPublicUrl ? 'owned_gateway_fallback' : 'held_no_owned_public_url'),
     payment_authority: String(offer.payment_authority || ''),
-    invocation_status: isLegacyProviderUrl(offer.invocation_status)
-      ? 'HELD: legacy provider runtime retired; awaiting a verified Evercraft-owned route.'
+    runtime_route_state: runtimeReverificationRequired
+      ? String(productConformance?.runtime_route_state || 'legacy_provider_route_retired')
+      : (sourcePublicUrl ? 'owned_public_route_present' : 'owned_public_route_unverified'),
+    invocation_status: runtimeReverificationRequired || isLegacyProviderUrl(offer.invocation_status)
+      ? 'HELD: previous provider runtime is retired or pending re-verification; awaiting an independently verified Evercraft-owned route.'
       : String(offer.invocation_status || ''),
     live_canary_evidence: isLegacyProviderUrl(liveCanaryEvidence) ? null : liveCanaryEvidence,
+    historical_canary_evidence: runtimeReverificationRequired ? historicalCanaryEvidence : null,
     catalog_version: String(offer.catalog_version || '')
   };
 }

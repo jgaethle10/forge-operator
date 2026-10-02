@@ -8,7 +8,7 @@ const matrix = JSON.parse(fs.readFileSync('nexus-probes/provider-matrix.json', '
 const contract = JSON.parse(fs.readFileSync('nexus-probes/bridge-contract.json', 'utf8'));
 
 const expectedProviders = ['chatgpt','claude','gemini','copilot','perplexity','grok','generic_agent'];
-const requiredNetworkCases = ['network-continuity-001','network-business-resilience-002','network-device-reconnect-003'];
+const requiredNetworkCases = ['network-continuity-001','network-business-resilience-002','network-device-reconnect-003','network-plain-continuity-004','network-plain-path-change-005','network-plain-health-visibility-006'];
 const requiredRemoteOpsCases = [
   'business-simulator-startup-001',
   'business-simulator-pricing-002',
