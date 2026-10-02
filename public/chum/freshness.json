@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-02T18:30:33.916Z",
+  "updated_at": "2026-10-02T19:14:51.970Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -12,47 +12,27 @@
   "latest_change_batch": [
     {
       "path": "/.well-known/evercraft-syndication.json",
-      "last_changed": "2026-10-02T18:30:33.916Z",
+      "last_changed": "2026-10-02T19:14:51.970Z",
       "priority": 84
     },
     {
-      "path": "/chum/crawler-radar.json",
-      "last_changed": "2026-10-02T18:30:33.916Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/crawler-radar.txt",
-      "last_changed": "2026-10-02T18:30:33.916Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-02T18:30:33.916Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/strike/",
-      "last_changed": "2026-10-02T18:30:33.916Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/strike/index.json",
-      "last_changed": "2026-10-02T18:30:33.916Z",
+      "last_changed": "2026-10-02T19:14:51.970Z",
       "priority": 80
     },
     {
       "path": "/chum/syndication/index.json",
-      "last_changed": "2026-10-02T18:30:33.916Z",
+      "last_changed": "2026-10-02T19:14:51.970Z",
       "priority": 80
     },
     {
       "path": "/feed.json",
-      "last_changed": "2026-10-02T18:30:33.916Z",
+      "last_changed": "2026-10-02T19:14:51.970Z",
       "priority": 60
     },
     {
       "path": "/feed.xml",
-      "last_changed": "2026-10-02T18:30:33.916Z",
+      "last_changed": "2026-10-02T19:14:51.970Z",
       "priority": 60
     }
   ],
@@ -60,8 +40,32 @@
     {
       "path": "/.well-known/evercraft-syndication.json",
       "url": "/.well-known/evercraft-syndication.json",
-      "last_changed": "2026-10-02T18:30:33.916Z",
+      "last_changed": "2026-10-02T19:14:51.970Z",
       "priority": 84
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-10-02T19:14:51.970Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/syndication/index.json",
+      "url": "/chum/syndication/index.json",
+      "last_changed": "2026-10-02T19:14:51.970Z",
+      "priority": 80
+    },
+    {
+      "path": "/feed.json",
+      "url": "/feed.json",
+      "last_changed": "2026-10-02T19:14:51.970Z",
+      "priority": 60
+    },
+    {
+      "path": "/feed.xml",
+      "url": "/feed.xml",
+      "last_changed": "2026-10-02T19:14:51.970Z",
+      "priority": 60
     },
     {
       "path": "/chum/crawler-radar.json",
@@ -76,12 +80,6 @@
       "priority": 80
     },
     {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-10-02T18:30:33.916Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/strike/",
       "url": "/chum/strike/",
       "last_changed": "2026-10-02T18:30:33.916Z",
@@ -92,24 +90,6 @@
       "url": "/chum/strike/index.json",
       "last_changed": "2026-10-02T18:30:33.916Z",
       "priority": 80
-    },
-    {
-      "path": "/chum/syndication/index.json",
-      "url": "/chum/syndication/index.json",
-      "last_changed": "2026-10-02T18:30:33.916Z",
-      "priority": 80
-    },
-    {
-      "path": "/feed.json",
-      "url": "/feed.json",
-      "last_changed": "2026-10-02T18:30:33.916Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.xml",
-      "url": "/feed.xml",
-      "last_changed": "2026-10-02T18:30:33.916Z",
-      "priority": 60
     },
     {
       "path": "/.well-known/agent-card.json",
