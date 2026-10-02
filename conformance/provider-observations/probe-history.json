@@ -1,26 +1,8 @@
 {
   "schema": "evercraft.chum.provider-probe-history.v1",
-  "updated_at": "2026-10-02T17:05:17.942Z",
+  "updated_at": "2026-10-02T17:21:34.281Z",
   "max_records": 500,
   "records": [
-    {
-      "receipt_key_sha256": "296b895ec98690096305aed76f9801d0b9fd991e8adbfde512fe62e648645bfb",
-      "observed_at": "2026-09-30T21:01:10.601Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "evercraft-network",
-      "case_id": "network-continuity-001",
-      "prompt_sha256": "6d0a49338a3ac427ad1527564d49b9b923ec4d36968c47e600544dc9eba1675e",
-      "pickup_observed": false,
-      "provider_receipt_sha256": "4946337caf348c43f85f6e9bf66d870b27f2eb42b5f1f317f3af553a4c823499",
-      "response_sha256": "341a77414e91d032af6ed8b61cfc27119dc32937677909d704cb51607001c21a",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
     {
       "receipt_key_sha256": "80bdb3f73d10f060ffbbf43fb4971c8b916ce1122d1f1f7b421741c5b6e834fc",
       "observed_at": "2026-09-30T22:18:24.964Z",
@@ -8995,6 +8977,24 @@
       "prompt_sha256": "2036732566ff0a3019719bc5d685f307a49a3db358069592316cb0d40e4b0147",
       "pickup_observed": false,
       "provider_receipt_sha256": "d64d0ffcc298417905324f58105d6ef7af50b566b0644cd307507d7bdb8224d0",
+      "response_sha256": "943a9710129ae00a64650256f72e0d5fb552673eecf5ef4dd00102b2f430d2a6",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "c431ffa3f6db2c52b58bf98e6d95b4fae75c2124fb7c852967e57301da704ab0",
+      "observed_at": "2026-10-02T17:21:34.281Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "forensiscope",
+      "case_id": "media-overflow-large-file-002",
+      "prompt_sha256": "2036732566ff0a3019719bc5d685f307a49a3db358069592316cb0d40e4b0147",
+      "pickup_observed": false,
+      "provider_receipt_sha256": "70bcc0342fe410f1a19cafdb3469a6b95d364cdd786e68f0475a84aedb0b2c27",
       "response_sha256": "943a9710129ae00a64650256f72e0d5fb552673eecf5ef4dd00102b2f430d2a6",
       "source": "authorized_provider_probe",
       "privacy": {
