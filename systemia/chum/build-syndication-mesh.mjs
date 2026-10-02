@@ -328,7 +328,7 @@ export function buildSyndicationMesh({
     products: products.map((product) => ({
       product_key: product.product_key,
       name: product.name,
-      canonical_url: socialUrl,
+      canonical_url: product.canonical_url,
       mirror: product.mirror_path,
       llms: product.llms_path,
       discovery: product.discovery_path,
@@ -348,7 +348,7 @@ export function buildSyndicationMesh({
       dedupe_key: product.product_key + ':' + product.content_sha256,
       product_key: product.product_key,
       name: product.name,
-      canonical_url: product.canonical_url,
+      canonical_url: socialUrl,
       discovery_path: product.discovery_path,
       text: product.name + ': ' + product.description,
       content_sha256: product.content_sha256,
