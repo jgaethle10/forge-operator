@@ -1,7 +1,9 @@
 #!/usr/bin/env node
+import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {YardOperator} from './operator.mjs';
+import {writeSafeNodeSeedInventory} from '../saban/nodeseed-inventory-ingest.mjs';
 
 const MODULE_FILE=fileURLToPath(import.meta.url);
 function arg(name,fallback=''){
@@ -20,22 +22,39 @@ export async function runYardSabanIntentDrain({
   if(!yardStateDir)throw new Error('yard_state_dir_required');
   if(!sabanStateDir)throw new Error('saban_state_dir_required');
   if(!brokerDeploymentId)throw new Error('broker_deployment_id_required');
-  const yard=new YardOperator({stateDir:path.resolve(yardStateDir)});
-  const receipt=await yard.drainSabanNodeSeedIntents({
-    sabanRoot:path.resolve(sabanStateDir),
+  const yardRoot=path.resolve(yardStateDir);
+  const sabanRoot=path.resolve(sabanStateDir);
+  const yard=new YardOperator({stateDir:yardRoot});
+
+  const remoteInventory=await yard.listRemoteCapacityNodes(brokerDeploymentId);
+  const safeInventory=writeSafeNodeSeedInventory({
+    inventory:remoteInventory,
+    file:path.join(sabanRoot,'nodeseed-capacity-inventory.json'),
+  });
+
+  const drained=await yard.drainSabanNodeSeedIntents({
+    sabanRoot,
     brokerDeploymentId,
     maxIntents,
     timeoutMs,
     now,
   });
-  return {
-    ...receipt,
+  const receipt={
+    ...drained,
     schema:'evercraft.yard.saban-intent-drain.v1',
     broker_deployment_id:brokerDeploymentId,
+    refreshed_safe_inventory_count:safeInventory.count,
+    safe_inventory_receipt_hash:safeInventory.receipt_hash,
     authority_boundary:'yard_operator',
     allocator_authority_exposed_to_saban:false,
+    control_authority_exposed_to_saban:false,
     commercial_spend_usd:0,
   };
+  fs.mkdirSync(sabanRoot,{recursive:true,mode:0o700});
+  const tmp=path.join(sabanRoot,'yard-saban-intent-drain.json.tmp');
+  fs.writeFileSync(tmp,JSON.stringify(receipt,null,2)+'\n',{mode:0o600});
+  fs.renameSync(tmp,path.join(sabanRoot,'yard-saban-intent-drain.json'));
+  return receipt;
 }
 
 async function main(){
