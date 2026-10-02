@@ -131,9 +131,17 @@ test('server-side product client sends the common intent contract with bearer au
   });
   await client.notify({ product: 'rivet', purpose: 'transactional', title: 'Ready', body: 'Open it' });
   await client.issueSession({ principal_id: 'owner', permissions: ['stream'] });
+  await client.enqueue({ id: 'queued-1', product: 'rivet', purpose: 'transactional', title: 'Queued', body: 'Open it' }, { idempotencyKey: 'queued-1' });
+  await client.getJob('job/with spaces');
+  await client.requeueJob('job-1', { maxAttempts: 4 });
   assert.equal(calls[0].url, 'https://notify.evercraft.test/api/notifications/intents');
   assert.equal(calls[0].init.headers.authorization, 'Bearer secret');
   assert.equal(calls[1].url, 'https://notify.evercraft.test/api/notifications/session-tokens');
+  assert.equal(calls[2].init.headers['idempotency-key'], 'queued-1');
+  assert.equal(calls[3].url, 'https://notify.evercraft.test/api/notifications/jobs/job%2Fwith%20spaces');
+  assert.equal(calls[3].init.method, 'GET');
+  assert.equal(calls[4].url, 'https://notify.evercraft.test/api/notifications/jobs/job-1/requeue');
+  assert.equal(JSON.parse(calls[4].init.body).max_attempts, 4);
 });
 
 
@@ -484,4 +492,45 @@ test('hung push transports are aborted instead of pinning Relay indefinitely', a
   assert.equal(result.accepted, 0);
   assert.ok(result.receipts.some((receipt) => receipt.status === 'delivery_failed'));
   assert.ok(elapsed < 2000);
+});
+
+
+test('expired business events are refused before inbox or transport delivery', async () => {
+  const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'relay-expiry-'));
+  const sent = [];
+  const fabric = createNotificationFabric({
+    dataDir,
+    now: '2026-10-01T12:00:00.000Z',
+    sendPush: async (_subscription, payload) => {
+      sent.push(payload);
+      return { ok: true, status: 201, retryAfter: null };
+    },
+  });
+  fabric.subscribe(makeSubscription());
+  const result = await fabric.dispatchIntent({
+    id: 'stale-1',
+    product: 'rivet',
+    purpose: 'transactional',
+    title: 'Stale report',
+    body: 'This should never surface.',
+    recipient_ids: ['owner'],
+    expires_at: '2026-10-01T11:59:59.000Z',
+  });
+  assert.equal(result.expired, true);
+  assert.equal(result.inboxed, 0);
+  assert.equal(result.accepted, 0);
+  assert.equal(sent.length, 0);
+  assert.equal(fabric.listInbox('owner').length, 0);
+  assert.ok(result.receipts.some((receipt) => receipt.status === 'expired'));
+});
+
+test('Relay rejects malformed timing, unsafe URLs and oversized data at admission', () => {
+  const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'relay-admission-'));
+  const fabric = createNotificationFabric({ dataDir, sendPush: async () => ({ ok: true, status: 201 }) });
+  const base = { product: 'rivet', purpose: 'transactional', title: 'Valid', body: 'Valid' };
+  assert.throws(() => fabric.prepareIntent({ ...base, ttl_seconds: 'banana' }), /ttl_seconds must be an integer/);
+  assert.throws(() => fabric.prepareIntent({ ...base, url: 'javascript:alert(1)' }), /credential-free HTTPS URL/);
+  assert.throws(() => fabric.prepareIntent({ ...base, body: 'x'.repeat(1201) }), /Notification body exceeds/);
+  assert.throws(() => fabric.prepareIntent({ ...base, data: { blob: 'x'.repeat(17000) } }), /16 KiB/);
+  assert.throws(() => fabric.prepareIntent({ ...base, recipient_ids: Array.from({ length: 501 }, (_, i) => `user-${i}`) }), /500-item Relay limit/);
 });
