@@ -1,0 +1,46 @@
+{
+  "schema": "evercraft.household-fabric.discovery.v1",
+  "product": "Systemia Household Fabric",
+  "provider": "Evercraft",
+  "purpose": "Dignity-first local intelligence that helps households keep more money, find useful opportunities and understand what is worth doing today.",
+  "pilot_geography": "Yakima, Washington",
+  "public_today_endpoint": "/api/household-fabric/yakima/today",
+  "health_endpoint": "/api/household-fabric/health",
+  "current_capability_state": {
+    "ranking_engine": "merged",
+    "evidence_ledger": "merged",
+    "local_event_collector": "merged",
+    "merchant_offer_contract": "merged",
+    "fuel_price_index": "merged",
+    "grocery_price_index": "merged",
+    "google_places_fuel_client": "implemented_candidate_credentials_required_not_live",
+    "kroger_grocery_client": "implemented_candidate_credentials_required_not_live",
+    "provider_credential_intake": "implemented_candidate_until_deployed",
+    "provider_credential_mode": "vault_reference_first",
+    "yakima_recurring_runner": "implemented_candidate_requires_live_browser_edge_receipt",
+    "public_today_gateway": "implemented_candidate_until_deployed",
+    "consumer_today_page": "implemented_candidate_until_deployed"
+  },
+  "evidence_rules": [
+    "Missing data is never treated as zero.",
+    "Stale monetary observations are not served as current.",
+    "Modeled or inferred values remain labeled.",
+    "Sponsorship does not improve organic ranking.",
+    "Public results preserve source and observation time.",
+    "Source existence does not imply collector execution or fresh user-facing data."
+  ],
+  "dignity_rules": [
+    "No poverty score.",
+    "No public hardship declaration required.",
+    "No personal-data sale required for core local intelligence.",
+    "Applications, purchases, payments and external messages remain user-controlled."
+  ],
+  "north_star_metrics": [
+    "money kept in households",
+    "money earned by households",
+    "hours returned to households",
+    "opportunities discovered",
+    "needs solved before emergency"
+  ],
+  "human_today_url": "/household/"
+}

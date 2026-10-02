@@ -7,40 +7,11 @@ FABRIC_PORT=8787
 HTTP_PORT=18080
 HTTPS_PORT=8443
 ROUTER_ENV=/etc/evercraft/router-map.env
-RELAY_ENV=/etc/evercraft/outbound-relay.env
-RELAY_SERVICE=evercraft-fabric-outbound-relay.service
 REPAIR=false
-MAINTAIN_SABAN=false
-TRIGGER_CANARY=false
-CANARY_WORKFLOW="${EVERCRAFT_EDGE_CANARY_WORKFLOW:-evercraft-public-edge-canary.yml}"
-CANARY_REPO="${EVERCRAFT_EDGE_CANARY_REPO:-jgaethle10/forge-operator}"
 
-for arg in "$@"; do
-  case "$arg" in
-    --repair) REPAIR=true ;;
-    --maintain-saban) MAINTAIN_SABAN=true ;;
-    --trigger-canary) TRIGGER_CANARY=true ;;
-    --help|-h)
-      cat <<'USAGE'
-Usage: sudo bash scripts/fabric-edge-doctor.sh [--repair] [--maintain-saban] [--trigger-canary]
-
-  --repair           Reconcile the critical Fabric/edge path and router mapping.
-  --maintain-saban   Separately install/repair Saban resident capacity services.
-                     Saban maintenance is intentionally NOT part of edge recovery.
-  --trigger-canary   When the owned edge is locally ready, dispatch the external
-                     GitHub canary immediately if gh is installed/authenticated.
-
-The doctor cannot toggle ChromeOS Linux Port Forwarding. If that is the only
-remaining gate, it exits 20 and prints the exact two ChromeOS host forwards.
-USAGE
-      exit 0
-      ;;
-    *)
-      echo "ERROR: unknown argument: $arg" >&2
-      exit 2
-      ;;
-  esac
-done
+if [[ "${1:-}" == "--repair" ]]; then
+  REPAIR=true
+fi
 
 if [[ "${EUID}" -ne 0 ]]; then
   echo "ERROR: run with sudo so the doctor can inspect and repair resident services." >&2
@@ -130,26 +101,11 @@ ensure_fabric_update_timer(){
 ensure_saban_capacity_timer(){
   local has_timer=false
   local has_gateway=false
-  local has_probation=false
-  local has_dispatch=false
-  local has_work_api=false
-  local has_pairing_api=false
-  local has_watchdog=false
   systemctl list-unit-files evercraft-saban-capacity.timer --no-legend 2>/dev/null | grep -q '^evercraft-saban-capacity.timer' && has_timer=true || true
   systemctl list-unit-files evercraft-saban-microseed-gateway.service --no-legend 2>/dev/null | grep -q '^evercraft-saban-microseed-gateway.service' && has_gateway=true || true
-  systemctl list-unit-files evercraft-saban-probation.timer --no-legend 2>/dev/null | grep -q '^evercraft-saban-probation.timer' && has_probation=true || true
-  systemctl list-unit-files evercraft-saban-dispatch.timer --no-legend 2>/dev/null | grep -q '^evercraft-saban-dispatch.timer' && has_dispatch=true || true
-  systemctl list-unit-files evercraft-saban-work-api.service --no-legend 2>/dev/null | grep -q '^evercraft-saban-work-api.service' && has_work_api=true || true
-  systemctl list-unit-files evercraft-saban-pairing-api.service --no-legend 2>/dev/null | grep -q '^evercraft-saban-pairing-api.service' && has_pairing_api=true || true
-  systemctl list-unit-files evercraft-saban-watchdog.timer --no-legend 2>/dev/null | grep -q '^evercraft-saban-watchdog.timer' && has_watchdog=true || true
-  if [[ "$has_timer" == "true" && "$has_gateway" == "true" && "$has_probation" == "true" && "$has_dispatch" == "true" && "$has_work_api" == "true" && "$has_pairing_api" == "true" && "$has_watchdog" == "true" ]]; then
+  if [[ "$has_timer" == "true" && "$has_gateway" == "true" ]]; then
     systemctl enable --now evercraft-saban-capacity.timer >/dev/null 2>&1 || true
     systemctl enable --now evercraft-saban-microseed-gateway.service >/dev/null 2>&1 || true
-    systemctl enable --now evercraft-saban-probation.timer >/dev/null 2>&1 || true
-    systemctl enable --now evercraft-saban-dispatch.timer >/dev/null 2>&1 || true
-    systemctl enable --now evercraft-saban-work-api.service >/dev/null 2>&1 || true
-    systemctl enable --now evercraft-saban-pairing-api.service >/dev/null 2>&1 || true
-    systemctl enable --now evercraft-saban-watchdog.timer >/dev/null 2>&1 || true
   else
     if [[ ! -f "$REPO_ROOT/scripts/install-saban-capacity-organism.sh" ]]; then
       echo "ERROR: Saban capacity organism installer missing" >&2
@@ -169,12 +125,7 @@ ensure_saban_capacity_timer(){
   systemctl daemon-reload
   systemctl enable --now evercraft-saban-capacity.timer >/dev/null 2>&1 || return 53
   systemctl enable --now evercraft-saban-microseed-gateway.service >/dev/null 2>&1 || return 54
-  systemctl enable --now evercraft-saban-probation.timer >/dev/null 2>&1 || return 55
-  systemctl enable --now evercraft-saban-dispatch.timer >/dev/null 2>&1 || return 56
-  systemctl enable --now evercraft-saban-work-api.service >/dev/null 2>&1 || return 57
-  systemctl enable --now evercraft-saban-pairing-api.service >/dev/null 2>&1 || return 58
-  systemctl enable --now evercraft-saban-watchdog.timer >/dev/null 2>&1 || return 59
-  systemctl start evercraft-saban-capacity.service >/dev/null 2>&1 || return 60
+  systemctl start evercraft-saban-capacity.service >/dev/null 2>&1 || return 55
   return 0
 }
 
@@ -208,7 +159,6 @@ echo "domain=$DOMAIN"
 local_organism_repair_ok=true
 saban_capacity_repair_ok=true
 self_update_repair_ok=true
-self_update_degraded=false
 local_organism_repair_code=0
 self_update_repair_code=0
 saban_capacity_repair_code=0
@@ -227,33 +177,21 @@ if [[ "$REPAIR" == "true" ]]; then
   ensure_fabric_update_timer
   self_update_repair_code=$?
   set -e
-  if [[ "$self_update_repair_code" -ne 0 ]]; then
-    self_update_repair_ok=false
-    self_update_degraded=true
-    echo "[repair] WARNING: verified self-updater is degraded (code=$self_update_repair_code); continuing critical edge recovery."
-  fi
+  [[ "$self_update_repair_code" -eq 0 ]] || self_update_repair_ok=false
 
-  # Restore the critical public edge before touching optional resident capacity.
+  set +e
+  ensure_saban_capacity_timer
+  saban_capacity_repair_code=$?
+  set -e
+  [[ "$saban_capacity_repair_code" -eq 0 ]] || saban_capacity_repair_ok=false
+
   systemctl enable --now evercraft-fabric.service >/dev/null 2>&1 || true
   systemctl enable --now evercraft-public-edge.service >/dev/null 2>&1 || true
   systemctl enable --now evercraft-router-map.timer >/dev/null 2>&1 || true
-  if systemctl list-unit-files "$RELAY_SERVICE" --no-legend 2>/dev/null | grep -q "^$RELAY_SERVICE"; then
-    systemctl enable --now "$RELAY_SERVICE" >/dev/null 2>&1 || true
-  fi
   systemctl restart evercraft-fabric.service >/dev/null 2>&1 || true
   systemctl restart evercraft-public-edge.service >/dev/null 2>&1 || true
   systemctl start evercraft-router-map.service >/dev/null 2>&1 || true
   sleep 2
-
-  if [[ "$MAINTAIN_SABAN" == "true" ]]; then
-    echo
-    echo "[maintenance] reconciling Saban resident capacity services after edge recovery..."
-    set +e
-    ensure_saban_capacity_timer
-    saban_capacity_repair_code=$?
-    set -e
-    [[ "$saban_capacity_repair_code" -eq 0 ]] || saban_capacity_repair_ok=false
-  fi
 fi
 
 fabric_state="$(service_state evercraft-fabric.service)"
@@ -262,12 +200,6 @@ router_timer_state="$(service_state evercraft-router-map.timer)"
 update_timer_state="$(service_state evercraft-fabric-update.timer)"
 saban_capacity_timer_state="$(service_state evercraft-saban-capacity.timer)"
 saban_gateway_state="$(service_state evercraft-saban-microseed-gateway.service)"
-saban_probation_timer_state="$(service_state evercraft-saban-probation.timer)"
-saban_dispatch_timer_state="$(service_state evercraft-saban-dispatch.timer)"
-saban_work_api_state="$(service_state evercraft-saban-work-api.service)"
-saban_pairing_api_state="$(service_state evercraft-saban-pairing-api.service)"
-saban_watchdog_timer_state="$(service_state evercraft-saban-watchdog.timer)"
-relay_state="$(service_state "$RELAY_SERVICE")"
 
 echo
 echo "[services]"
@@ -277,19 +209,11 @@ echo "evercraft-router-map.timer=$router_timer_state"
 echo "evercraft-fabric-update.timer=$update_timer_state"
 echo "evercraft-saban-capacity.timer=$saban_capacity_timer_state"
 echo "evercraft-saban-microseed-gateway.service=$saban_gateway_state"
-echo "evercraft-saban-probation.timer=$saban_probation_timer_state"
-echo "evercraft-saban-dispatch.timer=$saban_dispatch_timer_state"
-echo "evercraft-saban-work-api.service=$saban_work_api_state"
-echo "evercraft-saban-pairing-api.service=$saban_pairing_api_state"
-echo "evercraft-saban-watchdog.timer=$saban_watchdog_timer_state"
-echo "$RELAY_SERVICE=$relay_state"
 if [[ "$REPAIR" == "true" ]]; then
   echo "local_organism_repair_ok=$local_organism_repair_ok"
   echo "local_organism_repair_code=$local_organism_repair_code"
   echo "self_update_repair_ok=$self_update_repair_ok"
   echo "self_update_repair_code=$self_update_repair_code"
-  echo "self_update_degraded=$self_update_degraded"
-  echo "saban_maintenance_requested=$MAINTAIN_SABAN"
   echo "saban_capacity_repair_ok=$saban_capacity_repair_ok"
   echo "saban_capacity_repair_code=$saban_capacity_repair_code"
 fi
@@ -311,9 +235,6 @@ fi
 LAN_HOST=""
 GATEWAY=""
 if [[ -f "$ROUTER_ENV" ]]; then
-  # This file contains only bounded router mapping coordinates, not secrets.
-  # The resident router-map service runs unprivileged and must be able to read it.
-  chmod 0644 "$ROUTER_ENV" 2>/dev/null || true
   # shellcheck disable=SC1090
   source "$ROUTER_ENV"
   LAN_HOST="${EVERCRAFT_ROUTER_LAN_HOST:-}"
@@ -382,18 +303,17 @@ echo "local_edge_attestation_responding=$attestation_local_ok"
 
 diagnosis="unknown"
 human_gate=false
-ingress_transport="direct_chromeos_router"
-if [[ "$local_health_ok" != "true" ]]; then
+if [[ "$REPAIR" == "true" && "$local_organism_repair_ok" != "true" ]]; then
+  diagnosis="local_organism_repair_failed"
+elif [[ "$REPAIR" == "true" && "$self_update_repair_ok" != "true" ]]; then
+  diagnosis="fabric_update_repair_failed"
+elif [[ "$REPAIR" == "true" && "$saban_capacity_repair_ok" != "true" ]]; then
+  diagnosis="saban_capacity_repair_failed"
+elif [[ "$local_health_ok" != "true" ]]; then
   diagnosis="fabric_runtime_unreachable"
 elif [[ -n "$LAN_HOST" && ( "$lan_http_ok" != "true" || "$lan_https_ok" != "true" ) ]]; then
-  if [[ "$relay_state" == "active" && -f "$RELAY_ENV" ]]; then
-    diagnosis="local_edge_path_ready_external_canary_required"
-    human_gate=false
-    ingress_transport="outbound_service_relay"
-  else
-    diagnosis="chromeos_host_forward_unreachable"
-    human_gate=true
-  fi
+  diagnosis="chromeos_host_forward_unreachable"
+  human_gate=true
 elif [[ "$router_refresh_ok" != "true" ]]; then
   diagnosis="router_mapping_refresh_failed"
 elif [[ -n "$dns_ip" && -n "$public_ip" && "$dns_ip" != "$public_ip" ]]; then
@@ -408,55 +328,6 @@ echo
 echo "[diagnosis]"
 echo "state=$diagnosis"
 echo "human_gate=$human_gate"
-echo "ingress_transport=$ingress_transport"
-
-field_action="none"
-if [[ "$diagnosis" == "chromeos_host_forward_unreachable" ]]; then
-  field_action="chromeos_linux_port_forwarding"
-  echo
-  echo "[ChromeOS field gate]"
-  echo "Fabric below ChromeOS is reachable, but the ChromeOS host-forward layer is not."
-  echo "Open: ChromeOS Settings -> Developers -> Linux development environment -> Port forwarding"
-  echo "Required host forwards:"
-  echo "  TCP 18080  status=$([[ "$lan_http_ok" == "true" ]] && echo reachable || echo NOT_REACHABLE)"
-  echo "  TCP 8443   status=$([[ "$lan_https_ok" == "true" ]] && echo reachable || echo NOT_REACHABLE)"
-  echo "If either entry already exists, toggle it off and back on."
-  echo "Then rerun:"
-  echo "  cd $REPO_ROOT"
-  echo "  sudo bash scripts/fabric-edge-doctor.sh --repair --trigger-canary"
-fi
-
-saban_capacity_degraded=false
-if [[ "$MAINTAIN_SABAN" == "true" && "$saban_capacity_repair_ok" != "true" ]]; then
-  saban_capacity_degraded=true
-fi
-
-canary_trigger_state="not_requested"
-canary_trigger_ok=false
-if [[ "$TRIGGER_CANARY" == "true" ]]; then
-  if [[ "$diagnosis" != "local_edge_path_ready_external_canary_required" ]]; then
-    canary_trigger_state="blocked_until_local_edge_ready"
-  elif ! command -v gh >/dev/null 2>&1; then
-    canary_trigger_state="gh_not_installed"
-  elif ! run_as_runtime_user gh auth status -h github.com >/dev/null 2>&1; then
-    canary_trigger_state="gh_not_authenticated"
-  else
-    set +e
-    canary_output="$(run_as_runtime_user gh workflow run "$CANARY_WORKFLOW" --repo "$CANARY_REPO" 2>&1)"
-    canary_rc=$?
-    set -e
-    if [[ "$canary_rc" -eq 0 ]]; then
-      canary_trigger_state="dispatched"
-      canary_trigger_ok=true
-    else
-      canary_trigger_state="dispatch_failed"
-    fi
-    echo
-    echo "[external canary trigger]"
-    printf '%s\n' "$canary_output"
-  fi
-  echo "external_canary_trigger_state=$canary_trigger_state"
-fi
 
 cat > /tmp/evercraft-fabric-edge-doctor.json <<EOF
 {
@@ -469,22 +340,12 @@ cat > /tmp/evercraft-fabric-edge-doctor.json <<EOF
   "fabric_update_timer":"$update_timer_state",
   "saban_capacity_timer":"$saban_capacity_timer_state",
   "saban_microseed_gateway":"$saban_gateway_state",
-  "saban_probation_timer":"$saban_probation_timer_state",
-  "saban_dispatch_timer":"$saban_dispatch_timer_state",
-  "saban_work_api":"$saban_work_api_state",
-  "saban_pairing_api":"$saban_pairing_api_state",
-  "saban_watchdog_timer":"$saban_watchdog_timer_state",
-  "outbound_relay_service":"$relay_state",
-  "ingress_transport":"$ingress_transport",
   "local_organism_repair_ok":$(json_bool "$local_organism_repair_ok"),
   "local_organism_repair_code":$local_organism_repair_code,
   "self_update_repair_ok":$(json_bool "$self_update_repair_ok"),
   "self_update_repair_code":$self_update_repair_code,
-  "self_update_degraded":$(json_bool "$self_update_degraded"),
-  "saban_maintenance_requested":$(json_bool "$MAINTAIN_SABAN"),
   "saban_capacity_repair_ok":$(json_bool "$saban_capacity_repair_ok"),
   "saban_capacity_repair_code":$saban_capacity_repair_code,
-  "saban_capacity_degraded":$(json_bool "$saban_capacity_degraded"),
   "lan_http_forward_ok":$(json_bool "$lan_http_ok"),
   "lan_https_forward_ok":$(json_bool "$lan_https_ok"),
   "router_refresh_ok":$(json_bool "$router_refresh_ok"),
@@ -494,15 +355,6 @@ cat > /tmp/evercraft-fabric-edge-doctor.json <<EOF
   "public_ipv4_seen_inside":"${public_ip:-}",
   "diagnosis":"$diagnosis",
   "human_gate":$(json_bool "$human_gate"),
-  "field_action":"$field_action",
-  "required_chromeos_port_forwards":[
-    {"protocol":"tcp","host_port":18080,"reachable":$(json_bool "$lan_http_ok")},
-    {"protocol":"tcp","host_port":8443,"reachable":$(json_bool "$lan_https_ok")}
-  ],
-  "external_canary_trigger_requested":$(json_bool "$TRIGGER_CANARY"),
-  "external_canary_trigger_ok":$(json_bool "$canary_trigger_ok"),
-  "external_canary_trigger_state":"$canary_trigger_state",
-  "next_command":"sudo bash scripts/fabric-edge-doctor.sh --repair --trigger-canary",
   "observed_at":"$(date -u +%FT%TZ)"
 }
 EOF

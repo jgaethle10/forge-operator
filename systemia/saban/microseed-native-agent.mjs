@@ -1,8 +1,6 @@
 import http from 'node:http';
 import { randomBytes } from 'node:crypto';
 import { executeMicroSeedWorkload } from './microseed-executor.mjs';
-import { signMicroSeedExecutionReceipt } from './microseed-receipt-signature.mjs';
-import { signMicroSeedTelemetry } from './microseed-telemetry-signature.mjs';
 
 function clean(v){return String(v??'').trim();}
 function send(res,status,body){
@@ -31,8 +29,6 @@ export async function startMicroSeedNativeAgent({
   host='127.0.0.1',
   port=0,
   authorizationToken='',
-  receiptSigningPrivateKey=null,
-  receiptSigningKeyId='microseed-device-key',
   telemetryProvider=async()=>({
     primary_function_busy:false,
     cpu_utilization:0,
@@ -54,9 +50,6 @@ export async function startMicroSeedNativeAgent({
   }
   if(!stateDir) throw new Error('microseed_agent_state_dir_required');
   if(!clean(authorizationToken)) throw new Error('microseed_agent_token_required');
-  if(manifest.attestation?.receipt_signing_required===true&&!receiptSigningPrivateKey){
-    throw new Error('microseed_agent_receipt_signing_key_required');
-  }
 
   const instanceId='microseed-agent-'+randomBytes(8).toString('hex');
   let active=0;
@@ -73,10 +66,6 @@ export async function startMicroSeedNativeAgent({
     supported_workloads:manifest.supported_workloads,
     arbitrary_code_execution:false,
     active_executions:active,
-    signed_receipts_required:manifest.attestation?.receipt_signing_required===true,
-    signed_telemetry_required:manifest.attestation?.telemetry_signing_required===true,
-    signed_receipts_enabled:Boolean(receiptSigningPrivateKey),
-    signed_telemetry_enabled:Boolean(receiptSigningPrivateKey),
   });
 
   server=http.createServer(async(req,res)=>{
@@ -85,26 +74,6 @@ export async function startMicroSeedNativeAgent({
 
       if(clean(req.headers.authorization)!=='Bearer '+authorizationToken){
         return send(res,401,{ok:false,error:'microseed_agent_authorization_required'});
-      }
-
-      if(req.method==='GET'&&req.url==='/v1/telemetry'){
-        const telemetry=await telemetryProvider({manifest,request:null});
-        const envelope={
-          schema:'evercraft.microseed.device-telemetry.v1',
-          device_id:manifest.device_id,
-          telemetry:{
-            ...telemetry,
-            observed_at:telemetry?.observed_at||new Date().toISOString(),
-          },
-          arbitrary_code_execution:false,
-        };
-        const signed=receiptSigningPrivateKey
-          ? signMicroSeedTelemetry(envelope,{
-              privateKey:receiptSigningPrivateKey,
-              key_id:manifest.attestation?.receipt_key_id||receiptSigningKeyId,
-            })
-          : envelope;
-        return send(res,200,{ok:true,...signed});
       }
 
       if(req.method==='POST'&&req.url==='/v1/execute'){
@@ -123,13 +92,7 @@ export async function startMicroSeedNativeAgent({
             executionContext:'device',
             now:new Date(),
           });
-          const signed=receiptSigningPrivateKey
-            ? signMicroSeedExecutionReceipt(receipt,{
-                privateKey:receiptSigningPrivateKey,
-                key_id:manifest.attestation?.receipt_key_id||receiptSigningKeyId,
-              })
-            : receipt;
-          return send(res,200,{ok:true,...signed});
+          return send(res,200,{ok:true,...receipt});
         }finally{
           active=Math.max(0,active-1);
         }

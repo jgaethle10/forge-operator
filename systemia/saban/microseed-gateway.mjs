@@ -3,20 +3,10 @@ import { randomBytes } from 'node:crypto';
 import { AmbientDeviceRegistry } from './ambient-device-registry.mjs';
 import { evaluateAmbientTrust } from './ambient-device-trust.mjs';
 import { executeMicroSeedWorkload } from './microseed-executor.mjs';
-import { loadPerformanceLedger, recordPerformanceSample, savePerformanceLedger } from './performance-learning.mjs';
-import { runMicroSeedConformance, evaluateMicroSeedConformance } from './microseed-conformance.mjs';
-import { runMicroSeedCalibration } from './microseed-calibration.mjs';
-import { invokeMicroSeedCapability } from './microseed-capability-executor.mjs';
 
 function clean(v){return String(v??'').trim();}
 function loopback(host){
   return ['127.0.0.1','localhost','::1'].includes(clean(host).toLowerCase());
-}
-function observedEnergyWh(telemetry,durationMs){
-  if(telemetry?.power_measurement_state!=='observed') return null;
-  const watts=Number(telemetry?.power_watts);
-  if(!Number.isFinite(watts)||watts<0) return null;
-  return Number((watts*Math.max(0,Number(durationMs||0))/3600000).toFixed(9));
 }
 function send(res,status,body){
   const bytes=Buffer.from(JSON.stringify(body));
@@ -45,7 +35,6 @@ export async function startMicroSeedGateway({
   port=0,
   authorizationToken='',
   bridgeAdapters={},
-  performanceLedgerFile='',
   allowNonLoopback=false,
   globalMaxConcurrency=8,
 }={}){
@@ -55,7 +44,6 @@ export async function startMicroSeedGateway({
   if(!allowNonLoopback&&!loopback(host)) throw new Error('microseed_gateway_loopback_required');
 
   const registry=new AmbientDeviceRegistry({root:registryRoot});
-  const performanceFile=performanceLedgerFile||stateDir+'/performance-ledger.json';
   const instanceId='microseed-gateway-'+randomBytes(8).toString('hex');
   const activeByDevice=new Map();
   let activeGlobal=0;
@@ -74,82 +62,6 @@ export async function startMicroSeedGateway({
     eligible_device_count:registry.list({now:new Date()}).eligible_count,
   });
 
-  async function resolveExecutionTelemetry(manifest,provided){
-    const adapter=bridgeAdapters?.[manifest.bridge_mode];
-    if(adapter&&typeof adapter.telemetry==='function'){
-      const deviceTelemetry=await adapter.telemetry({manifest});
-      if(!deviceTelemetry||typeof deviceTelemetry!=='object'){
-        throw new Error('microseed_device_telemetry_invalid');
-      }
-      return {
-        ...deviceTelemetry,
-        observed_at:deviceTelemetry.observed_at||new Date().toISOString(),
-        telemetry_source:'device_agent',
-      };
-    }
-    if(provided&&typeof provided==='object'&&Object.keys(provided).length){
-      return {
-        ...provided,
-        observed_at:provided.observed_at||new Date().toISOString(),
-        telemetry_source:provided.telemetry_source||'caller_bridge',
-      };
-    }
-    throw new Error('microseed_execution_telemetry_required');
-  }
-
-  async function executeAndLearn({manifest,trustDecision,telemetry,request}){
-    const startedAt=Date.now();
-    const deviceId=manifest.device_id;
-    const effectiveTelemetry=await resolveExecutionTelemetry(manifest,telemetry);
-    try{
-      const receipt=await executeMicroSeedWorkload({
-        manifest,
-        trustDecision,
-        telemetry:effectiveTelemetry,
-        request,
-        stateDir,
-        bridgeAdapters,
-        executionContext:'gateway',
-        now:new Date(),
-      });
-      const duration=Math.max(0,Date.now()-startedAt);
-      const ledger=loadPerformanceLedger(performanceFile);
-      recordPerformanceSample(ledger,{
-        device_id:deviceId,
-        workload_class:String(request?.workload_class||'unknown'),
-        ok:true,
-        duration_ms:duration,
-        bytes_processed:
-          receipt?.result?.byte_count??
-          receipt?.result?.remote_result?.byte_count??
-          null,
-        checkpointed:Boolean(receipt?.checkpoint),
-        preempted:false,
-        thermal_hold:false,
-        energy_wh:observedEnergyWh(effectiveTelemetry,duration),
-        observed_at:new Date().toISOString(),
-      });
-      savePerformanceLedger(performanceFile,ledger);
-      return receipt;
-    }catch(error){
-      const duration=Math.max(0,Date.now()-startedAt);
-      const ledger=loadPerformanceLedger(performanceFile);
-      recordPerformanceSample(ledger,{
-        device_id:deviceId,
-        workload_class:String(request?.workload_class||'unknown'),
-        ok:false,
-        duration_ms:duration,
-        checkpointed:false,
-        preempted:String(error?.message||error).includes('preempt'),
-        thermal_hold:String(error?.message||error).includes('temperature'),
-        energy_wh:observedEnergyWh(effectiveTelemetry,duration),
-        observed_at:new Date().toISOString(),
-      });
-      savePerformanceLedger(performanceFile,ledger);
-      throw error;
-    }
-  }
-
   server=http.createServer(async(req,res)=>{
     try{
       if(req.method==='GET'&&req.url==='/health'){
@@ -159,131 +71,6 @@ export async function startMicroSeedGateway({
       const auth=clean(req.headers.authorization);
       if(auth!=='Bearer '+authorizationToken){
         return send(res,401,{ok:false,error:'microseed_gateway_authorization_required'});
-      }
-
-      if(req.method==='POST'&&req.url==='/v1/capabilities/invoke'){
-        const body=await readJson(req);
-        const invocation=body.request||body;
-        const deviceId=clean(invocation?.device_id);
-        if(!deviceId) return send(res,400,{ok:false,error:'device_id_required'});
-        const record=registry.get(deviceId);
-        const manifest=registry.manifest(deviceId);
-        if(!record||!manifest) return send(res,404,{ok:false,error:'microseed_device_not_registered'});
-
-        const trustDecision=evaluateAmbientTrust(record,{now:new Date()});
-        if(!trustDecision.eligible){
-          return send(res,403,{
-            ok:false,
-            error:'microseed_device_not_eligible',
-            trust_state:trustDecision.state,
-            reason:trustDecision.reason,
-          });
-        }
-
-        const receipt=await invokeMicroSeedCapability({
-          manifest,
-          trustDecision,
-          request:invocation,
-          stateDir,
-          bridgeAdapters,
-          now:new Date(),
-        });
-        return send(res,200,{ok:true,...receipt});
-      }
-
-      if(req.method==='POST'&&req.url==='/v1/conformance'){
-        const body=await readJson(req);
-        const deviceId=clean(body?.device_id);
-        if(!deviceId) return send(res,400,{ok:false,error:'device_id_required'});
-        const record=registry.get(deviceId);
-        const manifest=registry.manifest(deviceId);
-        if(!record||!manifest) return send(res,404,{ok:false,error:'microseed_device_not_registered'});
-
-        const trustDecision=evaluateAmbientTrust(record,{now:new Date()});
-        if(!trustDecision.eligible){
-          return send(res,403,{
-            ok:false,
-            error:'microseed_device_not_eligible',
-            trust_state:trustDecision.state,
-            reason:trustDecision.reason,
-          });
-        }
-        const conformance=await runMicroSeedConformance({
-          manifest,
-          trustDecision,
-          execute:({workload_class,idempotency_key,payload})=>
-            executeAndLearn({
-              manifest,
-              trustDecision,
-              telemetry:body.telemetry,
-              request:{
-                device_id:deviceId,
-                workload_class,
-                idempotency_key,
-                payload,
-                requested_memory_mb:64,
-                requested_cpu_fraction:0.05,
-              },
-            }),
-          now:new Date(),
-        });
-        registry.setConformance({device_id:deviceId,receipt:conformance});
-        return send(res,200,{
-          ok:true,
-          ...conformance,
-          authorization_changed:false,
-          production_eligibility_requires_fresh_conformance:true,
-        });
-      }
-
-      if(req.method==='POST'&&req.url==='/v1/calibrate'){
-        const body=await readJson(req);
-        const deviceId=clean(body?.device_id);
-        if(!deviceId) return send(res,400,{ok:false,error:'device_id_required'});
-        const record=registry.get(deviceId);
-        const manifest=registry.manifest(deviceId);
-        const conformance=registry.conformance(deviceId);
-        if(!record||!manifest) return send(res,404,{ok:false,error:'microseed_device_not_registered'});
-
-        const trustDecision=evaluateAmbientTrust(record,{now:new Date()});
-        if(!trustDecision.eligible){
-          return send(res,403,{
-            ok:false,
-            error:'microseed_device_not_eligible',
-            trust_state:trustDecision.state,
-            reason:trustDecision.reason,
-          });
-        }
-        const calibration=await runMicroSeedCalibration({
-          manifest,
-          conformance,
-          trustDecision,
-          samplesPerWorkload:body.samples_per_workload,
-          maxTotalSamples:body.max_total_samples,
-          workloadClasses:Array.isArray(body.workload_classes)?body.workload_classes:[],
-          execute:({workload_class,idempotency_key,payload})=>
-            executeAndLearn({
-              manifest,
-              trustDecision,
-              telemetry:body.telemetry,
-              request:{
-                device_id:deviceId,
-                workload_class,
-                idempotency_key,
-                payload,
-                requested_memory_mb:64,
-                requested_cpu_fraction:0.05,
-              },
-            }),
-          now:new Date(),
-        });
-        return send(res,200,{
-          ok:true,
-          ...calibration,
-          performance_ledger_updated:true,
-          authorization_changed:false,
-          conformance_changed:false,
-        });
       }
 
       if(req.method==='POST'&&req.url==='/v1/execute'){
@@ -308,23 +95,6 @@ export async function startMicroSeedGateway({
           });
         }
 
-        const request=body.request||body;
-        const conformanceDecision=evaluateMicroSeedConformance({
-          conformance:registry.conformance(deviceId),
-          manifest,
-          workload_class:String(request?.workload_class||''),
-          now:new Date(),
-        });
-        if(!conformanceDecision.verified){
-          return send(res,403,{
-            ok:false,
-            error:'microseed_workload_not_conformance_verified',
-            reason:conformanceDecision.reason,
-            device_id:deviceId,
-            workload_class:String(request?.workload_class||''),
-          });
-        }
-
         const deviceActive=Number(activeByDevice.get(deviceId)||0);
         const deviceMax=Math.max(1,Number(manifest.constraints?.max_concurrency||1));
         if(deviceActive>=deviceMax){
@@ -334,11 +104,15 @@ export async function startMicroSeedGateway({
         activeGlobal+=1;
         activeByDevice.set(deviceId,deviceActive+1);
         try{
-          const receipt=await executeAndLearn({
+          const receipt=await executeMicroSeedWorkload({
             manifest,
             trustDecision,
             telemetry:body.telemetry||{},
-            request,
+            request:body.request||body,
+            stateDir,
+            bridgeAdapters,
+            executionContext:'gateway',
+            now:new Date(),
           });
           return send(res,200,{ok:true,...receipt});
         }finally{

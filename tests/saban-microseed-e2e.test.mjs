@@ -3,7 +3,6 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { generateKeyPairSync } from 'node:crypto';
 
 import { AmbientDeviceRegistry } from '../systemia/saban/ambient-device-registry.mjs';
 import { normalizeMicroDeviceManifest } from '../systemia/saban/microseed-device-bridge.mjs';
@@ -16,12 +15,9 @@ test('Saban gateway relays exactly-once work to a real native MicroSeed agent',a
   const deviceToken='device-secret';
   const gatewayToken='gateway-secret';
   let telemetryCalls=0;
-  let executionTelemetryCalls=0;
   let agent=null;
   let gateway=null;
   try{
-    const {publicKey,privateKey}=generateKeyPairSync('ed25519');
-    const publicKeyPem=publicKey.export({type:'spki',format:'pem'});
     const deviceManifest=normalizeMicroDeviceManifest({
       device_id:'phone-e2e-01',
       device_class:'phone',
@@ -35,24 +31,15 @@ test('Saban gateway relays exactly-once work to a real native MicroSeed agent',a
       cpu_utilization_ceiling:0.8,
       memory_reserve_mb:256,
       battery_floor_percent:20,
-      attestation:{
-        mode:'device',
-        device_identity:'phone-key',
-        receipt_signing_required:true,
-        receipt_public_key_pem:publicKeyPem,
-        receipt_key_id:'phone-e2e-key-v1',
-      },
+      attestation:{mode:'device',device_identity:'phone-key'},
     });
 
     agent=await startMicroSeedNativeAgent({
       manifest:deviceManifest,
       stateDir:path.join(root,'device-state'),
       authorizationToken:deviceToken,
-      receiptSigningPrivateKey:privateKey,
-      receiptSigningKeyId:'phone-e2e-key-v1',
-      telemetryProvider:async({request})=>{
+      telemetryProvider:async()=>{
         telemetryCalls+=1;
-        if(request) executionTelemetryCalls+=1;
         return {
           primary_function_busy:false,
           cpu_utilization:0.1,
@@ -80,13 +67,7 @@ test('Saban gateway relays exactly-once work to a real native MicroSeed agent',a
       cpu_utilization_ceiling:0.8,
       memory_reserve_mb:256,
       battery_floor_percent:20,
-      attestation:{
-        mode:'device',
-        device_identity:'phone-key',
-        receipt_signing_required:true,
-        receipt_public_key_pem:publicKeyPem,
-        receipt_key_id:'phone-e2e-key-v1',
-      },
+      attestation:{mode:'device',device_identity:'phone-key'},
     });
 
     const registry=new AmbientDeviceRegistry({root:path.join(root,'registry')});
@@ -118,19 +99,6 @@ test('Saban gateway relays exactly-once work to a real native MicroSeed agent',a
       authorizationToken:gatewayToken,
       bridgeAdapters:{native_agent:nativeAdapter},
     });
-
-    const conformanceResponse=await fetch(gateway.url+'/v1/conformance',{
-      method:'POST',
-      headers:{
-        authorization:'Bearer '+gatewayToken,
-        'content-type':'application/json',
-      },
-      body:JSON.stringify({device_id:'phone-e2e-01'}),
-    });
-    assert.equal(conformanceResponse.status,200);
-    const conformanceBody=await conformanceResponse.json();
-    assert.deepEqual(conformanceBody.verified_workloads,['systemia.content-hash.v1']);
-    const executionsAfterConformance=executionTelemetryCalls;
 
     const requestBody={
       telemetry:{
@@ -170,20 +138,15 @@ test('Saban gateway relays exactly-once work to a real native MicroSeed agent',a
     assert.equal(firstBody.result.schema,'evercraft.microseed.native-agent-relay-result.v1');
     assert.equal(firstBody.result.remote_execution_location,'device');
     assert.equal(firstBody.result.remote_arbitrary_code_execution,false);
-    assert.equal(firstBody.result.remote_signature_verified,true);
-    assert.equal(firstBody.result.remote_signature_key_id,'phone-e2e-key-v1');
-    assert.match(firstBody.result.remote_signature_payload_sha256,/^sha256:/);
     assert.equal(firstBody.result.credential_exposed,false);
     assert.match(firstBody.result.remote_receipt_hash,/^sha256:/);
-    assert.ok(telemetryCalls>=2);
-    assert.equal(executionTelemetryCalls,executionsAfterConformance+1);
+    assert.equal(telemetryCalls,1);
 
     const second=await call();
     assert.equal(second.status,200);
     const secondBody=await second.json();
     assert.equal(secondBody.deduplicated,true);
-    assert.ok(telemetryCalls>=3);
-    assert.equal(executionTelemetryCalls,executionsAfterConformance+1);
+    assert.equal(telemetryCalls,1);
     assert.equal(secondBody.receipt_hash,firstBody.receipt_hash);
   }finally{
     if(gateway) await gateway.close();

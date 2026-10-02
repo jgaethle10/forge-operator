@@ -12,16 +12,6 @@ function nativeAdapters(){
   return {
     native_agent:{
       async execute({workload_class,payload}){
-        if(workload_class==='systemia.content-hash.v1'){
-          return {
-            ok:true,
-            remote_native_device:true,
-            workload_class,
-            digest:'sha256:'+'a'.repeat(64),
-            byte_count:32,
-            payload_value:payload?.value??null,
-          };
-        }
         return {
           ok:true,
           remote_native_device:true,
@@ -106,32 +96,6 @@ test('MicroSeed gateway executes authorized native-device work over bounded loop
         body:JSON.stringify({device_id:'phone-gw-01'}),
       });
       assert.equal(unauthorized.status,401);
-
-      const blockedBeforeConformance=await fetch(gateway.url+'/v1/execute',{
-        method:'POST',
-        headers:{'content-type':'application/json',authorization:'Bearer '+token},
-        body:JSON.stringify({
-          telemetry:safeTelemetry(),
-          request:{
-            device_id:'phone-gw-01',
-            workload_class:'systemia.content-hash.v1',
-            idempotency_key:'pre-conformance-job',
-            payload:{value:'blocked'},
-            requested_memory_mb:64,
-            requested_cpu_fraction:0.1,
-          },
-        }),
-      });
-      assert.equal(blockedBeforeConformance.status,403);
-      assert.equal((await blockedBeforeConformance.json()).error,'microseed_workload_not_conformance_verified');
-
-      const conformanceResponse=await fetch(gateway.url+'/v1/conformance',{
-        method:'POST',
-        headers:{'content-type':'application/json',authorization:'Bearer '+token},
-        body:JSON.stringify({device_id:'phone-gw-01',telemetry:safeTelemetry()}),
-      });
-      assert.equal(conformanceResponse.status,200);
-      assert.deepEqual((await conformanceResponse.json()).verified_workloads,['systemia.content-hash.v1']);
 
       const body={
         telemetry:safeTelemetry(),
@@ -231,46 +195,6 @@ test('gateway refuses non-loopback binding unless explicitly authorized',async()
       }),
       /loopback_required/
     );
-  }finally{
-    fs.rmSync(root,{recursive:true,force:true});
-  }
-});
-
-
-test('gateway conformance route graduates only verified workload claims and persists receipt separately',async()=>{
-  const root=fs.mkdtempSync(path.join(os.tmpdir(),'microseed-gateway-conformance-'));
-  const token='test-gateway-token';
-  try{
-    const registry=prepareNativeDevice(root);
-    const gateway=await startMicroSeedGateway({
-      registryRoot:path.join(root,'registry'),
-      stateDir:path.join(root,'execution'),
-      authorizationToken:token,
-      bridgeAdapters:nativeAdapters(),
-    });
-    try{
-      const response=await fetch(gateway.url+'/v1/conformance',{
-        method:'POST',
-        headers:{'content-type':'application/json',authorization:'Bearer '+token},
-        body:JSON.stringify({
-          device_id:'phone-gw-01',
-          telemetry:safeTelemetry(),
-        }),
-      });
-      assert.equal(response.status,200);
-      const body=await response.json();
-      assert.equal(body.ok,true);
-      assert.deepEqual(body.verified_workloads,['systemia.content-hash.v1']);
-      assert.equal(body.authorization_changed,false);
-      assert.equal(body.production_eligibility_requires_fresh_conformance,true);
-
-      const stored=registry.conformance('phone-gw-01');
-      assert.equal(stored.receipt_hash,body.receipt_hash);
-      assert.deepEqual(stored.verified_workloads,['systemia.content-hash.v1']);
-      assert.equal(registry.get('phone-gw-01').state,'active');
-    }finally{
-      await gateway.close();
-    }
   }finally{
     fs.rmSync(root,{recursive:true,force:true});
   }

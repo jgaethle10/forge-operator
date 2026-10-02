@@ -77,7 +77,6 @@ chown "$RUN_USER:$RUN_GROUP" "$STATE_DIR"
 chmod 0750 "$STATE_DIR"
 install -d -o "$RUN_USER" -g "$RUN_GROUP" -m 0700 "$STATE_DIR/.secrets"
 install -d -o "$RUN_USER" -g "$RUN_GROUP" -m 0700 "$STATE_DIR/.secrets/device-tokens"
-install -d -o "$RUN_USER" -g "$RUN_GROUP" -m 0700 "$STATE_DIR/.secrets/mqtt"
 
 GATEWAY_TOKEN_FILE="$STATE_DIR/.secrets/microseed-gateway-token"
 if [[ ! -s "$GATEWAY_TOKEN_FILE" ]]; then
@@ -85,22 +84,6 @@ if [[ ! -s "$GATEWAY_TOKEN_FILE" ]]; then
   "$NODE_BIN" -e "process.stdout.write(require('crypto').randomBytes(32).toString('hex')+'\\n')" > "$GATEWAY_TOKEN_FILE"
   chown "$RUN_USER:$RUN_GROUP" "$GATEWAY_TOKEN_FILE"
   chmod 0600 "$GATEWAY_TOKEN_FILE"
-fi
-
-WORK_API_TOKEN_FILE="$STATE_DIR/.secrets/ambient-work-api-token"
-if [[ ! -s "$WORK_API_TOKEN_FILE" ]]; then
-  umask 077
-  "$NODE_BIN" -e "process.stdout.write(require('crypto').randomBytes(32).toString('hex')+'\\n')" > "$WORK_API_TOKEN_FILE"
-  chown "$RUN_USER:$RUN_GROUP" "$WORK_API_TOKEN_FILE"
-  chmod 0600 "$WORK_API_TOKEN_FILE"
-fi
-
-PAIRING_API_TOKEN_FILE="$STATE_DIR/.secrets/pairing-api-token"
-if [[ ! -s "$PAIRING_API_TOKEN_FILE" ]]; then
-  umask 077
-  "$NODE_BIN" -e "process.stdout.write(require('crypto').randomBytes(32).toString('hex')+'\\n')" > "$PAIRING_API_TOKEN_FILE"
-  chown "$RUN_USER:$RUN_GROUP" "$PAIRING_API_TOKEN_FILE"
-  chmod 0600 "$PAIRING_API_TOKEN_FILE"
 fi
 
 cat >/etc/systemd/system/evercraft-saban-capacity.service <<EOF
@@ -179,207 +162,10 @@ TimeoutStartSec=20s
 WantedBy=multi-user.target
 EOF
 
-cat >/etc/systemd/system/evercraft-saban-work-api.service <<EOF
-[Unit]
-Description=Evercraft Saban loopback product work intake API
-After=network-online.target
-Wants=network-online.target
-
-[Service]
-Type=simple
-User=$RUN_USER
-Group=$RUN_GROUP
-WorkingDirectory=$REPO_ROOT
-Environment=SABAN_AMBIENT_STATE_DIR=$STATE_DIR
-Environment=SABAN_ALLOW_COMMERCIAL_CAPACITY=0
-ExecStart=$NODE_BIN $REPO_ROOT/systemia/saban/ambient-work-api-runner.mjs --root $STATE_DIR --host 127.0.0.1 --port 8793 --token-file $WORK_API_TOKEN_FILE --pairing-token-file $PAIRING_API_TOKEN_FILE
-Restart=always
-RestartSec=5s
-NoNewPrivileges=true
-PrivateTmp=true
-ProtectSystem=full
-ProtectHome=read-only
-ProtectKernelTunables=true
-ProtectKernelModules=true
-ProtectControlGroups=true
-RestrictSUIDSGID=true
-LockPersonality=true
-RestrictRealtime=true
-ReadWritePaths=$STATE_DIR
-TimeoutStartSec=20s
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-cat >/etc/systemd/system/evercraft-saban-pairing-api.service <<EOF
-[Unit]
-Description=Evercraft Saban loopback MicroSeed pairing enrollment API
-After=network-online.target
-Wants=network-online.target
-
-[Service]
-Type=simple
-User=$RUN_USER
-Group=$RUN_GROUP
-WorkingDirectory=$REPO_ROOT
-Environment=SABAN_AMBIENT_STATE_DIR=$STATE_DIR
-Environment=SABAN_ALLOW_COMMERCIAL_CAPACITY=0
-ExecStart=$NODE_BIN $REPO_ROOT/systemia/saban/microseed-pairing-api-runner.mjs --root $STATE_DIR --host 127.0.0.1 --port 8794
-Restart=always
-RestartSec=5s
-NoNewPrivileges=true
-PrivateTmp=true
-ProtectSystem=full
-ProtectHome=read-only
-ProtectKernelTunables=true
-ProtectKernelModules=true
-ProtectControlGroups=true
-RestrictSUIDSGID=true
-LockPersonality=true
-RestrictRealtime=true
-ReadWritePaths=$STATE_DIR
-TimeoutStartSec=20s
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-cat >/etc/systemd/system/evercraft-saban-probation.service <<EOF
-[Unit]
-Description=Evercraft Saban MicroSeed probation and calibration organism
-After=network-online.target evercraft-saban-microseed-gateway.service evercraft-saban-capacity.service
-Requires=evercraft-saban-microseed-gateway.service
-
-[Service]
-Type=oneshot
-User=$RUN_USER
-Group=$RUN_GROUP
-WorkingDirectory=$REPO_ROOT
-Environment=SABAN_AMBIENT_STATE_DIR=$STATE_DIR
-Environment=SABAN_ALLOW_COMMERCIAL_CAPACITY=0
-ExecStart=$NODE_BIN $REPO_ROOT/systemia/saban/microseed-probation-organism.mjs --root $STATE_DIR --gateway-url http://127.0.0.1:8791 --gateway-token-file $GATEWAY_TOKEN_FILE
-NoNewPrivileges=true
-PrivateTmp=true
-ProtectSystem=full
-ProtectHome=read-only
-ProtectKernelTunables=true
-ProtectKernelModules=true
-ProtectControlGroups=true
-RestrictSUIDSGID=true
-LockPersonality=true
-RestrictRealtime=true
-ReadWritePaths=$STATE_DIR
-TimeoutStartSec=90s
-EOF
-
-cat >/etc/systemd/system/evercraft-saban-probation.timer <<EOF
-[Unit]
-Description=Continuously conform and calibrate authorized MicroSeed devices
-
-[Timer]
-OnBootSec=55s
-OnUnitActiveSec=$CADENCE
-Persistent=true
-Unit=evercraft-saban-probation.service
-
-[Install]
-WantedBy=timers.target
-EOF
-
-cat >/etc/systemd/system/evercraft-saban-dispatch.service <<EOF
-[Unit]
-Description=Evercraft Saban zero-spend ambient job dispatcher
-After=network-online.target evercraft-saban-capacity.service evercraft-saban-probation.service evercraft-saban-microseed-gateway.service
-Requires=evercraft-saban-microseed-gateway.service
-
-[Service]
-Type=oneshot
-User=$RUN_USER
-Group=$RUN_GROUP
-WorkingDirectory=$REPO_ROOT
-Environment=SABAN_AMBIENT_STATE_DIR=$STATE_DIR
-Environment=SABAN_ALLOW_COMMERCIAL_CAPACITY=0
-ExecStart=$NODE_BIN $REPO_ROOT/systemia/saban/ambient-job-dispatcher.mjs --root $STATE_DIR --gateway-url http://127.0.0.1:8791 --gateway-token-file $GATEWAY_TOKEN_FILE --max-jobs 16
-NoNewPrivileges=true
-PrivateTmp=true
-ProtectSystem=full
-ProtectHome=read-only
-ProtectKernelTunables=true
-ProtectKernelModules=true
-ProtectControlGroups=true
-RestrictSUIDSGID=true
-LockPersonality=true
-RestrictRealtime=true
-ReadWritePaths=$STATE_DIR
-TimeoutStartSec=120s
-EOF
-
-cat >/etc/systemd/system/evercraft-saban-dispatch.timer <<EOF
-[Unit]
-Description=Drain bounded Evercraft product work through Saban ambient fabric
-
-[Timer]
-OnBootSec=75s
-OnUnitActiveSec=$CADENCE
-Persistent=true
-Unit=evercraft-saban-dispatch.service
-
-[Install]
-WantedBy=timers.target
-EOF
-
-cat >/etc/systemd/system/evercraft-saban-watchdog.service <<EOF
-[Unit]
-Description=Evercraft Saban bounded resident self-repair watchdog
-After=network-online.target
-Wants=network-online.target
-
-[Service]
-Type=oneshot
-Environment=SABAN_AMBIENT_STATE_DIR=$STATE_DIR
-Environment=SABAN_WATCHDOG_MAX_STALE_SECONDS=600
-Environment=SABAN_RUN_USER=$RUN_USER
-Environment=SABAN_RUN_GROUP=$RUN_GROUP
-ExecStart=/bin/bash $REPO_ROOT/scripts/saban-resident-watchdog.sh
-NoNewPrivileges=true
-PrivateTmp=true
-ProtectSystem=full
-ProtectHome=true
-ProtectKernelTunables=true
-ProtectKernelModules=true
-ProtectControlGroups=false
-RestrictSUIDSGID=true
-LockPersonality=true
-RestrictRealtime=true
-ReadWritePaths=$STATE_DIR /run/systemd
-TimeoutStartSec=45s
-EOF
-
-cat >/etc/systemd/system/evercraft-saban-watchdog.timer <<EOF
-[Unit]
-Description=Keep Evercraft Saban resident brain healthy
-
-[Timer]
-OnBootSec=100s
-OnUnitActiveSec=$CADENCE
-Persistent=true
-Unit=evercraft-saban-watchdog.service
-
-[Install]
-WantedBy=timers.target
-EOF
-
 systemctl daemon-reload
 systemctl enable --now evercraft-saban-capacity.timer
 systemctl enable --now evercraft-saban-microseed-gateway.service
-systemctl enable --now evercraft-saban-work-api.service
-systemctl enable --now evercraft-saban-pairing-api.service
-systemctl enable --now evercraft-saban-probation.timer
-systemctl enable --now evercraft-saban-dispatch.timer
-systemctl enable --now evercraft-saban-watchdog.timer
 systemctl start evercraft-saban-capacity.service
-systemctl start evercraft-saban-probation.service || true
 
 echo "Saban capacity organism installed."
 systemctl --no-pager --full status evercraft-saban-capacity.timer | sed -n '1,12p'
@@ -387,12 +173,5 @@ echo
 echo "State: $STATE_DIR/capacity-organism-state.json"
 echo "Registry: $STATE_DIR/registry"
 echo "MicroSeed gateway: http://127.0.0.1:8791"
-echo "Product work API: http://127.0.0.1:8793"
-echo "Pairing enrollment API: http://127.0.0.1:8794 (loopback only)"
-echo "Probation timer: evercraft-saban-probation.timer"
-echo "Dispatch timer: evercraft-saban-dispatch.timer"
-echo "Self-repair watchdog: evercraft-saban-watchdog.timer"
 echo "Gateway token file: $GATEWAY_TOKEN_FILE"
-echo "Work API token file: $WORK_API_TOKEN_FILE"
-echo "Pairing authority token file: $PAIRING_API_TOKEN_FILE"
 echo "Device token directory: $STATE_DIR/.secrets/device-tokens"
