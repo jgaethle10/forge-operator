@@ -2,6 +2,10 @@ import fs from 'node:fs';
 
 const files = [
   '.github/workflows/eps-social-yard-canary.yml',
+  '.github/workflows/clip-native-facebook-page-publisher.yml',
+  '.github/workflows/evercraft-journal-pages.yml',
+  '.github/workflows/evercraft-journal-owned.yml',
+  '.github/workflows/revenue-autonomy-heartbeat.yml',
   'systemia/compute/eps-social-yard-canary.mjs',
   'systemia/organism/eps-social-continuity.mjs',
   'systemia/chum/start-corridor.mjs',
@@ -9,6 +13,10 @@ const files = [
   'systemia/chum/build-public-mirror.mjs',
   'systemia/chum/build-capability-mirror.mjs',
   'systemia/chum/build-commercial-discovery-mesh.mjs',
+  'systemia/clip/social-publisher-runtime.mjs',
+  'systemia/clip/facebook-page-publisher.mjs',
+  'systemia/newsroom/journal-publisher.mjs',
+  'systemia/autonomy/github-revenue-heartbeat.mjs',
   'distribution/direct-plugin-specs.json',
   'public/.well-known/evercraft-products.json',
   'registry/catalog.json',
@@ -19,7 +27,23 @@ const files = [
   '.github/workflows/chum-watershed.yml'
 ];
 
+const runtimeFiles = new Set([
+  'systemia/compute/eps-social-yard-canary.mjs',
+  'systemia/organism/eps-social-continuity.mjs',
+  'systemia/chum/start-corridor.mjs',
+  'systemia/chum/sync-public-discovery.mjs',
+  'systemia/chum/build-public-mirror.mjs',
+  'systemia/chum/build-capability-mirror.mjs',
+  'systemia/chum/build-commercial-discovery-mesh.mjs',
+  'systemia/clip/social-publisher-runtime.mjs',
+  'systemia/clip/facebook-page-publisher.mjs',
+  'systemia/newsroom/journal-publisher.mjs',
+  'systemia/autonomy/github-revenue-heartbeat.mjs'
+]);
+
 const legacyUrl = /https?:\/\/[^\s"'\x60<>]*base44\.app[^\s"'\x60<>]*/ig;
+const base44EntityAccess = /\bentities\.[A-Za-z_$][A-Za-z0-9_$]*\s*\.\s*(filter|list|get|create|update|delete|bulkCreate|bulkUpdate)\b/gm;
+const base44FunctionInvoke = /\bfunctions\s*\.\s*invoke\s*\(/gm;
 const failures = [];
 
 for (const file of files) {
@@ -27,9 +51,24 @@ for (const file of files) {
     failures.push(file + ': missing');
     continue;
   }
+
   const content = fs.readFileSync(file, 'utf8');
-  const matches = [...content.matchAll(legacyUrl)].map((m) => m[0]);
-  if (matches.length) failures.push(file + ': ' + matches.slice(0, 5).join(', '));
+  const urls = [...content.matchAll(legacyUrl)].map((m) => m[0]);
+  if (urls.length) {
+    failures.push(file + ': legacy URL ' + urls.slice(0, 5).join(', '));
+  }
+
+  if (runtimeFiles.has(file)) {
+    const entityMatches = [...content.matchAll(base44EntityAccess)].map((m) => m[0]);
+    const invokeMatches = [...content.matchAll(base44FunctionInvoke)].map((m) => m[0]);
+
+    if (entityMatches.length) {
+      failures.push(file + ': Base44 entity access ' + entityMatches.slice(0, 5).join(', '));
+    }
+    if (invokeMatches.length) {
+      failures.push(file + ': Base44 functions.invoke usage ' + invokeMatches.slice(0, 5).join(', '));
+    }
+  }
 }
 
 if (failures.length) {
@@ -41,5 +80,6 @@ if (failures.length) {
 console.log(JSON.stringify({
   status: 'NO_BASE44_HOTPATH_PASS',
   checked_files: files.length,
-  policy: 'active runtime, public routing and social publishing must not target the retired provider'
+  checked_runtime_files: runtimeFiles.size,
+  policy: 'active runtime, public routing, publishing and scheduled revenue execution must not target or invoke the retired provider'
 }));
