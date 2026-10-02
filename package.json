@@ -316,7 +316,8 @@
     "proof:exact-output-gate": "node systemia/exact-output-gate/runtime.proof.mjs",
     "proof:command-center-function-map": "node systemia/migrations/base44-exit/wave-1-command-center-function-map.proof.mjs",
     "proof:capability-router": "node systemia/capability-router/runtime.proof.mjs",
-    "proof:command-center-core-gateway": "node systemia/command-center/core-gateway.proof.mjs"
+    "proof:command-center-core-gateway": "node systemia/command-center/core-gateway.proof.mjs",
+    "proof:public-relay-host": "node systemia/yard/public-relay-host.proof.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
