@@ -1,0 +1,52 @@
+{
+  "schema": "evercraft.edge.authoritative-pool-state.v1",
+  "observed_at": "2026-10-02T02:10:24.915Z",
+  "required_replicas": 2,
+  "nodes": [
+    {
+      "node_id": "evercraft-penguin",
+      "hardware_name": "Penguin Chromebook",
+      "state": "public_ingress_admitted",
+      "authorized": true,
+      "connected": true,
+      "attestation_verified": true,
+      "zero_cost": true,
+      "public_ingress": true,
+      "failure_domain": "home-wan-1",
+      "udp53_verified": true,
+      "tcp53_reachability_verified": true,
+      "direct_tcp53_authority_verified": false,
+      "supported_workloads": [
+        "systemia.evercraft-edge-dns.v1"
+      ],
+      "public_ip_persisted": false,
+      "next_gate": "run_direct_tcp_authority_proof"
+    },
+    {
+      "node_id": "evercraft-evernode-one",
+      "hardware_name": "Evernode One",
+      "state": "revalidation_pending",
+      "authorized": false,
+      "connected": false,
+      "attestation_verified": false,
+      "zero_cost": null,
+      "public_ingress": false,
+      "failure_domain": null,
+      "udp53_verified": false,
+      "tcp53_reachability_verified": false,
+      "direct_tcp53_authority_verified": false,
+      "supported_workloads": [],
+      "public_ip_persisted": false,
+      "next_gate": "fresh_owner_authorization_then_linux_edge_promotion"
+    }
+  ],
+  "production_delegation": {
+    "ready": false,
+    "blocker_summary": [
+      "second_distinct_failure_domain_not_admitted",
+      "penguin_direct_tcp53_authority_proof_pending",
+      "evernode_one_revalidation_pending",
+      "fresh_domain_control_mutation_challenge_pending"
+    ]
+  }
+}
