@@ -45,14 +45,16 @@ export function validateHouseholdFabricTodayCanary(payload, {
   maxAgeMs = 15 * 60 * 1000,
 } = {}) {
   const generated = Date.parse(clean(payload?.generated_at));
-  const ageMs = Number.isFinite(generated) ? Math.max(0, now.getTime() - generated) : null;
+  const deltaMs = Number.isFinite(generated) ? now.getTime() - generated : null;
+  const ageMs = Number.isFinite(deltaMs) ? Math.max(0, deltaMs) : null;
+  const clockValid = Number.isFinite(deltaMs) && deltaMs >= -60_000 && deltaMs <= maxAgeMs;
   const guardrails = payload?.guardrails || {};
   const ok = Boolean(
     payload?.ok === true &&
     payload?.schema === 'evercraft.household-fabric.public-today.v1' &&
     payload?.geography === 'yakima-wa' &&
     Number.isFinite(generated) &&
-    ageMs <= maxAgeMs &&
+    clockValid &&
     Array.isArray(payload?.opportunities) &&
     payload?.coverage &&
     !Object.prototype.hasOwnProperty.call(payload.coverage, 'categories') &&
@@ -235,6 +237,7 @@ export async function reconcileHouseholdFabricPublicRoute({
       route_verified: binding.route_verified === true,
       route_scope: binding.route_scope || null,
       canary,
+      invalidate_binding: bindingFresh,
     };
   }
 
@@ -306,6 +309,8 @@ async function main() {
           promotable: result.promotable === true,
           updated_at: new Date().toISOString(),
         });
+      } else if (result.invalidate_binding === true && fs.existsSync(stateFile)) {
+        fs.rmSync(stateFile, { force: true });
       }
       if (result.action !== lastAction || result.ok !== true || result.promotable === true) {
         lastAction = result.action;
