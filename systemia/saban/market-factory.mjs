@@ -153,6 +153,10 @@ export async function buildComputeMarketAdapters({
         row.market==='akash'?(String(env.AKASH_API_KEY||'').trim()?'configured_api':'public_discovery_only'):
         row.market==='golem'?'decentralized_market':
         'canonical_stack',
+      lease_credentials_present:
+        row.market==='akash'
+          ? Boolean(String(env.AKASH_API_KEY||'').trim())
+          : null,
     });
   }
 
