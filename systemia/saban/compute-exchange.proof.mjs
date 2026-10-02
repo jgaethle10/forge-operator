@@ -141,6 +141,58 @@ const paidFallback=await negotiateCompute({
 assert.equal(paidFallback.selected_offer.market,'paid-proof');
 assert.equal(paidFallback.lease.provider_id,'paid-provider');
 
+let paidWithoutSpendLeaseCalls=0;
+const paidWithoutSpend={
+  market:'paid-without-spend-proof',
+  async discover(){
+    return {
+      offers:[{
+        offer_id:'paid-without-spend-proof:supply',
+        provider_id:'paid-without-spend-provider',
+        resources:{cpu_units:8,memory_mb:8192,storage_gb:10},
+        placement:{},
+        trust:{uptime_7d:1,audited:true,valid_version:true},
+        economics:{
+          zero_cost:false,
+          quoted:true,
+          hourly_usd:0.1,
+          total_usd:0.1,
+        },
+        quote_required:false,
+      }],
+    };
+  },
+  async lease(){
+    paidWithoutSpendLeaseCalls+=1;
+    return {receipt:'sha256:must-not-lease'};
+  },
+};
+const paidSpendHeld=await negotiateCompute({
+  demand:{
+    demand_id:'proof-paid-without-spend',
+    cpu_units:2,
+    memory_mb:1024,
+    negotiation_level:'lease',
+    max_total_usd:1,
+    prefer_zero_cost:false,
+  },
+  adapters:[paidWithoutSpend],
+  leaseAuthority:{
+    schema:'evercraft.saban.compute-authority.v1',
+    approved:true,
+    demand_id:'proof-paid-without-spend',
+    allowed_markets:['paid-without-spend-proof'],
+    max_total_usd:1,
+  },
+});
+assert.equal(paidSpendHeld.lease,null);
+assert.equal(paidWithoutSpendLeaseCalls,0);
+assert.equal(paidSpendHeld.manual_reconciliation_required,false);
+assert.ok(paidSpendHeld.events.some((event)=>
+  event.type==='lease.held' &&
+  event.reason==='lease_spend_not_authorized'
+));
+
 const expensive=normalizeComputeOffer({
   offer_id:'expensive',
   provider_id:'expensive-provider',
@@ -598,6 +650,7 @@ console.log(JSON.stringify({
   zero_cost_owned_capacity_preferred:true,
   commercial_fallback_when_owned_capacity_insufficient:true,
   budget_enforcement:true,
+  paid_lease_requires_explicit_spend_authority:true,
   quote_orders_cleaned_up_when_not_leased:true,
   quote_required_before_commercial_lease:true,
   uncertain_lease_requires_manual_reconciliation:true,
