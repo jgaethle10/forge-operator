@@ -19,13 +19,12 @@ const yard = new YardOperator({ stateDir: yardState });
 try {
   const deployment = await yard.deployRelease({
     deploymentId: 'faie-yard-proof',
-    releaseRef: 'faie-yard-proof-release',
+    releaseRef: 'f'.repeat(40),
     workloadClass: 'systemia.faie.v1',
     capacityEndpoint: node.endpoint,
     input: {
       official_collectors_enabled: false,
       region_profile: 'yakima-basin-wa',
-      internal_token: 'faie-yard-proof-token',
     },
     rollbackTarget: 'sha256:' + 'a'.repeat(64),
     leaseTtlMs: 120000,
