@@ -109,8 +109,7 @@ export async function runMicroSeedProbationOnce({
       ? (autonomyPlan.safe_autonomous_actions||[])
           .filter(x=>[
             'run_registered_workload_conformance_canaries',
-            'run_safe_calibration_and_refresh_performance_profile',
-            'compile_offer_and_rebalance_matching_checkpointable_work'
+            'run_safe_calibration_and_refresh_performance_profile'
           ].includes(String(x.action||'')))
           .map(x=>String(x.device_id||''))
           .filter(Boolean)
