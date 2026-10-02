@@ -18,7 +18,9 @@ echo "[1/6] Promoting Chromebook into an attested Edge DNS candidate NodeSeed...
 bash "$REPO_ROOT/scripts/promote-chromebook-edge-node.sh"
 
 echo "[2/6] Verifying DNS inside Crostini..."
-node "$REPO_ROOT/infra/evercraft-edge/dns/probe.mjs"   --server 127.0.0.1 --port 1053 --name "$DNS_CANARY" >/tmp/evercraft-edge-dns-local-canary.json
+node "$REPO_ROOT/infra/evercraft-edge/dns/probe.mjs" \
+  --server 127.0.0.1 --port 1053 --name "_evercraft.$DNS_CANARY" \
+  >/tmp/evercraft-edge-dns-local-canary.json
 
 if [[ ! -f "$ROUTER_ENV" ]]; then
   echo "HOLD: router-map configuration is missing at $ROUTER_ENV" >&2
@@ -69,7 +71,10 @@ set +e
 node "$REPO_ROOT/infra/evercraft-edge/dns/external-public-verifier.mjs" \
   --server "$PUBLIC_IP" \
   --name "$IDENTITY_NAME" \
-  --expected-txt "$EXPECTED_TXT" > "$EXTERNAL_RECEIPT.tmp"
+  --expected-txt "$EXPECTED_TXT" \
+  --receipt-path "$EDGE_STATE_DIR/query-receipts.json" \
+  --local-proof /tmp/evercraft-edge-dns-local-canary.json \
+  > "$EXTERNAL_RECEIPT.tmp"
 VERIFY_RC=$?
 set -e
 
@@ -90,10 +95,11 @@ const r=JSON.parse(fs.readFileSync(process.argv[1],'utf8'));
 console.log(JSON.stringify({
   verified:r.verified,
   classification:r.classification,
-  tcp53_identity:r.tcp53_identity?.parsed||r.tcp53_identity,
-  tcp53_identity_http_status:r.tcp53_identity?.status||null,
-  tcp53_identity_surface:r.tcp53_identity?.evidence_surface||null,
-  tcp53_identity_excerpt:r.tcp53_identity?.excerpt?.slice(0,1200)||null,
+  runtime_identity_verified:r.runtime_identity?.verified===true,
+  runtime_identity_matches:r.runtime_identity?.match_count||0,
+  runtime_identity_distinct_sources:r.runtime_identity?.distinct_remote_addresses||0,
+  local_protocol_verified:r.local_protocol_proof?.verified===true,
+  tcp_proof_mode:r.tcp_proof_mode||null,
   tcp53_successes:r.distributed?.tcp53?.success_count||0,
   udp53_successes:r.distributed?.udp53?.success_count||0,
   tcp53053_successes:r.distributed?.tcp53053?.success_count||0,
@@ -117,8 +123,10 @@ console.log(JSON.stringify({
   verified:true,
   classification:r.classification,
   identity_name:r.identity_name,
-  tcp53_authoritative:r.tcp53_identity?.parsed?.aa===true,
-  tcp53_recursive:r.tcp53_identity?.parsed?.ra===true,
+  runtime_identity_verified:r.runtime_identity?.verified===true,
+  runtime_identity_matches:r.runtime_identity?.match_count||0,
+  local_protocol_verified:r.local_protocol_proof?.verified===true,
+  tcp_proof_mode:r.tcp_proof_mode||null,
   tcp53_successes:r.distributed?.tcp53?.success_count||0,
   udp53_successes:r.distributed?.udp53?.success_count||0,
   observed_at:r.observed_at
