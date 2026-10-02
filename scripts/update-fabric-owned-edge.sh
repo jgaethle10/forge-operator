@@ -88,8 +88,9 @@ router_map_config_value() {
 
 repair_router_map_env_permissions() {
   [[ -f "$ROUTER_MAP_ENV" ]] || return 0
-  # router-map.env contains only gateway/LAN host/repo/node coordinates.
-  # It must be readable by the bounded unprivileged router-map service.
+  # router-map.env and its parent contain only gateway/LAN host/repo/node coordinates.
+  # The bounded unprivileged router-map service must be able to traverse/read them.
+  chmod 0755 "$(dirname "$ROUTER_MAP_ENV")" 2>/dev/null || true
   chmod 0644 "$ROUTER_MAP_ENV" 2>/dev/null || true
 }
 
