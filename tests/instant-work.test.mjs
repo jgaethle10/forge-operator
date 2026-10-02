@@ -3,6 +3,7 @@ import {
   buildInstantWorkCatalog,
   createEvercraftPaymentOrder,
 } from '../systemia/commerce/instant-work.mjs';
+import { getFulfillmentProfile } from '../systemia/organism/universal-product-fulfillment.mjs';
 
 const fixture = {
   offers: [
@@ -49,6 +50,9 @@ assert.equal(catalog.some((row) => row.public_id === 'rivet-site-underwriting-v1
 assert.equal(catalog.some((row) => row.public_id === 'aliev-site-opportunity-snapshot-v1'), true);
 assert.equal(catalog[0].public_id, 'findmypart-paid-hunt-v1');
 assert.equal(catalog[0].entry_offer.price_usd, 19);
+for (const offer of catalog) {
+  assert.ok(getFulfillmentProfile(offer.public_id), `missing fulfillment profile: ${offer.public_id}`);
+}
 
 const aliev = catalog.find((row) => row.public_id === 'aliev-site-opportunity-snapshot-v1');
 assert.equal(aliev.entry_offer.offer_key, 'site_report_299');
@@ -75,6 +79,10 @@ assert.equal(order.authority, 'Evercraft Payments');
 assert.equal(order.settlement_router, 'Raven Nexus');
 assert.equal(order.settlement_adapter, 'selected_downstream');
 assert.equal(order.payment_state, 'not_verified');
+assert.equal(order.fulfillment.coordinator, 'Systemia');
+assert.equal(order.fulfillment.execution_fabric, 'Saban');
+assert.equal(order.fulfillment.delivery, 'Evercraft Shipping');
+assert.equal(order.fulfillment.completion_receipt_required, true);
 assert.equal(order.amount_cents, 29900);
 assert.match(order.continue_url, /^https:\/\/fabric\.systemiacommandcenters\.com\/api\/chum\/go\/aliev-site-opportunity-snapshot-v1\?/);
 assert.match(order.continue_url, /offer_key=site_report_299/);
