@@ -100,6 +100,23 @@ export async function runMicroSeedProbationOnce({
 
   const nowMs=now instanceof Date?now.getTime():Date.parse(String(now));
   const snapshot=registry.list({now});
+  const autonomyFile=path.join(resolvedRoot,'capacity-autonomy-plan.json');
+  const autonomyPlan=fs.existsSync(autonomyFile)
+    ? readJson(autonomyFile,null)
+    : null;
+  const plannedDevices=new Set(
+    autonomyPlan?.schema==='evercraft.saban.capacity-autonomy-plan.v1'
+      ? (autonomyPlan.safe_autonomous_actions||[])
+          .filter(x=>[
+            'run_registered_workload_conformance_canaries',
+            'run_safe_calibration_and_refresh_performance_profile',
+            'compile_offer_and_rebalance_matching_checkpointable_work'
+          ].includes(String(x.action||'')))
+          .map(x=>String(x.device_id||''))
+          .filter(Boolean)
+      : []
+  );
+  const autonomyPlanPresent=autonomyPlan?.schema==='evercraft.saban.capacity-autonomy-plan.v1';
   const rows=[];
 
   for(const row of snapshot.rows||[]){
@@ -107,6 +124,14 @@ export async function runMicroSeedProbationOnce({
     if(!manifest||manifest.compute_execution_mode==='none') continue;
 
     const deviceId=row.device_id;
+    if(autonomyPlanPresent&&!plannedDevices.has(deviceId)){
+      rows.push({
+        device_id:deviceId,
+        state:'idle',
+        reason:'no_current_autonomy_action',
+      });
+      continue;
+    }
     const trust=evaluateAmbientTrust(registry.get(deviceId),{now});
     const prior=state.devices[deviceId]||{
       attempts:0,
@@ -232,6 +257,10 @@ export async function runMicroSeedProbationOnce({
     production_eligible:rows.filter(x=>x.state==='production_eligible').length,
     held:rows.filter(x=>x.state==='held').length,
     retry_wait:rows.filter(x=>x.state==='retry_wait'||x.state==='backoff').length,
+    idle:rows.filter(x=>x.state==='idle').length,
+    autonomy_plan_present:autonomyPlanPresent,
+    autonomy_plan_receipt:autonomyPlan?.receipt_hash||null,
+    planned_device_count:plannedDevices.size,
     rows,
     owner_authorization_changed:false,
     credentials_created:false,
