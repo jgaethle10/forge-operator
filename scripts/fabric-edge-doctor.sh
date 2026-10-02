@@ -208,6 +208,7 @@ echo "domain=$DOMAIN"
 local_organism_repair_ok=true
 saban_capacity_repair_ok=true
 self_update_repair_ok=true
+self_update_degraded=false
 local_organism_repair_code=0
 self_update_repair_code=0
 saban_capacity_repair_code=0
@@ -226,7 +227,11 @@ if [[ "$REPAIR" == "true" ]]; then
   ensure_fabric_update_timer
   self_update_repair_code=$?
   set -e
-  [[ "$self_update_repair_code" -eq 0 ]] || self_update_repair_ok=false
+  if [[ "$self_update_repair_code" -ne 0 ]]; then
+    self_update_repair_ok=false
+    self_update_degraded=true
+    echo "[repair] WARNING: verified self-updater is degraded (code=$self_update_repair_code); continuing critical edge recovery."
+  fi
 
   # Restore the critical public edge before touching optional resident capacity.
   systemctl enable --now evercraft-fabric.service >/dev/null 2>&1 || true
@@ -283,6 +288,7 @@ if [[ "$REPAIR" == "true" ]]; then
   echo "local_organism_repair_code=$local_organism_repair_code"
   echo "self_update_repair_ok=$self_update_repair_ok"
   echo "self_update_repair_code=$self_update_repair_code"
+  echo "self_update_degraded=$self_update_degraded"
   echo "saban_maintenance_requested=$MAINTAIN_SABAN"
   echo "saban_capacity_repair_ok=$saban_capacity_repair_ok"
   echo "saban_capacity_repair_code=$saban_capacity_repair_code"
@@ -305,6 +311,9 @@ fi
 LAN_HOST=""
 GATEWAY=""
 if [[ -f "$ROUTER_ENV" ]]; then
+  # This file contains only bounded router mapping coordinates, not secrets.
+  # The resident router-map service runs unprivileged and must be able to read it.
+  chmod 0644 "$ROUTER_ENV" 2>/dev/null || true
   # shellcheck disable=SC1090
   source "$ROUTER_ENV"
   LAN_HOST="${EVERCRAFT_ROUTER_LAN_HOST:-}"
@@ -374,11 +383,7 @@ echo "local_edge_attestation_responding=$attestation_local_ok"
 diagnosis="unknown"
 human_gate=false
 ingress_transport="direct_chromeos_router"
-if [[ "$REPAIR" == "true" && "$local_organism_repair_ok" != "true" ]]; then
-  diagnosis="local_organism_repair_failed"
-elif [[ "$REPAIR" == "true" && "$self_update_repair_ok" != "true" ]]; then
-  diagnosis="fabric_update_repair_failed"
-elif [[ "$local_health_ok" != "true" ]]; then
+if [[ "$local_health_ok" != "true" ]]; then
   diagnosis="fabric_runtime_unreachable"
 elif [[ -n "$LAN_HOST" && ( "$lan_http_ok" != "true" || "$lan_https_ok" != "true" ) ]]; then
   if [[ "$relay_state" == "active" && -f "$RELAY_ENV" ]]; then
@@ -475,6 +480,7 @@ cat > /tmp/evercraft-fabric-edge-doctor.json <<EOF
   "local_organism_repair_code":$local_organism_repair_code,
   "self_update_repair_ok":$(json_bool "$self_update_repair_ok"),
   "self_update_repair_code":$self_update_repair_code,
+  "self_update_degraded":$(json_bool "$self_update_degraded"),
   "saban_maintenance_requested":$(json_bool "$MAINTAIN_SABAN"),
   "saban_capacity_repair_ok":$(json_bool "$saban_capacity_repair_ok"),
   "saban_capacity_repair_code":$saban_capacity_repair_code,
