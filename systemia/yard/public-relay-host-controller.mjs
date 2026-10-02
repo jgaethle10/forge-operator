@@ -305,6 +305,8 @@ export class PublicRelayHostController {
       }catch{}
       throw error;
     }
+  }
+
   async renewRemotePublication(publication,{ttlMs=30*60_000}={}){
     if(!publication||publication.schema!=='evercraft.yard.public-relayed-service.v1'){
       throw new Error('public_relayed_service_receipt_required');
@@ -350,7 +352,5 @@ export class PublicRelayHostController {
     };
     delete body.receipt_hash;
     return {...body,receipt_hash:sha(body)};
-  }
-
   }
 }
