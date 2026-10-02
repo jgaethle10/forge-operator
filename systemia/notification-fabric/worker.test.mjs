@@ -485,3 +485,48 @@ test('outbox health separates scheduled retries from due backlog', () => {
   assert.equal(due.due, 1);
   assert.equal(due.oldest_due_age_ms, 5_000);
 });
+
+
+test('acknowledgement escalation stops when the business event expires', async () => {
+  const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'relay-ack-expiry-'));
+  const sent = [];
+  const base = Date.now();
+  const fabric = createNotificationFabric({
+    dataDir,
+    sendPush: async (_subscription, payload) => {
+      sent.push(payload);
+      return { ok: true, status: 201, retryAfter: null };
+    },
+  });
+  fabric.subscribe(makeSubscription());
+  const outbox = createRelayOutbox({ dataDir });
+  const worker = createRelayWorker({ fabric, outbox, workerId: 'worker-expiry' });
+  const intent = fabric.prepareIntent({
+    id: 'critical-expiring-1',
+    product: 'systemia',
+    purpose: 'operational',
+    priority: 'critical',
+    title: 'Short-lived incident',
+    body: 'This incident expires before the acknowledgement window.',
+    recipient_ids: ['owner'],
+    expires_at: new Date(base + 15_000).toISOString(),
+    acknowledgement: {
+      required: true,
+      within_seconds: 300,
+      max_escalations: 2,
+      escalation_interval_seconds: 300,
+    },
+  });
+  outbox.enqueue({ kind: 'intent', payload: { intent }, idempotency_key: 'critical-expiring-1', now: base });
+  await worker.runOnce({ now: base });
+  assert.equal(sent.length, 1);
+
+  const jobs = Object.values(JSON.parse(fs.readFileSync(outbox.file, 'utf8')).jobs);
+  const watch = jobs.find((entry) => entry.kind === 'ack_watch');
+  assert.ok(watch);
+  assert.equal(Date.parse(watch.not_before_at), base + 15_000);
+
+  const result = await worker.runOnce({ now: base + 15_001 });
+  assert.equal(result.results[0].result.status, 'expired');
+  assert.equal(sent.length, 1);
+});
