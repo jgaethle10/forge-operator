@@ -13,7 +13,13 @@ function normalizeLoopbackOrigin(value) {
   if (!['127.0.0.1', 'localhost', '::1'].includes(host)) {
     throw new Error('household_public_origin_source_must_be_loopback');
   }
-  if (url.username || url.password || url.search || url.hash) {
+  if (
+    url.username ||
+    url.password ||
+    url.search ||
+    url.hash ||
+    (url.pathname && url.pathname !== '/')
+  ) {
     throw new Error('household_public_origin_source_url_unsafe');
   }
   return url.origin;
@@ -72,14 +78,12 @@ export async function startHouseholdFabricPublicOrigin({
       );
       return {
         ready,
-        resident_instance_id: ready ? clean(body.instance_id) || null : null,
         resident_state: ready ? clean(body.state) || null : null,
         today_available: ready ? body.today_available === true : false,
       };
     } catch {
       return {
         ready: false,
-        resident_instance_id: null,
         resident_state: 'unavailable',
         today_available: false,
       };
@@ -106,7 +110,6 @@ export async function startHouseholdFabricPublicOrigin({
       source_ready: source.ready,
       source_today_available: source.today_available,
       source_state: source.resident_state,
-      source_instance_id: source.resident_instance_id,
       started_at: startedAt,
     };
   }
