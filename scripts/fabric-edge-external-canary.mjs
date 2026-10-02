@@ -111,6 +111,7 @@ function failureStage(checks={},message=''){
     return 'trusted_tls';
   }
   if(checks.customer_surface!==true) return 'customer_surface';
+  if(checks.mobile_surface!==true) return 'mobile_surface';
   if(checks.policy_surfaces!==true) return 'policy_surfaces';
   if(checks.runtime_health!==true) return 'runtime_health';
   if(checks.mcp_sse_probe!==true) return 'mcp_sse_probe';
@@ -177,6 +178,17 @@ try{
   if(!/Evercraft Fabric|Bring the problem\./i.test(home.text)) throw new Error('fabric_home_identity_missing');
   receipt.checks.customer_surface=true;
 
+  const mobile=await getText('/mobile');
+  const mobileContentType=mobile.response.headers.get('content-type')||'';
+  if(!/^text\/html/i.test(mobileContentType)) throw new Error('mobile_surface_not_html');
+  if(!/Evercraft Mobile|Bring the problem\./i.test(mobile.text)) throw new Error('mobile_surface_identity_missing');
+  receipt.mobile_surface={
+    status:mobile.response.status,
+    content_type:mobileContentType,
+    identity_verified:true,
+  };
+  receipt.checks.mobile_surface=true;
+
   for(const path of ['/support','/privacy','/terms']){
     const page=await getText(path);
     if(!/text\/html/i.test(page.response.headers.get('content-type')||'')) throw new Error('policy_not_html:'+path);
@@ -192,6 +204,9 @@ try{
   }
   if(health.base44_transport_enabled!==false) throw new Error('base44_transport_enabled');
   if(Number(health.capability_count)<40) throw new Error('capability_count_below_floor');
+  if(health.mobile_path!=='/mobile'||health.mobile_installable!==true){
+    throw new Error('mobile_health_metadata_missing');
+  }
   receipt.health={
     service:health.service,
     server:health.server,
@@ -202,6 +217,8 @@ try{
     external_action_authority:false,
     base44_transport_enabled:false,
     edge_attestation_supported:health.edge_attestation_supported===true,
+    mobile_path:health.mobile_path,
+    mobile_installable:health.mobile_installable===true,
   };
   receipt.checks.runtime_health=true;
 
