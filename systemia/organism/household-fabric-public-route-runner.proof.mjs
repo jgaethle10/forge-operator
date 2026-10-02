@@ -153,6 +153,14 @@ try {
   });
   assert.equal(staleCanary.ok, false);
 
+  const future = structuredClone(publicToday);
+  future.generated_at = new Date(Date.now() + 5 * 60 * 1000).toISOString();
+  const futureCanary = validateHouseholdFabricTodayCanary(future, {
+    now: new Date(),
+    maxAgeMs: 15 * 60 * 1000,
+  });
+  assert.equal(futureCanary.ok, false);
+
   const overexposed = structuredClone(publicToday);
   overexposed.coverage.categories = { fuel: { internal: true } };
   const exposureCanary = validateHouseholdFabricTodayCanary(overexposed);
@@ -176,6 +184,7 @@ try {
     deployment_receipt_verified: true,
     fresh_today_canary: true,
     stale_today_rejected: true,
+    future_clock_skew_rejected: true,
     internal_coverage_projection_rejected: true,
     loopback_proof_route_verified: false,
     loopback_proof_promotable: false,
