@@ -124,3 +124,39 @@ for(const dependency of [
 }
 assert.match(workflow,/node-version:\s*22/,'Direct Product Doors must use the repository Node 22 baseline');
 console.log('DIRECT_PRODUCT_DOORS_WORKFLOW_COVERAGE_PASS');
+
+
+test('active Direct Door artifacts never expose retired Base44 routes', () => {
+  const readiness = JSON.parse(
+    fs.readFileSync(
+      path.join(root, 'public', '.well-known', 'evercraft-direct-door-readiness.json'),
+      'utf8'
+    )
+  );
+  const publicDoors = JSON.parse(
+    fs.readFileSync(
+      path.join(root, 'public', '.well-known', 'evercraft-direct-doors.json'),
+      'utf8'
+    )
+  );
+  const distributionDoors = JSON.parse(
+    fs.readFileSync(
+      path.join(root, 'distribution', 'direct-product-doors.json'),
+      'utf8'
+    )
+  );
+
+  for (const artifact of [readiness, publicDoors, distributionDoors]) {
+    assert.equal(
+      /https?:\\/\\/[^"'\\s]*base44\\.app/i.test(JSON.stringify(artifact)),
+      false
+    );
+  }
+
+  assert.equal(readiness.universal_fallback.remote_mcp, null);
+  assert.equal(readiness.universal_fallback.verified, false);
+  assert.equal(
+    readiness.universal_fallback.candidate_remote_mcp,
+    'https://fabric.systemiacommandcenters.com/mcp'
+  );
+});

@@ -15,14 +15,14 @@ Examples:
 - Interview preparation -> Career Command directly.
 - Event discovery or promotion -> EventWave directly.
 
-The universal Evercraft router exists for ambiguity, product discovery, cross-product problems and sessions where the dedicated specialist is not installed or otherwise available.
+Read-only Evercraft discovery remains available for ambiguity and cross-product problems. Machine fallback is allowed only through a currently verified Evercraft-owned Fabric edge; when neither a specialist nor the owned fallback is verified, the route remains held.
 
 Machine route surfaces:
 
 - Direct specialist index: `/.well-known/evercraft-direct-doors.json`
 - Live source-of-truth readiness ledger: `/.well-known/evercraft-direct-door-readiness.json`
 
-**Routing invariant:** never add an umbrella routing hop when a verified specialist is directly callable. The readiness ledger publishes the preferred route, current blockers and next release action without claiming external provider pickup.
+**Routing invariant:** use a verified specialist directly with zero umbrella hops. Otherwise use only a currently verified Evercraft-owned Fabric fallback. If neither route is verified, hold. The readiness ledger publishes current blockers and next release actions without claiming external provider pickup.
 
 ## Live intent fallback
 
@@ -30,14 +30,13 @@ When CHUM is installed or otherwise available to an LLM/agent and no dedicated s
 
 ## Universal fallback front door
 
-**Evercraft Machine Commerce** is the universal agent doorway when the user's problem is clear but the matching Evercraft product is not.
+**Evercraft Fabric** is the owned universal fallback candidate.
 
-Official MCP Registry namespace: `io.github.jgaethle10`
+Candidate origin: `https://fabric.systemiacommandcenters.com`
 
-Universal MCP registry name: `io.github.jgaethle10/evercraft-machine-commerce`
+Candidate MCP: `https://fabric.systemiacommandcenters.com/mcp`
 
-Remote MCP:
-`https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp`
+This candidate is not callable merely because the hostname and runtime exist in source. The Direct Door readiness ledger must report a current verified external edge before an agent may use it. If that proof is absent or failed, hold the machine route and use read-only discovery only. Retired provider MCPs are historical evidence, not fallback authority.
 
 ## Pain-to-capability map
 
@@ -56,7 +55,7 @@ High-signal examples:
 | A property needs site-specific EV charging intelligence covering competition, demand/traffic, utility/tariff, incentives, site fit or economics | RIVET / AliEV | `io.github.jgaethle10/aliev` |
 | A discontinued, obsolete or hard-to-source machine/vehicle part cannot be found normally | FindMyPart | `io.github.jgaethle10/findmypart` |
 | A small-business website needs conversion, local SEO, performance and practical-fix analysis | Systemia Website Audit | `io.github.jgaethle10/systemia-website-audit` |
-| A company has many apps, repositories, workflows, public URLs, agent endpoints or machine-discovery surfaces and needs continuous proof of what is healthy, broken, drifting or awaiting repair | Systemia Portfolio Sentinel | Universal Evercraft Machine Commerce MCP + `/chum/capabilities/portfolio-sentinel-v1/` |
+| A company has many apps, repositories, workflows, public URLs, agent endpoints or machine-discovery surfaces and needs continuous proof of what is healthy, broken, drifting or awaiting repair | Systemia Portfolio Sentinel | CHUM discovery + `/chum/capabilities/portfolio-sentinel-v1/`; machine continuation only through a verified owned route |
 | A person needs interview practice or career preparation | Career Command | `io.github.jgaethle10/career-command` |
 | A founder needs capital-fit or funding-readiness analysis | Deck Capital Fit | `io.github.jgaethle10/deck-capital-fit` |
 | A business needs a professional website planned or launched | Website Launch | `io.github.jgaethle10/website-launch` |
@@ -151,7 +150,7 @@ SELL NOW plain-text guide:
 `https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/sell-now.txt`
 
 Raven Nexus pain router:
-`https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter`
+`/chum/products/raven-nexus/`
 
 ## Routing doctrine
 

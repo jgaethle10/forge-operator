@@ -9,9 +9,15 @@ const DIRECT_CALLABLE_STATES = new Set([
 ]);
 
 export const UNIVERSAL_FALLBACK = {
-  registry_name: 'io.github.jgaethle10/evercraft-machine-commerce',
-  remote_mcp:
-    'https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp',
+  state: 'verification_required',
+  verified: false,
+  registry_name: null,
+  remote_mcp: null,
+  candidate_origin: 'https://fabric.systemiacommandcenters.com',
+  candidate_remote_mcp: 'https://fabric.systemiacommandcenters.com/mcp',
+  verification_source: '.github/workflows/chromebook-operator-edge-canary.yml',
+  truth_boundary:
+    'Evercraft Fabric is the owned universal fallback candidate. It is not callable from this ledger until a current external edge canary verifies DNS, trusted TLS, runtime health, MCP initialize/tools, catalog safety, and signed NodeSeed binding.',
 };
 
 function arg(name, fallback = null) {
@@ -34,6 +40,16 @@ function candidateMap(root) {
   return map;
 }
 
+function legacyProviderUrl(value) {
+  try {
+    const url = new URL(String(value || ''));
+    const host = url.hostname.toLowerCase();
+    return host === 'base44.app' || host.endsWith('.base44.app');
+  } catch {
+    return false;
+  }
+}
+
 function nextReleaseAction({ state, directCallable, registryPublished, candidate }) {
   if (registryPublished) return 'measure_provider_pickup_separately';
   if (directCallable) {
@@ -44,23 +60,31 @@ function nextReleaseAction({ state, directCallable, registryPublished, candidate
   if (state === 'yard_runtime_proven_public_route_pending') {
     return 'activate_shared_public_edge_and_verify_external_canary';
   }
+  if (state === 'owned_runtime_route_pending') {
+    return 'verify_owned_specialist_runtime_and_public_route';
+  }
   return 'repair_direct_runtime_or_public_route';
 }
 
 export function classifyDirectDoor(product, candidate = null) {
   const state = String(product?.state || '');
-  const registryPublished =
-    state === 'registry_published_direct_mcp_existing' &&
-    typeof product?.registry_name === 'string' &&
-    product.registry_name.length > 0;
   const directCallable =
     DIRECT_CALLABLE_STATES.has(state) &&
     typeof product?.mcp_url === 'string' &&
-    product.mcp_url.startsWith('https://');
+    product.mcp_url.startsWith('https://') &&
+    !legacyProviderUrl(product.mcp_url);
+  const registryPublished =
+    directCallable &&
+    state === 'registry_published_direct_mcp_existing' &&
+    typeof product?.registry_name === 'string' &&
+    product.registry_name.length > 0;
 
   const blockingGates = [];
   if (state === 'yard_runtime_proven_public_route_pending') {
     blockingGates.push('shared_public_edge_canary');
+    blockingGates.push('official_mcp_registry_publication');
+  } else if (state === 'owned_runtime_route_pending') {
+    blockingGates.push('owned_specialist_public_route');
     blockingGates.push('official_mcp_registry_publication');
   } else if (state === 'public_https_verified_registry_pending') {
     blockingGates.push('official_mcp_registry_publication');
@@ -77,16 +101,22 @@ export function classifyDirectDoor(product, candidate = null) {
         use_universal_router_first: false,
         registry_name: registryPublished ? product.registry_name : null,
         remote_mcp: product.mcp_url,
+        fallback_state: UNIVERSAL_FALLBACK.state,
         fallback_registry_name: UNIVERSAL_FALLBACK.registry_name,
         fallback_remote_mcp: UNIVERSAL_FALLBACK.remote_mcp,
+        fallback_candidate_remote_mcp: UNIVERSAL_FALLBACK.candidate_remote_mcp,
       }
     : {
-        mode: 'universal_fallback_until_specialist_promoted',
-        hops_before_specialist: 1,
-        use_universal_router_first: true,
-        registry_name: UNIVERSAL_FALLBACK.registry_name,
-        remote_mcp: UNIVERSAL_FALLBACK.remote_mcp,
-        desired_specialist_registry_name: candidate?.desired_registry_name || null,
+        mode: 'hold_until_verified_owned_route',
+        hops_before_specialist: null,
+        use_universal_router_first: false,
+        registry_name: null,
+        remote_mcp: null,
+        fallback_state: UNIVERSAL_FALLBACK.state,
+        fallback_candidate_origin: UNIVERSAL_FALLBACK.candidate_origin,
+        fallback_candidate_remote_mcp: UNIVERSAL_FALLBACK.candidate_remote_mcp,
+        fallback_verification_source: UNIVERSAL_FALLBACK.verification_source,
+        desired_specialist_registry_name: candidate?.desired_registry_name || product?.retired_registry_name || null,
         pending_specialist_runtime_path: product.runtime_path || null,
       };
 
@@ -127,11 +157,16 @@ export function resolveProductRoute({ slug, specs, candidates = new Map() }) {
       state: 'unknown_product',
       slug,
       route: {
-        mode: 'universal_fallback_for_unknown_product',
-        hops_before_specialist: 1,
-        use_universal_router_first: true,
+        mode: UNIVERSAL_FALLBACK.remote_mcp
+          ? 'universal_fallback_for_unknown_product'
+          : 'hold_until_verified_owned_fallback',
+        hops_before_specialist: UNIVERSAL_FALLBACK.remote_mcp ? 1 : null,
+        use_universal_router_first: Boolean(UNIVERSAL_FALLBACK.remote_mcp),
         registry_name: UNIVERSAL_FALLBACK.registry_name,
         remote_mcp: UNIVERSAL_FALLBACK.remote_mcp,
+        fallback_state: UNIVERSAL_FALLBACK.state,
+        fallback_candidate_origin: UNIVERSAL_FALLBACK.candidate_origin,
+        fallback_candidate_remote_mcp: UNIVERSAL_FALLBACK.candidate_remote_mcp,
       },
     };
   }
@@ -139,7 +174,9 @@ export function resolveProductRoute({ slug, specs, candidates = new Map() }) {
   const classified = classifyDirectDoor(product, candidates.get(product.slug) || null);
   return {
     schema: 'evercraft.direct-door-route-resolution.v1',
-    state: classified.direct_callable ? 'specialist_direct' : 'fallback_required',
+    state: classified.direct_callable
+      ? 'specialist_direct'
+      : (classified.preferred_route?.remote_mcp ? 'fallback_required' : 'route_held'),
     slug,
     product: classified.name,
     route: classified.preferred_route,
@@ -163,15 +200,24 @@ export function buildDirectDoorReadiness({ specs, candidates = new Map() }) {
     zero_hop_specialist_count: products.filter(
       (p) => p.preferred_route.hops_before_specialist === 0
     ).length,
-    fallback_required_count: products.filter(
-      (p) => p.preferred_route.use_universal_router_first
+    fallback_required_count: products.filter((p) => !p.direct_callable).length,
+    fallback_callable_count: UNIVERSAL_FALLBACK.verified === true ? products.filter((p) => !p.direct_callable).length : 0,
+    held_route_count: products.filter(
+      (p) => p.preferred_route.mode === 'hold_until_verified_owned_route'
     ).length,
     registry_published_count: products.filter((p) => p.registry_published).length,
     registry_pending_count: products.filter(
       (p) => p.direct_callable && !p.registry_published
     ).length,
     public_route_pending_count: products.filter(
+      (p) => p.state === 'yard_runtime_proven_public_route_pending' ||
+        p.state === 'owned_runtime_route_pending'
+    ).length,
+    yard_runtime_public_route_pending_count: products.filter(
       (p) => p.state === 'yard_runtime_proven_public_route_pending'
+    ).length,
+    owned_runtime_route_pending_count: products.filter(
+      (p) => p.state === 'owned_runtime_route_pending'
     ).length,
   };
   summary.not_direct_callable_count =
@@ -191,7 +237,7 @@ export function buildDirectDoorReadiness({ specs, candidates = new Map() }) {
     generated_from: 'distribution/direct-plugin-specs.json',
     routing_policy: specs.routing_policy,
     invariant:
-      'Never add an umbrella routing hop when a verified specialist can be invoked directly.',
+      'Use a verified specialist directly. Otherwise use only a currently verified Evercraft-owned fallback. If neither route is verified, hold rather than routing through a retired or unverified provider.',
     universal_fallback: UNIVERSAL_FALLBACK,
     promotion_order: [
       'prove_product_runtime',
@@ -204,7 +250,7 @@ export function buildDirectDoorReadiness({ specs, candidates = new Map() }) {
     release_queue: releaseQueue,
     products,
     truth_boundary:
-      'This ledger reports Evercraft-controlled doorway state and route choice only. A callable MCP or registry publication does not prove that any external AI provider has discovered, ranked, recommended, or invoked the product. Provider pickup is measured separately.',
+      'This ledger reports Evercraft-controlled doorway state and route choice only. Legacy provider publication is historical evidence, not active route authority. A specialist or fallback is callable only when its current owned route is verified. Provider pickup is measured separately.',
   };
 }
 

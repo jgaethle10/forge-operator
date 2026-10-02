@@ -20,60 +20,72 @@ const actual = JSON.parse(
 );
 const expected = renderDirectDoorReadiness(root);
 
-assert.deepEqual(actual, expected, 'published direct-door readiness ledger must match source state');
+assert.deepEqual(actual, expected, 'published Direct Door readiness must match current source truth');
 assert.equal(actual.schema, 'evercraft.direct-door-readiness.v2');
 assert.equal(actual.summary.product_count, specs.products.length);
+assert.equal(actual.summary.direct_callable_count, 0);
+assert.equal(actual.summary.zero_hop_specialist_count, 0);
+assert.equal(actual.summary.fallback_required_count, specs.products.length);
+assert.equal(actual.summary.fallback_callable_count, 0);
+assert.equal(actual.summary.held_route_count, specs.products.length);
+assert.equal(actual.summary.registry_published_count, 0);
+assert.equal(actual.summary.public_route_pending_count, specs.products.length);
+assert.equal(actual.summary.yard_runtime_public_route_pending_count, 4);
+assert.equal(actual.summary.owned_runtime_route_pending_count, 13);
+assert.equal(actual.summary.not_direct_callable_count, specs.products.length);
+assert.match(actual.invariant, /verified specialist/i);
+assert.match(actual.invariant, /hold/i);
+
+assert.equal(actual.universal_fallback.verified, false);
+assert.equal(actual.universal_fallback.registry_name, null);
+assert.equal(actual.universal_fallback.remote_mcp, null);
 assert.equal(
-  actual.summary.direct_callable_count + actual.summary.not_direct_callable_count,
-  actual.summary.product_count
+  actual.universal_fallback.candidate_remote_mcp,
+  'https://fabric.systemiacommandcenters.com/mcp'
 );
-assert.equal(actual.summary.zero_hop_specialist_count, actual.summary.direct_callable_count);
-assert.equal(actual.summary.fallback_required_count, actual.summary.not_direct_callable_count);
-assert.match(actual.invariant, /Never add an umbrella routing hop/i);
+assert.match(actual.universal_fallback.verification_source, /chromebook-operator-edge-canary/);
+
+const serialized = JSON.stringify(actual);
+assert.equal(/base44\.app/i.test(serialized), false, 'readiness ledger may not expose retired Base44 routes');
 
 const bySlug = new Map(actual.products.map((product) => [product.slug, product]));
 for (const spec of specs.products) {
   const row = bySlug.get(spec.slug);
   assert.ok(row, 'missing readiness row: ' + spec.slug);
+  assert.equal(row.direct_callable, false, spec.slug + ': unverified owned route must be held');
+  assert.equal(row.registry_published, false, spec.slug + ': retired publication is not current route authority');
+  assert.equal(row.registry_name, null, spec.slug + ': active registry identity must not be inferred');
+  assert.equal(row.mcp_url, null, spec.slug + ': active remote MCP must not be inferred');
+  assert.equal(row.preferred_route.mode, 'hold_until_verified_owned_route');
+  assert.equal(row.preferred_route.hops_before_specialist, null);
+  assert.equal(row.preferred_route.use_universal_router_first, false);
+  assert.equal(row.preferred_route.registry_name, null);
+  assert.equal(row.preferred_route.remote_mcp, null);
+  assert.equal(
+    row.preferred_route.fallback_candidate_remote_mcp,
+    'https://fabric.systemiacommandcenters.com/mcp'
+  );
 
-  if (spec.state === 'registry_published_direct_mcp_existing') {
-    assert.equal(row.direct_callable, true, spec.slug + ': published door must be callable');
-    assert.equal(row.registry_published, true, spec.slug + ': published door must be registry-backed');
-    assert.equal(row.preferred_route.mode, 'direct_specialist');
-    assert.equal(row.preferred_route.hops_before_specialist, 0);
-    assert.equal(row.preferred_route.use_universal_router_first, false);
-    assert.equal(row.preferred_route.remote_mcp, spec.mcp_url);
-    assert.deepEqual(row.blocking_gates, [], spec.slug + ': published door must have no release blocker');
-    assert.equal(row.next_release_action, 'measure_provider_pickup_separately');
+  if (spec.state === 'owned_runtime_route_pending') {
+    assert.deepEqual(
+      row.blocking_gates,
+      ['owned_specialist_public_route', 'official_mcp_registry_publication'],
+      spec.slug + ': owned-runtime blocker sequence drift'
+    );
+    assert.equal(row.next_release_action, 'verify_owned_specialist_runtime_and_public_route');
   }
 
   if (spec.state === 'yard_runtime_proven_public_route_pending') {
-    assert.equal(row.direct_callable, false, spec.slug + ': route-pending door must not claim callable');
-    assert.ok(row.registry_candidate, spec.slug + ': route-pending door must have registry candidate');
-    assert.equal(row.preferred_route.mode, 'universal_fallback_until_specialist_promoted');
-    assert.equal(row.preferred_route.hops_before_specialist, 1);
-    assert.equal(row.preferred_route.remote_mcp, UNIVERSAL_FALLBACK.remote_mcp);
-    assert.equal(row.preferred_route.pending_specialist_runtime_path, spec.runtime_path);
+    assert.deepEqual(
+      row.blocking_gates,
+      ['shared_public_edge_canary', 'official_mcp_registry_publication'],
+      spec.slug + ': Yard-runtime blocker sequence drift'
+    );
     assert.equal(
       row.next_release_action,
       'activate_shared_public_edge_and_verify_external_canary'
     );
-    assert.deepEqual(
-      row.blocking_gates,
-      ['shared_public_edge_canary', 'official_mcp_registry_publication'],
-      spec.slug + ': route-pending gate sequence drift'
-    );
-  }
-
-  if (spec.state === 'public_https_verified_registry_pending') {
-    assert.equal(row.direct_callable, true, spec.slug + ': HTTPS-verified door should be directly callable');
-    assert.equal(row.registry_published, false, spec.slug + ': registry-pending door must not claim publication');
-    assert.equal(row.preferred_route.hops_before_specialist, 0);
-    assert.deepEqual(
-      row.blocking_gates,
-      ['official_mcp_registry_publication'],
-      spec.slug + ': registry-pending gate sequence drift'
-    );
+    assert.equal(row.preferred_route.pending_specialist_runtime_path, spec.runtime_path);
   }
 }
 
@@ -82,9 +94,13 @@ const forensiRoute = resolveProductRoute({
   specs,
   candidates: new Map(),
 });
-assert.equal(forensiRoute.state, 'specialist_direct');
-assert.equal(forensiRoute.route.hops_before_specialist, 0);
+assert.equal(forensiRoute.state, 'route_held');
+assert.equal(forensiRoute.route.remote_mcp, null);
 assert.equal(forensiRoute.route.use_universal_router_first, false);
+assert.equal(
+  forensiRoute.route.fallback_candidate_remote_mcp,
+  'https://fabric.systemiacommandcenters.com/mcp'
+);
 
 const unknownRoute = resolveProductRoute({
   slug: 'not-a-product',
@@ -92,55 +108,60 @@ const unknownRoute = resolveProductRoute({
   candidates: new Map(),
 });
 assert.equal(unknownRoute.state, 'unknown_product');
-assert.equal(unknownRoute.route.registry_name, UNIVERSAL_FALLBACK.registry_name);
-assert.equal(unknownRoute.route.use_universal_router_first, true);
+assert.equal(unknownRoute.route.mode, 'hold_until_verified_owned_fallback');
+assert.equal(unknownRoute.route.remote_mcp, null);
+assert.equal(unknownRoute.route.use_universal_router_first, false);
+assert.equal(
+  unknownRoute.route.fallback_candidate_remote_mcp,
+  UNIVERSAL_FALLBACK.candidate_remote_mcp
+);
 
-const synthetic = buildDirectDoorReadiness({
+const syntheticDirect = buildDirectDoorReadiness({
   specs: {
     schema: 'evercraft.direct-plugin-specs.v1',
-    routing_policy: {
-      default: 'specialist_direct_when_clear',
-      fallback: 'evercraft_machine_commerce_when_ambiguous_or_specialist_unavailable',
-    },
-    products: [
-      {
-        slug: 'demo',
-        name: 'Demo',
-        state: 'public_https_verified_registry_pending',
-        registry_name: null,
-        mcp_url: 'https://example.com/mcp',
-      },
-    ],
+    routing_policy: specs.routing_policy,
+    products: [{
+      slug: 'demo',
+      name: 'Demo',
+      state: 'public_https_verified_registry_pending',
+      registry_name: null,
+      mcp_url: 'https://example.com/mcp',
+    }],
   },
   candidates: new Map(),
 });
-assert.equal(synthetic.summary.direct_callable_count, 1);
-assert.equal(synthetic.summary.zero_hop_specialist_count, 1);
-assert.equal(synthetic.summary.fallback_required_count, 0);
-assert.equal(synthetic.summary.registry_published_count, 0);
-assert.equal(synthetic.summary.registry_pending_count, 1);
+assert.equal(syntheticDirect.summary.direct_callable_count, 1);
+assert.equal(syntheticDirect.summary.zero_hop_specialist_count, 1);
+assert.equal(syntheticDirect.summary.held_route_count, 0);
+assert.equal(syntheticDirect.products[0].preferred_route.mode, 'direct_specialist');
 
-console.log(
-  'DIRECT_DOOR_READINESS_PASS',
-  JSON.stringify({
-    product_count: actual.summary.product_count,
-    direct_callable_count: actual.summary.direct_callable_count,
-    zero_hop_specialist_count: actual.summary.zero_hop_specialist_count,
-    fallback_required_count: actual.summary.fallback_required_count,
-    registry_published_count: actual.summary.registry_published_count,
-    public_route_pending_count: actual.summary.public_route_pending_count,
-  })
-);
+const syntheticLegacy = buildDirectDoorReadiness({
+  specs: {
+    schema: 'evercraft.direct-plugin-specs.v1',
+    routing_policy: specs.routing_policy,
+    products: [{
+      slug: 'legacy',
+      name: 'Legacy',
+      state: 'registry_published_direct_mcp_existing',
+      registry_name: 'io.github.jgaethle10/legacy',
+      mcp_url: 'https://legacy.base44.app/functions/mcp',
+    }],
+  },
+  candidates: new Map(),
+});
+assert.equal(syntheticLegacy.summary.direct_callable_count, 0);
+assert.equal(syntheticLegacy.products[0].registry_published, false);
+assert.equal(syntheticLegacy.products[0].preferred_route.remote_mcp, null);
+assert.equal(syntheticLegacy.products[0].preferred_route.mode, 'hold_until_verified_owned_route');
 
+console.log('DIRECT_DOOR_READINESS_PASS', JSON.stringify(actual.summary));
 
 const topLevelLlms = fs.readFileSync('public/llms.txt', 'utf8');
 assert.match(topLevelLlms, /evercraft-direct-doors\.json/i);
 assert.match(topLevelLlms, /evercraft-direct-door-readiness\.json/i);
-assert.match(topLevelLlms, /zero umbrella hops/i);
 
 const aiDiscoveryDoc = fs.readFileSync('AI-DISCOVERY.md', 'utf8');
 assert.match(aiDiscoveryDoc, /evercraft-direct-door-readiness\.json/i);
-assert.match(aiDiscoveryDoc, /never add an umbrella routing hop/i);
 
 for (const discoveryPath of [
   'public/.well-known/evercraft-discovery.json',
@@ -159,17 +180,11 @@ for (const discoveryPath of [
   );
   assert.equal(
     discovery.routing_mode,
-    'direct_specialist_zero_hop_then_universal_fallback',
+    'verified_specialist_then_verified_evercraft_fabric_else_hold',
     discoveryPath + ': routing mode drift'
   );
-  assert.match(discovery.routing_rule, /zero umbrella hops/i);
-}
-
-for (const llmsPath of ['llms-full.txt', 'public/llms-full.txt']) {
-  const llms = fs.readFileSync(llmsPath, 'utf8');
-  assert.match(llms, /Direct specialist index:/);
-  assert.match(llms, /Direct-door route\/readiness ledger:/);
-  assert.match(llms, /zero umbrella hops/i);
+  assert.match(discovery.routing_rule, /hold/i);
+  assert.match(discovery.routing_rule, /verified Evercraft Fabric/i);
 }
 
 console.log('DIRECT_DOOR_DISCOVERY_PROPAGATION_PASS');
