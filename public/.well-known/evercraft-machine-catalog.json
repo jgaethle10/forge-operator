@@ -7,10 +7,10 @@
   "source_schema_version": "2026-09-30.1",
   "gateway_version": "evercraft-machine-commerce-gateway-v0.9.1",
   "source_generated_at": "2026-09-30T20:21:00.000Z",
-  "generated_at": "2026-10-01T04:57:41.674Z",
-  "offer_count": 48,
+  "generated_at": "2026-10-02T06:16:00.000Z",
+  "offer_count": 49,
   "sell_now_count": 14,
-  "discovery_count": 34,
+  "discovery_count": 35,
   "safety": {
     "discovery_creates_obligation": false,
     "human_confirmation_required_for_checkout": true,
@@ -740,6 +740,34 @@
       "invocation_status": "LIVE: Clip Production Engine V2, Customer Clip Studio, read-only Creative Director planning, and an authenticated checkout/provider-verification control plane are deployed. The live checkout offer reports 499 cents USD, explicit confirmation required, checkout creation not payment proof, and checkout_configured=false. Machine checkout is not enabled. ForensiScope remains the overflow path for oversized or full-timeline media.",
       "live_canary_evidence": null,
       "catalog_version": "2026-09-28.1"
+    },
+    {
+      "public_id": "evercraft-documentary-desk-v1",
+      "name": "Evercraft Documentary Desk",
+      "intent_terms": [
+        "turn this research into a documentary",
+        "make a documentary from this evidence",
+        "build a source-grounded documentary",
+        "turn this investigation into a film",
+        "create a documentary with real sources maps and archival footage",
+        "make an evidence-backed explainer film",
+        "produce a documentary from our research archive"
+      ],
+      "problem": "A research or investigative project needs to become a watchable documentary without losing source lineage, uncertainty, contradiction handling, rights state or the boundary between factual evidence and generated illustration.",
+      "inputs": "Documentary brief, evidence records, source and rights metadata, chapter structure and optional visual references. Systemia admission is the canonical internal route.",
+      "outputs": "Evidence-governed documentary production plan with owned-runtime research, archive, world-state, production and distribution lanes; research gaps; chapter-to-evidence bindings; authenticity rules; QA gates; and master-film/trailer/social/article/audio/source-room deliverables.",
+      "commercial_state": "verification_required",
+      "machine_state": "discovery_only",
+      "pricing": "No approved external machine price. Internal Evercraft production use is not represented as a public paid offer.",
+      "offers": [],
+      "human_ui_required": false,
+      "confirmation": "Planning and discovery create no payment obligation. External publication remains human-gated until evidence, rights, authenticity and documentary QA gates pass.",
+      "public_url": "https://github.com/jgaethle10/forge-operator/tree/main/systemia/documentary-desk",
+      "public_url_source": "owned_source",
+      "payment_authority": "No public payment authority is declared for this capability.",
+      "invocation_status": "SOURCE IMPLEMENTED ON EVERCRAFT-OWNED RUNTIME: Documentary Desk binds only to Systemia-owned research, ForensiScope, Worldstate, Media Studio/Saban, Journal and Clip modules. Remote execution is not represented as live until an owned public edge and canary evidence exist.",
+      "live_canary_evidence": null,
+      "catalog_version": "2026-10-01.1"
     },
     {
       "public_id": "evercraft-network-resilience-membership-v1",
