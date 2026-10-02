@@ -1640,6 +1640,8 @@ export async function startEvercraftComputeNode({
             dnsPort: Number(body.input?.dns_port || 1053),
             healthHost: '127.0.0.1',
             healthPort: Number(body.input?.health_port || 0),
+            queryReceiptPath: String(body.input?.query_receipt_path || ''),
+            receiptQname: String(body.input?.receipt_qname || ''),
           });
           const serviceId = `svc_${randomBytes(8).toString('hex')}`;
           services.set(serviceId, {
