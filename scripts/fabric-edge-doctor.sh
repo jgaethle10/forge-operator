@@ -421,6 +421,11 @@ if [[ "$diagnosis" == "chromeos_host_forward_unreachable" ]]; then
   echo "  sudo bash scripts/fabric-edge-doctor.sh --repair --trigger-canary"
 fi
 
+saban_capacity_degraded=false
+if [[ "$MAINTAIN_SABAN" == "true" && "$saban_capacity_repair_ok" != "true" ]]; then
+  saban_capacity_degraded=true
+fi
+
 canary_trigger_state="not_requested"
 canary_trigger_ok=false
 if [[ "$TRIGGER_CANARY" == "true" ]]; then
@@ -473,7 +478,7 @@ cat > /tmp/evercraft-fabric-edge-doctor.json <<EOF
   "saban_maintenance_requested":$(json_bool "$MAINTAIN_SABAN"),
   "saban_capacity_repair_ok":$(json_bool "$saban_capacity_repair_ok"),
   "saban_capacity_repair_code":$saban_capacity_repair_code,
-  "saban_capacity_degraded":$(json_bool "$([[ "$saban_capacity_repair_ok" == "true" ]] && echo false || echo true)"),
+  "saban_capacity_degraded":$(json_bool "$saban_capacity_degraded"),
   "lan_http_forward_ok":$(json_bool "$lan_http_ok"),
   "lan_https_forward_ok":$(json_bool "$lan_https_ok"),
   "router_refresh_ok":$(json_bool "$router_refresh_ok"),
