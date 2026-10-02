@@ -1,0 +1,24 @@
+name: Fallen Golden Bridge Benchmark
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/golden-bridge-benchmark.ts'
+      - 'systemia/media-studio/golden-bridge-benchmark.test.ts'
+      - 'systemia/media-studio/golden-bridge-benchmark-cli.ts'
+      - 'systemia/media-studio/cinematic-sequence.ts'
+      - 'systemia/media-studio/performance-director.ts'
+      - '.github/workflows/fallen-golden-bridge-benchmark.yml'
+  workflow_dispatch:
+
+jobs:
+  golden-bridge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-audit --no-fund
+      - run: |
+          node --import tsx --test             systemia/media-studio/golden-bridge-benchmark.test.ts             systemia/media-studio/cinematic-sequence.test.ts             systemia/media-studio/performance-director.test.ts
