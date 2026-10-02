@@ -263,3 +263,32 @@ test('fresh performance suppresses calibration until forecast prewarm names a wo
   assert.deepEqual(calibration.stale_performance_workloads,[]);
   assert.equal(hot.policies.forecast_prewarm_never_expands_authority,true);
 });
+
+
+test('single live jobs preserve preemptible checkpointable continuity without becoming shardable',()=>{
+  const anatomy=portfolioWorkloadAnatomy({
+    includeRivetAliEv:false,
+    demandRadar:{
+      schema:'evercraft.saban.ambient-demand-radar.v1',
+      generated_at:'2026-10-02T06:25:00.000Z',
+      workloads:[{
+        workload_class:'systemia.telemetry-normalizer.v1',
+        jobs:1,
+        preemptible_jobs:1,
+        checkpointable_jobs:1,
+        private_jobs:0,
+        max_cpu_units:0.1,
+        max_memory_mb:96,
+        max_storage_gb:0,
+        max_gpu_count:0,
+        gpu_models:[],
+      }],
+    },
+  });
+  const task=anatomy.tasks[0];
+  assert.equal(task.execution_shape,'atomic');
+  assert.equal(task.shard_count,1);
+  assert.equal(task.continuity.preemptible,true);
+  assert.equal(task.continuity.checkpointable,true);
+  assert.equal(task.trust.minimum_uptime_7d,0);
+});
