@@ -1,0 +1,79 @@
+{
+  "schema": "evercraft.cross-llm-product.v1",
+  "product": "Systemia",
+  "product_key": "systemia",
+  "aliases": [
+    "Systemia Control Plane",
+    "Systemia Operating System",
+    "Evercraft Systemia"
+  ],
+  "providers": [
+    "chatgpt",
+    "claude",
+    "gemini",
+    "copilot",
+    "perplexity",
+    "grok",
+    "generic_agent"
+  ],
+  "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/systemia",
+  "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia/llms.txt",
+  "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia/ai-discovery.json",
+  "registry_name": null,
+  "mcp": null,
+  "authority": "public discovery of the Systemia control-plane model and human-confirmed pilot scoping; discovery grants no private repository access, credentials, production mutation, payment authority, or external-action authority",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "clear specialist intent should route directly to the verified specialist rather than through Systemia as an unnecessary hop",
+    "public discovery does not grant access to private repositories credentials customer data or internal topology",
+    "customer execution begins only after explicit scope authorization and receipt-backed onboarding",
+    "production mutation payment external communications and high-blast-radius actions remain separately gated",
+    "an internal Evercraft proof does not prove a customer deployment is live",
+    "owned public Fabric runtime is canonical only after its independent HTTPS and MCP canary is green"
+  ],
+  "commercial": {
+    "status": "commercial_pilot_discovery",
+    "pricing": "Custom quote based on portfolio size, repositories, public endpoints, workflow count, agent surfaces, and desired automation scope.",
+    "offers": [
+      {
+        "offer_key": "systemia_control_plane_pilot",
+        "name": "Systemia Control Plane Pilot",
+        "price": "Custom quote",
+        "billing": "pilot"
+      }
+    ],
+    "payment_state": "No public machine checkout is claimed. Commercial terms and payment require explicit human agreement and authoritative payment verification."
+  },
+  "human_start_url": null,
+  "buyer_frontage_url": null,
+  "developer_surfaces": null,
+  "editorial_surfaces": null,
+  "knowledge_surfaces": {
+    "registry_readme": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia",
+    "registry_llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/systemia/llms.txt"
+  },
+  "distribution_surfaces": null,
+  "relationships": {
+    "portfolio_sentinel": {
+      "name": "Systemia Portfolio Sentinel",
+      "relationship": "continuous_integrity_and_repair_evidence",
+      "public_surface": "/chum/products/systemia-portfolio-sentinel/"
+    },
+    "remote_ops": {
+      "name": "Systemia Remote Ops",
+      "relationship": "modeled_business_decision_support",
+      "public_surface": "/chum/products/systemia-remote-ops/"
+    },
+    "fabric": {
+      "name": "Evercraft Fabric",
+      "relationship": "public_machine_capability_directory",
+      "public_surface": "https://fabric.systemiacommandcenters.com/"
+    }
+  },
+  "proof_library": null,
+  "provider_behavior_state": "not_inferred_from_publication",
+  "machine_commerce_handoff_state": null,
+  "machine_commerce_public_id": null,
+  "machine_commerce_tool": null,
+  "live_canary_evidence": null
+}

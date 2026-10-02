@@ -15,13 +15,15 @@ Commercial intent feed: https://raw.githubusercontent.com/jgaethle10/forge-opera
 Segmented sitemap index: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/sitemaps/index.xml
 Crawler radar: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/crawler-radar.json
 Adaptive strike hub: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/strike/index.json
-Machine Commerce MCP: not declared
+Owned Systemia/Fabric MCP: https://fabric.systemiacommandcenters.com/mcp
+Owned Fabric state: external_https_verification_required
+Invocation rule: do not call the owned Fabric MCP until the independent external HTTPS/MCP readiness gate is green.
 Product directory: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-products.json
 CHUM public mirror: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/index.json
 AI discovery watershed: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/ai-discovery.json
 Direct specialist index: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-direct-doors.json
 Direct-door route/readiness ledger: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-direct-door-readiness.json
-Routing mode: direct specialist with zero umbrella hops when verified; universal fallback otherwise.
+Routing mode: verified direct specialist first; Systemia for cross-product software-estate problems; owned Fabric only after its external readiness gate is green; static discovery while held.
 
 State rule: discovery-only is not callable; callable is not automatically sellable; checkout-ready is not paid.
 Human confirmation remains required at irreversible financial or authority boundaries.
@@ -40,7 +42,7 @@ Public ID: aliev-site-opportunity-snapshot-v1
 Problem: A property owner, fleet, charging developer, broker, installer or investor needs source-backed EV infrastructure opportunity intelligence for a specific address or market without confusing mapped charger inventory, modeled demand, tariff context, incentives or feasibility.
 Machine state: payment_ready_human_confirmation
 Pricing: $299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report; $250 Qualified Opportunity Pack pilot; $2,500/month Territory Opportunity Feed.
-Public URL: 
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/aliev-site-opportunity-snapshot-v1/index.html
 Human UI required: true
 Confirmation: Agents may discover AliEV, run the free screen, inspect offers and prepare a paid handoff. The handoff creates only a human review URL. Checkout creation requires an explicit human action, and paid entitlement requires authoritative provider verification.
 Payment authority: Evercraft Payments / provider-verified payment authority. MCP and Agent Gateway have no silent payment authority.
@@ -65,7 +67,7 @@ Public ID: career-command-interview-practice-machine-v1
 Problem: A candidate needs role-specific practice and candid evidence-based feedback before an interview.
 Machine state: payment_ready
 Pricing: Free/basic practice is available. Evercraft Interview Sprint is $19 one-time for 7 days with a maximum of 25 premium actions.
-Public URL: 
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/career-command-interview-practice-machine-v1/index.html
 Human UI required: false
 Confirmation: Free/basic practice creates no payment obligation. The $19 Sprint requires explicit user confirmation before checkout. Covert live-interview answer feeding is not offered.
 Payment authority: Evercraft Payments with provider verification
@@ -83,7 +85,7 @@ Public ID: eventwave-paid-promotion-v1
 Problem: An organizer or venue wants a bounded paid EventWave placement with verified payment, source review and controlled activation.
 Machine state: payment_ready
 Pricing: Event Boost $49 one-time; Venue Pack $149 one-time.
-Public URL: 
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/eventwave-paid-promotion-v1/index.html
 Human UI required: false
 Confirmation: Explicit purchase confirmation and verified payment are required. Source review must pass before any public placement activates.
 Payment authority: Evercraft Payments with provider verification
@@ -105,7 +107,7 @@ Public ID: deck-capital-fit-sprint-machine-v1
 Problem: A founder, operator or project owner needs bounded capital-path research, readiness gaps and evidence-led deck direction without fake approval odds or invented financing terms.
 Machine state: payment_ready
 Pricing: $49 one-time for the Founding Capital Fit Sprint, limited to the first 20 paid cases. The $49 is credited toward a later Capital Package upgrade.
-Public URL: 
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/deck-capital-fit-sprint-machine-v1/index.html
 Human UI required: false
 Confirmation: The user must explicitly confirm before checkout. Fulfillment starts only after provider-verified payment. No lender approval, eligibility, rate, term or probability is promised.
 Payment authority: Evercraft Deck Engine / Polar, provider-verified
@@ -124,7 +126,7 @@ Public ID: foundry-app-escape-audit-v1
 Problem: A founder or operator needs a clear portability, dependency, security and migration map for an app tied to a builder-specific runtime.
 Machine state: human_handoff_ready
 Pricing: $500 one-time.
-Public URL: 
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/foundry-app-escape-audit-v1/index.html
 Human UI required: false
 Confirmation: Explicit buyer authorization for source access and payment is required.
 Payment authority: Evercraft Payments; direct machine checkout is not exposed for this service.
@@ -162,7 +164,7 @@ Public ID: website-launch-service-v1
 Problem: A business needs a professional website built or upgraded without operating a site-builder interface.
 Machine state: payment_ready
 Pricing: Human-Finished Pro Site $500 one-time; Premium Custom Build $999 one-time; Total Business Launch $1,999 one-time.
-Public URL: 
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/website-launch-service-v1/index.html
 Human UI required: false
 Confirmation: The buyer must explicitly choose a tier and confirm payment before checkout. Fulfillment begins only after independent payment verification.
 Payment authority: Evercraft Website Service / Stripe, provider-verified
@@ -178,7 +180,7 @@ Public ID: faie-signal-brief-v1
 Problem: A buyer has one bounded agriculture, land, water, production or resilience question and needs a sourced evidence-first investigation.
 Machine state: payment_ready
 Pricing: Signal Brief $250 one-time; Proof Sprint $2,500 one-time. Other intake categories are not auto-quotable.
-Public URL: 
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/faie-signal-brief-v1/index.html
 Human UI required: false
 Confirmation: Explicit buyer confirmation is required before checkout. Verified payment queues a human-controlled mission; consequential claims or actions remain review-gated.
 Payment authority: FAIE / Stripe, provider-verified
@@ -194,7 +196,7 @@ Public ID: findmypart-paid-hunt-v1
 Problem: A difficult, identified-enough physical part is still blocking a repair, restoration, machine or project after ordinary sourcing has failed or deeper cross-reference, salvage, documentation, blueprint or fabrication work is needed.
 Machine state: payment_ready
 Pricing: Quick Hunt $19 one-time; Deep Hunt $49 one-time; Rescue Hunt $99 one-time.
-Public URL: 
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/findmypart-paid-hunt-v1/index.html
 Human UI required: false
 Confirmation: User must explicitly choose an offer and confirm payment. Paid fulfillment starts only after independently verified payment.
 Payment authority: Evercraft Payments with Stripe provider verification
@@ -239,7 +241,7 @@ Public ID: rivet-site-underwriting-v1
 Problem: A property owner, fleet, charging developer, broker, installer or investor needs address-specific EV infrastructure diligence that keeps public facts, observed evidence, modeled assumptions and unresolved engineering questions separate.
 Machine state: payment_ready_human_confirmation
 Pricing: $299 Preliminary Site Opportunity Report; $750 Full Site Opportunity Report.
-Public URL: 
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/rivet-site-underwriting-v1/index.html
 Human UI required: true
 Confirmation: Agents may discover RIVET and inspect current report options. Secure checkout preparation requires explicit human payment confirmation, buyer email and address. Checkout creation is not payment proof; paid state and fulfillment require authoritative provider verification.
 Payment authority: Evercraft Payments / provider-verified payment authority. Discovery and agent routing have no silent payment authority.
@@ -270,7 +272,7 @@ Public ID: roasted-text-pressure-test-machine-v1
 Problem: Fast, low-cost critique for short user-supplied text, followed by concrete repair actions.
 Machine state: payment_ready
 Pricing: $0.99 USD one-time per roast.
-Public URL: 
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/roasted-text-pressure-test-machine-v1/index.html
 Human UI required: false
 Confirmation: Explicit user confirmation is required before checkout. Paid output is generated only after independent Stripe verification.
 Payment authority: ROASTED / Stripe, provider-verified
@@ -291,7 +293,7 @@ Public ID: site-survive-rapid-audit-v1
 Problem: A site-dependent organization needs to understand which operational dependencies fail first during connectivity disruption.
 Machine state: human_handoff_ready
 Pricing: $250 one-time; may be credited toward a deeper $1,250 audit if the customer elects to continue.
-Public URL: 
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/site-survive-rapid-audit-v1/index.html
 Human UI required: false
 Confirmation: Explicit buyer confirmation is required before payment or paid work.
 Payment authority: Evercraft Payments; direct machine checkout is not exposed for this service.
@@ -306,7 +308,7 @@ Public ID: audit-center-website-audit-machine-v1
 Problem: A small business or contractor needs evidence-backed website triage across performance, technical SEO, local SEO and trust/conversion before spending money fixing the wrong things.
 Machine state: payment_ready
 Pricing: Free preview. Quick Win Audit $49 one-time and machine-fulfilled after verified payment; the $49 may be credited toward Complete Audit. Complete Audit $500 one-time. Audit + Patch $1,200 one-time.
-Public URL: 
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/audit-center-website-audit-machine-v1/index.html
 Human UI required: false
 Confirmation: The free preview creates no payment obligation. Paid tiers require explicit user confirmation before checkout. Quick Win is automatically fulfilled only after provider-verified payment. Complete Audit and Audit + Patch retain their deeper intake and review flow.
 Payment authority: Systemia Audit Center / Stripe, provider-verified
@@ -332,7 +334,7 @@ Public ID: callproof-complaint-packet-machine-v1
 Problem: Organize a user's own unwanted-call or text records and evidence into a factual packet for review before optional FCC or FTC filing.
 Machine state: human_auth_handoff
 Pricing: Published app pricing: $19 one-time packet, $7.99/month Vault, $29/month Pro. Live Stripe checkout price is authoritative.
-Public URL: 
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/callproof-complaint-packet-machine-v1/index.html
 Human UI required: true
 Confirmation: User authentication and explicit checkout action are required. Paid access is granted only after Stripe verification.
 Payment authority: CallProof Vault / Stripe
@@ -349,7 +351,7 @@ Public ID: career-command-resume-job-fit-machine-v1
 Problem: A job seeker has a real opening and needs an evidence-backed comparison between their supplied background and the target role without fabricated credentials or fake proprietary ATS certainty.
 Machine state: discovery_only
 Pricing: Free core is available. No premium machine-lane price is approved yet.
-Public URL: 
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/career-command-resume-job-fit-machine-v1/index.html
 Human UI required: false
 Confirmation: No payment obligation is created. Any future paid premium action requires explicit user confirmation and verified payment.
 Payment authority: Evercraft Payments
@@ -369,7 +371,7 @@ Public ID: agent-proving-mission-v1
 Problem: Teams can demo an agent but struggle to prove what it can reliably do under a bounded mission with evidence and review.
 Machine state: discovery_only
 Pricing: Current hypothesis $250-$2,500 per proving mission; not auto-quotable yet.
-Public URL: 
+Public URL: https://systemiacommandcenters.com/
 Human UI required: false
 Confirmation: Testing scope and external side effects require explicit authority. Paid execution requires confirmed terms and payment.
 Payment authority: Evercraft Payments
@@ -385,7 +387,7 @@ Public ID: ai-capability-install-v1
 Problem: Organizations adding AI capabilities need versioning, installation verification, runtime assignment, rollback and proof the capability actually works.
 Machine state: discovery_only
 Pricing: Current hypothesis $500-$5,000 depending on environment/integration depth; not auto-quotable yet.
-Public URL: 
+Public URL: https://systemiacommandcenters.com/
 Human UI required: false
 Confirmation: Target-environment access, deployment and payment require explicit authorized approval. Discovery grants no deployment authority.
 Payment authority: Evercraft Payments
@@ -401,7 +403,7 @@ Public ID: littlered-kdp-export-qa-machine-v1
 Problem: An author or publishing workflow needs a bounded preflight on page-count and cover geometry before treating a book export as ready.
 Machine state: discovery_only
 Pricing: No approved external machine price/payment path was found. Do not auto-quote.
-Public URL: 
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/littlered-kdp-export-qa-machine-v1/index.html
 Human UI required: false
 Confirmation: QA may report readiness state but must not publish, upload or distribute the book without separate explicit authority.
 Payment authority: No verified Evercraft Payments path.
@@ -417,7 +419,7 @@ Public ID: buildflow-entity-resolution-machine-v1
 Problem: A business has duplicate or conflicting customer/vendor identities across systems and needs evidence-preserving matching with human adjudication rather than silent merges.
 Machine state: human_auth_handoff
 Pricing: No approved machine price/payment path was found. Do not auto-quote.
-Public URL: 
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/buildflow-entity-resolution-machine-v1/index.html
 Human UI required: true
 Confirmation: Accepting a mapping records an adjudication; it does not silently rewrite source evidence or auto-merge canonical counterparties.
 Payment authority: No verified Evercraft Payments path.
@@ -434,7 +436,7 @@ Public ID: buildflow-enterprise-ops-router-v1
 Problem: A company needs an evidence-native operating layer that can understand existing systems, reconstruct real workflows, surface uncertainty and introduce bounded automation without forcing immediate rip-and-replace.
 Machine state: discovery_only
 Pricing: No approved machine price/payment path was found. Do not auto-quote.
-Public URL: 
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/buildflow-enterprise-ops-router-v1/index.html
 Human UI required: true
 Confirmation: Public routing does not ingest private company records or execute business actions. Authenticated tenant context is required before customer data access.
 Payment authority: No verified Evercraft Payments path.
@@ -452,7 +454,7 @@ Public ID: buildflow-bounded-agent-action-v1
 Problem: An AI/agent needs to prepare or route enterprise actions while policy, tenant, version, approval, value and idempotency constraints remain authoritative outside the model.
 Machine state: human_auth_handoff
 Pricing: No approved machine price/payment path was found. Do not auto-quote.
-Public URL: 
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/buildflow-bounded-agent-action-v1/index.html
 Human UI required: true
 Confirmation: The model is never authority. Material actions require configured grants and human confirmation. External purchasing/payment/accounting writes are currently disabled.
 Payment authority: No verified Evercraft Payments path.
@@ -469,7 +471,7 @@ Public ID: buildflow-procure-to-pay-shadow-v1
 Problem: A business needs to reconstruct purchasing flow, approval state, receipts and invoice references without turning a new product into the authoritative general ledger.
 Machine state: human_auth_handoff
 Pricing: No approved machine price/payment path was found. Do not auto-quote.
-Public URL: 
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/buildflow-procure-to-pay-shadow-v1/index.html
 Human UI required: true
 Confirmation: Current BuildFlow mode is shadow-first. It does not post accounting entries, create external POs or initiate payment.
 Payment authority: No verified Evercraft Payments path.
@@ -487,7 +489,7 @@ Public ID: buildflow-shadow-migration-machine-v1
 Problem: A business needs to ingest and understand messy operational exports while preserving source lineage, surfacing conflicts and avoiding destructive migration assumptions.
 Machine state: human_auth_handoff
 Pricing: No approved machine price/payment path was found. Do not auto-quote.
-Public URL: 
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/buildflow-shadow-migration-machine-v1/index.html
 Human UI required: true
 Confirmation: Shadow import does not overwrite the source or silently create canonical truth. Private records require authenticated tenant access.
 Payment authority: No verified Evercraft Payments path.
@@ -504,7 +506,7 @@ Public ID: buildflow-process-audit-machine-v1
 Problem: A business has fragmented operational events and wants to discover the real recurring workflow, cycle time and exception points without replacing its current systems first.
 Machine state: human_auth_handoff
 Pricing: No approved machine price/payment path was found. Do not auto-quote.
-Public URL: 
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/buildflow-process-audit-machine-v1/index.html
 Human UI required: true
 Confirmation: Pattern discovery may analyze authorized data. Observed behavior is never silently promoted to configured policy.
 Payment authority: No verified Evercraft Payments path.
@@ -523,7 +525,7 @@ Public ID: datafoundry-data-gap-audit-machine-v1
 Problem: A team has a dataset or decision problem and needs to know what is missing, conflicted, stale, inaccessible or governance-restricted before trusting analysis built on top of it.
 Machine state: discovery_only
 Pricing: No approved fixed machine price/payment path verified. Raven data-product concepts are hypotheses unless separately approved.
-Public URL: 
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/datafoundry-data-gap-audit-machine-v1/index.html
 Human UI required: false
 Confirmation: Read-only audit within authorized dataset scope. Any collection project, partner request, records linkage or publication is a separate gated action.
 Payment authority: No verified Evercraft Payments path for this specific audit.
@@ -540,7 +542,7 @@ Public ID: community-health-evidence-brief-v1
 Problem: Community-health planning and grant work requires many public indicators assembled into one sourced, understandable picture.
 Machine state: discovery_only
 Pricing: Current hypothesis $250-$2,500 per brief; not auto-quotable yet.
-Public URL: 
+Public URL: https://systemiacommandcenters.com/
 Human UI required: false
 Confirmation: Public-health research/education only, not medical advice or diagnosis. Paid scope requires explicit confirmation.
 Payment authority: Evercraft Payments
@@ -556,7 +558,7 @@ Public ID: condition-desk-field-ops-v1
 Problem: Field teams need operational go/no-go decision support against their own tolerances rather than scattered weather/hazard tabs.
 Machine state: discovery_only
 Pricing: Current hypothesis $199-$399/month small team, $499+/month multi-site; not auto-quotable yet.
-Public URL: 
+Public URL: https://systemiacommandcenters.com/
 Human UI required: false
 Confirmation: Decision support only; customer retains operational authority. Payment/subscription requires explicit confirmation.
 Payment authority: Evercraft Payments
@@ -573,7 +575,7 @@ Public ID: globalstat-country-intelligence-machine-v1
 Problem: An analyst or agent needs country-level comparative data with sources, freshness, evidence states and reconciliation warnings rather than an opaque ranking.
 Machine state: discovery_only
 Pricing: Raven contains a country-brief pricing hypothesis ($299-$2,500 depending depth). No approved fixed machine price/payment path was verified, so it is not auto-quotable.
-Public URL: 
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/globalstat-country-intelligence-machine-v1/index.html
 Human UI required: false
 Confirmation: Read-only sourced data may be returned within approved access. No paid obligation without explicit confirmation and verified terms.
 Payment authority: No verified Evercraft Payments path for this capability.
@@ -590,7 +592,7 @@ Public ID: evercraft-clip-social-video-v1
 Problem: An authorized user needs a source video turned into a small set of social-ready vertical clips with bounded rendering, transparent limits and governed downstream distribution.
 Machine state: invocation_ready
 Pricing: Canonical customer price is $4.99 one-time (499 cents USD). An authenticated Clip checkout control plane and provider-verification path are deployed, but the live checkout gateway currently reports payment authority unconfigured, so this must not be represented as sell-now yet.
-Public URL: 
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/evercraft-clip-social-video-v1/index.html
 Human UI required: true
 Confirmation: Public discovery and planning create no payment obligation. Customer checkout requires an authenticated human and explicit $4.99 confirmation; rendering remains locked until Stripe reports paid + complete and exact amount, currency, and order metadata all verify.
 Payment authority: Evercraft Clip clipCheckoutGateway + Stripe provider verification. Control plane is deployed and fail-closed; live gateway observed 2026-09-28 with checkout_configured=false, so payment creation remains unavailable until server-side authority is provisioned.
@@ -611,7 +613,7 @@ Public ID: talent-evidence-profile-machine-v1
 Problem: A person, team or representative wants a structured view of demonstrated capabilities, missing proof, development questions and plausible opportunity classes without opaque personality scoring or sensitive-trait inference.
 Machine state: discovery_only
 Pricing: No approved machine price/payment path was verified. Do not auto-quote.
-Public URL: 
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/talent-evidence-profile-machine-v1/index.html
 Human UI required: false
 Confirmation: No contact, representation, application or third-party sharing without explicit authority/consent. Analysis must not infer protected traits or use gated sensitive data for scoring.
 Payment authority: No verified Evercraft Payments path for this capability.
@@ -628,7 +630,7 @@ Public ID: talent-proof-portal-v1
 Problem: Talent discovery relies heavily on resumes and claims that poorly connect demonstrated capability to opportunities.
 Machine state: discovery_only
 Pricing: Current organization hypothesis $500-$3,000/month; not auto-quotable yet.
-Public URL: 
+Public URL: https://systemiacommandcenters.com/
 Human UI required: false
 Confirmation: No employment decision is automated by discovery. Participant consent/authority and payment are required where applicable.
 Payment authority: Evercraft Payments
@@ -645,7 +647,7 @@ Public ID: towi-evidence-research-machine-v1
 Problem: A decision-maker needs a sourced research answer with provenance, contradiction handling, uncertainty and a bounded deliverable instead of a generic web summary.
 Machine state: discovery_only
 Pricing: No approved fixed machine price verified. Raven contains research-service hypotheses, but they remain hypotheses and are not auto-quotable.
-Public URL: 
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/towi-evidence-research-machine-v1/index.html
 Human UI required: false
 Confirmation: Research may be scoped without obligation. Paid work and consequential-domain deliverables require explicit confirmation and existing review gates.
 Payment authority: No verified Evercraft Payments path for this capability.
@@ -662,7 +664,7 @@ Public ID: forensiscope-evidence-review-v1
 Problem: An authorized user needs traceable analysis of video or long-form evidence while preserving source lineage and integrity boundaries.
 Machine state: discovery_only
 Pricing: Published duration tiers are $15 up to 5 minutes, $35 up to 30 minutes, $75 up to 2 hours, $149 up to 6 hours and $249 up to 12 hours. Central machine checkout remains verification-gated.
-Public URL: 
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/forensiscope-evidence-review-v1/index.html
 Human UI required: false
 Confirmation: Evidence authorization and payment confirmation are required. Secure machine intake remains disabled until current security tests pass.
 Payment authority: Evercraft Payments; central machine checkout remains verification-gated.
@@ -687,7 +689,7 @@ Public ID: freight-load-exception-intelligence-machine-v1
 Problem: A freight operator needs a compact operational picture of a load's exceptions, document gaps, carrier/compliance state and possible financial impact without manually reconciling several records.
 Machine state: discovery_only
 Pricing: No approved machine price or payment path was verified. Do not auto-quote.
-Public URL: 
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/freight-load-exception-intelligence-machine-v1/index.html
 Human UI required: false
 Confirmation: Analysis does not authorize dispatch, quote acceptance, carrier contact, claim filing, payment, invoice action or any other external/financial side effect.
 Payment authority: No verified payment path for this capability.
@@ -704,7 +706,7 @@ Public ID: large-document-corpus-review-v1
 Problem: Large public or authorized document productions are expensive to index, map, deduplicate and review without losing provenance.
 Machine state: discovery_only
 Pricing: Current hypothesis $1,500-$25,000/project depending on corpus size/scope; not auto-quotable yet.
-Public URL: 
+Public URL: https://systemiacommandcenters.com/
 Human UI required: false
 Confirmation: Only public or owner-authorized corpora. Paid scope and privileged handling require explicit authorization.
 Payment authority: Evercraft Payments
@@ -720,7 +722,7 @@ Public ID: evermaps-evidence-projection-machine-v1
 Problem: An agent needs map-ready, evidence-labeled public data for a place or system without having to understand the parent map UI or accidentally overstate incomplete coverage as resilience/risk.
 Machine state: discovery_only
 Pricing: No approved machine price was found. Do not auto-quote.
-Public URL: 
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/evermaps-evidence-projection-machine-v1/index.html
 Human UI required: false
 Confirmation: Public-safe reads can be served within access rules. Any paid packaging requires explicit terms/confirmation first.
 Payment authority: No verified Evercraft Payments path for this capability.
@@ -737,7 +739,7 @@ Public ID: raven-nexus-pain-router-v1
 Problem: A person or business has a specific home, family, financial, digital-security, personal-safety, property-stability, relationship, connectivity or business-safety pain and needs the smallest appropriate Raven Nexus capability rather than a forced full-suite purchase.
 Machine state: invocation_ready
 Pricing: Varies by matched modular capability. The live pain router is the authority for current availability, offer and checkout state; do not invent a price.
-Public URL: 
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/raven-nexus-pain-router-v1/index.html
 Human UI required: false
 Confirmation: Discovery and pain matching are read-only. A returned checkout link is not payment proof, and consequential safety or financial actions keep their own human gates.
 Payment authority: Raven Nexus / Evercraft Payments where a specific matched offer is verified; the pain router has no silent payment authority.
@@ -762,7 +764,7 @@ Public ID: findmypart-repair-shop-desk-v1
 Problem: Technicians lose billable time hunting discontinued, cross-referenced or obscure parts.
 Machine state: discovery_only
 Pricing: Current hypothesis $99-$499/month by hunt volume/service level; not auto-quotable yet.
-Public URL: 
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/findmypart-repair-shop-desk-v1/index.html
 Human UI required: false
 Confirmation: Subscription/payment requires explicit user confirmation; vendor outreach or purchases remain separately authorized.
 Payment authority: Evercraft Payments
@@ -778,7 +780,7 @@ Public ID: systemia-yard-runtime-extension-v1
 Problem: An already-approved active Yard execution needs more runtime without receiving broader authority.
 Machine state: invocation_ready
 Pricing: Dynamic server quote only. Source defaults are not public price authority because deployment configuration can override them.
-Public URL: 
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/systemia-yard-runtime-extension-v1/index.html
 Human UI required: false
 Confirmation: Explicit purchase authorization is required. Purchased runtime changes time only and never widens execution scope, permissions, release authority or security access.
 Payment authority: Runtime broker supports machine settlement, but live verifier configuration and a paid canary still require independent verification.
@@ -793,7 +795,7 @@ Public ID: worldstate-reality-delta-v1
 Problem: A user or Evercraft system needs to understand what materially changed in the real world across time without collapsing observed, reported, inferred, modeled, or uncertain evidence into one undifferentiated claim.
 Machine state: discovery_only
 Pricing: No approved public machine price or payment path. Do not auto-quote.
-Public URL: 
+Public URL: https://systemiacommandcenters.com/
 Human UI required: false
 Confirmation: Discovery and evidence comparison create no action authority. Publishing, consequential decisions, private-data access, and paid work remain separately authorized.
 Payment authority: No verified public payment path.
@@ -812,7 +814,7 @@ Public ID: capability-concierge-v1
 Problem: A buyer knows the desired outcome but should not need to know Evercraft's internal app or product map.
 Machine state: discovery_only
 Pricing: Quote required until machine-lane pricing is approved.
-Public URL: 
+Public URL: https://systemiacommandcenters.com/
 Human UI required: false
 Confirmation: Discovery/routing may be automatic. Pricing commitments, payment and consequential actions remain confirmation-gated.
 Payment authority: Evercraft Payments
@@ -827,7 +829,7 @@ Public ID: evercraft-network-resilience-membership-v1
 Problem: A household, business, or device operator wants an application-network identity and continuity visibility that can persist across changing internet paths the client is already authorized to use, without confusing that software layer with cellular service or guaranteed geographic coverage.
 Machine state: human_handoff_only
 Pricing: Displayed Founding Membership: $9.99/month for up to five devices. Billing is not live yet. Reserving a Founding Membership records interest only and creates no charge or paid entitlement.
-Public URL: 
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/evercraft-network-resilience-membership-v1/index.html
 Human UI required: true
 Confirmation: AI assistants may discover Evercraft Network, inspect public-safe capabilities and presence, and prepare a human handoff. They may not enroll a device, create payment, control connectivity, access private telemetry, expose private topology, control a carrier, or route an emergency.
 Payment authority: No live Network membership payment authority is advertised. Reservation creates no charge. Any future paid activation requires an independently verified billing path and explicit human action.
@@ -850,7 +852,7 @@ Public ID: evercraft-web-browser-agent-v1
 Problem: An AI assistant or agent needs public web fetch/extraction, live-web discovery, browser automation, or user-authorized authenticated browsing without depending on a third-party browser-agent provider.
 Machine state: specialist_discovery_ready_runtime_gated
 Pricing: No public machine price is advertised until runtime metering and production verification are complete.
-Public URL: 
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/evercraft-web-browser-agent-v1/index.html
 Human UI required: false
 Confirmation: Public capability discovery is read-only. Authenticated browsing requires explicit user authorization. Payment must never expand browser permissions or credential access.
 Payment authority: No public machine checkout is advertised for Evercraft Web yet.

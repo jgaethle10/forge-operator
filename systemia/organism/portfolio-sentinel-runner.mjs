@@ -339,7 +339,7 @@ async function main() {
     network.url_probes = publicScan.rows;
 
     const journalFreshness = await probeJournalFreshness({
-      url: process.env.EVERCRAFT_JOURNAL_URL || 'https://evercraftjournal.base44.app/',
+      url: process.env.EVERCRAFT_JOURNAL_URL || 'https://journal.evercraft.global/',
       now: observedAt
     });
     findings.push(...journalFreshness.findings.map((finding) => makeFinding(finding)));

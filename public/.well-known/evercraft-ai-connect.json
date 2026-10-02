@@ -1,18 +1,21 @@
 {
   "schema": "evercraft.ai-connect.v1",
   "provider": "Evercraft LLC",
-  "updated_at": "2026-09-24",
+  "updated_at": "2026-09-30",
   "universal_mcp": {
-    "name": "Evercraft Machine Commerce",
-    "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
-    "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
+    "name": "Evercraft Fabric / Systemia",
+    "url": "https://fabric.systemiacommandcenters.com/mcp",
+    "registry_name": null,
+    "state": "external_https_verification_required",
+    "canonical": true
   },
   "specialist_mcps": [
     {
       "name": "Systemia Field Library",
-      "url": "https://base44.app/api/apps/6a54381e147576b18ac94d8f/functions/fieldLibraryAgentMcp",
+      "url": null,
       "registry_name": "io.github.jgaethle10/systemia-field-library",
-      "state": "live_endpoint_verified_registry_publication_in_progress"
+      "state": "legacy_runtime_not_canonical_owned_route_pending",
+      "discovery": "https://github.com/jgaethle10/forge-operator/tree/main/public/chum/products/systemia-field-library"
     }
   ],
   "provider_paths": [
@@ -43,5 +46,16 @@
       "state": "certification_required_for_gallery"
     }
   ],
-  "boundary": "Connecting or discovering Evercraft grants no payment or consequential-action authority. Each tool retains its own explicit permission and human-confirmation rules."
+  "boundary": "Connecting or discovering Evercraft grants no payment or consequential-action authority. Each tool retains its own explicit permission and human-confirmation rules.",
+  "canonical_control_plane": {
+    "name": "Evercraft Fabric / Systemia",
+    "human_origin": "https://fabric.systemiacommandcenters.com/",
+    "mcp_url": "https://fabric.systemiacommandcenters.com/mcp",
+    "state": "external_https_verification_required",
+    "invocation_rule": "Do not invoke until the independent owned-edge canary reports trusted public HTTPS and MCP verification.",
+    "authority": "read_only capability discovery; no payment, production mutation, credential access, or external-action authority"
+  },
+  "legacy_continuity": {
+    "policy": "Base44 may remain only as temporary extraction/compatibility continuity under the active exit policy. Legacy endpoints are not canonical connection instructions and must not be selected for new Systemia deployment."
+  }
 }

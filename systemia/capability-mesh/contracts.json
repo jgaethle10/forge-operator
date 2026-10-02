@@ -512,6 +512,48 @@
         "compatibility_guaranteed": false,
         "private_vendor_analytics_session_command_center_sales_data_public": false
       }
+    },
+    {
+      "product_key": "systemia",
+      "contract_version": "1.0.0",
+      "owner": "systemia",
+      "authority": {
+        "state": "not_required",
+        "reason": "The public Systemia umbrella record is discovery and human-confirmed pilot scoping only. It exposes no callable production action and grants no private repository, credential, payment, communication, or mutation authority."
+      },
+      "context": {
+        "state": "not_required",
+        "reason": "Public Systemia discovery does not read or write customer operational context. Customer context begins only after explicit scoped onboarding under a separate runtime contract."
+      },
+      "meter": {
+        "state": "not_required",
+        "reason": "The Control Plane Pilot is custom-scoped and no machine usage meter or public machine checkout is declared."
+      },
+      "intake": {
+        "state": "not_required",
+        "reason": "The public record accepts no private software estate, credentials, repositories, files, or customer data. Pilot intake is human-confirmed and separately scoped."
+      },
+      "execution": {
+        "state": "not_required",
+        "reason": "The Systemia umbrella record is discovery-only. Execution occurs only through separately contracted specialist or customer-scoped Systemia runtimes with their own authority gates."
+      },
+      "relationship": {
+        "state": "not_required",
+        "reason": "Public discovery performs no outbound contact, sales outreach, publishing, or third-party communication."
+      },
+      "receipt_reconciliation": {
+        "state": "not_required",
+        "reason": "Discovery-only publication creates no customer runtime receipts to reconcile. Customer pilots must establish their own receipt namespace before execution begins."
+      },
+      "rollback": {
+        "policy": "Remove the public Systemia umbrella discovery record without changing specialist routes, runtime authority, customer data, payment state, or existing Systemia control-plane execution."
+      },
+      "compatibility": {
+        "intended_product_classes": [
+          "software_portfolio_operating_control_plane"
+        ]
+      },
+      "adoption_stage": "discovery_only"
     }
   ]
 }

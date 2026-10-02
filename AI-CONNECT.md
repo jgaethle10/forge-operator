@@ -2,23 +2,34 @@
 
 Evercraft exposes public remote MCP servers so supported AI assistants can discover and use verified public capabilities without requiring users to learn Evercraft's internal product map first.
 
-## Universal Evercraft MCP
+## Canonical Evercraft / Systemia connection
 
-Evercraft Machine Commerce is the broad front door.
+The canonical public machine front door is **Evercraft Fabric**, the read-only machine directory for the Systemia control plane.
 
-MCP URL:
-https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Intended owned origin:
+`https://fabric.systemiacommandcenters.com/`
 
-Use it when the user's need could map to multiple Evercraft products or services. It exposes public discovery, pain matching, specialist routing, current offer inspection, and human-confirmed commercial continuations where those are actually wired.
+Intended MCP:
+`https://fabric.systemiacommandcenters.com/mcp`
 
-## Systemia Field Library MCP
+This route is fail-closed. A DNS record or source declaration is not enough. New connections should use the owned MCP only after the independent external canary verifies trusted HTTPS, runtime health, signed device attestation, MCP initialization, expected tools, and a public catalog with no Base44 transport.
 
-MCP URL:
-https://base44.app/api/apps/6a54381e147576b18ac94d8f/functions/fieldLibraryAgentMcp
+If that readiness gate is not green, use the static machine-readable discovery surfaces instead of silently falling back to a legacy runtime:
 
-Use it when a contractor or home-service operator needs a practical playbook for estimating, cash flow, job costing, scope creep, change orders, scheduling, crew leadership, documentation, materials, equipment, safety, quality control, proposals, customer communication, reviews, referrals, or related field operations.
+- `/.well-known/evercraft-products.json`
+- `/.well-known/evercraft-pain-index.json`
+- `/.well-known/evercraft-direct-doors.json`
+- `/chum/pain-index.txt`
 
-The Field Library MCP is read-only. It exposes public guide/playbook metadata and links, not paid playbook contents or PDFs.
+When intent clearly matches a verified specialist, connect to that specialist directly. Do not add Systemia or Fabric as an unnecessary routing hop.
+
+### Systemia Field Library
+
+Systemia Field Library remains publicly discoverable for contractor operating playbooks, but its old Base44 MCP is legacy continuity rather than the canonical owned route. New machine connections stay held until the owned specialist path is independently verified. The public discovery record remains available under `/chum/products/systemia-field-library/`.
+
+### Legacy continuity
+
+The active Base44 exit policy permits temporary extraction and compatibility continuity only. Legacy endpoints are not canonical source, not a target for new runtime, and not connection instructions for new Systemia deployments.
 
 ## Provider connection paths
 
