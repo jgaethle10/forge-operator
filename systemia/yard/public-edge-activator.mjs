@@ -21,7 +21,7 @@ export async function activatePublicSpecialistEdge({
   requestedHostname='evercraft-specialists',
   mode='wildcard_https',
   requiredPlacementLabels=['public-edge'],
-  specialistGatewayUrl='https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway',
+  specialistGatewayUrl='',
   allowLoopbackProof=false,
 }={}){
   if(!stateDir) throw new Error('activation_state_dir_required');

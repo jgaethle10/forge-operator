@@ -30,6 +30,10 @@ assert.equal(
 assert.equal(actual.summary.zero_hop_specialist_count, actual.summary.direct_callable_count);
 assert.equal(actual.summary.fallback_required_count, actual.summary.not_direct_callable_count);
 assert.match(actual.invariant, /Never add an umbrella routing hop/i);
+assert.equal(/base44\.app/i.test(JSON.stringify(actual)), false);
+assert.equal(actual.universal_fallback.remote_mcp, null);
+assert.equal(actual.universal_fallback.pending_remote_mcp, 'https://fabric.systemiacommandcenters.com/mcp');
+assert.equal(actual.universal_fallback.callable, false);
 
 const bySlug = new Map(actual.products.map((product) => [product.slug, product]));
 for (const spec of specs.products) {
@@ -52,7 +56,10 @@ for (const spec of specs.products) {
     assert.ok(row.registry_candidate, spec.slug + ': route-pending door must have registry candidate');
     assert.equal(row.preferred_route.mode, 'universal_fallback_until_specialist_promoted');
     assert.equal(row.preferred_route.hops_before_specialist, 1);
-    assert.equal(row.preferred_route.remote_mcp, UNIVERSAL_FALLBACK.remote_mcp);
+    assert.equal(row.preferred_route.remote_mcp, null);
+    assert.equal(row.preferred_route.pending_remote_mcp, UNIVERSAL_FALLBACK.pending_remote_mcp);
+    assert.equal(row.preferred_route.fallback_state, 'external_https_verification_required');
+    assert.equal(row.preferred_route.fallback_callable, false);
     assert.equal(row.preferred_route.pending_specialist_runtime_path, spec.runtime_path);
     assert.equal(
       row.next_release_action,
@@ -82,9 +89,11 @@ const forensiRoute = resolveProductRoute({
   specs,
   candidates: new Map(),
 });
-assert.equal(forensiRoute.state, 'specialist_direct');
-assert.equal(forensiRoute.route.hops_before_specialist, 0);
-assert.equal(forensiRoute.route.use_universal_router_first, false);
+assert.equal(forensiRoute.state, 'fallback_required');
+assert.equal(forensiRoute.route.hops_before_specialist, 1);
+assert.equal(forensiRoute.route.use_universal_router_first, true);
+assert.equal(forensiRoute.route.remote_mcp, null);
+assert.equal(forensiRoute.route.pending_remote_mcp, UNIVERSAL_FALLBACK.pending_remote_mcp);
 
 const unknownRoute = resolveProductRoute({
   slug: 'not-a-product',
@@ -94,6 +103,9 @@ const unknownRoute = resolveProductRoute({
 assert.equal(unknownRoute.state, 'unknown_product');
 assert.equal(unknownRoute.route.registry_name, UNIVERSAL_FALLBACK.registry_name);
 assert.equal(unknownRoute.route.use_universal_router_first, true);
+assert.equal(unknownRoute.route.remote_mcp, null);
+assert.equal(unknownRoute.route.pending_remote_mcp, UNIVERSAL_FALLBACK.pending_remote_mcp);
+assert.equal(unknownRoute.route.fallback_callable, false);
 
 const synthetic = buildDirectDoorReadiness({
   specs: {
@@ -159,7 +171,7 @@ for (const discoveryPath of [
   );
   assert.equal(
     discovery.routing_mode,
-    'direct_specialist_zero_hop_then_universal_fallback',
+    'direct_specialist_zero_hop_then_systemia_for_cross_product_then_owned_fabric_fallback',
     discoveryPath + ': routing mode drift'
   );
   assert.match(discovery.routing_rule, /zero umbrella hops/i);

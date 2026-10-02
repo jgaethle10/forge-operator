@@ -17,10 +17,8 @@ const conformanceByCapabilityId = new Map(
 );
 
 function isLegacyProviderUrl(value) {
-  const raw = String(value || '');
-  if (/https?:\/\/(?:base44\.app|[^/\s]+\.base44\.app)(?:\/|$)/i.test(raw)) return true;
   try {
-    const url = new URL(raw);
+    const url = new URL(String(value || ''));
     const host = url.hostname.toLowerCase();
     return host === 'base44.app' || host.endsWith('.base44.app');
   } catch {
@@ -68,9 +66,14 @@ function publicOffer(offer) {
   ).trim() || null;
   const sourcePublicUrl = safeHttps(offer.public_url);
   const gateway = safeHttps(CONFIGURED_GATEWAY_URL);
+  const staticPublicUrl = publicId
+    ? 'https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/'
+      + encodeURIComponent(publicId)
+      + '/index.html'
+    : '';
   const fallbackPublicUrl = publicId && gateway
     ? gateway + (gateway.includes('?') ? '&' : '?') + 'view=service&public_id=' + encodeURIComponent(publicId)
-    : '';
+    : staticPublicUrl;
   return {
     public_id: publicId,
     name: String(offer.name || ''),
@@ -85,12 +88,12 @@ function publicOffer(offer) {
     human_ui_required: Boolean(offer.human_ui_required),
     confirmation: String(offer.confirmation || ''),
     public_url: sourcePublicUrl || fallbackPublicUrl,
-    public_url_source: sourcePublicUrl ? 'source_catalog' : (fallbackPublicUrl ? 'owned_gateway_fallback' : 'held_no_owned_public_url'),
+    public_url_source: sourcePublicUrl
+      ? 'source_catalog'
+      : (gateway ? 'owned_gateway_fallback' : (staticPublicUrl ? 'owned_static_capability_page' : 'held_no_owned_public_url')),
     payment_authority: String(offer.payment_authority || ''),
-    invocation_status: isLegacyProviderUrl(offer.invocation_status)
-      ? 'HELD: legacy provider runtime retired; awaiting a verified Evercraft-owned route.'
-      : String(offer.invocation_status || ''),
-    live_canary_evidence: isLegacyProviderUrl(liveCanaryEvidence) ? null : liveCanaryEvidence,
+    invocation_status: String(offer.invocation_status || ''),
+    live_canary_evidence: liveCanaryEvidence,
     catalog_version: String(offer.catalog_version || '')
   };
 }

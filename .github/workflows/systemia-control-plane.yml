@@ -15,6 +15,14 @@ on:
       - "systemia/beast-mode/**"
       - "systemia/media-studio/**"
       - "package.json"
+      - "registry/systemia/**"
+      - "registry/public-products.json"
+      - "public/.well-known/evercraft-products.json"
+      - "public/.well-known/evercraft-ai-connect.json"
+      - "public/ai-discovery.json"
+      - "AI-CONNECT.md"
+      - "AI-DISCOVERY.md"
+      - "tests/systemia-control-plane-coherence.test.mjs"
       - ".github/workflows/systemia-control-plane.yml"
   push:
     branches:
@@ -32,6 +40,14 @@ on:
       - "systemia/beast-mode/**"
       - "systemia/media-studio/**"
       - "package.json"
+      - "registry/systemia/**"
+      - "registry/public-products.json"
+      - "public/.well-known/evercraft-products.json"
+      - "public/.well-known/evercraft-ai-connect.json"
+      - "public/ai-discovery.json"
+      - "AI-CONNECT.md"
+      - "AI-DISCOVERY.md"
+      - "tests/systemia-control-plane-coherence.test.mjs"
 
 permissions:
   contents: read
@@ -47,3 +63,4 @@ jobs:
           node-version: 22
       - run: npm run machine:status
       - run: npm run proof:control-plane
+      - run: node --test tests/systemia-control-plane-coherence.test.mjs
