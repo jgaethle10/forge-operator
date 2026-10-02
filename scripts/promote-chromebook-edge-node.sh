@@ -10,6 +10,8 @@ RELEASE_REF="$(git -C "$REPO_ROOT" rev-parse HEAD 2>/dev/null || true)"
 
 export EVERCRAFT_NODE_ROLE=operator_authorized_public_edge
 export EVERCRAFT_NODE_LABELS="operator-authorized,public-edge-candidate,gateway,evercraft-edge-dns,chromebook"
+export EVERCRAFT_FAILURE_DOMAIN="${EVERCRAFT_FAILURE_DOMAIN:-home-wan-1}"
+export EVERCRAFT_ZERO_COST=true
 bash "$REPO_ROOT/systemia/compute/install-node-seed.sh"
 
 STATE_ROOT=/var/lib/evercraft/nodeseed
