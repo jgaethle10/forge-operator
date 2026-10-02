@@ -202,12 +202,12 @@ This distinction prevents "we documented it" from becoming "Systemia may execute
 
 The current integration branch evaluates 64 public products.
 
-- 8 have explicit complete contracts
-- 5 are `shared_runtime`: AliEV, ForensiScope route classification, Evercraft Clip read-only planning, FindMyPart free Part Passport triage, Systemia Remote Ops read-only decision simulation
+- 9 have explicit complete contracts
+- 6 are `shared_runtime`: AliEV, ForensiScope route classification, Evercraft Clip read-only planning, FindMyPart free Part Passport triage, Systemia Remote Ops read-only decision simulation, IBM i Rescue read-only offer/handoff
 - 1 is `private_runtime`: Opportunity Fabric
 - 2 are `discovery_only`: EverNest Atlas and Systemia University
-- 56 grandfathered public products remain in the migration queue
-- 10 public direct-door products still need contracts
+- 55 grandfathered public products remain in the migration queue
+- 9 public direct-door products still need contracts
 - the ratchet remains PASS because all three products added after the original 61-product baseline now have explicit contracts
 
 The baseline is not moved forward to hide new products. New products are contracted against the original migration boundary.
@@ -274,3 +274,21 @@ public_origin_state: https_route_unbound
 Systemia may therefore compile the proven internal simulation surface through Passport, Context and Execution Gate, but `require_direct_specialist:true` fails closed until the Evercraft Compute public HTTPS edge and registry publication are independently verified.
 
 No simulation authorizes a real-world business action.
+
+
+## IBM i Rescue canary contract
+
+IBM i Rescue is the sixth shared-runtime contract and the ninth explicit product contract overall.
+
+The contracted tools are the owned Evercraft Compute specialist-handoff tools:
+
+```
+get_ibmi_rescue_offer
+prepare_ibmi_rescue_handoff
+```
+
+Both are explicitly read-only, non-destructive and idempotent. The specialist runtime states that they create no checkout, payment, obligation, entitlement, source access, production access, or paid work. The handoff path only returns the current human-review surface.
+
+Checkout tools, paid fulfillment, credentials, private-system access, upgrades, cutovers and production mutation are not part of this contract.
+
+The IBM i specialist door remains held until its Evercraft Compute public HTTPS edge and registry publication are independently verified. Shared-runtime contract adoption does not upgrade that public route.
