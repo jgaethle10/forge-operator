@@ -1,3 +1,4 @@
+import path from 'node:path';
 import {AmbientWorkQueue} from './ambient-work-queue.mjs';
 import {
   getNodeSeedExecutionIntent,
@@ -48,7 +49,7 @@ export async function executeNodeSeedExecutionIntent({
   }
   if(!brokerDeploymentId) throw new Error('nodeseed_intent_executor_broker_deployment_required');
 
-  const queue=new AmbientWorkQueue({root:new URL('./',new URL('file:'+String(root).replace(/\/$/,'')+'/')).pathname+'work-queue'});
+  const queue=new AmbientWorkQueue({root:path.join(path.resolve(root),'work-queue')});
   const intent=getNodeSeedExecutionIntent({root,intentId});
   if(!intent) throw new Error('nodeseed_execution_intent_not_found');
   if(intent.state==='completed') return {...intent,deduplicated:true};
