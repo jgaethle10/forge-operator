@@ -99,3 +99,54 @@ node systemia/lineage/cli.mjs remote-push ./yard-lineage-remote main null
 ```
 
 The local remote is a protocol proof, not the final network transport. Yard should adapt the same immutable-object and compare-and-swap contracts behind authenticated workspace boundaries rather than changing the Lineage semantics.
+
+
+## Git interoperability
+
+Git is an interoperability bridge, not the canonical Lineage model.
+
+```bash
+node systemia/lineage/cli.mjs git-import ../legacy-repo HEAD git/legacy
+node systemia/lineage/cli.mjs git-export ../git-export HEAD lineage-export null
+```
+
+Git import preserves source commit SHA, parents and author metadata as Lineage provenance. Git export preserves exact artifact bytes and embeds the source Lineage commit ID in the generated Git commit message. The export receipt explicitly lists Lineage fields that cannot be represented losslessly in Git, including richer provenance, authority, transactions, receipts and semantic asset types.
+
+## Universal history view
+
+Lineage can materialize an owned, self-contained history surface without depending on GitHub:
+
+```bash
+node systemia/lineage/cli.mjs history main 100
+node systemia/lineage/cli.mjs history-export ./lineage-history main 100
+```
+
+The bundle contains `graph.json` plus a standalone `index.html` showing multi-parent ancestry, human and agent authorship, change counts, rationale and authority boundaries.
+
+## Release identity
+
+Named releases point to an exact immutable Lineage commit instead of whatever HEAD happens to contain later. A release manifest can carry artifact SHA-256 digests and downstream authority receipt references.
+
+```json
+{
+  "name": "week-in-motion-42",
+  "channel": "production",
+  "commitish": "HEAD",
+  "state": "released",
+  "artifacts": [
+    {
+      "name": "master.mp4",
+      "sha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+    }
+  ],
+  "authorityReceiptRefs": ["release-policy:approved:42"],
+  "actor": { "type": "human", "id": "operator" }
+}
+```
+
+```bash
+node systemia/lineage/cli.mjs release-record ./release.json
+node systemia/lineage/cli.mjs release-show week-in-motion-42 production
+```
+
+A pointer update is compare-and-swap protected. The `released` state fails closed unless at least one downstream authority receipt is supplied. Lineage records what state was released; it does not create release authority by itself.
