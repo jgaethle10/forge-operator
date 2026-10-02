@@ -27,7 +27,6 @@ on:
       - 'systemia/compute/device-identity.mjs'
       - 'systemia/compute/hardware-inventory.mjs'
       - 'systemia/compute/hardware-inventory.proof.mjs'
-      - 'systemia/compute/hardware-attestation.proof.mjs'
       - 'systemia/compute/node-seed.mjs'
       - 'systemia/compute/runtime-node.mjs'
       - 'systemia/network/outbound-capacity-broker.mjs'
@@ -60,8 +59,6 @@ jobs:
           node-version: '22'
       - name: Prove host hardware inventory
         run: node systemia/compute/hardware-inventory.proof.mjs
-      - name: Prove signed hardware attestation
-        run: node systemia/compute/hardware-attestation.proof.mjs
       - name: Prove Resource Field planning
         run: node systemia/saban/resource-field.proof.mjs
       - name: Prove hardware-aware placement
