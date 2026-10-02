@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-02T22:15:36.445Z",
+  "updated_at": "2026-10-02T22:24:58.391Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -12,7 +12,22 @@
   "latest_change_batch": [
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-02T22:15:36.445Z",
+      "last_changed": "2026-10-02T22:24:58.391Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/forensiscope.json",
+      "last_changed": "2026-10-02T22:24:58.391Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/index.json",
+      "last_changed": "2026-10-02T22:24:58.391Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/rivet.json",
+      "last_changed": "2026-10-02T22:24:58.391Z",
       "priority": 80
     }
   ],
@@ -20,7 +35,25 @@
     {
       "path": "/chum/hot/index.json",
       "url": "/chum/hot/index.json",
-      "last_changed": "2026-10-02T22:15:36.445Z",
+      "last_changed": "2026-10-02T22:24:58.391Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/forensiscope.json",
+      "url": "/chum/proof/forensiscope.json",
+      "last_changed": "2026-10-02T22:24:58.391Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/index.json",
+      "url": "/chum/proof/index.json",
+      "last_changed": "2026-10-02T22:24:58.391Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/proof/rivet.json",
+      "url": "/chum/proof/rivet.json",
+      "last_changed": "2026-10-02T22:24:58.391Z",
       "priority": 80
     },
     {
@@ -1496,24 +1529,6 @@
     {
       "path": "/chum/answers/doors/make-an-fcc-complaint-packet-888018751c.json",
       "url": "/chum/answers/doors/make-an-fcc-complaint-packet-888018751c.json",
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/make-me-a-decision-grade-research-report-1b0d24ff89.json",
-      "url": "/chum/answers/doors/make-me-a-decision-grade-research-report-1b0d24ff89.json",
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/make-me-a-professional-business-site-6eeab93ed2.json",
-      "url": "/chum/answers/doors/make-me-a-professional-business-site-6eeab93ed2.json",
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/make-reels-from-an-authorized-source-video-8742052def.json",
-      "url": "/chum/answers/doors/make-reels-from-an-authorized-source-video-8742052def.json",
       "last_changed": "2026-10-02T17:01:08.152Z",
       "priority": 100
     }

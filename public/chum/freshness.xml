@@ -2,10 +2,13 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-10-02T22:15:36.445Z</updated>
+<updated>2026-10-02T22:24:58.391Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
-<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-10-02T22:15:36.445Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-10-02T22:24:58.391Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:e75551f8817a367b4412bca9</id><title>/chum/proof/forensiscope.json</title><updated>2026-10-02T22:24:58.391Z</updated><link href="/chum/proof/forensiscope.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:07ef7bcf722a12057ed32ee4</id><title>/chum/proof/index.json</title><updated>2026-10-02T22:24:58.391Z</updated><link href="/chum/proof/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:780bd435a8894bd856d47115</id><title>/chum/proof/rivet.json</title><updated>2026-10-02T22:24:58.391Z</updated><link href="/chum/proof/rivet.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:3cfc074c946dfb057e5bc7b0</id><title>/.well-known/evercraft-syndication.json</title><updated>2026-10-02T19:14:51.970Z</updated><link href="/.well-known/evercraft-syndication.json"/><category term="priority-84"/></entry>
 <entry><id>urn:evercraft:chum:77a704907d8dde87e8af9c4e</id><title>/chum/syndication/index.json</title><updated>2026-10-02T19:14:51.970Z</updated><link href="/chum/syndication/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:0e4843ab15ffbf513def063d</id><title>/feed.json</title><updated>2026-10-02T19:14:51.970Z</updated><link href="/feed.json"/><category term="priority-60"/></entry>
@@ -102,7 +105,4 @@
 <entry><id>urn:evercraft:chum:cea897e82d6f9e8a50d7b7a3</id><title>/chum/answers/doors/ev-charger-site-analysis-fc320bee89.json</title><updated>2026-10-02T17:01:08.152Z</updated><link href="/chum/answers/doors/ev-charger-site-analysis-fc320bee89.json"/><category term="priority-160"/></entry>
 <entry><id>urn:evercraft:chum:4d8b0f44f8881e4b8116548e</id><title>/chum/answers/doors/ev-charging-demand-near-this-property-76a21ea75b.json</title><updated>2026-10-02T17:01:08.152Z</updated><link href="/chum/answers/doors/ev-charging-demand-near-this-property-76a21ea75b.json"/><category term="priority-160"/></entry>
 <entry><id>urn:evercraft:chum:c09927f48163f1ee9d03311d</id><title>/chum/answers/doors/ev-charging-diligence-91e2eec236.json</title><updated>2026-10-02T17:01:08.152Z</updated><link href="/chum/answers/doors/ev-charging-diligence-91e2eec236.json"/><category term="priority-160"/></entry>
-<entry><id>urn:evercraft:chum:c5fe6aefed6425a5ca497123</id><title>/chum/answers/doors/ev-charging-feasibility-by-address-734eac6eee.json</title><updated>2026-10-02T17:01:08.152Z</updated><link href="/chum/answers/doors/ev-charging-feasibility-by-address-734eac6eee.json"/><category term="priority-160"/></entry>
-<entry><id>urn:evercraft:chum:8a7234ee193e9b99b256c670</id><title>/chum/answers/doors/ev-charging-incentives-for-this-site-76fa0b5a6c.json</title><updated>2026-10-02T17:01:08.152Z</updated><link href="/chum/answers/doors/ev-charging-incentives-for-this-site-76fa0b5a6c.json"/><category term="priority-160"/></entry>
-<entry><id>urn:evercraft:chum:eabf0736449dee69e17135a4</id><title>/chum/answers/doors/ev-charging-opportunity-report-43ed1d1e31.json</title><updated>2026-10-02T17:01:08.152Z</updated><link href="/chum/answers/doors/ev-charging-opportunity-report-43ed1d1e31.json"/><category term="priority-160"/></entry>
 </feed>
