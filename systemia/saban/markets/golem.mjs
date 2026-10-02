@@ -362,7 +362,7 @@ export async function createGolemMarketAdapter({
         schema:'evercraft.saban.golem-portable-execution.v1',
         provider_id:lease.provider_id,
         portable_worker_id:portable.worker_id,
-        result:receipt.result,
+        result:receipt,
         checkpoint:receipt.checkpoint||null,
         result_receipt:receipt.receipt_hash,
       };
