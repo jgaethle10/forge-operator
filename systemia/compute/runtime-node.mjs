@@ -136,7 +136,8 @@ function bridgeServiceOrigin(entry) {
   }
   if (
     entry?.workload_class === 'systemia.specialist-handoff-mcp.v1' ||
-    entry?.workload_class === 'systemia.fabric-local-mcp.v1'
+    entry?.workload_class === 'systemia.fabric-local-mcp.v1' ||
+    entry?.workload_class === 'systemia.faie.v1'
   ) {
     return String(entry?.runtime?.url || '');
   }
