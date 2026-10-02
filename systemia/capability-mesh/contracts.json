@@ -619,6 +619,103 @@
         "market_outcomes_inferred": false,
         "real_world_business_action_authorized": false
       }
+    },
+    {
+      "product_key": "ibmi-rescue",
+      "contract_version": "1.0.0",
+      "owner": "systemia",
+      "adoption_stage": "shared_runtime",
+      "specialist_slug": "ibmi-rescue",
+      "authority": {
+        "state": "declared",
+        "passport_product": "ibmi-rescue",
+        "scopes": [
+          "get_ibmi_rescue_offer",
+          "prepare_ibmi_rescue_handoff"
+        ],
+        "evidence_refs": [
+          "systemia/mcp/specialist-handoff-runtime.mjs",
+          "plugins/ibmi-rescue/skills/ibmi-rescue-direct/SKILL.md",
+          "registry/ibmi-rescue/README.md"
+        ]
+      },
+      "context": {
+        "state": "declared",
+        "namespace": "ibmi-rescue",
+        "read_scope": "context.read.ibmi-rescue",
+        "write_scope": "context.write.ibmi-rescue",
+        "evidence_refs": [
+          "systemia/mcp/specialist-handoff-runtime.mjs",
+          "systemia/context-fabric/fabric.mjs"
+        ]
+      },
+      "meter": {
+        "state": "not_required",
+        "reason": "The contracted tools only read the current offer or prepare a human review handoff. The specialist runtime explicitly creates no checkout, payment, obligation, entitlement, access, or paid work."
+      },
+      "intake": {
+        "state": "not_required",
+        "reason": "The contracted tools take no customer estate evidence and do not authorize credentials, private-system access, production access, or paid fulfillment."
+      },
+      "execution": {
+        "state": "declared",
+        "gate_required": true,
+        "scopes": [
+          "get_ibmi_rescue_offer",
+          "prepare_ibmi_rescue_handoff"
+        ],
+        "actions": [
+          {
+            "scope": "get_ibmi_rescue_offer"
+          },
+          {
+            "scope": "prepare_ibmi_rescue_handoff"
+          }
+        ],
+        "evidence_refs": [
+          "systemia/mcp/specialist-handoff-runtime.mjs"
+        ]
+      },
+      "relationship": {
+        "state": "not_required",
+        "reason": "Preparing a handoff returns a current public human-review surface. It does not send outreach, contact a customer, contact a vendor, or start an engagement."
+      },
+      "receipt_reconciliation": {
+        "state": "declared",
+        "namespace": "ibmi-rescue",
+        "evidence_refs": [
+          "systemia/context-fabric/fabric.mjs",
+          "systemia/mcp/specialist-handoff-runtime.mjs"
+        ]
+      },
+      "rollback": {
+        "state": "declared",
+        "policy": "Disable the IBM i Rescue shared-runtime handoff contract or specialist route without enabling checkout, payment, paid fulfillment, credentials, production access, upgrade, cutover, or public direct routing."
+      },
+      "compatibility": {
+        "intended_product_classes": [
+          "ibmi_upgrade_and_legacy_modernization_evidence"
+        ]
+      },
+      "boundaries": {
+        "contracted_machine_surface": [
+          "get_ibmi_rescue_offer",
+          "prepare_ibmi_rescue_handoff"
+        ],
+        "public_direct_door_verified": false,
+        "registry_publication_proven": false,
+        "public_origin_state": "https_route_unbound",
+        "checkout_contracted": false,
+        "payment_contracted": false,
+        "paid_fulfillment_contracted": false,
+        "payment_obligation_created": false,
+        "credentials_authorized": false,
+        "private_system_access_authorized": false,
+        "production_access_authorized": false,
+        "upgrade_authorized": false,
+        "cutover_authorized": false,
+        "handoff_requires_human_action": true
+      }
     }
   ]
 }

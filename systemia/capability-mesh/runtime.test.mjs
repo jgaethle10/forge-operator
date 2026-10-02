@@ -296,6 +296,73 @@ test('Remote Ops contract cannot be stretched into a production mutation tool', 
   );
 });
 
+test('IBM i Rescue exposes only read-only offer and human handoff tools', () => {
+  const policy = compileProductRuntimePolicy('ibmi-rescue', process.cwd());
+  assert.equal(policy.adoption_stage, 'shared_runtime');
+  assert.equal(policy.authority.passport_product, 'ibmi-rescue');
+  assert.deepEqual(policy.authority.scopes, [
+    'get_ibmi_rescue_offer',
+    'prepare_ibmi_rescue_handoff',
+  ]);
+  assert.equal(policy.route.specialist_slug, 'ibmi-rescue');
+  assert.equal(policy.route.direct_callable, false);
+  assert.equal(policy.route.registry_published, false);
+  assert.equal(policy.meter.state, 'not_required');
+  assert.equal(policy.boundaries.checkout_contracted, false);
+  assert.equal(policy.boundaries.payment_contracted, false);
+  assert.equal(policy.boundaries.paid_fulfillment_contracted, false);
+  assert.equal(policy.boundaries.production_access_authorized, false);
+});
+
+test('IBM i handoff compiles without checkout, payment or production authority', () => {
+  const prepared = buildExecutionGateInput({
+    product_key: 'ibmi-rescue',
+    actor_ref: 'agent:legacy-rescue',
+    scope: 'prepare_ibmi_rescue_handoff',
+    request: {},
+    idempotency_key: 'capability-mesh:ibmi:handoff:001',
+  });
+
+  assert.equal(prepared.execution_gate_input.passport_product, 'ibmi-rescue');
+  assert.equal(prepared.execution_gate_input.specialist_slug, 'ibmi-rescue');
+  assert.equal(prepared.route_snapshot.direct_callable, false);
+  assert.equal(prepared.route_snapshot.state, 'yard_runtime_proven_public_route_pending');
+  assert.equal(Object.prototype.hasOwnProperty.call(prepared.execution_gate_input, 'meter'), false);
+  assert.equal(prepared.payment_state_inferred, false);
+  assert.equal(prepared.grants_execution_authority, false);
+});
+
+test('IBM i Rescue refuses a verified-direct requirement until the public edge is proven', () => {
+  assert.throws(
+    () =>
+      buildExecutionGateInput({
+        product_key: 'ibmi-rescue',
+        actor_ref: 'agent:legacy-rescue',
+        scope: 'get_ibmi_rescue_offer',
+        request: {},
+        idempotency_key: 'capability-mesh:ibmi:direct-held',
+        require_direct_specialist: true,
+      }),
+    /direct_specialist_not_ready/
+  );
+});
+
+test('IBM i Rescue handoff contract cannot become checkout or production authority', () => {
+  for (const scope of ['prepare_verified_checkout', 'get_verified_order_status', 'production.upgrade', 'production.cutover']) {
+    assert.throws(
+      () =>
+        buildExecutionGateInput({
+          product_key: 'ibmi-rescue',
+          actor_ref: 'agent:legacy-rescue',
+          scope,
+          request: { scope },
+          idempotency_key: 'capability-mesh:ibmi:blocked:' + scope,
+        }),
+      /scope_not_declared_in_authority_contract/
+    );
+  }
+});
+
 test('missing product contracts fail closed instead of inheriting another product defaults', () => {
   assert.throws(
     () => compileProductRuntimePolicy('buildflow', process.cwd()),
@@ -314,7 +381,7 @@ test('context binding describes scopes but grants no access', () => {
 
 test('generated runtime policy artifact covers only explicitly contracted products', () => {
   const rendered = renderRuntimePolicies(process.cwd());
-  assert.equal(rendered.policy_count, 8);
+  assert.equal(rendered.policy_count, 9);
   assert.deepEqual(
     rendered.policies.map((row) => row.product_key),
     [
@@ -326,6 +393,7 @@ test('generated runtime policy artifact covers only explicitly contracted produc
       'systemia-university',
       'findmypart',
       'systemia-remote-ops',
+      'ibmi-rescue',
     ]
   );
   assert.equal(rendered.truth_boundary.non_shared_runtime_execution_fails_closed, true);
