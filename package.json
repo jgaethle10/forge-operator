@@ -227,7 +227,7 @@
     "test:fabric-local": "npm run journal:build && node --test tests/fabric-local-runtime.test.mjs",
     "test:fabric-owned-edge": "node --test tests/fabric-owned-edge-installer.test.mjs tests/fabric-outbound-relay.test.mjs",
     "fabric:launch-gate": "node scripts/fabric-launch-gate.mjs",
-    "proof:rockies": "node systemia/rockies/expansion.proof.mjs",
+    "proof:rockies": "node systemia/rockies/expansion.proof.mjs && node systemia/rockies/machine-rockies.proof.mjs",
     "proof:worldstate-observation-fabric": "node systemia/worldstate/observation-fabric.proof.mjs",
     "proof:worldstate": "node systemia/worldstate/worldstate.proof.mjs",
     "proof:worldstate-context-adapter": "node systemia/worldstate/context-fabric-adapter.proof.mjs",
@@ -276,7 +276,8 @@
     "saban:pair-device": "node systemia/saban/microseed-device-pair-cli.mjs",
     "test:product-url-fabric": "node tests/product-url-fabric.test.mjs",
     "proof:rivet-mail": "node systemia/domain-authority/rivet-public-mail.proof.mjs",
-    "test:shipping": "node --test systemia/shipping/shipping-department.test.mjs"
+    "test:shipping": "node --test systemia/shipping/shipping-department.test.mjs",
+    "proof:machine-rockies": "node systemia/rockies/machine-rockies.proof.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
