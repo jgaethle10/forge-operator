@@ -1919,8 +1919,8 @@ export async function startEvercraftComputeNode({
             serviceHost === '127.0.0.1' ||
             serviceHost === '::1' ||
             serviceHost === 'localhost';
-          if (!loopbackService && body.input?.allow_public_bind !== true) {
-            return send(res, 403, { error: 'explicit_public_bind_authority_required' });
+          if (!loopbackService) {
+            return send(res, 403, { error: 'faie_loopback_bind_required' });
           }
 
           const runtime = await startFaieYardRuntime({
@@ -1933,8 +1933,12 @@ export async function startEvercraftComputeNode({
             usgsWaterSites: body.input?.usgs_water_sites || process.env.FAIE_USGS_WATER_SITES || [],
             usgsWaterParameters: body.input?.usgs_water_parameters || process.env.FAIE_USGS_WATER_PARAMETERS || ['00060', '00065'],
             nwpsGauges: body.input?.nwps_gauges || process.env.FAIE_NWPS_GAUGES || [],
-            officialCollectorsEnabled: body.input?.official_collectors_enabled !== false,
-            nwsEnabled: body.input?.nws_enabled !== false,
+            officialCollectorsEnabled: body.input?.official_collectors_enabled == null
+              ? String(process.env.FAIE_OFFICIAL_COLLECTORS_ENABLED || 'true').toLowerCase() !== 'false'
+              : body.input.official_collectors_enabled !== false,
+            nwsEnabled: body.input?.nws_enabled == null
+              ? String(process.env.FAIE_NWS_ENABLED || 'true').toLowerCase() !== 'false'
+              : body.input.nws_enabled !== false,
             internalToken: String(process.env.FAIE_INTERNAL_TOKEN || '')
           });
           const serviceId = `svc_${randomBytes(8).toString('hex')}`;
