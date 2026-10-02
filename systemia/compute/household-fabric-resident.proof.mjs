@@ -81,6 +81,7 @@ try {
   assert.equal(deployed.result.credential_refs_are_opaque, true);
   assert.equal(deployed.result.raw_provider_secrets_in_input, false);
   assert.equal(deployed.result.public_route_required, false);
+  assert.equal(JSON.stringify(deployed.result).includes(computeRoot), false);
 
   async function bridge(pathname) {
     const response = await fetch(node.endpoint + deployed.result.bridge_path, {
