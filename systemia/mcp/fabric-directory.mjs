@@ -6,7 +6,8 @@ const STOP_WORDS=new Set([
   'a','an','and','are','as','at','be','by','for','from','how','i','in','is','it',
   'me','my','of','on','or','the','this','to','we','what','with','you','your',
   'can','cannot','cant','could','need','needs','please','trying','want','wants',
-  'help','helps','through','normal','have','has','had','but','not','know','see','take','old','original','some','thing','things'
+  'help','helps','through','normal','have','has','had','but','not','know','see','take','old','original','some','thing','things',
+  'should','would','do','does','did','company','business'
 ]);
 
 function clean(value,max=4000){
@@ -234,6 +235,9 @@ const DOMAIN_SIGNAL_GUARDS={
   'portfolio-sentinel-v1':['software','app','apps','repository','repositories','repo','github','deployment','deployments','endpoint','endpoints','api','apis','workflow','workflows','codebase'],
   'globalstat-country-intelligence-machine-v1':['country','countries','nation','nations','global','metric','benchmark','geography','geographic'],
   'evercraft-clip-social-video-v1':['video','videos','clip','clips','reel','reels','social media','facebook','instagram','linkedin','tiktok','interview','media'],
+  'aliev-site-opportunity-snapshot-v1':['ev','electric vehicle','electric vehicles','charger','chargers','charging'],
+  'buildflow-procure-to-pay-shadow-v1':['invoice','invoices','receipt','receipts','purchase','purchasing','vendor','vendors','purchase order','purchase orders','procure','three way match'],
+  'buildflow-enterprise-ops-router-v1':['erp','spreadsheet','spreadsheets','legacy system','legacy systems','integration','integrations','operating layer','modernize','modernization','business systems'],
 };
 
 function scoreEntry(intent,entry,{frequency,total}){
