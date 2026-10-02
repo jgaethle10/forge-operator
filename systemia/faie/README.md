@@ -144,6 +144,6 @@ The Yard resident owns one canonical process for:
 - durable FAIE state and receipts
 - deployment-receipt binding for route verification
 
-Compute starts FAIE loopback-first. A non-loopback bind requires explicit authority. Yard verifies the workload identity and truth boundaries before issuing a ready deployment receipt. Public edge routing remains a separate verified binding step.
+Compute starts FAIE loopback-only. Direct public binding is refused; Evercraft Public Edge is the separate verified exposure path. Yard verifies the workload identity and truth boundaries before issuing a ready deployment receipt.
 
 The resident reports `base44_required: false` and `external_ai_required: false`. Public investigation requests remain ephemeral; persisted investigations remain behind the internal-token boundary.
