@@ -116,6 +116,8 @@ leased Relay worker
 
 Producer retries are deduplicated with an `Idempotency-Key`. Relay binds that key to a request fingerprint: reusing the same key for the same request returns the existing job, while reusing it for different content is rejected instead of silently swallowing the second request. Each job preserves a stable logical notification ID across worker retries. Web Push attempts also carry a stable Topic derived from that ID so compatible push services can collapse still-pending duplicate attempts.
 
+A notification may also carry `expires_at`, a business freshness deadline distinct from Web Push TTL. Once that instant passes, Relay records the event as expired and refuses to put it into the inbox, realtime stream, push gateway, or acknowledgement escalation ladder. Use TTL for transport retention and `expires_at` for truth/freshness.
+
 Critical intents may opt into acknowledgement enforcement:
 
 ```json
@@ -140,7 +142,7 @@ The filesystem outbox is restart-safe for the current single-node Forge/Yard run
 Public configuration and health:
 
 - `GET /api/notifications/health` sanitized liveness and queue summary
-- `GET /api/notifications/readiness` delivery readiness based on worker state and oldest pending job age
+- `GET /api/notifications/readiness` delivery readiness based on worker state and the age of work that is actually due, not healthy future retries
 - `GET /api/notifications/config`
 
 Server-to-server, ingest token required:
@@ -183,7 +185,7 @@ Browser/device session:
 
 Purposes are `transactional`, `operational`, `safety`, `reminder`, and `marketing`. Marketing requires `consent_basis: "explicit_opt_in"` and an opted-in subscription.
 
-Machine-readable contracts live in `intent.schema.json`, `receipt.schema.json`, and `job.schema.json`.
+Machine-readable contracts live in `intent.schema.json`, `receipt.schema.json`, `job.schema.json`, and `job-receipt.schema.json`. Relay rejects malformed timing fields, unsafe notification URL schemes, oversized target sets, and notification data above 16 KiB instead of silently coercing them.
 
 ## Browser adoption
 
@@ -208,6 +210,8 @@ Node services use `systemia/notification-fabric/client.mjs`:
 
 - `client.enqueue(intent, { idempotencyKey })` preferred durable production path
 - `client.enqueueSignal(signal, { idempotencyKey })`
+- `client.getJob(jobId)`
+- `client.requeueJob(jobId, { maxAttempts })`
 - `client.notify(intent)` synchronous compatibility path
 - `client.signal(signal)`
 - `client.issueSession(claims)`
@@ -232,6 +236,12 @@ EVERCRAFT_NOTIFICATION_WORKER_INTERVAL_MS=1000
 EVERCRAFT_NOTIFICATION_WORKER_LEASE_MS=30000
 EVERCRAFT_NOTIFICATION_WORKER_BATCH_SIZE=10
 EVERCRAFT_NOTIFICATION_MAX_QUEUE_AGE_MS=60000
+EVERCRAFT_NOTIFICATION_PUSH_TIMEOUT_MS=10000
 ```
 
 The resident worker timer is unreferenced so it does not prevent clean process shutdown. Operators can disable the resident worker and run an isolated worker process later without changing product contracts.
+
+
+### Queue health semantics
+
+Relay reports scheduled retries separately from work that is already due. A notification waiting for its intentional backoff window does not make readiness fail. Readiness degrades only when due work exceeds the configured queue-age objective or the resident worker is unhealthy. Dead letters remain visible in health and metrics as an explicit degraded delivery signal and require deliberate replay.
