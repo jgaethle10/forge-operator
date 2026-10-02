@@ -274,7 +274,7 @@ function scoreEntry(intent,entry,{frequency,total}){
   // Physical-part routing guardrails. Rare generic words such as "broken" must not
   // let software-health capabilities outrank a specialist when the user is holding
   // a real component, while deep sourcing language should still favor the paid hunt.
-  const physicalSignals=['part','component','replacement','obsolete','discontinu','salvage','donor','supersession','cross','reference','serial','marking','label','fragment','fitment','fabrication','blueprint','appliance','tractor','machine'];
+  const physicalSignals=['part','component','replacement','obsolete','discontinu','salvage','donor','supersession','cross','reference','serial','marking','label','fragment','fitment','fabrication','blueprint','appliance','tractor','machine','hydraulic','valve','pump','bearing','motor','gear','sensor','assembly','supplier','suppliers'];
   const identitySignals=['identify','photo','marking','label','serial','fragment','diagram','invoice','evidence','model','number','measurement','call'];
   const deepSourceSignals=['obsolete','discontinu','salvage','donor','supersession','cross','reference','blueprint','fabrication','aftermarket','nos'];
   const softwareSignals=['software','app','repository','repo','codebase','website','endpoint','workflow','deployment','api','saas'];
