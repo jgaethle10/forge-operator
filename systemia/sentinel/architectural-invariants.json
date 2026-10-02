@@ -85,13 +85,13 @@
         "public_url",
         "payment_authority",
         "confirmation",
-        "public_url_source"
+        "public_url_source",
+        "public_url_transactional",
+        "checkout_continuation_verified"
       ],
       "require_nonempty_offers": true,
       "repair_recipe_id": "sell-now-continuation-contract",
-      "allow_empty_public_url_when_source_in": [
-        "held_no_owned_public_url"
-      ]
+      "allow_empty_public_url_when_source_in": []
     },
     {
       "invariant_id": "trigger-mode-policy-single-source",
