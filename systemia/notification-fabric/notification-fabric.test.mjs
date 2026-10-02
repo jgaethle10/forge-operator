@@ -453,3 +453,35 @@ test('marketing realtime delivery requires an opted-in subscription', async () =
   assert.equal(withOptIn.realtime_delivered, 1);
   fabric.realtimeHub.closeAll();
 });
+
+
+test('hung push transports are aborted instead of pinning Relay indefinitely', async () => {
+  const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'relay-push-timeout-'));
+  let aborted = false;
+  const fabric = createNotificationFabric({
+    dataDir,
+    pushAttempts: 1,
+    pushTimeoutMs: 250,
+    sendPush: async (_subscription, _payload, options) => new Promise((_resolve, reject) => {
+      options.signal.addEventListener('abort', () => {
+        aborted = true;
+        reject(new Error('aborted'));
+      }, { once: true });
+    }),
+  });
+  fabric.subscribe(makeSubscription());
+  const started = Date.now();
+  const result = await fabric.dispatchIntent({
+    id: 'hung-push-1',
+    product: 'rivet',
+    purpose: 'transactional',
+    title: 'Timeout proof',
+    body: 'Gateway never answers',
+    recipient_ids: ['owner'],
+  });
+  const elapsed = Date.now() - started;
+  assert.equal(aborted, true);
+  assert.equal(result.accepted, 0);
+  assert.ok(result.receipts.some((receipt) => receipt.status === 'delivery_failed'));
+  assert.ok(elapsed < 2000);
+});
