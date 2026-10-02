@@ -1,0 +1,105 @@
+{
+  "id": "yakima-water-story-pilot-001",
+  "title": "Where the Water Goes",
+  "logline": "A source-grounded pilot tracing how water moves through the Yakima Basin, what is observed, what is modeled, and what remains uncertain.",
+  "targetRuntimeMinutes": 18,
+  "audience": "general",
+  "editorialThesis": "The Yakima Basin is best understood as a connected physical system whose choices and constraints can be shown through evidence, maps, history and lived infrastructure rather than reduced to a single drought headline.",
+  "evidence": [
+    {
+      "id": "yakima-water-system",
+      "claim": "The Yakima Basin water system links snowpack, reservoirs, rivers, irrigation infrastructure, agriculture, municipalities and ecological flows.",
+      "state": "documented",
+      "confidence": 0.95,
+      "sources": [
+        {
+          "ref": "source:pilot-placeholder-official-basin-material",
+          "kind": "official_document",
+          "authority": "primary",
+          "rights": "public_domain",
+          "notes": "Pilot placeholder. Replace with captured primary-source records during Systemia research admission."
+        }
+      ]
+    },
+    {
+      "id": "seasonal-variability",
+      "claim": "Water availability and operational constraints vary materially by season and year.",
+      "state": "documented",
+      "confidence": 0.9,
+      "sources": [
+        {
+          "ref": "source:pilot-placeholder-hydrology-series",
+          "kind": "official_dataset",
+          "authority": "primary",
+          "rights": "public_domain",
+          "notes": "Pilot placeholder. Replace with exact dataset version and capture timestamp."
+        }
+      ]
+    },
+    {
+      "id": "future-pressure",
+      "claim": "Future basin pressure depends on interacting climate, demand, infrastructure and policy variables.",
+      "state": "modeled",
+      "confidence": 0.65,
+      "sources": [],
+      "uncertainty": "Requires model-specific assumptions, time horizon and scenario labeling before narration."
+    }
+  ],
+  "visuals": [
+    {
+      "id": "basin-map",
+      "type": "map",
+      "sourceRef": "worldstate:yakima-basin-pilot",
+      "evidenceRefs": ["yakima-water-system"],
+      "rights": "owned"
+    },
+    {
+      "id": "hydrology-chart",
+      "type": "data_visualization",
+      "sourceRef": "dataset:pilot-hydrology-series",
+      "evidenceRefs": ["seasonal-variability"],
+      "rights": "owned"
+    },
+    {
+      "id": "future-scenario-visual",
+      "type": "generated_visualization",
+      "rights": "owned",
+      "synthetic": true,
+      "notes": "Illustrative only. Must be visibly labeled as a scenario visualization and cannot be bound as evidence."
+    }
+  ],
+  "chapters": [
+    {
+      "id": "chapter-1",
+      "title": "The Basin Is a Machine",
+      "purpose": "Orient the viewer to the physical system before introducing conflict or consequence.",
+      "targetMinutes": 4,
+      "evidenceRefs": ["yakima-water-system"],
+      "visualRefs": ["basin-map"]
+    },
+    {
+      "id": "chapter-2",
+      "title": "A Moving Target",
+      "purpose": "Show seasonal and year-to-year variability with real measurements.",
+      "targetMinutes": 5,
+      "evidenceRefs": ["seasonal-variability"],
+      "visualRefs": ["hydrology-chart"]
+    },
+    {
+      "id": "chapter-3",
+      "title": "What We Know About Tomorrow",
+      "purpose": "Separate projections from observations and surface uncertainty honestly.",
+      "targetMinutes": 5,
+      "evidenceRefs": ["future-pressure"],
+      "visualRefs": ["future-scenario-visual"]
+    },
+    {
+      "id": "chapter-4",
+      "title": "The Decisions Hidden Inside the Water",
+      "purpose": "Close on the evidence questions that matter for future reporting.",
+      "targetMinutes": 4,
+      "evidenceRefs": ["yakima-water-system", "seasonal-variability", "future-pressure"],
+      "visualRefs": ["basin-map", "hydrology-chart", "future-scenario-visual"]
+    }
+  ]
+}
