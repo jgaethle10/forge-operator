@@ -276,7 +276,10 @@
     "saban:pair-device": "node systemia/saban/microseed-device-pair-cli.mjs",
     "test:product-url-fabric": "node tests/product-url-fabric.test.mjs",
     "proof:rivet-mail": "node systemia/domain-authority/rivet-public-mail.proof.mjs",
-    "test:shipping": "node --test systemia/shipping/shipping-department.test.mjs"
+    "test:shipping": "node --test systemia/shipping/shipping-department.test.mjs",
+    "test:world-engine": "node --import tsx --test systemia/world-engine/world-engine.test.ts",
+    "proof:world-engine": "node --import tsx systemia/world-engine/proof.mjs",
+    "proof:saban-world-engine": "node systemia/saban/multiplier.mjs --software world-engine-review --inventory systemia/saban/fixtures/world-engine-review-job.json --agents 16 --workers 4 --execute --reconcile"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
