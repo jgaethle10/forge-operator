@@ -45,9 +45,14 @@
     "syndication_hub": "/chum/syndication/"
   },
   "universal_front_door": {
-    "read_only_registry_name": "io.github.jgaethle10/evercraft-capability-discovery",
-    "machine_commerce_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-    "machine_commerce_mcp": null
+    "owned_control_plane": "Systemia / Evercraft Fabric",
+    "owned_origin": "https://fabric.systemiacommandcenters.com/",
+    "owned_mcp": "https://fabric.systemiacommandcenters.com/mcp",
+    "state": "external_https_verification_required",
+    "invocation_rule": "Use the owned MCP only after the independent canary verifies trusted HTTPS, runtime health, signed device attestation, MCP tools, and a Base44-free public catalog.",
+    "static_fallback": "/.well-known/evercraft-products.json",
+    "pain_index": "/.well-known/evercraft-pain-index.json",
+    "direct_doors": "/.well-known/evercraft-direct-doors.json"
   },
   "state_semantics": {
     "discovery_only": "May be surfaced and explained; no machine invocation is claimed.",
@@ -56,8 +61,8 @@
     "checkout_ready": "An exact current checkout rail exists for that offer.",
     "paid": "Authoritative provider payment verification exists."
   },
-  "routing_mode": "direct_specialist_zero_hop_then_universal_fallback",
-  "routing_rule": "Start from the user problem, route to a matching verified direct specialist with zero umbrella hops when one exists, otherwise use the universal fallback. Choose the smallest truthful public capability, preserve evidence/permission/geography/safety/payment boundaries, and never infer provider pickup from publication.",
+  "routing_mode": "direct_specialist_zero_hop_then_systemia_for_cross_product_then_owned_fabric_fallback",
+  "routing_rule": "Start from the user problem. Use a matching verified direct specialist with zero umbrella hops when one exists. Use Systemia for genuinely cross-product software-estate problems. Use the owned Fabric fallback only when its external readiness gate is green. Otherwise use static public discovery. Preserve evidence, permission, geography, safety, runtime and payment boundaries; never infer provider pickup or live execution from publication.",
   "private_surfaces": "not advertised",
   "freshness_broadcast": {
     "coordinator": "CHUM",
@@ -74,5 +79,6 @@
     "segmented_sitemap_index": "/chum/sitemaps/index.xml",
     "hub": "/chum/syndication/",
     "manifest": "/.well-known/evercraft-syndication.json"
-  }
+  },
+  "legacy_runtime_policy": "Base44 is legacy extraction/compatibility continuity only and is not a canonical Systemia routing target."
 }

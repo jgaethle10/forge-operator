@@ -685,6 +685,19 @@
       }
     },
     {
+      "product_key": "systemia",
+      "name": "Systemia",
+      "class": "software_portfolio_operating_control_plane",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/systemia",
+      "github_record": "./systemia/README.md",
+      "llms": "./systemia/llms.txt",
+      "registry_name": null,
+      "invocation": {
+        "mode": "discovery_only",
+        "url": null
+      }
+    },
+    {
       "product_key": "systemia-atlas-freight",
       "name": "Systemia Atlas Freight Load Exception Intelligence",
       "class": "freight_load_exception_and_document_intelligence",

@@ -1,0 +1,82 @@
+{
+  "schema": "evercraft.chum.product-discovery.v1",
+  "product_key": "systemia",
+  "name": "Systemia",
+  "aliases": [
+    "Systemia Control Plane",
+    "Systemia Operating System",
+    "Evercraft Systemia"
+  ],
+  "class": "software_portfolio_operating_control_plane",
+  "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/systemia",
+  "intents": [
+    "coordinate a large portfolio of software products agents and workflows",
+    "turn many apps repositories and agents into one coherent operating system",
+    "continuously observe route prove repair and release software work",
+    "keep institutional memory evidence receipts dependencies and execution state together",
+    "make my software portfolio easier for AI agents and LLMs to understand and use",
+    "reduce drift across products APIs workflows machine discovery and deployments",
+    "find the right specialist capability for a cross-product software problem"
+  ],
+  "authority": "public discovery of the Systemia control-plane model and human-confirmed pilot scoping; discovery grants no private repository access, credentials, production mutation, payment authority, or external-action authority",
+  "human_confirmation_required": true,
+  "boundaries": [
+    "clear specialist intent should route directly to the verified specialist rather than through Systemia as an unnecessary hop",
+    "public discovery does not grant access to private repositories credentials customer data or internal topology",
+    "customer execution begins only after explicit scope authorization and receipt-backed onboarding",
+    "production mutation payment external communications and high-blast-radius actions remain separately gated",
+    "an internal Evercraft proof does not prove a customer deployment is live",
+    "owned public Fabric runtime is canonical only after its independent HTTPS and MCP canary is green"
+  ],
+  "commercial": {
+    "status": "commercial_pilot_discovery",
+    "pricing": "Custom quote based on portfolio size, repositories, public endpoints, workflow count, agent surfaces, and desired automation scope.",
+    "offers": [
+      {
+        "offer_key": "systemia_control_plane_pilot",
+        "name": "Systemia Control Plane Pilot",
+        "price": "Custom quote",
+        "billing": "pilot"
+      }
+    ],
+    "payment_state": "No public machine checkout is claimed. Commercial terms and payment require explicit human agreement and authoritative payment verification."
+  },
+  "machine_commerce_handoff": null,
+  "human_start_url": null,
+  "buyer_frontage_url": null,
+  "registry_name": null,
+  "mcp": null,
+  "machine_commerce_mcp": null,
+  "developer_surfaces": null,
+  "editorial_surfaces": null,
+  "knowledge_surfaces": {
+    "registry_readme": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia",
+    "registry_llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/systemia/llms.txt"
+  },
+  "distribution_surfaces": null,
+  "relationships": {
+    "portfolio_sentinel": {
+      "name": "Systemia Portfolio Sentinel",
+      "relationship": "continuous_integrity_and_repair_evidence",
+      "public_surface": "/chum/products/systemia-portfolio-sentinel/"
+    },
+    "remote_ops": {
+      "name": "Systemia Remote Ops",
+      "relationship": "modeled_business_decision_support",
+      "public_surface": "/chum/products/systemia-remote-ops/"
+    },
+    "fabric": {
+      "name": "Evercraft Fabric",
+      "relationship": "public_machine_capability_directory",
+      "public_surface": "https://fabric.systemiacommandcenters.com/"
+    }
+  },
+  "proof_library": null,
+  "source": "CHUM public mirror",
+  "mirror": {
+    "llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia/llms.txt",
+    "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia/ai-discovery.json",
+    "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia/ai-conformance.json",
+    "page": "/chum/products/systemia/"
+  }
+}

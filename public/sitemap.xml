@@ -2720,4 +2720,8 @@
   <url><loc>/.well-known/evercraft-syndication.json</loc><lastmod>2026-10-01T05:00:27.354Z</lastmod></url>
   <url><loc>/chum/syndication/</loc><lastmod>2026-10-01T04:57:43.336Z</lastmod></url>
   <url><loc>/chum/syndication/index.json</loc><lastmod>2026-10-01T05:00:27.354Z</lastmod></url>
+  <url><loc>https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia/index.html</loc></url>
+  <url><loc>https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia/llms.txt</loc></url>
+  <url><loc>https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia/ai-discovery.json</loc></url>
+  <url><loc>https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia/ai-conformance.json</loc></url>
 </urlset>

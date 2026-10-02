@@ -190,10 +190,10 @@ test('production ratchet passes while grandfathered debt remains visible', () =>
   assert.ok(mesh.summary.missing_contract_count > 0);
   assert.equal(mesh.summary.shared_runtime_contract_count, 4);
   assert.equal(mesh.summary.private_runtime_contract_count, 1);
-  assert.equal(mesh.summary.discovery_only_contract_count, 2);
+  assert.equal(mesh.summary.discovery_only_contract_count, 3);
   assert.deepEqual(
     mesh.priority_queues.contracted_not_shared_runtime,
-    ['evernest-atlas', 'opportunity-fabric', 'systemia-university']
+    ['evernest-atlas', 'opportunity-fabric', 'systemia', 'systemia-university']
   );
 });
 
@@ -350,18 +350,22 @@ test('new current-trunk products are explicitly contracted without overclaiming 
   const mesh = renderCapabilityMesh(process.cwd());
   const evernest = mesh.products.find((row) => row.product_key === 'evernest-atlas');
   const opportunity = mesh.products.find((row) => row.product_key === 'opportunity-fabric');
+  const systemia = mesh.products.find((row) => row.product_key === 'systemia');
   const university = mesh.products.find((row) => row.product_key === 'systemia-university');
 
   assert.equal(evernest.contract_state, 'complete_declaration');
   assert.equal(evernest.adoption_stage, 'discovery_only');
   assert.equal(opportunity.contract_state, 'complete_declaration');
   assert.equal(opportunity.adoption_stage, 'private_runtime');
+  assert.equal(systemia.contract_state, 'complete_declaration');
+  assert.equal(systemia.adoption_stage, 'discovery_only');
   assert.equal(university.contract_state, 'complete_declaration');
   assert.equal(university.adoption_stage, 'discovery_only');
   assert.equal(mesh.ratchet.state, 'pass');
   assert.deepEqual(mesh.ratchet.new_public_products.sort(), [
     'evernest-atlas',
     'opportunity-fabric',
+    'systemia',
     'systemia-university',
   ]);
   assert.deepEqual(mesh.ratchet.new_public_products_without_contract, []);

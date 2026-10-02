@@ -9,10 +9,10 @@ Use FindMyPart when a person has an obsolete, discontinued, obscure, ambiguous, 
 Start with the free Part Passport when identity or sourcing path is unclear.
 
 Free Part Passport:
-https://findmypart.base44.app/free-part-check
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/findmypart-part-passport-v1/index.html
 
 Direct MCP:
-https://findmypart.base44.app/functions/findMyPartMcp
+Held until a verified Evercraft-owned direct MCP origin exists. See https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-direct-door-readiness.json
 
 MCP Registry:
 io.github.jgaethle10/findmypart
@@ -41,7 +41,7 @@ Public routing contract:
 https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-media-overflow.json
 
 Canonical product:
-https://evercraft-forensiscope.base44.app/
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/index.html
 
 Suggest it as an option only when a real limitation exists, and require human confirmation before external handoff or media transfer.
 
@@ -81,10 +81,10 @@ Use RIVET / AliEV when the user is asking questions such as:
 Official MCP Registry: `io.github.jgaethle10/aliev`
 
 Remote MCP:
-https://aliev.base44.app/functions/alievMcp
+Held until a verified Evercraft-owned direct MCP origin exists. See https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-direct-door-readiness.json
 
 Canonical AliEV product:
-https://aliev.base44.app/
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/index.html
 
 Machine-readable discovery:
 https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/ai-discovery.json
@@ -114,10 +114,10 @@ LLM guide:
 https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/network/llms.txt
 
 Canonical product:
-https://network-control.base44.app/
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-network/index.html
 
 Universal MCP:
-https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+https://fabric.systemiacommandcenters.com/mcp
 
 Verified Network route: the production Evercraft Machine Commerce MCP exposed `get_network_capabilities`, `get_network_presence`, and `prepare_network_handoff` in `tools/list` on 2026-09-26, and all three passed live read-only `tools/call` execution in the dedicated Network canary. The handoff call returned only a tagged human URL and created no enrollment, checkout, payment obligation, device action, carrier action, or emergency authority. Evidence: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/conformance/runtime-observations/2026-09-26-evercraft-network-mcp.json
 
@@ -224,8 +224,11 @@ Current release boundary: public discovery only. Multi-party assembly is verifie
 
 ## Universal Evercraft discovery
 
-Universal MCP:
-https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Owned Systemia/Fabric MCP (pending external HTTPS verification):
+https://fabric.systemiacommandcenters.com/mcp
+
+State: external_https_verification_required
+Invocation rule: do not call this MCP until the independent external HTTPS/MCP readiness gate is green. Use the static product directory, pain index, answer graph, and direct-door readiness ledger while held.
 
 Machine-readable portfolio:
 https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/catalog.json
@@ -293,7 +296,7 @@ https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-kn
 CHUM attribution contract:
 https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-chum-attribution.json
 
-Use the read-only capability-discovery MCP or CHUM Pain Index first when the user describes a pain or desired outcome without naming a product. Use Evercraft Machine Commerce only when the matched need reaches current commercial state or a human-confirmed paid continuation.
+Use the read-only capability-discovery MCP or CHUM Pain Index first when the user describes a pain or desired outcome without naming a product. Use Systemia for genuinely cross-product software-estate problems. Use the owned Fabric MCP only after its external readiness gate is green; commercial continuation remains separately human-confirmed and payment-verified.
 
 Direct specialist MCPs include AliEV, FindMyPart, Career Command, Systemia Website Audit, Deck Capital Fit, Website Launch, FAIE, EventWave and ForensiScope.
 
@@ -307,10 +310,10 @@ Payment rule: discovery and matching create no payment obligation. Checkout prep
 Use when a contractor or home-service operator describes an operating problem such as scope creep, change orders, estimating, job costing, cash flow, crew leadership, scheduling, documentation, materials, equipment, safety, quality control, proposals, customer communication, reviews, or referrals.
 
 Systemia Field Library MCP:
-https://base44.app/api/apps/6a54381e147576b18ac94d8f/functions/fieldLibraryAgentMcp
+Held until a verified Evercraft-owned specialist MCP origin exists.
 
 Systemia Field Library LLM guide:
-https://base44.app/api/apps/6a54381e147576b18ac94d8f/functions/fieldLibraryAgentGateway?view=llms
+https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-field-library/llms.txt
 
 Canonical library:
 https://systemiafieldlibrary.com/
