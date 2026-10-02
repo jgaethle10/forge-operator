@@ -1,0 +1,48 @@
+name: Household Fabric resident runtime
+
+on:
+  pull_request:
+    paths:
+      - "systemia/household-fabric/**"
+      - "systemia/organism/household-fabric-yakima-runner.mjs"
+      - "systemia/organism/household-fabric-yakima.workflow.json"
+      - "systemia/compute/runtime-node.mjs"
+      - "systemia/compute/household-fabric-resident.proof.mjs"
+      - "systemia/yard/operator.mjs"
+      - ".github/workflows/household-fabric-resident.yml"
+      - "package.json"
+  push:
+    branches:
+      - main
+      - "systemia/**"
+    paths:
+      - "systemia/household-fabric/**"
+      - "systemia/organism/household-fabric-yakima-runner.mjs"
+      - "systemia/organism/household-fabric-yakima.workflow.json"
+      - "systemia/compute/runtime-node.mjs"
+      - "systemia/compute/household-fabric-resident.proof.mjs"
+      - "systemia/yard/operator.mjs"
+      - ".github/workflows/household-fabric-resident.yml"
+      - "package.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install
+        run: npm install --no-audit --no-fund
+      - name: Verify resident runtime
+        run: npm run test:household-fabric-resident
+      - name: Verify Evercraft Compute and Yard deployment
+        run: npm run proof:household-fabric-resident
+      - name: Verify canonical Yakima cycle
+        run: npm run proof:household-fabric-yakima
