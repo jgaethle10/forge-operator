@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { LineageStore } from './core.mjs';
 import { LargeObjectStore } from './large-object.mjs';
-import { LocalLineageRemote, pushCommitGraph } from './remote-protocol.mjs';
+import { LocalLineageRemote, fetchCommitGraph, pushCommitGraph } from './remote-protocol.mjs';
 
 test('large-object store materializes byte-identical content and deduplicates shared chunks', async () => {
   const root = await mkdtemp(join(tmpdir(), 'lineage-large-'));
@@ -104,5 +104,76 @@ test('remote refuses object bytes whose digest does not match their claimed iden
     );
   } finally {
     await rm(root, { recursive: true, force: true });
+  }
+});
+
+
+test('fetchCommitGraph fast-forwards an empty peer and preserves exact history', async () => {
+  const sourceRoot = await mkdtemp(join(tmpdir(), 'lineage-source-'));
+  const targetRoot = await mkdtemp(join(tmpdir(), 'lineage-target-'));
+  const remoteRoot = await mkdtemp(join(tmpdir(), 'lineage-fetch-remote-'));
+  try {
+    const source = new LineageStore(sourceRoot);
+    const target = new LineageStore(targetRoot);
+    const remote = new LocalLineageRemote(remoteRoot);
+    await source.init();
+    await target.init({ branch: 'main' });
+
+    await writeFile(join(sourceRoot, 'evidence.json'), '{"state":"verified"}\n');
+    const committed = await source.commit({ message: 'verified evidence' });
+    await pushCommitGraph({ store: source, remote, branch: 'main', expectedRemoteHead: null });
+
+    const receipt = await fetchCommitGraph({
+      store: target,
+      remote,
+      remoteBranch: 'main',
+      localBranch: 'main'
+    });
+
+    assert.equal(receipt.state, 'fast_forwarded');
+    assert.equal(receipt.local_head_after, committed.commit_id);
+    assert.equal(await target.resolveRef('main'), committed.commit_id);
+    const remoteTree = await target.getTree('main');
+    assert.deepEqual(remoteTree.entries.map((x) => x.path), ['evidence.json']);
+  } finally {
+    await rm(sourceRoot, { recursive: true, force: true });
+    await rm(targetRoot, { recursive: true, force: true });
+    await rm(remoteRoot, { recursive: true, force: true });
+  }
+});
+
+test('fetchCommitGraph refuses to move a diverged local ref', async () => {
+  const sourceRoot = await mkdtemp(join(tmpdir(), 'lineage-diverge-source-'));
+  const targetRoot = await mkdtemp(join(tmpdir(), 'lineage-diverge-target-'));
+  const remoteRoot = await mkdtemp(join(tmpdir(), 'lineage-diverge-remote-'));
+  try {
+    const source = new LineageStore(sourceRoot);
+    const target = new LineageStore(targetRoot);
+    const remote = new LocalLineageRemote(remoteRoot);
+    await source.init();
+    await target.init();
+
+    await writeFile(join(sourceRoot, 'shared.txt'), 'remote\n');
+    const remoteCommit = await source.commit({ message: 'remote history' });
+    await pushCommitGraph({ store: source, remote, branch: 'main', expectedRemoteHead: null });
+
+    await writeFile(join(targetRoot, 'shared.txt'), 'local\n');
+    const localCommit = await target.commit({ message: 'local history' });
+
+    const receipt = await fetchCommitGraph({
+      store: target,
+      remote,
+      remoteBranch: 'main',
+      localBranch: 'main'
+    });
+
+    assert.equal(receipt.state, 'diverged_requires_reconciliation');
+    assert.equal(receipt.ref_updated, false);
+    assert.equal(receipt.remote_head, remoteCommit.commit_id);
+    assert.equal(await target.resolveRef('main'), localCommit.commit_id);
+  } finally {
+    await rm(sourceRoot, { recursive: true, force: true });
+    await rm(targetRoot, { recursive: true, force: true });
+    await rm(remoteRoot, { recursive: true, force: true });
   }
 });
