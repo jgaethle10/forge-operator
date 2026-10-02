@@ -2,9 +2,11 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-10-02T17:01:08.152Z</updated>
+<updated>2026-10-02T17:05:20.795Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
+<entry><id>urn:evercraft:chum:770866315bf12f2c92446bfe</id><title>/chum/hot/</title><updated>2026-10-02T17:05:20.795Z</updated><link href="/chum/hot/"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-10-02T17:05:20.795Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:6773c307c0c5ac36f90410ea</id><title>/chum/answers/doors/account-takeover-protection-6a5072fc31.json</title><updated>2026-10-02T17:01:08.152Z</updated><link href="/chum/answers/doors/account-takeover-protection-6a5072fc31.json"/><category term="priority-160"/></entry>
 <entry><id>urn:evercraft:chum:e2e7f9de38af9742eb104bc2</id><title>/chum/answers/doors/add-a-safe-ai-tool-b7c5b86ec9.json</title><updated>2026-10-02T17:01:08.152Z</updated><link href="/chum/answers/doors/add-a-safe-ai-tool-b7c5b86ec9.json"/><category term="priority-160"/></entry>
 <entry><id>urn:evercraft:chum:8075656f944dc1b81467697e</id><title>/chum/answers/doors/add-an-agent-tool-to-my-system-72fd7b3a0c.json</title><updated>2026-10-02T17:01:08.152Z</updated><link href="/chum/answers/doors/add-an-agent-tool-to-my-system-72fd7b3a0c.json"/><category term="priority-160"/></entry>
@@ -103,6 +105,4 @@
 <entry><id>urn:evercraft:chum:6c8ecf418178e5ca013168fe</id><title>/chum/answers/doors/export-an-ai-built-app-5cdc62676d.json</title><updated>2026-10-02T17:01:08.152Z</updated><link href="/chum/answers/doors/export-an-ai-built-app-5cdc62676d.json"/><category term="priority-160"/></entry>
 <entry><id>urn:evercraft:chum:929f9a3ac04ae4f810ad0b06</id><title>/chum/answers/doors/extend-this-bounded-build-run-0e2e4d2c1f.json</title><updated>2026-10-02T17:01:08.152Z</updated><link href="/chum/answers/doors/extend-this-bounded-build-run-0e2e4d2c1f.json"/><category term="priority-160"/></entry>
 <entry><id>urn:evercraft:chum:d17ce61915dd390bd3d1698f</id><title>/chum/answers/doors/family-check-in-safety-90b9db7865.json</title><updated>2026-10-02T17:01:08.152Z</updated><link href="/chum/answers/doors/family-check-in-safety-90b9db7865.json"/><category term="priority-160"/></entry>
-<entry><id>urn:evercraft:chum:50632566a7e1d1452ba55a75</id><title>/chum/answers/doors/feature-my-venue-on-eventwave-91a643633e.json</title><updated>2026-10-02T17:01:08.152Z</updated><link href="/chum/answers/doors/feature-my-venue-on-eventwave-91a643633e.json"/><category term="priority-160"/></entry>
-<entry><id>urn:evercraft:chum:e665b8eeb93d5f8b5f3084ec</id><title>/chum/answers/doors/fetch-a-webpage-for-my-ai-agent-fc5f02747b.json</title><updated>2026-10-02T17:01:08.152Z</updated><link href="/chum/answers/doors/fetch-a-webpage-for-my-ai-agent-fc5f02747b.json"/><category term="priority-160"/></entry>
 </feed>
