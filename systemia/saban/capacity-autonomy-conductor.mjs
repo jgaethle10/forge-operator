@@ -14,6 +14,33 @@ function validConformance(row,nowMs){
   return Number.isFinite(exp)&&nowMs<exp&&(c.verified_workloads||[]).length>0;
 }
 
+function stalePerformanceWorkloads(row,performanceLedger,nowMs,maxAgeMs){
+  const workloads=[...(row?.conformance?.verified_workloads||[])].map(String);
+  if(!workloads.length)return [];
+  const profiles=performanceLedger?.profiles&&typeof performanceLedger.profiles==='object'
+    ? performanceLedger.profiles
+    : {};
+  return workloads.filter(workload=>{
+    const profile=profiles[String(row.device_id)+'|'+workload]||null;
+    if(!profile)return true;
+    const observed=Date.parse(String(profile.last_observed_at||''))||0;
+    return !observed || nowMs-observed>Math.max(60_000,Number(maxAgeMs||0));
+  });
+}
+
+function prewarmByDevice(prewarmPlan){
+  const map=new Map();
+  if(prewarmPlan?.schema!=='evercraft.saban.prewarm-plan.v1')return map;
+  for(const row of prewarmPlan.actions||[]){
+    const id=String(row?.device_id||'').trim();
+    if(!id)continue;
+    const entry=map.get(id)||new Set();
+    for(const workload of row.matched_workloads||[])entry.add(String(workload));
+    map.set(id,entry);
+  }
+  return map;
+}
+
 function authorityRequestForRow(row,now){
   const manifest=row?.manifest||null;
   if(!manifest)return null;
@@ -103,6 +130,8 @@ export function buildCapacityAutonomyPlan({
   registrySnapshot,
   opportunityMap=null,
   performanceLedger=null,
+  prewarmPlan=null,
+  maxPerformanceAgeMs=30*60*1000,
   now=new Date(),
 }={}){
   if(registrySnapshot?.schema!=='evercraft.saban.ambient-device-registry-snapshot.v1'){
@@ -114,6 +143,7 @@ export function buildCapacityAutonomyPlan({
 
   const safeAutonomousActions=[];
   const authorityRequests=[];
+  const prewarmTargets=prewarmByDevice(prewarmPlan);
   const postAuthorityPipelines=[];
   const holds=[];
 
@@ -181,15 +211,32 @@ export function buildCapacityAutonomyPlan({
           authority_basis:'existing_active_device_authorization',
           arbitrary_code_execution:false,
           canaries_only:true,
+          reason:'conformance_missing_or_near_expiry',
         });
       }else{
-        safeAutonomousActions.push({
-          device_id:row.device_id,
-          action:'run_safe_calibration_and_refresh_performance_profile',
-          authority_required:false,
-          authority_basis:'existing_active_device_authorization',
-          verified_workloads:[...(row.conformance?.verified_workloads||[])],
-        });
+        const stale=stalePerformanceWorkloads(
+          row,
+          performanceLedger,
+          nowMs,
+          maxPerformanceAgeMs
+        );
+        const forecast=[...(prewarmTargets.get(row.device_id)||new Set())];
+        const targetWorkloads=[...new Set([...stale,...forecast])].sort();
+        if(targetWorkloads.length){
+          safeAutonomousActions.push({
+            device_id:row.device_id,
+            action:'run_safe_calibration_and_refresh_performance_profile',
+            authority_required:false,
+            authority_basis:'existing_active_device_authorization',
+            verified_workloads:[...(row.conformance?.verified_workloads||[])],
+            target_workloads:targetWorkloads,
+            stale_performance_workloads:stale,
+            forecast_prewarm_workloads:forecast,
+            reason:forecast.length
+              ? 'predicted_demand_or_stale_performance'
+              : 'performance_profile_stale',
+          });
+        }
         safeAutonomousActions.push({
           device_id:row.device_id,
           action:'compile_offer_and_rebalance_matching_checkpointable_work',
@@ -197,6 +244,7 @@ export function buildCapacityAutonomyPlan({
           anti_flap:true,
           checkpoint_preservation:true,
           private_data_never_expands_authority:true,
+          calibration_required:targetWorkloads.length>0,
         });
       }
       continue;
@@ -261,6 +309,8 @@ export function buildCapacityAutonomyPlan({
       arbitrary_code_execution:false,
       commercial_spend_without_authority:false,
       stale_or_revoked_authority_never_auto_renews:true,
+      calibration_is_evidence_or_forecast_driven:true,
+      forecast_prewarm_never_expands_authority:true,
     },
     generated_at:nowDate.toISOString(),
   };
