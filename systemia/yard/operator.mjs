@@ -563,6 +563,30 @@ export class YardOperator {
         }
         healthState = 'healthy';
         routeVerification = 'private_core_health_verified';
+      } else if (workloadClass === 'systemia.household-fabric-yakima.v1') {
+        const householdHealthy =
+          health.ok === true &&
+          health.service === 'household-fabric-yakima' &&
+          health.runtime === 'Evercraft Compute' &&
+          health.workload_class === 'systemia.household-fabric-yakima.v1' &&
+          health.resident_process_alive === true &&
+          health.secret_material_exposed === false &&
+          health.raw_provider_secrets_required === false &&
+          health.poverty_score_used === false &&
+          health.sponsorship_affects_rank === false &&
+          Number(health.cadence_seconds || 0) >= 60 &&
+          health.instance_id === job.result?.instance_id;
+        if (!householdHealthy) {
+          try {
+            await request(`${capacityEndpoint}/v1/services/${job.result.service_id}/stop`, {
+              method: 'POST',
+              body: JSON.stringify({ token: lease.token }),
+            });
+          } catch {}
+          throw new Error('Household Fabric resident service failed initial health verification');
+        }
+        healthState = 'healthy';
+        routeVerification = 'private_household_fabric_health_verified';
       } else if (workloadClass === 'systemia.evercraft-home.v1') {
         const homeHealthy =
           health.ok === true &&
