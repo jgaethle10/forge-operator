@@ -53,16 +53,9 @@ function explicitAdapters(acquisition){
     : [];
 }
 
-function voluntaryControlHeaders(acquisition,env){
-  if(acquisition.voluntary_control_headers&&typeof acquisition.voluntary_control_headers==='object'){
-    return {...acquisition.voluntary_control_headers};
-  }
-  const token=String(
-    acquisition.voluntary_control_token||
-    env.EVERCRAFT_VOLUNTARY_CONTROL_TOKEN||
-    ''
-  ).trim();
-  return token?{authorization:`Bearer ${token}`}:null;
+function bearerHeaders(token){
+  const value=String(token||'').trim();
+  return value?{authorization:`Bearer ${value}`}:null;
 }
 
 export async function buildComputeMarketAdapters({
@@ -71,6 +64,7 @@ export async function buildComputeMarketAdapters({
   cwd=process.cwd(),
 }={}){
   const explicit=explicitAdapters(acquisition);
+  const diagnostics=[];
   const requested=new Set(uniq([
     ...(acquisition.markets||[]),
     ...(acquisition.adapter_specs||[]),
@@ -90,13 +84,22 @@ export async function buildComputeMarketAdapters({
     (yardStateDir?discoverRemoteBrokerDeployment(yardStateDir):'')||
     ''
   ).trim();
-  const yard=yardStateDir?new YardOperator({stateDir:yardStateDir}):null;
+  const yard=yardStateDir&&brokerDeploymentId
+    ? new YardOperator({stateDir:yardStateDir})
+    : null;
 
   const voluntaryEndpoint=String(
     acquisition.voluntary_endpoint||
     env.EVERCRAFT_VOLUNTARY_COMPUTE_ENDPOINT||
     ''
   ).trim();
+  const voluntaryControlHeaders=
+    acquisition.voluntary_control_headers||
+    bearerHeaders(
+      acquisition.voluntary_control_token||
+      env.EVERCRAFT_VOLUNTARY_COMPUTE_CONTROL_TOKEN||
+      ''
+    );
 
   const publicMarketDiscovery =
     acquisition.public_market_discovery===true ||
@@ -111,27 +114,21 @@ export async function buildComputeMarketAdapters({
         publicMarketDiscovery
       )
     );
-
   const includeGolem=
     requested.has('golem') ||
-    acquisition.include_golem===true ||
-    truthy(env.SABAN_GOLEM_DISCOVERY);
-
-  const wantBroker=
-    requested.has('evercraft-broker') ||
-    requested.has('evercraft_broker') ||
-    (automatic&&Boolean(yard&&brokerDeploymentId));
-
-  const wantVoluntary=
-    requested.has('evercraft-voluntary') ||
-    requested.has('evercraft_voluntary') ||
-    (automatic&&Boolean(voluntaryEndpoint));
+    (
+      automatic &&
+      (
+        acquisition.include_golem===true ||
+        truthy(env.SABAN_GOLEM_DISCOVERY)
+      )
+    );
 
   const stack=await buildSabanComputeMarketStack({
-    yard:wantBroker?yard:null,
-    brokerDeploymentId:wantBroker?brokerDeploymentId:'',
-    voluntaryEndpoint:wantVoluntary?voluntaryEndpoint:'',
-    voluntaryControlHeaders:wantVoluntary?voluntaryControlHeaders(acquisition,env):null,
+    yard,
+    brokerDeploymentId,
+    voluntaryEndpoint,
+    voluntaryControlHeaders,
     includeAkash,
     akash:{
       apiKey:String(env.AKASH_API_KEY||''),
@@ -142,19 +139,10 @@ export async function buildComputeMarketAdapters({
     golem:acquisition.golem||{},
   });
 
-  const adapters=[];
-  const seen=new Set();
-  for(const adapter of [...explicit,...stack.adapters]){
-    const market=String(adapter?.market||'unknown').toLowerCase();
-    if(seen.has(market)) continue;
-    seen.add(market);
-    adapters.push(adapter);
-  }
-
-  const diagnostics=[
-    ...stack.inventory.map((row)=>({
+  for(const row of stack.inventory){
+    diagnostics.push({
       market:row.market,
-      state:row.configured?'ready':'unavailable',
+      state:row.configured===true?'ready':'unavailable',
       class:row.class,
       priority:row.priority,
       execution_capable:row.execution_capable,
@@ -162,42 +150,34 @@ export async function buildComputeMarketAdapters({
       source:
         row.market==='evercraft-broker'?'yard':
         row.market==='evercraft-voluntary'?'voluntary_exchange':
-        row.market==='akash'
-          ? (String(env.AKASH_API_KEY||'').trim()?'configured_api':'public_discovery_only')
-          : row.market,
-      lease_credentials_present:
-        row.market==='akash'
-          ? Boolean(String(env.AKASH_API_KEY||'').trim())
-          : null,
-      broker_deployment_id:
-        row.market==='evercraft-broker'?brokerDeploymentId||null:null,
-    })),
-  ];
-  if(
-    (requested.has('evercraft-broker')||requested.has('evercraft_broker')) &&
-    !wantBroker
-  ){
+        row.market==='akash'?(String(env.AKASH_API_KEY||'').trim()?'configured_api':'public_discovery_only'):
+        row.market==='golem'?'decentralized_market':
+        'canonical_stack',
+    });
+  }
+
+  if(automatic&&!yard){
     diagnostics.push({
       market:'evercraft-broker',
       state:'unavailable',
       reason:'yard_or_broker_deployment_not_found',
     });
   }
-  if(
-    (requested.has('evercraft-voluntary')||requested.has('evercraft_voluntary')) &&
-    !wantVoluntary
-  ){
-    diagnostics.push({
-      market:'evercraft-voluntary',
-      state:'unavailable',
-      reason:'voluntary_exchange_endpoint_not_configured',
-    });
+
+  const adapters=[...explicit,...stack.adapters];
+  const deduped=[];
+  const seen=new Set();
+  for(const adapter of adapters){
+    const market=String(adapter?.market||'unknown').toLowerCase();
+    if(seen.has(market)) continue;
+    seen.add(market);
+    deduped.push(adapter);
   }
 
   return {
     schema:'evercraft.saban.compute-market-factory.v2',
-    adapters,
-    markets:adapters.map((adapter)=>String(adapter.market||'unknown')),
+    adapters:deduped,
+    markets:deduped.map((adapter)=>String(adapter.market||'unknown')),
     inventory:stack.inventory,
     doctrine:stack.doctrine,
     diagnostics,
