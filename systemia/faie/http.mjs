@@ -33,13 +33,18 @@ export function registerFaieRoutes(app, {
   stateDir = process.env.FAIE_STATE_DIR || path.resolve('.runtime', 'faie'),
   intervalMs = Number(process.env.FAIE_INTERVAL_MS || 5 * 60 * 1000),
   radarResident = null,
+  fetchImpl = globalThis.fetch,
+  collectorConfig = undefined,
+  internalToken = process.env.FAIE_INTERNAL_TOKEN || '',
   publicInvestigateLimiter = (_req, _res, next) => next()
 } = {}) {
-  const token = String(process.env.FAIE_INTERNAL_TOKEN || '').trim();
+  const token = String(internalToken || '').trim();
   const runtime = createFaieRuntime({
     stateDir,
     intervalMs,
-    radarResident
+    radarResident,
+    fetchImpl,
+    collectorConfig
   });
 
   function requireInternal(req, res, next) {
