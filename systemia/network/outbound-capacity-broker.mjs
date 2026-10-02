@@ -442,8 +442,20 @@ export async function startOutboundCapacityBroker({
         placement_labels: Array.isArray(node.capacity.placement_labels)
           ? [...node.capacity.placement_labels]
           : [],
+        authorized: true,
+        session_attestation_verified: true,
         attestation_supported: node.capacity.attestation_supported === true,
         device_fingerprint: node.capacity.device_fingerprint || null,
+        failure_domain: node.capacity.failure_domain || null,
+        zero_cost: node.capacity.zero_cost === true,
+        public_ingress: node.capacity.public_ingress === true,
+        capacity_hint: {
+          cpu_units: Math.max(0, Number(node.capacity.capacity_hint?.cpu_units || 0)),
+          memory_mb: Math.max(0, Number(node.capacity.capacity_hint?.memory_mb || 0)),
+          executables: node.capacity.capacity_hint?.executables && typeof node.capacity.capacity_hint.executables === 'object'
+            ? { ...node.capacity.capacity_hint.executables }
+            : {},
+        },
         public_edge: node.capacity.capacity_hint?.services?.public_edge
           ? {
               configured:
