@@ -44,3 +44,13 @@ Use a stable, non-secret failure-domain identifier that represents the actual in
 - direct external DNS-over-TCP application response identity.
 
 Production delegation remains blocked until two distinct admitted nodes exist and the stronger TCP application proof plus fresh domain-control mutation challenge pass.
+
+## Production TCP authority proof
+
+After the node earns `public-ingress`, run:
+
+```bash
+sudo bash scripts/prove-edge-direct-tcp-authority.sh
+```
+
+This receipt is separate from public-ingress admission. Production NS delegation remains blocked unless this direct external DNS-over-TCP identity proof passes for every selected authoritative replica.
