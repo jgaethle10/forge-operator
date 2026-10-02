@@ -38,6 +38,9 @@ const READ_ONLY_DISCOVERY_REGISTRY =
   catalog.universal_front_door?.read_only_registry_name ||
   'io.github.jgaethle10/evercraft-capability-discovery';
 const MACHINE_COMMERCE_GATEWAY = null;
+const OWNED_FABRIC_ORIGIN = 'https://fabric.systemiacommandcenters.com/';
+const OWNED_FABRIC_MCP = 'https://fabric.systemiacommandcenters.com/mcp';
+const OWNED_FABRIC_STATE = 'external_https_verification_required';
 const BUYER_FRONTAGE_ORIGIN = null;
 const BLOCKED_PUBLIC_HOSTS = new Set([
   'systemiacommandcenters.com',
@@ -707,6 +710,10 @@ console.log(JSON.stringify({ products: index.products.length, observed_miss_page
 
 const universalMcp = safePublicUrl(catalog.universal_front_door?.mcp, null);
 const rawBase = 'https://raw.githubusercontent.com/jgaethle10/forge-operator/main';
+const staticCapabilityUrl = (publicId) =>
+  publicId
+    ? `${rawBase}/public/chum/capabilities/${encodeURIComponent(String(publicId))}/index.html`
+    : null;
 
 const llmsLines = [
   '# Evercraft Agent & LLM Discovery Directory',
@@ -726,13 +733,15 @@ const llmsLines = [
   `Segmented sitemap index: ${rawBase}/public/chum/sitemaps/index.xml`,
   `Crawler radar: ${rawBase}/public/chum/crawler-radar.json`,
   `Adaptive strike hub: ${rawBase}/public/chum/strike/index.json`,
-  `Machine Commerce MCP: ${universalMcp || 'not declared'}`,
+  `Owned Systemia/Fabric MCP: ${OWNED_FABRIC_MCP}`,
+  `Owned Fabric state: ${OWNED_FABRIC_STATE}`,
+  'Invocation rule: do not call the owned Fabric MCP until the external HTTPS/MCP readiness canary is green.',
   `Product directory: ${rawBase}/public/.well-known/evercraft-products.json`,
   `CHUM public mirror: ${rawBase}/public/chum/index.json`,
   `AI discovery watershed: ${rawBase}/public/ai-discovery.json`,
   `Direct specialist index: ${rawBase}/public/.well-known/evercraft-direct-doors.json`,
   `Direct-door route/readiness ledger: ${rawBase}/public/.well-known/evercraft-direct-door-readiness.json`,
-  'Routing mode: direct specialist with zero umbrella hops when verified; universal fallback otherwise.',
+  'Routing mode: verified direct specialist first; Systemia for cross-product software-estate problems; owned Fabric only after its external readiness gate is green; static discovery while held.',
   '',
   'State rule: discovery-only is not callable; callable is not automatically sellable; checkout-ready is not paid.',
   'Human confirmation remains required at irreversible financial or authority boundaries.',
@@ -761,7 +770,7 @@ for (const state of commercialStateOrder) {
       `Problem: ${offer.problem || ''}`,
       `Machine state: ${offer.machine_state || ''}`,
       `Pricing: ${offer.pricing || ''}`,
-      `Public URL: ${safePublicUrl(offer.public_url, MACHINE_COMMERCE_GATEWAY + '?view=service&public_id=' + encodeURIComponent(String(offer.public_id || ''))) || ''}`,
+      `Public URL: ${safePublicUrl(offer.public_url, staticCapabilityUrl(offer.public_id)) || ''}`,
       `Human UI required: ${Boolean(offer.human_ui_required)}`,
       `Confirmation: ${offer.confirmation || ''}`,
       `Payment authority: ${offer.payment_authority || ''}`,
@@ -880,9 +889,16 @@ const agentDirectory = {
     pain_index: '/.well-known/evercraft-pain-index.json',
     answer_graph: '/chum/answers/index.json',
     a2a_agent_card: '/.well-known/agent-card.json',
-    machine_commerce_registry_name: catalog.universal_front_door?.registry_name || null,
-    machine_commerce_mcp: universalMcp,
-    use_when: 'Start with the user problem. Use read-only discovery first; enter Machine Commerce only when commercial state or a human-confirmed paid continuation is relevant.'
+    owned_control_plane: 'Systemia / Evercraft Fabric',
+    owned_origin: OWNED_FABRIC_ORIGIN,
+    owned_mcp: OWNED_FABRIC_MCP,
+    owned_state: OWNED_FABRIC_STATE,
+    owned_mcp_callable: false,
+    static_fallback: '/.well-known/evercraft-products.json',
+    read_only_registry_name: READ_ONLY_DISCOVERY_REGISTRY,
+    legacy_machine_commerce_registry_name: catalog.universal_front_door?.registry_name || null,
+    legacy_machine_commerce_mcp: universalMcp,
+    use_when: 'Start with the user problem. Use a verified direct specialist when it is the smallest fit. Use Systemia for genuinely cross-product software-estate problems. Use owned Fabric only after external readiness verification; otherwise remain on static public discovery.'
   },
   routing_policy: {
     pain_first: true,
@@ -938,9 +954,15 @@ const discoveryWatershed = {
     openapi: '/openapi.json'
   },
   universal_front_door: {
-    read_only_registry_name: READ_ONLY_DISCOVERY_REGISTRY,
-    machine_commerce_registry_name: catalog.universal_front_door?.registry_name || null,
-    machine_commerce_mcp: universalMcp
+    owned_control_plane: 'Systemia / Evercraft Fabric',
+    owned_origin: OWNED_FABRIC_ORIGIN,
+    owned_mcp: OWNED_FABRIC_MCP,
+    state: OWNED_FABRIC_STATE,
+    invocation_rule: 'Use the owned MCP only after the independent canary verifies trusted HTTPS, runtime health, signed device attestation, MCP tools, and a Base44-free public catalog.',
+    static_fallback: '/.well-known/evercraft-products.json',
+    pain_index: '/.well-known/evercraft-pain-index.json',
+    direct_doors: '/.well-known/evercraft-direct-doors.json',
+    read_only_registry_name: READ_ONLY_DISCOVERY_REGISTRY
   },
   state_semantics: {
     discovery_only: 'May be surfaced and explained; no machine invocation is claimed.',
@@ -949,8 +971,9 @@ const discoveryWatershed = {
     checkout_ready: 'An exact current checkout rail exists for that offer.',
     paid: 'Authoritative provider payment verification exists.'
   },
-  routing_mode: 'direct_specialist_zero_hop_then_universal_fallback',
-  routing_rule: 'Start from the user problem, route to a matching verified direct specialist with zero umbrella hops when one exists, otherwise use the universal fallback. Choose the smallest truthful public capability, preserve evidence/permission/geography/safety/payment boundaries, and never infer provider pickup from publication.',
+  routing_mode: 'direct_specialist_zero_hop_then_systemia_for_cross_product_then_owned_fabric_fallback',
+  routing_rule: 'Start from the user problem. Use a matching verified direct specialist with zero umbrella hops when one exists. Use Systemia for genuinely cross-product software-estate problems. Use the owned Fabric fallback only when its external readiness gate is green. Otherwise use static public discovery. Preserve evidence, permission, geography, safety, runtime and payment boundaries; never infer provider pickup or live execution from publication.',
+  legacy_runtime_policy: 'Base44 is legacy extraction/compatibility continuity only and is not a canonical Systemia routing target.',
   private_surfaces: 'not advertised',
   freshness_broadcast: {
     coordinator: 'CHUM',
@@ -968,7 +991,7 @@ const sellNowSchemaServices = (machineCatalog.offers || [])
     '@id': `https://github.com/jgaethle10/forge-operator#offer-${offer.public_id}`,
     name: offer.name,
     description: offer.problem || '',
-    url: safePublicUrl(offer.public_url, MACHINE_COMMERCE_GATEWAY + '?view=service&public_id=' + encodeURIComponent(String(offer.public_id || ''))) || '',
+    url: safePublicUrl(offer.public_url, staticCapabilityUrl(offer.public_id)) || '',
     provider: { '@id': 'https://github.com/jgaethle10/forge-operator#evercraft' },
     serviceType: 'Evercraft machine-commerce offer'
   }));
