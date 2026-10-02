@@ -60,6 +60,7 @@ export async function startHouseholdFabricYakimaRuntime({
   let closed = false;
   let inFlight = false;
   let timer = null;
+  let deploymentReceiptRef = '';
   let lastAttemptAt = null;
   let lastSuccessAt = null;
   let lastError = null;
@@ -130,6 +131,8 @@ export async function startHouseholdFabricYakimaRuntime({
       runtime: 'Evercraft Compute',
       workload_class: 'systemia.household-fabric-yakima.v1',
       instance_id: instanceId,
+      deployment_receipt_bound: Boolean(deploymentReceiptRef),
+      deployment_receipt_ref: deploymentReceiptRef || null,
       state,
       cadence_seconds: cadence,
       resident_process_alive: !closed,
@@ -151,6 +154,11 @@ export async function startHouseholdFabricYakimaRuntime({
       sponsorship_affects_rank: false,
       last_error: lastError,
     };
+  }
+
+  function setDeploymentReceipt(receiptRef) {
+    deploymentReceiptRef = clean(receiptRef);
+    return health();
   }
 
   const server = http.createServer((req, res) => {
@@ -209,6 +217,7 @@ export async function startHouseholdFabricYakimaRuntime({
     stateDir: root,
     runCycle,
     health,
+    setDeploymentReceipt,
     close,
   };
 }
