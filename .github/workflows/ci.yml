@@ -107,6 +107,7 @@ jobs:
           curl --fail --silent http://127.0.0.1:3000/api/radar/source-health | tee /tmp/radar-source-health.json
           curl --fail --silent http://127.0.0.1:3000/api/radar/releases | tee /tmp/radar-releases.json
           curl --fail --silent http://127.0.0.1:3000/api/radar/corrections | tee /tmp/radar-corrections.json
+          curl --fail --silent http://127.0.0.1:3000/api/radar/distribution | tee /tmp/radar-distribution.json
           curl --fail --silent http://127.0.0.1:3000/radar/ > /tmp/radar.html
           curl --fail --silent http://127.0.0.1:3000/fallen > /tmp/fallen.html
           curl --fail --silent -X POST http://127.0.0.1:3000/api/fallen/family/episode \
@@ -177,6 +178,7 @@ jobs:
           const radarSourceHealth = JSON.parse(fs.readFileSync('/tmp/radar-source-health.json','utf8'));
           const radarReleases = JSON.parse(fs.readFileSync('/tmp/radar-releases.json','utf8'));
           const radarCorrections = JSON.parse(fs.readFileSync('/tmp/radar-corrections.json','utf8'));
+          const radarDistribution = JSON.parse(fs.readFileSync('/tmp/radar-distribution.json','utf8'));
           const radarHtml = fs.readFileSync('/tmp/radar.html','utf8');
           const fallenHtml = fs.readFileSync('/tmp/fallen.html','utf8');
           const fallenEpisode = JSON.parse(fs.readFileSync('/tmp/fallen-episode.json','utf8'));
@@ -212,6 +214,9 @@ jobs:
           if (radarSourceHealth.schema !== 'evercraft.systemia-radar.source-health.public.v1') throw new Error('radar source health schema missing');
           if (radarReleases.schema !== 'evercraft.systemia-radar.release-index.v1') throw new Error('radar release index schema missing');
           if (radarCorrections.schema !== 'evercraft.systemia-radar.corrections.v1') throw new Error('radar corrections schema missing');
+          if (radarDistribution.schema !== 'evercraft.systemia-radar.clip-distribution-state.v1') throw new Error('radar distribution schema missing');
+          if (radarDistribution.enabled !== false) throw new Error('radar external distribution must default fail-closed');
+          if (radarDistribution.facebook?.access_token_configured !== false) throw new Error('radar smoke must not carry Facebook credentials');
           if (!radarHtml.includes('Reality before narrative')) throw new Error('radar control room did not render');
           if (radarLatest.publication_authority !== false) throw new Error('radar public projection must not gain publication authority');
           if (capabilities.schema !== 'evercraft.capability.v1') throw new Error('unexpected capability schema');
