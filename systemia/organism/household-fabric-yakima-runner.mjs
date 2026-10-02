@@ -28,7 +28,7 @@ function atomicJson(file, value) {
   fs.renameSync(temp, file);
 }
 
-function loadJson(file, fallback) {
+export function loadJson(file, fallback) {
   if (!fs.existsSync(file)) return fallback;
   try {
     return JSON.parse(fs.readFileSync(file, 'utf8'));
@@ -229,10 +229,10 @@ function parseArgs(argv) {
   return out;
 }
 
-async function fetchBrowserResult(edgeUrl, token = '') {
+export async function fetchYakimaBrowserResult(edgeUrl, token = '', fetchImpl = fetch) {
   const base = clean(edgeUrl).replace(/\/$/, '');
   if (!base) throw new Error('browser_result_or_edge_required');
-  const response = await fetch(base + '/v1/browser/render', {
+  const response = await fetchImpl(base + '/v1/browser/render', {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
@@ -254,6 +254,27 @@ async function fetchBrowserResult(edgeUrl, token = '') {
   return payload.result;
 }
 
+export function writeYakimaHouseholdArtifacts(outDir, report) {
+  const target = path.resolve(outDir);
+  atomicJson(path.join(target, 'latest.json'), {
+    ...report,
+    ledger: undefined,
+  });
+  atomicJson(path.join(target, 'ledger.json'), report.ledger);
+  atomicJson(path.join(target, 'today.json'), report.today);
+  atomicJson(path.join(target, 'mission-snapshot.json'), report.mission_snapshot);
+  atomicJson(path.join(target, 'collector-receipts.json'), report.receipts);
+  atomicJson(path.join(target, 'price-index.json'), report.price_index);
+  atomicJson(path.join(target, 'price-source-runs.json'), report.price_sources);
+  atomicJson(path.join(target, 'state.json'), report.state);
+  return {
+    out_dir: target,
+    today: path.join(target, 'today.json'),
+    mission_snapshot: path.join(target, 'mission-snapshot.json'),
+    ledger: path.join(target, 'ledger.json'),
+  };
+}
+
 async function main() {
   const args = parseArgs(process.argv.slice(2));
   if (args.help) {
@@ -267,7 +288,7 @@ async function main() {
 
   const browserResult = args.browserResult
     ? loadJson(path.resolve(args.browserResult), null)
-    : await fetchBrowserResult(args.browserEdge, args.browserToken);
+    : await fetchYakimaBrowserResult(args.browserEdge, args.browserToken);
 
   if (!browserResult) throw new Error('browser_result_unreadable');
 
@@ -283,17 +304,7 @@ async function main() {
   });
   report.credential_status = providerConfig.credential_status;
 
-  atomicJson(path.join(outDir, 'latest.json'), {
-    ...report,
-    ledger: undefined,
-  });
-  atomicJson(ledgerFile, report.ledger);
-  atomicJson(path.join(outDir, 'today.json'), report.today);
-  atomicJson(path.join(outDir, 'mission-snapshot.json'), report.mission_snapshot);
-  atomicJson(path.join(outDir, 'collector-receipts.json'), report.receipts);
-  atomicJson(path.join(outDir, 'price-index.json'), report.price_index);
-  atomicJson(path.join(outDir, 'price-source-runs.json'), report.price_sources);
-  atomicJson(stateFile, report.state);
+  writeYakimaHouseholdArtifacts(outDir, report);
 
   console.log(JSON.stringify({
     ok: true,
