@@ -93,8 +93,8 @@ function publicOffer(offer) {
     public_url_source: sourcePublicUrl
       ? 'source_catalog'
       : (ownedGatewayPublicUrl ? 'owned_gateway_fallback' : 'static_capability_mirror'),
-    public_url_transactional: Boolean(sourcePublicUrl || ownedGatewayPublicUrl),
-    checkout_continuation_verified: Boolean(sourcePublicUrl || ownedGatewayPublicUrl),
+    public_url_transactional: Boolean(ownedGatewayPublicUrl),
+    checkout_continuation_verified: Boolean(ownedGatewayPublicUrl),
     payment_authority: String(offer.payment_authority || ''),
     invocation_status: isLegacyProviderUrl(offer.invocation_status)
       ? 'HELD: legacy provider runtime retired; awaiting a verified Evercraft-owned route.'
