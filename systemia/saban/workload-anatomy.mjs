@@ -254,7 +254,7 @@ export function portfolioWorkloadAnatomy({
       minimum_uptime_7d:fullyPreemptible?0:0.85,
       max_observation_age_ms:120000,
       allowed_device_classes:registered
-        ? ['phone','tablet','router','raspberry-pi','sbc','nas','desktop','laptop','server','unknown']
+        ? ['phone','tablet','router','raspberry-pi','sbc','nas','desktop','laptop','server','general-compute','unknown']
         : [],
       max_power_budget_watts:registered?250:null,
     }));
