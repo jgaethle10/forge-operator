@@ -854,6 +854,7 @@ export async function startEvercraftComputeNode({
     'systemia.evercraft-edge-dns.v1',
     'systemia.federated-service-bridge.v1',
     'systemia.evercraft-home.v1',
+    'systemia.household-fabric-yakima.v1',
     'saban.logical-agent',
     'saban.multiplier-assignment.v1',
   ]);
