@@ -208,7 +208,14 @@ function authorityAllows(authority,demand,offer,kind){
     return {ok:false,reason:`${kind}_authority_expired`};
   }
   if(kind==='lease'){
+    const paid=offer.economics.zero_cost!==true;
+    if(paid&&authority.allow_spend!==true){
+      return {ok:false,reason:'lease_spend_not_authorized'};
+    }
     const ceiling=authority.max_total_usd==null?null:Math.max(0,n(authority.max_total_usd));
+    if(paid&&offer.economics.total_usd!=null&&ceiling==null){
+      return {ok:false,reason:'lease_authority_budget_missing'};
+    }
     if(ceiling!=null&&offer.economics.total_usd!=null&&offer.economics.total_usd>ceiling){
       return {ok:false,reason:'lease_authority_budget_exceeded'};
     }
