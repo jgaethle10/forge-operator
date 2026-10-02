@@ -142,9 +142,10 @@
       "action": {
         "type": "contract_repair_recipe",
         "targets": [
+          "systemia/chum/sync-public-discovery.mjs",
           "public/.well-known/evercraft-machine-catalog.json"
         ],
-        "instructions": "Every sell-now offer must retain a concrete public continuation, pricing, payment authority, confirmation boundary, and at least one offer record."
+        "instructions": "Every sell-now offer must retain a concrete non-legacy public details continuation, pricing, payment authority, confirmation boundary, and at least one offer record. Static capability mirrors are discovery/details only and must stay explicitly non-transactional until an owned checkout continuation is independently verified."
       },
       "verification": [
         "npm run chum:commerce-canary",
