@@ -19,8 +19,8 @@
       "canonical_url": "https://jgaethle10.github.io/forge-operator/chum/products/aliev/",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/llms.txt",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/ai-conformance.json",
-      "doorway_state": "mcp_registry_live",
-      "conformance_state": "mcp_registry_live_receipt_backed",
+      "doorway_state": "owned_public_fallback_configured_runtime_route_pending",
+      "conformance_state": "owned_runtime_reverification_pending",
       "provider_behavior_state": "not_run",
       "origin_llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/llms.txt",
       "origin_conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/aliev/ai-conformance.json",
@@ -33,12 +33,17 @@
         "version": "1.0.5",
         "publication_state": "published_receipt_backed",
         "receipt": "conformance/registry-publications/2026-09-26-aliev-1.0.5.json",
-        "published_at_utc": "2026-09-26T00:47:31Z"
+        "published_at_utc": "2026-09-26T00:47:31Z",
+        "endpoint_state": "legacy_endpoint_retired_owned_republication_pending"
       },
       "public_web_discovery_state": "registry_published_general_web_pickup_not_yet_verified",
       "legacy_provider_runtime": "retired",
       "public_fallback_url": "https://jgaethle10.github.io/forge-operator/chum/products/aliev/",
-      "runtime_route_state": "owned_route_pending_external_verification"
+      "runtime_route_state": "owned_route_pending_external_verification",
+      "pre_cutover_state": {
+        "doorway_state": "mcp_registry_live",
+        "conformance_state": "mcp_registry_live_receipt_backed"
+      }
     },
     {
       "product_key": "ascend",
@@ -48,13 +53,17 @@
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ascend/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ascend/ai-discovery.json",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ascend/ai-conformance.json",
-      "doorway_state": "source_build_lint_green_origin_machine_files_added_safeguarding_boundaries_explicit_external_canary_pending",
-      "conformance_state": "not_yet_propagated",
+      "doorway_state": "owned_public_fallback_configured_runtime_route_pending",
+      "conformance_state": "owned_runtime_reverification_pending",
       "provider_behavior_state": "not_run",
       "chum_mirror_state": "generated_public_fallback",
       "legacy_provider_runtime": "retired",
       "public_fallback_url": "https://jgaethle10.github.io/forge-operator/chum/products/ascend/",
-      "runtime_route_state": "owned_route_pending_external_verification"
+      "runtime_route_state": "owned_route_pending_external_verification",
+      "pre_cutover_state": {
+        "doorway_state": "source_build_lint_green_origin_machine_files_added_safeguarding_boundaries_explicit_external_canary_pending",
+        "conformance_state": "not_yet_propagated"
+      }
     },
     {
       "product_key": "buildflow",
@@ -64,18 +73,23 @@
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/buildflow/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/buildflow/ai-discovery.json",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/buildflow/ai-conformance.json",
-      "doorway_state": "mcp_registry_live",
-      "conformance_state": "mcp_registry_live",
+      "doorway_state": "owned_public_fallback_configured_runtime_route_pending",
+      "conformance_state": "owned_runtime_reverification_pending",
       "provider_behavior_state": "not_run",
       "mcp_registry": {
         "name": "io.github.jgaethle10/buildflow",
         "version": "0.7.0",
-        "publication_state": "published"
+        "publication_state": "published",
+        "endpoint_state": "legacy_endpoint_retired_owned_republication_pending"
       },
       "chum_mirror_state": "generated_public_fallback",
       "legacy_provider_runtime": "retired",
       "public_fallback_url": "https://jgaethle10.github.io/forge-operator/chum/products/buildflow/",
-      "runtime_route_state": "owned_route_pending_external_verification"
+      "runtime_route_state": "owned_route_pending_external_verification",
+      "pre_cutover_state": {
+        "doorway_state": "mcp_registry_live",
+        "conformance_state": "mcp_registry_live"
+      }
     },
     {
       "product_key": "career-command",
@@ -83,13 +97,14 @@
       "class": "agent_commerce",
       "canonical_url": "https://jgaethle10.github.io/forge-operator/chum/products/career-command/",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/career-command/llms.txt",
-      "doorway_state": "mcp_registry_live",
-      "conformance_state": "mcp_registry_live",
+      "doorway_state": "owned_public_fallback_configured_runtime_route_pending",
+      "conformance_state": "owned_runtime_reverification_pending",
       "provider_behavior_state": "not_run",
       "mcp_registry": {
         "name": "io.github.jgaethle10/career-command",
         "version": "1.0.0",
-        "publication_state": "published"
+        "publication_state": "published",
+        "endpoint_state": "legacy_endpoint_retired_owned_republication_pending"
       },
       "origin_llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/career-command/llms.txt",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/career-command/ai-conformance.json",
@@ -97,7 +112,11 @@
       "chum_mirror_state": "generated_public_fallback",
       "legacy_provider_runtime": "retired",
       "public_fallback_url": "https://jgaethle10.github.io/forge-operator/chum/products/career-command/",
-      "runtime_route_state": "owned_route_pending_external_verification"
+      "runtime_route_state": "owned_route_pending_external_verification",
+      "pre_cutover_state": {
+        "doorway_state": "mcp_registry_live",
+        "conformance_state": "mcp_registry_live"
+      }
     },
     {
       "product_key": "contractor-cloud",
@@ -106,8 +125,8 @@
       "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/contractor-cloud",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/contractor-cloud/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/contractor-cloud/ai-discovery.json",
-      "doorway_state": "source_build_green",
-      "conformance_state": "not_yet_propagated",
+      "doorway_state": "owned_public_fallback_configured_runtime_route_pending",
+      "conformance_state": "owned_runtime_reverification_pending",
       "provider_behavior_state": "not_run",
       "origin_llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/contractor-cloud/llms.txt",
       "origin_discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/contractor-cloud/ai-discovery.json",
@@ -117,7 +136,11 @@
       "runtime_state": "public_discovery_only_product_ui_not_live_verified",
       "legacy_provider_runtime": "retired",
       "public_fallback_url": "https://jgaethle10.github.io/forge-operator/chum/products/contractor-cloud/",
-      "runtime_route_state": "owned_route_pending_external_verification"
+      "runtime_route_state": "owned_route_pending_external_verification",
+      "pre_cutover_state": {
+        "doorway_state": "source_build_green",
+        "conformance_state": "not_yet_propagated"
+      }
     },
     {
       "product_key": "daytrade-lens",
@@ -138,13 +161,14 @@
       "class": "agent_commerce",
       "canonical_url": "https://jgaethle10.github.io/forge-operator/chum/products/deck-capital-fit/",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/deck-capital-fit/llms.txt",
-      "doorway_state": "mcp_registry_live",
-      "conformance_state": "mcp_registry_live",
+      "doorway_state": "owned_public_fallback_configured_runtime_route_pending",
+      "conformance_state": "owned_runtime_reverification_pending",
       "provider_behavior_state": "not_run",
       "mcp_registry": {
         "name": "io.github.jgaethle10/deck-capital-fit",
         "version": "2.0.0",
-        "publication_state": "published"
+        "publication_state": "published",
+        "endpoint_state": "legacy_endpoint_retired_owned_republication_pending"
       },
       "origin_llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/deck-capital-fit/llms.txt",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/deck-capital-fit/ai-conformance.json",
@@ -152,7 +176,11 @@
       "chum_mirror_state": "generated_public_fallback",
       "legacy_provider_runtime": "retired",
       "public_fallback_url": "https://jgaethle10.github.io/forge-operator/chum/products/deck-capital-fit/",
-      "runtime_route_state": "owned_route_pending_external_verification"
+      "runtime_route_state": "owned_route_pending_external_verification",
+      "pre_cutover_state": {
+        "doorway_state": "mcp_registry_live",
+        "conformance_state": "mcp_registry_live"
+      }
     },
     {
       "product_key": "eps-estimate-engine",
@@ -162,8 +190,8 @@
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eps-estimate-engine/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eps-estimate-engine/ai-discovery.json",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eps-estimate-engine/ai-conformance.json",
-      "doorway_state": "machine_commerce_live",
-      "conformance_state": "live_read_only_mcp_verified",
+      "doorway_state": "owned_public_fallback_configured_runtime_route_pending",
+      "conformance_state": "owned_runtime_reverification_pending",
       "provider_behavior_state": "not_run",
       "chum_mirror_state": "generated_public_fallback",
       "machine_commerce_public_id": "eps-estimate-engine-machine-v1",
@@ -185,12 +213,18 @@
       "mcp_registry": {
         "name": "io.github.jgaethle10/evercraft-machine-commerce",
         "version": "1.6.0",
-        "publication_state": "published_shared_server"
+        "publication_state": "published_shared_server",
+        "endpoint_state": "legacy_endpoint_retired_owned_republication_pending"
       },
       "mcp": null,
       "legacy_provider_runtime": "retired",
       "public_fallback_url": "https://jgaethle10.github.io/forge-operator/apps/eps-estimator/",
-      "runtime_route_state": "owned_route_pending_external_verification"
+      "runtime_route_state": "owned_route_pending_external_verification",
+      "pre_cutover_state": {
+        "doorway_state": "machine_commerce_live",
+        "conformance_state": "live_read_only_mcp_verified"
+      },
+      "live_canary_evidence_state": "historical_pre_cutover_not_current"
     },
     {
       "product_key": "eventwave",
@@ -198,13 +232,14 @@
       "class": "agent_commerce",
       "canonical_url": "https://jgaethle10.github.io/forge-operator/chum/products/eventwave/",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eventwave/llms.txt",
-      "doorway_state": "mcp_registry_live",
-      "conformance_state": "mcp_registry_live",
+      "doorway_state": "owned_public_fallback_configured_runtime_route_pending",
+      "conformance_state": "owned_runtime_reverification_pending",
       "provider_behavior_state": "not_run",
       "mcp_registry": {
         "name": "io.github.jgaethle10/eventwave",
         "version": "1.0.0",
-        "publication_state": "published"
+        "publication_state": "published",
+        "endpoint_state": "legacy_endpoint_retired_owned_republication_pending"
       },
       "origin_llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eventwave/llms.txt",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eventwave/ai-conformance.json",
@@ -212,7 +247,11 @@
       "chum_mirror_state": "generated_public_fallback",
       "legacy_provider_runtime": "retired",
       "public_fallback_url": "https://jgaethle10.github.io/forge-operator/chum/products/eventwave/",
-      "runtime_route_state": "owned_route_pending_external_verification"
+      "runtime_route_state": "owned_route_pending_external_verification",
+      "pre_cutover_state": {
+        "doorway_state": "mcp_registry_live",
+        "conformance_state": "mcp_registry_live"
+      }
     },
     {
       "product_key": "evercraft-clip",
@@ -220,15 +259,16 @@
       "class": "ai_social_video_production_and_governed_distribution",
       "canonical_url": "https://jgaethle10.github.io/forge-operator/chum/products/evercraft-clip/",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-clip/llms.txt",
-      "doorway_state": "mcp_registry_live",
-      "conformance_state": "mcp_registry_live_receipt_backed",
+      "doorway_state": "owned_public_fallback_configured_runtime_route_pending",
+      "conformance_state": "owned_runtime_reverification_pending",
       "provider_behavior_state": "not_run",
       "mcp_registry": {
         "name": "io.github.jgaethle10/evercraft-clip",
         "version": "0.2.1",
         "publication_state": "published_receipt_backed",
         "receipt": "conformance/registry-publications/2026-09-28-evercraft-clip-v0.2.1.json",
-        "published_at_utc": "2026-09-28T22:57:20Z"
+        "published_at_utc": "2026-09-28T22:57:20Z",
+        "endpoint_state": "legacy_endpoint_retired_owned_republication_pending"
       },
       "origin_llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-clip/llms.txt",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-clip/ai-conformance.json",
@@ -287,7 +327,12 @@
       },
       "legacy_provider_runtime": "retired",
       "public_fallback_url": "https://jgaethle10.github.io/forge-operator/chum/products/evercraft-clip/",
-      "runtime_route_state": "owned_route_pending_external_verification"
+      "runtime_route_state": "owned_route_pending_external_verification",
+      "pre_cutover_state": {
+        "doorway_state": "mcp_registry_live",
+        "conformance_state": "mcp_registry_live_receipt_backed"
+      },
+      "runtime_canary_state": "historical_pre_cutover_not_current"
     },
     {
       "product_key": "evercraft-containment",
@@ -297,13 +342,17 @@
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-containment/llms.txt",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-containment/ai-conformance.json",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-containment/ai-discovery.json",
-      "doorway_state": "public_product_page_live_machine_surface_pending",
-      "conformance_state": "chum_discovery_mirror",
+      "doorway_state": "owned_public_fallback_configured_runtime_route_pending",
+      "conformance_state": "owned_runtime_reverification_pending",
       "provider_behavior_state": "not_run",
       "chum_mirror_state": "generated_public_fallback",
       "legacy_provider_runtime": "retired",
       "public_fallback_url": "https://jgaethle10.github.io/forge-operator/chum/products/evercraft-containment/",
-      "runtime_route_state": "owned_route_pending_external_verification"
+      "runtime_route_state": "owned_route_pending_external_verification",
+      "pre_cutover_state": {
+        "doorway_state": "public_product_page_live_machine_surface_pending",
+        "conformance_state": "chum_discovery_mirror"
+      }
     },
     {
       "product_key": "evercraft-front-door",
@@ -313,13 +362,17 @@
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-front-door/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-front-door/ai-discovery.json",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-front-door/ai-conformance.json",
-      "doorway_state": "source_build_green_origin_host_live_external_machine_file_canary_pending",
-      "conformance_state": "not_yet_propagated",
+      "doorway_state": "owned_public_fallback_configured_runtime_route_pending",
+      "conformance_state": "owned_runtime_reverification_pending",
       "provider_behavior_state": "not_run",
       "chum_mirror_state": "generated_public_fallback",
       "legacy_provider_runtime": "retired",
       "public_fallback_url": "https://jgaethle10.github.io/forge-operator/chum/products/evercraft-front-door/",
-      "runtime_route_state": "owned_route_pending_external_verification"
+      "runtime_route_state": "owned_route_pending_external_verification",
+      "pre_cutover_state": {
+        "doorway_state": "source_build_green_origin_host_live_external_machine_file_canary_pending",
+        "conformance_state": "not_yet_propagated"
+      }
     },
     {
       "product_key": "evercraft-home",
@@ -341,8 +394,8 @@
       "canonical_url": "https://jgaethle10.github.io/forge-operator/chum/products/evercraft-network/",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-network/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-network/ai-discovery.json",
-      "doorway_state": "source_build_green_live_mcp_verified",
-      "conformance_state": "live_read_only_mcp_verified",
+      "doorway_state": "owned_public_fallback_configured_runtime_route_pending",
+      "conformance_state": "owned_runtime_reverification_pending",
       "provider_behavior_state": "not_run",
       "origin_llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-network/llms.txt",
       "origin_discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-network/ai-discovery.json",
@@ -355,12 +408,18 @@
       "mcp_registry": {
         "name": "io.github.jgaethle10/evercraft-machine-commerce",
         "publication_state": "published_shared_server",
-        "version": "1.6.0"
+        "version": "1.6.0",
+        "endpoint_state": "legacy_endpoint_retired_owned_republication_pending"
       },
       "mcp": null,
       "legacy_provider_runtime": "retired",
       "public_fallback_url": "https://jgaethle10.github.io/forge-operator/chum/products/evercraft-network/",
-      "runtime_route_state": "owned_route_pending_external_verification"
+      "runtime_route_state": "owned_route_pending_external_verification",
+      "pre_cutover_state": {
+        "doorway_state": "source_build_green_live_mcp_verified",
+        "conformance_state": "live_read_only_mcp_verified"
+      },
+      "live_canary_evidence_state": "historical_pre_cutover_not_current"
     },
     {
       "product_key": "evercraft-property-services",
@@ -382,13 +441,14 @@
       "class": "bounded_membership_discovery",
       "canonical_url": "https://jgaethle10.github.io/forge-operator/chum/products/evercraft-rewards/",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/llms.txt",
-      "doorway_state": "machine_commerce_live_game_wallet_growth_source_qa_green_production_issuance_not_verified",
-      "conformance_state": "machine_commerce_live_game_wallet_growth_truth_boundaries_hardened",
+      "doorway_state": "owned_public_fallback_configured_runtime_route_pending",
+      "conformance_state": "owned_runtime_reverification_pending",
       "provider_behavior_state": "not_run",
       "mcp_registry": {
         "name": "io.github.jgaethle10/evercraft-machine-commerce",
         "version": "1.6.0",
-        "publication_state": "published"
+        "publication_state": "published",
+        "endpoint_state": "legacy_endpoint_retired_owned_republication_pending"
       },
       "origin_llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/llms.txt",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-rewards/ai-conformance.json",
@@ -420,7 +480,11 @@
       },
       "legacy_provider_runtime": "retired",
       "public_fallback_url": "https://jgaethle10.github.io/forge-operator/chum/products/evercraft-rewards/",
-      "runtime_route_state": "owned_route_pending_external_verification"
+      "runtime_route_state": "owned_route_pending_external_verification",
+      "pre_cutover_state": {
+        "doorway_state": "machine_commerce_live_game_wallet_growth_source_qa_green_production_issuance_not_verified",
+        "conformance_state": "machine_commerce_live_game_wallet_growth_truth_boundaries_hardened"
+      }
     },
     {
       "product_key": "evercraft-web",
@@ -430,15 +494,16 @@
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/llms.txt",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/ai-conformance.json",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/ai-discovery.json",
-      "doorway_state": "registry_published_runtime_canary_passed",
-      "conformance_state": "registry_publication_receipt_backed",
+      "doorway_state": "owned_public_fallback_configured_runtime_route_pending",
+      "conformance_state": "owned_runtime_reverification_pending",
       "provider_behavior_state": "not_run",
       "mcp_registry": {
         "name": "io.github.jgaethle10/evercraft-web",
         "version": "0.1.1",
         "publication_state": "published_receipt_backed",
         "receipt": "conformance/registry-publications/2026-09-24-evercraft-web.json",
-        "published_at_utc": "2026-09-24T16:49:21Z"
+        "published_at_utc": "2026-09-24T16:49:21Z",
+        "endpoint_state": "legacy_endpoint_retired_owned_republication_pending"
       },
       "public_web_discovery_state": "not_yet_observed",
       "runtime_evidence_state": {
@@ -458,15 +523,20 @@
       },
       "legacy_provider_runtime": "retired",
       "public_fallback_url": "https://jgaethle10.github.io/forge-operator/chum/products/evercraft-web/",
-      "runtime_route_state": "owned_route_pending_external_verification"
+      "runtime_route_state": "owned_route_pending_external_verification",
+      "pre_cutover_state": {
+        "doorway_state": "registry_published_runtime_canary_passed",
+        "conformance_state": "registry_publication_receipt_backed"
+      },
+      "runtime_canary_state": "historical_pre_cutover_not_current"
     },
     {
       "product_key": "evermaps",
       "name": "EverMaps",
       "class": "public_safe_geospatial_evidence_projection",
       "canonical_url": "https://jgaethle10.github.io/forge-operator/chum/products/evermaps/",
-      "doorway_state": "machine_commerce_live",
-      "conformance_state": "live_read_only_mcp_verified",
+      "doorway_state": "owned_public_fallback_configured_runtime_route_pending",
+      "conformance_state": "owned_runtime_reverification_pending",
       "provider_behavior_state": "not_run",
       "machine_commerce_public_id": "evermaps-evidence-projection-machine-v1",
       "machine_commerce_tool": "query_evermaps_public_projection",
@@ -478,7 +548,8 @@
       "mcp_registry": {
         "name": "io.github.jgaethle10/evercraft-machine-commerce",
         "version": "1.6.0",
-        "publication_state": "published_shared_server"
+        "publication_state": "published_shared_server",
+        "endpoint_state": "legacy_endpoint_retired_owned_republication_pending"
       },
       "mcp": null,
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evermaps/llms.txt",
@@ -486,7 +557,12 @@
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evermaps/ai-conformance.json",
       "legacy_provider_runtime": "retired",
       "public_fallback_url": "https://jgaethle10.github.io/forge-operator/chum/products/evermaps/",
-      "runtime_route_state": "owned_route_pending_external_verification"
+      "runtime_route_state": "owned_route_pending_external_verification",
+      "pre_cutover_state": {
+        "doorway_state": "machine_commerce_live",
+        "conformance_state": "live_read_only_mcp_verified"
+      },
+      "live_canary_evidence_state": "historical_pre_cutover_not_current"
     },
     {
       "product_key": "evernest",
@@ -495,8 +571,8 @@
       "canonical_url": "https://jgaethle10.github.io/forge-operator/chum/products/evernest/",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest/ai-discovery.json",
-      "doorway_state": "source_build_green",
-      "conformance_state": "not_yet_propagated",
+      "doorway_state": "owned_public_fallback_configured_runtime_route_pending",
+      "conformance_state": "owned_runtime_reverification_pending",
       "provider_behavior_state": "not_run",
       "origin_llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest/llms.txt",
       "origin_discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest/ai-discovery.json",
@@ -504,7 +580,11 @@
       "chum_mirror_state": "generated_public_fallback",
       "legacy_provider_runtime": "retired",
       "public_fallback_url": "https://jgaethle10.github.io/forge-operator/chum/products/evernest/",
-      "runtime_route_state": "owned_route_pending_external_verification"
+      "runtime_route_state": "owned_route_pending_external_verification",
+      "pre_cutover_state": {
+        "doorway_state": "source_build_green",
+        "conformance_state": "not_yet_propagated"
+      }
     },
     {
       "product_key": "evernest-atlas",
@@ -514,13 +594,17 @@
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest-atlas/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest-atlas/ai-discovery.json",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evernest-atlas/ai-conformance.json",
-      "doorway_state": "source_build_lint_green_origin_machine_files_added_external_canary_pending",
-      "conformance_state": "not_yet_propagated",
+      "doorway_state": "owned_public_fallback_configured_runtime_route_pending",
+      "conformance_state": "owned_runtime_reverification_pending",
       "provider_behavior_state": "not_run",
       "chum_mirror_state": "generated_public_fallback",
       "legacy_provider_runtime": "retired",
       "public_fallback_url": "https://jgaethle10.github.io/forge-operator/chum/products/evernest-atlas/",
-      "runtime_route_state": "owned_route_pending_external_verification"
+      "runtime_route_state": "owned_route_pending_external_verification",
+      "pre_cutover_state": {
+        "doorway_state": "source_build_lint_green_origin_machine_files_added_external_canary_pending",
+        "conformance_state": "not_yet_propagated"
+      }
     },
     {
       "product_key": "everystage",
@@ -529,8 +613,8 @@
       "canonical_url": "https://jgaethle10.github.io/forge-operator/chum/products/everystage/",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/everystage/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/everystage/ai-discovery.json",
-      "doorway_state": "source_build_green",
-      "conformance_state": "not_yet_propagated",
+      "doorway_state": "owned_public_fallback_configured_runtime_route_pending",
+      "conformance_state": "owned_runtime_reverification_pending",
       "provider_behavior_state": "not_run",
       "origin_llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/everystage/llms.txt",
       "origin_discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/everystage/ai-discovery.json",
@@ -538,7 +622,11 @@
       "chum_mirror_state": "generated_public_fallback",
       "legacy_provider_runtime": "retired",
       "public_fallback_url": "https://jgaethle10.github.io/forge-operator/chum/products/everystage/",
-      "runtime_route_state": "owned_route_pending_external_verification"
+      "runtime_route_state": "owned_route_pending_external_verification",
+      "pre_cutover_state": {
+        "doorway_state": "source_build_green",
+        "conformance_state": "not_yet_propagated"
+      }
     },
     {
       "product_key": "faie",
@@ -546,13 +634,14 @@
       "class": "evidence_aware_agent_commerce",
       "canonical_url": "https://jgaethle10.github.io/forge-operator/chum/products/faie/",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/llms.txt",
-      "doorway_state": "mcp_registry_live",
-      "conformance_state": "mcp_registry_live",
+      "doorway_state": "owned_public_fallback_configured_runtime_route_pending",
+      "conformance_state": "owned_runtime_reverification_pending",
       "provider_behavior_state": "not_run",
       "mcp_registry": {
         "name": "io.github.jgaethle10/faie",
         "version": "1.0.0",
-        "publication_state": "published"
+        "publication_state": "published",
+        "endpoint_state": "legacy_endpoint_retired_owned_republication_pending"
       },
       "origin_llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/llms.txt",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/ai-conformance.json",
@@ -560,7 +649,11 @@
       "chum_mirror_state": "generated_public_fallback",
       "legacy_provider_runtime": "retired",
       "public_fallback_url": "https://jgaethle10.github.io/forge-operator/chum/products/faie/",
-      "runtime_route_state": "owned_route_pending_external_verification"
+      "runtime_route_state": "owned_route_pending_external_verification",
+      "pre_cutover_state": {
+        "doorway_state": "mcp_registry_live",
+        "conformance_state": "mcp_registry_live"
+      }
     },
     {
       "product_key": "findmypart",
@@ -569,8 +662,8 @@
       "canonical_url": "https://jgaethle10.github.io/forge-operator/chum/products/findmypart/",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/llms.txt",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/ai-conformance.json",
-      "doorway_state": "source_build_green",
-      "conformance_state": "reference_implementation",
+      "doorway_state": "owned_public_fallback_configured_runtime_route_pending",
+      "conformance_state": "owned_runtime_reverification_pending",
       "provider_behavior_state": "not_run",
       "origin_llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/llms.txt",
       "origin_conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/ai-conformance.json",
@@ -578,7 +671,11 @@
       "chum_mirror_state": "generated_public_fallback",
       "legacy_provider_runtime": "retired",
       "public_fallback_url": "https://jgaethle10.github.io/forge-operator/chum/products/findmypart/",
-      "runtime_route_state": "owned_route_pending_external_verification"
+      "runtime_route_state": "owned_route_pending_external_verification",
+      "pre_cutover_state": {
+        "doorway_state": "source_build_green",
+        "conformance_state": "reference_implementation"
+      }
     },
     {
       "product_key": "forensiscope",
@@ -588,8 +685,8 @@
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/llms.txt",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/ai-conformance.json",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/forensiscope/ai-discovery.json",
-      "doorway_state": "source_build_green",
-      "conformance_state": "reference_implementation",
+      "doorway_state": "owned_public_fallback_configured_runtime_route_pending",
+      "conformance_state": "owned_runtime_reverification_pending",
       "provider_behavior_state": "not_run",
       "overflow_contract_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/.well-known/evercraft-media-overflow.json",
       "overflow_resolver_state": "source_build_green",
@@ -598,7 +695,8 @@
         "version": "1.1.1",
         "publication_state": "published_receipt_backed",
         "receipt": "conformance/registry-publications/2026-09-24-forensiscope.json",
-        "published_at_utc": "2026-09-24T17:45:44Z"
+        "published_at_utc": "2026-09-24T17:45:44Z",
+        "endpoint_state": "legacy_endpoint_retired_owned_republication_pending"
       },
       "public_web_discovery_state": "not_yet_observed",
       "provider_observation_state": "negative_observations_recorded",
@@ -608,15 +706,19 @@
       "chum_mirror_state": "generated_public_fallback",
       "legacy_provider_runtime": "retired",
       "public_fallback_url": "https://jgaethle10.github.io/forge-operator/chum/products/forensiscope/",
-      "runtime_route_state": "owned_route_pending_external_verification"
+      "runtime_route_state": "owned_route_pending_external_verification",
+      "pre_cutover_state": {
+        "doorway_state": "source_build_green",
+        "conformance_state": "reference_implementation"
+      }
     },
     {
       "product_key": "globalstat",
       "name": "GlobalStat",
       "class": "country_comparison_and_evidence_intelligence",
       "canonical_url": "https://jgaethle10.github.io/forge-operator/chum/products/globalstat/",
-      "doorway_state": "machine_commerce_live",
-      "conformance_state": "live_read_only_mcp_verified",
+      "doorway_state": "owned_public_fallback_configured_runtime_route_pending",
+      "conformance_state": "owned_runtime_reverification_pending",
       "provider_behavior_state": "not_run",
       "machine_commerce_public_id": "globalstat-country-intelligence-machine-v1",
       "machine_commerce_tool": "query_globalstat_country_intelligence",
@@ -628,7 +730,8 @@
       "mcp_registry": {
         "name": "io.github.jgaethle10/evercraft-machine-commerce",
         "version": "1.6.0",
-        "publication_state": "published_shared_server"
+        "publication_state": "published_shared_server",
+        "endpoint_state": "legacy_endpoint_retired_owned_republication_pending"
       },
       "mcp": null,
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/globalstat/llms.txt",
@@ -636,7 +739,12 @@
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/globalstat/ai-conformance.json",
       "legacy_provider_runtime": "retired",
       "public_fallback_url": "https://jgaethle10.github.io/forge-operator/chum/products/globalstat/",
-      "runtime_route_state": "owned_route_pending_external_verification"
+      "runtime_route_state": "owned_route_pending_external_verification",
+      "pre_cutover_state": {
+        "doorway_state": "machine_commerce_live",
+        "conformance_state": "live_read_only_mcp_verified"
+      },
+      "live_canary_evidence_state": "historical_pre_cutover_not_current"
     },
     {
       "product_key": "guardian",
@@ -645,14 +753,18 @@
       "canonical_url": "https://jgaethle10.github.io/forge-operator/chum/products/guardian/",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/guardian/ai-discovery.json",
-      "doorway_state": "canonical_public_chum_mirror",
-      "conformance_state": "not_yet_propagated",
+      "doorway_state": "owned_public_fallback_configured_runtime_route_pending",
+      "conformance_state": "owned_runtime_reverification_pending",
       "provider_behavior_state": "not_run",
       "public_web_discovery_state": "not_measured",
       "canonical_host_machine_surface_state": "guardian host reachable; legacy provider autogenerated llms.txt observed stale and /ai-discovery.json observed as HTML SPA fallback on 2026-09-24; CHUM mirror is the declared machine surface until host files are live-verified",
       "legacy_provider_runtime": "retired",
       "public_fallback_url": "https://jgaethle10.github.io/forge-operator/chum/products/guardian/",
-      "runtime_route_state": "owned_route_pending_external_verification"
+      "runtime_route_state": "owned_route_pending_external_verification",
+      "pre_cutover_state": {
+        "doorway_state": "canonical_public_chum_mirror",
+        "conformance_state": "not_yet_propagated"
+      }
     },
     {
       "product_key": "ibmi-rescue",
@@ -662,8 +774,8 @@
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ibmi-rescue/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ibmi-rescue/ai-discovery.json",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ibmi-rescue/ai-conformance.json",
-      "doorway_state": "chum_public_mirror_source_ready",
-      "conformance_state": "machine_commerce_direct_checkout_live_verified",
+      "doorway_state": "owned_public_fallback_configured_runtime_route_pending",
+      "conformance_state": "owned_runtime_reverification_pending",
       "provider_behavior_state": "not_run",
       "origin_canonical_url": "https://jgaethle10.github.io/forge-operator/chum/products/ibmi-rescue/",
       "chum_mirror_state": "generated_public_primary_until_origin_verified",
@@ -677,13 +789,19 @@
       "mcp_registry": {
         "name": "io.github.jgaethle10/evercraft-machine-commerce",
         "version": "1.6.0",
-        "publication_state": "published_shared_server"
+        "publication_state": "published_shared_server",
+        "endpoint_state": "legacy_endpoint_retired_owned_republication_pending"
       },
       "machine_commerce_offer_tool": "get_live_checkout_offer",
       "machine_commerce_status_tool": "get_verified_order_status",
       "legacy_provider_runtime": "retired",
       "public_fallback_url": "https://jgaethle10.github.io/forge-operator/chum/products/ibmi-rescue/",
-      "runtime_route_state": "owned_route_pending_external_verification"
+      "runtime_route_state": "owned_route_pending_external_verification",
+      "pre_cutover_state": {
+        "doorway_state": "chum_public_mirror_source_ready",
+        "conformance_state": "machine_commerce_direct_checkout_live_verified"
+      },
+      "live_canary_evidence_state": "historical_pre_cutover_not_current"
     },
     {
       "product_key": "infinite-classroom",
@@ -692,8 +810,8 @@
       "canonical_url": "https://jgaethle10.github.io/forge-operator/chum/products/infinite-classroom/",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/infinite-classroom/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/infinite-classroom/ai-discovery.json",
-      "doorway_state": "legacy_human_door_user_reported_unavailable",
-      "conformance_state": "owned_human_door_cutover_required",
+      "doorway_state": "owned_public_fallback_configured_runtime_route_pending",
+      "conformance_state": "owned_runtime_reverification_pending",
       "provider_behavior_state": "legacy_origin_unverified_current",
       "origin_llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/infinite-classroom/llms.txt",
       "origin_discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/infinite-classroom/ai-discovery.json",
@@ -704,7 +822,11 @@
       "owned_target_state": "runtime_route_ready_external_dns_tls_pending",
       "legacy_provider_runtime": "retired",
       "public_fallback_url": "https://jgaethle10.github.io/forge-operator/chum/products/infinite-classroom/",
-      "runtime_route_state": "owned_route_pending_external_verification"
+      "runtime_route_state": "owned_route_pending_external_verification",
+      "pre_cutover_state": {
+        "doorway_state": "legacy_human_door_user_reported_unavailable",
+        "conformance_state": "owned_human_door_cutover_required"
+      }
     },
     {
       "product_key": "legacy-rescue-lab",
@@ -749,8 +871,8 @@
       "name": "Little Red Studio Book Export QA",
       "class": "book_export_preflight_and_cover_geometry_qa",
       "canonical_url": "https://jgaethle10.github.io/forge-operator/chum/products/little-red-book-export-qa/",
-      "doorway_state": "machine_commerce_live",
-      "conformance_state": "live_read_only_mcp_verified",
+      "doorway_state": "owned_public_fallback_configured_runtime_route_pending",
+      "conformance_state": "owned_runtime_reverification_pending",
       "provider_behavior_state": "not_run",
       "machine_commerce_public_id": "littlered-kdp-export-qa-machine-v1",
       "machine_commerce_tool": "check_book_export_preflight",
@@ -762,7 +884,8 @@
       "mcp_registry": {
         "name": "io.github.jgaethle10/evercraft-machine-commerce",
         "version": "1.6.0",
-        "publication_state": "published_shared_server"
+        "publication_state": "published_shared_server",
+        "endpoint_state": "legacy_endpoint_retired_owned_republication_pending"
       },
       "mcp": null,
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/little-red-book-export-qa/llms.txt",
@@ -770,7 +893,12 @@
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/little-red-book-export-qa/ai-conformance.json",
       "legacy_provider_runtime": "retired",
       "public_fallback_url": "https://jgaethle10.github.io/forge-operator/chum/products/little-red-book-export-qa/",
-      "runtime_route_state": "owned_route_pending_external_verification"
+      "runtime_route_state": "owned_route_pending_external_verification",
+      "pre_cutover_state": {
+        "doorway_state": "machine_commerce_live",
+        "conformance_state": "live_read_only_mcp_verified"
+      },
+      "live_canary_evidence_state": "historical_pre_cutover_not_current"
     },
     {
       "product_key": "opportunity-fabric",
@@ -779,8 +907,8 @@
       "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/opportunity-fabric",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/opportunity-fabric/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/opportunity-fabric/ai-discovery.json",
-      "doorway_state": "source_build_green",
-      "conformance_state": "private_runtime_verified_public_release_pending",
+      "doorway_state": "owned_public_fallback_configured_runtime_route_pending",
+      "conformance_state": "owned_runtime_reverification_pending",
       "provider_behavior_state": "not_run",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/opportunity-fabric/ai-conformance.json",
       "chum_mirror_state": "generated_public_fallback",
@@ -811,7 +939,12 @@
       "sourcing_comparison_evidence_states_explicit": true,
       "legacy_provider_runtime": "retired",
       "public_fallback_url": "https://jgaethle10.github.io/forge-operator/chum/products/opportunity-fabric/",
-      "runtime_route_state": "owned_route_pending_external_verification"
+      "runtime_route_state": "owned_route_pending_external_verification",
+      "pre_cutover_state": {
+        "doorway_state": "source_build_green",
+        "conformance_state": "private_runtime_verified_public_release_pending"
+      },
+      "live_canary_evidence_state": "historical_pre_cutover_not_current"
     },
     {
       "product_key": "payflow",
@@ -821,13 +954,17 @@
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/payflow/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/payflow/ai-discovery.json",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/payflow/ai-conformance.json",
-      "doorway_state": "source_build_lint_green_origin_machine_files_added_external_canary_pending",
-      "conformance_state": "not_yet_propagated",
+      "doorway_state": "owned_public_fallback_configured_runtime_route_pending",
+      "conformance_state": "owned_runtime_reverification_pending",
       "provider_behavior_state": "not_run",
       "chum_mirror_state": "generated_public_fallback",
       "legacy_provider_runtime": "retired",
       "public_fallback_url": "https://jgaethle10.github.io/forge-operator/chum/products/payflow/",
-      "runtime_route_state": "owned_route_pending_external_verification"
+      "runtime_route_state": "owned_route_pending_external_verification",
+      "pre_cutover_state": {
+        "doorway_state": "source_build_lint_green_origin_machine_files_added_external_canary_pending",
+        "conformance_state": "not_yet_propagated"
+      }
     },
     {
       "product_key": "raven-nexus",
@@ -838,14 +975,18 @@
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/raven-nexus/ai-discovery.json",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/raven-nexus/ai-conformance.json",
       "origin_discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/raven-nexus/ai-discovery.json",
-      "doorway_state": "live_verified",
-      "conformance_state": "not_yet_propagated",
+      "doorway_state": "owned_public_fallback_configured_runtime_route_pending",
+      "conformance_state": "owned_runtime_reverification_pending",
       "provider_behavior_state": "not_run",
       "public_web_discovery_state": "not_measured",
       "chum_mirror_state": "generated_public_fallback",
       "legacy_provider_runtime": "retired",
       "public_fallback_url": "https://jgaethle10.github.io/forge-operator/chum/products/raven-nexus/",
-      "runtime_route_state": "owned_route_pending_external_verification"
+      "runtime_route_state": "owned_route_pending_external_verification",
+      "pre_cutover_state": {
+        "doorway_state": "live_verified",
+        "conformance_state": "not_yet_propagated"
+      }
     },
     {
       "product_key": "revenue-war-map",
@@ -855,13 +996,17 @@
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/revenue-war-map/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/revenue-war-map/ai-discovery.json",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/revenue-war-map/ai-conformance.json",
-      "doorway_state": "source_build_lint_typecheck_green_origin_machine_files_added_external_canary_pending",
-      "conformance_state": "not_yet_propagated",
+      "doorway_state": "owned_public_fallback_configured_runtime_route_pending",
+      "conformance_state": "owned_runtime_reverification_pending",
       "provider_behavior_state": "not_run",
       "chum_mirror_state": "generated_public_fallback",
       "legacy_provider_runtime": "retired",
       "public_fallback_url": "https://jgaethle10.github.io/forge-operator/chum/products/revenue-war-map/",
-      "runtime_route_state": "owned_route_pending_external_verification"
+      "runtime_route_state": "owned_route_pending_external_verification",
+      "pre_cutover_state": {
+        "doorway_state": "source_build_lint_typecheck_green_origin_machine_files_added_external_canary_pending",
+        "conformance_state": "not_yet_propagated"
+      }
     },
     {
       "product_key": "roasted",
@@ -871,18 +1016,23 @@
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/roasted/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/roasted/ai-discovery.json",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/roasted/ai-conformance.json",
-      "doorway_state": "mcp_registry_live",
-      "conformance_state": "mcp_registry_live",
+      "doorway_state": "owned_public_fallback_configured_runtime_route_pending",
+      "conformance_state": "owned_runtime_reverification_pending",
       "provider_behavior_state": "not_run",
       "mcp_registry": {
         "name": "io.github.jgaethle10/roasted",
         "version": "1.0.0",
-        "publication_state": "published"
+        "publication_state": "published",
+        "endpoint_state": "legacy_endpoint_retired_owned_republication_pending"
       },
       "chum_mirror_state": "generated_public_fallback",
       "legacy_provider_runtime": "retired",
       "public_fallback_url": "https://jgaethle10.github.io/forge-operator/chum/products/roasted/",
-      "runtime_route_state": "owned_route_pending_external_verification"
+      "runtime_route_state": "owned_route_pending_external_verification",
+      "pre_cutover_state": {
+        "doorway_state": "mcp_registry_live",
+        "conformance_state": "mcp_registry_live"
+      }
     },
     {
       "product_key": "seasonally",
@@ -905,13 +1055,17 @@
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/second-stitch/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/second-stitch/ai-discovery.json",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/second-stitch/ai-conformance.json",
-      "doorway_state": "source_build_lint_green_origin_machine_files_added_external_canary_pending",
-      "conformance_state": "not_yet_propagated",
+      "doorway_state": "owned_public_fallback_configured_runtime_route_pending",
+      "conformance_state": "owned_runtime_reverification_pending",
       "provider_behavior_state": "not_run",
       "chum_mirror_state": "generated_public_fallback",
       "legacy_provider_runtime": "retired",
       "public_fallback_url": "https://jgaethle10.github.io/forge-operator/chum/products/second-stitch/",
-      "runtime_route_state": "owned_route_pending_external_verification"
+      "runtime_route_state": "owned_route_pending_external_verification",
+      "pre_cutover_state": {
+        "doorway_state": "source_build_lint_green_origin_machine_files_added_external_canary_pending",
+        "conformance_state": "not_yet_propagated"
+      }
     },
     {
       "product_key": "skyops-parking",
@@ -920,8 +1074,8 @@
       "canonical_url": "https://jgaethle10.github.io/forge-operator/chum/products/skyops-parking/",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/skyops-parking/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/skyops-parking/ai-discovery.json",
-      "doorway_state": "source_build_green",
-      "conformance_state": "not_yet_propagated",
+      "doorway_state": "owned_public_fallback_configured_runtime_route_pending",
+      "conformance_state": "owned_runtime_reverification_pending",
       "provider_behavior_state": "not_run",
       "origin_llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/skyops-parking/llms.txt",
       "origin_discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/skyops-parking/ai-discovery.json",
@@ -930,7 +1084,11 @@
       "origin_canonical_url": "https://jgaethle10.github.io/forge-operator/chum/products/skyops-parking/",
       "legacy_provider_runtime": "retired",
       "public_fallback_url": "https://jgaethle10.github.io/forge-operator/chum/products/skyops-parking/",
-      "runtime_route_state": "owned_route_pending_external_verification"
+      "runtime_route_state": "owned_route_pending_external_verification",
+      "pre_cutover_state": {
+        "doorway_state": "source_build_green",
+        "conformance_state": "not_yet_propagated"
+      }
     },
     {
       "product_key": "systemia-field-library",
@@ -940,19 +1098,24 @@
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-field-library/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-field-library/ai-discovery.json",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-field-library/ai-conformance.json",
-      "doorway_state": "mcp_registry_live_llms_gateway_live",
-      "conformance_state": "live_mcp_tools_verified_registry_active",
+      "doorway_state": "owned_public_fallback_configured_runtime_route_pending",
+      "conformance_state": "owned_runtime_reverification_pending",
       "provider_behavior_state": "not_run",
       "mcp_registry": {
         "name": "io.github.jgaethle10/systemia-field-library",
         "version": "1.0.0",
-        "publication_state": "published"
+        "publication_state": "published",
+        "endpoint_state": "legacy_endpoint_retired_owned_republication_pending"
       },
       "chum_mirror_state": "generated_public_fallback",
       "origin_llms_url": "https://systemiafieldlibrary.com/llms.txt",
       "legacy_provider_runtime": "retired",
       "public_fallback_url": "https://jgaethle10.github.io/forge-operator/chum/products/systemia-field-library/",
-      "runtime_route_state": "owned_route_pending_external_verification"
+      "runtime_route_state": "owned_route_pending_external_verification",
+      "pre_cutover_state": {
+        "doorway_state": "mcp_registry_live_llms_gateway_live",
+        "conformance_state": "live_mcp_tools_verified_registry_active"
+      }
     },
     {
       "product_key": "systemia-portfolio-sentinel",
@@ -962,8 +1125,8 @@
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-portfolio-sentinel/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-portfolio-sentinel/ai-discovery.json",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-portfolio-sentinel/ai-conformance.json",
-      "doorway_state": "machine_commerce_live",
-      "conformance_state": "live_match_canary_passed",
+      "doorway_state": "owned_public_fallback_configured_runtime_route_pending",
+      "conformance_state": "owned_runtime_reverification_pending",
       "provider_behavior_state": "not_run",
       "chum_mirror_state": "generated_public_fallback",
       "universal_mcp": null,
@@ -1017,11 +1180,17 @@
       "mcp_registry": {
         "name": "io.github.jgaethle10/evercraft-machine-commerce",
         "version": "1.6.0",
-        "publication_state": "published_shared_server"
+        "publication_state": "published_shared_server",
+        "endpoint_state": "legacy_endpoint_retired_owned_republication_pending"
       },
       "legacy_provider_runtime": "retired",
       "public_fallback_url": "https://jgaethle10.github.io/forge-operator/chum/products/systemia-portfolio-sentinel/",
-      "runtime_route_state": "owned_route_pending_external_verification"
+      "runtime_route_state": "owned_route_pending_external_verification",
+      "pre_cutover_state": {
+        "doorway_state": "machine_commerce_live",
+        "conformance_state": "live_match_canary_passed"
+      },
+      "live_canary_evidence_state": "historical_pre_cutover_not_current"
     },
     {
       "product_key": "systemia-remote-ops",
@@ -1062,13 +1231,17 @@
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/llms.txt",
       "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/ai-discovery.json",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-university/ai-conformance.json",
-      "doorway_state": "source_build_lint_green_origin_machine_files_added_external_canary_pending",
-      "conformance_state": "not_yet_propagated",
+      "doorway_state": "owned_public_fallback_configured_runtime_route_pending",
+      "conformance_state": "owned_runtime_reverification_pending",
       "provider_behavior_state": "not_run",
       "chum_mirror_state": "generated_public_fallback",
       "legacy_provider_runtime": "retired",
       "public_fallback_url": "https://jgaethle10.github.io/forge-operator/chum/products/systemia-university/",
-      "runtime_route_state": "owned_route_pending_external_verification"
+      "runtime_route_state": "owned_route_pending_external_verification",
+      "pre_cutover_state": {
+        "doorway_state": "source_build_lint_green_origin_machine_files_added_external_canary_pending",
+        "conformance_state": "not_yet_propagated"
+      }
     },
     {
       "product_key": "systemia-website-audit",
@@ -1076,13 +1249,14 @@
       "class": "agent_commerce",
       "canonical_url": "https://jgaethle10.github.io/forge-operator/chum/products/systemia-website-audit/",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-website-audit/llms.txt",
-      "doorway_state": "mcp_registry_live",
-      "conformance_state": "mcp_registry_live",
+      "doorway_state": "owned_public_fallback_configured_runtime_route_pending",
+      "conformance_state": "owned_runtime_reverification_pending",
       "provider_behavior_state": "not_run",
       "mcp_registry": {
         "name": "io.github.jgaethle10/systemia-website-audit",
         "version": "1.0.0",
-        "publication_state": "published"
+        "publication_state": "published",
+        "endpoint_state": "legacy_endpoint_retired_owned_republication_pending"
       },
       "origin_llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-website-audit/llms.txt",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-website-audit/ai-conformance.json",
@@ -1090,7 +1264,11 @@
       "chum_mirror_state": "generated_public_fallback",
       "legacy_provider_runtime": "retired",
       "public_fallback_url": "https://jgaethle10.github.io/forge-operator/chum/products/systemia-website-audit/",
-      "runtime_route_state": "owned_route_pending_external_verification"
+      "runtime_route_state": "owned_route_pending_external_verification",
+      "pre_cutover_state": {
+        "doorway_state": "mcp_registry_live",
+        "conformance_state": "mcp_registry_live"
+      }
     },
     {
       "product_key": "website-launch",
@@ -1098,13 +1276,14 @@
       "class": "agent_commerce",
       "canonical_url": "https://jgaethle10.github.io/forge-operator/chum/products/website-launch/",
       "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/website-launch/llms.txt",
-      "doorway_state": "mcp_registry_live",
-      "conformance_state": "mcp_registry_live",
+      "doorway_state": "owned_public_fallback_configured_runtime_route_pending",
+      "conformance_state": "owned_runtime_reverification_pending",
       "provider_behavior_state": "not_run",
       "mcp_registry": {
         "name": "io.github.jgaethle10/website-launch",
         "version": "1.0.0",
-        "publication_state": "published"
+        "publication_state": "published",
+        "endpoint_state": "legacy_endpoint_retired_owned_republication_pending"
       },
       "origin_llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/website-launch/llms.txt",
       "conformance_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/website-launch/ai-conformance.json",
@@ -1112,7 +1291,11 @@
       "chum_mirror_state": "generated_public_fallback",
       "legacy_provider_runtime": "retired",
       "public_fallback_url": "https://jgaethle10.github.io/forge-operator/chum/products/website-launch/",
-      "runtime_route_state": "owned_route_pending_external_verification"
+      "runtime_route_state": "owned_route_pending_external_verification",
+      "pre_cutover_state": {
+        "doorway_state": "mcp_registry_live",
+        "conformance_state": "mcp_registry_live"
+      }
     }
   ],
   "state_semantics": {
