@@ -2,6 +2,7 @@ import React, { FormEvent, useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
 import FallenFamilyCartoon from './FallenFamilyCartoon';
+import WorldForgeEditor from './WorldForgeEditor';
 import HouseholdFabricToday from './HouseholdFabricToday';
 
 type ForgeAction = {
@@ -223,12 +224,14 @@ function Metric({ label, value }: { label: string; value: string }) {
   return <div className="metric"><span>{label}</span><strong>{value}</strong></div>;
 }
 
-const rootView = window.location.pathname.startsWith('/fallen')
+const rootView = window.location.pathname.startsWith('/fallen/world-forge')
+  ? <WorldForgeEditor />
+  : window.location.pathname.startsWith('/fallen')
   ? <FallenFamilyCartoon />
   : (window.location.pathname.startsWith('/household-fabric') ||
       window.location.pathname.startsWith('/household'))
     ? <HouseholdFabricToday />
-    : <App />;
+    : <App />;;
 
 createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

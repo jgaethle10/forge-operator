@@ -168,6 +168,24 @@ npm run media:studio -- journal-story ./tmp/journal-brief.json ./tmp/journal-sta
 
 The resulting receipt binds the Journal package identity to the Fallen stage and explicitly sets `publication_authority: false`. Rendering and Evercraft Clip distribution remain separate downstream gates.
 
+## World Forge
+
+Fallen now includes the first kernel of **World Forge**, the Studio's native 3D/spatial authoring layer. The canonical project schema is `evercraft.fallen.world-forge-project.v1` and lives above any single renderer.
+
+World Forge currently defines scene hierarchy, true 3D transforms, mesh/curve/volume/camera/light/armature objects, PBR materials, procedural graphs, modifier stacks, animation, simulation domains, render intents, asset rights/provenance, deterministic scene digests and versioned agent mutations with inverse operations for undo.
+
+Agent edits fail closed on locked objects, version conflicts and destructive operations without explicit authority. Render planning fails closed on restricted or unknown-rights assets. The render plan also refuses to claim execution before a renderer has actually been selected and verified.
+
+Commands:
+
+```bash
+npm run media:studio -- world-forge-validate ./tmp/world.json ./tmp/world.validation.json
+npm run media:studio -- world-forge-mutate ./tmp/world-mutation.json ./tmp/world-mutation.result.json
+npm run media:studio -- world-forge-render-plan ./tmp/world-render.json ./tmp/world-render.plan.json
+```
+
+See `WORLD_FORGE.md` for the spatial runtime, modeling, simulation, character-animation, film integration and persistent-world roadmap.
+
 ## Visual Stage
 
 Fallen now has a deterministic layered graphics surface above the legacy clip concatenator. A visual stage contains a virtual camera plus independently animated media, text, shape, geo, metric and timeline layers. Layers support local translation, scale, rotation, perspective, parallax and evidence state.

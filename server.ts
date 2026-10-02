@@ -14,6 +14,7 @@ import { huntLiveIntent } from './systemia/chum/live-intent-hunter.mjs';
 import { buyerFrontageUrl } from './systemia/chum/start-corridor.mjs';
 import { createCrawlerRadarStore } from './systemia/chum/crawler-radar.mjs';
 import { registerFallenFamilyRoutes } from './systemia/media-studio/family-http.js';
+import { registerWorldForgeRoutes } from './systemia/media-studio/world-forge-http.js';
 import { registerRivetReportGateway } from './systemia/rivet/http-gateway.mjs';
 import { registerHouseholdFabricGateway } from './systemia/household-fabric/http-gateway.mjs';
 import { registerSpecialistHandoffMcps } from './systemia/mcp/specialist-handoff.js';
@@ -1478,6 +1479,10 @@ registerFallenFamilyRoutes(app, {
   Type,
   generateContentWithFallback,
   parseGeminiError,
+  rateLimit,
+});
+
+registerWorldForgeRoutes(app, {
   rateLimit,
 });
 
