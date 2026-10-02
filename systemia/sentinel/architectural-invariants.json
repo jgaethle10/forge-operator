@@ -84,7 +84,10 @@
         "pricing",
         "public_url",
         "payment_authority",
-        "confirmation"
+        "confirmation",
+        "public_url_source",
+        "public_url_transactional",
+        "checkout_continuation_verified"
       ],
       "require_nonempty_offers": true,
       "repair_recipe_id": "sell-now-continuation-contract"
