@@ -71,6 +71,8 @@ test('demand radar summarizes exact backlog shape by workload',()=>{
     cpu_units:0.4,
     memory_mb:256,
     storage_gb:0,
+    gpu_count:0,
+    gpu_models:[],
   });
   assert.equal(hashNeed.authorized_only,true);
   assert.equal(hashNeed.checkpoint_friendly,true);
