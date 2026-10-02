@@ -24,6 +24,7 @@ import { startFabricLocalRuntime } from '../mcp/fabric-local-runtime.mjs';
 import { startPublicEdgeRuntime } from '../network/public-edge-runtime.mjs';
 import { startFederatedServiceBridge } from '../network/federated-service-bridge.mjs';
 import { startEvercraftHomeServer } from '../evercraft-home/server.mjs';
+import { startHouseholdFabricYakimaRuntime } from '../household-fabric/resident-runtime.mjs';
 import { startEvercraftEdgeDnsRuntime } from './evercraft-edge-dns-runtime.mjs';
 import { validatePublicEdgeAdmission } from '../network/public-edge-tls.mjs';
 import { transcriptionCapabilityStatus } from '../forensiscope/transcription-engine.mjs';
@@ -89,6 +90,7 @@ const BRIDGED_WORKLOADS = new Set([
   'systemia.specialist-handoff-mcp.v1',
   'systemia.fabric-local-mcp.v1',
   'systemia.rivet-report-runtime.v1',
+  'systemia.household-fabric-yakima.v1',
 ]);
 
 const BRIDGE_REQUEST_HEADERS = new Set([
@@ -141,10 +143,16 @@ function bridgeServiceOrigin(entry) {
   if (entry?.workload_class === 'systemia.rivet-report-runtime.v1') {
     return String(entry?.runtime?.service_url || '');
   }
+  if (entry?.workload_class === 'systemia.household-fabric-yakima.v1') {
+    return String(entry?.runtime?.url || '');
+  }
   return '';
 }
 
 function bridgeRouteAllowed(entry, method, requestPath) {
+  if (entry?.workload_class === 'systemia.household-fabric-yakima.v1') {
+    return method === 'GET' && (requestPath === '/health' || requestPath === '/today');
+  }
   if (entry?.workload_class !== 'systemia.rivet-report-runtime.v1') return true;
   if (method === 'GET' && requestPath === '/health') return true;
   if (method === 'POST' && requestPath === '/v1/reports') return true;
@@ -188,7 +196,7 @@ async function bridgeResidentHttp(entry, input = {}) {
   const origin = assertLoopbackBridgeOrigin(bridgeServiceOrigin(entry));
   const requestPath = normalizeBridgePath(input.path);
   if (!bridgeRouteAllowed(entry, method, requestPath)) {
-    throw new Error('rivet_report_bridge_route_not_allowed');
+    throw new Error('resident_service_bridge_route_not_allowed');
   }
   const target = new URL(requestPath, origin);
   const encoded = String(input.body_base64 || '');
@@ -1606,6 +1614,100 @@ export async function startEvercraftComputeNode({
             workload_class: body.workload_class,
             result_schema: result.schema,
             instance_id: runtime.instance_id,
+          });
+          return send(res, 200, {
+            ok: true,
+            node_id: nodeId,
+            workload_class: body.workload_class,
+            result,
+            receipt,
+          });
+        }
+
+        if (workloadClass === 'systemia.household-fabric-yakima.v1') {
+          const stateRoot = path.resolve(String(
+            body.input?.state_root ||
+            path.join(allowedRoot, '.evercraft', 'household-fabric', 'yakima')
+          ));
+          if (!isWithin(allowedRoot, stateRoot)) {
+            return send(res, 403, { error: 'household_fabric_state_outside_admitted_root' });
+          }
+
+          const identityStateValue = String(process.env.EVERCRAFT_IDENTITY_STATE_DIR || '').trim();
+          const credentialStateValue = String(
+            body.input?.credential_state_dir ||
+            process.env.EVERCRAFT_CREDENTIAL_STATE_DIR ||
+            (identityStateValue ? path.join(identityStateValue, 'provider-credentials') : '')
+          ).trim();
+          const credentialStateRoot = credentialStateValue ? path.resolve(credentialStateValue) : '';
+          if (credentialStateRoot && !isWithin(allowedRoot, credentialStateRoot)) {
+            return send(res, 403, { error: 'household_fabric_credential_state_outside_admitted_root' });
+          }
+
+          const runtimeEnv = {
+            ...process.env,
+            ...(credentialStateRoot ? { EVERCRAFT_CREDENTIAL_STATE_DIR: credentialStateRoot } : {}),
+            ...(body.input?.google_credential_ref
+              ? { HOUSEHOLD_GOOGLE_CREDENTIAL_REF: String(body.input.google_credential_ref) }
+              : {}),
+            ...(body.input?.kroger_credential_ref
+              ? { HOUSEHOLD_KROGER_CREDENTIAL_REF: String(body.input.kroger_credential_ref) }
+              : {}),
+            ...(body.input?.kroger_zip_code
+              ? { HOUSEHOLD_KROGER_ZIP_CODE: String(body.input.kroger_zip_code) }
+              : {}),
+            ...(Array.isArray(body.input?.kroger_locations)
+              ? { HOUSEHOLD_KROGER_LOCATIONS_JSON: JSON.stringify(body.input.kroger_locations) }
+              : {}),
+            ...(Array.isArray(body.input?.kroger_terms)
+              ? { HOUSEHOLD_KROGER_TERMS: body.input.kroger_terms.map(String).join(',') }
+              : {}),
+          };
+
+          const runtime = await startHouseholdFabricYakimaRuntime({
+            stateDir: stateRoot,
+            browserEdgeUrl: String(
+              body.input?.browser_edge_url ||
+              process.env.HOUSEHOLD_FABRIC_BROWSER_EDGE_URL ||
+              ''
+            ),
+            browserToken: String(process.env.HOUSEHOLD_FABRIC_BROWSER_TOKEN || ''),
+            cadenceSeconds: Number(body.input?.cadence_seconds || 300),
+            host: '127.0.0.1',
+            port: Number(body.input?.port || 0),
+            env: runtimeEnv,
+          });
+          const serviceId = `svc_${randomBytes(8).toString('hex')}`;
+          services.set(serviceId, {
+            lease_id: body.lease_id,
+            workload_class: body.workload_class,
+            runtime,
+            service: runtime,
+          });
+          const result = {
+            schema: 'evercraft.compute.resident-service.v1',
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            service_url: null,
+            local_url: runtime.url,
+            health_path: `/v1/services/${serviceId}/health`,
+            bridge_path: `/v1/services/${serviceId}/http-bridge`,
+            public_route_required: false,
+            today_path: '/today',
+            instance_id: runtime.instanceId,
+            state_dir: stateRoot,
+            credential_state_bound: Boolean(credentialStateRoot),
+            credential_refs_are_opaque: true,
+            raw_provider_secrets_in_input: false,
+          };
+          const receipt = chain.issue('service.started', {
+            lease_id: body.lease_id,
+            service_id: serviceId,
+            workload_class: body.workload_class,
+            result_schema: result.schema,
+            instance_id: runtime.instanceId,
+            credential_state_bound: Boolean(credentialStateRoot),
+            credential_refs_are_opaque: true,
           });
           return send(res, 200, {
             ok: true,
