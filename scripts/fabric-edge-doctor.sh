@@ -130,19 +130,22 @@ ensure_saban_capacity_timer(){
   local has_dispatch=false
   local has_work_api=false
   local has_pairing_api=false
+  local has_watchdog=false
   systemctl list-unit-files evercraft-saban-capacity.timer --no-legend 2>/dev/null | grep -q '^evercraft-saban-capacity.timer' && has_timer=true || true
   systemctl list-unit-files evercraft-saban-microseed-gateway.service --no-legend 2>/dev/null | grep -q '^evercraft-saban-microseed-gateway.service' && has_gateway=true || true
   systemctl list-unit-files evercraft-saban-probation.timer --no-legend 2>/dev/null | grep -q '^evercraft-saban-probation.timer' && has_probation=true || true
   systemctl list-unit-files evercraft-saban-dispatch.timer --no-legend 2>/dev/null | grep -q '^evercraft-saban-dispatch.timer' && has_dispatch=true || true
   systemctl list-unit-files evercraft-saban-work-api.service --no-legend 2>/dev/null | grep -q '^evercraft-saban-work-api.service' && has_work_api=true || true
   systemctl list-unit-files evercraft-saban-pairing-api.service --no-legend 2>/dev/null | grep -q '^evercraft-saban-pairing-api.service' && has_pairing_api=true || true
-  if [[ "$has_timer" == "true" && "$has_gateway" == "true" && "$has_probation" == "true" && "$has_dispatch" == "true" && "$has_work_api" == "true" && "$has_pairing_api" == "true" ]]; then
+  systemctl list-unit-files evercraft-saban-watchdog.timer --no-legend 2>/dev/null | grep -q '^evercraft-saban-watchdog.timer' && has_watchdog=true || true
+  if [[ "$has_timer" == "true" && "$has_gateway" == "true" && "$has_probation" == "true" && "$has_dispatch" == "true" && "$has_work_api" == "true" && "$has_pairing_api" == "true" && "$has_watchdog" == "true" ]]; then
     systemctl enable --now evercraft-saban-capacity.timer >/dev/null 2>&1 || true
     systemctl enable --now evercraft-saban-microseed-gateway.service >/dev/null 2>&1 || true
     systemctl enable --now evercraft-saban-probation.timer >/dev/null 2>&1 || true
     systemctl enable --now evercraft-saban-dispatch.timer >/dev/null 2>&1 || true
     systemctl enable --now evercraft-saban-work-api.service >/dev/null 2>&1 || true
     systemctl enable --now evercraft-saban-pairing-api.service >/dev/null 2>&1 || true
+    systemctl enable --now evercraft-saban-watchdog.timer >/dev/null 2>&1 || true
   else
     if [[ ! -f "$REPO_ROOT/scripts/install-saban-capacity-organism.sh" ]]; then
       echo "ERROR: Saban capacity organism installer missing" >&2
@@ -166,7 +169,8 @@ ensure_saban_capacity_timer(){
   systemctl enable --now evercraft-saban-dispatch.timer >/dev/null 2>&1 || return 56
   systemctl enable --now evercraft-saban-work-api.service >/dev/null 2>&1 || return 57
   systemctl enable --now evercraft-saban-pairing-api.service >/dev/null 2>&1 || return 58
-  systemctl start evercraft-saban-capacity.service >/dev/null 2>&1 || return 59
+  systemctl enable --now evercraft-saban-watchdog.timer >/dev/null 2>&1 || return 59
+  systemctl start evercraft-saban-capacity.service >/dev/null 2>&1 || return 60
   return 0
 }
 
@@ -248,6 +252,7 @@ saban_probation_timer_state="$(service_state evercraft-saban-probation.timer)"
 saban_dispatch_timer_state="$(service_state evercraft-saban-dispatch.timer)"
 saban_work_api_state="$(service_state evercraft-saban-work-api.service)"
 saban_pairing_api_state="$(service_state evercraft-saban-pairing-api.service)"
+saban_watchdog_timer_state="$(service_state evercraft-saban-watchdog.timer)"
 relay_state="$(service_state "$RELAY_SERVICE")"
 
 echo
@@ -262,6 +267,7 @@ echo "evercraft-saban-probation.timer=$saban_probation_timer_state"
 echo "evercraft-saban-dispatch.timer=$saban_dispatch_timer_state"
 echo "evercraft-saban-work-api.service=$saban_work_api_state"
 echo "evercraft-saban-pairing-api.service=$saban_pairing_api_state"
+echo "evercraft-saban-watchdog.timer=$saban_watchdog_timer_state"
 echo "$RELAY_SERVICE=$relay_state"
 if [[ "$REPAIR" == "true" ]]; then
   echo "local_organism_repair_ok=$local_organism_repair_ok"
@@ -449,6 +455,7 @@ cat > /tmp/evercraft-fabric-edge-doctor.json <<EOF
   "saban_dispatch_timer":"$saban_dispatch_timer_state",
   "saban_work_api":"$saban_work_api_state",
   "saban_pairing_api":"$saban_pairing_api_state",
+  "saban_watchdog_timer":"$saban_watchdog_timer_state",
   "outbound_relay_service":"$relay_state",
   "ingress_transport":"$ingress_transport",
   "local_organism_repair_ok":$(json_bool "$local_organism_repair_ok"),
