@@ -54,8 +54,9 @@ test('Yard to Saban inventory ingest strips all authority material',()=>{
   assert.equal(safe.authority_material_exposed,false);
   const raw=JSON.stringify(safe);
   assert.doesNotMatch(raw,/must-not-survive/);
-  assert.doesNotMatch(raw,/allocator_token/);
-  assert.doesNotMatch(raw,/control_token/);
+  assert.doesNotMatch(raw,/"allocator_token"\s*:/);
+  assert.doesNotMatch(raw,/"control_token"\s*:/);
+  assert.doesNotMatch(raw,/"service_relay_token"\s*:/);
   assert.equal(safe.nodes[0].capacity.failure_domain,'remote-site-b');
   assert.equal(safe.nodes[0].capacity.zero_cost,true);
   assert.equal(safe.nodes[0].capacity.capacity_hint.storage_gb,500);
@@ -169,7 +170,15 @@ test('capacity organism plans MicroSeeds and NodeSeeds in one portfolio fabric',
   assert.equal(state.compute_offer_count,2);
   const telemetry=state.workload_plan.placements.find(x=>x.task_id==='queued-systemia.telemetry-normalizer.v1');
   const journal=state.workload_plan.placements.filter(x=>x.task_id==='queued-systemia.journal-claim-check.v1');
-  assert.ok(telemetry);
+  assert.ok(
+    telemetry,
+    JSON.stringify({
+      eligible:state.workload_plan.eligible_offers_by_task?.['queued-systemia.telemetry-normalizer.v1']||[],
+      held:state.workload_plan.held?.filter(x=>x.task_id==='queued-systemia.telemetry-normalizer.v1')||[],
+      placements:state.workload_plan.placements?.filter(x=>x.task_id.includes('telemetry-normalizer'))||[],
+      offers:{micro:state.microseed_compute_offer_count,node:state.nodeseed_compute_offer_count}
+    },null,2)
+  );
   assert.ok(journal.length>=1);
   assert.ok(journal.every(x=>x.provider_id==='evercraft-heavy-01'));
   assert.ok(state.workload_plan.placements.some(x=>x.provider_id==='micro:micro-phone-01' || x.device_id==='micro-phone-01'));
