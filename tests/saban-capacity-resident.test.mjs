@@ -47,5 +47,7 @@ test('Chromebook edge doctor installs and revives Saban capacity organism',()=>{
   assert.match(doctor,/evercraft-saban-work-api\.service/);
   assert.match(doctor,/evercraft-saban-pairing-api\.service/);
   assert.match(doctor,/evercraft-saban-watchdog\.timer/);
-  assert.match(doctor,/saban_capacity_repair_failed/);
+  assert.match(doctor,/saban_capacity_repair_ok/);
+  assert.match(doctor,/saban_capacity_repair_code/);
+  assert.match(doctor,/saban_capacity_degraded/);
 });
