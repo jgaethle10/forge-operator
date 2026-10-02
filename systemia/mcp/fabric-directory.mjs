@@ -274,21 +274,29 @@ function scoreEntry(intent,entry,{frequency,total}){
   // Physical-part routing guardrails. Rare generic words such as "broken" must not
   // let software-health capabilities outrank a specialist when the user is holding
   // a real component, while deep sourcing language should still favor the paid hunt.
-  const physicalSignals=['part','component','replacement','obsolete','discontinu','salvage','donor','supersession','cross','reference','serial','marking','label','fragment','fitment','fabrication','blueprint','appliance','tractor','machine'];
+  const physicalSignals=['part','component','replacement','obsolete','discontinu','salvage','donor','supersession','cross','reference','serial','marking','label','fragment','fitment','fabrication','blueprint','appliance','tractor','machine','hydraulic','valve','pump','bearing','motor','gear','sensor','assembly','supplier','suppliers'];
   const identitySignals=['identify','photo','marking','label','serial','fragment','diagram','invoice','evidence','model','number','measurement','call'];
   const deepSourceSignals=['obsolete','discontinu','salvage','donor','supersession','cross','reference','blueprint','fabrication','aftermarket','nos'];
   const softwareSignals=['software','app','repository','repo','codebase','website','endpoint','workflow','deployment','api','saas'];
   const hasPhysicalPartIntent=intentSet.has('part')||intentSet.has('component')||physicalSignals.filter((token)=>intentSet.has(token)).length>=2;
   const hasSoftwareIntent=softwareSignals.some((token)=>intentSet.has(token));
 
-  if(entry.public_id==='findmypart-part-passport-v1'&&hasPhysicalPartIntent){
-    score+=55;
-    if(identitySignals.some((token)=>intentSet.has(token))) score+=45;
+  if(entry.public_id==='findmypart-part-passport-v1'){
+    if(!hasPhysicalPartIntent) score-=180;
+    else {
+      score+=55;
+      if(identitySignals.some((token)=>intentSet.has(token))) score+=45;
+    }
   }
 
-  if(entry.public_id==='findmypart-paid-hunt-v1'&&hasPhysicalPartIntent){
-    score+=40;
-    if(deepSourceSignals.filter((token)=>intentSet.has(token)).length>=2) score+=55;
+  if(entry.public_id==='findmypart-paid-hunt-v1'){
+    if(!hasPhysicalPartIntent) score-=180;
+    else {
+      score+=40;
+      const deepSourceCount=deepSourceSignals.filter((token)=>intentSet.has(token)).length;
+      if(deepSourceCount>=2) score+=55;
+      else if(deepSourceCount===1) score+=35;
+    }
   }
 
   if(

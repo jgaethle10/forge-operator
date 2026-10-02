@@ -117,6 +117,19 @@ test('Fabric routes a messy contractor cash crisis toward business recovery capa
   assert.equal(ids.includes('evercraft-clip-social-video-v1'),false);
 });
 
+test('Fabric does not route relationship-and-income distress to FindMyPart on the word enough',()=>{
+  const canonical=loadFabricCatalogFromRepository();
+  const hits=matchFabricCapabilities(
+    'My wife left because my business isn’t making enough money',
+    canonical,
+    {limit:5}
+  );
+  const ids=hits.map((x)=>x.public_id);
+  assert.ok(ids.includes('income-war-map-v1'));
+  assert.equal(ids.includes('findmypart-part-passport-v1'),false);
+  assert.equal(ids.includes('findmypart-paid-hunt-v1'),false);
+});
+
 test('Fabric ignores generic question language when routing a simple payroll crisis',()=>{
   const canonical=loadFabricCatalogFromRepository();
   const hits=matchFabricCapabilities(
