@@ -397,3 +397,59 @@ test('multiple devices consume one human attention budget slot', async () => {
   assert.equal(second.push_suppressed, 2);
   assert.equal(sent.length, 2);
 });
+
+
+test('marketing realtime delivery requires an opted-in subscription', async () => {
+  const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'relay-marketing-consent-'));
+  const writes = [];
+  class FakeResponse extends EventEmitter {
+    write(chunk) { writes.push(String(chunk)); return true; }
+    end() {}
+  }
+  const fabric = createNotificationFabric({
+    dataDir,
+    sendPush: async () => ({ ok: true, status: 201, retryAfter: null }),
+  });
+  fabric.realtimeHub.connect({
+    principalId: 'owner',
+    res: new FakeResponse(),
+    metadata: { audiences: ['company-ops'], products: [] },
+  });
+
+  const withoutOptIn = await fabric.dispatchIntent({
+    id: 'marketing-no-opt-in',
+    product: 'journal',
+    purpose: 'marketing',
+    priority: 'normal',
+    title: 'Newsletter',
+    body: 'New issue',
+    audiences: ['company-ops'],
+    consent_basis: 'explicit_opt_in',
+  });
+  assert.equal(withoutOptIn.targeted_principals ?? 0, 0);
+  assert.equal(withoutOptIn.realtime_delivered, 0);
+  assert.equal(writes.some((chunk) => chunk.includes('Newsletter')), false);
+
+  fabric.subscribe({
+    ...makeSubscription(),
+    preferences: {
+      operational: true,
+      transactional: true,
+      safety: true,
+      marketing: true,
+    },
+  });
+  const withOptIn = await fabric.dispatchIntent({
+    id: 'marketing-opted-in',
+    product: 'journal',
+    purpose: 'marketing',
+    priority: 'normal',
+    title: 'Newsletter allowed',
+    body: 'New issue',
+    audiences: ['company-ops'],
+    consent_basis: 'explicit_opt_in',
+  });
+  assert.equal(withOptIn.targeted_principals, 1);
+  assert.equal(withOptIn.realtime_delivered, 1);
+  fabric.realtimeHub.closeAll();
+});
