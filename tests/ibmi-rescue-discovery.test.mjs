@@ -25,13 +25,15 @@ assert.match(product.commercial?.status || '', /buyer_route_live/);
 assert.match(product.commercial?.status || '', /backend_checkout_verified/);
 assert.equal(product.commercial?.machine_commerce_handoff?.state, 'live_verified');
 assert.equal(product.commercial?.machine_commerce_handoff?.payment_created, false);
+assert.equal(product.commercial?.machine_commerce_handoff?.payment_proof, false);
 assert.equal(product.commercial?.offers?.[0]?.offer_key, 'ibmi_estate_xray_250');
-assert.notEqual(product.canonical_url, product.origin_product_url, 'unverified product route must not be canonical');
+assert.equal(product.origin_product_url, null, 'retired provider origin must not be emitted as current product origin');
+assert.equal(product.human_start_url, null, 'held buyer frontage must not invent a public start URL');
 
 const cat = catalog.products.find((row) => row.product_key === 'ibmi-rescue');
 assert(cat, 'ibmi-rescue missing from registry catalog');
 assert.equal(cat.mode, 'shared_mcp');
-assert.match(cat.mcp || '', /machineCommerceMcp$/);
+assert.equal(cat.mcp, null, 'retired shared provider URL must remain absent');
 assert.equal(cat.registry_name, 'io.github.jgaethle10/evercraft-machine-commerce');
 assert.equal(cat.machine_state, 'direct_checkout_ready');
 
@@ -46,29 +48,34 @@ assert.equal(conf.machine_commerce_tool, 'prepare_verified_checkout');
 assert.equal(conf.machine_commerce_offer_tool, 'get_live_checkout_offer');
 assert.equal(conf.machine_commerce_status_tool, 'get_verified_order_status');
 assert.equal(conf.mcp_registry?.publication_state, 'published_shared_server');
+assert.match(conf.live_canary_evidence || '', /^GitHubActionsRun:/);
 
 const idx = publicIndex.products.find((row) => row.product_key === 'ibmi-rescue');
 assert(idx, 'ibmi-rescue missing from public registry index');
-assert.equal(idx.invocation?.mode, 'mcp');
-assert.match(idx.invocation?.url || '', /machineCommerceMcp$/);
+assert.equal(idx.invocation?.mode, 'discovery_only');
+assert.equal(idx.invocation?.url, null);
 assert.equal(idx.registry_name, 'io.github.jgaethle10/evercraft-machine-commerce');
 
 assert.equal(discovery.product_key, 'ibmi-rescue');
 assert.equal(discovery.human_confirmation_required, true);
 assert.equal(discovery.commercial?.offers?.length, 3);
-assert.match(discovery.mcp || '', /machineCommerceMcp$/);
+assert.equal(discovery.mcp, null);
+assert.equal(discovery.machine_commerce_mcp, null);
 assert.equal(discovery.registry_name, 'io.github.jgaethle10/evercraft-machine-commerce');
-assert.match(discovery.buyer_frontage_url || '', /\/buy\/ibmi-rescue-v1/);
-assert.equal(discovery.human_start_url, 'https://findmypart.base44.app/ibmi-rescue');
+assert.equal(discovery.buyer_frontage_url, null);
+assert.equal(discovery.human_start_url, null);
+assert.equal(aiConformance.mcp, null);
+assert.equal(aiConformance.buyer_frontage_url, null);
+assert.equal(aiConformance.human_start_url, null);
 assert.equal(aiConformance.provider_behavior_state, 'not_inferred_from_publication');
 assert.equal(aiConformance.machine_commerce_handoff_state, 'live_verified');
 
-assert.match(llms, /Buyer frontage:/);
-assert.match(mirrorHtml, /Review current offer/);
-assert.match(mirrorHtml, /\/buy\/ibmi-rescue-v1/);
+assert.doesNotMatch(llms, /base44\.app/i, 'IBM i product guidance must not advertise a retired provider origin');
+assert.doesNotMatch(mirrorHtml, /base44\.app/i, 'IBM i product page must not advertise a retired provider origin');
+assert.match(mirrorHtml, /Open public capability record/);
 assert.match(mirrorHtml, /IBM i Estate X-Ray/);
-assert.match(chumIndexHtml, /\/buy\/ibmi-rescue-v1/);
-assert.match(llms, /Product-native start:/);
+assert.match(chumIndexHtml, /chum\/products\/ibmi-rescue/);
+assert.match(llms, /Official MCP Registry:/);
 assert.match(llms, /IBM i Estate X-Ray/);
 assert.match(llms, /IBM i 7\.4 Deadline X-Ray/);
 assert.match(llms, /\$250 one-time/);
@@ -89,4 +96,5 @@ console.log(JSON.stringify({
   offers: product.commercial.offers.map((row) => row.offer_key),
   invocation: idx.invocation.mode,
   checkout_state: product.commercial.status,
+  provider_url_retired: true
 }, null, 2));
