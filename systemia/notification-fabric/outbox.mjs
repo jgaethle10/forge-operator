@@ -247,19 +247,33 @@ export function createRelayOutbox(options = {}) {
     const now = Number(options.now ?? Date.now());
     const statuses = {};
     let oldestPendingAt = null;
+    let oldestDueAt = null;
+    let due = 0;
+    let scheduled = 0;
     for (const job of Object.values(state.jobs || {})) {
       statuses[job.status] = (statuses[job.status] || 0) + 1;
       if (['pending', 'retry'].includes(job.status)) {
         const created = Date.parse(job.created_at || '');
         if (Number.isFinite(created) && (oldestPendingAt === null || created < oldestPendingAt)) oldestPendingAt = created;
+        const notBefore = Date.parse(job.not_before_at || '');
+        if (Number.isFinite(notBefore) && notBefore <= now) {
+          due += 1;
+          if (oldestDueAt === null || notBefore < oldestDueAt) oldestDueAt = notBefore;
+        } else {
+          scheduled += 1;
+        }
       }
     }
     return {
       schema: 'systemia.relay.outbox-stats.v1',
       total: Object.keys(state.jobs || {}).length,
       statuses,
+      due,
+      scheduled,
       oldest_pending_at: oldestPendingAt === null ? null : iso(oldestPendingAt),
       oldest_pending_age_ms: oldestPendingAt === null ? 0 : Math.max(0, now - oldestPendingAt),
+      oldest_due_at: oldestDueAt === null ? null : iso(oldestDueAt),
+      oldest_due_age_ms: oldestDueAt === null ? 0 : Math.max(0, now - oldestDueAt),
     };
   }
 
