@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {dnsTxtQueryHex,parseDigAuthority,summarizeCheckHost} from '../dns/external-public-verifier.mjs';
+import {dnsTxtQueryHex,parseDigAuthority,summarizeCheckHost,authoritativeReceiptMatches} from '../dns/external-public-verifier.mjs';
 
 test('external verifier recognizes exact authoritative non-recursive TXT identity',()=>{
   const text=`; <<>> DiG <<>>
@@ -28,9 +28,9 @@ _evercraft.edge-canary.evercraftpropertyservices.com. 60 IN TXT "service=evercra
 });
 
 test('DNS UDP payload is non-recursive TXT query',()=>{
-  const hex=dnsTxtQueryHex('_evercraft.edge-canary.evercraftpropertyservices.com.');
+  const hex=dnsTxtQueryHex('_evercraft.edge-canary.evercraftpropertyservices.com.',0x7a11);
   const b=Buffer.from(hex.slice(2),'hex');
-  assert.equal(b.readUInt16BE(0),0x4556);
+  assert.equal(b.readUInt16BE(0),0x7a11);
   assert.equal(b.readUInt16BE(2)&0x0100,0);
   assert.equal(b.readUInt16BE(4),1);
   assert.equal(b.readUInt16BE(b.length-4),16);
@@ -48,22 +48,23 @@ test('distributed status summary counts only successful external nodes',()=>{
   assert.deepEqual(new Set(s.successful_countries),new Set(['US','DE']));
 });
 
-test('production port 53 reachability is not mislabeled as blocked',()=>{
-  const tcp53={success_count:6};
-  const udp53={success_count:5};
-  const tcpDiag={success_count:5};
-  const udpDiag={success_count:5};
-  const tcpIdentity={parsed:{verified:false}};
-  const tcp53Reachable=Number(tcp53?.success_count||0)>=2;
-  const udp53Reachable=Number(udp53?.success_count||0)>=2;
-  const diagnosticReachable=Number(tcpDiag?.success_count||0)>=1||Number(udpDiag?.success_count||0)>=1;
-  const verified=tcpIdentity?.parsed?.verified===true&&tcp53Reachable&&udp53Reachable;
-  const classification=verified
-    ? 'public_dns_verified'
-    : (tcp53Reachable||udp53Reachable)
-      ? 'production_53_reachable_identity_unverified'
-      : diagnosticReachable
-        ? 'diagnostic_high_port_reachable_production_53_unreachable'
-        : 'no_external_path_to_candidate';
-  assert.equal(classification,'production_53_reachable_identity_unverified');
+
+test('runtime identity requires the same nonce from at least two external UDP sources',()=>{
+  const receipts={receipts:[
+    {transaction_id:0x7a11,qname:'_evercraft.edge-canary.evercraftpropertyservices.com.',protocol:'udp',remote_address:'198.51.100.10',aa:true,ra:false,rcode:0,answer_count:1},
+    {transaction_id:0x7a11,qname:'_evercraft.edge-canary.evercraftpropertyservices.com.',protocol:'udp',remote_address:'203.0.113.20',aa:true,ra:false,rcode:0,answer_count:1},
+    {transaction_id:0x7a12,qname:'_evercraft.edge-canary.evercraftpropertyservices.com.',protocol:'udp',remote_address:'203.0.113.30',aa:true,ra:false,rcode:0,answer_count:1}
+  ]};
+  const match=authoritativeReceiptMatches(receipts,{transactionId:0x7a11,identityName:'_evercraft.edge-canary.evercraftpropertyservices.com.'});
+  assert.equal(match.verified,true);
+  assert.equal(match.match_count,2);
+  assert.equal(match.distinct_remote_addresses,2);
+});
+
+test('runtime identity rejects recursive or single-source receipts',()=>{
+  const receipts={receipts:[
+    {transaction_id:9,qname:'_evercraft.edge-canary.evercraftpropertyservices.com.',protocol:'udp',remote_address:'198.51.100.10',aa:true,ra:true,rcode:0,answer_count:1},
+    {transaction_id:9,qname:'_evercraft.edge-canary.evercraftpropertyservices.com.',protocol:'udp',remote_address:'198.51.100.10',aa:true,ra:false,rcode:0,answer_count:1}
+  ]};
+  assert.equal(authoritativeReceiptMatches(receipts,{transactionId:9,identityName:'_evercraft.edge-canary.evercraftpropertyservices.com.'}).verified,false);
 });
