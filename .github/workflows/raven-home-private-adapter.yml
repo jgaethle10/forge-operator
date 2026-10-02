@@ -1,0 +1,35 @@
+name: Raven Home Private Adapter
+
+on:
+  pull_request:
+    paths:
+      - "systemia/raven/**"
+      - "systemia/compute/runtime-node.mjs"
+      - "systemia/yard/operator.mjs"
+      - "systemia/evercraft-home/raven-runtime-adapter.mjs"
+      - "systemia/evercraft-home/raven-runtime-adapter.proof.mjs"
+      - ".github/workflows/raven-home-private-adapter.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prove-home-raven-private-adapter:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check Home Raven adapter source
+        run: node --check systemia/evercraft-home/raven-runtime-adapter.mjs
+      - name: Prove Raven core
+        run: node systemia/raven/private-runtime.proof.mjs
+      - name: Prove Raven on Compute
+        run: node systemia/compute/raven-private-runtime.proof.mjs
+      - name: Prove Raven through Yard
+        run: node systemia/yard/raven-private-deployment.proof.mjs
+      - name: Prove Home private Raven adapter
+        run: node systemia/evercraft-home/raven-runtime-adapter.proof.mjs
