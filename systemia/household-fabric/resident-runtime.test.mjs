@@ -16,7 +16,7 @@ const browserResult = {
     headings: [
       { level: 'h1', text: 'Events' },
       { level: 'h5', text: 'Yakima Central: Family Storytime' },
-      { level: 'h6', text: 'Thursday October 1, 2026 | 7:00 pm' },
+      { level: 'h6', text: 'Thursday December 24, 2026 | 7:00 pm' },
     ],
   },
 };
