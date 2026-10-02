@@ -86,8 +86,11 @@ export function nodeSeedInventoryToComputeOffers({
   inventory,
   requireZeroCost=true,
 }={}){
-  if(inventory?.schema!=='evercraft.yard.remote-capacity-nodes.v1'){
-    throw new Error('yard_remote_capacity_inventory_required');
+  if(![
+    'evercraft.yard.remote-capacity-nodes.v1',
+    'evercraft.saban.nodeseed-safe-inventory.v1'
+  ].includes(inventory?.schema)){
+    throw new Error('yard_or_saban_nodeseed_inventory_required');
   }
   const offers=[];
   const rejected=[];
