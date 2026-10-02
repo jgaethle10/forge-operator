@@ -227,6 +227,75 @@ test('FindMyPart paid hunt is not silently exposed by the free-triage contract',
   );
 });
 
+test('Systemia Remote Ops compiles only its proven read-only decision tools', () => {
+  const policy = compileProductRuntimePolicy('systemia-remote-ops', process.cwd());
+  assert.equal(policy.adoption_stage, 'shared_runtime');
+  assert.equal(policy.authority.passport_product, 'systemia-remote-ops');
+  assert.deepEqual(policy.authority.scopes, [
+    'route_business_decision',
+    'simulate_pricing_change',
+    'simulate_business_scenario',
+    'get_decision_lab_capabilities',
+  ]);
+  assert.equal(policy.route.specialist_slug, 'systemia-remote-ops');
+  assert.equal(policy.route.direct_callable, false);
+  assert.equal(policy.route.registry_published, false);
+  assert.equal(policy.meter.state, 'not_required');
+  assert.equal(policy.boundaries.production_mutation_enabled, false);
+  assert.equal(policy.boundaries.external_action_taken, false);
+  assert.equal(policy.boundaries.market_outcomes_inferred, false);
+});
+
+test('Remote Ops simulation compiles through the shared trust chain without claiming a public direct door', () => {
+  const prepared = buildExecutionGateInput({
+    product_key: 'systemia-remote-ops',
+    actor_ref: 'agent:decision-lab',
+    scope: 'simulate_pricing_change',
+    request: {
+      current_price: 100,
+      customers_per_month: 100,
+      price_change_percent: 10,
+    },
+    idempotency_key: 'capability-mesh:remote-ops:pricing:001',
+  });
+
+  assert.equal(prepared.execution_gate_input.passport_product, 'systemia-remote-ops');
+  assert.equal(prepared.execution_gate_input.specialist_slug, 'systemia-remote-ops');
+  assert.equal(prepared.route_snapshot.direct_callable, false);
+  assert.equal(prepared.route_snapshot.state, 'yard_runtime_proven_public_route_pending');
+  assert.equal(Object.prototype.hasOwnProperty.call(prepared.execution_gate_input, 'meter'), false);
+  assert.equal(prepared.grants_execution_authority, false);
+});
+
+test('Remote Ops refuses a verified-direct requirement until its public edge is actually promoted', () => {
+  assert.throws(
+    () =>
+      buildExecutionGateInput({
+        product_key: 'systemia-remote-ops',
+        actor_ref: 'agent:decision-lab',
+        scope: 'route_business_decision',
+        request: { intent: 'Should I hire another employee?' },
+        idempotency_key: 'capability-mesh:remote-ops:direct-held',
+        require_direct_specialist: true,
+      }),
+    /direct_specialist_not_ready/
+  );
+});
+
+test('Remote Ops contract cannot be stretched into a production mutation tool', () => {
+  assert.throws(
+    () =>
+      buildExecutionGateInput({
+        product_key: 'systemia-remote-ops',
+        actor_ref: 'agent:decision-lab',
+        scope: 'remote_exec',
+        request: { program: 'deploy' },
+        idempotency_key: 'capability-mesh:remote-ops:mutation',
+      }),
+    /scope_not_declared_in_authority_contract/
+  );
+});
+
 test('missing product contracts fail closed instead of inheriting another product defaults', () => {
   assert.throws(
     () => compileProductRuntimePolicy('buildflow', process.cwd()),
@@ -245,7 +314,7 @@ test('context binding describes scopes but grants no access', () => {
 
 test('generated runtime policy artifact covers only explicitly contracted products', () => {
   const rendered = renderRuntimePolicies(process.cwd());
-  assert.equal(rendered.policy_count, 7);
+  assert.equal(rendered.policy_count, 8);
   assert.deepEqual(
     rendered.policies.map((row) => row.product_key),
     [
@@ -256,6 +325,7 @@ test('generated runtime policy artifact covers only explicitly contracted produc
       'opportunity-fabric',
       'systemia-university',
       'findmypart',
+      'systemia-remote-ops',
     ]
   );
   assert.equal(rendered.truth_boundary.non_shared_runtime_execution_fails_closed, true);

@@ -202,12 +202,12 @@ This distinction prevents "we documented it" from becoming "Systemia may execute
 
 The current integration branch evaluates 64 public products.
 
-- 7 have explicit complete contracts
-- 4 are `shared_runtime`: AliEV, ForensiScope route classification, Evercraft Clip read-only planning, FindMyPart free Part Passport triage
+- 8 have explicit complete contracts
+- 5 are `shared_runtime`: AliEV, ForensiScope route classification, Evercraft Clip read-only planning, FindMyPart free Part Passport triage, Systemia Remote Ops read-only decision simulation
 - 1 is `private_runtime`: Opportunity Fabric
 - 2 are `discovery_only`: EverNest Atlas and Systemia University
-- 57 grandfathered public products remain in the migration queue
-- 11 public direct-door products still need contracts
+- 56 grandfathered public products remain in the migration queue
+- 10 public direct-door products still need contracts
 - the ratchet remains PASS because all three products added after the original 61-product baseline now have explicit contracts
 
 The baseline is not moved forward to hide new products. New products are contracted against the original migration boundary.
@@ -245,3 +245,32 @@ Authoritative inputs are:
 Portfolio Sentinel calls the live renderer directly each cycle.
 
 This prevents a moving `main` branch from invalidating a PR merely because a generated snapshot was computed against an older base. Derived state can be reproduced at any time; source truth cannot be silently replaced by it.
+
+
+## Systemia Remote Ops canary contract
+
+Systemia Remote Ops is the fifth shared-runtime contract and the eighth explicit product contract overall.
+
+The contracted tools come directly from the owned Yard runtime proof:
+
+```
+route_business_decision
+simulate_pricing_change
+simulate_business_scenario
+get_decision_lab_capabilities
+```
+
+They are read-only decision-support tools. The runtime proof labels them non-destructive and idempotent, preserves low confidence on the pricing heuristic, performs general scenarios only from caller-supplied assumptions, and reports `external_action_taken:false`.
+
+The contract deliberately does not promote the public specialist door. The direct-door ledger still reports:
+
+```
+state: yard_runtime_proven_public_route_pending
+direct_callable: false
+registry_published: false
+public_origin_state: https_route_unbound
+```
+
+Systemia may therefore compile the proven internal simulation surface through Passport, Context and Execution Gate, but `require_direct_specialist:true` fails closed until the Evercraft Compute public HTTPS edge and registry publication are independently verified.
+
+No simulation authorizes a real-world business action.
