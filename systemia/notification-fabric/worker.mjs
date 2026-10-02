@@ -40,10 +40,15 @@ export function createRelayWorker(options = {}) {
       principals = fabric.resolvePrincipals(intent);
     }
     if (!policy || !principals.length || policy.max_escalations <= 0) return null;
+    const expiryMs = intent.expires_at ? Date.parse(intent.expires_at) : null;
+    if (Number.isFinite(expiryMs) && expiryMs <= now) return null;
+    const watchAt = Number.isFinite(expiryMs)
+      ? Math.min(now + policy.within_seconds * 1000, expiryMs)
+      : now + policy.within_seconds * 1000;
     return outbox.enqueue({
       kind: 'ack_watch',
       idempotency_key: `ack-watch:${intent.id}:1`,
-      not_before_ms: now + policy.within_seconds * 1000,
+      not_before_ms: watchAt,
       max_attempts: 8,
       payload: {
         notification_id: intent.id,
@@ -103,6 +108,19 @@ export function createRelayWorker(options = {}) {
         at: new Date(now).toISOString(),
       });
       return { kind: 'ack_watch', status: 'acknowledged', notification_id: payload.notification_id };
+    }
+
+    const expiresAt = payload.original_intent?.expires_at ? Date.parse(payload.original_intent.expires_at) : null;
+    if (Number.isFinite(expiresAt) && expiresAt <= now) {
+      fabric.store.recordDelivery({
+        schema: 'systemia.notification.delivery.v3',
+        notification_id: payload.notification_id,
+        status: 'ack_watch_expired',
+        principal_ids: principals,
+        expires_at: new Date(expiresAt).toISOString(),
+        at: new Date(now).toISOString(),
+      });
+      return { kind: 'ack_watch', status: 'expired', notification_id: payload.notification_id };
     }
 
     const level = Math.max(1, Number(payload.escalation_level || 1));
