@@ -155,9 +155,12 @@ test('reference identity fails closed when no identity reference is supplied',()
   assert.ok(videoRejections.every(row=>row.reasons.includes('identity_reference_missing')));
 });
 
-test('native audio requirement narrows routing to a capable model',()=>{
+test('native audio requirement narrows routing to one model and still produces the requested takes',()=>{
   const plan=buildVisualModelPlan({...request,requireNativeAudio:true,candidateCount:4},endpoints);
-  assert.deepEqual(plan.jobs.map(job=>job.modelId),['cinema-b']);
+  assert.equal(plan.jobs.length,4);
+  assert.deepEqual(plan.jobs.map(job=>job.modelId),['cinema-b','cinema-b','cinema-b','cinema-b']);
+  assert.deepEqual(plan.jobs.map(job=>job.modelVariantIndex),[1,2,3,4]);
+  assert.equal(new Set(plan.jobs.map(job=>job.id)).size,4);
 });
 
 test('finishing compiles lip-sync and upscale as governed post-tournament passes',()=>{
@@ -219,8 +222,9 @@ test('verified continuity start frame can satisfy reference identity when provid
     ]
   },[endpoint]);
   assert.equal(plan.status,'routed');
-  assert.equal(plan.jobs.length,1);
-  assert.deepEqual(plan.jobs[0].references.map(ref=>ref.role),['start_frame']);
+  assert.equal(plan.jobs.length,3);
+  assert.deepEqual(plan.jobs.map(job=>job.modelVariantIndex),[1,2,3]);
+  assert.ok(plan.jobs.every(job=>job.references.map(ref=>ref.role).join(',')==='start_frame'));
 });
 
 test('provider locator mismatch blocks routing before execution',()=>{
@@ -428,4 +432,21 @@ test('verified continuity start frame can carry both identity and environment ca
   },[endpoint]);
   assert.equal(plan.status,'routed');
   assert.deepEqual(plan.jobs[0].references.map(ref=>ref.role),['start_frame']);
+});
+
+
+test('one eligible model still supplies enough governed candidates for Shot Tournament',()=>{
+  const plan=buildVisualModelPlan({...request,candidateCount:4,modelDiversity:2},[endpoints[0]]);
+  assert.equal(plan.status,'routed');
+  assert.equal(plan.jobs.length,4);
+  assert.deepEqual(plan.jobs.map(job=>job.modelVariantIndex),[1,2,3,4]);
+  assert.equal(new Set(plan.jobs.map(job=>job.id)).size,4);
+});
+
+test('candidate fanout uses distinct models before repeating them',()=>{
+  const plan=buildVisualModelPlan({...request,candidateCount:5,modelDiversity:1},endpoints);
+  assert.equal(plan.jobs.length,5);
+  assert.equal(new Set(plan.jobs.slice(0,3).map(job=>job.modelId)).size,3);
+  assert.equal(plan.jobs[3].modelId,plan.jobs[0].modelId);
+  assert.equal(plan.jobs[4].modelId,plan.jobs[1].modelId);
 });
