@@ -1505,12 +1505,12 @@
         "checkout creation is not payment proof",
         "paid state requires authoritative provider verification",
         "no production change or cutover is included in the public X-Ray or Proof Sprint",
-        "Human buyer route reachability and backend checkout creation are live-verified with synthetic QA",
+        "Historical synthetic QA verified prior buyer-route reachability and checkout-session creation. That receipt does not prove a current owned public route.",
         "Checkout creation is not payment proof; provider verification is still required before paid state or revenue claims",
         "unknown IBM i release is acceptable and must not be guessed from generic technology-use evidence"
       ],
       "commercial": {
-        "status": "sell_now_machine_commerce_direct_checkout_live_buyer_route_live_backend_checkout_verified",
+        "status": "sell_now_current_route_held_historical_checkout_canary",
         "offers": [
           {
             "name": "IBM i Estate X-Ray",
@@ -1528,20 +1528,22 @@
             "offer_key": "ibmi_upgrade_proof_sprint_1500"
           }
         ],
-        "payment_state": "Evercraft Payments offers active. Human buyer route is externally reachable and synthetic QA verified creation of the $250 Stripe Checkout session. Checkout creation is not payment proof; authoritative provider verification is still required before paid state, revenue, or fulfillment claims.",
+        "payment_state": "Offer definitions and historical checkout evidence are retained, but no current Evercraft-owned public buyer route is verified. Historical synthetic QA is not current reachability, payment, revenue, or fulfillment proof.",
         "machine_commerce_handoff": {
-          "state": "live_verified",
+          "state": "route_held_owned_replacement_required",
           "public_id": "ibmi-rescue-v1",
-          "mode": "direct_checkout_capable",
+          "mode": "direct_checkout_capability_historical_current_route_held",
           "offer_tool": "get_live_checkout_offer",
           "tool": "prepare_verified_checkout",
           "status_tool": "get_verified_order_status",
           "explicit_human_payment_confirmation_required": true,
-          "checkout_capability_verified": true,
+          "checkout_capability_verified": false,
           "synthetic_checkout_created_in_canary": true,
           "payment_created": false,
           "payment_proof": false,
-          "evidence": "GitHub Actions run 36495507434 verified current direct-checkout offer state and creation of a synthetic $250 Estate X-Ray Stripe Checkout session with no payment proof."
+          "evidence": "GitHub Actions run 36495507434 historically verified a synthetic $250 Estate X-Ray Stripe Checkout session. The legacy public route is retired; no current owned public invocation is claimed.",
+          "current_route_verified": false,
+          "current_route_state": "held_no_owned_public_route"
         }
       },
       "origin_product_url": null,
@@ -1700,12 +1702,9 @@
         "ask a matched partner if they have capacity for this package",
         "get availability and a quote from accepted partners before assembling a team",
         "shortlist supplier quotes into a temporary execution team",
-        "turn shortlisted quotes into team invitations and work-package offers",
-        "compare quotes for the same work package without automatically choosing a vendor",
-        "explain the tradeoff between price lead time capacity geography and observed execution history",
-        "show me which sourcing evidence is self-reported versus observed"
+        "turn shortlisted quotes into team invitations and work-package offers"
       ],
-      "authority": "public capability discovery plus verified private metadata-first planning, non-binding sourcing, transparent sourcing comparison, and multi-party assembly; no public protected-file delivery, payment, or final legal-agreement authority is claimed",
+      "authority": "public capability discovery plus verified private metadata-first planning, non-binding sourcing, and multi-party assembly; no public protected-file delivery, payment, or final legal-agreement authority is claimed",
       "human_confirmation_required": true,
       "boundaries": [
         "public matching must not require protected creative files or confidential material",
@@ -1727,12 +1726,7 @@
         "sourcing availability and quote responses create no payment obligation or work acceptance",
         "shortlisting a sourcing response creates no team membership or contract",
         "only shortlisted Available or Limited responses from one project and one blueprint can seed sourced team invitations",
-        "accepting a sourced team invitation materializes the package as Offered and Not accepted",
-        "sourcing comparison uses explicit fixed weights and preserves evidence classes",
-        "quote availability and lead time are participant-supplied rather than independently observed",
-        "Fabric history uses accepted Opportunity Fabric work-package records only and missing history is neutral",
-        "prices are compared only against same-currency peers; no FX normalization is claimed",
-        "comparison ordering requires human decision and creates no partner selection shortlist membership contract rights work acceptance or payment"
+        "accepting a sourced team invitation materializes the package as Offered and Not accepted"
       ]
     },
     {
