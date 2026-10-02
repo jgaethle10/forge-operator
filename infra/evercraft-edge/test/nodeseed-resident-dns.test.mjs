@@ -5,6 +5,7 @@ import os from "node:os";
 import path from "node:path";
 import dgram from "node:dgram";
 import {startEvercraftComputeNode} from "../../../systemia/compute/runtime-node.mjs";
+import {probeUdp} from "../dns/probe.mjs";
 
 async function freePort(){
   const s=dgram.createSocket("udp4");
@@ -30,6 +31,7 @@ test("NodeSeed can lease, start, and health-check Edge DNS resident workload",as
   }));
   const token="test_allocator_token_1234567890";
   const dnsPort=await freePort();
+  const queryReceiptPath=path.join(root,"edge-dns-query-receipts.json");
   const node=await startEvercraftComputeNode({
     nodeId:"edge-test-node",root,host:"127.0.0.1",port:0,allocatorToken:token,
     placementLabels:["operator-authorized","public-edge-candidate","evercraft-edge-dns"]
@@ -49,7 +51,14 @@ test("NodeSeed can lease, start, and health-check Edge DNS resident workload",as
       body:JSON.stringify({
         lease_id:lease.lease_id,token:lease.token,release_ref:"a".repeat(40),
         workload_class:"systemia.evercraft-edge-dns.v1",
-        input:{snapshot_path:snapshot,dns_host:"127.0.0.1",dns_port:dnsPort,health_port:0}
+        input:{
+          snapshot_path:snapshot,
+          dns_host:"127.0.0.1",
+          dns_port:dnsPort,
+          health_port:0,
+          query_receipt_path:queryReceiptPath,
+          receipt_qname:"_evercraft.edge.invalid."
+        }
       })
     });
     const health=await json(node.endpoint+job.result.health_path);
@@ -59,6 +68,21 @@ test("NodeSeed can lease, start, and health-check Edge DNS resident workload",as
     assert.equal(health.dns_udp,true);
     assert.equal(health.dns_tcp,true);
     assert.match(health.snapshot_sha256,/^sha256:[a-f0-9]{64}$/);
+    const udp=await probeUdp({server:"127.0.0.1",port:dnsPort,name:"_evercraft.edge.invalid.",timeout:3000});
+    assert.equal(udp.aa,true);
+    assert.equal(udp.ra,false);
+    assert.equal(udp.answers,1);
+    await new Promise(r=>setTimeout(r,50));
+    const receipts=JSON.parse(fs.readFileSync(queryReceiptPath,"utf8"));
+    assert.equal(receipts.schema,"evercraft.edge.dns-exchange-receipts.v1");
+    assert.ok(receipts.receipts.some(x=>
+      x.qname==="_evercraft.edge.invalid." &&
+      x.protocol==="udp" &&
+      x.aa===true &&
+      x.ra===false &&
+      x.rcode===0 &&
+      x.answer_count===1
+    ));
   }finally{
     await node.close();
     fs.rmSync(root,{recursive:true,force:true});
