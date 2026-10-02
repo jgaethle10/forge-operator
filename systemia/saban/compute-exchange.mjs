@@ -59,6 +59,7 @@ export function normalizeComputeDemand(input={}){
         : {},
     },
     execution:{
+      software_id:input.portable_software_id?String(input.portable_software_id).trim():null,
       portable_worker_id:input.portable_worker_id?String(input.portable_worker_id).trim():null,
       portable_worker_version:input.portable_worker_version?String(input.portable_worker_version).trim():null,
     },
