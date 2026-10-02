@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { planHeterogeneousFabric } from '../systemia/saban/heterogeneous-fabric-planner.mjs';
+import { planHeterogeneousFabric, normalizeFabricTask } from '../systemia/saban/heterogeneous-fabric-planner.mjs';
 import { createPerformanceLedger, recordPerformanceSample } from '../systemia/saban/performance-learning.mjs';
 
 function offer({
@@ -243,4 +243,47 @@ test('performance circuit ejects a repeatedly failing device and calibration-sty
   assert.equal(plan.state,'ready');
   assert.equal(plan.placements[0].provider_id,'learned-phone');
   assert.equal(plan.placements[0].performance_adjustment.circuit_open,false);
+});
+
+
+test('fabric task normalization is idempotent and preserves placement semantics',()=>{
+  const input={
+    task_id:'semantic-proof',
+    workload_class:'systemia.content-hash.v1',
+    execution_shape:'shardable',
+    shard_count:3,
+    replicas:2,
+    resources:{cpu_units:0.25,memory_mb:512,storage_gb:2},
+    required_labels:['edge'],
+    allowed_device_classes:['phone','server'],
+    require_attestation:true,
+    allowed_access_classes:['authorized_compute'],
+    private_data:true,
+    minimum_uptime_7d:0.72,
+    preemptible:true,
+    checkpointable:true,
+    require_distinct_failure_domains:true,
+    failure_domain_axes:['failure_domain','power_domain'],
+    max_observation_age_ms:123456,
+    require_always_on:false,
+    max_power_budget_watts:40,
+    thermal_tolerance:'bounded',
+    prefer_lower_power:true,
+    input_bytes:1234,
+    output_bytes:567,
+    local_only:false,
+    created_at:'2026-10-02T03:00:00.000Z',
+  };
+  const once=normalizeFabricTask(input);
+  const twice=normalizeFabricTask(once);
+  assert.deepEqual(twice,once);
+  assert.deepEqual(twice.resources_per_execution,{cpu_units:0.25,memory_mb:512,storage_gb:2});
+  assert.equal(twice.trust.private_data,true);
+  assert.equal(twice.trust.minimum_uptime_7d,0.72);
+  assert.equal(twice.continuity.preemptible,true);
+  assert.equal(twice.continuity.checkpointable,true);
+  assert.deepEqual(twice.continuity.failure_domain_axes,['failure_domain','power_domain']);
+  assert.equal(twice.continuity.max_observation_age_ms,123456);
+  assert.equal(twice.energy.max_power_budget_watts,40);
+  assert.equal(twice.data.input_bytes,1234);
 });
