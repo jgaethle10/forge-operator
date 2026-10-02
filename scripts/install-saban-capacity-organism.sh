@@ -329,6 +329,47 @@ Unit=evercraft-saban-dispatch.service
 WantedBy=timers.target
 EOF
 
+cat >/etc/systemd/system/evercraft-saban-watchdog.service <<EOF
+[Unit]
+Description=Evercraft Saban bounded resident self-repair watchdog
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+Environment=SABAN_AMBIENT_STATE_DIR=$STATE_DIR
+Environment=SABAN_WATCHDOG_MAX_STALE_SECONDS=600
+Environment=SABAN_RUN_USER=$RUN_USER
+Environment=SABAN_RUN_GROUP=$RUN_GROUP
+ExecStart=/bin/bash $REPO_ROOT/scripts/saban-resident-watchdog.sh
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=false
+RestrictSUIDSGID=true
+LockPersonality=true
+RestrictRealtime=true
+ReadWritePaths=$STATE_DIR /run/systemd
+TimeoutStartSec=45s
+EOF
+
+cat >/etc/systemd/system/evercraft-saban-watchdog.timer <<EOF
+[Unit]
+Description=Keep Evercraft Saban resident brain healthy
+
+[Timer]
+OnBootSec=100s
+OnUnitActiveSec=$CADENCE
+Persistent=true
+Unit=evercraft-saban-watchdog.service
+
+[Install]
+WantedBy=timers.target
+EOF
+
 systemctl daemon-reload
 systemctl enable --now evercraft-saban-capacity.timer
 systemctl enable --now evercraft-saban-microseed-gateway.service
@@ -336,6 +377,7 @@ systemctl enable --now evercraft-saban-work-api.service
 systemctl enable --now evercraft-saban-pairing-api.service
 systemctl enable --now evercraft-saban-probation.timer
 systemctl enable --now evercraft-saban-dispatch.timer
+systemctl enable --now evercraft-saban-watchdog.timer
 systemctl start evercraft-saban-capacity.service
 systemctl start evercraft-saban-probation.service || true
 
@@ -349,6 +391,7 @@ echo "Product work API: http://127.0.0.1:8793"
 echo "Pairing enrollment API: http://127.0.0.1:8794 (loopback only)"
 echo "Probation timer: evercraft-saban-probation.timer"
 echo "Dispatch timer: evercraft-saban-dispatch.timer"
+echo "Self-repair watchdog: evercraft-saban-watchdog.timer"
 echo "Gateway token file: $GATEWAY_TOKEN_FILE"
 echo "Work API token file: $WORK_API_TOKEN_FILE"
 echo "Pairing authority token file: $PAIRING_API_TOKEN_FILE"
