@@ -326,6 +326,19 @@ echo "[router config]"
 echo "gateway=${GATEWAY:-missing}"
 echo "chromebook_lan_host=${LAN_HOST:-missing}"
 
+local_edge_http_ok=false
+local_edge_https_ok=false
+set +e
+local_http_probe="$(tcp_probe 127.0.0.1 "$HTTP_PORT" 2>/dev/null)"; local_http_rc=$?
+local_https_probe="$(tcp_probe 127.0.0.1 "$HTTPS_PORT" 2>/dev/null)"; local_https_rc=$?
+set -e
+[[ "$local_http_rc" -eq 0 ]] && local_edge_http_ok=true
+[[ "$local_https_rc" -eq 0 ]] && local_edge_https_ok=true
+echo
+echo "[Linux public-edge listener probes]"
+echo "$local_http_probe"
+echo "$local_https_probe"
+
 lan_http_ok=false
 lan_https_ok=false
 if [[ -n "$LAN_HOST" ]]; then
@@ -386,17 +399,11 @@ human_gate=false
 ingress_transport="direct_chromeos_router"
 if [[ "$local_health_ok" != "true" ]]; then
   diagnosis="fabric_runtime_unreachable"
-elif [[ -n "$LAN_HOST" && ( "$lan_http_ok" != "true" || "$lan_https_ok" != "true" ) ]]; then
-  if [[ "$relay_state" == "active" && -f "$RELAY_ENV" ]]; then
-    diagnosis="local_edge_path_ready_external_canary_required"
-    human_gate=false
-    ingress_transport="outbound_service_relay"
-  else
-    diagnosis="chromeos_host_forward_unreachable"
-    human_gate=true
-  fi
-elif [[ "$router_refresh_ok" != "true" ]]; then
-  diagnosis="router_mapping_refresh_failed"
+elif [[ "$relay_state" == "active" && -f "$RELAY_ENV" ]]; then
+  diagnosis="local_edge_path_ready_external_canary_required"
+  ingress_transport="outbound_service_relay"
+elif [[ "$local_edge_http_ok" != "true" || "$local_edge_https_ok" != "true" ]]; then
+  diagnosis="public_edge_listener_unreachable"
 elif [[ -n "$dns_ip" && -n "$public_ip" && "$dns_ip" != "$public_ip" ]]; then
   diagnosis="dns_public_ip_mismatch"
 elif [[ "$node_identity_ready" == "true" && "$attestation_local_ok" != "true" ]]; then
@@ -412,19 +419,21 @@ echo "human_gate=$human_gate"
 echo "ingress_transport=$ingress_transport"
 
 field_action="none"
-if [[ "$diagnosis" == "chromeos_host_forward_unreachable" ]]; then
-  field_action="chromeos_linux_port_forwarding"
+if [[ "$diagnosis" == "public_edge_listener_unreachable" ]]; then
   echo
-  echo "[ChromeOS field gate]"
-  echo "Fabric below ChromeOS is reachable, but the ChromeOS host-forward layer is not."
-  echo "Open: ChromeOS Settings -> Developers -> Linux development environment -> Port forwarding"
-  echo "Required host forwards:"
-  echo "  TCP 18080  status=$([[ "$lan_http_ok" == "true" ]] && echo reachable || echo NOT_REACHABLE)"
-  echo "  TCP 8443   status=$([[ "$lan_https_ok" == "true" ]] && echo reachable || echo NOT_REACHABLE)"
-  echo "If either entry already exists, toggle it off and back on."
-  echo "Then rerun:"
-  echo "  cd $REPO_ROOT"
-  echo "  sudo bash scripts/fabric-edge-doctor.sh --repair --trigger-canary"
+  echo "[public edge listener failure]"
+  echo "Caddy/public-edge is not listening on both required Linux ports."
+  echo "This is below the ChromeOS forwarding layer; do not change ChromeOS port settings."
+  systemctl --no-pager --full status evercraft-public-edge.service 2>&1 || true
+  journalctl -u evercraft-public-edge.service -n 80 --no-pager 2>&1 || true
+fi
+
+if [[ -n "$LAN_HOST" && ( "$lan_http_ok" != "true" || "$lan_https_ok" != "true" ) ]]; then
+  echo
+  echo "[ChromeOS host-forward observation]"
+  echo "LAN self-probe did not reach one or both ChromeOS forwarded ports."
+  echo "This observation is advisory because Crostini-to-host hairpin/self-reflection can fail even when forwarding works externally."
+  echo "Authoritative ingress state comes from the independent external canary."
 fi
 
 saban_capacity_degraded=false
@@ -486,8 +495,11 @@ cat > /tmp/evercraft-fabric-edge-doctor.json <<EOF
   "saban_capacity_repair_ok":$(json_bool "$saban_capacity_repair_ok"),
   "saban_capacity_repair_code":$saban_capacity_repair_code,
   "saban_capacity_degraded":$(json_bool "$saban_capacity_degraded"),
-  "lan_http_forward_ok":$(json_bool "$lan_http_ok"),
-  "lan_https_forward_ok":$(json_bool "$lan_https_ok"),
+  "local_edge_http_listener_ok":$(json_bool "$local_edge_http_ok"),
+  "local_edge_https_listener_ok":$(json_bool "$local_edge_https_ok"),
+  "lan_http_forward_observed":$(json_bool "$lan_http_ok"),
+  "lan_https_forward_observed":$(json_bool "$lan_https_ok"),
+  "lan_forward_probe_authoritative":false,
   "router_refresh_ok":$(json_bool "$router_refresh_ok"),
   "node_identity_material_present":$(json_bool "$node_identity_ready"),
   "local_edge_attestation_responding":$(json_bool "$attestation_local_ok"),

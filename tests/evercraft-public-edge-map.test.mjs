@@ -10,7 +10,9 @@ test('public edge mapper is credential-free and scoped to Fabric ports',()=>{
   assert.match(src,/18080/);
   assert.match(src,/8443/);
   assert.match(src,/host_forward_preflight/);
-  assert.match(src,/chromeos_host_forward_unreachable/);
+  assert.match(src,/host_forward_preflight\.advisory=true/);
+  assert.match(src,/host_forward_preflight\.authoritative=false/);
+  assert.match(src,/independent external canary/);
   assert.match(src,/tcpProbe\(host,18080\)/);
   assert.match(src,/tcpProbe\(host,8443\)/);
   assert.match(src,/external: 80/);
@@ -39,4 +41,11 @@ test('router mapper parses under the repository Node runtime',()=>{
   const scriptPath = fileURLToPath(new URL('../scripts/evercraft-public-edge-map.mjs', import.meta.url));
   const checked = spawnSync(process.execPath, ['--check', scriptPath], { encoding: 'utf8' });
   assert.equal(checked.status, 0, checked.stderr || checked.stdout);
+});
+
+test('web mapper does not abort on Crostini self-reflection failure',()=>{
+  assert.doesNotMatch(src,/process\.exit\(3\)/);
+  assert.match(src,/await upnpMap/);
+  assert.match(src,/await natPmpMap/);
+  assert.match(src,/await pcpMap/);
 });

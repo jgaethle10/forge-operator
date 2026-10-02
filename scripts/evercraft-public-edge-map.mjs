@@ -486,12 +486,7 @@ async function main() {
   if(out.host_forward_preflight.ready!==true){
     out.host_forward_preflight.advisory=true;
     out.host_forward_preflight.authoritative=false;
-    if(scope!=='dns'){
-      out.state='chromeos_host_forward_unreachable';
-      out.error='chromeos_host_forward_unreachable';
-      console.log(JSON.stringify(out,null,2));
-      process.exit(3);
-    }
+    out.host_forward_preflight.note='Crostini-to-ChromeOS LAN self-probe may fail because host hairpin/self-reflection is not guaranteed; continue bounded router mapping and rely on the independent external canary for ingress truth.';
   }
 
   const upnp = await upnpMap().catch(e => ({ method: 'UPnP-IGD', success: false, error: e.message }));

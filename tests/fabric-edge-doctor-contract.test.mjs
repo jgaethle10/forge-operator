@@ -4,20 +4,20 @@ import fs from 'node:fs';
 
 const script=fs.readFileSync('scripts/fabric-edge-doctor.sh','utf8');
 
-test('Fabric edge doctor keeps the ChromeOS field gate narrow and explicit',()=>{
+test('Fabric edge doctor proves Linux listeners before interpreting ChromeOS forwarding',()=>{
   for(const required of [
     'HTTP_PORT=18080',
     'HTTPS_PORT=8443',
-    'chromeos_host_forward_unreachable',
-    'field_action="chromeos_linux_port_forwarding"',
-    'ChromeOS Settings -> Developers -> Linux development environment -> Port forwarding',
-    'TCP 18080',
-    'TCP 8443',
-    '--repair --trigger-canary',
-    '"required_chromeos_port_forwards"',
-    '"human_gate"',
+    'local_edge_http_ok=false',
+    'local_edge_https_ok=false',
+    'tcp_probe 127.0.0.1 "$HTTP_PORT"',
+    'tcp_probe 127.0.0.1 "$HTTPS_PORT"',
+    'public_edge_listener_unreachable',
+    '[Linux public-edge listener probes]',
+    'do not change ChromeOS port settings',
+    'lan_forward_probe_authoritative":false',
   ]){
-    assert.ok(script.includes(required),'missing field-gate contract: '+required);
+    assert.ok(script.includes(required),'missing listener-first contract: '+required);
   }
 });
 
@@ -65,7 +65,7 @@ test('Fabric edge doctor does not let updater maintenance mask ingress diagnosis
     script.indexOf('echo\necho "[diagnosis]"')
   );
   assert.equal(diagnosisBlock.includes('fabric_update_repair_failed'),false);
-  assert.ok(diagnosisBlock.includes('chromeos_host_forward_unreachable'));
+  assert.ok(diagnosisBlock.includes('public_edge_listener_unreachable'));
   assert.ok(script.includes('"self_update_degraded"'));
 });
 
@@ -85,4 +85,14 @@ test('Fabric edge doctor repairs router-map directory traversal before unprivile
   assert.ok(dirChmod>=0,'missing router env directory traversal repair');
   assert.ok(fileChmod>dirChmod,'file readability repair should follow directory traversal repair');
   assert.ok(sourceIndex>fileChmod,'router env must be repaired before sourcing');
+});
+
+test('Fabric edge doctor treats Crostini-to-ChromeOS LAN self-probe as advisory',()=>{
+  assert.match(script,/hairpin\/self-reflection can fail/);
+  assert.match(script,/Authoritative ingress state comes from the independent external canary/);
+  const diagnosisBlock=script.slice(
+    script.indexOf('diagnosis="unknown"'),
+    script.indexOf('echo\necho "[diagnosis]"')
+  );
+  assert.equal(diagnosisBlock.includes('chromeos_host_forward_unreachable'),false);
 });
