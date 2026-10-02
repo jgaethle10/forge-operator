@@ -63,7 +63,7 @@ function safeSocialUrl(value) {
   const safe = safePublicUrl(value);
   if (!safe) return null;
   const host = new URL(safe).hostname.toLowerCase();
-  if (host === 'raw.githubusercontent.com' || host === 'api.github.com') return null;
+  if (host === 'github.com' || host === 'raw.githubusercontent.com' || host === 'api.github.com') return null;
   return safe;
 }
 
