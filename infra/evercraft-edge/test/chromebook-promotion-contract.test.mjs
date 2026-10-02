@@ -26,7 +26,9 @@ test("public-ingress label is granted only after distributed external verificati
  assert.ok(receiptCheck>verifier);
  assert.ok(promotion>receiptCheck);
  assert.match(one,/udp53_successes/);
- assert.match(one,/tcp53_authoritative/);
+ assert.match(one,/runtime_identity_verified/);
+ assert.match(one,/runtime_identity_distinct_sources/);
+ assert.match(one,/tcp_proof_mode/);
 });
 
 test("operator-authorized Crostini edge has lightweight bounded preflight",()=>{
