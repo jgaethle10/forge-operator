@@ -136,6 +136,20 @@ jobs:
           NODE
 
 
+          curl -fsS -X POST \
+            -H 'content-type: application/json' \
+            --data '{"message":"Prepare a private Raven deployment plan","lane":"infrastructure"}' \
+            http://127.0.0.1:4310/api/raven/command-plan > /tmp/raven-command.json
+          node - <<'NODE'
+          const fs = require('fs');
+          const command = JSON.parse(fs.readFileSync('/tmp/raven-command.json','utf8'));
+          if (!command.ok || command.state !== 'planned_not_executed') throw new Error('Raven Command Desk planning failed');
+          if (command.execution_authority_granted !== false) throw new Error('Raven Command Desk granted execution');
+          if (command.ai_inference_used !== false) throw new Error('Raven Command Desk falsely claimed AI inference');
+          if (!Array.isArray(command.routed_components) || !command.routed_components.includes('yard-operator')) throw new Error('Raven infrastructure route did not reach Yard');
+          if (command.systemia_authority !== 'systemia-organism') throw new Error('Raven Command Desk lost Systemia authority');
+          NODE
+
           curl -fsS http://127.0.0.1:4310/api/yard/overview > /tmp/yard-overview.json
           curl -fsS http://127.0.0.1:4310/api/network/overview > /tmp/network-overview.json
           curl -fsS http://127.0.0.1:4310/api/raven/overview > /tmp/raven-overview.json
