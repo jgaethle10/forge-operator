@@ -456,3 +456,27 @@ The automatic distributed fallback now supports two acquisition transports:
 2. an execution-ready negotiated market adapter implementing the bounded Saban assignment contract.
 
 Provider concurrency ceilings remain authoritative even when a Saban plan requests a larger physical worker pool.
+
+
+### Golem requestor sidecar
+
+Golem execution is an optional requestor sidecar rather than a mandatory root Forge dependency.
+
+Prepare the pinned SDK:
+
+```bash
+npm run saban:golem:prepare
+```
+
+That installs `@golem-sdk/golem-js` only under
+`systemia/saban/golem-requestor/node_modules` and verifies the SDK is present.
+
+Once a Linux Yagna requestor is running and `YAGNA_APPKEY` is available:
+
+```bash
+npm run saban:golem:preflight
+```
+
+The preflight connects through the configured Yagna API URL, verifies the requestor can be reached, and never prints the app-key.
+
+A green repository proof is not a claim that a funded Golem requestor is currently connected. Live marketplace execution requires the sidecar preflight to pass in the actual runtime and the selected payment network to have sufficient requestor funds.
