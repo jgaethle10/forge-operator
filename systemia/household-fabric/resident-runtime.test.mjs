@@ -34,6 +34,10 @@ try {
   const cycle = await runtime.runCycle();
   assert.equal(cycle.ok, true);
 
+  const bound = runtime.setDeploymentReceipt('sha256:resident-proof-deployment');
+  assert.equal(bound.deployment_receipt_bound, true);
+  assert.equal(bound.deployment_receipt_ref, 'sha256:resident-proof-deployment');
+
   const health = runtime.health();
   assert.equal(health.ok, true);
   assert.equal(health.service, 'household-fabric-yakima');
@@ -45,6 +49,8 @@ try {
   assert.equal(health.raw_provider_secrets_required, false);
   assert.equal(health.poverty_score_used, false);
   assert.equal(health.sponsorship_affects_rank, false);
+  assert.equal(health.deployment_receipt_bound, true);
+  assert.equal(health.deployment_receipt_ref, 'sha256:resident-proof-deployment');
   assert.equal(health.credential_status.raw_secret_override_enabled, false);
 
   const healthResponse = await fetch(runtime.url + '/health');
