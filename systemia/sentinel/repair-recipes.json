@@ -215,14 +215,14 @@
           "systemia/chum/start-corridor.mjs",
           "tests/chum-start-corridor.test.mjs"
         ],
-        "instructions": "Restore verified clean product buyer destinations before exposing Machine Commerce plumbing. Preserve tracked Forge handoff when a verified CHUM public origin exists and retain Machine Commerce only as last fallback."
+        "instructions": "Restore the owned buyer-frontage hierarchy without reintroducing legacy providers: verified CHUM origin first, owned buyer frontage when configured, owned machine review when verified, otherwise hold. Keep Base44 URLs forbidden and preserve explicit human confirmation/payment verification boundaries."
       },
       "verification": [
         "npm run test:chum-start-corridor",
         "npm run test:chum-revenue",
         "customer gauntlet remains open"
       ],
-      "rollback": "Restore the last known-green buyer destination map if a product-domain destination fails live verification.",
+      "rollback": "Restore the last known-green owned frontage hierarchy. Do not roll back to a legacy provider URL.",
       "learned_from": "Zero-sale conversion audit Sep 26 2026"
     },
     {
