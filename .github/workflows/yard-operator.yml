@@ -27,6 +27,7 @@ on:
       - main
     paths:
       - 'systemia/yard/**'
+      - 'systemia/faie/**'
       - 'systemia/saban/nodeseed-intent-executor.mjs'
       - 'systemia/saban/nodeseed-execution-intent.mjs'
       - 'systemia/saban/nodeseed-inventory-ingest.mjs'
