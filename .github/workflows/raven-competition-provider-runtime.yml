@@ -1,0 +1,41 @@
+name: Raven Competition Provider Runtime
+
+on:
+  pull_request:
+    paths:
+      - "systemia/competition/**"
+      - "systemia/raven/provider-secret-boundary.mjs"
+      - "systemia/organism/competition-provider-scout.workflow.json"
+      - "systemia/core/resident-services.json"
+      - "systemia/migrations/base44-exit/**"
+      - ".github/workflows/raven-competition-provider-runtime.yml"
+  push:
+    branches: [main]
+    paths:
+      - "systemia/competition/**"
+      - "systemia/raven/provider-secret-boundary.mjs"
+      - "systemia/organism/competition-provider-scout.workflow.json"
+      - "systemia/core/resident-services.json"
+      - "systemia/migrations/base44-exit/**"
+      - ".github/workflows/raven-competition-provider-runtime.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Prove Raven competition provider runtime
+        run: node --test systemia/competition/provider-runtime.test.mjs
+      - name: Prove fail-closed unconfigured resident scout
+        run: |
+          rm -rf artifacts/competition-provider
+          node systemia/competition/provider-probe-runner.mjs
+          node -e 'const fs=require("fs"); const x=JSON.parse(fs.readFileSync("artifacts/competition-provider/latest.json","utf8")); if(x.summary.state!=="held"||x.base44_used!==false||x.public_fabric_used!==false||x.submission_authority_enabled!==false||x.staking_authority_enabled!==false) process.exit(1)'
