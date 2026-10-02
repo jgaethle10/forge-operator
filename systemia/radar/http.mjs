@@ -16,7 +16,12 @@ export function registerRadarRoutes(app, {
   journalUrl = process.env.RADAR_JOURNAL_URL || 'https://journal.evercraft.global/',
   autoReleaseOwned = process.env.RADAR_OWNED_RELEASE_ENABLED == null
     ? isProd
-    : String(process.env.RADAR_OWNED_RELEASE_ENABLED).toLowerCase() === 'true'
+    : String(process.env.RADAR_OWNED_RELEASE_ENABLED).toLowerCase() === 'true',
+  sentinelStateDir = process.env.SYSTEMIA_SENTINEL_STATE_DIR || path.resolve('artifacts', 'sentinel-resident'),
+  sentinelBridgeEnabled = process.env.RADAR_SENTINEL_BRIDGE_ENABLED == null
+    ? true
+    : String(process.env.RADAR_SENTINEL_BRIDGE_ENABLED).toLowerCase() === 'true',
+  sentinelMaxAgeSeconds = Number(process.env.RADAR_SENTINEL_MAX_AGE_SECONDS || 180)
 } = {}) {
   const token = String(process.env.RADAR_INTERNAL_TOKEN || '').trim();
   const resident = createRadarResident({
@@ -25,7 +30,10 @@ export function registerRadarRoutes(app, {
     materialityThreshold,
     maxSignals,
     journalUrl,
-    autoReleaseOwned
+    autoReleaseOwned,
+    sentinelStateDir,
+    sentinelBridgeEnabled,
+    sentinelMaxAgeSeconds
   });
 
   function requireInternal(req, res, next) {
