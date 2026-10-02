@@ -54,7 +54,7 @@ function sequence():CinematicSequencePlan{
 }
 
 function endpoints():VisualModelEndpoint[]{
-  const commonRequirements:any[]=['reference_identity','commercial_rights','provenance_receipt','timing_control'];
+  const commonRequirements:any[]=['reference_identity','reference_environment','commercial_rights','provenance_receipt','timing_control'];
   return [
     {
       id:'cinema-url',providerId:'runway',displayName:'Cinema URL',enabled:true,executionState:'verified',
@@ -159,7 +159,7 @@ test('provider that silently drops environment canon cannot make an establishing
     id:'identity-only',providerId:'thin',displayName:'Thin provider',enabled:true,executionState:'verified',
     capabilities:[{
       task:'video',inputModes:['text','image_reference'],
-      requirements:['reference_identity','commercial_rights','provenance_receipt','timing_control'],
+      requirements:['reference_identity','reference_environment','commercial_rights','provenance_receipt','timing_control'],
       referenceRoles:['identity'],locatorKinds:['url'],maxReferences:1,
       aspectRatios:['16:9'],qualityTier:5,costTier:2,latencyTier:2
     }]
@@ -169,7 +169,9 @@ test('provider that silently drops environment canon cannot make an establishing
   value.minimumDistinctModelsPerShot=1;
   const report=assessNarrativeShootReadiness(value);
   assert.equal(report.status,'blocked');
-  assert.ok(report.shots[0].generation.rejectedModels[0].reasons.includes('environment_canon_not_carried_to_provider'));
+  assert.ok(report.shots[0].generation.rejectedModels[0].reasons.some(reason=>
+    reason==='environment_reference_mode_not_supported'||reason==='environment_canon_not_carried_to_provider'
+  ));
 });
 
 test('continuity materialization path is required for a dependent shot',()=>{
