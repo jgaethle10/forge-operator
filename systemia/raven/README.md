@@ -39,4 +39,14 @@ Systemia remains mission authority. Raven records a founder request and the resu
 - no public bind
 - no provider credentials in receipts or session files
 
-The next bounded slice is Evercraft Compute lifecycle integration for `systemia.raven-private-runtime.v1`. Yard ownership comes after the Compute lifecycle is proven. Authenticated Evercraft Home can then proxy into Raven through existing Evercraft Identity and Passport primitives. Sovereign or external model inference remains a separate optional layer.
+## Resident Systemia integration
+
+The private runtime can be admitted as an optional resident service by Systemia Core. It remains disabled unless both `RAVEN_PRIVATE_STATE_DIR` and `RAVEN_PRIVATE_CONTROL_TOKEN_FILE` are bound into the owned runtime. The control token is read from a private file rather than passed as a command-line secret, and the runner rejects token files that are readable by group or others.
+
+This is source and supervisor wiring, not a claim that Raven is already deployed on a live Evercraft Compute node. A deployment receipt can be bound separately through `RAVEN_PRIVATE_DEPLOYMENT_RECEIPT_FILE`.
+
+## Provider boundary
+
+`provider-secret-boundary.mjs` defines the Raven-side secret injection boundary for direct provider adapters such as the owned Kaggle/Numerai competition scout. Provider credentials are not persisted in Raven session receipts or public repository artifacts. Provider execution remains Systemia -> Raven Nexus -> provider API, never Base44 or public Fabric transit.
+
+Authenticated Evercraft Home can later proxy into Raven through governed Evercraft Identity and Passport primitives. Sovereign or external model inference remains a separate optional layer.
