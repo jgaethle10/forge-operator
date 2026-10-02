@@ -73,6 +73,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Prove Golem requestor portable execution primitive
+        run: node systemia/saban/golem-requestor/client.proof.mjs
       - name: Prove Golem adapter contract
         if: ${{ hashFiles('systemia/saban/golem-adapter.proof.mjs') != '' }}
         run: node systemia/saban/golem-adapter.proof.mjs
