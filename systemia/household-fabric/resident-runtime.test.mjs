@@ -66,8 +66,11 @@ try {
     'collector-receipts.json',
     'state.json',
   ]) {
-    assert.equal(fs.existsSync(path.join(root, file)), true, file + ' should exist');
+    const filePath = path.join(root, file);
+    assert.equal(fs.existsSync(filePath), true, file + ' should exist');
+    assert.equal(fs.statSync(filePath).mode & 0o777, 0o600, file + ' should be private');
   }
+  assert.equal(fs.statSync(root).mode & 0o777, 0o700);
 
   assert.equal(JSON.stringify(health).includes('HOUSEHOLD_FABRIC_BROWSER_TOKEN'), false);
 } finally {
