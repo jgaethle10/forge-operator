@@ -122,7 +122,7 @@ export function registerFaieRoutes(app, {
     });
   });
 
-  app.post('/mcp/faie', async (req, res) => {
+  app.post('/mcp/faie', publicInvestigateLimiter, async (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Cache-Control', 'no-store');
     try {
