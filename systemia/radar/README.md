@@ -225,3 +225,34 @@ A correction candidate is written when a released signal:
 - rolls off its freshness window
 
 Corrections are append-only. The original release remains preserved, which makes the public record auditable instead of silently rewriting history.
+
+
+## Sentinel Bridge
+
+Radar now listens to the owned Systemia Sentinel resident when a fresh Sentinel snapshot is available. This is a peer-system bridge, not a duplicate public-data scraper.
+
+The bridge reads the Sentinel resident snapshot from:
+
+`SYSTEMIA_SENTINEL_STATE_DIR/latest.json`
+
+Default path:
+
+`artifacts/sentinel-resident/latest.json`
+
+Radar converts corroborating, elevated, and urgent Sentinel operator pictures into derived Radar observations while preserving the original Sentinel evidence boundary:
+
+- Sentinel assessments enter Radar as `modeled`, so Radar classifies them as `INFERRED`
+- attribution remains `unresolved`
+- co-occurrence remains non-causal
+- independent upstream groups are preserved as metadata, not falsely counted as new public sources
+- original Sentinel provenance refs travel with the derived observation
+- a missing Sentinel runtime is `not_configured`, not proof that conditions are normal
+- a stale configured Sentinel snapshot fails visibly and enters Radar source-health monitoring
+
+Environment:
+
+- `RADAR_SENTINEL_BRIDGE_ENABLED=true|false`
+- `RADAR_SENTINEL_MAX_AGE_SECONDS=180`
+- `SYSTEMIA_SENTINEL_STATE_DIR=artifacts/sentinel-resident`
+
+This closes the first owned cross-system loop: Sentinel can continuously watch NWS, USGS, configured river gauges and other life-safety evidence, correlate it conservatively, and hand the resulting evidence state to Radar without Radar pretending Sentinel itself is an independent upstream witness.
