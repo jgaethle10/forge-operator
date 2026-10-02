@@ -51,9 +51,48 @@ try{
   assert.equal(verified.ok,true);
   assert.equal(verified.state,"verified");
 
+  const teams=await yard.invokeRavenPrivate("raven-private-proof",{
+    method:"GET",
+    path:"/v1/teams",
+  });
+  assert.equal(teams.status,200);
+  assert.ok(teams.body.teams.some(row=>row.label==="The Yard"));
+  assert.equal(teams.allocator_authority_exposed,false);
+  assert.equal(teams.raven_control_authority_exposed,false);
+  assert.equal(teams.request_content_recorded_in_bridge_receipt,false);
+  assert.equal(teams.response_content_recorded_in_bridge_receipt,false);
+
+  const created=await yard.invokeRavenPrivate("raven-private-proof",{
+    method:"POST",
+    path:"/v1/sessions",
+    body:{subject_ref:"user:founder-proof",title:"Founder Command Room",lane:"infrastructure"},
+  });
+  assert.equal(created.status,201);
+  const sessionId=created.body.session.session_id;
+
+  const planned=await yard.invokeRavenPrivate("raven-private-proof",{
+    method:"POST",
+    path:"/v1/sessions/"+encodeURIComponent(sessionId)+"/commands",
+    body:{message:"Prepare a private Raven deployment plan."},
+  });
+  assert.equal(planned.status,200);
+  assert.equal(planned.body.state,"planned_not_executed");
+  assert.equal(planned.body.command.execution_authority_granted,false);
+  assert.equal(planned.body.command.ai_inference_used,false);
+  assert.equal(planned.body.command.systemia_authority,"systemia-organism");
+  assert.ok(planned.body.command.routed_teams.some(row=>row.label==="The Yard"));
+
+  await assert.rejects(
+    ()=>yard.invokeRavenPrivate("raven-private-proof",{method:"GET",path:"/health"}),
+    /route is not allowed through Yard/
+  );
+
   const serialized=JSON.stringify(record);
   assert.equal(serialized.includes(allocatorToken),false);
   assert.equal(serialized.includes("private_control_token"),false);
+  assert.equal(JSON.stringify(teams).includes(allocatorToken),false);
+  assert.equal(JSON.stringify(created).includes(allocatorToken),false);
+  assert.equal(JSON.stringify(planned).includes(allocatorToken),false);
 
   await assert.rejects(
     ()=>yard.verifyPublicRoute("raven-private-proof",{origin:"https://raven.example.com"}),
@@ -72,6 +111,9 @@ try{
     ai_inference_enabled:false,
     execution_authority_granted:false,
     raven_control_authority_supplied_by_yard:false,
+    yard_private_gateway:true,
+    gateway_route_allowlist:true,
+    bridge_content_not_recorded:true,
     secret_material_in_receipt:false,
   },null,2));
 }finally{
