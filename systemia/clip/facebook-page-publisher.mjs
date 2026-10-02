@@ -1,3 +1,5 @@
+import { assertPublicLinkShape } from './public-link-preflight.mjs';
+
 const DOCS=[
   'https://developers.facebook.com/docs/graph-api/reference/post',
   'https://developers.facebook.com/docs/pages-api/posts',
@@ -37,6 +39,7 @@ export function createFacebookPagePublisherAdapter(config){
       const message=String(input.metadata?.message??'').trim();
       const link=String(input.metadata?.link??'').trim();
       if(!message&&!link) throw new Error('facebook_post_content_missing');
+      if(link) assertPublicLinkShape(link);
 
       const body=new URLSearchParams();
       if(message) body.set('message',message);
@@ -92,6 +95,7 @@ export function createFacebookPagePublisherAdapter(config){
           'permission:pages_show_list',
           'permission:pages_read_engagement',
           'permission:pages_manage_posts',
+          'guard:public-link-shape-v1',
         ],
       };
     },

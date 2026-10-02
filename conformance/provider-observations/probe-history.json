@@ -1,26 +1,8 @@
 {
   "schema": "evercraft.chum.provider-probe-history.v1",
-  "updated_at": "2026-10-02T14:50:34.055Z",
+  "updated_at": "2026-10-02T15:07:31.908Z",
   "max_records": 500,
   "records": [
-    {
-      "receipt_key_sha256": "8790240f408ee0f2efe8e78bb6f53df8ee71210f46bdad72438fbec557017336",
-      "observed_at": "2026-09-30T12:38:47.358Z",
-      "provider": "generic_agent",
-      "provider_surface": "machine_client",
-      "product_key": "legacy-rescue-lab",
-      "case_id": "legacy-rescue-abandoned-codebase-001",
-      "prompt_sha256": "847b106b51da88ab97c20b5eea5682cf88dfab66f439835bb5ca6112777c7d90",
-      "pickup_observed": true,
-      "provider_receipt_sha256": "6df05f291eedef9dedc86cd35e679be30b304b661c08861fd67bd72cb45e54f5",
-      "response_sha256": "a1e54acaf74f245aba43efc22704e190a191046b5049b4912bf3f4b9e66a131d",
-      "source": "authorized_provider_probe",
-      "privacy": {
-        "full_provider_response_persisted": false,
-        "provider_session_reference_persisted": false,
-        "credentials_persisted": false
-      }
-    },
     {
       "receipt_key_sha256": "654a819705c10ce9814860b6eb647168a9effe47dfb29a7a95a8f52ef0175e8e",
       "observed_at": "2026-09-30T12:38:48.866Z",
@@ -8995,6 +8977,24 @@
       "prompt_sha256": "9324e8f7da1c1dc9db9393f24af14bd3f3d89d8e584a9a312b756bf954042970",
       "pickup_observed": true,
       "provider_receipt_sha256": "368579e4a47707f209deb102c6ce743926db375b62a2daf6b4a35f713c3b7f49",
+      "response_sha256": "f68e9a1ceb3740b70269e96408b801a15668889dee3a13a23cd1d02c7317edf8",
+      "source": "authorized_provider_probe",
+      "privacy": {
+        "full_provider_response_persisted": false,
+        "provider_session_reference_persisted": false,
+        "credentials_persisted": false
+      }
+    },
+    {
+      "receipt_key_sha256": "e2d3901c3acaf331a3cd7d423533087419c1d22772fd8e7e2536af4fdeb61adc",
+      "observed_at": "2026-10-02T15:07:31.907Z",
+      "provider": "generic_agent",
+      "provider_surface": "machine_client",
+      "product_key": "legacy-rescue-lab",
+      "case_id": "legacy-rescue-broken-checkout-002",
+      "prompt_sha256": "9324e8f7da1c1dc9db9393f24af14bd3f3d89d8e584a9a312b756bf954042970",
+      "pickup_observed": true,
+      "provider_receipt_sha256": "3d394f1b05ba01253c5eebc56fe452c84ac444f30167e8dbeeffd4bca36e156b",
       "response_sha256": "f68e9a1ceb3740b70269e96408b801a15668889dee3a13a23cd1d02c7317edf8",
       "source": "authorized_provider_probe",
       "privacy": {

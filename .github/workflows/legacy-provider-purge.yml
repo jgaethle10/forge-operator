@@ -7,6 +7,7 @@ on:
       - 'distribution/**'
       - 'public/**'
       - 'registry/**'
+      - 'systemia/chum/**'
       - 'scripts/purge-legacy-provider-urls.mjs'
       - 'scripts/validate-no-legacy-provider-urls.mjs'
       - '.github/workflows/legacy-provider-purge.yml'
