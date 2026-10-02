@@ -97,6 +97,8 @@ EVERCRAFT_ADVERTISE_HOST=${ADVERTISE_HOST}
 EVERCRAFT_NODE_ID=${NODE_ID}
 EVERCRAFT_NODE_LABELS=${NODE_LABELS}
 EVERCRAFT_NODE_ROLE=${NODE_ROLE}
+EVERCRAFT_FAILURE_DOMAIN=${EVERCRAFT_FAILURE_DOMAIN:-}
+EVERCRAFT_ZERO_COST=${EVERCRAFT_ZERO_COST:-false}
 EOF
 
 if [[ -n "${EVERCRAFT_REMOTE_BROKER_URL:-}" ]]; then
@@ -201,7 +203,9 @@ cat > "${STATE_ROOT}/install-receipt.json" <<EOF
   "bind_host": "${BIND_HOST}",
   "advertise_host": "${ADVERTISE_HOST}",
   "outbound_only": $( [[ "${NODE_ROLE}" == "private_worker" || "${NODE_ROLE}" == "virtual_worker" ]] && echo true || echo false ),
-  "state_root": "${STATE_ROOT}"
+  "state_root": "${STATE_ROOT}",
+  "failure_domain": "${EVERCRAFT_FAILURE_DOMAIN:-}",
+  "zero_cost": $( [[ "${EVERCRAFT_ZERO_COST:-false}" == "true" ]] && echo true || echo false )
 }
 EOF
 chown evercraft:evercraft "${STATE_ROOT}/install-receipt.json"
