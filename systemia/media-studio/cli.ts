@@ -69,6 +69,7 @@ import {
   type WorldForgeOperation,
   type WorldForgeProject,
 } from './world-forge.js';
+import { buildWorldForgeCinematicShot } from './world-forge-cinematic.js';
 
 function readJson<T>(filePath: string): T {
   return JSON.parse(fs.readFileSync(path.resolve(filePath), 'utf8')) as T;
@@ -117,6 +118,7 @@ function usage() {
     '  npm run media:studio -- world-forge-validate <project.json> <validation.json>',
     '  npm run media:studio -- world-forge-mutate <payload.json> <mutation-result.json>',
     '  npm run media:studio -- world-forge-render-plan <payload.json> <render-plan.json>',
+    '  npm run media:studio -- world-forge-shot <payload.json> <shot.json>',
   ].join('\n'));
 }
 
@@ -163,6 +165,20 @@ function main() {
     console.log(`World Forge mutation: ${result.status}`);
     console.log(`Version: ${result.project.version}; digest: ${result.validation.digest}`);
     if (result.status === 'blocked') process.exitCode = 2;
+    return;
+  }
+
+  if (command === 'world-forge-shot') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const payload = readJson<{project:WorldForgeProject;renderIntentId:string;shotId:string}>(input);
+    const shot = buildWorldForgeCinematicShot(payload);
+    writeJson(output, shot);
+    console.log(`World Forge cinematic shot created: ${path.resolve(output)}`);
+    console.log(`World digest: ${shot.projectDigest}; shot digest: ${shot.digest}`);
     return;
   }
 
