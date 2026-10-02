@@ -21,6 +21,8 @@ import { evaluateMicroSeedAdapterAvailability } from './microseed-adapter-catalo
 import { matchCapacityGapsToAmbientCandidates } from './capacity-gap-matcher.mjs';
 import { buildAmbientCapacityHuntPlan } from './ambient-capacity-hunt.mjs';
 import { buildCapacityAutonomyPlan } from './capacity-autonomy-conductor.mjs';
+import { nodeSeedInventoryToComputeOffers } from './nodeseed-capacity-offer.mjs';
+import { readSafeNodeSeedInventory } from './nodeseed-inventory-ingest.mjs';
 
 const MODULE_FILE=fileURLToPath(import.meta.url);
 
@@ -96,6 +98,7 @@ export function compileCapacityOrganismState({
   previousPlan=null,
   checkpoints={},
   demandRadar=null,
+  nodeSeedInventory=null,
   now=new Date(),
 }={}){
   const {caps,rejected}=activeCapabilities(registrySnapshot,{adapterHealth});
@@ -106,6 +109,17 @@ export function compileCapacityOrganismState({
     requireVerifiedWorkload:true,
     now,
   });
+  const nodeSeedCompute=nodeSeedInventory
+    ? nodeSeedInventoryToComputeOffers({inventory:nodeSeedInventory,requireZeroCost:true})
+    : {
+        schema:'evercraft.saban.nodeseed-compute-resolution.v1',
+        eligible_count:0,
+        rejected_count:0,
+        offers:[],
+        rejected:[],
+        zero_spend_only:true,
+      };
+  const combinedOffers=[...compute.offers,...nodeSeedCompute.offers];
   const capabilityPlan=composeCapabilityFabric({
     roles:rivetAliEvCapabilityRoles(),
     capabilities:caps,
@@ -113,7 +127,7 @@ export function compileCapacityOrganismState({
   });
   const workloadPlan=planHeterogeneousFabric({
     tasks:anatomy.tasks,
-    offers:compute.offers,
+    offers:combinedOffers,
     performanceLedger,
     previousPlan,
     now,
@@ -143,7 +157,15 @@ export function compileCapacityOrganismState({
     mode:'zero_spend_ambient_first',
     active_device_count:Number(registrySnapshot?.eligible_count||0),
     compiled_capability_count:caps.length,
-    compute_offer_count:compute.offers.length,
+    compute_offer_count:combinedOffers.length,
+    microseed_compute_offer_count:compute.offers.length,
+    nodeseed_compute_offer_count:nodeSeedCompute.offers.length,
+    nodeseed_compute:{
+      eligible_count:nodeSeedCompute.eligible_count,
+      rejected_count:nodeSeedCompute.rejected_count,
+      rejected:nodeSeedCompute.rejected,
+      authority_material_exposed:false,
+    },
     rejected_devices:rejected,
     adapter_health:{
       present:adapterHealth?.schema==='evercraft.saban.microseed-adapter-health.v1',
@@ -215,6 +237,10 @@ export async function runCapacityOrganismOnce({
   const checkpoints=fs.existsSync(checkpointFile)
     ? JSON.parse(fs.readFileSync(checkpointFile,'utf8'))
     : {};
+  const nodeSeedInventoryFile=path.join(resolvedRoot,'nodeseed-capacity-inventory.json');
+  const nodeSeedInventory=fs.existsSync(nodeSeedInventoryFile)
+    ? readSafeNodeSeedInventory(nodeSeedInventoryFile)
+    : null;
   const workQueue=new AmbientWorkQueue({root:path.join(resolvedRoot,'work-queue')});
   const demandRadar=buildAmbientDemandRadar({
     jobs:workQueue.list(),
@@ -227,6 +253,7 @@ export async function runCapacityOrganismOnce({
     previousPlan,
     checkpoints,
     demandRadar,
+    nodeSeedInventory,
     now,
   });
   const opportunityMap=candidateInventory
@@ -329,6 +356,8 @@ async function main(){
       production_ready:receipt.production_ready,
       active_device_count:receipt.active_device_count,
       compute_offer_count:receipt.compute_offer_count,
+      microseed_compute_offer_count:receipt.microseed_compute_offer_count||0,
+      nodeseed_compute_offer_count:receipt.nodeseed_compute_offer_count||0,
       missing_capacity_count:receipt.missing_capacity.length,
       safe_autonomous_action_count:receipt.capacity_autonomy?.safe_autonomous_action_count||0,
       authority_request_count:receipt.capacity_autonomy?.authority_request_count||0,
