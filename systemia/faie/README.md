@@ -72,8 +72,18 @@ Public evidence-support surfaces:
 - GET /api/faie/health
 - GET /api/faie/signals
 - POST /api/faie/investigate
+- GET /mcp/faie?action=health
+- POST /mcp/faie
 
 Public investigation requests are ephemeral previews. They are rate limited by the Forge runtime and are not written into the shared investigation archive.
+
+The native FAIE MCP exposes three read-only tools:
+
+- investigate_faie_evidence
+- get_faie_signal_snapshot
+- get_faie_health
+
+The MCP uses the same in-process FAIE runtime as the HTTP API. Its investigation tool calls the non-persisting preview path, so an agent cannot silently add a caller question to the internal archive.
 
 Internal investigation and write surfaces require FAIE_INTERNAL_TOKEN:
 

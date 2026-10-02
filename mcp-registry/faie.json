@@ -2,13 +2,13 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.jgaethle10/faie",
   "title": "FAIE",
-  "description": "Agriculture evidence briefs for water, land resilience and production risk.",
-  "version": "1.0.2",
-  "websiteUrl": "https://faie.base44.app/",
+  "description": "Owned FAIE evidence runtime for agriculture, water, land, production, and resilience investigations. Direct native MCP exists at /mcp/faie inside Forge; Evercraft Fabric is the public discovery fallback until a verified owned direct origin is bound.",
+  "version": "1.1.0",
+  "websiteUrl": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/index.html",
   "remotes": [
     {
       "type": "streamable-http",
-      "url": "https://faie.base44.app/functions/faieMcp"
+      "url": "https://fabric.systemiacommandcenters.com/mcp"
     }
   ]
 }

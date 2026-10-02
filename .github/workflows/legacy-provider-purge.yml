@@ -1,0 +1,46 @@
+name: Legacy provider hard cutover
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'conformance/products.json'
+      - 'distribution/**'
+      - 'public/**'
+      - 'registry/**'
+      - 'scripts/purge-legacy-provider-urls.mjs'
+      - 'scripts/validate-no-legacy-provider-urls.mjs'
+      - '.github/workflows/legacy-provider-purge.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: legacy-provider-hard-cutover
+  cancel-in-progress: true
+jobs:
+  purge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - name: Purge active public legacy-provider URLs
+        run: node scripts/purge-legacy-provider-urls.mjs
+      - name: Verify hard cutover
+        run: node scripts/validate-no-legacy-provider-urls.mjs
+      - name: Verify diff integrity
+        run: git diff --check
+      - name: Commit deterministic cleanup
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo "No legacy-provider public URLs remain."
+            exit 0
+          fi
+          git config user.name "Evercraft Systemia"
+          git config user.email "systemia@users.noreply.github.com"
+          git add conformance/products.json distribution public registry
+          git commit -m "Hard cutover from legacy public provider"
+          git push origin HEAD:main
