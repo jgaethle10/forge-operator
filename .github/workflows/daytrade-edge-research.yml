@@ -77,6 +77,7 @@ jobs:
           node systemia/daytrade-lens/edge-depth-data-contract.test.mjs
           node systemia/daytrade-lens/edge-order-execution-receipt.test.mjs
           node systemia/daytrade-lens/edge-order-execution-fetch.test.mjs
+          node systemia/daytrade-lens/edge-paper-order-probe.test.mjs
           node systemia/daytrade-lens/edge-pilot-readiness.test.mjs
           node systemia/daytrade-lens/edge-cluster-adversarial-summary.test.mjs
           node systemia/daytrade-lens/saban-learning-adapter.test.mjs
