@@ -37,6 +37,7 @@ export async function verifyDirectTcpAuthority({
   const res=await fetchWithTimeout(url,10000);
   const text=await res.text();
   const parsed=parseDigAuthority(text,{identityName,expectedTxt});
+  const redactedText=text.split(String(server||'')).join('<candidate-ip>');
   return {
     schema:'evercraft.edge.direct-tcp-authority-proof.v1',
     verified:res.ok&&parsed.verified===true,
@@ -45,7 +46,7 @@ export async function verifyDirectTcpAuthority({
     source_surface:'isitdns-api-query-custom-ip',
     http_status:res.status,
     parsed,
-    evidence_excerpt:text.slice(0,4000),
+    evidence_excerpt:redactedText.slice(0,4000),
     candidate_ip_persisted_in_repo:false,
     observed_at:new Date().toISOString()
   };
