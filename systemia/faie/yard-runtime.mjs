@@ -34,9 +34,9 @@ function boundedInt(value, fallback, min, max) {
 }
 
 function uniqueStrings(value, maxItems, maxLength = 160) {
-  if (!Array.isArray(value)) return [];
+  const values = Array.isArray(value) ? value : [value];
   return [...new Set(
-    value
+    values
       .map((item) => clean(item, maxLength))
       .filter(Boolean)
   )].slice(0, maxItems);
