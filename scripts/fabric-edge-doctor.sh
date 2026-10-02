@@ -70,6 +70,51 @@ local_organism_install_receipt="/tmp/evercraft-edge-doctor-local-organism-instal
 self_update_install_receipt="/tmp/evercraft-edge-doctor-self-update-install.log"
 saban_capacity_install_receipt="/tmp/evercraft-edge-doctor-saban-capacity-install.log"
 
+ensure_fabric_service_source(){
+  local node_bin
+  node_bin="$(command -v node || true)"
+  [[ -n "$node_bin" ]] || { echo "ERROR: node unavailable for Fabric service reconciliation" >&2; return 61; }
+  [[ -f "$REPO_ROOT/systemia/mcp/fabric-local-runtime.mjs" ]] || {
+    echo "ERROR: current Forge checkout is missing Fabric runtime source" >&2
+    return 62
+  }
+
+  local desired_exec="$node_bin $REPO_ROOT/systemia/mcp/fabric-local-runtime.mjs --host 127.0.0.1 --port $FABRIC_PORT"
+  local current_exec current_workdir
+  current_exec="$(systemctl show -p ExecStart --value evercraft-fabric.service 2>/dev/null || true)"
+  current_workdir="$(systemctl show -p WorkingDirectory --value evercraft-fabric.service 2>/dev/null || true)"
+
+  if [[ "$current_exec" == *"$REPO_ROOT/systemia/mcp/fabric-local-runtime.mjs"* && "$current_workdir" == "$REPO_ROOT" ]]; then
+    return 0
+  fi
+
+  echo "[repair] Fabric service source drift detected; binding resident service to current Forge checkout..."
+  cat > /etc/systemd/system/evercraft-fabric.service <<EOF
+[Unit]
+Description=Evercraft Fabric MCP
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=$RUN_USER
+WorkingDirectory=$REPO_ROOT
+EnvironmentFile=/etc/evercraft/fabric.env
+ExecStart=$desired_exec
+Restart=always
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=read-only
+
+[Install]
+WantedBy=multi-user.target
+EOF
+  systemctl daemon-reload
+  return 0
+}
+
 ensure_local_organism(){
   if [[ -f "$node_receipt" && -f "$allocator_file" ]]; then
     return 0
@@ -233,6 +278,9 @@ if [[ "$REPAIR" == "true" ]]; then
     echo "[repair] WARNING: verified self-updater is degraded (code=$self_update_repair_code); continuing critical edge recovery."
   fi
 
+  # Bind the resident Fabric service to the current Forge checkout before restarting.
+  ensure_fabric_service_source || true
+
   # Restore the critical public edge before touching optional resident capacity.
   systemctl enable --now evercraft-fabric.service >/dev/null 2>&1 || true
   systemctl enable --now evercraft-public-edge.service >/dev/null 2>&1 || true
@@ -300,6 +348,13 @@ if local_health="$(curl -fsS --max-time 4 "http://127.0.0.1:$FABRIC_PORT/health"
   local_health_ok=true
 fi
 
+runtime_mobile_expected=false
+runtime_mobile_observed=false
+[[ -f "$REPO_ROOT/systemia/mcp/fabric-mobile-site.mjs" ]] && runtime_mobile_expected=true
+if [[ "$local_health_ok" == "true" ]]; then
+  runtime_mobile_observed="$(printf '%s' "$local_health" | node -e "let s='';process.stdin.on('data',d=>s+=d);process.stdin.on('end',()=>{try{const j=JSON.parse(s);process.stdout.write(j.mobile_path==='/mobile'&&j.mobile_installable===true?'true':'false')}catch{process.stdout.write('false')}})")"
+fi
+
 echo
 echo "[local Fabric]"
 if [[ "$local_health_ok" == "true" ]]; then
@@ -307,6 +362,8 @@ if [[ "$local_health_ok" == "true" ]]; then
 else
   echo "UNREACHABLE http://127.0.0.1:$FABRIC_PORT/health"
 fi
+echo "runtime_mobile_expected=$runtime_mobile_expected"
+echo "runtime_mobile_observed=$runtime_mobile_observed"
 
 LAN_HOST=""
 GATEWAY=""
@@ -399,6 +456,8 @@ human_gate=false
 ingress_transport="direct_chromeos_router"
 if [[ "$local_health_ok" != "true" ]]; then
   diagnosis="fabric_runtime_unreachable"
+elif [[ "$runtime_mobile_expected" == "true" && "$runtime_mobile_observed" != "true" ]]; then
+  diagnosis="fabric_service_source_mismatch"
 elif [[ "$relay_state" == "active" && -f "$RELAY_ENV" ]]; then
   diagnosis="local_edge_path_ready_external_canary_required"
   ingress_transport="outbound_service_relay"
@@ -473,6 +532,8 @@ cat > /tmp/evercraft-fabric-edge-doctor.json <<EOF
   "schema":"evercraft.fabric-edge-doctor.v1",
   "domain":"$DOMAIN",
   "local_fabric_ok":$(json_bool "$local_health_ok"),
+  "runtime_mobile_expected":$(json_bool "$runtime_mobile_expected"),
+  "runtime_mobile_observed":$(json_bool "$runtime_mobile_observed"),
   "fabric_service":"$fabric_state",
   "public_edge_service":"$edge_state",
   "router_map_timer":"$router_timer_state",
