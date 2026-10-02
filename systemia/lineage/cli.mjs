@@ -1,6 +1,10 @@
 #!/usr/bin/env node
 import { LineageStore } from './core.mjs';
 import { semanticDiff } from './semantic-diff.mjs';
+import { LargeObjectStore } from './large-object.mjs';
+import { LocalLineageRemote, pushCommitGraph } from './remote-protocol.mjs';
+import { readFile } from 'node:fs/promises';
+import { join } from 'node:path';
 
 const store = new LineageStore(process.cwd());
 const [command, ...args] = process.argv.slice(2);
@@ -52,8 +56,44 @@ async function main() {
       if (!args[0]) throw new Error('Usage: lineage merge-preview <branch>');
       console.log(JSON.stringify(await store.mergePreview(args[0]), null, 2));
       break;
+    case 'large-put': {
+      if (!args[0]) throw new Error('Usage: lineage large-put <file> [media-type]');
+      const bytes = await readFile(args[0]);
+      const large = new LargeObjectStore(join(store.dir));
+      console.log(JSON.stringify(await large.putBuffer(bytes, {
+        logicalName: args[0],
+        mediaType: args[1] || 'application/octet-stream'
+      }), null, 2));
+      break;
+    }
+    case 'large-verify': {
+      if (!args[0]) throw new Error('Usage: lineage large-verify <manifest-id>');
+      const large = new LargeObjectStore(join(store.dir));
+      console.log(JSON.stringify(await large.verify(args[0]), null, 2));
+      break;
+    }
+    case 'remote-refs': {
+      if (!args[0]) throw new Error('Usage: lineage remote-refs <remote-dir>');
+      const remote = new LocalLineageRemote(args[0]);
+      await remote.init();
+      console.log(JSON.stringify(await remote.advertiseRefs(), null, 2));
+      break;
+    }
+    case 'remote-push': {
+      if (!args[0]) throw new Error('Usage: lineage remote-push <remote-dir> [branch] [expected-head]');
+      const remote = new LocalLineageRemote(args[0]);
+      const branch = args[1] || await store.currentBranch();
+      const expectedRemoteHead = !args[2] || args[2] === 'null' ? null : args[2];
+      console.log(JSON.stringify(await pushCommitGraph({
+        store,
+        remote,
+        branch,
+        expectedRemoteHead
+      }), null, 2));
+      break;
+    }
     default:
-      console.log(`Evercraft Lineage\n\nCommands:\n  init [branch]\n  commit [message]\n  branch <name> [from]\n  switch <branch>\n  log [ref] [limit]\n  diff [from] [to]\n  restore <ref> [target]\n  rollback <ref>\n  merge-preview <branch>\n  merge <branch>`);
+      console.log(`Evercraft Lineage\n\nCommands:\n  init [branch]\n  commit [message]\n  branch <name> [from]\n  switch <branch>\n  log [ref] [limit]\n  diff [from] [to]\n  restore <ref> [target]\n  rollback <ref>\n  merge-preview <branch>\n  merge <branch>\n  large-put <file> [media-type]\n  large-verify <manifest-id>\n  remote-refs <remote-dir>\n  remote-push <remote-dir> [branch] [expected-head]`);
   }
 }
 
