@@ -42,6 +42,8 @@ export function normalizeFabricTask(input={}){
       cpu_units:Math.max(0,Number(resources.cpu_units||0)),
       memory_mb:Math.max(0,Number(resources.memory_mb||0)),
       storage_gb:Math.max(0,Number(resources.storage_gb||0)),
+      gpu_count:Math.max(0,Math.floor(Number(resources.gpu_count||0))),
+      gpu_models:uniq(resources.gpu_models).map(x=>x.toLowerCase()),
     },
     required_labels:uniq(input.required_labels).map(x=>x.toLowerCase()),
     required_locality_tags:uniq(input.required_locality_tags).map(x=>x.toLowerCase()),
@@ -109,6 +111,8 @@ function normalizeOffer(raw={}){
       cpu_units:Math.max(0,Number(raw.resources?.cpu_units||0)),
       memory_mb:Math.max(0,Number(raw.resources?.memory_mb||0)),
       storage_gb:Math.max(0,Number(raw.resources?.storage_gb||0)),
+      gpu_count:Math.max(0,Math.floor(Number(raw.resources?.gpu_count||0))),
+      gpu_models:uniq(raw.resources?.gpu_models).map(x=>x.toLowerCase()),
     },
     trust:{
       uptime_7d:clamp01(raw.trust?.uptime_7d,0),
@@ -212,6 +216,13 @@ function evaluateOffer(task,offer,nowMs,performanceLedger=null){
   if(offer.resources.cpu_units<r.cpu_units) reasons.push('insufficient_cpu');
   if(offer.resources.memory_mb<r.memory_mb) reasons.push('insufficient_memory');
   if(offer.resources.storage_gb<r.storage_gb) reasons.push('insufficient_storage');
+  if(offer.resources.gpu_count<r.gpu_count) reasons.push('insufficient_gpu_count');
+  if(r.gpu_models.length){
+    const available=new Set((offer.resources.gpu_models||[]).map(x=>String(x).toLowerCase()));
+    if(r.gpu_models.some(model=>!available.has(model))){
+      reasons.push('required_gpu_model_missing');
+    }
+  }
 
   if(task.continuity.require_always_on&&['opportunistic','sleepy','intermittent'].includes(dutyCycle)){
     reasons.push('always_on_required');
@@ -331,6 +342,7 @@ export function planHeterogeneousFabric({
     cpu_units:o.resources.cpu_units,
     memory_mb:o.resources.memory_mb,
     storage_gb:o.resources.storage_gb,
+    gpu_count:o.resources.gpu_count,
     slots:o.metadata?.max_concurrency==null
       ? 1024
       : Math.max(1,Math.floor(Number(o.metadata.max_concurrency))),
@@ -351,20 +363,22 @@ export function planHeterogeneousFabric({
     const cpu=Math.max(0,Number(r.cpu_units||0));
     const memory=Math.max(0,Number(r.memory_mb||0));
     const storage=Math.max(0,Number(r.storage_gb||0));
-    if(left.cpu_units<cpu||left.memory_mb<memory||left.storage_gb<storage||left.slots<1){
+    const gpuCount=Math.max(0,Math.floor(Number(r.gpu_count||0)));
+    if(left.cpu_units<cpu||left.memory_mb<memory||left.storage_gb<storage||left.gpu_count<gpuCount||left.slots<1){
       skippedReservations.push({reservation_id:reservation.reservation_id,reason:'reservation_capacity_unavailable'});
       continue;
     }
     left.cpu_units-=cpu;
     left.memory_mb-=memory;
     left.storage_gb-=storage;
+    left.gpu_count-=gpuCount;
     left.slots-=1;
     appliedReservations.push({
       reservation_id:reservation.reservation_id,
       offer_id:reservation.offer_id,
       provider_id:reservation.provider_id,
       workload_class:reservation.workload_class,
-      resources:{cpu_units:cpu,memory_mb:memory,storage_gb:storage},
+      resources:{cpu_units:cpu,memory_mb:memory,storage_gb:storage,gpu_count:gpuCount},
       reason:reservation.reason,
     });
   }
@@ -401,7 +415,12 @@ export function planHeterogeneousFabric({
         const left=residual.get(candidate.offer.offer_id);
         if(!left||left.slots<1) continue;
         const r=task.resources_per_execution;
-        if(left.cpu_units<r.cpu_units||left.memory_mb<r.memory_mb||left.storage_gb<r.storage_gb) continue;
+        if(
+          left.cpu_units<r.cpu_units||
+          left.memory_mb<r.memory_mb||
+          left.storage_gb<r.storage_gb||
+          left.gpu_count<r.gpu_count
+        ) continue;
 
         const domains=shardDomains.get(unit.shard_index)||new Map();
         if(task.continuity.require_distinct_failure_domains){
@@ -435,6 +454,7 @@ export function planHeterogeneousFabric({
       left.cpu_units-=r.cpu_units;
       left.memory_mb-=r.memory_mb;
       left.storage_gb-=r.storage_gb;
+      left.gpu_count-=r.gpu_count;
       left.slots-=1;
       for(const axis of task.continuity.failure_domain_axes||[]){
         const used=domains.get(axis)||new Set();
