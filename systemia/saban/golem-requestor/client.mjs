@@ -69,10 +69,14 @@ export async function createGolemSdkClient({
       await exe.uploadFile(String(localWorkerPath),remoteWorker);
       await exe.uploadJson(payload,remoteInput);
       const result=await exe.run(
-        'node /golem/work/evercraft-portable-worker.mjs /golem/work/evercraft-portable-input.json'
+        'node',
+        [remoteWorker,remoteInput]
       );
-      if(Number(result?.result??0)!==0&&Number(result?.exitCode??0)!==0){
-        throw new Error('golem_portable_worker_nonzero_exit');
+      if(String(result?.result||'').toLowerCase()!=='ok'){
+        throw new Error(
+          'golem_portable_worker_execution_failed:'+
+          String(result?.message||result?.stderr||'unknown')
+        );
       }
       const stdout=String(result?.stdout||'').trim();
       if(!stdout) throw new Error('golem_portable_worker_empty_result');
