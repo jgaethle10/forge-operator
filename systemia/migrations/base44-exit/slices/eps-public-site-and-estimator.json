@@ -1,0 +1,90 @@
+{
+  "schema": "evercraft.systemia.base44-migration-slice.v1",
+  "slice": "eps_public_site_and_estimator",
+  "priority": 1,
+  "source": {
+    "platform": "base44",
+    "product": "Evercraft Property Services",
+    "public_domain": "evercraftpropertyservices.com",
+    "scope": "public website, estimator, lead intake, appointments, content and supporting customer workflows"
+  },
+  "target": {
+    "source_control": "github",
+    "orchestration": "systemia",
+    "runtime": "yard_evercraft_compute",
+    "public_domain": "evercraftpropertyservices.com",
+    "publisher": "evercraft_clip"
+  },
+  "observed": {
+    "public_domain_currently_legacy_backed": true,
+    "working_public_estimator_route": "/ProjectEstimate",
+    "legacy_frontend_client_dependency_present": true,
+    "legacy_public_asset_dependency_present": true,
+    "legacy_data_dependencies": [
+      "Lead",
+      "Appointment",
+      "Article",
+      "ProjectEstimateEvent",
+      "Order",
+      "Payment",
+      "ServicePackage",
+      "Subscription"
+    ],
+    "legacy_function_dependencies": [
+      "createCheckout",
+      "probeLeadCapture",
+      "sendLeadToCommandCenter",
+      "syncLeadsToCommandCenter",
+      "leadToAppointment",
+      "stripeWebhook",
+      "publishScheduledArticles"
+    ],
+    "legacy_workflow_dependencies": [
+      "lead_sync",
+      "scheduled_article_publication",
+      "lead_to_appointment"
+    ],
+    "target_frontend_extracted": false,
+    "target_lead_capture_adapter_live": false,
+    "target_estimator_route_live_on_yard": false,
+    "target_checkout_adapter_live": false,
+    "yard_deployment_receipt_present": false,
+    "custom_domain_route_verification_pass": false,
+    "rollback_target_present": false,
+    "observation_window_pass": false
+  },
+  "acceptance": {
+    "source_extracted": true,
+    "dependencies_enumerated": true,
+    "data_reconciled": true,
+    "auth_parity_verified": true,
+    "integration_parity_verified": true,
+    "tests_pass": true,
+    "immutable_release_ref": true,
+    "yard_deployment_receipt": true,
+    "health_pass": true,
+    "route_verification_pass": true,
+    "rollback_target_present": true,
+    "observation_window_pass": true,
+    "anonymous_customer_route_preflight_required": true,
+    "legacy_provider_public_dependencies_allowed_after_cutover": false
+  },
+  "migration_order": [
+    "extract public Home, ServiceDetail, Contact and ProjectEstimate surfaces into GitHub",
+    "replace legacy client/entity reads and writes with Evercraft-owned adapters",
+    "bind lead capture and estimate events to Systemia plus Evercraft Compute",
+    "migrate appointment and checkout paths with provider-verifiable receipts",
+    "deploy customer frontage to Yard",
+    "verify anonymous mobile and desktop routes through the production custom domain",
+    "hold rollback window",
+    "remove legacy origin only after readback and observation-window evidence pass"
+  ],
+  "blockers": [
+    "The production EPS website is still served by the legacy application behind the branded domain.",
+    "The estimator and lead-intake path still depend on legacy application data and runtime APIs.",
+    "No verified Yard deployment receipt for the full EPS customer frontage exists yet.",
+    "The custom domain has not yet passed post-cutover DNS, TLS and anonymous customer-route readback against an Evercraft-owned runtime."
+  ],
+  "next_action": "Extract the customer-facing EPS frontend and ProjectEstimate path into GitHub first, then replace lead and estimate writes with Evercraft-owned adapters and deploy to Yard before changing the production domain origin.",
+  "truth_boundary": "A branded evercraftpropertyservices.com URL is not evidence that the runtime is off the legacy provider. This slice is complete only after the custom domain resolves to the Evercraft-owned runtime and all required cutover evidence passes."
+}
