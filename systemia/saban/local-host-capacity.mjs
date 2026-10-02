@@ -103,6 +103,7 @@ export function createLocalHostSpawnAdapter({
           advertiseHost:'127.0.0.1',
           allocatorToken,
           placementLabels:['owned','local-host','worker',...(candidate?.resources?.gpu_units?['gpu']:[])],
+          zeroCost:true,
           announce:false,
         });
 

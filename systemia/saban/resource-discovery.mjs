@@ -118,6 +118,15 @@ export async function discoverResourceFieldCandidates({
         continue;
       }
 
+      if(capacity.zero_cost!==true){
+        rejected.push({
+          node_id:row.node_id,
+          endpoint:row.endpoint,
+          reason:'automatic_discovery_requires_zero_cost',
+        });
+        continue;
+      }
+
       const hint=capacity.capacity_hint||{};
       const candidate={
         candidate_id:String(row.node_id),
@@ -140,7 +149,7 @@ export async function discoverResourceFieldCandidates({
         labels:liveLabels,
         transports:['evercraft.capacity.v1'],
         ready_seconds:0,
-        hourly_usd:capacity.zero_cost===true?0:0,
+        hourly_usd:0,
         acquisition_usd:0,
         failure_domain:String(capacity.failure_domain||row.node_id),
         metadata:{

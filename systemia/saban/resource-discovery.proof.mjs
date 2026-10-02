@@ -30,6 +30,7 @@ const seed=await startNodeSeed({
   advertiseHost:'127.0.0.1',
   allocatorToken:token,
   placementLabels:['worker'],
+  zeroCost:true,
   announce:true,
   announceAddress:'127.0.0.1',
   announcePort:port,
