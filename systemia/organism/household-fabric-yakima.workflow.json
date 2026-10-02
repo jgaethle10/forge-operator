@@ -68,7 +68,10 @@
     "resident_discovered_is_not_publicly_promoted": true,
     "identity_attested_is_not_fresh_source_evidence": true,
     "public_origin_routable_is_not_live_today": true,
-    "fresh_today_canary_required_before_public_promotion": true
+    "fresh_today_canary_required_before_public_promotion": true,
+    "loopback_proof_is_not_promotable": true,
+    "future_timestamp_beyond_60_seconds_is_not_fresh": true,
+    "route_failure_invalidates_cached_binding": true
   },
   "credential_policy": {
     "default_mode": "evercraft_vault_reference",
@@ -118,5 +121,19 @@
     "credential_material_exposed": false,
     "deployment_receipt_binding_required": true,
     "public_edge_route_verification_required": true
+  },
+  "public_route_activation": {
+    "runner": "systemia/organism/household-fabric-public-route-runner.mjs",
+    "edge_deployment_id": "evercraft-public-edge",
+    "origin_deployment_id": "household-fabric-public-origin",
+    "resident_deployment_id": "household-fabric-yakima",
+    "same_node_required": true,
+    "stable_hostname": true,
+    "route_refresh_seconds": 300,
+    "production_route_scope_required": "public_https",
+    "today_canary_max_age_seconds": 900,
+    "public_projection_required": true,
+    "guardrail_canary_required": true,
+    "promotion_state": "promotable_only_after_verified_https_and_fresh_today"
   }
 }
