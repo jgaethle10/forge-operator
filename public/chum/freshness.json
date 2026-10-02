@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-02T18:21:17.485Z",
+  "updated_at": "2026-10-02T18:30:33.916Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,22 +11,106 @@
   },
   "latest_change_batch": [
     {
-      "path": "/.well-known/agent-card.json",
-      "last_changed": "2026-10-02T18:21:17.485Z",
-      "priority": 104
+      "path": "/.well-known/evercraft-syndication.json",
+      "last_changed": "2026-10-02T18:30:33.916Z",
+      "priority": 84
     },
     {
-      "path": "/.well-known/agent.json",
-      "last_changed": "2026-10-02T18:21:17.485Z",
-      "priority": 102
+      "path": "/chum/crawler-radar.json",
+      "last_changed": "2026-10-02T18:30:33.916Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/crawler-radar.txt",
+      "last_changed": "2026-10-02T18:30:33.916Z",
+      "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-02T18:21:17.485Z",
+      "last_changed": "2026-10-02T18:30:33.916Z",
       "priority": 80
+    },
+    {
+      "path": "/chum/strike/",
+      "last_changed": "2026-10-02T18:30:33.916Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "last_changed": "2026-10-02T18:30:33.916Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/syndication/index.json",
+      "last_changed": "2026-10-02T18:30:33.916Z",
+      "priority": 80
+    },
+    {
+      "path": "/feed.json",
+      "last_changed": "2026-10-02T18:30:33.916Z",
+      "priority": 60
+    },
+    {
+      "path": "/feed.xml",
+      "last_changed": "2026-10-02T18:30:33.916Z",
+      "priority": 60
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/.well-known/evercraft-syndication.json",
+      "url": "/.well-known/evercraft-syndication.json",
+      "last_changed": "2026-10-02T18:30:33.916Z",
+      "priority": 84
+    },
+    {
+      "path": "/chum/crawler-radar.json",
+      "url": "/chum/crawler-radar.json",
+      "last_changed": "2026-10-02T18:30:33.916Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/crawler-radar.txt",
+      "url": "/chum/crawler-radar.txt",
+      "last_changed": "2026-10-02T18:30:33.916Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-10-02T18:30:33.916Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/",
+      "url": "/chum/strike/",
+      "last_changed": "2026-10-02T18:30:33.916Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/strike/index.json",
+      "url": "/chum/strike/index.json",
+      "last_changed": "2026-10-02T18:30:33.916Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/syndication/index.json",
+      "url": "/chum/syndication/index.json",
+      "last_changed": "2026-10-02T18:30:33.916Z",
+      "priority": 80
+    },
+    {
+      "path": "/feed.json",
+      "url": "/feed.json",
+      "last_changed": "2026-10-02T18:30:33.916Z",
+      "priority": 60
+    },
+    {
+      "path": "/feed.xml",
+      "url": "/feed.xml",
+      "last_changed": "2026-10-02T18:30:33.916Z",
+      "priority": 60
+    },
     {
       "path": "/.well-known/agent-card.json",
       "url": "/.well-known/agent-card.json",
@@ -38,12 +122,6 @@
       "url": "/.well-known/agent.json",
       "last_changed": "2026-10-02T18:21:17.485Z",
       "priority": 102
-    },
-    {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-10-02T18:21:17.485Z",
-      "priority": 80
     },
     {
       "path": "/chum/hot/",
@@ -1476,54 +1554,6 @@
     {
       "path": "/chum/answers/doors/make-reels-from-an-authorized-source-video-8742052def.json",
       "url": "/chum/answers/doors/make-reels-from-an-authorized-source-video-8742052def.json",
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/make-short-vertical-clips-from-a-long-video-9308630c9b.json",
-      "url": "/chum/answers/doors/make-short-vertical-clips-from-a-long-video-9308630c9b.json",
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/map-a-public-records-production-5fc74bef45.json",
-      "url": "/chum/answers/doors/map-a-public-records-production-5fc74bef45.json",
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/map-csv-data-before-replacing-our-system-8780382c6f.json",
-      "url": "/chum/answers/doors/map-csv-data-before-replacing-our-system-8780382c6f.json",
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/map-how-our-process-actually-works-73b1f0b6fd.json",
-      "url": "/chum/answers/doors/map-how-our-process-actually-works-73b1f0b6fd.json",
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/map-rpg-cl-cobol-db2-jobs-and-integrations-before-ibm-i-modernization-aa38657636.json",
-      "url": "/chum/answers/doors/map-rpg-cl-cobol-db2-jobs-and-integrations-before-ibm-i-modernization-aa38657636.json",
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/map-the-evidence-for-this-issue-4cb357b7d1.json",
-      "url": "/chum/answers/doors/map-the-evidence-for-this-issue-4cb357b7d1.json",
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/map-this-evidence-for-me-d7ef88ad66.json",
-      "url": "/chum/answers/doors/map-this-evidence-for-me-d7ef88ad66.json",
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/map-this-person-s-capabilities-to-opportunities-1aee2bf6f9.json",
-      "url": "/chum/answers/doors/map-this-person-s-capabilities-to-opportunities-1aee2bf6f9.json",
       "last_changed": "2026-10-02T17:01:08.152Z",
       "priority": 100
     }
