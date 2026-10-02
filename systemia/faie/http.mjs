@@ -1,5 +1,6 @@
 import path from 'node:path';
 import { createFaieRuntime, investigationToMarkdown } from './runtime.mjs';
+import { executeFaieMcpRpc, faieMcpTools } from './mcp.mjs';
 
 function bearer(req) {
   const header = String(req.headers?.authorization || '');
@@ -94,6 +95,53 @@ export function registerFaieRoutes(app, {
     }
     res.setHeader('Cache-Control', 'no-store');
     res.type('text/markdown').send(investigationToMarkdown(publicInvestigation(investigation)));
+  });
+
+  app.get('/mcp/faie', (req, res) => {
+    if (String(req.query?.action || '') !== 'health') {
+      res.status(405).json({
+        ok: false,
+        error: 'Use MCP Streamable HTTP POST or ?action=health.'
+      });
+      return;
+    }
+    res.setHeader('Cache-Control', 'no-store');
+    res.json({
+      ok: true,
+      service: 'FAIE',
+      server: 'evercraft-faie',
+      version: '1.0.0',
+      transport: 'Streamable HTTP',
+      tools: faieMcpTools().map((tool) => tool.name),
+      runtime: 'Evercraft Forge / Systemia',
+      persisted_public_investigations: false,
+      checkout_enabled: false,
+      payment_enabled: false,
+      decision_authority: false,
+      publication_authority: false
+    });
+  });
+
+  app.post('/mcp/faie', async (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Cache-Control', 'no-store');
+    try {
+      const response = await executeFaieMcpRpc(runtime, req.body);
+      if (response === null) {
+        res.status(202).end();
+        return;
+      }
+      res.type('application/json').json(response);
+    } catch (error) {
+      res.status(500).json({
+        jsonrpc: '2.0',
+        id: req.body?.id ?? null,
+        error: {
+          code: -32000,
+          message: error instanceof Error ? error.message : String(error)
+        }
+      });
+    }
   });
 
   app.post('/api/faie/investigate', publicInvestigateLimiter, (req, res) => {
