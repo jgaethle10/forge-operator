@@ -24,6 +24,7 @@ COPY --from=build /app/systemia/notification-fabric ./systemia/notification-fabr
 COPY --from=build /app/systemia/signal-fabric ./systemia/signal-fabric
 COPY --from=build /app/systemia/worldstate ./systemia/worldstate
 COPY --from=build /app/systemia/radar ./systemia/radar
+COPY --from=build /app/systemia/clip ./systemia/clip
 COPY --from=build /app/systemia/media-studio ./systemia/media-studio
 COPY --from=build /app/systemia/forensiscope ./systemia/forensiscope
 COPY --from=build /app/systemia/rivet ./systemia/rivet
