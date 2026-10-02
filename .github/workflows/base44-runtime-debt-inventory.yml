@@ -1,0 +1,49 @@
+name: Base44 Runtime Debt Inventory
+
+on:
+  pull_request:
+    paths:
+      - "systemia/**"
+      - "src/**"
+      - "scripts/**"
+      - "public/**"
+      - "registry/**"
+      - "distribution/**"
+      - ".github/workflows/**"
+      - "server.ts"
+      - "server.js"
+  push:
+    branches: [main]
+    paths:
+      - "systemia/**"
+      - "src/**"
+      - "scripts/**"
+      - "public/**"
+      - "registry/**"
+      - "distribution/**"
+      - ".github/workflows/**"
+      - "server.ts"
+      - "server.js"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inventory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Inventory Base44 migration debt
+        run: node scripts/inventory-base44-runtime-debt.mjs --out artifacts/base44-runtime-debt/latest.json
+      - name: Upload migration-debt receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: base44-runtime-debt-inventory
+          path: artifacts/base44-runtime-debt/latest.json
+          if-no-files-found: error
+          retention-days: 30
