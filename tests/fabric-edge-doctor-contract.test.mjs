@@ -76,3 +76,13 @@ test('Fabric edge doctor repairs router-map env readability before unprivileged 
   assert.ok(chmodIndex<sourceIndex,'router env mode must be repaired before sourcing');
   assert.ok(script.includes('runuser -u "$RUN_USER" -- /usr/local/sbin/evercraft-refresh-router-map'));
 });
+
+
+test('Fabric edge doctor repairs router-map directory traversal before unprivileged refresh',()=>{
+  const sourceIndex=script.indexOf('source "$ROUTER_ENV"');
+  const dirChmod=script.lastIndexOf('chmod 0755 "$(dirname "$ROUTER_ENV")"',sourceIndex);
+  const fileChmod=script.lastIndexOf('chmod 0644 "$ROUTER_ENV"',sourceIndex);
+  assert.ok(dirChmod>=0,'missing router env directory traversal repair');
+  assert.ok(fileChmod>dirChmod,'file readability repair should follow directory traversal repair');
+  assert.ok(sourceIndex>fileChmod,'router env must be repaired before sourcing');
+});
