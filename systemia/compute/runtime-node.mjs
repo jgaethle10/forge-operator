@@ -1625,6 +1625,12 @@ export async function startEvercraftComputeNode({
             return send(res, 404, { error: 'edge_dns_snapshot_missing' });
           }
 
+          const rawQueryReceiptPath = String(body.input?.query_receipt_path || '').trim();
+          const queryReceiptPath = rawQueryReceiptPath ? path.resolve(rawQueryReceiptPath) : '';
+          if (queryReceiptPath && !isWithin(allowedRoot, queryReceiptPath)) {
+            return send(res, 403, { error: 'edge_dns_query_receipt_outside_admitted_root' });
+          }
+
           const dnsHost = String(body.input?.dns_host || '127.0.0.1');
           const loopbackDns =
             dnsHost === '127.0.0.1' ||
@@ -1640,7 +1646,7 @@ export async function startEvercraftComputeNode({
             dnsPort: Number(body.input?.dns_port || 1053),
             healthHost: '127.0.0.1',
             healthPort: Number(body.input?.health_port || 0),
-            queryReceiptPath: String(body.input?.query_receipt_path || ''),
+            queryReceiptPath,
             receiptQname: String(body.input?.receipt_qname || ''),
           });
           const serviceId = `svc_${randomBytes(8).toString('hex')}`;
