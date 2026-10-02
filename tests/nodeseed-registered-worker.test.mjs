@@ -73,7 +73,7 @@ test('NodeSeed advertises and executes bounded registered MicroSeed workloads wi
         input:{payload:{value:{saban:'different-payload',n:2}}},
       }),
     });
-    assert.equal(conflict.status,500);
+    assert.equal(conflict.status,409);
     const conflictBody=await conflict.json();
     assert.equal(conflictBody.error,'nodeseed_registered_worker_idempotency_conflict');
   }finally{
