@@ -1,3 +1,11 @@
+function boundedInteger(value, label, fallback, minimum, maximum) {
+  const candidate = value === undefined || value === null || value === '' ? fallback : Number(value);
+  if (!Number.isFinite(candidate) || !Number.isInteger(candidate) || candidate < minimum || candidate > maximum) {
+    throw new Error(`${label} must be an integer between ${minimum} and ${maximum}.`);
+  }
+  return candidate;
+}
+
 function normalizeBaseUrl(value) {
   const url = new URL(String(value || '').trim());
   if (url.protocol !== 'https:' && url.hostname !== 'localhost' && url.hostname !== '127.0.0.1') {
@@ -10,7 +18,7 @@ export function createNotificationClient(options = {}) {
   const baseUrl = normalizeBaseUrl(options.baseUrl || process.env.EVERCRAFT_NOTIFICATION_BASE_URL || 'http://localhost:3000');
   const token = String(options.token ?? process.env.EVERCRAFT_NOTIFICATION_INGEST_TOKEN ?? '').trim();
   const fetchImpl = options.fetchImpl || fetch;
-  const timeoutMs = Math.max(250, Math.min(Number(options.timeoutMs ?? 5000), 30000));
+  const timeoutMs = boundedInteger(options.timeoutMs, 'Notification Fabric client timeoutMs', 5000, 250, 30000);
 
   if (!token) throw new Error('Notification Fabric ingest token is required.');
 
