@@ -318,6 +318,7 @@ export function planHeterogeneousFabric({
   offers=[],
   performanceLedger=null,
   previousPlan=null,
+  reservations=[],
   stickinessScore=250,
   now=new Date(),
 }={}){
@@ -334,6 +335,40 @@ export function planHeterogeneousFabric({
       ? 1024
       : Math.max(1,Math.floor(Number(o.metadata.max_concurrency))),
   }]));
+  const appliedReservations=[];
+  const skippedReservations=[];
+  for(const reservation of reservations||[]){
+    if(reservation?.schema!=='evercraft.saban.capacity-headroom-reservation.v1'){
+      skippedReservations.push({reservation_id:reservation?.reservation_id||null,reason:'reservation_schema_invalid'});
+      continue;
+    }
+    const left=residual.get(String(reservation.offer_id||''));
+    if(!left){
+      skippedReservations.push({reservation_id:reservation.reservation_id,reason:'reservation_offer_missing'});
+      continue;
+    }
+    const r=reservation.resources||{};
+    const cpu=Math.max(0,Number(r.cpu_units||0));
+    const memory=Math.max(0,Number(r.memory_mb||0));
+    const storage=Math.max(0,Number(r.storage_gb||0));
+    if(left.cpu_units<cpu||left.memory_mb<memory||left.storage_gb<storage||left.slots<1){
+      skippedReservations.push({reservation_id:reservation.reservation_id,reason:'reservation_capacity_unavailable'});
+      continue;
+    }
+    left.cpu_units-=cpu;
+    left.memory_mb-=memory;
+    left.storage_gb-=storage;
+    left.slots-=1;
+    appliedReservations.push({
+      reservation_id:reservation.reservation_id,
+      offer_id:reservation.offer_id,
+      provider_id:reservation.provider_id,
+      workload_class:reservation.workload_class,
+      resources:{cpu_units:cpu,memory_mb:memory,storage_gb:storage},
+      reason:reservation.reason,
+    });
+  }
+
   const placements=[];
   const held=[];
   const eligibleOffersByTask={};
@@ -455,6 +490,9 @@ export function planHeterogeneousFabric({
     correlated_failure_domain_axes:true,
     performance_learning_applied:Boolean(performanceLedger),
     placement_stickiness_applied:Boolean(previousPlan),
+    forecast_headroom_applied:appliedReservations.length>0,
+    applied_headroom_reservations:appliedReservations,
+    skipped_headroom_reservations:skippedReservations,
     generated_at:new Date(nowMs).toISOString(),
   };
   return {...body,receipt_hash:sha(body)};
