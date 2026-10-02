@@ -9,6 +9,7 @@ function offer({
   zeroCost=true,persistent=false,publicIngress=false,
   labels=[],locality=[],duty='always_on',power=5,
   failureDomain=id,maxConcurrency=8,observedAt='2026-10-01T03:00:00.000Z',
+  gpuCount=0,gpuModels=[],
 }){
   return {
     schema:'evercraft.saban.compute-offer.v1',
@@ -17,7 +18,13 @@ function offer({
     market:'ambient-fabric',
     access_class:access,
     endpoint:'evercraft://'+id,
-    resources:{cpu_units:cpu,memory_mb:memory,storage_gb:storage,gpu_count:0,gpu_models:[]},
+    resources:{
+      cpu_units:cpu,
+      memory_mb:memory,
+      storage_gb:storage,
+      gpu_count:gpuCount,
+      gpu_models:gpuModels,
+    },
     placement:{public_ingress:publicIngress,persistent_storage:persistent},
     trust:{uptime_7d:uptime,audited:false,valid_version:true,attested},
     economics:{zero_cost:zeroCost,quoted:true,hourly_usd:0,total_usd:0,native_price:null},
@@ -360,4 +367,84 @@ test('forecast headroom reservation consumes a real future execution slot before
   assert.equal(plan.placed_execution_units,0);
   assert.equal(plan.held_execution_units,1);
   assert.equal(plan.held[0].reason,'no_eligible_capacity');
+});
+
+
+test('GPU workloads require real accelerator capacity and consume GPU residuals',()=>{
+  const cpuOnly=offer({
+    id:'cpu-only',
+    deviceClass:'general-compute',
+    cpu:16,memory:32768,storage:500,
+    workloads:['systemia.render-frame.v1'],
+    maxConcurrency:8,
+  });
+  const gpu=offer({
+    id:'gpu-node',
+    deviceClass:'general-compute',
+    cpu:8,memory:16384,storage:500,
+    workloads:['systemia.render-frame.v1'],
+    gpuCount:1,
+    gpuModels:['evercraft-proof-gpu'],
+    maxConcurrency:8,
+  });
+  const plan=planHeterogeneousFabric({
+    now:new Date('2026-10-01T03:01:00.000Z'),
+    offers:[cpuOnly,gpu],
+    tasks:[{
+      task_id:'render',
+      workload_class:'systemia.render-frame.v1',
+      execution_shape:'shardable',
+      shard_count:2,
+      resources:{
+        cpu_units:1,
+        memory_mb:1024,
+        storage_gb:1,
+        gpu_count:1,
+      },
+      preemptible:true,
+      checkpointable:true,
+      allowed_device_classes:['general-compute'],
+    }],
+  });
+  assert.equal(plan.placed_execution_units,1);
+  assert.equal(plan.held_execution_units,1);
+  assert.equal(plan.placements[0].provider_id,'gpu-node');
+  assert.ok(
+    plan.held[0].candidate_rejections
+      .find(x=>x.offer_id==='ambient:cpu-only')
+      .reasons.includes('insufficient_gpu_count')
+  );
+  const residual=plan.residual_capacity.find(x=>x.offer_id==='ambient:gpu-node');
+  assert.equal(residual.gpu_count,0);
+});
+
+test('exact GPU model requirements fail closed when the accelerator model differs',()=>{
+  const gpu=offer({
+    id:'gpu-wrong-model',
+    deviceClass:'general-compute',
+    cpu:8,memory:16384,storage:500,
+    workloads:['systemia.render-frame.v1'],
+    gpuCount:1,
+    gpuModels:['model-a'],
+  });
+  const plan=planHeterogeneousFabric({
+    now:new Date('2026-10-01T03:01:00.000Z'),
+    offers:[gpu],
+    tasks:[{
+      task_id:'render-specific',
+      workload_class:'systemia.render-frame.v1',
+      resources:{
+        cpu_units:1,
+        memory_mb:1024,
+        storage_gb:1,
+        gpu_count:1,
+        gpu_models:['model-b'],
+      },
+      allowed_device_classes:['general-compute'],
+    }],
+  });
+  assert.equal(plan.state,'held');
+  assert.ok(
+    plan.held[0].candidate_rejections[0].reasons.includes('required_gpu_model_missing')
+  );
 });
