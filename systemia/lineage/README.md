@@ -75,3 +75,27 @@ node --test systemia/lineage/core.test.mjs
 ```
 
 The current tests cover typed diffs, branching, two-parent merges, conflict detection, rollback, world assets, agent identity, and immutable transaction receipts.
+
+
+## Phase 2 primitives
+
+The dependent Phase 2 branch adds the first owned distributed-history primitives:
+
+- content-defined chunking for large video, audio, world and dataset artifacts;
+- chunk-addressed deduplication across edited versions;
+- byte-identical materialization with per-chunk and whole-object verification;
+- an owned local remote protocol suitable for Yard adaptation;
+- compare-and-swap branch updates so stale agents cannot overwrite newer history;
+- immutable commit-graph push with object reuse;
+- Ed25519 actor attestations with tamper detection, key-to-actor binding and revocation.
+
+Phase 2 CLI examples:
+
+```bash
+node systemia/lineage/cli.mjs large-put ./master.mov video/quicktime
+node systemia/lineage/cli.mjs large-verify <manifest-id>
+node systemia/lineage/cli.mjs remote-refs ./yard-lineage-remote
+node systemia/lineage/cli.mjs remote-push ./yard-lineage-remote main null
+```
+
+The local remote is a protocol proof, not the final network transport. Yard should adapt the same immutable-object and compare-and-swap contracts behind authenticated workspace boundaries rather than changing the Lineage semantics.
