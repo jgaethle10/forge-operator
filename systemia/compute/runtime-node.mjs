@@ -28,6 +28,7 @@ import { startEvercraftEdgeDnsRuntime } from './evercraft-edge-dns-runtime.mjs';
 import { validatePublicEdgeAdmission } from '../network/public-edge-tls.mjs';
 import { transcriptionCapabilityStatus } from '../forensiscope/transcription-engine.mjs';
 import { EvercraftRemoteOperator } from './remote-operator.mjs';
+import { NodeSeedMicroWorkloads, runNodeSeedRegisteredWorkload } from './nodeseed-registered-worker.mjs';
 
 const CODE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 
@@ -773,6 +774,9 @@ export async function startEvercraftComputeNode({
     'saban.logical-agent',
     'saban.multiplier-assignment.v1',
   ]);
+  for (const workloadClass of NodeSeedMicroWorkloads) {
+    supported.add(workloadClass);
+  }
   if (browserRuntimeReady) {
     supported.add('systemia.evercraft-web-browser.v1');
   }
@@ -1157,6 +1161,44 @@ export async function startEvercraftComputeNode({
         const workloadClass = String(body.workload_class || lease.workload_class || '');
         if (workloadClass !== lease.workload_class || !supported.has(workloadClass)) {
           return send(res, 422, { error: 'workload_not_admitted' });
+        }
+
+        if (NodeSeedMicroWorkloads.includes(workloadClass)) {
+          const idempotencyKey = String(
+            body.idempotency_key ||
+            body.input?.idempotency_key ||
+            ''
+          ).trim();
+          if (!idempotencyKey) {
+            return send(res, 422, { error: 'registered_worker_idempotency_key_required' });
+          }
+          const worker = runNodeSeedRegisteredWorkload({
+            nodeId,
+            workloadClass,
+            payload: body.input?.payload ?? body.payload ?? null,
+            idempotencyKey,
+            stateDir: path.join(allowedRoot, '.evercraft', 'registered-worker'),
+          });
+          return send(res, 200, {
+            ok: true,
+            node_id: nodeId,
+            workload_class: workloadClass,
+            result: worker.result,
+            worker_receipt: worker,
+            deduplicated: worker.deduplicated === true,
+            idempotency_key: idempotencyKey,
+            receipt: chain.issue(
+              worker.deduplicated === true
+                ? 'registered-workload.reused'
+                : 'registered-workload.executed',
+              {
+                lease_id: body.lease_id,
+                workload_class: workloadClass,
+                idempotency_key: idempotencyKey,
+                worker_receipt_hash: worker.receipt_hash,
+              }
+            ),
+          });
         }
 
         if (workloadClass === 'saban.logical-agent') {
