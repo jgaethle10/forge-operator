@@ -317,3 +317,47 @@ test('tiny checkpointable work prefers right-sized micro capacity over a huge ge
   assert.equal(plan.state,'ready');
   assert.equal(plan.placements[0].provider_id,'tiny-phone');
 });
+
+
+test('forecast headroom reservation consumes a real future execution slot before placement',()=>{
+  const node=offer({
+    id:'reserve-node',
+    deviceClass:'server',
+    cpu:1,
+    memory:1024,
+    storage:8,
+    workloads:['systemia.content-hash.v1'],
+    duty:'always_on',
+    power:20,
+    maxConcurrency:1,
+    failureDomain:'reserve-domain',
+  });
+  const task={
+    task_id:'current-hash',
+    workload_class:'systemia.content-hash.v1',
+    resources:{cpu_units:0.1,memory_mb:64,storage_gb:0},
+    preemptible:true,
+    checkpointable:true,
+    allowed_device_classes:['server'],
+    minimum_uptime_7d:0,
+  };
+  const plan=planHeterogeneousFabric({
+    offers:[node],
+    tasks:[task],
+    reservations:[{
+      schema:'evercraft.saban.capacity-headroom-reservation.v1',
+      reservation_id:'reserve:hash:reserve-node',
+      offer_id:node.offer_id,
+      provider_id:node.provider_id,
+      workload_class:'systemia.content-hash.v1',
+      resources:{cpu_units:0.1,memory_mb:64,storage_gb:0},
+      reason:'forecast_growth_without_current_queue_pressure',
+    }],
+    now:new Date('2026-10-01T03:01:00.000Z'),
+  });
+  assert.equal(plan.forecast_headroom_applied,true);
+  assert.equal(plan.applied_headroom_reservations.length,1);
+  assert.equal(plan.placed_execution_units,0);
+  assert.equal(plan.held_execution_units,1);
+  assert.equal(plan.held[0].reason,'no_eligible_capacity');
+});
