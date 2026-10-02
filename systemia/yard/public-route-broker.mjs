@@ -67,6 +67,24 @@ export class YardPublicRouteBroker {
     });
   }
 
+  async #renewLease(routeLeaseId,ttlMs){
+    if(this.providerClient){
+      if(typeof this.providerClient.renewLease!=='function'){
+        throw new Error('public_route_provider_renewal_not_supported');
+      }
+      return await this.providerClient.renewLease(routeLeaseId,ttlMs);
+    }
+    const headers=this.providerToken?{authorization:`Bearer ${this.providerToken}`}:{};
+    return await requestJson(
+      this.providerEndpoint+'/v1/public-route/leases/'+encodeURIComponent(routeLeaseId)+'/renew',
+      {
+        method:'POST',
+        headers,
+        body:JSON.stringify({ttl_ms:Math.max(60000,Math.min(86400000,Number(ttlMs||3600000)))}),
+      }
+    );
+  }
+
   async #releaseLease(routeLeaseId,reason){
     if(this.providerClient){
       return await this.providerClient.releaseLease(routeLeaseId,reason);
@@ -200,6 +218,49 @@ export class YardPublicRouteBroker {
       public_route_receipt_hash:verified.receipt_hash,
       instance_id:record.result.instance_id,
       bound_at:new Date().toISOString(),
+    };
+    return {...body,receipt_hash:sha(body)};
+  }
+
+  async renewBinding(binding,{ttlMs=3600000}={}){
+    const leaseId=String(binding?.route_lease_id||'').trim();
+    if(!leaseId) throw new Error('route_lease_id_required');
+    const renewed=await this.#renewLease(
+      leaseId,
+      Math.max(60000,Math.min(86400000,Number(ttlMs||3600000)))
+    );
+    if(renewed?.renewed!==true) throw new Error('public_route_renewal_failed');
+    if(String(renewed.origin||'')!==String(binding?.origin||'')){
+      throw new Error('public_route_renewal_origin_changed');
+    }
+    if(
+      renewed.deployment_id &&
+      String(renewed.deployment_id)!==String(binding?.deployment_id||'')
+    ){
+      throw new Error('public_route_renewal_deployment_mismatch');
+    }
+    if(
+      renewed.instance_id &&
+      String(renewed.instance_id)!==String(binding?.instance_id||'')
+    ){
+      throw new Error('public_route_renewal_instance_mismatch');
+    }
+    const body={
+      schema:'evercraft.yard.public-route-renewal.v1',
+      route_lease_id:leaseId,
+      deployment_id:binding?.deployment_id||null,
+      origin:binding?.origin||null,
+      route_scope:binding?.route_scope||null,
+      route_verified:binding?.route_verified===true,
+      previous_expires_at:renewed.previous_expires_at||null,
+      expires_at:renewed.expires_at||null,
+      origin_changed:false,
+      provider_management_receipt_hash:
+        renewed?.compute_management_receipt_hash||
+        renewed?.receipt?.receipt_hash||
+        null,
+      provider_renewal_receipt_hash:renewed.renewal_receipt_hash||null,
+      renewed_at:renewed.renewed_at||new Date().toISOString(),
     };
     return {...body,receipt_hash:sha(body)};
   }
