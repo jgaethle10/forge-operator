@@ -293,7 +293,9 @@ function scoreEntry(intent,entry,{frequency,total}){
     if(!hasPhysicalPartIntent) score-=180;
     else {
       score+=40;
-      if(deepSourceSignals.filter((token)=>intentSet.has(token)).length>=2) score+=55;
+      const deepSourceCount=deepSourceSignals.filter((token)=>intentSet.has(token)).length;
+      if(deepSourceCount>=2) score+=55;
+      else if(deepSourceCount===1) score+=35;
     }
   }
 
