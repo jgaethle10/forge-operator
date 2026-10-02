@@ -50,6 +50,7 @@ const demand={
   demand_id:'golem-proof-demand',
   workload_class:'saban.multiplier-assignment.v1',
   container_image:'golem/node:20-alpine',
+  portable_software_id:'chum',
   portable_worker_id:'chum-portable-v1',
   portable_worker_version:'1',
   cpu_units:2,
@@ -114,7 +115,9 @@ assert.equal(negotiation.selected_offer.economics.native_price.ceiling_total_glm
 assert.ok(negotiation.lease);
 assert.equal(negotiation.lease.maximum_cost_glm,0.0225);
 assert.equal(negotiation.lease.execution_ready,true);
+assert.equal(negotiation.lease.portable_software_id,'chum');
 assert.equal(negotiation.lease.portable_worker_id,'chum-portable-v1');
+assert.equal(negotiation.lease.portable_image_tag,'golem/node:20-alpine');
 assert.equal(negotiation.lease.max_concurrency,1);
 assert.equal(rented,true);
 assert.equal(JSON.stringify(negotiation).includes('golem-rental-proof'),false);
