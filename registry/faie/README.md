@@ -16,18 +16,6 @@ FAIE is an approved public Evercraft discovery record. This GitHub mirror exists
 - GitHub LLM mirror: ./llms.txt
 - Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/llms.txt
 
-## Native runtime
-
-FAIE is implemented in the owned Forge/Systemia codebase. Its current native surfaces are:
-
-- human UI: `/faie/`
-- health: `/api/faie/health`
-- signals: `/api/faie/signals`
-- public-safe investigation preview: `/api/faie/investigate`
-- read-only MCP: `/mcp/faie`
-
-A direct public hostname is not claimed until Evercraft edge verification binds it. The verified Evercraft Fabric discovery fallback is `https://fabric.systemiacommandcenters.com/mcp`.
-
 ## Authority
 
 public offer discovery and human-confirmed bounded research checkout

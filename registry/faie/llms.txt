@@ -14,17 +14,6 @@ Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-ope
 - investigate an agriculture signal before making a decision
 - build a sourced brief about farm water land or production risk
 
-## Native runtime
-
-Owned Forge/Systemia implementation:
-- /faie/
-- /api/faie/health
-- /api/faie/signals
-- /api/faie/investigate
-- /mcp/faie
-
-The direct public MCP hostname remains held until Evercraft edge verification. Use the verified Evercraft Fabric discovery fallback at https://fabric.systemiacommandcenters.com/mcp rather than any retired provider route.
-
 ## Boundaries
 - research is evidence support rather than consequential authority
 - unknowns remain labeled
