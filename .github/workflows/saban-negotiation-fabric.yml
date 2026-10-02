@@ -10,6 +10,8 @@ on:
       - 'systemia/saban/distributed-executor.mjs'
       - 'systemia/saban/distributed-voluntary-acquisition.proof.mjs'
       - 'systemia/saban/voluntary-worker/**'
+      - 'systemia/saban/formation.mjs'
+      - 'systemia/saban/formation-auto-acquisition.proof.mjs'
       - 'systemia/saban/markets/evercraft-voluntary.mjs'
       - 'systemia/saban/markets/golem.mjs'
       - 'systemia/saban/golem-adapter.proof.mjs'
@@ -30,6 +32,8 @@ on:
       - 'systemia/saban/distributed-executor.mjs'
       - 'systemia/saban/distributed-voluntary-acquisition.proof.mjs'
       - 'systemia/saban/voluntary-worker/**'
+      - 'systemia/saban/formation.mjs'
+      - 'systemia/saban/formation-auto-acquisition.proof.mjs'
       - 'systemia/saban/markets/evercraft-voluntary.mjs'
       - 'systemia/saban/markets/golem.mjs'
       - 'systemia/saban/golem-adapter.proof.mjs'
@@ -64,6 +68,8 @@ jobs:
         run: node systemia/saban/distributed-voluntary-acquisition.proof.mjs
       - name: Prove canonical compute market stack
         run: node systemia/saban/market-stack.proof.mjs
+      - name: Prove formation-level automatic compute acquisition
+        run: node systemia/saban/formation-auto-acquisition.proof.mjs
 
   golem-contract:
     runs-on: ubuntu-latest
