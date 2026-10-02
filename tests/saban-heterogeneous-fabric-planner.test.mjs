@@ -287,3 +287,33 @@ test('fabric task normalization is idempotent and preserves placement semantics'
   assert.equal(twice.energy.max_power_budget_watts,40);
   assert.equal(twice.data.input_bytes,1234);
 });
+
+
+test('tiny checkpointable work prefers right-sized micro capacity over a huge general node',()=>{
+  const tiny=offer({
+    id:'tiny-phone',deviceClass:'phone',cpu:1,memory:2048,storage:16,
+    workloads:['systemia.telemetry-normalizer.v1'],
+    duty:'opportunistic',power:4,maxConcurrency:2,failureDomain:'battery-tiny',
+  });
+  const huge=offer({
+    id:'huge-node',deviceClass:'general-compute',cpu:16,memory:32768,storage:1000,
+    workloads:['systemia.telemetry-normalizer.v1'],
+    duty:'always_on',power:80,maxConcurrency:16,failureDomain:'rack-a',
+  });
+  const plan=planHeterogeneousFabric({
+    now:new Date('2026-10-01T03:01:00.000Z'),
+    offers:[tiny,huge],
+    tasks:[{
+      task_id:'tiny-normalization',
+      workload_class:'systemia.telemetry-normalizer.v1',
+      resources:{cpu_units:0.1,memory_mb:96,storage_gb:0},
+      allowed_device_classes:['phone','general-compute'],
+      preemptible:true,
+      checkpointable:true,
+      minimum_uptime_7d:0,
+      max_observation_age_ms:300000,
+    }],
+  });
+  assert.equal(plan.state,'ready');
+  assert.equal(plan.placements[0].provider_id,'tiny-phone');
+});
