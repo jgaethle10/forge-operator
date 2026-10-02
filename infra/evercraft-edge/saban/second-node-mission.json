@@ -13,17 +13,19 @@
   },
   "candidates": [
     {
-      "candidate_id": "megatron-external-linux",
+      "candidate_id": "evernode-one-external-linux",
       "rank": 1,
-      "source": "prior Evercraft Node 001 external test environment",
-      "historical_state": "Evercraft Node 001 previously installed and exercised",
+      "source": "prior Evercraft Node 001 / Evernode One external Linux test environment",
+      "historical_state": "Evernode One previously exercised as Evercraft Node 001 lineage; current authority must be refreshed",
       "current_authorization": "must_refresh",
       "current_connectivity": "unverified",
       "current_attestation": "unverified",
       "failure_domain": "must_prove_distinct_from_home-wan-1",
       "zero_cost": "must_reconfirm",
       "public_ingress": "unverified",
-      "action": "attempt_reenrollment_only_after_current_operator_authorization"
+      "action": "attempt_reenrollment_only_after_current_operator_authorization",
+      "canonical_hardware_name": "Evernode One",
+      "legacy_name_excluded": "Megatron"
     },
     {
       "candidate_id": "old-hp-owned-desktop",
@@ -57,5 +59,5 @@
     "ambient_visibility_is_authority": false,
     "commercial_spend_allowed": false
   },
-  "next_action": "revalidate Megatron first; if unavailable, stage old HP only on a different WAN/power failure domain"
+  "next_action": "revalidate Evernode One first; if unavailable, stage old HP only on a different WAN/power failure domain"
 }
