@@ -452,6 +452,7 @@ export async function startOutboundCapacityBroker({
         capacity_hint: {
           cpu_units: Math.max(0, Number(node.capacity.capacity_hint?.cpu_units || 0)),
           memory_mb: Math.max(0, Number(node.capacity.capacity_hint?.memory_mb || 0)),
+          storage_gb: Math.max(0, Number(node.capacity.capacity_hint?.storage_gb || 0)),
           executables: node.capacity.capacity_hint?.executables && typeof node.capacity.capacity_hint.executables === 'object'
             ? { ...node.capacity.capacity_hint.executables }
             : {},
