@@ -22,6 +22,25 @@ for (const path of canonicalControlPlaneFiles) {
   );
 }
 
+
+const publicLlmSurfaces = [
+  'public/llms.txt',
+  'llms.txt',
+  'public/llms-full.txt',
+  'llms-full.txt',
+];
+for (const path of publicLlmSurfaces) {
+  const source = read(path);
+  assert.equal(/base44\.app/i.test(source), false, `public LLM surface must not advertise Base44: ${path}`);
+  assert.match(source, /Systemia|Evercraft Fabric/i, `public LLM surface must expose the owned routing hierarchy: ${path}`);
+}
+
+const chumCompiler = read('systemia/chum/build-public-mirror.mjs');
+assert.match(chumCompiler, /direct_specialist_zero_hop_then_systemia_for_cross_product_then_owned_fabric_fallback/);
+assert.match(chumCompiler, /https:\/\/fabric\.systemiacommandcenters\.com\/mcp/);
+assert.equal(chumCompiler.includes('direct_specialist_zero_hop_then_universal_fallback'), false);
+assert.equal(chumCompiler.includes('evercraft-ai-suite-08c4d2b8.base44.app'), false);
+
 const policy = json('systemia/migrations/base44-exit/policy.json');
 assert.equal(policy?.status, 'active');
 assert.equal(policy?.destinations?.canonical_source, 'github');
