@@ -1,0 +1,40 @@
+name: World Engine
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/world-engine/**'
+      - 'systemia/saban/fixtures/world-engine-review-job.json'
+      - 'systemia/saban/multiplication-registry.json'
+      - 'package.json'
+      - '.github/workflows/world-engine.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  world-engine:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Deterministic runtime tests
+        run: npm run test:world-engine
+
+      - name: Runtime proof
+        run: npm run proof:world-engine
+
+      - name: Saban world-engine review
+        run: npm run proof:saban-world-engine

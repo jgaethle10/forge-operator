@@ -833,6 +833,78 @@
         "memory_mb_per_worker": 128,
         "require_capacity_hint": false
       }
+    },
+    {
+      "software_id": "world-engine-review",
+      "name": "Evercraft World Engine Review",
+      "aliases": [
+        "world engine",
+        "evercraft world engine",
+        "world runtime",
+        "simulation runtime",
+        "fallen world runtime"
+      ],
+      "adapter": "systemia/world-engine/saban-adapter.mjs",
+      "default_logical_agents": 64,
+      "max_logical_agents": 10000,
+      "default_physical_workers": 8,
+      "max_physical_workers": 128,
+      "lease_seconds": 600,
+      "roles": [
+        "engine_architect",
+        "determinism_guard",
+        "simulation_guard",
+        "physics_guard",
+        "fallen_bridge_guard",
+        "worldstate_bridge_guard",
+        "provenance_guard",
+        "runtime_guard"
+      ],
+      "work_sources": [],
+      "reconciler": {
+        "adapter_export": "reconcile",
+        "once_per_swarm": true
+      },
+      "side_effects": {
+        "default": "deny",
+        "local_generated_files": true,
+        "local_receipts": true,
+        "external_network": false,
+        "production_provider_calls": false,
+        "source_media_write": false,
+        "automatic_publication": false,
+        "payment_obligation": false,
+        "canon_mutation": false,
+        "production_mutation": false
+      },
+      "max_attempts_per_job": 3,
+      "budget": {
+        "max_logical_agents": 10000,
+        "max_physical_workers": 128,
+        "max_work_items": 100000,
+        "max_attempts_per_job": 3
+      },
+      "assignment_strategy": "role_item_cartesian",
+      "scaling": {
+        "strategy": "work_conserving",
+        "max_agents_per_item": 8,
+        "target_logical_per_physical_worker": 8,
+        "minimum_role_item_passes": 1
+      },
+      "quality": {
+        "minimum_completion_ratio": 1,
+        "dead_letter_allowed": false,
+        "require_all_roles": true,
+        "require_reconciliation": true,
+        "enforcement": "fail_execution"
+      },
+      "resources": {
+        "minimum_node_cpu_units": 1,
+        "minimum_node_memory_mb": 128,
+        "cpu_units_per_worker": 1,
+        "memory_mb_per_worker": 128,
+        "require_capacity_hint": false
+      }
     }
   ]
 }
