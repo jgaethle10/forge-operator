@@ -4,6 +4,11 @@
   "title": "EventWave",
   "description": "Search public events and buy labeled promotion with human-confirmed checkout.",
   "version": "1.0.0",
-  "websiteUrl": "https://event-wave.base44.app/functions/eventWaveAgentGateway?view=docs",
-  "remotes": [{"type":"streamable-http","url":"https://event-wave.base44.app/functions/eventWaveMcp"}]
+  "websiteUrl": "https://event-wave.legacy provider.app/functions/eventWaveAgentGateway?view=docs",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://event-wave.legacy provider.app/functions/eventWaveMcp"
+    }
+  ]
 }

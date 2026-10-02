@@ -4,6 +4,11 @@
   "title": "Systemia Website Audit",
   "description": "Website audits and prioritized fixes with human-confirmed checkout.",
   "version": "1.0.0",
-  "websiteUrl": "https://systemia-audit-pro.base44.app/functions/auditAgentGateway?view=docs",
-  "remotes": [{"type":"streamable-http","url":"https://systemia-audit-pro.base44.app/functions/auditAgentMcp"}]
+  "websiteUrl": "https://systemia-audit-pro.legacy provider.app/functions/auditAgentGateway?view=docs",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://systemia-audit-pro.legacy provider.app/functions/auditAgentMcp"
+    }
+  ]
 }

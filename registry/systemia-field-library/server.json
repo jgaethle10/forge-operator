@@ -8,7 +8,7 @@
   "remotes": [
     {
       "type": "streamable-http",
-      "url": "https://base44.app/api/apps/6a54381e147576b18ac94d8f/functions/fieldLibraryAgentMcp"
+      "url": "https://legacy provider.app/api/apps/6a54381e147576b18ac94d8f/functions/fieldLibraryAgentMcp"
     }
   ]
 }

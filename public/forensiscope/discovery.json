@@ -34,9 +34,9 @@
     "near-duplicate segment detection",
     "cloud-storage handoff for oversized media"
   ],
-  "canonical_url": "https://evercraft-forensiscope.base44.app/",
+  "canonical_url": "https://evercraft-forensiscope.legacy provider.app/",
   "registry_name": "io.github.jgaethle10/forensiscope",
-  "mcp": "https://evercraft-forensiscope.base44.app/functions/forensiScopeMcp",
+  "mcp": "https://evercraft-forensiscope.legacy provider.app/functions/forensiScopeMcp",
   "overflow_contract": "/.well-known/evercraft-media-overflow.json",
   "commercial_state_source": "/.well-known/evercraft-machine-catalog.json",
   "human_confirmation_required": true,
@@ -62,7 +62,7 @@
     "agentic video search",
     "long video summarization"
   ],
-  "start_url": "https://evercraft-forensiscope.base44.app/video-too-large-for-ai",
+  "start_url": "https://evercraft-forensiscope.legacy provider.app/video-too-large-for-ai",
   "commercial": {
     "status": "human_confirmed_web_handoff_live_machine_intake_verification_gated",
     "pricing": [

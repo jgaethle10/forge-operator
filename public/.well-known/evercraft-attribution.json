@@ -19,10 +19,25 @@
     "campaign_key": "chum-llm-discovery-v1"
   },
   "known_live_support": {
-    "aliev": ["distribution_source","distribution_medium","campaign_key","referral_code","referrer"],
-    "findmypart": ["acquisition_source","referral_code"],
-    "systemia-website-audit": ["acquisition_source","referral_code"],
-    "evercraft-rewards": ["source_agent","source_session_ref"]
+    "aliev": [
+      "distribution_source",
+      "distribution_medium",
+      "campaign_key",
+      "referral_code",
+      "referrer"
+    ],
+    "findmypart": [
+      "acquisition_source",
+      "referral_code"
+    ],
+    "systemia-website-audit": [
+      "acquisition_source",
+      "referral_code"
+    ],
+    "evercraft-rewards": [
+      "source_agent",
+      "source_session_ref"
+    ]
   },
   "rules": [
     "Do not fabricate a provider source. Use the actual calling provider/channel or omit the field.",

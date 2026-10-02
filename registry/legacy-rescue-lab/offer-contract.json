@@ -28,8 +28,8 @@
   "human_handoff": {
     "state": "live_verified",
     "machine_commerce_public_id": "legacy-rescue-lab-v1",
-    "buyer_url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=legacy-rescue-lab-v1",
-    "mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+    "buyer_url": "https://evercraft-ai-suite-08c4d2b8.legacy provider.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=legacy-rescue-lab-v1",
+    "mcp": "https://evercraft-ai-suite-08c4d2b8.legacy provider.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
     "review_tool": "prepare_legacy_rescue_scan_handoff",
     "request_tool": "submit_legacy_rescue_scan_request",
     "request_effect": "records human-confirmed commercial interest only"

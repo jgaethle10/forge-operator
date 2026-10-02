@@ -28,11 +28,11 @@
     "guaranteed emergency backhaul",
     "access to private topology or private telemetry"
   ],
-  "canonical_product": "https://network-control.base44.app/",
-  "human_join": "https://network-control.base44.app/join",
+  "canonical_product": "https://network-control.legacy provider.app/",
+  "human_join": "https://network-control.legacy provider.app/join",
   "machine_routes": {
     "universal_mcp_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-    "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+    "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.legacy provider.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
     "tools": [
       {
         "name": "get_network_capabilities",

@@ -9,7 +9,7 @@
       "name": "Evercraft Machine Commerce",
       "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
       "transport": "streamable-http",
-      "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "url": "https://evercraft-ai-suite-08c4d2b8.legacy provider.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
       "evidence": "Externally canaried initialize and tools/list; Official MCP Registry publication receipt-backed."
     },
     {

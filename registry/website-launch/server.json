@@ -4,6 +4,11 @@
   "title": "Evercraft Website Launch",
   "description": "Done-for-you business website services with human-confirmed checkout.",
   "version": "1.0.0",
-  "websiteUrl": "https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceAgentGateway?view=docs",
-  "remotes": [{"type":"streamable-http","url":"https://instant-website-builder-usa-6feac193.base44.app/functions/websiteServiceMcp"}]
+  "websiteUrl": "https://instant-website-builder-usa-6feac193.legacy provider.app/functions/websiteServiceAgentGateway?view=docs",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://instant-website-builder-usa-6feac193.legacy provider.app/functions/websiteServiceMcp"
+    }
+  ]
 }

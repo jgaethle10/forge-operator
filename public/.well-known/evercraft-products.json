@@ -968,7 +968,7 @@
           "total_dollar_cap",
           "funding_reference"
         ],
-        "deployment_note": "Base44 production deployment remains separately verified; source state alone is not proof the public runtime contains the fulfillment engine.",
+        "deployment_note": "legacy provider production deployment remains separately verified; source state alone is not proof the public runtime contains the fulfillment engine.",
         "founding_player_target": 2000,
         "player_goals": "interest_only_until_a_real_configured_offer_supplies_a_points_target",
         "referrals": "attribution_then_verified_local_checkin_qualification",
@@ -1712,7 +1712,7 @@
         "uploading listing viewing matching or forming a team does not transfer ownership or grant commercial rights",
         "protected disclosure remains gated and actual protected-file delivery is not exposed as a public production workflow",
         "Creator Covenant legal language remains draft_for_counsel_review",
-        "public Base44 deployment URL is not yet claimed",
+        "public legacy provider deployment URL is not yet claimed",
         "fingerprint vault evidence support is not copyright registration patent filing or dispositive proof of ownership",
         "multi-party team creation requires already-accepted source relationships",
         "each counterparty must accept the specific team invitation before receiving a work package",

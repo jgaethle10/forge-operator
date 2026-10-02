@@ -4,11 +4,11 @@
   "title": "Evercraft Machine Commerce",
   "description": "Problem-first Evercraft routing with read-only tools and human gates for consequential actions.",
   "version": "1.6.0",
-  "websiteUrl": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
+  "websiteUrl": "https://evercraft-ai-suite-08c4d2b8.legacy provider.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
   "remotes": [
     {
       "type": "streamable-http",
-      "url": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+      "url": "https://evercraft-ai-suite-08c4d2b8.legacy provider.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
     }
   ]
 }

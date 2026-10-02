@@ -3,7 +3,7 @@
   "updated_at": "2026-09-25",
   "provider": "Evercraft LLC",
   "purpose": "Transparent, community-aware Reddit distribution material for ForensiScope. This is a publishing pack, not proof that Reddit has been posted.",
-  "product_url": "https://evercraft-forensiscope.base44.app/",
+  "product_url": "https://evercraft-forensiscope.legacy provider.app/",
   "rules": {
     "disclose_affiliation": true,
     "no_astroturfing": true,
@@ -40,7 +40,7 @@
     {
       "id": "build-in-public",
       "title": "Long-video AI is still fragmented. We are building ForensiScope around the gap.",
-      "body": "Disclosure: I am part of Evercraft, the team building ForensiScope. We kept seeing the same request split across tools: inspect a huge video, transcribe it, search it semantically, find duplicate or near-duplicate segments, build a timestamped timeline, and keep going when a normal chatbot cannot handle the whole file. Twelve Labs, Gemini, K2, Echosaw and AssemblyAI each solve useful pieces of that landscape. We are building ForensiScope as the continuation layer for the combined workflow, with an Official MCP Registry identity and a human-confirmed media handoff. I would genuinely like criticism from people who work with long footage: which part of that workflow is still most painful today? Product link: https://evercraft-forensiscope.base44.app/"
+      "body": "Disclosure: I am part of Evercraft, the team building ForensiScope. We kept seeing the same request split across tools: inspect a huge video, transcribe it, search it semantically, find duplicate or near-duplicate segments, build a timestamped timeline, and keep going when a normal chatbot cannot handle the whole file. Twelve Labs, Gemini, K2, Echosaw and AssemblyAI each solve useful pieces of that landscape. We are building ForensiScope as the continuation layer for the combined workflow, with an Official MCP Registry identity and a human-confirmed media handoff. I would genuinely like criticism from people who work with long footage: which part of that workflow is still most painful today? Product link: https://evercraft-forensiscope.legacy provider.app/"
     },
     {
       "id": "developer-mcp",
