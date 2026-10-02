@@ -63,6 +63,7 @@ The v1 runtime lives in:
 
 - `machine-roster.json` for observer lanes and authority boundaries
 - `machine-rockies.mjs` for normalization, campaign correlation, and commercial convergence
-- `machine-rockies.proof.mjs` for invariants and regression proof
+- `machine-context.mjs` for Context Fabric routing without changing the shared global subscription table
+- `machine-rockies.proof.mjs` and `machine-context.proof.mjs` for invariants and regression proof
 
 All admitted observations are minimized into the shared `evercraft.context.observation.v1` contract before downstream use.
