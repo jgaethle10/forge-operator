@@ -144,3 +144,53 @@ test('CHUM syndication mesh drops legacy provider URLs before they can enter or 
   ].join('\n');
   assert.doesNotMatch(publicText, /base44\.app/i);
 });
+
+
+test('CHUM keeps raw repository mirrors out of the social publication queue', () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'evercraft-syndication-raw-'));
+  write(path.join(root, 'registry/catalog.json'), {
+    updated_at: '2026-10-02',
+    products: [{
+      product_key: 'raw-demo',
+      name: 'Raw Demo',
+      canonical_url: 'https://raw.githubusercontent.com/example/repo/main/product.html',
+      triggers: ['raw demo']
+    }]
+  });
+  write(path.join(root, 'public/chum/products/raw-demo/ai-discovery.json'), {
+    product_key: 'raw-demo',
+    name: 'Raw Demo',
+    canonical_url: 'https://raw.githubusercontent.com/example/repo/main/product.html',
+    intents: ['raw demo']
+  });
+  write(path.join(root, 'public/chum/syndication/state.json'), {
+    schema: 'evercraft.syndication-state.v1',
+    updated_at: '2026-10-01T00:00:00.000Z',
+    complete_mirror: true,
+    product_hashes: { 'raw-demo': 'old-hash' }
+  });
+  write(path.join(root, 'public/chum/syndication/social-queue.json'), {
+    schema: 'evercraft.syndication-social-queue.v1',
+    generated_at: '2026-10-01T00:00:00.000Z',
+    items: [{
+      dedupe_key: 'raw-demo:old',
+      product_key: 'raw-demo',
+      name: 'Raw Demo',
+      canonical_url: 'https://raw.githubusercontent.com/example/repo/main/product.html',
+      content_sha256: 'old',
+      requires_authorized_destination: true
+    }]
+  });
+  write(path.join(root, 'public/sitemap.xml'), '<?xml version="1.0"?><urlset></urlset>\n');
+  write(path.join(root, 'public/llms.txt'), '# Evercraft\n');
+  write(path.join(root, 'llms.txt'), '# Evercraft\n');
+  write(path.join(root, 'public/.well-known/evercraft-discovery.json'), { schema: 'evercraft.discovery.test', start_here: {} });
+  write(path.join(root, 'public/ai-discovery.json'), { schema: 'evercraft.discovery.test', start_here: {} });
+
+  const receipt = buildSyndicationMesh({ root, now: '2026-10-02T16:00:00.000Z' });
+  assert.equal(receipt.queued_social_changes, 0);
+  assert.equal(receipt.held_social_changes_without_safe_public_url, 1);
+  assert.equal(receipt.dropped_unsafe_previous_queue_items, 1);
+  const queue = JSON.parse(fs.readFileSync(path.join(root, 'public/chum/syndication/social-queue.json')));
+  assert.equal(queue.items.length, 0);
+});

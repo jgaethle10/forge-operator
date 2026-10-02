@@ -56,3 +56,20 @@ test('revalidates redirects and returns the final verified URL',async()=>{
 test('requires HTTPS',()=>{
   assert.throws(()=>assertPublicLinkShape('http://example.com'),/https_required/);
 });
+
+
+test('blocks raw source-host links before publication',async()=>{
+  let calls=0;
+  await assert.rejects(()=>preflightPublicLink({
+    url:'https://raw.githubusercontent.com/example/repo/main/product.html',
+    fetchImpl:async()=>{calls+=1;return response(200,'<title>raw</title>',{'content-type':'text/plain'});},
+  }),/clip_public_link_legacy_provider_blocked/);
+  assert.equal(calls,0);
+});
+
+test('rejects successful responses that are not browser landing content',async()=>{
+  await assert.rejects(()=>preflightPublicLink({
+    url:'https://example.com/product.json',
+    fetchImpl:async()=>response(200,'{"ok":true}',{'content-type':'application/json'}),
+  }),/clip_public_link_non_browsable_content_type/);
+});

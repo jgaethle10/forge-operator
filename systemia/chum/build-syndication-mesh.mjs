@@ -59,6 +59,14 @@ function safePublicUrl(value) {
   }
 }
 
+function safeSocialUrl(value) {
+  const safe = safePublicUrl(value);
+  if (!safe) return null;
+  const host = new URL(safe).hostname.toLowerCase();
+  if (host === 'raw.githubusercontent.com' || host === 'api.github.com') return null;
+  return safe;
+}
+
 function isoFromDate(value, fallback) {
   const raw = String(value || '').trim();
   if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) return raw + 'T00:00:00.000Z';
@@ -334,12 +342,13 @@ export function buildSyndicationMesh({
 
   const previousQueue = readJson(path.join(syndicationRoot, 'social-queue.json'), null);
   const newQueueItems = changedProducts
-    .filter((product) => Boolean(product.canonical_url))
-    .map((product) => ({
+    .map((product) => ({ product, socialUrl: safeSocialUrl(product.canonical_url) }))
+    .filter(({ socialUrl }) => Boolean(socialUrl))
+    .map(({ product, socialUrl }) => ({
       dedupe_key: product.product_key + ':' + product.content_sha256,
       product_key: product.product_key,
       name: product.name,
-      canonical_url: product.canonical_url,
+      canonical_url: socialUrl,
       discovery_path: product.discovery_path,
       text: product.name + ': ' + product.description,
       content_sha256: product.content_sha256,
@@ -350,7 +359,7 @@ export function buildSyndicationMesh({
   let droppedUnsafePreviousItems = 0;
   for (const item of array(previousQueue?.items)) {
     if (!item?.dedupe_key) continue;
-    const safeUrl = safePublicUrl(item.canonical_url);
+    const safeUrl = safeSocialUrl(item.canonical_url);
     if (!safeUrl) {
       droppedUnsafePreviousItems += 1;
       continue;
@@ -369,8 +378,8 @@ export function buildSyndicationMesh({
       : (previousQueue?.generated_at || previous?.updated_at || now),
     bootstrap: baselineExpansion,
     policy: baselineExpansion
-      ? 'Baseline inventory recorded without blasting every existing product. Future material product changes enter once per content hash only when a safe HTTPS canonical destination exists; Evercraft Clip must independently preflight that destination before publication.'
-      : 'Material product changes enter once per content hash only when a safe HTTPS canonical destination exists. Legacy-provider URLs are rejected, stale unsafe queue items are dropped, and Evercraft Clip must independently preflight the customer destination before publication.',
+      ? 'Baseline inventory recorded without blasting every existing product. Future material product changes enter once per content hash only when a customer-grade HTTPS destination exists; raw source hosts and legacy providers are not social destinations, and Evercraft Clip must independently preflight the final URL.'
+      : 'Material product changes enter once per content hash only when a customer-grade HTTPS destination exists. Raw source hosts, legacy-provider URLs, and stale unsafe queue items are rejected before Evercraft Clip independently preflights the final customer destination.',
     items: [...queueByKey.values()].sort((a, b) => String(a.product_key).localeCompare(String(b.product_key)))
   };
   writeJson(path.join(syndicationRoot, 'social-queue.json'), socialQueue);
