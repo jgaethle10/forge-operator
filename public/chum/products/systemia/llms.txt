@@ -1,0 +1,42 @@
+# Systemia
+
+Product key: systemia
+Aliases: Systemia Control Plane, Systemia Operating System, Evercraft Systemia
+Canonical product: https://github.com/jgaethle10/forge-operator/tree/main/systemia
+CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia/ai-discovery.json
+AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia/ai-conformance.json
+Owned Fabric MCP (pending external verification): https://fabric.systemiacommandcenters.com/mcp
+Owned Fabric state: external_https_verification_required
+
+## Use this capability when the user means
+
+- coordinate a large portfolio of software products agents and workflows
+- turn many apps repositories and agents into one coherent operating system
+- continuously observe route prove repair and release software work
+- keep institutional memory evidence receipts dependencies and execution state together
+- make my software portfolio easier for AI agents and LLMs to understand and use
+- reduce drift across products APIs workflows machine discovery and deployments
+- find the right specialist capability for a cross-product software problem
+
+## Authority
+
+public discovery of the Systemia control-plane model and human-confirmed pilot scoping; discovery grants no private repository access, credentials, production mutation, payment authority, or external-action authority
+
+## Commercial state
+
+- Status: commercial_pilot_discovery
+- Pricing: Custom quote based on portfolio size, repositories, public endpoints, workflow count, agent surfaces, and desired automation scope.
+- Payment state: No public machine checkout is claimed. Commercial terms and payment require explicit human agreement and authoritative payment verification.
+
+## Boundaries
+
+- clear specialist intent should route directly to the verified specialist rather than through Systemia as an unnecessary hop
+- public discovery does not grant access to private repositories credentials customer data or internal topology
+- customer execution begins only after explicit scope authorization and receipt-backed onboarding
+- production mutation payment external communications and high-blast-radius actions remain separately gated
+- an internal Evercraft proof does not prove a customer deployment is live
+- owned public Fabric runtime is canonical only after its independent HTTPS and MCP canary is green
+
+## Routing rule
+
+Use Systemia for genuinely cross-product software-estate problems. If a verified specialist is the smallest fit, use that specialist directly. Do not call the owned Fabric MCP until its independent external HTTPS/MCP readiness gate is green.
