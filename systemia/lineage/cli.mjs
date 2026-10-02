@@ -2,7 +2,7 @@
 import { LineageStore } from './core.mjs';
 import { semanticDiff } from './semantic-diff.mjs';
 import { LargeObjectStore } from './large-object.mjs';
-import { LocalLineageRemote, pushCommitGraph } from './remote-protocol.mjs';
+import { LocalLineageRemote, fetchCommitGraph, pushCommitGraph } from './remote-protocol.mjs';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
@@ -92,8 +92,21 @@ async function main() {
       }), null, 2));
       break;
     }
+    case 'remote-fetch': {
+      if (!args[0]) throw new Error('Usage: lineage remote-fetch <remote-dir> [remote-branch] [local-branch]');
+      const remote = new LocalLineageRemote(args[0]);
+      const remoteBranch = args[1] || 'main';
+      const localBranch = args[2] || remoteBranch;
+      console.log(JSON.stringify(await fetchCommitGraph({
+        store,
+        remote,
+        remoteBranch,
+        localBranch
+      }), null, 2));
+      break;
+    }
     default:
-      console.log(`Evercraft Lineage\n\nCommands:\n  init [branch]\n  commit [message]\n  branch <name> [from]\n  switch <branch>\n  log [ref] [limit]\n  diff [from] [to]\n  restore <ref> [target]\n  rollback <ref>\n  merge-preview <branch>\n  merge <branch>\n  large-put <file> [media-type]\n  large-verify <manifest-id>\n  remote-refs <remote-dir>\n  remote-push <remote-dir> [branch] [expected-head]`);
+      console.log(`Evercraft Lineage\n\nCommands:\n  init [branch]\n  commit [message]\n  branch <name> [from]\n  switch <branch>\n  log [ref] [limit]\n  diff [from] [to]\n  restore <ref> [target]\n  rollback <ref>\n  merge-preview <branch>\n  merge <branch>\n  large-put <file> [media-type]\n  large-verify <manifest-id>\n  remote-refs <remote-dir>\n  remote-push <remote-dir> [branch] [expected-head]\n  remote-fetch <remote-dir> [remote-branch] [local-branch]`);
   }
 }
 
