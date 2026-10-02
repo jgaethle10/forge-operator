@@ -20,6 +20,7 @@ import { registerRemoteOperatorMcp } from './systemia/remote-operator/mcp-gatewa
 import { registerNotificationFabricRoutes } from './systemia/notification-fabric/http.mjs';
 import { registerRadarRoutes } from './systemia/radar/http.mjs';
 import { registerInstantWorkRoutes } from './systemia/commerce/instant-work.mjs';
+import { routeVerifiedPayment } from './systemia/organism/portfolio-fulfillment-router.mjs';
 
 dotenv.config();
 
@@ -1156,10 +1157,32 @@ app.post('/api/chum/attribution/trusted-event', rateLimit(120, 60 * 60 * 1000), 
     });
     const persistence = await persistChumAttributionEvent(event);
 
+    const fulfillment = event.stage === 'payment_verified'
+      ? routeVerifiedPayment({
+          publicId: event.public_id,
+          payment: {
+            verified: true,
+            synthetic: false,
+            state: 'paid',
+            provider: String(req.body?.payment?.provider || req.body?.payment?.authority || ''),
+            evidence_ref: String(req.body?.payment?.verification_ref || ''),
+            amount_cents: Number(req.body?.payment?.amount_cents),
+            currency: String(req.body?.payment?.currency || 'USD'),
+            order_key: String(req.body?.payment?.order_key || req.body?.order_id || event.referral_id || ''),
+            receipt_key: String(req.body?.payment?.receipt_key || ''),
+            public_id: event.public_id,
+            verified_at: event.occurred_at,
+          },
+          stateRoot: process.env.EVERCRAFT_FULFILLMENT_STATE_ROOT?.trim() || 'state/fulfillment',
+          now: new Date(event.occurred_at),
+        })
+      : null;
+
     res.status(202).json({
       accepted: true,
       event,
       persistence,
+      fulfillment,
       verified_revenue_cents: event.stage === 'payment_verified' ? event.revenue.amount_cents : 0,
     });
   } catch (error) {
