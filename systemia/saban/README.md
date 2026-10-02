@@ -424,3 +424,58 @@ what Evercraft is waiting to execute
   -> zero-spend partner/voluntary paths only where allowed
   -> commercial capacity remains unauthorized unless separately approved
 ```
+
+## Portable marketplace execution
+
+Marketplace capacity is not assumed to be a full Evercraft NodeSeed. Saban may execute on a marketplace provider only when the selected software contract explicitly declares a portable worker for that market.
+
+A portable worker declaration binds:
+
+- a stable worker ID and version;
+- the exact local worker file Saban is allowed to transfer;
+- the provider image/runtime required to execute it;
+- whether network access is allowed;
+- whether arbitrary shell execution is allowed.
+
+The first portable workload is CHUM:
+
+- worker ID: `chum-portable-v1`;
+- image: `golem/node:20-alpine`;
+- worker: `systemia/saban/portable-workers/chum.mjs`;
+- network access: disabled by contract;
+- arbitrary shell: disabled by contract.
+
+For Golem, Saban uploads only the registered portable worker plus a JSON assignment, invokes Node using the argv form of the provider execution API, validates the portable-worker receipt, returns the normal assignment result/checkpoint into the distributed scheduler, and finalizes the rental after the acquired pool finishes.
+
+If a software contract does not declare a Golem portable worker, the Golem adapter does not advertise eligible supply for that demand. This keeps external compute acquisition fail-closed by software capability rather than treating every Evercraft workload as portable.
+
+The automatic distributed fallback now supports two acquisition transports:
+
+1. an acquired NodeSeed endpoint with allocator authority; or
+2. an execution-ready negotiated market adapter implementing the bounded Saban assignment contract.
+
+Provider concurrency ceilings remain authoritative even when a Saban plan requests a larger physical worker pool.
+
+
+### Golem requestor sidecar
+
+Golem execution is an optional requestor sidecar rather than a mandatory root Forge dependency.
+
+Prepare the pinned SDK:
+
+```bash
+npm run saban:golem:prepare
+```
+
+That installs `@golem-sdk/golem-js` only under
+`systemia/saban/golem-requestor/node_modules` and verifies the SDK is present.
+
+Once a Linux Yagna requestor is running and `YAGNA_APPKEY` is available:
+
+```bash
+npm run saban:golem:preflight
+```
+
+The preflight connects through the configured Yagna API URL, verifies the requestor can be reached, and never prints the app-key.
+
+A green repository proof is not a claim that a funded Golem requestor is currently connected. Live marketplace execution requires the sidecar preflight to pass in the actual runtime and the selected payment network to have sufficient requestor funds.
