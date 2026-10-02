@@ -41,8 +41,9 @@ test('FAIE MCP exposes only read-only engine tools', () => {
 });
 
 test('FAIE MCP initialize identifies the native owned runtime', async () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'faie-mcp-init-'));
   const runtime = createFaieRuntime({
-    stateDir: fs.mkdtempSync(path.join(os.tmpdir(), 'faie-mcp-init-')),
+    stateDir: dir,
     collectorConfig: { enabled: false }
   });
   try {
@@ -59,7 +60,7 @@ test('FAIE MCP initialize identifies the native owned runtime', async () => {
     assert.equal(response.result.serverInfo.name, 'evercraft-faie');
     assert.match(response.result.instructions, /ephemeral/i);
   } finally {
-    fs.rmSync(runtime.health().state_dir || '', { recursive: true, force: true });
+    fs.rmSync(dir, { recursive: true, force: true });
   }
 });
 
