@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-02T17:32:00.322Z",
+  "updated_at": "2026-10-02T18:21:17.485Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,16 +11,38 @@
   },
   "latest_change_batch": [
     {
+      "path": "/.well-known/agent-card.json",
+      "last_changed": "2026-10-02T18:21:17.485Z",
+      "priority": 104
+    },
+    {
+      "path": "/.well-known/agent.json",
+      "last_changed": "2026-10-02T18:21:17.485Z",
+      "priority": 102
+    },
+    {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-02T17:32:00.322Z",
+      "last_changed": "2026-10-02T18:21:17.485Z",
       "priority": 80
     }
   ],
   "recent_surfaces": [
     {
+      "path": "/.well-known/agent-card.json",
+      "url": "/.well-known/agent-card.json",
+      "last_changed": "2026-10-02T18:21:17.485Z",
+      "priority": 104
+    },
+    {
+      "path": "/.well-known/agent.json",
+      "url": "/.well-known/agent.json",
+      "last_changed": "2026-10-02T18:21:17.485Z",
+      "priority": 102
+    },
+    {
       "path": "/chum/hot/index.json",
       "url": "/chum/hot/index.json",
-      "last_changed": "2026-10-02T17:32:00.322Z",
+      "last_changed": "2026-10-02T18:21:17.485Z",
       "priority": 80
     },
     {
@@ -1502,18 +1524,6 @@
     {
       "path": "/chum/answers/doors/map-this-person-s-capabilities-to-opportunities-1aee2bf6f9.json",
       "url": "/chum/answers/doors/map-this-person-s-capabilities-to-opportunities-1aee2bf6f9.json",
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/match-vendors-without-silently-merging-them-3d1bf9d8b8.json",
-      "url": "/chum/answers/doors/match-vendors-without-silently-merging-them-3d1bf9d8b8.json",
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/media-evidence-integrity-review-44d880a80b.json",
-      "url": "/chum/answers/doors/media-evidence-integrity-review-44d880a80b.json",
       "last_changed": "2026-10-02T17:01:08.152Z",
       "priority": 100
     }
