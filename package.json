@@ -51,7 +51,7 @@
     "saban:discovery:check": "node systemia/saban/discovery-swarm.mjs --strict",
     "saban:watershed": "npm run saban:discovery && npm run saban:revenue && npm run chum:all",
     "chum:capabilities": "node systemia/chum/build-capability-mirror.mjs && node scripts/apply-rivet-brand.mjs",
-    "test:chum-revenue": "npm run chum:revenue && npm run test:chum-start-corridor && node tests/chum-revenue-watershed.test.mjs && node tests/chum-agent-commerce.test.mjs",
+    "test:chum-revenue": "npm run chum:revenue && npm run test:chum-start-corridor && npm run test:chum-catalog-truth && node tests/chum-revenue-watershed.test.mjs && node tests/chum-agent-commerce.test.mjs",
     "test:chum-capabilities": "npm run chum:capabilities && node tests/chum-capability-mirrors.test.mjs",
     "test:signal-fabric": "node systemia/signal-fabric/router.test.mjs",
     "test:signal-fabric-engine": "node systemia/signal-fabric/engine.test.mjs && node systemia/signal-fabric/adapters/github-actions.test.mjs",
@@ -284,7 +284,8 @@
     "faie:resident": "node systemia/faie/cli.mjs --resident",
     "test:world-engine": "node --import tsx --test systemia/world-engine/world-engine.test.ts",
     "proof:world-engine": "node --import tsx systemia/world-engine/proof.mjs",
-    "proof:saban-world-engine": "node systemia/saban/multiplier.mjs --software world-engine-review --inventory systemia/saban/fixtures/world-engine-review-job.json --agents 16 --workers 4 --execute --reconcile"
+    "proof:saban-world-engine": "node systemia/saban/multiplier.mjs --software world-engine-review --inventory systemia/saban/fixtures/world-engine-review-job.json --agents 16 --workers 4 --execute --reconcile",
+    "test:chum-catalog-truth": "node tests/chum-public-catalog-sync.test.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
