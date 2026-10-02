@@ -58,8 +58,10 @@ cp -a "${SOURCE_ROOT}/systemia" "${INSTALL_ROOT}/systemia"
 mkdir -p "${INSTALL_ROOT}/infra"
 cp -a "${SOURCE_ROOT}/infra/evercraft-edge" "${INSTALL_ROOT}/infra/evercraft-edge"
 cp -a "${SOURCE_ROOT}/registry" "${INSTALL_ROOT}/registry"
-find "${INSTALL_ROOT}/systemia" "${INSTALL_ROOT}/infra/evercraft-edge" "${INSTALL_ROOT}/registry" -type d -exec chmod 0755 {} +
-find "${INSTALL_ROOT}/systemia" "${INSTALL_ROOT}/infra/evercraft-edge" "${INSTALL_ROOT}/registry" -type f -exec chmod 0644 {} +
+mkdir -p "${INSTALL_ROOT}/public"
+cp -a "${SOURCE_ROOT}/public/faie" "${INSTALL_ROOT}/public/faie"
+find "${INSTALL_ROOT}/systemia" "${INSTALL_ROOT}/infra/evercraft-edge" "${INSTALL_ROOT}/registry" "${INSTALL_ROOT}/public/faie" -type d -exec chmod 0755 {} +
+find "${INSTALL_ROOT}/systemia" "${INSTALL_ROOT}/infra/evercraft-edge" "${INSTALL_ROOT}/registry" "${INSTALL_ROOT}/public/faie" -type f -exec chmod 0644 {} +
 
 ALLOCATOR_TOKEN="${EVERCRAFT_ALLOCATOR_TOKEN:-}"
 if [[ -z "${ALLOCATOR_TOKEN}" ]]; then
