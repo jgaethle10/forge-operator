@@ -230,6 +230,32 @@ assert.equal(remoteOpsDispatch.pre_dispatch_gate, 'evercraft-execution-gate');
 assert.equal(remoteOpsDispatch.hold, null);
 assert.equal(remoteOpsDispatch.execution_authority_granted, false);
 
+const ibmiContract = admitMission({
+  rootDir: process.cwd(),
+  request: {
+    objective: 'Prepare a read-only IBM i Rescue human handoff without creating checkout or production authority.',
+    tasks: [{
+      work_key: 'ibmi-handoff',
+      work_type: 'analyze',
+      product_key: 'ibmi-rescue',
+      action_scope: 'prepare_ibmi_rescue_handoff',
+    }]
+  }
+});
+assertControlPlane(ibmiContract);
+const ibmiDispatch = ibmiContract.dispatch[0];
+assert.equal(ibmiDispatch.capability_contract_state, 'complete_declaration');
+assert.equal(ibmiDispatch.adoption_stage, 'shared_runtime');
+assert.equal(ibmiDispatch.contract_specialist_slug, 'ibmi-rescue');
+assert.equal(ibmiDispatch.specialist_component, 'ibmi-rescue');
+assert.equal(ibmiDispatch.execution_component, 'ibmi-rescue');
+assert.equal(ibmiDispatch.contract_context_namespace, 'ibmi-rescue');
+assert.equal(ibmiDispatch.metered, false);
+assert.equal(ibmiDispatch.execution_gate_required, true);
+assert.equal(ibmiDispatch.pre_dispatch_gate, 'evercraft-execution-gate');
+assert.equal(ibmiDispatch.hold, null);
+assert.equal(ibmiDispatch.execution_authority_granted, false);
+
 const contractBadScope = admitMission({
   rootDir: process.cwd(),
   request: {
@@ -426,6 +452,10 @@ console.log(JSON.stringify({
     remoteOpsDispatch.specialist_component === 'systemia-remote-ops' &&
     remoteOpsDispatch.execution_gate_required === true &&
     remoteOpsDispatch.execution_authority_granted === false,
+  ibmi_handoff_contract_routes_to_internal_specialist_without_granting_authority:
+    ibmiDispatch.specialist_component === 'ibmi-rescue' &&
+    ibmiDispatch.execution_gate_required === true &&
+    ibmiDispatch.execution_authority_granted === false,
   undeclared_contract_scope_fails_closed:
     contractBadScope.dispatch[0].hold === 'capability_contract_scope_missing',
   missing_product_contract_action_fails_closed:
