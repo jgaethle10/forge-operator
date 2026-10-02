@@ -746,6 +746,30 @@ export class YardOperator {
         }
         healthState = 'healthy';
         routeVerification = 'private_route_provider_health_verified';
+      } else if (workloadClass === 'systemia.faie.v1') {
+        const faieHealthy =
+          health.ok === true &&
+          health.service === 'faie-yard-runtime' &&
+          health.runtime === 'Evercraft Compute' &&
+          health.workload_class === 'systemia.faie.v1' &&
+          health.instance_id === job.result?.instance_id &&
+          health.read_only_public === true &&
+          health.public_investigations_persisted === false &&
+          health.base44_required === false &&
+          health.external_ai_required === false &&
+          health.decision_authority === false &&
+          health.publication_authority === false;
+        if (!faieHealthy) {
+          try {
+            await request(`${capacityEndpoint}/v1/services/${job.result.service_id}/stop`, {
+              method: 'POST',
+              body: JSON.stringify({ token: lease.token }),
+            });
+          } catch {}
+          throw new Error('FAIE failed initial local health verification');
+        }
+        healthState = 'healthy';
+        routeVerification = 'local_faie_health_verified_public_route_unbound';
       } else if (workloadClass === 'systemia.specialist-handoff-mcp.v1') {
         const specialistHealthy =
           health.ok === true &&
@@ -1413,6 +1437,9 @@ export class YardOperator {
     } else if (workloadClass === 'systemia.fabric-local-mcp.v1') {
       service = 'evercraft-fabric-local';
       healthPath = '/health';
+    } else if (workloadClass === 'systemia.faie.v1') {
+      service = 'faie-yard-runtime';
+      healthPath = '/health';
     } else if (workloadClass === 'systemia.specialist-handoff-mcp.v1') {
       service = 'specialist-handoff-mcp';
       healthPath = '/health';
@@ -1463,8 +1490,19 @@ export class YardOperator {
         health.base44_transport_enabled === false &&
         health.edge_attestation_supported === true
       );
+    const faieMatch =
+      workloadClass !== 'systemia.faie.v1' ||
+      (
+        health.workload_class === 'systemia.faie.v1' &&
+        health.read_only_public === true &&
+        health.public_investigations_persisted === false &&
+        health.base44_required === false &&
+        health.external_ai_required === false &&
+        health.decision_authority === false &&
+        health.publication_authority === false
+      );
 
-    if (!commonMatch || !brokerMatch || !browserMatch || !homeMatch || !fabricMatch) {
+    if (!commonMatch || !brokerMatch || !browserMatch || !homeMatch || !fabricMatch || !faieMatch) {
       throw new Error('public route health does not match this deployment receipt and instance');
     }
 
@@ -1932,6 +1970,7 @@ export class YardOperator {
       record.receipt?.workload_class === 'systemia.remote-capacity-broker.v1' ||
       record.receipt?.workload_class === 'systemia.rivet-report-runtime.v1' ||
       record.receipt?.workload_class === 'systemia.fabric-local-mcp.v1' ||
+      record.receipt?.workload_class === 'systemia.faie.v1' ||
       record.receipt?.workload_class === 'systemia.specialist-handoff-mcp.v1' ||
       record.receipt?.workload_class === 'systemia.evercraft-web-browser.v1' ||
       record.receipt?.workload_class === 'systemia.evercraft-home.v1'
@@ -1942,6 +1981,8 @@ export class YardOperator {
         record.receipt?.workload_class === 'systemia.rivet-report-runtime.v1';
       const fabric =
         record.receipt?.workload_class === 'systemia.fabric-local-mcp.v1';
+      const faie =
+        record.receipt?.workload_class === 'systemia.faie.v1';
       const specialist =
         record.receipt?.workload_class === 'systemia.specialist-handoff-mcp.v1';
       const browser =
@@ -1958,16 +1999,18 @@ export class YardOperator {
             ? 'rivet-yard-report-runtime'
             : fabric
               ? 'evercraft-fabric-local'
-              : specialist
-                ? 'specialist-handoff-mcp'
-                : 'chum-public-origin';
+              : faie
+                ? 'faie-yard-runtime'
+                : specialist
+                  ? 'specialist-handoff-mcp'
+                  : 'chum-public-origin';
       const healthPath = home
         ? '/api/health'
         : browser
           ? '/health'
           : broker
           ? '/v1/remote/health'
-          : rivet || fabric || specialist
+          : rivet || fabric || faie || specialist
             ? '/health'
             : '/api/health';
 
@@ -1987,6 +2030,16 @@ export class YardOperator {
               health.external_action_authority === false &&
               health.base44_transport_enabled === false &&
               health.edge_attestation_supported === true
+            )) &&
+            (!faie || (
+              health.runtime === 'Evercraft Compute' &&
+              health.workload_class === 'systemia.faie.v1' &&
+              health.read_only_public === true &&
+              health.public_investigations_persisted === false &&
+              health.base44_required === false &&
+              health.external_ai_required === false &&
+              health.decision_authority === false &&
+              health.publication_authority === false
             )) &&
             (!browser || (
               health.mode === 'public_read_only' &&
@@ -2040,6 +2093,16 @@ export class YardOperator {
                     health.auth_mode === 'passport' &&
                     health.identity_login_configured === true &&
                     health.session_revocation_supported === true
+                  : faie
+                    ? health.service === 'faie-yard-runtime' &&
+                      health.runtime === 'Evercraft Compute' &&
+                      health.workload_class === 'systemia.faie.v1' &&
+                      health.read_only_public === true &&
+                      health.public_investigations_persisted === false &&
+                      health.base44_required === false &&
+                      health.external_ai_required === false &&
+                      health.decision_authority === false &&
+                      health.publication_authority === false
                   : browser
                     ? health.service === 'evercraft-owned-browser-worker' &&
                       health.runtime === 'Evercraft Compute' &&
@@ -2063,9 +2126,11 @@ export class YardOperator {
             ok: false,
             state: home
               ? 'local_home_unreachable'
-              : browser
-                ? 'local_browser_unreachable'
-                : broker
+              : faie
+                ? 'local_faie_unreachable'
+                : browser
+                  ? 'local_browser_unreachable'
+                  : broker
                 ? 'local_broker_unreachable'
                 : 'local_origin_unreachable',
             error: String(error?.message || error),
