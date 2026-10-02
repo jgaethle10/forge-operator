@@ -9,7 +9,7 @@ import {portfolioWorkloadAnatomy} from '../systemia/saban/workload-anatomy.mjs';
 import {AmbientDeviceRegistry} from '../systemia/saban/ambient-device-registry.mjs';
 import {normalizeMicroDeviceManifest} from '../systemia/saban/microseed-device-bridge.mjs';
 import {executeMicroSeedWorkload} from '../systemia/saban/microseed-executor.mjs';
-import {createPerformanceLedger} from '../systemia/saban/performance-learning.mjs';
+import {createPerformanceLedger, recordPerformanceSample} from '../systemia/saban/performance-learning.mjs';
 import {activateAuthorizedCapacity} from '../systemia/saban/authorized-capacity-activation.mjs';
 
 const now=new Date('2026-10-02T03:00:00.000Z');
@@ -171,4 +171,95 @@ test('authorized activation automatically conforms calibrates and learns',async(
   }finally{
     fs.rmSync(root,{recursive:true,force:true});
   }
+});
+
+
+test('fresh performance suppresses calibration until forecast prewarm names a workload',()=>{
+  const m=manifest('fresh-active-01');
+  const conformance={
+    schema:'evercraft.microseed.conformance-receipt.v1',
+    device_id:m.device_id,
+    manifest_hash:m.manifest_hash,
+    verified_workloads:['systemia.content-hash.v1','systemia.telemetry-normalizer.v1'],
+    unverified_workloads:[],
+    execution_receipts:[],
+    arbitrary_code_execution:false,
+    safe_registered_canaries_only:true,
+    verified_at:'2026-10-02T02:50:00.000Z',
+    expires_at:'2026-10-03T02:50:00.000Z',
+    receipt_hash:'sha256:'+'f'.repeat(64),
+  };
+  const snapshot={
+    schema:'evercraft.saban.ambient-device-registry-snapshot.v1',
+    eligible_count:1,
+    rows:[{
+      device_id:m.device_id,
+      state:'active',
+      eligible:true,
+      reason:'authorized_fresh',
+      manifest:m,
+      conformance,
+    }],
+  };
+  const ledger=createPerformanceLedger({created_at:'2026-10-02T02:50:00.000Z'});
+  for(const workload of conformance.verified_workloads){
+    recordPerformanceSample(ledger,{
+      device_id:m.device_id,
+      workload_class:workload,
+      ok:true,
+      duration_ms:10,
+      observed_at:'2026-10-02T02:59:30.000Z',
+    });
+  }
+
+  const quiet=buildCapacityAutonomyPlan({
+    registrySnapshot:snapshot,
+    performanceLedger:ledger,
+    now,
+  });
+  assert.equal(
+    quiet.safe_autonomous_actions.some(x=>
+      x.device_id===m.device_id &&
+      x.action==='run_safe_calibration_and_refresh_performance_profile'
+    ),
+    false
+  );
+  assert.equal(
+    quiet.safe_autonomous_actions.some(x=>
+      x.device_id===m.device_id &&
+      x.action==='compile_offer_and_rebalance_matching_checkpointable_work'
+    ),
+    true
+  );
+
+  const hot=buildCapacityAutonomyPlan({
+    registrySnapshot:snapshot,
+    performanceLedger:ledger,
+    prewarmPlan:{
+      schema:'evercraft.saban.prewarm-plan.v1',
+      actions:[{
+        device_id:m.device_id,
+        trust_state:'active',
+        matched_workloads:['systemia.content-hash.v1'],
+        action:'refresh_conformance_calibration_for_predicted_demand',
+        authority_basis:'existing_current_authorization_only',
+        authority_expansion:false,
+        commercial_spend_usd:0,
+      }],
+      action_count:1,
+      unauthorized_candidates_activated:0,
+      commercial_spend_usd:0,
+      generated_at:now.toISOString(),
+    },
+    now,
+  });
+  const calibration=hot.safe_autonomous_actions.find(x=>
+    x.device_id===m.device_id &&
+    x.action==='run_safe_calibration_and_refresh_performance_profile'
+  );
+  assert.ok(calibration);
+  assert.deepEqual(calibration.target_workloads,['systemia.content-hash.v1']);
+  assert.deepEqual(calibration.forecast_prewarm_workloads,['systemia.content-hash.v1']);
+  assert.deepEqual(calibration.stale_performance_workloads,[]);
+  assert.equal(hot.policies.forecast_prewarm_never_expands_authority,true);
 });
