@@ -16,6 +16,7 @@ on:
       - 'scripts/make-chromebook-edge-node.sh'
       - 'scripts/promote-linux-edge-node.sh'
       - 'scripts/make-linux-edge-node.sh'
+      - 'scripts/prove-edge-direct-tcp-authority.sh'
       - 'tests/nodeseed-installed-bundle.test.mjs'
       - 'systemia/yard/operator.mjs'
       - '.github/workflows/evercraft-edge.yml'
@@ -60,6 +61,7 @@ jobs:
           bash -n scripts/make-chromebook-edge-node.sh
           bash -n scripts/promote-linux-edge-node.sh
           bash -n scripts/make-linux-edge-node.sh
+          bash -n scripts/prove-edge-direct-tcp-authority.sh
       - name: Run Evercraft Edge contract and protocol tests
         run: |
           node --test infra/evercraft-edge/test/*.test.mjs
