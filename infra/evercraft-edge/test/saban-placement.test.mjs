@@ -7,6 +7,8 @@ const n=(id,domain,extra={})=>({
  endpoint:"https://"+id+".invalid",
  failure_domain:domain,
  placement_labels:["public-ingress"],
+ authorized:true,
+ connected:true,
  attestation:{verified:true},
  zero_cost:true,
  public_ingress:true,
@@ -37,4 +39,9 @@ test("undefined zero-cost, ingress, port proof, or workload support fails closed
 });
 test("endpoint identity is not accepted as a failure-domain substitute",()=>{
  assert.equal(selectDnsNodes([n("a",""),n("b","")]).ready,false);
+});
+
+test("stale or unauthorized historical nodes cannot be placed",()=>{
+ assert.equal(selectDnsNodes([n("a","x"),n("b","y",{connected:false})]).ready,false);
+ assert.equal(selectDnsNodes([n("a","x"),n("b","y",{authorized:false})]).ready,false);
 });
