@@ -3,6 +3,9 @@ import {
   buildPaperOrderProbeSpec,
   submitPaperOrderProbe,
 } from "./edge-paper-order-probe.mjs";
+import {
+  fetchAndBuildOrderExecutionReceipt,
+} from "./edge-order-execution-fetch.mjs";
 
 const spec=buildPaperOrderProbeSpec({
   symbol:"SOXX",
@@ -64,6 +67,52 @@ assert.equal(body.notional,"7.5");
 assert.equal(body.type,"market");
 assert.equal(body.time_in_force,"day");
 
+const chained=await fetchAndBuildOrderExecutionReceipt({
+  order:{
+    order_id:submitted.order_id,
+    requested_qty:0.075,
+    decision_time:"2026-10-02T14:39:59.000Z",
+    submitted_time:"2026-10-02T14:40:00.000Z",
+    decision_reference_price:100,
+    expected_side:"sell",
+    expected_symbol:"SOXX",
+    terminal_status:"canceled",
+    terminal_time:"2026-10-02T14:40:10.000Z",
+    terminal_reference_price:99.80,
+  },
+  key:"paper-key",
+  secret:"paper-secret",
+  fetchImpl:async(url,options)=>{
+    assert.equal(options.method,"GET");
+    assert.ok(String(url).includes("order_id=paper-order-123"));
+    return {
+      ok:true,
+      status:200,
+      json:async()=>[
+        {
+          activity_type:"FILL",
+          id:"paper-fill-1",
+          order_id:"paper-order-123",
+          symbol:"SOXX",
+          side:"sell",
+          type:"partial_fill",
+          transaction_time:"2026-10-02T14:40:03.000Z",
+          qty:"0.05",
+          price:"99.90",
+          cum_qty:"0.05",
+          leaves_qty:"0.025",
+        },
+      ],
+    };
+  },
+});
+assert.equal(chained.receipt.execution_state,"PARTIAL_FILL_ACTIVITY_OBSERVED");
+assert.equal(chained.receipt.filled_qty,0.05);
+assert.ok(Math.abs(chained.receipt.unfilled_qty-0.025)<1e-12);
+assert.equal(chained.receipt.unfilled_remainder_opportunity_cost_measured,true);
+assert.equal(chained.receipt.total_implementation_shortfall_complete,true);
+assert.equal(chained.receipt.live_trade_authority,false);
+
 for(const forbidden of [
   "https://api.alpaca.markets",
   "https://api.alpaca.markets/",
@@ -108,6 +157,8 @@ console.log(JSON.stringify({
   paper_notional_cap_20_usd:true,
   post_only_when_explicitly_not_dry:true,
   paper_fill_not_live_fill_evidence:true,
+  paper_order_to_receipt_chain:true,
+  partial_fill_receipt_chain:true,
   autonomous_live_order_authority:false,
   live_trade_authority:false
 }));
