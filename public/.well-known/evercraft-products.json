@@ -1983,7 +1983,7 @@
         "Evercraft Systemia"
       ],
       "class": "software_portfolio_operating_control_plane",
-      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia",
+      "canonical_url": "https://github.com/jgaethle10/forge-operator/tree/main/systemia",
       "intents": [
         "coordinate a large portfolio of software products agents and workflows",
         "turn many apps repositories and agents into one coherent operating system",
@@ -2032,6 +2032,10 @@
           "relationship": "public_machine_capability_directory",
           "public_surface": "https://fabric.systemiacommandcenters.com/"
         }
+      },
+      "knowledge_surfaces": {
+        "registry_readme": "https://github.com/jgaethle10/forge-operator/tree/main/registry/systemia",
+        "registry_llms": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/registry/systemia/llms.txt"
       }
     },
     {
