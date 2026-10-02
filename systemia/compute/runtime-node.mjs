@@ -2661,6 +2661,39 @@ export async function startEvercraftComputeNode({
         });
       }
 
+      const publicRouteLeaseRenew = req.url?.match(
+        /^\/v1\/services\/([^/]+)\/public-route-leases\/([^/]+)\/renew$/
+      );
+      if (req.method === 'POST' && publicRouteLeaseRenew) {
+        const entry = services.get(publicRouteLeaseRenew[1]);
+        if (!entry) return send(res, 404, { error: 'service_not_found' });
+        const body = await readJson(req);
+        const lease = leases.get(entry.lease_id);
+        if (!lease || lease.token_hash !== sha(body.token || '')) {
+          return send(res, 401, { error: 'invalid_lease' });
+        }
+        if (entry.workload_class !== 'systemia.public-edge.v1') {
+          return send(res, 422, { error: 'public_route_provider_not_supported' });
+        }
+        const renewed = await entry.runtime.renewRouteLease(
+          publicRouteLeaseRenew[2],
+          Number(body.ttl_ms || 3600000)
+        );
+        return send(res, renewed.renewed ? 200 : 404, {
+          ...renewed,
+          receipt: chain.issue('public-edge.route-lease.renewed', {
+            service_id: publicRouteLeaseRenew[1],
+            lease_id: entry.lease_id,
+            workload_class: entry.workload_class,
+            route_lease_id: publicRouteLeaseRenew[2],
+            renewed: renewed.renewed === true,
+            origin: renewed.origin || null,
+            expires_at: renewed.expires_at || null,
+            origin_changed: renewed.origin_changed === true,
+          }),
+        });
+      }
+
       const publicRouteLeaseRelease = req.url?.match(
         /^\/v1\/services\/([^/]+)\/public-route-leases\/([^/]+)\/release$/
       );
