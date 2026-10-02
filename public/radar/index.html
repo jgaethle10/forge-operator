@@ -88,14 +88,26 @@
   </div>
   <div class="lower">
     <section class="panel">
+      <h2>Distribution</h2>
+      <div class="meta">Evercraft Clip only asserts publication after a verified provider receipt. A queued package is not a published post.</div>
+      <div id="distribution" style="margin-top:20px"></div>
+    </section>
+    <section class="panel">
       <h2>Propagation Lab</h2>
       <div class="meta">Cross-domain co-occurrence worth investigating. These are relationship candidates, never automatic causal claims.</div>
       <div id="propagation" style="margin-top:20px"></div>
     </section>
+  </div>
+  <div class="lower">
     <section class="panel">
       <h2>Source Health</h2>
       <div class="meta">Radar audits its own eyes. Failing collectors become visible instead of silently producing gaps.</div>
       <div id="source-health" style="margin-top:20px"></div>
+    </section>
+    <section class="panel">
+      <h2>Release Discipline</h2>
+      <div class="meta">Owned archive release and external distribution are separate authorities. Provider receipts are the only proof of social publication.</div>
+      <div class="quiet">Quiet is valid. Held is visible. Failed is not published. Published means the provider returned a post identifier and URL.</div>
     </section>
   </div>
 </main>
@@ -115,29 +127,33 @@ async function load() {
   const changes = document.getElementById('changes');
   const propagation = document.getElementById('propagation');
   const sourceHealth = document.getElementById('source-health');
+  const distribution = document.getElementById('distribution');
   const latestRelease = document.getElementById('latest-release');
   const corrections = document.getElementById('corrections');
   const cutoff = document.getElementById('cutoff');
 
   try {
-    const [healthRes, latestRes, sourceHealthRes, releaseIndexRes, correctionsRes] = await Promise.all([
+    const [healthRes, latestRes, sourceHealthRes, releaseIndexRes, correctionsRes, distributionRes] = await Promise.all([
       fetch('/api/radar/health', {cache:'no-store'}),
       fetch('/api/radar/latest', {cache:'no-store'}),
       fetch('/api/radar/source-health', {cache:'no-store'}),
       fetch('/api/radar/releases', {cache:'no-store'}),
-      fetch('/api/radar/corrections', {cache:'no-store'})
+      fetch('/api/radar/corrections', {cache:'no-store'}),
+      fetch('/api/radar/distribution', {cache:'no-store'})
     ]);
     const health = await healthRes.json();
     const latest = await latestRes.json();
     const sourceState = await sourceHealthRes.json();
     const releaseIndex = await releaseIndexRes.json();
     const correctionState = await correctionsRes.json();
+    const distributionState = await distributionRes.json();
 
     statusbar.innerHTML = [
       ['Resident', health.resident ? 'ON' : 'OFF'],
       ['Streams', health.stream_count ?? 0],
       ['Signals', latest.signal_count ?? 0],
       ['Sources', latest.independent_source_families ?? 0],
+      ['Clip', distributionState.enabled ? 'ARMED' : 'SAFE'],
       ['Status', latest.status || 'no edition']
     ].map(([label,value]) => '<span class="pill">'+esc(label)+': <strong>'+esc(value)+'</strong></span>').join('');
 
@@ -171,6 +187,24 @@ async function load() {
         </div>
       </div>
     `).join('') : '<div class="quiet">The Change Wall is quiet.</div>';
+
+    const distributionRows = Array.isArray(distributionState.outbox) ? distributionState.outbox : [];
+    distribution.innerHTML = distributionRows.length ? distributionRows.slice(0,6).map((item) => {
+      const receipt = item.receipt || {};
+      const state = receipt.status || 'queued';
+      const detail = receipt.url
+        ? '<a href="' + esc(receipt.url) + '">Provider receipt</a>'
+        : esc(receipt.reason || receipt.error || 'Awaiting a verified provider receipt');
+      return `
+        <div class="source-row">
+          <div>
+            <strong>${esc(item.release_id || item.slug)}</strong>
+            <div class="meta">${detail}</div>
+          </div>
+          <span class="source-state ${state === 'published' ? 'healthy' : state === 'failed' ? 'degraded' : 'warning'}">${esc(state)}</span>
+        </div>
+      `;
+    }).join('') : '<div class="quiet">No Radar release is waiting in the Clip outbox.</div>';
 
     const chains = Array.isArray(latest.propagation_candidates) ? latest.propagation_candidates : [];
     propagation.innerHTML = chains.length ? chains.map((item) => `
@@ -224,6 +258,7 @@ async function load() {
     changes.innerHTML = '';
     propagation.innerHTML = '';
     sourceHealth.innerHTML = '';
+    distribution.innerHTML = '';
     latestRelease.innerHTML = '';
     corrections.innerHTML = '';
   }
