@@ -1935,7 +1935,7 @@ export async function startEvercraftComputeNode({
             nwpsGauges: body.input?.nwps_gauges || process.env.FAIE_NWPS_GAUGES || [],
             officialCollectorsEnabled: body.input?.official_collectors_enabled !== false,
             nwsEnabled: body.input?.nws_enabled !== false,
-            internalToken: String(process.env.FAIE_INTERNAL_TOKEN || body.input?.internal_token || '')
+            internalToken: String(process.env.FAIE_INTERNAL_TOKEN || '')
           });
           const serviceId = `svc_${randomBytes(8).toString('hex')}`;
           services.set(serviceId, {
