@@ -111,6 +111,22 @@
       </div>
       <div class="portfolio-body" id="raven-providers"><div class="portfolio-empty">Reading Raven registry and Nexus probe contracts.</div></div>
       <div class="portfolio-note" id="raven-note">Registry evidence is not a claim of a live private Raven human runtime.</div>
+      <div class="providers" style="margin-top:18px">
+        <strong>Raven Command Desk</strong>
+        <form id="raven-command-form" style="margin-top:12px;display:grid;gap:10px">
+          <select id="raven-command-lane" aria-label="Raven command lane" style="width:100%;border:1px solid #c8c3b8;background:white;padding:12px 13px;font:inherit;color:#1c1b17">
+            <option value="operations">Operations</option>
+            <option value="research">Research</option>
+            <option value="security">Security</option>
+            <option value="publishing">Publishing</option>
+            <option value="infrastructure">Infrastructure</option>
+            <option value="quality">Quality</option>
+          </select>
+          <textarea id="raven-command-message" maxlength="4000" rows="4" placeholder="Describe the work for Raven to route through Systemia." aria-label="Raven work request" style="width:100%;resize:vertical;border:1px solid #c8c3b8;background:white;padding:12px 13px;font:inherit;color:#1c1b17"></textarea>
+          <button id="raven-command-button" type="submit" style="border:1px solid #25241f;background:#25241f;color:white;padding:12px 14px;font:inherit;font-size:13px;font-weight:650;cursor:pointer">Route through Systemia</button>
+        </form>
+        <div id="raven-command-result" style="font-size:11px;color:#777269;line-height:1.55;margin-top:10px">Execution authority remains gated outside this planning surface.</div>
+      </div>
     </article>
   </div>
 </section>
@@ -132,6 +148,38 @@ const authScreen=document.getElementById("auth-screen");
 const appShell=document.getElementById("app-shell");
 const appFooter=document.getElementById("app-footer");
 const signout=document.getElementById("signout");
+const ravenCommandForm=document.getElementById("raven-command-form");
+const ravenCommandButton=document.getElementById("raven-command-button");
+const ravenCommandResult=document.getElementById("raven-command-result");
+
+ravenCommandForm?.addEventListener("submit",async(event)=>{
+  event.preventDefault();
+  const message=document.getElementById("raven-command-message").value.trim();
+  const lane=document.getElementById("raven-command-lane").value;
+  if(message.length<3){
+    ravenCommandResult.textContent="Add a little more detail before routing.";
+    return;
+  }
+  ravenCommandButton.disabled=true;
+  ravenCommandResult.textContent="Routing through Systemia…";
+  try{
+    const response=await fetch("/api/raven/command-plan",{
+      method:"POST",
+      headers:{"content-type":"application/json"},
+      body:JSON.stringify({message,lane})
+    });
+    const payload=await response.json();
+    if(response.status===401){showLogin("Your session expired. Sign in again.");return;}
+    if(!response.ok||!payload.ok) throw new Error(payload.state||"raven_command_plan_failed");
+    const teams=(payload.routed_teams||[]).map(row=>row.label).join(", ")||"Systemia";
+    const holds=(payload.holds||[]).filter(Boolean);
+    ravenCommandResult.textContent="Planned · "+teams+(holds.length?" · Held: "+holds.join(", "):" · No execution authority granted");
+  }catch(error){
+    ravenCommandResult.textContent="Planning held · "+String(error?.message||error);
+  }finally{
+    ravenCommandButton.disabled=false;
+  }
+});
 
 function showLogin(message=""){
   authScreen.classList.add("visible");

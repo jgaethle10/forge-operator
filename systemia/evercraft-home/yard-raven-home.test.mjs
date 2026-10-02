@@ -43,6 +43,22 @@ test("Raven overview stays a read surface and does not add execution endpoints",
 });
 
 
+
+test("Raven Command Desk routes through Systemia without inventing execution",()=>{
+  assert.ok(server.includes('url.pathname === "/api/raven/command-plan"'));
+  assert.ok(server.includes('sessionFor(req, "home.systemia.plan")'));
+  assert.equal(server.includes('"/api/raven/execute"'),false);
+  assert.equal(server.includes('"/api/raven/dispatch"'),false);
+  for(const required of [
+    "Raven Command Desk",
+    "Route through Systemia",
+    "/api/raven/command-plan",
+    "Execution authority remains gated outside this planning surface.",
+  ]){
+    assert.ok(html.includes(required)||server.includes(required),"missing Raven Command Desk contract: "+required);
+  }
+});
+
 test("Home inline application JavaScript remains syntactically valid",()=>{
   const match=html.match(/<script>([\s\S]*?)<\/script>/);
   assert.ok(match,"inline script missing");
