@@ -19,6 +19,7 @@ import { registerSpecialistHandoffMcps } from './systemia/mcp/specialist-handoff
 import { registerRemoteOperatorMcp } from './systemia/remote-operator/mcp-gateway.mjs';
 import { registerNotificationFabricRoutes } from './systemia/notification-fabric/http.mjs';
 import { registerRadarRoutes } from './systemia/radar/http.mjs';
+import { registerInstantWorkRoutes } from './systemia/commerce/instant-work.mjs';
 
 dotenv.config();
 
@@ -420,6 +421,12 @@ function chumHumanReviewUrl(publicId: string): string {
   target.searchParams.set('public_id', publicId);
   return target.toString();
 }
+
+registerInstantWorkRoutes(app, {
+  loadMachineCatalog: loadPublicMachineCatalog,
+  requestOrigin,
+  limiter: rateLimit(240, 60 * 60 * 1000),
+});
 
 async function persistChumAttributionEvent(event: unknown) {
   if (!chumAttributionSinkUrl) {
@@ -1016,6 +1023,8 @@ app.get('/api/chum/go/:publicId', rateLimit(240, 60 * 60 * 1000), async (req: Re
   const providerClaim = String(req.query.provider || 'unknown').trim().toLowerCase().slice(0, 64);
   const surface = String(req.query.surface || 'chum_pain_page').trim().toLowerCase().slice(0, 64);
   const intent = String(req.query.q || '').slice(0, 2000);
+  const selectedOfferKey = String(req.query.offer_key || '').trim().slice(0, 120);
+  const paymentOrderId = String(req.query.order_id || '').trim().slice(0, 96);
 
   try {
     const offer = findChumOffer(publicId);
@@ -1035,6 +1044,8 @@ app.get('/api/chum/go/:publicId', rateLimit(240, 60 * 60 * 1000), async (req: Re
     const landing = new URL(targetUrl);
     landing.searchParams.set('ec_source', 'chum');
     landing.searchParams.set('ec_surface', surface);
+    if (selectedOfferKey) landing.searchParams.set('offer_key', selectedOfferKey);
+    if (paymentOrderId) landing.searchParams.set('evercraft_order_id', paymentOrderId);
 
     res.setHeader('Cache-Control', 'no-store');
     res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
