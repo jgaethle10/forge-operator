@@ -77,6 +77,10 @@ export function normalizeComputeOffer(input={}){
     offer_id:String(input.offer_id||'').trim(),
     provider_id:String(input.provider_id||'').trim(),
     market:String(input.market||'unknown').trim().toLowerCase(),
+    routing_priority:Math.max(
+      0,
+      Math.floor(n(input.routing_priority,100))
+    ),
     access_class:String(input.access_class||'commercial_capacity').trim(),
     endpoint:input.endpoint?String(input.endpoint).trim():null,
     resources:{
@@ -181,6 +185,7 @@ export function evaluateComputeOffer(demandInput,offerInput){
 export function rankComputeOffers(demand,offers=[]){
   const evaluated=offers.map((offer)=>evaluateComputeOffer(demand,offer));
   const eligible=evaluated.filter((x)=>x.eligible).sort((a,b)=>
+    Number(a.offer.routing_priority||100)-Number(b.offer.routing_priority||100) ||
     b.score-a.score ||
     String(a.offer.offer_id).localeCompare(String(b.offer.offer_id))
   );
@@ -232,7 +237,14 @@ export async function negotiateCompute({
     try{
       const result=await adapter.discover({demand});
       for(const raw of result?.offers||[]){
-        discovered.push(normalizeComputeOffer({...raw,market:raw.market||market}));
+        discovered.push(normalizeComputeOffer({
+          ...raw,
+          market:raw.market||market,
+          routing_priority:
+            raw.routing_priority??
+            adapter.routing_priority??
+            100,
+        }));
       }
       events.push({
         type:'market.discovered',
@@ -267,7 +279,15 @@ export async function negotiateCompute({
             quote_count:Number(quote?.offers?.length||0),
             receipt:quote?.receipt||null,
           });
-          const quoted=(quote?.offers||[]).map((raw)=>normalizeComputeOffer({...raw,market:raw.market||selected.market}));
+          const quoted=(quote?.offers||[]).map((raw)=>normalizeComputeOffer({
+          ...raw,
+          market:raw.market||selected.market,
+          routing_priority:
+            raw.routing_priority??
+            selected.routing_priority??
+            adapter.routing_priority??
+            100,
+        }));
           ranking=rankComputeOffers(demand,quoted);
           selected=ranking.eligible[0]?.offer||null;
         }catch(error){
