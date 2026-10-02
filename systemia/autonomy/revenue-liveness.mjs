@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 
 export const WORKFLOW_REQUIREMENTS = Object.freeze([
   { lane: 'portfolio_sentinel', workflow: '.github/workflows/systemia-portfolio-sentinel.yml', max_age_minutes: 20, repair: 'dispatch' },
@@ -216,7 +217,7 @@ function writeGithubOutput(file, key, value) {
   fs.appendFileSync(file, `${key}=${String(value)}\n`);
 }
 
-if (process.argv[1] && import.meta.url === new URL('file://' + path.resolve(process.argv[1])).href) {
+if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
   const workflowSnapshot = readJson(arg('--workflows', 'artifacts/autonomy-revenue/workflows.json'), { workflow_runs: [] });
   const machineCatalog = readJson(arg('--catalog', 'public/.well-known/evercraft-machine-catalog.json'), { offers: [] });
   const agentCommerce = readJson(arg('--agent-commerce', 'public/.well-known/evercraft-agent-commerce.json'), { offers: [] });
