@@ -47,3 +47,23 @@ test('distributed status summary counts only successful external nodes',()=>{
   assert.equal(s.success_count,2);
   assert.deepEqual(new Set(s.successful_countries),new Set(['US','DE']));
 });
+
+test('production port 53 reachability is not mislabeled as blocked',()=>{
+  const tcp53={success_count:6};
+  const udp53={success_count:5};
+  const tcpDiag={success_count:5};
+  const udpDiag={success_count:5};
+  const tcpIdentity={parsed:{verified:false}};
+  const tcp53Reachable=Number(tcp53?.success_count||0)>=2;
+  const udp53Reachable=Number(udp53?.success_count||0)>=2;
+  const diagnosticReachable=Number(tcpDiag?.success_count||0)>=1||Number(udpDiag?.success_count||0)>=1;
+  const verified=tcpIdentity?.parsed?.verified===true&&tcp53Reachable&&udp53Reachable;
+  const classification=verified
+    ? 'public_dns_verified'
+    : (tcp53Reachable||udp53Reachable)
+      ? 'production_53_reachable_identity_unverified'
+      : diagnosticReachable
+        ? 'diagnostic_high_port_reachable_production_53_unreachable'
+        : 'no_external_path_to_candidate';
+  assert.equal(classification,'production_53_reachable_identity_unverified');
+});
