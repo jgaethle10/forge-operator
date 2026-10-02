@@ -183,7 +183,7 @@ export const ATTACK_IMPLEMENTATION_MAP=Object.freeze({
       "systemia/daytrade-lens/edge-quote-microstructure.mjs",
       "systemia/daytrade-lens/edge-depth-data-contract.mjs"
     ],
-    gap:"The multi-level depth schema is ready, but no real historical multi-level depth provider is connected. Visible NBBO touch size remains insufficient evidence for true low-depth stress."
+    gap:"The multi-level depth schema is ready, but no real historical multi-level depth provider is connected. Visible NBBO touch size is not full market depth and remains insufficient evidence for true low-depth stress."
   },
   "narrative-blind label permutation":{
     status:"implemented",
