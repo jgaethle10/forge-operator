@@ -17,7 +17,7 @@
   "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/opportunity-fabric/ai-discovery.json",
   "registry_name": null,
   "mcp": null,
-  "authority": "public capability discovery plus verified private metadata-first planning, non-binding sourcing, and multi-party assembly; no public protected-file delivery, payment, or final legal-agreement authority is claimed",
+  "authority": "public capability discovery plus verified private metadata-first planning, non-binding sourcing, transparent sourcing comparison, and multi-party assembly; no public protected-file delivery, payment, or final legal-agreement authority is claimed",
   "human_confirmation_required": true,
   "boundaries": [
     "public matching must not require protected creative files or confidential material",
@@ -39,7 +39,12 @@
     "sourcing availability and quote responses create no payment obligation or work acceptance",
     "shortlisting a sourcing response creates no team membership or contract",
     "only shortlisted Available or Limited responses from one project and one blueprint can seed sourced team invitations",
-    "accepting a sourced team invitation materializes the package as Offered and Not accepted"
+    "accepting a sourced team invitation materializes the package as Offered and Not accepted",
+    "sourcing comparison uses explicit fixed weights and preserves evidence classes",
+    "quote availability and lead time are participant-supplied rather than independently observed",
+    "Fabric history uses accepted Opportunity Fabric work-package records only and missing history is neutral",
+    "prices are compared only against same-currency peers; no FX normalization is claimed",
+    "comparison ordering requires human decision and creates no partner selection shortlist membership contract rights work acceptance or payment"
   ],
   "commercial": null,
   "human_start_url": null,
@@ -54,5 +59,11 @@
   "machine_commerce_handoff_state": null,
   "machine_commerce_public_id": null,
   "machine_commerce_tool": null,
-  "live_canary_evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/systemia/opportunity-fabric/runtime.json"
+  "live_canary_evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/systemia/opportunity-fabric/runtime.json",
+  "runtime_state": "base44_private_runtime_v1_4_transparent_sourcing_comparison_verified",
+  "sourcing_comparison_state": "verified_private_runtime",
+  "sourcing_comparison_human_decision_required": true,
+  "sourcing_comparison_selected_partner_created": false,
+  "sourcing_comparison_receipt_backed": true,
+  "protected_workflow_entities_runtime_write_only": 11
 }
