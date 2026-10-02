@@ -56,7 +56,7 @@ export function elevenLabsVeoEndpoint(
     capabilities:[{
       task:'video',
       inputModes:['text','image_reference','start_frame','end_frame'],
-      requirements:['reference_identity','commercial_rights','provenance_receipt','timing_control'],
+      requirements:['reference_identity','reference_environment','commercial_rights','provenance_receipt','timing_control'],
       aspectRatios:['16:9','9:16'],
       maxDurationSec:8,
       durationOptions:[4,6,8],
@@ -64,6 +64,7 @@ export function elevenLabsVeoEndpoint(
       maxReferences:3,
       referenceRoles:['identity','environment','style','start_frame','end_frame'],
       identityContinuityViaStartFrame:true,
+      environmentContinuityViaStartFrame:true,
       framesExclusiveWithReferences:true,
       referenceImageDurationOptions:[8],
       locatorKinds:['inline_base64','provider_asset','provider_generation'],
