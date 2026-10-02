@@ -8,8 +8,58 @@ import { sendWebPush } from './web-push.mjs';
 const PURPOSES = new Set(['transactional', 'operational', 'safety', 'reminder', 'marketing']);
 const PRIORITIES = new Set(['low', 'normal', 'high', 'critical']);
 
-function normArray(value) {
-  return [...new Set((Array.isArray(value) ? value : []).map((x) => String(x).trim()).filter(Boolean))];
+function normArray(value, label = 'values', maxItems = 100) {
+  const normalized = [...new Set((Array.isArray(value) ? value : []).map((x) => String(x).trim()).filter(Boolean))];
+  if (normalized.length > maxItems) throw new Error(`${label} exceeds the ${maxItems}-item Relay limit.`);
+  return normalized;
+}
+
+function boundedText(value, label, maxLength) {
+  const text = String(value ?? '').trim();
+  if (text.length > maxLength) throw new Error(`${label} exceeds the ${maxLength}-character Relay limit.`);
+  return text;
+}
+
+function boundedInteger(value, label, fallback, minimum, maximum) {
+  const candidate = value === undefined || value === null || value === '' ? fallback : Number(value);
+  if (!Number.isFinite(candidate) || !Number.isInteger(candidate) || candidate < minimum || candidate > maximum) {
+    throw new Error(`${label} must be an integer between ${minimum} and ${maximum}.`);
+  }
+  return candidate;
+}
+
+function normalizedData(value) {
+  if (value === undefined || value === null) return {};
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    throw new Error('Notification data must be a JSON object.');
+  }
+  let serialized;
+  try { serialized = JSON.stringify(value); }
+  catch { throw new Error('Notification data must be JSON serializable.'); }
+  if (Buffer.byteLength(serialized, 'utf8') > 16384) {
+    throw new Error('Notification data exceeds the 16 KiB Relay limit.');
+  }
+  return JSON.parse(serialized);
+}
+
+function safeDeliveryUrl(value, label) {
+  if (value === undefined || value === null || String(value).trim() === '') return null;
+  const raw = String(value).trim();
+  if (raw.startsWith('/') && !raw.startsWith('//')) return raw;
+  let parsed;
+  try { parsed = new URL(raw); }
+  catch { throw new Error(`${label} must be a relative path or HTTPS URL.`); }
+  if (parsed.protocol !== 'https:' || parsed.username || parsed.password) {
+    throw new Error(`${label} must be a relative path or credential-free HTTPS URL.`);
+  }
+  return parsed.toString();
+}
+
+function optionalExpiry(value) {
+  if (value === undefined || value === null || String(value).trim() === '') return null;
+  const ms = Date.parse(String(value));
+  if (!Number.isFinite(ms)) throw new Error('expires_at must be a valid timestamp.');
+  return new Date(ms).toISOString();
 }
 
 function urgency(priority) {
@@ -31,26 +81,37 @@ function validateIntent(raw) {
     throw new Error('Marketing notifications require consent_basis=explicit_opt_in.');
   }
   const now = new Date().toISOString();
+  const acknowledgement = raw?.acknowledgement?.required === true ? {
+    required: true,
+    mode: raw.acknowledgement.mode === 'all' ? 'all' : 'any',
+    within_seconds: boundedInteger(raw.acknowledgement.within_seconds, 'acknowledgement.within_seconds', 300, 15, 7 * 24 * 60 * 60),
+    max_escalations: boundedInteger(raw.acknowledgement.max_escalations, 'acknowledgement.max_escalations', 2, 0, 5),
+    escalation_interval_seconds: boundedInteger(raw.acknowledgement.escalation_interval_seconds, 'acknowledgement.escalation_interval_seconds', 300, 15, 24 * 60 * 60),
+    title_prefix: boundedText(raw.acknowledgement.title_prefix || 'UNACKNOWLEDGED', 'acknowledgement.title_prefix', 40),
+    due_at: raw.acknowledgement.due_at ? String(raw.acknowledgement.due_at) : null,
+  } : null;
   return {
     schema: 'systemia.notification.intent.v2',
-    id: String(raw.id || crypto.randomUUID()),
-    product: String(raw.product || 'unknown').trim(),
+    id: boundedText(raw.id || crypto.randomUUID(), 'Notification id', 160),
+    product: boundedText(raw.product || 'unknown', 'Product', 120),
     purpose,
     priority,
-    title: title.slice(0, 140),
-    body: body.slice(0, 1200),
-    url: raw.url ? String(raw.url) : null,
-    icon: raw.icon ? String(raw.icon) : '/favicon.ico',
-    badge: raw.badge ? String(raw.badge) : null,
-    recipient_ids: normArray(raw.recipient_ids),
-    audiences: normArray(raw.audiences),
-    topics: normArray(raw.topics),
-    data: raw.data && typeof raw.data === 'object' ? raw.data : {},
-    evidence_state: String(raw.evidence_state || 'not_applicable'),
-    consent_basis: raw.consent_basis || (purpose === 'safety' ? 'safety_service' : 'service_relationship'),
-    ttl_seconds: Math.max(0, Math.min(Number(raw.ttl_seconds ?? 3600), 2419200)),
-    dedupe_key: raw.dedupe_key ? String(raw.dedupe_key) : null,
-    dedupe_window_seconds: Math.max(0, Number(raw.dedupe_window_seconds ?? 900)),
+    title: boundedText(title, 'Notification title', 140),
+    body: boundedText(body, 'Notification body', 1200),
+    url: safeDeliveryUrl(raw.url, 'Notification URL'),
+    icon: safeDeliveryUrl(raw.icon || '/favicon.ico', 'Notification icon'),
+    badge: safeDeliveryUrl(raw.badge, 'Notification badge'),
+    recipient_ids: normArray(raw.recipient_ids, 'recipient_ids', 500),
+    audiences: normArray(raw.audiences, 'audiences', 100),
+    topics: normArray(raw.topics, 'topics', 100),
+    data: normalizedData(raw.data),
+    acknowledgement,
+    evidence_state: boundedText(raw.evidence_state || 'not_applicable', 'evidence_state', 120),
+    consent_basis: boundedText(raw.consent_basis || (purpose === 'safety' ? 'safety_service' : 'service_relationship'), 'consent_basis', 120),
+    ttl_seconds: boundedInteger(raw.ttl_seconds, 'ttl_seconds', 3600, 0, 2419200),
+    expires_at: optionalExpiry(raw.expires_at),
+    dedupe_key: raw.dedupe_key ? boundedText(raw.dedupe_key, 'dedupe_key', 256) : null,
+    dedupe_window_seconds: boundedInteger(raw.dedupe_window_seconds, 'dedupe_window_seconds', 900, 0, 2419200),
     created_at: raw.created_at || now,
   };
 }
@@ -77,6 +138,8 @@ function safeNotificationPayload(intent) {
     icon: intent.icon,
     badge: intent.badge,
     data: intent.data,
+    acknowledgement: intent.acknowledgement,
+    expires_at: intent.expires_at,
     created_at: intent.created_at,
   };
 }
@@ -116,6 +179,10 @@ function isQuietHours(subscription, now = new Date()) {
   return start < end ? current >= start && current < end : current >= start || current < end;
 }
 
+function pushTopic(notificationId) {
+  return crypto.createHash('sha256').update(String(notificationId || '')).digest('base64url').slice(0, 32);
+}
+
 function routeStrategy(intent, realtimeDelivered, subscription, now = new Date()) {
   const urgent = intent.priority === 'critical' || intent.purpose === 'safety';
   if (!urgent && isQuietHours(subscription, now)) {
@@ -135,28 +202,73 @@ export function createNotificationFabric(options = {}) {
   const vapidPublicKey = options.vapidPublicKey ?? process.env.EVERCRAFT_VAPID_PUBLIC_KEY ?? '';
   const vapidPrivateKey = options.vapidPrivateKey ?? process.env.EVERCRAFT_VAPID_PRIVATE_KEY ?? '';
   const vapidSubject = options.vapidSubject ?? process.env.EVERCRAFT_VAPID_SUBJECT ?? '';
-  const immediateBudgetPerHour = Number(options.immediateBudgetPerHour ?? process.env.EVERCRAFT_NOTIFICATION_IMMEDIATE_BUDGET ?? 4);
+  const immediateBudgetPerHour = boundedInteger(
+    options.immediateBudgetPerHour ?? process.env.EVERCRAFT_NOTIFICATION_IMMEDIATE_BUDGET,
+    'EVERCRAFT_NOTIFICATION_IMMEDIATE_BUDGET',
+    4,
+    1,
+    1000
+  );
+  const pushTimeoutMs = boundedInteger(
+    options.pushTimeoutMs ?? process.env.EVERCRAFT_NOTIFICATION_PUSH_TIMEOUT_MS,
+    'EVERCRAFT_NOTIFICATION_PUSH_TIMEOUT_MS',
+    10000,
+    250,
+    30000
+  );
 
-  async function dispatchIntent(rawIntent) {
-    const intent = validateIntent(rawIntent);
-    const dedupeKey = intent.dedupe_key ? `${intent.product}|${intent.dedupe_key}` : null;
-    if (dedupeKey && store.seenDedupe(dedupeKey, intent.dedupe_window_seconds)) {
-      const event = store.recordDelivery({ schema: 'systemia.notification.delivery.v2', notification_id: intent.id, status: 'deduped', at: new Date().toISOString(), intent });
-      return { intent, matched: 0, accepted: 0, realtime_delivered: 0, inboxed: 0, deduped: true, receipts: [event] };
-    }
-
+  function resolveTargets(intent) {
     const matched = store.listSubscriptions().filter((sub) => matchesSubscription(sub, intent));
+    const matchedPrincipals = new Set(matched.map((sub) => sub.principal_id));
     const livePrincipals = realtimeHub.matchPrincipals({
       recipient_ids: intent.recipient_ids,
       audiences: intent.audiences,
       product: intent.product,
     });
-    const principals = new Set();
-    for (const sub of matched) principals.add(sub.principal_id);
-    for (const principal of livePrincipals) principals.add(principal);
-    if (intent.purpose !== 'marketing') {
+    const principals = new Set(matchedPrincipals);
+    if (intent.purpose === 'marketing') {
+      for (const principal of livePrincipals) {
+        if (matchedPrincipals.has(principal)) principals.add(principal);
+      }
+    } else {
+      for (const principal of livePrincipals) principals.add(principal);
       for (const principal of intent.recipient_ids) principals.add(principal);
     }
+    return { matched, principals };
+  }
+
+  async function dispatchIntent(rawIntent) {
+    const intent = validateIntent(rawIntent);
+    const dispatchNow = options.now ? new Date(options.now).getTime() : Date.now();
+    if (intent.expires_at && Date.parse(intent.expires_at) <= dispatchNow) {
+      const event = store.recordDelivery({
+        schema: 'systemia.notification.delivery.v3',
+        notification_id: intent.id,
+        product: intent.product,
+        purpose: intent.purpose,
+        status: 'expired',
+        expires_at: intent.expires_at,
+        at: new Date(dispatchNow).toISOString(),
+      });
+      return {
+        intent,
+        matched: 0,
+        accepted: 0,
+        realtime_delivered: 0,
+        inboxed: 0,
+        targeted_principal_ids: [],
+        expired: true,
+        deduped: false,
+        receipts: [event],
+      };
+    }
+    const dedupeKey = intent.dedupe_key ? `${intent.product}|${intent.dedupe_key}` : null;
+    if (dedupeKey && store.seenDedupe(dedupeKey, intent.dedupe_window_seconds)) {
+      const event = store.recordDelivery({ schema: 'systemia.notification.delivery.v2', notification_id: intent.id, status: 'deduped', at: new Date().toISOString(), intent });
+      return { intent, matched: 0, accepted: 0, realtime_delivered: 0, inboxed: 0, targeted_principal_ids: [], deduped: true, receipts: [event] };
+    }
+
+    const { matched, principals } = resolveTargets(intent);
 
     const payload = safeNotificationPayload(intent);
     const receipts = [];
@@ -202,7 +314,7 @@ export function createNotificationFabric(options = {}) {
         at: new Date().toISOString(),
         intent,
       }));
-      return { intent, matched: 0, accepted: 0, realtime_delivered: 0, inboxed: 0, deduped: false, receipts };
+      return { intent, matched: 0, accepted: 0, realtime_delivered: 0, inboxed: 0, targeted_principal_ids: [], deduped: false, receipts };
     }
 
     const maxAttempts = Math.max(1, Math.min(Number(options.pushAttempts ?? process.env.EVERCRAFT_NOTIFICATION_PUSH_ATTEMPTS ?? 3), 5));
@@ -261,6 +373,9 @@ export function createNotificationFabric(options = {}) {
       let attempts = 0;
       for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
         attempts = attempt;
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), pushTimeoutMs);
+        timeout.unref?.();
         try {
           result = await sendPush(subscription, payload, {
             vapidPublicKey,
@@ -268,9 +383,18 @@ export function createNotificationFabric(options = {}) {
             vapidSubject,
             ttlSeconds: intent.ttl_seconds,
             urgency: urgency(intent.priority),
+            topic: pushTopic(intent.id),
+            signal: controller.signal,
           });
         } catch (error) {
-          result = { ok: false, status: 0, responseBody: String(error?.message || error) };
+          const timedOut = controller.signal.aborted;
+          result = {
+            ok: false,
+            status: 0,
+            responseBody: timedOut ? 'Push transport timed out.' : String(error?.message || error),
+          };
+        } finally {
+          clearTimeout(timeout);
         }
         if (result.ok || result.status === 404 || result.status === 410) break;
         const retryable = result.status === 0 || result.status === 429 || result.status >= 500;
@@ -306,6 +430,7 @@ export function createNotificationFabric(options = {}) {
       intent,
       matched: matched.length,
       targeted_principals: principals.size,
+      targeted_principal_ids: [...principals],
       accepted,
       delivered: accepted,
       realtime_delivered: realtimeDelivered,
@@ -404,6 +529,11 @@ export function createNotificationFabric(options = {}) {
       return store.removeSubscription(String(id || ''));
     },
     listInbox(principalId, options = {}) { return store.listInbox(principalId, options); },
+    prepareIntent(rawIntent) { return validateIntent(rawIntent); },
+    resolvePrincipals(rawIntent) {
+      const intent = validateIntent(rawIntent);
+      return [...resolveTargets(intent).principals];
+    },
     acknowledge,
     seen,
     dispatchIntent,

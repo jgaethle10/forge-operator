@@ -9,7 +9,7 @@ self.addEventListener('push', (event) => {
     data: { ...(payload.data || {}), url: payload.url || '/', notification_id: payload.id || null },
     tag: payload.data?.collapse_key || payload.id || undefined,
     renotify: payload.priority === 'critical',
-    requireInteraction: payload.priority === 'critical',
+    requireInteraction: payload.priority === 'critical' || payload.acknowledgement?.required === true,
   };
   event.waitUntil(self.registration.showNotification(title, options));
 });

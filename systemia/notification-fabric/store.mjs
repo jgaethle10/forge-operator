@@ -167,6 +167,12 @@ export function createNotificationStore({ dataDir, receiptSecret = '' }) {
       const items = unreadOnly ? state.items.filter((item) => !item.seen_at) : state.items;
       return items.slice(0, boundedLimit(options.limit, 50, 500));
     },
+    getInboxItem(principalId, notificationId) {
+      const principal = String(principalId || '').trim();
+      if (!principal) return null;
+      const state = safeReadJson(inboxFile(principal), { schema: 'systemia.notification-inbox.v1', principal_id: principal, items: [] });
+      return state.items.find((item) => item.id === String(notificationId || '')) || null;
+    },
     acknowledgeInbox(principalId, notificationId, options = {}) {
       const principal = String(principalId || '').trim();
       const file = inboxFile(principal);

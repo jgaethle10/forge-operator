@@ -135,16 +135,22 @@ export function prepareWebPushRequest(subscription, payload, options = {}) {
   }
 
   const token = vapidJwt(endpoint, subject, publicKey, privateKey, options.now);
+  const topic = String(options.topic || '').trim();
+  if (topic && !/^[A-Za-z0-9_-]{1,32}$/.test(topic)) {
+    throw new Error('Web Push Topic must be 1-32 URL-safe base64 characters.');
+  }
+  const headers = {
+    Authorization: `vapid t=${token}, k=${publicKey}`,
+    'Content-Encoding': 'aes128gcm',
+    'Content-Type': 'application/octet-stream',
+    TTL: String(Math.max(0, Math.min(Number(options.ttlSeconds ?? 3600), 2419200))),
+    Urgency: options.urgency || 'normal',
+  };
+  if (topic) headers.Topic = topic;
   return {
     endpoint,
     body: encryptWebPushPayload(subscription, payload),
-    headers: {
-      Authorization: `vapid t=${token}, k=${publicKey}`,
-      'Content-Encoding': 'aes128gcm',
-      'Content-Type': 'application/octet-stream',
-      TTL: String(Math.max(0, Math.min(Number(options.ttlSeconds ?? 3600), 2419200))),
-      Urgency: options.urgency || 'normal',
-    },
+    headers,
   };
 }
 

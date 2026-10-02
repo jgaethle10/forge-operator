@@ -39,7 +39,7 @@ jobs:
           node-version: "22"
 
       - name: Run focused Relay suite
-        run: node --test systemia/notification-fabric/notification-fabric.test.mjs
+        run: node --test systemia/notification-fabric/*.test.mjs
 
       - name: Syntax-check runtime modules
         run: |
@@ -48,4 +48,6 @@ jobs:
           node --check systemia/notification-fabric/store.mjs
           node --check systemia/notification-fabric/realtime-hub.mjs
           node --check systemia/notification-fabric/session-token.mjs
+          node --check systemia/notification-fabric/outbox.mjs
+          node --check systemia/notification-fabric/worker.mjs
           node --check systemia/notification-fabric/web-push.mjs

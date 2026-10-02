@@ -108,6 +108,18 @@ export async function connectEvercraftRelay(options: RelayConnectionOptions) {
   options.onState?.('connected');
   const reader = response.body.getReader();
   const decoder = new TextDecoder();
+  const seenNotificationIds = new Set<string>();
+  const rememberNotificationId = (value: unknown) => {
+    const id = String(value || '').trim();
+    if (!id) return false;
+    if (seenNotificationIds.has(id)) return true;
+    seenNotificationIds.add(id);
+    if (seenNotificationIds.size > 500) {
+      const oldest = seenNotificationIds.values().next().value;
+      if (oldest) seenNotificationIds.delete(oldest);
+    }
+    return false;
+  };
   let buffer = '';
   try {
     while (true) {
@@ -120,7 +132,10 @@ export async function connectEvercraftRelay(options: RelayConnectionOptions) {
         buffer = buffer.slice(boundary + 2);
         const parsed = parseSseFrame(frame);
         if (parsed?.event === 'relay.ready') options.onReady?.(parsed.payload);
-        else if (parsed?.event === 'notification') options.onNotification?.(parsed.payload);
+        else if (parsed?.event === 'notification') {
+          const duplicate = rememberNotificationId(parsed.payload?.id || parsed.id);
+          if (!duplicate) options.onNotification?.(parsed.payload);
+        }
         boundary = buffer.indexOf('\n\n');
       }
     }

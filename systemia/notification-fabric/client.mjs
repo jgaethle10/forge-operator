@@ -14,17 +14,16 @@ export function createNotificationClient(options = {}) {
 
   if (!token) throw new Error('Notification Fabric ingest token is required.');
 
-  async function post(pathname, payload) {
+  async function request(pathname, init = {}) {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), timeoutMs);
     try {
       const response = await fetchImpl(`${baseUrl}${pathname}`, {
-        method: 'POST',
+        ...init,
         headers: {
-          'content-type': 'application/json',
           authorization: `Bearer ${token}`,
+          ...(init.headers || {}),
         },
-        body: JSON.stringify(payload),
         signal: controller.signal,
       });
       const body = await response.json().catch(() => ({}));
@@ -37,9 +36,37 @@ export function createNotificationClient(options = {}) {
     }
   }
 
+  async function post(pathname, payload, extraHeaders = {}) {
+    return request(pathname, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        ...extraHeaders,
+      },
+      body: JSON.stringify(payload),
+    });
+  }
+
   return {
     notify(intent) { return post('/api/notifications/intents', intent); },
     signal(signal) { return post('/api/notifications/signals', signal); },
+    enqueue(intent, optionsEnqueue = {}) {
+      const headers = optionsEnqueue.idempotencyKey ? { 'idempotency-key': String(optionsEnqueue.idempotencyKey) } : {};
+      return post('/api/notifications/jobs', { intent, max_attempts: optionsEnqueue.maxAttempts }, headers);
+    },
+    enqueueSignal(signal, optionsEnqueue = {}) {
+      const headers = optionsEnqueue.idempotencyKey ? { 'idempotency-key': String(optionsEnqueue.idempotencyKey) } : {};
+      return post('/api/notifications/signal-jobs', { signal, max_attempts: optionsEnqueue.maxAttempts }, headers);
+    },
+    getJob(jobId) {
+      return request(`/api/notifications/jobs/${encodeURIComponent(String(jobId))}`, { method: 'GET' });
+    },
+    requeueJob(jobId, optionsRequeue = {}) {
+      return post(
+        `/api/notifications/jobs/${encodeURIComponent(String(jobId))}/requeue`,
+        { max_attempts: optionsRequeue.maxAttempts }
+      );
+    },
     issueSession(input) { return post('/api/notifications/session-tokens', input); },
   };
 }
