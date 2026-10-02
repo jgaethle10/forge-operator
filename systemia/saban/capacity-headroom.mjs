@@ -14,8 +14,12 @@ function rightSizeScore(offer,resources){
   const memNeed=Math.max(1,Number(resources.memory_mb||1));
   const cpuRatio=Number(offer.resources?.cpu_units||0)/cpuNeed;
   const memRatio=Number(offer.resources?.memory_mb||0)/memNeed;
-  if(cpuRatio<1||memRatio<1)return Infinity;
-  return Math.max(cpuRatio,memRatio);
+  const gpuNeed=Math.max(0,Math.floor(Number(resources.gpu_count||0)));
+  const gpuRatio=gpuNeed>0
+    ? Number(offer.resources?.gpu_count||0)/gpuNeed
+    : 1;
+  if(cpuRatio<1||memRatio<1||gpuRatio<1)return Infinity;
+  return Math.max(cpuRatio,memRatio,gpuRatio);
 }
 
 export function buildForecastHeadroomReservations({
@@ -66,7 +70,17 @@ export function buildForecastHeadroomReservations({
       .filter(offer=>
         Number(offer.resources?.cpu_units||0)>=Number(r.cpu_units||0) &&
         Number(offer.resources?.memory_mb||0)>=Number(r.memory_mb||0) &&
-        Number(offer.resources?.storage_gb||0)>=Number(r.storage_gb||0)
+        Number(offer.resources?.storage_gb||0)>=Number(r.storage_gb||0) &&
+        Number(offer.resources?.gpu_count||0)>=Number(r.gpu_count||0) &&
+        (
+          !Array.isArray(r.gpu_models) ||
+          r.gpu_models.length===0 ||
+          r.gpu_models.every(model=>
+            (offer.resources?.gpu_models||[])
+              .map(x=>String(x).toLowerCase())
+              .includes(String(model).toLowerCase())
+          )
+        )
       )
       .filter(offer=>
         Number(r.cpu_units||0)<=Number(offer.resources.cpu_units||0)*fraction &&
@@ -92,6 +106,8 @@ export function buildForecastHeadroomReservations({
         cpu_units:Number(r.cpu_units||0),
         memory_mb:Number(r.memory_mb||0),
         storage_gb:Number(r.storage_gb||0),
+        gpu_count:Math.max(0,Math.floor(Number(r.gpu_count||0))),
+        gpu_models:Array.isArray(r.gpu_models)?r.gpu_models:[],
       },
       reason:'forecast_growth_without_current_queue_pressure',
       projected_growth:Number(growth.toFixed(3)),
