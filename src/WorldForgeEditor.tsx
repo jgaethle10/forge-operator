@@ -381,6 +381,7 @@ export default function WorldForgeEditor(){
   const [undoStack,setUndoStack]=useState<ForgeOperation[][]>([]);
   const [command,setCommand]=useState('');
   const [commandNote,setCommandNote]=useState('');
+  const [shotDigest,setShotDigest]=useState('');
 
   useEffect(()=>{
     let active=true;
@@ -473,6 +474,33 @@ export default function WorldForgeEditor(){
     await mutate(inverse,false);
   }
 
+  async function bindCinematicShot(){
+    if(!project||busy) return;
+    setBusy(true);
+    setError('');
+    try{
+      const response=await fetch('/api/fallen/world-forge/cinematic-shot',{
+        method:'POST',
+        headers:{'content-type':'application/json'},
+        body:JSON.stringify({
+          project,
+          renderIntentId:'preview',
+          shotId:`${project.id}-shot-v${project.version}`,
+        }),
+      });
+      const payload=await response.json();
+      if(!response.ok||!payload.success||!payload.shot){
+        throw new Error(payload.error||'Could not bind this world into a cinematic shot.');
+      }
+      setShotDigest(payload.shot.digest);
+      setCommandNote(`Cinematic shot bound at world v${project.version}. Tournament required after render.`);
+    }catch(err){
+      setError(err instanceof Error?err.message:String(err));
+    }finally{
+      setBusy(false);
+    }
+  }
+
   async function runCommand(){
     if(!project||!command.trim()||busy) return;
     setBusy(true);
@@ -522,6 +550,7 @@ export default function WorldForgeEditor(){
         <span title={digest}>{digest.slice(0,10)}</span>
         <button onClick={undo} disabled={!undoStack.length||busy}>Undo</button>
         <button onClick={addCube} disabled={busy}>+ Cube</button>
+        <button onClick={()=>void bindCinematicShot()} disabled={busy}>Bind Shot</button>
       </div>
     </header>
 
@@ -633,6 +662,7 @@ export default function WorldForgeEditor(){
       <span>Scene graph: {project.nodes.length} nodes</span>
       <span>Human + command operations share one contract</span>
       <span>Publication authority: OFF</span>
+      {shotDigest&&<span title={shotDigest}>Shot: {shotDigest.slice(0,10)}</span>}
     </footer>
   </main>;
 }
