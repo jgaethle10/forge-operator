@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { once } from 'node:events';
 import { discoverCapacityBeacons } from '../compute/capacity-beacon.mjs';
-import { verifyNodeAttestation, normalizeHardwareCapacity } from '../compute/device-identity.mjs';
+import { verifyNodeAttestation } from '../compute/device-identity.mjs';
 
 async function requestJson(url, options = {}, timeoutMs = 5000) {
   const controller = new AbortController();
@@ -153,7 +153,7 @@ async function inspectNode(endpoint, options = {}) {
     : [];
 
   let attestation = null;
-  if (options.requireAttestation === true || options.requireHardwareAttestation === true) {
+  if (options.requireAttestation === true) {
     const nonce = crypto.randomBytes(18).toString('hex');
     const allocatorToken = tokenFor(endpoint, options);
     const headers = allocatorToken
@@ -183,32 +183,10 @@ async function inspectNode(endpoint, options = {}) {
     if (JSON.stringify(signedLabels) !== JSON.stringify(advertisedLabels)) {
       throw new Error('placement_label_attestation_mismatch');
     }
-    let signedHardware = null;
-    if (options.requireHardwareAttestation === true) {
-      signedHardware = verified.hardware_capacity || null;
-      if (!signedHardware) {
-        throw new Error('hardware_attestation_missing');
-      }
-      const hint = capacity.capacity_hint || {};
-      const advertisedHardware = normalizeHardwareCapacity({
-        cpu_units: hint.cpu_units,
-        memory_mb: hint.memory_mb,
-        storage_gb: hint.storage_gb,
-        gpu_units: hint.gpu_units ?? hint.gpu_count,
-        vram_mb: hint.vram_mb,
-        gpu_models: hint.gpu_models,
-        evidence: hint.hardware_evidence || null,
-      });
-      if (JSON.stringify(signedHardware) !== JSON.stringify(advertisedHardware)) {
-        throw new Error('hardware_attestation_capacity_mismatch');
-      }
-    }
-
     attestation = {
       verified: true,
       device_fingerprint: verified.device_fingerprint,
       placement_labels: signedLabels,
-      hardware_capacity: signedHardware,
       observed_at: verified.observed_at,
       field_claim: verified.field_claim
     };
@@ -219,6 +197,9 @@ async function inspectNode(endpoint, options = {}) {
     node_id: capacity.node_id,
     capacity_hint: capacity.capacity_hint || null,
     placement_labels: placementLabels,
+    failure_domain: capacity.failure_domain || null,
+    zero_cost: capacity.zero_cost === true,
+    public_ingress: capacity.public_ingress === true,
     attestation,
     allocation_auth: capacity.allocation_auth || null,
     lease_renewal_supported: capacity.lease_renewal_supported === true,
@@ -471,8 +452,7 @@ export async function resolveNodeSeedPool({
   allocatorToken = '',
   allocatorTokens = {},
   timeoutMs = 3000,
-  requireAttestation = false,
-  requireHardwareAttestation = false
+  requireAttestation = false
 } = {}) {
   let resolved = endpoints.map(normalizeEndpoint).filter(Boolean);
 
@@ -491,8 +471,7 @@ export async function resolveNodeSeedPool({
         timeoutMs,
         allocatorToken,
         allocatorTokens,
-        requireAttestation,
-        requireHardwareAttestation
+        requireAttestation
       });
       nodes.push(node);
     } catch (error) {
@@ -638,18 +617,8 @@ export async function runNodeSeedAssignmentPool({
     throw new Error('assignments are required');
   }
 
-  const hardwareSensitive = Boolean(
-    resourceProfile?.require_hardware_attestation === true ||
-    Number(resourceProfile?.minimum_node_cpu_units || 0) > 0 ||
-    Number(resourceProfile?.minimum_node_memory_mb || 0) > 0 ||
-    Number(resourceProfile?.minimum_node_storage_gb || 0) > 0 ||
-    Number(resourceProfile?.minimum_node_gpu_units || resourceProfile?.minimum_node_gpu_count || 0) > 0 ||
-    Number(resourceProfile?.minimum_node_vram_mb || 0) > 0 ||
-    (resourceProfile?.required_gpu_models || []).length > 0
-  );
   const placementSensitive = Boolean(
     resourceProfile?.require_node_attestation === true ||
-    hardwareSensitive ||
     (resourceProfile?.required_node_labels || []).length ||
     (resourceProfile?.forbidden_node_labels || []).length
   );
@@ -661,8 +630,7 @@ export async function runNodeSeedAssignmentPool({
     allocatorToken,
     allocatorTokens,
     timeoutMs,
-    requireAttestation: placementSensitive,
-    requireHardwareAttestation: hardwareSensitive
+    requireAttestation: placementSensitive
   });
 
   if (!resolved.nodes.length) {
@@ -926,8 +894,10 @@ export async function runNodeSeedAssignmentPool({
       endpoint: node.endpoint,
       capacity_hint: node.capacity_hint,
       placement_labels: node.placement_labels || [],
+      failure_domain: node.failure_domain || null,
+      zero_cost: node.zero_cost === true,
+      public_ingress: node.public_ingress === true,
       node_attestation_verified: node.attestation?.verified === true,
-      hardware_attestation_verified: Boolean(node.attestation?.hardware_capacity),
       device_fingerprint: node.attestation?.device_fingerprint || null,
       field_claim: node.attestation?.field_claim ?? null,
       healthy_at_end: node.healthy !== false
