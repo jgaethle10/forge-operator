@@ -33,6 +33,23 @@
       }
     },
     {
+      "service_key": "raven-private-runtime",
+      "mode": "resident",
+      "manifest": "systemia/organism/raven-private-runtime.workflow.json",
+      "executable": "systemia/raven/resident-runner.mjs",
+      "optional_when_unconfigured": true,
+      "env_args": {
+        "--state-dir": "RAVEN_PRIVATE_STATE_DIR",
+        "--control-token-file": "RAVEN_PRIVATE_CONTROL_TOKEN_FILE"
+      },
+      "optional_env_args": {
+        "--trusted-subject-ref": "RAVEN_PRIVATE_TRUSTED_SUBJECT_REF",
+        "--deployment-receipt-file": "RAVEN_PRIVATE_DEPLOYMENT_RECEIPT_FILE"
+      },
+      "max_restarts_per_hour": 12,
+      "restart_backoff_ms": 5000
+    },
+    {
       "service_key": "competition-provider-scout",
       "mode": "cycle",
       "manifest": "systemia/organism/competition-provider-scout.workflow.json",
