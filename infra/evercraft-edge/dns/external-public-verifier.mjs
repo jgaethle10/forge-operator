@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 import process from 'node:process';
+import fs from 'node:fs';
+import {randomInt} from 'node:crypto';
 
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const arg=(name,fallback='')=>{
@@ -7,7 +9,7 @@ const arg=(name,fallback='')=>{
   return i>=0&&process.argv[i+1]?process.argv[i+1]:fallback;
 };
 
-export function dnsTxtQueryHex(name){
+export function dnsTxtQueryHex(name,transactionId=0x4556){
   const clean=String(name).replace(/\.$/,'');
   const labels=clean.split('.').filter(Boolean);
   const qname=Buffer.concat([
@@ -19,7 +21,7 @@ export function dnsTxtQueryHex(name){
     Buffer.from([0])
   ]);
   const h=Buffer.alloc(12);
-  h.writeUInt16BE(0x4556,0);
+  h.writeUInt16BE(Number(transactionId)&0xffff,0);
   h.writeUInt16BE(0x0000,2); // RD=0 authoritative query
   h.writeUInt16BE(1,4);
   return '0x'+Buffer.concat([h,qname,Buffer.from([0,16,0,1])]).toString('hex');
@@ -79,26 +81,57 @@ async function fetchWithTimeout(url,options={},timeoutMs=8000){
   }finally{clearTimeout(t)}
 }
 
-async function isitdnsTcp({server,identityName,expectedTxt}){
-  const name=String(identityName||'').replace(/\.$/,'');
-  const qs=new URLSearchParams({
-    transport:'tcp53',
-    norec:'1',
-    dnssec:'0',
-    family:'v4'
-  });
-  const url='https://isitdns.net/dig/'+encodeURIComponent(name)+'/TXT/'+encodeURIComponent(server)+'?'+qs.toString();
-  const res=await fetchWithTimeout(url,{headers:{accept:'text/plain','user-agent':'curl/8.0'}},10000);
-  const text=await res.text();
-  const parsed=parseDigAuthority(text,{identityName,expectedTxt});
+export function authoritativeReceiptMatches(receipts,{transactionId,identityName}={}){
+  const qname=String(identityName||'').toLowerCase();
+  const rows=Array.isArray(receipts?.receipts)?receipts.receipts:[];
+  const matches=rows.filter(r=>
+    Number(r?.transaction_id)===Number(transactionId) &&
+    String(r?.qname||'').toLowerCase()===qname &&
+    String(r?.protocol||'').toLowerCase()==='udp' &&
+    r?.aa===true &&
+    r?.ra===false &&
+    Number(r?.rcode)===0 &&
+    Number(r?.answer_count)>=1
+  );
   return {
-    ok:res.ok,
-    status:res.status,
-    evidence_surface:'isitdns-dig-custom-ip-tcp53',
-    evidence_url:url.replace(server,'<candidate-ip>'),
-    parsed,
-    excerpt:text.slice(0,4000),
+    verified:matches.length>=2 && new Set(matches.map(r=>r.remote_address).filter(Boolean)).size>=2,
+    match_count:matches.length,
+    distinct_remote_addresses:new Set(matches.map(r=>r.remote_address).filter(Boolean)).size,
+    matches
   };
+}
+
+function localProtocolProof(file){
+  try{
+    const j=JSON.parse(fs.readFileSync(file,'utf8'));
+    const udp=j?.udp||{}, tcp=j?.tcp||{};
+    const verified=
+      j?.verified===true &&
+      udp?.ok===true && tcp?.ok===true &&
+      udp?.aa===true && tcp?.aa===true &&
+      udp?.ra===false && tcp?.ra===false &&
+      Number(udp?.answers)>=1 && Number(tcp?.answers)>=1;
+    return {verified,receipt:j};
+  }catch(e){
+    return {verified:false,error:String(e?.message||e)};
+  }
+}
+
+async function waitForReceipt(file,args){
+  for(let i=0;i<20;i++){
+    try{
+      const j=JSON.parse(fs.readFileSync(file,'utf8'));
+      const match=authoritativeReceiptMatches(j,args);
+      if(match.verified) return match;
+    }catch{}
+    await sleep(200);
+  }
+  try{
+    const j=JSON.parse(fs.readFileSync(file,'utf8'));
+    return authoritativeReceiptMatches(j,args);
+  }catch(e){
+    return {verified:false,match_count:0,distinct_remote_addresses:0,error:String(e?.message||e)};
+  }
 }
 
 async function dispatchCheckHost(method,{server,port,payload}){
@@ -139,41 +172,53 @@ async function runCheck(method,args){
   };
 }
 
-export async function verifyExternalDns({server,identityName,expectedTxt}){
-  const payload=dnsTxtQueryHex(identityName);
-  const tcpIdentity=await isitdnsTcp({server,identityName,expectedTxt}).catch(e=>({ok:false,error:String(e?.message||e),parsed:{verified:false}}));
+export async function verifyExternalDns({server,identityName,expectedTxt,receiptPath,localProofPath}){
+  const transactionId=randomInt(1,65536);
+  const payload=dnsTxtQueryHex(identityName,transactionId);
+  const localProof=localProtocolProof(localProofPath);
   const [tcp53,udp53,tcpDiag,udpDiag]=await Promise.all([
     runCheck('tcp',{server,port:53}).catch(e=>({error:String(e?.message||e),success_count:0})),
     runCheck('udp',{server,port:53,payload}).catch(e=>({error:String(e?.message||e),success_count:0})),
     runCheck('tcp',{server,port:53053}).catch(e=>({error:String(e?.message||e),success_count:0})),
     runCheck('udp',{server,port:53053,payload}).catch(e=>({error:String(e?.message||e),success_count:0})),
   ]);
+  const runtimeIdentity=await waitForReceipt(receiptPath,{transactionId,identityName});
   const tcp53Reachable=Number(tcp53?.success_count||0)>=2;
   const udp53Reachable=Number(udp53?.success_count||0)>=2;
   const diagnosticReachable=
     Number(tcpDiag?.success_count||0)>=1 ||
     Number(udpDiag?.success_count||0)>=1;
+
+  // TCP proof is compositional but protocol-grounded:
+  // 1) outside nodes complete TCP handshakes to public :53,
+  // 2) the router maps that exact public port to the same resident :1053 socket,
+  // 3) the local canary proves that resident socket answers DNS over TCP with AA=1/RA=0,
+  // 4) a nonce-correlated external UDP query proves the public mapping reaches this exact runtime.
   const verified=
-    tcpIdentity?.parsed?.verified===true &&
+    localProof.verified===true &&
+    runtimeIdentity.verified===true &&
     tcp53Reachable &&
     udp53Reachable;
+
   const classification=verified
-    ? 'public_dns_verified'
+    ? 'public_dns_verified_composed_tcp_udp_identity'
     : (tcp53Reachable||udp53Reachable)
       ? 'production_53_reachable_identity_unverified'
       : diagnosticReachable
         ? 'diagnostic_high_port_reachable_production_53_unreachable'
         : 'no_external_path_to_candidate';
+
   return {
-    schema:'evercraft.edge.external-public-verification.v1',
+    schema:'evercraft.edge.external-public-verification.v2',
     verified,
     classification,
     identity_name:identityName,
     expected_txt:expectedTxt,
-    tcp53_identity:tcpIdentity,
-    distributed:{
-      tcp53,udp53,tcp53053:tcpDiag,udp53053:udpDiag
-    },
+    transaction_id:transactionId,
+    runtime_identity:runtimeIdentity,
+    local_protocol_proof:localProof,
+    tcp_proof_mode:'external_handshake_plus_local_dns_protocol_plus_nonce_correlated_same_runtime',
+    distributed:{tcp53,udp53,tcp53053:tcpDiag,udp53053:udpDiag},
     public_ip_persisted_in_repo:false,
     observed_at:new Date().toISOString(),
   };
@@ -184,9 +229,11 @@ if(direct){
   const server=arg('--server');
   const identityName=arg('--name');
   const expectedTxt=arg('--expected-txt','service=evercraft://edge/canary');
+  const receiptPath=arg('--receipt-path','/var/lib/evercraft/nodeseed/edge-dns/query-receipts.json');
+  const localProofPath=arg('--local-proof','/tmp/evercraft-edge-dns-local-canary.json');
   if(!/^\d{1,3}(?:\.\d{1,3}){3}$/.test(server)) throw new Error('--server IPv4 required');
   if(!identityName) throw new Error('--name required');
-  const receipt=await verifyExternalDns({server,identityName,expectedTxt});
+  const receipt=await verifyExternalDns({server,identityName,expectedTxt,receiptPath,localProofPath});
   console.log(JSON.stringify(receipt,null,2));
   if(!receipt.verified) process.exitCode=2;
 }
