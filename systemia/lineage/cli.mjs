@@ -2,6 +2,7 @@
 import { LineageStore } from './core.mjs';
 import { semanticDiff } from './semantic-diff.mjs';
 import { LargeObjectStore } from './large-object.mjs';
+import { exportLineageSnapshotToGit, importGitHistory } from './git-bridge.mjs';
 import { LocalLineageRemote, fetchCommitGraph, pushCommitGraph } from './remote-protocol.mjs';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -105,8 +106,27 @@ async function main() {
       }), null, 2));
       break;
     }
+    case 'git-import': {
+      if (!args[0]) throw new Error('Usage: lineage git-import <git-repo-dir> [git-ref] [lineage-branch]');
+      console.log(JSON.stringify(await importGitHistory(store, {
+        repository: args[0],
+        ref: args[1] || 'HEAD',
+        branch: args[2] || 'git/imported'
+      }), null, 2));
+      break;
+    }
+    case 'git-export': {
+      if (!args[0]) throw new Error('Usage: lineage git-export <git-repo-dir> [lineage-ref] [git-branch] [expected-git-head]');
+      console.log(JSON.stringify(await exportLineageSnapshotToGit(store, {
+        repository: args[0],
+        commitish: args[1] || 'HEAD',
+        branch: args[2] || 'lineage-export',
+        expectedGitHead: !args[3] || args[3] === 'null' ? null : args[3]
+      }), null, 2));
+      break;
+    }
     default:
-      console.log(`Evercraft Lineage\n\nCommands:\n  init [branch]\n  commit [message]\n  branch <name> [from]\n  switch <branch>\n  log [ref] [limit]\n  diff [from] [to]\n  restore <ref> [target]\n  rollback <ref>\n  merge-preview <branch>\n  merge <branch>\n  large-put <file> [media-type]\n  large-verify <manifest-id>\n  remote-refs <remote-dir>\n  remote-push <remote-dir> [branch] [expected-head]\n  remote-fetch <remote-dir> [remote-branch] [local-branch]`);
+      console.log(`Evercraft Lineage\n\nCommands:\n  init [branch]\n  commit [message]\n  branch <name> [from]\n  switch <branch>\n  log [ref] [limit]\n  diff [from] [to]\n  restore <ref> [target]\n  rollback <ref>\n  merge-preview <branch>\n  merge <branch>\n  large-put <file> [media-type]\n  large-verify <manifest-id>\n  remote-refs <remote-dir>\n  remote-push <remote-dir> [branch] [expected-head]\n  remote-fetch <remote-dir> [remote-branch] [local-branch]\n  git-import <git-repo-dir> [git-ref] [lineage-branch]\n  git-export <git-repo-dir> [lineage-ref] [git-branch] [expected-git-head]`);
   }
 }
 
