@@ -1,0 +1,38 @@
+name: Household Fabric resident activation
+
+on:
+  pull_request:
+    paths:
+      - "systemia/organism/household-fabric-resident-runner.mjs"
+      - "systemia/organism/household-fabric-resident-runner.proof.mjs"
+      - "systemia/organism/household-fabric-yakima.workflow.json"
+      - ".github/workflows/household-fabric-resident-activation.yml"
+      - "package.json"
+  push:
+    branches:
+      - main
+      - "systemia/**"
+    paths:
+      - "systemia/organism/household-fabric-resident-runner.mjs"
+      - "systemia/organism/household-fabric-resident-runner.proof.mjs"
+      - "systemia/organism/household-fabric-yakima.workflow.json"
+      - ".github/workflows/household-fabric-resident-activation.yml"
+      - "package.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install
+        run: npm install --no-audit --no-fund
+      - name: Verify autonomous resident placement
+        run: npm run proof:household-fabric-resident-activation
