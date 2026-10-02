@@ -20,6 +20,22 @@ export function nodeSeedSnapshotToComputeOffer(node={}){
   const labels=[...(capacity.placement_labels||[])].map(x=>String(x).trim().toLowerCase());
   const workloads=[...(capacity.supported_workloads||[])].map(String).sort();
   if(!workloads.length) throw new Error('nodeseed_offer_workloads_required');
+  const hardware=capacity.capacity_hint?.hardware||{};
+  const gpuModels=Array.isArray(hardware.accelerators?.gpu_models)
+    ? hardware.accelerators.gpu_models.map(String).slice(0,16)
+    : [];
+  const gpuCount=Math.max(
+    0,
+    Number(hardware.accelerators?.gpu_count||gpuModels.length||0)
+  );
+  const recommendedConcurrency=Math.max(
+    1,
+    Math.floor(Number(
+      capacity.capacity_hint?.recommended_concurrency ||
+      hardware.recommended_concurrency?.value ||
+      1
+    ))
+  );
 
   const body={
     schema:'evercraft.saban.compute-offer.v1',
@@ -32,8 +48,8 @@ export function nodeSeedSnapshotToComputeOffer(node={}){
       cpu_units:Math.max(0,Number(capacity.capacity_hint?.cpu_units||0)),
       memory_mb:Math.max(0,Number(capacity.capacity_hint?.memory_mb||0)),
       storage_gb:Math.max(0,Number(capacity.capacity_hint?.storage_gb||0)),
-      gpu_count:0,
-      gpu_models:[],
+      gpu_count:gpuCount,
+      gpu_models:gpuModels,
     },
     placement:{
       region:null,
@@ -72,7 +88,15 @@ export function nodeSeedSnapshotToComputeOffer(node={}){
       zero_cost_verified:capacity.zero_cost===true,
       public_ingress_verified:capacity.public_ingress===true,
       generic_container_runtime:labels.includes('generic-container-runtime'),
-      max_concurrency:null,
+      max_concurrency:recommendedConcurrency,
+      cpu_architecture:hardware.cpu?.architecture||null,
+      cpu_model:hardware.cpu?.model||null,
+      logical_threads:Math.max(1,Number(hardware.cpu?.logical_threads||capacity.capacity_hint?.cpu_units||1)),
+      accelerator_detection_state:hardware.accelerators?.detection_state||'unknown',
+      hardware_measurement_state:'observed_local',
+      concurrency_hint_state:
+        hardware.recommended_concurrency?.state||
+        'inferred_from_cpu_and_memory',
       authorization_required:true,
       arbitrary_code_execution:false,
     },
