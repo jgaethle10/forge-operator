@@ -8,8 +8,50 @@ import { sendWebPush } from './web-push.mjs';
 const PURPOSES = new Set(['transactional', 'operational', 'safety', 'reminder', 'marketing']);
 const PRIORITIES = new Set(['low', 'normal', 'high', 'critical']);
 
-function normArray(value) {
-  return [...new Set((Array.isArray(value) ? value : []).map((x) => String(x).trim()).filter(Boolean))];
+function normArray(value, label = 'values', maxItems = 100) {
+  const normalized = [...new Set((Array.isArray(value) ? value : []).map((x) => String(x).trim()).filter(Boolean))];
+  if (normalized.length > maxItems) throw new Error(`${label} exceeds the ${maxItems}-item Relay limit.`);
+  return normalized;
+}
+
+function boundedText(value, label, maxLength) {
+  const text = String(value ?? '').trim();
+  if (text.length > maxLength) throw new Error(`${label} exceeds the ${maxLength}-character Relay limit.`);
+  return text;
+}
+
+function normalizedData(value) {
+  if (value === undefined || value === null) return {};
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    throw new Error('Notification data must be a JSON object.');
+  }
+  let serialized;
+  try { serialized = JSON.stringify(value); }
+  catch { throw new Error('Notification data must be JSON serializable.'); }
+  if (Buffer.byteLength(serialized, 'utf8') > 16384) {
+    throw new Error('Notification data exceeds the 16 KiB Relay limit.');
+  }
+  return JSON.parse(serialized);
+}
+
+function safeDeliveryUrl(value, label) {
+  if (value === undefined || value === null || String(value).trim() === '') return null;
+  const raw = String(value).trim();
+  if (raw.startsWith('/') && !raw.startsWith('//')) return raw;
+  let parsed;
+  try { parsed = new URL(raw); }
+  catch { throw new Error(`${label} must be a relative path or HTTPS URL.`); }
+  if (parsed.protocol !== 'https:' || parsed.username || parsed.password) {
+    throw new Error(`${label} must be a relative path or credential-free HTTPS URL.`);
+  }
+  return parsed.toString();
+}
+
+function optionalExpiry(value) {
+  if (value === undefined || value === null || String(value).trim() === '') return null;
+  const ms = Date.parse(String(value));
+  if (!Number.isFinite(ms)) throw new Error('expires_at must be a valid timestamp.');
+  return new Date(ms).toISOString();
 }
 
 function urgency(priority) {
@@ -42,24 +84,25 @@ function validateIntent(raw) {
   } : null;
   return {
     schema: 'systemia.notification.intent.v2',
-    id: String(raw.id || crypto.randomUUID()),
-    product: String(raw.product || 'unknown').trim(),
+    id: boundedText(raw.id || crypto.randomUUID(), 'Notification id', 160),
+    product: boundedText(raw.product || 'unknown', 'Product', 120),
     purpose,
     priority,
     title: title.slice(0, 140),
     body: body.slice(0, 1200),
-    url: raw.url ? String(raw.url) : null,
-    icon: raw.icon ? String(raw.icon) : '/favicon.ico',
-    badge: raw.badge ? String(raw.badge) : null,
-    recipient_ids: normArray(raw.recipient_ids),
-    audiences: normArray(raw.audiences),
-    topics: normArray(raw.topics),
-    data: raw.data && typeof raw.data === 'object' ? raw.data : {},
+    url: safeDeliveryUrl(raw.url, 'Notification URL'),
+    icon: safeDeliveryUrl(raw.icon || '/favicon.ico', 'Notification icon'),
+    badge: safeDeliveryUrl(raw.badge, 'Notification badge'),
+    recipient_ids: normArray(raw.recipient_ids, 'recipient_ids', 500),
+    audiences: normArray(raw.audiences, 'audiences', 100),
+    topics: normArray(raw.topics, 'topics', 100),
+    data: normalizedData(raw.data),
     acknowledgement,
-    evidence_state: String(raw.evidence_state || 'not_applicable'),
-    consent_basis: raw.consent_basis || (purpose === 'safety' ? 'safety_service' : 'service_relationship'),
+    evidence_state: boundedText(raw.evidence_state || 'not_applicable', 'evidence_state', 120),
+    consent_basis: boundedText(raw.consent_basis || (purpose === 'safety' ? 'safety_service' : 'service_relationship'), 'consent_basis', 120),
     ttl_seconds: Math.max(0, Math.min(Number(raw.ttl_seconds ?? 3600), 2419200)),
-    dedupe_key: raw.dedupe_key ? String(raw.dedupe_key) : null,
+    expires_at: optionalExpiry(raw.expires_at),
+    dedupe_key: raw.dedupe_key ? boundedText(raw.dedupe_key, 'dedupe_key', 256) : null,
     dedupe_window_seconds: Math.max(0, Number(raw.dedupe_window_seconds ?? 900)),
     created_at: raw.created_at || now,
   };
@@ -88,6 +131,7 @@ function safeNotificationPayload(intent) {
     badge: intent.badge,
     data: intent.data,
     acknowledgement: intent.acknowledgement,
+    expires_at: intent.expires_at,
     created_at: intent.created_at,
   };
 }
@@ -175,6 +219,29 @@ export function createNotificationFabric(options = {}) {
 
   async function dispatchIntent(rawIntent) {
     const intent = validateIntent(rawIntent);
+    const dispatchNow = options.now ? new Date(options.now).getTime() : Date.now();
+    if (intent.expires_at && Date.parse(intent.expires_at) <= dispatchNow) {
+      const event = store.recordDelivery({
+        schema: 'systemia.notification.delivery.v3',
+        notification_id: intent.id,
+        product: intent.product,
+        purpose: intent.purpose,
+        status: 'expired',
+        expires_at: intent.expires_at,
+        at: new Date(dispatchNow).toISOString(),
+      });
+      return {
+        intent,
+        matched: 0,
+        accepted: 0,
+        realtime_delivered: 0,
+        inboxed: 0,
+        targeted_principal_ids: [],
+        expired: true,
+        deduped: false,
+        receipts: [event],
+      };
+    }
     const dedupeKey = intent.dedupe_key ? `${intent.product}|${intent.dedupe_key}` : null;
     if (dedupeKey && store.seenDedupe(dedupeKey, intent.dedupe_window_seconds)) {
       const event = store.recordDelivery({ schema: 'systemia.notification.delivery.v2', notification_id: intent.id, status: 'deduped', at: new Date().toISOString(), intent });
