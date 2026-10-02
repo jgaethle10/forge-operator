@@ -15,6 +15,26 @@ export const FIVE_MINUTE_LAG_BARS = Object.freeze({
   "5d": 390,
 });
 
+export const EXECUTION_DELAY_STRESS_BARS = Object.freeze({
+  "5m": 1,
+  "15m": 3,
+  "30m": 6,
+  "60m": 12,
+  "90m": 18,
+});
+
+export const ALTERNATE_BENCHMARKS_BY_INSTRUMENT = Object.freeze({
+  SOXX: Object.freeze(["QQQ", "SMH"]),
+  SMH: Object.freeze(["QQQ", "SOXX"]),
+  QQQ: Object.freeze(["XLK"]),
+});
+
+function alternateBenchmarksFor(instrument) {
+  const configured = ALTERNATE_BENCHMARKS_BY_INSTRUMENT[instrument];
+  const values = configured || ["QQQ"];
+  return [...new Set(values)].filter((symbol) => symbol && symbol !== instrument);
+}
+
 function sha(value) {
   return crypto.createHash("sha256").update(
     typeof value === "string" ? value : JSON.stringify(value)
@@ -28,6 +48,9 @@ function uniq(values) {
 const NY_MARKET_CLOCK = new Intl.DateTimeFormat("en-US", {
   timeZone: "America/New_York",
   weekday: "short",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
   hour: "2-digit",
   minute: "2-digit",
   hourCycle: "h23",
@@ -35,10 +58,20 @@ const NY_MARKET_CLOCK = new Intl.DateTimeFormat("en-US", {
 
 function normalizeBars(rows = []) {
   return rows
-    .map((row) => ({
-      t: row?.t || row?.timestamp,
-      c: Number(row?.c ?? row?.close),
-    }))
+    .map((row) => {
+      const volume = row?.v ?? row?.volume;
+      return {
+        t: row?.t || row?.timestamp,
+        o: Number(row?.o ?? row?.open),
+        c: Number(row?.c ?? row?.close),
+        v:
+          volume === null || volume === undefined || volume === ""
+            ? null
+            : Number.isFinite(Number(volume))
+              ? Number(volume)
+              : null,
+      };
+    })
     .filter((row) => row.t && Number.isFinite(row.c) && row.c > 0)
     .sort((a,b) => new Date(a.t) - new Date(b.t));
 }
@@ -66,21 +99,234 @@ function firstBarAtOrAfter(bars, timestamp) {
   return lo < bars.length ? lo : -1;
 }
 
-function measuredReturn(bars, observedAt, lagBars) {
-  const startIndex = firstBarAtOrAfter(bars, observedAt);
+function marketDateKey(timestamp) {
+  const parts = Object.fromEntries(
+    NY_MARKET_CLOCK.formatToParts(new Date(timestamp)).map((part) => [part.type, part.value])
+  );
+  return `${parts.year}-${parts.month}-${parts.day}`;
+}
+function barCloseAvailableAt(timestamp, minutes = 5) {
+  const start = new Date(timestamp).getTime();
+  if (!Number.isFinite(start)) return null;
+  return new Date(start + Number(minutes) * 60_000).toISOString();
+}
+
+
+export function classifyNewYorkMarketPhase(timestamp) {
+  const date=new Date(timestamp);
+  if(!Number.isFinite(date.getTime())) return "invalid";
+  const parts=Object.fromEntries(
+    NY_MARKET_CLOCK.formatToParts(date).map((part)=>[part.type,part.value])
+  );
+  if(parts.weekday==="Sat"||parts.weekday==="Sun") return "closed_weekend";
+  const minute=Number(parts.hour)*60+Number(parts.minute);
+  if(minute<565) return "premarket";
+  if(minute<570) return "opening_imbalance_window";
+  if(minute<585) return "immediate_post_open";
+  if(minute<950) return "continuous_session";
+  if(minute<960) return "closing_imbalance_window";
+  return "after_hours";
+}
+
+
+function measuredReturnFromIndex(bars, startIndex, lagBars, observedAt) {
   if (startIndex < 0) return null;
   const endIndex = startIndex + lagBars;
-  if (endIndex >= bars.length) return null;
+  if (startIndex >= bars.length || endIndex >= bars.length) return null;
   const start = bars[startIndex];
   const end = bars[endIndex];
+  const pathBars = bars.slice(startIndex, endIndex + 1);
+  const pathReturns = [];
+  for (let i = 1; i < pathBars.length; i++) {
+    const previousBar = pathBars[i - 1];
+    const currentBar = pathBars[i];
+    const previous = Number(previousBar.c);
+    const current = Number(currentBar.c);
+    const intervalMs =
+      new Date(currentBar.t).getTime() - new Date(previousBar.t).getTime();
+    const contiguousFiveMinuteInterval =
+      intervalMs > 0 &&
+      intervalMs <= 10 * 60_000 &&
+      marketDateKey(previousBar.t) === marketDateKey(currentBar.t);
+    if (
+      previous > 0 &&
+      current > 0 &&
+      contiguousFiveMinuteInterval
+    ) {
+      pathReturns.push(Math.log(current / previous));
+    }
+  }
+  const pathMean = pathReturns.length
+    ? pathReturns.reduce((a,b) => a + b, 0) / pathReturns.length
+    : 0;
+  const realizedVariance = pathReturns.length > 1
+    ? pathReturns.reduce((sum, value) => sum + (value - pathMean) ** 2, 0) /
+      (pathReturns.length - 1)
+    : 0;
+  const pathRelative = pathBars.map((bar) => Number(bar.c) / Number(start.c) - 1);
+  const startDate = marketDateKey(start.t);
+  const sessionStartIndex = bars.findIndex((bar) => marketDateKey(bar.t) === startDate);
+  const previousSessionClose =
+    sessionStartIndex > 0 ? Number(bars[sessionStartIndex - 1].c) : null;
+  const sessionOpenPrice =
+    sessionStartIndex >= 0 && Number.isFinite(Number(bars[sessionStartIndex].o))
+      ? Number(bars[sessionStartIndex].o)
+      : null;
+  const openingGap = previousSessionClose && sessionOpenPrice
+    ? sessionOpenPrice / previousSessionClose - 1
+    : null;
+  const startAvailableAt = barCloseAvailableAt(start.t);
+  const endAvailableAt = barCloseAvailableAt(end.t);
   return {
-    start_time: start.t,
-    end_time: end.t,
+    start_interval_time: start.t,
+    end_interval_time: end.t,
+    start_time: startAvailableAt,
+    end_time: endAvailableAt,
     start_price: start.c,
     end_price: end.c,
+    start_volume: Number.isFinite(Number(start.v)) ? Number(start.v) : null,
+    price_field: "bar_close",
+    bar_minutes: 5,
     forward_return: end.c / start.c - 1,
-    no_pre_observation_price_used: new Date(start.t) >= new Date(observedAt),
+    realized_volatility_5m: Math.sqrt(Math.max(0, realizedVariance)),
+    max_path_gain: pathRelative.length ? Math.max(...pathRelative) : 0,
+    max_path_drawdown: pathRelative.length ? Math.min(...pathRelative) : 0,
+    opening_gap_return: openingGap,
+    opening_gap_price_field: "bar_open",
+    no_pre_observation_price_used:
+      startAvailableAt !== null &&
+      new Date(startAvailableAt) >= new Date(observedAt),
   };
+}
+
+function measuredReturnAtNextSessionOpen(bars, observedAt, lagBars) {
+  const observedDate = marketDateKey(observedAt);
+  const startIndex = bars.findIndex((bar) => marketDateKey(bar.t) > observedDate);
+  return measuredReturnFromIndex(bars, startIndex, lagBars, observedAt);
+}
+
+function measuredReturn(bars, observedAt, lagBars, entryDelayBars = 0) {
+  const firstIndex = firstBarAtOrAfter(bars, observedAt);
+  if (firstIndex < 0) return null;
+  const delay = Math.max(0, Number(entryDelayBars || 0));
+  const startIndex = firstIndex + delay;
+  const endIndex = startIndex + lagBars;
+  if (startIndex >= bars.length || endIndex >= bars.length) return null;
+  return measuredReturnFromIndex(bars, startIndex, lagBars, observedAt);
+}
+
+export function buildMatchedPlaceboHypotheses(hypotheses = [], {
+  offsets_days = [-7, 7],
+  exclusion_hours = 24,
+} = {}) {
+  const byOrigin = new Map();
+  for (const hypothesis of hypotheses) {
+    const origin = hypothesis.origin_entity_ref || "unknown";
+    if (!byOrigin.has(origin)) byOrigin.set(origin, []);
+    const time = new Date(hypothesis.observed_at).getTime();
+    if (Number.isFinite(time)) byOrigin.get(origin).push(time);
+  }
+
+  const exclusionMs = Number(exclusion_hours) * 60 * 60 * 1000;
+  const out = [];
+  for (const hypothesis of hypotheses) {
+    const base = new Date(hypothesis.observed_at).getTime();
+    if (!Number.isFinite(base)) continue;
+    const origin = hypothesis.origin_entity_ref || "unknown";
+    const realTimes = byOrigin.get(origin) || [];
+
+    for (const offsetDays of offsets_days) {
+      const shifted = base + Number(offsetDays) * 86400000;
+      if (
+        realTimes.some((real) =>
+          real !== base && Math.abs(real - shifted) <= exclusionMs
+        )
+      ) continue;
+
+      out.push({
+        ...hypothesis,
+        hypothesis_id: "edgeplacebo:" + sha({
+          hypothesis_id: hypothesis.hypothesis_id,
+          offset_days: Number(offsetDays),
+        }).slice(0,24),
+        source_observation_id: "placebo:" + sha({
+          source_observation_id: hypothesis.source_observation_id,
+          offset_days: Number(offsetDays),
+        }).slice(0,24),
+        observed_at: new Date(shifted).toISOString(),
+        placebo_for_source_observation_id: hypothesis.source_observation_id,
+        placebo_offset_days: Number(offsetDays),
+        research_only: true,
+        live_trade_authority: false,
+      });
+    }
+  }
+  return out;
+}
+
+export function buildDeterministicRandomPlaceboHypotheses(hypotheses = [], {
+  offset_pool_days = [-35, -28, -21, -14, 14, 21, 28, 35],
+  per_observation = 2,
+  exclusion_hours = 24,
+} = {}) {
+  const byOrigin = new Map();
+  for (const hypothesis of hypotheses) {
+    const origin = hypothesis.origin_entity_ref || "unknown";
+    if (!byOrigin.has(origin)) byOrigin.set(origin, []);
+    const time = new Date(hypothesis.observed_at).getTime();
+    if (Number.isFinite(time)) byOrigin.get(origin).push(time);
+  }
+
+  const exclusionMs = Number(exclusion_hours) * 60 * 60 * 1000;
+  const out = [];
+  for (const hypothesis of hypotheses) {
+    const base = new Date(hypothesis.observed_at).getTime();
+    if (!Number.isFinite(base)) continue;
+    const origin = hypothesis.origin_entity_ref || "unknown";
+    const realTimes = byOrigin.get(origin) || [];
+    const rankedOffsets = [...offset_pool_days]
+      .map((offsetDays) => ({
+        offsetDays: Number(offsetDays),
+        rank: sha({
+          hypothesis_id: hypothesis.hypothesis_id,
+          source_observation_id: hypothesis.source_observation_id,
+          offset_days: Number(offsetDays),
+          scheme: "deterministic_random_calendar",
+        }),
+      }))
+      .sort((a,b) => a.rank.localeCompare(b.rank));
+
+    let selected = 0;
+    for (const { offsetDays } of rankedOffsets) {
+      if (selected >= Number(per_observation)) break;
+      const shifted = base + offsetDays * 86400000;
+      if (
+        realTimes.some((real) =>
+          real !== base && Math.abs(real - shifted) <= exclusionMs
+        )
+      ) continue;
+
+      out.push({
+        ...hypothesis,
+        hypothesis_id: "edgerandomplacebo:" + sha({
+          hypothesis_id: hypothesis.hypothesis_id,
+          offset_days: offsetDays,
+        }).slice(0,24),
+        source_observation_id: "random-placebo:" + sha({
+          source_observation_id: hypothesis.source_observation_id,
+          offset_days: offsetDays,
+        }).slice(0,24),
+        observed_at: new Date(shifted).toISOString(),
+        placebo_for_source_observation_id: hypothesis.source_observation_id,
+        placebo_offset_days: offsetDays,
+        placebo_scheme: "deterministic_random_calendar",
+        research_only: true,
+        live_trade_authority: false,
+      });
+      selected += 1;
+    }
+  }
+  return out;
 }
 
 export function measureRockiesHypotheses(hypotheses, barsBySymbol, {
@@ -106,6 +352,99 @@ export function measureRockiesHypotheses(hypotheses, barsBySymbol, {
           throw new Error("edge_lab_lookahead_violation");
         }
 
+        const alternateBenchmarks = {};
+        for (const alternateBenchmark of alternateBenchmarksFor(instrument)) {
+          const alternateBars = filterCoreSessionBars(
+            barsBySymbol?.[alternateBenchmark] || []
+          );
+          if (!alternateBars.length) continue;
+          const alternateMove = measuredReturn(
+            alternateBars,
+            hypothesis.observed_at,
+            bars
+          );
+          if (!alternateMove || !alternateMove.no_pre_observation_price_used) continue;
+          alternateBenchmarks[alternateBenchmark] = {
+            benchmark_return: alternateMove.forward_return,
+            benchmark_start_interval_time: alternateMove.start_interval_time,
+            benchmark_end_interval_time: alternateMove.end_interval_time,
+            benchmark_start_time: alternateMove.start_time,
+            benchmark_end_time: alternateMove.end_time,
+            excess_return: instrumentMove.forward_return - alternateMove.forward_return,
+          };
+        }
+
+        const executionDelayStress = {};
+        for (const [delayKey, delayBars] of Object.entries(EXECUTION_DELAY_STRESS_BARS)) {
+          const delayedInstrument = measuredReturn(
+            instrumentBars,
+            hypothesis.observed_at,
+            bars,
+            delayBars
+          );
+          const delayedBenchmark = measuredReturn(
+            benchmarkBars,
+            hypothesis.observed_at,
+            bars,
+            delayBars
+          );
+          if (!delayedInstrument || !delayedBenchmark) continue;
+          if (
+            !delayedInstrument.no_pre_observation_price_used ||
+            !delayedBenchmark.no_pre_observation_price_used
+          ) {
+            throw new Error("edge_lab_timing_stress_lookahead_violation");
+          }
+          executionDelayStress[delayKey] = {
+            delay_bars: delayBars,
+            delay_minutes: delayBars * 5,
+            forward_return: delayedInstrument.forward_return,
+            benchmark_return: delayedBenchmark.forward_return,
+            excess_return: delayedInstrument.forward_return - delayedBenchmark.forward_return,
+            instrument_start_interval_time: delayedInstrument.start_interval_time,
+            instrument_end_interval_time: delayedInstrument.end_interval_time,
+            instrument_start_time: delayedInstrument.start_time,
+            instrument_end_time: delayedInstrument.end_time,
+            benchmark_start_interval_time: delayedBenchmark.start_interval_time,
+            benchmark_end_interval_time: delayedBenchmark.end_interval_time,
+            benchmark_start_time: delayedBenchmark.start_time,
+            benchmark_end_time: delayedBenchmark.end_time,
+          };
+        }
+
+        const nextSessionInstrument = measuredReturnAtNextSessionOpen(
+          instrumentBars,
+          hypothesis.observed_at,
+          bars
+        );
+        const nextSessionBenchmark = measuredReturnAtNextSessionOpen(
+          benchmarkBars,
+          hypothesis.observed_at,
+          bars
+        );
+        if (nextSessionInstrument && nextSessionBenchmark) {
+          if (
+            !nextSessionInstrument.no_pre_observation_price_used ||
+            !nextSessionBenchmark.no_pre_observation_price_used
+          ) {
+            throw new Error("edge_lab_next_session_lookahead_violation");
+          }
+          executionDelayStress.next_session_open = {
+            entry_policy: "next_core_session_first_5m_close",
+            forward_return: nextSessionInstrument.forward_return,
+            benchmark_return: nextSessionBenchmark.forward_return,
+            excess_return: nextSessionInstrument.forward_return - nextSessionBenchmark.forward_return,
+            instrument_start_interval_time: nextSessionInstrument.start_interval_time,
+            instrument_end_interval_time: nextSessionInstrument.end_interval_time,
+            instrument_start_time: nextSessionInstrument.start_time,
+            instrument_end_time: nextSessionInstrument.end_time,
+            benchmark_start_interval_time: nextSessionBenchmark.start_interval_time,
+            benchmark_end_interval_time: nextSessionBenchmark.end_interval_time,
+            benchmark_start_time: nextSessionBenchmark.start_time,
+            benchmark_end_time: nextSessionBenchmark.end_time,
+          };
+        }
+
         rows.push({
           schema: "evercraft.daytrade.edge-measurement.v1",
           measurement_id: "edgemeas:" + sha({
@@ -121,10 +460,19 @@ export function measureRockiesHypotheses(hypotheses, barsBySymbol, {
           ].join("|"),
           hypothesis_id: hypothesis.hypothesis_id,
           source_observation_id: hypothesis.source_observation_id,
+          placebo_for_source_observation_id: hypothesis.placebo_for_source_observation_id || null,
+          placebo_offset_days: Number.isFinite(Number(hypothesis.placebo_offset_days))
+            ? Number(hypothesis.placebo_offset_days)
+            : null,
           observed_at: hypothesis.observed_at,
+          observation_market_phase: classifyNewYorkMarketPhase(hypothesis.observed_at),
+          modeled_entry_market_phase: classifyNewYorkMarketPhase(instrumentMove.start_time),
           source_family: hypothesis.source_family,
           origin_entity_ref: hypothesis.origin_entity_ref || null,
           source_authority_class: hypothesis.source_authority_class || null,
+          sec_items: Array.isArray(hypothesis.sec_items) ? [...hypothesis.sec_items] : [],
+          source_form: hypothesis.source_form || null,
+          source_ticker: hypothesis.source_ticker || null,
           independent_source_family_count: hypothesis.independent_source_family_count,
           rockies_range: hypothesis.rockies_range,
           observation_kind: hypothesis.observation_kind || "observation",
@@ -135,10 +483,31 @@ export function measureRockiesHypotheses(hypotheses, barsBySymbol, {
           forward_return: instrumentMove.forward_return,
           benchmark_return: benchmarkMove.forward_return,
           excess_return: instrumentMove.forward_return - benchmarkMove.forward_return,
+          instrument_realized_volatility_5m: instrumentMove.realized_volatility_5m,
+          benchmark_realized_volatility_5m: benchmarkMove.realized_volatility_5m,
+          instrument_max_path_gain: instrumentMove.max_path_gain,
+          instrument_max_path_drawdown: instrumentMove.max_path_drawdown,
+          benchmark_max_path_gain: benchmarkMove.max_path_gain,
+          benchmark_max_path_drawdown: benchmarkMove.max_path_drawdown,
+          instrument_opening_gap_return: instrumentMove.opening_gap_return,
+          benchmark_opening_gap_return: benchmarkMove.opening_gap_return,
+          instrument_start_interval_time: instrumentMove.start_interval_time,
+          instrument_end_interval_time: instrumentMove.end_interval_time,
           instrument_start_time: instrumentMove.start_time,
           instrument_end_time: instrumentMove.end_time,
+          instrument_start_price: instrumentMove.start_price,
+          instrument_end_price: instrumentMove.end_price,
+          instrument_start_volume: instrumentMove.start_volume,
+          instrument_price_field: instrumentMove.price_field,
+          benchmark_start_interval_time: benchmarkMove.start_interval_time,
+          benchmark_end_interval_time: benchmarkMove.end_interval_time,
           benchmark_start_time: benchmarkMove.start_time,
           benchmark_end_time: benchmarkMove.end_time,
+          benchmark_start_price: benchmarkMove.start_price,
+          benchmark_end_price: benchmarkMove.end_price,
+          benchmark_price_field: benchmarkMove.price_field,
+          alternate_benchmarks: alternateBenchmarks,
+          execution_delay_stress: executionDelayStress,
           provenance_refs: [...(hypothesis.provenance_refs || [])],
           evidence_state: hypothesis.evidence_state,
           anomaly_score: hypothesis.anomaly_score,
@@ -222,31 +591,51 @@ export function evaluateEdgeFamilies(measurements, {
     const splitAt = Math.max(1, Math.floor(rows.length * development_fraction));
     const holdoutRows = rows.slice(splitAt);
     const holdoutOrigins = uniq(holdoutRows.map((row) => row.origin_entity_ref));
-    const byOrigin = new Map();
+    const byOriginRawNet = new Map();
+    const byOriginStrategyNet = new Map();
+    const expectedSign = evaluation.learned_direction === "NEGATIVE_EXCESS_RETURN"
+      ? -1
+      : evaluation.learned_direction === "POSITIVE_EXCESS_RETURN"
+        ? 1
+        : Number(evaluation.holdout?.expected_sign || 0);
+    const cost = transaction_cost_bps / 10000;
+
     for (const row of holdoutRows) {
       if (!row.origin_entity_ref) continue;
-      if (!byOrigin.has(row.origin_entity_ref)) byOrigin.set(row.origin_entity_ref, []);
+      if (!byOriginRawNet.has(row.origin_entity_ref)) {
+        byOriginRawNet.set(row.origin_entity_ref, []);
+        byOriginStrategyNet.set(row.origin_entity_ref, []);
+      }
       const excess = Number(row.forward_return || 0) - Number(row.benchmark_return || 0);
-      const net = excess - Math.sign(excess || 1) * (transaction_cost_bps / 10000);
-      byOrigin.get(row.origin_entity_ref).push(net);
+      const rawDirectionalNet = expectedSign === 0
+        ? excess
+        : excess - expectedSign * cost;
+      const strategyNet = expectedSign === 0
+        ? 0
+        : expectedSign * excess - cost;
+      byOriginRawNet.get(row.origin_entity_ref).push(rawDirectionalNet);
+      byOriginStrategyNet.get(row.origin_entity_ref).push(strategyNet);
     }
-    const originMeans = [...byOrigin.values()].map((values) =>
+    const originRawMeans = [...byOriginRawNet.values()].map((values) =>
       values.reduce((a,b) => a + b, 0) / values.length
     );
-    const originBalancedHoldoutMean = originMeans.length
-      ? originMeans.reduce((a,b) => a + b, 0) / originMeans.length
+    const originStrategyMeans = [...byOriginStrategyNet.values()].map((values) =>
+      values.reduce((a,b) => a + b, 0) / values.length
+    );
+    const originBalancedHoldoutMean = originRawMeans.length
+      ? originRawMeans.reduce((a,b) => a + b, 0) / originRawMeans.length
       : 0;
-    const originBalancedSign = originBalancedHoldoutMean > 0
-      ? 1
-      : originBalancedHoldoutMean < 0 ? -1 : 0;
+    const originBalancedStrategyMean = originStrategyMeans.length
+      ? originStrategyMeans.reduce((a,b) => a + b, 0) / originStrategyMeans.length
+      : 0;
     const officialAuthority = authorityClasses.length > 0 &&
       authorityClasses.every((value) => String(value).startsWith("official_"));
     const authoritativeMultiOrigin =
       officialAuthority &&
       originEntities.length >= minimum_authoritative_origins &&
       holdoutOrigins.length >= minimum_holdout_origins &&
-      originBalancedSign !== 0 &&
-      originBalancedSign === evaluation.holdout.sign;
+      expectedSign !== 0 &&
+      originBalancedStrategyMean > 0;
 
     return {
       schema: "evercraft.daytrade.edge-family-evaluation.v1",
@@ -264,6 +653,7 @@ export function evaluateEdgeFamilies(measurements, {
       origin_entities: originEntities,
       source_authority_classes: authorityClasses,
       origin_balanced_holdout_mean_excess_return_net: originBalancedHoldoutMean,
+      origin_balanced_holdout_mean_strategy_return_net: originBalancedStrategyMean,
       development_p_approx: developmentP,
       development_q_bh: 1,
       base_evaluation: evaluation,
@@ -378,7 +768,7 @@ function dateWindow(observations) {
   if (!times.length) throw new Error("edge_lab_observation_timestamps_missing");
   const min = new Date(Math.min(...times));
   const max = new Date(Math.max(...times));
-  min.setUTCDate(min.getUTCDate() - 1);
+  min.setUTCDate(min.getUTCDate() - 7);
   max.setUTCDate(max.getUTCDate() + 14);
   return { start: min.toISOString(), end: max.toISOString() };
 }
@@ -410,10 +800,22 @@ export async function runEdgeResearchBatch({
     };
   }
 
-  const window = dateWindow(hypotheses);
+  const placeboHypotheses = buildMatchedPlaceboHypotheses(hypotheses);
+  const randomPlaceboHypotheses = buildDeterministicRandomPlaceboHypotheses(hypotheses);
+  const window = dateWindow([
+    ...hypotheses,
+    ...placeboHypotheses,
+    ...randomPlaceboHypotheses,
+  ]);
+  const researchInstruments = uniq([
+    ...hypotheses.flatMap((row) => row.research_instruments || []),
+    ...placeboHypotheses.flatMap((row) => row.research_instruments || []),
+    ...randomPlaceboHypotheses.flatMap((row) => row.research_instruments || []),
+  ]);
   const symbols = uniq([
     "SPY",
-    ...hypotheses.flatMap((row) => row.research_instruments || []),
+    ...researchInstruments,
+    ...researchInstruments.flatMap((instrument) => alternateBenchmarksFor(instrument)),
   ]);
 
   const barsBySymbol = {};
@@ -427,6 +829,11 @@ export async function runEdgeResearchBatch({
   }
 
   const measurements = measureRockiesHypotheses(hypotheses, barsBySymbol);
+  const placeboMeasurements = measureRockiesHypotheses(placeboHypotheses, barsBySymbol);
+  const randomPlaceboMeasurements = measureRockiesHypotheses(
+    randomPlaceboHypotheses,
+    barsBySymbol
+  );
   const evaluations = evaluateEdgeFamilies(measurements, { transaction_cost_bps });
   const candidates = evaluations.filter((row) => row.status === "RESEARCH_CANDIDATE");
 
@@ -436,9 +843,28 @@ export async function runEdgeResearchBatch({
     observation_count: observations.length,
     hypothesis_count: hypotheses.length,
     measurement_count: measurements.length,
+    placebo_hypothesis_count: placeboHypotheses.length,
+    placebo_measurement_count: placeboMeasurements.length,
+    random_placebo_hypothesis_count: randomPlaceboHypotheses.length,
+    random_placebo_measurement_count: randomPlaceboMeasurements.length,
     family_count: evaluations.length,
     research_candidate_count: candidates.length,
     measurements,
+    placebo_measurements: placeboMeasurements,
+    random_placebo_measurements: randomPlaceboMeasurements,
+    placebo_policy: {
+      offsets_days: [-7, 7],
+      exclusion_hours_from_other_same_origin_events: 24,
+      same_weekday_preserved: true,
+      historical_diagnostic_only: true,
+    },
+    random_placebo_policy: {
+      offset_pool_days: [-35, -28, -21, -14, 14, 21, 28, 35],
+      deterministic_selection_per_observation: 2,
+      exclusion_hours_from_other_same_origin_events: 24,
+      same_weekday_preserved: true,
+      historical_diagnostic_only: true,
+    },
     date_window: window,
     transaction_cost_bps,
     no_lookahead_policy: true,

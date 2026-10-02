@@ -27,10 +27,32 @@ assert.equal(origin.origin_count,6);
 assert.ok(origin.p05>0);
 const costs=costStress(rows);
 assert.ok(costs.find(x=>x.transaction_cost_bps===20).mean_signed_net>0);
+assert.ok(costs.some(x=>x.transaction_cost_bps===100));
+assert.ok(costs.some(x=>x.transaction_cost_bps===150));
+assert.ok(
+  costs.find(x=>x.transaction_cost_bps===75).mean_signed_net >
+  costs.find(x=>x.transaction_cost_bps===100).mean_signed_net
+);
+assert.ok(
+  costs.find(x=>x.transaction_cost_bps===100).mean_signed_net >
+  costs.find(x=>x.transaction_cost_bps===150).mean_signed_net
+);
 const rolling=rollingWindowStress(rows);
 assert.ok(rolling.positive_rate>=0.75);
 const nullTest=permutationNullTest(rows,{iterations:500,seed:"null-proof"});
 assert.ok(nullTest.null_p_value<0.05);
+
+
+const negativeRows=rows.map((row)=>({
+  ...row,
+  signal_key:"ai_models|sec_8_k|SOXX|neg",
+  forward_return:-0.012,
+  benchmark_return:0,
+}));
+const negativeCosts=costStress(negativeRows,{expected_sign:-1,costs_bps:[5,20,75]});
+assert.ok(negativeCosts[0].mean_signed_net>negativeCosts[1].mean_signed_net);
+assert.ok(negativeCosts[1].mean_signed_net>negativeCosts[2].mean_signed_net);
+assert.ok(negativeCosts[2].mean_signed_net>0);
 
 const report={
   evaluations:[{
@@ -55,6 +77,7 @@ console.log(JSON.stringify({
   bootstrap:true,
   origin_balanced_bootstrap:true,
   cost_stress:true,
+  cost_stress_to_150bps:true,
   rolling_window_stress:true,
   permutation_null:true,
   live_trade_authority:false,

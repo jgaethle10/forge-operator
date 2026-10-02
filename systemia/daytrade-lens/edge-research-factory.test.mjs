@@ -1,21 +1,29 @@
 import assert from "node:assert/strict";
 import {
   FIVE_MINUTE_LAG_BARS,
+  EXECUTION_DELAY_STRESS_BARS,
+  ALTERNATE_BENCHMARKS_BY_INSTRUMENT,
+  buildMatchedPlaceboHypotheses,
+  buildDeterministicRandomPlaceboHypotheses,
   measureRockiesHypotheses,
   evaluateEdgeFamilies,
   benjaminiHochberg,
   fetchAlpacaBars,
   filterCoreSessionBars,
+  classifyNewYorkMarketPhase,
 } from "./edge-research-factory.mjs";
 
 function bars(start, count, drift) {
   const out = [];
   let price = 100;
   for (let i = 0; i < count; i++) {
+    const open = price;
     price *= 1 + drift;
     out.push({
       t: new Date(Date.parse(start) + i * 5 * 60_000).toISOString(),
+      o: open,
       c: price,
+      v: 1000 + i,
     });
   }
   return out;
@@ -31,6 +39,14 @@ assert.deepEqual(filtered.map((row) => row.t), [
   "2026-09-01T13:30:00Z",
   "2026-09-01T19:55:00Z",
 ]);
+
+assert.equal(classifyNewYorkMarketPhase("2026-09-01T13:24:00Z"),"premarket");
+assert.equal(classifyNewYorkMarketPhase("2026-09-01T13:25:00Z"),"opening_imbalance_window");
+assert.equal(classifyNewYorkMarketPhase("2026-09-01T13:30:00Z"),"immediate_post_open");
+assert.equal(classifyNewYorkMarketPhase("2026-09-01T13:45:00Z"),"continuous_session");
+assert.equal(classifyNewYorkMarketPhase("2026-09-01T19:50:00Z"),"closing_imbalance_window");
+assert.equal(classifyNewYorkMarketPhase("2026-09-01T20:00:00Z"),"after_hours");
+assert.equal(classifyNewYorkMarketPhase("2026-09-05T15:00:00Z"),"closed_weekend");
 
 const hypothesis = {
   hypothesis_id: "edgehyp:proof",
@@ -48,17 +64,147 @@ const hypothesis = {
   source_reliability: 0.9,
 };
 
+const placebos = buildMatchedPlaceboHypotheses([hypothesis]);
+assert.equal(placebos.length, 2);
+assert.deepEqual(placebos.map((row) => row.placebo_offset_days).sort((a,b)=>a-b), [-7, 7]);
+assert.ok(placebos.every((row) => row.placebo_for_source_observation_id === hypothesis.source_observation_id));
+assert.ok(placebos.every((row) => new Date(row.observed_at).getUTCDay() === new Date(hypothesis.observed_at).getUTCDay()));
+
+const randomPlacebos = buildDeterministicRandomPlaceboHypotheses([hypothesis]);
+assert.equal(randomPlacebos.length, 2);
+assert.ok(randomPlacebos.every((row) => row.placebo_scheme === "deterministic_random_calendar"));
+assert.ok(randomPlacebos.every((row) => Math.abs(row.placebo_offset_days) >= 14));
+assert.ok(randomPlacebos.every((row) => new Date(row.observed_at).getUTCDay() === new Date(hypothesis.observed_at).getUTCDay()));
+assert.deepEqual(
+  buildDeterministicRandomPlaceboHypotheses([hypothesis]).map((row) => row.placebo_offset_days),
+  randomPlacebos.map((row) => row.placebo_offset_days)
+);
+
+const nearbyReal = {
+  ...hypothesis,
+  hypothesis_id: "edgehyp:nearby",
+  source_observation_id: "ctxobs:nearby",
+  observed_at: "2026-09-08T13:30:00Z",
+};
+const excludedPlacebos = buildMatchedPlaceboHypotheses([hypothesis, nearbyReal]);
+assert.equal(
+  excludedPlacebos.some((row) =>
+    row.placebo_for_source_observation_id === hypothesis.source_observation_id &&
+    row.placebo_offset_days === 7
+  ),
+  false
+);
+
 const measured = measureRockiesHypotheses([hypothesis], {
-  XLU: bars("2026-09-01T13:30:00Z", 10, 0.002),
-  SPY: bars("2026-09-01T13:30:00Z", 10, 0.0005),
+  XLU: bars("2026-09-01T13:30:00Z", 25, 0.002),
+  SPY: bars("2026-09-01T13:30:00Z", 25, 0.0005),
+  QQQ: bars("2026-09-01T13:30:00Z", 25, 0.001),
 });
 assert.equal(measured.length, 1);
 assert.equal(measured[0].lag_bars, FIVE_MINUTE_LAG_BARS["15m"]);
+assert.equal(measured[0].instrument_start_interval_time, "2026-09-01T13:30:00.000Z");
+assert.equal(measured[0].instrument_start_time, "2026-09-01T13:35:00.000Z");
+assert.equal(measured[0].instrument_end_interval_time, "2026-09-01T13:45:00.000Z");
+assert.equal(measured[0].instrument_end_time, "2026-09-01T13:50:00.000Z");
 assert.equal(measured[0].live_trade_authority, false);
+assert.ok(measured[0].alternate_benchmarks.QQQ);
+assert.ok(Number.isFinite(measured[0].alternate_benchmarks.QQQ.excess_return));
+assert.deepEqual(ALTERNATE_BENCHMARKS_BY_INSTRUMENT.SOXX, ["QQQ", "SMH"]);
+assert.deepEqual(
+  Object.keys(measured[0].execution_delay_stress).sort(),
+  Object.keys(EXECUTION_DELAY_STRESS_BARS).sort()
+);
+assert.equal(measured[0].execution_delay_stress["5m"].delay_bars, 1);
+assert.equal(measured[0].execution_delay_stress["15m"].delay_bars, 3);
+assert.equal(measured[0].execution_delay_stress["30m"].delay_bars, 6);
+assert.equal(measured[0].execution_delay_stress["60m"].delay_bars, 12);
+assert.equal(measured[0].execution_delay_stress["90m"].delay_bars, 18);
+assert.ok(Number.isFinite(measured[0].instrument_realized_volatility_5m));
+assert.ok(Number.isFinite(measured[0].instrument_start_volume));
+assert.ok(Number.isFinite(measured[0].benchmark_realized_volatility_5m));
+assert.ok(measured[0].instrument_max_path_gain >= measured[0].instrument_max_path_drawdown);
+assert.ok(
+  new Date(measured[0].execution_delay_stress["30m"].instrument_start_time).getTime() >
+    new Date(measured[0].instrument_start_time).getTime()
+);
 assert.equal(
   new Date(measured[0].instrument_start_time).getTime() >= new Date(hypothesis.observed_at).getTime(),
   true
 );
+
+const multiSessionMeasured = measureRockiesHypotheses([hypothesis], {
+  XLU: [
+    ...bars("2026-09-01T13:30:00Z", 78, 0.0003),
+    ...bars("2026-09-02T13:30:00Z", 12, 0.0004),
+  ],
+  SPY: [
+    ...bars("2026-09-01T13:30:00Z", 78, 0.0001),
+    ...bars("2026-09-02T13:30:00Z", 12, 0.0001),
+  ],
+  QQQ: [
+    ...bars("2026-09-01T13:30:00Z", 78, 0.0002),
+    ...bars("2026-09-02T13:30:00Z", 12, 0.0002),
+  ],
+});
+assert.equal(
+  multiSessionMeasured[0].execution_delay_stress.next_session_open.entry_policy,
+  "next_core_session_first_5m_close"
+);
+assert.equal(
+  multiSessionMeasured[0].execution_delay_stress.next_session_open.instrument_start_time,
+  "2026-09-02T13:35:00.000Z"
+);
+
+const overnightHypothesis = {
+  ...hypothesis,
+  hypothesis_id: "edgehyp:overnight-vol-proof",
+  source_observation_id: "ctxobs:overnight-vol-proof",
+  lag_windows: [{ key: "1d", minutes: 390 }],
+};
+const flatDayOne = bars("2026-09-01T13:30:00Z", 78, 0).map((row) => ({
+  ...row,
+  c: 100,
+}));
+const gappedDayTwoInstrument = bars("2026-09-02T13:30:00Z", 5, 0).map((row) => ({
+  ...row,
+  c: 150,
+}));
+const gappedDayTwoBenchmark = bars("2026-09-02T13:30:00Z", 5, 0).map((row) => ({
+  ...row,
+  c: 120,
+}));
+const overnightMeasured = measureRockiesHypotheses([overnightHypothesis], {
+  XLU: [...flatDayOne, ...gappedDayTwoInstrument],
+  SPY: [...flatDayOne, ...gappedDayTwoBenchmark],
+  QQQ: [...flatDayOne, ...gappedDayTwoBenchmark],
+});
+assert.equal(overnightMeasured.length, 1);
+assert.equal(overnightMeasured[0].instrument_realized_volatility_5m, 0);
+assert.ok(overnightMeasured[0].instrument_max_path_gain >= 0.49);
+
+const gapHypothesis = {
+  ...hypothesis,
+  hypothesis_id: "edgehyp:gap-proof",
+  source_observation_id: "ctxobs:gap-proof",
+  observed_at: "2026-09-02T13:30:00Z",
+};
+const gapMeasured = measureRockiesHypotheses([gapHypothesis], {
+  XLU: [
+    ...bars("2026-09-01T13:30:00Z", 78, 0),
+    ...bars("2026-09-02T13:30:00Z", 25, 0.001),
+  ],
+  SPY: [
+    ...bars("2026-09-01T13:30:00Z", 78, 0),
+    ...bars("2026-09-02T13:30:00Z", 25, 0.0002),
+  ],
+  QQQ: [
+    ...bars("2026-09-01T13:30:00Z", 78, 0),
+    ...bars("2026-09-02T13:30:00Z", 25, 0.0003),
+  ],
+});
+assert.equal(gapMeasured.length, 1);
+assert.ok(Number.isFinite(gapMeasured[0].instrument_opening_gap_return));
+assert.ok(Number.isFinite(gapMeasured[0].benchmark_opening_gap_return));
 
 const many = [];
 for (let i = 0; i < 50; i++) {
@@ -106,6 +252,28 @@ assert.equal(authoritativeEval[0].candidate_checks.evidence_diversity_pass, true
 assert.equal(authoritativeEval[0].distinct_origin_entities, 6);
 assert.ok(authoritativeEval[0].holdout_origin_entities >= 3);
 assert.equal(authoritativeEval[0].status, "RESEARCH_CANDIDATE");
+
+
+const authoritativeNegative = many.map((row, i) => ({
+  ...row,
+  measurement_id: "neg:" + i,
+  source_observation_id: "neg-o:" + i,
+  source_family: "sec_filings",
+  source_authority_class: "official_regulatory_filing",
+  origin_entity_ref: "sec:cik:" + String(i % 6).padStart(10, "0"),
+  forward_return: (i % 5 === 0 ? 0.001 : -0.004) - (i >= 35 ? 0.0005 : 0),
+  benchmark_return: 0,
+}));
+const authoritativeNegativeEval = evaluateEdgeFamilies(authoritativeNegative, {
+  transaction_cost_bps: 20,
+  false_discovery_rate: 0.10,
+});
+assert.equal(authoritativeNegativeEval[0].candidate_checks.authoritative_multi_origin_diversity, true);
+assert.equal(authoritativeNegativeEval[0].status, "RESEARCH_CANDIDATE");
+assert.equal(authoritativeNegativeEval[0].learned_direction, "NEGATIVE_EXCESS_RETURN");
+assert.ok(authoritativeNegativeEval[0].base_evaluation.holdout.mean_strategy_return_net > 0);
+assert.ok(authoritativeNegativeEval[0].origin_balanced_holdout_mean_strategy_return_net > 0);
+assert.ok(authoritativeNegativeEval[0].origin_balanced_holdout_mean_excess_return_net < 0);
 
 const tooFewOrigins = many.map((row, i) => ({
   ...row,
@@ -182,8 +350,22 @@ console.log(JSON.stringify({
   no_lookahead: true,
   benchmark_adjusted: true,
   core_session_horizons: true,
+  delayed_entry_60m: true,
+  delayed_entry_90m: true,
+  next_session_open_execution_stress: true,
+  deterministic_random_placebo_calendar: true,
+  realized_volatility_metrics: true,
+  entry_bar_volume_preserved_without_liquidity_claim: true,
+  overnight_gap_excluded_from_5m_volatility: true,
+  opening_gap_metrics: true,
+  opening_gap_uses_bar_open_not_close: true,
+  bar_close_availability_timestamped_at_interval_end: true,
+  market_phase_tagging: true,
+  path_excursion_metrics: true,
   source_diversity_required: true,
   authoritative_multi_origin_screen: true,
+  origin_balanced_strategy_cost_accounting: true,
+  negative_direction_cost_regression_guard: true,
   alpaca_pagination: true,
   pagination_loop_guard: true,
   false_discovery_control: "benjamini_hochberg",

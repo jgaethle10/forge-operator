@@ -1,0 +1,136 @@
+import assert from "node:assert/strict";
+import {
+  ATTACK_IMPLEMENTATION_MAP,
+  reconcileLearningAttackCoverage,
+} from "./learning-attack-coverage.mjs";
+
+const receipt={
+  schema:"evercraft.saban.multiplication-receipt.v1",
+  reconciliation:{
+    mission_id:"daytrade-market-learning-attack-001",
+    attack_queue:[
+      {
+        test:"AI versus matched non-AI filing control",
+        lesson_ids:["behavioral-salience"],
+        roles:["behavioral_bias_guard"],
+        support_count:1,
+        priority:"P0"
+      },
+      {
+        test:"CSCV/PBO diagnostic where structurally valid",
+        lesson_ids:["backtest-overfitting"],
+        roles:["overfit_red_team"],
+        support_count:1,
+        priority:"P0"
+      },
+      {
+        test:"decision-to-fill implementation shortfall",
+        lesson_ids:["implementation-shortfall"],
+        roles:["execution_cost_guard"],
+        support_count:1,
+        priority:"P1"
+      },
+      {
+        test:"aggressive-versus-passive execution comparison",
+        lesson_ids:["order-flow-information"],
+        roles:["execution_cost_guard"],
+        support_count:1,
+        priority:"P0"
+      },
+      {
+        test:"partial/unfilled order outcome",
+        lesson_ids:["implementation-shortfall"],
+        roles:["execution_cost_guard"],
+        support_count:1,
+        priority:"P0"
+      }
+    ]
+  }
+};
+
+const result=reconcileLearningAttackCoverage(receipt);
+assert.equal(result.attack_count,5);
+assert.equal(result.counts.implemented,3);
+assert.equal(result.counts.partial,2);
+assert.equal(result.counts.missing,0);
+assert.equal(result.frontier[0].test,"partial/unfilled order outcome");
+assert.equal(result.next_frontier.implementation_status,"partial");
+assert.equal(
+  ATTACK_IMPLEMENTATION_MAP["aggressive-versus-passive execution comparison"].status,
+  "implemented"
+);
+assert.equal(
+  ATTACK_IMPLEMENTATION_MAP["partial/unfilled order outcome"].status,
+  "partial"
+);
+assert.match(
+  ATTACK_IMPLEMENTATION_MAP["partial/unfilled order outcome"].gap,
+  /queue-position or counterfactual fill probability is never inferred/
+);
+
+assert.equal(
+  ATTACK_IMPLEMENTATION_MAP["capital-scale invariance challenge"].status,
+  "implemented"
+);
+
+assert.equal(
+  ATTACK_IMPLEMENTATION_MAP["spread-depth-imbalance data contract"].status,
+  "implemented"
+);
+assert.equal(
+  ATTACK_IMPLEMENTATION_MAP["spread/depth/impact separate fields"].status,
+  "implemented"
+);
+assert.equal(
+  ATTACK_IMPLEMENTATION_MAP["volume-is-not-liquidity negative control"].status,
+  "implemented"
+);
+assert.equal(
+  ATTACK_IMPLEMENTATION_MAP["low-depth high-volatility stress"].status,
+  "partial"
+);
+assert.match(
+  ATTACK_IMPLEMENTATION_MAP["low-depth high-volatility stress"].gap,
+  /not full market depth/
+);
+
+assert.equal(
+  ATTACK_IMPLEMENTATION_MAP["complete research-trial cemetery"].status,
+  "implemented"
+);
+assert.equal(
+  ATTACK_IMPLEMENTATION_MAP["full trial-count ledger"].status,
+  "implemented"
+);
+assert.equal(
+  ATTACK_IMPLEMENTATION_MAP["durable lifetime research-trial cemetery"].status,
+  "implemented"
+);
+assert.equal(
+  ATTACK_IMPLEMENTATION_MAP["AI versus matched non-AI filing control"].status,
+  "implemented"
+);
+assert.equal(result.mapping_is_explicit_not_inferred,true);
+assert.equal(result.live_trade_authority,false);
+
+console.log(JSON.stringify({
+  ok:true,
+  schema:"evercraft.daytrade.learning-attack-coverage-proof.v1",
+  implemented_partial_missing_accounted:true,
+  closed_cscv_gap_removed_from_frontier:true,
+  aggressive_passive_comparison_closed:true,
+  partial_execution_frontier_exposed:true,
+  passive_touch_never_promoted_to_fill:true,
+  partial_unfilled_states_now_explicit:true,
+  queue_position_still_unclaimed:true,
+  durable_trial_cemetery_capability_closed:true,
+  spread_depth_imbalance_data_contract_closed:true,
+  spread_depth_impact_separation_closed:true,
+  volume_not_liquidity_closed:true,
+  low_visible_size_high_volatility_partial:true,
+  capital_scale_invariance_challenge_closed:true,
+  impact_envelope_not_calibrated_impact_model:true,
+  explicit_evidence_mapping:true,
+  frozen_protocol_mutation_forbidden:true,
+  live_trade_authority:false
+}));

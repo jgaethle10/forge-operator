@@ -72,6 +72,10 @@ assert.equal(ledger.appendMeasurement(protocol.cohort_id, {
 
 const score = ledger.score(protocol.cohort_id);
 assert.equal(score.status, "FORWARD_PAPER_PASS");
+const clusterScore = ledger.scoreClusters();
+assert.equal(clusterScore.cluster_count, 1);
+assert.equal(clusterScore.scores[0].status, "FORWARD_CLUSTER_PASS");
+assert.equal(clusterScore.scores[0].correlated_members_not_independent_edges, true);
 
 const ingest = ledger.ingestResearchReport({
   measurements: [
@@ -125,6 +129,7 @@ console.log(JSON.stringify({
   idempotent_measurements: true,
   one_signal_one_frozen_cohort: true,
   research_report_ingestion: true,
+  correlated_cluster_scoring: true,
   torn_tail_recovery: true,
   live_trade_authority: false,
 }));

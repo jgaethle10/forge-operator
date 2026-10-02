@@ -45,6 +45,23 @@ assert.ok(hypotheses.every((x) => x.direction === "LEARN_FROM_DATA"));
 assert.ok(hypotheses.every((x) => x.constraints.no_live_trade_instruction === true));
 assert.ok(hypotheses.every((x) => x.provenance_refs.length === 1));
 
+const secMetadataHypothesis = rockiesObservationToEdgeHypotheses({
+  ...observation,
+  kind: "sec_8_k",
+  facts: {
+    form: "8-K",
+    ticker: "MSFT",
+    items: ["2.02", "9.01"],
+  },
+  metadata: {
+    ...observation.metadata,
+    rockies_range: "ai_models",
+  },
+})[0];
+assert.deepEqual(secMetadataHypothesis.sec_items, ["2.02", "9.01"]);
+assert.equal(secMetadataHypothesis.source_form, "8-K");
+assert.equal(secMetadataHypothesis.source_ticker, "MSFT");
+
 const weak = rockiesObservationToEdgeHypotheses({
   ...observation,
   anomaly_score: 0.1,
@@ -61,6 +78,46 @@ assert.equal(good.status, "RESEARCH_CANDIDATE");
 assert.equal(good.edge_claimed, false);
 assert.equal(good.live_trade_authority, false);
 assert.equal(good.learned_direction, "POSITIVE_EXCESS_RETURN");
+
+
+const mixedPositive = Array.from({ length: 50 }, (_, i) => ({
+  observed_at: new Date(Date.parse("2026-03-01T15:00:00Z") + i * 86400000).toISOString(),
+  forward_return: i % 5 === 0 ? -0.004 : 0.004,
+  benchmark_return: 0,
+}));
+const mixedNoCost = evaluateRockiesEdgeCandidate(mixedPositive, { transaction_cost_bps: 0 });
+const mixedWithCost = evaluateRockiesEdgeCandidate(mixedPositive, { transaction_cost_bps: 20 });
+assert.ok(mixedNoCost.overall.mean_strategy_return_net > mixedWithCost.overall.mean_strategy_return_net);
+assert.ok(
+  Math.abs(
+    (mixedNoCost.overall.mean_strategy_return_net - mixedWithCost.overall.mean_strategy_return_net) - 0.002
+  ) < 1e-12
+);
+
+const negativeSamples = Array.from({ length: 50 }, (_, i) => ({
+  observed_at: new Date(Date.parse("2026-05-01T15:00:00Z") + i * 86400000).toISOString(),
+  forward_return: i % 5 === 0 ? 0.002 : -0.006,
+  benchmark_return: 0,
+}));
+const negativeCandidate = evaluateRockiesEdgeCandidate(negativeSamples, { transaction_cost_bps: 20 });
+assert.equal(negativeCandidate.status, "RESEARCH_CANDIDATE");
+assert.equal(negativeCandidate.learned_direction, "NEGATIVE_EXCESS_RETURN");
+assert.ok(negativeCandidate.overall.mean_strategy_return_net > 0);
+assert.equal(negativeCandidate.checks.development_strategy_return_positive_after_costs, true);
+assert.equal(negativeCandidate.checks.holdout_strategy_return_positive_after_costs, true);
+
+const weakNegativeNoCost = evaluateRockiesEdgeCandidate(negativeSamples, { transaction_cost_bps: 0 });
+const weakNegativeHeavyCost = evaluateRockiesEdgeCandidate(negativeSamples, { transaction_cost_bps: 40 });
+assert.ok(
+  weakNegativeNoCost.overall.mean_strategy_return_net >
+    weakNegativeHeavyCost.overall.mean_strategy_return_net
+);
+assert.ok(
+  Math.abs(
+    (weakNegativeNoCost.overall.mean_strategy_return_net -
+      weakNegativeHeavyCost.overall.mean_strategy_return_net) - 0.004
+  ) < 1e-12
+);
 
 const overfit = Array.from({ length: 50 }, (_, i) => ({
   observed_at: new Date(Date.parse("2026-01-01T15:00:00Z") + i * 86400000).toISOString(),
@@ -81,7 +138,10 @@ console.log(JSON.stringify({
   schema: "evercraft.daytrade.rockies-edge-fabric-proof.v1",
   hypothesis_direction_is_learned: true,
   provenance_preserved: true,
+  sec_item_metadata_preserved: true,
   holdout_required: true,
+  positive_and_negative_costs_reduce_strategy_returns: true,
+  strategy_space_cost_gate: true,
   overfit_candidate_rejected: true,
   live_trade_authority: false,
   mapped_ranges: ranges.length,

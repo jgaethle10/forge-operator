@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 import { validateFrozenProtocol, scoreForwardPaperCohort } from "./edge-forward-paper.mjs";
+import { scoreForwardPaperClusters } from "./edge-forward-paper-cluster.mjs";
 
 function sha(value) {
   return crypto.createHash("sha256").update(
@@ -225,6 +226,13 @@ export class ForwardPaperDurableState {
     return scoreForwardPaperCohort(
       protocol,
       this.measurements.get(protocol.cohort_id) || []
+    );
+  }
+
+  scoreClusters() {
+    return scoreForwardPaperClusters(
+      [...this.cohorts.values()],
+      this.measurements
     );
   }
 

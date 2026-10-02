@@ -1,0 +1,228 @@
+import assert from "node:assert/strict";
+import {
+  normalizeAlpacaFillActivity,
+  buildOrderExecutionReceipt,
+} from "./edge-order-execution-receipt.mjs";
+
+const legacy=normalizeAlpacaFillActivity({
+  activity_type:"FILL",
+  id:"a1",
+  order_id:"order-buy",
+  symbol:"SOXX",
+  side:"buy",
+  type:"partial_fill",
+  transaction_time:"2026-10-01T14:30:02.000Z",
+  qty:"3",
+  price:"100.20",
+  cum_qty:"3",
+  leaves_qty:"7",
+});
+assert.ok(legacy);
+assert.equal(legacy.qty,3);
+assert.equal(legacy.price,100.2);
+
+const sse=normalizeAlpacaFillActivity({
+  activity_type:"TRD",
+  ref_id:"a2",
+  executed_at:"2026-10-01T14:30:04.000Z",
+  qty:"7",
+  price:"100.40",
+  details:{
+    order_id:"order-buy",
+    symbol:"SOXX",
+    side:"buy",
+    execution_type:"fill",
+    cum_qty:"10",
+    leaves_qty:"0",
+  },
+});
+assert.ok(sse);
+assert.equal(sse.execution_type,"fill");
+
+const buy=buildOrderExecutionReceipt({
+  order_id:"order-buy",
+  requested_qty:10,
+  decision_time:"2026-10-01T14:30:00.000Z",
+  submitted_time:"2026-10-01T14:30:01.000Z",
+  decision_reference_price:100,
+  expected_side:"buy",
+  expected_symbol:"SOXX",
+  activities:[
+    {
+      activity_type:"FILL",
+      id:"a1",
+      order_id:"order-buy",
+      symbol:"SOXX",
+      side:"buy",
+      type:"partial_fill",
+      transaction_time:"2026-10-01T14:30:02.000Z",
+      qty:"3",
+      price:"100.20",
+      cum_qty:"3",
+      leaves_qty:"7",
+    },
+    {
+      activity_type:"TRD",
+      ref_id:"a2",
+      executed_at:"2026-10-01T14:30:04.000Z",
+      qty:"7",
+      price:"100.40",
+      details:{
+        order_id:"order-buy",
+        symbol:"SOXX",
+        side:"buy",
+        execution_type:"fill",
+        cum_qty:"10",
+        leaves_qty:"0",
+      },
+    },
+  ],
+});
+assert.equal(buy.execution_state,"FULL_FILL_ACTIVITY_OBSERVED");
+assert.equal(buy.filled_qty,10);
+assert.equal(buy.unfilled_qty,0);
+assert.equal(buy.fill_fraction,1);
+assert.equal(buy.partial_fill_event_count,1);
+assert.equal(buy.decision_to_first_fill_ms,2000);
+assert.equal(buy.submission_to_last_fill_ms,3000);
+assert.ok(Math.abs(buy.vwap_fill_price-100.34)<1e-12);
+assert.ok(Math.abs(buy.executed_share_implementation_shortfall_bps-34)<1e-9);
+assert.equal(buy.total_implementation_shortfall_complete,true);
+
+const partial=buildOrderExecutionReceipt({
+  order_id:"order-partial",
+  requested_qty:10,
+  decision_time:"2026-10-01T14:30:00.000Z",
+  decision_reference_price:100,
+  expected_side:"buy",
+  expected_symbol:"QQQ",
+  terminal_status:"canceled",
+  activities:[{
+    activity_type:"FILL",
+    id:"p1",
+    order_id:"order-partial",
+    symbol:"QQQ",
+    side:"buy",
+    type:"partial_fill",
+    transaction_time:"2026-10-01T14:30:05.000Z",
+    qty:"4",
+    price:"100.10",
+    cum_qty:"4",
+    leaves_qty:"6",
+  }],
+});
+assert.equal(partial.execution_state,"PARTIAL_FILL_ACTIVITY_OBSERVED");
+assert.equal(partial.filled_qty,4);
+assert.equal(partial.unfilled_qty,6);
+assert.equal(partial.fill_fraction,0.4);
+assert.equal(partial.total_implementation_shortfall_complete,false);
+assert.equal(partial.unfilled_remainder_opportunity_cost_measured,false);
+assert.equal(partial.unfilled_remainder_opportunity_cost_usd,null);
+
+const partialWithTerminal=buildOrderExecutionReceipt({
+  order_id:"order-partial-terminal",
+  requested_qty:10,
+  decision_time:"2026-10-01T14:30:00.000Z",
+  decision_reference_price:100,
+  expected_side:"buy",
+  expected_symbol:"QQQ",
+  terminal_status:"canceled",
+  terminal_time:"2026-10-01T14:35:00.000Z",
+  terminal_reference_price:101,
+  known_fees_usd:0.25,
+  activities:[{
+    activity_type:"FILL",
+    id:"pt1",
+    order_id:"order-partial-terminal",
+    symbol:"QQQ",
+    side:"buy",
+    type:"partial_fill",
+    transaction_time:"2026-10-01T14:30:05.000Z",
+    qty:"4",
+    price:"100.10",
+    cum_qty:"4",
+    leaves_qty:"6",
+  }],
+});
+assert.equal(partialWithTerminal.filled_qty,4);
+assert.equal(partialWithTerminal.unfilled_qty,6);
+assert.equal(partialWithTerminal.unfilled_remainder_opportunity_cost_measured,true);
+assert.ok(
+  Math.abs(partialWithTerminal.executed_share_implementation_shortfall_usd-0.4)<1e-12
+);
+assert.ok(
+  Math.abs(partialWithTerminal.unfilled_remainder_opportunity_cost_usd-6)<1e-12
+);
+assert.ok(
+  Math.abs(partialWithTerminal.gross_total_implementation_shortfall_usd-6.4)<1e-12
+);
+assert.ok(
+  Math.abs(partialWithTerminal.gross_total_implementation_shortfall_bps-64)<1e-9
+);
+assert.ok(
+  Math.abs(
+    partialWithTerminal.total_implementation_shortfall_with_known_fees_usd-6.65
+  )<1e-12
+);
+assert.equal(partialWithTerminal.total_implementation_shortfall_complete,true);
+
+const sell=buildOrderExecutionReceipt({
+  order_id:"order-sell",
+  requested_qty:5,
+  decision_time:"2026-10-01T15:00:00.000Z",
+  decision_reference_price:200,
+  expected_side:"sell",
+  expected_symbol:"SMH",
+  activities:[{
+    activity_type:"FILL",
+    id:"s1",
+    order_id:"order-sell",
+    symbol:"SMH",
+    side:"sell",
+    type:"fill",
+    transaction_time:"2026-10-01T15:00:01.000Z",
+    qty:"5",
+    price:"199",
+    cum_qty:"5",
+    leaves_qty:"0",
+  }],
+});
+assert.ok(sell.executed_share_implementation_shortfall_bps>0);
+assert.ok(Math.abs(sell.executed_share_implementation_shortfall_bps-50)<1e-9);
+assert.ok(
+  Math.abs(sell.executed_share_implementation_shortfall_usd-5)<1e-12
+);
+assert.equal(sell.unfilled_remainder_opportunity_cost_usd,0);
+assert.equal(sell.total_implementation_shortfall_complete,true);
+
+const noFill=buildOrderExecutionReceipt({
+  order_id:"order-empty",
+  requested_qty:2,
+  decision_time:"2026-10-01T15:00:00.000Z",
+  decision_reference_price:50,
+  expected_side:"buy",
+  expected_symbol:"QQQ",
+  activities:[],
+});
+assert.equal(noFill.execution_state,"NO_FILL_ACTIVITY_OBSERVED");
+assert.equal(noFill.filled_qty,0);
+assert.equal(noFill.total_implementation_shortfall_complete,false);
+assert.equal(noFill.interpretation.no_order_submission_capability,true);
+assert.equal(noFill.live_trade_authority,false);
+
+console.log(JSON.stringify({
+  ok:true,
+  schema:"evercraft.daytrade.order-execution-receipt-proof.v1",
+  legacy_fill_activity_normalized:true,
+  activity_sse_fill_normalized:true,
+  partial_and_full_fill_reconstruction:true,
+  side_correct_implementation_shortfall:true,
+  fill_latency:true,
+  unfilled_remainder_kept_unknown_without_terminal_reference:true,
+  terminal_reference_opportunity_cost_supported:true,
+  terminal_reference_never_inferred:true,
+  known_fees_optional_and_explicit:true,
+  no_order_submission_capability:true,
+  read_only:true,
+  live_trade_authority:false
+}));

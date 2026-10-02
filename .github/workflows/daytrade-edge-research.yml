@@ -5,12 +5,14 @@ on:
     paths:
       - "systemia/daytrade-lens/**"
       - "systemia/rockies/market-sources/**"
+      - "systemia/saban/multiplication-registry.json"
       - ".github/workflows/daytrade-edge-research.yml"
   push:
     branches: [main]
     paths:
       - "systemia/daytrade-lens/**"
       - "systemia/rockies/market-sources/**"
+      - "systemia/saban/multiplication-registry.json"
       - ".github/workflows/daytrade-edge-research.yml"
   schedule:
     - cron: "15 23 * * 1-5"
@@ -18,6 +20,10 @@ on:
 
 permissions:
   contents: read
+
+concurrency:
+  group: daytrade-edge-research-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   research:
@@ -37,7 +43,62 @@ jobs:
           node systemia/daytrade-lens/edge-adversarial-validation.test.mjs
           node systemia/daytrade-lens/edge-forward-paper.test.mjs
           node systemia/daytrade-lens/edge-forward-paper-durable.test.mjs
+          node systemia/daytrade-lens/edge-forward-paper-cluster.test.mjs
+          node systemia/daytrade-lens/edge-forward-paper-seed.test.mjs
           node systemia/daytrade-lens/edge-stress-lab.test.mjs
+          node systemia/daytrade-lens/edge-search-burden.test.mjs
+          node systemia/daytrade-lens/edge-research-trial-cemetery.test.mjs
+          node systemia/daytrade-lens/edge-family-max-null.test.mjs
+          node systemia/daytrade-lens/edge-deflated-sharpe.test.mjs
+          node systemia/daytrade-lens/edge-tail-dependence.test.mjs
+          node systemia/daytrade-lens/edge-cscv-pbo.test.mjs
+          node systemia/daytrade-lens/edge-breaker-lab.test.mjs
+          node systemia/daytrade-lens/edge-adversarial-fixtures.test.mjs
+          node systemia/daytrade-lens/edge-timing-fragility.test.mjs
+          node systemia/daytrade-lens/edge-volatility-delay-interaction.test.mjs
+          node systemia/daytrade-lens/edge-signal-decay-cost-decomposition.test.mjs
+          node systemia/daytrade-lens/edge-overlap-fragility.test.mjs
+          node systemia/daytrade-lens/edge-matched-placebo.test.mjs
+          node systemia/daytrade-lens/edge-random-placebo.test.mjs
+          node systemia/daytrade-lens/edge-label-permutation.test.mjs
+          node systemia/daytrade-lens/edge-benchmark-fragility.test.mjs
+          node systemia/daytrade-lens/edge-regime-fragility.test.mjs
+          node systemia/daytrade-lens/edge-clock-structure.test.mjs
+          node systemia/daytrade-lens/edge-event-contamination.test.mjs
+          node systemia/daytrade-lens/edge-announcement-execution-stress.test.mjs
+          node systemia/daytrade-lens/edge-narrative-blind-control.test.mjs
+          node systemia/daytrade-lens/edge-horizon-coherence.test.mjs
+          node systemia/daytrade-lens/edge-walk-forward.test.mjs
+          node systemia/daytrade-lens/edge-execution-translation.test.mjs
+          node systemia/daytrade-lens/edge-quote-microstructure.test.mjs
+          node systemia/daytrade-lens/edge-execution-speed-bounds.test.mjs
+          node systemia/daytrade-lens/edge-capital-scale-impact-envelope.test.mjs
+          node systemia/daytrade-lens/edge-liquidity-state-contract.test.mjs
+          node systemia/daytrade-lens/edge-depth-data-contract.test.mjs
+          node systemia/daytrade-lens/edge-order-execution-receipt.test.mjs
+          node systemia/daytrade-lens/edge-order-execution-fetch.test.mjs
+          node systemia/daytrade-lens/edge-paper-order-probe.test.mjs
+          node systemia/daytrade-lens/edge-pilot-readiness.test.mjs
+          node systemia/daytrade-lens/edge-cluster-adversarial-summary.test.mjs
+          node systemia/daytrade-lens/saban-learning-adapter.test.mjs
+          node systemia/daytrade-lens/learning-attack-coverage.test.mjs
+          node systemia/saban/contract-doctor.mjs
+          node systemia/daytrade-lens/sec-edge-backfill-contract.test.mjs
+
+      - name: Run Saban DayTrade learning red team
+        run: |
+          mkdir -p artifacts/daytrade-edge
+          node systemia/saban/multiplier.mjs \
+            --software daytrade-learning-lab \
+            --auto \
+            --execute \
+            --reconcile \
+            --state artifacts/daytrade-edge/saban-learning-state.json
+          cp artifacts/saban-multiplier/daytrade-learning-lab-latest.json \
+            artifacts/daytrade-edge/saban-learning-latest.json
+          node systemia/daytrade-lens/learning-attack-coverage.mjs \
+            --receipt artifacts/saban-multiplier/daytrade-learning-lab-latest.json \
+            --out artifacts/daytrade-edge/saban-learning-attack-coverage.json
 
       - name: Run real SEC to Alpaca event study
         if: github.event_name != 'pull_request'
@@ -49,7 +110,22 @@ jobs:
           EDGE_LAB_SEC_LOOKBACK_DAYS: "365"
           EDGE_LAB_SEC_PUBLICATION_DELAY_MINUTES: "10"
           EDGE_LAB_TRANSACTION_COST_BPS: "5"
+          EDGE_LAB_ALPACA_QUOTE_FEED: "sip"
+          EDGE_LAB_QUOTE_REQUEST_INTERVAL_MS: "350"
         run: node systemia/daytrade-lens/sec-edge-backfill.mjs
+
+      - name: Upload Saban DayTrade learning receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: daytrade-saban-learning-${{ github.run_id }}
+          path: |
+            artifacts/saban-multiplier/daytrade-learning-lab-latest.json
+            artifacts/saban-multiplier/contract-doctor.json
+            artifacts/daytrade-edge/saban-learning-state.json
+            artifacts/daytrade-edge/saban-learning-attack-coverage.json
+          if-no-files-found: warn
+          retention-days: 30
 
       - name: Upload Edge Lab research receipts
         if: always() && github.event_name != 'pull_request'

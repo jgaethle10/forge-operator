@@ -1,0 +1,253 @@
+import assert from "node:assert/strict";
+import { buildClusterAdversarialSummary } from "./edge-cluster-adversarial-summary.mjs";
+
+const candidates = [
+  {
+    signal_key:"ai_models|sec_8_k|SOXX|1d",
+    rockies_range:"ai_models",
+    observation_kind:"sec_8_k",
+    benchmark:"SPY",
+    status:"RESEARCH_CANDIDATE",
+  },
+  {
+    signal_key:"ai_models|sec_8_k|SMH|1d",
+    rockies_range:"ai_models",
+    observation_kind:"sec_8_k",
+    benchmark:"SPY",
+    status:"RESEARCH_CANDIDATE",
+  },
+];
+
+const rows=(field,value)=>candidates.map((candidate)=>({
+  signal_key:candidate.signal_key,
+  [field]:value,
+}));
+
+const summary=buildClusterAdversarialSummary({
+  report:{evaluations:candidates},
+  adversarial:{candidate_reviews:rows("adversarial_status","FORWARD_PAPER_ELIGIBLE")},
+  stressLab:{reviews:rows("stress_status","STRESS_SURVIVOR")},
+  breakerLab:{reviews:candidates.map((candidate)=>({
+    signal_key:candidate.signal_key,
+    breaker_status:"BREAKER_SURVIVOR",
+    extended_breaker_status:"EXTENDED_BREAKER_SURVIVOR",
+  }))},
+  timingLab:{reviews:candidates.map((candidate)=>({
+    signal_key:candidate.signal_key,
+    timing_status:"TIMING_ROBUST_DIAGNOSTIC",
+    extended_timing_status:"EXTENDED_TIMING_ROBUST_DIAGNOSTIC",
+  }))},
+  volatilityDelayInteractionLab:{reviews:candidates.map((candidate)=>({
+    signal_key:candidate.signal_key,
+    status:"VOLATILITY_DELAY_INTERACTION_READY",
+    differential_delay_decay_high_minus_low:-0.003,
+  }))},
+  signalDecayCostDecompositionLab:{reviews:candidates.map((candidate)=>({
+    signal_key:candidate.signal_key,
+    status:"SIGNAL_DECAY_COST_DECOMPOSITION_READY",
+    delays:[{
+      delay_key:"30m",
+      mean_combined_relative_change_proxy:-0.004,
+    }],
+  }))},
+  overlapLab:{reviews:rows("overlap_status","OVERLAP_ROBUST_DIAGNOSTIC")},
+  placeboLab:{reviews:rows("placebo_status","PLACEBO_SEPARATED_DIAGNOSTIC")},
+  randomPlaceboLab:{reviews:rows("random_placebo_status","RANDOM_PLACEBO_SEPARATED_DIAGNOSTIC")},
+  labelPermutationLab:{reviews:rows("label_permutation_status","LABEL_PERMUTATION_SEPARATED_DIAGNOSTIC")},
+  regimeFragilityLab:{reviews:rows("regime_status","REGIME_ROBUST_DIAGNOSTIC")},
+  eventContaminationLab:{reviews:rows("contamination_status","CONTAMINATION_ROBUST_DIAGNOSTIC")},
+  announcementExecutionStressLab:{reviews:candidates.map((candidate)=>({
+    signal_key:candidate.signal_key,
+    status:"ANNOUNCEMENT_EXECUTION_STRESS_READY",
+    execution_cost_ratios:{any_to_clean_mean_spread_ratio:1.8},
+  }))},
+  benchmarkLab:{reviews:rows("benchmark_status","BENCHMARK_ROBUST_DIAGNOSTIC")},
+  horizonCoherenceLab:{reviews:rows("horizon_coherence_status","HORIZON_COHERENT_DIAGNOSTIC")},
+  walkForwardLab:{reviews:rows("walk_forward_status","WALK_FORWARD_ROBUST_DIAGNOSTIC")},
+  executionTranslationLab:{reviews:rows("translation_status","UNHEDGED_ONLY_TRANSLATES_DIAGNOSTIC")},
+  executionSpeedBoundsLab:{reviews:candidates.map((candidate)=>({
+    signal_key:candidate.signal_key,
+    status:"EXECUTION_SPEED_BOUNDS_READY",
+    grid:[{
+      hypothetical_order_notional_usd:1000,
+      immediate_visible_touch_sufficient_rate:0.75,
+    }],
+  }))},
+  capitalScaleImpactEnvelopeLab:{reviews:candidates.map((candidate)=>({
+    signal_key:candidate.signal_key,
+    status:"CAPITAL_SCALE_IMPACT_ENVELOPE_READY",
+    grid:[{
+      hypothetical_order_notional_usd:10000,
+      scenarios:[{
+        impact_coefficient:1,
+        mean_stressed_quote_strategy_net:-0.002,
+      }],
+    }],
+  }))},
+  liquidityStateContracts:{reviews:candidates.map((candidate)=>({
+    signal_key:candidate.signal_key,
+    status:"LIQUIDITY_STATE_CONTRACT_READY",
+    full_depth:{measurement_state:"unavailable_not_observed"},
+    impact:{measurement_state:"modeled_sensitivity_not_observed"},
+  }))},
+  familyMaxNullLab:{reviews:candidates.map((candidate)=>({
+    signal_key:candidate.signal_key,
+    status:"MAX_FAMILY_NULL_SEPARATED_DIAGNOSTIC",
+    empirical_family_wise_p_value:0.02,
+  }))},
+  deflatedSharpeLab:{reviews:candidates.map((candidate)=>({
+    signal_key:candidate.signal_key,
+    status:"DSR_SEPARATED_DIAGNOSTIC",
+    deflated_sharpe_probability:0.97,
+  }))},
+  tailDependenceLab:{reviews:candidates.map((candidate,index)=>({
+    signal_key:candidate.signal_key,
+    status:index===0
+      ?"TAIL_DEPENDENCE_LOWER_FRAGILITY_DIAGNOSTIC"
+      :"TAIL_DEPENDENCE_FRAGILE_DIAGNOSTIC",
+  }))},
+  cscvPboLab:{reviews:[{
+    cluster_key:"ai_models|sec_8_k|SPY",
+    status:"CSCV_PBO_LOWER_OVERFIT_DIAGNOSTIC",
+    pbo:0.20,
+  }]},
+  currentRunForwardClusterScores:{
+    scores:[{
+      cluster_key:"ai_models|sec_8_k|SPY",
+      status:"FORWARD_CLUSTER_PENDING",
+      live_trade_authority:false,
+    }],
+  },
+});
+
+assert.equal(summary.cluster_count,1);
+assert.equal(summary.candidate_count,2);
+assert.equal(summary.clusters[0].candidate_count,2);
+assert.equal(summary.clusters[0].diagnostic_counts.stress_survivor,2);
+assert.equal(summary.clusters[0].diagnostic_counts.extended_breaker_survivor,2);
+assert.equal(
+  summary.clusters[0].diagnostic_counts.volatility_delay_interaction_ready,
+  2
+);
+assert.equal(
+  summary.clusters[0].member_receipts[0].volatility_delay_interaction_status,
+  "VOLATILITY_DELAY_INTERACTION_READY"
+);
+assert.equal(
+  summary.clusters[0].member_receipts[0].volatility_delay_differential_decay,
+  -0.003
+);
+assert.equal(
+  summary.clusters[0].diagnostic_counts.signal_decay_cost_decomposition_ready,
+  2
+);
+assert.equal(
+  summary.clusters[0].member_receipts[0].signal_decay_cost_decomposition_status,
+  "SIGNAL_DECAY_COST_DECOMPOSITION_READY"
+);
+assert.equal(
+  summary.clusters[0].member_receipts[0].signal_decay_cost_30m_combined_change,
+  -0.004
+);
+assert.equal(summary.clusters[0].diagnostic_counts.label_permutation_bh_separated,2);
+assert.equal(summary.clusters[0].diagnostic_counts.family_max_null_separated,2);
+assert.equal(summary.clusters[0].diagnostic_counts.deflated_sharpe_separated,2);
+assert.equal(summary.clusters[0].diagnostic_counts.tail_dependence_fragile,1);
+assert.equal(
+  summary.clusters[0].diagnostic_counts.announcement_execution_stress_ready,
+  2
+);
+assert.equal(
+  summary.clusters[0].member_receipts[0].announcement_execution_status,
+  "ANNOUNCEMENT_EXECUTION_STRESS_READY"
+);
+assert.equal(
+  summary.clusters[0].member_receipts[0].announcement_execution_any_to_clean_spread_ratio,
+  1.8
+);
+assert.equal(
+  summary.clusters[0].cscv_pbo_cluster_receipt.status,
+  "CSCV_PBO_LOWER_OVERFIT_DIAGNOSTIC"
+);
+assert.equal(summary.clusters[0].cscv_pbo_cluster_receipt.pbo,0.20);
+assert.equal(
+  summary.clusters[0].diagnostic_counts.execution_speed_bounds_ready,
+  2
+);
+assert.equal(
+  summary.clusters[0].member_receipts[0].execution_speed_bounds_status,
+  "EXECUTION_SPEED_BOUNDS_READY"
+);
+assert.equal(
+  summary.clusters[0].member_receipts[0].execution_speed_1000_immediate_visible_rate,
+  0.75
+);
+assert.equal(
+  summary.clusters[0].diagnostic_counts.capital_scale_impact_envelope_ready,
+  2
+);
+assert.equal(
+  summary.clusters[0].member_receipts[0].capital_scale_impact_envelope_status,
+  "CAPITAL_SCALE_IMPACT_ENVELOPE_READY"
+);
+assert.equal(
+  summary.clusters[0].member_receipts[0]
+    .capital_scale_10000_coefficient_1_mean_stressed_net,
+  -0.002
+);
+assert.equal(
+  summary.clusters[0].diagnostic_counts.liquidity_state_contract_ready,
+  2
+);
+assert.equal(
+  summary.clusters[0].member_receipts[0].liquidity_state_contract_status,
+  "LIQUIDITY_STATE_CONTRACT_READY"
+);
+assert.equal(
+  summary.clusters[0].member_receipts[0].full_depth_measurement_state,
+  "unavailable_not_observed"
+);
+assert.equal(
+  summary.clusters[0].member_receipts[0].impact_measurement_state,
+  "modeled_sensitivity_not_observed"
+);
+assert.equal(
+  summary.clusters[0].member_receipts[0].family_max_null_status,
+  "MAX_FAMILY_NULL_SEPARATED_DIAGNOSTIC"
+);
+assert.equal(
+  summary.clusters[0].member_receipts[0].deflated_sharpe_status,
+  "DSR_SEPARATED_DIAGNOSTIC"
+);
+
+assert.equal(
+  summary.clusters[0].current_run_forward_cluster_score.status,
+  "FORWARD_CLUSTER_PENDING"
+);
+assert.equal(summary.clusters[0].correlated_members_not_independent_edges,true);
+assert.equal(summary.clusters[0].cluster_is_independence_reporting_unit,true);
+assert.equal(summary.descriptive_rollup_only,true);
+assert.equal(summary.live_trade_authority,false);
+
+console.log(JSON.stringify({
+  ok:true,
+  schema:"evercraft.daytrade.edge-cluster-adversarial-summary-proof.v1",
+  correlated_siblings_grouped:true,
+  candidate_and_cluster_receipts_preserved:true,
+  forward_cluster_score_attached:true,
+  family_max_null_attached:true,
+  deflated_sharpe_attached:true,
+  tail_dependence_attached:true,
+  announcement_execution_stress_attached:true,
+  volatility_delay_interaction_attached:true,
+  signal_decay_cost_decomposition_attached:true,
+  execution_speed_bounds_attached:true,
+  capital_scale_impact_envelope_attached:true,
+  liquidity_measurement_states_attached:true,
+  full_depth_missing_not_zero:true,
+  modeled_impact_not_observed_impact:true,
+  cscv_pbo_attached_at_cluster_unit:true,
+  descriptive_only:true,
+  eligibility_mutated:false,
+  live_trade_authority:false,
+}));

@@ -25,8 +25,7 @@ function uniq(xs) {
 
 function signedNet(row, expectedSign, costBps) {
   const raw = Number(row.forward_return || 0) - Number(row.benchmark_return || 0);
-  const net = raw - Math.sign(raw || 1) * (Number(costBps) / 10000);
-  return expectedSign * net;
+  return expectedSign * raw - (Number(costBps) / 10000);
 }
 
 function percentile(values, p) {
@@ -101,7 +100,7 @@ export function originBalancedBootstrap(rows, options = {}) {
 
 export function costStress(rows, {
   expected_sign = 1,
-  costs_bps = [5,10,20,40,75],
+  costs_bps = [5,10,20,40,75,100,150],
 } = {}) {
   return costs_bps.map(cost=>({
     transaction_cost_bps:cost,
@@ -152,9 +151,9 @@ export function permutationNullTest(rows, {
     const permuted=rows.map(row=>{
       const flip=random()<0.5?-1:1;
       const raw=(Number(row.forward_return||0)-Number(row.benchmark_return||0))*flip;
-      return raw - Math.sign(raw||1)*(transaction_cost_bps/10000);
+      return expected_sign * raw - (transaction_cost_bps/10000);
     });
-    const m=mean(permuted)*expected_sign;
+    const m=mean(permuted);
     if(m>=observed) asExtreme++;
   }
   return {
