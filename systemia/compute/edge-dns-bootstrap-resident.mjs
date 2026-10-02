@@ -8,6 +8,8 @@ const token=String(process.env.EVERCRAFT_ALLOCATOR_TOKEN||'');
 const snapshotPath=String(process.env.EVERCRAFT_EDGE_DNS_SNAPSHOT||'/var/lib/evercraft/nodeseed/edge-dns/canary-zone.json');
 const releaseRef=String(process.env.EVERCRAFT_EDGE_RELEASE_REF||'');
 const ttlMs=Math.max(300000,Number(process.env.EVERCRAFT_EDGE_DNS_LEASE_TTL_MS||3600000));
+const queryReceiptPath=String(process.env.EVERCRAFT_EDGE_DNS_QUERY_RECEIPTS||path.join(path.dirname(snapshotPath),'query-receipts.json'));
+const receiptQname=String(process.env.EVERCRAFT_EDGE_DNS_RECEIPT_QNAME||'_evercraft.edge-canary.evercraftpropertyservices.com.').toLowerCase();
 if(!token) throw new Error('EVERCRAFT_ALLOCATOR_TOKEN required');
 if(!/^[a-f0-9]{40}$/i.test(releaseRef)) throw new Error('EVERCRAFT_EDGE_RELEASE_REF must be immutable SHA');
 if(!fs.existsSync(snapshotPath)) throw new Error('edge DNS snapshot missing');
@@ -35,7 +37,15 @@ async function start(){
   token:lease.token,
   release_ref:releaseRef,
   workload_class:'systemia.evercraft-edge-dns.v1',
-  input:{snapshot_path:snapshotPath,dns_host:'0.0.0.0',dns_port:1053,allow_public_bind:true,health_port:0}
+  input:{
+    snapshot_path:snapshotPath,
+    dns_host:'0.0.0.0',
+    dns_port:1053,
+    allow_public_bind:true,
+    health_port:0,
+    query_receipt_path:queryReceiptPath,
+    receipt_qname:receiptQname
+  }
  }});
  serviceId=job.result?.service_id||null;
  if(!serviceId) throw new Error('edge_dns_service_id_missing');
