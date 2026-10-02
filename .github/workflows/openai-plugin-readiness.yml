@@ -39,9 +39,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Build owned Journal fixture
-        run: npm run journal:build
-
       - name: Prove OpenAI package and Fabric contract
         run: |
           node --test tests/evercraft-openai-plugin-package.test.mjs tests/evercraft-fabric-runtime.test.mjs tests/openai-owned-fabric-promotion.test.mjs tests/fabric-local-runtime.test.mjs
