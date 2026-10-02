@@ -426,6 +426,15 @@ export async function startEvercraftComputeNode({
     ffmpeg: executableAvailable('ffmpeg'),
     ffprobe: executableAvailable('ffprobe')
   };
+  const freeStorageGb = (() => {
+    try {
+      const stat = fs.statfsSync(allowedRoot);
+      const bytes = Number(stat.bavail) * Number(stat.bsize);
+      return Number.isFinite(bytes) ? Number((bytes / (1024 ** 3)).toFixed(3)) : 0;
+    } catch {
+      return 0;
+    }
+  })();
   const publicEdgeCapability = (() => {
     const baseDomain = String(process.env.EVERCRAFT_PUBLIC_EDGE_BASE_DOMAIN || '').trim();
     const tlsKeyPath = String(process.env.EVERCRAFT_PUBLIC_EDGE_TLS_KEY_PATH || '').trim();
@@ -965,6 +974,7 @@ export async function startEvercraftComputeNode({
           capacity_hint: {
             cpu_units: Math.max(1, os.cpus()?.length || 1),
             memory_mb: Math.max(64, Math.floor(os.totalmem() / 1024 / 1024)),
+            storage_gb: freeStorageGb,
             executables: executableCapabilities,
             services: serviceCapabilities
           },
