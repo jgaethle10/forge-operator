@@ -281,7 +281,10 @@
     "test:household-fabric-ui": "node tests/household-fabric-today-ui.test.mjs",
     "test:faie": "node --test systemia/faie/*.test.mjs",
     "faie:once": "node systemia/faie/cli.mjs --once",
-    "faie:resident": "node systemia/faie/cli.mjs --resident"
+    "faie:resident": "node systemia/faie/cli.mjs --resident",
+    "test:world-engine": "node --import tsx --test systemia/world-engine/world-engine.test.ts",
+    "proof:world-engine": "node --import tsx systemia/world-engine/proof.mjs",
+    "proof:saban-world-engine": "node systemia/saban/multiplier.mjs --software world-engine-review --inventory systemia/saban/fixtures/world-engine-review-job.json --agents 16 --workers 4 --execute --reconcile"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
