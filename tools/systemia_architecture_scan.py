@@ -228,7 +228,7 @@ def scan_js_family(root: Path, path: Path, nodes: dict, edges: dict, coverage: l
         method = match.group(2)
         relation = "reads" if method in BASE44_READ_METHODS else "writes"
         line_number = source_for_access.count("\n", 0, match.start()) + 1
-        excerpt = re.sub(r"\\s*\\.\\s*", ".", " ".join(match.group(0).split()))
+        excerpt = re.sub(r"\s*\.\s*", ".", " ".join(match.group(0).split()))
         add_edge(
             edges,
             file_key,
@@ -243,7 +243,7 @@ def scan_js_family(root: Path, path: Path, nodes: dict, edges: dict, coverage: l
 
     for match in BASE44_FUNCTION_INVOKE_PATTERN.finditer(source_for_access):
         line_number = source_for_access.count("\n", 0, match.start()) + 1
-        excerpt = re.sub(r"\\s*\\.\\s*", ".", " ".join(match.group(0).split()))
+        excerpt = re.sub(r"\s*\.\s*", ".", " ".join(match.group(0).split()))
         add_edge(
             edges,
             file_key,
