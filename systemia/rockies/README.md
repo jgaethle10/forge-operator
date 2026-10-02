@@ -44,3 +44,25 @@ Scale-out must preserve source-family diversity. Spawning ten copies against one
 ## Safety and authority
 
 Rockies may read authorized public sources, normalize evidence, compare state, request corroboration, and feed internal context. They do not bypass authentication, scrape through access controls, publish unsupported conclusions, move money, mutate production, contact external parties, or trigger emergency actions directly.
+
+
+## Machine Rockies
+
+Machine Rockies extend the Rockies doctrine to the machine-visible layer of the world: crawlers, agents, LLM referrals, MCP/API requests, indexing events, authorized first-party access logs, automated commercial outreach, public business-change signals, and related software activity.
+
+They have two jobs:
+
+1. **Birthwatch Evercraft.** Observe how a new Evercraft domain, product, manifest, API, or machine-readable surface is discovered after launch.
+2. **Watch machine-visible commercial change.** Correlate lawful public signals such as business registrations, new domains, permits, hiring, listings, procurement, facility changes, and EV infrastructure activity before routing a bounded candidate into Opportunity Fabric review.
+
+Machine Rockies do not treat one domain registration as a qualified lead. Commercial review requires convergent signal classes, independent source families, and direct evidence. External contact is never automatic.
+
+They also correlate repeated machine-originated outreach across the portfolio. Matching templates, rotating actor domains, repeated targets, and shared destinations may produce a `coordinated_outreach_pattern`, but that pattern is not proof of common ownership, malicious intent, fraud, or malware.
+
+The v1 runtime lives in:
+
+- `machine-roster.json` for observer lanes and authority boundaries
+- `machine-rockies.mjs` for normalization, campaign correlation, and commercial convergence
+- `machine-rockies.proof.mjs` for invariants and regression proof
+
+All admitted observations are minimized into the shared `evercraft.context.observation.v1` contract before downstream use.
