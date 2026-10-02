@@ -563,6 +563,32 @@ export class YardOperator {
         }
         healthState = 'healthy';
         routeVerification = 'private_core_health_verified';
+      } else if (workloadClass === 'systemia.raven-private-runtime.v1') {
+        const ravenHealthy =
+          health.ok === true &&
+          health.service === 'raven-nexus-private' &&
+          health.runtime === 'Evercraft Compute' &&
+          health.workload_class === 'systemia.raven-private-runtime.v1' &&
+          health.authority === 'systemia-organism' &&
+          health.loopback_only === true &&
+          health.provider_independent_boot === true &&
+          health.external_ai_required === false &&
+          health.ai_inference_enabled === false &&
+          health.command_planning_enabled === true &&
+          health.execution_authority_granted === false &&
+          health.persistent_session_ledger === true &&
+          health.instance_id === job.result?.instance_id;
+        if (!ravenHealthy) {
+          try {
+            await request(`${capacityEndpoint}/v1/services/${job.result.service_id}/stop`, {
+              method: 'POST',
+              body: JSON.stringify({ token: lease.token }),
+            });
+          } catch {}
+          throw new Error('Raven private runtime failed initial sovereign health verification');
+        }
+        healthState = 'healthy';
+        routeVerification = 'private_raven_health_verified_no_public_route';
       } else if (workloadClass === 'systemia.evercraft-home.v1') {
         const homeHealthy =
           health.ok === true &&
