@@ -19,6 +19,8 @@ import { registerSpecialistHandoffMcps } from './systemia/mcp/specialist-handoff
 import { registerRemoteOperatorMcp } from './systemia/remote-operator/mcp-gateway.mjs';
 import { registerNotificationFabricRoutes } from './systemia/notification-fabric/http.mjs';
 import { registerRadarRoutes } from './systemia/radar/http.mjs';
+import { registerInstantWorkRoutes } from './systemia/commerce/instant-work.mjs';
+import { routeVerifiedPayment } from './systemia/organism/portfolio-fulfillment-router.mjs';
 
 dotenv.config();
 
@@ -420,6 +422,12 @@ function chumHumanReviewUrl(publicId: string): string {
   target.searchParams.set('public_id', publicId);
   return target.toString();
 }
+
+registerInstantWorkRoutes(app, {
+  loadMachineCatalog: loadPublicMachineCatalog,
+  requestOrigin,
+  limiter: rateLimit(240, 60 * 60 * 1000),
+});
 
 async function persistChumAttributionEvent(event: unknown) {
   if (!chumAttributionSinkUrl) {
@@ -1016,6 +1024,8 @@ app.get('/api/chum/go/:publicId', rateLimit(240, 60 * 60 * 1000), async (req: Re
   const providerClaim = String(req.query.provider || 'unknown').trim().toLowerCase().slice(0, 64);
   const surface = String(req.query.surface || 'chum_pain_page').trim().toLowerCase().slice(0, 64);
   const intent = String(req.query.q || '').slice(0, 2000);
+  const selectedOfferKey = String(req.query.offer_key || '').trim().slice(0, 120);
+  const paymentOrderId = String(req.query.order_id || '').trim().slice(0, 96);
 
   try {
     const offer = findChumOffer(publicId);
@@ -1035,6 +1045,8 @@ app.get('/api/chum/go/:publicId', rateLimit(240, 60 * 60 * 1000), async (req: Re
     const landing = new URL(targetUrl);
     landing.searchParams.set('ec_source', 'chum');
     landing.searchParams.set('ec_surface', surface);
+    if (selectedOfferKey) landing.searchParams.set('offer_key', selectedOfferKey);
+    if (paymentOrderId) landing.searchParams.set('evercraft_order_id', paymentOrderId);
 
     res.setHeader('Cache-Control', 'no-store');
     res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
@@ -1145,10 +1157,32 @@ app.post('/api/chum/attribution/trusted-event', rateLimit(120, 60 * 60 * 1000), 
     });
     const persistence = await persistChumAttributionEvent(event);
 
+    const fulfillment = event.stage === 'payment_verified'
+      ? routeVerifiedPayment({
+          publicId: event.public_id,
+          payment: {
+            verified: true,
+            synthetic: false,
+            state: 'paid',
+            provider: String(req.body?.payment?.provider || req.body?.payment?.authority || ''),
+            evidence_ref: String(req.body?.payment?.verification_ref || ''),
+            amount_cents: Number(req.body?.payment?.amount_cents),
+            currency: String(req.body?.payment?.currency || 'USD'),
+            order_key: String(req.body?.payment?.order_key || req.body?.order_id || event.referral_id || ''),
+            receipt_key: String(req.body?.payment?.receipt_key || ''),
+            public_id: event.public_id,
+            verified_at: event.occurred_at,
+          },
+          stateRoot: process.env.EVERCRAFT_FULFILLMENT_STATE_ROOT?.trim() || 'state/fulfillment',
+          now: new Date(event.occurred_at),
+        })
+      : null;
+
     res.status(202).json({
       accepted: true,
       event,
       persistence,
+      fulfillment,
       verified_revenue_cents: event.stage === 'payment_verified' ? event.revenue.amount_cents : 0,
     });
   } catch (error) {
