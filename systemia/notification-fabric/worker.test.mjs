@@ -418,3 +418,49 @@ test('repeated lease recovery does not exhaust the real failure budget', async (
   assert.equal(outbox.get(job.id).status, 'completed');
   assert.equal(outbox.get(job.id).failures, 0);
 });
+
+
+test('real Relay fabric reconstructs principals after a deduped recovery', async () => {
+  const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'relay-real-recovery-'));
+  const fabric = createNotificationFabric({
+    dataDir,
+    sendPush: async () => ({ ok: true, status: 201, retryAfter: null }),
+  });
+  fabric.subscribe(makeSubscription());
+  const intent = fabric.prepareIntent({
+    id: 'real-recovery-ack',
+    product: 'rivet',
+    purpose: 'operational',
+    priority: 'critical',
+    title: 'Needs acknowledgement',
+    body: 'Recover the acknowledgement target.',
+    recipient_ids: ['owner'],
+    dedupe_key: 'real-recovery-ack',
+    dedupe_window_seconds: 3600,
+    acknowledgement: {
+      required: true,
+      within_seconds: 15,
+      max_escalations: 1,
+      escalation_interval_seconds: 15,
+    },
+  });
+
+  const original = await fabric.dispatchIntent(intent);
+  assert.deepEqual(original.targeted_principal_ids, ['owner']);
+
+  const outbox = createRelayOutbox({ dataDir });
+  const worker = createRelayWorker({ fabric, outbox, workerId: 'real-recovery-worker' });
+  outbox.enqueue({
+    kind: 'intent',
+    payload: { intent },
+    idempotency_key: 'real-recovery-job',
+    now: 100_000,
+  });
+  const recovered = await worker.runOnce({ now: 100_000 });
+  assert.equal(recovered.results[0].status, 'completed');
+
+  const jobs = Object.values(JSON.parse(fs.readFileSync(outbox.file, 'utf8')).jobs);
+  const watch = jobs.find((entry) => entry.kind === 'ack_watch');
+  assert.ok(watch);
+  assert.deepEqual(watch.payload.principal_ids, ['owner']);
+});
