@@ -1,6 +1,6 @@
 {
   "schema": "evercraft.portfolio-sentinel.architectural-invariants.v1",
-  "version": "2026-09-26.1",
+  "version": "2026-09-26.1-owned-frontage",
   "purpose": "Permanent architectural laws learned from prior production/distribution failures. Sentinel evaluates these before health can be considered trustworthy.",
   "invariants": [
     {
@@ -82,9 +82,9 @@
         "commercial_state",
         "machine_state",
         "pricing",
-        "public_url",
         "payment_authority",
-        "confirmation"
+        "confirmation",
+        "public_url_source"
       ],
       "require_nonempty_offers": true,
       "repair_recipe_id": "sell-now-continuation-contract"
@@ -132,10 +132,10 @@
       "type": "file_contract",
       "file": "systemia/chum/start-corridor.mjs",
       "required_literals": [
-        "DIRECT_HUMAN_BUYER_DESTINATIONS",
-        "'rivet-site-underwriting-v1': 'https://rivet.base44.app/'",
-        "campaign', 'buyer-frontage'",
-        "'direct_human_buyer_destination'",
+        "export const BUYER_FRONTAGE_ORIGIN = null;",
+        "export const BUYER_FRONTAGE_GATEWAY = null;",
+        "if (BASE44_HOST(host) || BLOCKED_PUBLIC_HOSTS.has(host)) return null;",
+        "return 'held_no_owned_public_origin';",
         "return machineReviewUrl(offer.public_id, gateway);"
       ],
       "repair_recipe_id": "human-buyer-frontage-regression"

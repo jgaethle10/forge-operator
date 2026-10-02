@@ -144,13 +144,13 @@
         "targets": [
           "public/.well-known/evercraft-machine-catalog.json"
         ],
-        "instructions": "Every sell-now offer must retain a concrete public continuation, pricing, payment authority, confirmation boundary, and at least one offer record."
+        "instructions": "Every sell-now offer must retain explicit continuation state, pricing, payment authority, confirmation boundary, and at least one offer record. A public_url may remain empty only when public_url_source explicitly records a held/no-owned-public-route state; never invent or restore a legacy provider URL."
       },
       "verification": [
         "npm run chum:commerce-canary",
         "npm run customer:gauntlet"
       ],
-      "rollback": "restore last known-green machine catalog entry",
+      "rollback": "restore the last known evidence-honest continuation state; do not reintroduce an unverified or legacy public route",
       "learned_from": "RIVET buyer continuation break"
     },
     {
@@ -215,14 +215,14 @@
           "systemia/chum/start-corridor.mjs",
           "tests/chum-start-corridor.test.mjs"
         ],
-        "instructions": "Restore verified clean product buyer destinations before exposing Machine Commerce plumbing. Preserve tracked Forge handoff when a verified CHUM public origin exists and retain Machine Commerce only as last fallback."
+        "instructions": "Preserve the owned-frontage fail-closed contract: verified HTTPS CHUM origin first, then an explicitly configured owned buyer frontage, then an explicitly configured owned machine-review gateway. Reject Base44 and blocked legacy hosts. If no owned continuation is configured, hold rather than inventing a buyer route."
       },
       "verification": [
         "npm run test:chum-start-corridor",
         "npm run test:chum-revenue",
         "customer gauntlet remains open"
       ],
-      "rollback": "Restore the last known-green buyer destination map if a product-domain destination fails live verification.",
+      "rollback": "restore the last known-green owned-frontage policy; never restore a legacy-provider default",
       "learned_from": "Zero-sale conversion audit Sep 26 2026"
     },
     {
