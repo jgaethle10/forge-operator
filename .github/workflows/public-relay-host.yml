@@ -15,6 +15,7 @@ on:
   push:
     branches:
       - main
+      - systemia/base44-evacuation-factory-20260930
     paths:
       - 'systemia/yard/public-relay-host-controller.mjs'
       - 'systemia/yard/public-relay-host.proof.mjs'
