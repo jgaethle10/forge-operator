@@ -76,7 +76,7 @@ export const ATTACK_IMPLEMENTATION_MAP=Object.freeze({
       "systemia/daytrade-lens/edge-order-execution-fetch.mjs",
       "systemia/daytrade-lens/edge-paper-order-probe.mjs"
     ],
-    gap:"Historical public data separates no-touch and touch-but-fill-indeterminate states. The fail-closed paper probe can produce an explicit order_id whose FILL activities can represent observed paper partial fills, leaves and terminal opportunity cost, but no authorized forward paper-order dataset has been ingested and queue-position or counterfactual live fill probability is never inferred."
+    gap:"Historical public data separates no-touch and touch-but-fill-indeterminate states. The fail-closed paper probe can produce an explicit order_id whose FILL activities can represent observed paper partial fills, leaves and terminal opportunity cost. No authorized forward paper-order dataset has been ingested, and queue-position or counterfactual fill probability is never inferred. Paper execution is not live fill-quality evidence."
   },
   "signal-decay versus execution-cost decomposition":{
     status:"implemented",
