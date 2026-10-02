@@ -225,3 +225,40 @@ A correction candidate is written when a released signal:
 - rolls off its freshness window
 
 Corrections are append-only. The original release remains preserved, which makes the public record auditable instead of silently rewriting history.
+
+
+## First-party Clip distribution
+
+Radar now has a receipt-backed handoff into the owned Evercraft Clip publishing runtime.
+
+An owned Radar release still writes a durable `clip-outbox` package first. External distribution is a separate authority boundary. The resident may automatically drain one pending package per cycle only when all required publishing configuration is explicitly present.
+
+Current live adapter path:
+
+- destination: `facebook-page`
+- publisher runtime: `systemia/clip/social-publisher-runtime.mjs`
+- provider adapter: `systemia/clip/facebook-page-publisher.mjs`
+- provider publication proof: Facebook post identifier plus returned or verified permalink
+- brand block: `rnb-chicken-and-soul` remains fail-closed
+
+A queued package is not a published post. A provider error is not a published post. A provider timeout is not automatically retried because the remote outcome can be ambiguous. Failed publication requires an explicit retry through the internal distribution action.
+
+Environment:
+
+- `RADAR_CLIP_AUTOPUBLISH_ENABLED=true|false`
+- `RADAR_PUBLIC_ORIGIN=https://<owned-radar-origin>`
+- `RADAR_CLIP_AUTHORIZATION_REF=<durable policy/authorization receipt>`
+- `RADAR_FACEBOOK_ADAPTER_VERIFIED=true|false`
+- `RADAR_FACEBOOK_PAGE_ID=<page id>`
+- `RADAR_FACEBOOK_PAGE_ACCESS_TOKEN=<secret>`
+- `RADAR_FACEBOOK_GRAPH_VERSION=v26.0`
+
+Secrets never appear in the public distribution-state response.
+
+Distribution surfaces:
+
+- `GET /api/radar/distribution` exposes safe outbox and receipt state
+- `POST /api/radar/distribute` requires `RADAR_INTERNAL_TOKEN`
+- `POST /api/radar/distribute` with `{"retry_failed":true}` is the explicit retry boundary for an ambiguous failed provider outcome
+
+When automatic distribution is disabled, the Radar evidence/release organism continues to run normally and the external network remains untouched.
