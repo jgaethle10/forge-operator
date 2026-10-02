@@ -1,13 +1,9 @@
-import { createHash } from 'node:crypto';
 import { mkdir, readFile, writeFile, stat } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { lineage } from './core.mjs';
 
 const SCHEMA = 'evercraft.lineage.remote.v1';
 
-function sha256(bytes) {
-  return createHash('sha256').update(bytes).digest('hex');
-}
 
 function lineageObjectId(bytes) {
   const parsed = JSON.parse(Buffer.from(bytes).toString('utf8'));
@@ -171,5 +167,126 @@ export async function pushCommitGraph({ store, remote, branch = 'main', expected
     transferred_objects: transferred,
     reused_objects: reused,
     ref: refReceipt
+  };
+}
+
+
+async function localHasObject(store, id) {
+  try {
+    const bytes = await readFile(store.objectPath(id));
+    return lineageObjectId(bytes) === id;
+  } catch {
+    return false;
+  }
+}
+
+export async function fetchCommitGraph({
+  store,
+  remote,
+  remoteBranch = 'main',
+  localBranch = remoteBranch,
+  updateLocalRef = true
+}) {
+  await remote.init();
+  const remoteHead = await remote.readRef(remoteBranch);
+  if (!remoteHead) {
+    return {
+      schema: 'evercraft.lineage.fetch-receipt.v1',
+      remote_branch: remoteBranch,
+      local_branch: localBranch,
+      remote_head: null,
+      object_count: 0,
+      transferred_objects: 0,
+      reused_objects: 0,
+      ref_updated: false,
+      state: 'remote_empty'
+    };
+  }
+
+  const queue = [remoteHead];
+  const seen = new Set();
+  let transferred = 0;
+  let reused = 0;
+
+  while (queue.length) {
+    const id = queue.shift();
+    if (!id || seen.has(id)) continue;
+    seen.add(id);
+
+    const bytes = await remote.getObject(id);
+    const object = JSON.parse(bytes.toString('utf8'));
+
+    if (await localHasObject(store, id)) {
+      reused += 1;
+    } else {
+      const path = store.objectPath(id);
+      await mkdir(dirname(path), { recursive: true });
+      await writeFile(path, bytes);
+      transferred += 1;
+    }
+
+    if (object.type === 'commit') {
+      queue.push(object.payload.tree_id, ...(object.payload.parents || []), ...(object.payload.transactions || []));
+    } else if (object.type === 'tree') {
+      queue.push(...(object.payload.entries || []).map((entry) => entry.object_id));
+    }
+  }
+
+  let localHead = null;
+  try {
+    localHead = await store.resolveRef(localBranch);
+  } catch {
+    localHead = null;
+  }
+
+  const ancestors = await store.ancestors(remoteHead);
+  const canFastForward = !localHead || localHead === remoteHead || ancestors.has(localHead);
+
+  if (!updateLocalRef) {
+    return {
+      schema: 'evercraft.lineage.fetch-receipt.v1',
+      remote_branch: remoteBranch,
+      local_branch: localBranch,
+      remote_head: remoteHead,
+      local_head_before: localHead,
+      object_count: seen.size,
+      transferred_objects: transferred,
+      reused_objects: reused,
+      ref_updated: false,
+      fast_forward_possible: canFastForward,
+      state: 'objects_fetched'
+    };
+  }
+
+  if (!canFastForward) {
+    return {
+      schema: 'evercraft.lineage.fetch-receipt.v1',
+      remote_branch: remoteBranch,
+      local_branch: localBranch,
+      remote_head: remoteHead,
+      local_head_before: localHead,
+      object_count: seen.size,
+      transferred_objects: transferred,
+      reused_objects: reused,
+      ref_updated: false,
+      fast_forward_possible: false,
+      state: 'diverged_requires_reconciliation'
+    };
+  }
+
+  await store.writeRef(localBranch, remoteHead);
+  return {
+    schema: 'evercraft.lineage.fetch-receipt.v1',
+    remote_branch: remoteBranch,
+    local_branch: localBranch,
+    remote_head: remoteHead,
+    local_head_before: localHead,
+    local_head_after: remoteHead,
+    object_count: seen.size,
+    transferred_objects: transferred,
+    reused_objects: reused,
+    ref_updated: true,
+    fast_forward_possible: true,
+    state: localHead === remoteHead ? 'already_current' : 'fast_forwarded'
   };
 }
