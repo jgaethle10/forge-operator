@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://evercraft.example/schemas/systemia.notification.delivery.v2.json",
+  "$id": "https://evercraft.example/schemas/systemia.notification.delivery.v3.json",
   "title": "Evercraft Relay Delivery Receipt",
   "type": "object",
   "required": [
@@ -12,7 +12,10 @@
   ],
   "properties": {
     "schema": {
-      "const": "systemia.notification.delivery.v2"
+      "enum": [
+        "systemia.notification.delivery.v2",
+        "systemia.notification.delivery.v3"
+      ]
     },
     "notification_id": {
       "type": "string",
@@ -34,12 +37,17 @@
       "enum": [
         "deduped",
         "no_target",
+        "expired",
+        "inboxed",
         "delivered_realtime",
         "push_suppressed",
         "accepted_by_push_gateway",
         "delivery_failed",
         "human_seen",
-        "human_acknowledged"
+        "human_acknowledged",
+        "ack_watch_satisfied",
+        "ack_watch_expired",
+        "ack_escalated"
       ]
     },
     "reason": {
@@ -68,6 +76,27 @@
     "receipt_hash": {
       "type": "string",
       "minLength": 32
+    },
+    "expires_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "escalation_level": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "escalation_notification_id": {
+      "type": "string"
+    },
+    "principal_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
     }
   },
   "additionalProperties": true
