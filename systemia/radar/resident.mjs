@@ -17,6 +17,7 @@ import {
   readRadarRelease,
   reconcileRadarCorrections
 } from './release-controller.mjs';
+import { readSentinelRadarBridge } from './sentinel-bridge.mjs';
 
 function ensureDir(dir) {
   fs.mkdirSync(dir, { recursive: true, mode: 0o700 });
@@ -51,6 +52,9 @@ export function createRadarResident({
   maxSignals = 8,
   journalUrl = '',
   autoReleaseOwned = false,
+  sentinelStateDir = path.resolve('artifacts', 'sentinel-resident'),
+  sentinelBridgeEnabled = true,
+  sentinelMaxAgeSeconds = 180,
   clock = () => new Date()
 } = {}) {
   const stateFile = path.join(stateDir, 'state.json');
@@ -71,6 +75,7 @@ export function createRadarResident({
   let lastRun = null;
   let lastError = null;
   let lastReleaseDecision = readJson(releaseCandidateFile, null);
+  let lastSentinelBridge = null;
 
   async function runOnce({ externalObservations = [] } = {}) {
     if (running) {
@@ -89,13 +94,43 @@ export function createRadarResident({
         fetchImpl,
         now: startedAt
       });
-      const sourceHealthUpdate = updateSourceHealth(sourceHealthState, collectorRun.receipts, {
+
+      const sentinelBridge = sentinelBridgeEnabled
+        ? readSentinelRadarBridge({
+            stateDir: sentinelStateDir,
+            now: startedAt,
+            maxAgeSeconds: sentinelMaxAgeSeconds
+          })
+        : {
+            schema: 'evercraft.systemia-radar.upstream-bridge-receipt.v1',
+            bridge: 'systemia-sentinel',
+            status: 'disabled',
+            checked_at: startedAt,
+            observation_count: 0,
+            batch: null
+          };
+      lastSentinelBridge = sentinelBridge;
+
+      const sourceReceipts = [...(collectorRun.receipts || [])];
+      if (['pass', 'failed'].includes(sentinelBridge.status)) {
+        sourceReceipts.push({
+          collector: 'systemia-sentinel-bridge',
+          status: sentinelBridge.status,
+          observation_count: sentinelBridge.observation_count || 0,
+          error: sentinelBridge.error || null,
+          started_at: startedAt,
+          finished_at: startedAt
+        });
+      }
+
+      const sourceHealthUpdate = updateSourceHealth(sourceHealthState, sourceReceipts, {
         at: startedAt
       });
       sourceHealthState = sourceHealthUpdate.state;
 
       const observations = [
         ...(collectorRun.observations || []),
+        ...(sentinelBridge.batch?.observations || []),
         ...(Array.isArray(externalObservations) ? externalObservations : [])
       ];
 
@@ -162,9 +197,12 @@ export function createRadarResident({
         started_at: startedAt,
         finished_at: clock().toISOString(),
         collected_observations: collectorRun.observations?.length || 0,
+        sentinel_bridge: sentinelBridge,
+        sentinel_observations: sentinelBridge.batch?.observations?.length || 0,
         external_observations: Array.isArray(externalObservations) ? externalObservations.length : 0,
         admitted_observations: ingestReceipts.length,
         collector_receipts: collectorRun.receipts,
+        upstream_bridge_receipts: [sentinelBridge],
         edition_id: edition.edition_id,
         edition_status: edition.status,
         signal_count: edition.signal_count,
@@ -236,6 +274,9 @@ export function createRadarResident({
       latest_signal_count: state.last_edition?.signal_count || 0,
       propagation_candidate_count: state.last_edition?.propagation_candidates?.length || 0,
       source_health: publicSourceHealthProjection(sourceHealthState),
+      upstream_bridges: {
+        sentinel: lastSentinelBridge
+      },
       release_gate_status: lastReleaseDecision?.status || 'not_evaluated',
       owned_release_count: listRadarReleases(stateDir).releases?.length || 0,
       correction_count: listRadarCorrections(stateDir).corrections?.length || 0,
