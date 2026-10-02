@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evercraft.example/schemas/systemia.relay.job-receipt.v1.json",
+  "title": "Evercraft Relay Durable Job Receipt",
+  "type": "object",
+  "required": [
+    "schema",
+    "job_id",
+    "status",
+    "kind",
+    "at",
+    "receipt_hash"
+  ],
+  "properties": {
+    "schema": {
+      "const": "systemia.relay.job-receipt.v1"
+    },
+    "job_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "notification_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "status": {
+      "enum": [
+        "job_queued",
+        "job_deduplicated",
+        "job_completed",
+        "job_retry_scheduled",
+        "job_dead_letter",
+        "job_requeued"
+      ]
+    },
+    "kind": {
+      "enum": [
+        "intent",
+        "signal",
+        "ack_watch"
+      ]
+    },
+    "attempt": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "error": {
+      "type": "string",
+      "maxLength": 1000
+    },
+    "at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "prev_hash": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "receipt_hash": {
+      "type": "string",
+      "minLength": 32
+    }
+  },
+  "additionalProperties": true
+}
