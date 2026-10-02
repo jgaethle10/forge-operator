@@ -86,7 +86,15 @@ router_map_config_value() {
   grep -E "^${key}=" "$ROUTER_MAP_ENV" 2>/dev/null | tail -1 | cut -d= -f2- || true
 }
 
+repair_router_map_env_permissions() {
+  [[ -f "$ROUTER_MAP_ENV" ]] || return 0
+  # router-map.env contains only gateway/LAN host/repo/node coordinates.
+  # It must be readable by the bounded unprivileged router-map service.
+  chmod 0644 "$ROUTER_MAP_ENV" 2>/dev/null || true
+}
+
 ensure_router_map_resident_from_saved_config() {
+  repair_router_map_env_permissions
   # Never invent or scan router credentials. This recovery path only reuses
   # the previously operator-approved gateway + Chromebook LAN host.
   [[ -f "$ROUTER_MAP_ENV" ]] || {
@@ -121,6 +129,7 @@ ensure_router_map_resident_from_saved_config() {
 }
 
 reassert_owned_public_ingress() {
+  repair_router_map_env_permissions
   local edge_state="not_installed"
   local router_state="not_installed"
   local relay_state="not_installed"

@@ -55,3 +55,24 @@ test('Fabric edge recovery is not blocked by optional Saban maintenance',()=>{
   assert.ok(script.includes('"saban_maintenance_requested"'));
   assert.ok(script.includes('"saban_capacity_degraded"'));
 });
+
+
+test('Fabric edge doctor does not let updater maintenance mask ingress diagnosis',()=>{
+  assert.ok(script.includes('self_update_degraded=false'));
+  assert.ok(script.includes('WARNING: verified self-updater is degraded'));
+  const diagnosisBlock=script.slice(
+    script.indexOf('diagnosis="unknown"'),
+    script.indexOf('echo\necho "[diagnosis]"')
+  );
+  assert.equal(diagnosisBlock.includes('fabric_update_repair_failed'),false);
+  assert.ok(diagnosisBlock.includes('chromeos_host_forward_unreachable'));
+  assert.ok(script.includes('"self_update_degraded"'));
+});
+
+test('Fabric edge doctor repairs router-map env readability before unprivileged refresh',()=>{
+  const sourceIndex=script.indexOf('source "$ROUTER_ENV"');
+  const chmodIndex=script.lastIndexOf('chmod 0644 "$ROUTER_ENV"',sourceIndex);
+  assert.ok(chmodIndex>=0,'missing router env readability repair');
+  assert.ok(chmodIndex<sourceIndex,'router env mode must be repaired before sourcing');
+  assert.ok(script.includes('runuser -u "$RUN_USER" -- /usr/local/sbin/evercraft-refresh-router-map'));
+});
