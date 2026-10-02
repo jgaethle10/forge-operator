@@ -160,11 +160,18 @@ export function registerNotificationFabricRoutes(app, options = {}) {
       success: true,
       ...fabric.config(),
       relay_delivery: {
+        state:
+          workerState.last_error || Number(queue.statuses?.dead_letter || 0) > 0 || Number(queue.oldest_due_age_ms || 0) > maxQueueAgeMs
+            ? 'degraded'
+            : 'healthy',
         worker_enabled: workerEnabled,
         worker_started: workerState.started,
         queue_depth: Number(queue.statuses?.pending || 0) + Number(queue.statuses?.retry || 0),
+        due: Number(queue.due || 0),
+        scheduled: Number(queue.scheduled || 0),
         processing: Number(queue.statuses?.processing || 0),
         dead_letters: Number(queue.statuses?.dead_letter || 0),
+        oldest_due_age_ms: queue.oldest_due_age_ms,
         oldest_pending_age_ms: queue.oldest_pending_age_ms,
       },
     });
@@ -174,7 +181,7 @@ export function registerNotificationFabricRoutes(app, options = {}) {
     res.setHeader('Cache-Control', 'no-store');
     const queue = outbox.stats();
     const workerState = worker.snapshot();
-    const queueAgeOk = Number(queue.oldest_pending_age_ms || 0) <= maxQueueAgeMs;
+    const queueAgeOk = Number(queue.oldest_due_age_ms || 0) <= maxQueueAgeMs;
     const workerOk = !workerEnabled || (workerState.started && !workerState.last_error);
     const ready = queueAgeOk && workerOk;
     res.status(ready ? 200 : 503).json({
@@ -183,7 +190,9 @@ export function registerNotificationFabricRoutes(app, options = {}) {
       worker_enabled: workerEnabled,
       worker_started: workerState.started,
       queue_age_ok: queueAgeOk,
-      oldest_pending_age_ms: queue.oldest_pending_age_ms,
+      due: Number(queue.due || 0),
+      scheduled: Number(queue.scheduled || 0),
+      oldest_due_age_ms: queue.oldest_due_age_ms,
       max_queue_age_ms: maxQueueAgeMs,
       dead_letters: Number(queue.statuses?.dead_letter || 0),
     });
