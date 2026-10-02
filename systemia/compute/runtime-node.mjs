@@ -2770,6 +2770,43 @@ export async function startEvercraftComputeNode({
         });
       }
 
+      const remoteServiceRelayRenew = req.url?.match(
+        /^\/v1\/services\/([^/]+)\/remote-service-relay\/([^/]+)\/renew$/
+      );
+      if (req.method === 'POST' && remoteServiceRelayRenew) {
+        const entry = services.get(remoteServiceRelayRenew[1]);
+        if (!entry) return send(res, 404, { error: 'service_not_found' });
+        const body = await readJson(req);
+        const lease = leases.get(entry.lease_id);
+        if (!lease || lease.token_hash !== sha(body.token || '')) {
+          return send(res, 401, { error: 'invalid_lease' });
+        }
+        if (entry.workload_class !== 'systemia.remote-capacity-broker.v1') {
+          return send(res, 422, { error: 'remote_service_relay_not_supported' });
+        }
+        let renewed;
+        try {
+          renewed = entry.runtime.renewServiceRelay(
+            remoteServiceRelayRenew[2],
+            Number(body.ttl_ms || 30 * 60_000)
+          );
+        } catch (error) {
+          return send(res, 422, { error: String(error?.message || error) });
+        }
+        return send(res, renewed.renewed ? 200 : 404, {
+          ...renewed,
+          receipt: chain.issue('remote-capacity.service-relay.renewed', {
+            service_id: remoteServiceRelayRenew[1],
+            lease_id: entry.lease_id,
+            workload_class: entry.workload_class,
+            relay_id: remoteServiceRelayRenew[2],
+            renewed: renewed.renewed === true,
+            expires_at: renewed.expires_at || null,
+            relay_token_rotated: false,
+          }),
+        });
+      }
+
       const remoteServiceRelayRelease = req.url?.match(
         /^\/v1\/services\/([^/]+)\/remote-service-relay\/([^/]+)\/release$/
       );
