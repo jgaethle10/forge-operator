@@ -148,10 +148,14 @@ const execution=await market.execute({
 });
 assert.equal(execution.schema,'evercraft.saban.golem-portable-execution.v1');
 assert.equal(execution.portable_worker_id,'chum-portable-v1');
-assert.equal(execution.result.role,'surface_auditor');
-assert.equal(execution.result.status,'finding');
+assert.equal(
+  execution.result.schema,
+  'evercraft.saban.portable-worker-receipt.v1'
+);
+assert.equal(execution.result.result.role,'surface_auditor');
+assert.equal(execution.result.result.status,'finding');
 assert.ok(
-  execution.result.actions.some((row)=>
+  execution.result.result.actions.some((row)=>
     row.type==='verify_llms_and_structured_discovery_surfaces'
   )
 );
