@@ -50,8 +50,8 @@
   ],
   "handoff": {
     "registry_name": "io.github.jgaethle10/forensiscope",
-    "canonical_url": "https://evercraft-forensiscope.legacy provider.app/",
-    "mcp": "https://evercraft-forensiscope.legacy provider.app/functions/forensiScopeMcp",
+    "canonical_url": null,
+    "mcp": null,
     "human_confirmation_required": true,
     "automatic_media_transfer_allowed": false,
     "user_must_submit_media": true

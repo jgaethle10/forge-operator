@@ -4,11 +4,11 @@
   "title": "EventWave",
   "description": "Search public events and buy labeled promotion with human-confirmed checkout.",
   "version": "1.0.0",
-  "websiteUrl": "https://event-wave.legacy provider.app/functions/eventWaveAgentGateway?view=docs",
+  "websiteUrl": "https://github.com/jgaethle10/forge-operator/tree/main/registry/eventwave",
   "remotes": [
     {
       "type": "streamable-http",
-      "url": "https://event-wave.legacy provider.app/functions/eventWaveMcp"
+      "url": null
     }
   ]
 }

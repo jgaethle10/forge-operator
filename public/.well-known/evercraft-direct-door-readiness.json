@@ -8,7 +8,7 @@
   "invariant": "Never add an umbrella routing hop when a verified specialist can be invoked directly.",
   "universal_fallback": {
     "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-    "remote_mcp": "https://evercraft-ai-suite-08c4d2b8.legacy provider.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+    "remote_mcp": null
   },
   "promotion_order": [
     "prove_product_runtime",
@@ -71,7 +71,7 @@
       "direct_callable": true,
       "registry_published": true,
       "registry_name": "io.github.jgaethle10/forensiscope",
-      "mcp_url": "https://evercraft-forensiscope.legacy provider.app/functions/forensiScopeMcp",
+      "mcp_url": null,
       "public_origin_state": null,
       "runtime_path": null,
       "blocking_gates": [],
@@ -80,9 +80,9 @@
         "hops_before_specialist": 0,
         "use_universal_router_first": false,
         "registry_name": "io.github.jgaethle10/forensiscope",
-        "remote_mcp": "https://evercraft-forensiscope.legacy provider.app/functions/forensiScopeMcp",
+        "remote_mcp": null,
         "fallback_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-        "fallback_remote_mcp": "https://evercraft-ai-suite-08c4d2b8.legacy provider.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "fallback_remote_mcp": null
       },
       "next_release_action": "measure_provider_pickup_separately",
       "registry_candidate": null
@@ -94,7 +94,7 @@
       "direct_callable": true,
       "registry_published": true,
       "registry_name": "io.github.jgaethle10/aliev",
-      "mcp_url": "https://aliev.legacy provider.app/functions/alievMcp",
+      "mcp_url": null,
       "public_origin_state": null,
       "runtime_path": null,
       "blocking_gates": [],
@@ -103,9 +103,9 @@
         "hops_before_specialist": 0,
         "use_universal_router_first": false,
         "registry_name": "io.github.jgaethle10/aliev",
-        "remote_mcp": "https://aliev.legacy provider.app/functions/alievMcp",
+        "remote_mcp": null,
         "fallback_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-        "fallback_remote_mcp": "https://evercraft-ai-suite-08c4d2b8.legacy provider.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "fallback_remote_mcp": null
       },
       "next_release_action": "measure_provider_pickup_separately",
       "registry_candidate": null
@@ -117,7 +117,7 @@
       "direct_callable": true,
       "registry_published": true,
       "registry_name": "io.github.jgaethle10/findmypart",
-      "mcp_url": "https://findmypart.legacy provider.app/functions/findMyPartMcp",
+      "mcp_url": null,
       "public_origin_state": null,
       "runtime_path": null,
       "blocking_gates": [],
@@ -126,9 +126,9 @@
         "hops_before_specialist": 0,
         "use_universal_router_first": false,
         "registry_name": "io.github.jgaethle10/findmypart",
-        "remote_mcp": "https://findmypart.legacy provider.app/functions/findMyPartMcp",
+        "remote_mcp": null,
         "fallback_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-        "fallback_remote_mcp": "https://evercraft-ai-suite-08c4d2b8.legacy provider.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "fallback_remote_mcp": null
       },
       "next_release_action": "measure_provider_pickup_separately",
       "registry_candidate": null
@@ -140,7 +140,7 @@
       "direct_callable": true,
       "registry_published": true,
       "registry_name": "io.github.jgaethle10/systemia-website-audit",
-      "mcp_url": "https://systemia-audit-pro.legacy provider.app/functions/auditAgentMcp",
+      "mcp_url": null,
       "public_origin_state": null,
       "runtime_path": null,
       "blocking_gates": [],
@@ -149,9 +149,9 @@
         "hops_before_specialist": 0,
         "use_universal_router_first": false,
         "registry_name": "io.github.jgaethle10/systemia-website-audit",
-        "remote_mcp": "https://systemia-audit-pro.legacy provider.app/functions/auditAgentMcp",
+        "remote_mcp": null,
         "fallback_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-        "fallback_remote_mcp": "https://evercraft-ai-suite-08c4d2b8.legacy provider.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "fallback_remote_mcp": null
       },
       "next_release_action": "measure_provider_pickup_separately",
       "registry_candidate": null
@@ -163,7 +163,7 @@
       "direct_callable": true,
       "registry_published": true,
       "registry_name": "io.github.jgaethle10/career-command",
-      "mcp_url": "https://evercraft-career-command.legacy provider.app/functions/careerMcp",
+      "mcp_url": null,
       "public_origin_state": null,
       "runtime_path": null,
       "blocking_gates": [],
@@ -172,9 +172,9 @@
         "hops_before_specialist": 0,
         "use_universal_router_first": false,
         "registry_name": "io.github.jgaethle10/career-command",
-        "remote_mcp": "https://evercraft-career-command.legacy provider.app/functions/careerMcp",
+        "remote_mcp": null,
         "fallback_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-        "fallback_remote_mcp": "https://evercraft-ai-suite-08c4d2b8.legacy provider.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "fallback_remote_mcp": null
       },
       "next_release_action": "measure_provider_pickup_separately",
       "registry_candidate": null
@@ -186,7 +186,7 @@
       "direct_callable": true,
       "registry_published": true,
       "registry_name": "io.github.jgaethle10/eventwave",
-      "mcp_url": "https://event-wave.legacy provider.app/functions/eventWaveMcp",
+      "mcp_url": null,
       "public_origin_state": null,
       "runtime_path": null,
       "blocking_gates": [],
@@ -195,9 +195,9 @@
         "hops_before_specialist": 0,
         "use_universal_router_first": false,
         "registry_name": "io.github.jgaethle10/eventwave",
-        "remote_mcp": "https://event-wave.legacy provider.app/functions/eventWaveMcp",
+        "remote_mcp": null,
         "fallback_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-        "fallback_remote_mcp": "https://evercraft-ai-suite-08c4d2b8.legacy provider.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "fallback_remote_mcp": null
       },
       "next_release_action": "measure_provider_pickup_separately",
       "registry_candidate": null
@@ -209,7 +209,7 @@
       "direct_callable": true,
       "registry_published": true,
       "registry_name": "io.github.jgaethle10/faie",
-      "mcp_url": "https://faie.legacy provider.app/functions/faieMcp",
+      "mcp_url": null,
       "public_origin_state": null,
       "runtime_path": null,
       "blocking_gates": [],
@@ -218,9 +218,9 @@
         "hops_before_specialist": 0,
         "use_universal_router_first": false,
         "registry_name": "io.github.jgaethle10/faie",
-        "remote_mcp": "https://faie.legacy provider.app/functions/faieMcp",
+        "remote_mcp": null,
         "fallback_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-        "fallback_remote_mcp": "https://evercraft-ai-suite-08c4d2b8.legacy provider.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "fallback_remote_mcp": null
       },
       "next_release_action": "measure_provider_pickup_separately",
       "registry_candidate": null
@@ -232,7 +232,7 @@
       "direct_callable": true,
       "registry_published": true,
       "registry_name": "io.github.jgaethle10/buildflow",
-      "mcp_url": "https://legacy provider.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp",
+      "mcp_url": null,
       "public_origin_state": null,
       "runtime_path": null,
       "blocking_gates": [],
@@ -241,9 +241,9 @@
         "hops_before_specialist": 0,
         "use_universal_router_first": false,
         "registry_name": "io.github.jgaethle10/buildflow",
-        "remote_mcp": "https://legacy provider.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsMcp",
+        "remote_mcp": null,
         "fallback_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-        "fallback_remote_mcp": "https://evercraft-ai-suite-08c4d2b8.legacy provider.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "fallback_remote_mcp": null
       },
       "next_release_action": "measure_provider_pickup_separately",
       "registry_candidate": null
@@ -255,7 +255,7 @@
       "direct_callable": true,
       "registry_published": true,
       "registry_name": "io.github.jgaethle10/evercraft-web",
-      "mcp_url": "https://legacy provider.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp",
+      "mcp_url": null,
       "public_origin_state": null,
       "runtime_path": null,
       "blocking_gates": [],
@@ -264,9 +264,9 @@
         "hops_before_specialist": 0,
         "use_universal_router_first": false,
         "registry_name": "io.github.jgaethle10/evercraft-web",
-        "remote_mcp": "https://legacy provider.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp",
+        "remote_mcp": null,
         "fallback_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-        "fallback_remote_mcp": "https://evercraft-ai-suite-08c4d2b8.legacy provider.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "fallback_remote_mcp": null
       },
       "next_release_action": "measure_provider_pickup_separately",
       "registry_candidate": null
@@ -278,7 +278,7 @@
       "direct_callable": true,
       "registry_published": true,
       "registry_name": "io.github.jgaethle10/website-launch",
-      "mcp_url": "https://instant-website-builder-usa-6feac193.legacy provider.app/functions/websiteServiceMcp",
+      "mcp_url": null,
       "public_origin_state": null,
       "runtime_path": null,
       "blocking_gates": [],
@@ -287,9 +287,9 @@
         "hops_before_specialist": 0,
         "use_universal_router_first": false,
         "registry_name": "io.github.jgaethle10/website-launch",
-        "remote_mcp": "https://instant-website-builder-usa-6feac193.legacy provider.app/functions/websiteServiceMcp",
+        "remote_mcp": null,
         "fallback_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-        "fallback_remote_mcp": "https://evercraft-ai-suite-08c4d2b8.legacy provider.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "fallback_remote_mcp": null
       },
       "next_release_action": "measure_provider_pickup_separately",
       "registry_candidate": null
@@ -313,7 +313,7 @@
         "hops_before_specialist": 1,
         "use_universal_router_first": true,
         "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-        "remote_mcp": "https://evercraft-ai-suite-08c4d2b8.legacy provider.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+        "remote_mcp": null,
         "desired_specialist_registry_name": "io.github.jgaethle10/systemia-remote-ops",
         "pending_specialist_runtime_path": "/mcp/systemia-remote-ops"
       },
@@ -332,7 +332,7 @@
       "direct_callable": true,
       "registry_published": true,
       "registry_name": "io.github.jgaethle10/deck-capital-fit",
-      "mcp_url": "https://legacy provider.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp",
+      "mcp_url": null,
       "public_origin_state": null,
       "runtime_path": null,
       "blocking_gates": [],
@@ -341,9 +341,9 @@
         "hops_before_specialist": 0,
         "use_universal_router_first": false,
         "registry_name": "io.github.jgaethle10/deck-capital-fit",
-        "remote_mcp": "https://legacy provider.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp",
+        "remote_mcp": null,
         "fallback_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-        "fallback_remote_mcp": "https://evercraft-ai-suite-08c4d2b8.legacy provider.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "fallback_remote_mcp": null
       },
       "next_release_action": "measure_provider_pickup_separately",
       "registry_candidate": null
@@ -355,7 +355,7 @@
       "direct_callable": true,
       "registry_published": true,
       "registry_name": "io.github.jgaethle10/evercraft-clip",
-      "mcp_url": "https://legacy provider.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp",
+      "mcp_url": null,
       "public_origin_state": null,
       "runtime_path": null,
       "blocking_gates": [],
@@ -364,9 +364,9 @@
         "hops_before_specialist": 0,
         "use_universal_router_first": false,
         "registry_name": "io.github.jgaethle10/evercraft-clip",
-        "remote_mcp": "https://legacy provider.app/api/apps/6a83af980c9f995f588c7df3/functions/clipMcp",
+        "remote_mcp": null,
         "fallback_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-        "fallback_remote_mcp": "https://evercraft-ai-suite-08c4d2b8.legacy provider.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "fallback_remote_mcp": null
       },
       "next_release_action": "measure_provider_pickup_separately",
       "registry_candidate": null
@@ -378,7 +378,7 @@
       "direct_callable": true,
       "registry_published": true,
       "registry_name": "io.github.jgaethle10/roasted",
-      "mcp_url": "https://legacy provider.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp",
+      "mcp_url": null,
       "public_origin_state": null,
       "runtime_path": null,
       "blocking_gates": [],
@@ -387,9 +387,9 @@
         "hops_before_specialist": 0,
         "use_universal_router_first": false,
         "registry_name": "io.github.jgaethle10/roasted",
-        "remote_mcp": "https://legacy provider.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentMcp",
+        "remote_mcp": null,
         "fallback_registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-        "fallback_remote_mcp": "https://evercraft-ai-suite-08c4d2b8.legacy provider.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp"
+        "fallback_remote_mcp": null
       },
       "next_release_action": "measure_provider_pickup_separately",
       "registry_candidate": null
@@ -413,7 +413,7 @@
         "hops_before_specialist": 1,
         "use_universal_router_first": true,
         "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-        "remote_mcp": "https://evercraft-ai-suite-08c4d2b8.legacy provider.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+        "remote_mcp": null,
         "desired_specialist_registry_name": "io.github.jgaethle10/ibmi-rescue",
         "pending_specialist_runtime_path": "/mcp/ibmi-rescue"
       },
@@ -444,7 +444,7 @@
         "hops_before_specialist": 1,
         "use_universal_router_first": true,
         "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-        "remote_mcp": "https://evercraft-ai-suite-08c4d2b8.legacy provider.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+        "remote_mcp": null,
         "desired_specialist_registry_name": "io.github.jgaethle10/foundry-app-escape",
         "pending_specialist_runtime_path": "/mcp/foundry-app-escape"
       },
@@ -475,7 +475,7 @@
         "hops_before_specialist": 1,
         "use_universal_router_first": true,
         "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-        "remote_mcp": "https://evercraft-ai-suite-08c4d2b8.legacy provider.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+        "remote_mcp": null,
         "desired_specialist_registry_name": "io.github.jgaethle10/site-survive",
         "pending_specialist_runtime_path": "/mcp/site-survive"
       },

@@ -4,13 +4,13 @@
   "updated_at": "2026-09-24",
   "universal_mcp": {
     "name": "Evercraft Machine Commerce",
-    "url": "https://evercraft-ai-suite-08c4d2b8.legacy provider.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+    "url": null,
     "registry_name": "io.github.jgaethle10/evercraft-machine-commerce"
   },
   "specialist_mcps": [
     {
       "name": "Systemia Field Library",
-      "url": "https://legacy provider.app/api/apps/6a54381e147576b18ac94d8f/functions/fieldLibraryAgentMcp",
+      "url": null,
       "registry_name": "io.github.jgaethle10/systemia-field-library",
       "state": "live_endpoint_verified_registry_publication_in_progress"
     }

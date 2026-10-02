@@ -8,7 +8,7 @@
       "user_need": "I have a multi-hour meeting video and need a complete transcript, searchable timeline and important moments.",
       "fit": "forensiscope",
       "current_path": "human_confirmed_web_review",
-      "start_url": "https://evercraft-forensiscope.legacy provider.app/video-too-large-for-ai"
+      "start_url": null
     },
     {
       "id": "duplicate-segments",

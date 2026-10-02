@@ -51,7 +51,7 @@
   "llms": "/network/mesh/llms.txt",
   "machine_route": {
     "registry_name": "io.github.jgaethle10/evercraft-machine-commerce",
-    "mcp": "https://evercraft-ai-suite-08c4d2b8.legacy provider.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+    "mcp": null,
     "state": "production_mcp_verified_all_declared_read_only_calls",
     "evidence": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/conformance/runtime-observations/2026-09-26-evercraft-network-mcp.json",
     "tools_list_verified": [

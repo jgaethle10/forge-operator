@@ -4,11 +4,11 @@
   "title": "Evercraft Career Command",
   "description": "Role-specific interview practice with human-confirmed Interview Sprint checkout.",
   "version": "1.0.0",
-  "websiteUrl": "https://evercraft-career-command.legacy provider.app/functions/careerAgentGateway?view=docs",
+  "websiteUrl": "https://github.com/jgaethle10/forge-operator/tree/main/registry/career-command",
   "remotes": [
     {
       "type": "streamable-http",
-      "url": "https://evercraft-career-command.legacy provider.app/functions/careerMcp"
+      "url": null
     }
   ]
 }

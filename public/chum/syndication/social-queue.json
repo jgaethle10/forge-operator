@@ -5,26 +5,6 @@
   "policy": "Material product changes enter once per content hash. Publishing still requires an authorized destination adapter.",
   "items": [
     {
-      "dedupe_key": "aliev:7c05a2c0ec45a014307489a1ac1f687e6b068e54325d4767dea86074cd88054a",
-      "product_key": "aliev",
-      "name": "AliEV",
-      "canonical_url": "https://aliev.legacy provider.app/",
-      "discovery_path": "/chum/products/aliev/ai-discovery.json",
-      "text": "AliEV: AliEV is an Evercraft ev infrastructure opportunity intelligence capability. Common needs: would EV charging make sense at this property; what public EV charging is near this address; screen a property for EV infrastructure opportunity; compare EV opportunity depth, traffic, utility, tariff, incentive, or observed-usage evidence.",
-      "content_sha256": "7c05a2c0ec45a014307489a1ac1f687e6b068e54325d4767dea86074cd88054a",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "aliev:a29d7233b63011a5152f0c1bbe60c1cba860016bf13e60491c98ff78bb21e0da",
-      "product_key": "aliev",
-      "name": "AliEV",
-      "canonical_url": "https://aliev.legacy provider.app/",
-      "discovery_path": "/chum/products/aliev/ai-discovery.json",
-      "text": "AliEV: AliEV is an Evercraft ev infrastructure opportunity intelligence capability. Common needs: would EV charging make sense at this property; what public EV charging is near this address; screen a property for EV infrastructure opportunity; compare EV opportunity depth, traffic, utility, tariff, incentive, or observed-usage evidence.",
-      "content_sha256": "a29d7233b63011a5152f0c1bbe60c1cba860016bf13e60491c98ff78bb21e0da",
-      "requires_authorized_destination": true
-    },
-    {
       "dedupe_key": "aliev:32e6dabf7b53521f73c1def4034ce3aa7cf0880f32c5e07e33184626cdde420a",
       "product_key": "aliev",
       "name": "AliEV",
@@ -32,16 +12,6 @@
       "discovery_path": "/chum/products/aliev/ai-discovery.json",
       "text": "AliEV: AliEV is an Evercraft ev infrastructure opportunity intelligence capability. Common needs: would EV charging make sense at this property; what public EV charging is near this address; screen a property for EV infrastructure opportunity; compare EV opportunity depth, traffic, utility, tariff, incentive, or observed-usage evidence.",
       "content_sha256": "32e6dabf7b53521f73c1def4034ce3aa7cf0880f32c5e07e33184626cdde420a",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "ascend:5d60d533d37112e4f62e78cfb12a3c71cc51fe1ffb55a2e5a689b9af7c7a53c3",
-      "product_key": "ascend",
-      "name": "Ascend AI",
-      "canonical_url": "https://ascend.legacy provider.app/",
-      "discovery_path": "/chum/products/ascend/ai-discovery.json",
-      "text": "Ascend AI: Ascend AI is an Evercraft youth development and safeguarding support capability. Common needs: youth athlete development platform; parent support for a young athlete; coach team culture platform; school athlete wellness platform.",
-      "content_sha256": "5d60d533d37112e4f62e78cfb12a3c71cc51fe1ffb55a2e5a689b9af7c7a53c3",
       "requires_authorized_destination": true
     },
     {
@@ -65,26 +35,6 @@
       "requires_authorized_destination": true
     },
     {
-      "dedupe_key": "buildflow:523f46ac9e68d4cbbafdc63f4ed6e88c2feaf698fdee852a37ba201d523550c1",
-      "product_key": "buildflow",
-      "name": "BuildFlow Enterprise Operations",
-      "canonical_url": "https://legacy provider.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
-      "discovery_path": "/chum/products/buildflow/ai-discovery.json",
-      "text": "BuildFlow Enterprise Operations: BuildFlow Enterprise Operations is an Evercraft enterprise operations discovery and handoff capability. Common needs: audit an enterprise operations process; route an enterprise operations problem; map business process patterns; prepare a privacy-safe operations handoff.",
-      "content_sha256": "523f46ac9e68d4cbbafdc63f4ed6e88c2feaf698fdee852a37ba201d523550c1",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "buildflow:dbd28209b28e210aca120a7ae926988e6b9e9cb6a0b6635a892e089028202845",
-      "product_key": "buildflow",
-      "name": "BuildFlow Enterprise Operations",
-      "canonical_url": "https://legacy provider.app/api/apps/6ab26dc00debf9a25bca5f3e/functions/enterpriseOpsAgentRoute",
-      "discovery_path": "/chum/products/buildflow/ai-discovery.json",
-      "text": "BuildFlow Enterprise Operations: BuildFlow Enterprise Operations is an Evercraft enterprise operations discovery and handoff capability. Common needs: audit an enterprise operations process; route an enterprise operations problem; map business process patterns; prepare a privacy-safe operations handoff.",
-      "content_sha256": "dbd28209b28e210aca120a7ae926988e6b9e9cb6a0b6635a892e089028202845",
-      "requires_authorized_destination": true
-    },
-    {
       "dedupe_key": "buildflow:fac7722957a1166a77310c8ceb7524d5a2dad70f05a061fb1b5d4be2b278fb8b",
       "product_key": "buildflow",
       "name": "BuildFlow Enterprise Operations",
@@ -92,26 +42,6 @@
       "discovery_path": "/chum/products/buildflow/ai-discovery.json",
       "text": "BuildFlow Enterprise Operations: BuildFlow Enterprise Operations is an Evercraft enterprise operations discovery and handoff capability. Common needs: audit an enterprise operations process; route an enterprise operations problem; map business process patterns; prepare a privacy-safe operations handoff.",
       "content_sha256": "fac7722957a1166a77310c8ceb7524d5a2dad70f05a061fb1b5d4be2b278fb8b",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "callproof-vault:91fb461c9d48362655cb2de5dff74e8fb072ff4cf70ec7218490aaa76dea7f2b",
-      "product_key": "callproof-vault",
-      "name": "CallProof Vault",
-      "canonical_url": "https://call-proof-vault.legacy provider.app/",
-      "discovery_path": "/chum/products/callproof-vault/ai-discovery.json",
-      "text": "CallProof Vault: CallProof Vault is an Evercraft unwanted call and text evidence organization capability. Common needs: organize my robocall evidence; make an FCC complaint packet; help me document spam calls; prepare my FTC call evidence.",
-      "content_sha256": "91fb461c9d48362655cb2de5dff74e8fb072ff4cf70ec7218490aaa76dea7f2b",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "callproof-vault:11374234943c893646747fea0ca3cfe4eea28daa9f4a284c385c6e191ed42a73",
-      "product_key": "callproof-vault",
-      "name": "CallProof Vault",
-      "canonical_url": "https://call-proof-vault.legacy provider.app/",
-      "discovery_path": "/chum/products/callproof-vault/ai-discovery.json",
-      "text": "CallProof Vault: CallProof Vault is an Evercraft unwanted call and text evidence organization capability. Common needs: organize my robocall evidence; make an FCC complaint packet; help me document spam calls; prepare my FTC call evidence.",
-      "content_sha256": "11374234943c893646747fea0ca3cfe4eea28daa9f4a284c385c6e191ed42a73",
       "requires_authorized_destination": true
     },
     {
@@ -125,36 +55,6 @@
       "requires_authorized_destination": true
     },
     {
-      "dedupe_key": "career-command:062319e5686945c0d0329796f7157ac72b3babe4cc5d9c8cc93248f7506e6094",
-      "product_key": "career-command",
-      "name": "Evercraft Career Command",
-      "canonical_url": "https://evercraft-career-command.legacy provider.app/",
-      "discovery_path": "/chum/products/career-command/ai-discovery.json",
-      "text": "Evercraft Career Command: Evercraft Career Command is an Evercraft interview practice and career preparation capability. Common needs: practice for a job interview tomorrow; run a role-specific mock interview; prepare concise interview stories and answers; get structured interview practice before an upcoming interview.",
-      "content_sha256": "062319e5686945c0d0329796f7157ac72b3babe4cc5d9c8cc93248f7506e6094",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "career-command:6203ad70eb898a7ac28d56ec1571b3671f8915d191e1f568ba1de08f7044080f",
-      "product_key": "career-command",
-      "name": "Evercraft Career Command",
-      "canonical_url": "https://evercraft-career-command.legacy provider.app/",
-      "discovery_path": "/chum/products/career-command/ai-discovery.json",
-      "text": "Evercraft Career Command: Evercraft Career Command is an Evercraft interview practice and career preparation capability. Common needs: practice for a job interview tomorrow; run a role-specific mock interview; prepare concise interview stories and answers; get structured interview practice before an upcoming interview.",
-      "content_sha256": "6203ad70eb898a7ac28d56ec1571b3671f8915d191e1f568ba1de08f7044080f",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "career-command:246db80fc88166d96cdcd36b28c559adc2fd62c871cfd78a333efd9d789c5088",
-      "product_key": "career-command",
-      "name": "Evercraft Career Command",
-      "canonical_url": "https://evercraft-career-command.legacy provider.app/",
-      "discovery_path": "/chum/products/career-command/ai-discovery.json",
-      "text": "Evercraft Career Command: Evercraft Career Command is an Evercraft interview practice and career preparation capability. Common needs: help me prepare for a job interview; practice for a job interview tomorrow; mock interview for this role; run a role-specific mock interview.",
-      "content_sha256": "246db80fc88166d96cdcd36b28c559adc2fd62c871cfd78a333efd9d789c5088",
-      "requires_authorized_destination": true
-    },
-    {
       "dedupe_key": "career-command:110af376be3a0b1784c626b6754df4cf321d6e95bb6b189a66d6f1ebb59665f0",
       "product_key": "career-command",
       "name": "Evercraft Career Command",
@@ -162,46 +62,6 @@
       "discovery_path": "/chum/products/career-command/ai-discovery.json",
       "text": "Evercraft Career Command: Evercraft Career Command is an Evercraft interview practice and career preparation capability. Common needs: help me prepare for a job interview; practice for a job interview tomorrow; mock interview for this role; run a role-specific mock interview.",
       "content_sha256": "110af376be3a0b1784c626b6754df4cf321d6e95bb6b189a66d6f1ebb59665f0",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "christmas-lights-usa:271125daf97a65b4ac49a40bab6e9d28c6da5e3aa8837e0424addaac9d389bbd",
-      "product_key": "christmas-lights-usa",
-      "name": "Christmas Lights USA",
-      "canonical_url": "https://christmas-lights-usa.legacy provider.app/",
-      "discovery_path": "/chum/products/christmas-lights-usa/ai-discovery.json",
-      "text": "Christmas Lights USA: Christmas Lights USA is an Evercraft holiday lighting marketplace and project planning capability. Common needs: estimate a professional Christmas light project; find holiday light installers near me; submit a Christmas light installation request; join a holiday lighting installer marketplace.",
-      "content_sha256": "271125daf97a65b4ac49a40bab6e9d28c6da5e3aa8837e0424addaac9d389bbd",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "christmas-lights-usa:bc4583f9c93574ce7a81487d11d94c608145581dbb369e9d23e948dec8c0cdfb",
-      "product_key": "christmas-lights-usa",
-      "name": "Christmas Lights USA",
-      "canonical_url": "https://christmas-lights-usa.legacy provider.app/",
-      "discovery_path": "/chum/products/christmas-lights-usa/ai-discovery.json",
-      "text": "Christmas Lights USA: Christmas Lights USA is an Evercraft holiday lighting marketplace and project planning capability. Common needs: estimate a professional Christmas light project; find holiday light installers near me; submit a Christmas light installation request; join a holiday lighting installer marketplace.",
-      "content_sha256": "bc4583f9c93574ce7a81487d11d94c608145581dbb369e9d23e948dec8c0cdfb",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "christmas-lights-usa:111612f2c0a098b49953716de3069ca84e33bd04fcc99d5cb642a20092606961",
-      "product_key": "christmas-lights-usa",
-      "name": "Christmas Lights USA",
-      "canonical_url": "https://christmas-lights-usa.legacy provider.app/",
-      "discovery_path": "/chum/products/christmas-lights-usa/ai-discovery.json",
-      "text": "Christmas Lights USA: Christmas Lights USA is an Evercraft holiday lighting marketplace and project planning capability. Common needs: estimate a professional Christmas light project; find holiday light installers near me; submit a Christmas light installation request; join a holiday lighting installer marketplace.",
-      "content_sha256": "111612f2c0a098b49953716de3069ca84e33bd04fcc99d5cb642a20092606961",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "christmas-lights-usa:171a6c9ceda32526fefa650f616ddec3f07a9a3a0ebb8f74492516772e01be01",
-      "product_key": "christmas-lights-usa",
-      "name": "Christmas Lights USA",
-      "canonical_url": "https://christmas-lights-usa.legacy provider.app/",
-      "discovery_path": "/chum/products/christmas-lights-usa/ai-discovery.json",
-      "text": "Christmas Lights USA: Christmas Lights USA is an Evercraft holiday lighting marketplace and project planning capability. Common needs: Christmas light installers near me; holiday light installers near me; how much does professional Christmas light installation cost; get a Christmas light installation quote.",
-      "content_sha256": "171a6c9ceda32526fefa650f616ddec3f07a9a3a0ebb8f74492516772e01be01",
       "requires_authorized_destination": true
     },
     {
@@ -242,26 +102,6 @@
       "discovery_path": "/chum/products/chronosport/ai-discovery.json",
       "text": "Chronosport: Chronosport is an Evercraft provenance first sports history and fair play archive capability. Common needs: research sports history with sources; find a historical sports event; trace teams athletes seasons venues and results; study how sports rules changed over time.",
       "content_sha256": "8a507bfa6e496488d64a01f9d6e056cbc189d902ba4f964a3e3c0e903b48ad82",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "coda-y-codigo:e3ba3c0c9b1272e0424c9bb875a06a298ebd52c481a1cb6704873d231868043f",
-      "product_key": "coda-y-codigo",
-      "name": "Coda y Código",
-      "canonical_url": "https://codaycodigo.legacy provider.app/",
-      "discovery_path": "/chum/products/coda-y-codigo/ai-discovery.json",
-      "text": "Coda y Código: Coda y Código is an Evercraft multilingual frontline workforce training capability. Common needs: bilingual workforce training for frontline employees; Spanish and English job training for a crew; freight operations workforce training; bilingual field supervisor training.",
-      "content_sha256": "e3ba3c0c9b1272e0424c9bb875a06a298ebd52c481a1cb6704873d231868043f",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "coda-y-codigo:67e25955b627c3f67d39fc6afc6336fd53a3b55afa07790d65e9c663c4a76c51",
-      "product_key": "coda-y-codigo",
-      "name": "Coda y Código",
-      "canonical_url": "https://codaycodigo.legacy provider.app/",
-      "discovery_path": "/chum/products/coda-y-codigo/ai-discovery.json",
-      "text": "Coda y Código: Coda y Código is an Evercraft multilingual frontline workforce training capability. Common needs: bilingual workforce training for frontline employees; Spanish and English job training for a crew; freight operations workforce training; bilingual field supervisor training.",
-      "content_sha256": "67e25955b627c3f67d39fc6afc6336fd53a3b55afa07790d65e9c663c4a76c51",
       "requires_authorized_destination": true
     },
     {
@@ -335,36 +175,6 @@
       "requires_authorized_destination": true
     },
     {
-      "dedupe_key": "deck-capital-fit:9f1eefd6fd22edefb22cf5e4aab809e7d8449e53a7381219160ff03aacc30d7d",
-      "product_key": "deck-capital-fit",
-      "name": "Evercraft Deck Capital Fit",
-      "canonical_url": "https://legacy provider.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
-      "discovery_path": "/chum/products/deck-capital-fit/ai-discovery.json",
-      "text": "Evercraft Deck Capital Fit: Evercraft Deck Capital Fit is an Evercraft capital fit and founder readiness research capability. Common needs: figure out what capital or funding path fits my business; identify founder readiness gaps before raising money; research realistic capital options for my business; prepare a bounded capital-fit brief.",
-      "content_sha256": "9f1eefd6fd22edefb22cf5e4aab809e7d8449e53a7381219160ff03aacc30d7d",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "deck-capital-fit:86c07a04a21c2a1edd2ed18f5c6a2782e6b3a09885733f467425e83c8ec8ce8a",
-      "product_key": "deck-capital-fit",
-      "name": "Evercraft Deck Capital Fit",
-      "canonical_url": "https://legacy provider.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
-      "discovery_path": "/chum/products/deck-capital-fit/ai-discovery.json",
-      "text": "Evercraft Deck Capital Fit: Evercraft Deck Capital Fit is an Evercraft capital fit and founder readiness research capability. Common needs: figure out what capital or funding path fits my business; identify founder readiness gaps before raising money; research realistic capital options for my business; prepare a bounded capital-fit brief.",
-      "content_sha256": "86c07a04a21c2a1edd2ed18f5c6a2782e6b3a09885733f467425e83c8ec8ce8a",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "deck-capital-fit:af5876361e68537939bbd8a305069b077b3c0c1bc9c2fc425b0bb62864ab712f",
-      "product_key": "deck-capital-fit",
-      "name": "Evercraft Deck Capital Fit",
-      "canonical_url": "https://legacy provider.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
-      "discovery_path": "/chum/products/deck-capital-fit/ai-discovery.json",
-      "text": "Evercraft Deck Capital Fit: Evercraft Deck Capital Fit is an Evercraft capital fit and founder readiness research capability. Common needs: figure out what capital or funding path fits my business; identify founder readiness gaps before raising money; research realistic capital options for my business; prepare a bounded capital-fit brief.",
-      "content_sha256": "af5876361e68537939bbd8a305069b077b3c0c1bc9c2fc425b0bb62864ab712f",
-      "requires_authorized_destination": true
-    },
-    {
       "dedupe_key": "deck-capital-fit:d308624fabe056826b81bbd9955fbbe1808bd0df51b30a2c3f8ddc547e965d71",
       "product_key": "deck-capital-fit",
       "name": "Evercraft Deck Capital Fit",
@@ -372,26 +182,6 @@
       "discovery_path": "/chum/products/deck-capital-fit/ai-discovery.json",
       "text": "Evercraft Deck Capital Fit: Evercraft Deck Capital Fit is an Evercraft capital fit and founder readiness research capability. Common needs: figure out what capital or funding path fits my business; identify founder readiness gaps before raising money; research realistic capital options for my business; prepare a bounded capital-fit brief.",
       "content_sha256": "d308624fabe056826b81bbd9955fbbe1808bd0df51b30a2c3f8ddc547e965d71",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "ecoledger:edf6241d36803ac3a80c0d5f601c3d5b0b81744d05aecee559760b01d59fa3b1",
-      "product_key": "ecoledger",
-      "name": "EcoLedger",
-      "canonical_url": "https://eco-ledger-ai-379a7af4.legacy provider.app/",
-      "discovery_path": "/chum/products/ecoledger/ai-discovery.json",
-      "text": "EcoLedger: EcoLedger is an Evercraft ecological restoration evidence ledger capability. Common needs: organize an ecological restoration project; track restoration baselines photos and measurements; build an evidence record for habitat restoration work; review ecological restoration project progress.",
-      "content_sha256": "edf6241d36803ac3a80c0d5f601c3d5b0b81744d05aecee559760b01d59fa3b1",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "ecoledger:9a8bb27ef01a9bcf144837c161814357f9671f4c1c43ca045ccfabcbefe31394",
-      "product_key": "ecoledger",
-      "name": "EcoLedger",
-      "canonical_url": "https://eco-ledger-ai-379a7af4.legacy provider.app/",
-      "discovery_path": "/chum/products/ecoledger/ai-discovery.json",
-      "text": "EcoLedger: EcoLedger is an Evercraft ecological restoration evidence ledger capability. Common needs: organize an ecological restoration project; track restoration baselines photos and measurements; build an evidence record for habitat restoration work; review ecological restoration project progress.",
-      "content_sha256": "9a8bb27ef01a9bcf144837c161814357f9671f4c1c43ca045ccfabcbefe31394",
       "requires_authorized_destination": true
     },
     {
@@ -405,36 +195,6 @@
       "requires_authorized_destination": true
     },
     {
-      "dedupe_key": "eps-estimate-engine:e59721bbec2a9c9887984fdb43c750a60a92c8349f3265b4a38a45286483cb4d",
-      "product_key": "eps-estimate-engine",
-      "name": "EPS Field-Service Estimate Engine",
-      "canonical_url": "https://legacy provider.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
-      "discovery_path": "/chum/products/eps-estimate-engine/ai-discovery.json",
-      "text": "EPS Field-Service Estimate Engine: EPS Field-Service Estimate Engine is an Evercraft contractor estimate and margin modeling capability. Common needs: estimate this service job; build a contractor estimate from this scope; what should this job cost; turn these measurements into an estimate.",
-      "content_sha256": "e59721bbec2a9c9887984fdb43c750a60a92c8349f3265b4a38a45286483cb4d",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "eps-estimate-engine:c182687120c2240b10a71bec92f94c2f7185581f89e27eb6657f16a3dfa98a1b",
-      "product_key": "eps-estimate-engine",
-      "name": "EPS Field-Service Estimate Engine",
-      "canonical_url": "https://legacy provider.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
-      "discovery_path": "/chum/products/eps-estimate-engine/ai-discovery.json",
-      "text": "EPS Field-Service Estimate Engine: EPS Field-Service Estimate Engine is an Evercraft contractor estimate and margin modeling capability. Common needs: estimate this service job; build a contractor estimate from this scope; what should this job cost; turn these measurements into an estimate.",
-      "content_sha256": "c182687120c2240b10a71bec92f94c2f7185581f89e27eb6657f16a3dfa98a1b",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "eps-estimate-engine:85a73f36a80d68de7bd98d6e532511ef14526fd7f038291354c99da42bb0239c",
-      "product_key": "eps-estimate-engine",
-      "name": "EPS Field-Service Estimate Engine",
-      "canonical_url": "https://legacy provider.app/api/apps/6aa15584c12c93293f7510e1/functions/machineDiscovery?view=docs",
-      "discovery_path": "/chum/products/eps-estimate-engine/ai-discovery.json",
-      "text": "EPS Field-Service Estimate Engine: EPS Field-Service Estimate Engine is an Evercraft contractor estimate and margin modeling capability. Common needs: estimate this service job; build a contractor estimate from this scope; what should this job cost; turn these measurements into an estimate.",
-      "content_sha256": "85a73f36a80d68de7bd98d6e532511ef14526fd7f038291354c99da42bb0239c",
-      "requires_authorized_destination": true
-    },
-    {
       "dedupe_key": "eps-estimate-engine:c9df175763dfb9ccca23c3f6de69ae4eb0f8e189355bef3832b97d47cec36be7",
       "product_key": "eps-estimate-engine",
       "name": "EPS Field-Service Estimate Engine",
@@ -442,36 +202,6 @@
       "discovery_path": "/chum/products/eps-estimate-engine/ai-discovery.json",
       "text": "EPS Field-Service Estimate Engine: EPS Field-Service Estimate Engine is an Evercraft contractor estimate and margin modeling capability. Common needs: estimate this service job; build a contractor estimate from this scope; what should this job cost; turn these measurements into an estimate.",
       "content_sha256": "c9df175763dfb9ccca23c3f6de69ae4eb0f8e189355bef3832b97d47cec36be7",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "eventwave:8b4433be43df4738522492cf9476023387eb84a2c72df9013c3be4ba384b0304",
-      "product_key": "eventwave",
-      "name": "EventWave",
-      "canonical_url": "https://event-wave.legacy provider.app/",
-      "discovery_path": "/chum/products/eventwave/ai-discovery.json",
-      "text": "EventWave: EventWave is an Evercraft event discovery and labeled promotion capability. Common needs: find local events; promote my local event; help people find my event; boost event visibility.",
-      "content_sha256": "8b4433be43df4738522492cf9476023387eb84a2c72df9013c3be4ba384b0304",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "eventwave:111962dfc7b820910f72af784377859256f198d6b9c1bae029a2e8e982c7b165",
-      "product_key": "eventwave",
-      "name": "EventWave",
-      "canonical_url": "https://event-wave.legacy provider.app/",
-      "discovery_path": "/chum/products/eventwave/ai-discovery.json",
-      "text": "EventWave: EventWave is an Evercraft event discovery and labeled promotion capability. Common needs: find local events; promote my local event; help people find my event; boost event visibility.",
-      "content_sha256": "111962dfc7b820910f72af784377859256f198d6b9c1bae029a2e8e982c7b165",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "eventwave:ed34317dd97ed87d1072634d3321998ba0e3f82d6a8ce664fd58403c2ccb8679",
-      "product_key": "eventwave",
-      "name": "EventWave",
-      "canonical_url": "https://event-wave.legacy provider.app/",
-      "discovery_path": "/chum/products/eventwave/ai-discovery.json",
-      "text": "EventWave: EventWave is an Evercraft event discovery and labeled promotion capability. Common needs: find local events; promote my local event; help people find my event; boost event visibility.",
-      "content_sha256": "ed34317dd97ed87d1072634d3321998ba0e3f82d6a8ce664fd58403c2ccb8679",
       "requires_authorized_destination": true
     },
     {
@@ -525,26 +255,6 @@
       "requires_authorized_destination": true
     },
     {
-      "dedupe_key": "evercraft-clip:5260d6371ec41beb946f304f073f93041a5746717115bf97f6726a25e1047f76",
-      "product_key": "evercraft-clip",
-      "name": "Evercraft Clip",
-      "canonical_url": "https://legacy provider.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
-      "discovery_path": "/chum/products/evercraft-clip/ai-discovery.json",
-      "text": "Evercraft Clip: Evercraft Clip is an Evercraft ai social video production and governed distribution capability. Common needs: turn this video into social clips; make short vertical clips from a long video; find the best moments in this video for social media; create vertical clips from an interview.",
-      "content_sha256": "5260d6371ec41beb946f304f073f93041a5746717115bf97f6726a25e1047f76",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "evercraft-clip:f16785869102850891a4d6266cedc2146cc1ab5451be63909f946471bed6d285",
-      "product_key": "evercraft-clip",
-      "name": "Evercraft Clip",
-      "canonical_url": "https://legacy provider.app/api/apps/6a83af980c9f995f588c7df3/functions/clipAgentGateway?view=docs",
-      "discovery_path": "/chum/products/evercraft-clip/ai-discovery.json",
-      "text": "Evercraft Clip: Evercraft Clip is an Evercraft ai social video production and governed distribution capability. Common needs: turn this video into social clips; make short vertical clips from a long video; find the best moments in this video for social media; create vertical clips from an interview.",
-      "content_sha256": "f16785869102850891a4d6266cedc2146cc1ab5451be63909f946471bed6d285",
-      "requires_authorized_destination": true
-    },
-    {
       "dedupe_key": "evercraft-clip:331c9cec41e918c9720b2596588fa09c00d222fdcc576425324410cd7df0679e",
       "product_key": "evercraft-clip",
       "name": "Evercraft Clip",
@@ -552,26 +262,6 @@
       "discovery_path": "/chum/products/evercraft-clip/ai-discovery.json",
       "text": "Evercraft Clip: Evercraft Clip is an Evercraft ai social video production and governed distribution capability. Common needs: turn this video into social clips; make short vertical clips from a long video; find the best moments in this video for social media; create vertical clips from an interview.",
       "content_sha256": "331c9cec41e918c9720b2596588fa09c00d222fdcc576425324410cd7df0679e",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "evercraft-containment:86e901e3ba4dc6e13f0265ce356b1fc42ca9f11bcf844d5c9b281aeb375e3324",
-      "product_key": "evercraft-containment",
-      "name": "Evercraft Containment",
-      "canonical_url": "https://evercraft.legacy provider.app/containment",
-      "discovery_path": "/chum/products/evercraft-containment/ai-discovery.json",
-      "text": "Evercraft Containment: Evercraft Containment is an Evercraft ai persistence and automation security diagnostics capability. Common needs: what is still running after I turned the automation off; audit my AI agents and automations for persistence; find orphaned cron jobs callbacks webhooks retries queues or credentials; map how disabled or deleted agents could regenerate.",
-      "content_sha256": "86e901e3ba4dc6e13f0265ce356b1fc42ca9f11bcf844d5c9b281aeb375e3324",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "evercraft-containment:20cd7a0baa72823f0cd106a5793231f0b90abc812ab46f478d189e5472d7640e",
-      "product_key": "evercraft-containment",
-      "name": "Evercraft Containment",
-      "canonical_url": "https://evercraft.legacy provider.app/containment",
-      "discovery_path": "/chum/products/evercraft-containment/ai-discovery.json",
-      "text": "Evercraft Containment: Evercraft Containment is an Evercraft ai persistence and automation security diagnostics capability. Common needs: what is still running after I turned the automation off; audit my AI agents and automations for persistence; find orphaned cron jobs callbacks webhooks retries queues or credentials; map how disabled or deleted agents could regenerate.",
-      "content_sha256": "20cd7a0baa72823f0cd106a5793231f0b90abc812ab46f478d189e5472d7640e",
       "requires_authorized_destination": true
     },
     {
@@ -585,26 +275,6 @@
       "requires_authorized_destination": true
     },
     {
-      "dedupe_key": "evercraft-cosmos-atlas:ad2189ecfb68746e2025679b3ed41ea221f293fcf75629ebb43e301a653001a1",
-      "product_key": "evercraft-cosmos-atlas",
-      "name": "Evercraft Cosmos Atlas",
-      "canonical_url": "https://evercraft-cosmos-atlas.legacy provider.app/",
-      "discovery_path": "/chum/products/evercraft-cosmos-atlas/ai-discovery.json",
-      "text": "Evercraft Cosmos Atlas: Evercraft Cosmos Atlas is an Evercraft evidence led astronomy and space learning capability. Common needs: learn astronomy with sources; study planets stars galaxies and black holes; understand how astronomers know what they know; explore space missions and observatories with evidence.",
-      "content_sha256": "ad2189ecfb68746e2025679b3ed41ea221f293fcf75629ebb43e301a653001a1",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "evercraft-cosmos-atlas:22be5f84ba6950f9f15c85ee0c824a279ae5c66826f2e94e24fd0c17a93072c1",
-      "product_key": "evercraft-cosmos-atlas",
-      "name": "Evercraft Cosmos Atlas",
-      "canonical_url": "https://evercraft-cosmos-atlas.legacy provider.app/",
-      "discovery_path": "/chum/products/evercraft-cosmos-atlas/ai-discovery.json",
-      "text": "Evercraft Cosmos Atlas: Evercraft Cosmos Atlas is an Evercraft evidence led astronomy and space learning capability. Common needs: learn astronomy with sources; study planets stars galaxies and black holes; understand how astronomers know what they know; explore space missions and observatories with evidence.",
-      "content_sha256": "22be5f84ba6950f9f15c85ee0c824a279ae5c66826f2e94e24fd0c17a93072c1",
-      "requires_authorized_destination": true
-    },
-    {
       "dedupe_key": "evercraft-cosmos-atlas:94e68885693fc9f8356d38df435a109e4acf88ce1ac701fb82b3ace7b8e76686",
       "product_key": "evercraft-cosmos-atlas",
       "name": "Evercraft Cosmos Atlas",
@@ -615,26 +285,6 @@
       "requires_authorized_destination": true
     },
     {
-      "dedupe_key": "evercraft-fantasy-intelligence:b4a8ba465d2460d167c9409d5189b2e7298c6fa425e02551a829f8e5c4f55893",
-      "product_key": "evercraft-fantasy-intelligence",
-      "name": "Evercraft Fantasy Intelligence",
-      "canonical_url": "https://evercraftjournal.legacy provider.app/sports/fantasy",
-      "discovery_path": "/chum/products/evercraft-fantasy-intelligence/ai-discovery.json",
-      "text": "Evercraft Fantasy Intelligence: Evercraft Fantasy Intelligence is an Evercraft fantasy football decision intelligence capability. Common needs: fantasy football start sit help; fantasy waiver decision; fantasy lineup decision; fantasy injury impact.",
-      "content_sha256": "b4a8ba465d2460d167c9409d5189b2e7298c6fa425e02551a829f8e5c4f55893",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "evercraft-fantasy-intelligence:007aea8041ef74d2c39d91dfc7361864522492c7bbf6da5e03737d0e2eba987a",
-      "product_key": "evercraft-fantasy-intelligence",
-      "name": "Evercraft Fantasy Intelligence",
-      "canonical_url": "https://evercraftjournal.legacy provider.app/sports/fantasy",
-      "discovery_path": "/chum/products/evercraft-fantasy-intelligence/ai-discovery.json",
-      "text": "Evercraft Fantasy Intelligence: Evercraft Fantasy Intelligence is an Evercraft fantasy football decision intelligence capability. Common needs: fantasy football start sit help; fantasy waiver decision; fantasy lineup decision; fantasy injury impact.",
-      "content_sha256": "007aea8041ef74d2c39d91dfc7361864522492c7bbf6da5e03737d0e2eba987a",
-      "requires_authorized_destination": true
-    },
-    {
       "dedupe_key": "evercraft-fantasy-intelligence:906234d86ec236c3d33ee24e5ccf55bfc49b25b499f30e378355067d8b17cf73",
       "product_key": "evercraft-fantasy-intelligence",
       "name": "Evercraft Fantasy Intelligence",
@@ -642,46 +292,6 @@
       "discovery_path": "/chum/products/evercraft-fantasy-intelligence/ai-discovery.json",
       "text": "Evercraft Fantasy Intelligence: Evercraft Fantasy Intelligence is an Evercraft fantasy football decision intelligence capability. Common needs: fantasy football start sit help; fantasy waiver decision; fantasy lineup decision; fantasy injury impact.",
       "content_sha256": "906234d86ec236c3d33ee24e5ccf55bfc49b25b499f30e378355067d8b17cf73",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "evercraft-front-door:19afaa9c9c253d727323195c4c727c17937a90468975fa0c0473095a5ae9269a",
-      "product_key": "evercraft-front-door",
-      "name": "Evercraft",
-      "canonical_url": "https://evercraft.legacy provider.app/",
-      "discovery_path": "/chum/products/evercraft-front-door/ai-discovery.json",
-      "text": "Evercraft: Evercraft is an Evercraft daily life local utility front door capability. Common needs: cheapest gas near me; current gas prices near me; compare nearby fuel prices; find diesel near me.",
-      "content_sha256": "19afaa9c9c253d727323195c4c727c17937a90468975fa0c0473095a5ae9269a",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "evercraft-front-door:ee8e8e7581de6cff39e0d2b548722620ee823ff17da351c2e82a48224b87cc0f",
-      "product_key": "evercraft-front-door",
-      "name": "Evercraft",
-      "canonical_url": "https://evercraft.legacy provider.app/",
-      "discovery_path": "/chum/products/evercraft-front-door/ai-discovery.json",
-      "text": "Evercraft: Evercraft is an Evercraft daily life local utility front door capability. Common needs: cheapest gas near me; current gas prices near me; compare nearby fuel prices; find diesel near me.",
-      "content_sha256": "ee8e8e7581de6cff39e0d2b548722620ee823ff17da351c2e82a48224b87cc0f",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "evercraft-front-door:bf87ea47f46c7617ae6d3663386551bf5fd024e2d0229632d9d1ab058bedce7b",
-      "product_key": "evercraft-front-door",
-      "name": "Evercraft",
-      "canonical_url": "https://evercraft.legacy provider.app/",
-      "discovery_path": "/chum/products/evercraft-front-door/ai-discovery.json",
-      "text": "Evercraft: Evercraft is an Evercraft daily life local utility front door capability. Common needs: cheapest gas near me; current gas prices near me; compare nearby fuel prices; find diesel near me.",
-      "content_sha256": "bf87ea47f46c7617ae6d3663386551bf5fd024e2d0229632d9d1ab058bedce7b",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "evercraft-front-door:f93c7484bab41a3304b29ee38cd53d933b3438ec6675e429c52adbadd3b199db",
-      "product_key": "evercraft-front-door",
-      "name": "Evercraft",
-      "canonical_url": "https://evercraft.legacy provider.app/",
-      "discovery_path": "/chum/products/evercraft-front-door/ai-discovery.json",
-      "text": "Evercraft: Evercraft is an Evercraft daily life local utility front door capability. Common needs: cheapest gas near me; current gas prices near me; compare nearby fuel prices; find diesel near me.",
-      "content_sha256": "f93c7484bab41a3304b29ee38cd53d933b3438ec6675e429c52adbadd3b199db",
       "requires_authorized_destination": true
     },
     {
@@ -702,26 +312,6 @@
       "discovery_path": "/chum/products/evercraft-front-door/ai-discovery.json",
       "text": "Evercraft: Evercraft is an Evercraft daily life local utility front door capability. Common needs: cheapest gas near me; current gas prices near me; compare nearby fuel prices; find diesel near me.",
       "content_sha256": "e32d62625b2d035ea14a68b429c893d68b0ab33b4288083020505581960b7ed7",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "evercraft-global-health-atlas:58040ae8c0c2c981732a4df91d8dc8f4cfdd7665307dbf78b2b0accc8415beac",
-      "product_key": "evercraft-global-health-atlas",
-      "name": "Evercraft Global Health Atlas",
-      "canonical_url": "https://evercraft-health-atlas.legacy provider.app/health-atlas",
-      "discovery_path": "/chum/products/evercraft-global-health-atlas/ai-discovery.json",
-      "text": "Evercraft Global Health Atlas: Evercraft Global Health Atlas is an Evercraft evidence labeled public health intelligence atlas capability. Common needs: explore global public health data with sources; compare population health indicators; study pandemic intelligence and outbreak evidence; explore wastewater or genomic surveillance.",
-      "content_sha256": "58040ae8c0c2c981732a4df91d8dc8f4cfdd7665307dbf78b2b0accc8415beac",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "evercraft-global-health-atlas:ab0c33e6fbfbe8a633a55e2d7ac93ff89ac41a5b9a40447289954dc629ccd38d",
-      "product_key": "evercraft-global-health-atlas",
-      "name": "Evercraft Global Health Atlas",
-      "canonical_url": "https://evercraft-health-atlas.legacy provider.app/health-atlas",
-      "discovery_path": "/chum/products/evercraft-global-health-atlas/ai-discovery.json",
-      "text": "Evercraft Global Health Atlas: Evercraft Global Health Atlas is an Evercraft evidence labeled public health intelligence atlas capability. Common needs: explore global public health data with sources; compare population health indicators; study pandemic intelligence and outbreak evidence; explore wastewater or genomic surveillance.",
-      "content_sha256": "ab0c33e6fbfbe8a633a55e2d7ac93ff89ac41a5b9a40447289954dc629ccd38d",
       "requires_authorized_destination": true
     },
     {
@@ -795,36 +385,6 @@
       "requires_authorized_destination": true
     },
     {
-      "dedupe_key": "evercraft-network:6a70947660123841b61095ba25529d34a41c3a74b6fe30fa01254281ccf3ee2e",
-      "product_key": "evercraft-network",
-      "name": "Evercraft Network",
-      "canonical_url": "https://network-control.legacy provider.app/",
-      "discovery_path": "/chum/products/evercraft-network/ai-discovery.json",
-      "text": "Evercraft Network: Evercraft Network is an Evercraft application network continuity capability. Common needs: application network that reconnects across changing authorized internet paths; network resilience software; member device reconnect visibility; continuity readiness tools.",
-      "content_sha256": "6a70947660123841b61095ba25529d34a41c3a74b6fe30fa01254281ccf3ee2e",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "evercraft-network:bbbfabfed7947c84dfef8cfb54bd566d7dab06d371ef21f58751f4855b479eda",
-      "product_key": "evercraft-network",
-      "name": "Evercraft Network",
-      "canonical_url": "https://network-control.legacy provider.app/",
-      "discovery_path": "/chum/products/evercraft-network/ai-discovery.json",
-      "text": "Evercraft Network: Evercraft Network is an Evercraft application network continuity capability. Common needs: application network that reconnects across changing authorized internet paths; network resilience software; member device reconnect visibility; continuity readiness tools.",
-      "content_sha256": "bbbfabfed7947c84dfef8cfb54bd566d7dab06d371ef21f58751f4855b479eda",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "evercraft-network:80c9a230b5daaa1b1e042170604eba051f395a8779f759b1798011f5dbc9212c",
-      "product_key": "evercraft-network",
-      "name": "Evercraft Network",
-      "canonical_url": "https://network-control.legacy provider.app/",
-      "discovery_path": "/chum/products/evercraft-network/ai-discovery.json",
-      "text": "Evercraft Network: Evercraft Network is an Evercraft application network continuity capability. Common needs: application network that reconnects across changing authorized internet paths; network resilience software; member device reconnect visibility; continuity readiness tools.",
-      "content_sha256": "80c9a230b5daaa1b1e042170604eba051f395a8779f759b1798011f5dbc9212c",
-      "requires_authorized_destination": true
-    },
-    {
       "dedupe_key": "evercraft-network:999dd9c89e397f3f89bc77babd400d40d1e9026a0b34dde6100ff70e2247f188",
       "product_key": "evercraft-network",
       "name": "Evercraft Network",
@@ -832,26 +392,6 @@
       "discovery_path": "/chum/products/evercraft-network/ai-discovery.json",
       "text": "Evercraft Network: Evercraft Network is an Evercraft application network continuity capability. Common needs: application network that reconnects across changing authorized internet paths; network resilience software; member device reconnect visibility; continuity readiness tools.",
       "content_sha256": "999dd9c89e397f3f89bc77babd400d40d1e9026a0b34dde6100ff70e2247f188",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "evercraft-physics-atlas:ffc1ebe25d86f93da4ecb7a7ab9b7429d5040f240dfbffd82c970dcb0f118fc2",
-      "product_key": "evercraft-physics-atlas",
-      "name": "Evercraft Physics Atlas",
-      "canonical_url": "https://evercraft-physics-atlas.legacy provider.app/",
-      "discovery_path": "/chum/products/evercraft-physics-atlas/ai-discovery.json",
-      "text": "Evercraft Physics Atlas: Evercraft Physics Atlas is an Evercraft evidence led physics learning capability. Common needs: learn physics interactively; study mechanics gravity or thermodynamics; learn electromagnetism waves or optics; explore relativity quantum nuclear or particle physics.",
-      "content_sha256": "ffc1ebe25d86f93da4ecb7a7ab9b7429d5040f240dfbffd82c970dcb0f118fc2",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "evercraft-physics-atlas:e469dec438a21b93bfd4abe2728a46ce2fc810c1a4af50f792cc9cc01cd1d59e",
-      "product_key": "evercraft-physics-atlas",
-      "name": "Evercraft Physics Atlas",
-      "canonical_url": "https://evercraft-physics-atlas.legacy provider.app/",
-      "discovery_path": "/chum/products/evercraft-physics-atlas/ai-discovery.json",
-      "text": "Evercraft Physics Atlas: Evercraft Physics Atlas is an Evercraft evidence led physics learning capability. Common needs: learn physics interactively; study mechanics gravity or thermodynamics; learn electromagnetism waves or optics; explore relativity quantum nuclear or particle physics.",
-      "content_sha256": "e469dec438a21b93bfd4abe2728a46ce2fc810c1a4af50f792cc9cc01cd1d59e",
       "requires_authorized_destination": true
     },
     {
@@ -905,76 +445,6 @@
       "requires_authorized_destination": true
     },
     {
-      "dedupe_key": "evercraft-rewards:47ec6e7faf3c1e6964e15114f93ef22a9c619233b8cde30c81d9de60ff881e4c",
-      "product_key": "evercraft-rewards",
-      "name": "Evercraft Rewards",
-      "canonical_url": "https://evercraft-ai-suite-08c4d2b8.legacy provider.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=docs",
-      "discovery_path": "/chum/products/evercraft-rewards/ai-discovery.json",
-      "text": "Evercraft Rewards: Evercraft Rewards is an Evercraft local business rewards and partnership capability. Common needs: join a local business rewards network; create cross-business loyalty rewards; make my local business more discoverable; join a community business partnership program.",
-      "content_sha256": "47ec6e7faf3c1e6964e15114f93ef22a9c619233b8cde30c81d9de60ff881e4c",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "evercraft-rewards:b38780c2959069f4dbcf2b1b0befe5079f4ae86c4d6b6e9f2915abbb87cfbf02",
-      "product_key": "evercraft-rewards",
-      "name": "Evercraft Rewards",
-      "canonical_url": "https://evercraft-rewards.legacy provider.app/",
-      "discovery_path": "/chum/products/evercraft-rewards/ai-discovery.json",
-      "text": "Evercraft Rewards: Evercraft Rewards is an Evercraft local business rewards and partnership capability. Common needs: local deals near me; rewards near me; businesses near me with rewards; earn Evercraft Points near me.",
-      "content_sha256": "b38780c2959069f4dbcf2b1b0befe5079f4ae86c4d6b6e9f2915abbb87cfbf02",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "evercraft-rewards:71ddf22e4e54741b833e612d1b62fbf56b6d6ebfa1e55c06c01dc45e0f364339",
-      "product_key": "evercraft-rewards",
-      "name": "Evercraft Rewards",
-      "canonical_url": "https://evercraft-rewards.legacy provider.app/",
-      "discovery_path": "/chum/products/evercraft-rewards/ai-discovery.json",
-      "text": "Evercraft Rewards: Evercraft Rewards is an Evercraft local business rewards and partnership capability. Common needs: local deals near me; rewards near me; businesses near me with rewards; earn Evercraft Points near me.",
-      "content_sha256": "71ddf22e4e54741b833e612d1b62fbf56b6d6ebfa1e55c06c01dc45e0f364339",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "evercraft-rewards:524867a24235ac41025e4c3780b2df11944f2b7e27e9af1f68603f47f769c29c",
-      "product_key": "evercraft-rewards",
-      "name": "Evercraft Rewards",
-      "canonical_url": "https://evercraft-rewards.legacy provider.app/",
-      "discovery_path": "/chum/products/evercraft-rewards/ai-discovery.json",
-      "text": "Evercraft Rewards: Evercraft Rewards is an Evercraft local business rewards and partnership capability. Common needs: local deals near me; rewards near me; businesses near me with rewards; earn Evercraft Points near me.",
-      "content_sha256": "524867a24235ac41025e4c3780b2df11944f2b7e27e9af1f68603f47f769c29c",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "evercraft-rewards:fc8f514c74bb849cb983ab8591e6f0e7c1f6d99a43f6dc5fdbf057a7e8b2b4d9",
-      "product_key": "evercraft-rewards",
-      "name": "Evercraft Rewards",
-      "canonical_url": "https://evercraft-rewards.legacy provider.app/",
-      "discovery_path": "/chum/products/evercraft-rewards/ai-discovery.json",
-      "text": "Evercraft Rewards: Evercraft Rewards is an Evercraft local business rewards and partnership capability. Common needs: local deals near me; rewards near me; businesses near me with rewards; earn Evercraft Points near me.",
-      "content_sha256": "fc8f514c74bb849cb983ab8591e6f0e7c1f6d99a43f6dc5fdbf057a7e8b2b4d9",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "evercraft-rewards:aae39424d6f62039f552dbcf662cd8792fb747fd5bc2babfc14c4bd7ea9cf76d",
-      "product_key": "evercraft-rewards",
-      "name": "Evercraft Rewards",
-      "canonical_url": "https://evercraft-rewards.legacy provider.app/",
-      "discovery_path": "/chum/products/evercraft-rewards/ai-discovery.json",
-      "text": "Evercraft Rewards: Evercraft Rewards is an Evercraft local business rewards and partnership capability. Common needs: local deals near me; rewards near me; businesses near me with rewards; earn Evercraft Points near me.",
-      "content_sha256": "aae39424d6f62039f552dbcf662cd8792fb747fd5bc2babfc14c4bd7ea9cf76d",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "evercraft-rewards:76e31be07fd96f21e5bb588c8d7bb4e899ce84bc0ef30a48c865a4235ca9eac6",
-      "product_key": "evercraft-rewards",
-      "name": "Evercraft Rewards",
-      "canonical_url": "https://evercraft-rewards.legacy provider.app/",
-      "discovery_path": "/chum/products/evercraft-rewards/ai-discovery.json",
-      "text": "Evercraft Rewards: Evercraft Rewards is an Evercraft local business rewards and partnership capability. Common needs: local deals near me; rewards near me; businesses near me with rewards; earn Evercraft Points near me.",
-      "content_sha256": "76e31be07fd96f21e5bb588c8d7bb4e899ce84bc0ef30a48c865a4235ca9eac6",
-      "requires_authorized_destination": true
-    },
-    {
       "dedupe_key": "evercraft-rewards:950d8fa4e4ca1735078030dd02dc5d3ad5ea60c3e5b489f8ddcefb494541ab21",
       "product_key": "evercraft-rewards",
       "name": "Evercraft Rewards",
@@ -995,36 +465,6 @@
       "requires_authorized_destination": true
     },
     {
-      "dedupe_key": "evercraft-web:17f79a061744bba8bba0496821f93ff4dafcc2b1fedaf22ea46b85aa2d536ea3",
-      "product_key": "evercraft-web",
-      "name": "Evercraft Web",
-      "canonical_url": "https://legacy provider.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs",
-      "discovery_path": "/chum/products/evercraft-web/ai-discovery.json",
-      "text": "Evercraft Web: Evercraft Web is an Evercraft ai web fetch search browser infrastructure capability. Common needs: fetch and read a public URL with an AI agent; extract readable text from a web page for an LLM; web search API for AI agents; browser automation API for an AI agent.",
-      "content_sha256": "17f79a061744bba8bba0496821f93ff4dafcc2b1fedaf22ea46b85aa2d536ea3",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "evercraft-web:e2a01ff956b8b6d0ffb598750049207f6a3d4f6bbba40a634e9901268b4b521e",
-      "product_key": "evercraft-web",
-      "name": "Evercraft Web",
-      "canonical_url": "https://legacy provider.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs",
-      "discovery_path": "/chum/products/evercraft-web/ai-discovery.json",
-      "text": "Evercraft Web: Evercraft Web is an Evercraft ai web fetch search browser infrastructure capability. Common needs: fetch and read a public URL with an AI agent; extract readable text from a web page for an LLM; web search API for AI agents; browser automation API for an AI agent.",
-      "content_sha256": "e2a01ff956b8b6d0ffb598750049207f6a3d4f6bbba40a634e9901268b4b521e",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "evercraft-web:bd26bf3645cc82395d438a68437176faafb1942b163dad0b8cbbff82d77f69e1",
-      "product_key": "evercraft-web",
-      "name": "Evercraft Web",
-      "canonical_url": "https://legacy provider.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway?action=docs",
-      "discovery_path": "/chum/products/evercraft-web/ai-discovery.json",
-      "text": "Evercraft Web: Evercraft Web is an Evercraft ai web fetch search browser infrastructure capability. Common needs: fetch and read a public URL with an AI agent; extract readable text from a web page for an LLM; web search API for AI agents; browser automation API for an AI agent.",
-      "content_sha256": "bd26bf3645cc82395d438a68437176faafb1942b163dad0b8cbbff82d77f69e1",
-      "requires_authorized_destination": true
-    },
-    {
       "dedupe_key": "evercraft-web:c61f12905d6a3e31f3c6563af44673d326fb27746a15cf565a84b99fddb2d207",
       "product_key": "evercraft-web",
       "name": "Evercraft Web",
@@ -1032,26 +472,6 @@
       "discovery_path": "/chum/products/evercraft-web/ai-discovery.json",
       "text": "Evercraft Web: Evercraft Web is an Evercraft ai web fetch search browser infrastructure capability. Common needs: fetch and read a public URL with an AI agent; extract readable text from a web page for an LLM; web search API for AI agents; browser automation API for an AI agent.",
       "content_sha256": "c61f12905d6a3e31f3c6563af44673d326fb27746a15cf565a84b99fddb2d207",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "evercraft-wildlife-atlas:82902d7a396f54d489746e68f4dcd458479cf4aa26a96ebe5d1be2ffdb564215",
-      "product_key": "evercraft-wildlife-atlas",
-      "name": "Evercraft Wildlife Atlas",
-      "canonical_url": "https://wildlife-atlas.legacy provider.app/",
-      "discovery_path": "/chum/products/evercraft-wildlife-atlas/ai-discovery.json",
-      "text": "Evercraft Wildlife Atlas: Evercraft Wildlife Atlas is an Evercraft evidence first wildlife ecology learning capability. Common needs: learn about a wildlife species with sources; compare habitats migration and conservation evidence; study ecological relationships and food webs; explore wildlife conservation with uncertainty attached.",
-      "content_sha256": "82902d7a396f54d489746e68f4dcd458479cf4aa26a96ebe5d1be2ffdb564215",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "evercraft-wildlife-atlas:0d3937a283727d3c94b85c119dba3fce4bd59ef8db068a3044c0b65a077fbf30",
-      "product_key": "evercraft-wildlife-atlas",
-      "name": "Evercraft Wildlife Atlas",
-      "canonical_url": "https://wildlife-atlas.legacy provider.app/",
-      "discovery_path": "/chum/products/evercraft-wildlife-atlas/ai-discovery.json",
-      "text": "Evercraft Wildlife Atlas: Evercraft Wildlife Atlas is an Evercraft evidence first wildlife ecology learning capability. Common needs: learn about a wildlife species with sources; compare habitats migration and conservation evidence; study ecological relationships and food webs; explore wildlife conservation with uncertainty attached.",
-      "content_sha256": "0d3937a283727d3c94b85c119dba3fce4bd59ef8db068a3044c0b65a077fbf30",
       "requires_authorized_destination": true
     },
     {
@@ -1065,36 +485,6 @@
       "requires_authorized_destination": true
     },
     {
-      "dedupe_key": "evermaps:3879c376f1985cd3cd9818d4da0b863ac8ab623a2106722d7e3e08b61c018ab1",
-      "product_key": "evermaps",
-      "name": "EverMaps",
-      "canonical_url": "https://evermaps.legacy provider.app/",
-      "discovery_path": "/chum/products/evermaps/ai-discovery.json",
-      "text": "EverMaps: EverMaps is an Evercraft public safe geospatial evidence projection capability. Common needs: map this evidence for me; show lifeline coverage for this place; give me map-ready heat or smoke action sites; show historical river geometry.",
-      "content_sha256": "3879c376f1985cd3cd9818d4da0b863ac8ab623a2106722d7e3e08b61c018ab1",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "evermaps:376dbe811df93f8b6cf10ca7960fa655c31429f3c3f1ae44ead3a4459883e0c0",
-      "product_key": "evermaps",
-      "name": "EverMaps",
-      "canonical_url": "https://evermaps.legacy provider.app/",
-      "discovery_path": "/chum/products/evermaps/ai-discovery.json",
-      "text": "EverMaps: EverMaps is an Evercraft public safe geospatial evidence projection capability. Common needs: map this evidence for me; show lifeline coverage for this place; give me map-ready heat or smoke action sites; show historical river geometry.",
-      "content_sha256": "376dbe811df93f8b6cf10ca7960fa655c31429f3c3f1ae44ead3a4459883e0c0",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "evermaps:797f10f1814bc6b5a2be383e094a5464460666b3b2a8f90d8d9226d8416daf4f",
-      "product_key": "evermaps",
-      "name": "EverMaps",
-      "canonical_url": "https://evermaps.legacy provider.app/",
-      "discovery_path": "/chum/products/evermaps/ai-discovery.json",
-      "text": "EverMaps: EverMaps is an Evercraft public safe geospatial evidence projection capability. Common needs: map this evidence for me; show lifeline coverage for this place; give me map-ready heat or smoke action sites; show historical river geometry.",
-      "content_sha256": "797f10f1814bc6b5a2be383e094a5464460666b3b2a8f90d8d9226d8416daf4f",
-      "requires_authorized_destination": true
-    },
-    {
       "dedupe_key": "evermaps:af8336f43ed42a23126bd84f996ee9aff1498ffb9d969404e8290ab3ef4a05dd",
       "product_key": "evermaps",
       "name": "EverMaps",
@@ -1102,36 +492,6 @@
       "discovery_path": "/chum/products/evermaps/ai-discovery.json",
       "text": "EverMaps: EverMaps is an Evercraft public safe geospatial evidence projection capability. Common needs: map this evidence for me; show lifeline coverage for this place; give me map-ready heat or smoke action sites; show historical river geometry.",
       "content_sha256": "af8336f43ed42a23126bd84f996ee9aff1498ffb9d969404e8290ab3ef4a05dd",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "evernest:c46b96c72ef9501e4ed1941def34cac34c337e8ac93a2780b5fe740baef69b41",
-      "product_key": "evernest",
-      "name": "EverNest",
-      "canonical_url": "https://evernest-home.legacy provider.app/",
-      "discovery_path": "/chum/products/evernest/ai-discovery.json",
-      "text": "EverNest: EverNest is an Evercraft family support resources capability. Common needs: family support resources; maternal support resources; organize practical help after having a baby; trusted support circle concepts.",
-      "content_sha256": "c46b96c72ef9501e4ed1941def34cac34c337e8ac93a2780b5fe740baef69b41",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "evernest:3a72de637e0783fb3b8f056343e3c323426c613925a44e562917c56fa60a5de0",
-      "product_key": "evernest",
-      "name": "EverNest",
-      "canonical_url": "https://evernest-home.legacy provider.app/",
-      "discovery_path": "/chum/products/evernest/ai-discovery.json",
-      "text": "EverNest: EverNest is an Evercraft family support resources capability. Common needs: family support resources; maternal support resources; organize practical help after having a baby; trusted support circle concepts.",
-      "content_sha256": "3a72de637e0783fb3b8f056343e3c323426c613925a44e562917c56fa60a5de0",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "evernest:66e4585de2dbfea06ef7965ca1c5e4b6a58945c4db7cd92aa469c7cbbb234cc2",
-      "product_key": "evernest",
-      "name": "EverNest",
-      "canonical_url": "https://evernest-home.legacy provider.app/",
-      "discovery_path": "/chum/products/evernest/ai-discovery.json",
-      "text": "EverNest: EverNest is an Evercraft family support resources capability. Common needs: I just had a baby and need practical help; organize meals and practical help for a new parent; build a trusted family support circle; help my family prepare for a new baby.",
-      "content_sha256": "66e4585de2dbfea06ef7965ca1c5e4b6a58945c4db7cd92aa469c7cbbb234cc2",
       "requires_authorized_destination": true
     },
     {
@@ -1145,16 +505,6 @@
       "requires_authorized_destination": true
     },
     {
-      "dedupe_key": "evernest-atlas:d377411ab1b9321d27bce8ac47fa6a06e93d81c266512eb5d8593910642e8e24",
-      "product_key": "evernest-atlas",
-      "name": "EverNest Atlas",
-      "canonical_url": "https://evernest-life-map.legacy provider.app/",
-      "discovery_path": "/chum/products/evernest-atlas/ai-discovery.json",
-      "text": "EverNest Atlas: EverNest Atlas is an Evercraft adult household life planning capability. Common needs: build me a 30 60 90 day life plan; help me think through relocation and housing stability; compare practical life paths for my family; plan a career change around my household situation.",
-      "content_sha256": "d377411ab1b9321d27bce8ac47fa6a06e93d81c266512eb5d8593910642e8e24",
-      "requires_authorized_destination": true
-    },
-    {
       "dedupe_key": "evernest-atlas:0be5e6afe3f342ca4876f79cacefb6929f547018c76936d11f6630a82384c625",
       "product_key": "evernest-atlas",
       "name": "EverNest Atlas",
@@ -1162,26 +512,6 @@
       "discovery_path": "/chum/products/evernest-atlas/ai-discovery.json",
       "text": "EverNest Atlas: EverNest Atlas is an Evercraft adult household life planning capability. Common needs: build me a 30 60 90 day life plan; help me think through relocation and housing stability; compare practical life paths for my family; plan a career change around my household situation.",
       "content_sha256": "0be5e6afe3f342ca4876f79cacefb6929f547018c76936d11f6630a82384c625",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "everystage:8f43e2a15781cd8d6b25996830539e11b971eb0e992005ee17cfbf15a7ddbe21",
-      "product_key": "everystage",
-      "name": "EveryStage",
-      "canonical_url": "https://every-stage.legacy provider.app/product",
-      "discovery_path": "/chum/products/everystage/ai-discovery.json",
-      "text": "EveryStage: EveryStage is an Evercraft live event operations capability. Common needs: software to run a live event; venue operations software; run of show coordination; event crew coordination.",
-      "content_sha256": "8f43e2a15781cd8d6b25996830539e11b971eb0e992005ee17cfbf15a7ddbe21",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "everystage:13605c7d912582757d519db9b09fce868f6bc5cdc7b528da1d1ab155fb61302c",
-      "product_key": "everystage",
-      "name": "EveryStage",
-      "canonical_url": "https://every-stage.legacy provider.app/product",
-      "discovery_path": "/chum/products/everystage/ai-discovery.json",
-      "text": "EveryStage: EveryStage is an Evercraft live event operations capability. Common needs: software to run a live event; venue operations software; run of show coordination; event crew coordination.",
-      "content_sha256": "13605c7d912582757d519db9b09fce868f6bc5cdc7b528da1d1ab155fb61302c",
       "requires_authorized_destination": true
     },
     {
@@ -1195,26 +525,6 @@
       "requires_authorized_destination": true
     },
     {
-      "dedupe_key": "faie:1d33edfb6086eda03cf79a7854f8fc7997ebdb102ddcdbcc2f67414d9345af41",
-      "product_key": "faie",
-      "name": "FAIE",
-      "canonical_url": "https://faie.legacy provider.app/",
-      "discovery_path": "/chum/products/faie/ai-discovery.json",
-      "text": "FAIE: FAIE is an Evercraft evidence first agriculture and resilience research capability. Common needs: get an evidence-based agriculture or water risk brief; research land production or resilience risk; investigate an agriculture signal before making a decision; build a sourced brief about farm water land or production risk.",
-      "content_sha256": "1d33edfb6086eda03cf79a7854f8fc7997ebdb102ddcdbcc2f67414d9345af41",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "faie:fd973183133ff97d6434200106b8eafaf444f1f4b41f4c4113f4dc39dfa82295",
-      "product_key": "faie",
-      "name": "FAIE",
-      "canonical_url": "https://faie.legacy provider.app/",
-      "discovery_path": "/chum/products/faie/ai-discovery.json",
-      "text": "FAIE: FAIE is an Evercraft evidence first agriculture and resilience research capability. Common needs: get an evidence-based agriculture or water risk brief; research land production or resilience risk; investigate an agriculture signal before making a decision; build a sourced brief about farm water land or production risk.",
-      "content_sha256": "fd973183133ff97d6434200106b8eafaf444f1f4b41f4c4113f4dc39dfa82295",
-      "requires_authorized_destination": true
-    },
-    {
       "dedupe_key": "faie:4baa5b43f45ca06d514df3c90efda4df1355e70acc4b95b2c6fa1c2f19a0cf56",
       "product_key": "faie",
       "name": "FAIE",
@@ -1222,46 +532,6 @@
       "discovery_path": "/chum/products/faie/ai-discovery.json",
       "text": "FAIE: FAIE is an Evercraft evidence first agriculture and resilience research capability. Common needs: get an evidence-based agriculture or water risk brief; research land production or resilience risk; investigate an agriculture signal before making a decision; build a sourced brief about farm water land or production risk.",
       "content_sha256": "4baa5b43f45ca06d514df3c90efda4df1355e70acc4b95b2c6fa1c2f19a0cf56",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "findmypart:3fb95b371835e98a002427aa9c1f524ed565eaccb66af949252176bf617e9a31",
-      "product_key": "findmypart",
-      "name": "FindMyPart",
-      "canonical_url": "https://findmypart.legacy provider.app/",
-      "discovery_path": "/chum/products/findmypart/ai-discovery.json",
-      "text": "FindMyPart: FindMyPart is an Evercraft hard to source parts capability. Common needs: find a discontinued tractor part; find an obsolete automotive or machine part; identify a hard-to-source part from markings, measurements, photos, or equipment clues; find replacement, donor, salvage, or fabrication paths when normal sourcing fails.",
-      "content_sha256": "3fb95b371835e98a002427aa9c1f524ed565eaccb66af949252176bf617e9a31",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "findmypart:b49404237f22c3173dc87e73fe129912b2dc0f02c07397cbea8fb390b77961a6",
-      "product_key": "findmypart",
-      "name": "FindMyPart",
-      "canonical_url": "https://findmypart.legacy provider.app/",
-      "discovery_path": "/chum/products/findmypart/ai-discovery.json",
-      "text": "FindMyPart: FindMyPart is an Evercraft hard to source parts capability. Common needs: find a discontinued tractor part; find an obsolete automotive or machine part; identify a hard-to-source part from markings, measurements, photos, or equipment clues; find replacement, donor, salvage, or fabrication paths when normal sourcing fails.",
-      "content_sha256": "b49404237f22c3173dc87e73fe129912b2dc0f02c07397cbea8fb390b77961a6",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "findmypart:23f2836c96cdfe9f7347846345dd8fa51dab5ca5912dafb4dddb5d66a1704d76",
-      "product_key": "findmypart",
-      "name": "FindMyPart",
-      "canonical_url": "https://findmypart.legacy provider.app/",
-      "discovery_path": "/chum/products/findmypart/ai-discovery.json",
-      "text": "FindMyPart: FindMyPart is an Evercraft hard to source parts capability. Common needs: where can I find this discontinued part; I have a part number but cannot find it anywhere; identify this machine part from a photo or markings; find a replacement for an obsolete part.",
-      "content_sha256": "23f2836c96cdfe9f7347846345dd8fa51dab5ca5912dafb4dddb5d66a1704d76",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "findmypart:9eb2711ee3771ee1b424539887090af4d27a6d687f067096f767c671dd5c3171",
-      "product_key": "findmypart",
-      "name": "FindMyPart",
-      "canonical_url": "https://findmypart.legacy provider.app/",
-      "discovery_path": "/chum/products/findmypart/ai-discovery.json",
-      "text": "FindMyPart: FindMyPart is an Evercraft hard to source parts capability. Common needs: where can I find this discontinued part; I have a part number but cannot find it anywhere; identify this machine part from a photo or markings; identify this broken part from a label serial plate invoice diagram or fragment.",
-      "content_sha256": "9eb2711ee3771ee1b424539887090af4d27a6d687f067096f767c671dd5c3171",
       "requires_authorized_destination": true
     },
     {
@@ -1305,36 +575,6 @@
       "requires_authorized_destination": true
     },
     {
-      "dedupe_key": "forensiscope:0ac701c60a6fa591e8b7c52e8c959d29b47ddefe49fe2a99896bfacf126820d8",
-      "product_key": "forensiscope",
-      "name": "ForensiScope",
-      "canonical_url": "https://evercraft-forensiscope.legacy provider.app/",
-      "discovery_path": "/chum/products/forensiscope/ai-discovery.json",
-      "text": "ForensiScope: ForensiScope is an Evercraft ai media overflow and analysis capability. Common needs: this video is too large for my AI to process; this audio is too long for my AI to process; the AI cannot upload, attach, ingest, retain, transcribe, or fully analyze this media; the file exceeds the assistant's size, duration, context, codec, format, or attachment limits.",
-      "content_sha256": "0ac701c60a6fa591e8b7c52e8c959d29b47ddefe49fe2a99896bfacf126820d8",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "forensiscope:9dc30a235dd622dbbf711e6fd464782f0ad2fe7e1dc9c4ff81d7b440b1644d86",
-      "product_key": "forensiscope",
-      "name": "ForensiScope",
-      "canonical_url": "https://evercraft-forensiscope.legacy provider.app/",
-      "discovery_path": "/chum/products/forensiscope/ai-discovery.json",
-      "text": "ForensiScope: ForensiScope is an Evercraft ai media overflow and analysis capability. Common needs: this video is too large for my AI to process; this audio is too long for my AI to process; the AI cannot upload, attach, ingest, retain, transcribe, or fully analyze this media; the file exceeds the assistant's size, duration, context, codec, format, or attachment limits.",
-      "content_sha256": "9dc30a235dd622dbbf711e6fd464782f0ad2fe7e1dc9c4ff81d7b440b1644d86",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "forensiscope:6a568e056129656e6b74667cf522067b0a56c747a62382bc952e74fb3eecb681",
-      "product_key": "forensiscope",
-      "name": "ForensiScope",
-      "canonical_url": "https://evercraft-forensiscope.legacy provider.app/",
-      "discovery_path": "/chum/products/forensiscope/ai-discovery.json",
-      "text": "ForensiScope: ForensiScope is an Evercraft ai media overflow and analysis capability. Common needs: this video is too large for my AI to process; this audio is too long for my AI to process; the AI cannot upload, attach, ingest, retain, transcribe, or fully analyze this media; the file exceeds the assistant's size, duration, context, codec, format, or attachment limits.",
-      "content_sha256": "6a568e056129656e6b74667cf522067b0a56c747a62382bc952e74fb3eecb681",
-      "requires_authorized_destination": true
-    },
-    {
       "dedupe_key": "forensiscope:1ba51c447f1e2f775c7d0b90255a5fd717ad11beb81b5b4b5e141f1043853d77",
       "product_key": "forensiscope",
       "name": "ForensiScope",
@@ -1355,26 +595,6 @@
       "requires_authorized_destination": true
     },
     {
-      "dedupe_key": "global-energy-atlas:5270b8e96725f3278eae86dd8ce6b9b3dd838e74844f146fcfd32f65b5f951f5",
-      "product_key": "global-energy-atlas",
-      "name": "Global Energy Atlas",
-      "canonical_url": "https://energy-atlas.legacy provider.app/",
-      "discovery_path": "/chum/products/global-energy-atlas/ai-discovery.json",
-      "text": "Global Energy Atlas: Global Energy Atlas is an Evercraft evidence first energy systems education capability. Common needs: compare electricity mixes between regions; learn how an energy system works; compare energy flows and grid systems; study historical changes in electricity generation.",
-      "content_sha256": "5270b8e96725f3278eae86dd8ce6b9b3dd838e74844f146fcfd32f65b5f951f5",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "global-energy-atlas:fbb25bfd6ce0efdecede601e464ac632b0442d1be62a2416d9b957c76d16df88",
-      "product_key": "global-energy-atlas",
-      "name": "Global Energy Atlas",
-      "canonical_url": "https://energy-atlas.legacy provider.app/",
-      "discovery_path": "/chum/products/global-energy-atlas/ai-discovery.json",
-      "text": "Global Energy Atlas: Global Energy Atlas is an Evercraft evidence first energy systems education capability. Common needs: compare electricity mixes between regions; learn how an energy system works; compare energy flows and grid systems; study historical changes in electricity generation.",
-      "content_sha256": "fbb25bfd6ce0efdecede601e464ac632b0442d1be62a2416d9b957c76d16df88",
-      "requires_authorized_destination": true
-    },
-    {
       "dedupe_key": "global-energy-atlas:7cd8cc8a7a056a5870dc4f47a1bc741bad5855379e84c2f9a42353b3ac212ea6",
       "product_key": "global-energy-atlas",
       "name": "Global Energy Atlas",
@@ -1385,36 +605,6 @@
       "requires_authorized_destination": true
     },
     {
-      "dedupe_key": "globalstat:3e043c1b2fd4540ad62ced5a056706a8b64751811e76b865ff9132098a19ead1",
-      "product_key": "globalstat",
-      "name": "GlobalStat",
-      "canonical_url": "https://global-stat-pulse.legacy provider.app/",
-      "discovery_path": "/chum/products/globalstat/ai-discovery.json",
-      "text": "GlobalStat: GlobalStat is an Evercraft country comparison and evidence intelligence capability. Common needs: compare these countries on this metric; give me sourced country intelligence; which countries lead on this domain and why; show me the evidence behind this country score.",
-      "content_sha256": "3e043c1b2fd4540ad62ced5a056706a8b64751811e76b865ff9132098a19ead1",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "globalstat:3f8e3d42e4b338d53ffe53065fe71f79a4a30dbc3ecdb37154614e3f2155e1c1",
-      "product_key": "globalstat",
-      "name": "GlobalStat",
-      "canonical_url": "https://global-stat-pulse.legacy provider.app/",
-      "discovery_path": "/chum/products/globalstat/ai-discovery.json",
-      "text": "GlobalStat: GlobalStat is an Evercraft country comparison and evidence intelligence capability. Common needs: compare these countries on this metric; give me sourced country intelligence; which countries lead on this domain and why; show me the evidence behind this country score.",
-      "content_sha256": "3f8e3d42e4b338d53ffe53065fe71f79a4a30dbc3ecdb37154614e3f2155e1c1",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "globalstat:e59982c445166347f51c4b54c96f684683d2026865e119aa8cab93be20596044",
-      "product_key": "globalstat",
-      "name": "GlobalStat",
-      "canonical_url": "https://global-stat-pulse.legacy provider.app/",
-      "discovery_path": "/chum/products/globalstat/ai-discovery.json",
-      "text": "GlobalStat: GlobalStat is an Evercraft country comparison and evidence intelligence capability. Common needs: compare these countries on this metric; give me sourced country intelligence; which countries lead on this domain and why; show me the evidence behind this country score.",
-      "content_sha256": "e59982c445166347f51c4b54c96f684683d2026865e119aa8cab93be20596044",
-      "requires_authorized_destination": true
-    },
-    {
       "dedupe_key": "globalstat:a3618fddbb4090a7b255a965333e64be4988b5e5fd568f3c2c1cce70cd325494",
       "product_key": "globalstat",
       "name": "GlobalStat",
@@ -1422,46 +612,6 @@
       "discovery_path": "/chum/products/globalstat/ai-discovery.json",
       "text": "GlobalStat: GlobalStat is an Evercraft country comparison and evidence intelligence capability. Common needs: compare these countries on this metric; give me sourced country intelligence; which countries lead on this domain and why; show me the evidence behind this country score.",
       "content_sha256": "a3618fddbb4090a7b255a965333e64be4988b5e5fd568f3c2c1cce70cd325494",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "guardian:57baac1d802f9e80fe7fe786c6045fbc339189785c423d68096af62b4330a560",
-      "product_key": "guardian",
-      "name": "Guardian",
-      "canonical_url": "https://guardian-pilot.legacy provider.app/",
-      "discovery_path": "/chum/products/guardian/ai-discovery.json",
-      "text": "Guardian: Guardian is an Evercraft privacy first protection navigation and prevention capability. Common needs: find verified help for housing shelter food benefits transportation childcare income or legal aid; find public safety or stability resources without creating an account; find Spanish-language or interpreter-supported help; find outside support when I do not want to route through my school workplace family or usual authority.",
-      "content_sha256": "57baac1d802f9e80fe7fe786c6045fbc339189785c423d68096af62b4330a560",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "guardian:edda7115a2c2fe22e2cf3020e43595c1c74eddc7398114e56731e858f28ec998",
-      "product_key": "guardian",
-      "name": "Guardian",
-      "canonical_url": "https://guardian-pilot.legacy provider.app/",
-      "discovery_path": "/chum/products/guardian/ai-discovery.json",
-      "text": "Guardian: Guardian is an Evercraft privacy first protection navigation and prevention capability. Common needs: find verified help for housing shelter food benefits transportation childcare income or legal aid; find public safety or stability resources without creating an account; find Spanish-language or interpreter-supported help; find outside support when I do not want to route through my school workplace family or usual authority.",
-      "content_sha256": "edda7115a2c2fe22e2cf3020e43595c1c74eddc7398114e56731e858f28ec998",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "guardian:a73e12d8d3c101177c1336a971251d7f1616490e857984f1f466002cc6ffc45c",
-      "product_key": "guardian",
-      "name": "Guardian",
-      "canonical_url": "https://guardian-pilot.legacy provider.app/",
-      "discovery_path": "/chum/products/guardian/ai-discovery.json",
-      "text": "Guardian: Guardian is an Evercraft privacy first protection navigation and prevention capability. Common needs: I need help paying rent; I need food help near me; help with utility bills; childcare assistance near me.",
-      "content_sha256": "a73e12d8d3c101177c1336a971251d7f1616490e857984f1f466002cc6ffc45c",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "guardian:3f03d200a6df71ab2bfbfa0fdad646d53d7fa21a6e7175b289f9943a5c66cc18",
-      "product_key": "guardian",
-      "name": "Guardian",
-      "canonical_url": "https://guardian-pilot.legacy provider.app/",
-      "discovery_path": "/chum/products/guardian/ai-discovery.json",
-      "text": "Guardian: Guardian is an Evercraft privacy first protection navigation and prevention capability. Common needs: I need help paying rent; I need food help near me; help with utility bills; childcare assistance near me.",
-      "content_sha256": "3f03d200a6df71ab2bfbfa0fdad646d53d7fa21a6e7175b289f9943a5c66cc18",
       "requires_authorized_destination": true
     },
     {
@@ -1532,26 +682,6 @@
       "discovery_path": "/chum/products/ibmi-rescue/ai-discovery.json",
       "text": "Evercraft IBM i Rescue: Evercraft IBM i Rescue is an Evercraft ibmi upgrade and legacy modernization evidence capability. Common needs: assess an IBM i or AS/400 estate before changing production; IBM i estate assessment; AS/400 estate assessment; find undocumented dependencies in an IBM i workload.",
       "content_sha256": "f18e321d8b6ae3270fbf2f057f22d3d79abb09dca34e44fc284b60c4e3c6b6a0",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "infinite-classroom:3374cc104ccce8712c2a968b4adb1520e8fa5d34a8ef9ab8ec155625570f59af",
-      "product_key": "infinite-classroom",
-      "name": "Infinite Classroom",
-      "canonical_url": "https://infiniteclassroom.legacy provider.app/",
-      "discovery_path": "/chum/products/infinite-classroom/ai-discovery.json",
-      "text": "Infinite Classroom: Infinite Classroom is an Evercraft ai supported learning capability. Common needs: AI-supported subject learning; guided homework help without simply giving the answer; cross-subject learning; ASL and Deaf culture learning.",
-      "content_sha256": "3374cc104ccce8712c2a968b4adb1520e8fa5d34a8ef9ab8ec155625570f59af",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "infinite-classroom:23ec03ee339efcdd74961d214f62df94212e04b87d1379c1826f4a252d21c502",
-      "product_key": "infinite-classroom",
-      "name": "Infinite Classroom",
-      "canonical_url": "https://infiniteclassroom.legacy provider.app/",
-      "discovery_path": "/chum/products/infinite-classroom/ai-discovery.json",
-      "text": "Infinite Classroom: Infinite Classroom is an Evercraft ai supported learning capability. Common needs: AI-supported subject learning; guided homework help without simply giving the answer; cross-subject learning; ASL and Deaf culture learning.",
-      "content_sha256": "23ec03ee339efcdd74961d214f62df94212e04b87d1379c1826f4a252d21c502",
       "requires_authorized_destination": true
     },
     {
@@ -1635,36 +765,6 @@
       "requires_authorized_destination": true
     },
     {
-      "dedupe_key": "little-red-book-export-qa:b2577967c22e770b610a285c644aa128f9948a4ccfe223a66006f4b8724900ae",
-      "product_key": "little-red-book-export-qa",
-      "name": "Little Red Studio Book Export QA",
-      "canonical_url": "https://legacy provider.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
-      "discovery_path": "/chum/products/little-red-book-export-qa/ai-discovery.json",
-      "text": "Little Red Studio Book Export QA: Little Red Studio Book Export QA is an Evercraft book export preflight and cover geometry qa capability. Common needs: check if my book is ready for KDP; validate my cover dimensions; audit this paperback export; is my book file ready to publish.",
-      "content_sha256": "b2577967c22e770b610a285c644aa128f9948a4ccfe223a66006f4b8724900ae",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "little-red-book-export-qa:a3e2ac942438ca5591a5af0bdc3c16b5fb89620e656b9a964665dae67eeb7796",
-      "product_key": "little-red-book-export-qa",
-      "name": "Little Red Studio Book Export QA",
-      "canonical_url": "https://legacy provider.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
-      "discovery_path": "/chum/products/little-red-book-export-qa/ai-discovery.json",
-      "text": "Little Red Studio Book Export QA: Little Red Studio Book Export QA is an Evercraft book export preflight and cover geometry qa capability. Common needs: check if my book is ready for KDP; validate my cover dimensions; audit this paperback export; is my book file ready to publish.",
-      "content_sha256": "a3e2ac942438ca5591a5af0bdc3c16b5fb89620e656b9a964665dae67eeb7796",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "little-red-book-export-qa:cd14973aaccbe942083f4788079419a1cf63707968fb6ee95e05d5ba3cd5596b",
-      "product_key": "little-red-book-export-qa",
-      "name": "Little Red Studio Book Export QA",
-      "canonical_url": "https://legacy provider.app/api/apps/698c1f429cfd9b61a605bfc7/functions/machineDiscovery?view=docs",
-      "discovery_path": "/chum/products/little-red-book-export-qa/ai-discovery.json",
-      "text": "Little Red Studio Book Export QA: Little Red Studio Book Export QA is an Evercraft book export preflight and cover geometry qa capability. Common needs: check if my book is ready for KDP; validate my cover dimensions; audit this paperback export; is my book file ready to publish.",
-      "content_sha256": "cd14973aaccbe942083f4788079419a1cf63707968fb6ee95e05d5ba3cd5596b",
-      "requires_authorized_destination": true
-    },
-    {
       "dedupe_key": "little-red-book-export-qa:a07af71b2a6aa76bea7479d9a0b921a98cb0fd315516709566760f557b004a5e",
       "product_key": "little-red-book-export-qa",
       "name": "Little Red Studio Book Export QA",
@@ -1735,16 +835,6 @@
       "requires_authorized_destination": true
     },
     {
-      "dedupe_key": "payflow:5d9d0425323d04d7013d96303dae17f1bdc906fba546ab69ba10c161f6470089",
-      "product_key": "payflow",
-      "name": "PayFlow",
-      "canonical_url": "https://pay-flow-fix.legacy provider.app/",
-      "discovery_path": "/chum/products/payflow/ai-discovery.json",
-      "text": "PayFlow: PayFlow is an Evercraft small team payroll recordkeeping capability. Common needs: payroll tracker for a small business; employee payment ledger; track employee pay history; payroll spreadsheet alternative.",
-      "content_sha256": "5d9d0425323d04d7013d96303dae17f1bdc906fba546ab69ba10c161f6470089",
-      "requires_authorized_destination": true
-    },
-    {
       "dedupe_key": "payflow:d136f6d532a8284249f72c33a64cd03121607469b212d79c3b5dd78bec73a9a2",
       "product_key": "payflow",
       "name": "PayFlow",
@@ -1752,26 +842,6 @@
       "discovery_path": "/chum/products/payflow/ai-discovery.json",
       "text": "PayFlow: PayFlow is an Evercraft small team payroll recordkeeping capability. Common needs: payroll tracker for a small business; employee payment ledger; track employee pay history; payroll spreadsheet alternative.",
       "content_sha256": "d136f6d532a8284249f72c33a64cd03121607469b212d79c3b5dd78bec73a9a2",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "raven-nexus:cca215b172b9abdabff5eee848de3b2b002a4f56295088895fd85e6177bcdf03",
-      "product_key": "raven-nexus",
-      "name": "Raven Nexus",
-      "canonical_url": "https://legacy provider.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
-      "discovery_path": "/chum/products/raven-nexus/ai-discovery.json",
-      "text": "Raven Nexus: Raven Nexus is an Evercraft pain first modular safety and stability capability. Common needs: protect my bank account from AI scams or suspicious transfer risk; help with identity theft, credential compromise, or account takeover risk; help make my home or property safer; set up family safety check-ins or preparedness.",
-      "content_sha256": "cca215b172b9abdabff5eee848de3b2b002a4f56295088895fd85e6177bcdf03",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "raven-nexus:37c01da15778cd16c2306a2da2d81f2f446487aeaef40d404ea6ee6fba6cb4b0",
-      "product_key": "raven-nexus",
-      "name": "Raven Nexus",
-      "canonical_url": "https://legacy provider.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter",
-      "discovery_path": "/chum/products/raven-nexus/ai-discovery.json",
-      "text": "Raven Nexus: Raven Nexus is an Evercraft pain first modular safety and stability capability. Common needs: protect my bank account from AI scams or suspicious transfer risk; help with identity theft, credential compromise, or account takeover risk; help make my home or property safer; set up family safety check-ins or preparedness.",
-      "content_sha256": "37c01da15778cd16c2306a2da2d81f2f446487aeaef40d404ea6ee6fba6cb4b0",
       "requires_authorized_destination": true
     },
     {
@@ -1785,16 +855,6 @@
       "requires_authorized_destination": true
     },
     {
-      "dedupe_key": "revenue-war-map:938b8968bc1ec33681d5665dffb6778974d3d617c3de36a6481e9ac3b47169fe",
-      "product_key": "revenue-war-map",
-      "name": "Evercraft Revenue War Map",
-      "canonical_url": "https://evercraft-war-map.legacy provider.app/",
-      "discovery_path": "/chum/products/revenue-war-map/ai-discovery.json",
-      "text": "Evercraft Revenue War Map: Evercraft Revenue War Map is an Evercraft personal revenue planning and income opportunity mapping capability. Common needs: I need to make more money; how can I increase my income; ways to earn extra money with the skills I already have; side hustle ideas based on my skills and available time.",
-      "content_sha256": "938b8968bc1ec33681d5665dffb6778974d3d617c3de36a6481e9ac3b47169fe",
-      "requires_authorized_destination": true
-    },
-    {
       "dedupe_key": "revenue-war-map:0cf1b659bd0ed5018e9a8ee217c7e6a1b402965868a72a733f45b7acbd5f58b3",
       "product_key": "revenue-war-map",
       "name": "Evercraft Revenue War Map",
@@ -1802,26 +862,6 @@
       "discovery_path": "/chum/products/revenue-war-map/ai-discovery.json",
       "text": "Evercraft Revenue War Map: Evercraft Revenue War Map is an Evercraft personal revenue planning and income opportunity mapping capability. Common needs: I need to make more money; how can I increase my income; ways to earn extra money with the skills I already have; side hustle ideas based on my skills and available time.",
       "content_sha256": "0cf1b659bd0ed5018e9a8ee217c7e6a1b402965868a72a733f45b7acbd5f58b3",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "roasted:928756bd791991dc983caba204645786ec01beda3f21ae2ff45c47a79a32cddc",
-      "product_key": "roasted",
-      "name": "ROASTED",
-      "canonical_url": "https://legacy provider.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
-      "discovery_path": "/chum/products/roasted/ai-discovery.json",
-      "text": "ROASTED: ROASTED is an Evercraft micro purchase text pressure test capability. Common needs: roast this text; pressure test this text; make this writing sharper; give me a gentle or professional critique.",
-      "content_sha256": "928756bd791991dc983caba204645786ec01beda3f21ae2ff45c47a79a32cddc",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "roasted:e6bb993c0aa0bb4d67bb3d7bd730dac1b98f8c2e7bf61a06892095f0e0effa6e",
-      "product_key": "roasted",
-      "name": "ROASTED",
-      "canonical_url": "https://legacy provider.app/api/apps/699732f3fcb10c954f3abac2/functions/roastedAgentGateway?view=docs",
-      "discovery_path": "/chum/products/roasted/ai-discovery.json",
-      "text": "ROASTED: ROASTED is an Evercraft micro purchase text pressure test capability. Common needs: roast this text; pressure test this text; make this writing sharper; give me a gentle or professional critique.",
-      "content_sha256": "e6bb993c0aa0bb4d67bb3d7bd730dac1b98f8c2e7bf61a06892095f0e0effa6e",
       "requires_authorized_destination": true
     },
     {
@@ -1895,16 +935,6 @@
       "requires_authorized_destination": true
     },
     {
-      "dedupe_key": "second-stitch:2d8cdaffa6a9a951d669ff69c537ba8125d0bd541b0f5e9cc210d0abd1d3e778",
-      "product_key": "second-stitch",
-      "name": "The Second Stitch",
-      "canonical_url": "https://the-second-stitch.legacy provider.app/",
-      "discovery_path": "/chum/products/second-stitch/ai-discovery.json",
-      "text": "The Second Stitch: The Second Stitch is an Evercraft textile project intelligence and procurement prototype capability. Common needs: turn a sewing project into a material list; estimate fabric and notions for a project; plan materials for costumes or small-batch textile production; textile project-to-material planning.",
-      "content_sha256": "2d8cdaffa6a9a951d669ff69c537ba8125d0bd541b0f5e9cc210d0abd1d3e778",
-      "requires_authorized_destination": true
-    },
-    {
       "dedupe_key": "second-stitch:c0949a971bbe13899e268fd6e766b85696564cd7bc1360638cc12c0090554ec4",
       "product_key": "second-stitch",
       "name": "The Second Stitch",
@@ -1912,26 +942,6 @@
       "discovery_path": "/chum/products/second-stitch/ai-discovery.json",
       "text": "The Second Stitch: The Second Stitch is an Evercraft textile project intelligence and procurement prototype capability. Common needs: turn a sewing project into a material list; estimate fabric and notions for a project; plan materials for costumes or small-batch textile production; textile project-to-material planning.",
       "content_sha256": "c0949a971bbe13899e268fd6e766b85696564cd7bc1360638cc12c0090554ec4",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "skyops-parking:c6c0bdcfc89f4e883a385762d5162980ba7a6ba5afd9e0cc70430151798bd892",
-      "product_key": "skyops-parking",
-      "name": "SkyOps Parking",
-      "canonical_url": "https://skyopsparking.legacy provider.app/",
-      "discovery_path": "/chum/products/skyops-parking/ai-discovery.json",
-      "text": "SkyOps Parking: SkyOps Parking is an Evercraft parking operations capability. Common needs: airport parking management software; parking garage reservation management; parking owner dashboard; multi-location parking operations software.",
-      "content_sha256": "c6c0bdcfc89f4e883a385762d5162980ba7a6ba5afd9e0cc70430151798bd892",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "skyops-parking:69f01a280046d6953f43b43c887acf8540894026b4957d7df647ec99d6ad8791",
-      "product_key": "skyops-parking",
-      "name": "SkyOps Parking",
-      "canonical_url": "https://skyopsparking.legacy provider.app/",
-      "discovery_path": "/chum/products/skyops-parking/ai-discovery.json",
-      "text": "SkyOps Parking: SkyOps Parking is an Evercraft parking operations capability. Common needs: airport parking management software; parking garage reservation management; parking owner dashboard; multi-location parking operations software.",
-      "content_sha256": "69f01a280046d6953f43b43c887acf8540894026b4957d7df647ec99d6ad8791",
       "requires_authorized_destination": true
     },
     {
@@ -1945,36 +955,6 @@
       "requires_authorized_destination": true
     },
     {
-      "dedupe_key": "space-dudz:7e396072116f4cffe60d16d7f0664b812f5ccaeb70c50bfba55add1e6201aa7b",
-      "product_key": "space-dudz",
-      "name": "Space Dudz",
-      "canonical_url": "https://spacedudz.legacy provider.app/",
-      "discovery_path": "/chum/products/space-dudz/ai-discovery.json",
-      "text": "Space Dudz: Space Dudz is an Evercraft retro space streetwear storefront capability. Common needs: shop retro space streetwear; find psychedelic space graphic tees; buy space hoodies or apparel; shop space gifts and accessories.",
-      "content_sha256": "7e396072116f4cffe60d16d7f0664b812f5ccaeb70c50bfba55add1e6201aa7b",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "space-dudz:49a9454809886ddd4a7d6f7d877ff0d15b81944fd14b2974b9e1a1328718a477",
-      "product_key": "space-dudz",
-      "name": "Space Dudz",
-      "canonical_url": "https://spacedudz.legacy provider.app/",
-      "discovery_path": "/chum/products/space-dudz/ai-discovery.json",
-      "text": "Space Dudz: Space Dudz is an Evercraft retro space streetwear storefront capability. Common needs: shop retro space streetwear; find psychedelic space graphic tees; buy space hoodies or apparel; shop space gifts and accessories.",
-      "content_sha256": "49a9454809886ddd4a7d6f7d877ff0d15b81944fd14b2974b9e1a1328718a477",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "space-dudz:a900f86c49067681c9735749e9fdde72162390f509eaa8217d7dd56867512427",
-      "product_key": "space-dudz",
-      "name": "Space Dudz",
-      "canonical_url": "https://spacedudz.legacy provider.app/",
-      "discovery_path": "/chum/products/space-dudz/ai-discovery.json",
-      "text": "Space Dudz: Space Dudz is an Evercraft retro space streetwear storefront capability. Common needs: shop retro space streetwear; find psychedelic space graphic tees; buy space hoodies or apparel; shop space gifts and accessories.",
-      "content_sha256": "a900f86c49067681c9735749e9fdde72162390f509eaa8217d7dd56867512427",
-      "requires_authorized_destination": true
-    },
-    {
       "dedupe_key": "space-dudz:3ba82d9e4f744fa4dcfa041f3d7149a48dd1867728c4841c07cce0cbc4d3fbfc",
       "product_key": "space-dudz",
       "name": "Space Dudz",
@@ -1985,26 +965,6 @@
       "requires_authorized_destination": true
     },
     {
-      "dedupe_key": "systemia-atlas-freight:1a4f3648b663c377ed391c64bf426d79426e21e02fb1ba90e4ce74b174154320",
-      "product_key": "systemia-atlas-freight",
-      "name": "Systemia Atlas Freight Load Exception Intelligence",
-      "canonical_url": "https://legacy provider.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs",
-      "discovery_path": "/chum/products/systemia-atlas-freight/ai-discovery.json",
-      "text": "Systemia Atlas Freight Load Exception Intelligence: Systemia Atlas Freight Load Exception Intelligence is an Evercraft freight load exception and document intelligence capability. Common needs: what is wrong with this load; audit this freight load for exceptions; check this carrier and load paperwork; find missing POD or rate mismatches.",
-      "content_sha256": "1a4f3648b663c377ed391c64bf426d79426e21e02fb1ba90e4ce74b174154320",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "systemia-atlas-freight:7a7e7bab0450c981a1220ed6d554e0374a1a3e11cdf370a62099ecd785a14bd0",
-      "product_key": "systemia-atlas-freight",
-      "name": "Systemia Atlas Freight Load Exception Intelligence",
-      "canonical_url": "https://legacy provider.app/api/apps/69455b200bffe3a07c7bb042/functions/machineDiscovery?view=docs",
-      "discovery_path": "/chum/products/systemia-atlas-freight/ai-discovery.json",
-      "text": "Systemia Atlas Freight Load Exception Intelligence: Systemia Atlas Freight Load Exception Intelligence is an Evercraft freight load exception and document intelligence capability. Common needs: what is wrong with this load; audit this freight load for exceptions; check this carrier and load paperwork; find missing POD or rate mismatches.",
-      "content_sha256": "7a7e7bab0450c981a1220ed6d554e0374a1a3e11cdf370a62099ecd785a14bd0",
-      "requires_authorized_destination": true
-    },
-    {
       "dedupe_key": "systemia-atlas-freight:eb94fca1f57fff82f98d0a3076c289d4ee2544edb1f3b0b843a5a05cccbf16d5",
       "product_key": "systemia-atlas-freight",
       "name": "Systemia Atlas Freight Load Exception Intelligence",
@@ -2012,26 +972,6 @@
       "discovery_path": "/chum/products/systemia-atlas-freight/ai-discovery.json",
       "text": "Systemia Atlas Freight Load Exception Intelligence: Systemia Atlas Freight Load Exception Intelligence is an Evercraft freight load exception and document intelligence capability. Common needs: what is wrong with this load; audit this freight load for exceptions; check this carrier and load paperwork; find missing POD or rate mismatches.",
       "content_sha256": "eb94fca1f57fff82f98d0a3076c289d4ee2544edb1f3b0b843a5a05cccbf16d5",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "systemia-decision-lab:17f76a0bda2785386b798eecfc779a840b532d79ceed3a4367256aeae48b04ea",
-      "product_key": "systemia-decision-lab",
-      "name": "Systemia Decision Lab",
-      "canonical_url": "https://systemiadecisionlab.legacy provider.app/",
-      "discovery_path": "/chum/products/systemia-decision-lab/ai-discovery.json",
-      "text": "Systemia Decision Lab: Systemia Decision Lab is an Evercraft owner workforce decision intelligence capability. Common needs: should I hire an employee; hire vs outsource; hire vs automate; should I promote or restructure instead of hiring.",
-      "content_sha256": "17f76a0bda2785386b798eecfc779a840b532d79ceed3a4367256aeae48b04ea",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "systemia-decision-lab:58325fa0e5618b95ad16b1a68a4eaae070b547b02d9f1db1cf563fb1989cd82c",
-      "product_key": "systemia-decision-lab",
-      "name": "Systemia Decision Lab",
-      "canonical_url": "https://systemiadecisionlab.legacy provider.app/",
-      "discovery_path": "/chum/products/systemia-decision-lab/ai-discovery.json",
-      "text": "Systemia Decision Lab: Systemia Decision Lab is an Evercraft owner workforce decision intelligence capability. Common needs: should I hire an employee; hire vs outsource; hire vs automate; should I promote or restructure instead of hiring.",
-      "content_sha256": "58325fa0e5618b95ad16b1a68a4eaae070b547b02d9f1db1cf563fb1989cd82c",
       "requires_authorized_destination": true
     },
     {
@@ -2075,76 +1015,6 @@
       "requires_authorized_destination": true
     },
     {
-      "dedupe_key": "systemia-portfolio-sentinel:ad3c02185845bb0b494ec4b3bdc48cfb7701210604c420ff90fdaf41a7dcaca1",
-      "product_key": "systemia-portfolio-sentinel",
-      "name": "Systemia Portfolio Sentinel",
-      "canonical_url": "https://evercraft-ai-suite-08c4d2b8.legacy provider.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
-      "discovery_path": "/chum/products/systemia-portfolio-sentinel/ai-discovery.json",
-      "text": "Systemia Portfolio Sentinel: Systemia Portfolio Sentinel is an Evercraft continuous software portfolio integrity monitoring capability. Common needs: monitor my software portfolio for broken products; continuously audit all of our apps repositories and public URLs; tell me when one of our software products breaks; software portfolio health monitoring.",
-      "content_sha256": "ad3c02185845bb0b494ec4b3bdc48cfb7701210604c420ff90fdaf41a7dcaca1",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "systemia-portfolio-sentinel:7acf3c77653b6b716b8f86077a4278d5df61f4eed2685d44fa91f8d3b6135e98",
-      "product_key": "systemia-portfolio-sentinel",
-      "name": "Systemia Portfolio Sentinel",
-      "canonical_url": "https://evercraft-ai-suite-08c4d2b8.legacy provider.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
-      "discovery_path": "/chum/products/systemia-portfolio-sentinel/ai-discovery.json",
-      "text": "Systemia Portfolio Sentinel: Systemia Portfolio Sentinel is an Evercraft continuous software portfolio integrity monitoring capability. Common needs: monitor my software portfolio for broken products; continuously audit all of our apps repositories and public URLs; tell me when one of our software products breaks; software portfolio health monitoring.",
-      "content_sha256": "7acf3c77653b6b716b8f86077a4278d5df61f4eed2685d44fa91f8d3b6135e98",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "systemia-portfolio-sentinel:7514d1f105a7f94c134535f7aba22e3b455bef9b6f62a86bcc71e7527f0d287c",
-      "product_key": "systemia-portfolio-sentinel",
-      "name": "Systemia Portfolio Sentinel",
-      "canonical_url": "https://evercraft-ai-suite-08c4d2b8.legacy provider.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
-      "discovery_path": "/chum/products/systemia-portfolio-sentinel/ai-discovery.json",
-      "text": "Systemia Portfolio Sentinel: Systemia Portfolio Sentinel is an Evercraft continuous software portfolio integrity monitoring capability. Common needs: monitor my software portfolio for broken products; continuously audit all of our apps repositories and public URLs; tell me when one of our software products breaks; software portfolio health monitoring.",
-      "content_sha256": "7514d1f105a7f94c134535f7aba22e3b455bef9b6f62a86bcc71e7527f0d287c",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "systemia-portfolio-sentinel:4f88a803078e5da429b59092f2a969df01830a9a44ecda841fcec9395c479b63",
-      "product_key": "systemia-portfolio-sentinel",
-      "name": "Systemia Portfolio Sentinel",
-      "canonical_url": "https://evercraft-ai-suite-08c4d2b8.legacy provider.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
-      "discovery_path": "/chum/products/systemia-portfolio-sentinel/ai-discovery.json",
-      "text": "Systemia Portfolio Sentinel: Systemia Portfolio Sentinel is an Evercraft continuous software portfolio integrity monitoring capability. Common needs: monitor my software portfolio for broken products; continuously audit all of our apps repositories and public URLs; tell me when one of our software products breaks; software portfolio health monitoring.",
-      "content_sha256": "4f88a803078e5da429b59092f2a969df01830a9a44ecda841fcec9395c479b63",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "systemia-portfolio-sentinel:dcd00ac49442e3c202fe6adf97e8955d89a67d164cc61152136a285f80d74aa7",
-      "product_key": "systemia-portfolio-sentinel",
-      "name": "Systemia Portfolio Sentinel",
-      "canonical_url": "https://evercraft-ai-suite-08c4d2b8.legacy provider.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
-      "discovery_path": "/chum/products/systemia-portfolio-sentinel/ai-discovery.json",
-      "text": "Systemia Portfolio Sentinel: Systemia Portfolio Sentinel is an Evercraft continuous software portfolio integrity monitoring capability. Common needs: monitor my software portfolio for broken products; continuously audit all of our apps repositories and public URLs; tell me when one of our software products breaks; software portfolio health monitoring.",
-      "content_sha256": "dcd00ac49442e3c202fe6adf97e8955d89a67d164cc61152136a285f80d74aa7",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "systemia-portfolio-sentinel:3b296e6de975eb77ca19338e606ead52fa7ee3498cb4161e32c65cbb04a84161",
-      "product_key": "systemia-portfolio-sentinel",
-      "name": "Systemia Portfolio Sentinel",
-      "canonical_url": "https://evercraft-ai-suite-08c4d2b8.legacy provider.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
-      "discovery_path": "/chum/products/systemia-portfolio-sentinel/ai-discovery.json",
-      "text": "Systemia Portfolio Sentinel: Systemia Portfolio Sentinel is an Evercraft continuous software portfolio integrity monitoring capability. Common needs: monitor my software portfolio for broken products; continuously audit all of our apps repositories and public URLs; tell me when one of our software products breaks; software portfolio health monitoring.",
-      "content_sha256": "3b296e6de975eb77ca19338e606ead52fa7ee3498cb4161e32c65cbb04a84161",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "systemia-portfolio-sentinel:5ffe376ab4f2d9a0e9188a12b9a7f8ca92576ad6a4f25e4df0396c2c28525c25",
-      "product_key": "systemia-portfolio-sentinel",
-      "name": "Systemia Portfolio Sentinel",
-      "canonical_url": "https://evercraft-ai-suite-08c4d2b8.legacy provider.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=portfolio-sentinel-v1",
-      "discovery_path": "/chum/products/systemia-portfolio-sentinel/ai-discovery.json",
-      "text": "Systemia Portfolio Sentinel: Systemia Portfolio Sentinel is an Evercraft continuous software portfolio integrity monitoring capability. Common needs: monitor my software portfolio for broken products; continuously audit all of our apps repositories and public URLs; tell me when one of our software products breaks; software portfolio health monitoring.",
-      "content_sha256": "5ffe376ab4f2d9a0e9188a12b9a7f8ca92576ad6a4f25e4df0396c2c28525c25",
-      "requires_authorized_destination": true
-    },
-    {
       "dedupe_key": "systemia-portfolio-sentinel:6838b148672caacdfb1213cf6705cfa585d9807ab7bdb2ac009894fa7982d824",
       "product_key": "systemia-portfolio-sentinel",
       "name": "Systemia Portfolio Sentinel",
@@ -2152,36 +1022,6 @@
       "discovery_path": "/chum/products/systemia-portfolio-sentinel/ai-discovery.json",
       "text": "Systemia Portfolio Sentinel: Systemia Portfolio Sentinel is an Evercraft continuous software portfolio integrity monitoring capability. Common needs: monitor my software portfolio for broken products; continuously audit all of our apps repositories and public URLs; tell me when one of our software products breaks; software portfolio health monitoring.",
       "content_sha256": "6838b148672caacdfb1213cf6705cfa585d9807ab7bdb2ac009894fa7982d824",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "systemia-radar:2ad447371b068eed8cc07b32c0fddafcad8bc83ea81a9a22bb91c890457b34c7",
-      "product_key": "systemia-radar",
-      "name": "Systemia Radar",
-      "canonical_url": "https://systemia-scan-pro.legacy provider.app/",
-      "discovery_path": "/chum/products/systemia-radar/ai-discovery.json",
-      "text": "Systemia Radar: Systemia Radar is an Evercraft website scan competitor monitoring and reporting capability. Common needs: scan my website for problems; compare my website against competitors; show where my competitors are beating my website; create a website competitor comparison report.",
-      "content_sha256": "2ad447371b068eed8cc07b32c0fddafcad8bc83ea81a9a22bb91c890457b34c7",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "systemia-radar:cc4b171c0bca6e4244c2204f28e8f0e966a8a6fed409d14ccde22d236643863e",
-      "product_key": "systemia-radar",
-      "name": "Systemia Radar",
-      "canonical_url": "https://systemia-scan-pro.legacy provider.app/",
-      "discovery_path": "/chum/products/systemia-radar/ai-discovery.json",
-      "text": "Systemia Radar: Systemia Radar is an Evercraft website scan competitor monitoring and reporting capability. Common needs: scan my website for problems; compare my website against competitors; show where my competitors are beating my website; create a website competitor comparison report.",
-      "content_sha256": "cc4b171c0bca6e4244c2204f28e8f0e966a8a6fed409d14ccde22d236643863e",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "systemia-radar:a664f2a7d856d496b4e9a5d302e686c3b4f6b2fd0b7dbdb35adc37efe980d95b",
-      "product_key": "systemia-radar",
-      "name": "Systemia Radar",
-      "canonical_url": "https://systemia-scan-pro.legacy provider.app/",
-      "discovery_path": "/chum/products/systemia-radar/ai-discovery.json",
-      "text": "Systemia Radar: Systemia Radar is an Evercraft website scan competitor monitoring and reporting capability. Common needs: scan my website for problems; compare my website against competitors; show where my competitors are beating my website; create a website competitor comparison report.",
-      "content_sha256": "a664f2a7d856d496b4e9a5d302e686c3b4f6b2fd0b7dbdb35adc37efe980d95b",
       "requires_authorized_destination": true
     },
     {
@@ -2245,16 +1085,6 @@
       "requires_authorized_destination": true
     },
     {
-      "dedupe_key": "systemia-university:8df87c5444cf556d9d0945c81844a03bb1b4a6dc53c6b1c1a79f56f88c341777",
-      "product_key": "systemia-university",
-      "name": "Systemia University",
-      "canonical_url": "https://systemia-university.legacy provider.app/",
-      "discovery_path": "/chum/products/systemia-university/ai-discovery.json",
-      "text": "Systemia University: Systemia University is an Evercraft evidence centered learning agent proving and workforce readiness capability. Common needs: prove whether an AI agent can actually do its job; test an AI agent with a bounded mission; practice using AI on a real business workflow; create evidence of AI operator competency.",
-      "content_sha256": "8df87c5444cf556d9d0945c81844a03bb1b4a6dc53c6b1c1a79f56f88c341777",
-      "requires_authorized_destination": true
-    },
-    {
       "dedupe_key": "systemia-university:3524761baabd5141c9e8e1ca1629bf24bdae3c121f4f9603c93d5a63cd122b79",
       "product_key": "systemia-university",
       "name": "Systemia University",
@@ -2265,26 +1095,6 @@
       "requires_authorized_destination": true
     },
     {
-      "dedupe_key": "systemia-website-audit:184c5886be3c419d971a07f2999f26a2f2dda35679a133c7a2f31ea789502a4f",
-      "product_key": "systemia-website-audit",
-      "name": "Systemia Website Audit",
-      "canonical_url": "https://systemia-audit-pro.legacy provider.app/",
-      "discovery_path": "/chum/products/systemia-website-audit/ai-discovery.json",
-      "text": "Systemia Website Audit: Systemia Website Audit is an Evercraft website conversion and technical audit capability. Common needs: audit my website because traffic is not converting; find website performance and conversion friction; review technical SEO and trust problems on a business website; prioritize practical website fixes.",
-      "content_sha256": "184c5886be3c419d971a07f2999f26a2f2dda35679a133c7a2f31ea789502a4f",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "systemia-website-audit:53e5c5ad20cb368c4be7207d28d28984222d4d4e04255105d0897112b6f72891",
-      "product_key": "systemia-website-audit",
-      "name": "Systemia Website Audit",
-      "canonical_url": "https://systemia-audit-pro.legacy provider.app/",
-      "discovery_path": "/chum/products/systemia-website-audit/ai-discovery.json",
-      "text": "Systemia Website Audit: Systemia Website Audit is an Evercraft website conversion and technical audit capability. Common needs: audit my website because traffic is not converting; find website performance and conversion friction; review technical SEO and trust problems on a business website; prioritize practical website fixes.",
-      "content_sha256": "53e5c5ad20cb368c4be7207d28d28984222d4d4e04255105d0897112b6f72891",
-      "requires_authorized_destination": true
-    },
-    {
       "dedupe_key": "systemia-website-audit:cf7d58464b342e37e61e6eb4f268760d341a8a88e193f761fbd8d10c2e8a4d6e",
       "product_key": "systemia-website-audit",
       "name": "Systemia Website Audit",
@@ -2292,26 +1102,6 @@
       "discovery_path": "/chum/products/systemia-website-audit/ai-discovery.json",
       "text": "Systemia Website Audit: Systemia Website Audit is an Evercraft website conversion and technical audit capability. Common needs: audit my website because traffic is not converting; find website performance and conversion friction; review technical SEO and trust problems on a business website; prioritize practical website fixes.",
       "content_sha256": "cf7d58464b342e37e61e6eb4f268760d341a8a88e193f761fbd8d10c2e8a4d6e",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "talent-atlas:d519499e8ffaa9e4c9baef4594676b0c6ff6cfabe14c21139c58b1143030c859",
-      "product_key": "talent-atlas",
-      "name": "Talent Atlas",
-      "canonical_url": "https://legacy provider.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs",
-      "discovery_path": "/chum/products/talent-atlas/ai-discovery.json",
-      "text": "Talent Atlas: Talent Atlas is an Evercraft evidence backed talent profile and opportunity mapping capability. Common needs: evaluate this candidate from the evidence; build a talent profile from this portfolio; what roles fit this person's demonstrated skills; find gaps in this candidate's proof.",
-      "content_sha256": "d519499e8ffaa9e4c9baef4594676b0c6ff6cfabe14c21139c58b1143030c859",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "talent-atlas:7c8ba10447a2e9fca4c6bc7e25eca58c2ec6c861ea6d805f583f7b892b7309b9",
-      "product_key": "talent-atlas",
-      "name": "Talent Atlas",
-      "canonical_url": "https://legacy provider.app/api/apps/6a95d4f7e0df3e09c9b42996/functions/machineDiscovery?view=docs",
-      "discovery_path": "/chum/products/talent-atlas/ai-discovery.json",
-      "text": "Talent Atlas: Talent Atlas is an Evercraft evidence backed talent profile and opportunity mapping capability. Common needs: evaluate this candidate from the evidence; build a talent profile from this portfolio; what roles fit this person's demonstrated skills; find gaps in this candidate's proof.",
-      "content_sha256": "7c8ba10447a2e9fca4c6bc7e25eca58c2ec6c861ea6d805f583f7b892b7309b9",
       "requires_authorized_destination": true
     },
     {
@@ -2355,26 +1145,6 @@
       "requires_authorized_destination": true
     },
     {
-      "dedupe_key": "towi-research:b010b81ae76b67495c7eca2c291409c5be9a8ee3dac66421f14b50786f996c44",
-      "product_key": "towi-research",
-      "name": "TOWI Evidence-Controlled Research Brief",
-      "canonical_url": "https://legacy provider.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs",
-      "discovery_path": "/chum/products/towi-research/ai-discovery.json",
-      "text": "TOWI Evidence-Controlled Research Brief: TOWI Evidence-Controlled Research Brief is an Evercraft evidence controlled research and validation capability. Common needs: research this question with sources; build me an evidence brief; validate this claim independently; make me a decision grade research report.",
-      "content_sha256": "b010b81ae76b67495c7eca2c291409c5be9a8ee3dac66421f14b50786f996c44",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "towi-research:8b84c8376c0c4fd84e9d4aaba6c3680c368189cbc32658674b10920e9f7ad60a",
-      "product_key": "towi-research",
-      "name": "TOWI Evidence-Controlled Research Brief",
-      "canonical_url": "https://legacy provider.app/api/apps/69295c46aba7e47aab0ece22/functions/machineDiscovery?view=docs",
-      "discovery_path": "/chum/products/towi-research/ai-discovery.json",
-      "text": "TOWI Evidence-Controlled Research Brief: TOWI Evidence-Controlled Research Brief is an Evercraft evidence controlled research and validation capability. Common needs: research this question with sources; build me an evidence brief; validate this claim independently; make me a decision grade research report.",
-      "content_sha256": "8b84c8376c0c4fd84e9d4aaba6c3680c368189cbc32658674b10920e9f7ad60a",
-      "requires_authorized_destination": true
-    },
-    {
       "dedupe_key": "towi-research:17d02c1b261a63857aaace32d0315b3da35b3c964912876c1f75be819463af86",
       "product_key": "towi-research",
       "name": "TOWI Evidence-Controlled Research Brief",
@@ -2382,36 +1152,6 @@
       "discovery_path": "/chum/products/towi-research/ai-discovery.json",
       "text": "TOWI Evidence-Controlled Research Brief: TOWI Evidence-Controlled Research Brief is an Evercraft evidence controlled research and validation capability. Common needs: research this question with sources; build me an evidence brief; validate this claim independently; make me a decision grade research report.",
       "content_sha256": "17d02c1b261a63857aaace32d0315b3da35b3c964912876c1f75be819463af86",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "website-launch:890ff5a234a380e1abd863fe5ac1d81bb57fa76c6d38fb83b7de1bedcbbb6ce8",
-      "product_key": "website-launch",
-      "name": "Evercraft Website Launch",
-      "canonical_url": "https://instant-website-builder-usa-6feac193.legacy provider.app/",
-      "discovery_path": "/chum/products/website-launch/ai-discovery.json",
-      "text": "Evercraft Website Launch: Evercraft Website Launch is an Evercraft done for you business website service capability. Common needs: build a professional website for my small business; replace an outdated business website; launch a business website quickly; get a human-finished website instead of doing it myself.",
-      "content_sha256": "890ff5a234a380e1abd863fe5ac1d81bb57fa76c6d38fb83b7de1bedcbbb6ce8",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "website-launch:7e252103deb773e13ba46c10d95951482a06f7b87a93a8fd6a1c36abc0fcad5b",
-      "product_key": "website-launch",
-      "name": "Evercraft Website Launch",
-      "canonical_url": "https://instant-website-builder-usa-6feac193.legacy provider.app/",
-      "discovery_path": "/chum/products/website-launch/ai-discovery.json",
-      "text": "Evercraft Website Launch: Evercraft Website Launch is an Evercraft done for you business website service capability. Common needs: build a professional website for my small business; replace an outdated business website; launch a business website quickly; get a human-finished website instead of doing it myself.",
-      "content_sha256": "7e252103deb773e13ba46c10d95951482a06f7b87a93a8fd6a1c36abc0fcad5b",
-      "requires_authorized_destination": true
-    },
-    {
-      "dedupe_key": "website-launch:9d629a8feb30f1c6c2ccb0a0ce38bcedd9bb5364148f724b373743ee33bda4b7",
-      "product_key": "website-launch",
-      "name": "Evercraft Website Launch",
-      "canonical_url": "https://instant-website-builder-usa-6feac193.legacy provider.app/",
-      "discovery_path": "/chum/products/website-launch/ai-discovery.json",
-      "text": "Evercraft Website Launch: Evercraft Website Launch is an Evercraft done for you business website service capability. Common needs: build a professional website for my small business; replace an outdated business website; launch a business website quickly; get a human-finished website instead of doing it myself.",
-      "content_sha256": "9d629a8feb30f1c6c2ccb0a0ce38bcedd9bb5364148f724b373743ee33bda4b7",
       "requires_authorized_destination": true
     },
     {

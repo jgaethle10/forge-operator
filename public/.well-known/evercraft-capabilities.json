@@ -28,9 +28,9 @@
       "path": "/api/route-capability"
     },
     "chum": "/.well-known/evercraft-chum.json",
-    "liveMachineCatalog": "https://evercraft-ai-suite-08c4d2b8.legacy provider.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=catalog",
-    "livePainIndex": "https://evercraft-ai-suite-08c4d2b8.legacy provider.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceIntentLanding",
-    "universalMcp": "https://evercraft-ai-suite-08c4d2b8.legacy provider.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+    "liveMachineCatalog": "https://jgaethle10.github.io/forge-operator/chum/",
+    "livePainIndex": "https://jgaethle10.github.io/forge-operator/chum/",
+    "universalMcp": null,
     "liveIntentHunter": {
       "method": "POST",
       "path": "/api/chum/hunt",

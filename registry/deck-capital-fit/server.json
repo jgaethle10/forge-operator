@@ -4,11 +4,11 @@
   "title": "Evercraft Deck Capital Fit",
   "description": "Capital-fit research and founder readiness with human-confirmed checkout.",
   "version": "2.0.0",
-  "websiteUrl": "https://legacy provider.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineAgentGateway?view=docs",
+  "websiteUrl": "https://github.com/jgaethle10/forge-operator/tree/main/registry/deck-capital-fit",
   "remotes": [
     {
       "type": "streamable-http",
-      "url": "https://legacy provider.app/api/apps/69c5b9c1c4406941ad277ad5/functions/deckEngineMcp"
+      "url": null
     }
   ]
 }
