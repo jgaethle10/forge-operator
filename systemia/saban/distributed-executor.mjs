@@ -99,7 +99,8 @@ async function runNegotiatedAdapterPool({
     1,
     Math.min(
       assignments.length,
-      Math.max(1,Number(poolOptions.maxConcurrencyPerNode||1))
+      Math.max(1,Number(poolOptions.maxConcurrencyPerNode||1)),
+      Math.max(1,Number(lease?.max_concurrency||Number.MAX_SAFE_INTEGER))
     )
   );
 
