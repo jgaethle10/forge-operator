@@ -46,6 +46,10 @@ export function computeDemandFromDistributedPlan({
       acquisition.container_image||
       contract?.portable_execution?.golem?.image_tag||
       null,
+    portable_software_id:
+      acquisition.portable_software_id||
+      contract?.software_id||
+      null,
     portable_worker_id:
       acquisition.portable_worker_id||
       contract?.portable_execution?.golem?.worker_id||
