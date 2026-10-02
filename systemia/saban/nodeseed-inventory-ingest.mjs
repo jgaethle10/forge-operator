@@ -35,6 +35,33 @@ function safeCapacity(capacity={}){
       cpu_units:Math.max(0,Number(capacity.capacity_hint?.cpu_units||0)),
       memory_mb:Math.max(0,Number(capacity.capacity_hint?.memory_mb||0)),
       storage_gb:Math.max(0,Number(capacity.capacity_hint?.storage_gb||0)),
+      recommended_concurrency:Math.max(1,Number(capacity.capacity_hint?.recommended_concurrency||1)),
+      hardware:capacity.capacity_hint?.hardware&&typeof capacity.capacity_hint.hardware==='object'
+        ? {
+            schema:String(capacity.capacity_hint.hardware.schema||''),
+            cpu:{
+              architecture:String(capacity.capacity_hint.hardware.cpu?.architecture||''),
+              model:capacity.capacity_hint.hardware.cpu?.model
+                ? String(capacity.capacity_hint.hardware.cpu.model).slice(0,160)
+                : null,
+              logical_threads:Math.max(1,Number(capacity.capacity_hint.hardware.cpu?.logical_threads||1)),
+            },
+            memory_mb:Math.max(0,Number(capacity.capacity_hint.hardware.memory_mb||0)),
+            free_storage_gb:Math.max(0,Number(capacity.capacity_hint.hardware.free_storage_gb||0)),
+            accelerators:{
+              gpu_count:Math.max(0,Number(capacity.capacity_hint.hardware.accelerators?.gpu_count||0)),
+              gpu_models:Array.isArray(capacity.capacity_hint.hardware.accelerators?.gpu_models)
+                ? capacity.capacity_hint.hardware.accelerators.gpu_models.map(x=>String(x).slice(0,160)).slice(0,16)
+                : [],
+              detection_state:String(capacity.capacity_hint.hardware.accelerators?.detection_state||'unknown'),
+            },
+            recommended_concurrency:{
+              value:Math.max(1,Number(capacity.capacity_hint.hardware.recommended_concurrency?.value||1)),
+              state:String(capacity.capacity_hint.hardware.recommended_concurrency?.state||'unknown'),
+            },
+            sensitive_identifiers_included:false,
+          }
+        : null,
       executables:capacity.capacity_hint?.executables&&typeof capacity.capacity_hint.executables==='object'
         ? Object.fromEntries(
             Object.entries(capacity.capacity_hint.executables)
