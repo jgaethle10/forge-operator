@@ -512,6 +512,113 @@
         "compatibility_guaranteed": false,
         "private_vendor_analytics_session_command_center_sales_data_public": false
       }
+    },
+    {
+      "product_key": "systemia-remote-ops",
+      "contract_version": "1.0.0",
+      "owner": "systemia",
+      "adoption_stage": "shared_runtime",
+      "specialist_slug": "systemia-remote-ops",
+      "authority": {
+        "state": "declared",
+        "passport_product": "systemia-remote-ops",
+        "scopes": [
+          "route_business_decision",
+          "simulate_pricing_change",
+          "simulate_business_scenario",
+          "get_decision_lab_capabilities"
+        ],
+        "evidence_refs": [
+          "systemia/yard/remote-ops-specialist.proof.mjs",
+          "systemia/remote-operator/mcp-gateway.mjs",
+          "plugins/systemia-remote-ops/skills/systemia-remote-ops-direct/SKILL.md"
+        ]
+      },
+      "context": {
+        "state": "declared",
+        "namespace": "systemia-remote-ops",
+        "read_scope": "context.read.systemia-remote-ops",
+        "write_scope": "context.write.systemia-remote-ops",
+        "evidence_refs": [
+          "systemia/yard/remote-ops-specialist.proof.mjs",
+          "systemia/context-fabric/fabric.mjs"
+        ]
+      },
+      "meter": {
+        "state": "not_required",
+        "reason": "The contracted actions are read-only decision routing and labeled simulations. They do not create payment obligations, mutate production, or execute external business actions."
+      },
+      "intake": {
+        "state": "not_required",
+        "reason": "The contracted actions accept bounded caller-supplied decision inputs directly. They do not admit untrusted external content into execution authority."
+      },
+      "execution": {
+        "state": "declared",
+        "gate_required": true,
+        "scopes": [
+          "route_business_decision",
+          "simulate_pricing_change",
+          "simulate_business_scenario",
+          "get_decision_lab_capabilities"
+        ],
+        "actions": [
+          {
+            "scope": "route_business_decision"
+          },
+          {
+            "scope": "simulate_pricing_change"
+          },
+          {
+            "scope": "simulate_business_scenario"
+          },
+          {
+            "scope": "get_decision_lab_capabilities"
+          }
+        ],
+        "evidence_refs": [
+          "systemia/yard/remote-ops-specialist.proof.mjs",
+          "systemia/remote-operator/mcp-gateway.mjs"
+        ]
+      },
+      "relationship": {
+        "state": "not_required",
+        "reason": "The contracted runtime does not contact customers, vendors, employees, investors, partners, or other external parties."
+      },
+      "receipt_reconciliation": {
+        "state": "declared",
+        "namespace": "systemia-remote-ops",
+        "evidence_refs": [
+          "systemia/context-fabric/fabric.mjs",
+          "systemia/yard/remote-ops-specialist.proof.mjs"
+        ]
+      },
+      "rollback": {
+        "state": "declared",
+        "policy": "Disable the Systemia Remote Ops shared-runtime contract or specialist route without enabling production mutation, external actions, public direct routing, or registry publication."
+      },
+      "compatibility": {
+        "intended_product_classes": [
+          "business_decision_simulator"
+        ]
+      },
+      "boundaries": {
+        "contracted_machine_surface": [
+          "route_business_decision",
+          "simulate_pricing_change",
+          "simulate_business_scenario",
+          "get_decision_lab_capabilities"
+        ],
+        "public_direct_door_verified": false,
+        "registry_publication_proven": false,
+        "public_origin_state": "https_route_unbound",
+        "production_mutation_enabled": false,
+        "external_action_taken": false,
+        "simulations_are_decision_support": true,
+        "pricing_simulation_confidence": "low",
+        "general_scenarios_use_caller_supplied_assumptions": true,
+        "market_outcomes_inferred": false,
+        "real_world_business_action_authorized": false
+      }
     }
   ]
 }
