@@ -138,6 +138,8 @@ try {
   assert.equal(health.source_authority_exposed, false);
   assert.equal(health.allocator_authority_exposed, false);
   assert.equal(health.credential_material_exposed, false);
+  assert.equal('source_instance_id' in health, false);
+  assert.equal(JSON.stringify(health).includes(resident.result.local_url), false);
 
   const denied = await fetch(origin.result.local_url + '/api/household-fabric/yakima/today', {
     method: 'POST',
