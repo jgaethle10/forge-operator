@@ -378,6 +378,65 @@ test('legacy single locator remains supported alongside the materialization mesh
 });
 
 
+test('environment canon fails closed when a provider would ignore the location reference',()=>{
+  const endpoint:VisualModelEndpoint={
+    id:'identity-only',providerId:'provider',displayName:'Identity only',
+    enabled:true,executionState:'verified',
+    capabilities:[{
+      task:'video',
+      inputModes:['text','image_reference'],
+      requirements:['reference_identity','reference_environment','commercial_rights','provenance_receipt','timing_control'],
+      referenceRoles:['identity'],
+      maxReferences:1,
+      qualityTier:5,costTier:3,latencyTier:2
+    }]
+  };
+  const plan=buildVisualModelPlan({
+    ...request,
+    targetResolution:undefined,
+    requires:['reference_identity','reference_environment','commercial_rights','provenance_receipt','timing_control'],
+    references:[
+      {id:'eli',kind:'image',role:'identity',sourceRefs:['canon:eli']},
+      {id:'bridge',kind:'image',role:'environment',sourceRefs:['canon:bridge']}
+    ]
+  },[endpoint]);
+  assert.equal(plan.status,'blocked');
+  assert.ok(plan.rejectedModels[0].reasons.includes('environment_reference_mode_not_supported'));
+});
+
+test('verified continuity start frame can carry both identity and environment canon downstream',()=>{
+  const endpoint:VisualModelEndpoint={
+    id:'continuity-frame',providerId:'provider',displayName:'Continuity frame',
+    enabled:true,executionState:'verified',
+    capabilities:[{
+      task:'video',
+      inputModes:['text','start_frame'],
+      requirements:['reference_identity','reference_environment','commercial_rights','provenance_receipt','timing_control'],
+      referenceRoles:['start_frame'],
+      identityContinuityViaStartFrame:true,
+      environmentContinuityViaStartFrame:true,
+      framesExclusiveWithReferences:true,
+      locatorKinds:['url'],
+      maxReferences:1,
+      qualityTier:5,costTier:3,latencyTier:2
+    }]
+  };
+  const plan=buildVisualModelPlan({
+    ...request,
+    targetResolution:undefined,
+    requiredInputModes:['start_frame'],
+    requires:['reference_identity','reference_environment','commercial_rights','provenance_receipt','timing_control'],
+    references:[
+      {id:'eli',kind:'image',role:'identity',sourceRefs:['canon:eli'],locator:{kind:'url',value:'https://assets.example/eli.png'}},
+      {id:'bridge',kind:'image',role:'environment',sourceRefs:['canon:bridge'],locator:{kind:'url',value:'https://assets.example/bridge.png'}},
+      {id:'prior-end',kind:'image',role:'start_frame',sourceRefs:['continuity:prior'],locator:{kind:'url',value:'https://assets.example/prior.png'}}
+    ]
+  },[endpoint]);
+  assert.equal(plan.status,'routed');
+  assert.deepEqual(plan.jobs[0].references.map(ref=>ref.role),['start_frame']);
+});
+
+
 test('one eligible model can still produce enough governed candidates for a Shot Tournament',()=>{
   const only=[endpoints[0]];
   const plan=buildVisualModelPlan({...request,candidateCount:4,modelDiversity:2},only);
