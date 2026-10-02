@@ -1,0 +1,34 @@
+{
+  "jobs": [
+    {
+      "kind": "world_engine_review",
+      "key": "evercraft-world-engine-v1",
+      "world": {
+        "schema": "evercraft.world-engine.world.v1",
+        "id": "evercraft-world-engine-proof",
+        "version": 1,
+        "tickRateHz": 60,
+        "gravity": {"x": 0, "y": -9.81, "z": 0},
+        "ground": {"enabled": true, "height": 0},
+        "entities": [
+          {
+            "id": "proof-orb",
+            "transform": {"position": {"x": 0, "y": 3, "z": 0}},
+            "rigidBody": {
+              "mass": 1,
+              "velocity": {"x": 0.5, "y": 0, "z": 0},
+              "restitution": 0
+            },
+            "collider": {"type": "sphere", "radius": 0.5},
+            "tags": ["world-engine-proof"]
+          }
+        ],
+        "metadata": {
+          "authoring_source": "fallen",
+          "runtime_target": "evercraft-compute-yard",
+          "provider_neutral": true
+        }
+      }
+    }
+  ]
+}
