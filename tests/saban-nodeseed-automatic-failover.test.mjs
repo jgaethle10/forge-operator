@@ -26,10 +26,14 @@ function writeInventory(root,nodes){
     {mode:0o600}
   );
 }
-function brokerRow(node,capacity,{connected=true}={}){
+function brokerRow(node,capacity,{connected=true,fingerprint=''}={}){
+  const fp=fingerprint||(
+    'sha256:'+
+    (capacity.node_id==='node-a'?'a':'b').repeat(64)
+  );
   return {
     node_id:capacity.node_id,
-    device_fingerprint:capacity.device_fingerprint,
+    device_fingerprint:fp,
     connected,
     last_seen_at:new Date().toISOString(),
     capacity:{
@@ -39,7 +43,7 @@ function brokerRow(node,capacity,{connected=true}={}){
       zero_cost:true,
       public_ingress:false,
       failure_domain:'failover-'+capacity.node_id,
-      device_fingerprint:capacity.device_fingerprint,
+      device_fingerprint:fp,
     },
   };
 }
@@ -153,7 +157,7 @@ test('Saban automatically replans a frozen NodeSeed job when selected node disap
         assert.equal(nodeId,'node-b');
         return {
           node_id:'node-b',
-          device_fingerprint:capB.device_fingerprint,
+          device_fingerprint:rowB.device_fingerprint,
           capacity_endpoint:nodeB.endpoint,
           allocator_token:tokenB,
         };
