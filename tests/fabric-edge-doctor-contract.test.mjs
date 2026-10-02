@@ -96,3 +96,24 @@ test('Fabric edge doctor treats Crostini-to-ChromeOS LAN self-probe as advisory'
   );
   assert.equal(diagnosisBlock.includes('chromeos_host_forward_unreachable'),false);
 });
+
+
+test('Fabric edge doctor reconciles resident service source to the current Forge checkout',()=>{
+  assert.ok(script.includes('ensure_fabric_service_source(){'));
+  assert.ok(script.includes('systemctl show -p ExecStart --value evercraft-fabric.service'));
+  assert.ok(script.includes('systemctl show -p WorkingDirectory --value evercraft-fabric.service'));
+  assert.ok(script.includes('WorkingDirectory=$REPO_ROOT'));
+  assert.ok(script.includes('ExecStart=$desired_exec'));
+  const repair=script.indexOf('ensure_fabric_service_source || true');
+  const restart=script.indexOf('systemctl restart evercraft-fabric.service');
+  assert.ok(repair>=0 && restart>repair,'service source must be reconciled before restart');
+});
+
+test('Fabric edge doctor detects live/runtime drift using mobile health metadata',()=>{
+  assert.ok(script.includes('runtime_mobile_expected=false'));
+  assert.ok(script.includes('runtime_mobile_observed=false'));
+  assert.ok(script.includes("j.mobile_path==='/mobile'&&j.mobile_installable===true"));
+  assert.ok(script.includes('diagnosis="fabric_service_source_mismatch"'));
+  assert.ok(script.includes('"runtime_mobile_expected"'));
+  assert.ok(script.includes('"runtime_mobile_observed"'));
+});
