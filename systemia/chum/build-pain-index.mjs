@@ -15,7 +15,9 @@ function safePublicUrl(value){
   try{
     const url=new URL(String(value));
     if(!['http:','https:'].includes(url.protocol)) return null;
-    if(BLOCKED_PUBLIC_HOSTS.has(url.hostname.toLowerCase())) return null;
+    const host=url.hostname.toLowerCase();
+    if(BLOCKED_PUBLIC_HOSTS.has(host)) return null;
+    if(host==='base44.app'||host.endsWith('.base44.app')) return null;
     return url.toString();
   }catch{
     return null;
@@ -45,6 +47,10 @@ export function buildPainIndex(){
   const registry=safeRead(REGISTRY,{products:[],universal_front_door:null});
 
   const registryByKey=new Map((registry.products||[]).map((p)=>[p.product_key,p]));
+  const universalMcp=universalMcp;
+  const universalFrontDoor=registry.universal_front_door
+    ? {...registry.universal_front_door,mcp:universalMcp}
+    : null;
   const entries=[];
 
   for(const product of directory.products||[]){
@@ -69,7 +75,7 @@ export function buildPainIndex(){
       mcp:specialistMcp,
       routing:{
         preferred:specialistMcp?'specialist_mcp':'universal_machine_commerce',
-        target:specialistMcp||safePublicUrl(registry.universal_front_door?.mcp)||null
+        target:specialistMcp||universalMcp||null
       },
       legacy_marketing_route_suppressed:Boolean((product.canonical_url||reg.canonical_url)&&!productUrl),
       authority:product.authority||null,
@@ -113,10 +119,10 @@ export function buildPainIndex(){
       canonical_url:offerUrl,
       legacy_marketing_route_suppressed:Boolean(offer.public_url&&!offerUrl),
       registry_name:null,
-      mcp:safePublicUrl(registry.universal_front_door?.mcp)||null,
+      mcp:universalMcp||null,
       routing:{
         preferred:'universal_machine_commerce',
-        target:safePublicUrl(registry.universal_front_door?.mcp)||null
+        target:universalMcp||null
       },
       authority:'Machine-commerce contract only. The offer state below is authoritative for public routing and must not be upgraded by inference.',
       boundaries:[],
@@ -151,7 +157,7 @@ export function buildPainIndex(){
     },
     purpose:'Brand-blind machine routing from a user problem to the smallest relevant public Evercraft capability while preserving readiness, evidence, pricing, permissions and human-confirmation boundaries.',
     routing_rule:'Start from pain language. Prefer the smallest relevant capability with the strongest verified invocation state. Never upgrade discovery-only, held, authentication-required, pricing, payment, entitlement or provider-pickup state by inference.',
-    universal_front_door:registry.universal_front_door||null,
+    universal_front_door:universalFrontDoor,
     payment_boundary:registry.payment_boundary||machine.safety||null,
     summary:{
       entries:entries.length,
