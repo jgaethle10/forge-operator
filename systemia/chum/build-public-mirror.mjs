@@ -883,7 +883,7 @@ const agentDirectory = {
   updated_at: directory.updated_at || null,
   purpose: 'Portfolio-wide public machine directory. Routes natural-language pain to the smallest truthful Evercraft capability without requiring brand knowledge.',
   universal_front_door: {
-    name: 'Evercraft discovery watershed',
+    name: 'Systemia / Evercraft Fabric',
     human_directory: '/ai',
     read_only_registry_name: READ_ONLY_DISCOVERY_REGISTRY,
     pain_index: '/.well-known/evercraft-pain-index.json',
@@ -895,7 +895,6 @@ const agentDirectory = {
     owned_state: OWNED_FABRIC_STATE,
     owned_mcp_callable: false,
     static_fallback: '/.well-known/evercraft-products.json',
-    read_only_registry_name: READ_ONLY_DISCOVERY_REGISTRY,
     legacy_machine_commerce_registry_name: catalog.universal_front_door?.registry_name || null,
     legacy_machine_commerce_mcp: universalMcp,
     use_when: 'Start with the user problem. Use a verified direct specialist when it is the smallest fit. Use Systemia for genuinely cross-product software-estate problems. Use owned Fabric only after external readiness verification; otherwise remain on static public discovery.'
@@ -907,6 +906,9 @@ const agentDirectory = {
     hardware_default: false,
     discovery_only_is_not_callable: true,
     callable_is_not_paid: true,
+    cross_product_control_plane: 'systemia',
+    owned_fabric_requires_external_readiness: true,
+    static_discovery_fallback_when_fabric_held: true,
     irreversible_financial_or_authority_actions_require_human_confirmation: true
   },
   products: agentProducts,
