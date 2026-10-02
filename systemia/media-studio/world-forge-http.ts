@@ -1,3 +1,4 @@
+import { buildWorldForgeCinematicShot } from './world-forge-cinematic.js';
 import { compileWorldForgeCommand } from './world-forge-command.js';
 import type { Express, NextFunction, Request, Response } from 'express';
 import {
@@ -160,7 +161,7 @@ export function createWorldForgeStarterProject():WorldForgeProject{
     height:1080,
     fps:30,
     startFrame:1,
-    endFrame:1,
+    endFrame:90,
     quality:'preview',
     colorPipeline:'aces',
   };
@@ -261,6 +262,33 @@ export function registerWorldForgeRoutes(app:Express,deps:WorldForgeHttpDeps){
         success:result.status==='completed',
         result,
       });
+    },
+  );
+
+  app.post(
+    '/api/fallen/world-forge/cinematic-shot',
+    rateLimit(120,60*60*1000),
+    (req:Request,res:Response)=>{
+      const project=req.body?.project as WorldForgeProject|undefined;
+      if(!project){
+        badRequest(res,'World Forge project is required.');
+        return;
+      }
+      const renderIntentId=String(req.body?.renderIntentId||'preview').slice(0,200);
+      const shotId=String(req.body?.shotId||`${project.id}-shot-v${project.version}`).slice(0,200);
+      try{
+        const shot=buildWorldForgeCinematicShot({
+          project,
+          renderIntentId,
+          shotId,
+        });
+        res.json({success:true,shot});
+      }catch(error){
+        res.status(422).json({
+          success:false,
+          error:error instanceof Error?error.message:String(error),
+        });
+      }
     },
   );
 
