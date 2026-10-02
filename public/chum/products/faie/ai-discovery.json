@@ -24,7 +24,7 @@
   "buyer_frontage_url": null,
   "registry_name": "io.github.jgaethle10/faie",
   "mcp": null,
-  "machine_commerce_mcp": null,
+  "machine_commerce_mcp": "https://fabric.systemiacommandcenters.com/mcp",
   "developer_surfaces": null,
   "editorial_surfaces": null,
   "knowledge_surfaces": null,
@@ -37,5 +37,15 @@
     "discovery": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/ai-discovery.json",
     "conformance": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/faie/ai-conformance.json",
     "page": "/chum/products/faie/"
-  }
+  },
+  "runtime_state": "owned_native_runtime_mainline",
+  "native_runtime": {
+    "human_path": "/faie/",
+    "health_path": "/api/faie/health",
+    "signals_path": "/api/faie/signals",
+    "investigate_path": "/api/faie/investigate",
+    "mcp_path": "/mcp/faie",
+    "public_investigations_persisted": false
+  },
+  "public_origin_state": "held_until_verified_owned_edge"
 }
