@@ -104,17 +104,21 @@ export async function runMicroSeedProbationOnce({
   const autonomyPlan=fs.existsSync(autonomyFile)
     ? readJson(autonomyFile,null)
     : null;
-  const plannedDevices=new Set(
-    autonomyPlan?.schema==='evercraft.saban.capacity-autonomy-plan.v1'
-      ? (autonomyPlan.safe_autonomous_actions||[])
-          .filter(x=>[
-            'run_registered_workload_conformance_canaries',
-            'run_safe_calibration_and_refresh_performance_profile'
-          ].includes(String(x.action||'')))
-          .map(x=>String(x.device_id||''))
-          .filter(Boolean)
-      : []
-  );
+  const plannedActions=new Map();
+  if(autonomyPlan?.schema==='evercraft.saban.capacity-autonomy-plan.v1'){
+    for(const action of autonomyPlan.safe_autonomous_actions||[]){
+      if(![
+        'run_registered_workload_conformance_canaries',
+        'run_safe_calibration_and_refresh_performance_profile'
+      ].includes(String(action.action||''))) continue;
+      const id=String(action.device_id||'').trim();
+      if(!id) continue;
+      const rows=plannedActions.get(id)||[];
+      rows.push(action);
+      plannedActions.set(id,rows);
+    }
+  }
+  const plannedDevices=new Set(plannedActions.keys());
   const autonomyPlanPresent=autonomyPlan?.schema==='evercraft.saban.capacity-autonomy-plan.v1';
   const rows=[];
 
@@ -123,6 +127,14 @@ export async function runMicroSeedProbationOnce({
     if(!manifest||manifest.compute_execution_mode==='none') continue;
 
     const deviceId=row.device_id;
+    const deviceActions=plannedActions.get(deviceId)||[];
+    const calibrationTargets=[...new Set(
+      deviceActions
+        .filter(x=>String(x.action||'')==='run_safe_calibration_and_refresh_performance_profile')
+        .flatMap(x=>x.target_workloads||[])
+        .map(String)
+        .filter(Boolean)
+    )].sort();
     if(autonomyPlanPresent&&!plannedDevices.has(deviceId)){
       rows.push({
         device_id:deviceId,
@@ -199,6 +211,7 @@ export async function runMicroSeedProbationOnce({
             device_id:deviceId,
             samples_per_workload:3,
             max_total_samples:12,
+            workload_classes:calibrationTargets,
           },
           fetchImpl,
         });
@@ -223,6 +236,7 @@ export async function runMicroSeedProbationOnce({
         state:'production_eligible',
         conformance_action:conformanceAction,
         calibration_action:calibrationAction,
+        calibration_target_workloads:calibrationTargets,
         conformance_receipt_hash:state.devices[deviceId].conformance_receipt_hash,
         calibration_receipt_hash:state.devices[deviceId].calibration_receipt_hash,
       });
