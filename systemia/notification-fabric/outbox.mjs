@@ -32,6 +32,14 @@ function safeError(error) {
   return String(error?.message || error || 'Unknown Relay worker error.').slice(0, 2000);
 }
 
+function boundedInteger(value, label, fallback, minimum, maximum) {
+  const candidate = value === undefined || value === null || value === '' ? fallback : Number(value);
+  if (!Number.isFinite(candidate) || !Number.isInteger(candidate) || candidate < minimum || candidate > maximum) {
+    throw new Error(`${label} must be an integer between ${minimum} and ${maximum}.`);
+  }
+  return candidate;
+}
+
 function canonical(value) {
   if (Array.isArray(value)) return '[' + value.map(canonical).join(',') + ']';
   if (value && typeof value === 'object') {
@@ -76,8 +84,11 @@ export function createRelayOutbox(options = {}) {
         }
       }
       const now = Number(input.now ?? Date.now());
+      if (!Number.isFinite(now)) throw new Error('Relay enqueue now must be a finite timestamp.');
       const id = String(input.id || crypto.randomUUID());
       const notBeforeMs = Number(input.not_before_ms ?? now);
+      if (!Number.isFinite(notBeforeMs)) throw new Error('Relay not_before_ms must be a finite timestamp.');
+      const maxAttempts = boundedInteger(input.max_attempts, 'Relay max_attempts', 8, 1, 50);
       const job = {
         schema: 'systemia.relay.job.v1',
         id,
@@ -88,7 +99,7 @@ export function createRelayOutbox(options = {}) {
         status: 'pending',
         attempts: 0,
         failures: 0,
-        max_attempts: Math.max(1, Math.min(Number(input.max_attempts ?? 8), 50)),
+        max_attempts: maxAttempts,
         not_before_at: iso(notBeforeMs),
         lease_owner: null,
         lease_expires_at: null,
@@ -111,8 +122,8 @@ export function createRelayOutbox(options = {}) {
       const now = Number(options.now ?? Date.now());
       const workerId = String(options.worker_id || '').trim();
       if (!workerId) throw new Error('Relay worker_id is required.');
-      const leaseMs = Math.max(1000, Math.min(Number(options.lease_ms ?? 30000), 15 * 60 * 1000));
-      const limit = Math.max(1, Math.min(Number(options.limit ?? 10), 100));
+      const leaseMs = boundedInteger(options.lease_ms, 'Relay lease_ms', 30000, 1000, 15 * 60 * 1000);
+      const limit = boundedInteger(options.limit, 'Relay claim limit', 10, 1, 100);
 
       for (const job of Object.values(state.jobs || {})) {
         if (job.status !== 'processing') continue;
@@ -176,8 +187,8 @@ export function createRelayOutbox(options = {}) {
         job.status = 'dead_letter';
         job.dead_lettered_at = iso(now);
       } else {
-        const base = Math.max(250, Number(options.base_backoff_ms ?? 1000));
-        const cap = Math.max(base, Number(options.max_backoff_ms ?? 5 * 60 * 1000));
+        const base = boundedInteger(options.base_backoff_ms, 'Relay base_backoff_ms', 1000, 250, 5 * 60 * 1000);
+        const cap = boundedInteger(options.max_backoff_ms, 'Relay max_backoff_ms', 5 * 60 * 1000, base, 24 * 60 * 60 * 1000);
         const exponent = Math.max(0, Number(job.failures || 1) - 1);
         const backoff = Math.min(cap, base * (2 ** exponent));
         job.status = 'retry';
@@ -203,7 +214,7 @@ export function createRelayOutbox(options = {}) {
       job.dead_lettered_at = null;
       job.updated_at = iso(now);
       if (options.max_attempts !== undefined) {
-        job.max_attempts = Math.max(1, Math.min(Number(options.max_attempts), 50));
+        job.max_attempts = boundedInteger(options.max_attempts, 'Relay max_attempts', job.max_attempts || 8, 1, 50);
       }
       return structuredClone(job);
     });
