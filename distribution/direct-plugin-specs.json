@@ -2,8 +2,8 @@
   "schema": "evercraft.direct-plugin-specs.v1",
   "version": "1.0.0",
   "routing_policy": {
-    "default": "specialist_direct_when_clear",
-    "fallback": "evercraft_machine_commerce_when_ambiguous_or_specialist_unavailable"
+    "default": "verified_specialist_direct_when_clear",
+    "fallback": "verified_evercraft_fabric_when_available_else_hold"
   },
   "products": [
     {
