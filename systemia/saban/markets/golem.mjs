@@ -68,6 +68,10 @@ function portableIdentity(demand){
   return String(demand?.execution?.portable_worker_id||'').trim();
 }
 
+function portableSoftware(demand){
+  return String(demand?.execution?.software_id||'').trim();
+}
+
 function resolvePortableWorker(software,expectedWorkerId){
   const registry=loadMultiplicationRegistry(
     path.resolve(process.cwd(),'systemia/saban/multiplication-registry.json')
@@ -78,9 +82,20 @@ function resolvePortableWorker(software,expectedWorkerId){
   if(String(golem.worker_id||'')!==String(expectedWorkerId||'')){
     throw new Error('golem_portable_worker_identity_mismatch');
   }
+  const portableRoot=path.resolve(
+    process.cwd(),
+    'systemia/saban/portable-workers'
+  );
   const workerPath=path.resolve(process.cwd(),String(golem.worker_file||''));
+  const relative=path.relative(portableRoot,workerPath);
+  if(relative.startsWith('..')||path.isAbsolute(relative)){
+    throw new Error('golem_portable_worker_path_outside_registry_root');
+  }
   if(!fs.existsSync(workerPath)||!fs.statSync(workerPath).isFile()){
     throw new Error('golem_portable_worker_file_missing');
+  }
+  if(golem.arbitrary_shell!==false){
+    throw new Error('golem_portable_worker_arbitrary_shell_must_be_false');
   }
   return {
     contract,
@@ -88,6 +103,28 @@ function resolvePortableWorker(software,expectedWorkerId){
     worker_version:String(golem.worker_version||''),
     worker_path:workerPath,
     image_tag:String(golem.image_tag||''),
+    network_access:golem.network_access===true,
+    arbitrary_shell:false,
+  };
+}
+
+function portableContractForDemand(demand){
+  const workerId=portableIdentity(demand);
+  const software=portableSoftware(demand);
+  if(!workerId||!software) return null;
+  const portable=resolvePortableWorker(software,workerId);
+  if(
+    demand.execution?.portable_worker_version &&
+    String(demand.execution.portable_worker_version)!==portable.worker_version
+  ){
+    throw new Error('golem_portable_worker_version_mismatch');
+  }
+  if(String(demand.container_image||'')!==portable.image_tag){
+    throw new Error('golem_portable_image_mismatch');
+  }
+  return {
+    ...portable,
+    software_id:software,
   };
 }
 
@@ -163,8 +200,8 @@ export async function createGolemMarketAdapter({
     market:'golem',
 
     async discover({demand}={}){
-      const workerId=portableIdentity(demand);
-      if(!workerId){
+      const portable=portableContractForDemand(demand);
+      if(!portable){
         const body={
           schema:'evercraft.saban.golem-discovery.v1',
           market:'golem',
@@ -184,6 +221,8 @@ export async function createGolemMarketAdapter({
         market:'golem',
         offer_count:offers.length,
         payment_network:order.payment.network,
+        portable_software_id:portable.software_id,
+        portable_worker_id:portable.worker_id,
         live_yagna_client:true,
         observed_at:new Date().toISOString(),
       };
@@ -191,7 +230,8 @@ export async function createGolemMarketAdapter({
     },
 
     async requestQuotes({demand,offer,authority}={}){
-      if(!portableIdentity(demand)) throw new Error('golem_portable_worker_required');
+      const portable=portableContractForDemand(demand);
+      if(!portable) throw new Error('golem_portable_worker_required');
       if(authority?.allow_market_orders!==true){
         throw new Error('golem_market_order_authority_required');
       }
@@ -226,6 +266,8 @@ export async function createGolemMarketAdapter({
     },
 
     async lease({demand,offer,authority}={}){
+      const portable=portableContractForDemand(demand);
+      if(!portable) throw new Error('golem_portable_worker_required');
       if(authority?.allow_spend!==true){
         throw new Error('golem_spend_authority_required');
       }
@@ -244,8 +286,6 @@ export async function createGolemMarketAdapter({
         order,
         providerId:offer.provider_id,
       });
-      const workerId=portableIdentity(demand);
-      if(!workerId) throw new Error('golem_portable_worker_required');
       const body={
         schema:'evercraft.saban.golem-lease.v1',
         market:'golem',
@@ -254,8 +294,10 @@ export async function createGolemMarketAdapter({
         payment_network:order.payment.network,
         maximum_cost_glm:ceilingGlm,
         approved_maximum_glm:approvedGlm,
-        portable_worker_id:workerId,
-        portable_worker_version:demand.execution?.portable_worker_version||null,
+        portable_software_id:portable.software_id,
+        portable_worker_id:portable.worker_id,
+        portable_worker_version:portable.worker_version,
+        portable_image_tag:portable.image_tag,
         execution_ready:true,
         execution_fabric:'evercraft.golem-portable-worker.v1',
         max_concurrency:1,
@@ -287,7 +329,13 @@ export async function createGolemMarketAdapter({
       const software=String(input?.software||'');
       const assignment=input?.assignment;
       if(!software||!assignment) throw new Error('golem_registered_assignment_required');
+      if(software!==String(lease.portable_software_id||'')){
+        throw new Error('golem_lease_software_mismatch');
+      }
       const portable=resolvePortableWorker(software,lease.portable_worker_id);
+      if(portable.image_tag!==String(lease.portable_image_tag||'')){
+        throw new Error('golem_lease_image_mismatch');
+      }
       const runtime=lease.runtime_authority?.client||runtimeClient;
       const rental=lease.runtime_authority?.rental;
       if(!runtime||!rental) throw new Error('golem_runtime_authority_missing');
