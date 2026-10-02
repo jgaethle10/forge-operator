@@ -17,6 +17,7 @@ import {
   readRadarRelease,
   reconcileRadarCorrections
 } from './release-controller.mjs';
+import { createRadarClipDispatcher } from './clip-dispatch.mjs';
 
 function ensureDir(dir) {
   fs.mkdirSync(dir, { recursive: true, mode: 0o700 });
@@ -51,6 +52,13 @@ export function createRadarResident({
   maxSignals = 8,
   journalUrl = '',
   autoReleaseOwned = false,
+  clipAutoPublishEnabled = false,
+  radarPublicOrigin = '',
+  clipAuthorizationRef = '',
+  facebookPageId = '',
+  facebookPageAccessToken = '',
+  facebookAdapterVerified = false,
+  facebookGraphVersion = 'v26.0',
   clock = () => new Date()
 } = {}) {
   const stateFile = path.join(stateDir, 'state.json');
@@ -71,6 +79,19 @@ export function createRadarResident({
   let lastRun = null;
   let lastError = null;
   let lastReleaseDecision = readJson(releaseCandidateFile, null);
+  const clipDispatcher = createRadarClipDispatcher({
+    stateDir,
+    enabled: clipAutoPublishEnabled,
+    publicOrigin: radarPublicOrigin,
+    authorizationRef: clipAuthorizationRef,
+    fetchImpl,
+    facebook: {
+      pageId: facebookPageId,
+      pageAccessToken: facebookPageAccessToken,
+      graphVersion: facebookGraphVersion,
+      verified: facebookAdapterVerified
+    }
+  });
 
   async function runOnce({ externalObservations = [] } = {}) {
     if (running) {
@@ -146,6 +167,18 @@ export function createRadarResident({
         });
       }
 
+      const clipDispatchRun = clipAutoPublishEnabled
+        ? await clipDispatcher.runOnce({ maxItems: 1 })
+        : {
+            schema: 'evercraft.systemia-radar.clip-dispatch-run.v1',
+            status: 'disabled',
+            at: startedAt,
+            published: 0,
+            failed: 0,
+            held: 0,
+            receipts: []
+          };
+
       atomicWrite(stateFile, state);
       atomicWrite(latestFile, edition);
       atomicWrite(publicFile, publicEdition);
@@ -174,6 +207,7 @@ export function createRadarResident({
         release_gate_status: releaseDecision.status,
         owned_release: ownedReleaseReceipt,
         correction_run: correctionRun,
+        clip_distribution: clipDispatchRun,
         publication_authority: false
       };
       appendJsonl(receiptsFile, receipt);
@@ -239,6 +273,7 @@ export function createRadarResident({
       release_gate_status: lastReleaseDecision?.status || 'not_evaluated',
       owned_release_count: listRadarReleases(stateDir).releases?.length || 0,
       correction_count: listRadarCorrections(stateDir).corrections?.length || 0,
+      distribution: clipDispatcher.state(),
       last_run: lastRun,
       last_error: lastError,
       publication_authority: false
@@ -286,6 +321,14 @@ export function createRadarResident({
     };
   }
 
+  async function distribute({ retryFailed = false, maxItems = 1 } = {}) {
+    return clipDispatcher.runOnce({ retryFailed, maxItems });
+  }
+
+  function distributionState() {
+    return clipDispatcher.state();
+  }
+
   return {
     runOnce,
     ingest,
@@ -296,6 +339,8 @@ export function createRadarResident({
     internalLatest,
     sourceHealth,
     releaseLatestOwned,
-    releaseState
+    releaseState,
+    distribute,
+    distributionState
   };
 }
