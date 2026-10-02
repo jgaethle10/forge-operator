@@ -1,0 +1,21 @@
+name: Fallen Canon Reference Pack
+
+on:
+  pull_request:
+    paths:
+      - 'systemia/media-studio/canon-reference-pack.ts'
+      - 'systemia/media-studio/canon-reference-pack.test.ts'
+      - 'systemia/media-studio/canon-reference-pack-cli.ts'
+      - '.github/workflows/fallen-canon-reference-pack.yml'
+  workflow_dispatch:
+
+jobs:
+  canon-reference-pack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-audit --no-fund
+      - run: node --import tsx --test systemia/media-studio/canon-reference-pack.test.ts
