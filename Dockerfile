@@ -19,6 +19,7 @@ COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/server.ts ./server.ts
 COPY --from=build /app/systemia/chum ./systemia/chum
 COPY --from=build /app/systemia/commerce ./systemia/commerce
+COPY --from=build /app/systemia/organism ./systemia/organism
 COPY --from=build /app/systemia/mcp ./systemia/mcp
 COPY --from=build /app/systemia/remote-operator ./systemia/remote-operator
 COPY --from=build /app/systemia/notification-fabric ./systemia/notification-fabric
