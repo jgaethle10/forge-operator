@@ -338,13 +338,63 @@ async function main() {
     scanned += publicScan.scanned;
     network.url_probes = publicScan.rows;
 
-    const journalFreshness = await probeJournalFreshness({
-      url: process.env.EVERCRAFT_JOURNAL_URL || 'https://evercraftjournal.base44.app/',
-      now: observedAt
-    });
-    findings.push(...journalFreshness.findings.map((finding) => makeFinding(finding)));
-    scanned += journalFreshness.scanned;
-    network.journal_freshness = journalFreshness.observation;
+    const journalUrl = clean(process.env.EVERCRAFT_JOURNAL_URL);
+    let journalLegacyProvider = false;
+    if (journalUrl) {
+      try {
+        const parsedJournalUrl = new URL(journalUrl);
+        const host = parsedJournalUrl.hostname.toLowerCase();
+        journalLegacyProvider = host === 'base44.app' || host.endsWith('.base44.app');
+      } catch {}
+    }
+
+    if (journalLegacyProvider) {
+      network.journal_freshness = {
+        schema: 'evercraft.journal.freshness-observation.v1',
+        observed_at: observedAt.toISOString(),
+        canonical_url: null,
+        configured_url: journalUrl,
+        state: 'legacy_origin_rejected',
+        age_hours: null
+      };
+      findings.push(makeFinding({
+        code: 'journal_legacy_origin_retired',
+        severity: 'high',
+        subject: 'Evercraft Journal',
+        detail: 'The configured Journal origin points at the retired Base44 provider. Sentinel refuses to treat that URL as canonical.',
+        evidence_refs: ['env:EVERCRAFT_JOURNAL_URL'],
+        repair_mode: 'verify_external_dependency',
+        human_gate_required: false
+      }));
+    } else if (journalUrl) {
+      const journalFreshness = await probeJournalFreshness({
+        url: journalUrl,
+        now: observedAt
+      });
+      findings.push(...journalFreshness.findings.map((finding) => makeFinding(finding)));
+      scanned += journalFreshness.scanned;
+      network.journal_freshness = journalFreshness.observation;
+    } else {
+      network.journal_freshness = {
+        schema: 'evercraft.journal.freshness-observation.v1',
+        observed_at: observedAt.toISOString(),
+        canonical_url: null,
+        state: 'held_no_verified_public_origin',
+        age_hours: null
+      };
+      findings.push(makeFinding({
+        code: 'journal_public_origin_unverified',
+        severity: 'high',
+        subject: 'Evercraft Journal',
+        detail: 'The owned Journal build exists, but no verified Evercraft-owned public Journal origin is configured. Public freshness is held unknown until a live owned origin is proven.',
+        evidence_refs: [
+          'repo:.github/workflows/evercraft-journal-pages.yml',
+          'repo:systemia/newsroom/journal-publisher.mjs'
+        ],
+        repair_mode: 'verify_external_dependency',
+        human_gate_required: false
+      }));
+    }
 
     const githubScan = await scanGithub({
       owner: args.githubOwner,
