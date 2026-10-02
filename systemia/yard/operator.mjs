@@ -563,6 +563,31 @@ export class YardOperator {
         }
         healthState = 'healthy';
         routeVerification = 'private_core_health_verified';
+      } else if (workloadClass === 'systemia.household-fabric-public-origin.v1') {
+        const householdPublicHealthy =
+          health.ok === true &&
+          health.service === 'household-fabric-public-origin' &&
+          health.runtime === 'Evercraft Compute' &&
+          health.workload_class === 'systemia.household-fabric-public-origin.v1' &&
+          health.read_only === true &&
+          health.public_projection === true &&
+          health.source_loopback_only === true &&
+          health.source_authority_exposed === false &&
+          health.allocator_authority_exposed === false &&
+          health.credential_material_exposed === false &&
+          health.source_ready === true &&
+          health.instance_id === job.result?.instance_id;
+        if (!householdPublicHealthy) {
+          try {
+            await request(`${capacityEndpoint}/v1/services/${job.result.service_id}/stop`, {
+              method: 'POST',
+              body: JSON.stringify({ token: lease.token }),
+            });
+          } catch {}
+          throw new Error('Household Fabric public origin failed initial health verification');
+        }
+        healthState = 'healthy';
+        routeVerification = 'local_household_public_origin_health_verified_public_route_unbound';
       } else if (workloadClass === 'systemia.household-fabric-yakima.v1') {
         const householdHealthy =
           health.ok === true &&
@@ -1419,7 +1444,10 @@ export class YardOperator {
     const workloadClass = record.receipt?.workload_class;
     let service;
     let healthPath;
-    if (workloadClass === 'systemia.chum-public-origin.v1') {
+    if (workloadClass === 'systemia.household-fabric-public-origin.v1') {
+      service = 'household-fabric-public-origin';
+      healthPath = '/health';
+    } else if (workloadClass === 'systemia.chum-public-origin.v1') {
       service = 'chum-public-origin';
       healthPath = '/api/health';
     } else if (workloadClass === 'systemia.remote-capacity-broker.v1') {
@@ -1487,8 +1515,20 @@ export class YardOperator {
         health.base44_transport_enabled === false &&
         health.edge_attestation_supported === true
       );
+    const householdPublicMatch =
+      workloadClass !== 'systemia.household-fabric-public-origin.v1' ||
+      (
+        health.workload_class === 'systemia.household-fabric-public-origin.v1' &&
+        health.read_only === true &&
+        health.public_projection === true &&
+        health.source_loopback_only === true &&
+        health.source_authority_exposed === false &&
+        health.allocator_authority_exposed === false &&
+        health.credential_material_exposed === false &&
+        health.source_ready === true
+      );
 
-    if (!commonMatch || !brokerMatch || !browserMatch || !homeMatch || !fabricMatch) {
+    if (!commonMatch || !brokerMatch || !browserMatch || !homeMatch || !fabricMatch || !householdPublicMatch) {
       throw new Error('public route health does not match this deployment receipt and instance');
     }
 
