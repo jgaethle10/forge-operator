@@ -28,3 +28,5 @@ jobs:
         run: node --check systemia/raven/private-runtime.mjs
       - name: Prove Raven private runtime core
         run: node systemia/raven/private-runtime.proof.mjs
+      - name: Prove Raven resident runtime wiring
+        run: node --test systemia/raven/resident-runner.test.mjs
