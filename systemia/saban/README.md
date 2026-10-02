@@ -479,3 +479,50 @@ npm run saban:golem:preflight
 The preflight connects through the configured Yagna API URL, verifies the requestor can be reached, and never prints the app-key.
 
 A green repository proof is not a claim that a funded Golem requestor is currently connected. Live marketplace execution requires the sidecar preflight to pass in the actual runtime and the selected payment network to have sufficient requestor funds.
+
+## Formation-level compute acquisition
+
+A distributed formation can ask Saban to acquire capacity when its configured NodeSeed pool cannot satisfy the job. The formation declares policy only. Runtime adapters and authority material are constructed at execution time.
+
+Example zero-spend policy:
+
+```json
+{
+  "execution": {
+    "mode": "nodeseed_pool",
+    "discover": true,
+    "acquisition": {
+      "enabled": true,
+      "zero_spend_only": true,
+      "negotiation_level": "lease",
+      "markets": {
+        "evercraft_broker": {
+          "enabled": true,
+          "state_dir_env": "EVERCRAFT_YARD_STATE_DIR",
+          "broker_deployment_id_env": "EVERCRAFT_REMOTE_CAPACITY_BROKER_DEPLOYMENT_ID"
+        },
+        "evercraft_voluntary": {
+          "enabled": true,
+          "endpoint_env": "EVERCRAFT_VOLUNTARY_COMPUTE_ENDPOINT",
+          "control_token_env": "EVERCRAFT_VOLUNTARY_CONTROL_TOKEN"
+        },
+        "golem": { "enabled": false },
+        "akash": { "enabled": false }
+      }
+    }
+  }
+}
+```
+
+With `zero_spend_only`, Saban generates demand-scoped quote/lease authority only for eligible Evercraft broker and voluntary markets and fixes USD ceilings at zero. Paid offers cannot pass the generic lease gate.
+
+External paid markets must be explicitly enabled and supplied with an approved quote/lease policy. Paid leases additionally require `allow_spend: true` plus the applicable hard ceiling. Akash credentials, Yagna app keys, voluntary-control tokens and Yard authority never belong in the formation JSON. They are loaded from named runtime environment variables or private Yard state.
+
+Market preference is enforced after resource, placement, trust and budget eligibility:
+
+1. Evercraft broker capacity
+2. Evercraft voluntary capacity
+3. Golem portable capacity
+4. Akash capacity
+
+Before a commitment, a safe quote failure may fall through to the next eligible market. Once a lease request has been attempted, an uncertain failure stops automatic failover and requires reconciliation.
