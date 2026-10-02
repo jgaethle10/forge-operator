@@ -251,7 +251,24 @@ function evaluateOffer(task,offer,nowMs,performanceLedger=null){
       score+=Math.max(0,250-Math.round(Number(power)*10));
     }
     score-=Math.min(500,Math.round(ageMs/1000));
-    score+=Math.min(300,Math.round((offer.resources.memory_mb/Math.max(1,r.memory_mb))*10));
+    const memoryHeadroom=r.memory_mb>0
+      ? offer.resources.memory_mb/r.memory_mb
+      : 1;
+    const cpuHeadroom=r.cpu_units>0
+      ? offer.resources.cpu_units/r.cpu_units
+      : 1;
+    const fitHeadroom=Math.max(1,Math.min(memoryHeadroom,cpuHeadroom));
+    // Enough headroom is good. Infinite overprovisioning is not a reason for
+    // a server to steal tiny work from a safe smaller node.
+    score+=Math.round(Math.min(1,fitHeadroom/4)*300);
+    if(
+      offer.metadata?.micro_node!==true &&
+      r.memory_mb<=512 &&
+      r.cpu_units<=0.5 &&
+      Math.max(memoryHeadroom,cpuHeadroom)>=16
+    ){
+      score-=250;
+    }
 
     if(performance){
       score+=performance.score;
