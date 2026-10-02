@@ -1,0 +1,52 @@
+{
+  "schema": "systemia.household-fabric.price-sources.v1",
+  "updated_at": "2026-09-29",
+  "sources": [
+    {
+      "source_key": "google-places-fuel-options",
+      "categories": [
+        "fuel"
+      ],
+      "source_state": "verified_contract",
+      "credential_state": "required_not_configured",
+      "adapter": "systemia/household-fabric/adapters/google-places-fuel.mjs",
+      "provider_url": "https://developers.google.com/maps/documentation/places/web-service/op-overview",
+      "evidence": "fuelOptions.fuelPrices includes fuel type, Money price and updateTime",
+      "acquisition": "Places API (New) with fuelOptions requested",
+      "policy_notes": [
+        "Google Maps Platform terms and required attribution must be satisfied before production display.",
+        "Preserve provider updateTime as observed_at when present.",
+        "Do not mark this source live until credentials and an end-to-end Yakima canary pass."
+      ],
+      "client": "systemia/household-fabric/clients/google-places-fuel-client.mjs",
+      "client_state": "implemented_not_credentialed",
+      "credential_contract": [
+        "Google Places API key"
+      ]
+    },
+    {
+      "source_key": "kroger-public-products",
+      "categories": [
+        "grocery"
+      ],
+      "source_state": "verified_contract",
+      "credential_state": "required_not_configured",
+      "adapter": "systemia/household-fabric/adapters/kroger-products.mjs",
+      "provider_url": "https://www.postman.com/kroger/the-kroger-co-s-public-workspace/collection/ki6utqb/kroger-public-apis",
+      "evidence": "Products API returns store-specific regular/promo pricing when filter.locationId is supplied",
+      "acquisition": "OAuth2 client credentials plus Locations API and Products API",
+      "policy_notes": [
+        "A locationId is mandatory for price observations.",
+        "Capture observed_at at retrieval because the surfaced product contract does not expose a price update timestamp.",
+        "Do not mark this source live until credentials and an end-to-end Yakima/Fred Meyer canary pass."
+      ],
+      "client": "systemia/household-fabric/clients/kroger-client.mjs",
+      "client_state": "implemented_not_credentialed",
+      "credential_contract": [
+        "Kroger client ID",
+        "Kroger client secret"
+      ],
+      "oauth_flow": "client_credentials / product.compact"
+    }
+  ]
+}

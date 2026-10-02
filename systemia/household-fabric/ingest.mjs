@@ -114,7 +114,9 @@ export function latestOpportunities(ledger) {
 export function auditCoverage(ledger, sourceRegistry, options = {}) {
   const now = options.now instanceof Date ? options.now : new Date(options.now ?? Date.now());
   const freshnessMs = options.freshness_ms ?? DEFAULT_FRESHNESS_MS;
-  const latest = latestOpportunities(ledger);
+  const latest = Array.isArray(options.coverage_items)
+    ? options.coverage_items.filter(Boolean)
+    : latestOpportunities(ledger);
   const requirements = sourceRegistry?.geographies?.[options.geography]?.coverage ?? {};
   const categories = {};
 
