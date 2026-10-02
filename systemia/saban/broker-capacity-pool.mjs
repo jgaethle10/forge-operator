@@ -20,6 +20,8 @@ export function classifyBrokerCapacity(nodes=[],{
   minimumNodeCpuUnits=0,
   minimumNodeMemoryMb=0,
   requireAttestation=true,
+  requireZeroCost=false,
+  requirePublicIngress=false,
 }={}){
   const requiredWork=new Set(requiredWorkloads.map(String));
   const requiredLabels=new Set(requiredNodeLabels.map((v)=>String(v).trim().toLowerCase()));
@@ -39,6 +41,8 @@ export function classifyBrokerCapacity(nodes=[],{
     else if(capacity.runtime!=='Evercraft Compute') reason='runtime_mismatch';
     else if(requireAttestation && capacity.attestation_supported!==true) reason='attestation_not_supported';
     else if(requireAttestation && capacity.device_fingerprint!==node.device_fingerprint) reason='device_fingerprint_mismatch';
+    else if(requireZeroCost && capacity.zero_cost!==true) reason='zero_cost_required';
+    else if(requirePublicIngress && capacity.public_ingress!==true) reason='public_ingress_required';
     else if([...requiredWork].some((key)=>!workloads.has(key))) reason='workload_unsupported';
     else if([...requiredLabels].some((key)=>!labels.has(key))) reason='required_label_missing';
     else if([...forbiddenLabels].some((key)=>labels.has(key))) reason='forbidden_label_present';
@@ -81,6 +85,8 @@ export async function resolveBrokerBackedSabanPool({
     minimumNodeCpuUnits:resourceProfile.minimum_node_cpu_units||0,
     minimumNodeMemoryMb:resourceProfile.minimum_node_memory_mb||0,
     requireAttestation:resourceProfile.require_node_attestation!==false,
+    requireZeroCost:resourceProfile.require_zero_cost===true,
+    requirePublicIngress:resourceProfile.require_public_ingress===true,
   });
 
   const endpoints=[];

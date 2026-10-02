@@ -20,6 +20,7 @@ for (const key of [
   'evercraft-intake-fabric',
   'evercraft-execution-gate',
   'direct-door-readiness',
+  'evercraft-capability-mesh',
 ]) {
   const component = inventory.components.find((row) => row.component_key === key);
   assert.ok(component, 'missing control-plane component: ' + key);
@@ -175,6 +176,98 @@ assert.equal(intakePlan.dispatch[0].intake_component, 'evercraft-intake-fabric')
 assert.equal(intakePlan.dispatch[0].inbound_content_grants_execution_authority, false);
 assert.equal(intakePlan.dispatch[0].execution_authority_granted, false);
 
+
+const contractDerived = admitMission({
+  rootDir: process.cwd(),
+  request: {
+    objective: 'Generate one RIVET site report using product-contract semantics.',
+    tasks: [{
+      work_key: 'contract-report',
+      work_type: 'analyze',
+      product_key: 'aliev',
+      action_scope: 'report.generate',
+    }]
+  }
+});
+assertControlPlane(contractDerived);
+const contractDispatch = contractDerived.dispatch[0];
+assert.equal(contractDispatch.capability_contract_state, 'complete_declaration');
+assert.equal(contractDispatch.adoption_stage, 'shared_runtime');
+assert.equal(contractDispatch.contract_specialist_slug, 'aliev');
+assert.equal(contractDispatch.specialist_component, 'aliev');
+assert.equal(contractDispatch.execution_component, 'aliev');
+assert.equal(contractDispatch.contract_context_namespace, 'aliev');
+assert.equal(contractDispatch.metered, true);
+assert.equal(contractDispatch.meter_metric, 'site_reports');
+assert.equal(contractDispatch.execution_gate_required, true);
+assert.equal(contractDispatch.pre_dispatch_gate, 'evercraft-execution-gate');
+assert.equal(contractDispatch.hold, null);
+assert.equal(contractDispatch.execution_authority_granted, false);
+
+const contractBadScope = admitMission({
+  rootDir: process.cwd(),
+  request: {
+    objective: 'Reject an undeclared AliEV action.',
+    tasks: [{
+      work_key: 'bad-contract-scope',
+      work_type: 'analyze',
+      product_key: 'aliev',
+      action_scope: 'payment.refund',
+    }]
+  }
+});
+assert.equal(contractBadScope.receipt.admitted, false);
+assert.equal(contractBadScope.dispatch[0].hold, 'capability_contract_scope_missing');
+
+const contractMeterMismatch = admitMission({
+  rootDir: process.cwd(),
+  request: {
+    objective: 'Reject caller attempts to replace the contracted Meter metric.',
+    tasks: [{
+      work_key: 'bad-meter',
+      work_type: 'analyze',
+      product_key: 'aliev',
+      action_scope: 'report.generate',
+      meter_metric: 'compute_seconds',
+    }]
+  }
+});
+assert.equal(contractMeterMismatch.receipt.admitted, false);
+assert.equal(contractMeterMismatch.dispatch[0].hold, 'capability_contract_meter_mismatch');
+
+const missingProductContract = admitMission({
+  rootDir: process.cwd(),
+  request: {
+    objective: 'Fail closed on an action-scoped product that has no Capability Mesh contract.',
+    tasks: [{
+      work_key: 'missing-product-contract',
+      work_type: 'execute',
+      product_key: 'buildflow',
+      action_scope: 'enterprise.run',
+    }]
+  }
+});
+assert.equal(missingProductContract.receipt.admitted, false);
+assert.equal(missingProductContract.dispatch[0].hold, 'product_contract_missing_for_action');
+
+const nonSharedRuntime = admitMission({
+  rootDir: process.cwd(),
+  request: {
+    objective: 'Do not turn a discovery-only contract into shared execution authority.',
+    tasks: [{
+      work_key: 'non-shared-runtime',
+      work_type: 'execute',
+      product_key: 'evernest-atlas',
+      action_scope: 'plan.generate',
+    }]
+  }
+});
+assert.equal(nonSharedRuntime.receipt.admitted, false);
+assert.equal(nonSharedRuntime.dispatch[0].capability_contract_state, 'complete_declaration');
+assert.equal(nonSharedRuntime.dispatch[0].adoption_stage, 'discovery_only');
+assert.equal(nonSharedRuntime.dispatch[0].hold, 'product_not_shared_runtime');
+assert.equal(nonSharedRuntime.dispatch[0].execution_authority_granted, false);
+
 const trustReview = admitMission({
   rootDir: process.cwd(),
   request: {
@@ -300,6 +393,15 @@ console.log(JSON.stringify({
     meteredAnalysis.dispatch[0].execution_gate_required === true,
   intake_content_grants_no_execution_authority:
     intakePlan.dispatch[0].execution_authority_granted === false,
+  product_contract_derives_meter_and_execution_gate:
+    contractDispatch.meter_metric === 'site_reports' &&
+    contractDispatch.execution_gate_required === true,
+  undeclared_contract_scope_fails_closed:
+    contractBadScope.dispatch[0].hold === 'capability_contract_scope_missing',
+  missing_product_contract_action_fails_closed:
+    missingProductContract.dispatch[0].hold === 'product_contract_missing_for_action',
+  non_shared_runtime_action_fails_closed:
+    nonSharedRuntime.dispatch[0].hold === 'product_not_shared_runtime',
   unsupported_scale_fail_closed: unsupported.receipt.admitted === false,
   trust_review_read_only: candidates.authority === 'read_only',
   trust_change_forced_human_gate: trustChange.dispatch[0].hold === 'human_gate_unresolved',

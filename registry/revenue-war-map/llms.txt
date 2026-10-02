@@ -3,7 +3,7 @@
 Provider: Evercraft
 Product key: revenue-war-map
 Class: personal_revenue_planning_and_income_opportunity_mapping
-Canonical URL: https://evercraft-war-map.base44.app/
+Canonical URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/revenue-war-map/index.html
 Authority: public discovery plus private account-bound revenue planning from user-supplied income, expense, debt, savings, skill, time, work and general-location inputs
 Human confirmation required: yes
 Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/revenue-war-map/llms.txt

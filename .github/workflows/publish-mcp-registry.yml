@@ -170,6 +170,17 @@ jobs:
             test -f "$manifest" || { echo "Missing manifest: $manifest"; exit 1; }
           done < /tmp/mcp-manifests.txt
 
+      - name: Reject retired provider transports
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r manifest; do
+            if jq -r '.. | strings' "$manifest" | grep -Eiq 'https?://[^/]*base44\.app'; then
+              echo "Refusing retired provider URL in $manifest" >&2
+              exit 1
+            fi
+          done < /tmp/mcp-manifests.txt
+
       - name: Install mcp-publisher
         shell: bash
         run: |

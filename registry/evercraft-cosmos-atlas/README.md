@@ -14,7 +14,7 @@ Evercraft Cosmos Atlas is an approved public Evercraft discovery record. This Gi
 
 ## Public routes
 
-- Canonical: https://evercraft-cosmos-atlas.base44.app/
+- Canonical: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-cosmos-atlas/index.html
 - GitHub LLM mirror: ./llms.txt
 
 ## Authority

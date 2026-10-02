@@ -3,12 +3,9 @@
 Capability ID: evercraft-web-browser-agent-v1
 Commercial state: discovery_only
 Machine state: specialist_discovery_ready_runtime_gated
-Public URL: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=web
-Preferred agent route: direct specialist
-Direct specialist: Evercraft Web
-Direct MCP: https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp
-Official MCP Registry name: io.github.jgaethle10/evercraft-web
-Universal Evercraft fallback MCP: https://fabric.systemiacommandcenters.com/mcp
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/evercraft-web-browser-agent-v1/index.html
+Preferred agent route: universal fallback
+Universal Evercraft MCP: https://fabric.systemiacommandcenters.com/mcp
 Start here: Not a current sell-now route
 
 ## Use this when

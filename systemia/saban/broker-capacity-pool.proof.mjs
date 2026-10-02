@@ -34,6 +34,9 @@ const fieldEdge={
       'systemia.public-edge.v1',
     ],
     placement_labels:['public-edge','gateway','field-certified'],
+    zero_cost:true,
+    public_ingress:true,
+    failure_domain:'proof-domain-b',
     capacity_hint:{cpu_units:8,memory_mb:16384},
   },
 };
@@ -53,6 +56,8 @@ const publicEdge=classifyBrokerCapacity([chromebook,fieldEdge],{
   forbiddenNodeLabels:['outbound-only'],
   minimumNodeCpuUnits:2,
   minimumNodeMemoryMb:2048,
+  requireZeroCost:true,
+  requirePublicIngress:true,
 });
 assert.deepEqual(publicEdge.eligible.map((n)=>n.node_id),['field-edge-002']);
 assert.equal(publicEdge.rejected.length,1);
@@ -71,6 +76,7 @@ console.log(JSON.stringify({
   chromebook_general_compute_eligible:true,
   chromebook_public_edge_ineligible:true,
   field_edge_eligible:true,
+  zero_cost_public_ingress_required:true,
   disconnected_nodes_rejected:true,
   arbitrary_unknown_hardware_auto_authorized:false,
 },null,2));

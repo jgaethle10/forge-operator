@@ -6,6 +6,8 @@ on:
       - 'systemia/saban/hardware-federation.mjs'
       - 'systemia/saban/hardware-federation.proof.mjs'
       - 'systemia/saban/hardware-federation-bridge.proof.mjs'
+      - 'systemia/saban/fabric-edge-relay.proof.mjs'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
       - 'systemia/network/outbound-capacity-broker.mjs'
       - 'systemia/network/outbound-node-agent.mjs'
       - 'systemia/network/federated-service-bridge.mjs'
@@ -19,6 +21,8 @@ on:
       - 'systemia/saban/hardware-federation.mjs'
       - 'systemia/saban/hardware-federation.proof.mjs'
       - 'systemia/saban/hardware-federation-bridge.proof.mjs'
+      - 'systemia/saban/fabric-edge-relay.proof.mjs'
+      - 'systemia/mcp/fabric-local-runtime.mjs'
       - 'systemia/network/outbound-capacity-broker.mjs'
       - 'systemia/network/outbound-node-agent.mjs'
       - 'systemia/network/federated-service-bridge.mjs'
@@ -44,3 +48,5 @@ jobs:
         run: node systemia/saban/hardware-federation.proof.mjs
       - name: Prove encrypted two-node browser federation
         run: node systemia/saban/hardware-federation-bridge.proof.mjs
+      - name: Prove outbound Fabric edge relay
+        run: node systemia/saban/fabric-edge-relay.proof.mjs

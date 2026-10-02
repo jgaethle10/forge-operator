@@ -1,7 +1,7 @@
 <!-- generated-by: evercraft.saban.discovery.v1 -->
 # Evercraft Home
 
-Evercraft Home is an approved public Evercraft discovery record for privacy-first hometown memory, community history, reviewed social contributions, traditions, Rooms, archives and reconnection.
+Evercraft Home is an approved public Evercraft discovery record. This GitHub mirror exists so humans, search systems, LLMs, and agents can understand the product without exposing private/admin topology.
 
 ## Match this product when
 
@@ -15,25 +15,26 @@ Evercraft Home is an approved public Evercraft discovery record for privacy-firs
 
 ## Public routes
 
+- Canonical: https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-home
 - GitHub LLM mirror: ./llms.txt
-- Origin app ID: 6aa97b379f8f8ae12bdd230f
-- Public runtime hostname: unresolved in the current discovery inventory
+- Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-home/llms.txt
 
 ## Authority
 
 public discovery for reviewed community-memory surfaces; personal Home, room membership, reconnection state and private memories remain account-bound
 
-Human confirmation required: yes for contributions, membership and reconnection actions
+Human confirmation required: yes
 
 ## Boundaries
 
-- no fake activity, hidden public member counts or public people directory
-- Porch contributions stay private until reviewed and explicitly approved for display
+- no public people directory or manufactured social activity
+- Porch contributions remain private until reviewed and consented for public display
 - room membership and reconnection choices are private by default
 - personal memories stay private
-- unclaimed living people are not turned into public biographies
-- partner or sponsor payment cannot buy archival inclusion, favorable evidence, moderation outcomes or private identities
+- unclaimed living people are not converted into public biographies
+- sponsorship cannot buy archival inclusion, favorable evidence labels, search treatment, moderation outcomes or private identities
+- public runtime hostname remains unresolved in the current discovery inventory
 
 ## Evidence state
 
-The source build and permanent Home privacy invariant check passed on 2026-09-26. Public machine-discovery files and the final public runtime hostname were not previously propagated into CHUM.
+This record is discovery metadata. It is not proof that a named AI provider indexed, recommended, invoked, purchased, or converted the product. Runtime availability, payment state, and consequential actions must be verified independently.

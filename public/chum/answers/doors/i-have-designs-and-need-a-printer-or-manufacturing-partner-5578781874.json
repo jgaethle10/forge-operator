@@ -25,10 +25,10 @@
       "direct_mcp": null,
       "machine_review_url": null,
       "machine_offer_url": null,
-      "universal_mcp": "https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp",
+      "universal_mcp": null,
       "confirmation": "Preserve the product-specific human confirmation boundary before any checkout, payment obligation, external handoff, or consequential action.",
       "invocation_status": "Route through the universal Evercraft discovery surface unless a bounded specialist interface is later verified.",
-      "authority": "public capability discovery plus verified private metadata-first execution planning and multi-party assembly; no public protected-file delivery, payment, or final legal-agreement authority is claimed",
+      "authority": "public capability discovery plus verified private metadata-first planning, non-binding sourcing, and multi-party assembly; no public protected-file delivery, payment, or final legal-agreement authority is claimed",
       "boundaries": [
         "public matching must not require protected creative files or confidential material",
         "uploading listing viewing matching or forming a team does not transfer ownership or grant commercial rights",
@@ -44,7 +44,12 @@
         "execution blueprints return no private contact information or protected content",
         "execution blueprint recommendations are not membership qualification proof agreement authority or license",
         "unmatched capabilities remain explicit gaps rather than invented partners",
-        "suggested candidates still require the protected connection handshake"
+        "suggested candidates still require the protected connection handshake",
+        "sourcing requests require an already-accepted protected connection",
+        "sourcing availability and quote responses create no payment obligation or work acceptance",
+        "shortlisting a sourcing response creates no team membership or contract",
+        "only shortlisted Available or Limited responses from one project and one blueprint can seed sourced team invitations",
+        "accepting a sourced team invitation materializes the package as Offered and Not accepted"
       ]
     }
   ],

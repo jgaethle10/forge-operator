@@ -1,0 +1,28 @@
+{
+  "origin": "edge.invalid.",
+  "serial": 2026100101,
+  "default_ttl": 300,
+  "primary_ns": "ns1.edge.invalid.",
+  "admin": "hostmaster.edge.invalid.",
+  "nameservers": [
+    "ns1.edge.invalid.",
+    "ns2.edge.invalid."
+  ],
+  "records": [
+    {
+      "name": "@",
+      "type": "A",
+      "value": "192.0.2.10"
+    },
+    {
+      "name": "www",
+      "type": "CNAME",
+      "value": "edge.invalid."
+    },
+    {
+      "name": "_evercraft",
+      "type": "TXT",
+      "value": "service=evercraft://example"
+    }
+  ]
+}

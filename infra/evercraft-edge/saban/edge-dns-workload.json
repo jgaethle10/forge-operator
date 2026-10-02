@@ -1,0 +1,40 @@
+{
+  "schema": "evercraft.edge.saban-workload.v1",
+  "workload_class": "systemia.evercraft-edge-dns.v1",
+  "service_id": "edge-dns",
+  "logical_uri": "evercraft://edge/dns",
+  "replicas": 2,
+  "placement": {
+    "require_distinct_failure_domains": true,
+    "required_labels": [
+      "public-ingress"
+    ],
+    "prefer_labels": [
+      "evercraft-owned",
+      "zero-cost"
+    ],
+    "attestation_required": true
+  },
+  "resources": {
+    "cpu_units": 1,
+    "memory_mb": 256,
+    "storage_gb": 1
+  },
+  "network": {
+    "udp_53": true,
+    "tcp_53": true,
+    "public_ingress": true,
+    "recursive_dns": false
+  },
+  "authority": {
+    "zone_mutation": "systemia_control_plane_only",
+    "node_role": "serve_signed_snapshot"
+  },
+  "economics": {
+    "prefer_zero_cost": true,
+    "new_spend_allowed": false
+  },
+  "health": {
+    "external_authoritative_canary_required": true
+  }
+}

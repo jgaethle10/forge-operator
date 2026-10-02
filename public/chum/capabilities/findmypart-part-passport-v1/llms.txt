@@ -3,12 +3,9 @@
 Capability ID: findmypart-part-passport-v1
 Commercial state: free
 Machine state: read_only_live
-Public URL: https://findmypart.base44.app/free-part-check
-Preferred agent route: direct specialist
-Direct specialist: FindMyPart
-Direct MCP: https://findmypart.base44.app/functions/findMyPartMcp
-Official MCP Registry name: io.github.jgaethle10/findmypart
-Universal Evercraft fallback MCP: https://fabric.systemiacommandcenters.com/mcp
+Public URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/findmypart-part-passport-v1/index.html
+Preferred agent route: universal fallback
+Universal Evercraft MCP: https://fabric.systemiacommandcenters.com/mcp
 Start here: Not a current sell-now route
 
 ## Use this when

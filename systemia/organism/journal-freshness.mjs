@@ -119,11 +119,26 @@ export async function probeJournalFreshness({
   };
 
   const homepageLower = clean(home.text).toLowerCase();
+  const publicIdentityLower = homepageLower
+    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, ' ')
+    .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, ' ');
   const identityDriftMarkers = [
     'all-in-one ai shopping assistant for black friday',
     'optimize your cart for maximum savings'
   ];
-  const identityDrift = home.ok && identityDriftMarkers.some((marker) => homepageLower.includes(marker));
+  const journalIdentityMarkers = ['evercraft journal', 'news that moves. ideas that become things.'];
+  const strongJournalIdentityMarkers = ['news that moves. ideas that become things.'];
+  const hasJournalIdentity = home.ok && journalIdentityMarkers.some((marker) => publicIdentityLower.includes(marker));
+  const hasStrongJournalIdentity = home.ok && strongJournalIdentityMarkers.some(
+    (marker) => publicIdentityLower.includes(marker)
+  );
+  const hasLegacyIdentity = home.ok && identityDriftMarkers.some(
+    (marker) => publicIdentityLower.includes(marker)
+  );
+  // A generic Journal title is not enough to neutralize a conflicting public
+  // description that still identifies the product as the old shopping app.
+  // Explicit editorial identity is strong enough to disambiguate legacy copy.
+  const identityDrift = home.ok && hasLegacyIdentity && !hasStrongJournalIdentity;
   const identityFindings = identityDrift
     ? [{
         ...findingBase,
@@ -146,7 +161,7 @@ export async function probeJournalFreshness({
     sitemap_latest_at: evidence.sitemap_latest_at,
     latest_at: evidence.latest_at,
     latest_kind: evidence.latest_kind,
-    identity_state: identityDrift ? 'drifted' : (home.ok ? 'expected_or_unverified' : 'unknown'),
+    identity_state: identityDrift ? 'drifted' : (hasJournalIdentity ? 'expected' : (home.ok ? 'unverified' : 'unknown')),
     stale_after_hours: staleAfterHours,
     block_after_hours: blockAfterHours,
     state: 'unknown',

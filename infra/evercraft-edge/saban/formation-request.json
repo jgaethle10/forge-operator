@@ -1,0 +1,20 @@
+{
+  "schema": "evercraft.saban.edge-formation-request.v1",
+  "formation_id": "evercraft-edge-dns-bootstrap",
+  "desired_state": {
+    "workload_class": "systemia.evercraft-edge-dns.v1",
+    "replicas": 2,
+    "minimum_healthy_replicas": 2,
+    "distinct_failure_domains": 2,
+    "attestation_required": true,
+    "zero_spend_only": true
+  },
+  "gates": [
+    "capacity_discovered",
+    "two_distinct_failure_domains",
+    "node_attestation_verified",
+    "udp_tcp_53_reachable",
+    "zone_snapshot_hash_matches",
+    "external_authoritative_canary_green"
+  ]
+}

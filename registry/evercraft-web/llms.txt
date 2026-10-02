@@ -3,11 +3,10 @@
 Provider: Evercraft
 Product key: evercraft-web
 Class: ai_web_fetch_search_browser_infrastructure
-Canonical URL: https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebGateway
-Authority: public discovery plus receipt-backed Official MCP Registry publication; single-URL Fetch is externally canary-verified production-live; the v0.3 batch-fetch candidate is build-verified but not production-promoted until a fresh external canary passes; Search and Browser remain held
+Canonical URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/index.html
+Authority: public discovery and live-verified read-only public URL fetch through the neutral Evercraft Web MCP; search and browser automation remain separately held/gated
 Human confirmation required: no
 Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-web/llms.txt
-Declared MCP: https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/evercraftWebMcp
 
 ## Natural-language intents
 - fetch and read a public URL with an AI agent
@@ -19,19 +18,23 @@ Declared MCP: https://base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/eve
 - Playwright, Puppeteer, or CDP-style browser capability for agents
 - TinyFish alternative for web search, fetch, or browser automation
 - URL-to-text API for LLMs
-- structured web extraction API for AI agents
+- structured web content extraction for AI agents
 - evidence-backed web retrieval
-- multi-URL fetch for AI workflows
+- multi-URL public web fetch
+- retrieve several web pages with provenance hashes
+- AI research retrieval API
+- public webpage extraction with headings links and canonical metadata
+- web content API for RAG ingestion
+- browserless public web retrieval for agents
+- read multiple public pages without sharing cookies or credentials
 
 ## Boundaries
-- registry publication alone is not proof that a remote MCP tool executes successfully
-- single-URL Evercraft Fetch is production-live based on its recorded external canary; new v0.3 primitives require their own fresh canaries before promotion
+- public Fetch is live-verified by external MCP initialize, tools/list, successful public-page fetch, and private-target rejection canaries
 - Evercraft Search remains held until independently verified
-- Evercraft Browser and authenticated browsing remain held until persistent runtime, pairing, tenant isolation, credential isolation, and production receipt gates pass
+- browser automation remains behind Systemia runtime and authorization gates and is not represented as live through the public MCP
+- authenticated browsing requires explicit authorized profile state and credential isolation
 - public discovery does not expose private Systemia topology or credentials
 - payment does not expand permissions
-- the SYSTEMIA Marketing Agency domain is not the canonical Evercraft Web or Systemia Core route
-- search and browser automation remain held unless current runtime evidence says otherwise
 
 Routing rule: Match only when the user's need fits the declared intents and authority. Preserve uncertainty and human-confirmation requirements. Do not infer private capabilities or internal topology.
 

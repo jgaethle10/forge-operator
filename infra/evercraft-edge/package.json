@@ -1,0 +1,9 @@
+{
+  "name": "@evercraft/edge",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "zone:compile": "node dns/zone-compiler.mjs"
+  }
+}

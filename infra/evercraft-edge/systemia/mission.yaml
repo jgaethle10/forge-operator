@@ -1,0 +1,25 @@
+mission_id: evercraft-edge-owned-infrastructure-v1
+authority: systemia
+objective: Operate Evercraft-owned naming, DNS, routing and hosting control planes.
+invariants:
+  - permanent_identity_is_provider_independent
+  - no_public_recursive_dns
+  - no_unverified_live_claim
+  - external_canary_before_promotion
+  - all_mutations_receipted
+  - rollback_required
+  - new_financial_obligation_requires_budget_authority
+providers:
+  saban:
+    role: capability_and_capacity_provider
+    discovery: allowed
+    provisioning: policy_gated
+work_queue:
+  - authoritative_dns_runtime
+  - signed_zone_snapshot_store
+  - dns_replication
+  - dnssec_signing
+  - acme_dns01_orchestrator
+  - edge_reverse_proxy
+  - tenant_control_api
+  - external_resolution_canary

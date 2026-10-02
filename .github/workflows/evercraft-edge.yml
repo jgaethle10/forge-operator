@@ -1,0 +1,70 @@
+name: Evercraft Edge proof
+
+on:
+  pull_request:
+    paths:
+      - 'infra/evercraft-edge/**'
+      - 'systemia/compute/evercraft-edge-dns-runtime.mjs'
+      - 'systemia/compute/edge-dns-bootstrap-resident.mjs'
+      - 'systemia/compute/install-node-seed.sh'
+      - 'systemia/compute/field-preflight.mjs'
+      - 'systemia/compute/runtime-node.mjs'
+      - 'systemia/compute/node-seed.mjs'
+      - 'scripts/evercraft-public-edge-map.mjs'
+      - 'scripts/install-fabric-router-map-resident.sh'
+      - 'scripts/promote-chromebook-edge-node.sh'
+      - 'scripts/make-chromebook-edge-node.sh'
+      - 'scripts/promote-linux-edge-node.sh'
+      - 'scripts/make-linux-edge-node.sh'
+      - 'scripts/prove-edge-direct-tcp-authority.sh'
+      - 'scripts/harden-penguin-edge-production.sh'
+      - 'tests/nodeseed-installed-bundle.test.mjs'
+      - 'systemia/yard/operator.mjs'
+      - '.github/workflows/evercraft-edge.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'infra/evercraft-edge/**'
+      - 'systemia/compute/evercraft-edge-dns-runtime.mjs'
+      - 'systemia/compute/edge-dns-bootstrap-resident.mjs'
+      - 'systemia/compute/install-node-seed.sh'
+      - 'systemia/compute/field-preflight.mjs'
+      - 'systemia/compute/runtime-node.mjs'
+      - 'scripts/evercraft-public-edge-map.mjs'
+      - 'scripts/install-fabric-router-map-resident.sh'
+      - 'scripts/promote-chromebook-edge-node.sh'
+      - 'scripts/make-chromebook-edge-node.sh'
+      - 'tests/nodeseed-installed-bundle.test.mjs'
+      - 'systemia/yard/operator.mjs'
+      - '.github/workflows/evercraft-edge.yml'
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax-check resident integration
+        run: |
+          node --check systemia/compute/evercraft-edge-dns-runtime.mjs
+          node --check systemia/compute/edge-dns-bootstrap-resident.mjs
+          node --check systemia/compute/runtime-node.mjs
+          node --check systemia/compute/node-seed.mjs
+          node --check scripts/evercraft-public-edge-map.mjs
+          node --check systemia/yard/operator.mjs
+          bash -n systemia/compute/install-node-seed.sh
+          bash -n scripts/install-fabric-router-map-resident.sh
+          bash -n scripts/promote-chromebook-edge-node.sh
+          bash -n scripts/make-chromebook-edge-node.sh
+          bash -n scripts/promote-linux-edge-node.sh
+          bash -n scripts/make-linux-edge-node.sh
+          bash -n scripts/prove-edge-direct-tcp-authority.sh
+          bash -n scripts/harden-penguin-edge-production.sh
+      - name: Run Evercraft Edge contract and protocol tests
+        run: |
+          node --test infra/evercraft-edge/test/*.test.mjs
+          node --test tests/nodeseed-installed-bundle.test.mjs

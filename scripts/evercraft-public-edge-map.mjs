@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import dgram from 'node:dgram';
+import net from 'node:net';
 import process from 'node:process';
 import { randomBytes } from 'node:crypto';
 
@@ -16,25 +17,113 @@ for (let i = 2; i < process.argv.length; i += 2) {
 
 const gateway = args.get('gateway');
 const host = args.get('host');
+const scope = String(args.get('scope') || 'all').toLowerCase();
 if (!gateway || !host) {
-  console.error('Required: --gateway <router-ip> --host <chromebook-lan-ip>');
+  console.error('Required: --gateway <router-ip> --host <chromebook-lan-ip> [--scope all|web|dns]');
+  process.exit(2);
+}
+if (!['all','web','dns'].includes(scope)) {
+  console.error('Invalid --scope. Expected all, web, or dns.');
   process.exit(2);
 }
 
-const mappings = [
-  { external: 80, internal: 18080, proto: 'TCP', desc: 'Evercraft Fabric HTTP' },
-  { external: 443, internal: 8443, proto: 'TCP', desc: 'Evercraft Fabric HTTPS' },
+const allMappings = [
+  { external: 80, internal: 18080, proto: 'TCP', desc: 'Evercraft Fabric HTTP', scope:'web', lifetime:86400 },
+  { external: 443, internal: 8443, proto: 'TCP', desc: 'Evercraft Fabric HTTPS', scope:'web', lifetime:86400 },
+  { external: 53, internal: 1053, proto: 'TCP', desc: 'Evercraft Edge authoritative DNS TCP', scope:'dns', lifetime:86400, production:true },
+  { external: 53, internal: 1053, proto: 'UDP', desc: 'Evercraft Edge authoritative DNS UDP', scope:'dns', lifetime:86400, production:true },
+  { external: 53053, internal: 1053, proto: 'TCP', desc: 'Evercraft Edge DNS diagnostic TCP', scope:'dns-diagnostic', lifetime:600, diagnostic:true },
+  { external: 53053, internal: 1053, proto: 'UDP', desc: 'Evercraft Edge DNS diagnostic UDP', scope:'dns-diagnostic', lifetime:600, diagnostic:true },
 ];
+const mappings = scope === 'all'
+  ? allMappings
+  : scope === 'dns'
+    ? allMappings.filter(m => m.scope === 'dns' || m.scope === 'dns-diagnostic')
+    : allMappings.filter(m => m.scope === scope);
 
 const out = {
   ok: false,
   gateway,
   host,
   attempts: [],
+  scope,
   mappings,
+  host_forward_preflight: null,
 };
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function tcpProbe(hostname,port,timeoutMs=1500){
+  return new Promise((resolve)=>{
+    const socket=net.createConnection({host:hostname,port});
+    let settled=false;
+    const done=(ok,error='')=>{
+      if(settled) return;
+      settled=true;
+      socket.destroy();
+      resolve({port,ok,error:error?String(error):null});
+    };
+    socket.setTimeout(timeoutMs,()=>done(false,'timeout'));
+    socket.once('connect',()=>done(true));
+    socket.once('error',(error)=>done(false,error.message));
+  });
+}
+
+function dnsQuery(name='edge-canary.evercraftpropertyservices.com.'){
+  const labels=name.replace(/\.$/,'').split('.');
+  const qname=Buffer.concat([
+    ...labels.map(label=>Buffer.concat([Buffer.from([Buffer.byteLength(label)]),Buffer.from(label)])),
+    Buffer.from([0])
+  ]);
+  const header=Buffer.alloc(12);
+  header.writeUInt16BE(0x4556,0);
+  header.writeUInt16BE(0x0100,2);
+  header.writeUInt16BE(1,4);
+  return Buffer.concat([header,qname,Buffer.from([0,16,0,1])]);
+}
+
+function udpDnsProbe(hostname,port=1053,timeoutMs=1500){
+  return new Promise((resolve)=>{
+    const socket=dgram.createSocket('udp4');
+    let settled=false;
+    const done=(ok,error='')=>{
+      if(settled)return;
+      settled=true;
+      socket.close();
+      resolve({protocol:'udp',port,ok,error:error?String(error):null});
+    };
+    const timer=setTimeout(()=>done(false,'timeout'),timeoutMs);
+    socket.once('error',e=>{clearTimeout(timer);done(false,e.message)});
+    socket.once('message',msg=>{
+      clearTimeout(timer);
+      const valid=msg.length>=12 && msg.readUInt16BE(0)===0x4556 && Boolean(msg.readUInt16BE(2)&0x8000);
+      done(valid,valid?'':'invalid_dns_response');
+    });
+    socket.send(dnsQuery(),port,hostname,e=>{
+      if(e){clearTimeout(timer);done(false,e.message)}
+    });
+  });
+}
+
+async function verifyHostForward(){
+  const probes=[];
+  if(scope==='all'||scope==='web'){
+    probes.push(await tcpProbe(host,18080));
+    probes.push(await tcpProbe(host,8443));
+  }
+  if(scope==='all'||scope==='dns'){
+    probes.push(await tcpProbe(host,1053));
+    probes.push(await udpDnsProbe(host,1053));
+  }
+  return {
+    schema:'evercraft.chromeos-host-forward-preflight.v1',
+    scope,
+    host,
+    probes,
+    ready:probes.length>0&&probes.every(x=>x.ok===true),
+    checked_at:new Date().toISOString(),
+  };
+}
 
 async function natPmpMap() {
   const socket = dgram.createSocket('udp4');
@@ -76,7 +165,7 @@ async function natPmpMap() {
       buf.writeUInt16BE(0, 2);
       buf.writeUInt16BE(m.internal, 4);
       buf.writeUInt16BE(m.external, 6);
-      buf.writeUInt32BE(86400, 8);
+      buf.writeUInt32BE(Number(m.lifetime || 86400), 8);
       try {
         const resp = await request(buf);
         if (resp.length < 16) throw new Error('short response');
@@ -89,7 +178,12 @@ async function natPmpMap() {
         result.mappings.push({ requested: m, success: false, error: e.message });
       }
     }
-    result.success = result.mappings.length === mappings.length && result.mappings.every(x => x.success);
+    {
+      const production=result.mappings.filter(x=>x.requested?.production);
+      const diagnostic=result.mappings.filter(x=>x.requested?.diagnostic);
+      result.success=production.length>0&&production.every(x=>x.success===true);
+      result.diagnostic_success=diagnostic.length>0&&diagnostic.every(x=>x.success===true);
+    }
   } finally {
     socket.close();
   }
@@ -257,7 +351,7 @@ async function upnpMap() {
           `<NewInternalClient>${host}</NewInternalClient>` +
           '<NewEnabled>1</NewEnabled>' +
           `<NewPortMappingDescription>${m.desc}</NewPortMappingDescription>` +
-          '<NewLeaseDuration>0</NewLeaseDuration>';
+          `<NewLeaseDuration>${Number(m.lifetime || 86400)}</NewLeaseDuration>`;
         try {
           await soap(control, service.serviceType, 'AddPortMapping', b);
           mapped.push({ requested: m, success: true });
@@ -272,7 +366,12 @@ async function upnpMap() {
         control,
         mapping_results: mapped,
       });
-      result.success = mapped.length === mappings.length && mapped.every(x => x.success);
+      {
+        const production=mapped.filter(x=>x.requested?.production);
+        const diagnostic=mapped.filter(x=>x.requested?.diagnostic);
+        result.success=production.length>0&&production.every(x=>x.success===true);
+        result.diagnostic_success=diagnostic.length>0&&diagnostic.every(x=>x.success===true);
+      }
       if (result.success) {
         result.location = location;
         result.control = control;
@@ -328,7 +427,7 @@ async function pcpMap() {
       const buf = Buffer.alloc(60);
       buf[0] = 2;
       buf[1] = 1;
-      buf.writeUInt32BE(86400, 4);
+      buf.writeUInt32BE(Number(m.lifetime || 86400), 4);
       ipv4Mapped(host).copy(buf, 8);
       nonce.copy(buf, 24);
       buf[36] = m.proto === 'TCP' ? 6 : 17;
@@ -363,7 +462,12 @@ async function pcpMap() {
         result.mappings.push({ requested: m, success: false, error: e.message });
       }
     }
-    result.success = result.mappings.length === mappings.length && result.mappings.every(x => x.success);
+    {
+      const production=result.mappings.filter(x=>x.requested?.production);
+      const diagnostic=result.mappings.filter(x=>x.requested?.diagnostic);
+      result.success=production.length>0&&production.every(x=>x.success===true);
+      result.diagnostic_success=diagnostic.length>0&&diagnostic.every(x=>x.success===true);
+    }
     const firstIp = result.mappings.find(x => x.external_ip)?.external_ip;
     if (firstIp) result.external_ip = firstIp;
   } finally {
@@ -373,12 +477,31 @@ async function pcpMap() {
 }
 
 async function main() {
+  out.host_forward_preflight=await verifyHostForward();
+  // Crostini probing the Chromebook's own LAN address is not authoritative
+  // proof of ChromeOS host forwarding. Hairpin/self-reflection may be blocked
+  // even when another LAN host or the public WAN path can reach the forwarded
+  // port. Preserve this observation as advisory for DNS scope and continue to
+  // the router + independent external canary.
+  if(out.host_forward_preflight.ready!==true){
+    out.host_forward_preflight.advisory=true;
+    out.host_forward_preflight.authoritative=false;
+    if(scope!=='dns'){
+      out.state='chromeos_host_forward_unreachable';
+      out.error='chromeos_host_forward_unreachable';
+      console.log(JSON.stringify(out,null,2));
+      process.exit(3);
+    }
+  }
+
   const upnp = await upnpMap().catch(e => ({ method: 'UPnP-IGD', success: false, error: e.message }));
   out.attempts.push(upnp);
   if (upnp.success) {
     out.ok = true;
     out.method = upnp.method;
     out.external_ip = upnp.external_ip;
+    out.production_mapping_control_ok = true;
+    out.diagnostic_mapping_control_ok = upnp.diagnostic_success === true;
     console.log(JSON.stringify(out, null, 2));
     return;
   }
@@ -389,6 +512,8 @@ async function main() {
     out.ok = true;
     out.method = natpmp.method;
     out.external_ip = natpmp.external_ip;
+    out.production_mapping_control_ok = true;
+    out.diagnostic_mapping_control_ok = natpmp.diagnostic_success === true;
     console.log(JSON.stringify(out, null, 2));
     return;
   }
@@ -399,8 +524,20 @@ async function main() {
     out.ok = true;
     out.method = pcp.method;
     out.external_ip = pcp.external_ip;
+    out.production_mapping_control_ok = true;
+    out.diagnostic_mapping_control_ok = pcp.diagnostic_success === true;
   }
 
+  out.production_mapping_control_ok = mappings.filter(m=>m.production).every(m=>
+    out.attempts.some(a=>Array.isArray(a.mappings)&&a.mappings.some(x=>
+      x.success===true && x.requested?.external===m.external && x.requested?.internal===m.internal && x.requested?.proto===m.proto
+    ))
+  );
+  out.diagnostic_mapping_control_ok = mappings.filter(m=>m.diagnostic).every(m=>
+    out.attempts.some(a=>Array.isArray(a.mappings)&&a.mappings.some(x=>
+      x.success===true && x.requested?.external===m.external && x.requested?.internal===m.internal && x.requested?.proto===m.proto
+    ))
+  );
   console.log(JSON.stringify(out, null, 2));
   process.exit(out.ok ? 0 : 1);
 }

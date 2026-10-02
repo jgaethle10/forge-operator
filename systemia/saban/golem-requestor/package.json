@@ -1,0 +1,9 @@
+{
+  "name": "evercraft-saban-golem-requestor",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "dependencies": {
+    "@golem-sdk/golem-js": "3.11.0"
+  }
+}

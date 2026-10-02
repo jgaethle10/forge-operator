@@ -2,9 +2,8 @@
 
 Product key: findmypart
 Aliases: Find My Part, Part Passport
-Canonical product: https://findmypart.base44.app/
+Canonical product: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/index.html
 Official MCP Registry: io.github.jgaethle10/findmypart
-Remote MCP: https://findmypart.base44.app/functions/findMyPartMcp
 CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/findmypart/ai-conformance.json
 
@@ -40,6 +39,6 @@ free evidence-aware Part Passport triage plus human-confirmed paid sourcing hunt
 
 ## Universal Evercraft routing
 
-https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Not declared.
 
 Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

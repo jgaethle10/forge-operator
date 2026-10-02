@@ -2,6 +2,10 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import type { FallenTimelineProject } from './timeline.js';
+import {
+  validateNarrativeFilmAdmissionForProject,
+  type NarrativeFilmAdmissionReceipt,
+} from './narrative-film-admission.js';
 import { renderTimelineExport, type TimelineExportReceipt } from './timeline-export.js';
 import { assessStudioMaster } from './master-qc.js';
 
@@ -11,6 +15,8 @@ export type ClipDestination =
   | 'instagram'
   | 'linkedin'
   | 'tiktok';
+
+export type StudioQualityMode='standard'|'narrative_film';
 
 export interface StudioDeliveryRequest {
   schema:'evercraft.fallen.studio-delivery-request.v1';
@@ -25,6 +31,8 @@ export interface StudioDeliveryRequest {
     language?:string;
   };
   sourceApp?:string;
+  qualityMode?:StudioQualityMode;
+  narrativeFilmAdmission?:NarrativeFilmAdmissionReceipt;
 }
 
 export interface ClipDeliveryManifest {
@@ -33,6 +41,7 @@ export interface ClipDeliveryManifest {
   sourceApp:'fallen';
   sourceProjectId:string;
   sourceProjectVersion:number;
+  qualityMode:StudioQualityMode;
   state:'ready_for_clip_intake';
   media:{
     path:string;
@@ -64,12 +73,14 @@ export interface ClipDeliveryManifest {
     continuityDigests:string[];
     renderReceiptPath:string;
     masterQcReceiptPath:string;
+    narrativeFilmAdmissionDigest?:string;
   };
   boundaries:{
     publicationAuthorityGranted:false;
     platformCredentialsConsumed:false;
     platformPublishStateAsserted:false;
     downstreamClipGateRequired:true;
+    narrativeFilmAdmissionRequired:boolean;
   };
   createdAt:string;
 }
@@ -85,6 +96,7 @@ export interface StudioDeliveryReceipt {
   mediaSha256:string;
   manifestSha256:string;
   state:'ready_for_clip_intake';
+  qualityMode:StudioQualityMode;
   publicationAuthorityGranted:false;
 }
 
@@ -133,6 +145,21 @@ function validateRequest(request:StudioDeliveryRequest){
   for(const destination of request.destinations){
     if(!allowed.has(destination)) throw new Error('studio_delivery_destination_invalid:'+destination);
   }
+  const qualityMode=request.qualityMode??'standard';
+  if(qualityMode!=='standard'&&qualityMode!=='narrative_film'){
+    throw new Error('studio_delivery_quality_mode_invalid');
+  }
+  if(qualityMode==='narrative_film'){
+    const validation=validateNarrativeFilmAdmissionForProject({
+      project:request.project,
+      admission:request.narrativeFilmAdmission,
+    });
+    if(validation.status!=='accepted'){
+      throw new Error(
+        'studio_delivery_narrative_film_admission_rejected:'+validation.reasons.join('|')
+      );
+    }
+  }
 }
 
 export function buildClipDeliveryManifest(input:{
@@ -168,6 +195,7 @@ export function buildClipDeliveryManifest(input:{
     sourceApp:'fallen',
     sourceProjectId:project.id,
     sourceProjectVersion:project.version,
+    qualityMode:input.request.qualityMode??'standard',
     state:'ready_for_clip_intake',
     media:{
       path:input.renderReceipt.outputPath,
@@ -194,12 +222,14 @@ export function buildClipDeliveryManifest(input:{
       continuityDigests,
       renderReceiptPath:path.resolve(input.renderReceiptPath),
       masterQcReceiptPath:path.resolve(input.masterQcReceiptPath),
+      narrativeFilmAdmissionDigest:input.request.narrativeFilmAdmission?.admissionDigest,
     },
     boundaries:{
       publicationAuthorityGranted:false,
       platformCredentialsConsumed:false,
       platformPublishStateAsserted:false,
       downstreamClipGateRequired:true,
+      narrativeFilmAdmissionRequired:(input.request.qualityMode??'standard')==='narrative_film',
     },
     createdAt:new Date().toISOString(),
   };
@@ -271,6 +301,7 @@ export function finalizeStudioDelivery(input:{
     mediaSha256:renderReceipt.sha256,
     manifestSha256:hashFile(clipManifestPath),
     state:'ready_for_clip_intake',
+    qualityMode:input.request.qualityMode??'standard',
     publicationAuthorityGranted:false,
   };
 }

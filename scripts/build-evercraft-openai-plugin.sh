@@ -6,51 +6,72 @@ PLUGIN_DIR="$ROOT/plugins/evercraft-fabric"
 OUT_DIR="$ROOT/artifacts"
 OUT="$OUT_DIR/evercraft-openai-plugin.zip"
 
-if [[ ! -f "$PLUGIN_DIR/plugin.json" || ! -f "$PLUGIN_DIR/mcp.json" ]]; then
-  echo "ERROR: Evercraft plugin package is incomplete" >&2
-  exit 2
-fi
+required=(
+  "plugin.json"
+  "mcp.json"
+  ".codex-plugin/plugin.json"
+  ".mcp.json"
+  "assets/evercraft-icon.png"
+  "skills/evercraft-router/SKILL.md"
+)
+
+for rel in "${required[@]}"; do
+  if [[ ! -f "$PLUGIN_DIR/$rel" ]]; then
+    echo "ERROR: Evercraft plugin release is missing $rel" >&2
+    exit 2
+  fi
+done
 
 mkdir -p "$OUT_DIR"
 rm -f "$OUT"
 
-python3 - "$PLUGIN_DIR" "$OUT" <<'PY'
+python3 - "$PLUGIN_DIR" "$OUT" "${required[@]}" <<'PY'
 from pathlib import Path
 import sys, zipfile
 
 root = Path(sys.argv[1]).resolve()
 out = Path(sys.argv[2]).resolve()
+members = sorted(sys.argv[3:])
 
-exclude_names = {'.DS_Store'}
-exclude_suffixes = {'.swp', '.tmp', '.bak'}
-
-with zipfile.ZipFile(out, 'w', compression=zipfile.ZIP_DEFLATED) as zf:
-    for path in sorted(root.rglob('*')):
-        if path.is_dir():
-            continue
-        rel = path.relative_to(root)
-        if any(part in {'.git', '__pycache__'} for part in rel.parts):
-            continue
-        if path.name in exclude_names or path.suffix in exclude_suffixes:
-            continue
-        zf.write(path, rel.as_posix())
+with zipfile.ZipFile(out, 'w', compression=zipfile.ZIP_DEFLATED, compresslevel=9) as zf:
+    for rel in members:
+        source = (root / rel).resolve()
+        if root not in source.parents:
+            raise SystemExit(f"ERROR: release member escapes package root: {rel}")
+        data = source.read_bytes()
+        info = zipfile.ZipInfo(rel, date_time=(1980, 1, 1, 0, 0, 0))
+        info.compress_type = zipfile.ZIP_DEFLATED
+        info.external_attr = 0o100644 << 16
+        info.create_system = 3
+        zf.writestr(info, data)
 
 print(out)
 PY
 
 python3 - "$OUT" <<'PY'
-import sys, zipfile, json
-from pathlib import PurePosixPath
+import sys, zipfile, json, re
 archive=sys.argv[1]
+expected={
+    'plugin.json',
+    'mcp.json',
+    '.codex-plugin/plugin.json',
+    '.mcp.json',
+    'assets/evercraft-icon.png',
+    'skills/evercraft-router/SKILL.md',
+}
 with zipfile.ZipFile(archive) as zf:
     names=set(zf.namelist())
-    required={'plugin.json','mcp.json','assets/evercraft-icon.png','skills/evercraft-router/SKILL.md'}
-    missing=sorted(required-names)
-    if missing:
-        raise SystemExit("ERROR: release ZIP missing: "+", ".join(missing))
+    if names != expected:
+        missing=sorted(expected-names)
+        extra=sorted(names-expected)
+        raise SystemExit(f"ERROR: release ZIP membership mismatch missing={missing} extra={extra}")
     plugin=json.loads(zf.read('plugin.json'))
+    compatibility=json.loads(zf.read('.codex-plugin/plugin.json'))
     mcp=json.loads(zf.read('mcp.json'))
     iface=plugin['extensions']['com.openai']['interface']
+    assert re.fullmatch(r'\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?', plugin['version'])
+    assert compatibility['version']==plugin['version']
+    assert iface['category']=='Business & Operations'
     assert iface['logo']=='./assets/evercraft-icon.png'
     assert iface['composerIcon']=='./assets/evercraft-icon.png'
     url=mcp['mcpServers']['evercraft']['url']

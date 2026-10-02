@@ -228,3 +228,21 @@ Explicit environment or CLI source lists extend a profile. An explicit NWS area 
 The first bundled profile is `yakima-basin-wa`. It scopes NWS alerts to Washington and configures verified USGS continuous-water locations at Umtanum, Naches near Yakima, Union Gap, and Kiona. Its NWPS gauge list is intentionally empty until those gauge-to-place mappings are verified directly from NOAA's gauge endpoint.
 
 Every resident cycle records the resolved deployment profile in `latest.json`, so operators and KAIDANCE can audit what sensing footprint was active when a signal was produced.
+
+
+## Live regional profile canary
+
+Sentinel has a separate live-source canary for regional profiles. The canary is deliberately outside the incident engine: it checks whether configured authoritative sources are reachable, whether returned observations remain within privacy/provenance boundaries, and whether continuously expected sensor observations are fresh enough to prove the profile is connected to the real world.
+
+The bundled GitHub workflow runs `yakima-basin-wa` every 15 minutes and on relevant pull requests/pushes. It currently checks:
+
+- Washington NWS active-alert reachability
+- USGS real-time earthquake feed reachability
+- configured Yakima Basin USGS Water Data sensors
+- NOAA/NWPS gauges when a profile contains verified gauge IDs
+
+A healthy source may return zero alerts or zero earthquakes. That is not a failure. A configured continuous-water profile must return at least one fresh observation because its purpose is to prove live physical-world connectivity.
+
+The canary never calls Sentinel incident ingestion. It cannot create an incident, raise incident confidence, infer hostile intent, or authorize intervention.
+
+Each run writes a receipt plus a bounded 96-run history containing consecutive-pass count and last-failure time. Those receipts are uptime evidence for the sensing path, not proof that Sentinel is a permanently deployed field system.

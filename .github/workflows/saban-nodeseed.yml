@@ -1,11 +1,26 @@
 name: Saban NodeSeed discovery
 
 on:
+  workflow_dispatch:
   pull_request:
     paths:
       - 'systemia/network/**'
       - 'systemia/compute/**'
       - 'systemia/saban/**'
+      - 'tests/saban-capacity-autonomy.test.mjs'
+      - 'tests/saban-capacity-headroom.test.mjs'
+      - 'tests/saban-capacity-resident.test.mjs'
+      - 'tests/saban-microseed-calibration.test.mjs'
+      - 'tests/saban-capacity-demand-forecast.test.mjs'
+      - 'tests/saban-ambient-demand-radar.test.mjs'
+      - 'tests/saban-authority-api.test.mjs'
+      - 'tests/nodeseed-registered-worker.test.mjs'
+      - 'tests/saban-nodeseed-intent-execution.test.mjs'
+      - 'tests/saban-nodeseed-hardware-profile.test.mjs'
+      - 'tests/saban-yard-intent-drainer.test.mjs'
+      - 'tests/saban-nodeseed-automatic-failover.test.mjs'
+      - 'tests/saban-nodeseed-unified-capacity.test.mjs'
+      - 'tests/saban-heterogeneous-fabric-planner.test.mjs'
       - '.github/workflows/saban-nodeseed.yml'
   push:
     branches:
@@ -14,6 +29,20 @@ on:
       - 'systemia/network/**'
       - 'systemia/compute/**'
       - 'systemia/saban/**'
+      - 'tests/nodeseed-registered-worker.test.mjs'
+      - 'tests/saban-authority-api.test.mjs'
+      - 'tests/saban-capacity-autonomy.test.mjs'
+      - 'tests/saban-capacity-demand-forecast.test.mjs'
+      - 'tests/saban-ambient-demand-radar.test.mjs'
+      - 'tests/saban-capacity-headroom.test.mjs'
+      - 'tests/saban-capacity-resident.test.mjs'
+      - 'tests/saban-microseed-calibration.test.mjs'
+      - 'tests/saban-heterogeneous-fabric-planner.test.mjs'
+      - 'tests/saban-nodeseed-automatic-failover.test.mjs'
+      - 'tests/saban-nodeseed-intent-execution.test.mjs'
+      - 'tests/saban-nodeseed-hardware-profile.test.mjs'
+      - 'tests/saban-nodeseed-unified-capacity.test.mjs'
+      - 'tests/saban-yard-intent-drainer.test.mjs'
       - '.github/workflows/saban-nodeseed.yml'
 
 jobs:
@@ -30,3 +59,6 @@ jobs:
 
       - name: Execute registered Saban software on NodeSeed
         run: node systemia/network/saban-multiplier-nodeseed-proof.mjs
+
+      - name: Prove unified Saban capacity market
+        run: node --test tests/nodeseed-registered-worker.test.mjs tests/saban-ambient-demand-radar.test.mjs tests/saban-authority-api.test.mjs tests/saban-capacity-autonomy.test.mjs tests/saban-capacity-demand-forecast.test.mjs tests/saban-capacity-headroom.test.mjs tests/saban-capacity-resident.test.mjs tests/saban-microseed-calibration.test.mjs tests/saban-heterogeneous-fabric-planner.test.mjs tests/saban-nodeseed-automatic-failover.test.mjs tests/saban-nodeseed-hardware-profile.test.mjs tests/saban-nodeseed-intent-execution.test.mjs tests/saban-nodeseed-unified-capacity.test.mjs tests/saban-yard-intent-drainer.test.mjs

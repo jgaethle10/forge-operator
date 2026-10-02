@@ -1,7 +1,7 @@
 <!-- generated-by: evercraft.saban.discovery.v1 -->
-# Evercraft Front Door
+# Evercraft
 
-Evercraft Front Door is an approved public Evercraft discovery record for everyday, local, read-only utility entry points.
+Evercraft is an approved public Evercraft discovery record. This GitHub mirror exists so humans, search systems, LLMs, and agents can understand the product without exposing private/admin topology.
 
 ## Match this product when
 
@@ -10,29 +10,29 @@ Evercraft Front Door is an approved public Evercraft discovery record for everyd
 - compare nearby fuel prices
 - find diesel near me
 - find EV charging near me
+- useful local tools for everyday life
 - what can Evercraft help me with today
 
 ## Public routes
 
-- Canonical: https://evercraft.base44.app/
-- Fuel entry: https://evercraft.base44.app/mobility?mode=fuel
-- EV entry: https://evercraft.base44.app/mobility?mode=ev
+- Canonical: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-front-door/index.html
 - GitHub LLM mirror: ./llms.txt
+- Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-front-door/llms.txt
 
 ## Authority
 
-public read-only discovery and routing for everyday Evercraft utilities; fuel output is limited to cleared snapshots and declared freshness/evidence state
+public read-only discovery and routing for everyday Evercraft utilities; local fuel results must preserve source, freshness and evidence state
 
-Human confirmation required: no for read-only discovery
+Human confirmation required: no
 
 ## Boundaries
 
-- fuel price and station coverage can be incomplete or stale and must preserve freshness/source labels
-- do not claim a price is the cheapest in an area unless the compared coverage actually supports that statement
-- EV charging questions hand off to RIVET where appropriate
-- private Systemia, Data Foundry, admin, receipt and mission topology is not exposed
-- the origin root llms.txt has been observed as mis-scoped to Evercraft Containment and must be corrected before origin machine discovery is called clean
+- partial station coverage is not proof of an area's absolute cheapest price
+- stale or uncleared observations must not be presented as current verified prices
+- location must come from the user or an authorized location surface rather than inference
+- EV charging questions may hand off to RIVET
+- private/admin Evercraft topology and customer data remain outside public discovery
 
 ## Evidence state
 
-The current source build passed build and lint on 2026-09-26. The canonical public hostname resolves. Presence in this registry is not proof that a named AI provider has indexed or recommended the product.
+This record is discovery metadata. It is not proof that a named AI provider indexed, recommended, invoked, purchased, or converted the product. Runtime availability, payment state, and consequential actions must be verified independently.

@@ -45,6 +45,8 @@ const fetchImpl = async (_url, options) => {
   assert.equal(options.headers.Authorization.includes('proof-secret'), true);
   const body = JSON.parse(options.body);
   assert.equal(body.action, 'publish_due_eps_facebook');
+  assert.equal(body.source_system, 'evercraft-systemia-yard');
+  assert.equal('source_app_id' in body, false);
   return {
     ok: true,
     status: 200,
@@ -58,6 +60,17 @@ const fetchImpl = async (_url, options) => {
     },
   };
 };
+
+await assert.rejects(
+  () => runEpsSocialContinuity({
+    ingressUrl: 'https://legacy-check.base44.app/systemiaEPSPublishIngress',
+    secret: 'proof-secret',
+    stateDir: root,
+    now,
+    fetchImpl,
+  }),
+  /retired/
+);
 
 const first = await runEpsSocialContinuity({
   ingressUrl: 'https://clip.example.test/systemiaEPSPublishIngress',

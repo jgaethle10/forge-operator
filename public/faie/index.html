@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>FAIE | Evidence for the physical world</title>
+  <meta name="description" content="FAIE is Evercraft's evidence-first agriculture, land, water, production and resilience investigation engine.">
+  <style>
+    :root{
+      color-scheme:dark;
+      --bg:#09100d;--panel:#101914;--panel2:#142019;--line:#28382f;
+      --text:#f1f0e9;--muted:#aebbb3;--soft:#7e9185;--leaf:#9dc597;
+      --gold:#d3b678;--water:#87b9c8;--warn:#ddb06f;--bad:#d98d86;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:
+      radial-gradient(circle at 10% -10%,rgba(102,148,112,.18),transparent 34rem),
+      linear-gradient(180deg,#07100c,#0a120e 65%,#0b130f);color:var(--text);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    .shell{width:min(1180px,calc(100% - 32px));margin:auto}
+    header{padding:34px 0 26px;border-bottom:1px solid var(--line)}
+    .eyebrow{letter-spacing:.16em;text-transform:uppercase;font-size:.72rem;color:var(--leaf);font-weight:850}
+    h1{font-family:Georgia,"Times New Roman",serif;font-size:clamp(3rem,8vw,6.6rem);font-weight:500;
+      letter-spacing:-.06em;line-height:.9;margin:.18em 0 .14em}
+    .lede{max-width:850px;color:#d7ddd8;font-size:clamp(1rem,2vw,1.24rem);line-height:1.65}
+    .statusbar{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+    .pill,.tag{border:1px solid var(--line);border-radius:999px;background:#0c1510;color:var(--muted)}
+    .pill{padding:8px 11px;font-size:.8rem}.pill strong{color:var(--text)}
+    main{padding:28px 0 72px}
+    .layout{display:grid;grid-template-columns:.85fr 1.15fr;gap:18px}
+    @media(max-width:900px){.layout{grid-template-columns:1fr}}
+    .panel{background:rgba(16,25,20,.92);border:1px solid var(--line);border-radius:22px;padding:22px;
+      box-shadow:0 24px 80px rgba(0,0,0,.16)}
+    .panel h2{margin:0 0 8px;font-family:Georgia,"Times New Roman",serif;font-size:1.6rem;font-weight:500}
+    .meta{color:var(--muted);font-size:.88rem;line-height:1.55}
+    label{display:block;margin:18px 0 7px;color:#d8ded9;font-size:.84rem;font-weight:760}
+    textarea,input,select{width:100%;border:1px solid var(--line);border-radius:14px;background:#0b130f;color:var(--text);
+      padding:13px 14px;font:inherit;outline:none}
+    textarea{min-height:132px;resize:vertical;line-height:1.5}
+    textarea:focus,input:focus,select:focus{border-color:#59735f;box-shadow:0 0 0 3px rgba(126,161,133,.1)}
+    .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:560px){.two{grid-template-columns:1fr}}
+    button{border:1px solid #728f76;background:#b9d4b7;color:#102016;border-radius:999px;padding:11px 16px;
+      font-weight:850;cursor:pointer;margin-top:18px}
+    button:disabled{opacity:.5;cursor:wait}
+    .boundary{margin-top:16px;border-top:1px solid var(--line);padding-top:14px;color:var(--soft);font-size:.78rem;line-height:1.5}
+    .result-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
+    .confidence{min-width:74px;height:74px;border-radius:18px;border:1px solid var(--line);background:#0c1510;
+      display:grid;place-items:center;color:var(--gold);font-size:1.25rem;font-weight:850}
+    .finding{padding:17px 0;border-top:1px solid var(--line)}.finding:first-of-type{border-top:0}
+    .tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+    .tag{padding:5px 8px;font-size:.67rem;font-weight:850;letter-spacing:.06em;text-transform:uppercase}
+    .tag.verified,.tag.observed{color:var(--leaf);border-color:#3d5f43}
+    .tag.reported{color:var(--warn);border-color:#614f31}.tag.modeled{color:var(--water);border-color:#365965}
+    .finding p{margin:0;line-height:1.55;color:#e1e6e2}.finding small{display:block;margin-top:8px;color:var(--soft)}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}@media(max-width:850px){.grid2{grid-template-columns:1fr}}
+    .signal{padding:13px 0;border-top:1px solid var(--line)}.signal:first-of-type{border-top:0}
+    .signal p{margin:4px 0 0;line-height:1.5;color:#dde3de}
+    .quiet{padding:24px 8px;color:var(--muted)}
+    .list{margin:10px 0 0;padding-left:20px;color:#d7ddd8}.list li{margin:7px 0;line-height:1.5}
+    .error{color:var(--bad)}
+    footer{border-top:1px solid var(--line);padding:28px 0 52px;color:var(--soft);font-size:.84rem;line-height:1.6}
+    a{color:var(--water)}
+  </style>
+</head>
+<body>
+<header>
+  <div class="shell">
+    <div class="eyebrow">Evercraft · Systemia specialist</div>
+    <h1>FAIE</h1>
+    <div class="lede">Evidence for the physical world. Ask a bounded question about agriculture, land, water, production or resilience and FAIE will show what the current evidence supports, what it does not support, and what still needs to be measured.</div>
+    <div class="statusbar" id="statusbar"><span class="pill">Loading FAIE runtime…</span></div>
+  </div>
+</header>
+
+<main class="shell">
+  <div class="layout">
+    <section class="panel">
+      <h2>Start an investigation</h2>
+      <div class="meta">Keep the question specific. FAIE works best when the geography and production context are explicit.</div>
+
+      <form id="form">
+        <label for="question">Question</label>
+        <textarea id="question" maxlength="1200" placeholder="What current evidence could affect irrigation and orchard resilience in the Yakima Valley?"></textarea>
+
+        <div class="two">
+          <div>
+            <label for="region">Region key</label>
+            <input id="region" placeholder="yakima-wa">
+          </div>
+          <div>
+            <label for="crop">Crop or production type</label>
+            <input id="crop" placeholder="apples">
+          </div>
+        </div>
+
+        <div class="two">
+          <div>
+            <label for="water">Water source or dependency</label>
+            <input id="water" placeholder="Yakima River / irrigation district">
+          </div>
+          <div>
+            <label for="horizon">Evidence horizon</label>
+            <select id="horizon">
+              <option value="7">7 days</option>
+              <option value="30">30 days</option>
+              <option value="90" selected>90 days</option>
+              <option value="365">1 year</option>
+            </select>
+          </div>
+        </div>
+
+        <button id="run" type="submit">Investigate evidence</button>
+      </form>
+
+      <div class="boundary">FAIE is evidence support, not autonomous farm control or regulatory authority. Modeled, reported, observed and verified evidence stay visibly separate.</div>
+    </section>
+
+    <section class="panel">
+      <div id="result">
+        <div class="quiet">Run an investigation to build an evidence packet.</div>
+      </div>
+    </section>
+  </div>
+
+  <div class="grid2">
+    <section class="panel">
+      <h2>Current signal field</h2>
+      <div class="meta">Newest FAIE-relevant evidence currently held by the owned runtime.</div>
+      <div id="signals" style="margin-top:16px"></div>
+    </section>
+
+    <section class="panel">
+      <h2>How FAIE thinks</h2>
+      <div class="meta">The engine rewards source quality, recency, relevance and independent corroboration. It does not turn a sparse feed into fake certainty.</div>
+      <ul class="list">
+        <li>Observed and verified evidence stay distinct from reported and modeled material.</li>
+        <li>Unknowns are returned explicitly instead of being filled with guesses.</li>
+        <li>Source-family diversity is counted so duplicate reporting does not masquerade as corroboration.</li>
+        <li>Public previews are ephemeral. Persisted investigations and exports stay behind the internal workspace boundary.</li>
+      </ul>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="shell">FAIE is part of the Evercraft/Systemia evidence fabric. A finding is a bounded evidence interpretation, not a causal claim, forecast guarantee or instruction to take a consequential action.</div>
+</footer>
+
+<script>
+const esc = (value) => String(value == null ? '' : value).replace(/[&<>"']/g, (ch) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+const fmt = (value) => value ? new Date(value).toLocaleString(undefined,{dateStyle:'medium',timeStyle:'short'}) : 'Unknown';
+const cls = (value) => esc(String(value || '').toLowerCase());
+
+function renderResult(inv) {
+  const el = document.getElementById('result');
+  const findings = Array.isArray(inv.findings) ? inv.findings : [];
+  const unknowns = Array.isArray(inv.unknowns) ? inv.unknowns : [];
+  let html = '<div class="result-head"><div><h2>Investigation</h2><div class="meta">' + esc(inv.summary) + '</div></div><div class="confidence">' + Math.round((Number(inv.confidence)||0)*100) + '%</div></div>';
+  html += '<div class="meta" style="margin-top:12px">Evidence coverage score, not event probability. Public investigations are ephemeral previews and are not added to the shared investigation archive.</div>';
+
+  if (findings.length) {
+    html += '<div style="margin-top:18px">';
+    findings.forEach((finding) => {
+      html += '<article class="finding">';
+      html += '<div class="tags"><span class="tag ' + cls(finding.evidence_state) + '">' + esc(finding.evidence_state) + '</span>';
+      (finding.dimensions || []).slice(0,4).forEach((tag) => { html += '<span class="tag">' + esc(tag) + '</span>'; });
+      html += '</div><p>' + esc(finding.summary) + '</p>';
+      html += '<small>' + esc(finding.source_family) + ' · observed ' + esc(fmt(finding.observed_at)) + ' · relevance ' + esc(finding.relevance_score) + ' · signal ' + esc(finding.signal_score) + '</small>';
+      html += '</article>';
+    });
+    html += '</div>';
+  } else {
+    html += '<div class="quiet">No evidence currently clears the relevance gate for this scope.</div>';
+  }
+
+  if (unknowns.length) {
+    html += '<h2 style="margin-top:22px">Unknowns</h2><ul class="list">';
+    unknowns.forEach((item) => { html += '<li>' + esc(item) + '</li>'; });
+    html += '</ul>';
+  }
+  el.innerHTML = html;
+}
+
+async function loadState() {
+  const statusbar = document.getElementById('statusbar');
+  const signalsEl = document.getElementById('signals');
+  try {
+    const [healthRes, signalsRes] = await Promise.all([
+      fetch('/api/faie/health',{cache:'no-store'}),
+      fetch('/api/faie/signals?limit=12',{cache:'no-store'})
+    ]);
+    const health = await healthRes.json();
+    const state = await signalsRes.json();
+
+    const sources = health.official_collectors || {};
+    const sourceLabel = sources.enabled === false
+      ? 'OFF'
+      : sources.configured_source_count
+        ? String(sources.healthy_source_count || 0) + '/' + String(sources.configured_source_count) + ' healthy'
+        : sources.nws_enabled
+          ? 'NWS ready'
+          : 'IDLE';
+    statusbar.innerHTML = [
+      ['Resident', health.resident ? 'ON' : 'OFF'],
+      ['Signals', health.signal_count || 0],
+      ['Official feeds', sourceLabel],
+      ['Profile', sources.region_profile_id || 'GLOBAL'],
+      ['Radar bridge', health.radar_bridge ? 'CONNECTED' : 'IDLE']
+    ].map((row) => '<span class="pill">' + esc(row[0]) + ': <strong>' + esc(row[1]) + '</strong></span>').join('');
+
+    const rows = Array.isArray(state.signals) ? state.signals : [];
+    signalsEl.innerHTML = rows.length ? rows.map((signal) =>
+      '<article class="signal"><div class="tags"><span class="tag ' + cls(signal.evidence_state) + '">' + esc(signal.evidence_state) + '</span><span class="tag">' + esc((signal.dimensions || []).slice(0,2).join(' · ')) + '</span></div><p>' + esc(signal.summary) + '</p><div class="meta">' + esc(signal.source_family) + ' · ' + esc(fmt(signal.observed_at)) + '</div></article>'
+    ).join('') : '<div class="quiet">FAIE is running, but no relevant signals have been admitted yet.</div>';
+  } catch (error) {
+    statusbar.innerHTML = '<span class="pill error">FAIE API unavailable</span>';
+    signalsEl.innerHTML = '<div class="quiet error">' + esc(error && error.message ? error.message : error) + '</div>';
+  }
+}
+
+document.getElementById('form').addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const button = document.getElementById('run');
+  const question = document.getElementById('question').value.trim();
+  const region = document.getElementById('region').value.trim();
+  const crop = document.getElementById('crop').value.trim();
+  const waterSource = document.getElementById('water').value.trim();
+  const horizonDays = Number(document.getElementById('horizon').value) || 90;
+
+  if (!question) return;
+  button.disabled = true;
+  button.textContent = 'Investigating…';
+  document.getElementById('result').innerHTML = '<div class="quiet">Building a bounded evidence packet…</div>';
+
+  try {
+    const response = await fetch('/api/faie/investigate', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        question,
+        region_keys:region ? [region] : [],
+        crop:crop || undefined,
+        water_source:waterSource || undefined,
+        horizon_days:horizonDays
+      })
+    });
+    const payload = await response.json();
+    if (!response.ok) throw new Error(payload.error || 'Investigation failed.');
+    renderResult(payload);
+    await loadState();
+  } catch (error) {
+    document.getElementById('result').innerHTML = '<div class="quiet error">' + esc(error && error.message ? error.message : error) + '</div>';
+  } finally {
+    button.disabled = false;
+    button.textContent = 'Investigate evidence';
+  }
+});
+
+loadState();
+setInterval(loadState, 60000);
+</script>
+</body>
+</html>

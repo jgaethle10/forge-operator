@@ -3,10 +3,10 @@
   "@graph": [
     {
       "@type": "Service",
-      "@id": "https://faie.base44.app/functions/faieAgentGateway?view=docs#evercraft-capability",
+      "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/faie-signal-brief-v1/index.html#evercraft-capability",
       "name": "FAIE Evidence-First Signal Brief",
       "description": "A buyer has one bounded agriculture, land, water, production or resilience question and needs a sourced evidence-first investigation.",
-      "url": "https://faie.base44.app/functions/faieAgentGateway?view=docs",
+      "url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/faie-signal-brief-v1/index.html",
       "provider": {
         "@type": "Organization",
         "name": "Evercraft LLC",
@@ -20,7 +20,7 @@
       "name": "FAIE Evidence-First Signal Brief | Evercraft capability",
       "description": "A buyer has one bounded agriculture, land, water, production or resilience question and needs a sourced evidence-first investigation.",
       "about": {
-        "@id": "https://faie.base44.app/functions/faieAgentGateway?view=docs#evercraft-capability"
+        "@id": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/capabilities/faie-signal-brief-v1/index.html#evercraft-capability"
       }
     }
   ]

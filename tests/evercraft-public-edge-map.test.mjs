@@ -9,6 +9,10 @@ const src=fs.readFileSync(new URL('../scripts/evercraft-public-edge-map.mjs',imp
 test('public edge mapper is credential-free and scoped to Fabric ports',()=>{
   assert.match(src,/18080/);
   assert.match(src,/8443/);
+  assert.match(src,/host_forward_preflight/);
+  assert.match(src,/chromeos_host_forward_unreachable/);
+  assert.match(src,/tcpProbe\(host,18080\)/);
+  assert.match(src,/tcpProbe\(host,8443\)/);
   assert.match(src,/external: 80/);
   assert.match(src,/external: 443/);
   assert.doesNotMatch(src,/password|token|secret/i);

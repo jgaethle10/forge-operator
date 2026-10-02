@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "evercraft",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "One permission-aware front door into the Evercraft/Systemia capability fabric.",
   "author": {
     "name": "Evercraft LLC",
@@ -24,14 +24,14 @@
     "com.openai": {
       "interface": {
         "displayName": "Evercraft",
-        "shortDescription": "Route into Evercraft",
-        "longDescription": "Start from a real problem, discover the smallest truthful Evercraft capability, and route into a verified specialist when one exists. Evercraft preserves evidence and availability boundaries. Discovery does not grant private Systemia access, payment authority, publishing authority, deployment authority, or permission for other consequential actions.",
+        "shortDescription": "Find the right Evercraft path",
+        "longDescription": "Start from a real problem, discover the smallest truthful Evercraft capability, and identify its current public connection path when one exists. Evercraft preserves evidence and availability boundaries. Discovery does not grant private Systemia access, payment authority, publishing authority, deployment authority, or permission for other consequential actions.",
         "developerName": "Evercraft LLC",
-        "category": "Productivity",
+        "category": "Business & Operations",
         "capabilities": [
           "Capability discovery",
-          "Specialist routing",
-          "Safe human handoff"
+          "Specialist connection lookup",
+          "Bounded next-step guidance"
         ],
         "websiteURL": "https://fabric.systemiacommandcenters.com/",
         "supportURL": "https://fabric.systemiacommandcenters.com/support",
@@ -103,7 +103,7 @@
         "demo_recording_url": "https://drive.google.com/file/d/1v6KeJMAjH_Hp7IpjFWqNFTcPT2k9iUd_/view?usp=drivesdk"
       },
       "publication": {
-        "release_notes": "v1.0.2: verified owned Fabric MCP routing, corrected specialist ranking for natural-language discontinued-part requests, added reviewer-accessible walkthrough, and preserved read-only non-transactional discovery boundaries."
+        "release_notes": "v1.0.4: harden ChatGPT/Codex transport compatibility and add first-class SSE edge verification; no expansion of tool authority or transactional behavior."
       }
     }
   }

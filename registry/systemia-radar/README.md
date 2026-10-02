@@ -14,7 +14,7 @@ Systemia Radar is an approved public Evercraft discovery record. This GitHub mir
 
 ## Public routes
 
-- Canonical: https://systemia-radar.base44.app/
+- Canonical: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/systemia-radar/index.html
 - GitHub LLM mirror: ./llms.txt
 
 ## Authority

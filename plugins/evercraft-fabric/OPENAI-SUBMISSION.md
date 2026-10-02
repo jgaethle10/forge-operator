@@ -4,73 +4,54 @@
 
 - Name: **Evercraft**
 - Developer: **Evercraft LLC**
-- Category: **Business**
-- Short description: **Find and use the right Evercraft capability from one connected front door.**
+- Category: **Business & Operations**
+- Short description: **Find the right Evercraft path**
 - Source package: `plugins/evercraft-fabric/`
+- Submission type: **With MCP**
+- MCP: `https://fabric.systemiacommandcenters.com/mcp`
+- Package version: **1.0.4**
 
-Evercraft should be submitted as the umbrella front door. Specialist plugins remain useful direct routes, but the user should not need to know the portfolio before asking for help.
+Evercraft is the umbrella front door. Specialist plugins remain useful direct routes, but users should not need to know the portfolio before asking for help.
 
-## Source readiness
+## Verified source readiness
 
-The package contains:
+The package contains the portable and compatibility manifests, owned remote MCP configuration, problem-first routing skill, directory artwork, public website/support/privacy/terms URLs, exactly five positive and three negative review cases, release notes, and a reviewer-accessible walkthrough recording.
 
-- portable and Codex/OpenAI plugin manifests;
-- a remote MCP configuration;
-- the problem-first Evercraft routing skill;
-- privacy, terms, and support documents;
-- an explicit positive/negative review test matrix;
-- an owned read-only Evercraft Fabric MCP contract;
-- automated tests for package invariants and the owned Fabric runtime.
-
-## Transport truth
-
-Before owned-edge verification, the checked-in plugin configuration may still use the live universal Evercraft Machine Commerce MCP as a compatibility transport.
-
-Evercraft's owned Fabric MCP is implemented by `systemia/mcp/fabric-directory.mjs` and is served by the specialist-handoff runtime at `/mcp`. The Yard and Public Edge canary own the production gate. Once the external canary proves the actual HTTPS origin, `scripts/promote-openai-owned-fabric.mjs` rewrites the portable and compatibility manifests plus both OpenAI submission packets to that exact receipted origin. It also records the source canary digest and disables the legacy transport in submission metadata.
-
-Never replace the plugin MCP URL with a guessed hostname. OpenAI requires a new plugin submission when the MCP origin changes, so owned-origin promotion prepares a new submission artifact rather than representing the already-approved compatibility-origin plugin as interchangeable.
-
-## OpenAI account-side gates
-
-Before claiming public ChatGPT availability, the publishing organization must complete the current OpenAI submission flow:
-
-1. Verify the publisher identity and organization.
-2. Confirm Apps Management write access.
-3. Add the production remote MCP endpoint and complete the OpenAI tool scan.
-4. Verify ownership of the MCP host using OpenAI's required domain challenge.
-5. Supply public website, privacy, terms, and support URLs that are reachable outside GitHub source views if the review requires branded public pages.
-6. Enter at least five positive and three negative test cases. The canonical test matrix is `openai-submission.json`.
-7. Submit for review.
-8. After approval, explicitly publish the plugin.
-9. Independently verify exact-name directory discovery and a brand-blind problem-first query before changing any receipt to `published`.
-
-Submission is not publication. Approval is not publication. Repository packaging is not provider pickup.
-
-## Test-case rule
-
-The owned Fabric endpoint exposes:
+The owned Fabric MCP exposes:
 
 - `match_evercraft_capability`
 - `list_evercraft_capabilities`
 - `get_evercraft_connection_options`
 
-All three are read-only and non-transactional.
+All three are read-only and non-transactional. Their tool definitions declare the OpenAI review annotations for read-only, destructive, idempotent, and open-world behavior.
 
-When the submission is pointed at the owned Fabric endpoint, OpenAI review expectations should reference those exact tool names. If the compatibility Machine Commerce endpoint is submitted before owned-route cutover, use OpenAI's live Scan Tools result to populate the exact current tool names instead of assuming they match the owned Fabric contract.
+The private ChatGPT installation has been exercised against the owned Fabric endpoint, including a natural-language discontinued-part request that routes to FindMyPart without performing an external action.
+
+## Transport truth
+
+The OpenAI package now uses the Evercraft-owned Fabric MCP at `fabric.systemiacommandcenters.com`. The Base44 compatibility transport is inactive for this package. External canary evidence for the owned origin records trusted public HTTPS and independent health verification.
+
+Do not change the submitted MCP origin casually. OpenAI treats MCP configuration as submission metadata, and a server-origin change can require a new submission/update path.
+
+## Account-side publication gates
+
+Source work is no longer the limiting step. Before claiming public ChatGPT availability, complete the authenticated OpenAI Platform flow:
+
+1. Open `https://platform.openai.com/plugins` and upload the canonical v1.0.4 ZIP.
+2. Select the organization/project that will own the listing and the verified **Evercraft LLC** developer identity.
+3. Confirm the submitter has **Apps Management Write** if the submitter is not already an organization owner.
+4. In MCP setup, connect `https://fabric.systemiacommandcenters.com/mcp`.
+5. Serve the exact portal-generated token at the challenge URL the portal provides and complete domain verification.
+6. Run the portal MCP scan and resolve any findings.
+7. Confirm the package imported exactly five positive and three negative review cases, the walkthrough URL, release notes, artwork, and public policy/support URLs.
+8. Submit for review.
+9. After OpenAI approval, explicitly publish the plugin.
+10. Independently verify exact-name directory discovery and at least one brand-blind problem-first invocation before changing any receipt to `published`.
+
+Submission is not publication. Approval is not publication. Private installation is not publication.
 
 ## Publication receipt
 
-A future publication receipt should capture at minimum:
-
-- OpenAI plugin/listing identifier;
-- published listing name and version;
-- submitted MCP origin;
-- verified domain;
-- OpenAI review/approval state;
-- publication timestamp;
-- directory discovery observation;
-- one successful read-only invocation observation;
-- source commit SHA;
-- evidence URLs or screenshots.
+The publication receipt should capture the OpenAI plugin/listing identifier, published version, submitted MCP origin, verified domain, review/approval state, publication timestamp, directory discovery observation, one successful read-only invocation observation, source commit SHA, and supporting evidence references.
 
 Until those fields are observed, public-directory status remains **not proven**.

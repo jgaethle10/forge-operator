@@ -38,6 +38,8 @@ export async function startNodeSeed({
   advertiseHost,
   allocatorToken = '',
   placementLabels = [],
+  failureDomain = '',
+  zeroCost = false,
   remoteOperatorRoots = null,
   remoteOperatorStateDir = '',
   announce = true,
@@ -61,6 +63,8 @@ export async function startNodeSeed({
     allocatorToken,
     deviceIdentity,
     placementLabels,
+    failureDomain,
+    zeroCost,
     remoteOperatorRoots,
     remoteOperatorStateDir,
   });
@@ -93,6 +97,8 @@ export async function startNodeSeed({
     root: resolvedRoot,
     allocation_auth: allocatorToken ? 'bearer' : 'loopback_only',
     placement_labels: compute.placement_labels || placementLabels,
+    failure_domain: String(failureDomain || '') || null,
+    zero_cost: zeroCost === true,
     device_fingerprint: deviceIdentity.fingerprint,
     beacon: announce ? {
       schema: 'evercraft.capacity.beacon.v1',
@@ -144,6 +150,8 @@ if (isCli) {
     placementLabels: parsePlacementLabels(
       arg('--labels', process.env.EVERCRAFT_NODE_LABELS || '')
     ),
+    failureDomain: arg('--failure-domain', process.env.EVERCRAFT_FAILURE_DOMAIN || ''),
+    zeroCost: String(process.env.EVERCRAFT_ZERO_COST || '').toLowerCase() === 'true',
     announce: !has('--no-announce'),
     announceAddress: arg('--announce-address', '239.42.24.42'),
     announcePort: Number(arg('--announce-port', '42424')),

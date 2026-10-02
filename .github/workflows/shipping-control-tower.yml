@@ -1,0 +1,66 @@
+name: Evercraft Shipping Control Tower
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "systemia/shipping/**"
+      - "systemia/organism/universal-product-fulfillment.mjs"
+      - ".github/workflows/shipping-control-tower.yml"
+  push:
+    branches: [main]
+    paths:
+      - "systemia/shipping/**"
+      - "systemia/organism/universal-product-fulfillment.mjs"
+      - ".github/workflows/shipping-control-tower.yml"
+  schedule:
+    - cron: "17 8 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: shipping-control-tower-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  shipping:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run Shipping contract suite
+        run: node --test systemia/shipping/shipping-department.test.mjs
+      - name: Verify fulfillment binds to Shipping v3
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import { buildUniversalFulfillmentPlan } from './systemia/organism/universal-product-fulfillment.mjs';
+
+          const plan = buildUniversalFulfillmentPlan({
+            payment:{
+              public_id:'website-launch-service-v1',
+              provider:'stripe',
+              state:'paid',
+              verified:true,
+              synthetic:false,
+              amount_cents:50000,
+              currency:'usd',
+              order_key:'shipping-ci-order',
+              receipt_key:'shipping-ci-receipt',
+              evidence_ref:'ci:provider-verified-payment',
+              verified_at:'2026-10-01T00:00:00Z'
+            },
+            now:new Date('2026-10-01T00:00:01Z')
+          });
+
+          assert.equal(plan.authorized, true);
+          assert.equal(plan.team.shipping_contract, 'evercraft.shipping.control-tower.v3');
+          const delivery = plan.tasks.find((task) => task.work_key === 'customer-delivery');
+          assert(delivery);
+          assert.match(delivery.completion_rule, /non-superseded Shipping v3 order/);
+          console.log('SHIPPING V3 FULFILLMENT BINDING PASS');
+          NODE

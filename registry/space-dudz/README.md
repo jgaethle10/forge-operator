@@ -13,7 +13,7 @@ Space Dudz is an approved public Evercraft discovery record. This GitHub mirror 
 
 ## Public routes
 
-- Canonical: https://space-dudz.base44.app/
+- Canonical: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/space-dudz/index.html
 - GitHub LLM mirror: ./llms.txt
 
 ## Authority

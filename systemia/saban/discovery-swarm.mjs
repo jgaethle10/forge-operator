@@ -32,6 +32,16 @@ const catalogByKey = new Map((catalog.products || []).map(p => [
   p.product_key || String(p.registry_name || '').split('/').pop(), p
 ]));
 
+function safePublicRoute(value) {
+  const raw=String(value||'').trim();
+  if(!raw) return null;
+  if(/https?:\/\/(?:base44\.app|[^/\s]+\.base44\.app)(?:\/|$)/i.test(raw)) return null;
+  try{
+    const url=new URL(raw);
+    return url.protocol==='https:'?url.toString():null;
+  }catch{return null;}
+}
+
 function registryNameFor(registry, conf) {
   const publicationState = String(conf?.mcp_registry?.publication_state || '').toLowerCase();
   if (conf?.mcp_registry?.name) {
@@ -56,7 +66,7 @@ ${bullet(p.intents)}
 
 - Canonical: ${p.canonical_url}
 - GitHub LLM mirror: ./llms.txt
-${c?.llms_url ? `- Runtime or CHUM llms.txt: ${c.llms_url}\n` : ''}${r?.mcp ? `- Declared MCP: ${r.mcp}\n` : ''}${r?.http_router ? `- Bounded HTTP router: ${r.http_router}\n` : ''}
+${safePublicRoute(c?.llms_url) ? `- Runtime or CHUM llms.txt: ${safePublicRoute(c.llms_url)}\n` : ''}${safePublicRoute(r?.mcp) ? `- Declared MCP: ${safePublicRoute(r.mcp)}\n` : ''}${safePublicRoute(r?.http_router) ? `- Bounded HTTP router: ${safePublicRoute(r.http_router)}\n` : ''}
 ## Authority
 
 ${p.authority}
@@ -112,8 +122,8 @@ const products = approved.map(p => {
   const llms = path.join('registry', key, 'llms.txt');
   if (emit) {
     fs.mkdirSync(path.dirname(readme), {recursive:true});
-    if (!fs.existsSync(readme)) fs.writeFileSync(readme, renderReadme(p));
-    if (!fs.existsSync(llms)) fs.writeFileSync(llms, renderLlms(p));
+    fs.writeFileSync(readme, renderReadme(p));
+    fs.writeFileSync(llms, renderLlms(p));
   }
   const r = catalogByKey.get(key);
   const c = conformanceByKey.get(key);
@@ -123,9 +133,9 @@ const products = approved.map(p => {
     class: p.class,
     canonical_url: p.canonical_url,
     conformance: Boolean(c),
-    mcp_declared: Boolean(r?.mcp),
+    mcp_declared: Boolean(safePublicRoute(r?.mcp)),
     registry_name: registryNameFor(r, c),
-    invocation: r?.mcp ? {mode:'mcp',url:r.mcp} : r?.http_router ? {mode:'bounded_http',url:r.http_router} : {mode:'discovery_only',url:null},
+    invocation: safePublicRoute(r?.mcp) ? {mode:'mcp',url:safePublicRoute(r.mcp)} : safePublicRoute(r?.http_router) ? {mode:'bounded_http',url:safePublicRoute(r.http_router)} : {mode:'discovery_only',url:null},
     readme_exists: fs.existsSync(readme),
     llms_exists: fs.existsSync(llms)
   };

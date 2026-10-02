@@ -136,8 +136,18 @@ function renderSourceList(story) {
   }).join('\n');
 }
 
-function renderArticle(story) {
-  const canonical = `https://journal.evercraft.global/${story.slug}/`;
+function normalizeJournalOrigin(value='https://journal.evercraft.global') {
+  const url = new URL(String(value || 'https://journal.evercraft.global'));
+  if (!['https:','http:'].includes(url.protocol)) throw new Error('Journal public origin must be http(s).');
+  return url.toString().replace(/\/$/,'');
+}
+
+function storyUrl(publicOrigin, slug) {
+  return `${normalizeJournalOrigin(publicOrigin)}/${String(slug || '').replace(/^\/+|\/+$/g,'')}/`;
+}
+
+function renderArticle(story, publicOrigin) {
+  const canonical = storyUrl(publicOrigin, story.slug);
   const description = escapeHtml(story.dek);
   const image = story.hero_visual?.url ? escapeHtml(story.hero_visual.url) : '';
   const jsonLd = {
@@ -218,20 +228,24 @@ function renderIndex(stories) {
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Evercraft Journal</title><meta name="description" content="Evercraft Journal is a source-grounded newsroom for the physical world, technology, science, infrastructure and local life."><meta property="og:site_name" content="Evercraft Journal"><meta property="og:title" content="Evercraft Journal"><meta property="og:description" content="Source-grounded reporting, analysis and education from Evercraft."><style>:root{color-scheme:dark;--bg:#080b0b;--text:#f5f5f2;--muted:#b7bdc5;--gold:#b79a56;--ice:#4fb8ff}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.65}main,header,footer{width:min(960px,calc(100% - 36px));margin:auto}header{padding:48px 0 24px;border-bottom:1px solid #222b2b}h1{font-size:clamp(3rem,8vw,6rem);letter-spacing:-.06em;line-height:.95;margin:0}.sub{color:var(--muted);font-size:1.15rem;max-width:720px}.edition{color:var(--gold);font-weight:800;margin-top:16px}.grid{display:grid;gap:28px;padding:42px 0 80px}article{border-bottom:1px solid #222b2b;padding-bottom:28px}.kicker{color:var(--ice);font-size:.82rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em}h2{font-size:clamp(1.6rem,4vw,2.5rem);line-height:1.08;margin:.35em 0}a{color:inherit;text-decoration:none}a:hover{color:var(--ice)}p,.meta{color:#d7dddd}.meta{font-size:.9rem}footer{border-top:1px solid #222b2b;padding:28px 0 50px;color:var(--muted)}</style></head><body><header><h1>Evercraft Journal</h1><p class="sub">A continuously refreshed, evidence-controlled newsroom built to explain what the world is doing, what changed and what the evidence can actually support.</p><div class="edition">Live edition ${escapeHtml(new Date(latest.published_at).toLocaleDateString('en-US',{timeZone:'America/Los_Angeles',weekday:'long',month:'long',day:'numeric',year:'numeric'}))}</div></header><main class="grid">${cards}</main><footer>Observed, reported, modeled and inferred are kept separate. Uncertainty stays visible.</footer></body></html>`;
 }
 
-function renderFeed(stories) {
-  const items = stories.slice(0, 50).map((story) => `<item><title>${escapeXml(story.title)}</title><link>https://journal.evercraft.global/${escapeXml(story.slug)}/</link><guid>https://journal.evercraft.global/${escapeXml(story.slug)}/</guid><pubDate>${new Date(story.published_at).toUTCString()}</pubDate><description>${escapeXml(story.dek)}</description></item>`).join('');
-  return `<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>Evercraft Journal</title><link>https://journal.evercraft.global/</link><description>Source-grounded reporting, analysis and education from Evercraft.</description>${items}</channel></rss>\n`;
+function renderFeed(stories, publicOrigin) {
+  const origin = normalizeJournalOrigin(publicOrigin);
+  const items = stories.slice(0, 50).map((story) => `<item><title>${escapeXml(story.title)}</title><link>${escapeXml(storyUrl(origin, story.slug))}</link><guid>${escapeXml(storyUrl(origin, story.slug))}</guid><pubDate>${new Date(story.published_at).toUTCString()}</pubDate><description>${escapeXml(story.dek)}</description></item>`).join('');
+  return `<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>Evercraft Journal</title><link>${escapeXml(origin)}/</link><description>Source-grounded reporting, analysis and education from Evercraft.</description>${items}</channel></rss>\n`;
 }
 
-function renderLlms(stories) {
-  const rows = stories.map((story) => `- ${story.title}\n  - URL: https://journal.evercraft.global/${story.slug}/\n  - Published: ${story.published_at}\n  - Desk: ${story.desk}\n  - Evidence: ${story.evidence_state || 'source-grounded'}\n`).join('\n');
+function renderLlms(stories, publicOrigin) {
+  const origin = normalizeJournalOrigin(publicOrigin);
+  const rows = stories.map((story) => `- ${story.title}\n  - URL: ${storyUrl(origin, story.slug)}\n  - Published: ${story.published_at}\n  - Desk: ${story.desk}\n  - Evidence: ${story.evidence_state || 'source-grounded'}\n`).join('\n');
   return `# Evercraft Journal\n\nEvercraft Journal is Evercraft's source-grounded newsroom. Current-state claims preserve source lineage, evidence state, uncertainty and freshness. Classified or access-controlled detail is never inferred from public fragments.\n\n## Current stories\n\n${rows}\n`;
 }
 
 export function publishJournalStories(inputStories, {
   outDir = 'public/journal',
-  now = new Date()
+  now = new Date(),
+  publicOrigin = process.env.EVERCRAFT_JOURNAL_ORIGIN || 'https://journal.evercraft.global'
 } = {}) {
+  const origin = normalizeJournalOrigin(publicOrigin);
   const stories = inputStories.map((story) => validateJournalStory(story, { now }))
     .sort((a, b) => b.published_at.localeCompare(a.published_at));
   if (!stories.length) throw new Error('At least one approved story is required.');
@@ -247,7 +261,7 @@ export function publishJournalStories(inputStories, {
     fs.mkdirSync(productionDir, { recursive: true });
     fs.mkdirSync(receiptDir, { recursive: true });
 
-    const html = renderArticle(story);
+    const html = renderArticle(story, origin);
     const articlePath = path.join(articleDir, 'index.html');
     fs.writeFileSync(articlePath, html);
 
@@ -274,7 +288,7 @@ export function publishJournalStories(inputStories, {
       slug: story.slug,
       published_at: story.published_at,
       built_at: now.toISOString(),
-      canonical_url: `https://journal.evercraft.global/${story.slug}/`,
+      canonical_url: storyUrl(origin, story.slug),
       evidence_state: story.evidence_state,
       source_refs: story.sources.map((source) => source.source_id),
       freshness_expires_at: story.freshness_expires_at,
@@ -302,17 +316,18 @@ export function publishJournalStories(inputStories, {
       published_at: story.published_at,
       updated_at: story.updated_at,
       evidence_state: story.evidence_state,
-      canonical_url: `https://journal.evercraft.global/${story.slug}/`
+      canonical_url: storyUrl(origin, story.slug)
     }))
   }, null, 2) + '\n');
-  fs.writeFileSync(path.join(outDir, 'feed.xml'), renderFeed(stories));
-  fs.writeFileSync(path.join(outDir, 'llms.txt'), renderLlms(stories));
+  fs.writeFileSync(path.join(outDir, 'feed.xml'), renderFeed(stories, origin));
+  fs.writeFileSync(path.join(outDir, 'llms.txt'), renderLlms(stories, origin));
 
   return {
     schema: 'evercraft.journal.publish-run.v1',
     built_at: now.toISOString(),
     story_count: stories.length,
     latest_published_at: stories[0].published_at,
+    public_origin: origin,
     receipts
   };
 }

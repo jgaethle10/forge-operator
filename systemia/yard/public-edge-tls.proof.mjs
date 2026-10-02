@@ -28,6 +28,8 @@ async function startUpstream(){
       service:'tls-proof-upstream',
       path:req.url,
       host:req.headers.host,
+      forwarded_host:req.headers['x-forwarded-host']||null,
+      forwarded_proto:req.headers['x-forwarded-proto']||null,
     });
     res.writeHead(200,{'content-type':'application/json','content-length':Buffer.byteLength(body)});
     res.end(body);
@@ -43,16 +45,19 @@ async function startUpstream(){
   };
 }
 
-async function httpsJsonThroughLocalAddress(origin){
+async function httpsJsonThroughLocalAddress(origin,{hostname=null,path='/health'}={}){
   const target=new URL(origin);
+  const externalHostname=hostname||target.hostname;
+  const port=Number(target.port||443);
+  const hostHeader=port===443?externalHostname:`${externalHostname}:${port}`;
   return await new Promise((resolve,reject)=>{
     const req=https.request({
       hostname:'127.0.0.1',
-      port:Number(target.port||443),
-      path:'/health',
+      port,
+      path,
       method:'GET',
-      servername:target.hostname,
-      headers:{host:target.host},
+      servername:externalHostname,
+      headers:{host:hostHeader},
       rejectUnauthorized:false,
     },(res)=>{
       const chunks=[];
@@ -151,6 +156,8 @@ try{
   assert.equal(proxied.body.ok,true);
   assert.equal(proxied.body.service,'tls-proof-upstream');
   assert.equal(proxied.body.path,'/health');
+  assert.equal(proxied.body.forwarded_proto,'https');
+  assert.equal(proxied.body.forwarded_host,new URL(lease.origin).host);
 
   const released=await fetch(
     edge.controlUrl+'/v1/public-route/leases/'+encodeURIComponent(lease.lease_id)+'/release',
@@ -162,6 +169,52 @@ try{
   ).then(r=>r.json());
   assert.equal(released.released,true);
 
+  const wildcardLease=await fetch(edge.controlUrl+'/v1/public-route/leases',{
+    method:'POST',
+    headers:{'content-type':'application/json'},
+    body:JSON.stringify({
+      deployment_id:'tls-proof-product-router',
+      deployment_receipt_hash:'sha256:'+'b'.repeat(64),
+      instance_id:'tls-proof-product-router-instance',
+      upstream_origin:upstream.origin,
+      requested_hostname:'product-router-check',
+      stable_hostname:true,
+      wildcard_subdomains:true,
+      requested_ttl_ms:120000,
+    }),
+  }).then(async r=>{
+    const body=await r.json();
+    if(!r.ok) throw new Error(JSON.stringify(body));
+    return body;
+  });
+
+  assert.equal(wildcardLease.wildcard_subdomains,true);
+  assert.equal(wildcardLease.wildcard_hostname,'*.'+domain);
+  assert.equal(wildcardLease.hostname,'product-router-check.'+domain);
+
+  const arbitraryProductHost='infinite-classroom.'+domain;
+  const wildcardProxied=await httpsJsonThroughLocalAddress(
+    wildcardLease.origin,
+    {hostname:arbitraryProductHost,path:'/product-proof'}
+  );
+  assert.equal(wildcardProxied.status,200);
+  assert.equal(wildcardProxied.body.path,'/product-proof');
+  assert.equal(wildcardProxied.body.forwarded_proto,'https');
+  assert.equal(
+    wildcardProxied.body.forwarded_host,
+    publicPort===443?arbitraryProductHost:`${arbitraryProductHost}:${publicPort}`
+  );
+
+  const wildcardReleased=await fetch(
+    edge.controlUrl+'/v1/public-route/leases/'+encodeURIComponent(wildcardLease.lease_id)+'/release',
+    {
+      method:'POST',
+      headers:{'content-type':'application/json'},
+      body:JSON.stringify({reason:'proof_complete'})
+    }
+  ).then(r=>r.json());
+  assert.equal(wildcardReleased.released,true);
+
   console.log(JSON.stringify({
     ok:true,
     schema:'evercraft.public-edge.tls-proof.v1',
@@ -169,6 +222,8 @@ try{
     certificate_hostname_match:true,
     https_listener_started:true,
     hostname_routing_proven:true,
+    wildcard_catchall_route_proven:true,
+    original_host_forwarded:true,
     route_lease_release_proven:true,
     private_key_exposed:false,
     external_dns_verified:false,

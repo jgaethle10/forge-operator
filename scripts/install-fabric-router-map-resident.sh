@@ -6,17 +6,20 @@ LAN_HOST=""
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 NODE_BIN="$(command -v node || true)"
 RUN_USER="${SUDO_USER:-$USER}"
+STATE_DIR="/var/lib/evercraft/router-map"
 
 usage() {
   cat <<'EOF'
 Usage:
   scripts/install-fabric-router-map-resident.sh --gateway 192.168.88.1 --host 192.168.88.3
 
-Installs a resident systemd timer that reasserts the two Evercraft Fabric UPnP mappings:
-  WAN 80  -> Chromebook 18080
-  WAN 443 -> Chromebook 8443
+Installs a resident systemd timer that reasserts the Evercraft public-edge mappings:
+  WAN 80/TCP  -> Chromebook 18080/TCP
+  WAN 443/TCP -> Chromebook 8443/TCP
+  WAN 53/TCP  -> Chromebook 1053/TCP
+  WAN 53/UDP  -> Chromebook 1053/UDP
 
-The router-map helper remains hard-scoped to those two mappings.
+The router-map helper remains hard-scoped to these Evercraft ingress mappings.
 EOF
 }
 
@@ -54,11 +57,22 @@ EOF
 sudo chmod 0644 /etc/evercraft/router-map.env
 
 echo "[2/4] Installing refresh helper..."
+RUN_GROUP="$(id -gn "$RUN_USER")"
+sudo install -d -o "$RUN_USER" -g "$RUN_GROUP" -m 0750 "$STATE_DIR"
 sudo tee /usr/local/sbin/evercraft-refresh-router-map >/dev/null <<'EOF'
 #!/usr/bin/env bash
 set -euo pipefail
 source /etc/evercraft/router-map.env
-exec "$EVERCRAFT_ROUTER_NODE"   "$EVERCRAFT_ROUTER_REPO_ROOT/scripts/evercraft-public-edge-map.mjs"   --gateway "$EVERCRAFT_ROUTER_GATEWAY"   --host "$EVERCRAFT_ROUTER_LAN_HOST"
+STATE_DIR="/var/lib/evercraft/router-map"
+mkdir -p "$STATE_DIR"
+tmp="$(mktemp "$STATE_DIR/latest.XXXXXX")"
+set +e
+"$EVERCRAFT_ROUTER_NODE"   "$EVERCRAFT_ROUTER_REPO_ROOT/scripts/evercraft-public-edge-map.mjs"   --gateway "$EVERCRAFT_ROUTER_GATEWAY"   --host "$EVERCRAFT_ROUTER_LAN_HOST" >"$tmp"
+code=$?
+set -e
+chmod 0640 "$tmp"
+mv "$tmp" "$STATE_DIR/latest.json"
+exit "$code"
 EOF
 sudo chmod 0755 /usr/local/sbin/evercraft-refresh-router-map
 
@@ -77,6 +91,7 @@ NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=full
 ProtectHome=read-only
+ReadWritePaths=$STATE_DIR
 EOF
 
 sudo tee /etc/systemd/system/evercraft-router-map.timer >/dev/null <<'EOF'
@@ -100,4 +115,5 @@ sudo systemctl start evercraft-router-map.service
 
 echo
 echo "Resident router-map refresh is active."
+echo "Latest router-map receipt: $STATE_DIR/latest.json"
 systemctl --no-pager --full status evercraft-router-map.timer | sed -n '1,12p'

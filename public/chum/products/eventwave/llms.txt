@@ -1,16 +1,15 @@
 # EventWave
 
 Product key: eventwave
-Canonical product: https://event-wave.base44.app/
+Canonical product: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eventwave/index.html
 Official MCP Registry: io.github.jgaethle10/eventwave
-Remote MCP: https://event-wave.base44.app/functions/eventWaveMcp
 CHUM discovery JSON: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eventwave/ai-discovery.json
 AI conformance: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eventwave/ai-conformance.json
 
 ## Related product layers
 
-- Evercraft Front Door: Local event discovery is part of the wider everyday Evercraft utility graph. · https://evercraft.base44.app/
-- Evercraft Rewards: Approved events may carry event bonuses or local reward participation when separately configured. · https://evercraft-rewards.base44.app/
+- Evercraft Front Door: Local event discovery is part of the wider everyday Evercraft utility graph.
+- Evercraft Rewards: Approved events may carry event bonuses or local reward participation when separately configured.
 - Season & Story: Seasonal family planning can use EventWave as the current-event discovery layer while household plans remain private.
 
 ## Use this capability when the user means
@@ -38,6 +37,6 @@ public event search plus human-confirmed paid labeled promotion
 
 ## Universal Evercraft routing
 
-https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Not declared.
 
 Discovery or matching creates no payment obligation. Any supported checkout preparation requires explicit human confirmation, and checkout creation is not proof of payment.

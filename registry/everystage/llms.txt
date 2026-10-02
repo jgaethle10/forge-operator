@@ -3,10 +3,10 @@
 Provider: Evercraft
 Product key: everystage
 Class: live_event_operations
-Canonical URL: https://every-stage.base44.app/product
+Canonical URL: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/everystage/index.html
 Authority: public product discovery and human-directed pilot intake
 Human confirmation required: yes
-Runtime llms.txt: https://every-stage.base44.app/llms.txt
+Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/everystage/llms.txt
 
 ## Natural-language intents
 - software to run a live event

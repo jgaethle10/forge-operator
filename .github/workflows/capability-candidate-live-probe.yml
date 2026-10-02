@@ -1,0 +1,57 @@
+name: Capability candidate live probe
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "19 * * * *"
+  push:
+    branches: [main]
+    paths:
+      - "systemia/saban/capability-promotion-links.json"
+      - "systemia/saban/capability-candidate-probe.mjs"
+      - "tests/capability-candidate-probe.test.mjs"
+      - ".github/workflows/capability-candidate-live-probe.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: capability-candidate-live-probe
+  cancel-in-progress: true
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Prove probe truth boundaries
+        run: node --test tests/capability-candidate-probe.test.mjs
+
+      - name: Probe source-implemented candidates
+        run: node systemia/saban/capability-candidate-probe.mjs --out artifacts/capability-promotion/candidate-live-probe.json
+
+      - name: Summarize without laundering pending into live
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            echo "## Capability candidate live probe"
+            echo
+            echo "This workflow proves reachability only. It does not publish, bind, charge, or expand authority."
+            echo
+            echo '~~~json'
+            cat artifacts/capability-promotion/candidate-live-probe.json
+            echo '~~~'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: capability-candidate-live-probe
+          path: artifacts/capability-promotion/candidate-live-probe.json
+          if-no-files-found: error
+          retention-days: 30

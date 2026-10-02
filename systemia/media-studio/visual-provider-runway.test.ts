@@ -121,3 +121,53 @@ test('paid generation requires an explicit execution authorization',async()=>{
   });
   await assert.rejects(()=>adapter.execute(baseJob),/runway_paid_generation_not_authorized/);
 });
+
+
+test('Runway endpoint declares one-image identity continuity semantics',()=>{
+  const capability=runwayGen45Endpoint(true).capabilities[0];
+  assert.ok(capability.requirements.includes('reference_identity'));
+  assert.ok(capability.inputModes.includes('image_reference'));
+  assert.equal(capability.identityContinuityViaStartFrame,true);
+  assert.deepEqual(capability.referenceRoles,['identity','start_frame']);
+  assert.deepEqual(capability.locatorKinds,['url','data_uri']);
+  assert.equal(capability.maxReferences,1);
+});
+
+test('Runway can use one canonical identity image as promptImage for a first shot',async()=>{
+  const calls:any[]=[];
+  const fetchImpl=async(url:string,init?:any)=>{
+    calls.push({url,body:init?.body?JSON.parse(init.body):undefined});
+    if(url.endsWith('/v1/image_to_video')) return response(200,{id:'task-identity'});
+    if(url.endsWith('/v1/tasks/task-identity')) return response(200,{id:'task-identity',status:'SUCCEEDED',output:['https://signed.runway/identity.mp4']});
+    return response(200,{},Buffer.from('identity-video'));
+  };
+  const adapter=createRunwayGen45Adapter({
+    apiKey:'test-key',outputDir:fs.mkdtempSync(path.join(os.tmpdir(),'fallen-runway-identity-')),
+    verified:true,commercialRights:'allowed',allowPaidGeneration:true,pollIntervalMs:0,maxPolls:1,
+    fetchImpl:fetchImpl as any,
+  });
+  await adapter.execute({
+    ...baseJob,
+    references:[{
+      id:'eli',kind:'image',role:'identity',sourceRefs:['canon:eli'],
+      locator:{kind:'url',value:'https://assets.example/eli.png'}
+    }],
+    requires:['reference_identity','commercial_rights','provenance_receipt','timing_control']
+  });
+  assert.equal(calls[0].body.promptImage,'https://assets.example/eli.png');
+});
+
+test('Runway refuses multiple prompt identity images before spending',async()=>{
+  const adapter=createRunwayGen45Adapter({
+    apiKey:'test-key',outputDir:os.tmpdir(),verified:true,commercialRights:'allowed',allowPaidGeneration:true,
+    fetchImpl:(async()=>{throw new Error('network should not run');}) as any,
+  });
+  await assert.rejects(()=>adapter.execute({
+    ...baseJob,
+    references:[
+      {id:'eli',kind:'image',role:'identity',sourceRefs:['canon:eli'],locator:{kind:'url',value:'https://assets.example/eli.png'}},
+      {id:'fox',kind:'image',role:'identity',sourceRefs:['canon:fox'],locator:{kind:'url',value:'https://assets.example/fox.png'}}
+    ],
+    requires:['reference_identity','commercial_rights','provenance_receipt','timing_control']
+  }),/runway_gen45_multiple_prompt_images_unsupported/);
+});

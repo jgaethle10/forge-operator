@@ -4,11 +4,19 @@ on:
   pull_request:
     paths:
       - 'systemia/yard/**'
+      - 'systemia/saban/nodeseed-intent-executor.mjs'
+      - 'systemia/saban/nodeseed-execution-intent.mjs'
+      - 'systemia/saban/nodeseed-inventory-ingest.mjs'
+      - 'scripts/install-yard-saban-intent-drainer.sh'
+      - 'tests/saban-yard-intent-drainer.test.mjs'
+      - 'tests/saban-nodeseed-automatic-failover.test.mjs'
       - 'systemia/compute/**'
       - 'systemia/network/**'
       - 'systemia/mcp/**'
       - 'public/chum/capabilities.json'
       - 'tests/evercraft-fabric-runtime.test.mjs'
+      - 'tests/public-edge-ingress-watch.test.mjs'
+      - 'tests/network-observer-ingress-diagnosis.test.mjs'
       - 'scripts/update-fabric-owned-edge.sh'
       - 'scripts/install-fabric-self-update.sh'
       - 'systemia/core/bootstrap/**'
@@ -18,11 +26,19 @@ on:
       - main
     paths:
       - 'systemia/yard/**'
+      - 'systemia/saban/nodeseed-intent-executor.mjs'
+      - 'systemia/saban/nodeseed-execution-intent.mjs'
+      - 'systemia/saban/nodeseed-inventory-ingest.mjs'
+      - 'scripts/install-yard-saban-intent-drainer.sh'
+      - 'tests/saban-yard-intent-drainer.test.mjs'
+      - 'tests/saban-nodeseed-automatic-failover.test.mjs'
       - 'systemia/compute/**'
       - 'systemia/network/**'
       - 'systemia/mcp/**'
       - 'public/chum/capabilities.json'
       - 'tests/evercraft-fabric-runtime.test.mjs'
+      - 'tests/public-edge-ingress-watch.test.mjs'
+      - 'tests/network-observer-ingress-diagnosis.test.mjs'
       - 'scripts/update-fabric-owned-edge.sh'
       - 'scripts/install-fabric-self-update.sh'
       - 'systemia/core/bootstrap/**'
@@ -53,6 +69,10 @@ jobs:
         run: node systemia/yard/public-edge-specialist.proof.mjs
       - name: Prove wildcard TLS routing on Evercraft public edge
         run: node systemia/yard/public-edge-tls.proof.mjs
+      - name: Prove direct-ingress diagnosis and relay preference
+        run: npm run test:public-edge-ingress
+      - name: Prove node-side ChromeOS/router boundary diagnosis
+        run: npm run test:network-observer-ingress
       - name: Prove persistent public edge controller lifecycle
         run: node systemia/yard/public-edge-controller.proof.mjs
       - name: Prove automatic public edge activation
@@ -63,3 +83,5 @@ jobs:
         run: node systemia/yard/public-edge-private-yard-authority.proof.mjs
       - name: Prove authenticated field enrollment packet
         run: node systemia/yard/field-enrollment-packet.proof.mjs
+      - name: Prove Yard Saban resident execution bridge
+        run: node --test tests/saban-yard-intent-drainer.test.mjs tests/saban-nodeseed-automatic-failover.test.mjs

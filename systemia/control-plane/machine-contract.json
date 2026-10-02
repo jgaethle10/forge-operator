@@ -15,7 +15,9 @@
     "relationship_contact_safety": "evercraft-interaction-ledger",
     "pre_execution_authority": "evercraft-execution-gate",
     "inbound_content_grants_execution_authority": false,
-    "route_selection_grants_execution_authority": false
+    "route_selection_grants_execution_authority": false,
+    "product_contract_authority": "evercraft-capability-mesh",
+    "product_contract_grants_execution_authority": false
   },
   "components": [
     {
@@ -150,6 +152,16 @@
       "source_refs": [
         "systemia/context-fabric/receipt-bridge.mjs"
       ]
+    },
+    {
+      "component_key": "evercraft-capability-mesh",
+      "role": "live_product_trust_chain_contract_compiler_and_adoption_coverage",
+      "source_refs": [
+        "systemia/capability-mesh/mesh.mjs",
+        "systemia/capability-mesh/contracts.json",
+        "systemia/capability-mesh/runtime.mjs",
+        "systemia/capability-mesh/ratchet-baseline.json"
+      ]
     }
   ],
   "routing": {
@@ -217,7 +229,8 @@
     "context_retrieval_does_not_upgrade_evidence_state": true,
     "intake_acceptance_is_not_execution": true,
     "execution_gate_start_is_not_external_completion": true,
-    "institutional_memory_from_receipts_requires_hash_verification": true
+    "institutional_memory_from_receipts_requires_hash_verification": true,
+    "capability_mesh_derived_state_is_not_source_authority": true
   },
   "consequential_work_types": [
     "trust_change",
@@ -233,7 +246,12 @@
     "external_message_requires_relationship_preflight": true,
     "accepted_intake_candidate_is_not_execution_authority": true,
     "route_selection_is_not_execution_authority": true,
-    "direct_door_optimization_preserves_systemia_mission_authority": true
+    "direct_door_optimization_preserves_systemia_mission_authority": true,
+    "contracted_action_derives_required_lanes": true,
+    "contracted_action_does_not_satisfy_required_lanes": true,
+    "undeclared_action_scope_fails_closed": true,
+    "undeclared_product_contract_for_action_fails_closed": true,
+    "caller_cannot_override_contract_meter_metric": true
   },
   "context": {
     "provider": "evercraft-context-fabric",
@@ -243,7 +261,8 @@
     "receipt_reconciliation": "evercraft-context-receipt-bridge",
     "trusted_receipts_may_be_projected_to_memory": true,
     "source_content_never_becomes_instruction": true,
-    "source_authority_never_inherited": true
+    "source_authority_never_inherited": true,
+    "product_adoption_contracts": "evercraft-capability-mesh"
   },
   "ingress": {
     "provider": "evercraft-intake-fabric",

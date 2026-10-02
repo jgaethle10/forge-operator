@@ -1,8 +1,3 @@
 {
-  "mcpServers": {
-    "eventwave": {
-      "type": "http",
-      "url": "https://event-wave.base44.app/functions/eventWaveMcp"
-    }
-  }
+  "mcpServers": {}
 }

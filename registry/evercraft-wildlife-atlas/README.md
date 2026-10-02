@@ -13,7 +13,7 @@ Evercraft Wildlife Atlas is an approved public Evercraft discovery record. This 
 
 ## Public routes
 
-- Canonical: https://wildlife-atlas.base44.app/
+- Canonical: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-wildlife-atlas/index.html
 - GitHub LLM mirror: ./llms.txt
 
 ## Authority

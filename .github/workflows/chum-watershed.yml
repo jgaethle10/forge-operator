@@ -380,11 +380,23 @@ jobs:
       - name: Mint trusted payment-export identity
         if: always() && github.ref == 'refs/heads/main'
         shell: bash
+        env:
+          CONFIGURED_EXPORT_URL: ${{ vars.CHUM_ATTRIBUTION_EXPORT_URL }}
         run: |
           set -euo pipefail
+          if [ -z "${CONFIGURED_EXPORT_URL:-}" ]; then
+            echo "No verified Evercraft-owned payment export is configured; Money Radar will run without a remote export."
+            exit 0
+          fi
           node <<'NODE'
           const fs = require('fs');
           (async () => {
+            const exportUrl = new URL(String(process.env.CONFIGURED_EXPORT_URL || ''));
+            const host = exportUrl.hostname.toLowerCase();
+            if (exportUrl.protocol !== 'https:') throw new Error('Payment export must use HTTPS.');
+            if (host === 'base44.app' || host.endsWith('.base44.app')) {
+              throw new Error('Retired provider payment export is forbidden.');
+            }
             const requestUrl = process.env.ACTIONS_ID_TOKEN_REQUEST_URL;
             const requestToken = process.env.ACTIONS_ID_TOKEN_REQUEST_TOKEN;
             if (!requestUrl || !requestToken) throw new Error('GitHub OIDC request environment is unavailable.');
@@ -398,7 +410,7 @@ jobs:
             if (!body?.value) throw new Error('GitHub OIDC token response did not contain a token.');
             process.stdout.write('::add-mask::' + body.value + '\n');
             fs.appendFileSync(process.env.GITHUB_ENV, [
-              'CHUM_ATTRIBUTION_EXPORT_URL=https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommercePaymentExport',
+              'CHUM_ATTRIBUTION_EXPORT_URL=' + exportUrl.toString(),
               'CHUM_ATTRIBUTION_EXPORT_TOKEN=' + body.value
             ].join('\n') + '\n');
           })().catch((error) => {

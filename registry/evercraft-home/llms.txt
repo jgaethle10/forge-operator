@@ -3,10 +3,10 @@
 Provider: Evercraft
 Product key: evercraft-home
 Class: privacy_first_hometown_social_memory
-Canonical discovery URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-home
-Origin app ID: 6aa97b379f8f8ae12bdd230f
-Authority: public discovery for reviewed community-memory surfaces; private social graph remains account-bound
-Human confirmation required: yes for contributions, membership and reconnection actions
+Canonical URL: https://github.com/jgaethle10/forge-operator/tree/main/registry/evercraft-home
+Authority: public discovery for reviewed community-memory surfaces; personal Home, room membership, reconnection state and private memories remain account-bound
+Human confirmation required: yes
+Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/evercraft-home/llms.txt
 
 ## Natural-language intents
 - preserve hometown memories
@@ -19,12 +19,13 @@ Human confirmation required: yes for contributions, membership and reconnection 
 
 ## Boundaries
 - no public people directory or manufactured social activity
-- Porch contributions are review-gated and consent-gated
-- room membership and reconnection choices are private
+- Porch contributions remain private until reviewed and consented for public display
+- room membership and reconnection choices are private by default
 - personal memories stay private
-- living-person identity claims are not inferred from community evidence
-- sponsorship does not buy editorial or evidence treatment
+- unclaimed living people are not converted into public biographies
+- sponsorship cannot buy archival inclusion, favorable evidence labels, search treatment, moderation outcomes or private identities
+- public runtime hostname remains unresolved in the current discovery inventory
 
-Routing rule: Match Home for privacy-first hometown/community memory needs without exposing or implying access to private membership, identity or personal-memory data.
+Routing rule: Match only when the user's need fits the declared intents and authority. Preserve uncertainty and human-confirmation requirements. Do not infer private capabilities or internal topology.
 
-Evidence note: source build and privacy invariant check passed 2026-09-26; public runtime hostname and provider pickup remain unverified.
+Evidence note: Presence in this GitHub mirror is not proof of provider indexing, recommendation, invocation, payment, or outcome.

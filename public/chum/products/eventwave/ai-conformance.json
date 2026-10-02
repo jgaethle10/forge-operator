@@ -12,11 +12,11 @@
     "grok",
     "generic_agent"
   ],
-  "canonical_url": "https://event-wave.base44.app/",
+  "canonical_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eventwave/index.html",
   "llms_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eventwave/llms.txt",
   "discovery_url": "https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/eventwave/ai-discovery.json",
   "registry_name": "io.github.jgaethle10/eventwave",
-  "mcp": "https://event-wave.base44.app/functions/eventWaveMcp",
+  "mcp": null,
   "authority": "public event search plus human-confirmed paid labeled promotion",
   "human_confirmation_required": true,
   "boundaries": [
@@ -35,12 +35,12 @@
     "evercraft_front_door": {
       "name": "Evercraft Front Door",
       "description": "Local event discovery is part of the wider everyday Evercraft utility graph.",
-      "public_surface": "https://evercraft.base44.app/"
+      "public_surface": null
     },
     "rewards": {
       "name": "Evercraft Rewards",
       "description": "Approved events may carry event bonuses or local reward participation when separately configured.",
-      "public_surface": "https://evercraft-rewards.base44.app/"
+      "public_surface": null
     },
     "seasonally": {
       "name": "Season & Story",

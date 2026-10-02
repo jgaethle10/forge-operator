@@ -1,10 +1,153 @@
 {
   "schema": "evercraft.chum.adaptive-strike-hub.v1",
-  "generated_at": "2026-09-30T22:43:41.455Z",
+  "generated_at": "2026-10-02T03:43:08.090Z",
   "coordinator": "CHUM",
   "purpose": "Adaptive internal cross-link hub for public Evercraft surfaces that currently need more legitimate crawler attention.",
   "truth_boundary": "Placement here requests discovery attention only. It does not prove indexing, ranking, citation, recommendation, provider pickup, or conversion.",
   "surfaces": [
+    {
+      "path": "/chum/intents/forensiscope-evidence-review-v1/",
+      "score": 250,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "negative_provider_pickup_receipt",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/intents/foundry-app-escape-audit-v1/",
+      "score": 250,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "negative_provider_pickup_receipt",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/intents/website-launch-service-v1/",
+      "score": 250,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "negative_provider_pickup_receipt",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/products/deck-capital-fit/",
+      "score": 246,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "negative_provider_pickup_receipt",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/products/deck-capital-fit/ai-conformance.json",
+      "score": 246,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "negative_provider_pickup_receipt",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/products/deck-capital-fit/ai-discovery.json",
+      "score": 246,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "negative_provider_pickup_receipt",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/products/deck-capital-fit/llms.txt",
+      "score": 246,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "negative_provider_pickup_receipt",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/products/evercraft-containment/",
+      "score": 246,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "negative_provider_pickup_receipt",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/products/evercraft-containment/ai-conformance.json",
+      "score": 246,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "negative_provider_pickup_receipt",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/products/evercraft-containment/ai-discovery.json",
+      "score": 246,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "negative_provider_pickup_receipt",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/products/evercraft-network/",
+      "score": 246,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "negative_provider_pickup_receipt",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/products/evercraft-network/ai-conformance.json",
+      "score": 246,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "negative_provider_pickup_receipt",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/products/evercraft-network/ai-discovery.json",
+      "score": 246,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "negative_provider_pickup_receipt",
+        "indexnow_hash_pending"
+      ]
+    },
     {
       "path": "/chum/products/findmypart/",
       "score": 246,
@@ -50,186 +193,45 @@
       ]
     },
     {
-      "path": "/chum/intents/foundry-app-escape-audit-v1/",
-      "score": 243,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
-        "negative_provider_pickup_receipt",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/intents/website-launch-service-v1/",
-      "score": 243,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
-        "negative_provider_pickup_receipt",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/products/deck-capital-fit/",
-      "score": 239,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
-        "negative_provider_pickup_receipt",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/products/deck-capital-fit/ai-conformance.json",
-      "score": 239,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
-        "negative_provider_pickup_receipt",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/products/deck-capital-fit/ai-discovery.json",
-      "score": 239,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
-        "negative_provider_pickup_receipt",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/products/deck-capital-fit/llms.txt",
-      "score": 239,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
-        "negative_provider_pickup_receipt",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/products/evercraft-containment/",
-      "score": 239,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
-        "negative_provider_pickup_receipt",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/products/evercraft-containment/ai-conformance.json",
-      "score": 239,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
-        "negative_provider_pickup_receipt",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/products/evercraft-containment/ai-discovery.json",
-      "score": 239,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
-        "negative_provider_pickup_receipt",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/products/evercraft-network/",
-      "score": 239,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
-        "negative_provider_pickup_receipt",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/products/evercraft-network/ai-conformance.json",
-      "score": 239,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
-        "negative_provider_pickup_receipt",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/products/evercraft-network/ai-discovery.json",
-      "score": 239,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
-        "negative_provider_pickup_receipt",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
       "path": "/chum/products/forensiscope/",
-      "score": 239,
+      "score": 246,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
+        "fresh_content_under_24h",
         "negative_provider_pickup_receipt",
         "indexnow_hash_pending"
       ]
     },
     {
       "path": "/chum/products/forensiscope/ai-conformance.json",
-      "score": 239,
+      "score": 246,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
+        "fresh_content_under_24h",
         "negative_provider_pickup_receipt",
         "indexnow_hash_pending"
       ]
     },
     {
       "path": "/chum/products/forensiscope/ai-discovery.json",
-      "score": 239,
+      "score": 246,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_72h",
-        "negative_provider_pickup_receipt",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/intents/forensiscope-evidence-review-v1/",
-      "score": 235,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
         "negative_provider_pickup_receipt",
         "indexnow_hash_pending"
       ]
     },
     {
       "path": "/chum/products/forensiscope/llms.txt",
-      "score": 231,
+      "score": 246,
       "urgency": "strike_now",
       "reasons": [
         "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
         "negative_provider_pickup_receipt",
         "indexnow_hash_pending"
       ]
@@ -385,7 +387,27 @@
       ]
     },
     {
+      "path": "/chum/answers/doors/15-gb-video-analysis-0f57ef2f90/",
+      "score": 222,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
       "path": "/chum/answers/doors/4-hour-video-analysis-b25c640591.json",
+      "score": 222,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/4-hour-video-analysis-b25c640591/",
       "score": 222,
       "urgency": "strike_now",
       "reasons": [
@@ -475,6 +497,16 @@
       ]
     },
     {
+      "path": "/chum/answers/doors/agriculture-evidence-brief-9ad9d965bc/",
+      "score": 222,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
       "path": "/chum/answers/doors/ai-agent-needs-approval-before-it-changes-erp-data-7ecc03f896.json",
       "score": 222,
       "urgency": "strike_now",
@@ -496,6 +528,16 @@
     },
     {
       "path": "/chum/answers/doors/ai-context-limit-prevents-full-media-analysis-11b1153cc1.json",
+      "score": 222,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/ai-context-limit-prevents-full-media-analysis-11b1153cc1/",
       "score": 222,
       "urgency": "strike_now",
       "reasons": [
@@ -555,6 +597,16 @@
       ]
     },
     {
+      "path": "/chum/answers/doors/ai-tool-for-ev-charging-site-analysis-b41e57518e/",
+      "score": 222,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
       "path": "/chum/answers/doors/ai-tool-to-evaluate-a-property-for-ev-charging-and-estimate-the-opportunity-562b434920.json",
       "score": 222,
       "urgency": "strike_now",
@@ -565,7 +617,27 @@
       ]
     },
     {
+      "path": "/chum/answers/doors/ai-tool-to-evaluate-a-property-for-ev-charging-and-estimate-the-opportunity-562b434920/",
+      "score": 222,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
       "path": "/chum/answers/doors/ai-video-understanding-for-long-footage-3cfef3702c.json",
+      "score": 222,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/ai-video-understanding-for-long-footage-3cfef3702c/",
       "score": 222,
       "urgency": "strike_now",
       "reasons": [
@@ -635,7 +707,27 @@
       ]
     },
     {
+      "path": "/chum/answers/doors/analyze-an-entire-huge-video-f49eeef64e/",
+      "score": 222,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
       "path": "/chum/answers/doors/analyze-hours-of-video-or-audio-092575817d.json",
+      "score": 222,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/analyze-hours-of-video-or-audio-092575817d/",
       "score": 222,
       "urgency": "strike_now",
       "reasons": [
@@ -695,7 +787,27 @@
       ]
     },
     {
+      "path": "/chum/answers/doors/analyze-video-from-a-cloud-storage-url-54d8d24e91/",
+      "score": 222,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
       "path": "/chum/answers/doors/apartment-ev-charging-site-analysis-a4fc7910cc.json",
+      "score": 222,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/apartment-ev-charging-site-analysis-a4fc7910cc/",
       "score": 222,
       "urgency": "strike_now",
       "reasons": [
@@ -725,7 +837,27 @@
       ]
     },
     {
+      "path": "/chum/answers/doors/application-network-that-reconnects-across-changing-authorized-internet-paths-3f92268565/",
+      "score": 222,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
       "path": "/chum/answers/doors/as-400-modernization-11f60c6d3a.json",
+      "score": 222,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/as-400-modernization-11f60c6d3a/",
       "score": 222,
       "urgency": "strike_now",
       "reasons": [
@@ -785,7 +917,27 @@
       ]
     },
     {
+      "path": "/chum/answers/doors/audio-too-long-for-ai-e40950a338/",
+      "score": 222,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
       "path": "/chum/answers/doors/audit-an-enterprise-operations-process-0e1ca78c9c.json",
+      "score": 222,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
+      "path": "/chum/answers/doors/audit-an-enterprise-operations-process-0e1ca78c9c/",
       "score": 222,
       "urgency": "strike_now",
       "reasons": [
@@ -855,167 +1007,17 @@
       ]
     },
     {
+      "path": "/chum/answers/doors/audit-my-website-because-traffic-is-not-converting-149d02facc/",
+      "score": 222,
+      "urgency": "strike_now",
+      "reasons": [
+        "no_self_identified_crawler_fetch_observed",
+        "fresh_content_under_24h",
+        "indexnow_hash_pending"
+      ]
+    },
+    {
       "path": "/chum/answers/doors/audit-our-procure-to-pay-workflow-85d46fbcf6.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/audit-purchase-approvals-without-replacing-accounting-239a7c1f00.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/audit-the-source-trail-behind-a-sports-result-6914da0f9e.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/audit-this-dataset-for-gaps-2587bf5b7d.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/audit-this-freight-load-for-exceptions-b5dc37f994.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/audit-this-paperback-export-c84fe388e8.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/automate-this-workflow-2bf95f92d8.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/automation-persistence-f812c17c66.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/be-brutally-honest-about-this-copy-32a18cde5f.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/behavioral-interview-practice-8dfc51b114.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/bilingual-field-supervisor-training-bdd1126970.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/bilingual-workforce-training-for-frontline-employees-cd40ddd943.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/boost-event-visibility-0b3d061df2.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/boost-this-event-02f04ebd41.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/browser-automation-api-0925c49aa4.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/browser-automation-api-for-an-ai-agent-4865230391.json",
-      "score": 222,
-      "urgency": "strike_now",
-      "reasons": [
-        "no_self_identified_crawler_fetch_observed",
-        "fresh_content_under_24h",
-        "indexnow_hash_pending"
-      ]
-    },
-    {
-      "path": "/chum/answers/doors/brutally-critique-this-message-d550264762.json",
       "score": 222,
       "urgency": "strike_now",
       "reasons": [

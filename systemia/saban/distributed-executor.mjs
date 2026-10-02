@@ -71,6 +71,142 @@ export function computeDemandFromDistributedPlan({
   });
 }
 
+async function runNegotiatedAdapterPool({
+  adapter,
+  lease,
+  poolOptions,
+}={}){
+  if(!adapter||typeof adapter.execute!=='function'){
+    throw new Error('acquired_adapter_execution_not_supported');
+  }
+  const assignments=poolOptions.assignments||[];
+  const results=new Array(assignments.length);
+  const failures=[];
+  const events=[];
+  let cursor=0;
+  const workerCount=Math.max(
+    1,
+    Math.min(
+      assignments.length,
+      Math.max(1,Number(poolOptions.maxConcurrencyPerNode||1))
+    )
+  );
+
+  async function worker(){
+    while(true){
+      const index=cursor++;
+      if(index>=assignments.length) return;
+      const assignment=assignments[index];
+      const startedAt=Date.now();
+      try{
+        const response=await adapter.execute({
+          lease,
+          workload_class:'saban.multiplier-assignment.v1',
+          input:{
+            software:poolOptions.software,
+            assignment,
+          },
+          idempotency_key:assignment.idempotency_key||null,
+          checkpoint:null,
+          timeoutMs:poolOptions.assignmentTimeoutMs||120000,
+        });
+        const duration=Math.max(0,Date.now()-startedAt);
+        results[index]={
+          status:'completed',
+          assignment,
+          idempotency_key:assignment.idempotency_key||null,
+          node_id:lease.provider_id||'negotiated-provider',
+          attempts:1,
+          duration_ms:duration,
+          failover:false,
+          checkpoint:response?.checkpoint||null,
+          result:response?.result??null,
+          compute_receipt:response?.result_receipt||lease.receipt||null,
+          deduplicated:false,
+          artifacts:[],
+        };
+        events.push({
+          type:'assignment.completed',
+          agent_id:assignment.agent_id,
+          node_id:lease.provider_id||'negotiated-provider',
+          attempts:1,
+          duration_ms:duration,
+          execution_fabric:'negotiated_adapter',
+        });
+      }catch(error){
+        const duration=Math.max(0,Date.now()-startedAt);
+        const reason=String(error?.message||error);
+        results[index]={
+          status:'failed',
+          assignment,
+          idempotency_key:assignment.idempotency_key||null,
+          attempts:1,
+          duration_ms:duration,
+          last_node_id:lease.provider_id||'negotiated-provider',
+          reason,
+        };
+        failures.push({
+          assignment,
+          attempts:1,
+          last_node_id:lease.provider_id||'negotiated-provider',
+          reason,
+        });
+        events.push({
+          type:'node.assignment.failed',
+          agent_id:assignment.agent_id,
+          node_id:lease.provider_id||'negotiated-provider',
+          attempt:1,
+          reason,
+          execution_fabric:'negotiated_adapter',
+        });
+      }
+    }
+  }
+
+  try{
+    await Promise.all(Array.from({length:workerCount},()=>worker()));
+  }finally{
+    if(typeof adapter.release==='function'){
+      try{await adapter.release({lease});}
+      catch(error){
+        events.push({
+          type:'lease.release.failed',
+          reason:String(error?.message||error),
+          execution_fabric:'negotiated_adapter',
+        });
+      }
+    }
+  }
+
+  const completed=results.filter((row)=>row?.status==='completed');
+  return {
+    schema:'evercraft.saban.negotiated-adapter-pool-receipt.v1',
+    generated_at:new Date().toISOString(),
+    software:poolOptions.software,
+    requested_assignments:assignments.length,
+    completed_assignments:completed.length,
+    failed_assignments:failures.length,
+    failover_assignments:0,
+    nodes:[{
+      node_id:lease.provider_id||'negotiated-provider',
+      endpoint:null,
+      capacity_hint:null,
+      placement_labels:['negotiated','adapter-execution'],
+      node_attestation_verified:false,
+      device_fingerprint:null,
+      field_claim:null,
+      healthy_at_end:failures.length===0,
+    }],
+    rejected_nodes:[],
+    lease_failures:[],
+    events,
+    lease_renewals:null,
+    portable_artifacts:0,
+    results,
+    failures,
+  };
+}
+
 async function runPoolWithAcquisition({
   poolOptions,
   contract,
@@ -108,41 +244,75 @@ async function runPoolWithAcquisition({
       held.compute_negotiation=negotiation;
       throw held;
     }
+    const selectedMarket=String(
+      negotiation.selected_offer?.market||lease.market||''
+    ).toLowerCase();
+    const selectedAdapter=(acquisition.adapters||[]).find((adapter)=>
+      String(adapter?.market||'').toLowerCase()===selectedMarket
+    );
+
     if(
-      lease.execution_ready!==true ||
-      !lease.capacity_endpoint ||
-      !lease.runtime_authority?.allocator_token
+      lease.execution_ready===true &&
+      lease.capacity_endpoint &&
+      lease.runtime_authority?.allocator_token
     ){
-      const pending=new Error('acquired_compute_not_execution_ready');
-      pending.compute_negotiation=negotiation;
-      throw pending;
+      const acquiredEndpoint=String(lease.capacity_endpoint);
+      const allocatorTokens={
+        ...(poolOptions.allocatorTokens||{}),
+        [acquiredEndpoint]:lease.runtime_authority.allocator_token,
+      };
+      const poolReceipt=await runNodeSeedAssignmentPool({
+        ...poolOptions,
+        endpoints:[acquiredEndpoint],
+        discover:false,
+        allocatorToken:'',
+        allocatorTokens,
+      });
+      return {
+        poolReceipt,
+        acquisition:{
+          schema:'evercraft.saban.distributed-capacity-acquisition.v1',
+          trigger_reason:reason,
+          demand_hash:demand.demand_hash,
+          market:selectedMarket||null,
+          provider_id:negotiation.selected_offer?.provider_id||null,
+          negotiation_receipt:negotiation.receipt_hash,
+          lease_receipt:lease.receipt||null,
+          execution_ready:true,
+          execution_fabric:'evercraft.nodeseed-pool.v1',
+        },
+      };
     }
 
-    const acquiredEndpoint=String(lease.capacity_endpoint);
-    const allocatorTokens={
-      ...(poolOptions.allocatorTokens||{}),
-      [acquiredEndpoint]:lease.runtime_authority.allocator_token,
-    };
-    const poolReceipt=await runNodeSeedAssignmentPool({
-      ...poolOptions,
-      endpoints:[acquiredEndpoint],
-      discover:false,
-      allocatorToken:'',
-      allocatorTokens,
-    });
-    return {
-      poolReceipt,
-      acquisition:{
-        schema:'evercraft.saban.distributed-capacity-acquisition.v1',
-        trigger_reason:reason,
-        demand_hash:demand.demand_hash,
-        market:negotiation.selected_offer?.market||null,
-        provider_id:negotiation.selected_offer?.provider_id||null,
-        negotiation_receipt:negotiation.receipt_hash,
-        lease_receipt:lease.receipt||null,
-        execution_ready:true,
-      },
-    };
+    if(
+      lease.execution_ready===true &&
+      selectedAdapter &&
+      typeof selectedAdapter.execute==='function'
+    ){
+      const poolReceipt=await runNegotiatedAdapterPool({
+        adapter:selectedAdapter,
+        lease,
+        poolOptions,
+      });
+      return {
+        poolReceipt,
+        acquisition:{
+          schema:'evercraft.saban.distributed-capacity-acquisition.v1',
+          trigger_reason:reason,
+          demand_hash:demand.demand_hash,
+          market:selectedMarket||null,
+          provider_id:negotiation.selected_offer?.provider_id||null,
+          negotiation_receipt:negotiation.receipt_hash,
+          lease_receipt:lease.receipt||null,
+          execution_ready:true,
+          execution_fabric:'evercraft.negotiated-adapter-pool.v1',
+        },
+      };
+    }
+
+    const pending=new Error('acquired_compute_not_execution_ready');
+    pending.compute_negotiation=negotiation;
+    throw pending;
   }
 }
 
@@ -277,7 +447,9 @@ export async function executeDistributedMultiplicationPlan({
     logical_agents: plan.logical_agents,
     physical_workers: plan.physical_workers,
     work_item_count: plan.work_item_count,
-    execution_fabric: 'evercraft.nodeseed-pool.v1',
+    execution_fabric:
+      poolRun.acquisition?.execution_fabric ||
+      'evercraft.nodeseed-pool.v1',
     results_digest: resultsDigest,
     scheduler_summary: scheduler,
     pool_summary: {

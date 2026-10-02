@@ -1,0 +1,59 @@
+{
+  "schema": "evercraft.edge.capacity-gap.v1",
+  "observed_at": "2026-10-02T02:10:24.915Z",
+  "source": "live Chromebook Edge promotion receipt + Systemia/Saban admission policy",
+  "workload_class": "systemia.evercraft-edge-dns.v1",
+  "desired": {
+    "authorized_nodes": 2,
+    "distinct_failure_domains": 2,
+    "public_udp_53": true,
+    "public_tcp_53": true,
+    "attestation": true,
+    "zero_spend": true
+  },
+  "observed": {
+    "chromebook": {
+      "node_id": "evercraft-penguin",
+      "authorized": true,
+      "online": true,
+      "public_ingress_ready": true,
+      "node_identity_ready": true,
+      "attestation_verified": true,
+      "zero_cost": true,
+      "udp53_verified": true,
+      "tcp53_verified": true,
+      "workload_supported": true,
+      "placement_labels": [
+        "chromebook",
+        "evercraft-edge-dns",
+        "gateway",
+        "operator-authorized",
+        "public-ingress"
+      ],
+      "failure_domain": "home-wan-1",
+      "public_ip_persisted": false,
+      "proof_mode": "external UDP nonce correlation + external TCP/53 reachability + local DNS-over-TCP protocol proof"
+    },
+    "broker": {
+      "ready": false,
+      "authorized_node_count": 1,
+      "note": "first authoritative Edge candidate proven; second distinct failure-domain node not yet enrolled"
+    }
+  },
+  "state": "capacity_needed",
+  "admission_policy": {
+    "ambient_authorized_capacity_first": true,
+    "commercial_capacity": false,
+    "paid_lease": false,
+    "require_explicit_authorization": true,
+    "no_visibility_as_authority": true
+  },
+  "next_actions": [
+    "scan ambient Saban capacity for a second explicitly owned-or-authorized general-compute candidate",
+    "require a genuinely distinct network/power failure domain from evercraft-penguin",
+    "bootstrap candidate as operator-authorized public Edge NodeSeed",
+    "require attestation plus independent UDP/TCP 53 canary before admission",
+    "do not delegate production DNS until two distinct verified public-ingress nodes exist"
+  ],
+  "missing_count": 1
+}

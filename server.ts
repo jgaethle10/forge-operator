@@ -15,9 +15,12 @@ import { buyerFrontageUrl } from './systemia/chum/start-corridor.mjs';
 import { createCrawlerRadarStore } from './systemia/chum/crawler-radar.mjs';
 import { registerFallenFamilyRoutes } from './systemia/media-studio/family-http.js';
 import { registerRivetReportGateway } from './systemia/rivet/http-gateway.mjs';
+import { registerHouseholdFabricGateway } from './systemia/household-fabric/http-gateway.mjs';
 import { registerSpecialistHandoffMcps } from './systemia/mcp/specialist-handoff.js';
 import { registerRemoteOperatorMcp } from './systemia/remote-operator/mcp-gateway.mjs';
 import { registerNotificationFabricRoutes } from './systemia/notification-fabric/http.mjs';
+import { registerRadarRoutes } from './systemia/radar/http.mjs';
+import { registerFaieRoutes } from './systemia/faie/http.mjs';
 
 dotenv.config();
 
@@ -169,8 +172,15 @@ function rateLimit(maxRequests: number, windowMs: number) {
 }
 
 app.use(express.json({ limit: '10mb', type: ['application/json', 'application/*+json'] }));
+const radarResident = registerRadarRoutes(app, { isProd });
+registerFaieRoutes(app, {
+  isProd,
+  radarResident,
+  publicInvestigateLimiter: rateLimit(60, 60 * 60 * 1000)
+});
 registerNotificationFabricRoutes(app);
 registerRivetReportGateway(app);
+registerHouseholdFabricGateway(app);
 registerSpecialistHandoffMcps(app, { gatewayUrl: machineCommerceGatewayUrl });
 registerRemoteOperatorMcp(app);
 
@@ -192,6 +202,9 @@ const CHUM_DISCOVERY_LINKS = [
   '</feed.json>; rel="alternate"; type="application/feed+json"; title="Evercraft Product Discovery JSON Feed"',
   '</opensearch.xml>; rel="search"; type="application/opensearchdescription+xml"; title="Evercraft Search"',
   '</.well-known/evercraft-syndication.json>; rel="service-desc"; type="application/json"; title="Evercraft Syndication Manifest"',
+  '</.well-known/evercraft-household-fabric.json>; rel="service-desc"; type="application/json"; title="Evercraft Household Fabric Manifest"',
+  '</api/household-fabric/yakima/today>; rel="alternate"; type="application/json"; title="Evercraft Household Fabric Yakima Today"',
+  '</household/>; rel="alternate"; type="text/html"; title="Evercraft Household Fabric Today Page"',
   '</.well-known/agent-card.json>; rel="service-desc"; type="application/json"; title="Evercraft A2A Agent Card"',
   '</chum/freshness.xml>; rel="alternate"; type="application/atom+xml"; title="Evercraft CHUM Freshness Feed"',
   '</chum/freshness.json>; rel="alternate"; type="application/json"; title="Evercraft CHUM Freshness State"',
@@ -219,7 +232,10 @@ function isChumDiscoverySurface(pathname: string): boolean {
     pathname === '/api/capabilities' ||
     pathname === '/api/discover' ||
     pathname === '/api/revenue-watershed' ||
-    pathname === '/api/chum/crawler-radar';
+    pathname === '/api/chum/crawler-radar' ||
+    pathname.startsWith('/api/household-fabric/') ||
+    pathname.startsWith('/household-fabric') ||
+    pathname.startsWith('/household');
 }
 
 app.use((req: Request, res: Response, next: NextFunction) => {
@@ -460,6 +476,7 @@ app.get('/api/health', (_req: Request, res: Response) => {
       engine_id: speech.engine_id,
       probe_state: speech.probe_state,
     },
+    radar: radarResident.health(),
   });
 });
 
@@ -483,6 +500,19 @@ app.get('/api/capabilities', (_req: Request, res: Response) => {
         probeState: speech.probe_state,
       };
     })(),
+    radar: {
+      publicControlRoom: '/radar/',
+      health: '/api/radar/health',
+      latest: '/api/radar/latest',
+      changeWall: '/api/radar/change-wall',
+      sourceHealth: '/api/radar/source-health',
+      ownedReleases: '/api/radar/releases',
+      corrections: '/api/radar/corrections',
+      ownedArchive: '/radar/releases/{slug}/',
+      internalRelease: { method: 'POST', path: '/api/radar/release' },
+      internalWrites: 'bearer-gated',
+      publicationAuthority: false,
+    },
     discovery: {
       llms: '/llms.txt',
       manifest: '/.well-known/evercraft-capabilities.json',

@@ -1,4 +1,4 @@
-name: Evercraft Public Edge External Canary
+name: Evercraft Specialist Edge External Canary
 
 on:
   push:
@@ -28,21 +28,33 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Require explicit specialist origin
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "${SPECIALIST_ORIGIN:-}" ]; then
+            mkdir -p artifacts
+            cat > artifacts/evercraft-public-edge-canary.json <<'JSON'
+          {
+            "schema": "evercraft.public-edge.external-canary.v1",
+            "verified": false,
+            "state": "blocked_no_specialist_origin",
+            "public_https_verified": false,
+            "founder_login_required": false,
+            "note": "Universal Fabric and specialist edge are separate trust surfaces; no fallback origin is permitted."
+          }
+          JSON
+            echo "SPECIALIST_ORIGIN is not configured. Holding specialist-edge verification without probing the universal Fabric edge."
+            exit 0
+          fi
+
       - name: Prepare receipt
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p artifacts
           if [ -z "${SPECIALIST_ORIGIN:-}" ]; then
-            cat > artifacts/evercraft-public-edge-canary.json <<'JSON'
-          {
-            "schema": "evercraft.public-edge.external-canary.v1",
-            "verified": false,
-            "state": "held_no_public_origin_configured",
-            "public_https_verified": false,
-            "founder_login_required": false
-          }
-          JSON
+            test -s artifacts/evercraft-public-edge-canary.json
             cat artifacts/evercraft-public-edge-canary.json
             exit 0
           fi
@@ -62,6 +74,19 @@ jobs:
         run: |
           set -euo pipefail
 
+          verify_listing_page() {
+            local path="$1"
+            local expected="$2"
+            local body
+            body="$(curl --fail --silent --show-error --max-time 20 "${SPECIALIST_ORIGIN%/}$path")"
+            printf '%s' "$body" | grep -Fq "$expected"
+          }
+
+          verify_listing_page "/" "Evercraft Fabric"
+          verify_listing_page "/support" "Evercraft Fabric Support"
+          verify_listing_page "/privacy" "Evercraft Fabric Privacy Policy"
+          verify_listing_page "/terms" "Evercraft Fabric Terms of Service"
+
           health="$(curl --fail --silent --show-error --max-time 20 "${SPECIALIST_ORIGIN%/}/health")"
           printf '%s' "$health" | jq -e '
             .ok == true and
@@ -77,6 +102,7 @@ jobs:
             (.specialist_attestation_receipt_ref | type == "string" and test("^(sha256:)?[a-fA-F0-9]{64}$")) and
             .checkout_enabled == false and
             .payment_enabled == false and
+            .base44_transport_enabled == false and
             .fabric_directory_enabled == true and
             .fabric_mcp_path == "/mcp" and
             .openai_challenge_ready == true and
@@ -134,7 +160,9 @@ jobs:
                 .result.isError == false and
                 .result.structuredContent.direct_specialist == true and
                 .result.structuredContent.payment_created == false and
-                .result.structuredContent.payment_obligation_created == false
+                .result.structuredContent.payment_obligation_created == false and
+                .result.structuredContent.base44_transport_enabled == false and
+                (((.result.structuredContent.handoff_url // "") | test("base44\\.app"; "i")) | not)
               ' >/dev/null
             elif [ "$kind" = "remote_ops" ]; then
               printf '%s' "$result" | jq -e '
@@ -188,6 +216,8 @@ jobs:
               mcp_tools_list_verified:true,
               mcp_tool_calls_verified:true,
               read_only_authority_verified:true,
+              listing_pages_verified:true,
+              listing_pages:["/","/support","/privacy","/terms"],
               founder_login_required:false,
               external_saas_route_provider_required:false,
               observed_at:$observed
@@ -223,11 +253,8 @@ jobs:
             --receipt artifacts/evercraft-public-edge-canary.json \\
             --origin "$SPECIALIST_ORIGIN"
           node scripts/validate-openai-plugin-submission.mjs
-          mkdir -p artifacts
-          (
-            cd plugins/evercraft-fabric
-            zip -qr ../../artifacts/evercraft-openai-owned-plugin.zip . -x '*.DS_Store'
-          )
+          bash scripts/build-evercraft-openai-plugin.sh
+          cp artifacts/evercraft-openai-plugin.zip artifacts/evercraft-openai-owned-plugin.zip
           test -s artifacts/evercraft-openai-owned-plugin.zip
           npm run direct:check
 

@@ -1,6 +1,6 @@
 # Opportunity Fabric Multi-Party Execution Contract
 
-Version: v1.2  
+Version: v1.3  
 Evidence state: private runtime verified  
 Authority: Systemia Opportunity Fabric / trusted service-role runtime
 
@@ -34,6 +34,26 @@ The planner may not:
 - fabricate a partner when no real match exists
 
 A blueprint recommendation is not team membership.
+
+## Sourcing rule
+
+A suggested blueprint candidate cannot receive a sourcing request until the parties already have an accepted protected connection.
+
+A sourcing request is bound to:
+
+- execution blueprint plan id
+- execution blueprint record
+- source opportunity
+- suggested work-package sequence
+- candidate member
+- accepted connection
+- safe scope and safe inputs
+
+The recipient may respond with current capacity, estimate or firm quote mode, price, currency, lead time and safe operational constraints. Those fields are sourcing evidence only. They do not create a payment obligation, contract, purchase order, team membership, IP license or work-package acceptance.
+
+The opportunity owner may shortlist or pass a response. Only shortlisted responses marked `Available` or `Limited` can seed a sourced team. All selected responses must come from one project and one blueprint.
+
+Accepting the resulting team invitation does not automatically accept the sourced work. It materializes the sourced package as an `Offered` work package, preserving a separate assignee acceptance gate.
 
 ## Admission rule
 
@@ -99,11 +119,11 @@ A future work-package-specific disclosure must bind:
 - recipient acceptance
 - a durable receipt
 
-Actual protected-file delivery is not enabled or claimed in v1.2.
+Actual protected-file delivery is not enabled or claimed in v1.3.
 
 ## Authority model
 
-The following workflow entities are direct-client mutation locked in the verified v1.2 runtime:
+The following workflow entities are direct-client mutation locked in the verified v1.3 runtime:
 
 - ConnectionRequest
 - ProtectedAsset
@@ -134,7 +154,7 @@ Verified cross-industry examples include:
 
 ## Non-claims
 
-v1.2 does not claim:
+v1.3 does not claim:
 
 - a final legally reviewed Creator Covenant
 - signed contract execution

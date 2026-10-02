@@ -104,3 +104,97 @@ This installs a systemd timer that reasserts only:
 - WAN TCP 443 -> Chromebook TCP 8443
 
 It runs once after boot and every 10 minutes so a router reboot does not silently strand the public edge.
+
+
+## Production trust class
+
+The Chromebook/Crostini edge is admitted as:
+
+```text
+operator_authorized_public_edge
+```
+
+This is a production public-edge trust class, but it is **not** physical Node 001 certification. Crostini remains a virtualized Linux environment. The edge may serve production HTTPS because its public route, TLS, resident services, and exact Evercraft NodeSeed identity are verified independently.
+
+The production trust chain is:
+
+```text
+public DNS + trusted TLS
+  -> externally reachable Fabric
+  -> /.well-known/evercraft-edge-attestation
+  -> fresh verifier nonce
+  -> local loopback NodeSeed /v1/attest
+  -> Ed25519 signature
+  -> exact NodeSeed device fingerprint
+```
+
+The allocator token never crosses the public edge. Fabric uses it only on loopback to request the signed NodeSeed attestation. The public response contains the signed attestation, public key, and identity statement, but no allocator authority.
+
+The final admission receipt uses schema:
+
+```text
+evercraft.operator-public-edge-admission.v1
+```
+
+and must state all of the following before production admission:
+
+- `state = production_edge_admitted`
+- `trust_class = operator_authorized_public_edge`
+- `public_https_verified = true`
+- `trusted_tls_verified = true`
+- `cryptographic_external_device_binding = true`
+- `device_binding_state = signed_nonce_verified`
+- `physical_field_certified = false`
+- `node001_claimed = false`
+- `base44_transport_required = false`
+
+This lets the Chromebook be Evercraft's public front door without weakening or redefining the separate physical Node 001 evidence contract.
+
+
+## Native specialist runtime
+
+The resident specialist layer now uses the checked-in Evercraft Fabric capability catalog as its default offer and handoff source. A newly provisioned edge no longer silently falls back to the legacy Base44 Machine Commerce gateway.
+
+The production health contract exposes:
+
+```text
+gateway_mode = native_fabric_catalog
+external_gateway_configured = false
+base44_transport_enabled = false
+```
+
+An external gateway can still be supplied deliberately through `EVERCRAFT_MACHINE_COMMERCE_GATEWAY_URL` for migration/testing, but that state is visible in health. The public specialist external canary fails production verification whenever `base44_transport_enabled` is true.
+
+Native specialist calls preserve the authority boundary: offer and handoff preparation are read-only, do not create checkout or payment, and filter legacy Base44 URLs out of returned connection options. If no owned public review surface exists yet, the runtime says so instead of inventing one.
+
+## Resident network observation
+
+The edge installer also installs `evercraft-network-observer.timer`. Every two minutes it records the Crostini-visible interfaces, routes, listeners, Evercraft service state, router-map state, Fabric loopback health and hostname-aware local TLS health. ChromeOS host port-forwarding is recorded as an explicit external trust boundary because the Linux guest cannot truthfully inspect or toggle that host setting.
+
+Authorized Remote Operator status carries the same network observation, which lets Systemia distinguish a healthy Linux stack from a ChromeOS host-forwarding or public-ingress failure without requiring repeated terminal archaeology.
+
+## Independent external witness
+
+GitHub Actions runs `.github/workflows/chromebook-operator-edge-canary.yml` every ten minutes and on relevant edge changes. It is a verifier only, never runtime infrastructure. The workflow runs:
+
+```bash
+node scripts/fabric-edge-external-canary.mjs \
+  --origin https://fabric.systemiacommandcenters.com
+```
+
+and stores a 90-day `fabric-operator-edge-canary.json` receipt. A failed external canary does not silently revoke the architecture or redirect traffic elsewhere; it marks current reachability unverified so the resident recovery path can repair the edge.
+
+## Autonomous trust upgrade and recovery
+
+The existing root-owned Fabric update timer also reconciles the signed-attestation wiring. When the local organism's NodeSeed receipt and allocator token exist, the updater safely adds their **file paths** to `/etc/evercraft/fabric.env`, restarts Fabric, verifies local health, performs a fresh signed nonce challenge, and only then writes a green update receipt.
+
+No secret value is written to Git, emitted in updater receipts, or returned by the public attestation endpoint. If verification fails, the updater restores the previous environment and release.
+
+The two local references are:
+
+```text
+~/.local/state/evercraft/organism/compute/nodeseed-receipt.json
+~/.local/state/evercraft/organism/.secrets/allocator-token
+```
+
+The resident updater means an already-installed Chromebook edge can adopt this trust upgrade on its normal update cycle without a reinstall.

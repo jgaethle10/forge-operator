@@ -1,0 +1,51 @@
+{
+  "version": "0.1.0",
+  "authority": "systemia",
+  "mutations": {
+    "POST /v1/zones": {
+      "requires": [
+        "tenant",
+        "origin",
+        "ownership_proof"
+      ],
+      "receipt": true
+    },
+    "PUT /v1/zones/{zone}/records": {
+      "requires": [
+        "expected_serial",
+        "records"
+      ],
+      "atomic": true,
+      "receipt": true
+    },
+    "POST /v1/services": {
+      "requires": [
+        "service_id",
+        "logical_uri",
+        "tenant"
+      ],
+      "receipt": true
+    },
+    "PUT /v1/routes/{host}": {
+      "requires": [
+        "service_id",
+        "healthy_endpoint"
+      ],
+      "health_gate": true,
+      "rollback_required": true
+    }
+  },
+  "reads": [
+    "GET /v1/services",
+    "GET /v1/services/{id}",
+    "GET /v1/zones/{zone}",
+    "GET /v1/health"
+  ],
+  "principles": [
+    "fail-closed",
+    "provider-independent",
+    "append-only receipts",
+    "health before promotion",
+    "no public recursive resolver"
+  ]
+}

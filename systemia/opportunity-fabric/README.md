@@ -32,6 +32,27 @@ The execution flow is therefore:
 
 `SAFE OPPORTUNITY -> BLUEPRINT -> PROTECTED CONNECTIONS -> TEAM INVITATIONS -> WORK PACKAGES -> FORMATION / RIGHTS GATES -> EXECUTION`
 
+## Sourcing desk
+
+v1.3 adds the commercial-capacity bridge between a blueprint match and team formation.
+
+After a protected connection is accepted, the opportunity owner may send a bounded `SourcingRequest` tied to the exact blueprint, suggested work package and candidate. The recipient can answer with availability, estimate or firm-quote mode, amount/currency, lead time, availability date, validity date and a safe constraint note.
+
+Sourcing is deliberately non-binding:
+
+- creating a sourcing request creates no payment obligation
+- returning a quote does not accept work or create a contract
+- shortlisting a response does not create team membership
+- protected material remains undisclosed
+- only `Available` or `Limited` responses can be shortlisted into team assembly
+- selected sourcing responses must belong to one project and one execution blueprint
+
+When a sourced team invitation is accepted, Systemia materializes the exact sourced package as `Offered` with assignee state `Not accepted`. The assignee must still accept the work package independently.
+
+The execution flow is now:
+
+`SAFE OPPORTUNITY -> BLUEPRINT -> PROTECTED CONNECTION -> SOURCING -> SHORTLIST -> TEAM INVITATION -> OFFERED WORK PACKAGE -> PACKAGE ACCEPTANCE -> RIGHTS / PAYMENT GATES -> EXECUTION`
+
 ## Multi-party assembly
 
 v1.1 extends the one-to-one protected collaboration model into temporary execution teams.
@@ -79,7 +100,7 @@ This policy is a product-control contract specification. It is NOT represented a
 
 ## Trust model
 
-The verified v1.2.1 implementation sits behind an authenticated service-role runtime. Direct client mutation is locked for protected workflow entities, and the runtime re-verifies identity, relationship state, invitation state, and package authority before consequential writes. Client-supplied booleans or user ids must never be treated as proof of identity, signature, ownership, relationship, or authority.
+The verified v1.3 implementation sits behind an authenticated service-role runtime. Direct client mutation is locked for protected workflow entities, and the runtime re-verifies identity, relationship state, invitation state, and package authority before consequential writes. Client-supplied booleans or user ids must never be treated as proof of identity, signature, ownership, relationship, or authority.
 
 Authentication, e-signature identity proof, payment authority, durable storage, protected-file delivery, and legal record retention remain separate gates.
 
@@ -91,4 +112,4 @@ Discovery exposes opportunity, not crown-jewel content.
 
 ## Status
 
-v1.2.1 establishes metadata-first matching, safe execution blueprints, protected one-to-one formation, immutable terms snapshots, purpose-bound disclosure grants, multi-party execution teams, project-specific invitations, bounded work packages, evidence receipts, and conformance tests. The private runtime is verified, but it does not yet claim a production-ready legal agreement, payment/escrow rail, production identity proofing, protected-file delivery, or a publicly deployed transactional marketplace.
+v1.3 establishes metadata-first matching, safe execution blueprints, protected one-to-one formation, immutable terms snapshots, purpose-bound disclosure grants, multi-party execution teams, project-specific invitations, bounded work packages, evidence receipts, and conformance tests. The private runtime is verified, but it does not yet claim a production-ready legal agreement, payment/escrow rail, production identity proofing, protected-file delivery, or a publicly deployed transactional marketplace.

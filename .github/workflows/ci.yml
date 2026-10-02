@@ -102,6 +102,12 @@ jobs:
 
           curl --fail --silent http://127.0.0.1:3000/api/health | tee /tmp/health.json
           curl --fail --silent http://127.0.0.1:3000/api/capabilities | tee /tmp/capabilities.json
+          curl --fail --silent http://127.0.0.1:3000/api/radar/health | tee /tmp/radar-health.json
+          curl --fail --silent http://127.0.0.1:3000/api/radar/latest | tee /tmp/radar-latest.json
+          curl --fail --silent http://127.0.0.1:3000/api/radar/source-health | tee /tmp/radar-source-health.json
+          curl --fail --silent http://127.0.0.1:3000/api/radar/releases | tee /tmp/radar-releases.json
+          curl --fail --silent http://127.0.0.1:3000/api/radar/corrections | tee /tmp/radar-corrections.json
+          curl --fail --silent http://127.0.0.1:3000/radar/ > /tmp/radar.html
           curl --fail --silent http://127.0.0.1:3000/fallen > /tmp/fallen.html
           curl --fail --silent -X POST http://127.0.0.1:3000/api/fallen/family/episode \
             -H 'Content-Type: application/json' \
@@ -166,6 +172,12 @@ jobs:
           const fs = require('fs');
           const health = JSON.parse(fs.readFileSync('/tmp/health.json','utf8'));
           const capabilities = JSON.parse(fs.readFileSync('/tmp/capabilities.json','utf8'));
+          const radarHealth = JSON.parse(fs.readFileSync('/tmp/radar-health.json','utf8'));
+          const radarLatest = JSON.parse(fs.readFileSync('/tmp/radar-latest.json','utf8'));
+          const radarSourceHealth = JSON.parse(fs.readFileSync('/tmp/radar-source-health.json','utf8'));
+          const radarReleases = JSON.parse(fs.readFileSync('/tmp/radar-releases.json','utf8'));
+          const radarCorrections = JSON.parse(fs.readFileSync('/tmp/radar-corrections.json','utf8'));
+          const radarHtml = fs.readFileSync('/tmp/radar.html','utf8');
           const fallenHtml = fs.readFileSync('/tmp/fallen.html','utf8');
           const fallenEpisode = JSON.parse(fs.readFileSync('/tmp/fallen-episode.json','utf8'));
           const liveHunt = JSON.parse(fs.readFileSync('/tmp/live-hunt-route.json','utf8'));
@@ -195,6 +207,13 @@ jobs:
 
           if (health.ok !== true) throw new Error('health.ok must be true');
           if (health.service !== 'forge-operator') throw new Error('unexpected health service');
+          if (radarHealth.schema !== 'evercraft.systemia-radar.health.v1') throw new Error('radar health schema missing');
+          if (radarLatest.schema !== 'evercraft.systemia-radar.public.v1') throw new Error('radar public projection schema missing');
+          if (radarSourceHealth.schema !== 'evercraft.systemia-radar.source-health.public.v1') throw new Error('radar source health schema missing');
+          if (radarReleases.schema !== 'evercraft.systemia-radar.release-index.v1') throw new Error('radar release index schema missing');
+          if (radarCorrections.schema !== 'evercraft.systemia-radar.corrections.v1') throw new Error('radar corrections schema missing');
+          if (!radarHtml.includes('Reality before narrative')) throw new Error('radar control room did not render');
+          if (radarLatest.publication_authority !== false) throw new Error('radar public projection must not gain publication authority');
           if (capabilities.schema !== 'evercraft.capability.v1') throw new Error('unexpected capability schema');
           if (!fallenHtml.includes('<div id="root"></div>')) throw new Error('Fallen SPA route did not return the production app shell');
           if (fallenEpisode.success !== true) throw new Error('Fallen family episode smoke failed');

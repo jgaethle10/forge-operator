@@ -139,6 +139,8 @@ const receipt = {
   targets: rows.length,
   failed_mcp: failed.length,
   registry_missing: registryMissing.length,
+  state: rows.length === 0 ? 'held_no_verified_owned_mcp' : 'verified_targets_checked',
+  machine_commerce_target_present: Boolean(machineCommerce),
   machine_commerce_checkout_capability_visible: machineCommerceHasCommerceTool,
   machine_commerce_tool_names: machineCommerce?.tools_list?.names || [],
   machine_commerce_commerce_signals: machineCommerce?.tools_list?.commerce_signals || [],
@@ -162,7 +164,7 @@ fs.writeFileSync('artifacts/chum/mcp-canary-latest.md', [
   ...rows.map((r) => `| ${r.name} | ${r.initialize.valid ? 'pass' : 'FAIL'} | ${r.tools_list.valid ? 'pass' : 'FAIL'} | ${r.registry.present === true && r.registry.active === true && r.registry.latest === true ? `active/latest ${r.registry.version || ''}`.trim() : r.registry.present === false ? 'MISSING' : r.registry.active === false ? 'INACTIVE' : r.registry.latest === false ? 'NOT_LATEST' : 'unknown'} |`)
 ].join('\n') + '\n');
 
-console.log(JSON.stringify({ targets: receipt.targets, failed_mcp: receipt.failed_mcp, registry_missing: receipt.registry_missing, machine_commerce_checkout_capability_visible: receipt.machine_commerce_checkout_capability_visible, machine_commerce_commerce_signals: receipt.machine_commerce_commerce_signals }));
+console.log(JSON.stringify({ state: receipt.state, targets: receipt.targets, failed_mcp: receipt.failed_mcp, registry_missing: receipt.registry_missing, machine_commerce_target_present: receipt.machine_commerce_target_present, machine_commerce_checkout_capability_visible: receipt.machine_commerce_checkout_capability_visible, machine_commerce_commerce_signals: receipt.machine_commerce_commerce_signals }));
 if (failed.length) throw new Error(`CHUM MCP canary found ${failed.length} live MCP failure(s)`);
 if (registryMissing.length) throw new Error(`CHUM Registry canary found ${registryMissing.length} published entry mismatch(es)`);
-if (!machineCommerceHasCommerceTool) throw new Error('Evercraft Machine Commerce MCP is live but exposes no checkout/offer/commerce-capable tool name');
+if (machineCommerce && !machineCommerceHasCommerceTool) throw new Error('Evercraft Machine Commerce MCP is configured but exposes no checkout/offer/commerce-capable tool name');

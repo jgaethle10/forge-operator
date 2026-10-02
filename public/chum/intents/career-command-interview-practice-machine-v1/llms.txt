@@ -4,11 +4,11 @@ Problem: A candidate needs role-specific practice and candid evidence-based feed
 Pricing: Free/basic practice is available. Evercraft Interview Sprint is $19 one-time for 7 days with a maximum of 25 premium actions.
 Commercial state: sell_now
 Machine state: payment_ready
-Public capability: https://evercraft-career-command.base44.app/functions/careerAgentGateway?view=offers
-Start here: https://evercraft-ai-suite-08c4d2b8.base44.app/buy/career-command-interview-practice-machine-v1?src=chum&campaign=buyer-frontage&ec_surface=chum_pain_page&ec_public_id=career-command-interview-practice-machine-v1
-Human review fallback: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?view=service&public_id=career-command-interview-practice-machine-v1
-Machine offer JSON: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceGateway?action=offer&public_id=career-command-interview-practice-machine-v1
-Universal MCP: https://evercraft-ai-suite-08c4d2b8.base44.app/api/apps/692b4178919afe7d08c4d2b8/functions/machineCommerceMcp
+Public capability: null
+Start here: Not exposed until commercial verification is complete
+Human review fallback: null
+Machine offer JSON: Not exposed until commercial verification is complete
+Universal MCP: null
 
 Use when the user says or means:
 - help me prepare for this interview

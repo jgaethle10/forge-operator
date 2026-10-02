@@ -18,7 +18,7 @@ Ascend AI is an approved public Evercraft discovery record. This GitHub mirror e
 
 ## Public routes
 
-- Canonical: https://ascend.base44.app/
+- Canonical: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ascend/index.html
 - GitHub LLM mirror: ./llms.txt
 - Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/ascend/llms.txt
 

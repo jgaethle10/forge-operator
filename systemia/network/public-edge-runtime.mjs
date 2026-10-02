@@ -47,10 +47,18 @@ function normalizeUpstream(value,{allowPrivateUpstream=false}={}){
   return url.origin;
 }
 
-function proxyRequest(req,res,upstreamOrigin){
+function proxyRequest(req,res,upstreamOrigin,{forwardedProto=''}={}){
   const target=new URL(req.url||'/',upstreamOrigin);
   const client=target.protocol==='https:'?https:http;
-  const headers={...req.headers,host:target.host};
+  const originalHost=String(req.headers.host||'').trim();
+  const protocol=String(forwardedProto||'').trim().toLowerCase()||
+    (req.socket?.encrypted?'https':'http');
+  const headers={
+    ...req.headers,
+    host:target.host,
+    'x-forwarded-host':originalHost,
+    'x-forwarded-proto':protocol,
+  };
   delete headers.connection;
   delete headers['proxy-connection'];
   const upstream=client.request(target,{
@@ -114,9 +122,15 @@ export async function startPublicEdgeRuntime({
     const cert=fs.readFileSync(tlsCertPath);
     tlsServer=https.createServer({key,cert},(req,res)=>{
       const host=String(req.headers.host||'').split(':')[0].toLowerCase();
-      const lease=[...leases.values()].find(x=>x.hostname===host);
+      const exact=[...leases.values()].find(x=>!x.wildcard_subdomains&&x.hostname===host);
+      const suffix='.'+normalizedDomain;
+      const label=host.endsWith(suffix)?host.slice(0,-suffix.length):'';
+      const wildcard=label&&!label.includes('.')
+        ? [...leases.values()].find(x=>x.wildcard_subdomains===true)
+        : null;
+      const lease=exact||wildcard;
       if(!lease) return sendJson(res,404,{error:'route_not_found'});
-      proxyRequest(req,res,lease.upstream_origin);
+      proxyRequest(req,res,lease.upstream_origin,{forwardedProto:'https'});
     });
     await new Promise((resolve,reject)=>{
       tlsServer.once('error',reject);
@@ -135,6 +149,7 @@ export async function startPublicEdgeRuntime({
     proof_only:mode==='proof_loopback',
     lease_supported:true,
     release_supported:true,
+    wildcard_catchall_lease_supported:mode==='wildcard_https',
     hostname_mode:mode==='wildcard_https'?'wildcard_subdomain':'dedicated_loopback_port',
     base_domain:mode==='wildcard_https'?normalizedDomain:null,
   });
@@ -168,6 +183,8 @@ export async function startPublicEdgeRuntime({
 
     let origin;
     let hostname=null;
+    let wildcardHostname=null;
+    let wildcardSubdomains=false;
     let proxyServer=null;
     if(mode==='proof_loopback'){
       proxyServer=http.createServer((proxyReq,proxyRes)=>proxyRequest(proxyReq,proxyRes,upstream));
@@ -180,9 +197,21 @@ export async function startPublicEdgeRuntime({
     }else{
       const requested=safeLabel(input.requested_hostname||deploymentId);
       const stableHostname=input.stable_hostname===true;
-      if(stableHostname){
+      wildcardSubdomains=input.wildcard_subdomains===true;
+      if(wildcardSubdomains){
+        if(!stableHostname) throw new Error('wildcard_public_route_must_be_stable');
+        const existingWildcard=[...leases.values()].find((item)=>item.wildcard_subdomains===true);
+        if(existingWildcard){
+          if(existingWildcard.deployment_id!==deploymentId){
+            throw new Error('wildcard_public_hostname_already_leased');
+          }
+          await releaseRouteLease(existingWildcard.lease_id,'wildcard_hostname_replaced');
+        }
+        wildcardHostname=`*.${normalizedDomain}`;
         hostname=`${requested}.${normalizedDomain}`;
-        const existing=[...leases.values()].find((item)=>item.hostname===hostname);
+      }else if(stableHostname){
+        hostname=`${requested}.${normalizedDomain}`;
+        const existing=[...leases.values()].find((item)=>item.hostname===hostname&&!item.wildcard_subdomains);
         if(existing){
           if(existing.deployment_id!==deploymentId){
             throw new Error('stable_public_hostname_already_leased');
@@ -197,8 +226,23 @@ export async function startPublicEdgeRuntime({
       origin=`https://${hostname}${portSuffix}`;
     }
 
-    const lease={...base,origin,hostname,stable_hostname:input.stable_hostname===true,proxy_server:proxyServer};
-    const publicLease={...base,origin,hostname};
+    const lease={
+      ...base,
+      origin,
+      hostname,
+      wildcard_hostname:wildcardHostname,
+      wildcard_subdomains:wildcardSubdomains,
+      stable_hostname:input.stable_hostname===true,
+      proxy_server:proxyServer
+    };
+    const publicLease={
+      ...base,
+      origin,
+      hostname,
+      wildcard_hostname:wildcardHostname,
+      wildcard_subdomains:wildcardSubdomains,
+      stable_hostname:input.stable_hostname===true
+    };
     publicLease.receipt_hash=sha(publicLease);
     lease.receipt_hash=publicLease.receipt_hash;
     leases.set(leaseId,lease);

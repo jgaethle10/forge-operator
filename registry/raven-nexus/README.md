@@ -15,10 +15,9 @@ Raven Nexus is an approved public Evercraft discovery record. This GitHub mirror
 
 ## Public routes
 
-- Canonical: https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter
+- Canonical: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/raven-nexus/index.html
 - GitHub LLM mirror: ./llms.txt
 - Runtime or CHUM llms.txt: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/raven-nexus/llms.txt
-- Bounded HTTP router: https://base44.app/api/apps/6a7adc9666bfd8c5c2fb4069/functions/ravenNexusPainRouter
 
 ## Authority
 
