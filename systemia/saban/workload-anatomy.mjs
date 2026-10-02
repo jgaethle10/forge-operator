@@ -251,7 +251,7 @@ export function portfolioWorkloadAnatomy({
       checkpointable:shardable,
       require_attestation:true,
       private_data:privateData,
-      minimum_uptime_7d:fullyPreemptible?0.4:0.85,
+      minimum_uptime_7d:fullyPreemptible?0:0.85,
       max_observation_age_ms:120000,
       allowed_device_classes:registered
         ? ['phone','tablet','router','raspberry-pi','sbc','nas','desktop','laptop','server','unknown']
