@@ -9,10 +9,13 @@ on:
       - 'systemia/compute/install-node-seed.sh'
       - 'systemia/compute/field-preflight.mjs'
       - 'systemia/compute/runtime-node.mjs'
+      - 'systemia/compute/node-seed.mjs'
       - 'scripts/evercraft-public-edge-map.mjs'
       - 'scripts/install-fabric-router-map-resident.sh'
       - 'scripts/promote-chromebook-edge-node.sh'
       - 'scripts/make-chromebook-edge-node.sh'
+      - 'scripts/promote-linux-edge-node.sh'
+      - 'scripts/make-linux-edge-node.sh'
       - 'tests/nodeseed-installed-bundle.test.mjs'
       - 'systemia/yard/operator.mjs'
       - '.github/workflows/evercraft-edge.yml'
@@ -48,12 +51,15 @@ jobs:
           node --check systemia/compute/evercraft-edge-dns-runtime.mjs
           node --check systemia/compute/edge-dns-bootstrap-resident.mjs
           node --check systemia/compute/runtime-node.mjs
+          node --check systemia/compute/node-seed.mjs
           node --check scripts/evercraft-public-edge-map.mjs
           node --check systemia/yard/operator.mjs
           bash -n systemia/compute/install-node-seed.sh
           bash -n scripts/install-fabric-router-map-resident.sh
           bash -n scripts/promote-chromebook-edge-node.sh
           bash -n scripts/make-chromebook-edge-node.sh
+          bash -n scripts/promote-linux-edge-node.sh
+          bash -n scripts/make-linux-edge-node.sh
       - name: Run Evercraft Edge contract and protocol tests
         run: |
           node --test infra/evercraft-edge/test/*.test.mjs
