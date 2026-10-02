@@ -38,90 +38,13 @@ jobs:
       - name: Prove liveness supervisor
         run: node --test systemia/autonomy/revenue-liveness.test.mjs
 
-      - name: Snapshot revenue-critical workflows
-        shell: bash
+      - name: Run revenue autonomy supervisor
         env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          mkdir -p artifacts/autonomy-revenue
-          echo '{"workflow_runs":[]}' > artifacts/autonomy-revenue/workflows.json
-
-          capture() {
-            FULL_PATH="$1"
-            FILE_NAME="${FULL_PATH##*/}"
-            RESPONSE="$(gh api --method GET "repos/${GITHUB_REPOSITORY}/actions/workflows/${FILE_NAME}/runs?branch=main&per_page=1")"
-            ROW="$(printf '%s' "$RESPONSE" | jq -c --arg path "$FULL_PATH" '.workflow_runs[0] // empty | . + {path:$path}')"
-            if [ -n "$ROW" ]; then
-              jq --argjson row "$ROW" '.workflow_runs += [$row]' artifacts/autonomy-revenue/workflows.json > artifacts/autonomy-revenue/workflows.tmp
-              mv artifacts/autonomy-revenue/workflows.tmp artifacts/autonomy-revenue/workflows.json
-            fi
-          }
-
-          capture ".github/workflows/systemia-portfolio-sentinel.yml"
-          capture ".github/workflows/systemia-legacy-rescue-watch.yml"
-          capture ".github/workflows/portfolio-sentinel-commercial-discovery.yml"
-          capture ".github/workflows/chum-watershed.yml"
-          capture ".github/workflows/evercraft-journal-owned.yml"
-
-      - name: Evaluate revenue autonomy
-        id: evaluate
-        shell: bash
-        run: |
-          set +e
-          node systemia/autonomy/revenue-liveness.mjs             --workflows artifacts/autonomy-revenue/workflows.json             --out artifacts/autonomy-revenue/liveness.json             --github-output "$GITHUB_OUTPUT"
-          CODE=$?
-          echo "initial_exit_code=$CODE" >> "$GITHUB_OUTPUT"
-          exit 0
-
-      - name: Dispatch stale or missing internal lanes
-        id: repair
-        shell: bash
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          COUNT=0
-          : > artifacts/autonomy-revenue/dispatches.tsv
-          jq -r '.repairs[]? | select(.action=="dispatch") | [.workflow,.lane,.reason] | @tsv'             artifacts/autonomy-revenue/liveness.json |
-          while IFS=$'	' read -r WORKFLOW LANE REASON; do
-            [ -n "$WORKFLOW" ] || continue
-            FILE_NAME="${WORKFLOW##*/}"
-            if gh workflow run "$FILE_NAME" --ref main; then
-              echo "$WORKFLOW|$LANE|$REASON|dispatched" >> artifacts/autonomy-revenue/dispatches.tsv
-            else
-              echo "$WORKFLOW|$LANE|$REASON|dispatch_failed" >> artifacts/autonomy-revenue/dispatches.tsv
-            fi
-          done
-          COUNT="$(wc -l < artifacts/autonomy-revenue/dispatches.tsv | tr -d ' ')"
-          echo "dispatch_count=$COUNT" >> "$GITHUB_OUTPUT"
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node systemia/autonomy/github-revenue-heartbeat.mjs artifacts/autonomy-revenue
 
       - name: Refresh Saban revenue formation
         run: npm run saban:revenue
-
-      - name: Write heartbeat summary
-        if: always()
-        shell: bash
-        run: |
-          {
-            echo "## Revenue Autonomy Heartbeat"
-            echo
-            echo "Cadence: every 5 minutes"
-            echo "Internal rule: stale/missing revenue-critical workflows are incidents, not silent inactivity."
-            echo "Commerce rule: sell_now without a structured continuation remains degraded."
-            echo "External-world rule: hackathons, jobs, Bridge Builders and partnerships require the external opportunity monitor; repository cron cannot accept third-party terms."
-            echo
-            if [ -f artifacts/autonomy-revenue/liveness.json ]; then
-              echo '~~~json'
-              jq '{status,summary,repairs,external_monitor_contract}' artifacts/autonomy-revenue/liveness.json
-              echo '~~~'
-            fi
-            if [ -s artifacts/autonomy-revenue/dispatches.tsv ]; then
-              echo
-              echo "### Recovery dispatches"
-              cat artifacts/autonomy-revenue/dispatches.tsv
-            fi
-          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload revenue autonomy receipts
         if: always()
@@ -131,22 +54,8 @@ jobs:
           path: |
             artifacts/autonomy-revenue/workflows.json
             artifacts/autonomy-revenue/liveness.json
-            artifacts/autonomy-revenue/dispatches.tsv
+            artifacts/autonomy-revenue/heartbeat.json
             artifacts/saban-revenue/latest.json
             artifacts/saban-revenue/latest.md
           if-no-files-found: warn
           retention-days: 14
-
-      - name: Enforce unresolved critical liveness
-        if: always()
-        shell: bash
-        run: |
-          if [ ! -f artifacts/autonomy-revenue/liveness.json ]; then
-            echo "Revenue liveness receipt missing."
-            exit 1
-          fi
-          CRITICAL="$(jq -r '.summary.critical_workflow_findings // 0' artifacts/autonomy-revenue/liveness.json)"
-          if [ "$CRITICAL" -gt 0 ]; then
-            echo "Revenue autonomy remains critical. Recovery dispatches were attempted; next heartbeat must verify green."
-            exit 1
-          fi
