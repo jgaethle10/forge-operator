@@ -15,6 +15,7 @@ function clamp01(v,fallback=0){
 export function normalizeFabricTask(input={}){
   const taskId=String(input.task_id||'').trim();
   if(!taskId) throw new Error('fabric_task_id_required');
+  const alreadyNormalized=input?.schema==='evercraft.saban.fabric-task.v1';
   const shape=String(input.execution_shape||'atomic').trim();
   if(!['atomic','shardable'].includes(shape)) throw new Error('fabric_task_execution_shape_invalid');
 
@@ -22,6 +23,13 @@ export function normalizeFabricTask(input={}){
     ? Math.max(1,Math.floor(Number(input.shard_count||1)))
     : 1;
   const replicas=Math.max(1,Math.floor(Number(input.replicas||1)));
+  const resources=alreadyNormalized
+    ? (input.resources_per_execution||{})
+    : (input.resources||{});
+  const trustInput=alreadyNormalized?(input.trust||{}):input;
+  const continuityInput=alreadyNormalized?(input.continuity||{}):input;
+  const energyInput=alreadyNormalized?(input.energy||{}):input;
+  const dataInput=alreadyNormalized?(input.data||{}):input;
 
   const body={
     schema:'evercraft.saban.fabric-task.v1',
@@ -31,50 +39,54 @@ export function normalizeFabricTask(input={}){
     shard_count:shardCount,
     replicas,
     resources_per_execution:{
-      cpu_units:Math.max(0,Number(input.resources?.cpu_units||0)),
-      memory_mb:Math.max(0,Number(input.resources?.memory_mb||0)),
-      storage_gb:Math.max(0,Number(input.resources?.storage_gb||0)),
+      cpu_units:Math.max(0,Number(resources.cpu_units||0)),
+      memory_mb:Math.max(0,Number(resources.memory_mb||0)),
+      storage_gb:Math.max(0,Number(resources.storage_gb||0)),
     },
     required_labels:uniq(input.required_labels).map(x=>x.toLowerCase()),
     required_locality_tags:uniq(input.required_locality_tags).map(x=>x.toLowerCase()),
     forbidden_device_classes:uniq(input.forbidden_device_classes).map(x=>x.toLowerCase()),
     allowed_device_classes:uniq(input.allowed_device_classes).map(x=>x.toLowerCase()),
     trust:{
-      require_attestation:input.require_attestation!==false,
+      require_attestation:trustInput.require_attestation!==false,
       allowed_access_classes:uniq(
-        input.allowed_access_classes?.length
-          ? input.allowed_access_classes
+        trustInput.allowed_access_classes?.length
+          ? trustInput.allowed_access_classes
           : ['authorized_compute']
       ),
-      private_data:input.private_data===true,
-      minimum_uptime_7d:clamp01(input.minimum_uptime_7d,0),
+      private_data:trustInput.private_data===true,
+      minimum_uptime_7d:clamp01(trustInput.minimum_uptime_7d,0),
     },
     continuity:{
-      preemptible:input.preemptible===true,
-      checkpointable:input.checkpointable===true,
-      require_distinct_failure_domains:input.require_distinct_failure_domains!==false&&replicas>1,
+      preemptible:continuityInput.preemptible===true,
+      checkpointable:continuityInput.checkpointable===true,
+      require_distinct_failure_domains:
+        continuityInput.require_distinct_failure_domains!==false&&replicas>1,
       failure_domain_axes:
-        input.require_distinct_failure_domains!==false&&replicas>1
+        continuityInput.require_distinct_failure_domains!==false&&replicas>1
           ? uniq(
-              input.failure_domain_axes?.length
-                ? input.failure_domain_axes
+              continuityInput.failure_domain_axes?.length
+                ? continuityInput.failure_domain_axes
                 : ['failure_domain']
             ).map(x=>x.toLowerCase())
           : [],
-      max_observation_age_ms:Math.max(1000,Number(input.max_observation_age_ms||300000)),
-      require_always_on:input.require_always_on===true,
+      max_observation_age_ms:Math.max(
+        1000,
+        Number(continuityInput.max_observation_age_ms||300000)
+      ),
+      require_always_on:continuityInput.require_always_on===true,
     },
     energy:{
-      max_power_budget_watts:input.max_power_budget_watts==null
+      max_power_budget_watts:energyInput.max_power_budget_watts==null
         ? null
-        : Math.max(0,Number(input.max_power_budget_watts)),
-      thermal_tolerance:String(input.thermal_tolerance||'device_defined'),
-      prefer_lower_power:input.prefer_lower_power!==false,
+        : Math.max(0,Number(energyInput.max_power_budget_watts)),
+      thermal_tolerance:String(energyInput.thermal_tolerance||'device_defined'),
+      prefer_lower_power:energyInput.prefer_lower_power!==false,
     },
     data:{
-      input_bytes:Math.max(0,Number(input.input_bytes||0)),
-      output_bytes:Math.max(0,Number(input.output_bytes||0)),
-      local_only:input.local_only===true,
+      input_bytes:Math.max(0,Number(dataInput.input_bytes||0)),
+      output_bytes:Math.max(0,Number(dataInput.output_bytes||0)),
+      local_only:dataInput.local_only===true,
     },
     created_at:input.created_at||new Date().toISOString(),
   };
