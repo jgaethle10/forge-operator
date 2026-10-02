@@ -8,6 +8,7 @@ import {
   buildAmbientDemandRadar,
   deriveZeroSpendCapacityNeeds,
 } from '../systemia/saban/ambient-demand-radar.mjs';
+import {AmbientWorkQueue} from '../systemia/saban/ambient-work-queue.mjs';
 
 test('demand radar summarizes exact backlog shape by workload',()=>{
   const jobs=[
