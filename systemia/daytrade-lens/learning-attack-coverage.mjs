@@ -63,18 +63,20 @@ export const ATTACK_IMPLEMENTATION_MAP=Object.freeze({
       "systemia/daytrade-lens/edge-quote-microstructure.mjs",
       "systemia/daytrade-lens/edge-execution-translation.mjs",
       "systemia/daytrade-lens/edge-order-execution-receipt.mjs",
-      "systemia/daytrade-lens/edge-order-execution-fetch.mjs"
+      "systemia/daytrade-lens/edge-order-execution-fetch.mjs",
+      "systemia/daytrade-lens/edge-paper-order-probe.mjs"
     ],
-    gap:"The explicit-order read-only path can fetch FILL activities by order_id and reconstruct realized VWAP, partial fills, fill fraction, latency, executed-share shortfall and terminal-reference opportunity cost. No authorized forward order-specific activity dataset has been ingested yet, and routing, hidden liquidity and calibrated impact remain unobserved."
+    gap:"The explicit-order path can submit a fail-closed paper-only probe, fetch FILL activities by order_id and reconstruct realized VWAP, partial fills, fill fraction, latency, executed-share shortfall and terminal-reference opportunity cost. No authorized forward paper-order activity dataset has been ingested yet, paper fills are not live fill-quality evidence, and routing, hidden liquidity and calibrated live impact remain unobserved."
   },
   "partial/unfilled order outcome":{
     status:"partial",
     evidence:[
       "systemia/daytrade-lens/edge-quote-microstructure.mjs",
       "systemia/daytrade-lens/edge-order-execution-receipt.mjs",
-      "systemia/daytrade-lens/edge-order-execution-fetch.mjs"
+      "systemia/daytrade-lens/edge-order-execution-fetch.mjs",
+      "systemia/daytrade-lens/edge-paper-order-probe.mjs"
     ],
-    gap:"Historical public data separates no-touch and touch-but-fill-indeterminate states. Explicit order_id FILL activities can represent observed partial fills, leaves and terminal opportunity cost, but no authorized forward order dataset has been ingested and queue-position or counterfactual fill probability is never inferred."
+    gap:"Historical public data separates no-touch and touch-but-fill-indeterminate states. The fail-closed paper probe can produce an explicit order_id whose FILL activities can represent observed paper partial fills, leaves and terminal opportunity cost, but no authorized forward paper-order dataset has been ingested and queue-position or counterfactual live fill probability is never inferred."
   },
   "signal-decay versus execution-cost decomposition":{
     status:"implemented",
