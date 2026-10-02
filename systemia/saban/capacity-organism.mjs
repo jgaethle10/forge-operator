@@ -289,6 +289,7 @@ export async function runCapacityOrganismOnce({
     registrySnapshot,
     opportunityMap,
     performanceLedger,
+    prewarmPlan,
     now,
   });
 
