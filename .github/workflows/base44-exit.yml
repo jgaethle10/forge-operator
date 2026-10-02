@@ -3,6 +3,7 @@ name: Base44 exit and KAIDANCE proof
 on:
   pull_request:
     paths:
+      - 'server.ts'
       - 'systemia/migrations/base44-exit/**'
       - 'systemia/collider/**'
       - 'systemia/organism/eps-social-continuity.mjs'
@@ -32,6 +33,7 @@ on:
     branches:
       - main
     paths:
+      - 'server.ts'
       - 'systemia/migrations/base44-exit/**'
       - 'systemia/collider/**'
       - 'systemia/organism/eps-social-continuity.mjs'
@@ -72,6 +74,8 @@ jobs:
         run: node scripts/validate-owned-execution-ratchet.mjs
       - name: Enforce zero Base44 active hot paths
         run: node scripts/validate-no-base44-hotpath.mjs
+      - name: Prove owned server routing cutover
+        run: node --test tests/server-owned-routing-cutover.test.mjs
       - name: Prove KAIDANCE collider
         run: node systemia/collider/proof.mjs
       - name: Prove off-Base44 EPS social continuity

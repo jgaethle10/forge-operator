@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 
 const files = [
+  'server.ts',
   '.github/workflows/eps-social-yard-canary.yml',
   '.github/workflows/clip-native-facebook-page-publisher.yml',
   '.github/workflows/evercraft-journal-pages.yml',
@@ -28,6 +29,7 @@ const files = [
 ];
 
 const runtimeFiles = new Set([
+  'server.ts',
   'systemia/compute/eps-social-yard-canary.mjs',
   'systemia/organism/eps-social-continuity.mjs',
   'systemia/chum/start-corridor.mjs',
