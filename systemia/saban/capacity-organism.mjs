@@ -23,6 +23,7 @@ import { buildAmbientCapacityHuntPlan } from './ambient-capacity-hunt.mjs';
 import { buildCapacityAutonomyPlan } from './capacity-autonomy-conductor.mjs';
 import { nodeSeedInventoryToComputeOffers } from './nodeseed-capacity-offer.mjs';
 import { readSafeNodeSeedInventory } from './nodeseed-inventory-ingest.mjs';
+import { appendDemandHistory, forecastCapacityDemand, prewarmActionsForAuthorizedCapacity } from './capacity-demand-forecast.mjs';
 
 const MODULE_FILE=fileURLToPath(import.meta.url);
 
@@ -246,6 +247,20 @@ export async function runCapacityOrganismOnce({
     jobs:workQueue.list(),
     now,
   });
+  const demandHistoryFile=path.join(resolvedRoot,'demand-history.json');
+  const priorDemandHistory=fs.existsSync(demandHistoryFile)
+    ? readJson(demandHistoryFile,null)
+    : null;
+  const demandHistory=appendDemandHistory(priorDemandHistory,demandRadar,{maxSnapshots:96});
+  const demandForecast=forecastCapacityDemand({
+    demandHistory,
+    currentRadar:demandRadar,
+    horizonCycles:3,
+  });
+  const prewarmPlan=prewarmActionsForAuthorizedCapacity({
+    forecast:demandForecast,
+    registrySnapshot,
+  });
   const compiled=compileCapacityOrganismState({
     registrySnapshot,
     adapterHealth,
@@ -304,6 +319,14 @@ export async function runCapacityOrganismOnce({
       adapter_blocked_candidate_count:opportunityMap.adapter_blocked_candidate_count,
       receipt_hash:opportunityMap.receipt_hash,
     }:null,
+    demand_forecast:{
+      source_snapshot_count:demandForecast.source_snapshot_count,
+      prewarm_workloads:demandForecast.prewarm_workloads,
+      prewarm_action_count:prewarmPlan.action_count,
+      receipt_hash:demandForecast.receipt_hash,
+      commercial_spend_usd:0,
+      authority_expansion:false,
+    },
     capacity_autonomy:{
       safe_autonomous_action_count:autonomyPlan.safe_autonomous_action_count,
       authority_request_count:autonomyPlan.authority_request_count,
@@ -332,6 +355,9 @@ export async function runCapacityOrganismOnce({
   if(candidateInventory) atomicJson(path.join(resolvedRoot,'ambient-candidate-inventory.json'),candidateInventory);
   if(opportunityMap) atomicJson(path.join(resolvedRoot,'capacity-gap-opportunities.json'),opportunityMap);
   if(demandHuntPlan) atomicJson(path.join(resolvedRoot,'backlog-capacity-hunt.json'),demandHuntPlan);
+  atomicJson(demandHistoryFile,demandHistory);
+  atomicJson(path.join(resolvedRoot,'capacity-demand-forecast.json'),demandForecast);
+  atomicJson(path.join(resolvedRoot,'capacity-prewarm-plan.json'),prewarmPlan);
   atomicJson(path.join(resolvedRoot,'capacity-autonomy-plan.json'),autonomyPlan);
   atomicJson(path.join(resolvedRoot,'authority-requests.json'),{
     schema:'evercraft.saban.capacity-authority-queue.v1',
@@ -361,6 +387,8 @@ async function main(){
       missing_capacity_count:receipt.missing_capacity.length,
       safe_autonomous_action_count:receipt.capacity_autonomy?.safe_autonomous_action_count||0,
       authority_request_count:receipt.capacity_autonomy?.authority_request_count||0,
+      forecast_prewarm_workload_count:receipt.demand_forecast?.prewarm_workloads?.length||0,
+      forecast_prewarm_action_count:receipt.demand_forecast?.prewarm_action_count||0,
       commercial_capacity_authorized:false,
       generated_at:receipt.generated_at,
     })+'\n');
