@@ -1,0 +1,91 @@
+name: Evercraft Journal public canary
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/evercraft-journal-public-canary.yml'
+      - '.github/workflows/evercraft-journal-pages.yml'
+      - 'systemia/newsroom/**'
+      - 'systemia/organism/portfolio-sentinel-runner.mjs'
+      - '.github/workflows/systemia-portfolio-sentinel.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/evercraft-journal-public-canary.yml'
+      - '.github/workflows/evercraft-journal-pages.yml'
+      - 'systemia/newsroom/**'
+      - 'systemia/organism/portfolio-sentinel-runner.mjs'
+      - '.github/workflows/systemia-portfolio-sentinel.yml'
+  schedule:
+    - cron: '23 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  canary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Probe owned Journal candidates
+        shell: bash
+        env:
+          FAIL_CLOSED: ${{ github.event_name != 'pull_request' && 'true' || 'false' }}
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/journal-public-canary
+          node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+          const candidates=[
+            {key:'owned_domain',origin:'https://journal.evercraft.global/'},
+            {key:'github_pages',origin:'https://jgaethle10.github.io/forge-operator/'}
+          ];
+          const results=[];
+          for(const candidate of candidates){
+            const controller=new AbortController();
+            const timer=setTimeout(()=>controller.abort(),15000);
+            try{
+              const response=await fetch(candidate.origin,{
+                redirect:'follow',
+                headers:{accept:'text/html','user-agent':'Evercraft-Journal-Public-Canary/1.0'},
+                signal:controller.signal
+              });
+              const body=await response.text();
+              const identity=/Evercraft Journal/i.test(body);
+              const legacy=/Black Friday|shopping assistant|optimize your cart/i.test(body);
+              results.push({
+                ...candidate,status:response.status,final_url:response.url,
+                content_type:response.headers.get('content-type'),
+                evercraft_journal_identity:identity,
+                legacy_shopping_identity:legacy,
+                healthy:response.ok&&identity&&!legacy
+              });
+            }catch(error){
+              results.push({...candidate,status:null,error:error instanceof Error?error.message:String(error),healthy:false});
+            }finally{clearTimeout(timer);}
+          }
+          const selected=results.find(row=>row.healthy)||null;
+          const receipt={
+            schema:'evercraft.journal.public-canary.v1',
+            checked_at:new Date().toISOString(),
+            state:selected?'verified_owned_origin':'held_no_verified_owned_origin',
+            selected_origin:selected?.origin||null,
+            selected_key:selected?.key||null,
+            candidates:results,
+            legacy_base44_considered:false
+          };
+          fs.writeFileSync('artifacts/journal-public-canary/latest.json',JSON.stringify(receipt,null,2)+'\n');
+          console.log(JSON.stringify(receipt,null,2));
+          if(!selected && process.env.FAIL_CLOSED==='true') process.exitCode=1;
+          NODE
+      - name: Upload Journal public canary receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evercraft-journal-public-canary
+          path: artifacts/journal-public-canary/latest.json
+          if-no-files-found: error
+          retention-days: 30
