@@ -23,6 +23,7 @@ It:
 - never imports or executes scanned application code;
 - uses Python's standard-library AST for supported Python constructs;
 - uses conservative literal-import extraction for JS/TS and labels that coverage partial;
+- extracts literal Base44 entity reads/writes and literal `functions.invoke(...)` targets without executing code;
 - emits stable node and edge keys for unchanged source;
 - stores exact source locations and excerpts on declared relationships;
 - reports parser gaps and warnings rather than silently upgrading them to certainty;

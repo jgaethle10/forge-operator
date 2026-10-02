@@ -37,7 +37,7 @@ class ArchitectureScannerTests(unittest.TestCase):
 
             payload = self.run_scan(root)
 
-            self.assertEqual(payload["scanner_version"], "systemia-architecture-scan/1.0")
+            self.assertEqual(payload["scanner_version"], "systemia-architecture-scan/1.1")
             self.assertEqual(payload["scan_mode"], "static_only")
             self.assertFalse(payload["evidence_boundary"]["executes_scanned_code"])
             self.assertFalse(payload["evidence_boundary"]["claims_runtime_behavior"])
@@ -54,6 +54,32 @@ class ArchitectureScannerTests(unittest.TestCase):
                 row for row in payload["coverage"] if row["file_path"] == "beta.ts"
             )
             self.assertEqual(ts_coverage["state"], "partial")
+
+
+    def test_base44_entity_and_function_edges_are_extracted_without_execution(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "entry.ts").write_text(
+                "const a = await sr.entities.ColliderWorkItem.filter({stage: 'qa'})\n"
+                "await sr.entities.ExecutionCheckpoint.create({checkpoint_key: 'x'})\n"
+                "await base44.functions.invoke('workerOps', {action: 'run'})\n",
+                encoding="utf-8",
+            )
+
+            payload = self.run_scan(root)
+
+            relations = {(e["relation_type"], e["source_excerpt"]) for e in payload["edges"]}
+            self.assertTrue(any(r == "reads" and "ColliderWorkItem.filter" in x for r, x in relations))
+            self.assertTrue(any(r == "writes" and "ExecutionCheckpoint.create" in x for r, x in relations))
+            self.assertTrue(any(r == "invokes" and "functions.invoke('workerOps'" in x for r, x in relations))
+
+            node_types = {(n["node_type"], n["display_name"]) for n in payload["nodes"]}
+            self.assertIn(("entity", "ColliderWorkItem"), node_types)
+            self.assertIn(("entity", "ExecutionCheckpoint"), node_types)
+            self.assertIn(("workflow", "workerOps"), node_types)
+
+            self.assertFalse(payload["evidence_boundary"]["executes_scanned_code"])
+            self.assertFalse(payload["evidence_boundary"]["claims_runtime_behavior"])
 
     def test_output_is_deterministic_for_unchanged_tree(self):
         with tempfile.TemporaryDirectory() as tmp:
