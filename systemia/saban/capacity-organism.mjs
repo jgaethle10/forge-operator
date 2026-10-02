@@ -24,6 +24,7 @@ import { buildCapacityAutonomyPlan } from './capacity-autonomy-conductor.mjs';
 import { nodeSeedInventoryToComputeOffers } from './nodeseed-capacity-offer.mjs';
 import { readSafeNodeSeedInventory } from './nodeseed-inventory-ingest.mjs';
 import { appendDemandHistory, forecastCapacityDemand, prewarmActionsForAuthorizedCapacity } from './capacity-demand-forecast.mjs';
+import { buildForecastHeadroomReservations } from './capacity-headroom.mjs';
 
 const MODULE_FILE=fileURLToPath(import.meta.url);
 
@@ -100,6 +101,7 @@ export function compileCapacityOrganismState({
   checkpoints={},
   demandRadar=null,
   nodeSeedInventory=null,
+  demandForecast=null,
   now=new Date(),
 }={}){
   const {caps,rejected}=activeCapabilities(registrySnapshot,{adapterHealth});
@@ -121,6 +123,20 @@ export function compileCapacityOrganismState({
         zero_spend_only:true,
       };
   const combinedOffers=[...compute.offers,...nodeSeedCompute.offers];
+  const headroomPlan=demandForecast
+    ? buildForecastHeadroomReservations({
+        forecast:demandForecast,
+        tasks:anatomy.tasks,
+        offers:combinedOffers,
+      })
+    : {
+        schema:'evercraft.saban.capacity-headroom-plan.v1',
+        reservations:[],
+        reservation_count:0,
+        skipped:[],
+        authority_expansion:false,
+        commercial_spend_usd:0,
+      };
   const capabilityPlan=composeCapabilityFabric({
     roles:rivetAliEvCapabilityRoles(),
     capabilities:caps,
@@ -131,6 +147,7 @@ export function compileCapacityOrganismState({
     offers:combinedOffers,
     performanceLedger,
     previousPlan,
+    reservations:headroomPlan.reservations,
     now,
   });
   const rebalance=planFabricRebalance({
@@ -269,6 +286,7 @@ export async function runCapacityOrganismOnce({
     checkpoints,
     demandRadar,
     nodeSeedInventory,
+    demandForecast,
     now,
   });
   const opportunityMap=candidateInventory
@@ -327,6 +345,15 @@ export async function runCapacityOrganismOnce({
       receipt_hash:demandForecast.receipt_hash,
       commercial_spend_usd:0,
       authority_expansion:false,
+    },
+    capacity_headroom:{
+      reservation_count:headroomPlan.reservation_count,
+      reservations:headroomPlan.reservations,
+      skipped:headroomPlan.skipped,
+      current_pressure_always_wins:headroomPlan.current_pressure_always_wins!==false,
+      authority_expansion:false,
+      commercial_spend_usd:0,
+      receipt_hash:headroomPlan.receipt_hash||null,
     },
     capacity_autonomy:{
       safe_autonomous_action_count:autonomyPlan.safe_autonomous_action_count,
@@ -390,6 +417,7 @@ async function main(){
       authority_request_count:receipt.capacity_autonomy?.authority_request_count||0,
       forecast_prewarm_workload_count:receipt.demand_forecast?.prewarm_workloads?.length||0,
       forecast_prewarm_action_count:receipt.demand_forecast?.prewarm_action_count||0,
+      forecast_headroom_reservation_count:receipt.capacity_headroom?.reservation_count||0,
       commercial_capacity_authorized:false,
       generated_at:receipt.generated_at,
     })+'\n');
