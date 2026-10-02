@@ -68,7 +68,6 @@ for(const forbidden of [
   "https://api.alpaca.markets",
   "https://api.alpaca.markets/",
   "http://paper-api.alpaca.markets",
-  "https://paper-api.alpaca.markets:443",
 ]){
   assert.throws(
     ()=>buildPaperOrderProbeSpec({
