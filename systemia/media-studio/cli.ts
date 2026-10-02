@@ -16,6 +16,7 @@ import { compileSeriesEpisode } from './series.js';
 import { buildVisualStageHtml } from './visual-stage-html.js';
 import { compileWorldIntelStage, type WorldIntelStageInput } from './world-intel-stage.js';
 import { compilePhenomenonCanvas, compilePhenomenonStage, type PhenomenonInput } from './phenomenon-renderer.js';
+import { compileNativeMotionScene, type NativeMotionScene } from './native-motion.js';
 import { compileJournalEducationStage, type JournalFallenProductionBrief } from './journal-education.js';
 import type { VisualStage } from './visual-stage.js';
 import { buildDistributedRenderPlan, type RenderAssetManifestRow } from './distributed-render.js';
@@ -91,6 +92,7 @@ function usage() {
     '  npm run media:studio -- world-intel <story.json> <visual-stage.json> [stage.html]',
     '  npm run media:studio -- phenomenon <phenomenon.json> <stage.html> [receipt.json]',
     '  npm run media:studio -- phenomenon-stage <phenomenon.json> <stage.json> [receipt.json]',
+    '  npm run media:studio -- native-motion <scene.json> <scene.html> [receipt.json]',
     '  npm run media:studio -- journal-story <journal-brief.json> <visual-stage.json> [receipt.json]',
     '  npm run media:studio -- render-plan <render-plan-input.json> <distributed-plan.json>',
     '  npm run media:studio -- studio-room <room.json> <visual-stage.json>',
@@ -115,6 +117,23 @@ function main() {
 
   if (!command || command === '--help' || command === '-h') {
     usage();
+    return;
+  }
+
+  if (command === 'native-motion') {
+    if (!input || !output) {
+      usage();
+      process.exitCode = 1;
+      return;
+    }
+    const scene = readJson<NativeMotionScene>(input);
+    const bundle = compileNativeMotionScene(scene);
+    fs.mkdirSync(path.dirname(path.resolve(output)), { recursive: true });
+    fs.writeFileSync(path.resolve(output), bundle.html, 'utf8');
+    if (optionalPlan) writeJson(optionalPlan, bundle.receipt);
+    console.log(`Native motion scene created: ${path.resolve(output)}`);
+    console.log(`Renderer: ${bundle.receipt.renderer}; SHA-256: ${bundle.receipt.digest}`);
+    if (optionalPlan) console.log(`Native motion receipt created: ${path.resolve(optionalPlan)}`);
     return;
   }
 
