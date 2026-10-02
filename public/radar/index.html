@@ -138,6 +138,7 @@ async function load() {
       ['Streams', health.stream_count ?? 0],
       ['Signals', latest.signal_count ?? 0],
       ['Sources', latest.independent_source_families ?? 0],
+      ['Sentinel', health.upstream_bridges?.sentinel?.status || 'not seen'],
       ['Status', latest.status || 'no edition']
     ].map(([label,value]) => '<span class="pill">'+esc(label)+': <strong>'+esc(value)+'</strong></span>').join('');
 
