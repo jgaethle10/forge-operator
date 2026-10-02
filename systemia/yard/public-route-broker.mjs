@@ -245,6 +245,13 @@ export class YardPublicRouteBroker {
     ){
       throw new Error('public_route_renewal_instance_mismatch');
     }
+    const verified=await this.yard.verifyPublicRoute(
+      String(binding?.deployment_id||''),
+      {
+        origin:String(binding?.origin||''),
+        allowLoopbackProof:this.allowLoopbackProof,
+      }
+    );
     const body={
       schema:'evercraft.yard.public-route-renewal.v1',
       route_lease_id:leaseId,
@@ -260,6 +267,8 @@ export class YardPublicRouteBroker {
         renewed?.receipt?.receipt_hash||
         null,
       provider_renewal_receipt_hash:renewed.renewal_receipt_hash||null,
+      public_route_receipt_hash:verified.receipt_hash||null,
+      route_health_reverified:true,
       renewed_at:renewed.renewed_at||new Date().toISOString(),
     };
     return {...body,receipt_hash:sha(body)};
