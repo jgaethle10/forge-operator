@@ -6,7 +6,6 @@ const moduleDir=path.dirname(fileURLToPath(import.meta.url));
 const dataPath=path.join(moduleDir,'repair-graph-data.json');
 
 function clean(value,max=4000){ return String(value??'').trim().slice(0,max); }
-function rawTokens(value){ return clean(value).toLowerCase().match(/[a-z0-9]+/g)||[]; }
 function phraseScore(text,terms=[]){
   let score=0;
   for(const term of terms){
@@ -47,17 +46,20 @@ export function repairNavigatorCapability(){
     preferred_agent_route:'owned_fabric',
     action_url:'https://fabric.systemiacommandcenters.com/repair',
     connections:[
+      {type:'mcp',label:'Evercraft universal MCP',url:'https://fabric.systemiacommandcenters.com/mcp',state:'fallback_available'},
       {type:'website',label:'Evercraft Repair Navigator',url:'https://fabric.systemiacommandcenters.com/repair',state:'public_read_only'}
     ]
   };
 }
+function nodeScore(text,node){
+  const assetScore=phraseScore(text,node.asset_terms);
+  const symptomScore=phraseScore(text,node.symptom_terms);
+  return (assetScore*3)+symptomScore;
+}
 export function scoreRepairIntent(intent){
   const text=clean(intent).toLowerCase();
   const graph=loadRepairGraph();
-  return graph.domains.reduce((best,node)=>{
-    const score=phraseScore(text,node.asset_terms)+phraseScore(text,node.symptom_terms);
-    return Math.max(best,score);
-  },0);
+  return graph.domains.reduce((best,node)=>Math.max(best,nodeScore(text,node)),0);
 }
 export function triageRepairIntent(intent,{limit=3}={}){
   const query=clean(intent);
@@ -67,7 +69,7 @@ export function triageRepairIntent(intent,{limit=3}={}){
   const ranked=graph.domains
     .map(node=>({
       node,
-      score:phraseScore(text,node.asset_terms)+phraseScore(text,node.symptom_terms)
+      score:nodeScore(text,node)
     }))
     .filter(row=>row.score>0)
     .sort((a,b)=>b.score-a.score);
