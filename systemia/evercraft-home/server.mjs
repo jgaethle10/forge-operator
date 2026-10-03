@@ -11,7 +11,6 @@ import { readNetworkOverview, readYardOverview } from "./operations-adapter.mjs"
 import { readRavenOverview } from "./raven-adapter.mjs";
 import { ProviderCredentialVault } from "./credential-vault.mjs";
 import { normalizeProviderCredentialRequest } from "./provider-credentials.mjs";
-import { CompetitionCredentialMigrationDoor } from "./competition-credential-migration.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const publicDir = path.join(here, "public");
@@ -101,9 +100,6 @@ export async function startEvercraftHomeServer({
   sessionTtlSeconds = Number(process.env.EVERCRAFT_HOME_SESSION_TTL_SECONDS || 1800),
   cookieSecure = String(process.env.EVERCRAFT_HOME_COOKIE_SECURE || "true").toLowerCase() !== "false",
   serviceOrigins = process.env,
-  competitionCredentialMigrationEnabled = String(
-    process.env.EVERCRAFT_COMPETITION_CREDENTIAL_MIGRATION_ENABLED || "false"
-  ).toLowerCase() === "true",
 } = {}) {
   const loopback = ["127.0.0.1", "localhost", "::1"].includes(host);
   if (authMode === "local" && !loopback) {
@@ -123,9 +119,6 @@ export async function startEvercraftHomeServer({
     : null;
   const loginLimiter = new IdentityRateLimiter();
   const credentialVault = credentialStateDir ? new ProviderCredentialVault({ stateDir: credentialStateDir }) : null;
-  const competitionCredentialMigration = credentialVault && competitionCredentialMigrationEnabled
-    ? new CompetitionCredentialMigrationDoor({ vault: credentialVault })
-    : null;
   const instanceId = "home_" + randomUUID();
   let closed = false;
   let deploymentReceiptRef = "";
@@ -150,11 +143,6 @@ export async function startEvercraftHomeServer({
       accepted_signing_key_count: authMode === "passport" ? Object.keys(signingKeys).length : 0,
       session_revocation_supported: Boolean(identity),
       provider_credential_vault_configured: Boolean(credentialVault),
-      competition_credential_migration_state: competitionCredentialMigration
-        ? competitionCredentialMigration.status().state
-        : competitionCredentialMigrationEnabled
-          ? "vault_unconfigured"
-          : "disabled",
     };
   }
 
@@ -254,43 +242,6 @@ export async function startEvercraftHomeServer({
         timestamp: new Date().toISOString(),
       });
 
-    }
-
-    if (req.method === "GET" && url.pathname === "/api/migrations/raven-competition-credentials/challenge") {
-      if (!competitionCredentialMigration) {
-        return json(res, 503, { ok: false, state: "credential_vault_not_configured" });
-      }
-      return json(res, 200, {
-        ok: true,
-        ...competitionCredentialMigration.challenge(),
-      });
-    }
-
-    if (req.method === "POST" && url.pathname === "/api/migrations/raven-competition-credentials") {
-      if (!competitionCredentialMigration) {
-        return json(res, 503, { ok: false, state: "credential_vault_not_configured" });
-      }
-      try {
-        const body = await readJsonBody(req, 32768);
-        const receipt = await competitionCredentialMigration.accept({
-          challenge_id: body.challenge_id,
-          ciphertext_base64: body.ciphertext_base64,
-        });
-        return json(res, 201, {
-          ok: true,
-          ...receipt,
-        });
-      } catch (error) {
-        const state = String(error?.message || "competition_credential_migration_failed");
-        const retryable = !["migration_attempt_limit", "kaggle_credential_verification_failed", "numerai_credential_verification_failed"].includes(state);
-        return json(res, 400, {
-          ok: false,
-          state,
-          retryable,
-          secret_material_returned: false,
-          plaintext_persisted: false,
-        });
-      }
     }
 
     if (req.method === "POST" && url.pathname === "/api/login") {
@@ -402,14 +353,14 @@ export async function startEvercraftHomeServer({
       return json(res, session.ok ? 200 : session.status, session);
     }
 
-    const householdProviderCredentialMatch = url.pathname.match(
-      /^\/api\/credentials\/providers\/(google-places|kroger)(\/status)?$/
+    const providerCredentialMatch = url.pathname.match(
+      /^\/api\/credentials\/providers\/(google-places|kroger|kaggle|numerai)(\/status)?$/
     );
-    if (householdProviderCredentialMatch && req.method === "GET" && householdProviderCredentialMatch[2]) {
+    if (providerCredentialMatch && req.method === "GET" && providerCredentialMatch[2]) {
       const session = sessionFor(req, "home.identity.sessions.manage");
       if (!session.ok) return json(res, session.status, session);
       if (!credentialVault) return json(res, 503, { ok: false, state: "credential_vault_not_configured" });
-      const provider = householdProviderCredentialMatch[1];
+      const provider = providerCredentialMatch[1];
       return json(res, 200, {
         ok: true,
         provider,
@@ -418,13 +369,13 @@ export async function startEvercraftHomeServer({
       });
     }
 
-    if (householdProviderCredentialMatch && req.method === "POST" && !householdProviderCredentialMatch[2]) {
+    if (providerCredentialMatch && req.method === "POST" && !providerCredentialMatch[2]) {
       const session = sessionFor(req, "home.identity.sessions.manage");
       if (!session.ok) return json(res, session.status, session);
       if (!credentialVault) return json(res, 503, { ok: false, state: "credential_vault_not_configured" });
       try {
         const body = await readJsonBody(req, 16384);
-        const normalized = normalizeProviderCredentialRequest(householdProviderCredentialMatch[1], body);
+        const normalized = normalizeProviderCredentialRequest(providerCredentialMatch[1], body);
         const credential = credentialVault.put({
           ...normalized,
           actorRef: session.subject,
