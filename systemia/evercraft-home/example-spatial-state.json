@@ -1,0 +1,88 @@
+{
+  "home_id": "demo-home",
+  "label": "Evercraft Home Demo",
+  "updated_at": "2026-10-02T22:00:00-07:00",
+  "evidence_state": "observed",
+  "geometry_source": "manual_floorplan",
+  "source_refs": ["example:local-floorplan"],
+  "floors": [
+    {
+      "id": "main",
+      "label": "Main floor",
+      "level": 0,
+      "elevation_m": 0,
+      "rooms": [
+        {
+          "id": "living",
+          "label": "Living Room",
+          "geometry": { "x": 0, "y": 0, "width": 5.5, "depth": 4.2, "height": 2.7 },
+          "occupancy": "occupied",
+          "evidence_state": "observed",
+          "telemetry": { "temperature_c": 21.6, "co2_ppm": 638 }
+        },
+        {
+          "id": "kitchen",
+          "label": "Kitchen",
+          "geometry": { "x": 5.8, "y": 0, "width": 4.2, "depth": 4.2, "height": 2.7 },
+          "occupancy": "vacant",
+          "evidence_state": "observed",
+          "telemetry": { "temperature_c": 21.2 }
+        },
+        {
+          "id": "hall",
+          "label": "Hall",
+          "geometry": { "x": 3.2, "y": 4.5, "width": 3.2, "depth": 2.2, "height": 2.7 },
+          "occupancy": "unknown",
+          "evidence_state": "unknown"
+        },
+        {
+          "id": "wc",
+          "label": "WC",
+          "geometry": { "x": 6.7, "y": 4.5, "width": 1.9, "depth": 2.2, "height": 2.7 },
+          "occupancy": "unknown",
+          "evidence_state": "unknown"
+        }
+      ],
+      "doors": [
+        {
+          "id": "wc-door",
+          "label": "WC Door",
+          "connects": ["hall", "wc"],
+          "position": { "x": 6.62, "y": 5.35, "z": 1, "rotation_deg": 90 },
+          "state": "closed",
+          "evidence_state": "observed",
+          "source_refs": ["sensor:wc-door-contact"]
+        },
+        {
+          "id": "kitchen-door",
+          "label": "Kitchen Door",
+          "connects": ["living", "kitchen"],
+          "position": { "x": 5.65, "y": 2.1, "z": 1, "rotation_deg": 90 },
+          "state": "open",
+          "evidence_state": "observed",
+          "source_refs": ["sensor:kitchen-door-contact"]
+        }
+      ],
+      "devices": [
+        {
+          "id": "living-air",
+          "label": "Living Air",
+          "room_id": "living",
+          "kind": "air_quality",
+          "position": { "x": 2.2, "y": 1.6, "z": 1.25 },
+          "state": { "co2_ppm": 638, "temperature_c": 21.6 },
+          "evidence_state": "observed"
+        },
+        {
+          "id": "kitchen-light",
+          "label": "Kitchen Light",
+          "room_id": "kitchen",
+          "kind": "light",
+          "position": { "x": 7.9, "y": 2.1, "z": 2.5 },
+          "state": { "on": true },
+          "evidence_state": "observed"
+        }
+      ]
+    }
+  ]
+}
