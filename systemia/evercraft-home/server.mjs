@@ -101,6 +101,9 @@ export async function startEvercraftHomeServer({
   sessionTtlSeconds = Number(process.env.EVERCRAFT_HOME_SESSION_TTL_SECONDS || 1800),
   cookieSecure = String(process.env.EVERCRAFT_HOME_COOKIE_SECURE || "true").toLowerCase() !== "false",
   serviceOrigins = process.env,
+  competitionCredentialMigrationEnabled = String(
+    process.env.EVERCRAFT_COMPETITION_CREDENTIAL_MIGRATION_ENABLED || "false"
+  ).toLowerCase() === "true",
 } = {}) {
   const loopback = ["127.0.0.1", "localhost", "::1"].includes(host);
   if (authMode === "local" && !loopback) {
@@ -120,7 +123,7 @@ export async function startEvercraftHomeServer({
     : null;
   const loginLimiter = new IdentityRateLimiter();
   const credentialVault = credentialStateDir ? new ProviderCredentialVault({ stateDir: credentialStateDir }) : null;
-  const competitionCredentialMigration = credentialVault
+  const competitionCredentialMigration = credentialVault && competitionCredentialMigrationEnabled
     ? new CompetitionCredentialMigrationDoor({ vault: credentialVault })
     : null;
   const instanceId = "home_" + randomUUID();
@@ -149,7 +152,9 @@ export async function startEvercraftHomeServer({
       provider_credential_vault_configured: Boolean(credentialVault),
       competition_credential_migration_state: competitionCredentialMigration
         ? competitionCredentialMigration.status().state
-        : "vault_unconfigured",
+        : competitionCredentialMigrationEnabled
+          ? "vault_unconfigured"
+          : "disabled",
     };
   }
 
