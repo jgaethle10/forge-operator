@@ -1675,9 +1675,6 @@ export async function startEvercraftComputeNode({
             passportStateDir: passportStateRoot,
             identityStateDir: identityStateRoot,
             credentialStateDir: credentialStateRoot,
-            competitionCredentialMigrationEnabled: String(
-              body.input?.competition_credential_migration_enabled || 'false'
-            ).toLowerCase() === 'true',
             yardStateDir: yardStateRoot,
           });
 
@@ -2410,6 +2407,9 @@ export async function startEvercraftComputeNode({
             health_path: `/v1/services/${serviceId}/health`,
             supervised_service_count: health.service_count,
             sentinel_region_profile: serviceEnv.SYSTEMIA_SENTINEL_REGION_PROFILE || null,
+            provider_credential_vault_bound: Boolean(
+              serviceEnv.RAVEN_PROVIDER_CREDENTIAL_STATE_DIR
+            ),
           };
           const receipt = chain.issue('service.started', {
             lease_id: body.lease_id,
