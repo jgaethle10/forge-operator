@@ -11,6 +11,7 @@ import { readNetworkOverview, readYardOverview } from "./operations-adapter.mjs"
 import { readRavenOverview } from "./raven-adapter.mjs";
 import { ProviderCredentialVault } from "./credential-vault.mjs";
 import { normalizeProviderCredentialRequest } from "./provider-credentials.mjs";
+import { readSpatialTwinFile } from "./spatial-twin.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const publicDir = path.join(here, "public");
@@ -100,6 +101,7 @@ export async function startEvercraftHomeServer({
   sessionTtlSeconds = Number(process.env.EVERCRAFT_HOME_SESSION_TTL_SECONDS || 1800),
   cookieSecure = String(process.env.EVERCRAFT_HOME_COOKIE_SECURE || "true").toLowerCase() !== "false",
   serviceOrigins = process.env,
+  spatialStatePath = String(process.env.EVERCRAFT_HOME_SPATIAL_STATE_PATH || "").trim(),
 } = {}) {
   const loopback = ["127.0.0.1", "localhost", "::1"].includes(host);
   if (authMode === "local" && !loopback) {
@@ -143,6 +145,7 @@ export async function startEvercraftHomeServer({
       accepted_signing_key_count: authMode === "passport" ? Object.keys(signingKeys).length : 0,
       session_revocation_supported: Boolean(identity),
       provider_credential_vault_configured: Boolean(credentialVault),
+      spatial_twin_configured: Boolean(spatialStatePath),
     };
   }
 
@@ -476,6 +479,21 @@ export async function startEvercraftHomeServer({
       const session = sessionFor(req, "home.network.read");
       if (!session.ok) return json(res, session.status, session);
       return json(res, 200, { ok: true, subject: session.subject, ...readNetworkOverview(repoRoot) });
+    }
+
+    if (req.method === "GET" && url.pathname === "/api/home/spatial-twin") {
+      const session = sessionFor(req, "home.read");
+      if (!session.ok) return json(res, session.status, session);
+      const twin = readSpatialTwinFile(spatialStatePath);
+      return json(res, twin.ok ? 200 : 503, {
+        ok: twin.ok,
+        subject: session.subject,
+        state: twin.state,
+        scene: twin.scene,
+        world: twin.world || null,
+        device_control_authority: false,
+        public_exposure_allowed: false,
+      });
     }
 
     if (req.method === "GET" && url.pathname === "/api/overview") {
