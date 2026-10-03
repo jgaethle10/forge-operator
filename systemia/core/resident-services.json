@@ -64,6 +64,21 @@
       }
     },
     {
+      "service_key": "competition-submission-executor",
+      "mode": "cycle",
+      "manifest": "systemia/organism/competition-submission-executor.workflow.json",
+      "executable": "systemia/competition/submission-runner.mjs",
+      "cadence_seconds": 300,
+      "static_args": [
+        "--authority",
+        "authorized_existing_terms_only"
+      ],
+      "optional_env_args": {
+        "--job-dir": "SYSTEMIA_COMPETITION_JOB_DIR",
+        "--out-dir": "SYSTEMIA_COMPETITION_SUBMISSION_DIR"
+      }
+    },
+    {
       "service_key": "legacy-rescue-opportunity-watch",
       "mode": "cycle",
       "manifest": "systemia/organism/legacy-rescue-watch.workflow.json",
