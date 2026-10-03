@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-state.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-03T16:12:06.924Z",
+  "updated_at": "2026-10-03T16:12:11.448Z",
   "url_count": 2722,
   "doctrine": {
     "crawl_can_be_requested_not_forced": true,
@@ -141,8 +141,8 @@
     },
     "/chum/hot/index.json": {
       "path": "/chum/hot/index.json",
-      "content_sha256": "5742bc3fe4c28c1d6df025170583dff7dbf679c8b63151142a3e2da62ff9b15d",
-      "last_changed": "2026-10-03T16:12:06.924Z",
+      "content_sha256": "1cd8801aa95c4844f2047035bdb0623f5d88afe551161b4b6e867307ee1a190c",
+      "last_changed": "2026-10-03T16:12:11.448Z",
       "priority": 80
     },
     "/chum/strike/": {
@@ -16311,14 +16311,14 @@
     },
     "/feed.xml": {
       "path": "/feed.xml",
-      "content_sha256": "a7944a58d0ecc5a2242665b6513bd64cf0a28d9be40abe80a12fa009fa47be3c",
-      "last_changed": "2026-10-03T16:12:06.924Z",
+      "content_sha256": "19a60bdf1fe745a315475e6e268001e62c4eb4323803254b921ebd421a128cad",
+      "last_changed": "2026-10-03T16:12:11.448Z",
       "priority": 60
     },
     "/feed.json": {
       "path": "/feed.json",
-      "content_sha256": "9d61535dccc30e7132e0fce756b75aff3ee768fadf12f77c66c88b4f9b44de3c",
-      "last_changed": "2026-10-03T16:12:06.924Z",
+      "content_sha256": "dec3962a8b6bafe2716d03af26eb24abd540f3b4fed3f4d8eb6876cbf1b26a4b",
+      "last_changed": "2026-10-03T16:12:11.448Z",
       "priority": 60
     },
     "/opensearch.xml": {
@@ -16329,8 +16329,8 @@
     },
     "/.well-known/evercraft-syndication.json": {
       "path": "/.well-known/evercraft-syndication.json",
-      "content_sha256": "8ab190c252162e234b10209433c78d1a9bb7fdf5a784981d3239c211f0f2fa89",
-      "last_changed": "2026-10-03T16:12:06.924Z",
+      "content_sha256": "0490715e0d7c800878254e36e9163e9713cc02d2320cde6a52a7764afe48b026",
+      "last_changed": "2026-10-03T16:12:11.448Z",
       "priority": 84
     },
     "/chum/syndication/": {
@@ -16341,8 +16341,8 @@
     },
     "/chum/syndication/index.json": {
       "path": "/chum/syndication/index.json",
-      "content_sha256": "8717edec0b593d651a6571b8c9bf40f0ed77d64f01c349086e2cdf6a105bf320",
-      "last_changed": "2026-10-03T16:12:06.924Z",
+      "content_sha256": "4492a8ce59d6e35dc2212240553b96c39371f79105d05be6632462442f67a562",
+      "last_changed": "2026-10-03T16:12:11.448Z",
       "priority": 80
     }
   }
