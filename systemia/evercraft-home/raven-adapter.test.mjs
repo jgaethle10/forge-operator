@@ -31,10 +31,10 @@ test("Raven overview preserves provider probe truth",()=>{
   assert.equal(result.probe_suite.workload_declared,true);
 });
 
-test("Raven overview identifies legacy public routing debt without exposing credentials",()=>{
+test("Raven overview reports current non-Base44 public routing without exposing credentials",()=>{
   const result=readRavenOverview(repoRoot);
   assert.equal(result.runtime.public_discovery_route_declared,true);
-  assert.equal(result.runtime.legacy_public_route_declared,true);
+  assert.equal(result.runtime.legacy_public_route_declared,false);
   const serialized=JSON.stringify(result).toLowerCase();
   assert.equal(serialized.includes("nexus_probe_bridge_token"),false);
   assert.equal(serialized.includes("authorization: bearer"),false);
