@@ -15,8 +15,8 @@
   "authority": {
     "provider_listing": "autonomous_read_only",
     "provider_auth_probe": "autonomous_read_only",
-    "competition_participation": "human_gate_when_provider_terms_require_acceptance",
-    "submission": "held_until_provider_receipt_and_explicit_runtime_authority",
+    "competition_participation": "autonomous_when_no_new_terms_required_else_human_gate",
+    "submission": "delegated_to_competition_submission_executor_existing_terms_only",
     "staking": "disabled",
     "payment_request": "human_gate",
     "production_mutation": "explicit_authorization_required"
