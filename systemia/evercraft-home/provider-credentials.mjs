@@ -14,6 +14,16 @@ const SPECS = Object.freeze({
     label: 'household-fabric',
     environment: 'live',
   }),
+  kaggle: Object.freeze({
+    provider: 'kaggle',
+    label: 'competition-foundry',
+    environment: 'live',
+  }),
+  numerai: Object.freeze({
+    provider: 'numerai',
+    label: 'competition-foundry',
+    environment: 'live',
+  }),
 });
 
 function clean(value) {
@@ -50,6 +60,26 @@ export function normalizeProviderCredentialRequest(provider, body = {}) {
       label: clean(body.label) || spec.label,
       apiKeyId: 'google-places-api-key',
       apiSecret: clean(body.api_key),
+    };
+  }
+
+  if (spec.provider === 'kaggle') {
+    return {
+      provider: spec.provider,
+      environment: clean(body.environment) || spec.environment,
+      label: clean(body.label) || spec.label,
+      apiKeyId: 'kaggle-api-token',
+      apiSecret: clean(body.api_token),
+    };
+  }
+
+  if (spec.provider === 'numerai') {
+    return {
+      provider: spec.provider,
+      environment: clean(body.environment) || spec.environment,
+      label: clean(body.label) || spec.label,
+      apiKeyId: clean(body.public_id),
+      apiSecret: clean(body.secret_key),
     };
   }
 

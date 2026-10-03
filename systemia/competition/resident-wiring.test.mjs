@@ -13,7 +13,6 @@ test("competition provider scout is resident-wired without Base44 or public Fabr
   assert.equal(service.mode, "cycle");
   assert.equal(service.cadence_seconds, 900);
   assert.equal(service.optional_when_unconfigured, true);
-  assert.equal(service.env_args["--raven-credentials-ready"], "RAVEN_COMPETITION_PROVIDER_CREDENTIALS_READY");
   assert.equal(service.executable, "systemia/competition/provider-probe-runner.mjs");
 
   assert.equal(scoutManifest.routing.base44_allowed, false);

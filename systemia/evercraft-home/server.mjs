@@ -353,14 +353,14 @@ export async function startEvercraftHomeServer({
       return json(res, session.ok ? 200 : session.status, session);
     }
 
-    const householdProviderCredentialMatch = url.pathname.match(
-      /^\/api\/credentials\/providers\/(google-places|kroger)(\/status)?$/
+    const providerCredentialMatch = url.pathname.match(
+      /^\/api\/credentials\/providers\/(google-places|kroger|kaggle|numerai)(\/status)?$/
     );
-    if (householdProviderCredentialMatch && req.method === "GET" && householdProviderCredentialMatch[2]) {
+    if (providerCredentialMatch && req.method === "GET" && providerCredentialMatch[2]) {
       const session = sessionFor(req, "home.identity.sessions.manage");
       if (!session.ok) return json(res, session.status, session);
       if (!credentialVault) return json(res, 503, { ok: false, state: "credential_vault_not_configured" });
-      const provider = householdProviderCredentialMatch[1];
+      const provider = providerCredentialMatch[1];
       return json(res, 200, {
         ok: true,
         provider,
@@ -369,13 +369,13 @@ export async function startEvercraftHomeServer({
       });
     }
 
-    if (householdProviderCredentialMatch && req.method === "POST" && !householdProviderCredentialMatch[2]) {
+    if (providerCredentialMatch && req.method === "POST" && !providerCredentialMatch[2]) {
       const session = sessionFor(req, "home.identity.sessions.manage");
       if (!session.ok) return json(res, session.status, session);
       if (!credentialVault) return json(res, 503, { ok: false, state: "credential_vault_not_configured" });
       try {
         const body = await readJsonBody(req, 16384);
-        const normalized = normalizeProviderCredentialRequest(householdProviderCredentialMatch[1], body);
+        const normalized = normalizeProviderCredentialRequest(providerCredentialMatch[1], body);
         const credential = credentialVault.put({
           ...normalized,
           actorRef: session.subject,

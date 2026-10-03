@@ -56,9 +56,6 @@
       "executable": "systemia/competition/provider-probe-runner.mjs",
       "cadence_seconds": 900,
       "optional_when_unconfigured": true,
-      "env_args": {
-        "--raven-credentials-ready": "RAVEN_COMPETITION_PROVIDER_CREDENTIALS_READY"
-      },
       "optional_env_args": {
         "--out": "SYSTEMIA_COMPETITION_PROVIDER_RECEIPT"
       }

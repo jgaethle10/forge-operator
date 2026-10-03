@@ -168,3 +168,17 @@ The owner-gated Evercraft credential vault also accepts Household Fabric provide
 Google Places stores a fixed non-secret vault key ID while the API key remains encrypted secret material. Kroger maps its client ID and client secret into the generic provider envelope. Status responses return only opaque references, fingerprints, timestamps and non-secret metadata.
 
 `/credentials.html` exposes the supported providers through the private intake surface. Household Fabric runtime consumption is vault-reference-first.
+
+
+### Competition Foundry provider credentials
+
+Evercraft Home is also the owned credential-custody surface for the Systemia Competition Foundry:
+
+- `POST /api/credentials/providers/kaggle` with `api_token`
+- `GET /api/credentials/providers/kaggle/status`
+- `POST /api/credentials/providers/numerai` with `public_id` and `secret_key`
+- `GET /api/credentials/providers/numerai/status`
+
+These routes use the same authenticated owner boundary and AES-256-GCM provider vault as the other owned provider credentials. The Systemia Core resident supervisor receives only the private vault directory binding through `RAVEN_PROVIDER_CREDENTIAL_STATE_DIR`; raw keys are never copied into mission receipts, command-line arguments, GitHub, or public Fabric.
+
+Competition provider readiness is derived directly from the Raven secret boundary. No separate credential-ready toggle is required. Kaggle/Numerai execution still preserves the competition authority contract: Raven QA before submission, existing accepted terms only, provider receipt required before success, and Numerai staking/payment/security mutation disabled.

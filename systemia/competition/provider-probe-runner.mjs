@@ -21,35 +21,8 @@ function atomicJson(file, value) {
 const out = path.resolve(
   arg("--out", process.env.SYSTEMIA_COMPETITION_PROVIDER_RECEIPT || "artifacts/competition-provider/latest.json")
 );
-const ravenReady = arg(
-  "--raven-credentials-ready",
-  process.env.RAVEN_COMPETITION_PROVIDER_CREDENTIALS_READY || ""
-);
-
-let result;
-if (!truthy(ravenReady)) {
-  result = {
-    schema: "evercraft.systemia.competition-provider-probe-suite.v1",
-    route: ["systemia", "raven_nexus", "provider_api"],
-    base44_used: false,
-    public_fabric_used: false,
-    submission_authority_enabled: false,
-    staking_authority_enabled: false,
-    providers: [],
-    summary: {
-      provider_count: 0,
-      verified_count: 0,
-      held_count: 1,
-      failed_count: 0,
-      state: "held",
-      reason: "raven_provider_credentials_not_admitted_to_runtime",
-    },
-    observed_at: new Date().toISOString(),
-  };
-} else {
-  result = await runCompetitionProviderProbes({ env: process.env });
-  result.observed_at = new Date().toISOString();
-}
+const result = await runCompetitionProviderProbes({ env: process.env });
+result.observed_at = new Date().toISOString();
 
 atomicJson(out, result);
 process.stdout.write(JSON.stringify({
