@@ -11,6 +11,7 @@ import { readNetworkOverview, readYardOverview } from "./operations-adapter.mjs"
 import { readRavenOverview } from "./raven-adapter.mjs";
 import { ProviderCredentialVault } from "./credential-vault.mjs";
 import { normalizeProviderCredentialRequest } from "./provider-credentials.mjs";
+import { CompetitionCredentialMigrationDoor } from "./competition-credential-migration.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const publicDir = path.join(here, "public");
@@ -119,6 +120,9 @@ export async function startEvercraftHomeServer({
     : null;
   const loginLimiter = new IdentityRateLimiter();
   const credentialVault = credentialStateDir ? new ProviderCredentialVault({ stateDir: credentialStateDir }) : null;
+  const competitionCredentialMigration = credentialVault
+    ? new CompetitionCredentialMigrationDoor({ vault: credentialVault })
+    : null;
   const instanceId = "home_" + randomUUID();
   let closed = false;
   let deploymentReceiptRef = "";
@@ -143,6 +147,9 @@ export async function startEvercraftHomeServer({
       accepted_signing_key_count: authMode === "passport" ? Object.keys(signingKeys).length : 0,
       session_revocation_supported: Boolean(identity),
       provider_credential_vault_configured: Boolean(credentialVault),
+      competition_credential_migration_state: competitionCredentialMigration
+        ? competitionCredentialMigration.status().state
+        : "vault_unconfigured",
     };
   }
 
@@ -242,6 +249,43 @@ export async function startEvercraftHomeServer({
         timestamp: new Date().toISOString(),
       });
 
+    }
+
+    if (req.method === "GET" && url.pathname === "/api/migrations/raven-competition-credentials/challenge") {
+      if (!competitionCredentialMigration) {
+        return json(res, 503, { ok: false, state: "credential_vault_not_configured" });
+      }
+      return json(res, 200, {
+        ok: true,
+        ...competitionCredentialMigration.challenge(),
+      });
+    }
+
+    if (req.method === "POST" && url.pathname === "/api/migrations/raven-competition-credentials") {
+      if (!competitionCredentialMigration) {
+        return json(res, 503, { ok: false, state: "credential_vault_not_configured" });
+      }
+      try {
+        const body = await readJsonBody(req, 32768);
+        const receipt = await competitionCredentialMigration.accept({
+          challenge_id: body.challenge_id,
+          ciphertext_base64: body.ciphertext_base64,
+        });
+        return json(res, 201, {
+          ok: true,
+          ...receipt,
+        });
+      } catch (error) {
+        const state = String(error?.message || "competition_credential_migration_failed");
+        const retryable = !["migration_attempt_limit", "kaggle_credential_verification_failed", "numerai_credential_verification_failed"].includes(state);
+        return json(res, 400, {
+          ok: false,
+          state,
+          retryable,
+          secret_material_returned: false,
+          plaintext_persisted: false,
+        });
+      }
     }
 
     if (req.method === "POST" && url.pathname === "/api/login") {
