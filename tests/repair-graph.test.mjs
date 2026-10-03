@@ -37,3 +37,13 @@ test('Repair Navigator capability is free read-only Fabric frontage',()=>{
   assert.equal(capability.commercial_state,'free');
   assert.match(capability.action_url,/fabric\.systemiacommandcenters\.com\/repair/);
 });
+
+
+test('dryer that runs but leaves clothes wet routes to drying-performance triage',()=>{
+  const result=triageRepairIntent('My dryer turns on and runs but the clothes are still wet after an hour.');
+  assert.equal(result.supported,true);
+  assert.equal(result.domain,'appliance');
+  assert.match(result.problem,/not drying/i);
+  assert.match(result.hypotheses[0].cause,/airflow|vent/i);
+  assert.equal(result.external_action_taken,false);
+});
