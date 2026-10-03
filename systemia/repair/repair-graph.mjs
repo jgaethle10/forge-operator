@@ -54,7 +54,7 @@ export function repairNavigatorCapability(){
 function nodeScore(text,node){
   const assetScore=phraseScore(text,node.asset_terms);
   const symptomScore=phraseScore(text,node.symptom_terms);
-  return (assetScore*3)+symptomScore;
+  return (assetScore*5)+symptomScore;
 }
 export function scoreRepairIntent(intent){
   const text=clean(intent).toLowerCase();
