@@ -1635,6 +1635,16 @@ export async function startEvercraftComputeNode({
             return send(res, 403, { error: 'evercraft_identity_state_outside_admitted_root' });
           }
 
+          const credentialStateValue = String(
+            body.input?.provider_credential_state_dir ||
+            process.env.EVERCRAFT_CREDENTIAL_STATE_DIR ||
+            path.join(identityStateRoot, 'provider-credentials')
+          ).trim();
+          const credentialStateRoot = path.resolve(credentialStateValue);
+          if (!isWithin(allowedRoot, credentialStateRoot)) {
+            return send(res, 403, { error: 'evercraft_provider_credential_state_outside_admitted_root' });
+          }
+
           const passportStateRoot = path.resolve(String(
             body.input?.passport_state_dir ||
             process.env.EVERCRAFT_PASSPORT_STATE_DIR ||
@@ -1664,6 +1674,10 @@ export async function startEvercraftComputeNode({
             identitySecret,
             passportStateDir: passportStateRoot,
             identityStateDir: identityStateRoot,
+            credentialStateDir: credentialStateRoot,
+            competitionCredentialMigrationEnabled: String(
+              body.input?.competition_credential_migration_enabled || 'false'
+            ).toLowerCase() === 'true',
             yardStateDir: yardStateRoot,
           });
 
@@ -2290,6 +2304,23 @@ export async function startEvercraftComputeNode({
             ],
           });
 
+          const providerCredentialStateValue = String(
+            body.input?.provider_credential_state_dir ||
+            process.env.EVERCRAFT_CREDENTIAL_STATE_DIR ||
+            (process.env.EVERCRAFT_IDENTITY_STATE_DIR
+              ? path.join(process.env.EVERCRAFT_IDENTITY_STATE_DIR, 'provider-credentials')
+              : '')
+          ).trim();
+          const providerCredentialStateRoot = providerCredentialStateValue
+            ? path.resolve(providerCredentialStateValue)
+            : '';
+          if (
+            providerCredentialStateRoot &&
+            !isWithin(allowedRoot, providerCredentialStateRoot)
+          ) {
+            return send(res, 403, { error: 'core_provider_credential_state_outside_admitted_root' });
+          }
+
           const serviceEnv = {
             NODE_ENV: String(process.env.NODE_ENV || 'production'),
             EVERCRAFT_RELEASE_REF: releaseRef,
@@ -2328,6 +2359,7 @@ export async function startEvercraftComputeNode({
               workspaceRoot,
               'eps-social-continuity'
             ),
+            RAVEN_PROVIDER_CREDENTIAL_STATE_DIR: providerCredentialStateRoot,
           };
 
           if (serviceEnv.EVERCRAFT_CLIP_EPS_INGRESS_URL) {
