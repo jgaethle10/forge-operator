@@ -187,6 +187,7 @@ export function normalizeFabricCatalog(input=[]){
       entry_paid_offer:normalizeEntryPaidOffer(item.entry_paid_offer),
       start_url_state:clean(item.start_url_state||'',120)||null,
       preferred_agent_route:clean(item.preferred_agent_route||'',120)||null,
+      action_url:safeUrl(item.action_url||''),
       connections,
     };
   });
