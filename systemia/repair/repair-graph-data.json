@@ -118,6 +118,105 @@
       ]
     },
     {
+      "id": "appliance-dryer-runs-but-not-drying",
+      "domain": "appliance",
+      "asset_terms": [
+        "dryer",
+        "clothes dryer",
+        "laundry dryer"
+      ],
+      "symptom_terms": [
+        "clothes still wet",
+        "still wet after an hour",
+        "not drying",
+        "won't dry",
+        "will not dry",
+        "takes too long to dry",
+        "runs but clothes are wet",
+        "runs but not drying",
+        "no heat",
+        "not heating"
+      ],
+      "title": "Dryer runs but clothes are not drying",
+      "safety": {
+        "level": "caution",
+        "stop_if": [
+          "burning smell",
+          "scorching",
+          "melted plug or cord",
+          "sparking",
+          "dryer cabinet is unusually hot",
+          "vent duct or outlet appears overheated"
+        ],
+        "note": "Lint restriction can become a fire hazard. Disconnect power before opening panels. Gas dryers require qualified service if the fuel or ignition system is implicated."
+      },
+      "checks": [
+        {
+          "id": "airflow",
+          "label": "Check and clean the lint screen, then inspect whether airflow at the exterior vent is weak or absent while the dryer runs.",
+          "risk": "low"
+        },
+        {
+          "id": "vent",
+          "label": "Inspect the accessible vent path for crushing, heavy lint buildup, or an exterior flap that is stuck closed.",
+          "risk": "low"
+        },
+        {
+          "id": "heat",
+          "label": "Determine whether the drum is producing normal heat, low heat, or no heat without opening energized panels.",
+          "risk": "low"
+        },
+        {
+          "id": "load_cycle",
+          "label": "Confirm the load is not unusually large and that the selected cycle is intended to use heat.",
+          "risk": "low"
+        }
+      ],
+      "hypotheses": [
+        {
+          "cause": "restricted exhaust airflow or clogged vent",
+          "weight": 1,
+          "evidence": [
+            "weak exterior airflow",
+            "heavy lint",
+            "long dry times",
+            "dryer becomes unusually hot"
+          ],
+          "part_handoff": false
+        },
+        {
+          "cause": "heating element, igniter, gas-valve, or heat-source fault",
+          "weight": 0.86,
+          "evidence": [
+            "drum tumbles normally",
+            "little or no heat",
+            "airflow is otherwise adequate"
+          ],
+          "part_handoff": true
+        },
+        {
+          "cause": "thermal fuse, thermostat, or temperature-control fault",
+          "weight": 0.75,
+          "evidence": [
+            "heat behavior abnormal",
+            "vent path verified clear",
+            "service testing implicates thermal protection/control"
+          ],
+          "part_handoff": true
+        },
+        {
+          "cause": "moisture sensor or cycle-control issue",
+          "weight": 0.5,
+          "evidence": [
+            "heat and airflow appear normal",
+            "automatic cycle ends early",
+            "timed dry behaves differently"
+          ],
+          "part_handoff": true
+        }
+      ]
+    },
+    {
       "id": "appliance-no-power",
       "domain": "appliance",
       "asset_terms": [
