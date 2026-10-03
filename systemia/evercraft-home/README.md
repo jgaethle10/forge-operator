@@ -168,3 +168,34 @@ The owner-gated Evercraft credential vault also accepts Household Fabric provide
 Google Places stores a fixed non-secret vault key ID while the API key remains encrypted secret material. Kroger maps its client ID and client secret into the generic provider envelope. Status responses return only opaque references, fingerprints, timestamps and non-secret metadata.
 
 `/credentials.html` exposes the supported providers through the private intake surface. Household Fabric runtime consumption is vault-reference-first.
+
+
+## Spatial digital twin
+
+Evercraft Home now has a first-party, provider-independent spatial scene contract for the physical home.
+
+Set:
+
+```bash
+EVERCRAFT_HOME_SPATIAL_STATE_PATH=/private/path/home-spatial-state.json
+```
+
+Then an authenticated Home session can read:
+
+- `GET /api/home/spatial-twin` for `evercraft.home.spatial-twin.v1`
+- `/spatial.html` for the owned 3D/plan viewer
+
+The source is intentionally local and optional. Missing configuration reports `not_configured`; it is never promoted to a fake healthy scene.
+
+The scene carries floors, rooms, doors, devices, telemetry, evidence state and source references. Closed doors are visually highlighted, room occupancy remains coarse `occupied | vacant | unknown`, and missing state stays unknown. The bridge also emits a compatible `evercraft.world-engine.world.v1` definition so the same home can later move through World Engine/Fallen renderers instead of becoming a one-off dashboard.
+
+Privacy and authority are hard boundaries:
+
+- exact street address is excluded from the scene contract;
+- person identity tracking is off;
+- biometric tracking is off;
+- public exposure is disallowed;
+- the Home scene grants no device-control authority;
+- rendering a state does not authorize changing the physical device.
+
+`example-spatial-state.json` is a synthetic local example and can be copied outside the repository as a starting point.
