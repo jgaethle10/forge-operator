@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { repairNavigatorCapability, scoreRepairIntent } from '../repair/repair-graph.mjs';
 
 const STOP_WORDS=new Set([
   'a','an','and','are','as','at','be','by','for','from','how','i','in','is','it',
@@ -148,10 +149,11 @@ export function loadFabricCatalogFromRepository({catalogPath=''}={}){
       entry_paid_offer:normalizeEntryPaidOffer(item.entry_paid_offer),
       start_url_state:clean(item.start_url_state||'',120)||null,
       preferred_agent_route:clean(item.preferred_agent_route||'',120)||null,
+      action_url:safeUrl(item.action_url||''),
       connections,
     };
   });
-  return normalizeFabricCatalog(mapped);
+  return normalizeFabricCatalog([...mapped,repairNavigatorCapability()]);
 }
 
 export function normalizeFabricCatalog(input=[]){
@@ -329,6 +331,12 @@ function scoreEntry(intent,entry,{frequency,total}){
       hasAnyRawSignal(rawSignals,['contractor','subcontractor','restoration']) &&
       hasAnyRawSignal(rawSignals,['job','project'])
     ) score+=30;
+  }
+
+  if(entry.public_id==='evercraft-repair-navigator-v1'){
+    const repairScore=scoreRepairIntent(intent);
+    if(repairScore<=0) score-=180;
+    else score+=80+(repairScore*2);
   }
 
   return Math.max(0,Math.round(score*100)/100);
