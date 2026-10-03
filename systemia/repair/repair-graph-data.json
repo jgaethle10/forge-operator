@@ -1,0 +1,427 @@
+{
+  "schema": "evercraft.repair-graph.v1",
+  "updated_at": "2026-10-02",
+  "evidence_policy": {
+    "diagnosis_is_hypothesis": true,
+    "missing_is_unknown": true,
+    "part_identity_is_not_fitment_proof": true,
+    "dangerous_work_requires_human_professional_gate": true
+  },
+  "domains": [
+    {
+      "id": "automotive-lighting-headlight-out",
+      "domain": "automotive",
+      "asset_terms": [
+        "car",
+        "truck",
+        "vehicle",
+        "automotive",
+        "headlight",
+        "headlamp"
+      ],
+      "symptom_terms": [
+        "headlight out",
+        "headlight is out",
+        "headlight not working",
+        "headlamp out",
+        "headlamp not working",
+        "light is out",
+        "wire",
+        "wiring"
+      ],
+      "title": "One or more headlights are not working",
+      "safety": {
+        "level": "caution",
+        "stop_if": [
+          "burning smell",
+          "melted wiring",
+          "smoke",
+          "repeatedly blowing fuse",
+          "water inside an energized connector"
+        ],
+        "note": "Do not bypass fuses or short power directly across unknown wiring. Disconnect power before connector or wiring repair."
+      },
+      "checks": [
+        {
+          "id": "scope",
+          "label": "Confirm whether one lamp, both lamps, high beam, low beam, or all front lighting is affected.",
+          "risk": "low"
+        },
+        {
+          "id": "bulb",
+          "label": "Inspect the affected bulb or LED module and its connector for visible damage, looseness, corrosion, or heat discoloration.",
+          "risk": "low"
+        },
+        {
+          "id": "fuse",
+          "label": "Check the vehicle's documented lighting fuse/relay location and verify the correct rated fuse is intact.",
+          "risk": "low"
+        },
+        {
+          "id": "connector",
+          "label": "If the bulb and fuse appear sound, inspect the connector and ground path before assuming the harness wire itself has failed.",
+          "risk": "caution"
+        }
+      ],
+      "hypotheses": [
+        {
+          "cause": "failed bulb or lamp module",
+          "weight": 1,
+          "evidence": [
+            "single lamp affected",
+            "visible filament/module failure",
+            "known-good replacement restores function"
+          ],
+          "part_handoff": true
+        },
+        {
+          "cause": "loose, corroded, or heat-damaged connector",
+          "weight": 0.88,
+          "evidence": [
+            "intermittent operation",
+            "connector discoloration",
+            "corrosion",
+            "movement changes symptom"
+          ],
+          "part_handoff": true
+        },
+        {
+          "cause": "fuse or relay fault",
+          "weight": 0.72,
+          "evidence": [
+            "multiple related lamps affected",
+            "documented fuse open",
+            "relay test fails"
+          ],
+          "part_handoff": true
+        },
+        {
+          "cause": "ground or harness wiring fault",
+          "weight": 0.68,
+          "evidence": [
+            "bulb and fuse verified good",
+            "voltage/ground evidence points upstream",
+            "visible wire damage"
+          ],
+          "part_handoff": false
+        },
+        {
+          "cause": "control module or switch fault",
+          "weight": 0.42,
+          "evidence": [
+            "multiple circuits behave abnormally",
+            "wiring and load test good",
+            "scan or service information implicates control"
+          ],
+          "part_handoff": false
+        }
+      ]
+    },
+    {
+      "id": "appliance-no-power",
+      "domain": "appliance",
+      "asset_terms": [
+        "appliance",
+        "washer",
+        "dryer",
+        "dishwasher",
+        "refrigerator",
+        "fridge",
+        "freezer",
+        "microwave"
+      ],
+      "symptom_terms": [
+        "no power",
+        "won't turn on",
+        "will not turn on",
+        "dead",
+        "not powering on"
+      ],
+      "title": "Appliance has no apparent power",
+      "safety": {
+        "level": "caution",
+        "stop_if": [
+          "burning smell",
+          "melted plug",
+          "sparking",
+          "wet electrical components",
+          "damaged power cord"
+        ],
+        "note": "Unplug the appliance before opening panels. High-voltage appliances and capacitors require qualified service."
+      },
+      "checks": [
+        {
+          "id": "supply",
+          "label": "Verify the outlet or supply is working using a safe known-good load or the home's documented breaker/GFCI status.",
+          "risk": "low"
+        },
+        {
+          "id": "controls",
+          "label": "Confirm door/lid interlocks, control lock, timer, and reset states that can mimic loss of power.",
+          "risk": "low"
+        },
+        {
+          "id": "cord",
+          "label": "With the appliance unplugged, inspect the cord and plug for visible damage or heat.",
+          "risk": "low"
+        }
+      ],
+      "hypotheses": [
+        {
+          "cause": "loss of supply power or tripped protection",
+          "weight": 1,
+          "evidence": [
+            "outlet dead",
+            "breaker/GFCI tripped"
+          ],
+          "part_handoff": false
+        },
+        {
+          "cause": "door/lid interlock or control-state issue",
+          "weight": 0.75,
+          "evidence": [
+            "power present",
+            "interlock not made",
+            "reset restores operation"
+          ],
+          "part_handoff": true
+        },
+        {
+          "cause": "damaged cord, plug, line filter, or internal power component",
+          "weight": 0.62,
+          "evidence": [
+            "visible damage",
+            "power reaches appliance but control remains dead"
+          ],
+          "part_handoff": true
+        }
+      ]
+    },
+    {
+      "id": "small-engine-no-start",
+      "domain": "small_engine",
+      "asset_terms": [
+        "mower",
+        "snowblower",
+        "generator",
+        "small engine",
+        "chainsaw",
+        "trimmer",
+        "pressure washer"
+      ],
+      "symptom_terms": [
+        "won't start",
+        "will not start",
+        "no start",
+        "won't fire",
+        "does not start"
+      ],
+      "title": "Small engine will not start",
+      "safety": {
+        "level": "caution",
+        "stop_if": [
+          "fuel leak",
+          "strong fuel accumulation",
+          "damaged fuel line",
+          "unexpected blade or implement movement"
+        ],
+        "note": "Work outdoors or with adequate ventilation. Disable ignition before touching blades, belts, or rotating equipment."
+      },
+      "checks": [
+        {
+          "id": "fuel",
+          "label": "Confirm the correct fresh fuel is present and the shutoff/choke controls are in the documented start position.",
+          "risk": "low"
+        },
+        {
+          "id": "interlock",
+          "label": "Confirm safety interlocks and kill-switch positions.",
+          "risk": "low"
+        },
+        {
+          "id": "spark_plug",
+          "label": "Inspect the spark plug condition only with ignition disabled and the machine secured.",
+          "risk": "caution"
+        }
+      ],
+      "hypotheses": [
+        {
+          "cause": "stale, absent, or restricted fuel supply",
+          "weight": 1,
+          "evidence": [
+            "old fuel",
+            "empty bowl",
+            "restricted flow"
+          ],
+          "part_handoff": true
+        },
+        {
+          "cause": "safety interlock or kill circuit open",
+          "weight": 0.82,
+          "evidence": [
+            "interlock not engaged",
+            "kill circuit state incorrect"
+          ],
+          "part_handoff": true
+        },
+        {
+          "cause": "spark plug or ignition fault",
+          "weight": 0.72,
+          "evidence": [
+            "plug fouled",
+            "no verified spark after safe test"
+          ],
+          "part_handoff": true
+        }
+      ]
+    },
+    {
+      "id": "marine-bilge-pump-no-run",
+      "domain": "marine",
+      "asset_terms": [
+        "boat",
+        "marine",
+        "bilge",
+        "bilge pump"
+      ],
+      "symptom_terms": [
+        "bilge pump not working",
+        "pump won't run",
+        "pump will not run",
+        "bilge not pumping"
+      ],
+      "title": "Bilge pump does not run",
+      "safety": {
+        "level": "caution",
+        "stop_if": [
+          "flooding is increasing",
+          "battery wiring is hot",
+          "smoke",
+          "fuel vapor is present"
+        ],
+        "note": "Treat active flooding or fuel-vapor conditions as urgent. Do not create sparks around fuel vapors."
+      },
+      "checks": [
+        {
+          "id": "manual_auto",
+          "label": "Compare manual-switch and automatic-float operation to narrow the failed branch.",
+          "risk": "low"
+        },
+        {
+          "id": "fuse",
+          "label": "Verify the documented fuse or breaker is intact and correctly rated.",
+          "risk": "low"
+        },
+        {
+          "id": "float",
+          "label": "Inspect the float switch for obstruction without bypassing protection.",
+          "risk": "low"
+        }
+      ],
+      "hypotheses": [
+        {
+          "cause": "fuse, breaker, or supply fault",
+          "weight": 0.9,
+          "evidence": [
+            "manual and automatic both dead",
+            "protection open"
+          ],
+          "part_handoff": true
+        },
+        {
+          "cause": "float switch fault or obstruction",
+          "weight": 0.82,
+          "evidence": [
+            "manual works",
+            "automatic does not"
+          ],
+          "part_handoff": true
+        },
+        {
+          "cause": "pump motor or connector failure",
+          "weight": 0.7,
+          "evidence": [
+            "supply verified at pump",
+            "pump remains inactive"
+          ],
+          "part_handoff": true
+        }
+      ]
+    },
+    {
+      "id": "home-outlet-dead",
+      "domain": "home_electrical",
+      "asset_terms": [
+        "outlet",
+        "receptacle",
+        "socket",
+        "home electrical",
+        "house electrical"
+      ],
+      "symptom_terms": [
+        "outlet dead",
+        "outlet not working",
+        "no power at outlet",
+        "receptacle not working"
+      ],
+      "title": "Household outlet has no power",
+      "safety": {
+        "level": "professional_gate",
+        "stop_if": [
+          "burning smell",
+          "sparking",
+          "heat",
+          "scorching",
+          "water exposure",
+          "repeated breaker trips"
+        ],
+        "note": "Do not open energized electrical boxes. Limit self-service triage to external checks such as GFCI and breaker status; internal wiring requires a qualified electrician."
+      },
+      "checks": [
+        {
+          "id": "scope",
+          "label": "Determine whether one outlet, a group of outlets, or an entire circuit is affected.",
+          "risk": "low"
+        },
+        {
+          "id": "gfci",
+          "label": "Check upstream GFCI devices and reset only if there is no sign of damage, moisture, or repeated tripping.",
+          "risk": "low"
+        },
+        {
+          "id": "breaker",
+          "label": "Check the labeled breaker state. Repeated trips are a stop condition, not a reset loop.",
+          "risk": "low"
+        }
+      ],
+      "hypotheses": [
+        {
+          "cause": "tripped GFCI or breaker",
+          "weight": 1,
+          "evidence": [
+            "protection device tripped",
+            "safe reset restores power"
+          ],
+          "part_handoff": false
+        },
+        {
+          "cause": "upstream connection or device fault",
+          "weight": 0.65,
+          "evidence": [
+            "multiple downstream outlets affected",
+            "protection remains set"
+          ],
+          "part_handoff": true
+        },
+        {
+          "cause": "branch-circuit wiring fault",
+          "weight": 0.5,
+          "evidence": [
+            "external checks do not restore power"
+          ],
+          "part_handoff": false
+        }
+      ]
+    }
+  ]
+}
