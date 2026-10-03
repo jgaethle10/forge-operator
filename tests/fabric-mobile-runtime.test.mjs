@@ -43,6 +43,13 @@ test('owned Evercraft mobile surface is installable and routes through live Fabr
     assert.match(matched,/Read-only discovery/);
     assert.equal(matched.includes('base44.app'),false);
 
+    const unmatchedResponse=await fetch(runtime.url+'/mobile?q='+encodeURIComponent('My headlight is out and I think it might be the wire'));
+    assert.equal(unmatchedResponse.status,200);
+    const unmatched=await unmatchedResponse.text();
+    assert.match(unmatched,/No verified Evercraft capability matched this problem yet/);
+    assert.match(unmatched,/Fabric did not guess or invent a specialist/);
+    assert.equal(unmatched.includes('FindMyPart'),false);
+
     const manifestResponse=await fetch(runtime.url+'/mobile/manifest.webmanifest');
     assert.equal(manifestResponse.status,200);
     assert.match(manifestResponse.headers.get('content-type')||'',/^application\/manifest\+json/);
