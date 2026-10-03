@@ -162,6 +162,16 @@ test('Fabric domain guardrails do not suppress explicit software portfolio monit
   assert.equal(hits[0].public_id,'portfolio-sentinel-v1');
 });
 
+test('Fabric returns no specialist for unsupported headlight wiring diagnosis instead of guessing',()=>{
+  const canonical=loadFabricCatalogFromRepository();
+  const hits=matchFabricCapabilities(
+    'My headlight is out and I think it might be the wire',
+    canonical,
+    {limit:5}
+  );
+  assert.equal(hits.length,0);
+});
+
 test('Fabric MCP exposes exactly the read-only directory contract',async()=>{
   const init=await executeFabricDirectoryRpc({
     jsonrpc:'2.0',id:1,method:'initialize',
