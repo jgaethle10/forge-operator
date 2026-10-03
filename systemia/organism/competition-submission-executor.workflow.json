@@ -1,0 +1,51 @@
+{
+  "schema": "evercraft.systemia.workflow-manifest.v1",
+  "workflow_key": "competition-submission-executor",
+  "mission_key": "competition-autonomous-execution-v1",
+  "runtime": "systemia-organism+resident-supervisor",
+  "collider_compatible": true,
+  "cadence_seconds": 300,
+  "material_change_only": true,
+  "entrypoint": "systemia/competition/submission-runner.mjs",
+  "proof": "systemia/competition/submission-runtime.test.mjs",
+  "notification_policy": {
+    "chat_scheduler": false,
+    "notify_only_on_material_change": true
+  },
+  "authority": {
+    "discovery": "autonomous",
+    "fit_analysis": "autonomous",
+    "build_and_test": "autonomous",
+    "raven_qa": "required_before_submission",
+    "competition_participation": "autonomous_when_no_new_terms_required_else_human_gate",
+    "submission": "autonomous_existing_terms_only_after_raven_qa",
+    "provider_receipt": "required_before_success",
+    "staking": "disabled",
+    "payment": "disabled",
+    "identity_mfa_captcha": "human_gate"
+  },
+  "runner": "systemia/competition/submission-runner.mjs",
+  "outputs": {
+    "job_dir": "artifacts/competition-provider/jobs",
+    "submission_receipts": "artifacts/competition-provider/submissions",
+    "cycle_receipt": "artifacts/competition-provider/submissions/latest-cycle.json"
+  },
+  "routing": {
+    "canonical_path": [
+      "systemia",
+      "build_test",
+      "raven_qa",
+      "raven_nexus",
+      "provider_api"
+    ],
+    "base44_allowed": false,
+    "public_fabric_transit_allowed": false
+  },
+  "safety": {
+    "accept_new_terms": false,
+    "stake_funds": false,
+    "create_financial_obligation": false,
+    "bypass_identity_controls": false,
+    "duplicate_successful_submission": false
+  }
+}
