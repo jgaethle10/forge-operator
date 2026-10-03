@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-03T22:12:20.780Z",
+  "updated_at": "2026-10-03T23:08:41.114Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,43 +11,23 @@
   },
   "latest_change_batch": [
     {
-      "path": "/.well-known/evercraft-syndication.json",
-      "last_changed": "2026-10-03T22:12:20.780Z",
-      "priority": 84
-    },
-    {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-03T22:12:20.780Z",
+      "last_changed": "2026-10-03T23:08:41.114Z",
       "priority": 80
-    },
-    {
-      "path": "/chum/syndication/index.json",
-      "last_changed": "2026-10-03T22:12:20.780Z",
-      "priority": 80
-    },
-    {
-      "path": "/feed.json",
-      "last_changed": "2026-10-03T22:12:20.780Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.xml",
-      "last_changed": "2026-10-03T22:12:20.780Z",
-      "priority": 60
     }
   ],
   "recent_surfaces": [
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-10-03T23:08:41.114Z",
+      "priority": 80
+    },
     {
       "path": "/.well-known/evercraft-syndication.json",
       "url": "/.well-known/evercraft-syndication.json",
       "last_changed": "2026-10-03T22:12:20.780Z",
       "priority": 84
-    },
-    {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-10-03T22:12:20.780Z",
-      "priority": 80
     },
     {
       "path": "/chum/syndication/index.json",
