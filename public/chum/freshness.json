@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-04T06:21:41.537Z",
+  "updated_at": "2026-10-04T06:24:18.330Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -12,62 +12,27 @@
   "latest_change_batch": [
     {
       "path": "/.well-known/evercraft-syndication.json",
-      "last_changed": "2026-10-04T06:21:41.537Z",
+      "last_changed": "2026-10-04T06:24:18.330Z",
       "priority": 84
     },
     {
-      "path": "/chum/crawler-radar.json",
-      "last_changed": "2026-10-04T06:21:41.537Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/crawler-radar.txt",
-      "last_changed": "2026-10-04T06:21:41.537Z",
-      "priority": 80
-    },
-    {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-04T06:21:41.537Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/proof/forensiscope.json",
-      "last_changed": "2026-10-04T06:21:41.537Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/proof/index.json",
-      "last_changed": "2026-10-04T06:21:41.537Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/proof/rivet.json",
-      "last_changed": "2026-10-04T06:21:41.537Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/strike/",
-      "last_changed": "2026-10-04T06:21:41.537Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/strike/index.json",
-      "last_changed": "2026-10-04T06:21:41.537Z",
+      "last_changed": "2026-10-04T06:24:18.330Z",
       "priority": 80
     },
     {
       "path": "/chum/syndication/index.json",
-      "last_changed": "2026-10-04T06:21:41.537Z",
+      "last_changed": "2026-10-04T06:24:18.330Z",
       "priority": 80
     },
     {
       "path": "/feed.json",
-      "last_changed": "2026-10-04T06:21:41.537Z",
+      "last_changed": "2026-10-04T06:24:18.330Z",
       "priority": 60
     },
     {
       "path": "/feed.xml",
-      "last_changed": "2026-10-04T06:21:41.537Z",
+      "last_changed": "2026-10-04T06:24:18.330Z",
       "priority": 60
     }
   ],
@@ -75,8 +40,32 @@
     {
       "path": "/.well-known/evercraft-syndication.json",
       "url": "/.well-known/evercraft-syndication.json",
-      "last_changed": "2026-10-04T06:21:41.537Z",
+      "last_changed": "2026-10-04T06:24:18.330Z",
       "priority": 84
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-10-04T06:24:18.330Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/syndication/index.json",
+      "url": "/chum/syndication/index.json",
+      "last_changed": "2026-10-04T06:24:18.330Z",
+      "priority": 80
+    },
+    {
+      "path": "/feed.json",
+      "url": "/feed.json",
+      "last_changed": "2026-10-04T06:24:18.330Z",
+      "priority": 60
+    },
+    {
+      "path": "/feed.xml",
+      "url": "/feed.xml",
+      "last_changed": "2026-10-04T06:24:18.330Z",
+      "priority": 60
     },
     {
       "path": "/chum/crawler-radar.json",
@@ -87,12 +76,6 @@
     {
       "path": "/chum/crawler-radar.txt",
       "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-10-04T06:21:41.537Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
       "last_changed": "2026-10-04T06:21:41.537Z",
       "priority": 80
     },
@@ -125,24 +108,6 @@
       "url": "/chum/strike/index.json",
       "last_changed": "2026-10-04T06:21:41.537Z",
       "priority": 80
-    },
-    {
-      "path": "/chum/syndication/index.json",
-      "url": "/chum/syndication/index.json",
-      "last_changed": "2026-10-04T06:21:41.537Z",
-      "priority": 80
-    },
-    {
-      "path": "/feed.json",
-      "url": "/feed.json",
-      "last_changed": "2026-10-04T06:21:41.537Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.xml",
-      "url": "/feed.xml",
-      "last_changed": "2026-10-04T06:21:41.537Z",
-      "priority": 60
     },
     {
       "path": "/.well-known/agent-card.json",
