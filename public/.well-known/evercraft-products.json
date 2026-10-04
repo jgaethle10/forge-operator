@@ -1777,9 +1777,12 @@
         "set up family safety check-ins or preparedness",
         "make a personal or relationship safety plan",
         "protect a business from phishing, fake payment instructions, account compromise, or continuity risk",
-        "find the smallest Raven safety capability without buying the full suite or hardware"
+        "find the smallest Raven safety capability without buying the full suite or hardware",
+        "connect the tools my business already uses into a permission-aware operating layer",
+        "make my business information AI-ready without replacing everything",
+        "organize household documents obligations and important information into a permission-aware home layer"
       ],
-      "authority": "public pain-to-capability discovery and bounded Raven routing; any purchase or protective action remains limited by the selected capability's verified commercial and authority state",
+      "authority": "public pain-to-capability discovery plus bounded sell-now human handoff for Raven Nexus Home and Business setup; private access, consequential actions and payment remain explicitly human-authorized",
       "human_confirmation_required": true,
       "machine_router": null,
       "boundaries": [
@@ -1789,8 +1792,26 @@
         "does not claim bank-side transaction blocking without verified banking authority",
         "does not permit covert tracking, stalking, or unauthorized surveillance",
         "Raven discovery is not emergency response",
-        "checkout creation is not payment proof"
-      ]
+        "checkout creation is not payment proof",
+        "public discovery never requests passwords, security answers, API keys or private records",
+        "business and home setup are human-handoff services until product-specific direct checkout is independently verified"
+      ],
+      "commercial": {
+        "status": "sell_now_human_handoff",
+        "offers": [
+          {
+            "public_id": "raven-nexus-business-setup-v1",
+            "name": "Raven Nexus Business Systems Map",
+            "price": "$500 one-time"
+          },
+          {
+            "public_id": "raven-nexus-home-setup-v1",
+            "name": "Raven Nexus Home Stability Map",
+            "price": "$199 one-time"
+          }
+        ],
+        "payment_state": "No silent purchase. Human-confirmed scope and payment are required; paid state requires provider verification."
+      }
     },
     {
       "product_key": "revenue-war-map",
