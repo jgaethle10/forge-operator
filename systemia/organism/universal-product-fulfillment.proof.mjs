@@ -11,7 +11,7 @@ const SELL_NOW = catalog.offers
 const audit = auditFulfillmentRegistry({ sellNowIds: SELL_NOW });
 assert.equal(audit.pass, true);
 assert.equal(audit.expected_sell_now_count, SELL_NOW.length);
-assert.equal(SELL_NOW.length, 14, 'current canonical sell-now count changed; add/remove fulfillment profiles deliberately');
+assert.equal(SELL_NOW.length, 16, 'current canonical sell-now count changed; add/remove fulfillment profiles deliberately');
 assert.equal(audit.covered_sell_now_count, SELL_NOW.length);
 assert.deepEqual(audit.missing, []);
 assert.deepEqual(audit.invalid, []);

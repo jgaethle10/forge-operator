@@ -71,7 +71,7 @@ for (let i=0;i<registry.products.length;i+=1) {
   });
 }
 
-assert.equal(results.length,14);
+assert.equal(results.length,16);
 console.log(JSON.stringify({
   ok:true,
   products_dry_run:results.length,
