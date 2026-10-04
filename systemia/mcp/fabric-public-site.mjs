@@ -243,13 +243,14 @@ export function renderCapabilityDetail(item){
     ? `<ul>${useWhen.map((value)=>`<li>“${escapeHtml(value)}”</li>`).join('')}</ul>`
     : '<p>This capability is currently discovered from its published problem description.</p>';
   const startState=item.start_url_state||'not_declared';
+  const actionUrl=item.action_url||null;
   return shell(item.name+` · Evercraft Fabric`,`
 <main>
   <section class="hero">
     <div class="eyebrow">Evercraft capability</div>
     <h1>${escapeHtml(item.name)}</h1>
     <p class="lede">${escapeHtml(item.description)}</p>
-    <div class="actions"><a class="btn primary" href="/capabilities">Browse all capabilities</a><a class="btn" href="/health">Verify Fabric health</a></div>
+    <div class="actions">${actionUrl?'<a class="btn primary" href="'+escapeHtml(actionUrl)+'">Start read-only triage</a>':'<a class="btn primary" href="/capabilities">Browse all capabilities</a>'}<a class="btn" href="/health">Verify Fabric health</a></div>
   </section>
   <div class="detail-grid">
     <section class="detail-panel">

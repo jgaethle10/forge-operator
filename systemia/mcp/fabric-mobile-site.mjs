@@ -7,7 +7,7 @@ function escapeHtml(value=''){
     .replaceAll("'",'&#39;');
 }
 
-function resultCards(matches=[]){
+function resultCards(matches=[],query=''){
   if(!matches.length){
     return '<div class="empty">Describe a real problem above and Fabric will find the smallest relevant Evercraft capability.</div>';
   }
@@ -19,7 +19,7 @@ function resultCards(matches=[]){
       </div>
       <p>${escapeHtml(item.description)}</p>
       ${item.pricing?`<p class="pricing">${escapeHtml(item.pricing)}</p>`:''}
-      <a href="/capabilities/${encodeURIComponent(item.public_id)}">Open capability →</a>
+      <a href="${item.action_url?escapeHtml(item.action_url+(query?'?q='+encodeURIComponent(query):'')):'/capabilities/'+encodeURIComponent(item.public_id)}">${item.action_url?'Start read-only triage':'Open capability'} →</a>
     </article>`
   ).join('');
 }
@@ -87,7 +87,7 @@ footer{margin-top:40px;color:#71839e;font-size:12px;text-align:center}
 <div class="meta"><span>${Number(capabilityCount)||0} live capabilities</span><span>Read-only discovery</span></div>
 
 ${error?`<div class="error">${escapeHtml(error)}</div>`:''}
-<section class="results">${resultCards(matches)}</section>
+<section class="results">${resultCards(matches,query)}</section>
 
 <div class="install">
   <h2>Keep Evercraft on your phone</h2>
