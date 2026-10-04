@@ -462,6 +462,82 @@
         "QA",
         "Shipping"
       ]
+    },
+    {
+      "public_id": "raven-nexus-business-setup-v1",
+      "name": "Raven Nexus Business Setup",
+      "execution_mode": "systemia_managed_service",
+      "native_state": "human_handoff_sell_now_private_access_separately_authorized",
+      "intake": [
+        "buyer_email",
+        "business_name",
+        "selected_offer",
+        "business_goal",
+        "authorized_system_inventory",
+        "explicit_access_scope"
+      ],
+      "deliverables": [
+        "business system inventory",
+        "canonical source-of-truth map",
+        "access and permission map",
+        "bounded connection plan",
+        "agreed Raven Nexus configuration",
+        "implementation and handoff notes"
+      ],
+      "qa": [
+        "scope_match",
+        "no_private_access_by_payment",
+        "credential_material_not_requested_publicly",
+        "least_privilege",
+        "canonical_source_clarity",
+        "rollback_or_disconnect_path"
+      ],
+      "human_review_before_delivery": true,
+      "specialist_roles": [
+        "Raven Nexus",
+        "Systemia",
+        "Saban",
+        "Security/Permissions QA",
+        "Shipping"
+      ]
+    },
+    {
+      "public_id": "raven-nexus-home-setup-v1",
+      "name": "Raven Nexus Home Setup",
+      "execution_mode": "systemia_managed_service",
+      "native_state": "human_handoff_sell_now_private_household_access_separately_authorized",
+      "intake": [
+        "buyer_email",
+        "selected_offer",
+        "household_goal",
+        "authorized_information_categories",
+        "explicit_access_scope"
+      ],
+      "deliverables": [
+        "household information inventory",
+        "continuity map",
+        "permission and access plan",
+        "AI-context plan",
+        "bounded Raven Nexus Home configuration",
+        "handoff guidance"
+      ],
+      "qa": [
+        "scope_match",
+        "no_private_access_by_payment",
+        "credential_material_not_requested_publicly",
+        "least_privilege",
+        "no_covert_tracking",
+        "no_emergency_response_claim",
+        "disconnect_path"
+      ],
+      "human_review_before_delivery": true,
+      "specialist_roles": [
+        "Raven Nexus",
+        "Systemia",
+        "Saban",
+        "Privacy/Safety QA",
+        "Shipping"
+      ]
     }
   ]
 }
