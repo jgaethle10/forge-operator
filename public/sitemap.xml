@@ -22,11 +22,11 @@
   <url><loc>/chum/answers/observed/</loc><lastmod>2026-09-27T06:03:00.949Z</lastmod></url>
   <url><loc>/chum/answers/observed/index.json</loc><lastmod>2026-09-27T06:03:00.949Z</lastmod></url>
   <url><loc>/chum/hot/</loc><lastmod>2026-10-02T17:05:20.795Z</lastmod></url>
-  <url><loc>/chum/hot/index.json</loc><lastmod>2026-10-03T23:08:41.114Z</lastmod></url>
+  <url><loc>/chum/hot/index.json</loc><lastmod>2026-10-04T00:38:47.340Z</lastmod></url>
   <url><loc>/chum/strike/</loc><lastmod>2026-10-03T19:14:56.099Z</lastmod></url>
-  <url><loc>/chum/strike/index.json</loc><lastmod>2026-10-03T22:10:57.237Z</lastmod></url>
-  <url><loc>/chum/crawler-radar.json</loc><lastmod>2026-10-03T22:10:57.237Z</lastmod></url>
-  <url><loc>/chum/crawler-radar.txt</loc><lastmod>2026-10-03T22:10:57.237Z</lastmod></url>
+  <url><loc>/chum/strike/index.json</loc><lastmod>2026-10-04T00:38:47.340Z</lastmod></url>
+  <url><loc>/chum/crawler-radar.json</loc><lastmod>2026-10-04T00:38:47.340Z</lastmod></url>
+  <url><loc>/chum/crawler-radar.txt</loc><lastmod>2026-10-04T00:38:47.340Z</lastmod></url>
   <url><loc>/chum/proof/</loc><lastmod>2026-09-27T14:53:47.616Z</lastmod></url>
   <url><loc>/chum/proof/index.json</loc><lastmod>2026-10-03T22:10:57.237Z</lastmod></url>
   <url><loc>/chum/proof/llms.txt</loc><lastmod>2026-09-27T14:53:47.616Z</lastmod></url>
@@ -2720,10 +2720,10 @@
   <url><loc>/chum/commercial/audit-center-website-audit-machine-v1/</loc><lastmod>2026-10-01T04:57:43.336Z</lastmod></url>
   <url><loc>/chum/commercial/audit-center-website-audit-machine-v1/index.json</loc><lastmod>2026-10-01T04:57:43.336Z</lastmod></url>
   <url><loc>/chum/commercial/audit-center-website-audit-machine-v1/llms.txt</loc><lastmod>2026-10-01T04:57:43.336Z</lastmod></url>
-  <url><loc>/feed.xml</loc><lastmod>2026-10-03T22:12:20.780Z</lastmod></url>
-  <url><loc>/feed.json</loc><lastmod>2026-10-03T22:12:20.780Z</lastmod></url>
+  <url><loc>/feed.xml</loc><lastmod>2026-10-04T00:38:47.340Z</lastmod></url>
+  <url><loc>/feed.json</loc><lastmod>2026-10-04T00:38:47.340Z</lastmod></url>
   <url><loc>/opensearch.xml</loc><lastmod>2026-09-26T03:36:07.913Z</lastmod></url>
-  <url><loc>/.well-known/evercraft-syndication.json</loc><lastmod>2026-10-03T22:12:20.780Z</lastmod></url>
+  <url><loc>/.well-known/evercraft-syndication.json</loc><lastmod>2026-10-04T00:38:47.340Z</lastmod></url>
   <url><loc>/chum/syndication/</loc><lastmod>2026-10-01T04:57:43.336Z</lastmod></url>
-  <url><loc>/chum/syndication/index.json</loc><lastmod>2026-10-03T22:12:20.780Z</lastmod></url>
+  <url><loc>/chum/syndication/index.json</loc><lastmod>2026-10-04T00:38:47.340Z</lastmod></url>
 </urlset>
