@@ -13,6 +13,15 @@ Raven Nexus is an approved public Evercraft discovery record. This GitHub mirror
 - protect a business from phishing, fake payment instructions, account compromise, or continuity risk
 - find the smallest Raven safety capability without buying the full suite or hardware
 
+## Sell-now setup offers
+
+- **Raven Nexus Business Systems Map — $500 one-time.** For an owner with scattered business tools, documents, payments, customer records or AI context. Produces a system inventory, canonical-source map, access map and bounded implementation plan.
+- **Raven Nexus Connected Business Implementation — $1,500 one-time.** Founder-led implementation for an agreed bounded workflow after explicit access authorization.
+- **Raven Nexus Home Stability Map — $199 one-time.** Organizes important household information, recurring obligations and continuity needs without giving AI uncontrolled authority.
+- **Raven Nexus Connected Home Setup — $499 one-time.** Human-led configuration for the agreed household scope after explicit authorization.
+
+These are human-handoff offers. Public discovery creates no checkout, payment obligation, credential access or consequential authority. Direct machine checkout is not claimed until independently verified.
+
 ## Public routes
 
 - Canonical: https://raw.githubusercontent.com/jgaethle10/forge-operator/main/public/chum/products/raven-nexus/index.html
