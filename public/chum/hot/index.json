@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.hot-discovery.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-04T17:04:17.791Z",
+  "updated_at": "2026-10-04T17:44:43.659Z",
   "purpose": "High-priority public discovery surfaces for crawler fan-out. The queue reserves limited cold-start frontage for current commercial and sitemap surfaces, then fills remaining slots by observed priority. This is a crawl-order hint, not a ranking or recommendation claim.",
   "surfaces": [
     {
@@ -363,7 +363,7 @@
       "path": "/.well-known/evercraft-machine-catalog.json",
       "url": "/.well-known/evercraft-machine-catalog.json",
       "priority": 84,
-      "last_changed": "2026-10-02T17:01:08.152Z"
+      "last_changed": "2026-10-04T17:44:43.006Z"
     },
     {
       "path": "/chum/answers/doors/account-takeover-protection-6a5072fc31.json",

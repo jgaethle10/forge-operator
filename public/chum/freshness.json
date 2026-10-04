@@ -2,7 +2,7 @@
   "schema": "evercraft.chum.crawl-pressure.v1",
   "provider": "Evercraft LLC",
   "coordinator": "CHUM",
-  "updated_at": "2026-10-04T17:04:17.791Z",
+  "updated_at": "2026-10-04T17:44:43.659Z",
   "purpose": "Content-hash-backed freshness signals for public Evercraft discovery surfaces. A freshness signal requests attention; it does not prove indexing, ranking, recommendation, citation or provider pickup.",
   "indexnow": {
     "supported": true,
@@ -11,79 +11,127 @@
   },
   "latest_change_batch": [
     {
-      "path": "/.well-known/evercraft-syndication.json",
-      "last_changed": "2026-10-04T17:04:17.791Z",
-      "priority": 84
+      "path": "/chum/crawler-radar.json",
+      "last_changed": "2026-10-04T17:44:43.659Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/crawler-radar.txt",
+      "last_changed": "2026-10-04T17:44:43.659Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/",
+      "last_changed": "2026-10-04T17:44:43.659Z",
+      "priority": 80
     },
     {
       "path": "/chum/hot/index.json",
-      "last_changed": "2026-10-04T17:04:17.791Z",
+      "last_changed": "2026-10-04T17:44:43.659Z",
       "priority": 80
     },
     {
-      "path": "/chum/syndication/index.json",
-      "last_changed": "2026-10-04T17:04:17.791Z",
+      "path": "/chum/strike/index.json",
+      "last_changed": "2026-10-04T17:44:43.659Z",
       "priority": 80
-    },
-    {
-      "path": "/feed.json",
-      "last_changed": "2026-10-04T17:04:17.791Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.xml",
-      "last_changed": "2026-10-04T17:04:17.791Z",
-      "priority": 60
     }
   ],
   "recent_surfaces": [
     {
-      "path": "/.well-known/evercraft-syndication.json",
-      "url": "/.well-known/evercraft-syndication.json",
-      "last_changed": "2026-10-04T17:04:17.791Z",
-      "priority": 84
-    },
-    {
-      "path": "/chum/hot/index.json",
-      "url": "/chum/hot/index.json",
-      "last_changed": "2026-10-04T17:04:17.791Z",
-      "priority": 80
-    },
-    {
-      "path": "/chum/syndication/index.json",
-      "url": "/chum/syndication/index.json",
-      "last_changed": "2026-10-04T17:04:17.791Z",
-      "priority": 80
-    },
-    {
-      "path": "/feed.json",
-      "url": "/feed.json",
-      "last_changed": "2026-10-04T17:04:17.791Z",
-      "priority": 60
-    },
-    {
-      "path": "/feed.xml",
-      "url": "/feed.xml",
-      "last_changed": "2026-10-04T17:04:17.791Z",
-      "priority": 60
-    },
-    {
       "path": "/chum/crawler-radar.json",
       "url": "/chum/crawler-radar.json",
-      "last_changed": "2026-10-04T17:02:03.173Z",
+      "last_changed": "2026-10-04T17:44:43.659Z",
       "priority": 80
     },
     {
       "path": "/chum/crawler-radar.txt",
       "url": "/chum/crawler-radar.txt",
-      "last_changed": "2026-10-04T17:02:03.173Z",
+      "last_changed": "2026-10-04T17:44:43.659Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/",
+      "url": "/chum/hot/",
+      "last_changed": "2026-10-04T17:44:43.659Z",
+      "priority": 80
+    },
+    {
+      "path": "/chum/hot/index.json",
+      "url": "/chum/hot/index.json",
+      "last_changed": "2026-10-04T17:44:43.659Z",
       "priority": 80
     },
     {
       "path": "/chum/strike/index.json",
       "url": "/chum/strike/index.json",
-      "last_changed": "2026-10-04T17:02:03.173Z",
+      "last_changed": "2026-10-04T17:44:43.659Z",
       "priority": 80
+    },
+    {
+      "path": "/chum/products/raven-nexus/",
+      "url": "/chum/products/raven-nexus/",
+      "last_changed": "2026-10-04T17:44:43.006Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/raven-nexus/ai-conformance.json",
+      "url": "/chum/products/raven-nexus/ai-conformance.json",
+      "last_changed": "2026-10-04T17:44:43.006Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/raven-nexus/ai-discovery.json",
+      "url": "/chum/products/raven-nexus/ai-discovery.json",
+      "last_changed": "2026-10-04T17:44:43.006Z",
+      "priority": 94
+    },
+    {
+      "path": "/chum/products/raven-nexus/llms.txt",
+      "url": "/chum/products/raven-nexus/llms.txt",
+      "last_changed": "2026-10-04T17:44:43.006Z",
+      "priority": 94
+    },
+    {
+      "path": "/.well-known/evercraft-products.json",
+      "url": "/.well-known/evercraft-products.json",
+      "last_changed": "2026-10-04T17:44:43.006Z",
+      "priority": 88
+    },
+    {
+      "path": "/.well-known/evercraft-agent-commerce.json",
+      "url": "/.well-known/evercraft-agent-commerce.json",
+      "last_changed": "2026-10-04T17:44:43.006Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-machine-catalog.json",
+      "url": "/.well-known/evercraft-machine-catalog.json",
+      "last_changed": "2026-10-04T17:44:43.006Z",
+      "priority": 84
+    },
+    {
+      "path": "/.well-known/evercraft-syndication.json",
+      "url": "/.well-known/evercraft-syndication.json",
+      "last_changed": "2026-10-04T17:44:43.006Z",
+      "priority": 84
+    },
+    {
+      "path": "/chum/syndication/index.json",
+      "url": "/chum/syndication/index.json",
+      "last_changed": "2026-10-04T17:44:43.006Z",
+      "priority": 80
+    },
+    {
+      "path": "/feed.json",
+      "url": "/feed.json",
+      "last_changed": "2026-10-04T17:44:43.006Z",
+      "priority": 60
+    },
+    {
+      "path": "/feed.xml",
+      "url": "/feed.xml",
+      "last_changed": "2026-10-04T17:44:43.006Z",
+      "priority": 60
     },
     {
       "path": "/chum/proof/forensiscope.json",
@@ -120,12 +168,6 @@
       "url": "/.well-known/agent.json",
       "last_changed": "2026-10-02T18:21:17.485Z",
       "priority": 102
-    },
-    {
-      "path": "/chum/hot/",
-      "url": "/chum/hot/",
-      "last_changed": "2026-10-02T17:05:20.795Z",
-      "priority": 80
     },
     {
       "path": "/chum/answers/doors/account-takeover-protection-6a5072fc31.json",
@@ -1492,48 +1534,6 @@
     {
       "path": "/chum/answers/doors/landscaping-estimate-calculator-bdc36b4571.json",
       "url": "/chum/answers/doors/landscaping-estimate-calculator-bdc36b4571.json",
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/large-legal-document-review-e73d20a32a.json",
-      "url": "/chum/answers/doors/large-legal-document-review-e73d20a32a.json",
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/launch-a-website-for-my-company-0a8c7a11d2.json",
-      "url": "/chum/answers/doors/launch-a-website-for-my-company-0a8c7a11d2.json",
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/legacy-software-rescue-9cd924f010.json",
-      "url": "/chum/answers/doors/legacy-software-rescue-9cd924f010.json",
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/let-an-ai-act-on-business-systems-safely-75cb05b2ed.json",
-      "url": "/chum/answers/doors/let-an-ai-act-on-business-systems-safely-75cb05b2ed.json",
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/live-web-api-for-an-ai-agent-beec517170.json",
-      "url": "/chum/answers/doors/live-web-api-for-an-ai-agent-beec517170.json",
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/make-a-timestamped-timeline-from-this-video-143877068e.json",
-      "url": "/chum/answers/doors/make-a-timestamped-timeline-from-this-video-143877068e.json",
-      "last_changed": "2026-10-02T17:01:08.152Z",
-      "priority": 100
-    },
-    {
-      "path": "/chum/answers/doors/make-an-fcc-complaint-packet-888018751c.json",
-      "url": "/chum/answers/doors/make-an-fcc-complaint-packet-888018751c.json",
       "last_changed": "2026-10-02T17:01:08.152Z",
       "priority": 100
     }
