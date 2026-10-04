@@ -12,15 +12,9 @@ Raven Nexus is an approved public Evercraft discovery record. This GitHub mirror
 - make a personal or relationship safety plan
 - protect a business from phishing, fake payment instructions, account compromise, or continuity risk
 - find the smallest Raven safety capability without buying the full suite or hardware
-
-## Sell-now setup offers
-
-- **Raven Nexus Business Systems Map — $500 one-time.** For an owner with scattered business tools, documents, payments, customer records or AI context. Produces a system inventory, canonical-source map, access map and bounded implementation plan.
-- **Raven Nexus Connected Business Implementation — $1,500 one-time.** Founder-led implementation for an agreed bounded workflow after explicit access authorization.
-- **Raven Nexus Home Stability Map — $199 one-time.** Organizes important household information, recurring obligations and continuity needs without giving AI uncontrolled authority.
-- **Raven Nexus Connected Home Setup — $499 one-time.** Human-led configuration for the agreed household scope after explicit authorization.
-
-These are human-handoff offers. Public discovery creates no checkout, payment obligation, credential access or consequential authority. Direct machine checkout is not claimed until independently verified.
+- connect the tools my business already uses into a permission-aware operating layer
+- make my business information AI-ready without replacing everything
+- organize household documents obligations and important information into a permission-aware home layer
 
 ## Public routes
 
@@ -30,7 +24,7 @@ These are human-handoff offers. Public discovery creates no checkout, payment ob
 
 ## Authority
 
-public pain-to-capability discovery and bounded Raven routing; any purchase or protective action remains limited by the selected capability's verified commercial and authority state
+public pain-to-capability discovery plus bounded sell-now human handoff for Raven Nexus Home and Business setup; private access, consequential actions and payment remain explicitly human-authorized
 
 Human confirmation required: yes
 
@@ -43,6 +37,8 @@ Human confirmation required: yes
 - does not permit covert tracking, stalking, or unauthorized surveillance
 - Raven discovery is not emergency response
 - checkout creation is not payment proof
+- public discovery never requests passwords, security answers, API keys or private records
+- business and home setup are human-handoff services until product-specific direct checkout is independently verified
 
 ## Evidence state
 
