@@ -2,11 +2,14 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 <id>urn:evercraft:chum:crawl-pressure</id>
 <title>Evercraft CHUM Freshness Feed</title>
-<updated>2026-10-04T21:27:33.402Z</updated>
+<updated>2026-10-04T21:42:21.930Z</updated>
 <link rel="self" href="/chum/freshness.xml"/>
 <subtitle>Content-hash-backed public discovery changes. Freshness is not proof of provider pickup.</subtitle>
+<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-10-04T21:42:21.930Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:e75551f8817a367b4412bca9</id><title>/chum/proof/forensiscope.json</title><updated>2026-10-04T21:42:21.930Z</updated><link href="/chum/proof/forensiscope.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:07ef7bcf722a12057ed32ee4</id><title>/chum/proof/index.json</title><updated>2026-10-04T21:42:21.930Z</updated><link href="/chum/proof/index.json"/><category term="priority-80"/></entry>
+<entry><id>urn:evercraft:chum:780bd435a8894bd856d47115</id><title>/chum/proof/rivet.json</title><updated>2026-10-04T21:42:21.930Z</updated><link href="/chum/proof/rivet.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:770866315bf12f2c92446bfe</id><title>/chum/hot/</title><updated>2026-10-04T21:27:33.402Z</updated><link href="/chum/hot/"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:0df896994e643d779039e059</id><title>/chum/hot/index.json</title><updated>2026-10-04T21:27:33.402Z</updated><link href="/chum/hot/index.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:a578a6e1caee77790999ed79</id><title>/chum/commercial/</title><updated>2026-10-04T20:09:59.122Z</updated><link href="/chum/commercial/"/><category term="priority-112"/></entry>
 <entry><id>urn:evercraft:chum:1f9c776a26c06d16a178e5c6</id><title>/chum/commercial/feed.json</title><updated>2026-10-04T20:09:59.122Z</updated><link href="/chum/commercial/feed.json"/><category term="priority-112"/></entry>
 <entry><id>urn:evercraft:chum:da60d0a564c52ed2e335322a</id><title>/chum/commercial/feed.xml</title><updated>2026-10-04T20:09:59.122Z</updated><link href="/chum/commercial/feed.xml"/><category term="priority-112"/></entry>
@@ -39,9 +42,6 @@
 <entry><id>urn:evercraft:chum:85b28624a8b31b9bd8767fd1</id><title>/.well-known/evercraft-products.json</title><updated>2026-10-04T17:44:43.006Z</updated><link href="/.well-known/evercraft-products.json"/><category term="priority-88"/></entry>
 <entry><id>urn:evercraft:chum:3512ff1e15f8ad791030cf1d</id><title>/.well-known/evercraft-agent-commerce.json</title><updated>2026-10-04T17:44:43.006Z</updated><link href="/.well-known/evercraft-agent-commerce.json"/><category term="priority-84"/></entry>
 <entry><id>urn:evercraft:chum:f6f50a192b2dfdad7e76c1d3</id><title>/.well-known/evercraft-machine-catalog.json</title><updated>2026-10-04T17:44:43.006Z</updated><link href="/.well-known/evercraft-machine-catalog.json"/><category term="priority-84"/></entry>
-<entry><id>urn:evercraft:chum:e75551f8817a367b4412bca9</id><title>/chum/proof/forensiscope.json</title><updated>2026-10-04T12:37:56.442Z</updated><link href="/chum/proof/forensiscope.json"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:07ef7bcf722a12057ed32ee4</id><title>/chum/proof/index.json</title><updated>2026-10-04T12:37:56.442Z</updated><link href="/chum/proof/index.json"/><category term="priority-80"/></entry>
-<entry><id>urn:evercraft:chum:780bd435a8894bd856d47115</id><title>/chum/proof/rivet.json</title><updated>2026-10-04T12:37:56.442Z</updated><link href="/chum/proof/rivet.json"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:bc7689c4c0867339d0001ccc</id><title>/chum/strike/</title><updated>2026-10-04T06:21:41.537Z</updated><link href="/chum/strike/"/><category term="priority-80"/></entry>
 <entry><id>urn:evercraft:chum:e610b2719a363b9cd7a32d50</id><title>/.well-known/agent-card.json</title><updated>2026-10-02T18:21:17.485Z</updated><link href="/.well-known/agent-card.json"/><category term="priority-104"/></entry>
 <entry><id>urn:evercraft:chum:fc4ec54a9f72170ce6e9f4b5</id><title>/.well-known/agent.json</title><updated>2026-10-02T18:21:17.485Z</updated><link href="/.well-known/agent.json"/><category term="priority-102"/></entry>
